@@ -165,6 +165,7 @@ void DropBoxStorageService::storageServiceuploadFile(const QString &filename, co
         mNextAction->setNextActionType(UploadFile);
         mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
+        mNextAction->setUploadAsName(uploadAsName);
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);

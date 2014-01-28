@@ -386,6 +386,7 @@ void BoxStorageService::storageServiceuploadFile(const QString &filename, const 
         mNextAction->setNextActionType(UploadFile);
         mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
+        mNextAction->setUploadAsName(uploadAsName);
         if (needRefresh) {
             refreshToken();
         } else {

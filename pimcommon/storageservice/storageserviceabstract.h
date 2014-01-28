@@ -227,6 +227,7 @@ public:
     void setRenameFolder(const QString &source, const QString &destination) { mRenameSource = source; mRenameDestination = destination; }
     void setDownloadDestination(const QString &destination) { mDownLoadDestination = destination; }
     void setFileId(const QString &fileid) { mFileId = fileid; }
+    void setUploadAsName(const QString &name) { mUploadAsName = name; }
 
     QString nextActionName() const { return mNextActionFileName; }
     QString nextActionFolder() const { return mNextActionFolder; }
@@ -236,6 +237,7 @@ public:
     QString renameDestination() const { return mRenameDestination; }
     QString downloadDestination() const { return mDownLoadDestination; }
     QString fileId() const { return mFileId; }
+    QString uploadAsName() const { return mUploadAsName; }
 
 private:
     StorageServiceAbstract::ActionType mNextAction;
@@ -247,6 +249,7 @@ private:
     QString mRenameDestination;
     QString mDownLoadDestination;
     QString mFileId;
+    QString mUploadAsName;
 };
 
 }

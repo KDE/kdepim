@@ -147,6 +147,7 @@ void YouSendItStorageService::storageServiceuploadFile(const QString &filename, 
     if (mToken.isEmpty()) {
         mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
+        mNextAction->setUploadAsName(uploadAsName);
         mNextAction->setNextActionType(UploadFile);
         storageServiceauthentication();
     } else {

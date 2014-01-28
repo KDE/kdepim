@@ -174,6 +174,7 @@ void HubicStorageService::storageServiceuploadFile(const QString &filename, cons
     if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(UploadFile);
         mNextAction->setNextActionName(filename);
+        mNextAction->setUploadAsName(uploadAsName);
         mNextAction->setNextActionFolder(destination);
         if (needRefresh) {
             refreshToken();

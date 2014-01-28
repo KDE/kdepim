@@ -439,11 +439,10 @@ QNetworkReply *DropBoxJob::uploadFile(const QString &filename, const QString &up
         mActionType = PimCommon::StorageServiceAbstract::UploadFile;
         mError = false;
         if (file->open(QIODevice::ReadOnly)) {
-            QFileInfo info(filename);
             const QString defaultDestination = (destination.isEmpty() ? PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
             const QString r = mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26"));
             const QString str = QString::fromLatin1("https://api-content.dropbox.com/1/files_put/dropbox///%7/%1?oauth_consumer_key=%2&oauth_nonce=%3&oauth_signature=%4&oauth_signature_method=PLAINTEXT&oauth_timestamp=%6&oauth_version=1.0&oauth_token=%5&overwrite=false").
-                    arg(info.fileName()).arg(mOauthconsumerKey).arg(mNonce).arg(r).arg(mOauthToken).arg(mTimestamp).arg(defaultDestination);
+                    arg(uploadAsName).arg(mOauthconsumerKey).arg(mNonce).arg(r).arg(mOauthToken).arg(mTimestamp).arg(defaultDestination);
             KUrl url(str);
             QNetworkRequest request(url);
             QNetworkReply *reply = mNetworkAccessManager->put(request, file);

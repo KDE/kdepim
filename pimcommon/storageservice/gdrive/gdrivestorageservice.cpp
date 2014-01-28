@@ -311,6 +311,7 @@ void GDriveStorageService::storageServiceuploadFile(const QString &filename, con
         mNextAction->setNextActionType(UploadFile);
         mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
+        mNextAction->setUploadAsName(uploadAsName);
         storageServiceauthentication();
     } else {
         GDriveJob *job = new GDriveJob(this);

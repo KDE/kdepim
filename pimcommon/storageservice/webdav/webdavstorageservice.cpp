@@ -315,6 +315,7 @@ void WebDavStorageService::storageServiceuploadFile(const QString &filename, con
         mNextAction->setNextActionType(UploadFile);
         mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
+        mNextAction->setUploadAsName(uploadAsName);
         storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
