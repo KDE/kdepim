@@ -43,12 +43,22 @@ WebDavJob::~WebDavJob()
 
 }
 
+void WebDavJob::initializeToken(const QString &publicLocation, const QString &serviceLocation, const QString &username, const QString &password)
+{
+    mUserName = username;
+    mPassword = password;
+    mPublicLocation = publicLocation;
+    mServiceLocation = serviceLocation;
+}
+
 void WebDavJob::slotAuthenticationRequired(QNetworkReply *,QAuthenticator *auth)
 {
     QPointer<LoginDialog> dlg = new LoginDialog;
     if (dlg->exec()) {
-        auth->setUser(dlg->username());
-        auth->setPassword(dlg->password());
+        mUserName = dlg->username();
+        mPassword = dlg->password();
+        auth->setUser(mUserName);
+        auth->setPassword(mPassword);
     } else {
         Q_EMIT authorizationFailed(i18n("Authentication Canceled."));
         deleteLater();
@@ -227,9 +237,8 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
 void WebDavJob::parseAccessToken(const QString &data)
 {
     qDebug()<<" void WebDavJob::parseAccessToken(const QString &data)"<<data;
-    Q_EMIT authorizationDone(QString(), QString(), QString());
+    Q_EMIT authorizationDone(mPublicLocation, mServiceLocation, mUserName, mPassword);
     deleteLater();
-
 }
 
 void WebDavJob::parseUploadFile(const QString &data)

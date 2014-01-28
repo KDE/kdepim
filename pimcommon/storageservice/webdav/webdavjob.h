@@ -44,11 +44,11 @@ public:
     void moveFolder(const QString &source, const QString &destination);
     void moveFile(const QString &source, const QString &destination);    
     void copyFile(const QString &source, const QString &destination);
-    void copyFolder(const QString &source, const QString &destination);
-
+    void copyFolder(const QString &source, const QString &destination);    
+    void initializeToken(const QString &publicLocation, const QString &serviceLocation, const QString &username, const QString &password);
 
 Q_SIGNALS:
-    void authorizationDone(const QString &, const QString &, const QString &);
+    void authorizationDone(const QString &publicLocation, const QString &serviceLocation, const QString &username, const QString &password);
 
 private slots:
     void slotSendDataFinished(QNetworkReply *reply);    
@@ -61,6 +61,8 @@ private:
     void parseAccessToken(const QString &data);
     QString mPublicLocation;
     QString mServiceLocation;
+    QString mUserName;
+    QString mPassword;
 };
 }
 

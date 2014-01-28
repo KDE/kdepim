@@ -66,11 +66,13 @@ public:
 
 private slots:
     void slotAuthorizationFailed(const QString &errorMessage);    
-    void slotAuthorizationDone(const QString &, const QString &, const QString &);
+    void slotAuthorizationDone(const QString &publicLocation, const QString &serviceLocation, const QString &username, const QString &password);
 private:
     void readConfig();
     QString mPublicLocation;
     QString mServiceLocation;
+    QString mUsername;
+    QString mPassword;
 };
 }
 
