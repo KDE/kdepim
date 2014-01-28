@@ -1,4 +1,4 @@
-/*
+    /*
   Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
@@ -35,6 +35,7 @@ using namespace PimCommon;
 GDriveStorageService::GDriveStorageService(QObject *parent)
     : PimCommon::StorageServiceAbstract(parent)
 {
+    mAccount = KGAPI2::AccountPtr(new KGAPI2::Account);
     readConfig();
 }
 
@@ -46,8 +47,8 @@ void GDriveStorageService::readConfig()
 {
     KConfig config(StorageServiceManager::kconfigName());
     KConfigGroup grp(&config, "GoogleDrive Settings");
-    mRefreshToken = grp.readEntry("Refresh Token");
-    mToken = grp.readEntry("Token");
+    mAccount->setRefreshToken(grp.readEntry("Refresh Token"));
+    mAccount->setAccessToken(grp.readEntry("Token"));
 }
 
 void GDriveStorageService::removeConfig()
@@ -67,7 +68,6 @@ void GDriveStorageService::refreshToken()
     job->refreshToken();
 }
 
-
 void GDriveStorageService::storageServiceauthentication()
 {
     GDriveJob *job = new GDriveJob(this);
@@ -85,12 +85,12 @@ void GDriveStorageService::slotAuthorizationFailed(const QString &errorMessage)
 
 void GDriveStorageService::slotAuthorizationDone(const QString &refreshToken, const QString &token)
 {
-    mRefreshToken = refreshToken;
-    mToken = token;
+    mAccount->setRefreshToken(refreshToken);
+    mAccount->setAccessToken(token);
     KConfig config(StorageServiceManager::kconfigName());
     KConfigGroup grp(&config, "GoogleDrive Settings");
-    grp.writeEntry("Refresh Token", mRefreshToken);
-    grp.writeEntry("Token", mToken);
+    grp.writeEntry("Refresh Token", refreshToken);
+    grp.writeEntry("Token", token);
     grp.sync();
     emitAuthentificationDone();
 }

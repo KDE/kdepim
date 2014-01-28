@@ -43,7 +43,6 @@ GDriveJob::GDriveJob(QObject *parent)
 {
     mClientId = PimCommon::StorageServiceJobConfig::self()->gdriveClientId();
     mClientSecret = PimCommon::StorageServiceJobConfig::self()->gdriveClientSecret();
-    //connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
 }
 
 GDriveJob::~GDriveJob()
