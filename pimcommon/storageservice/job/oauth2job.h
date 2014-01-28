@@ -90,7 +90,6 @@ protected:
     QString mCurrentAccountInfoPath;
     QString mApiUrl;
     QString mFileInfoPath;
-    qint64 mExpireInTime;
     QPointer<PimCommon::StorageAuthViewDialog> mAuthDialog;
 
 private:

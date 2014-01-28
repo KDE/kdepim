@@ -31,8 +31,7 @@
 using namespace PimCommon;
 
 OAuth2Job::OAuth2Job(QObject *parent)
-    : PimCommon::StorageServiceAbstractJob(parent),
-      mExpireInTime(0)
+    : PimCommon::StorageServiceAbstractJob(parent)
 {
     mRedirectUri = PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl();
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
@@ -544,7 +543,6 @@ void OAuth2Job::parseUploadFile(const QString &data)
     deleteLater();
 }
 
-
 void OAuth2Job::parseAccessToken(const QString &data)
 {
     QJson::Parser parser;
@@ -558,12 +556,12 @@ void OAuth2Job::parseAccessToken(const QString &data)
     if (info.contains(QLatin1String("access_token"))) {
         mToken = info.value(QLatin1String("access_token")).toString();
     }
+    qint64 expireInTime = 0;
     if (info.contains(QLatin1String("expires_in"))) {
-        mExpireInTime = info.value(QLatin1String("expires_in")).toLongLong();
+        expireInTime = info.value(QLatin1String("expires_in")).toLongLong();
     }
     qDebug()<<" parseAccessToken";
-    Q_EMIT authorizationDone(mRefreshToken, mToken, mExpireInTime);
-    //TODO save it.
+    Q_EMIT authorizationDone(mRefreshToken, mToken, expireInTime);
     deleteLater();
 }
 
