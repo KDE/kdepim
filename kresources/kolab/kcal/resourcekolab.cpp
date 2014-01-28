@@ -789,12 +789,27 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
     }
   } else { /* KMail told us */
 
-    { // This blocks fixes issue4826. Checks if the addition is a false positive conflict
+    const bool ourOwnUpdate = mUidsPendingUpdate.contains(  uid );
+    kdDebug( 5650 ) << "addIncidence: ourOwnUpdate " << ourOwnUpdate << endl;
+
+    { // This block fixes issue4826. Checks if the addition is a false positive conflict
       if ( mUidMap.contains( uid ) &&
            mConflictPreventer->processNewPayload( incidence, _subresource, sernum ) ) {
         if ( (mUidMap[uid].serialNumber() == sernum ) ) {
           kdWarning() << "Two incidences with the same SerialNumber. Ignoring: "
                       << mUidMap[uid].serialNumber() << endl;
+          if ( ourOwnUpdate ) {
+            // It can happen that we get here issue4871 got us here.
+            // In that case we are about to process the same update twice
+            // (triggering the conflict preventer) we also have the
+            // correct serial number. Instead of understanding why
+            // this is the case (No more time and my brain hurts)
+            // We now remove the pending update as it is already processed.
+            // This fixes the corrupted state and should be done anyway because
+            // otherwise this uid is locked agains further modification.
+            kdDebug() << "Removing uid from pending update list" << endl;
+            mUidsPendingUpdate.remove( uid );
+          }
         } else {
           const bool success = kmailDeleteIncidence( _subresource, sernum, /*force=*/true );
           if ( !success ) {
@@ -806,8 +821,6 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       }
     }
 
-    const bool ourOwnUpdate = mUidsPendingUpdate.contains(  uid );
-    kdDebug( 5650 ) << "addIncidence: ourOwnUpdate " << ourOwnUpdate << endl;
     /* Check if we updated this one, which means kmail deleted and added it.
      * We know the new state, so lets just not do much at all. The old incidence
      * in the calendar remains valid, but the serial number changed, so we need to
