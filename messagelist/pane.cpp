@@ -237,7 +237,7 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
     d->mActionMenu->addSeparator();
 
     KAction *action = new KAction( i18n("Create New Tab"), this );
-    action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_T ) );
+    action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_O ) );
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "create_new_tab" ), action );
     connect( action, SIGNAL(triggered(bool)), SLOT(onNewTabClicked()) );
     d->mActionMenu->addAction( action );
