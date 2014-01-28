@@ -333,10 +333,8 @@ bool StorageServiceTreeWidget::uploadFileToService()
     if (!filename.isEmpty()) {
         const QRegExp disallowedSymbols = mStorageService->disallowedSymbols();
 
-        qDebug()<<"filename "<<filename;
         QFileInfo info(filename);
         QString newName = info.fileName();
-        qDebug()<<" newName "<<newName;
         if (!disallowedSymbols.isEmpty()) {
             if (newName.contains(disallowedSymbols)) {
                 QPointer<PimCommon::StorageServiceCheckNameDialog> dlg = new PimCommon::StorageServiceCheckNameDialog(this);
