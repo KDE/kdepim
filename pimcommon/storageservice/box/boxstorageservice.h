@@ -65,6 +65,9 @@ public:
     QString fileIdentifier(const QVariantMap &variantMap);
     QString fileShareRoot(const QVariantMap &variantMap);
 
+    QRegExp disallowedSymbols() const;
+    QString disallowedSymbolsStr() const;
+
 private slots:
     void slotAuthorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);
     void slotAuthorizationFailed(const QString &errorMessage);

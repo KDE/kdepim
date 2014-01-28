@@ -542,3 +542,13 @@ QString BoxStorageService::fileShareRoot(const QVariantMap &variantMap)
     Q_UNUSED(variantMap);
     return QString();
 }
+
+QRegExp BoxStorageService::disallowedSymbols() const
+{
+    return QRegExp(QLatin1String("[/:?*\\|]"));
+}
+
+QString BoxStorageService::disallowedSymbolsStr() const
+{
+    return QLatin1String("\\ / : ? * < > |");
+}
