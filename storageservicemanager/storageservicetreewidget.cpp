@@ -307,7 +307,7 @@ void StorageServiceTreeWidget::slotShareFile()
 void StorageServiceTreeWidget::slotDownloadFile()
 {
     if (itemTypeSelected() == StorageServiceTreeWidget::File) {
-        const QString filename = itemIdentifierSelected();
+        const QString filename = currentItem()->text(0);
         if (!filename.isEmpty()) {
             QString destination = StorageServiceManagerGlobalConfig::self()->downloadDirectory();
             if (destination.isEmpty()) {

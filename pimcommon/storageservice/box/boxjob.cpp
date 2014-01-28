@@ -426,7 +426,6 @@ QNetworkReply * BoxJob::downloadFile(const QString &name, const QString &fileId,
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
 
-    Q_UNUSED(fileId);
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
     const QString defaultDestination = (destination.isEmpty() ? PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
@@ -435,7 +434,7 @@ QNetworkReply * BoxJob::downloadFile(const QString &name, const QString &fileId,
     if (mDownloadFile->open(QIODevice::WriteOnly)) {
         QUrl url;
         qDebug()<<" fileId "<<fileId<<" name "<<name;
-        url.setUrl(mApiUrl + mFileInfoPath + name + QLatin1String("/content"));
+        url.setUrl(mApiUrl + mFileInfoPath + fileId + QLatin1String("/content"));
         qDebug()<<"url!"<<url;
         QNetworkRequest request(url);
         request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
