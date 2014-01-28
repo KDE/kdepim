@@ -72,8 +72,6 @@ private slots:
 private:
     void refreshToken();
     void readConfig();
-    QString mToken;
-    QString mRefreshToken;
     KGAPI2::AccountPtr mAccount;
 };
 }

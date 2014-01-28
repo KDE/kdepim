@@ -20,6 +20,8 @@
 
 #include <QObject>
 #include "storageservice/job/storageserviceabstractjob.h"
+#include <libkgapi2/account.h>
+
 namespace KGAPI2 {
 class Job;
 }
@@ -37,7 +39,7 @@ public:
     void accountInfo();
     void createFolder(const QString &foldername, const QString &destination);
     void shareLink(const QString &root, const QString &path);
-    void initializeToken(const QString &refreshToken, const QString &token);
+    void initializeToken(KGAPI2::AccountPtr account);
     void createServiceFolder();
     QNetworkReply *downloadFile(const QString &name, const QString &fileId, const QString &destination);
     void deleteFile(const QString &filename);
@@ -92,6 +94,7 @@ protected:
     QString mFileInfoPath;
 private:
     void shareLink(const QString &fileId);
+    KGAPI2::AccountPtr mAccount;
 };
 }
 #endif // GDriveJob_H

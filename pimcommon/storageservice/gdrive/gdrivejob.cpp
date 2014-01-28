@@ -82,14 +82,15 @@ void GDriveJob::slotAuthJobFinished(KGAPI2::Job *job)
     deleteLater();
 }
 
-/*old **********************/
-
-void GDriveJob::initializeToken(const QString &refreshToken, const QString &token)
+void GDriveJob::initializeToken(KGAPI2::AccountPtr account)
 {
     mError = false;
-    mRefreshToken = refreshToken;
-    mToken = token;
+    mAccount = account;
 }
+
+
+/*old **********************/
+
 
 void GDriveJob::createServiceFolder()
 {
