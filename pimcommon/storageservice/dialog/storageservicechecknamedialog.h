@@ -20,9 +20,10 @@
 #define STORAGESERVICECHECKNAMEDIALOG_H
 
 #include <KDialog>
+#include "pimcommon_export.h"
 class KLineEdit;
 namespace PimCommon {
-class StorageServiceCheckNameDialog : public KDialog
+class PIMCOMMON_EXPORT StorageServiceCheckNameDialog : public KDialog
 {
     Q_OBJECT
 public:
@@ -31,6 +32,11 @@ public:
 
     void setDisallowedSymbols(const QRegExp &regExp);
     void setOldName(const QString &name);
+
+    QString newName() const;
+
+private slots:
+    void slotNameChanged(const QString &text);
 
 private:
     QRegExp mRegExp;

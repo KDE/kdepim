@@ -43,11 +43,21 @@ StorageServiceCheckNameDialog::StorageServiceCheckNameDialog(QWidget *parent)
     mName = new KLineEdit;
     hbox->addWidget(mName);
     lay->addLayout(hbox);
+    connect(mName, SIGNAL(textChanged(QString)), this, SLOT(slotNameChanged(QString)));
 }
 
 StorageServiceCheckNameDialog::~StorageServiceCheckNameDialog()
 {
 
+}
+
+void StorageServiceCheckNameDialog::slotNameChanged(const QString &text)
+{
+    if (text.contains(mRegExp) || text == QLatin1String(".") || text == QLatin1String("..")) {
+        enableButtonOk(false);
+        return;
+    }
+    enableButtonOk(true);
 }
 
 void StorageServiceCheckNameDialog::setDisallowedSymbols(const QRegExp &regExp)
@@ -57,6 +67,10 @@ void StorageServiceCheckNameDialog::setDisallowedSymbols(const QRegExp &regExp)
 
 void StorageServiceCheckNameDialog::setOldName(const QString &name)
 {
-    //TODO
+    mName->setText(name);
 }
 
+QString StorageServiceCheckNameDialog::newName() const
+{
+    return mName->text();
+}
