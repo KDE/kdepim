@@ -75,6 +75,7 @@ protected:
     virtual void parseMoveFolder(const QString &data);
     virtual void parseMoveFile(const QString &data);
     virtual void parseShareLink(const QString &data);
+    virtual void parseDownloadFile(const QString &data);
 
     QString mServiceUrl;
     QUrl mAuthUrl;

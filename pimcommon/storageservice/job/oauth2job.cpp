@@ -438,10 +438,14 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
         parseShareLink(data);
         break;
     case PimCommon::StorageServiceAbstract::DownLoadFile:
-        Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-        deleteLater();
+        parseDownloadFile(data);
         break;
     }
+}
+
+void OAuth2Job::parseDownloadFile(const QString &data)
+{
+    Q_EMIT downLoadFileDone(QString());
 }
 
 void OAuth2Job::parseRenameFile(const QString &data)

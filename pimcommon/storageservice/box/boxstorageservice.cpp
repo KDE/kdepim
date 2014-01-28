@@ -429,7 +429,7 @@ StorageServiceAbstract::Capabilities BoxStorageService::serviceCapabilities()
     StorageServiceAbstract::Capabilities cap;
     cap |= AccountInfoCapability;
     cap |= UploadFileCapability;
-    //cap |= DownloadFileCapability;
+    cap |= DownloadFileCapability;
     cap |= CreateFolderCapability;
     cap |= DeleteFolderCapability;
     cap |= ListFolderCapability;
@@ -531,6 +531,9 @@ QString BoxStorageService::itemInformation(const QVariantMap &variantMap)
 
 QString BoxStorageService::fileIdentifier(const QVariantMap &variantMap)
 {
+    if (variantMap.contains(QLatin1String("id"))) {
+        return variantMap.value(QLatin1String("id")).toString();
+    }
     return QString();
 }
 

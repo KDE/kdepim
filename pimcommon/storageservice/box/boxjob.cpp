@@ -209,7 +209,7 @@ QNetworkReply *BoxJob::uploadFile(const QString &filename, const QString &upload
         mError = false;
         if (file->open(QIODevice::ReadOnly)) {
             QUrl url;
-            url.setUrl(mApiUrl + mFileInfoPath + QLatin1String("content"));
+            url.setUrl(QLatin1String("https://upload.box.com/api/2.0/files/content"));
             QNetworkRequest request(url);
             request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
             request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
@@ -413,4 +413,41 @@ void BoxJob::parseShareLink(const QString &data)
     }
     Q_EMIT shareLinkDone(url);
     deleteLater();
+}
+
+void BoxJob::parseDownloadFile(const QString &data)
+{
+    qDebug()<<" Data "<<data;
+    Q_EMIT downLoadFileDone(QString());
+}
+
+QNetworkReply * BoxJob::downloadFile(const QString &name, const QString &fileId, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
+    mError = false;
+
+    Q_UNUSED(fileId);
+    mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
+    mError = false;
+    const QString defaultDestination = (destination.isEmpty() ? PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
+    delete mDownloadFile;
+    mDownloadFile = new QFile(defaultDestination+ QLatin1Char('/') + name);
+    if (mDownloadFile->open(QIODevice::WriteOnly)) {
+        QUrl url;
+        qDebug()<<" fileId "<<fileId<<" name "<<name;
+        url.setUrl(mApiUrl + mFileInfoPath + name + QLatin1String("/content"));
+        qDebug()<<"url!"<<url;
+        QNetworkRequest request(url);
+        request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+        request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
+        QNetworkReply *reply = mNetworkAccessManager->get(request);
+        mDownloadFile->setParent(reply);
+        connect(reply, SIGNAL(readyRead()), this, SLOT(slotDownloadReadyRead()));
+        connect(reply, SIGNAL(downloadProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
+        connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+        return reply;
+    } else {
+        delete mDownloadFile;
+    }
+    return 0;
 }
