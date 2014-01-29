@@ -752,8 +752,10 @@ class KDE_EXPORT KMCopyCommand : public KMMenuCommand
 
 public:
   KMCopyCommand( KMFolder* destFolder,
-		 const QPtrList<KMMsgBase> &msgList );
-  KMCopyCommand( KMFolder* destFolder, KMMessage *msg );
+		 const QPtrList<KMMsgBase> &msgList,
+         bool decrypt = false );
+  KMCopyCommand( KMFolder* destFolder, KMMessage *msg,
+         bool decrypt = false );
 
 protected slots:
   void slotJobFinished( KMail::FolderJob *job );
@@ -766,6 +768,7 @@ private:
   KMFolder *mDestFolder;
   QPtrList<KMMsgBase> mMsgList;
   QValueList<KMail::FolderJob*> mPendingJobs;
+  bool mDecrypt;
 };
 
 namespace KPIM {

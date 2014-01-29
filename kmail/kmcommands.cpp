@@ -1952,14 +1952,16 @@ void KMMenuCommand::makeFolderMenu(KMFolderNode* node, bool move,
 
 
 KMCopyCommand::KMCopyCommand( KMFolder* destFolder,
-                              const QPtrList<KMMsgBase> &msgList )
-:mDestFolder( destFolder ), mMsgList( msgList )
+                              const QPtrList<KMMsgBase> &msgList,
+                              bool decrypt)
+:mDestFolder( destFolder ), mMsgList( msgList ), mDecrypt( decrypt )
 {
   setDeletesItself( true );
 }
 
-KMCopyCommand::KMCopyCommand( KMFolder* destFolder, KMMessage * msg )
-  :mDestFolder( destFolder )
+KMCopyCommand::KMCopyCommand( KMFolder* destFolder, KMMessage * msg,
+                              bool decrypt)
+  :mDestFolder( destFolder ), mDecrypt( decrypt )
 {
   setDeletesItself( true );
   mMsgList.append( &msg->toMsgBase() );
@@ -1973,6 +1975,8 @@ KMCommand::Result KMCopyCommand::execute()
   bool isMessage;
   QPtrList<KMMessage> list;
   QPtrList<KMMessage> localList;
+
+  kdDebug() << "KMCopyCommand::execute should decrypt? " << mDecrypt << endl;
 
   if (mDestFolder && mDestFolder->open("kmcommand") != 0)
   {
@@ -2000,6 +2004,12 @@ KMCommand::Result KMCopyCommand::execute()
         deleteLater();
         return Failed;
       }
+    }
+
+    if ( mDecrypt ) {
+      // Work on a decrypted copy of this message
+      msg = msg->createDecryptedCopy();
+      srcFolder = NULL;
     }
 
     if (srcFolder && mDestFolder &&
