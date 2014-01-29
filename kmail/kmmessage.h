@@ -206,6 +206,13 @@ public:
           bool allowGUI=false,
           QValueList<KMime::MDN::DispositionModifier> m=QValueList<KMime::MDN::DispositionModifier>() );
 
+  /** Create a new message that is a decrypted copy of this message.
+    The returned message is not stored in any folder.
+
+    @return The new message or 0 if decryption failed.
+   */
+  KMMessage* createDecryptedCopy();
+
   /** Remove all headers but the content description ones, and those in the white list. */
   void sanitizeHeaders( const QStringList& whiteList = QStringList() );
 

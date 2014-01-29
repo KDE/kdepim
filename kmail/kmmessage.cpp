@@ -10,6 +10,7 @@
 #define ALLOW_GUI 1
 #include "kmkernel.h"
 #include "kmmessage.h"
+#include "kmreaderwin.h"
 #include "mailinglist-magic.h"
 #include "messageproperty.h"
 using KMail::MessageProperty;
@@ -4537,3 +4538,58 @@ DwBodyPart* KMMessage::findPartInternal(DwEntity * root, int index, int & accu)
   return rv;
 }
 
+KMMessage* KMMessage::createDecryptedCopy()
+{
+  kdDebug() << "Creating decrypted copy. Already decrypted?: "
+    << hasUnencryptedMsg() << endl;
+  if ( hasUnencryptedMsg() ) {
+    // We already have an unencrypted message. Copy it and
+    // be done. Rarely happens as this is only used if the
+    // store-displayed-messages-unencrypted
+    // configuration setting is set.
+    return new KMMessage( new DwMessage( *unencryptedMsg()->mMsg ) );
+  } else {
+    // Create a working copy of this mail on stack
+    KMMessage *aMsg = new KMMessage( new DwMessage( *this->mMsg ) );
+
+    // Parse it
+    kdDebug() << "Parsing the message" << endl;
+    ObjectTreeParser otp( 0, 0, true, false, true );
+    partNode *root = partNode::fromMessage( aMsg );
+    if ( !root ) {
+      delete aMsg;
+      return NULL;
+    }
+    otp.parseObjectTree( root );
+
+    kdDebug () << "Message status after parsing: Enc: " <<
+      root->overallEncryptionState() <<
+      " Sig: " << root->overallSignatureState() << endl;
+
+    // Now get the decrypted message using some old code from
+    // KMReaderWin
+    NewByteArray decryptedData;
+    const bool changed = KMReaderWin::objectTreeToDecryptedMsg( root,
+        decryptedData, aMsg->getTopLevelPart(), false, 0, true);
+
+    if ( !changed ) {
+      kdDebug() << "Nothing changed" << endl;
+    }
+
+    decryptedData.appendNULL();
+    QCString resultString( decryptedData.data() );
+
+    if( !resultString.isEmpty() ) {
+//      kdDebug() << "composing unencrypted message: " << resultString << endl;
+      aMsg->deleteBodyParts();
+      aMsg->setMultiPartBody( resultString );
+      KMMessage* unencryptedMessage = new KMMessage( *aMsg );
+      unencryptedMessage->cleanupHeader(); // Remove empty fields
+      unencryptedMessage->setParent( 0 );
+      delete aMsg;
+      return unencryptedMessage;
+    }
+    delete aMsg;
+    return NULL;
+  }
+}
