@@ -136,16 +136,6 @@ using KMail::TeeHtmlWriter;
 #include <paths.h>
 #endif
 
-class NewByteArray : public QByteArray
-{
-public:
-    NewByteArray &appendNULL();
-    NewByteArray &operator+=( const char * );
-    NewByteArray &operator+=( const QByteArray & );
-    NewByteArray &operator+=( const QCString & );
-    QByteArray& qByteArray();
-};
-
 NewByteArray& NewByteArray::appendNULL()
 {
     QByteArray::detach();
@@ -204,7 +194,8 @@ bool KMReaderWin::objectTreeToDecryptedMsg( partNode* node,
                                             NewByteArray& resultingData,
                                             DwMessage *currentDwMessage,
                                             bool weAreReplacingAMessageNode,
-                                            int recCount )
+                                            int recCount,
+                                            bool stripSignature)
 {
   bool somethingWasChanged = false;
   kdDebug(5006) << QString("-------------------------------------------------" ) << endl;
@@ -225,7 +216,7 @@ bool KMReaderWin::objectTreeToDecryptedMsg( partNode* node,
       case DwMime::kTypeMultipart: {
           switch( curNode->subType() ){
           case DwMime::kSubtypeSigned: {
-              bKeepPartAsIs = true;
+              bKeepPartAsIs = !stripSignature;
             }
             break;
           case DwMime::kSubtypeEncrypted: {
@@ -246,7 +237,7 @@ bool KMReaderWin::objectTreeToDecryptedMsg( partNode* node,
           case DwMime::kSubtypePkcs7Signature: {
               // note: subtype Pkcs7Signature specifies a signature part
               //       which we do NOT want to remove!
-              bKeepPartAsIs = true;
+              bKeepPartAsIs = !stripSignature;
             }
             break;
           case DwMime::kSubtypePkcs7Mime: {
@@ -296,8 +287,10 @@ bool KMReaderWin::objectTreeToDecryptedMsg( partNode* node,
           }
           messageHeaders.ContentDescription() = headers->ContentDescription();
           messageHeaders.FindField( "Content-Description" )->SetModified();
-          messageHeaders.ContentDisposition() = headers->ContentDisposition();
-          messageHeaders.FindField( "Content-Disposition" )->SetModified();
+          if ( headers->HasContentDisposition() ) {
+            messageHeaders.ContentDisposition() = headers->ContentDisposition();
+            messageHeaders.FindField( "Content-Disposition" )->SetModified();
+          }
           messageHeaders.SetModified();
           messageHeaders.Assemble();
           somethingWasChanged = true;

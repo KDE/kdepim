@@ -62,7 +62,17 @@ namespace KMail {
 class partNode; // might be removed when KMime is used instead of mimelib
                 //                                      (khz, 29.11.2001)
 
-class NewByteArray; // providing operator+ on a QByteArray (khz, 21.06.2002)
+
+class NewByteArray : public QByteArray
+{
+public:
+    NewByteArray &appendNULL();
+    NewByteArray &operator+=( const char * );
+    NewByteArray &operator+=( const QByteArray & );
+    NewByteArray &operator+=( const QCString & );
+    QByteArray& qByteArray();
+}; // providing operator+ on a QByteArray (khz, 21.06.2002)
+
 
 class DwMessage;
 
@@ -263,14 +273,16 @@ public:
    * This function returns the complete data that were in this
    * message parts - *after* all encryption has been removed that
    * could be removed.
+   * If stripSignature is set outer signatures are stripped.
    * - This is used to store the message in decrypted form.
    * @return true if something was actually changed
    */
-  bool objectTreeToDecryptedMsg( partNode* node,
+  static bool objectTreeToDecryptedMsg( partNode* node,
                                  NewByteArray& resultingData,
                                  DwMessage *currentDwMessage,
                                  bool weAreReplacingTheRootNode = false,
-                                 int recCount = 0 );
+                                 int recCount = 0,
+                                 bool stripSignature = false);
 
   /** Returns message part from given URL or null if invalid. */
   partNode* partNodeFromUrl(const KURL &url);
