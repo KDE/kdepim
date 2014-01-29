@@ -132,6 +132,7 @@ public:
     void _k_slotPasteWithoutFormatting();
     void _k_slotInsertSpecialChar();
     void _k_slotInsertAnchor();
+    void _k_slotOpenLink();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     QVariant evaluateJavascript(const QString& command);

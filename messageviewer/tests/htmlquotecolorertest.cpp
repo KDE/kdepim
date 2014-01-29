@@ -77,3 +77,5 @@ void HTMLQuoteColorerTester::test_QuoteColor_data()
                     << "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;\"><font color=\"#0000ff\">&gt; &gt; &gt; Sdf sdfqsdf fqs dfq sfsdfsqfqs</font></p>";
 
 }
+
+#include "moc_htmlquotecolorertest.cpp"

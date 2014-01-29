@@ -211,3 +211,5 @@ void Vacation::showVacationDialog()
     }
 }
 
+
+#include "moc_vacation.cpp"

@@ -85,3 +85,5 @@ void VacationManager::slotDialogOk()
     mMultiImapVacationDialog->delayedDestruct();
     mMultiImapVacationDialog = 0;
 }
+
+#include "moc_vacationmanager.cpp"

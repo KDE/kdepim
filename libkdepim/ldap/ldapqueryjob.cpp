@@ -110,3 +110,5 @@ void LdapQueryJob::start()
 }
 
 
+
+#include "moc_ldapqueryjob.cpp"

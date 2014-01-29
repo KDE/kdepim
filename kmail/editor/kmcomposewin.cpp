@@ -1486,7 +1486,7 @@ void KMComposeWin::changeCryptoAction()
 //-----------------------------------------------------------------------------
 void KMComposeWin::setupStatusBar( QWidget *w )
 {
-  mProgressWidget  = new PimCommon::StorageServiceProgressWidget;
+  mProgressWidget  = new PimCommon::StorageServiceProgressWidget(0);
   mProgressWidget->hide();
   statusBar()->addWidget(w);
   statusBar()->addWidget(mProgressWidget);
@@ -3586,3 +3586,5 @@ void KMComposeWin::slotShareLinkDone(const QString &serviceName, const QString &
     Q_UNUSED(serviceName);
     mComposerBase->editor()->insertShareLink(link);
 }
+
+#include "moc_kmcomposewin.cpp"

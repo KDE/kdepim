@@ -353,3 +353,5 @@ void RecentAddressDialog::writeConfig()
 
 
 
+
+#include "moc_recentaddresses.cpp"

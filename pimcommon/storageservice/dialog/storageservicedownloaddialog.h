@@ -30,8 +30,10 @@ class PIMCOMMON_EXPORT StorageServiceDownloadDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit StorageServiceDownloadDialog(PimCommon::StorageServiceAbstract *storage, const QString &destination, QWidget *parent=0);
+    explicit StorageServiceDownloadDialog(PimCommon::StorageServiceAbstract *storage, QWidget *parent=0);
     ~StorageServiceDownloadDialog();
+
+    void setDefaultDownloadPath(const QString &path);
 
 private slots:
     void slotItemActivated(QTreeWidgetItem *item, int column);
@@ -43,7 +45,7 @@ private slots:
 private:
     void readConfig();
     void writeConfig();
-    QString mDestination;
+    QString mDefaultDownloadPath;
     StorageServiceTreeWidget *mTreeWidget;
     PimCommon::StorageServiceAbstract *mStorage;
     PimCommon::StorageServiceProgressWidget *mProgressWidget;

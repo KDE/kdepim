@@ -66,3 +66,5 @@ void SieveScriptDescriptionDialog::writeConfig()
 }
 
 
+
+#include "moc_sievescriptdescriptiondialog.cpp"

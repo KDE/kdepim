@@ -117,3 +117,5 @@ void CustomHeaderSettingWidget::resetToDefault()
 
 }
 
+
+#include "moc_customheadersettingwidget.cpp"

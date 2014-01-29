@@ -45,3 +45,5 @@ void VacationCheckJob::slotGetResult(KManageSieve::SieveJob */*job*/, bool succe
         active = false; // default to inactive
     emit scriptActive( active, mServerName );
 }
+
+#include "moc_vacationcheckjob.cpp"

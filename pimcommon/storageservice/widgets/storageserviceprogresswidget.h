@@ -25,15 +25,22 @@ class QProgressBar;
 class QLabel;
 class QToolButton;
 namespace PimCommon {
+class StorageServiceAbstract;
 class PIMCOMMON_EXPORT StorageServiceProgressWidget : public QFrame
 {
     Q_OBJECT
 public:
-    explicit StorageServiceProgressWidget(QWidget *parent=0);
+    explicit StorageServiceProgressWidget(PimCommon::StorageServiceAbstract *service, QWidget *parent=0);
     ~StorageServiceProgressWidget();
 
-     void setBusyIndicator(bool busy);
-     void reset();
+    enum ProgressBarType {
+        DownloadBar = 0,
+        UploadBar
+    };
+    void setProgressBarType(ProgressBarType type);
+
+    void setBusyIndicator(bool busy);
+    void reset();
 
 public Q_SLOTS:
     void setProgressValue(qint64 done, qint64 total);
@@ -45,9 +52,11 @@ private slots:
     void slotCancelTask();
 
 private:
+    ProgressBarType mType;
     QToolButton *mCancel;
     QProgressBar *mProgressBar;
     QLabel *mProgressInfo;
+    PimCommon::StorageServiceAbstract *mStorageService;
 };
 }
 

@@ -108,3 +108,5 @@ void AttachmentDialog::openWithClicked()
 
 //---------------------------------------------------------------------
 
+
+#include "moc_attachmentdialog.cpp"

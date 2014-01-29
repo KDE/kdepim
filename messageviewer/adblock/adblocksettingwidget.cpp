@@ -178,8 +178,7 @@ void AdBlockSettingWidget::doResetToDefaultsOther()
     loadWidget(checkEnableAdblock,GlobalSettings::self()->adBlockEnabledItem());
     tabWidget->setEnabled(GlobalSettings::self()->adBlockEnabled());
     checkHideAds->setChecked(GlobalSettings::self()->hideAdsEnabled());
-    const int days = GlobalSettings::self()->adBlockUpdateInterval();
-    spinBox->setValue(days);
+    loadWidget(spinBox, GlobalSettings::self()->adBlockUpdateIntervalItem());
     MessageViewer::GlobalSettings::self()->useDefaults( bUseDefaults );
 }
 
@@ -192,8 +191,7 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
     // update enabled status
     tabWidget->setEnabled(GlobalSettings::self()->adBlockEnabled());
     loadWidget(checkHideAds, GlobalSettings::self()->hideAdsEnabledItem());
-    const int days = GlobalSettings::self()->adBlockUpdateInterval();
-    spinBox->setValue(days);
+    loadWidget(spinBox, GlobalSettings::self()->adBlockUpdateIntervalItem());
 
     // ------------------------------------------------------------------------------
 
@@ -251,7 +249,7 @@ void AdBlockSettingWidget::save()
     // General settings    
     saveCheckBox(checkEnableAdblock,GlobalSettings::self()->adBlockEnabledItem());
     saveCheckBox(checkHideAds, GlobalSettings::self()->hideAdsEnabledItem());
-    GlobalSettings::self()->setAdBlockUpdateInterval(spinBox->value());
+    saveKIntSpinBox(spinBox, GlobalSettings::self()->adBlockUpdateIntervalItem());
 
     // automatic filters
     KConfig config(QLatin1String("messagevieweradblockrc"));
@@ -412,3 +410,5 @@ void AdBlockSettingWidget::slotExportFilters()
 }
 
 
+
+#include "moc_adblocksettingwidget.cpp"

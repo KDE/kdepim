@@ -205,6 +205,15 @@ else()
   find_package(Prison QUIET CONFIG)
   set_package_properties(Prison PROPERTIES DESCRIPTION "The Prison library" URL "http://projects.kde.org/prison" TYPE OPTIONAL PURPOSE "Needed to show mobile barcodes of your contacts")
 
+  # Libkgapi2
+  find_package(LibKGAPI2 2.0.80 QUIET CONFIG)
+  set_package_properties(LibKGAPI2 PROPERTIES DESCRIPTION "KDE-based library for accessing various Google services" URL "https://projects.kde.org/libkgapi" TYPE OPTIONAL PURPOSE "LibKGAPI is required to build Akonadi resources to access Google Contacts, Calendars and Tasks")
+
+if( LibKGAPI2_FOUND )
+  add_definitions( -DKDEPIM_STORAGESERVICE_GDRIVE )
+endif()
+
+
 
 ############### Desktop vs. Mobile options ##############
 

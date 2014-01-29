@@ -17,6 +17,7 @@
 
 
 #include "storageserviceprogresswidget.h"
+#include "storageservice/storageserviceabstract.h"
 
 #include <KLocalizedString>
 #include <KLocale>
@@ -31,8 +32,11 @@
 
 using namespace PimCommon;
 
-StorageServiceProgressWidget::StorageServiceProgressWidget(QWidget *parent)
-    : QFrame(parent)
+StorageServiceProgressWidget::StorageServiceProgressWidget(PimCommon::StorageServiceAbstract *service, QWidget *parent)
+    : QFrame(parent),
+      mType(DownloadBar),
+      mCancel(0),
+      mStorageService(service)
 {
     QHBoxLayout *box = new QHBoxLayout( this );
     box->setMargin(0);
@@ -45,10 +49,12 @@ StorageServiceProgressWidget::StorageServiceProgressWidget(QWidget *parent)
     mProgressBar->setMaximum(100);
     box->addWidget(mProgressBar);
 
-    mCancel = new QToolButton;
-    mCancel->setIcon(KIcon(QLatin1String("dialog-cancel")));
-    connect(mCancel, SIGNAL(clicked()), this, SLOT(slotCancelTask()));
-    box->addWidget(mCancel);
+    if (service) {
+        mCancel = new QToolButton;
+        mCancel->setIcon(KIcon(QLatin1String("dialog-cancel")));
+        connect(mCancel, SIGNAL(clicked()), this, SLOT(slotCancelTask()));
+        box->addWidget(mCancel);
+    }
 }
 
 StorageServiceProgressWidget::~StorageServiceProgressWidget()
@@ -56,9 +62,21 @@ StorageServiceProgressWidget::~StorageServiceProgressWidget()
 
 }
 
+void StorageServiceProgressWidget::setProgressBarType(StorageServiceProgressWidget::ProgressBarType type)
+{
+    mType = type;
+}
+
 void StorageServiceProgressWidget::slotCancelTask()
 {
-    //TODO
+    switch(mType) {
+    case DownloadBar:
+        mStorageService->cancelDownloadFile();
+        break;
+    case UploadBar:
+        mStorageService->cancelUploadFile();
+        break;
+    }
 }
 
 void StorageServiceProgressWidget::reset()
@@ -81,7 +99,10 @@ void StorageServiceProgressWidget::setBusyIndicator(bool busy)
 void StorageServiceProgressWidget::setProgressValue(qint64 done, qint64 total)
 {
     mProgressInfo->setText(i18n("%1 on %2", KGlobal::locale()->formatByteSize(done), KGlobal::locale()->formatByteSize(total)));
-    mProgressBar->setValue((100*done)/total);
+    if (total > 0)
+       mProgressBar->setValue((100*done)/total);
+    else
+       mProgressBar->setValue(100);
 }
 
 void StorageServiceProgressWidget::hideEvent(QHideEvent *e)
@@ -91,3 +112,5 @@ void StorageServiceProgressWidget::hideEvent(QHideEvent *e)
     }
     QFrame::hideEvent(e);
 }
+
+#include "moc_storageserviceprogresswidget.cpp"

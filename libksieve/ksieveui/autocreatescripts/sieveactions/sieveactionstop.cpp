@@ -46,3 +46,5 @@ QString SieveActionStop::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
+
+#include "moc_sieveactionstop.cpp"

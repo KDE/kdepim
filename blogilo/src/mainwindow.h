@@ -46,6 +46,11 @@ Main window of blogilo...
  @author Mehrdad Momeny <mehrdad.momeny@gmail.com>
  @author Golnaz Nilieh <g382nilieh@gmail.com>
 */
+
+namespace PimCommon {
+class StorageServiceManager;
+}
+
 class MainWindow : public KXmlGuiWindow
 {
     Q_OBJECT
@@ -102,6 +107,9 @@ private slots:
     void slotCloseTabClicked();
     void slotRemoveAllExclude(int);
 
+    void slotUploadFileDone(const QString &serviceName, const QString &filename);
+    void slotUploadFileFailed(const QString &serviceName, const QString &filename);
+
 protected:
     void keyPressEvent( QKeyEvent * event );
     virtual bool queryExit();
@@ -111,6 +119,7 @@ private:
     void setupActions();
     void setupSystemTray();
     void writeConfigs();
+    void initStorageService();
     /**
         Create a new post entry, 
         and return pointer to it's widget (Actually return value is a PostEntry instance)
@@ -132,5 +141,6 @@ private:
     int &mCurrentBlogId;
     QToolButton *mCloseTabButton;
     QToolButton *mNewTabButton;
+    PimCommon::StorageServiceManager *mStorageManager;
 };
 #endif

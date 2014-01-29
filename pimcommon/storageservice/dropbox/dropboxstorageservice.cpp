@@ -159,12 +159,13 @@ void DropBoxStorageService::storageServicecreateFolder(const QString &name, cons
     }
 }
 
-void DropBoxStorageService::storageServiceuploadFile(const QString &filename, const QString &destination)
+void DropBoxStorageService::storageServiceuploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
     if (mAccessToken.isEmpty()) {
         mNextAction->setNextActionType(UploadFile);
         mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
+        mNextAction->setUploadAsName(uploadAsName);
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -174,7 +175,7 @@ void DropBoxStorageService::storageServiceuploadFile(const QString &filename, co
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(uploadDownloadFileProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
         connect(job, SIGNAL(uploadFileFailed(QString)), this, SLOT(slotUploadFileFailed(QString)));
-        mUploadReply = job->uploadFile(filename, destination);
+        mUploadReply = job->uploadFile(filename, uploadAsName, destination);
     }
 }
 
@@ -379,6 +380,9 @@ void DropBoxStorageService::storageServiceCopyFolder(const QString &source, cons
 
 QString DropBoxStorageService::fileIdentifier(const QVariantMap &variantMap)
 {
+    if (variantMap.contains(QLatin1String("path"))) {
+        return variantMap.value(QLatin1String("path")).toString();
+    }
     return QString();
 }
 
@@ -428,15 +432,19 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
             if (qwer.contains(QLatin1String("is_dir"))) {
                 const bool isDir = qwer.value(QLatin1String("is_dir")).toBool();
                 const QString name = qwer.value(QLatin1String("path")).toString();
+
+                const QString itemName = name.right((name.length() - name.lastIndexOf(QLatin1Char('/'))) - 1);
+
+
                 StorageServiceTreeWidgetItem *item;
                 if (isDir) {
-                    item = listWidget->addFolder(name, name);
+                    item = listWidget->addFolder(itemName, name);
                 } else {
                     QString mimetype;
                     if (qwer.contains(QLatin1String("mime_type"))) {
                         mimetype = qwer.value(QLatin1String("mime_type")).toString();
                     }
-                    item = listWidget->addFile(name, name, mimetype);
+                    item = listWidget->addFile(itemName, name, mimetype);
                     if (qwer.contains(QLatin1String("bytes"))) {
                         item->setSize(qwer.value(QLatin1String("bytes")).toULongLong());
                     }
@@ -458,11 +466,27 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
 
 QString DropBoxStorageService::itemInformation(const QVariantMap &variantMap)
 {
+    QString information;
+    if (variantMap.contains(QLatin1String("root"))) {
+        information = i18n("Storage path: %1", variantMap.value(QLatin1String("root")).toString());
+    }
     qDebug()<<" variantMap "<<variantMap;
-    return QString();
+    return information;
 }
 
 KIcon DropBoxStorageService::icon() const
 {
     return KIcon(iconName());
 }
+
+QRegExp DropBoxStorageService::disallowedSymbols() const
+{
+    return QRegExp(QLatin1String("[/:?*<>\"|]"));
+}
+
+QString DropBoxStorageService::disallowedSymbolsStr() const
+{
+    return QLatin1String("\\ / : ? * < > \" |");
+}
+
+#include "moc_dropboxstorageservice.cpp"

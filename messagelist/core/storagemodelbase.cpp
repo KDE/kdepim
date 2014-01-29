@@ -71,3 +71,5 @@ void StorageModel::savePreSelectedMessage( unsigned long uniqueIdOfMessage )
 }
 
 
+
+#include "moc_storagemodelbase.cpp"

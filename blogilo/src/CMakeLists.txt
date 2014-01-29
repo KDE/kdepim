@@ -24,6 +24,7 @@ set(blogilo_SRCS
  uploadmediadialog.cpp
  syncuploader.cpp
  poststabwidget.cpp
+ configuredialog.cpp
  composer/htmleditor.cpp
  composer/stylegetter.cpp
 
@@ -31,6 +32,8 @@ set(blogilo_SRCS
  composer/blogilocomposereditor.cpp
  composer/bilbobrowser.cpp
  composer/blogilocomposerwidget.cpp
+ storageservice/storageservicemanagersettingsjob.cpp
+ configurestorageservicewidget.cpp
 )
 
 

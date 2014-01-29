@@ -1892,3 +1892,5 @@ SendLater::SendLaterInfo *MessageComposer::ComposerViewBase::sendLaterInfo()
     return mSendLaterInfo;
 }
 
+
+#include "moc_composerviewbase.cpp"

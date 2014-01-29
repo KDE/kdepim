@@ -93,3 +93,5 @@ void OverlayWidget::resizeEvent( QResizeEvent* ev )
     QFrame::resizeEvent( ev );
 }
 
+
+#include "moc_overlaywidget.cpp"

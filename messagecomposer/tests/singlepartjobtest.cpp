@@ -168,3 +168,5 @@ void SinglepartJobTest::testContentTransferEncoding()
   }
 }
 
+
+#include "moc_singlepartjobtest.cpp"

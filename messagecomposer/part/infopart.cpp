@@ -183,3 +183,5 @@ void InfoPart::setUserAgent ( const QString& userAgent )
   d->userAgent = userAgent;
 }
 
+
+#include "moc_infopart.cpp"

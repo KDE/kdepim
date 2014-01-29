@@ -285,3 +285,5 @@ void MainTextJobTest::testHtmlWithImages()
   }
 }
 
+
+#include "moc_maintextjobtest.cpp"

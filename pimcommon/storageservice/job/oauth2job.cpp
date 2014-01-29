@@ -31,9 +31,7 @@
 using namespace PimCommon;
 
 OAuth2Job::OAuth2Job(QObject *parent)
-    : PimCommon::StorageServiceAbstractJob(parent),
-      mExpireInTime(0),
-      mNeedRefreshToken(false)
+    : PimCommon::StorageServiceAbstractJob(parent)
 {
     mRedirectUri = PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl();
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
@@ -44,12 +42,11 @@ OAuth2Job::~OAuth2Job()
 
 }
 
-void OAuth2Job::initializeToken(const QString &refreshToken, const QString &token, const QDateTime &expireDateTime)
+void OAuth2Job::initializeToken(const QString &refreshToken, const QString &token)
 {
     mError = false;
     mRefreshToken = refreshToken;
     mToken = token;
-    mNeedRefreshToken = (QDateTime::currentDateTime() >= expireDateTime);
 }
 
 void OAuth2Job::createServiceFolder()
@@ -236,7 +233,7 @@ void OAuth2Job::getTokenAccess(const QString &authorizeCode)
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-QNetworkReply *OAuth2Job::uploadFile(const QString &filename, const QString &destination)
+QNetworkReply *OAuth2Job::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
@@ -441,10 +438,14 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
         parseShareLink(data);
         break;
     case PimCommon::StorageServiceAbstract::DownLoadFile:
-        Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-        deleteLater();
+        parseDownloadFile(data);
         break;
     }
+}
+
+void OAuth2Job::parseDownloadFile(const QString &data)
+{
+    Q_EMIT downLoadFileDone(QString());
 }
 
 void OAuth2Job::parseRenameFile(const QString &data)
@@ -546,7 +547,6 @@ void OAuth2Job::parseUploadFile(const QString &data)
     deleteLater();
 }
 
-
 void OAuth2Job::parseAccessToken(const QString &data)
 {
     QJson::Parser parser;
@@ -560,12 +560,12 @@ void OAuth2Job::parseAccessToken(const QString &data)
     if (info.contains(QLatin1String("access_token"))) {
         mToken = info.value(QLatin1String("access_token")).toString();
     }
+    qint64 expireInTime = 0;
     if (info.contains(QLatin1String("expires_in"))) {
-        mExpireInTime = info.value(QLatin1String("expires_in")).toLongLong();
+        expireInTime = info.value(QLatin1String("expires_in")).toLongLong();
     }
     qDebug()<<" parseAccessToken";
-    Q_EMIT authorizationDone(mRefreshToken, mToken, mExpireInTime);
-    //TODO save it.
+    Q_EMIT authorizationDone(mRefreshToken, mToken, expireInTime);
     deleteLater();
 }
 

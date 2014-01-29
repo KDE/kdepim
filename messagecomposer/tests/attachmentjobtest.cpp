@@ -115,3 +115,5 @@ void AttachmentJobTest::testTextCharsetAutodetect()
 }
 #endif
 
+
+#include "moc_attachmentjobtest.cpp"

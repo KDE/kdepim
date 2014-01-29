@@ -174,3 +174,5 @@ void SignJobTest::checkSignJob( MessageComposer::SignJob* sJob )
   ComposerTestUtil::verifySignature( result, QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8(), Kleo::OpenPGPMIMEFormat, KMime::Headers::CE7Bit );
 }
 
+
+#include "moc_signjobtest.cpp"

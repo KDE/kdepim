@@ -165,3 +165,5 @@ void SignatureController::applyCurrentSignature()
 
 
 
+
+#include "moc_signaturecontroller.cpp"

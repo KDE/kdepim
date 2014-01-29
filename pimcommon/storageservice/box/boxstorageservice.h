@@ -39,7 +39,7 @@ public:
     static StorageServiceAbstract::Capabilities serviceCapabilities();
 
 
-    void storageServiceuploadFile(const QString &filename, const QString &destination = QString());
+    void storageServiceuploadFile(const QString &filename, const QString &uploadAsName, const QString &destination = QString());
     void storageServiceaccountInfo();
     void storageServicecreateFolder(const QString &name, const QString &destination = QString());
     void storageServicelistFolder(const QString &folder);
@@ -64,6 +64,9 @@ public:
     QString itemInformation(const QVariantMap &variantMap);
     QString fileIdentifier(const QVariantMap &variantMap);
     QString fileShareRoot(const QVariantMap &variantMap);
+
+    QRegExp disallowedSymbols() const;
+    QString disallowedSymbolsStr() const;
 
 private slots:
     void slotAuthorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);

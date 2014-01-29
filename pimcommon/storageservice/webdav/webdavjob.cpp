@@ -17,11 +17,13 @@
 
 #include "webdavjob.h"
 #include "webdavsettingsdialog.h"
+#include "pimcommon/storageservice/authdialog/logindialog.h"
 
 #include <KLocalizedString>
 
 #include <qjson/parser.h>
 
+#include <QAuthenticator>
 #include <QNetworkAccessManager>
 #include <QDebug>
 #include <QNetworkReply>
@@ -33,6 +35,7 @@ WebDavJob::WebDavJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
+    connect(mNetworkAccessManager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)), SLOT(slotAuthenticationRequired(QNetworkReply*,QAuthenticator*)));
 }
 
 WebDavJob::~WebDavJob()
@@ -40,20 +43,46 @@ WebDavJob::~WebDavJob()
 
 }
 
-void WebDavJob::requestTokenAccess()
+void WebDavJob::initializeToken(const QString &publicLocation, const QString &serviceLocation, const QString &username, const QString &password)
 {
-    mError = false;
-    QPointer<WebDavSettingsDialog> dlg = new WebDavSettingsDialog;
+    mUserName = username;
+    mPassword = password;
+    mPublicLocation = publicLocation;
+    mServiceLocation = serviceLocation;
+}
+
+void WebDavJob::slotAuthenticationRequired(QNetworkReply *,QAuthenticator *auth)
+{
+    QPointer<LoginDialog> dlg = new LoginDialog;
     if (dlg->exec()) {
-        WebDavJob *job = new WebDavJob(this);
-        mServiceLocation = dlg->serviceLocation();
-        mPublicLocation = dlg->publicLocation();
-        job->requestTokenAccess();
+        mUserName = dlg->username();
+        mPassword = dlg->password();
+        auth->setUser(mUserName);
+        auth->setPassword(mPassword);
     } else {
         Q_EMIT authorizationFailed(i18n("Authentication Canceled."));
         deleteLater();
     }
     delete dlg;
+}
+
+void WebDavJob::requestTokenAccess()
+{
+    mError = false;
+    mActionType = PimCommon::StorageServiceAbstract::AccessToken;
+    QPointer<WebDavSettingsDialog> dlg = new WebDavSettingsDialog;
+    if (dlg->exec()) {
+        mServiceLocation = dlg->serviceLocation();
+        mPublicLocation = dlg->publicLocation();
+    } else {
+        Q_EMIT authorizationFailed(i18n("Authentication Canceled."));
+        deleteLater();
+    }
+    delete dlg;
+    QUrl url(mServiceLocation);
+    QNetworkRequest request(url);
+    QNetworkReply *reply = mNetworkAccessManager->get(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void WebDavJob::copyFile(const QString &source, const QString &destination)
@@ -76,11 +105,12 @@ void WebDavJob::copyFolder(const QString &source, const QString &destination)
     deleteLater();
 }
 
-QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &destination)
+QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
     qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
     return 0;
 }
@@ -90,6 +120,7 @@ void WebDavJob::listFolder(const QString &folder)
     mActionType = PimCommon::StorageServiceAbstract::ListFolder;
     mError = false;
     qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 
@@ -98,6 +129,7 @@ void WebDavJob::accountInfo()
     mActionType = PimCommon::StorageServiceAbstract::AccountInfo;
     mError = false;
     qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 
@@ -106,6 +138,7 @@ void WebDavJob::createFolder(const QString &foldername, const QString &destinati
     mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
     mError = false;
     qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 
@@ -174,7 +207,7 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
         deleteLater();
         break;
     case PimCommon::StorageServiceAbstract::AccessToken:
-        deleteLater();
+        parseAccessToken(data);
         break;
     case PimCommon::StorageServiceAbstract::UploadFile:
         parseUploadFile(data);
@@ -203,6 +236,13 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
         deleteLater();
         break;
     }
+}
+
+void WebDavJob::parseAccessToken(const QString &data)
+{
+    qDebug()<<" void WebDavJob::parseAccessToken(const QString &data)"<<data;
+    Q_EMIT authorizationDone(mPublicLocation, mServiceLocation, mUserName, mPassword);
+    deleteLater();
 }
 
 void WebDavJob::parseUploadFile(const QString &data)
@@ -319,3 +359,5 @@ void WebDavJob::moveFile(const QString &source, const QString &destination)
     //TODO
     deleteLater();
 }
+
+#include "moc_webdavjob.cpp"

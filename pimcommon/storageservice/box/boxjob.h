@@ -35,14 +35,15 @@ public:
     void renameFile(const QString &oldName, const QString &newName);
     void moveFolder(const QString &source, const QString &destination);
     void moveFile(const QString &source, const QString &destination);
-    QNetworkReply *uploadFile(const QString &filename, const QString &destination);
+    QNetworkReply *uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination);
     void listFolder(const QString &folder);
     void accountInfo();
     void createFolder(const QString &foldername, const QString &destination);
     void shareLink(const QString &root, const QString &fileId);
     void copyFile(const QString &source, const QString &destination);
-    void copyFolder(const QString &source, const QString &destination);    
+    void copyFolder(const QString &source, const QString &destination);
     void refreshToken();
+    QNetworkReply *downloadFile(const QString &name, const QString &fileId, const QString &destination);
 
 private:
     void parseDeleteFolder(const QString &data);
@@ -59,6 +60,8 @@ private:
     void parseMoveFolder(const QString &data);
     void parseMoveFile(const QString &data);
     void parseShareLink(const QString &data);
+    void parseDownloadFile(const QString &data);
+
     QString parseNameInfo(const QString &data);
 };
 }

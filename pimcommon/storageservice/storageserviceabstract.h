@@ -104,7 +104,7 @@ public:
     bool hasUploadOrDownloadInProgress() const;
 
     virtual void downloadFile(const QString &name, const QString &fileId, const QString &destination);
-    virtual void uploadFile(const QString &filename, const QString &destination);
+    virtual void uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination);
     virtual void accountInfo();
     virtual void createFolder(const QString &foldername, const QString &destination);
     virtual void listFolder(const QString &folder=QString());
@@ -129,7 +129,8 @@ public:
     virtual QString fileIdentifier(const QVariantMap &variantMap) = 0;
     virtual QString fileShareRoot(const QVariantMap &variantMap) = 0;
 
-    virtual QRegExp supportedFileName() const;
+    virtual QRegExp disallowedSymbols() const;
+    virtual QString disallowedSymbolsStr() const;
 
     void cancelUploadFile();
     void cancelDownloadFile();
@@ -179,7 +180,7 @@ protected slots:
 
 protected:
     virtual void storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination) = 0;
-    virtual void storageServiceuploadFile(const QString &filename, const QString &destination = QString()) = 0;
+    virtual void storageServiceuploadFile(const QString &filename, const QString &uploadAsName, const QString &destination = QString()) = 0;
     virtual void storageServiceaccountInfo() = 0;
     virtual void storageServicecreateFolder(const QString &folder, const QString &destination = QString()) = 0;
     virtual void storageServicelistFolder(const QString &folder) = 0;
@@ -226,6 +227,7 @@ public:
     void setRenameFolder(const QString &source, const QString &destination) { mRenameSource = source; mRenameDestination = destination; }
     void setDownloadDestination(const QString &destination) { mDownLoadDestination = destination; }
     void setFileId(const QString &fileid) { mFileId = fileid; }
+    void setUploadAsName(const QString &name) { mUploadAsName = name; }
 
     QString nextActionName() const { return mNextActionFileName; }
     QString nextActionFolder() const { return mNextActionFolder; }
@@ -235,6 +237,7 @@ public:
     QString renameDestination() const { return mRenameDestination; }
     QString downloadDestination() const { return mDownLoadDestination; }
     QString fileId() const { return mFileId; }
+    QString uploadAsName() const { return mUploadAsName; }
 
 private:
     StorageServiceAbstract::ActionType mNextAction;
@@ -246,6 +249,7 @@ private:
     QString mRenameDestination;
     QString mDownLoadDestination;
     QString mFileId;
+    QString mUploadAsName;
 };
 
 }

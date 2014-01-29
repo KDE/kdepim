@@ -82,7 +82,7 @@ void UbuntuOneJob::requestTokenAccess()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-QNetworkReply *UbuntuOneJob::uploadFile(const QString &filename, const QString &destination)
+QNetworkReply *UbuntuOneJob::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
@@ -616,3 +616,5 @@ void UbuntuOneJob::parseAccessToken(const QString &data)
     //Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
+
+#include "moc_ubuntuonejob.cpp"

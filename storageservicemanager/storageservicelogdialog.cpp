@@ -83,3 +83,5 @@ void StorageServiceLogDialog::readConfig()
         resize( size );
     }
 }
+
+#include "moc_storageservicelogdialog.cpp"

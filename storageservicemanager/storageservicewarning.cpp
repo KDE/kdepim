@@ -64,4 +64,5 @@ void StorageServiceWarning::addLog(const QString &log)
 void StorageServiceWarning::slotClearLog()
 {
     mLogInformation.clear();
+    animatedHide();
 }

@@ -97,3 +97,5 @@ void StorageServiceConfigureDialog::writeConfig()
     KConfigGroup group = config->group( QLatin1String("StorageServiceConfigureDialog") );
     group.writeEntry( "Size", size() );
 }
+
+#include "moc_storageserviceconfiguredialog.cpp"

@@ -70,3 +70,5 @@ void AdBlockBlockableItemsDialog::readConfig()
 }
 
 
+
+#include "moc_adblockblockableitemsdialog.cpp"

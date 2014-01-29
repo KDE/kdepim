@@ -133,3 +133,5 @@ void ScamCheckShortUrl::slotSystemNetworkStatusChanged( Solid::Networking::Statu
     }
 }
 
+
+#include "moc_scamcheckshorturl.cpp"

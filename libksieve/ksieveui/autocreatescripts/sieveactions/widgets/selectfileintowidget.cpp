@@ -79,3 +79,5 @@ QString SelectFileIntoWidget::selectedFolder() const
     return mLineEdit->text();
 }
 
+
+#include "moc_selectfileintowidget.cpp"

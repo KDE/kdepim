@@ -53,6 +53,7 @@
 #include <KFileDialog>
 #include <KPrintPreview>
 #include <kdeprintdialog.h>
+#include <KRun>
 
 #include <QAction>
 #include <QDBusInterface>
@@ -689,6 +690,14 @@ void ComposerViewPrivate::_k_slotEditLink()
 {
     ComposerEditorNG::ComposerLinkDialog dlg( contextMenuResult.linkElement(), q );
     dlg.exec();
+}
+
+void ComposerViewPrivate::_k_slotOpenLink()
+{
+    const QString href = contextMenuResult.linkElement().attribute(QLatin1String("href"));
+    if (!href.isEmpty()) {
+        new KRun( KUrl(href), 0 );
+    }
 }
 
 void ComposerViewPrivate::_k_setFontSize(int fontSize)

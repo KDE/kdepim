@@ -159,3 +159,5 @@ void VacationPageWidget::setDefault()
     if (mVacationEditWidget->isEnabled())
         mVacationEditWidget->setDefault();
 }
+
+#include "moc_vacationpagewidget.cpp"

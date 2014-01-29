@@ -19,14 +19,17 @@
 
 #include "settings/pimcommonsettings.h"
 
+#include "storageservice/dialog/storageservicedownloaddialog.h"
+
 #include "dropbox/dropboxstorageservice.h"
 #include "hubic/hubicstorageservice.h"
 #include "ubuntuone/ubuntuonestorageservice.h"
 #include "yousendit/yousenditstorageservice.h"
 #include "webdav/webdavstorageservice.h"
 #include "box/boxstorageservice.h"
+#ifdef KDEPIM_STORAGESERVICE_GDRIVE
 #include "gdrive/gdrivestorageservice.h"
-
+#endif
 #include <KLocalizedString>
 #include <KFileDialog>
 #include <KInputDialog>
@@ -101,8 +104,6 @@ KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageService
                     act->setIcon(icon);
                 switch(capability) {
                 case PimCommon::StorageServiceAbstract::NoCapability:
-                case PimCommon::StorageServiceAbstract::UploadFileCapability:
-                case PimCommon::StorageServiceAbstract::DownloadFileCapability:
                 case PimCommon::StorageServiceAbstract::CreateFolderCapability:
                 case PimCommon::StorageServiceAbstract::DeleteFolderCapability:
                 case PimCommon::StorageServiceAbstract::ListFolderCapability:
@@ -114,13 +115,24 @@ KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageService
                 case PimCommon::StorageServiceAbstract::CopyFolderCapability:
                     qDebug()<<" not implemented ";
                     break;
+                case PimCommon::StorageServiceAbstract::DownloadFileCapability:
+                    menuService->setText(i18n("Download File..."));
+                    connect(act, SIGNAL(triggered()), this, SLOT(slotDownloadFile()));
+                    break;
+                case PimCommon::StorageServiceAbstract::UploadFileCapability:
+                    menuService->setText(i18n("Upload File..."));
+                    connect(act, SIGNAL(triggered()), this, SLOT(slotShareFile()));
+                    break;
                 case PimCommon::StorageServiceAbstract::ShareLinkCapability:
+                    menuService->setText(i18n("Share File..."));
                     connect(act, SIGNAL(triggered()), this, SLOT(slotShareFile()));
                     break;
                 case PimCommon::StorageServiceAbstract::DeleteFileCapability:
+                    menuService->setText(i18n("Delete File..."));
                     connect(act, SIGNAL(triggered()), this, SLOT(slotDeleteFile()));
                     break;
                 case PimCommon::StorageServiceAbstract::AccountInfoCapability:
+                    menuService->setText(i18n("Account Info..."));
                     connect(act, SIGNAL(triggered()), this, SLOT(slotAccountInfo()));
                     break;
                 }
@@ -149,9 +161,25 @@ void StorageServiceManager::slotShareFile()
                     connect(service,SIGNAL(uploadFileDone(QString,QString)), this, SIGNAL(uploadFileDone(QString,QString)), Qt::UniqueConnection);
                     connect(service,SIGNAL(uploadFileFailed(QString,QString)), this, SIGNAL(uploadFileFailed(QString,QString)), Qt::UniqueConnection);
                     connect(service,SIGNAL(shareLinkDone(QString,QString)), this, SIGNAL(shareLinkDone(QString,QString)), Qt::UniqueConnection);
-                    service->uploadFile(fileName, mDefaultUploadFolder);
+                    service->uploadFile(fileName, QString(), mDefaultUploadFolder); //TODO
                 }
             }
+        }
+    }
+}
+
+void StorageServiceManager::slotDownloadFile()
+{
+    QAction *act = qobject_cast< QAction* >( sender() );
+    if ( act ) {
+        const QString type = act->data().toString();
+        if (mListService.contains(type)) {
+            StorageServiceAbstract *service = mListService.value(type);
+            QPointer<PimCommon::StorageServiceDownloadDialog> dlg = new PimCommon::StorageServiceDownloadDialog(service, 0);
+            if (dlg->exec()) {
+                //TODO ?
+            }
+            delete dlg;
         }
     }
 }
@@ -226,10 +254,12 @@ void StorageServiceManager::readConfig()
             if (!mListService.contains(serviceName(Box))) {
                 storageService = new BoxStorageService();
             }
+#ifdef KDEPIM_STORAGESERVICE_GDRIVE
         } else if (service == serviceName(GDrive)) {
             if (!mListService.contains(serviceName(GDrive))) {
                 storageService = new GDriveStorageService();
             }
+#endif
         }
         if (storageService) {
             mListService.insert(service, storageService);
@@ -260,8 +290,10 @@ QString StorageServiceManager::description(ServiceType type)
         return PimCommon::BoxStorageService::description();
     case YouSendIt:
         return PimCommon::YouSendItStorageService::description();
+#ifdef KDEPIM_STORAGESERVICE_GDRIVE
     case GDrive:
         return PimCommon::GDriveStorageService::description();
+#endif
     case EndListService:
     case Unknown:
         return QString();
@@ -284,8 +316,10 @@ QUrl StorageServiceManager::serviceUrl(ServiceType type)
         return PimCommon::WebDavStorageService::serviceUrl();
     case Box:
         return PimCommon::BoxStorageService::serviceUrl();
+#ifdef KDEPIM_STORAGESERVICE_GDRIVE
     case GDrive:
         return PimCommon::GDriveStorageService::serviceUrl();
+#endif
     case EndListService:
     case Unknown:
         return QString();
@@ -309,8 +343,10 @@ QString StorageServiceManager::serviceName(ServiceType type)
         return PimCommon::WebDavStorageService::serviceName();
     case Box:
         return PimCommon::BoxStorageService::serviceName();
+#ifdef KDEPIM_STORAGESERVICE_GDRIVE
     case GDrive:
         return PimCommon::GDriveStorageService::serviceName();
+#endif
     case EndListService:
     case Unknown:
         return QString();
@@ -333,8 +369,10 @@ QString StorageServiceManager::serviceToI18n(ServiceType type)
         return PimCommon::WebDavStorageService::name();
     case Box:
         return PimCommon::BoxStorageService::name();
+#ifdef KDEPIM_STORAGESERVICE_GDRIVE
     case GDrive:
         return PimCommon::GDriveStorageService::name();
+#endif
     case EndListService:
     case Unknown:
         return QString();
@@ -357,8 +395,10 @@ QString StorageServiceManager::icon(ServiceType type)
         return PimCommon::WebDavStorageService::iconName();
     case Box:
         return PimCommon::BoxStorageService::iconName();
+#ifdef KDEPIM_STORAGESERVICE_GDRIVE
     case GDrive:
         return PimCommon::GDriveStorageService::iconName();
+#endif
     case EndListService:
     case Unknown:
         return QString();
@@ -381,8 +421,10 @@ StorageServiceAbstract::Capabilities StorageServiceManager::capabilities(Service
         return PimCommon::WebDavStorageService::serviceCapabilities();
     case Box:
         return PimCommon::BoxStorageService::serviceCapabilities();
+#ifdef KDEPIM_STORAGESERVICE_GDRIVE
     case GDrive:
         return PimCommon::GDriveStorageService::serviceCapabilities();
+#endif
     case EndListService:
     case Unknown:
         return StorageServiceAbstract::NoCapability;
@@ -394,3 +436,5 @@ QString StorageServiceManager::kconfigName()
 {
     return QLatin1String("storageservicerc");
 }
+
+#include "moc_storageservicemanager.cpp"

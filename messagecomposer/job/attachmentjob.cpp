@@ -170,3 +170,5 @@ void AttachmentJob::process()
   emitResult();
 }
 
+
+#include "moc_attachmentjob.cpp"

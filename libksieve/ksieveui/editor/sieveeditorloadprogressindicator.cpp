@@ -57,3 +57,5 @@ void SieveEditorLoadProgressIndicator::slotTimerDone()
     mProgressTimer->start(300);
 }
 
+
+#include "moc_sieveeditorloadprogressindicator.cpp"

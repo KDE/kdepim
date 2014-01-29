@@ -21,7 +21,16 @@ set(libpimcommon_shorturl_SRCS
   shorturl/engine/triopabshorturl.cpp
 )
 
+if( LibKGAPI2_FOUND )
+  set(libpimcommon_storageservice_gdrive 
+    storageservice/gdrive/gdrivestorageservice.cpp
+    storageservice/gdrive/gdrivejob.cpp
+  )
+endif()
+
+
 set(libpimcommon_storageservice_SRCS
+  ${libpimcommon_storageservice_gdrive}
   storageservice/storageserviceabstract.cpp
   storageservice/storageservicemanager.cpp
 
@@ -51,10 +60,6 @@ set(libpimcommon_storageservice_SRCS
   storageservice/ubuntuone/ubuntuonejob.cpp
   storageservice/ubuntuone/ubuntuoneutil.cpp
 
-  storageservice/gdrive/gdrivestorageservice.cpp
-  storageservice/gdrive/gdrivejob.cpp
-
-
   storageservice/yousendit/yousenditjob.cpp
   storageservice/yousendit/yousenditstorageservice.cpp
   storageservice/yousendit/yousenditutil.cpp
@@ -70,6 +75,7 @@ set(libpimcommon_storageservice_SRCS
   storageservice/box/boxutil.cpp
 
   storageservice/dialog/storageservicedownloaddialog.cpp
+  storageservice/dialog/storageservicechecknamedialog.cpp
 
   storageservice/widgets/storageservicetreewidget.cpp
   storageservice/widgets/storageserviceprogresswidget.cpp
@@ -155,6 +161,8 @@ set(libpimcommon_widgets_SRCS
   widgets/configureimmutablewidgetutils.cpp
 )
 
+
+
 set(libpimcommon_SRCS
   util/createresource.cpp
   util/pimutil.cpp
@@ -193,6 +201,13 @@ kde4_add_kcfg_files(libpimcommon_SRCS
 
 kde4_add_library(pimcommon ${LIBRARY_TYPE} ${libpimcommon_SRCS})
 
+if( LibKGAPI2_FOUND )
+  target_link_libraries(pimcommon
+    ${LibKGAPI2_LIBRARY}
+  )
+endif()
+
+
 target_link_libraries(pimcommon
     ${KDEPIMLIBS_KABC_LIBS}
     ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
@@ -204,6 +219,7 @@ target_link_libraries(pimcommon
     ${QJSON_LIBRARIES}
     ${KDE4_SOLID_LIBS}
     ${KDE4_KNEWSTUFF3_LIBS}
+    ${LibKGAPI2_LIBRARY}
     kdepim
 )
 
@@ -225,10 +241,12 @@ add_subdirectory(storageservice/yousendit/tests)
 add_subdirectory(storageservice/webdav/tests)
 add_subdirectory(storageservice/ubuntuone/tests)
 add_subdirectory(storageservice/box/tests)
-add_subdirectory(storageservice/gdrive/tests/)
 
 add_subdirectory(storageservice/dropbox/icons/)
+if( LibKGAPI2_FOUND )
+add_subdirectory(storageservice/gdrive/tests/)
 add_subdirectory(storageservice/gdrive/icons/)
+endif()
 
 if (QT_QTDESIGNER_FOUND)
   set(pimcommonwidgets_PART_SRCS)

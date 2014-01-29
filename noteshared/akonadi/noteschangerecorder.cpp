@@ -50,3 +50,5 @@ Akonadi::ChangeRecorder *NotesChangeRecorder::changeRecorder() const
 {
     return mChangeRecorder;
 }
+
+#include "moc_noteschangerecorder.cpp"

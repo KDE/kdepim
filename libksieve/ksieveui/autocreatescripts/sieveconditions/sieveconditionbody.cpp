@@ -160,3 +160,5 @@ QString SieveConditionBody::href() const
 }
 
 
+
+#include "moc_sieveconditionbody.cpp"

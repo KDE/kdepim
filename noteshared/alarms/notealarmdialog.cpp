@@ -108,3 +108,5 @@ KDateTime NoteAlarmDialog::alarm() const
         return KDateTime();
     }
 }
+
+#include "moc_notealarmdialog.cpp"

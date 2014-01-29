@@ -20,6 +20,7 @@
 
 #include "storageservicetreewidget.h"
 #include "storageservice/storageserviceabstract.h"
+#include "storageservice/dialog/storageservicechecknamedialog.h"
 #include "storageservicemanagerglobalconfig.h"
 #include "storageservicepropertiesdialog.h"
 
@@ -211,6 +212,9 @@ void StorageServiceTreeWidget::slotRenameFolder()
     const QString folder = KInputDialog::getText(i18n("Rename Folder Name"), i18n("Folder:"), name);
     if (!folder.isEmpty()) {
         if (name != folder) {
+            if (!checkName(folder)) {
+                return;
+            }
             mStorageService->renameFolder(oldFolderName, folder);
         }
     }
@@ -223,15 +227,36 @@ void StorageServiceTreeWidget::slotRenameFile()
     const QString filename = KInputDialog::getText(i18n("Rename Filename"), i18n("Filename:"), name);
     if (!filename.isEmpty()) {
         if (name != filename) {
+            if (!checkName(filename)) {
+                return;
+            }
             mStorageService->renameFile(oldFileName, filename);
         }
     }
+}
+
+bool StorageServiceTreeWidget::checkName(const QString &name)
+{
+    const QRegExp disallowedSymbols = mStorageService->disallowedSymbols();
+    if (!disallowedSymbols.isEmpty()) {
+        if (name.contains(disallowedSymbols)) {
+            KMessageBox::error(this, i18n("The following characters aren't allowed by %1:\n%2", mStorageService->storageServiceName(), mStorageService->disallowedSymbolsStr()), i18n("Create folder"));
+            return false;
+        }
+    }
+    if (name == QLatin1String(".") || name == QLatin1String("..")) {
+        KMessageBox::error(this, i18n("You can not name a folder or file . or .."), i18n("Create Folder"));
+        return false;
+    }
+    return true;
 }
 
 void StorageServiceTreeWidget::slotCreateFolder()
 {
     const QString folder = KInputDialog::getText(i18n("Folder Name"), i18n("Folder:"));
     if (!folder.isEmpty()) {
+        if (!checkName(folder))
+            return;
         qDebug()<<" mCurrentFolder" <<mCurrentFolder;
         mStorageService->createFolder(folder, mCurrentFolder);
     }
@@ -282,7 +307,7 @@ void StorageServiceTreeWidget::slotShareFile()
 void StorageServiceTreeWidget::slotDownloadFile()
 {
     if (itemTypeSelected() == StorageServiceTreeWidget::File) {
-        const QString filename = itemIdentifierSelected();
+        const QString filename = currentItem()->text(0);
         if (!filename.isEmpty()) {
             QString destination = StorageServiceManagerGlobalConfig::self()->downloadDirectory();
             if (destination.isEmpty()) {
@@ -306,7 +331,26 @@ bool StorageServiceTreeWidget::uploadFileToService()
 {
     const QString filename = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*"), this);
     if (!filename.isEmpty()) {
-        mStorageService->uploadFile(filename, mCurrentFolder);
+        const QRegExp disallowedSymbols = mStorageService->disallowedSymbols();
+
+        QFileInfo info(filename);
+        QString newName = info.fileName();
+        if (!disallowedSymbols.isEmpty()) {
+            if (newName.contains(disallowedSymbols)) {
+                QPointer<PimCommon::StorageServiceCheckNameDialog> dlg = new PimCommon::StorageServiceCheckNameDialog(this);
+                dlg->setOldName(newName);
+                dlg->setDisallowedSymbols(disallowedSymbols);
+                dlg->setDisallowedSymbolsStr(mStorageService->disallowedSymbolsStr());
+                if (dlg->exec()) {
+                    newName = dlg->newName();
+                    delete dlg;
+                } else {
+                    delete dlg;
+                    return false;
+                }
+            }
+        }
+        mStorageService->uploadFile(filename, newName, mCurrentFolder);
         return true;
     } else {
         return false;

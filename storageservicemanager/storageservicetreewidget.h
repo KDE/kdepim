@@ -67,6 +67,7 @@ private Q_SLOTS:
     void slotProperties();
     void slotFileDoubleClicked();
 private:
+    bool checkName(const QString &name);
     void readConfig();
     void writeConfig();
 

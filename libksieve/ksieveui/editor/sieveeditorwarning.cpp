@@ -34,3 +34,5 @@ SieveEditorWarning::~SieveEditorWarning()
 {
 }
 
+
+#include "moc_sieveeditorwarning.cpp"

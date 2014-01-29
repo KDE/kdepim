@@ -333,3 +333,5 @@ void SieveGlobalVariableLister::loadSetVariable(const QDomElement &element, QStr
 
 }
 
+
+#include "moc_sieveglobalvariablewidget.cpp"

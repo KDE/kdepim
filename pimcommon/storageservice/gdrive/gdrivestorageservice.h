@@ -22,6 +22,7 @@
 #include "pimcommon_export.h"
 
 #include <QDateTime>
+#include <libkgapi2/account.h>
 
 namespace PimCommon {
 class PIMCOMMON_EXPORT GDriveStorageService : public PimCommon::StorageServiceAbstract
@@ -39,7 +40,7 @@ public:
     static StorageServiceAbstract::Capabilities serviceCapabilities();
 
 
-    void storageServiceuploadFile(const QString &filename, const QString &destination = QString());
+    void storageServiceuploadFile(const QString &filename, const QString &uploadAsName, const QString &destination = QString());
     void storageServiceaccountInfo();
     void storageServicecreateFolder(const QString &folder, const QString &destination = QString());
     void storageServicelistFolder(const QString &folder);
@@ -65,16 +66,13 @@ public:
     QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data);
 
 private slots:
-    void slotAuthorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);
+    void slotAuthorizationDone(const QString &refreshToken, const QString &token);
     void slotAuthorizationFailed(const QString &errorMessage);
 
 private:
     void refreshToken();
-    bool needToRefreshToken() const;
     void readConfig();
-    QString mToken;
-    QString mRefreshToken;
-    QDateTime mExpireDateTime;
+    KGAPI2::AccountPtr mAccount;
 };
 }
 

@@ -53,3 +53,5 @@ void ManageSieveTreeView::setNetworkDown(bool state)
     update();
 }
 
+
+#include "moc_managesievetreeview.cpp"

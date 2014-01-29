@@ -192,7 +192,7 @@ void ServiceTestWidget::slotUploadFile()
 {
     const QString filename = KFileDialog::getOpenFileName();
     if (!filename.isEmpty()) {
-        mStorageService->uploadFile(filename, QString());
+        mStorageService->uploadFile(filename, QString(), QString()); //TODO
     }
 }
 
@@ -205,7 +205,8 @@ void ServiceTestWidget::slotDownloadFile()
 {
     const QString destination = QDir::homePath();
 
-    QPointer<PimCommon::StorageServiceDownloadDialog> dlg = new PimCommon::StorageServiceDownloadDialog(mStorageService, destination, this);
+    QPointer<PimCommon::StorageServiceDownloadDialog> dlg = new PimCommon::StorageServiceDownloadDialog(mStorageService, this);
+    dlg->setDefaultDownloadPath(destination);
     if (dlg->exec()) {
         //TODO
     }

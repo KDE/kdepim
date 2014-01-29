@@ -168,3 +168,5 @@ QString SieveActionEnclose::href() const
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 
+
+#include "moc_sieveactionenclose.cpp"

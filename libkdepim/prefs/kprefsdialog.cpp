@@ -936,3 +936,5 @@ void KPrefsModule::defaults()
 
   emit changed( true );
 }
+
+#include "moc_kprefsdialog.cpp"

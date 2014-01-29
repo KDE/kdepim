@@ -1622,3 +1622,5 @@ MessageList::Core::Theme *ThemeEditor::editedTheme() const
 }
 
 
+
+#include "moc_themeeditor.cpp"

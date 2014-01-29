@@ -103,7 +103,7 @@ bool BoxStorageService::needToRefreshToken() const
 void BoxStorageService::refreshToken()
 {
     BoxJob *job = new BoxJob(this);
-    job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+    job->initializeToken(mRefreshToken, mToken);
     connect(job, SIGNAL(authorizationDone(QString,QString,qint64)), this, SLOT(slotAuthorizationDone(QString,QString,qint64)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
     job->refreshToken();
@@ -123,7 +123,7 @@ void BoxStorageService::storageServiceShareLink(const QString &root, const QStri
         }
     }  else {
         BoxJob *job = new BoxJob(this);
-        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        job->initializeToken(mRefreshToken, mToken);
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->shareLink(root, path);
@@ -145,7 +145,7 @@ void BoxStorageService::storageServicedownloadFile(const QString &name, const QS
         }
     } else {
         BoxJob *job = new BoxJob(this);
-        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        job->initializeToken(mRefreshToken, mToken);
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(downLoadFileFailed(QString)), this, SLOT(slotDownLoadFileFailed(QString)));
@@ -167,7 +167,7 @@ void BoxStorageService::storageServicedeleteFile(const QString &filename)
         }
     } else {
         BoxJob *job = new BoxJob(this);
-        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        job->initializeToken(mRefreshToken, mToken);
         connect(job, SIGNAL(deleteFileDone(QString)), SLOT(slotDeleteFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->deleteFile(filename);
@@ -187,7 +187,7 @@ void BoxStorageService::storageServicedeleteFolder(const QString &foldername)
         }
     } else {
         BoxJob *job = new BoxJob(this);
-        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        job->initializeToken(mRefreshToken, mToken);
         connect(job, SIGNAL(deleteFolderDone(QString)), SLOT(slotDeleteFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->deleteFolder(foldername);
@@ -207,7 +207,7 @@ void BoxStorageService::storageServiceRenameFolder(const QString &source, const 
         }
     } else {
         BoxJob *job = new BoxJob(this);
-        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        job->initializeToken(mRefreshToken, mToken);
         connect(job, SIGNAL(renameFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->renameFolder(source, destination);
@@ -227,8 +227,8 @@ void BoxStorageService::storageServiceRenameFile(const QString &source, const QS
         }
     } else {
         BoxJob *job = new BoxJob(this);
-        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
-        connect(job, SIGNAL(renameFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        job->initializeToken(mRefreshToken, mToken);
+        connect(job, SIGNAL(renameFileDone(QString)), SLOT(slotRenameFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->renameFile(source, destination);
     }
@@ -247,8 +247,8 @@ void BoxStorageService::storageServiceMoveFolder(const QString &source, const QS
         }
     } else {
         BoxJob *job = new BoxJob(this);
-        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
-        connect(job, SIGNAL(moveFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        job->initializeToken(mRefreshToken, mToken);
+        connect(job, SIGNAL(moveFolderDone(QString)), SLOT(slotMoveFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->moveFolder(source, destination);
     }
@@ -267,8 +267,8 @@ void BoxStorageService::storageServiceMoveFile(const QString &source, const QStr
         }
     } else {
         BoxJob *job = new BoxJob(this);
-        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
-        connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        job->initializeToken(mRefreshToken, mToken);
+        connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotMoveFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->moveFile(source, destination);
     }
@@ -287,7 +287,7 @@ void BoxStorageService::storageServiceCopyFile(const QString &source, const QStr
         }
     } else {
         BoxJob *job = new BoxJob(this);
-        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        job->initializeToken(mRefreshToken, mToken);
         connect(job, SIGNAL(copyFileDone(QString)), SLOT(slotCopyFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->copyFile(source, destination);
@@ -307,7 +307,7 @@ void BoxStorageService::storageServiceCopyFolder(const QString &source, const QS
         }
     } else {
         BoxJob *job = new BoxJob(this);
-        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        job->initializeToken(mRefreshToken, mToken);
         connect(job, SIGNAL(copyFolderDone(QString)), SLOT(slotCopyFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->copyFolder(source, destination);
@@ -327,7 +327,7 @@ void BoxStorageService::storageServicelistFolder(const QString &folder)
         }
     } else {
         BoxJob *job = new BoxJob(this);
-        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        job->initializeToken(mRefreshToken, mToken);
         connect(job, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->listFolder(folder);
@@ -348,7 +348,7 @@ void BoxStorageService::storageServicecreateFolder(const QString &name, const QS
         }
     } else {
         BoxJob *job = new BoxJob(this);
-        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        job->initializeToken(mRefreshToken, mToken);
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->createFolder(name, destination);
@@ -367,7 +367,7 @@ void BoxStorageService::storageServiceaccountInfo()
         }
     } else {
         BoxJob *job = new BoxJob(this);
-        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        job->initializeToken(mRefreshToken, mToken);
         connect(job,SIGNAL(accountInfoDone(PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(PimCommon::AccountInfo)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->accountInfo();
@@ -379,13 +379,14 @@ QString BoxStorageService::name()
     return i18n("Box");
 }
 
-void BoxStorageService::storageServiceuploadFile(const QString &filename, const QString &destination)
+void BoxStorageService::storageServiceuploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(UploadFile);
         mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
+        mNextAction->setUploadAsName(uploadAsName);
         if (needRefresh) {
             refreshToken();
         } else {
@@ -393,13 +394,13 @@ void BoxStorageService::storageServiceuploadFile(const QString &filename, const 
         }
     } else {
         BoxJob *job = new BoxJob(this);
-        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        job->initializeToken(mRefreshToken, mToken);
         connect(job, SIGNAL(uploadFileDone(QString)), this, SLOT(slotUploadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(uploadDownloadFileProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
         connect(job, SIGNAL(uploadFileFailed(QString)), this, SLOT(slotUploadFileFailed(QString)));
-        mUploadReply = job->uploadFile(filename, destination);
+        mUploadReply = job->uploadFile(filename, uploadAsName, destination);
     }
 }
 
@@ -428,7 +429,7 @@ StorageServiceAbstract::Capabilities BoxStorageService::serviceCapabilities()
     StorageServiceAbstract::Capabilities cap;
     cap |= AccountInfoCapability;
     cap |= UploadFileCapability;
-    //cap |= DownloadFileCapability;
+    cap |= DownloadFileCapability;
     cap |= CreateFolderCapability;
     cap |= DeleteFolderCapability;
     cap |= ListFolderCapability;
@@ -471,7 +472,7 @@ void BoxStorageService::storageServicecreateServiceFolder()
         }
     } else {
         BoxJob *job = new BoxJob(this);
-        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        job->initializeToken(mRefreshToken, mToken);
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->createServiceFolder();
@@ -530,6 +531,9 @@ QString BoxStorageService::itemInformation(const QVariantMap &variantMap)
 
 QString BoxStorageService::fileIdentifier(const QVariantMap &variantMap)
 {
+    if (variantMap.contains(QLatin1String("id"))) {
+        return variantMap.value(QLatin1String("id")).toString();
+    }
     return QString();
 }
 
@@ -538,3 +542,15 @@ QString BoxStorageService::fileShareRoot(const QVariantMap &variantMap)
     Q_UNUSED(variantMap);
     return QString();
 }
+
+QRegExp BoxStorageService::disallowedSymbols() const
+{
+    return QRegExp(QLatin1String("[/:?*\\|]"));
+}
+
+QString BoxStorageService::disallowedSymbolsStr() const
+{
+    return QLatin1String("\\ / : ? * < > |");
+}
+
+#include "moc_boxstorageservice.cpp"

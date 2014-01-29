@@ -142,7 +142,7 @@ void NotesAgentAlarmDialog::slotShowNote()
 
 void NotesAgentAlarmDialog::slotRemoveAlarm()
 {
-    if (KMessageBox::Yes == KMessageBox::warningYesNo(this, i18n("Remove Alarm"), i18n("Are you sure to remove alarm?")) ) {
+    if (KMessageBox::Yes == KMessageBox::warningYesNo(this, i18n("Are you sure to remove alarm?"), i18nc("@title:window", "Remove Alarm")) ) {
         const Akonadi::Item::Id id = mListWidget->currentItemId();
         if (id!=-1) {
             Akonadi::Item item(id);

@@ -96,3 +96,5 @@ SieveTemplateWidget::~SieveTemplateWidget()
 }
 
 }
+
+#include "moc_sievetemplatewidget.cpp"

@@ -148,12 +148,13 @@ QString UbuntuoneStorageService::name()
     return i18n("Ubuntu One");
 }
 
-void UbuntuoneStorageService::storageServiceuploadFile(const QString &filename, const QString &destination)
+void UbuntuoneStorageService::storageServiceuploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction->setNextActionType(UploadFile);
         mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
+        mNextAction->setUploadAsName(uploadAsName);
         storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -163,7 +164,7 @@ void UbuntuoneStorageService::storageServiceuploadFile(const QString &filename, 
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(uploadDownloadFileProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
         connect(job, SIGNAL(uploadFileFailed(QString)), this, SLOT(slotUploadFileFailed(QString)));
-        mUploadReply = job->uploadFile(filename, destination);
+        mUploadReply = job->uploadFile(filename, uploadAsName, destination);
     }
 }
 
@@ -313,7 +314,7 @@ void UbuntuoneStorageService::storageServiceRenameFile(const QString &source, co
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
-        connect(job, SIGNAL(renameFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(renameFileDone(QString)), SLOT(slotRenameFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->renameFile(source, destination);
     }
@@ -328,7 +329,7 @@ void UbuntuoneStorageService::storageServiceMoveFolder(const QString &source, co
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
-        connect(job, SIGNAL(moveFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(moveFolderDone(QString)), SLOT(slotMoveFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->moveFolder(source, destination);
     }
@@ -343,7 +344,7 @@ void UbuntuoneStorageService::storageServiceMoveFile(const QString &source, cons
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
-        connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotMoveFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->moveFile(source, destination);
     }
@@ -468,3 +469,4 @@ KIcon UbuntuoneStorageService::icon() const
     return KIcon();
 }
 
+#include "moc_ubuntuonestorageservice.cpp"

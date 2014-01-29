@@ -250,3 +250,5 @@ QVariantMap StorageServiceTreeWidgetItem::storeInfo() const
 {
     return data(StorageServiceTreeWidget::ColumnName, StorageServiceTreeWidget::Info).value<QVariantMap>();
 }
+
+#include "moc_storageservicetreewidget.cpp"

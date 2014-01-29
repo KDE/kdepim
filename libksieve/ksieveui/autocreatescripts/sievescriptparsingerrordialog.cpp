@@ -75,3 +75,5 @@ void SieveScriptParsingErrorDialog::slotSaveAs()
 }
 
 
+
+#include "moc_sievescriptparsingerrordialog.cpp"

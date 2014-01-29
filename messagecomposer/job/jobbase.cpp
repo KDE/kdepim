@@ -56,3 +56,5 @@ GlobalPart *JobBase::globalPart()
   return 0;
 }
 
+
+#include "moc_jobbase.cpp"

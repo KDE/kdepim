@@ -36,7 +36,7 @@ public:
     static QString iconName();
     static StorageServiceAbstract::Capabilities serviceCapabilities();
 
-    void storageServiceuploadFile(const QString &filename, const QString &destination = QString());
+    void storageServiceuploadFile(const QString &filename, const QString &uploadAsName, const QString &destination = QString());
     void storageServiceaccountInfo();
     void storageServicecreateFolder(const QString &name, const QString &destination = QString());
     void storageServicelistFolder(const QString &folder);
@@ -65,12 +65,14 @@ public:
     KIcon icon() const;
 
 private slots:
-    void slotAuthorizationFailed(const QString &errorMessage);
-
+    void slotAuthorizationFailed(const QString &errorMessage);    
+    void slotAuthorizationDone(const QString &publicLocation, const QString &serviceLocation, const QString &username, const QString &password);
 private:
     void readConfig();
     QString mPublicLocation;
     QString mServiceLocation;
+    QString mUsername;
+    QString mPassword;
 };
 }
 
