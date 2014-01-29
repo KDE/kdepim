@@ -51,3 +51,5 @@ void SieveEditorScriptWidget::setSieveCapabilities(const QStringList &capabiliti
 {
     mSieveEditor->setSieveCapabilities(capabilities);
 }
+
+#include "moc_sieveeditorscriptwidget.cpp"

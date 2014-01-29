@@ -159,3 +159,4 @@ void SieveEditorMainWindow::slotAddServerSieve()
     }
     delete dlg;
 }
+#include "moc_sieveeditormainwindow.cpp"

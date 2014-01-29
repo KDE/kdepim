@@ -82,3 +82,5 @@ void SieveEditorConfigureDialog::writeConfig()
     group.writeEntry( "Size", size() );
     group.sync();
 }
+
+#include "moc_sieveeditorconfiguredialog.cpp"

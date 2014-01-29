@@ -67,3 +67,5 @@ KWallet::Wallet *SieveServerSettings::wallet()
     }
     return mWallet;
 }
+
+#include "moc_sieveserversettings.cpp"
