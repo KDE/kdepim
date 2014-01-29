@@ -146,3 +146,5 @@ void KMailCVT::collectionChanged( const Akonadi::Collection &selectedCollection 
 }
 
 
+
+#include "moc_kmailcvt.cpp"

@@ -126,3 +126,5 @@ Ui::KSelFilterPageDlg *KSelFilterPage::widget()
 }
 
 
+
+#include "moc_kselfilterpage.cpp"
