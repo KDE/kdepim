@@ -485,12 +485,16 @@ void SearchWindow::slotSearch()
         qDebug()<<" create new folder";
         // FIXME if another app created a virtual 'Last Search' folder without
         // out custom attributes it will result in problems
-        mSearchJob = new Akonadi::SearchCreateJob( mUi.mSearchFolderEdt->text(), mQuery, this );
+        Akonadi::SearchCreateJob *searchJob = new Akonadi::SearchCreateJob( mUi.mSearchFolderEdt->text(), mQuery, this );
+        searchJob->setSearchMimeTypes( QStringList() << QLatin1String("message/rfc822") );
+        searchJob->setSearchCollections( searchCollections );
+        mSearchJob = searchJob;
     } else {
         qDebug()<<" use existing folder";
         Akonadi::PersistentSearchAttribute *attribute = mFolder.attribute<Akonadi::PersistentSearchAttribute>();
         attribute->setQueryLanguage( queryLanguage );
         attribute->setQueryString( QString::fromLatin1(mQuery.toJSON()) );
+        attribute->setQueryCollections( searchCollections );
         mSearchJob = new Akonadi::CollectionModifyJob( mFolder, this );
     }
 
