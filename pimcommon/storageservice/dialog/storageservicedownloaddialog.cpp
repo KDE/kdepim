@@ -23,10 +23,13 @@
 #include <KLocalizedString>
 #include <KGlobal>
 #include <KSharedConfig>
+#include <KMessageBox>
+#include <KFileDialog>
 
 #include <QGridLayout>
 #include <QLabel>
 #include <QTreeWidget>
+#include <QFileInfo>
 
 using namespace PimCommon;
 
@@ -94,15 +97,30 @@ void StorageServiceDownloadDialog::slotItemActivated(QTreeWidgetItem *item, int)
 
 void StorageServiceDownloadDialog::slotDownloadFile()
 {
-    //TODO mStorage->downloadFile();
+    const QString filename = mTreeWidget->currentItem()->text(0);
+    if (!filename.isEmpty()) {
+        const QString destination = KFileDialog::getExistingDirectory(KUrl(), this);
+        if (destination.isEmpty())
+            return;
+        QFileInfo fileInfo(destination + QLatin1Char('/') + filename);
+        if (fileInfo.exists()) {
+            if (KMessageBox::No == KMessageBox::questionYesNo(this, i18n("Filename already exists. Do you want to overwrite it?"), i18n("Overwrite file"))) {
+                return;
+            }
+        }
+        const QString fileId = mStorage->fileIdentifier(mTreeWidget->itemInformationSelected());
+        mStorage->downloadFile(filename, fileId, destination);
+    }
 }
 
 void StorageServiceDownloadDialog::slotDownfileDone(const QString &serviceName, const QString &filename)
 {
-    //TODO
+    KMessageBox::information(this, i18n("File was correctly downloaded."), i18n("Download file"));
 }
 
 void StorageServiceDownloadDialog::slotDownfileFailed(const QString &serviceName, const QString &filename)
 {
-    //TODO
+    KMessageBox::information(this, i18n("Error during download file."), i18n("Download file"));
 }
+
+#include "moc_storageservicedownloaddialog.cpp"
