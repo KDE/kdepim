@@ -28,6 +28,7 @@ public:
     explicit HubicJob(QObject *parent=0);
     ~HubicJob();
 
+    void refreshToken();
 private:
     void parseAccountInfo(const QString &data);
 };
