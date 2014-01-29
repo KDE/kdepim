@@ -52,7 +52,7 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
 
 
     vbox->addWidget(mTreeWidget);
-    mProgressWidget = new StorageServiceProgressWidget;
+    mProgressWidget = new StorageServiceProgressWidget(storage);
     vbox->addWidget(mProgressWidget);
     mProgressWidget->hide();
     w->setLayout(vbox);

@@ -25,11 +25,12 @@ class QProgressBar;
 class QLabel;
 class QToolButton;
 namespace PimCommon {
+class StorageServiceAbstract;
 class PIMCOMMON_EXPORT StorageServiceProgressWidget : public QFrame
 {
     Q_OBJECT
 public:
-    explicit StorageServiceProgressWidget(QWidget *parent=0);
+    explicit StorageServiceProgressWidget(PimCommon::StorageServiceAbstract *service, QWidget *parent=0);
     ~StorageServiceProgressWidget();
 
      void setBusyIndicator(bool busy);
@@ -48,6 +49,7 @@ private:
     QToolButton *mCancel;
     QProgressBar *mProgressBar;
     QLabel *mProgressInfo;
+    PimCommon::StorageServiceAbstract *mStorageService;
 };
 }
 

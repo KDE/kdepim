@@ -17,6 +17,7 @@
 
 
 #include "storageserviceprogresswidget.h"
+#include "storageservice/storageserviceabstract.h"
 
 #include <KLocalizedString>
 #include <KLocale>
@@ -31,8 +32,10 @@
 
 using namespace PimCommon;
 
-StorageServiceProgressWidget::StorageServiceProgressWidget(QWidget *parent)
-    : QFrame(parent)
+StorageServiceProgressWidget::StorageServiceProgressWidget(PimCommon::StorageServiceAbstract *service, QWidget *parent)
+    : QFrame(parent),
+      mCancel(0),
+      mStorageService(service)
 {
     QHBoxLayout *box = new QHBoxLayout( this );
     box->setMargin(0);
@@ -45,10 +48,12 @@ StorageServiceProgressWidget::StorageServiceProgressWidget(QWidget *parent)
     mProgressBar->setMaximum(100);
     box->addWidget(mProgressBar);
 
-    mCancel = new QToolButton;
-    mCancel->setIcon(KIcon(QLatin1String("dialog-cancel")));
-    connect(mCancel, SIGNAL(clicked()), this, SLOT(slotCancelTask()));
-    box->addWidget(mCancel);
+    if (service) {
+        mCancel = new QToolButton;
+        mCancel->setIcon(KIcon(QLatin1String("dialog-cancel")));
+        connect(mCancel, SIGNAL(clicked()), this, SLOT(slotCancelTask()));
+        box->addWidget(mCancel);
+    }
 }
 
 StorageServiceProgressWidget::~StorageServiceProgressWidget()
@@ -58,7 +63,7 @@ StorageServiceProgressWidget::~StorageServiceProgressWidget()
 
 void StorageServiceProgressWidget::slotCancelTask()
 {
-    //TODO
+    mStorageService->cancelUploadDownloadFile();
 }
 
 void StorageServiceProgressWidget::reset()
