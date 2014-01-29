@@ -110,6 +110,7 @@ QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &upl
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
     qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
     return 0;
 }
@@ -119,6 +120,7 @@ void WebDavJob::listFolder(const QString &folder)
     mActionType = PimCommon::StorageServiceAbstract::ListFolder;
     mError = false;
     qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 
@@ -127,6 +129,7 @@ void WebDavJob::accountInfo()
     mActionType = PimCommon::StorageServiceAbstract::AccountInfo;
     mError = false;
     qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 
@@ -135,6 +138,7 @@ void WebDavJob::createFolder(const QString &foldername, const QString &destinati
     mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
     mError = false;
     qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 
