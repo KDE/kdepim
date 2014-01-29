@@ -34,6 +34,7 @@ using namespace PimCommon;
 
 StorageServiceProgressWidget::StorageServiceProgressWidget(PimCommon::StorageServiceAbstract *service, QWidget *parent)
     : QFrame(parent),
+      mType(DownloadBar),
       mCancel(0),
       mStorageService(service)
 {
@@ -61,9 +62,21 @@ StorageServiceProgressWidget::~StorageServiceProgressWidget()
 
 }
 
+void StorageServiceProgressWidget::setProgressBarType(StorageServiceProgressWidget::ProgressBarType type)
+{
+    mType = type;
+}
+
 void StorageServiceProgressWidget::slotCancelTask()
 {
-    mStorageService->cancelUploadDownloadFile();
+    switch(mType) {
+    case DownloadBar:
+        mStorageService->cancelDownloadFile();
+        break;
+    case UploadBar:
+        mStorageService->cancelUploadFile();
+        break;
+    }
 }
 
 void StorageServiceProgressWidget::reset()

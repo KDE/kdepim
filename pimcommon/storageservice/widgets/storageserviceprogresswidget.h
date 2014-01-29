@@ -33,8 +33,14 @@ public:
     explicit StorageServiceProgressWidget(PimCommon::StorageServiceAbstract *service, QWidget *parent=0);
     ~StorageServiceProgressWidget();
 
-     void setBusyIndicator(bool busy);
-     void reset();
+    enum ProgressBarType {
+        DownloadBar = 0,
+        UploadBar
+    };
+    void setProgressBarType(ProgressBarType type);
+
+    void setBusyIndicator(bool busy);
+    void reset();
 
 public Q_SLOTS:
     void setProgressValue(qint64 done, qint64 total);
@@ -46,6 +52,7 @@ private slots:
     void slotCancelTask();
 
 private:
+    ProgressBarType mType;
     QToolButton *mCancel;
     QProgressBar *mProgressBar;
     QLabel *mProgressInfo;
