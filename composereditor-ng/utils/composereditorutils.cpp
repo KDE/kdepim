@@ -38,11 +38,11 @@ QColor ComposerEditorNG::Utils::convertRgbToQColor(QString rgb)
 
 QUrl ComposerEditorNG::Utils::guessUrlFromString(const QString &string)
 {
-    QString urlStr = string.trimmed();
-    QRegExp test(QLatin1String("^[a-zA-Z]+\\:.*"));
+    const QString urlStr = string.trimmed();
+    const QRegExp test(QLatin1String("^[a-zA-Z]+\\:.*"));
 
     // Check if it looks like a qualified URL. Try parsing it and see.
-    bool hasSchema = test.exactMatch(urlStr);
+    const bool hasSchema = test.exactMatch(urlStr);
     if (hasSchema) {
         QUrl url(urlStr, QUrl::TolerantMode);
         if (url.isValid())
