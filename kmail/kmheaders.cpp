@@ -1682,6 +1682,12 @@ void KMHeaders::copySelectedToFolder(int menuId )
     copyMsgToFolder( mMenuToFolder[menuId] );
 }
 
+//-----------------------------------------------------------------------------
+void KMHeaders::decryptedCopySelectedToFolder( int menuId )
+{
+  if (mMenuToFolder[menuId])
+    copyDecryptedMsgToFolder( mMenuToFolder[menuId] );
+}
 
 //-----------------------------------------------------------------------------
 void KMHeaders::copyMsgToFolder(KMFolder* destFolder, KMMessage* aMsg)
@@ -1695,6 +1701,24 @@ void KMHeaders::copyMsgToFolder(KMFolder* destFolder, KMMessage* aMsg)
   else {
     KMMessageList msgList = *selectedMsgs();
     command = new KMCopyCommand( destFolder, msgList );
+  }
+
+  command->start();
+}
+
+//-----------------------------------------------------------------------------
+void KMHeaders::copyDecryptedMsgToFolder(KMFolder* destFolder, KMMessage* aMsg)
+{
+  if ( !destFolder )
+    return;
+
+  kdDebug() << "copyDecryptedMsgToFolder" << endl;
+  KMCommand * command = 0;
+  if (aMsg)
+    command = new KMCopyCommand( destFolder, aMsg, true);
+  else {
+    KMMessageList msgList = *selectedMsgs();
+    command = new KMCopyCommand( destFolder, msgList, true );
   }
 
   command->start();
@@ -2488,6 +2512,11 @@ void KMHeaders::slotRMB()
   mOwner->folderTree()->folderToPopupMenu( KMFolderTree::CopyMessage, this,
       &mMenuToFolder, msgCopyMenu );
   menu->insertItem(i18n("&Copy To"), msgCopyMenu);
+
+  QPopupMenu *msgDecCopyMenu = new QPopupMenu(menu);
+  mOwner->folderTree()->folderToPopupMenu( KMFolderTree::DecCopyMessage, this,
+      &mMenuToFolder, msgDecCopyMenu );
+  menu->insertItem(i18n("&Copy decrypted message to"), msgDecCopyMenu);
 
   if ( !mFolder->canDeleteMessages() ) {
     int id = menu->insertItem( i18n("&Move To") );

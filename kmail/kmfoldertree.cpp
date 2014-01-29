@@ -1873,6 +1873,11 @@ void KMFolderTree::folderToPopupMenu( MenuAction action, QObject *receiver,
         SLOT(moveSelectedToFolder(int)) );
     connect( menu, SIGNAL(activated(int)), receiver,
         SLOT(moveSelectedToFolder(int)) );
+  } else if ( action == DecCopyMessage ) {
+    disconnect( menu, SIGNAL(activated(int)), receiver,
+        SLOT(decryptedCopySelectedToFolder(int)) );
+    connect( menu, SIGNAL(activated(int)), receiver,
+        SLOT(decryptedCopySelectedToFolder(int)) );
   } else {
     disconnect( menu, SIGNAL(activated(int)), receiver,
         SLOT(copySelectedToFolder(int)) );
@@ -1913,7 +1918,7 @@ void KMFolderTree::folderToPopupMenu( MenuAction action, QObject *receiver,
       QPopupMenu* popup = new QPopupMenu( menu, "subMenu" );
       folderToPopupMenu( action, receiver, aMenuToFolder, popup, fti->firstChild() );
       bool subMenu = false;
-      if ( ( action == MoveMessage || action == CopyMessage ) &&
+      if ( ( action == MoveMessage || action == CopyMessage || action == DecCopyMessage ) &&
            fti->folder() && !fti->folder()->noContent() )
         subMenu = true;
       if ( ( action == MoveFolder || action == CopyFolder )
@@ -1936,6 +1941,8 @@ void KMFolderTree::folderToPopupMenu( MenuAction action, QObject *receiver,
         int menuId;
         if ( action == MoveMessage || action == MoveFolder )
           menuId = popup->insertItem( i18n("Move to This Folder"), -1, 0 );
+        else if ( action == DecCopyMessage )
+          menuId = popup->insertItem( i18n("Copy decrypted message to This Folder"), -1, 0 );
         else
           menuId = popup->insertItem( i18n("Copy to This Folder"), -1, 0 );
         popup->insertSeparator( 1 );

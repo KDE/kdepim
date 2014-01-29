@@ -101,6 +101,11 @@ public:
   virtual void copyMsgToFolder(KMFolder* destination,
                                KMMessage* aMsg = 0);
 
+  /** Messages are decrypted and if decryption is successful added to
+   * given folder. */
+  virtual void copyDecryptedMsgToFolder(KMFolder* destination,
+                               KMMessage* aMsg = 0);
+
   /** Resets toBeDeleted and selectable status of all selected items. */
   virtual void clearSelectableAndAboutToBeDeleted(Q_UINT32 serNum);
   /** Returns list of selected messages. Mark the corresponding
@@ -358,6 +363,8 @@ protected slots:
   virtual void moveSelectedToFolder( int menuId );
   /** Same thing but copy */
   virtual void copySelectedToFolder( int menuId );
+  /** Copy a decrypted version of this message to folder */
+  virtual void decryptedCopySelectedToFolder( int menuId );
   /** Apply the filter Rules to a single message */
   virtual int slotFilterMsg( KMMessage * );
   /** dirties the sort order */

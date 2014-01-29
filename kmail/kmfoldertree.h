@@ -162,7 +162,8 @@ public:
     CopyMessage,
     MoveMessage,
     CopyFolder,
-    MoveFolder
+    MoveFolder,
+    DecCopyMessage
   };
 
   /** Generate a popup menu that contains all folders that can have content */
