@@ -104,3 +104,5 @@ void SieveEditorTabWidget::tabInserted(int index)
     KTabWidget::tabInserted(index);
 }
 
+
+#include "moc_sieveeditortabwidget.cpp"

@@ -132,3 +132,5 @@ void AdBlockShowListDialog::slotFinished(KJob *job)
 }
 
 
+
+#include "moc_adblockshowlistdialog.cpp"

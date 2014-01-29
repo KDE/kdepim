@@ -401,3 +401,5 @@ void AdBlockManager::applyHidingRules(bool ok)
     _elementHiding.apply(document, mainPageHost);
 }
 
+
+#include "moc_adblockmanager.cpp"

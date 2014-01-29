@@ -59,3 +59,5 @@ void SelectMimeTypeComboBox::setCode(const QString &code, const QString &name, Q
 }
 
 
+
+#include "moc_selectmimetypecombobox.cpp"

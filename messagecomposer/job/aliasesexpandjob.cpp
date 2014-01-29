@@ -251,3 +251,5 @@ void AliasesExpandJob::finishExpansion()
 }
 
 #include "moc_aliasesexpandjob_p.cpp"
+
+#include "moc_aliasesexpandjob.cpp"

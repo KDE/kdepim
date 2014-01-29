@@ -293,3 +293,5 @@ RecipientLineNG* RecipientsEditor::activeLine() const
 
 
 
+
+#include "moc_recipientseditor.cpp"

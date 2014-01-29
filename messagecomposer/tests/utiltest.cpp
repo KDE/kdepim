@@ -64,3 +64,5 @@ void UtilTest::testSelectCharset()
 
 }
 
+
+#include "moc_utiltest.cpp"

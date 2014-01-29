@@ -96,3 +96,5 @@ void ScamDetectionDetailsDialog::writeConfig()
     group.sync();
 }
 
+
+#include "moc_scamdetectiondetailsdialog.cpp"

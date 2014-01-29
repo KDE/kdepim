@@ -70,3 +70,5 @@ QString ChiasmusKeySelector::options() const
 }
 
 }
+
+#include "moc_chiasmuskeyselector.cpp"

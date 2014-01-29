@@ -151,3 +151,5 @@ QString SelectFlagsWidget::code() const
     return mEdit->text();
 }
 
+
+#include "moc_selectflagswidget.cpp"

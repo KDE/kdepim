@@ -42,3 +42,5 @@ GlobalSettings::~GlobalSettings()
 }
 
 
+
+#include "moc_globalsettings.cpp"

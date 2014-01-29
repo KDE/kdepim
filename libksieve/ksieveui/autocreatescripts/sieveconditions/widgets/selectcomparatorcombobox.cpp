@@ -69,3 +69,5 @@ void SelectComparatorComboBox::setCode(const QString &code, const QString &name,
     }
 }
 
+
+#include "moc_selectcomparatorcombobox.cpp"

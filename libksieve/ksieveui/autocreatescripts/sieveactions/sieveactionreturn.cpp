@@ -63,3 +63,5 @@ QString SieveActionReturn::serverNeedsCapability() const
 }
 
 
+
+#include "moc_sieveactionreturn.cpp"

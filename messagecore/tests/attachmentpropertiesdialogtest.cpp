@@ -177,3 +177,5 @@ void AttachmentPropertiesDialogTest::testMimeContentReadOnly()
   QCOMPARE( content->contentType()->name(), name ); // No change.
 }
 
+
+#include "moc_attachmentpropertiesdialogtest.cpp"

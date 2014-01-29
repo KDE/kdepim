@@ -268,3 +268,5 @@ void SieveTextEdit::slotHelp()
             Q_EMIT openHelp(word, url);
     }
 }
+
+#include "moc_sievetextedit.cpp"

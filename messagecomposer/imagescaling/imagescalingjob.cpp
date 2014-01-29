@@ -120,3 +120,5 @@ QByteArray ImageScalingJob::imageArray() const
     return mBuffer.data();
 }
 
+
+#include "moc_imagescalingjob.cpp"

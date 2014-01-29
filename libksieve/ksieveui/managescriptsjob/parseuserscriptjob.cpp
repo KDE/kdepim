@@ -126,3 +126,5 @@ QString ParseUserScriptJob::loadInclude(const QDomElement &element)
     return scriptName;
 }
 
+
+#include "moc_parseuserscriptjob.cpp"

@@ -421,3 +421,5 @@ void ManageSieveWidget::enableDisableActions(bool &newScriptAction, bool &editSc
         desactivateScriptAction = enabled && itemIsActived( item );
     }
 }
+
+#include "moc_managesievewidget.cpp"

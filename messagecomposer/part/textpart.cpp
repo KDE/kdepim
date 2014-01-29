@@ -116,3 +116,5 @@ void TextPart::setEmbeddedImages( const ImageList &images )
   d->embeddedImages = images;
 }
 
+
+#include "moc_textpart.cpp"

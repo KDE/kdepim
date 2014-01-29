@@ -153,3 +153,5 @@ void MyNetworkAccessManager::slotApplyHidingBlockedElements(bool ok)
 
 }
 
+
+#include "moc_networkaccessmanager.cpp"

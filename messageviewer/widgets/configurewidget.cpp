@@ -160,3 +160,5 @@ void ConfigureWidget::showCustomHeadersDialog()
     }
 }
 
+
+#include "moc_configurewidget.cpp"

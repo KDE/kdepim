@@ -127,3 +127,5 @@ void CreateNewNoteJob::slotNoteCreationFinished(KJob *job)
     }
     deleteLater();
 }
+
+#include "moc_createnewnotejob.cpp"

@@ -163,3 +163,5 @@ QStringList EmailAddressResolveJob::expandedBcc() const
   return KPIMUtils::splitAddressList( mResultMap.value( QLatin1String( "infoPartBcc" ) ).toString() );
 }
 
+
+#include "moc_emailaddressresolvejob.cpp"

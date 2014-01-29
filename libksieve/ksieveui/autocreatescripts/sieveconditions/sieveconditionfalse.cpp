@@ -68,3 +68,5 @@ QString SieveConditionFalse::href() const
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 
+
+#include "moc_sieveconditionfalse.cpp"

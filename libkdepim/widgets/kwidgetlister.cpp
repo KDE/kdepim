@@ -296,3 +296,5 @@ void KWidgetLister::addWidgetAfterThisWidget(QWidget*currentWidget, QWidget* wid
 }
 
 
+
+#include "moc_kwidgetlister.cpp"

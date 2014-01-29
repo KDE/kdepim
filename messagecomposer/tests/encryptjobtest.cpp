@@ -175,3 +175,5 @@ void EncryptJobTest::checkEncryption( MessageComposer::EncryptJob* eJob )
 
 }
 
+
+#include "moc_encryptjobtest.cpp"

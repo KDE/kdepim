@@ -61,3 +61,5 @@ MessageComposerSettings::~MessageComposerSettings()
 {
 }
 
+
+#include "moc_messagecomposersettings.cpp"
