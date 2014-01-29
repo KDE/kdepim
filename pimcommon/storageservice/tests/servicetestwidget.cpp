@@ -205,7 +205,8 @@ void ServiceTestWidget::slotDownloadFile()
 {
     const QString destination = QDir::homePath();
 
-    QPointer<PimCommon::StorageServiceDownloadDialog> dlg = new PimCommon::StorageServiceDownloadDialog(mStorageService, destination, this);
+    QPointer<PimCommon::StorageServiceDownloadDialog> dlg = new PimCommon::StorageServiceDownloadDialog(mStorageService, this);
+    dlg->setDefaultDownloadPath(destination);
     if (dlg->exec()) {
         //TODO
     }

@@ -33,9 +33,8 @@
 
 using namespace PimCommon;
 
-StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageServiceAbstract *storage, const QString &destination, QWidget *parent)
+StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageServiceAbstract *storage, QWidget *parent)
     : KDialog(parent),
-      mDestination(destination),
       mStorage(storage)
 {
     setCaption( i18n( "Download File" ) );
@@ -73,6 +72,11 @@ StorageServiceDownloadDialog::~StorageServiceDownloadDialog()
     writeConfig();
 }
 
+void StorageServiceDownloadDialog::setDefaultDownloadPath(const QString &path)
+{
+    mDefaultDownloadPath = path;
+}
+
 void StorageServiceDownloadDialog::readConfig()
 {
     KConfigGroup group( KGlobal::config(), "StorageServiceDownloadDialog" );
@@ -99,7 +103,9 @@ void StorageServiceDownloadDialog::slotDownloadFile()
 {
     const QString filename = mTreeWidget->currentItem()->text(0);
     if (!filename.isEmpty()) {
-        const QString destination = KFileDialog::getExistingDirectory(KUrl(), this);
+        QString destination = mDefaultDownloadPath;
+        if (destination.isEmpty())
+            destination = KFileDialog::getExistingDirectory(KUrl(), this);
         if (destination.isEmpty())
             return;
         QFileInfo fileInfo(destination + QLatin1Char('/') + filename);
@@ -109,18 +115,25 @@ void StorageServiceDownloadDialog::slotDownloadFile()
             }
         }
         const QString fileId = mStorage->fileIdentifier(mTreeWidget->itemInformationSelected());
+        mTreeWidget->setEnabled(false);
         mStorage->downloadFile(filename, fileId, destination);
     }
 }
 
 void StorageServiceDownloadDialog::slotDownfileDone(const QString &serviceName, const QString &filename)
 {
+    Q_UNUSED(serviceName);
+    Q_UNUSED(filename);
     KMessageBox::information(this, i18n("File was correctly downloaded."), i18n("Download file"));
+    mTreeWidget->setEnabled(true);
 }
 
 void StorageServiceDownloadDialog::slotDownfileFailed(const QString &serviceName, const QString &filename)
 {
+    Q_UNUSED(serviceName);
+    Q_UNUSED(filename);
     KMessageBox::information(this, i18n("Error during download file."), i18n("Download file"));
+    mTreeWidget->setEnabled(true);
 }
 
 #include "moc_storageservicedownloaddialog.cpp"
