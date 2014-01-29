@@ -495,3 +495,5 @@ QString HubicStorageService::fileShareRoot(const QVariantMap &variantMap)
 {
     return QString();
 }
+
+#include "moc_hubicstorageservice.cpp"

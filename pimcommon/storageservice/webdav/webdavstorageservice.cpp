@@ -414,3 +414,5 @@ KIcon WebDavStorageService::icon() const
 {
     return KIcon();
 }
+
+#include "moc_webdavstorageservice.cpp"

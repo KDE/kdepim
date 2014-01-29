@@ -616,3 +616,5 @@ void UbuntuOneJob::parseAccessToken(const QString &data)
     //Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
+
+#include "moc_ubuntuonejob.cpp"

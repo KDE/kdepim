@@ -488,3 +488,5 @@ QString DropBoxStorageService::disallowedSymbolsStr() const
 {
     return QLatin1String("\\ / : ? * < > \" |");
 }
+
+#include "moc_dropboxstorageservice.cpp"

@@ -441,3 +441,5 @@ QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
     qDebug()<<" parentId"<<parentId;
     return parentId;
 }
+
+#include "moc_gdrivestorageservice.cpp"

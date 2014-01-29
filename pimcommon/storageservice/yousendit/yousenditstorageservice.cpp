@@ -470,3 +470,5 @@ KIcon YouSendItStorageService::icon() const
 {
     return KIcon();
 }
+
+#include "moc_yousenditstorageservice.cpp"

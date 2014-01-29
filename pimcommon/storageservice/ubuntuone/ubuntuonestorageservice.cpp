@@ -469,3 +469,4 @@ KIcon UbuntuoneStorageService::icon() const
     return KIcon();
 }
 
+#include "moc_ubuntuonestorageservice.cpp"

@@ -84,3 +84,6 @@ QString StorageServiceCheckNameDialog::newName() const
 {
     return mName->text();
 }
+
+
+#include "moc_storageservicechecknamedialog.cpp"

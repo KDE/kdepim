@@ -635,3 +635,5 @@ void YouSendItJob::shareLink(const QString &root, const QString &path)
     qDebug()<<" not implemented";
     deleteLater();
 }
+
+#include "moc_yousenditjob.cpp"

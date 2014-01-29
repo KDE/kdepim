@@ -355,3 +355,5 @@ void WebDavJob::moveFile(const QString &source, const QString &destination)
     //TODO
     deleteLater();
 }
+
+#include "moc_webdavjob.cpp"

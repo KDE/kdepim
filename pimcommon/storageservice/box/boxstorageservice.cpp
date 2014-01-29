@@ -552,3 +552,5 @@ QString BoxStorageService::disallowedSymbolsStr() const
 {
     return QLatin1String("\\ / : ? * < > |");
 }
+
+#include "moc_boxstorageservice.cpp"
