@@ -52,10 +52,11 @@
 #include <kstatusbar.h>
 #include <KToggleAction>
 #include <kactioncollection.h>
+#include <KActionMenu>
 #include <kconfigdialog.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
-#include <KDE/KLocale>
+#include <KLocale>
 #include <KSelectAction>
 #include <kimagefilepreview.h>
 #include <KToolInvocation>
@@ -78,6 +79,7 @@ MainWindow::MainWindow()
       mCurrentBlogId(__currentBlogId)
 {
     setWindowTitle( i18n("Blogilo") );
+    initStorageService();
 
     tabPosts = new PostsTabWidget(this);
     setCentralWidget( tabPosts );
@@ -130,7 +132,6 @@ MainWindow::MainWindow()
     }
     connect( blogs, SIGNAL(triggered(QAction*)), this, SLOT(currentBlogChanged(QAction*)) );
     QTimer::singleShot( 0, this, SLOT(loadTempPosts()) );
-    initStorageService();
 }
 
 MainWindow::~MainWindow()
@@ -144,6 +145,22 @@ void MainWindow::initStorageService()
     configJob->registerConfigIf(settingsJob);
 
     mStorageManager = new PimCommon::StorageServiceManager(this);
+    connect(mStorageManager, SIGNAL(uploadFileDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
+    connect(mStorageManager, SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
+    connect(mStorageManager, SIGNAL(uploadFileFailed(QString,QString)), this, SLOT(slotUploadFileFailed(QString,QString)));
+}
+
+void MainWindow::slotUploadFileDone(const QString &serviceName, const QString &link)
+{
+    Q_UNUSED(serviceName);
+    KMessageBox::information(this, i18n("File uploaded. You can access to it at this url %1", link), i18n("Upload File"));
+}
+
+void MainWindow::slotUploadFileFailed(const QString &serviceName, const QString &filename)
+{
+    Q_UNUSED(serviceName);
+    Q_UNUSED(filename);
+    KMessageBox::error(this, i18n("Error during upload."), i18n("Upload File"));
 }
 
 void MainWindow::slotCloseTabClicked()
@@ -214,6 +231,9 @@ void MainWindow::setupActions()
     actionCollection()->addAction( QLatin1String("open_blog_in_browser"), actOpenBlog);
     actOpenBlog->setToolTip(i18n("Open current blog in browser"));
     connect( actOpenBlog, SIGNAL(triggered(bool)), this, SLOT(slotOpenCurrentBlogInBrowser()) );
+
+    actionCollection()->addAction( QLatin1String("upload_file"), mStorageManager->menuUploadServices(this) );
+    actionCollection()->addAction( QLatin1String("download_file"), mStorageManager->menuDownloadServices(this) );
 }
 
 void MainWindow::loadTempPosts()

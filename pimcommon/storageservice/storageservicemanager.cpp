@@ -19,6 +19,8 @@
 
 #include "settings/pimcommonsettings.h"
 
+#include "storageservice/dialog/storageservicedownloaddialog.h"
+
 #include "dropbox/dropboxstorageservice.h"
 #include "hubic/hubicstorageservice.h"
 #include "ubuntuone/ubuntuonestorageservice.h"
@@ -102,8 +104,6 @@ KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageService
                     act->setIcon(icon);
                 switch(capability) {
                 case PimCommon::StorageServiceAbstract::NoCapability:
-                case PimCommon::StorageServiceAbstract::UploadFileCapability:
-                case PimCommon::StorageServiceAbstract::DownloadFileCapability:
                 case PimCommon::StorageServiceAbstract::CreateFolderCapability:
                 case PimCommon::StorageServiceAbstract::DeleteFolderCapability:
                 case PimCommon::StorageServiceAbstract::ListFolderCapability:
@@ -115,13 +115,24 @@ KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageService
                 case PimCommon::StorageServiceAbstract::CopyFolderCapability:
                     qDebug()<<" not implemented ";
                     break;
+                case PimCommon::StorageServiceAbstract::DownloadFileCapability:
+                    menuService->setText(i18n("Download File..."));
+                    connect(act, SIGNAL(triggered()), this, SLOT(slotDownloadFile()));
+                    break;
+                case PimCommon::StorageServiceAbstract::UploadFileCapability:
+                    menuService->setText(i18n("Upload File..."));
+                    connect(act, SIGNAL(triggered()), this, SLOT(slotShareFile()));
+                    break;
                 case PimCommon::StorageServiceAbstract::ShareLinkCapability:
+                    menuService->setText(i18n("Share File..."));
                     connect(act, SIGNAL(triggered()), this, SLOT(slotShareFile()));
                     break;
                 case PimCommon::StorageServiceAbstract::DeleteFileCapability:
+                    menuService->setText(i18n("Delete File..."));
                     connect(act, SIGNAL(triggered()), this, SLOT(slotDeleteFile()));
                     break;
                 case PimCommon::StorageServiceAbstract::AccountInfoCapability:
+                    menuService->setText(i18n("Account Info..."));
                     connect(act, SIGNAL(triggered()), this, SLOT(slotAccountInfo()));
                     break;
                 }
@@ -153,6 +164,22 @@ void StorageServiceManager::slotShareFile()
                     service->uploadFile(fileName, QString(), mDefaultUploadFolder); //TODO
                 }
             }
+        }
+    }
+}
+
+void StorageServiceManager::slotDownloadFile()
+{
+    QAction *act = qobject_cast< QAction* >( sender() );
+    if ( act ) {
+        const QString type = act->data().toString();
+        if (mListService.contains(type)) {
+            StorageServiceAbstract *service = mListService.value(type);
+            QPointer<PimCommon::StorageServiceDownloadDialog> dlg = new PimCommon::StorageServiceDownloadDialog(service, 0);
+            if (dlg->exec()) {
+                //TODO ?
+            }
+            delete dlg;
         }
     }
 }

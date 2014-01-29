@@ -117,6 +117,7 @@ void StorageServiceDownloadDialog::slotDownloadFile()
         }
         const QString fileId = mStorage->fileIdentifier(mTreeWidget->itemInformationSelected());
         mTreeWidget->setEnabled(false);
+        enableButton(User1, false);
         mStorage->downloadFile(filename, fileId, destination);
     }
 }
@@ -127,6 +128,7 @@ void StorageServiceDownloadDialog::slotDownfileDone(const QString &serviceName, 
     Q_UNUSED(filename);
     KMessageBox::information(this, i18n("File was correctly downloaded."), i18n("Download file"));
     mTreeWidget->setEnabled(true);
+    enableButton(User1, true);
 }
 
 void StorageServiceDownloadDialog::slotDownfileFailed(const QString &serviceName, const QString &filename)
@@ -135,6 +137,7 @@ void StorageServiceDownloadDialog::slotDownfileFailed(const QString &serviceName
     Q_UNUSED(filename);
     KMessageBox::information(this, i18n("Error during download file."), i18n("Download file"));
     mTreeWidget->setEnabled(true);
+    enableButton(User1, true);
 }
 
 #include "moc_storageservicedownloaddialog.cpp"

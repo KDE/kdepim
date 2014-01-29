@@ -15,28 +15,33 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef CONFIGUREDIALOG_H
-#define CONFIGUREDIALOG_H
+#ifndef CONFIGURESTORAGESERVICEWIDGET_H
+#define CONFIGURESTORAGESERVICEWIDGET_H
 
-#include <KConfigDialog>
-#include "bilboblog.h"
-class ConfigureStorageServiceWidget;
-class ConfigureDialog : public KConfigDialog
+#include <QWidget>
+class QPushButton;
+namespace PimCommon {
+class StorageServiceSettingsWidget;
+}
+class ConfigureStorageServiceWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ConfigureDialog( QWidget *parent, const QString& name, KConfigSkeleton *config );
-    ~ConfigureDialog();
+    explicit ConfigureStorageServiceWidget(QWidget *parent=0);
+    ~ConfigureStorageServiceWidget();
+
+    void save();
+    void doLoadFromGlobalSettings();
 
 Q_SIGNALS:
-    void blogRemoved(int);
-    void blogAdded(const BilboBlog &);
-    void blogEdited(const BilboBlog &);
-    void dialogDestroyed(QObject*);
-    void settingsChanged();
+    void changed();
+
+private slots:
+    void slotManageStorageService();
 
 private:
-    ConfigureStorageServiceWidget *mConfigStorageService;
+    PimCommon::StorageServiceSettingsWidget *mStorageServiceWidget;
+    QPushButton *mManageStorageService;
 };
 
-#endif // CONFIGUREDIALOG_H
+#endif // CONFIGURESTORAGESERVICEWIDGET_H

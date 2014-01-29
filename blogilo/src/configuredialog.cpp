@@ -21,6 +21,8 @@
 #include "ui_settingsbase.h"
 #include "ui_editorsettingsbase.h"
 
+#include "configurestorageservicewidget.h"
+
 #include "settings.h"
 
 #include "blogsettings.h"
@@ -53,10 +55,15 @@ ConfigureDialog::ConfigureDialog(QWidget *parent, const QString& name, KConfigSk
     Ui::AdvancedSettingsBase ui_advancedsettings_base;
     ui_advancedsettings_base.setupUi( advancedSettingsDlg );
 
+    mConfigStorageService = new ConfigureStorageServiceWidget;
+    mConfigStorageService->setAttribute( Qt::WA_DeleteOnClose );
+
     addPage( generalSettingsDlg, i18nc( "Configure Page", "General" ), QLatin1String("configure") );
     addPage( blogSettingsDlg, i18nc( "Configure Page", "Blogs" ), QLatin1String("document-properties"));
     addPage( editorSettingsDlg, i18nc( "Configure Page", "Editor" ), QLatin1String("accessories-text-editor"));
     addPage( advancedSettingsDlg, i18nc( "Configure Page", "Advanced" ), QLatin1String("applications-utilities"));
+    addPage( mConfigStorageService, i18nc( "Configure Page", "Storage Service" ), QLatin1String("applications-utilities"));
+
     connect( this, SIGNAL(settingsChanged(QString)), this, SIGNAL(settingsChanged()) );
     connect( this, SIGNAL(destroyed(QObject*)), this, SIGNAL(dialogDestroyed(QObject*)));
     setAttribute( Qt::WA_DeleteOnClose );

@@ -107,6 +107,9 @@ private slots:
     void slotCloseTabClicked();
     void slotRemoveAllExclude(int);
 
+    void slotUploadFileDone(const QString &serviceName, const QString &filename);
+    void slotUploadFileFailed(const QString &serviceName, const QString &filename);
+
 protected:
     void keyPressEvent( QKeyEvent * event );
     virtual bool queryExit();

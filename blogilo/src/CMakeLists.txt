@@ -33,6 +33,7 @@ set(blogilo_SRCS
  composer/bilbobrowser.cpp
  composer/blogilocomposerwidget.cpp
  storageservice/storageservicemanagersettingsjob.cpp
+ configurestorageservicewidget.cpp
 )
 
 
