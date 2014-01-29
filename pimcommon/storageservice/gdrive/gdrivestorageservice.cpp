@@ -184,7 +184,7 @@ void GDriveStorageService::storageServiceRenameFile(const QString &source, const
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mAccount);
-        connect(job, SIGNAL(renameFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(renameFileDone(QString)), SLOT(slotRenameFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->renameFile(source, destination);
     }
@@ -199,7 +199,7 @@ void GDriveStorageService::storageServiceMoveFolder(const QString &source, const
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mAccount);
-        connect(job, SIGNAL(moveFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(moveFolderDone(QString)), SLOT(slotMoveFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->moveFolder(source, destination);
     }
@@ -214,7 +214,7 @@ void GDriveStorageService::storageServiceMoveFile(const QString &source, const Q
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mAccount);
-        connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotMoveFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->moveFile(source, destination);
     }

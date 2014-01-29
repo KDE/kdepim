@@ -198,7 +198,7 @@ void WebDavStorageService::storageServiceRenameFile(const QString &source, const
     } else {
         WebDavJob *job = new WebDavJob(this);
         job->initializeToken(mPublicLocation, mServiceLocation, mUsername, mPassword);
-        connect(job, SIGNAL(renameFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(renameFileDone(QString)), SLOT(slotRenameFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->renameFile(source, destination);
     }
@@ -213,7 +213,7 @@ void WebDavStorageService::storageServiceMoveFolder(const QString &source, const
     } else {
         WebDavJob *job = new WebDavJob(this);
         job->initializeToken(mPublicLocation, mServiceLocation, mUsername, mPassword);
-        connect(job, SIGNAL(moveFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(moveFolderDone(QString)), SLOT(slotMoveFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->moveFolder(source, destination);
     }
@@ -228,7 +228,7 @@ void WebDavStorageService::storageServiceMoveFile(const QString &source, const Q
     } else {
         WebDavJob *job = new WebDavJob(this);
         job->initializeToken(mPublicLocation, mServiceLocation, mUsername, mPassword);
-        connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotMoveFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->moveFile(source, destination);
     }
