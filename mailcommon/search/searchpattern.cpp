@@ -22,24 +22,9 @@
 #include "filterlog.h"
 using MailCommon::FilterLog;
 
-#include <ontologies/nie.h>
-#include <ontologies/nmo.h>
-#include <ontologies/nco.h>
-
-#include <Nepomuk2/Tag>
-#include <Nepomuk2/Query/Query>
-#include <Nepomuk2/Query/AndTerm>
-#include <Nepomuk2/Query/OrTerm>
-#include <Nepomuk2/Query/LiteralTerm>
-#include <Nepomuk2/Query/ResourceTerm>
-#include <Nepomuk2/Query/NegationTerm>
-#include <Nepomuk2/Query/ResourceTypeTerm>
-#include <Nepomuk2/Vocabulary/PIMO>
-#include <Soprano/Vocabulary/NAO>
-#include <Soprano/Vocabulary/RDF>
-#include <Nepomuk2/Vocabulary/NIE>
-
 #include <Akonadi/Contact/ContactSearchJob>
+
+#include <Akonadi/SearchQuery>
 
 #include <KMime/KMimeMessage>
 
@@ -58,6 +43,7 @@ using MailCommon::FilterLog;
 
 #include <algorithm>
 #include <boost/bind.hpp>
+#include <akonadi/searchquery.h>
 
 
 using namespace MailCommon;
@@ -572,43 +558,45 @@ const QString SearchRule::asString() const
 }
 
 
-Nepomuk2::Query::ComparisonTerm::Comparator SearchRule::nepomukComparator() const
+Akonadi::SearchTerm::Condition SearchRule::akonadiComparator() const
 {
   switch ( function() ) {
   case SearchRule::FuncContains:
   case SearchRule::FuncContainsNot:
-    return Nepomuk2::Query::ComparisonTerm::Contains;
+    return Akonadi::SearchTerm::CondContains;
 
   case SearchRule::FuncEquals:
   case SearchRule::FuncNotEqual:
-    return Nepomuk2::Query::ComparisonTerm::Equal;
+    return Akonadi::SearchTerm::CondEqual;
 
   case SearchRule::FuncIsGreater:
-    return Nepomuk2::Query::ComparisonTerm::Greater;
+    return Akonadi::SearchTerm::CondGreaterThan;
 
   case SearchRule::FuncIsGreaterOrEqual:
-      return Nepomuk2::Query::ComparisonTerm::GreaterOrEqual;
+    return Akonadi::SearchTerm::CondGreaterOrEqual;
 
   case SearchRule::FuncIsLess:
-    return Nepomuk2::Query::ComparisonTerm::Smaller;
+    return Akonadi::SearchTerm::CondLessThan;
 
   case SearchRule::FuncIsLessOrEqual:
-    return Nepomuk2::Query::ComparisonTerm::SmallerOrEqual;
+    return Akonadi::SearchTerm::CondLessOrEqual;
 
   case SearchRule::FuncRegExp:
   case SearchRule::FuncNotRegExp:
-    return Nepomuk2::Query::ComparisonTerm::Regexp;
+    //TODO is this sufficient?
+    return Akonadi::SearchTerm::CondContains;
 
   case SearchRule::FuncStartWith:
   case SearchRule::FuncNotStartWith:
   case SearchRule::FuncEndWith:
   case SearchRule::FuncNotEndWith:
-    return Nepomuk2::Query::ComparisonTerm::Regexp;
+    //TODO is this sufficient?
+    return Akonadi::SearchTerm::CondContains;
   default:
     kDebug() << "Unhandled function type: " << function();
   }
 
-  return Nepomuk2::Query::ComparisonTerm::Equal;
+  return Akonadi::SearchTerm::CondEqual;
 }
 
 bool SearchRule::isNegated() const
@@ -628,18 +616,6 @@ bool SearchRule::isNegated() const
     break;
   }
   return negate;
-}
-
-void SearchRule::addAndNegateTerm( const Nepomuk2::Query::Term &term,
-                                   Nepomuk2::Query::GroupTerm &termGroup ) const
-{
-  if ( isNegated() ) {
-    Nepomuk2::Query::NegationTerm neg;
-    neg.setSubTerm( term );
-    termGroup.addSubTerm( neg );
-  } else {
-    termGroup.addSubTerm( term );
-  }
 }
 
 QDataStream &SearchRule::operator >>( QDataStream &s ) const
@@ -750,10 +726,11 @@ bool SearchRuleString::matches( const Akonadi::Item &item ) const
     msgContents += ", " + msg->cc()->asUnicodeString();
     msgContents += ", " + msg->bcc()->asUnicodeString();
   } else if ( kasciistricmp( field(), "<tag>" ) == 0 ) {
-    const Nepomuk2::Resource res( item.url() );
-    foreach ( const Nepomuk2::Tag &tag, res.tags() ) {
-      msgContents += tag.label();
-    }
+    //port?
+//     const Nepomuk2::Resource res( item.url() );
+//     foreach ( const Nepomuk2::Tag &tag, res.tags() ) {
+//       msgContents += tag.label();
+//     }
     logContents = false;
   } else {
     // make sure to treat messages with multiple header lines for
@@ -796,201 +773,56 @@ bool SearchRuleString::matches( const Akonadi::Item &item ) const
   return rc;
 }
 
-
-QString SearchRule::quote( const QString &content ) const
+void SearchRuleString::addQueryTerms(Akonadi::SearchTerm &groupTerm , bool &emptyIsNotAnError) const
 {
-   //Without "" nepomuk will search a message containing each individual word
-  QString newContent;
-  switch( function() ) {
-  case SearchRule::FuncRegExp:
-  case SearchRule::FuncNotRegExp:
-    newContent = content;
-    break;
-  case SearchRule::FuncStartWith:
-  case SearchRule::FuncNotStartWith:
-    newContent = QString::fromLatin1( "^%1" ).arg( content );
-    break;
-  case SearchRule::FuncEndWith:
-  case SearchRule::FuncNotEndWith:
-    newContent = QString::fromLatin1( "%1$" ).arg( content );;
-    break;
-  case SearchRule::FuncContains:
-  case SearchRule::FuncContainsNot:
-      newContent = QString::fromLatin1( "\'%1*\'" ).arg( content );
-      break;
-  default:
-    newContent = QString::fromLatin1( "\'%1\'" ).arg( content );
-    break;
-  }
-  return newContent;
-}
-
-void SearchRuleString::addPersonTerm( Nepomuk2::Query::GroupTerm &groupTerm,
-                                      const QUrl &field ) const
-{
-  // TODO split contents() into address/name and adapt the query accordingly
-  const Nepomuk2::Query::ComparisonTerm valueTerm(
-    Vocabulary::NCO::emailAddress(),
-    Nepomuk2::Query::LiteralTerm( contents().toLower() ),
-    nepomukComparator() );
-
-  const Nepomuk2::Query::ComparisonTerm addressTerm(
-    Vocabulary::NCO::hasEmailAddress(),
-    valueTerm,
-    Nepomuk2::Query::ComparisonTerm::Equal );
-
-  const Nepomuk2::Query::ComparisonTerm personTerm(
-    field,
-    addressTerm,
-    Nepomuk2::Query::ComparisonTerm::Equal );
-
-  groupTerm.addSubTerm( personTerm );
-}
-
-void SearchRuleString::addHeaderTerm( Nepomuk2::Query::GroupTerm &groupTerm,
-                                      const Nepomuk2::Query::Term &field ) const
-{
-  const Nepomuk2::Query::ComparisonTerm headerName(
-    Vocabulary::NMO::headerName(),
-    field,
-    Nepomuk2::Query::ComparisonTerm::Equal );
-
-  const Nepomuk2::Query::ComparisonTerm headerTerm(
-    Vocabulary::NMO::headerValue(),
-    Nepomuk2::Query::LiteralTerm( quote( contents() ) ),
-    nepomukComparator() );
-
-  groupTerm.addSubTerm( headerName );
-  groupTerm.addSubTerm( headerTerm );
-
-}
-
-void SearchRuleString::addQueryTerms(Nepomuk2::Query::GroupTerm &groupTerm , bool &emptyIsNotAnError) const
-{
+  using namespace Akonadi;
   emptyIsNotAnError = false;
-  Nepomuk2::Query::OrTerm termGroup;
-  if ( kasciistricmp( field(), "<message>" ) == 0 ||
-       kasciistricmp( field(), "<recipients>" ) == 0  ||
-       kasciistricmp( field(), "<any header>" ) == 0 ) {
-
-    const Nepomuk2::Query::ComparisonTerm valueTerm(
-      Vocabulary::NCO::emailAddress(),
-      Nepomuk2::Query::LiteralTerm( quote( contents() ) ),
-      nepomukComparator() );
-
-    const Nepomuk2::Query::ComparisonTerm addressTerm(
-      Vocabulary::NCO::hasEmailAddress(),
-      valueTerm,
-      Nepomuk2::Query::ComparisonTerm::Equal );
-
-    const Nepomuk2::Query::ComparisonTerm personTerm(
-      Vocabulary::NMO::to(),
-      addressTerm,
-      Nepomuk2::Query::ComparisonTerm::Equal );
-
-    const Nepomuk2::Query::ComparisonTerm personTermTo(
-      Vocabulary::NMO::cc(),
-      personTerm,
-      Nepomuk2::Query::ComparisonTerm::Equal );
-
-    const Nepomuk2::Query::ComparisonTerm personTermCC(
-      Vocabulary::NMO::bcc(),
-      personTermTo,
-      Nepomuk2::Query::ComparisonTerm::Equal );
-
-    if ( kasciistricmp( field(), "<any header>" ) == 0 ) {
-      const Nepomuk2::Query::ComparisonTerm personTermBCC(
-        Vocabulary::NMO::from(),
-        personTermTo,
-        Nepomuk2::Query::ComparisonTerm::Equal );
-      termGroup.addSubTerm( personTermBCC );
-    } else {
-      termGroup.addSubTerm( personTermCC );
-    }
-  }
-
-  if ( kasciistricmp( field(), "to" ) == 0 ) {
-    addPersonTerm( termGroup, Vocabulary::NMO::to() );
+  SearchTerm termGroup(SearchTerm::RelOr);
+  if ( kasciistricmp( field(), "subject" ) == 0 ) {
+    termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::Subject, contents(), akonadiComparator()) );
+  } else if ( kasciistricmp( field(), "reply-to" ) == 0 ) {
+    termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderReplyTo, contents(), akonadiComparator()) );
+  } else if ( kasciistricmp( field(), "<message>" ) == 0 ) {
+    termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::Message, contents(), akonadiComparator()) );
+  } else if ( field() == "<body>" ) {
+    termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::Body, contents(), akonadiComparator()) );
+    termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::Attachment, contents(), akonadiComparator()) );
+  } else if ( kasciistricmp( field(), "<recipients>" ) == 0 ) {
+    termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderTo, contents(), akonadiComparator()) );
+    termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderCC, contents(), akonadiComparator()) );
+    termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderBCC, contents(), akonadiComparator()) );
+  } else if ( kasciistricmp( field(), "<any header>" ) == 0 ) {
+    termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::Headers, contents(), akonadiComparator()) );
+    termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::Subject, contents(), akonadiComparator()) );
+  } else if ( kasciistricmp( field(), "to" ) == 0 ) {
+    termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderTo, contents(), akonadiComparator()) );
   } else if ( kasciistricmp( field(), "cc" ) == 0 ) {
-    addPersonTerm( termGroup, Vocabulary::NMO::cc() );
+    termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderCC, contents(), akonadiComparator()) );
   } else if ( kasciistricmp( field(), "bcc" ) == 0 ) {
-    addPersonTerm( termGroup, Vocabulary::NMO::bcc() );
+    termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderBCC, contents(), akonadiComparator()) );
   } else if ( kasciistricmp( field(), "from" ) == 0 ) {
-    addPersonTerm( termGroup, Vocabulary::NMO::from() );
-  }
-
-  if ( kasciistricmp( field(), "subject" ) == 0 ||
-       kasciistricmp( field(), "<any header>" ) == 0 ||
-       kasciistricmp( field(), "<message>" ) == 0 ) {
-    const Nepomuk2::Query::ComparisonTerm subjectTerm(
-      Vocabulary::NMO::messageSubject(),
-      Nepomuk2::Query::LiteralTerm( quote( contents() ) ),
-      nepomukComparator() );
-    termGroup.addSubTerm( subjectTerm );
-  }
-  if ( kasciistricmp( field(), "reply-to" ) == 0 ) {
-    const Nepomuk2::Query::ComparisonTerm replyToTerm(
-      Vocabulary::NMO::messageReplyTo(),
-      Nepomuk2::Query::LiteralTerm( quote(contents() ) ),
-      nepomukComparator() );
-    termGroup.addSubTerm( replyToTerm );
-  }
-
-  if ( kasciistricmp( field(), "list-id" ) == 0 ) {
-    addHeaderTerm( termGroup, Nepomuk2::Query::LiteralTerm( "List-Id" ) );
+    termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderFrom, contents(), akonadiComparator()) );
+  } else if ( kasciistricmp( field(), "list-id" ) == 0 ) {
+    termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderListId, contents(), akonadiComparator()) );
   } else if ( kasciistricmp( field(), "resent-from" ) == 0 ) {
-    addHeaderTerm( termGroup, Nepomuk2::Query::LiteralTerm( "Resent-From" ) );
+    termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderResentFrom, contents(), akonadiComparator()) );
   } else if ( kasciistricmp( field(), "x-loop" ) == 0 ) {
-    addHeaderTerm( termGroup, Nepomuk2::Query::LiteralTerm( "X-Loop" ) );
+    termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderXLoop, contents(), akonadiComparator()) );
   } else if ( kasciistricmp( field(), "x-mailing-list" ) == 0 ) {
-    addHeaderTerm( termGroup, Nepomuk2::Query::LiteralTerm( "X-Mailing-List" ) );
+    termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderXMailingList, contents(), akonadiComparator()) );
   } else if ( kasciistricmp( field(), "x-spam-flag" ) == 0 ) {
-    addHeaderTerm( termGroup, Nepomuk2::Query::LiteralTerm( "X-Spam-Flag" ) );
+    termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderXSpamFlag, contents(), akonadiComparator()) );
+  } else if ( kasciistricmp( field(), "organization" )  == 0 ) {
+    termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::HeaderOrganization, contents(), akonadiComparator()) );
+  } else if ( kasciistricmp( field(), "<tag>" ) == 0 ) {
+    termGroup.addSubTerm(EmailSearchTerm(EmailSearchTerm::MessageTag, contents(), akonadiComparator()) );
   }
 
   // TODO complete for other headers, generic headers
 
-  if ( kasciistricmp( field(), "organization" )  == 0 ) {
-    addHeaderTerm( termGroup, Nepomuk2::Query::LiteralTerm( "Organization" ) );
-  }
-
-  if ( kasciistricmp( field(), "<tag>" ) == 0 ) {
-    const Nepomuk2::Tag tag( contents() );
-    if ( tag.exists() ) {
-       addAndNegateTerm(Nepomuk2::Query::ComparisonTerm(Soprano::Vocabulary::NAO::hasTag(),Nepomuk2::Query::ResourceTerm( tag ), Nepomuk2::Query::ComparisonTerm::Equal ),groupTerm );
-    } else {
-      foreach ( const Nepomuk2::Tag &tag, Nepomuk2::Tag::allTags() ) {
-        if (tag.label() == contents()) {
-            addAndNegateTerm(Nepomuk2::Query::ComparisonTerm(Soprano::Vocabulary::NAO::hasTag(),Nepomuk2::Query::ResourceTerm( tag ), Nepomuk2::Query::ComparisonTerm::Equal ),groupTerm );
-            break;
-        }
-      }
-    }
-  }
-
-  if ( field() == "<body>" || field() == "<message>" ) {
-    const Nepomuk2::Query::ComparisonTerm bodyTerm(
-      Vocabulary::NMO::plainTextMessageContent(),
-      Nepomuk2::Query::LiteralTerm( quote( contents() ) ),
-      nepomukComparator() );
-
-    termGroup.addSubTerm( bodyTerm );
-
-    const Nepomuk2::Query::ComparisonTerm attachmentBodyTerm(
-      Vocabulary::NMO::plainTextMessageContent(),
-      Nepomuk2::Query::LiteralTerm( quote( contents() ) ),
-      nepomukComparator() );
-
-    const Nepomuk2::Query::ComparisonTerm attachmentTerm(
-      Vocabulary::NIE::isPartOf(),
-      attachmentBodyTerm,
-      Nepomuk2::Query::ComparisonTerm::Equal );
-
-    termGroup.addSubTerm( attachmentTerm );
-  }
-
   if ( !termGroup.subTerms().isEmpty() ) {
-    addAndNegateTerm( termGroup, groupTerm );
+    termGroup.setIsNegated( isNegated() );
+    groupTerm.addSubTerm( termGroup );
   }
 }
 
@@ -1253,24 +1085,21 @@ bool SearchRuleNumerical::matchesInternal( long numericalValue,
   return false;
 }
 
-
-void SearchRuleNumerical::addQueryTerms(Nepomuk2::Query::GroupTerm &groupTerm , bool &emptyIsNotAnError) const
+void SearchRuleNumerical::addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const
 {
+  using namespace Akonadi;
   emptyIsNotAnError = false;
   if ( kasciistricmp( field(), "<size>" ) == 0 ) {
-    const Nepomuk2::Query::ComparisonTerm sizeTerm(
-      Vocabulary::NIE::byteSize(),
-      Nepomuk2::Query::LiteralTerm( contents().toInt() ),
-      nepomukComparator() );
-    addAndNegateTerm( sizeTerm, groupTerm );
+    EmailSearchTerm term(EmailSearchTerm::ByteSize, contents().toInt(), akonadiComparator());
+    term.setIsNegated( isNegated() );
+    groupTerm.addSubTerm(term);
   } else if ( kasciistricmp( field(), "<age in days>" ) == 0 ) {
     QDate date = QDate::currentDate();
     date = date.addDays( contents().toInt() );
-    const Nepomuk2::Query::ComparisonTerm dateTerm(
-      Vocabulary::NMO::sentDate(),
-      Nepomuk2::Query::LiteralTerm( date ),
-      nepomukComparator() );
-    addAndNegateTerm( dateTerm, groupTerm );
+    //TODO check that this works. It would be better if could just pass the date.
+    EmailSearchTerm term(EmailSearchTerm::HeaderDate, date.toString(), akonadiComparator());
+    term.setIsNegated( isNegated() );
+    groupTerm.addSubTerm(term);
   }
 }
 
@@ -1345,15 +1174,15 @@ SearchRule::RequiredPart SearchRuleDate::requiredPart() const
 
 
 
-void SearchRuleDate::addQueryTerms(Nepomuk2::Query::GroupTerm &groupTerm , bool &emptyIsNotAnError) const
+void SearchRuleDate::addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const
 {
-    emptyIsNotAnError = false;
-    const QDate date = QDate::fromString( contents(), Qt::ISODate );
-    const Nepomuk2::Query::ComparisonTerm dateTerm(
-      Vocabulary::NMO::sentDate(),
-      Nepomuk2::Query::LiteralTerm( date ),
-      nepomukComparator() );
-    addAndNegateTerm( dateTerm, groupTerm );
+  using namespace Akonadi;
+  emptyIsNotAnError = false;
+  const QDate date = QDate::fromString( contents(), Qt::ISODate );
+  //TODO check that this works. It would be better if could just pass the date.
+  EmailSearchTerm term(EmailSearchTerm::HeaderDate, date.toString(Qt::ISODate), akonadiComparator());
+  term.setIsNegated( isNegated() );
+  groupTerm.addSubTerm(term);
 }
 
 
@@ -1439,63 +1268,15 @@ SearchRule::RequiredPart SearchRuleStatus::requiredPart() const
   return SearchRule::Envelope;
 }
 
-void SearchRuleStatus::addTagTerm( Nepomuk2::Query::GroupTerm &groupTerm,
-                                   const QString &tagId ) const
+void SearchRuleStatus::addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const
 {
-  // TODO handle function() == NOT
-    qDebug()<<" tagId"<<tagId;
-  const Nepomuk2::Tag tag( tagId );
-  if (tag.exists()) {
-      qDebug()<<" tag exist !";
-    addAndNegateTerm(
-      Nepomuk2::Query::ComparisonTerm(
-        Soprano::Vocabulary::NAO::hasTag(),
-        Nepomuk2::Query::ResourceTerm( tag.uri() ),
-        Nepomuk2::Query::ComparisonTerm::Equal ),
-      groupTerm );
-  }
-}
-
-void SearchRuleStatus::addQueryTerms(Nepomuk2::Query::GroupTerm &groupTerm , bool &emptyIsNotAnError) const
-{
+  using namespace Akonadi;
   emptyIsNotAnError = true;
-  if ( mStatus.isImportant() ) {
-    addTagTerm( groupTerm, "important" );
-  } else if ( mStatus.isToAct() ) {
-    addTagTerm( groupTerm, "todo" );
-  } else if ( mStatus.isWatched() ) {
-    addTagTerm( groupTerm, "watched" );
-  } else if ( mStatus.isDeleted() ) {
-    addTagTerm( groupTerm, "deleted" );
-  } else if ( mStatus.isSpam() ) {
-    addTagTerm( groupTerm, "spam" );
-  } else if ( mStatus.isReplied() ) {
-    addTagTerm( groupTerm, "replied" );
-  } else if ( mStatus.isIgnored() ) {
-    addTagTerm( groupTerm, "ignored" );
-  } else if ( mStatus.isForwarded() ) {
-    addTagTerm( groupTerm, "forwarded" );
-  } else if ( mStatus.isSent() ) {
-    addTagTerm( groupTerm, "sent" );
-  } else if ( mStatus.isQueued() ) {
-    addTagTerm( groupTerm, "queued" );
-  } else if ( mStatus.isHam() ) {
-    addTagTerm( groupTerm, "ham" );
-  } else {
-      bool read = false;
-      if ( function() == FuncContains || function() == FuncEquals ) {
-        read = true;
-      }
-
-      if ( !mStatus.isRead() ) {
-        read = !read;
-      }
-      groupTerm.addSubTerm(
-        Nepomuk2::Query::ComparisonTerm(
-          Vocabulary::NMO::isRead(),
-          Nepomuk2::Query::LiteralTerm( read ),
-          Nepomuk2::Query::ComparisonTerm::Equal ) );
-
+  //TODO double check that isRead also works
+  if (!mStatus.statusFlags().isEmpty()) {
+    EmailSearchTerm term(EmailSearchTerm::MessageStatus, mStatus.statusFlags().toList().first(), akonadiComparator());
+    term.setIsNegated( isNegated() );
+    groupTerm.addSubTerm(term);
   }
 }
 
@@ -1731,47 +1512,24 @@ QString SearchPattern::asString() const
   return result;
 }
 
-
-static Nepomuk2::Query::GroupTerm makeGroupTerm( SearchPattern::Operator op )
+SearchPattern::SparqlQueryError SearchPattern::asAkonadiQuery( Akonadi::SearchQuery& query ) const
 {
-  if ( op == SearchPattern::OpOr ) {
-    return Nepomuk2::Query::OrTerm();
-  }
-  return Nepomuk2::Query::AndTerm();
-}
+  query = Akonadi::SearchQuery(Akonadi::SearchTerm::RelOr);
 
-Nepomuk2::Query::ComparisonTerm SearchPattern::createChildTerm( const KUrl& url, bool& empty ) const
-{
-  const Nepomuk2::Resource parentResource( url );
-  if ( !parentResource.exists() ) {
-    empty = true;
-    return Nepomuk2::Query::ComparisonTerm();
-  }
-  empty = false;
-  const Nepomuk2::Query::ComparisonTerm isChildTerm( Vocabulary::NIE::isPartOf(), Nepomuk2::Query::ResourceTerm( parentResource ) );
-  return isChildTerm;
-}
+  Akonadi::SearchTerm term(Akonadi::SearchTerm::RelAnd);
+//   if ( op == SearchPattern::OpOr ) {
+//     term = Akonadi::SearchTerm(Akonadi::SearchTerm::RelOr);
+//   }
 
-MailCommon::SearchPattern::SparqlQueryError SearchPattern::asSparqlQuery(QString &queryStr, const KUrl::List& urlList) const
-{
-  Nepomuk2::Query::Query query;
-
-  Nepomuk2::Query::AndTerm outerGroup;
-  const Nepomuk2::Types::Class cl( Vocabulary::NMO::Email() );
-  const Nepomuk2::Query::ResourceTypeTerm typeTerm( cl );
-  const Nepomuk2::Query::Query::RequestProperty itemIdProperty(
-    Akonadi::ItemSearchJob::akonadiItemIdUri(), false );
-
-  Nepomuk2::Query::GroupTerm innerGroup = makeGroupTerm( mOperator );
   const_iterator end( constEnd() );
   bool emptyIsNotAnError = false;
-  bool resultAddQuery = emptyIsNotAnError;
+  bool resultAddQuery = false;
   for ( const_iterator it = constBegin(); it != end; ++it ) {
-    (*it)->addQueryTerms( innerGroup, emptyIsNotAnError );
+    (*it)->addQueryTerms( term, emptyIsNotAnError );
     resultAddQuery &= emptyIsNotAnError;
   }
 
-  if ( innerGroup.subTerms().isEmpty() ) {
+  if ( term.subTerms().isEmpty() ) {
       if (resultAddQuery) {
           qDebug()<<" innergroup is Empty. Need to report bug";
           return MissingCheck;
@@ -1779,45 +1537,10 @@ MailCommon::SearchPattern::SparqlQueryError SearchPattern::asSparqlQuery(QString
           return EmptyResult;
       }
   }
-  if ( !urlList.isEmpty() ) {
-    const int numberOfUrl = urlList.count();
-    if ( numberOfUrl == 1 ) {
-      bool empty = false;
-      const Nepomuk2::Query::ComparisonTerm isChildTerm = createChildTerm( urlList.at( 0 ), empty );
-      if ( empty ) {
-        return FolderEmptyOrNotIndexed;
-      }
-      const Nepomuk2::Query::AndTerm andTerm( isChildTerm, innerGroup );
-      outerGroup.addSubTerm( andTerm );
-    } else {
-      QList<Nepomuk2::Query::Term> term;
-      bool allFolderIsEmpty = true;
-      for ( int i = 0; i < numberOfUrl; ++i ) {
-        bool empty = false;
-        const Nepomuk2::Query::ComparisonTerm childTerm = createChildTerm( urlList.at( i ), empty );
-        if ( !empty ) {
-          term<<childTerm;
-          allFolderIsEmpty = false;
-        }
-      }
-      if (allFolderIsEmpty) {
-        return FolderEmptyOrNotIndexed;
-      }
-      const Nepomuk2::Query::OrTerm orTerm( term );
-      const Nepomuk2::Query::AndTerm andTerm( orTerm, innerGroup );
-      outerGroup.addSubTerm( andTerm );
-    }
+  query.setTerm(term);
 
-  } else {
-    outerGroup.addSubTerm( innerGroup );
-  }
-  outerGroup.addSubTerm( typeTerm );
-  query.setTerm( outerGroup );
-  query.addRequestProperty( itemIdProperty );
-  queryStr = query.toSparqlQuery();
   return NoError;
 }
-
 
 const SearchPattern & SearchPattern::operator=( const SearchPattern &other )
 {

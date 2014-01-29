@@ -412,7 +412,8 @@ void SearchWindow::slotSearch()
 
     mUi.mSearchFolderEdt->setEnabled( false );
 
-    KUrl::List urls;
+    Akonadi::Collection::List searchCollections;
+    bool recursive = false;
     if ( mUi.mChkbxSpecificFolders->isChecked() ) {
         const Akonadi::Collection col = mUi.mCbxFolders->collection();
         if (!col.isValid()) {
@@ -420,9 +421,9 @@ void SearchWindow::slotSearch()
             mUi.mSearchFolderEdt->setEnabled( true );
             return;
         }
-        urls << col.url( Akonadi::Collection::UrlShort );
+        searchCollections << col;
         if ( mUi.mChkSubFolders->isChecked() ) {
-            childCollectionsFromSelectedCollection( col, urls );
+            recursive = true;
         }
     } else if (mUi.mChkMultiFolders->isChecked()) {
         if (!mSelectMultiCollectionDialog) {
@@ -430,15 +431,16 @@ void SearchWindow::slotSearch()
         }
         mCollectionId = mSelectMultiCollectionDialog->selectedCollection();
         Q_FOREACH(const Akonadi::Collection &col, mCollectionId) {
-            urls << col.url( Akonadi::Collection::UrlShort );
+            searchCollections << col;
         }
-        if (urls.isEmpty()) {
+        if (searchCollections.isEmpty()) {
             mUi.mSearchFolderEdt->setEnabled( true );
             mSearchPatternWidget->showWarningPattern(QStringList()<<i18n("You forgot to select collections."));
-            mQuery.clear();
+            mQuery = Akonadi::SearchQuery();
             return;
         }
     }
+    //FIXME set root colections if otherwise empty?
 
     mUi.mPatternEdit->updateSearchPattern();
 
@@ -446,8 +448,8 @@ void SearchWindow::slotSearch()
     searchPattern.purify();
 
     MailCommon::SearchPattern::SparqlQueryError queryError = MailCommon::SearchPattern::NoError;
-    queryError = searchPattern.asSparqlQuery(mQuery, urls);
-    const QString queryLanguage = QLatin1String("SPARQL");
+    queryError = searchPattern.asAkonadiQuery(mQuery);
+    const QString queryLanguage = QLatin1String("akonadi");
 
     switch(queryError) {
     case MailCommon::SearchPattern::NoError:
@@ -455,28 +457,28 @@ void SearchWindow::slotSearch()
     case MailCommon::SearchPattern::MissingCheck:
         mUi.mSearchFolderEdt->setEnabled( true );
         mSearchPatternWidget->showWarningPattern(QStringList()<<i18n("You forgot to define condition."));
-        mQuery.clear();
+        mQuery = Akonadi::SearchQuery();
         return;
     case MailCommon::SearchPattern::FolderEmptyOrNotIndexed:
         mUi.mSearchFolderEdt->setEnabled( true );
         mSearchPatternWidget->showWarningPattern(QStringList()<<i18n("All folders selected are empty or were not indexed."));
-        mQuery.clear();
+        mQuery = Akonadi::SearchQuery();
         return;
     case MailCommon::SearchPattern::EmptyResult:
         mUi.mSearchFolderEdt->setEnabled( true );
-        mQuery.clear();
+        mQuery = Akonadi::SearchQuery();
         mUi.mStatusLbl->setText( i18n("No message found.") );
         createSearchModel();
         return;
     case MailCommon::SearchPattern::NotEnoughCharacters:
         mUi.mSearchFolderEdt->setEnabled( true );
         mSearchPatternWidget->showWarningPattern(QStringList()<<i18n("Contains condition cannot be used with a number of characters inferior to 4."));
-        mQuery.clear();
+        mQuery = Akonadi::SearchQuery();
         return;
     }
     mSearchPatternWidget->hideWarningPattern();
     qDebug() << queryLanguage;
-    qDebug() << mQuery;
+    qDebug() << mQuery.toJSON();
     mUi.mSearchFolderOpenBtn->setEnabled( true );
 
     if ( !mFolder.isValid() ) {
@@ -488,7 +490,7 @@ void SearchWindow::slotSearch()
         qDebug()<<" use existing folder";
         Akonadi::PersistentSearchAttribute *attribute = mFolder.attribute<Akonadi::PersistentSearchAttribute>();
         attribute->setQueryLanguage( queryLanguage );
-        attribute->setQueryString( mQuery );
+        attribute->setQueryString( QString::fromLatin1(mQuery.toJSON()) );
         mSearchJob = new Akonadi::CollectionModifyJob( mFolder, this );
     }
 
@@ -816,16 +818,16 @@ void SearchWindow::addRulesToSearchPattern( const SearchPattern &pattern )
     mUi.mPatternEdit->setSearchPattern( &mSearchPattern );
 }
 
-void SearchWindow::childCollectionsFromSelectedCollection( const Akonadi::Collection& collection, KUrl::List&lstUrlCollection )
-{  
-    if ( collection.isValid() )  {
-        QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection( KMKernel::self()->collectionModel(), collection );
-        if ( idx.isValid() ) {
-            getChildren( KMKernel::self()->collectionModel(), idx, lstUrlCollection );
-        }
-    }
-}
-
+// void SearchWindow::childCollectionsFromSelectedCollection( const Akonadi::Collection& collection, KUrl::List&lstUrlCollection )
+// {
+//     if ( collection.isValid() )  {
+//         QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection( KMKernel::self()->collectionModel(), collection );
+//         if ( idx.isValid() ) {
+//             getChildren( KMKernel::self()->collectionModel(), idx, lstUrlCollection );
+//         }
+//     }
+// }
+//
 void SearchWindow::getChildren( const QAbstractItemModel *model,
                                 const QModelIndex &parentIndex,
                                 KUrl::List &list )
@@ -844,10 +846,11 @@ void SearchWindow::getChildren( const QAbstractItemModel *model,
 
 void SearchWindow::slotDebugQuery()
 {
+//FIXME
 #if !defined(NDEBUG)
-    QPointer<SearchDebugDialog> dlg = new SearchDebugDialog(mQuery, this);
-    dlg->exec();
-    delete dlg;
+//     QPointer<SearchDebugDialog> dlg = new SearchDebugDialog(mQuery, this);
+//     dlg->exec();
+//     delete dlg;
 #endif
 }
 
