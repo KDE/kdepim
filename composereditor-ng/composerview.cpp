@@ -226,6 +226,8 @@ void ComposerView::contextMenuEvent(QContextMenuEvent *event)
     } else if (linkSelected) {
         QAction *editLinkAction = menu->addAction(i18n("Edit Link..."));
         connect( editLinkAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotEditLink()) );
+        QAction *openLinkAction = menu->addAction(i18n("Open Link"));
+        connect( openLinkAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotOpenLink()) );
     } else if (tableSelected) {
         ComposerTableActionMenu * tableActionMenu = new ComposerTableActionMenu(elm,menu,this);
         connect(tableActionMenu, SIGNAL(insertNewTable()), this, SLOT(_k_slotInsertTable()));
