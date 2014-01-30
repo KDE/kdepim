@@ -21,12 +21,13 @@
 #ifndef STORAGESERVICEPROGRESSINDICATOR_H
 #define STORAGESERVICEPROGRESSINDICATOR_H
 
+#include "pimcommon_export.h"
 #include <KPixmapSequence>
 #include <QPixmap>
 
 class QTimer;
-
-class StorageServiceProgressIndicator : public QObject
+namespace PimCommon {
+class PIMCOMMON_EXPORT StorageServiceProgressIndicator : public QObject
 {
     Q_OBJECT
 public:
@@ -47,5 +48,6 @@ private:
     KPixmapSequence mProgressPix;
     QTimer *mProgressTimer;
 };
+}
 
 #endif // STORAGESERVICEPROGRESSINDICATOR_H

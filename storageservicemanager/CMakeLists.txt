@@ -20,7 +20,6 @@ set(storageservicemanager_SRCS
   storageserviceconfiguredialog.cpp
   storageservicemanagersettingsjob.cpp
   storageservicetreewidget.cpp
-  storageserviceprogressindicator.cpp
   storageservicewarning.cpp
   storageservicelogdialog.cpp
   storageserviceaccountinfodialog.cpp
