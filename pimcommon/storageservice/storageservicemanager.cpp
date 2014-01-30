@@ -20,6 +20,7 @@
 #include "settings/pimcommonsettings.h"
 
 #include "storageservice/dialog/storageservicedownloaddialog.h"
+#include "storageservice/dialog/storageservicechecknamedialog.h"
 
 #include "dropbox/dropboxstorageservice.h"
 #include "hubic/hubicstorageservice.h"
@@ -156,12 +157,31 @@ void StorageServiceManager::slotShareFile()
             } else {
                 const QString fileName = KFileDialog::getOpenFileName( QString(), QString(), 0, i18n("File to upload") );
                 if (!fileName.isEmpty()) {
+                    QFileInfo info(fileName);
+                    const QRegExp disallowedSymbols = service->disallowedSymbols();
+                    QString newName = info.fileName();
+                    if (!disallowedSymbols.isEmpty()) {
+                        if (newName.contains(disallowedSymbols)) {
+                            QPointer<PimCommon::StorageServiceCheckNameDialog> dlg = new PimCommon::StorageServiceCheckNameDialog;
+                            dlg->setOldName(newName);
+                            dlg->setDisallowedSymbols(disallowedSymbols);
+                            dlg->setDisallowedSymbolsStr(service->disallowedSymbolsStr());
+                            if (dlg->exec()) {
+                                newName = dlg->newName();
+                                delete dlg;
+                            } else {
+                                delete dlg;
+                                return;
+                            }
+                        }
+                    }
+
                     defaultConnect(service);
                     connect(service,SIGNAL(uploadDownloadFileProgress(QString,qint64,qint64)), this, SIGNAL(uploadDownloadFileProgress(QString,qint64,qint64)), Qt::UniqueConnection);
                     connect(service,SIGNAL(uploadFileDone(QString,QString)), this, SIGNAL(uploadFileDone(QString,QString)), Qt::UniqueConnection);
                     connect(service,SIGNAL(uploadFileFailed(QString,QString)), this, SIGNAL(uploadFileFailed(QString,QString)), Qt::UniqueConnection);
                     connect(service,SIGNAL(shareLinkDone(QString,QString)), this, SIGNAL(shareLinkDone(QString,QString)), Qt::UniqueConnection);
-                    service->uploadFile(fileName, QString(), mDefaultUploadFolder); //TODO
+                    service->uploadFile(fileName, newName, mDefaultUploadFolder);
                 }
             }
         }
