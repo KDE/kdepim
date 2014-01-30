@@ -37,6 +37,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
       mFirstTagInComboIndex(-1)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
+    hbox->setMargin(0);
     setLayout(hbox);
     mLockSearch = new QToolButton( this );
     mLockSearch->setCheckable( true );

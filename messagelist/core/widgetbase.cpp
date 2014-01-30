@@ -63,7 +63,9 @@ class Widget::Private
 {
 public:
   Private( Widget *owner )
-    : q( owner ), mView( 0 ),
+    : q( owner ),
+      quickSearchLine( 0 ),
+      mView( 0 ),
       mSearchTimer( 0 ),
       mStorageModel( 0 ), mAggregation( 0 ),
       mTheme( 0 ), mFilter( 0 ),
@@ -127,7 +129,7 @@ Widget::Widget( QWidget *pParent )
   setAutoFillBackground( true );
   setObjectName( QLatin1String( "messagelistwidget" ) );
 
-  QGridLayout * g = new QGridLayout( this );
+  QVBoxLayout * g = new QVBoxLayout( this );
   g->setMargin( 0 );
   g->setSpacing( 0 );
 
@@ -136,19 +138,19 @@ Widget::Widget( QWidget *pParent )
   connect(d->quickSearchLine, SIGNAL(fullSearchRequest()), this, SIGNAL(fullSearchRequest()) );
 
   connect( d->quickSearchLine, SIGNAL(searchEditTextEdited(QString)), SLOT(searchEditTextEdited(QString)) );
-  g->addWidget( d->quickSearchLine, 0, 0, 1, 6 );
+  g->addWidget( d->quickSearchLine, 0 );
 
   d->mView = new View( this );
   d->mView->setFrameStyle( QFrame::NoFrame );
   d->mView->setSortOrder( &d->mSortOrder );
   d->mView->setObjectName( QLatin1String( "messagealistview" ) );
-  g->addWidget( d->mView, 1, 0, 1, 6 );
+  g->addWidget( d->mView, 1 );
 
   connect( d->mView->header(), SIGNAL(sectionClicked(int)),
            SLOT(slotViewHeaderSectionClicked(int)) );
 
-  g->setRowStretch( 1, 1 );
-  g->setColumnStretch( 0, 1 );
+  //g->setRowStretch( 1, 1 );
+  //g->setColumnStretch( 0, 1 );
 
 
   d->mSearchTimer = 0;
