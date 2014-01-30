@@ -55,7 +55,7 @@ void HubicStorageService::readConfig()
     if (grp.hasKey("Expire Time"))
         mExpireDateTime = grp.readEntry("Expire Time", QDateTime::currentDateTime());
     else
-        mExpireDateTime = QDateTime::currentDateTime();
+        mExpireDateTime = QDateTime();
 }
 
 void HubicStorageService::removeConfig()
@@ -109,10 +109,10 @@ void HubicStorageService::storageServicelistFolder(const QString &folder)
     if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(ListFolder);
         mNextAction->setNextActionFolder(folder);
-        if (needRefresh) {
-            refreshToken();
-        } else {
+        if (mToken.isEmpty()) {
             storageServiceauthentication();
+        } else {
+            refreshToken();
         }
     } else {
         HubicJob *job = new HubicJob(this);
@@ -130,10 +130,10 @@ void HubicStorageService::storageServicecreateFolder(const QString &name, const 
         mNextAction->setNextActionType(CreateFolder);
         mNextAction->setNextActionName(name);
         mNextAction->setNextActionFolder(destination);
-        if (needRefresh) {
-            refreshToken();
-        } else {
+        if (mToken.isEmpty()) {
             storageServiceauthentication();
+        } else {
+            refreshToken();
         }
     } else {
         HubicJob *job = new HubicJob(this);
@@ -149,10 +149,10 @@ void HubicStorageService::storageServiceaccountInfo()
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(AccountInfo);
-        if (needRefresh) {
-            refreshToken();
-        } else {
+        if (mToken.isEmpty()) {
             storageServiceauthentication();
+        } else {
+            refreshToken();
         }
     } else {
         HubicJob *job = new HubicJob(this);
@@ -176,10 +176,10 @@ void HubicStorageService::storageServiceuploadFile(const QString &filename, cons
         mNextAction->setNextActionName(filename);
         mNextAction->setUploadAsName(uploadAsName);
         mNextAction->setNextActionFolder(destination);
-        if (needRefresh) {
-            refreshToken();
-        } else {
+        if (mToken.isEmpty()) {
             storageServiceauthentication();
+        } else {
+            refreshToken();
         }
     } else {
         HubicJob *job = new HubicJob(this);
@@ -242,10 +242,10 @@ void HubicStorageService::storageServiceShareLink(const QString &root, const QSt
         mNextAction->setNextActionType(ShareLink);
         mNextAction->setRootPath(root);
         mNextAction->setPath(path);
-        if (needRefresh) {
-            refreshToken();
-        } else {
+        if (mToken.isEmpty()) {
             storageServiceauthentication();
+        } else {
+            refreshToken();
         }
     } else {
         HubicJob *job = new HubicJob(this);
@@ -269,10 +269,10 @@ void HubicStorageService::storageServicedownloadFile(const QString &name, const 
         mNextAction->setNextActionName(name);
         mNextAction->setDownloadDestination(destination);
         mNextAction->setFileId(fileId);
-        if (needRefresh) {
-            refreshToken();
-        } else {
+        if (mToken.isEmpty()) {
             storageServiceauthentication();
+        } else {
+            refreshToken();
         }
     } else {
         HubicJob *job = new HubicJob(this);
@@ -290,10 +290,10 @@ void HubicStorageService::storageServicecreateServiceFolder()
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(CreateServiceFolder);
-        if (needRefresh) {
-            refreshToken();
-        } else {
+        if (mToken.isEmpty()) {
             storageServiceauthentication();
+        } else {
+            refreshToken();
         }
     } else {
         HubicJob *job = new HubicJob(this);
@@ -310,10 +310,10 @@ void HubicStorageService::storageServicedeleteFile(const QString &filename)
     if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(DeleteFile);
         mNextAction->setNextActionName(filename);
-        if (needRefresh) {
-            refreshToken();
-        } else {
+        if (mToken.isEmpty()) {
             storageServiceauthentication();
+        } else {
+            refreshToken();
         }
     } else {
         HubicJob *job = new HubicJob(this);
@@ -330,10 +330,10 @@ void HubicStorageService::storageServicedeleteFolder(const QString &foldername)
     if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(DeleteFolder);
         mNextAction->setNextActionFolder(foldername);
-        if (needRefresh) {
-            refreshToken();
-        } else {
+        if (mToken.isEmpty()) {
             storageServiceauthentication();
+        } else {
+            refreshToken();
         }
     } else {
         HubicJob *job = new HubicJob(this);
@@ -350,10 +350,10 @@ void HubicStorageService::storageServiceRenameFolder(const QString &source, cons
     if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(RenameFolder);
         mNextAction->setRenameFolder(source, destination);
-        if (needRefresh) {
-            refreshToken();
-        } else {
+        if (mToken.isEmpty()) {
             storageServiceauthentication();
+        } else {
+            refreshToken();
         }
     } else {
         HubicJob *job = new HubicJob(this);
@@ -370,10 +370,10 @@ void HubicStorageService::storageServiceRenameFile(const QString &source, const 
     if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(RenameFile);
         mNextAction->setRenameFolder(source, destination);
-        if (needRefresh) {
-            refreshToken();
-        } else {
+        if (mToken.isEmpty()) {
             storageServiceauthentication();
+        } else {
+            refreshToken();
         }
     } else {
         HubicJob *job = new HubicJob(this);
@@ -390,10 +390,10 @@ void HubicStorageService::storageServiceMoveFolder(const QString &source, const 
     if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(MoveFolder);
         mNextAction->setRenameFolder(source, destination);
-        if (needRefresh) {
-            refreshToken();
-        } else {
+        if (mToken.isEmpty()) {
             storageServiceauthentication();
+        } else {
+            refreshToken();
         }
     } else {
         HubicJob *job = new HubicJob(this);
@@ -410,10 +410,10 @@ void HubicStorageService::storageServiceMoveFile(const QString &source, const QS
     if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(MoveFile);
         mNextAction->setRenameFolder(source, destination);
-        if (needRefresh) {
-            refreshToken();
-        } else {
+        if (mToken.isEmpty()) {
             storageServiceauthentication();
+        } else {
+            refreshToken();
         }
     } else {
         HubicJob *job = new HubicJob(this);
@@ -430,10 +430,10 @@ void HubicStorageService::storageServiceCopyFile(const QString &source, const QS
     if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(CopyFile);
         mNextAction->setRenameFolder(source, destination);
-        if (needRefresh) {
-            refreshToken();
-        } else {
+        if (mToken.isEmpty()) {
             storageServiceauthentication();
+        } else {
+            refreshToken();
         }
     } else {
         HubicJob *job = new HubicJob(this);
@@ -450,10 +450,10 @@ void HubicStorageService::storageServiceCopyFolder(const QString &source, const 
     if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(CopyFolder);
         mNextAction->setRenameFolder(source, destination);
-        if (needRefresh) {
-            refreshToken();
-        } else {
+        if (mToken.isEmpty()) {
             storageServiceauthentication();
+        } else {
+            refreshToken();
         }
     } else {
         HubicJob *job = new HubicJob(this);
