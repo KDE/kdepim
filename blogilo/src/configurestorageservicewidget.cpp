@@ -71,6 +71,8 @@ ConfigureStorageServiceWidget::ConfigureStorageServiceWidget(PimCommon::StorageS
         connect(mManageStorageService, SIGNAL(clicked(bool)), this, SLOT(slotManageStorageService()));
     }
     setLayout(lay);
+    //TODO need to implement save/load from KDialogConfig
+    doLoadFromGlobalSettings();
 }
 
 ConfigureStorageServiceWidget::~ConfigureStorageServiceWidget()
