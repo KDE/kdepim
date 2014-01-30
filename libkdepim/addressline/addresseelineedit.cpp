@@ -246,7 +246,6 @@ class AddresseeLineEdit::Private
     void startSearches();
     void akonadiPerformSearch();
     void akonadiHandlePending();
-    void akonadiHandleItems( const Akonadi::Item::List &items );
     void doCompletion( bool ctrlT );
 
     void slotCompletion();
@@ -256,6 +255,7 @@ class AddresseeLineEdit::Private
     void slotLDAPSearchData( const KLDAP::LdapResult::List & );
     void slotEditCompletionOrder();
     void slotUserCancelled( const QString & );
+    void slotAkonadiHandleItems( const Akonadi::Item::List &items );
     void slotAkonadiSearchResult( KJob * );
     void slotAkonadiSearchDbResult( KJob* );
     void slotAkonadiCollectionsReceived( const Akonadi::Collection::List & );
@@ -599,6 +599,8 @@ void AddresseeLineEdit::Private::akonadiPerformSearch()
   contactJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
   contactJob->setQuery( Akonadi::ContactSearchJob::NameOrEmail, m_searchString,
                         Akonadi::ContactSearchJob::ContainsWordBoundaryMatch );
+  q->connect( contactJob, SIGNAL(itemsReceived(Akonadi::Item::List)),
+              q, SLOT(slotAkonadiHandleItems(Akonadi::Item::List)) );
   q->connect( contactJob, SIGNAL(result(KJob*)),
               q, SLOT(slotAkonadiSearchResult(KJob*)) );
 
@@ -606,8 +608,11 @@ void AddresseeLineEdit::Private::akonadiPerformSearch()
   groupJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
   groupJob->setQuery( Akonadi::ContactGroupSearchJob::Name, m_searchString,
                       Akonadi::ContactGroupSearchJob::ContainsMatch );
+  q->connect( contactJob, SIGNAL(itemsReceived(Akonadi::Item::List)),
+              q, SLOT(slotAkonadiHandleItems(Akonadi::Item::List)) );
   q->connect( groupJob, SIGNAL(result(KJob*)),
               q, SLOT(slotAkonadiSearchResult(KJob*)) );
+
   s_static->akonadiJobsInFlight.append( contactJob );
   s_static->akonadiJobsInFlight.append( groupJob );
   akonadiHandlePending();
@@ -852,7 +857,7 @@ void AddresseeLineEdit::Private::slotUserCancelled( const QString &cancelText )
   q->userCancelled( m_previousAddresses + cancelText ); // in KLineEdit
 }
 
-void AddresseeLineEdit::Private::akonadiHandleItems( const Akonadi::Item::List &items )
+void AddresseeLineEdit::Private::slotAkonadiHandleItems( const Akonadi::Item::List &items )
 {
     /* We have to fetch the collections of the items, so that
        the source name can be correctly labeled.*/
@@ -893,23 +898,15 @@ void AddresseeLineEdit::Private::akonadiHandleItems( const Akonadi::Item::List &
 
 void AddresseeLineEdit::Private::slotAkonadiSearchResult( KJob *job )
 {
+  if ( job->error() ) {
+    kWarning() << "Akonadi search job failed: " << job->errorString();
+  } else {
+    Akonadi::ItemSearchJob *searchJob = static_cast<Akonadi::ItemSearchJob*>(job);
+    kDebug() << "Found" << searchJob->items().size() << "items";
+  }
   const int index = s_static->akonadiJobsInFlight.indexOf( qobject_cast<Akonadi::Job*>( job ) );
   if( index != -1 )
     s_static->akonadiJobsInFlight.remove( index );
-  const Akonadi::ContactSearchJob *contactJob =
-    qobject_cast<Akonadi::ContactSearchJob*>( job );
-  const Akonadi::ContactGroupSearchJob *groupJob =
-    qobject_cast<Akonadi::ContactGroupSearchJob*>( job );
-
-  Akonadi::Item::List items;
-  if ( contactJob ) {
-    items += contactJob->items();
-    kDebug() << "Found" << contactJob->contacts().size() << "contacts";
-  } else if ( groupJob ) {
-    items += groupJob->items();
-    kDebug() << "Found" << groupJob->contactGroups().size() << "groups";
-  }
-  akonadiHandleItems( items );
 }
 
 void AddresseeLineEdit::Private::slotAkonadiSearchDbResult( KJob *job )
