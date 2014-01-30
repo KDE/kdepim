@@ -62,7 +62,7 @@ void WebDavStorageService::readConfig()
 
 bool WebDavStorageService::needInitialized() const
 {
-    return (mPublicLocation.isEmpty() || mUsername.isEmpty() || mPassword.isEmpty());
+    return (mServiceLocation.isEmpty() || mUsername.isEmpty() || mPassword.isEmpty());
 }
 
 void WebDavStorageService::removeConfig()
