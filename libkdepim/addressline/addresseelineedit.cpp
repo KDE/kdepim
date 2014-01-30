@@ -257,7 +257,6 @@ class AddresseeLineEdit::Private
     void slotUserCancelled( const QString & );
     void slotAkonadiHandleItems( const Akonadi::Item::List &items );
     void slotAkonadiSearchResult( KJob * );
-    void slotAkonadiSearchDbResult( KJob* );
     void slotAkonadiCollectionsReceived( const Akonadi::Collection::List & );
     void searchInBaloo();
     void slotTriggerDelayedQueries();
@@ -907,18 +906,6 @@ void AddresseeLineEdit::Private::slotAkonadiSearchResult( KJob *job )
   const int index = s_static->akonadiJobsInFlight.indexOf( qobject_cast<Akonadi::Job*>( job ) );
   if( index != -1 )
     s_static->akonadiJobsInFlight.remove( index );
-}
-
-void AddresseeLineEdit::Private::slotAkonadiSearchDbResult( KJob *job )
-{
-  const Akonadi::RecursiveItemFetchJob *contactJob =
-    qobject_cast<Akonadi::RecursiveItemFetchJob*>( job );
-  Akonadi::Item::List items;
-  if ( contactJob ) {
-      items += contactJob->items();
-      kDebug() << "Found in DB directly:" << contactJob->items().size() << "contacts";
-  }
-  akonadiHandleItems( items );
 }
 
 void AddresseeLineEdit::Private::slotAkonadiCollectionsReceived(
