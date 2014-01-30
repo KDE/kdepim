@@ -48,4 +48,3 @@ void StorageServiceConfigureDialog::writeSettings()
     StorageServiceManagerGlobalConfig::self()->writeConfig();
 }
 
-#include "moc_storageserviceconfiguredialog.cpp"
