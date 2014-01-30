@@ -40,6 +40,7 @@
 #include <QPushButton>
 #include <QPointer>
 #include <QDebug>
+#include <QStackedWidget>
 
 using namespace PimCommon;
 
@@ -80,14 +81,26 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     mDescription->setReadOnly(true);
     vbox->addWidget(mDescription);
 
+
+    mStackWidget = new QStackedWidget;
+
+    mInformationPage = new QWidget;
+    mStackWidget->addWidget(mInformationPage);
+    QVBoxLayout *informationLayout = new QVBoxLayout;
+    mInformationPage->setLayout(informationLayout);
     mAccountSize = new QLabel;
     mQuota = new QLabel;
     mShared = new QLabel;
+    informationLayout->addWidget(mAccountSize);
+    informationLayout->addWidget(mQuota);
+    informationLayout->addWidget(mShared);
     setDefaultLabel();
 
-    vbox->addWidget(mAccountSize);
-    vbox->addWidget(mQuota);
-    vbox->addWidget(mShared);
+    mErrorPage = new QWidget;
+    mStackWidget->addWidget(mErrorPage);
+    mStackWidget->setCurrentWidget(mInformationPage);
+
+    vbox->addWidget(mStackWidget);
     mainLayout->addLayout(vbox);
     setLayout(mainLayout);
     connect(mListService, SIGNAL(itemSelectionChanged()), this, SLOT(slotServiceSelected()));
@@ -101,6 +114,7 @@ StorageServiceSettingsWidget::~StorageServiceSettingsWidget()
 
 void StorageServiceSettingsWidget::setDefaultLabel()
 {
+    mStackWidget->setCurrentWidget(mInformationPage);
     mAccountSize->setText(i18n("Account size:"));
     mQuota->setText(i18n("Quota:"));
     mShared->setText(i18n("Shared:"));
@@ -328,6 +342,7 @@ void StorageServiceSettingsWidget::slotUpdateAccountInfoFailed(const QString &se
 {
     Q_UNUSED(error);
     if (mListService->currentItem() && (mListService->currentItem()->data(Name).toString()==serviceName)) {
+        mStackWidget->setCurrentWidget(mErrorPage);
         setDefaultLabel();
     }
 }
@@ -335,6 +350,7 @@ void StorageServiceSettingsWidget::slotUpdateAccountInfoFailed(const QString &se
 void StorageServiceSettingsWidget::slotUpdateAccountInfo(const QString &serviceName, const PimCommon::AccountInfo &info)
 {
     if (mListService->currentItem() && (mListService->currentItem()->data(Name).toString()==serviceName)) {
+        mStackWidget->setCurrentWidget(mInformationPage);
         if (info.accountSize != -1) {
             mAccountSize->setText(i18n("Account size: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
         } else {

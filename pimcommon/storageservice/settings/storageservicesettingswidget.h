@@ -27,6 +27,7 @@ class QListWidget;
 class QPushButton;
 class QLabel;
 class KTextBrowser;
+class QStackedWidget;
 namespace PimCommon {
 class StorageListWidgetItem;
 
@@ -73,6 +74,9 @@ private:
     QLabel *mAccountSize;
     QLabel *mQuota;
     QLabel *mShared;
+    QStackedWidget *mStackWidget;
+    QWidget *mInformationPage;
+    QWidget *mErrorPage;
 };
 }
 #endif // STORAGESERVICESETTINGSWIDGET_H
