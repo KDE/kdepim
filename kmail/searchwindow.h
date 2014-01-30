@@ -120,6 +120,7 @@ protected slots:
   virtual void updateContextMenuActions();
   virtual void slotContextMenuRequested( QListViewItem*, const QPoint &, int );
   virtual void copySelectedToFolder( int menuId );
+  virtual void decryptedCopySelectedToFolder( int menuId );
   virtual void moveSelectedToFolder( int menuId );
   virtual void slotFolderActivated();
   void slotClearSelection();

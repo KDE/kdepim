@@ -2491,6 +2491,7 @@ void KMMainWidget::slotMsgPopup(KMMessage&, const KURL &aUrl, const QPoint& aPoi
     menu->insertSeparator();
 
     mCopyActionMenu->plug( menu );
+    mDecCopyActionMenu->plug( menu );
     mMoveActionMenu->plug( menu );
 
     menu->insertSeparator();
@@ -3052,6 +3053,9 @@ void KMMainWidget::setupActions()
   mCopyActionMenu = new KActionMenu( i18n("&Copy To" ),
                                     actionCollection(), "copy_to" );
 
+  mDecCopyActionMenu = new KActionMenu( i18n("&Decrypted Copy To" ),
+                                    actionCollection(), "decrypted_copy_to" );
+
   mApplyAllFiltersAction = new KAction( i18n("Appl&y All Filters"), "filter",
 				    CTRL+Key_J, this,
 				    SLOT(slotApplyFilters()),
@@ -3345,6 +3349,12 @@ void KMMainWidget::copySelectedToFolder(int menuId )
     mHeaders->copyMsgToFolder( mMenuToFolder[menuId] );
 }
 
+//-----------------------------------------------------------------------------
+void KMMainWidget::decryptedCopySelectedToFolder(int menuId )
+{
+  if (mMenuToFolder[menuId])
+    mHeaders->copyDecryptedMsgToFolder( mMenuToFolder[menuId] );
+}
 
 //-----------------------------------------------------------------------------
 void KMMainWidget::updateMessageMenu()
@@ -3354,6 +3364,8 @@ void KMMainWidget::updateMessageMenu()
       &mMenuToFolder, mMoveActionMenu->popupMenu() );
   folderTree()->folderToPopupMenu( KMFolderTree::CopyMessage, this,
       &mMenuToFolder, mCopyActionMenu->popupMenu() );
+  folderTree()->folderToPopupMenu( KMFolderTree::DecCopyMessage, this,
+      &mMenuToFolder, mDecCopyActionMenu->popupMenu() );
   updateMessageActions();
 }
 
@@ -3434,6 +3446,7 @@ void KMMainWidget::updateMessageActions()
     mMoveActionMenu->setEnabled( mass_actions && mFolder->canDeleteMessages() );
     mMoveMsgToFolderAction->setEnabled( mass_actions && mFolder->canDeleteMessages() );
     mCopyActionMenu->setEnabled( mass_actions );
+    mDecCopyActionMenu->setEnabled( mass_actions );
     mTrashAction->setEnabled( mass_actions && mFolder->canDeleteMessages() );
     mDeleteAction->setEnabled( mass_actions && mFolder->canDeleteMessages() );
     mFindInMessageAction->setEnabled( mass_actions && !kmkernel->folderIsTemplates( mFolder ) );

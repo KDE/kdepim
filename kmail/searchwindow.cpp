@@ -810,6 +810,19 @@ void SearchWindow::copySelectedToFolder( int menuId )
 }
 
 //-----------------------------------------------------------------------------
+void SearchWindow::decryptedCopySelectedToFolder( int menuId )
+{
+    KMFolder *dest = mMenuToFolder[menuId];
+    if (!dest)
+        return;
+
+    KMMessageList msgList = selectedMessages();
+    KMCommand *command = new KMCopyCommand( dest, msgList, true );
+    command->start();
+}
+
+
+//-----------------------------------------------------------------------------
 void SearchWindow::updateContextMenuActions()
 {
     int count = selectedMessages().count();
@@ -844,6 +857,9 @@ void SearchWindow::slotContextMenuRequested( QListViewItem *lvi, const QPoint &,
     QPopupMenu *msgCopyMenu = new QPopupMenu(menu);
     mKMMainWidget->folderTree()->folderToPopupMenu( KMFolderTree::CopyMessage,
         this, &mMenuToFolder, msgCopyMenu );
+    QPopupMenu *msgDecCopyMenu = new QPopupMenu(menu);
+    mKMMainWidget->folderTree()->folderToPopupMenu( KMFolderTree::DecCopyMessage,
+        this, &mMenuToFolder, msgDecCopyMenu );
 
     // show most used actions
     mReplyAction->plug(menu);
@@ -854,6 +870,7 @@ void SearchWindow::slotContextMenuRequested( QListViewItem *lvi, const QPoint &,
     mCopyAction->plug(menu);
     mCutAction->plug(menu);
     menu->insertItem(i18n("&Copy To"), msgCopyMenu);
+    menu->insertItem(i18n("&Decrypted Copy To"), msgDecCopyMenu);
     menu->insertItem(i18n("&Move To"), msgMoveMenu);
     menu->insertSeparator();
     mSaveAsAction->plug(menu);

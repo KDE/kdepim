@@ -2516,7 +2516,7 @@ void KMHeaders::slotRMB()
   QPopupMenu *msgDecCopyMenu = new QPopupMenu(menu);
   mOwner->folderTree()->folderToPopupMenu( KMFolderTree::DecCopyMessage, this,
       &mMenuToFolder, msgDecCopyMenu );
-  menu->insertItem(i18n("&Copy decrypted message to"), msgDecCopyMenu);
+  menu->insertItem(i18n("&Decrypted Copy to"), msgDecCopyMenu);
 
   if ( !mFolder->canDeleteMessages() ) {
     int id = menu->insertItem( i18n("&Move To") );

@@ -143,6 +143,7 @@ public:
   KActionMenu *threadStatusMenu() const { return mThreadStatusMenu; }
   KActionMenu *moveActionMenu() const{ return mMoveActionMenu; }
   KActionMenu *mopyActionMenu() const { return mCopyActionMenu; }
+  KActionMenu *decCopyActionMenu() const { return mDecCopyActionMenu; }
   KActionMenu *applyFilterActionsMenu() const { return mApplyFilterActionsMenu; }
 
   KToggleAction *watchThreadAction() const { return mWatchThreadAction; }
@@ -377,6 +378,9 @@ protected slots:
   virtual void moveSelectedToFolder( int menuId );
   /** Copy selected messages to folder with corresponding to given menuid */
   virtual void copySelectedToFolder( int menuId );
+  /** Copy a decrypted version of selected messages to folder
+   * corresponding to given menuid */
+  virtual void decryptedCopySelectedToFolder( int menuId );
   /** Update html and threaded messages preferences in Folder menu. */
   void updateFolderMenu();
   /** Enable or disable the "mark all as read" action. Needs to happen more
@@ -480,7 +484,8 @@ private:
                 *mCustomForwardMapper;
 
   KActionMenu *mThreadStatusMenu,
-    *mMoveActionMenu, *mCopyActionMenu, *mApplyFilterActionsMenu;
+    *mMoveActionMenu, *mCopyActionMenu, *mApplyFilterActionsMenu,
+    *mDecCopyActionMenu;
   KAction *mMarkThreadAsNewAction;
   KAction *mMarkThreadAsReadAction;
   KAction *mMarkThreadAsUnreadAction;

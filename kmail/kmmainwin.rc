@@ -135,6 +135,7 @@
    <Action name="edit"/>
    <Separator/>
    <Action name="copy_to" />
+   <Action name="decrypted_copy_to" />
    <Action name="move_to" />
    <Separator/>
    <Action name="set_status" />
