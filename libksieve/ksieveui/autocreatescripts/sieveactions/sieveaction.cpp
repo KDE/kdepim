@@ -116,5 +116,3 @@ QString SieveAction::href() const
 {
     return QString();
 }
-
-#include "moc_sieveaction.cpp"

@@ -298,5 +298,3 @@ void SieveEditorWidget::slotSwitchTextMode(const QString &script)
 }
 
 
-
-#include "moc_sieveeditorwidget.cpp"

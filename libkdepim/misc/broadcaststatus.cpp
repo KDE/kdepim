@@ -180,5 +180,3 @@ void BroadcastStatus::reset()
 
 }
 
-
-#include "moc_broadcaststatus.cpp"

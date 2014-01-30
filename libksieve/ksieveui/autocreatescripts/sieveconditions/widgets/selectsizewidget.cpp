@@ -68,5 +68,3 @@ void SelectSizeWidget::setCode(qlonglong value, const QString &identifier, const
 }
 
 
-
-#include "moc_selectsizewidget.cpp"

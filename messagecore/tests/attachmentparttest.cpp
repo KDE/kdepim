@@ -48,5 +48,3 @@ void AttachmentPartTest::testApi()
   QVERIFY( variant.value<AttachmentPart::Ptr>() == part );
 }
 
-
-#include "moc_attachmentparttest.cpp"

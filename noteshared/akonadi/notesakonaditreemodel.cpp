@@ -28,5 +28,3 @@ NotesAkonadiTreeModel::~NotesAkonadiTreeModel()
 {
 
 }
-
-#include "moc_notesakonaditreemodel.cpp"

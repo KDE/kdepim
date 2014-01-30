@@ -55,5 +55,3 @@ void SelectAddHeaderPositionCombobox::setCode(const QString &code, const QString
     }
 }
 
-
-#include "moc_selectaddheaderpositioncombobox.cpp"

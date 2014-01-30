@@ -123,5 +123,3 @@ void LocalResourceCreator::finishCreateResource()
     deleteLater();
 }
 
-
-#include "moc_localresourcecreator.cpp"

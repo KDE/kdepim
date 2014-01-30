@@ -35,5 +35,3 @@ VacationWarningWidget::~VacationWarningWidget()
 {
 
 }
-
-#include "moc_vacationwarningwidget.cpp"

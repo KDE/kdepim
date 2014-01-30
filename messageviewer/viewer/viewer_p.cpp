@@ -3359,5 +3359,3 @@ void ViewerPrivate::slotExpandShortUrl()
     }
 }
 
-
-#include "moc_viewer_p.cpp"

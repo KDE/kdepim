@@ -506,5 +506,3 @@ int AttachmentModel::columnCount( const QModelIndex &parent ) const
   return LastColumn;
 }
 
-
-#include "moc_attachmentmodel.cpp"

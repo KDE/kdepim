@@ -70,5 +70,3 @@ KUrl AttachmentFromUrlBaseJob::url() const
   return d->mUrl;
 }
 
-
-#include "moc_attachmentfromurlbasejob.cpp"

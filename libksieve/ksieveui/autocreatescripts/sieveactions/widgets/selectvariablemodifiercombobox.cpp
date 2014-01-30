@@ -60,5 +60,3 @@ void SelectVariableModifierComboBox::setCode(const QString &code, const QString 
     }
 }
 
-
-#include "moc_selectvariablemodifiercombobox.cpp"

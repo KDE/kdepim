@@ -268,5 +268,3 @@ void ProgressManager::slotAbortAll()
 
 } // namespace
 
-
-#include "moc_progressmanager.cpp"

@@ -132,5 +132,3 @@ QString SieveConditionMetaDataExists::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
-
-#include "moc_sieveconditionmetadataexists.cpp"

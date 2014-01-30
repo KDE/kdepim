@@ -330,5 +330,3 @@ void SelectDateWidget::setCode(const QString &type, const QString &value)
 
 }
 
-
-#include "moc_selectdatewidget.cpp"

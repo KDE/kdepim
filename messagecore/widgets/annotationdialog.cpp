@@ -132,5 +132,3 @@ void AnnotationEditDialog::writeConfig()
 
 
 
-
-#include "moc_annotationdialog.cpp"

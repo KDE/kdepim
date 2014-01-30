@@ -77,5 +77,3 @@ QString SieveEditorHelpHtmlWidget::variableName() const
 {
     return mVariableName;
 }
-
-#include "moc_sieveeditorhelphtmlwidget.cpp"

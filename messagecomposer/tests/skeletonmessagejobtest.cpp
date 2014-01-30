@@ -214,5 +214,3 @@ void SkeletonMessageJobTest::testMessageID()
   delete composer;
 }
 
-
-#include "moc_skeletonmessagejobtest.cpp"

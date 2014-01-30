@@ -107,5 +107,3 @@ void KPIM::NepomukWarning::explicitlyClosed()
   cfgGroup.writeEntry( m_neverShowAgainKey, true );
 }
 
-
-#include "moc_nepomukwarning.cpp"

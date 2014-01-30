@@ -129,5 +129,3 @@ quint16 NoteHostDialog::port() const
     return m_hostCombo->currentText().section( QLatin1Char(':'), 1 ).toUShort();
 }
 
-
-#include "moc_notehostdialog.cpp"

@@ -183,5 +183,3 @@ QString SieveConditionMetaData::href() const
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 
-
-#include "moc_sieveconditionmetadata.cpp"

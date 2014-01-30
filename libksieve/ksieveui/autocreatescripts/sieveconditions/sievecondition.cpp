@@ -106,5 +106,3 @@ QString KSieveUi::SieveCondition::href() const
 {
     return QString();
 }
-
-#include "moc_sievecondition.cpp"

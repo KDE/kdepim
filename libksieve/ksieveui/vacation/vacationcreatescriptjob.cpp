@@ -100,5 +100,3 @@ void VacationCreateScriptJob::handlePutResult( KManageSieve::SieveJob *, bool su
     Q_EMIT scriptActive( activated, mServerName );
     deleteLater();
 }
-
-#include "moc_vacationcreatescriptjob.cpp"

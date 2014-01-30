@@ -47,5 +47,3 @@ QString SieveActionRemoveFlags::href() const
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 
-
-#include "moc_sieveactionremoveflags.cpp"

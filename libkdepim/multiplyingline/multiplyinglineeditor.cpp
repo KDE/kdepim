@@ -162,5 +162,3 @@ bool MultiplyingLineEditor::dynamicSizeHint() const
   return mView->dynamicSizeHint();
 }
 
-
-#include "moc_multiplyinglineeditor.cpp"

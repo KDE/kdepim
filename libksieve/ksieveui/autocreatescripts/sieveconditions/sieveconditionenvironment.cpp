@@ -149,5 +149,3 @@ QString KSieveUi::SieveConditionEnvironment::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
-
-#include "moc_sieveconditionenvironment.cpp"

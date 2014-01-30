@@ -103,5 +103,3 @@ void ParseUserTest::testParseUserErrorScriptJob()
 }
 
 
-
-#include "moc_parseuserjobtest.cpp"

@@ -88,5 +88,3 @@ void SieveTreeWidgetItem::setDefaultIcon()
     setIcon( 0, SmallIcon( QLatin1String("network-server") ) );
 }
 
-
-#include "moc_sievetreewidgetitem.cpp"

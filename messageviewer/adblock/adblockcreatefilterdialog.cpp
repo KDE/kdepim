@@ -142,5 +142,3 @@ void AdBlockCreateFilterDialog::slotUpdateFilter()
     mUi->filterName->setText(pattern);
 }
 
-
-#include "moc_adblockcreatefilterdialog.cpp"

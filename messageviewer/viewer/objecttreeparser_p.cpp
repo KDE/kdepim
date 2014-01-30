@@ -409,5 +409,3 @@ void VerifyOpaqueBodyPartMemento::slotKeyListJobDone()
 }
 
 
-
-#include "moc_objecttreeparser_p.cpp"

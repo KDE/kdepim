@@ -91,5 +91,3 @@ void AttachmentFromMimeContentJob::doStart()
   emitResult(); // Success.
 }
 
-
-#include "moc_attachmentfrommimecontentjob.cpp"

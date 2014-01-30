@@ -187,5 +187,3 @@ QString SieveConditionSpamTest::href() const
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 
-
-#include "moc_sieveconditionspamtest.cpp"

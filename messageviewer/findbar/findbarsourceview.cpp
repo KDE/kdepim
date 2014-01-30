@@ -83,5 +83,3 @@ void FindBarSourceView::updateSensitivity(bool)
 }
 
 
-
-#include "moc_findbarsourceview.cpp"

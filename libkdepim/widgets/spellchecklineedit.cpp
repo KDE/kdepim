@@ -242,5 +242,3 @@ void SpellCheckLineEdit::languageSelected()
 }
 
 
-
-#include "moc_spellchecklineedit.cpp"

@@ -126,5 +126,3 @@ KABC::Picture ContactDisplayMessageMemento::photo() const
 }
 
 
-
-#include "moc_contactdisplaymessagememento.cpp"

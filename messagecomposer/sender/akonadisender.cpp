@@ -188,5 +188,3 @@ void AkonadiSender::queueJobResult( KJob *job )
   }
 }
 
-
-#include "moc_akonadisender.cpp"

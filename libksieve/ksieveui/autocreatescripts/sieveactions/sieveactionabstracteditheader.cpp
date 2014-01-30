@@ -39,5 +39,3 @@ QString SieveActionAbstractEditHeader::serverNeedsCapability() const
     return QLatin1String("editheader");
 }
 
-
-#include "moc_sieveactionabstracteditheader.cpp"

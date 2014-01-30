@@ -162,5 +162,3 @@ void RecipientsEditorSideWidget::pickRecipient()
     }
 }
 
-
-#include "moc_recipientseditorsidewidget.cpp"

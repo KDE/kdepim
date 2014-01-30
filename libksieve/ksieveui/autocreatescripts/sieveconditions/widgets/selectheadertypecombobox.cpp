@@ -233,5 +233,3 @@ void SelectHeaderTypeComboBox::setCode(const QString &code)
     mCode = code;
 }
 
-
-#include "moc_selectheadertypecombobox.cpp"

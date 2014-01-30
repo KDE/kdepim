@@ -158,5 +158,3 @@ void ComposerTest::fillComposerData( Composer* composer )
   composer->textPart()->setWrappedPlainText( QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ) );
 }
 
-
-#include "moc_composertest.cpp"
