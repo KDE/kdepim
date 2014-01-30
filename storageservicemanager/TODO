@@ -1,6 +1,6 @@
 1.0:
 ----
-- Add wallet support
-- Remove page service when we remove a service.
+- Add wallet support (In Progress)
+- Remove page service when we remove a service. (In Progress)
 - Add multi selection
-- Add navigation bar
+- Add navigation bar (In Progress)

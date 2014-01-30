@@ -83,7 +83,8 @@ set(libpimcommon_storageservice_SRCS
   storageservice/widgets/storageserviceprogresswidget.cpp
   storageservice/widgets/storageserviceprogressindicator.cpp
   storageservice/widgets/storageserviceprogressdialog.cpp
-  
+ 
+  storageservice/storageservicesettings.cpp 
  
   storageservice/tests/testsettingsjob.cpp
 )
