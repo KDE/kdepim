@@ -33,17 +33,26 @@ public:
     explicit QuickSearchLine(QWidget *parent=0);
     ~QuickSearchLine();
 
+    void focusQuickSearch();
+
+    KComboBox *statusFilterComboBox() const;
+
 Q_SIGNALS:
     void fullSearchRequest();
     void clearButtonClicked();
     void searchEditTextEdited(const QString &);
     void lockSearchClicked(bool);
 
+private slots:
+    void slotLockSearchClicked(bool locked);
+
 private:
+    void defaultFilterStatus();
     KLineEdit *mSearchEdit;
     KComboBox *mStatusFilterCombo;
     QToolButton *mOpenFullSearchButton;
     QToolButton *mLockSearch;
+    int mFirstTagInComboIndex;
 };
 
 #endif // QUICKSEARCHLINE_H
