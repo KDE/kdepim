@@ -1212,10 +1212,11 @@ void AddresseeLineEdit::enableCompletion( bool enable )
 
 void AddresseeLineEdit::addItem( const Akonadi::Item &item, int weight, int source )
 {
+  //Let Akonadi results always have a higher weight than baloo results
   if ( item.hasPayload<KABC::Addressee>() ) {
-    addContact( item.payload<KABC::Addressee>(), weight, source );
+    addContact( item.payload<KABC::Addressee>(), weight + 1, source );
   } else if ( item.hasPayload<KABC::ContactGroup>() ) {
-    addContactGroup( item.payload<KABC::ContactGroup>(), weight, source );
+    addContactGroup( item.payload<KABC::ContactGroup>(), weight + 1, source );
   }
 }
 
