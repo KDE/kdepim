@@ -18,8 +18,12 @@
 #include "yousenditstorageservice.h"
 #include "storageservice/widgets/storageservicetreewidget.h"
 #include "storageservice/storageservicemanager.h"
+#include "storageservice/storageservicesettings.h"
+
 #include "yousenditutil.h"
 #include "yousenditjob.h"
+
+#include <kwallet.h>
 
 #include <KLocalizedString>
 #include <KConfig>
@@ -47,8 +51,12 @@ void YouSendItStorageService::readConfig()
     KConfig config(StorageServiceManager::kconfigName());
     KConfigGroup grp(&config, "YouSendIt Settings");
     mUsername = grp.readEntry("Username");
-    //Use password ?
-    mPassword = grp.readEntry("Password");
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        const QString walletEntry = StorageServiceManager::kconfigName();
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet)
+            wallet->readPassword(walletEntry, mPassword);
+    }
     mToken = grp.readEntry("Token");
 }
 
@@ -57,6 +65,12 @@ void YouSendItStorageService::removeConfig()
     KConfig config(StorageServiceManager::kconfigName());
     KConfigGroup grp(&config, "YouSendIt Settings");
     grp.deleteGroup();
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        const QString walletEntry = StorageServiceManager::kconfigName();
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet)
+            wallet->removeEntry(walletEntry);
+    }
     KGlobal::config()->sync();
 }
 
@@ -85,8 +99,12 @@ void YouSendItStorageService::slotAuthorizationDone(const QString &password, con
     KConfig config(StorageServiceManager::kconfigName());
     KConfigGroup grp(&config, "YouSendIt Settings");
     grp.readEntry("Username", mUsername);
-    //TODO store in kwallet ?
-    grp.writeEntry("Password", mPassword);
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        const QString walletEntry = StorageServiceManager::kconfigName();
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet)
+            wallet->writePassword(walletEntry, mPassword);
+    }
     grp.writeEntry("Token", mToken);
     grp.sync();
     emitAuthentificationDone();

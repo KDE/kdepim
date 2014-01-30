@@ -70,6 +70,13 @@ void WebDavStorageService::removeConfig()
     KConfig config(StorageServiceManager::kconfigName());
     KConfigGroup grp(&config, "Webdav Settings");
     grp.deleteGroup();
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        const QString walletEntry = StorageServiceManager::kconfigName();
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet)
+            wallet->removeEntry(walletEntry);
+    }
+
     KGlobal::config()->sync();
 }
 
