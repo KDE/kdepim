@@ -4540,56 +4540,55 @@ DwBodyPart* KMMessage::findPartInternal(DwEntity * root, int index, int & accu)
 
 KMMessage* KMMessage::createDecryptedCopy()
 {
-  kdDebug() << "Creating decrypted copy. Already decrypted?: "
-    << hasUnencryptedMsg() << endl;
-  if ( hasUnencryptedMsg() ) {
-    // We already have an unencrypted message. Copy it and
-    // be done. Rarely happens as this is only used if the
-    // store-displayed-messages-unencrypted
-    // configuration setting is set.
-    return new KMMessage( new DwMessage( *unencryptedMsg()->mMsg ) );
-  } else {
-    // Create a working copy of this mail on stack
-    KMMessage *aMsg = new KMMessage( new DwMessage( *this->mMsg ) );
 
-    // Parse it
-    kdDebug() << "Parsing the message" << endl;
-    ObjectTreeParser otp( 0, 0, true, false, true );
-    partNode *root = partNode::fromMessage( aMsg );
-    if ( !root ) {
-      delete aMsg;
-      return NULL;
-    }
-    otp.parseObjectTree( root );
+  kdDebug() << "KMMessage::createDecryptedCopy" << endl;
+  // Create a working copy
+  KMMessage *aMsg = new KMMessage( new DwMessage( *this->mMsg ) );
 
-    kdDebug () << "Message status after parsing: Enc: " <<
-      root->overallEncryptionState() <<
-      " Sig: " << root->overallSignatureState() << endl;
-
-    // Now get the decrypted message using some old code from
-    // KMReaderWin
-    NewByteArray decryptedData;
-    const bool changed = KMReaderWin::objectTreeToDecryptedMsg( root,
-        decryptedData, aMsg->getTopLevelPart(), false, 0, true);
-
-    if ( !changed ) {
-      kdDebug() << "Nothing changed" << endl;
-    }
-
-    decryptedData.appendNULL();
-    QCString resultString( decryptedData.data() );
-
-    if( !resultString.isEmpty() ) {
-//      kdDebug() << "composing unencrypted message: " << resultString << endl;
-      aMsg->deleteBodyParts();
-      aMsg->setMultiPartBody( resultString );
-      KMMessage* unencryptedMessage = new KMMessage( *aMsg );
-      unencryptedMessage->cleanupHeader(); // Remove empty fields
-      unencryptedMessage->setParent( 0 );
-      delete aMsg;
-      return unencryptedMessage;
-    }
+  // Parse it
+  kdDebug() << "Parsing the message" << endl;
+  ObjectTreeParser otp( 0, 0, true, false, true );
+  partNode *root = partNode::fromMessage( aMsg );
+  if ( !root ) {
     delete aMsg;
     return NULL;
   }
+  otp.parseObjectTree( root );
+
+  bool hasToChange = false;
+
+  KMMsgEncryptionState encState = root->overallEncryptionState();
+
+  if ( encState == KMMsgPartiallyEncrypted ||
+      encState == KMMsgFullyEncrypted ) {
+    // Check if the obtained message should be changed
+    hasToChange = true;
+  } else if ( encState == KMMsgNotEncrypted ) {
+    return aMsg;
+  }
+
+  NewByteArray decryptedData;
+  const bool changed = KMReaderWin::objectTreeToDecryptedMsg( root,
+      decryptedData, aMsg->getTopLevelPart(), false, 0, true);
+
+  if ( !changed && hasToChange ) {
+    kdDebug() << "Decryption changed nothing but message was encrypted -> error" << endl;
+    delete aMsg;
+    return NULL;
+  }
+
+  decryptedData.appendNULL();
+  QCString resultString( decryptedData.data() );
+
+  if( !resultString.isEmpty() ) {
+    aMsg->deleteBodyParts();
+    aMsg->setMultiPartBody( resultString );
+    KMMessage* unencryptedMessage = new KMMessage( *aMsg );
+    unencryptedMessage->cleanupHeader(); // Remove empty fields
+    unencryptedMessage->setParent( 0 );
+    delete aMsg;
+    return unencryptedMessage;
+  }
+  delete aMsg;
+  return NULL;
 }

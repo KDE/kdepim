@@ -2008,7 +2008,17 @@ KMCommand::Result KMCopyCommand::execute()
 
     if ( mDecrypt ) {
       // Work on a decrypted copy of this message
+      QString oldSubject = msg->subject();
       msg = msg->createDecryptedCopy();
+      if ( !msg ) {
+        KMessageBox::error( parentWidget(), i18n("Decryption of Message \"%1\" failed. "
+            "Copying of messages aborted.").arg( oldSubject ) );
+        deleteLater();
+        return Failed;
+      }
+      if ( idx != -1 ) {
+        srcFolder->unGetMsg(idx);
+      }
       srcFolder = NULL;
     }
 
