@@ -1,4 +1,4 @@
 File=blogilo.kcfg
 ClassName=Settings
 Singleton=true
-Mutators=showToolboxOnStart,configWindowSize,uploadMediaDialogSize,ftpServerPath,httpUrl,updateEntriesCount,showUpdateEntriesDialog
+Mutators=showToolboxOnStart,configWindowSize,uploadMediaDialogSize,ftpServerPath,httpUrl,updateEntriesCount,showUpdateEntriesDialog, DownloadDirectory

@@ -16,6 +16,7 @@
 */
 
 #include "configurestorageservicewidget.h"
+#include "settings.h"
 #include "pimcommon/storageservice/widgets/storageserviceconfigurewidget.h"
 #include "pimcommon/storageservice/settings/storageservicesettingswidget.h"
 #include "pimcommon/storageservice/storageservicemanager.h"
@@ -23,6 +24,7 @@
 #include <KLocalizedString>
 #include <KStandardDirs>
 #include <KMessageBox>
+#include <KUrlRequester>
 
 #include <QVBoxLayout>
 #include <QProcess>
@@ -41,12 +43,12 @@ StorageServiceConfigureWidget::~StorageServiceConfigureWidget()
 
 void StorageServiceConfigureWidget::loadSettings()
 {
-    //TODO
+    downloadFolder()->setUrl(KUrl(Settings::self()->downloadDirectory()));
 }
 
 void StorageServiceConfigureWidget::writeSettings()
 {
-    //TODO
+    Settings::self()->setDownloadDirectory(downloadFolder()->url().path());
 }
 
 ConfigureStorageServiceWidget::ConfigureStorageServiceWidget(PimCommon::StorageServiceManager *storageManager, QWidget *parent)
