@@ -32,11 +32,14 @@ public:
     virtual void writeSettings();
 };
 
+namespace PimCommon {
+class StorageServiceManager;
+}
 class ConfigureStorageServiceWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ConfigureStorageServiceWidget(QWidget *parent=0);
+    explicit ConfigureStorageServiceWidget(PimCommon::StorageServiceManager *storageManager, QWidget *parent=0);
     ~ConfigureStorageServiceWidget();
 
     void save();
@@ -51,6 +54,7 @@ private slots:
 private:
     StorageServiceConfigureWidget *mStorageServiceConfigureWidget;
     QPushButton *mManageStorageService;
+    PimCommon::StorageServiceManager *mStorageManager;
 };
 
 #endif // CONFIGURESTORAGESERVICEWIDGET_H

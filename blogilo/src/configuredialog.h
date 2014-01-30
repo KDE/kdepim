@@ -20,12 +20,17 @@
 
 #include <KConfigDialog>
 #include "bilboblog.h"
+
+namespace PimCommon {
+class StorageServiceManager;
+}
+
 class ConfigureStorageServiceWidget;
 class ConfigureDialog : public KConfigDialog
 {
     Q_OBJECT
 public:
-    explicit ConfigureDialog( QWidget *parent, const QString& name, KConfigSkeleton *config );
+    explicit ConfigureDialog(PimCommon::StorageServiceManager *storageManager, QWidget *parent, const QString& name, KConfigSkeleton *config );
     ~ConfigureDialog();
 
 Q_SIGNALS:

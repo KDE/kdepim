@@ -323,7 +323,7 @@ void MainWindow::optionsPreferences()
     if ( KConfigDialog::showDialog( QLatin1String("settings") ) )  {
         return;
     }
-    ConfigureDialog *dialog = new ConfigureDialog( this, QLatin1String("settings"), Settings::self() );
+    ConfigureDialog *dialog = new ConfigureDialog( mStorageManager, this, QLatin1String("settings"), Settings::self() );
     connect( dialog, SIGNAL(blogAdded(BilboBlog)),
              this, SLOT(slotBlogAdded(BilboBlog)) );
     connect( dialog, SIGNAL(blogEdited(BilboBlog)),

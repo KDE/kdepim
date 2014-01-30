@@ -17,6 +17,8 @@
 
 #include "configurestorageservicewidget.h"
 #include "pimcommon/storageservice/widgets/storageserviceconfigurewidget.h"
+#include "pimcommon/storageservice/settings/storageservicesettingswidget.h"
+#include "pimcommon/storageservice/storageservicemanager.h"
 
 #include <KLocalizedString>
 #include <KStandardDirs>
@@ -47,8 +49,9 @@ void StorageServiceConfigureWidget::writeSettings()
     //TODO
 }
 
-ConfigureStorageServiceWidget::ConfigureStorageServiceWidget(QWidget *parent)
-    : QWidget(parent)
+ConfigureStorageServiceWidget::ConfigureStorageServiceWidget(PimCommon::StorageServiceManager *storageManager, QWidget *parent)
+    : QWidget(parent),
+      mStorageManager(storageManager)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     mStorageServiceConfigureWidget = new StorageServiceConfigureWidget;
@@ -82,13 +85,14 @@ void ConfigureStorageServiceWidget::slotManageStorageService()
 
 void ConfigureStorageServiceWidget::save()
 {
-    //storageServiceManager()->setListService(mStorageServiceWidget->listService());
+    mStorageManager->setListService(mStorageServiceConfigureWidget->storageServiceSettingsWidget()->listService());
     mStorageServiceConfigureWidget->writeSettings();
 }
 
 void ConfigureStorageServiceWidget::doLoadFromGlobalSettings()
 {
-    //mStorageServiceWidget->setListService(KMKernel::self()->storageServiceManager()->listService(), PimCommon::StorageServiceAbstract::ShareLinkCapability);
+    //FIXME capabilities
+    mStorageServiceConfigureWidget->storageServiceSettingsWidget()->setListService(mStorageManager->listService(), PimCommon::StorageServiceAbstract::ShareLinkCapability);
     mStorageServiceConfigureWidget->loadSettings();
 }
 
