@@ -30,6 +30,7 @@
 #include "core/messageitem.h"
 #include "core/storagemodelbase.h"
 #include "core/settings.h"
+#include "core/quicksearchline.h"
 
 #include "utils/configureaggregationsdialog.h"
 #include "utils/configurethemesdialog.h"
@@ -62,16 +63,14 @@ class Widget::Private
 {
 public:
   Private( Widget *owner )
-    : q( owner ), mView( 0 ), mSearchEdit( 0 ),
-      mSearchTimer( 0 ), mStatusFilterCombo( 0 ),
-      mOpenFullSearchButton( 0 ),
-      mLockSearch( 0 ),
+    : q( owner ), mView( 0 ),
+      mSearchTimer( 0 ),
       mStorageModel( 0 ), mAggregation( 0 ),
       mTheme( 0 ), mFilter( 0 ),
       mStorageUsesPrivateTheme( false ),
       mStorageUsesPrivateAggregation( false ),
-      mStorageUsesPrivateSortOrder( false ),
-      mFirstTagInComboIndex( -1 ) { }
+      mStorageUsesPrivateSortOrder( false )
+  { }
 
 
   /**
@@ -99,14 +98,11 @@ public:
 
   Widget * const q;
 
+  QuickSearchLine *quickSearchLine;
   View *mView;
   QString mLastAggregationId;
   QString mLastThemeId;
-  KLineEdit *mSearchEdit;
   QTimer *mSearchTimer;
-  KComboBox *mStatusFilterCombo;
-  QToolButton *mOpenFullSearchButton;
-  QToolButton *mLockSearch;
   StorageModel * mStorageModel;          ///< The currently displayed storage. The storage itself
                                          ///  is owned by MessageList::Widget.
   Aggregation * mAggregation;            ///< The currently set aggregation mode, a deep copy
@@ -116,7 +112,6 @@ public:
   bool mStorageUsesPrivateTheme;         ///< true if the current folder does not use the global theme
   bool mStorageUsesPrivateAggregation;   ///< true if the current folder does not use the global aggregation
   bool mStorageUsesPrivateSortOrder;     ///< true if the current folder does not use the global sort order
-  int mFirstTagInComboIndex;             ///< the index of the combobox where the first tag starts
   KUrl mCurrentFolderUrl;                ///< The Akonadi URL of the current folder
 };
 
@@ -136,54 +131,12 @@ Widget::Widget( QWidget *pParent )
   g->setMargin( 0 );
   g->setSpacing( 0 );
 
-  d->mLockSearch = new QToolButton( this );
-  d->mLockSearch->setCheckable( true );
-  d->mLockSearch->setText( i18nc( "@action:button", "Lock search" ) );
-  slotLockSearchClicked( false );
-  d->mLockSearch->setWhatsThis(
-    i18nc( "@info:whatsthis",
-           "Toggle this button if you want to keep your quick search "
-           "locked when moving to other folders or when narrowing the search "
-           "by message status." ) );
+  d->quickSearchLine = new QuickSearchLine;
+  connect(d->quickSearchLine, SIGNAL(clearButtonClicked()), SLOT(searchEditClearButtonClicked()) );
+  connect(d->quickSearchLine, SIGNAL(fullSearchRequest()), this, SIGNAL(fullSearchRequest()) );
 
-  d->mLockSearch->setVisible( Settings::self()->showQuickSearch() );
-  connect( d->mLockSearch, SIGNAL(toggled(bool)),
-           this, SLOT(slotLockSearchClicked(bool)) );
-  g->addWidget( d->mLockSearch, 0, 0 );
-
-
-  d->mSearchEdit = new KLineEdit( this );
-  d->mSearchEdit->setClickMessage( i18nc( "Search for messages.", "Search" ) );
-  d->mSearchEdit->setObjectName( QLatin1String( "quicksearch" ) );
-  d->mSearchEdit->setClearButtonShown( true );
-  d->mSearchEdit->setVisible( Settings::self()->showQuickSearch() );
-
-  connect( d->mSearchEdit, SIGNAL(textEdited(QString)),
-           SLOT(searchEditTextEdited(QString)) );
-
-  connect( d->mSearchEdit, SIGNAL(clearButtonClicked()),
-           SLOT(searchEditClearButtonClicked()) );
-
-  g->addWidget( d->mSearchEdit, 0, 1 );
-
-  // The status filter button. Will be populated later, as populateStatusFilterCombo() is virtual
-  d->mStatusFilterCombo = new KComboBox( this ) ;
-  d->mStatusFilterCombo->setVisible( Settings::self()->showQuickSearch() );
-  d->mStatusFilterCombo->setMaximumWidth(300);
-  defaultFilterStatus();
-  g->addWidget( d->mStatusFilterCombo, 0, 2 );
-
-  // The "Open Full Search" button
-  d->mOpenFullSearchButton = new QToolButton( this );
-  d->mOpenFullSearchButton->setIcon( KIcon( QLatin1String( "edit-find-mail" ) ) );
-  d->mOpenFullSearchButton->setText( i18n( "Open Full Search" ) );
-  d->mOpenFullSearchButton->setToolTip( d->mOpenFullSearchButton->text() );
-  d->mOpenFullSearchButton->setVisible( Settings::self()->showQuickSearch() );
-  g->addWidget( d->mOpenFullSearchButton, 0, 3 );
-
-  connect( d->mOpenFullSearchButton, SIGNAL(clicked()),
-           this, SIGNAL(fullSearchRequest()) );
-
+  connect( d->quickSearchLine, SIGNAL(searchEditTextEdited(QString)), SLOT(searchEditTextEdited(QString)) );
+  g->addWidget( d->quickSearchLine, 0, 0, 1, 6 );
 
   d->mView = new View( this );
   d->mView->setFrameStyle( QFrame::NoFrame );
@@ -197,8 +150,6 @@ Widget::Widget( QWidget *pParent )
   g->setRowStretch( 1, 1 );
   g->setColumnStretch( 0, 1 );
 
-  d->mSearchEdit->setEnabled( false );
-  d->mStatusFilterCombo->setEnabled( false );
 
   d->mSearchTimer = 0;
 }
@@ -220,9 +171,9 @@ Widget::~Widget()
 
 void Widget::changeQuicksearchVisibility(bool show)
 {
-  KLineEdit * const lineEdit = d->mSearchEdit;
-  QWidget * const comboBox = d->mStatusFilterCombo;
-  QWidget * const fullSearchButton = d->mOpenFullSearchButton;
+  KLineEdit * const lineEdit = d->quickSearchLine->searchEdit();
+  QWidget * const comboBox = d->quickSearchLine->statusFilterComboBox();
+  QWidget * const fullSearchButton = d->quickSearchLine->openFullSearchButton();
   if ( !show ) {
     //if we hide it we do not want to apply the filter,
     //otherwise someone is maybe stuck with x new emails
@@ -242,75 +193,26 @@ void Widget::changeQuicksearchVisibility(bool show)
   lineEdit->setVisible( show );
   comboBox->setVisible( show );
   fullSearchButton->setVisible( show );
-  d->mLockSearch->setVisible( show );
+  d->quickSearchLine->lockSearch()->setVisible( show );
   Settings::self()->setShowQuickSearch( show );
-}
-
-void Widget::defaultFilterStatus()
-{
-    d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "system-run" )), i18n( "Any Status" ), 0 );
-
-    d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-unread" )),
-                                    i18nc( "@action:inmenu Status of a message", "Unread" ),
-                                    Akonadi::MessageStatus::statusUnread().toQInt32() );
-
-    d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-replied" )),
-                                    i18nc( "@action:inmenu Status of a message", "Replied" ),
-                                    Akonadi::MessageStatus::statusReplied().toQInt32() );
-
-    d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-forwarded" )),
-                                    i18nc( "@action:inmenu Status of a message", "Forwarded" ),
-                                    Akonadi::MessageStatus::statusForwarded().toQInt32() );
-
-    d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "emblem-important" )),
-                                    i18nc( "@action:inmenu Status of a message", "Important"),
-                                    Akonadi::MessageStatus::statusImportant().toQInt32() );
-
-    d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-task" )),
-                                    i18nc( "@action:inmenu Status of a message", "Action Item" ),
-                                    Akonadi::MessageStatus::statusToAct().toQInt32() );
-
-    d->mStatusFilterCombo->addItem( QIcon( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-thread-watch.png" ) ) ),
-                                    i18nc( "@action:inmenu Status of a message", "Watched" ),
-                                    Akonadi::MessageStatus::statusWatched().toQInt32() );
-
-    d->mStatusFilterCombo->addItem( QIcon( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-thread-ignored.png" ) ) ),
-                                    i18nc( "@action:inmenu Status of a message", "Ignored" ),
-                                    Akonadi::MessageStatus::statusIgnored().toQInt32() );
-
-    d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-attachment" )),
-                                    i18nc( "@action:inmenu Status of a message", "Has Attachment" ),
-                                    Akonadi::MessageStatus::statusHasAttachment().toQInt32() );
-
-    d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-invitation" )),
-                                    i18nc( "@action:inmenu Status of a message", "Has Invitation" ),
-                                    Akonadi::MessageStatus::statusHasInvitation().toQInt32() );
-
-    d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-mark-junk" )),
-                                    i18nc( "@action:inmenu Status of a message", "Spam" ),
-                                    Akonadi::MessageStatus::statusSpam().toQInt32() );
-
-    d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-mark-notjunk" )),
-                                    i18nc( "@action:inmenu Status of a message", "Ham" ),
-                                    Akonadi::MessageStatus::statusHam().toQInt32() );
-    d->mFirstTagInComboIndex = d->mStatusFilterCombo->count();
 }
 
 void Widget::populateStatusFilterCombo()
 {
-  const int currentIndex = (d->mStatusFilterCombo->currentIndex() != -1) ?  d->mStatusFilterCombo->currentIndex() : 0;
-  disconnect( d->mStatusFilterCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(statusSelected(int)) );
+  KComboBox *statusFilterComboBox = d->quickSearchLine->statusFilterComboBox();
+  const int currentIndex = (statusFilterComboBox->currentIndex() != -1) ?  statusFilterComboBox->currentIndex() : 0;
+  disconnect( statusFilterComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(statusSelected(int)) );
 
-  for (int i = d->mFirstTagInComboIndex; i < d->mStatusFilterCombo->count(); ++i) {
-      d->mStatusFilterCombo->removeItem(i);
+  for (int i = d->quickSearchLine->firstTagInComboIndex(); i < d->quickSearchLine->statusFilterComboBox()->count(); ++i) {
+      statusFilterComboBox->removeItem(i);
   }
 
-  fillMessageTagCombo( d->mStatusFilterCombo );
+  fillMessageTagCombo( d->quickSearchLine->statusFilterComboBox() );
 
-  connect( d->mStatusFilterCombo, SIGNAL(currentIndexChanged(int)),
+  connect( d->quickSearchLine->statusFilterComboBox(), SIGNAL(currentIndexChanged(int)),
            this, SLOT(statusSelected(int)) );
 
-  d->mStatusFilterCombo->setCurrentIndex(currentIndex>=d->mStatusFilterCombo->count() ? 0 : currentIndex );
+  d->quickSearchLine->statusFilterComboBox()->setCurrentIndex(currentIndex>=d->quickSearchLine->statusFilterComboBox()->count() ? 0 : currentIndex );
 }
 
 MessageItem *Widget::currentMessageItem() const
@@ -418,14 +320,14 @@ void Widget::setStorageModel( StorageModel * storageModel, PreSelectionMode preS
   d->setDefaultThemeForStorageModel( storageModel );
   d->setDefaultSortOrderForStorageModel( storageModel );
 
-  if(!d->mLockSearch->isChecked()) {
+  if(!d->quickSearchLine->lockSearch()->isChecked()) {
       if ( d->mSearchTimer ) {
           d->mSearchTimer->stop();
           delete d->mSearchTimer;
           d->mSearchTimer = 0;
       }
 
-      d->mSearchEdit->clear();
+      d->quickSearchLine->searchEdit()->clear();
 
       if ( d->mFilter ) {
           resetFilter();
@@ -438,8 +340,8 @@ void Widget::setStorageModel( StorageModel * storageModel, PreSelectionMode preS
 
   delete oldModel;
 
-  d->mStatusFilterCombo->setEnabled( d->mStorageModel );
-  d->mSearchEdit->setEnabled( d->mStorageModel );
+  d->quickSearchLine->statusFilterComboBox()->setEnabled( d->mStorageModel );
+  d->quickSearchLine->searchEdit()->setEnabled( d->mStorageModel );
 }
 
 StorageModel *Widget::storageModel() const
@@ -449,7 +351,7 @@ StorageModel *Widget::storageModel() const
 
 KLineEdit *Widget::quickSearch() const
 {
-  return d->mSearchEdit;
+  return d->quickSearchLine->searchEdit();
 }
 
 View *Widget::view() const
@@ -916,20 +818,8 @@ void Widget::resetFilter()
   delete d->mFilter;
   d->mFilter = 0;
   d->mView->model()->setFilter( 0 );
-  d->mStatusFilterCombo->setCurrentIndex( 0 );
-  d->mLockSearch->setChecked(false);
-}
-
-void Widget::slotLockSearchClicked( bool locked )
-{
-  if ( locked ) {
-    d->mLockSearch->setIcon( KIcon( QLatin1String( "object-locked" ) ) );
-    d->mLockSearch->setToolTip( i18nc( "@info:tooltip", "Clear the quick search field when changing folders" ) );
-  } else {
-    d->mLockSearch->setIcon( KIcon( QLatin1String( "object-unlocked" ) ) );
-    d->mLockSearch->setToolTip( i18nc( "@info:tooltip",
-                                       "Prevent the quick search field from being cleared when changing folders" ) );
-  }
+  d->quickSearchLine->statusFilterComboBox()->setCurrentIndex( 0 );
+  d->quickSearchLine->lockSearch()->setChecked(false);
 }
 
 void Widget::slotViewHeaderSectionClicked( int logicalIndex )
@@ -1023,15 +913,15 @@ void Widget::tagIdSelected( const QVariant& data )
 
 void Widget::statusSelected( int index )
 {
-  if ( index >= d->mFirstTagInComboIndex ) {
-    tagIdSelected( d->mStatusFilterCombo->itemData( index ) );
+  if ( index >= d->quickSearchLine->firstTagInComboIndex() ) {
+    tagIdSelected( d->quickSearchLine->statusFilterComboBox()->itemData( index ) );
     return;
   }
 
   bool ok;
 
   Akonadi::MessageStatus status;
-  status.fromQInt32( static_cast< qint32 >( d->mStatusFilterCombo->itemData( index ).toInt( &ok ) ) );
+  status.fromQInt32( static_cast< qint32 >( d->quickSearchLine->statusFilterComboBox()->itemData( index ).toInt( &ok ) ) );
 
   if ( !ok )
     return;
@@ -1092,7 +982,7 @@ void Widget::searchTimerFired()
   if ( !d->mFilter )
     d->mFilter = new Filter();
 
-  const QString text = d->mSearchEdit->text();
+  const QString text = d->quickSearchLine->searchEdit()->text();
 
   d->mFilter->setCurrentFolder( d->mCurrentFolderUrl );
   d->mFilter->setSearchString( text );
@@ -1167,7 +1057,7 @@ void Widget::viewMessageStatusChangeRequest( MessageItem *msg, const Akonadi::Me
 
 void Widget::focusQuickSearch()
 {
-  d->mSearchEdit->setFocus();
+  d->quickSearchLine->focusQuickSearch();
 }
 
 bool Widget::isThreaded() const
@@ -1187,7 +1077,7 @@ void Widget::setCurrentFolder( const Akonadi::Collection &collection )
 
 bool Widget::searchEditHasFocus() const
 {
-  return d->mSearchEdit->hasFocus();
+  return d->quickSearchLine->searchEdit()->hasFocus();
 }
 
 

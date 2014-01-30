@@ -80,7 +80,8 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     hbox->addWidget( mOpenFullSearchButton );
 
     connect( mOpenFullSearchButton, SIGNAL(clicked()), this, SIGNAL(fullSearchRequest()) );
-
+    mSearchEdit->setEnabled( false );
+    mStatusFilterCombo->setEnabled( false );
 }
 
 QuickSearchLine::~QuickSearchLine()
@@ -96,6 +97,26 @@ void QuickSearchLine::focusQuickSearch()
 KComboBox *QuickSearchLine::statusFilterComboBox() const
 {
     return mStatusFilterCombo;
+}
+
+KLineEdit *QuickSearchLine::searchEdit() const
+{
+    return mSearchEdit;
+}
+
+QToolButton *QuickSearchLine::openFullSearchButton() const
+{
+    return mOpenFullSearchButton;
+}
+
+QToolButton *QuickSearchLine::lockSearch() const
+{
+    return mLockSearch;
+}
+
+int QuickSearchLine::firstTagInComboIndex() const
+{
+    return mFirstTagInComboIndex;
 }
 
 void QuickSearchLine::defaultFilterStatus()

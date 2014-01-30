@@ -272,10 +272,7 @@ protected slots:
    */
   void slotViewHeaderSectionClicked( int logicalIndex );
 
-  void slotLockSearchClicked(bool b);
-
 private:
-  void defaultFilterStatus();
   class Private;
   Private * const d;
 };

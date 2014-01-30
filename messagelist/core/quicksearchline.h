@@ -36,12 +36,15 @@ public:
     void focusQuickSearch();
 
     KComboBox *statusFilterComboBox() const;
+    KLineEdit *searchEdit() const;
+    QToolButton *openFullSearchButton() const;
+    QToolButton *lockSearch() const;
+    int firstTagInComboIndex() const;
 
 Q_SIGNALS:
     void fullSearchRequest();
     void clearButtonClicked();
     void searchEditTextEdited(const QString &);
-    void lockSearchClicked(bool);
 
 private slots:
     void slotLockSearchClicked(bool locked);
