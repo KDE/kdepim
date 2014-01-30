@@ -94,7 +94,11 @@ void ConfigureStorageServiceWidget::save()
 void ConfigureStorageServiceWidget::doLoadFromGlobalSettings()
 {
     //FIXME capabilities
-    mStorageServiceConfigureWidget->storageServiceSettingsWidget()->setListService(mStorageManager->listService(), PimCommon::StorageServiceAbstract::ShareLinkCapability);
+    QList<PimCommon::StorageServiceAbstract::Capability> lst;
+    lst.append(PimCommon::StorageServiceAbstract::UploadFileCapability);
+    lst.append(PimCommon::StorageServiceAbstract::DownloadFileCapability);
+
+    mStorageServiceConfigureWidget->storageServiceSettingsWidget()->setListService(mStorageManager->listService(), lst);
     mStorageServiceConfigureWidget->loadSettings();
 }
 

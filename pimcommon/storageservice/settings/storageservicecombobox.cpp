@@ -20,25 +20,34 @@
 
 using namespace PimCommon;
 
-StorageServiceComboBox::StorageServiceComboBox(PimCommon::StorageServiceAbstract::Capability cap, const QStringList &excludeService, QWidget *parent)
+StorageServiceComboBox::StorageServiceComboBox(const QList<PimCommon::StorageServiceAbstract::Capability> &lstCap, const QStringList &excludeService, QWidget *parent)
     : QComboBox(parent)
 {
-    initialize(cap, excludeService);
+    initialize(lstCap, excludeService);
 }
 
 StorageServiceComboBox::~StorageServiceComboBox()
 {
 
 }
+bool StorageServiceComboBox::hasCapabilities(PimCommon::StorageServiceAbstract::Capabilities capabilities, const QList<PimCommon::StorageServiceAbstract::Capability> &lstNeedCapabily)
+{
+    Q_FOREACH (PimCommon::StorageServiceAbstract::Capability cap, lstNeedCapabily) {
+        if (capabilities & cap) {
+            return true;
+        }
+    }
+    return false;
+}
 
-void StorageServiceComboBox::initialize(PimCommon::StorageServiceAbstract::Capability cap, const QStringList &excludeService)
+void StorageServiceComboBox::initialize(const QList<StorageServiceAbstract::Capability> &lstCap, const QStringList &excludeService)
 {
     for (int i=0; i < PimCommon::StorageServiceManager::EndListService; ++i) {
         const PimCommon::StorageServiceManager::ServiceType type = static_cast<PimCommon::StorageServiceManager::ServiceType>(i);
         if (!excludeService.contains(PimCommon::StorageServiceManager::serviceName(type))) {
             const QString iconName = PimCommon::StorageServiceManager::icon(type);
             const PimCommon::StorageServiceAbstract::Capabilities capabilities = PimCommon::StorageServiceManager::capabilities(type);
-            if (capabilities & cap) {
+            if (hasCapabilities(capabilities, lstCap)) {
                 if (iconName.isEmpty()) {
                     addItem(PimCommon::StorageServiceManager::serviceToI18n(type), type);
                 } else {

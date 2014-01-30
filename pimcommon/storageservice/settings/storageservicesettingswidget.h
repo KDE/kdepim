@@ -37,7 +37,7 @@ public:
     explicit StorageServiceSettingsWidget(QWidget *parent=0);
     ~StorageServiceSettingsWidget();
 
-    void setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst, PimCommon::StorageServiceAbstract::Capability cap = PimCommon::StorageServiceAbstract::AccountInfoCapability);
+    void setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst, const QList<StorageServiceAbstract::Capability> &lstCap = QList<PimCommon::StorageServiceAbstract::Capability>()<< PimCommon::StorageServiceAbstract::AccountInfoCapability);
     QMap<QString, PimCommon::StorageServiceAbstract *> listService() const;
 
 Q_SIGNALS:
@@ -57,12 +57,13 @@ private slots:
 private:
     void updateButtons();
     void setDefaultLabel();
+    bool hasCapabilities(PimCommon::StorageServiceAbstract::Capabilities capabilities, const QList<PimCommon::StorageServiceAbstract::Capability> &lstNeedCapabily);
     PimCommon::StorageListWidgetItem *createItem(const QString &serviceName, const QString &service, PimCommon::StorageServiceManager::ServiceType type, const KIcon &icon);
     enum ServiceData {
         Name = Qt::UserRole + 1,
         Type = Qt::UserRole + 2
     };
-    PimCommon::StorageServiceAbstract::Capability mNeedCapability;
+    QList<PimCommon::StorageServiceAbstract::Capability> mNeedCapability;
     QMap<QString, PimCommon::StorageServiceAbstract *> mListStorageService;
     QListWidget *mListService;
     KTextBrowser *mDescription;

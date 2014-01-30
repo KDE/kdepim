@@ -23,12 +23,12 @@
 
 using namespace PimCommon;
 
-AddServiceStorageDialog::AddServiceStorageDialog(PimCommon::StorageServiceAbstract::Capability cap, const QStringList &excludeService, QWidget *parent)
+AddServiceStorageDialog::AddServiceStorageDialog(const QList<StorageServiceAbstract::Capability> &lstCap, const QStringList &excludeService, QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Add Service" ) );
     setButtons( Ok | Cancel );
-    mService = new StorageServiceComboBox(cap, excludeService);
+    mService = new StorageServiceComboBox(lstCap, excludeService);
     setMainWidget(mService);
     enableButtonOk(mService->count() > 0);
 }
