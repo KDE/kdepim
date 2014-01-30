@@ -76,6 +76,7 @@ set(libpimcommon_storageservice_SRCS
 
   storageservice/dialog/storageservicedownloaddialog.cpp
   storageservice/dialog/storageservicechecknamedialog.cpp
+  storageservice/dialog/storageserviceconfiguredialog.cpp
 
   storageservice/widgets/storageservicetreewidget.cpp
   storageservice/widgets/storageserviceprogresswidget.cpp
