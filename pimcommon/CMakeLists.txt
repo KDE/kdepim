@@ -78,9 +78,11 @@ set(libpimcommon_storageservice_SRCS
   storageservice/dialog/storageservicechecknamedialog.cpp
   storageservice/dialog/storageserviceconfiguredialog.cpp
 
+  storageservice/widgets/storageserviceconfigurewidget.cpp
   storageservice/widgets/storageservicetreewidget.cpp
   storageservice/widgets/storageserviceprogresswidget.cpp
   storageservice/widgets/storageserviceprogressdialog.cpp
+  
  
   storageservice/tests/testsettingsjob.cpp
 )

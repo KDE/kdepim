@@ -16,7 +16,7 @@
 */
 
 #include "configurestorageservicewidget.h"
-#include "pimcommon/storageservice/settings/storageservicesettingswidget.h"
+#include "pimcommon/storageservice/widgets/storageserviceconfigurewidget.h"
 
 #include <KLocalizedString>
 #include <KStandardDirs>
@@ -26,13 +26,34 @@
 #include <QProcess>
 #include <QPushButton>
 
+StorageServiceConfigureWidget::StorageServiceConfigureWidget(QWidget *parent)
+    : PimCommon::StorageServiceConfigureWidget(parent)
+{
+
+}
+
+StorageServiceConfigureWidget::~StorageServiceConfigureWidget()
+{
+
+}
+
+void StorageServiceConfigureWidget::loadSettings()
+{
+    //TODO
+}
+
+void StorageServiceConfigureWidget::writeSettings()
+{
+    //TODO
+}
+
 ConfigureStorageServiceWidget::ConfigureStorageServiceWidget(QWidget *parent)
     : QWidget(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
-    mStorageServiceWidget = new PimCommon::StorageServiceSettingsWidget;
-    connect(mStorageServiceWidget, SIGNAL(changed()), this, SIGNAL(changed()));
-    lay->addWidget(mStorageServiceWidget);
+    mStorageServiceConfigureWidget = new StorageServiceConfigureWidget;
+    connect(mStorageServiceConfigureWidget, SIGNAL(changed()), this, SIGNAL(changed()));
+    lay->addWidget(mStorageServiceConfigureWidget);
 
     QHBoxLayout *hbox = new QHBoxLayout;
     mManageStorageService = new QPushButton(i18n("Manage Storage Service"));
@@ -62,11 +83,13 @@ void ConfigureStorageServiceWidget::slotManageStorageService()
 void ConfigureStorageServiceWidget::save()
 {
     //storageServiceManager()->setListService(mStorageServiceWidget->listService());
+    mStorageServiceConfigureWidget->writeSettings();
 }
 
 void ConfigureStorageServiceWidget::doLoadFromGlobalSettings()
 {
     //mStorageServiceWidget->setListService(KMKernel::self()->storageServiceManager()->listService(), PimCommon::StorageServiceAbstract::ShareLinkCapability);
+    mStorageServiceConfigureWidget->loadSettings();
 }
 
 #include "moc_configurestorageservicewidget.cpp"

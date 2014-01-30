@@ -19,10 +19,19 @@
 #define CONFIGURESTORAGESERVICEWIDGET_H
 
 #include <QWidget>
+#include "pimcommon/storageservice/widgets/storageserviceconfigurewidget.h"
 class QPushButton;
-namespace PimCommon {
-class StorageServiceSettingsWidget;
-}
+
+class StorageServiceConfigureWidget : public PimCommon::StorageServiceConfigureWidget
+{
+    Q_OBJECT
+public:
+    explicit StorageServiceConfigureWidget(QWidget *parent=0);
+    ~StorageServiceConfigureWidget();
+    virtual void loadSettings();
+    virtual void writeSettings();
+};
+
 class ConfigureStorageServiceWidget : public QWidget
 {
     Q_OBJECT
@@ -40,7 +49,7 @@ private slots:
     void slotManageStorageService();
 
 private:
-    PimCommon::StorageServiceSettingsWidget *mStorageServiceWidget;
+    StorageServiceConfigureWidget *mStorageServiceConfigureWidget;
     QPushButton *mManageStorageService;
 };
 

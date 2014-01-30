@@ -19,7 +19,8 @@
 */
 
 #include "storageserviceconfiguredialog.h"
-#include "pimcommon/storageservice/settings/storageservicesettingswidget.h"
+#include "storageservice/widgets/storageserviceconfigurewidget.h"
+#include "storageservice/settings/storageservicesettingswidget.h"
 
 #include <KLocalizedString>
 #include <KConfigGroup>
@@ -37,20 +38,8 @@ StorageServiceConfigureDialog::StorageServiceConfigureDialog(QWidget *parent)
 {
     setCaption( i18n( "Configure" ) );
     setButtons( Cancel | Ok  );
-    QWidget *w = new QWidget;
-    setMainWidget(w);
-    QVBoxLayout *lay = new QVBoxLayout;
-    w->setLayout(lay);
-    mStorageSettings = new PimCommon::StorageServiceSettingsWidget;
-    lay->addWidget(mStorageSettings);
-
-    QHBoxLayout *hbox = new QHBoxLayout;
-    lay->addLayout(hbox);
-    QLabel *lab = new QLabel(i18n("Default Download Folder:"));
-    lay->addWidget(lab);
-    mDownloadFolder = new KUrlRequester;
-    mDownloadFolder->setMode(KFile::Directory|KFile::LocalOnly);
-    lay->addWidget(mDownloadFolder);
+    mStorageServiceConfigureWidget = new PimCommon::StorageServiceConfigureWidget;
+    setMainWidget(mStorageServiceConfigureWidget);
     readConfig();
 }
 
@@ -67,15 +56,14 @@ void StorageServiceConfigureDialog::loadSettings()
 {
 }
 
-
 QMap<QString, PimCommon::StorageServiceAbstract *> StorageServiceConfigureDialog::listService() const
 {
-    return mStorageSettings->listService();
+    return mStorageServiceConfigureWidget->storageServiceSettingsWidget()->listService();
 }
 
 void StorageServiceConfigureDialog::setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst)
 {
-    mStorageSettings->setListService(lst);
+    mStorageServiceConfigureWidget->storageServiceSettingsWidget()->setListService(lst);
 }
 
 void StorageServiceConfigureDialog::readConfig()

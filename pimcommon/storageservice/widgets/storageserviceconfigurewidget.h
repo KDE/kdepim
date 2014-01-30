@@ -18,37 +18,33 @@
 
 */
 
-#ifndef PIMCOMMON_STORAGESERVICECONFIGUREDIALOG_H
-#define PIMCOMMON_STORAGESERVICECONFIGUREDIALOG_H
+#ifndef STORAGESERVICECONFIGUREWIDGET_H
+#define STORAGESERVICECONFIGUREWIDGET_H
 
-#include <KDialog>
+#include <QWidget>
 #include "pimcommon_export.h"
 class KUrlRequester;
 namespace PimCommon {
 class StorageServiceSettingsWidget;
-class StorageServiceAbstract;
-class StorageServiceConfigureWidget;
-class PIMCOMMON_EXPORT StorageServiceConfigureDialog : public KDialog
+class PIMCOMMON_EXPORT StorageServiceConfigureWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit StorageServiceConfigureDialog(QWidget *parent=0);
-    ~StorageServiceConfigureDialog();
+    explicit StorageServiceConfigureWidget(QWidget *parent=0);
+    ~StorageServiceConfigureWidget();
 
-    QMap<QString, PimCommon::StorageServiceAbstract *> listService() const;
-    void setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst);
-
-
+    virtual void loadSettings();
     virtual void writeSettings();
+    PimCommon::StorageServiceSettingsWidget *storageServiceSettingsWidget() const;
+    KUrlRequester *downloadFolder() const;
+
+Q_SIGNALS:
+    void changed();
 
 protected:
-    PimCommon::StorageServiceConfigureWidget *mStorageServiceConfigureWidget;
-    virtual void loadSettings();
-
-private:
-    void readConfig();
-    void writeConfig();
+    PimCommon::StorageServiceSettingsWidget *mStorageSettings;
+    KUrlRequester *mDownloadFolder;
 };
 }
 
-#endif // STORAGESERVICECONFIGUREDIALOG_H
+#endif // STORAGESERVICECONFIGUREWIDGET_H
