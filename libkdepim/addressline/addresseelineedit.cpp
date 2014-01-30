@@ -579,7 +579,7 @@ void AddresseeLineEdit::Private::startSearches()
 void AddresseeLineEdit::Private::akonadiPerformSearch()
 {
 
-  if ( m_searchString.size() <= 2 ) {
+  if ( m_searchString.size() < 2 ) {
     return;
   }
   kDebug() << "searching akonadi with:" << m_searchString;
