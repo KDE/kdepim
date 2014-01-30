@@ -88,8 +88,7 @@ class AddresseeLineEditStatic
         ldapSearch( 0 ),
         ldapLineEdit( 0 ),
         akonadiSession( new Akonadi::Session("contactsCompletionSession") ),
-        balooCompletionSource( 0 ),
-        contactsListed( false )
+        balooCompletionSource( 0 )
     {
       KConfig config( QLatin1String( "kpimcompletionorder" ) );
       const KConfigGroup group( &config, QLatin1String( "General" ) );
@@ -175,7 +174,6 @@ class AddresseeLineEditStatic
     Akonadi::Session *akonadiSession;
     QVector<QWeakPointer<Akonadi::Job> > akonadiJobsInFlight;
     int balooCompletionSource;
-    bool contactsListed;
 };
 
 K_GLOBAL_STATIC( AddresseeLineEditStatic, s_static )
@@ -247,7 +245,6 @@ class AddresseeLineEdit::Private
     void updateSearchString();
     void startSearches();
     void akonadiPerformSearch();
-    void akonadiListAllContacts();
     void akonadiHandlePending();
     void akonadiHandleItems( const Akonadi::Item::List &items );
     void doCompletion( bool ctrlT );
@@ -565,43 +562,18 @@ void AddresseeLineEdit::Private::slotTriggerDelayedQueries()
     if (m_searchString.isEmpty())
         return;
 
-    // If Nepomuk is running, we send a ContactSearch job to
-    // Akonadi, which will forward the query to Nepomuk, be
-    // notified of matching items and return those to us.
+    // We send a contactsearch job through akonadi.
+    // This not only searches baloo but also servers if remote search is enabled
     akonadiPerformSearch();
-    // additionally, we ask Nepomuk directly, to get hits that
-    // did not come in through Akonadi
-
-    // vHanda: It probably makes more sense to only search in Baloo
-    // instead of doing a ContactSearchJob and Baloo. Specially since
-    // the ContactSearchJob internally uses Baloo
-    searchInBaloo();
 }
 
 void AddresseeLineEdit::Private::startSearches()
 {
-    // vHanda FIXME: We're now always using Baloo?
-    // if ( Nepomuk2::ResourceManager::instance()->initialized() ) {
-    if ( true) {
-        if (!m_delayedQueryTimer.isActive())
-            m_delayedQueryTimer.start(500);
-    } else {
-      // If Nepomuk is not available, we instead simply fetch
-      // all contacts from Akonadi and filter them ourselves.
-      // This is slower, but a reasonable fallback. We only do this
-      // once, since it returns the same contacts (all of them)
-      // every time. If one is added or removed during the lifetime
-      // of the widget, we miss that update, but that's better than
-      // doing useless repeat queries for every typed letter. We could
-      // monitor, but that doesn't seem worth the bother, for fallback
-      // code.
-      if ( !s_static->contactsListed ) {
-        akonadiListAllContacts();
-        s_static->contactsListed = true;
-      } else {
-        doCompletion( true );
-      }
-    }
+    //No need to delay the baloo search
+    searchInBaloo();
+
+    if (!m_delayedQueryTimer.isActive())
+        m_delayedQueryTimer.start(50);
 }
 
 void AddresseeLineEdit::Private::akonadiPerformSearch()
@@ -622,37 +594,20 @@ void AddresseeLineEdit::Private::akonadiPerformSearch()
 
   // now start new jobs
   Akonadi::ContactSearchJob *contactJob = new Akonadi::ContactSearchJob( s_static->akonadiSession );
-  Akonadi::ContactGroupSearchJob *groupJob = new Akonadi::ContactGroupSearchJob( s_static->akonadiSession );
   contactJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-  groupJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
   contactJob->setQuery( Akonadi::ContactSearchJob::NameOrEmail, m_searchString,
                         Akonadi::ContactSearchJob::ContainsWordBoundaryMatch );
-  groupJob->setQuery( Akonadi::ContactGroupSearchJob::Name, m_searchString,
-                      Akonadi::ContactGroupSearchJob::StartsWithMatch );
-  // FIXME: ContainsMatch is broken, even though it creates the correct SPARQL query, so use
-  //        StartsWith for now
-                      //Akonadi::ContactGroupSearchJob::ContainsMatch );
   q->connect( contactJob, SIGNAL(result(KJob*)),
               q, SLOT(slotAkonadiSearchResult(KJob*)) );
+
+  Akonadi::ContactGroupSearchJob *groupJob = new Akonadi::ContactGroupSearchJob( s_static->akonadiSession );
+  groupJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+  groupJob->setQuery( Akonadi::ContactGroupSearchJob::Name, m_searchString,
+                      Akonadi::ContactGroupSearchJob::ContainsMatch );
   q->connect( groupJob, SIGNAL(result(KJob*)),
               q, SLOT(slotAkonadiSearchResult(KJob*)) );
   s_static->akonadiJobsInFlight.append( contactJob );
   s_static->akonadiJobsInFlight.append( groupJob );
-  akonadiHandlePending();
-}
-
-void AddresseeLineEdit::Private::akonadiListAllContacts()
-{
-  kDebug() << "listing all contacts in Akonadi";
-  Akonadi::RecursiveItemFetchJob *job =
-           new Akonadi::RecursiveItemFetchJob( Akonadi::Collection::root(),
-                                               QStringList() << KABC::Addressee::mimeType() << KABC::ContactGroup::mimeType(),
-                                               s_static->akonadiSession );
-  job->fetchScope().fetchFullPayload();
-  job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-  q->connect( job, SIGNAL(result(KJob*)),
-              q, SLOT(slotAkonadiSearchDbResult(KJob*)) );
-  job->start();
   akonadiHandlePending();
 }
 
