@@ -140,5 +140,3 @@ void SieveEditorPageWidget::slotValueChanged()
     qDebug()<<"void SieveEditorPageWidget::slotValueChanged() ";
     mWasChanged = true;
 }
-
-#include "moc_sieveeditorpagewidget.cpp"

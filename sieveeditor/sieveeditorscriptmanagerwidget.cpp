@@ -97,5 +97,3 @@ void SieveEditorScriptManagerWidget::refreshList()
 {
     mTreeView->slotRefresh();
 }
-
-#include "moc_sieveeditorscriptmanagerwidget.cpp"

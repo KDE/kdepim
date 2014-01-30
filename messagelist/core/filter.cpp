@@ -112,5 +112,3 @@ void Filter::setSearchString( const QString &search )
   emit finished();
 }
 
-
-#include "moc_filter.cpp"

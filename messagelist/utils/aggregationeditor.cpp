@@ -260,5 +260,3 @@ void AggregationEditor::fillFillViewStrategyCombo()
 }
 
 
-
-#include "moc_aggregationeditor.cpp"

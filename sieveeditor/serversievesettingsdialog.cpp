@@ -98,5 +98,3 @@ SieveEditorUtil::SieveServerConfig ServerSieveSettingsDialog::serverSieveConfig(
 {
     return mServerSieveSettings->serverSieveConfig();
 }
-
-#include "moc_serversievesettingsdialog.cpp"
