@@ -1094,10 +1094,9 @@ void SearchRuleNumerical::addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &e
     term.setIsNegated( isNegated() );
     groupTerm.addSubTerm(term);
   } else if ( kasciistricmp( field(), "<age in days>" ) == 0 ) {
-    QDate date = QDate::currentDate();
+    QDateTime date(QDate::currentDate());
     date = date.addDays( contents().toInt() );
-    //TODO check that this works. It would be better if could just pass the date.
-    EmailSearchTerm term(EmailSearchTerm::HeaderDate, date.toString(), akonadiComparator());
+    EmailSearchTerm term(EmailSearchTerm::HeaderDate, date, akonadiComparator());
     term.setIsNegated( isNegated() );
     groupTerm.addSubTerm(term);
   }
@@ -1178,9 +1177,8 @@ void SearchRuleDate::addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyI
 {
   using namespace Akonadi;
   emptyIsNotAnError = false;
-  const QDate date = QDate::fromString( contents(), Qt::ISODate );
-  //TODO check that this works. It would be better if could just pass the date.
-  EmailSearchTerm term(EmailSearchTerm::HeaderDate, date.toString(Qt::ISODate), akonadiComparator());
+  const QDateTime date = QDateTime::fromString( contents(), Qt::ISODate );
+  EmailSearchTerm term(EmailSearchTerm::HeaderDate, date, akonadiComparator());
   term.setIsNegated( isNegated() );
   groupTerm.addSubTerm(term);
 }
