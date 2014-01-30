@@ -234,6 +234,7 @@ void MainWindow::setupActions()
 
     actionCollection()->addAction( QLatin1String("upload_file"), mStorageManager->menuUploadServices(this) );
     actionCollection()->addAction( QLatin1String("download_file"), mStorageManager->menuDownloadServices(this) );
+    mStorageManager->setDefaultUploadFolder(Settings::self()->downloadDirectory());
 }
 
 void MainWindow::loadTempPosts()
@@ -338,6 +339,7 @@ void MainWindow::optionsPreferences()
 void MainWindow::slotSettingsChanged()
 {
     setupSystemTray();
+    mStorageManager->setDefaultUploadFolder(Settings::self()->downloadDirectory());
 }
 
 void MainWindow::slotDialogDestroyed( QObject *win )
