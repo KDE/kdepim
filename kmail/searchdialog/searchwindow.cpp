@@ -440,7 +440,6 @@ void SearchWindow::slotSearch()
             return;
         }
     }
-    //FIXME set root colections if otherwise empty?
 
     mUi.mPatternEdit->updateSearchPattern();
 
@@ -488,13 +487,18 @@ void SearchWindow::slotSearch()
         Akonadi::SearchCreateJob *searchJob = new Akonadi::SearchCreateJob( mUi.mSearchFolderEdt->text(), mQuery, this );
         searchJob->setSearchMimeTypes( QStringList() << QLatin1String("message/rfc822") );
         searchJob->setSearchCollections( searchCollections );
+        searchJob->setRecursive( recursive );
+        searchJob->setRemoteSearchEnabled( false );
         mSearchJob = searchJob;
     } else {
         qDebug()<<" use existing folder";
         Akonadi::PersistentSearchAttribute *attribute = mFolder.attribute<Akonadi::PersistentSearchAttribute>();
+        mFolder.setContentMimeTypes(QStringList() << QLatin1String("message/rfc822"));
         attribute->setQueryLanguage( queryLanguage );
         attribute->setQueryString( QString::fromLatin1(mQuery.toJSON()) );
         attribute->setQueryCollections( searchCollections );
+        attribute->setRecursive( recursive );
+        attribute->setRemoteSearchEnabled( false );
         mSearchJob = new Akonadi::CollectionModifyJob( mFolder, this );
     }
 
