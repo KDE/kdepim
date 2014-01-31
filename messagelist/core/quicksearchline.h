@@ -57,10 +57,13 @@ Q_SIGNALS:
     void fullSearchRequest();
     void clearButtonClicked();
     void searchEditTextEdited(const QString &);
+    void searchOptionChanged();
 
 private slots:
     void slotLockSearchClicked(bool locked);
     void slotSearchOptionChanged();
+    void slotSearchEditTextEdited(const QString &text);
+    void slotClearButtonClicked();
 private:
     void defaultFilterStatus();
     SearchOptions mSearchOptions;
@@ -71,6 +74,7 @@ private:
     QPushButton *mSearchAgainstSubject;
     QPushButton *mSearchAgainstFrom;
     QPushButton *mSearchAgainstBcc;
+    QWidget *mExtraOption;
     int mFirstTagInComboIndex;
 };
 

@@ -69,9 +69,9 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mSearchEdit->setClearButtonShown( true );
     mSearchEdit->setVisible( Settings::self()->showQuickSearch() );
 
-    connect( mSearchEdit, SIGNAL(textEdited(QString)), this, SIGNAL(searchEditTextEdited(QString)));
+    connect( mSearchEdit, SIGNAL(textEdited(QString)), this, SLOT(slotSearchEditTextEdited(QString)));
 
-    connect( mSearchEdit, SIGNAL(clearButtonClicked()), this, SIGNAL(clearButtonClicked()));
+    connect( mSearchEdit, SIGNAL(clearButtonClicked()), this, SLOT(slotClearButtonClicked()));
 
     hbox->addWidget( mSearchEdit );
 
@@ -94,12 +94,12 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mSearchEdit->setEnabled( false );
     mStatusFilterCombo->setEnabled( false );
 
-    QWidget *extraOption = new QWidget;
+    mExtraOption = new QWidget;
     hbox = new QHBoxLayout;
     hbox->setMargin(0);
-    vbox->addWidget(extraOption);
-    extraOption->setLayout(hbox);
-    extraOption->hide();
+    vbox->addWidget(mExtraOption);
+    mExtraOption->setLayout(hbox);
+    mExtraOption->hide();
 
     hbox->addStretch(0);
     mSearchAgainstSubject = new QPushButton(i18n("Subject"));
@@ -116,12 +116,23 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     connect(mSearchAgainstBcc, SIGNAL(clicked(bool)), this, SLOT(slotSearchOptionChanged()));
     mSearchAgainstBcc->setCheckable(true);
     hbox->addWidget(mSearchAgainstBcc);
-
 }
 
 QuickSearchLine::~QuickSearchLine()
 {
 
+}
+
+void QuickSearchLine::slotSearchEditTextEdited(const QString &text)
+{
+    //TODO mExtraOption->show();
+    Q_EMIT searchEditTextEdited(text);
+}
+
+void QuickSearchLine::slotClearButtonClicked()
+{
+    //TODO mExtraOption->hide();
+    Q_EMIT clearButtonClicked();
 }
 
 void QuickSearchLine::slotSearchOptionChanged()
@@ -136,6 +147,7 @@ void QuickSearchLine::slotSearchOptionChanged()
     if (mSearchAgainstBcc->isChecked()) {
         mSearchOptions |= SearchAgainstBcc;
     }
+    Q_EMIT searchOptionChanged();
 }
 
 QuickSearchLine::SearchOptions QuickSearchLine::searchOptions() const
