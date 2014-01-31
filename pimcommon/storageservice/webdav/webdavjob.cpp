@@ -151,8 +151,8 @@ void WebDavJob::slotRequired(const QString &hostname, quint16 port, QAuthenticat
     if (dlg->exec()) {
         mUserName = dlg->username();
         mPassword = dlg->password();
-        auth->setUser(mUserName);
-        auth->setPassword(mPassword);
+        authenticator->setUser(mUserName);
+        authenticator->setPassword(mPassword);
     } else {
         Q_EMIT authorizationFailed(i18n("Authentication Canceled."));
         deleteLater();

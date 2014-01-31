@@ -19,6 +19,7 @@
 #include "storageservice/widgets/storageservicetreewidget.h"
 #include "storageservice/storageservicemanager.h"
 #include "storageservice/settings/storageservicesettings.h"
+#include "storageservice/webdav/protocol/webdav_url_info.h"
 #include "webdavsettingsdialog.h"
 #include "webdavjob.h"
 
@@ -31,6 +32,8 @@
 
 #include <QPointer>
 #include <QDebug>
+#include <QFileInfo>
+#include <QDir>
 
 using namespace PimCommon;
 
@@ -299,6 +302,16 @@ QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
 {
     listWidget->clear();
     listWidget->createMoveUpItem();
+    const QList<QWebdavUrlInfo> lst = QWebdavUrlInfo::parseListInfo(data);
+    Q_FOREACH(const QWebdavUrlInfo &info, lst) {
+        if (info.isDir()) {
+            StorageServiceTreeWidgetItem *item = listWidget->addFolder(QFileInfo(info.name()).dir().dirName(), info.source());
+        } else {
+            StorageServiceTreeWidgetItem *item = listWidget->addFile(QFileInfo(info.name()).fileName(), info.source());
+        }
+    }
+
+
     return QString();
 }
 
