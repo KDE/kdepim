@@ -199,8 +199,7 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
         }
         PimCommon::StorageListWidgetItem *item = createItem(serviceName, i.key(), type, icon.isEmpty() ? KIcon() : KIcon(icon));
         if (showItem) {
-            connect(i.value(),SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
-            connect(i.value(),SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
+            defaultConnection(i.value());
         } else {
             item->setHidden(true);
         }
@@ -289,12 +288,19 @@ void StorageServiceSettingsWidget::slotAddService()
             mListStorageService.insert(service, storage);
             PimCommon::StorageListWidgetItem *item = createItem(serviceName, service, type, storage->icon());
             item->startAnimation();
-            connect(storage,SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
-            connect(storage,SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
+            defaultConnection(storage);
             storage->authentication();
         }
     }
     delete dlg;
+}
+
+void StorageServiceSettingsWidget::defaultConnection(StorageServiceAbstract *storage)
+{
+    connect(storage, SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
+    connect(storage, SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
+    connect(storage, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotUpdateAccountInfo(QString,PimCommon::AccountInfo)));
+    connect(storage, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotUpdateAccountInfoFailed(QString,QString)));
 }
 
 void StorageServiceSettingsWidget::slotAuthenticationFailed(const QString &serviceName, const QString &error)
@@ -339,8 +345,6 @@ void StorageServiceSettingsWidget::slotServiceSelected()
         mDescription->setText(descriptionStr);
         if (mListStorageService.contains(mListService->currentItem()->data(Name).toString())) {
             StorageServiceAbstract *storage = mListStorageService.value(mListService->currentItem()->data(Name).toString());
-            connect(storage, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotUpdateAccountInfo(QString,PimCommon::AccountInfo)),Qt::UniqueConnection);
-            connect(storage, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotUpdateAccountInfoFailed(QString,QString)),Qt::UniqueConnection);
             storage->accountInfo();
         }
     } else {
