@@ -3,7 +3,7 @@
   <!ENTITY % English "INCLUDE"><!-- change language only here -->
 ]>
 
-<refentry id='kabcclient1'>
+<refentry lang="&language;">
 <refentryinfo>
 <title>&kde; User's Manual</title>
 <author>
