@@ -68,11 +68,12 @@ private slots:
     void slotAuthorizationFailed(const QString &errorMessage);
 
 private:
+    bool needAuthenticate() const;
     void readConfig();
 
     QString mToken;
     QString mPassword;
-    QString mUsername;    
+    QString mUsername;
 };
 }
 
