@@ -89,8 +89,8 @@ Change the view of your message list by selecting <menuchoice><guimenu>View</gui
 </para>
 <itemizedlist>
   <listitem><para><guilabel>Classic</guilabel> A simple, backward compatible, single row with clickable sort columns.</para></listitem>
-  <listitem><para><guilabel>Fancy</guilabel> A fancy multi-line, multi-item with status icons, no sort columns.</para></listitem>
-  <listitem><para><guilabel>Fancy with clickable status</guilabel> A fancy multi-line, multi-item, status icons and clickable sort icons.</para></listitem>
+  <listitem><para><guilabel>Smart</guilabel> A smart multi-line, multi-item with status icons, no sort columns.</para></listitem>
+  <listitem><para><guilabel>Smart with clickable status</guilabel> A smart multi-line, multi-item, status icons and clickable sort icons.</para></listitem>
   <listitem><para><guilabel>Configure...</guilabel> Allows you to customize your own Message List Theme &eg; add or remove columns from the clickable sort bar.</para></listitem>
 </itemizedlist>
 <para>
