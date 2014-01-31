@@ -377,8 +377,8 @@ void StorageServiceSettingsWidget::slotUpdateAccountInfo(const QString &serviceN
         } else {
             mQuota->setText(i18n("Quota:"));
         }
-        if (info.accountSize != -1) {
-            mShared->setText(i18n("Shared: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
+        if (info.shared != -1) {
+            mShared->setText(i18n("Shared: %1", KGlobal::locale()->formatByteSize(info.shared,1)));
         } else {
             mShared->setText(i18n("Shared:"));
         }
