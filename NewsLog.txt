@@ -1,4 +1,19 @@
 
+Friday 31 January 2014
+
+Problems addressed
+------------------
+
+* kolab/issue4870: Wrong invitation update email after 2nd modification
+* kolab/issue4871: Changes to kolab tasks are sometimes not synced to kmail (RT#10242)
+
+Features
+--------
+
+* RT#10254: Add possibility to copy a decrypted version of a Mail
+
+
+
 Wednesday 30 October 2013
 
 Problems addressed
