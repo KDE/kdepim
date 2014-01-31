@@ -33,7 +33,8 @@
 using namespace PimCommon;
 
 WebDavJob::WebDavJob(QObject *parent)
-    : PimCommon::StorageServiceAbstractJob(parent)
+    : PimCommon::StorageServiceAbstractJob(parent),
+      mReqId(-1)
 {
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
     connect(mNetworkAccessManager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)), SLOT(slotAuthenticationRequired(QNetworkReply*,QAuthenticator*)));
@@ -120,16 +121,26 @@ void WebDavJob::listFolder(const QString &folder)
 {
     mActionType = PimCommon::StorageServiceAbstract::ListFolder;
     mError = false;
+    qDebug()<<" folder"<<folder;
     QWebdav *webdav = new QWebdav(this);
     webdav->setUser(mUserName, mPassword);
+
     QUrl url(mServiceLocation);
+    if (!mServiceLocation.endsWith(QLatin1Char('/')))
+        url.setUrl(mServiceLocation + QLatin1Char('/') + folder + QLatin1Char('/'));
+    else
+        url.setUrl(mServiceLocation + QLatin1Char('/') + folder + QLatin1Char('/'));
+
+
+
     QHttp::ConnectionMode mode = QHttp::ConnectionModeHttp;
 
     if (url.port() == -1) {
-        if (mServiceLocation.startsWith(QLatin1String("https://")))
+        if (mServiceLocation.startsWith(QLatin1String("https://"))) {
             url.setPort(443);
-        if (mServiceLocation.startsWith(QLatin1String("http://")))
+        } else if (mServiceLocation.startsWith(QLatin1String("http://"))) {
             url.setPort(80);
+        }
     }
 
     if (mServiceLocation.startsWith(QLatin1String("https://")))
@@ -142,10 +153,11 @@ void WebDavJob::listFolder(const QString &folder)
             webdav, SLOT(ignoreSslErrors()));
     connect(webdav, SIGNAL(authenticationRequired(QString,quint16,QAuthenticator*)),
             this, SLOT(slotRequired(QString,quint16,QAuthenticator*)));
+    qDebug()<<" url.toString()"<<url.toString();
     webdav->list(url.toString());
 }
 
-void WebDavJob::slotRequired(const QString &hostname, quint16 port, QAuthenticator *authenticator)
+void WebDavJob::slotRequired(const QString &, quint16 , QAuthenticator *authenticator)
 {
     QPointer<LoginDialog> dlg = new LoginDialog;
     if (dlg->exec()) {
@@ -181,9 +193,47 @@ void WebDavJob::createFolder(const QString &foldername, const QString &destinati
 {
     mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
     mError = false;
-    qDebug()<<" not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    deleteLater();
+    QWebdav *webdav = new QWebdav(this);
+    webdav->setUser(mUserName, mPassword);
+    QUrl url(mServiceLocation);
+    if (!mServiceLocation.endsWith(QLatin1Char('/')))
+        url.setUrl(mServiceLocation + QLatin1Char('/'));
+
+    QHttp::ConnectionMode mode = QHttp::ConnectionModeHttp;
+
+    if (url.port() == -1) {
+        if (mServiceLocation.startsWith(QLatin1String("https://"))) {
+            url.setPort(443);
+        } else if (mServiceLocation.startsWith(QLatin1String("http://"))) {
+            url.setPort(80);
+        }
+    }
+
+    if (mServiceLocation.startsWith(QLatin1String("https://")))
+        mode = QHttp::ConnectionModeHttps;
+    else
+        mode = QHttp::ConnectionModeHttp;
+
+    webdav->setHost(url.host(), mode, url.port());
+
+    connect(webdav, SIGNAL(authenticationRequired(QString,quint16,QAuthenticator*)),
+            this, SLOT(slotRequired(QString,quint16,QAuthenticator*)));
+    connect(webdav, SIGNAL(requestFinished(int, bool)), this, SLOT(slotRequestFinished(int, bool)));
+    //TODO add destination
+    qDebug()<<" url.toString() "<<url.toString() <<" foldername"<<foldername;
+    mReqId = webdav->mkdir(url.toString() + QLatin1Char('/') + destination + QLatin1Char('/') + foldername + QLatin1Char('/'));
+}
+
+void WebDavJob::slotRequestFinished(int id, bool)
+{
+    if (id == mReqId) {
+        switch(mActionType) {
+        case PimCommon::StorageServiceAbstract::CreateFolder:
+            Q_EMIT createFolderDone(QString());
+            break;
+        }
+        deleteLater();
+    }
 }
 
 void WebDavJob::slotSendDataFinished(QNetworkReply *reply)

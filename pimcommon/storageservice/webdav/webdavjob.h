@@ -55,6 +55,7 @@ private slots:
     void slotAuthenticationRequired(QNetworkReply *, QAuthenticator *);
     void slotListInfo(const QString &data);
     void slotRequired(const QString &hostname, quint16 port, QAuthenticator *authenticator);
+    void slotRequestFinished(int, bool);
 private:
     void parseUploadFile(const QString &data);
     void parseCreateFolder(const QString &data);
@@ -65,6 +66,7 @@ private:
     QString mServiceLocation;
     QString mUserName;
     QString mPassword;
+    int mReqId;
 };
 }
 

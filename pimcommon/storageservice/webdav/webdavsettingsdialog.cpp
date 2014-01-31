@@ -59,15 +59,15 @@ WebDavSettingsDialog::~WebDavSettingsDialog()
 
 void WebDavSettingsDialog::slotServiceLocationChanged(const QString &text)
 {
-    enableButtonOk(!text.isEmpty());
+    enableButtonOk(!text.isEmpty() && (text.startsWith(QLatin1String("http://")) || text.startsWith(QLatin1String("https://"))));
 }
 
 QString WebDavSettingsDialog::serviceLocation() const
 {
-    return mServiceLocation->text();
+    return mServiceLocation->text().trimmed();
 }
 
 QString WebDavSettingsDialog::publicLocation() const
 {
-    return mPublicLocation->text();
+    return mPublicLocation->text().trimmed();
 }

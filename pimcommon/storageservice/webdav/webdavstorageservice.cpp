@@ -300,18 +300,24 @@ StorageServiceAbstract::Capabilities WebDavStorageService::capabilities() const
 
 QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
+    qDebug()<<" data"<<data;
     listWidget->clear();
     listWidget->createMoveUpItem();
     const QList<QWebdavUrlInfo> lst = QWebdavUrlInfo::parseListInfo(data);
     Q_FOREACH(const QWebdavUrlInfo &info, lst) {
         if (info.isDir()) {
-            StorageServiceTreeWidgetItem *item = listWidget->addFolder(QFileInfo(info.name()).dir().dirName(), info.source());
+            QFileInfo folderInfo(info.name());
+            StorageServiceTreeWidgetItem *item = listWidget->addFolder(folderInfo.dir().dirName(), folderInfo.dir().dirName());
+            item->setDateCreated(info.createdAt());
+            item->setLastModification(info.lastModified());
         } else {
-            StorageServiceTreeWidgetItem *item = listWidget->addFile(QFileInfo(info.name()).fileName(), info.source());
+            const QString mimetype = info.mimeType();
+            QFileInfo fileInfo(info.name());
+            StorageServiceTreeWidgetItem *item = listWidget->addFile(fileInfo.fileName(), fileInfo.fileName(), mimetype);
+            item->setDateCreated(info.createdAt());
+            item->setLastModification(info.lastModified());
         }
     }
-
-
     return QString();
 }
 
@@ -427,9 +433,9 @@ StorageServiceAbstract::Capabilities WebDavStorageService::serviceCapabilities()
     cap |= AccountInfoCapability;
     //cap |= UploadFileCapability;
     //cap |= DownloadFileCapability;
-    //cap |= CreateFolderCapability;
+    cap |= CreateFolderCapability;
     //cap |= DeleteFolderCapability;
-    //cap |= ListFolderCapability;
+    cap |= ListFolderCapability;
     //cap |= ShareLinkCapability;
     //cap |= DeleteFileCapability;
     //cap |= RenameFolderCapability;

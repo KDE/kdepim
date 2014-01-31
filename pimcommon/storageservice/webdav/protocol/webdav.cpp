@@ -221,26 +221,7 @@ void QWebdav::emitListInfos()
     QDomDocument multiResponse;
 
     multiResponse.setContent(buffer, true);
-    qDebug()<<" sssssssssssssssssssssssssssssssssssssssss";
     Q_EMIT listInfo(multiResponse.toString());
-#if 0
-    for ( QDomNode n = multiResponse.documentElement().firstChild();
-          !n.isNull(); n = n.nextSibling())
-    {
-        QDomElement thisResponse = n.toElement();
-
-        if (thisResponse.isNull())
-            continue;
-
-        QWebdavUrlInfo info(thisResponse);
-
-        if (!info.isValid())
-            continue;
-
-        hasResponse = true;
-        emit listInfo(info);
-    }
-#endif
 }
 
 void QWebdav::responseHeaderReceived( const QHttpResponseHeader & resp )
