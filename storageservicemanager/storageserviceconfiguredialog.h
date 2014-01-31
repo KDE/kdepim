@@ -21,32 +21,18 @@
 #ifndef STORAGESERVICECONFIGUREDIALOG_H
 #define STORAGESERVICECONFIGUREDIALOG_H
 
-#include <KDialog>
-
-namespace PimCommon {
-class StorageServiceSettingsWidget;
-class StorageServiceAbstract;
-}
-class KUrlRequester;
-class StorageServiceConfigureDialog : public KDialog
+#include "pimcommon/storageservice/dialog/storageserviceconfiguredialog.h"
+class StorageServiceConfigureDialog : public PimCommon::StorageServiceConfigureDialog
 {
     Q_OBJECT
 public:
     explicit StorageServiceConfigureDialog(QWidget *parent=0);
     ~StorageServiceConfigureDialog();
 
-    QMap<QString, PimCommon::StorageServiceAbstract *> listService() const;
-    void setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst);
-
-
     void writeSettings();
 
 private:
     void loadSettings();
-    void readConfig();
-    void writeConfig();
-    PimCommon::StorageServiceSettingsWidget *mStorageSettings;
-    KUrlRequester *mDownloadFolder;
 };
 
 #endif // STORAGESERVICECONFIGUREDIALOG_H

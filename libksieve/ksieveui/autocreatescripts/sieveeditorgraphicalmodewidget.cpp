@@ -163,5 +163,3 @@ void SieveEditorGraphicalModeWidget::slotSwitchToTextMode()
     switchTextMode(mSieveParsingWarning->initialScript());
 }
 
-
-#include "moc_sieveeditorgraphicalmodewidget.cpp"

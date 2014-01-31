@@ -82,5 +82,3 @@ void MultiImapVacationManager::slotScriptActive(bool active, const QString &serv
     if (mNumberOfJobs == 0)
         mCheckInProgress = false;
 }
-
-#include "moc_multiimapvacationmanager.cpp"

@@ -3,12 +3,19 @@ I == In progress
 N == not possible
 
 
-            Authentication  |  Delete File | Delete Folder | create Folder | Upload | Download | AccountInfo | Copy File | Copy Folder | Move File | Move Folder | Share Link | Rename file | Rename Folder 
+            Authentication  |  Delete File | Delete Folder | create Folder | Upload | Download | AccountInfo | Copy File | Copy Folder | Move File | Move Folder | Share Link | Rename file | Rename Folder | File/Folder Information | List Folder
 
-DropBox:          X               X             X                X             X         X           X           X           X             X           X               X            X            X
-YouSendIt:        X               X             X                X                                   X                                                 I                            I            I
-WebDav:           X
-GDrive:           X 
-Box:              X               X             X                X             I         I           X           X           X                         I               X            X            X
+DropBox:          X               X             X                X             X         X           X           X           X             X           X               X            X            X                     X                   X
+YouSendIt:        X               X             X                X                                   X                                                 I                            I            I                     X                   X
+WebDav:           X                                              X                                                                                                                                                     X                   X
+GDrive:           X  
+Box:              X               X             X                X             I         I           X           X           X                         I               X            X            X                     X                   X
 Hubic:            I
-UbuntuOne:        X                                                                                                                             X
+UbuntuOne:        X                                                                                                                             X                                                                      X                    X
+
+
+------------------------------
+TODO:
+-----
+- Move all config to kwallet ?
+

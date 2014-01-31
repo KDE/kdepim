@@ -384,5 +384,3 @@ void CompletionOrderEditor::slotOk()
 }
 
 #include "moc_completionordereditor_p.cpp"
-
-#include "moc_completionordereditor.cpp"

@@ -18,8 +18,12 @@
 #include "webdavstorageservice.h"
 #include "storageservice/widgets/storageservicetreewidget.h"
 #include "storageservice/storageservicemanager.h"
+#include "storageservice/settings/storageservicesettings.h"
+#include "storageservice/webdav/protocol/webdav_url_info.h"
 #include "webdavsettingsdialog.h"
 #include "webdavjob.h"
+
+#include <kwallet.h>
 
 #include <KLocalizedString>
 #include <KConfig>
@@ -27,6 +31,9 @@
 #include <KConfigGroup>
 
 #include <QPointer>
+#include <QDebug>
+#include <QFileInfo>
+#include <QDir>
 
 using namespace PimCommon;
 
@@ -42,13 +49,23 @@ WebDavStorageService::~WebDavStorageService()
 
 void WebDavStorageService::readConfig()
 {
+    //TODO add support for don't save as kwallet ?
     KConfig config(StorageServiceManager::kconfigName());
     KConfigGroup grp(&config, "Webdav Settings");
     mPublicLocation = grp.readEntry(QLatin1String("public location"));
     mServiceLocation = grp.readEntry(QLatin1String("service location"));
     mUsername = grp.readEntry(QLatin1String("username"));
-    //Use KWallet ?
-    mPassword = grp.readEntry(QLatin1String("password"));
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        const QString walletEntry = StorageServiceManager::kconfigName();
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet)
+            wallet->readPassword(walletEntry, mPassword);
+    }
+}
+
+bool WebDavStorageService::needInitialized() const
+{
+    return (mServiceLocation.isEmpty() || mUsername.isEmpty() || mPassword.isEmpty());
 }
 
 void WebDavStorageService::removeConfig()
@@ -56,6 +73,13 @@ void WebDavStorageService::removeConfig()
     KConfig config(StorageServiceManager::kconfigName());
     KConfigGroup grp(&config, "Webdav Settings");
     grp.deleteGroup();
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        const QString walletEntry = StorageServiceManager::kconfigName();
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet)
+            wallet->removeEntry(walletEntry);
+    }
+
     KGlobal::config()->sync();
 }
 
@@ -79,8 +103,12 @@ void WebDavStorageService::slotAuthorizationDone(const QString &publicLocation, 
     grp.writeEntry(QLatin1String("public location"), publicLocation);
     grp.writeEntry(QLatin1String("service location"), serviceLocation);
     grp.writeEntry(QLatin1String("username"), username);
-    //Use KWallet ?
-    grp.writeEntry(QLatin1String("password"), password);
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        const QString walletEntry = StorageServiceManager::kconfigName();
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet)
+            wallet->writePassword(walletEntry, mPassword);
+    }
     grp.sync();
     KGlobal::config()->sync();
     emitAuthentificationDone();
@@ -97,7 +125,7 @@ void WebDavStorageService::slotAuthorizationFailed(const QString &errorMessage)
 
 void WebDavStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
-    if (mServiceLocation.isEmpty()) {
+    if (needInitialized()) {
         mNextAction->setRootPath(root);
         mNextAction->setPath(path);
         mNextAction->setNextActionType(ShareLink);
@@ -113,7 +141,7 @@ void WebDavStorageService::storageServiceShareLink(const QString &root, const QS
 
 void WebDavStorageService::storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
-    if (mServiceLocation.isEmpty()) {
+    if (needInitialized()) {
         mNextAction->setNextActionType(DownLoadFile);
         mNextAction->setNextActionName(name);
         mNextAction->setDownloadDestination(destination);
@@ -132,7 +160,7 @@ void WebDavStorageService::storageServicedownloadFile(const QString &name, const
 
 void WebDavStorageService::storageServicecreateServiceFolder()
 {
-    if (mServiceLocation.isEmpty()) {
+    if (needInitialized()) {
         mNextAction->setNextActionType(CreateServiceFolder);
         storageServiceauthentication();
     } else {
@@ -146,7 +174,7 @@ void WebDavStorageService::storageServicecreateServiceFolder()
 
 void WebDavStorageService::storageServicedeleteFile(const QString &filename)
 {
-    if (mServiceLocation.isEmpty()) {
+    if (needInitialized()) {
         mNextAction->setNextActionType(DeleteFile);
         mNextAction->setNextActionName(filename);
         storageServiceauthentication();
@@ -161,7 +189,7 @@ void WebDavStorageService::storageServicedeleteFile(const QString &filename)
 
 void WebDavStorageService::storageServicedeleteFolder(const QString &foldername)
 {
-    if (mServiceLocation.isEmpty()) {
+    if (needInitialized()) {
         mNextAction->setNextActionType(DeleteFolder);
         mNextAction->setNextActionName(foldername);
         storageServiceauthentication();
@@ -176,7 +204,7 @@ void WebDavStorageService::storageServicedeleteFolder(const QString &foldername)
 
 void WebDavStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
 {
-    if (mServiceLocation.isEmpty()) {
+    if (needInitialized()) {
         mNextAction->setNextActionType(RenameFolder);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
@@ -191,7 +219,7 @@ void WebDavStorageService::storageServiceRenameFolder(const QString &source, con
 
 void WebDavStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
 {
-    if (mServiceLocation.isEmpty()) {
+    if (needInitialized()) {
         mNextAction->setNextActionType(RenameFile);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
@@ -206,7 +234,7 @@ void WebDavStorageService::storageServiceRenameFile(const QString &source, const
 
 void WebDavStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
 {
-    if (mServiceLocation.isEmpty()) {
+    if (needInitialized()) {
         mNextAction->setNextActionType(MoveFolder);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
@@ -221,7 +249,7 @@ void WebDavStorageService::storageServiceMoveFolder(const QString &source, const
 
 void WebDavStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
 {
-    if (mServiceLocation.isEmpty()) {
+    if (needInitialized()) {
         mNextAction->setNextActionType(MoveFile);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
@@ -236,7 +264,7 @@ void WebDavStorageService::storageServiceMoveFile(const QString &source, const Q
 
 void WebDavStorageService::storageServiceCopyFile(const QString &source, const QString &destination)
 {
-    if (mServiceLocation.isEmpty()) {
+    if (needInitialized()) {
         mNextAction->setNextActionType(CopyFile);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
@@ -251,7 +279,7 @@ void WebDavStorageService::storageServiceCopyFile(const QString &source, const Q
 
 void WebDavStorageService::storageServiceCopyFolder(const QString &source, const QString &destination)
 {
-    if (mServiceLocation.isEmpty()) {
+    if (needInitialized()) {
         mNextAction->setNextActionType(CopyFolder);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
@@ -272,8 +300,24 @@ StorageServiceAbstract::Capabilities WebDavStorageService::capabilities() const
 
 QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
+    qDebug()<<" data"<<data;
     listWidget->clear();
     listWidget->createMoveUpItem();
+    const QList<QWebdavUrlInfo> lst = QWebdavUrlInfo::parseListInfo(data);
+    Q_FOREACH(const QWebdavUrlInfo &info, lst) {
+        if (info.isDir()) {
+            QFileInfo folderInfo(info.name());
+            StorageServiceTreeWidgetItem *item = listWidget->addFolder(folderInfo.dir().dirName(), folderInfo.dir().dirName());
+            item->setDateCreated(info.createdAt());
+            item->setLastModification(info.lastModified());
+        } else {
+            const QString mimetype = info.mimeType();
+            QFileInfo fileInfo(info.name());
+            StorageServiceTreeWidgetItem *item = listWidget->addFile(fileInfo.fileName(), fileInfo.fileName(), mimetype);
+            item->setDateCreated(info.createdAt());
+            item->setLastModification(info.lastModified());
+        }
+    }
     return QString();
 }
 
@@ -294,7 +338,7 @@ QString WebDavStorageService::fileShareRoot(const QVariantMap &variantMap)
 
 void WebDavStorageService::storageServicelistFolder(const QString &folder)
 {
-    if (mServiceLocation.isEmpty()) {
+    if (needInitialized()) {
         mNextAction->setNextActionType(ListFolder);
         mNextAction->setNextActionFolder(folder);
         storageServiceauthentication();
@@ -309,7 +353,7 @@ void WebDavStorageService::storageServicelistFolder(const QString &folder)
 
 void WebDavStorageService::storageServicecreateFolder(const QString &name, const QString &destination)
 {
-    if (mServiceLocation.isEmpty()) {
+    if (needInitialized()) {
         mNextAction->setNextActionType(CreateFolder);
         mNextAction->setNextActionName(name);
         mNextAction->setNextActionFolder(destination);
@@ -325,7 +369,7 @@ void WebDavStorageService::storageServicecreateFolder(const QString &name, const
 
 void WebDavStorageService::storageServiceaccountInfo()
 {
-    if (mServiceLocation.isEmpty()) {
+    if (needInitialized()) {
         mNextAction->setNextActionType(AccountInfo);
         storageServiceauthentication();
     } else {
@@ -344,7 +388,7 @@ QString WebDavStorageService::name()
 
 void WebDavStorageService::storageServiceuploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
-    if (mServiceLocation.isEmpty()) {
+    if (needInitialized()) {
         mNextAction->setNextActionType(UploadFile);
         mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
@@ -389,9 +433,9 @@ StorageServiceAbstract::Capabilities WebDavStorageService::serviceCapabilities()
     cap |= AccountInfoCapability;
     //cap |= UploadFileCapability;
     //cap |= DownloadFileCapability;
-    //cap |= CreateFolderCapability;
+    cap |= CreateFolderCapability;
     //cap |= DeleteFolderCapability;
-    //cap |= ListFolderCapability;
+    cap |= ListFolderCapability;
     //cap |= ShareLinkCapability;
     //cap |= DeleteFileCapability;
     //cap |= RenameFolderCapability;

@@ -85,7 +85,7 @@ void Filter::setCurrentFolder( const KUrl &url )
 
 void Filter::setSearchString( const QString &search )
 {
-  QString trimStr = search.trimmed();
+  const QString trimStr = search.trimmed();
   if (mSearchString == trimStr) {
     return;
   }
@@ -112,5 +112,3 @@ void Filter::setSearchString( const QString &search )
   emit finished();
 }
 
-
-#include "moc_filter.cpp"

@@ -175,5 +175,3 @@ QString KSieveUi::SieveActionFileInto::href() const
 {
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
-
-#include "moc_sieveactionfileinto.cpp"

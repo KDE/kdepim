@@ -165,6 +165,3 @@ QString SieveActionRedirect::href() const
     return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 
-
-
-#include "moc_sieveactionredirect.cpp"

@@ -1698,5 +1698,3 @@ void ThemeDelegate::slotGeneralFontChanged()
 }
 
 
-
-#include "moc_themedelegate.cpp"

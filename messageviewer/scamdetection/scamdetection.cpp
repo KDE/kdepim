@@ -155,5 +155,3 @@ void ScamDetection::showDetails()
 }
 
 
-
-#include "moc_scamdetection.cpp"

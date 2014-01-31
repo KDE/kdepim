@@ -114,5 +114,3 @@ void SieveEditor::addOkMessage(const QString &msg)
     mSieveEditorWidget->addOkMessage(msg);
 }
 
-
-#include "moc_sieveeditor.cpp"

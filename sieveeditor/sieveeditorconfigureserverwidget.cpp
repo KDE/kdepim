@@ -81,4 +81,3 @@ void SieveEditorConfigureServerWidget::slotItemSelectionChanged()
     ui->modifyServer->setEnabled(hasItemSelected);
     ui->removeServer->setEnabled(hasItemSelected);
 }
-

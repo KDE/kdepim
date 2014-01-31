@@ -255,5 +255,3 @@ Recipient::Ptr RecipientLineNG::recipient() const
 }
 
 
-
-#include "moc_recipientline.cpp"

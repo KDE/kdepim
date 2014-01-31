@@ -124,6 +124,5 @@ void StorageServiceAbstractJob::slotDownloadReadyRead()
 
 void StorageServiceAbstractJob::slotuploadDownloadFileProgress(qint64 done, qint64 total)
 {
-    //qDebug()<<" done "<<done<<" total :"<<total;
     Q_EMIT uploadDownloadFileProgress(done, total);
 }

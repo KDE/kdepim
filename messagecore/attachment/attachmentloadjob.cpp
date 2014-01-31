@@ -58,5 +58,3 @@ void AttachmentLoadJob::setAttachmentPart( const AttachmentPart::Ptr &part )
   d->mPart = part;
 }
 
-
-#include "moc_attachmentloadjob.cpp"

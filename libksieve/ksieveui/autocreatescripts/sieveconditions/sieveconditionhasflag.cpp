@@ -176,5 +176,3 @@ QString SieveConditionHasFlag::href() const
 
 
 
-
-#include "moc_sieveconditionhasflag.cpp"

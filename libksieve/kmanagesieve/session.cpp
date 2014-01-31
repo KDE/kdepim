@@ -564,5 +564,3 @@ bool Session::allowUnencrypted() const
     return m_url.queryItem(QLatin1String("x-allow-unencrypted")) == QLatin1String("true");
 }
 
-
-#include "moc_session.cpp"

@@ -170,5 +170,3 @@ SieveEditorUtil::SieveServerConfig ServerSieveSettings::serverSieveConfig() cons
     conf.authenticationType = authtype;
     return conf;
 }
-
-#include "moc_serversievesettings.cpp"

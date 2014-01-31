@@ -40,12 +40,13 @@
 #include <QPushButton>
 #include <QPointer>
 #include <QDebug>
+#include <QStackedWidget>
 
 using namespace PimCommon;
 
 StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     : QWidget(parent),
-      mNeedCapability(PimCommon::StorageServiceAbstract::NoCapability)
+      mNeedCapability(QList<PimCommon::StorageServiceAbstract::Capability>() << PimCommon::StorageServiceAbstract::NoCapability)
 
 {
     QHBoxLayout *mainLayout = new QHBoxLayout;
@@ -80,14 +81,33 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     mDescription->setReadOnly(true);
     vbox->addWidget(mDescription);
 
+
+    mStackWidget = new QStackedWidget;
+
+    mInformationPage = new QWidget;
+    mStackWidget->addWidget(mInformationPage);
+    QVBoxLayout *informationLayout = new QVBoxLayout;
+    mInformationPage->setLayout(informationLayout);
     mAccountSize = new QLabel;
     mQuota = new QLabel;
     mShared = new QLabel;
+    informationLayout->addWidget(mAccountSize);
+    informationLayout->addWidget(mQuota);
+    informationLayout->addWidget(mShared);
     setDefaultLabel();
 
-    vbox->addWidget(mAccountSize);
-    vbox->addWidget(mQuota);
-    vbox->addWidget(mShared);
+    mErrorPage = new QWidget;
+    mStackWidget->addWidget(mErrorPage);
+    mStackWidget->setCurrentWidget(mInformationPage);
+    QVBoxLayout *errorLayout = new QVBoxLayout;
+    mErrorPage->setLayout(errorLayout);
+    mErrorInfo = new QLabel;
+    errorLayout->addWidget(mErrorInfo);
+    mAuthenticate = new QPushButton(i18n("Authenticate"));
+    errorLayout->addWidget(mAuthenticate);
+    connect(mAuthenticate, SIGNAL(clicked()), this, SLOT(slotAuthenticate()));
+
+    vbox->addWidget(mStackWidget);
     mainLayout->addLayout(vbox);
     setLayout(mainLayout);
     connect(mListService, SIGNAL(itemSelectionChanged()), this, SLOT(slotServiceSelected()));
@@ -99,8 +119,14 @@ StorageServiceSettingsWidget::~StorageServiceSettingsWidget()
 
 }
 
+void StorageServiceSettingsWidget::slotAuthenticate()
+{
+    //TODO
+}
+
 void StorageServiceSettingsWidget::setDefaultLabel()
 {
+    mStackWidget->setCurrentWidget(mInformationPage);
     mAccountSize->setText(i18n("Account size:"));
     mQuota->setText(i18n("Quota:"));
     mShared->setText(i18n("Shared:"));
@@ -112,10 +138,20 @@ void StorageServiceSettingsWidget::updateButtons()
     mModifyService->setEnabled(mListService->currentItem());
 }
 
-void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageServiceAbstract *> &lst, PimCommon::StorageServiceAbstract::Capability cap)
+bool StorageServiceSettingsWidget::hasCapabilities(PimCommon::StorageServiceAbstract::Capabilities capabilities, const QList<PimCommon::StorageServiceAbstract::Capability> &lstNeedCapabily)
+{
+    Q_FOREACH (PimCommon::StorageServiceAbstract::Capability cap, lstNeedCapabily) {
+        if (capabilities & cap) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageServiceAbstract *> &lst, const QList<PimCommon::StorageServiceAbstract::Capability> &lstCap)
 {
     mListStorageService = lst;
-    mNeedCapability = cap;
+    mNeedCapability = lstCap;
     QMapIterator<QString, StorageServiceAbstract*> i(mListStorageService);
     while (i.hasNext()) {
         i.next();
@@ -127,44 +163,43 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::DropBox);
             type = PimCommon::StorageServiceManager::DropBox;
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::DropBox);
-            showItem = (PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::DropBox) & cap);
+            showItem = hasCapabilities(PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::DropBox), lstCap);
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::Hubic)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::Hubic);
             type = PimCommon::StorageServiceManager::Hubic;
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::Hubic);
-            showItem = (PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::Hubic) & cap);
+            showItem = hasCapabilities(PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::Hubic), lstCap);
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::UbuntuOne)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::UbuntuOne);
             type = PimCommon::StorageServiceManager::UbuntuOne;
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::UbuntuOne);
-            showItem = (PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::YouSendIt) & cap);
+            showItem = hasCapabilities(PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::UbuntuOne), lstCap);
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::YouSendIt)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::YouSendIt);
-            showItem = (PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::YouSendIt) & cap);
+            showItem = hasCapabilities(PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::YouSendIt), lstCap);
             type = PimCommon::StorageServiceManager::YouSendIt;
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::YouSendIt);
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::WebDav)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::WebDav);
             type = PimCommon::StorageServiceManager::WebDav;
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::WebDav);
-            showItem = (PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::WebDav) & cap);
+            showItem = hasCapabilities(PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::WebDav), lstCap);
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::Box)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::Box);
             type = PimCommon::StorageServiceManager::Box;
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::Box);
-            showItem = (PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::Box) & cap);
+            showItem = hasCapabilities(PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::Box), lstCap);
 #ifdef KDEPIM_STORAGESERVICE_GDRIVE
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::GDrive)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::GDrive);
             type = PimCommon::StorageServiceManager::GDrive;
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::GDrive);
-            showItem = (PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::GDrive) & cap);
+            showItem = hasCapabilities(PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::GDrive), lstCap);
 #endif
         }
         PimCommon::StorageListWidgetItem *item = createItem(serviceName, i.key(), type, icon.isEmpty() ? KIcon() : KIcon(icon));
         if (showItem) {
-            connect(i.value(),SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
-            connect(i.value(),SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
+            defaultConnection(i.value());
         } else {
             item->setHidden(true);
         }
@@ -253,12 +288,19 @@ void StorageServiceSettingsWidget::slotAddService()
             mListStorageService.insert(service, storage);
             PimCommon::StorageListWidgetItem *item = createItem(serviceName, service, type, storage->icon());
             item->startAnimation();
-            connect(storage,SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
-            connect(storage,SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
+            defaultConnection(storage);
             storage->authentication();
         }
     }
     delete dlg;
+}
+
+void StorageServiceSettingsWidget::defaultConnection(StorageServiceAbstract *storage)
+{
+    connect(storage, SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
+    connect(storage, SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
+    connect(storage, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotUpdateAccountInfo(QString,PimCommon::AccountInfo)));
+    connect(storage, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotUpdateAccountInfoFailed(QString,QString)));
 }
 
 void StorageServiceSettingsWidget::slotAuthenticationFailed(const QString &serviceName, const QString &error)
@@ -303,8 +345,6 @@ void StorageServiceSettingsWidget::slotServiceSelected()
         mDescription->setText(descriptionStr);
         if (mListStorageService.contains(mListService->currentItem()->data(Name).toString())) {
             StorageServiceAbstract *storage = mListStorageService.value(mListService->currentItem()->data(Name).toString());
-            connect(storage, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotUpdateAccountInfo(QString,PimCommon::AccountInfo)),Qt::UniqueConnection);
-            connect(storage, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotUpdateAccountInfoFailed(QString,QString)),Qt::UniqueConnection);
             storage->accountInfo();
         }
     } else {
@@ -318,6 +358,7 @@ void StorageServiceSettingsWidget::slotUpdateAccountInfoFailed(const QString &se
 {
     Q_UNUSED(error);
     if (mListService->currentItem() && (mListService->currentItem()->data(Name).toString()==serviceName)) {
+        mStackWidget->setCurrentWidget(mErrorPage);
         setDefaultLabel();
     }
 }
@@ -325,6 +366,7 @@ void StorageServiceSettingsWidget::slotUpdateAccountInfoFailed(const QString &se
 void StorageServiceSettingsWidget::slotUpdateAccountInfo(const QString &serviceName, const PimCommon::AccountInfo &info)
 {
     if (mListService->currentItem() && (mListService->currentItem()->data(Name).toString()==serviceName)) {
+        mStackWidget->setCurrentWidget(mInformationPage);
         if (info.accountSize != -1) {
             mAccountSize->setText(i18n("Account size: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
         } else {
@@ -335,8 +377,8 @@ void StorageServiceSettingsWidget::slotUpdateAccountInfo(const QString &serviceN
         } else {
             mQuota->setText(i18n("Quota:"));
         }
-        if (info.accountSize != -1) {
-            mShared->setText(i18n("Shared: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
+        if (info.shared != -1) {
+            mShared->setText(i18n("Shared: %1", KGlobal::locale()->formatByteSize(info.shared,1)));
         } else {
             mShared->setText(i18n("Shared:"));
         }

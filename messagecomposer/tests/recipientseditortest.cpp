@@ -111,5 +111,3 @@ int main( int argc, char **argv )
   return ret;
 }
 
-
-#include "moc_recipientseditortest.cpp"

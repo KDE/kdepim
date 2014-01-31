@@ -22,10 +22,12 @@
 #include "pimcommon_export.h"
 
 class QTreeWidgetItem;
+class QLabel;
 namespace PimCommon {
 class StorageServiceAbstract;
 class StorageServiceTreeWidget;
 class StorageServiceProgressWidget;
+class StorageServiceProgressIndicator;
 class PIMCOMMON_EXPORT StorageServiceDownloadDialog : public KDialog
 {
     Q_OBJECT
@@ -42,6 +44,10 @@ private slots:
     void slotDownfileDone(const QString &serviceName, const QString &filename);
 
     void slotDownfileFailed(const QString &serviceName, const QString &filename);
+    void slotUpdatePixmap(const QPixmap &pix);
+    void slotListFolderDone(const QString &serviceName, const QString &data);
+    void slotActionFailed(const QString &serviceName, const QString &data);
+    void slotUploadDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total);
 private:
     void readConfig();
     void writeConfig();
@@ -49,6 +55,8 @@ private:
     StorageServiceTreeWidget *mTreeWidget;
     PimCommon::StorageServiceAbstract *mStorage;
     PimCommon::StorageServiceProgressWidget *mProgressWidget;
+    PimCommon::StorageServiceProgressIndicator *mStorageServiceProgressIndicator;
+    QLabel *mLabelProgressIncator;
 };
 }
 

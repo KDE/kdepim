@@ -334,5 +334,3 @@ void SieveIncludeWidgetLister::loadScript(const QDomElement &element, QString &e
 
 }
 
-
-#include "moc_sieveincludewidget.cpp"

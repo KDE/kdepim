@@ -27,6 +27,7 @@ class QListWidget;
 class QPushButton;
 class QLabel;
 class KTextBrowser;
+class QStackedWidget;
 namespace PimCommon {
 class StorageListWidgetItem;
 
@@ -37,7 +38,7 @@ public:
     explicit StorageServiceSettingsWidget(QWidget *parent=0);
     ~StorageServiceSettingsWidget();
 
-    void setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst, PimCommon::StorageServiceAbstract::Capability cap = PimCommon::StorageServiceAbstract::AccountInfoCapability);
+    void setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst, const QList<StorageServiceAbstract::Capability> &lstCap = QList<PimCommon::StorageServiceAbstract::Capability>()<< PimCommon::StorageServiceAbstract::AccountInfoCapability);
     QMap<QString, PimCommon::StorageServiceAbstract *> listService() const;
 
 Q_SIGNALS:
@@ -53,16 +54,18 @@ private slots:
     void slotAuthenticationFailed(const QString &serviceName, const QString &error);
     void slotAuthenticationDone(const QString &serviceName);
     void slotUpdateAccountInfoFailed(const QString &serviceName, const QString &error);
-
+    void slotAuthenticate();
 private:
     void updateButtons();
     void setDefaultLabel();
+    bool hasCapabilities(PimCommon::StorageServiceAbstract::Capabilities capabilities, const QList<PimCommon::StorageServiceAbstract::Capability> &lstNeedCapabily);
     PimCommon::StorageListWidgetItem *createItem(const QString &serviceName, const QString &service, PimCommon::StorageServiceManager::ServiceType type, const KIcon &icon);
+    void defaultConnection(StorageServiceAbstract *storage);
     enum ServiceData {
         Name = Qt::UserRole + 1,
         Type = Qt::UserRole + 2
     };
-    PimCommon::StorageServiceAbstract::Capability mNeedCapability;
+    QList<PimCommon::StorageServiceAbstract::Capability> mNeedCapability;
     QMap<QString, PimCommon::StorageServiceAbstract *> mListStorageService;
     QListWidget *mListService;
     KTextBrowser *mDescription;
@@ -72,6 +75,11 @@ private:
     QLabel *mAccountSize;
     QLabel *mQuota;
     QLabel *mShared;
+    QStackedWidget *mStackWidget;
+    QWidget *mInformationPage;
+    QWidget *mErrorPage;
+    QPushButton *mAuthenticate;
+    QLabel *mErrorInfo;
 };
 }
 #endif // STORAGESERVICESETTINGSWIDGET_H

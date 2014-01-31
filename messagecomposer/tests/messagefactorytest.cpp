@@ -503,5 +503,3 @@ void MessageFactoryTest::test_multipartAlternative()
   QCOMPARE( reply.msg->contents().at( contentAt )->encodedBody().data(), expected.toLatin1().data() );
 }
 
-
-#include "moc_messagefactorytest.cpp"

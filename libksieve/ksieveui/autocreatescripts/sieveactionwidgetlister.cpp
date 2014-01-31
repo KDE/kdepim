@@ -412,5 +412,3 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyAc
 
 
 
-
-#include "moc_sieveactionwidgetlister.cpp"

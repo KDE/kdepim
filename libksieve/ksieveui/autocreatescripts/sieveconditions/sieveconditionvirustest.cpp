@@ -159,5 +159,3 @@ QString SieveConditionVirusTest::href() const
 }
 
 
-
-#include "moc_sieveconditionvirustest.cpp"

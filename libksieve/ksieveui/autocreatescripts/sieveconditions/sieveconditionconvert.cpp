@@ -148,5 +148,3 @@ bool SieveConditionConvert::setParamWidgetValue(const QDomElement &element, QWid
     return true;
 }
 
-
-#include "moc_sieveconditionconvert.cpp"

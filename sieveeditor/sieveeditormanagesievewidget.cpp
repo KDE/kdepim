@@ -70,5 +70,3 @@ bool SieveEditorManageSieveWidget::refreshList()
     return noImapFound;
 }
 
-
-#include "moc_sieveeditormanagesievewidget.cpp"

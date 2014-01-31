@@ -16,23 +16,49 @@
 */
 
 #include "configurestorageservicewidget.h"
+#include "settings.h"
+#include "pimcommon/storageservice/widgets/storageserviceconfigurewidget.h"
 #include "pimcommon/storageservice/settings/storageservicesettingswidget.h"
+#include "pimcommon/storageservice/storageservicemanager.h"
 
 #include <KLocalizedString>
 #include <KStandardDirs>
 #include <KMessageBox>
+#include <KUrlRequester>
 
 #include <QVBoxLayout>
 #include <QProcess>
 #include <QPushButton>
 
-ConfigureStorageServiceWidget::ConfigureStorageServiceWidget(QWidget *parent)
-    : QWidget(parent)
+StorageServiceConfigureWidget::StorageServiceConfigureWidget(QWidget *parent)
+    : PimCommon::StorageServiceConfigureWidget(parent)
+{
+
+}
+
+StorageServiceConfigureWidget::~StorageServiceConfigureWidget()
+{
+
+}
+
+void StorageServiceConfigureWidget::loadSettings()
+{
+    downloadFolder()->setUrl(KUrl(Settings::self()->downloadDirectory()));
+}
+
+void StorageServiceConfigureWidget::writeSettings()
+{
+    Settings::self()->setDownloadDirectory(downloadFolder()->url().path());
+}
+
+ConfigureStorageServiceWidget::ConfigureStorageServiceWidget(PimCommon::StorageServiceManager *storageManager, QWidget *parent)
+    : QWidget(parent),
+      mStorageManager(storageManager)
 {
     QVBoxLayout *lay = new QVBoxLayout;
-    mStorageServiceWidget = new PimCommon::StorageServiceSettingsWidget;
-    connect(mStorageServiceWidget, SIGNAL(changed()), this, SIGNAL(changed()));
-    lay->addWidget(mStorageServiceWidget);
+    mStorageServiceConfigureWidget = new StorageServiceConfigureWidget;
+    connect(mStorageServiceConfigureWidget, SIGNAL(changed()), this, SIGNAL(changed()));
+    lay->addWidget(mStorageServiceConfigureWidget);
 
     QHBoxLayout *hbox = new QHBoxLayout;
     mManageStorageService = new QPushButton(i18n("Manage Storage Service"));
@@ -45,6 +71,8 @@ ConfigureStorageServiceWidget::ConfigureStorageServiceWidget(QWidget *parent)
         connect(mManageStorageService, SIGNAL(clicked(bool)), this, SLOT(slotManageStorageService()));
     }
     setLayout(lay);
+    //TODO need to implement save/load from KDialogConfig
+    doLoadFromGlobalSettings();
 }
 
 ConfigureStorageServiceWidget::~ConfigureStorageServiceWidget()
@@ -61,12 +89,18 @@ void ConfigureStorageServiceWidget::slotManageStorageService()
 
 void ConfigureStorageServiceWidget::save()
 {
-    //storageServiceManager()->setListService(mStorageServiceWidget->listService());
+    mStorageManager->setListService(mStorageServiceConfigureWidget->storageServiceSettingsWidget()->listService());
+    mStorageServiceConfigureWidget->writeSettings();
 }
 
 void ConfigureStorageServiceWidget::doLoadFromGlobalSettings()
 {
-    //mStorageServiceWidget->setListService(KMKernel::self()->storageServiceManager()->listService(), PimCommon::StorageServiceAbstract::ShareLinkCapability);
+    QList<PimCommon::StorageServiceAbstract::Capability> lst;
+    lst.append(PimCommon::StorageServiceAbstract::UploadFileCapability);
+    lst.append(PimCommon::StorageServiceAbstract::DownloadFileCapability);
+
+    mStorageServiceConfigureWidget->storageServiceSettingsWidget()->setListService(mStorageManager->listService(), lst);
+    mStorageServiceConfigureWidget->loadSettings();
 }
 
 #include "moc_configurestorageservicewidget.cpp"

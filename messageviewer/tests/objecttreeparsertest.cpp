@@ -196,5 +196,3 @@ void ObjectTreeParserTester::test_HTMLOnly()
 }
 
 
-
-#include "moc_objecttreeparsertest.cpp"

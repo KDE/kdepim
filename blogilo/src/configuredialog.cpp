@@ -30,7 +30,7 @@
 
 #include <KLocalizedString>
 
-ConfigureDialog::ConfigureDialog(QWidget *parent, const QString& name, KConfigSkeleton *config)
+ConfigureDialog::ConfigureDialog(PimCommon::StorageServiceManager *storageManager, QWidget *parent, const QString& name, KConfigSkeleton *config)
     : KConfigDialog(parent, name, config)
 {
     QWidget *generalSettingsDlg = new QWidget;
@@ -55,7 +55,7 @@ ConfigureDialog::ConfigureDialog(QWidget *parent, const QString& name, KConfigSk
     Ui::AdvancedSettingsBase ui_advancedsettings_base;
     ui_advancedsettings_base.setupUi( advancedSettingsDlg );
 
-    mConfigStorageService = new ConfigureStorageServiceWidget;
+    mConfigStorageService = new ConfigureStorageServiceWidget(storageManager);
     mConfigStorageService->setAttribute( Qt::WA_DeleteOnClose );
 
     addPage( generalSettingsDlg, i18nc( "Configure Page", "General" ), QLatin1String("configure") );

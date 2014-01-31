@@ -18,8 +18,12 @@
 #include "yousenditstorageservice.h"
 #include "storageservice/widgets/storageservicetreewidget.h"
 #include "storageservice/storageservicemanager.h"
+#include "storageservice/settings/storageservicesettings.h"
+
 #include "yousenditutil.h"
 #include "yousenditjob.h"
+
+#include <kwallet.h>
 
 #include <KLocalizedString>
 #include <KConfig>
@@ -42,14 +46,23 @@ YouSendItStorageService::~YouSendItStorageService()
 {
 }
 
+bool YouSendItStorageService::needAuthenticate() const
+{
+    return (mToken.isEmpty() || mUsername.isEmpty() || mPassword.isEmpty());
+}
+
 void YouSendItStorageService::readConfig()
 {
     KConfig config(StorageServiceManager::kconfigName());
     KConfigGroup grp(&config, "YouSendIt Settings");
     mUsername = grp.readEntry("Username");
-    //Use password ?
-    mPassword = grp.readEntry("Password");
     mToken = grp.readEntry("Token");
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        const QString walletEntry = StorageServiceManager::kconfigName();
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet)
+            wallet->readPassword(walletEntry, mPassword);
+    }
 }
 
 void YouSendItStorageService::removeConfig()
@@ -57,6 +70,12 @@ void YouSendItStorageService::removeConfig()
     KConfig config(StorageServiceManager::kconfigName());
     KConfigGroup grp(&config, "YouSendIt Settings");
     grp.deleteGroup();
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        const QString walletEntry = StorageServiceManager::kconfigName();
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet)
+            wallet->removeEntry(walletEntry);
+    }
     KGlobal::config()->sync();
 }
 
@@ -84,9 +103,13 @@ void YouSendItStorageService::slotAuthorizationDone(const QString &password, con
     mToken = token;
     KConfig config(StorageServiceManager::kconfigName());
     KConfigGroup grp(&config, "YouSendIt Settings");
-    grp.readEntry("Username", mUsername);
-    //TODO store in kwallet ?
-    grp.writeEntry("Password", mPassword);
+    grp.writeEntry("Username", mUsername);
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        const QString walletEntry = StorageServiceManager::kconfigName();
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet)
+            wallet->writePassword(walletEntry, mPassword);
+    }
     grp.writeEntry("Token", mToken);
     grp.sync();
     emitAuthentificationDone();
@@ -94,7 +117,7 @@ void YouSendItStorageService::slotAuthorizationDone(const QString &password, con
 
 void YouSendItStorageService::storageServicelistFolder(const QString &folder)
 {
-    if (mToken.isEmpty()) {
+    if (needAuthenticate()) {
         mNextAction->setNextActionType(ListFolder);
         mNextAction->setNextActionFolder(folder);
         storageServiceauthentication();
@@ -109,7 +132,7 @@ void YouSendItStorageService::storageServicelistFolder(const QString &folder)
 
 void YouSendItStorageService::storageServicecreateFolder(const QString &name, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    if (needAuthenticate()) {
         mNextAction->setNextActionName(name);
         mNextAction->setNextActionFolder(destination);
         mNextAction->setNextActionType(CreateFolder);
@@ -125,7 +148,7 @@ void YouSendItStorageService::storageServicecreateFolder(const QString &name, co
 
 void YouSendItStorageService::storageServiceaccountInfo()
 {
-    if (mToken.isEmpty()) {
+    if (needAuthenticate()) {
         mNextAction->setNextActionType(AccountInfo);
         storageServiceauthentication();
     } else {
@@ -144,7 +167,7 @@ QString YouSendItStorageService::name()
 
 void YouSendItStorageService::storageServiceuploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    if (needAuthenticate()) {
         mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
         mNextAction->setUploadAsName(uploadAsName);
@@ -206,7 +229,7 @@ StorageServiceAbstract::Capabilities YouSendItStorageService::serviceCapabilitie
 
 void YouSendItStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
-    if (mToken.isEmpty()) {
+    if (needAuthenticate()) {
         mNextAction->setRootPath(root);
         mNextAction->setPath(path);
         mNextAction->setNextActionType(ShareLink);
@@ -222,7 +245,7 @@ void YouSendItStorageService::storageServiceShareLink(const QString &root, const
 
 void YouSendItStorageService::storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    if (needAuthenticate()) {
         mNextAction->setNextActionName(name);
         mNextAction->setNextActionType(DownLoadFile);
         mNextAction->setDownloadDestination(destination);
@@ -241,7 +264,7 @@ void YouSendItStorageService::storageServicedownloadFile(const QString &name, co
 
 void YouSendItStorageService::storageServicecreateServiceFolder()
 {
-    if (mToken.isEmpty()) {
+    if (needAuthenticate()) {
         mNextAction->setNextActionType(CreateServiceFolder);
         storageServiceauthentication();
     } else {
@@ -255,7 +278,7 @@ void YouSendItStorageService::storageServicecreateServiceFolder()
 
 void YouSendItStorageService::storageServicedeleteFile(const QString &filename)
 {
-    if (mToken.isEmpty()) {
+    if (needAuthenticate()) {
         mNextAction->setNextActionName(filename);
         mNextAction->setNextActionType(DeleteFile);
         storageServiceauthentication();
@@ -270,7 +293,7 @@ void YouSendItStorageService::storageServicedeleteFile(const QString &filename)
 
 void YouSendItStorageService::storageServicedeleteFolder(const QString &foldername)
 {
-    if (mToken.isEmpty()) {
+    if (needAuthenticate()) {
         mNextAction->setNextActionName(foldername);
         mNextAction->setNextActionType(DeleteFolder);
         storageServiceauthentication();
@@ -285,7 +308,7 @@ void YouSendItStorageService::storageServicedeleteFolder(const QString &folderna
 
 void YouSendItStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    if (needAuthenticate()) {
         mNextAction->setNextActionType(RenameFolder);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
@@ -300,7 +323,7 @@ void YouSendItStorageService::storageServiceRenameFolder(const QString &source, 
 
 void YouSendItStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    if (needAuthenticate()) {
         mNextAction->setNextActionType(RenameFile);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
@@ -315,7 +338,7 @@ void YouSendItStorageService::storageServiceRenameFile(const QString &source, co
 
 void YouSendItStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    if (needAuthenticate()) {
         mNextAction->setNextActionType(MoveFolder);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
@@ -330,7 +353,7 @@ void YouSendItStorageService::storageServiceMoveFolder(const QString &source, co
 
 void YouSendItStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    if (needAuthenticate()) {
         mNextAction->setNextActionType(MoveFile);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
@@ -345,7 +368,7 @@ void YouSendItStorageService::storageServiceMoveFile(const QString &source, cons
 
 void YouSendItStorageService::storageServiceCopyFile(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    if (needAuthenticate()) {
         mNextAction->setNextActionType(CopyFile);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
@@ -360,7 +383,7 @@ void YouSendItStorageService::storageServiceCopyFile(const QString &source, cons
 
 void YouSendItStorageService::storageServiceCopyFolder(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    if (needAuthenticate()) {
         mNextAction->setNextActionType(CopyFolder);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();

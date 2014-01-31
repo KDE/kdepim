@@ -63,7 +63,7 @@ signals:
     void mediaFilesUploaded( int count );
     void settingsChanged();
 
-protected slots:
+private slots:
     void slotOpenCurrentBlogInBrowser();
     void slotSettingsChanged();
     void slotCreateNewPost();
@@ -91,7 +91,6 @@ protected slots:
     void loadTempPosts();
     void uploadMediaObject();
 
-private slots:
     void optionsPreferences();
     void postManipulationDone( bool isError, const QString &customMessage );
     void slotBusy( bool isBusy );

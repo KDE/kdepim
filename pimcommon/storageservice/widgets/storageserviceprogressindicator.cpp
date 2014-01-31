@@ -21,6 +21,8 @@
 #include "storageserviceprogressindicator.h"
 #include <QTimer>
 
+using namespace PimCommon;
+
 StorageServiceProgressIndicator::StorageServiceProgressIndicator(QObject *parent)
     : QObject(parent),
       mProgressCount(0)

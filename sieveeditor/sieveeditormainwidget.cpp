@@ -144,5 +144,3 @@ bool SieveEditorMainWidget::needToSaveScript()
     }
     return scriptSaved;
 }
-
-#include "moc_sieveeditormainwidget.cpp"

@@ -486,5 +486,3 @@ void CryptoComposerTest::runSMIMETest( bool sign, bool enc, bool opaque )
   }
 }
 
-
-#include "moc_cryptocomposertest.cpp"

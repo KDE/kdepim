@@ -76,7 +76,7 @@ QList<SieveEditorUtil::SieveServerConfig> SieveEditorUtil::readServerSieveConfig
     QRegExp re( QLatin1String( "^ServerSieve (.+)$" ) );
     const QStringList groups = cfg->groupList().filter( re );
     KWallet::Wallet *wallet = SieveServerSettings::self()->wallet();
-    if ( !wallet->setFolder( QLatin1String("sieveeditor") ) ) {
+    if ( wallet && !wallet->setFolder( QLatin1String("sieveeditor") ) ) {
         wallet->createFolder( QLatin1String("sieveeditor"));
         wallet->setFolder( QLatin1String("sieveeditor") );
     }
@@ -89,7 +89,7 @@ QList<SieveEditorUtil::SieveServerConfig> SieveEditorUtil::readServerSieveConfig
         sieve.serverName = group.readEntry(QLatin1String("ServerName"));
         sieve.userName = group.readEntry(QLatin1String("UserName"));
         const QString walletEntry = sieve.userName + QLatin1Char('@') + sieve.serverName;
-        if (wallet->hasEntry(walletEntry)) {
+        if (wallet && wallet->hasEntry(walletEntry)) {
             wallet->readPassword(walletEntry, sieve.password);
         }
         sieve.authenticationType = static_cast<MailTransport::Transport::EnumAuthenticationType::type>(group.readEntry(QLatin1String("Authentication"), static_cast<int>(MailTransport::Transport::EnumAuthenticationType::PLAIN)));
@@ -111,10 +111,12 @@ void SieveEditorUtil::writeServerSieveConfig(const QList<SieveEditorUtil::SieveS
 
     int i = 0;
     KWallet::Wallet *wallet = SieveServerSettings::self()->wallet();
-    if ( !wallet->hasFolder( QLatin1String("sieveeditor") ) ) {
-        wallet->createFolder( QLatin1String("sieveeditor") );
+    if (wallet) {
+        if ( !wallet->hasFolder( QLatin1String("sieveeditor") ) ) {
+            wallet->createFolder( QLatin1String("sieveeditor") );
+        }
+        wallet->setFolder( QLatin1String("sieveeditor") );
     }
-    wallet->setFolder( QLatin1String("sieveeditor") );
 
     Q_FOREACH (const SieveEditorUtil::SieveServerConfig &conf, lstConfig) {
         KConfigGroup group = cfg->group(QString::fromLatin1("ServerSieve %1").arg(i));
@@ -122,7 +124,8 @@ void SieveEditorUtil::writeServerSieveConfig(const QList<SieveEditorUtil::SieveS
         group.writeEntry(QLatin1String("ServerName"), conf.serverName);
         group.writeEntry(QLatin1String("UserName"), conf.userName);
         const QString walletEntry = conf.userName + QLatin1Char('@') + conf.serverName;
-        wallet->writePassword(walletEntry, conf.password);
+        if (wallet)
+            wallet->writePassword(walletEntry, conf.password);
         group.writeEntry(QLatin1String("Authentication"), static_cast<int>(conf.authenticationType));
 
         ++i;
@@ -134,10 +137,12 @@ void SieveEditorUtil::writeServerSieveConfig(const QList<SieveEditorUtil::SieveS
 void SieveEditorUtil::addServerSieveConfig(const SieveEditorUtil::SieveServerConfig &conf)
 {
     KWallet::Wallet *wallet = SieveServerSettings::self()->wallet();
-    if ( !wallet->hasFolder( QLatin1String("sieveeditor") ) ) {
-        wallet->createFolder( QLatin1String("sieveeditor") );
+    if (wallet) {
+        if ( !wallet->hasFolder( QLatin1String("sieveeditor") ) ) {
+            wallet->createFolder( QLatin1String("sieveeditor") );
+        }
+        wallet->setFolder( QLatin1String("sieveeditor") );
     }
-    wallet->setFolder( QLatin1String("sieveeditor") );
     KSharedConfigPtr cfg = KGlobal::config();
     const QRegExp re( QLatin1String( "^ServerSieve (.+)$" ) );
     const QStringList groups = cfg->groupList().filter( re );
@@ -146,7 +151,10 @@ void SieveEditorUtil::addServerSieveConfig(const SieveEditorUtil::SieveServerCon
     group.writeEntry(QLatin1String("ServerName"), conf.serverName);
     group.writeEntry(QLatin1String("UserName"), conf.userName);
     const QString walletEntry = conf.userName + QLatin1Char('@') + conf.serverName;
-    wallet->writePassword(walletEntry, conf.password);
+
+    if (wallet)
+        wallet->writePassword(walletEntry, conf.password);
+
     group.writeEntry(QLatin1String("Authentication"), static_cast<int>(conf.authenticationType));
     cfg->sync();
 }

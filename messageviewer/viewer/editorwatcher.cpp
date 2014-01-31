@@ -177,5 +177,3 @@ void EditorWatcher::checkEditDone()
   deleteLater();
 }
 }
-
-#include "moc_editorwatcher.cpp"

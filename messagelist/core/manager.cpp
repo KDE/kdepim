@@ -1051,5 +1051,3 @@ void Manager::saveConfiguration()
 }
 
 
-
-#include "moc_manager.cpp"

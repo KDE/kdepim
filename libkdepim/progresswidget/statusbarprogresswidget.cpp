@@ -306,5 +306,3 @@ void StatusbarProgressWidget::slotProgressDialogVisible( bool b )
     }
 }
 
-
-#include "moc_statusbarprogresswidget.cpp"

@@ -26,6 +26,7 @@
 #include <KConfig>
 #include <KGlobal>
 #include <KConfigGroup>
+#include <KLocale>
 
 #include <QDebug>
 
@@ -445,6 +446,13 @@ QString UbuntuoneStorageService::itemInformation(const QVariantMap &variantMap)
     if (variantMap.contains(QLatin1String("is_public"))) {
         const bool value = variantMap.value(QLatin1String("is_public")).toString() == QLatin1String("true");
         information = i18n("File is public: %1", value ? i18n("Yes") : i18n("No"));
+    }
+    if (variantMap.contains(QLatin1String("volume_path"))) {
+
+        information += QLatin1Char('\n') + i18n("Volume path: %1", variantMap.value(QLatin1String("volume_path")).toString());
+    }
+    if (variantMap.contains(QLatin1String("size"))) {
+        information += QLatin1Char('\n') + i18n("Size: %1", KGlobal::locale()->formatByteSize(variantMap.value(QLatin1String("size")).toULongLong()));
     }
     return information;
 }

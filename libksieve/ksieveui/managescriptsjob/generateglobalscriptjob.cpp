@@ -133,5 +133,3 @@ void GenerateGlobalScriptJob::disableAllOtherScripts()
     Q_EMIT success();
 }
 
-
-#include "moc_generateglobalscriptjob.cpp"

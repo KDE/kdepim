@@ -66,5 +66,3 @@ void TransparentJob::process()
   emitResult();
 }
 
-
-#include "moc_transparentjob.cpp"

@@ -156,5 +156,3 @@ QString SieveConditionDate::href() const
 }
 
 
-
-#include "moc_sieveconditiondate.cpp"

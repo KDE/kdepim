@@ -167,5 +167,3 @@ void WebKitPartHtmlWriter::extraHead( const QString& str )
     mExtraHead = str;
 }
 
-
-#include "moc_webkitparthtmlwriter.cpp"

@@ -162,5 +162,3 @@ void VacationDialog::slotDialogDefaults()
 {
     mVacationEditWidget->setDefault();
 }
-
-#include "moc_vacationdialog.cpp"

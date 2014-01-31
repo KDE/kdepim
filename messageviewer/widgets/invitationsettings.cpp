@@ -161,5 +161,3 @@ void InvitationSettings::doResetToDefaultsOther()
     loadWidget(mInvitationUi->mDeleteInvitations, GlobalSettings::self()->deleteInvitationEmailsAfterSendingReplyItem());
     GlobalSettings::self()->useDefaults( bUseDefaults );
 }
-
-#include "moc_invitationsettings.cpp"

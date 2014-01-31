@@ -60,5 +60,3 @@ void SelectedNotefolderDialog::writeConfig()
     group.writeEntry( "Size", size() );
     group.sync();
 }
-
-#include "moc_selectednotefolderdialog.cpp"

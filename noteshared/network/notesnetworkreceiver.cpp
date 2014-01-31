@@ -148,5 +148,3 @@ void NotesNetworkReceiver::slotError( QAbstractSocket::SocketError error )
     kWarning( 5500 ) <<"error type :"<< ( int ) error <<" error string : "<<m_sock->errorString();
 }
 
-
-#include "moc_notesnetworkreceiver.cpp"

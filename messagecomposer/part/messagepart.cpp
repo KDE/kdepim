@@ -44,5 +44,3 @@ MessagePart::~MessagePart()
   delete d;
 }
 
-
-#include "moc_messagepart.cpp"

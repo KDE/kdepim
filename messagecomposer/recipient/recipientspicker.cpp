@@ -211,5 +211,3 @@ void RecipientsPicker::ldapSearchResult()
     }
 }
 
-
-#include "moc_recipientspicker.cpp"

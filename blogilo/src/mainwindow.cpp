@@ -234,6 +234,7 @@ void MainWindow::setupActions()
 
     actionCollection()->addAction( QLatin1String("upload_file"), mStorageManager->menuUploadServices(this) );
     actionCollection()->addAction( QLatin1String("download_file"), mStorageManager->menuDownloadServices(this) );
+    mStorageManager->setDefaultUploadFolder(Settings::self()->downloadDirectory());
 }
 
 void MainWindow::loadTempPosts()
@@ -323,7 +324,7 @@ void MainWindow::optionsPreferences()
     if ( KConfigDialog::showDialog( QLatin1String("settings") ) )  {
         return;
     }
-    ConfigureDialog *dialog = new ConfigureDialog( this, QLatin1String("settings"), Settings::self() );
+    ConfigureDialog *dialog = new ConfigureDialog( mStorageManager, this, QLatin1String("settings"), Settings::self() );
     connect( dialog, SIGNAL(blogAdded(BilboBlog)),
              this, SLOT(slotBlogAdded(BilboBlog)) );
     connect( dialog, SIGNAL(blogEdited(BilboBlog)),
@@ -338,6 +339,7 @@ void MainWindow::optionsPreferences()
 void MainWindow::slotSettingsChanged()
 {
     setupSystemTray();
+    mStorageManager->setDefaultUploadFolder(Settings::self()->downloadDirectory());
 }
 
 void MainWindow::slotDialogDestroyed( QObject *win )

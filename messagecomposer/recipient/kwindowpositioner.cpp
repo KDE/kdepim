@@ -68,5 +68,3 @@ void KWindowPositioner::reposition()
 }
 }
 
-
-#include "moc_kwindowpositioner.cpp"

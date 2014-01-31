@@ -384,5 +384,3 @@ void SieveConditionWidgetLister::loadScript(const QDomElement &e, bool uniqTest,
     }
 }
 
-
-#include "moc_sieveconditionwidgetlister.cpp"

@@ -284,5 +284,3 @@ void SieveScriptBlockWidget::loadScript(const QDomElement &element, bool onlyAct
 
 }
 
-
-#include "moc_sievescriptblockwidget.cpp"

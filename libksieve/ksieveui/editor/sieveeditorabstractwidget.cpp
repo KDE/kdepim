@@ -103,5 +103,3 @@ bool SieveEditorAbstractWidget::loadFromFile( const QString &filename )
 }
 
 
-
-#include "moc_sieveeditorabstractwidget.cpp"

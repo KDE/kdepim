@@ -236,5 +236,3 @@ void VacationEditWidget::setDefault()
     setDomainName( VacationUtils::defaultDomainName() );
     setDomainCheck( false );
 }
-
-#include "moc_vacationeditwidget.cpp"

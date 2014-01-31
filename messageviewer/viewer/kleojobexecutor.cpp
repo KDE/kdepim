@@ -160,5 +160,3 @@ QString KleoJobExecutor::auditLogAsHtml() const
   return mAuditLog;
 }
 
-
-#include "moc_kleojobexecutor.cpp"
