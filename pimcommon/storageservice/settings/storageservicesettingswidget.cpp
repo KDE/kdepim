@@ -99,6 +99,13 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     mErrorPage = new QWidget;
     mStackWidget->addWidget(mErrorPage);
     mStackWidget->setCurrentWidget(mInformationPage);
+    QVBoxLayout *errorLayout = new QVBoxLayout;
+    mErrorPage->setLayout(errorLayout);
+    mErrorInfo = new QLabel;
+    errorLayout->addWidget(mErrorInfo);
+    mAuthenticate = new QPushButton(i18n("Authenticate"));
+    errorLayout->addWidget(mAuthenticate);
+    connect(mAuthenticate, SIGNAL(clicked()), this, SLOT(slotAuthenticate()));
 
     vbox->addWidget(mStackWidget);
     mainLayout->addLayout(vbox);
@@ -110,6 +117,11 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
 StorageServiceSettingsWidget::~StorageServiceSettingsWidget()
 {
 
+}
+
+void StorageServiceSettingsWidget::slotAuthenticate()
+{
+    //TODO
 }
 
 void StorageServiceSettingsWidget::setDefaultLabel()

@@ -54,7 +54,7 @@ private slots:
     void slotAuthenticationFailed(const QString &serviceName, const QString &error);
     void slotAuthenticationDone(const QString &serviceName);
     void slotUpdateAccountInfoFailed(const QString &serviceName, const QString &error);
-
+    void slotAuthenticate();
 private:
     void updateButtons();
     void setDefaultLabel();
@@ -77,6 +77,8 @@ private:
     QStackedWidget *mStackWidget;
     QWidget *mInformationPage;
     QWidget *mErrorPage;
+    QPushButton *mAuthenticate;
+    QLabel *mErrorInfo;
 };
 }
 #endif // STORAGESERVICESETTINGSWIDGET_H
