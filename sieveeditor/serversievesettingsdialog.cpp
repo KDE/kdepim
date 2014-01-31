@@ -40,7 +40,7 @@ ServerSieveSettingsDialog::ServerSieveSettingsDialog(QWidget *parent)
     lay->setMargin(0);
     w->setLayout(lay);
     setMainWidget(w);
-    resize(300,200);
+    resize(400,300);
     enableButtonOk(false);
 }
 
