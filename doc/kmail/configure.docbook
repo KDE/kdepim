@@ -847,12 +847,12 @@ the threads that have been active today.</para></listitem>
 <listitem><para>A simple, backward compatible, single row theme</para></listitem>
 </varlistentry>
 <varlistentry>
-<term>Fancy</term>
-<listitem><para>A fancy multi-line and multi-item theme</para></listitem>
+<term>Smart</term>
+<listitem><para>A smart multi-line and multi-item theme</para></listitem>
 </varlistentry>
 <varlistentry>
-<term>Fancy with Clickable Status</term>
-<listitem><para>A fancy multi-line and multi-item theme with a clickable status column</para></listitem>
+<term>Smart with Clickable Status</term>
+<listitem><para>A smart multi-line and multi-item theme with a clickable status column</para></listitem>
 </varlistentry>
 <varlistentry id="customize-messagelist-theme">
 <term>Configure...</term>
