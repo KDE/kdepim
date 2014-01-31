@@ -53,6 +53,7 @@ Q_SIGNALS:
 private slots:
     void slotSendDataFinished(QNetworkReply *reply);    
     void slotAuthenticationRequired(QNetworkReply *, QAuthenticator *);
+    void slotListInfo(const QString &data);
 private:
     void parseUploadFile(const QString &data);
     void parseCreateFolder(const QString &data);
