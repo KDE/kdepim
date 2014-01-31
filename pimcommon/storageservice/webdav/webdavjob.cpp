@@ -120,12 +120,9 @@ void WebDavJob::listFolder(const QString &folder)
 {
     mActionType = PimCommon::StorageServiceAbstract::ListFolder;
     mError = false;
-
     QWebdav *webdav = new QWebdav(this);
     webdav->setUser(mUserName, mPassword);
-
     QUrl url(mServiceLocation);
-
     QHttp::ConnectionMode mode = QHttp::ConnectionModeHttp;
 
     if (url.port() == -1) {
@@ -139,19 +136,34 @@ void WebDavJob::listFolder(const QString &folder)
         mode = QHttp::ConnectionModeHttps;
     else
         mode = QHttp::ConnectionModeHttp;
-
-    qDebug()<<" url.host()"<<url.host()<<" url.port()"<<url.port();
     webdav->setHost(url.host(), mode, url.port());
-
     connect(webdav, SIGNAL(listInfo(QString)), this, SLOT(slotListInfo(QString)));
-    qDebug()<<" url.encodedPath()"<<url.encodedPath();
+    connect(webdav, SIGNAL(sslErrors(QList<QSslError>)),
+            webdav, SLOT(ignoreSslErrors()));
+    connect(webdav, SIGNAL(authenticationRequired(QString,quint16,QAuthenticator*)),
+            this, SLOT(slotRequired(QString,quint16,QAuthenticator*)));
     webdav->list(url.toString());
-    qDebug()<<" sdsssssssssssssssss";
+}
+
+void WebDavJob::slotRequired(const QString &hostname, quint16 port, QAuthenticator *authenticator)
+{
+    QPointer<LoginDialog> dlg = new LoginDialog;
+    if (dlg->exec()) {
+        mUserName = dlg->username();
+        mPassword = dlg->password();
+        auth->setUser(mUserName);
+        auth->setPassword(mPassword);
+    } else {
+        Q_EMIT authorizationFailed(i18n("Authentication Canceled."));
+        deleteLater();
+    }
+    delete dlg;
+    authenticator->setUser(mUserName);
+    authenticator->setPassword(mPassword);
 }
 
 void WebDavJob::slotListInfo(const QString &data)
 {
-    qDebug()<<" Data "<<data;
     Q_EMIT listFolderDone(data);
     deleteLater();
 }

@@ -85,12 +85,12 @@ void QWebdav::init(const QString & hostName)
 {
     host = hostName;
     emitListInfo = false;
-    connect(this, SIGNAL(readyRead ( const QHttpResponseHeader & )),
-            this, SLOT(readyRead ( const QHttpResponseHeader & )));
-    connect(this, SIGNAL(requestFinished ( int, bool )),
-            this, SLOT(requestFinished ( int, bool )));
-    connect(this, SIGNAL(responseHeaderReceived( const QHttpResponseHeader & )),
-            this, SLOT(responseHeaderReceived( const QHttpResponseHeader & )));
+    connect(this, SIGNAL(readyRead(QHttpResponseHeader)),
+            this, SLOT(readyRead(QHttpResponseHeader)));
+    connect(this, SIGNAL(requestFinished(int,bool)),
+            this, SLOT(requestFinished(int,bool)));
+    connect(this, SIGNAL(responseHeaderReceived(QHttpResponseHeader)),
+            this, SLOT(responseHeaderReceived(QHttpResponseHeader)));
 }
 
 int QWebdav::list ( const QString & dir)

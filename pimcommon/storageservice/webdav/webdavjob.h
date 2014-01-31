@@ -54,6 +54,7 @@ private slots:
     void slotSendDataFinished(QNetworkReply *reply);    
     void slotAuthenticationRequired(QNetworkReply *, QAuthenticator *);
     void slotListInfo(const QString &data);
+    void slotRequired(const QString &hostname, quint16 port, QAuthenticator *authenticator);
 private:
     void parseUploadFile(const QString &data);
     void parseCreateFolder(const QString &data);
