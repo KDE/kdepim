@@ -25,13 +25,25 @@
 class KLineEdit;
 class KComboBox;
 class QToolButton;
-
+class QPushButton;
 class QuickSearchLine : public QWidget
 {
     Q_OBJECT
 public:
     explicit QuickSearchLine(QWidget *parent=0);
     ~QuickSearchLine();
+
+    enum SearchOption {
+        SearchNoOption = 1,
+        SearchAgainstSubject = 2,
+        SearchAgainstFrom = 4,
+        SearchAgainstBcc = 8
+    };
+
+    Q_ENUMS(SearchOption)
+    Q_DECLARE_FLAGS(SearchOptions, SearchOption)
+
+    SearchOptions searchOptions() const;
 
     void focusQuickSearch();
 
@@ -48,13 +60,17 @@ Q_SIGNALS:
 
 private slots:
     void slotLockSearchClicked(bool locked);
-
+    void slotSearchOptionChanged();
 private:
     void defaultFilterStatus();
+    SearchOptions mSearchOptions;
     KLineEdit *mSearchEdit;
     KComboBox *mStatusFilterCombo;
     QToolButton *mOpenFullSearchButton;
     QToolButton *mLockSearch;
+    QPushButton *mSearchAgainstSubject;
+    QPushButton *mSearchAgainstFrom;
+    QPushButton *mSearchAgainstBcc;
     int mFirstTagInComboIndex;
 };
 

@@ -31,14 +31,24 @@
 
 #include <QToolButton>
 #include <QHBoxLayout>
+#include <QPushButton>
+
 using namespace MessageList::Core;
 QuickSearchLine::QuickSearchLine(QWidget *parent)
     : QWidget(parent),
+      mSearchOptions(SearchNoOption),
       mFirstTagInComboIndex(-1)
 {
+    QVBoxLayout *vbox = new QVBoxLayout;
+    vbox->setMargin(0);
+    setLayout(vbox);
+
+    QWidget *w = new QWidget;
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->setMargin(0);
-    setLayout(hbox);
+    w->setLayout(hbox);
+    vbox->addWidget(w);
+
     mLockSearch = new QToolButton( this );
     mLockSearch->setCheckable( true );
     mLockSearch->setText( i18nc( "@action:button", "Lock search" ) );
@@ -83,11 +93,54 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     connect( mOpenFullSearchButton, SIGNAL(clicked()), this, SIGNAL(fullSearchRequest()) );
     mSearchEdit->setEnabled( false );
     mStatusFilterCombo->setEnabled( false );
+
+    QWidget *extraOption = new QWidget;
+    hbox = new QHBoxLayout;
+    hbox->setMargin(0);
+    vbox->addWidget(extraOption);
+    extraOption->setLayout(hbox);
+    extraOption->hide();
+
+    hbox->addStretch(0);
+    mSearchAgainstSubject = new QPushButton(i18n("Subject"));
+    mSearchAgainstSubject->setCheckable(true);
+    connect(mSearchAgainstSubject, SIGNAL(clicked(bool)), this, SLOT(slotSearchOptionChanged()));
+    hbox->addWidget(mSearchAgainstSubject);
+
+    mSearchAgainstFrom = new QPushButton(i18n("From"));
+    connect(mSearchAgainstFrom, SIGNAL(clicked(bool)), this, SLOT(slotSearchOptionChanged()));
+    mSearchAgainstFrom->setCheckable(true);
+    hbox->addWidget(mSearchAgainstFrom);
+
+    mSearchAgainstBcc = new QPushButton(i18n("Bcc"));
+    connect(mSearchAgainstBcc, SIGNAL(clicked(bool)), this, SLOT(slotSearchOptionChanged()));
+    mSearchAgainstBcc->setCheckable(true);
+    hbox->addWidget(mSearchAgainstBcc);
+
 }
 
 QuickSearchLine::~QuickSearchLine()
 {
 
+}
+
+void QuickSearchLine::slotSearchOptionChanged()
+{
+    mSearchOptions = SearchNoOption;
+    if (mSearchAgainstSubject->isChecked()) {
+        mSearchOptions |= SearchAgainstSubject;
+    }
+    if (mSearchAgainstFrom->isChecked()) {
+        mSearchOptions |= SearchAgainstFrom;
+    }
+    if (mSearchAgainstBcc->isChecked()) {
+        mSearchOptions |= SearchAgainstBcc;
+    }
+}
+
+QuickSearchLine::SearchOptions QuickSearchLine::searchOptions() const
+{
+    return mSearchOptions;
 }
 
 void QuickSearchLine::focusQuickSearch()
