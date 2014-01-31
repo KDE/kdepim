@@ -148,11 +148,6 @@ Widget::Widget( QWidget *pParent )
 
   connect( d->mView->header(), SIGNAL(sectionClicked(int)),
            SLOT(slotViewHeaderSectionClicked(int)) );
-
-  //g->setRowStretch( 1, 1 );
-  //g->setColumnStretch( 0, 1 );
-
-
   d->mSearchTimer = 0;
 }
 
