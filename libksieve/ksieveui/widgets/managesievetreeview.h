@@ -33,9 +33,6 @@ public:
 
     void setNoImapFound(bool found);    
     void setNetworkDown(bool state);
-
-private:
-    bool mImapFound;
 };
 }
 
