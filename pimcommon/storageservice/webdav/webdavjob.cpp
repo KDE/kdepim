@@ -123,7 +123,8 @@ void WebDavJob::deleteFile(const QString &filename)
     connect(webdav, SIGNAL(authenticationRequired(QString,quint16,QAuthenticator*)),
             this, SLOT(slotRequired(QString,quint16,QAuthenticator*)));
     connect(webdav, SIGNAL(requestFinished(int, bool)), this, SLOT(slotRequestFinished(int, bool)));
-    mReqId = webdav->remove(url.toString() + QLatin1Char('/') + filename);
+    qDebug()<<" filename "<<filename;
+    mReqId = webdav->remove(filename);
 }
 
 void WebDavJob::deleteFolder(const QString &foldername)
@@ -135,7 +136,8 @@ void WebDavJob::deleteFolder(const QString &foldername)
     connect(webdav, SIGNAL(authenticationRequired(QString,quint16,QAuthenticator*)),
             this, SLOT(slotRequired(QString,quint16,QAuthenticator*)));
     connect(webdav, SIGNAL(requestFinished(int, bool)), this, SLOT(slotRequestFinished(int, bool)));
-    mReqId = webdav->rmdir(url.toString() + QLatin1Char('/') + foldername + QLatin1Char('/'));
+    qDebug()<<" filename "<<foldername;
+    mReqId = webdav->rmdir(foldername);
 }
 
 
@@ -177,7 +179,7 @@ void WebDavJob::listFolder(const QString &folder)
 {
     mActionType = PimCommon::StorageServiceAbstract::ListFolder;
     mError = false;
-    qDebug()<<" folder"<<folder;
+    //qDebug()<<" folder"<<folder;
     QWebdav *webdav = new QWebdav(this);
     QUrl url = configureWebDav(webdav);
     if (!folder.isEmpty())
@@ -188,7 +190,6 @@ void WebDavJob::listFolder(const QString &folder)
             webdav, SLOT(ignoreSslErrors()));
     connect(webdav, SIGNAL(authenticationRequired(QString,quint16,QAuthenticator*)),
             this, SLOT(slotRequired(QString,quint16,QAuthenticator*)));
-    qDebug()<<" url.toString()"<<url.toString();
     webdav->list(url.toString());
 }
 
@@ -201,9 +202,7 @@ void WebDavJob::createFolder(const QString &foldername, const QString &destinati
     connect(webdav, SIGNAL(authenticationRequired(QString,quint16,QAuthenticator*)),
             this, SLOT(slotRequired(QString,quint16,QAuthenticator*)));
     connect(webdav, SIGNAL(requestFinished(int, bool)), this, SLOT(slotRequestFinished(int, bool)));
-    //TODO add destination
-    qDebug()<<" url.toString() "<<url.toString() <<" foldername"<<foldername;
-    mReqId = webdav->mkdir(url.toString() + QLatin1Char('/') + destination + QLatin1Char('/') + foldername + QLatin1Char('/'));
+    mReqId = webdav->mkdir(destination + QLatin1Char('/') + foldername);
 }
 
 void WebDavJob::slotRequired(const QString &, quint16 , QAuthenticator *authenticator)
