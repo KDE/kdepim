@@ -31,6 +31,7 @@
 #include <QLabel>
 #include <QTreeWidget>
 #include <QFileInfo>
+#include <QDebug>
 
 using namespace PimCommon;
 
@@ -96,6 +97,10 @@ void StorageServiceDownloadDialog::slotActionFailed(const QString &serviceName, 
     Q_UNUSED(serviceName);
     Q_UNUSED(data);
     mStorageServiceProgressIndicator->stopAnimation();
+    mTreeWidget->setEnabled(true);
+    mProgressWidget->hide();
+    mProgressWidget->reset();
+    enableButton(User1, true);
 }
 
 void StorageServiceDownloadDialog::slotListFolderDone(const QString &serviceName, const QString &data)
