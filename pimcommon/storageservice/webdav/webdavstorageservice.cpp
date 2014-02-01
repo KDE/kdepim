@@ -300,20 +300,16 @@ StorageServiceAbstract::Capabilities WebDavStorageService::capabilities() const
 
 QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder)
 {
-    qDebug()<<" data"<<data;
+    //qDebug()<<" data"<<data;
     listWidget->clear();
     listWidget->createMoveUpItem();
-    const QString currentLocation = QUrl(mServiceLocation + currentFolder + QLatin1Char('/')).path();
 
     const QList<QWebdavUrlInfo> lst = QWebdavUrlInfo::parseListInfo(data);
     Q_FOREACH(const QWebdavUrlInfo &info, lst) {
-        //Don't show current Folder
-        qDebug()<< " currentLocation"<<currentLocation<<" QUrl(info.name()).path()"<<QUrl(info.name()).path();
-        if (QUrl(info.name()).path() == currentLocation)
+        if (QUrl(info.name()).path() == currentFolder)
           continue;
         if (info.isDir()) {
             QFileInfo folderInfo(info.name());
-            qDebug()<<" info.name()"<<info.name();
             StorageServiceTreeWidgetItem *item = listWidget->addFolder(folderInfo.dir().dirName(), info.name());
             item->setDateCreated(info.createdAt());
             item->setLastModification(info.lastModified());

@@ -119,7 +119,7 @@ void WebDavJob::deleteFile(const QString &filename)
     mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
     mError = false;
     QWebdav *webdav = new QWebdav(this);
-    QUrl url = configureWebDav(webdav);
+    configureWebDav(webdav);
     connect(webdav, SIGNAL(authenticationRequired(QString,quint16,QAuthenticator*)),
             this, SLOT(slotRequired(QString,quint16,QAuthenticator*)));
     connect(webdav, SIGNAL(requestFinished(int, bool)), this, SLOT(slotRequestFinished(int, bool)));
@@ -132,7 +132,7 @@ void WebDavJob::deleteFolder(const QString &foldername)
     mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
     mError = false;
     QWebdav *webdav = new QWebdav(this);
-    QUrl url = configureWebDav(webdav);
+    configureWebDav(webdav);
     connect(webdav, SIGNAL(authenticationRequired(QString,quint16,QAuthenticator*)),
             this, SLOT(slotRequired(QString,quint16,QAuthenticator*)));
     connect(webdav, SIGNAL(requestFinished(int, bool)), this, SLOT(slotRequestFinished(int, bool)));
@@ -179,7 +179,7 @@ void WebDavJob::listFolder(const QString &folder)
 {
     mActionType = PimCommon::StorageServiceAbstract::ListFolder;
     mError = false;
-    //qDebug()<<" folder"<<folder;
+    qDebug()<<" folder"<<folder;
     QWebdav *webdav = new QWebdav(this);
     QUrl url = configureWebDav(webdav);
     if (!folder.isEmpty())
