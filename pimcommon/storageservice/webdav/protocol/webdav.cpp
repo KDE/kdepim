@@ -184,8 +184,8 @@ int QWebdav::proppatch ( const QString & path, const QWebdav::PropValues & props
     foreach (const QString &ns, props.keys())
     {
         QMap < QString , QVariant >::const_iterator i;
-
-        for (i = props[ns].constBegin(); i != props[ns].constEnd(); ++i) {
+        QMap < QString , QVariant >::const_iterator end(props[ns].constEnd());
+        for (i = props[ns].constBegin(); i != end; ++i) {
             if (ns == QLatin1String("DAV:")) {
                 query += "<D:" + i.key().toLatin1() + ">";
                 query += i.value().toString().toLatin1();
@@ -227,7 +227,7 @@ void QWebdav::emitListInfos()
 void QWebdav::responseHeaderReceived( const QHttpResponseHeader & resp )
 {
     QHttpRequestHeader req = currentRequest();
-    QString method = req.method().toUpper();
+    const QString method = req.method().toUpper();
 
     if (method == QLatin1String("PROPFIND") || method == QLatin1String("SEARCH"))
         emitListInfo = true;

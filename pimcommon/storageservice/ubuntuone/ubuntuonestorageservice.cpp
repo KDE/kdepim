@@ -388,6 +388,7 @@ StorageServiceAbstract::Capabilities UbuntuoneStorageService::capabilities() con
 
 QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder)
 {
+    Q_UNUSED(currentFolder);
     listWidget->clear();
     listWidget->createMoveUpItem();
     QJson::Parser parser;

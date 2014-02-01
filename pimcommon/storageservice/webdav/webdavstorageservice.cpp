@@ -321,7 +321,23 @@ QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
             item->setLastModification(info.lastModified());
         }
     }
-    return QString();
+    QString parentFolder;
+    if (!currentFolder.isEmpty()) {
+        QStringList parts = currentFolder.split(QLatin1String("/"), QString::SkipEmptyParts);
+        parts.removeLast();
+        parentFolder = parts.join(QLatin1String("/"));
+        if (parentFolder.isEmpty()) {
+            parentFolder = QLatin1String("/");
+        }
+        if (!parentFolder.endsWith(QLatin1Char('/'))) {
+            parentFolder += QLatin1String("/");
+        }
+        if (!parentFolder.startsWith(QLatin1Char('/'))) {
+            parentFolder.prepend(QLatin1String("/"));
+        }
+    }
+    qDebug()<<" currentFolder "<<currentFolder<<" parentFolder" <<parentFolder;
+    return parentFolder;
 }
 
 QString WebDavStorageService::itemInformation(const QVariantMap &variantMap)
