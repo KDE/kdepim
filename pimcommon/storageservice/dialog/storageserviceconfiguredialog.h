@@ -41,6 +41,9 @@ public:
 
     virtual void writeSettings();
 
+Q_SIGNALS:
+    void serviceRemoved(const QString &);
+
 protected:
     PimCommon::StorageServiceConfigureWidget *mStorageServiceConfigureWidget;
     virtual void loadSettings();

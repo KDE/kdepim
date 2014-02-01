@@ -232,6 +232,7 @@ void StorageServiceSettingsWidget::slotRemoveService()
             QListWidgetItem *item = mListService->currentItem();
             const QString serviceName = item->data(Name).toString();
             if (mListStorageService.contains(serviceName)) {
+                Q_EMIT serviceRemoved(serviceName);
                 StorageServiceAbstract *storage = mListStorageService.take(serviceName);
                 storage->removeConfig();
                 Q_EMIT changed();
