@@ -313,13 +313,14 @@ QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
           continue;
         if (info.isDir()) {
             QFileInfo folderInfo(info.name());
-            StorageServiceTreeWidgetItem *item = listWidget->addFolder(folderInfo.dir().dirName(), folderInfo.dir().dirName());
+            qDebug()<<" info.name()"<<info.name();
+            StorageServiceTreeWidgetItem *item = listWidget->addFolder(folderInfo.dir().dirName(), info.name());
             item->setDateCreated(info.createdAt());
             item->setLastModification(info.lastModified());
         } else {
             const QString mimetype = info.mimeType();
             QFileInfo fileInfo(info.name());
-            StorageServiceTreeWidgetItem *item = listWidget->addFile(fileInfo.fileName(), fileInfo.fileName(), mimetype);
+            StorageServiceTreeWidgetItem *item = listWidget->addFile(fileInfo.fileName(), info.name(), mimetype);
             item->setDateCreated(info.createdAt());
             item->setLastModification(info.lastModified());
         }

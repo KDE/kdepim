@@ -118,7 +118,7 @@ void QWebdavUrlInfo::davParsePropstats( const QString & path, const QDomNodeList
 
     setName(path);
 
-    for ( int i = 0; i < propstats.count(); i++) {
+    for ( int i = 0; i < propstats.count(); ++i) {
         QDomElement propstat = propstats.item(i).toElement();
         QDomElement status = propstat.namedItem( QLatin1String("status") ).toElement();
 

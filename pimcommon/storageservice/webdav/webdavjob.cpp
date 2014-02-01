@@ -180,10 +180,8 @@ void WebDavJob::listFolder(const QString &folder)
     qDebug()<<" folder"<<folder;
     QWebdav *webdav = new QWebdav(this);
     QUrl url = configureWebDav(webdav);
-    if (!mServiceLocation.endsWith(QLatin1Char('/')))
-        url.setUrl(mServiceLocation + QLatin1Char('/') + folder + QLatin1Char('/'));
-    else
-        url.setUrl(mServiceLocation + QLatin1Char('/') + folder + QLatin1Char('/'));
+    if (!folder.isEmpty())
+        url.setPath(folder);
 
     connect(webdav, SIGNAL(listInfo(QString)), this, SLOT(slotListInfo(QString)));
     connect(webdav, SIGNAL(sslErrors(QList<QSslError>)),
