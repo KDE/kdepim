@@ -1,6 +1,7 @@
 [Global]
 IconName=kmail
 Comment=Message Viewer
+Comment[bs]=Preglednik poruka
 Comment[de]=Nachrichtenanzeige
 Comment[es]=Visor de mensajes
 Comment[fi]=Viestikatselin

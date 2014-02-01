@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Sieve Editor
+Name[bs]=Sieve uređivač
 Name[cs]=Editor Sieve
 Name[de]=Sieve-Editor
 Name[es]=Editor de Sieve
@@ -21,6 +22,7 @@ Exec=sieveeditor
 Icon=kmail
 X-DocPath=sieveeditor/index.html
 GenericName=Sieve Editor
+GenericName[bs]=Sieve uređivač
 GenericName[cs]=Editor Sieve
 GenericName[de]=Sieve-Editor
 GenericName[es]=Editor de Sieve

@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Notes Agent
+Name[bs]=Agent za bilješke
 Name[cs]=Agent poznámek
 Name[de]=Notizen-Agent
 Name[es]=Agente de notas
@@ -18,6 +19,7 @@ Name[uk]=Агент нотаток
 Name[x-test]=xxNotes Agentxx
 Name[zh_TW]=便條代理程式
 Comment=Adds notes received via network and handles note alarm notifications
+Comment[bs]=Dodaje bilješke primljene preko mreže i rukuje napomenama alarma bilješki
 Comment[de]=Fügt Notizen hinzu, die über das Netzwerk erhalten wurden und verarbeitet Benachrichtigungen über Notiz-Erinnerungen
 Comment[es]=Añade notas recibidas vía red y maneja notificaciones de alarmas de notas
 Comment[fi]=Lisää verkon välityksellä vastaanotetut muistiinpanot ja käsittelee muistiinpanojen hälytysilmoitukset

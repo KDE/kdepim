@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Followup Reminder Agent
-Name[bs]=Agent za podsjećanje na praćenje
+Name[bs]=Prateći agent koji Vas podsjeća
 Name[ca]=Agent per a recordatoris de seguiment
 Name[ca@valencia]=Agent per a recordatoris de seguiment
 Name[da]=Agent til opfølgningspåmindelse
@@ -27,7 +27,7 @@ Name[uk]=Агент нагадування про відповіді
 Name[x-test]=xxFollowup Reminder Agentxx
 Name[zh_TW]=回覆提醒代理程式
 Comment=Followup Reminder Agent allows to remind you when an email was not answered.
-Comment[bs]=Agent za podsjećanje na praćenje vas podsjeća kada e-mail nije odgovoren
+Comment[bs]=Prateći agent koji Vas podsjeća omogućava vam informaciju kada neki email nije odgovoren.
 Comment[ca]=L'agent per a recordatoris de seguiment permet recordar quan no s'ha rebut resposta d'un correu electrònic.
 Comment[ca@valencia]=L'agent per a recordatoris de seguiment permet recordar quan no s'ha rebut resposta d'un correu electrònic.
 Comment[da]=Agent til opfølgningspåmindelse muliggør at minde dig om når e-mail ikke er blevet besvaret.

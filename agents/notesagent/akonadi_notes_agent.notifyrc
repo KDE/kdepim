@@ -1,6 +1,7 @@
 [Global]
 IconName=notes
 Comment=Notes Agent
+Comment[bs]=Agent za bilješke
 Comment[cs]=Agent poznámek
 Comment[de]=Notizen-Agent
 Comment[es]=Agente de notas
@@ -21,6 +22,7 @@ Comment[zh_TW]=便條代理程式
 
 [Event/receivednotes]
 Name=Received a note
+Name[bs]=Primljena bilješka
 Name[de]=Notiz erhalten
 Name[es]=Recibida una nota
 Name[fi]=Muistiinpano vastaanotettu

@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Contact Theme Editor
-Name[bs]=Uređivač tema za kontakte
+Name[bs]=Editor tema za kontakte
 Name[ca]=Editor de temes dels contactes
 Name[ca@valencia]=Editor de temes dels contactes
 Name[da]=Tema-editor til kontakter
@@ -33,7 +33,7 @@ Exec=contactthemeeditor
 Icon=kaddressbook
 X-DocPath=contactthemeeditor/index.html
 GenericName=Contact Theme Editor
-GenericName[bs]=Uređivač tema za kontakte
+GenericName[bs]=Editor tema za kontakte
 GenericName[ca]=Editor de temes dels contactes
 GenericName[ca@valencia]=Editor de temes dels contactes
 GenericName[da]=Tema-editor til kontakter
