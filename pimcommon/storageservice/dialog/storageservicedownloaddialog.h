@@ -28,6 +28,7 @@ class StorageServiceAbstract;
 class StorageServiceTreeWidget;
 class StorageServiceProgressWidget;
 class StorageServiceProgressIndicator;
+class StorageServiceTreeWidgetItem;
 class PIMCOMMON_EXPORT StorageServiceDownloadDialog : public KDialog
 {
     Q_OBJECT
@@ -48,7 +49,9 @@ private slots:
     void slotListFolderDone(const QString &serviceName, const QString &data);
     void slotActionFailed(const QString &serviceName, const QString &data);
     void slotUploadDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total);
+    void slotItemDoubleClicked(QTreeWidgetItem *item, int);
 private:
+    void downloadItem(PimCommon::StorageServiceTreeWidgetItem *item);
     void readConfig();
     void writeConfig();
     QString mDefaultDownloadPath;
