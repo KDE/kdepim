@@ -408,8 +408,7 @@ void WebDavStorageService::storageServiceuploadFile(const QString &filename, con
 
 QString WebDavStorageService::description()
 {
-    //TODO
-    return QString(); // i18n("");
+    return i18n("WebDav allows to access to owncloud server.");
 }
 
 QUrl WebDavStorageService::serviceUrl()
