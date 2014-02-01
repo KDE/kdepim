@@ -406,7 +406,7 @@ void GDriveStorageService::storageServicecreateServiceFolder()
     }
 }
 
-QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
+QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder)
 {
     listWidget->clear();
     QJson::Parser parser;

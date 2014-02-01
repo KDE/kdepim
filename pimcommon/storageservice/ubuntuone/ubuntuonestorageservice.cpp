@@ -386,7 +386,7 @@ StorageServiceAbstract::Capabilities UbuntuoneStorageService::capabilities() con
     return serviceCapabilities();
 }
 
-QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
+QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder)
 {
     listWidget->clear();
     listWidget->createMoveUpItem();

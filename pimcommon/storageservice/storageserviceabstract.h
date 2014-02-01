@@ -124,7 +124,7 @@ public:
     virtual KIcon icon() const = 0;
     virtual void removeConfig() = 0;
     virtual StorageServiceAbstract::Capabilities capabilities() const = 0;
-    virtual QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data) = 0;
+    virtual QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder) = 0;
     virtual QString itemInformation(const QVariantMap &variantMap) = 0;
     virtual QString fileIdentifier(const QVariantMap &variantMap) = 0;
     virtual QString fileShareRoot(const QVariantMap &variantMap) = 0;

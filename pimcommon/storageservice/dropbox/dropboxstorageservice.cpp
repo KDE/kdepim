@@ -399,7 +399,7 @@ StorageServiceAbstract::Capabilities DropBoxStorageService::capabilities() const
     return serviceCapabilities();
 }
 
-QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
+QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder)
 {
     listWidget->clear();
     QJson::Parser parser;

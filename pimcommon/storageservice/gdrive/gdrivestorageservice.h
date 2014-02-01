@@ -63,7 +63,7 @@ public:
     KIcon icon() const;
     StorageServiceAbstract::Capabilities capabilities() const;
     void storageServicecreateServiceFolder();
-    QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data);
+    QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder);
 
 private slots:
     void slotAuthorizationDone(const QString &refreshToken, const QString &token);

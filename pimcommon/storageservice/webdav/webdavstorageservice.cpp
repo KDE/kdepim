@@ -298,19 +298,18 @@ StorageServiceAbstract::Capabilities WebDavStorageService::capabilities() const
     return serviceCapabilities();
 }
 
-QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
+QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder)
 {
     qDebug()<<" data"<<data;
     listWidget->clear();
     listWidget->createMoveUpItem();
 
-    //TODO extract current directory
-#if 0
-    if (QUrl(url.name()).path() == currentUrl.path())
-      return;
-#endif
+
     const QList<QWebdavUrlInfo> lst = QWebdavUrlInfo::parseListInfo(data);
     Q_FOREACH(const QWebdavUrlInfo &info, lst) {
+        //Don't show current Folder
+        if (QUrl(info.name()).path() == currentFolder)
+          continue;
         if (info.isDir()) {
             QFileInfo folderInfo(info.name());
             StorageServiceTreeWidgetItem *item = listWidget->addFolder(folderInfo.dir().dirName(), folderInfo.dir().dirName());

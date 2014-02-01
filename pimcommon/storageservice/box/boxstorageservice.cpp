@@ -481,7 +481,7 @@ void BoxStorageService::storageServicecreateServiceFolder()
     }
 }
 
-QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
+QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder)
 {
     listWidget->clear();
     QJson::Parser parser;

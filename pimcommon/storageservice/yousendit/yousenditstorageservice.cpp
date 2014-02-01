@@ -425,7 +425,7 @@ StorageServiceAbstract::Capabilities YouSendItStorageService::capabilities() con
     return serviceCapabilities();
 }
 
-QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
+QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder)
 {
     listWidget->clear();
     listWidget->createMoveUpItem();
