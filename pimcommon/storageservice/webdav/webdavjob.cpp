@@ -92,20 +92,26 @@ void WebDavJob::copyFile(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::CopyFile;
     mError = false;
-    qDebug()<<" not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //TODO
-    deleteLater();
+    qDebug()<<" copyFile :source :"<<source<<" destination "<<destination;
+    QWebdav *webdav = new QWebdav(this);
+    QUrl url = configureWebDav(webdav);
+    connect(webdav, SIGNAL(authenticationRequired(QString,quint16,QAuthenticator*)),
+            this, SLOT(slotRequired(QString,quint16,QAuthenticator*)));
+    connect(webdav, SIGNAL(requestFinished(int, bool)), this, SLOT(slotRequestFinished(int, bool)));
+    mReqId = webdav->copy(url.toString() + QLatin1Char('/') + source, url.toString() + QLatin1Char('/') + destination + QLatin1Char('/') + source);
 }
 
 void WebDavJob::copyFolder(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::CopyFolder;
     mError = false;
-    qDebug()<<" not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //TODO
-    deleteLater();
+    qDebug()<<" copyFolder :source :"<<source<<" destination "<<destination;
+    QWebdav *webdav = new QWebdav(this);
+    QUrl url = configureWebDav(webdav);
+    connect(webdav, SIGNAL(authenticationRequired(QString,quint16,QAuthenticator*)),
+            this, SLOT(slotRequired(QString,quint16,QAuthenticator*)));
+    connect(webdav, SIGNAL(requestFinished(int, bool)), this, SLOT(slotRequestFinished(int, bool)));
+    mReqId = webdav->copy(url.toString() + source, url.toString() + destination);
 }
 
 QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
@@ -163,6 +169,20 @@ void WebDavJob::listFolder(const QString &folder)
     webdav->list(url.toString());
 }
 
+void WebDavJob::createFolder(const QString &foldername, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
+    mError = false;
+    QWebdav *webdav = new QWebdav(this);
+    QUrl url = configureWebDav(webdav);
+    connect(webdav, SIGNAL(authenticationRequired(QString,quint16,QAuthenticator*)),
+            this, SLOT(slotRequired(QString,quint16,QAuthenticator*)));
+    connect(webdav, SIGNAL(requestFinished(int, bool)), this, SLOT(slotRequestFinished(int, bool)));
+    //TODO add destination
+    qDebug()<<" url.toString() "<<url.toString() <<" foldername"<<foldername;
+    mReqId = webdav->mkdir(url.toString() + QLatin1Char('/') + destination + QLatin1Char('/') + foldername + QLatin1Char('/'));
+}
+
 void WebDavJob::slotRequired(const QString &, quint16 , QAuthenticator *authenticator)
 {
     QPointer<LoginDialog> dlg = new LoginDialog;
@@ -196,19 +216,6 @@ void WebDavJob::accountInfo()
     deleteLater();
 }
 
-void WebDavJob::createFolder(const QString &foldername, const QString &destination)
-{
-    mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
-    mError = false;
-    QWebdav *webdav = new QWebdav(this);
-    QUrl url = configureWebDav(webdav);
-    connect(webdav, SIGNAL(authenticationRequired(QString,quint16,QAuthenticator*)),
-            this, SLOT(slotRequired(QString,quint16,QAuthenticator*)));
-    connect(webdav, SIGNAL(requestFinished(int, bool)), this, SLOT(slotRequestFinished(int, bool)));
-    //TODO add destination
-    qDebug()<<" url.toString() "<<url.toString() <<" foldername"<<foldername;
-    mReqId = webdav->mkdir(url.toString() + QLatin1Char('/') + destination + QLatin1Char('/') + foldername + QLatin1Char('/'));
-}
 
 void WebDavJob::slotRequestFinished(int id, bool)
 {
@@ -216,6 +223,29 @@ void WebDavJob::slotRequestFinished(int id, bool)
         switch(mActionType) {
         case PimCommon::StorageServiceAbstract::CreateFolder:
             Q_EMIT createFolderDone(QString());
+            break;
+        case PimCommon::StorageServiceAbstract::CopyFile:
+            Q_EMIT copyFileDone(QString());
+            break;
+        case PimCommon::StorageServiceAbstract::CopyFolder:
+            Q_EMIT copyFolderDone(QString());
+            break;
+
+        case PimCommon::StorageServiceAbstract::NoneAction:
+        case PimCommon::StorageServiceAbstract::RequestToken:
+        case PimCommon::StorageServiceAbstract::AccessToken:
+        case PimCommon::StorageServiceAbstract::UploadFile:
+        case PimCommon::StorageServiceAbstract::DownLoadFile:
+        case PimCommon::StorageServiceAbstract::AccountInfo:
+        case PimCommon::StorageServiceAbstract::ListFolder:
+        case PimCommon::StorageServiceAbstract::CreateServiceFolder:
+        case PimCommon::StorageServiceAbstract::DeleteFile:
+        case PimCommon::StorageServiceAbstract::DeleteFolder:
+        case PimCommon::StorageServiceAbstract::RenameFolder:
+        case PimCommon::StorageServiceAbstract::RenameFile:
+        case PimCommon::StorageServiceAbstract::MoveFolder:
+        case PimCommon::StorageServiceAbstract::MoveFile:
+        case PimCommon::StorageServiceAbstract::ShareLink:
             break;
         }
         deleteLater();

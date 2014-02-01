@@ -434,16 +434,16 @@ StorageServiceAbstract::Capabilities WebDavStorageService::serviceCapabilities()
     //cap |= UploadFileCapability;
     //cap |= DownloadFileCapability;
     cap |= CreateFolderCapability;
-    //cap |= DeleteFolderCapability;
+    cap |= DeleteFolderCapability;
     cap |= ListFolderCapability;
     //cap |= ShareLinkCapability;
-    //cap |= DeleteFileCapability;
-    //cap |= RenameFolderCapability;
-    //cap |= RenameFileCapabilitity;
-    //cap |= MoveFileCapability;
-    //cap |= MoveFolderCapability;
-    //cap |= CopyFileCapability;
-    //cap |= CopyFolderCapability;
+    cap |= DeleteFileCapability;
+    cap |= RenameFolderCapability;
+    cap |= RenameFileCapabilitity;
+    cap |= MoveFileCapability;
+    cap |= MoveFolderCapability;
+    cap |= CopyFileCapability;
+    cap |= CopyFolderCapability;
 
 
     return cap;
