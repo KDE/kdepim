@@ -303,6 +303,12 @@ QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
     qDebug()<<" data"<<data;
     listWidget->clear();
     listWidget->createMoveUpItem();
+
+    //TODO extract current directory
+#if 0
+    if (QUrl(url.name()).path() == currentUrl.path())
+      return;
+#endif
     const QList<QWebdavUrlInfo> lst = QWebdavUrlInfo::parseListInfo(data);
     Q_FOREACH(const QWebdavUrlInfo &info, lst) {
         if (info.isDir()) {

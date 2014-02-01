@@ -114,6 +114,31 @@ void WebDavJob::copyFolder(const QString &source, const QString &destination)
     mReqId = webdav->copy(url.toString() + source, url.toString() + destination);
 }
 
+void WebDavJob::deleteFile(const QString &filename)
+{
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
+    mError = false;
+    QWebdav *webdav = new QWebdav(this);
+    QUrl url = configureWebDav(webdav);
+    connect(webdav, SIGNAL(authenticationRequired(QString,quint16,QAuthenticator*)),
+            this, SLOT(slotRequired(QString,quint16,QAuthenticator*)));
+    connect(webdav, SIGNAL(requestFinished(int, bool)), this, SLOT(slotRequestFinished(int, bool)));
+    mReqId = webdav->remove(url.toString() + QLatin1Char('/') + filename);
+}
+
+void WebDavJob::deleteFolder(const QString &foldername)
+{
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
+    mError = false;
+    QWebdav *webdav = new QWebdav(this);
+    QUrl url = configureWebDav(webdav);
+    connect(webdav, SIGNAL(authenticationRequired(QString,quint16,QAuthenticator*)),
+            this, SLOT(slotRequired(QString,quint16,QAuthenticator*)));
+    connect(webdav, SIGNAL(requestFinished(int, bool)), this, SLOT(slotRequestFinished(int, bool)));
+    mReqId = webdav->rmdir(url.toString() + QLatin1Char('/') + foldername + QLatin1Char('/'));
+}
+
+
 QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
@@ -230,7 +255,12 @@ void WebDavJob::slotRequestFinished(int id, bool)
         case PimCommon::StorageServiceAbstract::CopyFolder:
             Q_EMIT copyFolderDone(QString());
             break;
-
+        case PimCommon::StorageServiceAbstract::DeleteFile:
+            Q_EMIT deleteFileDone(QString());
+            break;
+        case PimCommon::StorageServiceAbstract::DeleteFolder:
+            Q_EMIT deleteFolderDone(QString());
+            break;
         case PimCommon::StorageServiceAbstract::NoneAction:
         case PimCommon::StorageServiceAbstract::RequestToken:
         case PimCommon::StorageServiceAbstract::AccessToken:
@@ -239,8 +269,6 @@ void WebDavJob::slotRequestFinished(int id, bool)
         case PimCommon::StorageServiceAbstract::AccountInfo:
         case PimCommon::StorageServiceAbstract::ListFolder:
         case PimCommon::StorageServiceAbstract::CreateServiceFolder:
-        case PimCommon::StorageServiceAbstract::DeleteFile:
-        case PimCommon::StorageServiceAbstract::DeleteFolder:
         case PimCommon::StorageServiceAbstract::RenameFolder:
         case PimCommon::StorageServiceAbstract::RenameFile:
         case PimCommon::StorageServiceAbstract::MoveFolder:
@@ -406,24 +434,6 @@ QNetworkReply *WebDavJob::downloadFile(const QString &name, const QString &fileI
     qDebug()<<" not implemented";
     deleteLater();
     return 0;
-}
-
-void WebDavJob::deleteFile(const QString &filename)
-{
-    mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
-    mError = false;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    qDebug()<<" not implemented";
-    deleteLater();
-}
-
-void WebDavJob::deleteFolder(const QString &foldername)
-{
-    mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
-    mError = false;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    qDebug()<<" not implemented";
-    deleteLater();
 }
 
 void WebDavJob::renameFolder(const QString &source, const QString &destination)
