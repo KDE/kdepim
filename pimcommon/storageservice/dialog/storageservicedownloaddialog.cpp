@@ -32,6 +32,7 @@
 #include <QTreeWidget>
 #include <QFileInfo>
 #include <QDebug>
+#include <QHeaderView>
 
 using namespace PimCommon;
 
@@ -124,6 +125,7 @@ void StorageServiceDownloadDialog::readConfig()
 {
     KConfigGroup group( KGlobal::config(), "StorageServiceDownloadDialog" );
     const QSize size = group.readEntry( "Size", QSize(600, 400) );
+    mTreeWidget->header()->restoreState( group.readEntry( mStorage->storageServiceName(), QByteArray() ) );
     if ( size.isValid() ) {
         resize( size );
     }
@@ -135,6 +137,7 @@ void StorageServiceDownloadDialog::writeConfig()
 
     KConfigGroup group = config->group( QLatin1String("StorageServiceDownloadDialog") );
     group.writeEntry( "Size", size() );
+    group.writeEntry(mStorage->storageServiceName(), mTreeWidget->header()->saveState());
 }
 
 void StorageServiceDownloadDialog::slotItemActivated(QTreeWidgetItem *item, int)
