@@ -56,6 +56,7 @@ void WebDavJob::initializeToken(const QString &publicLocation, const QString &se
 void WebDavJob::slotAuthenticationRequired(QNetworkReply *,QAuthenticator *auth)
 {
     QPointer<LoginDialog> dlg = new LoginDialog;
+    dlg->setCaption(i18n("WebDav"));
     if (dlg->exec()) {
         mUserName = dlg->username();
         mPassword = dlg->password();
@@ -160,6 +161,7 @@ void WebDavJob::listFolder(const QString &folder)
 void WebDavJob::slotRequired(const QString &, quint16 , QAuthenticator *authenticator)
 {
     QPointer<LoginDialog> dlg = new LoginDialog;
+    dlg->setCaption(i18n("WebDav"));
     if (dlg->exec()) {
         mUserName = dlg->username();
         mPassword = dlg->password();

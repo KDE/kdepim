@@ -551,6 +551,7 @@ void UbuntuOneJob::parseAccountInfo(const QString &data)
 void UbuntuOneJob::slotAuthenticationRequired(QNetworkReply *, QAuthenticator *auth)
 {
     QPointer<LoginDialog> dlg = new LoginDialog;
+    dlg->setCaption(i18n("UbuntuOne"));
     if (dlg->exec()) {
         auth->setUser(dlg->username());
         auth->setPassword(dlg->password());
