@@ -118,21 +118,11 @@ QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &upl
     return 0;
 }
 
-void WebDavJob::listFolder(const QString &folder)
+QUrl WebDavJob::configureWebDav(QWebdav *webdav)
 {
-    mActionType = PimCommon::StorageServiceAbstract::ListFolder;
-    mError = false;
-    qDebug()<<" folder"<<folder;
-    QWebdav *webdav = new QWebdav(this);
     webdav->setUser(mUserName, mPassword);
 
     QUrl url(mServiceLocation);
-    if (!mServiceLocation.endsWith(QLatin1Char('/')))
-        url.setUrl(mServiceLocation + QLatin1Char('/') + folder + QLatin1Char('/'));
-    else
-        url.setUrl(mServiceLocation + QLatin1Char('/') + folder + QLatin1Char('/'));
-
-
 
     QHttp::ConnectionMode mode = QHttp::ConnectionModeHttp;
 
@@ -149,6 +139,21 @@ void WebDavJob::listFolder(const QString &folder)
     else
         mode = QHttp::ConnectionModeHttp;
     webdav->setHost(url.host(), mode, url.port());
+    return url;
+}
+
+void WebDavJob::listFolder(const QString &folder)
+{
+    mActionType = PimCommon::StorageServiceAbstract::ListFolder;
+    mError = false;
+    qDebug()<<" folder"<<folder;
+    QWebdav *webdav = new QWebdav(this);
+    QUrl url = configureWebDav(webdav);
+    if (!mServiceLocation.endsWith(QLatin1Char('/')))
+        url.setUrl(mServiceLocation + QLatin1Char('/') + folder + QLatin1Char('/'));
+    else
+        url.setUrl(mServiceLocation + QLatin1Char('/') + folder + QLatin1Char('/'));
+
     connect(webdav, SIGNAL(listInfo(QString)), this, SLOT(slotListInfo(QString)));
     connect(webdav, SIGNAL(sslErrors(QList<QSslError>)),
             webdav, SLOT(ignoreSslErrors()));
@@ -196,28 +201,7 @@ void WebDavJob::createFolder(const QString &foldername, const QString &destinati
     mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
     mError = false;
     QWebdav *webdav = new QWebdav(this);
-    webdav->setUser(mUserName, mPassword);
-    QUrl url(mServiceLocation);
-    if (!mServiceLocation.endsWith(QLatin1Char('/')))
-        url.setUrl(mServiceLocation + QLatin1Char('/'));
-
-    QHttp::ConnectionMode mode = QHttp::ConnectionModeHttp;
-
-    if (url.port() == -1) {
-        if (mServiceLocation.startsWith(QLatin1String("https://"))) {
-            url.setPort(443);
-        } else if (mServiceLocation.startsWith(QLatin1String("http://"))) {
-            url.setPort(80);
-        }
-    }
-
-    if (mServiceLocation.startsWith(QLatin1String("https://")))
-        mode = QHttp::ConnectionModeHttps;
-    else
-        mode = QHttp::ConnectionModeHttp;
-
-    webdav->setHost(url.host(), mode, url.port());
-
+    QUrl url = configureWebDav(webdav);
     connect(webdav, SIGNAL(authenticationRequired(QString,quint16,QAuthenticator*)),
             this, SLOT(slotRequired(QString,quint16,QAuthenticator*)));
     connect(webdav, SIGNAL(requestFinished(int, bool)), this, SLOT(slotRequestFinished(int, bool)));

@@ -22,6 +22,7 @@
 #include "storageservice/job/storageserviceabstractjob.h"
 class QNetworkReply;
 namespace PimCommon {
+class QWebdav;
 class WebDavJob : public PimCommon::StorageServiceAbstractJob
 {
     Q_OBJECT
@@ -57,6 +58,7 @@ private slots:
     void slotRequired(const QString &hostname, quint16 port, QAuthenticator *authenticator);
     void slotRequestFinished(int, bool);
 private:
+    QUrl configureWebDav(QWebdav *webdav);
     void parseUploadFile(const QString &data);
     void parseCreateFolder(const QString &data);
     void parseAccountInfo(const QString &data);
