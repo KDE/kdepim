@@ -33,8 +33,7 @@
 using namespace PimCommon;
 
 WebDavJob::WebDavJob(QObject *parent)
-    : PimCommon::StorageServiceAbstractJob(parent),
-      mReqId(-1)
+    : PimCommon::StorageServiceAbstractJob(parent)
 {
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
     connect(mNetworkAccessManager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)), SLOT(slotAuthenticationRequired(QNetworkReply*,QAuthenticator*)));
@@ -344,52 +343,6 @@ void WebDavJob::accountInfo()
     deleteLater();
 }
 
-void WebDavJob::slotRequestFinished(int id, bool)
-{
-    if (id == mReqId) {
-        switch(mActionType) {
-        case PimCommon::StorageServiceAbstract::CreateFolder:
-            Q_EMIT createFolderDone(QString());
-            break;
-        case PimCommon::StorageServiceAbstract::CopyFile:
-            Q_EMIT copyFileDone(QString());
-            break;
-        case PimCommon::StorageServiceAbstract::CopyFolder:
-            Q_EMIT copyFolderDone(QString());
-            break;
-        case PimCommon::StorageServiceAbstract::DeleteFile:
-            Q_EMIT deleteFileDone(QString());
-            break;
-        case PimCommon::StorageServiceAbstract::DeleteFolder:
-            Q_EMIT deleteFolderDone(QString());
-            break;
-        case PimCommon::StorageServiceAbstract::RenameFolder:
-            Q_EMIT renameFolderDone(QString());
-            break;
-        case PimCommon::StorageServiceAbstract::RenameFile:
-            Q_EMIT renameFileDone(QString());
-            break;
-        case PimCommon::StorageServiceAbstract::MoveFile:
-            Q_EMIT moveFileDone(QString());
-            break;
-        case PimCommon::StorageServiceAbstract::MoveFolder:
-            Q_EMIT moveFolderDone(QString());
-            break;
-
-        case PimCommon::StorageServiceAbstract::NoneAction:
-        case PimCommon::StorageServiceAbstract::RequestToken:
-        case PimCommon::StorageServiceAbstract::AccessToken:
-        case PimCommon::StorageServiceAbstract::UploadFile:
-        case PimCommon::StorageServiceAbstract::DownLoadFile:
-        case PimCommon::StorageServiceAbstract::AccountInfo:
-        case PimCommon::StorageServiceAbstract::ListFolder:
-        case PimCommon::StorageServiceAbstract::CreateServiceFolder:
-        case PimCommon::StorageServiceAbstract::ShareLink:
-            break;
-        }
-        deleteLater();
-    }
-}
 
 void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
 {
@@ -482,18 +435,49 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::RenameFile:
         parseRenameFile(data);
         break;
-
-    case PimCommon::StorageServiceAbstract::DownLoadFile:
     case PimCommon::StorageServiceAbstract::MoveFolder:
+        parseMoveFolder(data);
+        break;
     case PimCommon::StorageServiceAbstract::MoveFile:
+        parseMoveFile(data);
+        break;
     case PimCommon::StorageServiceAbstract::CopyFile:
+        parseCopyFile(data);
+        break;
     case PimCommon::StorageServiceAbstract::CopyFolder:
+        parseCopyFolder(data);
+        break;
+    case PimCommon::StorageServiceAbstract::DownLoadFile:
     case PimCommon::StorageServiceAbstract::ShareLink:
     case PimCommon::StorageServiceAbstract::CreateServiceFolder:
 
         deleteLater();
         break;
     }
+}
+
+void WebDavJob::parseMoveFolder(const QString &data)
+{
+    Q_EMIT moveFolderDone(QString());
+    deleteLater();
+}
+
+void WebDavJob::parseMoveFile(const QString &data)
+{
+    Q_EMIT moveFileDone(QString());
+    deleteLater();
+}
+
+void WebDavJob::parseCopyFolder(const QString &data)
+{
+    Q_EMIT copyFolderDone(QString());
+    deleteLater();
+}
+
+void WebDavJob::parseCopyFile(const QString &data)
+{
+    Q_EMIT copyFileDone(QString());
+    deleteLater();
 }
 
 void WebDavJob::parseRenameFolder(const QString &data)
