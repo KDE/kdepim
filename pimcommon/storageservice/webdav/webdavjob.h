@@ -58,12 +58,36 @@ private slots:
     void slotRequired(const QString &hostname, quint16 port, QAuthenticator *authenticator);
     void slotRequestFinished(int, bool);
 private:
+    typedef QMap < QString, QMap < QString, QVariant > > PropValues;
+    typedef QMap < QString , QStringList > PropNames;
+
+    QNetworkReply *list(const QString &dir);
+    QNetworkReply *search(const QString &path, const QString &q);
+    QNetworkReply *put(const QString &path, QIODevice *data);
+    QNetworkReply *put(const QString &path, QByteArray &data);
+    QNetworkReply *propfind(const QString &path, const WebDavJob::PropNames &props, int depth);
+    QNetworkReply *propfind(const QString &path, const QByteArray &query, int depth);
+    QNetworkReply *proppatch(const QString &path, const WebDavJob::PropValues &props);
+    QNetworkReply *proppatch(const QString &path, const QByteArray &query);
+    void emitListInfos();
+    void finished(const QNetworkReply *reply);
+    void setupHeaders(QNetworkRequest &req, quint64 size);
+    QNetworkReply *davRequest(const QString &reqVerb, QNetworkRequest &req, const QByteArray &data = QByteArray());
+    QNetworkReply *davRequest(const QString &reqVerb, QNetworkRequest &req, QIODevice *data);
+    QNetworkReply *mkdir(const QString &dir);
+    QNetworkReply *copy(const QString &oldname, const QString &newname, bool overwrite);
+    QNetworkReply *rename(const QString &oldname, const QString &newname, bool overwrite);
+    QNetworkReply *move(const QString &oldname, const QString &newname, bool overwrite);
+    QNetworkReply *rmdir(const QString &dir);
+    QNetworkReply *remove(const QString &path);
+
     QUrl configureWebDav(QWebdav *webdav);
     void parseUploadFile(const QString &data);
     void parseCreateFolder(const QString &data);
     void parseAccountInfo(const QString &data);
     void parseListFolder(const QString &data);
     void parseAccessToken(const QString &data);
+
     QString mPublicLocation;
     QString mServiceLocation;
     QString mUserName;
