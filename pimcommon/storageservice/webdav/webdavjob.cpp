@@ -577,9 +577,6 @@ QNetworkReply *WebDavJob::downloadFile(const QString &name, const QString &fileI
     return 0;
 }
 
-#if 1
-
-
 QNetworkReply *WebDavJob::list ( const QString & dir)
 {
     WebDavJob::PropNames query;
@@ -787,8 +784,5 @@ QNetworkReply *WebDavJob::remove ( const QString & path )
     req.setUrl(QUrl(path));
     return davRequest(QLatin1String("DELETE"), req);
 }
-
-
-#endif
 
 #include "moc_webdavjob.cpp"
