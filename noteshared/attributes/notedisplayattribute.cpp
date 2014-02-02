@@ -36,8 +36,8 @@ NoteDisplayAttribute::NoteDisplayAttribute()
       mAutoIndent(true),
       mHide(false),
       mShowInTaskbar(false),
-      mKeepBelove(false),
       mKeepAbove(false),
+      mKeepBelove(false),
       mKeepBelow(false)
 {
 
