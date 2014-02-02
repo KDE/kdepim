@@ -268,7 +268,7 @@ void CSVTemplate::setFieldText(int column, KABC::Addressee& addressee, const QSt
         case  0: // "Formatted Name"
             addressee.setFormattedName(text);
             break;
-        case  1: // "Family Name"
+	case  1: // "Family Name"
             addressee.setFamilyName(text);
             break;
         case  2: // "Given Name"
@@ -447,7 +447,7 @@ CSVTemplate* CSVTemplate::defaultTemplate()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-CSVTemplate::CSVTemplate(const QString& datePattern)
+CSVTemplate::CSVTemplate(const QString& datePattern) : m_columns(0)
 {
     m_datePattern = datePattern;
     createDateFormat();
