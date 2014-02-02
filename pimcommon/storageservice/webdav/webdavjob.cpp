@@ -94,11 +94,20 @@ void WebDavJob::copyFile(const QString &source, const QString &destination)
     mError = false;
     qDebug()<<" copyFile :source :"<<source<<" destination "<<destination;
     QWebdav *webdav = new QWebdav(this);
-    QUrl url = configureWebDav(webdav);
+    configureWebDav(webdav);
     connect(webdav, SIGNAL(authenticationRequired(QString,quint16,QAuthenticator*)),
             this, SLOT(slotRequired(QString,quint16,QAuthenticator*)));
     connect(webdav, SIGNAL(requestFinished(int, bool)), this, SLOT(slotRequestFinished(int, bool)));
-    mReqId = webdav->copy(url.toString() + QLatin1Char('/') + source, url.toString() + QLatin1Char('/') + destination + QLatin1Char('/') + source);
+
+    QString filename;
+    if (!source.isEmpty()) {
+        QStringList parts = source.split(QLatin1String("/"), QString::SkipEmptyParts);
+        filename = parts.takeLast();
+    }
+
+    const QString destinationPath = destination + QLatin1Char('/') + filename;
+    //qDebug()<<" destinationPath "<<destinationPath;
+    mReqId = webdav->copy(source, destinationPath);
 }
 
 void WebDavJob::copyFolder(const QString &source, const QString &destination)
@@ -111,7 +120,16 @@ void WebDavJob::copyFolder(const QString &source, const QString &destination)
     connect(webdav, SIGNAL(authenticationRequired(QString,quint16,QAuthenticator*)),
             this, SLOT(slotRequired(QString,quint16,QAuthenticator*)));
     connect(webdav, SIGNAL(requestFinished(int, bool)), this, SLOT(slotRequestFinished(int, bool)));
-    mReqId = webdav->copy(url.toString() + source, url.toString() + destination);
+    QString filename;
+    if (!source.isEmpty()) {
+        QStringList parts = source.split(QLatin1String("/"), QString::SkipEmptyParts);
+        filename = parts.takeLast();
+    }
+
+    const QString destinationPath = destination + QLatin1Char('/') + filename + QLatin1Char('/');
+    qDebug()<<" destinationPath "<<destinationPath;
+
+    mReqId = webdav->copy(source, destinationPath);
 }
 
 void WebDavJob::deleteFile(const QString &filename)
