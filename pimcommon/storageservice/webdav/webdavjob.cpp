@@ -18,6 +18,7 @@
 #include "webdavjob.h"
 #include "webdavsettingsdialog.h"
 #include "pimcommon/storageservice/authdialog/logindialog.h"
+#include "pimcommon/storageservice/storageservicejobconfig.h"
 
 #include <KLocalizedString>
 
@@ -29,6 +30,7 @@
 #include <QNetworkReply>
 #include <QPointer>
 #include <QBuffer>
+#include <QFile>
 
 using namespace PimCommon;
 
@@ -215,9 +217,24 @@ QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &upl
 {
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
-    qDebug()<<" not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    deleteLater();
+    QFile *file = new QFile(filename);
+    if (file->exists()) {
+        mActionType = PimCommon::StorageServiceAbstract::UploadFile;
+        mError = false;
+        if (file->open(QIODevice::ReadOnly)) {
+            const QString defaultDestination = (destination.isEmpty() ? PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
+            QUrl destinationFile(mServiceLocation);
+            destinationFile.setPath(destination + QLatin1Char('/') + uploadAsName);
+
+            QNetworkReply *reply = put(destinationFile.toString(),file);
+            file->setParent(reply);
+            connect(reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
+            connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+            return reply;
+        } else {
+            delete file;
+        }
+    }
     return 0;
 }
 
@@ -481,6 +498,7 @@ void WebDavJob::parseAccessToken(const QString &data)
 void WebDavJob::parseUploadFile(const QString &data)
 {
     qDebug()<<" data "<<data;
+    Q_EMIT uploadFileDone(QString());
     deleteLater();
 }
 
