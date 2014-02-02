@@ -211,8 +211,6 @@ void WebDavJob::renameFile(const QString &oldName, const QString &newName)
     rename(sourceFile.toString(), destinationFile.toString(),false);
 }
 
-
-
 QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
@@ -222,9 +220,10 @@ QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &upl
         mActionType = PimCommon::StorageServiceAbstract::UploadFile;
         mError = false;
         if (file->open(QIODevice::ReadOnly)) {
+            //TODO fix default value
             const QString defaultDestination = (destination.isEmpty() ? PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
             QUrl destinationFile(mServiceLocation);
-            destinationFile.setPath(destination + QLatin1Char('/') + uploadAsName);
+            destinationFile.setPath(defaultDestination + QLatin1Char('/') + uploadAsName);
 
             QNetworkReply *reply = put(destinationFile.toString(),file);
             file->setParent(reply);
@@ -431,12 +430,20 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
         parseCopyFolder(data);
         break;
     case PimCommon::StorageServiceAbstract::DownLoadFile:
+        parseDownloadFile(data);
+        break;
     case PimCommon::StorageServiceAbstract::ShareLink:
     case PimCommon::StorageServiceAbstract::CreateServiceFolder:
 
         deleteLater();
         break;
     }
+}
+
+void WebDavJob::parseDownloadFile(const QString &data)
+{
+    Q_EMIT downLoadFileDone(QString());
+    deleteLater();
 }
 
 void WebDavJob::parseMoveFolder(const QString &data)
@@ -545,9 +552,23 @@ QNetworkReply *WebDavJob::downloadFile(const QString &name, const QString &fileI
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    qDebug()<<" not implemented";
-    deleteLater();
+
+#if 0
+    const QString defaultDestination = (destination.isEmpty() ? PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
+    delete mDownloadFile;
+    mDownloadFile = new QFile(defaultDestination+ QLatin1Char('/') + name);
+    if (mDownloadFile->open(QIODevice::WriteOnly)) {
+        QUrl url;
+        QNetworkReply *reply = getenv();
+        mDownloadFile->setParent(reply);
+        connect(reply, SIGNAL(readyRead()), this, SLOT(slotDownloadReadyRead()));
+        connect(reply, SIGNAL(downloadProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
+        connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+        return reply;
+    } else {
+        delete mDownloadFile;
+    }
+#endif
     return 0;
 }
 

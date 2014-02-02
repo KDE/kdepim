@@ -78,6 +78,7 @@ private:
     QNetworkReply *remove(const QString &path);
     void setupHeaders(QNetworkRequest &req, quint64 size);
 
+    void parseDownloadFile(const QString &data);
     void parseUploadFile(const QString &data);
     void parseCreateFolder(const QString &data);
     void parseAccountInfo(const QString &data);
