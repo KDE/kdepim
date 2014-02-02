@@ -28,7 +28,7 @@
 
 
 MonitorsModel::MonitorsModel(QObject* parent):
-  QAbstractItemModel( parent )
+  QAbstractItemModel( parent ), mManager( 0 )
 {
   QTimer::singleShot( 0, this, SLOT(init()) );
 }

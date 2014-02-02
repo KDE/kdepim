@@ -35,7 +35,8 @@
 using namespace KSieveUi;
 ManageSieveWidget::ManageSieveWidget(QWidget *parent)
     : QWidget(parent),
-      mClearAll( false )
+      mClearAll( false ),
+      mBlockSignal( false )
 {
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
