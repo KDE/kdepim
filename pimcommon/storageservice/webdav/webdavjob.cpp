@@ -96,37 +96,25 @@ void WebDavJob::copyFile(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::CopyFile;
     mError = false;
-#if 0
-    qDebug()<<" copyFile :source :"<<source<<" destination "<<destination;
-    QWebdav *webdav = new QWebdav(this);
-    configureWebDav(webdav);
-    connect(webdav, SIGNAL(authenticationRequired(QString,quint16,QAuthenticator*)),
-            this, SLOT(slotRequired(QString,quint16,QAuthenticator*)));
-    connect(webdav, SIGNAL(requestFinished(int, bool)), this, SLOT(slotRequestFinished(int, bool)));
-
     QString filename;
     if (!source.isEmpty()) {
         QStringList parts = source.split(QLatin1String("/"), QString::SkipEmptyParts);
         filename = parts.takeLast();
     }
 
-    const QString destinationPath = destination + QLatin1Char('/') + filename;
-    //qDebug()<<" destinationPath "<<destinationPath;
-    mReqId = webdav->copy(source, destinationPath);
-#endif
+    const QString destinationFolder = destination + QLatin1Char('/') + filename;
+
+    QUrl sourceFile(mServiceLocation);
+    sourceFile.setPath(source);
+    QUrl destinationFile(mServiceLocation);
+    destinationFile.setPath(destinationFolder);
+    copy(sourceFile.toString(), destinationFile.toString(),false);
 }
 
 void WebDavJob::copyFolder(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::CopyFolder;
     mError = false;
-#if 0
-    qDebug()<<" copyFolder :source :"<<source<<" destination "<<destination;
-    QWebdav *webdav = new QWebdav(this);
-    configureWebDav(webdav);
-    connect(webdav, SIGNAL(authenticationRequired(QString,quint16,QAuthenticator*)),
-            this, SLOT(slotRequired(QString,quint16,QAuthenticator*)));
-    connect(webdav, SIGNAL(requestFinished(int, bool)), this, SLOT(slotRequestFinished(int, bool)));
     QString filename;
     if (!source.isEmpty()) {
         QStringList parts = source.split(QLatin1String("/"), QString::SkipEmptyParts);
@@ -134,10 +122,11 @@ void WebDavJob::copyFolder(const QString &source, const QString &destination)
     }
 
     const QString destinationPath = destination + QLatin1Char('/') + filename + QLatin1Char('/');
-    qDebug()<<" destinationPath "<<destinationPath;
-
-    mReqId = webdav->copy(source, destinationPath);
-#endif
+    QUrl sourceFile(mServiceLocation);
+    sourceFile.setPath(source);
+    QUrl destinationFile(mServiceLocation);
+    destinationFile.setPath(destinationPath);
+    copy(sourceFile.toString(), destinationFile.toString(), false);
 }
 
 void WebDavJob::deleteFile(const QString &filename)
@@ -249,12 +238,6 @@ void WebDavJob::moveFolder(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::MoveFolder;
     mError = false;
-#if 0
-    QWebdav *webdav = new QWebdav(this);
-    configureWebDav(webdav);
-    connect(webdav, SIGNAL(authenticationRequired(QString,quint16,QAuthenticator*)),
-            this, SLOT(slotRequired(QString,quint16,QAuthenticator*)));
-    connect(webdav, SIGNAL(requestFinished(int, bool)), this, SLOT(slotRequestFinished(int, bool)));
     QString destinationPath;
     if (!source.isEmpty()) {
         QStringList parts = source.split(QLatin1String("/"), QString::SkipEmptyParts);
@@ -269,21 +252,18 @@ void WebDavJob::moveFolder(const QString &source, const QString &destination)
             destinationPath += QLatin1Char('/');
         }
     }
-    qDebug()<<" source "<<source<<" destinationPath"<<destinationPath;
-    mReqId = webdav->move(source, destinationPath);
-#endif
+    QUrl sourceFile(mServiceLocation);
+    sourceFile.setPath(source);
+    QUrl destinationFile(mServiceLocation);
+    destinationFile.setPath(destinationPath);
+
+    move(sourceFile.toString(), destinationFile.toString(), false);
 }
 
 void WebDavJob::moveFile(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::MoveFile;
     mError = false;
-#if 0
-    QWebdav *webdav = new QWebdav(this);
-    configureWebDav(webdav);
-    connect(webdav, SIGNAL(authenticationRequired(QString,quint16,QAuthenticator*)),
-            this, SLOT(slotRequired(QString,quint16,QAuthenticator*)));
-    connect(webdav, SIGNAL(requestFinished(int, bool)), this, SLOT(slotRequestFinished(int, bool)));
     QString destinationPath;
     if (!source.isEmpty()) {
         QStringList parts = source.split(QLatin1String("/"), QString::SkipEmptyParts);
@@ -295,8 +275,12 @@ void WebDavJob::moveFile(const QString &source, const QString &destination)
         }
         destinationPath += folderName;
     }
-    mReqId = webdav->move(source, destinationPath);
-#endif
+    QUrl sourceFile(mServiceLocation);
+    sourceFile.setPath(source);
+    QUrl destinationFile(mServiceLocation);
+    destinationFile.setPath(destinationPath);
+
+    move(sourceFile.toString(), destinationFile.toString(), false);
 }
 
 
@@ -308,24 +292,6 @@ void WebDavJob::createFolder(const QString &foldername, const QString &destinati
     url.setPath(destination + QLatin1Char('/') + foldername);
 
     mkdir(url.toString());
-}
-
-void WebDavJob::slotRequired(const QString &, quint16 , QAuthenticator *authenticator)
-{
-    QPointer<LoginDialog> dlg = new LoginDialog;
-    dlg->setCaption(i18n("WebDav"));
-    if (dlg->exec()) {
-        mUserName = dlg->username();
-        mPassword = dlg->password();
-        authenticator->setUser(mUserName);
-        authenticator->setPassword(mPassword);
-    } else {
-        Q_EMIT authorizationFailed(i18n("Authentication Canceled."));
-        deleteLater();
-    }
-    delete dlg;
-    authenticator->setUser(mUserName);
-    authenticator->setPassword(mPassword);
 }
 
 void WebDavJob::slotListInfo(const QString &data)

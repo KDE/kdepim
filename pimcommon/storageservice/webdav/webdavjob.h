@@ -54,7 +54,6 @@ private slots:
     void slotSendDataFinished(QNetworkReply *reply);    
     void slotAuthenticationRequired(QNetworkReply *, QAuthenticator *);
     void slotListInfo(const QString &data);
-    void slotRequired(const QString &hostname, quint16 port, QAuthenticator *authenticator);
 
 private:
     //QWebDav API
