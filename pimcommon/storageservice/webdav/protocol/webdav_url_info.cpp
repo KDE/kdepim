@@ -278,7 +278,7 @@ QDomElement QWebdavUrlInfo::propElement() const
     return mNode.toElement();
 }
 
-const QWebdav::PropValues &QWebdavUrlInfo::properties() const
+const QWebdavUrlInfo::PropValues &QWebdavUrlInfo::properties() const
 {
     return mProperties;
 }

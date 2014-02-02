@@ -46,13 +46,13 @@
 #include <QUrlInfo>
 #include <QVariant>
 
-#include "webdav.h"
-
 namespace PimCommon {
 
 class QWebdavUrlInfo : public QUrlInfo
 {
 public:
+    typedef QMap < QString, QMap < QString, QVariant > > PropValues;
+
     QWebdavUrlInfo ();
     QWebdavUrlInfo ( const QDomElement &dom );
     QWebdavUrlInfo ( const QWebdavUrlInfo &wui );
@@ -74,7 +74,7 @@ public:
     QString mimeType() const;
 
     QDomElement propElement() const;
-    const QWebdav::PropValues & properties() const;
+    const QWebdavUrlInfo::PropValues & properties() const;
 
     static QList<QWebdavUrlInfo> parseListInfo(const QString &lst);
 private:
@@ -83,7 +83,7 @@ private:
     void davParsePropstats(const QString & path, const QDomNodeList & propstat);
 
     QDomNode mNode;
-    QWebdav::PropValues mProperties;
+    QWebdavUrlInfo::PropValues mProperties;
     QDateTime mCreatedAt;
     QString mDisplayName;
     QString mSource;

@@ -22,7 +22,6 @@
 #include "storageservice/job/storageserviceabstractjob.h"
 class QNetworkReply;
 namespace PimCommon {
-class QWebdav;
 class WebDavJob : public PimCommon::StorageServiceAbstractJob
 {
     Q_OBJECT
@@ -69,8 +68,6 @@ private:
     QNetworkReply *propfind(const QString &path, const QByteArray &query, int depth);
     QNetworkReply *proppatch(const QString &path, const WebDavJob::PropValues &props);
     QNetworkReply *proppatch(const QString &path, const QByteArray &query);
-    void emitListInfos();
-    void finished(const QNetworkReply *reply);
     void setupHeaders(QNetworkRequest &req, quint64 size);
     QNetworkReply *davRequest(const QString &reqVerb, QNetworkRequest &req, const QByteArray &data = QByteArray());
     QNetworkReply *davRequest(const QString &reqVerb, QNetworkRequest &req, QIODevice *data);
@@ -81,12 +78,15 @@ private:
     QNetworkReply *rmdir(const QString &dir);
     QNetworkReply *remove(const QString &path);
 
-    QUrl configureWebDav(QWebdav *webdav);
     void parseUploadFile(const QString &data);
     void parseCreateFolder(const QString &data);
     void parseAccountInfo(const QString &data);
     void parseListFolder(const QString &data);
     void parseAccessToken(const QString &data);
+    void parseDeleteFile(const QString &data);
+    void parseDeleteFolder(const QString &data);
+    void parseRenameFolder(const QString &data);
+    void parseRenameFile(const QString &data);
 
     QString mPublicLocation;
     QString mServiceLocation;
