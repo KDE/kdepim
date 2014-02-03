@@ -311,7 +311,7 @@ void WebDavJob::createFolder(const QString &foldername, const QString &destinati
         url.setPath(destination + QLatin1Char('/') + foldername);
     else
         url.setPath(url.path() + QLatin1Char('/') + foldername);
-    qDebug()<<" url"<<url;
+    //qDebug()<<" url"<<url;
     mkdir(url.toString());
 }
 
@@ -529,7 +529,7 @@ void WebDavJob::parseAccountInfo(const QString &data)
 
 void WebDavJob::parseListFolder(const QString &data)
 {
-    qDebug()<<" data "<<data;
+    //qDebug()<<" data "<<data;
     Q_EMIT listFolderDone(data);
     deleteLater();
 }
