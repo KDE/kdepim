@@ -70,6 +70,9 @@ void GDriveJob::slotFileFetchJobFinished(KGAPI2::Job* job)
     Q_ASSERT(fileFetchJob);
     qDebug()<<"void GDriveJob::slotFileFetchJobFinished(KGAPI2::Job* job)";
     qDebug()<<" fileFetchJob" <<fileFetchJob->items().count();
+    //TODO
+    Q_EMIT listFolderDone(QString());
+
     deleteLater();
 }
 

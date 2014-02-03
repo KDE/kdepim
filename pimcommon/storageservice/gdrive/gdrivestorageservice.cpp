@@ -37,6 +37,7 @@ GDriveStorageService::GDriveStorageService(QObject *parent)
 {
     mAccount = KGAPI2::AccountPtr(new KGAPI2::Account);
     readConfig();
+
 }
 
 GDriveStorageService::~GDriveStorageService()
@@ -71,6 +72,7 @@ void GDriveStorageService::refreshToken()
 void GDriveStorageService::storageServiceauthentication()
 {
     GDriveJob *job = new GDriveJob(this);
+    job->initializeToken(mAccount);
     connect(job, SIGNAL(authorizationDone(QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
     job->requestTokenAccess();
