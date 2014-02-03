@@ -104,11 +104,8 @@ QDateTime QWebdavUrlInfo::parseDateTime( const QString& input, const QString& ty
     if (!datetime.isNull())
         return datetime;
 
-    QDate date;
-    QTime time;
-
-    date = locale.toDate(input.mid(5, 11) , QLatin1String("dd MMM yyyy"));
-    time = locale.toTime(input.mid(17, 8) , QLatin1String("hh:mm:ss"));
+    const QDate date = locale.toDate(input.mid(5, 11) , QLatin1String("dd MMM yyyy"));
+    const QTime time = locale.toTime(input.mid(17, 8) , QLatin1String("hh:mm:ss"));
     return QDateTime(date, time);
 }
 
@@ -155,16 +152,13 @@ void QWebdavUrlInfo::davParsePropstats( const QString & path, const QDomNodeList
             }
 
             if ( property.tagName() == QLatin1String("creationdate") ) {
-                qDebug()<<" create date ";
                 setCreatedAt(parseDateTime( property.text(), property.attribute(QLatin1String("dt")) ));
-            } else if ( property.tagName() == QLatin1String("getcontentlength") )
+            } else if ( property.tagName() == QLatin1String("getcontentlength") ) {
                 setSize(property.text().toULong());
-            else if ( property.tagName() == QLatin1String("displayname") )
+            } else if ( property.tagName() == QLatin1String("displayname") ) {
                 setDisplayName(property.text());
-            else if ( property.tagName() == QLatin1String("source") ) {
-                QDomElement source;
-
-                source = property.namedItem( QLatin1String("link") ).toElement()
+            } else if ( property.tagName() == QLatin1String("source") ) {
+                const QDomElement source = property.namedItem( QLatin1String("link") ).toElement()
                         .namedItem( QLatin1String("dst") ).toElement();
 
                 if ( !source.isNull() )
@@ -181,8 +175,7 @@ void QWebdavUrlInfo::davParsePropstats( const QString & path, const QDomNodeList
                     foundExecutable = true;
             } else if ( property.tagName() == QLatin1String("getlastmodified") ) {
                 setLastModified(parseDateTime( property.text(), property.attribute(QLatin1String("dt")) ));
-            }
-            else if ( property.tagName() == QLatin1String("getetag") ) {
+            } else if ( property.tagName() == QLatin1String("getetag") ) {
                 setEntitytag(property.text());
             } else if ( property.tagName() == QLatin1String("resourcetype") ) {
                 if ( !property.namedItem( QLatin1String("collection") ).toElement().isNull() )

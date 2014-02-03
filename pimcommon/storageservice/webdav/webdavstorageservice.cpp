@@ -336,7 +336,7 @@ QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
             parentFolder.prepend(QLatin1String("/"));
         }
     }
-    qDebug()<<" currentFolder "<<currentFolder<<" parentFolder" <<parentFolder;
+    //qDebug()<<" currentFolder "<<currentFolder<<" parentFolder" <<parentFolder;
     return parentFolder;
 }
 
