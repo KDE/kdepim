@@ -307,8 +307,11 @@ void WebDavJob::createFolder(const QString &foldername, const QString &destinati
     mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
     mError = false;
     QUrl url(mServiceLocation);
-    url.setPath(destination + QLatin1Char('/') + foldername);
-
+    if (!destination.isEmpty())
+        url.setPath(destination + QLatin1Char('/') + foldername);
+    else
+        url.setPath(url.path() + QLatin1Char('/') + foldername);
+    qDebug()<<" url"<<url;
     mkdir(url.toString());
 }
 
@@ -330,6 +333,7 @@ void WebDavJob::accountInfo()
 void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
 {
     const QString data = QString::fromUtf8(reply->readAll());
+    qDebug()<<" data "<<data;
     reply->deleteLater();
     if (mError) {
         qDebug()<<" error type "<<data;
