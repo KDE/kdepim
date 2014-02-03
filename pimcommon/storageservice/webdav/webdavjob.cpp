@@ -1,6 +1,8 @@
 /*
   Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
+  webdav access based on QWebDav Copyright (C) 2009-2010 Corentin Chary <corentin.chary@gmail.com>
+
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
@@ -48,6 +50,7 @@ WebDavJob::~WebDavJob()
 
 void WebDavJob::initializeToken(const QString &publicLocation, const QString &serviceLocation, const QString &username, const QString &password)
 {
+    mError = false;
     mUserName = username;
     mPassword = password;
     mPublicLocation = publicLocation;
@@ -247,7 +250,6 @@ void WebDavJob::listFolder(const QString &folder)
         url.setPath(folder);
     qDebug()<<" url.toString()"<<url.toString();
     list(url.toString());
-    qDebug()<<" end";
 }
 
 void WebDavJob::moveFolder(const QString &source, const QString &destination)
@@ -324,7 +326,6 @@ void WebDavJob::accountInfo()
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
-
 
 void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
 {
@@ -622,8 +623,7 @@ QNetworkReply *WebDavJob::put ( const QString & path, QByteArray & data )
     return put(path, &buffer);
 }
 
-QNetworkReply *WebDavJob::propfind ( const QString & path, const WebDavJob::PropNames & props,
-                    int depth)
+QNetworkReply *WebDavJob::propfind( const QString &path, const WebDavJob::PropNames & props, int depth)
 {
     QByteArray query;
 
@@ -643,7 +643,6 @@ QNetworkReply *WebDavJob::propfind ( const QString & path, const WebDavJob::Prop
     return propfind(path, query, depth);
 }
 
-
 QNetworkReply *WebDavJob::propfind( const QString & path, const QByteArray & query, int depth )
 {
     QNetworkRequest req;
@@ -660,7 +659,7 @@ QNetworkReply *WebDavJob::propfind( const QString & path, const QByteArray & que
     return davRequest(QLatin1String("PROPFIND"), req, query);
 }
 
-QNetworkReply *WebDavJob::proppatch ( const QString & path, const WebDavJob::PropValues & props)
+QNetworkReply *WebDavJob::proppatch( const QString & path, const WebDavJob::PropValues & props)
 {
     QByteArray query;
 
