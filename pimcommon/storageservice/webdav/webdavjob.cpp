@@ -481,7 +481,6 @@ void WebDavJob::parseAccountInfo(const QString &data)
     dom.setContent(data.toLatin1(), true);
     for ( QDomNode n = dom.documentElement().firstChild(); !n.isNull(); n = n.nextSibling()) {
         QDomElement thisResponse = n.toElement();
-        qDebug()<<"thisResponse "<<thisResponse.tagName();
         if (thisResponse.isNull())
             continue;
 
@@ -494,15 +493,20 @@ void WebDavJob::parseAccountInfo(const QString &data)
                 QDomNodeList propstat = propstats.item(i).childNodes();
                 for (int j=0; j<propstat.count();++j) {
                     QDomElement element = propstat.item(j).toElement();
-                    qDebug()<<" element.tag"<<element.tagName();
-                    const QString tagName = element.tagName();
-                    if (tagName == QLatin1String("quota-available-bytes")) {
-                        accountInfo.accountSize = element.text().toLongLong();
-                    } else if (tagName == QLatin1String("quota-used-bytes")) {
-                        accountInfo.quota = element.text().toLongLong();
+                    QString tagName = element.tagName();
+                    if (tagName == QLatin1String("prop")) {
+                        QDomNodeList prop = element.childNodes();
+                        for (int t=0; t<prop.count();++t) {
+                            const QDomElement propElement = prop.item(t).toElement();
+                            tagName = propElement.tagName();
+                            if (tagName == QLatin1String("quota-available-bytes")) {
+                                accountInfo.accountSize = propElement.text().toLongLong();
+                            } else if (tagName == QLatin1String("quota-used-bytes")) {
+                                accountInfo.shared = propElement.text().toLongLong();
+                            }
+                        }
                     }
                 }
-                qDebug()<<" propstat.tagName() :"<<propstat.count();
             }
         }
     }
