@@ -128,7 +128,7 @@ static QGpgMEListAllKeysJob::result_type list_keys( Context * ctx, bool mergeKey
       merge_keys( merged, pub, sec );
   else
       merged.swap( pub );
-  return make_tuple( r, merged, sec, QString(), Error() );
+  return boost::make_tuple( r, merged, sec, QString(), Error() );
 }
 
 Error QGpgMEListAllKeysJob::start( bool mergeKeys ) {
