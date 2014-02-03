@@ -25,7 +25,8 @@
 #include <QScrollArea>
 class KVBox;
 namespace PimCommon {
-
+class StorageServiceProgressWidget;
+class StorageServiceAbstract;
 class ProgressIndicatorView : public QScrollArea
 {
     Q_OBJECT
@@ -35,6 +36,8 @@ public:
 
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
+
+    StorageServiceProgressWidget *addTransactionItem(PimCommon::StorageServiceAbstract *service, bool first);
 
 public Q_SLOTS:
     void slotLayoutFirstItem();
