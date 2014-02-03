@@ -87,26 +87,28 @@ int QWebdavUrlInfo::codeFromResponse( const QString& response )
 QDateTime QWebdavUrlInfo::parseDateTime( const QString& input, const QString& type )
 {
     QDateTime datetime;
+    QLocale locale(QLocale::C);
 
     if ( type == QLatin1String("dateTime.tz") )
         datetime =  QDateTime::fromString( input, Qt::ISODate );
     else if ( type == QLatin1String("dateTime.rfc1123") )
-        datetime = QDateTime::fromString( input );
+        datetime = locale.toDateTime( input );
 
     if (!datetime.isNull())
         return datetime;
 
-    datetime = QDateTime::fromString(input.left(19), QLatin1String("yyyy-MM-dd'T'hh:mm:ss"));
+    datetime = locale.toDateTime(input.left(19), QLatin1String("yyyy-MM-dd'T'hh:mm:ss"));
     if (!datetime.isNull())
         return datetime;
-    datetime = QDateTime::fromString(input.mid(5, 20) , QLatin1String("d MMM yyyy hh:mm:ss"));
+    datetime = locale.toDateTime(input.mid(5, 20) , QLatin1String("dd MMM yyyy hh:mm:ss"));
     if (!datetime.isNull())
         return datetime;
+
     QDate date;
     QTime time;
 
-    date = QDate::fromString(input.mid(5, 11) , QLatin1String("d MMM yyyy"));
-    time = QTime::fromString(input.mid(17, 8) , QLatin1String("hh:mm:ss"));
+    date = locale.toDate(input.mid(5, 11) , QLatin1String("dd MMM yyyy"));
+    time = locale.toTime(input.mid(17, 8) , QLatin1String("hh:mm:ss"));
     return QDateTime(date, time);
 }
 
@@ -152,14 +154,14 @@ void QWebdavUrlInfo::davParsePropstats( const QString & path, const QDomNodeList
                 continue;
             }
 
-            if ( property.tagName() == QLatin1String("creationdate") )
+            if ( property.tagName() == QLatin1String("creationdate") ) {
+                qDebug()<<" create date ";
                 setCreatedAt(parseDateTime( property.text(), property.attribute(QLatin1String("dt")) ));
-            else if ( property.tagName() == QLatin1String("getcontentlength") )
+            } else if ( property.tagName() == QLatin1String("getcontentlength") )
                 setSize(property.text().toULong());
             else if ( property.tagName() == QLatin1String("displayname") )
                 setDisplayName(property.text());
-            else if ( property.tagName() == QLatin1String("source") )
-            {
+            else if ( property.tagName() == QLatin1String("source") ) {
                 QDomElement source;
 
                 source = property.namedItem( QLatin1String("link") ).toElement()
@@ -167,33 +169,27 @@ void QWebdavUrlInfo::davParsePropstats( const QString & path, const QDomNodeList
 
                 if ( !source.isNull() )
                     setSource(source.text());
-            }
-            else if ( property.tagName() == QLatin1String("getcontentlanguage") )
+            } else if ( property.tagName() == QLatin1String("getcontentlanguage") ) {
                 setContentLanguage(property.text());
-            else if ( property.tagName() == QLatin1String("getcontenttype") )
-            {
+            } else if ( property.tagName() == QLatin1String("getcontenttype") ) {
                 if ( property.text() == QLatin1String("httpd/unix-directory") )
                     isDirectory = true;
                 else
                     mimeType = property.text();
-            }
-            else if ( property.tagName() == QLatin1String("executable") )
-            {
+            } else if ( property.tagName() == QLatin1String("executable") ) {
                 if ( property.text() == QLatin1String("T") )
                     foundExecutable = true;
-            }
-            else if ( property.tagName() == QLatin1String("getlastmodified") )
+            } else if ( property.tagName() == QLatin1String("getlastmodified") ) {
                 setLastModified(parseDateTime( property.text(), property.attribute(QLatin1String("dt")) ));
-            else if ( property.tagName() == QLatin1String("getetag") )
+            }
+            else if ( property.tagName() == QLatin1String("getetag") ) {
                 setEntitytag(property.text());
-            else if ( property.tagName() == QLatin1String("resourcetype") )
-            {
+            } else if ( property.tagName() == QLatin1String("resourcetype") ) {
                 if ( !property.namedItem( QLatin1String("collection") ).toElement().isNull() )
                     isDirectory = true;
+            } else {
+                qDebug() << "Found unknown webdav property: "<< property.tagName() << property.text();
             }
-            else
-                qDebug() << "Found unknown webdav property: "
-                         << property.tagName() << property.text();
         }
     }
     setDir(isDirectory);
