@@ -24,9 +24,6 @@
 
 #include <Akonadi/KMime/MessageStatus>
 
-#include <Nepomuk2/Query/GroupTerm>
-#include <Nepomuk2/Query/ComparisonTerm>
-
 #include <KLocale>
 #include <KUrl>
 
@@ -34,6 +31,7 @@
 #include <QString>
 
 #include <boost/shared_ptr.hpp>
+#include <akonadi/searchquery.h>
 
 using Akonadi::MessageStatus;
 
@@ -268,7 +266,7 @@ class MAILCOMMON_EXPORT SearchRule
     /**
      * Adds query terms to the given term group.
      */
-    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm, bool &emptyIsNotAnError ) const = 0;
+    virtual void addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const {  };
 
 
     QDataStream &operator>>( QDataStream & ) const;
@@ -280,15 +278,9 @@ class MAILCOMMON_EXPORT SearchRule
     bool isNegated() const;
 
     /**
-     * Converts the rule function into the corresponding Nepomuk query operator.
+     * Converts the rule function into the corresponding Akonadi query operator.
      */
-    Nepomuk2::Query::ComparisonTerm::Comparator nepomukComparator() const;
-
-    /**
-     * Adds @p term to @p termGroup and adds a negation term inbetween if needed.
-     */
-    void addAndNegateTerm( const Nepomuk2::Query::Term &term,
-                           Nepomuk2::Query::GroupTerm &termGroup ) const;
+    Akonadi::SearchTerm::Condition akonadiComparator() const;
 
 protected:
     QString quote( const QString &content ) const;
@@ -367,15 +359,7 @@ class SearchRuleString : public SearchRule
     /**
      * @copydoc SearchRule::addQueryTerms()
      */
-    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm, bool &emptyIsNotAnError ) const;
-
-  private:
-    /**
-     * @copydoc SearchRule::addPersonTerms()
-     */
-    void addPersonTerm( Nepomuk2::Query::GroupTerm &groupTerm, const QUrl &field ) const;
-    void addHeaderTerm( Nepomuk2::Query::GroupTerm &groupTerm,
-                        const Nepomuk2::Query::Term &field ) const;
+    virtual void addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const;
 };
 
 /**
@@ -427,7 +411,7 @@ class SearchRuleNumerical : public SearchRule
     /**
      * @copydoc SearchRule::addQueryTerms()
      */
-    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm, bool &emptyIsNotAnError ) const;
+    virtual void addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const;
 
 };
 
@@ -474,7 +458,7 @@ class SearchRuleDate : public SearchRule
     /**
      * @copydoc SearchRule::addQueryTerms()
      */
-    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm, bool &emptyIsNotAnError ) const;
+    virtual void addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const;
 
 };
 
@@ -558,15 +542,12 @@ class MAILCOMMON_EXPORT SearchRuleStatus : public SearchRule
      */
    virtual RequiredPart requiredPart() const;
 
-    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm, bool &emptyIsNotAnError ) const;
+    virtual void addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const;
 
     //Not possible to implement optimized form for status searching
     using SearchRule::matches;
 
     static Akonadi::MessageStatus statusFromEnglishName( const QString & );
-
-  private:
-    void addTagTerm( Nepomuk2::Query::GroupTerm &groupTerm, const QString &tagId ) const;
 
   private:
     Akonadi::MessageStatus mStatus;
@@ -721,10 +702,9 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
     QString asString() const;
 
     /**
-     * Returns the pattern as a SPARQL query.
+     * Returns the pattern as akonadi query
      */
-
-    SparqlQueryError asSparqlQuery(QString &queryStr, const KUrl::List& url = KUrl::List()) const;
+    SparqlQueryError asAkonadiQuery(Akonadi::SearchQuery &) const;
 
     /**
      * Overloaded assignment operator. Makes a deep copy.
@@ -762,7 +742,6 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
      * to "<i18n("unnamed")>", and the boolean operator to @p OpAnd.
      */
     void init();
-    Nepomuk2::Query::ComparisonTerm createChildTerm( const KUrl& url, bool& empty ) const;
     QString  mName;
     Operator mOperator;
 };
