@@ -76,6 +76,7 @@ private:
     QNetworkReply *move(const QString &oldname, const QString &newname, bool overwrite);
     QNetworkReply *rmdir(const QString &dir);
     QNetworkReply *remove(const QString &path);
+    QNetworkReply *accountInfo(const QString &dir);
     void setupHeaders(QNetworkRequest &req, quint64 size);
 
     void parseDownloadFile(const QString &data);

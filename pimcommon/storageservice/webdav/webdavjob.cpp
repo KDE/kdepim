@@ -31,6 +31,8 @@
 #include <QPointer>
 #include <QBuffer>
 #include <QFile>
+#include <QDomDocument>
+#include <QDomNodeList>
 
 using namespace PimCommon;
 
@@ -323,9 +325,8 @@ void WebDavJob::accountInfo()
 {
     mActionType = PimCommon::StorageServiceAbstract::AccountInfo;
     mError = false;
-    qDebug()<<" not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    deleteLater();
+    QUrl url(mServiceLocation);
+    accountInfo(url.toString());
 }
 
 void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
@@ -476,7 +477,32 @@ void WebDavJob::parseCreateFolder(const QString &data)
 
 void WebDavJob::parseAccountInfo(const QString &data)
 {
-    qDebug()<<" data "<<data;
+    QDomDocument dom;
+    dom.setContent(data.toLatin1(), true);
+    for ( QDomNode n = dom.documentElement().firstChild(); !n.isNull(); n = n.nextSibling()) {
+        QDomElement thisResponse = n.toElement();
+        qDebug()<<"thisResponse "<<thisResponse.tagName();
+        if (thisResponse.isNull())
+            continue;
+
+        QDomElement href = n.namedItem( QLatin1String("href") ).toElement();
+
+        if ( !href.isNull() ) {
+
+            QDomNodeList propstats = thisResponse.elementsByTagName( QLatin1String("propstat") );
+            for (int i=0; i<propstats.count(); ++i) {
+                QDomNodeList propstat = propstats.item(i).childNodes();
+                for (int j=0; j<propstat.count();++j) {
+                    QDomElement element = propstat.item(j).toElement();
+                    qDebug()<<" element.tag"<<element.tagName();
+                }
+                qDebug()<<" propstat.tagName() :"<<propstat.count();
+            }
+        }
+    }
+    PimCommon::AccountInfo accountInfo;
+
+    Q_EMIT accountInfoDone(accountInfo);
     deleteLater();
 }
 
@@ -530,6 +556,18 @@ QNetworkReply *WebDavJob::downloadFile(const QString &name, const QString &fileI
     return 0;
 }
 
+QNetworkReply *WebDavJob::accountInfo(const QString &dir)
+{
+    WebDavJob::PropNames query;
+    QStringList props;
+
+    props << QLatin1String("quota-available-bytes");
+    props << QLatin1String("quota-used-bytes");
+    query[QLatin1String("DAV:")] = props;
+
+    return propfind(dir, query, 0);
+}
+
 QNetworkReply *WebDavJob::list ( const QString & dir)
 {
     WebDavJob::PropNames query;
@@ -545,7 +583,6 @@ QNetworkReply *WebDavJob::list ( const QString & dir)
     props << QLatin1String("getlastmodified");
     props << QLatin1String("getetag");
     props << QLatin1String("resourcetype");
-
     query[QLatin1String("DAV:")] = props;
 
     return propfind(dir, query, 1);
