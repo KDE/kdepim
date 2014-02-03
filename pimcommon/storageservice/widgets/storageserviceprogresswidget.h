@@ -41,6 +41,7 @@ public:
 
     void setBusyIndicator(bool busy);
     void reset();
+    void setService(PimCommon::StorageServiceAbstract *service);
 
 public Q_SLOTS:
     void setProgressValue(qint64 done, qint64 total);

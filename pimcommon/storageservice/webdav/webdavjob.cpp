@@ -441,7 +441,6 @@ void WebDavJob::parseRenameFile(const QString &data)
     deleteLater();
 }
 
-
 void WebDavJob::parseDeleteFile(const QString &data)
 {
     Q_EMIT deleteFileDone(QString());

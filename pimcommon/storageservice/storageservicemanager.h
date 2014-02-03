@@ -77,6 +77,7 @@ Q_SIGNALS:
     void actionFailed(const QString &serviceName, const QString &error);
     void deleteFileDone(const QString &serviceName, const QString &filename);
     void accountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo);
+    void uploadFileStart(PimCommon::StorageServiceAbstract *service);
 
 private Q_SLOTS:
     void slotAccountInfo();
