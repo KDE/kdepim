@@ -20,4 +20,5 @@ TODO:
 - Move all config to kwallet ?
 - Remove file when we cancel download.
 - Remove file when we cancel upload.
-
+- Select multi element ?
+- Improve progressbar 

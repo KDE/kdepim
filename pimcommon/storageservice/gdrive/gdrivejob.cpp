@@ -25,6 +25,8 @@
 #include <libkgapi2/drive/aboutfetchjob.h>
 #include <libkgapi2/drive/about.h>
 #include <libkgapi2/drive/filecreatejob.h>
+#include <libkgapi2/drive/filedeletejob.h>
+#include <libkgapi2/drive/filefetchjob.h>
 
 #include <KLocalizedString>
 
@@ -52,6 +54,23 @@ GDriveJob::GDriveJob(QObject *parent)
 GDriveJob::~GDriveJob()
 {
 
+}
+
+void GDriveJob::listFolder(const QString &folder)
+{
+    mActionType = PimCommon::StorageServiceAbstract::ListFolder;
+    mError = false;
+    KGAPI2::Drive::FileFetchJob *fileFetchJob = new KGAPI2::Drive::FileFetchJob(mAccount, this);
+    connect(fileFetchJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotFileFetchJobFinished(KGAPI2::Job*)));
+}
+
+void GDriveJob::slotFileFetchJobFinished(KGAPI2::Job* job)
+{
+    KGAPI2::Drive::FileFetchJob *fileFetchJob = qobject_cast<KGAPI2::Drive::FileFetchJob*>(job);
+    Q_ASSERT(fileFetchJob);
+    qDebug()<<"void GDriveJob::slotFileFetchJobFinished(KGAPI2::Job* job)";
+    qDebug()<<" fileFetchJob" <<fileFetchJob->items().count();
+    deleteLater();
 }
 
 void GDriveJob::requestTokenAccess()
@@ -126,6 +145,21 @@ QNetworkReply *GDriveJob::uploadFile(const QString &filename, const QString &upl
     return 0;
 }
 
+void GDriveJob::deleteFile(const QString &filename)
+{
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
+    mError = false;
+    KGAPI2::Drive::FileDeleteJob *fileDeleteJob = new KGAPI2::Drive::FileDeleteJob(filename, mAccount, this);
+    connect(fileDeleteJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotDeleteFileFinished(KGAPI2::Job*)));
+}
+
+void GDriveJob::slotDeleteFileFinished(KGAPI2::Job*job)
+{
+    //TODO
+    Q_EMIT deleteFileDone(QString());
+    deleteLater();
+}
+
 
 /*old **********************/
 
@@ -148,19 +182,6 @@ QNetworkReply * GDriveJob::downloadFile(const QString &name, const QString &file
     qDebug()<<" not implemented";
     deleteLater();
     return 0;
-}
-
-void GDriveJob::deleteFile(const QString &filename)
-{
-    mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
-    mError = false;
-    QUrl url;
-    url.setUrl(mApiUrl + mFileInfoPath + filename);
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    QNetworkReply *reply = mNetworkAccessManager->deleteResource(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void GDriveJob::deleteFolder(const QString &foldername)
@@ -277,19 +298,6 @@ void GDriveJob::getTokenAccess(const QString &authorizeCode)
     postData.addQueryItem(QLatin1String("client_id"), mClientId);
     postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-}
-
-void GDriveJob::listFolder(const QString &folder)
-{
-    mActionType = PimCommon::StorageServiceAbstract::ListFolder;
-    mError = false;
-    QUrl url;
-    url.setUrl(mApiUrl + mFolderInfoPath + (folder.isEmpty() ? QLatin1String("0") : folder));
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
