@@ -16,6 +16,7 @@
 */
 
 #include "storageserviceprogressdialog.h"
+#include "storageserviceprogresswidget.h"
 
 #include <KVBox>
 
@@ -38,6 +39,17 @@ ProgressIndicatorView::~ProgressIndicatorView()
 {
 
 }
+
+StorageServiceProgressWidget *ProgressIndicatorView::addTransactionItem( PimCommon::StorageServiceAbstract *service, bool first )
+{
+    StorageServiceProgressWidget *ti = new StorageServiceProgressWidget( service, mBigBox);//, first );
+    mBigBox->layout()->addWidget( ti );
+
+    resize( mBigBox->width(), mBigBox->height() );
+
+    return ti;
+}
+
 
 void ProgressIndicatorView::resizeEvent ( QResizeEvent *event )
 {
