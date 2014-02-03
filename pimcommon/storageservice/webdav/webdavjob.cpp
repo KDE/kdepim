@@ -24,8 +24,6 @@
 
 #include <KLocalizedString>
 
-#include <qjson/parser.h>
-
 #include <QAuthenticator>
 #include <QNetworkAccessManager>
 #include <QDebug>
@@ -332,116 +330,71 @@ void WebDavJob::accountInfo()
 
 void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
 {
-    const QString data = QString::fromUtf8(reply->readAll());
-    qDebug()<<" data "<<data;
-    reply->deleteLater();
-    if (mError) {
-        qDebug()<<" error type "<<data;
-        QJson::Parser parser;
-        bool ok;
-
-        QMap<QString, QVariant> error = parser.parse(data.toUtf8(), &ok).toMap();
-        if (error.contains(QLatin1String("error"))) {
-            const QString errorStr = error.value(QLatin1String("error")).toString();
-            switch(mActionType) {
-            case PimCommon::StorageServiceAbstract::NoneAction:
-                deleteLater();
-                break;
-            case PimCommon::StorageServiceAbstract::RequestToken:
-                Q_EMIT authorizationFailed(errorStr);
-                deleteLater();
-                break;
-            case PimCommon::StorageServiceAbstract::AccessToken:
-                Q_EMIT authorizationFailed(errorStr);
-                deleteLater();
-                break;
-            case PimCommon::StorageServiceAbstract::UploadFile:
-                Q_EMIT uploadFileFailed(errorStr);
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
-            case PimCommon::StorageServiceAbstract::DownLoadFile:
-                Q_EMIT downLoadFileFailed(errorStr);
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
-            case PimCommon::StorageServiceAbstract::CreateFolder:
-            case PimCommon::StorageServiceAbstract::AccountInfo:
-            case PimCommon::StorageServiceAbstract::ListFolder:
-            case PimCommon::StorageServiceAbstract::CreateServiceFolder:
-            case PimCommon::StorageServiceAbstract::DeleteFile:
-            case PimCommon::StorageServiceAbstract::DeleteFolder:
-            case PimCommon::StorageServiceAbstract::RenameFolder:
-            case PimCommon::StorageServiceAbstract::RenameFile:
-            case PimCommon::StorageServiceAbstract::MoveFolder:
-            case PimCommon::StorageServiceAbstract::MoveFile:
-            case PimCommon::StorageServiceAbstract::CopyFile:
-            case PimCommon::StorageServiceAbstract::CopyFolder:
-            case PimCommon::StorageServiceAbstract::ShareLink:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
-            }
-        } else {
-            errorMessage(mActionType, i18n("Unknown Error \"%1\"", data));
+    if (mError || reply->error() != QNetworkReply::NoError) {
+        qDebug()<<" ERROR "<<reply->error();
+        reply->deleteLater();
+        errorMessage(mActionType, reply->errorString());
+        //ADD more parsing
+        deleteLater();
+    } else {
+        const QString data = QString::fromUtf8(reply->readAll());
+        qDebug()<<" data "<<data;
+        reply->deleteLater();
+        switch(mActionType) {
+        case PimCommon::StorageServiceAbstract::NoneAction:
             deleteLater();
-        }
-        return;
-    }
-    switch(mActionType) {
-    case PimCommon::StorageServiceAbstract::NoneAction:
-        deleteLater();
-        break;
-    case PimCommon::StorageServiceAbstract::RequestToken:
-        deleteLater();
-        break;
-    case PimCommon::StorageServiceAbstract::AccessToken:
-        parseAccessToken(data);
-        break;
-    case PimCommon::StorageServiceAbstract::UploadFile:
-        parseUploadFile(data);
-        break;
-    case PimCommon::StorageServiceAbstract::CreateFolder:
-        parseCreateFolder(data);
-        break;
-    case PimCommon::StorageServiceAbstract::AccountInfo:
-        parseAccountInfo(data);
-        break;
-    case PimCommon::StorageServiceAbstract::ListFolder:
-        parseListFolder(data);
-        break;
-    case PimCommon::StorageServiceAbstract::DeleteFile:
-        parseDeleteFile(data);
-        break;
-    case PimCommon::StorageServiceAbstract::DeleteFolder:
-        parseDeleteFolder(data);
-        break;
-    case PimCommon::StorageServiceAbstract::RenameFolder:
-        parseRenameFolder(data);
-        break;
-    case PimCommon::StorageServiceAbstract::RenameFile:
-        parseRenameFile(data);
-        break;
-    case PimCommon::StorageServiceAbstract::MoveFolder:
-        parseMoveFolder(data);
-        break;
-    case PimCommon::StorageServiceAbstract::MoveFile:
-        parseMoveFile(data);
-        break;
-    case PimCommon::StorageServiceAbstract::CopyFile:
-        parseCopyFile(data);
-        break;
-    case PimCommon::StorageServiceAbstract::CopyFolder:
-        parseCopyFolder(data);
-        break;
-    case PimCommon::StorageServiceAbstract::DownLoadFile:
-        parseDownloadFile(data);
-        break;
-    case PimCommon::StorageServiceAbstract::ShareLink:
-    case PimCommon::StorageServiceAbstract::CreateServiceFolder:
+            break;
+        case PimCommon::StorageServiceAbstract::RequestToken:
+            deleteLater();
+            break;
+        case PimCommon::StorageServiceAbstract::AccessToken:
+            parseAccessToken(data);
+            break;
+        case PimCommon::StorageServiceAbstract::UploadFile:
+            parseUploadFile(data);
+            break;
+        case PimCommon::StorageServiceAbstract::CreateFolder:
+            parseCreateFolder(data);
+            break;
+        case PimCommon::StorageServiceAbstract::AccountInfo:
+            parseAccountInfo(data);
+            break;
+        case PimCommon::StorageServiceAbstract::ListFolder:
+            parseListFolder(data);
+            break;
+        case PimCommon::StorageServiceAbstract::DeleteFile:
+            parseDeleteFile(data);
+            break;
+        case PimCommon::StorageServiceAbstract::DeleteFolder:
+            parseDeleteFolder(data);
+            break;
+        case PimCommon::StorageServiceAbstract::RenameFolder:
+            parseRenameFolder(data);
+            break;
+        case PimCommon::StorageServiceAbstract::RenameFile:
+            parseRenameFile(data);
+            break;
+        case PimCommon::StorageServiceAbstract::MoveFolder:
+            parseMoveFolder(data);
+            break;
+        case PimCommon::StorageServiceAbstract::MoveFile:
+            parseMoveFile(data);
+            break;
+        case PimCommon::StorageServiceAbstract::CopyFile:
+            parseCopyFile(data);
+            break;
+        case PimCommon::StorageServiceAbstract::CopyFolder:
+            parseCopyFolder(data);
+            break;
+        case PimCommon::StorageServiceAbstract::DownLoadFile:
+            parseDownloadFile(data);
+            break;
+        case PimCommon::StorageServiceAbstract::ShareLink:
+        case PimCommon::StorageServiceAbstract::CreateServiceFolder:
 
-        deleteLater();
-        break;
+            deleteLater();
+            break;
+        }
     }
 }
 
