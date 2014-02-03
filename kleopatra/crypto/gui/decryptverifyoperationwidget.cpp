@@ -203,7 +203,7 @@ void DecryptVerifyOperationWidget::setMode( Mode mode, const shared_ptr<ArchiveD
     d->ui.inputLB.setBuddy( inputWidget );
     d->ui.signedDataLB.setBuddy( signedDataWidget );
 
-    d->ui.archiveCB.setChecked( ad );
+    d->ui.archiveCB.setChecked( ad.get() != 0 );
     for ( int i = 0, end = d->ui.archivesCB.count() ; i != end ; ++i )
         if ( ad == d->ui.archivesCB.itemData( i ).value< shared_ptr<ArchiveDefinition> >() ) {
             d->ui.archivesCB.setCurrentIndex( i );
