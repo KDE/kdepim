@@ -93,6 +93,8 @@ private:
     void parseMoveFile(const QString &data);
     void parseCopyFolder(const QString &data);
     void parseCopyFile(const QString &data);
+    void parseShareLink(const QString &data);
+    void parseCreateServiceFolder(const QString &data);
 
     QString mPublicLocation;
     QString mServiceLocation;

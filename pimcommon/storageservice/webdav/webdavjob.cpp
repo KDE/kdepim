@@ -244,11 +244,11 @@ void WebDavJob::listFolder(const QString &folder)
 {
     mActionType = PimCommon::StorageServiceAbstract::ListFolder;
     mError = false;
-    qDebug()<<" folder"<<folder;
+    //qDebug()<<" folder"<<folder;
     QUrl url(mServiceLocation);
     if (!folder.isEmpty())
         url.setPath(folder);
-    qDebug()<<" url.toString()"<<url.toString();
+    //qDebug()<<" url.toString()"<<url.toString();
     list(url.toString());
 }
 
@@ -332,14 +332,14 @@ void WebDavJob::accountInfo()
 void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
 {
     if (mError || reply->error() != QNetworkReply::NoError) {
-        qDebug()<<" ERROR "<<reply->error();
+        //qDebug()<<" ERROR "<<reply->error();
         reply->deleteLater();
         errorMessage(mActionType, reply->errorString());
         //ADD more parsing
         deleteLater();
     } else {
         const QString data = QString::fromUtf8(reply->readAll());
-        qDebug()<<" data "<<data;
+        //qDebug()<<" data "<<data;
         reply->deleteLater();
         switch(mActionType) {
         case PimCommon::StorageServiceAbstract::NoneAction:
@@ -391,12 +391,27 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
             parseDownloadFile(data);
             break;
         case PimCommon::StorageServiceAbstract::ShareLink:
+            parseShareLink(data);
+            break;
         case PimCommon::StorageServiceAbstract::CreateServiceFolder:
-
-            deleteLater();
+            parseCreateServiceFolder(data);
             break;
         }
     }
+}
+
+void WebDavJob::parseCreateServiceFolder(const QString &data)
+{
+    //TODO
+    Q_EMIT createFolderDone(QString());
+    deleteLater();
+}
+
+void WebDavJob::parseShareLink(const QString &data)
+{
+    //TODO
+    Q_EMIT shareLinkDone(data);
+    deleteLater();
 }
 
 void WebDavJob::parseDownloadFile(const QString &data)
