@@ -477,6 +477,7 @@ void WebDavJob::parseCreateFolder(const QString &data)
 
 void WebDavJob::parseAccountInfo(const QString &data)
 {
+    PimCommon::AccountInfo accountInfo;
     QDomDocument dom;
     dom.setContent(data.toLatin1(), true);
     for ( QDomNode n = dom.documentElement().firstChild(); !n.isNull(); n = n.nextSibling()) {
@@ -495,12 +496,17 @@ void WebDavJob::parseAccountInfo(const QString &data)
                 for (int j=0; j<propstat.count();++j) {
                     QDomElement element = propstat.item(j).toElement();
                     qDebug()<<" element.tag"<<element.tagName();
+                    const QString tagName = element.tagName();
+                    if (tagName == QLatin1String("quota-available-bytes")) {
+                        accountInfo.accountSize = element.text().toLongLong();
+                    } else if (tagName == QLatin1String("quota-used-bytes")) {
+                        accountInfo.quota = element.text().toLongLong();
+                    }
                 }
                 qDebug()<<" propstat.tagName() :"<<propstat.count();
             }
         }
     }
-    PimCommon::AccountInfo accountInfo;
 
     Q_EMIT accountInfoDone(accountInfo);
     deleteLater();
