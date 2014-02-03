@@ -538,7 +538,7 @@ void Composer::removeAttachmentPart( AttachmentPart::Ptr part )
   if( d->attachmentParts.contains( part ) ) {
     d->attachmentParts.removeAll( part );
   } else {
-    kError() << "Unknown attachment part" << part;
+    kError() << "Unknown attachment part" << part.get();
     Q_ASSERT( false );
     return;
   }

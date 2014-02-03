@@ -116,7 +116,7 @@ void ObjectTreeParserTester::test_parseEncapsulatedMessage()
 
   // Check that the objecttreeparser did process the encapsulated message
   KMime::Message::Ptr encapsulated = msg->contents().at( 1 )->bodyAsMessage();
-  QVERIFY( encapsulated );
+  QVERIFY( encapsulated.get() );
   QVERIFY( nodeHelper.nodeProcessed( encapsulated.get() ) );
   QVERIFY( nodeHelper.nodeProcessed( encapsulated->contents().at( 0 ) ) );
   QVERIFY( nodeHelper.nodeProcessed( encapsulated->contents().at( 1 ) ) );
