@@ -58,7 +58,6 @@ set(kdepim_LIB_SRCS
    widgets/kweekdaycheckcombo.cpp
    widgets/kwidgetlister.cpp
    widgets/pimmessagebox.cpp
-   widgets/nepomukwarning.cpp
    widgets/overlaywidget.cpp
 )
 
