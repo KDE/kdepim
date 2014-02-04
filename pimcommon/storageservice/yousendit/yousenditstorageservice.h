@@ -57,7 +57,7 @@ public:
     QString fileShareRoot(const QVariantMap &variantMap);
 
     StorageServiceAbstract::Capabilities capabilities() const;
-    QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data);
+    QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder);
 
 
     QString storageServiceName() const;

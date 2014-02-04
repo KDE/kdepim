@@ -49,17 +49,28 @@ StorageServiceProgressWidget::StorageServiceProgressWidget(PimCommon::StorageSer
     mProgressBar->setMaximum(100);
     box->addWidget(mProgressBar);
 
-    if (service) {
-        mCancel = new QToolButton;
-        mCancel->setIcon(KIcon(QLatin1String("dialog-cancel")));
-        connect(mCancel, SIGNAL(clicked()), this, SLOT(slotCancelTask()));
-        box->addWidget(mCancel);
+    mCancel = new QToolButton;
+    mCancel->setIcon(KIcon(QLatin1String("dialog-cancel")));
+    connect(mCancel, SIGNAL(clicked()), this, SLOT(slotCancelTask()));
+    box->addWidget(mCancel);
+
+    if (!service) {
+        mCancel->hide();
     }
 }
 
 StorageServiceProgressWidget::~StorageServiceProgressWidget()
 {
 
+}
+
+void StorageServiceProgressWidget::setService(PimCommon::StorageServiceAbstract *service)
+{
+    mStorageService = service;
+    if (service)
+        mCancel->show();
+    else
+        mCancel->hide();
 }
 
 void StorageServiceProgressWidget::setProgressBarType(StorageServiceProgressWidget::ProgressBarType type)

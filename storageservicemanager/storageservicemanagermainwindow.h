@@ -45,6 +45,8 @@ private slots:
     void slotUpdateActions();
     void slotSystemNetworkStatusChanged(Solid::Networking::Status status);
     void slotClose();
+    void slotServiceRemoved(const QString &serviceName);
+
 private:
     void setupActions();
     void readConfig();

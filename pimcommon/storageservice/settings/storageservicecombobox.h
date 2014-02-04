@@ -32,7 +32,6 @@ public:
     PimCommon::StorageServiceManager::ServiceType service() const;
 private:
     void initialize(const QList<PimCommon::StorageServiceAbstract::Capability> &lstCap, const QStringList &excludeService);
-    bool hasCapabilities(PimCommon::StorageServiceAbstract::Capabilities capabilities, const QList<PimCommon::StorageServiceAbstract::Capability> &lstNeedCapabily);
 };
 }
 #endif // STORAGESERVICECOMBOBOX_H

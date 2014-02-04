@@ -147,6 +147,7 @@ void StorageServiceManagerMainWindow::slotClose()
 void StorageServiceManagerMainWindow::slotConfigure()
 {
     QPointer<StorageServiceConfigureDialog> dlg = new StorageServiceConfigureDialog(this);
+    connect(dlg, SIGNAL(serviceRemoved(QString)), this, SLOT(slotServiceRemoved(QString)));
     dlg->setListService(mStorageManager->listService());
     if (dlg->exec()) {
         mStorageManager->setListService(dlg->listService());
@@ -154,6 +155,11 @@ void StorageServiceManagerMainWindow::slotConfigure()
         dlg->writeSettings();
     }
     delete dlg;
+}
+
+void StorageServiceManagerMainWindow::slotServiceRemoved(const QString &serviceName)
+{
+    mStorageServiceTabWidget->serviceRemoved(serviceName);
 }
 
 void StorageServiceManagerMainWindow::readConfig()

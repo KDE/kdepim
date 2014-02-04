@@ -88,6 +88,7 @@ void WebDavStorageService::storageServiceauthentication()
     WebDavJob *job = new WebDavJob(this);
     connect(job, SIGNAL(authorizationDone(QString,QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString,QString)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
+    connect(job, SIGNAL(actionFailed(QString)), this, SLOT(slotActionFailed(QString)));
     job->requestTokenAccess();
 }
 
@@ -135,6 +136,7 @@ void WebDavStorageService::storageServiceShareLink(const QString &root, const QS
         job->initializeToken(mPublicLocation, mServiceLocation, mUsername, mPassword);
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(authorizationDone(QString,QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString,QString)));
         job->shareLink(root, path);
     }
 }
@@ -154,6 +156,7 @@ void WebDavStorageService::storageServicedownloadFile(const QString &name, const
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(downLoadFileFailed(QString)), this, SLOT(slotDownLoadFileFailed(QString)));
         connect(job, SIGNAL(uploadDownloadFileProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
+        connect(job, SIGNAL(authorizationDone(QString,QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString,QString)));
         mDownloadReply = job->downloadFile(name, fileId, destination);
     }
 }
@@ -168,6 +171,7 @@ void WebDavStorageService::storageServicecreateServiceFolder()
         job->initializeToken(mPublicLocation, mServiceLocation, mUsername, mPassword);
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(authorizationDone(QString,QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString,QString)));
         job->createServiceFolder();
     }
 }
@@ -183,6 +187,7 @@ void WebDavStorageService::storageServicedeleteFile(const QString &filename)
         job->initializeToken(mPublicLocation, mServiceLocation, mUsername, mPassword);
         connect(job, SIGNAL(deleteFileDone(QString)), SLOT(slotDeleteFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(authorizationDone(QString,QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString,QString)));
         job->deleteFile(filename);
     }
 }
@@ -198,6 +203,7 @@ void WebDavStorageService::storageServicedeleteFolder(const QString &foldername)
         job->initializeToken(mPublicLocation, mServiceLocation, mUsername, mPassword);
         connect(job, SIGNAL(deleteFolderDone(QString)), SLOT(slotDeleteFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(authorizationDone(QString,QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString,QString)));
         job->deleteFolder(foldername);
     }
 }
@@ -213,6 +219,7 @@ void WebDavStorageService::storageServiceRenameFolder(const QString &source, con
         job->initializeToken(mPublicLocation, mServiceLocation, mUsername, mPassword);
         connect(job, SIGNAL(renameFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(authorizationDone(QString,QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString,QString)));
         job->renameFolder(source, destination);
     }
 }
@@ -228,6 +235,7 @@ void WebDavStorageService::storageServiceRenameFile(const QString &source, const
         job->initializeToken(mPublicLocation, mServiceLocation, mUsername, mPassword);
         connect(job, SIGNAL(renameFileDone(QString)), SLOT(slotRenameFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(authorizationDone(QString,QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString,QString)));
         job->renameFile(source, destination);
     }
 }
@@ -243,6 +251,7 @@ void WebDavStorageService::storageServiceMoveFolder(const QString &source, const
         job->initializeToken(mPublicLocation, mServiceLocation, mUsername, mPassword);
         connect(job, SIGNAL(moveFolderDone(QString)), SLOT(slotMoveFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(authorizationDone(QString,QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString,QString)));
         job->moveFolder(source, destination);
     }
 }
@@ -258,6 +267,7 @@ void WebDavStorageService::storageServiceMoveFile(const QString &source, const Q
         job->initializeToken(mPublicLocation, mServiceLocation, mUsername, mPassword);
         connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotMoveFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(authorizationDone(QString,QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString,QString)));
         job->moveFile(source, destination);
     }
 }
@@ -273,6 +283,7 @@ void WebDavStorageService::storageServiceCopyFile(const QString &source, const Q
         job->initializeToken(mPublicLocation, mServiceLocation, mUsername, mPassword);
         connect(job, SIGNAL(copyFileDone(QString)), SLOT(slotCopyFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(authorizationDone(QString,QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString,QString)));
         job->copyFile(source, destination);
     }
 }
@@ -288,6 +299,7 @@ void WebDavStorageService::storageServiceCopyFolder(const QString &source, const
         job->initializeToken(mPublicLocation, mServiceLocation, mUsername, mPassword);
         connect(job, SIGNAL(copyFolderDone(QString)), SLOT(slotCopyFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(authorizationDone(QString,QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString,QString)));
         job->copyFolder(source, destination);
     }
 }
@@ -298,27 +310,48 @@ StorageServiceAbstract::Capabilities WebDavStorageService::capabilities() const
     return serviceCapabilities();
 }
 
-QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
+QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder)
 {
-    qDebug()<<" data"<<data;
+    //qDebug()<<" data"<<data;
     listWidget->clear();
     listWidget->createMoveUpItem();
+
     const QList<QWebdavUrlInfo> lst = QWebdavUrlInfo::parseListInfo(data);
     Q_FOREACH(const QWebdavUrlInfo &info, lst) {
+        if (QUrl(info.name()).path() == currentFolder)
+          continue;
+        StorageServiceTreeWidgetItem *item = 0;
         if (info.isDir()) {
             QFileInfo folderInfo(info.name());
-            StorageServiceTreeWidgetItem *item = listWidget->addFolder(folderInfo.dir().dirName(), folderInfo.dir().dirName());
+            item = listWidget->addFolder(folderInfo.dir().dirName(), info.name());
             item->setDateCreated(info.createdAt());
             item->setLastModification(info.lastModified());
         } else {
             const QString mimetype = info.mimeType();
             QFileInfo fileInfo(info.name());
-            StorageServiceTreeWidgetItem *item = listWidget->addFile(fileInfo.fileName(), fileInfo.fileName(), mimetype);
+            item = listWidget->addFile(fileInfo.fileName(), info.name(), mimetype);
             item->setDateCreated(info.createdAt());
             item->setLastModification(info.lastModified());
         }
+        //TODO item->setStoreInfo(QVariantMap(info.properties()));
     }
-    return QString();
+    QString parentFolder;
+    if (!currentFolder.isEmpty()) {
+        QStringList parts = currentFolder.split(QLatin1String("/"), QString::SkipEmptyParts);
+        parts.removeLast();
+        parentFolder = parts.join(QLatin1String("/"));
+        if (parentFolder.isEmpty()) {
+            parentFolder = QLatin1String("/");
+        }
+        if (!parentFolder.endsWith(QLatin1Char('/'))) {
+            parentFolder += QLatin1String("/");
+        }
+        if (!parentFolder.startsWith(QLatin1Char('/'))) {
+            parentFolder.prepend(QLatin1String("/"));
+        }
+    }
+    //qDebug()<<" currentFolder "<<currentFolder<<" parentFolder" <<parentFolder;
+    return parentFolder;
 }
 
 QString WebDavStorageService::itemInformation(const QVariantMap &variantMap)
@@ -347,6 +380,7 @@ void WebDavStorageService::storageServicelistFolder(const QString &folder)
         job->initializeToken(mPublicLocation, mServiceLocation, mUsername, mPassword);
         connect(job, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(authorizationDone(QString,QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString,QString)));
         job->listFolder(folder);
     }
 }
@@ -363,6 +397,7 @@ void WebDavStorageService::storageServicecreateFolder(const QString &name, const
         job->initializeToken(mPublicLocation, mServiceLocation, mUsername, mPassword);
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(authorizationDone(QString,QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString,QString)));
         job->createFolder(name, destination);
     }
 }
@@ -377,6 +412,7 @@ void WebDavStorageService::storageServiceaccountInfo()
         job->initializeToken(mPublicLocation, mServiceLocation, mUsername, mPassword);
         connect(job,SIGNAL(accountInfoDone(PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(PimCommon::AccountInfo)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(authorizationDone(QString,QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString,QString)));
         job->accountInfo();
     }
 }
@@ -402,14 +438,14 @@ void WebDavStorageService::storageServiceuploadFile(const QString &filename, con
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(uploadDownloadFileProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
         connect(job, SIGNAL(uploadFileFailed(QString)), this, SLOT(slotUploadFileFailed(QString)));
+        connect(job, SIGNAL(authorizationDone(QString,QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString,QString)));
         mUploadReply = job->uploadFile(filename, uploadAsName, destination);
     }
 }
 
 QString WebDavStorageService::description()
 {
-    //TODO
-    return QString(); // i18n("");
+    return i18n("WebDav allows to access to owncloud server.");
 }
 
 QUrl WebDavStorageService::serviceUrl()
@@ -431,19 +467,19 @@ StorageServiceAbstract::Capabilities WebDavStorageService::serviceCapabilities()
 {
     StorageServiceAbstract::Capabilities cap;
     cap |= AccountInfoCapability;
-    //cap |= UploadFileCapability;
+    cap |= UploadFileCapability;
     //cap |= DownloadFileCapability;
     cap |= CreateFolderCapability;
-    //cap |= DeleteFolderCapability;
+    cap |= DeleteFolderCapability;
     cap |= ListFolderCapability;
     //cap |= ShareLinkCapability;
-    //cap |= DeleteFileCapability;
-    //cap |= RenameFolderCapability;
-    //cap |= RenameFileCapabilitity;
-    //cap |= MoveFileCapability;
-    //cap |= MoveFolderCapability;
-    //cap |= CopyFileCapability;
-    //cap |= CopyFolderCapability;
+    cap |= DeleteFileCapability;
+    cap |= RenameFolderCapability;
+    cap |= RenameFileCapabilitity;
+    cap |= MoveFileCapability;
+    cap |= MoveFolderCapability;
+    cap |= CopyFileCapability;
+    cap |= CopyFolderCapability;
 
 
     return cap;

@@ -40,7 +40,6 @@ public:
 #ifdef KDEPIM_STORAGESERVICE_GDRIVE
         GDrive,
 #endif
-
         //Last element
         EndListService
     };
@@ -48,9 +47,10 @@ public:
     explicit StorageServiceManager(QObject *parent=0);
     ~StorageServiceManager();
 
+    KActionMenu *menuShareLinkServices(QWidget *parent) const;
     KActionMenu *menuDownloadServices(QWidget *parent) const;
     KActionMenu *menuUploadServices(QWidget *parent) const;
-    KActionMenu *menuWithCapability(PimCommon::StorageServiceAbstract::Capability capability, QWidget *parent) const;
+    KActionMenu *menuWithCapability(PimCommon::StorageServiceAbstract::Capability mainCapability, const QList<PimCommon::StorageServiceAbstract::Capability> &lstCapability, QWidget *parent) const;
 
 
     QMap<QString, StorageServiceAbstract *> listService() const;
@@ -68,6 +68,7 @@ public:
 
 Q_SIGNALS:
     void servicesChanged();
+    void deleteFolderDone(const QString &serviceName, const QString &filename);
     void uploadFileDone(const QString &serviceName, const QString &filename);
     void uploadDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total);
     void uploadFileFailed(const QString &serviceName, const QString &filename);
@@ -77,11 +78,12 @@ Q_SIGNALS:
     void actionFailed(const QString &serviceName, const QString &error);
     void deleteFileDone(const QString &serviceName, const QString &filename);
     void accountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo);
+    void uploadFileStart(PimCommon::StorageServiceAbstract *service);
 
 private Q_SLOTS:
     void slotAccountInfo();
     void slotShareFile();
-    void slotDeleteFile();
+    void slotDeleteFileFolder();
     void slotDownloadFile();
 private:
     void defaultConnect(StorageServiceAbstract *service);

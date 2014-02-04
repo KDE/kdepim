@@ -385,7 +385,7 @@ void MessageFactoryTest::testCreateMDN()
 
   KMime::Message::Ptr mdn = factory.createMDN( KMime::MDN::AutomaticAction, KMime::MDN::Displayed, KMime::MDN::SentAutomatically );
 
-  QVERIFY( mdn );
+  QVERIFY( mdn.get() );
   kDebug() << "mdn" << mdn->encodedContent();
 /*
   // parse the result and make sure it is valid in various ways

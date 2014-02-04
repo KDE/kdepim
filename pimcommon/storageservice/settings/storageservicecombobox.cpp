@@ -17,6 +17,7 @@
 
 #include "storageservicecombobox.h"
 #include "storageservice/storageservicemanager.h"
+#include "storageservice/utils/storageserviceutils.h"
 
 using namespace PimCommon;
 
@@ -30,15 +31,6 @@ StorageServiceComboBox::~StorageServiceComboBox()
 {
 
 }
-bool StorageServiceComboBox::hasCapabilities(PimCommon::StorageServiceAbstract::Capabilities capabilities, const QList<PimCommon::StorageServiceAbstract::Capability> &lstNeedCapabily)
-{
-    Q_FOREACH (PimCommon::StorageServiceAbstract::Capability cap, lstNeedCapabily) {
-        if (capabilities & cap) {
-            return true;
-        }
-    }
-    return false;
-}
 
 void StorageServiceComboBox::initialize(const QList<StorageServiceAbstract::Capability> &lstCap, const QStringList &excludeService)
 {
@@ -47,7 +39,7 @@ void StorageServiceComboBox::initialize(const QList<StorageServiceAbstract::Capa
         if (!excludeService.contains(PimCommon::StorageServiceManager::serviceName(type))) {
             const QString iconName = PimCommon::StorageServiceManager::icon(type);
             const PimCommon::StorageServiceAbstract::Capabilities capabilities = PimCommon::StorageServiceManager::capabilities(type);
-            if (hasCapabilities(capabilities, lstCap)) {
+            if (PimCommon::StorageServiceUtils::hasCapabilities(capabilities, lstCap)) {
                 if (iconName.isEmpty()) {
                     addItem(PimCommon::StorageServiceManager::serviceToI18n(type), type);
                 } else {

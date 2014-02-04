@@ -84,6 +84,7 @@ void YouSendItStorageService::storageServiceauthentication()
     YouSendItJob *job = new YouSendItJob(this);
     connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
+    connect(job, SIGNAL(actionFailed(QString)), this, SLOT(slotActionFailed(QString)));
     job->requestTokenAccess();
 }
 
@@ -94,7 +95,6 @@ void YouSendItStorageService::slotAuthorizationFailed(const QString &errorMessag
     mToken.clear();
     emitAuthentificationFailder(errorMessage);
 }
-
 
 void YouSendItStorageService::slotAuthorizationDone(const QString &password, const QString &username, const QString &token)
 {
@@ -425,8 +425,9 @@ StorageServiceAbstract::Capabilities YouSendItStorageService::capabilities() con
     return serviceCapabilities();
 }
 
-QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
+QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder)
 {
+    Q_UNUSED(currentFolder);
     listWidget->clear();
     listWidget->createMoveUpItem();
     QJson::Parser parser;

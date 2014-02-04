@@ -56,15 +56,6 @@ void StorageServiceTabWidget::updateListService(const QMap<QString, PimCommon::S
             }
         }
     }
-    //Remove page.
-    const QStringList listService = list.keys();
-    for (int nbPage=0; nbPage < count(); ++nbPage) {
-        StorageServicePage *page = static_cast<StorageServicePage*>(widget(nbPage));
-        if (!listService.contains(page->serviceName())) {
-            delete widget(nbPage);
-            removeTab(nbPage);
-        }
-    }
 }
 
 void StorageServiceTabWidget::setListStorageService(const QMap<QString, PimCommon::StorageServiceAbstract *> &list)
@@ -177,4 +168,16 @@ bool StorageServiceTabWidget::hasUploadDownloadProgress() const
         }
     }
     return false;
+}
+
+void StorageServiceTabWidget::serviceRemoved(const QString &serviceName)
+{
+    for (int nbPage=0; nbPage < count(); ++nbPage) {
+        StorageServicePage *page = static_cast<StorageServicePage*>(widget(nbPage));
+        if (page->serviceName() == serviceName) {
+            //removeTab(nbPage);
+            delete widget(nbPage);
+            break;
+        }
+    }
 }

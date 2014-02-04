@@ -71,6 +71,7 @@ void HubicStorageService::storageServiceauthentication()
     HubicJob *job = new HubicJob(this);
     connect(job, SIGNAL(authorizationDone(QString,QString,qint64)), this, SLOT(slotAuthorizationDone(QString,QString,qint64)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
+    connect(job, SIGNAL(actionFailed(QString)), this, SLOT(slotActionFailed(QString)));
     job->requestTokenAccess();
 }
 
@@ -474,8 +475,9 @@ StorageServiceAbstract::Capabilities HubicStorageService::capabilities() const
     return serviceCapabilities();
 }
 
-QString HubicStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
+QString HubicStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder)
 {
+    Q_UNUSED(currentFolder);
     listWidget->clear();
     listWidget->createMoveUpItem();
     return QString();

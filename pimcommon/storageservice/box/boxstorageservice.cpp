@@ -69,6 +69,7 @@ void BoxStorageService::storageServiceauthentication()
     BoxJob *job = new BoxJob(this);
     connect(job, SIGNAL(authorizationDone(QString,QString,qint64)), this, SLOT(slotAuthorizationDone(QString,QString,qint64)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
+    connect(job, SIGNAL(actionFailed(QString)), this, SLOT(slotActionFailed(QString)));
     job->requestTokenAccess();
 }
 
@@ -430,7 +431,7 @@ StorageServiceAbstract::Capabilities BoxStorageService::serviceCapabilities()
 {
     StorageServiceAbstract::Capabilities cap;
     cap |= AccountInfoCapability;
-    cap |= UploadFileCapability;
+    //cap |= UploadFileCapability;
     cap |= DownloadFileCapability;
     cap |= CreateFolderCapability;
     cap |= DeleteFolderCapability;
@@ -481,8 +482,9 @@ void BoxStorageService::storageServicecreateServiceFolder()
     }
 }
 
-QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
+QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder)
 {
+    Q_UNUSED(currentFolder);
     listWidget->clear();
     QJson::Parser parser;
     bool ok;

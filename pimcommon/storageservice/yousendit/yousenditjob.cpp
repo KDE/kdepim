@@ -184,6 +184,7 @@ void YouSendItJob::moveFile(const QString &source, const QString &destination)
 void YouSendItJob::requestTokenAccess()
 {
     QPointer<LoginDialog> dlg = new LoginDialog;
+    dlg->setCaption(i18n("YouSendIt"));
     dlg->setUsernameLabel(i18n("Email:"));
     if (dlg->exec()) {
         mPassword = dlg->password();

@@ -6,7 +6,7 @@ X-KDE-Library=kcm_pimactivity
 X-KDE-Weight=200
 
 Name=PIM Activity Settings
-Name[bs]=Postavke PIM aktiovnosti
+Name[bs]=Postavke PIM aktivnosti
 Name[ca]=Arranjament de l'activitat PIM
 Name[ca@valencia]=Arranjament de l'activitat PIM
 Name[cs]=Nastavení činnosti PIM
@@ -75,7 +75,7 @@ Comment[wa]=Apontyîz l' activité pol programe pim
 Comment[x-test]=xxConfigure the activity for pim applicationxx
 Comment[zh_TW]=設定 PIM 應用程式的活動
 X-KDE-Keywords=configure, settings, activity
-X-KDE-Keywords[bs]=konfigurirati, postavke, arhiva
+X-KDE-Keywords[bs]=konfigurisanje, postavkem, aktivnost
 X-KDE-Keywords[ca]=configura, arranjament, activitat
 X-KDE-Keywords[ca@valencia]=configura, arranjament, activitat
 X-KDE-Keywords[da]=indstil, konfigurér, aktivitet

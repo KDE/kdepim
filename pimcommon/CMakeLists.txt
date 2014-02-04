@@ -67,7 +67,6 @@ set(libpimcommon_storageservice_SRCS
   storageservice/webdav/webdavstorageservice.cpp
   storageservice/webdav/webdavjob.cpp
   storageservice/webdav/webdavsettingsdialog.cpp
-  storageservice/webdav/protocol/webdav.cpp
   storageservice/webdav/protocol/webdav_url_info.cpp
 
   storageservice/utils/storageserviceutils.cpp
@@ -79,6 +78,7 @@ set(libpimcommon_storageservice_SRCS
   storageservice/dialog/storageservicedownloaddialog.cpp
   storageservice/dialog/storageservicechecknamedialog.cpp
   storageservice/dialog/storageserviceconfiguredialog.cpp
+  storageservice/dialog/storageservicedeletedialog.cpp
 
   storageservice/widgets/storageserviceconfigurewidget.cpp
   storageservice/widgets/storageservicetreewidget.cpp

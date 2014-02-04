@@ -239,6 +239,11 @@ QString StorageServiceAbstract::disallowedSymbolsStr() const
     return QString();
 }
 
+qlonglong StorageServiceAbstract::maximumUploadFileSize() const
+{
+    return -1;
+}
+
 void StorageServiceAbstract::executeNextAction()
 {
     switch(mNextAction->nextActionType()) {

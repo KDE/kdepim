@@ -97,12 +97,14 @@ QString StorageServiceManagerSettingsJob::ubuntuOneTokenName() const
 
 QString StorageServiceManagerSettingsJob::gdriveClientId() const
 {
-    return QLatin1String("76182239499-2krm3lvlrqrj446loaqrrep594n3u2o8.apps.googleusercontent.com");
+    return QLatin1String("735222197981-mrcgtaqf05914buqjkts7mk79blsquas.apps.googleusercontent.com");
+    //return QLatin1String("76182239499-2krm3lvlrqrj446loaqrrep594n3u2o8.apps.googleusercontent.com");
 }
 
 QString StorageServiceManagerSettingsJob::gdriveClientSecret() const
 {
-    return QLatin1String("7SinUSCxfbrJYN7az3VvxTJ9");
+    return QLatin1String("4MJOS0u1-_AUEKJ0ObA-j22U");
+    //return QLatin1String("7SinUSCxfbrJYN7az3VvxTJ9");
 }
 
 QString StorageServiceManagerSettingsJob::defaultUploadFolder() const

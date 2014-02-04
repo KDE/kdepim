@@ -43,6 +43,7 @@ public:
 
 Q_SIGNALS:
     void changed();
+    void serviceRemoved(const QString &serviceName);
 
 private slots:
     void slotServiceSelected();
@@ -58,7 +59,6 @@ private slots:
 private:
     void updateButtons();
     void setDefaultLabel();
-    bool hasCapabilities(PimCommon::StorageServiceAbstract::Capabilities capabilities, const QList<PimCommon::StorageServiceAbstract::Capability> &lstNeedCapabily);
     PimCommon::StorageListWidgetItem *createItem(const QString &serviceName, const QString &service, PimCommon::StorageServiceManager::ServiceType type, const KIcon &icon);
     void defaultConnection(StorageServiceAbstract *storage);
     enum ServiceData {

@@ -67,7 +67,7 @@ static bool isDueToday( const KCalCore::Todo::Ptr &todo )
 }
 
 TodoModel::Private::Private( const EventViews::PrefsPtr &preferences,
-                             TodoModel *qq ) : QObject()
+                             TodoModel *qq ) : QObject(), m_changer(0)
                                              , m_preferences( preferences )
                                              , q( qq )
 {

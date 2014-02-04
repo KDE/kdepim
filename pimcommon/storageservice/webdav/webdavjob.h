@@ -54,19 +54,53 @@ private slots:
     void slotSendDataFinished(QNetworkReply *reply);    
     void slotAuthenticationRequired(QNetworkReply *, QAuthenticator *);
     void slotListInfo(const QString &data);
-    void slotRequired(const QString &hostname, quint16 port, QAuthenticator *authenticator);
-    void slotRequestFinished(int, bool);
+
 private:
+    //QWebDav API
+    typedef QMap < QString, QMap < QString, QVariant > > PropValues;
+    typedef QMap < QString , QStringList > PropNames;
+
+    QNetworkReply *list(const QString &dir);
+    QNetworkReply *search(const QString &path, const QString &q);
+    QNetworkReply *put(const QString &path, QIODevice *data);
+    QNetworkReply *put(const QString &path, QByteArray &data);
+    QNetworkReply *propfind(const QString &path, const WebDavJob::PropNames &props, int depth);
+    QNetworkReply *propfind(const QString &path, const QByteArray &query, int depth);
+    QNetworkReply *proppatch(const QString &path, const WebDavJob::PropValues &props);
+    QNetworkReply *proppatch(const QString &path, const QByteArray &query);
+    QNetworkReply *davRequest(const QString &reqVerb, QNetworkRequest &req, const QByteArray &data = QByteArray());
+    QNetworkReply *davRequest(const QString &reqVerb, QNetworkRequest &req, QIODevice *data);
+    QNetworkReply *mkdir(const QString &dir);
+    QNetworkReply *copy(const QString &oldname, const QString &newname, bool overwrite);
+    QNetworkReply *rename(const QString &oldname, const QString &newname, bool overwrite);
+    QNetworkReply *move(const QString &oldname, const QString &newname, bool overwrite);
+    QNetworkReply *rmdir(const QString &dir);
+    QNetworkReply *remove(const QString &path);
+    QNetworkReply *accountInfo(const QString &dir);
+    void setupHeaders(QNetworkRequest &req, quint64 size);
+
+    void parseDownloadFile(const QString &data);
     void parseUploadFile(const QString &data);
     void parseCreateFolder(const QString &data);
     void parseAccountInfo(const QString &data);
     void parseListFolder(const QString &data);
     void parseAccessToken(const QString &data);
+    void parseDeleteFile(const QString &data);
+    void parseDeleteFolder(const QString &data);
+    void parseRenameFolder(const QString &data);
+    void parseRenameFile(const QString &data);
+    void parseMoveFolder(const QString &data);
+    void parseMoveFile(const QString &data);
+    void parseCopyFolder(const QString &data);
+    void parseCopyFile(const QString &data);
+    void parseShareLink(const QString &data);
+    void parseCreateServiceFolder(const QString &data);
+
     QString mPublicLocation;
     QString mServiceLocation;
     QString mUserName;
     QString mPassword;
-    int mReqId;
+    int mNbAuthCheck;
 };
 }
 

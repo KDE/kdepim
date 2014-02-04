@@ -28,3 +28,23 @@ QString PimCommon::StorageServiceUtils::generateNonce(qint32 length)
 
     return clng;
 }
+
+bool PimCommon::StorageServiceUtils::hasCapabilities(PimCommon::StorageServiceAbstract::Capabilities capabilities, const QList<PimCommon::StorageServiceAbstract::Capability> &lstNeedCapabily)
+{
+    Q_FOREACH (PimCommon::StorageServiceAbstract::Capability cap, lstNeedCapabily) {
+        if (capabilities & cap) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool PimCommon::StorageServiceUtils::hasExactCapabilities(PimCommon::StorageServiceAbstract::Capabilities capabilities, const QList<PimCommon::StorageServiceAbstract::Capability> &lstNeedCapabily)
+{
+    Q_FOREACH (PimCommon::StorageServiceAbstract::Capability cap, lstNeedCapabily) {
+        if (!(capabilities & cap)) {
+            return false;
+        }
+    }
+    return true;
+}

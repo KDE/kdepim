@@ -100,7 +100,6 @@
 #include "mailcommon/folder/foldercollection.h"
 
 // LIBKDEPIM includes
-#include <libkdepim/widgets/nepomukwarning.h>
 #include <libkdepim/addressline/recentaddresses.h>
 
 // KDEPIMLIBS includes
@@ -258,11 +257,6 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
 
 
   QVBoxLayout *v = new QVBoxLayout( mMainWidget );
-  if ( !KPIM::NepomukWarning::missingNepomukWarning( "kmail-composer" ) ) {
-    KPIM::NepomukWarning *nepomukWarning = new KPIM::NepomukWarning( "kmail-composer", this );
-    nepomukWarning->setMissingFeatures( QStringList() << i18n("Recipient auto-completion") << i18n("Distribution lists") << i18n("Per-contact crypto preferences") );
-    v->addWidget( nepomukWarning );
-  }
   v->setMargin(0);
   v->addWidget( mHeadersToEditorSplitter );
   KPIMIdentities::IdentityCombo* identity = new KPIMIdentities::IdentityCombo( kmkernel->identityManager(),
@@ -500,6 +494,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
   connect(KMKernel::self()->storageServiceManager(), SIGNAL(uploadFileFailed(QString,QString)), this, SLOT(slotUploadFileFailed(QString,QString)));
   connect(KMKernel::self()->storageServiceManager(), SIGNAL(uploadDownloadFileProgress(QString,qint64,qint64)), this, SLOT(slotuploadDownloadFileProgress(QString,qint64,qint64)));
   connect(KMKernel::self()->storageServiceManager(), SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotShareLinkDone(QString,QString)));
+  connect(KMKernel::self()->storageServiceManager(), SIGNAL(uploadFileStart(PimCommon::StorageServiceAbstract*)), this, SLOT(slotUploadFileStart(PimCommon::StorageServiceAbstract*)));
 }
 
 //-----------------------------------------------------------------------------
@@ -1445,7 +1440,7 @@ void KMComposeWin::setupActions( void )
   mCryptoModuleAction->setToolTip( i18n( "Select a cryptographic format for this message" ) );
 
   mComposerBase->editor()->createActions( actionCollection() );
-  actionCollection()->addAction( QLatin1String("shared_link"), KMKernel::self()->storageServiceManager()->menuUploadServices(this) );
+  actionCollection()->addAction( QLatin1String("shared_link"), KMKernel::self()->storageServiceManager()->menuShareLinkServices(this) );
 
   createGUI( QLatin1String("kmcomposerui.rc") );
   connect( toolBar( QLatin1String("htmlToolBar") )->toggleViewAction(),
@@ -3577,7 +3572,6 @@ void KMComposeWin::slotUploadFileFailed(const QString &serviceName, const QStrin
 void KMComposeWin::slotuploadDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total)
 {
     Q_UNUSED(serviceName);
-    mProgressWidget->show();
     mProgressWidget->setProgressValue(done, total);
 }
 
@@ -3585,4 +3579,12 @@ void KMComposeWin::slotShareLinkDone(const QString &serviceName, const QString &
 {
     Q_UNUSED(serviceName);
     mComposerBase->editor()->insertShareLink(link);
+}
+
+void KMComposeWin::slotUploadFileStart(PimCommon::StorageServiceAbstract *service)
+{
+    mProgressWidget->setProgressBarType(PimCommon::StorageServiceProgressWidget::UploadBar);
+    mProgressWidget->setService(service);
+    mProgressWidget->show();
+
 }

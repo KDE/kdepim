@@ -18,8 +18,10 @@
 #include "storageservicemanager.h"
 
 #include "settings/pimcommonsettings.h"
+#include "storageservice/utils/storageserviceutils.h"
 
 #include "storageservice/dialog/storageservicedownloaddialog.h"
+#include "storageservice/dialog/storageservicedeletedialog.h"
 #include "storageservice/dialog/storageservicechecknamedialog.h"
 
 #include "dropbox/dropboxstorageservice.h"
@@ -75,17 +77,29 @@ QString StorageServiceManager::defaultUploadFolder() const
     return mDefaultUploadFolder;
 }
 
+KActionMenu *StorageServiceManager::menuShareLinkServices(QWidget *parent) const
+{
+    QList<PimCommon::StorageServiceAbstract::Capability> lstCapability;
+    lstCapability << PimCommon::StorageServiceAbstract::ShareLinkCapability;
+    lstCapability << PimCommon::StorageServiceAbstract::UploadFileCapability;
+    return menuWithCapability(PimCommon::StorageServiceAbstract::ShareLinkCapability, lstCapability, parent);
+}
+
 KActionMenu *StorageServiceManager::menuUploadServices(QWidget *parent) const
 {
-    return menuWithCapability(PimCommon::StorageServiceAbstract::ShareLinkCapability, parent);
+    QList<PimCommon::StorageServiceAbstract::Capability> lstCapability;
+    lstCapability << PimCommon::StorageServiceAbstract::UploadFileCapability;
+    return menuWithCapability(PimCommon::StorageServiceAbstract::UploadFileCapability, lstCapability, parent);
 }
 
 KActionMenu *StorageServiceManager::menuDownloadServices(QWidget *parent) const
 {
-    return menuWithCapability(PimCommon::StorageServiceAbstract::DownloadFileCapability, parent);
+    QList<PimCommon::StorageServiceAbstract::Capability> lstCapability;
+    lstCapability << PimCommon::StorageServiceAbstract::DownloadFileCapability;
+    return menuWithCapability(PimCommon::StorageServiceAbstract::DownloadFileCapability, lstCapability, parent);
 }
 
-KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageServiceAbstract::Capability capability, QWidget *parent) const
+KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageServiceAbstract::Capability mainCapability, const QList<PimCommon::StorageServiceAbstract::Capability> &lstCapability, QWidget *parent) const
 {
     KActionMenu *menuService = new KActionMenu(i18n("Storage service"), parent);
     if (mListService.isEmpty()) {
@@ -97,16 +111,15 @@ KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageService
         while (i.hasNext()) {
             i.next();
             //FIXME
-            if (i.value()->capabilities() & capability) {
+            if (PimCommon::StorageServiceUtils::hasExactCapabilities(i.value()->capabilities(), lstCapability)) {
                 QAction *act = new QAction(/*serviceToI18n(*/i.key(), menuService);
                 act->setData(i.key());
                 const KIcon icon = i.value()->icon();
                 if (!icon.isNull())
                     act->setIcon(icon);
-                switch(capability) {
+                switch(mainCapability) {
                 case PimCommon::StorageServiceAbstract::NoCapability:
                 case PimCommon::StorageServiceAbstract::CreateFolderCapability:
-                case PimCommon::StorageServiceAbstract::DeleteFolderCapability:
                 case PimCommon::StorageServiceAbstract::ListFolderCapability:
                 case PimCommon::StorageServiceAbstract::RenameFolderCapability:
                 case PimCommon::StorageServiceAbstract::RenameFileCapabilitity:
@@ -115,6 +128,10 @@ KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageService
                 case PimCommon::StorageServiceAbstract::CopyFileCapability:
                 case PimCommon::StorageServiceAbstract::CopyFolderCapability:
                     qDebug()<<" not implemented ";
+                    break;
+                case PimCommon::StorageServiceAbstract::DeleteFolderCapability:
+                    menuService->setText(i18n("Delete Folder..."));
+                    connect(act, SIGNAL(triggered()), this, SLOT(slotDeleteFileFolder()));
                     break;
                 case PimCommon::StorageServiceAbstract::DownloadFileCapability:
                     menuService->setText(i18n("Download File..."));
@@ -130,7 +147,7 @@ KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageService
                     break;
                 case PimCommon::StorageServiceAbstract::DeleteFileCapability:
                     menuService->setText(i18n("Delete File..."));
-                    connect(act, SIGNAL(triggered()), this, SLOT(slotDeleteFile()));
+                    connect(act, SIGNAL(triggered()), this, SLOT(slotDeleteFileFolder()));
                     break;
                 case PimCommon::StorageServiceAbstract::AccountInfoCapability:
                     menuService->setText(i18n("Account Info..."));
@@ -181,6 +198,7 @@ void StorageServiceManager::slotShareFile()
                     connect(service,SIGNAL(uploadFileDone(QString,QString)), this, SIGNAL(uploadFileDone(QString,QString)), Qt::UniqueConnection);
                     connect(service,SIGNAL(uploadFileFailed(QString,QString)), this, SIGNAL(uploadFileFailed(QString,QString)), Qt::UniqueConnection);
                     connect(service,SIGNAL(shareLinkDone(QString,QString)), this, SIGNAL(shareLinkDone(QString,QString)), Qt::UniqueConnection);
+                    Q_EMIT uploadFileStart(service);
                     service->uploadFile(fileName, newName, mDefaultUploadFolder);
                 }
             }
@@ -196,9 +214,7 @@ void StorageServiceManager::slotDownloadFile()
         if (mListService.contains(type)) {
             StorageServiceAbstract *service = mListService.value(type);
             QPointer<PimCommon::StorageServiceDownloadDialog> dlg = new PimCommon::StorageServiceDownloadDialog(service, 0);
-            if (dlg->exec()) {
-                //TODO ?
-            }
+            dlg->exec();
             delete dlg;
         }
     }
@@ -211,19 +227,19 @@ void StorageServiceManager::defaultConnect(StorageServiceAbstract *service)
     connect(service,SIGNAL(authenticationFailed(QString,QString)), this, SIGNAL(authenticationFailed(QString,QString)), Qt::UniqueConnection);
 }
 
-void StorageServiceManager::slotDeleteFile()
+void StorageServiceManager::slotDeleteFileFolder()
 {
     QAction *act = qobject_cast< QAction* >( sender() );
     if ( act ) {
         const QString type = act->data().toString();
         if (mListService.contains(type)) {
             StorageServiceAbstract *service = mListService.value(type);
-            const QString fileName = KInputDialog::getText(i18n("Delete File"), i18n("Filename:"));
-            if (!fileName.isEmpty()) {
-                defaultConnect(service);
-                connect(service,SIGNAL(deleteFileDone(QString,QString)), this, SIGNAL(deleteFileDone(QString,QString)), Qt::UniqueConnection);
-                service->deleteFile(fileName);
-            }
+            QPointer<StorageServiceDeleteDialog> dlg = new StorageServiceDeleteDialog(service);
+            defaultConnect(service);
+            connect(dlg,SIGNAL(deleteFileDone(QString,QString)), this, SIGNAL(deleteFileDone(QString,QString)));
+            connect(dlg,SIGNAL(deleteFolderDone(QString,QString)), this, SIGNAL(deleteFolderDone(QString,QString)));
+            dlg->exec();
+            delete dlg;
         }
     }
 }

@@ -31,6 +31,8 @@
 #include <QLabel>
 #include <QTreeWidget>
 #include <QFileInfo>
+#include <QDebug>
+#include <QHeaderView>
 
 using namespace PimCommon;
 
@@ -60,6 +62,7 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
 
 
     vbox->addWidget(mTreeWidget);
+    connect(mTreeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(slotItemDoubleClicked(QTreeWidgetItem*,int)));
     mProgressWidget = new StorageServiceProgressWidget(storage);
     mProgressWidget->setProgressBarType(StorageServiceProgressWidget::DownloadBar);
     vbox->addWidget(mProgressWidget);
@@ -87,6 +90,7 @@ StorageServiceDownloadDialog::~StorageServiceDownloadDialog()
 
 void StorageServiceDownloadDialog::slotUploadDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total)
 {
+    Q_UNUSED(serviceName);
     mProgressWidget->setProgressValue(done, total);
 }
 
@@ -95,6 +99,10 @@ void StorageServiceDownloadDialog::slotActionFailed(const QString &serviceName, 
     Q_UNUSED(serviceName);
     Q_UNUSED(data);
     mStorageServiceProgressIndicator->stopAnimation();
+    mTreeWidget->setEnabled(true);
+    mProgressWidget->hide();
+    mProgressWidget->reset();
+    enableButton(User1, true);
 }
 
 void StorageServiceDownloadDialog::slotListFolderDone(const QString &serviceName, const QString &data)
@@ -118,6 +126,7 @@ void StorageServiceDownloadDialog::readConfig()
 {
     KConfigGroup group( KGlobal::config(), "StorageServiceDownloadDialog" );
     const QSize size = group.readEntry( "Size", QSize(600, 400) );
+    mTreeWidget->header()->restoreState( group.readEntry( mStorage->storageServiceName(), QByteArray() ) );
     if ( size.isValid() ) {
         resize( size );
     }
@@ -129,6 +138,7 @@ void StorageServiceDownloadDialog::writeConfig()
 
     KConfigGroup group = config->group( QLatin1String("StorageServiceDownloadDialog") );
     group.writeEntry( "Size", size() );
+    group.writeEntry(mStorage->storageServiceName(), mTreeWidget->header()->saveState());
 }
 
 void StorageServiceDownloadDialog::slotItemActivated(QTreeWidgetItem *item, int)
@@ -138,24 +148,9 @@ void StorageServiceDownloadDialog::slotItemActivated(QTreeWidgetItem *item, int)
 
 void StorageServiceDownloadDialog::slotDownloadFile()
 {
-    const QString filename = mTreeWidget->currentItem()->text(0);
-    if (!filename.isEmpty()) {
-        QString destination = mDefaultDownloadPath;
-        if (destination.isEmpty())
-            destination = KFileDialog::getExistingDirectory(KUrl(), this);
-        if (destination.isEmpty())
-            return;
-        QFileInfo fileInfo(destination + QLatin1Char('/') + filename);
-        if (fileInfo.exists()) {
-            if (KMessageBox::No == KMessageBox::questionYesNo(this, i18n("Filename already exists. Do you want to overwrite it?"), i18n("Overwrite file"))) {
-                return;
-            }
-        }
-        const QString fileId = mStorage->fileIdentifier(mTreeWidget->itemInformationSelected());
-        mTreeWidget->setEnabled(false);
-        enableButton(User1, false);
-        mProgressWidget->show();
-        mStorage->downloadFile(filename, fileId, destination);
+    StorageServiceTreeWidgetItem *storageServiceItem = dynamic_cast<StorageServiceTreeWidgetItem*>(mTreeWidget->currentItem());
+    if (storageServiceItem) {
+        downloadItem(storageServiceItem);
     }
 }
 
@@ -177,6 +172,39 @@ void StorageServiceDownloadDialog::slotDownfileFailed(const QString &serviceName
     mTreeWidget->setEnabled(true);
     mProgressWidget->hide();
     enableButton(User1, true);
+}
+
+void StorageServiceDownloadDialog::slotItemDoubleClicked(QTreeWidgetItem *item, int)
+{
+    StorageServiceTreeWidgetItem *storageServiceItem = dynamic_cast<StorageServiceTreeWidgetItem*>(item);
+    if (storageServiceItem) {
+        if (mTreeWidget->type(storageServiceItem) == StorageServiceTreeWidget::File) {
+            downloadItem(storageServiceItem);
+        }
+    }
+}
+
+void StorageServiceDownloadDialog::downloadItem(StorageServiceTreeWidgetItem *item)
+{
+    const QString filename = item->text(0);
+    if (!filename.isEmpty()) {
+        QString destination = mDefaultDownloadPath;
+        if (destination.isEmpty())
+            destination = KFileDialog::getExistingDirectory(KUrl(), this);
+        if (destination.isEmpty())
+            return;
+        QFileInfo fileInfo(destination + QLatin1Char('/') + filename);
+        if (fileInfo.exists()) {
+            if (KMessageBox::No == KMessageBox::questionYesNo(this, i18n("Filename already exists. Do you want to overwrite it?"), i18n("Overwrite file"))) {
+                return;
+            }
+        }
+        const QString fileId = mStorage->fileIdentifier(item->storeInfo());
+        mTreeWidget->setEnabled(false);
+        enableButton(User1, false);
+        mProgressWidget->show();
+        mStorage->downloadFile(filename, fileId, destination);
+    }
 }
 
 #include "moc_storageservicedownloaddialog.cpp"

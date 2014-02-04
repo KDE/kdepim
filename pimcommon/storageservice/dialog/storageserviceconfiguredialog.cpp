@@ -39,6 +39,7 @@ StorageServiceConfigureDialog::StorageServiceConfigureDialog(QWidget *parent)
     setCaption( i18n( "Configure" ) );
     setButtons( Cancel | Ok  );
     mStorageServiceConfigureWidget = new PimCommon::StorageServiceConfigureWidget;
+    connect(mStorageServiceConfigureWidget, SIGNAL(serviceRemoved(QString)), this, SIGNAL(serviceRemoved(QString)));
     setMainWidget(mStorageServiceConfigureWidget);
     readConfig();
 }

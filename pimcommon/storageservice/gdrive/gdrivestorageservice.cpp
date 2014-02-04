@@ -37,6 +37,7 @@ GDriveStorageService::GDriveStorageService(QObject *parent)
 {
     mAccount = KGAPI2::AccountPtr(new KGAPI2::Account);
     readConfig();
+
 }
 
 GDriveStorageService::~GDriveStorageService()
@@ -65,12 +66,14 @@ void GDriveStorageService::refreshToken()
     job->initializeToken(mAccount);
     connect(job, SIGNAL(authorizationDone(QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
+    connect(job, SIGNAL(actionFailed(QString)), this, SLOT(slotActionFailed(QString)));
     job->refreshToken();
 }
 
 void GDriveStorageService::storageServiceauthentication()
 {
     GDriveJob *job = new GDriveJob(this);
+    job->initializeToken(mAccount);
     connect(job, SIGNAL(authorizationDone(QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
     job->requestTokenAccess();
@@ -406,7 +409,7 @@ void GDriveStorageService::storageServicecreateServiceFolder()
     }
 }
 
-QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
+QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder)
 {
     listWidget->clear();
     QJson::Parser parser;

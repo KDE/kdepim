@@ -35,6 +35,7 @@ public:
     void setListStorageService(const QMap<QString, PimCommon::StorageServiceAbstract *> &list);
     void updateListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &list);    
     bool hasUploadDownloadProgress() const;
+    void serviceRemoved(const QString &serviceName);
 
 Q_SIGNALS:
     void updateStatusBarMessage(const QString &msg);

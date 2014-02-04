@@ -19,10 +19,12 @@
 #define STORAGESERVICEUTILS_H
 
 #include <QString>
-
+#include "storageservice/storageserviceabstract.h"
 namespace PimCommon {
 namespace StorageServiceUtils {
 QString generateNonce(qint32 length);
+bool hasCapabilities(PimCommon::StorageServiceAbstract::Capabilities capabilities, const QList<PimCommon::StorageServiceAbstract::Capability> &lstNeedCapabily);
+bool hasExactCapabilities(PimCommon::StorageServiceAbstract::Capabilities capabilities, const QList<PimCommon::StorageServiceAbstract::Capability> &lstNeedCapabily);
 }
 }
 

@@ -144,7 +144,6 @@ private Q_SLOTS:
     void slotSaveMsg();
     void slotSaveAttachments();
     void slotPrintMsg();
-    void slotDebugQuery();
 
     /** GUI cleanup after search */
     void searchDone( KJob* );
@@ -159,7 +158,7 @@ private Q_SLOTS:
 private:
     QPointer<PimCommon::SelectMultiCollectionDialog> mSelectMultiCollectionDialog;
     QList<Akonadi::Collection> mCollectionId;
-    QString mQuery;
+    Akonadi::SearchQuery mQuery;
     bool mCloseRequested;
     int mSortColumn;
     Qt::SortOrder mSortOrder;
