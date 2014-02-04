@@ -90,10 +90,9 @@ void WebDavJob::requestTokenAccess()
         Q_EMIT authorizationFailed(i18n("Authentication Canceled."));
         deleteLater();
     }
-    delete dlg;
+    delete dlg;    
     QUrl url(mServiceLocation);
-    QNetworkRequest request(url);
-    QNetworkReply *reply = mNetworkAccessManager->get(request);
+    QNetworkReply *reply = accountInfo(url.toString());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
