@@ -147,7 +147,7 @@ void QuickSearchLine::slotSearchOptionChanged()
     if (mSearchAgainstBcc->isChecked()) {
         mSearchOptions |= SearchAgainstBcc;
     }
-    Q_EMIT searchOptionChanged();
+    Q_EMIT searchOptionChanged(mSearchOptions);
 }
 
 QuickSearchLine::SearchOptions QuickSearchLine::searchOptions() const
