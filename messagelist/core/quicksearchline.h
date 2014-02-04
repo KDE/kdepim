@@ -35,9 +35,10 @@ public:
 
     enum SearchOption {
         SearchNoOption = 1,
-        SearchAgainstSubject = 2,
-        SearchAgainstFrom = 4,
-        SearchAgainstBcc = 8
+        SearchAgainstBody = 2,
+        SearchAgainstSubject = 4,
+        SearchAgainstFrom = 8,
+        SearchAgainstBcc = 16
     };
 
     Q_ENUMS(SearchOption)
@@ -71,6 +72,7 @@ private:
     KComboBox *mStatusFilterCombo;
     QToolButton *mOpenFullSearchButton;
     QToolButton *mLockSearch;
+    QPushButton *mSearchAgainstBody;
     QPushButton *mSearchAgainstSubject;
     QPushButton *mSearchAgainstFrom;
     QPushButton *mSearchAgainstBcc;

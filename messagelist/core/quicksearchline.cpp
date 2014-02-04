@@ -106,6 +106,11 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Filter message by:"));
     hbox->addWidget(lab);
 
+    mSearchAgainstBody = new QPushButton(i18n("Body"));
+    mSearchAgainstBody->setCheckable(true);
+    connect(mSearchAgainstBody, SIGNAL(clicked(bool)), this, SLOT(slotSearchOptionChanged()));
+    hbox->addWidget(mSearchAgainstBody);
+
     mSearchAgainstSubject = new QPushButton(i18n("Subject"));
     mSearchAgainstSubject->setCheckable(true);
     connect(mSearchAgainstSubject, SIGNAL(clicked(bool)), this, SLOT(slotSearchOptionChanged()));
@@ -149,6 +154,9 @@ void QuickSearchLine::slotClearButtonClicked()
 void QuickSearchLine::slotSearchOptionChanged()
 {
     mSearchOptions = SearchNoOption;
+    if (mSearchAgainstBody->isChecked()) {
+        mSearchOptions |= SearchAgainstBody;
+    }
     if (mSearchAgainstSubject->isChecked()) {
         mSearchOptions |= SearchAgainstSubject;
     }
