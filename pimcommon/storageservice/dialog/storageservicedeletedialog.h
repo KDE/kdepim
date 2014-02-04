@@ -36,6 +36,10 @@ public:
     explicit StorageServiceDeleteDialog(PimCommon::StorageServiceAbstract *storage, QWidget *parent=0);
     ~StorageServiceDeleteDialog();
 
+Q_SIGNALS:
+    void deleteFileDone(const QString &, const QString &);
+    void deleteFolderDone(const QString &, const QString &);
+
 private slots:
     void slotItemActivated(QTreeWidgetItem *item, int column);
 
@@ -43,8 +47,12 @@ private slots:
     void slotListFolderDone(const QString &serviceName, const QString &data);
     void slotActionFailed(const QString &serviceName, const QString &data);
     void slotItemDoubleClicked(QTreeWidgetItem *item, int);
+    void slotDelete();
 
 private:
+    void deleteFile(StorageServiceTreeWidgetItem *storageServiceItem);
+    void deleteFolder(StorageServiceTreeWidgetItem *storageServiceItem);
+
     void readConfig();
     void writeConfig();
     StorageServiceTreeWidget *mTreeWidget;

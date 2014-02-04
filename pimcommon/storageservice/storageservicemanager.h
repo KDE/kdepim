@@ -40,7 +40,6 @@ public:
 #ifdef KDEPIM_STORAGESERVICE_GDRIVE
         GDrive,
 #endif
-
         //Last element
         EndListService
     };
@@ -69,6 +68,7 @@ public:
 
 Q_SIGNALS:
     void servicesChanged();
+    void deleteFolderDone(const QString &serviceName, const QString &filename);
     void uploadFileDone(const QString &serviceName, const QString &filename);
     void uploadDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total);
     void uploadFileFailed(const QString &serviceName, const QString &filename);
@@ -83,7 +83,7 @@ Q_SIGNALS:
 private Q_SLOTS:
     void slotAccountInfo();
     void slotShareFile();
-    void slotDeleteFile();
+    void slotDeleteFileFolder();
     void slotDownloadFile();
 private:
     void defaultConnect(StorageServiceAbstract *service);

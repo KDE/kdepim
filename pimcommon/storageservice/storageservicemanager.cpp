@@ -21,6 +21,7 @@
 #include "storageservice/utils/storageserviceutils.h"
 
 #include "storageservice/dialog/storageservicedownloaddialog.h"
+#include "storageservice/dialog/storageservicedeletedialog.h"
 #include "storageservice/dialog/storageservicechecknamedialog.h"
 
 #include "dropbox/dropboxstorageservice.h"
@@ -119,7 +120,6 @@ KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageService
                 switch(mainCapability) {
                 case PimCommon::StorageServiceAbstract::NoCapability:
                 case PimCommon::StorageServiceAbstract::CreateFolderCapability:
-                case PimCommon::StorageServiceAbstract::DeleteFolderCapability:
                 case PimCommon::StorageServiceAbstract::ListFolderCapability:
                 case PimCommon::StorageServiceAbstract::RenameFolderCapability:
                 case PimCommon::StorageServiceAbstract::RenameFileCapabilitity:
@@ -128,6 +128,10 @@ KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageService
                 case PimCommon::StorageServiceAbstract::CopyFileCapability:
                 case PimCommon::StorageServiceAbstract::CopyFolderCapability:
                     qDebug()<<" not implemented ";
+                    break;
+                case PimCommon::StorageServiceAbstract::DeleteFolderCapability:
+                    menuService->setText(i18n("Delete Folder..."));
+                    connect(act, SIGNAL(triggered()), this, SLOT(slotDeleteFileFolder()));
                     break;
                 case PimCommon::StorageServiceAbstract::DownloadFileCapability:
                     menuService->setText(i18n("Download File..."));
@@ -143,7 +147,7 @@ KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageService
                     break;
                 case PimCommon::StorageServiceAbstract::DeleteFileCapability:
                     menuService->setText(i18n("Delete File..."));
-                    connect(act, SIGNAL(triggered()), this, SLOT(slotDeleteFile()));
+                    connect(act, SIGNAL(triggered()), this, SLOT(slotDeleteFileFolder()));
                     break;
                 case PimCommon::StorageServiceAbstract::AccountInfoCapability:
                     menuService->setText(i18n("Account Info..."));
@@ -210,9 +214,7 @@ void StorageServiceManager::slotDownloadFile()
         if (mListService.contains(type)) {
             StorageServiceAbstract *service = mListService.value(type);
             QPointer<PimCommon::StorageServiceDownloadDialog> dlg = new PimCommon::StorageServiceDownloadDialog(service, 0);
-            if (dlg->exec()) {
-                //TODO ?
-            }
+            dlg->exec();
             delete dlg;
         }
     }
@@ -225,19 +227,19 @@ void StorageServiceManager::defaultConnect(StorageServiceAbstract *service)
     connect(service,SIGNAL(authenticationFailed(QString,QString)), this, SIGNAL(authenticationFailed(QString,QString)), Qt::UniqueConnection);
 }
 
-void StorageServiceManager::slotDeleteFile()
+void StorageServiceManager::slotDeleteFileFolder()
 {
     QAction *act = qobject_cast< QAction* >( sender() );
     if ( act ) {
         const QString type = act->data().toString();
         if (mListService.contains(type)) {
             StorageServiceAbstract *service = mListService.value(type);
-            const QString fileName = KInputDialog::getText(i18n("Delete File"), i18n("Filename:"));
-            if (!fileName.isEmpty()) {
-                defaultConnect(service);
-                connect(service,SIGNAL(deleteFileDone(QString,QString)), this, SIGNAL(deleteFileDone(QString,QString)), Qt::UniqueConnection);
-                service->deleteFile(fileName);
-            }
+            QPointer<StorageServiceDeleteDialog> dlg = new StorageServiceDeleteDialog(service);
+            defaultConnect(service);
+            connect(dlg,SIGNAL(deleteFileDone(QString,QString)), this, SIGNAL(deleteFileDone(QString,QString)));
+            connect(dlg,SIGNAL(deleteFolderDone(QString,QString)), this, SIGNAL(deleteFolderDone(QString,QString)));
+            dlg->exec();
+            delete dlg;
         }
     }
 }

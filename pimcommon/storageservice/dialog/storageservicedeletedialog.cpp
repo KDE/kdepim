@@ -67,9 +67,11 @@ StorageServiceDeleteDialog::StorageServiceDeleteDialog(PimCommon::StorageService
     w->setLayout(vbox);
     setMainWidget(w);
     enableButton(User1, false);
-    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotDownloadFile()));
+    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotDelete()));
     connect(mStorage, SIGNAL(listFolderDone(QString,QString)), this, SLOT(slotListFolderDone(QString,QString)));
     connect(mStorage, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
+    connect(mStorage,SIGNAL(deleteFileDone(QString,QString)), this, SIGNAL(deleteFileFolderDone(QString,QString)), Qt::UniqueConnection);
+    connect(mStorage,SIGNAL(deleteFolderDone(QString,QString)), this, SIGNAL(deleteFolderDone(QString,QString)), Qt::UniqueConnection);
     connect(mTreeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(slotItemActivated(QTreeWidgetItem*,int)));
     mStorageServiceProgressIndicator->startAnimation();
     mTreeWidget->setEnabled(false);
@@ -132,7 +134,31 @@ void StorageServiceDeleteDialog::slotItemDoubleClicked(QTreeWidgetItem *item, in
     StorageServiceTreeWidgetItem *storageServiceItem = dynamic_cast<StorageServiceTreeWidgetItem*>(item);
     if (storageServiceItem) {
         if (mTreeWidget->type(storageServiceItem) == StorageServiceTreeWidget::File) {
-            //downloadItem(storageServiceItem);
+            deleteFile(storageServiceItem);
+        } else if (mTreeWidget->type(storageServiceItem) == StorageServiceTreeWidget::Folder) {
+            deleteFolder(storageServiceItem);
+        }
+    }
+}
+
+void StorageServiceDeleteDialog::deleteFile(StorageServiceTreeWidgetItem *storageServiceItem)
+{
+    mStorage->deleteFile(mTreeWidget->itemIdentifier(storageServiceItem));
+}
+
+void StorageServiceDeleteDialog::deleteFolder(StorageServiceTreeWidgetItem *storageServiceItem)
+{
+    mStorage->deleteFolder(mTreeWidget->itemIdentifier(storageServiceItem));
+}
+
+void StorageServiceDeleteDialog::slotDelete()
+{
+    StorageServiceTreeWidgetItem *storageServiceItem = dynamic_cast<StorageServiceTreeWidgetItem*>(mTreeWidget->currentItem());
+    if (storageServiceItem) {
+        if (mTreeWidget->type(storageServiceItem) == StorageServiceTreeWidget::File) {
+            deleteFile(storageServiceItem);
+        } else if (mTreeWidget->type(storageServiceItem) == StorageServiceTreeWidget::Folder) {
+            deleteFolder(storageServiceItem);
         }
     }
 }
