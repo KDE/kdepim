@@ -90,6 +90,7 @@ StorageServiceDownloadDialog::~StorageServiceDownloadDialog()
 
 void StorageServiceDownloadDialog::slotUploadDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total)
 {
+    Q_UNUSED(serviceName);
     mProgressWidget->setProgressValue(done, total);
 }
 
