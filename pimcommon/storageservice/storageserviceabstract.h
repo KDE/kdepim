@@ -131,6 +131,7 @@ public:
 
     virtual QRegExp disallowedSymbols() const;
     virtual QString disallowedSymbolsStr() const;
+    virtual qlonglong maximumUploadFileSize() const;
 
     void cancelUploadFile();
     void cancelDownloadFile();
