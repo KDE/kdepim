@@ -320,18 +320,20 @@ QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
     Q_FOREACH(const QWebdavUrlInfo &info, lst) {
         if (QUrl(info.name()).path() == currentFolder)
           continue;
+        StorageServiceTreeWidgetItem *item = 0;
         if (info.isDir()) {
             QFileInfo folderInfo(info.name());
-            StorageServiceTreeWidgetItem *item = listWidget->addFolder(folderInfo.dir().dirName(), info.name());
+            item = listWidget->addFolder(folderInfo.dir().dirName(), info.name());
             item->setDateCreated(info.createdAt());
             item->setLastModification(info.lastModified());
         } else {
             const QString mimetype = info.mimeType();
             QFileInfo fileInfo(info.name());
-            StorageServiceTreeWidgetItem *item = listWidget->addFile(fileInfo.fileName(), info.name(), mimetype);
+            item = listWidget->addFile(fileInfo.fileName(), info.name(), mimetype);
             item->setDateCreated(info.createdAt());
             item->setLastModification(info.lastModified());
         }
+        //TODO item->setStoreInfo(QVariantMap(info.properties()));
     }
     QString parentFolder;
     if (!currentFolder.isEmpty()) {
