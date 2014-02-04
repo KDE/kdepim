@@ -48,9 +48,10 @@ public:
     explicit StorageServiceManager(QObject *parent=0);
     ~StorageServiceManager();
 
+    KActionMenu *menuShareLinkServices(QWidget *parent) const;
     KActionMenu *menuDownloadServices(QWidget *parent) const;
     KActionMenu *menuUploadServices(QWidget *parent) const;
-    KActionMenu *menuWithCapability(PimCommon::StorageServiceAbstract::Capability capability, QWidget *parent) const;
+    KActionMenu *menuWithCapability(PimCommon::StorageServiceAbstract::Capability mainCapability, const QList<PimCommon::StorageServiceAbstract::Capability> &lstCapability, QWidget *parent) const;
 
 
     QMap<QString, StorageServiceAbstract *> listService() const;

@@ -18,6 +18,7 @@
 #include "storageservicemanager.h"
 
 #include "settings/pimcommonsettings.h"
+#include "storageservice/utils/storageserviceutils.h"
 
 #include "storageservice/dialog/storageservicedownloaddialog.h"
 #include "storageservice/dialog/storageservicechecknamedialog.h"
@@ -75,17 +76,29 @@ QString StorageServiceManager::defaultUploadFolder() const
     return mDefaultUploadFolder;
 }
 
+KActionMenu *StorageServiceManager::menuShareLinkServices(QWidget *parent) const
+{
+    QList<PimCommon::StorageServiceAbstract::Capability> lstCapability;
+    lstCapability << PimCommon::StorageServiceAbstract::ShareLinkCapability;
+    lstCapability << PimCommon::StorageServiceAbstract::UploadFileCapability;
+    return menuWithCapability(PimCommon::StorageServiceAbstract::ShareLinkCapability, lstCapability, parent);
+}
+
 KActionMenu *StorageServiceManager::menuUploadServices(QWidget *parent) const
 {
-    return menuWithCapability(PimCommon::StorageServiceAbstract::ShareLinkCapability, parent);
+    QList<PimCommon::StorageServiceAbstract::Capability> lstCapability;
+    lstCapability << PimCommon::StorageServiceAbstract::UploadFileCapability;
+    return menuWithCapability(PimCommon::StorageServiceAbstract::UploadFileCapability, lstCapability, parent);
 }
 
 KActionMenu *StorageServiceManager::menuDownloadServices(QWidget *parent) const
 {
-    return menuWithCapability(PimCommon::StorageServiceAbstract::DownloadFileCapability, parent);
+    QList<PimCommon::StorageServiceAbstract::Capability> lstCapability;
+    lstCapability << PimCommon::StorageServiceAbstract::DownloadFileCapability;
+    return menuWithCapability(PimCommon::StorageServiceAbstract::DownloadFileCapability, lstCapability, parent);
 }
-//TODO add capabilities
-KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageServiceAbstract::Capability capability, QWidget *parent) const
+
+KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageServiceAbstract::Capability mainCapability, const QList<PimCommon::StorageServiceAbstract::Capability> &lstCapability, QWidget *parent) const
 {
     KActionMenu *menuService = new KActionMenu(i18n("Storage service"), parent);
     if (mListService.isEmpty()) {
@@ -97,13 +110,13 @@ KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageService
         while (i.hasNext()) {
             i.next();
             //FIXME
-            if (i.value()->capabilities() & capability) {
+            if (PimCommon::StorageServiceUtils::hasExactCapabilities(i.value()->capabilities(), lstCapability)) {
                 QAction *act = new QAction(/*serviceToI18n(*/i.key(), menuService);
                 act->setData(i.key());
                 const KIcon icon = i.value()->icon();
                 if (!icon.isNull())
                     act->setIcon(icon);
-                switch(capability) {
+                switch(mainCapability) {
                 case PimCommon::StorageServiceAbstract::NoCapability:
                 case PimCommon::StorageServiceAbstract::CreateFolderCapability:
                 case PimCommon::StorageServiceAbstract::DeleteFolderCapability:

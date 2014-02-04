@@ -96,7 +96,6 @@ void YouSendItStorageService::slotAuthorizationFailed(const QString &errorMessag
     emitAuthentificationFailder(errorMessage);
 }
 
-
 void YouSendItStorageService::slotAuthorizationDone(const QString &password, const QString &username, const QString &token)
 {
     mUsername = username;

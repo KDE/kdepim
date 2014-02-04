@@ -431,7 +431,7 @@ StorageServiceAbstract::Capabilities BoxStorageService::serviceCapabilities()
 {
     StorageServiceAbstract::Capabilities cap;
     cap |= AccountInfoCapability;
-    cap |= UploadFileCapability;
+    //cap |= UploadFileCapability;
     cap |= DownloadFileCapability;
     cap |= CreateFolderCapability;
     cap |= DeleteFolderCapability;
