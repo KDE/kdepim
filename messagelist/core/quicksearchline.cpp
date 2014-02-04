@@ -32,6 +32,7 @@
 #include <QToolButton>
 #include <QHBoxLayout>
 #include <QPushButton>
+#include <QLabel>
 
 using namespace MessageList::Core;
 QuickSearchLine::QuickSearchLine(QWidget *parent)
@@ -102,6 +103,9 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mExtraOption->hide();
 
     hbox->addStretch(0);
+    QLabel *lab = new QLabel(i18n("Filter message by:"));
+    hbox->addWidget(lab);
+
     mSearchAgainstSubject = new QPushButton(i18n("Subject"));
     mSearchAgainstSubject->setCheckable(true);
     connect(mSearchAgainstSubject, SIGNAL(clicked(bool)), this, SLOT(slotSearchOptionChanged()));
@@ -125,13 +129,20 @@ QuickSearchLine::~QuickSearchLine()
 
 void QuickSearchLine::slotSearchEditTextEdited(const QString &text)
 {
-    //TODO mExtraOption->show();
+#if 0
+    if (text.isEmpty())
+        mExtraOption->hide();
+    else
+        mExtraOption->show();
+#endif
     Q_EMIT searchEditTextEdited(text);
 }
 
 void QuickSearchLine::slotClearButtonClicked()
 {
-    //TODO mExtraOption->hide();
+#if 0
+    mExtraOption->hide();
+#endif
     Q_EMIT clearButtonClicked();
 }
 
