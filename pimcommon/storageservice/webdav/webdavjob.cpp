@@ -37,7 +37,8 @@
 using namespace PimCommon;
 
 WebDavJob::WebDavJob(QObject *parent)
-    : PimCommon::StorageServiceAbstractJob(parent)
+    : PimCommon::StorageServiceAbstractJob(parent),
+      mNbAuthCheck(0)
 {
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
     connect(mNetworkAccessManager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)), SLOT(slotAuthenticationRequired(QNetworkReply*,QAuthenticator*)));
@@ -59,7 +60,7 @@ void WebDavJob::initializeToken(const QString &publicLocation, const QString &se
 
 void WebDavJob::slotAuthenticationRequired(QNetworkReply *,QAuthenticator *auth)
 {
-    if (mUserName.isEmpty() || mPassword.isEmpty()) {
+    if ((mNbAuthCheck > 2) || (mUserName.isEmpty() || mPassword.isEmpty())) {
         QPointer<LoginDialog> dlg = new LoginDialog;
         dlg->setCaption(i18n("WebDav"));
         if (dlg->exec()) {
@@ -67,6 +68,8 @@ void WebDavJob::slotAuthenticationRequired(QNetworkReply *,QAuthenticator *auth)
             mPassword = dlg->password();
             auth->setUser(mUserName);
             auth->setPassword(mPassword);
+            Q_EMIT authorizationDone(mPublicLocation, mServiceLocation, mUserName, mPassword);
+            mNbAuthCheck = -1;
         } else {
             Q_EMIT authorizationFailed(i18n("Authentication Canceled."));
             deleteLater();
@@ -76,6 +79,7 @@ void WebDavJob::slotAuthenticationRequired(QNetworkReply *,QAuthenticator *auth)
         auth->setUser(mUserName);
         auth->setPassword(mPassword);
     }
+    ++mNbAuthCheck;
 }
 
 void WebDavJob::requestTokenAccess()
@@ -490,6 +494,7 @@ void WebDavJob::parseCreateFolder(const QString &data)
 
 void WebDavJob::parseAccountInfo(const QString &data)
 {
+    qDebug()<<" parseAccountInfo "<<data;
     PimCommon::AccountInfo accountInfo;
     QDomDocument dom;
     dom.setContent(data.toLatin1(), true);
