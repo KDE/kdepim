@@ -84,7 +84,7 @@ KActionMenu *StorageServiceManager::menuDownloadServices(QWidget *parent) const
 {
     return menuWithCapability(PimCommon::StorageServiceAbstract::DownloadFileCapability, parent);
 }
-
+//TODO add capabilities
 KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageServiceAbstract::Capability capability, QWidget *parent) const
 {
     KActionMenu *menuService = new KActionMenu(i18n("Storage service"), parent);

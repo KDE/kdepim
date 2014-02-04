@@ -84,6 +84,7 @@ void YouSendItStorageService::storageServiceauthentication()
     YouSendItJob *job = new YouSendItJob(this);
     connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
+    connect(job, SIGNAL(actionFailed(QString)), this, SLOT(slotActionFailed(QString)));
     job->requestTokenAccess();
 }
 

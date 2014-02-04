@@ -66,6 +66,7 @@ void GDriveStorageService::refreshToken()
     job->initializeToken(mAccount);
     connect(job, SIGNAL(authorizationDone(QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
+    connect(job, SIGNAL(actionFailed(QString)), this, SLOT(slotActionFailed(QString)));
     job->refreshToken();
 }
 
