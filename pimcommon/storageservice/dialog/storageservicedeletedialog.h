@@ -49,9 +49,14 @@ private slots:
     void slotItemDoubleClicked(QTreeWidgetItem *item, int);
     void slotDelete();
 
+    void slotDeleteFolderDone(const QString &serviceName, const QString &filename);
+    void slotDeleteFileDone(const QString &serviceName, const QString &filename);
+    void slotRefreshList();
+
 private:
     void deleteFile(StorageServiceTreeWidgetItem *storageServiceItem);
     void deleteFolder(StorageServiceTreeWidgetItem *storageServiceItem);
+
 
     void readConfig();
     void writeConfig();

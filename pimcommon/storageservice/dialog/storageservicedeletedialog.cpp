@@ -33,6 +33,7 @@
 #include <QTreeWidget>
 #include <QFileInfo>
 #include <QDebug>
+#include <QTimer>
 #include <QHeaderView>
 
 using namespace PimCommon;
@@ -70,18 +71,35 @@ StorageServiceDeleteDialog::StorageServiceDeleteDialog(PimCommon::StorageService
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotDelete()));
     connect(mStorage, SIGNAL(listFolderDone(QString,QString)), this, SLOT(slotListFolderDone(QString,QString)));
     connect(mStorage, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
-    connect(mStorage,SIGNAL(deleteFileDone(QString,QString)), this, SIGNAL(deleteFileFolderDone(QString,QString)), Qt::UniqueConnection);
-    connect(mStorage,SIGNAL(deleteFolderDone(QString,QString)), this, SIGNAL(deleteFolderDone(QString,QString)), Qt::UniqueConnection);
+    connect(mStorage,SIGNAL(deleteFileDone(QString,QString)), this, SLOT(slotDeleteFileDone(QString,QString)), Qt::UniqueConnection);
+    connect(mStorage,SIGNAL(deleteFolderDone(QString,QString)), this, SLOT(slotDeleteFolderDone(QString,QString)), Qt::UniqueConnection);
     connect(mTreeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(slotItemActivated(QTreeWidgetItem*,int)));
-    mStorageServiceProgressIndicator->startAnimation();
-    mTreeWidget->setEnabled(false);
-    mTreeWidget->refreshList();
     readConfig();
+    slotRefreshList();
 }
 
 StorageServiceDeleteDialog::~StorageServiceDeleteDialog()
 {
     writeConfig();
+}
+
+void StorageServiceDeleteDialog::slotRefreshList()
+{
+    mStorageServiceProgressIndicator->startAnimation();
+    mTreeWidget->setEnabled(false);
+    mTreeWidget->refreshList();
+}
+
+void StorageServiceDeleteDialog::slotDeleteFolderDone(const QString &serviceName, const QString &filename)
+{
+    Q_EMIT deleteFolderDone(serviceName, filename);
+    QTimer::singleShot(0, this, SLOT(slotRefreshList()));
+}
+
+void StorageServiceDeleteDialog::slotDeleteFileDone(const QString &serviceName, const QString &filename)
+{
+    Q_EMIT deleteFileDone(serviceName, filename);
+    QTimer::singleShot(0, this, SLOT(slotRefreshList()));
 }
 
 void StorageServiceDeleteDialog::slotActionFailed(const QString &serviceName, const QString &data)
@@ -126,7 +144,8 @@ void StorageServiceDeleteDialog::writeConfig()
 
 void StorageServiceDeleteDialog::slotItemActivated(QTreeWidgetItem *item, int)
 {
-    enableButton(User1, (item && (mTreeWidget->type(item) == StorageServiceTreeWidget::File)));
+    const bool canDelete = item && ((mTreeWidget->type(item) == StorageServiceTreeWidget::File) || (mTreeWidget->type(item) == StorageServiceTreeWidget::Folder));
+    enableButton(User1, canDelete);
 }
 
 void StorageServiceDeleteDialog::slotItemDoubleClicked(QTreeWidgetItem *item, int)
