@@ -48,12 +48,14 @@ public:
     void requestTokenAccess();
     void initializeToken(const QString &refreshToken, const QString &token);
     void createServiceFolder();
+
 Q_SIGNALS:
     void authorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);
 
 private slots:
     void slotSendDataFinished(QNetworkReply *reply);
     void slotRedirect(const QUrl &url);
+
 private:
     void parseDeleteFolder(const QString &data);
     void parseAccountInfo(const QString &data);
