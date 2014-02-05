@@ -57,6 +57,7 @@ ConfigureDialog::ConfigureDialog(PimCommon::StorageServiceManager *storageManage
 
     mConfigStorageService = new ConfigureStorageServiceWidget(storageManager);
     mConfigStorageService->setAttribute( Qt::WA_DeleteOnClose );
+    connect(mConfigStorageService, SIGNAL(changed()), this, SLOT(settingsChangedSlot()));
 
     addPage( generalSettingsDlg, i18nc( "Configure Page", "General" ), QLatin1String("configure") );
     addPage( blogSettingsDlg, i18nc( "Configure Page", "Blogs" ), QLatin1String("document-properties"));
