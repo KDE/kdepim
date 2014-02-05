@@ -31,18 +31,26 @@
 #include <KApplication>
 #include <KActionCollection>
 #include <KAction>
+#include <KStatusBar>
 
 #include <QPointer>
+#include <QLabel>
 
 SieveEditorMainWindow::SieveEditorMainWindow()
-    : KXmlGuiWindow()
+    : KXmlGuiWindow(),
+      mNetworkIsDown(false)
 {    
     setupActions();
     setupGUI();
     readConfig();
+    initStatusBar();
     mMainWidget = new SieveEditorMainWidget;
     connect(mMainWidget, SIGNAL(updateButtons(bool,bool,bool,bool)), this, SLOT(slotUpdateButtons(bool,bool,bool,bool)));
     setCentralWidget(mMainWidget);
+    connect( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
+              this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
+    const Solid::Networking::Status status = Solid::Networking::status();
+    slotSystemNetworkStatusChanged(status);
 }
 
 SieveEditorMainWindow::~SieveEditorMainWindow()
@@ -51,6 +59,24 @@ SieveEditorMainWindow::~SieveEditorMainWindow()
 
     KConfigGroup group = config->group( QLatin1String("SieveEditorMainWindow") );
     group.writeEntry( "Size", size() );
+}
+
+void SieveEditorMainWindow::initStatusBar()
+{
+    mStatusBarInfo = new QLabel;
+    statusBar()->insertWidget(0, mStatusBarInfo, 4);
+}
+
+void SieveEditorMainWindow::slotSystemNetworkStatusChanged(Solid::Networking::Status status)
+{
+    if ( status == Solid::Networking::Connected || status == Solid::Networking::Unknown) {
+        mNetworkIsDown = false;
+        mStatusBarInfo->setText(i18n("Network is Up."));
+    } else {
+        mNetworkIsDown = true;
+        mStatusBarInfo->setText(i18n("Network is Down."));
+    }
+    mMainWidget->setEnabled(!mNetworkIsDown);
 }
 
 void SieveEditorMainWindow::slotUpdateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction)

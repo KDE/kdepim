@@ -22,9 +22,11 @@
 #define SIEVEEDITORMAINWINDOW_H
 
 #include <KXmlGuiWindow>
+#include <Solid/Networking>
 
 class KAction;
 class SieveEditorMainWidget;
+class QLabel;
 class SieveEditorMainWindow : public KXmlGuiWindow
 {
     Q_OBJECT
@@ -38,13 +40,14 @@ private slots:
     void slotAddServerSieve();
     void slotCreateNewScript();
     void slotDeleteScript();
-    void slotUpdateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);    
+    void slotUpdateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
     void slotEditScript();
     void slotDesactivateScript();
     void slotRefreshList();
     void slotSaveScript();
-
+    void slotSystemNetworkStatusChanged(Solid::Networking::Status status);
 private:
+    void initStatusBar();
     void readConfig();
     void setupActions();
     SieveEditorMainWidget *mMainWidget;
@@ -54,6 +57,8 @@ private:
     KAction *mDesactivateScript;
     KAction *mRefreshList;
     KAction *mSaveScript;
+    QLabel *mStatusBarInfo;
+    bool mNetworkIsDown;
 };
 
 #endif // SIEVEEDITORMAINWINDOW_H
