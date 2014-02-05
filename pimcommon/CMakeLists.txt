@@ -34,7 +34,6 @@ set(libpimcommon_storageservice_SRCS
   storageservice/storageserviceabstract.cpp
   storageservice/storageservicemanager.cpp
 
-  storageservice/job/oauth2job.cpp
   storageservice/job/storageserviceabstractjob.cpp
 
   storageservice/storageservicejobconfig.cpp

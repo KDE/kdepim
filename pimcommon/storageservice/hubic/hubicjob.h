@@ -19,18 +19,78 @@
 #define HUBICJOB_H
 
 #include <QObject>
-#include "storageservice/job/oauth2job.h"
+#include "storageservice/job/storageserviceabstractjob.h"
 namespace PimCommon {
-class HubicJob : public PimCommon::OAuth2Job
+class StorageAuthViewDialog;
+class HubicJob : public PimCommon::StorageServiceAbstractJob
 {
     Q_OBJECT
 public:
     explicit HubicJob(QObject *parent=0);
     ~HubicJob();
 
+    void deleteFile(const QString &filename);
+    void deleteFolder(const QString &foldername);
+
+    void renameFolder(const QString &source, const QString &destination);
+    void renameFile(const QString &oldName, const QString &newName);
+    void moveFolder(const QString &source, const QString &destination);
+    void moveFile(const QString &source, const QString &destination);
+    QNetworkReply *uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination);
+    void listFolder(const QString &folder);
+    void accountInfo();
+    void createFolder(const QString &foldername, const QString &destination);
+    void shareLink(const QString &root, const QString &fileId);
+    void copyFile(const QString &source, const QString &destination);
+    void copyFolder(const QString &source, const QString &destination);
     void refreshToken();
+    QNetworkReply *downloadFile(const QString &name, const QString &fileId, const QString &destination);
+    void requestTokenAccess();
+    void initializeToken(const QString &refreshToken, const QString &token);
+    void createServiceFolder();
+Q_SIGNALS:
+    void authorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);
+
+private slots:
+    void slotSendDataFinished(QNetworkReply *reply);
+    void slotRedirect(const QUrl &url);
 private:
+    void parseDeleteFolder(const QString &data);
     void parseAccountInfo(const QString &data);
+    void parseDeleteFile(const QString &data);
+    void parseCreateServiceFolder(const QString &data);
+    void parseListFolder(const QString &data);
+    void parseCreateFolder(const QString &data);
+    void parseUploadFile(const QString &data);
+    void parseCopyFile(const QString &data);
+    void parseCopyFolder(const QString &data);
+    void parseRenameFile(const QString &data);
+    void parseRenameFolder(const QString &data);
+    void parseMoveFolder(const QString &data);
+    void parseMoveFile(const QString &data);
+    void parseShareLink(const QString &data);
+    void parseDownloadFile(const QString &data);
+    void getTokenAccess(const QString &authorizeCode);
+    void parseRedirectUrl(const QUrl &url);
+    void parseAccessToken(const QString &data);
+
+    QString parseNameInfo(const QString &data);
+
+    QString mServiceUrl;
+    QUrl mAuthUrl;
+    QString mClientId;
+    QString mClientSecret;
+    QString mRedirectUri;
+    QString mRefreshToken;
+    QString mToken;
+    QString mScope;
+    QString mAuthorizePath;
+    QString mPathToken;
+    QString mFolderInfoPath;
+    QString mCurrentAccountInfoPath;
+    QString mApiUrl;
+    QString mFileInfoPath;
+    QPointer<PimCommon::StorageAuthViewDialog> mAuthDialog;
 };
 }
 

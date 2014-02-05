@@ -18,18 +18,23 @@
 #include "boxjob.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 #include "pimcommon/storageservice/storageservicejobconfig.h"
-
+#include "storageservice/authdialog/storageauthviewdialog.h"
 
 #include <qjson/parser.h>
+
+#include <KLocalizedString>
 
 #include <QDebug>
 #include <QFile>
 
+
 using namespace PimCommon;
 
 BoxJob::BoxJob(QObject *parent)
-    : PimCommon::OAuth2Job(parent)
+    : PimCommon::StorageServiceAbstractJob(parent)
 {
+    mRedirectUri = PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl();
+    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
     mClientId = PimCommon::StorageServiceJobConfig::self()->boxClientId();
     mClientSecret = PimCommon::StorageServiceJobConfig::self()->boxClientSecret();
     mRedirectUri = PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl();
@@ -46,6 +51,223 @@ BoxJob::~BoxJob()
 {
 
 }
+
+void BoxJob::initializeToken(const QString &refreshToken, const QString &token)
+{
+    mError = false;
+    mRefreshToken = refreshToken;
+    mToken = token;
+}
+
+void BoxJob::createServiceFolder()
+{
+    mActionType = PimCommon::StorageServiceAbstract::CreateServiceFolder;
+    mError = false;
+    //TODO
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    qDebug()<<" not implemented";
+    deleteLater();
+}
+
+void BoxJob::requestTokenAccess()
+{
+    mError = false;
+    mActionType = PimCommon::StorageServiceAbstract::RequestToken;
+    QUrl url(mServiceUrl + mAuthorizePath );
+    url.addQueryItem(QLatin1String("response_type"), QLatin1String("code"));
+    url.addQueryItem(QLatin1String("client_id"), mClientId);
+    url.addQueryItem(QLatin1String("redirect_uri"), mRedirectUri);
+    if (!mScope.isEmpty())
+        url.addQueryItem(QLatin1String("scope"),mScope);
+    mAuthUrl = url;
+    qDebug()<<" url"<<url;
+    delete mAuthDialog;
+    mAuthDialog = new PimCommon::StorageAuthViewDialog;
+    connect(mAuthDialog, SIGNAL(urlChanged(QUrl)), this, SLOT(slotRedirect(QUrl)));
+    mAuthDialog->setUrl(url);
+    if (mAuthDialog->exec()) {
+        delete mAuthDialog;
+    } else {
+        Q_EMIT authorizationFailed(i18n("Authorization canceled."));
+        delete mAuthDialog;
+        deleteLater();
+    }
+}
+
+void BoxJob::slotRedirect(const QUrl &url)
+{
+    if (url != mAuthUrl) {
+        //qDebug()<<" Redirect !"<<url;
+        mAuthDialog->accept();
+        parseRedirectUrl(url);
+    }
+}
+
+void BoxJob::parseRedirectUrl(const QUrl &url)
+{
+    const QList<QPair<QString, QString> > listQuery = url.queryItems();
+    //qDebug()<< "listQuery "<<listQuery;
+
+    QString authorizeCode;
+    QString errorStr;
+    QString errorDescription;
+    for (int i = 0; i < listQuery.size(); ++i) {
+        const QPair<QString, QString> item = listQuery.at(i);
+        if (item.first == QLatin1String("code")) {
+            authorizeCode = item.second;
+            break;
+        } else if (item.first == QLatin1String("error")) {
+            errorStr = item.second;
+        } else if (item.first == QLatin1String("error_description")) {
+            errorDescription = item.second;
+        }
+    }
+    if (!authorizeCode.isEmpty()) {
+        getTokenAccess(authorizeCode);
+    } else {
+        Q_EMIT authorizationFailed(errorStr + QLatin1Char(' ') + errorDescription);
+        deleteLater();
+    }
+}
+
+void BoxJob::getTokenAccess(const QString &authorizeCode)
+{
+    mActionType = PimCommon::StorageServiceAbstract::AccessToken;
+    mError = false;
+    QNetworkRequest request(QUrl(mServiceUrl + mPathToken));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    QUrl postData;
+    postData.addQueryItem(QLatin1String("code"), authorizeCode);
+    postData.addQueryItem(QLatin1String("redirect_uri"), mRedirectUri);
+    postData.addQueryItem(QLatin1String("grant_type"), QLatin1String("authorization_code"));
+    postData.addQueryItem(QLatin1String("client_id"), mClientId);
+    postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
+    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+}
+
+
+void BoxJob::slotSendDataFinished(QNetworkReply *reply)
+{
+    const QString data = QString::fromUtf8(reply->readAll());
+    reply->deleteLater();
+    if (mError) {
+        qDebug()<<" error type "<<data;
+        QJson::Parser parser;
+        bool ok;
+
+        QMap<QString, QVariant> error = parser.parse(data.toUtf8(), &ok).toMap();
+        qDebug()<<" error "<<error;
+        if (error.contains(QLatin1String("message"))) {
+            const QString errorStr = error.value(QLatin1String("message")).toString();
+            switch(mActionType) {
+            case PimCommon::StorageServiceAbstract::NoneAction:
+                deleteLater();
+                break;
+            case PimCommon::StorageServiceAbstract::RequestToken:
+                Q_EMIT authorizationFailed(errorStr);
+                deleteLater();
+                break;
+            case PimCommon::StorageServiceAbstract::AccessToken:
+                Q_EMIT authorizationFailed(errorStr);
+                deleteLater();
+                break;
+            case PimCommon::StorageServiceAbstract::UploadFile:
+                Q_EMIT uploadFileFailed(errorStr);
+                errorMessage(mActionType, errorStr);
+                deleteLater();
+                break;
+            case PimCommon::StorageServiceAbstract::DownLoadFile:
+                Q_EMIT downLoadFileFailed(errorStr);
+                errorMessage(mActionType, errorStr);
+                deleteLater();
+                break;
+            case PimCommon::StorageServiceAbstract::DeleteFile:
+            case PimCommon::StorageServiceAbstract::CreateFolder:
+            case PimCommon::StorageServiceAbstract::AccountInfo:
+            case PimCommon::StorageServiceAbstract::ListFolder:
+            case PimCommon::StorageServiceAbstract::CreateServiceFolder:
+            case PimCommon::StorageServiceAbstract::DeleteFolder:
+            case PimCommon::StorageServiceAbstract::RenameFolder:
+            case PimCommon::StorageServiceAbstract::RenameFile:
+            case PimCommon::StorageServiceAbstract::MoveFolder:
+            case PimCommon::StorageServiceAbstract::MoveFile:
+            case PimCommon::StorageServiceAbstract::CopyFile:
+            case PimCommon::StorageServiceAbstract::CopyFolder:
+            case PimCommon::StorageServiceAbstract::ShareLink:
+                errorMessage(mActionType, errorStr);
+                deleteLater();
+                break;
+            }
+        } else {
+            if (!mErrorMsg.isEmpty()) {
+                errorMessage(mActionType, mErrorMsg);
+            } else {
+                errorMessage(mActionType, i18n("Unknown Error \"%1\"", data));
+            }
+            deleteLater();
+        }
+        return;
+    }
+    qDebug()<<" data: "<<data;
+    switch(mActionType) {
+    case PimCommon::StorageServiceAbstract::NoneAction:
+        deleteLater();
+        break;
+    case PimCommon::StorageServiceAbstract::RequestToken:
+        deleteLater();
+        break;
+    case PimCommon::StorageServiceAbstract::AccessToken:
+        parseAccessToken(data);
+        break;
+    case PimCommon::StorageServiceAbstract::UploadFile:
+        parseUploadFile(data);
+        break;
+    case PimCommon::StorageServiceAbstract::CreateFolder:
+        parseCreateFolder(data);
+        break;
+    case PimCommon::StorageServiceAbstract::AccountInfo:
+        parseAccountInfo(data);
+        break;
+    case PimCommon::StorageServiceAbstract::ListFolder:
+        parseListFolder(data);
+        break;
+    case PimCommon::StorageServiceAbstract::CreateServiceFolder:
+        parseCreateServiceFolder(data);
+        break;
+    case PimCommon::StorageServiceAbstract::DeleteFile:
+        parseDeleteFile(data);
+        break;
+    case PimCommon::StorageServiceAbstract::DeleteFolder:
+        parseDeleteFolder(data);
+        break;
+    case PimCommon::StorageServiceAbstract::CopyFile:
+        parseCopyFile(data);
+        break;
+    case PimCommon::StorageServiceAbstract::CopyFolder:
+        parseCopyFolder(data);
+        break;
+    case PimCommon::StorageServiceAbstract::RenameFile:
+        parseRenameFile(data);
+        break;
+    case PimCommon::StorageServiceAbstract::RenameFolder:
+        parseRenameFolder(data);
+        break;
+    case PimCommon::StorageServiceAbstract::MoveFolder:
+        parseMoveFolder(data);
+        break;
+    case PimCommon::StorageServiceAbstract::MoveFile:
+        parseMoveFile(data);
+        break;
+    case PimCommon::StorageServiceAbstract::ShareLink:
+        parseShareLink(data);
+        break;
+    case PimCommon::StorageServiceAbstract::DownLoadFile:
+        parseDownloadFile(data);
+        break;
+    }
+}
+
 
 void BoxJob::parseAccountInfo(const QString &data)
 {
@@ -450,4 +672,26 @@ QNetworkReply * BoxJob::downloadFile(const QString &name, const QString &fileId,
         delete mDownloadFile;
     }
     return 0;
+}
+
+void BoxJob::parseAccessToken(const QString &data)
+{
+    QJson::Parser parser;
+    bool ok;
+
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info"<<info;
+    if (info.contains(QLatin1String("refresh_token"))) {
+        mRefreshToken = info.value(QLatin1String("refresh_token")).toString();
+    }
+    if (info.contains(QLatin1String("access_token"))) {
+        mToken = info.value(QLatin1String("access_token")).toString();
+    }
+    qint64 expireInTime = 0;
+    if (info.contains(QLatin1String("expires_in"))) {
+        expireInTime = info.value(QLatin1String("expires_in")).toLongLong();
+    }
+    qDebug()<<" parseAccessToken";
+    Q_EMIT authorizationDone(mRefreshToken, mToken, expireInTime);
+    deleteLater();
 }

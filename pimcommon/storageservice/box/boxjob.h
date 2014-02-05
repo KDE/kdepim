@@ -19,9 +19,10 @@
 #define BoxJob_H
 
 #include <QObject>
-#include "storageservice/job/oauth2job.h"
+#include "storageservice/job/storageserviceabstractjob.h"
 namespace PimCommon {
-class BoxJob : public PimCommon::OAuth2Job
+class StorageAuthViewDialog;
+class BoxJob : public PimCommon::StorageServiceAbstractJob
 {
     Q_OBJECT
 public:
@@ -44,7 +45,15 @@ public:
     void copyFolder(const QString &source, const QString &destination);
     void refreshToken();
     QNetworkReply *downloadFile(const QString &name, const QString &fileId, const QString &destination);
+    void requestTokenAccess();
+    void initializeToken(const QString &refreshToken, const QString &token);
+    void createServiceFolder();
+Q_SIGNALS:
+    void authorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);
 
+private slots:
+    void slotSendDataFinished(QNetworkReply *reply);
+    void slotRedirect(const QUrl &url);
 private:
     void parseDeleteFolder(const QString &data);
     void parseAccountInfo(const QString &data);
@@ -61,8 +70,27 @@ private:
     void parseMoveFile(const QString &data);
     void parseShareLink(const QString &data);
     void parseDownloadFile(const QString &data);
+    void getTokenAccess(const QString &authorizeCode);
+    void parseRedirectUrl(const QUrl &url);
+    void parseAccessToken(const QString &data);
 
     QString parseNameInfo(const QString &data);
+
+    QString mServiceUrl;
+    QUrl mAuthUrl;
+    QString mClientId;
+    QString mClientSecret;
+    QString mRedirectUri;
+    QString mRefreshToken;
+    QString mToken;
+    QString mScope;
+    QString mAuthorizePath;
+    QString mPathToken;
+    QString mFolderInfoPath;
+    QString mCurrentAccountInfoPath;
+    QString mApiUrl;
+    QString mFileInfoPath;
+    QPointer<PimCommon::StorageAuthViewDialog> mAuthDialog;
 };
 }
 
