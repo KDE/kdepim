@@ -161,7 +161,7 @@ void StorageServicePage::slotUploadFileDone(const QString &serviceName, const QS
         mProgressWidget->reset();
         mProgressWidget->hide();
         updateList(serviceName);
-        KMessageBox::information(this, i18n("%1 was correctly uploaded", i18n("Upload File"), fileName));
+        KMessageBox::information(this, i18n("%1 was correctly uploaded",fileName), i18n("Upload File"));
     }
 }
 
