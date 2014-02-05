@@ -26,6 +26,7 @@
 #include <KSharedConfig>
 #include <KMessageBox>
 #include <KFileDialog>
+#include <KMenu>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -35,6 +36,21 @@
 #include <QHeaderView>
 
 using namespace PimCommon;
+
+
+StorageServiceDownloadTreeWidget::StorageServiceDownloadTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
+    : PimCommon::StorageServiceTreeWidget(storageService, parent)
+{
+}
+
+void StorageServiceDownloadTreeWidget::createMenuActions(KMenu *menu)
+{
+    StorageServiceTreeWidget::createMenuActions(menu);
+    const PimCommon::StorageServiceTreeWidget::ItemType type = StorageServiceTreeWidget::itemTypeSelected();
+    if (type == StorageServiceTreeWidget::File)
+        menu->addAction(i18n("Download File"), this, SIGNAL(downloadFile()));
+}
+
 
 StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageServiceAbstract *storage, QWidget *parent)
     : KDialog(parent),
@@ -58,7 +74,9 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
     mLabelProgressIncator = new QLabel;
     hbox->addWidget(mLabelProgressIncator);
     hbox->setAlignment(mLabelProgressIncator, Qt::AlignLeft);
-    mTreeWidget = new StorageServiceTreeWidget(storage);
+    mTreeWidget = new StorageServiceDownloadTreeWidget(storage);
+    connect(mTreeWidget, SIGNAL(downloadFile()), this, SLOT(slotDownloadFile()));
+
 
 
     vbox->addWidget(mTreeWidget);

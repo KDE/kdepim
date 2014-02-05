@@ -20,7 +20,7 @@
 
 
 #include <KDialog>
- #include "pimcommon_export.h"
+#include "pimcommon_export.h"
 #include "storageservice/widgets/storageservicetreewidget.h"
 
 class QTreeWidgetItem;
