@@ -207,7 +207,7 @@ void StorageServiceDownloadDialog::downloadItem(StorageServiceTreeWidgetItem *it
     const QString filename = item->text(0);
     if (!filename.isEmpty()) {
         QString destination = mDefaultDownloadPath;
-        if (destination.isEmpty())
+        if (destination.isEmpty() || !QFileInfo(mDefaultDownloadPath).isDir())
             destination = KFileDialog::getExistingDirectory(KUrl(), this);
         if (destination.isEmpty())
             return;

@@ -199,6 +199,7 @@ void StorageServiceManager::slotShareFile()
                     connect(service,SIGNAL(uploadFileFailed(QString,QString)), this, SIGNAL(uploadFileFailed(QString,QString)), Qt::UniqueConnection);
                     connect(service,SIGNAL(shareLinkDone(QString,QString)), this, SIGNAL(shareLinkDone(QString,QString)), Qt::UniqueConnection);
                     Q_EMIT uploadFileStart(service);
+                    //TODO fix me mDefaultUploadFolder
                     service->uploadFile(fileName, newName, mDefaultUploadFolder);
                 }
             }
@@ -214,6 +215,7 @@ void StorageServiceManager::slotDownloadFile()
         if (mListService.contains(type)) {
             StorageServiceAbstract *service = mListService.value(type);
             QPointer<PimCommon::StorageServiceDownloadDialog> dlg = new PimCommon::StorageServiceDownloadDialog(service, 0);
+            dlg->setDefaultDownloadPath(mDefaultUploadFolder);
             dlg->exec();
             delete dlg;
         }
