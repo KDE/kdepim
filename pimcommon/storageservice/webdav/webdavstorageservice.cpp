@@ -445,7 +445,7 @@ void WebDavStorageService::storageServiceuploadFile(const QString &filename, con
 
 QString WebDavStorageService::description()
 {
-    return i18n("WebDav allows to access to owncloud server.");
+    return i18n("The WebDAV service allows access to any Web application that uses the WebDAV protocol, such as ownCloud, Kolab, and others.");
 }
 
 QUrl WebDavStorageService::serviceUrl()
