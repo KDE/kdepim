@@ -231,9 +231,15 @@ QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &upl
             //TODO fix default value
             const QString defaultDestination = (destination.isEmpty() ? PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
             QUrl destinationFile(mServiceLocation);
-            destinationFile.setPath(defaultDestination + QLatin1Char('/') + uploadAsName);
+            QString destinationToString;
+            if (defaultDestination.isEmpty()) {
+                destinationToString = destinationFile.toString() + QLatin1Char('/') + uploadAsName;
+            } else {
+                destinationFile.setPath(defaultDestination + QLatin1Char('/') + uploadAsName);
+                destinationToString = destinationFile.toString();
+            }
 
-            QNetworkReply *reply = put(destinationFile.toString(),file);
+            QNetworkReply *reply = put(destinationToString,file);
             file->setParent(reply);
             connect(reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
             connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
