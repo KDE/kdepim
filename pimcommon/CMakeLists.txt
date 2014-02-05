@@ -131,14 +131,6 @@ set(libpimcommon_templatewidgets_SRCS
   templatewidgets/templatemanager.cpp
 )
 
-set(libpimcommon_nepomukdebug_SRCS
-  nepomukdebug/searchdebugnepomukshowdialog.cpp
-  nepomukdebug/sparqlsyntaxhighlighter.cpp
-  nepomukdebug/akonadiresultlistview.cpp
-  nepomukdebug/nepomukdebugutils.cpp
-  nepomukdebug/nepomukdebugdialog.cpp
-)
-
 set(libpimcommon_folderdialog_SRCS
   folderdialog/selectmulticollectionwidget.cpp
   folderdialog/selectmulticollectiondialog.cpp
@@ -181,7 +173,6 @@ set(libpimcommon_SRCS
   ${libpimcommon_autocorrection_SRCS}
   ${libpimcommon_translator_SRCS}
   ${libpimcommon_templatewidgets_SRCS}
-  ${libpimcommon_nepomukdebug_SRCS}
   ${libpimcommon_folderdialog_SRCS}
   ${libpimcommon_acl_SRCS}
   ${libpimcommon_sieve_SRCS}
@@ -239,7 +230,6 @@ add_subdirectory(texteditor/richtexteditor/tests)
 add_subdirectory(widgets/tests)
 add_subdirectory(shorturl/tests)
 add_subdirectory(autocorrection/tests)
-add_subdirectory(nepomukdebug/tests)
 add_subdirectory(folderdialog/tests/)
 add_subdirectory(storageservice/dropbox/tests)
 add_subdirectory(storageservice/hubic/tests)
