@@ -23,7 +23,7 @@
 
 #include <QTreeWidget>
 #include "pimcommon_export.h"
-
+class KMenu;
 namespace PimCommon {
 class StorageServiceTreeWidget;
 class StorageServiceAbstract;
@@ -90,14 +90,17 @@ public Q_SLOTS:
     void refreshList();
     void slotListFolderDone(const QString &serviceName, const QString &data);
 
+
 protected:
-    void moveUp();
     QString mCurrentFolder;
     QString mParentFolder;
-    PimCommon::StorageServiceAbstract *mStorageService;
+    PimCommon::StorageServiceAbstract *mStorageService;    
+    virtual void createMenuActions(KMenu *menu);
 
 private Q_SLOTS:
     void slotItemDoubleClicked(QTreeWidgetItem *item, int column);
+    void slotMoveUp();
+    void slotContextMenu(const QPoint &pos);
 };
 }
 

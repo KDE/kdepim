@@ -44,8 +44,6 @@ StorageServiceTreeWidget::StorageServiceTreeWidget(PimCommon::StorageServiceAbst
     mCapabilities = mStorageService->capabilities();
     //Single selection for the moment
     setSelectionMode(QAbstractItemView::SingleSelection);
-    setContextMenuPolicy( Qt::CustomContextMenu );
-    connect( this, SIGNAL(customContextMenuRequested(QPoint)), SLOT(slotContextMenu(QPoint)) );
     connect(this, SIGNAL(fileDoubleClicked()), this, SLOT(slotFileDoubleClicked()));
     connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), this, SLOT(slotGeneralFontChanged()));
     connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), this, SLOT(slotGeneralPaletteChanged()));
@@ -88,16 +86,12 @@ void StorageServiceTreeWidget::setIsInitialized()
     mInitialized = true;
 }
 
-void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
+void StorageServiceTreeWidget::createMenuActions(KMenu *menu)
 {
-    KMenu *menu = new KMenu( this );
     if (mInitialized) {
-        menu->addAction( KIcon(QLatin1String("go-up")),  i18n("Up"), this, SLOT(slotMoveUp()));
+        PimCommon::StorageServiceTreeWidget::createMenuActions(menu);
         const PimCommon::StorageServiceTreeWidget::ItemType type = StorageServiceTreeWidget::itemTypeSelected();
         if (type != StorageServiceTreeWidget::UnKnown) {
-            QAction *act = new QAction(menu);
-            act->setSeparator(true);
-            menu->addAction(act);
             if (type == StorageServiceTreeWidget::File) {
                 if (mCapabilities & PimCommon::StorageServiceAbstract::MoveFileCapability)
                     menu->addAction(KIcon(QLatin1String("edit-cut")), i18n("Cut"), this, SLOT(slotCutFile()));
@@ -182,8 +176,6 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
     } else {
         menu->addAction(KIcon(QLatin1String("view-refresh")), i18n("Refresh"), this, SLOT(refreshList()));
     }
-    menu->exec( mapToGlobal( pos ) );
-    delete menu;
 }
 
 void StorageServiceTreeWidget::slotMoveFolder()
@@ -274,11 +266,6 @@ void StorageServiceTreeWidget::slotDeleteFolder()
             }
         }
     }
-}
-
-void StorageServiceTreeWidget::slotMoveUp()
-{
-    moveUp();
 }
 
 void StorageServiceTreeWidget::slotDeleteFile()

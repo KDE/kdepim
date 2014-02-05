@@ -20,20 +20,28 @@
 
 
 #include <KDialog>
-#include "pimcommon_export.h"
+ #include "pimcommon_export.h"
+#include "storageservice/widgets/storageservicetreewidget.h"
 
 class QTreeWidgetItem;
 class QLabel;
+class KMenu;
 namespace PimCommon {
 class StorageServiceAbstract;
-class StorageServiceTreeWidget;
 class StorageServiceProgressIndicator;
 class StorageServiceTreeWidgetItem;
+class StorageServiceDeleteTreeWidget;
 class PIMCOMMON_EXPORT StorageServiceDeleteDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit StorageServiceDeleteDialog(PimCommon::StorageServiceAbstract *storage, QWidget *parent=0);
+    enum DeleteType {
+        DeleteAll = 0,
+        DeleteFiles,
+        DeleteFolders
+    };
+
+    explicit StorageServiceDeleteDialog(PimCommon::StorageServiceDeleteDialog::DeleteType type, PimCommon::StorageServiceAbstract *storage, QWidget *parent=0);
     ~StorageServiceDeleteDialog();
 
 Q_SIGNALS:
@@ -60,11 +68,31 @@ private:
 
     void readConfig();
     void writeConfig();
-    StorageServiceTreeWidget *mTreeWidget;
+    DeleteType mDeleteType;
+    StorageServiceDeleteTreeWidget *mTreeWidget;
     PimCommon::StorageServiceAbstract *mStorage;
     PimCommon::StorageServiceProgressIndicator *mStorageServiceProgressIndicator;
     QLabel *mLabelProgressIncator;
 };
+
+class StorageServiceDeleteTreeWidget : public PimCommon::StorageServiceTreeWidget
+{
+    Q_OBJECT
+public:
+    explicit StorageServiceDeleteTreeWidget(PimCommon::StorageServiceDeleteDialog::DeleteType type, PimCommon::StorageServiceAbstract *storageService, QWidget *parent=0);
+
+    PimCommon::StorageServiceDeleteDialog::DeleteType deleteType() const;
+
+Q_SIGNALS:
+    void deleteFileFolder();
+
+protected:
+    virtual void createMenuActions(KMenu *menu);
+
+private:
+    PimCommon::StorageServiceDeleteDialog::DeleteType mDeleteType;
+};
+
 }
 
 #endif // STORAGESERVICEDELETEDIALOG_H

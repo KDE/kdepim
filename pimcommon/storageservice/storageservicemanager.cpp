@@ -131,7 +131,7 @@ KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageService
                     break;
                 case PimCommon::StorageServiceAbstract::DeleteFolderCapability:
                     menuService->setText(i18n("Delete Folder..."));
-                    connect(act, SIGNAL(triggered()), this, SLOT(slotDeleteFileFolder()));
+                    connect(act, SIGNAL(triggered()), this, SLOT(slotDeleteFolder()));
                     break;
                 case PimCommon::StorageServiceAbstract::DownloadFileCapability:
                     menuService->setText(i18n("Download File..."));
@@ -147,7 +147,7 @@ KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageService
                     break;
                 case PimCommon::StorageServiceAbstract::DeleteFileCapability:
                     menuService->setText(i18n("Delete File..."));
-                    connect(act, SIGNAL(triggered()), this, SLOT(slotDeleteFileFolder()));
+                    connect(act, SIGNAL(triggered()), this, SLOT(slotDeleteFile()));
                     break;
                 case PimCommon::StorageServiceAbstract::AccountInfoCapability:
                     menuService->setText(i18n("Account Info..."));
@@ -227,16 +227,31 @@ void StorageServiceManager::defaultConnect(StorageServiceAbstract *service)
     connect(service,SIGNAL(authenticationFailed(QString,QString)), this, SIGNAL(authenticationFailed(QString,QString)), Qt::UniqueConnection);
 }
 
-void StorageServiceManager::slotDeleteFileFolder()
+void StorageServiceManager::slotDeleteFile()
 {
     QAction *act = qobject_cast< QAction* >( sender() );
     if ( act ) {
         const QString type = act->data().toString();
         if (mListService.contains(type)) {
             StorageServiceAbstract *service = mListService.value(type);
-            QPointer<StorageServiceDeleteDialog> dlg = new StorageServiceDeleteDialog(service);
+            QPointer<StorageServiceDeleteDialog> dlg = new StorageServiceDeleteDialog(StorageServiceDeleteDialog::DeleteFiles,service);
             defaultConnect(service);
             connect(dlg,SIGNAL(deleteFileDone(QString,QString)), this, SIGNAL(deleteFileDone(QString,QString)));
+            dlg->exec();
+            delete dlg;
+        }
+    }
+}
+
+void StorageServiceManager::slotDeleteFolder()
+{
+    QAction *act = qobject_cast< QAction* >( sender() );
+    if ( act ) {
+        const QString type = act->data().toString();
+        if (mListService.contains(type)) {
+            StorageServiceAbstract *service = mListService.value(type);
+            QPointer<StorageServiceDeleteDialog> dlg = new StorageServiceDeleteDialog(StorageServiceDeleteDialog::DeleteFolders, service);
+            defaultConnect(service);
             connect(dlg,SIGNAL(deleteFolderDone(QString,QString)), this, SIGNAL(deleteFolderDone(QString,QString)));
             dlg->exec();
             delete dlg;

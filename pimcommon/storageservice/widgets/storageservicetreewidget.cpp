@@ -26,6 +26,7 @@
 #include <KGlobal>
 #include <KLocale>
 #include <KMimeType>
+#include <KMenu>
 
 #include <QTreeWidgetItem>
 #include <QHeaderView>
@@ -38,6 +39,8 @@ StorageServiceTreeWidget::StorageServiceTreeWidget(StorageServiceAbstract *stora
     : QTreeWidget(parent),
       mStorageService(storageService)
 {
+    setContextMenuPolicy( Qt::CustomContextMenu );
+    connect( this, SIGNAL(customContextMenuRequested(QPoint)), SLOT(slotContextMenu(QPoint)) );
     setSortingEnabled(true);
     setAlternatingRowColors(true);
     setRootIsDecorated(false);
@@ -51,6 +54,28 @@ StorageServiceTreeWidget::StorageServiceTreeWidget(StorageServiceAbstract *stora
 StorageServiceTreeWidget::~StorageServiceTreeWidget()
 {
 
+}
+
+void StorageServiceTreeWidget::slotMoveUp()
+{
+    if (parentFolder() == currentFolder())
+        return;
+    setCurrentFolder(parentFolder());
+    QTimer::singleShot(0, this, SLOT(refreshList()));
+}
+
+void StorageServiceTreeWidget::createMenuActions(KMenu *menu)
+{
+    menu->addAction( KIcon(QLatin1String("go-up")),  i18n("Up"), this, SLOT(slotMoveUp()));
+    menu->addSeparator();
+}
+
+void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
+{
+    KMenu *menu = new KMenu( this );
+    createMenuActions(menu);
+    menu->exec( mapToGlobal( pos ) );
+    delete menu;
 }
 
 void StorageServiceTreeWidget::createMoveUpItem()
@@ -168,14 +193,6 @@ void StorageServiceTreeWidget::goToFolder(const QString &folder)
     QTimer::singleShot(0, this, SLOT(refreshList()));
 }
 
-void StorageServiceTreeWidget::moveUp()
-{
-    if (parentFolder() == currentFolder())
-        return;
-    setCurrentFolder(parentFolder());
-    QTimer::singleShot(0, this, SLOT(refreshList()));
-}
-
 void StorageServiceTreeWidget::slotItemDoubleClicked(QTreeWidgetItem *item, int column)
 {
     Q_UNUSED(column);
@@ -189,7 +206,7 @@ void StorageServiceTreeWidget::slotItemDoubleClicked(QTreeWidgetItem *item, int 
             break;
         }
         case StorageServiceTreeWidget::MoveUpType:
-            moveUp();
+            slotMoveUp();
             break;
         case StorageServiceTreeWidget::File:
             Q_EMIT fileDoubleClicked();
