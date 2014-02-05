@@ -118,6 +118,11 @@ void StorageServiceTestWidget::slotServiceMenu()
     if (menu) {
         menu->clear();
         menu->addAction(mStorageManager->menuUploadServices(menu));
+        menu->addAction(mStorageManager->menuDownloadServices(menu));
+        menu->addAction(mStorageManager->menuShareLinkServices(menu));
+        QList<PimCommon::StorageServiceAbstract::Capability> lst;
+        lst <<PimCommon::StorageServiceAbstract::DeleteFileCapability;
+        menu->addAction(mStorageManager->menuWithCapability(PimCommon::StorageServiceAbstract::DeleteFileCapability, lst, menu));
     }
 }
 
