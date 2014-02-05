@@ -329,31 +329,34 @@ QString ICalFormat::createScheduleMessage(IncidenceBase *incidence,
   // Handle scheduling ID being present
   if ( incidence->type() == "Event" || incidence->type() == "Todo" ) {
     Incidence* i = static_cast<Incidence*>( incidence );
+    Incidence* clone = i->clone();
+
     if ( i->schedulingID() != i->uid() ) {
       // We have a separation of scheduling ID and UID
-      i = i->clone();
       // DON'T change this order. setUid() emits incidenceUpdated().
       // setSchedulingID() doesn't. If you change the order, kolab resource will
       // catch the signal and think there isn't any schedulingId.
       // Possible kcal improvement: create a setUids( schedulingId, uid )
       // that changes both members and emits incidenceuIpdated() at the end.
-      const QString tempId = i->schedulingID();
-      i->setSchedulingID( QString::null );
-      i->setUid( tempId );
-
-      // If we send a schduling message this means that we have modified
-      // the incidence. But as we save the incidence only after scheduling
-      // the original incidence still has the old modified date.
-      // So we set the last modified to NOW for the temporary scheduling
-      // incidence. kolab issue/4870
-      i->setLastModified( QDateTime::currentDateTime() );
-
-      // Build the message with the cloned incidence
-      message = mImpl->createScheduleComponent( i, method );
-
-      // And clean up
-      delete i;
+      const QString tempId = clone->schedulingID();
+      clone->setSchedulingID( QString::null );
+      clone->setUid( tempId );
     }
+
+    // If we send a schduling message this means that we have modified
+    // the incidence. But as we save the incidence only after scheduling
+    // the original incidence still has the old modified date.
+    // So we set the last modified to NOW for the temporary scheduling
+    // incidence.
+    // To avoid regression risks we work on a clone and don't touch the
+    // old incidence. kolab issue/4870
+    clone->setLastModified( QDateTime::currentDateTime() );
+
+    // Build the message with the cloned incidence
+    message = mImpl->createScheduleComponent( clone, method );
+
+    // And clean up
+    delete clone;
   }
 
   if ( message == 0 )
