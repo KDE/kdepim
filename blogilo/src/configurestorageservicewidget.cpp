@@ -49,6 +49,7 @@ void StorageServiceConfigureWidget::loadSettings()
 void StorageServiceConfigureWidget::writeSettings()
 {
     Settings::self()->setDownloadDirectory(downloadFolder()->url().path());
+    Settings::self()->writeConfig();
 }
 
 ConfigureStorageServiceWidget::ConfigureStorageServiceWidget(PimCommon::StorageServiceManager *storageManager, QWidget *parent)

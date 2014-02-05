@@ -40,6 +40,9 @@ Q_SIGNALS:
     void dialogDestroyed(QObject*);
     void settingsChanged();
 
+private slots:
+    void slotOkClicked();
+    void slotDefaultClicked();
 private:
     ConfigureStorageServiceWidget *mConfigStorageService;
 };

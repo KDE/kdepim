@@ -66,6 +66,8 @@ ConfigureDialog::ConfigureDialog(PimCommon::StorageServiceManager *storageManage
 
     connect( this, SIGNAL(settingsChanged(QString)), this, SIGNAL(settingsChanged()) );
     connect( this, SIGNAL(destroyed(QObject*)), this, SIGNAL(dialogDestroyed(QObject*)));
+    connect( this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
+    connect( this, SIGNAL(defaultClicked()), this, SLOT(slotDefaultClicked()));
     setAttribute( Qt::WA_DeleteOnClose );
     resize( Settings::configWindowSize() );
     show();
@@ -74,4 +76,14 @@ ConfigureDialog::ConfigureDialog(PimCommon::StorageServiceManager *storageManage
 ConfigureDialog::~ConfigureDialog()
 {
 
+}
+
+void ConfigureDialog::slotDefaultClicked()
+{
+    mConfigStorageService->doLoadFromGlobalSettings();
+}
+
+void ConfigureDialog::slotOkClicked()
+{
+    mConfigStorageService->save();
 }
