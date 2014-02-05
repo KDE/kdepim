@@ -87,4 +87,5 @@ void ConfigureDialog::slotDefaultClicked()
 void ConfigureDialog::slotOkClicked()
 {
     mConfigStorageService->save();
+    Q_EMIT settingsChanged();
 }

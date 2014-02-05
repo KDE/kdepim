@@ -333,6 +333,7 @@ void MainWindow::optionsPreferences()
     connect( dialog, SIGNAL(settingsChanged(QString)), this, SIGNAL(settingsChanged()) );
     connect( dialog, SIGNAL(settingsChanged(QString)), this, SLOT(slotSettingsChanged()) );
     connect( dialog, SIGNAL(dialogDestroyed(QObject*)), this, SLOT(slotDialogDestroyed(QObject*)));
+    connect( dialog, SIGNAL(settingsChanged()), this, SLOT(slotSettingsChanged()));
     dialog->show();
 }
 
