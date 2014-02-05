@@ -49,6 +49,7 @@ public:
     PimCommon::StorageServiceAbstract::Capabilities capabilities() const;
     QString serviceName() const;
     bool hasUploadDownloadProgress() const;
+    void setNetworkIsDown(bool state);
     void refreshList();
 
 Q_SIGNALS:

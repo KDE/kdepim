@@ -41,7 +41,8 @@
 
 
 StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
-    : KXmlGuiWindow()
+    : KXmlGuiWindow(),
+      mNetworkIsDown(false)
 {
     StorageServiceManagerSettingsJob *settingsJob = new StorageServiceManagerSettingsJob(this);
     PimCommon::StorageServiceJobConfig *configJob = PimCommon::StorageServiceJobConfig::self();
@@ -62,6 +63,8 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     mStorageServiceTabWidget->setListStorageService(mStorageManager->listService());
     slotUpdateActions();
     initStatusBar();
+    const Solid::Networking::Status status = Solid::Networking::status();
+    slotSystemNetworkStatusChanged(status);
 }
 
 StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
@@ -76,29 +79,44 @@ StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
 
 void StorageServiceManagerMainWindow::initStatusBar()
 {
-    statusBar()->setItemAlignment( 0, Qt::AlignLeft | Qt::AlignVCenter );
     mStatusBarInfo = new QLabel;
     statusBar()->insertWidget(0, mStatusBarInfo, 4);
 }
 
 void StorageServiceManagerMainWindow::slotSystemNetworkStatusChanged(Solid::Networking::Status status)
 {
-    //TODO
     if ( status == Solid::Networking::Connected || status == Solid::Networking::Unknown) {
+        mStorageServiceTabWidget->setNetworkIsDown(false);
+        slotSetStatusBarMessage(i18n("Network connection is up."));
+        mNetworkIsDown = false;
     } else {
+        mStorageServiceTabWidget->setNetworkIsDown(true);
+        slotSetStatusBarMessage(i18n("Network connection is down."));
+        mNetworkIsDown = true;
     }
+    slotUpdateActions();
 }
 
 void StorageServiceManagerMainWindow::slotUpdateActions()
 {
-    const PimCommon::StorageServiceAbstract::Capabilities capabilities = mStorageServiceTabWidget->capabilities();
-    mDownloadFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability);
-    mCreateFolder->setEnabled(capabilities & PimCommon::StorageServiceAbstract::CreateFolderCapability);
-    mAccountInfo->setEnabled(capabilities & PimCommon::StorageServiceAbstract::AccountInfoCapability);
-    mUploadFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::UploadFileCapability);
-    mDeleteFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability);
-    mAuthenticate->setDisabled(capabilities & PimCommon::StorageServiceAbstract::NoCapability);
-    mRefreshList->setDisabled(capabilities & PimCommon::StorageServiceAbstract::NoCapability);
+    if (mNetworkIsDown) {
+        mDownloadFile->setDisabled(true);
+        mCreateFolder->setDisabled(true);
+        mAccountInfo->setDisabled(true);
+        mUploadFile->setDisabled(true);
+        mDeleteFile->setDisabled(true);
+        mAuthenticate->setDisabled(true);
+        mRefreshList->setDisabled(true);
+    } else {
+        const PimCommon::StorageServiceAbstract::Capabilities capabilities = mStorageServiceTabWidget->capabilities();
+        mDownloadFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability);
+        mCreateFolder->setEnabled(capabilities & PimCommon::StorageServiceAbstract::CreateFolderCapability);
+        mAccountInfo->setEnabled(capabilities & PimCommon::StorageServiceAbstract::AccountInfoCapability);
+        mUploadFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::UploadFileCapability);
+        mDeleteFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability);
+        mAuthenticate->setDisabled(capabilities & PimCommon::StorageServiceAbstract::NoCapability);
+        mRefreshList->setDisabled(capabilities & PimCommon::StorageServiceAbstract::NoCapability);
+    }
 }
 
 void StorageServiceManagerMainWindow::setupActions()

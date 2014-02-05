@@ -181,3 +181,14 @@ void StorageServiceTabWidget::serviceRemoved(const QString &serviceName)
         }
     }
 }
+
+
+void StorageServiceTabWidget::setNetworkIsDown(bool state)
+{
+    for (int i=0; i <count() ; ++i) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        if (page) {
+            page->setNetworkIsDown(state);
+        }
+    }
+}

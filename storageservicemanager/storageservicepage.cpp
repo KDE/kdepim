@@ -378,3 +378,9 @@ void StorageServicePage::slotGoToFolder(const QString &folder)
 {
     mTreeWidget->goToFolder(folder);
 }
+
+
+void StorageServicePage::setNetworkIsDown(bool state)
+{
+    mTreeWidget->setEnabled(!state);
+}

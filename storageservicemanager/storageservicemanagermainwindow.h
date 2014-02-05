@@ -61,6 +61,7 @@ private:
     KAction *mAuthenticate;
     KAction *mRefreshList;
     QLabel *mStatusBarInfo;
+    bool mNetworkIsDown;
 };
 
 #endif // STORAGESERVICEMANAGERMAINWINDOW_H
