@@ -100,6 +100,9 @@ private:
     QString mServiceLocation;
     QString mUserName;
     QString mPassword;
+
+    QString mCacheValue;
+
     int mNbAuthCheck;
 };
 }

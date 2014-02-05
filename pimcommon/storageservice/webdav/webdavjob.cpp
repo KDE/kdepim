@@ -52,6 +52,7 @@ WebDavJob::~WebDavJob()
 void WebDavJob::initializeToken(const QString &publicLocation, const QString &serviceLocation, const QString &username, const QString &password)
 {
     mError = false;
+    mCacheValue.clear();
     mUserName = username;
     mPassword = password;
     mPublicLocation = publicLocation;
@@ -317,6 +318,7 @@ void WebDavJob::createFolder(const QString &foldername, const QString &destinati
 {
     mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
     mError = false;
+    mCacheValue = foldername;
     QUrl url(mServiceLocation);
     if (!destination.isEmpty())
         url.setPath(destination + QLatin1Char('/') + foldername);
@@ -481,7 +483,6 @@ void WebDavJob::parseDeleteFolder(const QString &data)
 
 void WebDavJob::parseAccessToken(const QString &data)
 {
-    qDebug()<<" void WebDavJob::parseAccessToken(const QString &data)"<<data;
     Q_EMIT authorizationDone(mPublicLocation, mServiceLocation, mUserName, mPassword);
     deleteLater();
 }
@@ -496,7 +497,7 @@ void WebDavJob::parseUploadFile(const QString &data)
 void WebDavJob::parseCreateFolder(const QString &data)
 {
     qDebug()<<" data "<<data;
-    Q_EMIT createFolderDone(QString());
+    Q_EMIT createFolderDone(mCacheValue);
     deleteLater();
 }
 
