@@ -97,7 +97,7 @@ void StorageServiceTreeWidget::createMenuActions(KMenu *menu)
                     menu->addAction(KIcon(QLatin1String("edit-cut")), i18n("Cut"), this, SLOT(slotCutFile()));
                 if (mCapabilities & PimCommon::StorageServiceAbstract::CopyFileCapability)
                     menu->addAction(KIcon(QLatin1String("edit-copy")), i18n("Copy"), this, SLOT(slotCopyFile()));
-                act = new QAction(menu);
+                QAction *act = new QAction(menu);
                 act->setSeparator(true);
                 menu->addAction(act);
                 if (mCapabilities & PimCommon::StorageServiceAbstract::RenameFileCapabilitity)
@@ -119,7 +119,7 @@ void StorageServiceTreeWidget::createMenuActions(KMenu *menu)
                     menu->addAction(KIcon(QLatin1String("edit-cut")), i18n("Cut"), this, SLOT(slotCutFolder()));
                 if (mCapabilities & PimCommon::StorageServiceAbstract::CopyFolderCapability)
                     menu->addAction(KIcon(QLatin1String("edit-copy")), i18n("Copy"), this, SLOT(slotCopyFolder()));
-                act = new QAction(menu);
+                QAction *act = new QAction(menu);
                 act->setSeparator(true);
                 menu->addAction(act);
                 if (mCapabilities & PimCommon::StorageServiceAbstract::RenameFolderCapability)
