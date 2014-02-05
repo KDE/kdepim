@@ -1,4 +1,13 @@
 
+Wednesday 05 February 2014
+
+Problems addressed
+------------------
+
+* kolab/issue4870: Wrong invitation update email after 2nd modification
+
+
+
 Friday 31 January 2014
 
 Problems addressed
