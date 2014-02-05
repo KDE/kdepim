@@ -30,6 +30,7 @@
 #include <KFileDialog>
 #include <KGlobalSettings>
 #include <KMessageBox>
+#include <KLocale>
 
 #include <QPainter>
 #include <QHeaderView>
@@ -332,8 +333,13 @@ bool StorageServiceTreeWidget::uploadFileToService()
     const QString filename = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*"), this);
     if (!filename.isEmpty()) {
         const QRegExp disallowedSymbols = mStorageService->disallowedSymbols();
-
+        const qlonglong maximumLimit =  mStorageService->maximumUploadFileSize();
+        qDebug()<<" maximumLimit"<<maximumLimit;
         QFileInfo info(filename);
+        if (maximumLimit > 0 && (info.size() > maximumLimit)) {
+            KMessageBox::error(this, i18n("File size (%1) is larger than limit (%2)", KGlobal::locale()->formatByteSize(info.size(),1), KGlobal::locale()->formatByteSize(maximumLimit,1)));
+            return false;
+        }
         QString newName = info.fileName();
         if (!disallowedSymbols.isEmpty()) {
             if (newName.contains(disallowedSymbols)) {

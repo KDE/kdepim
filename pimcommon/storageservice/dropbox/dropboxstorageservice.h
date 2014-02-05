@@ -63,6 +63,7 @@ public:
     KIcon icon() const;
     QRegExp disallowedSymbols() const;
     QString disallowedSymbolsStr() const;
+    qlonglong maximumUploadFileSize() const;
 
 private slots:
     void slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
