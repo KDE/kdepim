@@ -95,7 +95,6 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
 
     void slotGrantleeThemeSelected();
     void slotGrantleeThemesUpdated();
-    void slotDebugNepomuk();
 
   private:
     void initGrantleeThemeName();

@@ -41,7 +41,6 @@
 
 #include <pimcommon/acl/collectionaclpage.h>
 #include <pimcommon/acl/imapaclattribute.h>
-#include "pimcommon/nepomukdebug/nepomukdebugdialog.h"
 
 
 #include <Akonadi/ETMViewStateSaver>
@@ -653,11 +652,6 @@ void MainWidget::setupActions( KActionCollection *collection )
   action->setText( i18n( "Search Duplicate Contacts..." ) );
   connect( action, SIGNAL(triggered(bool)), this, SLOT(slotSearchDuplicateContacts()) );
 
-#if !defined(NDEBUG)
-  action = collection->addAction( QLatin1String("debug_nepomuk") );
-  action->setText( i18n( "Debug Nepomuk..." ) );
-  connect( action, SIGNAL(triggered(bool)), this, SLOT(slotDebugNepomuk()) );
-#endif
 }
 
 void MainWidget::printPreview()
@@ -915,16 +909,3 @@ void MainWidget::slotSearchDuplicateContacts()
     delete wizard;
 }
 
-void MainWidget::slotDebugNepomuk()
-{
-    QStringList uidList;
-    const Akonadi::Item::List lst = Utils::collectSelectedContactsItem(mItemView->selectionModel());
-    Q_FOREACH ( const Akonadi::Item &item, lst ) {
-        uidList << QString::number( item.id() );
-    }
-
-
-    QPointer<PimCommon::NepomukDebugDialog> dlg = new PimCommon::NepomukDebugDialog(uidList, this);
-    dlg->exec();
-    delete dlg;
-}
