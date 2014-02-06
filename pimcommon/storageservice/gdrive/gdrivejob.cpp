@@ -27,6 +27,7 @@
 #include <libkgapi2/drive/filecreatejob.h>
 #include <libkgapi2/drive/filedeletejob.h>
 #include <libkgapi2/drive/filefetchjob.h>
+#include <libkgapi2/drive/filefetchcontentjob.h>
 
 #include <KLocalizedString>
 
@@ -163,6 +164,16 @@ void GDriveJob::slotDeleteFileFinished(KGAPI2::Job*job)
     deleteLater();
 }
 
+QNetworkReply * GDriveJob::downloadFile(const QString &name, const QString &fileId, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
+    mError = false;
+    //Add url
+    //KGAPI2::Drive::FileFetchContentJob *fileFetchContentJob = new KGAPI2::Drive::FileFetchContentJob(mAccount, this);
+    return 0;
+}
+
+
 
 /*old **********************/
 
@@ -175,16 +186,6 @@ void GDriveJob::createServiceFolder()
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     qDebug()<<" not implemented";
     deleteLater();
-}
-
-QNetworkReply * GDriveJob::downloadFile(const QString &name, const QString &fileId, const QString &destination)
-{
-    mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
-    mError = false;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    qDebug()<<" not implemented";
-    deleteLater();
-    return 0;
 }
 
 void GDriveJob::deleteFolder(const QString &foldername)

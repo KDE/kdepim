@@ -560,7 +560,6 @@ void BoxJob::parseCreateFolder(const QString &data)
 void BoxJob::parseUploadFile(const QString &data)
 {
     const QString folderName = parseNameInfo(data);
-    qDebug()<<" data"<<data;
     Q_EMIT uploadFileDone(folderName);
     //shareLink(QString());
     deleteLater();
