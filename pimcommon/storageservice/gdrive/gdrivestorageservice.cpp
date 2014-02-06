@@ -428,7 +428,12 @@ QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
                 item->setSize(file->fileSize());
                 //item->setDateCreated(file->createdDate());
             }
+            //TODO store value
+            //TODO fix size
+            //TODO fix created date
+            //TODO other :)
         }
+
     }
     return QString(); //TODO
 }
