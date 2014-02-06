@@ -36,7 +36,8 @@ kde4_add_ui_files(sieveeditor_SRCS
 kde4_add_executable(sieveeditor ${sieveeditor_SRCS} )
 TARGET_LINK_LIBRARIES(sieveeditor 
                        ${KDE4_KDEUI_LIBS} 
-                       ${KDE4_KNEWSTUFF3_LIBS} 
+                       ${KDE4_KNEWSTUFF3_LIBS}
+                       ${KDE4_SOLID_LIBS} 
                        pimcommon 
                        ksieveui
                        kmanagesieve

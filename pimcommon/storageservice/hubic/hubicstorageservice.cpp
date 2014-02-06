@@ -118,7 +118,7 @@ void HubicStorageService::storageServicelistFolder(const QString &folder)
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken);
-        connect(job, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
+        connect(job, SIGNAL(listFolderDone(QVariant)), this, SLOT(slotListFolderDone(QVariant)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->listFolder(folder);
     }
@@ -475,7 +475,7 @@ StorageServiceAbstract::Capabilities HubicStorageService::capabilities() const
     return serviceCapabilities();
 }
 
-QString HubicStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder)
+QString HubicStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder)
 {
     Q_UNUSED(currentFolder);
     listWidget->clear();

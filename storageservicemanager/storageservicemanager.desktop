@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Storage Service Manager
 Name[bs]=Menadžer usluga smještaja
+Name[cs]=Správce služeb úložiště
 Name[de]=Speicherdienstverwaltung
 Name[es]=Gestor del servicio de almacenamiento
 Name[fi]=Tallennuspalvelun hallinta
@@ -23,6 +24,7 @@ Icon=kmail
 X-DocPath=storageservicemanager/index.html
 GenericName=Storage Service Manager
 GenericName[bs]=Menadžer usluga smještaja
+GenericName[cs]=Správce služeb úložiště
 GenericName[de]=Speicherdienstverwaltung
 GenericName[es]=Gestor del servicio de almacenamiento
 GenericName[fi]=Tallennuspalvelun hallinta

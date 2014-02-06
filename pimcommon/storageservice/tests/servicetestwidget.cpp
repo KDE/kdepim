@@ -102,7 +102,7 @@ void ServiceTestWidget::connectStorageService()
     connect(mStorageService, SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
     connect(mStorageService, SIGNAL(createFolderDone(QString,QString)), this, SLOT(slotCreateFolderDone(QString,QString)));
     connect(mStorageService, SIGNAL(uploadFileDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
-    connect(mStorageService, SIGNAL(listFolderDone(QString,QString)), this, SLOT(slotListFolderDone(QString,QString)));
+    connect(mStorageService, SIGNAL(listFolderDone(QString,QVariant)), this, SLOT(slotListFolderDone(QString,QVariant)));
     connect(mStorageService, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(QString,PimCommon::AccountInfo)));
     connect(mStorageService, SIGNAL(deleteFileDone(QString,QString)), this, SLOT(slotDeleteFileDone(QString,QString)));
     connect(mStorageService, SIGNAL(deleteFolderDone(QString,QString)), this, SLOT(slotDeleteFolderDone(QString,QString)));
@@ -154,9 +154,9 @@ void ServiceTestWidget::slotUploadFileDone(const QString &serviceName, const QSt
     mEdit->insertPlainText(serviceName + QString::fromLatin1(" Upload file done %1\n").arg(fileName));
 }
 
-void ServiceTestWidget::slotListFolderDone(const QString &serviceName, const QString &listFolder)
+void ServiceTestWidget::slotListFolderDone(const QString &serviceName, const QVariant &listFolder)
 {
-    mEdit->insertPlainText(serviceName + QString::fromLatin1(" list folder done %1\n").arg(listFolder));
+    mEdit->insertPlainText(serviceName + QString::fromLatin1(" list folder done \n")/*.arg(listFolder)*/);
 }
 
 void ServiceTestWidget::slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &info)

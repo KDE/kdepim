@@ -59,7 +59,7 @@ Q_SIGNALS:
     void createFolderDone(const QString &folderName);
     void uploadFileDone(const QString &fileName);
     void uploadFileFailed(const QString &fileName);
-    void listFolderDone(const QString &listFolder);
+    void listFolderDone(const QVariant &listFolder);
     void authorizationFailed(const QString &error);
     void downLoadFileDone(const QString &filename);
     void downLoadFileFailed(const QString &filename);

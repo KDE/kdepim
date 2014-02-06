@@ -26,6 +26,7 @@ class KLineEdit;
 class KComboBox;
 class QToolButton;
 class QPushButton;
+class QButtonGroup;
 class QuickSearchLine : public QWidget
 {
     Q_OBJECT
@@ -67,7 +68,6 @@ private slots:
     void slotClearButtonClicked();
 private:
     void defaultFilterStatus();
-    SearchOptions mSearchOptions;
     KLineEdit *mSearchEdit;
     KComboBox *mStatusFilterCombo;
     QToolButton *mOpenFullSearchButton;
@@ -77,6 +77,7 @@ private:
     QPushButton *mSearchAgainstFrom;
     QPushButton *mSearchAgainstBcc;
     QWidget *mExtraOption;
+    QButtonGroup *mButtonGroup;
     int mFirstTagInComboIndex;
 };
 

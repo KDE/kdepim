@@ -257,7 +257,7 @@ protected slots:
   void setPrivateSortOrderForStorage();
   void aggregationSelected( bool );
   void statusSelected( int index );
-  void searchEditTextEdited( const QString &text );
+  void searchEditTextEdited();
   void searchTimerFired();
   void searchEditClearButtonClicked();
   void sortOrderMenuAboutToShow();

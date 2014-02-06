@@ -22,6 +22,7 @@
 
 #include <qjson/parser.h>
 
+#include <KDateTime>
 #include <KLocalizedString>
 #include <KConfig>
 #include <KGlobal>
@@ -98,7 +99,7 @@ void UbuntuoneStorageService::storageServicelistFolder(const QString &folder)
         storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
-        connect(job, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
+        connect(job, SIGNAL(listFolderDone(QVariant)), this, SLOT(slotListFolderDone(QVariant)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
         job->listFolder(folder);
@@ -387,7 +388,7 @@ StorageServiceAbstract::Capabilities UbuntuoneStorageService::capabilities() con
     return serviceCapabilities();
 }
 
-QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder)
+QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder)
 {
     Q_UNUSED(currentFolder);
     listWidget->clear();
@@ -395,7 +396,7 @@ QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWi
     QJson::Parser parser;
     bool ok;
     QString parentFolder;
-    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    QMap<QString, QVariant> info = parser.parse(data.toString().toUtf8(), &ok).toMap();
     //qDebug()<<" info "<<info;
     if (info.contains(QLatin1String("children"))) {
         const QVariantList lst = info.value(QLatin1String("children")).toList();
@@ -408,11 +409,11 @@ QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWi
                     const QString path = map.value(QLatin1String("path")).toString();
                     item = listWidget->addFolder(path, path);
                     if (map.contains(QLatin1String("when_created"))) {
-                        const QDateTime t = QDateTime::fromString(map.value(QLatin1String("when_created")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ"));
+                        const KDateTime t = KDateTime(QDateTime::fromString(map.value(QLatin1String("when_created")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ")));
                         item->setDateCreated(t);
                     }
                     if (map.contains(QLatin1String("when_changed"))) {
-                        const QDateTime t = QDateTime::fromString(map.value(QLatin1String("when_changed")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ"));
+                        const KDateTime t = KDateTime(QDateTime::fromString(map.value(QLatin1String("when_changed")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ")));
                         item->setLastModification(t);
                     }
                 } else if (kind == QLatin1String("file")) {
@@ -422,11 +423,11 @@ QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWi
                         item->setSize(map.value(QLatin1String("size")).toULongLong());
                     }
                     if (map.contains(QLatin1String("when_created"))) {
-                        const QDateTime t = QDateTime::fromString(map.value(QLatin1String("when_created")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ"));
+                        const KDateTime t = KDateTime(QDateTime::fromString(map.value(QLatin1String("when_created")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ")));
                         item->setDateCreated(t);
                     }
                     if (map.contains(QLatin1String("when_changed"))) {
-                        const QDateTime t = QDateTime::fromString(map.value(QLatin1String("when_changed")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ"));
+                        const KDateTime t = KDateTime(QDateTime::fromString(map.value(QLatin1String("when_changed")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ")));
                         item->setLastModification(t);
                     }
                 } else {

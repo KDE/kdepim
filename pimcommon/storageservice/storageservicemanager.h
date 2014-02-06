@@ -83,8 +83,10 @@ Q_SIGNALS:
 private Q_SLOTS:
     void slotAccountInfo();
     void slotShareFile();
-    void slotDeleteFileFolder();
+    void slotDeleteFile();
+    void slotDeleteFolder();
     void slotDownloadFile();
+
 private:
     void defaultConnect(StorageServiceAbstract *service);
     void readConfig();

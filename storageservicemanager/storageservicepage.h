@@ -49,8 +49,9 @@ public:
     PimCommon::StorageServiceAbstract::Capabilities capabilities() const;
     QString serviceName() const;
     bool hasUploadDownloadProgress() const;
+    void setNetworkIsDown(bool state);
     void refreshList();
-
+    void showLog();
 Q_SIGNALS:
     void updateIcon(const QIcon &pix, StorageServicePage *page);
     void updateStatusBarMessage(const QString &msg);
@@ -69,7 +70,7 @@ private Q_SLOTS:
     void slotActionFailed(const QString &serviceName, const QString &error);
     void slotProgressStateChanged(bool state);
     void slotUpdatePixmap(const QPixmap &pix);
-    void slotListFolderDone(const QString &serviceName, const QString &data);
+    void slotListFolderDone(const QString &serviceName, const QVariant &data);
     void slotCreateFolderDone(const QString &serviceName, const QString &folder);
     void slotDeleteFolderDone(const QString &serviceName, const QString &folder);
     void slotDeleteFileDone(const QString &serviceName, const QString &filename);

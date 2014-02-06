@@ -17,9 +17,9 @@
 
 #include "boxutil.h"
 
-QDateTime PimCommon::BoxUtil::convertToDateTime(QString dateTime)
+KDateTime PimCommon::BoxUtil::convertToDateTime(QString dateTime)
 {
     dateTime.chop(6); // chop() removes the time zone
-    const QDateTime t =QDateTime::fromString(dateTime, QLatin1String("yyyy-MM-ddThh:mm:ss"));
+    const KDateTime t = KDateTime(QDateTime::fromString(dateTime, QLatin1String("yyyy-MM-ddThh:mm:ss")));
     return t;
 }

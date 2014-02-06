@@ -124,7 +124,7 @@ void YouSendItStorageService::storageServicelistFolder(const QString &folder)
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
-        connect(job, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
+        connect(job, SIGNAL(listFolderDone(QVariant)), this, SLOT(slotListFolderDone(QVariant)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->listFolder(folder);
     }
@@ -425,14 +425,14 @@ StorageServiceAbstract::Capabilities YouSendItStorageService::capabilities() con
     return serviceCapabilities();
 }
 
-QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder)
+QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder)
 {
     Q_UNUSED(currentFolder);
     listWidget->clear();
     listWidget->createMoveUpItem();
     QJson::Parser parser;
     bool ok;
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    const QMap<QString, QVariant> info = parser.parse(data.toString().toUtf8(), &ok).toMap();
     //qDebug()<<" INFO "<<info;
     if (info.contains(QLatin1String("folders"))) {
         const QVariantMap mapFolder = info.value(QLatin1String("folders")).toMap();

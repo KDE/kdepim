@@ -148,6 +148,7 @@ void MainWindow::initStorageService()
     connect(mStorageManager, SIGNAL(uploadFileDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
     connect(mStorageManager, SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
     connect(mStorageManager, SIGNAL(uploadFileFailed(QString,QString)), this, SLOT(slotUploadFileFailed(QString,QString)));
+    connect(mStorageManager, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
 }
 
 void MainWindow::slotUploadFileDone(const QString &serviceName, const QString &link)
@@ -161,6 +162,11 @@ void MainWindow::slotUploadFileFailed(const QString &serviceName, const QString 
     Q_UNUSED(serviceName);
     Q_UNUSED(filename);
     KMessageBox::error(this, i18n("Error during upload."), i18n("Upload File"));
+}
+
+void MainWindow::slotActionFailed(const QString &serviceName, const QString &error)
+{
+    KMessageBox::error(this, i18n("%1 return an error '%2'", serviceName, error), i18n("Error"));
 }
 
 void MainWindow::slotCloseTabClicked()
@@ -333,6 +339,7 @@ void MainWindow::optionsPreferences()
     connect( dialog, SIGNAL(settingsChanged(QString)), this, SIGNAL(settingsChanged()) );
     connect( dialog, SIGNAL(settingsChanged(QString)), this, SLOT(slotSettingsChanged()) );
     connect( dialog, SIGNAL(dialogDestroyed(QObject*)), this, SLOT(slotDialogDestroyed(QObject*)));
+    connect( dialog, SIGNAL(settingsChanged()), this, SLOT(slotSettingsChanged()));
     dialog->show();
 }
 

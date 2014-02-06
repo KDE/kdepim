@@ -63,16 +63,18 @@ public:
     KIcon icon() const;
     StorageServiceAbstract::Capabilities capabilities() const;
     void storageServicecreateServiceFolder();
-    QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder);
+    QString fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder);
 
 private slots:
-    void slotAuthorizationDone(const QString &refreshToken, const QString &token);
+    void slotAuthorizationDone(const QString &refreshToken, const QString &token, const QDateTime &expireTime);
     void slotAuthorizationFailed(const QString &errorMessage);
 
 private:
+    bool needToRefreshToken() const;
     void refreshToken();
     void readConfig();
     KGAPI2::AccountPtr mAccount;
+    QDateTime mExpireDateTime;
 };
 }
 

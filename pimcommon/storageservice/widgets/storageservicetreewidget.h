@@ -23,7 +23,8 @@
 
 #include <QTreeWidget>
 #include "pimcommon_export.h"
-
+class KMenu;
+class KDateTime;
 namespace PimCommon {
 class StorageServiceTreeWidget;
 class StorageServiceAbstract;
@@ -33,8 +34,8 @@ public:
     StorageServiceTreeWidgetItem(StorageServiceTreeWidget *parent);
     bool operator<(const QTreeWidgetItem &other) const;
     void setSize(qulonglong size);
-    void setDateCreated(const QDateTime &date);
-    void setLastModification(const QDateTime &date);
+    void setDateCreated(const KDateTime &date);
+    void setLastModification(const KDateTime &date);
     void setStoreInfo(const QVariantMap &data);
     QVariantMap storeInfo() const;
 };
@@ -88,16 +89,19 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void refreshList();
-    void slotListFolderDone(const QString &serviceName, const QString &data);
+    void slotListFolderDone(const QString &serviceName, const QVariant &data);
+
 
 protected:
-    void moveUp();
     QString mCurrentFolder;
     QString mParentFolder;
-    PimCommon::StorageServiceAbstract *mStorageService;
+    PimCommon::StorageServiceAbstract *mStorageService;    
+    virtual void createMenuActions(KMenu *menu);
 
 private Q_SLOTS:
     void slotItemDoubleClicked(QTreeWidgetItem *item, int column);
+    void slotMoveUp();
+    void slotContextMenu(const QPoint &pos);
 };
 }
 

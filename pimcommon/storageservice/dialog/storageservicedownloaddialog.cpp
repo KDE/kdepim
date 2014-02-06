@@ -26,6 +26,7 @@
 #include <KSharedConfig>
 #include <KMessageBox>
 #include <KFileDialog>
+#include <KMenu>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -35,6 +36,21 @@
 #include <QHeaderView>
 
 using namespace PimCommon;
+
+
+StorageServiceDownloadTreeWidget::StorageServiceDownloadTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
+    : PimCommon::StorageServiceTreeWidget(storageService, parent)
+{
+}
+
+void StorageServiceDownloadTreeWidget::createMenuActions(KMenu *menu)
+{
+    StorageServiceTreeWidget::createMenuActions(menu);
+    const PimCommon::StorageServiceTreeWidget::ItemType type = StorageServiceTreeWidget::itemTypeSelected();
+    if (type == StorageServiceTreeWidget::File)
+        menu->addAction(i18n("Download File"), this, SIGNAL(downloadFile()));
+}
+
 
 StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageServiceAbstract *storage, QWidget *parent)
     : KDialog(parent),
@@ -58,7 +74,9 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
     mLabelProgressIncator = new QLabel;
     hbox->addWidget(mLabelProgressIncator);
     hbox->setAlignment(mLabelProgressIncator, Qt::AlignLeft);
-    mTreeWidget = new StorageServiceTreeWidget(storage);
+    mTreeWidget = new StorageServiceDownloadTreeWidget(storage);
+    connect(mTreeWidget, SIGNAL(downloadFile()), this, SLOT(slotDownloadFile()));
+
 
 
     vbox->addWidget(mTreeWidget);
@@ -71,7 +89,7 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
     setMainWidget(w);
     enableButton(User1, false);
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotDownloadFile()));
-    connect(mStorage, SIGNAL(listFolderDone(QString,QString)), this, SLOT(slotListFolderDone(QString,QString)));
+    connect(mStorage, SIGNAL(listFolderDone(QString,QVariant)), this, SLOT(slotListFolderDone(QString,QVariant)));
     connect(mStorage, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
     connect(mStorage, SIGNAL(downLoadFileDone(QString,QString)), this, SLOT(slotDownfileDone(QString,QString)));
     connect(mStorage, SIGNAL(downLoadFileFailed(QString,QString)), this, SLOT(slotDownfileFailed(QString,QString)));
@@ -105,7 +123,7 @@ void StorageServiceDownloadDialog::slotActionFailed(const QString &serviceName, 
     enableButton(User1, true);
 }
 
-void StorageServiceDownloadDialog::slotListFolderDone(const QString &serviceName, const QString &data)
+void StorageServiceDownloadDialog::slotListFolderDone(const QString &serviceName, const QVariant &data)
 {
     mTreeWidget->setEnabled(true);
     mStorageServiceProgressIndicator->stopAnimation();
@@ -189,7 +207,7 @@ void StorageServiceDownloadDialog::downloadItem(StorageServiceTreeWidgetItem *it
     const QString filename = item->text(0);
     if (!filename.isEmpty()) {
         QString destination = mDefaultDownloadPath;
-        if (destination.isEmpty())
+        if (destination.isEmpty() || !QFileInfo(mDefaultDownloadPath).isDir())
             destination = KFileDialog::getExistingDirectory(KUrl(), this);
         if (destination.isEmpty())
             return;

@@ -39,10 +39,10 @@ QStringList PimCommon::YouSendItUtil::getListFolder(const QString &data)
     return listFolder;
 }
 
-QDateTime PimCommon::YouSendItUtil::convertToDateTime(QString dateTime, bool removeTimeZone)
+KDateTime PimCommon::YouSendItUtil::convertToDateTime(QString dateTime, bool removeTimeZone)
 {
     if (removeTimeZone)
         dateTime.chop(6);     // chop() removes the time zone
-    const QDateTime t =QDateTime::fromString(dateTime, QLatin1String("yyyy-MM-ddThh:mm:ss"));
+    const KDateTime t = KDateTime(QDateTime::fromString(dateTime, QLatin1String("yyyy-MM-ddThh:mm:ss")));
     return t;
 }

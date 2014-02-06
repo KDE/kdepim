@@ -52,6 +52,7 @@ WebDavJob::~WebDavJob()
 void WebDavJob::initializeToken(const QString &publicLocation, const QString &serviceLocation, const QString &username, const QString &password)
 {
     mError = false;
+    mCacheValue.clear();
     mUserName = username;
     mPassword = password;
     mPublicLocation = publicLocation;
@@ -231,9 +232,15 @@ QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &upl
             //TODO fix default value
             const QString defaultDestination = (destination.isEmpty() ? PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
             QUrl destinationFile(mServiceLocation);
-            destinationFile.setPath(defaultDestination + QLatin1Char('/') + uploadAsName);
+            QString destinationToString;
+            if (defaultDestination.isEmpty()) {
+                destinationToString = destinationFile.toString() + QLatin1Char('/') + uploadAsName;
+            } else {
+                destinationFile.setPath(defaultDestination + QLatin1Char('/') + uploadAsName);
+                destinationToString = destinationFile.toString();
+            }
 
-            QNetworkReply *reply = put(destinationFile.toString(),file);
+            QNetworkReply *reply = put(destinationToString,file);
             file->setParent(reply);
             connect(reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
             connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
@@ -311,6 +318,7 @@ void WebDavJob::createFolder(const QString &foldername, const QString &destinati
 {
     mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
     mError = false;
+    mCacheValue = foldername;
     QUrl url(mServiceLocation);
     if (!destination.isEmpty())
         url.setPath(destination + QLatin1Char('/') + foldername);
@@ -475,7 +483,6 @@ void WebDavJob::parseDeleteFolder(const QString &data)
 
 void WebDavJob::parseAccessToken(const QString &data)
 {
-    qDebug()<<" void WebDavJob::parseAccessToken(const QString &data)"<<data;
     Q_EMIT authorizationDone(mPublicLocation, mServiceLocation, mUserName, mPassword);
     deleteLater();
 }
@@ -490,7 +497,7 @@ void WebDavJob::parseUploadFile(const QString &data)
 void WebDavJob::parseCreateFolder(const QString &data)
 {
     qDebug()<<" data "<<data;
-    Q_EMIT createFolderDone(QString());
+    Q_EMIT createFolderDone(mCacheValue);
     deleteLater();
 }
 

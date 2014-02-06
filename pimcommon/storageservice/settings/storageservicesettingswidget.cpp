@@ -122,7 +122,14 @@ StorageServiceSettingsWidget::~StorageServiceSettingsWidget()
 
 void StorageServiceSettingsWidget::slotAuthenticate()
 {
-    //TODO
+    QListWidgetItem *item = mListService->currentItem();
+    if (item) {
+        const QString serviceName = item->data(Name).toString();
+        if (mListStorageService.contains(serviceName)) {
+            StorageServiceAbstract *storage = mListStorageService.value(serviceName);
+            storage->authentication();
+        }
+    }
 }
 
 void StorageServiceSettingsWidget::setDefaultLabel()
@@ -218,9 +225,9 @@ QMap<QString, StorageServiceAbstract *> StorageServiceSettingsWidget::listServic
 
 void StorageServiceSettingsWidget::slotRemoveService()
 {
-    if (mListService->currentItem()) {
-        if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Do you want to delete this service '%1'?", mListService->currentItem()->text()), i18n("Delete Service") )) {
-            QListWidgetItem *item = mListService->currentItem();
+    QListWidgetItem *item = mListService->currentItem();
+    if (item) {
+        if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Do you want to delete this service '%1'?", item->text()), i18n("Delete Service") )) {
             const QString serviceName = item->data(Name).toString();
             if (mListStorageService.contains(serviceName)) {
                 Q_EMIT serviceRemoved(serviceName);
@@ -327,8 +334,9 @@ void StorageServiceSettingsWidget::slotAuthenticationDone(const QString &service
 
 void StorageServiceSettingsWidget::slotServiceSelected()
 {
-    if (mListService->currentItem()) {
-        const PimCommon::StorageServiceManager::ServiceType type = static_cast<PimCommon::StorageServiceManager::ServiceType>(mListService->currentItem()->data(Type).toInt());
+    QListWidgetItem *item = mListService->currentItem();
+    if (item) {
+        const PimCommon::StorageServiceManager::ServiceType type = static_cast<PimCommon::StorageServiceManager::ServiceType>(item->data(Type).toInt());
         const QString description = PimCommon::StorageServiceManager::description(type);
         const QString name = PimCommon::StorageServiceManager::serviceToI18n(type);
         const QUrl serviceUrl = PimCommon::StorageServiceManager::serviceUrl(type);
@@ -379,8 +387,9 @@ void StorageServiceSettingsWidget::slotUpdateAccountInfo(const QString &serviceN
 
 void StorageServiceSettingsWidget::slotModifyService()
 {
-    if (mListService->currentItem()) {
-        const QString serviceName = mListService->currentItem()->data(Name).toString();
+    QListWidgetItem *item = mListService->currentItem();
+    if (item) {
+        const QString serviceName = item->data(Name).toString();
         if (mListStorageService.contains(serviceName)) {
             StorageServiceAbstract *storage = mListStorageService.value(serviceName);
             storage->authentication();

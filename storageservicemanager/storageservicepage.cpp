@@ -106,7 +106,7 @@ void StorageServicePage::connectStorageService()
 
     connect(mStorageService, SIGNAL(inProgress(bool)), this, SLOT(slotProgressStateChanged(bool)));
 
-    connect(mStorageService, SIGNAL(listFolderDone(QString,QString)), this, SLOT(slotListFolderDone(QString,QString)));
+    connect(mStorageService, SIGNAL(listFolderDone(QString,QVariant)), this, SLOT(slotListFolderDone(QString,QVariant)));
 
     connect(mStorageService, SIGNAL(createFolderDone(QString,QString)), this, SLOT(slotCreateFolderDone(QString,QString)));
 
@@ -136,7 +136,10 @@ void StorageServicePage::connectStorageService()
 
 void StorageServicePage::slotRenameFolderDone(const QString &serviceName, const QString &folderName)
 {
-    Q_EMIT updateStatusBarMessage(i18n("%1: Folder was renamed to '%2'.", serviceName, folderName));
+    if (folderName.isEmpty())
+        Q_EMIT updateStatusBarMessage(i18n("%1: Folder was renamed.", serviceName));
+    else
+        Q_EMIT updateStatusBarMessage(i18n("%1: Folder was renamed to '%2'.", serviceName, folderName));
     updateList(serviceName);
 }
 
@@ -161,7 +164,7 @@ void StorageServicePage::slotUploadFileDone(const QString &serviceName, const QS
         mProgressWidget->reset();
         mProgressWidget->hide();
         updateList(serviceName);
-        KMessageBox::information(this, i18n("%1 was correctly uploaded", i18n("Upload File"), fileName));
+        KMessageBox::information(this, fileName.isEmpty() ? i18n("Filename was correctly uploaded") : i18n("%1 was correctly uploaded",fileName), i18n("Upload File"));
     }
 }
 
@@ -266,7 +269,7 @@ void StorageServicePage::slotProgressStateChanged(bool state)
     }
 }
 
-void StorageServicePage::slotListFolderDone(const QString &serviceName, const QString &data)
+void StorageServicePage::slotListFolderDone(const QString &serviceName, const QVariant &data)
 {
     if (verifyService(serviceName)) {
         mTreeWidget->setIsInitialized();
@@ -277,14 +280,19 @@ void StorageServicePage::slotListFolderDone(const QString &serviceName, const QS
 void StorageServicePage::slotCreateFolderDone(const QString &serviceName, const QString &folder)
 {
     updateList(serviceName);
-    Q_EMIT updateStatusBarMessage(i18n("%1: Folder %2 was created.", serviceName, folder));
+    if (folder.isEmpty())
+        Q_EMIT updateStatusBarMessage(i18n("%1: Folder was created.", serviceName));
+    else
+        Q_EMIT updateStatusBarMessage(i18n("%1: Folder %2 was created.", serviceName, folder));
 }
 
 void StorageServicePage::slotDeleteFolderDone(const QString &serviceName, const QString &folder)
 {
-    Q_UNUSED(folder);
     updateList(serviceName);
-    Q_EMIT updateStatusBarMessage(i18n("%1: Folder %2 was deleted.", serviceName, folder));
+    if (folder.isEmpty())
+        Q_EMIT updateStatusBarMessage(i18n("%1: Folder was deleted.", serviceName));
+    else
+        Q_EMIT updateStatusBarMessage(i18n("%1: Folder %2 was deleted.", serviceName, folder));
 }
 
 void StorageServicePage::slotDeleteFileDone(const QString &serviceName, const QString &filename)
@@ -350,7 +358,7 @@ void StorageServicePage::slotDownloadFileFailed(const QString &serviceName, cons
     if (verifyService(serviceName)) {
         mProgressWidget->hide();
     }
-    //TODO inform it.
+    KMessageBox::error(this, i18n("Download Failed"), i18n("Download"));
 }
 
 void StorageServicePage::slotUploadFileFailed(const QString &serviceName, const QString &filename)
@@ -358,7 +366,7 @@ void StorageServicePage::slotUploadFileFailed(const QString &serviceName, const 
     if (verifyService(serviceName)) {
         mProgressWidget->hide();
     }
-    //TODO inform it.
+    KMessageBox::error(this, i18n("Upload Failed"), i18n("Upload"));
 }
 
 void StorageServicePage::slotGoHome()
@@ -369,4 +377,14 @@ void StorageServicePage::slotGoHome()
 void StorageServicePage::slotGoToFolder(const QString &folder)
 {
     mTreeWidget->goToFolder(folder);
+}
+
+void StorageServicePage::setNetworkIsDown(bool state)
+{
+    mTreeWidget->setEnabled(!state);
+}
+
+void StorageServicePage::showLog()
+{
+    mStorageServiceWarning->showLog();
 }

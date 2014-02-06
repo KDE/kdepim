@@ -49,7 +49,7 @@ private Q_SLOTS:
     void slotAuthenticationFailed(const QString &serviceName, const QString &errorMessage);
     void slotCreateFolderDone(const QString &serviceName, const QString &folderName);
     void slotUploadFileDone(const QString &serviceName, const QString &fileName);
-    void slotListFolderDone(const QString &serviceName, const QString &listFolder);
+    void slotListFolderDone(const QString &serviceName, const QVariant &listFolder);
     void slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &info);
     void slotDownloadFileDone(const QString &serviceName, const QString &filename);
     void slotUploadFile();

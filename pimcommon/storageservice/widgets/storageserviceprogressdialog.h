@@ -57,7 +57,22 @@ public:
     explicit StorageServiceProgressDialog(QWidget *alignWidget, QWidget *parent=0);
     ~StorageServiceProgressDialog();
 
+protected:
+    void setVisible(bool b);
+private slots:
+    void slotTransactionAdded();
+    void slotTransactionCompleted();
+    void slotTransactionCanceled();
+    void slotTransactionProgress();
+    void slotTransactionUsesBusyIndicator();
+    void slotShow();
+    void slotHide();
+    void slotClose();
+    void slotToggleVisibility();
 private:
+    //QMap<const ProgressItem *, StorageServiceProgressWidget *> mTransactionsToListviewItems;
+    bool mWasLastShown;
+
     ProgressIndicatorView *mScrollView;
 };
 }

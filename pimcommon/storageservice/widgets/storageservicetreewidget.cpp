@@ -26,6 +26,8 @@
 #include <KGlobal>
 #include <KLocale>
 #include <KMimeType>
+#include <KMenu>
+#include <KDateTime>
 
 #include <QTreeWidgetItem>
 #include <QHeaderView>
@@ -38,6 +40,8 @@ StorageServiceTreeWidget::StorageServiceTreeWidget(StorageServiceAbstract *stora
     : QTreeWidget(parent),
       mStorageService(storageService)
 {
+    setContextMenuPolicy( Qt::CustomContextMenu );
+    connect( this, SIGNAL(customContextMenuRequested(QPoint)), SLOT(slotContextMenu(QPoint)) );
     setSortingEnabled(true);
     setAlternatingRowColors(true);
     setRootIsDecorated(false);
@@ -51,6 +55,28 @@ StorageServiceTreeWidget::StorageServiceTreeWidget(StorageServiceAbstract *stora
 StorageServiceTreeWidget::~StorageServiceTreeWidget()
 {
 
+}
+
+void StorageServiceTreeWidget::slotMoveUp()
+{
+    if (parentFolder() == currentFolder())
+        return;
+    setCurrentFolder(parentFolder());
+    QTimer::singleShot(0, this, SLOT(refreshList()));
+}
+
+void StorageServiceTreeWidget::createMenuActions(KMenu *menu)
+{
+    menu->addAction( KIcon(QLatin1String("go-up")),  i18n("Up"), this, SLOT(slotMoveUp()));
+    menu->addSeparator();
+}
+
+void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
+{
+    KMenu *menu = new KMenu( this );
+    createMenuActions(menu);
+    menu->exec( mapToGlobal( pos ) );
+    delete menu;
 }
 
 void StorageServiceTreeWidget::createMoveUpItem()
@@ -153,7 +179,7 @@ void StorageServiceTreeWidget::refreshList()
     mStorageService->listFolder(mCurrentFolder);
 }
 
-void StorageServiceTreeWidget::slotListFolderDone(const QString &serviceName, const QString &data)
+void StorageServiceTreeWidget::slotListFolderDone(const QString &serviceName, const QVariant &data)
 {
     Q_UNUSED(serviceName);
     const QString parentFolder = mStorageService->fillListWidget(this, data, currentFolder());
@@ -165,14 +191,6 @@ void StorageServiceTreeWidget::goToFolder(const QString &folder)
     if (folder == currentFolder())
         return;
     setCurrentFolder(folder);
-    QTimer::singleShot(0, this, SLOT(refreshList()));
-}
-
-void StorageServiceTreeWidget::moveUp()
-{
-    if (parentFolder() == currentFolder())
-        return;
-    setCurrentFolder(parentFolder());
     QTimer::singleShot(0, this, SLOT(refreshList()));
 }
 
@@ -189,7 +207,7 @@ void StorageServiceTreeWidget::slotItemDoubleClicked(QTreeWidgetItem *item, int 
             break;
         }
         case StorageServiceTreeWidget::MoveUpType:
-            moveUp();
+            slotMoveUp();
             break;
         case StorageServiceTreeWidget::File:
             Q_EMIT fileDoubleClicked();
@@ -231,12 +249,12 @@ void StorageServiceTreeWidgetItem::setSize(qulonglong size)
     setText(StorageServiceTreeWidget::ColumnSize, KGlobal::locale()->formatByteSize(size));
 }
 
-void StorageServiceTreeWidgetItem::setDateCreated(const QDateTime &date)
+void StorageServiceTreeWidgetItem::setDateCreated(const KDateTime &date)
 {
     setText(StorageServiceTreeWidget::ColumnCreated, KGlobal::locale()->formatDateTime(date));
 }
 
-void StorageServiceTreeWidgetItem::setLastModification(const QDateTime &date)
+void StorageServiceTreeWidgetItem::setLastModification(const KDateTime &date)
 {
     setText(StorageServiceTreeWidget::ColumnLastModification, KGlobal::locale()->formatDateTime(date));
 }

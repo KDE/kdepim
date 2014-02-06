@@ -57,12 +57,13 @@ public:
     QString fileIdentifier(const QVariantMap &variantMap);
     QString fileShareRoot(const QVariantMap &variantMap);
     StorageServiceAbstract::Capabilities capabilities() const;
-    QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder);
+    QString fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder);
     QString itemInformation(const QVariantMap &variantMap);
 
     KIcon icon() const;
     QRegExp disallowedSymbols() const;
     QString disallowedSymbolsStr() const;
+    qlonglong maximumUploadFileSize() const;
 
 private slots:
     void slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);

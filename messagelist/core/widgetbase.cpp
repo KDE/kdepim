@@ -137,7 +137,8 @@ Widget::Widget( QWidget *pParent )
   connect(d->quickSearchLine, SIGNAL(clearButtonClicked()), SLOT(searchEditClearButtonClicked()) );
   connect(d->quickSearchLine, SIGNAL(fullSearchRequest()), this, SIGNAL(fullSearchRequest()) );
 
-  connect( d->quickSearchLine, SIGNAL(searchEditTextEdited(QString)), SLOT(searchEditTextEdited(QString)) );
+  connect( d->quickSearchLine, SIGNAL(searchEditTextEdited(QString)), SLOT(searchEditTextEdited()) );
+  connect( d->quickSearchLine, SIGNAL(searchOptionChanged(SearchOptions)), SLOT(searchEditTextEdited()) );
   g->addWidget( d->quickSearchLine, 0 );
 
   d->mView = new View( this );
@@ -948,7 +949,7 @@ void Widget::statusSelected( int index )
   d->mView->model()->setFilter( d->mFilter );
 }
 
-void Widget::searchEditTextEdited( const QString & )
+void Widget::searchEditTextEdited()
 {
   // This slot is called whenever the user edits the search QLineEdit.
   // Since the user is likely to type more than one character
@@ -982,7 +983,7 @@ void Widget::searchTimerFired()
   const QString text = d->quickSearchLine->searchEdit()->text();
 
   d->mFilter->setCurrentFolder( d->mCurrentFolderUrl );
-  d->mFilter->setSearchString( text );
+  d->mFilter->setSearchString( text, d->quickSearchLine->searchOptions() );
   if ( d->mFilter->isEmpty() ) {
     resetFilter();
     return;

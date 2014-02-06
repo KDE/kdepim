@@ -53,14 +53,15 @@ public:
     virtual void refreshToken();
 
 Q_SIGNALS:
-    void authorizationDone(const QString &refreshToken, const QString &token);
+    void authorizationDone(const QString &refreshToken, const QString &token, const QDateTime &expireTime);
 
 private slots:
     void slotSendDataFinished(QNetworkReply *reply);
     void slotAuthJobFinished(KGAPI2::Job *job);
     void slotAboutFetchJobFinished(KGAPI2::Job *job);
     void slotDeleteFileFinished(KGAPI2::Job *job);
-    void slotFileFetchJobFinished(KGAPI2::Job *job);
+    void slotFileFetchFinished(KGAPI2::Job *job);
+    void slotChildReferenceFetchJobFinished(KGAPI2::Job *job);
 
 protected:
     virtual void parseCreateServiceFolder(const QString &data);
@@ -96,6 +97,7 @@ protected:
     QString mApiUrl;
     QString mFileInfoPath;
 private:
+    QString lastPathComponent(const QUrl &url) const;
     void shareLink(const QString &fileId);
     KGAPI2::AccountPtr mAccount;
 };

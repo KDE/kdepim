@@ -32,12 +32,14 @@
 #include <QToolButton>
 #include <QHBoxLayout>
 #include <QPushButton>
+#include <QButtonGroup>
 #include <QLabel>
+
+//#define SHOW_EXTRA_OPTION 1
 
 using namespace MessageList::Core;
 QuickSearchLine::QuickSearchLine(QWidget *parent)
     : QWidget(parent),
-      mSearchOptions(SearchNoOption),
       mFirstTagInComboIndex(-1)
 {
     QVBoxLayout *vbox = new QVBoxLayout;
@@ -108,23 +110,28 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
 
     mSearchAgainstBody = new QPushButton(i18n("Body"));
     mSearchAgainstBody->setCheckable(true);
-    connect(mSearchAgainstBody, SIGNAL(clicked(bool)), this, SLOT(slotSearchOptionChanged()));
     hbox->addWidget(mSearchAgainstBody);
 
     mSearchAgainstSubject = new QPushButton(i18n("Subject"));
     mSearchAgainstSubject->setCheckable(true);
-    connect(mSearchAgainstSubject, SIGNAL(clicked(bool)), this, SLOT(slotSearchOptionChanged()));
     hbox->addWidget(mSearchAgainstSubject);
 
     mSearchAgainstFrom = new QPushButton(i18n("From"));
-    connect(mSearchAgainstFrom, SIGNAL(clicked(bool)), this, SLOT(slotSearchOptionChanged()));
     mSearchAgainstFrom->setCheckable(true);
     hbox->addWidget(mSearchAgainstFrom);
 
     mSearchAgainstBcc = new QPushButton(i18n("Bcc"));
-    connect(mSearchAgainstBcc, SIGNAL(clicked(bool)), this, SLOT(slotSearchOptionChanged()));
     mSearchAgainstBcc->setCheckable(true);
     hbox->addWidget(mSearchAgainstBcc);
+    mButtonGroup = new QButtonGroup(this);
+
+    mButtonGroup->addButton(mSearchAgainstBody, 0);
+    mButtonGroup->addButton(mSearchAgainstSubject);
+    mButtonGroup->addButton(mSearchAgainstFrom);
+    mButtonGroup->addButton(mSearchAgainstBcc);
+    mButtonGroup->button(0)->setChecked(true);
+    connect(mButtonGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotSearchOptionChanged()));
+    mButtonGroup->setExclusive(true);
 }
 
 QuickSearchLine::~QuickSearchLine()
@@ -134,7 +141,7 @@ QuickSearchLine::~QuickSearchLine()
 
 void QuickSearchLine::slotSearchEditTextEdited(const QString &text)
 {
-#if 0
+#ifdef SHOW_EXTRA_OPTION
     if (text.isEmpty())
         mExtraOption->hide();
     else
@@ -145,33 +152,38 @@ void QuickSearchLine::slotSearchEditTextEdited(const QString &text)
 
 void QuickSearchLine::slotClearButtonClicked()
 {
-#if 0
+#ifdef SHOW_EXTRA_OPTION
     mExtraOption->hide();
+    mButtonGroup->button(0)->setChecked(true);
 #endif
     Q_EMIT clearButtonClicked();
 }
 
 void QuickSearchLine::slotSearchOptionChanged()
 {
-    mSearchOptions = SearchNoOption;
-    if (mSearchAgainstBody->isChecked()) {
-        mSearchOptions |= SearchAgainstBody;
-    }
-    if (mSearchAgainstSubject->isChecked()) {
-        mSearchOptions |= SearchAgainstSubject;
-    }
-    if (mSearchAgainstFrom->isChecked()) {
-        mSearchOptions |= SearchAgainstFrom;
-    }
-    if (mSearchAgainstBcc->isChecked()) {
-        mSearchOptions |= SearchAgainstBcc;
-    }
-    Q_EMIT searchOptionChanged(mSearchOptions);
+    Q_EMIT searchOptionChanged(searchOptions());
 }
 
 QuickSearchLine::SearchOptions QuickSearchLine::searchOptions() const
 {
-    return mSearchOptions;
+    QuickSearchLine::SearchOptions searchOptions = SearchNoOption;
+#ifdef SHOW_EXTRA_OPTION
+    if (mSearchAgainstBody->isChecked()) {
+        searchOptions |= SearchAgainstBody;
+    }
+    if (mSearchAgainstSubject->isChecked()) {
+        searchOptions |= SearchAgainstSubject;
+    }
+    if (mSearchAgainstFrom->isChecked()) {
+        searchOptions |= SearchAgainstFrom;
+    }
+    if (mSearchAgainstBcc->isChecked()) {
+        searchOptions |= SearchAgainstBcc;
+    }
+#else
+    searchOptions |= SearchAgainstBody;
+#endif
+    return searchOptions;
 }
 
 void QuickSearchLine::focusQuickSearch()

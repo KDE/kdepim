@@ -45,13 +45,12 @@ public Q_SLOTS:
     void slotDeleteFile();
     void slotShareFile();
 
-
 protected:
     void paintEvent(QPaintEvent *event);
+    void createMenuActions(KMenu *menu);
 
 private Q_SLOTS:
-    void slotContextMenu(const QPoint &pos);
-    void slotMoveUp();
+
     void slotRenameFile();
     void slotRenameFolder();
     void slotGeneralPaletteChanged();

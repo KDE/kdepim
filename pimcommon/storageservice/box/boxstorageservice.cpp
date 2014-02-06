@@ -331,7 +331,7 @@ void BoxStorageService::storageServicelistFolder(const QString &folder)
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken);
-        connect(job, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
+        connect(job, SIGNAL(listFolderDone(QVariant)), this, SLOT(slotListFolderDone(QVariant)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->listFolder(folder);
     }
@@ -482,14 +482,14 @@ void BoxStorageService::storageServicecreateServiceFolder()
     }
 }
 
-QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder)
+QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder)
 {
     Q_UNUSED(currentFolder);
     listWidget->clear();
     QJson::Parser parser;
     bool ok;
 
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    const QMap<QString, QVariant> info = parser.parse(data.toString().toUtf8(), &ok).toMap();
     qDebug()<<" info "<<info;
     listWidget->createMoveUpItem();
     QString parentId;

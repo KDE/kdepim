@@ -21,19 +21,27 @@
 
 #include <KDialog>
 #include "pimcommon_export.h"
+#include "storageservice/widgets/storageservicetreewidget.h"
 
 class QTreeWidgetItem;
 class QLabel;
+class KMenu;
 namespace PimCommon {
 class StorageServiceAbstract;
-class StorageServiceTreeWidget;
 class StorageServiceProgressIndicator;
 class StorageServiceTreeWidgetItem;
+class StorageServiceDeleteTreeWidget;
 class PIMCOMMON_EXPORT StorageServiceDeleteDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit StorageServiceDeleteDialog(PimCommon::StorageServiceAbstract *storage, QWidget *parent=0);
+    enum DeleteType {
+        DeleteAll = 0,
+        DeleteFiles,
+        DeleteFolders
+    };
+
+    explicit StorageServiceDeleteDialog(PimCommon::StorageServiceDeleteDialog::DeleteType type, PimCommon::StorageServiceAbstract *storage, QWidget *parent=0);
     ~StorageServiceDeleteDialog();
 
 Q_SIGNALS:
@@ -44,22 +52,47 @@ private slots:
     void slotItemActivated(QTreeWidgetItem *item, int column);
 
     void slotUpdatePixmap(const QPixmap &pix);
-    void slotListFolderDone(const QString &serviceName, const QString &data);
+    void slotListFolderDone(const QString &serviceName, const QVariant &data);
     void slotActionFailed(const QString &serviceName, const QString &data);
     void slotItemDoubleClicked(QTreeWidgetItem *item, int);
     void slotDelete();
+
+    void slotDeleteFolderDone(const QString &serviceName, const QString &filename);
+    void slotDeleteFileDone(const QString &serviceName, const QString &filename);
+    void slotRefreshList();
 
 private:
     void deleteFile(StorageServiceTreeWidgetItem *storageServiceItem);
     void deleteFolder(StorageServiceTreeWidgetItem *storageServiceItem);
 
+
     void readConfig();
     void writeConfig();
-    StorageServiceTreeWidget *mTreeWidget;
+    DeleteType mDeleteType;
+    StorageServiceDeleteTreeWidget *mTreeWidget;
     PimCommon::StorageServiceAbstract *mStorage;
     PimCommon::StorageServiceProgressIndicator *mStorageServiceProgressIndicator;
     QLabel *mLabelProgressIncator;
 };
+
+class StorageServiceDeleteTreeWidget : public PimCommon::StorageServiceTreeWidget
+{
+    Q_OBJECT
+public:
+    explicit StorageServiceDeleteTreeWidget(PimCommon::StorageServiceDeleteDialog::DeleteType type, PimCommon::StorageServiceAbstract *storageService, QWidget *parent=0);
+
+    PimCommon::StorageServiceDeleteDialog::DeleteType deleteType() const;
+
+Q_SIGNALS:
+    void deleteFileFolder();
+
+protected:
+    virtual void createMenuActions(KMenu *menu);
+
+private:
+    PimCommon::StorageServiceDeleteDialog::DeleteType mDeleteType;
+};
+
 }
 
 #endif // STORAGESERVICEDELETEDIALOG_H

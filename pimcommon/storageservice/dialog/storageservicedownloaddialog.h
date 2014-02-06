@@ -20,15 +20,16 @@
 
 #include <KDialog>
 #include "pimcommon_export.h"
+#include "storageservice/widgets/storageservicetreewidget.h"
 
 class QTreeWidgetItem;
 class QLabel;
 namespace PimCommon {
 class StorageServiceAbstract;
-class StorageServiceTreeWidget;
 class StorageServiceProgressWidget;
 class StorageServiceProgressIndicator;
 class StorageServiceTreeWidgetItem;
+class StorageServiceDownloadTreeWidget;
 class PIMCOMMON_EXPORT StorageServiceDownloadDialog : public KDialog
 {
     Q_OBJECT
@@ -46,7 +47,7 @@ private slots:
 
     void slotDownfileFailed(const QString &serviceName, const QString &filename);
     void slotUpdatePixmap(const QPixmap &pix);
-    void slotListFolderDone(const QString &serviceName, const QString &data);
+    void slotListFolderDone(const QString &serviceName, const QVariant &data);
     void slotActionFailed(const QString &serviceName, const QString &data);
     void slotUploadDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total);
     void slotItemDoubleClicked(QTreeWidgetItem *item, int);
@@ -55,12 +56,27 @@ private:
     void readConfig();
     void writeConfig();
     QString mDefaultDownloadPath;
-    StorageServiceTreeWidget *mTreeWidget;
+    StorageServiceDownloadTreeWidget *mTreeWidget;
     PimCommon::StorageServiceAbstract *mStorage;
     PimCommon::StorageServiceProgressWidget *mProgressWidget;
     PimCommon::StorageServiceProgressIndicator *mStorageServiceProgressIndicator;
     QLabel *mLabelProgressIncator;
 };
+
+class StorageServiceDownloadTreeWidget : public PimCommon::StorageServiceTreeWidget
+{
+    Q_OBJECT
+public:
+    explicit StorageServiceDownloadTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent=0);
+
+Q_SIGNALS:
+    void downloadFile();
+
+protected:
+    virtual void createMenuActions(KMenu *menu);
+};
+
+
 }
 
 #endif // STORAGESERVICEDOWNLOADDIALOG_H

@@ -1512,12 +1512,12 @@ QString SearchPattern::asString() const
 
 SearchPattern::SparqlQueryError SearchPattern::asAkonadiQuery( Akonadi::SearchQuery& query ) const
 {
-  query = Akonadi::SearchQuery(Akonadi::SearchTerm::RelOr);
+  query = Akonadi::SearchQuery();
 
   Akonadi::SearchTerm term(Akonadi::SearchTerm::RelAnd);
-//   if ( op == SearchPattern::OpOr ) {
-//     term = Akonadi::SearchTerm(Akonadi::SearchTerm::RelOr);
-//   }
+  if ( op() == SearchPattern::OpOr ) {
+    term = Akonadi::SearchTerm(Akonadi::SearchTerm::RelOr);
+  }
 
   const_iterator end( constEnd() );
   bool emptyIsNotAnError = false;
