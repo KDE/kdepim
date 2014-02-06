@@ -124,7 +124,7 @@ public:
     virtual KIcon icon() const = 0;
     virtual void removeConfig() = 0;
     virtual StorageServiceAbstract::Capabilities capabilities() const = 0;
-    virtual QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder) = 0;
+    virtual QString fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder) = 0;
     virtual QString itemInformation(const QVariantMap &variantMap) = 0;
     virtual QString fileIdentifier(const QVariantMap &variantMap) = 0;
     virtual QString fileShareRoot(const QVariantMap &variantMap) = 0;
@@ -145,7 +145,7 @@ Q_SIGNALS:
     void authenticationFailed(const QString &serviceName, const QString &error = QString());
     void createFolderDone(const QString &serviceName, const QString &folderName);
     void uploadFileDone(const QString &serviceName, const QString &fileName);
-    void listFolderDone(const QString &serviceName, const QString &listFolder);
+    void listFolderDone(const QString &serviceName, const QVariant &listFolder);
     void downLoadFileDone(const QString &serviceName, const QString &fileName);
     void deleteFolderDone(const QString &serviceName, const QString &folder);
     void deleteFileDone(const QString &serviceName, const QString &filename);
@@ -166,7 +166,7 @@ protected slots:
     void slotuploadDownloadFileProgress(qint64 done, qint64 total);
     void slotCreateFolderDone(const QString &folderName);
     void slotUploadFileDone(const QString &filename);
-    void slotListFolderDone(const QString &listFolder);
+    void slotListFolderDone(const QVariant &listFolder);
     void slotDownLoadFileDone(const QString &fileName);
     void slotDeleteFolderDone(const QString &folder);
     void slotDeleteFileDone(const QString &filename);

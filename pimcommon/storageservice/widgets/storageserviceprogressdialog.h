@@ -70,7 +70,7 @@ private slots:
     void slotClose();
     void slotToggleVisibility();
 private:
-    //QMap<const ProgressItem *, TransactionItem *> mTransactionsToListviewItems;
+    //QMap<const ProgressItem *, StorageServiceProgressWidget *> mTransactionsToListviewItems;
     bool mWasLastShown;
 
     ProgressIndicatorView *mScrollView;

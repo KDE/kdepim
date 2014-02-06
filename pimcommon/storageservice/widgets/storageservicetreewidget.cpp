@@ -178,7 +178,7 @@ void StorageServiceTreeWidget::refreshList()
     mStorageService->listFolder(mCurrentFolder);
 }
 
-void StorageServiceTreeWidget::slotListFolderDone(const QString &serviceName, const QString &data)
+void StorageServiceTreeWidget::slotListFolderDone(const QString &serviceName, const QVariant &data)
 {
     Q_UNUSED(serviceName);
     const QString parentFolder = mStorageService->fillListWidget(this, data, currentFolder());

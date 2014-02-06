@@ -306,13 +306,13 @@ StorageServiceAbstract::Capabilities WebDavStorageService::capabilities() const
     return serviceCapabilities();
 }
 
-QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder)
+QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder)
 {
     //qDebug()<<" data"<<data;
     listWidget->clear();
     listWidget->createMoveUpItem();
 
-    const QList<QWebdavUrlInfo> lst = QWebdavUrlInfo::parseListInfo(data);
+    const QList<QWebdavUrlInfo> lst = QWebdavUrlInfo::parseListInfo(data.toString());
     Q_FOREACH(const QWebdavUrlInfo &info, lst) {
         if (QUrl(info.name()).path() == currentFolder)
           continue;
@@ -374,7 +374,7 @@ void WebDavStorageService::storageServicelistFolder(const QString &folder)
     } else {
         WebDavJob *job = new WebDavJob(this);
         job->initializeToken(mPublicLocation, mServiceLocation, mUsername, mPassword);
-        connect(job, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
+        connect(job, SIGNAL(listFolderDone(QVariant)), this, SLOT(slotListFolderDone(QVariant)));
         connectDefaultSlot(job);
         job->listFolder(folder);
     }

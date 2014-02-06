@@ -20,7 +20,7 @@
 #include "storageservice/storageservicemanager.h"
 #include "gdrivejob.h"
 
-#include <qjson/parser.h>
+#include <libkgapi2/drive/file.h>
 
 #include <KLocalizedString>
 #include <KConfig>
@@ -270,7 +270,7 @@ void GDriveStorageService::storageServicelistFolder(const QString &folder)
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mAccount);
-        connect(job, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
+        connect(job, SIGNAL(listFolderDone(QVariant)), this, SLOT(slotListFolderDone(QVariant)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->listFolder(folder);
     }
@@ -412,44 +412,22 @@ void GDriveStorageService::storageServicecreateServiceFolder()
     }
 }
 
-QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder)
+QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder)
 {
     listWidget->clear();
     listWidget->createMoveUpItem();
-#if 0
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    qDebug()<<" info "<<info;
-    QString parentId;
-    if (info.contains(QLatin1String("id"))) {
-        parentId = info.value(QLatin1String("id")).toString();
-    }
-    if (info.contains(QLatin1String("item_collection"))) {
-        const QVariantMap itemCollection = info.value(QLatin1String("item_collection")).toMap();
-        if (itemCollection.contains(QLatin1String("entries"))) {
-            const QVariantList entries = itemCollection.value(QLatin1String("entries")).toList();
-            Q_FOREACH (const QVariant &v, entries) {
-                const QVariantMap mapEntries = v.toMap();
-                if (mapEntries.contains(QLatin1String("type"))) {
-                    const QString type = mapEntries.value(QLatin1String("type")).toString();
-                    const QString name = mapEntries.value(QLatin1String("name")).toString();
-                    const QString id = mapEntries.value(QLatin1String("id")).toString();
-                    if (type == QLatin1String("folder")) {
-                        listWidget->addFolder(name, id);
-                    } else if (type == QLatin1String("file")) {
-                        listWidget->addFile(name, id);
-                    }
-                }
-                //qDebug()<<" v"<<v;
+    const QStringList lst = data.toStringList();
+    Q_FOREACH(const QString &item, lst) {
+        qDebug()<<" item "<<item;
+        KGAPI2::Drive::FilePtr file = KGAPI2::Drive::File::fromJSON(item.toLatin1());
+        if (file) {
+            if (file->isFolder()) {
+                listWidget->addFolder(file->title(), file->title());
+            } else {
+                listWidget->addFile(file->title(), file->title());
             }
         }
     }
-#endif
-    const QStringList lst = data.split(QLatin1String(","));
-    Q_FOREACH(const QString &item, lst) {
-        qDebug()<<" item "<<item;
-    }
-
-    qDebug()<<" lst"<<lst;
     return QString(); //TODO
 }
 

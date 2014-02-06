@@ -89,7 +89,7 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
     setMainWidget(w);
     enableButton(User1, false);
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotDownloadFile()));
-    connect(mStorage, SIGNAL(listFolderDone(QString,QString)), this, SLOT(slotListFolderDone(QString,QString)));
+    connect(mStorage, SIGNAL(listFolderDone(QString,QVariant)), this, SLOT(slotListFolderDone(QString,QVariant)));
     connect(mStorage, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
     connect(mStorage, SIGNAL(downLoadFileDone(QString,QString)), this, SLOT(slotDownfileDone(QString,QString)));
     connect(mStorage, SIGNAL(downLoadFileFailed(QString,QString)), this, SLOT(slotDownfileFailed(QString,QString)));
@@ -123,7 +123,7 @@ void StorageServiceDownloadDialog::slotActionFailed(const QString &serviceName, 
     enableButton(User1, true);
 }
 
-void StorageServiceDownloadDialog::slotListFolderDone(const QString &serviceName, const QString &data)
+void StorageServiceDownloadDialog::slotListFolderDone(const QString &serviceName, const QVariant &data)
 {
     mTreeWidget->setEnabled(true);
     mStorageServiceProgressIndicator->stopAnimation();

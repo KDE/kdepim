@@ -52,7 +52,7 @@ private slots:
     void slotItemActivated(QTreeWidgetItem *item, int column);
 
     void slotUpdatePixmap(const QPixmap &pix);
-    void slotListFolderDone(const QString &serviceName, const QString &data);
+    void slotListFolderDone(const QString &serviceName, const QVariant &data);
     void slotActionFailed(const QString &serviceName, const QString &data);
     void slotItemDoubleClicked(QTreeWidgetItem *item, int);
     void slotDelete();

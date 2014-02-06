@@ -106,7 +106,7 @@ void StorageServicePage::connectStorageService()
 
     connect(mStorageService, SIGNAL(inProgress(bool)), this, SLOT(slotProgressStateChanged(bool)));
 
-    connect(mStorageService, SIGNAL(listFolderDone(QString,QString)), this, SLOT(slotListFolderDone(QString,QString)));
+    connect(mStorageService, SIGNAL(listFolderDone(QString,QVariant)), this, SLOT(slotListFolderDone(QString,QVariant)));
 
     connect(mStorageService, SIGNAL(createFolderDone(QString,QString)), this, SLOT(slotCreateFolderDone(QString,QString)));
 
@@ -269,7 +269,7 @@ void StorageServicePage::slotProgressStateChanged(bool state)
     }
 }
 
-void StorageServicePage::slotListFolderDone(const QString &serviceName, const QString &data)
+void StorageServicePage::slotListFolderDone(const QString &serviceName, const QVariant &data)
 {
     if (verifyService(serviceName)) {
         mTreeWidget->setIsInitialized();

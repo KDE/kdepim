@@ -88,7 +88,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void refreshList();
-    void slotListFolderDone(const QString &serviceName, const QString &data);
+    void slotListFolderDone(const QString &serviceName, const QVariant &data);
 
 
 protected:

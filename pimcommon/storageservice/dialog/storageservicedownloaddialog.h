@@ -47,7 +47,7 @@ private slots:
 
     void slotDownfileFailed(const QString &serviceName, const QString &filename);
     void slotUpdatePixmap(const QPixmap &pix);
-    void slotListFolderDone(const QString &serviceName, const QString &data);
+    void slotListFolderDone(const QString &serviceName, const QVariant &data);
     void slotActionFailed(const QString &serviceName, const QString &data);
     void slotUploadDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total);
     void slotItemDoubleClicked(QTreeWidgetItem *item, int);

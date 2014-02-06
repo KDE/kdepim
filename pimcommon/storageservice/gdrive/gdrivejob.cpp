@@ -110,11 +110,10 @@ void GDriveJob::slotFileFetchFinished(KGAPI2::Job* job)
         if ( file->labels()->trashed() ) {
             continue;
         }
-        QString value = QString::fromLatin1(KGAPI2::Drive::File::toJSON(file));
+        const QString value = QString::fromLatin1(KGAPI2::Drive::File::toJSON(file));
         listFolder<<value;
     }
-    //TODO fix seperator
-    Q_EMIT listFolderDone(listFolder.join(QLatin1String(",")));
+    Q_EMIT listFolderDone(QVariant(listFolder));
     deleteLater();
 }
 

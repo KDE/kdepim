@@ -351,7 +351,7 @@ void StorageServiceAbstract::slotUploadFileDone(const QString &filename)
     changeProgressState(false);
 }
 
-void StorageServiceAbstract::slotListFolderDone(const QString &listFolder)
+void StorageServiceAbstract::slotListFolderDone(const QVariant &listFolder)
 {
     Q_EMIT listFolderDone(storageServiceName(), listFolder);
     changeProgressState(false);

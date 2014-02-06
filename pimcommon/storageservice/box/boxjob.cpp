@@ -209,7 +209,7 @@ void BoxJob::slotSendDataFinished(QNetworkReply *reply)
         }
         return;
     }
-    qDebug()<<" data: "<<data;
+    //qDebug()<<" data: "<<data;
     switch(mActionType) {
     case PimCommon::StorageServiceAbstract::NoneAction:
         deleteLater();
@@ -431,6 +431,7 @@ QNetworkReply *BoxJob::uploadFile(const QString &filename, const QString &upload
         mError = false;
         if (file->open(QIODevice::ReadOnly)) {
             QUrl url;
+            //TODO upload multipart
             url.setUrl(QLatin1String("https://upload.box.com/api/2.0/files/content"));
             QNetworkRequest request(url);
             request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));

@@ -98,7 +98,7 @@ void UbuntuoneStorageService::storageServicelistFolder(const QString &folder)
         storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
-        connect(job, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
+        connect(job, SIGNAL(listFolderDone(QVariant)), this, SLOT(slotListFolderDone(QVariant)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
         job->listFolder(folder);
@@ -387,7 +387,7 @@ StorageServiceAbstract::Capabilities UbuntuoneStorageService::capabilities() con
     return serviceCapabilities();
 }
 
-QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder)
+QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder)
 {
     Q_UNUSED(currentFolder);
     listWidget->clear();
@@ -395,7 +395,7 @@ QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWi
     QJson::Parser parser;
     bool ok;
     QString parentFolder;
-    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    QMap<QString, QVariant> info = parser.parse(data.toString().toUtf8(), &ok).toMap();
     //qDebug()<<" info "<<info;
     if (info.contains(QLatin1String("children"))) {
         const QVariantList lst = info.value(QLatin1String("children")).toList();

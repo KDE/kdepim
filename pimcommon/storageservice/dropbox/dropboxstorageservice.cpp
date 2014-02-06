@@ -124,7 +124,7 @@ void DropBoxStorageService::storageServicelistFolder(const QString &folder)
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        connect(job, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
+        connect(job, SIGNAL(listFolderDone(QVariant)), this, SLOT(slotListFolderDone(QVariant)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->listFolder(folder);
     }
@@ -400,7 +400,7 @@ StorageServiceAbstract::Capabilities DropBoxStorageService::capabilities() const
     return serviceCapabilities();
 }
 
-QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder)
+QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder)
 {
     Q_UNUSED(currentFolder);
     listWidget->clear();
@@ -408,7 +408,7 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
     bool ok;
     QString parentFolder;
     listWidget->createMoveUpItem();
-    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    QMap<QString, QVariant> info = parser.parse(data.toString().toUtf8(), &ok).toMap();
     if (info.contains(QLatin1String("path"))) {
         const QString path = info.value(QLatin1String("path")).toString();
         if (parentFolder.isEmpty()) {

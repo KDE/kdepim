@@ -112,7 +112,7 @@ StorageServiceDeleteDialog::StorageServiceDeleteDialog(DeleteType type, PimCommo
     setMainWidget(w);
     enableButton(User1, false);
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotDelete()));
-    connect(mStorage, SIGNAL(listFolderDone(QString,QString)), this, SLOT(slotListFolderDone(QString,QString)));
+    connect(mStorage, SIGNAL(listFolderDone(QString,QVariant)), this, SLOT(slotListFolderDone(QString,QVariant)));
     connect(mStorage, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
     connect(mStorage,SIGNAL(deleteFileDone(QString,QString)), this, SLOT(slotDeleteFileDone(QString,QString)), Qt::UniqueConnection);
     connect(mStorage,SIGNAL(deleteFolderDone(QString,QString)), this, SLOT(slotDeleteFolderDone(QString,QString)), Qt::UniqueConnection);
@@ -154,7 +154,7 @@ void StorageServiceDeleteDialog::slotActionFailed(const QString &serviceName, co
     enableButton(User1, true);
 }
 
-void StorageServiceDeleteDialog::slotListFolderDone(const QString &serviceName, const QString &data)
+void StorageServiceDeleteDialog::slotListFolderDone(const QString &serviceName, const QVariant &data)
 {
     mTreeWidget->setEnabled(true);
     mStorageServiceProgressIndicator->stopAnimation();
