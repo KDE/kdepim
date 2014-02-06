@@ -108,6 +108,7 @@ private slots:
 
     void slotUploadFileDone(const QString &serviceName, const QString &filename);
     void slotUploadFileFailed(const QString &serviceName, const QString &filename);
+    void slotActionFailed(const QString &serviceName, const QString &filename);
 
 protected:
     void keyPressEvent( QKeyEvent * event );
