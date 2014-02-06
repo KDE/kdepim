@@ -27,6 +27,7 @@
 
 #include <Akonadi/KMime/MessageStatus>
 #include <KUrl>
+#include "quicksearchline.h"
 
 namespace MessageList
 {
@@ -80,7 +81,7 @@ public:
   /**
    * Sets the search string for this filter.
    */
-  void setSearchString( const QString &search );
+  void setSearchString(const QString &search, QuickSearchLine::SearchOptions options);
 
   /**
    * Returns the currently set MessageItem::Tag id

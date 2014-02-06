@@ -40,7 +40,6 @@
 using namespace MessageList::Core;
 QuickSearchLine::QuickSearchLine(QWidget *parent)
     : QWidget(parent),
-      mSearchOptions(SearchNoOption),
       mFirstTagInComboIndex(-1)
 {
     QVBoxLayout *vbox = new QVBoxLayout;
@@ -124,15 +123,15 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mSearchAgainstBcc = new QPushButton(i18n("Bcc"));
     mSearchAgainstBcc->setCheckable(true);
     hbox->addWidget(mSearchAgainstBcc);
-    QButtonGroup *group = new QButtonGroup(this);
+    mButtonGroup = new QButtonGroup(this);
 
-    group->addButton(mSearchAgainstBody, 0);
-    group->addButton(mSearchAgainstSubject);
-    group->addButton(mSearchAgainstFrom);
-    group->addButton(mSearchAgainstBcc);
-    group->button(0)->setChecked(true);
-    connect(group, SIGNAL(buttonClicked(int)), this, SLOT(slotSearchOptionChanged()));
-    group->setExclusive(true);
+    mButtonGroup->addButton(mSearchAgainstBody, 0);
+    mButtonGroup->addButton(mSearchAgainstSubject);
+    mButtonGroup->addButton(mSearchAgainstFrom);
+    mButtonGroup->addButton(mSearchAgainstBcc);
+    mButtonGroup->button(0)->setChecked(true);
+    connect(mButtonGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotSearchOptionChanged()));
+    mButtonGroup->setExclusive(true);
 }
 
 QuickSearchLine::~QuickSearchLine()
@@ -142,7 +141,7 @@ QuickSearchLine::~QuickSearchLine()
 
 void QuickSearchLine::slotSearchEditTextEdited(const QString &text)
 {
-#if SHOW_EXTRA_OPTION
+#ifdef SHOW_EXTRA_OPTION
     if (text.isEmpty())
         mExtraOption->hide();
     else
@@ -153,34 +152,38 @@ void QuickSearchLine::slotSearchEditTextEdited(const QString &text)
 
 void QuickSearchLine::slotClearButtonClicked()
 {
-#if SHOW_EXTRA_OPTION
+#ifdef SHOW_EXTRA_OPTION
     mExtraOption->hide();
-    group->button(0)->setChecked(true);
+    mButtonGroup->button(0)->setChecked(true);
 #endif
     Q_EMIT clearButtonClicked();
 }
 
 void QuickSearchLine::slotSearchOptionChanged()
 {
-    mSearchOptions = SearchNoOption;
-    if (mSearchAgainstBody->isChecked()) {
-        mSearchOptions |= SearchAgainstBody;
-    }
-    if (mSearchAgainstSubject->isChecked()) {
-        mSearchOptions |= SearchAgainstSubject;
-    }
-    if (mSearchAgainstFrom->isChecked()) {
-        mSearchOptions |= SearchAgainstFrom;
-    }
-    if (mSearchAgainstBcc->isChecked()) {
-        mSearchOptions |= SearchAgainstBcc;
-    }
-    Q_EMIT searchOptionChanged(mSearchOptions);
+    Q_EMIT searchOptionChanged(searchOptions());
 }
 
 QuickSearchLine::SearchOptions QuickSearchLine::searchOptions() const
 {
-    return mSearchOptions;
+    QuickSearchLine::SearchOptions searchOptions = SearchNoOption;
+#ifdef SHOW_EXTRA_OPTION
+    if (mSearchAgainstBody->isChecked()) {
+        searchOptions |= SearchAgainstBody;
+    }
+    if (mSearchAgainstSubject->isChecked()) {
+        searchOptions |= SearchAgainstSubject;
+    }
+    if (mSearchAgainstFrom->isChecked()) {
+        searchOptions |= SearchAgainstFrom;
+    }
+    if (mSearchAgainstBcc->isChecked()) {
+        searchOptions |= SearchAgainstBcc;
+    }
+#else
+    searchOptions |= SearchAgainstBody;
+#endif
+    return searchOptions;
 }
 
 void QuickSearchLine::focusQuickSearch()

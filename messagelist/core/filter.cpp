@@ -83,7 +83,7 @@ void Filter::setCurrentFolder( const KUrl &url )
   mCurrentFolder = url;
 }
 
-void Filter::setSearchString( const QString &search )
+void Filter::setSearchString( const QString &search, QuickSearchLine::SearchOptions options )
 {
   const QString trimStr = search.trimmed();
   if (mSearchString == trimStr) {
@@ -98,7 +98,15 @@ void Filter::setSearchString( const QString &search )
   }
 
   Baloo::PIM::EmailQuery query;
-  query.matches(mSearchString);
+  if (options & QuickSearchLine::SearchAgainstSubject) {
+      query.subjectMatches(mSearchString);
+  } else if (options & QuickSearchLine::SearchAgainstBody) {
+      query.matches(mSearchString);
+  } else if (options & QuickSearchLine::SearchAgainstFrom) {
+      query.setFrom(mSearchString);
+  } else if (options & QuickSearchLine::SearchAgainstBcc) {
+      query.setBcc(QStringList() << mSearchString);
+  }
 
   Akonadi::Collection col = Akonadi::Collection::fromUrl(mCurrentFolder);
   if (col.isValid()) {
