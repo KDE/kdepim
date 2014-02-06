@@ -421,9 +421,12 @@ QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
         KGAPI2::Drive::FilePtr file = KGAPI2::Drive::File::fromJSON(item.toLatin1());
         if (file) {
             if (file->isFolder()) {
-                listWidget->addFolder(file->title(), file->title());
+                StorageServiceTreeWidgetItem *item = listWidget->addFolder(file->title(), file->title());
+                //item->setDateCreated(file->createdDate());
             } else {
-                listWidget->addFile(file->title(), file->title());
+                StorageServiceTreeWidgetItem *item = listWidget->addFile(file->title(), file->title(), file->mimeType());
+                item->setSize(file->fileSize());
+                //item->setDateCreated(file->createdDate());
             }
         }
     }
