@@ -47,12 +47,25 @@ GDriveStorageService::~GDriveStorageService()
 {
 }
 
+bool GDriveStorageService::needToRefreshToken() const
+{
+    if (mExpireDateTime < QDateTime::currentDateTime())
+        return true;
+    else
+        return false;
+}
+
 void GDriveStorageService::readConfig()
 {
     KConfig config(StorageServiceManager::kconfigName());
     KConfigGroup grp(&config, "GoogleDrive Settings");
     mAccount->setRefreshToken(grp.readEntry("Refresh Token"));
     mAccount->setAccessToken(grp.readEntry("Token"));
+    if (grp.hasKey("Expire Time")) {
+        mExpireDateTime = grp.readEntry("Expire Time", QDateTime::currentDateTime());
+    } else {
+        mExpireDateTime = QDateTime();
+    }
 }
 
 void GDriveStorageService::removeConfig()
@@ -67,7 +80,7 @@ void GDriveStorageService::refreshToken()
 {
     GDriveJob *job = new GDriveJob(this);
     job->initializeToken(mAccount);
-    connect(job, SIGNAL(authorizationDone(QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString)));
+    connect(job, SIGNAL(authorizationDone(QString,QString,QDateTime)), this, SLOT(slotAuthorizationDone(QString,QString,QDateTime)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
     connect(job, SIGNAL(actionFailed(QString)), this, SLOT(slotActionFailed(QString)));
     job->refreshToken();
@@ -77,7 +90,7 @@ void GDriveStorageService::storageServiceauthentication()
 {
     GDriveJob *job = new GDriveJob(this);
     job->initializeToken(mAccount);
-    connect(job, SIGNAL(authorizationDone(QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString)));
+    connect(job, SIGNAL(authorizationDone(QString,QString,QDateTime)), this, SLOT(slotAuthorizationDone(QString,QString,QDateTime)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
     job->requestTokenAccess();
 }
@@ -89,25 +102,31 @@ void GDriveStorageService::slotAuthorizationFailed(const QString &errorMessage)
     emitAuthentificationFailder(errorMessage);
 }
 
-void GDriveStorageService::slotAuthorizationDone(const QString &refreshToken, const QString &token)
+void GDriveStorageService::slotAuthorizationDone(const QString &refreshToken, const QString &token, const QDateTime &expireTime)
 {
     mAccount->setRefreshToken(refreshToken);
     mAccount->setAccessToken(token);
+    mExpireDateTime = expireTime;
     KConfig config(StorageServiceManager::kconfigName());
     KConfigGroup grp(&config, "GoogleDrive Settings");
     grp.writeEntry("Refresh Token", refreshToken);
     grp.writeEntry("Token", token);
+    grp.writeEntry("Expire Time", mExpireDateTime);
     grp.sync();
     emitAuthentificationDone();
 }
 
 void GDriveStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
-    if (mAccount->accessToken().isEmpty()) {
+    if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(ShareLink);
         mNextAction->setPath(path);
         mNextAction->setRootPath(root);
-        storageServiceauthentication();
+        if (mAccount->accessToken().isEmpty()) {
+            storageServiceauthentication();
+        } else {
+            refreshToken();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mAccount);
@@ -119,12 +138,16 @@ void GDriveStorageService::storageServiceShareLink(const QString &root, const QS
 
 void GDriveStorageService::storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
-    if (mAccount->accessToken().isEmpty()) {
+    if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(DownLoadFile);
         mNextAction->setNextActionName(name);
         mNextAction->setDownloadDestination(destination);
         mNextAction->setFileId(fileId);
-        storageServiceauthentication();
+        if (mAccount->accessToken().isEmpty()) {
+            storageServiceauthentication();
+        } else {
+            refreshToken();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mAccount);
@@ -138,10 +161,14 @@ void GDriveStorageService::storageServicedownloadFile(const QString &name, const
 
 void GDriveStorageService::storageServicedeleteFile(const QString &filename)
 {
-    if (mAccount->accessToken().isEmpty()) {
+    if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(DeleteFile);
         mNextAction->setNextActionName(filename);
-        storageServiceauthentication();
+        if (mAccount->accessToken().isEmpty()) {
+            storageServiceauthentication();
+        } else {
+            refreshToken();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mAccount);
@@ -153,10 +180,14 @@ void GDriveStorageService::storageServicedeleteFile(const QString &filename)
 
 void GDriveStorageService::storageServicedeleteFolder(const QString &foldername)
 {
-    if (mAccount->accessToken().isEmpty()) {
+    if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(DeleteFolder);
         mNextAction->setNextActionFolder(foldername);
-        storageServiceauthentication();
+        if (mAccount->accessToken().isEmpty()) {
+            storageServiceauthentication();
+        } else {
+            refreshToken();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mAccount);
@@ -168,10 +199,14 @@ void GDriveStorageService::storageServicedeleteFolder(const QString &foldername)
 
 void GDriveStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
 {
-    if (mAccount->accessToken().isEmpty()) {
+    if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(RenameFolder);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (mAccount->accessToken().isEmpty()) {
+            storageServiceauthentication();
+        } else {
+            refreshToken();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mAccount);
@@ -183,10 +218,14 @@ void GDriveStorageService::storageServiceRenameFolder(const QString &source, con
 
 void GDriveStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
 {
-    if (mAccount->accessToken().isEmpty()) {
+    if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(RenameFile);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (mAccount->accessToken().isEmpty()) {
+            storageServiceauthentication();
+        } else {
+            refreshToken();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mAccount);
@@ -198,10 +237,14 @@ void GDriveStorageService::storageServiceRenameFile(const QString &source, const
 
 void GDriveStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
 {
-    if (mAccount->accessToken().isEmpty()) {
+    if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(MoveFolder);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (mAccount->accessToken().isEmpty()) {
+            storageServiceauthentication();
+        } else {
+            refreshToken();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mAccount);
@@ -213,10 +256,14 @@ void GDriveStorageService::storageServiceMoveFolder(const QString &source, const
 
 void GDriveStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
 {
-    if (mAccount->accessToken().isEmpty()) {
+    if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(MoveFile);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (mAccount->accessToken().isEmpty()) {
+            storageServiceauthentication();
+        } else {
+            refreshToken();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mAccount);
@@ -228,10 +275,14 @@ void GDriveStorageService::storageServiceMoveFile(const QString &source, const Q
 
 void GDriveStorageService::storageServiceCopyFile(const QString &source, const QString &destination)
 {
-    if (mAccount->accessToken().isEmpty()) {
+    if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(CopyFile);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (mAccount->accessToken().isEmpty()) {
+            storageServiceauthentication();
+        } else {
+            refreshToken();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mAccount);
@@ -243,10 +294,14 @@ void GDriveStorageService::storageServiceCopyFile(const QString &source, const Q
 
 void GDriveStorageService::storageServiceCopyFolder(const QString &source, const QString &destination)
 {
-    if (mAccount->accessToken().isEmpty()) {
+    if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(CopyFolder);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (mAccount->accessToken().isEmpty()) {
+            storageServiceauthentication();
+        } else {
+            refreshToken();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mAccount);
@@ -263,10 +318,14 @@ QString GDriveStorageService::itemInformation(const QVariantMap &variantMap)
 
 void GDriveStorageService::storageServicelistFolder(const QString &folder)
 {
-    if (mAccount->accessToken().isEmpty()) {
+    if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(ListFolder);
         mNextAction->setNextActionFolder(folder);
-        storageServiceauthentication();
+        if (mAccount->accessToken().isEmpty()) {
+            storageServiceauthentication();
+        } else {
+            refreshToken();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mAccount);
@@ -278,11 +337,15 @@ void GDriveStorageService::storageServicelistFolder(const QString &folder)
 
 void GDriveStorageService::storageServicecreateFolder(const QString &name, const QString &destination)
 {
-    if (mAccount->accessToken().isEmpty()) {
+    if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(CreateFolder);
         mNextAction->setNextActionName(name);
         mNextAction->setNextActionFolder(destination);
-        storageServiceauthentication();
+        if (mAccount->accessToken().isEmpty()) {
+            storageServiceauthentication();
+        } else {
+            refreshToken();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mAccount);
@@ -294,9 +357,13 @@ void GDriveStorageService::storageServicecreateFolder(const QString &name, const
 
 void GDriveStorageService::storageServiceaccountInfo()
 {
-    if (mAccount->accessToken().isEmpty()) {
+    if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(AccountInfo);
-        storageServiceauthentication();
+        if (mAccount->accessToken().isEmpty()) {
+            storageServiceauthentication();
+        } else {
+            refreshToken();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mAccount);
@@ -313,12 +380,16 @@ QString GDriveStorageService::name()
 
 void GDriveStorageService::storageServiceuploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
-    if (mAccount->accessToken().isEmpty()) {
+    if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(UploadFile);
         mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
         mNextAction->setUploadAsName(uploadAsName);
-        storageServiceauthentication();
+        if (mAccount->accessToken().isEmpty()) {
+            storageServiceauthentication();
+        } else {
+            refreshToken();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mAccount);
@@ -400,9 +471,13 @@ StorageServiceAbstract::Capabilities GDriveStorageService::capabilities() const
 
 void GDriveStorageService::storageServicecreateServiceFolder()
 {
-    if (mAccount->accessToken().isEmpty()) {
+    if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
         mNextAction->setNextActionType(CreateServiceFolder);
-        storageServiceauthentication();
+        if (mAccount->accessToken().isEmpty()) {
+            storageServiceauthentication();
+        } else {
+            refreshToken();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mAccount);
@@ -418,19 +493,20 @@ QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
     listWidget->createMoveUpItem();
     const QStringList lst = data.toStringList();
     Q_FOREACH(const QString &item, lst) {
+        qDebug()<<" item "<<item;
         KGAPI2::Drive::FilePtr file = KGAPI2::Drive::File::fromJSON(item.toLatin1());
         if (file) {
             if (file->isFolder()) {
                 StorageServiceTreeWidgetItem *item = listWidget->addFolder(file->title(), file->title());
-                //item->setDateCreated(file->createdDate());
+                item->setDateCreated(file->createdDate());
+                item->setLastModification(file->modifiedDate());
             } else {
                 StorageServiceTreeWidgetItem *item = listWidget->addFile(file->title(), file->title(), file->mimeType());
                 item->setSize(file->fileSize());
-                //item->setDateCreated(file->createdDate());
+                item->setDateCreated(file->createdDate());
+                item->setLastModification(file->modifiedDate());
             }
             //TODO store value
-            //TODO fix size
-            //TODO fix created date
             //TODO other :)
         }
 

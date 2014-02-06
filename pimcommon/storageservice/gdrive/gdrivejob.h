@@ -53,7 +53,7 @@ public:
     virtual void refreshToken();
 
 Q_SIGNALS:
-    void authorizationDone(const QString &refreshToken, const QString &token);
+    void authorizationDone(const QString &refreshToken, const QString &token, const QDateTime &expireTime);
 
 private slots:
     void slotSendDataFinished(QNetworkReply *reply);

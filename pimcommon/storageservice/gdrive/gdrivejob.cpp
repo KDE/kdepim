@@ -141,7 +141,8 @@ void GDriveJob::slotAuthJobFinished(KGAPI2::Job *job)
         return;
     }
     KGAPI2::AccountPtr account = authJob->account();
-    Q_EMIT authorizationDone(account->refreshToken(),account->accessToken());
+    qDebug()<<" account->expireDateTime()"<<account->expireDateTime();
+    Q_EMIT authorizationDone(account->refreshToken(),account->accessToken(), account->expireDateTime());
     /* Always remember to delete the jobs, otherwise your application will
      * leak memory. */
     authJob->deleteLater();
@@ -213,6 +214,16 @@ QNetworkReply * GDriveJob::downloadFile(const QString &name, const QString &file
     return 0;
 }
 
+void GDriveJob::refreshToken()
+{
+    mActionType = PimCommon::StorageServiceAbstract::AccessToken;
+    KGAPI2::AuthJob *authJob = new KGAPI2::AuthJob(
+                mAccount,
+                mClientId,
+                mClientSecret);
+    connect(authJob, SIGNAL(finished(KGAPI2::Job*)),
+            this, SLOT(slotAuthJobFinished(KGAPI2::Job*)));
+}
 
 
 /*old **********************/
@@ -633,20 +644,3 @@ void GDriveJob::parseAccessToken(const QString &data)
 }
 
 
-void GDriveJob::refreshToken()
-{
-    mActionType = PimCommon::StorageServiceAbstract::AccessToken;
-    QNetworkRequest request(QUrl(mServiceUrl + QLatin1String("/oauth/token")));
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-
-    QUrl postData;
-
-    postData.addQueryItem(QLatin1String("refresh_token"), mRefreshToken);
-    postData.addQueryItem(QLatin1String("grant_type"), QLatin1String("refresh_token"));
-    postData.addQueryItem(QLatin1String("client_id"), mClientId);
-    postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
-    qDebug()<<"refreshToken postData: "<<postData;
-
-    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-}
