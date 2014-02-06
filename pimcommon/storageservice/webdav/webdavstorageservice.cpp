@@ -26,6 +26,7 @@
 #include <kwallet.h>
 
 #include <KLocalizedString>
+#include <KDateTime>
 #include <KConfig>
 #include <KGlobal>
 #include <KConfigGroup>
@@ -320,14 +321,14 @@ QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
         if (info.isDir()) {
             QFileInfo folderInfo(info.name());
             item = listWidget->addFolder(folderInfo.dir().dirName(), info.name());
-            item->setDateCreated(info.createdAt());
-            item->setLastModification(info.lastModified());
+            item->setDateCreated(KDateTime(info.createdAt()));
+            item->setLastModification(KDateTime(info.lastModified()));
         } else {
             const QString mimetype = info.mimeType();
             QFileInfo fileInfo(info.name());
             item = listWidget->addFile(fileInfo.fileName(), info.name(), mimetype);
-            item->setDateCreated(info.createdAt());
-            item->setLastModification(info.lastModified());
+            item->setDateCreated(KDateTime(info.createdAt()));
+            item->setLastModification(KDateTime(info.lastModified()));
         }
         //TODO item->setStoreInfo(QVariantMap(info.properties()));
     }

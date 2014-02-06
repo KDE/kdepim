@@ -24,6 +24,7 @@
 #include <QTreeWidget>
 #include "pimcommon_export.h"
 class KMenu;
+class KDateTime;
 namespace PimCommon {
 class StorageServiceTreeWidget;
 class StorageServiceAbstract;
@@ -33,8 +34,8 @@ public:
     StorageServiceTreeWidgetItem(StorageServiceTreeWidget *parent);
     bool operator<(const QTreeWidgetItem &other) const;
     void setSize(qulonglong size);
-    void setDateCreated(const QDateTime &date);
-    void setLastModification(const QDateTime &date);
+    void setDateCreated(const KDateTime &date);
+    void setLastModification(const KDateTime &date);
     void setStoreInfo(const QVariantMap &data);
     QVariantMap storeInfo() const;
 };

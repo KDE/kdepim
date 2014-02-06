@@ -19,12 +19,12 @@
 #define YOUSENDITUTIL_H
 
 #include <QStringList>
-#include <QDateTime>
+#include <KDateTime>
 namespace PimCommon {
 namespace YouSendItUtil
 {
 QStringList getListFolder(const QString &data);
-QDateTime convertToDateTime(QString dateTime, bool removeTimeZone = false);
+KDateTime convertToDateTime(QString dateTime, bool removeTimeZone = false);
 }
 }
 

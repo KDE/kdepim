@@ -27,6 +27,7 @@
 #include <KLocale>
 #include <KMimeType>
 #include <KMenu>
+#include <KDateTime>
 
 #include <QTreeWidgetItem>
 #include <QHeaderView>
@@ -248,12 +249,12 @@ void StorageServiceTreeWidgetItem::setSize(qulonglong size)
     setText(StorageServiceTreeWidget::ColumnSize, KGlobal::locale()->formatByteSize(size));
 }
 
-void StorageServiceTreeWidgetItem::setDateCreated(const QDateTime &date)
+void StorageServiceTreeWidgetItem::setDateCreated(const KDateTime &date)
 {
     setText(StorageServiceTreeWidget::ColumnCreated, KGlobal::locale()->formatDateTime(date));
 }
 
-void StorageServiceTreeWidgetItem::setLastModification(const QDateTime &date)
+void StorageServiceTreeWidgetItem::setLastModification(const KDateTime &date)
 {
     setText(StorageServiceTreeWidget::ColumnLastModification, KGlobal::locale()->formatDateTime(date));
 }

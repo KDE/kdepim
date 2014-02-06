@@ -22,6 +22,7 @@
 
 #include <qjson/parser.h>
 
+#include <KDateTime>
 #include <KLocalizedString>
 #include <KConfig>
 #include <KGlobal>
@@ -408,11 +409,11 @@ QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWi
                     const QString path = map.value(QLatin1String("path")).toString();
                     item = listWidget->addFolder(path, path);
                     if (map.contains(QLatin1String("when_created"))) {
-                        const QDateTime t = QDateTime::fromString(map.value(QLatin1String("when_created")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ"));
+                        const KDateTime t = KDateTime(QDateTime::fromString(map.value(QLatin1String("when_created")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ")));
                         item->setDateCreated(t);
                     }
                     if (map.contains(QLatin1String("when_changed"))) {
-                        const QDateTime t = QDateTime::fromString(map.value(QLatin1String("when_changed")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ"));
+                        const KDateTime t = KDateTime(QDateTime::fromString(map.value(QLatin1String("when_changed")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ")));
                         item->setLastModification(t);
                     }
                 } else if (kind == QLatin1String("file")) {
@@ -422,11 +423,11 @@ QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWi
                         item->setSize(map.value(QLatin1String("size")).toULongLong());
                     }
                     if (map.contains(QLatin1String("when_created"))) {
-                        const QDateTime t = QDateTime::fromString(map.value(QLatin1String("when_created")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ"));
+                        const KDateTime t = KDateTime(QDateTime::fromString(map.value(QLatin1String("when_created")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ")));
                         item->setDateCreated(t);
                     }
                     if (map.contains(QLatin1String("when_changed"))) {
-                        const QDateTime t = QDateTime::fromString(map.value(QLatin1String("when_changed")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ"));
+                        const KDateTime t = KDateTime(QDateTime::fromString(map.value(QLatin1String("when_changed")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ")));
                         item->setLastModification(t);
                     }
                 } else {
