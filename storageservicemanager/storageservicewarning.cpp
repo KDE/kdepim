@@ -47,11 +47,7 @@ StorageServiceWarning::~StorageServiceWarning()
 void StorageServiceWarning::slotShowDetails(const QString &content)
 {
     if (content == QLatin1String("actionfailed")) {
-        QPointer<StorageServiceLogDialog> dlg = new StorageServiceLogDialog(this);
-        connect(dlg, SIGNAL(clearLog()), this, SLOT(slotClearLog()));
-        dlg->setLog(mLogInformation);
-        dlg->exec();
-        delete dlg;
+        showLog();
     }
 }
 
@@ -65,4 +61,13 @@ void StorageServiceWarning::slotClearLog()
 {
     mLogInformation.clear();
     animatedHide();
+}
+
+void StorageServiceWarning::showLog()
+{
+    QPointer<StorageServiceLogDialog> dlg = new StorageServiceLogDialog(this);
+    connect(dlg, SIGNAL(clearLog()), this, SLOT(slotClearLog()));
+    dlg->setLog(mLogInformation);
+    dlg->exec();
+    delete dlg;
 }

@@ -1,6 +1,9 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
 <kpartgui name="storageservicemanager" version="1">
  <MenuBar>
+  <Menu name="file" >
+    <Action name="show_log" />
+  </Menu>
   <Menu name="edit" >
    <text>&amp;Edit</text>
    <Action name="authenticate"/>

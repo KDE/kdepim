@@ -29,11 +29,11 @@ class StorageServiceTabWidget : public QTabWidget
     Q_OBJECT
 public:
     explicit StorageServiceTabWidget(QWidget *parent=0);
-    ~StorageServiceTabWidget();    
+    ~StorageServiceTabWidget();
 
-    PimCommon::StorageServiceAbstract::Capabilities capabilities() const;    
+    PimCommon::StorageServiceAbstract::Capabilities capabilities() const;
     void setListStorageService(const QMap<QString, PimCommon::StorageServiceAbstract *> &list);
-    void updateListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &list);    
+    void updateListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &list);
     bool hasUploadDownloadProgress() const;
     void serviceRemoved(const QString &serviceName);
     void setNetworkIsDown(bool state);
@@ -49,7 +49,7 @@ public slots:
     void slotUploadFile();
     void slotDeleteFile();
     void slotDownloadFile();
-
+    void slotShowLog();
 private slots:
     void slotUpdateIcon(const QIcon &icon, StorageServicePage *page);
 

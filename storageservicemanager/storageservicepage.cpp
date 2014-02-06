@@ -383,3 +383,8 @@ void StorageServicePage::setNetworkIsDown(bool state)
 {
     mTreeWidget->setEnabled(!state);
 }
+
+void StorageServicePage::showLog()
+{
+    mStorageServiceWarning->showLog();
+}

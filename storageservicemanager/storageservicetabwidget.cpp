@@ -192,3 +192,12 @@ void StorageServiceTabWidget::setNetworkIsDown(bool state)
         }
     }
 }
+
+void StorageServiceTabWidget::slotShowLog()
+{
+    if (currentWidget()) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        if (page)
+            page->showLog();
+    }
+}

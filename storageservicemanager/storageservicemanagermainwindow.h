@@ -60,6 +60,7 @@ private:
     KAction *mDeleteFile;
     KAction *mAuthenticate;
     KAction *mRefreshList;
+    KAction *mShowLog;
     QLabel *mStatusBarInfo;
     bool mNetworkIsDown;
 };
