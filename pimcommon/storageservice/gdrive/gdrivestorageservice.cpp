@@ -418,7 +418,6 @@ QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
     listWidget->createMoveUpItem();
     const QStringList lst = data.toStringList();
     Q_FOREACH(const QString &item, lst) {
-        qDebug()<<" item "<<item;
         KGAPI2::Drive::FilePtr file = KGAPI2::Drive::File::fromJSON(item.toLatin1());
         if (file) {
             if (file->isFolder()) {
