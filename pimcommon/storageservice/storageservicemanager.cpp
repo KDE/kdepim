@@ -199,8 +199,7 @@ void StorageServiceManager::slotShareFile()
                     connect(service,SIGNAL(uploadFileFailed(QString,QString)), this, SIGNAL(uploadFileFailed(QString,QString)), Qt::UniqueConnection);
                     connect(service,SIGNAL(shareLinkDone(QString,QString)), this, SIGNAL(shareLinkDone(QString,QString)), Qt::UniqueConnection);
                     Q_EMIT uploadFileStart(service);
-                    //TODO fix me mDefaultUploadFolder
-                    service->uploadFile(fileName, newName, mDefaultUploadFolder);
+                    service->uploadFile(fileName, newName, QString());
                 }
             }
         }
