@@ -32,7 +32,10 @@
 #include <QToolButton>
 #include <QHBoxLayout>
 #include <QPushButton>
+#include <QButtonGroup>
 #include <QLabel>
+
+//#define SHOW_EXTRA_OPTION 1
 
 using namespace MessageList::Core;
 QuickSearchLine::QuickSearchLine(QWidget *parent)
@@ -108,23 +111,28 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
 
     mSearchAgainstBody = new QPushButton(i18n("Body"));
     mSearchAgainstBody->setCheckable(true);
-    connect(mSearchAgainstBody, SIGNAL(clicked(bool)), this, SLOT(slotSearchOptionChanged()));
     hbox->addWidget(mSearchAgainstBody);
 
     mSearchAgainstSubject = new QPushButton(i18n("Subject"));
     mSearchAgainstSubject->setCheckable(true);
-    connect(mSearchAgainstSubject, SIGNAL(clicked(bool)), this, SLOT(slotSearchOptionChanged()));
     hbox->addWidget(mSearchAgainstSubject);
 
     mSearchAgainstFrom = new QPushButton(i18n("From"));
-    connect(mSearchAgainstFrom, SIGNAL(clicked(bool)), this, SLOT(slotSearchOptionChanged()));
     mSearchAgainstFrom->setCheckable(true);
     hbox->addWidget(mSearchAgainstFrom);
 
     mSearchAgainstBcc = new QPushButton(i18n("Bcc"));
-    connect(mSearchAgainstBcc, SIGNAL(clicked(bool)), this, SLOT(slotSearchOptionChanged()));
     mSearchAgainstBcc->setCheckable(true);
     hbox->addWidget(mSearchAgainstBcc);
+    QButtonGroup *group = new QButtonGroup(this);
+
+    group->addButton(mSearchAgainstBody, 0);
+    group->addButton(mSearchAgainstSubject);
+    group->addButton(mSearchAgainstFrom);
+    group->addButton(mSearchAgainstBcc);
+    group->button(0)->setChecked(true);
+    connect(group, SIGNAL(buttonClicked(int)), this, SLOT(slotSearchOptionChanged()));
+    group->setExclusive(true);
 }
 
 QuickSearchLine::~QuickSearchLine()
@@ -134,7 +142,7 @@ QuickSearchLine::~QuickSearchLine()
 
 void QuickSearchLine::slotSearchEditTextEdited(const QString &text)
 {
-#if 0
+#if SHOW_EXTRA_OPTION
     if (text.isEmpty())
         mExtraOption->hide();
     else
@@ -145,8 +153,9 @@ void QuickSearchLine::slotSearchEditTextEdited(const QString &text)
 
 void QuickSearchLine::slotClearButtonClicked()
 {
-#if 0
+#if SHOW_EXTRA_OPTION
     mExtraOption->hide();
+    group->button(0)->setChecked(true);
 #endif
     Q_EMIT clearButtonClicked();
 }
