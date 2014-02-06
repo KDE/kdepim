@@ -156,13 +156,12 @@ void StorageServiceManagerMainWindow::setupActions()
 
 void StorageServiceManagerMainWindow::slotClose()
 {
-    if (!mStorageServiceTabWidget->hasUploadDownloadProgress()) {
-        close();
-    } else {
-        if (KMessageBox::Yes == KMessageBox::warningYesNo(this, i18n("There is still upload or download in progress. Do you want to close anyway?"))) {
-            close();
+    if (mStorageServiceTabWidget->hasUploadDownloadProgress()) {
+        if (KMessageBox::No == KMessageBox::warningYesNo(this, i18n("There is still upload or download in progress. Do you want to close anyway?"))) {
+            return;
         }
     }
+    close();
 }
 
 void StorageServiceManagerMainWindow::slotConfigure()
