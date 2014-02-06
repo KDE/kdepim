@@ -22,6 +22,7 @@ set(libpimcommon_shorturl_SRCS
 )
 
 if( LibKGAPI2_FOUND )
+  include_directories(${LibKGAPI2_INCLUDE_DIR})
   set(libpimcommon_storageservice_gdrive 
     storageservice/gdrive/gdrivestorageservice.cpp
     storageservice/gdrive/gdrivejob.cpp
