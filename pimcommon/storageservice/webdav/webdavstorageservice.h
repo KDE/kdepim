@@ -22,6 +22,7 @@
 #include "pimcommon_export.h"
 
 namespace PimCommon {
+class WebDavJob;
 class PIMCOMMON_EXPORT WebDavStorageService : public PimCommon::StorageServiceAbstract
 {
     Q_OBJECT
@@ -67,7 +68,9 @@ public:
 private slots:
     void slotAuthorizationFailed(const QString &errorMessage);    
     void slotAuthorizationDone(const QString &publicLocation, const QString &serviceLocation, const QString &username, const QString &password);
+
 private:
+    void connectDefaultSlot(WebDavJob *job);
     bool needInitialized() const;
     void readConfig();
     QString mPublicLocation;
