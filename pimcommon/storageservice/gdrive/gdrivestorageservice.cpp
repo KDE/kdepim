@@ -36,8 +36,11 @@ GDriveStorageService::GDriveStorageService(QObject *parent)
     : PimCommon::StorageServiceAbstract(parent)
 {
     mAccount = KGAPI2::AccountPtr(new KGAPI2::Account);
+    mAccount->addScope( QUrl( QLatin1String("https://www.googleapis.com/auth/drive") ) );
+    mAccount->addScope( QUrl( QLatin1String("https://www.googleapis.com/auth/drive.file")) );
+    mAccount->addScope( QUrl( QLatin1String("https://www.googleapis.com/auth/drive.metadata.readonly" )) );
+    mAccount->addScope( QUrl( QLatin1String("https://www.googleapis.com/auth/drive.readonly") ) );
     readConfig();
-
 }
 
 GDriveStorageService::~GDriveStorageService()
@@ -412,9 +415,8 @@ void GDriveStorageService::storageServicecreateServiceFolder()
 QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data, const QString &currentFolder)
 {
     listWidget->clear();
-    QJson::Parser parser;
-    bool ok;
     listWidget->createMoveUpItem();
+#if 0
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qDebug()<<" info "<<info;
     QString parentId;
@@ -441,8 +443,14 @@ QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
             }
         }
     }
-    qDebug()<<" parentId"<<parentId;
-    return parentId;
+#endif
+    const QStringList lst = data.split(QLatin1String(","));
+    Q_FOREACH(const QString &item, lst) {
+        qDebug()<<" item "<<item;
+    }
+
+    qDebug()<<" lst"<<lst;
+    return QString(); //TODO
 }
 
 #include "moc_gdrivestorageservice.cpp"

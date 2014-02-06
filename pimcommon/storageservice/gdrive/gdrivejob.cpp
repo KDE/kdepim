@@ -28,7 +28,10 @@
 #include <libkgapi2/drive/filedeletejob.h>
 #include <libkgapi2/drive/filefetchjob.h>
 #include <libkgapi2/drive/filefetchcontentjob.h>
-
+#include <libkgapi2/types.h>
+#include <libkgapi2/drive/childreferencefetchjob.h>
+#include <libkgapi2/drive/childreference.h>
+#include <libkgapi2/drive/file.h>
 #include <KLocalizedString>
 
 #include <qjson/parser.h>
@@ -57,23 +60,61 @@ GDriveJob::~GDriveJob()
 
 }
 
+QString GDriveJob::lastPathComponent( const QUrl &url ) const
+{
+    QString path = url.toString( QUrl::StripTrailingSlash );
+    if ( path.indexOf( QLatin1Char( '/' ) ) == -1 ) {
+        return QLatin1String( "root" );
+    } else {
+        return path.mid( path.lastIndexOf( QLatin1Char('/') ) + 1 );
+    }
+}
+
 void GDriveJob::listFolder(const QString &folder)
 {
     mActionType = PimCommon::StorageServiceAbstract::ListFolder;
     mError = false;
-    KGAPI2::Drive::FileFetchJob *fileFetchJob = new KGAPI2::Drive::FileFetchJob(mAccount, this);
-    connect(fileFetchJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotFileFetchJobFinished(KGAPI2::Job*)));
+    const QString folderId = lastPathComponent( folder );
+    qDebug()<<"folderId "<<folderId;
+    KGAPI2::Drive::ChildReferenceFetchJob *fetchJob = new KGAPI2::Drive::ChildReferenceFetchJob( folderId, mAccount );
+    connect(fetchJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotChildReferenceFetchJobFinished(KGAPI2::Job*)));
 }
 
-void GDriveJob::slotFileFetchJobFinished(KGAPI2::Job* job)
+void GDriveJob::slotChildReferenceFetchJobFinished(KGAPI2::Job *job)
+{
+    KGAPI2::Drive::ChildReferenceFetchJob *childRef = qobject_cast<KGAPI2::Drive::ChildReferenceFetchJob *>(job);
+    if (childRef) {
+        KGAPI2::ObjectsList objects = childRef->items();
+        QStringList filesIds;
+        Q_FOREACH ( const KGAPI2::ObjectPtr &object, objects ) {
+            const KGAPI2::Drive::ChildReferencePtr ref = object.dynamicCast<KGAPI2::Drive::ChildReference>();
+            filesIds << ref->id();
+        }
+        KGAPI2::Drive::FileFetchJob *fileFetchJob = new KGAPI2::Drive::FileFetchJob( filesIds, mAccount );
+        connect(fileFetchJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotFileFetchFinished(KGAPI2::Job*)));
+    } else {
+        //TODO emit error
+        deleteLater();
+    }
+}
+
+void GDriveJob::slotFileFetchFinished(KGAPI2::Job* job)
 {
     KGAPI2::Drive::FileFetchJob *fileFetchJob = qobject_cast<KGAPI2::Drive::FileFetchJob*>(job);
     Q_ASSERT(fileFetchJob);
-    qDebug()<<"void GDriveJob::slotFileFetchJobFinished(KGAPI2::Job* job)";
     qDebug()<<" fileFetchJob" <<fileFetchJob->items().count();
-    //TODO
-    Q_EMIT listFolderDone(QString());
-
+    QStringList listFolder;
+    KGAPI2::ObjectsList objects = fileFetchJob->items();
+    Q_FOREACH ( const KGAPI2::ObjectPtr &object, objects ) {
+        const KGAPI2::Drive::FilePtr file = object.dynamicCast<KGAPI2::Drive::File>();
+        if ( file->labels()->trashed() ) {
+            continue;
+        }
+        QString value = QString::fromLatin1(KGAPI2::Drive::File::toJSON(file));
+        listFolder<<value;
+    }
+    //TODO fix seperator
+    Q_EMIT listFolderDone(listFolder.join(QLatin1String(",")));
     deleteLater();
 }
 
