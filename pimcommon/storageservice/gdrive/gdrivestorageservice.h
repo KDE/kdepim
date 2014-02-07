@@ -66,7 +66,7 @@ public:
     QString fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder);
 
 private slots:
-    void slotAuthorizationDone(const QString &refreshToken, const QString &token, const QDateTime &expireTime);
+    void slotAuthorizationDone(const QString &refreshToken, const QString &token, const QDateTime &expireTime, const QString &accountName);
     void slotAuthorizationFailed(const QString &errorMessage);
 
 private:

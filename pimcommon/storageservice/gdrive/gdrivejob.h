@@ -53,35 +53,16 @@ public:
     virtual void refreshToken();
 
 Q_SIGNALS:
-    void authorizationDone(const QString &refreshToken, const QString &token, const QDateTime &expireTime);
+    void authorizationDone(const QString &refreshToken, const QString &token, const QDateTime &expireTime, const QString &accountName);
 
 private slots:
-    void slotSendDataFinished(QNetworkReply *reply);
     void slotAuthJobFinished(KGAPI2::Job *job);
     void slotAboutFetchJobFinished(KGAPI2::Job *job);
     void slotDeleteFileFinished(KGAPI2::Job *job);
     void slotFileFetchFinished(KGAPI2::Job *job);
     void slotChildReferenceFetchJobFinished(KGAPI2::Job *job);
 
-protected:
-    virtual void parseCreateServiceFolder(const QString &data);
-    virtual void parseListFolder(const QString &data);
-    virtual void parseRedirectUrl(const QUrl &url);
-    virtual void parseAccessToken(const QString &data);
-    virtual void getTokenAccess(const QString &authorizeCode);
-    virtual void parseUploadFile(const QString &data);
-    virtual void parseCreateFolder(const QString &data);
-    virtual void parseAccountInfo(const QString &data);
-    virtual void parseDeleteFile(const QString &data);
-    virtual void parseDeleteFolder(const QString &data);
-    virtual void parseCopyFile(const QString &data);
-    virtual void parseCopyFolder(const QString &data);
-    virtual void parseRenameFile(const QString &data);
-    virtual void parseRenameFolder(const QString &data);
-    virtual void parseMoveFolder(const QString &data);
-    virtual void parseMoveFile(const QString &data);
-    virtual void parseShareLink(const QString &data);
-
+private:
     QString mServiceUrl;
     QUrl mAuthUrl;
     QString mClientId;
@@ -96,7 +77,6 @@ protected:
     QString mCurrentAccountInfoPath;
     QString mApiUrl;
     QString mFileInfoPath;
-private:
     QString lastPathComponent(const QUrl &url) const;
     void shareLink(const QString &fileId);
     KGAPI2::AccountPtr mAccount;

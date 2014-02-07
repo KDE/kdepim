@@ -35,11 +35,6 @@ using namespace PimCommon;
 GDriveStorageService::GDriveStorageService(QObject *parent)
     : PimCommon::StorageServiceAbstract(parent)
 {
-    mAccount = KGAPI2::AccountPtr(new KGAPI2::Account);
-    mAccount->addScope( QUrl( QLatin1String("https://www.googleapis.com/auth/drive") ) );
-    mAccount->addScope( QUrl( QLatin1String("https://www.googleapis.com/auth/drive.file")) );
-    mAccount->addScope( QUrl( QLatin1String("https://www.googleapis.com/auth/drive.metadata.readonly" )) );
-    mAccount->addScope( QUrl( QLatin1String("https://www.googleapis.com/auth/drive.readonly") ) );
     readConfig();
 }
 
@@ -59,8 +54,24 @@ void GDriveStorageService::readConfig()
 {
     KConfig config(StorageServiceManager::kconfigName());
     KConfigGroup grp(&config, "GoogleDrive Settings");
-    mAccount->setRefreshToken(grp.readEntry("Refresh Token"));
-    mAccount->setAccessToken(grp.readEntry("Token"));
+
+    QList<QUrl> scopeUrls;
+
+    scopeUrls<<QUrl( QLatin1String("https://www.googleapis.com/auth/drive") );
+    scopeUrls<<QUrl( QLatin1String("https://www.googleapis.com/auth/drive.file"));
+    scopeUrls<<QUrl( QLatin1String("https://www.googleapis.com/auth/drive.metadata.readonly" ));
+    scopeUrls<<QUrl( QLatin1String("https://www.googleapis.com/auth/drive.readonly") );
+
+    const QString accountName = grp.readEntry("Account Name");
+    const QString refreshTokenStr = grp.readEntry("Refresh Token");
+    const QString accessTokenStr = grp.readEntry("Token");
+    if (accountName.isEmpty() || refreshTokenStr.isEmpty() || accessTokenStr.isEmpty()) {
+        mAccount = KGAPI2::AccountPtr(new KGAPI2::Account());
+        mAccount->setScopes(scopeUrls);
+    } else {
+        mAccount = KGAPI2::AccountPtr(new KGAPI2::Account(accountName, accessTokenStr, refreshTokenStr, scopeUrls));
+    }
+
     if (grp.hasKey("Expire Time")) {
         mExpireDateTime = grp.readEntry("Expire Time", QDateTime::currentDateTime());
     } else {
@@ -80,7 +91,7 @@ void GDriveStorageService::refreshToken()
 {
     GDriveJob *job = new GDriveJob(this);
     job->initializeToken(mAccount);
-    connect(job, SIGNAL(authorizationDone(QString,QString,QDateTime)), this, SLOT(slotAuthorizationDone(QString,QString,QDateTime)));
+    connect(job, SIGNAL(authorizationDone(QString,QString,QDateTime,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QDateTime,QString)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
     connect(job, SIGNAL(actionFailed(QString)), this, SLOT(slotActionFailed(QString)));
     job->refreshToken();
@@ -90,7 +101,7 @@ void GDriveStorageService::storageServiceauthentication()
 {
     GDriveJob *job = new GDriveJob(this);
     job->initializeToken(mAccount);
-    connect(job, SIGNAL(authorizationDone(QString,QString,QDateTime)), this, SLOT(slotAuthorizationDone(QString,QString,QDateTime)));
+    connect(job, SIGNAL(authorizationDone(QString,QString,QDateTime,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QDateTime,QString)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
     job->requestTokenAccess();
 }
@@ -102,7 +113,7 @@ void GDriveStorageService::slotAuthorizationFailed(const QString &errorMessage)
     emitAuthentificationFailder(errorMessage);
 }
 
-void GDriveStorageService::slotAuthorizationDone(const QString &refreshToken, const QString &token, const QDateTime &expireTime)
+void GDriveStorageService::slotAuthorizationDone(const QString &refreshToken, const QString &token, const QDateTime &expireTime, const QString &accountName)
 {
     mAccount->setRefreshToken(refreshToken);
     mAccount->setAccessToken(token);
@@ -112,6 +123,7 @@ void GDriveStorageService::slotAuthorizationDone(const QString &refreshToken, co
     grp.writeEntry("Refresh Token", refreshToken);
     grp.writeEntry("Token", token);
     grp.writeEntry("Expire Time", mExpireDateTime);
+    grp.writeEntry("Account Name", accountName);
     grp.sync();
     emitAuthentificationDone();
 }
