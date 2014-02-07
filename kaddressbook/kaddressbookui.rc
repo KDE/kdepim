@@ -21,6 +21,7 @@
       </Menu>
       <Menu name="file_export">
         <text>&amp;Export</text>
+        <Action name="file_export_vcard40"/>
         <Action name="file_export_vcard30"/>
         <Action name="file_export_vcard21"/>
         <Action name="file_export_csv"/>

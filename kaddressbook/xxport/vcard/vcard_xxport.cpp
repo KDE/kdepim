@@ -131,8 +131,10 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
 
     if ( option( QLatin1String("version") ) == QLatin1String("v21") ) {
       ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v2_1 ) );
-    } else {
+    } else if ( option( QLatin1String("version") ) == QLatin1String("v30") ) {
       ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v3_0 ) );
+    } else {
+      ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v4_0 ) );
     }
   } else {
     const int answer =
@@ -291,7 +293,7 @@ KABC::Addressee::List VCardXXPort::parseVCard( const QByteArray &data ) const
 }
 
 bool VCardXXPort::doExport( const KUrl &url, const QByteArray &data ) const
-{   
+{
     KUrl newUrl(url);
     if ( newUrl.isLocalFile() && QFileInfo( newUrl.toLocalFile() ).exists() ) {
         PimCommon::RenameFileDialog *dialog = new PimCommon::RenameFileDialog(newUrl, false, parentWidget());
