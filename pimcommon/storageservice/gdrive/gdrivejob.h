@@ -62,6 +62,7 @@ private slots:
     void slotFileFetchFinished(KGAPI2::Job *job);
     void slotChildReferenceFetchJobFinished(KGAPI2::Job *job);
     void slotDeleteFolderFinished(KGAPI2::Job *job);
+    void slotCreateJobFinished(KGAPI2::Job *job);
 private:
     bool handleError(KGAPI2::Job *job);
     void shareLink(const QString &fileId);
