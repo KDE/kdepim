@@ -32,6 +32,9 @@ XXPort *XXPortFactory::createXXPort( const QString &identifier, QWidget *parentW
     if ( identifier == QLatin1String("vcard21") ) {
       xxport->setOption( QLatin1String("version"), QLatin1String("v21") );
     }
+    else if ( identifier == QLatin1String("vcard30") ) {
+      xxport->setOption( QLatin1String("version"), QLatin1String("v30") );
+    }
     return xxport;
   } else if ( identifier == QLatin1String("csv") ) {
     return new CsvXXPort( parentWidget );
