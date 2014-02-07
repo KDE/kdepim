@@ -33,6 +33,9 @@ public:
 
     KWallet::Wallet *wallet();
 
+private slots:
+    void slotWalletClosed();
+
 private:
     explicit SieveServerSettings(QObject *parent=0);
     friend class SieveServerSettingsPrivate;
