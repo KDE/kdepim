@@ -52,6 +52,7 @@ private slots:
     void slotUploadDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total);
     void slotItemDoubleClicked(QTreeWidgetItem *item, int);
 private:
+    void reenableDialog();
     void downloadItem(PimCommon::StorageServiceTreeWidgetItem *item);
     void readConfig();
     void writeConfig();

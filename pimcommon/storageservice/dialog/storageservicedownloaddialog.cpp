@@ -112,15 +112,21 @@ void StorageServiceDownloadDialog::slotUploadDownloadFileProgress(const QString 
     mProgressWidget->setProgressValue(done, total);
 }
 
-void StorageServiceDownloadDialog::slotActionFailed(const QString &serviceName, const QString &data)
+void StorageServiceDownloadDialog::reenableDialog()
 {
-    Q_UNUSED(serviceName);
-    Q_UNUSED(data);
     mStorageServiceProgressIndicator->stopAnimation();
     mTreeWidget->setEnabled(true);
     mProgressWidget->hide();
     mProgressWidget->reset();
     enableButton(User1, true);
+    enableButton(Close, true);
+}
+
+void StorageServiceDownloadDialog::slotActionFailed(const QString &serviceName, const QString &data)
+{
+    Q_UNUSED(serviceName);
+    Q_UNUSED(data);
+    reenableDialog();
 }
 
 void StorageServiceDownloadDialog::slotListFolderDone(const QString &serviceName, const QVariant &data)
@@ -177,9 +183,7 @@ void StorageServiceDownloadDialog::slotDownfileDone(const QString &serviceName, 
     Q_UNUSED(serviceName);
     Q_UNUSED(filename);
     KMessageBox::information(this, i18n("File was correctly downloaded."), i18n("Download file"));
-    mTreeWidget->setEnabled(true);
-    mProgressWidget->hide();
-    enableButton(User1, true);
+    reenableDialog();
 }
 
 void StorageServiceDownloadDialog::slotDownfileFailed(const QString &serviceName, const QString &filename)
@@ -187,9 +191,7 @@ void StorageServiceDownloadDialog::slotDownfileFailed(const QString &serviceName
     Q_UNUSED(serviceName);
     Q_UNUSED(filename);
     KMessageBox::information(this, i18n("Error during download file."), i18n("Download file"));
-    mTreeWidget->setEnabled(true);
-    mProgressWidget->hide();
-    enableButton(User1, true);
+    reenableDialog();
 }
 
 void StorageServiceDownloadDialog::slotItemDoubleClicked(QTreeWidgetItem *item, int)
@@ -220,6 +222,7 @@ void StorageServiceDownloadDialog::downloadItem(StorageServiceTreeWidgetItem *it
         const QString fileId = mStorage->fileIdentifier(item->storeInfo());
         mTreeWidget->setEnabled(false);
         enableButton(User1, false);
+        enableButton(Close, false);
         mProgressWidget->show();
         mStorage->downloadFile(filename, fileId, destination);
     }
