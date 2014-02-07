@@ -61,8 +61,11 @@ private slots:
     void slotDeleteFileFinished(KGAPI2::Job *job);
     void slotFileFetchFinished(KGAPI2::Job *job);
     void slotChildReferenceFetchJobFinished(KGAPI2::Job *job);
-
+    void slotDeleteFolderFinished(KGAPI2::Job *job);
 private:
+    bool handleError(KGAPI2::Job *job);
+    void shareLink(const QString &fileId);
+
     QString mServiceUrl;
     QUrl mAuthUrl;
     QString mClientId;
@@ -78,7 +81,6 @@ private:
     QString mApiUrl;
     QString mFileInfoPath;
     QString lastPathComponent(const QUrl &url) const;
-    void shareLink(const QString &fileId);
     KGAPI2::AccountPtr mAccount;
 };
 }

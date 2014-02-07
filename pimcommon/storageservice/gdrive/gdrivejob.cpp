@@ -60,6 +60,42 @@ GDriveJob::~GDriveJob()
 
 }
 
+bool GDriveJob::handleError( KGAPI2::Job *job/*, const KUrl &url*/ )
+{
+    qDebug() << job->error() << job->errorString();
+
+    switch ( job->error() ) {
+    case KGAPI2::OK:
+    case KGAPI2::NoError:
+        return false;
+    case KGAPI2::AuthCancelled:
+    case KGAPI2::AuthError:
+        //error( KIO::ERR_COULD_NOT_LOGIN, url.prettyUrl() );
+        return true;
+    case KGAPI2::Unauthorized: {
+        return true;
+    }
+    case KGAPI2::Forbidden:
+        //error( KIO::ERR_ACCESS_DENIED, url.prettyUrl() );
+        return true;
+    case KGAPI2::NotFound:
+        //error( KIO::ERR_DOES_NOT_EXIST, url.prettyUrl() );
+        return true;
+    case KGAPI2::NoContent:
+        //error( KIO::ERR_NO_CONTENT, url.prettyUrl() );
+        return true;
+    case KGAPI2::QuotaExceeded:
+        //error( KIO::ERR_DISK_FULL, url.prettyUrl() );
+        return true;
+    default:
+        //error( KIO::ERR_SLAVE_DEFINED, job->errorString() );
+        return true;
+    }
+
+    return true;
+}
+
+
 QString GDriveJob::lastPathComponent( const QUrl &url ) const
 {
     QString path = url.toString( QUrl::StripTrailingSlash );
@@ -135,6 +171,7 @@ void GDriveJob::slotAuthJobFinished(KGAPI2::Job *job)
     KGAPI2::AuthJob *authJob = qobject_cast<KGAPI2::AuthJob*>(job);
     Q_ASSERT(authJob);
 
+    handleError(job);
     if (authJob->error() != KGAPI2::NoError) {
         Q_EMIT authorizationFailed(authJob->errorString());
         deleteLater();
@@ -167,7 +204,7 @@ void GDriveJob::slotAboutFetchJobFinished(KGAPI2::Job *job)
 {
     KGAPI2::Drive::AboutFetchJob *aboutFetchJob = qobject_cast<KGAPI2::Drive::AboutFetchJob*>(job);
     Q_ASSERT(aboutFetchJob);
-
+    handleError(job);
     if (aboutFetchJob->error() != KGAPI2::NoError) {
         qDebug()<<" ERRRRR"<<aboutFetchJob->errorString();
         Q_EMIT actionFailed(aboutFetchJob->errorString());
@@ -198,8 +235,26 @@ void GDriveJob::deleteFile(const QString &filename)
     connect(fileDeleteJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotDeleteFileFinished(KGAPI2::Job*)));
 }
 
+void GDriveJob::deleteFolder(const QString &foldername)
+{
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
+    mError = false;
+    KGAPI2::Drive::FileDeleteJob *fileDeleteJob = new KGAPI2::Drive::FileDeleteJob(foldername, mAccount, this);
+    connect(fileDeleteJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotDeleteFolderFinished(KGAPI2::Job*)));
+}
+
+void GDriveJob::slotDeleteFolderFinished(KGAPI2::Job*job)
+{
+    handleError(job);
+    //TODO
+    Q_EMIT deleteFolderDone(QString());
+    deleteLater();
+}
+
+
 void GDriveJob::slotDeleteFileFinished(KGAPI2::Job*job)
 {
+    handleError(job);
     //TODO
     Q_EMIT deleteFileDone(QString());
     deleteLater();
@@ -239,19 +294,6 @@ void GDriveJob::createServiceFolder()
     deleteLater();
 }
 
-void GDriveJob::deleteFolder(const QString &foldername)
-{
-    mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
-    mError = false;
-    QUrl url;
-    url.setUrl(mApiUrl + mFolderInfoPath + foldername);
-    url.addQueryItem(QLatin1String("recursive"), QLatin1String("true"));
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    QNetworkReply *reply = mNetworkAccessManager->deleteResource(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-}
 
 void GDriveJob::renameFolder(const QString &source, const QString &destination)
 {
