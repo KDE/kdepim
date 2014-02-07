@@ -107,6 +107,7 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
         mDeleteFile->setDisabled(true);
         mAuthenticate->setDisabled(true);
         mRefreshList->setDisabled(true);
+        mShowLog->setDisabled(true);
     } else {
         const PimCommon::StorageServiceAbstract::Capabilities capabilities = mStorageServiceTabWidget->capabilities();
         mDownloadFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability);
@@ -114,8 +115,9 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
         mAccountInfo->setEnabled(capabilities & PimCommon::StorageServiceAbstract::AccountInfoCapability);
         mUploadFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::UploadFileCapability);
         mDeleteFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability);
-        mAuthenticate->setDisabled(capabilities & PimCommon::StorageServiceAbstract::NoCapability);
-        mRefreshList->setDisabled(capabilities & PimCommon::StorageServiceAbstract::NoCapability);
+        mAuthenticate->setDisabled((capabilities & PimCommon::StorageServiceAbstract::NoCapability) || (mStorageServiceTabWidget->count() == 0));
+        mRefreshList->setDisabled((capabilities & PimCommon::StorageServiceAbstract::NoCapability) || (mStorageServiceTabWidget->count() == 0));
+        mShowLog->setDisabled((mStorageServiceTabWidget->count() == 0));
     }
 }
 
