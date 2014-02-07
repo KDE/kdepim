@@ -88,16 +88,22 @@ QNetworkReply *YouSendItJob::downloadFile(const QString &name, const QString &fi
     return 0;
 }
 
+QNetworkRequest YouSendItJob::setDefaultHeader(const QUrl &url)
+{
+    QNetworkRequest request(url);
+    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
+    request.setRawHeader("Accept", "application/json");
+    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
+    return request;
+}
+
 void YouSendItJob::deleteFile(const QString &filename)
 {
     mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
     mError = false;
     QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/file/%1").arg(filename));
     qDebug()<<" url"<<url;
-    QNetworkRequest request(url);
-    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
-    request.setRawHeader("Accept", "application/json");
-    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
+    QNetworkRequest request = setDefaultHeader(url);
     QNetworkReply *reply = mNetworkAccessManager->deleteResource(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
@@ -107,10 +113,7 @@ void YouSendItJob::deleteFolder(const QString &foldername)
     mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
     mError = false;
     QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/%1").arg(foldername));
-    QNetworkRequest request(url);
-    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
-    request.setRawHeader("Accept", "application/json");
-    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
+    QNetworkRequest request = setDefaultHeader(url);
     QNetworkReply *reply = mNetworkAccessManager->deleteResource(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
@@ -121,11 +124,8 @@ void YouSendItJob::renameFolder(const QString &source, const QString &destinatio
     mError = false;
     QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/%1/rename").arg(source));
     qDebug()<<"url"<<url;
-    QNetworkRequest request(url);
+    QNetworkRequest request = setDefaultHeader(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
-    request.setRawHeader("Accept", "application/json");
-    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
     QByteArray t("\"name\"=\"sdfsdf\"");
 
     QNetworkReply *reply = mNetworkAccessManager->put(request, t);
@@ -137,12 +137,9 @@ void YouSendItJob::renameFile(const QString &oldName, const QString &newName)
     mActionType = PimCommon::StorageServiceAbstract::RenameFile;
     mError = false;
     QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/file/%1/rename").arg(oldName));
-    QNetworkRequest request(url);
-    qDebug()<<" url;"<<url;
+    QNetworkRequest request = setDefaultHeader(url);
+
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
-    request.setRawHeader("Accept", "application/json");
-    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
 
     QByteArray t("\"name\"=\"sdfsdf\"");
     QNetworkReply *reply = mNetworkAccessManager->put(request, t);
@@ -154,11 +151,8 @@ void YouSendItJob::moveFolder(const QString &source, const QString &destination)
     mActionType = PimCommon::StorageServiceAbstract::MoveFolder;
     mError = false;
     QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/%1/move").arg(source));
-    QNetworkRequest request(url);
+    QNetworkRequest request = setDefaultHeader(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
-    request.setRawHeader("Accept", "application/json");
-    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
 
     QByteArray t("\"name\"=\"sdfsdf\"");
     QNetworkReply *reply = mNetworkAccessManager->put(request, t);
@@ -170,11 +164,8 @@ void YouSendItJob::moveFile(const QString &source, const QString &destination)
     mActionType = PimCommon::StorageServiceAbstract::MoveFile;
     mError = false;
     QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/file/%1/move").arg(source));
-    QNetworkRequest request(url);
+    QNetworkRequest request = setDefaultHeader(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
-    request.setRawHeader("Accept", "application/json");
-    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
 
     QByteArray t("\"name\"=\"sdfsdf\"");
     QNetworkReply *reply = mNetworkAccessManager->put(request, t);
@@ -220,10 +211,7 @@ QNetworkReply *YouSendItJob::uploadFile(const QString &filename, const QString &
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
     QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/folder/file/initUpload"));
-    QNetworkRequest request(url);
-    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
-    request.setRawHeader("Accept", "application/json");
-    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
+    QNetworkRequest request = setDefaultHeader(url);
     QUrl postData;
 
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
@@ -245,10 +233,7 @@ void YouSendItJob::listFolder(const QString &folder)
     }
     url.addQueryItem(QLatin1String("email"),mUsername);
     url.addQueryItem(QLatin1String("X-Auth-Token"), mToken);
-    QNetworkRequest request(url);
-    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
-    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
-    request.setRawHeader("Accept", "application/json");
+    QNetworkRequest request = setDefaultHeader(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
@@ -261,10 +246,7 @@ void YouSendItJob::accountInfo()
     QUrl url(mDefaultUrl + QLatin1String("/dpi/v2/user"));
     url.addQueryItem(QLatin1String("email"),mUsername);
     url.addQueryItem(QLatin1String("X-Auth-Token"), mToken);
-    QNetworkRequest request(url);
-    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
-    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
-    request.setRawHeader("Accept", "application/json");
+    QNetworkRequest request = setDefaultHeader(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
@@ -275,10 +257,7 @@ void YouSendItJob::createFolder(const QString &foldername, const QString &destin
     mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
     mError = false;
     QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/folder"));
-    QNetworkRequest request(url);
-    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
-    request.setRawHeader("Accept", "application/json");
-    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
+    QNetworkRequest request = setDefaultHeader(url);
     QUrl postData;
     postData.addQueryItem(QLatin1String("name"), foldername);
     if (!destination.isEmpty())
