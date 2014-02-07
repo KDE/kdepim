@@ -59,7 +59,7 @@ Q_SIGNALS:
     void fullSearchRequest();
     void clearButtonClicked();
     void searchEditTextEdited(const QString &);
-    void searchOptionChanged(SearchOptions searchOption);
+    void searchOptionChanged();
 
 private slots:
     void slotLockSearchClicked(bool locked);

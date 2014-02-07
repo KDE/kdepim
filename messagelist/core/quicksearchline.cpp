@@ -161,7 +161,7 @@ void QuickSearchLine::slotClearButtonClicked()
 
 void QuickSearchLine::slotSearchOptionChanged()
 {
-    Q_EMIT searchOptionChanged(searchOptions());
+    Q_EMIT searchOptionChanged();
 }
 
 QuickSearchLine::SearchOptions QuickSearchLine::searchOptions() const

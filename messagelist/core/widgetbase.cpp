@@ -138,7 +138,7 @@ Widget::Widget( QWidget *pParent )
   connect(d->quickSearchLine, SIGNAL(fullSearchRequest()), this, SIGNAL(fullSearchRequest()) );
 
   connect( d->quickSearchLine, SIGNAL(searchEditTextEdited(QString)), SLOT(searchEditTextEdited()) );
-  connect( d->quickSearchLine, SIGNAL(searchOptionChanged(SearchOptions)), SLOT(searchEditTextEdited()) );
+  connect( d->quickSearchLine, SIGNAL(searchOptionChanged()), SLOT(searchEditTextEdited()) );
   g->addWidget( d->quickSearchLine, 0 );
 
   d->mView = new View( this );
