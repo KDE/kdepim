@@ -86,7 +86,7 @@ void Filter::setCurrentFolder( const KUrl &url )
 void Filter::setSearchString( const QString &search, QuickSearchLine::SearchOptions options )
 {
   const QString trimStr = search.trimmed();
-  if (mSearchString == trimStr) {
+  if ((mSearchString == trimStr) && (mOptions == options)) {
     return;
   }
 

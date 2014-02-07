@@ -35,7 +35,7 @@
 #include <QButtonGroup>
 #include <QLabel>
 
-//#define SHOW_EXTRA_OPTION 1
+#define SHOW_EXTRA_OPTION 1
 
 using namespace MessageList::Core;
 QuickSearchLine::QuickSearchLine(QWidget *parent)
@@ -278,3 +278,10 @@ void QuickSearchLine::slotLockSearchClicked( bool locked )
     }
 }
 
+void QuickSearchLine::resetFilter()
+{
+    mStatusFilterCombo->setCurrentIndex( 0 );
+    mLockSearch->setChecked(false);
+    mButtonGroup->button(0)->setChecked(true);
+    mExtraOption->hide();
+}

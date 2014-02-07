@@ -53,8 +53,8 @@ public:
     KLineEdit *searchEdit() const;
     QToolButton *openFullSearchButton() const;
     QToolButton *lockSearch() const;
-    int firstTagInComboIndex() const;
-
+    int firstTagInComboIndex() const;    
+    void resetFilter();
 Q_SIGNALS:
     void fullSearchRequest();
     void clearButtonClicked();

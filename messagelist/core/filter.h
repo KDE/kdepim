@@ -115,6 +115,7 @@ private:
   QString mTagId;                    ///< Messages must have this tag, if not empty
   KUrl mCurrentFolder;
   QSet<qint64> mMatchingItemIds;
+  QuickSearchLine::SearchOptions mOptions;
 };
 
 } // namespace Core

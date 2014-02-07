@@ -816,8 +816,7 @@ void Widget::resetFilter()
   delete d->mFilter;
   d->mFilter = 0;
   d->mView->model()->setFilter( 0 );
-  d->quickSearchLine->statusFilterComboBox()->setCurrentIndex( 0 );
-  d->quickSearchLine->lockSearch()->setChecked(false);
+  d->quickSearchLine->resetFilter();
 }
 
 void Widget::slotViewHeaderSectionClicked( int logicalIndex )
