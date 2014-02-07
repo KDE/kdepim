@@ -16,6 +16,7 @@
 */
 
 #include "storageservicemanager.h"
+#include "storageserviceprogressmanager.h"
 
 #include "settings/pimcommonsettings.h"
 #include "storageservice/utils/storageserviceutils.h"
@@ -199,6 +200,7 @@ void StorageServiceManager::slotShareFile()
                     connect(service,SIGNAL(uploadFileFailed(QString,QString)), this, SIGNAL(uploadFileFailed(QString,QString)), Qt::UniqueConnection);
                     connect(service,SIGNAL(shareLinkDone(QString,QString)), this, SIGNAL(shareLinkDone(QString,QString)), Qt::UniqueConnection);
                     Q_EMIT uploadFileStart(service);
+                    PimCommon::StorageServiceProgressManager::self()->addProgress(service);
                     service->uploadFile(fileName, newName, QString());
                 }
             }
@@ -215,6 +217,7 @@ void StorageServiceManager::slotDownloadFile()
             StorageServiceAbstract *service = mListService.value(type);
             QPointer<PimCommon::StorageServiceDownloadDialog> dlg = new PimCommon::StorageServiceDownloadDialog(service, 0);
             dlg->setDefaultDownloadPath(mDefaultUploadFolder);
+            PimCommon::StorageServiceProgressManager::self()->addProgress(service);
             dlg->exec();
             delete dlg;
         }

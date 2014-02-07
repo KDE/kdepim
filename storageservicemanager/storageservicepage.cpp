@@ -27,7 +27,6 @@
 #include "pimcommon/storageservice/widgets/storageserviceprogresswidget.h"
 #include "pimcommon/storageservice/widgets/storageserviceprogressindicator.h"
 
-
 #include <KLocalizedString>
 #include <KFileDialog>
 #include <KInputDialog>

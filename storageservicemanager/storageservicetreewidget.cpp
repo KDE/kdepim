@@ -23,6 +23,7 @@
 #include "storageservice/dialog/storageservicechecknamedialog.h"
 #include "storageservicemanagerglobalconfig.h"
 #include "storageservicepropertiesdialog.h"
+#include "storageservice/storageserviceprogressmanager.h"
 
 #include <KMenu>
 #include <KInputDialog>
@@ -310,6 +311,7 @@ void StorageServiceTreeWidget::slotDownloadFile()
                 }
             }
             const QString fileId = mStorageService->fileIdentifier(itemInformationSelected());
+            PimCommon::StorageServiceProgressManager::self()->addProgress(mStorageService);
             mStorageService->downloadFile(filename, fileId, destination);
         }
     }
@@ -343,6 +345,7 @@ bool StorageServiceTreeWidget::uploadFileToService()
                 }
             }
         }
+        PimCommon::StorageServiceProgressManager::self()->addProgress(mStorageService);
         mStorageService->uploadFile(filename, newName, mCurrentFolder);
         return true;
     } else {

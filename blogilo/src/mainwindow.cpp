@@ -47,6 +47,9 @@
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 
+#include "libkdepim/progresswidget/progressdialog.h"
+#include "libkdepim/progresswidget/statusbarprogresswidget.h"
+
 #include <ktabwidget.h>
 #include <KStatusNotifierItem>
 #include <kstatusbar.h>
@@ -101,9 +104,7 @@ MainWindow::MainWindow()
 
     // then, setup our actions
     setupActions();
-
-    // add a status bar
-    statusBar()->show();
+    setupStatusBar();
 
     // a call to KXmlGuiWindow::setupGUI() populates the GUI
     // with actions, using KXMLGUI.
@@ -136,6 +137,17 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow()
 {
+}
+
+void MainWindow::setupStatusBar()
+{
+    KPIM::ProgressDialog *progressDialog = new KPIM::ProgressDialog( statusBar(), this );
+    progressDialog->hide();
+
+    KPIM::StatusbarProgressWidget *littleProgress = new KPIM::StatusbarProgressWidget( progressDialog, statusBar() );
+    littleProgress->show();
+    // add a status bar
+    statusBar()->show();
 }
 
 void MainWindow::initStorageService()

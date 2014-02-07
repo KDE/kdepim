@@ -27,6 +27,7 @@
 namespace PimCommon {
 class StorageServiceManager;
 }
+
 class KAction;
 class QLabel;
 class StorageServiceTabWidget;
