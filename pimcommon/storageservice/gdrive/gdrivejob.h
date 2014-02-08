@@ -65,7 +65,6 @@ private slots:
     void slotCreateJobFinished(KGAPI2::Job *job);
 private:
     bool handleError(KGAPI2::Job *job);
-    void shareLink(const QString &fileId);
 
     QString mServiceUrl;
     QUrl mAuthUrl;
