@@ -137,6 +137,15 @@ void StorageServiceProgressManager::slotUploadFileFailed(const QString &serviceN
 
 void StorageServiceProgressManager::slotProgressItemCanceled(KPIM::ProgressItem *item)
 {
+    QHashIterator<QString, ProgressJob *> i(mHashList);
+    while (i.hasNext()) {
+        i.next();
+        if (i.value()->item() == item) {
+            //TODO search service
+            //i.key()
+        }
+    }
+
     //TODO cancel with type of progress (DownLoad/Upload)
 }
 
