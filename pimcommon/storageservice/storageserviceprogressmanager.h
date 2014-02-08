@@ -31,29 +31,21 @@ class ProgressItem;
 
 namespace PimCommon {
 class StorageServiceAbstract;
-class ProgressJob
-{
-public:
-    ProgressJob(const QString &serviceName, KPIM::ProgressItem *item);
-    ~ProgressJob();
-
-    KPIM::ProgressItem *item() const;
-    QString serviceName() const;
-
-private:
-    QString mServiceName;
-    KPIM::ProgressItem *mProgressItem;
-};
-
+class ProgressJob;
 class PIMCOMMON_EXPORT StorageServiceProgressManager : public QObject
 {
     Q_OBJECT
 public:
+    enum ProgressType {
+        DownLoad = 0,
+        Upload = 1
+    };
+
     ~StorageServiceProgressManager();
 
     static StorageServiceProgressManager *self();
 
-    void addProgress(PimCommon::StorageServiceAbstract *storageService);
+    void addProgress(PimCommon::StorageServiceAbstract *storageService, ProgressType type);
 
 private slots:
     void slotProgressItemCanceled(KPIM::ProgressItem *item);
@@ -66,8 +58,23 @@ private slots:
 private:
     explicit StorageServiceProgressManager(QObject *parent = 0);
     friend class StorageServiceProgressManagerPrivate;
-    QHash<QString, QPointer<KPIM::ProgressItem> > mHashList;
+    QHash<QString, ProgressJob *> mHashList;
 };
+
+class ProgressJob
+{
+public:
+    ProgressJob(KPIM::ProgressItem *item, StorageServiceProgressManager::ProgressType type);
+    ~ProgressJob();
+
+    StorageServiceProgressManager::ProgressType type() const;
+    KPIM::ProgressItem *item() const;
+
+private:
+    StorageServiceProgressManager::ProgressType mType;
+    QPointer<KPIM::ProgressItem> mProgressItem;
+};
+
 }
 
 #endif // STORAGESERVICEPROGRESSMANAGER_H

@@ -311,7 +311,7 @@ void StorageServiceTreeWidget::slotDownloadFile()
                 }
             }
             const QString fileId = mStorageService->fileIdentifier(itemInformationSelected());
-            PimCommon::StorageServiceProgressManager::self()->addProgress(mStorageService);
+            PimCommon::StorageServiceProgressManager::self()->addProgress(mStorageService, PimCommon::StorageServiceProgressManager::DownLoad);
             mStorageService->downloadFile(filename, fileId, destination);
         }
     }
@@ -345,7 +345,7 @@ bool StorageServiceTreeWidget::uploadFileToService()
                 }
             }
         }
-        PimCommon::StorageServiceProgressManager::self()->addProgress(mStorageService);
+        PimCommon::StorageServiceProgressManager::self()->addProgress(mStorageService, PimCommon::StorageServiceProgressManager::Upload);
         mStorageService->uploadFile(filename, newName, mCurrentFolder);
         return true;
     } else {

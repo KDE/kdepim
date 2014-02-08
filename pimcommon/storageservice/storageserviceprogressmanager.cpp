@@ -56,11 +56,13 @@ StorageServiceProgressManager *StorageServiceProgressManager::self()
 }
 
 
-void StorageServiceProgressManager::addProgress(PimCommon::StorageServiceAbstract *storageService)
+void StorageServiceProgressManager::addProgress(PimCommon::StorageServiceAbstract *storageService, ProgressType type)
 {
     if (!mHashList.contains(storageService->storageServiceName())) {
         KPIM::ProgressItem *progressItem = KPIM::ProgressManager::createProgressItem( storageService->storageServiceName() );
-        mHashList.insert(storageService->storageServiceName(), progressItem);
+        ProgressJob *job = new ProgressJob(progressItem, type);
+
+        mHashList.insert(storageService->storageServiceName(), job);
         connect(progressItem, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)), SLOT(slotProgressItemCanceled(KPIM::ProgressItem*)));
         connect(storageService, SIGNAL(uploadFileDone(QString,QString)), SLOT(slotUploadFileDone(QString,QString)), Qt::UniqueConnection);
         connect(storageService, SIGNAL(uploadFileFailed(QString,QString)), SLOT(slotUploadFileFailed(QString,QString)), Qt::UniqueConnection);
@@ -73,7 +75,8 @@ void StorageServiceProgressManager::addProgress(PimCommon::StorageServiceAbstrac
 void StorageServiceProgressManager::slotDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total)
 {
     if (mHashList.contains(serviceName)) {
-        KPIM::ProgressItem *mProgressItem = mHashList.value(serviceName);
+        ProgressJob *job = mHashList.value(serviceName);
+        KPIM::ProgressItem *mProgressItem = job->item();
         if (mProgressItem) {
             if (total > 0)
                 mProgressItem->setProgress((100*done)/total);
@@ -86,7 +89,8 @@ void StorageServiceProgressManager::slotDownloadFileProgress(const QString &serv
 void StorageServiceProgressManager::slotDownloadFileDone(const QString &serviceName, const QString &)
 {
     if (mHashList.contains(serviceName)) {
-        KPIM::ProgressItem *mProgressItem = mHashList.value(serviceName);
+        ProgressJob *job = mHashList.value(serviceName);
+        KPIM::ProgressItem *mProgressItem = job->item();
         if (mProgressItem) {
             mProgressItem->setComplete();
         }
@@ -97,7 +101,8 @@ void StorageServiceProgressManager::slotDownloadFileDone(const QString &serviceN
 void StorageServiceProgressManager::slotDownloadFileFailed(const QString &serviceName, const QString &)
 {
     if (mHashList.contains(serviceName)) {
-        KPIM::ProgressItem *mProgressItem = mHashList.value(serviceName);
+        ProgressJob *job = mHashList.value(serviceName);
+        KPIM::ProgressItem *mProgressItem = job->item();
         if (mProgressItem) {
             mProgressItem->setComplete();
         }
@@ -109,7 +114,8 @@ void StorageServiceProgressManager::slotDownloadFileFailed(const QString &servic
 void StorageServiceProgressManager::slotUploadFileDone(const QString &serviceName, const QString &)
 {
     if (mHashList.contains(serviceName)) {
-        KPIM::ProgressItem *mProgressItem = mHashList.value(serviceName);
+        ProgressJob *job = mHashList.value(serviceName);
+        KPIM::ProgressItem *mProgressItem = job->item();
         if (mProgressItem) {
             mProgressItem->setComplete();
         }
@@ -120,7 +126,8 @@ void StorageServiceProgressManager::slotUploadFileDone(const QString &serviceNam
 void StorageServiceProgressManager::slotUploadFileFailed(const QString &serviceName, const QString &)
 {
     if (mHashList.contains(serviceName)) {
-        KPIM::ProgressItem *mProgressItem = mHashList.value(serviceName);
+        ProgressJob *job = mHashList.value(serviceName);
+        KPIM::ProgressItem *mProgressItem = job->item();
         if (mProgressItem) {
             mProgressItem->setComplete();
         }
@@ -130,25 +137,25 @@ void StorageServiceProgressManager::slotUploadFileFailed(const QString &serviceN
 
 void StorageServiceProgressManager::slotProgressItemCanceled(KPIM::ProgressItem *item)
 {
-    //TODO
+    //TODO cancel with type of progress (DownLoad/Upload)
 }
 
 
-ProgressJob::ProgressJob(const QString &serviceName, KPIM::ProgressItem *item)
-    : mServiceName(serviceName),
+ProgressJob::ProgressJob(KPIM::ProgressItem *item, StorageServiceProgressManager::ProgressType type)
+    : mType(type),
       mProgressItem(item)
 {
 
 }
 
+StorageServiceProgressManager::ProgressType ProgressJob::type() const
+{
+    return mType;
+}
+
 KPIM::ProgressItem *ProgressJob::item() const
 {
     return mProgressItem;
-}
-
-QString ProgressJob::serviceName() const
-{
-    return mServiceName;
 }
 
 }
