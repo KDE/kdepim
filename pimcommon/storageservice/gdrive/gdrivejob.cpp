@@ -62,7 +62,7 @@ GDriveJob::~GDriveJob()
 
 }
 
-bool GDriveJob::handleError( KGAPI2::Job *job/*, const KUrl &url*/ )
+bool GDriveJob::handleError( KGAPI2::Job *job )
 {
     qDebug() << job->error() << job->errorString();
 
@@ -72,25 +72,12 @@ bool GDriveJob::handleError( KGAPI2::Job *job/*, const KUrl &url*/ )
         return false;
     case KGAPI2::AuthCancelled:
     case KGAPI2::AuthError:
-        //error( KIO::ERR_COULD_NOT_LOGIN, url.prettyUrl() );
-        return true;
-    case KGAPI2::Unauthorized: {
-        return true;
-    }
+    case KGAPI2::Unauthorized:
     case KGAPI2::Forbidden:
-        //error( KIO::ERR_ACCESS_DENIED, url.prettyUrl() );
-        return true;
     case KGAPI2::NotFound:
-        //error( KIO::ERR_DOES_NOT_EXIST, url.prettyUrl() );
-        return true;
     case KGAPI2::NoContent:
-        //error( KIO::ERR_NO_CONTENT, url.prettyUrl() );
-        return true;
     case KGAPI2::QuotaExceeded:
-        //error( KIO::ERR_DISK_FULL, url.prettyUrl() );
-        return true;
     default:
-        //error( KIO::ERR_SLAVE_DEFINED, job->errorString() );
         return true;
     }
 
@@ -287,7 +274,8 @@ void GDriveJob::createFolder(const QString &foldername, const QString &destinati
 {
     mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
     mError = false;
-    const QString folderName = lastPathComponent( foldername );
+
+    const QString folderName = lastPathComponent( destination );
 
     KGAPI2::Drive::FilePtr file( new KGAPI2::Drive::File() );
     file->setTitle( foldername );
@@ -310,18 +298,27 @@ void GDriveJob::slotCreateJobFinished(KGAPI2::Job *job)
     deleteLater();
 }
 
-/*old **********************/
-
-
 void GDriveJob::createServiceFolder()
 {
     mActionType = PimCommon::StorageServiceAbstract::CreateServiceFolder;
     mError = false;
-    //TODO
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    qDebug()<<" not implemented";
-    deleteLater();
+    const QString folderName = lastPathComponent( QString() );
+
+    KGAPI2::Drive::FilePtr file( new KGAPI2::Drive::File() );
+    file->setTitle( PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() );
+    file->setMimeType( KGAPI2::Drive::File::folderMimeType() );
+
+    KGAPI2::Drive::ParentReferencePtr parent( new KGAPI2::Drive::ParentReference( folderName ) );
+    file->setParents( KGAPI2::Drive::ParentReferencesList() << parent );
+
+    KGAPI2::Drive::FileCreateJob *createJob = new KGAPI2::Drive::FileCreateJob( file, mAccount);
+    connect(createJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotCreateJobFinished(KGAPI2::Job*)));
 }
+
+
+/*old **********************/
+
+
 
 void GDriveJob::renameFolder(const QString &source, const QString &destination)
 {
