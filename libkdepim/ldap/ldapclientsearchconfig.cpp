@@ -111,6 +111,7 @@ void LdapClientSearchConfig::readConfig( KLDAP::LdapServer &server, KConfigGroup
                                                             QLatin1String("DoAskToStoreToKwallet"))) {
             d->wallet = KWallet::Wallet::openWallet( KWallet::Wallet::LocalWallet(), 0 );
             if ( d->wallet ) {
+                connect(d->wallet, SIGNAL(walletClosed()), SLOT(slotWalletClosed()));
                 d->useWallet = true;
                 if ( !d->wallet->hasFolder( QLatin1String("ldapclient") ) ) {
                     d->wallet->createFolder( QLatin1String("ldapclient") );
@@ -181,10 +182,14 @@ void LdapClientSearchConfig::writeConfig( const KLDAP::LdapServer &server, KConf
     const QString passwordEntry = prefix + QString::fromLatin1( "PwdBind%1" ).arg( j );
     const QString password = server.password();
     if (!password.isEmpty()) {
-        if (d->useWallet && d->wallet) {
+        if (d->useWallet && !d->wallet) {
+            d->wallet = KWallet::Wallet::openWallet( KWallet::Wallet::LocalWallet(), 0 );
+        }
+        if (d->wallet) {
             d->wallet->writePassword(passwordEntry, password );
         } else {
             config.writeEntry( passwordEntry, password );
+            d->useWallet = false;
         }
     }
 
@@ -216,6 +221,12 @@ void LdapClientSearchConfig::writeConfig( const KLDAP::LdapServer &server, KConf
     }
     config.writeEntry( prefix + QString::fromLatin1( "Auth%1" ).arg( j ), tmp );
     config.writeEntry( prefix + QString::fromLatin1( "Mech%1" ).arg( j ), server.mech() );
+}
+
+void LdapClientSearchConfig::slotWalletClosed()
+{
+    delete d->wallet;
+    d->wallet = 0;
 }
 
 
