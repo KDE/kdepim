@@ -77,7 +77,7 @@ void TodoEdit::setMessage(const KMime::Message::Ptr &value)
 
 void TodoEdit::slotReturnPressed()
 {
-    if (!mNoteEdit->text().isEmpty() && mCollectionCombobox->currentCollection().isValid()) {
+    if (!mNoteEdit->text().isEmpty() /*&& mCollectionCombobox->currentCollection().isValid()*/) {
         KCalCore::Todo::Ptr todo( new KCalCore::Todo );
         todo->setSummary(mNoteEdit->text());
         Q_EMIT createTodo(todo);
