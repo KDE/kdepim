@@ -35,6 +35,7 @@
 #include <QButtonGroup>
 #include <QLabel>
 
+//#define QUICKSEARCHBUTTON 1
 
 using namespace MessageList::Core;
 QuickSearchLine::QuickSearchLine(QWidget *parent)
@@ -64,7 +65,12 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     connect( mLockSearch, SIGNAL(toggled(bool)), SLOT(slotLockSearchClicked(bool)));
     hbox->addWidget( mLockSearch );
 
-
+#if QUICKSEARCHBUTTON
+    QHBoxLayout *quickSearchButtonLayout = new QHBoxLayout;
+    QLabel *quickLab = new QLabel(i18n("Quick Filter:"));
+    quickSearchButtonLayout->addWidget(quickLab);
+    initializeStatusSearchButton(quickSearchButtonLayout);
+#endif
     mSearchEdit = new KLineEdit( this );
     mSearchEdit->setClickMessage( i18nc( "Search for messages.", "Search" ) );
     mSearchEdit->setObjectName( QLatin1String( "quicksearch" ) );
@@ -123,15 +129,15 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mSearchAgainstBcc = new QPushButton(i18n("Bcc"));
     mSearchAgainstBcc->setCheckable(true);
     hbox->addWidget(mSearchAgainstBcc);
-    mButtonGroup = new QButtonGroup(this);
+    mButtonSearchAgainstGroup = new QButtonGroup(this);
 
-    mButtonGroup->addButton(mSearchAgainstBody, 0);
-    mButtonGroup->addButton(mSearchAgainstSubject);
-    mButtonGroup->addButton(mSearchAgainstFrom);
-    mButtonGroup->addButton(mSearchAgainstBcc);
-    mButtonGroup->button(0)->setChecked(true);
-    connect(mButtonGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotSearchOptionChanged()));
-    mButtonGroup->setExclusive(true);
+    mButtonSearchAgainstGroup->addButton(mSearchAgainstBody, 0);
+    mButtonSearchAgainstGroup->addButton(mSearchAgainstSubject);
+    mButtonSearchAgainstGroup->addButton(mSearchAgainstFrom);
+    mButtonSearchAgainstGroup->addButton(mSearchAgainstBcc);
+    mButtonSearchAgainstGroup->button(0)->setChecked(true);
+    connect(mButtonSearchAgainstGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotSearchOptionChanged()));
+    mButtonSearchAgainstGroup->setExclusive(true);
 }
 
 QuickSearchLine::~QuickSearchLine()
@@ -152,7 +158,7 @@ void QuickSearchLine::slotSearchEditTextEdited(const QString &text)
 void QuickSearchLine::slotClearButtonClicked()
 {
     mExtraOption->hide();
-    mButtonGroup->button(0)->setChecked(true);
+    mButtonSearchAgainstGroup->button(0)->setChecked(true);
     Q_EMIT clearButtonClicked();
 }
 
@@ -276,6 +282,62 @@ void QuickSearchLine::resetFilter()
 {
     mStatusFilterCombo->setCurrentIndex( 0 );
     mLockSearch->setChecked(false);
-    mButtonGroup->button(0)->setChecked(true);
+    mButtonSearchAgainstGroup->button(0)->setChecked(true);
     mExtraOption->hide();
+}
+
+QToolButton *QuickSearchLine::createQuickSearchButton(const QIcon &icon, const QString &text, int value, QLayout *quickSearchButtonLayout)
+{
+    QToolButton *button = new QToolButton;
+    button->setIcon(icon);
+    button->setText(text);
+    button->setProperty("statusvalue", value);
+    quickSearchButtonLayout->addWidget(button);
+    return button;
+}
+
+void QuickSearchLine::initializeStatusSearchButton(QLayout *quickSearchButtonLayout)
+{
+    createQuickSearchButton(SmallIcon(QLatin1String( "mail-unread" )), i18nc( "@action:inmenu Status of a message", "Unread" ), Akonadi::MessageStatus::statusUnread().toQInt32(),quickSearchButtonLayout );
+
+    createQuickSearchButton( SmallIcon(QLatin1String( "mail-replied" )),
+                                 i18nc( "@action:inmenu Status of a message", "Replied" ),
+                                 Akonadi::MessageStatus::statusReplied().toQInt32(),quickSearchButtonLayout  );
+
+    createQuickSearchButton( SmallIcon(QLatin1String( "mail-forwarded" )),
+                                 i18nc( "@action:inmenu Status of a message", "Forwarded" ),
+                                 Akonadi::MessageStatus::statusForwarded().toQInt32(),quickSearchButtonLayout  );
+
+    createQuickSearchButton( SmallIcon(QLatin1String( "emblem-important" )),
+                                 i18nc( "@action:inmenu Status of a message", "Important"),
+                                 Akonadi::MessageStatus::statusImportant().toQInt32(),quickSearchButtonLayout  );
+
+    createQuickSearchButton( SmallIcon(QLatin1String( "mail-task" )),
+                                 i18nc( "@action:inmenu Status of a message", "Action Item" ),
+                                 Akonadi::MessageStatus::statusToAct().toQInt32(),quickSearchButtonLayout  );
+
+    createQuickSearchButton( QIcon( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-thread-watch.png" ) ) ),
+                                 i18nc( "@action:inmenu Status of a message", "Watched" ),
+                                 Akonadi::MessageStatus::statusWatched().toQInt32(),quickSearchButtonLayout  );
+
+    createQuickSearchButton( QIcon( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-thread-ignored.png" ) ) ),
+                                 i18nc( "@action:inmenu Status of a message", "Ignored" ),
+                                 Akonadi::MessageStatus::statusIgnored().toQInt32(),quickSearchButtonLayout  );
+
+    createQuickSearchButton( SmallIcon(QLatin1String( "mail-attachment" )),
+                                 i18nc( "@action:inmenu Status of a message", "Has Attachment" ),
+                                 Akonadi::MessageStatus::statusHasAttachment().toQInt32(),quickSearchButtonLayout  );
+
+    createQuickSearchButton( SmallIcon(QLatin1String( "mail-invitation" )),
+                                 i18nc( "@action:inmenu Status of a message", "Has Invitation" ),
+                                 Akonadi::MessageStatus::statusHasInvitation().toQInt32(),quickSearchButtonLayout  );
+
+    createQuickSearchButton( SmallIcon(QLatin1String( "mail-mark-junk" )),
+                                 i18nc( "@action:inmenu Status of a message", "Spam" ),
+                                 Akonadi::MessageStatus::statusSpam().toQInt32(),quickSearchButtonLayout  );
+
+    createQuickSearchButton( SmallIcon(QLatin1String( "mail-mark-notjunk" )),
+                                 i18nc( "@action:inmenu Status of a message", "Ham" ),
+                                 Akonadi::MessageStatus::statusHam().toQInt32(),quickSearchButtonLayout  );
+
 }

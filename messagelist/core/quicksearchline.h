@@ -71,7 +71,10 @@ private slots:
     void slotSearchEditTextEdited(const QString &text);
     void slotClearButtonClicked();
 private:
+    void initializeStatusSearchButton(QLayout *quickSearchButtonLayout);
     void defaultFilterStatus();
+    QToolButton *createQuickSearchButton(const QIcon &icon, const QString &text, int value, QLayout *quickSearchButtonLayout);
+    QList<QToolButton *> mListStatusButton;
     KLineEdit *mSearchEdit;
     KComboBox *mStatusFilterCombo;
     QToolButton *mOpenFullSearchButton;
@@ -81,7 +84,7 @@ private:
     QPushButton *mSearchAgainstFrom;
     QPushButton *mSearchAgainstBcc;
     QWidget *mExtraOption;
-    QButtonGroup *mButtonGroup;
+    QButtonGroup *mButtonSearchAgainstGroup;
     int mFirstTagInComboIndex;
 };
 }
