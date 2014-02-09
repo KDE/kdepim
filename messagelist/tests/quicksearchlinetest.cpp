@@ -23,8 +23,11 @@
 #include "messagelist/core/quicksearchline.h"
 #include <qtest_kde.h>
 #include <qtestkeyboard.h>
+#include <qtestmouse.h>
 #include <KLineEdit>
 #include <QToolButton>
+#include <QPushButton>
+
 
 using namespace MessageList::Core;
 QuickSearchLineTest::QuickSearchLineTest()
@@ -81,6 +84,16 @@ void QuickSearchLineTest::shouldHideExtraOptionWidgetWhenResetFilter()
 
     searchLine.resetFilter();
     QVERIFY(!widget->isVisible());
+}
+
+void QuickSearchLineTest::shouldEmitSearchOptionChanged()
+{
+    QuickSearchLine searchLine;
+    searchLine.show();
+    QSignalSpy spy(&searchLine, SIGNAL(searchOptionChanged()));
+    QPushButton *button = qFindChild<QPushButton *>(&searchLine, QLatin1String("subject"));
+    QTest::mouseClick(button, Qt::LeftButton);
+    QCOMPARE(spy.count(), 1);
 }
 
 QTEST_KDEMAIN( QuickSearchLineTest, GUI )

@@ -59,6 +59,8 @@ public:
     QToolButton *lockSearch() const;
     int firstTagInComboIndex() const;    
     void resetFilter();
+    QList<qint32> status() const;
+
 Q_SIGNALS:
     void fullSearchRequest();
     void clearButtonClicked();
