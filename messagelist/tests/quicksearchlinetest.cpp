@@ -71,4 +71,16 @@ void QuickSearchLineTest::shouldHideExtraOptionWidgetWhenClearLineEdit()
     QVERIFY(!widget->isVisible());
 }
 
+void QuickSearchLineTest::shouldHideExtraOptionWidgetWhenResetFilter()
+{
+    QuickSearchLine searchLine;
+    searchLine.show();
+    QTest::keyClick(searchLine.searchEdit(), 'F');
+    QTest::qWaitForWindowShown(&searchLine);
+    QWidget *widget = qFindChild<QWidget *>(&searchLine, QLatin1String("extraoptions"));
+
+    searchLine.resetFilter();
+    QVERIFY(!widget->isVisible());
+}
+
 QTEST_KDEMAIN( QuickSearchLineTest, GUI )

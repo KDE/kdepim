@@ -115,18 +115,22 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     hbox->addWidget(lab);
 
     mSearchAgainstBody = new QPushButton(i18n("Body"));
+    mSearchAgainstBody->setObjectName(QLatin1String("body"));
     mSearchAgainstBody->setCheckable(true);
     hbox->addWidget(mSearchAgainstBody);
 
     mSearchAgainstSubject = new QPushButton(i18n("Subject"));
     mSearchAgainstSubject->setCheckable(true);
+    mSearchAgainstSubject->setObjectName(QLatin1String("subject"));
     hbox->addWidget(mSearchAgainstSubject);
 
     mSearchAgainstFrom = new QPushButton(i18n("From"));
+    mSearchAgainstFrom->setObjectName(QLatin1String("from"));
     mSearchAgainstFrom->setCheckable(true);
     hbox->addWidget(mSearchAgainstFrom);
 
     mSearchAgainstBcc = new QPushButton(i18n("Bcc"));
+    mSearchAgainstBcc->setObjectName(QLatin1String("bcc"));
     mSearchAgainstBcc->setCheckable(true);
     hbox->addWidget(mSearchAgainstBcc);
     mButtonSearchAgainstGroup = new QButtonGroup(this);
@@ -280,6 +284,9 @@ void QuickSearchLine::slotLockSearchClicked( bool locked )
 
 void QuickSearchLine::resetFilter()
 {
+    Q_FOREACH(QToolButton *button, mListStatusButton) {
+        button->setChecked(false);
+    }
     mStatusFilterCombo->setCurrentIndex( 0 );
     mLockSearch->setChecked(false);
     mButtonSearchAgainstGroup->button(0)->setChecked(true);
@@ -295,6 +302,7 @@ void QuickSearchLine::createQuickSearchButton(const QIcon &icon, const QString &
     button->setCheckable(true);
     button->setProperty("statusvalue", value);
     quickSearchButtonLayout->addWidget(button);
+    mListStatusButton.append(button);
     mButtonStatusGroup->addButton(button);
 }
 
