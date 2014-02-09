@@ -483,9 +483,9 @@ QString HubicStorageService::fillListWidget(StorageServiceTreeWidget *listWidget
     return QString();
 }
 
-QString HubicStorageService::itemInformation(const QVariantMap &variantMap)
+QMap<QString, QString> HubicStorageService::itemInformation(const QVariantMap &variantMap)
 {
-    return QString();
+    return QMap<QString, QString>();
 }
 
 QString HubicStorageService::fileIdentifier(const QVariantMap &variantMap)

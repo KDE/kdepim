@@ -466,13 +466,12 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
     return parentFolder;
 }
 
-QString DropBoxStorageService::itemInformation(const QVariantMap &variantMap)
+QMap<QString, QString> DropBoxStorageService::itemInformation(const QVariantMap &variantMap)
 {
-    QString information;
+    QMap<QString, QString> information;
     if (variantMap.contains(QLatin1String("root"))) {
-        information = i18n("Storage path: %1", variantMap.value(QLatin1String("root")).toString());
+        information.insert(i18n("Storage path:"), variantMap.value(QLatin1String("root")).toString());
     }
-    qDebug()<<" variantMap "<<variantMap;
     return information;
 }
 

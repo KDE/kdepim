@@ -402,10 +402,9 @@ void StorageServiceTreeWidget::slotCopyFolder()
 
 void StorageServiceTreeWidget::slotProperties()
 {
-    const QString info = mStorageService->itemInformation(itemInformationSelected());
-    if (!info.isEmpty()) {
-        QPointer<StorageServicePropertiesDialog> dlg = new StorageServicePropertiesDialog(this);
-        dlg->setInformation(info);
+    const QMap<QString, QString> information = mStorageService->itemInformation(itemInformationSelected());
+    if (!information.isEmpty()) {
+        QPointer<StorageServicePropertiesDialog> dlg = new StorageServicePropertiesDialog(information, this);
         dlg->exec();
         delete dlg;
     }

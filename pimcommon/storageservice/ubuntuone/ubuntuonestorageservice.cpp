@@ -442,20 +442,19 @@ QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWi
     return parentFolder;
 }
 
-QString UbuntuoneStorageService::itemInformation(const QVariantMap &variantMap)
+QMap<QString, QString> UbuntuoneStorageService::itemInformation(const QVariantMap &variantMap)
 {
     qDebug()<<" variantMap "<<variantMap;
-    QString information;
+    QMap<QString, QString> information;
     if (variantMap.contains(QLatin1String("is_public"))) {
         const bool value = variantMap.value(QLatin1String("is_public")).toString() == QLatin1String("true");
-        information = i18n("File is public: %1", value ? i18n("Yes") : i18n("No"));
+        information.insert(i18n("File is public:"), (value ? i18n("Yes") : i18n("No")));
     }
     if (variantMap.contains(QLatin1String("volume_path"))) {
-
-        information += QLatin1Char('\n') + i18n("Volume path: %1", variantMap.value(QLatin1String("volume_path")).toString());
+        information.insert(i18n("Volume path:"), variantMap.value(QLatin1String("volume_path")).toString());
     }
     if (variantMap.contains(QLatin1String("size"))) {
-        information += QLatin1Char('\n') + i18n("Size: %1", KGlobal::locale()->formatByteSize(variantMap.value(QLatin1String("size")).toULongLong()));
+        information.insert(i18n("Size:"), KGlobal::locale()->formatByteSize(variantMap.value(QLatin1String("size")).toULongLong()));
     }
     return information;
 }

@@ -58,7 +58,7 @@ public:
     QString fileShareRoot(const QVariantMap &variantMap);
     StorageServiceAbstract::Capabilities capabilities() const;
     QString fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder);
-    QString itemInformation(const QVariantMap &variantMap);
+    QMap<QString, QString> itemInformation(const QVariantMap &variantMap);
 
     KIcon icon() const;
     QRegExp disallowedSymbols() const;

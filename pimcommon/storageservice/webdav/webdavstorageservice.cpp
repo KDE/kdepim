@@ -351,9 +351,9 @@ QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
     return parentFolder;
 }
 
-QString WebDavStorageService::itemInformation(const QVariantMap &variantMap)
+QMap<QString, QString> WebDavStorageService::itemInformation(const QVariantMap &variantMap)
 {
-    return QString();
+    return QMap<QString, QString>();
 }
 
 QString WebDavStorageService::fileIdentifier(const QVariantMap &variantMap)

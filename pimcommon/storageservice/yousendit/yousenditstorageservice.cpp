@@ -396,15 +396,14 @@ void YouSendItStorageService::storageServiceCopyFolder(const QString &source, co
     }
 }
 
-QString YouSendItStorageService::itemInformation(const QVariantMap &variantMap)
+QMap<QString, QString> YouSendItStorageService::itemInformation(const QVariantMap &variantMap)
 {
-    qDebug()<<" variantMap"<<variantMap;
-    QString information;
+    QMap<QString, QString> information;
     if (variantMap.contains(QLatin1String("name"))) {
-        information = i18n("name: %1", variantMap.value(QLatin1String("name")).toString());
+        information.insert(i18n("name:"), variantMap.value(QLatin1String("name")).toString());
     }
     if (variantMap.contains(QLatin1String("writeable"))) {
-        information += QLatin1String("\n") + i18n("writable: %1", (variantMap.value(QLatin1String("writeable")).toString() == QLatin1String("true")) ? i18n("Yes") : i18n("No"));
+        information.insert(i18n("writable:"), (variantMap.value(QLatin1String("writeable")).toString() == QLatin1String("true")) ? i18n("Yes") : i18n("No"));
     }
     return information;
 }

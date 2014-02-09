@@ -527,10 +527,10 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
     return parentId;
 }
 
-QString BoxStorageService::itemInformation(const QVariantMap &variantMap)
+QMap<QString, QString> BoxStorageService::itemInformation(const QVariantMap &variantMap)
 {
     qDebug()<<" variantMap" <<variantMap;
-    return QString();
+    return QMap<QString, QString>();
 }
 
 QString BoxStorageService::fileIdentifier(const QVariantMap &variantMap)

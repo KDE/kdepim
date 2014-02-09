@@ -56,7 +56,7 @@ public:
     void storageServiceMoveFile(const QString &source, const QString &destination);
     void storageServiceCopyFile(const QString &source, const QString &destination);
     void storageServiceCopyFolder(const QString &source, const QString &destination);
-    QString itemInformation(const QVariantMap &variantMap);
+    QMap<QString, QString> itemInformation(const QVariantMap &variantMap);
     QString storageServiceName() const;
     QString fileIdentifier(const QVariantMap &variantMap);
     QString fileShareRoot(const QVariantMap &variantMap);

@@ -22,20 +22,17 @@
 #define STORAGESERVICEPROPERTIESDIALOG_H
 
 #include <KDialog>
-class QLabel;
 class StorageServicePropertiesDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit StorageServicePropertiesDialog(QWidget *parent=0);
+    explicit StorageServicePropertiesDialog(const QMap<QString, QString> &information, QWidget *parent=0);
     ~StorageServicePropertiesDialog();
 
-    void setInformation(const QString &info);
-
 private:
+    void createInformationWidget(const QMap<QString, QString> &information);
     void readConfig();
     void writeConfig();
-    QLabel *mInformation;
 };
 
 #endif // STORAGESERVICEPROPERTIESDIALOG_H

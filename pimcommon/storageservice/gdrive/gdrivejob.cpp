@@ -116,6 +116,7 @@ void GDriveJob::slotChildReferenceFetchJobFinished(KGAPI2::Job *job)
         }
         KGAPI2::Drive::FileFetchJob *fileFetchJob = new KGAPI2::Drive::FileFetchJob( filesIds, mAccount );
         connect(fileFetchJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotFileFetchFinished(KGAPI2::Job*)));
+        childRef->deleteLater();
     } else {
         //TODO emit error
         deleteLater();
@@ -137,6 +138,7 @@ void GDriveJob::slotFileFetchFinished(KGAPI2::Job* job)
         const QString value = QString::fromLatin1(KGAPI2::Drive::File::toJSON(file));
         listFolder<<value;
     }
+    fileFetchJob->deleteLater();
     Q_EMIT listFolderDone(QVariant(listFolder));
     deleteLater();
 }
@@ -193,6 +195,7 @@ void GDriveJob::slotAboutFetchJobFinished(KGAPI2::Job *job)
     Q_ASSERT(aboutFetchJob);
     if (handleError(job)) {
         Q_EMIT actionFailed(aboutFetchJob->errorString());
+        aboutFetchJob->deleteLater();
         deleteLater();
         return;
     }
@@ -201,6 +204,7 @@ void GDriveJob::slotAboutFetchJobFinished(KGAPI2::Job *job)
     accountInfo.shared = about->quotaBytesUsed();
     accountInfo.quota = about->quotaBytesTotal();
     Q_EMIT accountInfoDone(accountInfo);
+    aboutFetchJob->deleteLater();
     deleteLater();
 }
 
@@ -237,6 +241,7 @@ void GDriveJob::slotDeleteFolderFinished(KGAPI2::Job*job)
     } else {
         Q_EMIT deleteFolderDone(QString());
     }
+    job->deleteLater();
     deleteLater();
 }
 
@@ -248,6 +253,7 @@ void GDriveJob::slotDeleteFileFinished(KGAPI2::Job*job)
     } else {
         Q_EMIT deleteFileDone(QString());
     }
+    job->deleteLater();
     deleteLater();
 }
 
@@ -295,6 +301,7 @@ void GDriveJob::slotCreateJobFinished(KGAPI2::Job *job)
     } else {
         Q_EMIT createFolderDone(QString());
     }
+    job->deleteLater();
     deleteLater();
 }
 
