@@ -35,7 +35,6 @@
 #include <QButtonGroup>
 #include <QLabel>
 
-#define SHOW_EXTRA_OPTION 1
 
 using namespace MessageList::Core;
 QuickSearchLine::QuickSearchLine(QWidget *parent)
@@ -141,21 +140,17 @@ QuickSearchLine::~QuickSearchLine()
 
 void QuickSearchLine::slotSearchEditTextEdited(const QString &text)
 {
-#ifdef SHOW_EXTRA_OPTION
     if (text.isEmpty())
         mExtraOption->hide();
     else
         mExtraOption->show();
-#endif
     Q_EMIT searchEditTextEdited(text);
 }
 
 void QuickSearchLine::slotClearButtonClicked()
 {
-#ifdef SHOW_EXTRA_OPTION
     mExtraOption->hide();
     mButtonGroup->button(0)->setChecked(true);
-#endif
     Q_EMIT clearButtonClicked();
 }
 
@@ -167,7 +162,6 @@ void QuickSearchLine::slotSearchOptionChanged()
 QuickSearchLine::SearchOptions QuickSearchLine::searchOptions() const
 {
     QuickSearchLine::SearchOptions searchOptions = SearchNoOption;
-#ifdef SHOW_EXTRA_OPTION
     if (mSearchAgainstBody->isChecked()) {
         searchOptions |= SearchAgainstBody;
     }
@@ -180,9 +174,7 @@ QuickSearchLine::SearchOptions QuickSearchLine::searchOptions() const
     if (mSearchAgainstBcc->isChecked()) {
         searchOptions |= SearchAgainstBcc;
     }
-#else
     searchOptions |= SearchAgainstBody;
-#endif
     return searchOptions;
 }
 
