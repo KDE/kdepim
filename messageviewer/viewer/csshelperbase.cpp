@@ -74,10 +74,10 @@ namespace MessageViewer {
     mPaintDevice( pd )
   {
     // initialize with defaults - should match the corresponding application defaults
-    mForegroundColor = QApplication::palette().color( QPalette::Text );
+    mForegroundColor = /*QApplication::palette().color( QPalette::Text )*/QColor(Qt::black);
     mLinkColor = KColorScheme( QPalette::Active, KColorScheme::View ).foreground( KColorScheme::LinkText ).color();
     mVisitedLinkColor = KColorScheme( QPalette::Active, KColorScheme::View ).foreground( KColorScheme::VisitedText ).color();
-    mBackgroundColor = QApplication::palette().color( QPalette::Base );
+    mBackgroundColor = /*QApplication::palette().color( QPalette::Base )*/QColor(Qt::white);
     cHtmlWarning = QColor( 0xFF, 0x40, 0x40 ); // warning frame color: light red
 
     cPgpEncrH = QColor( 0x00, 0x80, 0xFF ); // light blue
@@ -300,8 +300,8 @@ namespace MessageViewer {
                "}\n\n"
             )
       .arg( headerFont,
-            pal.color( QPalette::Background ).name(),
-            pal.color( QPalette::Foreground ).name() )
+            /*pal.color( QPalette::Background ).name()*/QColor(Qt::white).name(),
+            /*pal.color( QPalette::Foreground ).name()*/QColor(Qt::black).name() )
       + quoteCSS;
   }
 
@@ -546,7 +546,7 @@ namespace MessageViewer {
       .arg( pal.color( QPalette::Highlight ).name(),
             pal.color( QPalette::HighlightedText ).name(),
             pal.color( QPalette::Foreground ).name(),
-            pal.color( QPalette::Background ).name() )
+            /*pal.color( QPalette::Background ).name()*/QColor(Qt::white).name() )
       .arg( pal.color( QPalette::Mid ).name() )
       + quoteCSS;
   }
@@ -671,7 +671,7 @@ namespace MessageViewer {
       "div.quotelevelmark {\n"
       "  position: absolute;\n"
       "  margin-left:-10px;\n"
-      "}\n\n").arg( pal.color( QPalette::Background ).name() ).arg(pal.color( QPalette::Foreground ).name()).arg(headerFont)
+      "}\n\n").arg( /*pal.color( QPalette::Background ).name()*/QColor(Qt::white).name() ).arg(/*pal.color( QPalette::Foreground ).name()*/QColor(Qt::black).name()).arg(headerFont)
       ;
   }
 
