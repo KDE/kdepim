@@ -97,6 +97,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mStatusFilterCombo->setEnabled( false );
 
     mExtraOption = new QWidget;
+    mExtraOption->setObjectName(QLatin1String("extraoptions"));
     hbox = new QHBoxLayout;
     hbox->setMargin(0);
     vbox->addWidget(mExtraOption);
@@ -140,10 +141,11 @@ QuickSearchLine::~QuickSearchLine()
 
 void QuickSearchLine::slotSearchEditTextEdited(const QString &text)
 {
-    if (text.isEmpty())
+    if (text.isEmpty()) {
         mExtraOption->hide();
-    else
+    } else {
         mExtraOption->show();
+    }
     Q_EMIT searchEditTextEdited(text);
 }
 

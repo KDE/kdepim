@@ -22,12 +22,16 @@
 #define QUICKSEARCHLINE_H
 
 #include <QWidget>
+#include "messagelist_export.h"
+
 class KLineEdit;
 class KComboBox;
 class QToolButton;
 class QPushButton;
 class QButtonGroup;
-class QuickSearchLine : public QWidget
+namespace MessageList {
+namespace Core {
+class MESSAGELIST_EXPORT QuickSearchLine : public QWidget
 {
     Q_OBJECT
 public:
@@ -80,5 +84,6 @@ private:
     QButtonGroup *mButtonGroup;
     int mFirstTagInComboIndex;
 };
-
+}
+}
 #endif // QUICKSEARCHLINE_H
