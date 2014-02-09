@@ -70,6 +70,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     QLabel *quickLab = new QLabel(i18n("Quick Filter:"));
     quickSearchButtonLayout->addWidget(quickLab);
     initializeStatusSearchButton(quickSearchButtonLayout);
+    hbox->addLayout(quickSearchButtonLayout);
 #endif
     mSearchEdit = new KLineEdit( this );
     mSearchEdit->setClickMessage( i18nc( "Search for messages.", "Search" ) );
@@ -290,6 +291,8 @@ void QuickSearchLine::createQuickSearchButton(const QIcon &icon, const QString &
     QToolButton *button = new QToolButton;
     button->setIcon(icon);
     button->setText(text);
+    button->setToolTip(text);
+    button->setCheckable(true);
     button->setProperty("statusvalue", value);
     quickSearchButtonLayout->addWidget(button);
     mButtonStatusGroup->addButton(button);
