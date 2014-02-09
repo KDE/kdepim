@@ -65,7 +65,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     connect( mLockSearch, SIGNAL(toggled(bool)), SLOT(slotLockSearchClicked(bool)));
     hbox->addWidget( mLockSearch );
 
-#if QUICKSEARCHBUTTON
+#ifdef QUICKSEARCHBUTTON
     QHBoxLayout *quickSearchButtonLayout = new QHBoxLayout;
     QLabel *quickLab = new QLabel(i18n("Quick Filter:"));
     quickSearchButtonLayout->addWidget(quickLab);
@@ -77,9 +77,8 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mSearchEdit->setClearButtonShown( true );
     mSearchEdit->setVisible( Settings::self()->showQuickSearch() );
 
-    connect( mSearchEdit, SIGNAL(textEdited(QString)), this, SLOT(slotSearchEditTextEdited(QString)));
+    connect( mSearchEdit, SIGNAL(textChanged(QString)), this, SLOT(slotSearchEditTextEdited(QString)));
 
-    connect( mSearchEdit, SIGNAL(clearButtonClicked()), this, SLOT(slotClearButtonClicked()));
 
     hbox->addWidget( mSearchEdit );
 
@@ -286,18 +285,22 @@ void QuickSearchLine::resetFilter()
     mExtraOption->hide();
 }
 
-QToolButton *QuickSearchLine::createQuickSearchButton(const QIcon &icon, const QString &text, int value, QLayout *quickSearchButtonLayout)
+void QuickSearchLine::createQuickSearchButton(const QIcon &icon, const QString &text, int value, QLayout *quickSearchButtonLayout)
 {
     QToolButton *button = new QToolButton;
     button->setIcon(icon);
     button->setText(text);
     button->setProperty("statusvalue", value);
     quickSearchButtonLayout->addWidget(button);
-    return button;
+    mButtonStatusGroup->addButton(button);
 }
 
 void QuickSearchLine::initializeStatusSearchButton(QLayout *quickSearchButtonLayout)
 {
+    mButtonStatusGroup = new QButtonGroup(this);
+    mButtonStatusGroup->setExclusive(false);
+    connect(mButtonStatusGroup, SIGNAL(buttonClicked(int)), this, SIGNAL(statusButtonsClicked()));
+
     createQuickSearchButton(SmallIcon(QLatin1String( "mail-unread" )), i18nc( "@action:inmenu Status of a message", "Unread" ), Akonadi::MessageStatus::statusUnread().toQInt32(),quickSearchButtonLayout );
 
     createQuickSearchButton( SmallIcon(QLatin1String( "mail-replied" )),

@@ -64,6 +64,7 @@ Q_SIGNALS:
     void clearButtonClicked();
     void searchEditTextEdited(const QString &);
     void searchOptionChanged();
+    void statusButtonsClicked();
 
 private slots:
     void slotLockSearchClicked(bool locked);
@@ -73,7 +74,7 @@ private slots:
 private:
     void initializeStatusSearchButton(QLayout *quickSearchButtonLayout);
     void defaultFilterStatus();
-    QToolButton *createQuickSearchButton(const QIcon &icon, const QString &text, int value, QLayout *quickSearchButtonLayout);
+    void createQuickSearchButton(const QIcon &icon, const QString &text, int value, QLayout *quickSearchButtonLayout);
     QList<QToolButton *> mListStatusButton;
     KLineEdit *mSearchEdit;
     KComboBox *mStatusFilterCombo;
@@ -84,6 +85,7 @@ private:
     QPushButton *mSearchAgainstFrom;
     QPushButton *mSearchAgainstBcc;
     QWidget *mExtraOption;
+    QButtonGroup *mButtonStatusGroup;
     QButtonGroup *mButtonSearchAgainstGroup;
     int mFirstTagInComboIndex;
 };

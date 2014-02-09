@@ -33,6 +33,7 @@ private Q_SLOTS:
     void shouldHaveDefaultValueOnCreation();
     void shouldEmitTextChanged();
     void shouldShowExtraOptionWidget();
+    void shouldHideExtraOptionWidgetWhenClearLineEdit();
 };
 
 #endif // QUICKSEARCHLINETEST_H
