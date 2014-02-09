@@ -38,6 +38,7 @@ TodoEdit::TodoEdit(QWidget *parent)
     connect(mNoteEdit, SIGNAL(returnPressed()), SLOT(slotReturnPressed()));
     hbox->addWidget(mNoteEdit);
     mCollectionCombobox = new Akonadi::CollectionComboBox(_k_todoEditStubModel);
+    mCollectionCombobox->setMimeTypeFilter( QStringList() << KCalCore::Todo::todoMimeType() );
     mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
     hbox->addWidget(mCollectionCombobox);
 }
@@ -76,7 +77,7 @@ void TodoEdit::setMessage(const KMime::Message::Ptr &value)
 
 void TodoEdit::slotReturnPressed()
 {
-    if (!mNoteEdit->text().isEmpty()) {
+    if (!mNoteEdit->text().isEmpty() && mCollectionCombobox->currentCollection().isValid()) {
         KCalCore::Todo::Ptr todo( new KCalCore::Todo );
         todo->setSummary(mNoteEdit->text());
         Q_EMIT createTodo(todo);
