@@ -41,11 +41,13 @@ public:
 public slots:
     void slotSetStatusBarMessage(const QString &message);
 
+protected:
+    void closeEvent(QCloseEvent *e);
+
 private slots:
     void slotConfigure();
     void slotUpdateActions();
     void slotSystemNetworkStatusChanged(Solid::Networking::Status status);
-    void slotClose();
     void slotServiceRemoved(const QString &serviceName);
 
 private:

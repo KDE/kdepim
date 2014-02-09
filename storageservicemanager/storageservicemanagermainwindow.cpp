@@ -39,6 +39,7 @@
 #include <KMessageBox>
 
 #include <QPointer>
+#include <QCloseEvent>
 #include <QLabel>
 #include <QDebug>
 
@@ -135,7 +136,7 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
 void StorageServiceManagerMainWindow::setupActions()
 {
     KActionCollection *ac = actionCollection();
-    KStandardAction::quit(this, SLOT(slotClose()), ac );
+    KStandardAction::quit(this, SLOT(close()), ac );
 
     mAuthenticate = ac->addAction(QLatin1String("authenticate"), mStorageServiceTabWidget, SLOT(slotAuthenticate()));
     mAuthenticate->setText(i18n("Authenticate..."));
@@ -167,14 +168,15 @@ void StorageServiceManagerMainWindow::setupActions()
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
 }
 
-void StorageServiceManagerMainWindow::slotClose()
+void StorageServiceManagerMainWindow::closeEvent(QCloseEvent *e)
 {
     if (mStorageServiceTabWidget->hasUploadDownloadProgress()) {
         if (KMessageBox::No == KMessageBox::warningYesNo(this, i18n("There is still upload or download in progress. Do you want to close anyway?"))) {
+            e->ignore();
             return;
         }
     }
-    close();
+    e->accept();
 }
 
 void StorageServiceManagerMainWindow::slotConfigure()
