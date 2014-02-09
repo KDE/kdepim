@@ -34,8 +34,10 @@ public:
     explicit SieveEditorMainWindow();
     ~SieveEditorMainWindow();
 
+protected:
+    void closeEvent(QCloseEvent *e);
+
 private slots:
-    void slotQuitApp();
     void slotConfigure();
     void slotAddServerSieve();
     void slotCreateNewScript();
