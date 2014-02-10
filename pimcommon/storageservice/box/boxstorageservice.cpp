@@ -25,6 +25,7 @@
 
 #include <KLocalizedString>
 #include <KConfig>
+#include <KLocale>
 #include <KGlobal>
 #include <KConfigGroup>
 
@@ -530,7 +531,26 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
 QMap<QString, QString> BoxStorageService::itemInformation(const QVariantMap &variantMap)
 {
     qDebug()<<" variantMap" <<variantMap;
-    return QMap<QString, QString>();
+    QMap<QString, QString> information;
+    if (variantMap.contains(QLatin1String("type"))) {
+        const QString type = variantMap.value(QLatin1String("type")).toString();
+        information.insert(i18n("Type:"), type == QLatin1String("folder") ? i18n("Folder") : i18n("File"));
+    }
+    if (variantMap.contains(QLatin1String("name"))) {
+        information.insert(i18n("Name:"), variantMap.value(QLatin1String("name")).toString());
+    }
+    if (variantMap.contains(QLatin1String("size"))) {
+        information.insert(i18n("Size:"), KGlobal::locale()->formatByteSize(variantMap.value(QLatin1String("size")).toULongLong()));
+    }
+    if (variantMap.contains(QLatin1String("created_at"))) {
+        const QString tmp = variantMap.value(QLatin1String("created_at")).toString();
+        information.insert(i18n("Created"), KGlobal::locale()->formatDateTime(PimCommon::BoxUtil::convertToDateTime( tmp )));
+    }
+    if (variantMap.contains(QLatin1String("modified_at"))) {
+        const QString tmp = variantMap.value(QLatin1String("modified_at")).toString();
+        information.insert(i18n("Last Modified:"), KGlobal::locale()->formatDateTime(PimCommon::BoxUtil::convertToDateTime( tmp )));
+    }
+    return information;
 }
 
 QString BoxStorageService::fileIdentifier(const QVariantMap &variantMap)
