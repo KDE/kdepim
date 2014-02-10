@@ -60,6 +60,7 @@ void StorageServicePropertiesDialog::createInformationWidget(const QMap<QString,
         grid->addWidget(type, row, 0);
 
         QLabel *info = new QLabel;
+        info->setTextInteractionFlags(Qt::TextBrowserInteraction);
         info->setAlignment(Qt::AlignLeft);
         info->setText(i.value());
         grid->addWidget(info, row, 1);
