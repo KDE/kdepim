@@ -41,6 +41,7 @@ private slots:
     void shouldEmitTodoWhenPressEnter();
     void shouldEmitNotEmitTodoWhenTextIsEmpty();
     void shouldTodoHasCorrectSubject();
+    void shouldClearAllWhenCloseWidget();
 };
 
 #endif // TODOEDITTEST_H

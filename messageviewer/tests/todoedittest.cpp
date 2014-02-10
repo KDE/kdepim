@@ -201,5 +201,18 @@ void TodoEditTest::shouldTodoHasCorrectSubject()
     QCOMPARE(todoPtr->summary(), QString::fromLatin1("Reply to \"%1\"").arg(subject));
 }
 
+void TodoEditTest::shouldClearAllWhenCloseWidget()
+{
+    MessageViewer::TodoEdit edit;
+    KMime::Message::Ptr msg(new KMime::Message);
+    QString subject = QLatin1String("Test Note");
+    msg->subject(true)->fromUnicodeString(subject, "us-ascii");
+    edit.setMessage(msg);
+    QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
+    edit.slotCloseWidget();
+    QCOMPARE(noteedit->text(), QString());
+    QVERIFY(!edit.message());
+}
+
 
 QTEST_KDEMAIN( TodoEditTest, GUI )

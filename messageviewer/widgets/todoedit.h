@@ -24,7 +24,7 @@
 #include <KCalCore/Todo>
 #include "messageviewer_export.h"
 
-class QLineEdit;
+class KLineEdit;
 
 namespace Akonadi {
 class CollectionComboBox;
@@ -43,6 +43,9 @@ public:
     KMime::Message::Ptr message() const;
     void setMessage(const KMime::Message::Ptr &value);
 
+public Q_SLOTS:
+    void slotCloseWidget();
+
 private Q_SLOTS:
     void slotReturnPressed();
 
@@ -54,7 +57,7 @@ Q_SIGNALS:
 private:
     Akonadi::Collection mCollection;
     KMime::Message::Ptr mMessage;
-    QLineEdit *mNoteEdit;
+    KLineEdit *mNoteEdit;
     Akonadi::CollectionComboBox *mCollectionCombobox;
 };
 }

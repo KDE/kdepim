@@ -32,6 +32,7 @@
 #include "scamdetection/scamdetectionwarningwidget.h"
 #include "scamdetection/scamattribute.h"
 #include "adblock/adblockmanager.h"
+#include "widgets/todoedit.h"
 
 #ifdef MESSAGEVIEWER_READER_HTML_DEBUG
 #include "htmlwriter/filehtmlwriter.h"
@@ -1320,6 +1321,7 @@ void ViewerPrivate::resetStateForNewMessage()
   mShowRawToltecMail = !GlobalSettings::self()->showToltecReplacementText();
   mFindBar->closeBar();
   mTranslatorWidget->slotCloseWidget();
+  mCreateTodo->slotCloseWidget();
   mScamDetectionWarning->setVisible(false);
 
   if ( mPrinting ) {
@@ -1528,6 +1530,9 @@ void ViewerPrivate::createWidgets() {
 
   mViewer = new MailWebView( mActionCollection, readerBox );
   mViewer->setObjectName( QLatin1String("mViewer") );
+
+  mCreateTodo = new MessageViewer::TodoEdit(readerBox);
+  mCreateTodo->hide();
 
   mFindBar = new FindBarMailWebView( mViewer, readerBox );
   mTranslatorWidget = new PimCommon::TranslatorWidget(readerBox);

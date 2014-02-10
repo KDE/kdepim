@@ -18,8 +18,9 @@
 #include "todoedit.h"
 
 #include <KLocalizedString>
+#include <KLineEdit>
+
 #include <QHBoxLayout>
-#include <QLineEdit>
 #include <Akonadi/CollectionComboBox>
 
 namespace MessageViewer {
@@ -33,11 +34,13 @@ TodoEdit::TodoEdit(QWidget *parent)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
     setLayout(hbox);
-    mNoteEdit = new QLineEdit;
+    mNoteEdit = new KLineEdit;
+    mNoteEdit->setClearButtonShown(true);
     mNoteEdit->setObjectName(QLatin1String("noteedit"));
     connect(mNoteEdit, SIGNAL(returnPressed()), SLOT(slotReturnPressed()));
     hbox->addWidget(mNoteEdit);
     mCollectionCombobox = new Akonadi::CollectionComboBox(_k_todoEditStubModel);
+    mCollectionCombobox->setMinimumWidth(250);
     mCollectionCombobox->setMimeTypeFilter( QStringList() << KCalCore::Todo::todoMimeType() );
     mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
     hbox->addWidget(mCollectionCombobox);
@@ -55,6 +58,7 @@ void TodoEdit::setCollection(const Akonadi::Collection &value)
         Q_EMIT collectionChanged(mCollection);
     }
 }
+
 KMime::Message::Ptr TodoEdit::message() const
 {
     return mMessage;
@@ -73,6 +77,12 @@ void TodoEdit::setMessage(const KMime::Message::Ptr &value)
         }
         Q_EMIT messageChanged(mMessage);
     }
+}
+
+void TodoEdit::slotCloseWidget()
+{
+    mNoteEdit->clear();
+    mMessage = KMime::Message::Ptr();
 }
 
 void TodoEdit::slotReturnPressed()

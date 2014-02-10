@@ -55,7 +55,7 @@ class QModelIndex;
 class QTreeView;
 
 namespace MessageViewer {
-
+  class TodoEdit;
   class EditorWatcher;
   class HtmlWriter;
   class CSSHelper;
@@ -714,6 +714,7 @@ public:
 
   GrantleeTheme::GrantleeThemeManager *mThemeManager;
   ScamDetectionWarningWidget *mScamDetectionWarning;
+  MessageViewer::TodoEdit *mCreateTodo;
   // zoom Factor
   static const qreal zoomBy;
   qreal mZoomFactor;
