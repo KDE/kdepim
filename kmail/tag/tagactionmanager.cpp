@@ -31,11 +31,13 @@
 #include <KMenu>
 #include <KLocalizedString>
 #include <KJob>
+#include <Akonadi/Monitor>
 
 #include <QSignalMapper>
 #include <QPointer>
 
 #include <Akonadi/TagFetchJob>
+#include <Akonadi/TagFetchScope>
 #include <Akonadi/TagAttribute>
 
 using namespace KMail;
@@ -53,19 +55,16 @@ TagActionManager::TagActionManager( QObject *parent, KActionCollection *actionCo
       mSeparatorNewTagAction( 0 ),
       mMoreAction( 0 ),
       mNewTagAction( 0 ),
-      mTagFetchInProgress( false )
+      mTagFetchInProgress( false ),
+      mMonitor(new Akonadi::Monitor(this))
 {
     mMessageActions->messageStatusMenu()->menu()->addSeparator();
 
-    //TODO monitor tags
-    //mTags should be replaced by a generic TagCache with a monitor built in.
-
-//     Nepomuk2::ResourceWatcher* watcher = new Nepomuk2::ResourceWatcher(this);
-//     watcher->addType(Soprano::Vocabulary::NAO::Tag());
-//     connect(watcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)), this, SLOT(resourceCreated(Nepomuk2::Resource,QList<QUrl>)));
-//     connect(watcher, SIGNAL(resourceRemoved(QUrl,QList<QUrl>)),this, SLOT(resourceRemoved(QUrl,QList<QUrl>)));
-//     connect(watcher, SIGNAL(propertyChanged(Nepomuk2::Resource,Nepomuk2::Types::Property,QVariantList,QVariantList)),this,SLOT(propertyChanged(Nepomuk2::Resource)));
-//     watcher->start();
+    mMonitor->setTypeMonitored(Akonadi::Monitor::Tags);
+    mMonitor->tagFetchScope().fetchAttribute<Akonadi::TagAttribute>();
+    connect(mMonitor, SIGNAL(tagAdded(Akonadi::Tag)), this, SLOT(onTagAdded(Akonadi::Tag)));
+    connect(mMonitor, SIGNAL(tagRemoved(Akonadi::Tag)), this, SLOT(onTagRemoved(Akonadi::Tag)));
+    connect(mMonitor, SIGNAL(tagChanged(Akonadi::Tag)), this, SLOT(onTagChanged(Akonadi::Tag)));
 }
 
 TagActionManager::~TagActionManager()
@@ -152,11 +151,25 @@ void TagActionManager::createActions()
       mTagFetchInProgress = true;
       //TODO set type filter
       Akonadi::TagFetchJob *fetchJob = new Akonadi::TagFetchJob(this);
-      fetchJob->fetchAttribute<Akonadi::TagAttribute>();
+      fetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
       connect(fetchJob, SIGNAL(result(KJob*)), this, SLOT(finishedTagListing(KJob*)));
     } else {
-        createTagActions();
+        createTagActions(mTags);
     }
+}
+
+void TagActionManager::finishedTagListing(KJob *job)
+{
+    if (job->error()) {
+        kWarning() << job->errorString();
+    }
+    Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob*>(job);
+    foreach (const Akonadi::Tag &result, fetchJob->tags()) {
+        mTags.append( MailCommon::Tag::fromAkonadi( result ) );
+    }
+    mTagFetchInProgress = false;
+    qSort( mTags.begin(), mTags.end(), MailCommon::Tag::compare );
+    createTagActions(mTags);
 }
 
 void TagActionManager::onSignalMapped(const QString& tag)
@@ -164,9 +177,8 @@ void TagActionManager::onSignalMapped(const QString& tag)
   emit tagActionTriggered(Akonadi::Tag(tag.toLongLong()));
 }
 
-void TagActionManager::createTagActions()
+void TagActionManager::createTagActions(const QList<MailCommon::Tag::Ptr> &tags)
 {
-  kDebug();
     //Use a mapper to understand which tag button is triggered
     mMessageTagToggleMapper = new QSignalMapper( this );
     connect( mMessageTagToggleMapper, SIGNAL(mapped(QString)),
@@ -175,8 +187,9 @@ void TagActionManager::createTagActions()
     // Create a action for each tag and plug it into various places
     int i = 0;
     bool needToAddMoreAction = false;
-    const int numberOfTag(mTags.count());
-    foreach( const MailCommon::Tag::Ptr &tag, mTags ) {
+    const int numberOfTag(tags.size());
+    //It is assumed the tags are sorted
+    foreach( const MailCommon::Tag::Ptr &tag, tags ) {
         if(tag->tagStatus)
             continue;
         if ( i< s_numberMaxTag )
@@ -229,20 +242,6 @@ void TagActionManager::createTagActions()
     }
 }
 
-void TagActionManager::finishedTagListing(KJob *job)
-{
-    if (job->error()) {
-        kWarning() << job->errorString();
-    }
-    Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob*>(job);
-    foreach (const Akonadi::Tag &result, fetchJob->tags()) {
-        mTags.append( MailCommon::Tag::fromAkonadi( result ) );
-    }
-    mTagFetchInProgress = false;
-    qSort( mTags.begin(), mTags.end(), MailCommon::Tag::compare );
-    createTagActions();
-}
-
 void TagActionManager::updateActionStates( int numberOfSelectedMessages,
                                            const Akonadi::Item &selectedItem )
 {
@@ -280,63 +279,54 @@ void TagActionManager::updateActionStates( int numberOfSelectedMessages,
     }
 }
 
-// void TagActionManager::tagsChanged()
-// {
-//     mTags.clear(); // re-read the tags
-//     createActions();
-// }
+void TagActionManager::onTagAdded(const Akonadi::Tag &akonadiTag)
+{
+    const QList<qint64> checked = checkedTags();
 
-//TODO onTagCreated(const Akonadi::Tag &)
-// void TagActionManager::resourceCreated(const Nepomuk2::Resource& res,const QList<QUrl>&)
-// {
-//     const QList<QUrl> checked = checkedTags();
-//
-//     clearActions();
-//     mTags.append( MailCommon::Tag::fromNepomuk( res ) );
-//     qSort( mTags.begin(), mTags.end(), MailCommon::Tag::compare );
-//     createTagActions();
-//
-//     checkTags( checked );
-// }
+    clearActions();
+    mTags.append( MailCommon::Tag::fromAkonadi( akonadiTag ) );
+    qSort( mTags.begin(), mTags.end(), MailCommon::Tag::compare );
+    createTagActions(mTags);
 
-//TODO onTagRemoved(const Akonadi::Tag &)
-// void TagActionManager::resourceRemoved(const QUrl& url,const QList<QUrl>&)
-// {
-//     foreach( const MailCommon::Tag::Ptr &tag, mTags ) {
-//         if(tag->nepomukResourceUri == url) {
-//             mTags.removeAll(tag);
-//             break;
-//         }
-//     }
-//
-//     const QList<QUrl> checked = checkedTags();
-//
-//     clearActions();
-//     qSort( mTags.begin(), mTags.end(), MailCommon::Tag::compare );
-//     createTagActions();
-//
-//     checkTags( checked );
-// }
+    checkTags( checked );
+}
 
-//TODO onTagChanged(const Akonadi::Tag &)
-// void TagActionManager::propertyChanged(const Nepomuk2::Resource& res)
-// {
-//     foreach( const MailCommon::Tag::Ptr &tag, mTags ) {
-// //         if(tag->nepomukResourceUri == res.uri()) {
-// //             mTags.removeAll(tag);
-// //             break;
-// //         }
-//     }
-//     mTags.append( MailCommon::Tag::fromNepomuk( res ) );
-//
-//     QList<QUrl> checked = checkedTags();
-//
-//     clearActions();
-//     qSort( mTags.begin(), mTags.end(), MailCommon::Tag::compare );
-//     createTagActions();
-//
-//     checkTags( checked );
-// }
+void TagActionManager::onTagRemoved(const Akonadi::Tag &akonadiTag)
+{
+    foreach( const MailCommon::Tag::Ptr &tag, mTags ) {
+        if(tag->id() == akonadiTag.id()) {
+            mTags.removeAll(tag);
+            break;
+        }
+    }
+
+    const QList<qint64> checked = checkedTags();
+
+    clearActions();
+    qSort( mTags.begin(), mTags.end(), MailCommon::Tag::compare );
+    createTagActions( mTags );
+
+    checkTags( checked );
+}
+
+void TagActionManager::onTagChanged(const Akonadi::Tag& akonadiTag)
+{
+    foreach( const MailCommon::Tag::Ptr &tag, mTags ) {
+        if(tag->id() == akonadiTag.id()) {
+            mTags.removeAll(tag);
+            break;
+        }
+    }
+    mTags.append( MailCommon::Tag::fromAkonadi( akonadiTag ) );
+
+    const QList<qint64> checked = checkedTags();
+
+    clearActions();
+    qSort( mTags.begin(), mTags.end(), MailCommon::Tag::compare );
+    createTagActions( mTags );
+
+    checkTags( checked );
+}
 
 void TagActionManager::newTagActionClicked()
 {
@@ -350,27 +340,24 @@ void TagActionManager::newTagActionClicked()
     delete dialog;
 }
 
-// void TagActionManager::checkTags(const QList< QUrl >& tags)
-// {
-//     foreach( const QUrl &url, tags ) {
-//         const QString str = url.toString();
-//         if ( mTagActions.contains( str ) ) {
-//             mTagActions[str]->setChecked( true );
-//         }
-//     }
-// }
-//
-// QList< QUrl > TagActionManager::checkedTags() const
-// {
-//     QMap<qint64,KToggleAction*>::const_iterator it = mTagActions.constBegin();
-//     QMap<qint64,KToggleAction*>::const_iterator end = mTagActions.constEnd();
-//     QList<QUrl> checked;
-//     for ( ; it != end; ++it ) {
-//         if ( it.value()->isChecked() ) {
-//             checked << it.key();
-//         }
-//     }
-//
-//     return checked;
-// }
+void TagActionManager::checkTags(const QList<qint64>& tags)
+{
+    foreach( const qint64 &id, tags ) {
+        if ( mTagActions.contains(id) ) {
+            mTagActions[id]->setChecked( true );
+        }
+    }
+}
 
+QList<qint64> TagActionManager::checkedTags() const
+{
+    QMap<qint64,KToggleAction*>::const_iterator it = mTagActions.constBegin();
+    QMap<qint64,KToggleAction*>::const_iterator end = mTagActions.constEnd();
+    QList<qint64> checked;
+    for ( ; it != end; ++it ) {
+        if ( it.value()->isChecked() ) {
+            checked << it.key();
+        }
+    }
+    return checked;
+}

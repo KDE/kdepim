@@ -50,6 +50,7 @@
 
 #include <Akonadi/Tag>
 #include <Akonadi/TagFetchJob>
+#include <Akonadi/TagFetchScope>
 #include <Akonadi/TagAttribute>
 
 
@@ -208,7 +209,7 @@ void Widget::fillMessageTagCombo()
 {
   //TODO type filter
   Akonadi::TagFetchJob *fetchJob = new Akonadi::TagFetchJob(this);
-  fetchJob->fetchAttribute<Akonadi::TagAttribute>();
+  fetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
   connect(fetchJob, SIGNAL(result(KJob*)), this, SLOT(slotTagsFetched(KJob*)));
 }
 

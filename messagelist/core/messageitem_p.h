@@ -25,9 +25,11 @@
 #include "item_p.h"
 #include "messagecore/widgets/annotationdialog.h"
 #include <Akonadi/Item>
+#include <Akonadi/Monitor>
 #include <Akonadi/Tag>
 #include <KJob>
 #include <QWeakPointer>
+#include <QCache>
 
 namespace MessageList {
 namespace Core {
@@ -91,9 +93,7 @@ class FakeItemPrivate : public MessageItemPrivate
 };
 
 /**
- * TODO:
- * This should become a generic tag cache with a builtin monitor that just keeps copies of all fetched tags upto-date
- * It could be reused in tagactionmanager.
+ * A tag cache
  */
 class TagCache : public QObject
 {
@@ -104,10 +104,15 @@ public:
   void cancelRequest(MessageItemPrivate *m);
 
 private Q_SLOTS:
+  void onTagAdded(const Akonadi::Tag &);
+  void onTagChanged(const Akonadi::Tag &);
+  void onTagRemoved(const Akonadi::Tag &);
   void onTagsFetched(KJob*);
 
 private:
   QHash<KJob*, MessageItemPrivate*> mRequests;
+  QCache<Akonadi::Tag::Id, Akonadi::Tag> mCache;
+  Akonadi::Monitor *mMonitor;
 };
 
 }

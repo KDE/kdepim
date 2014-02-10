@@ -47,6 +47,7 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 
 #include <Akonadi/Tag>
 #include <Akonadi/TagFetchJob>
+#include <Akonadi/TagFetchScope>
 #include <Akonadi/TagDeleteJob>
 #include <Akonadi/TagCreateJob>
 #include <Akonadi/TagAttribute>
@@ -1371,7 +1372,7 @@ void AppearancePage::MessageTagTab::doLoadFromGlobalSettings()
 
     //TODO type filter
     Akonadi::TagFetchJob *fetchJob = new Akonadi::TagFetchJob(this);
-    fetchJob->fetchAttribute<Akonadi::TagAttribute>();
+    fetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
     connect(fetchJob, SIGNAL(result(KJob*)), this, SLOT(slotTagsFetched(KJob*)));
 }
 

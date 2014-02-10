@@ -30,6 +30,7 @@
 #include <akonadi/entityannotationsattribute.h>
 #include <akonadi/tagattribute.h>
 #include <akonadi/tagfetchjob.h>
+#include <akonadi/tagfetchscope.h>
 #include <KIconLoader>
 #include <KLocalizedString>
 
@@ -687,19 +688,56 @@ bool FakeItem::hasAnnotation() const
 }
 
 TagCache::TagCache()
+   :QObject(),
+   mMonitor(new Akonadi::Monitor(this))
 {
+  mCache.setMaxCost(100);
+  mMonitor->setTypeMonitored(Akonadi::Monitor::Tags);
+  mMonitor->tagFetchScope().fetchAttribute<Akonadi::TagAttribute>();
+  connect(mMonitor, SIGNAL(tagAdded(Akonadi::Tag)), this, SLOT(onTagAdded(Akonadi::Tag)));
+  connect(mMonitor, SIGNAL(tagRemoved(Akonadi::Tag)), this, SLOT(onTagRemoved(Akonadi::Tag)));
+  connect(mMonitor, SIGNAL(tagChanged(Akonadi::Tag)), this, SLOT(onTagChanged(Akonadi::Tag)));
+}
 
+void TagCache::onTagAdded(const Akonadi::Tag &tag)
+{
+  mCache.insert(tag.id(), new Akonadi::Tag(tag));
+}
+
+void TagCache::onTagChanged(const Akonadi::Tag &tag)
+{
+  mCache.remove(tag.id());
+}
+
+void TagCache::onTagRemoved(const Akonadi::Tag &tag)
+{
+  mCache.remove(tag.id());
 }
 
 void TagCache::retrieveTags(const Akonadi::Tag::List &tags, MessageItemPrivate *m)
 {
+  //Retrieval is in progress
   if (mRequests.key(m)) {
     return;
   }
-  //TODO cache tags and try cache first
-  Akonadi::TagFetchJob *tagFetchJob = new Akonadi::TagFetchJob(tags, this);
-  connect(tagFetchJob, SIGNAL(result(KJob*)), this, SLOT(onTagsFetched(KJob*)));
-  mRequests.insert(tagFetchJob, m);
+  Akonadi::Tag::List toFetch;
+  Akonadi::Tag::List available;
+  Q_FOREACH( const Akonadi::Tag &tag, tags ) {
+    if (mCache.contains(tag.id())) {
+      available << tag;
+    } else {
+      toFetch << tag;
+    }
+  }
+  //Because fillTagList expects to be called once we either fetch all or none
+  if (!toFetch.isEmpty()) {
+    Akonadi::TagFetchJob *tagFetchJob = new Akonadi::TagFetchJob(tags, this);
+    tagFetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
+    connect(tagFetchJob, SIGNAL(result(KJob*)), this, SLOT(onTagsFetched(KJob*)));
+    mRequests.insert(tagFetchJob, m);
+  } else {
+    m->fillTagList(available);
+  }
 }
 
 void TagCache::cancelRequest(MessageItemPrivate *m)
@@ -717,7 +755,9 @@ void TagCache::onTagsFetched(KJob *job)
     return;
   }
   Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob*>(job);
-  fetchJob->fetchAttribute<Akonadi::TagAttribute>();
+  Q_FOREACH( const Akonadi::Tag &tag, fetchJob->tags() ) {
+    mCache.insert(tag.id(), new Akonadi::Tag(tag));
+  }
   MessageItemPrivate *m = mRequests.take(fetchJob);
   if (m) {
     m->fillTagList(fetchJob->tags());

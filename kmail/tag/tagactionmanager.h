@@ -34,6 +34,8 @@ class QSignalMapper;
 class KAction;
 namespace Akonadi {
 class Item;
+class Monitor;
+class Tag;
 }
 
 namespace KMail {
@@ -107,10 +109,15 @@ private Q_SLOTS:
     void finishedTagListing(KJob *job);
     void newTagActionClicked();
     void onSignalMapped(const QString &tag);
+    void onTagAdded(const Akonadi::Tag &);
+    void onTagRemoved(const Akonadi::Tag &);
+    void onTagChanged(const Akonadi::Tag &);
 
 private:
     void createTagAction( const MailCommon::Tag::Ptr &tag, bool addToMenu );
-    void createTagActions();
+    void createTagActions( const QList<MailCommon::Tag::Ptr> &);
+    void checkTags(const QList<qint64>& tags);
+    QList<qint64> checkedTags() const;
 
     KActionCollection *mActionCollection;
     MessageActions *mMessageActions;
@@ -128,12 +135,13 @@ private:
     // The actions of all tags that are in the toolbar
     QList<QAction*> mToolbarActions;
 
-    // Cache of the tags to avoid expensive Nepomuk queries
+    // A sorted list of all tags
     QList<MailCommon::Tag::Ptr> mTags;
 
     // Uri of a newly created tag
     qint64 mNewTagId;
     bool mTagFetchInProgress;
+    Akonadi::Monitor *mMonitor;
 };
 }
 
