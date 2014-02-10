@@ -259,7 +259,7 @@ void QuickSearchLine::initializeStatusSearchButton(QLayout *quickSearchButtonLay
 {
     mButtonStatusGroup = new QButtonGroup(this);
     mButtonStatusGroup->setExclusive(false);
-    //connect(mButtonStatusGroup, SIGNAL(buttonClicked(int)), this, SIGNAL(statusButtonsClicked()));
+    connect(mButtonStatusGroup, SIGNAL(buttonClicked(int)), this, SIGNAL(statusButtonsClicked()));
 
     createQuickSearchButton(SmallIcon(QLatin1String( "mail-unread" )), i18nc( "@action:inmenu Status of a message", "Unread" ), Akonadi::MessageStatus::statusUnread().toQInt32(),quickSearchButtonLayout );
 
@@ -314,7 +314,6 @@ QList<Akonadi::MessageStatus> QuickSearchLine::status() const
             status.fromQInt32( static_cast< qint32 >( button->property("statusvalue").toInt() ));
             lstStatus.append(status);
         }
-        button->setChecked(false);
     }
     return lstStatus;
 }
