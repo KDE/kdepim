@@ -74,7 +74,6 @@ private:
     void parseMoveFile(const QString &data);
     void parseCopyFile(const QString &data);
     void parseCopyFolder(const QString &data);
-    QString nonce;
     QString mOauthconsumerKey;
     QString mOauthSignature;
     QString mOauthVersion;

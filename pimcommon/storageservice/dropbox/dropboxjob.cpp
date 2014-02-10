@@ -662,7 +662,7 @@ void DropBoxJob::copyFolder(const QString &source, const QString &destination)
 void DropBoxJob::addDefaultUrlItem(QUrl &url)
 {
     url.addQueryItem(QLatin1String("oauth_consumer_key"),mOauthconsumerKey);
-    url.addQueryItem(QLatin1String("oauth_nonce"), nonce);
+    url.addQueryItem(QLatin1String("oauth_nonce"), mNonce);
     url.addQueryItem(QLatin1String("oauth_signature"), mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26")));
     url.addQueryItem(QLatin1String("oauth_signature_method"),mOauthSignatureMethod);
     url.addQueryItem(QLatin1String("oauth_timestamp"), mTimestamp);
