@@ -34,6 +34,7 @@
 #include <QFileInfo>
 #include <QDebug>
 #include <QHeaderView>
+#include <QCloseEvent>
 
 using namespace PimCommon;
 
@@ -104,6 +105,21 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
 StorageServiceDownloadDialog::~StorageServiceDownloadDialog()
 {
     writeConfig();
+}
+
+void StorageServiceDownloadDialog::closeEvent(QCloseEvent *e)
+{
+    if (mStorage->hasUploadOrDownloadInProgress()) {
+        if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("A download is still in progress. Do you want to cancel it and close dialog?"), i18n("Download in progress"))) {
+            mStorage->cancelDownloadFile();
+            e->accept();
+        } else {
+            e->ignore();
+            return;
+        }
+    } else {
+        e->accept();
+    }
 }
 
 void StorageServiceDownloadDialog::slotUploadDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total)

@@ -39,6 +39,9 @@ public:
 
     void setDefaultDownloadPath(const QString &path);
 
+protected:
+    void closeEvent(QCloseEvent *e);
+
 private slots:
     void slotItemActivated(QTreeWidgetItem *item, int column);
     void slotDownloadFile();
