@@ -116,22 +116,26 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
 
     mSearchAgainstBody = new QPushButton(i18n("Body"));
     mSearchAgainstBody->setObjectName(QLatin1String("body"));
+    mSearchAgainstBody->setAutoRaise(true);
     mSearchAgainstBody->setCheckable(true);
     hbox->addWidget(mSearchAgainstBody);
 
     mSearchAgainstSubject = new QPushButton(i18n("Subject"));
     mSearchAgainstSubject->setCheckable(true);
+    mSearchAgainstSubject->setAutoRaise(true);
     mSearchAgainstSubject->setObjectName(QLatin1String("subject"));
     hbox->addWidget(mSearchAgainstSubject);
 
     mSearchAgainstFrom = new QPushButton(i18n("From"));
     mSearchAgainstFrom->setObjectName(QLatin1String("from"));
     mSearchAgainstFrom->setCheckable(true);
+    mSearchAgainstFrom->setAutoRaise(true);
     hbox->addWidget(mSearchAgainstFrom);
 
     mSearchAgainstBcc = new QPushButton(i18n("Bcc"));
     mSearchAgainstBcc->setObjectName(QLatin1String("bcc"));
     mSearchAgainstBcc->setCheckable(true);
+    mSearchAgainstBcc->setAutoRaise(true);
     hbox->addWidget(mSearchAgainstBcc);
     mButtonSearchAgainstGroup = new QButtonGroup(this);
 
@@ -298,6 +302,7 @@ void QuickSearchLine::createQuickSearchButton(const QIcon &icon, const QString &
     QToolButton *button = new QToolButton;
     button->setIcon(icon);
     button->setText(text);
+    button->setAutoRaise(true);
     button->setToolTip(text);
     button->setCheckable(true);
     button->setProperty("statusvalue", value);
