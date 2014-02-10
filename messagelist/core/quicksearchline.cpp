@@ -35,7 +35,6 @@
 #include <QButtonGroup>
 #include <QLabel>
 
-#define QUICKSEARCHBUTTON 1
 
 using namespace MessageList::Core;
 QuickSearchLine::QuickSearchLine(QWidget *parent)
@@ -64,13 +63,12 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     connect( mLockSearch, SIGNAL(toggled(bool)), SLOT(slotLockSearchClicked(bool)));
     hbox->addWidget( mLockSearch );
 
-#ifdef QUICKSEARCHBUTTON
     QHBoxLayout *quickSearchButtonLayout = new QHBoxLayout;
     QLabel *quickLab = new QLabel(i18n("Quick Filter:"));
     quickSearchButtonLayout->addWidget(quickLab);
     initializeStatusSearchButton(quickSearchButtonLayout);
     hbox->addLayout(quickSearchButtonLayout);
-#endif
+
     mSearchEdit = new KLineEdit( this );
     mSearchEdit->setClickMessage( i18nc( "Search for messages.", "Search" ) );
     mSearchEdit->setObjectName( QLatin1String( "quicksearch" ) );
