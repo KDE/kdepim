@@ -48,7 +48,7 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void slotReturnPressed();
-
+    void slotCollectionChanged(int);
 Q_SIGNALS:
     void createTodo(const KCalCore::Todo::Ptr &);
     void collectionChanged(const Akonadi::Collection &col);

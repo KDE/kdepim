@@ -42,6 +42,7 @@ private slots:
     void shouldEmitNotEmitTodoWhenTextIsEmpty();
     void shouldTodoHasCorrectSubject();
     void shouldClearAllWhenCloseWidget();
+    void shouldEmitCollectionChangedWhenCurrentCollectionWasChanged();
 };
 
 #endif // TODOEDITTEST_H

@@ -19,6 +19,7 @@
 #include "widgets/todoedit.h"
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionComboBox>
+#include <Akonadi/EntityTreeModel>
 #include <QStandardItemModel>
 #include <kcalcore/todo.h>
 #include <qtest_kde.h>
@@ -37,9 +38,23 @@ TodoEditTest::TodoEditTest()
     qRegisterMetaType<Akonadi::Collection>();
     qRegisterMetaType<KMime::Message::Ptr>();
     qRegisterMetaType<KCalCore::Todo::Ptr>();
-    MessageViewer::_k_todoEditStubModel = new QStandardItemModel;
 
+    QStandardItemModel *model = new QStandardItemModel;
+    for (int id = 42; id < 51; ++id) {
+        Akonadi::Collection collection(id);
+        collection.setRights(Akonadi::Collection::AllRights);
+        collection.setName(QString::number(id));
+        collection.setContentMimeTypes(QStringList() << KCalCore::Todo::todoMimeType());
 
+        QStandardItem *item = new QStandardItem(collection.name());
+        item->setData(QVariant::fromValue(collection),
+                      Akonadi::EntityTreeModel::CollectionRole);
+        item->setData(QVariant::fromValue(collection.id()),
+                      Akonadi::EntityTreeModel::CollectionIdRole);
+
+        model->appendRow(item);
+    }
+    MessageViewer::_k_todoEditStubModel = model;
 }
 
 void TodoEditTest::shouldHaveDefaultValuesOnCreation()
@@ -124,7 +139,6 @@ void TodoEditTest::shouldEmptySubjectWhenMessageIsNull()
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
     edit.setMessage(KMime::Message::Ptr());
     QCOMPARE(noteedit->text(), QString());
-
 }
 
 void TodoEditTest::shouldEmptySubjectWhenMessageHasNotSubject()
@@ -158,7 +172,7 @@ void TodoEditTest::shouldEmitCollectionChangedWhenChangeComboboxItem()
     MessageViewer::TodoEdit edit;
     Akonadi::CollectionComboBox *akonadicombobox = qFindChild<Akonadi::CollectionComboBox *>(&edit, QLatin1String("akonadicombobox"));
     QVERIFY(akonadicombobox);
-    //TODO add test
+    QVERIFY(akonadicombobox->currentCollection().isValid());
 }
 
 void TodoEditTest::shouldEmitNotEmitTodoWhenTextIsEmpty()
@@ -212,6 +226,17 @@ void TodoEditTest::shouldClearAllWhenCloseWidget()
     edit.slotCloseWidget();
     QCOMPARE(noteedit->text(), QString());
     QVERIFY(!edit.message());
+}
+
+void TodoEditTest::shouldEmitCollectionChangedWhenCurrentCollectionWasChanged()
+{
+    MessageViewer::TodoEdit edit;
+    Akonadi::CollectionComboBox *akonadicombobox = qFindChild<Akonadi::CollectionComboBox *>(&edit, QLatin1String("akonadicombobox"));
+    QSignalSpy spy(&edit, SIGNAL(collectionChanged(Akonadi::Collection)));
+    QCOMPARE(akonadicombobox->currentIndex(), 0);
+    akonadicombobox->setCurrentIndex(3);
+    QCOMPARE(akonadicombobox->currentIndex(), 3);
+    QCOMPARE(spy.count(), 1);
 }
 
 

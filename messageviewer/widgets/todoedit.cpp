@@ -43,12 +43,18 @@ TodoEdit::TodoEdit(QWidget *parent)
     mCollectionCombobox->setMinimumWidth(250);
     mCollectionCombobox->setMimeTypeFilter( QStringList() << KCalCore::Todo::todoMimeType() );
     mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
+    connect(mCollectionCombobox, SIGNAL(currentIndexChanged(int)), SLOT(slotCollectionChanged(int)));
     hbox->addWidget(mCollectionCombobox);
 }
 
 Akonadi::Collection TodoEdit::collection() const
 {
     return mCollection;
+}
+
+void TodoEdit::slotCollectionChanged(int /*index*/)
+{
+    setCollection(mCollectionCombobox->currentCollection());
 }
 
 void TodoEdit::setCollection(const Akonadi::Collection &value)
@@ -87,7 +93,7 @@ void TodoEdit::slotCloseWidget()
 
 void TodoEdit::slotReturnPressed()
 {
-    if (!mNoteEdit->text().isEmpty() /*&& mCollectionCombobox->currentCollection().isValid()*/) {
+    if (!mNoteEdit->text().isEmpty() && mCollectionCombobox->currentCollection().isValid()) {
         KCalCore::Todo::Ptr todo( new KCalCore::Todo );
         todo->setSummary(mNoteEdit->text());
         Q_EMIT createTodo(todo);
