@@ -26,9 +26,8 @@
 #include <kwallet.h>
 
 #include <KLocalizedString>
-#include <KConfig>
 #include <KGlobal>
-#include <KConfigGroup>
+#include <KLocale>
 
 #include <qjson/parser.h>
 
@@ -53,30 +52,35 @@ bool YouSendItStorageService::needAuthenticate() const
 
 void YouSendItStorageService::readConfig()
 {
-    KConfig config(StorageServiceManager::kconfigName());
-    KConfigGroup grp(&config, "YouSendIt Settings");
-    mUsername = grp.readEntry("Username");
-    mToken = grp.readEntry("Token");
     if (StorageServiceSettings::self()->createDefaultFolder()) {
-        const QString walletEntry = StorageServiceManager::kconfigName();
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
-        if (wallet)
-            wallet->readPassword(walletEntry, mPassword);
+        if (wallet) {
+            QStringList lst = wallet->entryList();
+            if (lst.contains(storageServiceName())) {
+                QMap<QString, QString> map;
+                wallet->readMap( storageServiceName(), map );
+                if (map.contains(QLatin1String("Username"))) {
+                    mUsername = map.value(QLatin1String("Username"));
+                }
+                if (map.contains(QLatin1String("Token"))) {
+                    mToken = map.value(QLatin1String("Token"));
+                }
+                if (map.contains(QLatin1String("Password"))) {
+                    mPassword = map.value(QLatin1String("Password"));
+                }
+            }
+        }
     }
 }
 
 void YouSendItStorageService::removeConfig()
 {
-    KConfig config(StorageServiceManager::kconfigName());
-    KConfigGroup grp(&config, "YouSendIt Settings");
-    grp.deleteGroup();
     if (StorageServiceSettings::self()->createDefaultFolder()) {
-        const QString walletEntry = StorageServiceManager::kconfigName();
+        const QString walletEntry = storageServiceName();
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
         if (wallet)
             wallet->removeEntry(walletEntry);
     }
-    KGlobal::config()->sync();
 }
 
 void YouSendItStorageService::storageServiceauthentication()
@@ -101,17 +105,17 @@ void YouSendItStorageService::slotAuthorizationDone(const QString &password, con
     mUsername = username;
     mPassword = password;
     mToken = token;
-    KConfig config(StorageServiceManager::kconfigName());
-    KConfigGroup grp(&config, "YouSendIt Settings");
-    grp.writeEntry("Username", mUsername);
     if (StorageServiceSettings::self()->createDefaultFolder()) {
-        const QString walletEntry = StorageServiceManager::kconfigName();
+        const QString walletEntry = storageServiceName();
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
-        if (wallet)
-            wallet->writePassword(walletEntry, mPassword);
+        if (wallet) {
+            QMap<QString, QString> map;
+            map[QLatin1String( "Username" )] = username;
+            map[QLatin1String( "Token" )] = token;
+            map[QLatin1String( "Password" )] = mPassword;
+            wallet->writeMap( walletEntry, map);
+        }
     }
-    grp.writeEntry("Token", mToken);
-    grp.sync();
     emitAuthentificationDone();
 }
 
@@ -399,8 +403,20 @@ void YouSendItStorageService::storageServiceCopyFolder(const QString &source, co
 QMap<QString, QString> YouSendItStorageService::itemInformation(const QVariantMap &variantMap)
 {
     QMap<QString, QString> information;
+    qDebug()<<" variantMap "<<variantMap;
     if (variantMap.contains(QLatin1String("name"))) {
         information.insert(i18n("name:"), variantMap.value(QLatin1String("name")).toString());
+    }
+    if (variantMap.contains(QLatin1String("createdOn"))) {
+        const QString t = variantMap.value(QLatin1String("createdOn")).toString();
+        information.insert(i18n("Created:"), KGlobal::locale()->formatDateTime(YouSendItUtil::convertToDateTime(t,true)));
+    }
+    if (variantMap.contains(QLatin1String("lastUpdatedOn"))) {
+        const QString t = variantMap.value(QLatin1String("lastUpdatedOn")).toString();
+        information.insert(i18n("Last Modifier:"), KGlobal::locale()->formatDateTime(YouSendItUtil::convertToDateTime(t,true)));
+    }
+    if (variantMap.contains(QLatin1String("size"))) {
+        information.insert(i18n("Size:"), KGlobal::locale()->formatByteSize(variantMap.value(QLatin1String("size")).toULongLong()));
     }
     if (variantMap.contains(QLatin1String("writeable"))) {
         information.insert(i18n("writable:"), (variantMap.value(QLatin1String("writeable")).toString() == QLatin1String("true")) ? i18n("Yes") : i18n("No"));

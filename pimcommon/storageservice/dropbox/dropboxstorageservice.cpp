@@ -20,14 +20,15 @@
 #include "storageservice/storageservicemanager.h"
 #include "dropboxutil.h"
 #include "dropboxjob.h"
+#include "storageservice/settings/storageservicesettings.h"
+
+#include <kwallet.h>
 
 #include <qjson/parser.h>
 
 #include <KLocalizedString>
-#include <KConfig>
 #include <KGlobal>
 #include <KLocale>
-#include <KConfigGroup>
 #include <KMessageBox>
 
 #include <QDebug>
@@ -47,19 +48,35 @@ DropBoxStorageService::~DropBoxStorageService()
 
 void DropBoxStorageService::removeConfig()
 {
-    KConfig config(StorageServiceManager::kconfigName());
-    KConfigGroup grp(&config, "Dropbox Settings");
-    grp.deleteGroup();
-    config.sync();
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        const QString walletEntry = storageServiceName();
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet)
+            wallet->removeEntry(walletEntry);
+    }
 }
 
 void DropBoxStorageService::readConfig()
 {
-    KConfig config(StorageServiceManager::kconfigName());
-    KConfigGroup grp(&config, "Dropbox Settings");
-    mAccessToken = grp.readEntry("Access Token");
-    mAccessTokenSecret = grp.readEntry("Access Token Secret");
-    mAccessOauthSignature = grp.readEntry("Access Oauth Signature");
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet) {
+            QStringList lst = wallet->entryList();
+            if (lst.contains(storageServiceName())) {
+                QMap<QString, QString> map;
+                wallet->readMap( storageServiceName(), map );
+                if (map.contains(QLatin1String("Access Token"))) {
+                    mAccessToken = map.value(QLatin1String("Access Token"));
+                }
+                if (map.contains(QLatin1String("Access Token Secret"))) {
+                    mAccessTokenSecret = map.value(QLatin1String("Access Token Secret"));
+                }
+                if (map.contains(QLatin1String("Access Oauth Signature"))) {
+                    mAccessOauthSignature = map.value(QLatin1String("Access Oauth Signature"));
+                }
+            }
+        }
+    }
 }
 
 void DropBoxStorageService::storageServiceauthentication()
@@ -106,13 +123,19 @@ void DropBoxStorageService::slotAuthorizationDone(const QString &accessToken, co
     mAccessToken = accessToken;
     mAccessTokenSecret = accessTokenSecret;
     mAccessOauthSignature = accessOauthSignature;
-    KConfig config(StorageServiceManager::kconfigName());
-    KConfigGroup grp(&config, "Dropbox Settings");
-    grp.writeEntry("Access Token", mAccessToken);
-    grp.writeEntry("Access Token Secret", mAccessTokenSecret);
-    grp.writeEntry("Access Oauth Signature", mAccessOauthSignature);
-    grp.sync();
-    config.sync();
+
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        const QString walletEntry = storageServiceName();
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet) {
+            QMap<QString, QString> map;
+            map[QLatin1String( "Access Token" )] = mAccessToken;
+            map[QLatin1String( "Access Token Secret" )] = mAccessTokenSecret;
+            map[QLatin1String( "Access Oauth Signature" )] = mAccessOauthSignature;
+            wallet->writeMap( walletEntry, map);
+        }
+    }
+
     emitAuthentificationDone();
 }
 

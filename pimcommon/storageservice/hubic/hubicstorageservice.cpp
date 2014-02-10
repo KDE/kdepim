@@ -20,10 +20,13 @@
 #include "storageservice/storageservicemanager.h"
 #include "hubicjob.h"
 
+#include "storageservice/settings/storageservicesettings.h"
+
+#include <kwallet.h>
+
+
 #include <KLocalizedString>
-#include <KConfig>
 #include <KGlobal>
-#include <KConfigGroup>
 
 
 using namespace PimCommon;
@@ -48,22 +51,36 @@ bool HubicStorageService::needToRefreshToken() const
 
 void HubicStorageService::readConfig()
 {
-    KConfig config(StorageServiceManager::kconfigName());
-    KConfigGroup grp(&config, "Hubic Settings");
-    mRefreshToken = grp.readEntry("Refresh Token");
-    mToken = grp.readEntry("Token");
-    if (grp.hasKey("Expire Time"))
-        mExpireDateTime = grp.readEntry("Expire Time", QDateTime::currentDateTime());
-    else
-        mExpireDateTime = QDateTime();
+    mExpireDateTime = QDateTime();
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet) {
+            QStringList lst = wallet->entryList();
+            if (lst.contains(storageServiceName())) {
+                QMap<QString, QString> map;
+                wallet->readMap( storageServiceName(), map );
+                if (map.contains(QLatin1String("Refresh Token"))) {
+                    mRefreshToken = map.value(QLatin1String("Refresh Token"));
+                }
+                if (map.contains(QLatin1String("Token"))) {
+                    mToken = map.value(QLatin1String("Token"));
+                }
+                if (map.contains(QLatin1String("Expire Time"))) {
+                    mExpireDateTime = QDateTime::fromString(map.value(QLatin1String("Expire Time")));
+                }
+            }
+        }
+    }
 }
 
 void HubicStorageService::removeConfig()
 {
-    KConfig config(StorageServiceManager::kconfigName());
-    KConfigGroup grp(&config, "Hubic Settings");
-    grp.deleteGroup();
-    config.sync();
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        const QString walletEntry = storageServiceName();
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet)
+            wallet->removeEntry(walletEntry);
+    }
 }
 
 void HubicStorageService::storageServiceauthentication()
@@ -86,12 +103,17 @@ void HubicStorageService::slotAuthorizationDone(const QString &refreshToken, con
     mRefreshToken = refreshToken;
     mToken = token;
     mExpireDateTime = QDateTime::currentDateTime().addSecs(expireTime);
-    KConfig config(StorageServiceManager::kconfigName());
-    KConfigGroup grp(&config, "Hubic Settings");
-    grp.writeEntry("Refresh Token", mRefreshToken);
-    grp.writeEntry("Token", mToken);
-    grp.writeEntry("Expire Time", mExpireDateTime);
-    grp.sync();
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        const QString walletEntry = storageServiceName();
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet) {
+            QMap<QString, QString> map;
+            map[QLatin1String( "Refresh Token" )] = mRefreshToken;
+            map[QLatin1String( "Token" )] = mToken;
+            map[QLatin1String( "Expire Time" )] = mExpireDateTime.toString();
+            wallet->writeMap( walletEntry, map);
+        }
+    }
     emitAuthentificationDone();
 }
 
