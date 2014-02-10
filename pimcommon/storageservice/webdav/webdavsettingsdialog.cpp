@@ -40,10 +40,13 @@ WebDavSettingsDialog::WebDavSettingsDialog(QWidget *parent)
     mServiceLocation = new KLineEdit;
     lay->addWidget(mServiceLocation);
 
+    //Hide for the moment not implemented.
     lab = new QLabel(i18n("Public location (Optional)"));
+    lab->hide();
     lay->addWidget(lab);
 
     mPublicLocation = new KLineEdit;
+    mPublicLocation->hide();
     lay->addWidget(mPublicLocation);
 
     w->setLayout(lay);
