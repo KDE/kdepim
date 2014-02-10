@@ -257,5 +257,17 @@ void TodoEditTest::shouldEmitCorrectCollection()
     //QCOMPARE(spy.at(0).at(0).value<Akonadi::Collection>(), col);
 }
 
+void TodoEditTest::shouldClearLineAfterEmitNewNote()
+{
+    MessageViewer::TodoEdit edit;
+    KMime::Message::Ptr msg(new KMime::Message);
+    QString subject = QLatin1String("Test Note");
+    msg->subject(true)->fromUnicodeString(subject, "us-ascii");
+    edit.setMessage(msg);
+    QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
+    QTest::keyClick(noteedit, Qt::Key_Enter);
+    QCOMPARE(noteedit->text(), QString());
+}
+
 
 QTEST_KDEMAIN( TodoEditTest, GUI )

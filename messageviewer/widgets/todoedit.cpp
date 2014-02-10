@@ -16,6 +16,7 @@
 */
 
 #include "todoedit.h"
+#include "messageviewer/globalsettings_base.h"
 
 #include <KLocalizedString>
 #include <KLineEdit>
@@ -25,6 +26,7 @@
 #include <QKeyEvent>
 
 #include <Akonadi/CollectionComboBox>
+
 
 namespace MessageViewer {
 MESSAGEVIEWER_EXPORT QAbstractItemModel *_k_todoEditStubModel = 0;
@@ -48,6 +50,25 @@ TodoEdit::TodoEdit(QWidget *parent)
     mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
     connect(mCollectionCombobox, SIGNAL(currentIndexChanged(int)), SLOT(slotCollectionChanged(int)));
     hbox->addWidget(mCollectionCombobox);
+    readConfig();
+}
+
+TodoEdit::~TodoEdit()
+{
+
+}
+
+void TodoEdit::writeConfig()
+{
+    MessageViewer::GlobalSettingsBase::self()->setLastSelectedFolder(mCollectionCombobox->currentCollection().id());
+}
+
+void TodoEdit::readConfig()
+{
+    const qint64 id = MessageViewer::GlobalSettingsBase::self()->lastSelectedFolder();
+    if (id!=-1) {
+        mCollectionCombobox->setDefaultCollection(Akonadi::Collection(id));
+    }
 }
 
 Akonadi::Collection TodoEdit::collection() const
@@ -101,6 +122,7 @@ void TodoEdit::slotReturnPressed()
         KCalCore::Todo::Ptr todo( new KCalCore::Todo );
         todo->setSummary(mNoteEdit->text());
         Q_EMIT createTodo(todo, collection);
+        mNoteEdit->clear();
     }
 }
 

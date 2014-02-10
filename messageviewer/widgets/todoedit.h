@@ -36,6 +36,7 @@ class MESSAGEVIEWER_EXPORT TodoEdit : public QWidget
     Q_OBJECT
 public:
     explicit TodoEdit(QWidget *parent = 0);
+    ~TodoEdit();
 
     Akonadi::Collection collection() const;
     void setCollection(const Akonadi::Collection &value);
@@ -58,6 +59,8 @@ protected:
     bool event(QEvent *e);
 
 private:
+    void writeConfig();
+    void readConfig();
     Akonadi::Collection mCollection;
     KMime::Message::Ptr mMessage;
     KLineEdit *mNoteEdit;
