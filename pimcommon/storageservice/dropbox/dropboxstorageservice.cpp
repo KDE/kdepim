@@ -26,6 +26,7 @@
 #include <KLocalizedString>
 #include <KConfig>
 #include <KGlobal>
+#include <KLocale>
 #include <KConfigGroup>
 #include <KMessageBox>
 
@@ -469,6 +470,22 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
 QMap<QString, QString> DropBoxStorageService::itemInformation(const QVariantMap &variantMap)
 {
     QMap<QString, QString> information;
+
+    const bool isDir = variantMap.value(QLatin1String("is_dir")).toBool();
+    const QString name = variantMap.value(QLatin1String("path")).toString();
+
+    const QString itemName = name.right((name.length() - name.lastIndexOf(QLatin1Char('/'))) - 1);
+    information.insert(i18n("Type:"), isDir ? i18n("Folder") : i18n("File"));
+    information.insert(i18n("Name:"), itemName);
+
+    if (variantMap.contains(QLatin1String("client_mtime"))) {
+        const QString tmp = variantMap.value(QLatin1String("client_mtime")).toString();
+        information.insert(i18n("Created"), KGlobal::locale()->formatDateTime(PimCommon::DropBoxUtil::convertToDateTime( tmp )));
+    }
+    if (variantMap.contains(QLatin1String("modified"))) {
+        const QString tmp = variantMap.value(QLatin1String("modified")).toString();
+        information.insert(i18n("Last Modified:"), KGlobal::locale()->formatDateTime(PimCommon::DropBoxUtil::convertToDateTime( tmp )));
+    }
     if (variantMap.contains(QLatin1String("root"))) {
         information.insert(i18n("Storage path:"), variantMap.value(QLatin1String("root")).toString());
     }
