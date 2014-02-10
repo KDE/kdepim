@@ -2713,7 +2713,7 @@ void View::focusQuickSearch()
   d->mWidget->focusQuickSearch();
 }
 
-Akonadi::MessageStatus View::currentFilterStatus() const
+QList<Akonadi::MessageStatus> View::currentFilterStatus() const
 {
   return d->mWidget->currentFilterStatus();
 }

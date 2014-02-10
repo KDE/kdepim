@@ -23,6 +23,7 @@
 
 #include <QWidget>
 #include "messagelist_export.h"
+#include <akonadi/kmime/messagestatus.h>
 
 class KLineEdit;
 class KComboBox;
@@ -57,9 +58,8 @@ public:
     KLineEdit *searchEdit() const;
     QToolButton *openFullSearchButton() const;
     QToolButton *lockSearch() const;
-    int firstTagInComboIndex() const;    
     void resetFilter();
-    QList<qint32> status() const;
+    QList<Akonadi::MessageStatus> status() const;
 
 Q_SIGNALS:
     void fullSearchRequest();
@@ -75,7 +75,6 @@ private slots:
     void slotClearButtonClicked();
 private:
     void initializeStatusSearchButton(QLayout *quickSearchButtonLayout);
-    void defaultFilterStatus();
     void createQuickSearchButton(const QIcon &icon, const QString &text, int value, QLayout *quickSearchButtonLayout);
     QList<QToolButton *> mListStatusButton;
     KLineEdit *mSearchEdit;
@@ -89,7 +88,6 @@ private:
     QWidget *mExtraOption;
     QButtonGroup *mButtonStatusGroup;
     QButtonGroup *mButtonSearchAgainstGroup;
-    int mFirstTagInComboIndex;
 };
 }
 }

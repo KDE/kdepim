@@ -33,90 +33,91 @@ Filter::Filter()
 
 bool Filter::match( const MessageItem * item ) const
 {
-  if ( !mStatus.isOfUnknownStatus() )
-  {
-    if ( !(mStatus & item->status()) )
-      return false;
-  }
+    if ( !mStatus.isEmpty() ) {
+        Q_FOREACH(Akonadi::MessageStatus status, mStatus) {
+            if (!(status & item->status())) {
+                return false;
+            }
+        }
+    }
 
-  if ( !mSearchString.isEmpty() )
-  {
-    if ( mMatchingItemIds.contains( item->itemId() ) )
-      return true;
-    else
-      return false;
-  }
+    if ( !mSearchString.isEmpty() ) {
+        if ( mMatchingItemIds.contains( item->itemId() ) )
+            return true;
+        else
+            return false;
+    }
 
-  if ( !mTagId.isEmpty() ) {
-    const bool tagMatches = item->findTag( mTagId ) != 0;
-    if ( !tagMatches )
-      return false;
-  }
+    if ( !mTagId.isEmpty() ) {
+        const bool tagMatches = item->findTag( mTagId ) != 0;
+        if ( !tagMatches )
+            return false;
+    }
 
-  return true;
+    return true;
 }
 
 bool Filter::isEmpty() const
 {
-  if ( !mStatus.isOfUnknownStatus() )
-    return false;
+    if ( !mStatus.isEmpty() )
+        return false;
 
-  if ( !mSearchString.isEmpty() )
-    return false;
+    if ( !mSearchString.isEmpty() )
+        return false;
 
-  if ( !mTagId.isEmpty() )
-    return false;
+    if ( !mTagId.isEmpty() )
+        return false;
 
-  return true;
+    return true;
 }
 
 void Filter::clear()
 {
-  mStatus = Akonadi::MessageStatus();
-  mSearchString.clear();
-  mTagId.clear();
-  mMatchingItemIds.clear();
+    mStatus.clear();
+    mSearchString.clear();
+    mTagId.clear();
+    mMatchingItemIds.clear();
 }
 
 void Filter::setCurrentFolder( const KUrl &url )
 {
-  mCurrentFolder = url;
+    mCurrentFolder = url;
 }
 
 void Filter::setSearchString( const QString &search, QuickSearchLine::SearchOptions options )
 {
-  const QString trimStr = search.trimmed();
-  if ((mSearchString == trimStr) && (mOptions == options)) {
-    return;
-  }
+    const QString trimStr = search.trimmed();
+    if ((mSearchString == trimStr) && (mOptions == options)) {
+        return;
+    }
 
-  mSearchString = trimStr;
-  mMatchingItemIds.clear();
+    mSearchString = trimStr;
+    mMatchingItemIds.clear();
 
-  if (mSearchString.isEmpty()) {
-    return;
-  }
+    if (mSearchString.isEmpty()) {
+        return;
+    }
 
-  Baloo::PIM::EmailQuery query;
-  if (options & QuickSearchLine::SearchAgainstSubject) {
-      query.subjectMatches(mSearchString);
-  } else if (options & QuickSearchLine::SearchAgainstBody) {
-      query.matches(mSearchString);
-  } else if (options & QuickSearchLine::SearchAgainstFrom) {
-      query.setFrom(mSearchString);
-  } else if (options & QuickSearchLine::SearchAgainstBcc) {
-      query.setBcc(QStringList() << mSearchString);
-  }
+    Baloo::PIM::EmailQuery query;
+    if (options & QuickSearchLine::SearchAgainstSubject) {
+        query.subjectMatches(mSearchString);
+    } else if (options & QuickSearchLine::SearchAgainstBody) {
+        query.matches(mSearchString);
+    } else if (options & QuickSearchLine::SearchAgainstFrom) {
+        query.setFrom(mSearchString);
+    } else if (options & QuickSearchLine::SearchAgainstBcc) {
+        query.setBcc(QStringList() << mSearchString);
+    }
 
-  Akonadi::Collection col = Akonadi::Collection::fromUrl(mCurrentFolder);
-  if (col.isValid()) {
-    query.addCollection(col.id());
-  }
+    Akonadi::Collection col = Akonadi::Collection::fromUrl(mCurrentFolder);
+    if (col.isValid()) {
+        query.addCollection(col.id());
+    }
 
-  Baloo::PIM::ResultIterator it = query.exec();
-  while (it.next())
-    mMatchingItemIds << it.id();
+    Baloo::PIM::ResultIterator it = query.exec();
+    while (it.next())
+        mMatchingItemIds << it.id();
 
-  emit finished();
+    emit finished();
 }
 
