@@ -181,7 +181,7 @@ void TodoEditTest::shouldEmitNotEmitTodoWhenTextIsEmpty()
     KMime::Message::Ptr msg(new KMime::Message);
     edit.setMessage(msg);
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
-    QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr)));
+    QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection)));
     QTest::keyClick(noteedit, Qt::Key_Enter);
     QCOMPARE(spy.count(), 0);
 }
@@ -194,7 +194,7 @@ void TodoEditTest::shouldEmitTodoWhenPressEnter()
     msg->subject(true)->fromUnicodeString(subject, "us-ascii");
     edit.setMessage(msg);
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
-    QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr)));
+    QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection)));
     QTest::keyClick(noteedit, Qt::Key_Enter);
     QCOMPARE(spy.count(), 1);
 }
@@ -207,7 +207,7 @@ void TodoEditTest::shouldTodoHasCorrectSubject()
     msg->subject(true)->fromUnicodeString(subject, "us-ascii");
     edit.setMessage(msg);
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
-    QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr)));
+    QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection)));
     QTest::keyClick(noteedit, Qt::Key_Enter);
     QCOMPARE(spy.count(), 1);
     KCalCore::Todo::Ptr todoPtr = spy.at(0).at(0).value<KCalCore::Todo::Ptr>();
@@ -237,6 +237,24 @@ void TodoEditTest::shouldEmitCollectionChangedWhenCurrentCollectionWasChanged()
     akonadicombobox->setCurrentIndex(3);
     QCOMPARE(akonadicombobox->currentIndex(), 3);
     QCOMPARE(spy.count(), 1);
+}
+
+void TodoEditTest::shouldEmitCorrectCollection()
+{
+    MessageViewer::TodoEdit edit;
+    Akonadi::CollectionComboBox *akonadicombobox = qFindChild<Akonadi::CollectionComboBox *>(&edit, QLatin1String("akonadicombobox"));
+    KMime::Message::Ptr msg(new KMime::Message);
+    QString subject = QLatin1String("Test Note");
+    msg->subject(true)->fromUnicodeString(subject, "us-ascii");
+    edit.setMessage(msg);
+    akonadicombobox->setCurrentIndex(3);
+    Akonadi::Collection col = akonadicombobox->currentCollection();
+    QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
+    QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection)));
+    QTest::keyClick(noteedit, Qt::Key_Enter);
+    QCOMPARE(spy.count(), 1);
+    //FIX IT
+    //QCOMPARE(spy.at(0).at(0).value<Akonadi::Collection>(), col);
 }
 
 

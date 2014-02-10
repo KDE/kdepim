@@ -50,9 +50,12 @@ private Q_SLOTS:
     void slotReturnPressed();
     void slotCollectionChanged(int);
 Q_SIGNALS:
-    void createTodo(const KCalCore::Todo::Ptr &);
+    void createTodo(const KCalCore::Todo::Ptr &todo, const Akonadi::Collection &collection);
     void collectionChanged(const Akonadi::Collection &col);
     void messageChanged(const KMime::Message::Ptr &msg);
+
+protected:
+    bool event(QEvent *e);
 
 private:
     Akonadi::Collection mCollection;

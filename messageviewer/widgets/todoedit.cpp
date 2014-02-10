@@ -21,6 +21,9 @@
 #include <KLineEdit>
 
 #include <QHBoxLayout>
+#include <QEvent>
+#include <QKeyEvent>
+
 #include <Akonadi/CollectionComboBox>
 
 namespace MessageViewer {
@@ -93,11 +96,29 @@ void TodoEdit::slotCloseWidget()
 
 void TodoEdit::slotReturnPressed()
 {
-    if (!mNoteEdit->text().isEmpty() && mCollectionCombobox->currentCollection().isValid()) {
+    const Akonadi::Collection collection = mCollectionCombobox->currentCollection();
+    if (!mNoteEdit->text().isEmpty() && collection.isValid()) {
         KCalCore::Todo::Ptr todo( new KCalCore::Todo );
         todo->setSummary(mNoteEdit->text());
-        Q_EMIT createTodo(todo);
+        Q_EMIT createTodo(todo, collection);
     }
+}
+
+bool TodoEdit::event(QEvent* e)
+{
+    // Close the bar when pressing Escape.
+    // Not using a QShortcut for this because it could conflict with
+    // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
+    // With a shortcut override we can catch this before it gets to kactions.
+    if (e->type() == QEvent::ShortcutOverride || e->type() == QEvent::KeyPress ) {
+        QKeyEvent* kev = static_cast<QKeyEvent* >(e);
+        if (kev->key() == Qt::Key_Escape) {
+            e->accept();
+            slotCloseWidget();
+            return true;
+        }
+    }
+    return QWidget::event(e);
 }
 
 
