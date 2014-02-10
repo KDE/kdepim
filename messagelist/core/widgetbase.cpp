@@ -115,6 +115,7 @@ public:
   bool mStorageUsesPrivateAggregation;   ///< true if the current folder does not use the global aggregation
   bool mStorageUsesPrivateSortOrder;     ///< true if the current folder does not use the global sort order
   KUrl mCurrentFolderUrl;                ///< The Akonadi URL of the current folder
+  int mCurrentStatusFilterIndex;
 };
 
 Widget::Widget( QWidget *pParent )
@@ -197,19 +198,26 @@ void Widget::changeQuicksearchVisibility(bool show)
 void Widget::populateStatusFilterCombo()
 {
   KComboBox *statusFilterComboBox = d->quickSearchLine->statusFilterComboBox();
-  const int currentIndex = (statusFilterComboBox->currentIndex() != -1) ?  statusFilterComboBox->currentIndex() : 0;
+  d->mCurrentStatusFilterIndex = (statusFilterComboBox->currentIndex() != -1) ?  statusFilterComboBox->currentIndex() : 0;
   disconnect( statusFilterComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(statusSelected(int)) );
 
   for (int i = d->quickSearchLine->firstTagInComboIndex(); i < d->quickSearchLine->statusFilterComboBox()->count(); ++i) {
       statusFilterComboBox->removeItem(i);
   }
 
-  fillMessageTagCombo( d->quickSearchLine->statusFilterComboBox() );
+  fillMessageTagCombo();
+}
 
+void Widget::addMessageTagItem(const QPixmap &icon, const QString &text, const QVariant &data)
+{
+  d->quickSearchLine->statusFilterComboBox()->addItem(icon, text, data);
+}
+
+void Widget::setCurrentStatusFilterItem()
+{
   connect( d->quickSearchLine->statusFilterComboBox(), SIGNAL(currentIndexChanged(int)),
            this, SLOT(statusSelected(int)) );
-
-  d->quickSearchLine->statusFilterComboBox()->setCurrentIndex(currentIndex>=d->quickSearchLine->statusFilterComboBox()->count() ? 0 : currentIndex );
+  d->quickSearchLine->statusFilterComboBox()->setCurrentIndex(d->mCurrentStatusFilterIndex>=d->quickSearchLine->statusFilterComboBox()->count() ? 0 : d->mCurrentStatusFilterIndex );
 }
 
 MessageItem *Widget::currentMessageItem() const
@@ -875,9 +883,10 @@ void Widget::aggregationsChanged()
   d->mView->reload();
 }
 
-void Widget::fillMessageTagCombo( KComboBox* /*combo*/ )
+void Widget::fillMessageTagCombo()
 {
   // nothing here: must be overridden in derived classes
+  setCurrentStatusFilterItem();
 }
 
 void Widget::tagIdSelected( const QVariant& data )

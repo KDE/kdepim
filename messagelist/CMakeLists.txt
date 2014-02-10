@@ -10,7 +10,6 @@ configure_file(config-messagelist.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-mes
 include_directories(
   ${Boost_INCLUDE_DIRS}
   ${SOPRANO_INCLUDE_DIR}
-  ${NEPOMUK_CORE_INCLUDE_DIR}
   ${BALOO_INCLUDE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}/messagecore
@@ -22,7 +21,6 @@ add_subdirectory(tests)
 
 set(libmessagelist_SRCS
   core/aggregation.cpp
-  core/callbacknepomukresourceretriever.cpp
   core/delegate.cpp
   core/filter.cpp
   core/item.cpp
@@ -106,8 +104,6 @@ target_link_libraries(messagelist
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
   ${SOPRANO_LIBRARIES}
-  ${NEPOMUK_CORE_LIBRARY}
-  ${NEPOMUK_QUERY_LIBRARIES}
   ${BALOO_LIBRARIES}
   messagecore
   niefast_apps

@@ -20,26 +20,21 @@
 #include "tag.h"
 
 #include "messagetag.h"
+#include <Akonadi/Tag>
+#include <Akonadi/TagAttribute>
 
-#include <soprano/nao.h>
-#include <Nepomuk2/Tag>
-#include <Nepomuk2/Variant>
 #include <QDebug>
 
 using namespace MailCommon;
 
-Tag::Ptr Tag::fromNepomuk( const Nepomuk2::Tag& nepomukTag )
+Tag::Ptr Tag::createDefaultTag(const QString& name)
 {
   Tag::Ptr tag( new Tag() );
-  tag->tagName = nepomukTag.label();
+  tag->tagName = name;
+  tag->iconName = QLatin1String("mail-tagged");
+  const QString identifier = name;
 
-  tag->iconName = nepomukTag.genericIcon();
-  if ( tag->iconName.isEmpty() )
-    tag->iconName = QLatin1String("mail-tagged");
-
-  tag->nepomukResourceUri = nepomukTag.uri();
-
-  const QString identifier = nepomukTag.property( Soprano::Vocabulary::NAO::identifier() ).toString();
+  //TODO remove  (it's only accessible from add tag dialog)
   tag->tagStatus = (identifier == QLatin1String("important")) ||
           (identifier == QLatin1String("todo")) ||
           (identifier == QLatin1String("watched")) ||
@@ -51,72 +46,62 @@ Tag::Ptr Tag::fromNepomuk( const Nepomuk2::Tag& nepomukTag )
           (identifier == QLatin1String("sent")) ||
           (identifier == QLatin1String("queued")) ||
           (identifier == QLatin1String("ham"));
-
-  if ( nepomukTag.hasProperty( Vocabulary::MessageTag::textColor() ) ) {
-    const QString name = nepomukTag.property( Vocabulary::MessageTag::textColor() ).toString();
-    tag->textColor = QColor( name );
-  }
-
-  if ( nepomukTag.hasProperty( Vocabulary::MessageTag::backgroundColor() ) ) {
-    const QString name = nepomukTag.property( Vocabulary::MessageTag::backgroundColor() ).toString();
-    tag->backgroundColor = QColor( name );
-  }
-
-  if ( nepomukTag.hasProperty( Vocabulary::MessageTag::font() ) ) {
-    const QString fontString = nepomukTag.property( Vocabulary::MessageTag::font() ).toString();
-    QFont font;
-    font.fromString( fontString );
-    tag->textFont = font;
-  }
-
-  if ( nepomukTag.hasProperty( Vocabulary::MessageTag::priority() ) ) {
-    tag->priority = nepomukTag.property( Vocabulary::MessageTag::priority() ).toInt();
-  }
-  else
-    tag->priority = -1;
-
-  if ( nepomukTag.hasProperty( Vocabulary::MessageTag::shortcut() ) ) {
-    tag->shortcut = KShortcut( nepomukTag.property( Vocabulary::MessageTag::shortcut() ).toString() );
-  }
-
-  if ( nepomukTag.hasProperty( Vocabulary::MessageTag::inToolbar() ) ) {
-    tag->inToolbar = nepomukTag.property( Vocabulary::MessageTag::inToolbar() ).toBool();
-  }
-  else
-    tag->inToolbar = false;
-
+  tag->priority = -1;
+  tag->inToolbar = false;
   return tag;
 }
 
-void Tag::saveToNepomuk( SaveFlags saveFlags ) const
+Tag::Ptr Tag::fromAkonadi(const Akonadi::Tag& akonadiTag)
 {
-  Nepomuk2::Tag nepomukTag( nepomukResourceUri );
+  Tag::Ptr tag( new Tag() );
+  tag->tagName = akonadiTag.name();
+  tag->mTag = akonadiTag;
+  tag->priority = -1;
+  tag->iconName = QLatin1String("mail-tagged");
+  tag->tagStatus = false;
+  tag->inToolbar = false;
+  Akonadi::TagAttribute *attr = akonadiTag.attribute<Akonadi::TagAttribute>();
+  if (attr) {
+    if (!attr->iconName().isEmpty()) {
+      tag->iconName = attr->iconName();
+    }
+    tag->inToolbar = attr->inToolbar();
+    tag->shortcut = KShortcut(attr->shortcut());
+    tag->textColor = attr->textColor();
+    tag->backgroundColor = attr->backgroundColor();
+    tag->textFont = attr->font();
+    //TODO priority?
+  }
+  return tag;
+}
 
-  nepomukTag.setLabel( tagName );
-
-  Nepomuk2::Resource symbol( QUrl(), Soprano::Vocabulary::NAO::FreeDesktopIcon() );
-  symbol.setProperty( Soprano::Vocabulary::NAO::iconName(), iconName );
-
-  nepomukTag.setProperty( Soprano::Vocabulary::NAO::hasSymbol(), symbol );
-
-  nepomukTag.setProperty( Vocabulary::MessageTag::priority(), priority );
-  nepomukTag.setProperty( Vocabulary::MessageTag::inToolbar(), inToolbar );
-  nepomukTag.setProperty( Vocabulary::MessageTag::shortcut(), shortcut.toString() );
+Akonadi::Tag Tag::saveToAkonadi(Tag::SaveFlags saveFlags) const
+{
+  Akonadi::Tag tag( tagName );
+  Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(Akonadi::AttributeEntity::AddIfMissing);
+  attr->setDisplayName( tagName );
+  attr->setIconName( iconName );
+  attr->setInToolbar( inToolbar );
+  attr->setShortcut( shortcut.toString() );
+  //TODO priority?
 
   if ( textColor.isValid() && saveFlags & TextColor )
-    nepomukTag.setProperty( Vocabulary::MessageTag::textColor(), textColor.name() );
+    attr->setTextColor( textColor );
   else
-    nepomukTag.removeProperty( Vocabulary::MessageTag::textColor() );
+    attr->setTextColor( QColor() );
 
   if ( backgroundColor.isValid() && saveFlags & BackgroundColor )
-    nepomukTag.setProperty( Vocabulary::MessageTag::backgroundColor(), backgroundColor.name() );
+    attr->setBackgroundColor( backgroundColor );
   else
-    nepomukTag.removeProperty( Vocabulary::MessageTag::backgroundColor() );
+    attr->setBackgroundColor( QColor() );
 
   if ( saveFlags & Font )
-    nepomukTag.setProperty( Vocabulary::MessageTag::font(), textFont.toString() );
+    attr->setFont( textFont );
   else
-    nepomukTag.removeProperty( Vocabulary::MessageTag::font() );
+    attr->setFont( QFont() );
+
+  tag.addAttribute(attr);
+  return tag;
 }
 
 bool Tag::compare( Tag::Ptr &tag1, Tag::Ptr &tag2 )
@@ -143,11 +128,26 @@ bool Tag::operator==( const Tag &other ) const
          iconName == other.iconName &&
          inToolbar == other.inToolbar &&
          shortcut.toString() == other.shortcut.toString() &&
-         priority == other.priority &&
-         nepomukResourceUri == other.nepomukResourceUri;
+         priority == other.priority;
 }
 
 bool Tag::operator!=( const Tag &other ) const
 {
   return !( *this == other );
 }
+
+qint64 Tag::id() const
+{
+  return mTag.id();
+}
+
+QString Tag::name() const
+{
+  return mTag.name();
+}
+
+Akonadi::Tag Tag::tag() const
+{
+  return mTag;
+}
+

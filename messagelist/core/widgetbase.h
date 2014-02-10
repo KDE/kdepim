@@ -160,8 +160,17 @@ protected:
    * to the caller. The QAction objects associated to the entries should have
    * the string id of the tag set as data() and the tag icon set as icon().
    * The default implementation does nothing.
+   *
+   * Once the tag retrieval is complete call setCurrentStatusFilterItem()
    */
-  virtual void fillMessageTagCombo( KComboBox * combo );
+  virtual void fillMessageTagCombo();
+
+  void addMessageTagItem(const QPixmap &, const QString &, const QVariant &);
+
+  /**
+   * Must be called by fillMessageTagCombo()
+   */
+  void setCurrentStatusFilterItem();
 
   /**
    * This is called by View when a message is single-clicked (thus selected and made current)

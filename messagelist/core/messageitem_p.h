@@ -25,6 +25,8 @@
 #include "item_p.h"
 #include "messagecore/widgets/annotationdialog.h"
 #include <Akonadi/Item>
+#include <Akonadi/Tag>
+#include <KJob>
 #include <QWeakPointer>
 
 namespace MessageList {
@@ -58,8 +60,8 @@ public:
   /// Deletes the cache of the annotation
   void invalidateAnnotationCache();
 
-  /// Callback for async Nepomuk resource retrieval.
-  void resourceReceived( const Nepomuk2::Resource &resource );
+  // This creates mTagList and fills it with useful data
+  void fillTagList( const Akonadi::Tag::List &taglist );
 
   QByteArray mMessageIdMD5;            ///< always set
   QByteArray mInReplyToIdMD5;          ///< set only if we're doing threading
@@ -73,13 +75,8 @@ public:
 
   bool mAboutToBeRemoved : 1;       ///< Set to true when this item is going to be deleted and shouldn't be selectable
   bool mSubjectIsPrefixed : 1;      ///< set only if we're doing subject based threading
-  mutable bool mAnnotationStateChecked : 1; ///< The state of the annotation below has been checked
-  mutable bool mHasAnnotation : 1;          ///< Cached value for hasAnnotation()
 
 private:
-
-  // This creates mTagList and fills it with useful data
-  void fillTagList(const Nepomuk2::Resource& resource) const;
 
   // List of all tags. If this is 0, it means we have not yet calculated this list. It is calculated
   // on demand when needed.
@@ -93,7 +90,28 @@ class FakeItemPrivate : public MessageItemPrivate
     QList<MessageItem::Tag*> mFakeTags;
 };
 
+/**
+ * TODO:
+ * This should become a generic tag cache with a builtin monitor that just keeps copies of all fetched tags upto-date
+ * It could be reused in tagactionmanager.
+ */
+class TagCache : public QObject
+{
+  Q_OBJECT
+public:
+  TagCache();
+  void retrieveTags(const Akonadi::Tag::List &tags, MessageItemPrivate *m);
+  void cancelRequest(MessageItemPrivate *m);
+
+private Q_SLOTS:
+  void onTagsFetched(KJob*);
+
+private:
+  QHash<KJob*, MessageItemPrivate*> mRequests;
+};
+
 }
+
 }
 
 #endif

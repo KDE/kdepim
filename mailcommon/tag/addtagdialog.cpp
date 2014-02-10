@@ -18,11 +18,12 @@
 #include "addtagdialog.h"
 #include "mailcommon/tag/tagwidget.h"
 
+#include <akonadi/tagcreatejob.h>
+
 #include <KLocale>
 #include <KLineEdit>
 #include <KMessageBox>
-
-#include <Nepomuk2/Tag>
+#include <KJob>
 
 #include <QVBoxLayout>
 
@@ -58,28 +59,40 @@ void AddTagDialog::slotTagNameChanged(const QString& text)
   enableButtonOk(!text.isEmpty());
 }
 
-void AddTagDialog::slotOk()
+void AddTagDialog::slotButtonClicked(int button)
 {
-  const QString name(mTagWidget->tagNameLineEdit()->text());
+  if (button == KDialog::Ok) {
+    const QString name(mTagWidget->tagNameLineEdit()->text());
 
-  Q_FOREACH ( const MailCommon::Tag::Ptr &tag, mTags ) {
-    if ( tag->tagName == name ) {
-      KMessageBox::error( this, i18n( "Tag %1 already exists", name ) );
-      return;
+    Q_FOREACH ( const MailCommon::Tag::Ptr &tag, mTags ) {
+      if ( tag->name() == name ) {
+        KMessageBox::error( this, i18n( "Tag %1 already exists", name ) );
+        return;
+      }
     }
+
+    MailCommon::Tag::Ptr tag( Tag::createDefaultTag( name ) );
+    mTagWidget->recordTagSettings(tag);
+    MailCommon::Tag::SaveFlags saveFlags = mTagWidget->saveFlags();
+    const Akonadi::Tag akonadiTag = tag->saveToAkonadi( saveFlags );
+    Akonadi::TagCreateJob *createJob = new Akonadi::TagCreateJob(akonadiTag, this);
+    connect(createJob, SIGNAL(result(KJob*)), this, SLOT(onTagCreated(KJob*)));
+
+    mLabel = name;
+  } else {
+    reject();
   }
+}
 
-  Nepomuk2::Tag nepomukTag( name );
-  nepomukTag.setLabel( name );
-
-  MailCommon::Tag::Ptr tag = MailCommon::Tag::fromNepomuk( nepomukTag );
-  mTagWidget->recordTagSettings(tag);
-  MailCommon::Tag::SaveFlags saveFlags = mTagWidget->saveFlags();
-  tag->saveToNepomuk( saveFlags );
-
-  mLabel = name;
-  mNepomukUrl = tag->nepomukResourceUri.toString();
-
+void AddTagDialog::onTagCreated(KJob *job)
+{
+  if (job->error()) {
+    kWarning() << "Failed to create tag: " << job->errorString();
+    reject();
+    return;
+  }
+  Akonadi::TagCreateJob *createJob = static_cast<Akonadi::TagCreateJob*>(job);
+  mTag = createJob->tag();
   accept();
 }
 
@@ -88,8 +101,10 @@ QString AddTagDialog::label() const
   return mLabel;
 }
 
-QString AddTagDialog::nepomukUrl() const
+Akonadi::Tag AddTagDialog::tag() const
 {
-  return mNepomukUrl;
+  return mTag;
 }
+
+
 

@@ -46,14 +46,11 @@
 #include <KDE/KXMLGUIClient>
 #include <KDE/KXMLGUIFactory>
 
-#include <Nepomuk2/Tag>
 #include "core/groupheaderitem.h"
 
-#include <Nepomuk2/ResourceWatcher>
-#include <Nepomuk2/Resource>
-#include <Nepomuk2/Vocabulary/NIE>
-#include <Nepomuk2/ResourceWatcher>
-#include <soprano/nao.h>
+#include <Akonadi/Tag>
+#include <Akonadi/TagFetchJob>
+#include <Akonadi/TagAttribute>
 
 
 namespace MessageList
@@ -87,15 +84,16 @@ Widget::Widget( QWidget *parent )
 {
   populateStatusFilterCombo();
 
-  Nepomuk2::ResourceWatcher *watcher = new Nepomuk2::ResourceWatcher(this);
-  watcher->addType(Soprano::Vocabulary::NAO::Tag());
-  connect(watcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
-          this, SLOT(populateStatusFilterCombo()));
-  connect(watcher, SIGNAL(resourceRemoved(QUrl,QList<QUrl>)),
-          this, SLOT(populateStatusFilterCombo()));
-  connect(watcher, SIGNAL(propertyChanged(Nepomuk2::Resource,Nepomuk2::Types::Property,QVariantList,QVariantList)),
-          this, SLOT(populateStatusFilterCombo()));
-  watcher->start();
+  //TODO add monitor
+//   Nepomuk2::ResourceWatcher *watcher = new Nepomuk2::ResourceWatcher(this);
+//   watcher->addType(Soprano::Vocabulary::NAO::Tag());
+//   connect(watcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
+//           this, SLOT(populateStatusFilterCombo()));
+//   connect(watcher, SIGNAL(resourceRemoved(QUrl,QList<QUrl>)),
+//           this, SLOT(populateStatusFilterCombo()));
+//   connect(watcher, SIGNAL(propertyChanged(Nepomuk2::Resource,Nepomuk2::Types::Property,QVariantList,QVariantList)),
+//           this, SLOT(populateStatusFilterCombo()));
+//   watcher->start();
 }
 
 Widget::~Widget()
@@ -206,25 +204,43 @@ void Widget::focusQuickSearch()
 }
 
 
-void Widget::fillMessageTagCombo( KComboBox * combo )
+void Widget::fillMessageTagCombo()
 {
+  //TODO type filter
+  Akonadi::TagFetchJob *fetchJob = new Akonadi::TagFetchJob(this);
+  fetchJob->fetchAttribute<Akonadi::TagAttribute>();
+  connect(fetchJob, SIGNAL(result(KJob*)), this, SLOT(slotTagsFetched(KJob*)));
+}
+
+void Widget::slotTagsFetched(KJob *job)
+{
+  if (job->error()) {
+    kWarning() << "Failed to load tags " << job->errorString();
+    return;
+  }
+  Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob*>(job);
+
   KConfigGroup conf( MessageList::Core::Settings::self()->config(),"MessageListView");
   const QString tagSelected= conf.readEntry(QLatin1String("TagSelected"));
   if(tagSelected.isEmpty()) {
+    setCurrentStatusFilterItem();
     return;
   }
   const QStringList tagSelectedLst = tagSelected.split(QLatin1Char(','));
-  foreach( const Nepomuk2::Tag &nepomukTag, Nepomuk2::Tag::allTags() ) {
-    const QString id = nepomukTag.uri().toString();
-    if(tagSelectedLst.contains(id)) {
-      QString iconName = nepomukTag.genericIcon(); 
-      if(iconName.isEmpty()) 
-        iconName = QLatin1String( "mail-tagged" ); 
-      const QString label = nepomukTag.label();
-      const QString id = nepomukTag.uri().toString();
-      combo->addItem( SmallIcon( iconName ), label, QVariant( id ) );
+
+  foreach( const Akonadi::Tag &akonadiTag, fetchJob->tags() ) {
+    if(tagSelectedLst.contains(akonadiTag.url().url())) {
+      QString iconName = QLatin1String( "mail-tagged" );
+      const QString label = akonadiTag.name();
+      const QString id = akonadiTag.url().url();
+      Akonadi::TagAttribute *attr = akonadiTag.attribute<Akonadi::TagAttribute>();
+      if (attr) {
+        iconName = attr->iconName();
+      }
+      addMessageTagItem( SmallIcon( iconName ), label, QVariant( id ) );
     }
   }
+  setCurrentStatusFilterItem();
 }
 
 void Widget::viewMessageSelected( MessageList::Core::MessageItem *msg )

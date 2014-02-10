@@ -39,14 +39,14 @@ namespace Akonadi {
   class Monitor;
 }
 
-namespace MessageCore {
-  class AsyncNepomukResourceRetriever;
-}
-
-namespace Nepomuk2 {
-  class Resource;
-}
-
+// namespace MessageCore {
+//   class AsyncNepomukResourceRetriever;
+// }
+//
+// namespace Nepomuk2 {
+//   class Resource;
+// }
+//
 namespace TemplateParser {
   class CustomTemplatesMenu;
 }
@@ -122,7 +122,7 @@ class MessageActions : public QObject
 
 
   private slots:
-    void updateAnnotateAction(const QUrl& url, const Nepomuk2::Resource& resource);
+//     void updateAnnotateAction(const QUrl& url, const Nepomuk2::Resource& resource);
     void slotItemModified( const Akonadi::Item &  item, const QSet< QByteArray > &  partIdentifiers );
     void slotItemRemoved(const Akonadi::Item& item);
 
@@ -160,7 +160,7 @@ class MessageActions : public QObject
     KAction *mEditAction, *mAnnotateAction, *mPrintAction, *mPrintPreviewAction;
     bool mKorganizerIsOnSystem;
     Akonadi::Monitor *mMonitor;
-    MessageCore::AsyncNepomukResourceRetriever *mAsynNepomukRetriever;
+//     MessageCore::AsyncNepomukResourceRetriever *mAsynNepomukRetriever;
     TemplateParser::CustomTemplatesMenu *mCustomTemplatesMenu;
     KAction *mListFilterAction;
 };

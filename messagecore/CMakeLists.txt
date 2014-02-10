@@ -8,7 +8,6 @@ add_subdirectory(tests)
 
 include_directories( ${Boost_INCLUDE_DIR} 
                      ${SOPRANO_INCLUDE_DIR}
-		     ${NEPOMUK_CORE_INCLUDE_DIR}
                      ${CMAKE_SOURCE_DIR}/pimcommon
                    )
 
@@ -22,7 +21,6 @@ install(FILES  ontology/messagetag.trig ${CMAKE_CURRENT_BINARY_DIR}/messagetag.o
 
 set(messagecore_LIB_SRCS
 
-   nepomukutil/asyncnepomukresourceretriever.cpp
    misc/imagecollector.cpp
    attachment/attachmentcollector.cpp
    attachment/attachmentcompressjob.cpp
@@ -64,7 +62,6 @@ target_link_libraries(messagecore
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  ${NEPOMUK_CORE_LIBRARY}
   pimcommon
 )
 

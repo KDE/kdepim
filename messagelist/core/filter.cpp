@@ -48,6 +48,7 @@ bool Filter::match( const MessageItem * item ) const
   }
 
   if ( !mTagId.isEmpty() ) {
+    //FIXME the tag id currently is a akonadi tag url => see widget.cpp and filteractionmissingargumentdialog
     const bool tagMatches = item->findTag( mTagId ) != 0;
     if ( !tagMatches )
       return false;

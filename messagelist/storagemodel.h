@@ -89,7 +89,6 @@ private:
   Q_PRIVATE_SLOT(d, void onSourceDataChanged( const QModelIndex&, const QModelIndex& ))
   Q_PRIVATE_SLOT(d, void onSelectionChanged())
   Q_PRIVATE_SLOT(d, void loadSettings())
-  Q_PRIVATE_SLOT(d, void statementChanged( const Nepomuk2::Resource & ))
 
   class Private;
   Private * const d;

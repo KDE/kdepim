@@ -30,6 +30,7 @@
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/KMime/MessageParts>
+#include <akonadi/entityannotationsattribute.h>
 
 #include <KMime/KMimeMessage>
 
@@ -51,10 +52,12 @@ FolderCollectionMonitor::FolderCollectionMonitor( Akonadi::Session *session, QOb
   mMonitor->setMimeTypeMonitored( QString::fromLatin1("message/news") );
 #endif
   mMonitor->setResourceMonitored( "akonadi_search_resource", true );
-  mMonitor->setResourceMonitored( "akonadi_nepomuktag_resource", true );
+//   mMonitor->setResourceMonitored( "akonadi_nepomuktag_resource", true );
   mMonitor->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope );
   mMonitor->itemFetchScope().setFetchModificationTime( false );
   mMonitor->itemFetchScope().setFetchRemoteIdentification( false );
+  mMonitor->itemFetchScope().setFetchTags( true );
+  mMonitor->itemFetchScope().fetchAttribute<Akonadi::EntityAnnotationsAttribute>();
 }
 
 FolderCollectionMonitor::~FolderCollectionMonitor()
