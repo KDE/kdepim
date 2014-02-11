@@ -84,6 +84,8 @@ public:
 
     QVariantMap itemInformationSelected() const;
 
+    void createUpAction(KMenu *menu);
+    void createPropertiesAction(KMenu *menu);
 Q_SIGNALS:
     void fileDoubleClicked();
 
@@ -102,6 +104,7 @@ private Q_SLOTS:
     void slotItemDoubleClicked(QTreeWidgetItem *item, int column);
     void slotMoveUp();
     void slotContextMenu(const QPoint &pos);
+    void slotProperties();
 };
 }
 

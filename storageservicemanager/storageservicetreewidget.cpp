@@ -22,7 +22,6 @@
 #include "storageservice/storageserviceabstract.h"
 #include "storageservice/dialog/storageservicechecknamedialog.h"
 #include "storageservicemanagerglobalconfig.h"
-#include "storageservicepropertiesdialog.h"
 #include "storageservice/storageserviceprogressmanager.h"
 
 #include <KMenu>
@@ -90,7 +89,7 @@ void StorageServiceTreeWidget::setIsInitialized()
 void StorageServiceTreeWidget::createMenuActions(KMenu *menu)
 {
     if (mInitialized) {
-        PimCommon::StorageServiceTreeWidget::createMenuActions(menu);
+        createUpAction(menu);
         const PimCommon::StorageServiceTreeWidget::ItemType type = StorageServiceTreeWidget::itemTypeSelected();
         if (type != StorageServiceTreeWidget::UnKnown) {
             if (type == StorageServiceTreeWidget::File) {
@@ -172,7 +171,7 @@ void StorageServiceTreeWidget::createMenuActions(KMenu *menu)
             act = new QAction(menu);
             act->setSeparator(true);
             menu->addAction(act);
-            menu->addAction(KIcon(QLatin1String("document-properties")), i18n("Properties"), this, SLOT(slotProperties()));
+            createPropertiesAction(menu);
         }
     } else {
         menu->addAction(KIcon(QLatin1String("view-refresh")), i18n("Refresh"), this, SLOT(refreshList()));
@@ -398,16 +397,6 @@ void StorageServiceTreeWidget::slotCopyFolder()
     mCopyItem.moveItem = false;
     mCopyItem.type = FolderType;
     mCopyItem.identifier = itemIdentifierSelected();
-}
-
-void StorageServiceTreeWidget::slotProperties()
-{
-    const QMap<QString, QString> information = mStorageService->itemInformation(itemInformationSelected());
-    if (!information.isEmpty()) {
-        QPointer<StorageServicePropertiesDialog> dlg = new StorageServicePropertiesDialog(information, this);
-        dlg->exec();
-        delete dlg;
-    }
 }
 
 void StorageServiceTreeWidget::slotFileDoubleClicked()

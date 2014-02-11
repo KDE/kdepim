@@ -24,7 +24,6 @@ set(storageservicemanager_SRCS
   storageservicewarning.cpp
   storageservicelogdialog.cpp
   storageserviceaccountinfodialog.cpp
-  storageservicepropertiesdialog.cpp
   storageservicenavigationbar.cpp
 )
 

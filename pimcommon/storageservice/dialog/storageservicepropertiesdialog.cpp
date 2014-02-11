@@ -26,6 +26,8 @@
 #include <QGridLayout>
 #include <QLabel>
 
+using namespace PimCommon;
+
 StorageServicePropertiesDialog::StorageServicePropertiesDialog(const QMap<QString, QString> &information, QWidget *parent)
     : KDialog(parent)
 {

@@ -80,6 +80,7 @@ set(libpimcommon_storageservice_SRCS
   storageservice/dialog/storageservicechecknamedialog.cpp
   storageservice/dialog/storageserviceconfiguredialog.cpp
   storageservice/dialog/storageservicedeletedialog.cpp
+  storageservice/dialog/storageservicepropertiesdialog.cpp
 
   storageservice/widgets/storageserviceconfigurewidget.cpp
   storageservice/widgets/storageservicetreewidget.cpp

@@ -22,6 +22,7 @@
 #define STORAGESERVICEPROPERTIESDIALOG_H
 
 #include <KDialog>
+namespace PimCommon {
 class StorageServicePropertiesDialog : public KDialog
 {
     Q_OBJECT
@@ -34,5 +35,6 @@ private:
     void readConfig();
     void writeConfig();
 };
+}
 
 #endif // STORAGESERVICEPROPERTIESDIALOG_H
