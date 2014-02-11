@@ -81,10 +81,10 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     hbox->addWidget( mSearchEdit );
 
     // The status filter button. Will be populated later, as populateStatusFilterCombo() is virtual
-    mStatusFilterCombo = new KComboBox( this ) ;
-    mStatusFilterCombo->setVisible( Settings::self()->showQuickSearch() );
-    mStatusFilterCombo->setMaximumWidth(300);
-    hbox->addWidget( mStatusFilterCombo );
+    mTagFilterCombo = new KComboBox( this ) ;
+    mTagFilterCombo->setVisible( Settings::self()->showQuickSearch() );
+    mTagFilterCombo->setMaximumWidth(300);
+    hbox->addWidget( mTagFilterCombo );
 
     // The "Open Full Search" button
     mOpenFullSearchButton = new QToolButton( this );
@@ -96,7 +96,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
 
     connect( mOpenFullSearchButton, SIGNAL(clicked()), this, SIGNAL(fullSearchRequest()) );
     mSearchEdit->setEnabled( false );
-    mStatusFilterCombo->setEnabled( false );
+    mTagFilterCombo->setEnabled( false );
 
     mExtraOption = new QWidget;
     mExtraOption->setObjectName(QLatin1String("extraoptions"));
@@ -195,9 +195,9 @@ void QuickSearchLine::focusQuickSearch()
     mSearchEdit->setFocus();
 }
 
-KComboBox *QuickSearchLine::statusFilterComboBox() const
+KComboBox *QuickSearchLine::tagFilterComboBox() const
 {
-    return mStatusFilterCombo;
+    return mTagFilterCombo;
 }
 
 KLineEdit *QuickSearchLine::searchEdit() const
@@ -232,7 +232,7 @@ void QuickSearchLine::resetFilter()
     Q_FOREACH(QToolButton *button, mListStatusButton) {
         button->setChecked(false);
     }
-    mStatusFilterCombo->setCurrentIndex( 0 );
+    mTagFilterCombo->setCurrentIndex( 0 );
     mLockSearch->setChecked(false);
     mButtonSearchAgainstGroup->button(0)->setChecked(true);
     mExtraOption->hide();

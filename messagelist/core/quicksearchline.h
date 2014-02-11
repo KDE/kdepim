@@ -54,7 +54,7 @@ public:
 
     void focusQuickSearch();
 
-    KComboBox *statusFilterComboBox() const;
+    KComboBox *tagFilterComboBox() const;
     KLineEdit *searchEdit() const;
     QToolButton *openFullSearchButton() const;
     QToolButton *lockSearch() const;
@@ -78,7 +78,7 @@ private:
     void createQuickSearchButton(const QIcon &icon, const QString &text, int value, QLayout *quickSearchButtonLayout);
     QList<QToolButton *> mListStatusButton;
     KLineEdit *mSearchEdit;
-    KComboBox *mStatusFilterCombo;
+    KComboBox *mTagFilterCombo;
     QToolButton *mOpenFullSearchButton;
     QToolButton *mLockSearch;
     QPushButton *mSearchAgainstBody;

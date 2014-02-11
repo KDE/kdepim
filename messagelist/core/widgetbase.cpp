@@ -171,7 +171,7 @@ Widget::~Widget()
 void Widget::changeQuicksearchVisibility(bool show)
 {
   KLineEdit * const lineEdit = d->quickSearchLine->searchEdit();
-  QWidget * const comboBox = d->quickSearchLine->statusFilterComboBox();
+  QWidget * const comboBox = d->quickSearchLine->tagFilterComboBox();
   QWidget * const fullSearchButton = d->quickSearchLine->openFullSearchButton();
   if ( !show ) {
     //if we hide it we do not want to apply the filter,
@@ -198,18 +198,18 @@ void Widget::changeQuicksearchVisibility(bool show)
 
 void Widget::populateStatusFilterCombo()
 {
-  KComboBox *statusFilterComboBox = d->quickSearchLine->statusFilterComboBox();
-  const int currentIndex = (statusFilterComboBox->currentIndex() != -1) ?  statusFilterComboBox->currentIndex() : 0;
-  disconnect( statusFilterComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(statusSelected(int)) );
+  KComboBox *tagFilterComboBox = d->quickSearchLine->tagFilterComboBox();
+  const int currentIndex = (tagFilterComboBox->currentIndex() != -1) ?  tagFilterComboBox->currentIndex() : 0;
+  disconnect( tagFilterComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(statusSelected(int)) );
 
-  statusFilterComboBox->clear();
+  tagFilterComboBox->clear();
 
-  fillMessageTagCombo( d->quickSearchLine->statusFilterComboBox() );
+  fillMessageTagCombo( d->quickSearchLine->tagFilterComboBox() );
 
-  connect( d->quickSearchLine->statusFilterComboBox(), SIGNAL(currentIndexChanged(int)),
+  connect( d->quickSearchLine->tagFilterComboBox(), SIGNAL(currentIndexChanged(int)),
            this, SLOT(statusSelected(int)) );
 
-  d->quickSearchLine->statusFilterComboBox()->setCurrentIndex(currentIndex>=d->quickSearchLine->statusFilterComboBox()->count() ? 0 : currentIndex );
+  d->quickSearchLine->tagFilterComboBox()->setCurrentIndex(currentIndex>=d->quickSearchLine->tagFilterComboBox()->count() ? 0 : currentIndex );
 }
 
 MessageItem *Widget::currentMessageItem() const
@@ -337,7 +337,7 @@ void Widget::setStorageModel( StorageModel * storageModel, PreSelectionMode preS
 
   delete oldModel;
 
-  d->quickSearchLine->statusFilterComboBox()->setEnabled( d->mStorageModel );
+  d->quickSearchLine->tagFilterComboBox()->setEnabled( d->mStorageModel );
   d->quickSearchLine->searchEdit()->setEnabled( d->mStorageModel );
 }
 
@@ -902,7 +902,7 @@ void Widget::tagIdSelected( const QVariant& data )
 
 void Widget::statusSelected( int index )
 {
-    tagIdSelected( d->quickSearchLine->statusFilterComboBox()->itemData( index ) );
+    tagIdSelected( d->quickSearchLine->tagFilterComboBox()->itemData( index ) );
     d->mView->model()->setFilter( d->mFilter );
 }
 
