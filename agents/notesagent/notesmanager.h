@@ -39,9 +39,11 @@ public:
     explicit NotesManager(QObject *parent=0);
     ~NotesManager();
 
-    void load();
     void stopAll();
     void updateNetworkListener();
+
+public Q_SLOTS:
+    void load();
 
 private slots:
     void slotAcceptConnection();
