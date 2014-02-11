@@ -20,6 +20,7 @@
 #include "storageservice/widgets/storageserviceprogresswidget.h"
 #include "storageservice/widgets/storageserviceprogressindicator.h"
 #include "storageservice/storageserviceabstract.h"
+#include "storageservice/storageserviceprogressmanager.h"
 
 #include <KLocalizedString>
 #include <KGlobal>
@@ -235,6 +236,8 @@ void StorageServiceDownloadDialog::downloadItem(StorageServiceTreeWidgetItem *it
                 return;
             }
         }
+        PimCommon::StorageServiceProgressManager::self()->addProgress(mStorage, StorageServiceProgressManager::DownLoad);
+
         const QString fileId = mStorage->fileIdentifier(item->storeInfo());
         mTreeWidget->setEnabled(false);
         enableButton(User1, false);

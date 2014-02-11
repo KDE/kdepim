@@ -217,7 +217,6 @@ void StorageServiceManager::slotDownloadFile()
             StorageServiceAbstract *service = mListService.value(type);
             QPointer<PimCommon::StorageServiceDownloadDialog> dlg = new PimCommon::StorageServiceDownloadDialog(service, 0);
             dlg->setDefaultDownloadPath(mDefaultUploadFolder);
-            PimCommon::StorageServiceProgressManager::self()->addProgress(service, StorageServiceProgressManager::DownLoad);
             dlg->exec();
             delete dlg;
         }
