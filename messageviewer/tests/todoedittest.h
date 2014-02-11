@@ -43,8 +43,8 @@ private slots:
     void shouldTodoHasCorrectSubject();
     void shouldClearAllWhenCloseWidget();
     void shouldEmitCollectionChangedWhenCurrentCollectionWasChanged();
-    void shouldEmitCorrectCollection();
     void shouldClearLineAfterEmitNewNote();
+    void shouldEmitCorrectCollection();
 };
 
 #endif // TODOEDITTEST_H

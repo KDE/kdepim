@@ -253,8 +253,7 @@ void TodoEditTest::shouldEmitCorrectCollection()
     QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection)));
     QTest::keyClick(noteedit, Qt::Key_Enter);
     QCOMPARE(spy.count(), 1);
-    //FIX IT
-    //QCOMPARE(spy.at(0).at(0).value<Akonadi::Collection>(), col);
+    QCOMPARE(spy.at(0).at(1).value<Akonadi::Collection>(), col);
 }
 
 void TodoEditTest::shouldClearLineAfterEmitNewNote()
