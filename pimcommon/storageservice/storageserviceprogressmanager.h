@@ -55,6 +55,7 @@ private slots:
     void slotDownloadFileDone(const QString &serviceName, const QString &);
     void slotDownloadFileFailed(const QString &serviceName, const QString &);
     void slotDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total);
+    void slotActionFailed(const QString &serviceName, const QString &);
 private:
     explicit StorageServiceProgressManager(QObject *parent = 0);
     friend class StorageServiceProgressManagerPrivate;

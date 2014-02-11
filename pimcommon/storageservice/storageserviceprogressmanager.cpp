@@ -68,7 +68,20 @@ void StorageServiceProgressManager::addProgress(PimCommon::StorageServiceAbstrac
         connect(storageService, SIGNAL(uploadFileFailed(QString,QString)), SLOT(slotUploadFileFailed(QString,QString)), Qt::UniqueConnection);
         connect(storageService, SIGNAL(downLoadFileDone(QString,QString)), SLOT(slotDownloadFileDone(QString,QString)), Qt::UniqueConnection);
         connect(storageService, SIGNAL(downLoadFileFailed(QString,QString)), SLOT(slotDownloadFileFailed(QString,QString)), Qt::UniqueConnection);
+        connect(storageService, SIGNAL(actionFailed(QString,QString)), SLOT(slotActionFailed(QString,QString)), Qt::UniqueConnection);
         connect(storageService, SIGNAL(uploadDownloadFileProgress(QString,qint64,qint64)), SLOT(slotDownloadFileProgress(QString,qint64,qint64)), Qt::UniqueConnection);
+    }
+}
+
+void StorageServiceProgressManager::slotActionFailed(const QString &serviceName, const QString &)
+{
+    if (mHashList.contains(serviceName)) {
+        ProgressJob *job = mHashList.value(serviceName);
+        KPIM::ProgressItem *mProgressItem = job->item();
+        if (mProgressItem) {
+            mProgressItem->setComplete();
+        }
+        mHashList.remove(serviceName);
     }
 }
 
