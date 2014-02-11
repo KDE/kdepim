@@ -126,10 +126,17 @@ void SieveEditorPageWidget::slotPutResult( KManageSieve::SieveJob *, bool succes
 bool SieveEditorPageWidget::needToSaveScript()
 {
     bool result = false;
-    if (mWasChanged) {
-        if (KMessageBox::Yes == KMessageBox::warningYesNo(this, i18n("Script '%1' was changed. Do you want to save it ?", mCurrentURL.fileName()))) {
+    if (mIsNewScript) {
+        if (KMessageBox::Yes == KMessageBox::warningYesNo(this, i18n("Script '%1' is new. Do you want to save it?", mCurrentURL.fileName()))) {
             saveScript();
             result = true;
+        }
+    } else {
+        if (mWasChanged) {
+            if (KMessageBox::Yes == KMessageBox::warningYesNo(this, i18n("Script '%1' was changed. Do you want to save it ?", mCurrentURL.fileName()))) {
+                saveScript();
+                result = true;
+            }
         }
     }
     return result;
