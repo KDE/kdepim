@@ -31,7 +31,7 @@ class StorageServiceAccountInfoDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit StorageServiceAccountInfoDialog(const PimCommon::AccountInfo &accountInfo, QWidget *parent);
+    explicit StorageServiceAccountInfoDialog(const QString &serviceName, const PimCommon::AccountInfo &accountInfo, QWidget *parent);
     ~StorageServiceAccountInfoDialog();
 };
 

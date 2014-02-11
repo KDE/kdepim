@@ -151,7 +151,7 @@ void StorageServicePage::slotRenameFileDone(const QString &serviceName, const QS
 void StorageServicePage::slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo)
 {
     if (verifyService(serviceName)) {
-        QPointer<StorageServiceAccountInfoDialog> dlg = new StorageServiceAccountInfoDialog(accountInfo, this);
+        QPointer<StorageServiceAccountInfoDialog> dlg = new StorageServiceAccountInfoDialog(serviceName, accountInfo, this);
         dlg->exec();
         delete dlg;
     }

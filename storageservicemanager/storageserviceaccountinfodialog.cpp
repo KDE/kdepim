@@ -25,17 +25,20 @@
 #include <KLocale>
 
 #include <QVBoxLayout>
+#include <QGroupBox>
 #include <QLabel>
 
-StorageServiceAccountInfoDialog::StorageServiceAccountInfoDialog(const PimCommon::AccountInfo &accountInfo, QWidget *parent)
+StorageServiceAccountInfoDialog::StorageServiceAccountInfoDialog(const QString &serviceName, const PimCommon::AccountInfo &accountInfo, QWidget *parent)
     : KDialog(parent)
 {
     setCaption(i18n("Account Info"));
     setButtons(Close);
-    QWidget *w = new QWidget;
-    setMainWidget(w);
+
+    QGroupBox *grp = new QGroupBox(serviceName);
+    setMainWidget(grp);
+
     QVBoxLayout *vbox = new QVBoxLayout;
-    w->setLayout(vbox);
+    grp->setLayout(vbox);
     if (accountInfo.accountSize>=0)
         vbox->addWidget(new QLabel(i18n("Size: %1", KGlobal::locale()->formatByteSize(accountInfo.accountSize,1))));
     if (accountInfo.quota>=0)
