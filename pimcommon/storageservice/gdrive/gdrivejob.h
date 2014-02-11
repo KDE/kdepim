@@ -63,6 +63,7 @@ private slots:
     void slotChildReferenceFetchJobFinished(KGAPI2::Job *job);
     void slotDeleteFolderFinished(KGAPI2::Job *job);
     void slotCreateJobFinished(KGAPI2::Job *job);
+    void slotUploadJobFinished(KGAPI2::Job *job);
 private:
     bool handleError(KGAPI2::Job *job);
 

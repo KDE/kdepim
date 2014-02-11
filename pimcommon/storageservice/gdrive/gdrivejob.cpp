@@ -127,7 +127,6 @@ void GDriveJob::slotFileFetchFinished(KGAPI2::Job* job)
 {
     KGAPI2::Drive::FileFetchJob *fileFetchJob = qobject_cast<KGAPI2::Drive::FileFetchJob*>(job);
     Q_ASSERT(fileFetchJob);
-    qDebug()<<" fileFetchJob" <<fileFetchJob->items().count();
     QStringList listFolder;
     KGAPI2::ObjectsList objects = fileFetchJob->items();
     Q_FOREACH ( const KGAPI2::ObjectPtr &object, objects ) {
@@ -212,8 +211,26 @@ QNetworkReply *GDriveJob::uploadFile(const QString &filename, const QString &upl
 {
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
-    //TODO
+    KGAPI2::Drive::FilePtr file( new KGAPI2::Drive::File() );
+    file->setTitle( uploadAsName );
+    KGAPI2::Drive::ParentReferencePtr parent( new KGAPI2::Drive::ParentReference( destination ) );
+    file->setParents( KGAPI2::Drive::ParentReferencesList() << parent );
+
+    //TODO destination
+    KGAPI2::Drive::FileCreateJob *createJob = new KGAPI2::Drive::FileCreateJob( filename/*, file*/, mAccount);
+    connect(createJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotUploadJobFinished(KGAPI2::Job*)));
     return 0;
+}
+
+void GDriveJob::slotUploadJobFinished(KGAPI2::Job* job)
+{
+    if (handleError(job)) {
+        Q_EMIT errorMessage(mActionType, job->errorString());
+    } else {
+        Q_EMIT uploadFileDone(QString());
+    }
+    job->deleteLater();
+    deleteLater();
 }
 
 void GDriveJob::deleteFile(const QString &filename)
