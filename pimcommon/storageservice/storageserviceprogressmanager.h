@@ -68,11 +68,15 @@ public:
     ProgressJob(KPIM::ProgressItem *item, StorageServiceProgressManager::ProgressType type);
     ~ProgressJob();
 
+    void setStorageService(StorageServiceAbstract *storage);
+    StorageServiceAbstract *storageService() const;
+
     StorageServiceProgressManager::ProgressType type() const;
     KPIM::ProgressItem *item() const;
 
 private:
     StorageServiceProgressManager::ProgressType mType;
+    StorageServiceAbstract *mStorageService;
     QPointer<KPIM::ProgressItem> mProgressItem;
 };
 

@@ -61,6 +61,7 @@ void StorageServiceProgressManager::addProgress(PimCommon::StorageServiceAbstrac
     if (!mHashList.contains(storageService->storageServiceName())) {
         KPIM::ProgressItem *progressItem = KPIM::ProgressManager::createProgressItem( storageService->storageServiceName() );
         ProgressJob *job = new ProgressJob(progressItem, type);
+        job->setStorageService(storageService);
 
         mHashList.insert(storageService->storageServiceName(), job);
         connect(progressItem, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)), SLOT(slotProgressItemCanceled(KPIM::ProgressItem*)));
@@ -154,12 +155,17 @@ void StorageServiceProgressManager::slotProgressItemCanceled(KPIM::ProgressItem 
     while (i.hasNext()) {
         i.next();
         if (i.value()->item() == item) {
-            //TODO search service
-            //i.key()
+            ProgressType type = i.value()->type();
+            switch(type) {
+            case DownLoad:
+                i.value()->storageService()->cancelDownloadFile();
+                break;
+            case Upload:
+                i.value()->storageService()->cancelUploadFile();
+                break;
+            }
         }
     }
-
-    //TODO cancel with type of progress (DownLoad/Upload)
 }
 
 
@@ -168,6 +174,16 @@ ProgressJob::ProgressJob(KPIM::ProgressItem *item, StorageServiceProgressManager
       mProgressItem(item)
 {
 
+}
+
+void ProgressJob::setStorageService(StorageServiceAbstract *storage)
+{
+    mStorageService = storage;
+}
+
+StorageServiceAbstract *ProgressJob::storageService() const
+{
+    return mStorageService;
 }
 
 StorageServiceProgressManager::ProgressType ProgressJob::type() const
