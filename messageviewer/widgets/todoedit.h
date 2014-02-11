@@ -44,6 +44,8 @@ public:
     KMime::Message::Ptr message() const;
     void setMessage(const KMime::Message::Ptr &value);
 
+    void writeConfig();
+
 public Q_SLOTS:
     void slotCloseWidget();
 
@@ -59,7 +61,6 @@ protected:
     bool event(QEvent *e);
 
 private:
-    void writeConfig();
     void readConfig();
     Akonadi::Collection mCollection;
     KMime::Message::Ptr mMessage;

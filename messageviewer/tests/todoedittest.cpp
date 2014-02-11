@@ -16,6 +16,7 @@
 */
 
 #include "todoedittest.h"
+#include "messageviewer/globalsettings_base.h"
 #include "widgets/todoedit.h"
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionComboBox>
@@ -267,6 +268,39 @@ void TodoEditTest::shouldHideWidgetWhenClickOnCloseButton()
     QToolButton *close = qFindChild<QToolButton *>(&edit, QLatin1String("close-button"));
     QTest::mouseClick(close, Qt::LeftButton);
     QCOMPARE(edit.isVisible(), false);
+}
+
+void TodoEditTest::shouldHideWidgetWhenPressEscape()
+{
+    MessageViewer::TodoEdit edit;
+    edit.show();
+    QTest::qWaitForWindowShown(&edit);
+    QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
+    noteedit->setFocus();
+    QVERIFY(noteedit->hasFocus());
+    QTest::keyPress(&edit, Qt::Key_Escape);
+    QCOMPARE(edit.isVisible(), false);
+}
+
+void TodoEditTest::shouldSaveCollectionSettings()
+{
+    MessageViewer::TodoEdit edit;
+    Akonadi::CollectionComboBox *akonadicombobox = qFindChild<Akonadi::CollectionComboBox *>(&edit, QLatin1String("akonadicombobox"));
+    akonadicombobox->setCurrentIndex(3);
+    const Akonadi::Collection::Id id = akonadicombobox->currentCollection().id();
+    QToolButton *close = qFindChild<QToolButton *>(&edit, QLatin1String("close-button"));
+    QTest::mouseClick(close, Qt::LeftButton);
+    QCOMPARE(MessageViewer::GlobalSettingsBase::self()->lastSelectedFolder(), id);
+}
+
+void TodoEditTest::shouldSaveCollectionSettingsWhenCloseWidget()
+{
+    MessageViewer::TodoEdit edit;
+    Akonadi::CollectionComboBox *akonadicombobox = qFindChild<Akonadi::CollectionComboBox *>(&edit, QLatin1String("akonadicombobox"));
+    akonadicombobox->setCurrentIndex(3);
+    const Akonadi::Collection::Id id = akonadicombobox->currentCollection().id();
+    edit.writeConfig();
+    QCOMPARE(MessageViewer::GlobalSettingsBase::self()->lastSelectedFolder(), id);
 }
 
 void TodoEditTest::shouldClearLineAfterEmitNewNote()

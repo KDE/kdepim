@@ -46,6 +46,9 @@ private slots:
     void shouldClearLineAfterEmitNewNote();
     void shouldEmitCorrectCollection();
     void shouldHideWidgetWhenClickOnCloseButton();
+    void shouldHideWidgetWhenPressEscape();
+    void shouldSaveCollectionSettings();
+    void shouldSaveCollectionSettingsWhenCloseWidget();
 };
 
 #endif // TODOEDITTEST_H
