@@ -24,8 +24,10 @@
 #include <kcalcore/todo.h>
 #include <qtest_kde.h>
 #include <qtestkeyboard.h>
+#include <qtestmouse.h>
 
 #include <QLineEdit>
+#include <QToolButton>
 
 namespace MessageViewer {
 extern MESSAGEVIEWER_EXPORT QAbstractItemModel *_k_todoEditStubModel;
@@ -256,6 +258,17 @@ void TodoEditTest::shouldEmitCorrectCollection()
     QCOMPARE(spy.at(0).at(1).value<Akonadi::Collection>(), col);
 }
 
+void TodoEditTest::shouldHideWidgetWhenClickOnCloseButton()
+{
+    MessageViewer::TodoEdit edit;
+    edit.show();
+    QTest::qWaitForWindowShown(&edit);
+    QVERIFY(edit.isVisible());
+    QToolButton *close = qFindChild<QToolButton *>(&edit, QLatin1String("close-button"));
+    QTest::mouseClick(close, Qt::LeftButton);
+    QCOMPARE(edit.isVisible(), false);
+}
+
 void TodoEditTest::shouldClearLineAfterEmitNewNote()
 {
     MessageViewer::TodoEdit edit;
@@ -267,6 +280,7 @@ void TodoEditTest::shouldClearLineAfterEmitNewNote()
     QTest::keyClick(noteedit, Qt::Key_Enter);
     QCOMPARE(noteedit->text(), QString());
 }
+
 
 
 QTEST_KDEMAIN( TodoEditTest, GUI )

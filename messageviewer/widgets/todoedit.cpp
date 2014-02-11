@@ -20,10 +20,13 @@
 
 #include <KLocalizedString>
 #include <KLineEdit>
+#include <KIcon>
 
 #include <QHBoxLayout>
 #include <QEvent>
 #include <QKeyEvent>
+#include <QLabel>
+#include <QToolButton>
 
 #include <Akonadi/CollectionComboBox>
 
@@ -39,6 +42,24 @@ TodoEdit::TodoEdit(QWidget *parent)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
     setLayout(hbox);
+
+    QToolButton *closeBtn = new QToolButton( this );
+    closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );
+    closeBtn->setObjectName(QLatin1String("close-button"));
+    closeBtn->setIconSize( QSize( 16, 16 ) );
+    closeBtn->setToolTip( i18n( "Close" ) );
+
+#ifndef QT_NO_ACCESSIBILITY
+    closeBtn->setAccessibleName( i18n( "Close" ) );
+#endif
+
+    closeBtn->setAutoRaise( true );
+    hbox->addWidget( closeBtn );
+    connect( closeBtn, SIGNAL(clicked()), this, SLOT(slotCloseWidget()) );
+
+    QLabel *lab = new QLabel(i18n("Todo:"));
+    hbox->addWidget(lab);
+
     mNoteEdit = new KLineEdit;
     mNoteEdit->setClearButtonShown(true);
     mNoteEdit->setObjectName(QLatin1String("noteedit"));
@@ -114,6 +135,7 @@ void TodoEdit::slotCloseWidget()
 {
     mNoteEdit->clear();
     mMessage = KMime::Message::Ptr();
+    hide();
 }
 
 void TodoEdit::slotReturnPressed()
