@@ -256,11 +256,9 @@ void WebDavJob::listFolder(const QString &folder)
 {
     mActionType = PimCommon::StorageServiceAbstract::ListFolder;
     mError = false;
-    //qDebug()<<" folder"<<folder;
     QUrl url(mServiceLocation);
     if (!folder.isEmpty())
         url.setPath(folder);
-    //qDebug()<<" url.toString()"<<url.toString();
     list(url.toString());
 }
 
@@ -313,7 +311,6 @@ void WebDavJob::moveFile(const QString &source, const QString &destination)
     move(sourceFile.toString(), destinationFile.toString(), false);
 }
 
-
 void WebDavJob::createFolder(const QString &foldername, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
@@ -345,10 +342,8 @@ void WebDavJob::accountInfo()
 void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
 {
     if (mError || reply->error() != QNetworkReply::NoError) {
-        //qDebug()<<" ERROR "<<reply->error();
         reply->deleteLater();
         errorMessage(mActionType, reply->errorString());
-        //ADD more parsing
         deleteLater();
     } else {
         const QString data = QString::fromUtf8(reply->readAll());
@@ -489,14 +484,12 @@ void WebDavJob::parseAccessToken(const QString &data)
 
 void WebDavJob::parseUploadFile(const QString &data)
 {
-    qDebug()<<" data "<<data;
     Q_EMIT uploadFileDone(QString());
     deleteLater();
 }
 
 void WebDavJob::parseCreateFolder(const QString &data)
 {
-    qDebug()<<" data "<<data;
     Q_EMIT createFolderDone(mCacheValue);
     deleteLater();
 }
