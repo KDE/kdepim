@@ -98,8 +98,7 @@ void GDriveJob::listFolder(const QString &folder)
 {
     mActionType = PimCommon::StorageServiceAbstract::ListFolder;
     mError = false;
-    const QString folderId = lastPathComponent( folder );
-    qDebug()<<"folderId "<<folderId;
+    const QString folderId = folder.isEmpty() ? QLatin1String("root") : folder;
     KGAPI2::Drive::ChildReferenceFetchJob *fetchJob = new KGAPI2::Drive::ChildReferenceFetchJob( folderId, mAccount );
     connect(fetchJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotChildReferenceFetchJobFinished(KGAPI2::Job*)));
 }
@@ -131,7 +130,9 @@ void GDriveJob::slotFileFetchFinished(KGAPI2::Job* job)
     KGAPI2::ObjectsList objects = fileFetchJob->items();
     Q_FOREACH ( const KGAPI2::ObjectPtr &object, objects ) {
         const KGAPI2::Drive::FilePtr file = object.dynamicCast<KGAPI2::Drive::File>();
-        if ( file->labels()->trashed() ) {
+        qDebug()<<" file "<<file;
+	
+        if ( !file->labels() || file->labels()->trashed() ) {
             continue;
         }
         const QString value = QString::fromLatin1(KGAPI2::Drive::File::toJSON(file));
@@ -237,7 +238,7 @@ void GDriveJob::deleteFile(const QString &filename)
 {
     mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
     mError = false;
-    const QString folderId = lastPathComponent( filename );
+    const QString folderId = filename;
     KGAPI2::Drive::FileDeleteJob *fileDeleteJob = new KGAPI2::Drive::FileDeleteJob(folderId, mAccount, this);
     connect(fileDeleteJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotDeleteFileFinished(KGAPI2::Job*)));
 }
@@ -246,7 +247,7 @@ void GDriveJob::deleteFolder(const QString &foldername)
 {
     mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
     mError = false;
-    const QString folderId = lastPathComponent( foldername );
+    const QString folderId = foldername;
     KGAPI2::Drive::FileDeleteJob *fileDeleteJob = new KGAPI2::Drive::FileDeleteJob(folderId, mAccount, this);
     connect(fileDeleteJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotDeleteFolderFinished(KGAPI2::Job*)));
 }
@@ -298,13 +299,11 @@ void GDriveJob::createFolder(const QString &foldername, const QString &destinati
     mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
     mError = false;
 
-    const QString folderName = lastPathComponent( destination );
-
     KGAPI2::Drive::FilePtr file( new KGAPI2::Drive::File() );
     file->setTitle( foldername );
     file->setMimeType( KGAPI2::Drive::File::folderMimeType() );
 
-    KGAPI2::Drive::ParentReferencePtr parent( new KGAPI2::Drive::ParentReference( folderName ) );
+    KGAPI2::Drive::ParentReferencePtr parent( new KGAPI2::Drive::ParentReference( destination ) );
     file->setParents( KGAPI2::Drive::ParentReferencesList() << parent );
 
     KGAPI2::Drive::FileCreateJob *createJob = new KGAPI2::Drive::FileCreateJob( file, mAccount);
