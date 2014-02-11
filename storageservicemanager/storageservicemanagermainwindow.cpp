@@ -26,6 +26,9 @@
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 
+#include "libkdepim/progresswidget/progressdialog.h"
+#include "libkdepim/progresswidget/statusbarprogresswidget.h"
+
 #include <KStandardAction>
 #include <KLocalizedString>
 #include <KActionCollection>
@@ -36,6 +39,7 @@
 #include <KMessageBox>
 
 #include <QPointer>
+#include <QCloseEvent>
 #include <QLabel>
 #include <QDebug>
 
@@ -81,6 +85,14 @@ void StorageServiceManagerMainWindow::initStatusBar()
 {
     mStatusBarInfo = new QLabel;
     statusBar()->insertWidget(0, mStatusBarInfo, 4);
+
+    KPIM::ProgressDialog *progressDialog = new KPIM::ProgressDialog( statusBar(), this );
+    progressDialog->hide();
+
+    KPIM::StatusbarProgressWidget *littleProgress = new KPIM::StatusbarProgressWidget( progressDialog, statusBar() );
+    littleProgress->show();
+
+    statusBar()->addPermanentWidget( littleProgress, 0 );
 }
 
 void StorageServiceManagerMainWindow::slotSystemNetworkStatusChanged(Solid::Networking::Status status)
@@ -107,6 +119,7 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
         mDeleteFile->setDisabled(true);
         mAuthenticate->setDisabled(true);
         mRefreshList->setDisabled(true);
+        mShowLog->setDisabled(true);
     } else {
         const PimCommon::StorageServiceAbstract::Capabilities capabilities = mStorageServiceTabWidget->capabilities();
         mDownloadFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability);
@@ -114,15 +127,16 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
         mAccountInfo->setEnabled(capabilities & PimCommon::StorageServiceAbstract::AccountInfoCapability);
         mUploadFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::UploadFileCapability);
         mDeleteFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability);
-        mAuthenticate->setDisabled(capabilities & PimCommon::StorageServiceAbstract::NoCapability);
-        mRefreshList->setDisabled(capabilities & PimCommon::StorageServiceAbstract::NoCapability);
+        mAuthenticate->setDisabled((capabilities & PimCommon::StorageServiceAbstract::NoCapability) || (mStorageServiceTabWidget->count() == 0));
+        mRefreshList->setDisabled((capabilities & PimCommon::StorageServiceAbstract::NoCapability) || (mStorageServiceTabWidget->count() == 0));
+        mShowLog->setDisabled((mStorageServiceTabWidget->count() == 0));
     }
 }
 
 void StorageServiceManagerMainWindow::setupActions()
 {
     KActionCollection *ac = actionCollection();
-    KStandardAction::quit(this, SLOT(slotClose()), ac );
+    KStandardAction::quit(this, SLOT(close()), ac );
 
     mAuthenticate = ac->addAction(QLatin1String("authenticate"), mStorageServiceTabWidget, SLOT(slotAuthenticate()));
     mAuthenticate->setText(i18n("Authenticate..."));
@@ -154,14 +168,15 @@ void StorageServiceManagerMainWindow::setupActions()
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
 }
 
-void StorageServiceManagerMainWindow::slotClose()
+void StorageServiceManagerMainWindow::closeEvent(QCloseEvent *e)
 {
     if (mStorageServiceTabWidget->hasUploadDownloadProgress()) {
         if (KMessageBox::No == KMessageBox::warningYesNo(this, i18n("There is still upload or download in progress. Do you want to close anyway?"))) {
+            e->ignore();
             return;
         }
     }
-    close();
+    e->accept();
 }
 
 void StorageServiceManagerMainWindow::slotConfigure()

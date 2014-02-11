@@ -305,5 +305,13 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     <default>Display</default>
    </entry>
   </group>
+
+    <group name="Todo">
+      <entry name="LastSelectedFolder" type="LongLong">
+        <whatsthis>The most recent selected folder using for Todo.</whatsthis>
+        <default>-1</default>
+      </entry>
+    </group>
+
 </kcfg>
 

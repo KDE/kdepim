@@ -27,9 +27,7 @@
 
 #include <KLocalizedString>
 #include <KDateTime>
-#include <KConfig>
 #include <KGlobal>
-#include <KConfigGroup>
 
 #include <QPointer>
 #include <QDebug>
@@ -51,16 +49,27 @@ WebDavStorageService::~WebDavStorageService()
 void WebDavStorageService::readConfig()
 {
     //TODO add support for don't save as kwallet ?
-    KConfig config(StorageServiceManager::kconfigName());
-    KConfigGroup grp(&config, "Webdav Settings");
-    mPublicLocation = grp.readEntry(QLatin1String("public location"));
-    mServiceLocation = grp.readEntry(QLatin1String("service location"));
-    mUsername = grp.readEntry(QLatin1String("username"));
     if (StorageServiceSettings::self()->createDefaultFolder()) {
-        const QString walletEntry = StorageServiceManager::kconfigName();
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
-        if (wallet)
-            wallet->readPassword(walletEntry, mPassword);
+        if (wallet) {
+            QStringList lst = wallet->entryList();
+            if (lst.contains(storageServiceName())) {
+                QMap<QString, QString> map;
+                wallet->readMap( storageServiceName(), map );
+                if (map.contains(QLatin1String("public location"))) {
+                    mPublicLocation = map.value(QLatin1String("public location"));
+                }
+                if (map.contains(QLatin1String("service location"))) {
+                    mServiceLocation = map.value(QLatin1String("service location"));
+                }
+                if (map.contains(QLatin1String("username"))) {
+                    mUsername = map.value(QLatin1String("username"));
+                }
+                if (map.contains(QLatin1String("password"))) {
+                    mPassword = map.value(QLatin1String("password"));
+                }
+            }
+        }
     }
 }
 
@@ -71,17 +80,12 @@ bool WebDavStorageService::needInitialized() const
 
 void WebDavStorageService::removeConfig()
 {
-    KConfig config(StorageServiceManager::kconfigName());
-    KConfigGroup grp(&config, "Webdav Settings");
-    grp.deleteGroup();
     if (StorageServiceSettings::self()->createDefaultFolder()) {
-        const QString walletEntry = StorageServiceManager::kconfigName();
+        const QString walletEntry = storageServiceName();
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
         if (wallet)
             wallet->removeEntry(walletEntry);
     }
-
-    KGlobal::config()->sync();
 }
 
 void WebDavStorageService::storageServiceauthentication()
@@ -100,19 +104,18 @@ void WebDavStorageService::slotAuthorizationDone(const QString &publicLocation, 
     mUsername = username;
     mPassword = password;
 
-    KConfig config(StorageServiceManager::kconfigName());
-    KConfigGroup grp(&config, "Webdav Settings");
-    grp.writeEntry(QLatin1String("public location"), publicLocation);
-    grp.writeEntry(QLatin1String("service location"), serviceLocation);
-    grp.writeEntry(QLatin1String("username"), username);
     if (StorageServiceSettings::self()->createDefaultFolder()) {
-        const QString walletEntry = StorageServiceManager::kconfigName();
+        const QString walletEntry = storageServiceName();
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
-        if (wallet)
-            wallet->writePassword(walletEntry, mPassword);
+        if (wallet) {
+            QMap<QString, QString> map;
+            map[QLatin1String( "public location" )] = mPublicLocation;
+            map[QLatin1String( "service location" )] = mServiceLocation;
+            map[QLatin1String( "username" )] = mUsername;
+            map[QLatin1String( "password" )] = mPassword;
+            wallet->writeMap( walletEntry, map);
+        }
     }
-    grp.sync();
-    KGlobal::config()->sync();
     emitAuthentificationDone();
 }
 
@@ -351,9 +354,9 @@ QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
     return parentFolder;
 }
 
-QString WebDavStorageService::itemInformation(const QVariantMap &variantMap)
+QMap<QString, QString> WebDavStorageService::itemInformation(const QVariantMap &variantMap)
 {
-    return QString();
+    return QMap<QString, QString>();
 }
 
 QString WebDavStorageService::fileIdentifier(const QVariantMap &variantMap)

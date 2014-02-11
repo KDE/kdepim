@@ -35,6 +35,10 @@ public:
     KWallet::Wallet *wallet();
 
     bool createDefaultFolder();
+
+private slots:
+    void slotWalletClosed();
+
 private:
     explicit StorageServiceSettings(QObject *parent=0);
     friend class StorageServiceSettingsPrivate;

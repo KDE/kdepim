@@ -120,6 +120,7 @@ private:
     void setupSystemTray();
     void writeConfigs();
     void initStorageService();
+    void setupStatusBar();
     /**
         Create a new post entry, 
         and return pointer to it's widget (Actually return value is a PostEntry instance)

@@ -55,6 +55,7 @@ Q_SIGNALS:
     void authorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
 
 private:
+    void addDefaultUrlItem(QUrl &url);
     void getTokenAccess();
     void parseRequestToken(const QString &result);
     void doAuthentication();
@@ -73,7 +74,6 @@ private:
     void parseMoveFile(const QString &data);
     void parseCopyFile(const QString &data);
     void parseCopyFolder(const QString &data);
-    QString nonce;
     QString mOauthconsumerKey;
     QString mOauthSignature;
     QString mOauthVersion;

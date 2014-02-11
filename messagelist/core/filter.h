@@ -58,14 +58,14 @@ public:
   /**
    * Returns the currently set status mask
    */
-  Akonadi::MessageStatus status() const
+  QList<Akonadi::MessageStatus>  status() const
    { return mStatus; }
 
   /**
    * Sets the status mask for this filter.
    */
-  void setStatus( const Akonadi::MessageStatus &status )
-   { mStatus = status; }
+  void setStatus( const QList<Akonadi::MessageStatus> &lstStatus )
+   { mStatus = lstStatus; }
 
   /**
    * Sets the current folder of this filter.
@@ -110,11 +110,12 @@ Q_SIGNALS:
   void finished();
 
 private:
-  Akonadi::MessageStatus mStatus;    ///< Messages must match this status, if non 0
+  QList<Akonadi::MessageStatus> mStatus;    ///< Messages must match theses status, if non 0
   QString mSearchString;             ///< Messages must match this search string, if not empty
   QString mTagId;                    ///< Messages must have this tag, if not empty
   KUrl mCurrentFolder;
   QSet<qint64> mMatchingItemIds;
+  QuickSearchLine::SearchOptions mOptions;
 };
 
 } // namespace Core

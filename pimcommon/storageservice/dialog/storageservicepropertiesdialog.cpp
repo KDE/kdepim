@@ -23,16 +23,18 @@
 #include <KLocalizedString>
 #include <KSharedConfig>
 
+#include <QGridLayout>
 #include <QLabel>
 
-StorageServicePropertiesDialog::StorageServicePropertiesDialog(QWidget *parent)
+using namespace PimCommon;
+
+StorageServicePropertiesDialog::StorageServicePropertiesDialog(const QMap<QString, QString> &information, QWidget *parent)
     : KDialog(parent)
 {
     setCaption(i18n("Properties"));
 
     setButtons( Close );
-    mInformation = new QLabel;
-    setMainWidget(mInformation);
+    createInformationWidget(information);
     readConfig();
 }
 
@@ -41,9 +43,33 @@ StorageServicePropertiesDialog::~StorageServicePropertiesDialog()
     writeConfig();
 }
 
-void StorageServicePropertiesDialog::setInformation(const QString &info)
+void StorageServicePropertiesDialog::createInformationWidget(const QMap<QString, QString> &information)
 {
-    mInformation->setText(info);
+    QWidget *parent = new QWidget;
+    QGridLayout *grid = new QGridLayout;
+    parent->setLayout(grid);
+
+    QMapIterator<QString, QString> i(information);
+    int row = 0;
+    while (i.hasNext()) {
+        i.next();
+        QLabel *type = new QLabel;
+        QFont font = type->font();
+        font.setBold(true);
+        type->setFont(font);
+        type->setAlignment(Qt::AlignRight);
+        type->setText(i.key());
+        grid->addWidget(type, row, 0);
+
+        QLabel *info = new QLabel;
+        info->setTextInteractionFlags(Qt::TextBrowserInteraction);
+        info->setAlignment(Qt::AlignLeft);
+        info->setText(i.value());
+        grid->addWidget(info, row, 1);
+
+        ++row;
+    }
+    setMainWidget(parent);
 }
 
 void StorageServicePropertiesDialog::readConfig()

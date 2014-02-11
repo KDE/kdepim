@@ -35,6 +35,7 @@
 
 #include <QPointer>
 #include <QLabel>
+#include <QCloseEvent>
 
 SieveEditorMainWindow::SieveEditorMainWindow()
     : KXmlGuiWindow(),
@@ -101,7 +102,7 @@ void SieveEditorMainWindow::setupActions()
 {
     KActionCollection* ac=actionCollection();
 
-    KStandardAction::quit(this, SLOT(slotQuitApp()), ac );
+    KStandardAction::quit(this, SLOT(close()), ac );
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
     mSaveScript = KStandardAction::save( this, SLOT(slotSaveScript()), ac );
 
@@ -159,10 +160,14 @@ void SieveEditorMainWindow::slotDeleteScript()
     mMainWidget->deleteScript();
 }
 
-void SieveEditorMainWindow::slotQuitApp()
+void SieveEditorMainWindow::closeEvent(QCloseEvent *e)
 {
-    if (!mMainWidget->needToSaveScript())
-        close();
+    if (mMainWidget->needToSaveScript()) {
+        e->ignore();
+        return;
+    } else {
+        e->accept();
+    }
 }
 
 void SieveEditorMainWindow::slotConfigure()

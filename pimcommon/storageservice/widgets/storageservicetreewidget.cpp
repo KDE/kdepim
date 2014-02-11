@@ -20,6 +20,7 @@
 
 #include "storageservicetreewidget.h"
 #include "storageservice/storageserviceabstract.h"
+#include "storageservice/dialog/storageservicepropertiesdialog.h"
 
 #include <KIcon>
 #include <KLocalizedString>
@@ -65,10 +66,24 @@ void StorageServiceTreeWidget::slotMoveUp()
     QTimer::singleShot(0, this, SLOT(refreshList()));
 }
 
-void StorageServiceTreeWidget::createMenuActions(KMenu *menu)
+void StorageServiceTreeWidget::createUpAction(KMenu *menu)
 {
     menu->addAction( KIcon(QLatin1String("go-up")),  i18n("Up"), this, SLOT(slotMoveUp()));
-    menu->addSeparator();
+}
+
+void StorageServiceTreeWidget::createPropertiesAction(KMenu *menu)
+{
+    menu->addAction(KIcon(QLatin1String("document-properties")), i18n("Properties"), this, SLOT(slotProperties()));
+}
+
+void StorageServiceTreeWidget::createMenuActions(KMenu *menu)
+{
+    createUpAction(menu);
+    const PimCommon::StorageServiceTreeWidget::ItemType type = StorageServiceTreeWidget::itemTypeSelected();
+    if ((type == StorageServiceTreeWidget::File) || (type == StorageServiceTreeWidget::Folder)) {
+        menu->addSeparator();
+        createPropertiesAction(menu);
+    }
 }
 
 void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
@@ -218,6 +233,15 @@ void StorageServiceTreeWidget::slotItemDoubleClicked(QTreeWidgetItem *item, int 
     }
 }
 
+void StorageServiceTreeWidget::slotProperties()
+{
+    const QMap<QString, QString> information = mStorageService->itemInformation(itemInformationSelected());
+    if (!information.isEmpty()) {
+        QPointer<StorageServicePropertiesDialog> dlg = new StorageServicePropertiesDialog(information, this);
+        dlg->exec();
+        delete dlg;
+    }
+}
 
 StorageServiceTreeWidgetItem::StorageServiceTreeWidgetItem(StorageServiceTreeWidget *parent)
     : QTreeWidgetItem(parent)

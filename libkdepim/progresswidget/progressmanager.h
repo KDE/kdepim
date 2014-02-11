@@ -153,10 +153,7 @@ public:
     /**
      * Recalculate progress according to total/completed items and update.
      */
-    void updateProgress()
-    {
-        setProgress( mTotal? mCompleted * 100 / mTotal : 0 );
-    }
+    void updateProgress();
 
     void addChild( ProgressItem *kiddo );
     void removeChild( ProgressItem *kiddo );

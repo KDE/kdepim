@@ -609,7 +609,7 @@ QList<Akonadi::Item> Widget::currentThreadAsMessageList() const
 }
 
 
-Akonadi::MessageStatus Widget::currentFilterStatus() const
+QList<Akonadi::MessageStatus> Widget::currentFilterStatus() const
 {
   return view()->currentFilterStatus();
 }

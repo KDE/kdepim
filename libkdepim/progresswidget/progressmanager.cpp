@@ -109,6 +109,11 @@ void ProgressItem::cancel()
     emit progressItemCanceled( this );
 }
 
+void ProgressItem::updateProgress()
+{
+    setProgress( mTotal? mCompleted * 100 / mTotal : 0 );
+}
+
 void ProgressItem::setProgress( unsigned int v )
 {
     mProgress = v;

@@ -56,7 +56,7 @@ public:
     void storageServiceMoveFile(const QString &source, const QString &destination);
     void storageServiceCopyFile(const QString &source, const QString &destination);
     void storageServiceCopyFolder(const QString &source, const QString &destination);
-    QString itemInformation(const QVariantMap &variantMap);
+    QMap<QString, QString> itemInformation(const QVariantMap &variantMap);
     QString storageServiceName() const;
     QString fileIdentifier(const QVariantMap &variantMap);
     QString fileShareRoot(const QVariantMap &variantMap);
@@ -66,7 +66,7 @@ public:
     QString fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder);
 
 private slots:
-    void slotAuthorizationDone(const QString &refreshToken, const QString &token, const QDateTime &expireTime);
+    void slotAuthorizationDone(const QString &refreshToken, const QString &token, const QDateTime &expireTime, const QString &accountName);
     void slotAuthorizationFailed(const QString &errorMessage);
 
 private:

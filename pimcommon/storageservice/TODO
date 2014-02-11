@@ -8,8 +8,8 @@ N == not possible
 DropBox:          X               X             X                X             X         X           X           X           X             X           X               X            X            X                     X                   X
 YouSendIt:        X               X             X                X                                   X                                                 I                            I            I                     X                   X
 WebDav:           X               X             X                X             X                     X           X           X             X           X                            X            X                     X                   X
-GDrive:           X                                                                                  X                                                                                                                                     X 
-Box:              X               X             X                X             I         I           X           X           X                         I               X            X            X                     X                   X
+GDrive:           X                                              X             X                     X                                                                                                                                     X 
+Box:              X               X             X                X             I         I           X           X           X             I           I               X            X            X                     X                   X
 Hubic:            I
 UbuntuOne:        X                                                                                                                             X                                                                      X                    X
 
@@ -17,8 +17,6 @@ UbuntuOne:        X                                                             
 ------------------------------
 TODO:
 -----
-- Move all config to kwallet ?
 - Remove file when we cancel download.
 - Remove file when we cancel upload.
 - Select multi element ?
-- Improve progressbar 

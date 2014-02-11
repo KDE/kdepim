@@ -89,11 +89,14 @@ set(libmessageviewer_SRCS
   viewer/viewer_p.cpp
   viewer/messagedisplayformatattribute.cpp
   viewer/urlhandlermanager.cpp
+  
   widgets/configurewidget.cpp
   widgets/printingsettings.cpp
   widgets/htmlstatusbar.cpp
   widgets/vcardviewer.cpp
   widgets/invitationsettings.cpp
+  widgets/todoedit.cpp
+
   htmlwriter/filehtmlwriter.cpp
   findbar/findbarbase.cpp
   findbar/findbarmailwebview.cpp

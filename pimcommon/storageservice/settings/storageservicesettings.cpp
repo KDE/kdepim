@@ -64,6 +64,9 @@ KWallet::Wallet *StorageServiceSettings::wallet()
 {
     if (!mWallet) {
         mWallet = KWallet::Wallet::openWallet( KWallet::Wallet::LocalWallet(), 0 );
+        if (mWallet) {
+            connect(mWallet, SIGNAL(walletClosed()), this, SLOT(slotWalletClosed()));
+        }
     }
     return mWallet;
 }
@@ -82,6 +85,13 @@ bool StorageServiceSettings::createDefaultFolder()
         return false;
     }
 }
+
+void StorageServiceSettings::slotWalletClosed()
+{
+    delete mWallet;
+    mWallet = 0;
+}
+
 
 }
 #include "moc_storageservicesettings.cpp"

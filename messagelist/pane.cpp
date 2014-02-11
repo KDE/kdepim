@@ -896,11 +896,11 @@ void Pane::markMessageItemsAsAboutToBeRemoved( MessageList::Core::MessageItemSet
   }
 }
 
-Akonadi::MessageStatus Pane::currentFilterStatus() const
+QList<Akonadi::MessageStatus> Pane::currentFilterStatus() const
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
   if ( w == 0 ) {
-    return Akonadi::MessageStatus();
+    return QList<Akonadi::MessageStatus>();
   }
   return w->currentFilterStatus();
 }

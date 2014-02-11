@@ -20,13 +20,15 @@
 #include "storageservice/storageservicemanager.h"
 #include "ubuntuonejob.h"
 
+#include "storageservice/settings/storageservicesettings.h"
+
+#include <kwallet.h>
+
 #include <qjson/parser.h>
 
 #include <KDateTime>
 #include <KLocalizedString>
-#include <KConfig>
 #include <KGlobal>
-#include <KConfigGroup>
 #include <KLocale>
 
 #include <QDebug>
@@ -46,13 +48,28 @@ UbuntuoneStorageService::~UbuntuoneStorageService()
 
 void UbuntuoneStorageService::readConfig()
 {
-    KConfig config(StorageServiceManager::kconfigName());
-    KConfigGroup grp(&config, "Ubuntu One Settings");
-
-    mCustomerSecret = grp.readEntry("Customer Secret");
-    mToken = grp.readEntry("Token");
-    mCustomerKey = grp.readEntry("Customer Key");
-    mTokenSecret = grp.readEntry("Token Secret");
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet) {
+            QStringList lst = wallet->entryList();
+            if (lst.contains(storageServiceName())) {
+                QMap<QString, QString> map;
+                wallet->readMap( storageServiceName(), map );
+                if (map.contains(QLatin1String("Customer Secret"))) {
+                    mCustomerSecret = map.value(QLatin1String("Customer Secret"));
+                }
+                if (map.contains(QLatin1String("Token"))) {
+                    mToken = map.value(QLatin1String("Token"));
+                }
+                if (map.contains(QLatin1String("Customer Key"))) {
+                    mCustomerKey = map.value(QLatin1String("Customer Key"));
+                }
+                if (map.contains(QLatin1String("Token Secret"))) {
+                    mTokenSecret = map.value(QLatin1String("Token Secret"));
+                }
+            }
+        }
+    }
 }
 
 void UbuntuoneStorageService::slotAuthorizationDone(const QString &customerSecret, const QString &token, const QString &customerKey, const QString &tokenSecret)
@@ -62,24 +79,29 @@ void UbuntuoneStorageService::slotAuthorizationDone(const QString &customerSecre
     mCustomerKey = customerKey;
     mTokenSecret = tokenSecret;
 
-    KConfig config(StorageServiceManager::kconfigName());
-    KConfigGroup grp(&config, "Ubuntu One Settings");
-    grp.writeEntry("Customer Secret", mCustomerSecret);
-    grp.writeEntry("Token", mToken);
-    grp.writeEntry("Customer Key", mCustomerKey);
-    grp.writeEntry("Token Secret", mTokenSecret);
-
-    grp.sync();
-    KGlobal::config()->sync();
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        const QString walletEntry = storageServiceName();
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet) {
+            QMap<QString, QString> map;
+            map[QLatin1String( "Customer Secret" )] = mCustomerSecret;
+            map[QLatin1String( "Token" )] = mToken;
+            map[QLatin1String( "Customer Key" )] = mCustomerKey;
+            map[QLatin1String( "Token Secret" )] = mTokenSecret;
+            wallet->writeMap( walletEntry, map);
+        }
+    }
     emitAuthentificationDone();
 }
 
 void UbuntuoneStorageService::removeConfig()
 {
-    KConfig config(StorageServiceManager::kconfigName());
-    KConfigGroup grp(&config, "Ubuntu One Settings");
-    grp.deleteGroup();
-    grp.sync();
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        const QString walletEntry = storageServiceName();
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet)
+            wallet->removeEntry(walletEntry);
+    }
 }
 
 void UbuntuoneStorageService::storageServiceauthentication()
@@ -442,20 +464,35 @@ QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWi
     return parentFolder;
 }
 
-QString UbuntuoneStorageService::itemInformation(const QVariantMap &variantMap)
+QMap<QString, QString> UbuntuoneStorageService::itemInformation(const QVariantMap &variantMap)
 {
     qDebug()<<" variantMap "<<variantMap;
-    QString information;
-    if (variantMap.contains(QLatin1String("is_public"))) {
-        const bool value = variantMap.value(QLatin1String("is_public")).toString() == QLatin1String("true");
-        information = i18n("File is public: %1", value ? i18n("Yes") : i18n("No"));
+    QMap<QString, QString> information;
+    if (variantMap.contains(QLatin1String("kind"))) {
+        information.insert(i18n("Type:"), variantMap.value(QLatin1String("kind")).toString() == QLatin1String("file") ? i18n("File") : i18n("Folder"));
     }
     if (variantMap.contains(QLatin1String("volume_path"))) {
-
-        information += QLatin1Char('\n') + i18n("Volume path: %1", variantMap.value(QLatin1String("volume_path")).toString());
+        information.insert(i18n("Volume path:"), variantMap.value(QLatin1String("volume_path")).toString());
     }
     if (variantMap.contains(QLatin1String("size"))) {
-        information += QLatin1Char('\n') + i18n("Size: %1", KGlobal::locale()->formatByteSize(variantMap.value(QLatin1String("size")).toULongLong()));
+        information.insert(i18n("Size:"), KGlobal::locale()->formatByteSize(variantMap.value(QLatin1String("size")).toULongLong()));
+    }
+    if (variantMap.contains(QLatin1String("when_created"))) {
+        const KDateTime t = KDateTime(QDateTime::fromString(variantMap.value(QLatin1String("when_created")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ")));
+        information.insert(i18n("Created:"), KGlobal::locale()->formatDateTime(t));
+    }
+    if (variantMap.contains(QLatin1String("when_changed"))) {
+        const KDateTime t = KDateTime(QDateTime::fromString(variantMap.value(QLatin1String("when_changed")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ")));
+        information.insert(i18n("Last Changed:"), KGlobal::locale()->formatDateTime(t));
+    }
+    if (variantMap.contains(QLatin1String("is_public"))) {
+        const bool value = variantMap.value(QLatin1String("is_public")).toString() == QLatin1String("true");
+        information.insert(i18n("File is public:"), (value ? i18n("Yes") : i18n("No")));
+        if (variantMap.contains(QLatin1String("public_url"))) {
+            const QString publicurl = variantMap.value(QLatin1String("public_url")).toString();
+            if (!publicurl.isEmpty())
+                information.insert(i18n("Public link:"), publicurl);
+        }
     }
     return information;
 }

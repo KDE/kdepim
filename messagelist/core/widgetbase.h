@@ -99,7 +99,7 @@ public:
   /**
    * Returns the Akonadi::MessageStatus in the current quicksearch field.
    */
-  Akonadi::MessageStatus currentFilterStatus() const;
+  QList<Akonadi::MessageStatus> currentFilterStatus() const;
 
   /**
    * Returns the search term in the current quicksearch field.
@@ -271,6 +271,7 @@ protected slots:
    * Handles header section clicks switching the Aggregation MessageSorting on-the-fly.
    */
   void slotViewHeaderSectionClicked( int logicalIndex );
+  void slotStatusButtonsClicked();
 
 private:
   class Private;

@@ -63,7 +63,6 @@ private Q_SLOTS:
     void slotMoveFile();
     void slotPasteFolder();
     void slotPasteFile();
-    void slotProperties();
     void slotFileDoubleClicked();
 private:
     bool checkName(const QString &name);

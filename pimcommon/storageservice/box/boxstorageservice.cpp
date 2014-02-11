@@ -20,13 +20,15 @@
 #include "storageservice/storageservicemanager.h"
 #include "boxutil.h"
 #include "boxjob.h"
+#include "storageservice/settings/storageservicesettings.h"
 
 #include <qjson/parser.h>
 
+#include <kwallet.h>
+
 #include <KLocalizedString>
-#include <KConfig>
+#include <KLocale>
 #include <KGlobal>
-#include <KConfigGroup>
 
 #include <QPointer>
 #include <QDebug>
@@ -45,23 +47,36 @@ BoxStorageService::~BoxStorageService()
 
 void BoxStorageService::readConfig()
 {
-    KConfig config(StorageServiceManager::kconfigName());
-    KConfigGroup grp(&config, "Box Settings");
-    mRefreshToken = grp.readEntry("Refresh Token");
-    mToken = grp.readEntry("Token");
-    if (grp.hasKey("Expire Time")) {
-        mExpireDateTime = grp.readEntry("Expire Time", QDateTime::currentDateTime());
-    } else {
-        mExpireDateTime = QDateTime();
+    mExpireDateTime = QDateTime();
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet) {
+            QStringList lst = wallet->entryList();
+            if (lst.contains(storageServiceName())) {
+                QMap<QString, QString> map;
+                wallet->readMap( storageServiceName(), map );
+                if (map.contains(QLatin1String("Refresh Token"))) {
+                    mRefreshToken = map.value(QLatin1String("Refresh Token"));
+                }
+                if (map.contains(QLatin1String("Token"))) {
+                    mToken = map.value(QLatin1String("Token"));
+                }
+                if (map.contains(QLatin1String("Expire Time"))) {
+                    mExpireDateTime = QDateTime::fromString(map.value(QLatin1String("Expire Time")));
+                }
+            }
+        }
     }
 }
 
 void BoxStorageService::removeConfig()
 {
-    KConfig config(StorageServiceManager::kconfigName());
-    KConfigGroup grp(&config, "Box Settings");
-    grp.deleteGroup();
-    grp.sync();
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        const QString walletEntry = storageServiceName();
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet)
+            wallet->removeEntry(walletEntry);
+    }
 }
 
 void BoxStorageService::storageServiceauthentication()
@@ -85,12 +100,18 @@ void BoxStorageService::slotAuthorizationDone(const QString &refreshToken, const
     mRefreshToken = refreshToken;
     mToken = token;
     mExpireDateTime = QDateTime::currentDateTime().addSecs(expireTime);
-    KConfig config(StorageServiceManager::kconfigName());
-    KConfigGroup grp(&config, "Box Settings");
-    grp.writeEntry("Refresh Token", mRefreshToken);
-    grp.writeEntry("Token", mToken);
-    grp.writeEntry("Expire Time", mExpireDateTime);
-    grp.sync();
+
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        const QString walletEntry = storageServiceName();
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet) {
+            QMap<QString, QString> map;
+            map[QLatin1String( "Refresh Token" )] = mRefreshToken;
+            map[QLatin1String( "Token" )] = mToken;
+            map[QLatin1String( "Expire Time" )] = mExpireDateTime.toString();
+            wallet->writeMap( walletEntry, map);
+        }
+    }
     emitAuthentificationDone();
 }
 
@@ -527,10 +548,29 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
     return parentId;
 }
 
-QString BoxStorageService::itemInformation(const QVariantMap &variantMap)
+QMap<QString, QString> BoxStorageService::itemInformation(const QVariantMap &variantMap)
 {
     qDebug()<<" variantMap" <<variantMap;
-    return QString();
+    QMap<QString, QString> information;
+    if (variantMap.contains(QLatin1String("type"))) {
+        const QString type = variantMap.value(QLatin1String("type")).toString();
+        information.insert(i18n("Type:"), type == QLatin1String("folder") ? i18n("Folder") : i18n("File"));
+    }
+    if (variantMap.contains(QLatin1String("name"))) {
+        information.insert(i18n("Name:"), variantMap.value(QLatin1String("name")).toString());
+    }
+    if (variantMap.contains(QLatin1String("size"))) {
+        information.insert(i18n("Size:"), KGlobal::locale()->formatByteSize(variantMap.value(QLatin1String("size")).toULongLong()));
+    }
+    if (variantMap.contains(QLatin1String("created_at"))) {
+        const QString tmp = variantMap.value(QLatin1String("created_at")).toString();
+        information.insert(i18n("Created"), KGlobal::locale()->formatDateTime(PimCommon::BoxUtil::convertToDateTime( tmp )));
+    }
+    if (variantMap.contains(QLatin1String("modified_at"))) {
+        const QString tmp = variantMap.value(QLatin1String("modified_at")).toString();
+        information.insert(i18n("Last Modified:"), KGlobal::locale()->formatDateTime(PimCommon::BoxUtil::convertToDateTime( tmp )));
+    }
+    return information;
 }
 
 QString BoxStorageService::fileIdentifier(const QVariantMap &variantMap)

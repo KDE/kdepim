@@ -5,6 +5,7 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/pimcommon/
+  ${CMAKE_SOURCE_DIR}/libkdepim/
 )
 
 set( storageservicemanager_kcfg_SRCS settings/storageservicemanagerglobalconfig.kcfgc )
@@ -23,7 +24,6 @@ set(storageservicemanager_SRCS
   storageservicewarning.cpp
   storageservicelogdialog.cpp
   storageserviceaccountinfodialog.cpp
-  storageservicepropertiesdialog.cpp
   storageservicenavigationbar.cpp
 )
 
@@ -32,7 +32,8 @@ TARGET_LINK_LIBRARIES(storageservicemanager
                        ${KDE4_KDEUI_LIBS} 
                        ${KDE4_KIO_LIBS}
 		       ${KDE4_SOLID_LIBS}
-                       pimcommon 
+                       pimcommon
+                       kdepim
 )
 
 install(TARGETS storageservicemanager ${INSTALL_TARGETS_DEFAULT_ARGS})

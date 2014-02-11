@@ -19,13 +19,14 @@
 #include "storageservice/widgets/storageservicetreewidget.h"
 #include "storageservice/storageservicemanager.h"
 #include "gdrivejob.h"
+#include "storageservice/settings/storageservicesettings.h"
+
+#include <kwallet.h>
 
 #include <libkgapi2/drive/file.h>
 
 #include <KLocalizedString>
-#include <KConfig>
 #include <KGlobal>
-#include <KConfigGroup>
 
 #include <QPointer>
 #include <QDebug>
@@ -35,11 +36,6 @@ using namespace PimCommon;
 GDriveStorageService::GDriveStorageService(QObject *parent)
     : PimCommon::StorageServiceAbstract(parent)
 {
-    mAccount = KGAPI2::AccountPtr(new KGAPI2::Account);
-    mAccount->addScope( QUrl( QLatin1String("https://www.googleapis.com/auth/drive") ) );
-    mAccount->addScope( QUrl( QLatin1String("https://www.googleapis.com/auth/drive.file")) );
-    mAccount->addScope( QUrl( QLatin1String("https://www.googleapis.com/auth/drive.metadata.readonly" )) );
-    mAccount->addScope( QUrl( QLatin1String("https://www.googleapis.com/auth/drive.readonly") ) );
     readConfig();
 }
 
@@ -57,30 +53,62 @@ bool GDriveStorageService::needToRefreshToken() const
 
 void GDriveStorageService::readConfig()
 {
-    KConfig config(StorageServiceManager::kconfigName());
-    KConfigGroup grp(&config, "GoogleDrive Settings");
-    mAccount->setRefreshToken(grp.readEntry("Refresh Token"));
-    mAccount->setAccessToken(grp.readEntry("Token"));
-    if (grp.hasKey("Expire Time")) {
-        mExpireDateTime = grp.readEntry("Expire Time", QDateTime::currentDateTime());
+    mExpireDateTime = QDateTime();
+    QString accountName;
+    QString refreshTokenStr;
+    QString accessTokenStr;
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet) {
+            QStringList lst = wallet->entryList();
+            if (lst.contains(storageServiceName())) {
+                QMap<QString, QString> map;
+                wallet->readMap( storageServiceName(), map );
+                if (map.contains(QLatin1String("Account Name"))) {
+                    accountName = map.value(QLatin1String("Account Name"));
+                }
+                if (map.contains(QLatin1String("Refresh Token"))) {
+                    refreshTokenStr = map.value(QLatin1String("Refresh Token"));
+                }
+                if (map.contains(QLatin1String("Token"))) {
+                    accessTokenStr = map.value(QLatin1String("Token"));
+                }
+                if (map.contains(QLatin1String("Expire Time"))) {
+                    mExpireDateTime = QDateTime::fromString(map.value(QLatin1String("Expire Time")));
+                }
+            }
+        }
+    }
+    QList<QUrl> scopeUrls;
+
+    scopeUrls<<QUrl( QLatin1String("https://www.googleapis.com/auth/drive") );
+    scopeUrls<<QUrl( QLatin1String("https://www.googleapis.com/auth/drive.file"));
+    scopeUrls<<QUrl( QLatin1String("https://www.googleapis.com/auth/drive.metadata.readonly" ));
+    scopeUrls<<QUrl( QLatin1String("https://www.googleapis.com/auth/drive.readonly") );
+
+    if (accountName.isEmpty() || refreshTokenStr.isEmpty() || accessTokenStr.isEmpty()) {
+        mAccount = KGAPI2::AccountPtr(new KGAPI2::Account());
+        mAccount->setScopes(scopeUrls);
     } else {
-        mExpireDateTime = QDateTime();
+        mAccount = KGAPI2::AccountPtr(new KGAPI2::Account(accountName, accessTokenStr, refreshTokenStr, scopeUrls));
     }
 }
 
 void GDriveStorageService::removeConfig()
 {
-    KConfig config(StorageServiceManager::kconfigName());
-    KConfigGroup grp(&config, "GoogleDrive Settings");
-    grp.deleteGroup();
-    config.sync();
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        const QString walletEntry = storageServiceName();
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet)
+            wallet->removeEntry(walletEntry);
+    }
 }
 
 void GDriveStorageService::refreshToken()
 {
     GDriveJob *job = new GDriveJob(this);
     job->initializeToken(mAccount);
-    connect(job, SIGNAL(authorizationDone(QString,QString,QDateTime)), this, SLOT(slotAuthorizationDone(QString,QString,QDateTime)));
+    connect(job, SIGNAL(authorizationDone(QString,QString,QDateTime,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QDateTime,QString)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
     connect(job, SIGNAL(actionFailed(QString)), this, SLOT(slotActionFailed(QString)));
     job->refreshToken();
@@ -90,7 +118,7 @@ void GDriveStorageService::storageServiceauthentication()
 {
     GDriveJob *job = new GDriveJob(this);
     job->initializeToken(mAccount);
-    connect(job, SIGNAL(authorizationDone(QString,QString,QDateTime)), this, SLOT(slotAuthorizationDone(QString,QString,QDateTime)));
+    connect(job, SIGNAL(authorizationDone(QString,QString,QDateTime,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QDateTime,QString)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
     job->requestTokenAccess();
 }
@@ -102,17 +130,24 @@ void GDriveStorageService::slotAuthorizationFailed(const QString &errorMessage)
     emitAuthentificationFailder(errorMessage);
 }
 
-void GDriveStorageService::slotAuthorizationDone(const QString &refreshToken, const QString &token, const QDateTime &expireTime)
+void GDriveStorageService::slotAuthorizationDone(const QString &refreshToken, const QString &token, const QDateTime &expireTime, const QString &accountName)
 {
     mAccount->setRefreshToken(refreshToken);
     mAccount->setAccessToken(token);
     mExpireDateTime = expireTime;
-    KConfig config(StorageServiceManager::kconfigName());
-    KConfigGroup grp(&config, "GoogleDrive Settings");
-    grp.writeEntry("Refresh Token", refreshToken);
-    grp.writeEntry("Token", token);
-    grp.writeEntry("Expire Time", mExpireDateTime);
-    grp.sync();
+
+    if (StorageServiceSettings::self()->createDefaultFolder()) {
+        const QString walletEntry = storageServiceName();
+        KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
+        if (wallet) {
+            QMap<QString, QString> map;
+            map[QLatin1String( "Account Name" )] = accountName;
+            map[QLatin1String( "Token" )] = token;
+            map[QLatin1String( "Refresh Token" )] = refreshToken;
+            map[QLatin1String( "Expire Time" )] = mExpireDateTime.toString();
+            wallet->writeMap( walletEntry, map);
+        }
+    }
     emitAuthentificationDone();
 }
 
@@ -311,9 +346,9 @@ void GDriveStorageService::storageServiceCopyFolder(const QString &source, const
     }
 }
 
-QString GDriveStorageService::itemInformation(const QVariantMap &variantMap)
+QMap<QString, QString> GDriveStorageService::itemInformation(const QVariantMap &variantMap)
 {
-    return QString();
+    return QMap<QString, QString>();
 }
 
 void GDriveStorageService::storageServicelistFolder(const QString &folder)

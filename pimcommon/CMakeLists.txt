@@ -34,6 +34,7 @@ set(libpimcommon_storageservice_SRCS
   ${libpimcommon_storageservice_gdrive}
   storageservice/storageserviceabstract.cpp
   storageservice/storageservicemanager.cpp
+  storageservice/storageserviceprogressmanager.cpp
 
   storageservice/job/storageserviceabstractjob.cpp
 
@@ -79,12 +80,12 @@ set(libpimcommon_storageservice_SRCS
   storageservice/dialog/storageservicechecknamedialog.cpp
   storageservice/dialog/storageserviceconfiguredialog.cpp
   storageservice/dialog/storageservicedeletedialog.cpp
+  storageservice/dialog/storageservicepropertiesdialog.cpp
 
   storageservice/widgets/storageserviceconfigurewidget.cpp
   storageservice/widgets/storageservicetreewidget.cpp
   storageservice/widgets/storageserviceprogresswidget.cpp
   storageservice/widgets/storageserviceprogressindicator.cpp
-  storageservice/widgets/storageserviceprogressdialog.cpp
  
   storageservice/settings/storageservicesettings.cpp 
  

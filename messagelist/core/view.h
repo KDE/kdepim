@@ -353,7 +353,7 @@ public:
   /**
    * Returns the Akonadi::MessageStatus in the current quicksearch field.
    */
-  Akonadi::MessageStatus currentFilterStatus() const;
+  QList<Akonadi::MessageStatus> currentFilterStatus() const;
 
   /**
    * Returns the search term in the current quicksearch field.

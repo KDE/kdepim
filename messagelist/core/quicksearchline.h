@@ -22,12 +22,17 @@
 #define QUICKSEARCHLINE_H
 
 #include <QWidget>
+#include "messagelist_export.h"
+#include <akonadi/kmime/messagestatus.h>
+
 class KLineEdit;
 class KComboBox;
 class QToolButton;
 class QPushButton;
 class QButtonGroup;
-class QuickSearchLine : public QWidget
+namespace MessageList {
+namespace Core {
+class MESSAGELIST_EXPORT QuickSearchLine : public QWidget
 {
     Q_OBJECT
 public:
@@ -49,17 +54,19 @@ public:
 
     void focusQuickSearch();
 
-    KComboBox *statusFilterComboBox() const;
+    KComboBox *tagFilterComboBox() const;
     KLineEdit *searchEdit() const;
     QToolButton *openFullSearchButton() const;
     QToolButton *lockSearch() const;
-    int firstTagInComboIndex() const;
+    void resetFilter();
+    QList<Akonadi::MessageStatus> status() const;
 
 Q_SIGNALS:
     void fullSearchRequest();
     void clearButtonClicked();
     void searchEditTextEdited(const QString &);
-    void searchOptionChanged(SearchOptions searchOption);
+    void searchOptionChanged();
+    void statusButtonsClicked();
 
 private slots:
     void slotLockSearchClicked(bool locked);
@@ -67,9 +74,11 @@ private slots:
     void slotSearchEditTextEdited(const QString &text);
     void slotClearButtonClicked();
 private:
-    void defaultFilterStatus();
+    void initializeStatusSearchButton(QLayout *quickSearchButtonLayout);
+    void createQuickSearchButton(const QIcon &icon, const QString &text, int value, QLayout *quickSearchButtonLayout);
+    QList<QToolButton *> mListStatusButton;
     KLineEdit *mSearchEdit;
-    KComboBox *mStatusFilterCombo;
+    KComboBox *mTagFilterCombo;
     QToolButton *mOpenFullSearchButton;
     QToolButton *mLockSearch;
     QPushButton *mSearchAgainstBody;
@@ -77,8 +86,9 @@ private:
     QPushButton *mSearchAgainstFrom;
     QPushButton *mSearchAgainstBcc;
     QWidget *mExtraOption;
-    QButtonGroup *mButtonGroup;
-    int mFirstTagInComboIndex;
+    QButtonGroup *mButtonStatusGroup;
+    QButtonGroup *mButtonSearchAgainstGroup;
 };
-
+}
+}
 #endif // QUICKSEARCHLINE_H

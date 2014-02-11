@@ -17,29 +17,25 @@
   02110-1301, USA.
 
 */
-#ifndef SieveServerSettings_H
-#define SieveServerSettings_H
+
+
+#ifndef QUICKSEARCHLINETEST_H
+#define QUICKSEARCHLINETEST_H
 
 #include <QObject>
-namespace KWallet {
-class Wallet;
-}
-class SieveServerSettings : public QObject
+
+class QuickSearchLineTest : public QObject
 {
     Q_OBJECT
 public:
-    ~SieveServerSettings();
-    static SieveServerSettings *self();
-
-    KWallet::Wallet *wallet();
-
-private slots:
-    void slotWalletClosed();
-
-private:
-    explicit SieveServerSettings(QObject *parent=0);
-    friend class SieveServerSettingsPrivate;
-    KWallet::Wallet *mWallet;
+    QuickSearchLineTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValueOnCreation();
+    void shouldEmitTextChanged();
+    void shouldShowExtraOptionWidget();
+    void shouldHideExtraOptionWidgetWhenClearLineEdit();
+    void shouldHideExtraOptionWidgetWhenResetFilter();
+    void shouldEmitSearchOptionChanged();
 };
 
-#endif // SieveServerSettings_H
+#endif // QUICKSEARCHLINETEST_H

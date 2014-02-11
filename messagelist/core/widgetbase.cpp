@@ -137,8 +137,9 @@ Widget::Widget( QWidget *pParent )
   connect(d->quickSearchLine, SIGNAL(clearButtonClicked()), SLOT(searchEditClearButtonClicked()) );
   connect(d->quickSearchLine, SIGNAL(fullSearchRequest()), this, SIGNAL(fullSearchRequest()) );
 
-  connect( d->quickSearchLine, SIGNAL(searchEditTextEdited(QString)), SLOT(searchEditTextEdited()) );
-  connect( d->quickSearchLine, SIGNAL(searchOptionChanged(SearchOptions)), SLOT(searchEditTextEdited()) );
+  connect(d->quickSearchLine, SIGNAL(searchEditTextEdited(QString)), SLOT(searchEditTextEdited()) );
+  connect(d->quickSearchLine, SIGNAL(searchOptionChanged()), SLOT(searchEditTextEdited()) );
+  connect(d->quickSearchLine, SIGNAL(statusButtonsClicked()), SLOT(slotStatusButtonsClicked()));
   g->addWidget( d->quickSearchLine, 0 );
 
   d->mView = new View( this );
@@ -170,7 +171,7 @@ Widget::~Widget()
 void Widget::changeQuicksearchVisibility(bool show)
 {
   KLineEdit * const lineEdit = d->quickSearchLine->searchEdit();
-  QWidget * const comboBox = d->quickSearchLine->statusFilterComboBox();
+  QWidget * const comboBox = d->quickSearchLine->tagFilterComboBox();
   QWidget * const fullSearchButton = d->quickSearchLine->openFullSearchButton();
   if ( !show ) {
     //if we hide it we do not want to apply the filter,
@@ -197,20 +198,19 @@ void Widget::changeQuicksearchVisibility(bool show)
 
 void Widget::populateStatusFilterCombo()
 {
-  KComboBox *statusFilterComboBox = d->quickSearchLine->statusFilterComboBox();
-  const int currentIndex = (statusFilterComboBox->currentIndex() != -1) ?  statusFilterComboBox->currentIndex() : 0;
-  disconnect( statusFilterComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(statusSelected(int)) );
+  KComboBox *tagFilterComboBox = d->quickSearchLine->tagFilterComboBox();
+  const int currentIndex = (tagFilterComboBox->currentIndex() != -1) ?  tagFilterComboBox->currentIndex() : 0;
+  disconnect( tagFilterComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(statusSelected(int)) );
 
-  for (int i = d->quickSearchLine->firstTagInComboIndex(); i < d->quickSearchLine->statusFilterComboBox()->count(); ++i) {
-      statusFilterComboBox->removeItem(i);
-  }
+  tagFilterComboBox->clear();
 
-  fillMessageTagCombo( d->quickSearchLine->statusFilterComboBox() );
+  fillMessageTagCombo( d->quickSearchLine->tagFilterComboBox() );
+  d->quickSearchLine->tagFilterComboBox()->setVisible(d->quickSearchLine->tagFilterComboBox()->count());
 
-  connect( d->quickSearchLine->statusFilterComboBox(), SIGNAL(currentIndexChanged(int)),
+  connect( d->quickSearchLine->tagFilterComboBox(), SIGNAL(currentIndexChanged(int)),
            this, SLOT(statusSelected(int)) );
 
-  d->quickSearchLine->statusFilterComboBox()->setCurrentIndex(currentIndex>=d->quickSearchLine->statusFilterComboBox()->count() ? 0 : currentIndex );
+  d->quickSearchLine->tagFilterComboBox()->setCurrentIndex(currentIndex>=d->quickSearchLine->tagFilterComboBox()->count() ? 0 : currentIndex );
 }
 
 MessageItem *Widget::currentMessageItem() const
@@ -218,11 +218,11 @@ MessageItem *Widget::currentMessageItem() const
   return view()->currentMessageItem();
 }
 
-Akonadi::MessageStatus Widget::currentFilterStatus() const
+QList<Akonadi::MessageStatus> Widget::currentFilterStatus() const
 {
   if ( d->mFilter )
     return d->mFilter->status();
-  return Akonadi::MessageStatus();
+  return QList<Akonadi::MessageStatus>();
 }
 
 QString Widget::currentFilterSearchString() const
@@ -338,7 +338,7 @@ void Widget::setStorageModel( StorageModel * storageModel, PreSelectionMode preS
 
   delete oldModel;
 
-  d->quickSearchLine->statusFilterComboBox()->setEnabled( d->mStorageModel );
+  d->quickSearchLine->tagFilterComboBox()->setEnabled( d->mStorageModel );
   d->quickSearchLine->searchEdit()->setEnabled( d->mStorageModel );
 }
 
@@ -816,8 +816,7 @@ void Widget::resetFilter()
   delete d->mFilter;
   d->mFilter = 0;
   d->mView->model()->setFilter( 0 );
-  d->quickSearchLine->statusFilterComboBox()->setCurrentIndex( 0 );
-  d->quickSearchLine->lockSearch()->setChecked(false);
+  d->quickSearchLine->resetFilter();
 }
 
 void Widget::slotViewHeaderSectionClicked( int logicalIndex )
@@ -885,16 +884,9 @@ void Widget::tagIdSelected( const QVariant& data )
 {
   QString tagId = data.toString();
 
-  // Here we arbitrairly set the status to 0, though we *could* allow filtering
-  // by status AND tag...
 
-  if ( d->mFilter )
-    d->mFilter->setStatus( Akonadi::MessageStatus() );
-
-  if ( tagId.isEmpty() )
-  {
-    if ( d->mFilter )
-    {
+  if ( tagId.isEmpty() ) {
+    if ( d->mFilter ){
       if ( d->mFilter->isEmpty() ) {
         resetFilter();
         return;
@@ -911,42 +903,8 @@ void Widget::tagIdSelected( const QVariant& data )
 
 void Widget::statusSelected( int index )
 {
-  if ( index >= d->quickSearchLine->firstTagInComboIndex() ) {
-    tagIdSelected( d->quickSearchLine->statusFilterComboBox()->itemData( index ) );
-    return;
-  }
-
-  bool ok;
-
-  Akonadi::MessageStatus status;
-  status.fromQInt32( static_cast< qint32 >( d->quickSearchLine->statusFilterComboBox()->itemData( index ).toInt( &ok ) ) );
-
-  if ( !ok )
-    return;
-
-  // We also arbitrairly set tagId to an empty string, though we *could* allow filtering
-  // by status AND tag...
-  if ( d->mFilter )
-    d->mFilter->setTagId( QString() );
-
-  if ( status.isOfUnknownStatus() )
-  {
-    if ( d->mFilter )
-    {
-      d->mFilter->setStatus( Akonadi::MessageStatus() );
-      if ( d->mFilter->isEmpty() ) {
-        resetFilter();
-        return;
-      }
-    }
-  } else {
-    // don't have this status bit
-    if ( !d->mFilter )
-      d->mFilter = new Filter();
-    d->mFilter->setStatus( status );
-  }
-
-  d->mView->model()->setFilter( d->mFilter );
+    tagIdSelected( d->quickSearchLine->tagFilterComboBox()->itemData( index ) );
+    d->mView->model()->setFilter( d->mFilter );
 }
 
 void Widget::searchEditTextEdited()
@@ -967,7 +925,33 @@ void Widget::searchEditTextEdited()
 
   d->mSearchTimer->setSingleShot( true );
   d->mSearchTimer->start( 1000 );
+}
 
+void Widget::slotStatusButtonsClicked()
+{
+    // We also arbitrairly set tagId to an empty string, though we *could* allow filtering
+    // by status AND tag...
+    if ( d->mFilter )
+      d->mFilter->setTagId( QString() );
+
+    QList<Akonadi::MessageStatus> lst = d->quickSearchLine->status();
+    if ( lst.isEmpty() ) {
+      if ( d->mFilter ) {
+        d->mFilter->setStatus( lst );
+        if ( d->mFilter->isEmpty() ) {
+            qDebug()<<" RESET FILTER";
+          resetFilter();
+          return;
+        }
+      }
+    } else {
+      // don't have this status bit
+      if ( !d->mFilter )
+        d->mFilter = new Filter();
+      d->mFilter->setStatus( lst );
+    }
+
+    d->mView->model()->setFilter( d->mFilter );
 }
 
 void Widget::searchTimerFired()

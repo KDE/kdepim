@@ -60,6 +60,9 @@ public:
      */
     void writeConfig( const KLDAP::LdapServer &server, KConfigGroup &group,
                       int clientNumber, bool active );
+private Q_SLOTS:
+    void slotWalletClosed();
+
 private:
     //@cond PRIVATE
     class Private;
