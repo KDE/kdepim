@@ -64,8 +64,7 @@ else()
   add_subdirectory(a11y)
 endif()
 
-set(libmessageviewer_SRCS
-  widgets/attachmentdialog.cpp
+set(libmessageviewer_viewer_SRCS
   viewer/attachmentstrategy.cpp
   viewer/bodypartformatter.cpp
   viewer/bodypartformatterfactory.cpp
@@ -89,6 +88,10 @@ set(libmessageviewer_SRCS
   viewer/viewer_p.cpp
   viewer/messagedisplayformatattribute.cpp
   viewer/urlhandlermanager.cpp
+)
+
+set(libmessageviewer_widgets_SRCS
+  widgets/attachmentdialog.cpp
   
   widgets/configurewidget.cpp
   widgets/printingsettings.cpp
@@ -96,12 +99,9 @@ set(libmessageviewer_SRCS
   widgets/vcardviewer.cpp
   widgets/invitationsettings.cpp
   widgets/todoedit.cpp
+)
 
-  htmlwriter/filehtmlwriter.cpp
-  findbar/findbarbase.cpp
-  findbar/findbarmailwebview.cpp
-  findbar/findbarsourceview.cpp
-  settings/globalsettings.cpp
+set(libmessageviewer_header_SRCS
   header/contactdisplaymessagememento.cpp
   header/headerstrategy.cpp
   header/headerstrategy_p.cpp
@@ -118,18 +118,49 @@ set(libmessageviewer_SRCS
   header/grantleeheaderformatter.cpp
   header/grantleeheaderteststyle.cpp
   header/kxface.cpp
-  utils/iconnamecache.cpp
-  utils/markmessagereadhandler.cpp
-  htmlwriter/teehtmlwriter.cpp
-  utils/util.cpp
-  htmlwriter/webkitparthtmlwriter.cpp
+)
+
+set(libmessageviewer_scamdetection_SRCS
   scamdetection/scamdetectionwarningwidget.cpp
   scamdetection/scamdetection.cpp
   scamdetection/scamdetectiondetailsdialog.cpp
   scamdetection/scamattribute.cpp
   scamdetection/scamcheckshorturl.cpp
+)
+
+set(libmessageviewer_findbar_SRCS
+  findbar/findbarbase.cpp
+  findbar/findbarmailwebview.cpp
+  findbar/findbarsourceview.cpp
+)
+
+set(libmessageviewer_utils_SRCS
+  utils/iconnamecache.cpp
+  utils/markmessagereadhandler.cpp
+  utils/util.cpp
+)
+
+set(libmessageviewer_htmlwriter_SRCS
+  htmlwriter/filehtmlwriter.cpp
+  htmlwriter/teehtmlwriter.cpp
+  htmlwriter/webkitparthtmlwriter.cpp
+)
+
+set(libmessageviewer_antispam_SRCS
   antispam/spamheaderanalyzer.cpp
   antispam/antispamconfig.cpp
+)
+
+set(libmessageviewer_SRCS
+  ${libmessageviewer_viewer_SRCS}
+  ${libmessageviewer_widgets_SRCS}
+  ${libmessageviewer_header_SRCS}
+  ${libmessageviewer_scamdetection_SRCS}
+  ${libmessageviewer_findbar_SRCS}
+  ${libmessageviewer_utils_SRCS}
+  ${libmessageviewer_htmlwriter_SRCS}
+  ${libmessageviewer_antispam_SRCS}
+  settings/globalsettings.cpp
   ${_mailwebview_cpp}
 )
 
