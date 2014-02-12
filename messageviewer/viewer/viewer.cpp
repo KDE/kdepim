@@ -689,6 +689,12 @@ KAction *Viewer::expandShortUrlAction()
     return d->mExpandUrlAction;
 }
 
+KAction *Viewer::createTodoAction()
+{
+    Q_D( Viewer );
+    return d->mCreateTodoAction;
+}
+
 }
 
 

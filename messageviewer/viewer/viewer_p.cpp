@@ -1532,6 +1532,7 @@ void ViewerPrivate::createWidgets() {
   mViewer->setObjectName( QLatin1String("mViewer") );
 
   mCreateTodo = new MessageViewer::TodoEdit(readerBox);
+  mCreateTodo->setObjectName(QLatin1String("createtodowidget"));
   mCreateTodo->hide();
 
   mFindBar = new FindBarMailWebView( mViewer, readerBox );
@@ -1848,6 +1849,10 @@ void ViewerPrivate::createActions()
   ac->addAction(QLatin1String("expand_short_url"), mExpandUrlAction);
   mExpandUrlAction->setShortcutConfigurable( false );
   connect( mExpandUrlAction, SIGNAL(triggered(bool)), SLOT(slotExpandShortUrl()) );
+
+  mCreateTodoAction = new KAction(i18n("Create Todo"), this);
+  ac->addAction(QLatin1String("create_new_todo"), mCreateTodoAction);
+  connect( mCreateTodoAction, SIGNAL(triggered(bool)), SLOT(slotShowCreateTodoWidget()) );
 }
 
 
@@ -3364,3 +3369,7 @@ void ViewerPrivate::slotExpandShortUrl()
     }
 }
 
+void ViewerPrivate::slotShowCreateTodoWidget()
+{
+    mCreateTodo->show();
+}

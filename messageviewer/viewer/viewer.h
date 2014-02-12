@@ -283,6 +283,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   KAction *blockImage();
   KAction *openBlockableItems();
   KAction *expandShortUrlAction();
+  KAction *createTodoAction();
 
   HeaderStrategy * headerStrategy() const;
 

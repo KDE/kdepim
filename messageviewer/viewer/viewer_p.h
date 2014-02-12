@@ -605,6 +605,8 @@ public slots:
   void slotBlockImage();
   void slotOpenBlockableItems();
   void slotExpandShortUrl();
+  void slotShowCreateTodoWidget();
+
 signals:
   void showStatusBarMessage( const QString &message );
   void replaceMsgByUnencryptedVersion();
@@ -679,6 +681,7 @@ public:
   KAction *mBlockImage;
   KAction *mBlockableItems;
   KAction *mExpandUrlAction;
+  KAction *mCreateTodoAction;
   KUrl mHoveredUrl;
   KUrl mClickedUrl;
   KUrl mImageUrl;
