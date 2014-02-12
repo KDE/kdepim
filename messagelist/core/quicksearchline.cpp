@@ -173,7 +173,7 @@ void QuickSearchLine::slotSearchOptionChanged()
 
 QuickSearchLine::SearchOptions QuickSearchLine::searchOptions() const
 {
-    QuickSearchLine::SearchOptions searchOptions = SearchNoOption;
+    QuickSearchLine::SearchOptions searchOptions;
     if (mSearchAgainstBody->isChecked()) {
         searchOptions |= SearchAgainstBody;
     }
@@ -186,7 +186,6 @@ QuickSearchLine::SearchOptions QuickSearchLine::searchOptions() const
     if (mSearchAgainstBcc->isChecked()) {
         searchOptions |= SearchAgainstBcc;
     }
-    searchOptions |= SearchAgainstBody;
     return searchOptions;
 }
 
