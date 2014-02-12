@@ -856,7 +856,7 @@ void KMeditor::insertShareLink(const QString &url)
         QTextCursor cursor = textCursor();
 
         cursor.beginEditBlock();
-        cursor.insertText(msg + QLatin1Char('\n'));
+        cursor.insertText(QLatin1Char('\n') + msg + QLatin1Char('\n'));
 
         QTextCharFormat format = cursor.charFormat();
         // Save original format to create an extra space with the existing char
@@ -879,7 +879,7 @@ void KMeditor::insertShareLink(const QString &url)
         cursor.insertText(QLatin1String(" \n"));
         cursor.endEditBlock();
     } else {
-        textCursor().insertText(msg + QLatin1Char('\n') + url + QLatin1Char('\n'));
+        textCursor().insertText(QLatin1Char('\n') + msg + QLatin1Char('\n') + url + QLatin1Char('\n'));
     }
 }
 
