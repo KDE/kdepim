@@ -220,7 +220,15 @@ QNetworkReply *GDriveJob::uploadFile(const QString &filename, const QString &upl
     //TODO destination
     KGAPI2::Drive::FileCreateJob *createJob = new KGAPI2::Drive::FileCreateJob( filename/*, file*/, mAccount);
     connect(createJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotUploadJobFinished(KGAPI2::Job*)));
+    connect(createJob, SIGNAL(progress(KGAPI2::Job*,int,int)), this, SLOT(slotUploadDownLoadProgress(KGAPI2::Job*,int,int)));
     return 0;
+}
+
+void GDriveJob::slotUploadDownLoadProgress(KGAPI2::Job *job, int progress, int total)
+{
+    Q_UNUSED(job);
+    qDebug()<<" progress "<<progress<<" total"<<total;
+    Q_EMIT uploadDownloadFileProgress(progress, total);
 }
 
 void GDriveJob::slotUploadJobFinished(KGAPI2::Job* job)

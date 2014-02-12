@@ -64,6 +64,7 @@ private slots:
     void slotDeleteFolderFinished(KGAPI2::Job *job);
     void slotCreateJobFinished(KGAPI2::Job *job);
     void slotUploadJobFinished(KGAPI2::Job *job);
+    void slotUploadDownLoadProgress(KGAPI2::Job *job, int progress, int total);
 private:
     bool handleError(KGAPI2::Job *job);
 
