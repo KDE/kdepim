@@ -167,7 +167,7 @@ void GDriveJob::slotAuthJobFinished(KGAPI2::Job *job)
         return;
     }
     KGAPI2::AccountPtr account = authJob->account();
-    qDebug()<<" account->expireDateTime()"<<account->expireDateTime();
+    //qDebug()<<" account->expireDateTime()"<<account->expireDateTime();
     Q_EMIT authorizationDone(account->refreshToken(),account->accessToken(), account->expireDateTime(), account->accountName());
     /* Always remember to delete the jobs, otherwise your application will
      * leak memory. */
