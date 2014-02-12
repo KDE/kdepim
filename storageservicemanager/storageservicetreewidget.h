@@ -36,9 +36,11 @@ public:
 
     void canDownloadFile();
 
+    bool listFolderWasLoaded() const;
 Q_SIGNALS:
     void uploadFile();
     void downloadFile();
+    void listFileWasInitialized();
 
 public Q_SLOTS:
     void slotCreateFolder();

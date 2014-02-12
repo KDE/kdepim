@@ -37,9 +37,11 @@ public:
     bool hasUploadDownloadProgress() const;
     void serviceRemoved(const QString &serviceName);
     void setNetworkIsDown(bool state);
+    bool listFolderWasLoaded() const;
 
 Q_SIGNALS:
     void updateStatusBarMessage(const QString &msg);
+    void listFileWasInitialized();
 
 public slots:
     void slotAuthenticate();

@@ -83,7 +83,10 @@ void StorageServiceTreeWidget::slotGeneralFontChanged()
 
 void StorageServiceTreeWidget::setIsInitialized()
 {
-    mInitialized = true;
+    if (!mInitialized) {
+        mInitialized = true;
+        Q_EMIT listFileWasInitialized();
+    }
 }
 
 void StorageServiceTreeWidget::createMenuActions(KMenu *menu)
@@ -415,4 +418,9 @@ void StorageServiceTreeWidget::slotFileDoubleClicked()
             Q_EMIT downloadFile();
         }
     }
+}
+
+bool StorageServiceTreeWidget::listFolderWasLoaded() const
+{
+    return mInitialized;
 }

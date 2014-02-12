@@ -94,6 +94,7 @@ void StorageServicePage::slotUpdatePixmap(const QPixmap &pix)
 
 void StorageServicePage::connectStorageService()
 {
+    connect(mTreeWidget, SIGNAL(listFileWasInitialized()), this, SIGNAL(listFileWasInitialized()));
     connect(mStorageService, SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotShareLinkDone(QString,QString)));
 
     connect(mStorageService, SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
@@ -246,6 +247,11 @@ void StorageServicePage::deleteFile()
 void StorageServicePage::downloadFile()
 {
     mTreeWidget->canDownloadFile();
+}
+
+bool StorageServicePage::listFolderWasLoaded() const
+{
+    return mTreeWidget->listFolderWasLoaded();
 }
 
 void StorageServicePage::slotDownloadFile()

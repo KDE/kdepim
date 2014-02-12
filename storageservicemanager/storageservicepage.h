@@ -53,9 +53,12 @@ public:
     void refreshList();
     void showLog();
     void downloadFile();
+    bool listFolderWasLoaded() const;
+
 Q_SIGNALS:
     void updateIcon(const QIcon &pix, StorageServicePage *page);
     void updateStatusBarMessage(const QString &msg);
+    void listFileWasInitialized();
 
 public Q_SLOTS:
     void slotUploadFile();
