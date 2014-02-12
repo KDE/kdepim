@@ -160,12 +160,21 @@ void UbuntuOneJob::createFolder(const QString &foldername, const QString &destin
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QUrl postData;
     const QString mAccessOauth = mCustomerSecret + QLatin1String("%26") + mTokenSecret;
-
+/*
     postData.addQueryItem(QLatin1String("oauth_signature"), mAccessOauth);
-    postData.addQueryItem(QLatin1String("token"), mToken);
+    postData.addQueryItem(QLatin1String("oauth_signature_method"), mOauthSignatureMethod);
+    postData.addQueryItem(QLatin1String("oauth_token"), mToken);
+
     postData.addQueryItem(QLatin1String("token_secret"), mTokenSecret);
     postData.addQueryItem(QLatin1String("consumer_secret"), mCustomerSecret);
     postData.addQueryItem(QLatin1String("consumer_key"), mCustomerKey);
+    */
+    postData.addQueryItem(QLatin1String("oauth_signature"), mAccessOauth);
+    postData.addQueryItem(QLatin1String("oauth_signature_method"), mOauthSignatureMethod);
+    postData.addQueryItem(QLatin1String("oauth_timestamp"), mTimestamp);
+    postData.addQueryItem(QLatin1String("oauth_version"), mOauthVersion);
+    postData.addQueryItem(QLatin1String("oauth_token"), mToken);
+
     QNetworkReply *reply = mNetworkAccessManager->put(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
@@ -489,8 +498,8 @@ void UbuntuOneJob::renameFile(const QString &oldName, const QString &newName)
     postData.addQueryItem(QLatin1String("token_secret"), mTokenSecret);
     postData.addQueryItem(QLatin1String("consumer_secret"), mCustomerSecret);
     postData.addQueryItem(QLatin1String("consumer_key"), mCustomerKey);
-    QByteArray t("{\"path\":dd}");
-    QNetworkReply *reply = mNetworkAccessManager->put(request, t);
+    QString t = QString::fromLatin1("{\"path\": \"%1\"}").arg(newName);
+    QNetworkReply *reply = mNetworkAccessManager->put(request, t.toUtf8());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
