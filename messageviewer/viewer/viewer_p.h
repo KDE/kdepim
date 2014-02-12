@@ -31,10 +31,12 @@
 #include <kservice.h>
 #include <ksharedconfig.h>
 #include <kurl.h>
+#include <KCalCore/Todo>
 
-#include <QtCore/QObject>
-#include <QtCore/QTimer>
+#include <QObject>
+#include <QTimer>
 #include <QWebElement>
+
 namespace GpgME { class Error; }
 namespace KIO { 
   class Job; 
@@ -494,6 +496,7 @@ private slots:
   void saveSplitterSizes() const;
   void slotGrantleeThemesUpdated();
 
+  void slotCreateTodo(const KCalCore::Todo::Ptr &, const Akonadi::Collection &collection);
 public slots:
   /** An URL has been activate with a click. */
   void slotUrlOpen( const QUrl &url = QUrl());

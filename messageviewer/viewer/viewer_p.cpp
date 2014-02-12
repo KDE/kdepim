@@ -1532,6 +1532,7 @@ void ViewerPrivate::createWidgets() {
   mViewer->setObjectName( QLatin1String("mViewer") );
 
   mCreateTodo = new MessageViewer::TodoEdit(readerBox);
+  connect(mCreateTodo, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection)), this, SLOT(slotCreateTodo(KCalCore::Todo::Ptr,Akonadi::Collection)));
   mCreateTodo->setObjectName(QLatin1String("createtodowidget"));
   mCreateTodo->hide();
 
@@ -3371,5 +3372,11 @@ void ViewerPrivate::slotExpandShortUrl()
 
 void ViewerPrivate::slotShowCreateTodoWidget()
 {
+    mCreateTodo->setMessage(mMessage);
     mCreateTodo->show();
+}
+
+void ViewerPrivate::slotCreateTodo(const KCalCore::Todo::Ptr &, const Akonadi::Collection &collection)
+{
+    //TODO
 }
