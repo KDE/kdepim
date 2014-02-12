@@ -202,6 +202,9 @@ protected:
     QPointer<QNetworkReply> mUploadReply;
     QPointer<QNetworkReply> mDownloadReply;
 
+private slots:
+    void slotNextAction();
+
 private:
     inline void changeProgressState(bool state);
     void executeNextAction();

@@ -16,7 +16,9 @@
 */
 
 #include "storageserviceabstract.h"
+
 #include <QDebug>
+#include <QTimer>
 
 using namespace PimCommon;
 
@@ -408,6 +410,11 @@ void StorageServiceAbstract::slotCopyFolderDone(const QString &filename)
 void StorageServiceAbstract::emitAuthentificationDone()
 {
     Q_EMIT authenticationDone(storageServiceName());
+    QTimer::singleShot(0, this, SLOT(slotNextAction()));
+}
+
+void StorageServiceAbstract::slotNextAction()
+{
     if (mNextAction->nextActionType() != NoneAction)
         executeNextAction();
     else {
