@@ -34,6 +34,8 @@ public:
     void setIsInitialized();
     bool uploadFileToService();
 
+    void canDownloadFile();
+
 Q_SIGNALS:
     void uploadFile();
     void downloadFile();

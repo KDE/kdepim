@@ -243,6 +243,11 @@ void StorageServicePage::deleteFile()
     mTreeWidget->slotDeleteFile();
 }
 
+void StorageServicePage::downloadFile()
+{
+    mTreeWidget->canDownloadFile();
+}
+
 void StorageServicePage::slotDownloadFile()
 {
     mProgressWidget->reset();

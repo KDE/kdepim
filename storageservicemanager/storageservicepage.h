@@ -52,15 +52,16 @@ public:
     void setNetworkIsDown(bool state);
     void refreshList();
     void showLog();
+    void downloadFile();
 Q_SIGNALS:
     void updateIcon(const QIcon &pix, StorageServicePage *page);
     void updateStatusBarMessage(const QString &msg);
 
 public Q_SLOTS:
     void slotUploadFile();
-    void slotDownloadFile();
 
 private Q_SLOTS:
+    void slotDownloadFile();
     void slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo);
     void slotUploadFileDone(const QString &serviceName, const QString &fileName);
     void slotuploadDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total);

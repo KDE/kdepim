@@ -352,6 +352,15 @@ bool StorageServiceTreeWidget::uploadFileToService()
     }
 }
 
+void StorageServiceTreeWidget::canDownloadFile()
+{
+    if (itemTypeSelected() == StorageServiceTreeWidget::File) {
+        Q_EMIT downloadFile();
+    } else {
+        KMessageBox::error(this, i18n("Please select a file to download."), i18n("Download File"));
+    }
+}
+
 void StorageServiceTreeWidget::paintEvent( QPaintEvent *event )
 {
     if ( mInitialized ) {
