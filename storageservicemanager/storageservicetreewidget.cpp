@@ -331,6 +331,10 @@ bool StorageServiceTreeWidget::uploadFileToService()
             KMessageBox::error(this, i18n("File size (%1) is larger than limit (%2)", KGlobal::locale()->formatByteSize(info.size(),1), KGlobal::locale()->formatByteSize(maximumLimit,1)));
             return false;
         }
+        if (filename == QLatin1String(".") || filename == QLatin1String("..")) {
+            KMessageBox::error(this, i18n("You try to use no authorize characters."));
+            return false;
+        }
         QString newName = info.fileName();
         if (!disallowedSymbols.isEmpty()) {
             if (newName.contains(disallowedSymbols)) {
