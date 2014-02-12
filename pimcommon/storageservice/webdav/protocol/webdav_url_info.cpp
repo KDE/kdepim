@@ -144,6 +144,7 @@ void QWebdavUrlInfo::davParsePropstats( const QString & path, const QDomNodeList
             if (property.isNull())
                 continue;
 
+            qDebug()<<" property.namespaceURI()"<<property.namespaceURI()<<" property.tagName()"<<property.tagName();
             mProperties[property.namespaceURI()][property.tagName()] = property.text();
 
             if ( property.namespaceURI() != QLatin1String("DAV:") ) {
@@ -185,6 +186,7 @@ void QWebdavUrlInfo::davParsePropstats( const QString & path, const QDomNodeList
             }
         }
     }
+    qDebug()<<" PropValues"<<mProperties;
     setDir(isDirectory);
     setFile(!isDirectory);
 

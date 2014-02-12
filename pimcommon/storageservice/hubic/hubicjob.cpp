@@ -32,6 +32,7 @@ using namespace PimCommon;
 HubicJob::HubicJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
+    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
     mScope = PimCommon::StorageServiceJobConfig::self()->hubicScope();
     mClientId = PimCommon::StorageServiceJobConfig::self()->hubicClientId();
     mClientSecret = PimCommon::StorageServiceJobConfig::self()->hubicClientSecret();
@@ -41,9 +42,7 @@ HubicJob::HubicJob(QObject *parent)
     mAuthorizePath = QLatin1String("/oauth/auth/");
     mPathToken = QLatin1String("/oauth/token/");
     mCurrentAccountInfoPath = QLatin1String("/1.0/account/usage");
-    //FIXME
-    //mFolderInfoPath = QLatin1String("/2.0/folders/");
-    //mFileInfoPath = QLatin1String("/2.0/files/");
+    mSwiftTokenPath = QLatin1String("/1.0/account/credentials");
 }
 
 HubicJob::~HubicJob()
@@ -79,7 +78,7 @@ void HubicJob::requestTokenAccess()
     if (!mScope.isEmpty())
         url.addQueryItem(QLatin1String("scope"),mScope);
     mAuthUrl = url;
-    qDebug()<<" url"<<url;
+    //qDebug()<<" url"<<url;
     delete mAuthDialog;
     mAuthDialog = new PimCommon::StorageAuthViewDialog;
     connect(mAuthDialog, SIGNAL(urlChanged(QUrl)), this, SLOT(slotRedirect(QUrl)));
@@ -276,11 +275,11 @@ void HubicJob::parseAccountInfo(const QString &data)
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     //qDebug()<<" info"<<info;
     PimCommon::AccountInfo accountInfo;
-    if (info.contains(QLatin1String("space_used"))) {
-        accountInfo.shared = info.value(QLatin1String("space_used")).toLongLong();
+    if (info.contains(QLatin1String("used"))) {
+        accountInfo.shared = info.value(QLatin1String("used")).toLongLong();
     }
-    if (info.contains(QLatin1String("space_amount"))) {
-        accountInfo.quota = info.value(QLatin1String("space_amount")).toLongLong();
+    if (info.contains(QLatin1String("quota"))) {
+        accountInfo.quota = info.value(QLatin1String("quota")).toLongLong();
     }
     Q_EMIT accountInfoDone(accountInfo);
     deleteLater();
@@ -307,119 +306,48 @@ void HubicJob::deleteFile(const QString &filename)
 {
     mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
     mError = false;
-    QUrl url;
-    url.setUrl(mApiUrl + mFileInfoPath + filename);
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    QNetworkReply *reply = mNetworkAccessManager->deleteResource(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void HubicJob::deleteFolder(const QString &foldername)
 {
     mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
     mError = false;
-    QUrl url;
-    url.setUrl(mApiUrl + mFolderInfoPath + foldername);
-    url.addQueryItem(QLatin1String("recursive"), QLatin1String("true"));
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    QNetworkReply *reply = mNetworkAccessManager->deleteResource(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void HubicJob::renameFolder(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::RenameFolder;
     mError = false;
-    QUrl url;
-    url.setUrl(mApiUrl + mFolderInfoPath + source);
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    const QString data = QString::fromLatin1("{\"name\":\"%1\"}").arg(destination);
-
-    QNetworkReply *reply = mNetworkAccessManager->put(request, data.toLatin1());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void HubicJob::renameFile(const QString &oldName, const QString &newName)
 {
     mActionType = PimCommon::StorageServiceAbstract::RenameFile;
     mError = false;
-
-    QUrl url;
-    url.setUrl(mApiUrl + mFileInfoPath + oldName);
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    const QString data = QString::fromLatin1("{\"name\":\"%1\"}").arg(newName);
-
-    QNetworkReply *reply = mNetworkAccessManager->put(request, data.toLatin1());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void HubicJob::moveFolder(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::MoveFolder;
     mError = false;
-    QUrl url;
-    url.setUrl(mApiUrl + mFolderInfoPath + source);
-    //qDebug()<<" url "<<url;
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    const QString data = QString::fromLatin1("{\"id\":\"%1\"}").arg(destination);
-    QNetworkReply *reply = mNetworkAccessManager->put(request, data.toLatin1());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void HubicJob::moveFile(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::MoveFile;
     mError = false;
-    QUrl url;
-    url.setUrl(mApiUrl + mFileInfoPath + source);
-    //qDebug()<<" url "<<url;
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    const QString data = QString::fromLatin1("{\"id\":\"%1\"}").arg(destination);
-
-    QNetworkReply *reply = mNetworkAccessManager->put(request, data.toLatin1());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void HubicJob::copyFile(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::CopyFile;
     mError = false;
-    QUrl url;
-    url.setUrl(mApiUrl + mFileInfoPath + QString::fromLatin1("%1/copy").arg(source));
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    const QString data = QString::fromLatin1("{\"parent\": {\"id\": \"%1\"}}").arg(destination);
-
-    QNetworkReply *reply = mNetworkAccessManager->post(request, data.toLatin1());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void HubicJob::copyFolder(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::CopyFolder;
     mError = false;
-    QUrl url;
-    url.setUrl(mApiUrl + mFolderInfoPath + QString::fromLatin1("%1/copy").arg(source));
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    const QString data = QString::fromLatin1("{\"parent\": {\"id\": \"%1\"}}").arg(destination);
-
-    QNetworkReply *reply = mNetworkAccessManager->post(request, data.toLatin1());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 QNetworkReply *HubicJob::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
@@ -429,6 +357,7 @@ QNetworkReply *HubicJob::uploadFile(const QString &filename, const QString &uplo
         mActionType = PimCommon::StorageServiceAbstract::UploadFile;
         mError = false;
         if (file->open(QIODevice::ReadOnly)) {
+#if 0
             QUrl url;
             url.setUrl(QLatin1String("https://upload.box.com/api/2.0/files/content"));
             QNetworkRequest request(url);
@@ -441,6 +370,9 @@ QNetworkReply *HubicJob::uploadFile(const QString &filename, const QString &uplo
             file->setParent(reply);
             connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
             return reply;
+#else
+            return 0;
+#endif
         } else {
             delete file;
         }
@@ -453,12 +385,23 @@ void HubicJob::listFolder(const QString &folder)
     mActionType = PimCommon::StorageServiceAbstract::ListFolder;
     mError = false;
     QUrl url;
+    url.setUrl(mApiUrl + mSwiftTokenPath);
+    qDebug()<<"url"<<url;
+    QNetworkRequest request(url);
+    qDebug()<<" mToken"<<mToken;
+    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
+    QNetworkReply *reply = mNetworkAccessManager->get(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+
+#if 0
+    QUrl url;
     url.setUrl(mApiUrl + mFolderInfoPath + (folder.isEmpty() ? QLatin1String("0") : folder) + QLatin1String("/items?fields=name,created_at,size,modified_at,id"));
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
     QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+#endif
 }
 
 void HubicJob::accountInfo()
@@ -478,14 +421,6 @@ void HubicJob::createFolder(const QString &foldername, const QString &destinatio
 {
     mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
     mError = false;
-    QUrl url;
-    url.setUrl(mApiUrl + mFolderInfoPath);
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    const QString data = QString::fromLatin1("{\"name\":\"%1\", \"parent\": {\"id\": \"%2\"}}").arg(foldername).arg((destination.isEmpty() ? QLatin1String("0") : destination));
-    QNetworkReply *reply = mNetworkAccessManager->post(request, data.toLatin1());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 
@@ -494,16 +429,6 @@ void HubicJob::shareLink(const QString &root, const QString &fileId)
     Q_UNUSED(root);
     mActionType = PimCommon::StorageServiceAbstract::ShareLink;
     mError = false;
-    QUrl url;
-    url.setUrl(mApiUrl + mFileInfoPath + fileId);
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-
-    const QByteArray data("{\"shared_link\": {\"access\": \"open\"}}");
-
-    QNetworkReply *reply = mNetworkAccessManager->put(request,data);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void HubicJob::parseDeleteFolder(const QString &data)
@@ -647,7 +572,7 @@ QNetworkReply * HubicJob::downloadFile(const QString &name, const QString &fileI
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
-
+#if 0
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
     const QString defaultDestination = (destination.isEmpty() ? PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
@@ -670,6 +595,7 @@ QNetworkReply * HubicJob::downloadFile(const QString &name, const QString &fileI
     } else {
         delete mDownloadFile;
     }
+#endif
     return 0;
 }
 

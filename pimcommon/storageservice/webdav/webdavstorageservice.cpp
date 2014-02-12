@@ -48,7 +48,6 @@ WebDavStorageService::~WebDavStorageService()
 
 void WebDavStorageService::readConfig()
 {
-    //TODO add support for don't save as kwallet ?
     if (StorageServiceSettings::self()->createDefaultFolder()) {
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
         if (wallet) {
