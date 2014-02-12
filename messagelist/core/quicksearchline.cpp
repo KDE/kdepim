@@ -315,3 +315,8 @@ QList<Akonadi::MessageStatus> QuickSearchLine::status() const
     }
     return lstStatus;
 }
+
+void QuickSearchLine::updateComboboxVisibility()
+{
+    mTagFilterCombo->setVisible(mTagFilterCombo->count());
+}

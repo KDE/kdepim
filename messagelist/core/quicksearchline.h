@@ -61,6 +61,8 @@ public:
     void resetFilter();
     QList<Akonadi::MessageStatus> status() const;
 
+    void updateComboboxVisibility();
+
 Q_SIGNALS:
     void fullSearchRequest();
     void clearButtonClicked();
