@@ -49,6 +49,7 @@ private slots:
     void shouldHideWidgetWhenPressEscape();
     void shouldSaveCollectionSettings();
     void shouldSaveCollectionSettingsWhenCloseWidget();
+    void shouldNotEmitTodoWhenMessageIsNull();
 };
 
 #endif // TODOEDITTEST_H

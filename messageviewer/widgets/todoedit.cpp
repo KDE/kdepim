@@ -141,6 +141,8 @@ void TodoEdit::slotCloseWidget()
 
 void TodoEdit::slotReturnPressed()
 {
+    if (!mMessage)
+        return;
     const Akonadi::Collection collection = mCollectionCombobox->currentCollection();
     if (!mNoteEdit->text().isEmpty() && collection.isValid()) {
         KCalCore::Todo::Ptr todo( new KCalCore::Todo );

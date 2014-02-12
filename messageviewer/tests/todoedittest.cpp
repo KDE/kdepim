@@ -303,6 +303,18 @@ void TodoEditTest::shouldSaveCollectionSettingsWhenCloseWidget()
     QCOMPARE(MessageViewer::GlobalSettingsBase::self()->lastSelectedFolder(), id);
 }
 
+void TodoEditTest::shouldNotEmitTodoWhenMessageIsNull()
+{
+    MessageViewer::TodoEdit edit;
+    KMime::Message::Ptr msg();
+    QString subject = QLatin1String("Test Note");
+    QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
+    noteedit->setText(subject);
+    QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection)));
+    QTest::keyClick(noteedit, Qt::Key_Enter);
+    QCOMPARE(spy.count(), 0);
+}
+
 void TodoEditTest::shouldClearLineAfterEmitNewNote()
 {
     MessageViewer::TodoEdit edit;
