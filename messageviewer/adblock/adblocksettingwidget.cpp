@@ -177,7 +177,7 @@ void AdBlockSettingWidget::doResetToDefaultsOther()
     const bool bUseDefaults = MessageViewer::GlobalSettings::self()->useDefaults( true );
     loadWidget(checkEnableAdblock,GlobalSettings::self()->adBlockEnabledItem());
     tabWidget->setEnabled(GlobalSettings::self()->adBlockEnabled());
-    checkHideAds->setChecked(GlobalSettings::self()->hideAdsEnabled());
+    saveCheckBox(checkHideAds, GlobalSettings::self()->hideAdsEnabledItem());
     loadWidget(spinBox, GlobalSettings::self()->adBlockUpdateIntervalItem());
     MessageViewer::GlobalSettings::self()->useDefaults( bUseDefaults );
 }
