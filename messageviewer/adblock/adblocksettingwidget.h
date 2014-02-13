@@ -66,9 +66,10 @@ private Q_SLOTS:
     void slotUpdateManualButtons();
     void slotEditFilter();
     void slotManualFilterLineEditTextChanged(const QString &);
-
+    void slotAutomaticFilterDouble(QListWidgetItem *item);
 private:
     void addManualFilter(const QString &text);
+    void showAutomaticFilterList(QListWidgetItem *item);
     enum List {
         UrlList = Qt::UserRole + 1,
         PathList = Qt::UserRole + 2,

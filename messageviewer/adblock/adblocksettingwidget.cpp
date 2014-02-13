@@ -85,6 +85,7 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
 
     connect(automaticFiltersListWidget, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(hasChanged()));
     connect(automaticFiltersListWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), this, SLOT(slotUpdateButtons()));
+    connect(automaticFiltersListWidget, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(slotAutomaticFilterDouble(QListWidgetItem*)));
 
     connect(importFilters, SIGNAL(clicked()), SLOT(slotImportFilters()));
     connect(exportFilters, SIGNAL(clicked()), SLOT(slotExportFilters()));
@@ -355,7 +356,11 @@ void AdBlockSettingWidget::slotRemoveSubscription()
 
 void AdBlockSettingWidget::slotShowList()
 {
-    QListWidgetItem *item = automaticFiltersListWidget->currentItem();
+    showAutomaticFilterList(automaticFiltersListWidget->currentItem());
+}
+
+void AdBlockSettingWidget::showAutomaticFilterList(QListWidgetItem *item)
+{
     if (item) {
         QPointer<AdBlockShowListDialog> dlg = new AdBlockShowListDialog(this);
         dlg->setAdBlockListPath(item->data(PathList).toString(), item->data(UrlList).toString());
@@ -409,5 +414,9 @@ void AdBlockSettingWidget::slotExportFilters()
     PimCommon::Util::saveTextAs(exportFilters, filter, this);
 }
 
+void AdBlockSettingWidget::slotAutomaticFilterDouble(QListWidgetItem *item)
+{
+    showAutomaticFilterList(item);
+}
 
 #include "adblocksettingwidget.moc"
