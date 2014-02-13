@@ -51,6 +51,7 @@ TodoEdit::TodoEdit(QWidget *parent)
 
 #ifndef QT_NO_ACCESSIBILITY
     closeBtn->setAccessibleName( i18n( "Close" ) );
+    closeBtn->setAccessibleDescription( i18n("Close widget to create new Todo") );
 #endif
 
     closeBtn->setAutoRaise( true );
@@ -69,6 +70,10 @@ TodoEdit::TodoEdit(QWidget *parent)
     mCollectionCombobox->setMinimumWidth(250);
     mCollectionCombobox->setMimeTypeFilter( QStringList() << KCalCore::Todo::todoMimeType() );
     mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
+#ifndef QT_NO_ACCESSIBILITY
+    mCollectionCombobox->setAccessibleDescription( i18n("Select collection where Todo will stored.") );
+#endif
+
     connect(mCollectionCombobox, SIGNAL(currentIndexChanged(int)), SLOT(slotCollectionChanged(int)));
     connect(mCollectionCombobox, SIGNAL(activated(int)), SLOT(slotCollectionChanged(int)));
     hbox->addWidget(mCollectionCombobox);
