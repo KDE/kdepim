@@ -577,7 +577,22 @@ void DropBoxJob::renameFolder(const QString &source, const QString &destination)
     url.addQueryItem(QLatin1String("root"), mRootPath);
     addDefaultUrlItem(url);
     url.addQueryItem(QLatin1String("from_path"), source);
-    url.addQueryItem(QLatin1String("to_path"), destination);
+
+    QStringList parts = source.split(QLatin1String("/"), QString::SkipEmptyParts);
+    parts.removeLast();
+    QString destinationFolder = parts.join(QLatin1String("/"));
+    if (destinationFolder.isEmpty()) {
+        destinationFolder = QLatin1String("/");
+    }
+    if (!destinationFolder.endsWith(QLatin1Char('/'))) {
+        destinationFolder += QLatin1String("/");
+    }
+    if (!destinationFolder.startsWith(QLatin1Char('/'))) {
+        destinationFolder.prepend(QLatin1String("/"));
+    }
+
+    const QString newPath = destinationFolder.append(destination);
+    url.addQueryItem(QLatin1String("to_path"), newPath);
 
     QNetworkRequest request(url);
     QNetworkReply *reply = mNetworkAccessManager->get(request);
@@ -591,8 +606,25 @@ void DropBoxJob::renameFile(const QString &oldName, const QString &newName)
     QUrl url = QUrl(mApiPath + QLatin1String("fileops/move"));
     url.addQueryItem(QLatin1String("root"), mRootPath);
     addDefaultUrlItem(url);
+
+    //Generate new path.
+    QStringList parts = oldName.split(QLatin1String("/"), QString::SkipEmptyParts);
+    parts.removeLast();
+    QString destinationFolder = parts.join(QLatin1String("/"));
+    if (destinationFolder.isEmpty()) {
+        destinationFolder = QLatin1String("/");
+    }
+    if (!destinationFolder.endsWith(QLatin1Char('/'))) {
+        destinationFolder += QLatin1String("/");
+    }
+    if (!destinationFolder.startsWith(QLatin1Char('/'))) {
+        destinationFolder.prepend(QLatin1String("/"));
+    }
+
+    const QString newPath = destinationFolder.append(newName);
+
     url.addQueryItem(QLatin1String("from_path"), oldName);
-    url.addQueryItem(QLatin1String("to_path"), newName);
+    url.addQueryItem(QLatin1String("to_path"), newPath);
 
     QNetworkRequest request(url);
     QNetworkReply *reply = mNetworkAccessManager->get(request);
