@@ -239,7 +239,9 @@ void ComposerLineEdit::loadContacts()
     KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kpimcompletionorder") );
     KConfigGroup group( config, "CompletionWeights" );
     const int weight = group.readEntry( "Recent Addresses", 10 );
+    removeCompletionSource(recentAddressGroupName);
     const int idx = addCompletionSource( recentAddressGroupName, weight );
+
     QStringList::ConstIterator end = recent.constEnd();
     for ( ; it != end; ++it ) {
       KABC::Addressee addr;
