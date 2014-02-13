@@ -84,6 +84,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mTagFilterCombo = new KComboBox( this ) ;
     mTagFilterCombo->setVisible( Settings::self()->showQuickSearch() );
     mTagFilterCombo->setMaximumWidth(300);
+    mTagFilterCombo->hide();
     hbox->addWidget( mTagFilterCombo );
 
     // The "Open Full Search" button

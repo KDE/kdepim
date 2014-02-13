@@ -110,4 +110,15 @@ void QuickSearchLineTest::shouldResetAllWhenResetFilter()
     QCOMPARE(searchLine.searchOptions(), options);
 }
 
+void QuickSearchLineTest::shouldShowTagComboBox()
+{
+    QuickSearchLine searchLine;
+    searchLine.show();
+    QTest::qWaitForWindowShown(&searchLine);
+    QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), false);
+    searchLine.tagFilterComboBox()->addItems(QStringList()<<QLatin1String("1")<<QLatin1String("2"));
+    searchLine.updateComboboxVisibility();
+    QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), true);
+}
+
 QTEST_KDEMAIN( QuickSearchLineTest, GUI )
