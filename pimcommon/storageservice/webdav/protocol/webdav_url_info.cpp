@@ -45,6 +45,7 @@ using namespace PimCommon;
 
 QWebdavUrlInfo::QWebdavUrlInfo()
 {
+    setSize(-1);
 }
 
 QWebdavUrlInfo::~QWebdavUrlInfo()
@@ -53,6 +54,7 @@ QWebdavUrlInfo::~QWebdavUrlInfo()
 
 QWebdavUrlInfo::QWebdavUrlInfo(const QDomElement & dom)
 {
+    setSize(-1);
     QDomElement href = dom.namedItem( QLatin1String("href") ).toElement();
 
     mNode = dom.cloneNode();

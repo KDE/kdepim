@@ -324,17 +324,20 @@ QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
         if (info.isDir()) {
             QFileInfo folderInfo(info.name());
             item = listWidget->addFolder(folderInfo.dir().dirName(), info.name());
-            item->setDateCreated(KDateTime(info.createdAt()));
-            item->setLastModification(KDateTime(info.lastModified()));
-            item->setSize(info.size());
         } else {
             const QString mimetype = info.mimeType();
             QFileInfo fileInfo(info.name());
             item = listWidget->addFile(fileInfo.fileName(), info.name(), mimetype);
-            item->setDateCreated(KDateTime(info.createdAt()));
-            item->setLastModification(KDateTime(info.lastModified()));
-            item->setSize(info.size());
         }
+        QDateTime t = info.createdAt();
+        if (t.isValid())
+            item->setDateCreated(KDateTime(t));
+        t = info.lastModified();
+        if (t.isValid())
+            item->setLastModification(KDateTime(t));
+        const qint64 size = info.size();
+        if (size>=0)
+            item->setSize(size);
         item->setStoreInfo(QVariantMap(info.properties()));
     }
     QString parentFolder;
