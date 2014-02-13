@@ -241,7 +241,7 @@ bool StorageServiceTreeWidget::checkName(const QString &name)
         }
     }
     if (name == QLatin1String(".") || name == QLatin1String("..")) {
-        KMessageBox::error(this, i18n("You can not name a folder or file . or .."), i18n("Create Folder"));
+        KMessageBox::error(this, i18n("You cannot name a folder or file . or .."), i18n("Create Folder"));
         return false;
     }
     return true;
@@ -332,7 +332,7 @@ bool StorageServiceTreeWidget::uploadFileToService()
             return false;
         }
         if (filename == QLatin1String(".") || filename == QLatin1String("..")) {
-            KMessageBox::error(this, i18n("You try to use no authorize characters."));
+            KMessageBox::error(this, i18n("You are trying to use no unauthorized characters."));
             return false;
         }
         QString newName = info.fileName();
