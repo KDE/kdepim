@@ -501,6 +501,9 @@ QMap<QString, QString> DropBoxStorageService::itemInformation(const QVariantMap 
     information.insert(i18n("Type:"), isDir ? i18n("Folder") : i18n("File"));
     information.insert(i18n("Name:"), itemName);
 
+    if (variantMap.contains(QLatin1String("bytes"))) {
+        information.insert(i18n("Size:"), KGlobal::locale()->formatByteSize(variantMap.value(QLatin1String("bytes")).toULongLong()));
+    }
     if (variantMap.contains(QLatin1String("client_mtime"))) {
         const QString tmp = variantMap.value(QLatin1String("client_mtime")).toString();
         information.insert(i18n("Created"), KGlobal::locale()->formatDateTime(PimCommon::DropBoxUtil::convertToDateTime( tmp )));
