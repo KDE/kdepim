@@ -32,6 +32,7 @@
 #include <QVBoxLayout>
 #include <QRadioButton>
 #include <QSpinBox>
+#include <QComboBox>
 
 using namespace PimCommon;
 
@@ -69,7 +70,6 @@ void ConfigureImmutableWidgetUtils::populateCheckBox( QCheckBox * b, const KCore
 {
     b->setText( e->label() );
 }
-
 
 void ConfigureImmutableWidgetUtils::loadWidget( QLineEdit * b, const KCoreConfigSkeleton::ItemString *e )
 {
@@ -163,4 +163,18 @@ void ConfigureImmutableWidgetUtils::saveButtonGroup( QButtonGroup * group, KCore
 void ConfigureImmutableWidgetUtils::saveSimpleStringListEditor( PimCommon::SimpleStringListEditor * b, KCoreConfigSkeleton::ItemStringList *e )
 {
     e->setValue(b->stringList());
+}
+
+void ConfigureImmutableWidgetUtils::loadWidget( QComboBox *b, const KCoreConfigSkeleton::ItemEnum *e )
+{
+    checkLockDown( b, e );
+    b->setCurrentIndex( e->value() );
+}
+
+void ConfigureImmutableWidgetUtils::saveComboBox( QComboBox * b, KCoreConfigSkeleton::ItemEnum *e )
+{
+    Q_ASSERT( b->count() == e->choices().size() );
+    if ( b->currentIndex() != -1 ) {
+        e->setValue( b->currentIndex() );
+    }
 }

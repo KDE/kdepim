@@ -32,6 +32,7 @@ class QLineEdit;
 class KConfigSkeletonItem;
 class KUrlRequester;
 class QSpinBox;
+class QComboBox;
 
 class KIntSpinBox;
 namespace PimCommon {
@@ -48,7 +49,9 @@ PIMCOMMON_EXPORT void loadWidget( QSpinBox * b, const KCoreConfigSkeleton::ItemI
 PIMCOMMON_EXPORT void loadWidget( PimCommon::SimpleStringListEditor * b, const KCoreConfigSkeleton::ItemStringList *e );
 PIMCOMMON_EXPORT void loadWidget( KIntSpinBox * b, const KCoreConfigSkeleton::ItemInt *e );
 PIMCOMMON_EXPORT void loadWidget( KIntSpinBox * b, const KCoreConfigSkeleton::ItemUInt *e );
+PIMCOMMON_EXPORT void loadWidget( QComboBox * b, const KCoreConfigSkeleton::ItemEnum *e );
 
+PIMCOMMON_EXPORT void saveComboBox( QComboBox * b, KCoreConfigSkeleton::ItemEnum *e );
 PIMCOMMON_EXPORT void saveKIntSpinBox( KIntSpinBox * b, KCoreConfigSkeleton::ItemInt *e );
 PIMCOMMON_EXPORT void saveKIntSpinBox( KIntSpinBox * b, KCoreConfigSkeleton::ItemUInt *e );
 PIMCOMMON_EXPORT void saveSpinBox( QSpinBox * b, KCoreConfigSkeleton::ItemInt *e );
