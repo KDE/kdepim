@@ -63,7 +63,7 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
               this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
 
     setupActions();
-    setupGUI();
+    setupGUI(Keys | StatusBar | Save | Create);
     readConfig();
     mStorageServiceTabWidget->setListStorageService(mStorageManager->listService());
     slotUpdateActions();
