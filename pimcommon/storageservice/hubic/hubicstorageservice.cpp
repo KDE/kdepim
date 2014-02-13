@@ -123,6 +123,7 @@ void HubicStorageService::refreshToken()
     job->initializeToken(mRefreshToken, mToken);
     connect(job, SIGNAL(authorizationDone(QString,QString,qint64)), this, SLOT(slotAuthorizationDone(QString,QString,qint64)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
+    connect(job, SIGNAL(actionFailed(QString)), this, SLOT(slotActionFailed(QString)));
     job->refreshToken();
 }
 
