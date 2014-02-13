@@ -3372,8 +3372,10 @@ void ViewerPrivate::slotExpandShortUrl()
 
 void ViewerPrivate::slotShowCreateTodoWidget()
 {
-    mCreateTodo->setMessage(mMessage);
-    mCreateTodo->show();
+    if (mMessage) {
+        mCreateTodo->setMessage(mMessage);
+        mCreateTodo->show();
+    }
 }
 
 void ViewerPrivate::slotCreateTodo(const KCalCore::Todo::Ptr &, const Akonadi::Collection &collection)

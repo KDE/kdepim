@@ -38,13 +38,21 @@ void ViewerTest::shouldHaveDefaultValuesOnCreation()
     QCOMPARE(createtodowidget->isVisible(), false);
 }
 
-void ViewerTest::shouldShowCreateTodoWidgetWhenActivateIt()
+void ViewerTest::shouldShowCreateTodoWidgetWhenActivateItAndWeHaveAMessage()
 {
     MessageViewer::Viewer viewer(0, 0, new KActionCollection(this));
     viewer.show();
     QTest::qWaitForWindowShown(&viewer);
     QWidget *createtodowidget = qFindChild<QWidget *>(&viewer, QLatin1String("createtodowidget"));
     QVERIFY(viewer.createTodoAction());
+
+    viewer.createTodoAction()->trigger();
+    //No message => we can show it.
+    QCOMPARE(createtodowidget->isVisible(), false);
+
+    KMime::Message::Ptr msg(new KMime::Message);
+    viewer.setMessage(msg);
+
     viewer.createTodoAction()->trigger();
     QCOMPARE(createtodowidget->isVisible(), true);
 }

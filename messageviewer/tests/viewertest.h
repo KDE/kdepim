@@ -26,7 +26,7 @@ public:
     ViewerTest();
 private slots:
     void shouldHaveDefaultValuesOnCreation();
-    void shouldShowCreateTodoWidgetWhenActivateIt();
+    void shouldShowCreateTodoWidgetWhenActivateItAndWeHaveAMessage();
 };
 
 #endif // VIEWERTEST_H
