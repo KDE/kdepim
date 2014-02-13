@@ -26,6 +26,7 @@
 #include <kwallet.h>
 
 #include <KLocalizedString>
+#include <KLocale>
 #include <KDateTime>
 #include <KGlobal>
 
@@ -325,14 +326,16 @@ QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
             item = listWidget->addFolder(folderInfo.dir().dirName(), info.name());
             item->setDateCreated(KDateTime(info.createdAt()));
             item->setLastModification(KDateTime(info.lastModified()));
+            item->setSize(info.size());
         } else {
             const QString mimetype = info.mimeType();
             QFileInfo fileInfo(info.name());
             item = listWidget->addFile(fileInfo.fileName(), info.name(), mimetype);
             item->setDateCreated(KDateTime(info.createdAt()));
             item->setLastModification(KDateTime(info.lastModified()));
+            item->setSize(info.size());
         }
-        //TODO item->setStoreInfo(QVariantMap(info.properties()));
+        item->setStoreInfo(QVariantMap(info.properties()));
     }
     QString parentFolder;
     if (!currentFolder.isEmpty()) {
@@ -355,7 +358,21 @@ QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
 
 QMap<QString, QString> WebDavStorageService::itemInformation(const QVariantMap &variantMap)
 {
-    return QMap<QString, QString>();
+    qDebug()<<" variantMap"<<variantMap;
+    QMap<QString, QString> information;
+    if (variantMap.contains(QLatin1String("name"))) {
+        information.insert(i18n("Name:"), variantMap.value(QLatin1String("name")).toString());
+    }
+    if (variantMap.contains(QLatin1String("isDir"))) {
+        information.insert(i18n("Type:"), variantMap.value(QLatin1String("isDir")).toBool() ? i18n("Directory") : i18n("File"));
+    }
+    if (variantMap.contains(QLatin1String("getcontentlength"))) {
+        information.insert(i18n("Size:"), KGlobal::locale()->formatByteSize(variantMap.value(QLatin1String("getcontentlength")).toString().toLongLong() ));
+    }
+    //TODO add created date
+
+    qDebug()<<" information"<<information;
+    return information;
 }
 
 QString WebDavStorageService::fileIdentifier(const QVariantMap &variantMap)

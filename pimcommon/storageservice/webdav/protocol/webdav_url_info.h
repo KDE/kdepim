@@ -51,8 +51,6 @@ namespace PimCommon {
 class QWebdavUrlInfo : public QUrlInfo
 {
 public:
-    typedef QMap < QString, QMap < QString, QVariant > > PropValues;
-
     QWebdavUrlInfo ();
     QWebdavUrlInfo ( const QDomElement &dom );
     QWebdavUrlInfo ( const QWebdavUrlInfo &wui );
@@ -74,7 +72,7 @@ public:
     QString mimeType() const;
 
     QDomElement propElement() const;
-    const QWebdavUrlInfo::PropValues & properties() const;
+    const QVariantMap properties() const;
 
     static QList<QWebdavUrlInfo> parseListInfo(const QString &lst);
 private:
@@ -83,7 +81,7 @@ private:
     void davParsePropstats(const QString & path, const QDomNodeList & propstat);
 
     QDomNode mNode;
-    QWebdavUrlInfo::PropValues mProperties;
+    QVariantMap mProperties;
     QDateTime mCreatedAt;
     QString mDisplayName;
     QString mSource;
