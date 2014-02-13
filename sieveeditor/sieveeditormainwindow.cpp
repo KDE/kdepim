@@ -127,6 +127,7 @@ void SieveEditorMainWindow::setupActions()
 
     mRefreshList = ac->addAction(QLatin1String("refresh_list"), this, SLOT(slotRefreshList()));
     mRefreshList->setText(i18n("Refresh List"));
+    mRefreshList->setIcon(KIcon(QLatin1String("view-refresh")));
     mRefreshList->setShortcut(QKeySequence( Qt::Key_F5 ));
 }
 
