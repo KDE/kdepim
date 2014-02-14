@@ -56,6 +56,8 @@ private slots:
     void slotSendDataFinished(QNetworkReply *reply);
     void slotRedirect(const QUrl &url);
 private:
+    void createFolderJob(const QString &foldername, const QString &destination);
+
     void parseDeleteFolder(const QString &data);
     void parseAccountInfo(const QString &data);
     void parseDeleteFile(const QString &data);

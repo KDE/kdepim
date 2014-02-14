@@ -62,11 +62,8 @@ void BoxJob::initializeToken(const QString &refreshToken, const QString &token)
 void BoxJob::createServiceFolder()
 {
     mActionType = PimCommon::StorageServiceAbstract::CreateServiceFolder;
-    mError = false;
-    //TODO
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    qDebug()<<" not implemented";
-    deleteLater();
+    mError = false;    
+    createFolderJob(PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder(), QLatin1String("0"));
 }
 
 void BoxJob::requestTokenAccess()
@@ -476,10 +473,8 @@ void BoxJob::accountInfo()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void BoxJob::createFolder(const QString &foldername, const QString &destination)
+void BoxJob::createFolderJob(const QString &foldername, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
-    mError = false;
     QUrl url;
     url.setUrl(mApiUrl + mFolderInfoPath);
     QNetworkRequest request(url);
@@ -488,6 +483,13 @@ void BoxJob::createFolder(const QString &foldername, const QString &destination)
     const QString data = QString::fromLatin1("{\"name\":\"%1\", \"parent\": {\"id\": \"%2\"}}").arg(foldername).arg((destination.isEmpty() ? QLatin1String("0") : destination));
     QNetworkReply *reply = mNetworkAccessManager->post(request, data.toLatin1());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+}
+
+void BoxJob::createFolder(const QString &foldername, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
+    mError = false;
+    createFolderJob(foldername, destination);
 }
 
 

@@ -75,9 +75,9 @@ void YouSendItJob::copyFolder(const QString &source, const QString &destination)
 
 void YouSendItJob::createServiceFolder()
 {
-    qDebug()<<" not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    deleteLater();
+    mActionType = PimCommon::StorageServiceAbstract::CreateServiceFolder;
+    mError = false;
+    createFolderJob(PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder(), QString());
 }
 
 QNetworkReply *YouSendItJob::downloadFile(const QString &name, const QString &fileId, const QString &destination)
@@ -259,6 +259,11 @@ void YouSendItJob::createFolder(const QString &foldername, const QString &destin
 {
     mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
     mError = false;
+    createFolderJob(foldername, destination);
+}
+
+void YouSendItJob::createFolderJob(const QString &foldername, const QString &destination)
+{
     QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/folder"));
     QNetworkRequest request = setDefaultHeader(url);
     QUrl postData;
@@ -269,7 +274,6 @@ void YouSendItJob::createFolder(const QString &foldername, const QString &destin
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
-
 
 void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
 {

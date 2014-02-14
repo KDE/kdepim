@@ -408,10 +408,8 @@ void DropBoxJob::doAuthentication()
     }
 }
 
-void DropBoxJob::createFolder(const QString &foldername, const QString &destination)
+void DropBoxJob::createFolderJob(const QString &foldername, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
-    mError = false;
     if (foldername.isEmpty()) {
         qDebug()<<" folder empty!";
     }
@@ -423,6 +421,13 @@ void DropBoxJob::createFolder(const QString &foldername, const QString &destinat
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+}
+
+void DropBoxJob::createFolder(const QString &foldername, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
+    mError = false;
+    createFolderJob(foldername, destination);
 }
 
 QNetworkReply *DropBoxJob::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
@@ -512,9 +517,7 @@ void DropBoxJob::createServiceFolder()
 {
     mActionType = PimCommon::StorageServiceAbstract::CreateServiceFolder;
     mError = false;
-    qDebug()<<" not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    deleteLater();
+    createFolderJob(PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder(), QString());
 }
 
 QNetworkReply *DropBoxJob::downloadFile(const QString &name, const QString &fileId, const QString &destination)
