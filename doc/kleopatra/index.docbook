@@ -716,7 +716,7 @@ Verify Checksum Files...
                 In such cases, the only way to restore order is to
                 kill &scdaemon;, &dirmngr;, &gpgsm; and &gpg;
                 processes, in that order, via the operating system
-                tools (<command>top</command>, &Windows; Task-Manager,
+                tools (<command>top</command>, Task-Manager,
                 &etc;), until the operation get unblocked.
               </para>
             </note>
