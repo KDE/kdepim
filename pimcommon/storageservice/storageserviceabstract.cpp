@@ -25,6 +25,7 @@ using namespace PimCommon;
 StorageServiceAbstract::StorageServiceAbstract(QObject *parent)
     : QObject(parent),
       mNextAction(new NextAction),
+      mNeedToReadConfigFirst(false),
       mInProgress(false)
 {
 }

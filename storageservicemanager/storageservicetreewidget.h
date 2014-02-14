@@ -37,6 +37,8 @@ public:
     void canDownloadFile();
 
     bool listFolderWasLoaded() const;
+    void logout();
+
 Q_SIGNALS:
     void uploadFile();
     void downloadFile();

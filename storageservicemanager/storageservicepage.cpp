@@ -271,7 +271,7 @@ PimCommon::StorageServiceAbstract::Capabilities StorageServicePage::capabilities
 void StorageServicePage::slotProgressStateChanged(bool state)
 {
     mTreeWidget->setEnabled(!state);
-    mStorageServiceNavigationBar->setEnabled(!state);
+    mStorageServiceNavigationBar->setEnabled(!state && mTreeWidget->listFolderWasLoaded());
     if (state) {
         mProgressIndicator->startAnimation();
     } else {
@@ -397,4 +397,11 @@ void StorageServicePage::setNetworkIsDown(bool state)
 void StorageServicePage::showLog()
 {
     mStorageServiceWarning->showLog();
+}
+
+void StorageServicePage::logout()
+{
+    mTreeWidget->logout();
+    mTreeWidget->setEnabled(false);
+    mStorageServiceNavigationBar->setEnabled(false);
 }

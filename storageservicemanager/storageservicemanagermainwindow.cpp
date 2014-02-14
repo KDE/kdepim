@@ -132,6 +132,7 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
         mAuthenticate->setDisabled((capabilities & PimCommon::StorageServiceAbstract::NoCapability) || (mStorageServiceTabWidget->count() == 0));
         mRefreshList->setDisabled((capabilities & PimCommon::StorageServiceAbstract::NoCapability) || (mStorageServiceTabWidget->count() == 0));
         mShowLog->setDisabled((mStorageServiceTabWidget->count() == 0));
+        mLogout->setEnabled(listFolderWasLoaded);
     }
 }
 
@@ -166,6 +167,9 @@ void StorageServiceManagerMainWindow::setupActions()
 
     mShowLog = ac->addAction(QLatin1String("show_log"), mStorageServiceTabWidget, SLOT(slotShowLog()));
     mShowLog->setText(i18n("Show Log..."));
+
+    mLogout = ac->addAction(QLatin1String("logout"), mStorageServiceTabWidget, SLOT(slotLogout()));
+    mLogout->setText(i18n("Logout"));
 
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
 }

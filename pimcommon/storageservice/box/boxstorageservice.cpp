@@ -45,6 +45,14 @@ BoxStorageService::~BoxStorageService()
 {
 }
 
+void BoxStorageService::logout()
+{
+    mToken.clear();
+    mRefreshToken.clear();
+    mExpireDateTime = QDateTime();
+    mNeedToReadConfigFirst = true;
+}
+
 void BoxStorageService::readConfig()
 {
     mExpireDateTime = QDateTime();
@@ -66,6 +74,7 @@ void BoxStorageService::readConfig()
                 }
             }
         }
+        mNeedToReadConfigFirst = false;
     }
 }
 
@@ -115,8 +124,10 @@ void BoxStorageService::slotAuthorizationDone(const QString &refreshToken, const
     emitAuthentificationDone();
 }
 
-bool BoxStorageService::needToRefreshToken() const
+bool BoxStorageService::needToRefreshToken()
 {
+    if (mNeedToReadConfigFirst)
+        readConfig();
     if (mExpireDateTime < QDateTime::currentDateTime())
         return true;
     else

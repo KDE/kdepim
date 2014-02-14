@@ -64,6 +64,7 @@ public:
 
     QString storageServiceName() const;
     KIcon icon() const;
+    void logout();
 
 private slots:
     void slotAuthorizationFailed(const QString &errorMessage);    
@@ -71,7 +72,7 @@ private slots:
 
 private:
     void connectDefaultSlot(WebDavJob *job);
-    bool needInitialized() const;
+    bool needInitialized();
     void readConfig();
     QString mPublicLocation;
     QString mServiceLocation;

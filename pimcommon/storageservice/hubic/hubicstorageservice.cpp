@@ -41,12 +41,22 @@ HubicStorageService::~HubicStorageService()
 {
 }
 
-bool HubicStorageService::needToRefreshToken() const
+bool HubicStorageService::needToRefreshToken()
 {
+    if (mNeedToReadConfigFirst)
+        readConfig();
     if (mExpireDateTime < QDateTime::currentDateTime())
         return true;
     else
         return false;
+}
+
+void HubicStorageService::logout()
+{
+    mRefreshToken.clear();
+    mToken.clear();
+    mExpireDateTime = QDateTime();
+    mNeedToReadConfigFirst = true;
 }
 
 void HubicStorageService::readConfig()
@@ -69,6 +79,7 @@ void HubicStorageService::readConfig()
                     mExpireDateTime = QDateTime::fromString(map.value(QLatin1String("Expire Time")));
                 }
             }
+            mNeedToReadConfigFirst = false;
         }
     }
 }

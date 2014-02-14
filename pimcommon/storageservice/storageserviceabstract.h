@@ -128,6 +128,7 @@ public:
     virtual QMap<QString, QString> itemInformation(const QVariantMap &variantMap) = 0;
     virtual QString fileIdentifier(const QVariantMap &variantMap) = 0;
     virtual QString fileShareRoot(const QVariantMap &variantMap) = 0;
+    virtual void logout() = 0;
 
     virtual QRegExp disallowedSymbols() const;
     virtual QString disallowedSymbolsStr() const;
@@ -201,6 +202,7 @@ protected:
     NextAction *mNextAction;
     QPointer<QNetworkReply> mUploadReply;
     QPointer<QNetworkReply> mDownloadReply;
+    bool mNeedToReadConfigFirst;
 
 private slots:
     void slotNextAction();

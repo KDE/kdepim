@@ -212,3 +212,12 @@ void StorageServiceTabWidget::slotShowLog()
             page->showLog();
     }
 }
+
+void StorageServiceTabWidget::slotLogout()
+{
+    if (currentWidget()) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        if (page)
+            page->logout();
+    }
+}

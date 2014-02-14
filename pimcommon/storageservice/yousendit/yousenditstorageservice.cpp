@@ -45,8 +45,18 @@ YouSendItStorageService::~YouSendItStorageService()
 {
 }
 
-bool YouSendItStorageService::needAuthenticate() const
+void YouSendItStorageService::logout()
 {
+    mToken.clear();
+    mUsername.clear();
+    mPassword.clear();
+    mNeedToReadConfigFirst = true;
+}
+
+bool YouSendItStorageService::needAuthenticate()
+{
+    if (mNeedToReadConfigFirst)
+        readConfig();
     return (mToken.isEmpty() || mUsername.isEmpty() || mPassword.isEmpty());
 }
 
@@ -69,6 +79,7 @@ void YouSendItStorageService::readConfig()
                     mPassword = map.value(QLatin1String("Password"));
                 }
             }
+            mNeedToReadConfigFirst = false;
         }
     }
 }

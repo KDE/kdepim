@@ -14,6 +14,8 @@
    <Action name="upload_file"/>
    <Action name="delete_file"/>
    <Action name="download_file"/>
+   <Separator/>
+   <Action name="logout"/>
   </Menu>
  </MenuBar>
 </kpartgui>

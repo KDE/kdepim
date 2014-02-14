@@ -65,15 +65,17 @@ public:
     QString disallowedSymbolsStr() const;
     qlonglong maximumUploadFileSize() const;
 
+    void logout();
 private slots:
     void slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
     void slotAuthorizationFailed(const QString &errorMessage);
 
 private:
+    bool checkNeedAuthenticate();
     void readConfig();
     QString mAccessToken;
     QString mAccessTokenSecret;
-    QString mAccessOauthSignature;    
+    QString mAccessOauthSignature;
 };
 }
 

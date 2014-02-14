@@ -428,3 +428,10 @@ bool StorageServiceTreeWidget::listFolderWasLoaded() const
 {
     return mInitialized;
 }
+
+void StorageServiceTreeWidget::logout()
+{
+    mInitialized = false;
+    clear();
+    mStorageService->logout();
+}

@@ -54,7 +54,7 @@ public:
     void showLog();
     void downloadFile();
     bool listFolderWasLoaded() const;
-
+    void logout();
 Q_SIGNALS:
     void updateIcon(const QIcon &pix, StorageServicePage *page);
     void updateStatusBarMessage(const QString &msg);

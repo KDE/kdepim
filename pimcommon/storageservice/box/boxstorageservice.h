@@ -68,13 +68,14 @@ public:
     QRegExp disallowedSymbols() const;
     QString disallowedSymbolsStr() const;
 
+    void logout();
 private slots:
     void slotAuthorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);
     void slotAuthorizationFailed(const QString &errorMessage);
 
 private:
     void refreshToken();
-    bool needToRefreshToken() const;
+    bool needToRefreshToken();
     void readConfig();
     QString mToken;
     QString mRefreshToken;

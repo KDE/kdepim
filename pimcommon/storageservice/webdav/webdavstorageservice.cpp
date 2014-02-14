@@ -47,6 +47,8 @@ WebDavStorageService::~WebDavStorageService()
 {
 }
 
+
+
 void WebDavStorageService::readConfig()
 {
     if (StorageServiceSettings::self()->createDefaultFolder()) {
@@ -69,12 +71,15 @@ void WebDavStorageService::readConfig()
                     mPassword = map.value(QLatin1String("password"));
                 }
             }
+            mNeedToReadConfigFirst = false;
         }
     }
 }
 
-bool WebDavStorageService::needInitialized() const
+bool WebDavStorageService::needInitialized()
 {
+    if (mNeedToReadConfigFirst)
+        readConfig();
     return (mServiceLocation.isEmpty() || mUsername.isEmpty() || mPassword.isEmpty());
 }
 
@@ -508,6 +513,15 @@ QString WebDavStorageService::storageServiceName() const
 KIcon WebDavStorageService::icon() const
 {
     return KIcon();
+}
+
+void WebDavStorageService::logout()
+{
+    mPublicLocation.clear();
+    mServiceLocation.clear();
+    mUsername.clear();
+    mPassword.clear();
+    mNeedToReadConfigFirst = true;
 }
 
 #include "moc_webdavstorageservice.cpp"
