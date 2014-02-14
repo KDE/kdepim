@@ -46,6 +46,9 @@ public:
 
     void writeConfig();
 
+    void setMessageUrlAkonadi(const QString &url);
+    QString messageUrlAkonadi() const;
+
 public Q_SLOTS:
     void slotCloseWidget();
 
@@ -62,6 +65,7 @@ protected:
 
 private:
     void readConfig();
+    QString mMessageUrlAkonadi;
     Akonadi::Collection mCollection;
     KMime::Message::Ptr mMessage;
     KLineEdit *mNoteEdit;

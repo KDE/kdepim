@@ -29,6 +29,9 @@
 
 #include <QLineEdit>
 #include <QToolButton>
+#include <QHBoxLayout>
+#include <QShortcut>
+#include <QAction>
 
 namespace MessageViewer {
 extern MESSAGEVIEWER_EXPORT QAbstractItemModel *_k_todoEditStubModel;
@@ -65,6 +68,7 @@ void TodoEditTest::shouldHaveDefaultValuesOnCreation()
     MessageViewer::TodoEdit edit;
     QVERIFY(!edit.collection().isValid());
     QVERIFY(!edit.message());
+    QVERIFY(edit.messageUrlAkonadi().isEmpty());
 }
 
 void TodoEditTest::shouldEmitCollectionChanged()
@@ -306,7 +310,6 @@ void TodoEditTest::shouldSaveCollectionSettingsWhenCloseWidget()
 void TodoEditTest::shouldNotEmitTodoWhenMessageIsNull()
 {
     MessageViewer::TodoEdit edit;
-    KMime::Message::Ptr msg();
     QString subject = QLatin1String("Test Note");
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
     noteedit->setText(subject);
@@ -327,6 +330,30 @@ void TodoEditTest::shouldClearLineAfterEmitNewNote()
     QCOMPARE(noteedit->text(), QString());
 }
 
+void TodoEditTest::shouldHaveLineEditFocus()
+{
+    MessageViewer::TodoEdit edit;
+    edit.show();
+    QTest::qWaitForWindowShown(&edit);
+    KMime::Message::Ptr msg(new KMime::Message);
+    QString subject = QLatin1String("Test Note");
+    msg->subject(true)->fromUnicodeString(subject, "us-ascii");
+    edit.setMessage(msg);
+    QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
+    QCOMPARE(noteedit->hasFocus(), true);
+}
+
+void TodoEditTest::shouldClearUrlMessageWhenSwitchMessage()
+{
+    MessageViewer::TodoEdit edit;
+    KMime::Message::Ptr msg(new KMime::Message);
+    edit.setMessage(msg);
+    edit.setMessageUrlAkonadi(QLatin1String("test"));
+    QCOMPARE(edit.messageUrlAkonadi(), QLatin1String("test"));
+    KMime::Message::Ptr msg2(new KMime::Message);
+    edit.setMessage(msg2);
+    QCOMPARE(edit.messageUrlAkonadi(), QString());
+}
 
 
 QTEST_KDEMAIN( TodoEditTest, GUI )
