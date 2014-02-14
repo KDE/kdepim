@@ -332,7 +332,7 @@ bool StorageServiceTreeWidget::uploadFileToService()
             return false;
         }
         if (filename == QLatin1String(".") || filename == QLatin1String("..")) {
-            KMessageBox::error(this, i18n("You are trying to use no unauthorized characters."));
+            KMessageBox::error(this, i18n("You are trying to use unauthorized characters."));
             return false;
         }
         QString newName = info.fileName();
