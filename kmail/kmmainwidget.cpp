@@ -58,7 +58,6 @@
 #include "sendlateragentinterface.h"
 #include "folderarchive/folderarchiveutil.h"
 #include "folderarchive/folderarchivemanager.h"
-#include "folderarchive/folderarchiveconfiguredialog.h"
 
 #include "pimcommon/acl/collectionaclpage.h"
 #include "mailcommon/collectionpage/collectiongeneralpage.h"
@@ -2922,7 +2921,7 @@ void KMMainWidget::showMessagePopup(const Akonadi::Item&msg ,const KUrl&url,cons
       menu->addAction( akonadiStandardAction( Akonadi::StandardMailActionManager::MoveToTrash ) );
     }
     menu->addSeparator();
-    menu->addAction( mMsgActions->createTodoAction() );
+    menu->addAction( mMsgView->createTodoAction() );
     menu->addSeparator();
     if (mMsgView) {
         menu->addAction( mMsgView->saveMessageDisplayFormatAction() );
@@ -3117,12 +3116,6 @@ void KMMainWidget::setupActions()
     KAction *action = new KAction(i18n("Message Delayed..."), this);
     actionCollection()->addAction(QLatin1String("message_delayed"), action );
     connect(action, SIGNAL(triggered(bool)), SLOT(slotConfigureSendLater()));
-  }
-
-  {
-    KAction *action = new KAction(i18n("&Configure Folder Archive Agent..."), this);
-    actionCollection()->addAction(QLatin1String("tools_configure_folderarchiving"), action );
-    connect(action, SIGNAL(triggered(bool)), SLOT(slotConfigureFolderArchiving()));
   }
 
 
@@ -4791,15 +4784,6 @@ void KMMainWidget::slotConfigureSendLater()
     } else {
         KMessageBox::error(this,i18n("Send Later Agent was not registered."));
     }
-}
-
-void KMMainWidget::slotConfigureFolderArchiving()
-{
-    QPointer<FolderArchiveConfigureDialog> dlg = new FolderArchiveConfigureDialog(this);
-    if (dlg->exec()) {
-        KMKernel::self()->folderArchiveManager()->load();
-    }
-    delete dlg;
 }
 
 void KMMainWidget::updatePaneTagComboBox()

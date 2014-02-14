@@ -41,12 +41,21 @@ HubicStorageService::~HubicStorageService()
 {
 }
 
-bool HubicStorageService::needToRefreshToken() const
+bool HubicStorageService::needToRefreshToken()
 {
+    if (mNeedToReadConfigFirst)
+        readConfig();
     if (mExpireDateTime < QDateTime::currentDateTime())
         return true;
     else
         return false;
+}
+
+void HubicStorageService::shutdownService()
+{
+    mRefreshToken.clear();
+    mToken.clear();
+    mExpireDateTime = QDateTime();
 }
 
 void HubicStorageService::readConfig()
@@ -69,6 +78,7 @@ void HubicStorageService::readConfig()
                     mExpireDateTime = QDateTime::fromString(map.value(QLatin1String("Expire Time")));
                 }
             }
+            mNeedToReadConfigFirst = false;
         }
     }
 }
@@ -123,6 +133,7 @@ void HubicStorageService::refreshToken()
     job->initializeToken(mRefreshToken, mToken);
     connect(job, SIGNAL(authorizationDone(QString,QString,qint64)), this, SLOT(slotAuthorizationDone(QString,QString,qint64)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
+    connect(job, SIGNAL(actionFailed(QString)), this, SLOT(slotActionFailed(QString)));
     job->refreshToken();
 }
 

@@ -278,40 +278,37 @@ void SecurityPage::ComposerCryptoTab::doLoadOther()
 {
     // If you change default values, sync messagecomposer.cpp too
 
-    mWidget->mEncToSelf->setChecked( MessageComposer::MessageComposerSettings::self()->cryptoEncryptToSelf() );
+    loadWidget(mWidget->mEncToSelf, MessageComposer::MessageComposerSettings::self()->cryptoEncryptToSelfItem());
     mWidget->mShowEncryptionResult->setChecked( false ); //composer.readBoolEntry( "crypto-show-encryption-result", true ) );
     mWidget->mShowEncryptionResult->hide();
-    mWidget->mShowKeyApprovalDlg->setChecked( MessageComposer::MessageComposerSettings::self()->cryptoShowKeysForApproval() );
+    loadWidget(mWidget->mShowKeyApprovalDlg, MessageComposer::MessageComposerSettings::self()->cryptoShowKeysForApprovalItem() );
 
-    mWidget->mAutoEncrypt->setChecked( MessageComposer::MessageComposerSettings::self()->pgpAutoEncrypt() ) ;
-    mWidget->mNeverEncryptWhenSavingInDrafts->setChecked(
-                GlobalSettings::self()->neverEncryptDrafts() );
+    loadWidget(mWidget->mAutoEncrypt, MessageComposer::MessageComposerSettings::self()->pgpAutoEncryptItem() ) ;
+    loadWidget(mWidget->mNeverEncryptWhenSavingInDrafts,GlobalSettings::self()->neverEncryptDraftsItem() );
 
-    mWidget->mStoreEncrypted->setChecked( GlobalSettings::self()->cryptoStoreEncrypted() );
+    loadWidget(mWidget->mStoreEncrypted, GlobalSettings::self()->cryptoStoreEncryptedItem() );
 }
 
 void SecurityPage::ComposerCryptoTab::save()
 {
-    MessageComposer::MessageComposerSettings::self()->setCryptoEncryptToSelf( mWidget->mEncToSelf->isChecked() );
-    GlobalSettings::self()->setCryptoShowEncryptionResult( mWidget->mShowEncryptionResult->isChecked() );
-    MessageComposer::MessageComposerSettings::self()->setCryptoShowKeysForApproval( mWidget->mShowKeyApprovalDlg->isChecked() );
+    saveCheckBox(mWidget->mEncToSelf, MessageComposer::MessageComposerSettings::self()->cryptoEncryptToSelfItem());
+    saveCheckBox(mWidget->mShowEncryptionResult, GlobalSettings::self()->cryptoShowEncryptionResultItem() );
+    saveCheckBox(mWidget->mShowKeyApprovalDlg, MessageComposer::MessageComposerSettings::self()->cryptoShowKeysForApprovalItem() );
 
-    MessageComposer::MessageComposerSettings::self()->setPgpAutoEncrypt( mWidget->mAutoEncrypt->isChecked() );
-    GlobalSettings::self()->setNeverEncryptDrafts( mWidget->mNeverEncryptWhenSavingInDrafts->isChecked() );
-
-    GlobalSettings::self()->setCryptoStoreEncrypted( mWidget->mStoreEncrypted->isChecked() );
+    saveCheckBox(mWidget->mAutoEncrypt, MessageComposer::MessageComposerSettings::self()->pgpAutoEncryptItem() ) ;
+    saveCheckBox(mWidget->mNeverEncryptWhenSavingInDrafts,GlobalSettings::self()->neverEncryptDraftsItem() );
+    saveCheckBox(mWidget->mStoreEncrypted, GlobalSettings::self()->cryptoStoreEncryptedItem() );
 }
 
 void SecurityPage::ComposerCryptoTab::doLoadFromGlobalSettings()
 {
-    mWidget->mEncToSelf->setChecked( MessageComposer::MessageComposerSettings::self()->cryptoEncryptToSelf() );
-    mWidget->mShowEncryptionResult->setChecked( GlobalSettings::self()->cryptoShowEncryptionResult() );
-    mWidget->mShowKeyApprovalDlg->setChecked(MessageComposer::MessageComposerSettings::self()->cryptoShowKeysForApproval() );
+    loadWidget(mWidget->mEncToSelf, MessageComposer::MessageComposerSettings::self()->cryptoEncryptToSelfItem());
+    loadWidget(mWidget->mShowEncryptionResult, GlobalSettings::self()->cryptoShowEncryptionResultItem() );
+    loadWidget(mWidget->mShowKeyApprovalDlg, MessageComposer::MessageComposerSettings::self()->cryptoShowKeysForApprovalItem() );
 
-    mWidget->mAutoEncrypt->setChecked(MessageComposer::MessageComposerSettings::self()->pgpAutoEncrypt() );
-    mWidget->mNeverEncryptWhenSavingInDrafts->setChecked( GlobalSettings::self()->neverEncryptDrafts() );
-
-    mWidget->mStoreEncrypted->setChecked(GlobalSettings::self()->cryptoStoreEncrypted() );
+    loadWidget(mWidget->mAutoEncrypt, MessageComposer::MessageComposerSettings::self()->pgpAutoEncryptItem() ) ;
+    loadWidget(mWidget->mNeverEncryptWhenSavingInDrafts,GlobalSettings::self()->neverEncryptDraftsItem() );
+    loadWidget(mWidget->mStoreEncrypted, GlobalSettings::self()->cryptoStoreEncryptedItem() );
 
 }
 
@@ -345,64 +342,48 @@ SecurityPageWarningTab::~SecurityPageWarningTab()
 
 void SecurityPage::WarningTab::doLoadFromGlobalSettings()
 {
-    mWidget->warnUnencryptedCB->setChecked(
-                MessageComposer::MessageComposerSettings::self()->cryptoWarningUnencrypted() );
-    mWidget->mWarnUnsigned->setChecked(
-                MessageComposer::MessageComposerSettings::self()->cryptoWarningUnsigned() );
-    mWidget->warnReceiverNotInCertificateCB->setChecked(
-                MessageComposer::MessageComposerSettings::self()->cryptoWarnRecvNotInCert() );
+    loadWidget(mWidget->warnUnencryptedCB, MessageComposer::MessageComposerSettings::self()->cryptoWarningUnencryptedItem() );
+    loadWidget(mWidget->mWarnUnsigned, MessageComposer::MessageComposerSettings::self()->cryptoWarningUnsignedItem() );
+    loadWidget(mWidget->warnReceiverNotInCertificateCB, MessageComposer::MessageComposerSettings::self()->cryptoWarnRecvNotInCertItem() );
 
     // The "-int" part of the key name is because there used to be a separate boolean
     // config entry for enabling/disabling. This is done with the single bool value now.
     mWidget->warnGroupBox->setChecked(
                 MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() );
-    mWidget->mWarnSignKeyExpiresSB->setValue(
-                MessageComposer::MessageComposerSettings::self()->cryptoWarnSignKeyNearExpiryThresholdDays() );
-    mWidget->mWarnSignChainCertExpiresSB->setValue(
-                MessageComposer::MessageComposerSettings::self()->cryptoWarnSignChaincertNearExpiryThresholdDays() );
-    mWidget->mWarnSignRootCertExpiresSB->setValue(
-                MessageComposer::MessageComposerSettings::self()->cryptoWarnSignRootNearExpiryThresholdDays() );
 
-    mWidget->mWarnEncrKeyExpiresSB->setValue(
-                MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrKeyNearExpiryThresholdDays() );
-    mWidget->mWarnEncrChainCertExpiresSB->setValue(
-                MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrChaincertNearExpiryThresholdDays() );
-    mWidget->mWarnEncrRootCertExpiresSB->setValue(
-                MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrRootNearExpiryThresholdDays() );
+    loadWidget(mWidget->mWarnSignKeyExpiresSB, MessageComposer::MessageComposerSettings::self()->cryptoWarnSignKeyNearExpiryThresholdDaysItem() );
+    loadWidget(mWidget->mWarnSignChainCertExpiresSB,MessageComposer::MessageComposerSettings::self()->cryptoWarnSignChaincertNearExpiryThresholdDaysItem() );
+    loadWidget(mWidget->mWarnSignRootCertExpiresSB, MessageComposer::MessageComposerSettings::self()->cryptoWarnSignRootNearExpiryThresholdDaysItem() );
+    loadWidget(mWidget->mWarnEncrKeyExpiresSB, MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrKeyNearExpiryThresholdDaysItem() );
+    loadWidget(mWidget->mWarnEncrChainCertExpiresSB, MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrChaincertNearExpiryThresholdDaysItem() );
+    loadWidget(mWidget->mWarnEncrRootCertExpiresSB, MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrRootNearExpiryThresholdDaysItem() );
+
 }
 
 void SecurityPage::WarningTab::doLoadOther()
 {
-    mWidget->warnUnencryptedCB->setChecked(
-                MessageComposer::MessageComposerSettings::self()->cryptoWarningUnencrypted() );
-    mWidget->mWarnUnsigned->setChecked(
-                MessageComposer::MessageComposerSettings::self()->cryptoWarningUnsigned() );
-    mWidget->warnReceiverNotInCertificateCB->setChecked(
-                MessageComposer::MessageComposerSettings::self()->cryptoWarnRecvNotInCert() );
+    loadWidget(mWidget->warnUnencryptedCB, MessageComposer::MessageComposerSettings::self()->cryptoWarningUnencryptedItem() );
+    loadWidget(mWidget->mWarnUnsigned, MessageComposer::MessageComposerSettings::self()->cryptoWarningUnsignedItem() );
+    loadWidget(mWidget->warnReceiverNotInCertificateCB, MessageComposer::MessageComposerSettings::self()->cryptoWarnRecvNotInCertItem() );
 
     // The "-int" part of the key name is because there used to be a separate boolean
     // config entry for enabling/disabling. This is done with the single bool value now.
     mWidget->warnGroupBox->setChecked(
                 MessageComposer::MessageComposerSettings::self()->cryptoWarnWhenNearExpire() );
 
-    mWidget->mWarnSignKeyExpiresSB->setValue(
-                MessageComposer::MessageComposerSettings::self()->cryptoWarnSignKeyNearExpiryThresholdDays() );
+    loadWidget(mWidget->mWarnSignKeyExpiresSB, MessageComposer::MessageComposerSettings::self()->cryptoWarnSignKeyNearExpiryThresholdDaysItem() );
     mWidget->mWarnSignKeyExpiresSB->setSuffix(ki18np(" day", " days"));
-    mWidget->mWarnSignChainCertExpiresSB->setValue(
-                MessageComposer::MessageComposerSettings::self()->cryptoWarnSignChaincertNearExpiryThresholdDays() );
-    mWidget->mWarnSignChainCertExpiresSB->setSuffix(ki18np(" day", " days"));
-    mWidget->mWarnSignRootCertExpiresSB->setValue(
-                MessageComposer::MessageComposerSettings::self()->cryptoWarnSignRootNearExpiryThresholdDays() );
-    mWidget->mWarnSignRootCertExpiresSB->setSuffix(ki18np(" day", " days"));
 
-    mWidget->mWarnEncrKeyExpiresSB->setValue(
-                MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrKeyNearExpiryThresholdDays() );
+    loadWidget(mWidget->mWarnSignChainCertExpiresSB,MessageComposer::MessageComposerSettings::self()->cryptoWarnSignChaincertNearExpiryThresholdDaysItem() );
+    mWidget->mWarnSignChainCertExpiresSB->setSuffix(ki18np(" day", " days"));
+    loadWidget(mWidget->mWarnSignRootCertExpiresSB, MessageComposer::MessageComposerSettings::self()->cryptoWarnSignRootNearExpiryThresholdDaysItem() );
+    mWidget->mWarnSignRootCertExpiresSB->setSuffix(ki18np(" day", " days"));
+    loadWidget(mWidget->mWarnEncrKeyExpiresSB, MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrKeyNearExpiryThresholdDaysItem() );
     mWidget->mWarnEncrKeyExpiresSB->setSuffix(ki18np(" day", " days"));
-    mWidget->mWarnEncrChainCertExpiresSB->setValue(
-                MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrChaincertNearExpiryThresholdDays() );
+
+    loadWidget(mWidget->mWarnEncrChainCertExpiresSB, MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrChaincertNearExpiryThresholdDaysItem() );
     mWidget->mWarnEncrChainCertExpiresSB->setSuffix(ki18np(" day", " days"));
-    mWidget->mWarnEncrRootCertExpiresSB->setValue(
-                MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrRootNearExpiryThresholdDays() );
+    loadWidget(mWidget->mWarnEncrRootCertExpiresSB, MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrRootNearExpiryThresholdDaysItem() );
     mWidget->mWarnEncrRootCertExpiresSB->setSuffix(ki18np(" day", " days"));
 
     mWidget->enableAllWarningsPB->setEnabled( true );
@@ -410,28 +391,19 @@ void SecurityPage::WarningTab::doLoadOther()
 
 void SecurityPage::WarningTab::save()
 {
-    MessageComposer::MessageComposerSettings::self()->setCryptoWarnRecvNotInCert(
-                mWidget->warnReceiverNotInCertificateCB->isChecked() );
-    MessageComposer::MessageComposerSettings::self()->setCryptoWarningUnencrypted(
-                mWidget->warnUnencryptedCB->isChecked() );
-    MessageComposer::MessageComposerSettings::self()->setCryptoWarningUnsigned(
-                mWidget->mWarnUnsigned->isChecked() );
+    saveCheckBox(mWidget->warnUnencryptedCB, MessageComposer::MessageComposerSettings::self()->cryptoWarningUnencryptedItem() );
+    saveCheckBox(mWidget->mWarnUnsigned, MessageComposer::MessageComposerSettings::self()->cryptoWarningUnsignedItem() );
+    saveCheckBox(mWidget->warnReceiverNotInCertificateCB, MessageComposer::MessageComposerSettings::self()->cryptoWarnRecvNotInCertItem() );
 
     MessageComposer::MessageComposerSettings::self()->setCryptoWarnWhenNearExpire(
                 mWidget->warnGroupBox->isChecked() );
-    MessageComposer::MessageComposerSettings::self()->setCryptoWarnSignKeyNearExpiryThresholdDays(
-                mWidget->mWarnSignKeyExpiresSB->value() );
-    MessageComposer::MessageComposerSettings::self()->setCryptoWarnSignChaincertNearExpiryThresholdDays(
-                mWidget->mWarnSignChainCertExpiresSB->value() );
-    MessageComposer::MessageComposerSettings::self()->setCryptoWarnSignRootNearExpiryThresholdDays(
-                mWidget->mWarnSignRootCertExpiresSB->value() );
 
-    MessageComposer::MessageComposerSettings::self()->setCryptoWarnEncrKeyNearExpiryThresholdDays(
-                mWidget->mWarnEncrKeyExpiresSB->value() );
-    MessageComposer::MessageComposerSettings::self()->setCryptoWarnEncrChaincertNearExpiryThresholdDays(
-                mWidget->mWarnEncrChainCertExpiresSB->value() );
-    MessageComposer::MessageComposerSettings::self()->setCryptoWarnEncrRootNearExpiryThresholdDays(
-                mWidget->mWarnEncrRootCertExpiresSB->value() );
+    saveKIntSpinBox(mWidget->mWarnSignKeyExpiresSB, MessageComposer::MessageComposerSettings::self()->cryptoWarnSignKeyNearExpiryThresholdDaysItem() );
+    saveKIntSpinBox(mWidget->mWarnSignChainCertExpiresSB,MessageComposer::MessageComposerSettings::self()->cryptoWarnSignChaincertNearExpiryThresholdDaysItem() );
+    saveKIntSpinBox(mWidget->mWarnSignRootCertExpiresSB, MessageComposer::MessageComposerSettings::self()->cryptoWarnSignRootNearExpiryThresholdDaysItem() );
+    saveKIntSpinBox(mWidget->mWarnEncrKeyExpiresSB, MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrKeyNearExpiryThresholdDaysItem() );
+    saveKIntSpinBox(mWidget->mWarnEncrChainCertExpiresSB, MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrChaincertNearExpiryThresholdDaysItem() );
+    saveKIntSpinBox(mWidget->mWarnEncrRootCertExpiresSB, MessageComposer::MessageComposerSettings::self()->cryptoWarnEncrRootNearExpiryThresholdDaysItem() );
 }
 
 void SecurityPage::WarningTab::slotReenableAllWarningsClicked()

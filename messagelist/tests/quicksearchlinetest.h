@@ -36,6 +36,8 @@ private Q_SLOTS:
     void shouldHideExtraOptionWidgetWhenClearLineEdit();
     void shouldHideExtraOptionWidgetWhenResetFilter();
     void shouldEmitSearchOptionChanged();
+    void shouldResetAllWhenResetFilter();
+    void shouldShowTagComboBox();
 };
 
 #endif // QUICKSEARCHLINETEST_H

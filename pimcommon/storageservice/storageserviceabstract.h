@@ -129,10 +129,13 @@ public:
     virtual QString fileIdentifier(const QVariantMap &variantMap) = 0;
     virtual QString fileShareRoot(const QVariantMap &variantMap) = 0;
 
+    virtual void shutdownService() = 0;
+
     virtual QRegExp disallowedSymbols() const;
     virtual QString disallowedSymbolsStr() const;
     virtual qlonglong maximumUploadFileSize() const;
 
+    void logout();
     void cancelUploadFile();
     void cancelDownloadFile();
     void cancelUploadDownloadFile();
@@ -201,6 +204,10 @@ protected:
     NextAction *mNextAction;
     QPointer<QNetworkReply> mUploadReply;
     QPointer<QNetworkReply> mDownloadReply;
+    bool mNeedToReadConfigFirst;
+
+private slots:
+    void slotNextAction();
 
 private:
     inline void changeProgressState(bool state);

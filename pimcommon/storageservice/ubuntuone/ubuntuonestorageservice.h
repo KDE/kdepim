@@ -62,6 +62,7 @@ public:
 
     KIcon icon() const;
 
+    void shutdownService();
 private slots:
     void slotAuthorizationDone(const QString &customerSecret, const QString &token, const QString &customerKey, const QString &tokenSecret);
     void slotAuthorizationFailed(const QString &errorMessage);

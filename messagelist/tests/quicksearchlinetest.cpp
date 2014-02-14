@@ -27,6 +27,7 @@
 #include <KLineEdit>
 #include <QToolButton>
 #include <QPushButton>
+#include <KComboBox>
 
 
 using namespace MessageList::Core;
@@ -94,6 +95,30 @@ void QuickSearchLineTest::shouldEmitSearchOptionChanged()
     QPushButton *button = qFindChild<QPushButton *>(&searchLine, QLatin1String("subject"));
     QTest::mouseClick(button, Qt::LeftButton);
     QCOMPARE(spy.count(), 1);
+}
+
+void QuickSearchLineTest::shouldResetAllWhenResetFilter()
+{
+    QuickSearchLine searchLine;
+    searchLine.show();
+    searchLine.resetFilter();
+    QCOMPARE(searchLine.status().count(), 0);
+    QCOMPARE(searchLine.lockSearch()->isChecked(), false);
+    QCOMPARE(searchLine.tagFilterComboBox()->currentIndex(), -1);
+    QuickSearchLine::SearchOptions options;
+    options = QuickSearchLine::SearchAgainstBody;
+    QCOMPARE(searchLine.searchOptions(), options);
+}
+
+void QuickSearchLineTest::shouldShowTagComboBox()
+{
+    QuickSearchLine searchLine;
+    searchLine.show();
+    QTest::qWaitForWindowShown(&searchLine);
+    QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), false);
+    searchLine.tagFilterComboBox()->addItems(QStringList()<<QLatin1String("1")<<QLatin1String("2"));
+    searchLine.updateComboboxVisibility();
+    QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), true);
 }
 
 QTEST_KDEMAIN( QuickSearchLineTest, GUI )

@@ -72,6 +72,7 @@ void StorageServiceTabWidget::createPage(const QString &name, PimCommon::Storage
     StorageServicePage *page = new StorageServicePage(name, service);
     connect(page, SIGNAL(updateIcon(QIcon,StorageServicePage*)), this, SLOT(slotUpdateIcon(QIcon,StorageServicePage*)));
     connect(page, SIGNAL(updateStatusBarMessage(QString)), this, SIGNAL(updateStatusBarMessage(QString)));
+    connect(page, SIGNAL(listFileWasInitialized()), this, SIGNAL(listFileWasInitialized()));
     addTab(page, name);
 }
 
@@ -144,7 +145,7 @@ void StorageServiceTabWidget::slotDownloadFile()
     if (currentWidget()) {
         StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
         if (page)
-            page->slotDownloadFile();
+            page->downloadFile();
     }
 }
 
@@ -156,6 +157,16 @@ PimCommon::StorageServiceAbstract::Capabilities StorageServiceTabWidget::capabil
             return page->capabilities();
     }
     return PimCommon::StorageServiceAbstract::NoCapability;
+}
+
+bool StorageServiceTabWidget::listFolderWasLoaded() const
+{
+    if (currentWidget()) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        if (page)
+            return page->listFolderWasLoaded();
+    }
+    return false;
 }
 
 bool StorageServiceTabWidget::hasUploadDownloadProgress() const
@@ -199,5 +210,14 @@ void StorageServiceTabWidget::slotShowLog()
         StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
         if (page)
             page->showLog();
+    }
+}
+
+void StorageServiceTabWidget::logout()
+{
+    if (currentWidget()) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        if (page)
+            page->logout();
     }
 }

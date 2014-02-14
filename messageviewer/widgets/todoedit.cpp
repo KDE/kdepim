@@ -41,6 +41,7 @@ TodoEdit::TodoEdit(QWidget *parent)
     : QWidget(parent)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
+    hbox->setSpacing(0);
     setLayout(hbox);
 
     QToolButton *closeBtn = new QToolButton( this );
@@ -51,6 +52,7 @@ TodoEdit::TodoEdit(QWidget *parent)
 
 #ifndef QT_NO_ACCESSIBILITY
     closeBtn->setAccessibleName( i18n( "Close" ) );
+    closeBtn->setAccessibleDescription( i18n("Close widget to create new Todo") );
 #endif
 
     closeBtn->setAutoRaise( true );
@@ -63,21 +65,37 @@ TodoEdit::TodoEdit(QWidget *parent)
     mNoteEdit = new KLineEdit;
     mNoteEdit->setClearButtonShown(true);
     mNoteEdit->setObjectName(QLatin1String("noteedit"));
+    mNoteEdit->setFocus();
     connect(mNoteEdit, SIGNAL(returnPressed()), SLOT(slotReturnPressed()));
     hbox->addWidget(mNoteEdit);
     mCollectionCombobox = new Akonadi::CollectionComboBox(_k_todoEditStubModel);
     mCollectionCombobox->setMinimumWidth(250);
     mCollectionCombobox->setMimeTypeFilter( QStringList() << KCalCore::Todo::todoMimeType() );
     mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
+#ifndef QT_NO_ACCESSIBILITY
+    mCollectionCombobox->setAccessibleDescription( i18n("Select collection where Todo will stored.") );
+#endif
+
     connect(mCollectionCombobox, SIGNAL(currentIndexChanged(int)), SLOT(slotCollectionChanged(int)));
     connect(mCollectionCombobox, SIGNAL(activated(int)), SLOT(slotCollectionChanged(int)));
     hbox->addWidget(mCollectionCombobox);
     readConfig();
+    setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
 }
 
 TodoEdit::~TodoEdit()
 {
 
+}
+
+void TodoEdit::setMessageUrlAkonadi(const QString &url)
+{
+    mMessageUrlAkonadi = url;
+}
+
+QString TodoEdit::messageUrlAkonadi() const
+{
+    return mMessageUrlAkonadi;
 }
 
 void TodoEdit::writeConfig()
@@ -120,10 +138,12 @@ void TodoEdit::setMessage(const KMime::Message::Ptr &value)
 {
     if (mMessage != value) {
         mMessage = value;
+        mMessageUrlAkonadi.clear();
         const KMime::Headers::Subject * const subject = mMessage ? mMessage->subject(false) : 0;
         if (subject) {
             mNoteEdit->setText(i18n("Reply to \"%1\"", subject->asUnicodeString()));
             mNoteEdit->selectAll();
+            mNoteEdit->setFocus();
         } else {
             mNoteEdit->clear();
         }
@@ -133,6 +153,7 @@ void TodoEdit::setMessage(const KMime::Message::Ptr &value)
 
 void TodoEdit::slotCloseWidget()
 {
+    writeConfig();
     mNoteEdit->clear();
     mMessage = KMime::Message::Ptr();
     hide();
@@ -140,6 +161,10 @@ void TodoEdit::slotCloseWidget()
 
 void TodoEdit::slotReturnPressed()
 {
+    if (!mMessage) {
+        kDebug()<<" Message is null";
+        return;
+    }
     const Akonadi::Collection collection = mCollectionCombobox->currentCollection();
     if (!mNoteEdit->text().isEmpty() && collection.isValid()) {
         KCalCore::Todo::Ptr todo( new KCalCore::Todo );
@@ -155,12 +180,19 @@ bool TodoEdit::event(QEvent* e)
     // Not using a QShortcut for this because it could conflict with
     // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
     // With a shortcut override we can catch this before it gets to kactions.
-    if (e->type() == QEvent::ShortcutOverride || e->type() == QEvent::KeyPress ) {
+    const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
+    if (shortCutOverride || e->type() == QEvent::KeyPress ) {
         QKeyEvent* kev = static_cast<QKeyEvent* >(e);
         if (kev->key() == Qt::Key_Escape) {
             e->accept();
             slotCloseWidget();
             return true;
+        } else if ( kev->key() == Qt::Key_Enter ||
+                   kev->key() == Qt::Key_Return ) {
+            e->accept();
+            if ( shortCutOverride ) {
+                return true;
+            }
         }
     }
     return QWidget::event(e);

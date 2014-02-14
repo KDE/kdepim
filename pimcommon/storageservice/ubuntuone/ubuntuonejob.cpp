@@ -160,12 +160,21 @@ void UbuntuOneJob::createFolder(const QString &foldername, const QString &destin
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QUrl postData;
     const QString mAccessOauth = mCustomerSecret + QLatin1String("%26") + mTokenSecret;
-
+/*
     postData.addQueryItem(QLatin1String("oauth_signature"), mAccessOauth);
-    postData.addQueryItem(QLatin1String("token"), mToken);
+    postData.addQueryItem(QLatin1String("oauth_signature_method"), mOauthSignatureMethod);
+    postData.addQueryItem(QLatin1String("oauth_token"), mToken);
+
     postData.addQueryItem(QLatin1String("token_secret"), mTokenSecret);
     postData.addQueryItem(QLatin1String("consumer_secret"), mCustomerSecret);
     postData.addQueryItem(QLatin1String("consumer_key"), mCustomerKey);
+    */
+    postData.addQueryItem(QLatin1String("oauth_signature"), mAccessOauth);
+    postData.addQueryItem(QLatin1String("oauth_signature_method"), mOauthSignatureMethod);
+    postData.addQueryItem(QLatin1String("oauth_timestamp"), mTimestamp);
+    postData.addQueryItem(QLatin1String("oauth_version"), mOauthVersion);
+    postData.addQueryItem(QLatin1String("oauth_token"), mToken);
+
     QNetworkReply *reply = mNetworkAccessManager->put(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
@@ -456,8 +465,14 @@ void UbuntuOneJob::deleteFolder(const QString &foldername)
     QUrl postData;
     const QString mAccessOauth = mCustomerSecret + QLatin1String("%26") + mTokenSecret;
 
+    qDebug()<<" mAccessOauth"<<mAccessOauth;
+    qDebug()<<" mToken"<<mToken;
+    qDebug()<<" mTokenSecret"<<mTokenSecret;
+    qDebug()<<" mCustomerSecret"<<mCustomerSecret;
+    qDebug()<<" consumer_key"<<mCustomerKey;
+
     postData.addQueryItem(QLatin1String("oauth_signature"), mAccessOauth);
-    postData.addQueryItem(QLatin1String("token"), mToken);
+    postData.addQueryItem(QLatin1String("oauth_token"), mToken);
     postData.addQueryItem(QLatin1String("token_secret"), mTokenSecret);
     postData.addQueryItem(QLatin1String("consumer_secret"), mCustomerSecret);
     postData.addQueryItem(QLatin1String("consumer_key"), mCustomerKey);
@@ -481,16 +496,38 @@ void UbuntuOneJob::renameFile(const QString &oldName, const QString &newName)
     mError = false;
     QNetworkRequest request(QUrl(QLatin1String("https://one.ubuntu.com/api/file_storage/v1/volumes/~/Ubuntu One/") + oldName));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+
+#if 0
+
+    //https://one.ubuntu.com/api/file_storage/v1/~/Ubuntu One/ss?oauth_consumer_key=xze7Bw3&
+                                                                 oauth_nonce=13922099193c5&
+                                                                 oauth_signature=s4mmPGu164pA94R18SFfdqBW3As%3D&
+                                                                 oauth_signature_method=HMAC-SHA1&
+                                                                 oauth_timestamp=1392209919&
+                                                                 oauth_token=CLmkMwIYhWeQQVxbKRgYhwDeWpURoYvbEjfpzgUvgamUrJdMyo&
+                                                                 oauth_version=1.0
+
+                                                                 oauth_signature=aKYAypiqhSkxUYRUUGNbqRYJHnSRsi%26FhpzokZIMhMYlVXDgUGMnBgXetcxMHzmCTbWIYpVfKkvpfnBQa&token=MPNifxdxiGzAkyOGOshegdKkNxomjTTWAZKZYoMPqNsOhEODdB&token_secret=FhpzokZIMhMYlVXDgUGMnBgXetcxMHzmCTbWIYpVfKkvpfnBQa&consumer_secret=aKYAypiqhSkxUYRUUGNbqRYJHnSRsi&consumer_key=xze7Bw3;
+#endif
     QUrl postData;
+
+
+
     const QString mAccessOauth = mCustomerSecret + QLatin1String("%26") + mTokenSecret;
 
     postData.addQueryItem(QLatin1String("oauth_signature"), mAccessOauth);
-    postData.addQueryItem(QLatin1String("token"), mToken);
-    postData.addQueryItem(QLatin1String("token_secret"), mTokenSecret);
-    postData.addQueryItem(QLatin1String("consumer_secret"), mCustomerSecret);
-    postData.addQueryItem(QLatin1String("consumer_key"), mCustomerKey);
-    QByteArray t("{\"path\":dd}");
-    QNetworkReply *reply = mNetworkAccessManager->put(request, t);
+
+
+
+    postData.addQueryItem(QLatin1String("oauth_token"), mToken);
+    postData.addQueryItem(QLatin1String("oauth_token_secret"), mTokenSecret);
+    //postData.addQueryItem(QLatin1String("oauth_consumer_secret"), mCustomerSecret);
+    postData.addQueryItem(QLatin1String("oauth_consumer_key"), mCustomerKey);
+    qDebug()<<" postData"<<postData;
+    QUrl url = QUrl(QLatin1String("https://one.ubuntu.com/api/file_storage/v1/volumes/~/Ubuntu One/ss?oauth_consumer_key=xze7Bw3&oauth_nonce=13922099193c5&oauth_signature=s4mmPGu164pA94R18SFfdqBW3As%3D&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1392209919&oauth_token=CLmkMwIYhWeQQVxbKRgYhwDeWpURoYvbEjfpzgUvgamUrJdMyo&oauth_version=1.0"));
+    request = QNetworkRequest(url);
+    QString t = QString::fromLatin1("{\"path\": \"%1\"}").arg(newName);
+    QNetworkReply *reply = mNetworkAccessManager->put(request, t.toUtf8());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
@@ -614,7 +651,6 @@ void UbuntuOneJob::finishGetToken()
 void UbuntuOneJob::parseAccessToken(const QString &data)
 {
     qDebug()<<" data "<<data;
-    //Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 

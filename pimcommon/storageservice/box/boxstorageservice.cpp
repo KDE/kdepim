@@ -45,6 +45,13 @@ BoxStorageService::~BoxStorageService()
 {
 }
 
+void BoxStorageService::shutdownService()
+{
+    mToken.clear();
+    mRefreshToken.clear();
+    mExpireDateTime = QDateTime();
+}
+
 void BoxStorageService::readConfig()
 {
     mExpireDateTime = QDateTime();
@@ -66,6 +73,7 @@ void BoxStorageService::readConfig()
                 }
             }
         }
+        mNeedToReadConfigFirst = false;
     }
 }
 
@@ -115,8 +123,10 @@ void BoxStorageService::slotAuthorizationDone(const QString &refreshToken, const
     emitAuthentificationDone();
 }
 
-bool BoxStorageService::needToRefreshToken() const
+bool BoxStorageService::needToRefreshToken()
 {
+    if (mNeedToReadConfigFirst)
+        readConfig();
     if (mExpireDateTime < QDateTime::currentDateTime())
         return true;
     else
@@ -126,7 +136,6 @@ bool BoxStorageService::needToRefreshToken() const
 void BoxStorageService::refreshToken()
 {
     BoxJob *job = new BoxJob(this);
-    qDebug()<<" mRefreshToken"<<mRefreshToken;
     job->initializeToken(mRefreshToken, mToken);
     connect(job, SIGNAL(authorizationDone(QString,QString,qint64)), this, SLOT(slotAuthorizationDone(QString,QString,qint64)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
@@ -511,7 +520,6 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
     bool ok;
 
     const QMap<QString, QVariant> info = parser.parse(data.toString().toUtf8(), &ok).toMap();
-    qDebug()<<" info "<<info;
     listWidget->createMoveUpItem();
     QString parentId;
 

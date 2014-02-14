@@ -84,6 +84,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mTagFilterCombo = new KComboBox( this ) ;
     mTagFilterCombo->setVisible( Settings::self()->showQuickSearch() );
     mTagFilterCombo->setMaximumWidth(300);
+    mTagFilterCombo->hide();
     hbox->addWidget( mTagFilterCombo );
 
     // The "Open Full Search" button
@@ -173,7 +174,7 @@ void QuickSearchLine::slotSearchOptionChanged()
 
 QuickSearchLine::SearchOptions QuickSearchLine::searchOptions() const
 {
-    QuickSearchLine::SearchOptions searchOptions = SearchNoOption;
+    QuickSearchLine::SearchOptions searchOptions;
     if (mSearchAgainstBody->isChecked()) {
         searchOptions |= SearchAgainstBody;
     }
@@ -186,7 +187,6 @@ QuickSearchLine::SearchOptions QuickSearchLine::searchOptions() const
     if (mSearchAgainstBcc->isChecked()) {
         searchOptions |= SearchAgainstBcc;
     }
-    searchOptions |= SearchAgainstBody;
     return searchOptions;
 }
 
@@ -314,4 +314,9 @@ QList<Akonadi::MessageStatus> QuickSearchLine::status() const
         }
     }
     return lstStatus;
+}
+
+void QuickSearchLine::updateComboboxVisibility()
+{
+    mTagFilterCombo->setVisible(mTagFilterCombo->count());
 }

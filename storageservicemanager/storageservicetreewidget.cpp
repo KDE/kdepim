@@ -83,7 +83,10 @@ void StorageServiceTreeWidget::slotGeneralFontChanged()
 
 void StorageServiceTreeWidget::setIsInitialized()
 {
-    mInitialized = true;
+    if (!mInitialized) {
+        mInitialized = true;
+        Q_EMIT listFileWasInitialized();
+    }
 }
 
 void StorageServiceTreeWidget::createMenuActions(KMenu *menu)
@@ -238,7 +241,7 @@ bool StorageServiceTreeWidget::checkName(const QString &name)
         }
     }
     if (name == QLatin1String(".") || name == QLatin1String("..")) {
-        KMessageBox::error(this, i18n("You can not name a folder or file . or .."), i18n("Create Folder"));
+        KMessageBox::error(this, i18n("You cannot name a folder or file . or .."), i18n("Create Folder"));
         return false;
     }
     return true;
@@ -328,6 +331,10 @@ bool StorageServiceTreeWidget::uploadFileToService()
             KMessageBox::error(this, i18n("File size (%1) is larger than limit (%2)", KGlobal::locale()->formatByteSize(info.size(),1), KGlobal::locale()->formatByteSize(maximumLimit,1)));
             return false;
         }
+        if (filename == QLatin1String(".") || filename == QLatin1String("..")) {
+            KMessageBox::error(this, i18n("You are trying to use unauthorized characters."));
+            return false;
+        }
         QString newName = info.fileName();
         if (!disallowedSymbols.isEmpty()) {
             if (newName.contains(disallowedSymbols)) {
@@ -349,6 +356,15 @@ bool StorageServiceTreeWidget::uploadFileToService()
         return true;
     } else {
         return false;
+    }
+}
+
+void StorageServiceTreeWidget::canDownloadFile()
+{
+    if (itemTypeSelected() == StorageServiceTreeWidget::File) {
+        Q_EMIT downloadFile();
+    } else {
+        KMessageBox::error(this, i18n("Please select a file to download."), i18n("Download File"));
     }
 }
 
@@ -406,4 +422,16 @@ void StorageServiceTreeWidget::slotFileDoubleClicked()
             Q_EMIT downloadFile();
         }
     }
+}
+
+bool StorageServiceTreeWidget::listFolderWasLoaded() const
+{
+    return mInitialized;
+}
+
+void StorageServiceTreeWidget::logout()
+{
+    mInitialized = false;
+    clear();
+    mStorageService->logout();
 }

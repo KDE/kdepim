@@ -16,13 +16,17 @@
 */
 
 #include "storageserviceabstract.h"
+#include "storageservice/settings/storageservicesettings.h"
+
 #include <QDebug>
+#include <QTimer>
 
 using namespace PimCommon;
 
 StorageServiceAbstract::StorageServiceAbstract(QObject *parent)
     : QObject(parent),
       mNextAction(new NextAction),
+      mNeedToReadConfigFirst(false),
       mInProgress(false)
 {
 }
@@ -244,6 +248,13 @@ qlonglong StorageServiceAbstract::maximumUploadFileSize() const
     return -1;
 }
 
+void StorageServiceAbstract::logout()
+{
+    StorageServiceSettings::self()->closeWallet();
+    shutdownService();
+    mNeedToReadConfigFirst = true;
+}
+
 void StorageServiceAbstract::executeNextAction()
 {
     switch(mNextAction->nextActionType()) {
@@ -408,6 +419,11 @@ void StorageServiceAbstract::slotCopyFolderDone(const QString &filename)
 void StorageServiceAbstract::emitAuthentificationDone()
 {
     Q_EMIT authenticationDone(storageServiceName());
+    QTimer::singleShot(0, this, SLOT(slotNextAction()));
+}
+
+void StorageServiceAbstract::slotNextAction()
+{
     if (mNextAction->nextActionType() != NoneAction)
         executeNextAction();
     else {

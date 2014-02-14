@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,27 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLDERARCHIVECONFIGUREDIALOG_H
-#define FOLDERARCHIVECONFIGUREDIALOG_H
+#ifndef VIEWERTEST_H
+#define VIEWERTEST_H
+#include <QObject>
 
-#include <KDialog>
-class QTabWidget;
-class KAboutData;
-class FolderArchiveConfigureDialog : public KDialog
+class ViewerTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FolderArchiveConfigureDialog(QWidget *parent=0);
-    ~FolderArchiveConfigureDialog();
-
-private Q_SLOTS:
-    void slotOkClicked();
-
-private:
-    void initializeTab();
-    void writeConfig();
-    void readConfig();
-    QTabWidget *mTabWidget;
+    ViewerTest();
+private slots:
+    void shouldHaveDefaultValuesOnCreation();
+    void shouldShowCreateTodoWidgetWhenActivateItAndWeHaveAMessage();
 };
 
-#endif // FOLDERARCHIVECONFIGUREDIALOG_H
+#endif // VIEWERTEST_H

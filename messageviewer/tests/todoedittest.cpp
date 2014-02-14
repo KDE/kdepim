@@ -16,6 +16,7 @@
 */
 
 #include "todoedittest.h"
+#include "messageviewer/globalsettings_base.h"
 #include "widgets/todoedit.h"
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionComboBox>
@@ -28,6 +29,9 @@
 
 #include <QLineEdit>
 #include <QToolButton>
+#include <QHBoxLayout>
+#include <QShortcut>
+#include <QAction>
 
 namespace MessageViewer {
 extern MESSAGEVIEWER_EXPORT QAbstractItemModel *_k_todoEditStubModel;
@@ -64,6 +68,7 @@ void TodoEditTest::shouldHaveDefaultValuesOnCreation()
     MessageViewer::TodoEdit edit;
     QVERIFY(!edit.collection().isValid());
     QVERIFY(!edit.message());
+    QVERIFY(edit.messageUrlAkonadi().isEmpty());
 }
 
 void TodoEditTest::shouldEmitCollectionChanged()
@@ -269,6 +274,50 @@ void TodoEditTest::shouldHideWidgetWhenClickOnCloseButton()
     QCOMPARE(edit.isVisible(), false);
 }
 
+void TodoEditTest::shouldHideWidgetWhenPressEscape()
+{
+    MessageViewer::TodoEdit edit;
+    edit.show();
+    QTest::qWaitForWindowShown(&edit);
+    QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
+    noteedit->setFocus();
+    QVERIFY(noteedit->hasFocus());
+    QTest::keyPress(&edit, Qt::Key_Escape);
+    QCOMPARE(edit.isVisible(), false);
+}
+
+void TodoEditTest::shouldSaveCollectionSettings()
+{
+    MessageViewer::TodoEdit edit;
+    Akonadi::CollectionComboBox *akonadicombobox = qFindChild<Akonadi::CollectionComboBox *>(&edit, QLatin1String("akonadicombobox"));
+    akonadicombobox->setCurrentIndex(3);
+    const Akonadi::Collection::Id id = akonadicombobox->currentCollection().id();
+    QToolButton *close = qFindChild<QToolButton *>(&edit, QLatin1String("close-button"));
+    QTest::mouseClick(close, Qt::LeftButton);
+    QCOMPARE(MessageViewer::GlobalSettingsBase::self()->lastSelectedFolder(), id);
+}
+
+void TodoEditTest::shouldSaveCollectionSettingsWhenCloseWidget()
+{
+    MessageViewer::TodoEdit edit;
+    Akonadi::CollectionComboBox *akonadicombobox = qFindChild<Akonadi::CollectionComboBox *>(&edit, QLatin1String("akonadicombobox"));
+    akonadicombobox->setCurrentIndex(3);
+    const Akonadi::Collection::Id id = akonadicombobox->currentCollection().id();
+    edit.writeConfig();
+    QCOMPARE(MessageViewer::GlobalSettingsBase::self()->lastSelectedFolder(), id);
+}
+
+void TodoEditTest::shouldNotEmitTodoWhenMessageIsNull()
+{
+    MessageViewer::TodoEdit edit;
+    QString subject = QLatin1String("Test Note");
+    QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
+    noteedit->setText(subject);
+    QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection)));
+    QTest::keyClick(noteedit, Qt::Key_Enter);
+    QCOMPARE(spy.count(), 0);
+}
+
 void TodoEditTest::shouldClearLineAfterEmitNewNote()
 {
     MessageViewer::TodoEdit edit;
@@ -281,6 +330,30 @@ void TodoEditTest::shouldClearLineAfterEmitNewNote()
     QCOMPARE(noteedit->text(), QString());
 }
 
+void TodoEditTest::shouldHaveLineEditFocus()
+{
+    MessageViewer::TodoEdit edit;
+    edit.show();
+    QTest::qWaitForWindowShown(&edit);
+    KMime::Message::Ptr msg(new KMime::Message);
+    QString subject = QLatin1String("Test Note");
+    msg->subject(true)->fromUnicodeString(subject, "us-ascii");
+    edit.setMessage(msg);
+    QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
+    QCOMPARE(noteedit->hasFocus(), true);
+}
+
+void TodoEditTest::shouldClearUrlMessageWhenSwitchMessage()
+{
+    MessageViewer::TodoEdit edit;
+    KMime::Message::Ptr msg(new KMime::Message);
+    edit.setMessage(msg);
+    edit.setMessageUrlAkonadi(QLatin1String("test"));
+    QCOMPARE(edit.messageUrlAkonadi(), QLatin1String("test"));
+    KMime::Message::Ptr msg2(new KMime::Message);
+    edit.setMessage(msg2);
+    QCOMPARE(edit.messageUrlAkonadi(), QString());
+}
 
 
 QTEST_KDEMAIN( TodoEditTest, GUI )

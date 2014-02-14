@@ -34,9 +34,15 @@ public:
     void setIsInitialized();
     bool uploadFileToService();
 
+    void canDownloadFile();
+
+    bool listFolderWasLoaded() const;
+    void logout();
+
 Q_SIGNALS:
     void uploadFile();
     void downloadFile();
+    void listFileWasInitialized();
 
 public Q_SLOTS:
     void slotCreateFolder();

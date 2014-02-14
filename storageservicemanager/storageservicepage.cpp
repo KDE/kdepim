@@ -94,6 +94,7 @@ void StorageServicePage::slotUpdatePixmap(const QPixmap &pix)
 
 void StorageServicePage::connectStorageService()
 {
+    connect(mTreeWidget, SIGNAL(listFileWasInitialized()), this, SIGNAL(listFileWasInitialized()));
     connect(mStorageService, SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotShareLinkDone(QString,QString)));
 
     connect(mStorageService, SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
@@ -151,7 +152,7 @@ void StorageServicePage::slotRenameFileDone(const QString &serviceName, const QS
 void StorageServicePage::slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo)
 {
     if (verifyService(serviceName)) {
-        QPointer<StorageServiceAccountInfoDialog> dlg = new StorageServiceAccountInfoDialog(accountInfo, this);
+        QPointer<StorageServiceAccountInfoDialog> dlg = new StorageServiceAccountInfoDialog(serviceName, accountInfo, this);
         dlg->exec();
         delete dlg;
     }
@@ -243,6 +244,16 @@ void StorageServicePage::deleteFile()
     mTreeWidget->slotDeleteFile();
 }
 
+void StorageServicePage::downloadFile()
+{
+    mTreeWidget->canDownloadFile();
+}
+
+bool StorageServicePage::listFolderWasLoaded() const
+{
+    return mTreeWidget->listFolderWasLoaded();
+}
+
 void StorageServicePage::slotDownloadFile()
 {
     mProgressWidget->reset();
@@ -260,7 +271,7 @@ PimCommon::StorageServiceAbstract::Capabilities StorageServicePage::capabilities
 void StorageServicePage::slotProgressStateChanged(bool state)
 {
     mTreeWidget->setEnabled(!state);
-    mStorageServiceNavigationBar->setEnabled(!state);
+    mStorageServiceNavigationBar->setEnabled(!state && mTreeWidget->listFolderWasLoaded());
     if (state) {
         mProgressIndicator->startAnimation();
     } else {
@@ -386,4 +397,10 @@ void StorageServicePage::setNetworkIsDown(bool state)
 void StorageServicePage::showLog()
 {
     mStorageServiceWarning->showLog();
+}
+
+void StorageServicePage::logout()
+{
+    mTreeWidget->logout();
+    mStorageServiceNavigationBar->setEnabled(false);
 }

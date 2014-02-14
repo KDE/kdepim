@@ -55,7 +55,6 @@ private:
     QWidget *hasExistingPage(const KUrl &url);
     QStackedWidget *mStackedWidget;
     SieveEditorScriptManagerWidget *mScriptManagerWidget;
-    QSplitter *mSplitter;
 };
 
 #endif // SIEVEEDITORMAINWIDGET_H

@@ -26,6 +26,7 @@
 #include <kwallet.h>
 
 #include <KLocalizedString>
+#include <KLocale>
 #include <KDateTime>
 #include <KGlobal>
 
@@ -48,7 +49,6 @@ WebDavStorageService::~WebDavStorageService()
 
 void WebDavStorageService::readConfig()
 {
-    //TODO add support for don't save as kwallet ?
     if (StorageServiceSettings::self()->createDefaultFolder()) {
         KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();
         if (wallet) {
@@ -69,12 +69,15 @@ void WebDavStorageService::readConfig()
                     mPassword = map.value(QLatin1String("password"));
                 }
             }
+            mNeedToReadConfigFirst = false;
         }
     }
 }
 
-bool WebDavStorageService::needInitialized() const
+bool WebDavStorageService::needInitialized()
 {
+    if (mNeedToReadConfigFirst)
+        readConfig();
     return (mServiceLocation.isEmpty() || mUsername.isEmpty() || mPassword.isEmpty());
 }
 
@@ -324,16 +327,21 @@ QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
         if (info.isDir()) {
             QFileInfo folderInfo(info.name());
             item = listWidget->addFolder(folderInfo.dir().dirName(), info.name());
-            item->setDateCreated(KDateTime(info.createdAt()));
-            item->setLastModification(KDateTime(info.lastModified()));
         } else {
             const QString mimetype = info.mimeType();
             QFileInfo fileInfo(info.name());
             item = listWidget->addFile(fileInfo.fileName(), info.name(), mimetype);
-            item->setDateCreated(KDateTime(info.createdAt()));
-            item->setLastModification(KDateTime(info.lastModified()));
         }
-        //TODO item->setStoreInfo(QVariantMap(info.properties()));
+        QDateTime t = info.createdAt();
+        if (t.isValid())
+            item->setDateCreated(KDateTime(t));
+        t = info.lastModified();
+        if (t.isValid())
+            item->setLastModification(KDateTime(t));
+        const qint64 size = info.size();
+        if (size>=0)
+            item->setSize(size);
+        item->setStoreInfo(QVariantMap(info.properties()));
     }
     QString parentFolder;
     if (!currentFolder.isEmpty()) {
@@ -356,7 +364,21 @@ QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
 
 QMap<QString, QString> WebDavStorageService::itemInformation(const QVariantMap &variantMap)
 {
-    return QMap<QString, QString>();
+    qDebug()<<" variantMap"<<variantMap;
+    QMap<QString, QString> information;
+    if (variantMap.contains(QLatin1String("name"))) {
+        information.insert(i18n("Name:"), variantMap.value(QLatin1String("name")).toString());
+    }
+    if (variantMap.contains(QLatin1String("isDir"))) {
+        information.insert(i18n("Type:"), variantMap.value(QLatin1String("isDir")).toBool() ? i18n("Directory") : i18n("File"));
+    }
+    if (variantMap.contains(QLatin1String("getcontentlength"))) {
+        information.insert(i18n("Size:"), KGlobal::locale()->formatByteSize(variantMap.value(QLatin1String("getcontentlength")).toString().toLongLong() ));
+    }
+    //TODO add created date
+
+    qDebug()<<" information"<<information;
+    return information;
 }
 
 QString WebDavStorageService::fileIdentifier(const QVariantMap &variantMap)
@@ -489,6 +511,14 @@ QString WebDavStorageService::storageServiceName() const
 KIcon WebDavStorageService::icon() const
 {
     return KIcon();
+}
+
+void WebDavStorageService::shutdownService()
+{
+    mPublicLocation.clear();
+    mServiceLocation.clear();
+    mUsername.clear();
+    mPassword.clear();
 }
 
 #include "moc_webdavstorageservice.cpp"

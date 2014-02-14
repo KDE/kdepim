@@ -55,6 +55,7 @@ private slots:
     void slotSendDataFinished(QNetworkReply *reply);
 
 private:
+    void createFolderJob(const QString &foldername, const QString &destination);
     QNetworkRequest setDefaultHeader(const QUrl &url);
     void parseRenameFile(const QString &data);
     void parseMoveFolder(const QString &data);

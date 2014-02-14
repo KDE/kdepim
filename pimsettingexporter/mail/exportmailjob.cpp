@@ -218,36 +218,10 @@ void ExportMailJob::backupConfig()
     backupConfigFile(QLatin1String("kmail2.notifyrc"));
     backupConfigFile(QLatin1String("akonadi_newmailnotifier_agent.notifyrc"));
     backupConfigFile(QLatin1String("akonadi_maildispatcher_agent.notifyrc"));
-    backupConfigFile(QLatin1String("akonadi_followupreminder_agent.notifyrc"));
+    //backupConfigFile(QLatin1String("akonadi_followupreminder_agent.notifyrc"));
     backupConfigFile(QLatin1String("messagevieweradblockrc"));
     backupConfigFile(QLatin1String("messageviewer.notifyrc"));
 
-    const QString folderArchiveAgentConfigurationStr(QLatin1String("akonadi_folderarchive_agentrc"));
-    const QString folderArchiveAgentConfigurationrc = KStandardDirs::locateLocal( "config", folderArchiveAgentConfigurationStr );
-    if (QFile(folderArchiveAgentConfigurationrc).exists()) {
-        KSharedConfigPtr archivemailrc = KSharedConfig::openConfig(folderArchiveAgentConfigurationStr);
-
-        KTemporaryFile tmp;
-        tmp.open();
-
-        KConfig *archiveConfig = archivemailrc->copyTo( tmp.fileName() );
-        const QStringList archiveList = archiveConfig->groupList().filter( QRegExp( QLatin1String("FolderArchiveAccount ") ) );
-
-        Q_FOREACH(const QString& str, archiveList) {
-            KConfigGroup oldGroup = archiveConfig->group(str);
-            qint64 topLevelId = oldGroup.readEntry(QLatin1String("topLevelCollectionId"), -1);
-            if (topLevelId!=-1) {
-                const QString realPath = MailCommon::Util::fullCollectionPath(Akonadi::Collection( topLevelId ));
-                if (!realPath.isEmpty()) {
-                    oldGroup.writeEntry(QLatin1String("topLevelCollectionId"), realPath);
-                }
-            }
-        }
-        archiveConfig->sync();
-
-        backupFile(tmp.fileName(), Utils::configsPath(), folderArchiveAgentConfigurationStr);
-        delete archiveConfig;
-    }
 
     const QString archiveMailAgentConfigurationStr(QLatin1String("akonadi_archivemail_agentrc"));
     const QString archiveMailAgentconfigurationrc = KStandardDirs::locateLocal( "config", archiveMailAgentConfigurationStr );

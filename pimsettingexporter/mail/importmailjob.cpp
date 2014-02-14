@@ -674,22 +674,6 @@ void ImportMailJob::restoreConfig()
         }
     }
 
-
-    const QString folderarchiveconfigurationrcStr(QLatin1String("akonadi_folderarchive_agentrc"));
-    const KArchiveEntry* folderarchiveconfigurationentry  = mArchiveDirectory->entry(Utils::configsPath() + folderarchiveconfigurationrcStr);
-    if ( folderarchiveconfigurationentry && folderarchiveconfigurationentry->isFile()) {
-        const KArchiveFile* folderarchiveconfiguration = static_cast<const KArchiveFile*>(folderarchiveconfigurationentry);
-        const QString folderarchiveconfigurationrc = KStandardDirs::locateLocal( "config",  folderarchiveconfigurationrcStr);
-        if (QFile(folderarchiveconfigurationrc).exists()) {
-            if (overwriteConfigMessageBox(folderarchiveconfigurationrcStr)) {
-                importFolderArchiveConfig(folderarchiveconfiguration, folderarchiveconfigurationrc, folderarchiveconfigurationrcStr, Utils::configsPath());
-            }
-        } else {
-            importFolderArchiveConfig(folderarchiveconfiguration, folderarchiveconfigurationrc, folderarchiveconfigurationrcStr, Utils::configsPath());
-        }
-    }
-
-
     const QString templatesconfigurationrcStr(QLatin1String("templatesconfigurationrc"));
     const KArchiveEntry* templatesconfigurationentry  = mArchiveDirectory->entry(Utils::configsPath() + templatesconfigurationrcStr);
     if ( templatesconfigurationentry &&  templatesconfigurationentry->isFile()) {
@@ -778,7 +762,7 @@ void ImportMailJob::restoreConfig()
               << QLatin1String("kmail2.notifyrc")
               << QLatin1String("akonadi_newmailnotifier_agent.notifyrc")
               << QLatin1String("akonadi_maildispatcher_agent.notifyrc")
-              << QLatin1String("akonadi_followupreminder_agent.notifyrc")
+              //<< QLatin1String("akonadi_followupreminder_agent.notifyrc")
               << QLatin1String("messageviewer.notifyrc");
 
     //We can't merge it.

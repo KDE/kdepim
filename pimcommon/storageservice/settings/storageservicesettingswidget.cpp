@@ -367,17 +367,17 @@ void StorageServiceSettingsWidget::slotUpdateAccountInfo(const QString &serviceN
 {
     if (mListService->currentItem() && (mListService->currentItem()->data(Name).toString()==serviceName)) {
         mStackWidget->setCurrentWidget(mInformationPage);
-        if (info.accountSize != -1) {
+        if (info.accountSize >= 0) {
             mAccountSize->setText(i18n("Account size: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
         } else {
             mAccountSize->setText(i18n("Account size:"));
         }
-        if (info.quota != -1) {
+        if (info.quota >= 0) {
             mQuota->setText(i18n("Quota: %1", KGlobal::locale()->formatByteSize(info.quota,1)));
         } else {
             mQuota->setText(i18n("Quota:"));
         }
-        if (info.shared != -1) {
+        if (info.shared >= 0) {
             mShared->setText(i18n("Shared: %1", KGlobal::locale()->formatByteSize(info.shared,1)));
         } else {
             mShared->setText(i18n("Shared:"));

@@ -39,17 +39,26 @@ kde4_handle_crypto_rpath_for_executable( rendertest )
 add_messageviewer_unittest( unencryptedmessagetest.cpp )
 kde4_handle_crypto_rpath_for_executable( unencryptedmessagetest )
 add_messageviewer_unittest( todoedittest.cpp )
+add_messageviewer_unittest( viewertest.cpp )
 ########### viewertest_gui ###############
 
-set(viewertest_gui_SRCS viewertest_gui.cpp)
-kde4_add_executable(viewertest_gui TEST ${viewertest_gui_SRCS})
-target_link_libraries(viewertest_gui
-  ${QT_QTTEST_LIBRARY}
-  ${QT_QTCORE_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
-  ${QT_QTWEBKIT_LIBRARY}
-  ${KDE4_KDECORE_LIBS}
-  ${KDE4_KDEUI_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
-  messageviewer
-)
+
+include(AkonadiMacros)
+set(KDEPIMLIBS_RUN_ISOLATED_TESTS TRUE)
+set(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS TRUE)
+
+add_akonadi_isolated_test_advanced( viewertest_gui.cpp "" "messageviewer")
+
+
+#set(viewertest_gui_SRCS viewertest_gui.cpp)
+#kde4_add_executable(viewertest_gui TEST ${viewertest_gui_SRCS})
+#target_link_libraries(viewertest_gui
+#  ${QT_QTTEST_LIBRARY}
+#  ${QT_QTCORE_LIBRARY}
+#  ${QT_QTGUI_LIBRARY}
+#  ${QT_QTWEBKIT_LIBRARY}
+#  ${KDE4_KDECORE_LIBS}
+#  ${KDE4_KDEUI_LIBS}
+#  ${KDEPIMLIBS_KMIME_LIBS}
+#  messageviewer
+#)

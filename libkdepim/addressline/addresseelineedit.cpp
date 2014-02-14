@@ -88,8 +88,6 @@ class AddresseeLineEditStatic
         akonadiSession( new Akonadi::Session("contactsCompletionSession") ),
         balooCompletionSource( 0 )
     {
-      KConfig config( QLatin1String( "kpimcompletionorder" ) );
-      const KConfigGroup group( &config, QLatin1String( "General" ) );
     }
 
     ~AddresseeLineEditStatic()

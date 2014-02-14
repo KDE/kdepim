@@ -205,7 +205,7 @@ void Widget::populateStatusFilterCombo()
   tagFilterComboBox->clear();
 
   fillMessageTagCombo( d->quickSearchLine->tagFilterComboBox() );
-  d->quickSearchLine->tagFilterComboBox()->setVisible(d->quickSearchLine->tagFilterComboBox()->count());
+  d->quickSearchLine->updateComboboxVisibility();
 
   connect( d->quickSearchLine->tagFilterComboBox(), SIGNAL(currentIndexChanged(int)),
            this, SLOT(statusSelected(int)) );

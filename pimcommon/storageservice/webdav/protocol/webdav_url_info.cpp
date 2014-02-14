@@ -45,6 +45,7 @@ using namespace PimCommon;
 
 QWebdavUrlInfo::QWebdavUrlInfo()
 {
+    setSize(-1);
 }
 
 QWebdavUrlInfo::~QWebdavUrlInfo()
@@ -53,6 +54,7 @@ QWebdavUrlInfo::~QWebdavUrlInfo()
 
 QWebdavUrlInfo::QWebdavUrlInfo(const QDomElement & dom)
 {
+    setSize(-1);
     QDomElement href = dom.namedItem( QLatin1String("href") ).toElement();
 
     mNode = dom.cloneNode();
@@ -116,6 +118,8 @@ void QWebdavUrlInfo::davParsePropstats( const QString & path, const QDomNodeList
     bool isDirectory = false;
 
     setName(path);
+    QMap<QString, QVariant> map;
+
 
     for ( int i = 0; i < propstats.count(); ++i) {
         QDomElement propstat = propstats.item(i).toElement();
@@ -144,12 +148,13 @@ void QWebdavUrlInfo::davParsePropstats( const QString & path, const QDomNodeList
             if (property.isNull())
                 continue;
 
-            mProperties[property.namespaceURI()][property.tagName()] = property.text();
+            //mProperties[property.namespaceURI()][property.tagName()] = property.text();
 
             if ( property.namespaceURI() != QLatin1String("DAV:") ) {
                 // break out - we're only interested in properties from the DAV namespace
                 continue;
             }
+            map.insert(property.tagName(), property.text());
 
             if ( property.tagName() == QLatin1String("creationdate") ) {
                 setCreatedAt(parseDateTime( property.text(), property.attribute(QLatin1String("dt")) ));
@@ -158,9 +163,7 @@ void QWebdavUrlInfo::davParsePropstats( const QString & path, const QDomNodeList
             } else if ( property.tagName() == QLatin1String("displayname") ) {
                 setDisplayName(property.text());
             } else if ( property.tagName() == QLatin1String("source") ) {
-                const QDomElement source = property.namedItem( QLatin1String("link") ).toElement()
-                        .namedItem( QLatin1String("dst") ).toElement();
-
+                const QDomElement source = property.namedItem( QLatin1String("link") ).toElement().namedItem( QLatin1String("dst") ).toElement();
                 if ( !source.isNull() )
                     setSource(source.text());
             } else if ( property.tagName() == QLatin1String("getcontentlanguage") ) {
@@ -185,6 +188,12 @@ void QWebdavUrlInfo::davParsePropstats( const QString & path, const QDomNodeList
             }
         }
     }
+    map.insert(QLatin1String("isDir"), isDirectory);
+    map.insert(QLatin1String("name"), name());
+    if (!map.isEmpty()) {
+        mProperties = map;
+    }
+
     setDir(isDirectory);
     setFile(!isDirectory);
 
@@ -267,7 +276,7 @@ QDomElement QWebdavUrlInfo::propElement() const
     return mNode.toElement();
 }
 
-const QWebdavUrlInfo::PropValues &QWebdavUrlInfo::properties() const
+const QVariantMap QWebdavUrlInfo::properties() const
 {
     return mProperties;
 }

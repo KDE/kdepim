@@ -78,6 +78,7 @@ private:
 
     QString parseNameInfo(const QString &data);
 
+    QString mSwiftTokenPath;
     QString mServiceUrl;
     QUrl mAuthUrl;
     QString mClientId;
@@ -88,10 +89,8 @@ private:
     QString mScope;
     QString mAuthorizePath;
     QString mPathToken;
-    QString mFolderInfoPath;
     QString mCurrentAccountInfoPath;
     QString mApiUrl;
-    QString mFileInfoPath;
     QPointer<PimCommon::StorageAuthViewDialog> mAuthDialog;
 };
 }

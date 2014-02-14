@@ -37,9 +37,12 @@ public:
     bool hasUploadDownloadProgress() const;
     void serviceRemoved(const QString &serviceName);
     void setNetworkIsDown(bool state);
+    bool listFolderWasLoaded() const;
+    void logout();
 
 Q_SIGNALS:
     void updateStatusBarMessage(const QString &msg);
+    void listFileWasInitialized();
 
 public slots:
     void slotAuthenticate();
@@ -50,6 +53,7 @@ public slots:
     void slotDeleteFile();
     void slotDownloadFile();
     void slotShowLog();
+
 private slots:
     void slotUpdateIcon(const QIcon &icon, StorageServicePage *page);
 
