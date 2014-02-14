@@ -33,7 +33,7 @@ class GrammarConfigureWidgetPrivate {
 public:
     GrammarConfigureWidgetPrivate(KConfig *_config, GrammarConfigureWidget *qq)
         : q(qq),
-          config(config)
+          config(_config)
     {
         init();
     }
