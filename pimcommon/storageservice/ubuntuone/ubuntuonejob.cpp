@@ -465,8 +465,14 @@ void UbuntuOneJob::deleteFolder(const QString &foldername)
     QUrl postData;
     const QString mAccessOauth = mCustomerSecret + QLatin1String("%26") + mTokenSecret;
 
+    qDebug()<<" mAccessOauth"<<mAccessOauth;
+    qDebug()<<" mToken"<<mToken;
+    qDebug()<<" mTokenSecret"<<mTokenSecret;
+    qDebug()<<" mCustomerSecret"<<mCustomerSecret;
+    qDebug()<<" consumer_key"<<mCustomerKey;
+
     postData.addQueryItem(QLatin1String("oauth_signature"), mAccessOauth);
-    postData.addQueryItem(QLatin1String("token"), mToken);
+    postData.addQueryItem(QLatin1String("oauth_token"), mToken);
     postData.addQueryItem(QLatin1String("token_secret"), mTokenSecret);
     postData.addQueryItem(QLatin1String("consumer_secret"), mCustomerSecret);
     postData.addQueryItem(QLatin1String("consumer_key"), mCustomerKey);
@@ -645,7 +651,6 @@ void UbuntuOneJob::finishGetToken()
 void UbuntuOneJob::parseAccessToken(const QString &data)
 {
     qDebug()<<" data "<<data;
-    //Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 
