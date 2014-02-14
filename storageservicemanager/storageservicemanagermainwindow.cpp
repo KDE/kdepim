@@ -168,10 +168,16 @@ void StorageServiceManagerMainWindow::setupActions()
     mShowLog = ac->addAction(QLatin1String("show_log"), mStorageServiceTabWidget, SLOT(slotShowLog()));
     mShowLog->setText(i18n("Show Log..."));
 
-    mLogout = ac->addAction(QLatin1String("logout"), mStorageServiceTabWidget, SLOT(slotLogout()));
+    mLogout = ac->addAction(QLatin1String("logout"), this, SLOT(slotLogout()));
     mLogout->setText(i18n("Logout"));
 
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
+}
+
+void StorageServiceManagerMainWindow::slotLogout()
+{
+    mStorageServiceTabWidget->logout();
+    slotUpdateActions();
 }
 
 void StorageServiceManagerMainWindow::closeEvent(QCloseEvent *e)

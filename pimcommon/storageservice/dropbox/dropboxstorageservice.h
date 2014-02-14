@@ -65,7 +65,7 @@ public:
     QString disallowedSymbolsStr() const;
     qlonglong maximumUploadFileSize() const;
 
-    void logout();
+    void shutdownService();
 private slots:
     void slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
     void slotAuthorizationFailed(const QString &errorMessage);

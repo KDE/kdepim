@@ -63,7 +63,7 @@ public:
     QString storageServiceName() const;
     KIcon icon() const;
 
-    void logout();
+    void shutdownService();
 private slots:
     void slotAuthorizationDone(const QString &password, const QString &username, const QString &token);
     void slotAuthorizationFailed(const QString &errorMessage);

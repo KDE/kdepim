@@ -402,6 +402,5 @@ void StorageServicePage::showLog()
 void StorageServicePage::logout()
 {
     mTreeWidget->logout();
-    mTreeWidget->setEnabled(false);
     mStorageServiceNavigationBar->setEnabled(false);
 }

@@ -47,8 +47,6 @@ WebDavStorageService::~WebDavStorageService()
 {
 }
 
-
-
 void WebDavStorageService::readConfig()
 {
     if (StorageServiceSettings::self()->createDefaultFolder()) {
@@ -515,13 +513,12 @@ KIcon WebDavStorageService::icon() const
     return KIcon();
 }
 
-void WebDavStorageService::logout()
+void WebDavStorageService::shutdownService()
 {
     mPublicLocation.clear();
     mServiceLocation.clear();
     mUsername.clear();
     mPassword.clear();
-    mNeedToReadConfigFirst = true;
 }
 
 #include "moc_webdavstorageservice.cpp"

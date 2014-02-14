@@ -71,6 +71,11 @@ KWallet::Wallet *StorageServiceSettings::wallet()
     return mWallet;
 }
 
+void StorageServiceSettings::closeWallet()
+{
+    KWallet::Wallet::closeWallet(KWallet::Wallet::LocalWallet(), true);
+}
+
 bool StorageServiceSettings::createDefaultFolder()
 {
     KWallet::Wallet *wallet = StorageServiceSettings::self()->wallet();

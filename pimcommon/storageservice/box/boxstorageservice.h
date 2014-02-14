@@ -68,7 +68,7 @@ public:
     QRegExp disallowedSymbols() const;
     QString disallowedSymbolsStr() const;
 
-    void logout();
+    void shutdownService();
 private slots:
     void slotAuthorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);
     void slotAuthorizationFailed(const QString &errorMessage);

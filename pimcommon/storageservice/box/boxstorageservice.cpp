@@ -45,12 +45,11 @@ BoxStorageService::~BoxStorageService()
 {
 }
 
-void BoxStorageService::logout()
+void BoxStorageService::shutdownService()
 {
     mToken.clear();
     mRefreshToken.clear();
     mExpireDateTime = QDateTime();
-    mNeedToReadConfigFirst = true;
 }
 
 void BoxStorageService::readConfig()

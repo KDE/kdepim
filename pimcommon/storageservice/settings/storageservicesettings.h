@@ -33,6 +33,7 @@ public:
     static StorageServiceSettings *self();
 
     KWallet::Wallet *wallet();
+    void closeWallet();
 
     bool createDefaultFolder();
 

@@ -43,11 +43,10 @@ GDriveStorageService::~GDriveStorageService()
 {
 }
 
-void GDriveStorageService::logout()
+void GDriveStorageService::shutdownService()
 {
     mAccount = KGAPI2::AccountPtr();
     mExpireDateTime = QDateTime();
-    mNeedToReadConfigFirst = true;
 }
 
 bool GDriveStorageService::needToRefreshToken() const

@@ -45,12 +45,11 @@ YouSendItStorageService::~YouSendItStorageService()
 {
 }
 
-void YouSendItStorageService::logout()
+void YouSendItStorageService::shutdownService()
 {
     mToken.clear();
     mUsername.clear();
     mPassword.clear();
-    mNeedToReadConfigFirst = true;
 }
 
 bool YouSendItStorageService::needAuthenticate()

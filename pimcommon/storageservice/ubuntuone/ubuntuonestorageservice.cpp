@@ -46,13 +46,12 @@ UbuntuoneStorageService::~UbuntuoneStorageService()
 {
 }
 
-void UbuntuoneStorageService::logout()
+void UbuntuoneStorageService::shutdownService()
 {
     mCustomerSecret.clear();
     mToken.clear();
     mCustomerKey.clear();
     mTokenSecret.clear();
-    mNeedToReadConfigFirst = true;
 }
 
 void UbuntuoneStorageService::readConfig()

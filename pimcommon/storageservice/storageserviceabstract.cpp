@@ -16,6 +16,7 @@
 */
 
 #include "storageserviceabstract.h"
+#include "storageservice/settings/storageservicesettings.h"
 
 #include <QDebug>
 #include <QTimer>
@@ -245,6 +246,13 @@ QString StorageServiceAbstract::disallowedSymbolsStr() const
 qlonglong StorageServiceAbstract::maximumUploadFileSize() const
 {
     return -1;
+}
+
+void StorageServiceAbstract::logout()
+{
+    StorageServiceSettings::self()->closeWallet();
+    shutdownService();
+    mNeedToReadConfigFirst = true;
 }
 
 void StorageServiceAbstract::executeNextAction()

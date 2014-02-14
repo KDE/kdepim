@@ -46,12 +46,11 @@ DropBoxStorageService::~DropBoxStorageService()
 {
 }
 
-void DropBoxStorageService::logout()
+void DropBoxStorageService::shutdownService()
 {
     mAccessToken.clear();
     mAccessTokenSecret.clear();
     mAccessOauthSignature.clear();
-    mNeedToReadConfigFirst = true;
 }
 
 void DropBoxStorageService::removeConfig()

@@ -51,12 +51,11 @@ bool HubicStorageService::needToRefreshToken()
         return false;
 }
 
-void HubicStorageService::logout()
+void HubicStorageService::shutdownService()
 {
     mRefreshToken.clear();
     mToken.clear();
     mExpireDateTime = QDateTime();
-    mNeedToReadConfigFirst = true;
 }
 
 void HubicStorageService::readConfig()
