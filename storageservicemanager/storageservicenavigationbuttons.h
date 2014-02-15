@@ -22,18 +22,9 @@
 #define STORAGESERVICENAVIGATIONBUTTONS_H
 
 #include <QWidget>
+#include "storageservicemanagerutil.h"
 
 class QAction;
-
-struct InformationUrl
-{
-    bool operator ==(const InformationUrl &a) {
-        return (a.currentUrl == currentUrl) && (a.parentUrl == parentUrl);
-    }
-
-    QString currentUrl;
-    QString parentUrl;
-};
 
 class StorageServiceNavigationButtons : public QWidget
 {

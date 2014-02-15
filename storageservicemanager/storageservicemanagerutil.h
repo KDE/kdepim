@@ -18,28 +18,20 @@
 
 */
 
-#include "storageservicenavigationbar.h"
-#include "storageservicenavigationbuttons.h"
 
-#include <KLocalizedString>
-#include <KStandardShortcut>
-#include <KIcon>
+#ifndef STORAGESERVICEMANAGERUTIL_H
+#define STORAGESERVICEMANAGERUTIL_H
 
-#include <QAction>
+#include <QString>
 
-StorageServiceNavigationBar::StorageServiceNavigationBar(QWidget *parent)
-    : QToolBar(parent)
+struct InformationUrl
 {
-    addAction(KIcon(QLatin1String("go-home")),i18n("Home"), this, SIGNAL(goHome()));
-    mNavigationButtons = new StorageServiceNavigationButtons(this);
-    addAction(mNavigationButtons->goBack());
-    connect(mNavigationButtons, SIGNAL(changeUrl(InformationUrl)), this, SIGNAL(changeUrl(InformationUrl)));
+    bool operator ==(const InformationUrl &a) {
+        return (a.currentUrl == currentUrl) && (a.parentUrl == parentUrl);
+    }
 
-    addAction(mNavigationButtons->goForward());
-}
+    QString currentUrl;
+    QString parentUrl;
+};
 
-StorageServiceNavigationBar::~StorageServiceNavigationBar()
-{
-
-}
-
+#endif // STORAGESERVICEMANAGERUTIL_H

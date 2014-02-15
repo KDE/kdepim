@@ -22,6 +22,7 @@
 #define STORAGESERVICENAVIGATIONBAR_H
 
 #include <QToolBar>
+#include "storageservicemanagerutil.h"
 class StorageServiceNavigationButtons;
 class StorageServiceNavigationBar : public QToolBar
 {
@@ -32,7 +33,7 @@ public:
 
 Q_SIGNALS:
     void goHome();
-    void goToFolder(const QString &parent);
+    void changeUrl(const InformationUrl &);
 
 private:
     StorageServiceNavigationButtons *mNavigationButtons;
