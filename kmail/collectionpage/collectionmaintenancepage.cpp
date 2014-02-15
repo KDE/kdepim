@@ -25,11 +25,6 @@
 #include <Akonadi/AgentManager>
 #include <Akonadi/ChangeRecorder>
 
-#include <Soprano/Vocabulary/NAO>
-#include <Nepomuk2/Variant>
-#include <Nepomuk2/ResourceManager>
-#include <nepomuk2/datamanagement.h>
-
 #include <QDBusInterface>
 #include <QDBusConnectionInterface>
 
@@ -37,6 +32,7 @@
 #include <KDialog>
 #include <QGroupBox>
 #include <KLocalizedString>
+#include <KLocale>
 #include <KPushButton>
 #include <QFormLayout>
 #include <kio/global.h>
@@ -102,13 +98,7 @@ void CollectionMaintenancePage::init(const Akonadi::Collection & col)
 
     KPushButton *forceReindex = new KPushButton(i18n("Force reindexing"));
     indexingLayout->addWidget( forceReindex );
-
-    if(!Nepomuk2::ResourceManager::instance()->initialized()) {
-        mLastIndexed->hide();
-        forceReindex->setEnabled(false);
-    } else {
-        connect(forceReindex,SIGNAL(clicked()),SLOT(slotReindexing()));
-    }
+    connect(forceReindex,SIGNAL(clicked()),SLOT(slotReindexing()));
 
     topLayout->addWidget( indexingGroup );
 
@@ -126,15 +116,15 @@ void CollectionMaintenancePage::load(const Collection & col)
         if(!indexingWasEnabled)
             mLastIndexed->hide();
         else {
-            const KUrl url = col.url( Akonadi::Collection::UrlShort );
-            if(!url.isEmpty()) {
-                const Nepomuk2::Resource parentResource( url );
-                const QDateTime dt = parentResource.property( Soprano::Vocabulary::NAO::lastModified() ).toDateTime();
-                const KDateTime localTime(dt, KDateTime::LocalZone);
-                if(localTime.isValid()) {
-                    mLastIndexed->setText(i18n("Folder was indexed: %1",KGlobal::locale()->formatDateTime(localTime)));
-                }
-            }
+            //FIXME check indexing status
+//             const KUrl url = col.url( Akonadi::Collection::UrlShort );
+//             if(!url.isEmpty()) {
+//                 const QDateTime dt = parentResource.property( Soprano::Vocabulary::NAO::lastModified() ).toDateTime();
+//                 const KDateTime localTime(dt, KDateTime::LocalZone);
+//                 if(localTime.isValid()) {
+//                     mLastIndexed->setText(i18n("Folder was indexed: %1",KGlobal::locale()->formatDateTime(localTime)));
+//                 }
+//             }
         }
     }
 }
@@ -156,7 +146,6 @@ void CollectionMaintenancePage::save(Collection &collection )
         attr->setIndexingEnabled( true );
     else {
         attr->setIndexingEnabled( false );
-        Nepomuk2::removeResources( QList <QUrl>() << collection.url() );
     }
 }
 
@@ -169,11 +158,10 @@ void CollectionMaintenancePage::updateCollectionStatistic(Akonadi::Collection::I
 
 void CollectionMaintenancePage::slotReindexing()
 {
-    //Be sure to remove collection resources before to reindex.
-    Nepomuk2::removeResources( QList <QUrl>() << mCurrentCollection.url() );
-    QDBusInterface interfaceNepomukFeeder( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_nepomuk_feeder"), QLatin1String("/") );
-    if(interfaceNepomukFeeder.isValid()) {
-        interfaceNepomukFeeder.asyncCall(QLatin1String("forceReindexCollection"),(qlonglong)mCurrentCollection.id());
-    }
+  //FIXME port to baloo indexer
+//     QDBusInterface interfaceNepomukFeeder( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_nepomuk_feeder"), QLatin1String("/") );
+//     if(interfaceNepomukFeeder.isValid()) {
+//         interfaceNepomukFeeder.asyncCall(QLatin1String("forceReindexCollection"),(qlonglong)mCurrentCollection.id());
+//     }
 }
 
