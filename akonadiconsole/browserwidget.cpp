@@ -45,6 +45,7 @@
 #include <akonadi/etmviewstatesaver.h>
 #include <akonadi/favoritecollectionsmodel.h>
 #include <akonadi_next/quotacolorproxymodel.h>
+#include <akonadi/tagmodel.h>
 #include <libkdepim/misc/statisticsproxymodel.h>
 #include <kviewstatemaintainer.h>
 
@@ -108,6 +109,14 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   splitter2->addWidget( favoritesView );
 
   splitter->addWidget( splitter2 );
+
+  ChangeRecorder *tagRecorder = new ChangeRecorder( this );
+  tagRecorder->setTypeMonitored( Monitor::Tags );
+  tagRecorder->setChangeRecordingEnabled( false );
+  QTreeView *tagView = new QTreeView( this );
+  TagModel *tagModel = new Akonadi::TagModel( tagRecorder, this );
+  tagView->setModel( tagModel );
+  splitter2->addWidget( tagView );
 
   Session *session = new Session( "AkonadiConsole Browser Widget", this );
 
