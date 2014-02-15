@@ -207,7 +207,7 @@ void Widget::populateStatusFilterCombo()
   d->mCurrentStatusFilterIndex = (statusFilterComboBox->currentIndex() != -1) ?  statusFilterComboBox->currentIndex() : 0;
   disconnect( statusFilterComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(statusSelected(int)) );
 
-  for (int i = d->quickSearchLine->firstTagInComboIndex(); i < d->quickSearchLine->statusFilterComboBox()->count(); ++i) {
+  for (int i = d->quickSearchLine->statusFilterComboBox()->count() - 1; i >= d->quickSearchLine->firstTagInComboIndex(); --i) {
       statusFilterComboBox->removeItem(i);
   }
 
