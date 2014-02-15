@@ -57,7 +57,7 @@ FolderCollectionMonitor::FolderCollectionMonitor( Akonadi::Session *session, QOb
   mMonitor->itemFetchScope().setFetchModificationTime( false );
   mMonitor->itemFetchScope().setFetchRemoteIdentification( false );
   mMonitor->itemFetchScope().setFetchTags( true );
-  mMonitor->itemFetchScope().fetchAttribute<Akonadi::EntityAnnotationsAttribute>();
+  mMonitor->itemFetchScope().fetchAttribute<Akonadi::EntityAnnotationsAttribute>( true );
 }
 
 FolderCollectionMonitor::~FolderCollectionMonitor()
