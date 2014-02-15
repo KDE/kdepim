@@ -33,6 +33,7 @@ public:
 
     KWallet::Wallet *wallet();
 
+    void closeWallet();
 private slots:
     void slotWalletClosed();
 

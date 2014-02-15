@@ -22,6 +22,7 @@
 #include "sieveeditormainwidget.h"
 #include "sieveeditorconfiguredialog.h"
 #include "serversievesettingsdialog.h"
+#include "sieveserversettings.h"
 
 #include <KSharedConfig>
 #include <KGlobal>
@@ -60,6 +61,7 @@ SieveEditorMainWindow::~SieveEditorMainWindow()
 
     KConfigGroup group = config->group( QLatin1String("SieveEditorMainWindow") );
     group.writeEntry( "Size", size() );
+    SieveServerSettings::self()->closeWallet();
 }
 
 void SieveEditorMainWindow::initStatusBar()
