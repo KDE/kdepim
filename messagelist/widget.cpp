@@ -48,6 +48,7 @@
 
 #include "core/groupheaderitem.h"
 
+#include <Akonadi/Monitor>
 #include <Akonadi/Tag>
 #include <Akonadi/TagFetchJob>
 #include <Akonadi/TagFetchScope>
@@ -72,7 +73,7 @@ public:
   int mLastSelectedMessage;
   KXMLGUIClient *mXmlGuiClient;
   QModelIndex mGroupHeaderItemIndex;
-
+  Akonadi::Monitor *mMonitor;
 };
 
 } // namespace MessageList
@@ -85,16 +86,11 @@ Widget::Widget( QWidget *parent )
 {
   populateStatusFilterCombo();
 
-  //TODO add monitor
-//   Nepomuk2::ResourceWatcher *watcher = new Nepomuk2::ResourceWatcher(this);
-//   watcher->addType(Soprano::Vocabulary::NAO::Tag());
-//   connect(watcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
-//           this, SLOT(populateStatusFilterCombo()));
-//   connect(watcher, SIGNAL(resourceRemoved(QUrl,QList<QUrl>)),
-//           this, SLOT(populateStatusFilterCombo()));
-//   connect(watcher, SIGNAL(propertyChanged(Nepomuk2::Resource,Nepomuk2::Types::Property,QVariantList,QVariantList)),
-//           this, SLOT(populateStatusFilterCombo()));
-//   watcher->start();
+  d->mMonitor = new Akonadi::Monitor( this );
+  d->mMonitor->setTypeMonitored( Akonadi::Monitor::Tags );
+  connect(d->mMonitor, SIGNAL(tagAdded(Akonadi::Tag)), this, SLOT(populateStatusFilterCombo()));
+  connect(d->mMonitor, SIGNAL(tagRemoved(Akonadi::Tag)), this, SLOT(populateStatusFilterCombo()));
+  connect(d->mMonitor, SIGNAL(tagChanged(Akonadi::Tag)), this, SLOT(populateStatusFilterCombo()));
 }
 
 Widget::~Widget()

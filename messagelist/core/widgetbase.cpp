@@ -71,7 +71,8 @@ public:
       mTheme( 0 ), mFilter( 0 ),
       mStorageUsesPrivateTheme( false ),
       mStorageUsesPrivateAggregation( false ),
-      mStorageUsesPrivateSortOrder( false )
+      mStorageUsesPrivateSortOrder( false ),
+      mStatusFilterComboPopulationInProgress( false )
   { }
 
 
@@ -116,6 +117,7 @@ public:
   bool mStorageUsesPrivateSortOrder;     ///< true if the current folder does not use the global sort order
   KUrl mCurrentFolderUrl;                ///< The Akonadi URL of the current folder
   int mCurrentStatusFilterIndex;
+  bool mStatusFilterComboPopulationInProgress;
 };
 
 Widget::Widget( QWidget *pParent )
@@ -197,6 +199,10 @@ void Widget::changeQuicksearchVisibility(bool show)
 
 void Widget::populateStatusFilterCombo()
 {
+  if (d->mStatusFilterComboPopulationInProgress) {
+    return;
+  }
+  d->mStatusFilterComboPopulationInProgress = true;
   KComboBox *statusFilterComboBox = d->quickSearchLine->statusFilterComboBox();
   d->mCurrentStatusFilterIndex = (statusFilterComboBox->currentIndex() != -1) ?  statusFilterComboBox->currentIndex() : 0;
   disconnect( statusFilterComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(statusSelected(int)) );
@@ -218,6 +224,7 @@ void Widget::setCurrentStatusFilterItem()
   connect( d->quickSearchLine->statusFilterComboBox(), SIGNAL(currentIndexChanged(int)),
            this, SLOT(statusSelected(int)) );
   d->quickSearchLine->statusFilterComboBox()->setCurrentIndex(d->mCurrentStatusFilterIndex>=d->quickSearchLine->statusFilterComboBox()->count() ? 0 : d->mCurrentStatusFilterIndex );
+  d->mStatusFilterComboPopulationInProgress = false;
 }
 
 MessageItem *Widget::currentMessageItem() const
