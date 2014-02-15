@@ -8,5 +8,8 @@
     <entry name="DownloadDirectory" type="string">
       <default></default>
     </entry>
+    <entry name="CloseWallet" type="bool">
+      <default>true</default>
+    </entry>
   </group>
 </kcfg>

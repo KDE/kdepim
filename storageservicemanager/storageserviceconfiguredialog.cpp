@@ -27,9 +27,14 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 
+#include <QHBoxLayout>
+#include <QCheckBox>
+
 StorageServiceConfigureDialog::StorageServiceConfigureDialog(QWidget *parent)
     : PimCommon::StorageServiceConfigureDialog(parent)
 {
+    mCloseWallet = new QCheckBox(i18n("Close wallet when close application"));
+    mainWidget()->layout()->addWidget(mCloseWallet);
     loadSettings();
 }
 
@@ -40,11 +45,14 @@ StorageServiceConfigureDialog::~StorageServiceConfigureDialog()
 void StorageServiceConfigureDialog::loadSettings()
 {
     PimCommon::ConfigureImmutableWidgetUtils::loadWidget(mStorageServiceConfigureWidget->downloadFolder(), StorageServiceManagerGlobalConfig::self()->downloadDirectoryItem());
+    PimCommon::ConfigureImmutableWidgetUtils::loadWidget(mCloseWallet, StorageServiceManagerGlobalConfig::self()->closeWalletItem());
 }
 
 void StorageServiceConfigureDialog::writeSettings()
 {
     PimCommon::ConfigureImmutableWidgetUtils::saveUrlRequester(mStorageServiceConfigureWidget->downloadFolder(), StorageServiceManagerGlobalConfig::self()->downloadDirectoryItem());
+    PimCommon::ConfigureImmutableWidgetUtils::saveCheckBox(mCloseWallet, StorageServiceManagerGlobalConfig::self()->closeWalletItem());
+
     StorageServiceManagerGlobalConfig::self()->writeConfig();
 }
 
