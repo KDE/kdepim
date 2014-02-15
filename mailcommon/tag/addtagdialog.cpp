@@ -40,7 +40,6 @@ AddTagDialog::AddTagDialog(const QList<KActionCollection *>& actions, QWidget *p
   QVBoxLayout *lay = new QVBoxLayout( mainWidget() );
   mTagWidget = new MailCommon::TagWidget(actions,this);
   lay->addWidget(mTagWidget);
-  connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
   connect(mTagWidget->tagNameLineEdit(), SIGNAL(textChanged(QString)), SLOT(slotTagNameChanged(QString)));
   enableButtonOk(false);
 }
