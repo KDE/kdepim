@@ -24,6 +24,7 @@
 
 #include <QTextDocument>
 #include <QPointer>
+#include <Akonadi/Tag>
 
 using namespace MailCommon;
 
@@ -110,9 +111,8 @@ FilterAction::ReturnCode FilterActionAddTag::process(ItemContext &context , bool
     if (!mList.contains(mParameter)) {
         return ErrorButGoOn;
     }
-//     Nepomuk2::Resource resource( context.item().url() );
-//     resource.addTag( mParameter );
-    //TODO tag item
+    context.item().setTag( Akonadi::Tag::fromUrl( mParameter ) );
+    context.setNeedsFlagStore();
 
     return GoOn;
 }
