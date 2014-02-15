@@ -1855,7 +1855,7 @@ void ViewerPrivate::createActions()
     mCreateTodoAction->setIconText( i18n( "Create To-do" ) );
     mCreateTodoAction->setHelpText( i18n( "Allows you to create a calendar to-do or reminder from this message" ) );
     mCreateTodoAction->setWhatsThis( i18n( "This option starts the KOrganizer to-do editor with initial values taken from the currently selected message. Then you can edit the to-do to your liking before saving it to your calendar." ) );
-    ac->addAction(QLatin1String("create_new_todo"), mCreateTodoAction);
+    ac->addAction(QLatin1String("create_todo"), mCreateTodoAction);
     mCreateTodoAction->setShortcut(Qt::CTRL + Qt::Key_T);
     connect( mCreateTodoAction, SIGNAL(triggered(bool)), SLOT(slotShowCreateTodoWidget()) );
 }
