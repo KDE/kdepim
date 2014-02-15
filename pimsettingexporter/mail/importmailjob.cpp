@@ -92,8 +92,6 @@ void ImportMailJob::nextStep()
             restoreConfig();
         if (type == Utils::AkonadiDb)
             restoreAkonadiDb();
-        if (type == Utils::Nepomuk)
-            restoreNepomuk();
     } else {
         Q_EMIT jobFinished();
     }
@@ -1001,16 +999,6 @@ void ImportMailJob::restoreAkonadiDb()
     }
     nextStep();
 }
-
-void ImportMailJob::restoreNepomuk()
-{
-    MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-    Q_EMIT info(i18n("Nepomuk Database restored."));
-    Q_EMIT error(i18n("Failed to restore Nepomuk Database."));
-    nextStep();
-    //TODO
-}
-
 
 void ImportMailJob::importArchiveConfig(const KArchiveFile* archiveconfiguration, const QString& archiveconfigurationrc, const QString&filename,const QString& prefix)
 {

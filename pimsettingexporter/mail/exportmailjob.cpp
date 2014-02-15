@@ -117,14 +117,6 @@ void ExportMailJob::start()
             return;
         }
     }
-    if (mTypeSelected & Utils::Nepomuk) {
-        backupNepomuk();
-        increaseProgressDialog();
-        if (wasCanceled()) {
-            Q_EMIT jobFinished();
-            return;
-        }
-    }
     Q_EMIT jobFinished();
 }
 
@@ -601,13 +593,6 @@ void ExportMailJob::backupAkonadiDb()
         Q_EMIT error(i18n("Akonadi Database \"%1\" cannot be added to backup file.", QString::fromLatin1("akonadidatabase.sql")));
     else
         Q_EMIT info(i18n("Akonadi Database backup done."));
-}
-
-void ExportMailJob::backupNepomuk()
-{
-    showInfo(i18n("Backing up Nepomuk Database..."));
-    MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-    Q_EMIT info(i18n("Nepomuk Database backup done."));
 }
 
 KUrl ExportMailJob::subdirPath( const KUrl& url) const
