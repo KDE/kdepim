@@ -182,7 +182,7 @@ void TagActionManager::createTagActions(const QList<MailCommon::Tag::Ptr> &tags)
     //Use a mapper to understand which tag button is triggered
     mMessageTagToggleMapper = new QSignalMapper( this );
     connect( mMessageTagToggleMapper, SIGNAL(mapped(QString)),
-             this, SIGNAL(onSignalMapped(QString)) );
+             this, SLOT(onSignalMapped(QString)) );
 
     // Create a action for each tag and plug it into various places
     int i = 0;
