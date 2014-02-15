@@ -23,9 +23,13 @@
 
 #include <QAction>
 #include <qtest_kde.h>
+#include <qtestmouse.h>
+#include <qtestkeyboard.h>
 
+Q_DECLARE_METATYPE(InformationUrl)
 StorageServiceNavigationButtonTest::StorageServiceNavigationButtonTest()
 {
+    qRegisterMetaType<InformationUrl>();
 }
 
 void StorageServiceNavigationButtonTest::shouldHaveDefaultValuesOnCreation()
@@ -70,8 +74,36 @@ void StorageServiceNavigationButtonTest::shouldDisableButtonWhenClearList()
     buttons.clear();
     QCOMPARE(buttons.goBack()->isEnabled(), false);
     QCOMPARE(buttons.goForward()->isEnabled(), false);
-
 }
+
+void StorageServiceNavigationButtonTest::shouldEmitSignalWhenClickOnButtonAndListNotEmpty()
+{
+    StorageServiceNavigationButtons buttons;
+    QList<InformationUrl> lst;
+    InformationUrl url;
+    lst.append(url);
+    buttons.setBackUrls(lst);
+    QSignalSpy spy(&buttons, SIGNAL(changeUrl(InformationUrl)));
+    buttons.goBack()->trigger();
+    QCOMPARE(spy.count(), 1);
+
+    //Forward url is empty
+    QSignalSpy spy2(&buttons, SIGNAL(changeUrl(InformationUrl)));
+    buttons.goForward()->trigger();
+    QCOMPARE(spy2.count(), 0);
+
+    //clear goBack
+    buttons.clear();
+    QSignalSpy spy3(&buttons, SIGNAL(changeUrl(InformationUrl)));
+    buttons.goBack()->trigger();
+    QCOMPARE(spy3.count(), 0);
+
+    buttons.setForwardUrls(lst);
+    QSignalSpy spy4(&buttons, SIGNAL(changeUrl(InformationUrl)));
+    buttons.goForward()->trigger();
+    QCOMPARE(spy4.count(), 1);
+}
+
 
 
 

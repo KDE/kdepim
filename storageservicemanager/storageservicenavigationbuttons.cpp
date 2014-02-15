@@ -34,11 +34,13 @@ StorageServiceNavigationButtons::StorageServiceNavigationButtons(QWidget *parent
     setLayout(hbox);
 
     mGoBack = new QAction(KIcon(QLatin1String("go-previous")),i18n("Back"), this);
+    connect(mGoBack, SIGNAL(triggered()), SLOT(slotGoBackClicked()));
     mGoBack->setShortcuts( KStandardShortcut::shortcut(KStandardShortcut::Back) );
     mGoBack->setEnabled(false);
 
     mGoForward = new QAction(KIcon(QLatin1String("go-next")),i18n("Forward"), this);
     mGoForward->setShortcuts( KStandardShortcut::shortcut(KStandardShortcut::Forward) );
+    connect(mGoForward, SIGNAL(triggered()), SLOT(slotGoForwardClicked()));
     mGoForward->setEnabled(false);
 }
 
@@ -89,4 +91,18 @@ void StorageServiceNavigationButtons::updateButtons()
 {
     mGoForward->setEnabled(!mForwardUrls.isEmpty());
     mGoBack->setEnabled(!mBackUrls.isEmpty());
+}
+
+void StorageServiceNavigationButtons::slotGoBackClicked()
+{
+    if (!mBackUrls.isEmpty()) {
+        Q_EMIT changeUrl(mBackUrls.first());
+    }
+}
+
+void StorageServiceNavigationButtons::slotGoForwardClicked()
+{
+    if (!mForwardUrls.isEmpty()) {
+        Q_EMIT changeUrl(mForwardUrls.first());
+    }
 }

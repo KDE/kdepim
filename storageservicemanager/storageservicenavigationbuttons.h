@@ -51,6 +51,13 @@ public:
     void setForwardUrls(const QList<InformationUrl> &value);
 
     void clear();
+
+Q_SIGNALS:
+    void changeUrl(const InformationUrl &);
+
+private slots:
+    void slotGoBackClicked();
+    void slotGoForwardClicked();
 private:
     void updateButtons();
     QAction *mGoBack;
