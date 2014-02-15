@@ -23,6 +23,8 @@
 #include <KMenu>
 #include <KIcon>
 #include <KLocalizedString>
+#include <KMime/Message>
+#include <Akonadi/Item>
 
 using namespace MessageList::Core;
 
@@ -138,28 +140,37 @@ void MessageList::Util::fillViewMenu( KMenu * menu, QObject *receiver )
            receiver, SLOT(themeMenuAboutToShow()) );
 }
 
-QString MessageList::Util::contentSummary( const KUrl& url )
+QString MessageList::Util::contentSummary( const Akonadi::Item &item )
 {
-//   Nepomuk2::Resource mail( url );
-//   const QString content =
-//       mail.property( Nepomuk2::Vocabulary::NMO::plainTextMessageContent() ).toString();
-//   // Extract the first 5 non-empty, non-quoted lines from the content and return it
-//   int numLines = 0;
-//   const int maxLines = 5;
-//   const QStringList lines = content.split( QLatin1Char( '\n' ) );
-//   QString ret;
-//   foreach( const QString &line, lines ) {
-//     const QString lineTrimmed = line.trimmed();
-//     const bool isQuoted = lineTrimmed.startsWith( QLatin1Char( '>' ) ) || lineTrimmed.startsWith( QLatin1Char( '|' ) );
-//     if ( !isQuoted && !lineTrimmed.isEmpty() ) {
-//       ret += line + QLatin1Char( '\n' );
-//       numLines++;
-//       if ( numLines >= maxLines )
-//         break;
-//     }
-//   }
-//   return Qt::escape(ret);
-  //FIXME
-  return QString();
+  if ( !item.hasPayload<KMime::Message::Ptr>() ) {
+    return QString();
+  }
+
+  KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
+  KMime::Content *textContent = message->textContent();
+  if ( !textContent ) {
+    return QString();
+  }
+  const QString content = textContent->decodedText( true, true );
+  if ( content.isEmpty() ) {
+    return QString();
+  }
+
+  // Extract the first 5 non-empty, non-quoted lines from the content and return it
+  int numLines = 0;
+  const int maxLines = 5;
+  const QStringList lines = content.split( QLatin1Char( '\n' ) );
+  QString ret;
+  foreach( const QString &line, lines ) {
+    const QString lineTrimmed = line.trimmed();
+    const bool isQuoted = lineTrimmed.startsWith( QLatin1Char( '>' ) ) || lineTrimmed.startsWith( QLatin1Char( '|' ) );
+    if ( !isQuoted && !lineTrimmed.isEmpty() ) {
+      ret += line + QLatin1Char( '\n' );
+      numLines++;
+      if ( numLines >= maxLines )
+        break;
+    }
+  }
+  return Qt::escape(ret);
 }
 
