@@ -26,14 +26,15 @@
 
 #include <QHBoxLayout>
 #include <QAction>
+#include <QWidgetAction>
 
 StorageServiceNavigationButtons::StorageServiceNavigationButtons(QWidget *parent)
-    : QWidget(parent)
+    : QToolBar(parent)
 {
-    QHBoxLayout *hbox = new QHBoxLayout;
-    setLayout(hbox);
+    addAction(KIcon(QLatin1String("go-home")),i18n("Home"), this, SIGNAL(goHome()));
 
     mGoBack = new QAction(KIcon(QLatin1String("go-previous")),i18n("Back"), this);
+    addAction(mGoBack);
     connect(mGoBack, SIGNAL(triggered()), SLOT(slotGoBackClicked()));
     mGoBack->setShortcuts( KStandardShortcut::shortcut(KStandardShortcut::Back) );
     mGoBack->setEnabled(false);
@@ -41,6 +42,7 @@ StorageServiceNavigationButtons::StorageServiceNavigationButtons(QWidget *parent
     mGoForward = new QAction(KIcon(QLatin1String("go-next")),i18n("Forward"), this);
     mGoForward->setShortcuts( KStandardShortcut::shortcut(KStandardShortcut::Forward) );
     connect(mGoForward, SIGNAL(triggered()), SLOT(slotGoForwardClicked()));
+    addAction(mGoForward);
     mGoForward->setEnabled(false);
 }
 

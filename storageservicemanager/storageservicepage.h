@@ -32,7 +32,7 @@ class StorageServiceProgressIndicator;
 }
 class StorageServiceWarning;
 class StorageServiceTreeWidget;
-class StorageServiceNavigationBar;
+class StorageServiceNavigationButtons;
 class StorageServicePage : public QWidget
 {
     Q_OBJECT
@@ -99,7 +99,7 @@ private:
     StorageServiceTreeWidget *mTreeWidget;
     PimCommon::StorageServiceProgressIndicator *mProgressIndicator;
     StorageServiceWarning *mStorageServiceWarning;
-    StorageServiceNavigationBar *mStorageServiceNavigationBar;
+    StorageServiceNavigationButtons *mStorageServiceNavigationBar;
     PimCommon::StorageServiceProgressWidget *mProgressWidget;
 };
 

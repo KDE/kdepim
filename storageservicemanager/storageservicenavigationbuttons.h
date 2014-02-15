@@ -21,12 +21,12 @@
 #ifndef STORAGESERVICENAVIGATIONBUTTONS_H
 #define STORAGESERVICENAVIGATIONBUTTONS_H
 
-#include <QWidget>
+#include <QToolBar>
 #include "storageservicemanagerutil.h"
 
 class QAction;
 
-class StorageServiceNavigationButtons : public QWidget
+class StorageServiceNavigationButtons : public QToolBar
 {
     Q_OBJECT
 public:
@@ -45,10 +45,12 @@ public:
 
 Q_SIGNALS:
     void changeUrl(const InformationUrl &);
+    void goHome();
 
 private slots:
     void slotGoBackClicked();
     void slotGoForwardClicked();
+
 private:
     void updateButtons();
     QAction *mGoBack;

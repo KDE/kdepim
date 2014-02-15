@@ -22,7 +22,7 @@
 #include "storageservicetreewidget.h"
 #include "storageservicewarning.h"
 #include "storageserviceaccountinfodialog.h"
-#include "storageservicenavigationbar.h"
+#include "storageservicenavigationbuttons.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 #include "pimcommon/storageservice/widgets/storageserviceprogresswidget.h"
 #include "pimcommon/storageservice/widgets/storageserviceprogressindicator.h"
@@ -50,9 +50,8 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
 
     mProgressIndicator = new PimCommon::StorageServiceProgressIndicator(this);
     connect(mProgressIndicator, SIGNAL(updatePixmap(QPixmap)), this, SLOT(slotUpdatePixmap(QPixmap)));
-    mStorageServiceNavigationBar = new StorageServiceNavigationBar(this);
+    mStorageServiceNavigationBar = new StorageServiceNavigationButtons(this);
     connect(mStorageServiceNavigationBar, SIGNAL(goHome()), this, SLOT(slotGoHome()));
-    connect(mStorageServiceNavigationBar, SIGNAL(goToFolder(QString)), this, SLOT(slotGoToFolder(QString)));
     mStorageServiceNavigationBar->setEnabled(false);
     vbox->addWidget(mStorageServiceNavigationBar);
 
@@ -402,5 +401,6 @@ void StorageServicePage::showLog()
 void StorageServicePage::logout()
 {
     mTreeWidget->logout();
+    mStorageServiceNavigationBar->clear();
     mStorageServiceNavigationBar->setEnabled(false);
 }
