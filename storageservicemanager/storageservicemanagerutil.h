@@ -26,6 +26,9 @@
 
 struct InformationUrl
 {
+    bool isValid() const {
+        return !currentUrl.isEmpty() && !parentUrl.isEmpty();
+    }
     bool operator ==(const InformationUrl &a) {
         return (a.currentUrl == currentUrl) && (a.parentUrl == parentUrl);
     }

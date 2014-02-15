@@ -37,9 +37,11 @@ void StorageServiceNavigationButtonTest::shouldHaveDefaultValuesOnCreation()
     StorageServiceNavigationButtons buttons;
     QVERIFY(buttons.goBack());
     QVERIFY(buttons.goForward());
+    QVERIFY(buttons.home());
 
     QCOMPARE(buttons.goBack()->isEnabled(), false);
     QCOMPARE(buttons.goForward()->isEnabled(), false);
+    QCOMPARE(buttons.home()->isEnabled(), true);
 
     QCOMPARE(buttons.backUrls().isEmpty(), true);
     QCOMPARE(buttons.forwardUrls().isEmpty(), true);
@@ -102,6 +104,35 @@ void StorageServiceNavigationButtonTest::shouldEmitSignalWhenClickOnButtonAndLis
     QSignalSpy spy4(&buttons, SIGNAL(changeUrl(InformationUrl)));
     buttons.goForward()->trigger();
     QCOMPARE(spy4.count(), 1);
+}
+
+void StorageServiceNavigationButtonTest::shouldEmitSignalWhenClickOnHome()
+{
+    StorageServiceNavigationButtons buttons;
+    QSignalSpy spy(&buttons, SIGNAL(goHome()));
+    buttons.home()->trigger();
+    QCOMPARE(spy.count(), 1);
+}
+
+void StorageServiceNavigationButtonTest::shouldEnabledBackButtonWhenAndInfoAndItValids()
+{
+    StorageServiceNavigationButtons buttons;
+    QCOMPARE(buttons.backUrls().isEmpty(), true);
+    QCOMPARE(buttons.forwardUrls().isEmpty(), true);
+
+    InformationUrl urlInvalid;
+    buttons.addBackUrl(urlInvalid);
+    buttons.addForwadUrl(urlInvalid);
+    QCOMPARE(buttons.backUrls().isEmpty(), true);
+    QCOMPARE(buttons.forwardUrls().isEmpty(), true);
+
+    InformationUrl urlValid;
+    urlValid.currentUrl = QLatin1String("Foo");
+    urlValid.parentUrl = QLatin1String("Foo1");
+    buttons.addBackUrl(urlValid);
+    buttons.addForwadUrl(urlValid);
+    QCOMPARE(buttons.backUrls().isEmpty(), false);
+    QCOMPARE(buttons.forwardUrls().isEmpty(), false);
 }
 
 

@@ -31,7 +31,7 @@
 StorageServiceNavigationButtons::StorageServiceNavigationButtons(QWidget *parent)
     : QToolBar(parent)
 {
-    addAction(KIcon(QLatin1String("go-home")),i18n("Home"), this, SIGNAL(goHome()));
+    mHome = addAction(KIcon(QLatin1String("go-home")),i18n("Home"), this, SIGNAL(goHome()));
 
     mGoBack = new QAction(KIcon(QLatin1String("go-previous")),i18n("Back"), this);
     addAction(mGoBack);
@@ -54,6 +54,27 @@ QAction *StorageServiceNavigationButtons::goBack() const
 QAction *StorageServiceNavigationButtons::goForward() const
 {
     return mGoForward;
+}
+
+QAction *StorageServiceNavigationButtons::home() const
+{
+    return mHome;
+}
+
+void StorageServiceNavigationButtons::addBackUrl(const InformationUrl &info)
+{
+    if (info.isValid()) {
+        mBackUrls.append(info);
+        updateButtons();
+    }
+}
+
+void StorageServiceNavigationButtons::addForwadUrl(const InformationUrl &info)
+{
+    if (info.isValid()) {
+        mForwardUrls.append(info);
+        updateButtons();
+    }
 }
 
 QList<InformationUrl> StorageServiceNavigationButtons::backUrls() const

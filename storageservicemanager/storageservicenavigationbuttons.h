@@ -34,6 +34,10 @@ public:
 
     QAction *goBack() const;
     QAction *goForward() const;
+    QAction *home() const;
+
+    void addBackUrl(const InformationUrl &);
+    void addForwadUrl(const InformationUrl &);
 
     QList<InformationUrl> backUrls() const;
     void setBackUrls(const QList<InformationUrl> &value);
@@ -53,6 +57,7 @@ private slots:
 
 private:
     void updateButtons();
+    QAction *mHome;
     QAction *mGoBack;
     QAction *mGoForward;
     QList<InformationUrl> mBackUrls;
