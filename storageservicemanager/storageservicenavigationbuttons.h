@@ -25,6 +25,16 @@
 
 class QAction;
 
+struct InformationUrl
+{
+    bool operator ==(const InformationUrl &a) {
+        return (a.currentUrl == currentUrl) && (a.parentUrl == parentUrl);
+    }
+
+    QString currentUrl;
+    QString parentUrl;
+};
+
 class StorageServiceNavigationButtons : public QWidget
 {
     Q_OBJECT
@@ -34,9 +44,19 @@ public:
     QAction *goBack() const;
     QAction *goForward() const;
 
+    QList<InformationUrl> backUrls() const;
+    void setBackUrls(const QList<InformationUrl> &value);
+
+    QList<InformationUrl> forwardUrls() const;
+    void setForwardUrls(const QList<InformationUrl> &value);
+
+    void clear();
 private:
+    void updateButtons();
     QAction *mGoBack;
     QAction *mGoForward;
+    QList<InformationUrl> mBackUrls;
+    QList<InformationUrl> mForwardUrls;
 };
 
 #endif // STORAGESERVICENAVIGATIONBUTTONS_H

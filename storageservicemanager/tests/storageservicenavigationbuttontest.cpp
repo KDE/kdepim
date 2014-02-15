@@ -36,6 +36,41 @@ void StorageServiceNavigationButtonTest::shouldHaveDefaultValuesOnCreation()
 
     QCOMPARE(buttons.goBack()->isEnabled(), false);
     QCOMPARE(buttons.goForward()->isEnabled(), false);
+
+    QCOMPARE(buttons.backUrls().isEmpty(), true);
+    QCOMPARE(buttons.forwardUrls().isEmpty(), true);
+}
+
+void StorageServiceNavigationButtonTest::shouldEnabledBackButtonWhenWeListUrlIsNotEmpty()
+{
+    StorageServiceNavigationButtons buttons;
+    QList<InformationUrl> lst;
+    InformationUrl url;
+    lst.append(url);
+    buttons.setBackUrls(lst);
+    QCOMPARE(buttons.backUrls().isEmpty(), false);
+    QCOMPARE(buttons.goBack()->isEnabled(), true);
+
+    buttons.setForwardUrls(lst);
+    QCOMPARE(buttons.forwardUrls().isEmpty(), false);
+    QCOMPARE(buttons.goForward()->isEnabled(), true);
+}
+
+void StorageServiceNavigationButtonTest::shouldDisableButtonWhenClearList()
+{
+    StorageServiceNavigationButtons buttons;
+    QList<InformationUrl> lst;
+    InformationUrl url;
+    lst.append(url);
+    buttons.setBackUrls(lst);
+    QCOMPARE(buttons.goBack()->isEnabled(), true);
+
+    buttons.setForwardUrls(lst);
+    QCOMPARE(buttons.goForward()->isEnabled(), true);
+    buttons.clear();
+    QCOMPARE(buttons.goBack()->isEnabled(), false);
+    QCOMPARE(buttons.goForward()->isEnabled(), false);
+
 }
 
 

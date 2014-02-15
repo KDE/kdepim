@@ -51,3 +51,42 @@ QAction *StorageServiceNavigationButtons::goForward() const
 {
     return mGoForward;
 }
+
+QList<InformationUrl> StorageServiceNavigationButtons::backUrls() const
+{
+    return mBackUrls;
+}
+
+void StorageServiceNavigationButtons::setBackUrls(const QList<InformationUrl> &value)
+{
+    if (mBackUrls != value) {
+        mBackUrls = value;
+        updateButtons();
+    }
+}
+
+QList<InformationUrl> StorageServiceNavigationButtons::forwardUrls() const
+{
+    return mForwardUrls;
+}
+
+void StorageServiceNavigationButtons::setForwardUrls(const QList<InformationUrl> &value)
+{
+    if (mForwardUrls != value) {
+        mForwardUrls = value;
+        updateButtons();
+    }
+}
+
+void StorageServiceNavigationButtons::clear()
+{
+    mBackUrls.clear();
+    mForwardUrls.clear();
+    updateButtons();
+}
+
+void StorageServiceNavigationButtons::updateButtons()
+{
+    mGoForward->setEnabled(!mForwardUrls.isEmpty());
+    mGoBack->setEnabled(!mBackUrls.isEmpty());
+}

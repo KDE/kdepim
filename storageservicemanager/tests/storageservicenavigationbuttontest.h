@@ -31,6 +31,8 @@ public:
 
 private Q_SLOTS:
     void shouldHaveDefaultValuesOnCreation();
+    void shouldEnabledBackButtonWhenWeListUrlIsNotEmpty();
+    void shouldDisableButtonWhenClearList();
 };
 
 #endif // STORAGESERVICENAVIGATIONBUTTONTEST_H

@@ -19,6 +19,7 @@
 */
 
 #include "storageservicenavigationbar.h"
+#include "storageservicenavigationbuttons.h"
 
 #include <KLocalizedString>
 #include <KStandardShortcut>
@@ -30,10 +31,9 @@ StorageServiceNavigationBar::StorageServiceNavigationBar(QWidget *parent)
     : QToolBar(parent)
 {
     addAction(KIcon(QLatin1String("go-home")),i18n("Home"), this, SIGNAL(goHome()));
-    mGoBack = addAction(KIcon(QLatin1String("go-previous")),i18n("Back"));
-    mGoBack->setShortcuts( KStandardShortcut::shortcut(KStandardShortcut::Back) );
-    mGoForward = addAction(KIcon(QLatin1String("go-next")),i18n("Forward"));
-    mGoForward->setShortcuts( KStandardShortcut::shortcut(KStandardShortcut::Forward) );
+    mNavigationButtons = new StorageServiceNavigationButtons(this);
+    addAction(mNavigationButtons->goBack());
+    addAction(mNavigationButtons->goForward());
 }
 
 StorageServiceNavigationBar::~StorageServiceNavigationBar()
