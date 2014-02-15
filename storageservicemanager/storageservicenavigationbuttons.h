@@ -36,6 +36,9 @@ public:
     QAction *goForward() const;
     QAction *home() const;
 
+    void addNewUrl(const InformationUrl &);
+
+
     void addBackUrl(const InformationUrl &);
     void addForwadUrl(const InformationUrl &);
 

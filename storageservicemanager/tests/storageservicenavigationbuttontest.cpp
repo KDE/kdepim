@@ -135,6 +135,32 @@ void StorageServiceNavigationButtonTest::shouldEnabledBackButtonWhenAndInfoAndIt
     QCOMPARE(buttons.forwardUrls().isEmpty(), false);
 }
 
+void StorageServiceNavigationButtonTest::shouldEnabledBackButtonWhenAddNewInfo()
+{
+    StorageServiceNavigationButtons buttons;
+    QCOMPARE(buttons.backUrls().isEmpty(), true);
+    InformationUrl urlValid;
+    urlValid.currentUrl = QLatin1String("Foo");
+    urlValid.parentUrl = QLatin1String("Foo1");
+    buttons.addNewUrl(urlValid);
+    QCOMPARE(buttons.backUrls().isEmpty(), false);
+}
+
+void StorageServiceNavigationButtonTest::shouldIncreaseNumberOfElement()
+{
+    StorageServiceNavigationButtons buttons;
+    InformationUrl urlValid;
+    urlValid.currentUrl = QLatin1String("Foo");
+    urlValid.parentUrl = QLatin1String("Foo1");
+    buttons.addNewUrl(urlValid);
+    buttons.addNewUrl(urlValid);
+    buttons.addNewUrl(urlValid);
+    buttons.addNewUrl(urlValid);
+    buttons.addNewUrl(urlValid);
+    buttons.addNewUrl(urlValid);
+    QCOMPARE(buttons.backUrls().count(), 6);
+}
+
 
 
 

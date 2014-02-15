@@ -61,6 +61,14 @@ QAction *StorageServiceNavigationButtons::home() const
     return mHome;
 }
 
+void StorageServiceNavigationButtons::addNewUrl(const InformationUrl &info)
+{
+    if (info.isValid()) {
+        mBackUrls.append(info);
+        updateButtons();
+    }
+}
+
 void StorageServiceNavigationButtons::addBackUrl(const InformationUrl &info)
 {
     if (info.isValid()) {

@@ -36,6 +36,8 @@ private Q_SLOTS:
     void shouldEmitSignalWhenClickOnButtonAndListNotEmpty();
     void shouldEmitSignalWhenClickOnHome();
     void shouldEnabledBackButtonWhenAndInfoAndItValids();
+    void shouldEnabledBackButtonWhenAddNewInfo();
+    void shouldIncreaseNumberOfElement();
 };
 
 #endif // STORAGESERVICENAVIGATIONBUTTONTEST_H
