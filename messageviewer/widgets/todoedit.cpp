@@ -169,7 +169,7 @@ void TodoEdit::slotReturnPressed()
     if (!mNoteEdit->text().isEmpty() && collection.isValid()) {
         KCalCore::Todo::Ptr todo( new KCalCore::Todo );
         todo->setSummary(mNoteEdit->text());
-        Q_EMIT createTodo(todo, collection);
+        Q_EMIT createTodo(todo, collection, mMessageUrlAkonadi);
         mNoteEdit->clear();
     }
 }
