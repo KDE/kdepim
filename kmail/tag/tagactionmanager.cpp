@@ -174,7 +174,7 @@ void TagActionManager::finishedTagListing(KJob *job)
 
 void TagActionManager::onSignalMapped(const QString& tag)
 {
-  emit tagActionTriggered(Akonadi::Tag(tag.toLongLong()));
+  emit tagActionTriggered(Akonadi::Tag( tag.toLongLong()) );
 }
 
 void TagActionManager::createTagActions(const QList<MailCommon::Tag::Ptr> &tags)

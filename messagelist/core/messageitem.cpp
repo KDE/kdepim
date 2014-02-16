@@ -52,7 +52,6 @@ public:
   QColor mTextColor;
   QColor mBackgroundColor;
   QFont  mFont;
-  QString  mFontKey;
   int mPriority;
 };
 
