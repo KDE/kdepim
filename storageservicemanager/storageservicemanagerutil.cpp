@@ -18,25 +18,10 @@
 
 */
 
+#include "storageservicemanagerutil.h"
 
-#ifndef STORAGESERVICEMANAGERUTIL_H
-#define STORAGESERVICEMANAGERUTIL_H
 
-#include <QString>
-#include <QDebug>
-struct InformationUrl
-{
-    bool isValid() const {
-        return !currentUrl.isEmpty() && !parentUrl.isEmpty();
-    }
-    bool operator ==(const InformationUrl &a) {
-        return (a.currentUrl == currentUrl) && (a.parentUrl == parentUrl);
-    }
-
-    QString currentUrl;
-    QString parentUrl;
-};
-
-QDebug operator<<(QDebug d, const InformationUrl &info);
-
-#endif // STORAGESERVICEMANAGERUTIL_H
+QDebug operator<<(QDebug d, const InformationUrl &info) {
+    d.nospace() << " currentUrl " << info.currentUrl<< " parentUrl "<<info.parentUrl;
+    return d.space();
+}

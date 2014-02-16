@@ -386,6 +386,10 @@ void StorageServicePage::slotGoHome()
 
 void StorageServicePage::slotGoToFolder(const QString &folder)
 {
+    InformationUrl info;
+    info.currentUrl = mTreeWidget->currentFolder();
+    info.parentUrl = mTreeWidget->parentFolder();
+    mStorageServiceNavigationBar->addNewUrl(info);
     mTreeWidget->goToFolder(folder);
 }
 
