@@ -32,18 +32,7 @@
 #include <akonadi/kmime/messagefolderattribute.h>
 #include <akonadi/selectionproxymodel.h>
 
-#include <Nepomuk2/Resource>
-#include <Nepomuk2/Vocabulary/NIE>
-#include <Nepomuk2/Variant>
-
-#include <Nepomuk2/ResourceWatcher>
-
-
 #include <KDE/KLocale>
-#include <Soprano/Statement>
-#include <soprano/signalcachemodel.h>
-#include <soprano/nao.h>
-
 #include "core/messageitem.h"
 #include "core/settings.h"
 #include "messagelistutil.h"
