@@ -53,23 +53,21 @@ void YouSendItJob::initializeToken(const QString &password, const QString &userN
     mToken = token;
 }
 
-void YouSendItJob::copyFile(const QString &source, const QString &destination)
+void YouSendItJob::copyFile(const QString &/*source*/, const QString &/*destination*/)
 {
     mActionType = PimCommon::StorageServiceAbstract::CopyFile;
     mError = false;
     qDebug()<<" not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //TODO
     deleteLater();
 }
 
-void YouSendItJob::copyFolder(const QString &source, const QString &destination)
+void YouSendItJob::copyFolder(const QString &/*source*/, const QString &/*destination*/)
 {
     mActionType = PimCommon::StorageServiceAbstract::CopyFolder;
     mError = false;
     qDebug()<<" not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //TODO
     deleteLater();
 }
 

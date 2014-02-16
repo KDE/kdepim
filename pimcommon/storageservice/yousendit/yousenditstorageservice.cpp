@@ -234,6 +234,8 @@ StorageServiceAbstract::Capabilities YouSendItStorageService::serviceCapabilitie
     cap |= RenameFileCapabilitity;
     cap |= MoveFileCapability;
     cap |= MoveFolderCapability;
+
+    //Can not be implemented.
     //cap |= CopyFileCapability;
     //cap |= CopyFolderCapability;
 

@@ -27,6 +27,8 @@ QNetworkReply *WebDavJob::accountInfo(const QString &dir)
 
     props << QLatin1String("quota-available-bytes");
     props << QLatin1String("quota-used-bytes");
+    props << QLatin1String("quota");
+    props << QLatin1String("quotaused");
     query[QLatin1String("DAV:")] = props;
 
     return propfind(dir, query, 0);
