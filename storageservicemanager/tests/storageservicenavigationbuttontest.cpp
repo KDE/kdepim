@@ -89,13 +89,11 @@ void StorageServiceNavigationButtonTest::shouldEmitSignalWhenClickOnButtonAndLis
     buttons.goBack()->trigger();
     QCOMPARE(spy.count(), 1);
 
-    //Forward url is empty
+    //clear goBack
+    buttons.clear();
     QSignalSpy spy2(&buttons, SIGNAL(changeUrl(InformationUrl)));
     buttons.goForward()->trigger();
     QCOMPARE(spy2.count(), 0);
-
-    //clear goBack
-    buttons.clear();
     QSignalSpy spy3(&buttons, SIGNAL(changeUrl(InformationUrl)));
     buttons.goBack()->trigger();
     QCOMPARE(spy3.count(), 0);
@@ -159,6 +157,42 @@ void StorageServiceNavigationButtonTest::shouldIncreaseNumberOfElement()
     buttons.addNewUrl(urlValid);
     buttons.addNewUrl(urlValid);
     QCOMPARE(buttons.backUrls().count(), 6);
+}
+
+void StorageServiceNavigationButtonTest::shouldMoveInfoInGoForwardWhenClickOnGoBack()
+{
+    StorageServiceNavigationButtons buttons;
+    InformationUrl urlValid;
+    urlValid.currentUrl = QLatin1String("Foo");
+    urlValid.parentUrl = QLatin1String("Foo1");
+    buttons.addNewUrl(urlValid);
+    QCOMPARE(buttons.backUrls().count(), 1);
+    buttons.goBack()->trigger();
+    QCOMPARE(buttons.backUrls().count(), 0);
+    QCOMPARE(buttons.forwardUrls().count(), 1);
+
+    //Compare that button goback is disable, goforward is enable after that
+    QCOMPARE(buttons.goBack()->isEnabled(), false);
+    QCOMPARE(buttons.goForward()->isEnabled(), true);
+}
+
+void StorageServiceNavigationButtonTest::shouldMoveInfoInGoBackWhenClickOnGoForward()
+{
+    StorageServiceNavigationButtons buttons;
+    InformationUrl urlValid;
+    urlValid.currentUrl = QLatin1String("Foo");
+    urlValid.parentUrl = QLatin1String("Foo1");
+    buttons.addNewUrl(urlValid);
+    buttons.goBack()->trigger();
+
+    buttons.goForward()->trigger();
+
+    QCOMPARE(buttons.backUrls().count(), 1);
+    QCOMPARE(buttons.forwardUrls().count(), 0);
+
+    //Compare that button goback is disable, goforward is enable after that
+    QCOMPARE(buttons.goBack()->isEnabled(), true);
+    QCOMPARE(buttons.goForward()->isEnabled(), false);
 }
 
 

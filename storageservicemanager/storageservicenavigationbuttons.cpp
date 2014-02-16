@@ -127,13 +127,19 @@ void StorageServiceNavigationButtons::updateButtons()
 void StorageServiceNavigationButtons::slotGoBackClicked()
 {
     if (!mBackUrls.isEmpty()) {
-        Q_EMIT changeUrl(mBackUrls.first());
+        InformationUrl url = mBackUrls.takeFirst();
+        Q_EMIT changeUrl(url);
+        mForwardUrls.append(url);
+        updateButtons();
     }
 }
 
 void StorageServiceNavigationButtons::slotGoForwardClicked()
 {
     if (!mForwardUrls.isEmpty()) {
-        Q_EMIT changeUrl(mForwardUrls.first());
+        InformationUrl url = mForwardUrls.takeFirst();
+        Q_EMIT changeUrl(url);
+        mBackUrls.append(url);
+        updateButtons();
     }
 }

@@ -38,6 +38,8 @@ private Q_SLOTS:
     void shouldEnabledBackButtonWhenAndInfoAndItValids();
     void shouldEnabledBackButtonWhenAddNewInfo();
     void shouldIncreaseNumberOfElement();
+    void shouldMoveInfoInGoForwardWhenClickOnGoBack();
+    void shouldMoveInfoInGoBackWhenClickOnGoForward();
 };
 
 #endif // STORAGESERVICENAVIGATIONBUTTONTEST_H
