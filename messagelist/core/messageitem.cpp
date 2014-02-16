@@ -192,28 +192,31 @@ void MessageItemPrivate::fillTagList(const Akonadi::Tag::List &taglist)
   //       creating them for each item that has tags
   // This should be impelemented by implicitly sharing tag objects while fetching tags
 
-  if ( !taglist.isEmpty() ) {
-    foreach( const Akonadi::Tag &tag, taglist ) {
-      QString symbol = QLatin1String( "mail-tagged" );
-      Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>();
-      if (attr) {
-        if (!attr->iconName().isEmpty()) {
-          symbol = attr->iconName();
-        }
-      }
-      MessageItem::Tag *messageListTag =
-          new MessageItem::Tag( SmallIcon( symbol ), tag.name(), tag.url().url() );
+  //Priority sort this and make bestTag more efficient
 
-      if (attr) {
-        messageListTag->setTextColor( attr->textColor() );
-        messageListTag->setBackgroundColor( attr->backgroundColor() );
-        messageListTag->setFont( attr->font() );
-        //TODO priority?
+  foreach( const Akonadi::Tag &tag, taglist ) {
+    QString symbol = QLatin1String( "mail-tagged" );
+    Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>();
+    if (attr) {
+      if (!attr->iconName().isEmpty()) {
+        symbol = attr->iconName();
+      }
+    }
+    MessageItem::Tag *messageListTag =
+        new MessageItem::Tag( SmallIcon( symbol ), tag.name(), tag.url().url() );
+
+    if (attr) {
+      messageListTag->setTextColor( attr->textColor() );
+      messageListTag->setBackgroundColor( attr->backgroundColor() );
+      messageListTag->setFont( attr->font() );
+      if (attr->priority() != -1) {
+        messageListTag->setPriority( attr->priority() );
+      } else {
         messageListTag->setPriority( 0xFFFF );
       }
-
-      mTagList->append( messageListTag );
     }
+
+    mTagList->append( messageListTag );
   }
 }
 

@@ -70,7 +70,7 @@ Tag::Ptr Tag::fromAkonadi(const Akonadi::Tag& akonadiTag)
     tag->textColor = attr->textColor();
     tag->backgroundColor = attr->backgroundColor();
     tag->textFont = attr->font();
-    //TODO priority?
+    tag->priority = attr->priority();
   }
   return tag;
 }
@@ -83,7 +83,7 @@ Akonadi::Tag Tag::saveToAkonadi(Tag::SaveFlags saveFlags) const
   attr->setIconName( iconName );
   attr->setInToolbar( inToolbar );
   attr->setShortcut( shortcut.toString() );
-  //TODO priority?
+  attr->setPriority( priority );
 
   if ( textColor.isValid() && saveFlags & TextColor )
     attr->setTextColor( textColor );
