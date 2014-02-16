@@ -207,7 +207,12 @@ void MessageItemPrivate::fillTagList(const Akonadi::Tag::List &taglist)
     if (attr) {
       messageListTag->setTextColor( attr->textColor() );
       messageListTag->setBackgroundColor( attr->backgroundColor() );
-      messageListTag->setFont( attr->font() );
+      if (!attr->font().isEmpty()) {
+        QFont font;
+        if (font.fromString( attr->font() )) {
+          messageListTag->setFont( font );
+        }
+      }
       if (attr->priority() != -1) {
         messageListTag->setPriority( attr->priority() );
       } else {

@@ -69,7 +69,7 @@ Tag::Ptr Tag::fromAkonadi(const Akonadi::Tag& akonadiTag)
     tag->shortcut = KShortcut(attr->shortcut());
     tag->textColor = attr->textColor();
     tag->backgroundColor = attr->backgroundColor();
-    tag->textFont = attr->font();
+    tag->textFont.fromString( attr->font() );
     tag->priority = attr->priority();
   }
   return tag;
@@ -96,9 +96,9 @@ Akonadi::Tag Tag::saveToAkonadi(Tag::SaveFlags saveFlags) const
     attr->setBackgroundColor( QColor() );
 
   if ( saveFlags & Font )
-    attr->setFont( textFont );
+    attr->setFont( textFont.toString() );
   else
-    attr->setFont( QFont() );
+    attr->setFont( QString() );
 
   tag.addAttribute(attr);
   return tag;
