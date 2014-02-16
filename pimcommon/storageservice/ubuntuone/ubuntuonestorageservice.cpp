@@ -122,12 +122,16 @@ void UbuntuoneStorageService::storageServiceauthentication()
     job->requestTokenAccess();
 }
 
-void UbuntuoneStorageService::storageServicelistFolder(const QString &folder)
+bool UbuntuoneStorageService::checkNeedAuthenticate()
 {
     if (mNeedToReadConfigFirst)
         readConfig();
+    return mToken.isEmpty();
+}
 
-    if (mTokenSecret.isEmpty()) {
+void UbuntuoneStorageService::storageServicelistFolder(const QString &folder)
+{
+    if (checkNeedAuthenticate()) {
         mNextAction->setNextActionType(ListFolder);
         mNextAction->setNextActionFolder(folder);
         storageServiceauthentication();
@@ -142,10 +146,7 @@ void UbuntuoneStorageService::storageServicelistFolder(const QString &folder)
 
 void UbuntuoneStorageService::storageServicecreateFolder(const QString &name, const QString &destination)
 {
-    if (mNeedToReadConfigFirst)
-        readConfig();
-
-    if (mTokenSecret.isEmpty()) {
+    if (checkNeedAuthenticate()) {
         mNextAction->setNextActionType(CreateFolder);
         mNextAction->setNextActionName(name);
         mNextAction->setNextActionFolder(destination);
@@ -171,10 +172,7 @@ void UbuntuoneStorageService::slotAuthorizationFailed(const QString &errorMessag
 
 void UbuntuoneStorageService::storageServiceaccountInfo()
 {
-    if (mNeedToReadConfigFirst)
-        readConfig();
-
-    if (mTokenSecret.isEmpty()) {
+    if (checkNeedAuthenticate()) {
         mNextAction->setNextActionType(AccountInfo);
         storageServiceauthentication();
     } else {
@@ -193,10 +191,7 @@ QString UbuntuoneStorageService::name()
 
 void UbuntuoneStorageService::storageServiceuploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
-    if (mNeedToReadConfigFirst)
-        readConfig();
-
-    if (mTokenSecret.isEmpty()) {
+    if (checkNeedAuthenticate()) {
         mNextAction->setNextActionType(UploadFile);
         mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
@@ -257,10 +252,7 @@ StorageServiceAbstract::Capabilities UbuntuoneStorageService::serviceCapabilitie
 
 void UbuntuoneStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {    
-    if (mNeedToReadConfigFirst)
-        readConfig();
-
-    if (mTokenSecret.isEmpty()) {
+    if (checkNeedAuthenticate()) {
         mNextAction->setNextActionType(ShareLink);
         mNextAction->setRootPath(root);
         mNextAction->setPath(path);
@@ -276,10 +268,7 @@ void UbuntuoneStorageService::storageServiceShareLink(const QString &root, const
 
 void UbuntuoneStorageService::storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
-    if (mNeedToReadConfigFirst)
-        readConfig();
-
-    if (mTokenSecret.isEmpty()) {
+    if (checkNeedAuthenticate()) {
         mNextAction->setNextActionType(DownLoadFile);
         mNextAction->setNextActionName(name);
         mNextAction->setDownloadDestination(destination);
@@ -298,10 +287,7 @@ void UbuntuoneStorageService::storageServicedownloadFile(const QString &name, co
 
 void UbuntuoneStorageService::storageServicecreateServiceFolder()
 {
-    if (mNeedToReadConfigFirst)
-        readConfig();
-
-    if (mTokenSecret.isEmpty()) {
+    if (checkNeedAuthenticate()) {
         mNextAction->setNextActionType(CreateServiceFolder);
         storageServiceauthentication();
     } else {
@@ -315,10 +301,7 @@ void UbuntuoneStorageService::storageServicecreateServiceFolder()
 
 void UbuntuoneStorageService::storageServicedeleteFile(const QString &filename)
 {
-    if (mNeedToReadConfigFirst)
-        readConfig();
-
-    if (mTokenSecret.isEmpty()) {
+    if (checkNeedAuthenticate()) {
         mNextAction->setNextActionType(DeleteFile);
         mNextAction->setNextActionName(filename);
         storageServiceauthentication();
@@ -334,10 +317,7 @@ void UbuntuoneStorageService::storageServicedeleteFile(const QString &filename)
 
 void UbuntuoneStorageService::storageServicedeleteFolder(const QString &foldername)
 {
-    if (mNeedToReadConfigFirst)
-        readConfig();
-
-    if (mTokenSecret.isEmpty()) {
+    if (checkNeedAuthenticate()) {
         mNextAction->setNextActionType(DeleteFile);
         mNextAction->setNextActionFolder(foldername);
         storageServiceauthentication();
@@ -353,10 +333,7 @@ void UbuntuoneStorageService::storageServicedeleteFolder(const QString &folderna
 
 void UbuntuoneStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
 {
-    if (mNeedToReadConfigFirst)
-        readConfig();
-
-    if (mToken.isEmpty()) {
+    if (checkNeedAuthenticate()) {
         mNextAction->setNextActionType(RenameFolder);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
@@ -371,10 +348,7 @@ void UbuntuoneStorageService::storageServiceRenameFolder(const QString &source, 
 
 void UbuntuoneStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
 {
-    if (mNeedToReadConfigFirst)
-        readConfig();
-
-    if (mToken.isEmpty()) {
+    if (checkNeedAuthenticate()) {
         mNextAction->setNextActionType(RenameFile);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
@@ -389,10 +363,7 @@ void UbuntuoneStorageService::storageServiceRenameFile(const QString &source, co
 
 void UbuntuoneStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
 {
-    if (mNeedToReadConfigFirst)
-        readConfig();
-
-    if (mToken.isEmpty()) {
+    if (checkNeedAuthenticate()) {
         mNextAction->setNextActionType(MoveFolder);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
@@ -407,10 +378,7 @@ void UbuntuoneStorageService::storageServiceMoveFolder(const QString &source, co
 
 void UbuntuoneStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
 {
-    if (mNeedToReadConfigFirst)
-        readConfig();
-
-    if (mToken.isEmpty()) {
+    if (checkNeedAuthenticate()) {
         mNextAction->setNextActionType(MoveFolder);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
@@ -425,10 +393,7 @@ void UbuntuoneStorageService::storageServiceMoveFile(const QString &source, cons
 
 void UbuntuoneStorageService::storageServiceCopyFile(const QString &source, const QString &destination)
 {
-    if (mNeedToReadConfigFirst)
-        readConfig();
-
-    if (mToken.isEmpty()) {
+    if (checkNeedAuthenticate()) {
         mNextAction->setNextActionType(CopyFile);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
@@ -443,10 +408,7 @@ void UbuntuoneStorageService::storageServiceCopyFile(const QString &source, cons
 
 void UbuntuoneStorageService::storageServiceCopyFolder(const QString &source, const QString &destination)
 {
-    if (mNeedToReadConfigFirst)
-        readConfig();
-
-    if (mToken.isEmpty()) {
+    if (checkNeedAuthenticate()) {
         mNextAction->setNextActionType(CopyFolder);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();

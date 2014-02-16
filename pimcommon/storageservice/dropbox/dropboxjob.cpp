@@ -273,8 +273,6 @@ void DropBoxJob::parseMoveFile(const QString &data)
     deleteLater();
 }
 
-
-
 void DropBoxJob::parseRenameFile(const QString &data)
 {
     //qDebug()<<" data :"<<data;
