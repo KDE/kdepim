@@ -23,6 +23,7 @@
 
 #include <QWidget>
 #include "pimcommon/storageservice/storageserviceabstract.h"
+#include "storageservicemanagerutil.h"
 
 class QProgressBar;
 namespace PimCommon {
@@ -89,6 +90,7 @@ private Q_SLOTS:
     void slotDownloadFileFailed(const QString &serviceName, const QString &filename);
     void slotGoHome();
     void slotGoToFolder(const QString &folder);
+    void slotChangeUrl(const InformationUrl &info);
 
 private:
     bool verifyService(const QString &serviceName);

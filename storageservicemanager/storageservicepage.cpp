@@ -52,6 +52,7 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     connect(mProgressIndicator, SIGNAL(updatePixmap(QPixmap)), this, SLOT(slotUpdatePixmap(QPixmap)));
     mStorageServiceNavigationBar = new StorageServiceNavigationButtons(this);
     connect(mStorageServiceNavigationBar, SIGNAL(goHome()), this, SLOT(slotGoHome()));
+    connect(mStorageServiceNavigationBar, SIGNAL(changeUrl(InformationUrl)), this, SLOT(slotChangeUrl(InformationUrl)));
     mStorageServiceNavigationBar->setEnabled(false);
     vbox->addWidget(mStorageServiceNavigationBar);
 
@@ -386,6 +387,12 @@ void StorageServicePage::slotGoHome()
 void StorageServicePage::slotGoToFolder(const QString &folder)
 {
     mTreeWidget->goToFolder(folder);
+}
+
+void StorageServicePage::slotChangeUrl(const InformationUrl &info)
+{
+    mTreeWidget->goToFolder(info.currentUrl);
+    mTreeWidget->setParentFolder(info.parentUrl);
 }
 
 void StorageServicePage::setNetworkIsDown(bool state)
