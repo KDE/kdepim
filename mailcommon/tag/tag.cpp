@@ -121,6 +121,9 @@ bool Tag::compareName( Tag::Ptr &tag1, Tag::Ptr &tag2 )
 
 bool Tag::operator==( const Tag &other ) const
 {
+  if (mTag.isValid()) {
+    return id() == other.id();
+  }
   return tagName == other.tagName &&
          textColor == other.textColor &&
          backgroundColor == other.backgroundColor &&
