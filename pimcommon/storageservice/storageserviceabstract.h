@@ -140,6 +140,8 @@ public:
     virtual QString disallowedSymbolsStr() const;
     virtual qlonglong maximumUploadFileSize() const;
 
+    virtual bool hasValidSettings() const = 0;
+
     void logout();
     void cancelUploadFile();
     void cancelDownloadFile();

@@ -21,6 +21,7 @@
 #include "dropboxutil.h"
 #include "dropboxjob.h"
 #include "storageservice/settings/storageservicesettings.h"
+#include "pimcommon/storageservice/storageservicejobconfig.h"
 
 #include <kwallet.h>
 
@@ -51,6 +52,13 @@ void DropBoxStorageService::shutdownService()
     mAccessToken.clear();
     mAccessTokenSecret.clear();
     mAccessOauthSignature.clear();
+}
+
+bool DropBoxStorageService::hasValidSettings() const
+{
+    return (!PimCommon::StorageServiceJobConfig::self()->dropboxOauthConsumerKey().isEmpty() &&
+            !PimCommon::StorageServiceJobConfig::self()->dropboxOauthSignature().isEmpty() &&
+            !PimCommon::StorageServiceJobConfig::self()->dropboxRootPath().isEmpty());
 }
 
 void DropBoxStorageService::removeConfig()

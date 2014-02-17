@@ -18,6 +18,7 @@
 #include "hubicstorageservice.h"
 #include "storageservice/widgets/storageservicetreewidget.h"
 #include "storageservice/storageservicemanager.h"
+#include "pimcommon/storageservice/storageservicejobconfig.h"
 #include "hubicjob.h"
 
 #include "storageservice/settings/storageservicesettings.h"
@@ -56,6 +57,15 @@ void HubicStorageService::shutdownService()
     mRefreshToken.clear();
     mToken.clear();
     mExpireDateTime = QDateTime();
+}
+
+bool HubicStorageService::hasValidSettings() const
+{
+    return (!PimCommon::StorageServiceJobConfig::self()->hubicScope().isEmpty() &&
+            !PimCommon::StorageServiceJobConfig::self()->hubicClientId().isEmpty() &&
+            !PimCommon::StorageServiceJobConfig::self()->hubicClientSecret().isEmpty() &&
+            !PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl().isEmpty());
+
 }
 
 void HubicStorageService::readConfig()

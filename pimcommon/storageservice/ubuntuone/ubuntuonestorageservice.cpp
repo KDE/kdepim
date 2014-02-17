@@ -54,6 +54,11 @@ void UbuntuoneStorageService::shutdownService()
     mTokenSecret.clear();
 }
 
+bool UbuntuoneStorageService::hasValidSettings() const
+{
+    return true;
+}
+
 void UbuntuoneStorageService::readConfig()
 {
     if (StorageServiceSettings::self()->createDefaultFolder()) {

@@ -33,11 +33,13 @@ using namespace PimCommon;
 BoxJob::BoxJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
-    mRedirectUri = PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl();
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
+
+    mRedirectUri = PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl();
     mClientId = PimCommon::StorageServiceJobConfig::self()->boxClientId();
     mClientSecret = PimCommon::StorageServiceJobConfig::self()->boxClientSecret();
     mRedirectUri = PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl();
+
     mServiceUrl = QLatin1String("https://app.box.com");
     mApiUrl = QLatin1String("https://api.box.com");
     mAuthorizePath = QLatin1String("/api/oauth2/authorize/");

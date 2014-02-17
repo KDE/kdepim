@@ -65,6 +65,7 @@ public:
     QString storageServiceName() const;
     KIcon icon() const;
     void shutdownService();
+    bool hasValidSettings() const;
 
 private slots:
     void slotAuthorizationFailed(const QString &errorMessage);    

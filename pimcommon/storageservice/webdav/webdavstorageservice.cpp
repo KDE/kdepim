@@ -521,4 +521,9 @@ void WebDavStorageService::shutdownService()
     mPassword.clear();
 }
 
+bool WebDavStorageService::hasValidSettings() const
+{
+    return true;
+}
+
 #include "moc_webdavstorageservice.cpp"
