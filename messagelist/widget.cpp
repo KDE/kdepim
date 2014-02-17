@@ -203,7 +203,6 @@ void Widget::focusQuickSearch()
 
 void Widget::fillMessageTagCombo()
 {
-  //TODO type filter
   Akonadi::TagFetchJob *fetchJob = new Akonadi::TagFetchJob(this);
   fetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
   connect(fetchJob, SIGNAL(result(KJob*)), this, SLOT(slotTagsFetched(KJob*)));

@@ -189,7 +189,6 @@ void MessageItemPrivate::fillTagList(const Akonadi::Tag::List &taglist)
 
   // TODO: The tag pointers here could be shared between all items, there really is no point in
   //       creating them for each item that has tags
-  // This should be impelemented by implicitly sharing tag objects while fetching tags
 
   //Priority sort this and make bestTag more efficient
 

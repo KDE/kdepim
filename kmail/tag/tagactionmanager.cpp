@@ -149,7 +149,6 @@ void TagActionManager::createActions()
 
     if ( mTags.isEmpty() ) {
         mTagFetchInProgress = true;
-        //TODO set type filter
         Akonadi::TagFetchJob *fetchJob = new Akonadi::TagFetchJob(this);
         fetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
         connect(fetchJob, SIGNAL(result(KJob*)), this, SLOT(finishedTagListing(KJob*)));
