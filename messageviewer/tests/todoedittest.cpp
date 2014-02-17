@@ -229,9 +229,11 @@ void TodoEditTest::shouldClearAllWhenCloseWidget()
     QString subject = QLatin1String("Test Note");
     msg->subject(true)->fromUnicodeString(subject, "us-ascii");
     edit.setMessage(msg);
+    edit.setMessageUrlAkonadi(QLatin1String("foo"));
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
     edit.slotCloseWidget();
     QCOMPARE(noteedit->text(), QString());
+    QCOMPARE(edit.messageUrlAkonadi(), QString());
     QVERIFY(!edit.message());
 }
 
@@ -354,6 +356,5 @@ void TodoEditTest::shouldClearUrlMessageWhenSwitchMessage()
     edit.setMessage(msg2);
     QCOMPARE(edit.messageUrlAkonadi(), QString());
 }
-
 
 QTEST_KDEMAIN( TodoEditTest, GUI )

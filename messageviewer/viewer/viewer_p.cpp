@@ -75,6 +75,7 @@
 #include <KABC/VCardConverter>
 #include <KPIMUtils/Email>
 #include <Akonadi/ItemModifyJob>
+#include <Akonadi/ItemCreateJob>
 
 #include <kpimutils/kfileio.h>
 
@@ -107,6 +108,7 @@
 #include <akonadi/kmime/messagestatus.h>
 #include <akonadi/kmime/specialmailcollections.h>
 #include <akonadi/attributefactory.h>
+#include <Akonadi/KMime/MessageParts>
 #include <kleo/specialjob.h>
 
 #include "chiasmuskeyselector.h"
@@ -3376,7 +3378,7 @@ void ViewerPrivate::slotExpandShortUrl()
 
 void ViewerPrivate::slotShowCreateTodoWidget()
 {
-    if (mMessage) {
+    if (mMessage) {       
         mCreateTodo->setMessage(mMessage);
         mCreateTodo->show();
     } else {
@@ -3384,8 +3386,42 @@ void ViewerPrivate::slotShowCreateTodoWidget()
     }
 }
 
-void ViewerPrivate::slotCreateTodo(const KCalCore::Todo::Ptr &, const Akonadi::Collection &collection, const QString &urlMessageAkonadi)
+void ViewerPrivate::slotCreateTodo(const KCalCore::Todo::Ptr &todoPtr, const Akonadi::Collection &collection, const QString &urlMessageAkonadi)
 {
-    qDebug()<<" create todo ";
-    //TODO
+    Akonadi::Item item( mMessageItem );
+
+    // We need the full payload to attach the mail to the incidence
+    if ( !item.loadedPayloadParts().contains( Akonadi::MessagePart::Body ) ) {
+        Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item );
+        job->fetchScope().fetchFullPayload();
+        if ( job->exec() ) {
+            if ( job->items().count() == 1 ) {
+                item = job->items().first();
+            }
+        }
+    }
+    if ( !item.hasPayload<KMime::Message::Ptr>() ) {
+        qDebug()<<" item has not payload";
+        return;
+    }
+
+    KMime::Message::Ptr msg =  item.payload<KMime::Message::Ptr>();
+
+    KCalCore::Attachment::Ptr attachmentPtr(new KCalCore::Attachment( msg->encodedContent().toBase64(), KMime::Message::mimeType() ));
+    attachmentPtr->setLabel(msg->subject(false)->asUnicodeString());
+    todoPtr->addAttachment(attachmentPtr);
+
+    Akonadi::Item newTodoItem;
+    newTodoItem.setMimeType( KCalCore::Todo::todoMimeType() );
+    newTodoItem.setPayload<KCalCore::Todo::Ptr>( todoPtr );
+
+    Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob(newTodoItem, collection);
+    connect(job, SIGNAL(result(KJob*)), this, SLOT(slotCreateNewTodo(KJob*)));
+}
+
+void ViewerPrivate::slotCreateNewTodo(KJob *job)
+{
+    if ( job->error() ) {
+        qDebug() << "Error during create new Todo "<<job->errorString();
+    }
 }

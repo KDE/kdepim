@@ -156,6 +156,7 @@ void TodoEdit::slotCloseWidget()
     writeConfig();
     mNoteEdit->clear();
     mMessage = KMime::Message::Ptr();
+    mMessageUrlAkonadi.clear();
     hide();
 }
 
@@ -197,5 +198,3 @@ bool TodoEdit::event(QEvent* e)
     }
     return QWidget::event(e);
 }
-
-
