@@ -59,6 +59,7 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     mTreeWidget = new StorageServiceTreeWidget(mStorageService);
     connect(mTreeWidget, SIGNAL(uploadFile()), this, SLOT(slotUploadFile()));
     connect(mTreeWidget, SIGNAL(downloadFile()), this, SLOT(slotDownloadFile()));
+    connect(mTreeWidget, SIGNAL(changeFolder(QString,QString)), this, SLOT(slotChangeFolder(QString,QString)));
     vbox->addWidget(mTreeWidget);
     mProgressWidget = new PimCommon::StorageServiceProgressWidget(storageService);
     vbox->addWidget(mProgressWidget);
@@ -384,13 +385,13 @@ void StorageServicePage::slotGoHome()
     mTreeWidget->goToFolder(QString());
 }
 
-void StorageServicePage::slotGoToFolder(const QString &folder)
+void StorageServicePage::slotChangeFolder(const QString &previousCurrentFolder, const QString &previousParentFolder)
 {
     InformationUrl info;
-    info.currentUrl = mTreeWidget->currentFolder();
-    info.parentUrl = mTreeWidget->parentFolder();
+    info.currentUrl = previousCurrentFolder;
+    info.parentUrl = previousParentFolder;
+    qDebug()<<" info "<<info;
     mStorageServiceNavigationBar->addNewUrl(info);
-    mTreeWidget->goToFolder(folder);
 }
 
 void StorageServicePage::slotChangeUrl(const InformationUrl &info)

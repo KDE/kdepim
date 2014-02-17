@@ -89,7 +89,7 @@ private Q_SLOTS:
     void slotUploadFileFailed(const QString &serviceName, const QString &filename);
     void slotDownloadFileFailed(const QString &serviceName, const QString &filename);
     void slotGoHome();
-    void slotGoToFolder(const QString &folder);
+    void slotChangeFolder(const QString &previousCurrentFolder, const QString &previousParentFolder);
     void slotChangeUrl(const InformationUrl &info);
 
 private:

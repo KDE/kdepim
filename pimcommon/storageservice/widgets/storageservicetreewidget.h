@@ -88,6 +88,7 @@ public:
     void createPropertiesAction(KMenu *menu);
 Q_SIGNALS:
     void fileDoubleClicked();
+    void changeFolder(const QString &currentFolder, const QString &parentFolder);
 
 public Q_SLOTS:
     void refreshList();
