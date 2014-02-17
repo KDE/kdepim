@@ -20,6 +20,7 @@
 #include "storageservice/storageservicemanager.h"
 #include "gdrivejob.h"
 #include "storageservice/settings/storageservicesettings.h"
+#include "pimcommon/storageservice/storageservicejobconfig.h"
 
 #include <kwallet.h>
 
@@ -47,6 +48,13 @@ void GDriveStorageService::shutdownService()
 {
     mAccount = KGAPI2::AccountPtr();
     mExpireDateTime = QDateTime();
+}
+
+bool GDriveStorageService::hasValidSettings() const
+{
+    return (!PimCommon::StorageServiceJobConfig::self()->gdriveClientId().isEmpty() &&
+            !PimCommon::StorageServiceJobConfig::self()->gdriveClientSecret().isEmpty());
+
 }
 
 bool GDriveStorageService::needToRefreshToken() const

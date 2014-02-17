@@ -19,6 +19,7 @@
 #include "storageservice/widgets/storageservicetreewidget.h"
 #include "storageservice/storageservicemanager.h"
 #include "storageservice/settings/storageservicesettings.h"
+#include "pimcommon/storageservice/storageservicejobconfig.h"
 
 #include "yousenditutil.h"
 #include "yousenditjob.h"
@@ -50,6 +51,11 @@ void YouSendItStorageService::shutdownService()
     mToken.clear();
     mUsername.clear();
     mPassword.clear();
+}
+
+bool YouSendItStorageService::hasValidSettings() const
+{
+    return !PimCommon::StorageServiceJobConfig::self()->youSendItApiKey().isEmpty();
 }
 
 bool YouSendItStorageService::needAuthenticate()
@@ -234,6 +240,8 @@ StorageServiceAbstract::Capabilities YouSendItStorageService::serviceCapabilitie
     cap |= RenameFileCapabilitity;
     cap |= MoveFileCapability;
     cap |= MoveFolderCapability;
+
+    //Can not be implemented.
     //cap |= CopyFileCapability;
     //cap |= CopyFolderCapability;
 

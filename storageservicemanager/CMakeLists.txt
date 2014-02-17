@@ -24,7 +24,8 @@ set(storageservicemanager_SRCS
   storageservicewarning.cpp
   storageservicelogdialog.cpp
   storageserviceaccountinfodialog.cpp
-  storageservicenavigationbar.cpp
+  storageservicenavigationbuttons.cpp
+  storageservicemanagerutil.cpp
 )
 
 kde4_add_executable(storageservicemanager ${storageservicemanager_SRCS} )
@@ -43,3 +44,5 @@ install(FILES
   DESTINATION  ${DATA_INSTALL_DIR}/storageservicemanager)
 
 install(PROGRAMS storageservicemanager.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+
+add_subdirectory(tests)

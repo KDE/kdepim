@@ -201,10 +201,12 @@ void StorageServiceTreeWidget::slotListFolderDone(const QString &serviceName, co
     setParentFolder(parentFolder);
 }
 
-void StorageServiceTreeWidget::goToFolder(const QString &folder)
+void StorageServiceTreeWidget::goToFolder(const QString &folder, bool addToHistory)
 {
     if (folder == currentFolder())
         return;
+    if (addToHistory)
+        Q_EMIT changeFolder(currentFolder(), parentFolder());
     setCurrentFolder(folder);
     QTimer::singleShot(0, this, SLOT(refreshList()));
 }
@@ -217,7 +219,7 @@ void StorageServiceTreeWidget::slotItemDoubleClicked(QTreeWidgetItem *item, int 
         switch (itemType) {
         case StorageServiceTreeWidget::Folder:
         {
-            const QString folder = itemIdentifierSelected();
+            const QString folder = itemIdentifierSelected();            
             goToFolder(folder);
             break;
         }

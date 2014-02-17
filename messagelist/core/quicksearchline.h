@@ -40,7 +40,7 @@ public:
     ~QuickSearchLine();
 
     enum SearchOption {
-        SearchNoOption = 1,
+        SearchEveryWhere = 1,
         SearchAgainstBody = 2,
         SearchAgainstSubject = 4,
         SearchAgainstFrom = 8,
@@ -75,6 +75,7 @@ private slots:
     void slotSearchOptionChanged();
     void slotSearchEditTextEdited(const QString &text);
     void slotClearButtonClicked();
+
 private:
     void initializeStatusSearchButton(QLayout *quickSearchButtonLayout);
     void createQuickSearchButton(const QIcon &icon, const QString &text, int value, QLayout *quickSearchButtonLayout);
@@ -83,6 +84,7 @@ private:
     KComboBox *mTagFilterCombo;
     QToolButton *mOpenFullSearchButton;
     QToolButton *mLockSearch;
+    QPushButton *mSearchEveryWhere;
     QPushButton *mSearchAgainstBody;
     QPushButton *mSearchAgainstSubject;
     QPushButton *mSearchAgainstFrom;

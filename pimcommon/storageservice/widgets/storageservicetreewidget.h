@@ -71,7 +71,7 @@ public:
     void setParentFolder(const QString &folder);
     QString parentFolder() const;
 
-    void goToFolder(const QString &folder);
+    void goToFolder(const QString &folder, bool addToHistory = true);
 
     StorageServiceTreeWidgetItem *addFolder(const QString &name, const QString &ident);
     StorageServiceTreeWidgetItem *addFile(const QString &name, const QString &ident, const QString &mimetype = QString());
@@ -88,6 +88,7 @@ public:
     void createPropertiesAction(KMenu *menu);
 Q_SIGNALS:
     void fileDoubleClicked();
+    void changeFolder(const QString &currentFolder, const QString &parentFolder);
 
 public Q_SLOTS:
     void refreshList();

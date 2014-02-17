@@ -22,7 +22,7 @@
 #include "storageservicetreewidget.h"
 #include "storageservicewarning.h"
 #include "storageserviceaccountinfodialog.h"
-#include "storageservicenavigationbar.h"
+#include "storageservicenavigationbuttons.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 #include "pimcommon/storageservice/widgets/storageserviceprogresswidget.h"
 #include "pimcommon/storageservice/widgets/storageserviceprogressindicator.h"
@@ -50,15 +50,16 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
 
     mProgressIndicator = new PimCommon::StorageServiceProgressIndicator(this);
     connect(mProgressIndicator, SIGNAL(updatePixmap(QPixmap)), this, SLOT(slotUpdatePixmap(QPixmap)));
-    mStorageServiceNavigationBar = new StorageServiceNavigationBar(this);
+    mStorageServiceNavigationBar = new StorageServiceNavigationButtons(this);
     connect(mStorageServiceNavigationBar, SIGNAL(goHome()), this, SLOT(slotGoHome()));
-    connect(mStorageServiceNavigationBar, SIGNAL(goToFolder(QString)), this, SLOT(slotGoToFolder(QString)));
+    connect(mStorageServiceNavigationBar, SIGNAL(changeUrl(InformationUrl)), this, SLOT(slotChangeUrl(InformationUrl)));
     mStorageServiceNavigationBar->setEnabled(false);
     vbox->addWidget(mStorageServiceNavigationBar);
 
     mTreeWidget = new StorageServiceTreeWidget(mStorageService);
     connect(mTreeWidget, SIGNAL(uploadFile()), this, SLOT(slotUploadFile()));
     connect(mTreeWidget, SIGNAL(downloadFile()), this, SLOT(slotDownloadFile()));
+    connect(mTreeWidget, SIGNAL(changeFolder(QString,QString)), this, SLOT(slotChangeFolder(QString,QString)));
     vbox->addWidget(mTreeWidget);
     mProgressWidget = new PimCommon::StorageServiceProgressWidget(storageService);
     vbox->addWidget(mProgressWidget);
@@ -384,9 +385,18 @@ void StorageServicePage::slotGoHome()
     mTreeWidget->goToFolder(QString());
 }
 
-void StorageServicePage::slotGoToFolder(const QString &folder)
+void StorageServicePage::slotChangeFolder(const QString &previousCurrentFolder, const QString &previousParentFolder)
 {
-    mTreeWidget->goToFolder(folder);
+    InformationUrl info;
+    info.currentUrl = previousCurrentFolder;
+    info.parentUrl = previousParentFolder;
+    mStorageServiceNavigationBar->addNewUrl(info);
+}
+
+void StorageServicePage::slotChangeUrl(const InformationUrl &info)
+{
+    mTreeWidget->goToFolder(info.currentUrl, false);
+    mTreeWidget->setParentFolder(info.parentUrl);
 }
 
 void StorageServicePage::setNetworkIsDown(bool state)
@@ -402,5 +412,6 @@ void StorageServicePage::showLog()
 void StorageServicePage::logout()
 {
     mTreeWidget->logout();
+    mStorageServiceNavigationBar->clear();
     mStorageServiceNavigationBar->setEnabled(false);
 }

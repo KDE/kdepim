@@ -1532,7 +1532,7 @@ void ViewerPrivate::createWidgets() {
     mViewer->setObjectName( QLatin1String("mViewer") );
 
     mCreateTodo = new MessageViewer::TodoEdit(readerBox);
-    connect(mCreateTodo, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection)), this, SLOT(slotCreateTodo(KCalCore::Todo::Ptr,Akonadi::Collection)));
+    connect(mCreateTodo, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection,QString)), this, SLOT(slotCreateTodo(KCalCore::Todo::Ptr,Akonadi::Collection,QString)));
     mCreateTodo->setObjectName(QLatin1String("createtodowidget"));
     mCreateTodo->hide();
 
@@ -1855,7 +1855,7 @@ void ViewerPrivate::createActions()
     mCreateTodoAction->setIconText( i18n( "Create To-do" ) );
     mCreateTodoAction->setHelpText( i18n( "Allows you to create a calendar to-do or reminder from this message" ) );
     mCreateTodoAction->setWhatsThis( i18n( "This option starts the KOrganizer to-do editor with initial values taken from the currently selected message. Then you can edit the to-do to your liking before saving it to your calendar." ) );
-    ac->addAction(QLatin1String("create_new_todo"), mCreateTodoAction);
+    ac->addAction(QLatin1String("create_todo"), mCreateTodoAction);
     mCreateTodoAction->setShortcut(Qt::CTRL + Qt::Key_T);
     connect( mCreateTodoAction, SIGNAL(triggered(bool)), SLOT(slotShowCreateTodoWidget()) );
 }
@@ -3380,11 +3380,11 @@ void ViewerPrivate::slotShowCreateTodoWidget()
         mCreateTodo->setMessage(mMessage);
         mCreateTodo->show();
     } else {
-        qDebug()<<" We don't have message";
+        qDebug()<<" There is not valid message";
     }
 }
 
-void ViewerPrivate::slotCreateTodo(const KCalCore::Todo::Ptr &, const Akonadi::Collection &collection)
+void ViewerPrivate::slotCreateTodo(const KCalCore::Todo::Ptr &, const Akonadi::Collection &collection, const QString &urlMessageAkonadi)
 {
     qDebug()<<" create todo ";
     //TODO

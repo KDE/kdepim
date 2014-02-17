@@ -22,6 +22,9 @@
 #define STORAGESERVICECONFIGUREDIALOG_H
 
 #include "pimcommon/storageservice/dialog/storageserviceconfiguredialog.h"
+
+class QCheckBox;
+
 class StorageServiceConfigureDialog : public PimCommon::StorageServiceConfigureDialog
 {
     Q_OBJECT
@@ -33,6 +36,7 @@ public:
 
 private:
     void loadSettings();
+    QCheckBox *mCloseWallet;
 };
 
 #endif // STORAGESERVICECONFIGUREDIALOG_H

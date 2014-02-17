@@ -18,25 +18,25 @@
 
 */
 
-#ifndef STORAGESERVICENAVIGATIONBAR_H
-#define STORAGESERVICENAVIGATIONBAR_H
 
-#include <QToolBar>
-class QAction;
-class StorageServiceNavigationBar : public QToolBar
+#ifndef STORAGESERVICEMANAGERUTIL_H
+#define STORAGESERVICEMANAGERUTIL_H
+
+#include <QString>
+#include <QDebug>
+struct InformationUrl
 {
-    Q_OBJECT
-public:
-    explicit StorageServiceNavigationBar(QWidget *parent=0);
-    ~StorageServiceNavigationBar();
+    bool isValid() const {
+        return !currentUrl.isEmpty() && !parentUrl.isEmpty();
+    }
+    bool operator ==(const InformationUrl &a) {
+        return (a.currentUrl == currentUrl) && (a.parentUrl == parentUrl);
+    }
 
-Q_SIGNALS:
-    void goHome();
-    void goToFolder(const QString &parent);
-
-private:
-    QAction *mGoBack;
-    QAction *mGoForward;
+    QString currentUrl;
+    QString parentUrl;
 };
 
-#endif // STORAGESERVICENAVIGATIONBAR_H
+QDebug operator<<(QDebug d, const InformationUrl &info);
+
+#endif // STORAGESERVICEMANAGERUTIL_H

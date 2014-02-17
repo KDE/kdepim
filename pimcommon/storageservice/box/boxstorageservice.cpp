@@ -21,6 +21,7 @@
 #include "boxutil.h"
 #include "boxjob.h"
 #include "storageservice/settings/storageservicesettings.h"
+#include "pimcommon/storageservice/storageservicejobconfig.h"
 
 #include <qjson/parser.h>
 
@@ -50,6 +51,14 @@ void BoxStorageService::shutdownService()
     mToken.clear();
     mRefreshToken.clear();
     mExpireDateTime = QDateTime();
+}
+
+bool BoxStorageService::hasValidSettings() const
+{
+    return (!PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl().isEmpty() &&
+            !PimCommon::StorageServiceJobConfig::self()->boxClientId().isEmpty() &&
+            !PimCommon::StorageServiceJobConfig::self()->boxClientSecret().isEmpty() &&
+            !PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl().isEmpty());
 }
 
 void BoxStorageService::readConfig()

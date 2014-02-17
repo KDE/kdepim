@@ -31,7 +31,8 @@
 
 MonitorItem::MonitorItem( const QString &identifier_, MonitorsModel* model):
   QObject( model ),
-  identifier( identifier_ )
+  identifier( identifier_ ),
+  allMonitored( false )
 {
 
   QString service = QLatin1String( "org.freedesktop.Akonadi" );

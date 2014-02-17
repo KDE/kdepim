@@ -9,8 +9,13 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libksieve/ksieveui/
 )
 
+set( sieveeditor_kcfg_SRCS settings/sieveeditorglobalconfig.kcfgc )
+
+kde4_add_kcfg_files(sieveeditor_kcfg_SRCS ${sieveeditor_kcfg_SRCS})
+
 
 set(sieveeditor_SRCS
+  ${sieveeditor_kcfg_SRCS}
   main.cpp
   sieveeditormainwindow.cpp
   serversievesettingsdialog.cpp

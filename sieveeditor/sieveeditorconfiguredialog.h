@@ -23,6 +23,7 @@
 
 #include <KDialog>
 class QTabWidget;
+class QCheckBox;
 class SieveEditorConfigureServerWidget;
 class SieveEditorConfigureDialog : public KDialog
 {
@@ -40,6 +41,7 @@ private:
     void initializeServerSieveSettings();
     QTabWidget *mTabWidget;
     SieveEditorConfigureServerWidget *mServerWidget;
+    QCheckBox *mCloseWallet;
 };
 
 #endif // SIEVEEDITORCONFIGUREDIALOG_H

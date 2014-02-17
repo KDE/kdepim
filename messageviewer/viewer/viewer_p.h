@@ -496,7 +496,7 @@ private slots:
     void saveSplitterSizes() const;
     void slotGrantleeThemesUpdated();
 
-    void slotCreateTodo(const KCalCore::Todo::Ptr &, const Akonadi::Collection &collection);
+    void slotCreateTodo(const KCalCore::Todo::Ptr &, const Akonadi::Collection &collection, const QString &urlMessageAkonadi);
 public slots:
     /** An URL has been activate with a click. */
     void slotUrlOpen( const QUrl &url = QUrl());

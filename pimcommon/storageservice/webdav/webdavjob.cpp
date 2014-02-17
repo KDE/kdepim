@@ -497,7 +497,7 @@ void WebDavJob::parseCreateFolder(const QString &data)
 
 void WebDavJob::parseAccountInfo(const QString &data)
 {
-    //qDebug()<<" parseAccountInfo "<<data;
+    qDebug()<<" parseAccountInfo "<<data;
     PimCommon::AccountInfo accountInfo;
     QDomDocument dom;
     dom.setContent(data.toLatin1(), true);

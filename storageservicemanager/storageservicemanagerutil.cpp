@@ -18,26 +18,10 @@
 
 */
 
-#include "storageservicenavigationbar.h"
+#include "storageservicemanagerutil.h"
 
-#include <KLocalizedString>
-#include <KStandardShortcut>
-#include <KIcon>
 
-#include <QAction>
-
-StorageServiceNavigationBar::StorageServiceNavigationBar(QWidget *parent)
-    : QToolBar(parent)
-{
-    addAction(KIcon(QLatin1String("go-home")),i18n("Home"), this, SIGNAL(goHome()));
-    mGoBack = addAction(KIcon(QLatin1String("go-previous")),i18n("Back"));
-    mGoBack->setShortcuts( KStandardShortcut::shortcut(KStandardShortcut::Back) );
-    mGoForward = addAction(KIcon(QLatin1String("go-next")),i18n("Forward"));
-    mGoForward->setShortcuts( KStandardShortcut::shortcut(KStandardShortcut::Forward) );
+QDebug operator<<(QDebug d, const InformationUrl &info) {
+    d.nospace() << " currentUrl " << info.currentUrl<< " parentUrl "<<info.parentUrl;
+    return d.space();
 }
-
-StorageServiceNavigationBar::~StorageServiceNavigationBar()
-{
-
-}
-

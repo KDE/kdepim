@@ -19,6 +19,7 @@
 #include "adblockcreatefilterdialog.h"
 #include "settings/globalsettings.h"
 #include "adblock/adblockmanager.h"
+#include "pimcommon/widgets/customtreeview.h"
 
 #include <KLocalizedString>
 #include <KTreeWidgetSearchLine>
@@ -28,7 +29,6 @@
 #include <KRun>
 
 #include <QHeaderView>
-#include <QTreeWidget>
 #include <QVBoxLayout>
 #include <QWebFrame>
 #include <QWebElement>
@@ -37,6 +37,7 @@
 #include <QClipboard>
 #include <QApplication>
 #include <QFile>
+#include <QPainter>
 
 using namespace MessageViewer;
 
@@ -45,7 +46,8 @@ AdBlockBlockableItemsWidget::AdBlockBlockableItemsWidget(QWidget *parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     setLayout(lay);
-    mListItems = new QTreeWidget;
+    mListItems = new PimCommon::CustomTreeView;
+    mListItems->setDefaultText(i18n("No blockable element found."));
 
     mListItems->setContextMenuPolicy(Qt::CustomContextMenu);
     mListItems->setAlternatingRowColors(true);

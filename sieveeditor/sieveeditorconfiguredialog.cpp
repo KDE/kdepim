@@ -21,6 +21,8 @@
 #include "sieveeditorconfiguredialog.h"
 #include "serversievelistwidget.h"
 #include "sieveeditorconfigureserverwidget.h"
+#include "pimcommon/widgets/configureimmutablewidgetutils.h"
+#include "sieveeditorglobalconfig.h"
 
 #include <KLocalizedString>
 #include <KSharedConfig>
@@ -29,6 +31,7 @@
 #include <QVBoxLayout>
 #include <QListWidget>
 #include <QLabel>
+#include <QCheckBox>
 
 SieveEditorConfigureDialog::SieveEditorConfigureDialog(QWidget *parent)
     : KDialog(parent)
@@ -54,17 +57,23 @@ void SieveEditorConfigureDialog::initializeServerSieveSettings()
     mTabWidget->addTab(w, i18n("Server Sieve"));
     mServerWidget = new SieveEditorConfigureServerWidget;
     vbox->addWidget(mServerWidget);
+
+    mCloseWallet = new QCheckBox(i18n("Close wallet when close application"));
+    vbox->addWidget(mCloseWallet);
     loadServerSieveConfig();
 }
 
 void SieveEditorConfigureDialog::loadServerSieveConfig()
 {
     mServerWidget->readConfig();
+    PimCommon::ConfigureImmutableWidgetUtils::loadWidget(mCloseWallet, SieveEditorGlobalConfig::self()->closeWalletItem());
 }
 
 void SieveEditorConfigureDialog::saveServerSieveConfig()
 {
     mServerWidget->writeConfig();
+    PimCommon::ConfigureImmutableWidgetUtils::saveCheckBox(mCloseWallet, SieveEditorGlobalConfig::self()->closeWalletItem());
+    SieveEditorGlobalConfig::self()->writeConfig();
 }
 
 void SieveEditorConfigureDialog::readConfig()

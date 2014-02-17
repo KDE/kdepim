@@ -41,7 +41,7 @@ private:
     void readConfig();
     void writeConfig();
 
-    void searchArchiveElement(const QString &path, const KArchiveDirectory *topDirectory, const QString &name);
+    bool searchArchiveElement(const QString &path, const KArchiveDirectory *topDirectory, const QString &name);
     QTreeWidgetItem *addTopItem(const QString &name);
     void addSubItems(QTreeWidgetItem *parent, const KArchiveEntry *entry, int indent);
     QTreeWidgetItem *addItem(QTreeWidgetItem *parent, const QString &name);

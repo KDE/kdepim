@@ -20,10 +20,12 @@
 
 #include <QWidget>
 #include "messageviewer_export.h"
-
-class QTreeWidget;
 class QWebFrame;
+namespace PimCommon {
+class CustomTreeView;
+}
 namespace MessageViewer {
+
 class MESSAGEVIEWER_EXPORT AdBlockBlockableItemsWidget : public QWidget
 {
     Q_OBJECT
@@ -75,7 +77,7 @@ private:
     void adaptSrc(QString &src,const QString &hostName);
 
 private:
-    QTreeWidget *mListItems;
+    PimCommon::CustomTreeView *mListItems;
 };
 }
 

@@ -35,6 +35,11 @@ struct AccountInfo {
     {
 
     }
+
+    bool isValid() const {
+        return (accountSize >=0) || (quota >= 0) || (shared >= 0);
+    }
+
     qint64 accountSize;
     qint64 quota;
     qint64 shared;
@@ -134,6 +139,8 @@ public:
     virtual QRegExp disallowedSymbols() const;
     virtual QString disallowedSymbolsStr() const;
     virtual qlonglong maximumUploadFileSize() const;
+
+    virtual bool hasValidSettings() const = 0;
 
     void logout();
     void cancelUploadFile();

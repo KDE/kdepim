@@ -22,9 +22,12 @@
 #include "storageservicetabwidget.h"
 #include "storageserviceconfiguredialog.h"
 #include "storageservicemanagersettingsjob.h"
+#include "storageservicemanagerglobalconfig.h"
 #include "pimcommon/storageservice/storageservicemanager.h"
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
+
+#include "pimcommon/storageservice/settings/storageservicesettings.h"
 
 #include "libkdepim/progresswidget/progressdialog.h"
 #include "libkdepim/progresswidget/statusbarprogresswidget.h"
@@ -80,6 +83,8 @@ StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
     KConfigGroup group = config->group( QLatin1String("StorageServiceManagerMainWindow") );
     group.writeEntry( "Size", size() );
     qDebug()<<" StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()";
+    if (StorageServiceManagerGlobalConfig::self()->closeWallet())
+        PimCommon::StorageServiceSettings::self()->closeWallet();
 }
 
 void StorageServiceManagerMainWindow::initStatusBar()

@@ -21,11 +21,12 @@
 #define PIMCOMMON_StorageServiceSettings_H
 
 #include <QObject>
+#include "pimcommon_export.h"
 namespace KWallet {
 class Wallet;
 }
 namespace PimCommon {
-class StorageServiceSettings : public QObject
+class PIMCOMMON_EXPORT StorageServiceSettings : public QObject
 {
     Q_OBJECT
 public:
