@@ -64,7 +64,7 @@ QAction *StorageServiceNavigationButtons::home() const
 void StorageServiceNavigationButtons::addNewUrl(const InformationUrl &info)
 {
     if (info.isValid()) {
-        mBackUrls.append(info);
+        mBackUrls.prepend(info);
         updateButtons();
     }
 }
@@ -72,7 +72,7 @@ void StorageServiceNavigationButtons::addNewUrl(const InformationUrl &info)
 void StorageServiceNavigationButtons::addBackUrl(const InformationUrl &info)
 {
     if (info.isValid()) {
-        mBackUrls.append(info);
+        mBackUrls.prepend(info);
         updateButtons();
     }
 }
@@ -80,7 +80,7 @@ void StorageServiceNavigationButtons::addBackUrl(const InformationUrl &info)
 void StorageServiceNavigationButtons::addForwadUrl(const InformationUrl &info)
 {
     if (info.isValid()) {
-        mForwardUrls.append(info);
+        mForwardUrls.prepend(info);
         updateButtons();
     }
 }
