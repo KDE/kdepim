@@ -4028,8 +4028,7 @@ void KMMainWidget::slotAkonadiStandardActionUpdated()
                                                                                                             && !multiFolder
                                                                                                             && ( mCurrentFolder->collection().rights() & Collection::CanDeleteCollection )
                                                                                                             && !mCurrentFolder->isSystemFolder()
-                                                                                                            && folderWithContent
-                                                                                                            && mCurrentFolder->collection().resource() != QLatin1String("akonadi_nepomuktag_resource") );
+                                                                                                            && folderWithContent);
   }
 
   if ( mAkonadiStandardActionManager->action( Akonadi::StandardMailActionManager::MoveAllToTrash ) ) {
