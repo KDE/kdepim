@@ -1449,7 +1449,7 @@ void AppearancePage::MessageTagTab::save()
                 //TODO TagModifyJob
                 kWarning() << "cannot modify tag";
             } else {
-                new Akonadi::TagCreateJob(akonadiTag, this);
+                new Akonadi::TagCreateJob(akonadiTag);
             }
         }
     }
