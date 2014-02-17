@@ -108,6 +108,10 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     errorLayout->addWidget(mAuthenticate);
     connect(mAuthenticate, SIGNAL(clicked()), this, SLOT(slotAuthenticate()));
 
+
+    mCanNotGetInfo = new QLabel(i18n("Unable to get account information."));
+    mStackWidget->addWidget(mCanNotGetInfo);
+
     vbox->addWidget(mStackWidget);
     mainLayout->addLayout(vbox);
     setLayout(mainLayout);
@@ -366,21 +370,25 @@ void StorageServiceSettingsWidget::slotUpdateAccountInfoFailed(const QString &se
 void StorageServiceSettingsWidget::slotUpdateAccountInfo(const QString &serviceName, const PimCommon::AccountInfo &info)
 {
     if (mListService->currentItem() && (mListService->currentItem()->data(Name).toString()==serviceName)) {
-        mStackWidget->setCurrentWidget(mInformationPage);
-        if (info.accountSize >= 0) {
-            mAccountSize->setText(i18n("Account size: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
+        if (info.isValid()) {
+            mStackWidget->setCurrentWidget(mInformationPage);
+            if (info.accountSize >= 0) {
+                mAccountSize->setText(i18n("Account size: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
+            } else {
+                mAccountSize->setText(i18n("Account size:"));
+            }
+            if (info.quota >= 0) {
+                mQuota->setText(i18n("Quota: %1", KGlobal::locale()->formatByteSize(info.quota,1)));
+            } else {
+                mQuota->setText(i18n("Quota:"));
+            }
+            if (info.shared >= 0) {
+                mShared->setText(i18n("Shared: %1", KGlobal::locale()->formatByteSize(info.shared,1)));
+            } else {
+                mShared->setText(i18n("Shared:"));
+            }
         } else {
-            mAccountSize->setText(i18n("Account size:"));
-        }
-        if (info.quota >= 0) {
-            mQuota->setText(i18n("Quota: %1", KGlobal::locale()->formatByteSize(info.quota,1)));
-        } else {
-            mQuota->setText(i18n("Quota:"));
-        }
-        if (info.shared >= 0) {
-            mShared->setText(i18n("Shared: %1", KGlobal::locale()->formatByteSize(info.shared,1)));
-        } else {
-            mShared->setText(i18n("Shared:"));
+            mStackWidget->setCurrentWidget(mCanNotGetInfo);
         }
     }
 }
