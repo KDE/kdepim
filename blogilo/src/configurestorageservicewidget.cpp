@@ -73,6 +73,13 @@ ConfigureStorageServiceWidget::ConfigureStorageServiceWidget(PimCommon::StorageS
     }
     setLayout(lay);
     //TODO need to implement save/load from KDialogConfig
+
+    QList<PimCommon::StorageServiceAbstract::Capability> lst;
+    lst.append(PimCommon::StorageServiceAbstract::UploadFileCapability);
+    lst.append(PimCommon::StorageServiceAbstract::DownloadFileCapability);
+
+    mStorageServiceConfigureWidget->storageServiceSettingsWidget()->setListService(mStorageManager->listService(), lst);
+
     doLoadFromGlobalSettings();
 }
 
@@ -96,11 +103,6 @@ void ConfigureStorageServiceWidget::save()
 
 void ConfigureStorageServiceWidget::doLoadFromGlobalSettings()
 {
-    QList<PimCommon::StorageServiceAbstract::Capability> lst;
-    lst.append(PimCommon::StorageServiceAbstract::UploadFileCapability);
-    lst.append(PimCommon::StorageServiceAbstract::DownloadFileCapability);
-
-    mStorageServiceConfigureWidget->storageServiceSettingsWidget()->setListService(mStorageManager->listService(), lst);
     mStorageServiceConfigureWidget->loadSettings();
 }
 
