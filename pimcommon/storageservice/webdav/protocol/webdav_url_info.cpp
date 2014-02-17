@@ -189,7 +189,7 @@ void QWebdavUrlInfo::davParsePropstats( const QString & path, const QDomNodeList
         }
     }
     map.insert(QLatin1String("isDir"), isDirectory);
-    map.insert(QLatin1String("name"), name());
+    map.insert(QLatin1String("path"), name());
     if (!map.isEmpty()) {
         mProperties = map;
     }

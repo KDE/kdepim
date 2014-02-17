@@ -96,6 +96,8 @@ private:
     void parseShareLink(const QString &data);
     void parseCreateServiceFolder(const QString &data);
 
+    void createFolderJob(const QString &foldername, const QString &destination);
+
     QString mPublicLocation;
     QString mServiceLocation;
     QString mUserName;
