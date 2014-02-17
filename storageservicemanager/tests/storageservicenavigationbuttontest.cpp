@@ -195,6 +195,62 @@ void StorageServiceNavigationButtonTest::shouldMoveInfoInGoBackWhenClickOnGoForw
     QCOMPARE(buttons.goForward()->isEnabled(), false);
 }
 
+void StorageServiceNavigationButtonTest::shouldMoveInfoToTopWhenClickOnBack()
+{
+    StorageServiceNavigationButtons buttons;
+    InformationUrl urlValid;
+
+    urlValid.currentUrl = QLatin1String("Foo1");
+    urlValid.parentUrl = QLatin1String("Foo1");
+    buttons.addNewUrl(urlValid);
+
+    urlValid.currentUrl = QLatin1String("Foo2");
+    urlValid.parentUrl = QLatin1String("Foo2");
+    buttons.addNewUrl(urlValid);
+
+    urlValid.currentUrl = QLatin1String("Foo3");
+    urlValid.parentUrl = QLatin1String("Foo3");
+    buttons.addNewUrl(urlValid);
+
+    buttons.goBack()->trigger();
+    InformationUrl forwardUrl = buttons.forwardUrls().first();
+    QCOMPARE(forwardUrl.currentUrl, QLatin1String("Foo3"));
+
+    buttons.goBack()->trigger();
+    forwardUrl = buttons.forwardUrls().first();
+    QCOMPARE(forwardUrl.currentUrl, QLatin1String("Foo2"));
+
+    buttons.goBack()->trigger();
+    forwardUrl = buttons.forwardUrls().first();
+    QCOMPARE(forwardUrl.currentUrl, QLatin1String("Foo1"));
+
+}
+
+void StorageServiceNavigationButtonTest::shouldMoveInfoToTopWhenClickOnBackAndAfterForward()
+{
+    StorageServiceNavigationButtons buttons;
+    InformationUrl urlValid;
+
+    urlValid.currentUrl = QLatin1String("Foo1");
+    urlValid.parentUrl = QLatin1String("Foo1");
+    buttons.addNewUrl(urlValid);
+
+    urlValid.currentUrl = QLatin1String("Foo2");
+    urlValid.parentUrl = QLatin1String("Foo2");
+    buttons.addNewUrl(urlValid);
+
+    urlValid.currentUrl = QLatin1String("Foo3");
+    urlValid.parentUrl = QLatin1String("Foo3");
+    buttons.addNewUrl(urlValid);
+
+    buttons.goBack()->trigger();
+    InformationUrl forwardUrl = buttons.forwardUrls().first();
+    QCOMPARE(forwardUrl.currentUrl, QLatin1String("Foo3"));
+
+    buttons.goForward()->trigger();
+    forwardUrl = buttons.backUrls().first();
+    QCOMPARE(forwardUrl.currentUrl, QLatin1String("Foo3"));
+}
 
 
 

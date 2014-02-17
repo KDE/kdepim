@@ -40,6 +40,8 @@ private Q_SLOTS:
     void shouldIncreaseNumberOfElement();
     void shouldMoveInfoInGoForwardWhenClickOnGoBack();
     void shouldMoveInfoInGoBackWhenClickOnGoForward();
+    void shouldMoveInfoToTopWhenClickOnBack();
+    void shouldMoveInfoToTopWhenClickOnBackAndAfterForward();
 };
 
 #endif // STORAGESERVICENAVIGATIONBUTTONTEST_H
