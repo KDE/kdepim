@@ -95,7 +95,7 @@ Akonadi::Tag Tag::saveToAkonadi(Tag::SaveFlags saveFlags) const
   else
     attr->setBackgroundColor( QColor() );
 
-  if ( saveFlags & Font )
+  if ( textFont != QFont() && saveFlags & Font )
     attr->setFont( textFont.toString() );
   else
     attr->setFont( QString() );
