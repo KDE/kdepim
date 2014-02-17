@@ -19,11 +19,30 @@
 #define ADBLOCKBLOCKABLEITEMSWIDGET_H
 
 #include <QWidget>
+#include <QTreeWidget>
 #include "messageviewer_export.h"
 
-class QTreeWidget;
 class QWebFrame;
 namespace MessageViewer {
+
+class AdBlockBlockableItemsTreeWidget : public QTreeWidget
+{
+    Q_OBJECT
+public:
+    explicit AdBlockBlockableItemsTreeWidget(QWidget *parent=0);
+    ~AdBlockBlockableItemsTreeWidget();
+
+protected:
+    void paintEvent( QPaintEvent *event );
+
+private slots:
+    void slotGeneralFontChanged();
+    void slotGeneralPaletteChanged();
+
+private:
+    QColor mTextColor;
+};
+
 class MESSAGEVIEWER_EXPORT AdBlockBlockableItemsWidget : public QWidget
 {
     Q_OBJECT
@@ -75,7 +94,7 @@ private:
     void adaptSrc(QString &src,const QString &hostName);
 
 private:
-    QTreeWidget *mListItems;
+    AdBlockBlockableItemsTreeWidget *mListItems;
 };
 }
 

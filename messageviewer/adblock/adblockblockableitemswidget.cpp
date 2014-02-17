@@ -28,7 +28,6 @@
 #include <KRun>
 
 #include <QHeaderView>
-#include <QTreeWidget>
 #include <QVBoxLayout>
 #include <QWebFrame>
 #include <QWebElement>
@@ -37,15 +36,61 @@
 #include <QClipboard>
 #include <QApplication>
 #include <QFile>
+#include <QPainter>
 
 using namespace MessageViewer;
+
+AdBlockBlockableItemsTreeWidget::AdBlockBlockableItemsTreeWidget(QWidget *parent)
+    : QTreeWidget(parent)
+{
+    connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), this, SLOT(slotGeneralFontChanged()));
+    connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), this, SLOT(slotGeneralPaletteChanged()));
+}
+
+AdBlockBlockableItemsTreeWidget::~AdBlockBlockableItemsTreeWidget()
+{
+}
+
+void AdBlockBlockableItemsTreeWidget::slotGeneralPaletteChanged()
+{
+    const QPalette palette = viewport()->palette();
+    QColor color = palette.text().color();
+    color.setAlpha( 128 );
+    mTextColor = color;
+}
+
+void AdBlockBlockableItemsTreeWidget::slotGeneralFontChanged()
+{
+    setFont( KGlobalSettings::generalFont() );
+}
+
+
+void AdBlockBlockableItemsTreeWidget::paintEvent( QPaintEvent *event )
+{
+    if (topLevelItemCount()) {
+        QTreeWidget::paintEvent(event);
+    } else {
+        QPainter p( viewport() );
+
+        QFont font = p.font();
+        font.setItalic( true );
+        p.setFont( font );
+
+        if (!mTextColor.isValid()) {
+            slotGeneralPaletteChanged();
+        }
+        p.setPen( mTextColor );
+        p.drawText( QRect( 0, 0, width(), height() ), Qt::AlignCenter, i18n("No blockable element found.") );
+    }
+}
+
 
 AdBlockBlockableItemsWidget::AdBlockBlockableItemsWidget(QWidget *parent)
     : QWidget(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     setLayout(lay);
-    mListItems = new QTreeWidget;
+    mListItems = new AdBlockBlockableItemsTreeWidget;
 
     mListItems->setContextMenuPolicy(Qt::CustomContextMenu);
     mListItems->setAlternatingRowColors(true);
