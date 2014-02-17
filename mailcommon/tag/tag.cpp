@@ -58,7 +58,9 @@ Tag::Ptr Tag::fromAkonadi(const Akonadi::Tag& akonadiTag)
     tag->shortcut = KShortcut(attr->shortcut());
     tag->textColor = attr->textColor();
     tag->backgroundColor = attr->backgroundColor();
-    tag->textFont.fromString( attr->font() );
+    if (!attr->font().isEmpty()) {
+      tag->textFont.fromString( attr->font() );
+    }
     tag->priority = attr->priority();
   }
   return tag;
