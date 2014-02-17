@@ -390,13 +390,12 @@ void StorageServicePage::slotChangeFolder(const QString &previousCurrentFolder, 
     InformationUrl info;
     info.currentUrl = previousCurrentFolder;
     info.parentUrl = previousParentFolder;
-    qDebug()<<" info "<<info;
     mStorageServiceNavigationBar->addNewUrl(info);
 }
 
 void StorageServicePage::slotChangeUrl(const InformationUrl &info)
 {
-    mTreeWidget->goToFolder(info.currentUrl);
+    mTreeWidget->goToFolder(info.currentUrl, false);
     mTreeWidget->setParentFolder(info.parentUrl);
 }
 
