@@ -189,8 +189,6 @@ void TagActionManager::createTagActions(const QList<MailCommon::Tag::Ptr> &tags)
     const int numberOfTag(tags.size());
     //It is assumed the tags are sorted
     foreach( const MailCommon::Tag::Ptr &tag, tags ) {
-        if(tag->tagStatus)
-            continue;
         if ( i< s_numberMaxTag )
             createTagAction( tag,true );
         else

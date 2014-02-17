@@ -1234,12 +1234,10 @@ void AppearancePage::MessageTagTab::slotUpdateTagSettingWidgets( int aIndex )
     TagListWidgetItem *tagItem = static_cast<TagListWidgetItem*>( item );
     MailCommon::Tag::Ptr tmp_desc = tagItem->kmailTag();
 
-    mTagRemoveButton->setEnabled( !tmp_desc->tagStatus );
-
     disconnect( mTagWidget->tagNameLineEdit(), SIGNAL(textChanged(QString)),
                 this, SLOT(slotNameLineTextChanged(QString)) );
 
-    mTagWidget->tagNameLineEdit()->setEnabled(!tmp_desc->tagStatus);
+    mTagWidget->tagNameLineEdit()->setEnabled( !tmp_desc->isImmutable );
     mTagWidget->tagNameLineEdit()->setText( tmp_desc->tagName );
     connect( mTagWidget->tagNameLineEdit(), SIGNAL(textChanged(QString)),
              this, SLOT(slotNameLineTextChanged(QString)) );
@@ -1251,7 +1249,7 @@ void AppearancePage::MessageTagTab::slotUpdateTagSettingWidgets( int aIndex )
 
     mTagWidget->setTagTextFont(tmp_desc->textFont);
 
-    mTagWidget->iconButton()->setEnabled( !tmp_desc->tagStatus );
+    mTagWidget->iconButton()->setEnabled( !tmp_desc->isImmutable );
     mTagWidget->iconButton()->setIcon( tmp_desc->iconName );
 
     mTagWidget->keySequenceWidget()->setEnabled( true );

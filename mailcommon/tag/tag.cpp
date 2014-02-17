@@ -34,20 +34,9 @@ Tag::Ptr Tag::createDefaultTag(const QString& name)
   tag->iconName = QLatin1String("mail-tagged");
   const QString identifier = name;
 
-  //TODO remove  (it's only accessible from add tag dialog)
-  tag->tagStatus = (identifier == QLatin1String("important")) ||
-          (identifier == QLatin1String("todo")) ||
-          (identifier == QLatin1String("watched")) ||
-          (identifier == QLatin1String("deleted")) ||
-          (identifier == QLatin1String("spam")) ||
-          (identifier == QLatin1String("replied")) ||
-          (identifier == QLatin1String("ignored")) ||
-          (identifier == QLatin1String("forwarded")) ||
-          (identifier == QLatin1String("sent")) ||
-          (identifier == QLatin1String("queued")) ||
-          (identifier == QLatin1String("ham"));
   tag->priority = -1;
   tag->inToolbar = false;
+  tag->isImmutable = false;
   return tag;
 }
 
@@ -58,8 +47,8 @@ Tag::Ptr Tag::fromAkonadi(const Akonadi::Tag& akonadiTag)
   tag->mTag = akonadiTag;
   tag->priority = -1;
   tag->iconName = QLatin1String("mail-tagged");
-  tag->tagStatus = false;
   tag->inToolbar = false;
+  tag->isImmutable = akonadiTag.isImmutable();
   Akonadi::TagAttribute *attr = akonadiTag.attribute<Akonadi::TagAttribute>();
   if (attr) {
     if (!attr->iconName().isEmpty()) {
