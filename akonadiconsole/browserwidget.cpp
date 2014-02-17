@@ -62,10 +62,6 @@
 #include <KToggleAction>
 #include <KActionCollection>
 
-#include <nepomuk2/resource.h>
-#include <nepomuk2/resourcemanager.h>
-#include <nepomuk2/variant.h>
-
 #include <QSplitter>
 #include <QVBoxLayout>
 #include <QStandardItemModel>
@@ -84,7 +80,6 @@ Q_DECLARE_METATYPE( QSet<QByteArray> )
 BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
     QWidget( parent ),
     mAttrModel( 0 ),
-    mNepomukModel( 0 ),
     mStdActionManager( 0 ),
     mMonitor( 0 ),
     mCacheOnlyAction( 0 )
@@ -215,8 +210,6 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   xmlGuiWindow->actionCollection()->addAction( "akonadiconsole_cacheonly", mCacheOnlyAction );
   connect( mCacheOnlyAction, SIGNAL(toggled(bool)), SLOT(updateItemFetchScope()) );
 
-  Nepomuk2::ResourceManager::instance()->init();
-
   m_stateMaintainer = new KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config()->group("CollectionViewState"), this );
   m_stateMaintainer->setView( mCollectionView );
 
@@ -239,6 +232,7 @@ void BrowserWidget::clear()
   contentUi.size->clear();
   contentUi.modificationtime->clear();
   contentUi.flags->clear();
+  contentUi.tags->clear();
   contentUi.attrView->setModel( 0 );
 }
 
@@ -253,6 +247,7 @@ void BrowserWidget::itemActivated(const QModelIndex & index)
   ItemFetchJob *job = new ItemFetchJob( item, this );
   job->fetchScope().fetchFullPayload();
   job->fetchScope().fetchAllAttributes();
+  job->fetchScope().setFetchTags( true );
   connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchDone(KJob*)), Qt::QueuedConnection );
 }
 
@@ -306,6 +301,11 @@ void BrowserWidget::setItem( const Akonadi::Item &item )
     flags << QString::fromUtf8( f );
   contentUi.flags->setItems( flags );
 
+  QStringList tags;
+  foreach ( const Tag &tag, item.tags() )
+    tags << tag.url().url();
+  contentUi.tags->setItems( tags );
+
   Attribute::List list = item.attributes();
   delete mAttrModel;
   mAttrModel = new QStandardItemModel( list.count(), 2 );
@@ -322,40 +322,6 @@ void BrowserWidget::setItem( const Akonadi::Item &item )
     mAttrModel->itemFromIndex( index )->setFlags( Qt::ItemIsEditable | mAttrModel->flags( index ) );
   }
   contentUi.attrView->setModel( mAttrModel );
-
-  if ( Settings::self()->nepomukEnabled() ) {
-    Nepomuk2::Resource res( item.url() );
-
-    contentUi.tagWidget->setTaggedResource( res );
-    contentUi.ratingWidget->setRating( int( res.rating() ) );
-
-    delete mNepomukModel;
-    mNepomukModel = 0;
-    if ( res.isValid() ) {
-      contentUi.rdfClassName->setText( res.type().toString().section( QRegExp( "[#:]" ), -1 ) );
-      QHash<QUrl, Nepomuk2::Variant> props = res.properties();
-      mNepomukModel = new QStandardItemModel( props.count(), 2, this );
-      QStringList labels;
-      labels << i18n( "Property" ) << i18n( "Value" );
-      mNepomukModel->setHorizontalHeaderLabels( labels );
-      int row = 0;
-      for ( QHash<QUrl, Nepomuk2::Variant>::ConstIterator it = props.constBegin(); it != props.constEnd(); ++it, ++row ) {
-        QModelIndex index = mNepomukModel->index( row, 0 );
-        Q_ASSERT( index.isValid() );
-        mNepomukModel->setData( index, it.key().toString() );
-        index = mNepomukModel->index( row, 1 );
-        Q_ASSERT( index.isValid() );
-        mNepomukModel->setData( index, it.value().toString() );
-      }
-      contentUi.nepomukView->setEnabled( true );
-    } else {
-      contentUi.nepomukView->setEnabled( false );
-    }
-    contentUi.nepomukView->setModel( mNepomukModel );
-    contentUi.nepomukTab->setEnabled( true );
-  } else {
-    contentUi.nepomukTab->setEnabled( false );
-  }
 
   if ( mMonitor )
     mMonitor->deleteLater(); // might be the one calling us
@@ -395,6 +361,10 @@ void BrowserWidget::save()
     item.clearFlag( f );
   foreach ( const QString &s, contentUi.flags->items() )
     item.setFlag( s.toUtf8() );
+  foreach ( const Tag &tag, mCurrentItem.tags() )
+    item.clearTag( tag );
+  foreach ( const QString &s, contentUi.tags->items() )
+    item.setTag( Tag::fromUrl( s ) );
   item.setPayloadFromData( data );
 
   item.clearAttributes();
@@ -411,11 +381,6 @@ void BrowserWidget::save()
 
   ItemModifyJob *store = new ItemModifyJob( item, this );
   connect( store, SIGNAL(result(KJob*)), SLOT(saveResult(KJob*)) );
-
-  if ( Settings::self()->nepomukEnabled() ) {
-    Nepomuk2::Resource res( item.url() );
-    res.setRating( contentUi.ratingWidget->rating() );
-  }
 }
 
 void BrowserWidget::saveResult(KJob * job)

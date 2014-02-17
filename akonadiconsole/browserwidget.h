@@ -87,7 +87,6 @@ class BrowserWidget: public QWidget
     Ui::ContentViewWidget contentUi;
     Akonadi::Item mCurrentItem;
     QStandardItemModel *mAttrModel;
-    QStandardItemModel *mNepomukModel;
     Akonadi::StandardActionManager *mStdActionManager;
     Akonadi::Monitor *mMonitor;
     KViewStateMaintainer<Akonadi::ETMViewStateSaver> *m_stateMaintainer;
