@@ -3,9 +3,6 @@ project(akonadiconsole)
 include_directories(
   ${AKONADI_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
-  ${SOPRANO_INCLUDE_DIR}
-  ${NEPOMUK_CORE_INCLUDE_DIR}
-  ${NEPOMUK_WIDGETS_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/libkdepim/
   ${CMAKE_SOURCE_DIR}/messageviewer/
 )
@@ -115,8 +112,6 @@ target_link_libraries(akonadiconsole_bin
   ${QT_QTSQL_LIBRARY}
   ${QT_QTNETWORK_LIBRARY}
   ${AKONADI_COMMON_LIBRARIES}
-  ${NEPOMUK_CORE_LIBRARY}
-  ${NEPOMUK_WIDGETS_LIBRARY}
 )
 
 install(TARGETS akonadiconsole_bin ${INSTALL_TARGETS_DEFAULT_ARGS})

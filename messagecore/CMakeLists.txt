@@ -7,17 +7,10 @@ add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5300)
 add_subdirectory(tests)
 
 include_directories( ${Boost_INCLUDE_DIR} 
-                     ${SOPRANO_INCLUDE_DIR}
                      ${CMAKE_SOURCE_DIR}/pimcommon
                    )
 
 ########### next target ###############
-
-configure_file(ontology/messagetag.ontology.in ${CMAKE_CURRENT_BINARY_DIR}/messagetag.ontology)
-
-install(FILES  ontology/messagetag.trig ${CMAKE_CURRENT_BINARY_DIR}/messagetag.ontology DESTINATION ${CMAKE_INSTALL_PREFIX}/share/ontology/kde)
-
-
 
 set(messagecore_LIB_SRCS
 

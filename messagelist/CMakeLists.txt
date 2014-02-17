@@ -9,7 +9,6 @@ configure_file(config-messagelist.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-mes
 
 include_directories(
   ${Boost_INCLUDE_DIRS}
-  ${SOPRANO_INCLUDE_DIR}
   ${BALOO_INCLUDE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}/messagecore
@@ -85,13 +84,6 @@ set(libmessagelist_HEADERS
   widget.h
 )
 
-soprano_add_ontology(libmessagelist_SRCS
-  ${CMAKE_SOURCE_DIR}/messagecore/ontology/messagetag.trig
-  "MessageTag"
-  "Vocabulary"
-  "trig"
-)
-
 kde4_add_kcfg_files(libmessagelist_SRCS USE_RELATIVE_PATH
   core/settings.kcfgc
 )
@@ -103,10 +95,8 @@ target_link_libraries(messagelist
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
-  ${SOPRANO_LIBRARIES}
   ${BALOO_LIBRARIES}
   messagecore
-  niefast_apps
 )
 
 set_target_properties(messagelist PROPERTIES

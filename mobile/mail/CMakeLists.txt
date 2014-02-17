@@ -23,8 +23,6 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/pimcommon/
   ${CMAKE_SOURCE_DIR}/libkdepim/
   ${Boost_INCLUDE_DIR}
-  ${SOPRANO_INCLUDE_DIR}
-  ${NEPOMUK_CORE_INCLUDE_DIR}
 )
 
 set(kmail_mobile_srcs
