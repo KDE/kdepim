@@ -3380,7 +3380,7 @@ void ViewerPrivate::slotShowCreateTodoWidget()
         mCreateTodo->setMessage(mMessage);
         mCreateTodo->show();
     } else {
-        qDebug()<<" We don't have message";
+        qDebug()<<" There is not valid message";
     }
 }
 
