@@ -168,7 +168,12 @@ void TodoEdit::slotReturnPressed()
         return;
     }
     const Akonadi::Collection collection = mCollectionCombobox->currentCollection();
-    if (!mNoteEdit->text().isEmpty() && collection.isValid()) {
+    if (!collection.isValid()) {
+        kDebug()<<" Collection is not valid";
+        return;
+    }
+
+    if (!mNoteEdit->text().isEmpty()) {
         KCalCore::Todo::Ptr todo( new KCalCore::Todo );
         todo->setSummary(mNoteEdit->text());
         Q_EMIT createTodo(todo, collection, mMessageUrlAkonadi);
