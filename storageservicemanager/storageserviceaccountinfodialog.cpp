@@ -47,7 +47,11 @@ StorageServiceAccountInfoDialog::StorageServiceAccountInfoDialog(const QString &
         if (accountInfo.shared>=0)
             vbox->addWidget(new QLabel(i18n("Shared: %1", KGlobal::locale()->formatByteSize(accountInfo.shared,1))));
     } else {
-        vbox->addWidget(new QLabel(i18n("Unable to get account information")));
+        QLabel *lab = new QLabel(i18n("Unable to get account information."));
+        QFont font = lab->font();
+        font.setBold(true);
+        lab->setFont(font);
+        vbox->addWidget(lab);
     }
 }
 
