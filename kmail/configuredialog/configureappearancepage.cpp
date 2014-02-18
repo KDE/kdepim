@@ -51,6 +51,7 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 #include <Akonadi/TagDeleteJob>
 #include <Akonadi/TagCreateJob>
 #include <Akonadi/TagAttribute>
+#include <Akonadi/TagModifyJob>
 
 #include <KIconButton>
 #include <KButtonGroup>
@@ -1443,8 +1444,7 @@ void AppearancePage::MessageTagTab::save()
             MailCommon::Tag::SaveFlags saveFlags = mTagWidget->saveFlags();
             const Akonadi::Tag akonadiTag = tag->saveToAkonadi( saveFlags );
             if (akonadiTag.isValid()) {
-                //TODO TagModifyJob
-                kWarning() << "cannot modify tag";
+                new Akonadi::TagModifyJob(akonadiTag);
             } else {
                 new Akonadi::TagCreateJob(akonadiTag);
             }
