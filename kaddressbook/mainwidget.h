@@ -39,6 +39,7 @@ namespace Akonadi {
   class Item;
   class ItemView;
   class StandardContactActionManager;
+  class EntityTreeModel;
 }
 
 namespace KAddressBookGrantlee {
@@ -88,9 +89,10 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     void saveState();
 
     void slotGrantleeThemeSelected();
-    void slotGrantleeThemesUpdated();
+    void slotGrantleeThemesUpdated();  
+    void slotCheckNewCalendar(const QModelIndex &parent, int begin, int end);
 
-  private:
+private:
     void initGrantleeThemeName();
     void setupGui();
     void setupActions( KActionCollection * );
@@ -136,6 +138,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     KAddressBookGrantlee::GrantleeContactFormatter *mFormatter;
     KAddressBookGrantlee::GrantleeContactGroupFormatter *mGroupFormatter;
     GrantleeTheme::GrantleeThemeManager *mGrantleeThemeManager;
+    Akonadi::EntityTreeModel *entityTreeModel() const;
 };
 
 #endif
