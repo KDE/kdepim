@@ -116,17 +116,20 @@ void CollectionMaintenancePage::load(const Collection & col)
         if(!indexingWasEnabled)
             mLastIndexed->hide();
         else {
-            //FIXME check indexing status
-//             const KUrl url = col.url( Akonadi::Collection::UrlShort );
-//             if(!url.isEmpty()) {
-//                 const QDateTime dt = parentResource.property( Soprano::Vocabulary::NAO::lastModified() ).toDateTime();
-//                 const KDateTime localTime(dt, KDateTime::LocalZone);
-//                 if(localTime.isValid()) {
-//                     mLastIndexed->setText(i18n("Folder was indexed: %1",KGlobal::locale()->formatDateTime(localTime)));
-//                 }
-//             }
+            QDBusInterface interfaceNepomukFeeder( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_baloo_indexer"), QLatin1String("/") );
+            if(interfaceNepomukFeeder.isValid()) {
+                if (!interfaceNepomukFeeder.callWithCallback(QLatin1String("indexedItems"), QList<QVariant>() << (qlonglong)mCurrentCollection.id(), this, SLOT(onIndexedItemsReceived(qint64)))) {
+                    kWarning() << "Failed to request indexed items";
+                }
+            }
         }
     }
+}
+
+void CollectionMaintenancePage::onIndexedItemsReceived(qint64 num)
+{
+    kDebug() << num;
+    mLastIndexed->setText(i18n("Indexed %1 items of this collection", num));
 }
 
 void CollectionMaintenancePage::updateLabel( qint64 nbMail, qint64 nbUnreadMail, qint64 size )
@@ -134,7 +137,6 @@ void CollectionMaintenancePage::updateLabel( qint64 nbMail, qint64 nbUnreadMail,
     mCollectionCount->setText( QString::number( qMax( 0LL, nbMail ) ) );
     mCollectionUnread->setText( QString::number( qMax( 0LL, nbUnreadMail ) ) );
     mFolderSizeLabel->setText( KGlobal::locale()->formatByteSize( qMax( 0LL, size ) ) );
-
 }
 
 void CollectionMaintenancePage::save(Collection &collection )
@@ -158,10 +160,9 @@ void CollectionMaintenancePage::updateCollectionStatistic(Akonadi::Collection::I
 
 void CollectionMaintenancePage::slotReindexing()
 {
-  //FIXME port to baloo indexer
-//     QDBusInterface interfaceNepomukFeeder( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_nepomuk_feeder"), QLatin1String("/") );
-//     if(interfaceNepomukFeeder.isValid()) {
-//         interfaceNepomukFeeder.asyncCall(QLatin1String("forceReindexCollection"),(qlonglong)mCurrentCollection.id());
-//     }
+    QDBusInterface interfaceNepomukFeeder( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_baloo_indexer"), QLatin1String("/") );
+    if(interfaceNepomukFeeder.isValid()) {
+        interfaceNepomukFeeder.asyncCall(QLatin1String("reindexCollection"),(qlonglong)mCurrentCollection.id());
+    }
 }
 
