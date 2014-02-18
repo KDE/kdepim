@@ -493,7 +493,7 @@ StorageServiceAbstract::Capabilities WebDavStorageService::serviceCapabilities()
     cap |= CreateFolderCapability;
     cap |= DeleteFolderCapability;
     cap |= ListFolderCapability;
-    //cap |= ShareLinkCapability;
+    cap |= ShareLinkCapability;
     cap |= DeleteFileCapability;
     cap |= RenameFolderCapability;
     cap |= RenameFileCapabilitity;

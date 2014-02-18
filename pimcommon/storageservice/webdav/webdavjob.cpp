@@ -553,14 +553,13 @@ void WebDavJob::parseListFolder(const QString &data)
     deleteLater();
 }
 
-
 void WebDavJob::shareLink(const QString &root, const QString &path)
 {
     mActionType = PimCommon::StorageServiceAbstract::ShareLink;
     mError = false;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    qDebug()<<" not implemented";
-    deleteLater();
+    QUrl sourceFile(mServiceLocation);
+    sourceFile.setPath(path);
+    parseShareLink(sourceFile.toString());
 }
 
 void WebDavJob::createServiceFolder()
