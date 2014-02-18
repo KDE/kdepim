@@ -172,7 +172,7 @@ bool StorageServiceTabWidget::listFolderWasLoaded() const
 bool StorageServiceTabWidget::hasUploadDownloadProgress() const
 {
     for (int i=0; i <count() ; ++i) {
-        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        StorageServicePage *page = static_cast<StorageServicePage *>(widget(i));
         if (page) {
             if (page->hasUploadDownloadProgress())
                 return true;
@@ -197,7 +197,7 @@ void StorageServiceTabWidget::serviceRemoved(const QString &serviceName)
 void StorageServiceTabWidget::setNetworkIsDown(bool state)
 {
     for (int i=0; i <count() ; ++i) {
-        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        StorageServicePage *page = static_cast<StorageServicePage *>(widget(i));
         if (page) {
             page->setNetworkIsDown(state);
         }
