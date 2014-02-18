@@ -41,7 +41,7 @@ TodoEdit::TodoEdit(QWidget *parent)
     : QWidget(parent)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
-    hbox->setSpacing(0);
+    hbox->setMargin(2);
     setLayout(hbox);
 
     QToolButton *closeBtn = new QToolButton( this );

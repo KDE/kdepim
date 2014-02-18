@@ -46,6 +46,7 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
 {
     loadEngine();
     QGridLayout *grid = new QGridLayout;
+    grid->setMargin(2);
     setLayout(grid);
 
     QToolButton *closeBtn = new QToolButton( this );
