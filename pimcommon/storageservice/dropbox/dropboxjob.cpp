@@ -217,9 +217,8 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
     }
 }
 
-void DropBoxJob::parseCopyFile(const QString &data)
+QString DropBoxJob::extractPathFromData(const QString &data)
 {
-    qDebug()<<" data :"<<data;
     QJson::Parser parser;
     bool ok;
     QString name;
@@ -227,6 +226,13 @@ void DropBoxJob::parseCopyFile(const QString &data)
     if (info.contains(QLatin1String("path"))) {
         name = info.value(QLatin1String("path")).toString();
     }
+    return name;
+}
+
+void DropBoxJob::parseCopyFile(const QString &data)
+{
+    qDebug()<<" data :"<<data;
+    const QString name = extractPathFromData(data);
     Q_EMIT copyFileDone(name);
     deleteLater();
 }
@@ -234,13 +240,7 @@ void DropBoxJob::parseCopyFile(const QString &data)
 void DropBoxJob::parseCopyFolder(const QString &data)
 {
     qDebug()<<" data :"<<data;
-    QJson::Parser parser;
-    bool ok;
-    QString name;
-    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    if (info.contains(QLatin1String("path"))) {
-        name = info.value(QLatin1String("path")).toString();
-    }
+    const QString name = extractPathFromData(data);
     Q_EMIT copyFolderDone(name);
     deleteLater();
 }
@@ -248,13 +248,7 @@ void DropBoxJob::parseCopyFolder(const QString &data)
 void DropBoxJob::parseMoveFolder(const QString &data)
 {
     qDebug()<<" data :"<<data;
-    QJson::Parser parser;
-    bool ok;
-    QString name;
-    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    if (info.contains(QLatin1String("path"))) {
-        name = info.value(QLatin1String("path")).toString();
-    }
+    const QString name = extractPathFromData(data);
     Q_EMIT moveFolderDone(name);
     deleteLater();
 }
@@ -262,13 +256,7 @@ void DropBoxJob::parseMoveFolder(const QString &data)
 void DropBoxJob::parseMoveFile(const QString &data)
 {
     //qDebug()<<" data :"<<data;
-    QJson::Parser parser;
-    bool ok;
-    QString name;
-    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    if (info.contains(QLatin1String("path"))) {
-        name = info.value(QLatin1String("path")).toString();
-    }
+    const QString name = extractPathFromData(data);
     Q_EMIT moveFileDone(name);
     deleteLater();
 }
@@ -276,55 +264,30 @@ void DropBoxJob::parseMoveFile(const QString &data)
 void DropBoxJob::parseRenameFile(const QString &data)
 {
     //qDebug()<<" data :"<<data;
-    QJson::Parser parser;
-    bool ok;
-    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    QString foldername;
-    if (info.contains(QLatin1String("path"))) {
-        foldername = info.value(QLatin1String("path")).toString();
-    }
-    Q_EMIT renameFileDone(foldername);
+    const QString name = extractPathFromData(data);
+    Q_EMIT renameFileDone(name);
     deleteLater();
 }
 
 void DropBoxJob::parseRenameFolder(const QString &data)
 {
     //qDebug()<<" data :"<<data;
-    QJson::Parser parser;
-    bool ok;
-    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    QString foldername;
-    if (info.contains(QLatin1String("path"))) {
-        foldername = info.value(QLatin1String("path")).toString();
-    }
-    Q_EMIT renameFolderDone(foldername);
+    const QString name = extractPathFromData(data);
+    Q_EMIT renameFolderDone(name);
     deleteLater();
 }
 
 void DropBoxJob::parseDeleteFolder(const QString &data)
 {
-    QJson::Parser parser;
-    bool ok;
-    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    QString foldername;
-    if (info.contains(QLatin1String("path"))) {
-        foldername = info.value(QLatin1String("path")).toString();
-    }
-    Q_EMIT deleteFolderDone(foldername);
-
+    const QString name = extractPathFromData(data);
+    Q_EMIT deleteFolderDone(name);
     deleteLater();
 }
 
 void DropBoxJob::parseDeleteFile(const QString &data)
 {
-    QJson::Parser parser;
-    bool ok;
-    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    QString filename;
-    if (info.contains(QLatin1String("path"))) {
-        filename = info.value(QLatin1String("path")).toString();
-    }
-    Q_EMIT deleteFileDone(filename);
+    const QString name = extractPathFromData(data);
+    Q_EMIT deleteFileDone(name);
     deleteLater();
 }
 
@@ -718,14 +681,8 @@ void DropBoxJob::parseShareLink(const QString &data)
 
 void DropBoxJob::parseCreateFolder(const QString &data)
 {
-    QJson::Parser parser;
-    bool ok;
-    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    QString foldername;
-    if (info.contains(QLatin1String("path"))) {
-        foldername = info.value(QLatin1String("path")).toString();
-    }
-    Q_EMIT createFolderDone(foldername);
+    const QString name = extractPathFromData(data);
+    Q_EMIT createFolderDone(name);
     deleteLater();
 }
 
