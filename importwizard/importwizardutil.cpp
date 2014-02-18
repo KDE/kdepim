@@ -18,7 +18,6 @@
 #include "importwizardutil.h"
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include "messagetag.h"
 #include <QDebug>
 #include <kwallet.h>
 #include <Akonadi/Tag>

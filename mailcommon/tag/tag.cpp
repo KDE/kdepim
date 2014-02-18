@@ -19,7 +19,6 @@
 */
 #include "tag.h"
 
-#include "messagetag.h"
 #include <Akonadi/Tag>
 #include <Akonadi/TagAttribute>
 

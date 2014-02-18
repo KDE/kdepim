@@ -22,7 +22,6 @@
 #include "messageitem.h"
 #include "messageitem_p.h"
 
-#include "messagetag.h"
 #include "messagecore/widgets/annotationdialog.h"
 #include "theme.h"
 
