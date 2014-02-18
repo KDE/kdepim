@@ -3,6 +3,8 @@
  <MenuBar>
   <Menu name="file" >
     <Action name="show_log" />
+    <Separator/>
+    <Action name="shutdown_all_services" />
   </Menu>
   <Menu name="edit" >
    <text>&amp;Edit</text>

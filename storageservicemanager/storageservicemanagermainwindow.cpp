@@ -176,6 +176,9 @@ void StorageServiceManagerMainWindow::setupActions()
     mLogout = ac->addAction(QLatin1String("logout"), this, SLOT(slotLogout()));
     mLogout->setText(i18n("Logout"));
 
+    mShutdownAllServices = ac->addAction(QLatin1String("shutdown_all_services"), this, SLOT(slotShutdownAllServices()));
+    mShutdownAllServices->setText(i18n("Shutdown All Services"));
+
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
 }
 
@@ -227,4 +230,10 @@ void StorageServiceManagerMainWindow::readConfig()
 void StorageServiceManagerMainWindow::slotSetStatusBarMessage(const QString &message)
 {
     mStatusBarInfo->setText(message);
+}
+
+void StorageServiceManagerMainWindow::slotShutdownAllServices()
+{
+    mStorageServiceTabWidget->shutdownAllServices();
+    slotUpdateActions();
 }

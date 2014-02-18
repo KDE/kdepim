@@ -50,6 +50,8 @@ private slots:
     void slotSystemNetworkStatusChanged(Solid::Networking::Status status);
     void slotServiceRemoved(const QString &serviceName);    
     void slotLogout();
+    void slotShutdownAllServices();
+
 private:
     void setupActions();
     void readConfig();
@@ -65,6 +67,7 @@ private:
     KAction *mRefreshList;
     KAction *mShowLog;
     KAction *mLogout;
+    KAction *mShutdownAllServices;
     QLabel *mStatusBarInfo;
     bool mNetworkIsDown;
 };
