@@ -223,8 +223,6 @@ void WebDavJob::renameFile(const QString &oldName, const QString &newName)
 
 QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::UploadFile;
-    mError = false;
     QFile *file = new QFile(filename);
     if (file->exists()) {
         mActionType = PimCommon::StorageServiceAbstract::UploadFile;
@@ -240,7 +238,7 @@ QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &upl
                 destinationFile.setPath(defaultDestination + QLatin1Char('/') + uploadAsName);
                 destinationToString = destinationFile.toString();
             }
-
+            mCacheValue = destinationToString;
             QNetworkReply *reply = put(destinationToString,file);
             file->setParent(reply);
             connect(reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
@@ -312,10 +310,8 @@ void WebDavJob::moveFile(const QString &source, const QString &destination)
     move(sourceFile.toString(), destinationFile.toString(), false);
 }
 
-void WebDavJob::createFolder(const QString &foldername, const QString &destination)
+void WebDavJob::createFolderJob(const QString &foldername, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
-    mError = false;
     mCacheValue = foldername;
     QUrl url(mServiceLocation);
     if (!destination.isEmpty())
@@ -324,6 +320,13 @@ void WebDavJob::createFolder(const QString &foldername, const QString &destinati
         url.setPath(url.path() + QLatin1Char('/') + foldername);
     //qDebug()<<" url"<<url;
     mkdir(url.toString());
+}
+
+void WebDavJob::createFolder(const QString &foldername, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
+    mError = false;
+    createFolderJob(foldername, destination);
 }
 
 void WebDavJob::slotListInfo(const QString &data)
@@ -486,7 +489,7 @@ void WebDavJob::parseAccessToken(const QString &data)
 void WebDavJob::parseUploadFile(const QString &data)
 {
     Q_EMIT uploadFileDone(QString());
-    deleteLater();
+    shareLink(QString(), mCacheValue);
 }
 
 void WebDavJob::parseCreateFolder(const QString &data)
@@ -550,13 +553,17 @@ void WebDavJob::parseListFolder(const QString &data)
     deleteLater();
 }
 
-
-void WebDavJob::shareLink(const QString &root, const QString &path)
+void WebDavJob::shareLink(const QString &/*root*/, const QString &path)
 {
     mActionType = PimCommon::StorageServiceAbstract::ShareLink;
     mError = false;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    qDebug()<<" not implemented";
+    if (!path.startsWith(mServiceLocation)) {
+        QUrl sourceFile(mServiceLocation);
+        sourceFile.setPath(path);
+        parseShareLink(sourceFile.toString());
+    } else {
+        parseShareLink(path);
+    }
     deleteLater();
 }
 
@@ -564,23 +571,22 @@ void WebDavJob::createServiceFolder()
 {
     mActionType = PimCommon::StorageServiceAbstract::CreateServiceFolder;
     mError = false;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    qDebug()<<" not implemented";
-    deleteLater();
+    createFolderJob(PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder(), QString());
 }
 
 QNetworkReply *WebDavJob::downloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
-
-#if 0
     const QString defaultDestination = (destination.isEmpty() ? PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
     delete mDownloadFile;
     mDownloadFile = new QFile(defaultDestination+ QLatin1Char('/') + name);
     if (mDownloadFile->open(QIODevice::WriteOnly)) {
-        QUrl url;
-        QNetworkReply *reply = getenv();
+        QNetworkRequest req;
+        QUrl sourceFile(mServiceLocation);
+        sourceFile.setPath(fileId);
+        req.setUrl(sourceFile);
+        QNetworkReply *reply = mNetworkAccessManager->get(req);
         mDownloadFile->setParent(reply);
         connect(reply, SIGNAL(readyRead()), this, SLOT(slotDownloadReadyRead()));
         connect(reply, SIGNAL(downloadProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
@@ -589,7 +595,6 @@ QNetworkReply *WebDavJob::downloadFile(const QString &name, const QString &fileI
     } else {
         delete mDownloadFile;
     }
-#endif
     return 0;
 }
 

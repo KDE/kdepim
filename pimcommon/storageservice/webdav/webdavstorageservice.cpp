@@ -366,8 +366,8 @@ QMap<QString, QString> WebDavStorageService::itemInformation(const QVariantMap &
 {
     qDebug()<<" variantMap"<<variantMap;
     QMap<QString, QString> information;
-    if (variantMap.contains(QLatin1String("name"))) {
-        information.insert(i18n("Name:"), variantMap.value(QLatin1String("name")).toString());
+    if (variantMap.contains(QLatin1String("path"))) {
+        information.insert(i18n("Name:"), variantMap.value(QLatin1String("path")).toString());
     }
     if (variantMap.contains(QLatin1String("isDir"))) {
         information.insert(i18n("Type:"), variantMap.value(QLatin1String("isDir")).toBool() ? i18n("Directory") : i18n("File"));
@@ -383,6 +383,9 @@ QMap<QString, QString> WebDavStorageService::itemInformation(const QVariantMap &
 
 QString WebDavStorageService::fileIdentifier(const QVariantMap &variantMap)
 {
+    if (variantMap.contains(QLatin1String("path"))) {
+        return variantMap.value(QLatin1String("path")).toString();
+    }
     return QString();
 }
 
@@ -486,11 +489,11 @@ StorageServiceAbstract::Capabilities WebDavStorageService::serviceCapabilities()
     StorageServiceAbstract::Capabilities cap;
     cap |= AccountInfoCapability;
     cap |= UploadFileCapability;
-    //cap |= DownloadFileCapability;
+    cap |= DownloadFileCapability;
     cap |= CreateFolderCapability;
     cap |= DeleteFolderCapability;
     cap |= ListFolderCapability;
-    //cap |= ShareLinkCapability;
+    cap |= ShareLinkCapability;
     cap |= DeleteFileCapability;
     cap |= RenameFolderCapability;
     cap |= RenameFileCapabilitity;

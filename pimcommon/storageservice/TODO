@@ -7,7 +7,7 @@ N == not possible
 
 DropBox:          X               X             X                X             X         X           X           X           X             X           X               X            X            X                     X                   X
 YouSendIt:        X               X             X                X                                   X           N           N             X           X                            X            X                     X                   X
-WebDav:           X               X             X                X             X                     X           X           X             X           X                            X            X                     X                   X
+WebDav:           X               X             X                X             X         X           X           X           X             X           X               X            X            X                     X                   X
 GDrive:           X                                              X             X                     X                                                                                                                                     X 
 Box:              X               X             X                X             I         I           X           X           X             I           I               X            X            X                     X                   X
 Hubic:            X                                                                                  X

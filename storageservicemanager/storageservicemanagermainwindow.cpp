@@ -176,6 +176,13 @@ void StorageServiceManagerMainWindow::setupActions()
     mLogout = ac->addAction(QLatin1String("logout"), this, SLOT(slotLogout()));
     mLogout->setText(i18n("Logout"));
 
+    mShutdownAllServices = ac->addAction(QLatin1String("shutdown_all_services"), this, SLOT(slotShutdownAllServices()));
+    mShutdownAllServices->setText(i18n("Shutdown All Services"));
+
+    mRefreshAll = ac->addAction(QLatin1String("refresh_all"), this, SLOT(slotRefreshAll()));
+    mRefreshAll->setText(i18n("Refresh All"));
+    mRefreshAll->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_F5 ));
+
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
 }
 
@@ -227,4 +234,16 @@ void StorageServiceManagerMainWindow::readConfig()
 void StorageServiceManagerMainWindow::slotSetStatusBarMessage(const QString &message)
 {
     mStatusBarInfo->setText(message);
+}
+
+void StorageServiceManagerMainWindow::slotShutdownAllServices()
+{
+    mStorageServiceTabWidget->shutdownAllServices();
+    slotUpdateActions();
+}
+
+void StorageServiceManagerMainWindow::slotRefreshAll()
+{
+    mStorageServiceTabWidget->refreshAll();
+    slotUpdateActions();
 }

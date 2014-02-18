@@ -19,22 +19,31 @@
 #define KNOTESICONVIEW_H
 
 #include "knotes_part.h"
-#include <QListView>
-#include <QListWidgetItem>
+#include <QListWidget>
 class KNoteConfig;
-class KNotesIconView : public QListView
+class KNotesIconView : public QListWidget
 {
     Q_OBJECT
 public:
-    explicit KNotesIconView( KNotesPart * );
+    explicit KNotesIconView(QWidget *parent );
     ~KNotesIconView();
+
+    void addNote();
 
 protected:
     void mousePressEvent( QMouseEvent * );
 
 private:
-    KNotesPart *m_part;
+    //KNotesPart *m_part;
 };
+
+class KNotesIconViewItem : public QListWidgetItem
+{
+public:
+    KNotesIconViewItem( QListWidget *parent);
+    ~KNotesIconViewItem();
+};
+
 #if 0
 class KNotesIconViewItem : public QListWidgetItem
 {

@@ -3,6 +3,9 @@
  <MenuBar>
   <Menu name="file" >
     <Action name="show_log" />
+    <Separator/>
+    <Action name="refresh_all" />
+    <Action name="shutdown_all_services" />
   </Menu>
   <Menu name="edit" >
    <text>&amp;Edit</text>

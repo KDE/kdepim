@@ -19,19 +19,22 @@
 #include "noteshared/akonadi/notesakonaditreemodel.h"
 #include "utils/knoteutils.h"
 
+#include <KLocalizedString>
+
 #include <KIconEffect>
 #include <KIconLoader>
+
 #include <QColor>
 #include <QPixmap>
 #include <QMouseEvent>
+#include <QListWidgetItem>
+#include <QDebug>
 
-KNotesIconView::KNotesIconView( KNotesPart *part )
-    : QListView(),
-      m_part( part )
+KNotesIconView::KNotesIconView( QWidget *parent )
+    : QListWidget(parent)
 {
     setViewMode( QListView::IconMode );
     setMovement( QListView::Static );
-    setModel(m_part->noteTreeModel());
     //setSortingEnabled( true );
     setSelectionMode( QAbstractItemView::ExtendedSelection );
     setWordWrap( true );
@@ -51,6 +54,23 @@ void KNotesIconView::mousePressEvent( QMouseEvent *e )
     } else {
         QListView::mousePressEvent( e );
     }
+}
+
+void KNotesIconView::addNote()
+{
+    qDebug()<<" void KNotesIconView::addNote()";
+    new KNotesIconViewItem(this);
+}
+
+KNotesIconViewItem::KNotesIconViewItem( QListWidget *parent )
+    : QListWidgetItem( parent )
+{
+    setText(i18n("Note"));
+    //TODO
+}
+
+KNotesIconViewItem::~KNotesIconViewItem()
+{
 }
 
 #if 0

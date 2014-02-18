@@ -80,6 +80,7 @@ private:
     QWidget *mErrorPage;
     QPushButton *mAuthenticate;
     QLabel *mErrorInfo;
+    QLabel *mCanNotGetInfo;
 };
 }
 #endif // STORAGESERVICESETTINGSWIDGET_H

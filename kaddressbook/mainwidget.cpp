@@ -211,6 +211,9 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mCollectionView->header()->setDefaultAlignment( Qt::AlignCenter );
   mCollectionView->header()->setSortIndicatorShown( false );
 
+  connect( mCollectionView->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
+           SLOT(slotCheckNewCalendar(QModelIndex,int,int)) );
+
   connect( mCollectionView, SIGNAL(currentChanged(Akonadi::Collection)),
            mXXPortManager, SLOT(setDefaultAddressBook(Akonadi::Collection)) );
 
@@ -908,4 +911,36 @@ void MainWidget::slotSearchDuplicateContacts()
     wizard->exec();
     delete wizard;
 }
+
+Akonadi::EntityTreeModel *MainWidget::entityTreeModel() const
+{
+    QAbstractProxyModel *proxy = qobject_cast<QAbstractProxyModel*>( mCollectionView->model() );
+    while( proxy ) {
+        Akonadi::EntityTreeModel *etm = qobject_cast<Akonadi::EntityTreeModel*>( proxy->sourceModel() );
+        if ( etm ) {
+            return etm;
+        }
+        proxy = qobject_cast<QAbstractProxyModel*>( proxy->sourceModel() );
+    }
+
+    kWarning() << "Couldn't find EntityTreeModel";
+    return 0;
+}
+
+void MainWidget::slotCheckNewCalendar( const QModelIndex &parent, int begin, int end )
+{
+    // HACK: Check newly created calendars
+    Akonadi::EntityTreeModel *etm = entityTreeModel();
+    if ( etm && etm->isCollectionTreeFetched() ) {
+        for( int row=begin; row<=end; ++row ) {
+            QModelIndex index = mCollectionView->model()->index( row, 0, parent );
+            if ( index.isValid() )
+                mCollectionView->model()->setData( index, Qt::Checked, Qt::CheckStateRole );
+        }
+        if ( parent.isValid() ) {
+            mCollectionView->setExpanded( parent, true );
+        }
+    }
+}
+
 

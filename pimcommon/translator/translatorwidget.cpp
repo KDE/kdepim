@@ -216,7 +216,7 @@ void TranslatorWidget::init()
     connect(d->abstractTranslator, SIGNAL(translateFailed(bool,QString)), SLOT(slotTranslateFailed(bool,QString)));
 
     QVBoxLayout *layout = new QVBoxLayout( this );
-    layout->setMargin( 0 );
+    layout->setMargin( 2 );
     QHBoxLayout *hboxLayout = new QHBoxLayout;
     QToolButton * closeBtn = new QToolButton( this );
     closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );

@@ -41,7 +41,7 @@ TodoEdit::TodoEdit(QWidget *parent)
     : QWidget(parent)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
-    hbox->setSpacing(0);
+    hbox->setMargin(2);
     setLayout(hbox);
 
     QToolButton *closeBtn = new QToolButton( this );
@@ -69,6 +69,7 @@ TodoEdit::TodoEdit(QWidget *parent)
     connect(mNoteEdit, SIGNAL(returnPressed()), SLOT(slotReturnPressed()));
     hbox->addWidget(mNoteEdit);
     mCollectionCombobox = new Akonadi::CollectionComboBox(_k_todoEditStubModel);
+    mCollectionCombobox->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
     mCollectionCombobox->setMinimumWidth(250);
     mCollectionCombobox->setMimeTypeFilter( QStringList() << KCalCore::Todo::todoMimeType() );
     mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
@@ -156,6 +157,7 @@ void TodoEdit::slotCloseWidget()
     writeConfig();
     mNoteEdit->clear();
     mMessage = KMime::Message::Ptr();
+    mMessageUrlAkonadi.clear();
     hide();
 }
 
@@ -166,7 +168,12 @@ void TodoEdit::slotReturnPressed()
         return;
     }
     const Akonadi::Collection collection = mCollectionCombobox->currentCollection();
-    if (!mNoteEdit->text().isEmpty() && collection.isValid()) {
+    if (!collection.isValid()) {
+        kDebug()<<" Collection is not valid";
+        return;
+    }
+
+    if (!mNoteEdit->text().isEmpty()) {
         KCalCore::Todo::Ptr todo( new KCalCore::Todo );
         todo->setSummary(mNoteEdit->text());
         Q_EMIT createTodo(todo, collection, mMessageUrlAkonadi);
@@ -197,5 +204,3 @@ bool TodoEdit::event(QEvent* e)
     }
     return QWidget::event(e);
 }
-
-

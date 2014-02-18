@@ -55,6 +55,7 @@ Q_SIGNALS:
     void authorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
 
 private:
+    QString extractPathFromData(const QString &data);
     void createFolderJob(const QString &foldername, const QString &destination);
     void addDefaultUrlItem(QUrl &url);
     void getTokenAccess();

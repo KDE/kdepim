@@ -497,6 +497,8 @@ private slots:
     void slotGrantleeThemesUpdated();
 
     void slotCreateTodo(const KCalCore::Todo::Ptr &, const Akonadi::Collection &collection, const QString &urlMessageAkonadi);
+    void slotCreateNewTodo(KJob *job);
+
 public slots:
     /** An URL has been activate with a click. */
     void slotUrlOpen( const QUrl &url = QUrl());
