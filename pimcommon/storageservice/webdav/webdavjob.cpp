@@ -238,7 +238,7 @@ QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &upl
                 destinationFile.setPath(defaultDestination + QLatin1Char('/') + uploadAsName);
                 destinationToString = destinationFile.toString();
             }
-
+            mCacheValue = destinationToString;
             QNetworkReply *reply = put(destinationToString,file);
             file->setParent(reply);
             connect(reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
@@ -489,7 +489,7 @@ void WebDavJob::parseAccessToken(const QString &data)
 void WebDavJob::parseUploadFile(const QString &data)
 {
     Q_EMIT uploadFileDone(QString());
-    deleteLater();
+    shareLink(QString(), mCacheValue);
 }
 
 void WebDavJob::parseCreateFolder(const QString &data)
@@ -553,13 +553,18 @@ void WebDavJob::parseListFolder(const QString &data)
     deleteLater();
 }
 
-void WebDavJob::shareLink(const QString &root, const QString &path)
+void WebDavJob::shareLink(const QString &/*root*/, const QString &path)
 {
     mActionType = PimCommon::StorageServiceAbstract::ShareLink;
     mError = false;
-    QUrl sourceFile(mServiceLocation);
-    sourceFile.setPath(path);
-    parseShareLink(sourceFile.toString());
+    if (!path.startsWith(mServiceLocation)) {
+        QUrl sourceFile(mServiceLocation);
+        sourceFile.setPath(path);
+        parseShareLink(sourceFile.toString());
+    } else {
+        parseShareLink(path);
+    }
+    deleteLater();
 }
 
 void WebDavJob::createServiceFolder()
