@@ -231,3 +231,13 @@ void StorageServiceTabWidget::shutdownAllServices()
         }
     }
 }
+
+void StorageServiceTabWidget::refreshAll()
+{
+    for (int i=0; i <count() ; ++i) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(widget(i));
+        if (page) {
+            page->refreshList();
+        }
+    }
+}

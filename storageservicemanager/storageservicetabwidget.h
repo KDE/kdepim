@@ -40,6 +40,7 @@ public:
     bool listFolderWasLoaded() const;
     void logout();
     void shutdownAllServices();
+    void refreshAll();
 Q_SIGNALS:
     void updateStatusBarMessage(const QString &msg);
     void listFileWasInitialized();
