@@ -69,6 +69,7 @@ TodoEdit::TodoEdit(QWidget *parent)
     connect(mNoteEdit, SIGNAL(returnPressed()), SLOT(slotReturnPressed()));
     hbox->addWidget(mNoteEdit);
     mCollectionCombobox = new Akonadi::CollectionComboBox(_k_todoEditStubModel);
+    mCollectionCombobox->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
     mCollectionCombobox->setMinimumWidth(250);
     mCollectionCombobox->setMimeTypeFilter( QStringList() << KCalCore::Todo::todoMimeType() );
     mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
