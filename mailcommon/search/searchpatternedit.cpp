@@ -199,7 +199,7 @@ void SearchRuleWidget::initWidget(SearchPatternEdit::SearchModeType modeType)
   mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
   hlay->addWidget( mRemove );
 
-  RuleWidgetHandlerManager::instance()->setIsNepomukSearch(modeType==SearchPatternEdit::NepomukMode);
+  RuleWidgetHandlerManager::instance()->setIsBalooSearch(modeType==SearchPatternEdit::BalooMode);
 
   RuleWidgetHandlerManager::instance()->createWidgets( mFunctionStack, mValueStack, this );
 

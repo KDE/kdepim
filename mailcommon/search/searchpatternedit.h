@@ -91,7 +91,7 @@ class MAILCOMMON_EXPORT SearchPatternEdit : public QWidget
 
     enum SearchModeType {
         StandardMode = 0,
-        NepomukMode = 1
+        BalooMode = 1
     };
 
     /**

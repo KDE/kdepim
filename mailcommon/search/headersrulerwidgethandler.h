@@ -34,7 +34,7 @@ public:
 
     QWidget *createFunctionWidget(int number,
                                    QStackedWidget *functionStack,
-                                   const QObject *receiver , bool isNepomukSearch) const;
+                                   const QObject *receiver , bool isBalooSearch) const;
 
     QWidget *createValueWidget( int number,
                                 QStackedWidget *valueStack,
@@ -58,7 +58,7 @@ public:
 
     bool setRule(QStackedWidget *functionStack,
                   QStackedWidget *valueStack,
-                  const SearchRule::Ptr rule , bool isNepomukSearch) const;
+                  const SearchRule::Ptr rule , bool isBalooSearch) const;
 
     bool update( const QByteArray & field,
                  QStackedWidget *functionStack,

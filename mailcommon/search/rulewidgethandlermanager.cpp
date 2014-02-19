@@ -59,7 +59,7 @@ using namespace MailCommon;
 MailCommon::RuleWidgetHandlerManager *MailCommon::RuleWidgetHandlerManager::self = 0;
 
 MailCommon::RuleWidgetHandlerManager::RuleWidgetHandlerManager()
-    : mIsNepomukSearch(false)
+    : mIsBalooSearch(false)
 {
     registerHandler( new MailCommon::TagRuleWidgetHandler() );
     registerHandler( new MailCommon::DateRuleWidgetHandler() );
@@ -79,9 +79,9 @@ MailCommon::RuleWidgetHandlerManager::~RuleWidgetHandlerManager()
               MessageViewer::DeleteAndSetToZero<RuleWidgetHandler>() );
 }
 
-void MailCommon::RuleWidgetHandlerManager::setIsNepomukSearch(bool isNepomukSearch)
+void MailCommon::RuleWidgetHandlerManager::setIsBalooSearch(bool isBalooSearch)
 {
-    mIsNepomukSearch = isNepomukSearch;
+    mIsBalooSearch = isBalooSearch;
 }
 
 void MailCommon::RuleWidgetHandlerManager::registerHandler( const RuleWidgetHandler *handler )
@@ -128,7 +128,7 @@ void MailCommon::RuleWidgetHandlerManager::createWidgets(QStackedWidget *functio
     for ( const_iterator it = mHandlers.constBegin(); it != end; ++it ) {
         QWidget *w = 0;
         for ( int i = 0;
-              ( w = (*it)->createFunctionWidget( i, functionStack, receiver, mIsNepomukSearch ) );
+              ( w = (*it)->createFunctionWidget( i, functionStack, receiver, mIsBalooSearch ) );
               ++i ) {
             if ( childCount( functionStack, w->objectName() ) < 2 ) {
                 // there wasn't already a widget with this name, so add this widget
@@ -213,7 +213,7 @@ void MailCommon::RuleWidgetHandlerManager::setRule( QStackedWidget *functionStac
     reset( functionStack, valueStack );
     const_iterator end( mHandlers.constEnd() );
     for ( const_iterator it = mHandlers.constBegin(); it != end; ++it ) {
-        if ( (*it)->setRule( functionStack, valueStack, rule, mIsNepomukSearch ) ) {
+        if ( (*it)->setRule( functionStack, valueStack, rule, mIsBalooSearch ) ) {
             return;
         }
     }

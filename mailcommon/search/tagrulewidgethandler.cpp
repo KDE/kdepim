@@ -117,7 +117,7 @@ static const int TagFunctionCount =
 //---------------------------------------------------------------------------
 
 QWidget *TagRuleWidgetHandler::createFunctionWidget(
-        int number, QStackedWidget *functionStack, const QObject *receiver, bool isNepomukSearch ) const
+        int number, QStackedWidget *functionStack, const QObject *receiver, bool isBalooSearch ) const
 {
     if ( number != 0 ) {
         return 0;
@@ -126,7 +126,7 @@ QWidget *TagRuleWidgetHandler::createFunctionWidget(
     PimCommon::MinimumComboBox *funcCombo = new PimCommon::MinimumComboBox( functionStack );
     funcCombo->setObjectName( QLatin1String("tagRuleFuncCombo") );
     for ( int i = 0; i < TagFunctionCount; ++i ) {
-        if (isNepomukSearch) {
+        if (isBalooSearch) {
             if (TagFunctions[i].id == SearchRule::FuncContains || TagFunctions[i].id == SearchRule::FuncContainsNot) {
                 funcCombo->addItem( i18n( TagFunctions[i].displayName ) );
             }
@@ -281,7 +281,7 @@ void TagRuleWidgetHandler::reset( QStackedWidget *functionStack,
 
 bool TagRuleWidgetHandler::setRule( QStackedWidget *functionStack,
                                     QStackedWidget *valueStack,
-                                    const SearchRule::Ptr rule, bool isNepomukSearch ) const
+                                    const SearchRule::Ptr rule, bool isBalooSearch ) const
 {
     if ( !rule || !handlesField( rule->field() ) ) {
         reset( functionStack, valueStack );
@@ -291,7 +291,7 @@ bool TagRuleWidgetHandler::setRule( QStackedWidget *functionStack,
     // set the function
     const SearchRule::Function func = rule->function();
 
-    if (isNepomukSearch ) {
+    if (isBalooSearch ) {
         if(func != SearchRule::FuncContains && func != SearchRule::FuncContainsNot) {
             reset( functionStack, valueStack );
             return false;

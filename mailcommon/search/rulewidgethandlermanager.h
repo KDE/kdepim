@@ -64,7 +64,7 @@ public:
         return self;
     }
 
-    void setIsNepomukSearch(bool isNepomukSearch);
+    void setIsBalooSearch(bool isBalooSearch);
 
     void registerHandler( const RuleWidgetHandler *handler );
     void unregisterHandler( const RuleWidgetHandler *handler );
@@ -104,7 +104,7 @@ private:
     typedef QVector<const RuleWidgetHandler*>::iterator iterator;
 
     QVector<const RuleWidgetHandler*> mHandlers;
-    bool mIsNepomukSearch;
+    bool mIsBalooSearch;
 };
 
 } // namespace MailCommon
