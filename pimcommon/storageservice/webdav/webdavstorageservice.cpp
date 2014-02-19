@@ -364,7 +364,7 @@ QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
 
 QMap<QString, QString> WebDavStorageService::itemInformation(const QVariantMap &variantMap)
 {
-    qDebug()<<" variantMap"<<variantMap;
+    //qDebug()<<" variantMap"<<variantMap;
     QMap<QString, QString> information;
     if (variantMap.contains(QLatin1String("path"))) {
         information.insert(i18n("Name:"), variantMap.value(QLatin1String("path")).toString());
