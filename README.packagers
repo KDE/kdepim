@@ -12,43 +12,9 @@ Also, this document discusses other topics which are of importance for
 packagers, such as the GPG support.
 
 
-Nepomuk & Soprano
+Baloo
 ------------------
-Akonadi uses Nepomuk and Soprano for all kind of searches. Nepomuk itself
-requires two storage backends for full functionality. Thus, these are
-hard requirements for KDEPIM:
-
-- Redland (for in-memory representation)
-- Virtuoso (for persistent storage on hard-disk)
-
-For the Redland backend you need librdf from http://librdf.org which should
-be available as package for all major distributions already.
-
-The Virtuoso backend has a compile time and runtime dependency, both must be
-fulfilled. The compile time dependency is libiodbc which is available from
-http://www.iodbc.org and packages for all distributions should be available.
-The runtime dependency is the Virtuoso server version 5.0.12 that can be
-retrieved from http://virtuoso.openlinksw.com. Although the Virtuoso sources
-are huge, the compilation can be sped up by passing --disable-all-vads to
-the configure script. After compilation has finished only the executable
-virtuoso-t and the ODBC driver library virtodbc_r(.so) are needed for the 
-Soprano backend. We suggest splitting Virtuoso into several sub-packages,
-two of which are the server binary and the ODBC drivers to not force the
-user to install a full blown Virtuoso server.
-
-Akonadi only requires Nepomuk, Strigi file indexing is not needed. You can
-disable Strigi file indexing if you find that is uses too many resources. Only
-the rest of Nepomuk needs to be running for Akonadi to work.  Akonadi uses 
-some Strigi libraries to index e-mail content. These libraries are needed at
-compile time.
-
-
-Shared Desktop Ontologies
---------------------------
-Nepomuk and Akonadi need some semantic ontologies to know how to interpret the
-content of Sopranos RDF store. These ontologies are available at
-http://sourceforge.net/projects/oscaf/files and version 0.2 should be used.
-
+Akonadi uses Baloo for all kind of searches. 
 
 MySQL
 -----
@@ -67,7 +33,7 @@ for MySQL (can be done as plugin as well).
 
 Akonadi
 -------
-Having a working installation of Nepomuk, Soprano, Virtuoso and MySQL should
+Having a working installation of Baloo and MySQL should
 normally result in a working installation of Akonadi.  Akonadi provides a self
 test dialog to make sure it really works. Please make sure all tests in this
 self test dialog pass.  The test can be found in a control center module that is
