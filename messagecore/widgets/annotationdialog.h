@@ -24,6 +24,10 @@
 
 #include <KDialog>
 
+namespace Akonadi {
+  class Item;
+}
+
 namespace MessageCore {
 
 /**
@@ -39,10 +43,10 @@ class MESSAGECORE_EXPORT AnnotationEditDialog : public KDialog
     /**
      * Creates a new annotation edit dialog.
      *
-     * @param uri The Nepomuk resource uri of the email.
+     * @param item The item.
      * @param parent The parent widget.
      */
-    explicit AnnotationEditDialog( const QUrl &uri, QWidget *parent = 0 );
+    explicit AnnotationEditDialog( const Akonadi::Item &item, QWidget *parent = 0 );
 
     /**
      * Destroys the annotation edit dialog.

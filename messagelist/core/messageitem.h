@@ -31,10 +31,6 @@
 #include <messagelist/messagelist_export.h>
 #include "theme.h"
 
-namespace Nepomuk2 {
-class Resource;
-}
-
 namespace Akonadi {
 class Item;
 }
@@ -123,7 +119,7 @@ public:
   QString tagListDescription() const;
 
   /// Deletes all cached tags. The next time someone asks this item for the tags, they are
-  /// fetched from Nepomuk again
+  /// fetched again
   void invalidateTagCache();
 
   /// Same as invalidateTagCache(), only for the annotation

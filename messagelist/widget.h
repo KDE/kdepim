@@ -24,6 +24,7 @@
 #include <akonadi/item.h>
 
 #include <kmime/kmime_message.h>
+#include <KJob>
 
 #include <messagelist/messagelist_export.h>
 
@@ -326,7 +327,7 @@ protected:
   /**
    * Reimplemented from MessageList::Core::Widget
    */
-  virtual void fillMessageTagCombo( KComboBox * combo );
+  virtual void fillMessageTagCombo();
 
   /**
    * Reimplemented from MessageList::Core::Widget
@@ -381,6 +382,7 @@ protected:
 private Q_SLOTS:
   void slotCollapseItem();
   void slotExpandItem();
+  void slotTagsFetched(KJob *job);
 
 
 signals:

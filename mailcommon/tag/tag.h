@@ -27,16 +27,13 @@
 #include <QFont>
 #include <QSharedPointer>
 #include <QUrl>
-
-namespace Nepomuk2 {
-  class Tag;
-}
+#include <akonadi/tag.h>
 
 namespace MailCommon {
 
-  // Our own copy of the tag data normally attached to a Nepomuk2::Tag.
+  // Our own copy of the tag data.
   // Useful in the config dialog, because the user might cancel his changes,
-  // in which case we don't write them back to the Nepomuk2::Tag.
+  // in which case we don't write them back.
   // Also used as a convenience class in the TagActionManager.
   class MAILCOMMON_EXPORT Tag
   {
@@ -56,30 +53,36 @@ namespace MailCommon {
 
       bool operator!=( const Tag &other ) const;
 
-      // Load a tag from a Nepomuk tag
-      static Ptr fromNepomuk( const Nepomuk2::Tag& nepomukTag );
+      static Ptr createDefaultTag( const QString &name );
+      // expects a tag with all attributes fetched
+      static Ptr fromAkonadi( const Akonadi::Tag &tag );
 
-      // Save this tag to Nepomuk the corresponding Nepomuk tag
-      void saveToNepomuk( SaveFlags saveFlags ) const;
+      Akonadi::Tag saveToAkonadi( SaveFlags saveFlags ) const;
 
       // Compare, based on priority
       static bool compare( Ptr &tag1, Ptr &tag2 );
       // Compare, based on name
       static bool compareName( Ptr &tag1, Ptr &tag2 );
 
+      qint64 id() const;
+      QString name() const;
+      Akonadi::Tag tag() const;
+
       QString tagName;
       QColor textColor;
       QColor backgroundColor;
       QFont textFont;
       QString iconName;
-      QUrl nepomukResourceUri;
       KShortcut shortcut;
       bool inToolbar;
-      bool tagStatus;
-
+      bool isImmutable;
       // Priority, i.e. sort order of the tag. Only used when loading the tag, when saving
       // the priority is set to the position in the list widget
       int priority;
+
+  private:
+      Tag(){};
+      Akonadi::Tag mTag;
   };
   Q_DECLARE_OPERATORS_FOR_FLAGS(Tag::SaveFlags)
 

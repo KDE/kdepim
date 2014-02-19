@@ -339,8 +339,6 @@ QString Utils::storedTypeToI18n(StoredType type)
         return i18n("Config");
     case AkonadiDb:
         return i18n("Akonadi Database");
-    case Nepomuk:
-        return i18n("Nepomuk Database");
     case Data:
         return i18n("Data");
     }

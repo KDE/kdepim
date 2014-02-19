@@ -9,15 +9,12 @@ include_directories(
   ${CMAKE_BINARY_DIR}/pimcommon
   ${CMAKE_SOURCE_DIR}/pimcommon
   ${CMAKE_SOURCE_DIR}/pimcommon/util/
-  ${CMAKE_CURRENT_BINARY_DIR}/../ontologies
   ${CMAKE_CURRENT_SOURCE_DIR}/filter
   ${CMAKE_CURRENT_SOURCE_DIR}/tag/
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/snippets
   ${CMAKE_CURRENT_SOURCE_DIR}/folder
   ${CMAKE_CURRENT_SOURCE_DIR}/util
-  ${SOPRANO_INCLUDE_DIR}
-  ${NEPOMUK_CORE_INCLUDE_DIR}
 )
 
 #add_definitions( -DQT_NO_CAST_FROM_ASCII )
@@ -132,13 +129,6 @@ set(libmailcommon_SRCS
   ${libmailcommon_filter_SRCS}
 )
 
-soprano_add_ontology(libmailcommon_SRCS
-  ${CMAKE_SOURCE_DIR}/messagecore/ontology/messagetag.trig
-  "MessageTag"
-  "Vocabulary"
-  "trig"
-)
-
 kde4_add_kcfg_files(libmailcommon_SRCS
     settings/mailcommonsettings_base.kcfgc
 )
@@ -184,13 +174,9 @@ target_link_libraries(mailcommon messageviewer messagecore messagecomposer maili
   ${KDEPIMLIBS_KIMAP_LIBS}
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${KDE4_KDEUI_LIBS}
-  ${NEPOMUK_CORE_LIBRARY}
 )
 
 target_link_libraries(mailcommon
-  ${NEPOMUK_QUERY_LIBRARIES}
-  ${SOPRANO_LIBRARIES}
-  niefast_apps
   incidenceeditorsng
 )
 

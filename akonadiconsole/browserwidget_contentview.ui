@@ -11,6 +11,26 @@
    </rect>
   </property>
   <layout class="QGridLayout">
+   <item row="1" column="0">
+    <spacer>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="1">
+    <widget class="KPushButton" name="saveButton">
+     <property name="text">
+      <string>&amp;Save</string>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="0" colspan="2">
     <widget class="KTabWidget" name="mainTabWidget">
      <property name="currentIndex">
@@ -316,131 +336,38 @@
          </layout>
         </widget>
        </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab_5">
-      <attribute name="title">
-       <string>Nepomuk</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Tags:</string>
+       <item row="7" column="0">
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>Tags</string>
          </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="Nepomuk2::TagWidget" name="tagWidget" native="true"/>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_8">
-         <property name="text">
-          <string>Rating:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="KRatingWidget" name="ratingWidget">
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
-         </property>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="KEditListWidget" name="tags">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="buttons">
+             <set>KEditListWidget::Add|KEditListWidget::Remove</set>
+            </property>
+            <property name="title" stdset="0">
+             <string>Flags</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="nepomukTab">
-      <attribute name="title">
-       <string>RDF</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <widget class="QLabel" name="label_9">
-           <property name="text">
-            <string>Class Name:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="rdfClassName">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QTreeView" name="nepomukView">
-         <property name="rootIsDecorated">
-          <bool>false</bool>
-         </property>
-         <property name="allColumnsShowFocus">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <spacer>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="1" column="1">
-    <widget class="KPushButton" name="saveButton">
-     <property name="text">
-      <string>&amp;Save</string>
-     </property>
     </widget>
    </item>
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KTabWidget</class>
-   <extends>QTabWidget</extends>
-   <header>ktabwidget.h</header>
-   <container>1</container>
-  </customwidget>
   <customwidget>
    <class>KEditListWidget</class>
    <extends>QWidget</extends>
@@ -453,9 +380,24 @@
    <header>ktextbrowser.h</header>
   </customwidget>
   <customwidget>
-   <class>KRatingWidget</class>
-   <extends>QFrame</extends>
-   <header>kratingwidget.h</header>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KPushButton</class>
+   <extends>QPushButton</extends>
+   <header>kpushbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header>ktextedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KTabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>ktabwidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -469,12 +411,6 @@
    <header location="global">messageviewer/viewer/viewer.h</header>
   </customwidget>
   <customwidget>
-   <class>Nepomuk2::TagWidget</class>
-   <extends>QWidget</extends>
-   <header location="global">nepomuk2/tagwidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>Akonadi::ContactViewer</class>
    <extends>QWidget</extends>
    <header location="global">akonadi/contact/contactviewer.h</header>
@@ -485,11 +421,6 @@
    <extends>QWidget</extends>
    <header location="global">akonadi/contact/contactgroupviewer.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>KTextEdit</class>
-   <extends>QTextEdit</extends>
-   <header>ktextedit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

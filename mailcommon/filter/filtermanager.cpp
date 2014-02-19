@@ -24,14 +24,11 @@
 #include "filterimporterexporter.h"
 #include "mailfilteragentinterface.h"
 #include <kconfiggroup.h>
-
-#include <Nepomuk2/Resource>
-#include <Nepomuk2/Vocabulary/NIE>
-#include <Nepomuk2/ResourceWatcher>
-#include <Nepomuk2/Query/QueryServiceClient>
-#include <Nepomuk2/Query/Result>
-#include <Nepomuk2/Query/ResourceTypeTerm>
-#include <soprano/nao.h>
+#include <Akonadi/Monitor>
+#include <Akonadi/Tag>
+#include <Akonadi/TagFetchJob>
+#include <Akonadi/TagFetchScope>
+#include <Akonadi/TagAttribute>
 
 #include <QTimer>
 
@@ -41,7 +38,7 @@ class FilterManager::Private
 {
 public:
     Private( FilterManager *qq )
-        : q( qq ), mMailFilterAgentInterface(0), mTagQueryClient(0), mInitialized(false)
+        : q( qq ), mMailFilterAgentInterface(0), mMonitor(new Akonadi::Monitor), mInitialized(false)
     {
         mMailFilterAgentInterface = new org::freedesktop::Akonadi::MailFilterAgent( QLatin1String( "org.freedesktop.Akonadi.MailFilterAgent" ),
                                                                                     QLatin1String( "/MailFilterAgent" ),
@@ -59,7 +56,7 @@ public:
     FilterManager *q;
     OrgFreedesktopAkonadiMailFilterAgentInterface *mMailFilterAgentInterface;
     QList<MailCommon::MailFilter *> mFilters;
-    Nepomuk2::Query::QueryServiceClient *mTagQueryClient;
+    Akonadi::Monitor *mMonitor;
     bool mInitialized;
 };
 
@@ -120,17 +117,11 @@ FilterManager::FilterManager()
 {
     updateTagList();
 
-    Nepomuk2::ResourceWatcher *watcher = new Nepomuk2::ResourceWatcher(this);
-    watcher->addType(Soprano::Vocabulary::NAO::Tag());
-    connect(watcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
-            this, SLOT(resourceCreated(Nepomuk2::Resource,QList<QUrl>)));
-    connect(watcher, SIGNAL(resourceRemoved(QUrl,QList<QUrl>)),
-            this, SLOT(resourceRemoved(QUrl,QList<QUrl>)));
-    connect(watcher, SIGNAL(propertyChanged(Nepomuk2::Resource,Nepomuk2::Types::Property,QVariantList,QVariantList)),
-            this, SLOT(propertyChanged(Nepomuk2::Resource)));
-
-
-    watcher->start();
+    d->mMonitor->setTypeMonitored(Akonadi::Monitor::Tags);
+    d->mMonitor->tagFetchScope().fetchAttribute<Akonadi::TagAttribute>();
+    connect(d->mMonitor, SIGNAL(tagAdded(Akonadi::Tag)), this, SLOT(slotTagAdded(Akonadi::Tag)));
+    connect(d->mMonitor, SIGNAL(tagRemoved(Akonadi::Tag)), this, SLOT(slotTagRemoved(Akonadi::Tag)));
+    connect(d->mMonitor, SIGNAL(tagChanged(Akonadi::Tag)), this, SLOT(slotTagChanged(Akonadi::Tag)));
 
     qDBusRegisterMetaType<QList<qint64> >();
     Akonadi::ServerManager::State state = Akonadi::ServerManager::self()->state();
@@ -152,18 +143,9 @@ void FilterManager::slotServerStateChanged(Akonadi::ServerManager::State state)
 
 void FilterManager::updateTagList()
 {
-    if ( d->mTagQueryClient )
-        return;
-    d->mTagList.clear();
-    d->mTagQueryClient = new Nepomuk2::Query::QueryServiceClient(this);
-    connect( d->mTagQueryClient, SIGNAL(newEntries(QList<Nepomuk2::Query::Result>)),
-             this, SLOT(slotNewTagEntries(QList<Nepomuk2::Query::Result>)) );
-    connect( d->mTagQueryClient, SIGNAL(finishedListing()),
-             this, SLOT(slotFinishedTagListing()) );
-
-    Nepomuk2::Query::ResourceTypeTerm term( Soprano::Vocabulary::NAO::Tag() );
-    Nepomuk2::Query::Query query( term );
-    d->mTagQueryClient->query(query);
+  Akonadi::TagFetchJob *fetchJob = new Akonadi::TagFetchJob(this);
+  fetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
+  connect(fetchJob, SIGNAL(result(KJob*)), this, SLOT(slotFinishedTagListing(KJob*)));
 }
 
 bool FilterManager::initialized() const
@@ -178,40 +160,37 @@ void FilterManager::slotReadConfig()
     Q_EMIT loadingFiltersDone();
 }
 
-void FilterManager::slotFinishedTagListing()
+void FilterManager::slotFinishedTagListing(KJob *job)
 {
-    d->mTagQueryClient->close();
-    d->mTagQueryClient->deleteLater();
-    d->mTagQueryClient = 0;
-    Q_EMIT tagListingFinished();
-}
-
-void FilterManager::slotNewTagEntries(const QList<Nepomuk2::Query::Result>& results)
-{
-    Q_FOREACH(const Nepomuk2::Query::Result &result, results ) {
-        Nepomuk2::Resource resource = result.resource();
-        d->mTagList.insert(resource.uri(), resource.label());
+    if (job->error()) {
+        kWarning() << "failed to retrieve tags " << job->errorString();
     }
-}
+    Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob*>(job);
+    Q_FOREACH(const Akonadi::Tag &tag, fetchJob->tags() ) {
+        d->mTagList.insert(tag.url(), tag.name());
+    }
 
-void FilterManager::resourceCreated(const Nepomuk2::Resource& res,const QList<QUrl>&)
-{
-    d->mTagList.insert(res.uri(),res.label());
     Q_EMIT tagListingFinished();
 }
 
-void FilterManager::resourceRemoved(const QUrl&url,const QList<QUrl>&)
+void FilterManager::slotTagAdded(const Akonadi::Tag &tag)
 {
-    if (d->mTagList.contains(url)) {
-        d->mTagList.remove(url);
+    d->mTagList.insert(tag.url(), tag.name());
+    Q_EMIT tagListingFinished();
+}
+
+void FilterManager::slotTagChanged(const Akonadi::Tag &tag)
+{
+    if (d->mTagList.contains(tag.url())) {
+        d->mTagList.insert(tag.url(), tag.name());
     }
     Q_EMIT tagListingFinished();
 }
 
-void FilterManager::propertyChanged(const Nepomuk2::Resource& res)
+void FilterManager::slotTagRemoved(const Akonadi::Tag &tag)
 {
-    if (d->mTagList.contains(res.uri())) {
-        d->mTagList.insert(res.uri(), res.label() );
+    if (d->mTagList.contains(tag.url())) {
+        d->mTagList.remove(tag.url());
     }
     Q_EMIT tagListingFinished();
 }

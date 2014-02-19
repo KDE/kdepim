@@ -266,7 +266,7 @@ int ThunderbirdSettings::adaptAutoResizeResolution(int index, const QString& con
 
 void ThunderbirdSettings::readTagSettings()
 {
-    ImportWizardUtil::addNepomukTag(mHashTag.values());
+    ImportWizardUtil::addAkonadiTag(mHashTag.values());
 }
 
 void ThunderbirdSettings::readLdapSettings()

@@ -4,8 +4,6 @@ add_subdirectory( kconf_update )
 
 include_directories(
   ${Boost_INCLUDE_DIR}
-  ${SOPRANO_INCLUDE_DIR}
-  ${NEPOMUK_CORE_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/mailcommon
   ${CMAKE_SOURCE_DIR}/messagecomposer
   ${CMAKE_SOURCE_DIR}/pimcommon

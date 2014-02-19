@@ -3,14 +3,12 @@ add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 include_directories(${AKONADI_INCLUDE_DIR} 
-                    ${SOPRANO_INCLUDE_DIR} 
                     ${CMAKE_SOURCE_DIR}/libkdepim
                     ${CMAKE_SOURCE_DIR}/mailcommon
                     ${CMAKE_SOURCE_DIR}/messageviewer
                     ${CMAKE_SOURCE_DIR}/pimcommon
                     ${CMAKE_SOURCE_DIR}/messagecomposer/
                     ${CMAKE_SOURCE_DIR}/pimsettingexporter/ 
-                    ${NEPOMUK_CORE_INCLUDE_DIR}
 )
 
 
