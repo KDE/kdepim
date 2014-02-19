@@ -18,11 +18,11 @@
 #include "importwizardutil.h"
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <Nepomuk2/Tag>
-#include <Nepomuk2/Variant>
-#include "messagetag.h"
 #include <QDebug>
 #include <kwallet.h>
+#include <Akonadi/Tag>
+#include <Akonadi/TagAttribute>
+#include <Akonadi/TagCreateJob>
 
 
 
@@ -79,16 +79,14 @@ void ImportWizardUtil::mergeLdap(const ldapStruct &ldap)
     grp.sync();
 }
 
-void ImportWizardUtil::addNepomukTag(const QList<tagStruct>& tagList)
+void ImportWizardUtil::addAkonadiTag(const QList<tagStruct>& tagList)
 {
-    const int listSize(tagList.size());
-    for(int i = 0; i<listSize; ++i) {
-        Nepomuk2::Tag nepomukTag( tagList.at(i).name );
-        nepomukTag.setLabel( tagList.at(i).name );
+    for(int i = 0; i<tagList.size(); ++i) {
+        Akonadi::Tag tag(tagList.at(i).name);
         if ( tagList.at(i).color.isValid() ) {
-            const QString colorName = tagList.at(i).color.name();
-            nepomukTag.setProperty( Vocabulary::MessageTag::textColor(), colorName );
+            tag.attribute<Akonadi::TagAttribute>(Akonadi::AttributeEntity::AddIfMissing)->setTextColor(tagList.at(i).color);
         }
+        new Akonadi::TagCreateJob(tag);
     }
 }
 

@@ -32,18 +32,7 @@
 #include <akonadi/kmime/messagefolderattribute.h>
 #include <akonadi/selectionproxymodel.h>
 
-#include <Nepomuk2/Resource>
-#include <Nepomuk2/Vocabulary/NIE>
-#include <Nepomuk2/Variant>
-
-#include <Nepomuk2/ResourceWatcher>
-
-
 #include <KDE/KLocale>
-#include <Soprano/Statement>
-#include <soprano/signalcachemodel.h>
-#include <soprano/nao.h>
-
 #include "core/messageitem.h"
 #include "core/settings.h"
 #include "messagelistutil.h"
@@ -65,7 +54,6 @@ public:
   void onSourceDataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
   void onSelectionChanged();
   void loadSettings();
-  void statementChanged(const Nepomuk2::Resource &statement );
 
   StorageModel * const q;
 
@@ -120,18 +108,6 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
   d->mModel = itemFilter;
 
   kDebug() << "Using model:" << model->metaObject()->className();
-  Nepomuk2::ResourceWatcher *watcher = new Nepomuk2::ResourceWatcher(this);
-  watcher->addProperty(Nepomuk2::Types::Property(Soprano::Vocabulary::NAO::hasTag()));
-  watcher->addProperty(Nepomuk2::Types::Property(Soprano::Vocabulary::NAO::description()));
-  connect(watcher, SIGNAL(propertyChanged(Nepomuk2::Resource,Nepomuk2::Types::Property,QVariantList,QVariantList)),
-          this, SLOT(statementChanged(Nepomuk2::Resource)));
-  connect(watcher, SIGNAL(propertyRemoved(Nepomuk2::Resource,Nepomuk2::Types::Property,QVariant)),
-          this, SLOT(statementChanged(Nepomuk2::Resource)));
-  connect(watcher, SIGNAL(propertyAdded(Nepomuk2::Resource,Nepomuk2::Types::Property,QVariant)),
-          this, SLOT(statementChanged(Nepomuk2::Resource)));
-  connect(watcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)),
-          this, SLOT(statementChanged(Nepomuk2::Resource)));
-  watcher->start();
 
   connect( d->mModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
            this, SLOT(onSourceDataChanged(QModelIndex,QModelIndex)) );
@@ -426,20 +402,6 @@ QMimeData* StorageModel::mimeData( const QList< MessageList::Core::MessageItem* 
 void StorageModel::prepareForScan()
 {
 
-}
-
-void StorageModel::Private::statementChanged( const Nepomuk2::Resource &statement )
-{
-  const Akonadi::Item item = Item::fromUrl( statement.property(Nepomuk2::Vocabulary::NIE::url()).toUrl() );
-  if ( !item.isValid() ) {
-    return;
-  }
-  const QModelIndexList list = mModel->match( QModelIndex(), EntityTreeModel::ItemIdRole, item.id() );
-  if ( list.isEmpty() ) {
-    return;
-  }
-  emit q->dataChanged( q->index( list.first().row(), 0 ),
-                       q->index( list.first().row(), 0 ) );
 }
 
 void StorageModel::Private::onSourceDataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight )

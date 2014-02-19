@@ -2431,7 +2431,7 @@ bool View::event( QEvent *e )
         }
       }
 
-      QString content = MessageList::Util::contentSummary(mi->akonadiItem().url());
+      QString content = MessageList::Util::contentSummary( mi->akonadiItem() );
       if ( !content.isEmpty() ) {
         if ( textIsLeftToRight ) {
           tip += htmlCodeForStandardRow.arg( i18n( "Preview" ) ).arg( content.replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) );

@@ -64,8 +64,7 @@ include_directories(${CMAKE_SOURCE_DIR}/mailimporter
 		    ${CMAKE_SOURCE_DIR}/mailcommon/filter/
                     ${CMAKE_SOURCE_DIR}/messageviewer/
 		    ${CMAKE_SOURCE_DIR}/libkdepim/
-                    ${NEPOMUK_CORE_INCLUDE_DIR}
-                    ${SOPRANO_INCLUDE_DIR})
+)
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
@@ -78,13 +77,6 @@ kde4_add_ui_files(importwizard_SRCS
                   ui/selectcomponentpage.ui 
 		  ui/importfinishpage.ui 
 		  ui/importcalendarpage.ui)
-
-soprano_add_ontology(importwizard_SRCS
-    ${CMAKE_SOURCE_DIR}/messagecore/ontology/messagetag.trig
-    "MessageTag"
-    "Vocabulary"
-    "trig"
-  )
 
 kde4_add_app_icon(importwizard_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-app-kontact-import-wizard.png")
 
@@ -103,7 +95,6 @@ target_link_libraries(importwizard
   kdepim
   messagecomposer
   messageviewer
-  ${NEPOMUK_CORE_LIBRARY}
 )
 
 install(TARGETS importwizard  ${INSTALL_TARGETS_DEFAULT_ARGS})

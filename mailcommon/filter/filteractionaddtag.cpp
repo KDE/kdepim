@@ -22,12 +22,9 @@
 #include "dialog/filteractionmissingargumentdialog.h"
 #include "pimcommon/widgets/minimumcombobox.h"
 
-#include <Nepomuk2/Tag>
-#include <Nepomuk2/Resource>
-#include <Nepomuk2/ResourceManager>
-
 #include <QTextDocument>
 #include <QPointer>
+#include <Akonadi/Tag>
 
 using namespace MailCommon;
 
@@ -97,15 +94,13 @@ bool FilterActionAddTag::argsFromStringInteractive( const QString &argsStr, cons
     if ( mList.isEmpty() )
         return false;
     const bool index = mList.contains( mParameter );
-    if ( Nepomuk2::ResourceManager::instance()->initialized() ) {
-        if ( !index ) {
-            QPointer<FilterActionMissingTagDialog> dlg = new FilterActionMissingTagDialog( mList, filterName, argsStr );
-            if ( dlg->exec() ) {
-                mParameter = dlg->selectedTag();
-                needUpdate = true;
-            }
-            delete dlg;
+    if ( !index ) {
+        QPointer<FilterActionMissingTagDialog> dlg = new FilterActionMissingTagDialog( mList, filterName, argsStr );
+        if ( dlg->exec() ) {
+            mParameter = dlg->selectedTag();
+            needUpdate = true;
         }
+        delete dlg;
     }
     return needUpdate;
 }
@@ -116,8 +111,8 @@ FilterAction::ReturnCode FilterActionAddTag::process(ItemContext &context , bool
     if (!mList.contains(mParameter)) {
         return ErrorButGoOn;
     }
-    Nepomuk2::Resource resource( context.item().url() );
-    resource.addTag( mParameter );
+    context.item().setTag( Akonadi::Tag::fromUrl( mParameter ) );
+    context.setNeedsFlagStore();
 
     return GoOn;
 }

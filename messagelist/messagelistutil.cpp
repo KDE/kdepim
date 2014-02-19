@@ -23,10 +23,8 @@
 #include <KMenu>
 #include <KIcon>
 #include <KLocalizedString>
-#include <nepomuk2/nmo.h>
-#include <Nepomuk2/Resource>
-#include <Nepomuk2/Variant>
-
+#include <KMime/Message>
+#include <Akonadi/Item>
 
 using namespace MessageList::Core;
 
@@ -142,11 +140,22 @@ void MessageList::Util::fillViewMenu( KMenu * menu, QObject *receiver )
            receiver, SLOT(themeMenuAboutToShow()) );
 }
 
-QString MessageList::Util::contentSummary( const KUrl& url )
+QString MessageList::Util::contentSummary( const Akonadi::Item &item )
 {
-  Nepomuk2::Resource mail( url );
-  const QString content =
-      mail.property( Nepomuk2::Vocabulary::NMO::plainTextMessageContent() ).toString();
+  if ( !item.hasPayload<KMime::Message::Ptr>() ) {
+    return QString();
+  }
+
+  KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
+  KMime::Content *textContent = message->textContent();
+  if ( !textContent ) {
+    return QString();
+  }
+  const QString content = textContent->decodedText( true, true );
+  if ( content.isEmpty() ) {
+    return QString();
+  }
+
   // Extract the first 5 non-empty, non-quoted lines from the content and return it
   int numLines = 0;
   const int maxLines = 5;

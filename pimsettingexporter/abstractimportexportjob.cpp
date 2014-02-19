@@ -534,6 +534,4 @@ void AbstractImportExportJob::initializeListStep()
         mListStep << Utils::Config;
     if (mTypeSelected & Utils::AkonadiDb)
         mListStep << Utils::AkonadiDb;
-    if (mTypeSelected & Utils::Nepomuk)
-        mListStep << Utils::Nepomuk;
 }

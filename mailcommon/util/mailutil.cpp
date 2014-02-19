@@ -102,7 +102,6 @@ bool MailCommon::Util::isVirtualCollection( const QString &resource )
 {
     return
             (
-                resource == QLatin1String( "akonadi_nepomuktag_resource" ) ||
                 resource == QLatin1String( "akonadi_search_resource" ) );
 }
 

@@ -3,9 +3,6 @@ project(akonadiconsole)
 include_directories(
   ${AKONADI_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
-  ${SOPRANO_INCLUDE_DIR}
-  ${NEPOMUK_CORE_INCLUDE_DIR}
-  ${NEPOMUK_WIDGETS_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/libkdepim/
   ${CMAKE_SOURCE_DIR}/messageviewer/
 )
@@ -63,7 +60,7 @@ set_source_files_properties(${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akona
   PROPERTIES INCLUDE "akonadi/private/notificationmessage_p.h")
 
 set_source_files_properties(${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml
-  PROPERTIES INCLUDE "akonadi/private/notificationmessagev2_p.h")
+  PROPERTIES INCLUDE "akonadi/private/notificationmessagev3_p.h")
 
 qt4_add_dbus_interface(akonadiconsole_bin_SRCS
   ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml
@@ -115,8 +112,6 @@ target_link_libraries(akonadiconsole_bin
   ${QT_QTSQL_LIBRARY}
   ${QT_QTNETWORK_LIBRARY}
   ${AKONADI_COMMON_LIBRARIES}
-  ${NEPOMUK_CORE_LIBRARY}
-  ${NEPOMUK_WIDGETS_LIBRARY}
 )
 
 install(TARGETS akonadiconsole_bin ${INSTALL_TARGETS_DEFAULT_ARGS})
