@@ -77,6 +77,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mSearchEdit->setVisible( Settings::self()->showQuickSearch() );
 
     connect( mSearchEdit, SIGNAL(textChanged(QString)), this, SLOT(slotSearchEditTextEdited(QString)));
+    connect( mSearchEdit, SIGNAL(clearButtonClicked()), this, SLOT(slotClearButtonClicked()));
 
 
     hbox->addWidget( mSearchEdit );
@@ -180,6 +181,8 @@ void QuickSearchLine::slotClearButtonClicked()
 {
     mExtraOption->hide();
     mButtonSearchAgainstGroup->button(0)->setChecked(true);
+    if (mTagFilterCombo->isVisible())
+        mTagFilterCombo->setCurrentIndex(0);
     Q_EMIT clearButtonClicked();
 }
 
@@ -253,7 +256,8 @@ void QuickSearchLine::resetFilter()
     Q_FOREACH(QToolButton *button, mListStatusButton) {
         button->setChecked(false);
     }
-    mTagFilterCombo->setCurrentIndex( 0 );
+    if (mTagFilterCombo->isVisible())
+        mTagFilterCombo->setCurrentIndex( 0 );
     mLockSearch->setChecked(false);
     mButtonSearchAgainstGroup->button(0)->setChecked(true);
     mExtraOption->hide();

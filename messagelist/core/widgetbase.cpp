@@ -919,6 +919,10 @@ void Widget::tagIdSelected( const QVariant& data )
 
 void Widget::statusSelected( int index )
 {
+    if (index == 0) {
+        resetFilter();
+        return;
+    }
     tagIdSelected( d->quickSearchLine->tagFilterComboBox()->itemData( index ) );
     d->mView->model()->setFilter( d->mFilter );
 }

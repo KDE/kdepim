@@ -224,6 +224,8 @@ void Widget::slotTagsFetched(KJob *job)
   }
   const QStringList tagSelectedLst = tagSelected.split(QLatin1Char(','));
 
+  addMessageTagItem( SmallIcon( QLatin1String( "mail-flag" ) ), i18n( "All" ), QString() );
+
   foreach( const Akonadi::Tag &akonadiTag, fetchJob->tags() ) {
     if(tagSelectedLst.contains(akonadiTag.url().url())) {
       QString iconName = QLatin1String( "mail-tagged" );
