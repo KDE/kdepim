@@ -157,7 +157,9 @@ void QWebdavUrlInfo::davParsePropstats( const QString & path, const QDomNodeList
             map.insert(property.tagName(), property.text());
 
             if ( property.tagName() == QLatin1String("creationdate") ) {
-                setCreatedAt(parseDateTime( property.text(), property.attribute(QLatin1String("dt")) ));
+                const QDateTime t = parseDateTime( property.text(), property.attribute(QLatin1String("dt")) );
+                setCreatedAt(t);
+                map.insert(QLatin1String("creationdate"), t.toString());
             } else if ( property.tagName() == QLatin1String("getcontentlength") ) {
                 setSize(property.text().toULong());
             } else if ( property.tagName() == QLatin1String("displayname") ) {
@@ -177,7 +179,9 @@ void QWebdavUrlInfo::davParsePropstats( const QString & path, const QDomNodeList
                 if ( property.text() == QLatin1String("T") )
                     foundExecutable = true;
             } else if ( property.tagName() == QLatin1String("getlastmodified") ) {
-                setLastModified(parseDateTime( property.text(), property.attribute(QLatin1String("dt")) ));
+                const QDateTime t = parseDateTime( property.text(), property.attribute(QLatin1String("dt")) );
+                setLastModified(t);
+                map.insert(QLatin1String("lastmodified"), t.toString());
             } else if ( property.tagName() == QLatin1String("getetag") ) {
                 setEntitytag(property.text());
             } else if ( property.tagName() == QLatin1String("resourcetype") ) {

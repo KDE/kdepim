@@ -375,9 +375,13 @@ QMap<QString, QString> WebDavStorageService::itemInformation(const QVariantMap &
     if (variantMap.contains(QLatin1String("getcontentlength"))) {
         information.insert(i18n("Size:"), KGlobal::locale()->formatByteSize(variantMap.value(QLatin1String("getcontentlength")).toString().toLongLong() ));
     }
-    //TODO add created date
-
-    qDebug()<<" information"<<information;
+    if (variantMap.contains(QLatin1String("lastmodified"))) {
+        information.insert(i18n("Last Modified:"), KGlobal::locale()->formatDateTime(QDateTime::fromString(variantMap.value(QLatin1String("lastmodified")).toString())));
+    }
+    if (variantMap.contains(QLatin1String("creationdate"))) {
+        information.insert(i18n("Created:"), KGlobal::locale()->formatDateTime(QDateTime::fromString(variantMap.value(QLatin1String("creationdate")).toString())));
+    }
+    //qDebug()<<" information"<<information;
     return information;
 }
 
