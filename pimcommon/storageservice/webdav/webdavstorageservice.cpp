@@ -313,11 +313,16 @@ StorageServiceAbstract::Capabilities WebDavStorageService::capabilities() const
     return serviceCapabilities();
 }
 
-QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder)
+QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentPath)
 {
     //qDebug()<<" data"<<data;
     listWidget->clear();
     listWidget->createMoveUpItem();
+    QString currentFolder = currentPath;
+    if (currentFolder.isEmpty()) {
+        QUrl url(mServiceLocation);
+        currentFolder = url.path() + QLatin1Char('/');
+    }
 
     const QList<QWebdavUrlInfo> lst = QWebdavUrlInfo::parseListInfo(data.toString());
     Q_FOREACH(const QWebdavUrlInfo &info, lst) {
