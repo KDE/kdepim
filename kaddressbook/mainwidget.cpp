@@ -462,6 +462,8 @@ void MainWidget::setupGui()
   //   - contact switcher at the bottom
   mMainWidgetSplitter1 = new QSplitter(Qt::Horizontal);
   mMainWidgetSplitter1->setObjectName( QLatin1String("MainWidgetSplitter1") );
+  mMainWidgetSplitter1->setStretchFactor( 1, 9 );        // maximum width for detail
+  mMainWidgetSplitter1->setChildrenCollapsible(false);
   layout->addWidget( mMainWidgetSplitter1 );
 
   // Splitter 2 contains the remaining parts of the GUI:
@@ -471,11 +473,15 @@ void MainWidget::setupGui()
   // a three or two column view;  in simple mode it is hidden.
   mMainWidgetSplitter2 = new QSplitter(Qt::Vertical);
   mMainWidgetSplitter2->setObjectName( QLatin1String("MainWidgetSplitter2") );
+  mMainWidgetSplitter2->setStretchFactor( 1, 9 );        // maximum width for intuitive resizing
+  mMainWidgetSplitter2->setChildrenCollapsible(false);
   mMainWidgetSplitter1->addWidget( mMainWidgetSplitter2 );
+  connect(mMainWidgetSplitter2, SIGNAL(splitterMoved(int,int)), SLOT(splitterMoved(int,int)));
 
   // the collection view
   mCollectionView = new Akonadi::EntityTreeView();
   mMainWidgetSplitter2->addWidget( mCollectionView );
+  mMainWidgetSplitter2->setCollapsible(mMainWidgetSplitter2->indexOf(mCollectionView), true);
 
   // the items view
   mItemView = new Akonadi::EntityTreeView();
@@ -488,10 +494,6 @@ void MainWidget::setupGui()
   mDetailsPane = new QWidget;
   mMainWidgetSplitter1->addWidget( mDetailsPane );
 
-  mMainWidgetSplitter1->setStretchFactor( 1, 9 );        // maximum width for detail
-  mMainWidgetSplitter2->setStretchFactor( 1, 9 );        // for intuitive resizing
-  mMainWidgetSplitter2->setChildrenCollapsible(false);
-  mMainWidgetSplitter1->setChildrenCollapsible(false);
 
   QVBoxLayout *detailsPaneLayout = new QVBoxLayout( mDetailsPane );
   detailsPaneLayout->setMargin( 0 );
@@ -568,13 +570,13 @@ void MainWidget::setupActions( KActionCollection *collection )
   connect( action, SIGNAL(triggered(bool)), mItemView, SLOT(selectAll()) );
 
 #if defined(HAVE_PRISON)
-  KToggleAction *qrtoggleAction;
-  qrtoggleAction = collection->add<KToggleAction>( QLatin1String("options_show_qrcodes") );
-  qrtoggleAction->setText( i18n( "Show QR Codes" ) );
-  qrtoggleAction->setWhatsThis( i18n( "Show QR Codes in the contact." ) );
-  connect( qrtoggleAction, SIGNAL(toggled(bool)), SLOT(setQRCodeShow(bool)) );
+  KToggleAction *toggleAction = collection->add<KToggleAction>( QLatin1String("options_show_qrcodes") );
+  toggleAction->setText( i18n( "Show QR Codes" ) );
+  toggleAction->setWhatsThis( i18n( "Show QR Codes in the contact." ) );
+  connect( toggleAction, SIGNAL(toggled(bool)), SLOT(setQRCodeShow(bool)) );
 #endif
 
+  // View modes actions
   mViewModeGroup = new QActionGroup( this );
 
   KAction *act = new KAction( i18nc( "@action:inmenu", "Simple (one column)" ), mViewModeGroup );
@@ -656,8 +658,9 @@ void MainWidget::setupActions( KActionCollection *collection )
   mXXPortManager->addExportAction( action, QLatin1String("gmx") );
 
   KToggleAction *actTheme = mGrantleeThemeManager->actionForTheme();
-  if (actTheme)
-      actTheme->setChecked(true);
+  if (actTheme) {
+    actTheme->setChecked(true);
+  }
 
   action = collection->addAction( QLatin1String("merge_contacts") );
   action->setText( i18n( "Merge Contacts..." ) );
