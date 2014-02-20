@@ -30,7 +30,7 @@ class QCheckBox;
 template <typename T> class QSharedPointer;
 
 namespace KPIMIdentities {
-  class IdentityCombo;
+class IdentityCombo;
 }
 
 namespace MailCommon {
@@ -39,9 +39,9 @@ class FolderCollection;
 
 class MAILCOMMON_EXPORT CollectionGeneralPage : public Akonadi::CollectionPropertiesPage
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit CollectionGeneralPage( QWidget *parent = 0 );
     ~CollectionGeneralPage();
 
@@ -49,33 +49,33 @@ class MAILCOMMON_EXPORT CollectionGeneralPage : public Akonadi::CollectionProper
     void save( Akonadi::Collection &collection );
 
     enum FolderContentsType {
-      ContentsTypeMail = 0,
-      ContentsTypeCalendar,
-      ContentsTypeContact,
-      ContentsTypeNote,
-      ContentsTypeTask,
-      ContentsTypeJournal,
-      ContentsTypeConfiguration,
-      ContentsTypeFreebusy,
-      ContentsTypeFile,
-      ContentsTypeLast = ContentsTypeFile
+        ContentsTypeMail = 0,
+        ContentsTypeCalendar,
+        ContentsTypeContact,
+        ContentsTypeNote,
+        ContentsTypeTask,
+        ContentsTypeJournal,
+        ContentsTypeConfiguration,
+        ContentsTypeFreebusy,
+        ContentsTypeFile,
+        ContentsTypeLast = ContentsTypeFile
     };
 
     enum IncidencesFor {
-      IncForNobody,
-      IncForAdmins,
-      IncForReaders
+        IncForNobody,
+        IncForAdmins,
+        IncForReaders
     };
 
-  protected:
+protected:
     void init( const Akonadi::Collection & );
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotIdentityCheckboxChanged();
     void slotFolderContentsSelectionChanged( int );
     void slotNameChanged( const QString &name );
 
-  private:
+private:
     QString mColorName;
     KComboBox *mContentsComboBox;
     KComboBox *mIncidencesForComboBox;
