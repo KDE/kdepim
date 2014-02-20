@@ -49,6 +49,12 @@ class KDEPIM_EXPORT ProgressItem : public QObject
 
 public:
 
+    enum CryptoStatus {
+        Encrypted,
+        Unencrypted,
+        Unknown
+    };
+
     /**
      * @return The id string which uniquely identifies the operation
      *         represented by this item.
@@ -89,14 +95,14 @@ public:
      * @return Whether this item uses secure communication
      * (Account uses ssl, for example.).
      */
-    bool usesCrypto() const { return mUsesCrypto; }
+    CryptoStatus cryptoStatus() const { return mCryptoStatus; }
 
     /**
      * Set whether this item uses crypted communication, so listeners
      * can display a nice crypto icon.
      * @param v The value.
      */
-    void setUsesCrypto( bool v );
+    void setCryptoStatus( ProgressItem::CryptoStatus v );
 
     /**
      * @return whether this item uses a busy indicator instead of real progress display
@@ -216,7 +222,7 @@ Q_SIGNALS:
      * @param  The updated item.
      * @param  The new state.
      */
-    void progressItemUsesCrypto( KPIM::ProgressItem *, bool );
+    void progressItemCryptoStatus( KPIM::ProgressItem *, KPIM::ProgressItem::CryptoStatus );
 
     /**
      * Emitted when the busy indicator state of an item changes. Should be used
@@ -229,8 +235,8 @@ Q_SIGNALS:
 
 protected:
     /* Only to be used by our good friend the ProgressManager */
-    ProgressItem( ProgressItem *parent, const QString &id, const QString &label,
-                  const QString &status, bool isCancellable, bool usesCrypto );
+    ProgressItem(ProgressItem *parent, const QString &id, const QString &label,
+                  const QString &status, bool isCancellable, CryptoStatus cryptoStatus );
     virtual ~ProgressItem();
 
 private:
@@ -243,9 +249,9 @@ private:
     ProgressItemMap mChildren;
     unsigned int mTotal;
     unsigned int mCompleted;
+    CryptoStatus mCryptoStatus;
     bool mWaitingForKids;
     bool mCanceled;
-    bool mUsesCrypto;
     bool mUsesBusyIndicator;
     bool mCompletedCalled;
 };
@@ -306,7 +312,7 @@ public:
     static ProgressItem *createProgressItem( const QString &label )
     {
         return instance()->createProgressItemImpl( 0, getUniqueID(), label,
-                                                   QString(), true, false );
+                                                   QString(), true, KPIM::ProgressItem::Unencrypted );
     }
 
     /**
@@ -328,10 +334,10 @@ public:
                                              const QString &label,
                                              const QString &status = QString(),
                                              bool canBeCanceled = true,
-                                             bool usesCrypto = false )
+                                             KPIM::ProgressItem::CryptoStatus cryptoStatus = KPIM::ProgressItem::Unencrypted )
     {
         return instance()->createProgressItemImpl( parent, id, label, status,
-                                                   canBeCanceled, usesCrypto );
+                                                   canBeCanceled, cryptoStatus );
     }
 
     /**
@@ -343,10 +349,10 @@ public:
                                              const QString &label,
                                              const QString &status = QString(),
                                              bool canBeCanceled = true,
-                                             bool usesCrypto = false )
+                                             KPIM::ProgressItem::CryptoStatus cryptoStatus = KPIM::ProgressItem::Unencrypted )
     {
         return instance()->createProgressItemImpl( parent, id, label,
-                                                   status, canBeCanceled, usesCrypto );
+                                                   status, canBeCanceled, cryptoStatus );
     }
 
     /**
@@ -356,10 +362,10 @@ public:
                                              const QString &label,
                                              const QString &status = QString(),
                                              bool canBeCanceled = true,
-                                             bool usesCrypto = false )
+                                             KPIM::ProgressItem::CryptoStatus cryptoStatus = KPIM::ProgressItem::Unencrypted )
     {
         return instance()->createProgressItemImpl( 0, id, label, status,
-                                                   canBeCanceled, usesCrypto );
+                                                   canBeCanceled, cryptoStatus );
     }
 
     /**
@@ -373,10 +379,10 @@ public:
                                              const QString &label,
                                              const QString &status = QString(),
                                              bool canBeCanceled = true,
-                                             bool usesCrypto = false )
+                                             KPIM::ProgressItem::CryptoStatus cryptoStatus = KPIM::ProgressItem::Unencrypted )
     {
         return instance()->createProgressItemForAgent( parent, agent, id, label,
-                                                       status, canBeCanceled, usesCrypto );
+                                                       status, canBeCanceled, cryptoStatus );
     }
 
     /**
@@ -418,8 +424,8 @@ Q_SIGNALS:
     void progressItemStatus( KPIM::ProgressItem *, const QString & );
     /** @see ProgressItem::progressItemLabel() */
     void progressItemLabel( KPIM::ProgressItem *, const QString & );
-    /** @see ProgressItem::progressItemUsesCrypto() */
-    void progressItemUsesCrypto( KPIM::ProgressItem *, bool );
+    /** @see ProgressItem::progressItemCryptoStatus() */
+    void progressItemCryptoStatus( KPIM::ProgressItem *, KPIM::ProgressItem::CryptoStatus );
     /** @see ProgressItem::progressItemUsesBusyIndicator */
     void progressItemUsesBusyIndicator( KPIM::ProgressItem*, bool );
 
@@ -451,25 +457,25 @@ private:
     // prevent unsolicited copies
     ProgressManager( const ProgressManager & );
 
-    virtual ProgressItem *createProgressItemImpl( ProgressItem *parent,
+    virtual ProgressItem *createProgressItemImpl(ProgressItem *parent,
                                                   const QString &id,
                                                   const QString &label,
                                                   const QString &status,
                                                   bool cancellable,
-                                                  bool usesCrypto );
-    virtual ProgressItem *createProgressItemImpl( const QString &parent,
+                                                  ProgressItem::CryptoStatus cryptoStatus );
+    virtual ProgressItem *createProgressItemImpl(const QString &parent,
                                                   const QString &id,
                                                   const QString &label,
                                                   const QString &status,
                                                   bool cancellable,
-                                                  bool usesCrypto );
+                                                  ProgressItem::CryptoStatus cryptoStatus );
     ProgressItem *createProgressItemForAgent( ProgressItem *parent,
                                               const Akonadi::AgentInstance &instance,
                                               const QString &id,
                                               const QString &label,
                                               const QString &status,
                                               bool cancellable,
-                                              bool usesCrypto );
+                                              ProgressItem::CryptoStatus cryptoStatus );
     void emitShowProgressDialogImpl();
 
     QHash< QString, ProgressItem* > mTransactions;

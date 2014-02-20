@@ -45,13 +45,9 @@ SSLLabel::SSLLabel( QWidget* parent )
     setState( Done );
 }
 
-void SSLLabel::setEncrypted( bool enc )
+void SSLLabel::setEncrypted( SSLLabel::State state )
 {
-    if ( enc ) {
-        m_lastEncryptionState = Encrypted;
-    } else {
-        m_lastEncryptionState = Unencrypted;
-    }
+    m_lastEncryptionState = state;
 }
 
 SSLLabel::State SSLLabel::lastState() const
@@ -72,6 +68,7 @@ void SSLLabel::setState( State state )
         setPixmap( SmallIcon( QLatin1String("security-low") ) );
         show();
         break;
+    case Unknown:
     case Done:
         this->setToolTip(QString());
         hide();

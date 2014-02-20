@@ -65,7 +65,6 @@ public:
 public Q_SLOTS:
 
     void slotClean();
-    void slotSetSSL( bool );
 
     void slotProgressItemAdded( KPIM::ProgressItem *i );
     void slotProgressItemCompleted( KPIM::ProgressItem *i );

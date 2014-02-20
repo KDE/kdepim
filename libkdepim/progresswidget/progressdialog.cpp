@@ -30,7 +30,6 @@
  */
 
 #include "progressdialog.h"
-#include "progressmanager.h"
 #include "ssllabel.h"
 
 #include <KDebug>
@@ -187,7 +186,7 @@ TransactionItem::TransactionItem( QWidget *parent,
     mItemStatus->setText(
                 fontMetrics().elidedText( item->status(), Qt::ElideRight, MAX_LABEL_WIDTH ) );
     h->layout()->addWidget( mItemStatus );
-    setCrypto( item->usesCrypto() );
+    setCryptoStatus(item->cryptoStatus() );
     if ( first ) {
         hideHLine();
     }
@@ -217,14 +216,19 @@ void TransactionItem::setStatus( const QString &status )
     mItemStatus->setText( fontMetrics().elidedText( status, Qt::ElideRight, MAX_LABEL_WIDTH ) );
 }
 
-void TransactionItem::setCrypto( bool on )
+void TransactionItem::setCryptoStatus(KPIM::ProgressItem::CryptoStatus status)
 {
-    if ( on ) {
-        mSSLLabel->setEncrypted( true );
-    } else {
-        mSSLLabel->setEncrypted( false );
+    switch (status) {
+    case KPIM::ProgressItem::Encrypted:
+        mSSLLabel->setEncrypted( SSLLabel::Encrypted );
+        break;
+    case KPIM::ProgressItem::Unencrypted:
+        mSSLLabel->setEncrypted( SSLLabel::Unencrypted );
+        break;
+    case KPIM::ProgressItem::Unknown:
+        mSSLLabel->setEncrypted( SSLLabel::Unknown );
+        break;
     }
-
     mSSLLabel->setState( mSSLLabel->lastState() );
 }
 
@@ -286,8 +290,8 @@ ProgressDialog::ProgressDialog( QWidget *alignWidget, QWidget *parent, const cha
               this, SLOT(slotTransactionStatus(KPIM::ProgressItem*,QString)) );
     connect ( pm, SIGNAL(progressItemLabel(KPIM::ProgressItem*,QString)),
               this, SLOT(slotTransactionLabel(KPIM::ProgressItem*,QString)) );
-    connect ( pm, SIGNAL(progressItemUsesCrypto(KPIM::ProgressItem*,bool)),
-              this, SLOT(slotTransactionUsesCrypto(KPIM::ProgressItem*,bool)) );
+    connect ( pm, SIGNAL(progressItemCryptoStatus(KPIM::ProgressItem*,KPIM::ProgressItem::CryptoStatus)),
+              this, SLOT(slotTransactionCryptoStatus(KPIM::ProgressItem*,KPIM::ProgressItem::CryptoStatus)) );
     connect ( pm, SIGNAL(progressItemUsesBusyIndicator(KPIM::ProgressItem*,bool)),
               this, SLOT(slotTransactionUsesBusyIndicator(KPIM::ProgressItem*,bool)) );
     connect ( pm, SIGNAL(showProgressDialog()),
@@ -376,12 +380,12 @@ void ProgressDialog::slotTransactionLabel( ProgressItem *item,
     }
 }
 
-void ProgressDialog::slotTransactionUsesCrypto( ProgressItem *item,
-                                                bool value )
+void ProgressDialog::slotTransactionCryptoStatus( ProgressItem *item,
+                                                KPIM::ProgressItem::CryptoStatus value )
 {
     if ( mTransactionsToListviewItems.contains( item ) ) {
         TransactionItem *ti = mTransactionsToListviewItems[ item ];
-        ti->setCrypto( value );
+        ti->setCryptoStatus( value );
     }
 }
 

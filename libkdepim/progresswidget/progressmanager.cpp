@@ -33,11 +33,11 @@ unsigned int KPIM::ProgressManager::uID = 42;
 
 ProgressItem::ProgressItem( ProgressItem *parent, const QString &id,
                             const QString &label, const QString &status,
-                            bool canBeCanceled, bool usesCrypto )
+                            bool canBeCanceled, CryptoStatus cryptoStatus )
     : mId( id ), mLabel( label ), mStatus( status ), mParent( parent ),
       mCanBeCanceled( canBeCanceled ), mProgress( 0 ), mTotal( 0 ),
-      mCompleted( 0 ), mWaitingForKids( false ), mCanceled( false ),
-      mUsesCrypto( usesCrypto ), mUsesBusyIndicator( false ), mCompletedCalled( false )
+      mCompleted( 0 ), mCryptoStatus(cryptoStatus), mWaitingForKids( false ), mCanceled( false ),
+      mUsesBusyIndicator( false ), mCompletedCalled( false )
 {
 }
 
@@ -133,10 +133,10 @@ void ProgressItem::setStatus( const QString &v )
     emit progressItemStatus( this, mStatus );
 }
 
-void ProgressItem::setUsesCrypto( bool v )
+void ProgressItem::setCryptoStatus( ProgressItem::CryptoStatus v )
 {
-    mUsesCrypto = v;
-    emit progressItemUsesCrypto( this, v );
+    mCryptoStatus = v;
+    emit progressItemCryptoStatus( this, v );
 }
 
 void ProgressItem::setUsesBusyIndicator( bool useBusyIndicator )
@@ -171,11 +171,11 @@ ProgressItem *ProgressManager::createProgressItemImpl( ProgressItem *parent,
                                                        const QString &label,
                                                        const QString &status,
                                                        bool cancellable,
-                                                       bool usesCrypto )
+                                                       ProgressItem::CryptoStatus cryptoStatus )
 {
     ProgressItem *t = 0;
     if ( !mTransactions.value( id ) ) {
-        t = new ProgressItem ( parent, id, label, status, cancellable, usesCrypto );
+        t = new ProgressItem ( parent, id, label, status, cancellable, cryptoStatus );
         mTransactions.insert( id, t );
         if ( parent ) {
             ProgressItem *p = mTransactions.value( parent->id() );
@@ -196,8 +196,8 @@ ProgressItem *ProgressManager::createProgressItemImpl( ProgressItem *parent,
                   this, SIGNAL(progressItemStatus(KPIM::ProgressItem*,QString)) );
         connect ( t, SIGNAL(progressItemLabel(KPIM::ProgressItem*,QString)),
                   this, SIGNAL(progressItemLabel(KPIM::ProgressItem*,QString)) );
-        connect ( t, SIGNAL(progressItemUsesCrypto(KPIM::ProgressItem*,bool)),
-                  this, SIGNAL(progressItemUsesCrypto(KPIM::ProgressItem*,bool)) );
+        connect ( t, SIGNAL(progressItemCryptoStatus(KPIM::ProgressItem*,KPIM::ProgressItem::CryptoStatus)),
+                  this, SIGNAL(progressItemCryptoStatus(KPIM::ProgressItem*,KPIM::ProgressItem::CryptoStatus)) );
         connect ( t, SIGNAL(progressItemUsesBusyIndicator(KPIM::ProgressItem*,bool)),
                   this, SIGNAL(progressItemUsesBusyIndicator(KPIM::ProgressItem*,bool)) );
 
@@ -214,10 +214,10 @@ ProgressItem *ProgressManager::createProgressItemImpl( const QString &parent,
                                                        const QString &label,
                                                        const QString &status,
                                                        bool canBeCanceled,
-                                                       bool usesCrypto )
+                                                       ProgressItem::CryptoStatus cryptoStatus )
 {
     ProgressItem *p = mTransactions.value( parent );
-    return createProgressItemImpl( p, id, label, status, canBeCanceled, usesCrypto );
+    return createProgressItemImpl( p, id, label, status, canBeCanceled, cryptoStatus );
 }
 
 void ProgressManager::emitShowProgressDialogImpl()

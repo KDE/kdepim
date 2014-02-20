@@ -228,11 +228,6 @@ void StatusbarProgressWidget::slotProgressItemProgress( ProgressItem *item, unsi
     m_pProgressBar->setValue( value );
 }
 
-void StatusbarProgressWidget::slotSetSSL( bool ssl )
-{
-    m_sslLabel->setEncrypted( ssl );
-}
-
 void StatusbarProgressWidget::setMode() {
     switch ( mode ) {
     case None:

@@ -43,11 +43,12 @@ public:
         Encrypted,
         Unencrypted,
         Clean,
-        Done
+        Done,
+        Unknown
     };
     explicit SSLLabel( QWidget* parent );
 
-    void setEncrypted( bool enc=true );
+    void setEncrypted( State enc = Encrypted );
     void setState( State state );
     State lastState() const;
 
