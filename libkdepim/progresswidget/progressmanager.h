@@ -140,12 +140,7 @@ public:
      * Reset the progress value of this item to 0 and the status string to
      * the empty string.
      */
-    void reset()
-    {
-        setProgress( 0 );
-        setStatus( QString() );
-        mCompleted = 0;
-    }
+    void reset();
 
     void cancel();
 
@@ -299,21 +294,14 @@ public:
      * number as the id string for your progressItem to ensure it is unique.
      * @return
      */
-    static QString getUniqueID()
-    {
-        return QString::number( ++uID );
-    }
+    static QString getUniqueID();
 
     /**
       * Creates a ProgressItem with a unique id and the given label.
       * This is the simplest way to acquire a progress item. It will not
       * have a parent and will be set to be cancellable and not using crypto.
       */
-    static ProgressItem *createProgressItem( const QString &label )
-    {
-        return instance()->createProgressItemImpl( 0, getUniqueID(), label,
-                                                   QString(), true, KPIM::ProgressItem::Unencrypted );
-    }
+    static ProgressItem *createProgressItem( const QString &label );
 
     /**
      * Creates a new progressItem with the given parent, id, label and initial
@@ -334,11 +322,7 @@ public:
                                              const QString &label,
                                              const QString &status = QString(),
                                              bool canBeCanceled = true,
-                                             KPIM::ProgressItem::CryptoStatus cryptoStatus = KPIM::ProgressItem::Unencrypted )
-    {
-        return instance()->createProgressItemImpl( parent, id, label, status,
-                                                   canBeCanceled, cryptoStatus );
-    }
+                                             KPIM::ProgressItem::CryptoStatus cryptoStatus = KPIM::ProgressItem::Unencrypted );
 
     /**
      * Use this version if you have the id string of the parent and want to
@@ -349,11 +333,7 @@ public:
                                              const QString &label,
                                              const QString &status = QString(),
                                              bool canBeCanceled = true,
-                                             KPIM::ProgressItem::CryptoStatus cryptoStatus = KPIM::ProgressItem::Unencrypted )
-    {
-        return instance()->createProgressItemImpl( parent, id, label,
-                                                   status, canBeCanceled, cryptoStatus );
-    }
+                                             KPIM::ProgressItem::CryptoStatus cryptoStatus = KPIM::ProgressItem::Unencrypted );
 
     /**
      * Version without a parent.
@@ -362,11 +342,7 @@ public:
                                              const QString &label,
                                              const QString &status = QString(),
                                              bool canBeCanceled = true,
-                                             KPIM::ProgressItem::CryptoStatus cryptoStatus = KPIM::ProgressItem::Unencrypted )
-    {
-        return instance()->createProgressItemImpl( 0, id, label, status,
-                                                   canBeCanceled, cryptoStatus );
-    }
+                                             KPIM::ProgressItem::CryptoStatus cryptoStatus = KPIM::ProgressItem::Unencrypted );
 
     /**
      * Version for Akonadi agents.
@@ -379,19 +355,12 @@ public:
                                              const QString &label,
                                              const QString &status = QString(),
                                              bool canBeCanceled = true,
-                                             KPIM::ProgressItem::CryptoStatus cryptoStatus = KPIM::ProgressItem::Unencrypted )
-    {
-        return instance()->createProgressItemForAgent( parent, agent, id, label,
-                                                       status, canBeCanceled, cryptoStatus );
-    }
+                                             KPIM::ProgressItem::CryptoStatus cryptoStatus = KPIM::ProgressItem::Unencrypted );
 
     /**
      * @return true when there are no more progress items.
      */
-    bool isEmpty() const
-    {
-        return mTransactions.isEmpty();
-    }
+    bool isEmpty() const;
 
     /**
      * @return the only top level progressitem when there's only one.
@@ -406,10 +375,7 @@ public:
      * Ask all listeners to show the progress dialog, because there is
      * something that wants to be shown.
      */
-    static void emitShowProgressDialog()
-    {
-        instance()->emitShowProgressDialogImpl();
-    }
+    static void emitShowProgressDialog();
 
 Q_SIGNALS:
     /** @see ProgressItem::progressItemAdded() */

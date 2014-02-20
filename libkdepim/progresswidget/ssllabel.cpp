@@ -37,7 +37,7 @@
 #include <QLabel>
 #include <QPixmap>
 
-namespace KPIM {
+using namespace KPIM;
 
 SSLLabel::SSLLabel( QWidget* parent )
     : QLabel( parent )
@@ -83,7 +83,4 @@ void SSLLabel::setState( State state )
     }
     m_lastEncryptionState = state;
 }
-
-
-} //end namespace KPIM
 

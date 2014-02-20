@@ -217,7 +217,7 @@ void StatusbarProgressWidget::slotShowItemDelayed()
 
 void StatusbarProgressWidget::slotBusyIndicator()
 {
-    int p = m_pProgressBar->value();
+    const int p = m_pProgressBar->value();
     m_pProgressBar->setValue( p + 10 );
 }
 
@@ -239,17 +239,6 @@ void StatusbarProgressWidget::setMode() {
         stack->show();
         stack->setCurrentWidget( m_pLabel );
         break;
-
-#if 0
-    case Label:
-        if ( m_bShowButton ) {
-            m_pButton->show();
-        }
-        m_sslLabel->setState( m_sslLabel->lastState() );
-        stack->show();
-        stack->raiseWidget( m_pLabel );
-        break;
-#endif
 
     case Progress:
         stack->show();

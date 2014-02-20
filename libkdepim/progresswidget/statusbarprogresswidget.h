@@ -89,7 +89,7 @@ private:
     SSLLabel* m_sslLabel;
     QPushButton* m_pButton;
 
-    enum Mode { None, /*Label,*/ Progress };
+    enum Mode { None, Progress };
 
     uint mode;
     bool m_bShowButton;

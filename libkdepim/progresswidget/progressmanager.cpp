@@ -64,6 +64,13 @@ void ProgressItem::setComplete()
     }
 }
 
+void ProgressItem::reset()
+{
+    setProgress( 0 );
+    setStatus( QString() );
+    mCompleted = 0;
+}
+
 void ProgressItem::addChild( ProgressItem *kiddo )
 {
     mChildren.insert( kiddo, true );
@@ -159,11 +166,54 @@ ProgressManager::ProgressManager()
 
 }
 
-ProgressManager::~ProgressManager() {}
+ProgressManager::~ProgressManager()
+{
+
+}
 
 ProgressManager *ProgressManager::instance()
 {
     return progressManagerPrivate.isDestroyed() ? 0 : &progressManagerPrivate->instance ;
+}
+
+QString ProgressManager::getUniqueID()
+{
+    return QString::number( ++uID );
+}
+
+ProgressItem *ProgressManager::createProgressItem(ProgressItem *parent, const Akonadi::AgentInstance &agent, const QString &id, const QString &label, const QString &status, bool canBeCanceled, ProgressItem::CryptoStatus cryptoStatus)
+{
+    return instance()->createProgressItemForAgent( parent, agent, id, label,
+                                                   status, canBeCanceled, cryptoStatus );
+}
+
+bool ProgressManager::isEmpty() const
+{
+    return mTransactions.isEmpty();
+}
+
+ProgressItem *ProgressManager::createProgressItem(const QString &id, const QString &label, const QString &status, bool canBeCanceled, ProgressItem::CryptoStatus cryptoStatus)
+{
+    return instance()->createProgressItemImpl( 0, id, label, status,
+                                               canBeCanceled, cryptoStatus );
+}
+
+ProgressItem *ProgressManager::createProgressItem(const QString &parent, const QString &id, const QString &label, const QString &status, bool canBeCanceled, ProgressItem::CryptoStatus cryptoStatus)
+{
+    return instance()->createProgressItemImpl( parent, id, label,
+                                               status, canBeCanceled, cryptoStatus );
+}
+
+ProgressItem *ProgressManager::createProgressItem(ProgressItem *parent, const QString &id, const QString &label, const QString &status, bool canBeCanceled, ProgressItem::CryptoStatus cryptoStatus)
+{
+    return instance()->createProgressItemImpl( parent, id, label, status,
+                                               canBeCanceled, cryptoStatus );
+}
+
+ProgressItem *ProgressManager::createProgressItem(const QString &label)
+{
+    return instance()->createProgressItemImpl( 0, getUniqueID(), label,
+                                               QString(), true, KPIM::ProgressItem::Unencrypted );
 }
 
 ProgressItem *ProgressManager::createProgressItemImpl( ProgressItem *parent,
@@ -259,6 +309,11 @@ ProgressItem *ProgressManager::singleItem() const
         ++it;
     }
     return item;
+}
+
+void ProgressManager::emitShowProgressDialog()
+{
+    instance()->emitShowProgressDialogImpl();
 }
 
 void ProgressManager::slotAbortAll()
