@@ -91,8 +91,6 @@ kde4_add_ui_files(akonadiconsole_bin_SRCS
   collectioninternalspage.ui
 )
 
-kde4_add_kcfg_files(akonadiconsole_bin_SRCS settings.kcfgc)
-
 kde4_add_app_icon(akonadiconsole_bin_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-app-akonadiconsole.png")
 
 kde4_add_executable(akonadiconsole_bin ${akonadiconsole_bin_SRCS})

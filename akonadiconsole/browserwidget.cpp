@@ -23,7 +23,6 @@
 #include "collectioninternalspage.h"
 #include "collectionaclpage.h"
 #include "dbaccess.h"
-#include "settings.h"
 #include "akonadibrowsermodel.h"
 
 #include <akonadi/attributefactory.h>
