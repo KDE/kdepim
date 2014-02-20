@@ -65,6 +65,7 @@ void ContactSwitcher::setView( QAbstractItemView *view )
   connect( mView->model(), SIGNAL(layoutChanged()), SLOT(updateStatus()) );
   connect( mView->model(), SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(updateStatus()) );
   connect( mView->model(), SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(updateStatus()) );
+  connect( mView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateStatus()));
 
   updateStatus();
 }
