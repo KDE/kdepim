@@ -1,5 +1,8 @@
-2014-1-21:
+2014-2-20:
 -----------
+
+2014-2-20: New VERSION for archive => VERSION_2 => knote-akonadi
+
 Zip structure is :
 Root
 |-----information
@@ -79,17 +82,12 @@ Root
 |-----akonadi
 |       |---------<archive akonadi>
 |
-|-----nepomuk
-|       |---------<archive nepomuk>
-|
 |-----data
 |       |---------autocorrect/<autocorrection xml file>
 |       |---------korganizer/freebusyurls
 |       |---------korganizer/templates/*
 |       |---------messageviewer/themes/*
 |       |---------kmail2/adblockrules_local
-|       |---------knotes/notes.ics
-|       |---------knotes/notes/*
 |       |---------knotes/print/*
 |       |---------akregator/*
 |       |---------blogilo/blogilo.db

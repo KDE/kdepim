@@ -74,15 +74,15 @@ void ExportNotesJob::backupConfig()
     const QString globalNoteSettingsrc = KStandardDirs::locateLocal( "config", globalNoteSettingsStr);
     backupFile(globalNoteSettingsrc, Utils::configsPath(), globalNoteSettingsStr);
 
-    backupConfigFile(QLatin1String("akonadi_mailfilter_agent.notifyrc"));
-
     Q_EMIT info(i18n("Config backup done."));
 }
 
 void ExportNotesJob::backupData()
 {
-    showInfo(i18n("Backing up data..."));
+    showInfo(i18n("Backing up data..."));    
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+
+#if 0  //Code for knote <knote-akonadi
     const QString icsfileStr = QLatin1String( "notes.ics" );
     const QString icsfile = KStandardDirs::locateLocal( "data", QLatin1String( "knotes/" ) + icsfileStr );
 
@@ -97,6 +97,7 @@ void ExportNotesJob::backupData()
             Q_EMIT error(i18n("\"%1\" directory cannot be added to backup file.", notesDir));
         }
     }
+#endif
     const QString notesThemeDir = KStandardDirs::locateLocal( "data", QLatin1String( "knotes/print/" ) );
     QDir notesThemeDirectory( notesThemeDir );
     if (notesThemeDirectory.exists()) {

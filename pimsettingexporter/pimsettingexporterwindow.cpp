@@ -74,7 +74,6 @@
 
 #include <QPointer>
 
-
 PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
     : KXmlGuiWindow(parent),
       mAction(Backup),
@@ -452,6 +451,10 @@ void PimSettingExporterWindow::restoreStart()
     mAction = Restore;
     mStoreIterator = mStored.constBegin();
     const int version = Utils::archiveVersion(mArchiveStorage->archive());
+    if (version > Utils::currentArchiveVersion()) {
+        if (KMessageBox::No == KMessageBox::questionYesNo(this, i18n("Archive is newer that apps can import. Perhaps some features will not correctly import. Do you want to import it?"), i18n("Not correct version")))
+            return;
+    }
     qDebug()<<" version "<<version;
     AbstractImportExportJob::setArchiveVersion(version);
 
