@@ -21,6 +21,8 @@
 #include "gdrivejob.h"
 #include "storageservice/settings/storageservicesettings.h"
 #include "pimcommon/storageservice/storageservicejobconfig.h"
+#include "pimcommon/storageservice/utils/storageserviceutils.h"
+
 
 #include <kwallet.h>
 

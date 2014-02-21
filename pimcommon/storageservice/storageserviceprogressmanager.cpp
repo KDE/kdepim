@@ -65,6 +65,7 @@ void StorageServiceProgressManager::addProgress(PimCommon::StorageServiceAbstrac
 {
     if (!mHashList.contains(storageService->storageServiceName())) {
         KPIM::ProgressItem *progressItem = KPIM::ProgressManager::createProgressItem( StorageServiceProgressManager::progressTypeValue(), storageService->storageServiceName() );
+        progressItem->setCryptoStatus(KPIM::ProgressItem::Unknown);
         ProgressJob *job = new ProgressJob(progressItem, type);
         job->setStorageService(storageService);
 

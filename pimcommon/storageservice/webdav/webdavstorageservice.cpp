@@ -16,6 +16,8 @@
 */
 
 #include "webdavstorageservice.h"
+#include "pimcommon/storageservice/utils/storageserviceutils.h"
+
 #include "storageservice/widgets/storageservicetreewidget.h"
 #include "storageservice/storageservicemanager.h"
 #include "storageservice/settings/storageservicesettings.h"
@@ -372,19 +374,19 @@ QMap<QString, QString> WebDavStorageService::itemInformation(const QVariantMap &
     //qDebug()<<" variantMap"<<variantMap;
     QMap<QString, QString> information;
     if (variantMap.contains(QLatin1String("path"))) {
-        information.insert(i18n("Name:"), variantMap.value(QLatin1String("path")).toString());
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Name), variantMap.value(QLatin1String("path")).toString());
     }
     if (variantMap.contains(QLatin1String("isDir"))) {
-        information.insert(i18n("Type:"), variantMap.value(QLatin1String("isDir")).toBool() ? i18n("Directory") : i18n("File"));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Type), variantMap.value(QLatin1String("isDir")).toBool() ? i18n("Directory") : i18n("File"));
     }
     if (variantMap.contains(QLatin1String("getcontentlength"))) {
-        information.insert(i18n("Size:"), KGlobal::locale()->formatByteSize(variantMap.value(QLatin1String("getcontentlength")).toString().toLongLong() ));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KGlobal::locale()->formatByteSize(variantMap.value(QLatin1String("getcontentlength")).toString().toLongLong() ));
     }
     if (variantMap.contains(QLatin1String("lastmodified"))) {
-        information.insert(i18n("Last Modified:"), KGlobal::locale()->formatDateTime(QDateTime::fromString(variantMap.value(QLatin1String("lastmodified")).toString())));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), KGlobal::locale()->formatDateTime(QDateTime::fromString(variantMap.value(QLatin1String("lastmodified")).toString())));
     }
     if (variantMap.contains(QLatin1String("creationdate"))) {
-        information.insert(i18n("Created:"), KGlobal::locale()->formatDateTime(QDateTime::fromString(variantMap.value(QLatin1String("creationdate")).toString())));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), KGlobal::locale()->formatDateTime(QDateTime::fromString(variantMap.value(QLatin1String("creationdate")).toString())));
     }
     //qDebug()<<" information"<<information;
     return information;
