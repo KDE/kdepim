@@ -200,6 +200,10 @@ void Widget::focusQuickSearch()
   view()->focusQuickSearch();
 }
 
+void Widget::setQuickSearchClickMessage(const QString &msg)
+{
+  view()->setQuickSearchClickMessage(msg);
+}
 
 void Widget::fillMessageTagCombo()
 {

@@ -52,6 +52,7 @@
 #include <KDebug>
 #include <KGlobalSettings>
 #include <KIcon>
+#include <KLineEdit>
 
 using namespace MessageList::Core;
 
@@ -2768,6 +2769,11 @@ void View::setExpandItem(const QModelIndex& index)
 {
     if(index.isValid())
       setExpanded( index, true );
+}
+
+void View::setQuickSearchClickMessage(const QString &msg)
+{
+    d->mWidget->quickSearch()->setClickMessage(msg);
 }
 
 

@@ -438,6 +438,16 @@ void Pane::focusQuickSearch()
   }
 }
 
+void Pane::setQuickSearchClickMessage(const QString &msg)
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+
+  if ( w ) {
+    w->setQuickSearchClickMessage(msg);
+  }
+}
+
+
 void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected )
 {
   if ( mPreferEmptyTab ) {

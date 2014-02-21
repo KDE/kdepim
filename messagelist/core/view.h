@@ -375,6 +375,7 @@ public:
   void setCollapseItem(const QModelIndex& index);
   void setExpandItem(const QModelIndex& index);
 
+  void setQuickSearchClickMessage(const QString &msg);
 
 protected:
   /**

@@ -322,6 +322,7 @@ public:
   MessageList::Core::MessageItemSetReference currentThreadAsPersistentSet() const;
   Akonadi::Collection currentCollection() const;
 
+  void setQuickSearchClickMessage(const QString &msg);
 protected:
 
   /**
