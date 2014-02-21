@@ -46,9 +46,11 @@
 #include "pimcommon/storageservice/storageservicemanager.h"
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
+#include "pimcommon/storageservice/storageserviceprogressmanager.h"
 
 #include "libkdepim/progresswidget/progressdialog.h"
 #include "libkdepim/progresswidget/statusbarprogresswidget.h"
+#include "libkdepim/progresswidget/progressstatusbarwidget.h"
 
 #include <ktabwidget.h>
 #include <KStatusNotifierItem>
@@ -141,12 +143,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupStatusBar()
 {
-    KPIM::ProgressDialog *progressDialog = new KPIM::ProgressDialog( statusBar(), this );
-    progressDialog->hide();
-
-    KPIM::StatusbarProgressWidget *littleProgress = new KPIM::StatusbarProgressWidget( progressDialog, statusBar() );
-    littleProgress->show();
-    // add a status bar
+    KPIM::ProgressStatusBarWidget * progressStatusBarWidget = new KPIM::ProgressStatusBarWidget(statusBar(), this, PimCommon::StorageServiceProgressManager::progressTypeValue());
+    statusBar()->addWidget(progressStatusBarWidget->littleProgress());
     statusBar()->show();
 }
 
