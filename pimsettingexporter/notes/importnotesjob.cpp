@@ -55,19 +55,19 @@ void ImportNotesJob::restoreConfig()
     const QString globalNoteSettingsStr(QLatin1String("globalnotesettings"));
     restoreConfigFile(globalNoteSettingsStr);
 
-    //We can't merge it.
-    restoreConfigFile(QLatin1String("akonadi_mailfilter_agent.notifyrc"));
-
 
     Q_EMIT info(i18n("Config restored."));
 }
 
 void ImportNotesJob::restoreData()
 {
-    const KArchiveEntry *notesEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "knotes/" ) );
-    if (notesEntry && notesEntry->isDirectory()) {
-        const QString notesPath = KGlobal::dirs()->saveLocation("data", QLatin1String("knotes/"));
-        overwriteDirectory(notesPath, notesEntry);
+    if (archiveVersion() <= 1) {
+        //Knote < knote-akonadi
+        const KArchiveEntry *notesEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "knotes/" ) );
+        if (notesEntry && notesEntry->isDirectory()) {
+            const QString notesPath = KGlobal::dirs()->saveLocation("data", QLatin1String("knotes/"));
+            overwriteDirectory(notesPath, notesEntry);
+        }
     }
     Q_EMIT info(i18n("Data restored."));
 }

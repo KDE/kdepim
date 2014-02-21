@@ -43,6 +43,8 @@ public:
 
     ~StorageServiceProgressManager();
 
+    static unsigned int progressTypeValue();
+
     static StorageServiceProgressManager *self();
 
     void addProgress(PimCommon::StorageServiceAbstract *storageService, ProgressType type);

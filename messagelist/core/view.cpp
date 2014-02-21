@@ -52,6 +52,7 @@
 #include <KDebug>
 #include <KGlobalSettings>
 #include <KIcon>
+#include <KLineEdit>
 
 using namespace MessageList::Core;
 
@@ -2431,7 +2432,7 @@ bool View::event( QEvent *e )
         }
       }
 
-      QString content = MessageList::Util::contentSummary(mi->akonadiItem().url());
+      QString content = MessageList::Util::contentSummary( mi->akonadiItem() );
       if ( !content.isEmpty() ) {
         if ( textIsLeftToRight ) {
           tip += htmlCodeForStandardRow.arg( i18n( "Preview" ) ).arg( content.replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) );
@@ -2768,6 +2769,11 @@ void View::setExpandItem(const QModelIndex& index)
 {
     if(index.isValid())
       setExpanded( index, true );
+}
+
+void View::setQuickSearchClickMessage(const QString &msg)
+{
+    d->mWidget->quickSearch()->setClickMessage(msg);
 }
 
 

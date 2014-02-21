@@ -29,6 +29,7 @@ class KCheckableProxyModel;
 
 namespace Akonadi {
 class EntityTreeModel;
+class Collection;
 }
 
 namespace PimCommon {
@@ -46,6 +47,10 @@ public:
     QItemSelectionModel *selectionModel() const;
 
     KCheckableProxyModel *checkableProxy() const;
+
+Q_SIGNALS:
+    void collectionAdded(const Akonadi::Collection &, const Akonadi::Collection &);
+    void collectionRemoved(const Akonadi::Collection &);
 
 private Q_SLOTS:
     void slotSetCollectionFilter(const QString &filter);

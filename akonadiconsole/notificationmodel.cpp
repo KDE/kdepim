@@ -31,9 +31,9 @@
 
 #include <akonadi/private/imapparser_p.h>
 #include <boost/concept_check.hpp>
-#include <akonadi/private/notificationmessagev2_p.h>
+#include <akonadi/private/notificationmessagev3_p.h>
 
-using Akonadi::NotificationMessageV2;
+using namespace Akonadi;
 
 class NotificationModel::Item {
   public:
@@ -45,7 +45,7 @@ class NotificationModel::Item {
 
 class NotificationModel::NotificationBlock: public NotificationModel::Item {
   public:
-    NotificationBlock( const Akonadi::NotificationMessageV2::List &msgs );
+    NotificationBlock( const Akonadi::NotificationMessageV3::List &msgs );
     ~NotificationBlock();
 
     QList<NotificationNode*> nodes;
@@ -54,7 +54,7 @@ class NotificationModel::NotificationBlock: public NotificationModel::Item {
 
 class NotificationModel::NotificationNode: public NotificationModel::Item {
   public:
-    NotificationNode( const NotificationMessageV2 &msg_, NotificationBlock *parent_ );
+    NotificationNode( const NotificationMessageV3 &msg_, NotificationBlock *parent_ );
     ~NotificationNode();
 
     QByteArray sessionId;
@@ -83,11 +83,11 @@ class NotificationModel::NotificationEntity: public NotificationModel::Item {
 };
 
 
-NotificationModel::NotificationBlock::NotificationBlock( const NotificationMessageV2::List &msgs ) :
+NotificationModel::NotificationBlock::NotificationBlock( const NotificationMessageV3::List &msgs ) :
   Item( 0 )
 {
   timestamp = QDateTime::currentDateTime();
-  Q_FOREACH ( const NotificationMessageV2 &msg, msgs ) {
+  Q_FOREACH ( const NotificationMessageV3 &msg, msgs ) {
     nodes << new NotificationNode( msg, this );
   }
 }
@@ -98,7 +98,7 @@ NotificationModel::NotificationBlock::~NotificationBlock()
 }
 
 
-NotificationModel::NotificationNode::NotificationNode( const NotificationMessageV2& msg, NotificationModel::NotificationBlock* parent_ ):
+NotificationModel::NotificationNode::NotificationNode( const NotificationMessageV3& msg, NotificationModel::NotificationBlock* parent_ ):
   Item( 1 ),
   sessionId( msg.sessionId() ),
   type( msg.type() ),
@@ -257,23 +257,25 @@ QVariant NotificationModel::data( const QModelIndex &index, int role ) const
         case 0:
         {
           switch ( node->operation ) {
-            case NotificationMessageV2::Add: return QString( "Add" );
-            case NotificationMessageV2::Modify: return QString( "Modify" );
-            case NotificationMessageV2::ModifyFlags: return QString( "ModifyFlags" );
-            case NotificationMessageV2::Move: return QString( "Move" );
-            case NotificationMessageV2::Remove: return QString( "Delete" );
-            case NotificationMessageV2::Link: return QString( "Link" );
-            case NotificationMessageV2::Unlink: return QString( "Unlink" );
-            case NotificationMessageV2::Subscribe: return QString( "Subscribe" );
-            case NotificationMessageV2::Unsubscribe: return QString( "Unsubscribe" );
+            case NotificationMessageV2::Add: return QLatin1String( "Add" );
+            case NotificationMessageV2::Modify: return QLatin1String( "Modify" );
+            case NotificationMessageV2::ModifyFlags: return QLatin1String( "ModifyFlags" );
+            case NotificationMessageV2::ModifyTags: return QLatin1String( "ModifyTags" );
+            case NotificationMessageV2::Move: return QLatin1String( "Move" );
+            case NotificationMessageV2::Remove: return QLatin1String( "Delete" );
+            case NotificationMessageV2::Link: return QLatin1String( "Link" );
+            case NotificationMessageV2::Unlink: return QLatin1String( "Unlink" );
+            case NotificationMessageV2::Subscribe: return QLatin1String( "Subscribe" );
+            case NotificationMessageV2::Unsubscribe: return QLatin1String( "Unsubscribe" );
             default: return QString( "Invalid" );
           }
         }
         case 1:
         {
           switch ( node->type ) {
-            case NotificationMessageV2::Collections: return QString( "Collections" );
-            case NotificationMessageV2::Items: return QString( "Items" );
+            case NotificationMessageV2::Collections: return QLatin1String( "Collections" );
+            case NotificationMessageV2::Items: return QLatin1String( "Items" );
+            case NotificationMessageV2::Tags: return QLatin1String( "Tags" );
             default: return QString( "Invalid" );
           }
         }
@@ -334,7 +336,7 @@ QVariant NotificationModel::headerData(int section, Qt::Orientation orientation,
 }
 
 
-void NotificationModel::slotNotify(const Akonadi::NotificationMessageV2::List& msgs)
+void NotificationModel::slotNotify(const Akonadi::NotificationMessageV3::List& msgs)
 {
   beginInsertRows( QModelIndex(), m_data.size(), m_data.size() );
   m_data.append( new NotificationBlock( msgs ) );
@@ -366,12 +368,12 @@ void NotificationModel::setEnabled( bool enable )
       return;
     }
 
-    connect( m_source, SIGNAL(notifyV2(Akonadi::NotificationMessageV2::List)),
-             this, SLOT(slotNotify(Akonadi::NotificationMessageV2::List)) );
+    connect( m_source, SIGNAL(notifyV3(Akonadi::NotificationMessageV3::List)),
+             this, SLOT(slotNotify(Akonadi::NotificationMessageV3::List)) );
 
   } else if ( !enable && m_source ) {
 
-    disconnect( m_source, SIGNAL(notifyV2(Akonadi::NotificationMessageV2::List)) );
+    disconnect( m_source, SIGNAL(notifyV3(Akonadi::NotificationMessageV3::List)) );
     m_source->unsubscribe();
     m_source->deleteLater();
     m_source = 0;

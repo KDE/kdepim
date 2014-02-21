@@ -49,7 +49,7 @@ static const int MessageFunctionCount =
 //---------------------------------------------------------------------------
 
 QWidget *MessageRuleWidgetHandler::createFunctionWidget(
-        int number, QStackedWidget *functionStack, const QObject *receiver, bool isNepomukSearch ) const
+        int number, QStackedWidget *functionStack, const QObject *receiver, bool isBalooSearch ) const
 {
     if ( number != 0 ) {
         return 0;
@@ -58,7 +58,7 @@ QWidget *MessageRuleWidgetHandler::createFunctionWidget(
     PimCommon::MinimumComboBox *funcCombo = new PimCommon::MinimumComboBox( functionStack );
     funcCombo->setObjectName( QLatin1String("messageRuleFuncCombo") );
     for ( int i = 0; i < MessageFunctionCount; ++i ) {
-        if ( !( isNepomukSearch && (MessageFunctions[i].id == SearchRule::FuncHasAttachment || MessageFunctions[i].id == SearchRule::FuncHasNoAttachment) )) {
+        if ( !( isBalooSearch && (MessageFunctions[i].id == SearchRule::FuncHasAttachment || MessageFunctions[i].id == SearchRule::FuncHasNoAttachment) )) {
             funcCombo->addItem( i18n( MessageFunctions[i].displayName ) );
         }
     }
@@ -214,7 +214,7 @@ void MessageRuleWidgetHandler::reset( QStackedWidget *functionStack,
 
 bool MessageRuleWidgetHandler::setRule( QStackedWidget *functionStack,
                                         QStackedWidget *valueStack,
-                                        const SearchRule::Ptr rule, bool isNepomukSearch ) const
+                                        const SearchRule::Ptr rule, bool isBalooSearch ) const
 {
     if ( !rule || !handlesField( rule->field() ) ) {
         reset( functionStack, valueStack );
@@ -223,7 +223,7 @@ bool MessageRuleWidgetHandler::setRule( QStackedWidget *functionStack,
 
     const SearchRule::Function func = rule->function();
 
-    if ( ( isNepomukSearch && (func == SearchRule::FuncHasAttachment || func == SearchRule::FuncHasNoAttachment) )) {
+    if ( ( isBalooSearch && (func == SearchRule::FuncHasAttachment || func == SearchRule::FuncHasNoAttachment) )) {
         reset( functionStack, valueStack );
         return false;
     }

@@ -250,49 +250,51 @@ void StorageServiceSettingsWidget::slotAddService()
     QPointer<AddServiceStorageDialog> dlg = new AddServiceStorageDialog(mNeedCapability, mListStorageService.keys(), this);
     if (dlg->exec()) {
         const PimCommon::StorageServiceManager::ServiceType type = dlg->serviceSelected();
-        const QString serviceName = PimCommon::StorageServiceManager::serviceToI18n(type);
-        const QString service = PimCommon::StorageServiceManager::serviceName(type);
-        StorageServiceAbstract *storage = 0;
-        switch(type) {
-        case PimCommon::StorageServiceManager::DropBox: {
-            storage = new PimCommon::DropBoxStorageService;
-            break;
-        }
-        case PimCommon::StorageServiceManager::Hubic: {
-            storage = new PimCommon::HubicStorageService;
-            break;
-        }
-        case PimCommon::StorageServiceManager::UbuntuOne: {
-            storage = new PimCommon::UbuntuoneStorageService;
-            break;
-        }
-        case PimCommon::StorageServiceManager::YouSendIt: {
-            storage = new PimCommon::YouSendItStorageService;
-            break;
-        }
-        case PimCommon::StorageServiceManager::Box: {
-            storage = new PimCommon::BoxStorageService;
-            break;
-        }
-        case PimCommon::StorageServiceManager::WebDav: {
-            storage = new PimCommon::WebDavStorageService;
-            break;
-        }
+        if (type != PimCommon::StorageServiceManager::Unknown) {
+            const QString serviceName = PimCommon::StorageServiceManager::serviceToI18n(type);
+            const QString service = PimCommon::StorageServiceManager::serviceName(type);
+            StorageServiceAbstract *storage = 0;
+            switch(type) {
+            case PimCommon::StorageServiceManager::DropBox: {
+                storage = new PimCommon::DropBoxStorageService;
+                break;
+            }
+            case PimCommon::StorageServiceManager::Hubic: {
+                storage = new PimCommon::HubicStorageService;
+                break;
+            }
+            case PimCommon::StorageServiceManager::UbuntuOne: {
+                storage = new PimCommon::UbuntuoneStorageService;
+                break;
+            }
+            case PimCommon::StorageServiceManager::YouSendIt: {
+                storage = new PimCommon::YouSendItStorageService;
+                break;
+            }
+            case PimCommon::StorageServiceManager::Box: {
+                storage = new PimCommon::BoxStorageService;
+                break;
+            }
+            case PimCommon::StorageServiceManager::WebDav: {
+                storage = new PimCommon::WebDavStorageService;
+                break;
+            }
 #ifdef KDEPIM_STORAGESERVICE_GDRIVE
-        case PimCommon::StorageServiceManager::GDrive: {
-            storage = new PimCommon::GDriveStorageService;
-            break;
-        }
+            case PimCommon::StorageServiceManager::GDrive: {
+                storage = new PimCommon::GDriveStorageService;
+                break;
+            }
 #endif
-        default:
-            break;
-        }
-        if (storage) {
-            mListStorageService.insert(service, storage);
-            PimCommon::StorageListWidgetItem *item = createItem(serviceName, service, type, storage->icon());
-            item->startAnimation();
-            defaultConnection(storage);
-            storage->authentication();
+            default:
+                break;
+            }
+            if (storage) {
+                mListStorageService.insert(service, storage);
+                PimCommon::StorageListWidgetItem *item = createItem(serviceName, service, type, storage->icon());
+                item->startAnimation();
+                defaultConnection(storage);
+                storage->authentication();
+            }
         }
     }
     delete dlg;

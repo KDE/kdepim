@@ -57,7 +57,7 @@ static const int HeadersFunctionCount =
 //---------------------------------------------------------------------------
 
 QWidget *HeadersRuleWidgetHandler::createFunctionWidget(
-        int number, QStackedWidget *functionStack, const QObject *receiver, bool isNepomukSearch ) const
+        int number, QStackedWidget *functionStack, const QObject *receiver, bool isBalooSearch ) const
 {
     if ( number != 0 ) {
         return 0;
@@ -66,7 +66,7 @@ QWidget *HeadersRuleWidgetHandler::createFunctionWidget(
     PimCommon::MinimumComboBox *funcCombo = new PimCommon::MinimumComboBox( functionStack );
     funcCombo->setObjectName( QLatin1String("headerRuleFuncCombo") );
     for ( int i = 0; i < HeadersFunctionCount; ++i ) {
-        if (! (isNepomukSearch &&
+        if (! (isBalooSearch &&
                 (HeaderFunctions[i].id == SearchRule::FuncIsInAddressbook || HeaderFunctions[i].id == SearchRule::FuncIsNotInAddressbook)))  {
             funcCombo->addItem( i18n( HeaderFunctions[i].displayName ) );
         }
@@ -221,7 +221,7 @@ void HeadersRuleWidgetHandler::reset( QStackedWidget *functionStack,
 
 bool HeadersRuleWidgetHandler::setRule( QStackedWidget *functionStack,
                                      QStackedWidget *valueStack,
-                                     const SearchRule::Ptr rule, bool isNepomukSearch ) const
+                                     const SearchRule::Ptr rule, bool isBalooSearch ) const
 {
     if ( !rule || !handlesField( rule->field() ) ) {
         reset( functionStack, valueStack );
@@ -229,7 +229,7 @@ bool HeadersRuleWidgetHandler::setRule( QStackedWidget *functionStack,
     }
 
     const SearchRule::Function func = rule->function();
-    if ( (isNepomukSearch &&
+    if ( (isBalooSearch &&
             (func == SearchRule::FuncIsInAddressbook || func == SearchRule::FuncIsNotInAddressbook)))  {
         reset( functionStack, valueStack );
         return false;

@@ -20,7 +20,6 @@ else()
   set(LIBRARY_TYPE SHARED)
 endif()
 
-add_definitions( -DDISABLE_NEPOMUK_LEGACY )
 add_definitions(-DQT_USE_QSTRINGBUILDER)
 if(KDEPIM_NO_WEBKIT)
   add_definitions(-DKDEPIM_NO_WEBKIT)
@@ -101,7 +100,7 @@ set(CMAKE_AUTOMOC ON)
 find_package(KDE4 4.11.3 REQUIRED)
 include(KDE4Defaults)
 
-find_package(KdepimLibs 4.12.44)
+find_package(KdepimLibs 4.12.46)
 set_package_properties(KdepimLibs PROPERTIES DESCRIPTION "The KDEPIM libraries" URL "http://www.kde.org" TYPE REQUIRED)
 
 ############### Load the CTest options ###############
@@ -176,21 +175,8 @@ else()
   find_package(QGpgme)
   set_package_properties(QGpgme PROPERTIES DESCRIPTION "The QGpgMe library" URL "http://www.kde.org" TYPE RECOMMENDED PURPOSE "QGpgME is required to build KMail, KOrganizer and Kleopatra")
 
-  find_package(SharedDesktopOntologies 0.11)
-  set_package_properties(SharedDesktopOntologies PROPERTIES DESCRIPTION "Shared Desktop Ontologies" URL "http://sourceforge.net/projects/oscaf/" TYPE REQUIRED PURPOSE "Ontologies necessary for the Nepomuk semantic desktop")
-
-  find_package(Soprano 2.9.0)
-  set_package_properties(Soprano PROPERTIES DESCRIPTION "C++/Qt4 framework for RDF data" URL "http://soprano.sourceforge.net" TYPE REQUIRED PURPOSE "Storage of semantic data")
-  include(SopranoAddOntology)
-
   find_package(Grantlee 0.3.0 QUIET CONFIG)
   set_package_properties(Grantlee PROPERTIES DESCRIPTION "The Grantlee Template System" URL "http://www.gitorious.org/grantlee/pages/Home" TYPE REQUIRED PURPOSE "Grantlee is requires for kmail and templating, theming for KJots, KaddressBook, KNotes and MessageViewer(KMail)." )
-
-  find_package(NepomukCore QUIET CONFIG)
-  set_package_properties(NepomukCore PROPERTIES DESCRIPTION "The Nepomuk Core libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
-
-  find_package(NepomukWidgets QUIET CONFIG)
-  set_package_properties(NepomukWidgets PROPERTIES DESCRIPTION "The NepomukWidget libraries" URL "http://www.kde.org" TYPE RECOMMENDED PURPOSE "Nepomuk-widgets is needed for building Akonadiconsole")
 
   find_package(Baloo QUIET CONFIG)
   set_package_properties(Baloo PROPERTIES DESCRIPTION "The Baloo libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Baloo provides search capabilities in KMail and Akonadi")
@@ -246,7 +232,6 @@ endif()
 
   # These targets will always be built before anything else.
 
-  add_subdirectory(ontologies) # must be the first one.
   add_subdirectory(noteshared)
   add_subdirectory(akonadi_next)
   add_subdirectory(libkdepim)
@@ -336,9 +321,7 @@ endif()
     macro_optional_add_subdirectory(kontact) # must be the last one.
   endif()
 
-  if(NepomukWidgets_FOUND)
-    macro_optional_add_subdirectory(akonadiconsole)
-  endif()
+  macro_optional_add_subdirectory(akonadiconsole)
   macro_optional_add_subdirectory(console)
 
   # These targets depend on optional applications

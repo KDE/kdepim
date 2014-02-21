@@ -30,7 +30,6 @@
  */
 
 #include "progressdialog.h"
-#include "progressmanager.h"
 #include "ssllabel.h"
 
 #include <KDebug>
@@ -187,7 +186,7 @@ TransactionItem::TransactionItem( QWidget *parent,
     mItemStatus->setText(
                 fontMetrics().elidedText( item->status(), Qt::ElideRight, MAX_LABEL_WIDTH ) );
     h->layout()->addWidget( mItemStatus );
-    setCrypto( item->usesCrypto() );
+    setCryptoStatus(item->cryptoStatus() );
     if ( first ) {
         hideHLine();
     }
@@ -217,14 +216,19 @@ void TransactionItem::setStatus( const QString &status )
     mItemStatus->setText( fontMetrics().elidedText( status, Qt::ElideRight, MAX_LABEL_WIDTH ) );
 }
 
-void TransactionItem::setCrypto( bool on )
+void TransactionItem::setCryptoStatus(KPIM::ProgressItem::CryptoStatus status)
 {
-    if ( on ) {
-        mSSLLabel->setEncrypted( true );
-    } else {
-        mSSLLabel->setEncrypted( false );
+    switch (status) {
+    case KPIM::ProgressItem::Encrypted:
+        mSSLLabel->setEncrypted( SSLLabel::Encrypted );
+        break;
+    case KPIM::ProgressItem::Unencrypted:
+        mSSLLabel->setEncrypted( SSLLabel::Unencrypted );
+        break;
+    case KPIM::ProgressItem::Unknown:
+        mSSLLabel->setEncrypted( SSLLabel::Unknown );
+        break;
     }
-
     mSSLLabel->setState( mSSLLabel->lastState() );
 }
 
@@ -248,7 +252,9 @@ void TransactionItem::addSubTransaction( ProgressItem *item )
 // ---------------------------------------------------------------------------
 
 ProgressDialog::ProgressDialog( QWidget *alignWidget, QWidget *parent, const char *name )
-    : OverlayWidget( alignWidget, parent, name ), mWasLastShown( false )
+    : OverlayWidget( alignWidget, parent, name ),
+      mShowTypeProgressItem(0),
+      mWasLastShown( false )
 {
     setFrameStyle( QFrame::Panel | QFrame::Sunken ); // QFrame
 
@@ -256,21 +262,6 @@ ProgressDialog::ProgressDialog( QWidget *alignWidget, QWidget *parent, const cha
 
     mScrollView = new TransactionItemView( this, "ProgressScrollView" );
     layout()->addWidget( mScrollView );
-
-    // No more close button for now, since there is no more autoshow
-    /*
-    QVBox* rightBox = new QVBox( this );
-    QToolButton* pbClose = new QToolButton( rightBox );
-    pbClose->setAutoRaise(true);
-    pbClose->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
-    pbClose->setFixedSize( 16, 16 );
-    pbClose->setIcon( KIconLoader::global()->loadIconSet( "window-close", KIconLoader::Small, 14 ) );
-    pbClose->setToolTip( i18n( "Hide detailed progress window" ) );
-    connect(pbClose, SIGNAL(clicked()), this, SLOT(slotClose()));
-    QWidget* spacer = new QWidget( rightBox ); // don't let the close button take up all the height
-    rightBox->setStretchFactor( spacer, 100 );
-  */
-
     /*
    * Get the singleton ProgressManager item which will inform us of
    * appearing and vanishing items.
@@ -286,8 +277,8 @@ ProgressDialog::ProgressDialog( QWidget *alignWidget, QWidget *parent, const cha
               this, SLOT(slotTransactionStatus(KPIM::ProgressItem*,QString)) );
     connect ( pm, SIGNAL(progressItemLabel(KPIM::ProgressItem*,QString)),
               this, SLOT(slotTransactionLabel(KPIM::ProgressItem*,QString)) );
-    connect ( pm, SIGNAL(progressItemUsesCrypto(KPIM::ProgressItem*,bool)),
-              this, SLOT(slotTransactionUsesCrypto(KPIM::ProgressItem*,bool)) );
+    connect ( pm, SIGNAL(progressItemCryptoStatus(KPIM::ProgressItem*,KPIM::ProgressItem::CryptoStatus)),
+              this, SLOT(slotTransactionCryptoStatus(KPIM::ProgressItem*,KPIM::ProgressItem::CryptoStatus)) );
     connect ( pm, SIGNAL(progressItemUsesBusyIndicator(KPIM::ProgressItem*,bool)),
               this, SLOT(slotTransactionUsesBusyIndicator(KPIM::ProgressItem*,bool)) );
     connect ( pm, SIGNAL(showProgressDialog()),
@@ -308,23 +299,29 @@ ProgressDialog::~ProgressDialog()
     // no need to delete child widgets.
 }
 
+void ProgressDialog::setShowTypeProgressItem(unsigned int type)
+{
+    mShowTypeProgressItem = type;
+}
+
 void ProgressDialog::slotTransactionAdded( ProgressItem *item )
 {
-    if ( item->parent() ) {
-        if ( mTransactionsToListviewItems.contains( item->parent() ) ) {
-            TransactionItem * parent = mTransactionsToListviewItems[ item->parent() ];
-            parent->addSubTransaction( item );
+    if (item->typeProgressItem() == mShowTypeProgressItem) {
+        if ( item->parent() ) {
+            if ( mTransactionsToListviewItems.contains( item->parent() ) ) {
+                TransactionItem * parent = mTransactionsToListviewItems[ item->parent() ];
+                parent->addSubTransaction( item );
+            }
+        } else {
+            const bool first = mTransactionsToListviewItems.empty();
+            TransactionItem *ti = mScrollView->addTransactionItem( item, first );
+            if ( ti ) {
+                mTransactionsToListviewItems.insert( item, ti );
+            }
+            if ( first && mWasLastShown ) {
+                QTimer::singleShot( 1000, this, SLOT(slotShow()) );
+            }
         }
-    } else {
-        const bool first = mTransactionsToListviewItems.empty();
-        TransactionItem *ti = mScrollView->addTransactionItem( item, first );
-        if ( ti ) {
-            mTransactionsToListviewItems.insert( item, ti );
-        }
-        if ( first && mWasLastShown ) {
-            QTimer::singleShot( 1000, this, SLOT(slotShow()) );
-        }
-
     }
 }
 
@@ -376,12 +373,12 @@ void ProgressDialog::slotTransactionLabel( ProgressItem *item,
     }
 }
 
-void ProgressDialog::slotTransactionUsesCrypto( ProgressItem *item,
-                                                bool value )
+void ProgressDialog::slotTransactionCryptoStatus( ProgressItem *item,
+                                                KPIM::ProgressItem::CryptoStatus value )
 {
     if ( mTransactionsToListviewItems.contains( item ) ) {
         TransactionItem *ti = mTransactionsToListviewItems[ item ];
-        ti->setCrypto( value );
+        ti->setCryptoStatus( value );
     }
 }
 

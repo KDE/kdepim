@@ -33,7 +33,7 @@
 int Utils::currentArchiveVersion()
 {
     //Increase it when we add major feature!
-    return 1;
+    return 2;
 }
 
 QString Utils::transportsPath()
@@ -292,6 +292,10 @@ int Utils::archiveVersion(KZip *archive)
     if (informationFile && informationFile->isFile()) {
         return 1;
     }
+    informationFile = archive->directory()->entry(Utils::infoPath() + QLatin1String( "VERSION_2" ) );
+    if (informationFile && informationFile->isFile()) {
+        return 2;
+    }
     //TODO add more version when new version
     return 0;
 }
@@ -339,8 +343,6 @@ QString Utils::storedTypeToI18n(StoredType type)
         return i18n("Config");
     case AkonadiDb:
         return i18n("Akonadi Database");
-    case Nepomuk:
-        return i18n("Nepomuk Database");
     case Data:
         return i18n("Data");
     }

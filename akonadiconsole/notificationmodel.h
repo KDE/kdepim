@@ -20,7 +20,7 @@
 #ifndef AKONADICONSOLE_NOTIFICATIONMODEL_H
 #define AKONADICONSOLE_NOTIFICATIONMODEL_H
 
-#include <akonadi/private/notificationmessagev2_p.h>
+#include <akonadi/private/notificationmessagev3_p.h>
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QDateTime>
@@ -49,7 +49,7 @@ class NotificationModel : public QAbstractItemModel
     void setEnabled( bool enable );
 
   private slots:
-    void slotNotify( const Akonadi::NotificationMessageV2::List &msgs );
+    void slotNotify( const Akonadi::NotificationMessageV3::List &msgs );
 
   private:
     class Item;

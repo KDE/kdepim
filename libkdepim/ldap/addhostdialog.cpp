@@ -97,7 +97,9 @@ AddHostDialog::AddHostDialog( KLDAP::LdapServer *server, QWidget *parent )
   mCfg->setMech( mServer->mech() );
 
   KAcceleratorManager::manage( this );
+  connect(mCfg, SIGNAL(hostNameChanged(QString)), this, SLOT(slotHostEditChanged(QString)));
   connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
+  enableButtonOk(!mServer->host().isEmpty());
 }
 
 AddHostDialog::~AddHostDialog()

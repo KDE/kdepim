@@ -19,6 +19,7 @@
 #include "storageservice/widgets/storageservicetreewidget.h"
 #include "storageservice/storageservicemanager.h"
 #include "ubuntuonejob.h"
+#include "pimcommon/storageservice/utils/storageserviceutils.h"
 
 #include "storageservice/settings/storageservicesettings.h"
 
@@ -490,21 +491,21 @@ QMap<QString, QString> UbuntuoneStorageService::itemInformation(const QVariantMa
     qDebug()<<" variantMap "<<variantMap;
     QMap<QString, QString> information;
     if (variantMap.contains(QLatin1String("kind"))) {
-        information.insert(i18n("Type:"), variantMap.value(QLatin1String("kind")).toString() == QLatin1String("file") ? i18n("File") : i18n("Folder"));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Type), variantMap.value(QLatin1String("kind")).toString() == QLatin1String("file") ? i18n("File") : i18n("Folder"));
     }
     if (variantMap.contains(QLatin1String("volume_path"))) {
         information.insert(i18n("Volume path:"), variantMap.value(QLatin1String("volume_path")).toString());
     }
     if (variantMap.contains(QLatin1String("size"))) {
-        information.insert(i18n("Size:"), KGlobal::locale()->formatByteSize(variantMap.value(QLatin1String("size")).toULongLong()));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KGlobal::locale()->formatByteSize(variantMap.value(QLatin1String("size")).toULongLong()));
     }
     if (variantMap.contains(QLatin1String("when_created"))) {
         const KDateTime t = KDateTime(QDateTime::fromString(variantMap.value(QLatin1String("when_created")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ")));
-        information.insert(i18n("Created:"), KGlobal::locale()->formatDateTime(t));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), KGlobal::locale()->formatDateTime(t));
     }
     if (variantMap.contains(QLatin1String("when_changed"))) {
         const KDateTime t = KDateTime(QDateTime::fromString(variantMap.value(QLatin1String("when_changed")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ")));
-        information.insert(i18n("Last Changed:"), KGlobal::locale()->formatDateTime(t));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), KGlobal::locale()->formatDateTime(t));
     }
     if (variantMap.contains(QLatin1String("is_public"))) {
         const bool value = variantMap.value(QLatin1String("is_public")).toString() == QLatin1String("true");

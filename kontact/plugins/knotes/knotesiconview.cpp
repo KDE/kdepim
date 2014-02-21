@@ -17,9 +17,16 @@
 
 #include "knotesiconview.h"
 #include "noteshared/akonadi/notesakonaditreemodel.h"
+#include "noteshared/attributes/notedisplayattribute.h"
+#include "noteshared/attributes/notelockattribute.h"
+#include "knotes/notes/knotedisplaysettings.h"
 #include "utils/knoteutils.h"
 
 #include <KLocalizedString>
+
+#include <Akonadi/ItemModifyJob>
+
+#include <KMime/KMimeMessage>
 
 #include <KIconEffect>
 #include <KIconLoader>
@@ -30,12 +37,12 @@
 #include <QListWidgetItem>
 #include <QDebug>
 
-KNotesIconView::KNotesIconView( QWidget *parent )
-    : QListWidget(parent)
+KNotesIconView::KNotesIconView( KNotesPart *part, QWidget *parent )
+    : KListWidget(parent),
+      m_part(part)
 {
     setViewMode( QListView::IconMode );
     setMovement( QListView::Static );
-    //setSortingEnabled( true );
     setSelectionMode( QAbstractItemView::ExtendedSelection );
     setWordWrap( true );
     setMouseTracking ( true );
@@ -50,78 +57,102 @@ void KNotesIconView::mousePressEvent( QMouseEvent *e )
 {
     if ( e->button() == Qt::RightButton ) {
         QListView::mousePressEvent( e );
-        //m_part->popupRMB( currentItem(), e->pos (), e->globalPos() );
+        m_part->popupRMB( currentItem(), e->pos (), e->globalPos() );
     } else {
         QListView::mousePressEvent( e );
     }
 }
 
-void KNotesIconView::addNote()
+void KNotesIconView::addNote(const Akonadi::Item &item)
 {
-    qDebug()<<" void KNotesIconView::addNote()";
-    new KNotesIconViewItem(this);
+    KNotesIconViewItem *iconView = new KNotesIconViewItem(item, this);
+    mNoteList.insert(item.id(), iconView);
 }
 
-KNotesIconViewItem::KNotesIconViewItem( QListWidget *parent )
-    : QListWidgetItem( parent )
+KNotesIconViewItem *KNotesIconView::iconView(Akonadi::Item::Id id) const
 {
-    setText(i18n("Note"));
-    //TODO
+    if (mNoteList.contains(id)) {
+        return mNoteList.value(id);
+    }
+    return 0;
 }
 
-KNotesIconViewItem::~KNotesIconViewItem()
+QHash<Akonadi::Entity::Id, KNotesIconViewItem *> KNotesIconView::noteList() const
 {
+    return mNoteList;
 }
 
-#if 0
-KNotesIconViewItem::KNotesIconViewItem( QListWidget *parent, Journal *journal )
+KNotesIconViewItem::KNotesIconViewItem( const Akonadi::Item &item, QListWidget *parent )
     : QListWidgetItem( parent ),
-      mJournal( journal ),
-      mConfig(0)
+      mItem(item),
+      mDisplayAttribute(new KNoteDisplaySettings),
+      mReadOnly(false)
 {
-    QString configPath;
-
-    mConfig = KNoteUtils::createConfig(journal, configPath);
-    KNoteUtils::setProperty(journal, mConfig);
-
-    updateSettings();
-    setIconText( journal->summary() );
+    if ( mItem.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
+        mDisplayAttribute->setDisplayAttribute(mItem.attribute<NoteShared::NoteDisplayAttribute>());
+    } else {
+        setDisplayDefaultValue();
+        //save default display value
+    }
+    prepare();
 }
 
 KNotesIconViewItem::~KNotesIconViewItem()
 {
-    delete mConfig;
+    delete mDisplayAttribute;
 }
 
-
-void KNotesIconViewItem::updateSettings()
+void KNotesIconViewItem::prepare()
 {
-    KNoteUtils::savePreferences(mJournal, mConfig);
-    KIconEffect effect;
-    QColor color( mConfig->bgColor() );
-    QPixmap icon = KIconLoader::global()->loadIcon( QLatin1String("knotes"), KIconLoader::Desktop );
-    icon = effect.apply( icon, KIconEffect::Colorize, 1, color, false );
-    setFont(mConfig->titleFont());
-    mConfig->writeConfig();
-    setIcon( icon );
+    KMime::Message::Ptr noteMessage = mItem.payload<KMime::Message::Ptr>();
+    setText(noteMessage->subject(false)->asUnicodeString());
+
+    if ( mItem.hasAttribute<NoteShared::NoteLockAttribute>() ) {
+        mReadOnly = true;
+    } else {
+        mReadOnly = false;
+    }
+    updateSettings();
 }
 
-Journal *KNotesIconViewItem::journal() const
+bool KNotesIconViewItem::readOnly() const
 {
-    return mJournal;
+    return mReadOnly;
 }
 
-KNoteConfig *KNotesIconViewItem::config()
+void KNotesIconViewItem::setReadOnly(bool b)
 {
-    return mConfig;
+    mReadOnly = b;
+    if (mItem.hasAttribute<NoteShared::NoteLockAttribute>()) {
+        if (!mReadOnly) {
+            mItem.removeAttribute<NoteShared::NoteLockAttribute>();
+        }
+    } else {
+        if (mReadOnly) {
+            mItem.attribute<NoteShared::NoteLockAttribute>( Akonadi::Entity::AddIfMissing );
+        }
+    }
+    Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
+    connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
 }
 
-QString KNotesIconViewItem::realName() const
+void KNotesIconViewItem::setDisplayDefaultValue()
 {
-    return mJournal->summary();
+    KNoteUtils::setDefaultValue(mItem);
+    Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
+    connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
 }
 
-void KNotesIconViewItem::setIconText( const QString &text )
+void KNotesIconViewItem::slotNoteSaved(KJob *job)
+{
+    qDebug()<<" void KNotesIconViewItem::slotNoteSaved(KJob *job)";
+    if ( job->error() ) {
+        qDebug()<<" problem during save note:"<<job->errorString();
+    }
+}
+
+
+void KNotesIconViewItem::setIconText( const QString &text, bool save )
 {
     QString replaceText ;
     if ( text.count() > 50 ) {
@@ -131,40 +162,109 @@ void KNotesIconViewItem::setIconText( const QString &text )
     }
 
     setText( replaceText );
-
-    mJournal->setSummary( text );
+    if (save)
+        saveNoteContent(text);
 }
 
-bool KNotesIconViewItem::readOnly() const
+QString KNotesIconViewItem::realName() const
 {
-    return mConfig->readOnly();
-}
-
-void KNotesIconViewItem::setReadOnly(bool b)
-{
-    mConfig->setReadOnly(b);
-    mConfig->writeConfig();
+    const KMime::Message::Ptr noteMessage = mItem.payload<KMime::Message::Ptr>();
+    return noteMessage->subject(false)->asUnicodeString();
 }
 
 int KNotesIconViewItem::tabSize() const
 {
-    return mConfig->tabSize();
+    return mDisplayAttribute->tabSize();
 }
 
 bool KNotesIconViewItem::autoIndent() const
 {
-    return mConfig->autoIndent();
+    return mDisplayAttribute->autoIndent();
 }
 
 QFont KNotesIconViewItem::textFont() const
 {
-    return mConfig->font();
+    return mDisplayAttribute->font();
 }
 
 bool KNotesIconViewItem::isRichText() const
 {
-    const QString property = mJournal->customProperty("KNotes", "RichText");
-    return (property == QLatin1String("true") ? true : false );
+    const KMime::Message::Ptr noteMessage = mItem.payload<KMime::Message::Ptr>();
+    return noteMessage->contentType()->isHTMLText();
 }
-#endif
+
+QString KNotesIconViewItem::description() const
+{
+    const KMime::Message::Ptr noteMessage = mItem.payload<KMime::Message::Ptr>();
+    return QString::fromLatin1(noteMessage->mainBodyPart()->decodedContent());
+}
+
+void KNotesIconViewItem::setDescription(const QString &description)
+{
+    saveNoteContent(QString(), description);
+}
+
+KNoteDisplaySettings *KNotesIconViewItem::displayAttribute() const
+{
+    return mDisplayAttribute;
+}
+
+Akonadi::Item KNotesIconViewItem::item()
+{
+    return mItem;
+}
+
+void KNotesIconViewItem::saveNoteContent(const QString &subject, const QString &description)
+{
+    KMime::Message::Ptr message = mItem.payload<KMime::Message::Ptr>();
+    const QByteArray encoding( "utf-8" );
+    if (!subject.isEmpty()) {
+        message->subject( true )->fromUnicodeString( subject, encoding );
+    }
+    message->contentType( true )->setMimeType( isRichText() ? "text/html" : "text/plain" );
+    message->contentType()->setCharset(encoding);
+    message->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
+    message->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
+    if (!description.isEmpty()) {
+        message->mainBodyPart()->fromUnicodeString( description );
+    } else if (message->mainBodyPart()->decodedText().isEmpty()) {
+        message->mainBodyPart()->fromUnicodeString( QString::fromLatin1( " " ) );
+    }
+
+    message->assemble();
+
+    mItem.setPayload( message );
+    Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
+    connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
+}
+
+
+void KNotesIconViewItem::setChangeItem(const Akonadi::Item &item, const QSet<QByteArray> & set)
+{
+    mItem = item;
+    if ( item.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
+        mDisplayAttribute->setDisplayAttribute(item.attribute<NoteShared::NoteDisplayAttribute>());
+    }
+    if (set.contains("ATR:KJotsLockAttribute")) {
+        setReadOnly(item.hasAttribute<NoteShared::NoteLockAttribute>());
+    }
+    if (set.contains("PLD:RFC822")) {
+        KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
+        setIconText(noteMessage->subject(false)->asUnicodeString(), false);
+    }
+    if (set.contains("ATR:NoteDisplayAttribute")) {
+        updateSettings();
+    }
+
+}
+void KNotesIconViewItem::updateSettings()
+{
+    KIconEffect effect;
+    const QColor color( mDisplayAttribute->backgroundColor() );
+    QPixmap icon = KIconLoader::global()->loadIcon( QLatin1String("knotes"), KIconLoader::Desktop );
+    icon = effect.apply( icon, KIconEffect::Colorize, 1, color, false );
+    setFont(mDisplayAttribute->titleFont());
+    setIcon( icon );
+}
+
 #include "moc_knotesiconview.cpp"

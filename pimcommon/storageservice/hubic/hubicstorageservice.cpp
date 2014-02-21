@@ -20,6 +20,7 @@
 #include "storageservice/storageservicemanager.h"
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 #include "hubicjob.h"
+#include "pimcommon/storageservice/utils/storageserviceutils.h"
 
 #include "storageservice/settings/storageservicesettings.h"
 

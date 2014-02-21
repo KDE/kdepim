@@ -58,7 +58,10 @@ class QuickSearchWidget : public QWidget
      */
     virtual QSize sizeHint() const;
 
-  Q_SIGNALS:
+public slots:
+    void slotFocusQuickSearch();
+
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the user has changed
      * the filter string in the line edit.

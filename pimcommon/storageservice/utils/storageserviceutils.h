@@ -22,6 +22,16 @@
 #include "storageservice/storageserviceabstract.h"
 namespace PimCommon {
 namespace StorageServiceUtils {
+enum PropertyName {
+    Type = 0,
+    Name,
+    LastModified,
+    Created,
+    Size,
+};
+
+QString propertyNameToI18n(PropertyName type);
+
 QString generateNonce(qint32 length);
 bool hasCapabilities(PimCommon::StorageServiceAbstract::Capabilities capabilities, const QList<PimCommon::StorageServiceAbstract::Capability> &lstNeedCapabily);
 bool hasExactCapabilities(PimCommon::StorageServiceAbstract::Capabilities capabilities, const QList<PimCommon::StorageServiceAbstract::Capability> &lstNeedCapabily);

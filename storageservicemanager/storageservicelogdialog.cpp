@@ -58,7 +58,7 @@ void StorageServiceLogDialog::slotClearLog()
 
 void StorageServiceLogDialog::slotSaveAs()
 {
-    const QString filter = i18n( "all files (*)" );
+    const QString filter = QLatin1String("*|") + i18n( "all files (*)" );
     PimCommon::Util::saveTextAs(mLog->toPlainText(), filter, this);
 }
 

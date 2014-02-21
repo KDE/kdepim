@@ -19,56 +19,63 @@
 #define KNOTESICONVIEW_H
 
 #include "knotes_part.h"
-#include <QListWidget>
+#include <KListWidget>
+#include <QMultiHash>
 class KNoteConfig;
-class KNotesIconView : public QListWidget
+class KNoteDisplaySettings;
+class KNotesIconView : public KListWidget
 {
     Q_OBJECT
 public:
-    explicit KNotesIconView(QWidget *parent );
+    explicit KNotesIconView(KNotesPart *part, QWidget *parent );
     ~KNotesIconView();
 
-    void addNote();
+    void addNote(const Akonadi::Item &item);
 
+    KNotesIconViewItem *iconView(Akonadi::Item::Id id) const;
+    QHash<Akonadi::Item::Id, KNotesIconViewItem*> noteList() const;
 protected:
     void mousePressEvent( QMouseEvent * );
 
 private:
-    //KNotesPart *m_part;
+    KNotesPart *m_part;
+    QHash<Akonadi::Item::Id, KNotesIconViewItem*> mNoteList;
 };
 
-class KNotesIconViewItem : public QListWidgetItem
+class KNotesIconViewItem : public QObject, public QListWidgetItem
 {
+    Q_OBJECT
 public:
-    KNotesIconViewItem( QListWidget *parent);
-    ~KNotesIconViewItem();
-};
-
-#if 0
-class KNotesIconViewItem : public QListWidgetItem
-{
-public:
-    KNotesIconViewItem( QListWidget *parent, Journal *journal );
+    KNotesIconViewItem(const Akonadi::Item &item, QListWidget *parent);
     ~KNotesIconViewItem();
 
-    Journal *journal() const;
-    QString realName() const;
-    void setIconText( const QString &text );
-    KNoteConfig *config();
-    void updateSettings();
     bool readOnly() const;
     void setReadOnly(bool b);
+
+    void setIconText(const QString &text , bool save = true);
+    QString realName() const;
+
     int tabSize() const;
-
     bool autoIndent() const;
-    bool isRichText() const;
-
     QFont textFont() const;
+    bool isRichText() const;
+    QString description() const;
+    void setDescription(const QString &);
+    KNoteDisplaySettings *displayAttribute() const;
+    Akonadi::Item item();
 
+    void setChangeItem(const Akonadi::Item &item, const QSet<QByteArray> &set);
+    void saveNoteContent(const QString &subject = QString(), const QString &description = QString());
+    void updateSettings();
+private slots:
+    void slotNoteSaved(KJob *job);
 private:
-    Journal *mJournal;
-    KNoteConfig *mConfig;
+    void prepare();
+    void setDisplayDefaultValue();
+
+    Akonadi::Item mItem;
+    KNoteDisplaySettings *mDisplayAttribute;
+    bool mReadOnly;
 };
-#endif
 
 #endif // KNOTESICONVIEW_H

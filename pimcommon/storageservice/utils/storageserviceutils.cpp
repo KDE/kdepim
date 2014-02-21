@@ -16,6 +16,7 @@
 */
 
 #include "storageserviceutils.h"
+#include <KLocalizedString>
 #include <cstdlib>
 
 QString PimCommon::StorageServiceUtils::generateNonce(qint32 length)
@@ -47,4 +48,27 @@ bool PimCommon::StorageServiceUtils::hasExactCapabilities(PimCommon::StorageServ
         }
     }
     return true;
+}
+
+QString PimCommon::StorageServiceUtils::propertyNameToI18n(PropertyName type)
+{
+    QString result;
+    switch(type) {
+    case Type:
+        result = i18n("Type:");
+        break;
+    case Name:
+        result = i18n("Name:");
+        break;
+    case LastModified:
+        result = i18n("Last Modified:");
+        break;
+    case Created:
+        result = i18n("Created:");
+        break;
+    case Size:
+        result = i18n("Size:");
+        break;
+    }
+    return result;
 }

@@ -121,4 +121,19 @@ void QuickSearchLineTest::shouldShowTagComboBox()
     QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), true);
 }
 
+void QuickSearchLineTest::shouldResetComboboxWhenResetFilter()
+{
+    QuickSearchLine searchLine;
+    searchLine.show();
+    QTest::qWaitForWindowShown(&searchLine);
+    QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), false);
+    searchLine.tagFilterComboBox()->addItems(QStringList()<<QLatin1String("1")<<QLatin1String("2"));
+    searchLine.updateComboboxVisibility();
+    QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), true);
+    searchLine.tagFilterComboBox()->setCurrentIndex(1);
+    QCOMPARE(searchLine.tagFilterComboBox()->currentIndex(), 1);
+    searchLine.resetFilter();
+    QCOMPARE(searchLine.tagFilterComboBox()->currentIndex(), 0);
+}
+
 QTEST_KDEMAIN( QuickSearchLineTest, GUI )

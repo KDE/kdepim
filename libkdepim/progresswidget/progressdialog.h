@@ -36,6 +36,9 @@
 #include "widgets/overlaywidget.h"
 #include "kdepim_export.h"
 
+#include "progressmanager.h"
+
+
 #include <QScrollArea>
 #include <QMap>
 #include <KVBox>
@@ -46,7 +49,6 @@ class QLabel;
 class QPushButton;
 
 namespace KPIM {
-class ProgressItem;
 class TransactionItem;
 class SSLLabel;
 
@@ -89,7 +91,7 @@ public:
     // Qt::escape() it before passing
     void setStatus( const QString & );
 
-    void setCrypto( bool );
+    void setCryptoStatus( KPIM::ProgressItem::CryptoStatus );
     void setTotalSteps( int totalSteps );
 
     ProgressItem *item() const { return mItem; }
@@ -121,6 +123,8 @@ public:
     ~ProgressDialog();
     void setVisible( bool b );
 
+    void setShowTypeProgressItem(unsigned int type);
+
 public Q_SLOTS:
     void slotToggleVisibility();
 
@@ -131,7 +135,7 @@ protected Q_SLOTS:
     void slotTransactionProgress( KPIM::ProgressItem *item, unsigned int progress );
     void slotTransactionStatus( KPIM::ProgressItem *item, const QString & );
     void slotTransactionLabel( KPIM::ProgressItem *item, const QString & );
-    void slotTransactionUsesCrypto( KPIM::ProgressItem *item, bool );
+    void slotTransactionCryptoStatus(KPIM::ProgressItem *item, KPIM::ProgressItem::CryptoStatus );
     void slotTransactionUsesBusyIndicator( KPIM::ProgressItem *, bool );
 
     void slotClose();
@@ -146,6 +150,7 @@ protected:
 
     TransactionItemView *mScrollView;
     QMap<const ProgressItem *, TransactionItem *> mTransactionsToListviewItems;
+    unsigned int mShowTypeProgressItem;
     bool mWasLastShown;
 };
 

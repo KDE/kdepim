@@ -250,7 +250,7 @@ void AdBlockSettingWidget::save()
     // General settings    
     saveCheckBox(checkEnableAdblock,GlobalSettings::self()->adBlockEnabledItem());
     saveCheckBox(checkHideAds, GlobalSettings::self()->hideAdsEnabledItem());
-    saveKIntSpinBox(spinBox, GlobalSettings::self()->adBlockUpdateIntervalItem());
+    saveSpinBox(spinBox, GlobalSettings::self()->adBlockUpdateIntervalItem());
 
     // automatic filters
     KConfig config(QLatin1String("messagevieweradblockrc"));

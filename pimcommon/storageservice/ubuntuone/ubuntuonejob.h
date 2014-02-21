@@ -58,6 +58,7 @@ Q_SIGNALS:
     void authorizationDone(const QString &customerSecret, const QString &token, const QString &customerKey, const QString &tokenSecret);
 
 private:
+    void addDefaultUrlItem(QUrl &url);
     void parseRequestToken(const QString &data);
     void finishGetToken();
     void parseAccountInfo(const QString &data);

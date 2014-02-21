@@ -22,6 +22,7 @@
 #include "boxjob.h"
 #include "storageservice/settings/storageservicesettings.h"
 #include "pimcommon/storageservice/storageservicejobconfig.h"
+#include "pimcommon/storageservice/utils/storageserviceutils.h"
 
 #include <qjson/parser.h>
 
@@ -571,21 +572,21 @@ QMap<QString, QString> BoxStorageService::itemInformation(const QVariantMap &var
     QMap<QString, QString> information;
     if (variantMap.contains(QLatin1String("type"))) {
         const QString type = variantMap.value(QLatin1String("type")).toString();
-        information.insert(i18n("Type:"), type == QLatin1String("folder") ? i18n("Folder") : i18n("File"));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Type), type == QLatin1String("folder") ? i18n("Folder") : i18n("File"));
     }
     if (variantMap.contains(QLatin1String("name"))) {
-        information.insert(i18n("Name:"), variantMap.value(QLatin1String("name")).toString());
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Name), variantMap.value(QLatin1String("name")).toString());
     }
     if (variantMap.contains(QLatin1String("size"))) {
-        information.insert(i18n("Size:"), KGlobal::locale()->formatByteSize(variantMap.value(QLatin1String("size")).toULongLong()));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KGlobal::locale()->formatByteSize(variantMap.value(QLatin1String("size")).toULongLong()));
     }
     if (variantMap.contains(QLatin1String("created_at"))) {
         const QString tmp = variantMap.value(QLatin1String("created_at")).toString();
-        information.insert(i18n("Created"), KGlobal::locale()->formatDateTime(PimCommon::BoxUtil::convertToDateTime( tmp )));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), KGlobal::locale()->formatDateTime(PimCommon::BoxUtil::convertToDateTime( tmp )));
     }
     if (variantMap.contains(QLatin1String("modified_at"))) {
         const QString tmp = variantMap.value(QLatin1String("modified_at")).toString();
-        information.insert(i18n("Last Modified:"), KGlobal::locale()->formatDateTime(PimCommon::BoxUtil::convertToDateTime( tmp )));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), KGlobal::locale()->formatDateTime(PimCommon::BoxUtil::convertToDateTime( tmp )));
     }
     return information;
 }

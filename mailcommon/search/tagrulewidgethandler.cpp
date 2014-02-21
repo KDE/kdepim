@@ -25,14 +25,80 @@ using MailCommon::RegExpLineEdit;
 #include <KDebug>
 #include <KIcon>
 #include <KLocale>
+#include <KJob>
 
-#include <Nepomuk2/Tag>
-
+#include <Akonadi/Tag>
+#include <Akonadi/TagFetchJob>
+#include <Akonadi/TagFetchScope>
+#include <Akonadi/TagAttribute>
 
 #include <QLineEdit>
 #include <QStackedWidget>
 
 using namespace MailCommon;
+
+class FillTagComboJob : public KJob
+{
+    Q_OBJECT
+public:
+    explicit FillTagComboJob(KComboBox *combo, QObject* parent = 0);
+    virtual void start();
+private Q_SLOTS:
+    void onDestroyed();
+    void onTagsFetched(KJob*);
+
+private:
+    KComboBox *mComboBox;
+};
+
+FillTagComboJob::FillTagComboJob(KComboBox* combo, QObject* parent)
+    :KJob(parent),
+    mComboBox(combo)
+{
+    connect(combo, SIGNAL(destroyed(QObject*)), this, SLOT(onDestroyed()));
+}
+
+void FillTagComboJob::onDestroyed()
+{
+    mComboBox = 0;
+    setError(KJob::UserDefinedError);
+    kDebug() << "Combobox destroyed";
+    emitResult();
+}
+
+void FillTagComboJob::start()
+{
+    Akonadi::TagFetchJob *fetchJob = new Akonadi::TagFetchJob(this);
+    fetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
+    connect(fetchJob, SIGNAL(result(KJob*)), this, SLOT(onTagsFetched(KJob*)));
+}
+
+void FillTagComboJob::onTagsFetched(KJob *job)
+{
+    if (job->error()) {
+        kWarning() << job->errorString();
+        setError(KJob::UserDefinedError);
+        emitResult();
+    }
+    if (!mComboBox) {
+        kDebug() << "combobox already destroyed";
+        emitResult();
+        return;
+    }
+    Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob*>(job);
+    foreach ( const Akonadi::Tag &tag, fetchJob->tags() ) {
+        QString iconName = QLatin1String("mail-tagged");
+        Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>();
+        if (attr) {
+            if (!attr->iconName().isEmpty()) {
+                iconName = attr->iconName();
+            }
+        }
+        mComboBox->addItem( KIcon( iconName ), tag.name(), tag.url().url() );
+    }
+    emitResult();
+}
+
 
 static const struct {
     SearchRule::Function id;
@@ -51,7 +117,7 @@ static const int TagFunctionCount =
 //---------------------------------------------------------------------------
 
 QWidget *TagRuleWidgetHandler::createFunctionWidget(
-        int number, QStackedWidget *functionStack, const QObject *receiver, bool isNepomukSearch ) const
+        int number, QStackedWidget *functionStack, const QObject *receiver, bool isBalooSearch ) const
 {
     if ( number != 0 ) {
         return 0;
@@ -60,7 +126,7 @@ QWidget *TagRuleWidgetHandler::createFunctionWidget(
     PimCommon::MinimumComboBox *funcCombo = new PimCommon::MinimumComboBox( functionStack );
     funcCombo->setObjectName( QLatin1String("tagRuleFuncCombo") );
     for ( int i = 0; i < TagFunctionCount; ++i ) {
-        if (isNepomukSearch) {
+        if (isBalooSearch) {
             if (TagFunctions[i].id == SearchRule::FuncContains || TagFunctions[i].id == SearchRule::FuncContainsNot) {
                 funcCombo->addItem( i18n( TagFunctions[i].displayName ) );
             }
@@ -95,12 +161,10 @@ QWidget *TagRuleWidgetHandler::createValueWidget( int number,
         valueCombo->setObjectName( QLatin1String("tagRuleValueCombo") );
         valueCombo->setEditable( true );
         valueCombo->addItem( QString() ); // empty entry for user input
-        foreach ( const Nepomuk2::Tag &tag, Nepomuk2::Tag::allTags() ) {
-            QString iconName = tag.genericIcon();
-            if ( iconName.isEmpty() )
-                iconName = QLatin1String("mail-tagged");
-            valueCombo->addItem( KIcon( iconName ), tag.label(), tag.uri() );
-        }
+
+        FillTagComboJob *job = new FillTagComboJob( valueCombo );
+        job->start();
+
         valueCombo->adjustSize();
         QObject::connect( valueCombo, SIGNAL(activated(int)),
                           receiver, SLOT(slotValueChanged()) );
@@ -156,7 +220,7 @@ QString TagRuleWidgetHandler::value( const QByteArray &field,
             valueStack->findChild<PimCommon::MinimumComboBox*>( QLatin1String("tagRuleValueCombo") );
 
     if ( tagCombo ) {
-        return tagCombo->currentText();
+        return tagCombo->itemData(tagCombo->currentIndex()).toString();
     } else {
         return QString();
     }
@@ -217,7 +281,7 @@ void TagRuleWidgetHandler::reset( QStackedWidget *functionStack,
 
 bool TagRuleWidgetHandler::setRule( QStackedWidget *functionStack,
                                     QStackedWidget *valueStack,
-                                    const SearchRule::Ptr rule, bool isNepomukSearch ) const
+                                    const SearchRule::Ptr rule, bool isBalooSearch ) const
 {
     if ( !rule || !handlesField( rule->field() ) ) {
         reset( functionStack, valueStack );
@@ -227,7 +291,7 @@ bool TagRuleWidgetHandler::setRule( QStackedWidget *functionStack,
     // set the function
     const SearchRule::Function func = rule->function();
 
-    if (isNepomukSearch ) {
+    if (isBalooSearch ) {
         if(func != SearchRule::FuncContains && func != SearchRule::FuncContainsNot) {
             reset( functionStack, valueStack );
             return false;
@@ -269,31 +333,28 @@ bool TagRuleWidgetHandler::setRule( QStackedWidget *functionStack,
         }
     } else {
         // set combo box value
-        int valueIndex = -1;
-        int tagIndex = 0;
-        foreach ( const Nepomuk2::Tag &tag, Nepomuk2::Tag::allTags() ) {
-            if ( tag.label() == rule->contents() ) {
-                valueIndex = tagIndex;
-                break;
-            }
-            tagIndex++;
-        }
-
         PimCommon::MinimumComboBox *tagCombo =
                 valueStack->findChild<PimCommon::MinimumComboBox*>( QLatin1String("tagRuleValueCombo") );
 
         if ( tagCombo ) {
             tagCombo->blockSignals( true );
-            if ( valueIndex == -1 ) {
-                tagCombo->setCurrentIndex( 0 );
-                // Still show tag if it was deleted from MsgTagMgr
-                QLineEdit *lineEdit = tagCombo->lineEdit(); // krazy:exclude=qclasses
-                Q_ASSERT( lineEdit );
-                lineEdit->setText( rule->contents() );
-            } else {
-                // Existing tags numbered from 1
-                tagCombo->setCurrentIndex( valueIndex + 1 );
+            bool found = false;
+            // Existing tags numbered from 1
+            for (int i = 1; i < tagCombo->count(); i++) {
+                if (rule->contents() == tagCombo->itemData(i).toString()) {
+                    tagCombo->setCurrentIndex(i);
+                    found = true;
+                    break;
+                }
             }
+            if (!found) {
+              tagCombo->setCurrentIndex( 0 );
+              // Still show tag if it was deleted from MsgTagMgr
+              QLineEdit *lineEdit = tagCombo->lineEdit(); // krazy:exclude=qclasses
+              Q_ASSERT( lineEdit );
+              lineEdit->setText( rule->contents() );
+            }
+
             tagCombo->blockSignals( false );
             valueStack->setCurrentWidget( tagCombo );
         }
@@ -325,3 +386,4 @@ bool TagRuleWidgetHandler::update( const QByteArray &field,
     return true;
 }
 
+#include "tagrulewidgethandler.moc"

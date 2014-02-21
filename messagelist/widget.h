@@ -24,6 +24,7 @@
 #include <akonadi/item.h>
 
 #include <kmime/kmime_message.h>
+#include <KJob>
 
 #include <messagelist/messagelist_export.h>
 
@@ -321,12 +322,13 @@ public:
   MessageList::Core::MessageItemSetReference currentThreadAsPersistentSet() const;
   Akonadi::Collection currentCollection() const;
 
+  void setQuickSearchClickMessage(const QString &msg);
 protected:
 
   /**
    * Reimplemented from MessageList::Core::Widget
    */
-  virtual void fillMessageTagCombo( KComboBox * combo );
+  virtual void fillMessageTagCombo();
 
   /**
    * Reimplemented from MessageList::Core::Widget
@@ -381,6 +383,7 @@ protected:
 private Q_SLOTS:
   void slotCollapseItem();
   void slotExpandItem();
+  void slotTagsFetched(KJob *job);
 
 
 signals:

@@ -35,8 +35,7 @@ public:
     QList<Akonadi::Collection> selectedCollection(const QModelIndex &parent = QModelIndex()) const;
 
 private Q_SLOTS:
-    void slotCollectionsInserted(const QModelIndex &parent, int start, int end);
-
+    void slotCollectionsTreeFetched();
 private:
     void initialize(const QString &mimetype);
     void updateStatus(const QModelIndex &parent);

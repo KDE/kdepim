@@ -61,6 +61,7 @@ private slots:
     void slotTextChanged( const QString & );
     void serviceSelected( const QModelIndex& );
     
+    void slotServiceDoubleClicked(const QModelIndex &idx);
 private:
     void readConfig();
     KHistoryComboBox *m_hostCombo;

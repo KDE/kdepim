@@ -38,13 +38,9 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/pimcommon
   ${CMAKE_BINARY_DIR}/pimcommon
   ${CMAKE_SOURCE_DIR}/pimcommon/util/
-  ${CMAKE_SOURCE_DIR}/korganizer
   ${CMAKE_SOURCE_DIR}/messagecomposer/utils/
   ${GPGME_INCLUDES}
   ${Boost_INCLUDE_DIR}
-  ${CMAKE_CURRENT_BINARY_DIR}/../ontologies
-  ${NEPOMUK_CORE_INCLUDE_DIR}
-  ${SOPRANO_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}
  )
 
@@ -266,13 +262,9 @@ if (KDEPIM_BUILD_DESKTOP)
     ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
     messageviewer
     akonadi_next
-    ${SOPRANO_LIBRARIES}
-    niefast_apps
     ${QT_QTWEBKIT_LIBRARY}
     ${QT_QTSCRIPT_LIBRARY}
-    ${NEPOMUK_QUERY_LIBRARIES}
     ${KDE4_KPRINTUTILS_LIBS}
-    ${NEPOMUK_CORE_LIBRARY}
     sendlater
     ${AKONADI_COMMON_LIBRARIES}
   )

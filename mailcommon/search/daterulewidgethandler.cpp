@@ -47,7 +47,7 @@ static const int DateFunctionCount =
 //---------------------------------------------------------------------------
 
 QWidget *DateRuleWidgetHandler::createFunctionWidget(
-        int number, QStackedWidget *functionStack, const QObject *receiver, bool /*isNepomukSearch*/ ) const
+        int number, QStackedWidget *functionStack, const QObject *receiver, bool /*isBalooSearch*/ ) const
 {
     if ( number != 0 ) {
         return 0;
@@ -184,7 +184,7 @@ void DateRuleWidgetHandler::reset( QStackedWidget *functionStack,
 
 bool DateRuleWidgetHandler::setRule( QStackedWidget *functionStack,
                                      QStackedWidget *valueStack,
-                                     const SearchRule::Ptr rule, bool /*isNepomukSearch*/ ) const
+                                     const SearchRule::Ptr rule, bool /*isBalooSearch*/ ) const
 {
     if ( !rule || !handlesField( rule->field() ) ) {
         reset( functionStack, valueStack );

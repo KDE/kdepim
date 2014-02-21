@@ -112,7 +112,7 @@ Q_SIGNALS:
 private:
   QList<Akonadi::MessageStatus> mStatus;    ///< Messages must match theses status, if non 0
   QString mSearchString;             ///< Messages must match this search string, if not empty
-  QString mTagId;                    ///< Messages must have this tag, if not empty
+  QString mTagId;                    ///< Messages must have this tag, if not empty. Contains a tag url.
   KUrl mCurrentFolder;
   QSet<qint64> mMatchingItemIds;
   QuickSearchLine::SearchOptions mOptions;

@@ -158,9 +158,9 @@ void KNJobData::createProgressItem()
     if ( acc )
       msg = acc->name();
   }
-  bool encr = false;
+  KPIM::ProgressItem::CryptoStatus encr = KPIM::ProgressItem::Unencrypted;
   if ( acc && acc->encryption() != KNServerInfo::None )
-    encr = true;
+    encr = KPIM::ProgressItem::Encrypted;
   mProgressItem = KPIM::ProgressManager::createProgressItem( 0,
       KPIM::ProgressManager::getUniqueID(), msg, i18n( "Waiting..." ), true, encr );
 }

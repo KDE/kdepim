@@ -22,24 +22,20 @@
 #include "messageitem.h"
 #include "messageitem_p.h"
 
-#include "messagetag.h"
 #include "messagecore/widgets/annotationdialog.h"
-#include "core/callbacknepomukresourceretriever.h"
 #include "theme.h"
 
 #include <akonadi/item.h>
-
-#include <Nepomuk2/Resource>
-#include <Nepomuk2/Tag>
-#include <Nepomuk2/Variant>
-#include <nepomuk2/nmo.h>
-#include <nepomuk2/resourcemanager.h>
-#include <Soprano/Vocabulary/NAO>
+#include <akonadi/entityannotationsattribute.h>
+#include <akonadi/tagattribute.h>
+#include <akonadi/tagfetchjob.h>
+#include <akonadi/tagfetchscope.h>
 #include <KIconLoader>
+#include <KLocalizedString>
 
 using namespace MessageList::Core;
 
-K_GLOBAL_STATIC( MessageList::CallbackNepomukResourceRetriever, s_nepomukRetriever )
+K_GLOBAL_STATIC( TagCache, s_tagCache )
 
 class MessageItem::Tag::Private
 {
@@ -55,7 +51,6 @@ public:
   QColor mTextColor;
   QColor mBackgroundColor;
   QFont  mFont;
-  QString  mFontKey;
   int mPriority;
 };
 
@@ -153,15 +148,13 @@ MessageItemPrivate::MessageItemPrivate( MessageItem* qq )
     mSignatureState( MessageItem::NotSigned ),
     mAboutToBeRemoved( false ),
     mSubjectIsPrefixed( false ),
-    mAnnotationStateChecked( false ),
-    mHasAnnotation( false ),
     mTagList( 0 )
 {
 }
 
 MessageItemPrivate::~MessageItemPrivate()
 {
-  s_nepomukRetriever->cancelCallbackRequest( mAkonadiItem.url() );
+  s_tagCache->cancelRequest(this);
   invalidateTagCache();
 }
 
@@ -176,7 +169,6 @@ void MessageItemPrivate::invalidateTagCache()
 
 void MessageItemPrivate::invalidateAnnotationCache()
 {
-  mAnnotationStateChecked = false;
 }
 
 const MessageItem::Tag* MessageItemPrivate::bestTag() const
@@ -189,7 +181,7 @@ const MessageItem::Tag* MessageItemPrivate::bestTag() const
   return best;
 }
 
-void MessageItemPrivate::fillTagList( const Nepomuk2::Resource &resource ) const
+void MessageItemPrivate::fillTagList(const Akonadi::Tag::List &taglist)
 {
   Q_ASSERT( !mTagList );
   mTagList = new QList<MessageItem::Tag*>;
@@ -197,46 +189,43 @@ void MessageItemPrivate::fillTagList( const Nepomuk2::Resource &resource ) const
   // TODO: The tag pointers here could be shared between all items, there really is no point in
   //       creating them for each item that has tags
 
-  const QList< Nepomuk2::Tag > nepomukTagList = resource.tags();
-  if ( !nepomukTagList.isEmpty() ) {
-    foreach( const Nepomuk2::Tag &nepomukTag, nepomukTagList ) {
-      QString symbol = QLatin1String( "mail-tagged" );
-      if ( !nepomukTag.genericIcon().isEmpty() ) {
-        symbol = nepomukTag.genericIcon();
-      }
-      MessageItem::Tag *messageListTag =
-          new MessageItem::Tag( SmallIcon( symbol ),
-                   nepomukTag.label(), nepomukTag.uri().toString() );
-      if ( nepomukTag.hasProperty( Vocabulary::MessageTag::textColor() ) ) {
-        const QString name = nepomukTag.property( Vocabulary::MessageTag::textColor() ).toString();
-        messageListTag->setTextColor( QColor( name ) );
-      }
-      if ( nepomukTag.hasProperty( Vocabulary::MessageTag::backgroundColor() ) ) {
-        const QString name = nepomukTag.property( Vocabulary::MessageTag::backgroundColor() ).toString();
-        messageListTag->setBackgroundColor( QColor( name ) );
-      }
-      if ( nepomukTag.hasProperty( Vocabulary::MessageTag::priority() ) ) {
-        messageListTag->setPriority( nepomukTag.property( Vocabulary::MessageTag::priority() ).toInt() );
-      }
-      else
-        messageListTag->setPriority( 0xFFFF );
+  //Priority sort this and make bestTag more efficient
 
-      if ( nepomukTag.hasProperty( Vocabulary::MessageTag::font() ) ) {
-        const QString fontName = nepomukTag.property( Vocabulary::MessageTag::font() ).toString();
-        QFont font;
-        font.fromString( fontName );
-        messageListTag->setFont( font );
+  foreach( const Akonadi::Tag &tag, taglist ) {
+    QString symbol = QLatin1String( "mail-tagged" );
+    Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>();
+    if (attr) {
+      if (!attr->iconName().isEmpty()) {
+        symbol = attr->iconName();
       }
-
-      mTagList->append( messageListTag );
     }
+    MessageItem::Tag *messageListTag =
+        new MessageItem::Tag( SmallIcon( symbol ), tag.name(), tag.url().url() );
+
+    if (attr) {
+      messageListTag->setTextColor( attr->textColor() );
+      messageListTag->setBackgroundColor( attr->backgroundColor() );
+      if (!attr->font().isEmpty()) {
+        QFont font;
+        if (font.fromString( attr->font() )) {
+          messageListTag->setFont( font );
+        }
+      }
+      if (attr->priority() != -1) {
+        messageListTag->setPriority( attr->priority() );
+      } else {
+        messageListTag->setPriority( 0xFFFF );
+      }
+    }
+
+    mTagList->append( messageListTag );
   }
 }
 
 QList<MessageItem::Tag*> MessageItemPrivate::getTagList() const
 {
   if ( !mTagList ) {
-    s_nepomukRetriever->requestResource( const_cast<MessageItemPrivate*>(this), mAkonadiItem.url() );
+    s_tagCache->retrieveTags(mAkonadiItem.tags(), const_cast<MessageItemPrivate*>(this));
     return QList<MessageItem::Tag*>();
   }
 
@@ -247,21 +236,6 @@ bool MessageItemPrivate::tagListInitialized() const
 {
   return mTagList != 0;
 }
-
-void MessageItemPrivate::resourceReceived(const Nepomuk2::Resource& resource)
-{
-  if ( !mTagList )
-    fillTagList( resource );
-
-  if ( resource.hasProperty( QUrl( Soprano::Vocabulary::NAO::description().toString() ) ) ) {
-    mHasAnnotation = !resource.description().isEmpty();
-  } else {
-    mHasAnnotation = false;
-  }
-
-  mAnnotationStateChecked = true;
-}
-
 
 MessageItem::MessageItem()
   : Item( Message, new MessageItemPrivate( this ) ), ModelInvariantIndex()
@@ -286,37 +260,37 @@ QList< MessageItem::Tag * > MessageItem::tagList() const
 bool MessageItem::hasAnnotation() const
 {
   Q_D( const MessageItem );
-  if ( d->mAnnotationStateChecked )
-    return d->mHasAnnotation;
-
-  s_nepomukRetriever->requestResource( const_cast<MessageItemPrivate*>(d), d->mAkonadiItem.url() );
-  return false;
+  //TODO check for note entry?
+  return d->mAkonadiItem.hasAttribute<Akonadi::EntityAnnotationsAttribute>();
 }
 
 QString MessageItem::annotation() const
 {
   Q_D( const MessageItem );
-  if ( hasAnnotation() ) {
-    kDebug();
-    Nepomuk2::Resource resource( d->mAkonadiItem.url() );
-    return resource.description();
+  if ( d->mAkonadiItem.hasAttribute<Akonadi::EntityAnnotationsAttribute>() ) {
+    Akonadi::EntityAnnotationsAttribute *attr = d->mAkonadiItem.attribute<Akonadi::EntityAnnotationsAttribute>();
+    const QMap<QByteArray, QByteArray> annotations = attr->annotations();
+    if (annotations.contains("/private/comment")) {
+      return QString::fromLatin1(annotations.value("/private/comment"));
+    }
+    if (annotations.contains("/shared/comment")) {
+      return QString::fromLatin1(annotations.value("/shared/comment"));
+    }
   }
-  else
-    return QString();
+  return QString();
 }
 
 void MessageItem::editAnnotation()
 {
-  if( !Nepomuk2::ResourceManager::instance()->initialized() )
-      return;
   Q_D( MessageItem );
   if ( d->mAnnotationDialog.data() )
     return;
-  d->mAnnotationDialog = new MessageCore::AnnotationEditDialog( d->mAkonadiItem.url() );
+  d->mAnnotationDialog = new MessageCore::AnnotationEditDialog( d->mAkonadiItem );
   d->mAnnotationDialog.data()->setAttribute( Qt::WA_DeleteOnClose );
-  if ( d->mAnnotationDialog.data()->exec() )
+  //FIXME make async
+  if ( d->mAnnotationDialog.data()->exec() ) {
     // invalidate the cached mHasAnnotation value
-    d->mAnnotationStateChecked = false;
+  }
 }
 
 const MessageItem::Tag * MessageItemPrivate::findTagInternal( const QString &szTagId ) const
@@ -718,4 +692,79 @@ bool FakeItem::hasAnnotation() const
   return true;
 }
 
+TagCache::TagCache()
+   :QObject(),
+   mMonitor(new Akonadi::Monitor(this))
+{
+  mCache.setMaxCost(100);
+  mMonitor->setTypeMonitored(Akonadi::Monitor::Tags);
+  mMonitor->tagFetchScope().fetchAttribute<Akonadi::TagAttribute>();
+  connect(mMonitor, SIGNAL(tagAdded(Akonadi::Tag)), this, SLOT(onTagAdded(Akonadi::Tag)));
+  connect(mMonitor, SIGNAL(tagRemoved(Akonadi::Tag)), this, SLOT(onTagRemoved(Akonadi::Tag)));
+  connect(mMonitor, SIGNAL(tagChanged(Akonadi::Tag)), this, SLOT(onTagChanged(Akonadi::Tag)));
+}
 
+void TagCache::onTagAdded(const Akonadi::Tag &tag)
+{
+  mCache.insert(tag.id(), new Akonadi::Tag(tag));
+}
+
+void TagCache::onTagChanged(const Akonadi::Tag &tag)
+{
+  mCache.remove(tag.id());
+}
+
+void TagCache::onTagRemoved(const Akonadi::Tag &tag)
+{
+  mCache.remove(tag.id());
+}
+
+void TagCache::retrieveTags(const Akonadi::Tag::List &tags, MessageItemPrivate *m)
+{
+  //Retrieval is in progress
+  if (mRequests.key(m)) {
+    return;
+  }
+  Akonadi::Tag::List toFetch;
+  Akonadi::Tag::List available;
+  Q_FOREACH( const Akonadi::Tag &tag, tags ) {
+    if (mCache.contains(tag.id())) {
+      available << *mCache.object(tag.id());
+    } else {
+      toFetch << tag;
+    }
+  }
+  //Because fillTagList expects to be called once we either fetch all or none
+  if (!toFetch.isEmpty()) {
+    Akonadi::TagFetchJob *tagFetchJob = new Akonadi::TagFetchJob(tags, this);
+    tagFetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
+    connect(tagFetchJob, SIGNAL(result(KJob*)), this, SLOT(onTagsFetched(KJob*)));
+    mRequests.insert(tagFetchJob, m);
+  } else {
+    m->fillTagList(available);
+  }
+}
+
+void TagCache::cancelRequest(MessageItemPrivate *m)
+{
+  const QList<KJob*> keys = mRequests.keys(m);
+  Q_FOREACH( KJob *job, keys ) {
+      mRequests.remove(job);
+  }
+}
+
+void TagCache::onTagsFetched(KJob *job)
+{
+  if (job->error()) {
+    kWarning() << "Failed to fetch tags: " << job->errorString();
+    return;
+  }
+  Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob*>(job);
+  Q_FOREACH( const Akonadi::Tag &tag, fetchJob->tags() ) {
+    mCache.insert(tag.id(), new Akonadi::Tag(tag));
+  }
+  MessageItemPrivate *m = mRequests.take(fetchJob);
+  if (m) {
+    m->fillTagList(fetchJob->tags());
+  }
+}

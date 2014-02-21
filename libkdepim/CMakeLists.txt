@@ -14,7 +14,6 @@ add_definitions(${QT_QTDBUS_DEFINITIONS})
 
 include_directories( ${Boost_INCLUDE_DIR} )
 include_directories( ${BALOO_INCLUDE_DIR} )
-include_directories( ${SOPRANO_INCLUDE_DIR} ${NEPOMUK_CORE_INCLUDE_DIR} )
 
 option(KDEPIM_INPROCESS_LDAP "Use in-process rather than KIO slave LDAP" FALSE)
 if (KDEPIM_INPROCESS_LDAP)
@@ -23,7 +22,18 @@ endif ()
 
 ########### next target ###############
 
+set(kdepim_progresswidget_LIB_SRCS
+   progresswidget/progressmanager.cpp
+   progresswidget/progressmanager_akonadiagent.cpp
+   progresswidget/agentprogressmonitor.cpp
+   progresswidget/progressdialog.cpp
+   progresswidget/statusbarprogresswidget.cpp
+   progresswidget/ssllabel.cpp
+   progresswidget/progressstatusbarwidget.cpp
+)
+
 set(kdepim_LIB_SRCS
+   ${kdepim_progresswidget_LIB_SRCS}
    job/addemailaddressjob.cpp
    job/addcontactjob.cpp
    job/openemailaddressjob.cpp
@@ -37,12 +47,6 @@ set(kdepim_LIB_SRCS
    ldap/ldapsearchdialog.cpp
    ldap/ldapclientsearch.cpp
    ldap/ldapclientsearchconfig.cpp
-   progresswidget/progressmanager.cpp
-   progresswidget/progressmanager_akonadiagent.cpp
-   progresswidget/agentprogressmonitor.cpp
-   progresswidget/progressdialog.cpp
-   progresswidget/statusbarprogresswidget.cpp
-   progresswidget/ssllabel.cpp
    misc/broadcaststatus.cpp
    misc/maillistdrag.cpp
    misc/uistatesaver.cpp
@@ -83,7 +87,6 @@ target_link_libraries(kdepim
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
-  ${NEPOMUK_CORE_LIBRARY}
   ${BALOO_LIBRARIES}
 )
 

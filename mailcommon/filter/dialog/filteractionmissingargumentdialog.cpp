@@ -488,7 +488,7 @@ void FilterActionMissingTagDialog::slotAddTag()
     QPointer<MailCommon::AddTagDialog> dlg = new MailCommon::AddTagDialog(QList<KActionCollection*>(),this);
     if (dlg->exec())  {
         QListWidgetItem *item = new QListWidgetItem( dlg->label() );
-        item->setData(UrlData, dlg->nepomukUrl());
+        item->setData(UrlData, dlg->tag().url().url());
         mTagList->addItem(item);
     }
     delete dlg;

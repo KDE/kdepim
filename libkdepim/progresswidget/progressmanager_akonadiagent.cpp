@@ -33,16 +33,18 @@ using namespace Akonadi;
 
 using namespace KPIM;
 
-ProgressItem *ProgressManager::createProgressItemForAgent( ProgressItem *parent,
+ProgressItem *ProgressManager::createProgressItemForAgent(ProgressItem *parent,
                                                            const Akonadi::AgentInstance &instance,
                                                            const QString &id,
                                                            const QString &label,
                                                            const QString &status,
                                                            bool cancellable,
-                                                           bool usesCrypto )
+                                                           ProgressItem::CryptoStatus cryptoStatus,
+                                                          unsigned int progressType )
 {
     const bool itemAlreadyExists = ( mTransactions.value( id ) != 0 );
-    ProgressItem *t = createProgressItemImpl( parent, id, label, status, cancellable, usesCrypto );
+    ProgressItem *t = createProgressItemImpl( parent, id, label, status, cancellable, cryptoStatus );
+    t->setTypeProgressItem(progressType);
     // TODO ^ emits progressItemAdded() before I'm done connecting the signals.
     // Should I block that and emit it when I'm done?
 

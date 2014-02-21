@@ -70,14 +70,14 @@ public slots:
 
 
 public:
-    void killNote( const QString &id );
-    void killNote( const QString &id, bool force );
+    void killNote( Akonadi::Item::Id id );
+    void killNote( Akonadi::Item::Id id, bool force );
 
-    QString name(const Akonadi::Item::Id &id ) const;
-    QString text( const Akonadi::Item::Id &id ) const;
+    QString name( Akonadi::Item::Id id ) const;
+    QString text(Akonadi::Entity::Id id ) const;
 
-    void setName( const Akonadi::Item::Id &id, const QString &newName );
-    void setText( const Akonadi::Item::Id &id, const QString &newText );
+    void setName( Akonadi::Item::Id id, const QString &newName );
+    void setText( Akonadi::Item::Id id, const QString &newText );
 
     QMap<QString, QString> notes() const;
     void popupRMB( QListWidgetItem *item, const QPoint &pos, const QPoint &globalPos );
@@ -99,7 +99,6 @@ private slots:
     void hideToolTip();
     void slotNotePreferences();
     void slotPreferences();
-    void slotApplyConfig();
     void slotMail();
     void slotSendToNetwork();
     void slotConfigUpdated();
@@ -110,13 +109,15 @@ private slots:
 
     void slotNoteCreationFinished(KJob *job);
     void slotRowInserted(const QModelIndex &parent, int start, int end);
+    void slotItemChanged(const Akonadi::Item &id, const QSet<QByteArray> &set);
+    void slotNoteSaved(KJob *);
+    void slotDeleteNotesFinished(KJob *job);
+    void slotItemRemoved(const Akonadi::Item &item);
 private:
     void updateNetworkListener();
     void printSelectedNotes(bool preview);
     KNotesWidget *mNotesWidget;
     KNoteTip *mNoteTip;
-
-    QMultiHash<QString, KNotesIconViewItem*> mNoteList;
     DNSSD::PublicService *mPublisher;
     KAction *mNoteEdit;
     KAction *mNoteRename;

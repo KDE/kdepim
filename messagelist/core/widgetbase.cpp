@@ -71,7 +71,8 @@ public:
       mTheme( 0 ), mFilter( 0 ),
       mStorageUsesPrivateTheme( false ),
       mStorageUsesPrivateAggregation( false ),
-      mStorageUsesPrivateSortOrder( false )
+      mStorageUsesPrivateSortOrder( false ),
+      mStatusFilterComboPopulationInProgress( false )
   { }
 
 
@@ -115,6 +116,8 @@ public:
   bool mStorageUsesPrivateAggregation;   ///< true if the current folder does not use the global aggregation
   bool mStorageUsesPrivateSortOrder;     ///< true if the current folder does not use the global sort order
   KUrl mCurrentFolderUrl;                ///< The Akonadi URL of the current folder
+  int mCurrentStatusFilterIndex;
+  bool mStatusFilterComboPopulationInProgress;
 };
 
 Widget::Widget( QWidget *pParent )
@@ -198,19 +201,31 @@ void Widget::changeQuicksearchVisibility(bool show)
 
 void Widget::populateStatusFilterCombo()
 {
+  if (d->mStatusFilterComboPopulationInProgress) {
+    return;
+  }
+  d->mStatusFilterComboPopulationInProgress = true;
   KComboBox *tagFilterComboBox = d->quickSearchLine->tagFilterComboBox();
-  const int currentIndex = (tagFilterComboBox->currentIndex() != -1) ?  tagFilterComboBox->currentIndex() : 0;
+  d->mCurrentStatusFilterIndex = (tagFilterComboBox->currentIndex() != -1) ?  tagFilterComboBox->currentIndex() : 0;
   disconnect( tagFilterComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(statusSelected(int)) );
 
   tagFilterComboBox->clear();
 
-  fillMessageTagCombo( d->quickSearchLine->tagFilterComboBox() );
-  d->quickSearchLine->updateComboboxVisibility();
+  fillMessageTagCombo();
+}
 
+void Widget::addMessageTagItem(const QPixmap &icon, const QString &text, const QVariant &data)
+{
+  d->quickSearchLine->tagFilterComboBox()->addItem(icon, text, data);
+}
+
+void Widget::setCurrentStatusFilterItem()
+{
+  d->quickSearchLine->updateComboboxVisibility();
   connect( d->quickSearchLine->tagFilterComboBox(), SIGNAL(currentIndexChanged(int)),
            this, SLOT(statusSelected(int)) );
-
-  d->quickSearchLine->tagFilterComboBox()->setCurrentIndex(currentIndex>=d->quickSearchLine->tagFilterComboBox()->count() ? 0 : currentIndex );
+  d->quickSearchLine->tagFilterComboBox()->setCurrentIndex(d->mCurrentStatusFilterIndex>=d->quickSearchLine->tagFilterComboBox()->count() ? 0 : d->mCurrentStatusFilterIndex );
+  d->mStatusFilterComboPopulationInProgress = false;
 }
 
 MessageItem *Widget::currentMessageItem() const
@@ -875,9 +890,10 @@ void Widget::aggregationsChanged()
   d->mView->reload();
 }
 
-void Widget::fillMessageTagCombo( KComboBox* /*combo*/ )
+void Widget::fillMessageTagCombo()
 {
   // nothing here: must be overridden in derived classes
+  setCurrentStatusFilterItem();
 }
 
 void Widget::tagIdSelected( const QVariant& data )
@@ -903,6 +919,10 @@ void Widget::tagIdSelected( const QVariant& data )
 
 void Widget::statusSelected( int index )
 {
+    if (index == 0) {
+        resetFilter();
+        return;
+    }
     tagIdSelected( d->quickSearchLine->tagFilterComboBox()->itemData( index ) );
     d->mView->model()->setFilter( d->mFilter );
 }

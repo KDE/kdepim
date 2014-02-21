@@ -108,28 +108,16 @@ void ConfigureImmutableWidgetUtils::saveSpinBox( QSpinBox * b, KCoreConfigSkelet
     e->setValue( b->value() );
 }
 
-void ConfigureImmutableWidgetUtils::loadWidget( KIntSpinBox * b, const KCoreConfigSkeleton::ItemInt *e )
-{
-    checkLockDown( b, e );
-    b->setValue( e->value() );
-}
-
-void ConfigureImmutableWidgetUtils::saveKIntSpinBox( KIntSpinBox * b, KCoreConfigSkeleton::ItemInt *e )
+void ConfigureImmutableWidgetUtils::saveSpinBox( QSpinBox * b, KCoreConfigSkeleton::ItemUInt *e )
 {
     e->setValue( b->value() );
 }
 
-void ConfigureImmutableWidgetUtils::loadWidget( KIntSpinBox * b, const KCoreConfigSkeleton::ItemUInt *e )
+void ConfigureImmutableWidgetUtils::loadWidget( QSpinBox * b, const KCoreConfigSkeleton::ItemUInt *e )
 {
     checkLockDown( b, e );
     b->setValue( e->value() );
 }
-
-void ConfigureImmutableWidgetUtils::saveKIntSpinBox( KIntSpinBox * b, KCoreConfigSkeleton::ItemUInt *e )
-{
-    e->setValue( b->value() );
-}
-
 
 void ConfigureImmutableWidgetUtils::saveCheckBox( QCheckBox * b, KCoreConfigSkeleton::ItemBool *e )
 {

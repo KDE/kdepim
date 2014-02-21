@@ -55,9 +55,12 @@ void SelectMultiCollectionWidget::initialize(const QString &mimetype)
     setLayout(vbox);
 
     mCheckedCollectionWidget = new PimCommon::CheckedCollectionWidget(mimetype);
-    connect(mCheckedCollectionWidget->entityTreeModel(), SIGNAL(rowsInserted(QModelIndex,int,int)),
-            this, SLOT(slotCollectionsInserted(QModelIndex,int,int)));
 
+    connect(mCheckedCollectionWidget, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)), SLOT(slotCollectionsTreeFetched()));
+    connect(mCheckedCollectionWidget, SIGNAL(collectionRemoved(Akonadi::Collection)), SLOT(slotCollectionsTreeFetched()));
+
+    connect(mCheckedCollectionWidget->entityTreeModel(), SIGNAL(collectionTreeFetched(Akonadi::Collection::List)),
+            this, SLOT(slotCollectionsTreeFetched()));
     vbox->addWidget(mCheckedCollectionWidget);
 }
 
@@ -77,7 +80,7 @@ void SelectMultiCollectionWidget::updateStatus(const QModelIndex &parent)
     }
 }
 
-void SelectMultiCollectionWidget::slotCollectionsInserted(const QModelIndex &, int, int)
+void SelectMultiCollectionWidget::slotCollectionsTreeFetched()
 {
     if (!mListCollection.isEmpty()) {
         updateStatus(QModelIndex());

@@ -20,6 +20,7 @@
 #include "storageservice/storageservicemanager.h"
 #include "storageservice/settings/storageservicesettings.h"
 #include "pimcommon/storageservice/storageservicejobconfig.h"
+#include "pimcommon/storageservice/utils/storageserviceutils.h"
 
 #include "yousenditutil.h"
 #include "yousenditjob.h"
@@ -423,18 +424,18 @@ QMap<QString, QString> YouSendItStorageService::itemInformation(const QVariantMa
     QMap<QString, QString> information;
     qDebug()<<" variantMap "<<variantMap;
     if (variantMap.contains(QLatin1String("name"))) {
-        information.insert(i18n("name:"), variantMap.value(QLatin1String("name")).toString());
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Name), variantMap.value(QLatin1String("name")).toString());
     }
     if (variantMap.contains(QLatin1String("createdOn"))) {
         const QString t = variantMap.value(QLatin1String("createdOn")).toString();
-        information.insert(i18n("Created:"), KGlobal::locale()->formatDateTime(YouSendItUtil::convertToDateTime(t,true)));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), KGlobal::locale()->formatDateTime(YouSendItUtil::convertToDateTime(t,true)));
     }
     if (variantMap.contains(QLatin1String("lastUpdatedOn"))) {
         const QString t = variantMap.value(QLatin1String("lastUpdatedOn")).toString();
-        information.insert(i18n("Last Modifier:"), KGlobal::locale()->formatDateTime(YouSendItUtil::convertToDateTime(t,true)));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), KGlobal::locale()->formatDateTime(YouSendItUtil::convertToDateTime(t,true)));
     }
     if (variantMap.contains(QLatin1String("size"))) {
-        information.insert(i18n("Size:"), KGlobal::locale()->formatByteSize(variantMap.value(QLatin1String("size")).toULongLong()));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KGlobal::locale()->formatByteSize(variantMap.value(QLatin1String("size")).toULongLong()));
     }
     if (variantMap.contains(QLatin1String("writeable"))) {
         information.insert(i18n("writable:"), (variantMap.value(QLatin1String("writeable")).toString() == QLatin1String("true")) ? i18n("Yes") : i18n("No"));

@@ -72,6 +72,8 @@ NoteHostDialog::NoteHostDialog( const QString &caption, QWidget *parent )
              SLOT(serviceSelected(QModelIndex)) );
     connect( m_servicesView, SIGNAL(clicked(QModelIndex)),
              SLOT(serviceSelected(QModelIndex)) );
+    connect( m_servicesView, SIGNAL(doubleClicked(QModelIndex)),
+             SLOT(slotServiceDoubleClicked(QModelIndex)) );
 
     ( void ) new QLabel( i18n("Hostname or IP address:"), page );
 
@@ -129,3 +131,9 @@ quint16 NoteHostDialog::port() const
     return m_hostCombo->currentText().section( QLatin1Char(':'), 1 ).toUShort();
 }
 
+void NoteHostDialog::slotServiceDoubleClicked(const QModelIndex &idx)
+{
+    DNSSD::RemoteService::Ptr srv = idx.data( DNSSD::ServiceModel::ServicePtrRole ).value<DNSSD::RemoteService::Ptr>();
+    m_hostCombo->lineEdit()->setText( srv->hostName() + QLatin1String(":") + QString::number( srv->port() ) );
+    accept();
+}

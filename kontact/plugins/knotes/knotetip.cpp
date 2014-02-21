@@ -32,7 +32,7 @@
 
 #include "knotetip.h"
 #include "knotesiconview.h"
-
+#include "knotes/notes/knotedisplaysettings.h"
 
 #include <KTextEdit>
 #include <KGlobalSettings>
@@ -48,7 +48,7 @@ KNoteTip::KNoteTip( QListWidget *parent )
               Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint ),
       mFilter( false ),
       mView( parent ),
-      //mNoteIVI( 0 ),
+      mNoteIVI( 0 ),
       mPreview( new QTextEdit( this ) )
 {
     mPreview->setReadOnly( true );
@@ -68,7 +68,7 @@ KNoteTip::~KNoteTip()
     delete mPreview;
     mPreview = 0;
 }
-#if 0
+
 void KNoteTip::setNote( KNotesIconViewItem *item )
 {
     if ( mNoteIVI == item ) {
@@ -83,14 +83,11 @@ void KNoteTip::setNote( KNotesIconViewItem *item )
             hide();
         }
     } else {
-        Journal *journal = item->journal();
-        mPreview->setAcceptRichText( journal->customProperty( "KNotes", "RichText" ) == QLatin1String("true") );
-
-        const QColor fg( journal->customProperty( "KNotes", "FgColor" ) );
-        const QColor bg( journal->customProperty( "KNotes", "BgColor" ) );
+        mPreview->setAcceptRichText(item->isRichText());
+        const QColor fg( item->displayAttribute()->foregroundColor() );
+        const QColor bg( item->displayAttribute()->backgroundColor() );
         setColor( fg, bg );
-
-        mPreview->setText( journal->description() );
+        mPreview->setText(item->description());
         //mPreview->zoomTo( 8 );
         //mPreview->sync(); this is deprecated in Qt4, but there is no replacement
 
@@ -110,7 +107,6 @@ void KNoteTip::setNote( KNotesIconViewItem *item )
         startTimer( 600 );  // delay showing the tooltip for 0.7 sec
     }
 }
-#endif
 // protected, virtual methods
 
 void KNoteTip::resizeEvent( QResizeEvent *ev )
@@ -195,7 +191,6 @@ void KNoteTip::setFilter( bool enable )
 
 void KNoteTip::reposition()
 {
-#if 0
     if ( !mNoteIVI ) {
         return;
     }
@@ -224,6 +219,5 @@ void KNoteTip::reposition()
         pos.setY( rect.bottom() );
     }
     move( pos );
-#endif
     update();
 }

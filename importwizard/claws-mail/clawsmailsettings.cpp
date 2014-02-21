@@ -189,6 +189,6 @@ void ClawsMailSettings::readTagColor(const KConfigGroup &group)
         }
     }
     if (!listTag.isEmpty()) {
-        ImportWizardUtil::addNepomukTag(listTag);
+        ImportWizardUtil::addAkonadiTag(listTag);
     }
 }

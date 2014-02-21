@@ -37,7 +37,7 @@ class FolderRequester;
 
 class MAILCOMMON_EXPORT CollectionExpiryPage : public Akonadi::CollectionPropertiesPage
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
     explicit CollectionExpiryPage( QWidget *parent = 0 );
