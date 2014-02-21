@@ -67,7 +67,7 @@ void TranslatorDebugDialog::writeConfig()
 
 void TranslatorDebugDialog::slotSaveAs()
 {
-    const QString filter = i18n( "all files (*)" );
+    const QString filter = QLatin1String("*.*|") + i18n( "all files (*)" );
     PimCommon::Util::saveTextAs(mEdit->toPlainText(), filter, this);
 }
 
