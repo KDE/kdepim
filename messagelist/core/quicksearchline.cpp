@@ -86,6 +86,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mTagFilterCombo = new KComboBox( this ) ;
     mTagFilterCombo->setVisible( Settings::self()->showQuickSearch() );
     mTagFilterCombo->setMaximumWidth(300);
+    mTagFilterCombo->setMaximumWidth(200);
     mTagFilterCombo->hide();
     hbox->addWidget( mTagFilterCombo );
 
