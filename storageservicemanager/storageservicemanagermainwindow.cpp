@@ -24,12 +24,13 @@
 #include "storageservicemanagersettingsjob.h"
 #include "storageservicemanagerglobalconfig.h"
 #include "pimcommon/storageservice/storageservicemanager.h"
+#include "pimcommon/storageservice/storageserviceprogressmanager.h"
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 
 #include "pimcommon/storageservice/settings/storageservicesettings.h"
 
-#include "libkdepim/progresswidget/progressdialog.h"
+#include "libkdepim/progresswidget/progressstatusbarwidget.h"
 #include "libkdepim/progresswidget/statusbarprogresswidget.h"
 
 #include <KStandardAction>
@@ -91,14 +92,8 @@ void StorageServiceManagerMainWindow::initStatusBar()
 {
     mStatusBarInfo = new QLabel;
     statusBar()->insertWidget(0, mStatusBarInfo, 4);
-
-    KPIM::ProgressDialog *progressDialog = new KPIM::ProgressDialog( statusBar(), this );
-    progressDialog->hide();
-
-    KPIM::StatusbarProgressWidget *littleProgress = new KPIM::StatusbarProgressWidget( progressDialog, statusBar() );
-    littleProgress->show();
-
-    statusBar()->addPermanentWidget( littleProgress, 0 );
+    KPIM::ProgressStatusBarWidget *progressBar = new KPIM::ProgressStatusBarWidget( statusBar(), this, PimCommon::StorageServiceProgressManager::progressTypeValue() );
+    statusBar()->addPermanentWidget( progressBar->littleProgress(), 0 );
 }
 
 void StorageServiceManagerMainWindow::slotSystemNetworkStatusChanged(Solid::Networking::Status status)

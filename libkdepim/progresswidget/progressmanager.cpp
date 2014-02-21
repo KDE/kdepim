@@ -236,16 +236,24 @@ ProgressItem *ProgressManager::createProgressItem(const QString &label)
                                                QString(), true, KPIM::ProgressItem::Unencrypted );
 }
 
+ProgressItem *ProgressManager::createProgressItem(unsigned int progressType, const QString &label)
+{
+    return instance()->createProgressItemImpl( 0, getUniqueID(), label,
+                                               QString(), true, KPIM::ProgressItem::Unencrypted, progressType );
+}
+
 ProgressItem *ProgressManager::createProgressItemImpl( ProgressItem *parent,
                                                        const QString &id,
                                                        const QString &label,
                                                        const QString &status,
                                                        bool cancellable,
-                                                       ProgressItem::CryptoStatus cryptoStatus )
+                                                       ProgressItem::CryptoStatus cryptoStatus,
+                                                       unsigned int progressType)
 {
     ProgressItem *t = 0;
     if ( !mTransactions.value( id ) ) {
         t = new ProgressItem ( parent, id, label, status, cancellable, cryptoStatus );
+        t->setTypeProgressItem(progressType);
         mTransactions.insert( id, t );
         if ( parent ) {
             ProgressItem *p = mTransactions.value( parent->id() );
@@ -284,10 +292,11 @@ ProgressItem *ProgressManager::createProgressItemImpl( const QString &parent,
                                                        const QString &label,
                                                        const QString &status,
                                                        bool canBeCanceled,
-                                                       ProgressItem::CryptoStatus cryptoStatus )
+                                                       ProgressItem::CryptoStatus cryptoStatus,
+                                                       unsigned int progressType )
 {
     ProgressItem *p = mTransactions.value( parent );
-    return createProgressItemImpl( p, id, label, status, canBeCanceled, cryptoStatus );
+    return createProgressItemImpl( p, id, label, status, canBeCanceled, cryptoStatus, progressType );
 }
 
 void ProgressManager::emitShowProgressDialogImpl()
