@@ -123,6 +123,8 @@ public:
     ~ProgressDialog();
     void setVisible( bool b );
 
+    void setShowTypeProgressItem(unsigned int type);
+
 public Q_SLOTS:
     void slotToggleVisibility();
 
@@ -148,6 +150,7 @@ protected:
 
     TransactionItemView *mScrollView;
     QMap<const ProgressItem *, TransactionItem *> mTransactionsToListviewItems;
+    unsigned int mShowTypeProgressItem;
     bool mWasLastShown;
 };
 

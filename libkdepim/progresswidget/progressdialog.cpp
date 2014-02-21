@@ -252,7 +252,9 @@ void TransactionItem::addSubTransaction( ProgressItem *item )
 // ---------------------------------------------------------------------------
 
 ProgressDialog::ProgressDialog( QWidget *alignWidget, QWidget *parent, const char *name )
-    : OverlayWidget( alignWidget, parent, name ), mWasLastShown( false )
+    : OverlayWidget( alignWidget, parent, name ),
+      mShowTypeProgressItem(0),
+      mWasLastShown( false )
 {
     setFrameStyle( QFrame::Panel | QFrame::Sunken ); // QFrame
 
@@ -297,23 +299,29 @@ ProgressDialog::~ProgressDialog()
     // no need to delete child widgets.
 }
 
+void ProgressDialog::setShowTypeProgressItem(unsigned int type)
+{
+    mShowTypeProgressItem = type;
+}
+
 void ProgressDialog::slotTransactionAdded( ProgressItem *item )
 {
-    if ( item->parent() ) {
-        if ( mTransactionsToListviewItems.contains( item->parent() ) ) {
-            TransactionItem * parent = mTransactionsToListviewItems[ item->parent() ];
-            parent->addSubTransaction( item );
+    if (item->typeProgressItem() == mShowTypeProgressItem) {
+        if ( item->parent() ) {
+            if ( mTransactionsToListviewItems.contains( item->parent() ) ) {
+                TransactionItem * parent = mTransactionsToListviewItems[ item->parent() ];
+                parent->addSubTransaction( item );
+            }
+        } else {
+            const bool first = mTransactionsToListviewItems.empty();
+            TransactionItem *ti = mScrollView->addTransactionItem( item, first );
+            if ( ti ) {
+                mTransactionsToListviewItems.insert( item, ti );
+            }
+            if ( first && mWasLastShown ) {
+                QTimer::singleShot( 1000, this, SLOT(slotShow()) );
+            }
         }
-    } else {
-        const bool first = mTransactionsToListviewItems.empty();
-        TransactionItem *ti = mScrollView->addTransactionItem( item, first );
-        if ( ti ) {
-            mTransactionsToListviewItems.insert( item, ti );
-        }
-        if ( first && mWasLastShown ) {
-            QTimer::singleShot( 1000, this, SLOT(slotShow()) );
-        }
-
     }
 }
 

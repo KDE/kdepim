@@ -161,6 +161,9 @@ public:
 
     bool canceled() const { return mCanceled; }
 
+    unsigned int typeProgressItem() const;
+    void setTypeProgressItem(unsigned int);
+
 Q_SIGNALS:
     /**
      * Emitted when a new ProgressItem is added.
@@ -245,6 +248,7 @@ private:
     unsigned int mTotal;
     unsigned int mCompleted;
     CryptoStatus mCryptoStatus;
+    unsigned int mType;
     bool mWaitingForKids;
     bool mCanceled;
     bool mUsesBusyIndicator;

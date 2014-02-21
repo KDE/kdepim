@@ -34,10 +34,20 @@ unsigned int KPIM::ProgressManager::uID = 42;
 ProgressItem::ProgressItem( ProgressItem *parent, const QString &id,
                             const QString &label, const QString &status,
                             bool canBeCanceled, CryptoStatus cryptoStatus )
-    : mId( id ), mLabel( label ), mStatus( status ), mParent( parent ),
-      mCanBeCanceled( canBeCanceled ), mProgress( 0 ), mTotal( 0 ),
-      mCompleted( 0 ), mCryptoStatus(cryptoStatus), mWaitingForKids( false ), mCanceled( false ),
-      mUsesBusyIndicator( false ), mCompletedCalled( false )
+    : mId( id ),
+      mLabel( label ),
+      mStatus( status ),
+      mParent( parent ),
+      mCanBeCanceled( canBeCanceled ),
+      mProgress( 0 ),
+      mTotal( 0 ),
+      mCompleted( 0 ),
+      mCryptoStatus(cryptoStatus),
+      mType( 0 ),
+      mWaitingForKids( false ),
+      mCanceled( false ),
+      mUsesBusyIndicator( false ),
+      mCompletedCalled( false )
 {
 }
 
@@ -92,6 +102,16 @@ void ProgressItem::removeChild( ProgressItem *kiddo )
     if ( mChildren.count() == 0 && mWaitingForKids ) {
         emit progressItemCompleted( this );
     }
+}
+
+unsigned int ProgressItem::typeProgressItem() const
+{
+    return mType;
+}
+
+void ProgressItem::setTypeProgressItem(unsigned int type)
+{
+    mType = type;
 }
 
 void ProgressItem::cancel()
