@@ -260,21 +260,6 @@ ProgressDialog::ProgressDialog( QWidget *alignWidget, QWidget *parent, const cha
 
     mScrollView = new TransactionItemView( this, "ProgressScrollView" );
     layout()->addWidget( mScrollView );
-
-    // No more close button for now, since there is no more autoshow
-    /*
-    QVBox* rightBox = new QVBox( this );
-    QToolButton* pbClose = new QToolButton( rightBox );
-    pbClose->setAutoRaise(true);
-    pbClose->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
-    pbClose->setFixedSize( 16, 16 );
-    pbClose->setIcon( KIconLoader::global()->loadIconSet( "window-close", KIconLoader::Small, 14 ) );
-    pbClose->setToolTip( i18n( "Hide detailed progress window" ) );
-    connect(pbClose, SIGNAL(clicked()), this, SLOT(slotClose()));
-    QWidget* spacer = new QWidget( rightBox ); // don't let the close button take up all the height
-    rightBox->setStretchFactor( spacer, 100 );
-  */
-
     /*
    * Get the singleton ProgressManager item which will inform us of
    * appearing and vanishing items.
