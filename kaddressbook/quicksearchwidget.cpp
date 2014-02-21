@@ -35,7 +35,8 @@ QuickSearchWidget::QuickSearchWidget( QWidget *parent )
   layout->setMargin( 0 );
 
   mEdit = new KLineEdit;
-  mEdit->setClickMessage( i18nc( "@label Search contacts in list", "Search" ) );
+  //If change shortcut changes it in mainwidget
+  mEdit->setClickMessage( i18nc( "@label Search contacts in list", "Search...<ALT+Q>" ) );
   mEdit->setClearButtonShown( true );
   mEdit->setToolTip(
     i18nc( "@info:tooltip", "Search contacts in list" ) );
@@ -62,6 +63,11 @@ QSize QuickSearchWidget::sizeHint() const
 {
   const QSize size = mEdit->sizeHint();
   return QSize( 200, size.height() );
+}
+
+void QuickSearchWidget::slotFocusQuickSearch()
+{
+    mEdit->setFocus();
 }
 
 void QuickSearchWidget::resetTimer()
