@@ -27,8 +27,6 @@
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
 
-class KConfig;
-class KConfigGroup;
 class KJob;
 
 namespace KLDAP {

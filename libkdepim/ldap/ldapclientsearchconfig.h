@@ -28,7 +28,6 @@ class KConfigGroup;
 class KConfig;
 
 namespace KLDAP {
-class LdapObject;
 class LdapServer;
 class LdapClient;
 class KDEPIM_EXPORT LdapClientSearchConfig : public QObject

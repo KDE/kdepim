@@ -25,7 +25,6 @@
 #include "pimcommon/storageservice/storageserviceabstract.h"
 #include "storageservicemanagerutil.h"
 
-class QProgressBar;
 namespace PimCommon {
 class StorageServiceAbstract;
 class StorageServiceProgressWidget;
