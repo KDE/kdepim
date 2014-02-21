@@ -80,6 +80,7 @@ protected:
     PimCommon::StorageServiceAbstract::ActionType mActionType;
     bool mError;
     QString mErrorMsg;
+    QString mCacheValue;
 
 protected Q_SLOTS:
     void slotDownloadReadyRead();
