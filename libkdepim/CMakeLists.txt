@@ -22,7 +22,18 @@ endif ()
 
 ########### next target ###############
 
+set(kdepim_progresswidget_LIB_SRCS
+   progresswidget/progressmanager.cpp
+   progresswidget/progressmanager_akonadiagent.cpp
+   progresswidget/agentprogressmonitor.cpp
+   progresswidget/progressdialog.cpp
+   progresswidget/statusbarprogresswidget.cpp
+   progresswidget/ssllabel.cpp
+   progresswidget/progressstatusbarwidget.cpp
+)
+
 set(kdepim_LIB_SRCS
+   ${kdepim_progresswidget_LIB_SRCS}
    job/addemailaddressjob.cpp
    job/addcontactjob.cpp
    job/openemailaddressjob.cpp
@@ -36,12 +47,6 @@ set(kdepim_LIB_SRCS
    ldap/ldapsearchdialog.cpp
    ldap/ldapclientsearch.cpp
    ldap/ldapclientsearchconfig.cpp
-   progresswidget/progressmanager.cpp
-   progresswidget/progressmanager_akonadiagent.cpp
-   progresswidget/agentprogressmonitor.cpp
-   progresswidget/progressdialog.cpp
-   progresswidget/statusbarprogresswidget.cpp
-   progresswidget/ssllabel.cpp
    misc/broadcaststatus.cpp
    misc/maillistdrag.cpp
    misc/uistatesaver.cpp

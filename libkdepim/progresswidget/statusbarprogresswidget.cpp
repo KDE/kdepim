@@ -60,8 +60,13 @@ using namespace KPIM;
 
 //-----------------------------------------------------------------------------
 StatusbarProgressWidget::StatusbarProgressWidget( ProgressDialog* progressDialog, QWidget* parent, bool button )
-    : QFrame( parent ), mCurrentItem( 0 ), mProgressDialog( progressDialog ),
-      mDelayTimer( 0 ), mBusyTimer( 0 ), mCleanTimer( 0 )
+    : QFrame( parent ),
+      mShowTypeProgressItem( 0 ),
+      mCurrentItem( 0 ),
+      mProgressDialog( progressDialog ),
+      mDelayTimer( 0 ),
+      mBusyTimer( 0 ),
+      mCleanTimer( 0 )
 {
     m_bShowButton = button;
     int w = fontMetrics().width( QLatin1String(" 999.9 kB/s 00:00:01 ") ) + 8;
@@ -109,7 +114,7 @@ StatusbarProgressWidget::StatusbarProgressWidget( ProgressDialog* progressDialog
     connect ( ProgressManager::instance(), SIGNAL(progressItemCompleted(KPIM::ProgressItem*)),
               this, SLOT(slotProgressItemCompleted(KPIM::ProgressItem*)) );
     connect ( ProgressManager::instance(), SIGNAL(progressItemUsesBusyIndicator(KPIM::ProgressItem*,bool)),
-              this, SLOT(updateBusyMode()) );
+              this, SLOT(updateBusyMode(KPIM::ProgressItem*)) );
 
     connect ( progressDialog, SIGNAL(visibilityChanged(bool)),
               this, SLOT(slotProgressDialogVisible(bool)) );
@@ -125,24 +130,31 @@ StatusbarProgressWidget::StatusbarProgressWidget( ProgressDialog* progressDialog
               this, SLOT(slotClean()) );
 }
 
+void StatusbarProgressWidget::setShowTypeProgressItem(unsigned int type)
+{
+    mShowTypeProgressItem = type;
+}
+
 // There are three cases: no progressitem, one progressitem (connect to it directly),
 // or many progressitems (display busy indicator). Let's call them 0,1,N.
 // In slot..Added we can only end up in 1 or N.
 // In slot..Removed we can end up in 0, 1, or we can stay in N if we were already.
 
-void StatusbarProgressWidget::updateBusyMode()
+void StatusbarProgressWidget::updateBusyMode(KPIM::ProgressItem *item)
 {
-    connectSingleItem(); // if going to 1 item
-    if ( mCurrentItem ) { // Exactly one item
-        delete mBusyTimer;
-        mBusyTimer = 0;
-        mDelayTimer->start( 1000 );
-    } else { // N items
-        if ( !mBusyTimer ) {
-            mBusyTimer = new QTimer( this );
-            connect( mBusyTimer, SIGNAL(timeout()),
-                     this, SLOT(slotBusyIndicator()) );
+    if (item->typeProgressItem() == mShowTypeProgressItem) {
+        connectSingleItem(); // if going to 1 item
+        if ( mCurrentItem ) { // Exactly one item
+            delete mBusyTimer;
+            mBusyTimer = 0;
             mDelayTimer->start( 1000 );
+        } else { // N items
+            if ( !mBusyTimer ) {
+                mBusyTimer = new QTimer( this );
+                connect( mBusyTimer, SIGNAL(timeout()),
+                         this, SLOT(slotBusyIndicator()) );
+                mDelayTimer->start( 1000 );
+            }
         }
     }
 }
@@ -152,7 +164,7 @@ void StatusbarProgressWidget::slotProgressItemAdded( ProgressItem *item )
     if ( item->parent() )
         return; // we are only interested in top level items
 
-    updateBusyMode();
+    updateBusyMode(item);
 }
 
 void StatusbarProgressWidget::slotProgressItemCompleted( ProgressItem *item )

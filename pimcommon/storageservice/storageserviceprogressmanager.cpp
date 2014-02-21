@@ -50,6 +50,11 @@ StorageServiceProgressManager::~StorageServiceProgressManager()
 
 }
 
+unsigned int StorageServiceProgressManager::progressTypeValue()
+{
+    return 1;
+}
+
 StorageServiceProgressManager *StorageServiceProgressManager::self()
 {
     return sInstance->storageServiceProgressManager; //will create it
@@ -60,6 +65,7 @@ void StorageServiceProgressManager::addProgress(PimCommon::StorageServiceAbstrac
 {
     if (!mHashList.contains(storageService->storageServiceName())) {
         KPIM::ProgressItem *progressItem = KPIM::ProgressManager::createProgressItem( storageService->storageServiceName() );
+        progressItem->setTypeProgressItem(StorageServiceProgressManager::progressTypeValue());
         ProgressJob *job = new ProgressJob(progressItem, type);
         job->setStorageService(storageService);
 

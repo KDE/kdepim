@@ -23,15 +23,15 @@
 
 using namespace KPIM;
 
-ProgressStatusBarWidget::ProgressStatusBarWidget(QWidget *alignWidget, QObject *parent)
+ProgressStatusBarWidget::ProgressStatusBarWidget(QWidget *alignWidget, QWidget *parent, unsigned int showTypeProgressItem)
     : QObject(parent)
 {
-    KPIM::ProgressDialog *progressDialog = new KPIM::ProgressDialog( alignWidget, this );
-    progressDialog->setShowTypeProgressItem(1);
+    KPIM::ProgressDialog *progressDialog = new KPIM::ProgressDialog( alignWidget, parent );
+    progressDialog->setShowTypeProgressItem(showTypeProgressItem);
     progressDialog->hide();
 
     mLittleProgress = new KPIM::StatusbarProgressWidget( progressDialog, alignWidget );
-    mLittleProgress->setShowTypeProgressItem(1);
+    mLittleProgress->setShowTypeProgressItem(showTypeProgressItem);
     mLittleProgress->show();
 }
 
