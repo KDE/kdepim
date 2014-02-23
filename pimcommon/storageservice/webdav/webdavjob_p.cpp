@@ -179,7 +179,7 @@ QNetworkReply *WebDavJob::davRequest(const QString & reqVerb,  QNetworkRequest &
     return mNetworkAccessManager->sendCustomRequest(req, reqVerb.toUtf8(), data);
 }
 
-QNetworkReply *WebDavJob::mkdir ( const QString & dir )
+QNetworkReply *WebDavJob::mkdir ( const QUrl & dir )
 {
     QNetworkRequest req;
     req.setUrl(QUrl(dir));

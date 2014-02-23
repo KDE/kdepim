@@ -70,7 +70,7 @@ private:
     QNetworkReply *proppatch(const QString &path, const QByteArray &query);
     QNetworkReply *davRequest(const QString &reqVerb, QNetworkRequest &req, const QByteArray &data = QByteArray());
     QNetworkReply *davRequest(const QString &reqVerb, QNetworkRequest &req, QIODevice *data);
-    QNetworkReply *mkdir(const QString &dir);
+    QNetworkReply *mkdir(const QUrl &dir);
     QNetworkReply *copy(const QString &oldname, const QString &newname, bool overwrite);
     QNetworkReply *rename(const QString &oldname, const QString &newname, bool overwrite);
     QNetworkReply *move(const QString &oldname, const QString &newname, bool overwrite);

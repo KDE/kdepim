@@ -320,7 +320,7 @@ void WebDavJob::createFolderJob(const QString &foldername, const QString &destin
     else
         url.setPath(destination + QLatin1Char('/') + foldername);
     //qDebug()<<" url"<<url;
-    mkdir(url.toString());
+    mkdir(url);
 }
 
 void WebDavJob::createFolder(const QString &foldername, const QString &destination)
