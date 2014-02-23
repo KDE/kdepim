@@ -31,7 +31,6 @@ Tag::Ptr Tag::createDefaultTag(const QString& name)
   Tag::Ptr tag( new Tag() );
   tag->tagName = name;
   tag->iconName = QLatin1String("mail-tagged");
-  const QString identifier = name;
 
   tag->priority = -1;
   tag->inToolbar = false;

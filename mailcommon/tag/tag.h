@@ -81,7 +81,7 @@ namespace MailCommon {
       int priority;
 
   private:
-      Tag(){};
+      Tag() {}
       Akonadi::Tag mTag;
   };
   Q_DECLARE_OPERATORS_FOR_FLAGS(Tag::SaveFlags)
