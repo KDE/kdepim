@@ -228,9 +228,9 @@ QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &upl
         mActionType = PimCommon::StorageServiceAbstract::UploadFile;
         mError = false;
         if (file->open(QIODevice::ReadOnly)) {
-            //TODO fix default value
-            const QString defaultDestination = (destination.isEmpty() ? PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
             QUrl destinationFile(mServiceLocation);
+            const QString defaultDestination = (destination.isEmpty() ? destinationFile.path() + QLatin1Char('/') + PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
+
             QString destinationToString;
             if (defaultDestination.isEmpty()) {
                 destinationToString = destinationFile.toString() + QLatin1Char('/') + uploadAsName;
