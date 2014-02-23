@@ -314,10 +314,10 @@ void WebDavJob::createFolderJob(const QString &foldername, const QString &destin
 {
     mCacheValue = foldername;
     QUrl url(mServiceLocation);
-    if (!destination.isEmpty())
-        url.setPath(destination + QLatin1Char('/') + foldername);
-    else
+    if (destination.isEmpty())
         url.setPath(url.path() + QLatin1Char('/') + foldername);
+    else
+        url.setPath(destination + QLatin1Char('/') + foldername);
     //qDebug()<<" url"<<url;
     mkdir(url.toString());
 }
