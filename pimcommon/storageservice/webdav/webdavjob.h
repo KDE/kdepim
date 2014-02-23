@@ -74,8 +74,8 @@ private:
     QNetworkReply *copy(const QString &oldname, const QString &newname, bool overwrite);
     QNetworkReply *rename(const QString &oldname, const QString &newname, bool overwrite);
     QNetworkReply *move(const QString &oldname, const QString &newname, bool overwrite);
-    QNetworkReply *rmdir(const QString &dir);
-    QNetworkReply *remove(const QString &path);
+    QNetworkReply *rmdir(const QUrl &dir);
+    QNetworkReply *remove(const QUrl &path);
     QNetworkReply *accountInfo(const QString &dir);
     void setupHeaders(QNetworkRequest &req, quint64 size);
 

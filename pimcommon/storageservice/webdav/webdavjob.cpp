@@ -156,6 +156,7 @@ void WebDavJob::deleteFolder(const QString &foldername)
     mError = false;
     QUrl url(mServiceLocation);
     url.setPath(foldername);
+
     rmdir(url.toString());
 }
 

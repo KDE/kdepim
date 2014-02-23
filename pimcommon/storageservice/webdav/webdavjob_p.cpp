@@ -213,15 +213,15 @@ QNetworkReply *WebDavJob::move ( const QString & oldname, const QString & newnam
     return davRequest(QLatin1String("MOVE"), req);
 }
 
-QNetworkReply *WebDavJob::rmdir ( const QString & dir )
+QNetworkReply *WebDavJob::rmdir ( const QUrl &url )
 {
-    return remove(dir);
+    return remove(url);
 }
 
-QNetworkReply *WebDavJob::remove ( const QString & path )
+QNetworkReply *WebDavJob::remove ( const QUrl & url )
 {
     QNetworkRequest req;
-    req.setUrl(QUrl(path));
+    req.setUrl(url);
     return davRequest(QLatin1String("DELETE"), req);
 }
 
