@@ -110,17 +110,19 @@ bool Tag::compareName( Tag::Ptr &tag1, Tag::Ptr &tag2 )
 
 bool Tag::operator==( const Tag &other ) const
 {
+#if 0
   if (mTag.isValid()) {
     return id() == other.id();
   }
+#endif
   return tagName == other.tagName &&
-         textColor == other.textColor &&
-         backgroundColor == other.backgroundColor &&
-         textFont == other.textFont &&
-         iconName == other.iconName &&
-         inToolbar == other.inToolbar &&
-         shortcut.toString() == other.shortcut.toString() &&
-         priority == other.priority;
+          textColor == other.textColor &&
+          backgroundColor == other.backgroundColor &&
+          textFont == other.textFont &&
+          iconName == other.iconName &&
+          inToolbar == other.inToolbar &&
+          shortcut.toString() == other.shortcut.toString() &&
+          priority == other.priority;
 }
 
 bool Tag::operator!=( const Tag &other ) const
