@@ -147,7 +147,7 @@ void WebDavJob::deleteFile(const QString &filename)
     mError = false;
     QUrl url(mServiceLocation);
     url.setPath(filename);
-    remove(url.toString());
+    remove(url);
 }
 
 void WebDavJob::deleteFolder(const QString &foldername)
@@ -157,7 +157,7 @@ void WebDavJob::deleteFolder(const QString &foldername)
     QUrl url(mServiceLocation);
     url.setPath(foldername);
 
-    rmdir(url.toString());
+    rmdir(url);
 }
 
 void WebDavJob::renameFolder(const QString &source, const QString &destination)
