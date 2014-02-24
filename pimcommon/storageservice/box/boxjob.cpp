@@ -442,10 +442,9 @@ QNetworkReply *BoxJob::uploadFile(const QString &filename, const QString &upload
             file->setParent(reply);
             connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
             return reply;
-        } else {
-            delete file;
         }
     }
+    delete file;
     return 0;
 }
 

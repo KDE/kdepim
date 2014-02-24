@@ -93,13 +93,13 @@ QNetworkReply *UbuntuOneJob::uploadFile(const QString &filename, const QString &
         if (file->open(QIODevice::ReadOnly)) {
             //TODO
             delete file;
-        } else {
-            delete file;
+            return 0; //TODO return QNetworkReply
         }
     }
     qDebug()<<" upload file not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
+    delete file;
     return 0;
 }
 

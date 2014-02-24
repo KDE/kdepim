@@ -373,10 +373,9 @@ QNetworkReply *HubicJob::uploadFile(const QString &filename, const QString &uplo
 #else
             return 0;
 #endif
-        } else {
-            delete file;
         }
     }
+    delete file;
     return 0;
 }
 
