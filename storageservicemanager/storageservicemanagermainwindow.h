@@ -52,6 +52,7 @@ private slots:
     void slotLogout();
     void slotShutdownAllServices();
     void slotRefreshAll();
+    void slotShowNotificationOptions();
 private:
     void setupActions();
     void readConfig();

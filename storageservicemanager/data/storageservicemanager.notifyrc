@@ -3,6 +3,6 @@ IconName=kmail
 Comment=StorageServiceManager
 
 [Event/action-failed]
-Name=action failed
+Name=Action Failed
 Action=None
 

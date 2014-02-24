@@ -33,6 +33,7 @@ TARGET_LINK_LIBRARIES(storageservicemanager
                        ${KDE4_KDEUI_LIBS} 
                        ${KDE4_KIO_LIBS}
 		       ${KDE4_SOLID_LIBS}
+                       ${KDE4_KNOTIFYCONFIG_LIBS}
                        pimcommon
                        kdepim
 )
