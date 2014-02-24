@@ -1,0 +1,8 @@
+[Global]
+IconName=kmail
+Comment=StorageServiceManager
+
+[Event/action-failed]
+Name=action failed
+Action=None
+
