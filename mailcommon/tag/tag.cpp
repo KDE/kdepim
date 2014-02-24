@@ -31,7 +31,6 @@ Tag::Ptr Tag::createDefaultTag(const QString& name)
   Tag::Ptr tag( new Tag() );
   tag->tagName = name;
   tag->iconName = QLatin1String("mail-tagged");
-  const QString identifier = name;
 
   tag->priority = -1;
   tag->inToolbar = false;
@@ -75,17 +74,17 @@ Akonadi::Tag Tag::saveToAkonadi(Tag::SaveFlags saveFlags) const
   attr->setShortcut( shortcut.toString() );
   attr->setPriority( priority );
 
-  if ( textColor.isValid() && saveFlags & TextColor )
+  if ( textColor.isValid() && (saveFlags & TextColor) )
     attr->setTextColor( textColor );
   else
     attr->setTextColor( QColor() );
 
-  if ( backgroundColor.isValid() && saveFlags & BackgroundColor )
+  if ( backgroundColor.isValid() && (saveFlags & BackgroundColor) )
     attr->setBackgroundColor( backgroundColor );
   else
     attr->setBackgroundColor( QColor() );
 
-  if ( textFont != QFont() && saveFlags & Font )
+  if ( (textFont != QFont()) && (saveFlags & Font) )
     attr->setFont( textFont.toString() );
   else
     attr->setFont( QString() );
@@ -111,17 +110,19 @@ bool Tag::compareName( Tag::Ptr &tag1, Tag::Ptr &tag2 )
 
 bool Tag::operator==( const Tag &other ) const
 {
+#if 0
   if (mTag.isValid()) {
     return id() == other.id();
   }
+#endif
   return tagName == other.tagName &&
-         textColor == other.textColor &&
-         backgroundColor == other.backgroundColor &&
-         textFont == other.textFont &&
-         iconName == other.iconName &&
-         inToolbar == other.inToolbar &&
-         shortcut.toString() == other.shortcut.toString() &&
-         priority == other.priority;
+          textColor == other.textColor &&
+          backgroundColor == other.backgroundColor &&
+          textFont == other.textFont &&
+          iconName == other.iconName &&
+          inToolbar == other.inToolbar &&
+          shortcut.toString() == other.shortcut.toString() &&
+          priority == other.priority;
 }
 
 bool Tag::operator!=( const Tag &other ) const

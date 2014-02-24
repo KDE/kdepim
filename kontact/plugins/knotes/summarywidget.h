@@ -2,6 +2,7 @@
   This file is part of Kontact.
 
   Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>
+  Copyright (c) 2014 Laurent Montel <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -27,7 +28,7 @@
 
 #include <KontactInterface/Summary>
 #include <KViewStateMaintainer>
-
+#include <Akonadi/Item>
 class QGridLayout;
 class QItemSelectionModel;
 class QLabel;
@@ -40,6 +41,7 @@ class ChangeRecorder;
 class Collection;
 class EntityTreeModel;
 class ETMViewStateSaver;
+class Item;
 }
 namespace NoteShared {
 class NotesChangeRecorder;
@@ -60,17 +62,15 @@ public:
 protected:
     virtual bool eventFilter( QObject *obj, QEvent *e );
 
-protected slots:
-    void urlClicked( const QString & );
-
-
 private slots:
-    void slotCollectionChanged(const Akonadi::Collection &col);
-    void slotRowInserted(const QModelIndex &parent, int start, int end);
     void updateFolderList();
-
+    void slotSelectNote(const QString &note);
+    void slotPopupMenu(const QString &);
 private:
-    void displayNotes( const QModelIndex &parent, int &counter);
+    void deleteNote(const QString &note);
+    void displayNotes(const QModelIndex &parent, int &counter);
+    void createNote(const Akonadi::Item &item, int counter);
+    QPixmap mDefaultPixmap;
     QGridLayout *mLayout;
     KontactInterface::Plugin *mPlugin;
     QList<QLabel *> mLabels;

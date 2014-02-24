@@ -212,17 +212,8 @@ KNotesPart::KNotesPart( QObject *parent )
             new KViewStateMaintainer<Akonadi::ETMViewStateSaver>( _config->group( "CheckState" ), this );
     mModelState->setSelectionModel( mSelectionModel );
 
-    connect( mNoteRecorder, SIGNAL(collectionChanged(Akonadi::Collection)),
-             SLOT(slotCollectionChanged(Akonadi::Collection)) );
-    connect( mNoteRecorder, SIGNAL(collectionRemoved(Akonadi::Collection)),
-             SLOT(slotCollectionChanged(Akonadi::Collection)) );
-
     mNotesWidget = new KNotesWidget(this,widget());
     mNoteTip = new KNoteTip( mNotesWidget->notesView() );
-
-    // TODO icons: s/editdelete/knotes_delete/ or the other way round in knotes
-
-    // set the view up
 
     connect( mNotesWidget->notesView(), SIGNAL(executed(QListWidgetItem*)),
              this, SLOT(editNote(QListWidgetItem*)) );
@@ -258,7 +249,6 @@ void KNotesPart::slotItemRemoved(const Akonadi::Item &item)
 
 void KNotesPart::slotRowInserted(const QModelIndex &parent, int start, int end)
 {
-    //qDebug()<<" void KNotesPart::slotRowInserted(const QModelIndex &parent, int start, int end)";
     for ( int i = start; i <= end; ++i) {
         if ( mNoteTreeModel->hasIndex( i, 0, parent ) ) {
             const QModelIndex child = mNoteTreeModel->index( i, 0, parent );
@@ -273,8 +263,6 @@ void KNotesPart::slotRowInserted(const QModelIndex &parent, int start, int end)
         }
     }
 }
-
-
 
 QStringList KNotesPart::notesList() const
 {
@@ -526,6 +514,14 @@ void KNotesPart::popupRMB( QListWidgetItem *item, const QPoint &pos, const QPoin
 
     contextMenu->exec( mNotesWidget->notesView()->mapFromParent( globalPos ) );
     delete contextMenu;
+}
+
+void KNotesPart::editNote(Akonadi::Entity::Id id)
+{
+    KNotesIconViewItem *knoteItem = mNotesWidget->notesView()->iconView(id);
+    if (knoteItem) {
+        editNote(knoteItem);
+    }
 }
 
 void KNotesPart::editNote( QListWidgetItem *item )

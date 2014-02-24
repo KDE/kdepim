@@ -20,7 +20,6 @@
 
 #include <QWidget>
 #include "pimcommon/storageservice/tests/servicetestwidget.h"
-class QTextEdit;
 class BoxTestWidget : public ServiceTestWidget
 {
     Q_OBJECT

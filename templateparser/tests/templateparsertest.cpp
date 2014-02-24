@@ -172,13 +172,12 @@ void TemplateParserTester::test_processWithTemplatesForContent_data()
 
   QDir dir( QLatin1String(MAIL_DATA_DIR) );
   foreach ( const QString &file, dir.entryList( QStringList(QLatin1String("plain*.mbox")), QDir::Files | QDir::Readable | QDir::NoSymLinks  ) ) {
-    //Comment for the moment
-    //QTest::newRow( file.toLatin1() ) << "%OTIME" << QString(dir.path() + QLatin1Char('/') +  file) << "11:30";
-    //QTest::newRow( file.toLatin1() ) << "%OTIMELONG" << QString(dir.path() + QLatin1Char('/') +  file) << "11:30:27";
-    //QTest::newRow( file.toLatin1() ) << "%OTIMELONGEN" << QString(dir.path() + QLatin1Char('/') +  file) << "11:30:27";
-    //QTest::newRow( file.toLatin1() ) << "%ODATE" << QString(dir.path() + QLatin1Char('/') +  file) << "Sunday 07 August 2011";
-    //QTest::newRow( file.toLatin1() ) << "%ODATESHORT" << QString(dir.path() + QLatin1Char('/') +  file) << "2011-08-07";
-    //QTest::newRow( file.toLatin1() ) << "%ODATEEN" << QString(dir.path() + QLatin1Char('/') +  file) << "Sunday 07 August 2011";
+    QTest::newRow( file.toLatin1() ) << "%OTIME" << QString(dir.path() + QLatin1Char('/') +  file) << "11:30";
+    QTest::newRow( file.toLatin1() ) << "%OTIMELONG" << QString(dir.path() + QLatin1Char('/') +  file) << "11:30:27";
+    QTest::newRow( file.toLatin1() ) << "%OTIMELONGEN" << QString(dir.path() + QLatin1Char('/') +  file) << "11:30:27";
+    QTest::newRow( file.toLatin1() ) << "%ODATE" << QString(dir.path() + QLatin1Char('/') +  file) << "Sunday 07 August 2011";
+    QTest::newRow( file.toLatin1() ) << "%ODATESHORT" << QString(dir.path() + QLatin1Char('/') +  file) << "2011-08-07";
+    QTest::newRow( file.toLatin1() ) << "%ODATEEN" << QString(dir.path() + QLatin1Char('/') +  file) << "Sunday 07 August 2011";
     QTest::newRow( file.toLatin1() ) << "%OFULLSUBJ" << QString(dir.path() + QLatin1Char('/') +  file) << "Plain Message Test";
     QTest::newRow( file.toLatin1() ) << "%OFULLSUBJECT" << QString(dir.path() + QLatin1Char('/') +  file) << "Plain Message Test";
     QTest::newRow( file.toLatin1() ) << "%OFROMFNAME" << QString(dir.path() + QLatin1Char('/') +  file) << "Sudhendu";

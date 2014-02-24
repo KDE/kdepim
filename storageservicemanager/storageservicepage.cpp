@@ -31,6 +31,7 @@
 #include <KFileDialog>
 #include <KInputDialog>
 #include <KMessageBox>
+#include <knotification.h>
 
 #include <QApplication>
 #include <QClipboard>
@@ -39,6 +40,7 @@
 #include <QPointer>
 #include <QTimer>
 #include <QProgressBar>
+
 
 StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
     : QWidget(parent),
@@ -203,6 +205,7 @@ void StorageServicePage::slotActionFailed(const QString &serviceName, const QStr
     if (verifyService(serviceName)) {
         mStorageServiceWarning->addLog(error);
         mStorageServiceWarning->animatedShow();
+        KNotification::event(QLatin1String("action-failed"), error, QPixmap() ,this, KNotification::CloseOnTimeout);
     }
 }
 

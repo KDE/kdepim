@@ -147,7 +147,7 @@ void WebDavJob::deleteFile(const QString &filename)
     mError = false;
     QUrl url(mServiceLocation);
     url.setPath(filename);
-    remove(url.toString());
+    remove(url);
 }
 
 void WebDavJob::deleteFolder(const QString &foldername)
@@ -156,7 +156,8 @@ void WebDavJob::deleteFolder(const QString &foldername)
     mError = false;
     QUrl url(mServiceLocation);
     url.setPath(foldername);
-    rmdir(url.toString());
+
+    rmdir(url);
 }
 
 void WebDavJob::renameFolder(const QString &source, const QString &destination)
@@ -228,9 +229,9 @@ QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &upl
         mActionType = PimCommon::StorageServiceAbstract::UploadFile;
         mError = false;
         if (file->open(QIODevice::ReadOnly)) {
-            //TODO fix default value
-            const QString defaultDestination = (destination.isEmpty() ? PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
             QUrl destinationFile(mServiceLocation);
+            const QString defaultDestination = (destination.isEmpty() ? destinationFile.path() + QLatin1Char('/') + PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
+
             QString destinationToString;
             if (defaultDestination.isEmpty()) {
                 destinationToString = destinationFile.toString() + QLatin1Char('/') + uploadAsName;
@@ -244,10 +245,9 @@ QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &upl
             connect(reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
             connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
             return reply;
-        } else {
-            delete file;
         }
     }
+    delete file;
     return 0;
 }
 
@@ -314,12 +314,12 @@ void WebDavJob::createFolderJob(const QString &foldername, const QString &destin
 {
     mCacheValue = foldername;
     QUrl url(mServiceLocation);
-    if (!destination.isEmpty())
-        url.setPath(destination + QLatin1Char('/') + foldername);
-    else
+    if (destination.isEmpty())
         url.setPath(url.path() + QLatin1Char('/') + foldername);
+    else
+        url.setPath(destination + QLatin1Char('/') + foldername);
     //qDebug()<<" url"<<url;
-    mkdir(url.toString());
+    mkdir(url);
 }
 
 void WebDavJob::createFolder(const QString &foldername, const QString &destination)

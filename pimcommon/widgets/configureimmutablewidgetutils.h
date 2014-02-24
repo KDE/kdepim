@@ -34,7 +34,6 @@ class KUrlRequester;
 class QSpinBox;
 class QComboBox;
 
-class KIntSpinBox;
 namespace PimCommon {
 class SimpleStringListEditor;
 namespace ConfigureImmutableWidgetUtils {

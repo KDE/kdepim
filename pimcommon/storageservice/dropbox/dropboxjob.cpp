@@ -409,10 +409,9 @@ QNetworkReply *DropBoxJob::uploadFile(const QString &filename, const QString &up
             connect(reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
             connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
             return reply;
-        } else {
-            delete file;
         }
     }
+    delete file;
     return 0;
 }
 

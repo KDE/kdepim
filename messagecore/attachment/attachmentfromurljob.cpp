@@ -143,7 +143,7 @@ void AttachmentFromUrlJob::doStart()
     const qint64 size = QFileInfo( d->mUrl.toLocalFile() ).size();
     if ( size > maximumAllowedSize() ) {
       setError( KJob::UserDefinedError );
-      setErrorText( i18n( "You may not attach files bigger than %1.",
+      setErrorText( i18n( "You may not attach files bigger than %1. Share it with storage service.",
                           KGlobal::locale()->formatByteSize( maximumAllowedSize() ) ) );
       emitResult();
       return;

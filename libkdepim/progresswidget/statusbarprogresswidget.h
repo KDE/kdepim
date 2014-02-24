@@ -45,7 +45,6 @@ class QEvent;
 class QProgressBar;
 class QPushButton;
 class QStackedWidget;
-class QBoxLayout;
 class QLabel;
 class QTimer;
 

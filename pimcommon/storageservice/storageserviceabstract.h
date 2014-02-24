@@ -48,7 +48,6 @@ struct AccountInfo {
 
 
 class NextAction;
-class StorageServiceTreeWidgetItem;
 class PIMCOMMON_EXPORT StorageServiceAbstract : public QObject
 {
     Q_OBJECT

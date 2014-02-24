@@ -20,7 +20,6 @@
 #define DROPBOXJOB_H
 #include "storageservice/job/storageserviceabstractjob.h"
 #include <QNetworkReply>
-class QFile;
 namespace PimCommon {
 class AccountInfo;
 class DropBoxJob : public PimCommon::StorageServiceAbstractJob

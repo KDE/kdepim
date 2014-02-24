@@ -41,11 +41,13 @@
 #include <KAction>
 #include <KStatusBar>
 #include <KMessageBox>
+#include <knotifyconfigwidget.h>
 
 #include <QPointer>
 #include <QCloseEvent>
 #include <QLabel>
 #include <QDebug>
+
 
 
 StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
@@ -179,6 +181,12 @@ void StorageServiceManagerMainWindow::setupActions()
     mRefreshAll->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_F5 ));
 
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
+    KStandardAction::configureNotifications(this, SLOT(slotShowNotificationOptions()), ac); // options_configure_notifications
+}
+
+void StorageServiceManagerMainWindow::slotShowNotificationOptions()
+{
+    KNotifyConfigWidget::configure(this);
 }
 
 void StorageServiceManagerMainWindow::slotLogout()

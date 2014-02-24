@@ -23,9 +23,7 @@
 
 #include <KDialog>
 #include "pimcommon_export.h"
-class KUrlRequester;
 namespace PimCommon {
-class StorageServiceSettingsWidget;
 class StorageServiceAbstract;
 class StorageServiceConfigureWidget;
 class PIMCOMMON_EXPORT StorageServiceConfigureDialog : public KDialog

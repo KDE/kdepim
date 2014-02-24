@@ -27,7 +27,7 @@ enum PropertyName {
     Name,
     LastModified,
     Created,
-    Size,
+    Size
 };
 
 QString propertyNameToI18n(PropertyName type);

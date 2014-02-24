@@ -39,7 +39,7 @@ bool NoteShared::NoteUtils::sendToMail(QWidget *parent, const QString &title, co
         if ( cmd == QLatin1String("%f") ) {
             mail << message;
         } else if ( cmd == QLatin1String("%t") ) {
-            mail << title;
+            mail << i18n("Note: \"%1\"",title);
         } else {
             mail << cmd;
         }

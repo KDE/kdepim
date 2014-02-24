@@ -33,6 +33,7 @@ TARGET_LINK_LIBRARIES(storageservicemanager
                        ${KDE4_KDEUI_LIBS} 
                        ${KDE4_KIO_LIBS}
 		       ${KDE4_SOLID_LIBS}
+                       ${KDE4_KNOTIFYCONFIG_LIBS}
                        pimcommon
                        kdepim
 )
@@ -44,5 +45,10 @@ install(FILES
   DESTINATION  ${DATA_INSTALL_DIR}/storageservicemanager)
 
 install(PROGRAMS storageservicemanager.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+
+install(FILES data/storageservicemanager.notifyrc
+    DESTINATION ${DATA_INSTALL_DIR}/storageservicemanager
+  )
+
 
 add_subdirectory(tests)
