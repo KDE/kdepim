@@ -64,10 +64,10 @@ private:
     QNetworkReply *search(const QString &path, const QString &q);
     QNetworkReply *put(const QString &path, QIODevice *data);
     QNetworkReply *put(const QString &path, QByteArray &data);
-    QNetworkReply *propfind(const QString &path, const WebDavJob::PropNames &props, int depth);
-    QNetworkReply *propfind(const QString &path, const QByteArray &query, int depth);
-    QNetworkReply *proppatch(const QString &path, const WebDavJob::PropValues &props);
-    QNetworkReply *proppatch(const QString &path, const QByteArray &query);
+    QNetworkReply *propfind(const QUrl &path, const WebDavJob::PropNames &props, int depth);
+    QNetworkReply *propfind(const QUrl &path, const QByteArray &query, int depth);
+    QNetworkReply *proppatch(const QUrl &path, const WebDavJob::PropValues &props);
+    QNetworkReply *proppatch(const QUrl &path, const QByteArray &query);
     QNetworkReply *davRequest(const QString &reqVerb, QNetworkRequest &req, const QByteArray &data = QByteArray());
     QNetworkReply *davRequest(const QString &reqVerb, QNetworkRequest &req, QIODevice *data);
     QNetworkReply *mkdir(const QUrl &dir);
@@ -77,6 +77,7 @@ private:
     QNetworkReply *rmdir(const QUrl &dir);
     QNetworkReply *remove(const QUrl &path);
     QNetworkReply *accountInfo(const QString &dir);
+    QNetworkReply *exists(const QUrl &dir);
     void setupHeaders(QNetworkRequest &req, quint64 size);
 
     void parseDownloadFile(const QString &data);
