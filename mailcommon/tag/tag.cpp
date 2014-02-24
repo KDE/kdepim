@@ -74,17 +74,17 @@ Akonadi::Tag Tag::saveToAkonadi(Tag::SaveFlags saveFlags) const
   attr->setShortcut( shortcut.toString() );
   attr->setPriority( priority );
 
-  if ( textColor.isValid() && saveFlags & TextColor )
+  if ( textColor.isValid() && (saveFlags & TextColor) )
     attr->setTextColor( textColor );
   else
     attr->setTextColor( QColor() );
 
-  if ( backgroundColor.isValid() && saveFlags & BackgroundColor )
+  if ( backgroundColor.isValid() && (saveFlags & BackgroundColor) )
     attr->setBackgroundColor( backgroundColor );
   else
     attr->setBackgroundColor( QColor() );
 
-  if ( textFont != QFont() && saveFlags & Font )
+  if ( (textFont != QFont()) && (saveFlags & Font) )
     attr->setFont( textFont.toString() );
   else
     attr->setFont( QString() );

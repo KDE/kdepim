@@ -29,28 +29,28 @@ class TagWidget;
 
 class MAILCOMMON_EXPORT AddTagDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit AddTagDialog(const QList<KActionCollection *>& actions, QWidget *parent = 0);
-  ~AddTagDialog();
+    explicit AddTagDialog(const QList<KActionCollection *>& actions, QWidget *parent = 0);
+    ~AddTagDialog();
 
-  void setTags(const QList<MailCommon::Tag::Ptr>& tags);
-  QString label() const;
-  Akonadi::Tag tag() const;
+    void setTags(const QList<MailCommon::Tag::Ptr>& tags);
+    QString label() const;
+    Akonadi::Tag tag() const;
 
 protected Q_SLOTS:
-  virtual void slotButtonClicked(int button);
+    virtual void slotButtonClicked(int button);
 
 private Q_SLOTS:
-  void slotTagNameChanged(const QString& text);
-  void onTagCreated(KJob *job);
+    void slotTagNameChanged(const QString& text);
+    void onTagCreated(KJob *job);
 
 private:
-  QString mLabel;
-  QString mGid;
-  MailCommon::TagWidget *mTagWidget;
-  QList<MailCommon::Tag::Ptr> mTags;
-  Akonadi::Tag mTag;
+    QString mLabel;
+    QString mGid;
+    MailCommon::TagWidget *mTagWidget;
+    QList<MailCommon::Tag::Ptr> mTags;
+    Akonadi::Tag mTag;
 };
 }
 #endif // ADDTAGDIALOG_H
