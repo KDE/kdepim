@@ -166,6 +166,7 @@ void StorageServiceManagerMainWindow::setupActions()
 
     mDownloadFile = ac->addAction(QLatin1String("download_file"), mStorageServiceTabWidget, SLOT(slotDownloadFile()));
     mDownloadFile->setText(i18n("Download File..."));
+    mDownloadFile->setIcon(KIcon(QLatin1String("download")));
 
     mShowLog = ac->addAction(QLatin1String("show_log"), mStorageServiceTabWidget, SLOT(slotShowLog()));
     mShowLog->setText(i18n("Show Log..."));
