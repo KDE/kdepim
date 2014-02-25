@@ -30,6 +30,7 @@ set(calendarsupport_LIB_SRCS
   kcalmodel.cpp
   kcalprefs.cpp
   messagewidget.cpp
+  tagwidgets.cpp
   utils.cpp
 
   printing/calprintpluginbase.cpp

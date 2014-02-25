@@ -32,8 +32,11 @@
 #endif
 
 #include <calendarsupport/categoryconfig.h>
+#include <calendarsupport/tagwidgets.h>
 #include <KConfigSkeleton>
 #include <KDebug>
+
+#include <Akonadi/TagCreateJob>
 
 using namespace IncidenceEditorNG;
 using namespace CalendarSupport;
@@ -48,31 +51,32 @@ IncidenceCategories::IncidenceCategories( Ui::EventOrTodoDesktop *ui )
   setObjectName( "IncidenceCategories" );
 
 #ifdef KDEPIM_MOBILE_UI
-  connect( mUi->mSelectCategoriesButton, SIGNAL(clicked()),
-           SLOT(selectCategories()) );
+connect( mUi->mSelectCategoriesButton, SIGNAL(clicked()),
+          SLOT(selectCategories()) );
 #else
-  CategoryConfig cc( EditorConfig::instance()->config() );
-  mUi->mCategoryCombo->setDefaultText( i18nc( "@item:inlistbox", "Select Categories" ) );
-  mUi->mCategoryCombo->setSqueezeText( true );
-  CategoryHierarchyReaderQComboBox( mUi->mCategoryCombo ).read( cc.customCategories() );
+  //load existing categories
+  //TODO this is only for backwards compatiblity and can be removed in 4.14
+  checkForUnknownCategories(QStringList());
 
-  connect( mUi->mCategoryCombo, SIGNAL(checkedItemsChanged(QStringList)),
-           SLOT(setCategoriesFromCombo()) );
+  connect( mUi->mTagWidget, SIGNAL(selectionChanged(QStringList)),
+          SLOT(onSelectionChanged(QStringList)) );
 #endif
+}
+
+void IncidenceCategories::onSelectionChanged(const QStringList &list)
+{
+  mSelectedCategories = list;
+  checkDirtyStatus();
 }
 
 void IncidenceCategories::load( const KCalCore::Incidence::Ptr &incidence )
 {
   mLoadedIncidence = incidence;
   if ( mLoadedIncidence ) {
-#ifdef KDEPIM_MOBILE_UI
-    setCategories( mLoadedIncidence->categories() );
-#else
     checkForUnknownCategories( mLoadedIncidence->categories() );
-    mUi->mCategoryCombo->setCheckedItems( mLoadedIncidence->categories(), Qt::UserRole );
-#endif
+    setCategories( mLoadedIncidence->categories() );
   } else {
-    mSelectedCategories.clear();
+    setCategories( QStringList() );
   }
 
   mWasDirty = false;
@@ -81,7 +85,7 @@ void IncidenceCategories::load( const KCalCore::Incidence::Ptr &incidence )
 void IncidenceCategories::save( const KCalCore::Incidence::Ptr &incidence )
 {
   Q_ASSERT( incidence );
-  incidence->setCategories( mSelectedCategories );
+  incidence->setCategories( categories() );
 }
 
 QStringList IncidenceCategories::categories() const
@@ -92,18 +96,11 @@ QStringList IncidenceCategories::categories() const
 bool IncidenceCategories::isDirty() const
 {
   // If no Incidence was loaded, mSelectedCategories should be empty.
-  bool categoriesEqual = mSelectedCategories.isEmpty();
+  bool categoriesEqual = categories().isEmpty();
 
   if ( mLoadedIncidence ) { // There was an Incidence loaded
     categoriesEqual =
-      ( mLoadedIncidence->categories().toSet().size() == mSelectedCategories.toSet().size() );
-
-    if ( categoriesEqual ) {
-      QStringListIterator it( mLoadedIncidence->categories() );
-      while ( it.hasNext() && categoriesEqual ) {
-        categoriesEqual = mSelectedCategories.contains( it.next() );
-      }
-    }
+      ( mLoadedIncidence->categories().toSet() == categories().toSet() );
   }
   return !categoriesEqual;
 }
@@ -113,7 +110,7 @@ void IncidenceCategories::selectCategories()
 #ifdef KDEPIM_MOBILE_UI
   CategoryConfig cc( EditorConfig::instance()->config() );
   QPointer<CategoryDialog> dialog( new CategoryDialog( &cc ) );
-  dialog->setSelected( mSelectedCategories );
+  dialog->setSelected( categories() );
   dialog->exec();
 
   setCategories( dialog->selectedCategories() );
@@ -126,48 +123,37 @@ void IncidenceCategories::setCategories( const QStringList &categories )
   mSelectedCategories = categories;
 #ifdef KDEPIM_MOBILE_UI
   mUi->mCategoriesLabel->setText( mSelectedCategories.join( QLatin1String( "," ) ) );
+#else
+  mUi->mTagWidget->setSelection(categories);
 #endif
 
   checkDirtyStatus();
 }
 
-void IncidenceCategories::setCategoriesFromCombo()
-{
-#ifndef KDEPIM_MOBILE_UI
-  const QStringList categories = mUi->mCategoryCombo->checkedItems( Qt::UserRole );
-  setCategories( categories );
-#endif
-}
-
 void IncidenceCategories::printDebugInfo() const
 {
-  kDebug() << "mSelectedCategories = " << mSelectedCategories;
+  kDebug() << "mSelectedCategories = " << categories();
   kDebug() << "mLoadedIncidence->categories() = " << mLoadedIncidence->categories();
 }
 
 void IncidenceCategories::checkForUnknownCategories( const QStringList &categoriesToCheck )
 {
 #ifndef KDEPIM_MOBILE_UI // desktop only
+  //TODO CategoryConfig can be removed in the next iteration (4.14), it's only used to migrate existing tags
   CalendarSupport::CategoryConfig cc( EditorConfig::instance()->config() );
-
   QStringList existingCategories( cc.customCategories() );
-  bool found = false;
+
   foreach ( const QString &categoryToCheck, categoriesToCheck ) {
     if ( !existingCategories.contains( categoryToCheck ) ) {
       existingCategories.append( categoryToCheck );
-      found = true;
     }
   }
 
-  cc.setCustomCategories( existingCategories );
-  cc.writeConfig();
-
-  if ( found ) {
-    //update the combo with newly found categories
-    CategoryHierarchyReaderQComboBox( mUi->mCategoryCombo ).read( existingCategories );
+  foreach ( const QString &category, existingCategories ) {
+    Akonadi::TagCreateJob *tagCreateJob = new Akonadi::TagCreateJob(Akonadi::Tag(category), this);
+    tagCreateJob->setMergeIfExisting(true);
   }
 #else
-  Q_UNUSED( categoriesToCheck )
+  Q_UNUSED( categoriesToCheck );
 #endif
 }
-
