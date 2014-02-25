@@ -3398,6 +3398,8 @@ void ViewerPrivate::slotCreateTodo(const KCalCore::Todo::Ptr &todoPtr, const Ako
             if ( job->items().count() == 1 ) {
                 item = job->items().first();
             }
+        } else {
+            qDebug()<<" createTodo Error during fetch: "<<job->errorString();
         }
     }
     if ( !item.hasPayload<KMime::Message::Ptr>() ) {
