@@ -91,6 +91,14 @@ QStringList NoteListWidget::selectedNotes() const
     return lst;
 }
 
+Akonadi::Entity::Id NoteListWidget::itemId(QListWidgetItem *item) const
+{
+    if (item) {
+        return item->data(AkonadiId).toLongLong();
+    }
+    return -1;
+}
+
 Akonadi::Entity::Id NoteListWidget::currentItemId() const
 {
     QListWidgetItem *item = currentItem();
