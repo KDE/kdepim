@@ -21,7 +21,6 @@
 #include "core/filter.h"
 #include "core/messageitem.h"
 
-#include <akonadi/itemsearchjob.h>
 #include <baloo/pim/emailquery.h>
 #include <baloo/pim/resultiterator.h>
 
