@@ -15,21 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef CALENDARSUPPORT_TAGWIDGETS_H
-#define CALENDARSUPPORT_TAGWIDGETS_H
+#ifndef KDEPIM_TAGWIDGETS_H
+#define KDEPIM_TAGWIDGETS_H
 
-#include "calendarsupport_export.h"
+#include "kdepim_export.h"
 #include <Akonadi/Tag>
+#include <Akonadi/TagSelectionDialog>
 #include <QWidget>
+#include <KDialog>
+#include <KComboBox>
+#include "kcheckcombobox.h"
 
 class KJob;
 namespace Akonadi {
   class TagWidget;
 }
 
-namespace CalendarSupport {
+namespace KPIM {
 
-class CALENDARSUPPORT_EXPORT TagWidget: public QWidget
+class KDEPIM_EXPORT TagWidget: public QWidget
 {
     Q_OBJECT
 public:
@@ -47,6 +51,35 @@ private:
     Akonadi::TagWidget *mTagWidget;
     Akonadi::Tag::List mTagList;
     QStringList mCachedTagNames;
+};
+
+class KDEPIM_EXPORT TagSelectionDialog : public Akonadi::TagSelectionDialog
+{
+    Q_OBJECT
+public:
+    explicit TagSelectionDialog(QWidget* parent = 0);
+    void setSelection(const QStringList &);
+    QStringList selection() const;
+
+private slots:
+    void onTagCreated(KJob*);
+
+private:
+    Akonadi::Tag::List mTagList;
+};
+
+class KDEPIM_EXPORT TagSelectionCombo : public KPIM::KCheckComboBox
+{
+    Q_OBJECT
+public:
+    explicit TagSelectionCombo(QWidget* parent = 0);
+};
+
+class KDEPIM_EXPORT TagCombo : public KComboBox
+{
+    Q_OBJECT
+public:
+    explicit TagCombo(QWidget* parent = 0);
 };
 
 }

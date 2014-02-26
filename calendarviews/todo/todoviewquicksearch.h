@@ -32,6 +32,7 @@
 
 namespace KPIM {
   class KCheckComboBox;
+  class TagSelectionCombo;
 }
 
 class KLineEdit;
@@ -45,7 +46,6 @@ class TodoViewQuickSearch : public QWidget
     ~TodoViewQuickSearch() {}
 
     void setCalendar( const Akonadi::ETMCalendar::Ptr &calendar );
-    void updateCategories();
 
   Q_SIGNALS:
     void searchTextChanged( const QString & );
@@ -67,15 +67,13 @@ class TodoViewQuickSearch : public QWidget
     void emitFilterPriorityChanged();
 
   private:
-    /** Helper method for the filling of the category combo. */
-    void fillCategories();
     /** Helper method for the filling of the priority combo. */
     void fillPriorities();
 
     Akonadi::ETMCalendar::Ptr mCalendar;
 
     KLineEdit *mSearchLine;
-    KPIM::KCheckComboBox *mCategoryCombo;
+    KPIM::TagSelectionCombo *mCategoryCombo;
     KPIM::KCheckComboBox *mPriorityCombo;
 };
 

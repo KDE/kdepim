@@ -586,7 +586,7 @@
         </attribute>
         <layout class="QGridLayout" name="gridLayout_9">
          <item row="2" column="1">
-          <widget class="CalendarSupport::TagWidget" name="mTagWidget" native="true"/>
+          <widget class="KPIM::TagWidget" name="mTagWidget" native="true"/>
          </item>
          <item row="2" column="2">
           <widget class="QLabel" name="mSecrecyLabel">
@@ -1557,9 +1557,9 @@
    <header>calendarsupport/messagewidget.h</header>
   </customwidget>
   <customwidget>
-   <class>CalendarSupport::TagWidget</class>
+   <class>KPIM::TagWidget</class>
    <extends>QWidget</extends>
-   <header>calendarsupport/tagwidgets.h</header>
+   <header>libkdepim/widgets/tagwidgets.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

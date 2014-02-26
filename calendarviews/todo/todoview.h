@@ -34,6 +34,7 @@
 #include <KConfig>
 #include <QPointer>
 
+class KJob;
 class TodoCategoriesDelegate;
 class TodoViewQuickAddLine;
 class TodoViewQuickSearch;
@@ -92,7 +93,6 @@ class EVENTVIEWS_EXPORT TodoView : public EventViews::EventView
                             const QDate &preferredMonth = QDate() );
     virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
     virtual void updateView();
-    void updateCategories();
     virtual void changeIncidenceDisplay( const Akonadi::Item &incidence, Akonadi::IncidenceChanger::ChangeType changeType );
     virtual void updateConfig();
     virtual void clearSelection();
@@ -130,6 +130,7 @@ class EVENTVIEWS_EXPORT TodoView : public EventViews::EventView
     void setFlatView( bool flatView, bool notifyOtherViews = true );
 
     void onRowsInserted( const QModelIndex &parent, int start, int end );
+    void onTagsFetched(KJob*);
 
   Q_SIGNALS:
     void purgeCompletedSignal();
@@ -173,7 +174,6 @@ class EVENTVIEWS_EXPORT TodoView : public EventViews::EventView
 
     QMap<QAction *,int> mPercentage;
     QMap<QAction *,int> mPriority;
-    QMap<QAction *,QString> mCategory;
     bool mSidebarView;
     bool mResizeColumnsScheduled;
     QTimer *mResizeColumnsTimer;

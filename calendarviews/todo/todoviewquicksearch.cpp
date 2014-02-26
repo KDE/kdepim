@@ -32,6 +32,7 @@
 #include <calendarsupport/categoryconfig.h>
 
 #include <libkdepim/widgets/kcheckcombobox.h>
+#include <libkdepim/widgets/tagwidgets.h>
 
 #include <calendarsupport/categoryhierarchyreader.h>
 
@@ -63,21 +64,21 @@ TodoViewQuickSearch::TodoViewQuickSearch( const Akonadi::ETMCalendar::Ptr &calen
 
   layout->addWidget( mSearchLine, 3 );
 
-  mCategoryCombo = new KPIM::KCheckComboBox( this );
+  mCategoryCombo = new KPIM::TagSelectionCombo( this );
   mCategoryCombo->setToolTip(
     i18nc( "@info:tooltip", "Filter on these categories" ) );
   mCategoryCombo->setWhatsThis(
     i18nc( "@info:whatsthis",
            "Use this combobox to filter the to-dos that are shown by "
            "a list of selected categories." ) );
-  mCategoryCombo->setDefaultText( i18nc( "@item:inlistbox", "Select Categories" ) );
+  const QString defaultText = i18nc( "@item:inlistbox", "Select Categories" );
+  mCategoryCombo->setDefaultText( defaultText );
   mCategoryCombo->setSeparator( i18nc( "@item:intext delimiter for joining category names", "," ) );
 
   connect( mCategoryCombo, SIGNAL(checkedItemsChanged(QStringList)),
            SLOT(emitFilterCategoryChanged()) );
 
   layout->addWidget( mCategoryCombo, 1 );
-  fillCategories();
 
   { // Make the combo big enough so that "Select Categories" fits.
     QFontMetrics fm = mCategoryCombo->lineEdit()->fontMetrics();
@@ -88,7 +89,7 @@ TodoViewQuickSearch::TodoViewQuickSearch( const Akonadi::ETMCalendar::Ptr &calen
     // Calculate a nice size for "Select Categories"
     const int newPreferedWidth = currentPreferedWidth -
                                  fm.width( QLatin1Char( 'x' ) ) * 17 +
-                                 fm.width( mCategoryCombo->defaultText() );
+                                 fm.width( defaultText );
 
     const int pixelsToAdd = newPreferedWidth - mCategoryCombo->lineEdit()->width();
     mCategoryCombo->setMinimumWidth( mCategoryCombo->width() + pixelsToAdd );
@@ -115,13 +116,7 @@ void TodoViewQuickSearch::setCalendar( const Akonadi::ETMCalendar::Ptr &calendar
 {
   if ( calendar != mCalendar ) {
     mCalendar = calendar;
-    fillCategories();
   }
-}
-
-void TodoViewQuickSearch::updateCategories()
-{
-  fillCategories();
 }
 
 void TodoViewQuickSearch::reset()
@@ -129,44 +124,6 @@ void TodoViewQuickSearch::reset()
   mSearchLine->clear();
   mCategoryCombo->setCurrentIndex( 0 );
   mPriorityCombo->setCurrentIndex( 0 );
-}
-
-void TodoViewQuickSearch::fillCategories()
-{
-  QStringList currentCategories = mCategoryCombo->checkedItems( Qt::UserRole );
-  mCategoryCombo->clear();
-
-  QStringList categories;
-
-  if ( mCalendar ) {
-    KCalCore::CalFilter *filter = mCalendar->filter();
-    if ( filter->criteria() & KCalCore::CalFilter::ShowCategories ) {
-      categories = filter->categoryList();
-      categories.sort();
-    } else {
-      CalendarSupport::CategoryConfig cc( CalendarSupport::KCalPrefs::instance() );
-      categories = cc.customCategories();
-      QStringList filterCategories = filter->categoryList();
-      categories.sort();
-      filterCategories.sort();
-
-      QStringList::Iterator it = categories.begin();
-      QStringList::Iterator jt = filterCategories.begin();
-      while ( it != categories.end() && jt != filterCategories.end() ) {
-        if ( *it == *jt ) {
-          it = categories.erase( it );
-          jt++;
-        } else if ( *it < *jt ) {
-          it++;
-        } else if ( *it > *jt ) {
-          jt++;
-        }
-      }
-    }
-  }
-
-  CalendarSupport::CategoryHierarchyReaderQComboBox( mCategoryCombo ).read( categories );
-  mCategoryCombo->setCheckedItems( currentCategories, Qt::UserRole );
 }
 
 void TodoViewQuickSearch::fillPriorities()
@@ -189,9 +146,7 @@ void TodoViewQuickSearch::fillPriorities()
 
 void TodoViewQuickSearch::emitFilterCategoryChanged()
 {
-  // The display role doesn't work because it represents subcategories
-  // as " subcategory", and we want "ParentCollection:subCategory"
-  emit filterCategoryChanged( mCategoryCombo->checkedItems( Qt::UserRole ) );
+  emit filterCategoryChanged( mCategoryCombo->checkedItems() );
 }
 
 void TodoViewQuickSearch::emitFilterPriorityChanged()

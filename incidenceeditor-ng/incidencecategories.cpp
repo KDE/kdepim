@@ -19,9 +19,6 @@
 */
 
 #include "incidencecategories.h"
-#include "categoryhierarchyreader.h"
-
-#include "categorydialog.h"
 
 #include "editorconfig.h"
 
@@ -31,15 +28,13 @@
   #include "ui_dialogdesktop.h"
 #endif
 
-#include <calendarsupport/categoryconfig.h>
-#include <calendarsupport/tagwidgets.h>
+#include <libkdepim/widgets/tagwidgets.h>
 #include <KConfigSkeleton>
 #include <KDebug>
 
 #include <Akonadi/TagCreateJob>
 
 using namespace IncidenceEditorNG;
-using namespace CalendarSupport;
 
 #ifdef KDEPIM_MOBILE_UI
 IncidenceCategories::IncidenceCategories( Ui::EventOrTodoMore *ui )
@@ -54,10 +49,6 @@ IncidenceCategories::IncidenceCategories( Ui::EventOrTodoDesktop *ui )
 connect( mUi->mSelectCategoriesButton, SIGNAL(clicked()),
           SLOT(selectCategories()) );
 #else
-  //load existing categories
-  //TODO this is only for backwards compatiblity and can be removed in 4.14
-  checkForUnknownCategories(QStringList());
-
   connect( mUi->mTagWidget, SIGNAL(selectionChanged(QStringList)),
           SLOT(onSelectionChanged(QStringList)) );
 #endif
@@ -107,15 +98,14 @@ bool IncidenceCategories::isDirty() const
 
 void IncidenceCategories::selectCategories()
 {
-#ifdef KDEPIM_MOBILE_UI
-  CategoryConfig cc( EditorConfig::instance()->config() );
-  QPointer<CategoryDialog> dialog( new CategoryDialog( &cc ) );
-  dialog->setSelected( categories() );
+  QPointer<KPIM::TagSelectionDialog> dialog( new KPIM::TagSelectionDialog() );
+  dialog->setSelection( categories() );
   dialog->exec();
 
-  setCategories( dialog->selectedCategories() );
-  delete dialog;
-#endif
+  if (dialog) {
+    setCategories( dialog->selection() );
+    delete dialog;
+  }
 }
 
 void IncidenceCategories::setCategories( const QStringList &categories )
@@ -139,17 +129,7 @@ void IncidenceCategories::printDebugInfo() const
 void IncidenceCategories::checkForUnknownCategories( const QStringList &categoriesToCheck )
 {
 #ifndef KDEPIM_MOBILE_UI // desktop only
-  //TODO CategoryConfig can be removed in the next iteration (4.14), it's only used to migrate existing tags
-  CalendarSupport::CategoryConfig cc( EditorConfig::instance()->config() );
-  QStringList existingCategories( cc.customCategories() );
-
-  foreach ( const QString &categoryToCheck, categoriesToCheck ) {
-    if ( !existingCategories.contains( categoryToCheck ) ) {
-      existingCategories.append( categoryToCheck );
-    }
-  }
-
-  foreach ( const QString &category, existingCategories ) {
+  foreach ( const QString &category, categoriesToCheck ) {
     Akonadi::TagCreateJob *tagCreateJob = new Akonadi::TagCreateJob(Akonadi::Tag(category), this);
     tagCreateJob->setMergeIfExisting(true);
   }
