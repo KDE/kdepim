@@ -73,6 +73,7 @@ void StorageServiceTabWidget::createPage(const QString &name, PimCommon::Storage
     connect(page, SIGNAL(updateIcon(QIcon,StorageServicePage*)), this, SLOT(slotUpdateIcon(QIcon,StorageServicePage*)));
     connect(page, SIGNAL(updateStatusBarMessage(QString)), this, SIGNAL(updateStatusBarMessage(QString)));
     connect(page, SIGNAL(listFileWasInitialized()), this, SIGNAL(listFileWasInitialized()));
+    connect(page, SIGNAL(selectionChanged()), this, SIGNAL(selectionChanged()));
     addTab(page, name);
 }
 
@@ -240,4 +241,14 @@ void StorageServiceTabWidget::refreshAll()
             page->refreshList();
         }
     }
+}
+
+PimCommon::StorageServiceTreeWidget::ItemType StorageServiceTabWidget::itemTypeSelected() const
+{
+    if (currentWidget()) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        if (page)
+            return page->itemTypeSelected();
+    }
+    return PimCommon::StorageServiceTreeWidget::UnKnown;
 }

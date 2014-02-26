@@ -59,7 +59,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceCategories : public IncidenceEditor
 
   private slots:
     void selectCategories();
-    void setCategoriesFromCombo();
+    void onSelectionChanged(const QStringList &);
 
   private:
 

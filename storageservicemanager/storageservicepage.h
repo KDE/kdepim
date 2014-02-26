@@ -24,6 +24,7 @@
 #include <QWidget>
 #include "pimcommon/storageservice/storageserviceabstract.h"
 #include "storageservicemanagerutil.h"
+#include "pimcommon/storageservice/widgets/storageservicetreewidget.h"
 
 namespace PimCommon {
 class StorageServiceAbstract;
@@ -55,10 +56,14 @@ public:
     void downloadFile();
     bool listFolderWasLoaded() const;
     void logout();
+
+    PimCommon::StorageServiceTreeWidget::ItemType itemTypeSelected() const;
+
 Q_SIGNALS:
     void updateIcon(const QIcon &pix, StorageServicePage *page);
     void updateStatusBarMessage(const QString &msg);
     void listFileWasInitialized();
+    void selectionChanged();
 
 public Q_SLOTS:
     void slotUploadFile();

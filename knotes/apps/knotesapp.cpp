@@ -137,7 +137,7 @@ KNotesApp::KNotesApp()
     actionCollection()->addAction( QLatin1String("print_selected_notes"), action );
     connect( action, SIGNAL(triggered()), SLOT(slotPrintSelectedNotes()) );
 
-    mFindAction = KStandardAction::find( this, SLOT(slotOpenFindDialog()), actionCollection());
+    KStandardAction::find( this, SLOT(slotOpenFindDialog()), actionCollection());
 
 
 
@@ -565,9 +565,24 @@ bool KNotesApp::commitData( QSessionManager & )
     return true;
 }
 
+void KNotesApp::slotSelectNote(Akonadi::Item::Id id)
+{
+    showNote(id);
+}
+
 void KNotesApp::slotOpenFindDialog()
 {
-    QPointer<KNoteFindDialog> dlg = new KNoteFindDialog(this);
-    dlg->exec();
-    delete dlg;
+    if (!mFindDialog) {
+        mFindDialog = new KNoteFindDialog(this);
+        connect(mFindDialog, SIGNAL(noteSelected(Akonadi::Item::Id)), this, SLOT(slotSelectNote(Akonadi::Item::Id)));
+    }
+    QHash<Akonadi::Item::Id , Akonadi::Item> lst;
+
+    QHashIterator<Akonadi::Item::Id, KNote*> i(mNotes);
+    while (i.hasNext()) {
+        i.next();
+        lst.insert(i.key(), i.value()->item());
+    }
+    mFindDialog->setExistingNotes(lst);
+    mFindDialog->show();
 }

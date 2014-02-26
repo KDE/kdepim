@@ -34,6 +34,8 @@ public:
     void removeNote(const Akonadi::Item &note);
     QStringList selectedNotes() const;
 
+    Akonadi::Item::Id itemId(QListWidgetItem *item) const;
+
     Akonadi::Item::Id currentItemId() const;
 
 private:

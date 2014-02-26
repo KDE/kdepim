@@ -230,8 +230,10 @@ void Widget::slotTagsFetched(KJob *job)
 
   addMessageTagItem( SmallIcon( QLatin1String( "mail-flag" ) ), i18n( "All" ), QString() );
 
+  QStringList tagFound;
   foreach( const Akonadi::Tag &akonadiTag, fetchJob->tags() ) {
     if(tagSelectedLst.contains(akonadiTag.url().url())) {
+      tagFound.append(akonadiTag.url().url());
       QString iconName = QLatin1String( "mail-tagged" );
       const QString label = akonadiTag.name();
       const QString id = akonadiTag.url().url();
@@ -242,6 +244,9 @@ void Widget::slotTagsFetched(KJob *job)
       addMessageTagItem( SmallIcon( iconName ), label, QVariant( id ) );
     }
   }
+  conf.writeEntry(QLatin1String("TagSelected"), tagFound);
+  conf.sync();
+
   setCurrentStatusFilterItem();
 }
 

@@ -151,6 +151,10 @@ set(libmessageviewer_antispam_SRCS
   antispam/antispamconfig.cpp
 )
 
+set(libmessageviewer_job_SRCS
+  job/createtodojob.cpp
+)
+
 set(libmessageviewer_SRCS
   ${libmessageviewer_viewer_SRCS}
   ${libmessageviewer_widgets_SRCS}
@@ -160,6 +164,7 @@ set(libmessageviewer_SRCS
   ${libmessageviewer_utils_SRCS}
   ${libmessageviewer_htmlwriter_SRCS}
   ${libmessageviewer_antispam_SRCS}
+  ${libmessageviewer_job_SRCS}
   settings/globalsettings.cpp
   ${_mailwebview_cpp}
 )

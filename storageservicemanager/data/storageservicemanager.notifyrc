@@ -1,9 +1,26 @@
 [Global]
 IconName=kmail
 Comment=StorageServiceManager
+Comment[cs]=Správce služeb úložiště
+Comment[de]=Speicherdienstverwaltung
+Comment[nl]=Beheerder van opslagservice
+Comment[pt]=Gestor de Serviços de Armazenamento
+Comment[uk]=Керування службами збереження
+Comment[x-test]=xxStorageServiceManagerxx
 
 [Event/action-failed]
 Name=Action Failed
+Name[cs]=Činnost selhala
+Name[de]=Aktion ist fehlgeschlagen
+Name[nl]=Actie is mislukt
+Name[pt]=Acção sem Sucesso
+Name[uk]=Помилка під час дії
+Name[x-test]=xxAction Failedxx
 Comment=An error was returned
+Comment[de]=Ein Fehler wurde zurückgegeben
+Comment[nl]=Er kwam een fout terug
+Comment[pt]=Foi devolvido um erro
+Comment[uk]=Повернуто повідомлення про помилку
+Comment[x-test]=xxAn error was returnedxx
 Action=None
 

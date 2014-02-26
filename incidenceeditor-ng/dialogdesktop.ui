@@ -11,992 +11,656 @@
    </rect>
   </property>
   <layout class="QVBoxLayout" name="mainVerticalLayout">
-    <item>
-  <layout class="QGridLayout" name="gridLayout">
-   <property name="margin">
-    <number>0</number>
-   </property>
-   <item row="0" column="0">
-    <widget class="QLabel" name="label">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <property name="margin">
+      <number>0</number>
      </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="text">
-      <string comment="@label:listbox The calendar to which the todo or event must be added">Calendar:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QWidget" name="mCalSelectorPlaceHolder" native="true"/>
-   </item>
-   <item row="1" column="1">
-    <widget class="QWidget" name="mInvitationBar" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout_10">
-      <property name="margin">
-       <number>0</number>
-      </property>
-      <item>
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string comment="@info">You are Invited, what do you want to do?</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="mAcceptInvitationButton">
-        <property name="toolTip">
-         <string comment="@info:tooltip">Accept the invitation</string>
-        </property>
-        <property name="whatsThis">
-         <string comment="@info:whatsthis">Click this button to accept the invitation.</string>
-        </property>
-        <property name="text">
-         <string comment="@action:button Accept an invitation">Accept</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="mDeclineInvitationButton">
-        <property name="text">
-         <string comment="@action:button decline an invitation">Decline</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_13">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="font">
-      <font>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="toolTip">
-      <string comment="@info:tooltip">Set the title</string>
-     </property>
-     <property name="whatsThis">
-      <string comment="@info:whatsthis">Sets the Title of this event or to-do.</string>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="text">
-      <string comment="@label">T&amp;itle:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="buddy">
-      <cstring>mSummaryEdit</cstring>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="KLineEdit" name="mSummaryEdit">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="toolTip">
-      <string comment="@info:tooltip">Set the title</string>
-     </property>
-     <property name="whatsThis">
-      <string comment="@info:whatsthis">Sets the Title of this event or to-do.</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="mLocationLabel">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="text">
-      <string comment="@label">&amp;Location:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="buddy">
-      <cstring>mLocationEdit</cstring>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="KLineEdit" name="mLocationEdit">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="toolTip">
-      <string comment="@info:tooltip">Set the location</string>
-     </property>
-     <property name="whatsThis">
-      <string comment="@info:whatsthis">Sets where the event or to-do will take place.</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0" colspan="2">
-    <widget class="Line" name="line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0">
-    <widget class="QLabel" name="mTaskLabel">
-     <property name="text">
-      <string comment="@label line containing to-do specific ui controls">Completion:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="1">
-    <widget class="QWidget" name="mCompletionPriorityWidget" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout_8">
-      <property name="margin">
-       <number>0</number>
-      </property>
-      <item>
-       <widget class="QSlider" name="mCompletionSlider">
-        <property name="maximum">
-         <number>100</number>
-        </property>
-        <property name="singleStep">
-         <number>10</number>
-        </property>
-        <property name="tracking">
-         <bool>true</bool>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="tickPosition">
-         <enum>QSlider::TicksBelow</enum>
-        </property>
-        <property name="tickInterval">
-         <number>10</number>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="mCompletedLabel">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string comment="@label:slider Showed after the to-do percentage completed slider">completed</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_9">
-        <property name="text">
-         <string comment="@label:listbox priority of a to-do">Priority:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="KComboBox" name="mPriorityCombo">
-        <property name="currentIndex">
-         <number>5</number>
-        </property>
-        <item>
-         <property name="text">
-          <string comment="@item:inlistbox Priority of a to-do">unspecified</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string comment="@item:inlistbox Priority of a to-do">1 (highest)</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string comment="@item:inlistbox Priority of a to-do">2</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string comment="@item:inlistbox Priority of a to-do">3</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string comment="@item:inlistbox Priority of a to-do">4</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string comment="@item:inlistbox Priority of a to-do">5 (medium)</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string comment="@item:inlistbox Priority of a to-do">6</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string comment="@item:inlistbox Priority of a to-do">7</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string comment="@item:inlistbox Priority of a to-do">8</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string comment="@item:inlistbox Priority of a to-do">9 (lowest)</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="8" column="1">
-    <layout class="QHBoxLayout" name="horizontalLayout_5">
-     <item>
-      <widget class="QCheckBox" name="mWholeDayCheck">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="whatsThis">
-        <string comment="@info:whatsthis">Set if this to-do's start and due dates have times associated with them.</string>
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
        </property>
        <property name="text">
-        <string comment="@option:check">All Day</string>
+        <string comment="@label:listbox The calendar to which the todo or event must be added">Calendar:</string>
        </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_7">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Fixed</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="mFreeBusyCheck">
-       <property name="text">
-        <string comment="@option:check">Blocks me for other events</string>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
-     <item>
-      <spacer name="horizontalSpacer_12">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
+     <item row="0" column="1">
+      <widget class="QWidget" name="mCalSelectorPlaceHolder" native="true"/>
      </item>
-    </layout>
-   </item>
-   <item row="9" column="0">
-    <widget class="QLabel" name="mStartLabel">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="text">
-      <string comment="@label Start date/time of the event or todo">&amp;Start:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="buddy">
-      <cstring>mStartDateEdit</cstring>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="1">
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QCheckBox" name="mStartCheck">
-       <property name="text">
-        <string/>
-       </property>
+     <item row="1" column="1">
+      <widget class="QWidget" name="mInvitationBar" native="true">
+       <layout class="QHBoxLayout" name="horizontalLayout_10">
+        <property name="margin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string comment="@info">You are Invited, what do you want to do?</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="mAcceptInvitationButton">
+          <property name="toolTip">
+           <string comment="@info:tooltip">Accept the invitation</string>
+          </property>
+          <property name="whatsThis">
+           <string comment="@info:whatsthis">Click this button to accept the invitation.</string>
+          </property>
+          <property name="text">
+           <string comment="@action:button Accept an invitation">Accept</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="mDeclineInvitationButton">
+          <property name="text">
+           <string comment="@action:button decline an invitation">Decline</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_13">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
       </widget>
      </item>
-     <item>
-      <widget class="KDateComboBox" name="mStartDateEdit">
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_2">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="toolTip">
-        <string comment="@info:tooltip">Set the start date</string>
-       </property>
-       <property name="whatsThis">
-        <string comment="@info:whatsthis">Sets the start date for this to-do</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="KTimeComboBox" name="mStartTimeEdit">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="whatsThis">
-        <string comment="@info:whatsthis">Sets the start time for this to-do.</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="IncidenceEditorNG::KTimeZoneComboBox" name="mTimeZoneComboStart">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="whatsThis">
-        <string comment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="mTimeZoneLabel">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
        <property name="font">
         <font>
-         <underline>false</underline>
+         <weight>75</weight>
+         <bold>true</bold>
         </font>
        </property>
-       <property name="text">
-        <string comment="@action">&lt;a href=&quot;hide&quot;&gt;&lt;font color='blue'&gt;&amp;lt;&amp;lt; Time zones&lt;/font&gt;&lt;/a&gt;</string>
+       <property name="toolTip">
+        <string comment="@info:tooltip">Set the title</string>
        </property>
-       <property name="textFormat">
-        <enum>Qt::RichText</enum>
+       <property name="whatsThis">
+        <string comment="@info:whatsthis">Sets the Title of this event or to-do.</string>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
+       <property name="text">
+        <string comment="@label">T&amp;itle:</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="buddy">
+        <cstring>mSummaryEdit</cstring>
        </property>
       </widget>
      </item>
-     <item>
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+     <item row="2" column="1">
+      <widget class="KLineEdit" name="mSummaryEdit">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
+       <property name="toolTip">
+        <string comment="@info:tooltip">Set the title</string>
        </property>
-      </spacer>
+       <property name="whatsThis">
+        <string comment="@info:whatsthis">Sets the Title of this event or to-do.</string>
+       </property>
+      </widget>
      </item>
-    </layout>
-   </item>
-   <item row="10" column="0">
-    <widget class="QLabel" name="mEndLabel">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="text">
-      <string comment="@label end date/time for an event or to-do">&amp;End:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="buddy">
-      <cstring>mEndDateEdit</cstring>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="1">
-    <layout class="QHBoxLayout" name="horizontalLayout_4">
-     <item>
-      <widget class="QCheckBox" name="mEndCheck">
+     <item row="3" column="0">
+      <widget class="QLabel" name="mLocationLabel">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
        <property name="text">
-        <string/>
+        <string comment="@label">&amp;Location:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="buddy">
+        <cstring>mLocationEdit</cstring>
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="KDateComboBox" name="mEndDateEdit">
+     <item row="3" column="1">
+      <widget class="KLineEdit" name="mLocationEdit">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="toolTip">
+        <string comment="@info:tooltip">Set the location</string>
+       </property>
        <property name="whatsThis">
-        <string comment="@info:whatsthis">Sets the due date for this to-do.</string>
+        <string comment="@info:whatsthis">Sets where the event or to-do will take place.</string>
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="KTimeComboBox" name="mEndTimeEdit">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="whatsThis">
-        <string comment="@info:whatsthis">Sets the due time for this to-do.</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="IncidenceEditorNG::KTimeZoneComboBox" name="mTimeZoneComboEnd">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="whatsThis">
-        <string comment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer">
+     <item row="4" column="0" colspan="2">
+      <widget class="Line" name="line">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-        </size>
-       </property>
-      </spacer>
+      </widget>
      </item>
-    </layout>
-   </item>
-   <item row="11" column="0" colspan="2">
-    <widget class="Line" name="line_2">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="12" column="0" colspan="2">
-    <widget class="KTabWidget" name="mTabWidget">
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
-     <widget class="QWidget" name="mGeneralTab">
-      <attribute name="title">
-       <string comment="@title:tab General settings for an event or to-do">General</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout_9">
-       <item row="0" column="0" colspan="4">
-        <layout class="QHBoxLayout" name="horizontalLayout_6">
-         <item>
-          <widget class="QWidget" name="mEditToolBarPlaceHolder" native="true"/>
-         </item>
-         <item>
-          <widget class="QLabel" name="mRichTextLabel">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
+     <item row="5" column="0">
+      <widget class="QLabel" name="mTaskLabel">
+       <property name="text">
+        <string comment="@label line containing to-do specific ui controls">Completion:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QWidget" name="mCompletionPriorityWidget" native="true">
+       <layout class="QHBoxLayout" name="horizontalLayout_8">
+        <property name="margin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QSlider" name="mCompletionSlider">
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="singleStep">
+           <number>10</number>
+          </property>
+          <property name="tracking">
+           <bool>true</bool>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="tickPosition">
+           <enum>QSlider::TicksBelow</enum>
+          </property>
+          <property name="tickInterval">
+           <number>10</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="mCompletedLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string comment="@label:slider Showed after the to-do percentage completed slider">completed</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string comment="@label:listbox priority of a to-do">Priority:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="KComboBox" name="mPriorityCombo">
+          <property name="currentIndex">
+           <number>5</number>
+          </property>
+          <item>
            <property name="text">
-            <string comment="@label">&lt;a href=\&quot;hide\&quot;&gt;&lt;font color='blue'&gt;Rich text &amp;gt;&amp;gt;&lt;/font&gt;&lt;/a&gt;</string>
+            <string comment="@item:inlistbox Priority of a to-do">unspecified</string>
            </property>
-           <property name="textFormat">
-            <enum>Qt::RichText</enum>
+          </item>
+          <item>
+           <property name="text">
+            <string comment="@item:inlistbox Priority of a to-do">1 (highest)</string>
            </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_9">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+          </item>
+          <item>
+           <property name="text">
+            <string comment="@item:inlistbox Priority of a to-do">2</string>
            </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
+          </item>
+          <item>
+           <property name="text">
+            <string comment="@item:inlistbox Priority of a to-do">3</string>
            </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-       <item row="1" column="0" colspan="4">
-        <widget class="KRichTextWidget" name="mDescriptionEdit">
-         <property name="toolTip">
-          <string comment="@info:tooltip">Set the description in plain text or rich text.</string>
+          </item>
+          <item>
+           <property name="text">
+            <string comment="@item:inlistbox Priority of a to-do">4</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string comment="@item:inlistbox Priority of a to-do">5 (medium)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string comment="@item:inlistbox Priority of a to-do">6</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string comment="@item:inlistbox Priority of a to-do">7</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string comment="@item:inlistbox Priority of a to-do">8</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string comment="@item:inlistbox Priority of a to-do">9 (lowest)</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="8" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <item>
+        <widget class="QCheckBox" name="mWholeDayCheck">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
          <property name="whatsThis">
-          <string comment="@info:whatsthis">Sets the description for this event, to-do or journal. This will be displayed in a reminder if one is set, as well as in a tooltip when you hover over the event.</string>
+          <string comment="@info:whatsthis">Set if this to-do's start and due dates have times associated with them.</string>
          </property>
-         <property name="tabChangesFocus">
+         <property name="text">
+          <string comment="@option:check">All Day</string>
+         </property>
+         <property name="checked">
           <bool>true</bool>
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="mCategoryLabel">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+       <item>
+        <spacer name="horizontalSpacer_7">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="mFreeBusyCheck">
          <property name="text">
-          <string comment="@label">Categories:</string>
+          <string comment="@option:check">Blocks me for other events</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
-        <widget class="KPIM::KCheckComboBox" name="mCategoryCombo">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2">
-        <widget class="QLabel" name="mSecrecyLabel">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="toolTip">
-          <string comment="@info:tooltip">Set the secrecy level</string>
-         </property>
-         <property name="whatsThis">
-          <string comment="@info:whatsthis">Sets whether the access to this event or to-do is restricted. Please note that KOrganizer currently does not use this setting, so the implementation of the restrictions will depend on the groupware server. This means that events or to-dos marked as private or confidential may be visible to others.</string>
-         </property>
-         <property name="text">
-          <string comment="@label:listbox sets the privacy option of the event or to-do">Access:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="3">
-        <widget class="KComboBox" name="mSecrecyCombo">
-         <property name="toolTip">
-          <string comment="@info:tooltip">Set the secrecy level</string>
-         </property>
-         <property name="whatsThis">
-          <string comment="@info:whatsthis">Sets whether the access to this event or to-do is restricted. Please note that KOrganizer currently does not use this setting, so the implementation of the restrictions will depend on the groupware server. This means that events or to-dos marked as private or confidential may be visible to others.</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="mAttendeesTab">
-      <attribute name="title">
-       <string comment="@title:tab attendees of this event or to-do">Attendees</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout_15">
-       <item row="1" column="0" colspan="2">
-        <widget class="QLabel" name="label_3">
-         <property name="text">
-          <string comment="@label:listbox">Meeting organizer:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_5">
-         <property name="text">
-          <string comment="@label participants of this event or to-do">Participants:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1" colspan="2">
-        <layout class="QHBoxLayout" name="horizontalLayout_7">
-         <item>
-          <widget class="QLabel" name="mConflictsLabel">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="mSolveButton">
-           <property name="toolTip">
-            <string comment="@info:tooltip">Schedule the meeting with your attendees.</string>
-           </property>
-           <property name="whatsThis">
-            <string comment="@info:whatsthis">Opens the scheduling dialog, which will assist in picking a time slot that works for all attendees.</string>
-           </property>
-           <property name="text">
-            <string comment="@action:button">Schedule...</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_5">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>258</width>
-             <height>24</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QPushButton" name="mSelectButton">
-           <property name="toolTip">
-            <string comment="@info:tooltip">Select attendees from your address book.</string>
-           </property>
-           <property name="whatsThis">
-            <string comment="@info:whatsthis">Opens your address book, allowing you to select new attendees from it.</string>
-           </property>
-           <property name="text">
-            <string comment="@action:button">Select Attendees...</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="3" column="0" colspan="3">
-        <widget class="QWidget" name="mAttendeWidgetPlaceHolder" native="true">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
-        <widget class="QStackedWidget" name="mOrganizerStack">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="currentIndex">
-          <number>0</number>
-         </property>
-         <widget class="QWidget" name="page">
-          <layout class="QGridLayout" name="gridLayout_2">
-           <property name="margin">
-            <number>0</number>
-           </property>
-           <item row="0" column="0">
-            <widget class="KComboBox" name="mOrganizerCombo">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="toolTip">
-              <string comment="@info:tooltip">Set the organizer identity</string>
-             </property>
-             <property name="whatsThis">
-              <string comment="@info:whatsthis">Sets the identity corresponding to the organizer of this to-do or event. Identities can be set in the 'Personal' section of the KOrganizer configuration, or in the Personal'-&gt;'About Me'-&gt;'Password &amp; User Account' section of the System Settings. In addition, identities are gathered from your KMail settings and from your address book. If you choose to set it globally for KDE in the System Settings, be sure to check 'Use email settings from System Settings' in the 'Personal' section of the KOrganizer configuration.</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="page_2">
-          <layout class="QGridLayout" name="gridLayout_3">
-           <property name="margin">
-            <number>0</number>
-           </property>
-           <item row="0" column="0">
-            <widget class="QLabel" name="mOrganizerLabel">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string comment="KDE::DoNotExtract">TextLabel</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="mReminderTab">
-      <attribute name="title">
-       <string comment="@title:tab Tab to configure reminders for events or to-do">Reminder</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout_17">
-       <item row="0" column="0">
-        <widget class="QLabel" name="mQuickAddReminderLabel">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string comment="@label">Add default reminder:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="KComboBox" name="mAlarmPresetCombo">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
-        <widget class="QPushButton" name="mAlarmAddPresetButton">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string comment="@action:button Adds an reminder">Add</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="3">
-        <spacer name="horizontalSpacer_3">
+       <item>
+        <spacer name="horizontalSpacer_12">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>141</width>
-           <height>22</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="1" column="0" rowspan="5" colspan="4">
-        <widget class="QListWidget" name="mAlarmList">
-         <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="4">
-        <widget class="QPushButton" name="mAlarmNewButton">
-         <property name="text">
-          <string comment="@action:button Create a new reminder">New</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="4">
-        <widget class="QPushButton" name="mAlarmConfigureButton">
-         <property name="text">
-          <string comment="@action:button Configures selected reminder">Configure</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="4">
-        <widget class="QPushButton" name="mAlarmToggleButton">
-         <property name="text">
-          <string comment="@action:button disables selected reminder">Disable</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="4">
-        <widget class="QPushButton" name="mAlarmRemoveButton">
-         <property name="text">
-          <string comment="@action:button removes selected reminders">Remove</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="4">
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>88</width>
-           <height>126</height>
+           <width>40</width>
+           <height>20</height>
           </size>
          </property>
         </spacer>
        </item>
       </layout>
-     </widget>
-     <widget class="QWidget" name="mRecurrenceTab">
-      <attribute name="title">
-       <string comment="@title:tab">Recurrence</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout_19" columnstretch="0,1,0">
-       <item row="0" column="0">
-        <widget class="QLabel" name="mRepeatLabel">
+     </item>
+     <item row="9" column="0">
+      <widget class="QLabel" name="mStartLabel">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
+       <property name="text">
+        <string comment="@label Start date/time of the event or todo">&amp;Start:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="buddy">
+        <cstring>mStartDateEdit</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QCheckBox" name="mStartCheck">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="KDateComboBox" name="mStartDateEdit">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="text">
-          <string comment="@label whether or not this event or to-do repeats">Repeats:</string>
+         <property name="toolTip">
+          <string comment="@info:tooltip">Set the start date</string>
          </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         <property name="whatsThis">
+          <string comment="@info:whatsthis">Sets the start date for this to-do</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="1" colspan="2">
-        <layout class="QHBoxLayout" name="horizontalLayout_9">
-         <item>
-          <widget class="KComboBox" name="mRecurrenceTypeCombo">
+       <item>
+        <widget class="KTimeComboBox" name="mStartTimeEdit">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="whatsThis">
+          <string comment="@info:whatsthis">Sets the start time for this to-do.</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="IncidenceEditorNG::KTimeZoneComboBox" name="mTimeZoneComboStart">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="whatsThis">
+          <string comment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="mTimeZoneLabel">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <underline>false</underline>
+          </font>
+         </property>
+         <property name="text">
+          <string comment="@action">&lt;a href=&quot;hide&quot;&gt;&lt;font color='blue'&gt;&amp;lt;&amp;lt; Time zones&lt;/font&gt;&lt;/a&gt;</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::RichText</enum>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item row="10" column="0">
+      <widget class="QLabel" name="mEndLabel">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
+       <property name="text">
+        <string comment="@label end date/time for an event or to-do">&amp;End:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="buddy">
+        <cstring>mEndDateEdit</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <widget class="QCheckBox" name="mEndCheck">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="KDateComboBox" name="mEndDateEdit">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="whatsThis">
+          <string comment="@info:whatsthis">Sets the due date for this to-do.</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="KTimeComboBox" name="mEndTimeEdit">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="whatsThis">
+          <string comment="@info:whatsthis">Sets the due time for this to-do.</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="IncidenceEditorNG::KTimeZoneComboBox" name="mTimeZoneComboEnd">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="whatsThis">
+          <string comment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item row="11" column="0" colspan="2">
+      <widget class="Line" name="line_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="0" colspan="2">
+      <widget class="KTabWidget" name="mTabWidget">
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="mGeneralTab">
+        <attribute name="title">
+         <string comment="@title:tab General settings for an event or to-do">General</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_9">
+         <item row="2" column="1">
+          <widget class="KPIM::TagWidget" name="mTagWidget" native="true"/>
+         </item>
+         <item row="2" column="2">
+          <widget class="QLabel" name="mSecrecyLabel">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
-           <item>
-            <property name="text">
-             <string comment="@item:inlistbox Lets the user chose how often an event recurs">Never</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string comment="@item:inlistbox Lets the user chose how often an event recurs">Daily</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string comment="@item:inlistbox Lets the user chose how often an event recurs">Weekly</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string comment="@item:inlistbox Lets the user chose how often an event recurs">Monthly</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string comment="@item:inlistbox Lets the user chose how often an event recurs">Yearly</string>
-            </property>
-           </item>
+           <property name="toolTip">
+            <string comment="@info:tooltip">Set the secrecy level</string>
+           </property>
+           <property name="whatsThis">
+            <string comment="@info:whatsthis">Sets whether the access to this event or to-do is restricted. Please note that KOrganizer currently does not use this setting, so the implementation of the restrictions will depend on the groupware server. This means that events or to-dos marked as private or confidential may be visible to others.</string>
+           </property>
+           <property name="text">
+            <string comment="@label:listbox sets the privacy option of the event or to-do">Access:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
           </widget>
          </item>
-         <item>
-          <widget class="QLabel" name="mFrequencyLabel">
+         <item row="0" column="0" colspan="4">
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QWidget" name="mEditToolBarPlaceHolder" native="true"/>
+           </item>
+           <item>
+            <widget class="QLabel" name="mRichTextLabel">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string comment="@label">&lt;a href=\&quot;hide\&quot;&gt;&lt;font color='blue'&gt;Rich text &amp;gt;&amp;gt;&lt;/font&gt;&lt;/a&gt;</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::RichText</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_9">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="0" colspan="4">
+          <widget class="KRichTextWidget" name="mDescriptionEdit">
+           <property name="toolTip">
+            <string comment="@info:tooltip">Set the description in plain text or rich text.</string>
+           </property>
+           <property name="whatsThis">
+            <string comment="@info:whatsthis">Sets the description for this event, to-do or journal. This will be displayed in a reminder if one is set, as well as in a tooltip when you hover over the event.</string>
+           </property>
+           <property name="tabChangesFocus">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="mCategoryLabel">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -1004,31 +668,276 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string comment="@label repeats every [various options]">every</string>
+            <string comment="@label">Categories:</string>
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QSpinBox" name="mFrequencyEdit">
+         <item row="2" column="3">
+          <widget class="KComboBox" name="mSecrecyCombo">
+           <property name="toolTip">
+            <string comment="@info:tooltip">Set the secrecy level</string>
+           </property>
+           <property name="whatsThis">
+            <string comment="@info:whatsthis">Sets whether the access to this event or to-do is restricted. Please note that KOrganizer currently does not use this setting, so the implementation of the restrictions will depend on the groupware server. This means that events or to-dos marked as private or confidential may be visible to others.</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="mAttendeesTab">
+        <attribute name="title">
+         <string comment="@title:tab attendees of this event or to-do">Attendees</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_15">
+         <item row="1" column="0" colspan="2">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string comment="@label:listbox">Meeting organizer:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string comment="@label participants of this event or to-do">Participants:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1" colspan="2">
+          <layout class="QHBoxLayout" name="horizontalLayout_7">
+           <item>
+            <widget class="QLabel" name="mConflictsLabel">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="mSolveButton">
+             <property name="toolTip">
+              <string comment="@info:tooltip">Schedule the meeting with your attendees.</string>
+             </property>
+             <property name="whatsThis">
+              <string comment="@info:whatsthis">Opens the scheduling dialog, which will assist in picking a time slot that works for all attendees.</string>
+             </property>
+             <property name="text">
+              <string comment="@action:button">Schedule...</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_5">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>258</width>
+               <height>24</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="mSelectButton">
+             <property name="toolTip">
+              <string comment="@info:tooltip">Select attendees from your address book.</string>
+             </property>
+             <property name="whatsThis">
+              <string comment="@info:whatsthis">Opens your address book, allowing you to select new attendees from it.</string>
+             </property>
+             <property name="text">
+              <string comment="@action:button">Select Attendees...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="3" column="0" colspan="3">
+          <widget class="QWidget" name="mAttendeWidgetPlaceHolder" native="true">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QStackedWidget" name="mOrganizerStack">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <widget class="QWidget" name="page">
+            <layout class="QGridLayout" name="gridLayout_2">
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="KComboBox" name="mOrganizerCombo">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string comment="@info:tooltip">Set the organizer identity</string>
+               </property>
+               <property name="whatsThis">
+                <string comment="@info:whatsthis">Sets the identity corresponding to the organizer of this to-do or event. Identities can be set in the 'Personal' section of the KOrganizer configuration, or in the Personal'-&gt;'About Me'-&gt;'Password &amp; User Account' section of the System Settings. In addition, identities are gathered from your KMail settings and from your address book. If you choose to set it globally for KDE in the System Settings, be sure to check 'Use email settings from System Settings' in the 'Personal' section of the KOrganizer configuration.</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="page_2">
+            <layout class="QGridLayout" name="gridLayout_3">
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="mOrganizerLabel">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string comment="KDE::DoNotExtract">TextLabel</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="mReminderTab">
+        <attribute name="title">
+         <string comment="@title:tab Tab to configure reminders for events or to-do">Reminder</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_17">
+         <item row="0" column="0">
+          <widget class="QLabel" name="mQuickAddReminderLabel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string comment="@label">Add default reminder:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="KComboBox" name="mAlarmPresetCombo">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
-           <property name="minimum">
-            <number>1</number>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QPushButton" name="mAlarmAddPresetButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
-           <property name="maximum">
-            <number>999</number>
-           </property>
-           <property name="value">
-            <number>1</number>
+           <property name="text">
+            <string comment="@action:button Adds an reminder">Add</string>
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QLabel" name="mRecurrenceRuleLabel">
+         <item row="0" column="3">
+          <spacer name="horizontalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>141</width>
+             <height>22</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="1" column="0" rowspan="5" colspan="4">
+          <widget class="QListWidget" name="mAlarmList">
+           <property name="editTriggers">
+            <set>QAbstractItemView::NoEditTriggers</set>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="4">
+          <widget class="QPushButton" name="mAlarmNewButton">
+           <property name="text">
+            <string comment="@action:button Create a new reminder">New</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="4">
+          <widget class="QPushButton" name="mAlarmConfigureButton">
+           <property name="text">
+            <string comment="@action:button Configures selected reminder">Configure</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="4">
+          <widget class="QPushButton" name="mAlarmToggleButton">
+           <property name="text">
+            <string comment="@action:button disables selected reminder">Disable</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="4">
+          <widget class="QPushButton" name="mAlarmRemoveButton">
+           <property name="text">
+            <string comment="@action:button removes selected reminders">Remove</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="4">
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>88</width>
+             <height>126</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="mRecurrenceTab">
+        <attribute name="title">
+         <string comment="@title:tab">Recurrence</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_19" columnstretch="0,1,0">
+         <item row="0" column="0">
+          <widget class="QLabel" name="mRepeatLabel">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -1036,91 +945,104 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string comment="@label Event or todo recurs every n day(s)">day(s)</string>
+            <string comment="@label whether or not this event or to-do repeats">Repeats:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QCheckBox" name="mThisAndFutureCheck">
-           <property name="text">
-            <string>This and future occurrences.</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_10">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-       <item row="1" column="1" colspan="2">
-        <widget class="QStackedWidget" name="mRepeatStack">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="currentIndex">
-          <number>2</number>
-         </property>
-         <widget class="QWidget" name="never_page"/>
-         <widget class="QWidget" name="daily_page">
-          <layout class="QGridLayout" name="gridLayout_11">
-           <property name="margin">
-            <number>0</number>
-           </property>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="weekly_page">
-          <layout class="QGridLayout" name="gridLayout_4">
-           <property name="margin">
-            <number>0</number>
-           </property>
-           <item row="0" column="0">
-            <widget class="KPIM::KWeekdayCheckCombo" name="mWeekDayCombo">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="sizeAdjustPolicy">
-              <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="Monthly">
-          <layout class="QGridLayout" name="gridLayout_6">
-           <property name="margin">
-            <number>0</number>
-           </property>
-           <item row="0" column="0">
-            <widget class="KComboBox" name="mMonthlyCombo">
+         <item row="0" column="1" colspan="2">
+          <layout class="QHBoxLayout" name="horizontalLayout_9">
+           <item>
+            <widget class="KComboBox" name="mRecurrenceTypeCombo">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <property name="sizeAdjustPolicy">
-              <enum>QComboBox::AdjustToContents</enum>
+             <item>
+              <property name="text">
+               <string comment="@item:inlistbox Lets the user chose how often an event recurs">Never</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string comment="@item:inlistbox Lets the user chose how often an event recurs">Daily</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string comment="@item:inlistbox Lets the user chose how often an event recurs">Weekly</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string comment="@item:inlistbox Lets the user chose how often an event recurs">Monthly</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string comment="@item:inlistbox Lets the user chose how often an event recurs">Yearly</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="mFrequencyLabel">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string comment="@label repeats every [various options]">every</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <spacer name="horizontalSpacer_11">
+           <item>
+            <widget class="QSpinBox" name="mFrequencyEdit">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>999</number>
+             </property>
+             <property name="value">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="mRecurrenceRuleLabel">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string comment="@label Event or todo recurs every n day(s)">day(s)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="mThisAndFutureCheck">
+             <property name="text">
+              <string>This and future occurrences.</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_10">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -1133,90 +1055,9 @@
             </spacer>
            </item>
           </layout>
-         </widget>
-         <widget class="QWidget" name="yearly_page">
-          <layout class="QGridLayout" name="gridLayout_7">
-           <property name="margin">
-            <number>0</number>
-           </property>
-           <item row="0" column="0">
-            <widget class="KComboBox" name="mYearlyCombo">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="sizeAdjustPolicy">
-              <enum>QComboBox::AdjustToContents</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <spacer name="horizontalSpacer_8">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </widget>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="mRecurrenceEndLabel">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string comment="@label recurrence ends on|after">Ends:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1" colspan="2">
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <property name="spacing">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="KComboBox" name="mRecurrenceEndCombo">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <item>
-            <property name="text">
-             <string comment="@item:inlistbox Speficies when a recurring events end">never</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string comment="@item:inlistbox Speficies when a recurring events end">on</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string comment="@item:inlistbox Speficies when a recurring events end">after</string>
-            </property>
-           </item>
-          </widget>
          </item>
-         <item>
-          <widget class="QStackedWidget" name="mRecurrenceEndStack">
+         <item row="1" column="1" colspan="2">
+          <widget class="QStackedWidget" name="mRepeatStack">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -1226,295 +1067,433 @@
            <property name="currentIndex">
             <number>2</number>
            </property>
-           <widget class="QWidget" name="no_end">
-            <layout class="QGridLayout" name="gridLayout_16">
+           <widget class="QWidget" name="never_page"/>
+           <widget class="QWidget" name="daily_page">
+            <layout class="QGridLayout" name="gridLayout_11">
              <property name="margin">
               <number>0</number>
              </property>
             </layout>
            </widget>
-           <widget class="QWidget" name="end_on">
-            <layout class="QGridLayout" name="gridLayout_14">
+           <widget class="QWidget" name="weekly_page">
+            <layout class="QGridLayout" name="gridLayout_4">
              <property name="margin">
               <number>0</number>
              </property>
              <item row="0" column="0">
-              <widget class="KDateComboBox" name="mRecurrenceEndDate">
+              <widget class="KPIM::KWeekdayCheckCombo" name="mWeekDayCombo">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="sizeAdjustPolicy">
+                <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="Monthly">
+            <layout class="QGridLayout" name="gridLayout_6">
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="KComboBox" name="mMonthlyCombo">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <property name="whatsThis">
-                <string comment="@info:whatsthis">Date after which the event or to-do should stop recurring</string>
+               <property name="sizeAdjustPolicy">
+                <enum>QComboBox::AdjustToContents</enum>
                </property>
               </widget>
              </item>
              <item row="0" column="1">
-              <spacer name="horizontalSpacer_6">
+              <spacer name="horizontalSpacer_11">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
-                 <width>276</width>
-                 <height>18</height>
+                 <width>40</width>
+                 <height>20</height>
                 </size>
                </property>
               </spacer>
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="end_after">
-            <layout class="QGridLayout" name="gridLayout_10">
-             <property name="horizontalSpacing">
-              <number>0</number>
-             </property>
+           <widget class="QWidget" name="yearly_page">
+            <layout class="QGridLayout" name="gridLayout_7">
              <property name="margin">
               <number>0</number>
              </property>
              <item row="0" column="0">
-              <widget class="QSpinBox" name="mEndDurationEdit">
-               <property name="minimum">
-                <number>1</number>
-               </property>
-               <property name="maximum">
-                <number>9999</number>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QLabel" name="mRecurrenceOccurrencesLabel">
+              <widget class="KComboBox" name="mYearlyCombo">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <property name="text">
-                <string comment="@label">occurrence(s)</string>
+               <property name="sizeAdjustPolicy">
+                <enum>QComboBox::AdjustToContents</enum>
                </property>
               </widget>
+             </item>
+             <item row="0" column="1">
+              <spacer name="horizontalSpacer_8">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
              </item>
             </layout>
            </widget>
           </widget>
          </item>
-        </layout>
-       </item>
-       <item row="3" column="0" rowspan="2">
-        <widget class="QLabel" name="mExceptionsLabel">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string comment="@label exceptions for the recurrence">Exceptions:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1" rowspan="2" colspan="2">
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <item>
-          <widget class="KDateComboBox" name="mExceptionDateEdit">
+         <item row="2" column="0">
+          <widget class="QLabel" name="mRecurrenceEndLabel">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string comment="@label recurrence ends on|after">Ends:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1" colspan="2">
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="KComboBox" name="mRecurrenceEndCombo">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <item>
+              <property name="text">
+               <string comment="@item:inlistbox Speficies when a recurring events end">never</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string comment="@item:inlistbox Speficies when a recurring events end">on</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string comment="@item:inlistbox Speficies when a recurring events end">after</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <widget class="QStackedWidget" name="mRecurrenceEndStack">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="currentIndex">
+              <number>2</number>
+             </property>
+             <widget class="QWidget" name="no_end">
+              <layout class="QGridLayout" name="gridLayout_16">
+               <property name="margin">
+                <number>0</number>
+               </property>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="end_on">
+              <layout class="QGridLayout" name="gridLayout_14">
+               <property name="margin">
+                <number>0</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="KDateComboBox" name="mRecurrenceEndDate">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="whatsThis">
+                  <string comment="@info:whatsthis">Date after which the event or to-do should stop recurring</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <spacer name="horizontalSpacer_6">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>276</width>
+                   <height>18</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="end_after">
+              <layout class="QGridLayout" name="gridLayout_10">
+               <property name="horizontalSpacing">
+                <number>0</number>
+               </property>
+               <property name="margin">
+                <number>0</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QSpinBox" name="mEndDurationEdit">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>9999</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLabel" name="mRecurrenceOccurrencesLabel">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string comment="@label">occurrence(s)</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="3" column="0" rowspan="2">
+          <widget class="QLabel" name="mExceptionsLabel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string comment="@label exceptions for the recurrence">Exceptions:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1" rowspan="2" colspan="2">
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <widget class="KDateComboBox" name="mExceptionDateEdit">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="mExceptionAddButton">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string comment="@action:button adds an exception on the recurrence">Add</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item row="5" column="1">
+          <widget class="QListWidget" name="mExceptionList">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::ExtendedSelection</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="mOnLabel">
+           <property name="text">
+            <string comment="@label The event ends on [different options]">on:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="2">
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <widget class="QPushButton" name="mExceptionRemoveButton">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string comment="@action:button removes an exception">Remove</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_5">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="mAttachmentsTab">
+        <attribute name="title">
+         <string comment="@title:tab configure attachments of an event or todo">Attachments</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_18">
+         <item row="0" column="0" rowspan="3">
+          <widget class="QWidget" name="mAttachmentViewPlaceHolder" native="true">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QPushButton" name="mExceptionAddButton">
-           <property name="enabled">
-            <bool>false</bool>
+         <item row="0" column="1">
+          <widget class="QPushButton" name="mAddButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="toolTip">
+            <string comment="@info:tooltip">Add an attachment</string>
+           </property>
+           <property name="whatsThis">
+            <string comment="@info:whatsthis">Shows a dialog used to select an attachment to add to this event or to-do as link or as inline data.</string>
            </property>
            <property name="text">
-            <string comment="@action:button adds an exception on the recurrence">Add</string>
+            <string comment="@action:button adds an attachment">Add</string>
            </property>
           </widget>
          </item>
-         <item>
-          <spacer name="horizontalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-       <item row="5" column="1">
-        <widget class="QListWidget" name="mExceptionList">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="selectionMode">
-          <enum>QAbstractItemView::ExtendedSelection</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="mOnLabel">
-         <property name="text">
-          <string comment="@label The event ends on [different options]">on:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="2">
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <widget class="QPushButton" name="mExceptionRemoveButton">
+         <item row="1" column="1">
+          <widget class="QPushButton" name="mRemoveButton">
            <property name="enabled">
             <bool>false</bool>
            </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="toolTip">
+            <string comment="@info:tooltip">Remove the selected attachment</string>
+           </property>
+           <property name="whatsThis">
+            <string comment="@info:whatsthis">Removes the attachment selected in the list above from this event or to-do.</string>
+           </property>
            <property name="text">
-            <string comment="@action:button removes an exception">Remove</string>
+            <string comment="@action:button remove an attachment">Remove</string>
            </property>
           </widget>
          </item>
-         <item>
-          <spacer name="verticalSpacer_5">
+         <item row="2" column="1">
+          <spacer name="verticalSpacer_4">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
              <width>20</width>
-             <height>40</height>
+             <height>210</height>
             </size>
            </property>
           </spacer>
          </item>
         </layout>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="mAttachmentsTab">
-      <attribute name="title">
-       <string comment="@title:tab configure attachments of an event or todo">Attachments</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout_18">
-       <item row="0" column="0" rowspan="3">
-        <widget class="QWidget" name="mAttachmentViewPlaceHolder" native="true">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QPushButton" name="mAddButton">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="toolTip">
-          <string comment="@info:tooltip">Add an attachment</string>
-         </property>
-         <property name="whatsThis">
-          <string comment="@info:whatsthis">Shows a dialog used to select an attachment to add to this event or to-do as link or as inline data.</string>
-         </property>
-         <property name="text">
-          <string comment="@action:button adds an attachment">Add</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QPushButton" name="mRemoveButton">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="toolTip">
-          <string comment="@info:tooltip">Remove the selected attachment</string>
-         </property>
-         <property name="whatsThis">
-          <string comment="@info:whatsthis">Removes the attachment selected in the list above from this event or to-do.</string>
-         </property>
-         <property name="text">
-          <string comment="@action:button remove an attachment">Remove</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <spacer name="verticalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>210</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </widget>
+       </widget>
+      </widget>
+     </item>
+     <item row="6" column="0" colspan="2">
+      <widget class="KSeparator" name="mTaskSeparator"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="CalendarSupport::MessageWidget" name="mMessageWidget" native="true">
+     <property name="visible">
+      <bool>false</bool>
+     </property>
     </widget>
    </item>
-   <item row="6" column="0" colspan="2">
-    <widget class="KSeparator" name="mTaskSeparator"/>
-   </item>
   </layout>
-  </item>
-    <item>
-      <widget class="CalendarSupport::MessageWidget" name="mMessageWidget">
-        <property name="visible">
-          <bool>false</bool>
-        </property>
-      </widget>
-    </item>
-  </layout>
-  </widget>
+ </widget>
  <customwidgets>
-  <customwidget>
-   <class>CalendarSupport::MessageWidget</class>
-   <extends>KMessageWidget</extends>
-   <header>calendarsupport/messagewidget.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KTimeComboBox</class>
-   <extends>QComboBox</extends>
-   <header>ktimecombobox.h</header>
-  </customwidget>
   <customwidget>
    <class>KPIM::KCheckComboBox</class>
    <extends>KComboBox</extends>
    <header>libkdepim/widgets/kcheckcombobox.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KDateComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kdatecombobox.h</header>
   </customwidget>
   <customwidget>
    <class>KRichTextEdit</class>
@@ -1522,9 +1501,14 @@
    <header>krichtextedit.h</header>
   </customwidget>
   <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
+   <class>KTimeComboBox</class>
+   <extends>KComboBox</extends>
+   <header>ktimecombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KDateComboBox</class>
+   <extends>KComboBox</extends>
+   <header>kdatecombobox.h</header>
   </customwidget>
   <customwidget>
    <class>KComboBox</class>
@@ -1532,10 +1516,9 @@
    <header>kcombobox.h</header>
   </customwidget>
   <customwidget>
-   <class>KTabWidget</class>
-   <extends>QTabWidget</extends>
-   <header>ktabwidget.h</header>
-   <container>1</container>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
   </customwidget>
   <customwidget>
    <class>KSeparator</class>
@@ -1553,6 +1536,12 @@
    <header>krichtextwidget.h</header>
   </customwidget>
   <customwidget>
+   <class>KTabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>ktabwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>KPIM::KWeekdayCheckCombo</class>
    <extends>KPIM::KCheckComboBox</extends>
    <header>libkdepim/widgets/kweekdaycheckcombo.h</header>
@@ -1561,6 +1550,17 @@
    <class>IncidenceEditorNG::KTimeZoneComboBox</class>
    <extends>KComboBox</extends>
    <header>ktimezonecombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>CalendarSupport::MessageWidget</class>
+   <extends>QWidget</extends>
+   <header>calendarsupport/messagewidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KPIM::TagWidget</class>
+   <extends>QWidget</extends>
+   <header>libkdepim/widgets/tagwidgets.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -46,12 +46,15 @@
 
 #include <Akonadi/EntityMimeTypeFilterModel>
 #include <Akonadi/ETMViewStateSaver>
+#include <Akonadi/TagFetchJob>
+#include <Akonadi/Tag>
 
 #include <KCalCore/CalFormat>
 #include <KIcon>
 #include <KIconLoader>
 #include <KGlobal>
 #include <KComponentData>
+#include <KJob>
 
 #include <QCheckBox>
 #include <QGridLayout>
@@ -60,6 +63,8 @@
 #include <QToolButton>
 #include <QItemSelection>
 #include <QTimer>
+
+Q_DECLARE_METATYPE(QPointer<QMenu>)
 
 using namespace EventViews;
 using namespace KCalCore;
@@ -627,14 +632,6 @@ void TodoView::updateView()
   // View is always updated, it's connected to ETM.
 }
 
-void TodoView::updateCategories()
-{
-  if ( !mSidebarView ) {
-    mQuickSearch->updateCategories();
-  }
-  // TODO check if we have to do something with the category delegate
-}
-
 void TodoView::changeIncidenceDisplay( const Akonadi::Item &, Akonadi::IncidenceChanger::ChangeType )
 {
   // Don't do anything, model is connected to ETM, it's up to date
@@ -920,18 +917,13 @@ QMenu *TodoView::createCategoryPopupMenu()
   KCalCore::Todo::Ptr todo = CalendarSupport::todo( todoItem );
   Q_ASSERT( todo );
 
-  QStringList checkedCategories = todo->categories();
+  const QStringList checkedCategories = todo->categories();
 
-  QStringList::Iterator it;
-  CalendarSupport::CategoryConfig cc( CalendarSupport::KCalPrefs::instance() );
-  Q_FOREACH ( const QString &i, cc.customCategories() ) {
-    QAction *action = tempMenu->addAction( i );
-    action->setCheckable( true );
-    mCategory[ action ] = i;
-    if ( checkedCategories.contains( i ) ) {
-      action->setChecked( true );
-    }
-  }
+
+  Akonadi::TagFetchJob *tagFetchJob = new Akonadi::TagFetchJob(this);
+  connect(tagFetchJob, SIGNAL(result(KJob*)), this, SLOT(onTagsFetched(KJob*)));
+  tagFetchJob->setProperty("menu", QVariant::fromValue(QPointer<QMenu>(tempMenu)));
+  tagFetchJob->setProperty("checkedCategories", checkedCategories);
 
   connect( tempMenu, SIGNAL(triggered(QAction*)),
            SLOT(changedCategories(QAction*)) );
@@ -939,6 +931,29 @@ QMenu *TodoView::createCategoryPopupMenu()
            tempMenu, SLOT(deleteLater()) );
   return tempMenu;
 }
+
+void TodoView::onTagsFetched(KJob *job)
+{
+  if (job->error()) {
+    kWarning() << "Failed to fetch tags " << job->errorString();
+    return;
+  }
+  Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob*>(job);
+  const QStringList checkedCategories = job->property("checkedCategories").toStringList();
+  QPointer<QMenu> menu = job->property("menu").value<QPointer<QMenu> >();
+  if (menu) {
+    Q_FOREACH (const Akonadi::Tag &tag, fetchJob->tags()) {
+      const QString name = tag.name();
+      QAction *action = menu->addAction( name );
+      action->setCheckable( true );
+      action->setData(name);
+      if ( checkedCategories.contains( name ) ) {
+        action->setChecked( true );
+      }
+    }
+  }
+}
+
 
 void TodoView::setNewDate( const QDate &date )
 {
@@ -1028,11 +1043,12 @@ void TodoView::changedCategories( QAction *action )
   if ( calendar()->hasRight( todoItem, Akonadi::Collection::CanChangeItem ) ) {
     KCalCore::Todo::Ptr oldTodo( todo->clone() );
 
+    const QString cat = action->data().toString();
     QStringList categories = todo->categories();
-    if ( categories.contains( mCategory[action] ) ) {
-      categories.removeAll( mCategory[action] );
+    if ( categories.contains( cat ) ) {
+      categories.removeAll( cat );
     } else {
-      categories.append( mCategory[action] );
+      categories.append( cat );
     }
     categories.sort();
     todo->setCategories( categories );

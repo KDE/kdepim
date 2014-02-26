@@ -63,6 +63,7 @@ set(kdepim_LIB_SRCS
    widgets/kwidgetlister.cpp
    widgets/pimmessagebox.cpp
    widgets/overlaywidget.cpp
+   widgets/tagwidgets.cpp
 )
 
 if (KDEPIM_INPROCESS_LDAP)

@@ -317,6 +317,13 @@ void KNote::slotUpdateReadOnly()
     actionCollection()->action( QLatin1String("format_size") )->setEnabled( !readOnly );
     actionCollection()->action( QLatin1String("format_color") )->setEnabled( !readOnly );
     actionCollection()->action( QLatin1String("rename_note") )->setEnabled( !readOnly);
+    actionCollection()->action( QLatin1String("set_alarm") )->setEnabled( !readOnly);
+    m_keepAbove->setEnabled( !readOnly);
+    m_keepBelow->setEnabled( !readOnly);
+
+#ifdef Q_WS_X11
+    m_toDesktop->setEnabled( !readOnly);
+#endif
 
     updateFocus();
 }

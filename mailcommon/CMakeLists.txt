@@ -83,13 +83,16 @@ set(libmailcommon_filter_SRCS
   filter/mdnadvicedialog.cpp
 )
 
-set(libmailcommon_SRCS
+set(libmailcommon_collection_SRCS
   collectionpage/attributeregistrar.cpp
   collectionpage/collectionannotationsattribute.cpp
   collectionpage/collectiongeneralpage.cpp
   collectionpage/collectionexpirypage.cpp
   collectionpage/expirecollectionattribute.cpp
   collectionpage/newmailnotifierattribute.cpp
+)
+
+set(libmailcommon_folder_SRCS
   folder/foldercollection.cpp
   folder/foldercollectionmonitor.cpp
   folder/folderrequester.cpp
@@ -98,15 +101,16 @@ set(libmailcommon_SRCS
   folder/foldertreewidget.cpp
   folder/foldertreewidgetproxymodel.cpp
   folder/entitycollectionorderproxymodel.cpp
+)
+
+set(libmailcommon_job_SRCS
   job/jobscheduler.cpp
   job/folderjob.cpp
   job/expirejob.cpp
   job/backupjob.cpp
-  kernel/mailkernel.cpp
-  util/mailutil.cpp
-  widgets/redirectdialog.cpp
-  widgets/regexplineedit.cpp
-  widgets/favoritecollectionwidget.cpp
+)
+
+set(libmailcommon_search_SRCS
   search/rulewidgethandlermanager.cpp
   search/searchpattern.cpp
   search/searchpatternedit.cpp
@@ -118,14 +122,38 @@ set(libmailcommon_SRCS
   search/daterulewidgethandler.cpp
   search/numericdoublerulewidgethandler.cpp
   search/headersrulerwidgethandler.cpp
-  mdn/sendmdnhandler.cpp
+)
+
+set(libmailcommon_snippets_SRCS
   snippets/snippetdialog.cpp
   snippets/snippetsmanager.cpp
   snippets/snippetsmodel.cpp
   snippets/snippetvariabledialog.cpp
+)
+
+set(libmailcommon_tag_SRCS
   tag/tagwidget.cpp
   tag/tag.cpp
   tag/addtagdialog.cpp
+)
+
+set(libmailcommon_widget_SRCS
+  widgets/redirectdialog.cpp
+  widgets/regexplineedit.cpp
+  widgets/favoritecollectionwidget.cpp
+)
+
+set(libmailcommon_SRCS
+  kernel/mailkernel.cpp
+  util/mailutil.cpp
+  mdn/sendmdnhandler.cpp
+  ${libmailcommon_widget_SRCS}
+  ${libmailcommon_tag_SRCS}
+  ${libmailcommon_snippets_SRCS}
+  ${libmailcommon_search_SRCS}
+  ${libmailcommon_job_SRCS}
+  ${libmailcommon_collection_SRCS}
+  ${libmailcommon_folder_SRCS}   
   ${libmailcommon_filter_SRCS}
 )
 

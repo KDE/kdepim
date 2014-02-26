@@ -38,8 +38,11 @@
 #include "knotes/knoteedit.h"
 #include "knotes/knotesglobalconfig.h"
 #include "knotes/configdialog/knotesimpleconfigdialog.h"
+#include "knotes/finddialog/knotefinddialog.h"
 #include "utils/knoteutils.h"
 #include "alarms/notealarmdialog.h"
+#include "noteshared/resources/localresourcecreator.h"
+#include "noteshared/job/createnewnotejob.h"
 
 #include "noteshared/akonadi/notesakonaditreemodel.h"
 #include "noteshared/akonadi/noteschangerecorder.h"
@@ -60,7 +63,7 @@
 #include <KMime/KMimeMessage>
 
 #include <Akonadi/ItemModifyJob>
-
+#include <Akonadi/Control>
 
 #include <KActionCollection>
 #include <KAction>
@@ -88,6 +91,15 @@ KNotesPart::KNotesPart( QObject *parent )
       mNotePrintPreview(0),
       mNoteTreeModel(0)
 {
+    Akonadi::Control::widgetNeedsAkonadi(widget());
+
+    KNoteUtils::migrateToAkonadi();
+
+    if (KNotesGlobalConfig::self()->autoCreateResourceOnStart()) {
+        NoteShared::LocalResourceCreator *creator = new NoteShared::LocalResourceCreator( this );
+        creator->createIfMissing();
+    }
+
     (void) new KNotesAdaptor( this );
     QDBusConnection::sessionBus().registerObject( QLatin1String("/KNotes"), this );
 
@@ -189,6 +201,7 @@ KNotesPart::KNotesPart( QObject *parent )
     connect( mReadOnly, SIGNAL(triggered(bool)), SLOT(slotUpdateReadOnly()) );
     mReadOnly->setCheckedState( KGuiItem( i18n( "Unlock" ), QLatin1String("object-unlocked") ) );
 
+    KStandardAction::find( this, SLOT(slotOpenFindDialog()), actionCollection());
 
     Akonadi::Session *session = new Akonadi::Session( "KNotes Session", this );
     mNoteRecorder = new NoteShared::NotesChangeRecorder(this);
@@ -762,4 +775,25 @@ void KNotesPart::slotItemChanged(const Akonadi::Item &item, const QSet<QByteArra
     if (knoteItem) {
         knoteItem->setChangeItem(item, set);
     }
+}
+
+void KNotesPart::slotOpenFindDialog()
+{
+    if (!mNoteFindDialog) {
+        mNoteFindDialog = new KNoteFindDialog(widget());
+        connect(mNoteFindDialog, SIGNAL(noteSelected(Akonadi::Item::Id)), this, SLOT(slotSelectNote(Akonadi::Item::Id)));
+    }
+    QHash<Akonadi::Item::Id , Akonadi::Item> lst;
+    QHashIterator<Akonadi::Item::Id, KNotesIconViewItem*> i(mNotesWidget->notesView()->noteList());
+    while (i.hasNext()) {
+        i.next();
+        lst.insert(i.key(), i.value()->item());
+    }
+    mNoteFindDialog->setExistingNotes(lst);
+    mNoteFindDialog->show();
+}
+
+void KNotesPart::slotSelectNote(Akonadi::Item::Id id)
+{
+    editNote(id);
 }

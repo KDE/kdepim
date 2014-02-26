@@ -111,7 +111,7 @@ void StorageServiceTreeWidget::createMenuActions(KMenu *menu)
                 act->setSeparator(true);
                 menu->addAction(act);
                 if (mCapabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability)
-                    menu->addAction(i18n("Download File"), this, SIGNAL(downloadFile()));
+                    menu->addAction(KIcon(QLatin1String("download")), i18n("Download File"), this, SIGNAL(downloadFile()));
                 act = new QAction(menu);
                 act->setSeparator(true);
                 menu->addAction(act);

@@ -21,7 +21,6 @@
 #include "core/filter.h"
 #include "core/messageitem.h"
 
-#include <akonadi/itemsearchjob.h>
 #include <baloo/pim/emailquery.h>
 #include <baloo/pim/resultiterator.h>
 
@@ -100,8 +99,10 @@ void Filter::setSearchString( const QString &search, QuickSearchLine::SearchOpti
     }
 
     Baloo::PIM::EmailQuery query;
-    if (options & QuickSearchLine::SearchAgainstSubject) {
+    if (options & QuickSearchLine::SearchEveryWhere) {
         query.subjectMatches(mSearchString);
+    } else if (options & QuickSearchLine::SearchAgainstSubject) {
+        query.bodyMatches(mSearchString);
     } else if (options & QuickSearchLine::SearchAgainstBody) {
         query.matches(mSearchString);
     } else if (options & QuickSearchLine::SearchAgainstFrom) {
