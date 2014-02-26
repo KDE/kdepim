@@ -114,22 +114,16 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Filter message by:"));
     hbox->addWidget(lab);
 
-#ifdef SEARCH_EVERYWHERE
     mSearchEveryWhere = new QPushButton(i18n("Full Message"));
     mSearchEveryWhere->setObjectName(QLatin1String("full_message"));
     mSearchEveryWhere->setFlat(true);
     mSearchEveryWhere->setCheckable(true);
     hbox->addWidget(mSearchEveryWhere);
-#endif
 
     mSearchAgainstBody = new QPushButton(i18n("Body"));
     mSearchAgainstBody->setObjectName(QLatin1String("body"));
     mSearchAgainstBody->setFlat(true);
-#ifdef SEARCH_EVERYWHERE
-    mSearchAgainstBody->setCheckable(false);
-#else
     mSearchAgainstBody->setCheckable(true);
-#endif
     hbox->addWidget(mSearchAgainstBody);
 
     mSearchAgainstSubject = new QPushButton(i18n("Subject"));
@@ -149,12 +143,10 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mSearchAgainstBcc->setCheckable(true);
     mSearchAgainstBcc->setFlat(true);
     hbox->addWidget(mSearchAgainstBcc);
+
     mButtonSearchAgainstGroup = new QButtonGroup(this);
-#ifdef SEARCH_EVERYWHERE
     mButtonSearchAgainstGroup->addButton(mSearchEveryWhere, 0);
-#else
-    mButtonSearchAgainstGroup->addButton(mSearchAgainstBody, 0);
-#endif
+    mButtonSearchAgainstGroup->addButton(mSearchAgainstBody);
     mButtonSearchAgainstGroup->addButton(mSearchAgainstSubject);
     mButtonSearchAgainstGroup->addButton(mSearchAgainstFrom);
     mButtonSearchAgainstGroup->addButton(mSearchAgainstBcc);
@@ -195,11 +187,9 @@ void QuickSearchLine::slotSearchOptionChanged()
 QuickSearchLine::SearchOptions QuickSearchLine::searchOptions() const
 {
     QuickSearchLine::SearchOptions searchOptions;
-#ifdef SEARCH_EVERYWHERE
     if (mSearchEveryWhere->isChecked()) {
         searchOptions |= SearchEveryWhere;
     }
-#endif
     if (mSearchAgainstBody->isChecked()) {
         searchOptions |= SearchAgainstBody;
     }

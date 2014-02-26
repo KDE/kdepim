@@ -106,7 +106,7 @@ void QuickSearchLineTest::shouldResetAllWhenResetFilter()
     QCOMPARE(searchLine.lockSearch()->isChecked(), false);
     QCOMPARE(searchLine.tagFilterComboBox()->currentIndex(), -1);
     QuickSearchLine::SearchOptions options;
-    options = QuickSearchLine::SearchAgainstBody;
+    options = QuickSearchLine::SearchEveryWhere;
     QCOMPARE(searchLine.searchOptions(), options);
 }
 
