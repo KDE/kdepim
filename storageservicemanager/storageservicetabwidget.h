@@ -23,6 +23,7 @@
 
 #include <QTabWidget>
 #include "pimcommon/storageservice/storageserviceabstract.h"
+#include "pimcommon/storageservice/widgets/storageservicetreewidget.h"
 class StorageServicePage;
 class StorageServiceTabWidget : public QTabWidget
 {
@@ -41,9 +42,12 @@ public:
     void logout();
     void shutdownAllServices();
     void refreshAll();
+    PimCommon::StorageServiceTreeWidget::ItemType itemTypeSelected() const;
+
 Q_SIGNALS:
     void updateStatusBarMessage(const QString &msg);
     void listFileWasInitialized();
+    void selectionChanged();
 
 public slots:
     void slotAuthenticate();

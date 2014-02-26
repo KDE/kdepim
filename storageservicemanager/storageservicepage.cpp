@@ -62,6 +62,7 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     connect(mTreeWidget, SIGNAL(uploadFile()), this, SLOT(slotUploadFile()));
     connect(mTreeWidget, SIGNAL(downloadFile()), this, SLOT(slotDownloadFile()));
     connect(mTreeWidget, SIGNAL(changeFolder(QString,QString)), this, SLOT(slotChangeFolder(QString,QString)));
+    connect(mTreeWidget, SIGNAL(itemSelectionChanged()), this, SIGNAL(selectionChanged()));
     vbox->addWidget(mTreeWidget);
     mProgressWidget = new PimCommon::StorageServiceProgressWidget(storageService);
     vbox->addWidget(mProgressWidget);
@@ -417,4 +418,9 @@ void StorageServicePage::logout()
     mTreeWidget->logout();
     mStorageServiceNavigationBar->clear();
     mStorageServiceNavigationBar->setEnabled(false);
+}
+
+PimCommon::StorageServiceTreeWidget::ItemType StorageServicePage::itemTypeSelected() const
+{
+    return mTreeWidget->itemTypeSelected();
 }

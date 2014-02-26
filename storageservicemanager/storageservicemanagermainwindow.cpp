@@ -63,6 +63,7 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     connect(mStorageServiceTabWidget, SIGNAL(currentChanged(QWidget*)), this, SLOT(slotUpdateActions()));
     connect(mStorageServiceTabWidget, SIGNAL(updateStatusBarMessage(QString)), this, SLOT(slotSetStatusBarMessage(QString)));
     connect(mStorageServiceTabWidget, SIGNAL(listFileWasInitialized()), this, SLOT(slotUpdateActions()));
+    connect(mStorageServiceTabWidget, SIGNAL(selectionChanged()), this, SLOT(slotUpdateActions()));
     setCentralWidget(mStorageServiceTabWidget);
 
     connect( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
@@ -126,11 +127,12 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
     } else {
         const PimCommon::StorageServiceAbstract::Capabilities capabilities = mStorageServiceTabWidget->capabilities();
         const bool listFolderWasLoaded = mStorageServiceTabWidget->listFolderWasLoaded();
-        mDownloadFile->setEnabled(listFolderWasLoaded && (capabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability));
+        PimCommon::StorageServiceTreeWidget::ItemType type = mStorageServiceTabWidget->itemTypeSelected();
+        mDownloadFile->setEnabled(listFolderWasLoaded && (capabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability) && (type == PimCommon::StorageServiceTreeWidget::File));
         mCreateFolder->setEnabled(listFolderWasLoaded && (capabilities & PimCommon::StorageServiceAbstract::CreateFolderCapability));
         mAccountInfo->setEnabled(capabilities & PimCommon::StorageServiceAbstract::AccountInfoCapability);
         mUploadFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::UploadFileCapability);
-        mDeleteFile->setEnabled(listFolderWasLoaded && (capabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability));
+        mDeleteFile->setEnabled(listFolderWasLoaded && (capabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability) && (type == PimCommon::StorageServiceTreeWidget::File));
         mAuthenticate->setDisabled((capabilities & PimCommon::StorageServiceAbstract::NoCapability) || (mStorageServiceTabWidget->count() == 0));
         mRefreshList->setDisabled((capabilities & PimCommon::StorageServiceAbstract::NoCapability) || (mStorageServiceTabWidget->count() == 0));
         mShowLog->setDisabled((mStorageServiceTabWidget->count() == 0));
