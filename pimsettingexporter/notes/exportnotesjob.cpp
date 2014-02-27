@@ -24,6 +24,8 @@
 #include <KLocalizedString>
 #include <KStandardDirs>
 #include <KZip>
+#include <KTemporaryFile>
+#include <KConfigGroup>
 
 
 #include <QWidget>
@@ -70,10 +72,29 @@ void ExportNotesJob::backupConfig()
     const QString knotesrc = KStandardDirs::locateLocal( "config", knotesStr);
     backupFile(knotesrc, Utils::configsPath(), knotesStr);
 
+
+
     const QString globalNoteSettingsStr(QLatin1String("globalnotesettings"));
     const QString globalNoteSettingsrc = KStandardDirs::locateLocal( "config", globalNoteSettingsStr);
-    backupFile(globalNoteSettingsrc, Utils::configsPath(), globalNoteSettingsStr);
 
+    if (QFile(globalNoteSettingsrc).exists()) {
+        KSharedConfigPtr globalnotesettingsrc = KSharedConfig::openConfig(globalNoteSettingsrc);
+
+        KTemporaryFile tmp;
+        tmp.open();
+
+        KConfig *knoteConfig = globalnotesettingsrc->copyTo( tmp.fileName() );
+        const QString selectFolderNoteStr(QLatin1String("SelectNoteFolder"));
+        if (knoteConfig->hasGroup(selectFolderNoteStr)) {
+            KConfigGroup selectFolderNoteGroup = knoteConfig->group(selectFolderNoteStr);
+
+            const QString selectFolderNoteGroupStr(QLatin1String("DefaultFolder"));
+            Utils::convertCollectionIdsToRealPath(selectFolderNoteGroup, selectFolderNoteGroupStr);
+        }
+        knoteConfig->sync();
+        backupFile(tmp.fileName(), Utils::configsPath(), globalNoteSettingsStr);
+        delete knoteConfig;
+    }
     Q_EMIT info(i18n("Config backup done."));
 }
 
