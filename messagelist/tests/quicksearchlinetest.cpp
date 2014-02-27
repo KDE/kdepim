@@ -51,6 +51,10 @@ void QuickSearchLineTest::shouldEmitTextChanged()
     QSignalSpy spy(&searchLine, SIGNAL(searchEditTextEdited(QString)));
     QTest::keyClick(searchLine.searchEdit(), 'F');
     QCOMPARE(spy.count(),1);
+
+    QSignalSpy spy2(&searchLine, SIGNAL(searchEditTextEdited(QString)));
+    QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FOO"));
+    QCOMPARE(spy2.count(), 3);
 }
 
 void QuickSearchLineTest::shouldShowExtraOptionWidget()
@@ -134,6 +138,33 @@ void QuickSearchLineTest::shouldResetComboboxWhenResetFilter()
     QCOMPARE(searchLine.tagFilterComboBox()->currentIndex(), 1);
     searchLine.resetFilter();
     QCOMPARE(searchLine.tagFilterComboBox()->currentIndex(), 0);
+}
+
+void QuickSearchLineTest::shouldNotEmitTextChangedWhenTextTrimmedIsEmpty()
+{
+    QuickSearchLine searchLine;
+    QSignalSpy spy(&searchLine, SIGNAL(searchEditTextEdited(QString)));
+    QTest::keyClicks(searchLine.searchEdit(), QLatin1String("      "));
+    QCOMPARE(spy.count(),0);
+
+    QSignalSpy spy2(&searchLine, SIGNAL(searchEditTextEdited(QString)));
+    QTest::keyClicks(searchLine.searchEdit(), QLatin1String(" FOO"));
+    QCOMPARE(spy2.count(), 3);
+}
+
+void QuickSearchLineTest::shouldShowExtraOptionWidgetWhenTextTrimmedIsNotEmpty()
+{
+    QuickSearchLine searchLine;
+    searchLine.show();
+    QTest::keyClick(searchLine.searchEdit(), ' ');
+    QTest::qWaitForWindowShown(&searchLine);
+    QWidget *widget = qFindChild<QWidget *>(&searchLine, QLatin1String("extraoptions"));
+    QVERIFY(!widget->isVisible());
+    QTest::keyClick(searchLine.searchEdit(), ' ');
+    QVERIFY(!widget->isVisible());
+    QTest::keyClick(searchLine.searchEdit(), 'F');
+    QVERIFY(widget->isVisible());
+
 }
 
 QTEST_KDEMAIN( QuickSearchLineTest, GUI )

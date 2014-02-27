@@ -165,6 +165,10 @@ void QuickSearchLine::slotSearchEditTextEdited(const QString &text)
     if (text.isEmpty()) {
         mExtraOption->hide();
     } else {
+        if (text.trimmed().isEmpty()) {
+            mExtraOption->hide();
+            return;
+        }
         mExtraOption->show();
     }
     Q_EMIT searchEditTextEdited(text);
