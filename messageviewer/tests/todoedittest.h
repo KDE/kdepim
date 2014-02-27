@@ -54,6 +54,7 @@ private slots:
     void shouldNotEmitTodoWhenMessageIsNull();
     void shouldHaveLineEditFocus();
     void shouldClearUrlMessageWhenSwitchMessage();
+    void shouldEmitNotEmitTodoWhenTextTrimmedIsEmpty();
 };
 
 #endif // TODOEDITTEST_H
