@@ -28,7 +28,7 @@
 namespace GrantleeTheme {
 class GrantleeThemeManager;
 }
-
+class KAction;
 namespace Akonadi {
   class Collection;
   class ContactGroupViewer;
@@ -69,6 +69,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     ~MainWidget();
 
     XXPortManager *importManager() const;
+    void updateQuickSearchText();
 
   public Q_SLOTS:
     void newContact();
@@ -145,6 +146,7 @@ private:
     KAddressBookGrantlee::GrantleeContactGroupFormatter *mGroupFormatter;
     GrantleeTheme::GrantleeThemeManager *mGrantleeThemeManager;
     Akonadi::EntityTreeModel *entityTreeModel() const;
+    KAction *mQuickSearchAction;
 };
 
 #endif

@@ -43,7 +43,7 @@ MainWindow::MainWindow()
 
   toolBar()->setToolButtonStyle( Qt::ToolButtonTextUnderIcon );
 
-  setupGUI( Keys | Save | Create, QLatin1String("kaddressbookui.rc") );
+  setupGUI( Save | Create, QLatin1String("kaddressbookui.rc") );
 
   setAutoSaveSettings();
 }
@@ -67,7 +67,6 @@ void MainWindow::initActions()
     i18nc( "@info:whatsthis",
            "You will be presented with a dialog where you can configure "
            "the application-wide shortcuts." ) );
-
   KStandardAction::configureToolbars( this, SLOT(configureToolbars()), actionCollection() );
   KStandardAction::preferences( this, SLOT(configure()), actionCollection() );
 }
@@ -79,7 +78,9 @@ void MainWindow::configure()
 
 void MainWindow::configureKeyBindings()
 {
-  KShortcutsDialog::configure( actionCollection(), KShortcutsEditor::LetterShortcutsAllowed, this );
+  if (KShortcutsDialog::configure( actionCollection(), KShortcutsEditor::LetterShortcutsAllowed, this )) {
+      mMainWidget->updateQuickSearchText();
+  }
 }
 
 void MainWindow::configureToolbars()
