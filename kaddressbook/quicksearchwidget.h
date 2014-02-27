@@ -58,6 +58,8 @@ class QuickSearchWidget : public QWidget
      */
     virtual QSize sizeHint() const;
 
+    void updateQuickSearchText(const QString &text);
+
 public slots:
     void slotFocusQuickSearch();
 

@@ -133,7 +133,7 @@ class StructuralCollectionsNotCheckableProxy : public KCheckableProxyModel
 }
 
 MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
-    : QWidget( parent ), mAllContactsModel( 0 ), mXmlGuiClient( guiClient ), mGrantleeThemeManager(0)
+    : QWidget( parent ), mAllContactsModel( 0 ), mXmlGuiClient( guiClient ), mGrantleeThemeManager(0), mQuickSearchAction(0)
 {
 
   (void) new KaddressbookAdaptor( this );
@@ -311,6 +311,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mModelColumnManager->load();
 
   QMetaObject::invokeMethod( this, "delayedInit", Qt::QueuedConnection );
+  updateQuickSearchText();
 }
 
 void MainWidget::configure()
@@ -341,6 +342,11 @@ XXPortManager *MainWidget::importManager() const
     return mXXPortManager;
 }
 
+void MainWidget::updateQuickSearchText()
+{
+    mQuickSearchWidget->updateQuickSearchText(i18nc( "@label Search contacts in list", "Search...<%1>", mQuickSearchAction->shortcut().toString() ));
+}
+
 void MainWidget::delayedInit()
 {
   setViewMode(0);                                        // get default from settings
@@ -361,6 +367,7 @@ void MainWidget::delayedInit()
   connect( kapp, SIGNAL(aboutToQuit()), SLOT(saveState()) );
 
   restoreState();
+  updateQuickSearchText();
 }
 
 MainWidget::~MainWidget()
@@ -655,11 +662,11 @@ void MainWidget::setupActions( KActionCollection *collection )
   action->setText( i18n( "Search Duplicate Contacts..." ) );
   connect( action, SIGNAL(triggered(bool)), this, SLOT(slotSearchDuplicateContacts()) );
 
-  action = new KAction( i18n("Set Focus to Quick Search"), this );
+  mQuickSearchAction = new KAction( i18n("Set Focus to Quick Search"), this );
   //If change shortcut change in quicksearchwidget->lineedit->setClickMessage
-  action->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Q ) );
-  collection->addAction( QLatin1String("focus_to_quickseach"), action );
-  connect( action, SIGNAL(triggered(bool)), mQuickSearchWidget, SLOT(slotFocusQuickSearch()) );
+  mQuickSearchAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Q ) );
+  collection->addAction( QLatin1String("focus_to_quickseach"), mQuickSearchAction );
+  connect( mQuickSearchAction, SIGNAL(triggered(bool)), mQuickSearchWidget, SLOT(slotFocusQuickSearch()) );
 }
 
 void MainWidget::printPreview()
