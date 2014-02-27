@@ -32,6 +32,7 @@
 #include <libkgapi2/drive/childreferencefetchjob.h>
 #include <libkgapi2/drive/childreference.h>
 #include <libkgapi2/drive/file.h>
+#include <libkgapi2/drive/filecopyjob.h>
 #include <LibKGAPI2/Drive/ParentReference>
 
 #include <KLocalizedString>
@@ -287,8 +288,18 @@ QNetworkReply * GDriveJob::downloadFile(const QString &name, const QString &file
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
-    //Add url
-    //KGAPI2::Drive::FileFetchContentJob *fileFetchContentJob = new KGAPI2::Drive::FileFetchContentJob(mAccount, this);
+    const QString defaultDestination = (destination.isEmpty() ? PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
+
+    delete mDownloadFile;
+    mDownloadFile = new QFile(defaultDestination+ QLatin1Char('/') + name);
+    if (mDownloadFile->open(QIODevice::WriteOnly)) {
+        KGAPI2::Drive::FilePtr file( new KGAPI2::Drive::File() );
+        KGAPI2::Drive::FileFetchContentJob *fileFetchContentJob = new KGAPI2::Drive::FileFetchContentJob(file, mAccount, this);
+        //TODO
+        return 0;
+    } else {
+        delete mDownloadFile;
+    }
     return 0;
 }
 
@@ -346,14 +357,64 @@ void GDriveJob::createServiceFolder()
     connect(createJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotCreateJobFinished(KGAPI2::Job*)));
 }
 
+void GDriveJob::copyFile(const QString &source, const QString &destination)
+{
+    qDebug()<<"source "<<source<<" destination"<<destination;
 
-/*old **********************/
+    mActionType = PimCommon::StorageServiceAbstract::CopyFile;
+    mError = false;
+    KGAPI2::Drive::FilePtr file( new KGAPI2::Drive::File() );
+    file->setTitle( QLatin1String("copy") );
+    file->setMimeType( KGAPI2::Drive::File::folderMimeType() );
 
+    KGAPI2::Drive::ParentReferencePtr parent( new KGAPI2::Drive::ParentReference( destination ) );
+    file->setParents( KGAPI2::Drive::ParentReferencesList() << parent );
 
+    KGAPI2::Drive::FileCopyJob *copyJob = new KGAPI2::Drive::FileCopyJob( source, file, mAccount);
+    connect(copyJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotCopyJobFinished(KGAPI2::Job*)));
+}
+
+void GDriveJob::slotCopyJobFinished(KGAPI2::Job *job)
+{
+    if (handleError(job)) {
+        Q_EMIT errorMessage(mActionType, job->errorString());
+    } else {
+        Q_EMIT copyFileDone(QString());
+    }
+    job->deleteLater();
+    deleteLater();
+}
+
+void GDriveJob::copyFolder(const QString &source, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::CopyFolder;
+    mError = false;
+    KGAPI2::Drive::FilePtr file( new KGAPI2::Drive::File() );
+    file->setTitle( QLatin1String("copy") );
+    file->setMimeType( KGAPI2::Drive::File::folderMimeType() );
+
+    KGAPI2::Drive::ParentReferencePtr parent( new KGAPI2::Drive::ParentReference( destination ) );
+    file->setParents( KGAPI2::Drive::ParentReferencesList() << parent );
+
+    KGAPI2::Drive::FileCopyJob *copyJob = new KGAPI2::Drive::FileCopyJob( source, file, mAccount);
+    connect(copyJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotCopyFolderJobFinished(KGAPI2::Job*)));
+}
+
+void GDriveJob::slotCopyFolderJobFinished(KGAPI2::Job *job)
+{
+    if (handleError(job)) {
+        Q_EMIT errorMessage(mActionType, job->errorString());
+    } else {
+        Q_EMIT copyFolderDone(QString());
+    }
+    job->deleteLater();
+    deleteLater();
+}
 
 void GDriveJob::renameFolder(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::RenameFolder;
+    qDebug()<<" source "<<source<<" destination "<<destination;
     mError = false;
     qDebug()<<" not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
@@ -364,12 +425,19 @@ void GDriveJob::renameFolder(const QString &source, const QString &destination)
 void GDriveJob::renameFile(const QString &oldName, const QString &newName)
 {
     mActionType = PimCommon::StorageServiceAbstract::RenameFile;
+    qDebug()<<" oldName "<<oldName<<" newName "<<newName;
     mError = false;
     qDebug()<<" not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     //TODO
     deleteLater();
 }
+
+
+/*old **********************/
+
+
+
 
 void GDriveJob::moveFolder(const QString &source, const QString &destination)
 {
@@ -384,26 +452,6 @@ void GDriveJob::moveFolder(const QString &source, const QString &destination)
 void GDriveJob::moveFile(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::MoveFile;
-    mError = false;
-    qDebug()<<" not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //TODO
-    deleteLater();
-}
-
-void GDriveJob::copyFile(const QString &source, const QString &destination)
-{
-    mActionType = PimCommon::StorageServiceAbstract::CopyFile;
-    mError = false;
-    qDebug()<<" not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //TODO
-    deleteLater();
-}
-
-void GDriveJob::copyFolder(const QString &source, const QString &destination)
-{
-    mActionType = PimCommon::StorageServiceAbstract::CopyFolder;
     mError = false;
     qDebug()<<" not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));

@@ -65,6 +65,8 @@ private slots:
     void slotCreateJobFinished(KGAPI2::Job *job);
     void slotUploadJobFinished(KGAPI2::Job *job);
     void slotUploadDownLoadProgress(KGAPI2::Job *job, int progress, int total);
+    void slotCopyJobFinished(KGAPI2::Job *);
+    void slotCopyFolderJobFinished(KGAPI2::Job *job);
 private:
     bool handleError(KGAPI2::Job *job);
 
