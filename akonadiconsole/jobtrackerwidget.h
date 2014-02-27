@@ -24,6 +24,8 @@
 
 #include <QWidget>
 
+class QModelIndex;
+class QFile;
 class JobTrackerWidget : public QWidget
 {
   Q_OBJECT
@@ -33,8 +35,11 @@ class JobTrackerWidget : public QWidget
     ~JobTrackerWidget();
   private slots:
     void contextMenu(const QPoint& pos);
+    void slotSaveToFile();
 
   private:
+    void writeRows( const QModelIndex &parent, QFile &file, int indentLevel );
+
     class Private;
     Private* const d;
 };
