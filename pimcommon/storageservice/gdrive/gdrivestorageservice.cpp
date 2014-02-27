@@ -397,6 +397,7 @@ void GDriveStorageService::storageServiceCopyFolder(const QString &source, const
 QMap<QString, QString> GDriveStorageService::itemInformation(const QVariantMap &variantMap)
 {
     QMap<QString, QString> information;
+    qDebug()<<" variantMap"<<variantMap;
     KGAPI2::Drive::FilePtr file = KGAPI2::Drive::File::fromJSON(variantMap);
     if (file) {
         information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Type), file->isFolder() ? i18n("Folder") : i18n("File"));
@@ -404,6 +405,9 @@ QMap<QString, QString> GDriveStorageService::itemInformation(const QVariantMap &
         if (!file->isFolder()) {
             information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KGlobal::locale()->formatByteSize(file->fileSize()));
         }
+
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), KGlobal::locale()->formatDateTime(file->createdDate()));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), KGlobal::locale()->formatDateTime(file->modifiedDate()));
         //TODO more infos
 
     }
@@ -543,7 +547,7 @@ StorageServiceAbstract::Capabilities GDriveStorageService::serviceCapabilities()
     cap |= RenameFileCapabilitity;
     //cap |= MoveFileCapability;
     //cap |= MoveFolderCapability;
-    //cap |= CopyFileCapability;
+    cap |= CopyFileCapability;
     //cap |= CopyFolderCapability;
     return cap;
 }
