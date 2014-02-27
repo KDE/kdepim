@@ -25,7 +25,9 @@
 #include <KGlobal>
 #include <KStandardDirs>
 #include <KZip>
+#include <KConfigGroup>
 
+#include <QFile>
 
 ImportNotesJob::ImportNotesJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -52,9 +54,25 @@ void ImportNotesJob::restoreConfig()
 {
     const QString knotesStr(QLatin1String("knotesrc"));
     restoreConfigFile(knotesStr);
-    const QString globalNoteSettingsStr(QLatin1String("globalnotesettings"));
-    restoreConfigFile(globalNoteSettingsStr);
+    if (archiveVersion() <= 1) {
+        const QString globalNoteSettingsStr(QLatin1String("globalnotesettings"));
+        restoreConfigFile(globalNoteSettingsStr);
+    } else {
+        const QString globalNoteStr(QLatin1String("globalnotesettings"));
+        const KArchiveEntry* globalNotecentry  = mArchiveDirectory->entry(Utils::configsPath() + globalNoteStr);
+        if (globalNotecentry && globalNotecentry->isFile()) {
+            const KArchiveFile* globalNotecentryrc = static_cast<const KArchiveFile*>(globalNotecentry);
+            const QString globalNoterc = KStandardDirs::locateLocal( "config", globalNoteStr);
+            if (QFile(globalNoterc).exists()) {
+                if (overwriteConfigMessageBox(globalNoteStr)) {
+                    importKNoteGlobalSettings(globalNotecentryrc,globalNoterc,globalNoteStr,Utils::configsPath());
+                }
+            } else {
+                importKNoteGlobalSettings(globalNotecentryrc,globalNoterc,globalNoteStr,Utils::configsPath());
+            }
+        }
 
+    }
 
     Q_EMIT info(i18n("Config restored."));
 }
@@ -72,3 +90,17 @@ void ImportNotesJob::restoreData()
     Q_EMIT info(i18n("Data restored."));
 }
 
+
+void ImportNotesJob::importKNoteGlobalSettings(const KArchiveFile* kmailsnippet, const QString& kmail2rc, const QString&filename,const QString& prefix)
+{
+    copyToFile(kmailsnippet,kmail2rc,filename,prefix);
+    KSharedConfig::Ptr kmailConfig = KSharedConfig::openConfig(kmail2rc);
+
+    const QString composerStr(QLatin1String("SelectNoteFolder"));
+    if (kmailConfig->hasGroup(composerStr)) {
+        KConfigGroup composerGroup = kmailConfig->group(composerStr);
+        const QString previousStr(QLatin1String("DefaultFolder"));
+        convertRealPathToCollection(composerGroup, previousStr);
+    }
+    kmailConfig->sync();
+}
