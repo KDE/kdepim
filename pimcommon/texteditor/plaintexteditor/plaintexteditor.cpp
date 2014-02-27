@@ -398,10 +398,12 @@ bool PlainTextEditor::handleShortcut(const QKeyEvent* event)
             redo();
         return true;
     } else if ( KStandardShortcut::deleteWordBack().contains( key ) ) {
-        deleteWordBack();
+        if (!isReadOnly())
+            deleteWordBack();
         return true;
     } else if ( KStandardShortcut::deleteWordForward().contains( key ) ) {
-        deleteWordForward();
+        if (!isReadOnly())
+            deleteWordForward();
         return true;
     } else if ( KStandardShortcut::backwardWord().contains( key ) ) {
         QTextCursor cursor = textCursor();
