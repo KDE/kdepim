@@ -97,7 +97,7 @@ set(CMAKE_AUTOMOC ON)
 
 ############### search packages used by KDE ###############
 
-find_package(KDE4 4.12.0 REQUIRED)
+find_package(KDE4 4.11.3 REQUIRED)
 include(KDE4Defaults)
 
 find_package(KdepimLibs 4.13.0)
