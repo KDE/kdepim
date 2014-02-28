@@ -201,6 +201,20 @@ void StorageServiceTreeWidget::slotPasteFile()
     mStorageService->copyFile(mCopyItem.identifier, mCurrentFolder);
 }
 
+void StorageServiceTreeWidget::renameItem()
+{
+    switch(itemTypeSelected()) {
+    case StorageServiceTreeWidget::Folder:
+        slotRenameFolder();
+        break;
+    case StorageServiceTreeWidget::File:
+        slotRenameFile();
+        break;
+    default:
+        break;
+    }
+}
+
 void StorageServiceTreeWidget::slotRenameFolder()
 {
     const QString oldFolderName = itemIdentifierSelected();

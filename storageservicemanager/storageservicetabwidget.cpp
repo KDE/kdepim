@@ -252,3 +252,12 @@ PimCommon::StorageServiceTreeWidget::ItemType StorageServiceTabWidget::itemTypeS
     }
     return PimCommon::StorageServiceTreeWidget::UnKnown;
 }
+
+void StorageServiceTabWidget::slotRename()
+{
+    if (currentWidget()) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        if (page)
+            page->renameItem();
+    }
+}

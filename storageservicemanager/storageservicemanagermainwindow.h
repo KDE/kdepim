@@ -70,6 +70,7 @@ private:
     KAction *mLogout;
     KAction *mShutdownAllServices;
     KAction *mRefreshAll;
+    KAction *mRenameItem;
     QLabel *mStatusBarInfo;
     bool mNetworkIsDown;
 };

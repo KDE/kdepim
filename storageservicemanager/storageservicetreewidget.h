@@ -40,6 +40,7 @@ public:
     void logout();
 
     void deleteItem();
+    void renameItem();
 Q_SIGNALS:
     void uploadFile();
     void downloadFile();

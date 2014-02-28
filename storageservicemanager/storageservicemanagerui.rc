@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="storageservicemanager" version="1">
+<kpartgui name="storageservicemanager" version="2">
  <MenuBar>
   <Menu name="file" >
     <Action name="show_log" />
@@ -10,6 +10,8 @@
   <Menu name="edit" >
    <text>&amp;Edit</text>
    <Action name="authenticate"/>
+   <Separator/>
+   <Action name="rename"/>
    <Separator/>
    <Action name="create_folder"/>
    <Action name="refresh_list"/>

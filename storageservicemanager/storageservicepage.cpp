@@ -244,6 +244,11 @@ void StorageServicePage::slotUploadFile()
     }
 }
 
+void StorageServicePage::renameItem()
+{
+    mTreeWidget->renameItem();
+}
+
 void StorageServicePage::deleteItem()
 {
     mTreeWidget->deleteItem();
