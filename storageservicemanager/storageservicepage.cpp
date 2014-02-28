@@ -244,9 +244,9 @@ void StorageServicePage::slotUploadFile()
     }
 }
 
-void StorageServicePage::deleteFile()
+void StorageServicePage::deleteItem()
 {
-    mTreeWidget->slotDeleteFile();
+    mTreeWidget->deleteItem();
 }
 
 void StorageServicePage::downloadFile()

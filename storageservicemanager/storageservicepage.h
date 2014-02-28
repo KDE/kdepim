@@ -59,6 +59,7 @@ public:
 
     PimCommon::StorageServiceTreeWidget::ItemType itemTypeSelected() const;
 
+    void deleteItem();
 Q_SIGNALS:
     void updateIcon(const QIcon &pix, StorageServicePage *page);
     void updateStatusBarMessage(const QString &msg);
