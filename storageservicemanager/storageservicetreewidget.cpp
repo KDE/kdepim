@@ -258,29 +258,53 @@ void StorageServiceTreeWidget::slotCreateFolder()
     }
 }
 
+void StorageServiceTreeWidget::deleteItem()
+{
+    switch(itemTypeSelected()) {
+    case StorageServiceTreeWidget::Folder:
+        deleteFolder();
+        break;
+    case StorageServiceTreeWidget::File:
+        deleteFile();
+        break;
+    default:
+        break;
+    }
+}
+
+void StorageServiceTreeWidget::deleteFolder()
+{
+    const QString folder = itemIdentifierSelected();
+    const QString name = currentItem()->text(0);
+    if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Are you sure that you want to delete \"%1\"?", name))) {
+        if (!folder.isEmpty()) {
+            mStorageService->deleteFolder(folder);
+        }
+    }
+}
+
+void StorageServiceTreeWidget::deleteFile()
+{
+    const QString filename = itemIdentifierSelected();
+    const QString name = currentItem()->text(0);
+    if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Are you sure that you want to delete \"%1\"?", name) )) {
+        if (!filename.isEmpty()) {
+            mStorageService->deleteFile(filename);
+        }
+    }
+}
+
 void StorageServiceTreeWidget::slotDeleteFolder()
 {
     if (itemTypeSelected() == StorageServiceTreeWidget::Folder) {
-        const QString folder = itemIdentifierSelected();
-        const QString name = currentItem()->text(0);
-        if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Are you sure that you want to delete \"%1\"?", name))) {
-            if (!folder.isEmpty()) {
-                mStorageService->deleteFolder(folder);
-            }
-        }
+        deleteFolder();
     }
 }
 
 void StorageServiceTreeWidget::slotDeleteFile()
 {
     if (itemTypeSelected() == StorageServiceTreeWidget::File) {
-        const QString filename = itemIdentifierSelected();
-        const QString name = currentItem()->text(0);
-        if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Are you sure that you want to delete \"%1\"?", name) )) {
-            if (!filename.isEmpty()) {
-                mStorageService->deleteFile(filename);
-            }
-        }
+        deleteFile();
     }
 }
 

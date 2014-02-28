@@ -55,7 +55,7 @@ public slots:
     void slotRefreshList();
     void slotAccountInfo();
     void slotUploadFile();
-    void slotDeleteFile();
+    void slotDelete();
     void slotDownloadFile();
     void slotShowLog();
 

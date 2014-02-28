@@ -120,7 +120,7 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
         mCreateFolder->setDisabled(true);
         mAccountInfo->setDisabled(true);
         mUploadFile->setDisabled(true);
-        mDeleteFile->setDisabled(true);
+        mDelete->setDisabled(true);
         mAuthenticate->setDisabled(true);
         mRefreshList->setDisabled(true);
         mShowLog->setDisabled(true);
@@ -132,7 +132,8 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
         mCreateFolder->setEnabled(listFolderWasLoaded && (capabilities & PimCommon::StorageServiceAbstract::CreateFolderCapability));
         mAccountInfo->setEnabled(capabilities & PimCommon::StorageServiceAbstract::AccountInfoCapability);
         mUploadFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::UploadFileCapability);
-        mDeleteFile->setEnabled(listFolderWasLoaded && (capabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability) && (type == PimCommon::StorageServiceTreeWidget::File));
+        mDelete->setEnabled(listFolderWasLoaded && (capabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability) &&
+                            (type == PimCommon::StorageServiceTreeWidget::File || type == PimCommon::StorageServiceTreeWidget::Folder));
         mAuthenticate->setDisabled((capabilities & PimCommon::StorageServiceAbstract::NoCapability) || (mStorageServiceTabWidget->count() == 0));
         mRefreshList->setDisabled((capabilities & PimCommon::StorageServiceAbstract::NoCapability) || (mStorageServiceTabWidget->count() == 0));
         mShowLog->setDisabled((mStorageServiceTabWidget->count() == 0));
@@ -162,9 +163,10 @@ void StorageServiceManagerMainWindow::setupActions()
     mUploadFile = ac->addAction(QLatin1String("upload_file"), mStorageServiceTabWidget, SLOT(slotUploadFile()));
     mUploadFile->setText(i18n("Upload File..."));
 
-    mDeleteFile = ac->addAction(QLatin1String("delete_file"), mStorageServiceTabWidget, SLOT(slotDeleteFile()));
-    mDeleteFile->setText(i18n("Delete File..."));
-    mDeleteFile->setIcon(KIcon(QLatin1String("edit-delete")));
+    mDelete = ac->addAction(QLatin1String("delete"), mStorageServiceTabWidget, SLOT(slotDelete()));
+    mDelete->setShortcut(QKeySequence(Qt::Key_Delete));
+    mDelete->setText(i18n("Delete..."));
+    mDelete->setIcon(KIcon(QLatin1String("edit-delete")));
 
     mDownloadFile = ac->addAction(QLatin1String("download_file"), mStorageServiceTabWidget, SLOT(slotDownloadFile()));
     mDownloadFile->setText(i18n("Download File..."));

@@ -132,12 +132,12 @@ void StorageServiceTabWidget::slotUploadFile()
     }
 }
 
-void StorageServiceTabWidget::slotDeleteFile()
+void StorageServiceTabWidget::slotDelete()
 {
     if (currentWidget()) {
         StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
         if (page)
-            page->deleteFile();
+            page->deleteItem();
     }
 }
 
