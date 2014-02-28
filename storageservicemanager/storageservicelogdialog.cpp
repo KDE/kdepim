@@ -43,11 +43,17 @@ StorageServiceLogDialog::StorageServiceLogDialog(QWidget *parent)
     setMainWidget(mLog);
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotClearLog()));
     connect(this, SIGNAL(user2Clicked()), this, SLOT(slotSaveAs()));
+    connect(mLog->editor(), SIGNAL(textChanged()), this, SLOT(slotTextChanged()));
 }
 
 StorageServiceLogDialog::~StorageServiceLogDialog()
 {
     writeConfig();
+}
+
+void StorageServiceLogDialog::slotTextChanged()
+{
+    enableButton(User2, !mLog->toPlainText().isEmpty());
 }
 
 void StorageServiceLogDialog::slotClearLog()
