@@ -11,6 +11,7 @@ Comment[sk]=Správca úložných služieb
 Comment[sv]=Hantering av lagringstjänst
 Comment[uk]=Керування службами збереження
 Comment[x-test]=xxStorageServiceManagerxx
+Comment[zh_TW]=儲存服務管理員
 
 [Event/action-failed]
 Name=Action Failed
@@ -24,6 +25,7 @@ Name[sk]=Akcia zlyhala
 Name[sv]=Åtgärd misslyckades
 Name[uk]=Помилка під час дії
 Name[x-test]=xxAction Failedxx
+Name[zh_TW]=動作失敗
 Comment=An error was returned
 Comment[de]=Ein Fehler wurde zurückgegeben
 Comment[fi]=Tapahtui virhe
@@ -34,5 +36,6 @@ Comment[sk]=Nastala chyba
 Comment[sv]=Ett fel returnerades
 Comment[uk]=Повернуто повідомлення про помилку
 Comment[x-test]=xxAn error was returnedxx
+Comment[zh_TW]=傳回錯誤
 Action=None
 
