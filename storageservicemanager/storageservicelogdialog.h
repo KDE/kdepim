@@ -41,6 +41,7 @@ Q_SIGNALS:
 private slots:
     void slotSaveAs();
     void slotClearLog();
+    void slotTextChanged();
 private:
     void readConfig();
     void writeConfig();
