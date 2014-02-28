@@ -36,7 +36,6 @@ QuickSearchWidget::QuickSearchWidget( QWidget *parent )
 
   mEdit = new KLineEdit;
   //If change shortcut changes it in mainwidget
-  mEdit->setClickMessage( i18nc( "@label Search contacts in list", "Search...<ALT+Q>" ) );
   mEdit->setClearButtonShown( true );
   mEdit->setToolTip(
     i18nc( "@info:tooltip", "Search contacts in list" ) );
@@ -94,3 +93,7 @@ void QuickSearchWidget::keyPressEvent( QKeyEvent *event )
   QWidget::keyPressEvent( event );
 }
 
+void QuickSearchWidget::updateQuickSearchText( const QString &text )
+{
+    mEdit->setClickMessage( text );
+}

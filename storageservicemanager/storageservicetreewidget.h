@@ -39,6 +39,8 @@ public:
     bool listFolderWasLoaded() const;
     void logout();
 
+    void deleteItem();
+    void renameItem();
 Q_SIGNALS:
     void uploadFile();
     void downloadFile();
@@ -74,6 +76,8 @@ private:
     bool checkName(const QString &name);
     void readConfig();
     void writeConfig();
+    void deleteFile();
+    void deleteFolder();
 
     enum CopyType {
         UnknownType = 0,

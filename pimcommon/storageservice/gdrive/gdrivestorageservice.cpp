@@ -23,8 +23,10 @@
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 #include "pimcommon/storageservice/utils/storageserviceutils.h"
 
+#include <qjson/parser.h>
 
 #include <kwallet.h>
+#include <KLocale>
 
 #include <libkgapi2/drive/file.h>
 
@@ -394,7 +396,22 @@ void GDriveStorageService::storageServiceCopyFolder(const QString &source, const
 
 QMap<QString, QString> GDriveStorageService::itemInformation(const QVariantMap &variantMap)
 {
-    return QMap<QString, QString>();
+    QMap<QString, QString> information;
+    qDebug()<<" variantMap"<<variantMap;
+    KGAPI2::Drive::FilePtr file = KGAPI2::Drive::File::fromJSON(variantMap);
+    if (file) {
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Type), file->isFolder() ? i18n("Folder") : i18n("File"));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Name), file->title());
+        if (!file->isFolder()) {
+            information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KGlobal::locale()->formatByteSize(file->fileSize()));
+        }
+
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), KGlobal::locale()->formatDateTime(file->createdDate()));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), KGlobal::locale()->formatDateTime(file->modifiedDate()));
+        //TODO more infos
+
+    }
+    return information;
 }
 
 void GDriveStorageService::storageServicelistFolder(const QString &folder)
@@ -530,7 +547,7 @@ StorageServiceAbstract::Capabilities GDriveStorageService::serviceCapabilities()
     cap |= RenameFileCapabilitity;
     //cap |= MoveFileCapability;
     //cap |= MoveFolderCapability;
-    //cap |= CopyFileCapability;
+    cap |= CopyFileCapability;
     //cap |= CopyFolderCapability;
     return cap;
 }
@@ -589,23 +606,28 @@ QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
     listWidget->createMoveUpItem();
     const QStringList lst = data.toStringList();
     Q_FOREACH(const QString &item, lst) {
-        qDebug()<<" item "<<item;
-        KGAPI2::Drive::FilePtr file = KGAPI2::Drive::File::fromJSON(item.toLatin1());
-        if (file) {
-            if (file->isFolder()) {
-                StorageServiceTreeWidgetItem *item = listWidget->addFolder(file->title(), file->id());
-                item->setDateCreated(file->createdDate());
-                item->setLastModification(file->modifiedDate());
-            } else {
-                StorageServiceTreeWidgetItem *item = listWidget->addFile(file->title(), file->id(), file->mimeType());
-                item->setSize(file->fileSize());
-                item->setDateCreated(file->createdDate());
-                item->setLastModification(file->modifiedDate());
+        const QByteArray dataItem = item.toLatin1();
+        QJson::Parser parser;
+        bool ok;
+        const QVariant data = parser.parse(dataItem, &ok);
+        if (ok) {
+            const QVariantMap varData = data.toMap();
+            KGAPI2::Drive::FilePtr file = KGAPI2::Drive::File::fromJSON(varData);
+            if (file) {
+                StorageServiceTreeWidgetItem *treeWidgetItem = 0;
+                if (file->isFolder()) {
+                    treeWidgetItem = listWidget->addFolder(file->title(), file->id());
+                    treeWidgetItem->setDateCreated(file->createdDate());
+                    treeWidgetItem->setLastModification(file->modifiedDate());
+                } else {
+                    treeWidgetItem = listWidget->addFile(file->title(), file->id(), file->mimeType());
+                    treeWidgetItem->setSize(file->fileSize());
+                    treeWidgetItem->setDateCreated(file->createdDate());
+                    treeWidgetItem->setLastModification(file->modifiedDate());
+                }
+                treeWidgetItem->setStoreInfo(varData);
             }
-            //TODO store value
-            //TODO other :)
         }
-
     }
     return QString(); //TODO
 }

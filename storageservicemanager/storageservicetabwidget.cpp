@@ -132,12 +132,12 @@ void StorageServiceTabWidget::slotUploadFile()
     }
 }
 
-void StorageServiceTabWidget::slotDeleteFile()
+void StorageServiceTabWidget::slotDelete()
 {
     if (currentWidget()) {
         StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
         if (page)
-            page->deleteFile();
+            page->deleteItem();
     }
 }
 
@@ -251,4 +251,13 @@ PimCommon::StorageServiceTreeWidget::ItemType StorageServiceTabWidget::itemTypeS
             return page->itemTypeSelected();
     }
     return PimCommon::StorageServiceTreeWidget::UnKnown;
+}
+
+void StorageServiceTabWidget::slotRename()
+{
+    if (currentWidget()) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        if (page)
+            page->renameItem();
+    }
 }

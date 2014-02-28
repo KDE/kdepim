@@ -193,6 +193,22 @@ void TodoEditTest::shouldEmitNotEmitTodoWhenTextIsEmpty()
     QCOMPARE(spy.count(), 0);
 }
 
+void TodoEditTest::shouldEmitNotEmitTodoWhenTextTrimmedIsEmpty()
+{
+    MessageViewer::TodoEdit edit;
+    KMime::Message::Ptr msg(new KMime::Message);
+    edit.setMessage(msg);
+    QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
+    QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection,QString)));
+    noteedit->setText(QLatin1String("      "));
+    QTest::keyClick(noteedit, Qt::Key_Enter);
+    QCOMPARE(spy.count(), 0);
+
+    noteedit->setText(QLatin1String("      F"));
+    QTest::keyClick(noteedit, Qt::Key_Enter);
+    QCOMPARE(spy.count(), 1);
+}
+
 void TodoEditTest::shouldEmitTodoWhenPressEnter()
 {
     MessageViewer::TodoEdit edit;

@@ -120,10 +120,11 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
         mCreateFolder->setDisabled(true);
         mAccountInfo->setDisabled(true);
         mUploadFile->setDisabled(true);
-        mDeleteFile->setDisabled(true);
+        mDelete->setDisabled(true);
         mAuthenticate->setDisabled(true);
         mRefreshList->setDisabled(true);
         mShowLog->setDisabled(true);
+        mRenameItem->setDisabled(true);
     } else {
         const PimCommon::StorageServiceAbstract::Capabilities capabilities = mStorageServiceTabWidget->capabilities();
         const bool listFolderWasLoaded = mStorageServiceTabWidget->listFolderWasLoaded();
@@ -132,9 +133,13 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
         mCreateFolder->setEnabled(listFolderWasLoaded && (capabilities & PimCommon::StorageServiceAbstract::CreateFolderCapability));
         mAccountInfo->setEnabled(capabilities & PimCommon::StorageServiceAbstract::AccountInfoCapability);
         mUploadFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::UploadFileCapability);
-        mDeleteFile->setEnabled(listFolderWasLoaded && (capabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability) && (type == PimCommon::StorageServiceTreeWidget::File));
+        mDelete->setEnabled(listFolderWasLoaded && (capabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability) &&
+                            (type == PimCommon::StorageServiceTreeWidget::File || type == PimCommon::StorageServiceTreeWidget::Folder));
         mAuthenticate->setDisabled((capabilities & PimCommon::StorageServiceAbstract::NoCapability) || (mStorageServiceTabWidget->count() == 0));
         mRefreshList->setDisabled((capabilities & PimCommon::StorageServiceAbstract::NoCapability) || (mStorageServiceTabWidget->count() == 0));
+        mRenameItem->setEnabled(listFolderWasLoaded && (capabilities & PimCommon::StorageServiceAbstract::RenameFileCapabilitity || capabilities & PimCommon::StorageServiceAbstract::RenameFolderCapability) &&
+                (type == PimCommon::StorageServiceTreeWidget::File || type == PimCommon::StorageServiceTreeWidget::Folder));
+
         mShowLog->setDisabled((mStorageServiceTabWidget->count() == 0));
         mLogout->setEnabled(listFolderWasLoaded);
     }
@@ -162,9 +167,10 @@ void StorageServiceManagerMainWindow::setupActions()
     mUploadFile = ac->addAction(QLatin1String("upload_file"), mStorageServiceTabWidget, SLOT(slotUploadFile()));
     mUploadFile->setText(i18n("Upload File..."));
 
-    mDeleteFile = ac->addAction(QLatin1String("delete_file"), mStorageServiceTabWidget, SLOT(slotDeleteFile()));
-    mDeleteFile->setText(i18n("Delete File..."));
-    mDeleteFile->setIcon(KIcon(QLatin1String("edit-delete")));
+    mDelete = ac->addAction(QLatin1String("delete"), mStorageServiceTabWidget, SLOT(slotDelete()));
+    mDelete->setShortcut(QKeySequence(Qt::Key_Delete));
+    mDelete->setText(i18n("Delete..."));
+    mDelete->setIcon(KIcon(QLatin1String("edit-delete")));
 
     mDownloadFile = ac->addAction(QLatin1String("download_file"), mStorageServiceTabWidget, SLOT(slotDownloadFile()));
     mDownloadFile->setText(i18n("Download File..."));
@@ -182,6 +188,10 @@ void StorageServiceManagerMainWindow::setupActions()
     mRefreshAll = ac->addAction(QLatin1String("refresh_all"), this, SLOT(slotRefreshAll()));
     mRefreshAll->setText(i18n("Refresh All"));
     mRefreshAll->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_F5 ));
+
+    mRenameItem = ac->addAction(QLatin1String("rename"), mStorageServiceTabWidget, SLOT(slotRename()));
+    mRenameItem->setText(i18n("Rename..."));
+    mRenameItem->setShortcut(QKeySequence( Qt::Key_F2 ));
 
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
     KStandardAction::configureNotifications(this, SLOT(slotShowNotificationOptions()), ac); // options_configure_notifications

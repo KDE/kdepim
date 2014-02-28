@@ -484,7 +484,8 @@ void KNote::slotSaveAs()
         return;
     }
 
-    QString fileName = dlg->selectedFile();
+    const QString fileName = dlg->selectedFile();
+    const bool htmlFormatAndSaveAsHtml = (convert && !convert->isChecked());
     delete dlg;
     if ( fileName.isEmpty() ) {
         return;
@@ -502,7 +503,7 @@ void KNote::slotSaveAs()
 
     if ( file.open( QIODevice::WriteOnly ) ) {
         QTextStream stream( &file );
-        if ( convert && !convert->isChecked() ) {
+        if ( htmlFormatAndSaveAsHtml ) {
             stream << m_editor->toHtml();
         } else {
             stream << m_editor->toPlainText();
@@ -1080,12 +1081,10 @@ void KNote::dropEvent( QDropEvent *e )
     const QMimeData *md = e->mimeData();
     if ( md->hasColor() ) {
         const QColor bg =  qvariant_cast<QColor>( md->colorData() );
-        setColor( palette().color( foregroundRole() ), bg );
 
-        //Verify it!
         NoteShared::NoteDisplayAttribute *attr =  mItem.attribute<NoteShared::NoteDisplayAttribute>( Akonadi::Entity::AddIfMissing );
         saveNoteContent();
-        attr->setForegroundColor(bg);
+        attr->setBackgroundColor(bg);
         Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
         connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
     }

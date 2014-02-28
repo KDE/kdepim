@@ -51,10 +51,12 @@ StorageServiceConfigureDialog::~StorageServiceConfigureDialog()
 
 void StorageServiceConfigureDialog::writeSettings()
 {
+    //Reimplement it
 }
 
 void StorageServiceConfigureDialog::loadSettings()
 {
+    //Reimplement it
 }
 
 QMap<QString, PimCommon::StorageServiceAbstract *> StorageServiceConfigureDialog::listService() const

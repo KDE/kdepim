@@ -89,7 +89,7 @@ if(DEFINED KDEPIM_DEV_VERSION)
   set(KDEPIM_DEV_VERSION " ${KDEPIM_DEV_VERSION}")
 endif()
 
-set(KDEPIM_VERSION "4.13${KDEPIM_DEV_VERSION}")
+set(KDEPIM_VERSION "4.14${KDEPIM_DEV_VERSION}")
 
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
 
@@ -97,10 +97,10 @@ set(CMAKE_AUTOMOC ON)
 
 ############### search packages used by KDE ###############
 
-find_package(KDE4 4.11.3 REQUIRED)
+find_package(KDE4 4.12.0 REQUIRED)
 include(KDE4Defaults)
 
-find_package(KdepimLibs 4.12.47)
+find_package(KdepimLibs 4.13.40)
 set_package_properties(KdepimLibs PROPERTIES DESCRIPTION "The KDEPIM libraries" URL "http://www.kde.org" TYPE REQUIRED)
 
 ############### Load the CTest options ###############
@@ -192,12 +192,12 @@ else()
   set_package_properties(Prison PROPERTIES DESCRIPTION "The Prison library" URL "http://projects.kde.org/prison" TYPE OPTIONAL PURPOSE "Needed to show mobile barcodes of your contacts")
 
   # Libkgapi2
-  find_package(LibKGAPI2 2.0.82 QUIET CONFIG)
+  find_package(LibKGAPI2 2.0.83 QUIET CONFIG)
   set_package_properties(LibKGAPI2 PROPERTIES DESCRIPTION "KDE-based library for accessing various Google services" URL "https://projects.kde.org/libkgapi" TYPE OPTIONAL PURPOSE "LibKGAPI is required to build Google Drive Storage Service")
 
-if( LibKGAPI2_FOUND )
-  add_definitions( -DKDEPIM_STORAGESERVICE_GDRIVE )
-endif()
+  if( LibKGAPI2_FOUND )
+    add_definitions( -DKDEPIM_STORAGESERVICE_GDRIVE )
+  endif()
 
 
 

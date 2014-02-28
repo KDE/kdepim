@@ -129,6 +129,7 @@ KNotesPart::KNotesPart( QObject *parent )
 
     mNoteRename = new KAction( KIcon( QLatin1String("edit-rename") ),
                           i18nc( "@action:inmenu", "Rename..." ), this );
+    mNoteRename->setShortcut( QKeySequence( Qt::Key_F2 ) );
     actionCollection()->addAction( QLatin1String("edit_rename"), mNoteRename );
     connect( mNoteRename, SIGNAL(triggered(bool)), SLOT(renameNote()) );
     mNoteRename->setHelpText(
@@ -533,6 +534,7 @@ void KNotesPart::editNote(Akonadi::Entity::Id id)
 {
     KNotesIconViewItem *knoteItem = mNotesWidget->notesView()->iconView(id);
     if (knoteItem) {
+        mNotesWidget->notesView()->setCurrentItem(knoteItem);
         editNote(knoteItem);
     }
 }
@@ -729,6 +731,7 @@ void KNotesPart::slotSaveAs()
     }
 
     const QString fileName = dlg->selectedFile();
+    const bool htmlFormatAndSaveAsHtml = (convert && !convert->isChecked());
     delete dlg;
     if ( fileName.isEmpty() ) {
         return;
@@ -747,7 +750,7 @@ void KNotesPart::slotSaveAs()
         QTextStream stream( &file );
         QTextDocument doc;
         doc.setHtml(knoteItem->description());
-        if ( convert && !convert->isChecked() ) {
+        if ( htmlFormatAndSaveAsHtml ) {
             stream << doc.toHtml();
         } else {
             stream << knoteItem->realName() + QLatin1Char('\n');

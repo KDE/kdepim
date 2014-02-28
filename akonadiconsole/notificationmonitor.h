@@ -22,7 +22,9 @@
 
 #include <QWidget>
 
+class QModelIndex;
 class NotificationModel;
+class QFile;
 
 class NotificationMonitor : public QWidget
 {
@@ -32,8 +34,11 @@ class NotificationMonitor : public QWidget
 
   private slots:
     void contextMenu(const QPoint& pos);
+    void slotSaveToFile();
 
   private:
+    void writeRows( const QModelIndex &parent, QFile &file, int indentLevel );
+
     NotificationModel *m_model;
 };
 

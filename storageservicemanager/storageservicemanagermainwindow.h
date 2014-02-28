@@ -63,13 +63,14 @@ private:
     KAction *mCreateFolder;
     KAction *mAccountInfo;
     KAction *mUploadFile;
-    KAction *mDeleteFile;
+    KAction *mDelete;
     KAction *mAuthenticate;
     KAction *mRefreshList;
     KAction *mShowLog;
     KAction *mLogout;
     KAction *mShutdownAllServices;
     KAction *mRefreshAll;
+    KAction *mRenameItem;
     QLabel *mStatusBarInfo;
     bool mNetworkIsDown;
 };

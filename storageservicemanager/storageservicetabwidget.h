@@ -55,10 +55,10 @@ public slots:
     void slotRefreshList();
     void slotAccountInfo();
     void slotUploadFile();
-    void slotDeleteFile();
+    void slotDelete();
     void slotDownloadFile();
     void slotShowLog();
-
+    void slotRename();
 private slots:
     void slotUpdateIcon(const QIcon &icon, StorageServicePage *page);
 
