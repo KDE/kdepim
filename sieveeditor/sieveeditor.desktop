@@ -52,5 +52,5 @@ GenericName[uk]=Редактор фільтрів
 GenericName[x-test]=xxSieve Editorxx
 GenericName[zh_TW]=過濾編輯器
 Terminal=false
-Categories=Qt;KDE;Office;Network;Sieve;
+Categories=Qt;KDE;Office;Network;X-KDE-Sieve;
 InitialPreference=10
