@@ -47,6 +47,8 @@ public:
     explicit StorageServiceManager(QObject *parent=0);
     ~StorageServiceManager();
 
+    QString ourIdentifier() const;
+
     KActionMenu *menuShareLinkServices(QWidget *parent) const;
     KActionMenu *menuDownloadServices(QWidget *parent) const;
     KActionMenu *menuUploadServices(QWidget *parent) const;
@@ -90,7 +92,6 @@ private Q_SLOTS:
 
     void slotConfigChanged(const QString &id);
 private:
-    QString ourIdentifier() const;
     void defaultConnect(StorageServiceAbstract *service);
     void readConfig();
     void writeConfig();

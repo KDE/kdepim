@@ -87,8 +87,10 @@ QString StorageServiceManager::ourIdentifier() const
 
 void StorageServiceManager::slotConfigChanged(const QString &id)
 {
+    qDebug()<<" void StorageServiceManager::slotConfigChanged(const QString &id)"<<id;
     if ( id != ourIdentifier() ) {
         readConfig();
+        Q_EMIT servicesChanged();
     }
 }
 
@@ -101,8 +103,8 @@ void StorageServiceManager::setListService(const QMap<QString, StorageServiceAbs
 {
     mListService = lst;
     writeConfig();
-    Q_EMIT servicesChanged();
 
+    qDebug()<<"void StorageServiceManager::setListService(const QMap<QString, StorageServiceAbstract *> &lst) ";
     // DBus signal for other IdentityManager instances
     emit configChanged( ourIdentifier() );
 }
