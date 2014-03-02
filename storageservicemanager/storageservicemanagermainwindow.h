@@ -53,6 +53,7 @@ private slots:
     void slotShutdownAllServices();
     void slotRefreshAll();
     void slotShowNotificationOptions();
+    void slotServicesChanged();
 private:
     void setupActions();
     void readConfig();

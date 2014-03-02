@@ -59,6 +59,7 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     configJob->registerConfigIf(settingsJob);
 
     mStorageManager = new PimCommon::StorageServiceManager(this);
+    connect(mStorageManager, SIGNAL(servicesChanged()), this, SLOT(slotServicesChanged()));
     mStorageServiceTabWidget = new StorageServiceTabWidget;
     connect(mStorageServiceTabWidget, SIGNAL(currentChanged(QWidget*)), this, SLOT(slotUpdateActions()));
     connect(mStorageServiceTabWidget, SIGNAL(updateStatusBarMessage(QString)), this, SLOT(slotSetStatusBarMessage(QString)));
@@ -89,6 +90,11 @@ StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
     qDebug()<<" StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()";
     if (StorageServiceManagerGlobalConfig::self()->closeWallet())
         PimCommon::StorageServiceSettings::self()->closeWallet();
+}
+
+void StorageServiceManagerMainWindow::slotServicesChanged()
+{
+    mStorageServiceTabWidget->updateListService(mStorageManager->listService());
 }
 
 void StorageServiceManagerMainWindow::initStatusBar()

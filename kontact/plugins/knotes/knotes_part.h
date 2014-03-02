@@ -62,8 +62,6 @@ public:
 
     bool openFile();
 
-    NoteShared::NotesAkonadiTreeModel *noteTreeModel() const {return mNoteTreeModel;}
-
 public slots:
     void newNote( const QString &name = QString(),
                      const QString &text = QString() );
@@ -72,6 +70,7 @@ public slots:
 
 
 public:
+    void updateConfig();
     void killNote( Akonadi::Item::Id id );
     void killNote( Akonadi::Item::Id id, bool force );
 
@@ -85,6 +84,7 @@ public:
     void popupRMB( QListWidgetItem *item, const QPoint &pos, const QPoint &globalPos );
     void editNote(Akonadi::Entity::Id id);
 
+    void updateClickMessage();
 private slots:
     void editNote( QListWidgetItem *item );
     void editNote();
@@ -135,6 +135,7 @@ private:
     KAction *mNoteSetAlarm;
     KAction *mNewNote;
     KAction *mSaveAs;
+    KAction *mQuickSearchAction;
     KToggleAction *mReadOnly;
     NoteShared::NotesChangeRecorder *mNoteRecorder;
     NoteShared::NotesAkonadiTreeModel *mNoteTreeModel;

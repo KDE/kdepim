@@ -53,7 +53,7 @@ public:
     ~KNote();
 
     void setChangeItem(const Akonadi::Item &item, const QSet<QByteArray> &set = QSet<QByteArray>());
-    void saveNote(bool force = false);
+    void saveNote(bool force = false, bool sync = false);
 
     QString name() const;
     QString text() const;
@@ -66,7 +66,6 @@ public:
 
     bool isModified() const;
     bool isDesktopAssigned() const;
-    void commitData();
 
     void toDesktop( int desktop );
 
@@ -156,7 +155,6 @@ private:
     KToggleAction *m_keepBelow;
 
     KSharedConfig::Ptr m_kwinConf;
-    bool mBlockWriteConfigDuringCommitData;
 
     KNoteDisplaySettings *mDisplayAttribute;
 };

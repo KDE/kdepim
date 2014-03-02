@@ -9,6 +9,7 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
+
 set(libpimcommon_shorturl_SRCS
   shorturl/abstractshorturl.cpp
   shorturl/shorturlwidget.cpp
@@ -91,6 +92,8 @@ set(libpimcommon_storageservice_SRCS
  
   storageservice/tests/testsettingsjob.cpp
 )
+
+qt4_add_dbus_adaptor(libpimcommon_storageservice_SRCS storageservice/org.kde.pim.StorageManager.xml storageservice/storageservicemanager.h PimCommon::StorageServiceManager )
 
 set(libpimcommon_autocorrection_SRCS
   autocorrection/autocorrection.cpp

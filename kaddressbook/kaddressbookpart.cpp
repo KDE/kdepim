@@ -59,6 +59,11 @@ KAddressBookPart::KAddressBookPart( QWidget *parentWidget, QObject *parent,
   setXMLFile( QLatin1String("kaddressbookui.rc") );
 }
 
+void KAddressBookPart::updateQuickSearchText()
+{
+  mMainWidget->updateQuickSearchText();
+}
+
 void KAddressBookPart::initAction()
 {
   KAction *action = new KAction( KIcon( QLatin1String("configure") ), i18n( "&Configure KAddressBook..." ), this );

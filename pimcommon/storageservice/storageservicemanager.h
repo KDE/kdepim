@@ -47,6 +47,8 @@ public:
     explicit StorageServiceManager(QObject *parent=0);
     ~StorageServiceManager();
 
+    QString ourIdentifier() const;
+
     KActionMenu *menuShareLinkServices(QWidget *parent) const;
     KActionMenu *menuDownloadServices(QWidget *parent) const;
     KActionMenu *menuUploadServices(QWidget *parent) const;
@@ -79,6 +81,7 @@ Q_SIGNALS:
     void deleteFileDone(const QString &serviceName, const QString &filename);
     void accountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo);
     void uploadFileStart(PimCommon::StorageServiceAbstract *service);
+    void configChanged( const QString &id );
 
 private Q_SLOTS:
     void slotAccountInfo();
@@ -87,6 +90,7 @@ private Q_SLOTS:
     void slotDeleteFolder();
     void slotDownloadFile();
 
+    void slotConfigChanged(const QString &id);
 private:
     void defaultConnect(StorageServiceAbstract *service);
     void readConfig();

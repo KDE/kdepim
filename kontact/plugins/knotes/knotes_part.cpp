@@ -202,6 +202,7 @@ KNotesPart::KNotesPart( QObject *parent )
     connect( mReadOnly, SIGNAL(triggered(bool)), SLOT(slotUpdateReadOnly()) );
     mReadOnly->setCheckedState( KGuiItem( i18n( "Unlock" ), QLatin1String("object-unlocked") ) );
 
+
     KStandardAction::find( this, SLOT(slotOpenFindDialog()), actionCollection());
 
     Akonadi::Session *session = new Akonadi::Session( "KNotes Session", this );
@@ -229,6 +230,12 @@ KNotesPart::KNotesPart( QObject *parent )
     mNotesWidget = new KNotesWidget(this,widget());
     mNoteTip = new KNoteTip( mNotesWidget->notesView() );
 
+    mQuickSearchAction = new KAction( i18n("Set Focus to Quick Search"), this );
+    //If change shortcut change in quicksearchwidget->lineedit->setClickMessage
+    mQuickSearchAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Q ) );
+    actionCollection()->addAction( QLatin1String("focus_to_quickseach"), mQuickSearchAction );
+    connect( mQuickSearchAction, SIGNAL(triggered(bool)), mNotesWidget, SLOT(slotFocusQuickSearch()) );
+
     connect( mNotesWidget->notesView(), SIGNAL(executed(QListWidgetItem*)),
              this, SLOT(editNote(QListWidgetItem*)) );
 
@@ -245,6 +252,7 @@ KNotesPart::KNotesPart( QObject *parent )
     setWidget( mNotesWidget );
     setXMLFile( QLatin1String("knotes_part.rc") );
     updateNetworkListener();
+    updateClickMessage();
 }
 
 KNotesPart::~KNotesPart()
@@ -253,6 +261,11 @@ KNotesPart::~KNotesPart()
     mPublisher=0;
     delete mNoteTip;
     mNoteTip = 0;
+}
+
+void KNotesPart::updateClickMessage()
+{
+    mNotesWidget->updateClickMessage(mQuickSearchAction->shortcut().toString());
 }
 
 void KNotesPart::slotItemRemoved(const Akonadi::Item &item)
@@ -631,6 +644,11 @@ void KNotesPart::slotPreferences()
     dialog->show();
 }
 
+void KNotesPart::updateConfig()
+{
+    updateNetworkListener();
+}
+
 void KNotesPart::slotConfigUpdated()
 {
     updateNetworkListener();
@@ -751,7 +769,9 @@ void KNotesPart::slotSaveAs()
         QTextDocument doc;
         doc.setHtml(knoteItem->description());
         if ( htmlFormatAndSaveAsHtml ) {
-            stream << doc.toHtml();
+            QString htmlStr = doc.toHtml();
+            htmlStr.replace(QLatin1String("meta name=\"qrichtext\" content=\"1\""), QLatin1String("meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\""));
+            stream <<  htmlStr;
         } else {
             stream << knoteItem->realName() + QLatin1Char('\n');
             stream << doc.toPlainText();

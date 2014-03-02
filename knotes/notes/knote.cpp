@@ -96,7 +96,6 @@ KNote::KNote(const QDomDocument& buildDoc, const Akonadi::Item &item, QWidget *p
       m_tool( 0 ),
       m_editor( 0 ),
       m_kwinConf( KSharedConfig::openConfig( QLatin1String("kwinrc") ) ),
-      mBlockWriteConfigDuringCommitData( false ),
       mDisplayAttribute(new KNoteDisplaySettings)
 {
     if ( mItem.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
@@ -179,7 +178,7 @@ void KNote::slotKill( bool force )
 
 // -------------------- public member functions -------------------- //
 
-void KNote::saveNote(bool force)
+void KNote::saveNote(bool force, bool sync)
 {
     if (!force && !m_editor->document()->isModified())
         return;
@@ -198,7 +197,11 @@ void KNote::saveNote(bool force)
     if (m_editor->document()->isModified())
         saveNoteContent();
     Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
-    connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
+    if (sync) {
+        job->exec();
+    } else {
+        connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
+    }
 }
 
 void KNote::slotNoteSaved(KJob *job)
@@ -328,12 +331,6 @@ void KNote::slotUpdateReadOnly()
     updateFocus();
 }
 
-
-void KNote::commitData()
-{
-    mBlockWriteConfigDuringCommitData = true;
-}
-
 void KNote::slotClose()
 {
     NoteShared::NoteDisplayAttribute *attribute =  mItem.attribute<NoteShared::NoteDisplayAttribute>(Akonadi::Entity::AddIfMissing);
@@ -403,6 +400,9 @@ void KNote::slotPreferences()
 {
     // create a new preferences dialog...
     QPointer<KNoteSimpleConfigDialog> dialog = new KNoteSimpleConfigDialog( name(), this );
+    NoteShared::NoteDisplayAttribute *attribute =  mItem.attribute<NoteShared::NoteDisplayAttribute>( Akonadi::Entity::AddIfMissing );
+    attribute->setSize(QSize(width(), height()));
+
     dialog->load(mItem, m_editor->acceptRichText());
     connect( this, SIGNAL(sigNameChanged(QString)), dialog,
              SLOT(slotUpdateCaption(QString)) );
@@ -504,7 +504,9 @@ void KNote::slotSaveAs()
     if ( file.open( QIODevice::WriteOnly ) ) {
         QTextStream stream( &file );
         if ( htmlFormatAndSaveAsHtml ) {
-            stream << m_editor->toHtml();
+            QString htmlStr = m_editor->toHtml();
+            htmlStr.replace(QLatin1String("meta name=\"qrichtext\" content=\"1\""), QLatin1String("meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\""));
+            stream <<  htmlStr;
         } else {
             stream << m_editor->toPlainText();
         }
@@ -530,6 +532,7 @@ void KNote::slotApplyConfig()
 
     updateLayout();
     slotUpdateShowInTaskbar();
+    resize(mDisplayAttribute->size());
 }
 
 

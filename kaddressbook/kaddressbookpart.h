@@ -34,9 +34,10 @@ class KAddressBookPart: public KParts::ReadOnlyPart
     KAddressBookPart( QWidget *parentWidget, QObject *parent, const QVariantList & );
     virtual ~KAddressBookPart();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void newContact();
     void newGroup();
+    void updateQuickSearchText();
 
   protected:
     virtual bool openFile();

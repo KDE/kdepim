@@ -17,6 +17,7 @@
 
 #include "storageservicemanager.h"
 #include "storageserviceprogressmanager.h"
+#include "storagemanageradaptor.h"
 
 #include "settings/pimcommonsettings.h"
 #include "storageservice/utils/storageserviceutils.h"
@@ -41,19 +42,56 @@
 #include <KMessageBox>
 
 #include <QMenu>
-
+#include <QDBusConnection>
 
 using namespace PimCommon;
+
+static QString newDBusObjectName()
+{
+    static int s_count = 0;
+    QString name( QLatin1String("/STORAGESERVICE_ServiceManager") );
+    if ( s_count++ ) {
+        name += QLatin1Char('_');
+        name += QString::number( s_count );
+    }
+    return name;
+}
 
 StorageServiceManager::StorageServiceManager(QObject *parent)
     : QObject(parent)
 {
+    new StorageManagerAdaptor( this );
+    QDBusConnection dbus = QDBusConnection::sessionBus();
+    const QString dbusPath = newDBusObjectName();
+    setProperty( "uniqueDBusPath", dbusPath );
+    const QString dbusInterface = QLatin1String("org.kde.pim.StorageManager");
+    dbus.registerObject( dbusPath, this );
+    dbus.connect( QString(), QString(), dbusInterface, QLatin1String("configChanged"), this,
+                  SLOT(slotConfigChanged(QString)) );
+
     readConfig();
 }
 
 StorageServiceManager::~StorageServiceManager()
 {
     qDeleteAll(mListService);
+}
+
+QString StorageServiceManager::ourIdentifier() const
+{
+    const QString identifier = QString::fromLatin1( "%1/%2" ).
+                                    arg( QDBusConnection::sessionBus().baseService() ).
+                                    arg( property( "uniqueDBusPath" ).toString() );
+    return identifier;
+}
+
+void StorageServiceManager::slotConfigChanged(const QString &id)
+{
+    qDebug()<<" void StorageServiceManager::slotConfigChanged(const QString &id)"<<id;
+    if ( id != ourIdentifier() ) {
+        readConfig();
+        Q_EMIT servicesChanged();
+    }
 }
 
 QMap<QString, StorageServiceAbstract *> StorageServiceManager::listService() const
@@ -65,7 +103,10 @@ void StorageServiceManager::setListService(const QMap<QString, StorageServiceAbs
 {
     mListService = lst;
     writeConfig();
-    Q_EMIT servicesChanged();
+
+    qDebug()<<"void StorageServiceManager::setListService(const QMap<QString, StorageServiceAbstract *> &lst) ";
+    // DBus signal for other IdentityManager instances
+    emit configChanged( ourIdentifier() );
 }
 
 void StorageServiceManager::setDefaultUploadFolder(const QString &folder)
@@ -278,6 +319,7 @@ void StorageServiceManager::slotAccountInfo()
 
 void StorageServiceManager::readConfig()
 {
+    mListService.clear();
     KConfig conf(kconfigName());
     KConfigGroup grp(&conf, QLatin1String("General"));
 
