@@ -22,30 +22,29 @@ import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 
 QML.Item {
-  id: root
+    id: root
 
-  width: icon.width 
-  height: icon.height
+    width: icon.width
+    height: icon.height
 
-  function iconFromStatus( status )
-  {
-    if ( !(status & KPIM.AgentStatusMonitor.Online) ) {
-      return "images/status/offline.png";
-    } else {
-      if ( (status & KPIM.AgentStatusMonitor.Sending) && (status & KPIM.AgentStatusMonitor.Receiving) ) {
-        return "images/status/sending-receiving.png";
-      } else if ( status & KPIM.AgentStatusMonitor.Receiving ) {
-        return "images/status/receiving.png";
-      } else if ( status & KPIM.AgentStatusMonitor.Sending ) {
-        return "images/status/sending.png";
-      } else {
-        return "images/status/online.png"
-      }
+    function iconFromStatus( status ) {
+        if ( !(status & KPIM.AgentStatusMonitor.Online) ) {
+            return "images/status/offline.png";
+        } else {
+            if ( (status & KPIM.AgentStatusMonitor.Sending) && (status & KPIM.AgentStatusMonitor.Receiving) ) {
+                return "images/status/sending-receiving.png";
+            } else if ( status & KPIM.AgentStatusMonitor.Receiving ) {
+                return "images/status/receiving.png";
+            } else if ( status & KPIM.AgentStatusMonitor.Sending ) {
+                return "images/status/sending.png";
+            } else {
+                return "images/status/online.png"
+            }
+        }
     }
-  }
 
-  QML.Image {
-    id: icon
-    source: iconFromStatus( agentStatusMonitor.status )
-  }
+    QML.Image {
+        id: icon
+        source: iconFromStatus( agentStatusMonitor.status )
+    }
 }

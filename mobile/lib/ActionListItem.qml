@@ -24,55 +24,60 @@ import org.kde.pim.mobileui 4.5 as KPIM
 
 
 QML.Item {
-  id : _top
-  height : parent.height
-  width : (parent ? parent.width : 0)
-  property string name
-  property string argument : ""
-  property string title : ""
-  property bool reactsOnLongPressed : false
+    id: _top
+    height: parent.height
+    width: (parent ? parent.width : 0)
 
-  property string category
+    property string name
+    property string argument: ""
+    property string title: ""
+    property bool reactsOnLongPressed: false
+    property string category
 
-  signal triggered(string triggeredName)
-  signal doCollapse()
-  signal pressAndHold()
+    signal triggered(string triggeredName)
+    signal doCollapse()
+    signal pressAndHold()
 
-  onVisibleChanged :
-  {
-    if (!visible)
-      height = -actionItemSpacing
-    else
-      height = actionItemHeight
-  }
+    onVisibleChanged: {
 
-  KPIM.Action {
-    height : parent.height
-    width : parent.width
-    showIcon : false
-    action : {
-      application.setActionTitle(name, title)
-      application.getAction(name, argument);
-    }
-    actionIconName : {
-      application.getActionIconName(name);
-    }
-    hidable : false
-
-    onLongPressed: {
-      pressAndHold();
+        if (!visible) {
+            height = -actionItemSpacing
+        } else {
+            height = actionItemHeight
+        }
     }
 
-    onTriggered : {
-      parent.doCollapse()
-      parent.triggered(name)
-    }
+    KPIM.Action {
+        height: parent.height
+        width: parent.width
+        showIcon: false
+        hidable: false
 
-    QML.Image {
-      anchors.right: parent.right
-      anchors.verticalCenter: parent.verticalCenter
-      source: KDE.locate( "data", "mobileui/long-press-indicator.png" )
-      visible: _top.reactsOnLongPressed
+        action: {
+            application.setActionTitle(name, title);
+            application.getAction(name, argument);
+        }
+
+        actionIconName: {
+            application.getActionIconName(name);
+        }
+
+        onLongPressed: {
+            pressAndHold();
+        }
+
+        onTriggered: {
+            parent.doCollapse()
+            parent.triggered(name)
+        }
+
+        QML.Image {
+            anchors {
+                right: parent.right
+                verticalCenter: parent.verticalCenter
+            }
+            source: KDE.locate( "data", "mobileui/long-press-indicator.png" )
+            visible: _top.reactsOnLongPressed
+        }
     }
-  }
 }

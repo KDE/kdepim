@@ -23,62 +23,76 @@ import org.kde 4.5
 import org.kde.pim.mobileui 4.5
 
 QML.Item {
-  id: _delegateTopLevel
-  clip: true
-  width: QML.ListView.width
-  height: 100
 
-  function statusMessage( msg, progress )
-  {
-    if ( progress <= 0 || progress >= 100 )
-      return msg;
-    return KDE.i18nc( "status message (50%)", "%1 (%2%)", msg, progress );
-  }
+    id: _delegateTopLevel
+    clip: true
+    width: QML.ListView.width
+    height: 100
 
-  QML.Rectangle {
-    id: background
-    anchors.fill: parent
-    opacity: (_delegateTopLevel.QML.ListView.isCurrentItem ? 0.25 : 0)
-    color: "lightsteelblue"
-  }
-
-  QML.Item {
-    anchors.margins: 4
-    anchors.fill: parent
-
-    AgentInstanceStatusIndicator {
-      id: statusIcon
-
-      anchors {
-        top: parent.top
-        left: parent.left
-      }
-
-      online: model.online
-      status: model.status
+    function statusMessage( msg, progress ) {
+        if ( progress <= 0 || progress >= 100 ) {
+            return msg;
+        }
+        return KDE.i18nc( "status message (50%)", "%1 (%2%)", msg, progress );
     }
 
-    QML.Text {
-      id: nameLabel
-      anchors { verticalCenter: statusIcon.verticalCenter; left: statusIcon.right }
-      width: parent.width - statusIcon.width
-      elide: QML.Text.ElideRight
-      text : model.display
+    QML.Rectangle {
+        id: background
+        anchors.fill: parent
+        opacity: (_delegateTopLevel.QML.ListView.isCurrentItem ? 0.25 : 0)
+        color: "lightsteelblue"
     }
 
-    QML.Text {
-      id: statusLabel
-      anchors { left: nameLabel.left; top: nameLabel.bottom; topMargin: 2 }
-      width: nameLabel.width
-      font.pixelSize: 16
-      elide: QML.Text.ElideRight
-      text: statusMessage( model.statusMessage, model.progress )
+    QML.Item {
+        anchors.margins: 4
+        anchors.fill: parent
+
+        AgentInstanceStatusIndicator {
+            id: statusIcon
+
+            anchors {
+                top: parent.top
+                left: parent.left
+            }
+
+            online: model.online
+            status: model.status
+        }
+
+        QML.Text {
+            id: nameLabel
+
+            anchors {
+                verticalCenter: statusIcon.verticalCenter
+                left: statusIcon.right
+            }
+
+            width: parent.width - statusIcon.width
+            elide: QML.Text.ElideRight
+            text: model.display
+        }
+
+        QML.Text {
+            id: statusLabel
+
+            anchors {
+                left: nameLabel.left
+                top: nameLabel.bottom
+                topMargin: 2
+            }
+
+            width: nameLabel.width
+            font.pixelSize: 16
+            elide: QML.Text.ElideRight
+            text: statusMessage( model.statusMessage, model.progress )
+        }
+
     }
 
-  }
-
-  QML.MouseArea {
-    anchors.fill: parent
-    onClicked: { _delegateTopLevel.QML.ListView.view.currentIndex = model.index; }
-  }
+    QML.MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            _delegateTopLevel.QML.ListView.view.currentIndex = model.index;
+        }
+    }
 }

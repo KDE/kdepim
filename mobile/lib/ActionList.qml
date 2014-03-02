@@ -24,66 +24,69 @@ import org.kde.pim.mobileui 4.5 as KPIM
 
 
 QML.Item {
-  id : actionList_top
-  width : parent.width
-  //property alias listElementContent : _listElementContent.data
-  default property alias listContent : _listContent.content
+    id: actionList_top
+    width: parent.width
 
-  signal doCollapse()
+    //property alias listElementContent: _listElementContent.data
+    default property alias listContent: _listContent.content
+    property string category
+    property string name
+    property alias text: nameItem.buttonText
+    property alias columnHeight: _listContent.height
+    property alias totalWidth: _listContent.width
+    property alias depth: _listContent.bottomMargin
+    property alias actionItemSpacing: _listContent.actionItemSpacing
+    property alias actionItemHeight: _listContent.actionItemHeight
+    property alias showChildren: _listContent.visible
+    property alias menuStyle: _listContent.menuStyle
 
-  property string category
+    signal doCollapse()
+    signal triggered(string triggeredName)
 
-  property string name
-  property alias text : nameItem.buttonText
-  property alias columnHeight : _listContent.height
-  property alias totalWidth : _listContent.width
-  property alias depth : _listContent.bottomMargin
-  property alias actionItemSpacing : _listContent.actionItemSpacing
-  property alias actionItemHeight : _listContent.actionItemHeight
-
-  property alias showChildren : _listContent.visible
-  property alias menuStyle : _listContent.menuStyle
-
-  function preselectAction()
-  {
-    actionList_top.triggered(actionList_top.name)
-    showChildren = true
-  }
-
-  onVisibleChanged :
-  {
-    if (!visible)
-      height = -actionItemSpacing
-    else
-      height = actionItemHeight
-  }
-
-  signal triggered(string triggeredName)
-
-  KPIM.Button {
-    id : nameItem
-    height : parent.height
-    width : parent.width
-
-    onClicked : {
-      actionList_top.triggered(actionList_top.name)
-      showChildren = true
-    }
-  }
-
-  KPIM.ActionMenuContainer {
-    actionItemWidth : parent.totalWidth
-    anchors.left : nameItem.right
-    anchors.bottom : nameItem.top
-    id : _listContent
-
-    onTriggered : {
-      actionList_top.triggered(triggeredName)
+    function preselectAction() {
+        actionList_top.triggered(actionList_top.name)
+        showChildren = true
     }
 
-    onDoCollapse : {
-      actionList_top.doCollapse()
+    onVisibleChanged: {
+        if (!visible) {
+            height = -actionItemSpacing
+        } else {
+            height = actionItemHeight
+        }
     }
-    visible : false
-  }
+
+
+
+    KPIM.Button {
+        id: nameItem
+        height: parent.height
+        width: parent.width
+
+        onClicked: {
+            actionList_top.triggered(actionList_top.name)
+            showChildren = true
+        }
+    }
+
+    KPIM.ActionMenuContainer {
+        id: _listContent
+
+        anchors {
+            left: nameItem.right
+            bottom: nameItem.top
+        }
+
+        visible: false
+        actionItemWidth: parent.totalWidth
+
+        onTriggered: {
+            actionList_top.triggered(triggeredName)
+        }
+
+        onDoCollapse: {
+            actionList_top.doCollapse()
+        }
+
+    }
 }

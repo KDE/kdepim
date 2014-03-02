@@ -23,26 +23,28 @@ import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 
 KPIM.BulkActionScreen {
-  id : bulkActionScreen
-  property bool initialized : false
-  anchors.fill: parent
+    id: bulkActionScreen
+    anchors.fill: parent
 
-  actionListWidth : 1/3 * parent.width
-  multipleText : KDE.i18np("1 folder", "%1 folders", collectionView.numSelected)
-  selectedItemModel : _breadcrumbNavigationFactory.qmlSelectedItemModel();
-  headerList : ContactListView {
-    showCheckBox : true
-    id: bulkActionContactList
-    model: itemModel
-    checkModel : _itemActionModel
-    anchors.fill : parent
-    itemHeight: bulkActionScreen.itemHeight
-  }
+    property bool initialized: false
 
-  QML.Component.onCompleted: {
-    if ( initialized == false ) {
-      bulkActionScreen.actionModel.append( {"action": "send_mail_to"} )
-      initialized = true;
+    actionListWidth: 1/3 * parent.width
+    multipleText: KDE.i18np("1 folder", "%1 folders", collectionView.numSelected)
+    selectedItemModel: _breadcrumbNavigationFactory.qmlSelectedItemModel();
+
+    headerList: ContactListView {
+        id: bulkActionContactList
+        anchors.fill: parent
+        showCheckBox: true
+        model: itemModel
+        checkModel: _itemActionModel
+        itemHeight: bulkActionScreen.itemHeight
     }
-  }
+
+    QML.Component.onCompleted: {
+        if ( initialized == false ) {
+            bulkActionScreen.actionModel.append( {"action": "send_mail_to"} )
+            initialized = true;
+        }
+    }
 }
