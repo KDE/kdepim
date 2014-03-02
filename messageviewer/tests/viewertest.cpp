@@ -21,6 +21,7 @@
 #include <qtestmouse.h>
 #include <KActionCollection>
 #include <KAction>
+#include <KToggleAction>
 
 ViewerTest::ViewerTest()
 {
@@ -36,6 +37,29 @@ void ViewerTest::shouldHaveDefaultValuesOnCreation()
     QWidget *createtodowidget = qFindChild<QWidget *>(&viewer, QLatin1String("createtodowidget"));
     QVERIFY(createtodowidget);
     QCOMPARE(createtodowidget->isVisible(), false);
+
+    QVERIFY(viewer.toggleFixFontAction());
+    QVERIFY(viewer.toggleMimePartTreeAction());
+    QVERIFY(viewer.selectAllAction());
+    QVERIFY(viewer.copyURLAction());
+    QVERIFY(viewer.copyAction());
+    QVERIFY(viewer.urlOpenAction());
+    QVERIFY(viewer.speakTextAction());
+    QVERIFY(viewer.copyImageLocation());
+    QVERIFY(viewer.translateAction());
+    QVERIFY(viewer.viewSourceAction());
+    QVERIFY(viewer.findInMessageAction());
+    QVERIFY(viewer.saveAsAction());
+    QVERIFY(viewer.saveMessageDisplayFormatAction());
+    QVERIFY(viewer.resetMessageDisplayFormatAction());
+    QVERIFY(viewer.blockImage());
+    QVERIFY(viewer.openBlockableItems());
+    QVERIFY(viewer.expandShortUrlAction());
+    QVERIFY(viewer.createTodoAction());
+    QVERIFY(viewer.urlClicked().isEmpty());
+    QVERIFY(viewer.imageUrlClicked().isEmpty());
+    QCOMPARE(viewer.isFixedFont(), false);
+
 }
 
 void ViewerTest::shouldShowCreateTodoWidgetWhenActivateItAndWeHaveAMessage()
