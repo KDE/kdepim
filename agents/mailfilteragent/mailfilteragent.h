@@ -33,9 +33,9 @@ class KJob;
 
 class MailFilterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV2
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit MailFilterAgent( const QString &id );
     ~MailFilterAgent();
 
@@ -52,7 +52,7 @@ class MailFilterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::Ob
 
     void showFilterLogDialog(qlonglong windowId = 0);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void initializeCollections();
     void initialCollectionFetchingDone( KJob* );
     void mailCollectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
@@ -63,7 +63,7 @@ class MailFilterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::Ob
     void itemsReceiviedForFiltering( const Akonadi::Item::List &items );
     void clearMessage();
 
-  private:
+private:
     FilterManager *m_filterManager;
 
     FilterLogDialog *m_filterLogDialog;

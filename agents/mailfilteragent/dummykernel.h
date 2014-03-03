@@ -14,7 +14,7 @@ class FolderCollectionMonitor;
 
 class DummyKernel : public QObject, public MailCommon::IKernel, public MailCommon::ISettings
 {
-  public:
+public:
     explicit DummyKernel( QObject *parent = 0 );
 
     virtual KPIMIdentities::IdentityManager *identityManager();
@@ -35,7 +35,7 @@ class DummyKernel : public QObject, public MailCommon::IKernel, public MailCommo
     virtual bool showPopupAfterDnD();
     
 
-  private:
+private:
     KPIMIdentities::IdentityManager *mIdentityManager;
     MessageComposer::MessageSender *mMessageSender;
     MailCommon::FolderCollectionMonitor *mFolderCollectionMonitor;

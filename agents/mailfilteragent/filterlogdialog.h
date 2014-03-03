@@ -47,13 +47,13 @@ class PlainTextEditorWidget;
 }
 class FilterLogDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /** constructor */
     explicit FilterLogDialog( QWidget * parent );
     ~FilterLogDialog();
-  protected slots:
+protected slots:
     void slotLogEntryAdded( const QString& logEntry );
     void slotLogShrinked();
     void slotLogStateChanged();
@@ -63,10 +63,10 @@ class FilterLogDialog : public KDialog
 
     void slotUser1();
     void slotUser2();
-  private:
+private:
     void readConfig();
     void writeConfig();
-  protected:
+protected:
     PimCommon::PlainTextEditorWidget * mTextEdit;
     QCheckBox * mLogActiveBox;
     QGroupBox * mLogDetailsBox;
