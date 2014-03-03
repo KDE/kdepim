@@ -100,11 +100,11 @@ void Filter::setSearchString( const QString &search, QuickSearchLine::SearchOpti
 
     Baloo::PIM::EmailQuery query;
     if (options & QuickSearchLine::SearchEveryWhere) {
-        query.subjectMatches(mSearchString);
-    } else if (options & QuickSearchLine::SearchAgainstSubject) {
-        query.bodyMatches(mSearchString);
-    } else if (options & QuickSearchLine::SearchAgainstBody) {
         query.matches(mSearchString);
+    } else if (options & QuickSearchLine::SearchAgainstSubject) {
+        query.subjectMatches(mSearchString);
+    } else if (options & QuickSearchLine::SearchAgainstBody) {
+        query.bodyMatches(mSearchString);
     } else if (options & QuickSearchLine::SearchAgainstFrom) {
         query.setFrom(mSearchString);
     } else if (options & QuickSearchLine::SearchAgainstBcc) {
