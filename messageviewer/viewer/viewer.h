@@ -284,6 +284,7 @@ public:
     KAction *openBlockableItems();
     KAction *expandShortUrlAction();
     KAction *createTodoAction();
+    KAction *createEventAction();
 
     HeaderStrategy * headerStrategy() const;
 

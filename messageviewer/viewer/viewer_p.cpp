@@ -1327,6 +1327,7 @@ void ViewerPrivate::resetStateForNewMessage()
     mFindBar->closeBar();
     mTranslatorWidget->slotCloseWidget();
     mCreateTodo->slotCloseWidget();
+    mCreateEvent->slotCloseWidget();
     mScamDetectionWarning->setVisible(false);
 
     if ( mPrinting ) {
@@ -1868,6 +1869,14 @@ void ViewerPrivate::createActions()
     ac->addAction(QLatin1String("create_todo"), mCreateTodoAction);
     mCreateTodoAction->setShortcut(Qt::CTRL + Qt::Key_T);
     connect( mCreateTodoAction, SIGNAL(triggered(bool)), SLOT(slotShowCreateTodoWidget()) );
+
+    mCreateEventAction = new KAction(KIcon( QLatin1String("appointment-new") ),i18n("Create Event"), this);
+    mCreateEventAction->setIconText( i18n( "Create Event" ) );
+    mCreateEventAction->setHelpText( i18n( "Allows you to create a calendar Event" ) );
+    ac->addAction(QLatin1String("create_event"), mCreateEventAction);
+    //TODO
+    //mCreateEventAction->setShortcut(Qt::CTRL + Qt::Key_T);
+    connect( mCreateEventAction, SIGNAL(triggered(bool)), SLOT(slotShowCreateEventWidget()) );
 }
 
 
@@ -3398,6 +3407,16 @@ void ViewerPrivate::slotCreateTodo(const KCalCore::Todo::Ptr &todoPtr, const Ako
 {
     CreateTodoJob *createJob = new CreateTodoJob(todoPtr, collection, mMessageItem, this);
     createJob->start();
+}
+
+void ViewerPrivate::slotShowCreateEventWidget()
+{
+    if (mMessage) {
+        mCreateEvent->setMessage(mMessage);
+        mCreateEvent->show();
+    } else {
+        qDebug()<<" There is not valid message";
+    }
 }
 
 void ViewerPrivate::slotCreateEvent(const KCalCore::Event::Ptr &eventPtr, const Akonadi::Collection &collection)

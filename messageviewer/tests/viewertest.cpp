@@ -56,6 +56,7 @@ void ViewerTest::shouldHaveDefaultValuesOnCreation()
     QVERIFY(viewer.openBlockableItems());
     QVERIFY(viewer.expandShortUrlAction());
     QVERIFY(viewer.createTodoAction());
+    QVERIFY(viewer.createEventAction());
     QVERIFY(viewer.urlClicked().isEmpty());
     QVERIFY(viewer.imageUrlClicked().isEmpty());
     QCOMPARE(viewer.isFixedFont(), false);
