@@ -24,74 +24,82 @@ import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 
 QML.Rectangle {
+    anchors.fill: parent
+    z: 10
 
-  anchors.fill: parent
-  z: 10
-
-  function load()
-  {
-    aclEditor.load()
-  }
-
-  QML.Text {
-    id: headLine
-    anchors.left: parent.left
-    anchors.top: parent.top
-    anchors.leftMargin: 30
-    anchors.topMargin: 40
-
-    text: KDE.i18n( "<b>Access Control List for '%1'</b>", aclEditor.collectionName )
-  }
-
-  KPIM.ReorderListContainer {
-    id: aclView
-    anchors.left: parent.left
-    anchors.top: headLine.bottom
-    anchors.right: parent.right
-    anchors.bottom: okButton.top
-    anchors.leftMargin: 30
-    anchors.topMargin: 10
-
-    model: aclModel
-
-    onCurrentIndexChanged: aclEditor.setRowSelected( index )
-
-    KPIM.ActionButton {
-      icon : KDE.locate( "data", "mobileui/add-button.png" )
-      actionName : "acleditor_add"
+    function load() {
+        aclEditor.load()
     }
 
-    KPIM.ActionButton {
-      icon : KDE.locate( "data", "mobileui/edit-button.png" )
-      actionName : "acleditor_edit"
+    QML.Text {
+        id: headLine
+
+        anchors {
+            left: parent.left
+            top: parent.top
+            leftMargin: 30
+            topMargin: 40
+        }
+
+        text: KDE.i18n( "<b>Access Control List for '%1'</b>", aclEditor.collectionName )
     }
 
-    KPIM.ActionButton {
-      icon : KDE.locate( "data", "mobileui/delete-button.png" )
-      actionName : "acleditor_delete"
-    }
-  }
+    KPIM.ReorderListContainer {
+        id: aclView
 
-  KPIM.Button2 {
-    id: okButton
-    anchors.left: parent.left
-    anchors.bottom: parent.bottom
-    anchors.leftMargin: 30
-    width: 150
-    buttonText: KDE.i18n( "Save" )
-    onClicked: {
-      aclEditor.save();
-      guiStateManager.popState();
-    }
-  }
+        anchors {
+            left: parent.left
+            top: headLine.bottom
+            right: parent.right
+            bottom: okButton.top
+            leftMargin: 30
+            topMargin: 10
+        }
 
-  KPIM.Button2 {
-    id: cancelButton
-    anchors.left: okButton.right
-    anchors.bottom: parent.bottom
-    anchors.leftMargin: 10
-    width: 150
-    buttonText: KDE.i18n( "Cancel" )
-    onClicked: guiStateManager.popState()
-  }
+        model: aclModel
+
+        onCurrentIndexChanged: aclEditor.setRowSelected( index )
+
+        KPIM.ActionButton {
+            icon: KDE.locate( "data", "mobileui/add-button.png" )
+            actionName: "acleditor_add"
+        }
+
+        KPIM.ActionButton {
+            icon: KDE.locate( "data", "mobileui/edit-button.png" )
+            actionName: "acleditor_edit"
+        }
+
+        KPIM.ActionButton {
+            icon: KDE.locate( "data", "mobileui/delete-button.png" )
+            actionName: "acleditor_delete"
+        }
+    }
+
+    KPIM.Button2 {
+        id: okButton
+        anchors {
+            left: parent.left
+            bottom: parent.bottom
+            leftMargin: 30
+        }
+        width: 150
+        buttonText: KDE.i18n( "Save" )
+        onClicked: {
+             aclEditor.save();
+             guiStateManager.popState();
+        }
+    }
+
+    KPIM.Button2 {
+        id: cancelButton
+        anchors {
+            left: okButton.right
+            bottom: parent.bottom
+            leftMargin: 10
+        }
+        width: 150
+        buttonText: KDE.i18n( "Cancel" )
+        onClicked: guiStateManager.popState()
+    }
 }

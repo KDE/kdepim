@@ -22,32 +22,41 @@ import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 
 KPIM.ItemListView {
-  id: _top
-  property bool showCheckBox
-  property variant checkModel
+    id: _top
 
-  delegate: [
-    KPIM.ItemListViewDelegate {
-      navigationModel : _top.navigationModel
-      showCheckBox : _top.showCheckBox
-      checkModel : _top.checkModel
-      height : _top.itemHeight
-      summaryContent: [
-        QML.Image {
-          anchors.left: parent.left
-          anchors.top: parent.top
-          anchors.margins: 4
-          source: model.picture
-          scale: (parent.height - 2 * anchors.margins) / Math.max( width, height )
-          transformOrigin: "TopLeft"
-        },
-        QML.Text {
-          anchors.top: parent.top
-          anchors.margins: 4
-          x: parent.height + anchors.margins
-          text: model.name
+    property bool showCheckBox
+    property variant checkModel
+
+    delegate: [
+
+        KPIM.ItemListViewDelegate {
+            navigationModel: _top.navigationModel
+            showCheckBox: _top.showCheckBox
+            checkModel: _top.checkModel
+            height: _top.itemHeight
+
+            summaryContent: [
+
+                QML.Image {
+                    anchors {
+                        left: parent.left
+                        top: parent.top
+                        margins: 4
+                    }
+                    source: model.picture
+                    scale: (parent.height - 2 * anchors.margins) / Math.max( width, height )
+                    transformOrigin: "TopLeft"
+                },
+
+                QML.Text {
+                    anchors {
+                        top: parent.top
+                        margins: 4
+                    }
+                    x: parent.height + anchors.margins
+                    text: model.name
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }

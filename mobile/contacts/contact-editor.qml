@@ -24,115 +24,120 @@ import org.kde.contacteditors 4.5 as ContactEditors
 import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 KPIM.MainView {
-  PlasmaExtras.ScrollArea {
-    anchors {
-      fill: parent
-      topMargin: 40
-      leftMargin: 40;
-      rightMargin: 4;
-    }
+    PlasmaExtras.ScrollArea {
 
-    flickableItem: Flickable {
-      contentHeight: editorGeneral.height;
-
-      ContactEditors.ContactEditorGeneral {
-        id: editorGeneral;
-        width: parent.width;
-      }
-    }
-  }
-
-  SlideoutPanelContainer {
-    anchors.fill: parent
-    z: 50
-
-    SlideoutPanel {
-      anchors.fill: parent
-      id: businessPanel
-      titleText: KDE.i18n( "Business" )
-      handlePosition: 30
-      handleHeight: 120
-
-      content: [
-      PlasmaExtras.ScrollArea {
-        anchors.fill: parent;
+        anchors {
+            fill: parent
+            topMargin: 40
+            leftMargin: 40
+            rightMargin: 4
+        }
 
         flickableItem: Flickable {
-          contentHeight: editorBusiness.height;
+            contentHeight: editorGeneral.height;
 
-          ContactEditors.ContactEditorBusiness {
-            id: editorBusiness
-            width: parent.width;
-          }
+            ContactEditors.ContactEditorGeneral {
+                id: editorGeneral;
+                width: parent.width;
+            }
         }
-      }
-      ]
     }
-    SlideoutPanel {
-      anchors.fill: parent
-      id: locationPanel
-      titleText: KDE.i18n( "Location" )
-      handlePosition: 30 + 120
-      handleHeight: 120
 
-      content: [
-      PlasmaExtras.ScrollArea {
-        anchors.fill: parent;
+    SlideoutPanelContainer {
+        anchors.fill: parent
+        z: 50
 
-        flickableItem: Flickable {
-          contentHeight: editorLocation.height;
+        SlideoutPanel {
+            id: businessPanel
+            anchors.fill: parent
+            titleText: KDE.i18n( "Business" )
+            handlePosition: 30
+            handleHeight: 120
 
-          ContactEditors.ContactEditorLocation {
-            id: editorLocation
-            width: parent.width;
-          }
+            content: [
+
+                PlasmaExtras.ScrollArea {
+                    anchors.fill: parent
+
+                    flickableItem: Flickable {
+                        contentHeight: editorBusiness.height
+
+                        ContactEditors.ContactEditorBusiness {
+                            id: editorBusiness
+                            width: parent.width
+                        }
+                    }
+                }
+            ]
         }
-      }
-      ]
-    }
-    SlideoutPanel {
-      anchors.fill: parent
-      id: cryptoPanel
-      titleText: KDE.i18n( "Crypto" )
-      handlePosition: 30 + 120 + 120
-      handleHeight: 100
 
-      content: [
-      PlasmaExtras.ScrollArea {
-        anchors.fill: parent;
+        SlideoutPanel {
+            id: locationPanel
+            anchors.fill: parent
+            titleText: KDE.i18n( "Location" )
+            handlePosition: 30 + 120
+            handleHeight: 120
 
-        flickableItem: Flickable {
-          contentHeight: editorCrypto.height;
+            content: [
+                PlasmaExtras.ScrollArea {
+                    anchors.fill: parent
 
-          ContactEditors.ContactEditorCrypto {
-            id: editorCrypto
-            width: parent.width;
-          }
+                    flickableItem: Flickable {
+                        contentHeight: editorLocation.height
+
+                        ContactEditors.ContactEditorLocation {
+                            id: editorLocation
+                            width: parent.width
+                        }
+                    }
+                }
+            ]
         }
-      }
-      ]
-    }
-    SlideoutPanel {
-      anchors.fill: parent
-      id: morePanel
-      titleText: KDE.i18n( "More" )
-      handlePosition: 30 + 120 + 120 + 100
-      handleHeight: 100
 
-      content: [
-      PlasmaExtras.ScrollArea {
-        anchors.fill: parent;
+        SlideoutPanel {
+            id: cryptoPanel
+            anchors.fill: parent
+            titleText: KDE.i18n( "Crypto" )
+            handlePosition: 30 + 120 + 120
+            handleHeight: 100
 
-        flickableItem: Flickable {
-          contentHeight: editorMore.height;
+            content: [
+                PlasmaExtras.ScrollArea {
+                    anchors.fill: parent
 
-          ContactEditors.ContactEditorMore {
-            id: editorMore
-            width: parent.width;
-          }
+                    flickableItem: Flickable {
+                        contentHeight: editorCrypto.height
+
+                        ContactEditors.ContactEditorCrypto {
+                            id: editorCrypto
+                            width: parent.width
+                        }
+                    }
+                }
+            ]
         }
-      }
-      ]
+
+        SlideoutPanel {
+            id: morePanel
+            anchors.fill: parent
+            titleText: KDE.i18n( "More" )
+            handlePosition: 30 + 120 + 120 + 100
+            handleHeight: 100
+
+            content: [
+                PlasmaExtras.ScrollArea {
+                    anchors.fill: parent
+
+                    flickableItem: Flickable {
+                        contentHeight: editorMore.height
+
+                        ContactEditors.ContactEditorMore {
+                            id: editorMore
+                            width: parent.width
+                        }
+                    }
+                }
+            ]
+        }
     }
-  }
 }

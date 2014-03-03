@@ -24,34 +24,37 @@ import QtQuick 1.1
 import org.kde 4.5
 
 Rectangle {
-  id: root
-  property real percentComplete : 0
-  color : "#00000000"
-  width : 155
-  height : 52
+    id: root
 
-  Image {
-    anchors.fill : parent
-    source : "images/sliderbackground.png";
-  }
-  Image {
-    anchors.verticalCenter : parent.verticalCenter
-    property bool dirtyBit
-    x : 3 + ((model.percentComplete/100) * (root.width - width - 6)) + (dirtyBit ? 0 : 0)
-    source : "images/sliderhandle.png";
+    property real percentComplete: 0
 
-    MouseArea {
-      anchors.fill : parent
-      drag.target: parent
-      drag.axis: "XAxis"
-      drag.minimumX: 3
-      drag.maximumX: width - 6
-      onReleased : {
-        root.percentageUpdated(((parent.x - 3)/(root.width - width - 6)) * 100);
-        parent.dirtyBit = !parent.dirtyBit
-      }
+    color: "#00000000"
+    width: 155
+    height: 52
+
+    Image {
+        anchors.fill: parent
+        source: "images/sliderbackground.png";
     }
-  }
 
-  signal percentageUpdated(real value);
+    Image {
+        anchors.verticalCenter: parent.verticalCenter
+        property bool dirtyBit
+        x: 3 + ((model.percentComplete/100) * (root.width - width - 6)) + (dirtyBit ? 0 : 0)
+        source:  "images/sliderhandle.png"
+
+        MouseArea {
+            anchors.fill: parent
+            drag.target: parent
+            drag.axis: "XAxis"
+            drag.minimumX: 3
+            drag.maximumX: width - 6
+            onReleased: {
+                root.percentageUpdated(((parent.x - 3)/(root.width - width - 6)) * 100);
+                parent.dirtyBit = !parent.dirtyBit
+            }
+        }
+    }
+
+    signal percentageUpdated(real value);
 }
