@@ -127,7 +127,7 @@ public:
 
     /**
    * The display update mode: Force updates the display immediately, Delayed updates
-   * after some time (150ms by default
+   * after some time (150ms by default)
    */
     enum UpdateMode {
         Force = 0,
