@@ -10,98 +10,98 @@
 #include <akonadi/changerecorder.h>
 
 DummyKernel::DummyKernel( QObject *parent )
-  : QObject( parent )
+    : QObject( parent )
 {
-  mMessageSender = new MessageComposer::AkonadiSender( this );
-  mIdentityManager = new KPIMIdentities::IdentityManager( false, this );
-  Akonadi::Session *session = new Akonadi::Session( "MailFilter Kernel ETM", this );
+    mMessageSender = new MessageComposer::AkonadiSender( this );
+    mIdentityManager = new KPIMIdentities::IdentityManager( false, this );
+    Akonadi::Session *session = new Akonadi::Session( "MailFilter Kernel ETM", this );
 
-  mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( session, this );
+    mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( session, this );
 
-  mEntityTreeModel = new Akonadi::EntityTreeModel( folderCollectionMonitor(), this );
-  mEntityTreeModel->setIncludeUnsubscribed( false );
-  mEntityTreeModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
+    mEntityTreeModel = new Akonadi::EntityTreeModel( folderCollectionMonitor(), this );
+    mEntityTreeModel->setIncludeUnsubscribed( false );
+    mEntityTreeModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
 
-  mCollectionModel = new Akonadi::EntityMimeTypeFilterModel( this );
-  mCollectionModel->setSourceModel( mEntityTreeModel );
-  mCollectionModel->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
-  mCollectionModel->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
-  mCollectionModel->setDynamicSortFilter( true );
-  mCollectionModel->setSortCaseSensitivity( Qt::CaseInsensitive );
+    mCollectionModel = new Akonadi::EntityMimeTypeFilterModel( this );
+    mCollectionModel->setSourceModel( mEntityTreeModel );
+    mCollectionModel->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
+    mCollectionModel->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
+    mCollectionModel->setDynamicSortFilter( true );
+    mCollectionModel->setSortCaseSensitivity( Qt::CaseInsensitive );
 }
 
 KPIMIdentities::IdentityManager *DummyKernel::identityManager()
 {
-  return mIdentityManager;
+    return mIdentityManager;
 }
 
 MessageComposer::MessageSender *DummyKernel::msgSender()
 {
-  return mMessageSender;
+    return mMessageSender;
 }
 
 Akonadi::EntityMimeTypeFilterModel *DummyKernel::collectionModel() const
 {
-  return mCollectionModel;
+    return mCollectionModel;
 }
 
 KSharedConfig::Ptr DummyKernel::config()
 {
-  return KGlobal::config();
+    return KGlobal::config();
 }
 
 void DummyKernel::syncConfig()
 {
-  Q_ASSERT( false );
+    Q_ASSERT( false );
 }
 
 MailCommon::JobScheduler* DummyKernel::jobScheduler() const
 {
-  Q_ASSERT( false );
-  return 0;
+    Q_ASSERT( false );
+    return 0;
 }
 
 Akonadi::ChangeRecorder *DummyKernel::folderCollectionMonitor() const
 {
-  return mFolderCollectionMonitor->monitor();
+    return mFolderCollectionMonitor->monitor();
 }
 
 void DummyKernel::updateSystemTray()
 {
-  Q_ASSERT( false );
+    Q_ASSERT( false );
 }
 
 bool DummyKernel::showPopupAfterDnD()
 {
-  return false;
+    return false;
 }
 
 qreal DummyKernel::closeToQuotaThreshold()
 {
-  return 80;
+    return 80;
 }
 
 QStringList DummyKernel::customTemplates()
 {
-  Q_ASSERT( false );
-  return QStringList();
+    Q_ASSERT( false );
+    return QStringList();
 }
 
 bool DummyKernel::excludeImportantMailFromExpiry()
 {
-  Q_ASSERT( false );
-  return true;
+    Q_ASSERT( false );
+    return true;
 }
 
 Akonadi::Entity::Id DummyKernel::lastSelectedFolder()
 {
-  Q_ASSERT( false );
-  return Akonadi::Entity::Id();
+    Q_ASSERT( false );
+    return Akonadi::Entity::Id();
 }
 
 void DummyKernel::setLastSelectedFolder(const Akonadi::Entity::Id& col)
 {
-  Q_UNUSED(col);
+    Q_UNUSED(col);
 }
 
 
