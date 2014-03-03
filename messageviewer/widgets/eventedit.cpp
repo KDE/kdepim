@@ -188,6 +188,8 @@ void EventEdit::slotReturnPressed()
 
     if (!mNoteEdit->text().trimmed().isEmpty()) {
         KCalCore::Event::Ptr event( new KCalCore::Event );
+        event->setDtStart(mStartDateTimeEdit->dateTime());
+        event->setDtEnd(mEndDateTimeEdit->dateTime());
         event->setSummary(mNoteEdit->text());
         Q_EMIT createEvent(event, collection);
         mNoteEdit->clear();

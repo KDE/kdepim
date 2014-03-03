@@ -38,6 +38,7 @@ private Q_SLOTS:
     void shouldHideWidgetWhenPressEscape();
     void shouldEventHasCorrectSubject();
     void shouldSelectLineWhenPutMessage();
+    void shouldHaveCorrectStartEndDateTime();
 };
 
 #endif // EVENTEDITTEST_H
