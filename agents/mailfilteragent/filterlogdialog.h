@@ -76,6 +76,8 @@ class FilterLogDialog : public KDialog
     QCheckBox * mLogFilterActionBox;
     QSpinBox  * mLogMemLimitSpin;
     bool mIsInitialized;
+private slots:
+    void slotTextChanged();
 };
 
 #endif

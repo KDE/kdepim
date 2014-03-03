@@ -164,8 +164,15 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
   setInitialSize( QSize( 500, 500 ) );
   connect( this, SIGNAL(user1Clicked()), SLOT(slotUser1()) );
   connect( this, SIGNAL(user2Clicked()), SLOT(slotUser2()) );
+  connect(mTextEdit->editor(), SIGNAL(textChanged()), this, SLOT(slotTextChanged()));
+  slotTextChanged();
   readConfig();
   mIsInitialized = true;
+}
+
+void FilterLogDialog::slotTextChanged()
+{
+    enableButton(User2, !mTextEdit->toPlainText().isEmpty());
 }
 
 void FilterLogDialog::readConfig()
