@@ -69,6 +69,9 @@ void TodoEditTest::shouldHaveDefaultValuesOnCreation()
     QVERIFY(!edit.collection().isValid());
     QVERIFY(!edit.message());
     QVERIFY(edit.messageUrlAkonadi().isEmpty());
+    QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
+    QVERIFY(noteedit);
+    QCOMPARE(noteedit->text(), QString());
 }
 
 void TodoEditTest::shouldEmitCollectionChanged()
