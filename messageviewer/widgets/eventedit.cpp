@@ -96,6 +96,10 @@ EventEdit::EventEdit(QWidget *parent)
     mStartDateTimeEdit = new KDateTimeEdit;
     mStartDateTimeEdit->setObjectName(QLatin1String("startdatetimeedit"));
     mStartDateTimeEdit->setDateTime(currentDateTime);
+#ifndef QT_NO_ACCESSIBILITY
+    mStartDateTimeEdit->setAccessibleDescription( i18n("Select start time for event.") );
+#endif
+
 
     hbox->addWidget(mStartDateTimeEdit);
 
@@ -104,6 +108,9 @@ EventEdit::EventEdit(QWidget *parent)
     mEndDateTimeEdit = new KDateTimeEdit;
     mEndDateTimeEdit->setObjectName(QLatin1String("enddatetimeedit"));
     mEndDateTimeEdit->setDateTime(currentDateTime.addSecs(3600));
+#ifndef QT_NO_ACCESSIBILITY
+    mEndDateTimeEdit->setAccessibleDescription( i18n("Select end time for event.") );
+#endif
     hbox->addWidget(mEndDateTimeEdit);
 
     readConfig();
