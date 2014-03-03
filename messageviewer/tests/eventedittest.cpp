@@ -118,7 +118,6 @@ void EventEditTest::shouldNotEmitWhenCollectionIsNotChanged()
     QCOMPARE(spy.count(), 0);
 }
 
-
 void EventEditTest::shouldNotEmitWhenMessageIsNotChanged()
 {
     MessageViewer::EventEdit edit;
@@ -218,6 +217,32 @@ void EventEditTest::shouldSelectLineWhenPutMessage()
     QVERIFY(noteedit->hasSelectedText());
     const QString selectedText = noteedit->selectedText();
     QCOMPARE(selectedText, QString::fromLatin1("Reply to \"%1\"").arg(subject));
+}
+
+void EventEditTest::shouldHaveCorrectStartEndDateTime()
+{
+    MessageViewer::EventEdit edit;
+    KMime::Message::Ptr msg(new KMime::Message);
+    QString subject = QLatin1String("Test Note");
+    msg->subject(true)->fromUnicodeString(subject, "us-ascii");
+    edit.setMessage(msg);
+
+    KDateTime currentDateTime = KDateTime::currentDateTime(KDateTime::LocalZone);
+    KDateTimeEdit *startDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("startdatetimeedit"));
+    startDateTime->setDateTime(currentDateTime);
+
+    KDateTime endDt = currentDateTime.addDays(1);
+    KDateTimeEdit *endDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("enddatetimeedit"));
+    endDateTime->setDateTime(endDt);
+
+    QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
+    QSignalSpy spy(&edit, SIGNAL(createEvent(KCalCore::Event::Ptr,Akonadi::Collection)));
+    QTest::keyClick(noteedit, Qt::Key_Enter);
+    QCOMPARE(spy.count(), 1);
+    KCalCore::Event::Ptr eventPtr = spy.at(0).at(0).value<KCalCore::Event::Ptr>();
+    QVERIFY(eventPtr);
+    QCOMPARE(eventPtr->dtStart(), currentDateTime);
+    QCOMPARE(eventPtr->dtEnd(), endDt);
 }
 
 
