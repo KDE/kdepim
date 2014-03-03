@@ -501,6 +501,7 @@ private slots:
     void slotCreateTodo(const KCalCore::Todo::Ptr &, const Akonadi::Collection &collection);
 
     void slotCreateEvent(const KCalCore::Event::Ptr &eventPtr, const Akonadi::Collection &collection);
+
 public slots:
     /** An URL has been activate with a click. */
     void slotUrlOpen( const QUrl &url = QUrl());
@@ -613,6 +614,7 @@ public slots:
     void slotOpenBlockableItems();
     void slotExpandShortUrl();
     void slotShowCreateTodoWidget();
+    void slotShowCreateEventWidget();
 
 signals:
     void showStatusBarMessage( const QString &message );
@@ -689,6 +691,7 @@ public:
     KAction *mBlockableItems;
     KAction *mExpandUrlAction;
     KAction *mCreateTodoAction;
+    KAction *mCreateEventAction;
     KUrl mHoveredUrl;
     KUrl mClickedUrl;
     KUrl mImageUrl;

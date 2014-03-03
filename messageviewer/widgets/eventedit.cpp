@@ -63,7 +63,7 @@ EventEdit::EventEdit(QWidget *parent)
     hbox->addWidget( closeBtn );
     connect( closeBtn, SIGNAL(clicked()), this, SLOT(slotCloseWidget()) );
 
-    QLabel *lab = new QLabel(i18n("Todo:"));
+    QLabel *lab = new QLabel(i18n("Event:"));
     hbox->addWidget(lab);
 
     mNoteEdit = new KLineEdit;
@@ -88,6 +88,7 @@ EventEdit::EventEdit(QWidget *parent)
     hbox = new QHBoxLayout;
     vbox->addLayout(hbox);
 
+    hbox->addStretch();
     lab = new QLabel(i18n("Start:"));
     hbox->addWidget(lab);
     KDateTime currentDateTime = KDateTime::currentDateTime(KDateTime::LocalZone);
