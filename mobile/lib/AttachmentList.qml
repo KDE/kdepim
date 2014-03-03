@@ -26,188 +26,218 @@ import org.kde.plasma.extras 0.1 as PlasmaExtras
  * Shows a list view of the specified attachment model of a MessageView component.
  * @param model An attachment model
  */
+
 Item {
-  id: _attachmentList
-  property alias model: attachmentListView.model
-  property int rowHeight: 48
-  property int attachmentListWidth: 250
-  property int actionListWidth: 240
+    id: _attachmentList
 
-  /** Emittted when an attachment has been selected. */
-  signal openAttachment(string url, string mimeType)
-  signal saveAttachment(string url, string fileName)
+    property alias model: attachmentListView.model
+    property int rowHeight: 48
+    property int attachmentListWidth: 250
+    property int actionListWidth: 240
 
-  Component {
-    id: attachmentDelegate
+    /** Emittted when an attachment has been selected. */
+    signal openAttachment(string url, string mimeType)
+    signal saveAttachment(string url, string fileName)
 
-    Item {
-      id: wrapper
-      width: attachmentListWidth
-      height: rowHeight
-      clip: true
+    Component {
+        id: attachmentDelegate
 
-      Rectangle {
-        id: background
-        anchors.fill: parent
-        opacity: (wrapper.ListView.isCurrentItem ? 0.4 : 0.25)
-        color: "lightsteelblue"
-      }
-      Text {
-        anchors.fill: parent;
-        text: model.display;
-        horizontalAlignment: "AlignHCenter";
-        verticalAlignment: "AlignVCenter";
-      }
+        Item {
+            id: wrapper
+            width: attachmentListWidth
+            height: rowHeight
+            clip: true
 
-      MouseArea {
-        anchors.fill: parent
-        onClicked: {
-          wrapper.ListView.view.currentIndex = model.index
-          wrapper.ListView.view.currentMimeType = model.mimeType;
-          wrapper.ListView.view.currentAttachmentUrl = model.attachmentUrl;
-          wrapper.ListView.view.currentFileName = model.display;
+            Rectangle {
+                id: background
+                anchors.fill: parent
+                opacity: (wrapper.ListView.isCurrentItem ? 0.4 : 0.25)
+                color: "lightsteelblue"
+            }
+
+            Text {
+                anchors.fill: parent;
+                text: model.display;
+                horizontalAlignment: "AlignHCenter";
+                verticalAlignment: "AlignVCenter";
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    wrapper.ListView.view.currentIndex = model.index
+                    wrapper.ListView.view.currentMimeType = model.mimeType;
+                    wrapper.ListView.view.currentAttachmentUrl = model.attachmentUrl;
+                    wrapper.ListView.view.currentFileName = model.display;
+                }
+            }
         }
-      }
     }
-  }
-
-  PlasmaExtras.ScrollArea {
-    anchors {
-      top: parent.top
-      left: parent.left
-      right: actionView.left
-      bottom: parent.bottom
-    }
-
-    flickableItem: ListView {
-      property string currentMimeType
-      property string currentAttachmentUrl
-      property string currentFileName
-
-      id: attachmentListView
-
-      delegate: attachmentDelegate
-      clip: true
-
-      Connections {
-        target: model
-        onModelReset: {
-          attachmentListView.currentIndex = -1
-          attachmentListView.currentMimeType = "";
-          attachmentListView.currentAttachmentUrl = "";
-          attachmentListView.currentFileName = "";
-        }
-      }
-    }
-  }
-
-  Item {
-    id: actionView
-    visible: false
-    width: 0
-    anchors {
-      top: parent.top
-      right: parent.right
-      bottom: parent.bottom
-    }
-
-    KPIM.Button {
-      id: openButton
-      anchors {
-        top: parent.top
-        horizontalCenter: parent.horizontalCenter
-      }
-      width: parent.width - 10
-      height: parent.height / 6
-      buttonText: KDE.i18n( "Open" )
-
-      onClicked: {
-         openAttachment(attachmentListView.currentAttachmentUrl, attachmentListView.currentMimeType);
-      }
-    }
-    KPIM.Button {
-      id: saveButton
-      anchors {
-        top: openButton.bottom;
-        horizontalCenter: parent.horizontalCenter
-      }
-      width: parent.width - 10
-      height: parent.height / 6
-      buttonText: KDE.i18n( "Save" )
-      onClicked: {
-         saveAttachment(attachmentListView.currentAttachmentUrl, attachmentListView.currentFileName);
-      }
-    }
-  }
-
-  Item {
-    id: previewView
-    visible: false
-    anchors {
-      top: parent.top
-      right: parent.right
-      bottom: parent.bottom
-    }
-    width: _attachmentList.width - attachmentListWidth - 6
 
     PlasmaExtras.ScrollArea {
 
-      id: previewScrollArea
-      anchors.fill: parent
-
-      flickableItem: Flickable {
-
-        contentWidth: previewImage.width
-        contentHeight: previewImage.height
-
-        Image {
-          id: previewImage
-          source: attachmentListView.currentAttachmentUrl
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: actionView.left
+            bottom: parent.bottom
         }
 
-      }
+        flickableItem: ListView {
+            id: attachmentListView
+
+            property string currentMimeType
+            property string currentAttachmentUrl
+            property string currentFileName
+
+            delegate: attachmentDelegate
+            clip: true
+
+            Connections {
+                target: model
+                onModelReset: {
+                     attachmentListView.currentIndex = -1
+                     attachmentListView.currentMimeType = "";
+                     attachmentListView.currentAttachmentUrl = "";
+                     attachmentListView.currentFileName = "";
+                }
+            }
+        }
     }
 
-    KPIM.Button {
-      id: previewSaveButton
-      anchors {
-        bottom: parent.bottom
-        right: parent.right
-        margins: 12
-      }
-      width: 48
-      height: 48
-      icon: KDE.iconPath( "document-save", width );
-      onClicked: {
-        saveAttachment(attachmentListView.currentAttachmentUrl, attachmentListView.currentFileName);
-      }
-      states: [
+    Item {
+        id: actionView
+        visible: false
+        width: 0
+
+        anchors {
+            top: parent.top
+            right: parent.right
+            bottom: parent.bottom
+        }
+
+        KPIM.Button {
+            id: openButton
+
+            anchors {
+                top: parent.top
+                horizontalCenter: parent.horizontalCenter
+            }
+
+            width: parent.width - 10
+            height: parent.height / 6
+            buttonText: KDE.i18n( "Open" )
+
+            onClicked: {
+                openAttachment(attachmentListView.currentAttachmentUrl, attachmentListView.currentMimeType);
+            }
+        }
+
+        KPIM.Button {
+            id: saveButton
+
+            anchors {
+                top: openButton.bottom;
+                horizontalCenter: parent.horizontalCenter
+            }
+
+            width: parent.width - 10
+            height: parent.height / 6
+            buttonText: KDE.i18n( "Save" )
+            onClicked: {
+                 saveAttachment(attachmentListView.currentAttachmentUrl, attachmentListView.currentFileName);
+            }
+        }
+    }
+
+    Item {
+        id: previewView
+        visible: false
+
+        anchors {
+            top: parent.top
+            right: parent.right
+            bottom: parent.bottom
+        }
+
+        width: _attachmentList.width - attachmentListWidth - 6
+
+        PlasmaExtras.ScrollArea {
+            id: previewScrollArea
+            anchors.fill: parent
+
+            flickableItem: Flickable {
+
+                contentWidth: previewImage.width
+                contentHeight: previewImage.height
+
+                Image {
+                    id: previewImage
+                    source: attachmentListView.currentAttachmentUrl
+                }
+
+            }
+        }
+
+        KPIM.Button {
+            id: previewSaveButton
+
+            anchors {
+                bottom: parent.bottom
+                right: parent.right
+                margins: 12
+            }
+
+            width: 48
+            height: 48
+            icon: KDE.iconPath( "document-save", width );
+
+            onClicked: {
+                 saveAttachment(attachmentListView.currentAttachmentUrl, attachmentListView.currentFileName);
+            }
+
+            states: [
+                State {
+                    name: "movingState"
+                    when: previewScrollArea.moving
+
+                    PropertyChanges {
+                        target: previewSaveButton
+                        opacity: 0.25
+                    }
+                }
+            ]
+
+            transitions: [
+                Transition {
+                    NumberAnimation {
+                        properties: "opacity"
+                        duration: 200
+                    }
+                }
+            ]
+        }
+    }
+
+    states: [
         State {
-          name: "movingState"
-          when: previewScrollArea.moving
-          PropertyChanges { target: previewSaveButton; opacity: 0.25 }
-        }
-      ]
-      transitions: [
-        Transition {
-          NumberAnimation { properties: "opacity"; duration: 200 }
-        }
-      ]
-    }
-  }
+            name: "actionState"
+            when: (attachmentListView.currentIndex >= 0 && attachmentListView.currentIndex < model.attachmentCount) && attachmentListView.currentMimeType.indexOf( "image" ) != 0
+            PropertyChanges {
+                target: actionView
+                width: actionListWidth
+                visible: true
+            }
+        },
 
-  states: [
-    State {
-      name: "actionState"
-      when: (attachmentListView.currentIndex >= 0 && attachmentListView.currentIndex < model.attachmentCount) && attachmentListView.currentMimeType.indexOf( "image" ) != 0
-      PropertyChanges { target: actionView; width: actionListWidth; visible: true }
-    },
-
-    State {
-      name: "previewState"
-      when: (attachmentListView.currentIndex >= 0 && attachmentListView.currentIndex < model.attachmentCount) && attachmentListView.currentMimeType.indexOf( "image" ) == 0
-      PropertyChanges { target: previewView; visible: true }
-    }
-  ]
+        State {
+           name: "previewState"
+           when: (attachmentListView.currentIndex >= 0 && attachmentListView.currentIndex < model.attachmentCount) && attachmentListView.currentMimeType.indexOf( "image" ) == 0
+           PropertyChanges {
+               target: previewView
+               visible: true
+           }
+        }
+    ]
 
 }

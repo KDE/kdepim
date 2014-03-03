@@ -32,6 +32,7 @@
 #include <ksharedconfig.h>
 #include <kurl.h>
 #include <KCalCore/Todo>
+#include <KCalCore/Event>
 
 #include <QObject>
 #include <QTimer>
@@ -58,6 +59,7 @@ class QTreeView;
 
 namespace MessageViewer {
 class TodoEdit;
+class EventEdit;
 class EditorWatcher;
 class HtmlWriter;
 class CSSHelper;
@@ -498,6 +500,8 @@ private slots:
 
     void slotCreateTodo(const KCalCore::Todo::Ptr &, const Akonadi::Collection &collection, const QString &urlMessageAkonadi);
 
+    void slotCreateEvent(const KCalCore::Event::Ptr &eventPtr, const Akonadi::Collection &collection);
+
 public slots:
     /** An URL has been activate with a click. */
     void slotUrlOpen( const QUrl &url = QUrl());
@@ -610,6 +614,7 @@ public slots:
     void slotOpenBlockableItems();
     void slotExpandShortUrl();
     void slotShowCreateTodoWidget();
+    void slotShowCreateEventWidget();
 
 signals:
     void showStatusBarMessage( const QString &message );
@@ -686,6 +691,7 @@ public:
     KAction *mBlockableItems;
     KAction *mExpandUrlAction;
     KAction *mCreateTodoAction;
+    KAction *mCreateEventAction;
     KUrl mHoveredUrl;
     KUrl mClickedUrl;
     KUrl mImageUrl;
@@ -722,6 +728,7 @@ public:
     GrantleeTheme::GrantleeThemeManager *mThemeManager;
     ScamDetectionWarningWidget *mScamDetectionWarning;
     MessageViewer::TodoEdit *mCreateTodo;
+    MessageViewer::EventEdit *mCreateEvent;
     // zoom Factor
     static const qreal zoomBy;
     qreal mZoomFactor;

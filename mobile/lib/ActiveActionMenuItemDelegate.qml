@@ -22,44 +22,61 @@
 import QtQuick 1.1 as QML
 
 QML.Item {
-  id : _top
+    id: _top
 
-  property int spaceAbove
-  property int spaceBelow
-  property int actionItemHeight
+    property int spaceAbove
+    property int spaceBelow
+    property int actionItemHeight
 
-  onSpaceAboveChanged : {
-    lineAbove.height = Math.max( spaceAbove, 0 );
-  }
-  onSpaceBelowChanged : {
-    lineBelow.height = Math.max( spaceBelow, 0 );
-  }
+    onSpaceAboveChanged: {
+        lineAbove.height = Math.max( spaceAbove, 0 );
+    }
 
-  QML.Behavior on y { QML.NumberAnimation { duration : 250; easing.type : Easing.OutQuad } }
-  QML.Image {
-    id : lineAbove
-    anchors.bottom : active_image.top
-    anchors.right : _top.right
-    source : "images/dividing-line.png"
-    height : 0
-  }
+    onSpaceBelowChanged: {
+        lineBelow.height = Math.max( spaceBelow, 0 );
+    }
 
-  QML.BorderImage {
-    id : active_image
-    anchors.right : _top.right
-    anchors.rightMargin : -10
-    height: actionItemHeight
-    source : "images/activeactionitem.png"
-    border { left: 0; right: 0; top: 20; bottom: 20 }
-    verticalTileMode: QML.BorderImage.Repeat
-  }
+    QML.Behavior on y {
+        QML.NumberAnimation {
+            duration: 250
+            easing.type: Easing.OutQuad
+        }
+    }
 
-  QML.Image {
-    id : lineBelow
-    anchors.top : active_image.bottom
-    anchors.right : _top.right
-    source : "images/dividing-line.png"
-    height : 0
-  }
+    QML.Image {
+        id: lineAbove
+        anchors {
+            bottom: active_image.top
+            right: _top.right
+        }
+        source: "images/dividing-line.png"
+        height: 0
+    }
+
+    QML.BorderImage {
+        id: active_image
+        anchors {
+            right: _top.right
+            rightMargin: -10
+        }
+        height: actionItemHeight
+        source: "images/activeactionitem.png"
+        border {
+            left: 0
+            right: 0
+            top: 20
+            bottom: 20
+        }
+        verticalTileMode: QML.BorderImage.Repeat
+    }
+
+    QML.Image {
+        id: lineBelow
+        anchors {
+            top: active_image.bottom
+            right: _top.right
+        }
+        source: "images/dividing-line.png"
+        height: 0
+    }
 }
-

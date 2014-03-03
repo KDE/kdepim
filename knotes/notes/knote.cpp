@@ -96,7 +96,8 @@ KNote::KNote(const QDomDocument& buildDoc, const Akonadi::Item &item, QWidget *p
       m_tool( 0 ),
       m_editor( 0 ),
       m_kwinConf( KSharedConfig::openConfig( QLatin1String("kwinrc") ) ),
-      mDisplayAttribute(new KNoteDisplaySettings)
+      mDisplayAttribute(new KNoteDisplaySettings),
+      mBlockSave(false)
 {
     if ( mItem.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
         mDisplayAttribute->setDisplayAttribute(mItem.attribute<NoteShared::NoteDisplayAttribute>());
@@ -182,25 +183,42 @@ void KNote::saveNote(bool force, bool sync)
 {
     if (!force && !m_editor->document()->isModified())
         return;
-    qDebug()<<" saveNote "<<force;
+    bool needToSave = false;
     NoteShared::NoteDisplayAttribute *attribute =  mItem.attribute<NoteShared::NoteDisplayAttribute>( Akonadi::Entity::AddIfMissing );
-    attribute->setPosition(pos());
-    attribute->setSize(QSize(width(), height()));
+    const QPoint notePosition = pos();
+    if (attribute->position() != notePosition) {
+        needToSave = true;
+        attribute->setPosition(notePosition);
+    }
+    const QSize currentSize(QSize(width(), height()));
+    if (attribute->size() != currentSize) {
+        needToSave = true;
+        attribute->setSize(currentSize);
+    }
 #ifdef Q_WS_X11
     NETWinInfo wm_client( QX11Info::display(), winId(),
                           QX11Info::appRootWindow(), NET::WMDesktop );
     if ( ( wm_client.desktop() == NETWinInfo::OnAllDesktops ) ||
          ( wm_client.desktop() > 0 ) ) {
-        attribute->setDesktop( wm_client.desktop() );
+        const int desktopNumber = wm_client.desktop();
+        if (attribute->desktop() != desktopNumber) {
+            needToSave = true;
+            attribute->setDesktop( desktopNumber );
+        }
     }
 #endif
-    if (m_editor->document()->isModified())
+    if (m_editor->document()->isModified()) {
+        needToSave = true;
         saveNoteContent();
-    Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
-    if (sync) {
-        job->exec();
-    } else {
-        connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
+    }
+    if (needToSave) {
+        qDebug()<<" saveNote "<<force;
+        Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
+        if (sync) {
+            job->exec();
+        } else {
+            connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
+        }
     }
 }
 
@@ -295,9 +313,10 @@ void KNote::slotUpdateReadOnly()
             mItem.attribute<NoteShared::NoteLockAttribute>( Akonadi::Entity::AddIfMissing );
         }
     }
-    //Verify it!
-    Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
-    connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
+    if (!mBlockSave) {
+        Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
+        connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
+    }
 
 
     // enable/disable actions accordingly
@@ -538,8 +557,7 @@ void KNote::slotApplyConfig()
 
 void KNote::slotKeepAbove()
 {
-    if ( m_keepBelow->isChecked() )
-    {
+    if ( m_keepBelow->isChecked() ) {
         m_keepBelow->setChecked( false );
     }
     slotUpdateKeepAboveBelow();
@@ -547,8 +565,7 @@ void KNote::slotKeepAbove()
 
 void KNote::slotKeepBelow()
 {
-    if ( m_keepAbove->isChecked() )
-    {
+    if ( m_keepAbove->isChecked() ) {
         m_keepAbove->setChecked( false );
     }
     slotUpdateKeepAboveBelow();
@@ -576,9 +593,11 @@ void KNote::slotUpdateKeepAboveBelow()
         KWindowSystem::clearState( winId(), NET::KeepAbove );
         KWindowSystem::clearState( winId(), NET::KeepBelow );
     }
-    saveNoteContent();
-    Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
-    connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
+    if (!mBlockSave) {
+        saveNoteContent();
+        Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
+        connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
+    }
 }
 
 void KNote::slotUpdateShowInTaskbar()
@@ -816,6 +835,7 @@ void KNote::createNoteFooter()
 
 void KNote::prepare()
 {
+    mBlockSave = true;
     KMime::Message::Ptr noteMessage = mItem.payload<KMime::Message::Ptr>();
     setName(noteMessage->subject(false)->asUnicodeString());
     if ( noteMessage->contentType()->isHTMLText() ) {
@@ -907,6 +927,7 @@ void KNote::prepare()
     m_editor->setBackgroundRole( QPalette::Base );
     m_editor->setFrameStyle( NoFrame );
     m_editor->document()->setModified( false );
+    mBlockSave = false;
 }
 
 void KNote::toDesktop( int desktop )
@@ -988,8 +1009,7 @@ void KNote::updateLabelAlignment()
 {
     // if the name is too long to fit, left-align it, otherwise center it (#59028)
     const QString labelText = m_label->text();
-    if ( m_label->fontMetrics().boundingRect( labelText ).width() >
-         m_label->width() ) {
+    if ( m_label->fontMetrics().boundingRect( labelText ).width() > m_label->width() ) {
         m_label->setAlignment( Qt::AlignLeft );
     } else {
         m_label->setAlignment( Qt::AlignHCenter );
@@ -1048,8 +1068,10 @@ void KNote::showEvent( QShowEvent * )
         NoteShared::NoteDisplayAttribute *attr =  mItem.attribute<NoteShared::NoteDisplayAttribute>( Akonadi::Entity::AddIfMissing );
         saveNoteContent();
         attr->setIsHidden(false);
-        Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
-        connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
+        if (!mBlockSave) {
+            Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
+            connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
+        }
     }
 }
 
@@ -1157,7 +1179,8 @@ bool KNote::eventFilter( QObject *o, QEvent *ev )
             if ( fe->reason() != Qt::PopupFocusReason &&
                  fe->reason() != Qt::MouseFocusReason ) {
                 updateFocus();
-                saveNote(true);
+                if (!mBlockSave)
+                    saveNote(true);
             }
         } else if ( ev->type() == QEvent::FocusIn ) {
             updateFocus();

@@ -695,6 +695,12 @@ KAction *Viewer::createTodoAction()
     return d->mCreateTodoAction;
 }
 
+KAction *Viewer::createEventAction()
+{
+    Q_D( Viewer );
+    return d->mCreateEventAction;
+}
+
 }
 
 

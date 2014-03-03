@@ -24,55 +24,62 @@ import org.kde.plasma.extras 0.1 as PlasmaExtras
 import org.kde.pim.mobileui 4.5 as KPIM
 
 QML.Rectangle {
-  id : _topLevel
-  color : "#00000000"
-  property int actionItemHeight : 70
-  property int actionItemWidth : 200
-  property int actionItemSpacing : 0
-  property int bottomMargin
-  anchors.bottomMargin : bottomMargin
 
-  property alias model : myList.model
+    id: _topLevel
+    anchors.bottomMargin: bottomMargin
+    color: "#00000000"
 
-  property alias customActions : actionColumn.content
+    property int actionItemHeight: 70
+    property int actionItemWidth: 200
+    property int actionItemSpacing: 0
+    property int bottomMargin
+    property alias model: myList.model
+    property alias customActions: actionColumn.content
 
-  signal triggered(string triggeredName)
+    signal triggered(string triggeredName)
 
-  PlasmaExtras.ScrollArea {
+    PlasmaExtras.ScrollArea {
 
-    anchors { top: parent.top; bottom: parent.bottom; left: parent.left }
-    width: parent.width - actionColumn.width
+        anchors {
+            top: parent.top
+            bottom: parent.bottom
+            left: parent.left
+        }
 
-    flickableItem: QML.ListView {
-      id : myList
+        width: parent.width - actionColumn.width
 
-      focus: true
-      clip: true
-      delegate : AgentInstanceListDelegate {
-        height: _topLevel.actionItemHeight
-        width: myList.width
-      }
+        flickableItem: QML.ListView {
+            id: myList
+            focus: true
+            clip: true
 
-      onCurrentIndexChanged : {
-        application.setAgentInstanceListSelectedRow( currentIndex )
-      }
+            delegate: AgentInstanceListDelegate {
+                height: _topLevel.actionItemHeight
+                width: myList.width
+            }
+
+            onCurrentIndexChanged: {
+                application.setAgentInstanceListSelectedRow( currentIndex )
+            }
+        }
     }
-  }
 
-  ActionMenuContainer {
-    id : actionColumn
-    width : _topLevel.actionItemWidth
-    anchors.top : parent.top
-    anchors.bottom : parent.bottom
-    anchors.right : parent.right
-    actionItemWidth : width
-    actionItemHeight : _topLevel.actionItemHeight
+    ActionMenuContainer {
+        id: actionColumn
+        width: _topLevel.actionItemWidth
+        anchors {
+            top: parent.top
+            bottom: parent.bottom
+            right: parent.right
+        }
+        actionItemWidth: width
+        actionItemHeight: _topLevel.actionItemHeight
 
-    content : [
-      ActionListItem { name : "akonadi_agentinstance_configure" },
-      ActionListItem { name : "akonadi_agentinstance_delete" },
-      ActionListItem { name : "akonadi_agentinstance_create" }
-    ]
-  }
+        content: [
+            ActionListItem { name: "akonadi_agentinstance_configure" },
+            ActionListItem { name: "akonadi_agentinstance_delete" },
+            ActionListItem { name: "akonadi_agentinstance_create" }
+        ]
+    }
 
 }

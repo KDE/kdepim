@@ -1272,30 +1272,39 @@ void AppearancePage::MessageTagTab::slotSelectionChanged()
 
 void AppearancePage::MessageTagTab::slotRemoveTag()
 {
-    int tmp_index = mTagListBox->currentRow();
+    const int tmp_index = mTagListBox->currentRow();
     if ( tmp_index >= 0 ) {
-        QListWidgetItem * item = mTagListBox->takeItem( mTagListBox->currentRow() );
-        TagListWidgetItem *tagItem = static_cast<TagListWidgetItem*>( item );
-        MailCommon::Tag::Ptr tmp_desc = tagItem->kmailTag();
-        if ( tmp_desc->tag().isValid() ) {
-          new Akonadi::TagDeleteJob(tmp_desc->tag());
-        } else {
-          kWarning() << "Can't remove tag with invalid akonadi tag";
+        if (KMessageBox::Yes == KMessageBox::questionYesNo(this,i18n("Do you want to remove tag \'%1\'?", mTagListBox->item(mTagListBox->currentRow())->text()))) {
+            QListWidgetItem * item = mTagListBox->takeItem( mTagListBox->currentRow() );
+            TagListWidgetItem *tagItem = static_cast<TagListWidgetItem*>( item );
+            MailCommon::Tag::Ptr tmp_desc = tagItem->kmailTag();
+            if ( tmp_desc->tag().isValid() ) {
+                new Akonadi::TagDeleteJob(tmp_desc->tag());
+            } else {
+                kWarning() << "Can't remove tag with invalid akonadi tag";
+            }
+            mPreviousTag = -1;
+
+            //Before deleting the current item, make sure the selectionChanged signal
+            //is disconnected, so that the widgets will not get updated while the
+            //deletion takes place.
+            disconnect( mTagListBox, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+                        this, SLOT(slotSelectionChanged()) );
+
+            delete item;
+            connect( mTagListBox, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+                     this, SLOT(slotSelectionChanged()) );
+
+            slotSelectionChanged();
+            slotEmitChangeCheck();
         }
-        mPreviousTag = -1;
+    }
+}
 
-        //Before deleting the current item, make sure the selectionChanged signal
-        //is disconnected, so that the widgets will not get updated while the
-        //deletion takes place.
-        disconnect( mTagListBox, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-                    this, SLOT(slotSelectionChanged()) );
-
-        delete item;
-        connect( mTagListBox, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-                 this, SLOT(slotSelectionChanged()) );
-
-        slotSelectionChanged();
-        slotEmitChangeCheck();
+void AppearancePage::MessageTagTab::slotDeleteTagJob(KJob* job)
+{
+    if (job->error()) {
+        kWarning() << "Failed to delete tag " << job->errorString();
     }
 }
 
@@ -1338,7 +1347,7 @@ void AppearancePage::MessageTagTab::slotIconNameChanged( const QString &iconName
 
 void AppearancePage::MessageTagTab::slotAddLineTextChanged( const QString &aText )
 {
-    mTagAddButton->setEnabled( !aText.isEmpty() );
+    mTagAddButton->setEnabled( !aText.trimmed().isEmpty() );
 }
 
 void AppearancePage::MessageTagTab::slotAddNewTag()

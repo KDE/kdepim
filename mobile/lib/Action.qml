@@ -24,88 +24,100 @@ import QtQuick 1.1
 import org.kde 4.5
 
 Rectangle {
-  id : _topContext
-  property variant action
-  property variant actionIconName
-  property int hardcoded_height : 70
-  property bool disableable : true
-  property bool showIcon : true
-  property bool hidable : true
-  property bool hidden : hidable && !action.enabled
-  property bool checkable : false
-  property alias showText : buttonText.visible
-  property alias image : image.source
-  property alias imageWidth : image.width
-  property alias imageHeight : image.height
+    id: _topContext
 
-  signal triggered()
-  signal longPressed()
+    property variant action
+    property variant actionIconName
+    property int hardcoded_height: 70
+    property bool disableable: true
+    property bool showIcon: true
+    property bool hidable: true
+    property bool hidden: hidable && !action.enabled
+    property bool checkable: false
+    property alias showText: buttonText.visible
+    property alias image: image.source
+    property alias imageWidth: image.width
+    property alias imageHeight: image.height
 
-  Binding {
-    target : image
-    property : "source"
-    value : "image://action_images/" + actionIconName
-    when: showIcon && actionIconName != undefined
-  }
+    signal triggered()
+    signal longPressed()
 
-  Binding {
-    target : buttonText
-    property : "text"
-    value : { action.text.replace("&", ""); }
-  }
-
-  Binding {
-    target: _topContext
-    property: "enabled"
-    value: disableable ? action.enabled : true
-  }
-
-  height : (!hidable || action.enabled) ? hardcoded_height : 0
-  visible : (!hidable || action.enabled)
-  Connections {
-    target : action
-    onChanged : {
-      border.width = action.checked ? 2 : 0
-      if (!hidable)
-        return;
-      parent.height = action.enabled ? hardcoded_height : 0;
-      _topContext.visible = action.enabled
+    Binding {
+        target: image
+        property: "source"
+        value: "image://action_images/" + actionIconName
+        when: showIcon && actionIconName != undefined
     }
-  }
 
-  radius: 12
-  color: "#00000000" // Set a transparent color.
+    Binding {
+        target: buttonText
+        property: "text"
 
-  Image {
-    id : image
-    anchors.verticalCenter : parent.verticalCenter
-    anchors.margins: 5
-  }
-
-  Text {
-    id : buttonText
-    anchors.horizontalCenter : parent.horizontalCenter
-    anchors.verticalCenter : parent.verticalCenter
-    color: parent.enabled ? "black" : "gray"
-  }
-
-  MouseArea {
-    anchors.fill : parent
-    onPressed : {
-      border.width = 2
+        value: {
+            action.text.replace("&", "");
+        }
     }
-    onReleased : {
-      border.width = 0
-    }
-    onCanceled : border.width = 0
-    onClicked : {
-      triggered(); action.trigger();
-    }
-    onPressAndHold : {
-      longPressed()
-    }
-  }
 
-  border.color : "#4166F5"
-  border.width : action.checked ? 2 : 0
+    Binding {
+        target: _topContext
+        property: "enabled"
+        value: disableable ? action.enabled : true
+    }
+
+    height: (!hidable || action.enabled) ? hardcoded_height : 0
+    visible: (!hidable || action.enabled)
+
+    Connections {
+        target: action
+
+        onChanged: {
+            border.width = action.checked ? 2 : 0
+            if (!hidable)
+              return;
+            parent.height = action.enabled ? hardcoded_height : 0;
+        }
+    }
+
+    radius: 12
+    color: "#00000000" // Set a transparent color.
+
+    Image {
+        id: image
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.margins: 5
+    }
+
+    Text {
+        id: buttonText
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        color: parent.enabled ? "black" : "gray"
+    }
+
+    MouseArea {
+        anchors.fill: parent
+
+        onPressed: {
+            border.width = 2
+        }
+
+        onReleased: {
+            border.width = 0
+        }
+
+        onCanceled: border.width = 0
+
+        onClicked: {
+            triggered();
+            action.trigger();
+        }
+
+        onPressAndHold: {
+            longPressed()
+        }
+
+    }
+
+    border.color: "#4166F5"
+    border.width: action.checked ? 2 : 0
 }

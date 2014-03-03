@@ -52,12 +52,14 @@ QString StorageServiceManagerSettingsJob::dropboxOauthSignature() const
 
 QString StorageServiceManagerSettingsJob::boxClientId() const
 {
-    return QLatin1String("o4sn4e0dvz50pd3ps6ao3qxehvqv8dyo");
+    //StorageServiceManager
+    return QLatin1String("00g0i42i7qwfg1honq4tvwdek1rqx3jl");
 }
 
 QString StorageServiceManagerSettingsJob::boxClientSecret() const
 {
-    return QLatin1String("wLdaOgrblYzi1Y6WN437wStvqighmSJt");
+    //StorageServiceManager
+    return QLatin1String("sO5ce1jU7hQZaqWCcIUCLy4mfWEEsqtq");
 }
 
 QString StorageServiceManagerSettingsJob::hubicClientId() const
