@@ -92,13 +92,13 @@ set(libmessageviewer_viewer_SRCS
 
 set(libmessageviewer_widgets_SRCS
   widgets/attachmentdialog.cpp
-  
   widgets/configurewidget.cpp
   widgets/printingsettings.cpp
   widgets/htmlstatusbar.cpp
   widgets/vcardviewer.cpp
   widgets/invitationsettings.cpp
   widgets/todoedit.cpp
+  widgets/eventedit.cpp
 )
 
 set(libmessageviewer_header_SRCS
@@ -153,6 +153,7 @@ set(libmessageviewer_antispam_SRCS
 
 set(libmessageviewer_job_SRCS
   job/createtodojob.cpp
+  job/createeventjob.cpp
 )
 
 set(libmessageviewer_SRCS

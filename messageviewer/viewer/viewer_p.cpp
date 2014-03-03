@@ -33,6 +33,7 @@
 #include "scamdetection/scamattribute.h"
 #include "adblock/adblockmanager.h"
 #include "widgets/todoedit.h"
+#include "widgets/eventedit.h"
 
 #ifdef MESSAGEVIEWER_READER_HTML_DEBUG
 #include "htmlwriter/filehtmlwriter.h"
@@ -136,6 +137,7 @@
 #include "findbar/findbarmailwebview.h"
 #include "pimcommon/translator/translatorwidget.h"
 #include "job/createtodojob.h"
+#include "job/createeventjob.h"
 
 #include "interfaces/bodypart.h"
 #include "interfaces/htmlwriter.h"
@@ -1538,6 +1540,11 @@ void ViewerPrivate::createWidgets() {
     connect(mCreateTodo, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection,QString)), this, SLOT(slotCreateTodo(KCalCore::Todo::Ptr,Akonadi::Collection,QString)));
     mCreateTodo->setObjectName(QLatin1String("createtodowidget"));
     mCreateTodo->hide();
+
+    mCreateEvent = new MessageViewer::EventEdit(readerBox);
+    connect(mCreateEvent, SIGNAL(createEvent(KCalCore::Event::Ptr,Akonadi::Collection)), this, SLOT(slotCreateEvent(KCalCore::Event::Ptr,Akonadi::Collection)));
+    mCreateEvent->setObjectName(QLatin1String("createeventwidget"));
+    mCreateEvent->hide();
 
     mFindBar = new FindBarMailWebView( mViewer, readerBox );
     mTranslatorWidget = new PimCommon::TranslatorWidget(readerBox);
@@ -3390,5 +3397,11 @@ void ViewerPrivate::slotShowCreateTodoWidget()
 void ViewerPrivate::slotCreateTodo(const KCalCore::Todo::Ptr &todoPtr, const Akonadi::Collection &collection, const QString &urlMessageAkonadi)
 {
     CreateTodoJob *createJob = new CreateTodoJob(todoPtr, collection, mMessageItem, this);
+    createJob->start();
+}
+
+void ViewerPrivate::slotCreateEvent(const KCalCore::Event::Ptr &eventPtr, const Akonadi::Collection &collection)
+{
+    CreateEventJob *createJob = new CreateEventJob(eventPtr, collection, mMessageItem, this);
     createJob->start();
 }
