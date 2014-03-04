@@ -66,7 +66,7 @@ TodoEditTest::TodoEditTest()
 void TodoEditTest::shouldHaveDefaultValuesOnCreation()
 {
     MessageViewer::TodoEdit edit;
-    QVERIFY(!edit.collection().isValid());
+    QVERIFY(edit.collection().isValid());
     QVERIFY(!edit.message());
     QVERIFY(edit.messageUrlAkonadi().isEmpty());
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
@@ -260,8 +260,9 @@ void TodoEditTest::shouldEmitCollectionChangedWhenCurrentCollectionWasChanged()
 {
     MessageViewer::TodoEdit edit;
     Akonadi::CollectionComboBox *akonadicombobox = qFindChild<Akonadi::CollectionComboBox *>(&edit, QLatin1String("akonadicombobox"));
-    QSignalSpy spy(&edit, SIGNAL(collectionChanged(Akonadi::Collection)));
+    akonadicombobox->setCurrentIndex(0);
     QCOMPARE(akonadicombobox->currentIndex(), 0);
+    QSignalSpy spy(&edit, SIGNAL(collectionChanged(Akonadi::Collection)));
     akonadicombobox->setCurrentIndex(3);
     QCOMPARE(akonadicombobox->currentIndex(), 3);
     QCOMPARE(spy.count(), 1);
