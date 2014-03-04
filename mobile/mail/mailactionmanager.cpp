@@ -112,12 +112,6 @@ MailActionManager::MailActionManager( KActionCollection *actionCollection, QObje
   action = actionCollection->addAction( QLatin1String("move_all_to_trash") );
   action->setText( i18n( "Move Displayed Emails To Trash" ) );
 
-  action = actionCollection->addAction( QLatin1String("create_todo_reminder") );
-  action->setText( i18n( "Create Task From Email" ) );
-
-  action = actionCollection->addAction( QLatin1String("create_event") );
-  action->setText( i18n( "Create Event From Email" ) );
-
   action = actionCollection->addAction( QLatin1String("apply_filters") );
   action->setText( i18n( "Apply Filters" ) );
 
