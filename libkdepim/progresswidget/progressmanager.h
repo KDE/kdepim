@@ -92,6 +92,11 @@ public:
     bool canBeCanceled() const { return mCanBeCanceled; }
 
     /**
+     * @param b Set if can be canceled
+     */
+    void setCanBeCanceled(bool b);
+
+    /**
      * @return Whether this item uses secure communication
      * (Account uses ssl, for example.).
      */

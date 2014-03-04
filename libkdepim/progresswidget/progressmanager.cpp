@@ -160,6 +160,11 @@ void ProgressItem::setStatus( const QString &v )
     emit progressItemStatus( this, mStatus );
 }
 
+void ProgressItem::setCanBeCanceled(bool b)
+{
+    mCanBeCanceled = b;
+}
+
 void ProgressItem::setCryptoStatus( ProgressItem::CryptoStatus v )
 {
     mCryptoStatus = v;
