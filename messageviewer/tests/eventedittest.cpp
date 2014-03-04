@@ -70,7 +70,7 @@ EventEditTest::EventEditTest()
 void EventEditTest::shouldHaveDefaultValuesOnCreation()
 {
     MessageViewer::EventEdit edit;
-    QVERIFY(!edit.collection().isValid());
+    QVERIFY(edit.collection().isValid());
     QVERIFY(!edit.message());
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
     QVERIFY(noteedit);
@@ -198,6 +198,27 @@ void EventEditTest::shouldSaveCollectionSettingsWhenDeleteWidget()
     const Akonadi::Collection::Id id = akonadicombobox->currentCollection().id();
     delete edit;
     QCOMPARE(MessageViewer::GlobalSettingsBase::self()->lastEventSelectedFolder(), id);
+}
+
+void EventEditTest::shouldNotEmitCreateEventWhenDateIsInvalid()
+{
+    MessageViewer::EventEdit edit;
+    KMime::Message::Ptr msg(new KMime::Message);
+
+    KDateTimeEdit *startDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("startdatetimeedit"));
+    startDateTime->setDateTime(KDateTime());
+
+    KDateTimeEdit *endDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("enddatetimeedit"));
+    endDateTime->setDateTime(KDateTime());
+
+
+    QString subject = QLatin1String("Test Note");
+    msg->subject(true)->fromUnicodeString(subject, "us-ascii");
+    edit.setMessage(msg);
+    QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
+    QSignalSpy spy(&edit, SIGNAL(createEvent(KCalCore::Event::Ptr,Akonadi::Collection)));
+    QTest::keyClick(noteedit, Qt::Key_Enter);
+    QCOMPARE(spy.count(), 0);
 }
 
 void EventEditTest::shouldEventHasCorrectSubject()
