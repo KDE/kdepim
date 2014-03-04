@@ -632,4 +632,10 @@ QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
     return QString(); //TODO
 }
 
+bool GDriveStorageService::hasCancelSupport() const
+{
+    return false;
+}
+
+
 #include "moc_gdrivestorageservice.cpp"

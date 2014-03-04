@@ -91,7 +91,9 @@ TodoEdit::~TodoEdit()
 
 void TodoEdit::setMessageUrlAkonadi(const QString &url)
 {
-    mMessageUrlAkonadi = url;
+    if (mMessageUrlAkonadi != url) {
+        mMessageUrlAkonadi = url;
+    }
 }
 
 QString TodoEdit::messageUrlAkonadi() const

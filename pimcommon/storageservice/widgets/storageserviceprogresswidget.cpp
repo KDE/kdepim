@@ -54,7 +54,7 @@ StorageServiceProgressWidget::StorageServiceProgressWidget(PimCommon::StorageSer
     connect(mCancel, SIGNAL(clicked()), this, SLOT(slotCancelTask()));
     box->addWidget(mCancel);
 
-    if (!service) {
+    if (!service || !service->hasCancelSupport()) {
         mCancel->hide();
     }
 }

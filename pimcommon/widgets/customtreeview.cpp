@@ -52,7 +52,10 @@ bool CustomTreeView::showDefaultText() const
 
 void CustomTreeView::setDefaultText(const QString &text)
 {
-    mDefaultText = text;
+    if (mDefaultText != text) {
+        mDefaultText = text;
+        update();
+    }
 }
 
 void CustomTreeView::slotGeneralPaletteChanged()

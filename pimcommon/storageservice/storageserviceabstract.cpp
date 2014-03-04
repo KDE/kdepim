@@ -47,6 +47,11 @@ void StorageServiceAbstract::cancelUploadDownloadFile()
     cancelDownloadFile();
 }
 
+bool StorageServiceAbstract::hasCancelSupport() const
+{
+    return true;
+}
+
 void StorageServiceAbstract::cancelUploadFile()
 {
     if (mUploadReply) {
