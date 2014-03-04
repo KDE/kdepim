@@ -55,7 +55,7 @@ void AddTagDialog::setTags(const QList<MailCommon::Tag::Ptr> &tags)
 
 void AddTagDialog::slotTagNameChanged(const QString &text)
 {
-    enableButtonOk(!text.isEmpty());
+    enableButtonOk(!text.trimmed().isEmpty());
 }
 
 void AddTagDialog::slotButtonClicked(int button)
