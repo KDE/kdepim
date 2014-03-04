@@ -184,9 +184,19 @@ void EventEditTest::shouldSaveCollectionSettingsWhenCloseWidget()
 {
     MessageViewer::EventEdit edit;
     Akonadi::CollectionComboBox *akonadicombobox = qFindChild<Akonadi::CollectionComboBox *>(&edit, QLatin1String("akonadicombobox"));
-    akonadicombobox->setCurrentIndex(3);
+    akonadicombobox->setCurrentIndex(4);
     const Akonadi::Collection::Id id = akonadicombobox->currentCollection().id();
     edit.writeConfig();
+    QCOMPARE(MessageViewer::GlobalSettingsBase::self()->lastEventSelectedFolder(), id);
+}
+
+void EventEditTest::shouldSaveCollectionSettingsWhenDeleteWidget()
+{
+    MessageViewer::EventEdit *edit = new MessageViewer::EventEdit;
+    Akonadi::CollectionComboBox *akonadicombobox = qFindChild<Akonadi::CollectionComboBox *>(edit, QLatin1String("akonadicombobox"));
+    akonadicombobox->setCurrentIndex(5);
+    const Akonadi::Collection::Id id = akonadicombobox->currentCollection().id();
+    delete edit;
     QCOMPARE(MessageViewer::GlobalSettingsBase::self()->lastEventSelectedFolder(), id);
 }
 

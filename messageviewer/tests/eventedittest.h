@@ -39,6 +39,7 @@ private Q_SLOTS:
     void shouldEventHasCorrectSubject();
     void shouldSelectLineWhenPutMessage();
     void shouldHaveCorrectStartEndDateTime();
+    void shouldSaveCollectionSettingsWhenDeleteWidget();
 };
 
 #endif // EVENTEDITTEST_H
