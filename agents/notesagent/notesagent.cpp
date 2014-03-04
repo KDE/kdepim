@@ -156,6 +156,12 @@ void NotesAgent::setAlarmCheckInterval(int value)
     }
 }
 
+void NotesAgent::configurationChanged()
+{
+    NoteShared::NoteSharedGlobalConfig::self()->config()->reparseConfiguration();
+    mNotesManager->updateNetworkListener();
+}
+
 int NotesAgent::alarmCheckInterval() const
 {
     return NoteShared::NoteSharedGlobalConfig::checkInterval();
