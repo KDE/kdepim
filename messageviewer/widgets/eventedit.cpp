@@ -119,12 +119,13 @@ EventEdit::EventEdit(QWidget *parent)
 
 EventEdit::~EventEdit()
 {
-
+    writeConfig();
 }
 
 void EventEdit::writeConfig()
 {
     MessageViewer::GlobalSettingsBase::self()->setLastEventSelectedFolder(mCollectionCombobox->currentCollection().id());
+    MessageViewer::GlobalSettingsBase::self()->writeConfig();
 }
 
 void EventEdit::readConfig()
