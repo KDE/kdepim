@@ -322,11 +322,22 @@ void TodoEditTest::shouldSaveCollectionSettingsWhenCloseWidget()
 {
     MessageViewer::TodoEdit edit;
     Akonadi::CollectionComboBox *akonadicombobox = qFindChild<Akonadi::CollectionComboBox *>(&edit, QLatin1String("akonadicombobox"));
-    akonadicombobox->setCurrentIndex(3);
+    akonadicombobox->setCurrentIndex(4);
     const Akonadi::Collection::Id id = akonadicombobox->currentCollection().id();
     edit.writeConfig();
     QCOMPARE(MessageViewer::GlobalSettingsBase::self()->lastSelectedFolder(), id);
 }
+
+void TodoEditTest::shouldSaveCollectionSettingsWhenDeleteWidget()
+{
+    MessageViewer::TodoEdit *edit = new MessageViewer::TodoEdit;
+    Akonadi::CollectionComboBox *akonadicombobox = qFindChild<Akonadi::CollectionComboBox *>(edit, QLatin1String("akonadicombobox"));
+    akonadicombobox->setCurrentIndex(4);
+    const Akonadi::Collection::Id id = akonadicombobox->currentCollection().id();
+    delete edit;
+    QCOMPARE(MessageViewer::GlobalSettingsBase::self()->lastSelectedFolder(), id);
+}
+
 
 void TodoEditTest::shouldNotEmitTodoWhenMessageIsNull()
 {
