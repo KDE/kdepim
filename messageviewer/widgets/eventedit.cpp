@@ -44,6 +44,7 @@ EventEdit::EventEdit(QWidget *parent)
 {
     QVBoxLayout *vbox = new QVBoxLayout;
     vbox->setSpacing(0);
+    vbox->setMargin(0);
     setLayout(vbox);
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->setMargin(2);
