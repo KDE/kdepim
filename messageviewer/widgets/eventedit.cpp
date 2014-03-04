@@ -196,10 +196,17 @@ void EventEdit::slotReturnPressed()
         return;
     }
 
+    const KDateTime dtstart = mStartDateTimeEdit->dateTime();
+    const KDateTime dtend = mEndDateTimeEdit->dateTime();
+    if (!dtstart.isValid() || !dtend.isValid()) {
+        kDebug()<<" date is not valid !";
+        return;
+    }
+
     if (!mNoteEdit->text().trimmed().isEmpty()) {
         KCalCore::Event::Ptr event( new KCalCore::Event );
-        event->setDtStart(mStartDateTimeEdit->dateTime());
-        event->setDtEnd(mEndDateTimeEdit->dateTime());
+        event->setDtStart(dtstart);
+        event->setDtEnd(dtend);
         event->setSummary(mNoteEdit->text());
         Q_EMIT createEvent(event, collection);
         mNoteEdit->clear();
