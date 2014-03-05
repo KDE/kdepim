@@ -237,11 +237,6 @@ protected:
 
 Q_SIGNALS:
   /**
-   * Emitted when a full search is requested.
-   */
-  void fullSearchRequest();
-
-  /**
    * Notify the outside when updating the status bar with a message
    * could be useful
    */

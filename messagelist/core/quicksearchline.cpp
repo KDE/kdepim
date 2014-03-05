@@ -90,15 +90,6 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mTagFilterCombo->hide();
     hbox->addWidget( mTagFilterCombo );
 
-    // The "Open Full Search" button
-    mOpenFullSearchButton = new QToolButton( this );
-    mOpenFullSearchButton->setIcon( KIcon( QLatin1String( "edit-find-mail" ) ) );
-    mOpenFullSearchButton->setText( i18n( "Open Full Search" ) );
-    mOpenFullSearchButton->setToolTip( mOpenFullSearchButton->text() );
-    mOpenFullSearchButton->setVisible( Settings::self()->showQuickSearch() );
-    hbox->addWidget( mOpenFullSearchButton );
-
-    connect( mOpenFullSearchButton, SIGNAL(clicked()), this, SIGNAL(fullSearchRequest()) );
     mSearchEdit->setEnabled( false );
     mTagFilterCombo->setEnabled( false );
 
@@ -222,11 +213,6 @@ KComboBox *QuickSearchLine::tagFilterComboBox() const
 KLineEdit *QuickSearchLine::searchEdit() const
 {
     return mSearchEdit;
-}
-
-QToolButton *QuickSearchLine::openFullSearchButton() const
-{
-    return mOpenFullSearchButton;
 }
 
 QToolButton *QuickSearchLine::lockSearch() const
