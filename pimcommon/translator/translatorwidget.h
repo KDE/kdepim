@@ -42,7 +42,7 @@ private:
     bool mResultFailed;
 };
 
-class TranslatorTextEdit : public KTextEdit
+class PIMCOMMON_EXPORT TranslatorTextEdit : public KTextEdit
 {
     Q_OBJECT
 public:

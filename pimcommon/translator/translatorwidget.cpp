@@ -251,6 +251,7 @@ void TranslatorWidget::init()
 
     d->invert = new KPushButton(
                 i18nc("Invert language choices so that from becomes to and to becomes from", "Invert"),this);
+    d->invert->setObjectName(QLatin1String("invert-button"));
     connect(d->invert, SIGNAL(clicked()), this, SLOT(slotInvertLanguage()));
     hboxLayout->addWidget(d->invert);
 
