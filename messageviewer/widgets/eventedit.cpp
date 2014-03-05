@@ -43,11 +43,12 @@ EventEdit::EventEdit(QWidget *parent)
     : QWidget(parent)
 {
     QVBoxLayout *vbox = new QVBoxLayout;
+    vbox->setMargin(2);
     vbox->setSpacing(0);
-    vbox->setMargin(0);
     setLayout(vbox);
     QHBoxLayout *hbox = new QHBoxLayout;
-    hbox->setMargin(2);
+    hbox->setMargin(0);
+    hbox->setSpacing(0);
     vbox->addLayout(hbox);
 
     QToolButton *closeBtn = new QToolButton( this );
