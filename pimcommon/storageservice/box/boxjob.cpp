@@ -157,8 +157,12 @@ void BoxJob::slotSendDataFinished(QNetworkReply *reply)
 
         QMap<QString, QVariant> error = parser.parse(data.toUtf8(), &ok).toMap();
         qDebug()<<" error "<<error;
-        if (error.contains(QLatin1String("message"))) {
-            const QString errorStr = error.value(QLatin1String("message")).toString();
+        if (error.contains(QLatin1String("message")) || error.contains(QLatin1String("error_description"))) {
+            QString errorStr;
+            if (error.contains(QLatin1String("message")))
+                errorStr = error.value(QLatin1String("message")).toString();
+            else
+                errorStr = error.value(QLatin1String("error_description")).toString();
             switch(mActionType) {
             case PimCommon::StorageServiceAbstract::NoneAction:
                 deleteLater();
