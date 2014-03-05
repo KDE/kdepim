@@ -64,7 +64,6 @@ public:
     void updateComboboxVisibility();
 
 Q_SIGNALS:
-    void fullSearchRequest();
     void clearButtonClicked();
     void searchEditTextEdited(const QString &);
     void searchOptionChanged();
@@ -82,7 +81,6 @@ private:
     QList<QToolButton *> mListStatusButton;
     KLineEdit *mSearchEdit;
     KComboBox *mTagFilterCombo;
-    QToolButton *mOpenFullSearchButton;
     QToolButton *mLockSearch;
     QPushButton *mSearchEveryWhere;
     QPushButton *mSearchAgainstBody;
