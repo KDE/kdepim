@@ -219,6 +219,7 @@ void TranslatorWidget::init()
     layout->setMargin( 2 );
     QHBoxLayout *hboxLayout = new QHBoxLayout;
     QToolButton * closeBtn = new QToolButton( this );
+    closeBtn->setObjectName(QLatin1String("close-button"));
     closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );
     closeBtn->setIconSize( QSize( 16, 16 ) );
     closeBtn->setToolTip( i18n( "Close" ) );
@@ -233,11 +234,13 @@ void TranslatorWidget::init()
     QLabel *label = new QLabel( i18nc( "Translate from language", "From:" ) );
     hboxLayout->addWidget( label );
     d->from = new MinimumComboBox;
+    d->from->setObjectName(QLatin1String("from"));
     hboxLayout->addWidget( d->from );
 
     label = new QLabel( i18nc( "Translate to language", "To:" ) );
     hboxLayout->addWidget( label );
     d->to = new MinimumComboBox;
+    d->to->setObjectName(QLatin1String("to"));
     connect( d->to, SIGNAL(currentIndexChanged(int)), SLOT(slotTranslate()) );
     connect( d->to, SIGNAL(currentIndexChanged(int)), SLOT(slotConfigChanged()));
     hboxLayout->addWidget( d->to );
@@ -252,6 +255,7 @@ void TranslatorWidget::init()
     hboxLayout->addWidget(d->invert);
 
     KPushButton *clear = new KPushButton(i18n("Clear"),this);
+    clear->setObjectName(QLatin1String("clear-button"));
 #ifndef QT_NO_ACCESSIBILITY
     clear->setAccessibleName( i18n("Clear") );
 #endif
@@ -259,6 +263,7 @@ void TranslatorWidget::init()
     hboxLayout->addWidget(clear);
 
     d->translate = new KPushButton( i18n( "Translate" ) );
+    d->translate->setObjectName(QLatin1String("translate-button"));
 #ifndef QT_NO_ACCESSIBILITY
     d->translate->setAccessibleName( i18n("Translate") );
 #endif
@@ -283,6 +288,7 @@ void TranslatorWidget::init()
     d->splitter = new QSplitter;
     d->splitter->setChildrenCollapsible( false );
     d->inputText = new TranslatorTextEdit;
+    d->inputText->setObjectName(QLatin1String("inputtext"));
     d->inputText->enableFindReplace(false);
     d->inputText->setAcceptRichText(false);
     d->inputText->setClickMessage(i18n("Drag text that you want to translate."));
@@ -292,6 +298,7 @@ void TranslatorWidget::init()
     d->splitter->addWidget( d->inputText );
     d->translatorResultTextEdit = new TranslatorResultTextEdit;
     d->translatedText = new PimCommon::PlainTextEditorWidget(d->translatorResultTextEdit, this);
+    d->translatedText->setObjectName(QLatin1String("translatedtext"));
     d->translatedText->setReadOnly( true );
     d->splitter->addWidget( d->translatedText );
 
