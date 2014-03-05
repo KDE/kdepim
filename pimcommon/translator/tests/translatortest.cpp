@@ -81,12 +81,14 @@ void TranslatorTest::shouldDisableTranslateButtonAndClearTextWhenClickOnClearBut
 
 void TranslatorTest::shouldInvertLanguageWhenClickOnInvertButton()
 {
-#if 0 //Adapt it
     PimCommon::TranslatorWidget edit;
     QComboBox *from = qFindChild<QComboBox *>(&edit, QLatin1String("from"));
     QComboBox *to = qFindChild<QComboBox *>(&edit, QLatin1String("to"));
-    const int fromIndex = from->currentIndex();
-    const int toIndex = to->currentIndex();
+
+    const int fromIndex = 5;
+    const int toIndex = 7;
+    from->setCurrentIndex(fromIndex);
+    to->setCurrentIndex(toIndex);
     KPushButton *invert = qFindChild<KPushButton *>(&edit, QLatin1String("invert-button"));
     QCOMPARE(fromIndex != toIndex, true);
     QTest::mouseClick(invert, Qt::LeftButton);
@@ -94,7 +96,6 @@ void TranslatorTest::shouldInvertLanguageWhenClickOnInvertButton()
     int newToIndex = to->currentIndex();
     QCOMPARE(fromIndex != newFromIndex, true);
     QCOMPARE(toIndex != newToIndex, true);
-#endif
 }
 
 QTEST_KDEMAIN( TranslatorTest, GUI )
