@@ -107,7 +107,7 @@ bool UIDOutput::writeAddresseeList(const KABC::AddresseeList& addresseeList,
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-VCardOutput::VCardOutput() : m_converter(0), m_vCardVersion(VCardConverter::v3_0)
+VCardOutput::VCardOutput() : m_converter(0), m_vCardVersion(VCardConverter::v4_0)
 {
     m_converter = new VCardConverter();
 }
@@ -132,6 +132,8 @@ bool VCardOutput::setOptions(const QByteArray& options)
 {
     if (options == "v2.1")
         m_vCardVersion = VCardConverter::v2_1;
+    else if (options == "v3.0")
+        m_vCardVersion = VCardConverter::v3.0;
     else
         return false;
 
@@ -144,12 +146,17 @@ QString VCardOutput::optionUsage() const
 {
     QString usage =
         i18n("Optionally use a different vCard version (default is %1)",
-             QString::fromLatin1("3.0"));
+             QString::fromLatin1("4.0"));
 
     usage += QLatin1Char('\n');
 
     usage += QLatin1String("v2.1\t");
     usage += i18n("Uses the vCard version 2.1");
+
+    usage += QLatin1Char('\n');
+
+    usage += QLatin1String("v3.0\t");
+    usage += i18n("Uses the vCard version 3.0");
 
     return usage;
 }
@@ -182,7 +189,7 @@ bool VCardOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream&
 {
     if (stream.bad()) return false;
 
-    VCardConverter::Version version = VCardConverter::v3_0;
+    VCardConverter::Version version = VCardConverter::v4_0;
     switch (m_vCardVersion)
     {
         case VCardConverter::v2_1:
@@ -190,9 +197,13 @@ bool VCardOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream&
             break;
 
         case VCardConverter::v3_0:
+            version = VCardConverter::v3_0;
+            break;
+
+        case VCardConverter::v4_0:
             // for completeness, in case the enum gets extended and different
             // default value is used
-            version = VCardConverter::v3_0;
+            version = VCardConverter::v4_0;
             break;
 
         default:
@@ -219,7 +230,7 @@ bool VCardOutput::writeAddresseeList(const KABC::AddresseeList& addresseeList,
 {
     if (stream.bad()) return false;
 
-    VCardConverter::Version version = VCardConverter::v3_0;
+    VCardConverter::Version version = VCardConverter::v4_0;
     switch (m_vCardVersion)
     {
         case VCardConverter::v2_1:
@@ -227,9 +238,13 @@ bool VCardOutput::writeAddresseeList(const KABC::AddresseeList& addresseeList,
             break;
 
         case VCardConverter::v3_0:
+            version = VCardConverter::v3_0;
+            break;
+
+        case VCardConverter::v4_0:
             // for completeness, in case the enum gets extended and different
             // default value is used
-            version = VCardConverter::v3_0;
+            version = VCardConverter::v4_0;
             break;
 
         default:
