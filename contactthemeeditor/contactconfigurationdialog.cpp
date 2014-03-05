@@ -136,7 +136,7 @@ void ContactConfigureDialog::writeConfig()
     KConfigGroup group = config->group(QLatin1String("Global"));
     const KABC::Addressee addr = mDefaultContact->contact();
     KABC::VCardConverter converter;
-    const QByteArray data = converter.exportVCard( addr, KABC::VCardConverter::v3_0 );
+    const QByteArray data = converter.exportVCard( addr, KABC::VCardConverter::v4_0 );
     group.writeEntry("defaultContact", data);
 
     group.writeEntry("defaultTemplate", mDefaultTemplate->toPlainText());
