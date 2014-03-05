@@ -162,8 +162,6 @@ class MainView : public KDeclarativeMainView
     void loadExternalReferences( bool load );
     void folderChanged();
     void moveToOrEmptyTrash();
-    void createToDo();
-    void createEvent();
     void useFixedFont();
     void applyFilters();
     void applyFiltersBulkAction();

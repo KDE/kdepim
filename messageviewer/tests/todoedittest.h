@@ -55,6 +55,7 @@ private slots:
     void shouldHaveLineEditFocus();
     void shouldClearUrlMessageWhenSwitchMessage();
     void shouldEmitNotEmitTodoWhenTextTrimmedIsEmpty();
+    void shouldSaveCollectionSettingsWhenDeleteWidget();
 };
 
 #endif // TODOEDITTEST_H

@@ -38,6 +38,7 @@ WebDavSettingsDialog::WebDavSettingsDialog(QWidget *parent)
     lay->addWidget(lab);
 
     mServiceLocation = new KLineEdit;
+    mServiceLocation->setClearButtonShown(true);
     lay->addWidget(mServiceLocation);
 
     //Hide for the moment not implemented.

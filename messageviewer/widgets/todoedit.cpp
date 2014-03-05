@@ -86,12 +86,14 @@ TodoEdit::TodoEdit(QWidget *parent)
 
 TodoEdit::~TodoEdit()
 {
-
+    writeConfig();
 }
 
 void TodoEdit::setMessageUrlAkonadi(const QString &url)
 {
-    mMessageUrlAkonadi = url;
+    if (mMessageUrlAkonadi != url) {
+        mMessageUrlAkonadi = url;
+    }
 }
 
 QString TodoEdit::messageUrlAkonadi() const
@@ -102,6 +104,7 @@ QString TodoEdit::messageUrlAkonadi() const
 void TodoEdit::writeConfig()
 {
     MessageViewer::GlobalSettingsBase::self()->setLastSelectedFolder(mCollectionCombobox->currentCollection().id());
+    MessageViewer::GlobalSettingsBase::self()->writeConfig();
 }
 
 void TodoEdit::readConfig()

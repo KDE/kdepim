@@ -1874,8 +1874,7 @@ void ViewerPrivate::createActions()
     mCreateEventAction->setIconText( i18n( "Create Event" ) );
     mCreateEventAction->setHelpText( i18n( "Allows you to create a calendar Event" ) );
     ac->addAction(QLatin1String("create_event"), mCreateEventAction);
-    //TODO
-    //mCreateEventAction->setShortcut(Qt::CTRL + Qt::Key_T);
+    mCreateEventAction->setShortcut(Qt::CTRL + Qt::Key_E);
     connect( mCreateEventAction, SIGNAL(triggered(bool)), SLOT(slotShowCreateEventWidget()) );
 }
 

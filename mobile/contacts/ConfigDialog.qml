@@ -24,59 +24,65 @@ import org.kde.akonadi.contacts 4.5 as Contacts
 import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 QML.Rectangle {
-  id: configDialog
-  anchors.fill: parent
-  z: 10
-  color: "white"
-  visible: guiStateManager.inConfigScreenState
+    id: configDialog
+    anchors.fill: parent
+    z: 10
+    color: "white"
+    visible: guiStateManager.inConfigScreenState
 
-  function load()
-  {
-    configWidget.load();
-  }
-
-  PlasmaExtras.ScrollArea {
-    id: configWidgetBox
-
-    anchors {
-      top: parent.top
-      topMargin: 25
-      bottom: parent.bottom
-      left: parent.left
-      right: okButton.left
+    function load() {
+        configWidget.load();
     }
 
-    flickableItem: QML.Flickable {
-      contentHeight: configWidget.height;
+    PlasmaExtras.ScrollArea {
+        id: configWidgetBox
 
-      Contacts.ConfigWidget {
-        id: configWidget
-        width: parent.width
-      }
-    }
-  }
+        anchors {
+            top: parent.top
+            topMargin: 25
+            bottom: parent.bottom
+            left: parent.left
+            right: okButton.left
+        }
 
-  KPIM.Button2 {
-    id: okButton
-    anchors.top: parent.top
-    anchors.topMargin: 20
-    anchors.right: parent.right
-    width: 150
-    buttonText: KDE.i18n( "OK" )
-    onClicked: {
-      configWidget.save();
-      guiStateManager.popState()
-    }
-  }
+        flickableItem: QML.Flickable {
+            contentHeight: configWidget.height;
 
-  KPIM.Button2 {
-    id: cancelButton
-    anchors.top: okButton.bottom
-    anchors.right: parent.right
-    width: 150
-    buttonText: KDE.i18n( "Cancel" )
-    onClicked: {
-      guiStateManager.popState()
+            Contacts.ConfigWidget {
+                id: configWidget
+                width: parent.width
+            }
+        }
     }
-  }
+
+    KPIM.Button2 {
+        id: okButton
+        anchors {
+            top: parent.top
+            topMargin: 20
+            right: parent.right
+        }
+
+        width: 150
+        buttonText: KDE.i18n( "OK" )
+
+        onClicked: {
+            configWidget.save();
+            guiStateManager.popState()
+        }
+    }
+
+    KPIM.Button2 {
+        id: cancelButton
+        anchors {
+            top: okButton.bottom
+            right: parent.right
+        }
+        width: 150
+        buttonText: KDE.i18n( "Cancel" )
+
+        onClicked: {
+            guiStateManager.popState()
+        }
+    }
 }

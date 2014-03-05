@@ -30,6 +30,7 @@ class KComboBox;
 class QToolButton;
 class QPushButton;
 class QButtonGroup;
+class KPushButton;
 namespace MessageList {
 namespace Core {
 class MESSAGELIST_EXPORT QuickSearchLine : public QWidget
@@ -64,7 +65,6 @@ public:
     void updateComboboxVisibility();
 
 Q_SIGNALS:
-    void fullSearchRequest();
     void clearButtonClicked();
     void searchEditTextEdited(const QString &);
     void searchOptionChanged();
@@ -75,6 +75,7 @@ private slots:
     void slotSearchOptionChanged();
     void slotSearchEditTextEdited(const QString &text);
     void slotClearButtonClicked();
+    void slotMoreOptionClicked(bool b);
 
 private:
     void initializeStatusSearchButton(QLayout *quickSearchButtonLayout);
@@ -82,14 +83,15 @@ private:
     QList<QToolButton *> mListStatusButton;
     KLineEdit *mSearchEdit;
     KComboBox *mTagFilterCombo;
-    QToolButton *mOpenFullSearchButton;
     QToolButton *mLockSearch;
+    KPushButton *mMoreOptions;
     QPushButton *mSearchEveryWhere;
     QPushButton *mSearchAgainstBody;
     QPushButton *mSearchAgainstSubject;
     QPushButton *mSearchAgainstFrom;
     QPushButton *mSearchAgainstBcc;
     QWidget *mExtraOption;
+    QWidget *mQuickSearchFilterWidget;
     QButtonGroup *mButtonStatusGroup;
     QButtonGroup *mButtonSearchAgainstGroup;
 };

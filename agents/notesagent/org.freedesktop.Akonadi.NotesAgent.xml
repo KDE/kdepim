@@ -28,6 +28,6 @@
     <method name="alarmCheckInterval" >
       <arg direction="out" type="i" />
     </method>
-
+    <method name="configurationChanged"/>
   </interface>
 </node>

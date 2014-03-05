@@ -28,6 +28,7 @@
 #include <KStandardDirs>
 #include <KIcon>
 #include <KIconLoader>
+#include <KPushButton>
 
 #include <QToolButton>
 #include <QHBoxLayout>
@@ -35,7 +36,6 @@
 #include <QButtonGroup>
 #include <QLabel>
 
-//#define SEARCH_EVERYWHERE 1
 
 using namespace MessageList::Core;
 QuickSearchLine::QuickSearchLine(QWidget *parent)
@@ -43,11 +43,13 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
 {
     QVBoxLayout *vbox = new QVBoxLayout;
     vbox->setMargin(0);
+    vbox->setSpacing(0);
     setLayout(vbox);
 
     QWidget *w = new QWidget;
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->setMargin(0);
+    hbox->setSpacing(0);
     w->setLayout(hbox);
     vbox->addWidget(w);
 
@@ -64,11 +66,17 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     connect( mLockSearch, SIGNAL(toggled(bool)), SLOT(slotLockSearchClicked(bool)));
     hbox->addWidget( mLockSearch );
 
+
+
+    mQuickSearchFilterWidget = new QWidget;
+    mQuickSearchFilterWidget->setObjectName(QLatin1String("quicksearchfilterwidget"));
     QHBoxLayout *quickSearchButtonLayout = new QHBoxLayout;
+    mQuickSearchFilterWidget->setLayout(quickSearchButtonLayout);
+    quickSearchButtonLayout->addStretch(0);
     QLabel *quickLab = new QLabel(i18n("Quick Filter:"));
     quickSearchButtonLayout->addWidget(quickLab);
     initializeStatusSearchButton(quickSearchButtonLayout);
-    hbox->addLayout(quickSearchButtonLayout);
+    vbox->addWidget(mQuickSearchFilterWidget);
 
     mSearchEdit = new KLineEdit( this );
     mSearchEdit->setClickMessage( i18nc( "Search for messages.", "Search" ) );
@@ -82,6 +90,13 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
 
     hbox->addWidget( mSearchEdit );
 
+    mMoreOptions = new KPushButton(i18n("More..."), this);
+    mMoreOptions->setObjectName(QLatin1String("moreoptions"));
+    mMoreOptions->setFlat(true);
+    mMoreOptions->setCheckable(true);
+    connect( mMoreOptions, SIGNAL(toggled(bool)), SLOT(slotMoreOptionClicked(bool)));
+    hbox->addWidget( mMoreOptions );
+
     // The status filter button. Will be populated later, as populateStatusFilterCombo() is virtual
     mTagFilterCombo = new KComboBox( this ) ;
     mTagFilterCombo->setVisible( Settings::self()->showQuickSearch() );
@@ -90,15 +105,6 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mTagFilterCombo->hide();
     hbox->addWidget( mTagFilterCombo );
 
-    // The "Open Full Search" button
-    mOpenFullSearchButton = new QToolButton( this );
-    mOpenFullSearchButton->setIcon( KIcon( QLatin1String( "edit-find-mail" ) ) );
-    mOpenFullSearchButton->setText( i18n( "Open Full Search" ) );
-    mOpenFullSearchButton->setToolTip( mOpenFullSearchButton->text() );
-    mOpenFullSearchButton->setVisible( Settings::self()->showQuickSearch() );
-    hbox->addWidget( mOpenFullSearchButton );
-
-    connect( mOpenFullSearchButton, SIGNAL(clicked()), this, SIGNAL(fullSearchRequest()) );
     mSearchEdit->setEnabled( false );
     mTagFilterCombo->setEnabled( false );
 
@@ -153,11 +159,17 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mButtonSearchAgainstGroup->button(0)->setChecked(true);
     connect(mButtonSearchAgainstGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotSearchOptionChanged()));
     mButtonSearchAgainstGroup->setExclusive(true);
+    mQuickSearchFilterWidget->hide();
 }
 
 QuickSearchLine::~QuickSearchLine()
 {
 
+}
+
+void QuickSearchLine::slotMoreOptionClicked(bool b)
+{
+    mQuickSearchFilterWidget->setVisible(b);
 }
 
 void QuickSearchLine::slotSearchEditTextEdited(const QString &text)
@@ -222,11 +234,6 @@ KComboBox *QuickSearchLine::tagFilterComboBox() const
 KLineEdit *QuickSearchLine::searchEdit() const
 {
     return mSearchEdit;
-}
-
-QToolButton *QuickSearchLine::openFullSearchButton() const
-{
-    return mOpenFullSearchButton;
 }
 
 QToolButton *QuickSearchLine::lockSearch() const

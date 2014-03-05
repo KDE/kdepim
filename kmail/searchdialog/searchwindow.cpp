@@ -352,7 +352,7 @@ void SearchWindow::setEnabledSearchButton( bool )
     mSearchButton->setEnabled( true );
 }
 
-void SearchWindow::updateCollectionStatistic(Akonadi::Collection::Id id,Akonadi::CollectionStatistics statistic)
+void SearchWindow::updateCollectionStatistic(Akonadi::Collection::Id id, const Akonadi::CollectionStatistics &statistic)
 {
     QString genMsg;
     if ( id == mFolder.id() ) {
@@ -520,6 +520,7 @@ void SearchWindow::doSearch()
     }
 
     connect( mSearchJob, SIGNAL(result(KJob*)), SLOT(searchDone(KJob*)) );
+    mUi.mProgressIndicator->start();
     enableGUI();
     mUi.mStatusLbl->setText( i18n( "Searching..." ) );
 }
@@ -528,6 +529,7 @@ void SearchWindow::searchDone( KJob* job )
 {
     Q_ASSERT( job == mSearchJob );
     QMetaObject::invokeMethod( this, "enableGUI", Qt::QueuedConnection );
+    mUi.mProgressIndicator->stop();
     if ( job->error() ) {
         kDebug() << job->errorString();
         KMessageBox::sorry( this, i18n("Cannot get search result. %1", job->errorString() ) );
@@ -591,6 +593,7 @@ void SearchWindow::searchDone( KJob* job )
 
 void SearchWindow::slotStop()
 {
+    mUi.mProgressIndicator->stop();
     if ( mSearchJob ) {
         mSearchJob->kill( KJob::Quietly );
         mSearchJob->deleteLater();
@@ -844,32 +847,6 @@ void SearchWindow::addRulesToSearchPattern( const SearchPattern &pattern )
 
     mSearchPattern = p;
     mUi.mPatternEdit->setSearchPattern( &mSearchPattern );
-}
-
-// void SearchWindow::childCollectionsFromSelectedCollection( const Akonadi::Collection& collection, KUrl::List&lstUrlCollection )
-// {
-//     if ( collection.isValid() )  {
-//         QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection( KMKernel::self()->collectionModel(), collection );
-//         if ( idx.isValid() ) {
-//             getChildren( KMKernel::self()->collectionModel(), idx, lstUrlCollection );
-//         }
-//     }
-// }
-//
-void SearchWindow::getChildren( const QAbstractItemModel *model,
-                                const QModelIndex &parentIndex,
-                                KUrl::List &list )
-{
-    const int rowCount = model->rowCount( parentIndex );
-    for ( int row = 0; row < rowCount; ++row ) {
-        const QModelIndex index = model->index( row, 0, parentIndex );
-        if ( model->rowCount( index ) > 0 ) {
-            getChildren( model, index, list );
-        }
-        Akonadi::Collection c = model->data(index, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-        if ( c.isValid() )
-            list << c.url( Akonadi::Collection::UrlShort );
-    }
 }
 
 void SearchWindow::slotSelectMultipleFolders()

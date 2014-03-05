@@ -145,6 +145,8 @@ public:
     void cancelUploadFile();
     void cancelDownloadFile();
     void cancelUploadDownloadFile();
+    virtual bool hasCancelSupport() const;
+
 Q_SIGNALS:
     void actionFailed(const QString &serviceName, const QString &error);
     void accountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &);

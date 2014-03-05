@@ -81,10 +81,6 @@ MAILCOMMON_EXPORT Akonadi::AgentInstance::List agentInstances( bool excludeMailT
 
 MAILCOMMON_EXPORT bool ensureKorganizerRunning( bool switchTo );
 
-MAILCOMMON_EXPORT bool createTodoFromMail( const Akonadi::Item &mailItem );
-
-MAILCOMMON_EXPORT bool createEventFromMail( const Akonadi::Item &mailItem );
-
 /**
    * Returns the identity of the folder that contains the given Akonadi::Item.
    */

@@ -25,137 +25,161 @@ import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 QML.Column {
-  id : _top
-  property alias selectedItemModel : selectedItem.model
-  property alias multipleText : _multipleText.text
+    id: _top
 
-  property alias actionModel: actionListView.model
+    property alias selectedItemModel: selectedItem.model
+    property alias multipleText: _multipleText.text
+    property alias actionModel: actionListView.model
+    property int itemHeight: 65
 
-  signal backClicked()
-  signal triggered(string name)
+    signal backClicked()
+    signal triggered(string name)
 
-  property int itemHeight : 65
+    onChildrenChanged: {
+        var newChild = children[ children.length - 1 ];
+        newChild.anchors.left = _top.left;
+        newChild.anchors.right = _top.right;
+        newChild.height = itemHeight;
+    }
 
-  onChildrenChanged: {
-    var newChild = children[ children.length - 1 ];
-    newChild.anchors.left = _top.left;
-    newChild.anchors.right = _top.right;
-    newChild.height = itemHeight;
-  }
-
-  QML.Item {
-    id: firstItem
-    anchors.left : parent.left
-    anchors.right : parent.right
-    height : itemHeight
-
-    PlasmaExtras.ScrollArea {
-      id : selectedItemContainer
-
-      anchors.fill : parent
-
-      flickableItem: QML.ListView {
-        id : selectedItem
-
-        delegate : CollectionDelegate {
-          height : 70
-          indentation : 80
+    QML.Item {
+        id: firstItem
+        height: itemHeight
+        anchors {
+            left: parent.left
+            right: parent.right
         }
-        visible : count == 1
-      }
-    }
-    QML.Text {
-      id : _multipleText
-      anchors.horizontalCenter : parent.horizontalCenter
-      y : height / 2
-      visible : selectedItem.count != 1
-      height : 70
-    }
-    QML.Image {
-      id : topLine
-      source : "images/list-line-top.png"
-      anchors.right : selectedItemContainer.right
-      anchors.top : selectedItemContainer.top
-    }
-    QML.Image {
-      id : topLineFiller
-      source : "images/dividing-line-horizontal.png"
-      anchors.right : topLine.left
-      anchors.bottom : topLine.bottom
-      fillMode : QML.Image.TileHorizontally
-      width : parent.width - topLine.width
-    }
-    QML.Image {
-      id : bottomLine
-      source : "images/dividing-line-horizontal.png"
-      anchors.right : selectedItemContainer.right
-      anchors.bottom : selectedItemContainer.bottom
-      fillMode : QML.Image.TileHorizontally
-      width : parent.width
-    }
-    QML.Image {
-      source : "images/dividing-line.png"
-      anchors.top : selectedItemContainer.bottom
-      anchors.right : parent.right
-      height : _top.height - selectedItemContainer.height
-      fillMode : QML.Image.TileVertically
-    }
-    QML.Image {
-      id : backIcon
-      source : "images/bulk-back-overlay.png"
-      anchors.right : parent.right
-      anchors.verticalCenter : parent.verticalCenter
-    }
-    QML.MouseArea {
-      id : back_ma
-      anchors.fill : parent
-      onClicked : _top.backClicked()
-    }
-  }
 
-  QML.ListModel {
-    id: actionModel;
-    QML.ListElement {
-      action: "akonadi_item_delete"
-    }
-    QML.ListElement {
-      action: "akonadi_item_move_to_dialog"
-    }
-    QML.ListElement {
-      action: "akonadi_item_copy_to_dialog"
-    }
-  }
 
-  QML.Rectangle {
-    anchors.left : _top.left
-    anchors.right : _top.right
-    anchors.top: _top.top
-    anchors.topMargin: itemHeight
-    height: _top.height - itemHeight
-    clip: true
-    QML.Text {
-      anchors.fill : parent
-      horizontalAlignment : QML.Text.AlignHCenter
-      verticalAlignment : QML.Text.AlignVCenter
-      font.pixelSize : 22
-      text : KDE.i18n( "Please select one\nor more items\non the right." )
-      visible : !_itemActionModel.hasSelection
-    }
+        PlasmaExtras.ScrollArea {
+            id: selectedItemContainer
+            anchors.fill: parent
 
-    PlasmaExtras.ScrollArea {
-      anchors.fill:parent
+            flickableItem: QML.ListView {
+                id: selectedItem
 
-      flickableItem: QML.ListView {
-        id: actionListView
-
-        model: actionModel
-
-        delegate: KPIM.Action {
-          height : itemHeight
-          width : parent.width
-          action: application.getAction( model.action, "" )
+                delegate: CollectionDelegate {
+                    height: 70
+                    indentation: 80
+                }
+                visible: count == 1
+            }
         }
-      }
+
+        QML.Text {
+            id: _multipleText
+            anchors.horizontalCenter : parent.horizontalCenter
+            y: height / 2
+            visible: selectedItem.count != 1
+            height: 70
+        }
+
+        QML.Image {
+            id: topLine
+            source: "images/list-line-top.png"
+            anchors {
+                right: selectedItemContainer.right
+                top: selectedItemContainer.top
+            }
+        }
+
+        QML.Image {
+            id: topLineFiller
+            source: "images/dividing-line-horizontal.png"
+            anchors {
+                right: topLine.left
+                bottom: topLine.bottom
+            }
+            fillMode: QML.Image.TileHorizontally
+            width: parent.width - topLine.width
+        }
+
+        QML.Image {
+            id: bottomLine
+            source: "images/dividing-line-horizontal.png"
+            anchors {
+                right: selectedItemContainer.right
+                bottom: selectedItemContainer.bottom
+            }
+            fillMode: QML.Image.TileHorizontally
+            width: parent.width
+        }
+
+        QML.Image {
+            source: "images/dividing-line.png"
+            anchors {
+                top: selectedItemContainer.bottom
+                right: parent.right
+            }
+            height: _top.height - selectedItemContainer.height
+            fillMode: QML.Image.TileVertically
+        }
+
+        QML.Image {
+            id: backIcon
+            source: "images/bulk-back-overlay.png"
+            anchors {
+                right: parent.right
+                verticalCenter: parent.verticalCenter
+            }
+        }
+
+        QML.MouseArea {
+            id: back_ma
+            anchors.fill: parent
+            onClicked: _top.backClicked()
+        }
+
     }
-  }
+
+    QML.ListModel {
+        id: actionModel;
+
+        QML.ListElement {
+            action: "akonadi_item_delete"
+        }
+
+        QML.ListElement {
+            action: "akonadi_item_move_to_dialog"
+        }
+
+        QML.ListElement {
+            action: "akonadi_item_copy_to_dialog"
+        }
+    }
+
+    QML.Rectangle {
+        anchors {
+            left: _top.left
+            right: _top.right
+            top: _top.top
+            topMargin: itemHeight
+        }
+        height: _top.height - itemHeight
+        clip: true
+
+        QML.Text {
+            anchors.fill: parent
+            horizontalAlignment: QML.Text.AlignHCenter
+            verticalAlignment: QML.Text.AlignVCenter
+            font.pixelSize: 22
+            text:  KDE.i18n( "Please select one\nor more items\non the right." )
+            visible: !_itemActionModel.hasSelection
+        }
+
+        PlasmaExtras.ScrollArea {
+            anchors.fill:parent
+
+            flickableItem: QML.ListView {
+                id: actionListView
+                model: actionModel
+
+                delegate: KPIM.Action {
+                    height: itemHeight
+                    width: parent.width
+                    action: application.getAction( model.action, "" )
+                }
+            }
+        }
+    }
 }

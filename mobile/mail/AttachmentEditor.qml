@@ -23,77 +23,84 @@ import QtQuick 1.1
 import org.kde.pim.mobileui 4.5 as KPIM
 
 KPIM.ReorderListContainer {
-  width: 600
+    width: 600
+    model: attachmentModel
 
-  model: attachmentModel
+    onCurrentIndexChanged: attachmentEditor.setRowSelected( index )
 
-  delegate: Item {
-    id: wrapper
-    width: parent.width
-    height: 70
-    clip: true
+    delegate: Item {
+        id: wrapper
+        width: parent.width
+        height: 70
+        clip: true
 
-    Rectangle {
-      id: background
-      anchors.fill: parent
-      opacity: (wrapper.ListView.isCurrentItem ? 0.25 : 0)
-      color: "lightsteelblue"
+        Rectangle {
+            id: background
+            anchors.fill: parent
+            opacity: (wrapper.ListView.isCurrentItem ? 0.25 : 0)
+            color: "lightsteelblue"
+        }
+
+        Text {
+            id: attachmentName
+            anchors.fill: parent;
+            text: model.attachmentName;
+            horizontalAlignment: "AlignLeft";
+            verticalAlignment: "AlignTop";
+        }
+
+        Row {
+            id: cryptoIcons
+            anchors {
+                right: parent.right
+                bottom: parent.bottom
+            }
+            Image {
+                width: 22
+                height: 22
+                source: KDE.locate( "data", "libmessageviewer/pics/mobile_status_signed.png" )
+                visible: model.attachmentIsSigned
+            }
+
+            Image {
+                width: 22
+                height: 22
+                source: KDE.locate( "data", "libmessageviewer/pics/mobile_status_encrypted.png" )
+                visible: model.attachmentIsEncrypted
+            }
+        }
+
+        Text {
+            anchors {
+                left: parent.left
+                bottom: parent.bottom
+            }
+            text: model.attachmentSize
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: wrapper.ListView.view.currentIndex = model.index
+        }
     }
-    Text {
-      id: attachmentName
-      anchors.fill: parent;
-      text: model.attachmentName;
-      horizontalAlignment: "AlignLeft";
-      verticalAlignment: "AlignTop";
+
+    KPIM.ActionButton {
+        icon: KDE.locate( "data", "kmail-mobile/add-attachment-button.png" )
+        actionName: "attach"
     }
-    Row {
-      id: cryptoIcons
-      anchors.right: parent.right
-      anchors.bottom: parent.bottom
 
-      Image {
-        width: 22
-        height: 22
-        source: KDE.locate( "data", "libmessageviewer/pics/mobile_status_signed.png" )
-        visible: model.attachmentIsSigned
-      }
-      Image {
-        width: 22
-        height: 22
-        source: KDE.locate( "data", "libmessageviewer/pics/mobile_status_encrypted.png" )
-        visible: model.attachmentIsEncrypted
-      }
+    KPIM.ActionButton {
+        icon: KDE.locate( "data", "kmail-mobile/remove-attachment-button.png" )
+        actionName: "remove"
     }
-    Text {
-      anchors.left: parent.left
-      anchors.bottom: parent.bottom
-      text: model.attachmentSize
+
+    KPIM.ActionButton {
+        icon: KDE.locate( "data", "kmail-mobile/toggle-signature-button.png" )
+        actionName: "toggle_attachment_signed"
     }
-    MouseArea {
-      anchors.fill: parent
-      onClicked: wrapper.ListView.view.currentIndex = model.index
+
+    KPIM.ActionButton {
+        icon: KDE.locate( "data", "kmail-mobile/toggle-encryption-button.png" )
+        actionName: "toggle_attachment_encrypted"
     }
-  }
-
-  onCurrentIndexChanged: attachmentEditor.setRowSelected( index )
-
-  KPIM.ActionButton {
-    icon : KDE.locate( "data", "kmail-mobile/add-attachment-button.png" )
-    actionName : "attach"
-  }
-
-  KPIM.ActionButton {
-    icon : KDE.locate( "data", "kmail-mobile/remove-attachment-button.png" )
-    actionName : "remove"
-  }
-
-  KPIM.ActionButton {
-    icon : KDE.locate( "data", "kmail-mobile/toggle-signature-button.png" )
-    actionName : "toggle_attachment_signed"
-  }
-
-  KPIM.ActionButton {
-    icon : KDE.locate( "data", "kmail-mobile/toggle-encryption-button.png" )
-    actionName : "toggle_attachment_encrypted"
-  }
 }

@@ -503,8 +503,6 @@ void MainView::doDelayedInit()
   connect( actionCollection()->action( QLatin1String("prefer_html_to_plain_viewer") ), SIGNAL(triggered(bool)), SLOT(preferHtmlViewer(bool)) );
   connect( actionCollection()->action( QLatin1String("load_external_ref") ), SIGNAL(triggered(bool)), SLOT(loadExternalReferences(bool)) );
   connect( actionCollection()->action( QLatin1String("move_all_to_trash") ), SIGNAL(triggered(bool)), SLOT(moveToOrEmptyTrash()) );
-  connect( actionCollection()->action( QLatin1String("create_todo_reminder") ), SIGNAL(triggered(bool)), SLOT(createToDo()) );
-  connect( actionCollection()->action( QLatin1String("create_event") ), SIGNAL(triggered(bool)), SLOT(createEvent()) );
   connect( actionCollection()->action( QLatin1String("apply_filters") ), SIGNAL(triggered(bool)), SLOT(applyFilters()) );
   connect( actionCollection()->action( QLatin1String("apply_filters_bulk_action") ), SIGNAL(triggered(bool)), SLOT(applyFiltersBulkAction()) );
 
@@ -1664,24 +1662,6 @@ void MainView::moveToOrEmptyTrash()
   } else {
     mMailActionManager->action( Akonadi::StandardMailActionManager::MoveAllToTrash )->trigger();
   }
-}
-
-void MainView::createToDo()
-{
-  const Item item = currentItem();
-  if ( !item.isValid() )
-    return;
-
-  MailCommon::Util::createTodoFromMail( item );
-}
-
-void MainView::createEvent()
-{
-  const Item item = currentItem();
-  if ( !item.isValid() )
-    return;
-
-  MailCommon::Util::createEventFromMail( item );
 }
 
 void MainView::useFixedFont()

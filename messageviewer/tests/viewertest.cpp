@@ -82,4 +82,23 @@ void ViewerTest::shouldShowCreateTodoWidgetWhenActivateItAndWeHaveAMessage()
     QCOMPARE(createtodowidget->isVisible(), true);
 }
 
+void ViewerTest::shouldShowCreateEventWidgetWhenActivateItAndWeHaveAMessage()
+{
+    MessageViewer::Viewer viewer(0, 0, new KActionCollection(this));
+    viewer.show();
+    QTest::qWaitForWindowShown(&viewer);
+    QWidget *createeventwidget = qFindChild<QWidget *>(&viewer, QLatin1String("createeventwidget"));
+    QVERIFY(viewer.createEventAction());
+
+    viewer.createTodoAction()->trigger();
+    //No message => we can show it.
+    QCOMPARE(createeventwidget->isVisible(), false);
+
+    KMime::Message::Ptr msg(new KMime::Message);
+    viewer.setMessage(msg);
+
+    viewer.createEventAction()->trigger();
+    QCOMPARE(createeventwidget->isVisible(), true);
+}
+
 QTEST_KDEMAIN( ViewerTest, GUI )

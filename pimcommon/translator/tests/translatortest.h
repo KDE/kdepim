@@ -15,32 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef EVENTEDITTEST_H
-#define EVENTEDITTEST_H
+#ifndef TRANSLATORTEST_H
+#define TRANSLATORTEST_H
 #include <QObject>
 
-class EventEditTest : public QObject
+class TranslatorTest : public QObject
 {
     Q_OBJECT
 public:
-    EventEditTest();
+    TranslatorTest();
 
 private Q_SLOTS:
     void shouldHaveDefaultValuesOnCreation();
-    void shouldEmitCollectionChanged();
-    void shouldEmitMessageChanged();
-    void shouldNotEmitWhenCollectionIsNotChanged();
-    void shouldNotEmitWhenMessageIsNotChanged();
-    void shouldHideWidgetWhenPressEnter();
-    void shouldEmitEventWhenPressEnter();
-    void shouldSaveCollectionSettingsWhenCloseWidget();
-    void shouldSaveCollectionSettings();
-    void shouldHideWidgetWhenPressEscape();
-    void shouldEventHasCorrectSubject();
-    void shouldSelectLineWhenPutMessage();
-    void shouldHaveCorrectStartEndDateTime();
-    void shouldSaveCollectionSettingsWhenDeleteWidget();
-    void shouldNotEmitCreateEventWhenDateIsInvalid();
+    void shouldEnableTranslateButtonWhenTextToTranslateIsNotEmpty();
+    void shouldDisableTranslateButtonAndClearTextWhenClickOnClearButton();
+    void shouldInvertLanguageWhenClickOnInvertButton();
 };
 
-#endif // EVENTEDITTEST_H
+#endif // TRANSLATORTEST_H

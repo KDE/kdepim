@@ -138,7 +138,6 @@ Widget::Widget( QWidget *pParent )
 
   d->quickSearchLine = new QuickSearchLine;
   connect(d->quickSearchLine, SIGNAL(clearButtonClicked()), SLOT(searchEditClearButtonClicked()) );
-  connect(d->quickSearchLine, SIGNAL(fullSearchRequest()), this, SIGNAL(fullSearchRequest()) );
 
   connect(d->quickSearchLine, SIGNAL(searchEditTextEdited(QString)), SLOT(searchEditTextEdited()) );
   connect(d->quickSearchLine, SIGNAL(searchOptionChanged()), SLOT(searchEditTextEdited()) );
@@ -175,7 +174,6 @@ void Widget::changeQuicksearchVisibility(bool show)
 {
   KLineEdit * const lineEdit = d->quickSearchLine->searchEdit();
   QWidget * const comboBox = d->quickSearchLine->tagFilterComboBox();
-  QWidget * const fullSearchButton = d->quickSearchLine->openFullSearchButton();
   if ( !show ) {
     //if we hide it we do not want to apply the filter,
     //otherwise someone is maybe stuck with x new emails
@@ -194,7 +192,6 @@ void Widget::changeQuicksearchVisibility(bool show)
   }
   lineEdit->setVisible( show );
   comboBox->setVisible( show );
-  fullSearchButton->setVisible( show );
   d->quickSearchLine->lockSearch()->setVisible( show );
   Settings::self()->setShowQuickSearch( show );
 }

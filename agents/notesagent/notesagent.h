@@ -43,6 +43,8 @@ public:
     int alarmCheckInterval() const;
     void setAlarmCheckInterval(int value);
 
+    void configurationChanged();
+
 Q_SIGNALS:
     void needUpdateConfigDialogBox();
 

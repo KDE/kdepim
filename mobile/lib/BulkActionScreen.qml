@@ -24,93 +24,111 @@ import org.kde.akonadi 4.5 as Akonadi
 import org.kde.pim.mobileui 4.5 as KPIM
 
 QML.Rectangle {
-  color : "white"
-  id : _top
-  property alias selectedItemModel : actionList.selectedItemModel
-  property alias multipleText : actionList.multipleText
-  property alias headerList : headerList.children
-  property alias actionListWidth : actionList.width
-  property alias backgroundImage : _backgroundImage.source
-  property alias actionModel : actionList.actionModel
-  property alias itemHeight : actionList.itemHeight
-  default property alias actions: actionList.children
+    id: _top
 
-  anchors.fill: parent
-  anchors.topMargin : 12
-
-  QML.Image {
-    id: _backgroundImage
-  }
-
-  BulkActionList {
-    id : actionList
-    anchors.top : parent.top
-    anchors.bottom : selectAllButton.top
-    anchors.left : parent.left
-    onBackClicked : {
-      guiStateManager.popState()
-      bulkActionFilterLineEdit.clear()
-    }
-    onTriggered : {
-      //mainPanel.complete(name)
-    }
-  }
-
-  KPIM.Button2 {
-    id: selectAllButton
-    anchors.left: parent.left
-    anchors.bottom: parent.bottom
-    anchors.right: mainPanel.left
-    buttonText: stateHolder.state == "check_all" ? KDE.i18n( "Select All" ) : KDE.i18n( "Deselect All" )
-    onClicked: {
-      if ( stateHolder.state == "check_all" ) {
-        application.checkAllBulkActionItems( true )
-        stateHolder.state = "uncheck_all"
-      } else {
-        application.checkAllBulkActionItems( false )
-        stateHolder.state = "check_all"
-      }
+    anchors {
+        fill: parent
+        topMargin: 12
     }
 
-    QML.Item {
-      id: stateHolder
-      state: "check_all"
+    color: "white"
 
-      states: [
-        QML.State {
-          name: "check_all"
-        },
+    default property alias actions: actionList.children
+    property alias selectedItemModel: actionList.selectedItemModel
+    property alias multipleText: actionList.multipleText
+    property alias headerList: headerList.children
+    property alias actionListWidth: actionList.width
+    property alias backgroundImage: _backgroundImage.source
+    property alias actionModel: actionList.actionModel
+    property alias itemHeight: actionList.itemHeight
 
-        QML.State {
-          name: "uncheck_all"
+    QML.Image {
+        id: _backgroundImage
+    }
+
+    BulkActionList {
+        id: actionList
+        anchors {
+            top: parent.top
+            bottom: selectAllButton.top
+            left: parent.left
         }
-      ]
-    }
-  }
 
-  QML.Item {
-    id : mainPanel
-    anchors.top : parent.top
-    anchors.right : parent.right
-    anchors.bottom : parent.bottom
-    anchors.left : actionList.right
+        onBackClicked: {
+            guiStateManager.popState()
+            bulkActionFilterLineEdit.clear()
+        }
+
+        onTriggered: {
+            //mainPanel.complete(name)
+        }
+    }
+
+    KPIM.Button2 {
+        id: selectAllButton
+        anchors {
+            left: parent.left
+            bottom: parent.bottom
+            right: mainPanel.left
+        }
+
+        buttonText: stateHolder.state == "check_all" ? KDE.i18n( "Select All" ) : KDE.i18n( "Deselect All" )
+
+        onClicked: {
+            if ( stateHolder.state == "check_all" ) {
+                application.checkAllBulkActionItems( true )
+                stateHolder.state = "uncheck_all"
+            } else {
+                application.checkAllBulkActionItems( false )
+                stateHolder.state = "check_all"
+            }
+        }
+
+        QML.Item {
+            id: stateHolder
+            state: "check_all"
+
+            states: [
+                QML.State {
+                    name: "check_all"
+                },
+
+                QML.State {
+                    name: "uncheck_all"
+                }
+            ]
+        }
+    }
 
     QML.Item {
-      anchors.left : parent.left
-      anchors.top : parent.top
-      anchors.bottom : bulkActionFilterLineEdit.top
-      anchors.right : parent.right
-      id : headerList
-    }
+        id : mainPanel
+        achors {
+            top: parent.top
+            right: parent.right
+            bottom: parent.bottom
+            left: actionList.right
+        }
 
-    Akonadi.BulkActionFilterLineEdit {
-      id: bulkActionFilterLineEdit
-      anchors.left : parent.left
-      anchors.bottom : parent.bottom
-      anchors.right : parent.right
-      visible : false
-      height : 0
-      y: height == 0 ? parent.height : parent.height - height
+        QML.Item {
+            id: headerList
+            anchors {
+                left: parent.left
+                top: parent.top
+                bottom: bulkActionFilterLineEdit.top
+                right: parent.right
+            }
+        }
+
+        Akonadi.BulkActionFilterLineEdit {
+            id: bulkActionFilterLineEdit
+            anchors {
+                left: parent.left
+                bottom: parent.bottom
+                right: parent.right
+            }
+            visible: false
+            height: 0
+            y: height == 0 ? parent.height : parent.height - height
+        }
     }
-  }
 }

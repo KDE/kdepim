@@ -43,10 +43,12 @@ EventEdit::EventEdit(QWidget *parent)
     : QWidget(parent)
 {
     QVBoxLayout *vbox = new QVBoxLayout;
+    vbox->setMargin(2);
     vbox->setSpacing(0);
     setLayout(vbox);
     QHBoxLayout *hbox = new QHBoxLayout;
-    hbox->setMargin(2);
+    hbox->setMargin(0);
+    hbox->setSpacing(0);
     vbox->addLayout(hbox);
 
     QToolButton *closeBtn = new QToolButton( this );
@@ -119,12 +121,13 @@ EventEdit::EventEdit(QWidget *parent)
 
 EventEdit::~EventEdit()
 {
-
+    writeConfig();
 }
 
 void EventEdit::writeConfig()
 {
     MessageViewer::GlobalSettingsBase::self()->setLastEventSelectedFolder(mCollectionCombobox->currentCollection().id());
+    MessageViewer::GlobalSettingsBase::self()->writeConfig();
 }
 
 void EventEdit::readConfig()
@@ -194,10 +197,17 @@ void EventEdit::slotReturnPressed()
         return;
     }
 
+    const KDateTime dtstart = mStartDateTimeEdit->dateTime();
+    const KDateTime dtend = mEndDateTimeEdit->dateTime();
+    if (!dtstart.isValid() || !dtend.isValid()) {
+        kDebug()<<" date is not valid !";
+        return;
+    }
+
     if (!mNoteEdit->text().trimmed().isEmpty()) {
         KCalCore::Event::Ptr event( new KCalCore::Event );
-        event->setDtStart(mStartDateTimeEdit->dateTime());
-        event->setDtEnd(mEndDateTimeEdit->dateTime());
+        event->setDtStart(dtstart);
+        event->setDtEnd(dtend);
         event->setSummary(mNoteEdit->text());
         Q_EMIT createEvent(event, collection);
         mNoteEdit->clear();

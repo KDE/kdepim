@@ -35,7 +35,7 @@ public:
     QMap<QString, QMap<QString, QString> > initListLanguage(KComboBox *from);
     void translate();
     void debug();
-
+    void clear();
 protected Q_SLOTS:
     void slotTranslateFinished(QNetworkReply*);
     void slotError(QNetworkReply::NetworkError /*error*/);
