@@ -27,6 +27,9 @@ public:
 
 private Q_SLOTS:
     void shouldHaveDefaultValuesOnCreation();
+    void shouldEnableTranslateButtonWhenTextToTranslateIsNotEmpty();
+    void shouldDisableTranslateButtonAndClearTextWhenClickOnClearButton();
+    void shouldInvertLanguageWhenClickOnInvertButton();
 };
 
 #endif // TRANSLATORTEST_H
