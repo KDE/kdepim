@@ -27,6 +27,7 @@
 #include <KLineEdit>
 #include <QToolButton>
 #include <QPushButton>
+#include <KPushButton>
 #include <KComboBox>
 
 
@@ -43,6 +44,11 @@ void QuickSearchLineTest::shouldHaveDefaultValueOnCreation()
     QWidget *widget = qFindChild<QWidget *>(&searchLine, QLatin1String("extraoptions"));
     QVERIFY(widget);
     QVERIFY(widget->isHidden());
+    KPushButton *moreButton = qFindChild<KPushButton *>(&searchLine, QLatin1String("moreoptions"));
+    QVERIFY(moreButton);
+    QWidget *quickSearchFilterWidget = qFindChild<QWidget *>(&searchLine, QLatin1String("quicksearchfilterwidget"));
+    QVERIFY(quickSearchFilterWidget);
+    QVERIFY(quickSearchFilterWidget->isHidden());
 }
 
 void QuickSearchLineTest::shouldEmitTextChanged()
@@ -165,6 +171,19 @@ void QuickSearchLineTest::shouldShowExtraOptionWidgetWhenTextTrimmedIsNotEmpty()
     QTest::keyClick(searchLine.searchEdit(), 'F');
     QVERIFY(widget->isVisible());
 
+}
+
+void QuickSearchLineTest::shouldShowMoreOptionWhenClickOnMoreButton()
+{
+    QuickSearchLine searchLine;
+    searchLine.show();
+    QTest::qWaitForWindowShown(&searchLine);
+    KPushButton *moreButton = qFindChild<KPushButton *>(&searchLine, QLatin1String("moreoptions"));
+    QTest::mouseClick(moreButton, Qt::LeftButton);
+    QWidget *quickSearchFilterWidget = qFindChild<QWidget *>(&searchLine, QLatin1String("quicksearchfilterwidget"));
+    QVERIFY(quickSearchFilterWidget->isVisible());
+    QTest::mouseClick(moreButton, Qt::LeftButton);
+    QVERIFY(!quickSearchFilterWidget->isVisible());
 }
 
 QTEST_KDEMAIN( QuickSearchLineTest, GUI )

@@ -41,6 +41,7 @@ private Q_SLOTS:
     void shouldResetComboboxWhenResetFilter();
     void shouldNotEmitTextChangedWhenTextTrimmedIsEmpty();
     void shouldShowExtraOptionWidgetWhenTextTrimmedIsNotEmpty();
+    void shouldShowMoreOptionWhenClickOnMoreButton();
 };
 
 #endif // QUICKSEARCHLINETEST_H
