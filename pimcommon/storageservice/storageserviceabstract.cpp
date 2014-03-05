@@ -258,6 +258,7 @@ void StorageServiceAbstract::logout()
     StorageServiceSettings::self()->closeWallet();
     shutdownService();
     mNeedToReadConfigFirst = true;
+    mInProgress = false;
 }
 
 void StorageServiceAbstract::executeNextAction()
