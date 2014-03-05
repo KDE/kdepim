@@ -850,7 +850,7 @@ void ThunderbirdSettings::readIdentity( const QString& account )
         const QString filename = KStandardDirs::locateLocal("appdata",newIdentity->identityName() + QLatin1String(".vcf"));
         QFile file(filename);
         if ( file.open( QIODevice::WriteOnly |QIODevice::Text ) ) {
-            const QByteArray data = converter.exportVCard( addr, KABC::VCardConverter::v3_0 );
+            const QByteArray data = converter.exportVCard( addr, KABC::VCardConverter::v4_0 );
             file.write( data );
             file.flush();
             file.close();

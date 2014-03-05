@@ -100,7 +100,7 @@ bool ContactsExportHandler::exportItems( const Akonadi::Item::List &items )
     if ( fileName.isEmpty() ) // user canceled export
       return true;
 
-    ok = exportVCard( fileName, converter.createVCards( contacts, KABC::VCardConverter::v3_0 ) );
+    ok = exportVCard( fileName, converter.createVCards( contacts, KABC::VCardConverter::v4_0 ) );
   } else {
     const QString msg = i18n( "You have selected a list of contacts, shall they be "
                               "exported to several files?" );
@@ -116,7 +116,7 @@ bool ContactsExportHandler::exportItems( const Akonadi::Item::List &items )
           foreach ( const KABC::Addressee &contact, contacts ) {
             fileName = path + QDir::separator() + contactFileName( contact ) + QLatin1String( ".vcf" );
 
-            const bool tmpOk = exportVCard( fileName, converter.createVCard( contact, KABC::VCardConverter::v3_0 ) );
+            const bool tmpOk = exportVCard( fileName, converter.createVCard( contact, KABC::VCardConverter::v4_0 ) );
 
             ok = ok && tmpOk;
           }
@@ -129,7 +129,7 @@ bool ContactsExportHandler::exportItems( const Akonadi::Item::List &items )
           if ( fileName.isEmpty() )
             return true; // user canceled export
 
-          ok = exportVCard( fileName, converter.createVCards( contacts, KABC::VCardConverter::v3_0 ) );
+          ok = exportVCard( fileName, converter.createVCards( contacts, KABC::VCardConverter::v4_0 ) );
         }
     }
   }
