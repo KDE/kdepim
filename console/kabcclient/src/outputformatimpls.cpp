@@ -133,7 +133,7 @@ bool VCardOutput::setOptions(const QByteArray& options)
     if (options == "v2.1")
         m_vCardVersion = VCardConverter::v2_1;
     else if (options == "v3.0")
-        m_vCardVersion = VCardConverter::v3.0;
+        m_vCardVersion = VCardConverter::v3_0;
     else
         return false;
 
