@@ -67,12 +67,6 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     hbox->addWidget( mLockSearch );
 
 
-    mMoreOptions = new KPushButton(i18n("More..."), this);
-    mMoreOptions->setObjectName(QLatin1String("moreoptions"));
-    mMoreOptions->setFlat(true);
-    mMoreOptions->setCheckable(true);
-    connect( mMoreOptions, SIGNAL(toggled(bool)), SLOT(slotMoreOptionClicked(bool)));
-    hbox->addWidget( mMoreOptions );
 
     mQuickSearchFilterWidget = new QWidget;
     mQuickSearchFilterWidget->setObjectName(QLatin1String("quicksearchfilterwidget"));
@@ -95,6 +89,13 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
 
 
     hbox->addWidget( mSearchEdit );
+
+    mMoreOptions = new KPushButton(i18n("More..."), this);
+    mMoreOptions->setObjectName(QLatin1String("moreoptions"));
+    mMoreOptions->setFlat(true);
+    mMoreOptions->setCheckable(true);
+    connect( mMoreOptions, SIGNAL(toggled(bool)), SLOT(slotMoreOptionClicked(bool)));
+    hbox->addWidget( mMoreOptions );
 
     // The status filter button. Will be populated later, as populateStatusFilterCombo() is virtual
     mTagFilterCombo = new KComboBox( this ) ;
