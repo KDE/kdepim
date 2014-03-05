@@ -249,3 +249,7 @@ void GoogleTranslator::debug()
 #endif
 }
 
+void GoogleTranslator::clear()
+{
+    mJsonData.clear();
+}
