@@ -42,6 +42,8 @@ private Q_SLOTS:
     void shouldNotEmitTextChangedWhenTextTrimmedIsEmpty();
     void shouldShowExtraOptionWidgetWhenTextTrimmedIsNotEmpty();
     void shouldShowMoreOptionWhenClickOnMoreButton();
+    void shouldChangeFromButtonLabelWhenChangeOutboundMessagesValue();
+    void shouldSearchToOrFrom();
 };
 
 #endif // QUICKSEARCHLINETEST_H
