@@ -45,7 +45,8 @@ public:
         SearchAgainstBody = 2,
         SearchAgainstSubject = 4,
         SearchAgainstFrom = 8,
-        SearchAgainstBcc = 16
+        SearchAgainstBcc = 16,
+        SearchAgainstTo = 32
     };
 
     Q_ENUMS(SearchOption)
@@ -64,6 +65,9 @@ public:
 
     void updateComboboxVisibility();
 
+    bool containsOutboundMessages() const;
+    void setContainsOutboundMessages(bool containsOutboundMessages);
+
 Q_SIGNALS:
     void clearButtonClicked();
     void searchEditTextEdited(const QString &);
@@ -80,6 +84,7 @@ private slots:
 private:
     void initializeStatusSearchButton(QLayout *quickSearchButtonLayout);
     void createQuickSearchButton(const QIcon &icon, const QString &text, int value, QLayout *quickSearchButtonLayout);
+    void changeSearchAgainstFromOrToText();
     QList<QToolButton *> mListStatusButton;
     KLineEdit *mSearchEdit;
     KComboBox *mTagFilterCombo;
@@ -88,12 +93,13 @@ private:
     QPushButton *mSearchEveryWhere;
     QPushButton *mSearchAgainstBody;
     QPushButton *mSearchAgainstSubject;
-    QPushButton *mSearchAgainstFrom;
+    QPushButton *mSearchAgainstFromOrTo;
     QPushButton *mSearchAgainstBcc;
     QWidget *mExtraOption;
     QWidget *mQuickSearchFilterWidget;
     QButtonGroup *mButtonStatusGroup;
     QButtonGroup *mButtonSearchAgainstGroup;
+    bool mContainsOutboundMessages;
 };
 }
 }
