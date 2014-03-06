@@ -66,6 +66,8 @@ void AddTagDialog::slotButtonClicked(int button)
         Q_FOREACH ( const MailCommon::Tag::Ptr &tag, mTags ) {
             if ( tag->name() == name ) {
                 KMessageBox::error( this, i18n( "Tag %1 already exists", name ) );
+                mTagWidget->tagNameLineEdit()->setFocus();
+                mTagWidget->tagNameLineEdit()->selectAll();
                 return;
             }
         }
