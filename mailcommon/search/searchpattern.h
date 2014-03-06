@@ -37,11 +37,11 @@ using Akonadi::MessageStatus;
 
 
 namespace Akonadi {
-  class Item;
+class Item;
 }
 
 namespace KMime {
-  class Message;
+class Message;
 }
 
 class KConfigGroup;
@@ -60,7 +60,7 @@ const int FILTER_MAX_RULES = 8;
  */
 class MAILCOMMON_EXPORT SearchRule
 {
-  public:
+public:
     /**
      * Defines a pointer to a search rule.
      */
@@ -76,33 +76,33 @@ class MAILCOMMON_EXPORT SearchRule
      * opposites (ie. "=" <-> "!=", ">" <-> "<=", etc.).
      */
     enum Function {
-      FuncNone = -1,
-      FuncContains = 0,
-      FuncContainsNot,
-      FuncEquals,
-      FuncNotEqual,
-      FuncRegExp,
-      FuncNotRegExp,
-      FuncIsGreater,
-      FuncIsLessOrEqual,
-      FuncIsLess,
-      FuncIsGreaterOrEqual,
-      FuncIsInAddressbook,
-      FuncIsNotInAddressbook,
-      FuncIsInCategory,
-      FuncIsNotInCategory,
-      FuncHasAttachment,
-      FuncHasNoAttachment,
-      FuncStartWith,
-      FuncNotStartWith,
-      FuncEndWith,
-      FuncNotEndWith
+        FuncNone = -1,
+        FuncContains = 0,
+        FuncContainsNot,
+        FuncEquals,
+        FuncNotEqual,
+        FuncRegExp,
+        FuncNotRegExp,
+        FuncIsGreater,
+        FuncIsLessOrEqual,
+        FuncIsLess,
+        FuncIsGreaterOrEqual,
+        FuncIsInAddressbook,
+        FuncIsNotInAddressbook,
+        FuncIsInCategory,
+        FuncIsNotInCategory,
+        FuncHasAttachment,
+        FuncHasNoAttachment,
+        FuncStartWith,
+        FuncNotStartWith,
+        FuncEndWith,
+        FuncNotEndWith
     };
 
     enum RequiredPart {
-      Envelope = 0,
-      Header,
-      CompleteMessage
+        Envelope = 0,
+        Header,
+        CompleteMessage
     };
 
     /**
@@ -271,7 +271,7 @@ class MAILCOMMON_EXPORT SearchRule
 
     QDataStream &operator>>( QDataStream & ) const;
 
-  protected:
+protected:
     /**
      * Helper that returns whether the rule has a negated function.
      */
@@ -308,7 +308,7 @@ uint qHash( SearchRule::Ptr sr );
  */
 class SearchRuleString : public SearchRule
 {
-  public:
+public:
     /**
      * Creates new new string search rule.
      *
@@ -370,7 +370,7 @@ class SearchRuleString : public SearchRule
  */
 class SearchRuleNumerical : public SearchRule
 {
-  public:
+public:
     /**
      * Creates new numerical search rule.
      *
@@ -418,7 +418,7 @@ class SearchRuleNumerical : public SearchRule
 
 class SearchRuleDate : public SearchRule
 {
-  public:
+public:
     /**
      * Creates new date search rule.
      *
@@ -427,8 +427,8 @@ class SearchRuleDate : public SearchRule
      * @param contents The contents to search for.
      */
     explicit SearchRuleDate( const QByteArray &field = 0,
-                                  Function function = FuncContains,
-                                  const QString &contents = QString() );
+                             Function function = FuncContains,
+                             const QString &contents = QString() );
 
     /**
      * @copydoc SearchRule::isEmpty()
@@ -469,49 +469,49 @@ class SearchRuleDate : public SearchRule
 //TODO: Check if the below one is needed or not!
 // The below are used in several places and here so they are accessible.
 struct MessageStatusInfo {
-  const char *text;
-  const char *icon;
+    const char *text;
+    const char *icon;
 };
 
 // If you change the ordering here; also do it in the enum below
 static const MessageStatusInfo StatusValues[] =
 {
-  { I18N_NOOP2( "message status", "Important" ),     "emblem-important"    },
-  { I18N_NOOP2( "message status", "Action Item" ),   "mail-task"           },
-  { I18N_NOOP2( "message status", "Unread" ),        "mail-unread"         },
-  { I18N_NOOP2( "message status", "Read" ),          "mail-read"           },
-  { I18N_NOOP2( "message status", "Deleted" ),       "mail-deleted"        },
-  { I18N_NOOP2( "message status", "Replied" ),       "mail-replied"        },
-  { I18N_NOOP2( "message status", "Forwarded" ),     "mail-forwarded"      },
-  { I18N_NOOP2( "message status", "Queued" ),        "mail-queued"         },
-  { I18N_NOOP2( "message status", "Sent" ),          "mail-sent"           },
-  { I18N_NOOP2( "message status", "Watched" ),       "mail-thread-watch"   },
-  { I18N_NOOP2( "message status", "Ignored" ),       "mail-thread-ignored" },
-  { I18N_NOOP2( "message status", "Spam" ),          "mail-mark-junk"      },
-  { I18N_NOOP2( "message status", "Ham" ),           "mail-mark-notjunk"   },
-  { I18N_NOOP2( "message status", "Has Attachment"), "mail-attachment"     } //must be last
+    { I18N_NOOP2( "message status", "Important" ),     "emblem-important"    },
+    { I18N_NOOP2( "message status", "Action Item" ),   "mail-task"           },
+    { I18N_NOOP2( "message status", "Unread" ),        "mail-unread"         },
+    { I18N_NOOP2( "message status", "Read" ),          "mail-read"           },
+    { I18N_NOOP2( "message status", "Deleted" ),       "mail-deleted"        },
+    { I18N_NOOP2( "message status", "Replied" ),       "mail-replied"        },
+    { I18N_NOOP2( "message status", "Forwarded" ),     "mail-forwarded"      },
+    { I18N_NOOP2( "message status", "Queued" ),        "mail-queued"         },
+    { I18N_NOOP2( "message status", "Sent" ),          "mail-sent"           },
+    { I18N_NOOP2( "message status", "Watched" ),       "mail-thread-watch"   },
+    { I18N_NOOP2( "message status", "Ignored" ),       "mail-thread-ignored" },
+    { I18N_NOOP2( "message status", "Spam" ),          "mail-mark-junk"      },
+    { I18N_NOOP2( "message status", "Ham" ),           "mail-mark-notjunk"   },
+    { I18N_NOOP2( "message status", "Has Attachment"), "mail-attachment"     } //must be last
 };
 
 // If you change the ordering here; also do it in the array above
 enum StatusValueTypes {
-  StatusImportant = 0,
-  StatusToAct = 1,
-  StatusUnread = 2,
-  StatusRead = 3,
-  StatusDeleted = 4,
-  StatusReplied = 5,
-  StatusForwarded = 6,
-  StatusQueued = 7,
-  StatusSent = 8,
-  StatusWatched = 9,
-  StatusIgnored = 10,
-  StatusSpam = 11,
-  StatusHam = 12,
-  StatusHasAttachment = 13 //must be last
+    StatusImportant = 0,
+    StatusToAct = 1,
+    StatusUnread = 2,
+    StatusRead = 3,
+    StatusDeleted = 4,
+    StatusReplied = 5,
+    StatusForwarded = 6,
+    StatusQueued = 7,
+    StatusSent = 8,
+    StatusWatched = 9,
+    StatusIgnored = 10,
+    StatusSpam = 11,
+    StatusHam = 12,
+    StatusHasAttachment = 13 //must be last
 };
 
 static const int StatusValueCount =
-  sizeof( StatusValues ) / sizeof( MessageStatusInfo );
+        sizeof( StatusValues ) / sizeof( MessageStatusInfo );
 // we want to show all status entries in the quick search bar, but only the
 // ones up to attachment in the search/filter dialog, because there the
 // attachment case is handled separately.
@@ -526,7 +526,7 @@ static const int StatusValueCountWithoutHidden = StatusValueCount - 1;
  */
 class MAILCOMMON_EXPORT SearchRuleStatus : public SearchRule
 {
-  public:
+public:
     explicit SearchRuleStatus( const QByteArray &field = 0,
                                Function function = FuncContains,
                                const QString &contents = QString() );
@@ -537,10 +537,10 @@ class MAILCOMMON_EXPORT SearchRuleStatus : public SearchRule
     virtual bool isEmpty() const ;
     virtual bool matches( const Akonadi::Item &item ) const;
 
-     /**
+    /**
      * @copydoc SearchRule::requiredPart()
      */
-   virtual RequiredPart requiredPart() const;
+    virtual RequiredPart requiredPart() const;
 
     virtual void addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const;
 
@@ -549,7 +549,7 @@ class MAILCOMMON_EXPORT SearchRuleStatus : public SearchRule
 
     static Akonadi::MessageStatus statusFromEnglishName( const QString & );
 
-  private:
+private:
     Akonadi::MessageStatus mStatus;
 };
 
@@ -576,7 +576,7 @@ class MAILCOMMON_EXPORT SearchRuleStatus : public SearchRule
 class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
 {
 
-  public:
+public:
     /**
      * Boolean operators that connect the return values of the
      * individual rules. A pattern with @p OpAnd will match iff all
@@ -584,9 +584,9 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
      *  any of it's rules matches.
      */
     enum Operator {
-      OpAnd,
-      OpOr,
-      OpAll
+        OpAnd,
+        OpOr,
+        OpAll
     };
 
 
@@ -668,7 +668,7 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
      */
     QString name() const
     {
-      return mName;
+        return mName;
     }
 
     /**
@@ -677,7 +677,7 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
      */
     void setName( const QString &newName )
     {
-      mName = newName;
+        mName = newName;
     }
 
     /**
@@ -685,7 +685,7 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
      */
     SearchPattern::Operator op() const
     {
-      return mOperator;
+        return mOperator;
     }
 
     /**
@@ -693,7 +693,7 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
      */
     void setOp( SearchPattern::Operator aOp )
     {
-      mOperator = aOp;
+        mOperator = aOp;
     }
 
     /**
@@ -727,7 +727,7 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
 
     void generateSieveScript(QStringList &requires, QString &code);
 
-  private:
+private:
     /**
      * Tries to import a legacy search pattern, ie. one that still has
      * e.g. the @p unless or @p ignore operator which were useful as long as
