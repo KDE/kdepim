@@ -675,6 +675,11 @@ void MainWidget::setupActions( KActionCollection *collection )
   mQuickSearchAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Q ) );
   collection->addAction( QLatin1String("focus_to_quickseach"), mQuickSearchAction );
   connect( mQuickSearchAction, SIGNAL(triggered(bool)), mQuickSearchWidget, SLOT(slotFocusQuickSearch()) );
+
+  action = collection->addAction( QLatin1String("send_mail") );
+  action->setText( i18n( "Send an email...") );
+  connect( action, SIGNAL(triggered(bool)), this, SLOT(slotSendMail()));
+
 }
 
 void MainWidget::printPreview()
@@ -916,6 +921,17 @@ void MainWidget::slotGrantleeThemesUpdated()
     if ( mItemView->model() ) {
       mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
     }
+}
+
+void MainWidget::slotSendMail() {
+    QStringList emails;
+     foreach (Akonadi::Item item, Utils::collectSelectedContactsItem(mItemView->selectionModel())) {
+         const KABC::Addressee address = item.payload<KABC::Addressee>();
+         emails << address.preferredEmail();
+     }
+
+     QProcess proc;
+     proc.startDetached( QLatin1String("ksendemail"), emails);
 }
 
 void MainWidget::mergeContacts()
