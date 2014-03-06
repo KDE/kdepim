@@ -42,24 +42,24 @@ namespace MailCommon {
 
 class ExpireJob : public ScheduledJob
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit ExpireJob( const Akonadi::Collection &folder, bool immediate );
     virtual ~ExpireJob();
 
     virtual void execute();
     virtual void kill();
 
-  private slots:
+private slots:
     void slotDoWork();
     void slotExpireDone( KJob *job );
     void slotMoveDone( KJob *job );
     void itemFetchResult( KJob *job );
 
-  private:
+private:
     void done();
 
-  private:
+private:
     QList<Akonadi::Item> mRemovedMsgs;
     int mMaxUnreadTime;
     int mMaxReadTime;
@@ -69,11 +69,11 @@ class ExpireJob : public ScheduledJob
 /// A scheduled "expire mails in this folder" task.
 class ScheduledExpireTask : public ScheduledTask
 {
-  public:
+public:
     /// If immediate is set, the job will execute synchronously. This is used when
     /// the user requests explicitly that the operation should happen immediately.
     ScheduledExpireTask( const Akonadi::Collection &folder, bool immediate )
-      : ScheduledTask( folder, immediate )
+        : ScheduledTask( folder, immediate )
     {
     }
 
@@ -83,12 +83,12 @@ class ScheduledExpireTask : public ScheduledTask
 
     virtual ScheduledJob *run()
     {
-      return folder().isValid() ? new ExpireJob( folder(), isImmediate() ) : 0;
+        return folder().isValid() ? new ExpireJob( folder(), isImmediate() ) : 0;
     }
 
     virtual int taskTypeId() const
     {
-      return 1;
+        return 1;
     }
 };
 
