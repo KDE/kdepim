@@ -144,7 +144,7 @@ MainWindow::~MainWindow()
 void MainWindow::setupStatusBar()
 {
     KPIM::ProgressStatusBarWidget * progressStatusBarWidget = new KPIM::ProgressStatusBarWidget(statusBar(), this, PimCommon::StorageServiceProgressManager::progressTypeValue());
-    statusBar()->addWidget(progressStatusBarWidget->littleProgress());
+    statusBar()->addPermanentWidget( progressStatusBarWidget->littleProgress(), 0);
     statusBar()->show();
 }
 
