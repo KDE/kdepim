@@ -86,11 +86,11 @@ void CreateEventJob::createEvent()
     attachmentPtr->setLabel(msg->subject(false)->asUnicodeString());
     mEventPtr->addAttachment(attachmentPtr);
 
-    Akonadi::Item newTodoItem;
-    newTodoItem.setMimeType( KCalCore::Event::eventMimeType() );
-    newTodoItem.setPayload<KCalCore::Event::Ptr>( mEventPtr );
+    Akonadi::Item newEventItem;
+    newEventItem.setMimeType( KCalCore::Event::eventMimeType() );
+    newEventItem.setPayload<KCalCore::Event::Ptr>( mEventPtr );
 
-    Akonadi::ItemCreateJob *createJob = new Akonadi::ItemCreateJob(newTodoItem, mCollection);
+    Akonadi::ItemCreateJob *createJob = new Akonadi::ItemCreateJob(newEventItem, mCollection);
     connect(createJob, SIGNAL(result(KJob*)), this, SLOT(slotCreateNewEvent(KJob*)));
 }
 
