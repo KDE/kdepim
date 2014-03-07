@@ -29,7 +29,7 @@
 using namespace MessageComposer;
 
 InsertTextFileJob::InsertTextFileJob( QTextEdit *editor, const KUrl &url )
-  : KJob( editor ), mEditor( editor ), mUrl( url )
+    : KJob( editor ), mEditor( editor ), mUrl( url )
 {
 }
 
@@ -39,46 +39,46 @@ InsertTextFileJob::~InsertTextFileJob()
 
 void InsertTextFileJob::slotFileData ( KIO::Job* job, const QByteArray& data )
 {
-  Q_UNUSED( job );
-  mFileData += data;
+    Q_UNUSED( job );
+    mFileData += data;
 }
 
 void InsertTextFileJob::slotGetJobFinished( KJob* job )
 {
-  if ( job->error() ) {
-    kWarning() << job->errorString();
-    setError( job->error() );
-    setErrorText( job->errorText() );
-    emitResult();
-    return;
-  }
-
-  if ( mEditor ) {
-    if ( !mEncoding.isEmpty() ) {
-      const QTextCodec *fileCodec = KGlobal::charsets()->codecForName( mEncoding );
-      if ( fileCodec ) {
-        mEditor->textCursor().insertText( fileCodec->toUnicode( mFileData.data() ) );
-      } else {
-        mEditor->textCursor().insertText( QString::fromLocal8Bit( mFileData.data() ) );
-      }
+    if ( job->error() ) {
+        kWarning() << job->errorString();
+        setError( job->error() );
+        setErrorText( job->errorText() );
+        emitResult();
+        return;
     }
-  }
 
-  emitResult();
+    if ( mEditor ) {
+        if ( !mEncoding.isEmpty() ) {
+            const QTextCodec *fileCodec = KGlobal::charsets()->codecForName( mEncoding );
+            if ( fileCodec ) {
+                mEditor->textCursor().insertText( fileCodec->toUnicode( mFileData.data() ) );
+            } else {
+                mEditor->textCursor().insertText( QString::fromLocal8Bit( mFileData.data() ) );
+            }
+        }
+    }
+
+    emitResult();
 }
 
 void InsertTextFileJob::setEncoding( const QString &encoding )
 {
-  mEncoding = encoding;
+    mEncoding = encoding;
 }
 
 void InsertTextFileJob::start()
 {
-  KIO::TransferJob *job = KIO::get( mUrl );
-  connect( job, SIGNAL(result(KJob*)),
-           this, SLOT(slotGetJobFinished(KJob*)) );
-  connect( job, SIGNAL(data(KIO::Job*,QByteArray)),
-           this, SLOT(slotFileData(KIO::Job*,QByteArray)) );
-  job->start();
+    KIO::TransferJob *job = KIO::get( mUrl );
+    connect( job, SIGNAL(result(KJob*)),
+             this, SLOT(slotGetJobFinished(KJob*)) );
+    connect( job, SIGNAL(data(KIO::Job*,QByteArray)),
+             this, SLOT(slotFileData(KIO::Job*,QByteArray)) );
+    job->start();
 }
 

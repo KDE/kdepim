@@ -49,13 +49,13 @@
 class QStringList;
 
 namespace KABC {
-  class Addressee;
+class Addressee;
 }
 
 namespace Kleo {
 
 
-  /**
+/**
      \short A class to resolve signing/encryption keys w.r.t. per-recipient preferences
 
      \section Step 1: Set the information needed
@@ -128,8 +128,8 @@ namespace Kleo {
      a copy of it's own to hide the other secondary recipients.
     */
 
-  class MESSAGECOMPOSER_EXPORT KeyResolver {
-  public:
+class MESSAGECOMPOSER_EXPORT KeyResolver {
+public:
     KeyResolver( bool encToSelf, bool showApproval, bool oppEncryption,
                  unsigned int format,
                  int encrKeyNearExpiryThresholdDays,
@@ -142,25 +142,25 @@ namespace Kleo {
     ~KeyResolver();
 
     struct Item : public KeyApprovalDialog::Item {
-      Item()
-        : KeyApprovalDialog::Item(),
-          signPref( UnknownSigningPreference ),
-          format( AutoFormat ),
-          needKeys( true ) {}
-      Item( const QString & a,
-            EncryptionPreference e, SigningPreference s,
-            CryptoMessageFormat f )
-        : KeyApprovalDialog::Item( a, std::vector<GpgME::Key>(), e ),
-          signPref( s ), format( f ), needKeys( true ) {}
-      Item( const QString & a, const std::vector<GpgME::Key> & k,
-            EncryptionPreference e, SigningPreference s,
-            CryptoMessageFormat f )
-        : KeyApprovalDialog::Item( a, k, e ),
-          signPref( s ), format( f ), needKeys( false ) {}
+        Item()
+            : KeyApprovalDialog::Item(),
+              signPref( UnknownSigningPreference ),
+              format( AutoFormat ),
+              needKeys( true ) {}
+        Item( const QString & a,
+              EncryptionPreference e, SigningPreference s,
+              CryptoMessageFormat f )
+            : KeyApprovalDialog::Item( a, std::vector<GpgME::Key>(), e ),
+              signPref( s ), format( f ), needKeys( true ) {}
+        Item( const QString & a, const std::vector<GpgME::Key> & k,
+              EncryptionPreference e, SigningPreference s,
+              CryptoMessageFormat f )
+            : KeyApprovalDialog::Item( a, k, e ),
+              signPref( s ), format( f ), needKeys( false ) {}
 
-      SigningPreference signPref;
-      CryptoMessageFormat format;
-      bool needKeys;
+        SigningPreference signPref;
+        CryptoMessageFormat format;
+        bool needKeys;
     };
 
 
@@ -213,12 +213,12 @@ namespace Kleo {
     std::vector<GpgME::Key> signingKeys( CryptoMessageFormat f ) const;
 
     struct SplitInfo {
-      SplitInfo() {}
-      SplitInfo( const QStringList & r ) : recipients( r ) {}
-      SplitInfo( const QStringList & r, const std::vector<GpgME::Key> & k )
-        : recipients( r ), keys( k ) {}
-      QStringList recipients;
-      std::vector<GpgME::Key> keys;
+        SplitInfo() {}
+        SplitInfo( const QStringList & r ) : recipients( r ) {}
+        SplitInfo( const QStringList & r, const std::vector<GpgME::Key> & k )
+            : recipients( r ), keys( k ) {}
+        QStringList recipients;
+        std::vector<GpgME::Key> keys;
     };
     /** @return the found distinct sets of items for format \a f.  The
         returned vector will contain more than one item only if
@@ -226,7 +226,7 @@ namespace Kleo {
     */
     std::vector<SplitInfo> encryptionItems( CryptoMessageFormat f ) const;
 
-  private:
+private:
     void dump() const;
     std::vector<Item> getEncryptionItems( const QStringList & recipients );
     std::vector<GpgME::Key> getEncryptionKeys( const QString & recipient, bool quiet ) const;
@@ -264,40 +264,40 @@ namespace Kleo {
     bool showApprovalDialog() const { return mShowApprovalDialog; }
 
     int encryptKeyNearExpiryWarningThresholdInDays() const {
-      return mEncryptKeyNearExpiryWarningThreshold;
+        return mEncryptKeyNearExpiryWarningThreshold;
     }
     int signingKeyNearExpiryWarningThresholdInDays() const {
-      return mSigningKeyNearExpiryWarningThreshold;
+        return mSigningKeyNearExpiryWarningThreshold;
     }
 
     int encryptRootCertNearExpiryWarningThresholdInDays() const {
-      return mEncryptRootCertNearExpiryWarningThreshold;
+        return mEncryptRootCertNearExpiryWarningThreshold;
     }
     int signingRootCertNearExpiryWarningThresholdInDays() const {
-      return mSigningRootCertNearExpiryWarningThreshold;
+        return mSigningRootCertNearExpiryWarningThreshold;
     }
 
     int encryptChainCertNearExpiryWarningThresholdInDays() const {
-      return mEncryptChainCertNearExpiryWarningThreshold;
+        return mEncryptChainCertNearExpiryWarningThreshold;
     }
     int signingChainCertNearExpiryWarningThresholdInDays() const {
-      return mSigningChainCertNearExpiryWarningThreshold;
+        return mSigningChainCertNearExpiryWarningThreshold;
     }
 
     struct ContactPreferences {
-      ContactPreferences();
-      Kleo::EncryptionPreference encryptionPreference;
-      Kleo::SigningPreference signingPreference;
-      Kleo::CryptoMessageFormat cryptoMessageFormat;
-      QStringList pgpKeyFingerprints;
-      QStringList smimeCertFingerprints;
+        ContactPreferences();
+        Kleo::EncryptionPreference encryptionPreference;
+        Kleo::SigningPreference signingPreference;
+        Kleo::CryptoMessageFormat cryptoMessageFormat;
+        QStringList pgpKeyFingerprints;
+        QStringList smimeCertFingerprints;
     };
 
     ContactPreferences lookupContactPreferences( const QString& address ) const;
     void writeCustomContactProperties( KABC::Addressee &contact, const ContactPreferences& pref ) const;
     void saveContactPreference( const QString& email, const ContactPreferences& pref ) const;
 
-  private:
+private:
     class EncryptionPreferenceCounter;
     friend class ::Kleo::KeyResolver::EncryptionPreferenceCounter;
     class SigningPreferenceCounter;
@@ -317,7 +317,7 @@ namespace Kleo {
     const int mSigningRootCertNearExpiryWarningThreshold;
     const int mEncryptChainCertNearExpiryWarningThreshold;
     const int mSigningChainCertNearExpiryWarningThreshold;
-  };
+};
 
 } // namespace Kleo
 

@@ -29,18 +29,18 @@ namespace MessageComposer {
 
 class MESSAGECOMPOSER_EXPORT ComposerLineEdit : public KPIM::AddresseeLineEdit
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit ComposerLineEdit( bool useCompletion, QWidget *parent = 0 );
 
     void setRecentAddressConfig( KConfig* config );
 
-  signals:
+signals:
     void focusUp();
     void focusDown();
 
-  protected:
+protected:
 
     // Inherited. Always called by the parent when this widget is created.
     virtual void loadContacts();
@@ -51,17 +51,17 @@ class MESSAGECOMPOSER_EXPORT ComposerLineEdit : public KPIM::AddresseeLineEdit
     virtual void contextMenuEvent( QContextMenuEvent*e );
 #endif
 
-  private slots:
+private slots:
     void editRecentAddresses();
     void groupDropExpandResult( KJob* );
 
-  private:
+private:
 #ifndef QT_NO_DRAGANDDROP
     void dropEvent( QDropEvent *event );
 #endif
     void insertEmails( const QStringList & emails );
 
-  private:
+private:
     KConfig* m_recentAddressConfig;
 };
 

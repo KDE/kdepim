@@ -24,7 +24,7 @@ using namespace MessageComposer;
 
 class TextPart::Private
 {
-  public:
+public:
     bool wordWrappingEnabled;
     bool warnBadCharset;
     QString cleanPlainText;
@@ -34,85 +34,85 @@ class TextPart::Private
 };
 
 TextPart::TextPart( QObject *parent )
-  : MessagePart( parent )
-  , d( new Private )
+    : MessagePart( parent )
+    , d( new Private )
 {
-  d->wordWrappingEnabled = true;
-  d->warnBadCharset = true;
+    d->wordWrappingEnabled = true;
+    d->warnBadCharset = true;
 }
 
 TextPart::~TextPart()
 {
-  delete d;
+    delete d;
 }
 
 bool TextPart::isWordWrappingEnabled() const
 {
-  return d->wordWrappingEnabled;
+    return d->wordWrappingEnabled;
 }
 
 void TextPart::setWordWrappingEnabled( bool enabled )
 {
-  d->wordWrappingEnabled = enabled;
+    d->wordWrappingEnabled = enabled;
 }
 
 bool TextPart::warnBadCharset() const
 {
-  return d->warnBadCharset;
+    return d->warnBadCharset;
 }
 
 void TextPart::setWarnBadCharset( bool warn )
 {
-  d->warnBadCharset = warn;
+    d->warnBadCharset = warn;
 }
 
 QString TextPart::cleanPlainText() const
 {
-  return d->cleanPlainText;
+    return d->cleanPlainText;
 }
 
 void TextPart::setCleanPlainText( const QString &text )
 {
-  d->cleanPlainText = text;
+    d->cleanPlainText = text;
 }
 
 QString TextPart::wrappedPlainText() const
 {
-  return d->wrappedPlainText;
+    return d->wrappedPlainText;
 }
 
 void TextPart::setWrappedPlainText( const QString &text )
 {
-  d->wrappedPlainText = text;
+    d->wrappedPlainText = text;
 }
 
 bool TextPart::isHtmlUsed() const
 {
-  return !d->cleanHtml.isEmpty();
+    return !d->cleanHtml.isEmpty();
 }
 
 QString TextPart::cleanHtml() const
 {
-  return d->cleanHtml;
+    return d->cleanHtml;
 }
 
 void TextPart::setCleanHtml( const QString &text )
 {
-  d->cleanHtml = text;
+    d->cleanHtml = text;
 }
 
 bool TextPart::hasEmbeddedImages() const
 {
-  return !d->embeddedImages.isEmpty();
+    return !d->embeddedImages.isEmpty();
 }
 
 ImageList TextPart::embeddedImages() const
 {
-  return d->embeddedImages;
+    return d->embeddedImages;
 }
 
 void TextPart::setEmbeddedImages( const ImageList &images )
 {
-  d->embeddedImages = images;
+    d->embeddedImages = images;
 }
 
