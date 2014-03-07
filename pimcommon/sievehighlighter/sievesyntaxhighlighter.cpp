@@ -77,6 +77,7 @@ void SieveSyntaxHighlighter::init()
     keywords << QLatin1String( "\\brequire\\b" );
     keywords << QLatin1String( "\\binclude\\b" );
     keywords << QLatin1String( "\\bglobal\\b" );
+    keywords << QLatin1String( "\\bforeverypart\\b" );
     Q_FOREACH ( const QString & s, keywords ) {
         const QRegExp regex( s, Qt::CaseInsensitive );
         m_rules.append( Rule( regex, keywordFormat ) );
@@ -137,7 +138,12 @@ void SieveSyntaxHighlighter::init()
               << QLatin1String( "\\s:regex\\b")
               << QLatin1String( "\\s:flags\\b" )
               << QLatin1String( "\\s:subject\\b" )
-              << QLatin1String( "\\s:create\\b" );
+              << QLatin1String( "\\s:create\\b" )
+              << QLatin1String( "\\s:name\\b" )
+              << QLatin1String( "\\s:headers\\b" )
+              << QLatin1String( "\\s:list\\b")
+              << QLatin1String( "\\s:from\\b")
+              << QLatin1String( "\\s:first\\b");
     Q_FOREACH ( const QString & s, matchType ) {
         const QRegExp regex( s, Qt::CaseInsensitive );
         m_rules.append( Rule( regex, matchFormat ) );
@@ -174,7 +180,10 @@ void SieveSyntaxHighlighter::init()
                <<QLatin1String( "\\bnotify\\b" )
                <<QLatin1String( "\\bset\\b" )
                <<QLatin1String( "\\breturn\\b" )
-               <<QLatin1String( "\\bvacation\\b" );
+               <<QLatin1String( "\\bvacation\\b" )
+               <<QLatin1String( "\\benclose\\b" )
+               <<QLatin1String( "\\breplace\\b" )
+               <<QLatin1String( "\\bextracttext\\b");
     Q_FOREACH ( const QString & s, actionType ) {
         const QRegExp regex( s, Qt::CaseInsensitive );
         m_rules.append( Rule( regex, actionFormat ) );
@@ -198,7 +207,9 @@ void SieveSyntaxHighlighter::init()
              <<QLatin1String( "\\bbody\\b" )
              <<QLatin1String( "\\bcurrentdate\\b" )
              <<QLatin1String( "\\bmailboxexists\\b" )
-             <<QLatin1String( "\\btrue\\b" );
+             <<QLatin1String( "\\btrue\\b" )
+             <<QLatin1String("\\bmetadata\\b")
+             <<QLatin1String("\\benvironment\\b");
     Q_FOREACH ( const QString & s, testType ) {
         const QRegExp regex( s, Qt::CaseInsensitive );
         m_rules.append( Rule( regex, testFormat ) );
