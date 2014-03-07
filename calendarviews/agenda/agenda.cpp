@@ -68,7 +68,7 @@ class MarcusBains::Private
   public:
     Private( EventView *eventView, Agenda *agenda )
       : mEventView( eventView ), mAgenda( agenda ),
-        mTimer( 0 ), mTimeBox( 0 ), mOldTime( 0, 0 ), mOldTodayCol( -1 )
+        mTimer( 0 ), mTimeBox( 0 ), mOldTodayCol( -1 )
     {
     }
 
@@ -79,7 +79,7 @@ class MarcusBains::Private
     Agenda *mAgenda;
     QTimer *mTimer;
     QLabel *mTimeBox;  // Label showing the current time
-    QTime mOldTime;
+    KDateTime mOldDateTime;
     int mOldTodayCol;
 };
 
@@ -126,10 +126,11 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
   const bool showSeconds = d->mEventView->preferences()->marcusBainsShowSeconds();
   const QColor color = d->mEventView->preferences()->agendaMarcusBainsLineLineColor();
 
-  const QTime time = QTime::currentTime();
-  if ( ( time.hour() == 0 ) && ( d->mOldTime.hour() == 23 ) ) {
-    // We are on a new day
-    recalculate = true;
+  const KDateTime now = KDateTime::currentLocalDateTime();
+  const QTime time = now.time();
+
+  if (now.date() != d->mOldDateTime.date()) {
+      recalculate = true; // New day
   }
   const int todayCol = recalculate ? d->todayColumn() : d->mOldTodayCol;
 
@@ -137,7 +138,7 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
   const int minutes = time.hour() * 60 + time.minute();
   const int minutesPerCell = 24 * 60 / d->mAgenda->rows();
 
-  d->mOldTime = time;
+  d->mOldDateTime = now;
   d->mOldTodayCol = todayCol;
 
   int y = int( minutes  *  d->mAgenda->gridSpacingY() / minutesPerCell );
