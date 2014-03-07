@@ -77,6 +77,9 @@ NotesAgentAlarmDialog::~NotesAgentAlarmDialog()
 void NotesAgentAlarmDialog::removeAlarm(const Akonadi::Item &note)
 {
     mListWidget->removeNote(note);
+    if (mListWidget->count() == 0) {
+        close();
+    }
 }
 
 void NotesAgentAlarmDialog::slotCustomContextMenuRequested(const QPoint &pos)
