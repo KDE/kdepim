@@ -913,7 +913,7 @@ void MainView::forwardFetchResult( KJob* job )
       return;
 
     factory.setFolderIdentity( MailCommon::Util::folderIdentity( item ) );
-    const KMime::Message::Ptr redirectMessage = factory.createRedirect( dlg.to() );
+    const KMime::Message::Ptr redirectMessage = factory.createRedirect( dlg.to(), dlg.cc(), dlg.bcc() );
     if ( !redirectMessage )
       return;
 

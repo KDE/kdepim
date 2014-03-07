@@ -40,9 +40,9 @@ namespace MessageComposer {
  */
 class MESSAGECOMPOSER_EXPORT AliasesExpandJob : public KJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new aliases expand job.
      *
@@ -72,11 +72,11 @@ class MESSAGECOMPOSER_EXPORT AliasesExpandJob : public KJob
      */
     QStringList emptyDistributionLists() const;
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotDistributionListExpansionDone( KJob* );
     void slotNicknameExpansionDone( KJob* );
 
-  private:
+private:
     void finishExpansion();
 
     QStringList mRecipients;
@@ -90,8 +90,8 @@ class MESSAGECOMPOSER_EXPORT AliasesExpandJob : public KJob
 
     struct DistributionListExpansionResult
     {
-      QString addresses;
-      bool isEmpty;
+        QString addresses;
+        bool isEmpty;
     };
     QMap<QString, DistributionListExpansionResult> mDistListExpansionResults;
     QMap<QString, QString> mNicknameExpansionResults;

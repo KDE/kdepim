@@ -43,9 +43,9 @@ namespace MessageComposer {
 class AttachmentModel;
 class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     AttachmentControllerBase( MessageComposer::AttachmentModel *model, QWidget *wParent, KActionCollection *actionCollection );
     ~AttachmentControllerBase();
 
@@ -59,7 +59,7 @@ class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
     bool attachOwnVcard() const;
     void setIdentityHasOwnVcard(bool state);
 
-  public slots:
+public slots:
     /// model sets these
     void setEncryptEnabled( bool enabled );
     void setSignEnabled( bool enabled );
@@ -81,7 +81,7 @@ class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
     void showAttachPublicKeyDialog();
     virtual void attachMyPublicKey() {}
 
-  signals:
+signals:
     void actionsCreated();
     void refreshSelection();
     void showAttachment( KMime::Content *content, const QByteArray &charset );
@@ -89,20 +89,20 @@ class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
     void addOwnVcard(bool);
     void fileAttached();
 
-  protected:
+protected:
     void exportPublicKey( const QString &fingerprint );
     void enableAttachPublicKey( bool enable );
     void enableAttachMyPublicKey( bool enable );
     void byteArrayToRemoteFile(const QByteArray &aData, const KUrl &aURL, bool overwrite = false);
     void openWith(KService::Ptr offer = KService::Ptr());
-  private:
+private:
     MessageCore::AttachmentFromUrlBaseJob * createAttachmentJob(const KUrl &url);
-  private slots:
+private slots:
     void slotPutResult(KJob *job);
     void slotOpenWithDialog();
     void slotOpenWithAction(QAction*act);
 
-  private:
+private:
     class Private;
     Private *const d;
 

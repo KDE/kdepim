@@ -30,20 +30,20 @@ class TextPart;
 
 class MESSAGECOMPOSER_EXPORT MainTextJob : public ContentJobBase
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit MainTextJob( TextPart *textPart = 0, QObject *parent = 0 );
     virtual ~MainTextJob();
 
     TextPart *textPart() const;
     void setTextPart( TextPart *part );
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     virtual void doStart();
     virtual void process();
 
-  private:
+private:
     Q_DECLARE_PRIVATE( MainTextJob )
 };
 

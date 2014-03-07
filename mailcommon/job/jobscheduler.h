@@ -53,35 +53,35 @@ class ScheduledJob;
  */
 class MAILCOMMON_EXPORT ScheduledTask {
 public:
-  /// Create a scheduled task for a given folder
-  /// If @p immediate is true, the scheduler will run this task as soon
-  /// as possible (but won't interrupt a currently running job for it)
-  ScheduledTask( const Akonadi::Collection & folder, bool immediate );
-  virtual ~ScheduledTask();
+    /// Create a scheduled task for a given folder
+    /// If @p immediate is true, the scheduler will run this task as soon
+    /// as possible (but won't interrupt a currently running job for it)
+    ScheduledTask( const Akonadi::Collection & folder, bool immediate );
+    virtual ~ScheduledTask();
 
-  /// Run this task, i.e. create a job for it.
-  /// Important: the job's execute() method must either call open() on the
-  /// folder or storage immediately, or abort (deleting itself).
-  /// Usually, that job should also be cancellable.
-  /// Otherwise (if the open() is delayed) an unrelated open() could happen first
-  /// and mess things up.
-  /// If for some reason (e.g. folder deleted) nothing should be done, return 0.
-  virtual ScheduledJob* run() = 0;
+    /// Run this task, i.e. create a job for it.
+    /// Important: the job's execute() method must either call open() on the
+    /// folder or storage immediately, or abort (deleting itself).
+    /// Usually, that job should also be cancellable.
+    /// Otherwise (if the open() is delayed) an unrelated open() could happen first
+    /// and mess things up.
+    /// If for some reason (e.g. folder deleted) nothing should be done, return 0.
+    virtual ScheduledJob* run() = 0;
 
-  /// An identifier for the type of task (a bit like QListViewItem::rtti)
-  /// This allows to automatically prevent two identical tasks from being scheduled
-  /// for the same folder. To circumvent this feature and make every task
-  /// unique, return 0 here.
-  virtual int taskTypeId() const = 0;
+    /// An identifier for the type of task (a bit like QListViewItem::rtti)
+    /// This allows to automatically prevent two identical tasks from being scheduled
+    /// for the same folder. To circumvent this feature and make every task
+    /// unique, return 0 here.
+    virtual int taskTypeId() const = 0;
 
-  /// The folder which this task is about, 0 if it was deleted meanwhile.
-  Akonadi::Collection folder() const { return mCurrentFolder; }
+    /// The folder which this task is about, 0 if it was deleted meanwhile.
+    Akonadi::Collection folder() const { return mCurrentFolder; }
 
-  bool isImmediate() const { return mImmediate; }
+    bool isImmediate() const { return mImmediate; }
 
 private:
-  Akonadi::Collection mCurrentFolder;
-  bool mImmediate;
+    Akonadi::Collection mCurrentFolder;
+    bool mImmediate;
 };
 
 /**
@@ -94,41 +94,41 @@ private:
  */
 class MAILCOMMON_EXPORT JobScheduler : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit JobScheduler( QObject* parent );
-  ~JobScheduler();
+    explicit JobScheduler( QObject* parent );
+    ~JobScheduler();
 
-  /// Register a task to be done for a given folder
-  /// The ownership of the task is transferred to the JobScheduler
-  void registerTask( ScheduledTask* task );
+    /// Register a task to be done for a given folder
+    /// The ownership of the task is transferred to the JobScheduler
+    void registerTask( ScheduledTask* task );
 
-  // D-Bus calls, called from KMKernel
-  void pause();
-  void resume();
+    // D-Bus calls, called from KMKernel
+    void pause();
+    void resume();
 
 private slots:
-  /// Called by a timer to run the next job
-  void slotRunNextJob();
+    /// Called by a timer to run the next job
+    void slotRunNextJob();
 
-  /// Called when the current job terminates
-  void slotJobFinished();
+    /// Called when the current job terminates
+    void slotJobFinished();
 
 private:
-  void restartTimer();
-  void interruptCurrentTask();
-  void runTaskNow( ScheduledTask* task );
-  typedef QList<ScheduledTask *> TaskList;
-  void removeTask( TaskList::Iterator& it );
+    void restartTimer();
+    void interruptCurrentTask();
+    void runTaskNow( ScheduledTask* task );
+    typedef QList<ScheduledTask *> TaskList;
+    void removeTask( TaskList::Iterator& it );
 private:
-  TaskList mTaskList; // FIFO of tasks to be run
+    TaskList mTaskList; // FIFO of tasks to be run
 
-  QTimer mTimer;
-  int mPendingImmediateTasks;
+    QTimer mTimer;
+    int mPendingImmediateTasks;
 
-  /// Information about the currently running job, if any
-  ScheduledTask* mCurrentTask;
-  ScheduledJob* mCurrentJob;
+    /// Information about the currently running job, if any
+    ScheduledTask* mCurrentTask;
+    ScheduledJob* mCurrentJob;
 };
 
 /**
@@ -137,11 +137,11 @@ private:
 class MAILCOMMON_EXPORT ScheduledJob : public FolderJob
 {
 public:
-  ScheduledJob( const Akonadi::Collection & folder, bool immediate );
-  ~ScheduledJob();
+    ScheduledJob( const Akonadi::Collection & folder, bool immediate );
+    ~ScheduledJob();
 
 protected:
-  bool mImmediate;
+    bool mImmediate;
 };
 
 }

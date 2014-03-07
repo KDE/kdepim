@@ -37,16 +37,16 @@ class TransparentJobPrivate;
  */
 class MESSAGECOMPOSER_EXPORT TransparentJob : public MessageComposer::ContentJobBase
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit TransparentJob( QObject *parent = 0 );
     virtual ~TransparentJob();
 
     void setContent( KMime::Content* content );
     void process();
     
-  private:
+private:
     Q_DECLARE_PRIVATE( TransparentJob )
 };
 

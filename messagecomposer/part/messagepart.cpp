@@ -25,7 +25,7 @@ using namespace MessageComposer;
 
 class MessagePart::Private
 {
-  public:
+public:
     Private()
     {
     }
@@ -34,13 +34,13 @@ class MessagePart::Private
 
 
 MessagePart::MessagePart( QObject *parent )
-  : QObject( parent )
-  , d( new Private )
+    : QObject( parent )
+    , d( new Private )
 {
 }
 
 MessagePart::~MessagePart()
 {
-  delete d;
+    delete d;
 }
 

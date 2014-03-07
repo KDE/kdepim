@@ -1,4 +1,4 @@
-/*
+ /*
   Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
@@ -39,7 +39,8 @@
 
 using namespace MessageList::Core;
 QuickSearchLine::QuickSearchLine(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mContainsOutboundMessages(false)
 {
     QVBoxLayout *vbox = new QVBoxLayout;
     vbox->setMargin(0);
@@ -138,11 +139,12 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mSearchAgainstSubject->setObjectName(QLatin1String("subject"));
     hbox->addWidget(mSearchAgainstSubject);
 
-    mSearchAgainstFrom = new QPushButton(i18n("From"));
-    mSearchAgainstFrom->setObjectName(QLatin1String("from"));
-    mSearchAgainstFrom->setCheckable(true);
-    mSearchAgainstFrom->setFlat(true);
-    hbox->addWidget(mSearchAgainstFrom);
+    mSearchAgainstFromOrTo = new QPushButton;
+    changeSearchAgainstFromOrToText();
+    mSearchAgainstFromOrTo->setObjectName(QLatin1String("fromorto"));
+    mSearchAgainstFromOrTo->setCheckable(true);
+    mSearchAgainstFromOrTo->setFlat(true);
+    hbox->addWidget(mSearchAgainstFromOrTo);
 
     mSearchAgainstBcc = new QPushButton(i18n("Bcc"));
     mSearchAgainstBcc->setObjectName(QLatin1String("bcc"));
@@ -154,7 +156,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mButtonSearchAgainstGroup->addButton(mSearchEveryWhere, 0);
     mButtonSearchAgainstGroup->addButton(mSearchAgainstBody);
     mButtonSearchAgainstGroup->addButton(mSearchAgainstSubject);
-    mButtonSearchAgainstGroup->addButton(mSearchAgainstFrom);
+    mButtonSearchAgainstGroup->addButton(mSearchAgainstFromOrTo);
     mButtonSearchAgainstGroup->addButton(mSearchAgainstBcc);
     mButtonSearchAgainstGroup->button(0)->setChecked(true);
     connect(mButtonSearchAgainstGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotSearchOptionChanged()));
@@ -212,8 +214,11 @@ QuickSearchLine::SearchOptions QuickSearchLine::searchOptions() const
     if (mSearchAgainstSubject->isChecked()) {
         searchOptions |= SearchAgainstSubject;
     }
-    if (mSearchAgainstFrom->isChecked()) {
-        searchOptions |= SearchAgainstFrom;
+    if (mSearchAgainstFromOrTo->isChecked()) {
+        if (mContainsOutboundMessages)
+            searchOptions |= SearchAgainstTo;
+        else
+            searchOptions |= SearchAgainstFrom;
     }
     if (mSearchAgainstBcc->isChecked()) {
         searchOptions |= SearchAgainstBcc;
@@ -278,6 +283,28 @@ void QuickSearchLine::createQuickSearchButton(const QIcon &icon, const QString &
     quickSearchButtonLayout->addWidget(button);
     mListStatusButton.append(button);
     mButtonStatusGroup->addButton(button);
+}
+
+bool QuickSearchLine::containsOutboundMessages() const
+{
+    return mContainsOutboundMessages;
+}
+
+void QuickSearchLine::setContainsOutboundMessages(bool containsOutboundMessages)
+{
+    if (mContainsOutboundMessages != containsOutboundMessages) {
+        mContainsOutboundMessages = containsOutboundMessages;
+        changeSearchAgainstFromOrToText();
+    }
+}
+
+void QuickSearchLine::changeSearchAgainstFromOrToText()
+{
+    if (mContainsOutboundMessages) {
+        mSearchAgainstFromOrTo->setText(i18n("To"));
+    } else {
+        mSearchAgainstFromOrTo->setText(i18n("From"));
+    }
 }
 
 void QuickSearchLine::initializeStatusSearchButton(QLayout *quickSearchButtonLayout)

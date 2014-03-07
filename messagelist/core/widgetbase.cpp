@@ -352,6 +352,7 @@ void Widget::setStorageModel( StorageModel * storageModel, PreSelectionMode preS
 
   d->quickSearchLine->tagFilterComboBox()->setEnabled( d->mStorageModel );
   d->quickSearchLine->searchEdit()->setEnabled( d->mStorageModel );
+  d->quickSearchLine->setContainsOutboundMessages( d->mStorageModel->containsOutboundMessages() );
 }
 
 StorageModel *Widget::storageModel() const

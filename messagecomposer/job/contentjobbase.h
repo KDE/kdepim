@@ -26,7 +26,7 @@
 #include "messagecomposer_export.h"
 
 namespace KMime {
-  class Content;
+class Content;
 }
 
 namespace MessageComposer {
@@ -35,14 +35,14 @@ class ContentJobBasePrivate;
 
 class MESSAGECOMPOSER_EXPORT ContentJobBase : public JobBase
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit ContentJobBase( QObject *parent = 0 );
     virtual ~ContentJobBase();
 
     /**
-      Starts processing this ContentJobBase asynchronously.  
+      Starts processing this ContentJobBase asynchronously.
       This processes all children in order first, then calls process().
       Emits finished() after all processing is done, and the
       content is reachable through content().
@@ -74,13 +74,13 @@ class MESSAGECOMPOSER_EXPORT ContentJobBase : public JobBase
      */
     KMime::Content* extraContent() const;
 
-  protected:
+protected:
     ContentJobBase( ContentJobBasePrivate &dd, QObject *parent );
 
     /** Use appendSubjob() instead. */
     virtual bool addSubjob( KJob *job );
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     /**
       Reimplement to do additional stuff before processing children, such as
       adding more subjobs.  Remember to call the base implementation.
@@ -98,7 +98,7 @@ class MESSAGECOMPOSER_EXPORT ContentJobBase : public JobBase
     /* reimpl */
     virtual void slotResult( KJob *job );
 
-  private:
+private:
     Q_DECLARE_PRIVATE( ContentJobBase )
 };
 

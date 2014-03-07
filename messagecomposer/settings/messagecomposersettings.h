@@ -34,26 +34,26 @@ namespace MessageComposer {
 
 class MESSAGECOMPOSER_EXPORT MessageComposerSettings : public MessageComposer::MessageComposerSettingsBase
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  static MessageComposerSettings *self();
+    static MessageComposerSettings *self();
 
-  /** Call this slot instead of directly @ref KConfig::sync() to
+    /** Call this slot instead of directly @ref KConfig::sync() to
       minimize the overall config writes. Calling this slot will
       schedule a sync of the application config file using a timer, so
       that many consecutive calls can be condensed into a single
       sync, which is more efficient. */
-  void requestSync();
+    void requestSync();
 
 private slots:
-  void slotSyncNow();
+    void slotSyncNow();
 
 private:
-  MessageComposerSettings();
-  virtual ~MessageComposerSettings();
-  static MessageComposerSettings *mSelf;
+    MessageComposerSettings();
+    virtual ~MessageComposerSettings();
+    static MessageComposerSettings *mSelf;
 
-  QTimer *mConfigSyncTimer;
+    QTimer *mConfigSyncTimer;
 
 };
 

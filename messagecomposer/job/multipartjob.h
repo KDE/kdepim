@@ -31,19 +31,19 @@ class MultipartJobPrivate;
 */
 class MESSAGECOMPOSER_EXPORT MultipartJob : public ContentJobBase
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit MultipartJob( QObject *parent = 0 );
     virtual ~MultipartJob();
 
     QByteArray multipartSubtype() const;
     void setMultipartSubtype( const QByteArray &subtype );
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     virtual void process();
 
-  private:
+private:
     Q_DECLARE_PRIVATE( MultipartJob )
 };
 

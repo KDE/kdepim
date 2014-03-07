@@ -32,19 +32,19 @@ namespace MessageComposer {
 // TODO I have no idea how to test this.  Have a fake keyring???
 class MESSAGECOMPOSER_EXPORT AttachmentFromPublicKeyJob : public MessageCore::AttachmentLoadJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit AttachmentFromPublicKeyJob( const QString &fingerprint, QObject *parent = 0 );
     virtual ~AttachmentFromPublicKeyJob();
 
     QString fingerprint() const;
     void setFingerprint( const QString &fingerprint );
 
-  protected slots:
+protected slots:
     virtual void doStart();
 
-  private:
+private:
     class Private;
     friend class Private;
     Private *const d;

@@ -53,7 +53,9 @@ StorageServiceLogDialog::~StorageServiceLogDialog()
 
 void StorageServiceLogDialog::slotTextChanged()
 {
-    enableButton(User2, !mLog->toPlainText().isEmpty());
+    const bool status = !mLog->toPlainText().isEmpty();
+    enableButton(User2, status);
+    enableButton(User1, status);
 }
 
 void StorageServiceLogDialog::slotClearLog()

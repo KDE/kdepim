@@ -43,8 +43,8 @@ class KMeditor;
  */
 class MESSAGECOMPOSER_EXPORT SignatureController : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit SignatureController( QObject* parent = 0 );
 
     void setEditor( MessageComposer::KMeditor* editor );
@@ -62,7 +62,7 @@ class MESSAGECOMPOSER_EXPORT SignatureController : public QObject
     /** Applys the currently selected signature according to user preferences. */
     void applyCurrentSignature();
 
-  public slots:
+public slots:
     /**
      * Append signature to the end of the text in the editor.
      */
@@ -80,14 +80,14 @@ class MESSAGECOMPOSER_EXPORT SignatureController : public QObject
 
     void cleanSpace();
 
-  signals:
+signals:
     /**
      * A HTML signature is about to be inserted, so enable HTML support in the editor.
      */
     void enableHtml();
     void signatureAdded();
 
-  private:
+private:
     /**
      * Helper to insert the signature of the current identity arbitrarily
      * in the editor, connecting slot functions to KMeditor::insertSignature().
@@ -95,10 +95,10 @@ class MESSAGECOMPOSER_EXPORT SignatureController : public QObject
      */
     void insertSignatureHelper( KPIMIdentities::Signature::Placement placement );
 
-  private slots:
+private slots:
     void identityChanged ( uint id );
 
-  private:
+private:
     MessageComposer::KMeditor* m_editor;
     KPIMIdentities::IdentityCombo* m_identityCombo;
     uint m_currentIdentityId;
