@@ -63,6 +63,10 @@ static void extractSenderToCCAndBcc( const KMime::Message::Ptr &aMsg, QString &s
         // BBC information by looking at source of an OpenPGP encrypted mail
         to = addrSpecListToStringList( MessageHelper::extractAddrSpecs( aMsg, "X-KMail-Recipients" ) );
         aMsg->removeHeader( "X-KMail-Recipients" );
+    } else if( aMsg->headerByType("Resent-To") ) {
+       to = addrSpecListToStringList( MessageHelper::extractAddrSpecs( aMsg, "Resent-To" ) );
+       cc = addrSpecListToStringList( MessageHelper::extractAddrSpecs( aMsg, "Resent-Cc" ) );
+       bcc = addrSpecListToStringList( MessageHelper::extractAddrSpecs( aMsg, "Resent-Bcc" ) );
     } else {
         to = addrSpecListToStringList( MessageHelper::extractAddrSpecs( aMsg, "To" ) );
         cc = addrSpecListToStringList( MessageHelper::extractAddrSpecs( aMsg, "Cc" ) );
