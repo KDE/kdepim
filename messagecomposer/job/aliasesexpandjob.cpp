@@ -34,7 +34,7 @@
 using namespace MessageComposer;
 
 DistributionListExpandJob::DistributionListExpandJob( const QString &name, QObject *parent )
-  : KJob( parent ), mListName( name ), mIsEmpty( false )
+    : KJob( parent ), mListName( name ), mIsEmpty( false )
 {
 }
 
@@ -44,71 +44,71 @@ DistributionListExpandJob::~DistributionListExpandJob()
 
 void DistributionListExpandJob::start()
 {
-  Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob( this );
-  job->setQuery( Akonadi::ContactGroupSearchJob::Name, mListName );
-  connect( job, SIGNAL(result(KJob*)), SLOT(slotSearchDone(KJob*)) );
+    Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob( this );
+    job->setQuery( Akonadi::ContactGroupSearchJob::Name, mListName );
+    connect( job, SIGNAL(result(KJob*)), SLOT(slotSearchDone(KJob*)) );
 }
 
 QString DistributionListExpandJob::addresses() const
 {
-  return mEmailAddresses.join( QLatin1String( ", " ) );
+    return mEmailAddresses.join( QLatin1String( ", " ) );
 }
 
 bool DistributionListExpandJob::isEmpty() const
 {
-  return mIsEmpty;
+    return mIsEmpty;
 }
 
 void DistributionListExpandJob::slotSearchDone( KJob *job )
 {
-  if ( job->error() ) {
-    setError( job->error() );
-    setErrorText( job->errorText() );
-    emitResult();
-    return;
-  }
+    if ( job->error() ) {
+        setError( job->error() );
+        setErrorText( job->errorText() );
+        emitResult();
+        return;
+    }
 
-  const Akonadi::ContactGroupSearchJob *searchJob = qobject_cast<Akonadi::ContactGroupSearchJob*>( job );
+    const Akonadi::ContactGroupSearchJob *searchJob = qobject_cast<Akonadi::ContactGroupSearchJob*>( job );
 
-  const KABC::ContactGroup::List groups = searchJob->contactGroups();
-  if ( groups.isEmpty() ) {
-    emitResult();
-    return;
-  }
+    const KABC::ContactGroup::List groups = searchJob->contactGroups();
+    if ( groups.isEmpty() ) {
+        emitResult();
+        return;
+    }
 
-  Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob( groups.first() );
-  connect( expandJob, SIGNAL(result(KJob*)), SLOT(slotExpansionDone(KJob*)) );
-  expandJob->start();
+    Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob( groups.first() );
+    connect( expandJob, SIGNAL(result(KJob*)), SLOT(slotExpansionDone(KJob*)) );
+    expandJob->start();
 }
 
 void DistributionListExpandJob::slotExpansionDone( KJob *job )
 {
-  if ( job->error() ) {
-    setError( job->error() );
-    setErrorText( job->errorText() );
+    if ( job->error() ) {
+        setError( job->error() );
+        setErrorText( job->errorText() );
+        emitResult();
+        return;
+    }
+
+    const Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob*>( job );
+
+    const KABC::Addressee::List contacts = expandJob->contacts();
+
+    foreach ( const KABC::Addressee &contact, contacts )
+        mEmailAddresses << contact.fullEmail();
+
+    mIsEmpty = mEmailAddresses.isEmpty();
+
     emitResult();
-    return;
-  }
-
-  const Akonadi::ContactGroupExpandJob *expandJob = qobject_cast<Akonadi::ContactGroupExpandJob*>( job );
-
-  const KABC::Addressee::List contacts = expandJob->contacts();
-
-  foreach ( const KABC::Addressee &contact, contacts )
-    mEmailAddresses << contact.fullEmail();
-
-  mIsEmpty = mEmailAddresses.isEmpty();
-
-  emitResult();
 }
 
 
 AliasesExpandJob::AliasesExpandJob( const QString &recipients, const QString &defaultDomain, QObject *parent )
-  : KJob( parent ),
-    mRecipients( KPIMUtils::splitAddressList( recipients ) ),
-    mDefaultDomain( defaultDomain ),
-    mDistributionListExpansionJobs( 0 ),
-    mNicknameExpansionJobs( 0 )
+    : KJob( parent ),
+      mRecipients( KPIMUtils::splitAddressList( recipients ) ),
+      mDefaultDomain( defaultDomain ),
+      mDistributionListExpansionJobs( 0 ),
+      mNicknameExpansionJobs( 0 )
 {
 }
 
@@ -118,136 +118,136 @@ AliasesExpandJob::~AliasesExpandJob()
 
 void AliasesExpandJob::start()
 {
-  // At first we try to expand the recipient to a distribution list
-  // or nick name and save the results in a map for later lookup
-  foreach ( const QString &recipient, mRecipients ) {
+    // At first we try to expand the recipient to a distribution list
+    // or nick name and save the results in a map for later lookup
+    foreach ( const QString &recipient, mRecipients ) {
 
-    // speedup: assume aliases and list names don't contain '@'
-    if ( recipient.isEmpty() || recipient.contains( QLatin1Char( '@' ) ) )
-      continue;
+        // speedup: assume aliases and list names don't contain '@'
+        if ( recipient.isEmpty() || recipient.contains( QLatin1Char( '@' ) ) )
+            continue;
 
-    // check for distribution list
-    DistributionListExpandJob *expandJob = new DistributionListExpandJob( recipient, this );
-    expandJob->setProperty( "recipient", recipient );
-    connect( expandJob, SIGNAL(result(KJob*)), SLOT(slotDistributionListExpansionDone(KJob*)) );
-    mDistributionListExpansionJobs++;
-    expandJob->start();
+        // check for distribution list
+        DistributionListExpandJob *expandJob = new DistributionListExpandJob( recipient, this );
+        expandJob->setProperty( "recipient", recipient );
+        connect( expandJob, SIGNAL(result(KJob*)), SLOT(slotDistributionListExpansionDone(KJob*)) );
+        mDistributionListExpansionJobs++;
+        expandJob->start();
 
-    // check for nick name
-    Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob( this );
-    searchJob->setProperty( "recipient", recipient );
-    searchJob->setQuery( Akonadi::ContactSearchJob::NickName, recipient.toLower() );
-    connect( searchJob, SIGNAL(result(KJob*)), SLOT(slotNicknameExpansionDone(KJob*)) );
-    mNicknameExpansionJobs++;
-    searchJob->start();
-  }
+        // check for nick name
+        Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob( this );
+        searchJob->setProperty( "recipient", recipient );
+        searchJob->setQuery( Akonadi::ContactSearchJob::NickName, recipient.toLower() );
+        connect( searchJob, SIGNAL(result(KJob*)), SLOT(slotNicknameExpansionDone(KJob*)) );
+        mNicknameExpansionJobs++;
+        searchJob->start();
+    }
 
-  if ( mDistributionListExpansionJobs == 0 && mNicknameExpansionJobs == 0 )
-    emitResult();
+    if ( mDistributionListExpansionJobs == 0 && mNicknameExpansionJobs == 0 )
+        emitResult();
 }
 
 QString AliasesExpandJob::addresses() const
 {
-  return mEmailAddresses;
+    return mEmailAddresses;
 }
 
 QStringList AliasesExpandJob::emptyDistributionLists() const
 {
-  return mEmptyDistributionLists;
+    return mEmptyDistributionLists;
 }
 
 void AliasesExpandJob::slotDistributionListExpansionDone( KJob *job )
 {
-  if ( job->error() ) {
-    setError( job->error() );
-    setErrorText( job->errorText() );
-    emitResult();
-    return;
-  }
+    if ( job->error() ) {
+        setError( job->error() );
+        setErrorText( job->errorText() );
+        emitResult();
+        return;
+    }
 
-  const DistributionListExpandJob *expandJob = qobject_cast<DistributionListExpandJob*>( job );
-  const QString recipient = expandJob->property( "recipient" ).toString();
+    const DistributionListExpandJob *expandJob = qobject_cast<DistributionListExpandJob*>( job );
+    const QString recipient = expandJob->property( "recipient" ).toString();
 
-  DistributionListExpansionResult result;
-  result.addresses = expandJob->addresses();
-  result.isEmpty = expandJob->isEmpty();
+    DistributionListExpansionResult result;
+    result.addresses = expandJob->addresses();
+    result.isEmpty = expandJob->isEmpty();
 
-  mDistListExpansionResults.insert( recipient, result );
+    mDistListExpansionResults.insert( recipient, result );
 
-  mDistributionListExpansionJobs--;
-  if ( mDistributionListExpansionJobs == 0 && mNicknameExpansionJobs == 0 )
-    finishExpansion();
+    mDistributionListExpansionJobs--;
+    if ( mDistributionListExpansionJobs == 0 && mNicknameExpansionJobs == 0 )
+        finishExpansion();
 }
 
 void AliasesExpandJob::slotNicknameExpansionDone( KJob *job )
 {
-  if ( job->error() ) {
-    setError( job->error() );
-    setErrorText( job->errorText() );
-    emitResult();
-    return;
-  }
-
-  const Akonadi::ContactSearchJob *searchJob = qobject_cast<Akonadi::ContactSearchJob*>( job );
-  const KABC::Addressee::List contacts = searchJob->contacts();
-  const QString recipient = searchJob->property( "recipient" ).toString();
-
-  foreach ( const KABC::Addressee &contact, contacts ) {
-    if ( contact.nickName().toLower() == recipient.toLower() ) {
-      mNicknameExpansionResults.insert( recipient, contact.fullEmail() );
-      break;
+    if ( job->error() ) {
+        setError( job->error() );
+        setErrorText( job->errorText() );
+        emitResult();
+        return;
     }
-  }
 
-  mNicknameExpansionJobs--;
-  if ( mDistributionListExpansionJobs == 0 && mNicknameExpansionJobs == 0 )
-    finishExpansion();
+    const Akonadi::ContactSearchJob *searchJob = qobject_cast<Akonadi::ContactSearchJob*>( job );
+    const KABC::Addressee::List contacts = searchJob->contacts();
+    const QString recipient = searchJob->property( "recipient" ).toString();
+
+    foreach ( const KABC::Addressee &contact, contacts ) {
+        if ( contact.nickName().toLower() == recipient.toLower() ) {
+            mNicknameExpansionResults.insert( recipient, contact.fullEmail() );
+            break;
+        }
+    }
+
+    mNicknameExpansionJobs--;
+    if ( mDistributionListExpansionJobs == 0 && mNicknameExpansionJobs == 0 )
+        finishExpansion();
 }
 
 void AliasesExpandJob::finishExpansion()
 {
-  foreach ( const QString &recipient, mRecipients ) {
-    if( recipient.isEmpty() )
-      continue;
-    if ( !mEmailAddresses.isEmpty() )
-      mEmailAddresses += QLatin1String( ", " );
+    foreach ( const QString &recipient, mRecipients ) {
+        if( recipient.isEmpty() )
+            continue;
+        if ( !mEmailAddresses.isEmpty() )
+            mEmailAddresses += QLatin1String( ", " );
 
-    const QString receiver = recipient.trimmed();
+        const QString receiver = recipient.trimmed();
 
-    // take prefetched expand distribution list results
-    const DistributionListExpansionResult result = mDistListExpansionResults.value( recipient );
+        // take prefetched expand distribution list results
+        const DistributionListExpansionResult result = mDistListExpansionResults.value( recipient );
 
-    if ( result.isEmpty ) {
-      mEmailAddresses += receiver;
-      mEmptyDistributionLists << receiver;
-      continue;
+        if ( result.isEmpty ) {
+            mEmailAddresses += receiver;
+            mEmptyDistributionLists << receiver;
+            continue;
+        }
+
+        if ( !result.addresses.isEmpty() ) {
+            mEmailAddresses += result.addresses;
+            continue;
+        }
+
+        // take prefetched expand nick name results
+        if ( !mNicknameExpansionResults.value( recipient ).isEmpty() ) {
+            mEmailAddresses += mNicknameExpansionResults.value( recipient );
+            continue;
+        }
+
+        // check whether the address is missing the domain part
+        QString displayName, addrSpec, comment;
+        KPIMUtils::splitAddress( receiver, displayName, addrSpec, comment );
+        if ( !addrSpec.contains( QLatin1Char('@') ) ) {
+            if ( !mDefaultDomain.isEmpty() )
+                mEmailAddresses += KPIMUtils::normalizedAddress( displayName, addrSpec + QLatin1Char( '@' ) +
+                                                                 mDefaultDomain, comment );
+            else
+                mEmailAddresses += MessageCore::StringUtil::guessEmailAddressFromLoginName( addrSpec );
+        } else
+            mEmailAddresses += receiver;
     }
 
-    if ( !result.addresses.isEmpty() ) {
-      mEmailAddresses += result.addresses;
-      continue;
-    }
-
-    // take prefetched expand nick name results
-    if ( !mNicknameExpansionResults.value( recipient ).isEmpty() ) {
-      mEmailAddresses += mNicknameExpansionResults.value( recipient );
-      continue;
-    }
-
-    // check whether the address is missing the domain part
-    QString displayName, addrSpec, comment;
-    KPIMUtils::splitAddress( receiver, displayName, addrSpec, comment );
-    if ( !addrSpec.contains( QLatin1Char('@') ) ) {
-      if ( !mDefaultDomain.isEmpty() )
-        mEmailAddresses += KPIMUtils::normalizedAddress( displayName, addrSpec + QLatin1Char( '@' ) +
-                                                            mDefaultDomain, comment );
-      else
-        mEmailAddresses += MessageCore::StringUtil::guessEmailAddressFromLoginName( addrSpec );
-    } else
-      mEmailAddresses += receiver;
-  }
-
-  emitResult();
+    emitResult();
 }
 
 #include "moc_aliasesexpandjob_p.cpp"

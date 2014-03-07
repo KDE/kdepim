@@ -26,7 +26,7 @@
 #include <messagecore/attachment/attachmentpart.h>
 
 namespace boost {
-  template <typename T> class shared_ptr;
+template <typename T> class shared_ptr;
 }
 
 namespace MessageComposer {
@@ -37,20 +37,20 @@ class AttachmentJobPrivate;
 */
 class MESSAGECOMPOSER_EXPORT AttachmentJob : public ContentJobBase
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit AttachmentJob( MessageCore::AttachmentPart::Ptr part, QObject *parent = 0 );
     virtual ~AttachmentJob();
 
     MessageCore::AttachmentPart::Ptr attachmentPart() const;
     void setAttachmentPart( MessageCore::AttachmentPart::Ptr part );
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     virtual void doStart();
     virtual void process();
 
-  private:
+private:
     Q_DECLARE_PRIVATE( AttachmentJob )
 };
 

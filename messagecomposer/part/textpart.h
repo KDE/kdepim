@@ -31,9 +31,9 @@ namespace MessageComposer {
 
 class MESSAGECOMPOSER_EXPORT TextPart : public MessagePart
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit TextPart( QObject *parent = 0 );
     virtual ~TextPart();
 
@@ -57,7 +57,7 @@ class MESSAGECOMPOSER_EXPORT TextPart : public MessagePart
     KPIMTextEdit::ImageList embeddedImages() const;
     void setEmbeddedImages( const KPIMTextEdit::ImageList &images );
 
-  private:
+private:
     class Private;
     Private *const d;
 };

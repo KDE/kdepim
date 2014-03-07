@@ -32,9 +32,9 @@ namespace MessageComposer {
 
 class MESSAGECOMPOSER_EXPORT InfoPart : public MessageComposer::MessagePart
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit InfoPart( QObject *parent = 0 );
     virtual ~InfoPart();
 
@@ -74,7 +74,7 @@ class MESSAGECOMPOSER_EXPORT InfoPart : public MessageComposer::MessagePart
     int transportId() const;
     void setTransportId( int tid );
 
-  private:
+private:
     class Private;
     Private *const d;
 };

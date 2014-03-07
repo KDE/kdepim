@@ -29,7 +29,7 @@
 class QTextEdit;
 
 namespace KIO {
-  class Job;
+class Job;
 }
 
 namespace MessageComposer {
@@ -40,9 +40,9 @@ namespace MessageComposer {
  */
 class MESSAGECOMPOSER_EXPORT InsertTextFileJob : public KJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     InsertTextFileJob( QTextEdit *editor, const KUrl &url );
     ~InsertTextFileJob();
 
@@ -50,12 +50,12 @@ class MESSAGECOMPOSER_EXPORT InsertTextFileJob : public KJob
 
     virtual void start();
 
-  private slots:
+private slots:
 
     void slotGetJobFinished( KJob *job );
     void slotFileData( KIO::Job *job, const QByteArray &data );
 
-  private:
+private:
 
     QPointer<QTextEdit> mEditor;
     KUrl mUrl;

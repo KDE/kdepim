@@ -24,7 +24,7 @@
 #include "messagecomposer_export.h"
 
 namespace KMime {
-  class Message;
+class Message;
 }
 
 namespace MessageComposer {
@@ -38,9 +38,9 @@ class GlobalPart;
 */
 class MESSAGECOMPOSER_EXPORT SkeletonMessageJob : public JobBase
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit SkeletonMessageJob( InfoPart *infoPart = 0, GlobalPart* globalPart = 0, QObject *parent = 0 );
     virtual ~SkeletonMessageJob();
 
@@ -54,7 +54,7 @@ class MESSAGECOMPOSER_EXPORT SkeletonMessageJob : public JobBase
 
     virtual void start();
 
-  private:
+private:
     Q_DECLARE_PRIVATE( SkeletonMessageJob )
 
     Q_PRIVATE_SLOT( d_func(), void doStart() )

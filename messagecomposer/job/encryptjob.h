@@ -32,12 +32,12 @@
 #include <vector>
 
 namespace KMime {
-  class Content;
+class Content;
 
 }
 
 namespace GpgME {
-  class Error;
+class Error;
 }
 
 
@@ -51,9 +51,9 @@ class EncryptJobPrivate;
 */
 class MESSAGECOMPOSER_EXPORT EncryptJob : public ContentJobBase, public AbstractEncryptJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit EncryptJob( QObject *parent = 0 );
     virtual ~EncryptJob();
 
@@ -65,11 +65,11 @@ class MESSAGECOMPOSER_EXPORT EncryptJob : public ContentJobBase, public Abstract
     std::vector<GpgME::Key> encryptionKeys() const;
     QStringList recipients() const;
     
-  protected Q_SLOTS:
+protected Q_SLOTS:
     //virtual void doStart();
     virtual void process();
 
-  private:
+private:
     Q_DECLARE_PRIVATE( EncryptJob )
 };
 

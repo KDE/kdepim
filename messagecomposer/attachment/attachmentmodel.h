@@ -43,34 +43,34 @@ namespace MessageComposer {
 */
 class MESSAGECOMPOSER_EXPORT AttachmentModel : public QAbstractItemModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     enum {
-      AttachmentPartRole = Qt::UserRole,
-      NameRole,
-      SizeRole,
-      EncodingRole,
-      MimeTypeRole,
-      CompressRole,
-      EncryptRole,
-      SignRole,
-      AutoDisplayRole
+        AttachmentPartRole = Qt::UserRole,
+        NameRole,
+        SizeRole,
+        EncodingRole,
+        MimeTypeRole,
+        CompressRole,
+        EncryptRole,
+        SignRole,
+        AutoDisplayRole
     };
 
     /**
      * @todo: get rid of columns and use the roles instead.
      */
     enum Column {
-      NameColumn,
-      SizeColumn,
-      EncodingColumn,
-      MimeTypeColumn,
-      CompressColumn,
-      EncryptColumn,
-      SignColumn,
-      AutoDisplayColumn,
-      LastColumn ///< @internal
+        NameColumn,
+        SizeColumn,
+        EncodingColumn,
+        MimeTypeColumn,
+        CompressColumn,
+        EncryptColumn,
+        SignColumn,
+        AutoDisplayColumn,
+        LastColumn ///< @internal
     };
 
     explicit AttachmentModel( QObject *parent );
@@ -119,7 +119,7 @@ class MESSAGECOMPOSER_EXPORT AttachmentModel : public QAbstractItemModel
     virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
     virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;
 
-  signals:
+signals:
     void encryptEnabled( bool enabled );
     void signEnabled( bool enabled );
     void autoDisplayEnabled( bool enabled );
@@ -128,7 +128,7 @@ class MESSAGECOMPOSER_EXPORT AttachmentModel : public QAbstractItemModel
     void attachmentRemoved( MessageCore::AttachmentPart::Ptr part );
     void attachmentCompressRequested( MessageCore::AttachmentPart::Ptr part, bool compress );
 
-  private:
+private:
     class Private;
     friend class Private;
     Private *const d;

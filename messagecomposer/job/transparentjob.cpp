@@ -29,10 +29,10 @@ using namespace MessageComposer;
 
 class MessageComposer::TransparentJobPrivate : public MessageComposer::ContentJobBasePrivate
 {
-  public:
+public:
     TransparentJobPrivate( TransparentJob *qq )
-      : ContentJobBasePrivate( qq )
-      , content( 0 )
+        : ContentJobBasePrivate( qq )
+        , content( 0 )
     {
     }
 
@@ -42,7 +42,7 @@ class MessageComposer::TransparentJobPrivate : public MessageComposer::ContentJo
 };
 
 TransparentJob::TransparentJob( QObject *parent )
-  : MessageComposer::ContentJobBase( *new TransparentJobPrivate( this ), parent )
+    : MessageComposer::ContentJobBase( *new TransparentJobPrivate( this ), parent )
 {
 }
 
@@ -53,16 +53,16 @@ TransparentJob::~TransparentJob()
 
 void TransparentJob::setContent( KMime::Content* content )
 {
-  Q_D( TransparentJob );
+    Q_D( TransparentJob );
 
-  d->content = content;
+    d->content = content;
 }
 
 
 void TransparentJob::process()
 {
-  Q_D( TransparentJob );
-  d->resultContent = d->content;
-  emitResult();
+    Q_D( TransparentJob );
+    d->resultContent = d->content;
+    emitResult();
 }
 
