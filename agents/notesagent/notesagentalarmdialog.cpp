@@ -211,7 +211,12 @@ void NotesAgentAlarmDialog::slotFetchAlarmItem(KJob *job)
             QPointer<NoteShared::NoteAlarmDialog> dlg = new NoteShared::NoteAlarmDialog(caption, this);
             dlg->setAlarm(attr->dateTime());
             if (dlg->exec()) {
-                attr->setDateTime(dlg->alarm());
+                const KDateTime date = dlg->alarm();
+                if (date.isValid()) {
+                    attr->setDateTime(dlg->alarm());
+                } else {
+                    item.removeAttribute<NoteShared::NoteAlarmAttribute>();
+                }
                 Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob(item);
                 connect(modify, SIGNAL(result(KJob*)), SLOT(slotModifyItem(KJob*)));
             }
