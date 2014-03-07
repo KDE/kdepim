@@ -102,7 +102,7 @@ public:
     user, mail is not changed and the reply-to field is set to
     the email address of the original sender.
    */
-    KMime::Message::Ptr createRedirect(const QString &toStr, int transportId = -1, const QString& fcc = QString() , int identity = -1);
+    KMime::Message::Ptr createRedirect(const QString &toStr, const QString &ccStr = QString(), const QString &bccStr = QString(), int transportId = -1, const QString& fcc = QString() , int identity = -1);
 
     KMime::Message::Ptr createResend();
 

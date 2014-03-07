@@ -483,7 +483,7 @@ KMime::Message::Ptr MessageFactory::createResend()
     return msg;
 }
 
-KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr, int transportId, const QString& fcc, int identity )
+KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr, const QString &ccStr, const QString &bccStr, int transportId, const QString& fcc, int identity )
 {
     if ( !m_origMsg )
         return KMime::Message::Ptr();
@@ -546,6 +546,16 @@ KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr, int tr
 
     header = new KMime::Headers::Generic( "Resent-To", msg.get(), toStr, "utf-8" );
     msg->setHeader( header );
+
+    if (!ccStr.isEmpty()) {
+        header = new KMime::Headers::Generic( "Resent-Cc", msg.get(), ccStr, "utf-8" );
+        msg->setHeader( header );
+    }
+
+    if (!bccStr.isEmpty()) {
+        header = new KMime::Headers::Generic( "Resent-Bcc", msg.get(), bccStr, "utf-8" );
+        msg->setHeader( header );
+    }
 
     header = new KMime::Headers::Generic( "X-KMail-Redirect-From", msg.get(), strByWayOf, "utf-8" );
     msg->setHeader( header );
