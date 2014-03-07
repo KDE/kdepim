@@ -98,7 +98,7 @@ void WebDavJob::requestTokenAccess()
         deleteLater();
         return;
     }
-    delete dlg;    
+    delete dlg;
     QUrl url(mServiceLocation);
     QNetworkReply *reply = accountInfo(url.toString());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
