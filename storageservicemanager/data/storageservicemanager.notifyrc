@@ -20,6 +20,7 @@ Comment[zh_TW]=儲存服務管理員
 
 [Event/action-failed]
 Name=Action Failed
+Name[ca]=L'acció ha fallat
 Name[cs]=Činnost selhala
 Name[de]=Aktion ist fehlgeschlagen
 Name[es]=Falló la acción
@@ -37,6 +38,7 @@ Name[uk]=Помилка під час дії
 Name[x-test]=xxAction Failedxx
 Name[zh_TW]=動作失敗
 Comment=An error was returned
+Comment[ca]=S'ha retornat un error
 Comment[de]=Ein Fehler wurde zurückgegeben
 Comment[es]=Se devolvió un error
 Comment[fi]=Tapahtui virhe
