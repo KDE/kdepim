@@ -296,24 +296,21 @@ void MessageFactoryTest::testCreateRedirect()
                                           "Cc: cc@cc.cc\n"
                                           "Bcc: bcc@bcc.bcc\n"
                                           "Subject: Test Email Subject\n"
-                                          "Date: %2\n"
-                                          "Message-ID: %3\n"
+                                          "Date: %1\n"
+                                          "Message-ID: %2\n"
                                           "Disposition-Notification-To: me@me.me\n"
                                           "MIME-Version: 1.0\n"
                                           "Content-Transfer-Encoding: 7Bit\n"
                                           "Content-Type: text/plain; charset=\"us-ascii\"\n"
-                                          "Resent-Message-ID: %4\n"
-                                          "Resent-Date: %5\n"
-                                          "Resent-From: %6\n"
-                                          "To: %1\n"
+                                          "Resent-Message-ID: %3\n"
+                                          "Resent-Date: %4\n"
+                                          "Resent-From: %5\n"
+                                          "To: you@you.you\n"
                                           "Resent-To: redir@redir.com\n"
-                                          "Resent-Cc: cc@cc.cc\n"
-                                          "Resent-Bcc: bcc@bcc.bcc\n"
                                           "X-KMail-Redirect-From: me@me.me (by way of another <another@another.com>)\n"
-                                          "X-KMail-Recipients: redir@redir.com\n"
                                           "\n"
                                           "All happy families are alike; each unhappy family is unhappy in its own way." );
-  baseline = baseline.arg( redirectTo ).arg( datetime ).arg( rxmessageid.cap(1) ).arg( rx.cap(1) ).arg( datetime ).arg( QLatin1String( "another <another@another.com>" ) );
+  baseline = baseline.arg( datetime ).arg( rxmessageid.cap(1) ).arg( rx.cap(1) ).arg( datetime ).arg( QLatin1String( "another <another@another.com>" ) );
 
 //   kDebug() << baseline.toLatin1();
 //   kDebug() << "instead:" << rdir->encodedContent();
