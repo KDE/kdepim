@@ -2,11 +2,13 @@
 IconName=kmail
 Comment=Message Viewer
 Comment[bs]=Preglednik poruka
+Comment[ca]=Visor del missatge
 Comment[de]=Nachrichtenanzeige
 Comment[es]=Visor de mensajes
 Comment[fi]=Viestikatselin
 Comment[fr]=Afficheur de messages
 Comment[hu]=Üzenetmegjelenítő
+Comment[it]=Visualizzatore del messaggio
 Comment[nb]=Meldingsviser
 Comment[nl]=Viewer van meldingen
 Comment[pl]=Przeglądarka wiadomości

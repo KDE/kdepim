@@ -533,8 +533,10 @@ KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr, int tr
   header = new KMime::Headers::Generic( "Resent-From", msg.get(), strFrom, "utf-8" );
   msg->setHeader( header );
 
-  KMime::Headers::To* headerT = new KMime::Headers::To( msg.get(), toStr, "utf-8" );
-  msg->setHeader( headerT );
+  if ( msg->to(false) ) {
+    KMime::Headers::To* headerT = new KMime::Headers::To( msg.get(), m_origMsg->to()->asUnicodeString(), "utf-8" );
+    msg->setHeader( headerT );
+  }
 
   header = new KMime::Headers::Generic( "Resent-To", msg.get(), toStr, "utf-8" );
   msg->setHeader( header );
