@@ -143,7 +143,8 @@ void SieveSyntaxHighlighter::init()
               << QLatin1String( "\\s:headers\\b" )
               << QLatin1String( "\\s:list\\b")
               << QLatin1String( "\\s:from\\b")
-              << QLatin1String( "\\s:first\\b");
+              << QLatin1String( "\\s:first\\b")
+              << QLatin1String( "\\s:comparator\\b");
     Q_FOREACH ( const QString & s, matchType ) {
         const QRegExp regex( s, Qt::CaseInsensitive );
         m_rules.append( Rule( regex, matchFormat ) );
@@ -209,7 +210,13 @@ void SieveSyntaxHighlighter::init()
              <<QLatin1String( "\\bmailboxexists\\b" )
              <<QLatin1String( "\\btrue\\b" )
              <<QLatin1String("\\bmetadata\\b")
-             <<QLatin1String("\\benvironment\\b");
+             <<QLatin1String("\\benvironment\\b")
+             <<QLatin1String("\\bspamtest\\b")
+             <<QLatin1String("\\bvirustest\\b")
+             <<QLatin1String("\\bihave\\b")
+             <<QLatin1String("\\bmetadataexists\\b")
+             <<QLatin1String("\\bservermetadata\\b")
+             <<QLatin1String("\\bservermetadataexists\\b");
     Q_FOREACH ( const QString & s, testType ) {
         const QRegExp regex( s, Qt::CaseInsensitive );
         m_rules.append( Rule( regex, testFormat ) );

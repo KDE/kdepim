@@ -53,6 +53,7 @@ QStringList SieveSyntaxHighlighterUtil::fullCapabilities()
             <<QLatin1String("variables")
             <<QLatin1String("servermetadata")
             <<QLatin1String("regex")
+            <<QLatin1String("relational")
             <<QLatin1String("comparator-i;ascii-numeric");
 }
 }
