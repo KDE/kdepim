@@ -31,3 +31,5 @@ Icon=kmail
 MimeType=text/vcard;text/x-ldif;
 
 X-KDE-StartupNotify=true
+Categories=Qt;KDE;Office;ContactManagement;
+Hidden=true
