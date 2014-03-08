@@ -29,6 +29,9 @@
 #include <knewstuff3/uploaddialog.h>
 #include <klocale.h>
 #include <KStandardGuiItem>
+#include <ktempdir.h>
+#include <kzip.h>
+#include <ktemporaryfile.h>
 
 #include <QPushButton>
 #include <QVBoxLayout>
@@ -39,6 +42,8 @@
 #include <QDebug>
 #include <QAction>
 #include <QPointer>
+#include <QDir>
+
 
 using namespace KSieveUi;
 
@@ -114,16 +119,31 @@ SieveEditorWidget::~SieveEditorWidget()
 
 void SieveEditorWidget::slotUploadScripts()
 {
-    //TODO
-    // Open dialog
-    QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("ksieve_script.knsrc"), this);
-
-    //dialog->setUploadFile(zipFileName);
-    //dialog->setUploadName(source);
-    dialog->setDescription(i18nc("Default description for the source", "My Sieve Script"));
-    dialog->exec();
-    delete dialog;
-
+    KTempDir tmp;
+    KTemporaryFile tmpFile;
+    if (tmpFile.open()) {
+        QTextStream out(&tmpFile);
+        out.setCodec("UTF-8");
+        out << script();
+        tmpFile.close();
+        const QString sourceName = mScriptName->text();
+        const QString zipFileName = tmp.name() + QDir::separator() + sourceName + QLatin1String(".zip");
+        KZip *zip = new KZip(zipFileName);
+        if (zip->open(QIODevice::WriteOnly)) {
+            if (zip->addLocalFile(tmpFile.fileName(), sourceName + QLatin1String(".siv"))) {
+                zip->close();
+                QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("ksieve_script.knsrc"), this);
+                dialog->setUploadFile(zipFileName);
+                dialog->setUploadName(sourceName);
+                dialog->setDescription(i18nc("Default description for the source", "My Sieve Script"));
+                dialog->exec();
+                delete dialog;
+            } else {
+                zip->close();
+            }
+        }
+        delete zip;
+    }
 }
 
 void SieveEditorWidget::changeMode(EditorMode mode)
