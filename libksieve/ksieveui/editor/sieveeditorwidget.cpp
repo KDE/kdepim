@@ -190,8 +190,10 @@ void SieveEditorWidget::addOkMessage(const QString &msg)
 
 void SieveEditorWidget::addMessageEntry( const QString &errorMsg, const QColor &color )
 {
+    QString msg = errorMsg;
+    msg.replace(QLatin1Char('\n'), QLatin1String("<br>"));
     const QString logText = QString::fromLatin1( "<font color=%1>%2</font>" )
-           .arg( color.name() ).arg(errorMsg);
+           .arg( color.name() ).arg(msg);
 
     setDebugScript( logText );
 }
