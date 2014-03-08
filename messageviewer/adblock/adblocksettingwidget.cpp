@@ -411,7 +411,7 @@ void AdBlockSettingWidget::slotExportFilters()
         if (!stringRule.isEmpty())
             exportFilters += stringRule + QLatin1Char('\n');
     }
-    PimCommon::Util::saveTextAs(exportFilters, filter, this, i18n("Export Filters"));
+    PimCommon::Util::saveTextAs(exportFilters, filter, this, KUrl(), i18n("Export Filters"));
 }
 
 void AdBlockSettingWidget::slotAutomaticFilterDouble(QListWidgetItem *item)
