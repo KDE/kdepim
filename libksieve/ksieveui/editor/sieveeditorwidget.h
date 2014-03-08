@@ -64,7 +64,7 @@ private Q_SLOTS:
     void slotSwitchMode();
     void slotSwitchTextMode(const QString &script);
     void slotSwitchToGraphicalMode();
-
+    void slotUploadScripts();
 Q_SIGNALS:
     void checkSyntax();
     void enableButtonOk(bool b);
@@ -82,6 +82,7 @@ private:
     QAction *mSwitchMode;
     QAction *mAutoGenerateScript;
     QAction *mSaveAs;
+    QAction *mUpload;
 #if !defined(NDEBUG)
     QAction *mGenerateXml;
 #endif

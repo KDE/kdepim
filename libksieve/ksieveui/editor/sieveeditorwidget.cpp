@@ -26,6 +26,7 @@
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 #include "autocreatescripts/sievescriptparsingerrordialog.h"
 
+#include <knewstuff3/uploaddialog.h>
 #include <klocale.h>
 #include <KStandardGuiItem>
 
@@ -37,6 +38,7 @@
 #include <QToolBar>
 #include <QDebug>
 #include <QAction>
+#include <QPointer>
 
 using namespace KSieveUi;
 
@@ -47,6 +49,7 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
     QVBoxLayout *lay = new QVBoxLayout;
 
     QToolBar *bar = new QToolBar;
+    bar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     mCheckSyntax = new QAction(i18n("Check Syntax"), this);
     connect(mCheckSyntax, SIGNAL(triggered(bool)), SLOT(slotCheckSyntax()));
     bar->addAction(mCheckSyntax);
@@ -65,6 +68,12 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
     connect(mGenerateXml, SIGNAL(triggered(bool)), SLOT(slotGenerateXml()));
     bar->addAction(mGenerateXml);
 #endif
+
+    QStringList overlays;
+    overlays <<QLatin1String("list-add");
+    mUpload = new QAction(KIcon(QLatin1String("get-hot-new-stuff"), 0, overlays), i18n("Upload..."), this);
+    connect(mUpload, SIGNAL(triggered(bool)), SLOT(slotUploadScripts()));
+    bar->addAction(mUpload);
 
     lay->addWidget(bar);
 
@@ -101,6 +110,20 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
 
 SieveEditorWidget::~SieveEditorWidget()
 {
+}
+
+void SieveEditorWidget::slotUploadScripts()
+{
+    //TODO
+    // Open dialog
+    QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("ksieve_script.knsrc"), this);
+
+    //dialog->setUploadFile(zipFileName);
+    //dialog->setUploadName(source);
+    dialog->setDescription(i18nc("Default description for the source", "My Sieve Script"));
+    dialog->exec();
+    delete dialog;
+
 }
 
 void SieveEditorWidget::changeMode(EditorMode mode)
