@@ -43,7 +43,7 @@ void TrojitaAddressBook::readAddressBook()
     Q_FOREACH (const QString &contact, contacts) {
         KABC::Addressee contactABC;
         settings->beginGroup(contact);
-        contactABC.setEmails(QStringList() << settings->value(QLatin1String("email")).toString());
+        contactABC.setEmails(QStringList() << settings->value(QLatin1String("email")).toStringList());
 
         KABC::Address homeAddr = KABC::Address( KABC::Address::Home );
         homeAddr.setLocality(settings->value(QLatin1String("city")).toString());
