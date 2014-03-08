@@ -43,7 +43,7 @@ SieveEditorAbstractWidget::~SieveEditorAbstractWidget()
 void SieveEditorAbstractWidget::slotSaveAs()
 {
     const QString filter = i18n( "*.siv|sieve files (*.siv)\n*|all files (*)" );
-    PimCommon::Util::saveTextAs(currentscript(), filter, this);
+    PimCommon::Util::saveTextAs(currentscript(), filter, this, i18n("Save Script"));
 }
 
 QString SieveEditorAbstractWidget::currentscript()

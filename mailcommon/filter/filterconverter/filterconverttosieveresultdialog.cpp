@@ -62,7 +62,7 @@ FilterConvertToSieveResultDialog::~FilterConvertToSieveResultDialog()
 void FilterConvertToSieveResultDialog::slotSave()
 {
     const QString filter = i18n( "*.siv|sieve files (*.siv)\n*|all files (*)" );
-    PimCommon::Util::saveTextAs(mEditor->editor()->toPlainText(), filter, this);
+    PimCommon::Util::saveTextAs(mEditor->editor()->toPlainText(), filter, this, i18n("Convert to Script Sieve"));
 }
 
 void FilterConvertToSieveResultDialog::setCode(const QString &code)

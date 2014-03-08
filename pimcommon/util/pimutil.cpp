@@ -57,10 +57,11 @@ OrgKdeAkonadiImapSettingsInterface *PimCommon::Util::createImapSettingsInterface
                 QLatin1String("org.freedesktop.Akonadi.Resource.") + ident, QLatin1String("/Settings"), QDBusConnection::sessionBus() );
 }
 
-void PimCommon::Util::saveTextAs( const QString &text, const QString &filter, QWidget *parent, const KUrl &url )
+void PimCommon::Util::saveTextAs( const QString &text, const QString &filter, QWidget *parent, const KUrl &url, const QString &caption )
 {
     QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, parent) );
-
+    if (!caption.isEmpty())
+        fdlg->setCaption(caption);
     fdlg->setMode( KFile::File );
     fdlg->setOperationMode( KFileDialog::Saving );
     fdlg->setConfirmOverwrite(true);
@@ -78,7 +79,7 @@ void PimCommon::Util::saveTextAs( const QString &text, const QString &filter, QW
     delete fdlg;
 }
 
-bool PimCommon::Util::saveToFile( const QString &filename, const QString &text )
+bool PimCommon::Util::saveToFile( const QString &filename, const QString &text)
 {
     QFile file( filename );
     if ( !file.open( QIODevice::WriteOnly|QIODevice::Text ) )
@@ -90,10 +91,11 @@ bool PimCommon::Util::saveToFile( const QString &filename, const QString &text )
     return true;
 }
 
-QString PimCommon::Util::loadToFile(const QString &filter, QWidget *parent, const KUrl &url)
+QString PimCommon::Util::loadToFile(const QString &filter, QWidget *parent, const KUrl &url, const QString &caption)
 {
     QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, parent) );
-
+    if (!caption.isEmpty())
+        fdlg->setCaption(caption);
     fdlg->setMode( KFile::File );
     fdlg->setOperationMode( KFileDialog::Opening );
     QString result;

@@ -372,7 +372,7 @@ void AdBlockSettingWidget::showAutomaticFilterList(QListWidgetItem *item)
 void AdBlockSettingWidget::slotImportFilters()
 {
     const QString filter = i18n( "*|all files (*)" );
-    const QString result = PimCommon::Util::loadToFile(filter, this);
+    const QString result = PimCommon::Util::loadToFile(filter, this, i18n("Import Filters"));
     if (result.isEmpty()) {
         return;
     }
@@ -411,7 +411,7 @@ void AdBlockSettingWidget::slotExportFilters()
         if (!stringRule.isEmpty())
             exportFilters += stringRule + QLatin1Char('\n');
     }
-    PimCommon::Util::saveTextAs(exportFilters, filter, this);
+    PimCommon::Util::saveTextAs(exportFilters, filter, this, i18n("Export Filters"));
 }
 
 void AdBlockSettingWidget::slotAutomaticFilterDouble(QListWidgetItem *item)
