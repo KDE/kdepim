@@ -121,7 +121,7 @@ void SearchRuleWidget::setPatternEditOptions( SearchPatternEdit::SearchPatternEd
     const bool headersOnly = ( options & MailCommon::SearchPatternEdit::HeadersOnly );
     const bool notShowSize = ( options & MailCommon::SearchPatternEdit::NotShowSize );
     const bool notShowDate = ( options & MailCommon::SearchPatternEdit::NotShowDate );
-    const bool absoluteDates = ( options & MailCommon::SearchPatternEdit::AbsoluteDate );
+    const bool notShowAbsoluteDates = ( options & MailCommon::SearchPatternEdit::NotShowAbsoluteDate );
     const bool notShowTags = ( options & MailCommon::SearchPatternEdit::NotShowTags );
 
     if ( headersOnly && ( currentText != "<message>") && ( currentText != "<body>" ) ) {
@@ -142,7 +142,7 @@ void SearchRuleWidget::setPatternEditOptions( SearchPatternEdit::SearchPatternEd
         mRuleField->setItemText( 0, QString() );
     }
 
-    if ( !absoluteDates && ( currentText != "<age in days>") ) {
+    if ( notShowAbsoluteDates && ( currentText != "<age in days>") ) {
         mRuleField->setItemText( 0, QString::fromLatin1( currentText ) );
     } else {
         mRuleField->setItemText( 0, QString() );
@@ -363,7 +363,7 @@ int SearchRuleWidget::indexOfRuleField( const QByteArray &aName ) const
 void SearchRuleWidget::initFieldList( SearchPatternEdit::SearchPatternEditOptions options )
 {
     const bool headersOnly = ( options & MailCommon::SearchPatternEdit::HeadersOnly );
-    const bool absoluteDates = ( options & MailCommon::SearchPatternEdit::AbsoluteDate );
+    const bool notShowAbsoluteDates = ( options & MailCommon::SearchPatternEdit::NotShowAbsoluteDate );
     const bool notShowSize = ( options & MailCommon::SearchPatternEdit::NotShowSize );
     const bool notShowDate = ( options & MailCommon::SearchPatternEdit::NotShowDate );
     const bool notShowTags = ( options & MailCommon::SearchPatternEdit::NotShowTags );
@@ -379,7 +379,7 @@ void SearchRuleWidget::initFieldList( SearchPatternEdit::SearchPatternEditOption
     mFilterFieldList.append( SpecialRuleFields[Recipients].getLocalizedDisplayName() );
     if ( !notShowSize )
         mFilterFieldList.append( SpecialRuleFields[Size].getLocalizedDisplayName() );
-    if ( !absoluteDates ) {
+    if ( !notShowAbsoluteDates ) {
         mFilterFieldList.append( SpecialRuleFields[AgeInDays].getLocalizedDisplayName() );
     }
 
