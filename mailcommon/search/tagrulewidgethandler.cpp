@@ -387,3 +387,4 @@ bool TagRuleWidgetHandler::update( const QByteArray &field,
 }
 
 #include "tagrulewidgethandler.moc"
+
