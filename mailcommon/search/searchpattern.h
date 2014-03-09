@@ -266,7 +266,7 @@ public:
     /**
      * Adds query terms to the given term group.
      */
-    virtual void addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const {  };
+    virtual void addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyIsNotAnError ) const {  }
 
 
     QDataStream &operator>>( QDataStream & ) const;

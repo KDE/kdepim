@@ -1,6 +1,7 @@
 [Global]
 IconName=kmail
 Comment=StorageServiceManager
+Comment[ca]=Gestor del servei d'emmagatzematge
 Comment[cs]=Správce služeb úložiště
 Comment[de]=Speicherdienstverwaltung
 Comment[es]=Gestor del servicio de almacenamiento

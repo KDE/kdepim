@@ -85,7 +85,8 @@ public:
         AbsoluteDate = 2,
         MatchAllMessages = 4,
         NotShowSize = 8,
-        NotShowDate = 16
+        NotShowDate = 16,
+        NotShowTags = 32
     };
     Q_DECLARE_FLAGS( SearchPatternEditOptions, SearchPatternEditOption )
 
