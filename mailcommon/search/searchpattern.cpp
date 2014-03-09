@@ -1094,7 +1094,7 @@ void SearchRuleNumerical::addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &e
         term.setIsNegated( isNegated() );
         groupTerm.addSubTerm(term);
     } else if ( kasciistricmp( field(), "<age in days>" ) == 0 ) {
-        QDateTime date(QDate::currentDate());
+        QDate date(QDate::currentDate());
         date = date.addDays( contents().toInt() );
         EmailSearchTerm term(EmailSearchTerm::HeaderOnlyDate, date, akonadiComparator());
         term.setIsNegated( isNegated() );
