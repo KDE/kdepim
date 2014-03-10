@@ -435,16 +435,28 @@ void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, Pa
                             comment.clear();
                         }
                         typeBlock = TypeBlockInclude;
-                        currentPage->includeWidget()->loadScript(e, error);
+                        if (currentPage->includeWidget()) {
+                            currentPage->includeWidget()->loadScript(e, error);
+                        } else {
+                            qDebug()<<" include not supported";
+                        }
                     } else if (actionName == QLatin1String("global")) {
                         if (!currentPage || (typeBlock == TypeBlockIf) || (typeBlock == TypeBlockElse) || (typeBlock == TypeBlockElsif)) {
                             currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
                             comment.clear();
                         }
                         typeBlock = TypeBlockGlobal;
-                        currentPage->globalVariableWidget()->loadScript(e, error);
+                        if (currentPage->globalVariableWidget()) {
+                            currentPage->globalVariableWidget()->loadScript(e, error);
+                        } else {
+                            qDebug()<<" globalVariable not supported";
+                        }
                     } else if (actionName == QLatin1String("set") && (typeBlock == TypeBlockGlobal)) {
-                        currentPage->globalVariableWidget()->loadSetVariable(e, error);
+                        if (currentPage->globalVariableWidget()) {
+                            currentPage->globalVariableWidget()->loadSetVariable(e, error);
+                        } else {
+                            qDebug()<<" globalVariable not supported";
+                        }
                     } else {
                         if (!currentPage || (typeBlock == TypeBlockIf) || (typeBlock == TypeBlockElse) || (typeBlock == TypeBlockElsif)) {
                             currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
