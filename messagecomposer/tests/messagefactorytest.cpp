@@ -127,9 +127,8 @@ void MessageFactoryTest::testCreateReply()
   QDateTime date = msg->date()->dateTime().dateTime();
   QString datetime = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
   datetime += QLatin1String( " " ) + KGlobal::locale()->formatTime( date.time(), true );
-  QString replyStr = QString::fromLatin1( QByteArray(QByteArray("On ") + datetime.toLatin1() + QByteArray(" you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n")) );
+  QString replyStr = QString::fromLatin1( QByteArray(QByteArray("On ") + datetime.toLatin1() + QByteArray(" you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n\n")) );
   QVERIFY( reply.msg->subject()->asUnicodeString() == QLatin1String( "Re: Test Email Subject" ) );
-  QSKIP("This test has been failing for a long time, please someone fix it", SkipSingle);
   QCOMPARE_OR_DIFF( reply.msg->body(), replyStr.toLatin1() );
   
 }
@@ -184,36 +183,6 @@ void MessageFactoryTest::testCreateReplyUTF16Base64()
 
 }
 
-void MessageFactoryTest::testCreateReplyKeepCharsetEncoding()
-{
-  // Commented out, the mbox file is missing.
-  /*KMime::Message::Ptr msg = loadMessageFromFile( QLatin1String("plain_iso8859-1.mbox") );
-  KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
-
-//   kDebug() << "plain base64 msg message:" << msg->encodedContent();
-
-  MessageFactory factory( msg, 0 );
-  factory.setIdentityManager( identMan );
-
-  MessageFactory::MessageReply reply =  factory.createReply();
-  QVERIFY( reply.replyAll = true );
-  kDebug() << "reply" << reply.msg->encodedContent();
-
-  QString replyStr = KGlobal::charsets()->codecForName( QLatin1String( "iso-8859-1" ) )->toUnicode(
-  QByteArray::fromBase64( "8/Xq6Obn3PL1++np6g" ) );
-  QVERIFY( reply.msg->contentType()->mimeType() == "text/plain" );
-  QVERIFY( reply.msg->subject()->asUnicodeString() == QLatin1String( "Re: asking for reply" ) );
-  
-  TestHtmlWriter testWriter;
-  TestCSSHelper testCSSHelper;
-  MessageCore::Test::TestObjectTreeSource testSource( &testWriter, &testCSSHelper );
-  MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
-  MessageViewer::ObjectTreeParser otp( &testSource, nh, 0, false, true, 0 );
-  otp.parseObjectTree( reply.msg.get() );
-  QVERIFY( otp.textualContent().contains( replyStr ) );*/
-
-}
-
 void MessageFactoryTest::testCreateForward()
 {
   KMime::Message::Ptr msg = createPlainTestMessage();
@@ -232,12 +201,14 @@ void MessageFactoryTest::testCreateForward()
   QString datetime = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
   datetime += QLatin1String( ", " ) + KGlobal::locale()->formatTime( date.time(), true );
 
-  QString fwdMsg = QString::fromLatin1("Content-Type: text/plain; charset=\"us-ascii\"\n"
+  QString fwdMsg = QString::fromLatin1(
                       "From: another <another@another.com>\n"
                       "Subject: Fwd: Test Email Subject\n"
                       "Date: %2\n"
                       "User-Agent: %3\n"
                       "MIME-Version: 1.0\n"
+                      "Content-Type: text/plain; charset=\"ISO-8859-1\"\n"
+                      "Content-Transfer-Encoding: 8Bit\n"
                       "X-KMail-Link-Message: 0\n"
                       "X-KMail-Link-Type: forward\n"
                       "\n"
@@ -256,9 +227,6 @@ void MessageFactoryTest::testCreateForward()
 
   
 //   kDebug() << "got:" << fw->encodedContent() << "against" << fwdMsg.toLatin1();
-  
-  QString fwdStr = QString::fromLatin1( QByteArray(QByteArray("On ") + datetime.toLatin1() + QByteArray(" you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n")) );
-  QSKIP("This test has been failing for a long time, please someone fix it", SkipSingle);
   QCOMPARE( fw->subject()->asUnicodeString(), QLatin1String( "Fwd: Test Email Subject" ) );
   QCOMPARE_OR_DIFF( fw->encodedContent(), fwdMsg.toLatin1() );
 }
