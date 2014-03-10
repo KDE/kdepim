@@ -99,7 +99,7 @@ void SieveEditorPageWidget::slotGetResult( KManageSieve::SieveJob *, bool succes
     mSieveEditorWidget->setScriptName( mCurrentURL.fileName() );
     mSieveEditorWidget->setScript( script );
     mWasActive = isActive;
-    mWasChanged = false;
+    setModified(false);
 }
 
 void SieveEditorPageWidget::saveScript()
@@ -117,7 +117,7 @@ void SieveEditorPageWidget::slotPutResult( KManageSieve::SieveJob *, bool succes
         KMessageBox::information( this, i18n( "The Sieve script was successfully uploaded." ),
                                   i18n( "Sieve Script Upload" ) );
         mIsNewScript = false;
-        mWasChanged = false;
+        setModified(false);
     } else {
         //TODO error
     }
@@ -148,8 +148,14 @@ bool SieveEditorPageWidget::needToSaveScript()
     return result;
 }
 
+void SieveEditorPageWidget::setModified(bool b)
+{
+    mWasChanged = b;
+    Q_EMIT scriptModified(mWasChanged, this);
+}
+
 void SieveEditorPageWidget::slotValueChanged()
 {
     qDebug()<<"void SieveEditorPageWidget::slotValueChanged() ";
-    mWasChanged = true;
+    setModified(true);
 }

@@ -24,14 +24,16 @@
 #include "editor/sieveeditor.h"
 
 #include <KSharedConfig>
+#include <KTabWidget>
+#include <KGlobalSettings>
+#include <KColorScheme>
 
-#include <QTabWidget>
 #include <QSplitter>
 
 SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     : QSplitter(parent)
 {
-    mTabWidget = new QTabWidget;
+    mTabWidget = new KTabWidget;
     mTabWidget->setMovable(true);
     addWidget(mTabWidget);
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
@@ -45,6 +47,7 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     splitterSizes << 80 << 20;
     KConfigGroup myGroup( KGlobal::config(), "SieveEditorMainWidget" );
     setSizes(myGroup.readEntry( "mainSplitter", splitterSizes));
+    connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), this, SLOT(slotGeneralPaletteChanged()));
 }
 
 SieveEditorMainWidget::~SieveEditorMainWidget()
@@ -84,6 +87,7 @@ void SieveEditorMainWidget::slotCreateScriptPage(const KUrl &url, const QStringL
     } else {
         SieveEditorPageWidget *editor = new SieveEditorPageWidget;
         connect(editor, SIGNAL(refreshList()), this, SIGNAL(updateScriptList()));
+        connect(editor, SIGNAL(scriptModified(bool,SieveEditorPageWidget*)), this, SLOT(slotScriptModified(bool,SieveEditorPageWidget*)));
         editor->setIsNewScript(isNewScript);
         editor->loadScript(url, capabilities);
         mTabWidget->addTab(editor, url.fileName());
@@ -148,7 +152,28 @@ bool SieveEditorMainWidget::needToSaveScript()
     return scriptSaved;
 }
 
-QTabWidget *SieveEditorMainWidget::tabWidget() const
+KTabWidget *SieveEditorMainWidget::tabWidget() const
 {
     return mTabWidget;
+}
+
+void SieveEditorMainWidget::slotScriptModified(bool modified,SieveEditorPageWidget *page)
+{
+    const int index = mTabWidget->indexOf(page);
+    if (index >= 0) {
+        if (!mScriptColor.isValid()) {
+            slotGeneralPaletteChanged();
+        }
+        mTabWidget->setTabTextColor(index, modified ? mModifiedScriptColor : mScriptColor);
+    }
+}
+
+void SieveEditorMainWidget::slotGeneralPaletteChanged()
+{
+    const QPalette pal = palette();
+    mScriptColor = pal.text().color();
+    mModifiedScriptColor = pal.text().color();
+
+    const KColorScheme scheme( QPalette::Active, KColorScheme::View );
+    mModifiedScriptColor = scheme.foreground( KColorScheme::NegativeText ).color();
 }

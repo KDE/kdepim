@@ -34,11 +34,11 @@
 #include <KActionCollection>
 #include <KAction>
 #include <KStatusBar>
+#include <KTabWidget>
 
 #include <QPointer>
 #include <QLabel>
 #include <QCloseEvent>
-#include <QStackedWidget>
 
 SieveEditorMainWindow::SieveEditorMainWindow()
     : KXmlGuiWindow(),

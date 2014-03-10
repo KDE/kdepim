@@ -44,6 +44,7 @@ public:
 
 Q_SIGNALS:
     void refreshList();
+    void scriptModified(bool, SieveEditorPageWidget *);
 
 private slots:
     void slotGetResult(KManageSieve::SieveJob *, bool success, const QString &script, bool isActive);
@@ -53,6 +54,7 @@ private slots:
     void slotValueChanged();
 
 private:
+    void setModified(bool b);
     KUrl mCurrentURL;
     KSieveUi::SieveEditorWidget *mSieveEditorWidget;
     bool mWasActive;
