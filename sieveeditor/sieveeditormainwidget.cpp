@@ -25,14 +25,14 @@
 
 #include <KSharedConfig>
 
-#include <QStackedWidget>
+#include <QTabWidget>
 #include <QSplitter>
 
 SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     : QSplitter(parent)
 {
-    mStackedWidget = new QStackedWidget;
-    addWidget(mStackedWidget);
+    mTabWidget = new QTabWidget;
+    addWidget(mTabWidget);
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
     connect(mScriptManagerWidget, SIGNAL(createScriptPage(KUrl,QStringList,bool)), this, SLOT(slotCreateScriptPage(KUrl,QStringList,bool)));
     connect(mScriptManagerWidget, SIGNAL(updateButtons(bool,bool,bool,bool)), SIGNAL(updateButtons(bool,bool,bool,bool)));
@@ -55,8 +55,8 @@ SieveEditorMainWidget::~SieveEditorMainWidget()
 
 QWidget *SieveEditorMainWidget::hasExistingPage(const KUrl &url)
 {
-    for (int i=0; i < mStackedWidget->count(); ++i) {
-        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(mStackedWidget->widget(i));
+    for (int i=0; i < mTabWidget->count(); ++i) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(mTabWidget->widget(i));
         if (page) {
             if (page->currentUrl() == url) {
                 return page;
@@ -70,7 +70,7 @@ void SieveEditorMainWidget::slotScriptDeleted(const KUrl &url)
 {
     QWidget *page = hasExistingPage(url);
     if (page) {
-        mStackedWidget->removeWidget(page);
+        mTabWidget->removeTab(mTabWidget->indexOf(page));
         delete page;
     }
 }
@@ -79,14 +79,14 @@ void SieveEditorMainWidget::slotCreateScriptPage(const KUrl &url, const QStringL
 {
     QWidget *page = hasExistingPage(url);
     if (page) {
-        mStackedWidget->setCurrentWidget(page);
+        mTabWidget->setCurrentWidget(page);
     } else {
         SieveEditorPageWidget *editor = new SieveEditorPageWidget;
         connect(editor, SIGNAL(refreshList()), this, SIGNAL(updateScriptList()));
         editor->setIsNewScript(isNewScript);
         editor->loadScript(url, capabilities);
-        mStackedWidget->addWidget(editor);
-        mStackedWidget->setCurrentWidget(editor);
+        mTabWidget->addTab(editor, url.fileName());
+        mTabWidget->setCurrentWidget(editor);
         if (isNewScript)
             editor->saveScript();
     }
@@ -124,7 +124,7 @@ void SieveEditorMainWidget::refreshList()
 
 void SieveEditorMainWidget::saveScript()
 {
-    QWidget *w = mStackedWidget->currentWidget();
+    QWidget *w = mTabWidget->currentWidget();
     if (w) {
         SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
         if (page) {
@@ -136,8 +136,8 @@ void SieveEditorMainWidget::saveScript()
 bool SieveEditorMainWidget::needToSaveScript()
 {
     bool scriptSaved = false;
-    for (int i=0; i < mStackedWidget->count(); ++i) {
-        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(mStackedWidget->widget(i));
+    for (int i=0; i < mTabWidget->count(); ++i) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(mTabWidget->widget(i));
         if (page) {
             const bool result = page->needToSaveScript();
             if (result)
@@ -147,7 +147,7 @@ bool SieveEditorMainWidget::needToSaveScript()
     return scriptSaved;
 }
 
-QStackedWidget *SieveEditorMainWidget::stackedWidget() const
+QTabWidget *SieveEditorMainWidget::tabWidget() const
 {
-    return mStackedWidget;
+    return mTabWidget;
 }
