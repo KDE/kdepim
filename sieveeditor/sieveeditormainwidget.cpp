@@ -87,6 +87,8 @@ void SieveEditorMainWidget::slotCreateScriptPage(const KUrl &url, const QStringL
         editor->loadScript(url, capabilities);
         mStackedWidget->addWidget(editor);
         mStackedWidget->setCurrentWidget(editor);
+        if (isNewScript)
+            editor->saveScript();
     }
 }
 
