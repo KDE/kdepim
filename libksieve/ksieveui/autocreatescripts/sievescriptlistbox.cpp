@@ -395,7 +395,10 @@ void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, Pa
                             currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
                             comment.clear();
                         }
-                        currentPage->forEveryPartWidget()->loadScript(e, error);
+                        if (currentPage->forEveryPartWidget())
+                            currentPage->forEveryPartWidget()->loadScript(e, error);
+                        else 
+                            qDebug()<<" forEveryPart feature not supported";
                         //TODO verify it.
                         QDomNode block = e.firstChildElement(QLatin1String("block")).firstChild();
                         loadBlock(block, currentPage, typeBlock, error);
