@@ -144,3 +144,8 @@ bool SieveEditorMainWidget::needToSaveScript()
     }
     return scriptSaved;
 }
+
+QStackedWidget *SieveEditorMainWidget::stackedWidget() const
+{
+    return mStackedWidget;
+}

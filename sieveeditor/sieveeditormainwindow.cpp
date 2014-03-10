@@ -38,6 +38,7 @@
 #include <QPointer>
 #include <QLabel>
 #include <QCloseEvent>
+#include <QStackedWidget>
 
 SieveEditorMainWindow::SieveEditorMainWindow()
     : KXmlGuiWindow(),
@@ -52,6 +53,8 @@ SieveEditorMainWindow::SieveEditorMainWindow()
     setCentralWidget(mMainWidget);
     connect( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
               this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
+    connect(mMainWidget->stackedWidget(), SIGNAL(currentChanged(int)), SLOT(slotUpdateActions()));
+    connect(mMainWidget->stackedWidget(), SIGNAL(widgetRemoved(int)), SLOT(slotUpdateActions()));
     const Solid::Networking::Status status = Solid::Networking::status();
     slotSystemNetworkStatusChanged(status);
 }
@@ -109,6 +112,7 @@ void SieveEditorMainWindow::setupActions()
     KStandardAction::quit(this, SLOT(close()), ac );
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
     mSaveScript = KStandardAction::save( this, SLOT(slotSaveScript()), ac );
+    mSaveScript->setEnabled(false);
 
     KAction *act = ac->addAction(QLatin1String("add_server_sieve"), this, SLOT(slotAddServerSieve()));
     act->setText(i18n("Add Server Sieve..."));
@@ -195,3 +199,9 @@ void SieveEditorMainWindow::slotAddServerSieve()
     }
     delete dlg;
 }
+
+void SieveEditorMainWindow::slotUpdateActions()
+{
+    mSaveScript->setEnabled(mMainWidget->stackedWidget()->count()>0);
+}
+

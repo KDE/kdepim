@@ -48,6 +48,7 @@ private slots:
     void slotRefreshList();
     void slotSaveScript();
     void slotSystemNetworkStatusChanged(Solid::Networking::Status status);
+    void slotUpdateActions();
 private:
     void initStatusBar();
     void readConfig();

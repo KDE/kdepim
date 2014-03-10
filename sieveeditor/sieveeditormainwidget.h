@@ -43,6 +43,8 @@ public:
     void saveScript();
     bool needToSaveScript();
 
+    QStackedWidget *stackedWidget() const;
+
 Q_SIGNALS:
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
     void updateScriptList();
