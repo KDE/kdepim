@@ -32,6 +32,7 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     : QSplitter(parent)
 {
     mTabWidget = new QTabWidget;
+    mTabWidget->setMovable(true);
     addWidget(mTabWidget);
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
     connect(mScriptManagerWidget, SIGNAL(createScriptPage(KUrl,QStringList,bool)), this, SLOT(slotCreateScriptPage(KUrl,QStringList,bool)));
