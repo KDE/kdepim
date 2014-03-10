@@ -24,7 +24,7 @@
 #include <QSplitter>
 #include <KUrl>
 
-class QStackedWidget;
+class QTabWidget;
 
 class SieveEditorScriptManagerWidget;
 class SieveEditorMainWidget : public QSplitter
@@ -43,7 +43,7 @@ public:
     void saveScript();
     bool needToSaveScript();
 
-    QStackedWidget *stackedWidget() const;
+    QTabWidget *tabWidget() const;
 
 Q_SIGNALS:
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
@@ -55,7 +55,7 @@ private slots:
 
 private:
     QWidget *hasExistingPage(const KUrl &url);
-    QStackedWidget *mStackedWidget;
+    QTabWidget *mTabWidget;
     SieveEditorScriptManagerWidget *mScriptManagerWidget;
 };
 

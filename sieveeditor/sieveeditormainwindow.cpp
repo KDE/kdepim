@@ -53,8 +53,8 @@ SieveEditorMainWindow::SieveEditorMainWindow()
     setCentralWidget(mMainWidget);
     connect( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
               this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
-    connect(mMainWidget->stackedWidget(), SIGNAL(currentChanged(int)), SLOT(slotUpdateActions()));
-    connect(mMainWidget->stackedWidget(), SIGNAL(widgetRemoved(int)), SLOT(slotUpdateActions()));
+    connect(mMainWidget->tabWidget(), SIGNAL(currentChanged(int)), SLOT(slotUpdateActions()));
+    connect(mMainWidget->tabWidget(), SIGNAL(widgetRemoved(int)), SLOT(slotUpdateActions()));
     const Solid::Networking::Status status = Solid::Networking::status();
     slotSystemNetworkStatusChanged(status);
 }
@@ -202,6 +202,6 @@ void SieveEditorMainWindow::slotAddServerSieve()
 
 void SieveEditorMainWindow::slotUpdateActions()
 {
-    mSaveScript->setEnabled(mMainWidget->stackedWidget()->count()>0);
+    mSaveScript->setEnabled(mMainWidget->tabWidget()->count()>0);
 }
 
