@@ -55,7 +55,7 @@ private slots:
     void slotScriptDeleted(const KUrl &url);
     void slotScriptModified(bool modified, SieveEditorPageWidget *page);
     void slotGeneralPaletteChanged();
-
+    void slotTabCloseRequested(int index);
 private:
     QWidget *hasExistingPage(const KUrl &url);
     QColor mModifiedScriptColor;

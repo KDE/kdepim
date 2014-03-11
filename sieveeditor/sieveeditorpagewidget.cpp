@@ -148,6 +148,11 @@ bool SieveEditorPageWidget::needToSaveScript()
     return result;
 }
 
+bool SieveEditorPageWidget::isModified() const
+{
+    return mWasChanged;
+}
+
 void SieveEditorPageWidget::setModified(bool b)
 {
     mWasChanged = b;

@@ -23,10 +23,13 @@
 #include "sieveeditorpagewidget.h"
 #include "editor/sieveeditor.h"
 
+#include <KLocalizedString>
+
 #include <KSharedConfig>
 #include <KTabWidget>
 #include <KGlobalSettings>
 #include <KColorScheme>
+#include <KMessageBox>
 
 #include <QSplitter>
 
@@ -35,6 +38,8 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
 {
     mTabWidget = new KTabWidget;
     mTabWidget->setMovable(true);
+    mTabWidget->setTabsClosable(true);
+    connect(mTabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(slotTabCloseRequested(int)));
     addWidget(mTabWidget);
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
     connect(mScriptManagerWidget, SIGNAL(createScriptPage(KUrl,QStringList,bool)), this, SLOT(slotCreateScriptPage(KUrl,QStringList,bool)));
@@ -176,4 +181,21 @@ void SieveEditorMainWidget::slotGeneralPaletteChanged()
 
     const KColorScheme scheme( QPalette::Active, KColorScheme::View );
     mModifiedScriptColor = scheme.foreground( KColorScheme::NegativeText ).color();
+}
+
+void SieveEditorMainWidget::slotTabCloseRequested(int index)
+{
+    SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(mTabWidget->widget(index));
+    if (page) {
+        if (page->isModified()) {
+            const int result = KMessageBox::questionYesNoCancel(this, i18n("Script was modified. Do you want to save before closing?"), i18n("Close script"));
+            if (result == KMessageBox::Yes) {
+                page->saveScript();
+            } else if (result == KMessageBox::Cancel) {
+                return;
+            }
+        }
+        mTabWidget->removeTab(index);
+        delete page;
+    }
 }
