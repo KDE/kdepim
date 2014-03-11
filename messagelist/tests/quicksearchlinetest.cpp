@@ -46,6 +46,7 @@ void QuickSearchLineTest::shouldHaveDefaultValueOnCreation()
     QVERIFY(widget->isHidden());
     KPushButton *moreButton = qFindChild<KPushButton *>(&searchLine, QLatin1String("moreoptions"));
     QVERIFY(moreButton);
+    QCOMPARE(moreButton->icon().name(), QLatin1String("arrow-down-double"));
     QWidget *quickSearchFilterWidget = qFindChild<QWidget *>(&searchLine, QLatin1String("quicksearchfilterwidget"));
     QVERIFY(quickSearchFilterWidget);
     QVERIFY(quickSearchFilterWidget->isHidden());
@@ -183,8 +184,11 @@ void QuickSearchLineTest::shouldShowMoreOptionWhenClickOnMoreButton()
     QTest::mouseClick(moreButton, Qt::LeftButton);
     QWidget *quickSearchFilterWidget = qFindChild<QWidget *>(&searchLine, QLatin1String("quicksearchfilterwidget"));
     QVERIFY(quickSearchFilterWidget->isVisible());
+    QCOMPARE(moreButton->icon().name(), QLatin1String("arrow-up-double"));
+
     QTest::mouseClick(moreButton, Qt::LeftButton);
     QVERIFY(!quickSearchFilterWidget->isVisible());
+    QCOMPARE(moreButton->icon().name(), QLatin1String("arrow-down-double"));
 }
 
 void QuickSearchLineTest::shouldChangeFromButtonLabelWhenChangeOutboundMessagesValue()

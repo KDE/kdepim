@@ -91,7 +91,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
 
     hbox->addWidget( mSearchEdit );
 
-    mMoreOptions = new KPushButton(i18n("More..."), this);
+    mMoreOptions = new KPushButton(KIcon(QLatin1String("arrow-down-double")), i18n("More..."), this);
     mMoreOptions->setObjectName(QLatin1String("moreoptions"));
     mMoreOptions->setFlat(true);
     mMoreOptions->setCheckable(true);
@@ -172,6 +172,11 @@ QuickSearchLine::~QuickSearchLine()
 void QuickSearchLine::slotMoreOptionClicked(bool b)
 {
     mQuickSearchFilterWidget->setVisible(b);
+    if (b) {
+        mMoreOptions->setIcon(KIcon(QLatin1String("arrow-up-double")));
+    } else {
+        mMoreOptions->setIcon(KIcon(QLatin1String("arrow-down-double")));
+    }
 }
 
 void QuickSearchLine::slotSearchEditTextEdited(const QString &text)
