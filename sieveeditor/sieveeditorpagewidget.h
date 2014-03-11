@@ -41,7 +41,6 @@ public:
     void setIsNewScript(bool isNewScript);
     void saveScript(bool showInformation = true);
     bool needToSaveScript();
-    bool isModified() const;
 
     bool isModified() const;
 Q_SIGNALS:

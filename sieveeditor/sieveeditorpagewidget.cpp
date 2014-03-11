@@ -164,11 +164,6 @@ void SieveEditorPageWidget::setModified(bool b)
     Q_EMIT scriptModified(mWasChanged, this);
 }
 
-bool SieveEditorPageWidget::isModified() const
-{
-    return mWasChanged;
-}
-
 void SieveEditorPageWidget::slotValueChanged()
 {
     qDebug()<<"void SieveEditorPageWidget::slotValueChanged() ";
