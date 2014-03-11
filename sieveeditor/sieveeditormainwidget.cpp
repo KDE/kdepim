@@ -21,6 +21,7 @@
 #include "sieveeditormainwidget.h"
 #include "sieveeditorscriptmanagerwidget.h"
 #include "sieveeditorpagewidget.h"
+#include "sieveeditortabwidget.h"
 #include "editor/sieveeditor.h"
 
 #include <KLocalizedString>
@@ -32,14 +33,14 @@
 #include <KMessageBox>
 
 #include <QSplitter>
+#include <QTabBar>
 
 SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     : QSplitter(parent)
 {
-    mTabWidget = new KTabWidget;
-    mTabWidget->setMovable(true);
-    mTabWidget->setTabsClosable(true);
+    mTabWidget = new SieveEditorTabWidget;
     connect(mTabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(slotTabCloseRequested(int)));
+    connect(mTabWidget, SIGNAL(tabRemoveAllExclude(int)), this, SLOT(slotTabRemoveAllExclude(int)));
     addWidget(mTabWidget);
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
     connect(mScriptManagerWidget, SIGNAL(createScriptPage(KUrl,QStringList,bool)), this, SLOT(slotCreateScriptPage(KUrl,QStringList,bool)));
@@ -197,5 +198,15 @@ void SieveEditorMainWidget::slotTabCloseRequested(int index)
         }
         mTabWidget->removeTab(index);
         delete page;
+    }
+}
+
+void SieveEditorMainWidget::slotTabRemoveAllExclude(int index)
+{
+    for(int i = mTabWidget->count()-1; i >=0; --i) {
+        if (i == index) {
+            continue;
+        }
+        slotTabCloseRequested(i);
     }
 }

@@ -30,6 +30,7 @@ set(sieveeditor_SRCS
   sieveeditormanagesievewidget.cpp
   sieveeditorpagewidget.cpp
   sieveserversettings.cpp
+  sieveeditortabwidget.cpp
 )
 
 kde4_add_ui_files(sieveeditor_SRCS

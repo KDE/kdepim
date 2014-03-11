@@ -23,9 +23,8 @@
 
 #include <QSplitter>
 #include <KUrl>
-
 class KTabWidget;
-
+class SieveEditorTabWidget;
 class SieveEditorScriptManagerWidget;
 class SieveEditorPageWidget;
 class SieveEditorMainWidget : public QSplitter
@@ -56,11 +55,12 @@ private slots:
     void slotScriptModified(bool modified, SieveEditorPageWidget *page);
     void slotGeneralPaletteChanged();
     void slotTabCloseRequested(int index);
+    void slotTabRemoveAllExclude(int index);
 private:
     QWidget *hasExistingPage(const KUrl &url);
     QColor mModifiedScriptColor;
     QColor mScriptColor;
-    KTabWidget *mTabWidget;
+    SieveEditorTabWidget *mTabWidget;
     SieveEditorScriptManagerWidget *mScriptManagerWidget;
 
 };
