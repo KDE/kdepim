@@ -93,7 +93,7 @@ void SieveEditorMainWidget::slotCreateScriptPage(const KUrl &url, const QStringL
         mTabWidget->addTab(editor, url.fileName());
         mTabWidget->setCurrentWidget(editor);
         if (isNewScript)
-            editor->saveScript();
+            editor->saveScript(false);
     }
 }
 

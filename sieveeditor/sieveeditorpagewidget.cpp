@@ -102,20 +102,25 @@ void SieveEditorPageWidget::slotGetResult( KManageSieve::SieveJob *, bool succes
     setModified(false);
 }
 
-void SieveEditorPageWidget::saveScript()
+void SieveEditorPageWidget::saveScript(bool showInformation)
 {
-    KManageSieve::SieveJob * job = KManageSieve::SieveJob::put( mCurrentURL, mSieveEditorWidget->script(), mWasActive, mWasActive );
-    connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
-             this, SLOT(slotPutResult(KManageSieve::SieveJob*,bool)) );
+    if (isModified()) {
+        KManageSieve::SieveJob * job = KManageSieve::SieveJob::put( mCurrentURL, mSieveEditorWidget->script(), mWasActive, mWasActive );
+        job->setProperty("showuploadinformation", showInformation);
+        connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
+                 this, SLOT(slotPutResult(KManageSieve::SieveJob*,bool)) );
+    }
 }
 
-void SieveEditorPageWidget::slotPutResult( KManageSieve::SieveJob *, bool success )
+void SieveEditorPageWidget::slotPutResult( KManageSieve::SieveJob *job, bool success )
 {
     if (mIsNewScript)
         Q_EMIT refreshList();
     if ( success ) {
-        KMessageBox::information( this, i18n( "The Sieve script was successfully uploaded." ),
-                                  i18n( "Sieve Script Upload" ) );
+        if (job->property("showuploadinformation").toBool()) {
+            KMessageBox::information( this, i18n( "The Sieve script was successfully uploaded." ),
+                                     i18n( "Sieve Script Upload" ) );
+        }
         mIsNewScript = false;
         setModified(false);
     } else {
@@ -152,6 +157,11 @@ void SieveEditorPageWidget::setModified(bool b)
 {
     mWasChanged = b;
     Q_EMIT scriptModified(mWasChanged, this);
+}
+
+bool SieveEditorPageWidget::isModified() const
+{
+    return mWasChanged;
 }
 
 void SieveEditorPageWidget::slotValueChanged()
