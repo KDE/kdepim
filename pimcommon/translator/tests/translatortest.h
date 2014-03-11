@@ -30,6 +30,8 @@ private Q_SLOTS:
     void shouldEnableTranslateButtonWhenTextToTranslateIsNotEmpty();
     void shouldDisableTranslateButtonAndClearTextWhenClickOnClearButton();
     void shouldInvertLanguageWhenClickOnInvertButton();
+    void shouldHideWidgetWhenPressEscape();
+    void shouldEmitTranslatorWasClosedSignalWhenCloseIt();
 };
 
 #endif // TRANSLATORTEST_H
