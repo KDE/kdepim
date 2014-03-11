@@ -115,7 +115,7 @@ void TranslatorTest::shouldEmitTranslatorWasClosedSignalWhenCloseIt()
     QTest::qWaitForWindowShown(&edit);
     QSignalSpy spy(&edit, SIGNAL(translatorWasClosed()));
     QTest::keyClick(&edit, Qt::Key_Escape);
-    //QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.count(), 1);
 }
 
 QTEST_KDEMAIN( TranslatorTest, GUI )
