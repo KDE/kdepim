@@ -39,8 +39,9 @@ public:
     void loadScript(const KUrl &url, const QStringList &capabilities);
     KUrl currentUrl() const;
     void setIsNewScript(bool isNewScript);
-    void saveScript();
+    void saveScript(bool showInformation = true);
     bool needToSaveScript();
+    bool isModified() const;
 
     bool isModified() const;
 Q_SIGNALS:
