@@ -24,6 +24,13 @@ class TextGoToLineWidgetTest : public QObject
     Q_OBJECT
 public:
     TextGoToLineWidgetTest();
+
+private Q_SLOTS:
+    void shouldHaveDefaultValuesOnCreation();
+    void shouldEmitGoToLineSignalWhenPressOnButton();
+    void shouldEmitGoToLineSignalCorrectValueWhenPressOnButton();
+    void shouldHideWidgetWhenClickOnCloseButton();
+    void shouldHideWidgetWhenPressEscape();
 };
 
 #endif // TEXTGOTOLINEWIDGETTEST_H

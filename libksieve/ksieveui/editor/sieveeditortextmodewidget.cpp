@@ -30,6 +30,7 @@
 
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditfindbar.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
+#include "pimcommon/texteditor/commonwidget/textgotolinewidget.h"
 
 #include <ksieve/parser.h>
 #include <ksieve/error.h>
@@ -88,9 +89,15 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mTabWidget->setTabBarHidden(true);
     textEditLayout->addWidget(mTabWidget);
     connect(mTextEdit, SIGNAL(openHelp(QString,QString)), mTabWidget, SLOT(slotAddHelpPage(QString,QString)));
-    mFindBar = new PimCommon::PlainTextEditFindBar( mTextEdit, textEditWidget );
 
+    mGoToLine = new PimCommon::TextGoToLineWidget;
+    mGoToLine->hide();
+    textEditLayout->addWidget(mGoToLine);
+    connect(mGoToLine, SIGNAL(goToLine(int)), this, SLOT(slotGoToLine(int)));
+
+    mFindBar = new PimCommon::PlainTextEditFindBar( mTextEdit, textEditWidget );
     textEditLayout->addWidget(mFindBar);
+
     mSieveEditorWarning = new SieveEditorWarning;
     textEditLayout->addWidget(mSieveEditorWarning);
 
@@ -116,6 +123,11 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     shortcut->setKey( Qt::Key_R+Qt::CTRL );
     connect( shortcut, SIGNAL(activated()), SLOT(slotReplace()) );
     connect( mTextEdit, SIGNAL(replaceText()), SLOT(slotReplace()) );
+
+    shortcut = new QShortcut( this );
+    shortcut->setKey( Qt::Key_G+Qt::CTRL );
+    connect( shortcut, SIGNAL(activated()), SLOT(slotShowGoToLine()) );
+
 
     mDebugTextEdit = new PimCommon::PlainTextEditor;
     mDebugTextEdit->setSearchSupport(false);
@@ -152,6 +164,16 @@ void SieveEditorTextModeWidget::readConfig()
     mMainSplitter->setSizes(group.readEntry( "mainSplitter", size));
     mExtraSplitter->setSizes(group.readEntry( "extraSplitter", size));
     mTemplateSplitter->setSizes(group.readEntry( "templateSplitter", size));
+}
+
+void SieveEditorTextModeWidget::slotGoToLine(int line)
+{
+
+}
+
+void SieveEditorTextModeWidget::slotShowGoToLine()
+{
+    mGoToLine->show();
 }
 
 void SieveEditorTextModeWidget::generateXml()

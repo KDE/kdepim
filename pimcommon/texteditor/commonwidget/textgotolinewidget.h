@@ -18,10 +18,32 @@
 #ifndef TEXTGOTOLINEWIDGET_H
 #define TEXTGOTOLINEWIDGET_H
 
-class TextGoToLineWidget
-{
-public:
-    TextGoToLineWidget();
-};
+#include "pimcommon_export.h"
+#include <QWidget>
 
+class QSpinBox;
+class KPushButton;
+namespace PimCommon {
+class PIMCOMMON_EXPORT TextGoToLineWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit TextGoToLineWidget(QWidget *parent=0);
+    ~TextGoToLineWidget();
+
+Q_SIGNALS:
+    void goToLine(int);
+
+protected:
+    bool event(QEvent* e);
+
+private slots:
+    void slotGoToLine();
+    void slotCloseBar();
+
+private:
+    QSpinBox *mSpinbox;
+    KPushButton *mGoToLine;
+};
+}
 #endif // TEXTGOTOLINEWIDGET_H

@@ -17,10 +17,71 @@
 
 
 #include "textgotolinewidgettest.h"
+#include "pimcommon/texteditor/commonwidget/textgotolinewidget.h"
 #include <qtest_kde.h>
+#include <qtestmouse.h>
+#include <qtestkeyboard.h>
+#include <QSpinBox>
+#include <QToolButton>
+#include <KPushButton>
 
 TextGoToLineWidgetTest::TextGoToLineWidgetTest()
 {
 }
+
+void TextGoToLineWidgetTest::shouldHaveDefaultValuesOnCreation()
+{
+    PimCommon::TextGoToLineWidget edit;
+    QSpinBox *line = qFindChild<QSpinBox *>(&edit, QLatin1String("line"));
+    QVERIFY(line);
+    QCOMPARE(line->minimum(), 1);
+    KPushButton *gotolinebutton = qFindChild<KPushButton *>(&edit, QLatin1String("gotoline"));
+    QVERIFY(gotolinebutton);
+    QToolButton *closebutton = qFindChild<QToolButton *>(&edit, QLatin1String("closebutton"));
+    QVERIFY(closebutton);
+}
+
+void TextGoToLineWidgetTest::shouldEmitGoToLineSignalWhenPressOnButton()
+{
+    PimCommon::TextGoToLineWidget edit;
+    KPushButton *gotolinebutton = qFindChild<KPushButton *>(&edit, QLatin1String("gotoline"));
+    QSignalSpy spy(&edit, SIGNAL(goToLine(int)));
+    QTest::mouseClick(gotolinebutton, Qt::LeftButton);
+    QCOMPARE(spy.count(), 1);
+}
+
+void TextGoToLineWidgetTest::shouldEmitGoToLineSignalCorrectValueWhenPressOnButton()
+{
+    PimCommon::TextGoToLineWidget edit;
+    KPushButton *gotolinebutton = qFindChild<KPushButton *>(&edit, QLatin1String("gotoline"));
+    QSpinBox *line = qFindChild<QSpinBox *>(&edit, QLatin1String("line"));
+    line->setValue(5);
+    QCOMPARE(line->value(), 5);
+    QSignalSpy spy(&edit, SIGNAL(goToLine(int)));
+    QTest::mouseClick(gotolinebutton, Qt::LeftButton);
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.at(0).at(0).toInt(), 5);
+}
+
+void TextGoToLineWidgetTest::shouldHideWidgetWhenClickOnCloseButton()
+{
+    PimCommon::TextGoToLineWidget edit;
+    edit.show();
+    QTest::qWaitForWindowShown(&edit);
+    QVERIFY(edit.isVisible());
+    QToolButton *closebutton = qFindChild<QToolButton *>(&edit, QLatin1String("closebutton"));
+    QTest::mouseClick(closebutton, Qt::LeftButton);
+    QVERIFY(!edit.isVisible());
+}
+
+void TextGoToLineWidgetTest::shouldHideWidgetWhenPressEscape()
+{
+    PimCommon::TextGoToLineWidget edit;
+    edit.show();
+    QTest::qWaitForWindowShown(&edit);
+    QTest::keyPress(&edit, Qt::Key_Escape);
+    QCOMPARE(edit.isVisible(), false);
+}
+
 
 QTEST_KDEMAIN( TextGoToLineWidgetTest, GUI )
