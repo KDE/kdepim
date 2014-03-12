@@ -160,8 +160,10 @@ bool SieveEditorPageWidget::isModified() const
 
 void SieveEditorPageWidget::setModified(bool b)
 {
-    mWasChanged = b;
-    Q_EMIT scriptModified(mWasChanged, this);
+    if (mWasChanged != b) {
+        mWasChanged = b;
+        Q_EMIT scriptModified(mWasChanged, this);
+    }
 }
 
 void SieveEditorPageWidget::slotValueChanged()

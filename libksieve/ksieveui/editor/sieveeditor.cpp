@@ -1,4 +1,4 @@
-/* Copyright (C) 2011, 2012, 2013 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2011, 2012, 2013, 2014 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -24,6 +24,7 @@
 #include <KStandardGuiItem>
 
 #include <QPushButton>
+#include <QKeyEvent>
 #include <QDebug>
 
 using namespace KSieveUi;
@@ -46,6 +47,23 @@ SieveEditor::SieveEditor( QWidget * parent )
 SieveEditor::~SieveEditor()
 {
     writeConfig();
+}
+
+bool SieveEditor::event(QEvent* e)
+{
+    // Close the bar when pressing Escape.
+    // Not using a QShortcut for this because it could conflict with
+    // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
+    // With a shortcut override we can catch this before it gets to kactions.
+    const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
+    if (shortCutOverride || e->type() == QEvent::KeyPress ) {
+        QKeyEvent* kev = static_cast<QKeyEvent* >(e);
+        if (kev->key() == Qt::Key_Escape) {
+            e->ignore();
+            return true;
+        }
+    }
+    return QWidget::event(e);
 }
 
 
