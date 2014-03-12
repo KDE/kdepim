@@ -437,6 +437,8 @@ private:
     void importFilters( MailCommon::FilterImporterExporter::FilterType type );
 
 protected:
+    bool event(QEvent *e);
+
     /** The widget that contains the ListBox showing the filters, and the
         controls to remove filters, add new ones and to change their order. */
     KMFilterListBox *mFilterList;
