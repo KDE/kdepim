@@ -274,7 +274,8 @@ void SieveScriptBlockWidget::loadScript(const QDomElement &element, bool onlyAct
                 } else if (tagName == QLatin1String("block")) {
                     mScriptActionLister->loadScript(e, false, error);
                 } else {
-                    qDebug()<<" e.tag"<<e.tagName();
+                    if (tagName != QLatin1String("crlf"))
+                        qDebug()<<" e.tag"<<tagName;
                 }
             }
             node = node.nextSibling();
