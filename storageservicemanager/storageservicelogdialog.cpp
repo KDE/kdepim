@@ -62,6 +62,7 @@ void StorageServiceLogDialog::slotClearLog()
 {
     mLog->editor()->clear();
     Q_EMIT clearLog();
+    close();
 }
 
 void StorageServiceLogDialog::slotSaveAs()
