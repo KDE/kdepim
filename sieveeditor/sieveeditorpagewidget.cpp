@@ -155,8 +155,10 @@ bool SieveEditorPageWidget::needToSaveScript()
 
 void SieveEditorPageWidget::setModified(bool b)
 {
-    mWasChanged = b;
-    Q_EMIT scriptModified(mWasChanged, this);
+    if (mWasChanged != b) {
+        mWasChanged = b;
+        Q_EMIT scriptModified(mWasChanged, this);
+    }
 }
 
 bool SieveEditorPageWidget::isModified() const
