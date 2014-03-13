@@ -32,6 +32,8 @@ TextGoToLineWidgetTest::TextGoToLineWidgetTest()
 void TextGoToLineWidgetTest::shouldHaveDefaultValuesOnCreation()
 {
     PimCommon::TextGoToLineWidget edit;
+    edit.show();
+    QTest::qWaitForWindowShown(&edit);
     QSpinBox *line = qFindChild<QSpinBox *>(&edit, QLatin1String("line"));
     QVERIFY(line);
     QCOMPARE(line->minimum(), 1);
@@ -39,6 +41,7 @@ void TextGoToLineWidgetTest::shouldHaveDefaultValuesOnCreation()
     QVERIFY(gotolinebutton);
     QToolButton *closebutton = qFindChild<QToolButton *>(&edit, QLatin1String("closebutton"));
     QVERIFY(closebutton);
+    QVERIFY(line->hasFocus());
 }
 
 void TextGoToLineWidgetTest::shouldEmitGoToLineSignalWhenPressOnButton()
@@ -96,6 +99,21 @@ void TextGoToLineWidgetTest::shouldEmitGoToLineSignalWhenSpinboxHasFocusAndWePre
     QTest::keyPress(line, Qt::Key_Enter);
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0).at(0).toInt(), 5);
+}
+
+void TextGoToLineWidgetTest::shouldHasFocusEachTimeThatItShown()
+{
+    PimCommon::TextGoToLineWidget edit;
+    edit.show();
+    QTest::qWaitForWindowShown(&edit);
+    QSpinBox *line = qFindChild<QSpinBox *>(&edit, QLatin1String("line"));
+    QVERIFY(line);
+    QVERIFY(line->hasFocus());
+    edit.hide();
+    QVERIFY(!line->hasFocus());
+    edit.show();
+    QTest::qWaitForWindowShown(&edit);
+    QVERIFY(line->hasFocus());
 }
 
 

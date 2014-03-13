@@ -61,6 +61,7 @@ TextGoToLineWidget::TextGoToLineWidget(QWidget *parent)
     mGoToLine->setObjectName(QLatin1String("gotoline"));
     hbox->addWidget(mGoToLine);
     hbox->addStretch();
+    mSpinbox->setFocus();
 }
 
 TextGoToLineWidget::~TextGoToLineWidget()
@@ -71,6 +72,14 @@ TextGoToLineWidget::~TextGoToLineWidget()
 void TextGoToLineWidget::slotGoToLine()
 {
     Q_EMIT goToLine(mSpinbox->value());
+}
+
+void TextGoToLineWidget::showEvent(QShowEvent *e)
+{
+    if (!e->spontaneous()) {
+        mSpinbox->setFocus();
+    }
+    QWidget::showEvent(e);
 }
 
 void TextGoToLineWidget::slotCloseBar()

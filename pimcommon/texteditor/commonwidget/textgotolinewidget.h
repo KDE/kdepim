@@ -36,6 +36,7 @@ Q_SIGNALS:
 
 protected:
     bool event(QEvent* e);
+    void showEvent(QShowEvent *e);
 
 private slots:
     void slotGoToLine();
