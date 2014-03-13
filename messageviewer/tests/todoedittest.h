@@ -20,7 +20,6 @@
 
 #include <QObject>
 
-class QStandardItemModel;
 
 class TodoEditTest : public QObject
 {
