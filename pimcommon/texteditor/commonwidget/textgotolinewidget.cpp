@@ -55,8 +55,8 @@ TextGoToLineWidget::TextGoToLineWidget(QWidget *parent)
     mSpinbox->setObjectName(QLatin1String("line"));
     connect(mSpinbox, SIGNAL(editingFinished()), this, SLOT(slotGoToLine()));
     hbox->addWidget(mSpinbox);
-    //TODO add Icon
-    mGoToLine = new KPushButton(i18n("Go"));
+    mGoToLine = new KPushButton(KIcon(QLatin1String("go-jump")), i18n("Go"));
+    mGoToLine->setFlat(true);
     connect(mGoToLine, SIGNAL(clicked(bool)), this, SLOT(slotGoToLine()));
     mGoToLine->setObjectName(QLatin1String("gotoline"));
     hbox->addWidget(mGoToLine);
