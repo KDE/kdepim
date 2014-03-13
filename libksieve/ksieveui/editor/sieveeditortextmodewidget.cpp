@@ -124,11 +124,6 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     connect( shortcut, SIGNAL(activated()), SLOT(slotReplace()) );
     connect( mTextEdit, SIGNAL(replaceText()), SLOT(slotReplace()) );
 
-    shortcut = new QShortcut( this );
-    shortcut->setKey( Qt::Key_G+Qt::CTRL );
-    connect( shortcut, SIGNAL(activated()), SLOT(slotShowGoToLine()) );
-
-
     mDebugTextEdit = new PimCommon::PlainTextEditor;
     mDebugTextEdit->setSearchSupport(false);
     mDebugTextEdit->setReadOnly( true );

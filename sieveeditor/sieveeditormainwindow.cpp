@@ -140,7 +140,7 @@ void SieveEditorMainWindow::setupActions()
     mGoToLine = ac->addAction(QLatin1String("gotoline"), mMainWidget, SLOT(slotGoToLine()));
     mGoToLine->setText(i18n("Go to Line"));
     mGoToLine->setIcon(KIcon(QLatin1String("go-jump")));
-    //mGoToLine->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_G ));
+    mGoToLine->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_G ));
 }
 
 void SieveEditorMainWindow::slotRefreshList()
