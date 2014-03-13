@@ -163,6 +163,17 @@ KTabWidget *SieveEditorMainWidget::tabWidget() const
     return mTabWidget;
 }
 
+void SieveEditorMainWidget::slotGoToLine()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->goToLine();
+        }
+    }
+}
+
 void SieveEditorMainWidget::slotScriptModified(bool modified,SieveEditorPageWidget *page)
 {
     const int index = mTabWidget->indexOf(page);

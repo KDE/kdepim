@@ -45,6 +45,9 @@ public:
 
     KTabWidget *tabWidget() const;
 
+public Q_SLOTS:
+    void slotGoToLine();
+
 Q_SIGNALS:
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
     void updateScriptList();

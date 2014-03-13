@@ -162,3 +162,8 @@ bool SieveEditorPageWidget::isModified() const
 {
     return mSieveEditorWidget->isModified();
 }
+
+void SieveEditorPageWidget::goToLine()
+{
+    mSieveEditorWidget->goToLine();
+}

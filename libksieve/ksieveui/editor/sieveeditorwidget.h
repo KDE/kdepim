@@ -56,6 +56,7 @@ public:
 
     void setModified(bool b);
     bool isModified() const;
+    void goToLine();
 private Q_SLOTS:
     void slotEnableButtonOk(bool b);
     void slotAutoGenerateScripts();

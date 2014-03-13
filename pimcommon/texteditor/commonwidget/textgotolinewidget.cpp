@@ -69,6 +69,11 @@ TextGoToLineWidget::~TextGoToLineWidget()
 
 }
 
+void TextGoToLineWidget::goToLine()
+{
+    show();
+}
+
 void TextGoToLineWidget::slotGoToLine()
 {
     Q_EMIT goToLine(mSpinbox->value());

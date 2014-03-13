@@ -63,7 +63,7 @@ public:
     void showParsingEditorWarning();
 
     void setParsingEditorWarningError(const QString &script, const QString &error);
-
+    void goToLine();
 Q_SIGNALS:
     void enableButtonOk( bool );
     void switchToGraphicalMode();

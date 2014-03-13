@@ -60,6 +60,7 @@ private:
     KAction *mDesactivateScript;
     KAction *mRefreshList;
     KAction *mSaveScript;
+    KAction *mGoToLine;
     QLabel *mStatusBarInfo;
     bool mNetworkIsDown;
 };

@@ -295,3 +295,8 @@ void SieveEditorTextModeWidget::setParsingEditorWarningError(const QString &scri
     mSieveParsingWarning->setErrors(script, error);
 }
 
+void SieveEditorTextModeWidget::goToLine()
+{
+    mGoToLine->goToLine();
+}
+

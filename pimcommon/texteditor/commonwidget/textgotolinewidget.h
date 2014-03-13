@@ -31,16 +31,19 @@ public:
     explicit TextGoToLineWidget(QWidget *parent=0);
     ~TextGoToLineWidget();
 
+    void goToLine();
+
 Q_SIGNALS:
     void goToLine(int);
+
 
 protected:
     bool event(QEvent* e);
     void showEvent(QShowEvent *e);
 
 private slots:
-    void slotGoToLine();
     void slotCloseBar();
+    void slotGoToLine();
 
 private:
     QSpinBox *mSpinbox;

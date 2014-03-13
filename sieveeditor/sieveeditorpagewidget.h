@@ -43,6 +43,8 @@ public:
     bool needToSaveScript();
 
     bool isModified() const;
+    void goToLine();
+
 Q_SIGNALS:
     void refreshList();
     void scriptModified(bool, SieveEditorPageWidget *);

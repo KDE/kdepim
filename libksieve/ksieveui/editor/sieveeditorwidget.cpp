@@ -129,6 +129,13 @@ bool SieveEditorWidget::isModified() const
     return mModified;
 }
 
+void SieveEditorWidget::goToLine()
+{
+    if (mMode == TextMode) {
+        mTextModeWidget->goToLine();
+    }
+}
+
 void SieveEditorWidget::setModified(bool b)
 {
     if (mModified != b) {

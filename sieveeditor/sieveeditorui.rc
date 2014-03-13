@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="sieveeditor" version="1">
+<kpartgui name="sieveeditor" version="2">
  <MenuBar>
   <Menu name="file" >
    <Action name="add_server_sieve" />
@@ -13,6 +13,8 @@
    <Action name="desactivate_script"/>
    <Separator/>
    <Action name="delete_script" />
+   <Separator/>
+   <Action name="gotoline" />
   </Menu>
  </MenuBar>
 </kpartgui>
