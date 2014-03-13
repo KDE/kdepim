@@ -47,7 +47,7 @@ int main (int argc, char **argv)
 SieveEditorTestWidget::SieveEditorTestWidget(QWidget *parent)
     : KSieveUi::SieveEditor(parent)
 {
-    connect(this, SIGNAL(valueChanged()), this, SLOT(slotValueChanged()));
+    connect(this, SIGNAL(valueChanged(bool)), this, SLOT(slotValueChanged(bool)));
 }
 
 SieveEditorTestWidget::~SieveEditorTestWidget()
@@ -55,7 +55,7 @@ SieveEditorTestWidget::~SieveEditorTestWidget()
 
 }
 
-void SieveEditorTestWidget::slotValueChanged()
+void SieveEditorTestWidget::slotValueChanged(bool changed)
 {
-    qDebug()<<" value changed";
+    qDebug()<<" value changed :"<<changed;
 }

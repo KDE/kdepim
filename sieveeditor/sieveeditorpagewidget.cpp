@@ -32,13 +32,12 @@
 SieveEditorPageWidget::SieveEditorPageWidget(QWidget *parent)
     : QWidget(parent),
       mWasActive(false),
-      mIsNewScript(false),
-      mWasChanged(false)
+      mIsNewScript(false)
 {
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
     mSieveEditorWidget = new KSieveUi::SieveEditorWidget;
-    connect(mSieveEditorWidget, SIGNAL(valueChanged()), this, SLOT(slotValueChanged()));
+    connect(mSieveEditorWidget, SIGNAL(valueChanged(bool)), this, SLOT(slotValueChanged(bool)));
     vbox->addWidget(mSieveEditorWidget);
     connect(mSieveEditorWidget, SIGNAL(checkSyntax()), this, SLOT(slotCheckSyntaxClicked()));
     //qDebug()<<"SieveEditorPageWidget::SieveEditorPageWidget "<<this;
@@ -99,12 +98,12 @@ void SieveEditorPageWidget::slotGetResult( KManageSieve::SieveJob *, bool succes
     mSieveEditorWidget->setScriptName( mCurrentURL.fileName() );
     mSieveEditorWidget->setScript( script );
     mWasActive = isActive;
-    setModified(false);
+    mSieveEditorWidget->setModified(false);
 }
 
 void SieveEditorPageWidget::saveScript(bool showInformation)
 {
-    if (isModified()) {
+    if (mSieveEditorWidget->isModified()) {
         KManageSieve::SieveJob * job = KManageSieve::SieveJob::put( mCurrentURL, mSieveEditorWidget->script(), mWasActive, mWasActive );
         job->setProperty("showuploadinformation", showInformation);
         connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
@@ -122,7 +121,7 @@ void SieveEditorPageWidget::slotPutResult( KManageSieve::SieveJob *job, bool suc
                                      i18n( "Sieve Script Upload" ) );
         }
         mIsNewScript = false;
-        setModified(false);
+        mSieveEditorWidget->setModified(false);
     } else {
         //TODO error
     }
@@ -140,7 +139,7 @@ bool SieveEditorPageWidget::needToSaveScript()
             result = true;
         }
     } else {
-        if (mWasChanged) {
+        if (mSieveEditorWidget->isModified()) {
             const int resultQuestion =KMessageBox::warningYesNoCancel(this, i18n("Script '%1' was changed. Do you want to save it ?", mCurrentURL.fileName()));
             if (resultQuestion == KMessageBox::Yes) {
                 saveScript();
@@ -153,21 +152,13 @@ bool SieveEditorPageWidget::needToSaveScript()
     return result;
 }
 
-bool SieveEditorPageWidget::isModified() const
-{
-    return mWasChanged;
-}
-
-void SieveEditorPageWidget::setModified(bool b)
-{
-    if (mWasChanged != b) {
-        mWasChanged = b;
-        Q_EMIT scriptModified(mWasChanged, this);
-    }
-}
-
-void SieveEditorPageWidget::slotValueChanged()
+void SieveEditorPageWidget::slotValueChanged(bool b)
 {
     qDebug()<<"void SieveEditorPageWidget::slotValueChanged() ";
-    setModified(true);
+    Q_EMIT scriptModified(b, this);
+}
+
+bool SieveEditorPageWidget::isModified() const
+{
+    return mSieveEditorWidget->isModified();
 }

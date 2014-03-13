@@ -49,7 +49,8 @@ using namespace KSieveUi;
 
 SieveEditorWidget::SieveEditorWidget(QWidget *parent)
     : QWidget(parent),
-      mMode(TextMode)
+      mMode(TextMode),
+      mModified(false)
 {
     QVBoxLayout *lay = new QVBoxLayout;
 
@@ -97,10 +98,10 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
     mStackedWidget = new QStackedWidget;
 
     mTextModeWidget = new SieveEditorTextModeWidget;
-    connect(mTextModeWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(mTextModeWidget, SIGNAL(valueChanged()), this, SLOT(slotModified()));
     mStackedWidget->addWidget(mTextModeWidget);
     mGraphicalModeWidget = new SieveEditorGraphicalModeWidget;
-    connect(mGraphicalModeWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(mGraphicalModeWidget, SIGNAL(valueChanged()), this, SLOT(slotModified()));
     mStackedWidget->addWidget(mGraphicalModeWidget);
 
     lay->addWidget(mStackedWidget);
@@ -115,6 +116,25 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
 
 SieveEditorWidget::~SieveEditorWidget()
 {
+}
+
+void SieveEditorWidget::slotModified()
+{
+    mModified = true;
+    Q_EMIT valueChanged(mModified);
+}
+
+bool SieveEditorWidget::isModified() const
+{
+    return mModified;
+}
+
+void SieveEditorWidget::setModified(bool b)
+{
+    if (mModified != b) {
+        mModified = b;
+        Q_EMIT valueChanged(mModified);
+    }
 }
 
 void SieveEditorWidget::slotUploadScripts()

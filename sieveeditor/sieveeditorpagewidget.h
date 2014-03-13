@@ -52,7 +52,7 @@ private slots:
     void slotCheckSyntaxClicked();
     void slotPutResultDebug(KManageSieve::SieveJob *, bool success, const QString &errorMsg);
     void slotPutResult(KManageSieve::SieveJob *, bool success);
-    void slotValueChanged();
+    void slotValueChanged(bool b);
 
 private:
     void setModified(bool b);
@@ -60,7 +60,6 @@ private:
     KSieveUi::SieveEditorWidget *mSieveEditorWidget;
     bool mWasActive;
     bool mIsNewScript;
-    bool mWasChanged;
 };
 
 #endif // SIEVEEDITORPAGEWIDGET_H

@@ -28,7 +28,7 @@ public:
     ~SieveEditorTestWidget();
 
 private Q_SLOTS:
-    void slotValueChanged();
+    void slotValueChanged(bool);
 };
 
 #endif

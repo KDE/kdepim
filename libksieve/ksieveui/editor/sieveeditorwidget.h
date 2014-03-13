@@ -54,6 +54,8 @@ public:
     void addFailedMessage(const QString &err);
     void addOkMessage(const QString &msg);
 
+    void setModified(bool b);
+    bool isModified() const;
 private Q_SLOTS:
     void slotEnableButtonOk(bool b);
     void slotAutoGenerateScripts();
@@ -65,10 +67,11 @@ private Q_SLOTS:
     void slotSwitchTextMode(const QString &script);
     void slotSwitchToGraphicalMode();
     void slotUploadScripts();
+    void slotModified();
 Q_SIGNALS:
     void checkSyntax();
     void enableButtonOk(bool b);
-    void valueChanged();
+    void valueChanged(bool b);
 
 private:
     void changeMode(EditorMode mode);
@@ -87,6 +90,7 @@ private:
     QAction *mGenerateXml;
 #endif
     EditorMode mMode;
+    bool mModified;
 };
 
 }
