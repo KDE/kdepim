@@ -53,6 +53,7 @@ TextGoToLineWidget::TextGoToLineWidget(QWidget *parent)
     mSpinbox = new QSpinBox;
     mSpinbox->setMinimum(1);
     mSpinbox->setObjectName(QLatin1String("line"));
+    connect(mSpinbox, SIGNAL(editingFinished()), this, SLOT(slotGoToLine()));
     hbox->addWidget(mSpinbox);
     //TODO add Icon
     mGoToLine = new KPushButton(i18n("Go"));

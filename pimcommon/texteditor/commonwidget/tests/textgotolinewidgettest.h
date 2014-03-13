@@ -31,6 +31,7 @@ private Q_SLOTS:
     void shouldEmitGoToLineSignalCorrectValueWhenPressOnButton();
     void shouldHideWidgetWhenClickOnCloseButton();
     void shouldHideWidgetWhenPressEscape();
+    void shouldEmitGoToLineSignalWhenSpinboxHasFocusAndWePressEnter();
 };
 
 #endif // TEXTGOTOLINEWIDGETTEST_H

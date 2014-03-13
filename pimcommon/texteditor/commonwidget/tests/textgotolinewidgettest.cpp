@@ -83,5 +83,20 @@ void TextGoToLineWidgetTest::shouldHideWidgetWhenPressEscape()
     QCOMPARE(edit.isVisible(), false);
 }
 
+void TextGoToLineWidgetTest::shouldEmitGoToLineSignalWhenSpinboxHasFocusAndWePressEnter()
+{
+    PimCommon::TextGoToLineWidget edit;
+    edit.show();
+    QTest::qWaitForWindowShown(&edit);
+    QSpinBox *line = qFindChild<QSpinBox *>(&edit, QLatin1String("line"));
+    line->setFocus();
+    QVERIFY(line->hasFocus());
+    line->setValue(5);
+    QSignalSpy spy(&edit, SIGNAL(goToLine(int)));
+    QTest::keyPress(line, Qt::Key_Enter);
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.at(0).at(0).toInt(), 5);
+}
+
 
 QTEST_KDEMAIN( TextGoToLineWidgetTest, GUI )
