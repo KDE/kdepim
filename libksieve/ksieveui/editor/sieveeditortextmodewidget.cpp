@@ -168,7 +168,15 @@ void SieveEditorTextModeWidget::readConfig()
 
 void SieveEditorTextModeWidget::slotGoToLine(int line)
 {
-
+    if (line > 0) {
+        QTextCursor cursor = mTextEdit->textCursor();
+        cursor.beginEditBlock();
+        cursor.movePosition(QTextCursor::Start);
+        cursor.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor, (line-1));
+        cursor.endEditBlock();
+        mTextEdit->setTextCursor(cursor);
+        mTextEdit->setFocus();
+    }
 }
 
 void SieveEditorTextModeWidget::slotShowGoToLine()
