@@ -39,25 +39,29 @@ public:
     void loadScript(const KUrl &url, const QStringList &capabilities);
     KUrl currentUrl() const;
     void setIsNewScript(bool isNewScript);
-    void saveScript();
+    void saveScript(bool showInformation = true);
     bool needToSaveScript();
+
+    bool isModified() const;
+    void goToLine();
 
 Q_SIGNALS:
     void refreshList();
+    void scriptModified(bool, SieveEditorPageWidget *);
 
 private slots:
     void slotGetResult(KManageSieve::SieveJob *, bool success, const QString &script, bool isActive);
     void slotCheckSyntaxClicked();
     void slotPutResultDebug(KManageSieve::SieveJob *, bool success, const QString &errorMsg);
     void slotPutResult(KManageSieve::SieveJob *, bool success);
-    void slotValueChanged();
+    void slotValueChanged(bool b);
 
 private:
+    void setModified(bool b);
     KUrl mCurrentURL;
     KSieveUi::SieveEditorWidget *mSieveEditorWidget;
     bool mWasActive;
     bool mIsNewScript;
-    bool mWasChanged;
 };
 
 #endif // SIEVEEDITORPAGEWIDGET_H

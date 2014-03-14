@@ -38,12 +38,13 @@
 #include "pimcommon/util/pimutil.h"
 #include <kiconloader.h>
 #include <KLocalizedString>
-#include <kstandardguiitem.h>
+#include <KStandardAction>
 #include <kwindowsystem.h>
 #include <kglobalsettings.h>
 #include <KTabWidget>
 #include <KFileDialog>
 #include <KMessageBox>
+#include <KAction>
 
 #include <QtCore/QRegExp>
 #include <QApplication>
@@ -113,7 +114,7 @@ void MailSourceViewTextBrowser::contextMenuEvent( QContextMenuEvent *event )
     QMenu *popup = createStandardContextMenu();
     if (popup) {
         popup->addSeparator();
-        popup->addAction( KStandardGuiItem::find().text(),this,SIGNAL(findText()) , Qt::Key_F+Qt::CTRL);
+        popup->addAction(KStandardAction::find(this, SIGNAL(findText()), this));
         //Code from KTextBrowser
         KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
                                                            : KIconTheme::TextEditor,
@@ -122,7 +123,7 @@ void MailSourceViewTextBrowser::contextMenuEvent( QContextMenuEvent *event )
         popup->addAction( KIcon(QLatin1String("preferences-desktop-text-to-speech")),i18n("Speak Text"),this,SLOT(slotSpeakText()));
 
         popup->addSeparator();
-        popup->addAction( KIcon(QLatin1String("document-save")),i18n("Save As..."),this,SLOT(slotSaveAs()));
+        popup->addAction(KStandardAction::saveAs(this, SLOT(slotSaveAs()), this));
 
         popup->exec( event->globalPos() );
         delete popup;

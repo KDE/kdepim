@@ -121,7 +121,8 @@ void SearchRuleWidget::setPatternEditOptions( SearchPatternEdit::SearchPatternEd
     const bool headersOnly = ( options & MailCommon::SearchPatternEdit::HeadersOnly );
     const bool notShowSize = ( options & MailCommon::SearchPatternEdit::NotShowSize );
     const bool notShowDate = ( options & MailCommon::SearchPatternEdit::NotShowDate );
-    const bool absoluteDates = ( options & MailCommon::SearchPatternEdit::AbsoluteDate );
+    const bool notShowAbsoluteDates = ( options & MailCommon::SearchPatternEdit::NotShowAbsoluteDate );
+    const bool notShowTags = ( options & MailCommon::SearchPatternEdit::NotShowTags );
 
     if ( headersOnly && ( currentText != "<message>") && ( currentText != "<body>" ) ) {
         mRuleField->setItemText( 0, QString::fromLatin1( currentText ) );
@@ -141,7 +142,12 @@ void SearchRuleWidget::setPatternEditOptions( SearchPatternEdit::SearchPatternEd
         mRuleField->setItemText( 0, QString() );
     }
 
-    if ( !absoluteDates && ( currentText != "<age in days>") ) {
+    if ( notShowAbsoluteDates && ( currentText != "<age in days>") ) {
+        mRuleField->setItemText( 0, QString::fromLatin1( currentText ) );
+    } else {
+        mRuleField->setItemText( 0, QString() );
+    }
+    if ( notShowTags && ( currentText != "<tag>") ) {
         mRuleField->setItemText( 0, QString::fromLatin1( currentText ) );
     } else {
         mRuleField->setItemText( 0, QString() );
@@ -357,9 +363,10 @@ int SearchRuleWidget::indexOfRuleField( const QByteArray &aName ) const
 void SearchRuleWidget::initFieldList( SearchPatternEdit::SearchPatternEditOptions options )
 {
     const bool headersOnly = ( options & MailCommon::SearchPatternEdit::HeadersOnly );
-    const bool absoluteDates = ( options & MailCommon::SearchPatternEdit::AbsoluteDate );
+    const bool notShowAbsoluteDates = ( options & MailCommon::SearchPatternEdit::NotShowAbsoluteDate );
     const bool notShowSize = ( options & MailCommon::SearchPatternEdit::NotShowSize );
     const bool notShowDate = ( options & MailCommon::SearchPatternEdit::NotShowDate );
+    const bool notShowTags = ( options & MailCommon::SearchPatternEdit::NotShowTags );
 
     mFilterFieldList.clear();
     mFilterFieldList.append( QString() ); // empty entry for user input
@@ -372,7 +379,7 @@ void SearchRuleWidget::initFieldList( SearchPatternEdit::SearchPatternEditOption
     mFilterFieldList.append( SpecialRuleFields[Recipients].getLocalizedDisplayName() );
     if ( !notShowSize )
         mFilterFieldList.append( SpecialRuleFields[Size].getLocalizedDisplayName() );
-    if ( !absoluteDates ) {
+    if ( !notShowAbsoluteDates ) {
         mFilterFieldList.append( SpecialRuleFields[AgeInDays].getLocalizedDisplayName() );
     }
 
@@ -381,7 +388,9 @@ void SearchRuleWidget::initFieldList( SearchPatternEdit::SearchPatternEditOption
     mFilterFieldList.append( SpecialRuleFields[To].getLocalizedDisplayName() );
     mFilterFieldList.append( SpecialRuleFields[CC].getLocalizedDisplayName() );
     mFilterFieldList.append( SpecialRuleFields[Status].getLocalizedDisplayName() );
-    mFilterFieldList.append( SpecialRuleFields[Tag].getLocalizedDisplayName() );
+    if ( !notShowTags ) {
+        mFilterFieldList.append( SpecialRuleFields[Tag].getLocalizedDisplayName() );
+    }
     mFilterFieldList.append( i18n( SpecialRuleFields[ReplyTo].displayName ) );
     mFilterFieldList.append( i18n( SpecialRuleFields[Organization].displayName ) );
 

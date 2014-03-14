@@ -439,6 +439,8 @@ void TranslatorWidget::setStandalone(bool b)
 
 void TranslatorWidget::slotCloseWidget()
 {
+    if (isHidden())
+        return;
     d->inputText->clear();
     d->translatorResultTextEdit->clear();
     d->progressIndictor->stop();

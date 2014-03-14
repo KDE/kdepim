@@ -118,7 +118,10 @@ private slots:
     void slotItemRemoved(const Akonadi::Item &item);
     void slotOpenFindDialog();
     void slotSelectNote(Akonadi::Item::Id id);
+    void slotCollectionChanged(const Akonadi::Collection &col, const QSet<QByteArray> &set);
+    void slotItemFetchFinished(KJob *job);
 private:
+    void fetchNotesFromCollection(const Akonadi::Collection &col);
     void updateNetworkListener();
     void printSelectedNotes(bool preview);
     KNotesWidget *mNotesWidget;

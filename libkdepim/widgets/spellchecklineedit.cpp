@@ -175,7 +175,7 @@ void SpellCheckLineEdit::insertFromMimeData(const QMimeData * source)
 
         // does the text contain at least one newline character?
         if(pasteText.contains(QLatin1Char( '\n' )))
-            pasteText.remove(QLatin1Char( '\n' ));
+            pasteText.replace(QLatin1Char( '\n' ), QLatin1Char(' '));
         
         insertPlainText(pasteText);
         ensureCursorVisible();

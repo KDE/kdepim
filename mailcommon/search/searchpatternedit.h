@@ -82,10 +82,11 @@ public:
     enum SearchPatternEditOption {
         None = 0,
         HeadersOnly = 1,
-        AbsoluteDate = 2,
+        NotShowAbsoluteDate = 2,
         MatchAllMessages = 4,
         NotShowSize = 8,
-        NotShowDate = 16
+        NotShowDate = 16,
+        NotShowTags = 32
     };
     Q_DECLARE_FLAGS( SearchPatternEditOptions, SearchPatternEditOption )
 

@@ -34,6 +34,7 @@
 #include <KActionCollection>
 #include <KAction>
 #include <KStatusBar>
+#include <KTabWidget>
 
 #include <QPointer>
 #include <QLabel>
@@ -43,15 +44,16 @@ SieveEditorMainWindow::SieveEditorMainWindow()
     : KXmlGuiWindow(),
       mNetworkIsDown(false)
 {    
+    mMainWidget = new SieveEditorMainWidget;
+    connect(mMainWidget, SIGNAL(updateButtons(bool,bool,bool,bool)), this, SLOT(slotUpdateButtons(bool,bool,bool,bool)));
+    setCentralWidget(mMainWidget);
     setupActions();
     setupGUI();
     readConfig();
     initStatusBar();
-    mMainWidget = new SieveEditorMainWidget;
-    connect(mMainWidget, SIGNAL(updateButtons(bool,bool,bool,bool)), this, SLOT(slotUpdateButtons(bool,bool,bool,bool)));
-    setCentralWidget(mMainWidget);
     connect( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
               this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
+    connect(mMainWidget->tabWidget(), SIGNAL(currentChanged(int)), SLOT(slotUpdateActions()));
     const Solid::Networking::Status status = Solid::Networking::status();
     slotSystemNetworkStatusChanged(status);
 }
@@ -109,6 +111,7 @@ void SieveEditorMainWindow::setupActions()
     KStandardAction::quit(this, SLOT(close()), ac );
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
     mSaveScript = KStandardAction::save( this, SLOT(slotSaveScript()), ac );
+    mSaveScript->setEnabled(false);
 
     KAction *act = ac->addAction(QLatin1String("add_server_sieve"), this, SLOT(slotAddServerSieve()));
     act->setText(i18n("Add Server Sieve..."));
@@ -133,6 +136,12 @@ void SieveEditorMainWindow::setupActions()
     mRefreshList->setText(i18n("Refresh List"));
     mRefreshList->setIcon(KIcon(QLatin1String("view-refresh")));
     mRefreshList->setShortcut(QKeySequence( Qt::Key_F5 ));
+
+    mGoToLine = ac->addAction(QLatin1String("gotoline"), mMainWidget, SLOT(slotGoToLine()));
+    mGoToLine->setText(i18n("Go to Line"));
+    mGoToLine->setIcon(KIcon(QLatin1String("go-jump")));
+    mGoToLine->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_G ));
+    mGoToLine->setEnabled(false);
 }
 
 void SieveEditorMainWindow::slotRefreshList()
@@ -195,3 +204,11 @@ void SieveEditorMainWindow::slotAddServerSieve()
     }
     delete dlg;
 }
+
+void SieveEditorMainWindow::slotUpdateActions()
+{
+    const bool hasPage = (mMainWidget->tabWidget()->count()>0);
+    mSaveScript->setEnabled(hasPage);
+    mGoToLine->setEnabled(hasPage);
+}
+

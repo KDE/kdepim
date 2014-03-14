@@ -26,8 +26,12 @@
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 #include "autocreatescripts/sievescriptparsingerrordialog.h"
 
+#include <knewstuff3/uploaddialog.h>
 #include <klocale.h>
 #include <KStandardGuiItem>
+#include <ktempdir.h>
+#include <kzip.h>
+#include <ktemporaryfile.h>
 
 #include <QPushButton>
 #include <QVBoxLayout>
@@ -37,16 +41,21 @@
 #include <QToolBar>
 #include <QDebug>
 #include <QAction>
+#include <QPointer>
+#include <QDir>
+
 
 using namespace KSieveUi;
 
 SieveEditorWidget::SieveEditorWidget(QWidget *parent)
     : QWidget(parent),
-      mMode(TextMode)
+      mMode(TextMode),
+      mModified(false)
 {
     QVBoxLayout *lay = new QVBoxLayout;
 
     QToolBar *bar = new QToolBar;
+    bar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     mCheckSyntax = new QAction(i18n("Check Syntax"), this);
     connect(mCheckSyntax, SIGNAL(triggered(bool)), SLOT(slotCheckSyntax()));
     bar->addAction(mCheckSyntax);
@@ -66,6 +75,12 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
     bar->addAction(mGenerateXml);
 #endif
 
+    QStringList overlays;
+    overlays <<QLatin1String("list-add");
+    mUpload = new QAction(KIcon(QLatin1String("get-hot-new-stuff"), 0, overlays), i18n("Upload..."), this);
+    connect(mUpload, SIGNAL(triggered(bool)), SLOT(slotUploadScripts()));
+    bar->addAction(mUpload);
+
     lay->addWidget(bar);
 
 
@@ -83,10 +98,10 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
     mStackedWidget = new QStackedWidget;
 
     mTextModeWidget = new SieveEditorTextModeWidget;
-    connect(mTextModeWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(mTextModeWidget, SIGNAL(valueChanged()), this, SLOT(slotModified()));
     mStackedWidget->addWidget(mTextModeWidget);
     mGraphicalModeWidget = new SieveEditorGraphicalModeWidget;
-    connect(mGraphicalModeWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    connect(mGraphicalModeWidget, SIGNAL(valueChanged()), this, SLOT(slotModified()));
     mStackedWidget->addWidget(mGraphicalModeWidget);
 
     lay->addWidget(mStackedWidget);
@@ -101,6 +116,61 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
 
 SieveEditorWidget::~SieveEditorWidget()
 {
+}
+
+void SieveEditorWidget::slotModified()
+{
+    mModified = true;
+    Q_EMIT valueChanged(mModified);
+}
+
+bool SieveEditorWidget::isModified() const
+{
+    return mModified;
+}
+
+void SieveEditorWidget::goToLine()
+{
+    if (mMode == TextMode) {
+        mTextModeWidget->goToLine();
+    }
+}
+
+void SieveEditorWidget::setModified(bool b)
+{
+    if (mModified != b) {
+        mModified = b;
+        Q_EMIT valueChanged(mModified);
+    }
+}
+
+void SieveEditorWidget::slotUploadScripts()
+{
+    KTempDir tmp;
+    KTemporaryFile tmpFile;
+    if (tmpFile.open()) {
+        QTextStream out(&tmpFile);
+        out.setCodec("UTF-8");
+        out << script();
+        tmpFile.close();
+        const QString sourceName = mScriptName->text();
+        const QString zipFileName = tmp.name() + QDir::separator() + sourceName + QLatin1String(".zip");
+        KZip *zip = new KZip(zipFileName);
+        if (zip->open(QIODevice::WriteOnly)) {
+            if (zip->addLocalFile(tmpFile.fileName(), sourceName + QLatin1String(".siv"))) {
+                zip->close();
+                QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("ksieve_script.knsrc"), this);
+                dialog->setUploadFile(zipFileName);
+                dialog->setUploadName(sourceName);
+                dialog->setDescription(i18nc("Default description for the source", "My Sieve Script"));
+                dialog->exec();
+                delete dialog;
+            } else {
+                zip->close();
+            }
+        }
+        delete zip;
+    }
 }
 
 void SieveEditorWidget::changeMode(EditorMode mode)
@@ -167,8 +237,10 @@ void SieveEditorWidget::addOkMessage(const QString &msg)
 
 void SieveEditorWidget::addMessageEntry( const QString &errorMsg, const QColor &color )
 {
+    QString msg = errorMsg;
+    msg.replace(QLatin1Char('\n'), QLatin1String("<br>"));
     const QString logText = QString::fromLatin1( "<font color=%1>%2</font>" )
-           .arg( color.name() ).arg(errorMsg);
+           .arg( color.name() ).arg(msg);
 
     setDebugScript( logText );
 }

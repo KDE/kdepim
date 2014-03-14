@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,20 +15,39 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef KSIEVE_EDITORSIEVEGUI_TEST_H
-#define KSIEVE_EDITORSIEVEGUI_TEST_H
+#ifndef TEXTGOTOLINEWIDGET_H
+#define TEXTGOTOLINEWIDGET_H
 
-#include "ksieveui/editor/sieveeditor.h"
+#include "pimcommon_export.h"
+#include <QWidget>
 
-class SieveEditorTestWidget : public KSieveUi::SieveEditor
+class QSpinBox;
+class KPushButton;
+namespace PimCommon {
+class PIMCOMMON_EXPORT TextGoToLineWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorTestWidget(QWidget *parent=0);
-    ~SieveEditorTestWidget();
+    explicit TextGoToLineWidget(QWidget *parent=0);
+    ~TextGoToLineWidget();
 
-private Q_SLOTS:
-    void slotValueChanged(bool);
+    void goToLine();
+
+Q_SIGNALS:
+    void goToLine(int);
+
+
+protected:
+    bool event(QEvent* e);
+    void showEvent(QShowEvent *e);
+
+private slots:
+    void slotCloseBar();
+    void slotGoToLine();
+
+private:
+    QSpinBox *mSpinbox;
+    KPushButton *mGoToLine;
 };
-
-#endif
+}
+#endif // TEXTGOTOLINEWIDGET_H

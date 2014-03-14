@@ -55,9 +55,9 @@ namespace PimCommon {
 namespace Util {
 
 PIMCOMMON_EXPORT OrgKdeAkonadiImapSettingsInterface *createImapSettingsInterface( const QString &ident );
-PIMCOMMON_EXPORT void saveTextAs( const QString &text, const QString &filter, QWidget *parent, const KUrl &url = KUrl());
+PIMCOMMON_EXPORT void saveTextAs( const QString &text, const QString &filter, QWidget *parent, const KUrl &url = KUrl(), const QString &caption = QString());
 PIMCOMMON_EXPORT bool saveToFile( const QString &filename, const QString &text );
-PIMCOMMON_EXPORT QString loadToFile(const QString &filter, QWidget *parent, const KUrl &url = KUrl());
+PIMCOMMON_EXPORT QString loadToFile(const QString &filter, QWidget *parent, const KUrl &url = KUrl(), const QString &caption = QString());
 }
 
 }

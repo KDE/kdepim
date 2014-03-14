@@ -472,7 +472,6 @@ bool PlainTextEditor::handleShortcut(const QKeyEvent* event)
         setTextCursor( cursor );
         return true;
     } else if (d->hasSearchSupport && KStandardShortcut::find().contains(key)) {
-        qDebug()<<" findtext *************";
         Q_EMIT findText();
         return true;
     } else if (d->hasSearchSupport && KStandardShortcut::replace().contains(key)) {

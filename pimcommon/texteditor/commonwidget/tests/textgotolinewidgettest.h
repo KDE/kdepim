@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,20 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef KSIEVE_EDITORSIEVEGUI_TEST_H
-#define KSIEVE_EDITORSIEVEGUI_TEST_H
+#ifndef TEXTGOTOLINEWIDGETTEST_H
+#define TEXTGOTOLINEWIDGETTEST_H
+#include <QObject>
 
-#include "ksieveui/editor/sieveeditor.h"
-
-class SieveEditorTestWidget : public KSieveUi::SieveEditor
+class TextGoToLineWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit SieveEditorTestWidget(QWidget *parent=0);
-    ~SieveEditorTestWidget();
+    TextGoToLineWidgetTest();
 
 private Q_SLOTS:
-    void slotValueChanged(bool);
+    void shouldHaveDefaultValuesOnCreation();
+    void shouldEmitGoToLineSignalWhenPressOnButton();
+    void shouldEmitGoToLineSignalCorrectValueWhenPressOnButton();
+    void shouldHideWidgetWhenClickOnCloseButton();
+    void shouldHideWidgetWhenPressEscape();
+    void shouldEmitGoToLineSignalWhenSpinboxHasFocusAndWePressEnter();
+    void shouldHasFocusEachTimeThatItShown();
 };
 
-#endif
+#endif // TEXTGOTOLINEWIDGETTEST_H

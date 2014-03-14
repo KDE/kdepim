@@ -448,6 +448,7 @@ void SearchWindow::doSearch()
         }
     } else if (mUi.mChkMultiFolders->isChecked()) {
         if (!mSelectMultiCollectionDialog) {
+            mSearchPatternWidget->showWarningPattern(QStringList()<<i18n("You forgot to select collections."));
             return;
         }
         mCollectionId = mSelectMultiCollectionDialog->selectedCollection();
@@ -485,8 +486,7 @@ void SearchWindow::doSearch()
     case MailCommon::SearchPattern::EmptyResult:
         mUi.mSearchFolderEdt->setEnabled( true );
         mQuery = Akonadi::SearchQuery();
-        mUi.mStatusLbl->setText( i18n("No message found.") );
-        createSearchModel();
+        mSearchPatternWidget->showWarningPattern(QStringList()<<i18n("You forgot to add conditions."));
         return;
     case MailCommon::SearchPattern::NotEnoughCharacters:
         mUi.mSearchFolderEdt->setEnabled( true );

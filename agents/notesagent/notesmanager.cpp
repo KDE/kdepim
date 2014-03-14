@@ -67,7 +67,7 @@ void NotesManager::clear()
 {
     delete mListener;
     mListener=0;
-    if (mCheckAlarm->isActive())
+    if (mCheckAlarm && mCheckAlarm->isActive())
         mCheckAlarm->stop();
 }
 

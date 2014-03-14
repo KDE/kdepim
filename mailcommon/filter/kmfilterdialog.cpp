@@ -66,6 +66,7 @@ using MailCommon::FilterImporterExporter;
 #include <QShortcut>
 #include <QSplitter>
 #include <QPointer>
+#include <QKeyEvent>
 
 Q_DECLARE_METATYPE(MailCommon::FilterImporterExporter::FilterType)
 using namespace MailCommon;
@@ -625,6 +626,24 @@ void KMFilterDialog::accept()
         slotFinished();
     }
 }
+
+bool KMFilterDialog::event(QEvent* e)
+{
+    // Close the bar when pressing Escape.
+    // Not using a QShortcut for this because it could conflict with
+    // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
+    // With a shortcut override we can catch this before it gets to kactions.
+    const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
+    if (shortCutOverride || e->type() == QEvent::KeyPress ) {
+        QKeyEvent* kev = static_cast<QKeyEvent* >(e);
+        if (kev->key() == Qt::Key_Escape) {
+            e->ignore();
+            return true;
+        }
+    }
+    return QWidget::event(e);
+}
+
 
 void KMFilterDialog::slotApply()
 {

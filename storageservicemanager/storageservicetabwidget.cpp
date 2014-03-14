@@ -27,6 +27,7 @@
 StorageServiceTabWidget::StorageServiceTabWidget(QWidget *parent)
     : QTabWidget(parent)
 {
+    setMovable(true);
 }
 
 StorageServiceTabWidget::~StorageServiceTabWidget()

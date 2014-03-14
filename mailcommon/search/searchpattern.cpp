@@ -1094,9 +1094,9 @@ void SearchRuleNumerical::addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &e
         term.setIsNegated( isNegated() );
         groupTerm.addSubTerm(term);
     } else if ( kasciistricmp( field(), "<age in days>" ) == 0 ) {
-        QDateTime date(QDate::currentDate());
+        QDate date(QDate::currentDate());
         date = date.addDays( contents().toInt() );
-        EmailSearchTerm term(EmailSearchTerm::HeaderDate, date, akonadiComparator());
+        EmailSearchTerm term(EmailSearchTerm::HeaderOnlyDate, date, akonadiComparator());
         term.setIsNegated( isNegated() );
         groupTerm.addSubTerm(term);
     }
@@ -1177,8 +1177,9 @@ void SearchRuleDate::addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &emptyI
 {
     using namespace Akonadi;
     emptyIsNotAnError = false;
-    const QDateTime date = QDateTime::fromString( contents(), Qt::ISODate );
-    EmailSearchTerm term(EmailSearchTerm::HeaderDate, date, akonadiComparator());
+
+    const QDate date = QDate::fromString( contents(), Qt::ISODate );
+    EmailSearchTerm term(EmailSearchTerm::HeaderOnlyDate, date, akonadiComparator());
     term.setIsNegated( isNegated() );
     groupTerm.addSubTerm(term);
 }
@@ -1274,6 +1275,13 @@ void SearchRuleStatus::addQueryTerms( Akonadi::SearchTerm &groupTerm, bool &empt
     if (!mStatus.statusFlags().isEmpty()) {
         EmailSearchTerm term(EmailSearchTerm::MessageStatus, mStatus.statusFlags().toList().first(), akonadiComparator());
         term.setIsNegated( isNegated() );
+        groupTerm.addSubTerm(term);
+    } else {
+        //Special case Unread
+        Akonadi::MessageStatus status;
+        status.setRead(true);
+        EmailSearchTerm term(EmailSearchTerm::MessageStatus, status.statusFlags().toList().first(), akonadiComparator());
+        term.setIsNegated( !isNegated() );
         groupTerm.addSubTerm(term);
     }
 }

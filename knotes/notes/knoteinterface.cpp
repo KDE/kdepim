@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,20 +15,20 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef KSIEVE_EDITORSIEVEGUI_TEST_H
-#define KSIEVE_EDITORSIEVEGUI_TEST_H
 
-#include "ksieveui/editor/sieveeditor.h"
+#include "knoteinterface.h"
 
-class SieveEditorTestWidget : public KSieveUi::SieveEditor
+KNoteInterface::KNoteInterface()
+    : mBlockSave(false)
 {
-    Q_OBJECT
-public:
-    explicit SieveEditorTestWidget(QWidget *parent=0);
-    ~SieveEditorTestWidget();
+}
 
-private Q_SLOTS:
-    void slotValueChanged(bool);
-};
+void KNoteInterface::setBlockSave(bool b)
+{
+    mBlockSave = b;
+}
 
-#endif
+bool KNoteInterface::blockSave() const
+{
+    return mBlockSave;
+}
