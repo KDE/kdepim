@@ -68,8 +68,7 @@ AdBlockManager *AdBlockManager::self()
 AdBlockManager::AdBlockManager(QObject *parent)
     : QObject(parent)
 {
-    // NOTE: launch this in a second thread so that it does not delay startup
-    _settingsLoaded = QtConcurrent::run(this, &AdBlockManager::loadSettings);
+    loadSettings();
 }
 
 
@@ -327,9 +326,6 @@ bool AdBlockManager::subscriptionFileExists(int i)
 
 void AdBlockManager::addCustomRule(const QString &stringRule, bool reloadPage)
 {
-    // at this point, the settings should be loaded
-    _settingsLoaded.waitForFinished();
-
     // save rule in local filters
     const QString localRulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_local"));
 
