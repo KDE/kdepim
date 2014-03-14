@@ -141,6 +141,7 @@ void SieveEditorMainWindow::setupActions()
     mGoToLine->setText(i18n("Go to Line"));
     mGoToLine->setIcon(KIcon(QLatin1String("go-jump")));
     mGoToLine->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_G ));
+    mGoToLine->setEnabled(false);
 }
 
 void SieveEditorMainWindow::slotRefreshList()
@@ -206,6 +207,8 @@ void SieveEditorMainWindow::slotAddServerSieve()
 
 void SieveEditorMainWindow::slotUpdateActions()
 {
-    mSaveScript->setEnabled(mMainWidget->tabWidget()->count()>0);
+    const bool hasPage = (mMainWidget->tabWidget()->count()>0);
+    mSaveScript->setEnabled(hasPage);
+    mGoToLine->setEnabled(hasPage);
 }
 
