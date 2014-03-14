@@ -173,7 +173,7 @@ public:
 private:
     AdBlockManager(QObject *parent = 0);
 
-    void updateSubscription(const QString &path, const QString &url);
+    void updateSubscription(const QString &path, const QString &url, const QString &itemName);
     bool subscriptionFileExists(int);
 
     // load a file rule, given a path
