@@ -5,6 +5,12 @@
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
   <kcfgfile name="globalnotesettings" />
 
+  <group name="Note">
+    <entry name="DefaultTitle" type="String">
+       <default>%d %t</default>
+    </entry>
+  </group>
+
   <group name="SelectNoteFolder">
       <entry name="DefaultFolder" type="LongLong">
         <default>-1</default>
