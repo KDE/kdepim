@@ -266,7 +266,8 @@ void AdBlockSettingWidget::save()
         grp.writeEntry(QLatin1String("FilterEnabled"), subItem->checkState() == Qt::Checked);
         grp.writeEntry(QLatin1String("url"), subItem->data(UrlList).toString());
         grp.writeEntry(QLatin1String("name"), subItem->text());
-        grp.writeEntry(QLatin1String("lastUpdate"), subItem->data(LastUpdateList).toDateTime());
+        if (subItem->data(LastUpdateList).toDateTime().isValid())
+           grp.writeEntry(QLatin1String("lastUpdate"), subItem->data(LastUpdateList).toDateTime());
         QString path = subItem->data(PathList).toString();
         if (path.isEmpty()) {
             path = KStandardDirs::locateLocal("appdata", QString::fromLatin1("adblockrules-%1").arg(i));
