@@ -40,9 +40,9 @@ FilterConvertToSieveResultDialog::FilterConvertToSieveResultDialog(QWidget *pare
     : KDialog(parent)
 {
     setCaption( i18n( "Convert to sieve script" ) );
-    setButtons( User1|Ok|Cancel );
+    setButtons( User1| Close );
     setButtonText(User1, i18n("Save..."));
-    setDefaultButton( Ok );
+    setDefaultButton( User1 );
     setModal( true );
     connect(this, SIGNAL(user1Clicked()), SLOT(slotSave()));
 
