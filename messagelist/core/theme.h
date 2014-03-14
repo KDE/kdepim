@@ -474,6 +474,7 @@ public:
     QList< ContentItem * > mLeftItems;   ///< The list of left aligned items
     QList< ContentItem * > mRightItems;  ///< The list of right aligned items
 
+    bool LoadContentItem(int val, QDataStream &stream, int themeVersion, bool leftItem);
   public:
     /**
      * Returns the list of left aligned items for this row
