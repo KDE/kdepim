@@ -325,6 +325,58 @@ void Theme::Row::save( QDataStream &stream ) const
   }
 }
 
+bool Theme::Row::LoadContentItem(int val, QDataStream &stream, int themeVersion, bool leftItem)
+{
+    if ( ( val < 0 ) || ( val > 50 ) )
+      return false; // senseless
+
+    // FIXME: Remove code duplication here
+
+    for ( int i = 0; i < val ; ++i )
+    {
+      ContentItem * ci = new ContentItem( ContentItem::Subject ); // dummy type
+      if ( !ci->load( stream, themeVersion ) )
+      {
+        kDebug() << "Left content item loading failed";
+        delete ci;
+        return false;
+      }
+      if (leftItem)
+          addLeftItem( ci );
+      else
+          addRightItem( ci );
+
+      // Add the annotation item next to the attachment icon, so that users upgrading from old
+      // versions don't manually need to set this.
+      // Don't do this for the stand-alone attchment column.
+      if ( ci->type() == ContentItem::AttachmentStateIcon &&
+           themeVersion < gThemeMinimumVersionWithAnnotationIcon &&
+           val > 1 ) {
+        kDebug() << "Old theme version detected, adding annotation item next to attachment icon.";
+        ContentItem *annotationItem = new ContentItem( ContentItem::AnnotationIcon ) ;
+        annotationItem->setHideWhenDisabled( true );
+        if (leftItem)
+            addLeftItem( annotationItem );
+        else
+            addRightItem( annotationItem );
+      }
+
+      // Same as above, for the invitation icon
+      if ( ci->type() == ContentItem::AttachmentStateIcon &&
+           themeVersion < gThemeMinimumVersionWithInvitationIcon &&
+           val > 1 ) {
+        kDebug() << "Old theme version detected, adding invitation item next to attachment icon.";
+        ContentItem *invitationItem = new ContentItem( ContentItem::InvitationIcon ) ;
+        invitationItem->setHideWhenDisabled( true );
+        if (leftItem)
+            addLeftItem( invitationItem );
+        else
+            addRightItem( invitationItem );
+      }
+    }
+    return true;
+}
+
 bool Theme::Row::load( QDataStream &stream, int themeVersion )
 {
   removeAllLeftItems();
@@ -335,80 +387,15 @@ bool Theme::Row::load( QDataStream &stream, int themeVersion )
   // left item count
 
   stream >> val;
-
-  if ( ( val < 0 ) || ( val > 50 ) )
-    return false; // senseless
-
-  // FIXME: Remove code duplication here
-
-  for ( int i = 0; i < val ; ++i )
-  {
-    ContentItem * ci = new ContentItem( ContentItem::Subject ); // dummy type
-    if ( !ci->load( stream, themeVersion ) )
-    {
-      kDebug() << "Left content item loading failed";
-      delete ci;
+  if (!LoadContentItem(val, stream, themeVersion, true))
       return false;
-    }
-    addLeftItem( ci );
-
-    // Add the annotation item next to the attachment icon, so that users upgrading from old
-    // versions don't manually need to set this.
-    // Don't do this for the stand-alone attchment column.
-    if ( ci->type() == ContentItem::AttachmentStateIcon &&
-         themeVersion < gThemeMinimumVersionWithAnnotationIcon &&
-         val > 1 ) {
-      kDebug() << "Old theme version detected, adding annotation item next to attachment icon.";
-      ContentItem *annotationItem = new ContentItem( ContentItem::AnnotationIcon ) ;
-      annotationItem->setHideWhenDisabled( true );
-      addLeftItem( annotationItem );
-    }
-
-    // Same as above, for the invitation icon
-    if ( ci->type() == ContentItem::AttachmentStateIcon &&
-         themeVersion < gThemeMinimumVersionWithInvitationIcon &&
-         val > 1 ) {
-      kDebug() << "Old theme version detected, adding invitation item next to attachment icon.";
-      ContentItem *invitationItem = new ContentItem( ContentItem::InvitationIcon ) ;
-      invitationItem->setHideWhenDisabled( true );
-      addLeftItem( invitationItem );
-    }
-  }
 
   // right item count
 
   stream >> val;
 
-  if ( ( val < 0 ) || ( val > 50 ) )
-    return false; // senseless
-
-  for ( int i = 0; i < val ; ++i )
-  {
-    ContentItem * ci = new ContentItem( ContentItem::Subject ); // dummy type
-    if ( !ci->load( stream, themeVersion ) )
-    {
-      kDebug() << "Right content item loading failed";
-      delete ci;
+  if (!LoadContentItem(val, stream, themeVersion, false))
       return false;
-    }
-    addRightItem( ci );
-    if ( ci->type() == ContentItem::AttachmentStateIcon &&
-         themeVersion < gThemeMinimumVersionWithAnnotationIcon &&
-         val > 1 ) {
-      kDebug() << "Old theme version detected, adding annotation item next to attachment icon.";
-      ContentItem *annotationItem = new ContentItem( ContentItem::AnnotationIcon ) ;
-      annotationItem->setHideWhenDisabled( true );
-      addRightItem( annotationItem );
-    }
-    if ( ci->type() == ContentItem::AttachmentStateIcon &&
-         themeVersion < gThemeMinimumVersionWithInvitationIcon &&
-         val > 1 ) {
-      kDebug() << "Old theme version detected, adding invitation item next to attachment icon.";
-      ContentItem *invitationItem = new ContentItem( ContentItem::InvitationIcon ) ;
-      invitationItem->setHideWhenDisabled( true );
-      addRightItem( invitationItem );
-    }
-  }
 
   return true;
 }
