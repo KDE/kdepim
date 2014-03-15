@@ -16,6 +16,7 @@
 */
 
 #include "notelistwidget.h"
+#include "attributes/notedisplayattribute.h"
 #include <KMime/KMimeMessage>
 
 using namespace NoteShared;
@@ -76,7 +77,14 @@ void NoteListWidget::createItem(const Akonadi::Item &note)
         text = noteMessage->mainBodyPart()->decodedText().replace(QLatin1Char('\n'), QLatin1String("<br>"));
     }
     if (!text.trimmed().isEmpty()) {
-        item->setToolTip(QLatin1String("<qt>") + text + QLatin1String("</qt>"));
+        QString tip = text;
+        if (note.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
+            NoteShared::NoteDisplayAttribute *attr = note.attribute<NoteShared::NoteDisplayAttribute>();
+            if (attr) {
+                tip = QString::fromLatin1("<div bgcolor=\"%1\" style=\"color: %2;\">%3</div>" ).arg(attr->backgroundColor().name()).arg(attr->foregroundColor().name()).arg(text);
+            }
+        }
+        item->setToolTip(QLatin1String("<qt>") + tip + QLatin1String("</qt>"));
     }
     item->setData(AkonadiId, note.id());
 }
