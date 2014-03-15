@@ -40,7 +40,7 @@ QMap<QString, QString> MessageViewer::AdBlockUtil::listSubscriptions()
     lst.insert(QString::fromUtf8("ChinaList"), QLatin1String("http://adblock-chinalist.googlecode.com/svn/trunk/adblock.txt"));
     lst.insert(QString::fromUtf8("Filter von Dr.Evil"), QLatin1String("http://adblock.maltekraus.de/adblock.txt"));
     lst.insert(QString::fromUtf8("RuAdList"), QLatin1String("http://ruadlist.googlecode.com/svn/trunk/adblock.txt"));
-    lst.insert(QString::fromUtf8("AdblockRules.org"), QLatin1String("http://adblockrules.org/download.php?typeall"));
+    //lst.insert(QString::fromUtf8("AdblockRules.org"), QLatin1String("http://adblockrules.org/download.php?typeall"));
     lst.insert(QString::fromUtf8("BSI Lista Polska"), QLatin1String("http://www.bsi.info.pl/filtrABP.txt"));
     lst.insert(QString::fromUtf8("Czech List"), QLatin1String("http://dajbych.net/adblock.txt"));
     lst.insert(QString::fromUtf8("Cédrics Liste"), QLatin1String("http://chewey.de/mozilla/data/adblock.txt"));
