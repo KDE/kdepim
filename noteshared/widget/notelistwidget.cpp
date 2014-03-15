@@ -75,7 +75,9 @@ void NoteListWidget::createItem(const Akonadi::Item &note)
     } else {
         text = noteMessage->mainBodyPart()->decodedText().replace(QLatin1Char('\n'), QLatin1String("<br>"));
     }
-    item->setToolTip(QLatin1String("<qt>") + text + QLatin1String("</qt>"));
+    if (!text.trimmed().isEmpty()) {
+        item->setToolTip(QLatin1String("<qt>") + text + QLatin1String("</qt>"));
+    }
     item->setData(AkonadiId, note.id());
 }
 
