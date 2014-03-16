@@ -340,6 +340,23 @@ void TodoEditTest::shouldSaveCollectionSettingsWhenDeleteWidget()
     QCOMPARE(MessageViewer::GlobalSettingsBase::self()->lastSelectedFolder(), id);
 }
 
+void TodoEditTest::shouldSetFocusWhenWeCallTodoEdit()
+{
+    MessageViewer::TodoEdit edit;
+    edit.show();
+    QTest::qWaitForWindowShown(&edit);
+    KMime::Message::Ptr msg(new KMime::Message);
+    QString subject = QLatin1String("Test Note");
+    msg->subject(true)->fromUnicodeString(subject, "us-ascii");
+    edit.setMessage(msg);
+    QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
+    QCOMPARE(noteedit->hasFocus(), true);
+    edit.setFocus();
+    QCOMPARE(noteedit->hasFocus(), false);
+    edit.showToDoWidget();
+    QCOMPARE(noteedit->hasFocus(), true);
+}
+
 
 void TodoEditTest::shouldNotEmitTodoWhenMessageIsNull()
 {

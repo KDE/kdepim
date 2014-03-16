@@ -3396,7 +3396,7 @@ void ViewerPrivate::slotShowCreateTodoWidget()
 {
     if (mMessage) {       
         mCreateTodo->setMessage(mMessage);
-        mCreateTodo->show();
+        mCreateTodo->showToDoWidget();
     } else {
         qDebug()<<" There is not valid message";
     }

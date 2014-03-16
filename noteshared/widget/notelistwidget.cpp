@@ -112,8 +112,5 @@ Akonadi::Entity::Id NoteListWidget::itemId(QListWidgetItem *item) const
 Akonadi::Entity::Id NoteListWidget::currentItemId() const
 {
     QListWidgetItem *item = currentItem();
-    if (item) {
-        return item->data(AkonadiId).toLongLong();
-    }
-    return -1;
+    return itemId(item);
 }
