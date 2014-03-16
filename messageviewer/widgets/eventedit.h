@@ -46,6 +46,7 @@ public:
     void setMessage(const KMime::Message::Ptr &value);
 
     void writeConfig();
+    void showEventEdit();
 
 public Q_SLOTS:
     void slotCloseWidget();

@@ -130,6 +130,12 @@ void EventEdit::writeConfig()
     MessageViewer::GlobalSettingsBase::self()->writeConfig();
 }
 
+void EventEdit::showEventEdit()
+{
+    mNoteEdit->setFocus();
+    show();
+}
+
 void EventEdit::readConfig()
 {
     const qint64 id = MessageViewer::GlobalSettingsBase::self()->lastEventSelectedFolder();

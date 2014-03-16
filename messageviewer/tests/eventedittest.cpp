@@ -276,5 +276,18 @@ void EventEditTest::shouldHaveCorrectStartEndDateTime()
     QCOMPARE(eventPtr->dtEnd(), endDt);
 }
 
+void EventEditTest::shouldSetFocusWhenWeCallTodoEdit()
+{
+    MessageViewer::EventEdit edit;
+    edit.show();
+    QTest::qWaitForWindowShown(&edit);
+    QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
+    noteedit->setFocus();
+    QVERIFY(noteedit->hasFocus());
+    edit.setFocus();
+    edit.showEventEdit();
+    QVERIFY(noteedit->hasFocus());
+}
+
 
 QTEST_KDEMAIN( EventEditTest, GUI )
