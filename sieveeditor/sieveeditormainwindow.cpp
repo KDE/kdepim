@@ -54,6 +54,7 @@ SieveEditorMainWindow::SieveEditorMainWindow()
     connect( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
               this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
     connect(mMainWidget->tabWidget(), SIGNAL(currentChanged(int)), SLOT(slotUpdateActions()));
+    connect(mMainWidget, SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)), SLOT(slotUpdateActions()));
     const Solid::Networking::Status status = Solid::Networking::status();
     slotSystemNetworkStatusChanged(status);
 }
@@ -209,6 +210,6 @@ void SieveEditorMainWindow::slotUpdateActions()
 {
     const bool hasPage = (mMainWidget->tabWidget()->count()>0);
     mSaveScript->setEnabled(hasPage);
-    mGoToLine->setEnabled(hasPage);
+    mGoToLine->setEnabled(hasPage && mMainWidget->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
 }
 

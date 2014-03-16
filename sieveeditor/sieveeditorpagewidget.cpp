@@ -40,6 +40,7 @@ SieveEditorPageWidget::SieveEditorPageWidget(QWidget *parent)
     connect(mSieveEditorWidget, SIGNAL(valueChanged(bool)), this, SLOT(slotValueChanged(bool)));
     vbox->addWidget(mSieveEditorWidget);
     connect(mSieveEditorWidget, SIGNAL(checkSyntax()), this, SLOT(slotCheckSyntaxClicked()));
+    connect(mSieveEditorWidget, SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)), SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)));
     //qDebug()<<"SieveEditorPageWidget::SieveEditorPageWidget "<<this;
 }
 
@@ -166,4 +167,9 @@ bool SieveEditorPageWidget::isModified() const
 void SieveEditorPageWidget::goToLine()
 {
     mSieveEditorWidget->goToLine();
+}
+
+KSieveUi::SieveEditorWidget::EditorMode SieveEditorPageWidget::pageMode() const
+{
+    return mSieveEditorWidget->mode();
 }
