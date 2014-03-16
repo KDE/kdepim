@@ -72,6 +72,7 @@ TextGoToLineWidget::~TextGoToLineWidget()
 void TextGoToLineWidget::goToLine()
 {
     show();
+    mSpinbox->setFocus();
 }
 
 void TextGoToLineWidget::slotGoToLine()
