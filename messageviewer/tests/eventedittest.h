@@ -41,6 +41,7 @@ private Q_SLOTS:
     void shouldHaveCorrectStartEndDateTime();
     void shouldSaveCollectionSettingsWhenDeleteWidget();
     void shouldNotEmitCreateEventWhenDateIsInvalid();
+    void shouldSetFocusWhenWeCallTodoEdit();
 };
 
 #endif // EVENTEDITTEST_H

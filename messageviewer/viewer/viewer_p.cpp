@@ -3412,7 +3412,7 @@ void ViewerPrivate::slotShowCreateEventWidget()
 {
     if (mMessage) {
         mCreateEvent->setMessage(mMessage);
-        mCreateEvent->show();
+        mCreateEvent->showEventEdit();
     } else {
         qDebug()<<" There is not valid message";
     }
