@@ -69,12 +69,12 @@ EventEdit::EventEdit(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Event:"));
     hbox->addWidget(lab);
 
-    mNoteEdit = new KLineEdit;
-    mNoteEdit->setClearButtonShown(true);
-    mNoteEdit->setObjectName(QLatin1String("noteedit"));
-    mNoteEdit->setFocus();
-    connect(mNoteEdit, SIGNAL(returnPressed()), SLOT(slotReturnPressed()));
-    hbox->addWidget(mNoteEdit);
+    mEventEdit = new KLineEdit;
+    mEventEdit->setClearButtonShown(true);
+    mEventEdit->setObjectName(QLatin1String("noteedit"));
+    mEventEdit->setFocus();
+    connect(mEventEdit, SIGNAL(returnPressed()), SLOT(slotReturnPressed()));
+    hbox->addWidget(mEventEdit);
     mCollectionCombobox = new Akonadi::CollectionComboBox(_k_eventEditStubModel);
     mCollectionCombobox->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
     mCollectionCombobox->setMinimumWidth(250);
@@ -132,7 +132,7 @@ void EventEdit::writeConfig()
 
 void EventEdit::showEventEdit()
 {
-    mNoteEdit->setFocus();
+    mEventEdit->setFocus();
     show();
 }
 
@@ -173,11 +173,11 @@ void EventEdit::setMessage(const KMime::Message::Ptr &value)
         mMessage = value;
         const KMime::Headers::Subject * const subject = mMessage ? mMessage->subject(false) : 0;
         if (subject) {
-            mNoteEdit->setText(i18n("Reply to \"%1\"", subject->asUnicodeString()));
-            mNoteEdit->selectAll();
-            mNoteEdit->setFocus();
+            mEventEdit->setText(i18n("Reply to \"%1\"", subject->asUnicodeString()));
+            mEventEdit->selectAll();
+            mEventEdit->setFocus();
         } else {
-            mNoteEdit->clear();
+            mEventEdit->clear();
         }
         Q_EMIT messageChanged(mMessage);
     }
@@ -186,7 +186,7 @@ void EventEdit::setMessage(const KMime::Message::Ptr &value)
 void EventEdit::slotCloseWidget()
 {
     writeConfig();
-    mNoteEdit->clear();
+    mEventEdit->clear();
     mMessage = KMime::Message::Ptr();
     hide();
 }
@@ -210,13 +210,13 @@ void EventEdit::slotReturnPressed()
         return;
     }
 
-    if (!mNoteEdit->text().trimmed().isEmpty()) {
+    if (!mEventEdit->text().trimmed().isEmpty()) {
         KCalCore::Event::Ptr event( new KCalCore::Event );
         event->setDtStart(dtstart);
         event->setDtEnd(dtend);
-        event->setSummary(mNoteEdit->text());
+        event->setSummary(mEventEdit->text());
         Q_EMIT createEvent(event, collection);
-        mNoteEdit->clear();
+        mEventEdit->clear();
         hide();
     }
 }
