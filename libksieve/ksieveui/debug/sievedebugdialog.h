@@ -35,8 +35,7 @@ namespace KSieveUi {
  */
 class KSIEVEUI_EXPORT SieveDebugDialog : public KDialog
 {
-    Q_OBJECT
-
+    Q_OBJECT    
 public:
     explicit SieveDebugDialog( QWidget *parent = 0 );
     ~SieveDebugDialog();
@@ -45,14 +44,16 @@ public:
 Q_SIGNALS:
     void result( bool success );
 
-protected Q_SLOTS:
+private Q_SLOTS:
     void slotGetScript( KManageSieve::SieveJob *job, bool success, const QString &script, bool active );
     void slotGetScriptList( KManageSieve::SieveJob *job, bool success, const QStringList &scriptList, const QString &activeScript );
 
     void slotDiagNextAccount();
     void slotDiagNextScript();
 
-protected:
+private:
+    void writeConfig();
+    void readConfig();
     KManageSieve::SieveJob *mSieveJob;
     KUrl mUrl;
 

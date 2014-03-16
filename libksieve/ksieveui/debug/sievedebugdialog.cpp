@@ -45,10 +45,10 @@ SieveDebugDialog::SieveDebugDialog( QWidget *parent )
 
     mEdit->editor()->setPlainText( i18n( "Collecting diagnostic information about Sieve support...\n\n" ) );
 
-    setInitialSize( QSize( 640, 480 ) );
 
     if ( !mResourceIdentifier.isEmpty() )
         QTimer::singleShot( 0, this, SLOT(slotDiagNextAccount()) );
+    readConfig();
 }
 
 SieveDebugDialog::~SieveDebugDialog()
@@ -58,6 +58,22 @@ SieveDebugDialog::~SieveDebugDialog()
         mSieveJob = 0;
     }
     kDebug();
+    writeConfig();
+}
+
+void SieveDebugDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SieveDebugDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(640, 480) );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    }
+}
+
+void SieveDebugDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SieveDebugDialog" );
+    group.writeEntry( "Size", size() );
 }
 
 
