@@ -359,7 +359,7 @@ The following options may not be immediately obvious, therefore deserve an expla
 <varlistentry id="reader-view-messagelist-create-new-tab">
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Ctrl;&Shift;<keycap>T</keycap></keycombo>
+<keycombo action="simul">&Ctrl;&Shift;<keycap>O</keycap></keycombo>
 </shortcut>
 <guisubmenu>Create New Tab</guisubmenu>
 </menuchoice></term>
