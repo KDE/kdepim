@@ -641,7 +641,7 @@ bool KMFilterDialog::event(QEvent* e)
             return true;
         }
     }
-    return QWidget::event(e);
+    return KDialog::event(e);
 }
 
 
