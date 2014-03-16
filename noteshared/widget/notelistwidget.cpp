@@ -18,6 +18,7 @@
 #include "notelistwidget.h"
 #include "attributes/notedisplayattribute.h"
 #include <KMime/KMimeMessage>
+#include "noteshared/noteutils.h"
 
 using namespace NoteShared;
 NoteListWidget::NoteListWidget(QWidget *parent)
@@ -70,22 +71,7 @@ void NoteListWidget::createItem(const Akonadi::Item &note)
     QListWidgetItem *item =new QListWidgetItem(this);
     item->setText(noteMessage->subject(false)->asUnicodeString());
 
-    QString text;
-    if ( noteMessage->contentType()->isHTMLText() ) {
-        text = noteMessage->mainBodyPart()->decodedText();
-    } else {
-        text = noteMessage->mainBodyPart()->decodedText().replace(QLatin1Char('\n'), QLatin1String("<br>"));
-    }
-    if (!text.trimmed().isEmpty()) {
-        QString tip = text;
-        if (note.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
-            NoteShared::NoteDisplayAttribute *attr = note.attribute<NoteShared::NoteDisplayAttribute>();
-            if (attr) {
-                tip = QString::fromLatin1("<div bgcolor=\"%1\" style=\"color: %2;\">%3</div>" ).arg(attr->backgroundColor().name()).arg(attr->foregroundColor().name()).arg(text);
-            }
-        }
-        item->setToolTip(QLatin1String("<qt>") + tip + QLatin1String("</qt>"));
-    }
+    item->setToolTip(NoteShared::NoteUtils::createToolTip(note));
     item->setData(AkonadiId, note.id());
 }
 

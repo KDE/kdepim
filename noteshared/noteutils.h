@@ -19,6 +19,7 @@
 #define NOTEUTILS_H
 
 #include "noteshared_export.h"
+#include <Akonadi/Item>
 #include <QString>
 class QWidget;
 namespace NoteShared
@@ -26,6 +27,7 @@ namespace NoteShared
 namespace NoteUtils {
 NOTESHARED_EXPORT bool sendToMail(QWidget *parent, const QString &title, const QString &message);
 NOTESHARED_EXPORT void sendToNetwork(QWidget *parent, const QString &title, const QString &message);
+NOTESHARED_EXPORT QString createToolTip(const Akonadi::Item &item);
 }
 }
 
