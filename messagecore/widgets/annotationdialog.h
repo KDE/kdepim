@@ -25,7 +25,7 @@
 #include <KDialog>
 
 namespace Akonadi {
-  class Item;
+class Item;
 }
 
 namespace MessageCore {
@@ -37,9 +37,9 @@ namespace MessageCore {
  */
 class MESSAGECORE_EXPORT AnnotationEditDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new annotation edit dialog.
      *
@@ -53,13 +53,13 @@ class MESSAGECORE_EXPORT AnnotationEditDialog : public KDialog
      */
     ~AnnotationEditDialog();
 
-  protected:
+protected:
     /// Reimplemented to handle button clicks
     void slotButtonClicked( int button );
     void readConfig();
     void writeConfig();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private* const d;

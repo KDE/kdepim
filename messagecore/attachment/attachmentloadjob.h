@@ -35,9 +35,9 @@ namespace MessageCore {
  */
 class MESSAGECORE_EXPORT AttachmentLoadJob : public KJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new attachment load job.
      *
@@ -60,16 +60,16 @@ class MESSAGECORE_EXPORT AttachmentLoadJob : public KJob
      */
     AttachmentPart::Ptr attachmentPart() const;
 
-  protected:
+protected:
     /**
      * Subclasses use this method to set the loaded @p part.
      */
     void setAttachmentPart( const AttachmentPart::Ptr &part );
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     virtual void doStart() = 0;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

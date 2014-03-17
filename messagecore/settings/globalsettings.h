@@ -28,12 +28,12 @@ namespace MessageCore {
 
 class MESSAGECORE_EXPORT GlobalSettings : public MessageCore::GlobalSettingsBase
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     static GlobalSettings *self();
 
-  private:
+private:
     GlobalSettings();
     virtual ~GlobalSettings();
     static GlobalSettings *mSelf;

@@ -32,7 +32,7 @@ class MESSAGECORE_EXPORT AttachmentFromUrlBaseJob : public AttachmentLoadJob
 {
     Q_OBJECT
 
-  public:
+public:
     explicit AttachmentFromUrlBaseJob( const KUrl &url = KUrl(), QObject *parent = 0 );
     virtual ~AttachmentFromUrlBaseJob();
     
@@ -56,10 +56,10 @@ class MESSAGECORE_EXPORT AttachmentFromUrlBaseJob : public AttachmentLoadJob
      */
     void setMaximumAllowedSize( qint64 size );
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     virtual void doStart() = 0;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

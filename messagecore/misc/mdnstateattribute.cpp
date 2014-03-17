@@ -1,5 +1,5 @@
 /******************************************************************************
- * 
+ *
  *  Copyright (c) 2010 Leo Franchi <lfranchi@kde.org>
  *  Copyright (c) 2010 KDAB
  *
@@ -33,12 +33,12 @@ using namespace MessageCore;
  */
 class MDNStateAttribute::Private
 {
-  public:
+public:
     MDNSentState dataToState( const QByteArray &data )
     {
-      MDNSentState state = MDNStateUnknown;
+        MDNSentState state = MDNStateUnknown;
 
-      switch ( data.at( 0 ) ) {
+        switch ( data.at( 0 ) ) {
         case 'N': state = MDNNone; break;
         case 'I': state = MDNIgnore; break;
         case 'R': state = MDNDisplayed; break;
@@ -49,16 +49,16 @@ class MDNStateAttribute::Private
         case 'E': state = MDNFailed; break;
         case 'U': state = MDNStateUnknown; break;
         default: state = MDNStateUnknown; break;
-      }
+        }
 
-      return state;
+        return state;
     }
 
     QByteArray stateToData( const MDNSentState &state )
     {
-      QByteArray data = "U"; // Unknown
+        QByteArray data = "U"; // Unknown
 
-      switch ( state ) {
+        switch ( state ) {
         case MDNNone:         data = "N"; break;
         case MDNIgnore:       data = "I"; break;
         case MDNDisplayed:    data = "R"; break;
@@ -68,72 +68,72 @@ class MDNStateAttribute::Private
         case MDNDenied:       data = "X"; break;
         case MDNFailed:       data = "E"; break;
         case MDNStateUnknown: data = "U"; break;
-      }
+        }
 
-      return data;
+        return data;
     }
     
     QByteArray mSentState;
 };
 
 MDNStateAttribute::MDNStateAttribute( const MDNSentState &state )
-  : d( new Private )
+    : d( new Private )
 {
-  d->mSentState = d->stateToData( state );
+    d->mSentState = d->stateToData( state );
 }
 
 MDNStateAttribute::MDNStateAttribute( const QByteArray &stateData )
-  : d( new Private )
+    : d( new Private )
 {
-  d->mSentState = stateData;
+    d->mSentState = stateData;
 }
 
 MDNStateAttribute::~MDNStateAttribute()
 {
-  delete d;
+    delete d;
 }
 
 MDNStateAttribute* MDNStateAttribute::clone() const
 {
-  return new MDNStateAttribute( d->mSentState );
+    return new MDNStateAttribute( d->mSentState );
 }
 
 QByteArray MDNStateAttribute::type() const
 {
-  static const QByteArray sType( "MDNStateAttribute" );
-  return sType;
+    static const QByteArray sType( "MDNStateAttribute" );
+    return sType;
 }
 
 QByteArray MDNStateAttribute::serialized() const
 {
-  return d->mSentState;
+    return d->mSentState;
 }
 
 void MDNStateAttribute::deserialize( const QByteArray &data )
 {
-  d->mSentState = data;
+    d->mSentState = data;
 }
 
 void MDNStateAttribute::setMDNState( const MDNSentState &state )
 {
-  d->mSentState = d->stateToData( state );
+    d->mSentState = d->stateToData( state );
 }
 
 MDNStateAttribute::MDNSentState MDNStateAttribute::mdnState() const
 {
-  return d->dataToState( d->mSentState );
+    return d->dataToState( d->mSentState );
 }
 
 // Register the attribute when the library is loaded.
 namespace {
-  
+
 bool dummyMDNStateAttribute()
 {
-  using namespace MessageCore;
-  Akonadi::AttributeFactory::registerAttribute<MDNStateAttribute>();
-  return true;
+    using namespace MessageCore;
+    Akonadi::AttributeFactory::registerAttribute<MDNStateAttribute>();
+    return true;
 }
-  
+
 const bool registeredMDNStateAttribute = dummyMDNStateAttribute();
-  
+
 }
