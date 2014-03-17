@@ -73,6 +73,7 @@ void TextGoToLineWidget::goToLine()
 {
     show();
     mSpinbox->setFocus();
+    mSpinbox->selectAll();
 }
 
 void TextGoToLineWidget::slotGoToLine()
