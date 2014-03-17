@@ -75,6 +75,7 @@ EmailAddressRequester::EmailAddressRequester( QWidget *parent )
   layout->setMargin( 0 );
 
   d->mLineEdit = new KLineEdit( this );
+  d->mLineEdit->setClearButtonShown(true);
   d->mLineEdit->setTrapReturnKey(true);
   layout->addWidget( d->mLineEdit, 1 );
   
