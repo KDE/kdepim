@@ -34,6 +34,7 @@ using namespace KSieveUi;
 SieveConditionHasFlag::SieveConditionHasFlag(QObject *parent)
     : SieveCondition(QLatin1String("hasflag"), i18n("Has Flag"), parent)
 {
+    hasVariableSupport = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("variables"));
 }
 
 SieveCondition *SieveConditionHasFlag::newAction()
@@ -60,11 +61,12 @@ QWidget *SieveConditionHasFlag::createParamWidget( QWidget *parent ) const
     QLabel *lab = new QLabel(i18n("Variable name\n (if empty it uses internal variable):"));
     grid->addWidget(lab, 0, 0);
 
-    KLineEdit *variableName = new KLineEdit;
-    variableName->setObjectName(QLatin1String("variablename"));
-    connect(variableName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
-    grid->addWidget(variableName, 0, 1);
-
+    if (hasVariableSupport) {
+        KLineEdit *variableName = new KLineEdit;
+        variableName->setObjectName(QLatin1String("variablename"));
+        connect(variableName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+        grid->addWidget(variableName, 0, 1);
+    }
     lab = new QLabel(i18n("Value:"));
     grid->addWidget(lab, 1, 0);
 
@@ -84,15 +86,17 @@ QString SieveConditionHasFlag::code(QWidget *w) const
 
     QString result = AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("hasflag %1").arg(matchString);
 
-    const KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
-    const QString variableNameStr = variableName->text();
-    if (!variableNameStr.isEmpty()) {
-        result += QLatin1String(" \"") + variableNameStr + QLatin1Char('"');
-    }
+    if (hasVariableSupport) {
+        const KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
+        const QString variableNameStr = variableName->text();
+        if (!variableNameStr.isEmpty()) {
+            result += QLatin1String(" \"") + variableNameStr + QLatin1Char('"');
+        }
 
-    const KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
-    const QString valueStr = value->text();
-    result += QLatin1String(" \"") + valueStr + QLatin1Char('"');
+        const KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
+        const QString valueStr = value->text();
+        result += QLatin1String(" \"") + valueStr + QLatin1Char('"');
+    }
     return result;
 }
 
@@ -103,7 +107,8 @@ QStringList SieveConditionHasFlag::needRequires(QWidget *) const
         lst << QLatin1String("imap4flags");
     else
         lst << QLatin1String("imapflags");
-    lst << QLatin1String("variables");
+    if (hasVariableSupport)
+        lst << QLatin1String("variables");
     return lst;
 }
 
@@ -156,10 +161,14 @@ bool SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWid
         break;
     }
     case 2: {
-        KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
-        variableName->setText(strList.at(0));
-        KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
-        value->setText(strList.at(1));
+        if (hasVariableSupport) {
+            KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
+            variableName->setText(strList.at(0));
+            KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
+            value->setText(strList.at(1));
+        } else {
+            qDebug()<<" SieveConditionHasFlag has not variable support";
+        }
         break;
     }
     default:
