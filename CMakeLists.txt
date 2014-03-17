@@ -82,7 +82,7 @@ endif()
 # 3.0, 3.0.1, 3.1 alpha1, 3.1 beta1, 3.1 beta2, 3.1 rc1, 3.1, 3.1.1, 3.2 pre, 3.2 alpha1
 
 # Do NOT add quote
-set(KDEPIM_DEV_VERSION beta2)
+set(KDEPIM_DEV_VERSION beta3)
 
 # add an extra space
 if(DEFINED KDEPIM_DEV_VERSION)
@@ -100,7 +100,7 @@ set(CMAKE_AUTOMOC ON)
 find_package(KDE4 4.12.0 REQUIRED)
 include(KDE4Defaults)
 
-find_package(KdepimLibs 4.12.90)
+find_package(KdepimLibs 4.12.95)
 set_package_properties(KdepimLibs PROPERTIES DESCRIPTION "The KDEPIM libraries" URL "http://www.kde.org" TYPE REQUIRED)
 
 ############### Load the CTest options ###############
