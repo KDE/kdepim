@@ -1,5 +1,5 @@
 /******************************************************************************
- * 
+ *
  *  Copyright (c) 2010 Leo Franchi <lfranchi@kde.org>
  *  Copyright (c) 2010 KDAB
  *
@@ -28,7 +28,7 @@
 #include <akonadi/attribute.h>
 
 namespace MessageCore {
-  
+
 /**
  * @short An Attribute that keeps track of the MDN state of a mail message.
  *
@@ -41,21 +41,21 @@ namespace MessageCore {
  */
 class MESSAGECORE_EXPORT MDNStateAttribute : public Akonadi::Attribute
 {
-  public:
+public:
     /**
      * Describes the "MDN sent" state.
      */
     enum MDNSentState
     {
-      MDNStateUnknown, ///< The state is unknown.
-      MDNNone,         ///< No MDN has been set.
-      MDNIgnore,       ///< Ignore sending a MDN.
-      MDNDisplayed,    ///< The message has been displayed by the UA to someone reading the recipient's mailbox.
-      MDNDeleted,      ///< The message has been deleted.
-      MDNDispatched,   ///< The message has been sent somewhere in some manner without necessarily having been previously displayed to the user.
-      MDNProcessed,    ///< The message has been processed in some manner without being displayed to the user.
-      MDNDenied,       ///< The recipient does not wish the sender to be informed of the message's disposition.
-      MDNFailed        ///< A failure occurred that prevented the proper generation of an MDN.
+        MDNStateUnknown, ///< The state is unknown.
+        MDNNone,         ///< No MDN has been set.
+        MDNIgnore,       ///< Ignore sending a MDN.
+        MDNDisplayed,    ///< The message has been displayed by the UA to someone reading the recipient's mailbox.
+        MDNDeleted,      ///< The message has been deleted.
+        MDNDispatched,   ///< The message has been sent somewhere in some manner without necessarily having been previously displayed to the user.
+        MDNProcessed,    ///< The message has been processed in some manner without being displayed to the user.
+        MDNDenied,       ///< The recipient does not wish the sender to be informed of the message's disposition.
+        MDNFailed        ///< A failure occurred that prevented the proper generation of an MDN.
     };
 
     /**
@@ -107,13 +107,13 @@ class MESSAGECORE_EXPORT MDNStateAttribute : public Akonadi::Attribute
      */
     MDNStateAttribute::MDNSentState mdnState() const;
     
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private* const d;
     //@endcond
 };
-  
+
 }
 
 #endif

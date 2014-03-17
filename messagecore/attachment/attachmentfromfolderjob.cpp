@@ -33,7 +33,7 @@ using namespace MessageCore;
 class AttachmentFromFolderJob::Private
 {
 
-  public:
+public:
     Private( AttachmentFromFolderJob *qq );
 
     void compressFolder();
@@ -48,10 +48,10 @@ class AttachmentFromFolderJob::Private
 };
 
 AttachmentFromFolderJob::Private::Private( AttachmentFromFolderJob* qq ) :
-        q( qq ),
-        mCompression( KZip::DeflateCompression ),
-        mZip(0),
-        mArchiveTime(QDateTime::currentDateTime().toTime_t())
+    q( qq ),
+    mCompression( KZip::DeflateCompression ),
+    mZip(0),
+    mArchiveTime(QDateTime::currentDateTime().toTime_t())
 {
 }
 
@@ -72,7 +72,7 @@ void AttachmentFromFolderJob::Private::compressFolder()
     mZip->writeDir( mUrl.fileName(),QString(),QString(), 040755, mArchiveTime, mArchiveTime, mArchiveTime );
     kDebug() << "writing root directory : " << mUrl.fileName();
     addEntity(  QDir( mUrl.path() ).entryInfoList( QDir::Dirs | QDir::NoDotAndDotDot |
-                QDir::NoSymLinks | QDir::Files, QDir::DirsFirst ), fileName + QLatin1Char('/') );
+                                                   QDir::NoSymLinks | QDir::Files, QDir::DirsFirst ), fileName + QLatin1Char('/') );
     mZip->close();
 
     Q_ASSERT ( mCompressedFolder == 0 );
@@ -82,9 +82,9 @@ void AttachmentFromFolderJob::Private::compressFolder()
     mCompressedFolder->setName( newName );
     mCompressedFolder->setFileName( newName );
     mCompressedFolder->setMimeType( "application/zip" );
-//     mCompressedFolder->setCompressed( true );
+    //     mCompressedFolder->setCompressed( true );
     mCompressedFolder->setData( array );
-//     mCompressedFolder->setCompressible(false);
+    //     mCompressedFolder->setCompressible(false);
     q->setAttachmentPart( mCompressedFolder );
     q->emitResult();
 
@@ -94,51 +94,51 @@ void AttachmentFromFolderJob::Private::compressFolder()
 
 void AttachmentFromFolderJob::Private::addEntity( const QFileInfoList &f, const QString &path )
 {
-  foreach( const QFileInfo &info, f ){
-    kDebug() << q->maximumAllowedSize() << "Attachment size : " << mZip->device()->size();
+    foreach( const QFileInfo &info, f ){
+        kDebug() << q->maximumAllowedSize() << "Attachment size : " << mZip->device()->size();
 
-    if ( q->maximumAllowedSize() !=-1 && mZip->device()->size() > q->maximumAllowedSize() ) {
-      q->setError( KJob::UserDefinedError );
-      q->setErrorText( i18n
-      ( "The resulting attachment would be larger than the maximum allowed size, aborting." ) );
-      q->emitResult();
-      return;
-    }
+        if ( q->maximumAllowedSize() !=-1 && mZip->device()->size() > q->maximumAllowedSize() ) {
+            q->setError( KJob::UserDefinedError );
+            q->setErrorText( i18n
+                             ( "The resulting attachment would be larger than the maximum allowed size, aborting." ) );
+            q->emitResult();
+            return;
+        }
 
-    if ( info.isDir() ) {
-      kDebug() << "adding directory " << info.fileName() << "to zip";
-      if ( !mZip->writeDir( path+info.fileName(), QString(), QString(), 040755, mArchiveTime, mArchiveTime, mArchiveTime ) ) {
-        q->setError( KJob::UserDefinedError );
-        q->setErrorText( i18n( "Could not add %1 to the archive", info.fileName() ) );
-        q->emitResult();
-      }
-      addEntity( QDir( info.filePath() ).entryInfoList( QDir::Dirs | QDir::NoDotAndDotDot |
-                 QDir::NoSymLinks | QDir::Files,QDir::DirsFirst ), path+info.fileName() + QLatin1Char('/'));
-    }
+        if ( info.isDir() ) {
+            kDebug() << "adding directory " << info.fileName() << "to zip";
+            if ( !mZip->writeDir( path+info.fileName(), QString(), QString(), 040755, mArchiveTime, mArchiveTime, mArchiveTime ) ) {
+                q->setError( KJob::UserDefinedError );
+                q->setErrorText( i18n( "Could not add %1 to the archive", info.fileName() ) );
+                q->emitResult();
+            }
+            addEntity( QDir( info.filePath() ).entryInfoList( QDir::Dirs | QDir::NoDotAndDotDot |
+                                                              QDir::NoSymLinks | QDir::Files,QDir::DirsFirst ), path+info.fileName() + QLatin1Char('/'));
+        }
 
-    if ( info.isFile() ){
-      kDebug() << "Adding file " << path+info.fileName() << "to zip";
-      QFile file( info.filePath() );
-      if ( !file.open( QIODevice::ReadOnly ) ) {
-        q->setError( KJob::UserDefinedError );
-        q->setErrorText( i18n( "Could not open %1 for reading.", file.fileName() ) );
-        q->emitResult();
-      }
-      if ( !mZip->writeFile( path+info.fileName(), QString(),QString(),
-                             file.readAll().constData(),file.size(), archivePerms, mArchiveTime, mArchiveTime, mArchiveTime ) ) {
-        q->setError( KJob::UserDefinedError );
-        q->setErrorText( i18n( "Could not add %1 to the archive", file.fileName() ) );
-        q->emitResult();
-      }
-      file.close();
+        if ( info.isFile() ){
+            kDebug() << "Adding file " << path+info.fileName() << "to zip";
+            QFile file( info.filePath() );
+            if ( !file.open( QIODevice::ReadOnly ) ) {
+                q->setError( KJob::UserDefinedError );
+                q->setErrorText( i18n( "Could not open %1 for reading.", file.fileName() ) );
+                q->emitResult();
+            }
+            if ( !mZip->writeFile( path+info.fileName(), QString(),QString(),
+                                   file.readAll().constData(),file.size(), archivePerms, mArchiveTime, mArchiveTime, mArchiveTime ) ) {
+                q->setError( KJob::UserDefinedError );
+                q->setErrorText( i18n( "Could not add %1 to the archive", file.fileName() ) );
+                q->emitResult();
+            }
+            file.close();
+        }
     }
-  }
 }
 
 
 AttachmentFromFolderJob::AttachmentFromFolderJob( const KUrl &url, QObject *parent ) :
-        AttachmentFromUrlBaseJob ( url, parent ),
-        d( new Private( this ) )
+    AttachmentFromUrlBaseJob ( url, parent ),
+    d( new Private( this ) )
 {
     d->mUrl = url;
 }

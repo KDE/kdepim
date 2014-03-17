@@ -34,9 +34,9 @@ namespace MessageCore {
  */
 class MESSAGECORE_EXPORT AttachmentFromUrlJob : public AttachmentFromUrlBaseJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new job.
      *
@@ -51,10 +51,10 @@ class MESSAGECORE_EXPORT AttachmentFromUrlJob : public AttachmentFromUrlBaseJob
     ~AttachmentFromUrlJob();
 
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     void doStart();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

@@ -23,12 +23,12 @@ using namespace MessageCore;
 
 class AttachmentFromUrlBaseJob::Private {
 
-  public:
+public:
     Private( AttachmentFromUrlBaseJob *qq );
 
-     AttachmentFromUrlBaseJob *const q;
-     qint64 mMaxSize;
-     KUrl mUrl;
+    AttachmentFromUrlBaseJob *const q;
+    qint64 mMaxSize;
+    KUrl mUrl;
 };
 
 AttachmentFromUrlBaseJob::Private::Private( AttachmentFromUrlBaseJob* qq ):
@@ -42,31 +42,31 @@ AttachmentFromUrlBaseJob::AttachmentFromUrlBaseJob( const KUrl &url, QObject *pa
     AttachmentLoadJob( parent ),
     d( new Private( this ) )
 {
-  d->mUrl=url;
+    d->mUrl=url;
 }
 
 AttachmentFromUrlBaseJob::~AttachmentFromUrlBaseJob()
 {
-  delete d;
+    delete d;
 }
 
 void AttachmentFromUrlBaseJob::setMaximumAllowedSize( qint64 size )
 {
-  d->mMaxSize = size;
+    d->mMaxSize = size;
 }
 
 qint64 AttachmentFromUrlBaseJob::maximumAllowedSize() const
 {
-  return d->mMaxSize;
+    return d->mMaxSize;
 }
 
 void AttachmentFromUrlBaseJob::setUrl( const KUrl& url )
 {
-  d->mUrl = url;
+    d->mUrl = url;
 }
 
 KUrl AttachmentFromUrlBaseJob::url() const
 {
-  return d->mUrl;
+    return d->mUrl;
 }
 

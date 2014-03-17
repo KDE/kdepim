@@ -35,35 +35,35 @@ namespace MessageCore {
  */
 namespace NodeHelper {
 
-  /**
+/**
    * Returns the next sibling node of the given @p node.
    * If there is no sibling node @c 0 is returned.
    */
-  MESSAGECORE_EXPORT KMime::Content *nextSibling( const KMime::Content *node );
+MESSAGECORE_EXPORT KMime::Content *nextSibling( const KMime::Content *node );
 
-  /**
+/**
    * Returns the next node (child, sibling or parent) of the given @p node.
    *
    * @param node The start node for iteration.
    * @param allowChildren If @c true child nodes will be returned, otherwise only sibling or parent nodes.
    */
-  MESSAGECORE_EXPORT KMime::Content *next( KMime::Content *node, bool allowChildren = true );
+MESSAGECORE_EXPORT KMime::Content *next( KMime::Content *node, bool allowChildren = true );
 
-  /**
+/**
    * Returns the first child node of the given @p node.
    * If there is no child node @c 0 is returned.
    */
-  MESSAGECORE_EXPORT KMime::Content *firstChild( const KMime::Content *node );
+MESSAGECORE_EXPORT KMime::Content *firstChild( const KMime::Content *node );
 
-  /**
+/**
    * Returns whether the given @p node is an attachment.
    *
    * @todo The node parameters here should be const, be there is no const version of
    *       functions like contentDisposition() yet
    */
-  MESSAGECORE_EXPORT bool isAttachment( KMime::Content *node );
+MESSAGECORE_EXPORT bool isAttachment( KMime::Content *node );
 
-  /**
+/**
    * Returns whether the given @p node is an attachment.
    *
    * In opposite to isAttachment() some additional tests are executed which
@@ -72,7 +72,7 @@ namespace NodeHelper {
    * @todo The node parameters here should be const, be there is no const version of
    *       functions like contentDisposition() yet
    */
-  MESSAGECORE_EXPORT bool isHeuristicalAttachment( KMime::Content* node );
+MESSAGECORE_EXPORT bool isHeuristicalAttachment( KMime::Content* node );
 }
 
 }

@@ -29,32 +29,32 @@ namespace MessageCore
  */
 class MESSAGECORE_EXPORT MailingList
 {
-  public:
+public:
     /**
      * Defines what entity should manage the mailing list.
      */
     enum Handler {
-      KMail,   ///< The list is handled by KMail
-      Browser  ///< The list is handled by a browser.
+        KMail,   ///< The list is handled by KMail
+        Browser  ///< The list is handled by a browser.
     };
 
     /**
      * Defines the features a mailinglist can suppport.
      */
     enum Feature {
-      None         = 0 << 0, ///< No mailing list fields exist.
-      Post         = 1 << 0, ///< List-Post header exists.
-      Subscribe    = 1 << 1, ///< List-Subscribe header exists.
-      Unsubscribe  = 1 << 2, ///< List-Unsubscribe header exists.
-      Help         = 1 << 3, ///< List-Help header exists.
-      Archive      = 1 << 4, ///< List-Archive header exists.
-      Id           = 1 << 5, ///< List-ID header exists.
-      Owner        = 1 << 6, ///< List-Owner header exists.
-      ArchivedAt   = 1 << 7  ///< Archive-At header exists.
+        None         = 0 << 0, ///< No mailing list fields exist.
+        Post         = 1 << 0, ///< List-Post header exists.
+        Subscribe    = 1 << 1, ///< List-Subscribe header exists.
+        Unsubscribe  = 1 << 2, ///< List-Unsubscribe header exists.
+        Help         = 1 << 3, ///< List-Help header exists.
+        Archive      = 1 << 4, ///< List-Archive header exists.
+        Id           = 1 << 5, ///< List-ID header exists.
+        Owner        = 1 << 6, ///< List-Owner header exists.
+        ArchivedAt   = 1 << 7  ///< Archive-At header exists.
     };
     Q_DECLARE_FLAGS( Features, Feature )
 
-  public:
+public:
     /**
      * Extracts the information about a mailing list from the given @p message.
      */
@@ -63,7 +63,7 @@ class MESSAGECORE_EXPORT MailingList
     static QString name( const KMime::Message::Ptr &message, QByteArray &headerName,
                          QString &headerValue );
 
-  public:
+public:
     /**
      * Creates an empty mailing list.
      */
@@ -86,7 +86,7 @@ class MESSAGECORE_EXPORT MailingList
     ~MailingList();
 
     /**
-     * Returns the features the mailing list supports. 
+     * Returns the features the mailing list supports.
      */
     Features features() const;
 
@@ -190,7 +190,7 @@ class MESSAGECORE_EXPORT MailingList
      */
     void readConfig( const KConfigGroup &group );
 
-  private:
+private:
     class Private;
     QSharedDataPointer<Private> d;
 };
