@@ -1734,6 +1734,8 @@ void KMFilterDialog::slotExportAsSieveScript()
             FilterConvertToSieve convert(lst);
             convert.convert();
             qDeleteAll(lst);
+        } else {
+            KMessageBox::information(this, i18n("No filters selected."), i18n("Convert KMail filters to sieve scripts"));
         }
     }
     delete dlg;
