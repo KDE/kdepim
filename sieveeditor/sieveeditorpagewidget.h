@@ -40,7 +40,7 @@ public:
     void loadScript(const KUrl &url, const QStringList &capabilities);
     KUrl currentUrl() const;
     void setIsNewScript(bool isNewScript);
-    void saveScript(bool showInformation = true);
+    void saveScript(bool showInformation = true, bool forceSave = false);
     bool needToSaveScript();
 
     bool isModified() const;

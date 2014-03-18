@@ -102,9 +102,9 @@ void SieveEditorPageWidget::slotGetResult( KManageSieve::SieveJob *, bool succes
     mSieveEditorWidget->setModified(false);
 }
 
-void SieveEditorPageWidget::saveScript(bool showInformation)
+void SieveEditorPageWidget::saveScript(bool showInformation, bool forceSave)
 {
-    if (mSieveEditorWidget->isModified()) {
+    if (mSieveEditorWidget->isModified() || forceSave) {
         KManageSieve::SieveJob * job = KManageSieve::SieveJob::put( mCurrentURL, mSieveEditorWidget->script(), mWasActive, mWasActive );
         job->setProperty("showuploadinformation", showInformation);
         connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
