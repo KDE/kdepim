@@ -40,6 +40,7 @@ LoginDialog::LoginDialog(QWidget *parent)
     grid->addWidget(mLabUsername, 0, 0);
 
     mUsername = new KLineEdit;
+    mUsername->setClearButtonShown(true);
     grid->addWidget(mUsername, 0, 1);
 
     QLabel *lab = new QLabel(i18n("Password:"));
@@ -65,9 +66,19 @@ void LoginDialog::setUsernameLabel(const QString &labelName)
     mLabUsername->setText(labelName);
 }
 
+void LoginDialog::setPassword(const QString &pass)
+{
+    mPassword->setText(pass);
+}
+
 QString LoginDialog::password() const
 {
     return mPassword->text();
+}
+
+void LoginDialog::setUserName(const QString &name)
+{
+    mUsername->setText(name);
 }
 
 QString LoginDialog::username() const
