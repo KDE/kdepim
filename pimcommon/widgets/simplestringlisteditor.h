@@ -96,6 +96,9 @@ signals:
     void aboutToAdd(QString&);
     void changed(void);
 
+protected:
+    void insertNewEntry(const QString &newEntry);
+
 protected slots:
     void slotAdd();
     void slotRemove();

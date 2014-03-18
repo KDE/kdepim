@@ -47,7 +47,7 @@
 //********************************************************
 // SimpleStringListEditor
 //********************************************************
-namespace PimCommon {
+using namespace PimCommon;
 SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
                                                 ButtonCode buttons,
                                                 const QString & addLabel,
@@ -166,16 +166,19 @@ void SimpleStringListEditor::setUpDownAutoRepeat(bool b)
         mDownButton->setAutoRepeat(b);
 }
 
-void SimpleStringListEditor::setStringList( const QStringList & strings ) {
+void SimpleStringListEditor::setStringList( const QStringList & strings )
+{
     mListBox->clear();
     mListBox->addItems( strings );
 }
 
-void SimpleStringListEditor::appendStringList( const QStringList & strings ) {
+void SimpleStringListEditor::appendStringList( const QStringList & strings )
+{
     mListBox->addItems( strings );
 }
 
-QStringList SimpleStringListEditor::stringList() const {
+QStringList SimpleStringListEditor::stringList() const
+{
     QStringList result;
     const int numberOfItem(mListBox->count());
     for ( int i = 0; i < numberOfItem; ++i )
@@ -183,7 +186,8 @@ QStringList SimpleStringListEditor::stringList() const {
     return result;
 }
 
-bool SimpleStringListEditor::containsString( const QString & str ) {
+bool SimpleStringListEditor::containsString( const QString & str )
+{
     const int numberOfItem(mListBox->count());
     for ( int i = 0; i < numberOfItem; ++i ) {
         if ( mListBox->item( i )->text() == str )
@@ -192,8 +196,8 @@ bool SimpleStringListEditor::containsString( const QString & str ) {
     return false;
 }
 
-void SimpleStringListEditor::setButtonText( ButtonCode button,
-                                            const QString & text ) {
+void SimpleStringListEditor::setButtonText( ButtonCode button, const QString & text )
+{
     switch ( button ) {
     case Add:
         if ( !mAddButton ) break;
@@ -229,9 +233,16 @@ void SimpleStringListEditor::addNewEntry()
     QString newEntry = KInputDialog::getText( i18n("New Value"),
                                               mAddDialogLabel, QString(),
                                               &ok, this );
+    if (ok)
+        insertNewEntry(newEntry);
+}
+
+void SimpleStringListEditor::insertNewEntry(const QString &entry)
+{
+    QString newEntry = entry;
     // let the user verify the string before adding
     emit aboutToAdd( newEntry );
-    if ( ok && !newEntry.isEmpty() && !containsString( newEntry )) {
+    if ( !newEntry.isEmpty() && !containsString( newEntry )) {
         mListBox->addItem( newEntry );
         slotSelectionChanged();
         emit changed();
@@ -243,7 +254,8 @@ void SimpleStringListEditor::slotAdd()
     addNewEntry();
 }
 
-void SimpleStringListEditor::slotRemove() {
+void SimpleStringListEditor::slotRemove()
+{
     QList<QListWidgetItem *> selectedItems = mListBox->selectedItems();
     if (selectedItems.isEmpty())
         return;
@@ -266,15 +278,14 @@ QString SimpleStringListEditor::modifyEntry(const QString &text)
         return QString();
 
     return newText;
-
-
 }
 
-void SimpleStringListEditor::slotModify() {
+void SimpleStringListEditor::slotModify()
+{
     QListWidgetItem* item = mListBox->currentItem();
     if ( !item )
         return;
-    QString newText = modifyEntry(item->text());
+    const QString newText = modifyEntry(item->text());
     if (!newText.isEmpty()) {
         item->setText( newText );
         emit changed();
@@ -293,8 +304,8 @@ QList<QListWidgetItem*> SimpleStringListEditor::selectedItems() const
     return listWidgetItem;
 }
 
-void SimpleStringListEditor::slotUp() {
-
+void SimpleStringListEditor::slotUp()
+{
     QList<QListWidgetItem*> listWidgetItem = selectedItems();
     if ( listWidgetItem.isEmpty() ) {
         return;
@@ -324,7 +335,8 @@ void SimpleStringListEditor::slotUp() {
     }
 }
 
-void SimpleStringListEditor::slotDown() {
+void SimpleStringListEditor::slotDown()
+{
     QList<QListWidgetItem*> listWidgetItem = selectedItems();
     if ( listWidgetItem.isEmpty() ) {
         return;
@@ -355,7 +367,8 @@ void SimpleStringListEditor::slotDown() {
     }
 }
 
-void SimpleStringListEditor::slotSelectionChanged() {
+void SimpleStringListEditor::slotSelectionChanged()
+{
 
     QList<QListWidgetItem *> lstSelectedItems = mListBox->selectedItems();
     const int numberOfItemSelected( lstSelectedItems.count() );
@@ -413,8 +426,6 @@ QSize SimpleStringListEditor::sizeHint() const
     QSize sh = QWidget::sizeHint();
     sh.setHeight( mButtonLayout->minimumSize().height() );
     return sh;
-}
-
 }
 
 
