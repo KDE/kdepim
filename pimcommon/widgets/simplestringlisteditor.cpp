@@ -223,7 +223,8 @@ void SimpleStringListEditor::setButtonText( ButtonCode button,
     kDebug() << "The requested button has not been created!";
 }
 
-void SimpleStringListEditor::slotAdd() {
+void SimpleStringListEditor::addNewEntry()
+{
     bool ok = false;
     QString newEntry = KInputDialog::getText( i18n("New Value"),
                                               mAddDialogLabel, QString(),
@@ -237,6 +238,11 @@ void SimpleStringListEditor::slotAdd() {
     }
 }
 
+void SimpleStringListEditor::slotAdd()
+{
+    addNewEntry();
+}
+
 void SimpleStringListEditor::slotRemove() {
     QList<QListWidgetItem *> selectedItems = mListBox->selectedItems();
     if (selectedItems.isEmpty())
@@ -248,22 +254,31 @@ void SimpleStringListEditor::slotRemove() {
     emit changed();
 }
 
+QString SimpleStringListEditor::modifyEntry(const QString &text)
+{
+    bool ok = false;
+    QString newText = KInputDialog::getText( i18n("Change Value"),
+                                             mAddDialogLabel, text,
+                                             &ok, this );
+    emit aboutToAdd( newText );
+
+    if ( !ok || newText.isEmpty() || newText == text )
+        return QString();
+
+    return newText;
+
+
+}
+
 void SimpleStringListEditor::slotModify() {
     QListWidgetItem* item = mListBox->currentItem();
     if ( !item )
         return;
-
-    bool ok = false;
-    QString newText = KInputDialog::getText( i18n("Change Value"),
-                                             mAddDialogLabel, item->text(),
-                                             &ok, this );
-    emit aboutToAdd( newText );
-
-    if ( !ok || newText.isEmpty() || newText == item->text() )
-        return;
-
-    item->setText( newText );
-    emit changed();
+    QString newText = modifyEntry(item->text());
+    if (!newText.isEmpty()) {
+        item->setText( newText );
+        emit changed();
+    }
 }
 
 QList<QListWidgetItem*> SimpleStringListEditor::selectedItems() const 
