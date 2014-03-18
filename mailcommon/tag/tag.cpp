@@ -28,120 +28,120 @@ using namespace MailCommon;
 
 Tag::Ptr Tag::createDefaultTag(const QString& name)
 {
-  Tag::Ptr tag( new Tag() );
-  tag->tagName = name;
-  tag->iconName = QLatin1String("mail-tagged");
+    Tag::Ptr tag( new Tag() );
+    tag->tagName = name;
+    tag->iconName = QLatin1String("mail-tagged");
 
-  tag->priority = -1;
-  tag->inToolbar = false;
-  tag->isImmutable = false;
-  return tag;
+    tag->priority = -1;
+    tag->inToolbar = false;
+    tag->isImmutable = false;
+    return tag;
 }
 
 Tag::Ptr Tag::fromAkonadi(const Akonadi::Tag& akonadiTag)
 {
-  Tag::Ptr tag( new Tag() );
-  tag->tagName = akonadiTag.name();
-  tag->mTag = akonadiTag;
-  tag->priority = -1;
-  tag->iconName = QLatin1String("mail-tagged");
-  tag->inToolbar = false;
-  tag->isImmutable = akonadiTag.isImmutable();
-  Akonadi::TagAttribute *attr = akonadiTag.attribute<Akonadi::TagAttribute>();
-  if (attr) {
-    if (!attr->iconName().isEmpty()) {
-      tag->iconName = attr->iconName();
+    Tag::Ptr tag( new Tag() );
+    tag->tagName = akonadiTag.name();
+    tag->mTag = akonadiTag;
+    tag->priority = -1;
+    tag->iconName = QLatin1String("mail-tagged");
+    tag->inToolbar = false;
+    tag->isImmutable = akonadiTag.isImmutable();
+    Akonadi::TagAttribute *attr = akonadiTag.attribute<Akonadi::TagAttribute>();
+    if (attr) {
+        if (!attr->iconName().isEmpty()) {
+            tag->iconName = attr->iconName();
+        }
+        tag->inToolbar = attr->inToolbar();
+        tag->shortcut = KShortcut(attr->shortcut());
+        tag->textColor = attr->textColor();
+        tag->backgroundColor = attr->backgroundColor();
+        if (!attr->font().isEmpty()) {
+            tag->textFont.fromString( attr->font() );
+        }
+        tag->priority = attr->priority();
     }
-    tag->inToolbar = attr->inToolbar();
-    tag->shortcut = KShortcut(attr->shortcut());
-    tag->textColor = attr->textColor();
-    tag->backgroundColor = attr->backgroundColor();
-    if (!attr->font().isEmpty()) {
-      tag->textFont.fromString( attr->font() );
-    }
-    tag->priority = attr->priority();
-  }
-  return tag;
+    return tag;
 }
 
 Akonadi::Tag Tag::saveToAkonadi(Tag::SaveFlags saveFlags) const
 {
-  Akonadi::Tag tag( tagName );
-  Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(Akonadi::AttributeEntity::AddIfMissing);
-  attr->setDisplayName( tagName );
-  attr->setIconName( iconName );
-  attr->setInToolbar( inToolbar );
-  attr->setShortcut( shortcut.toString() );
-  attr->setPriority( priority );
+    Akonadi::Tag tag( tagName );
+    Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(Akonadi::AttributeEntity::AddIfMissing);
+    attr->setDisplayName( tagName );
+    attr->setIconName( iconName );
+    attr->setInToolbar( inToolbar );
+    attr->setShortcut( shortcut.toString() );
+    attr->setPriority( priority );
 
-  if ( textColor.isValid() && (saveFlags & TextColor) )
-    attr->setTextColor( textColor );
-  else
-    attr->setTextColor( QColor() );
+    if ( textColor.isValid() && (saveFlags & TextColor) )
+        attr->setTextColor( textColor );
+    else
+        attr->setTextColor( QColor() );
 
-  if ( backgroundColor.isValid() && (saveFlags & BackgroundColor) )
-    attr->setBackgroundColor( backgroundColor );
-  else
-    attr->setBackgroundColor( QColor() );
+    if ( backgroundColor.isValid() && (saveFlags & BackgroundColor) )
+        attr->setBackgroundColor( backgroundColor );
+    else
+        attr->setBackgroundColor( QColor() );
 
-  if ( (textFont != QFont()) && (saveFlags & Font) )
-    attr->setFont( textFont.toString() );
-  else
-    attr->setFont( QString() );
+    if ( (textFont != QFont()) && (saveFlags & Font) )
+        attr->setFont( textFont.toString() );
+    else
+        attr->setFont( QString() );
 
-  tag.addAttribute(attr);
-  return tag;
+    tag.addAttribute(attr);
+    return tag;
 }
 
 bool Tag::compare( Tag::Ptr &tag1, Tag::Ptr &tag2 )
 {
-  if ( tag1->priority < tag2->priority )
-    return true;
-  else if (tag1->priority == tag2->priority)
-    return ( tag1->tagName < tag2->tagName );
-  else
-    return false;
+    if ( tag1->priority < tag2->priority )
+        return true;
+    else if (tag1->priority == tag2->priority)
+        return ( tag1->tagName < tag2->tagName );
+    else
+        return false;
 }
 
 bool Tag::compareName( Tag::Ptr &tag1, Tag::Ptr &tag2 )
 {
-  return ( tag1->tagName < tag2->tagName );
+    return ( tag1->tagName < tag2->tagName );
 }
 
 bool Tag::operator==( const Tag &other ) const
 {
 #if 0
-  if (mTag.isValid()) {
-    return id() == other.id();
-  }
+    if (mTag.isValid()) {
+        return id() == other.id();
+    }
 #endif
-  return tagName == other.tagName &&
-          textColor == other.textColor &&
-          backgroundColor == other.backgroundColor &&
-          textFont == other.textFont &&
-          iconName == other.iconName &&
-          inToolbar == other.inToolbar &&
-          shortcut.toString() == other.shortcut.toString() &&
-          priority == other.priority;
+    return tagName == other.tagName &&
+            textColor == other.textColor &&
+            backgroundColor == other.backgroundColor &&
+            textFont == other.textFont &&
+            iconName == other.iconName &&
+            inToolbar == other.inToolbar &&
+            shortcut.toString() == other.shortcut.toString() &&
+            priority == other.priority;
 }
 
 bool Tag::operator!=( const Tag &other ) const
 {
-  return !( *this == other );
+    return !( *this == other );
 }
 
 qint64 Tag::id() const
 {
-  return mTag.id();
+    return mTag.id();
 }
 
 QString Tag::name() const
 {
-  return mTag.name();
+    return mTag.name();
 }
 
 Akonadi::Tag Tag::tag() const
 {
-  return mTag;
+    return mTag;
 }
 

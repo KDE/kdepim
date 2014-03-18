@@ -495,7 +495,7 @@ QString WebDavStorageService::serviceName()
 
 QString WebDavStorageService::iconName()
 {
-    return QString();
+    return QLatin1String("folder-remote");
 }
 
 StorageServiceAbstract::Capabilities WebDavStorageService::serviceCapabilities()
@@ -527,7 +527,7 @@ QString WebDavStorageService::storageServiceName() const
 
 KIcon WebDavStorageService::icon() const
 {
-    return KIcon();
+    return KIcon(WebDavStorageService::iconName());
 }
 
 void WebDavStorageService::shutdownService()

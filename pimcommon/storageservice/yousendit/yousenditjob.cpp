@@ -201,7 +201,7 @@ void YouSendItJob::requestTokenAccess()
 
     postData.addQueryItem(QLatin1String("email"), mUsername);
     postData.addQueryItem(QLatin1String("password"), mPassword);
-    qDebug()<<" postData"<<postData;
+    //qDebug()<<" postData"<<postData;
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
