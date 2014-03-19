@@ -47,11 +47,13 @@ class GrantleeContactFormatter;
 class GrantleeContactGroupFormatter;
 }
 
+class CheckableProxyModel;
 class ContactSwitcher;
 class KActionCollection;
 class KXMLGUIClient;
 class ModelColumnManager;
 class QAbstractItemModel;
+class QItemSelection;
 class QItemSelectionModel;
 class QModelIndex;
 class QSplitter;
@@ -96,10 +98,16 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     void saveState();
 
     void slotGrantleeThemeSelected();
-    void slotGrantleeThemesUpdated();  
+    void slotGrantleeThemesUpdated();
     void slotCheckNewCalendar(const QModelIndex &parent, int begin, int end);
 
-private:
+    void slotSendMail();
+    void updateSendMailState();
+
+    void slotUpdateSelection();
+    void slotUpdateCheckboxes(const QItemSelection & selected, const QItemSelection & deselected);
+
+  private:
     void initGrantleeThemeName();
     void setupGui();
     void setupActions( KActionCollection * );
@@ -121,6 +129,7 @@ private:
     Akonadi::EntityMimeTypeFilterModel *mItemTree;
     Akonadi::EntityMimeTypeFilterModel *mAllContactsModel;
     Akonadi::ContactsFilterProxyModel *mContactsFilterModel;
+    CheckableProxyModel *mCheckableProxyModel;
 
     QuickSearchWidget *mQuickSearchWidget;
     Akonadi::EntityTreeView *mCollectionView;

@@ -74,7 +74,7 @@ set(kaddressbook_merge_SRCS
    merge/mergecontactsdialog.cpp
    merge/searchduplicatecontactwizard.cpp
    merge/potentialduplicatecontactswidget.cpp
-   merge/searchpotentialduplicatecontactjob.cpp 
+   merge/searchpotentialduplicatecontactjob.cpp
    merge/mergecontactwidget.cpp
    merge/mergecontactutil.cpp
    merge/mergecontactsjob.cpp
@@ -83,12 +83,14 @@ set(kaddressbook_merge_SRCS
 set(kaddressbook_LIB_SRCS
   startup.cpp
   aboutdata.cpp
+  checkableproxymodel.cpp
   contactfields.cpp
   contactselectiondialog.cpp
   contactselectionwidget.cpp
   contactsorter.cpp
   contactswitcher.cpp
   globalcontactmodel.cpp
+  mailsender.cpp
   mainwidget.cpp
   modelcolumnmanager.cpp
   quicksearchwidget.cpp
