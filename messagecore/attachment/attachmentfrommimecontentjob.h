@@ -37,9 +37,9 @@ namespace MessageCore {
  */
 class MESSAGECORE_EXPORT AttachmentFromMimeContentJob : public AttachmentLoadJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new job.
      *
@@ -63,10 +63,10 @@ class MESSAGECORE_EXPORT AttachmentFromMimeContentJob : public AttachmentLoadJob
      */
     const KMime::Content *mimeContent() const;
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     void doStart();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

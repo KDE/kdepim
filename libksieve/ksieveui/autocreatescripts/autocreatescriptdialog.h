@@ -38,6 +38,9 @@ public:
 
     void loadScript(const QDomDocument &doc, QString &error);
 
+protected:
+    bool event(QEvent *e);
+
 private:
     void readConfig();
     void writeConfig();

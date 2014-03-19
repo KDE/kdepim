@@ -185,7 +185,7 @@ void initNumInput( KIntNumInput *numInput, const QByteArray &field )
 {
     if ( field == "<age in days>" ) {
         numInput->setMinimum( -10000 );
-        numInput->setSuffix( i18nc( "Unit suffix where units are days.", " days" ) );
+        numInput->setSuffix( ki18ncp( "Unit suffix where units are days.", " day", " days" ) );
         numInput->setSliderEnabled( false );
     }
 }

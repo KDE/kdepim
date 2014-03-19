@@ -22,6 +22,7 @@
 #include "notes/knote.h"
 #include "noteshared/editor/noteeditorutils.h"
 #include "pimcommon/util/editorutil.h"
+#include "knotesglobalconfig.h"
 
 #include <kaction.h>
 #include <kactioncollection.h>
@@ -188,6 +189,10 @@ KNoteEdit::KNoteEdit( const QString &configFile, KActionCollection *actions, QWi
     actions->addAction( QLatin1String("insert_date"), action );
     connect( action, SIGNAL(triggered(bool)), SLOT(slotInsertDate()) );
 
+    action = new KAction( KIcon( QLatin1String("checkmark") ), i18n( "Insert Checkmark" ), this );
+    actions->addAction( QLatin1String("insert_checkmark"), action );
+    connect( action, SIGNAL(triggered(bool)), SLOT(slotInsertCheckMark()) );
+
     // QTextEdit connections
     connect( this, SIGNAL(currentCharFormatChanged(QTextCharFormat)),
              SLOT(slotCurrentCharFormatChanged(QTextCharFormat)) );
@@ -199,6 +204,46 @@ KNoteEdit::KNoteEdit( const QString &configFile, KActionCollection *actions, QWi
 
 KNoteEdit::~KNoteEdit()
 {
+}
+
+void KNoteEdit::setColor(const QColor &fg, const QColor &bg)
+{
+    mDefaultBackgroundColor = bg;
+    mDefaultForegroundColor = fg;
+
+    QPalette p = palette();
+
+    // better: from light(150) to light(100) to light(75)
+    // QLinearGradient g( width()/2, 0, width()/2, height() );
+    // g.setColorAt( 0, bg );
+    // g.setColorAt( 1, bg.dark(150) );
+
+    p.setColor( QPalette::Window,     bg );
+    // p.setBrush( QPalette::Window,     g );
+    p.setColor( QPalette::Base,       bg );
+    // p.setBrush( QPalette::Base,       g );
+
+    p.setColor( QPalette::WindowText, fg );
+    p.setColor( QPalette::Text,       fg );
+
+    p.setColor( QPalette::Button,     bg.dark( 116 ) );
+    p.setColor( QPalette::ButtonText, fg );
+
+    //p.setColor( QPalette::Highlight,  bg );
+    //p.setColor( QPalette::HighlightedText, fg );
+
+    // order: Light, Midlight, Button, Mid, Dark, Shadow
+
+    // the shadow
+    p.setColor( QPalette::Light, bg.light( 180 ) );
+    p.setColor( QPalette::Midlight, bg.light( 150 ) );
+    p.setColor( QPalette::Mid, bg.light( 150 ) );
+    p.setColor( QPalette::Dark, bg.dark( 108 ) );
+    p.setColor( QPalette::Shadow, bg.dark( 116 ) );
+
+    setPalette( p );
+
+    setTextColor( fg );
 }
 
 void KNoteEdit::setNote( KNote *_note )
@@ -242,7 +287,10 @@ void KNoteEdit::mousePopupMenuImplementation(const QPoint& pos)
                 popup->addMenu(changeCaseMenu);
             }
             popup->addSeparator();
-            QAction * act = m_actions->action(QLatin1String("insert_date"));
+            QAction *act = m_actions->action(QLatin1String("insert_date"));
+            popup->addAction(act);
+            popup->addSeparator();
+            act = m_actions->action(QLatin1String("insert_checkmark"));
             popup->addAction(act);
         }
         aboutToShowContextMenu(popup);
@@ -355,8 +403,8 @@ void KNoteEdit::slotTextColor()
     if ( m_note )
         m_note->setBlockSave( true );
     QColor c = textColor();
-    if ( KColorDialog::getColor( c, this ) ) {
-        setTextColor( c );
+    if ( KColorDialog::getColor( c, mDefaultForegroundColor, this ) ) {
+        setTextColor( c.isValid() ? c : mDefaultForegroundColor);
     }
     if ( m_note )
         m_note->setBlockSave( false );
@@ -370,8 +418,8 @@ void KNoteEdit::slotTextBackgroundColor()
     if ( m_note )
         m_note->setBlockSave( true );
     QColor c = textBackgroundColor();
-    if ( KColorDialog::getColor( c, this ) ) {
-        setTextBackgroundColor( c );
+    if ( KColorDialog::getColor( c, mDefaultBackgroundColor, this ) ) {
+        setTextBackgroundColor( c.isValid() ? c : mDefaultBackgroundColor );
     }
     if ( m_note )
         m_note->setBlockSave( false );
@@ -632,4 +680,8 @@ void KNoteEdit::slotInsertDate()
     NoteShared::NoteEditorUtils::insertDate(this);
 }
 
-
+void KNoteEdit::slotInsertCheckMark()
+{
+    QTextCursor cursor = textCursor();
+    NoteShared::NoteEditorUtils::addCheckmark(cursor);
+}

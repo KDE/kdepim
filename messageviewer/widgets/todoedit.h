@@ -49,6 +49,7 @@ public:
     void setMessageUrlAkonadi(const QString &url);
     QString messageUrlAkonadi() const;
 
+    void showToDoWidget();
 public Q_SLOTS:
     void slotCloseWidget();
 

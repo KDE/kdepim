@@ -79,7 +79,7 @@ void BoxJob::requestTokenAccess()
     if (!mScope.isEmpty())
         url.addQueryItem(QLatin1String("scope"),mScope);
     mAuthUrl = url;
-    qDebug()<<" url"<<url;
+    //qDebug()<<" url"<<url;
     delete mAuthDialog;
     mAuthDialog = new PimCommon::StorageAuthViewDialog;
     connect(mAuthDialog, SIGNAL(urlChanged(QUrl)), this, SLOT(slotRedirect(QUrl)));
@@ -110,7 +110,8 @@ void BoxJob::parseRedirectUrl(const QUrl &url)
     QString authorizeCode;
     QString errorStr;
     QString errorDescription;
-    for (int i = 0; i < listQuery.size(); ++i) {
+    const int listSize(listQuery.size());
+    for (int i = 0; i < listSize; ++i) {
         const QPair<QString, QString> item = listQuery.at(i);
         if (item.first == QLatin1String("code")) {
             authorizeCode = item.second;
@@ -687,7 +688,7 @@ void BoxJob::parseAccessToken(const QString &data)
     bool ok;
 
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    qDebug()<<" info"<<info;
+    //qDebug()<<" info"<<info;
     if (info.contains(QLatin1String("refresh_token"))) {
         mRefreshToken = info.value(QLatin1String("refresh_token")).toString();
     }
@@ -698,7 +699,7 @@ void BoxJob::parseAccessToken(const QString &data)
     if (info.contains(QLatin1String("expires_in"))) {
         expireInTime = info.value(QLatin1String("expires_in")).toLongLong();
     }
-    qDebug()<<" parseAccessToken";
+    //qDebug()<<" parseAccessToken";
     Q_EMIT authorizationDone(mRefreshToken, mToken, expireInTime);
     deleteLater();
 }

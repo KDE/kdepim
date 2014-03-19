@@ -34,11 +34,11 @@ namespace MessageCore {
  */
 class MESSAGECORE_EXPORT EmailAddressRequester : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  Q_PROPERTY( QString text READ text WRITE setText NOTIFY textChanged USER true )
+    Q_PROPERTY( QString text READ text WRITE setText NOTIFY textChanged USER true )
 
-  public:
+public:
     /**
      * Creates a new email address requester.
      *
@@ -71,14 +71,14 @@ class MESSAGECORE_EXPORT EmailAddressRequester : public QWidget
      */
     KLineEdit* lineEdit() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the text of the email address requester
      * has been changed.
      */
     void textChanged();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private* const d;

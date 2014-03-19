@@ -232,7 +232,7 @@ QString UbuntuoneStorageService::serviceName()
 
 QString UbuntuoneStorageService::iconName()
 {
-    return QString();
+    return QLatin1String("kdepim-ubuntuone");
 }
 
 StorageServiceAbstract::Capabilities UbuntuoneStorageService::serviceCapabilities()
@@ -536,7 +536,7 @@ QString UbuntuoneStorageService::storageServiceName() const
 
 KIcon UbuntuoneStorageService::icon() const
 {
-    return KIcon();
+    return KIcon(UbuntuoneStorageService::iconName());
 }
 
 #include "moc_ubuntuonestorageservice.cpp"

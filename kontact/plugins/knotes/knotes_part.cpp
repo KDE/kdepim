@@ -30,7 +30,6 @@
 #include "knotesiconview.h"
 #include "knoteswidget.h"
 #include "knotesselectdeletenotesdialog.h"
-#include "knotetip.h"
 #include "knotes/configdialog/knoteconfigdialog.h"
 #include "knotes/print/knoteprinter.h"
 #include "knotes/print/knoteprintobject.h"
@@ -235,7 +234,6 @@ KNotesPart::KNotesPart( QObject *parent )
     mModelState->setSelectionModel( mSelectionModel );
 
     mNotesWidget = new KNotesWidget(this,widget());
-    mNoteTip = new KNoteTip( mNotesWidget->notesView() );
 
     mQuickSearchAction = new KAction( i18n("Set Focus to Quick Search"), this );
     //If change shortcut change in quicksearchwidget->lineedit->setClickMessage
@@ -245,12 +243,6 @@ KNotesPart::KNotesPart( QObject *parent )
 
     connect( mNotesWidget->notesView(), SIGNAL(executed(QListWidgetItem*)),
              this, SLOT(editNote(QListWidgetItem*)) );
-
-    connect( mNotesWidget->notesView(), SIGNAL(entered(QModelIndex)),
-             this, SLOT(requestToolTip(QModelIndex)));
-
-    connect( mNotesWidget->notesView(), SIGNAL(viewportEntered()),
-             this, SLOT(hideToolTip()));
 
     connect( mNotesWidget->notesView(), SIGNAL(itemSelectionChanged()),
              this, SLOT(slotOnCurrentChanged()) );
@@ -266,8 +258,6 @@ KNotesPart::~KNotesPart()
 {
     delete mPublisher;
     mPublisher=0;
-    delete mNoteTip;
-    mNoteTip = 0;
 }
 
 void KNotesPart::updateClickMessage()
@@ -307,18 +297,6 @@ QStringList KNotesPart::notesList() const
         notes.append(QString::number(i.key()));
     }
     return notes;
-}
-
-void KNotesPart::requestToolTip( const QModelIndex &index )
-{
-    const QRect m_itemRect = mNotesWidget->notesView()->visualRect( index );
-    mNoteTip->setNote(
-                static_cast<KNotesIconViewItem *>( mNotesWidget->notesView()->itemAt( m_itemRect.topLeft() ) ) );
-}
-
-void KNotesPart::hideToolTip()
-{
-    mNoteTip->setNote( 0 );
 }
 
 void KNotesPart::slotPrintPreviewSelectedNotes()
@@ -565,6 +543,7 @@ void KNotesPart::editNote( QListWidgetItem *item )
     QPointer<KNoteEditDialog> dlg = new KNoteEditDialog( knotesItem->readOnly(), widget() );
     dlg->setTitle( knotesItem->realName() );
     dlg->setText( knotesItem->description() );
+    dlg->setColor( knotesItem->textForegroundColor(), knotesItem->textBackgroundColor() );
 
     dlg->setAcceptRichText(knotesItem->isRichText());
     dlg->setTabSize(knotesItem->tabSize());
@@ -573,9 +552,7 @@ void KNotesPart::editNote( QListWidgetItem *item )
 
     dlg->noteEdit()->setFocus();
     if ( dlg->exec() == QDialog::Accepted ) {
-        //Don't save we save in description
-        knotesItem->setIconText( dlg->title(), false );
-        knotesItem->setDescription( dlg->text() );
+        knotesItem->setChangeIconTextAndDescription(dlg->title(), dlg->text());
     }
     delete dlg;
 }
@@ -857,7 +834,7 @@ void KNotesPart::fetchNotesFromCollection(const Akonadi::Collection &col)
     job->fetchScope().fetchAttribute<NoteShared::NoteDisplayAttribute>();
     job->fetchScope().fetchAttribute<NoteShared::NoteAlarmAttribute>();
     job->fetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
-    connect( job, SIGNAL( result( KJob* ) ), SLOT( slotItemFetchFinished(KJob*)) );
+    connect( job, SIGNAL(result(KJob*)), SLOT(slotItemFetchFinished(KJob*)) );
 }
 
 void KNotesPart::slotItemFetchFinished(KJob *job)

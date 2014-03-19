@@ -136,6 +136,11 @@ void SieveEditorWidget::goToLine()
     }
 }
 
+SieveEditorWidget::EditorMode SieveEditorWidget::mode() const
+{
+    return mMode;
+}
+
 void SieveEditorWidget::setModified(bool b)
 {
     if (mModified != b) {
@@ -186,6 +191,7 @@ void SieveEditorWidget::changeMode(EditorMode mode)
             mCheckSyntax->setEnabled(false);
         else
             mCheckSyntax->setEnabled(!mTextModeWidget->currentscript().isEmpty());
+        Q_EMIT modeEditorChanged(mode);
     }
 }
 
@@ -209,6 +215,9 @@ QString SieveEditorWidget::script() const
         break;
     case GraphicMode:
         currentScript = mGraphicalModeWidget->currentscript();
+        break;
+    case Unknown:
+        qDebug()<<" Unknown Mode!";
         break;
     }
     return currentScript;
@@ -273,6 +282,7 @@ void SieveEditorWidget::slotAutoGenerateScripts()
         mTextModeWidget->autoGenerateScripts();
         break;
     case GraphicMode:
+    case Unknown:
         break;
     }
 }
@@ -285,6 +295,7 @@ void SieveEditorWidget::slotCheckSyntax()
         Q_EMIT checkSyntax();
         break;
     case GraphicMode:
+    case Unknown:
         break;
     }
 }
@@ -297,6 +308,7 @@ void SieveEditorWidget::slotGenerateXml()
         mTextModeWidget->generateXml();
         break;
     case GraphicMode:
+    case Unknown:
         break;
     }
 #endif
@@ -311,6 +323,9 @@ void SieveEditorWidget::slotSaveAs()
     case GraphicMode:
         mGraphicalModeWidget->slotSaveAs();
         break;
+    case Unknown:
+        qDebug()<<" Unknown mode";
+        break;
     }
 }
 
@@ -322,6 +337,9 @@ void SieveEditorWidget::slotImport()
         break;
     case GraphicMode:
         mGraphicalModeWidget->slotImport();
+        break;
+    case Unknown:
+        qDebug()<<" Unknown mode";
         break;
     }
 }
@@ -360,6 +378,9 @@ void SieveEditorWidget::slotSwitchMode()
         mTextModeWidget->setScript(script);
         break;
     }
+    case Unknown:
+        qDebug()<<" Unknown mode";
+        break;
     }
 }
 

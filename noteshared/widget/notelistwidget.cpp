@@ -16,7 +16,9 @@
 */
 
 #include "notelistwidget.h"
+#include "attributes/notedisplayattribute.h"
 #include <KMime/KMimeMessage>
+#include "noteshared/noteutils.h"
 
 using namespace NoteShared;
 NoteListWidget::NoteListWidget(QWidget *parent)
@@ -69,13 +71,7 @@ void NoteListWidget::createItem(const Akonadi::Item &note)
     QListWidgetItem *item =new QListWidgetItem(this);
     item->setText(noteMessage->subject(false)->asUnicodeString());
 
-    QString text;
-    if ( noteMessage->contentType()->isHTMLText() ) {
-        text = noteMessage->mainBodyPart()->decodedText();
-    } else {
-        text = noteMessage->mainBodyPart()->decodedText().replace(QLatin1Char('\n'), QLatin1String("<br>"));
-    }
-    item->setToolTip(QLatin1String("<qt>") + text + QLatin1String("</qt>"));
+    item->setToolTip(NoteShared::NoteUtils::createToolTip(note));
     item->setData(AkonadiId, note.id());
 }
 
@@ -102,8 +98,5 @@ Akonadi::Entity::Id NoteListWidget::itemId(QListWidgetItem *item) const
 Akonadi::Entity::Id NoteListWidget::currentItemId() const
 {
     QListWidgetItem *item = currentItem();
-    if (item) {
-        return item->data(AkonadiId).toLongLong();
-    }
-    return -1;
+    return itemId(item);
 }

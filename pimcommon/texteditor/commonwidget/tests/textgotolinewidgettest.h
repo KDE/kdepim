@@ -33,6 +33,7 @@ private Q_SLOTS:
     void shouldHideWidgetWhenPressEscape();
     void shouldEmitGoToLineSignalWhenSpinboxHasFocusAndWePressEnter();
     void shouldHasFocusEachTimeThatItShown();
+    void shouldSetFocusWhenWeRecallGotToLine();
 };
 
 #endif // TEXTGOTOLINEWIDGETTEST_H

@@ -87,12 +87,17 @@ public:
     void setUpDownAutoRepeat(bool b);
     QSize sizeHint() const;
 
+    virtual void addNewEntry();
+    virtual QString modifyEntry(const QString &text);
 signals:
     /** Connected slots can alter the argument to be added or set the
       argument to QString() to suppress adding.
   */
     void aboutToAdd(QString&);
     void changed(void);
+
+protected:
+    void insertNewEntry(const QString &newEntry);
 
 protected slots:
     void slotAdd();

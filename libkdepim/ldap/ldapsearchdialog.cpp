@@ -53,6 +53,7 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <KPushButton>
 
 #include <KPIMUtils/ProgressIndicatorLabel>
 
@@ -496,6 +497,8 @@ class LdapSearchDialog::Private
     void slotSelectionChanged();
 
     LdapSearchDialog *q;
+    KGuiItem startSearchGuiItem;
+    KGuiItem stopSearchGuiItem;
     int mNumHosts;
     QList<KLDAP::LdapClient*> mLdapClientList;
     bool mIsConfigured;
@@ -507,7 +510,7 @@ class LdapSearchDialog::Private
 
     QCheckBox *mRecursiveCheckbox;
     QTableView *mResultView;
-    QPushButton *mSearchButton;
+    KPushButton *mSearchButton;
     ContactListModel *mModel;
     KPIMUtils::ProgressIndicatorLabel *progressIndication;
     QSortFilterProxyModel *sortproxy;
@@ -552,11 +555,14 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
   d->mFilterCombo->addItem( i18nc( "@item:inlistbox", "Home Number" ) );
   d->mFilterCombo->addItem( i18nc( "@item:inlistbox", "Work Number" ) );
   boxLayout->addWidget( d->mFilterCombo, 0, 3 );
+  d->startSearchGuiItem = KGuiItem(  i18nc( "@action:button Start searching", "&Search" ), QLatin1String("edit-find") );
+  d->stopSearchGuiItem = KStandardGuiItem::stop();
 
   QSize buttonSize;
-  d->mSearchButton = new QPushButton( i18n( "Stop" ), groupBox );
+  d->mSearchButton = new KPushButton( groupBox );
+  d->mSearchButton->setGuiItem(d->startSearchGuiItem);
+
   buttonSize = d->mSearchButton->sizeHint();
-  d->mSearchButton->setText( i18nc( "@action:button Start searching", "&Search" ) );
   if ( buttonSize.width() < d->mSearchButton->sizeHint().width() ) {
     buttonSize = d->mSearchButton->sizeHint();
   }
@@ -784,7 +790,7 @@ void LdapSearchDialog::Private::slotStartSearch()
 #ifndef QT_NO_CURSOR
   QApplication::setOverrideCursor( Qt::WaitCursor );
 #endif
-  mSearchButton->setText( i18n( "Stop" ) );
+  mSearchButton->setGuiItem(stopSearchGuiItem);
   progressIndication->start();
 
   q->disconnect( mSearchButton, SIGNAL(clicked()),
@@ -826,7 +832,7 @@ void LdapSearchDialog::Private::slotSearchDone()
   q->connect( mSearchButton, SIGNAL(clicked()),
               q, SLOT(slotStartSearch()) );
 
-  mSearchButton->setText( i18nc( "@action:button Start searching", "&Search" ) );
+  mSearchButton->setGuiItem(startSearchGuiItem);
   progressIndication->stop();
 #ifndef QT_NO_CURSOR
   QApplication::restoreOverrideCursor();

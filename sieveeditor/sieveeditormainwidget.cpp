@@ -94,12 +94,13 @@ void SieveEditorMainWidget::slotCreateScriptPage(const KUrl &url, const QStringL
         SieveEditorPageWidget *editor = new SieveEditorPageWidget;
         connect(editor, SIGNAL(refreshList()), this, SIGNAL(updateScriptList()));
         connect(editor, SIGNAL(scriptModified(bool,SieveEditorPageWidget*)), this, SLOT(slotScriptModified(bool,SieveEditorPageWidget*)));
+        connect(editor, SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)), SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)));
         editor->setIsNewScript(isNewScript);
         editor->loadScript(url, capabilities);
         mTabWidget->addTab(editor, url.fileName());
         mTabWidget->setCurrentWidget(editor);
         if (isNewScript)
-            editor->saveScript(false);
+            editor->saveScript(false, true);
     }
 }
 
@@ -220,4 +221,16 @@ void SieveEditorMainWidget::slotTabRemoveAllExclude(int index)
         }
         slotTabCloseRequested(i);
     }
+}
+
+KSieveUi::SieveEditorWidget::EditorMode SieveEditorMainWidget::pageMode() const
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            return page->pageMode();
+        }
+    }
+    return KSieveUi::SieveEditorWidget::Unknown;
 }

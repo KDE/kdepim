@@ -116,5 +116,18 @@ void TextGoToLineWidgetTest::shouldHasFocusEachTimeThatItShown()
     QVERIFY(line->hasFocus());
 }
 
+void TextGoToLineWidgetTest::shouldSetFocusWhenWeRecallGotToLine()
+{
+    PimCommon::TextGoToLineWidget edit;
+    edit.show();
+    QTest::qWaitForWindowShown(&edit);
+    QSpinBox *line = qFindChild<QSpinBox *>(&edit, QLatin1String("line"));
+    QVERIFY(line->hasFocus());
+    edit.setFocus();
+    QVERIFY(!line->hasFocus());
+    edit.goToLine();
+    QVERIFY(line->hasFocus());
+}
+
 
 QTEST_KDEMAIN( TextGoToLineWidgetTest, GUI )

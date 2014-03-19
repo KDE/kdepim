@@ -24,6 +24,8 @@
 #include <KLocalizedString>
 #include <KSharedConfig>
 
+#include <QKeyEvent>
+
 using namespace KSieveUi;
 
 AutoCreateScriptDialog::AutoCreateScriptDialog(QWidget *parent)
@@ -70,5 +72,18 @@ void AutoCreateScriptDialog::writeConfig()
 {
     KConfigGroup group( KGlobal::config(), "AutoCreateScriptDialog" );
     group.writeEntry( "Size", size() );
+}
+
+bool AutoCreateScriptDialog::event(QEvent* e)
+{
+    const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
+    if (shortCutOverride || e->type() == QEvent::KeyPress ) {
+        QKeyEvent* kev = static_cast<QKeyEvent* >(e);
+        if (kev->key() == Qt::Key_Escape) {
+            e->ignore();
+            return true;
+        }
+    }
+    return KDialog::event(e);
 }
 

@@ -8,14 +8,9 @@ macro(add_plaintext_unittest _source)
   kde4_add_unit_test(${_name} TESTNAME pimcommon-${_name} ${_test})
   target_link_libraries( ${_name}
     pimcommon
-    ${QGPGME_LIBRARIES}
     ${QT_QTTEST_LIBRARY}
     ${QT_QTCORE_LIBRARY}
-    ${QT_QTWEBKIT_LIBRARY}
-    ${KDE4_KIO_LIBS}
-    ${KDEPIMLIBS_KMIME_LIBS}
-    ${KDEPIMLIBS_AKONADI_LIBS}
-    ${KDEPIMLIBS_KCALCORE_LIBS}
+    ${KDE4_KDEUI_LIBS}
   )
 endmacro ()
 

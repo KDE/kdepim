@@ -52,6 +52,7 @@ public:
     void setTabStop( int tabs );
     void setAutoIndentMode( bool newmode );
 
+    void setColor(const QColor &fg, const QColor &bg);
 public slots:
     void setRichText( bool );
 
@@ -90,14 +91,16 @@ private slots:
     void slotCursorPositionChanged();
     void slotUpperCase();
     void slotLowerCase();
-    void slotSentenceCase();
-
+    void slotSentenceCase();    
+    void slotInsertCheckMark();
 private:
     void autoIndent();
 
     void enableRichTextActions(bool enabled);
 
 private:
+    QColor mDefaultBackgroundColor;
+    QColor mDefaultForegroundColor;
 
     KToggleAction *m_textBold;
     KToggleAction *m_textItalic;

@@ -49,7 +49,7 @@ private Q_SLOTS:
 
 Q_SIGNALS:
     void checkSyntax();
-    void valueChanged();
+    void valueChanged(bool);
 
 protected:
     bool event(QEvent *e);

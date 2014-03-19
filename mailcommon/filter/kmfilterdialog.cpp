@@ -641,7 +641,7 @@ bool KMFilterDialog::event(QEvent* e)
             return true;
         }
     }
-    return QWidget::event(e);
+    return KDialog::event(e);
 }
 
 
@@ -1719,7 +1719,7 @@ void KMFilterDialog::slotExportAsSieveScript()
         KMessageBox::information(
                     this,
                     i18nc( "@info",
-                           "Some filters were changed and not saved yet. "
+                           "Some filters were changed and not saved yet.<br>"
                            "You must save your filters before they can be exported." ),
                     i18n( "Filters changed." ) );
         return;
@@ -1734,6 +1734,8 @@ void KMFilterDialog::slotExportAsSieveScript()
             FilterConvertToSieve convert(lst);
             convert.convert();
             qDeleteAll(lst);
+        } else {
+            KMessageBox::information(this, i18n("No filters selected."), i18n("Convert KMail filters to sieve scripts"));
         }
     }
     delete dlg;

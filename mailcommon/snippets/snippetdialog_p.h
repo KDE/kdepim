@@ -50,7 +50,6 @@ public:
 private Q_SLOTS:
     void slotTextChanged();
     void slotGroupChanged();
-    void slotReturnPressed();
 
 private:
     bool snippetIsValid() const;

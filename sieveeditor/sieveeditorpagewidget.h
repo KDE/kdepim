@@ -22,6 +22,7 @@
 #define SIEVEEDITORPAGEWIDGET_H
 #include <QWidget>
 #include <KUrl>
+#include "ksieveui/editor/sieveeditorwidget.h"
 namespace KManageSieve {
 class SieveJob;
 }
@@ -39,15 +40,17 @@ public:
     void loadScript(const KUrl &url, const QStringList &capabilities);
     KUrl currentUrl() const;
     void setIsNewScript(bool isNewScript);
-    void saveScript(bool showInformation = true);
+    void saveScript(bool showInformation = true, bool forceSave = false);
     bool needToSaveScript();
 
     bool isModified() const;
     void goToLine();
+    KSieveUi::SieveEditorWidget::EditorMode pageMode() const;
 
 Q_SIGNALS:
     void refreshList();
     void scriptModified(bool, SieveEditorPageWidget *);
+    void modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode);
 
 private slots:
     void slotGetResult(KManageSieve::SieveJob *, bool success, const QString &script, bool isActive);

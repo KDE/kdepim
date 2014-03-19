@@ -85,7 +85,11 @@ void CreateNewNoteJob::start()
 
         QString title;
         if (mTitle.isEmpty()) {
-            title = KGlobal::locale()->formatDateTime( QDateTime::currentDateTime() );
+            const QDateTime currentDateTime = QDateTime::currentDateTime();
+            title = NoteShared::NoteSharedGlobalConfig::self()->defaultTitle();
+            title.replace(QLatin1String("%t"), KGlobal::locale()->formatTime( currentDateTime.time()));
+            title.replace(QLatin1String("%d"), KGlobal::locale()->formatDate( currentDateTime.date(), KLocale::ShortDate));
+            title.replace(QLatin1String("%l"), KGlobal::locale()->formatDate( currentDateTime.date(), KLocale::LongDate));
         } else {
             title = mTitle;
         }

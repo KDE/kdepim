@@ -46,6 +46,7 @@ public:
     void setMessage(const KMime::Message::Ptr &value);
 
     void writeConfig();
+    void showEventEdit();
 
 public Q_SLOTS:
     void slotCloseWidget();
@@ -66,7 +67,7 @@ private:
     void readConfig();
     Akonadi::Collection mCollection;
     KMime::Message::Ptr mMessage;
-    KLineEdit *mNoteEdit;
+    KLineEdit *mEventEdit;
     Akonadi::CollectionComboBox *mCollectionCombobox;
     KDateTimeEdit *mStartDateTimeEdit;
     KDateTimeEdit *mEndDateTimeEdit;

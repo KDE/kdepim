@@ -89,6 +89,12 @@ TodoEdit::~TodoEdit()
     writeConfig();
 }
 
+void TodoEdit::showToDoWidget()
+{
+    mNoteEdit->setFocus();
+    show();
+}
+
 void TodoEdit::setMessageUrlAkonadi(const QString &url)
 {
     if (mMessageUrlAkonadi != url) {
