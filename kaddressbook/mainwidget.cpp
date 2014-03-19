@@ -695,6 +695,7 @@ void MainWidget::setupActions( KActionCollection *collection )
 
     action = collection->addAction( QLatin1String("send_mail") );
     action->setText( i18n( "Send an email...") );
+    action->setIcon(KIconLoader::global()->loadIcon( QLatin1String( "mail-message-new"), KIconLoader::Small ));
     connect( action, SIGNAL(triggered(bool)), this, SLOT(slotSendMail()));
 }
 
