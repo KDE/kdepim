@@ -23,6 +23,8 @@
 class QItemSelectionModel;
 namespace Utils {
 Akonadi::Item::List collectSelectedContactsItem(QItemSelectionModel *model);
+
+Akonadi::Item::List collectSelectedGroupItem(QItemSelectionModel *model);
 }
 
 #endif // UTILS_H
