@@ -52,7 +52,7 @@ void SieveSyntaxHighlighter::addCapabilities(const QStringList &capabilities)
     QStringList keywords;
     keywords << capabilities;
     Q_FOREACH ( const QString & s, keywords ) {
-        const QRegExp regex( QString::fromLatin1("\"%1\"").arg(s), Qt::CaseInsensitive );
+        const QRegExp regex( QString::fromLatin1("\"%1\"").arg(s), Qt::CaseSensitive );
         m_rules.append( Rule( regex, keywordFormat ) );
     }
 }
@@ -62,10 +62,10 @@ void SieveSyntaxHighlighter::init()
     // Comments
     QTextCharFormat commentFormat;
     commentFormat.setForeground( Qt::darkYellow );
-    QRegExp commentRegex( QLatin1String( "^#.*$" ) );
+    QRegExp commentRegex( QLatin1String( "#.*$" ) );
     m_rules.append( Rule( commentRegex, commentFormat ) );
 
-    commentRegex = QRegExp( QLatin1String( "^/*.*$*/" ) );
+    commentRegex = QRegExp( QLatin1String( "/*.*$*/" ) );
     m_rules.append( Rule( commentRegex, commentFormat ) );
 
 
@@ -77,8 +77,9 @@ void SieveSyntaxHighlighter::init()
     keywords << QLatin1String( "\\brequire\\b" );
     keywords << QLatin1String( "\\binclude\\b" );
     keywords << QLatin1String( "\\bglobal\\b" );
+    keywords << QLatin1String( "\\bforeverypart\\b" );
     Q_FOREACH ( const QString & s, keywords ) {
-        const QRegExp regex( s, Qt::CaseInsensitive );
+        const QRegExp regex( s, Qt::CaseSensitive );
         m_rules.append( Rule( regex, keywordFormat ) );
     }
 
@@ -88,7 +89,7 @@ void SieveSyntaxHighlighter::init()
     QStringList textKeywords;
     textKeywords << QLatin1String( "\\btext:" );
     Q_FOREACH ( const QString & s, textKeywords ) {
-        const QRegExp regex( s, Qt::CaseInsensitive );
+        const QRegExp regex( s, Qt::CaseSensitive );
         m_rules.append( Rule( regex, textKeywordFormat ) );
     }
 
@@ -137,9 +138,15 @@ void SieveSyntaxHighlighter::init()
               << QLatin1String( "\\s:regex\\b")
               << QLatin1String( "\\s:flags\\b" )
               << QLatin1String( "\\s:subject\\b" )
-              << QLatin1String( "\\s:create\\b" );
+              << QLatin1String( "\\s:create\\b" )
+              << QLatin1String( "\\s:name\\b" )
+              << QLatin1String( "\\s:headers\\b" )
+              << QLatin1String( "\\s:list\\b")
+              << QLatin1String( "\\s:from\\b")
+              << QLatin1String( "\\s:first\\b")
+              << QLatin1String( "\\s:comparator\\b");
     Q_FOREACH ( const QString & s, matchType ) {
-        const QRegExp regex( s, Qt::CaseInsensitive );
+        const QRegExp regex( s, Qt::CaseSensitive );
         m_rules.append( Rule( regex, matchFormat ) );
     }
 
@@ -150,7 +157,7 @@ void SieveSyntaxHighlighter::init()
     QStringList controlType;
     controlType << QLatin1String( "\\bif\\b" )<<QLatin1String( "\\belsif\\b" )<<QLatin1String( "\\belse\\b" );
     Q_FOREACH ( const QString & s, controlType ) {
-        const QRegExp regex( s, Qt::CaseInsensitive );
+        const QRegExp regex( s, Qt::CaseSensitive );
         m_rules.append( Rule( regex, controlFormat ) );
     }
 
@@ -174,9 +181,12 @@ void SieveSyntaxHighlighter::init()
                <<QLatin1String( "\\bnotify\\b" )
                <<QLatin1String( "\\bset\\b" )
                <<QLatin1String( "\\breturn\\b" )
-               <<QLatin1String( "\\bvacation\\b" );
+               <<QLatin1String( "\\bvacation\\b" )
+               <<QLatin1String( "\\benclose\\b" )
+               <<QLatin1String( "\\breplace\\b" )
+               <<QLatin1String( "\\bextracttext\\b");
     Q_FOREACH ( const QString & s, actionType ) {
-        const QRegExp regex( s, Qt::CaseInsensitive );
+        const QRegExp regex( s, Qt::CaseSensitive );
         m_rules.append( Rule( regex, actionFormat ) );
     }
 
@@ -198,9 +208,17 @@ void SieveSyntaxHighlighter::init()
              <<QLatin1String( "\\bbody\\b" )
              <<QLatin1String( "\\bcurrentdate\\b" )
              <<QLatin1String( "\\bmailboxexists\\b" )
-             <<QLatin1String( "\\btrue\\b" );
+             <<QLatin1String( "\\btrue\\b" )
+             <<QLatin1String("\\bmetadata\\b")
+             <<QLatin1String("\\benvironment\\b")
+             <<QLatin1String("\\bspamtest\\b")
+             <<QLatin1String("\\bvirustest\\b")
+             <<QLatin1String("\\bihave\\b")
+             <<QLatin1String("\\bmetadataexists\\b")
+             <<QLatin1String("\\bservermetadata\\b")
+             <<QLatin1String("\\bservermetadataexists\\b");
     Q_FOREACH ( const QString & s, testType ) {
-        const QRegExp regex( s, Qt::CaseInsensitive );
+        const QRegExp regex( s, Qt::CaseSensitive );
         m_rules.append( Rule( regex, testFormat ) );
     }
 

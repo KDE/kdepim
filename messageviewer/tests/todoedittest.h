@@ -20,7 +20,6 @@
 
 #include <QObject>
 
-class QStandardItemModel;
 
 class TodoEditTest : public QObject
 {
@@ -56,6 +55,7 @@ private slots:
     void shouldClearUrlMessageWhenSwitchMessage();
     void shouldEmitNotEmitTodoWhenTextTrimmedIsEmpty();
     void shouldSaveCollectionSettingsWhenDeleteWidget();
+    void shouldSetFocusWhenWeCallTodoEdit();
 };
 
 #endif // TODOEDITTEST_H

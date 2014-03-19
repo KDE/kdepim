@@ -68,8 +68,7 @@ AdBlockManager *AdBlockManager::self()
 AdBlockManager::AdBlockManager(QObject *parent)
     : QObject(parent)
 {
-    // NOTE: launch this in a second thread so that it does not delay startup
-    _settingsLoaded = QtConcurrent::run(this, &AdBlockManager::loadSettings);
+    loadSettings();
 }
 
 
@@ -133,7 +132,7 @@ void AdBlockManager::loadSettings()
 
         const QDateTime lastDateTime = filtersGroup.readEntry(QLatin1String("lastUpdate"), QDateTime());
         if (!lastDateTime.isValid() || today > lastDateTime.addDays(days) || !QFile(path).exists()) {
-            updateSubscription(path, url);
+            updateSubscription(path, url, item);
         } else {
             loadRules(path);
         }
@@ -268,7 +267,7 @@ bool AdBlockManager::blockRequest(const QNetworkRequest &request)
 }
 
 
-void AdBlockManager::updateSubscription(const QString &path, const QString &url)
+void AdBlockManager::updateSubscription(const QString &path, const QString &url, const QString &itemName)
 {
     KUrl subUrl = KUrl(url);
 
@@ -281,6 +280,7 @@ void AdBlockManager::updateSubscription(const QString &path, const QString &url)
     job->metaData().insert(QLatin1String("UseCache"), QLatin1String("false"));
     job->metaData().insert(QLatin1String("cookies"), QLatin1String("none"));
     job->metaData().insert(QLatin1String("no-auth"), QLatin1String("true"));
+    job->setProperty("itemname", itemName);
 
     connect(job, SIGNAL(finished(KJob*)), this, SLOT(slotFinished(KJob*)));
 }
@@ -300,6 +300,14 @@ void AdBlockManager::slotFinished(KJob *job)
     notify->setComponentData( KComponentData("messageviewer") );
     notify->setText( i18n("Download new ad-block list was done." ) );
     notify->sendEvent();
+    const QString itemName = job->property("itemname").toString();
+    if (!itemName.isEmpty()) {
+        KConfig config(QLatin1String("messagevieweradblockrc"));
+        if (config.hasGroup(itemName)) {
+            KConfigGroup grp = config.group(itemName);
+            grp.writeEntry(QLatin1String("lastUpdate"), QDateTime::currentDateTime());
+        }
+    }
 
     KIO::FileCopyJob *fJob = qobject_cast<KIO::FileCopyJob *>(job);
     KUrl url = fJob->destUrl();
@@ -318,9 +326,6 @@ bool AdBlockManager::subscriptionFileExists(int i)
 
 void AdBlockManager::addCustomRule(const QString &stringRule, bool reloadPage)
 {
-    // at this point, the settings should be loaded
-    _settingsLoaded.waitForFinished();
-
     // save rule in local filters
     const QString localRulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_local"));
 

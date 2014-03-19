@@ -31,12 +31,12 @@
 #include <vector>
 
 namespace KMime {
-  class Content;
+class Content;
 
 }
 
 namespace GpgME {
-  class Error;
+class Error;
 }
 
 
@@ -50,9 +50,9 @@ class SignJobPrivate;
 */
 class MESSAGECOMPOSER_EXPORT SignJob : public ContentJobBase
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit SignJob( QObject *parent = 0 );
     virtual ~SignJob();
 
@@ -62,11 +62,11 @@ class MESSAGECOMPOSER_EXPORT SignJob : public ContentJobBase
 
     KMime::Content* origContent();
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     //virtual void doStart();
     virtual void process();
 
-  private:
+private:
     Q_DECLARE_PRIVATE( SignJob )
 };
 

@@ -423,18 +423,25 @@ QMap<QString, QString> YouSendItStorageService::itemInformation(const QVariantMa
 {
     QMap<QString, QString> information;
     qDebug()<<" variantMap "<<variantMap;
+    bool folder = false;
     if (variantMap.contains(QLatin1String("name"))) {
         information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Name), variantMap.value(QLatin1String("name")).toString());
     }
+    if (variantMap.contains(QLatin1String("updatedOn"))) {
+        const QString t = variantMap.value(QLatin1String("updatedOn")).toString();
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), KGlobal::locale()->formatDateTime(YouSendItUtil::convertToDateTime(t,true)));
+        folder = true;
+    }
+    information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Type), folder ? i18n("Directory") : i18n("File"));
     if (variantMap.contains(QLatin1String("createdOn"))) {
         const QString t = variantMap.value(QLatin1String("createdOn")).toString();
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), KGlobal::locale()->formatDateTime(YouSendItUtil::convertToDateTime(t,true)));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), KGlobal::locale()->formatDateTime(YouSendItUtil::convertToDateTime(t,folder ? true : false)));
     }
     if (variantMap.contains(QLatin1String("lastUpdatedOn"))) {
         const QString t = variantMap.value(QLatin1String("lastUpdatedOn")).toString();
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), KGlobal::locale()->formatDateTime(YouSendItUtil::convertToDateTime(t,true)));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), KGlobal::locale()->formatDateTime(YouSendItUtil::convertToDateTime(t)));
     }
-    if (variantMap.contains(QLatin1String("size"))) {
+    if (!folder && variantMap.contains(QLatin1String("size"))) {
         information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KGlobal::locale()->formatByteSize(variantMap.value(QLatin1String("size")).toULongLong()));
     }
     if (variantMap.contains(QLatin1String("writeable"))) {
@@ -478,7 +485,6 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
                 const QString name = map.value(QLatin1String("name")).toString();
                 const QString folderId = map.value(QLatin1String("id")).toString();
                 StorageServiceTreeWidgetItem *item = listWidget->addFolder(name, folderId);
-                item->setStoreInfo(map);
                 if (map.contains(QLatin1String("createdOn"))) {
                     const QString t = map.value(QLatin1String("createdOn")).toString();
                     item->setDateCreated(YouSendItUtil::convertToDateTime(t,true));
@@ -487,6 +493,7 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
                     const QString t = map.value(QLatin1String("updatedOn")).toString();
                     item->setLastModification(YouSendItUtil::convertToDateTime(t,true));
                 }
+                item->setStoreInfo(map);
             }
         }
         const QVariantMap mapFiles = info.value(QLatin1String("files")).toMap();

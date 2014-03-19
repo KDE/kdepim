@@ -266,7 +266,8 @@ void AdBlockSettingWidget::save()
         grp.writeEntry(QLatin1String("FilterEnabled"), subItem->checkState() == Qt::Checked);
         grp.writeEntry(QLatin1String("url"), subItem->data(UrlList).toString());
         grp.writeEntry(QLatin1String("name"), subItem->text());
-        grp.writeEntry(QLatin1String("lastUpdate"), subItem->data(LastUpdateList).toDateTime());
+        if (subItem->data(LastUpdateList).toDateTime().isValid())
+           grp.writeEntry(QLatin1String("lastUpdate"), subItem->data(LastUpdateList).toDateTime());
         QString path = subItem->data(PathList).toString();
         if (path.isEmpty()) {
             path = KStandardDirs::locateLocal("appdata", QString::fromLatin1("adblockrules-%1").arg(i));
@@ -372,7 +373,7 @@ void AdBlockSettingWidget::showAutomaticFilterList(QListWidgetItem *item)
 void AdBlockSettingWidget::slotImportFilters()
 {
     const QString filter = i18n( "*|all files (*)" );
-    const QString result = PimCommon::Util::loadToFile(filter, this);
+    const QString result = PimCommon::Util::loadToFile(filter, this, i18n("Import Filters"));
     if (result.isEmpty()) {
         return;
     }
@@ -411,7 +412,7 @@ void AdBlockSettingWidget::slotExportFilters()
         if (!stringRule.isEmpty())
             exportFilters += stringRule + QLatin1Char('\n');
     }
-    PimCommon::Util::saveTextAs(exportFilters, filter, this);
+    PimCommon::Util::saveTextAs(exportFilters, filter, this, KUrl(), i18n("Export Filters"));
 }
 
 void AdBlockSettingWidget::slotAutomaticFilterDouble(QListWidgetItem *item)

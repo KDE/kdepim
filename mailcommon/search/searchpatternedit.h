@@ -76,16 +76,17 @@ class SearchPatternEdit;
 class SearchRuleWidgetLister;
 class MAILCOMMON_EXPORT SearchPatternEdit : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     enum SearchPatternEditOption {
         None = 0,
         HeadersOnly = 1,
-        AbsoluteDate = 2,
+        NotShowAbsoluteDate = 2,
         MatchAllMessages = 4,
         NotShowSize = 8,
-        NotShowDate = 16
+        NotShowDate = 16,
+        NotShowTags = 32
     };
     Q_DECLARE_FLAGS( SearchPatternEditOptions, SearchPatternEditOption )
 
@@ -121,14 +122,14 @@ class MAILCOMMON_EXPORT SearchPatternEdit : public QWidget
      */
     void updateSearchPattern();
 
-  public slots:
+public slots:
     /**
      * Called when the widget should let go of the currently referenced
      * filter and disable itself.
      */
     void reset();
 
-  signals:
+signals:
     /**
      * This signal is emitted whenever the name of the processed
      * search pattern may have changed.
@@ -142,12 +143,12 @@ class MAILCOMMON_EXPORT SearchPatternEdit : public QWidget
 
     void returnPressed();
 
-  private slots:
+private slots:
     void slotRadioClicked( QAbstractButton *aRBtn );
     void slotAutoNameHack();
     void slotRuleAdded( QWidget *widget );
 
-  private:
+private:
     void initLayout( SearchPatternEditOptions options, SearchModeType modeType );
     MailCommon::SearchPattern *mPattern;
     QRadioButton *mAllRBtn;
@@ -172,122 +173,122 @@ class MAILCOMMON_EXPORT SearchPatternEdit : public QWidget
 */
 class SearchRuleWidget : public QWidget
 {
-Q_OBJECT
+    Q_OBJECT
 
 public:
-  /**
+    /**
    * Constructor. You can give a MailCommon::SearchRule as parameter,
    * which will be used to initialize the widget.
    */
-  explicit SearchRuleWidget(QWidget *parent = 0,
-                             MailCommon::SearchRule::Ptr aRule = MailCommon::SearchRule::Ptr(),
-                             SearchPatternEdit::SearchPatternEditOptions options = (SearchPatternEdit::SearchPatternEditOptions) (SearchPatternEdit::None),
-                            SearchPatternEdit::SearchModeType modeType = SearchPatternEdit::StandardMode);
+    explicit SearchRuleWidget(QWidget *parent = 0,
+                              MailCommon::SearchRule::Ptr aRule = MailCommon::SearchRule::Ptr(),
+                              SearchPatternEdit::SearchPatternEditOptions options = (SearchPatternEdit::SearchPatternEditOptions) (SearchPatternEdit::None),
+                              SearchPatternEdit::SearchModeType modeType = SearchPatternEdit::StandardMode);
 
-  enum {
-    Message,
-    Body,
-    AnyHeader,
-    Recipients,
-    Size,
-    AgeInDays,
-    Status,
-    Tag,
-    Subject,
-    From,
-    To,
-    CC,
-    ReplyTo,
-    Organization,
-    Date
-  };
+    enum {
+        Message,
+        Body,
+        AnyHeader,
+        Recipients,
+        Size,
+        AgeInDays,
+        Status,
+        Tag,
+        Subject,
+        From,
+        To,
+        CC,
+        ReplyTo,
+        Organization,
+        Date
+    };
 
-  /**
+    /**
    * Sets the rule. The rule is accepted regardless of the return
    * value of MailCommon::SearchRule::isEmpty. This widget makes a shallow
    * copy of @p aRule and operates directly on it. If @p aRule is 0,
    * resets itself, taks user input, but does essentially nothing.
    * If you pass 0, you should probably disable it.
    */
-  void setRule( MailCommon::SearchRule::Ptr aRule );
+    void setRule( MailCommon::SearchRule::Ptr aRule );
 
-  /**
+    /**
    * Returns a reference to the currently-worked-on MailCommon::SearchRule.
    */
-  MailCommon::SearchRule::Ptr rule() const;
+    MailCommon::SearchRule::Ptr rule() const;
 
-  /**
+    /**
    * Resets the rule currently worked on and updates the widget accordingly.
    */
-  void reset();
+    void reset();
 
-  static int ruleFieldToId( const QString &i18nVal );
+    static int ruleFieldToId( const QString &i18nVal );
 
-  void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
+    void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
 
-  void setPatternEditOptions(MailCommon::SearchPatternEdit::SearchPatternEditOptions options);
+    void setPatternEditOptions(MailCommon::SearchPatternEdit::SearchPatternEditOptions options);
 
 public slots:
-  void slotFunctionChanged();
-  void slotValueChanged();
-  void slotReturnPressed();
+    void slotFunctionChanged();
+    void slotValueChanged();
+    void slotReturnPressed();
 
 signals:
-  /**
+    /**
    * This signal is emitted whenever the user alters the field.
    * The pseudo-headers <...> are returned in their i18n form, but
    * stored in their English form in the rule.
    */
-  void fieldChanged( const QString & );
+    void fieldChanged( const QString & );
 
-  /**
+    /**
    * This signal is emitted whenever the user alters the contents/value
    * of the rule.
    */
-  void contentsChanged( const QString & );
+    void contentsChanged( const QString & );
 
-  void returnPressed();
+    void returnPressed();
 
-  void addWidget( QWidget * );
-  void removeWidget( QWidget * );
+    void addWidget( QWidget * );
+    void removeWidget( QWidget * );
 
 protected:
-  /**
+    /**
    * Used internally to translate i18n-ized pseudo-headers back to English.
    */
-  static QByteArray ruleFieldToEnglish( const QString &i18nVal );
+    static QByteArray ruleFieldToEnglish( const QString &i18nVal );
 
-  /**
+    /**
    * Used internally to find the corresponding index into the field
    * ComboBox. Returns the index if found or -1 if the search failed,
    */
-  int indexOfRuleField( const QByteArray & aName ) const;
+    int indexOfRuleField( const QByteArray & aName ) const;
 
 protected slots:
-  void slotRuleFieldChanged( const QString & );
-  void slotAddWidget();
-  void slotRemoveWidget();
+    void slotRuleFieldChanged( const QString & );
+    void slotAddWidget();
+    void slotRemoveWidget();
 
 private:
-  void initWidget(SearchPatternEdit::SearchModeType modeType);
-  void initFieldList(MailCommon::SearchPatternEdit::SearchPatternEditOptions options);
+    void initWidget(SearchPatternEdit::SearchModeType modeType);
+    void initFieldList(MailCommon::SearchPatternEdit::SearchPatternEditOptions options);
 
-  QStringList mFilterFieldList;
-  KComboBox *mRuleField;
-  QStackedWidget *mFunctionStack;
-  QStackedWidget *mValueStack;
-  KPushButton *mAdd;
-  KPushButton *mRemove;
+    QStringList mFilterFieldList;
+    KComboBox *mRuleField;
+    QStackedWidget *mFunctionStack;
+    QStackedWidget *mValueStack;
+    KPushButton *mAdd;
+    KPushButton *mRemove;
 };
 
 
 class SearchRuleWidgetLister : public KPIM::KWidgetLister
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  friend class SearchPatternEdit;
+    friend class SearchPatternEdit;
 
-  public:
+public:
     explicit SearchRuleWidgetLister(QWidget *parent = 0,
                                     SearchPatternEdit::SearchPatternEditOptions opt = (SearchPatternEdit::SearchPatternEditOptions) (SearchPatternEdit::None),
                                     SearchPatternEdit::SearchModeType modeType = SearchPatternEdit::StandardMode);
@@ -298,16 +299,16 @@ class SearchRuleWidgetLister : public KPIM::KWidgetLister
 
     void setPatternEditOptions( SearchPatternEdit::SearchPatternEditOptions options );
 
-  public slots:
+public slots:
     void reset();
     void slotAddWidget( QWidget * );
     void slotRemoveWidget( QWidget * );
 
-  protected:
+protected:
     virtual void clearWidget( QWidget *aWidget );
     virtual QWidget *createWidget( QWidget *parent );
 
-  private:
+private:
     void reconnectWidget( SearchRuleWidget *w );
     void updateAddRemoveButton();
     void regenerateRuleListFromWidgets();

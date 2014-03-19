@@ -22,6 +22,7 @@
 #include <KPushButton>
 
 #include <qtest_kde.h>
+#include <qtestkeyboard.h>
 #include <qtestmouse.h>
 #include <QComboBox>
 
@@ -92,10 +93,29 @@ void TranslatorTest::shouldInvertLanguageWhenClickOnInvertButton()
     KPushButton *invert = qFindChild<KPushButton *>(&edit, QLatin1String("invert-button"));
     QCOMPARE(fromIndex != toIndex, true);
     QTest::mouseClick(invert, Qt::LeftButton);
-    int newFromIndex = from->currentIndex();
-    int newToIndex = to->currentIndex();
+    const int newFromIndex = from->currentIndex();
+    const int newToIndex = to->currentIndex();
     QCOMPARE(fromIndex != newFromIndex, true);
     QCOMPARE(toIndex != newToIndex, true);
+}
+
+void TranslatorTest::shouldHideWidgetWhenPressEscape()
+{
+    PimCommon::TranslatorWidget edit;
+    edit.show();
+    QTest::qWaitForWindowShown(&edit);
+    QTest::keyPress(&edit, Qt::Key_Escape);
+    QCOMPARE(edit.isVisible(), false);
+}
+
+void TranslatorTest::shouldEmitTranslatorWasClosedSignalWhenCloseIt()
+{
+    PimCommon::TranslatorWidget edit;
+    edit.show();
+    QTest::qWaitForWindowShown(&edit);
+    QSignalSpy spy(&edit, SIGNAL(translatorWasClosed()));
+    QTest::keyClick(&edit, Qt::Key_Escape);
+    QCOMPARE(spy.count(), 1);
 }
 
 QTEST_KDEMAIN( TranslatorTest, GUI )

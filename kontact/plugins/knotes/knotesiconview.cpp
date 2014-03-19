@@ -19,8 +19,10 @@
 #include "noteshared/akonadi/notesakonaditreemodel.h"
 #include "noteshared/attributes/notedisplayattribute.h"
 #include "noteshared/attributes/notelockattribute.h"
+#include "noteshared/noteutils.h"
 #include "knotes/notes/knotedisplaysettings.h"
 #include "utils/knoteutils.h"
+
 
 #include <KLocalizedString>
 
@@ -36,6 +38,9 @@
 #include <QMouseEvent>
 #include <QListWidgetItem>
 #include <QDebug>
+#include <QToolTip>
+
+//#define DEBUG_SAVE_NOTE 1
 
 KNotesIconView::KNotesIconView( KNotesPart *part, QWidget *parent )
     : KListWidget(parent),
@@ -53,6 +58,26 @@ KNotesIconView::KNotesIconView( KNotesPart *part, QWidget *parent )
 KNotesIconView::~KNotesIconView()
 {
 
+}
+
+bool KNotesIconView::event(QEvent *e)
+{
+    if( e->type() != QEvent::ToolTip )
+      return KListWidget::event( e );
+    QHelpEvent * he = static_cast< QHelpEvent * >( e );
+
+    QPoint pnt = viewport()->mapFromGlobal( mapToGlobal( he->pos() ) );
+
+    if ( pnt.y() < 0 )
+      return true;
+
+    QListWidgetItem *item = itemAt( pnt );
+    if (item) {
+        KNotesIconViewItem *noteItem = static_cast<KNotesIconViewItem*>(item);
+        const QString toolTip = NoteShared::NoteUtils::createToolTip(noteItem->item());
+        QToolTip::showText( he->globalPos(), toolTip, viewport(), visualItemRect( item ) );
+    }
+    return true;
 }
 
 void KNotesIconView::mousePressEvent( QMouseEvent *e )
@@ -136,6 +161,9 @@ void KNotesIconViewItem::setReadOnly(bool b, bool save)
     }
     if (save) {
         Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
+#ifdef DEBUG_SAVE_NOTE
+        qDebug()<<" KNotesIconViewItem::setReadOnly savenote";
+#endif
         connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
     }
 }
@@ -155,6 +183,11 @@ void KNotesIconViewItem::slotNoteSaved(KJob *job)
     }
 }
 
+void KNotesIconViewItem::setChangeIconTextAndDescription( const QString &iconText, const QString &description)
+{
+    setIconText(iconText, false);
+    saveNoteContent(iconText, description);
+}
 
 void KNotesIconViewItem::setIconText( const QString &text, bool save )
 {
@@ -179,6 +212,16 @@ QString KNotesIconViewItem::realName() const
 int KNotesIconViewItem::tabSize() const
 {
     return mDisplayAttribute->tabSize();
+}
+
+QColor KNotesIconViewItem::textBackgroundColor() const
+{
+    return mDisplayAttribute->backgroundColor();
+}
+
+QColor KNotesIconViewItem::textForegroundColor() const
+{
+    return mDisplayAttribute->foregroundColor();
 }
 
 bool KNotesIconViewItem::autoIndent() const
@@ -239,6 +282,9 @@ void KNotesIconViewItem::saveNoteContent(const QString &subject, const QString &
 
     mItem.setPayload( message );
     Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
+#ifdef DEBUG_SAVE_NOTE
+    qDebug()<<" KNotesIconViewItem::saveNoteContent savenote";
+#endif
     connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
 }
 

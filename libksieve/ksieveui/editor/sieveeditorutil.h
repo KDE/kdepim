@@ -69,7 +69,10 @@ enum HelpVariableName {
     VacationAction,
     GlobalVariable,
     Includes,
-    ForEveryPart
+    ForEveryPart,
+    CopyExtension,
+    MBoxMetaDataExtension,
+    SubAddressExtension
 };
 KSieveUi::SieveEditorUtil::HelpVariableName strToVariableName(const QString &str);
 

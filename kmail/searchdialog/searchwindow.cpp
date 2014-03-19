@@ -448,6 +448,7 @@ void SearchWindow::doSearch()
         }
     } else if (mUi.mChkMultiFolders->isChecked()) {
         if (!mSelectMultiCollectionDialog) {
+            mSearchPatternWidget->showWarningPattern(QStringList()<<i18n("You forgot to select collections."));
             return;
         }
         mCollectionId = mSelectMultiCollectionDialog->selectedCollection();
@@ -485,8 +486,7 @@ void SearchWindow::doSearch()
     case MailCommon::SearchPattern::EmptyResult:
         mUi.mSearchFolderEdt->setEnabled( true );
         mQuery = Akonadi::SearchQuery();
-        mUi.mStatusLbl->setText( i18n("No message found.") );
-        createSearchModel();
+        mSearchPatternWidget->showWarningPattern(QStringList()<<i18n("You forgot to add conditions."));
         return;
     case MailCommon::SearchPattern::NotEnoughCharacters:
         mUi.mSearchFolderEdt->setEnabled( true );
@@ -504,7 +504,7 @@ void SearchWindow::doSearch()
         searchJob->setSearchMimeTypes( QStringList() << QLatin1String("message/rfc822") );
         searchJob->setSearchCollections( searchCollections );
         searchJob->setRecursive( recursive );
-        searchJob->setRemoteSearchEnabled( true );
+        searchJob->setRemoteSearchEnabled( false );
         mSearchJob = searchJob;
     } else {
         kDebug()<<" use existing folder " << mFolder.id();
@@ -514,7 +514,7 @@ void SearchWindow::doSearch()
         attribute->setQueryString( QString::fromLatin1(mQuery.toJSON()) );
         attribute->setQueryCollections( searchCollections );
         attribute->setRecursive( recursive );
-        attribute->setRemoteSearchEnabled( true );
+        attribute->setRemoteSearchEnabled( false );
         mFolder.addAttribute(attribute);
         mSearchJob = new Akonadi::CollectionModifyJob( mFolder, this );
     }

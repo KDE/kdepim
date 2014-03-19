@@ -133,6 +133,10 @@ if (KDEPIM_BUILD_DESKTOP)
      dialog/addemailtoexistingcontactdialog.cpp
      dialog/kmknotify.cpp
   )
+  set(kmailprivate_mailmerge_LIB_SRCS
+     mailmerge/mailmergewidget.cpp
+     mailmerge/attachmentlistwidget.cpp
+  ) 
   set(kmailprivate_LIB_SRCS
      widgets/collectionpane.cpp
      kmmainwin.cpp
@@ -158,6 +162,7 @@ if (KDEPIM_BUILD_DESKTOP)
      job/createnewcontactjob.cpp
      job/addemailtoexistingcontactjob.cpp
      widgets/vacationscriptindicatorwidget.cpp
+     ${kmailprivate_mailmerge_LIB_SRCS}
      ${kmailprivate_dialogs_LIB_SRCS}
      ${kmailprivate_warningwidgets_LIB_SRCS}
      ${kmailprivate_folderarchive_LIB_SRCS}
@@ -312,6 +317,7 @@ if (KDEPIM_BUILD_DESKTOP)
   )
 
 
+  add_subdirectory(mailmerge/tests/)
   ########### install files ###############
 
   install(TARGETS kmailprivate ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)

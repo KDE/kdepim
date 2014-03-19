@@ -30,6 +30,7 @@
 
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditfindbar.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
+#include "pimcommon/texteditor/commonwidget/textgotolinewidget.h"
 
 #include <ksieve/parser.h>
 #include <ksieve/error.h>
@@ -88,9 +89,15 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mTabWidget->setTabBarHidden(true);
     textEditLayout->addWidget(mTabWidget);
     connect(mTextEdit, SIGNAL(openHelp(QString,QString)), mTabWidget, SLOT(slotAddHelpPage(QString,QString)));
-    mFindBar = new PimCommon::PlainTextEditFindBar( mTextEdit, textEditWidget );
 
+    mGoToLine = new PimCommon::TextGoToLineWidget;
+    mGoToLine->hide();
+    textEditLayout->addWidget(mGoToLine);
+    connect(mGoToLine, SIGNAL(goToLine(int)), this, SLOT(slotGoToLine(int)));
+
+    mFindBar = new PimCommon::PlainTextEditFindBar( mTextEdit, textEditWidget );
     textEditLayout->addWidget(mFindBar);
+
     mSieveEditorWarning = new SieveEditorWarning;
     textEditLayout->addWidget(mSieveEditorWarning);
 
@@ -152,6 +159,24 @@ void SieveEditorTextModeWidget::readConfig()
     mMainSplitter->setSizes(group.readEntry( "mainSplitter", size));
     mExtraSplitter->setSizes(group.readEntry( "extraSplitter", size));
     mTemplateSplitter->setSizes(group.readEntry( "templateSplitter", size));
+}
+
+void SieveEditorTextModeWidget::slotGoToLine(int line)
+{
+    if (line > 0) {
+        QTextCursor cursor = mTextEdit->textCursor();
+        cursor.beginEditBlock();
+        cursor.movePosition(QTextCursor::Start);
+        cursor.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor, (line-1));
+        cursor.endEditBlock();
+        mTextEdit->setTextCursor(cursor);
+        mTextEdit->setFocus();
+    }
+}
+
+void SieveEditorTextModeWidget::slotShowGoToLine()
+{
+    mGoToLine->show();
 }
 
 void SieveEditorTextModeWidget::generateXml()
@@ -263,5 +288,10 @@ void SieveEditorTextModeWidget::showParsingEditorWarning()
 void SieveEditorTextModeWidget::setParsingEditorWarningError(const QString &script, const QString &error)
 {
     mSieveParsingWarning->setErrors(script, error);
+}
+
+void SieveEditorTextModeWidget::goToLine()
+{
+    mGoToLine->goToLine();
 }
 

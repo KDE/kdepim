@@ -18,13 +18,18 @@
 #include "noteutils.h"
 #include "network/notesnetworksender.h"
 #include "network/notehostdialog.h"
+#include "noteshared/attributes/notedisplayattribute.h"
 #include "notesharedglobalconfig.h"
 #include <KProcess>
 #include <ksocketfactory.h>
 #include <KMessageBox>
 #include <KLocalizedString>
 
+#include <KMime/KMimeMessage>
+
 #include <QPointer>
+#include <QTextDocument>
+#include <QApplication>
 
 bool NoteShared::NoteUtils::sendToMail(QWidget *parent, const QString &title, const QString &message)
 {
@@ -80,5 +85,62 @@ void NoteShared::NoteUtils::sendToNetwork(QWidget *parent, const QString &title,
         sender->setNote( title, message ); // FIXME: plainText ??
     }
     delete hostDlg;
+}
+
+
+QString NoteShared::NoteUtils::createToolTip(const Akonadi::Item &item)
+{
+    const KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
+    const QString description = QString::fromUtf8(noteMessage->mainBodyPart()->decodedContent());
+    const QString realName = noteMessage->subject(false)->asUnicodeString();
+    const bool isRichText = noteMessage->contentType()->isHTMLText();
+
+    QString tip;
+    if (item.hasAttribute<NoteDisplayAttribute>()) {
+        NoteDisplayAttribute *attr = item.attribute<NoteDisplayAttribute>();
+        if (attr) {
+            const QString bckColorName = attr->backgroundColor().name();
+            const QString txtColorName = attr->foregroundColor().name();;
+            const bool textIsLeftToRight = ( QApplication::layoutDirection() == Qt::LeftToRight );
+            const QString textDirection =  textIsLeftToRight ? QLatin1String( "left" ) : QLatin1String( "right" );
+
+            tip = QString::fromLatin1(
+                        "<table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">"
+                        );
+            tip += QString::fromLatin1(
+                        "<tr>" \
+                        "<td bgcolor=\"%1\" align=\"%4\" valign=\"middle\">" \
+                        "<div style=\"color: %2; font-weight: bold;\">" \
+                        "%3" \
+                        "</div>" \
+                        "</td>" \
+                        "</tr>"
+                        ).arg( bckColorName ).arg( txtColorName ).arg( Qt::escape( realName ) ).arg( textDirection );
+            const QString htmlCodeForStandardRow = QString::fromLatin1(
+                        "<tr>" \
+                        "<td bgcolor=\"%1\" align=\"left\" valign=\"top\">" \
+                        "<div style=\"color: %2;\">" \
+                        "%3" \
+                        "</div>" \
+                        "</td>" \
+                        "</tr>" );
+
+            QString content = description;
+            if ( !content.trimmed().isEmpty() ) {
+                if ( textIsLeftToRight ) {
+                    tip += htmlCodeForStandardRow.arg(bckColorName).arg( txtColorName ).arg( isRichText ? content : content.replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) );
+                } else {
+                    tip += htmlCodeForStandardRow.arg(bckColorName).arg( txtColorName ).arg( isRichText ? content : content.replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) );
+                }
+            }
+
+            tip += QString::fromLatin1(
+                        "</table" \
+                        "</td>" \
+                        "</tr>"
+                        );
+        }
+    }
+    return tip;
 }
 

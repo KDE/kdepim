@@ -27,34 +27,34 @@ using namespace MessageCore;
 
 class MessageCore::AttachmentLoadJob::Private
 {
-  public:
+public:
     AttachmentPart::Ptr mPart;
 };
 
 
 AttachmentLoadJob::AttachmentLoadJob( QObject *parent )
-  : KJob( parent ),
-    d( new Private )
+    : KJob( parent ),
+      d( new Private )
 {
 }
 
 AttachmentLoadJob::~AttachmentLoadJob()
 {
-  delete d;
+    delete d;
 }
 
 void AttachmentLoadJob::start()
 {
-  QTimer::singleShot( 0, this, SLOT(doStart()) );
+    QTimer::singleShot( 0, this, SLOT(doStart()) );
 }
 
 AttachmentPart::Ptr AttachmentLoadJob::attachmentPart() const
 {
-  return d->mPart;
+    return d->mPart;
 }
 
 void AttachmentLoadJob::setAttachmentPart( const AttachmentPart::Ptr &part )
 {
-  d->mPart = part;
+    d->mPart = part;
 }
 

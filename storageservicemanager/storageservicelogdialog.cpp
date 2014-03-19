@@ -53,19 +53,22 @@ StorageServiceLogDialog::~StorageServiceLogDialog()
 
 void StorageServiceLogDialog::slotTextChanged()
 {
-    enableButton(User2, !mLog->toPlainText().isEmpty());
+    const bool status = !mLog->toPlainText().isEmpty();
+    enableButton(User2, status);
+    enableButton(User1, status);
 }
 
 void StorageServiceLogDialog::slotClearLog()
 {
     mLog->editor()->clear();
     Q_EMIT clearLog();
+    close();
 }
 
 void StorageServiceLogDialog::slotSaveAs()
 {
     const QString filter = QLatin1String("*|") + i18n( "all files (*)" );
-    PimCommon::Util::saveTextAs(mLog->toPlainText(), filter, this);
+    PimCommon::Util::saveTextAs(mLog->toPlainText(), filter, this, KUrl(), i18n("Save Log"));
 }
 
 void StorageServiceLogDialog::setLog(const QString &log)

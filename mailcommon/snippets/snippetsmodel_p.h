@@ -29,13 +29,13 @@ class SnippetItem;
 
 class SnippetsModel : public QAbstractItemModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     enum Role {
-      IsGroupRole = Qt::UserRole + 1, ///< Returns whether the index represents a group
-      NameRole,                       ///< The name of a snippet or group
-      TextRole,                       ///< The text of a snippet
-      KeySequenceRole                 ///< The key sequence to activate a snippet
+        IsGroupRole = Qt::UserRole + 1, ///< Returns whether the index represents a group
+        NameRole,                       ///< The name of a snippet or group
+        TextRole,                       ///< The text of a snippet
+        KeySequenceRole                 ///< The key sequence to activate a snippet
     };
 
     explicit SnippetsModel( QObject *parent = 0 );
@@ -66,16 +66,16 @@ class SnippetsModel : public QAbstractItemModel
 
     virtual Qt::DropActions supportedDropActions () const;
 
-  protected:
+protected:
     virtual bool insertRows( int row, int count,
                              const QModelIndex &parent = QModelIndex() );
 
     virtual bool removeRows( int row, int count,
                              const QModelIndex &parent = QModelIndex() );
 
-  signals:
+signals:
     void dndDone();
-  private:
+private:
     SnippetItem *mRootItem;
 };
 

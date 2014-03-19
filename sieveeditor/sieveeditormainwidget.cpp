@@ -21,18 +21,27 @@
 #include "sieveeditormainwidget.h"
 #include "sieveeditorscriptmanagerwidget.h"
 #include "sieveeditorpagewidget.h"
+#include "sieveeditortabwidget.h"
 #include "editor/sieveeditor.h"
 
-#include <KSharedConfig>
+#include <KLocalizedString>
 
-#include <QStackedWidget>
+#include <KSharedConfig>
+#include <KTabWidget>
+#include <KGlobalSettings>
+#include <KColorScheme>
+#include <KMessageBox>
+
 #include <QSplitter>
+#include <QTabBar>
 
 SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     : QSplitter(parent)
 {
-    mStackedWidget = new QStackedWidget;
-    addWidget(mStackedWidget);
+    mTabWidget = new SieveEditorTabWidget;
+    connect(mTabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(slotTabCloseRequested(int)));
+    connect(mTabWidget, SIGNAL(tabRemoveAllExclude(int)), this, SLOT(slotTabRemoveAllExclude(int)));
+    addWidget(mTabWidget);
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
     connect(mScriptManagerWidget, SIGNAL(createScriptPage(KUrl,QStringList,bool)), this, SLOT(slotCreateScriptPage(KUrl,QStringList,bool)));
     connect(mScriptManagerWidget, SIGNAL(updateButtons(bool,bool,bool,bool)), SIGNAL(updateButtons(bool,bool,bool,bool)));
@@ -44,6 +53,7 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     splitterSizes << 80 << 20;
     KConfigGroup myGroup( KGlobal::config(), "SieveEditorMainWidget" );
     setSizes(myGroup.readEntry( "mainSplitter", splitterSizes));
+    connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), this, SLOT(slotGeneralPaletteChanged()));
 }
 
 SieveEditorMainWidget::~SieveEditorMainWidget()
@@ -55,8 +65,8 @@ SieveEditorMainWidget::~SieveEditorMainWidget()
 
 QWidget *SieveEditorMainWidget::hasExistingPage(const KUrl &url)
 {
-    for (int i=0; i < mStackedWidget->count(); ++i) {
-        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(mStackedWidget->widget(i));
+    for (int i=0; i < mTabWidget->count(); ++i) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(mTabWidget->widget(i));
         if (page) {
             if (page->currentUrl() == url) {
                 return page;
@@ -70,7 +80,7 @@ void SieveEditorMainWidget::slotScriptDeleted(const KUrl &url)
 {
     QWidget *page = hasExistingPage(url);
     if (page) {
-        mStackedWidget->removeWidget(page);
+        mTabWidget->removeTab(mTabWidget->indexOf(page));
         delete page;
     }
 }
@@ -79,14 +89,18 @@ void SieveEditorMainWidget::slotCreateScriptPage(const KUrl &url, const QStringL
 {
     QWidget *page = hasExistingPage(url);
     if (page) {
-        mStackedWidget->setCurrentWidget(page);
+        mTabWidget->setCurrentWidget(page);
     } else {
         SieveEditorPageWidget *editor = new SieveEditorPageWidget;
         connect(editor, SIGNAL(refreshList()), this, SIGNAL(updateScriptList()));
+        connect(editor, SIGNAL(scriptModified(bool,SieveEditorPageWidget*)), this, SLOT(slotScriptModified(bool,SieveEditorPageWidget*)));
+        connect(editor, SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)), SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)));
         editor->setIsNewScript(isNewScript);
         editor->loadScript(url, capabilities);
-        mStackedWidget->addWidget(editor);
-        mStackedWidget->setCurrentWidget(editor);
+        mTabWidget->addTab(editor, url.fileName());
+        mTabWidget->setCurrentWidget(editor);
+        if (isNewScript)
+            editor->saveScript(false, true);
     }
 }
 
@@ -122,7 +136,7 @@ void SieveEditorMainWidget::refreshList()
 
 void SieveEditorMainWidget::saveScript()
 {
-    QWidget *w = mStackedWidget->currentWidget();
+    QWidget *w = mTabWidget->currentWidget();
     if (w) {
         SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
         if (page) {
@@ -134,8 +148,8 @@ void SieveEditorMainWidget::saveScript()
 bool SieveEditorMainWidget::needToSaveScript()
 {
     bool scriptSaved = false;
-    for (int i=0; i < mStackedWidget->count(); ++i) {
-        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(mStackedWidget->widget(i));
+    for (int i=0; i < mTabWidget->count(); ++i) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(mTabWidget->widget(i));
         if (page) {
             const bool result = page->needToSaveScript();
             if (result)
@@ -143,4 +157,80 @@ bool SieveEditorMainWidget::needToSaveScript()
         }
     }
     return scriptSaved;
+}
+
+KTabWidget *SieveEditorMainWidget::tabWidget() const
+{
+    return mTabWidget;
+}
+
+void SieveEditorMainWidget::slotGoToLine()
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            page->goToLine();
+        }
+    }
+}
+
+void SieveEditorMainWidget::slotScriptModified(bool modified,SieveEditorPageWidget *page)
+{
+    const int index = mTabWidget->indexOf(page);
+    if (index >= 0) {
+        if (!mScriptColor.isValid()) {
+            slotGeneralPaletteChanged();
+        }
+        mTabWidget->setTabTextColor(index, modified ? mModifiedScriptColor : mScriptColor);
+    }
+}
+
+void SieveEditorMainWidget::slotGeneralPaletteChanged()
+{
+    const QPalette pal = palette();
+    mScriptColor = pal.text().color();
+    mModifiedScriptColor = pal.text().color();
+
+    const KColorScheme scheme( QPalette::Active, KColorScheme::View );
+    mModifiedScriptColor = scheme.foreground( KColorScheme::NegativeText ).color();
+}
+
+void SieveEditorMainWidget::slotTabCloseRequested(int index)
+{
+    SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(mTabWidget->widget(index));
+    if (page) {
+        if (page->isModified()) {
+            const int result = KMessageBox::questionYesNoCancel(this, i18n("Script was modified. Do you want to save before closing?"), i18n("Close script"));
+            if (result == KMessageBox::Yes) {
+                page->saveScript();
+            } else if (result == KMessageBox::Cancel) {
+                return;
+            }
+        }
+        mTabWidget->removeTab(index);
+        delete page;
+    }
+}
+
+void SieveEditorMainWidget::slotTabRemoveAllExclude(int index)
+{
+    for(int i = mTabWidget->count()-1; i >=0; --i) {
+        if (i == index) {
+            continue;
+        }
+        slotTabCloseRequested(i);
+    }
+}
+
+KSieveUi::SieveEditorWidget::EditorMode SieveEditorMainWidget::pageMode() const
+{
+    QWidget *w = mTabWidget->currentWidget();
+    if (w) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(w);
+        if (page) {
+            return page->pageMode();
+        }
+    }
+    return KSieveUi::SieveEditorWidget::Unknown;
 }

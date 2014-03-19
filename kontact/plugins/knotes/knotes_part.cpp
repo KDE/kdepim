@@ -30,7 +30,6 @@
 #include "knotesiconview.h"
 #include "knoteswidget.h"
 #include "knotesselectdeletenotesdialog.h"
-#include "knotetip.h"
 #include "knotes/configdialog/knoteconfigdialog.h"
 #include "knotes/print/knoteprinter.h"
 #include "knotes/print/knoteprintobject.h"
@@ -48,6 +47,9 @@
 #include "noteshared/akonadi/noteschangerecorder.h"
 #include "noteshared/attributes/notealarmattribute.h"
 #include "noteshared/attributes/showfoldernotesattribute.h"
+#include "noteshared/attributes/notealarmattribute.h"
+#include "noteshared/attributes/notedisplayattribute.h"
+#include "noteshared/attributes/notelockattribute.h"
 
 #include "akonadi_next/note.h"
 
@@ -56,8 +58,10 @@
 #include <Akonadi/ETMViewStateSaver>
 #include <Akonadi/EntityDisplayAttribute>
 #include <Akonadi/ItemCreateJob>
+#include <Akonadi/ItemFetchJob>
 #include <KCheckableProxyModel>
 #include <akonadi/itemdeletejob.h>
+#include <Akonadi/ItemFetchScope>
 
 
 #include <KMime/KMimeMessage>
@@ -91,6 +95,11 @@ KNotesPart::KNotesPart( QObject *parent )
       mNotePrintPreview(0),
       mNoteTreeModel(0)
 {
+    (void) new KNotesAdaptor( this );
+    QDBusConnection::sessionBus().registerObject( QLatin1String("/KNotes"), this );
+
+    setComponentData( KComponentData( "knotes" ) );
+
     Akonadi::Control::widgetNeedsAkonadi(widget());
 
     KNoteUtils::migrateToAkonadi();
@@ -99,11 +108,6 @@ KNotesPart::KNotesPart( QObject *parent )
         NoteShared::LocalResourceCreator *creator = new NoteShared::LocalResourceCreator( this );
         creator->createIfMissing();
     }
-
-    (void) new KNotesAdaptor( this );
-    QDBusConnection::sessionBus().registerObject( QLatin1String("/KNotes"), this );
-
-    setComponentData( KComponentData( "knotes" ) );
 
     // create the actions
     mNewNote = new KAction( KIcon( QLatin1String("knotes") ),
@@ -215,6 +219,8 @@ KNotesPart::KNotesPart( QObject *parent )
 
     connect( mNoteRecorder->changeRecorder(), SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(slotItemChanged(Akonadi::Item,QSet<QByteArray>)));
     connect( mNoteRecorder->changeRecorder(), SIGNAL(itemRemoved(Akonadi::Item)), SLOT(slotItemRemoved(Akonadi::Item)) );
+    connect( mNoteRecorder->changeRecorder(), SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)), SLOT(slotCollectionChanged(Akonadi::Collection,QSet<QByteArray>)) );
+
 
     mSelectionModel = new QItemSelectionModel( mNoteTreeModel );
     mModelProxy = new KCheckableProxyModel( this );
@@ -228,7 +234,6 @@ KNotesPart::KNotesPart( QObject *parent )
     mModelState->setSelectionModel( mSelectionModel );
 
     mNotesWidget = new KNotesWidget(this,widget());
-    mNoteTip = new KNoteTip( mNotesWidget->notesView() );
 
     mQuickSearchAction = new KAction( i18n("Set Focus to Quick Search"), this );
     //If change shortcut change in quicksearchwidget->lineedit->setClickMessage
@@ -238,12 +243,6 @@ KNotesPart::KNotesPart( QObject *parent )
 
     connect( mNotesWidget->notesView(), SIGNAL(executed(QListWidgetItem*)),
              this, SLOT(editNote(QListWidgetItem*)) );
-
-    connect( mNotesWidget->notesView(), SIGNAL(entered(QModelIndex)),
-             this, SLOT(requestToolTip(QModelIndex)));
-
-    connect( mNotesWidget->notesView(), SIGNAL(viewportEntered()),
-             this, SLOT(hideToolTip()));
 
     connect( mNotesWidget->notesView(), SIGNAL(itemSelectionChanged()),
              this, SLOT(slotOnCurrentChanged()) );
@@ -259,8 +258,6 @@ KNotesPart::~KNotesPart()
 {
     delete mPublisher;
     mPublisher=0;
-    delete mNoteTip;
-    mNoteTip = 0;
 }
 
 void KNotesPart::updateClickMessage()
@@ -300,18 +297,6 @@ QStringList KNotesPart::notesList() const
         notes.append(QString::number(i.key()));
     }
     return notes;
-}
-
-void KNotesPart::requestToolTip( const QModelIndex &index )
-{
-    const QRect m_itemRect = mNotesWidget->notesView()->visualRect( index );
-    mNoteTip->setNote(
-                static_cast<KNotesIconViewItem *>( mNotesWidget->notesView()->itemAt( m_itemRect.topLeft() ) ) );
-}
-
-void KNotesPart::hideToolTip()
-{
-    mNoteTip->setNote( 0 );
 }
 
 void KNotesPart::slotPrintPreviewSelectedNotes()
@@ -558,6 +543,7 @@ void KNotesPart::editNote( QListWidgetItem *item )
     QPointer<KNoteEditDialog> dlg = new KNoteEditDialog( knotesItem->readOnly(), widget() );
     dlg->setTitle( knotesItem->realName() );
     dlg->setText( knotesItem->description() );
+    dlg->setColor( knotesItem->textForegroundColor(), knotesItem->textBackgroundColor() );
 
     dlg->setAcceptRichText(knotesItem->isRichText());
     dlg->setTabSize(knotesItem->tabSize());
@@ -566,8 +552,7 @@ void KNotesPart::editNote( QListWidgetItem *item )
 
     dlg->noteEdit()->setFocus();
     if ( dlg->exec() == QDialog::Accepted ) {
-        knotesItem->setIconText( dlg->title() );
-        knotesItem->setDescription( dlg->text() );
+        knotesItem->setChangeIconTextAndDescription(dlg->title(), dlg->text());
     }
     delete dlg;
 }
@@ -820,4 +805,51 @@ void KNotesPart::slotOpenFindDialog()
 void KNotesPart::slotSelectNote(Akonadi::Item::Id id)
 {
     editNote(id);
+}
+
+void KNotesPart::slotCollectionChanged(const Akonadi::Collection &col, const QSet<QByteArray> & set)
+{
+    if (set.contains("showfoldernotesattribute")) {
+        //qDebug()<<" collection Changed "<<set<<" col "<<col;
+        if (col.hasAttribute<NoteShared::ShowFolderNotesAttribute>()) {
+            fetchNotesFromCollection(col);
+        } else {
+            QHashIterator<Akonadi::Item::Id, KNotesIconViewItem*> i(mNotesWidget->notesView()->noteList());
+            while (i.hasNext()) {
+                i.next();
+                Akonadi::Item item = i.value()->item();
+                if (item.parentCollection() == col) {
+                    slotItemRemoved(item);
+                }
+            }
+        }
+    }
+}
+
+void KNotesPart::fetchNotesFromCollection(const Akonadi::Collection &col)
+{
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( col );
+    job->fetchScope().fetchFullPayload(true);
+    job->fetchScope().fetchAttribute<NoteShared::NoteLockAttribute>();
+    job->fetchScope().fetchAttribute<NoteShared::NoteDisplayAttribute>();
+    job->fetchScope().fetchAttribute<NoteShared::NoteAlarmAttribute>();
+    job->fetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
+    connect( job, SIGNAL(result(KJob*)), SLOT(slotItemFetchFinished(KJob*)) );
+}
+
+void KNotesPart::slotItemFetchFinished(KJob *job)
+{
+    if ( job->error() ) {
+        qDebug() << "Error occurred during item fetch:"<<job->errorString();
+        return;
+    }
+
+    Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
+
+    const Akonadi::Item::List items = fetchJob->items();
+    foreach ( const Akonadi::Item &item, items ) {
+        if ( !item.hasPayload<KMime::Message::Ptr>() )
+            continue;
+        mNotesWidget->notesView()->addNote(item);
+    }
 }

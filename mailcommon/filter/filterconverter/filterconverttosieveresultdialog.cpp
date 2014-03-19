@@ -35,9 +35,9 @@ FilterConvertToSieveResultDialog::FilterConvertToSieveResultDialog(QWidget *pare
     : KDialog(parent)
 {
     setCaption( i18n( "Convert to sieve script" ) );
-    setButtons( User1|Ok|Cancel );
+    setButtons( User1| Close );
     setButtonText(User1, i18n("Save..."));
-    setDefaultButton( Ok );
+    setDefaultButton( User1 );
     setModal( true );
     connect(this, SIGNAL(user1Clicked()), SLOT(slotSave()));
 
@@ -62,7 +62,7 @@ FilterConvertToSieveResultDialog::~FilterConvertToSieveResultDialog()
 void FilterConvertToSieveResultDialog::slotSave()
 {
     const QString filter = i18n( "*.siv|sieve files (*.siv)\n*|all files (*)" );
-    PimCommon::Util::saveTextAs(mEditor->editor()->toPlainText(), filter, this);
+    PimCommon::Util::saveTextAs(mEditor->editor()->toPlainText(), filter, this, KUrl(), i18n("Convert to Script Sieve"));
 }
 
 void FilterConvertToSieveResultDialog::setCode(const QString &code)

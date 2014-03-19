@@ -39,9 +39,9 @@ class Composer;
  */
 class MESSAGECOMPOSER_EXPORT EmailAddressResolveJob : public KJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new email address resolve job.
      *
@@ -99,10 +99,10 @@ class MESSAGECOMPOSER_EXPORT EmailAddressResolveJob : public KJob
      */
     virtual QStringList expandedBcc() const;
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotAliasExpansionDone( KJob* );
 
-  private:
+private:
     int mJobCount;
     QVariantMap mResultMap;
     QString mFrom;

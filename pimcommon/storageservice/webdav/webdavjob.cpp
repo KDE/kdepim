@@ -65,6 +65,8 @@ void WebDavJob::slotAuthenticationRequired(QNetworkReply *,QAuthenticator *auth)
     if ((mNbAuthCheck > 2) || (mUserName.isEmpty() || mPassword.isEmpty())) {
         QPointer<LoginDialog> dlg = new LoginDialog;
         dlg->setCaption(i18n("WebDav"));
+        dlg->setUserName(auth->user());
+        dlg->setPassword(auth->password());
         if (dlg->exec()) {
             mUserName = dlg->username();
             mPassword = dlg->password();
@@ -98,7 +100,7 @@ void WebDavJob::requestTokenAccess()
         deleteLater();
         return;
     }
-    delete dlg;    
+    delete dlg;
     QUrl url(mServiceLocation);
     QNetworkReply *reply = accountInfo(url.toString());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
@@ -156,7 +158,6 @@ void WebDavJob::deleteFolder(const QString &foldername)
     mError = false;
     QUrl url(mServiceLocation);
     url.setPath(foldername);
-
     rmdir(url);
 }
 

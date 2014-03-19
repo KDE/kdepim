@@ -65,6 +65,7 @@ void KNoteEditDialog::init(bool readOnly)
     label->setText( i18nc( "@label popup note name", "Name:" ) );
     hbl->addWidget( label, 0 );
     mTitleEdit= new KLineEdit( page );
+    mTitleEdit->setClearButtonShown(true);
     mTitleEdit->setObjectName( QLatin1String("name") );
     if (!readOnly)
         connect(mTitleEdit, SIGNAL(textChanged(QString)), this, SLOT(slotTextChanged(QString)));
@@ -93,6 +94,11 @@ void KNoteEditDialog::init(bool readOnly)
 KNoteEditDialog::~KNoteEditDialog()
 {
     writeConfig();
+}
+
+void KNoteEditDialog::setColor(const QColor &fg, const QColor &bg)
+{
+    mNoteEdit->setColor( fg, bg );
 }
 
 void KNoteEditDialog::setAcceptRichText(bool b)

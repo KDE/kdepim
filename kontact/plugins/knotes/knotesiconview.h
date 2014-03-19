@@ -37,6 +37,8 @@ public:
 protected:
     void mousePressEvent( QMouseEvent * );
 
+    bool event(QEvent *e);
+
 private:
     KNotesPart *m_part;
     QHash<Akonadi::Item::Id, KNotesIconViewItem*> mNoteList;
@@ -67,6 +69,10 @@ public:
     void setChangeItem(const Akonadi::Item &item, const QSet<QByteArray> &set);
     void saveNoteContent(const QString &subject = QString(), const QString &description = QString());
     void updateSettings();
+    void setChangeIconTextAndDescription(const QString &iconText, const QString &description);
+    QColor textBackgroundColor() const;
+    QColor textForegroundColor() const;
+
 private slots:
     void slotNoteSaved(KJob *job);
 private:

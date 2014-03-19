@@ -46,9 +46,11 @@ void QuickSearchLineTest::shouldHaveDefaultValueOnCreation()
     QVERIFY(widget->isHidden());
     KPushButton *moreButton = qFindChild<KPushButton *>(&searchLine, QLatin1String("moreoptions"));
     QVERIFY(moreButton);
+    QCOMPARE(moreButton->icon().name(), QLatin1String("arrow-down-double"));
     QWidget *quickSearchFilterWidget = qFindChild<QWidget *>(&searchLine, QLatin1String("quicksearchfilterwidget"));
     QVERIFY(quickSearchFilterWidget);
     QVERIFY(quickSearchFilterWidget->isHidden());
+    QCOMPARE(searchLine.containsOutboundMessages(), false);
 }
 
 void QuickSearchLineTest::shouldEmitTextChanged()
@@ -182,8 +184,37 @@ void QuickSearchLineTest::shouldShowMoreOptionWhenClickOnMoreButton()
     QTest::mouseClick(moreButton, Qt::LeftButton);
     QWidget *quickSearchFilterWidget = qFindChild<QWidget *>(&searchLine, QLatin1String("quicksearchfilterwidget"));
     QVERIFY(quickSearchFilterWidget->isVisible());
+    QCOMPARE(moreButton->icon().name(), QLatin1String("arrow-up-double"));
+
     QTest::mouseClick(moreButton, Qt::LeftButton);
     QVERIFY(!quickSearchFilterWidget->isVisible());
+    QCOMPARE(moreButton->icon().name(), QLatin1String("arrow-down-double"));
+}
+
+void QuickSearchLineTest::shouldChangeFromButtonLabelWhenChangeOutboundMessagesValue()
+{
+    QuickSearchLine searchLine;
+    QPushButton *button = qFindChild<QPushButton *>(&searchLine, QLatin1String("fromorto"));
+    const QString buttonName = button->text();
+    searchLine.setContainsOutboundMessages(true);
+    QVERIFY(button->text()!=buttonName);
+    searchLine.setContainsOutboundMessages(false);
+    QCOMPARE(button->text(), buttonName);
+}
+
+void QuickSearchLineTest::shouldSearchToOrFrom()
+{
+    QuickSearchLine searchLine;
+    QPushButton *button = qFindChild<QPushButton *>(&searchLine, QLatin1String("fromorto"));
+    button->setChecked(true);
+    searchLine.setContainsOutboundMessages(true);
+    QuickSearchLine::SearchOptions options;
+    options = QuickSearchLine::SearchAgainstTo;
+    QCOMPARE(searchLine.searchOptions(), options);
+
+    searchLine.setContainsOutboundMessages(false);
+    options = QuickSearchLine::SearchAgainstFrom;
+    QCOMPARE(searchLine.searchOptions(), options);
 }
 
 QTEST_KDEMAIN( QuickSearchLineTest, GUI )

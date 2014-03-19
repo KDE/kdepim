@@ -353,7 +353,10 @@ QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
     QString parentFolder;
     if (!currentFolder.isEmpty()) {
         QStringList parts = currentFolder.split(QLatin1String("/"), QString::SkipEmptyParts);
-        parts.removeLast();
+        if (!parts.isEmpty()) {
+          parts.removeLast();
+        }
+
         parentFolder = parts.join(QLatin1String("/"));
         if (parentFolder.isEmpty()) {
             parentFolder = QLatin1String("/");
@@ -492,7 +495,7 @@ QString WebDavStorageService::serviceName()
 
 QString WebDavStorageService::iconName()
 {
-    return QString();
+    return QLatin1String("folder-remote");
 }
 
 StorageServiceAbstract::Capabilities WebDavStorageService::serviceCapabilities()
@@ -524,7 +527,7 @@ QString WebDavStorageService::storageServiceName() const
 
 KIcon WebDavStorageService::icon() const
 {
-    return KIcon();
+    return KIcon(WebDavStorageService::iconName());
 }
 
 void WebDavStorageService::shutdownService()

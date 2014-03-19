@@ -97,8 +97,7 @@ KNote::KNote(const QDomDocument& buildDoc, const Akonadi::Item &item, QWidget *p
       m_tool( 0 ),
       m_editor( 0 ),
       m_kwinConf( KSharedConfig::openConfig( QLatin1String("kwinrc") ) ),
-      mDisplayAttribute(new KNoteDisplaySettings),
-      mBlockSave(false)
+      mDisplayAttribute(new KNoteDisplaySettings)
 {
     if ( mItem.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
         mDisplayAttribute->setDisplayAttribute(mItem.attribute<NoteShared::NoteDisplayAttribute>());
@@ -116,8 +115,7 @@ KNote::KNote(const QDomDocument& buildDoc, const Akonadi::Item &item, QWidget *p
     m_noteLayout->setMargin( 0 );
     createActions();
 
-    QString configFile;
-    buildGui(configFile);
+    buildGui();
     prepare();
 }
 
@@ -663,10 +661,10 @@ void KNote::slotUpdateDesktopActions()
 
 // -------------------- private methods -------------------- //
 
-void KNote::buildGui(const QString &configFile)
+void KNote::buildGui()
 {
     createNoteHeader();
-    createNoteEditor(configFile);
+    createNoteEditor(QString());
 
     KXMLGUIBuilder builder( this );
     KXMLGUIFactory factory( &builder, this );
@@ -967,6 +965,7 @@ void KNote::toDesktop( int desktop )
 
 void KNote::setColor( const QColor &fg, const QColor &bg )
 {
+    m_editor->setColor(fg,bg);
     QPalette p = palette();
 
     // better: from light(150) to light(100) to light(75)

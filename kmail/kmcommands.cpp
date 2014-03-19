@@ -303,7 +303,7 @@ void KMCommand::transferSelectedMsgs()
     // TODO once the message list is based on ETM and we get the more advanced caching we need to make that check a bit more clever
     if ( !mFetchScope.isEmpty() ) {
         complete = false;
-        KMCommand::mCountJobs++;
+        ++KMCommand::mCountJobs;
         Akonadi::ItemFetchJob *fetch = new Akonadi::ItemFetchJob( mMsgList, this );
         mFetchScope.fetchAttribute< MessageCore::MDNStateAttribute >();
         fetch->setFetchScope( mFetchScope );
@@ -1018,6 +1018,8 @@ KMCommand::Result KMRedirectCommand::execute()
     const int identity = dlg->identity();
     int transportId = dlg->transportId();
     const QString to = dlg->to();
+    const QString cc = dlg->cc();
+    const QString bcc = dlg->bcc();
     foreach( const Akonadi::Item &item, retrievedMsgs() ) {
         const KMime::Message::Ptr msg = MessageCore::Util::message( item );
         if ( !msg )
@@ -1043,7 +1045,7 @@ KMCommand::Result KMRedirectCommand::execute()
         if ( sentAttribute && ( sentAttribute->sentBehaviour() == MailTransport::SentBehaviourAttribute::MoveToCollection ) )
             fcc =  QString::number( sentAttribute->moveToCollection().id() );
 
-        const KMime::Message::Ptr newMsg = factory.createRedirect( to, transportId, fcc, identity );
+        const KMime::Message::Ptr newMsg = factory.createRedirect( to, cc, bcc, transportId, fcc, identity );
         if ( !newMsg )
             return Failed;
 

@@ -1,6 +1,7 @@
 /*  -*- mode: C++ -*-
 
   Copyright (c) 2003 Andreas Gungl <a.gungl@gmx.de>
+  Copyright (c) 2014 Laurent Montel <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -33,7 +34,38 @@
 
 #include <KDialog>
 
+namespace MessageComposer {
+class ComposerLineEdit;
+}
+
 namespace MailCommon {
+
+class RedirectWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    enum TypeAddress {
+        ResendTo,
+        ResendCc,
+        ResendBcc
+    };
+
+    explicit RedirectWidget(TypeAddress type, QWidget *parent=0);
+    ~RedirectWidget();
+
+    void setFocus();
+    QString resend();
+
+Q_SIGNALS:
+    void addressChanged(const QString &);
+
+private slots:
+    void slotAddressSelection();
+
+private:
+    MessageComposer::ComposerLineEdit *mEdit;
+    QString mResendStr;
+};
 
 /**
  * @short A dialog to request information about message redirection from the user.
@@ -84,6 +116,8 @@ public:
 
     int identity() const;
 
+    QString cc() const;
+    QString bcc() const;
 protected:
     virtual void accept();
 
@@ -94,7 +128,6 @@ private:
 
     Q_PRIVATE_SLOT( d, void slotUser1() )
     Q_PRIVATE_SLOT( d, void slotUser2() )
-    Q_PRIVATE_SLOT( d, void slotAddressSelection() )
     Q_PRIVATE_SLOT( d, void slotAddressChanged( const QString & ) )
     //@endcond
 };

@@ -66,6 +66,7 @@ using MailCommon::FilterImporterExporter;
 #include <QShortcut>
 #include <QSplitter>
 #include <QPointer>
+#include <QKeyEvent>
 
 Q_DECLARE_METATYPE(MailCommon::FilterImporterExporter::FilterType)
 using namespace MailCommon;
@@ -625,6 +626,24 @@ void KMFilterDialog::accept()
         slotFinished();
     }
 }
+
+bool KMFilterDialog::event(QEvent* e)
+{
+    // Close the bar when pressing Escape.
+    // Not using a QShortcut for this because it could conflict with
+    // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
+    // With a shortcut override we can catch this before it gets to kactions.
+    const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
+    if (shortCutOverride || e->type() == QEvent::KeyPress ) {
+        QKeyEvent* kev = static_cast<QKeyEvent* >(e);
+        if (kev->key() == Qt::Key_Escape) {
+            e->ignore();
+            return true;
+        }
+    }
+    return KDialog::event(e);
+}
+
 
 void KMFilterDialog::slotApply()
 {
@@ -1700,7 +1719,7 @@ void KMFilterDialog::slotExportAsSieveScript()
         KMessageBox::information(
                     this,
                     i18nc( "@info",
-                           "Some filters were changed and not saved yet. "
+                           "Some filters were changed and not saved yet.<br>"
                            "You must save your filters before they can be exported." ),
                     i18n( "Filters changed." ) );
         return;
@@ -1715,6 +1734,8 @@ void KMFilterDialog::slotExportAsSieveScript()
             FilterConvertToSieve convert(lst);
             convert.convert();
             qDeleteAll(lst);
+        } else {
+            KMessageBox::information(this, i18n("No filters selected."), i18n("Convert KMail filters to sieve scripts"));
         }
     }
     delete dlg;

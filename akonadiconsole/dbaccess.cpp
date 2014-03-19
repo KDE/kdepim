@@ -74,9 +74,10 @@ class DbAccessPrivate
 K_GLOBAL_STATIC( DbAccessPrivate, sInstance )
 QSqlDatabase DbAccess::database()
 {
-  //hack to detect mysql gone away error
-  QSqlQuery query( QLatin1String("SELECT * FROM schemaversiontable") );
-  if ( !query.exec() && query.lastError().text().contains( "MySQL server has gone away" ) ) {
+  // hack to detect database gone away error
+  QSqlQuery query( sInstance->database );
+  // prepare or exec of "SELECT 1" will only fail when we are not connected to database
+  if ( !query.prepare( QLatin1String( "SELECT 1" ) ) || !query.exec() ) {
     sInstance->database.close();
     QSqlDatabase::removeDatabase(sInstance->database.connectionName());
     sInstance->init();

@@ -37,17 +37,17 @@ class JobBasePrivate;
 */
 class MESSAGECOMPOSER_EXPORT JobBase : public KCompositeJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     typedef QList<JobBase*> List;
 
     enum Error
     {
-      BugError = UserDefinedError + 1,
-      IncompleteError,
-      UserCancelledError,
-      UserError = UserDefinedError + 42
+        BugError = UserDefinedError + 1,
+        IncompleteError,
+        UserCancelledError,
+        UserError = UserDefinedError + 42
     };
 
     explicit JobBase( QObject *parent = 0 );
@@ -56,11 +56,11 @@ class MESSAGECOMPOSER_EXPORT JobBase : public KCompositeJob
     // asserts if no Composer parent
     GlobalPart *globalPart();
 
-  protected:
+protected:
     JobBasePrivate *const d_ptr;
     JobBase( JobBasePrivate &dd, QObject *parent );
 
-  private:
+private:
     Q_DECLARE_PRIVATE( JobBase )
 };
 

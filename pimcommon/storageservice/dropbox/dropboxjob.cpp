@@ -455,7 +455,11 @@ void DropBoxJob::parseUploadFile(const QString &data)
     if (info.contains(QLatin1String("path"))) {
         path = info.value(QLatin1String("path")).toString();
     }
-    Q_EMIT uploadFileDone(path);
+    QString itemName;
+    if (!path.isEmpty()) {
+        itemName = path.right((path.length() - path.lastIndexOf(QLatin1Char('/'))) - 1);
+    }
+    Q_EMIT uploadFileDone(itemName);
     shareLink(root, path);
 }
 

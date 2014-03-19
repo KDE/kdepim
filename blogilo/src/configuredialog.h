@@ -40,11 +40,18 @@ Q_SIGNALS:
     void dialogDestroyed(QObject*);
     void settingsChanged();
 
+
+protected:
+    bool hasChanged();
+
+
 private slots:
-    void slotOkClicked();
+    void slotApplySettingsClicked();
     void slotDefaultClicked();
+    void slotStorageServiceChanged();
 private:
     ConfigureStorageServiceWidget *mConfigStorageService;
+    bool mHasChanged;
 };
 
 #endif // CONFIGUREDIALOG_H

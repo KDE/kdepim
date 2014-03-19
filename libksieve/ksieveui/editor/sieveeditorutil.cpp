@@ -112,7 +112,13 @@ QString KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::HelpVariab
         return QLatin1String("http://tools.ietf.org/html/rfc6609#page-4");
     case ForEveryPart:
         return QLatin1String("http://tools.ietf.org/html/rfc5703#page-3");
-    default:
+    case CopyExtension:
+        return QLatin1String("http://tools.ietf.org/html/rfc3894");
+    case MBoxMetaDataExtension:
+        return QLatin1String("http://tools.ietf.org/html/rfc5490#page-2");
+    case SubAddressExtension:
+        return QLatin1String("https://tools.ietf.org/html/rfc5233");
+    case UnknownHelp:
         break;
     }
     return QString();
@@ -197,7 +203,14 @@ KSieveUi::SieveEditorUtil::HelpVariableName KSieveUi::SieveEditorUtil::strToVari
         return GlobalVariable;
     } else if (str == QLatin1String("foreverypart")) {
         return ForEveryPart;
+    } else if (str == QLatin1String("copy")) {
+        return CopyExtension;
+    } else if (str == QLatin1String("mboxmetadata")) {
+        return MBoxMetaDataExtension;
+    } else if (str == QLatin1String("subaddress")) {
+        return SubAddressExtension;
     }
+
     //TODO
     return UnknownHelp;
 }

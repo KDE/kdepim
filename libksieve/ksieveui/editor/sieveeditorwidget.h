@@ -37,6 +37,7 @@ public:
     explicit SieveEditorWidget(QWidget *parent=0);
     ~SieveEditorWidget();
     enum EditorMode {
+        Unknown = -1,
         TextMode = 0,
         GraphicMode = 1
     };
@@ -54,6 +55,11 @@ public:
     void addFailedMessage(const QString &err);
     void addOkMessage(const QString &msg);
 
+    void setModified(bool b);
+    bool isModified() const;
+    void goToLine();
+    EditorMode mode() const;
+
 private Q_SLOTS:
     void slotEnableButtonOk(bool b);
     void slotAutoGenerateScripts();
@@ -64,11 +70,13 @@ private Q_SLOTS:
     void slotSwitchMode();
     void slotSwitchTextMode(const QString &script);
     void slotSwitchToGraphicalMode();
-
+    void slotUploadScripts();
+    void slotModified();
 Q_SIGNALS:
     void checkSyntax();
     void enableButtonOk(bool b);
-    void valueChanged();
+    void valueChanged(bool b);
+    void modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode);
 
 private:
     void changeMode(EditorMode mode);
@@ -82,10 +90,12 @@ private:
     QAction *mSwitchMode;
     QAction *mAutoGenerateScript;
     QAction *mSaveAs;
+    QAction *mUpload;
 #if !defined(NDEBUG)
     QAction *mGenerateXml;
 #endif
     EditorMode mMode;
+    bool mModified;
 };
 
 }

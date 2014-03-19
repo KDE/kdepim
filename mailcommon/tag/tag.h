@@ -31,60 +31,60 @@
 
 namespace MailCommon {
 
-  // Our own copy of the tag data.
-  // Useful in the config dialog, because the user might cancel his changes,
-  // in which case we don't write them back.
-  // Also used as a convenience class in the TagActionManager.
-  class MAILCOMMON_EXPORT Tag
-  {
+// Our own copy of the tag data.
+// Useful in the config dialog, because the user might cancel his changes,
+// in which case we don't write them back.
+// Also used as a convenience class in the TagActionManager.
+class MAILCOMMON_EXPORT Tag
+{
     Q_GADGET
-    public:
+public:
 
-      typedef QSharedPointer<Tag> Ptr;
-      enum SaveFlag {
+    typedef QSharedPointer<Tag> Ptr;
+    enum SaveFlag {
         TextColor = 1,
         BackgroundColor = 1 << 1,
         Font = 1 << 2
-      };
-      typedef QFlags<SaveFlag> SaveFlags;
+    };
+    typedef QFlags<SaveFlag> SaveFlags;
 
-      // Returns true if two tags are equal
-      bool operator==( const Tag &other ) const;
+    // Returns true if two tags are equal
+    bool operator==( const Tag &other ) const;
 
-      bool operator!=( const Tag &other ) const;
+    bool operator!=( const Tag &other ) const;
 
-      static Ptr createDefaultTag( const QString &name );
-      // expects a tag with all attributes fetched
-      static Ptr fromAkonadi( const Akonadi::Tag &tag );
+    static Ptr createDefaultTag( const QString &name );
+    // expects a tag with all attributes fetched
+    static Ptr fromAkonadi( const Akonadi::Tag &tag );
 
-      Akonadi::Tag saveToAkonadi( SaveFlags saveFlags ) const;
+    Akonadi::Tag saveToAkonadi( SaveFlags saveFlags ) const;
 
-      // Compare, based on priority
-      static bool compare( Ptr &tag1, Ptr &tag2 );
-      // Compare, based on name
-      static bool compareName( Ptr &tag1, Ptr &tag2 );
+    // Compare, based on priority
+    static bool compare( Ptr &tag1, Ptr &tag2 );
+    // Compare, based on name
+    static bool compareName( Ptr &tag1, Ptr &tag2 );
 
-      qint64 id() const;
-      QString name() const;
-      Akonadi::Tag tag() const;
+    qint64 id() const;
+    QString name() const;
+    Akonadi::Tag tag() const;
 
-      QString tagName;
-      QColor textColor;
-      QColor backgroundColor;
-      QFont textFont;
-      QString iconName;
-      KShortcut shortcut;
-      bool inToolbar;
-      bool isImmutable;
-      // Priority, i.e. sort order of the tag. Only used when loading the tag, when saving
-      // the priority is set to the position in the list widget
-      int priority;
+    QString tagName;
+    QColor textColor;
+    QColor backgroundColor;
+    QFont textFont;
+    QString iconName;
+    KShortcut shortcut;
+    bool inToolbar;
+    bool isImmutable;
+    // Priority, i.e. sort order of the tag. Only used when loading the tag, when saving
+    // the priority is set to the position in the list widget
+    int priority;
 
-  private:
-      Tag() {}
-      Akonadi::Tag mTag;
-  };
-  Q_DECLARE_OPERATORS_FOR_FLAGS(Tag::SaveFlags)
+private:
+    Tag() {}
+    Akonadi::Tag mTag;
+};
+Q_DECLARE_OPERATORS_FOR_FLAGS(Tag::SaveFlags)
 
 }
 

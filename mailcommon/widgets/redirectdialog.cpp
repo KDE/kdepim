@@ -1,5 +1,6 @@
 /*
   Copyright (c) 2003 Andreas Gungl <a.gungl@gmx.de>
+  Copyright (c) 2014 Laurent Montel <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -54,8 +55,93 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QTreeView>
+#include <QHBoxLayout>
 
 using namespace MailCommon;
+
+RedirectWidget::RedirectWidget(TypeAddress type, QWidget *parent)
+    : QWidget(parent)
+{
+    QHBoxLayout *hbox = new QHBoxLayout;
+    hbox->setSpacing( 0 );
+    hbox->setMargin( 0 );
+    hbox->setAlignment(Qt::AlignRight);
+    setLayout(hbox);
+
+    QLabel *lab = new QLabel;
+    switch(type) {
+    case ResendTo:
+        lab->setText(i18n("Resend-To:"));
+        break;
+    case ResendCc:
+        lab->setText(i18n("Resend-Cc:"));
+        break;
+    case ResendBcc:
+        lab->setText(i18n("Resend-Bcc:"));
+        break;
+    }
+    hbox->addWidget(lab);
+
+    mEdit = new MessageComposer::ComposerLineEdit( true );
+    mEdit->setRecentAddressConfig( KernelIf->config().data() );
+    mEdit->setMinimumWidth( 300 );
+    mEdit->setClearButtonShown( true );
+    hbox->addWidget(mEdit);
+
+    QPushButton *BtnTo = new QPushButton( QString() );
+    BtnTo->setIcon( KIcon( QLatin1String("help-contents") ) );
+    BtnTo->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
+    BtnTo->setMinimumSize( BtnTo->sizeHint() * 1.2 );
+    BtnTo->setToolTip( i18n( "Use the Address-Selection Dialog" ) );
+    BtnTo->setWhatsThis( i18n( "This button opens a separate dialog "
+                               "where you can select recipients out "
+                               "of all available addresses." ) );
+    hbox->addWidget(BtnTo);
+    connect( BtnTo, SIGNAL(clicked()), SLOT(slotAddressSelection()) );
+
+    connect( mEdit, SIGNAL(textChanged(QString)), SIGNAL(addressChanged(QString)) );
+}
+
+RedirectWidget::~RedirectWidget()
+{
+
+}
+
+QString RedirectWidget::resend()
+{
+    mResendStr = mEdit->text();
+    return mResendStr;
+}
+
+void RedirectWidget::setFocus()
+{
+    mEdit->setFocus();
+}
+
+void RedirectWidget::slotAddressSelection()
+{
+    MessageViewer::AutoQPointer<Akonadi::EmailAddressSelectionDialog> dlg(
+                new Akonadi::EmailAddressSelectionDialog( this ) );
+
+    dlg->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
+
+    mResendStr = mEdit->text();
+
+    if ( dlg->exec() != KDialog::Rejected && dlg ) {
+        QStringList addresses;
+        foreach ( const Akonadi::EmailAddressSelection &selection, dlg->selectedAddresses() ) {
+            addresses << selection.quotedEmail();
+        }
+
+        if ( !mResendStr.isEmpty() ) {
+            addresses.prepend( mResendStr );
+        }
+
+        mEdit->setText( addresses.join( QLatin1String(", ") ) );
+        mEdit->setModified( true );
+    }
+}
+
 
 class RedirectDialog::Private
 {
@@ -67,13 +153,13 @@ public:
 
     void slotUser1();
     void slotUser2();
-    void slotAddressSelection();
     void slotAddressChanged( const QString & );
 
     RedirectDialog *q;
-    MessageComposer::ComposerLineEdit *mEditTo;
+    RedirectWidget *mEditTo;
+    RedirectWidget *mEditCc;
+    RedirectWidget *mEditBcc;
 
-    QString mResentTo;
     RedirectDialog::SendMode mSendMode;
     KPIMIdentities::IdentityCombo *mComboboxIdentity;
     MailTransport::TransportComboBox *mTransportCombobox;
@@ -91,30 +177,6 @@ void RedirectDialog::Private::slotUser2()
     q->accept();
 }
 
-void RedirectDialog::Private::slotAddressSelection()
-{
-    MessageViewer::AutoQPointer<Akonadi::EmailAddressSelectionDialog> dlg(
-                new Akonadi::EmailAddressSelectionDialog( q ) );
-
-    dlg->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
-
-    mResentTo = mEditTo->text();
-
-    if ( dlg->exec() != KDialog::Rejected && dlg ) {
-        QStringList addresses;
-        foreach ( const Akonadi::EmailAddressSelection &selection, dlg->selectedAddresses() ) {
-            addresses << selection.quotedEmail();
-        }
-
-        if ( !mResentTo.isEmpty() ) {
-            addresses.prepend( mResentTo );
-        }
-
-        mEditTo->setText( addresses.join( QLatin1String(", ") ) );
-        mEditTo->setModified( true );
-    }
-}
-
 void RedirectDialog::Private::slotAddressChanged( const QString &text )
 {
     q->enableButton( KDialog::User1, !text.isEmpty() );
@@ -128,41 +190,39 @@ RedirectDialog::RedirectDialog( SendMode mode, QWidget *parent )
     setButtons( User1 | User2 | Cancel );
     setDefaultButton( mode == SendNow ? User1 : User2 );
 
-    QFrame *vbox = new KVBox( this );
-    setMainWidget( vbox );
-    QLabel *LabelTo = new QLabel( i18n( "Select the recipient &addresses "
-                                        "to redirect to:" ), vbox );
+    QWidget *mainWidget = new QWidget;
+    setMainWidget(mainWidget);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainWidget->setLayout(mainLayout);
+    mainLayout->setSpacing(0);
+    QLabel *LabelTo = new QLabel( i18n( "Select the recipient addresses to redirect:" ));
+    mainLayout->addWidget(LabelTo);
 
-    KHBox *hbox = new KHBox( vbox );
-    hbox->setSpacing( 4 );
-    d->mEditTo = new MessageComposer::ComposerLineEdit( true, hbox );
-    d->mEditTo->setRecentAddressConfig( KernelIf->config().data() );
-    d->mEditTo->setMinimumWidth( 300 );
-    d->mEditTo->setClearButtonShown( true );
+    d->mEditTo = new RedirectWidget(RedirectWidget::ResendTo);
+    mainLayout->addWidget(d->mEditTo);
 
-    QPushButton *BtnTo = new QPushButton( QString(), hbox );
-    BtnTo->setIcon( KIcon( QLatin1String("help-contents") ) );
-    BtnTo->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-    BtnTo->setMinimumSize( BtnTo->sizeHint() * 1.2 );
-    BtnTo->setToolTip( i18n( "Use the Address-Selection Dialog" ) );
-    BtnTo->setWhatsThis( i18n( "This button opens a separate dialog "
-                               "where you can select recipients out "
-                               "of all available addresses." ) );
+    connect( d->mEditTo, SIGNAL(addressChanged(QString)), SLOT(slotAddressChanged(QString)) );
 
-    connect( BtnTo, SIGNAL(clicked()), SLOT(slotAddressSelection()) );
-
-    connect( d->mEditTo, SIGNAL(textChanged(QString)), SLOT(slotAddressChanged(QString)) );
-    LabelTo->setBuddy( BtnTo );
+    d->mEditCc = new RedirectWidget(RedirectWidget::ResendCc);
+    mainLayout->addWidget(d->mEditCc);
+    d->mEditBcc = new RedirectWidget(RedirectWidget::ResendBcc);
+    mainLayout->addWidget(d->mEditBcc);
     d->mEditTo->setFocus();
 
-    hbox = new KHBox( vbox );
-    QLabel *lab = new QLabel(i18n("Identity:"),hbox);
-    d->mComboboxIdentity = new KPIMIdentities::IdentityCombo(KernelIf->identityManager(),hbox);
+    QHBoxLayout *hbox = new QHBoxLayout;
+    mainLayout->addLayout(hbox);
+    QLabel *lab = new QLabel(i18n("Identity:"));
+    hbox->addWidget(lab);
+    d->mComboboxIdentity = new KPIMIdentities::IdentityCombo(KernelIf->identityManager());
+    hbox->addWidget(d->mComboboxIdentity);
     lab->setBuddy(d->mComboboxIdentity);
 
-    hbox = new KHBox(vbox);
-    lab = new QLabel(i18n("Transport:"),hbox);
-    d->mTransportCombobox = new MailTransport::TransportComboBox( hbox );
+    hbox = new QHBoxLayout;
+    mainLayout->addLayout(hbox);
+    lab = new QLabel(i18n("Transport:"));
+    hbox->addWidget(lab);
+    d->mTransportCombobox = new MailTransport::TransportComboBox;
+    hbox->addWidget(d->mTransportCombobox);
     lab->setBuddy(d->mTransportCombobox);
 
     setButtonGuiItem( User1, KGuiItem( i18n( "&Send Now" ), QLatin1String("mail-send") ) );
@@ -180,7 +240,17 @@ RedirectDialog::~RedirectDialog()
 
 QString RedirectDialog::to() const
 {
-    return d->mResentTo;
+    return d->mEditTo->resend();
+}
+
+QString RedirectDialog::cc() const
+{
+    return d->mEditCc->resend();
+}
+
+QString RedirectDialog::bcc() const
+{
+    return d->mEditBcc->resend();
 }
 
 RedirectDialog::SendMode RedirectDialog::sendMode() const
@@ -200,8 +270,8 @@ int RedirectDialog::identity() const
 
 void RedirectDialog::accept()
 {
-    d->mResentTo = d->mEditTo->text();
-    if ( d->mResentTo.isEmpty() ) {
+    const QString editTo = d->mEditTo->resend();
+    if ( editTo.isEmpty() ) {
         KMessageBox::sorry(
                     this,
                     i18n( "You cannot redirect the message without an address." ),

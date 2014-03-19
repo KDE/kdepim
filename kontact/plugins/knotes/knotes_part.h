@@ -33,7 +33,6 @@ class KNoteFindDialog;
 class KNotesIconView;
 class KNotesWidget;
 class KNotesIconViewItem;
-class KNoteTip;
 class KAction;
 class KToggleAction;
 
@@ -97,9 +96,7 @@ private slots:
 
     void slotPrintSelectedNotes();
     void slotPrintPreviewSelectedNotes();
-    void requestToolTip( const QModelIndex & );
 
-    void hideToolTip();
     void slotNotePreferences();
     void slotPreferences();
     void slotMail();
@@ -118,11 +115,13 @@ private slots:
     void slotItemRemoved(const Akonadi::Item &item);
     void slotOpenFindDialog();
     void slotSelectNote(Akonadi::Item::Id id);
+    void slotCollectionChanged(const Akonadi::Collection &col, const QSet<QByteArray> &set);
+    void slotItemFetchFinished(KJob *job);
 private:
+    void fetchNotesFromCollection(const Akonadi::Collection &col);
     void updateNetworkListener();
     void printSelectedNotes(bool preview);
     KNotesWidget *mNotesWidget;
-    KNoteTip *mNoteTip;
     DNSSD::PublicService *mPublisher;
     KAction *mNoteEdit;
     KAction *mNoteRename;

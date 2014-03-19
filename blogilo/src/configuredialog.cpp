@@ -31,7 +31,8 @@
 #include <KLocalizedString>
 
 ConfigureDialog::ConfigureDialog(PimCommon::StorageServiceManager *storageManager, QWidget *parent, const QString& name, KConfigSkeleton *config)
-    : KConfigDialog(parent, name, config)
+    : KConfigDialog(parent, name, config),
+      mHasChanged(false)
 {
     QWidget *generalSettingsDlg = new QWidget;
     generalSettingsDlg->setAttribute( Qt::WA_DeleteOnClose );
@@ -57,7 +58,7 @@ ConfigureDialog::ConfigureDialog(PimCommon::StorageServiceManager *storageManage
 
     mConfigStorageService = new ConfigureStorageServiceWidget(storageManager);
     mConfigStorageService->setAttribute( Qt::WA_DeleteOnClose );
-    connect(mConfigStorageService, SIGNAL(changed()), this, SLOT(settingsChangedSlot()));
+    connect(mConfigStorageService, SIGNAL(changed()), this, SLOT(slotStorageServiceChanged()));
 
     addPage( generalSettingsDlg, i18nc( "Configure Page", "General" ), QLatin1String("configure") );
     addPage( blogSettingsDlg, i18nc( "Configure Page", "Blogs" ), QLatin1String("document-properties"));
@@ -67,8 +68,9 @@ ConfigureDialog::ConfigureDialog(PimCommon::StorageServiceManager *storageManage
 
     connect( this, SIGNAL(settingsChanged(QString)), this, SIGNAL(settingsChanged()) );
     connect( this, SIGNAL(destroyed(QObject*)), this, SIGNAL(dialogDestroyed(QObject*)));
-    connect( this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
+    connect( this, SIGNAL(okClicked()), this, SLOT(slotApplySettingsClicked()));
     connect( this, SIGNAL(defaultClicked()), this, SLOT(slotDefaultClicked()));
+    connect( this, SIGNAL(applyClicked()), this, SLOT(slotApplySettingsClicked()));
     setAttribute( Qt::WA_DeleteOnClose );
     resize( Settings::configWindowSize() );
     show();
@@ -79,13 +81,28 @@ ConfigureDialog::~ConfigureDialog()
 
 }
 
+bool ConfigureDialog::hasChanged()
+{
+    return (KConfigDialog::hasChanged() || mHasChanged);
+}
+
+void ConfigureDialog::slotStorageServiceChanged()
+{
+    qDebug()<<" void ConfigureDialog::slotStorageServiceChanged()";
+    mHasChanged = true;
+    Q_EMIT settingsChanged();
+    updateButtons();
+}
+
 void ConfigureDialog::slotDefaultClicked()
 {
     mConfigStorageService->doLoadFromGlobalSettings();
 }
 
-void ConfigureDialog::slotOkClicked()
+void ConfigureDialog::slotApplySettingsClicked()
 {
     mConfigStorageService->save();
+    mHasChanged = false;
+    updateButtons();
     Q_EMIT settingsChanged();
 }

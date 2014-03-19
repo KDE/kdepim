@@ -50,7 +50,7 @@ namespace MessageCore {
  */
 class MESSAGECORE_EXPORT AttachmentCollector
 {
-  public:
+public:
     /**
      * Creates a new attachment collector.
      */
@@ -73,7 +73,7 @@ class MESSAGECORE_EXPORT AttachmentCollector
      */
     const std::vector<KMime::Content*>& attachments() const;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private* const d;

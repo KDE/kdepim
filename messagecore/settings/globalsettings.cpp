@@ -25,12 +25,12 @@ GlobalSettings *GlobalSettings::mSelf = 0;
 
 GlobalSettings *GlobalSettings::self()
 {
-  if ( !mSelf ) {
-    mSelf = new GlobalSettings();
-    mSelf->readConfig();
-  }
+    if ( !mSelf ) {
+        mSelf = new GlobalSettings();
+        mSelf->readConfig();
+    }
 
-  return mSelf;
+    return mSelf;
 }
 
 GlobalSettings::GlobalSettings()

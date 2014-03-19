@@ -27,34 +27,34 @@ using namespace MessageCore;
 
 uint MessageCore::qHash( const MessageCore::AttachmentPart::Ptr &ptr )
 {
-  return ::qHash( ptr.get() );
+    return ::qHash( ptr.get() );
 }
 
 // TODO move to kmime_util?
 static qint64 sizeWithEncoding( const QByteArray &data,
                                 KMime::Headers::contentEncoding encoding ) // local
 {
-  KMime::Content *content = new KMime::Content;
-  content->setBody( data );
-  content->contentTransferEncoding()->setEncoding( encoding );
+    KMime::Content *content = new KMime::Content;
+    content->setBody( data );
+    content->contentTransferEncoding()->setEncoding( encoding );
 
-  const int size = content->size();
-  delete content;
+    const int size = content->size();
+    delete content;
 
-  return size;
+    return size;
 }
 
 class MessageCore::AttachmentPart::Private
 {
-  public:
+public:
     Private()
-      : mIsInline( false ),
-        mAutoEncoding( true ),
-        mEncoding( KMime::Headers::CE7Bit ),
-        mCompressed( false ),
-        mToEncrypt( false ),
-        mToSign( false ),
-        mSize( -1 )
+        : mIsInline( false ),
+          mAutoEncoding( true ),
+          mEncoding( KMime::Headers::CE7Bit ),
+          mCompressed( false ),
+          mToEncrypt( false ),
+          mToSign( false ),
+          mSize( -1 )
     {
     }
 
@@ -74,157 +74,157 @@ class MessageCore::AttachmentPart::Private
 };
 
 AttachmentPart::AttachmentPart()
-  : d( new Private )
+    : d( new Private )
 {
 }
 
 AttachmentPart::~AttachmentPart()
 {
-  delete d;
+    delete d;
 }
 
 QString AttachmentPart::name() const
 {
-  return d->mName;
+    return d->mName;
 }
 
 void AttachmentPart::setName( const QString &name )
 {
-  d->mName = name;
+    d->mName = name;
 }
 
 QString AttachmentPart::fileName() const
 {
-  return d->mFileName;
+    return d->mFileName;
 }
 
 void AttachmentPart::setFileName( const QString &name )
 {
-  d->mFileName = name;
+    d->mFileName = name;
 }
 
 QString AttachmentPart::description() const
 {
-  return d->mDescription;
+    return d->mDescription;
 }
 
 void AttachmentPart::setDescription( const QString &description )
 {
-  d->mDescription = description;
+    d->mDescription = description;
 }
 
 bool AttachmentPart::isInline() const
 {
-  return d->mIsInline;
+    return d->mIsInline;
 }
 
 void AttachmentPart::setInline( bool inl )
 {
-  d->mIsInline = inl;
+    d->mIsInline = inl;
 }
 
 bool AttachmentPart::isAutoEncoding() const
 {
-  return d->mAutoEncoding;
+    return d->mAutoEncoding;
 }
 
 void AttachmentPart::setAutoEncoding( bool enabled )
 {
-  d->mAutoEncoding = enabled;
+    d->mAutoEncoding = enabled;
 
-  if ( enabled ) {
-    d->mEncoding = KMime::encodingsForData( d->mData ).first();
-  }
+    if ( enabled ) {
+        d->mEncoding = KMime::encodingsForData( d->mData ).first();
+    }
 
-  d->mSize = sizeWithEncoding( d->mData, d->mEncoding );
+    d->mSize = sizeWithEncoding( d->mData, d->mEncoding );
 }
 
 KMime::Headers::contentEncoding AttachmentPart::encoding() const
 {
-  return d->mEncoding;
+    return d->mEncoding;
 }
 
 void AttachmentPart::setEncoding( KMime::Headers::contentEncoding encoding )
 {
-  d->mAutoEncoding = false;
-  d->mEncoding = encoding;
-  d->mSize = sizeWithEncoding( d->mData, d->mEncoding );
+    d->mAutoEncoding = false;
+    d->mEncoding = encoding;
+    d->mSize = sizeWithEncoding( d->mData, d->mEncoding );
 }
 
 QByteArray AttachmentPart::charset() const
 {
-  return d->mCharset;
+    return d->mCharset;
 }
 
 void AttachmentPart::setCharset( const QByteArray &charset )
 {
-  d->mCharset = charset;
+    d->mCharset = charset;
 }
 
 QByteArray AttachmentPart::mimeType() const
 {
-  return d->mMimeType;
+    return d->mMimeType;
 }
 
 void AttachmentPart::setMimeType( const QByteArray &mimeType )
 {
-  d->mMimeType = mimeType;
+    d->mMimeType = mimeType;
 }
 
 bool AttachmentPart::isCompressed() const
 {
-  return d->mCompressed;
+    return d->mCompressed;
 }
 
 void AttachmentPart::setCompressed( bool compressed )
 {
-  d->mCompressed = compressed;
+    d->mCompressed = compressed;
 }
 
 bool AttachmentPart::isEncrypted() const
 {
-  return d->mToEncrypt;
+    return d->mToEncrypt;
 }
 
 void AttachmentPart::setEncrypted( bool encrypted )
 {
-  d->mToEncrypt = encrypted;
+    d->mToEncrypt = encrypted;
 }
 
 bool AttachmentPart::isSigned() const
 {
-  return d->mToSign;
+    return d->mToSign;
 }
 
 void AttachmentPart::setSigned( bool sign )
 {
-  d->mToSign = sign;
+    d->mToSign = sign;
 }
 
 QByteArray AttachmentPart::data() const
 {
-  return d->mData;
+    return d->mData;
 }
 
 void AttachmentPart::setData( const QByteArray &data )
 {
-  d->mData = data;
+    d->mData = data;
 
-  if ( d->mAutoEncoding ) {
-    QList<KMime::Headers::contentEncoding> possibleEncodings = KMime::encodingsForData( data );
-    possibleEncodings.removeAll( KMime::Headers::CE8Bit );
-    d->mEncoding = possibleEncodings.first();
-  }
+    if ( d->mAutoEncoding ) {
+        QList<KMime::Headers::contentEncoding> possibleEncodings = KMime::encodingsForData( data );
+        possibleEncodings.removeAll( KMime::Headers::CE8Bit );
+        d->mEncoding = possibleEncodings.first();
+    }
 
-  d->mSize = sizeWithEncoding( d->mData, d->mEncoding );
+    d->mSize = sizeWithEncoding( d->mData, d->mEncoding );
 }
 
 qint64 AttachmentPart::size() const
 {
-  return d->mSize;
+    return d->mSize;
 }
 
 bool AttachmentPart::isMessageOrMessageCollection() const
 {
-  return ( mimeType() == "message/rfc822" ) || ( mimeType() == "multipart/digest" );
+    return ( mimeType() == "message/rfc822" ) || ( mimeType() == "multipart/digest" );
 }

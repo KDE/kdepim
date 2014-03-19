@@ -32,26 +32,26 @@ namespace MessageComposer {
 
 class DistributionListDialog : public KDialog
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit DistributionListDialog( QWidget *parent );
     ~DistributionListDialog();
     void setRecipients( const Recipient::List & );
 
-  public slots:
+public slots:
     void slotUser1();
     void slotTitleChanged( const QString& );
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotDelayedSetRecipients( KJob* );
     void slotDelayedUser1( KJob* );
     void slotContactGroupCreateJobResult( KJob* );
 
-  private:
+private:
     void readConfig();
     void writeConfig();
 
-  private:
+private:
     KLineEdit *mTitleEdit;
     QTreeWidget *mRecipientsList;
 };

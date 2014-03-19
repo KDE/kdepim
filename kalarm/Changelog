@@ -1,5 +1,10 @@
 KAlarm Change Log
 
+=== Version 2.10.7 --- 19 March 2014 ===
+- [Akonadi] Fix deletion of alarm copies from KOrganiser not working.
+- Fix crash after session restoration has nothing to restore [KDE Bug 331719]
+- Prevent data in birthday import dialogue being editable.
+
 === Version 2.10.6 (KDE 4.11.1) --- 27 August 2013 ===
 - [Akonadi] Fix error saving template when closing Edit Template dialogue [KDE Bug 323965]
 

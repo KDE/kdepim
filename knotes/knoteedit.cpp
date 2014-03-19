@@ -22,6 +22,7 @@
 #include "notes/knote.h"
 #include "noteshared/editor/noteeditorutils.h"
 #include "pimcommon/util/editorutil.h"
+#include "knotesglobalconfig.h"
 
 #include <kaction.h>
 #include <kactioncollection.h>
@@ -176,6 +177,10 @@ KNoteEdit::KNoteEdit( const QString &configFile, KActionCollection *actions, QWi
     actions->addAction( QLatin1String("change_to_uppercase"), action );
     connect( action, SIGNAL(triggered(bool)), this, SLOT(slotUpperCase()) );
 
+    action = new KAction( i18n("Sentence case"), this );
+    actions->addAction( QLatin1String("change_to_sentencecase"), action );
+    connect( action, SIGNAL(triggered(bool)), this, SLOT(slotSentenceCase()) );
+
     action = new KAction( i18n("Lowercase"), this );
     actions->addAction( QLatin1String("change_to_lowercase"), action );
     connect( action, SIGNAL(triggered(bool)), this, SLOT(slotLowerCase()) );
@@ -183,6 +188,10 @@ KNoteEdit::KNoteEdit( const QString &configFile, KActionCollection *actions, QWi
     action  = new KAction( KIcon( QLatin1String("knotes_date") ), i18n( "Insert Date" ), this );
     actions->addAction( QLatin1String("insert_date"), action );
     connect( action, SIGNAL(triggered(bool)), SLOT(slotInsertDate()) );
+
+    action = new KAction( KIcon( QLatin1String("checkmark") ), i18n( "Insert Checkmark" ), this );
+    actions->addAction( QLatin1String("insert_checkmark"), action );
+    connect( action, SIGNAL(triggered(bool)), SLOT(slotInsertCheckMark()) );
 
     // QTextEdit connections
     connect( this, SIGNAL(currentCharFormatChanged(QTextCharFormat)),
@@ -197,9 +206,55 @@ KNoteEdit::~KNoteEdit()
 {
 }
 
+void KNoteEdit::setColor(const QColor &fg, const QColor &bg)
+{
+    mDefaultBackgroundColor = bg;
+    mDefaultForegroundColor = fg;
+
+    QPalette p = palette();
+
+    // better: from light(150) to light(100) to light(75)
+    // QLinearGradient g( width()/2, 0, width()/2, height() );
+    // g.setColorAt( 0, bg );
+    // g.setColorAt( 1, bg.dark(150) );
+
+    p.setColor( QPalette::Window,     bg );
+    // p.setBrush( QPalette::Window,     g );
+    p.setColor( QPalette::Base,       bg );
+    // p.setBrush( QPalette::Base,       g );
+
+    p.setColor( QPalette::WindowText, fg );
+    p.setColor( QPalette::Text,       fg );
+
+    p.setColor( QPalette::Button,     bg.dark( 116 ) );
+    p.setColor( QPalette::ButtonText, fg );
+
+    //p.setColor( QPalette::Highlight,  bg );
+    //p.setColor( QPalette::HighlightedText, fg );
+
+    // order: Light, Midlight, Button, Mid, Dark, Shadow
+
+    // the shadow
+    p.setColor( QPalette::Light, bg.light( 180 ) );
+    p.setColor( QPalette::Midlight, bg.light( 150 ) );
+    p.setColor( QPalette::Mid, bg.light( 150 ) );
+    p.setColor( QPalette::Dark, bg.dark( 108 ) );
+    p.setColor( QPalette::Shadow, bg.dark( 116 ) );
+
+    setPalette( p );
+
+    setTextColor( fg );
+}
+
 void KNoteEdit::setNote( KNote *_note )
 {
     m_note = _note;
+}
+
+void KNoteEdit::slotSentenceCase()
+{
+    QTextCursor cursor = textCursor();
+    PimCommon::EditorUtil::sentenceCase(cursor);
 }
 
 void KNoteEdit::slotUpperCase()
@@ -223,14 +278,19 @@ void KNoteEdit::mousePopupMenuImplementation(const QPoint& pos)
             if (cursor.hasSelection()) {
                 popup->addSeparator();
                 QMenu *changeCaseMenu = new QMenu(i18n("Change case..."), popup);
-                QAction * act = m_actions->action(QLatin1String("change_to_lowercase"));
+                QAction * act = m_actions->action(QLatin1String("change_to_sentencecase"));
+                changeCaseMenu->addAction(act);
+                act = m_actions->action(QLatin1String("change_to_lowercase"));
                 changeCaseMenu->addAction(act);
                 act = m_actions->action(QLatin1String("change_to_uppercase"));
                 changeCaseMenu->addAction(act);
                 popup->addMenu(changeCaseMenu);
             }
             popup->addSeparator();
-            QAction * act = m_actions->action(QLatin1String("insert_date"));
+            QAction *act = m_actions->action(QLatin1String("insert_date"));
+            popup->addAction(act);
+            popup->addSeparator();
+            act = m_actions->action(QLatin1String("insert_checkmark"));
             popup->addAction(act);
         }
         aboutToShowContextMenu(popup);
@@ -340,14 +400,14 @@ void KNoteEdit::slotTextColor()
     if (!acceptRichText())
         return;
 
-    //if ( m_note )
-    //    m_note->blockEmitDataChanged( true );
+    if ( m_note )
+        m_note->setBlockSave( true );
     QColor c = textColor();
-    if ( KColorDialog::getColor( c, this ) ) {
-        setTextColor( c );
+    if ( KColorDialog::getColor( c, mDefaultForegroundColor, this ) ) {
+        setTextColor( c.isValid() ? c : mDefaultForegroundColor);
     }
-    //if ( m_note )
-    //    m_note->blockEmitDataChanged( false );
+    if ( m_note )
+        m_note->setBlockSave( false );
 }
 
 void KNoteEdit::slotTextBackgroundColor()
@@ -355,14 +415,14 @@ void KNoteEdit::slotTextBackgroundColor()
     if (!acceptRichText())
         return;
 
-    //if ( m_note )
-    //    m_note->blockEmitDataChanged( true );
+    if ( m_note )
+        m_note->setBlockSave( true );
     QColor c = textBackgroundColor();
-    if ( KColorDialog::getColor( c, this ) ) {
-        setTextBackgroundColor( c );
+    if ( KColorDialog::getColor( c, mDefaultBackgroundColor, this ) ) {
+        setTextBackgroundColor( c.isValid() ? c : mDefaultBackgroundColor );
     }
-    //if ( m_note )
-    //    m_note->blockEmitDataChanged( false );
+    if ( m_note )
+        m_note->setBlockSave( false );
 }
 
 void KNoteEdit::textAlignLeft()
@@ -620,4 +680,8 @@ void KNoteEdit::slotInsertDate()
     NoteShared::NoteEditorUtils::insertDate(this);
 }
 
-
+void KNoteEdit::slotInsertCheckMark()
+{
+    QTextCursor cursor = textCursor();
+    NoteShared::NoteEditorUtils::addCheckmark(cursor);
+}

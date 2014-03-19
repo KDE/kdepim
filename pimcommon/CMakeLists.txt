@@ -114,6 +114,7 @@ set(libpimcommon_texteditor_SRCS
   texteditor/plaintexteditor/plaintexteditorwidget.cpp
   texteditor/commonwidget/textfindreplacewidget.cpp
   texteditor/commonwidget/texteditfindbarbase.cpp
+  texteditor/commonwidget/textgotolinewidget.cpp
   texteditor/richtexteditor/richtexteditor.cpp
   texteditor/richtexteditor/richtexteditfindbar.cpp
   texteditor/richtexteditor/richtexteditorwidget.cpp
@@ -231,6 +232,7 @@ install(TARGETS pimcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 add_subdirectory(translator/tests)
 add_subdirectory(texteditor/plaintexteditor/tests)
 add_subdirectory(texteditor/richtexteditor/tests)
+add_subdirectory(texteditor/commonwidget/tests/)
 add_subdirectory(widgets/tests)
 add_subdirectory(shorturl/tests)
 add_subdirectory(autocorrection/tests)
@@ -244,6 +246,7 @@ add_subdirectory(storageservice/ubuntuone/tests)
 add_subdirectory(storageservice/box/tests)
 
 add_subdirectory(storageservice/dropbox/icons/)
+add_subdirectory(storageservice/ubuntuone/icons/)
 if( LibKGAPI2_FOUND )
 add_subdirectory(storageservice/gdrive/tests/)
 add_subdirectory(storageservice/gdrive/icons/)

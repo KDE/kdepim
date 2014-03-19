@@ -33,7 +33,6 @@ class MessageFactoryTest : public QObject
     void testCreateReply();
     void testCreateReplyHtml();
     void testCreateReplyUTF16Base64();
-    void testCreateReplyKeepCharsetEncoding();
     void testCreateForward();
     void testCreateRedirect();
     void testCreateResend();

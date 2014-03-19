@@ -109,7 +109,10 @@ void Filter::setSearchString( const QString &search, QuickSearchLine::SearchOpti
         query.setFrom(mSearchString);
     } else if (options & QuickSearchLine::SearchAgainstBcc) {
         query.setBcc(QStringList() << mSearchString);
+    } else if (options & QuickSearchLine::SearchAgainstTo) {
+        query.setTo(QStringList() << mSearchString);
     }
+
 
     Akonadi::Collection col = Akonadi::Collection::fromUrl(mCurrentFolder);
     if (col.isValid()) {

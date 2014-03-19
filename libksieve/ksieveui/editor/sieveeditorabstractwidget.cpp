@@ -43,7 +43,7 @@ SieveEditorAbstractWidget::~SieveEditorAbstractWidget()
 void SieveEditorAbstractWidget::slotSaveAs()
 {
     const QString filter = i18n( "*.siv|sieve files (*.siv)\n*|all files (*)" );
-    PimCommon::Util::saveTextAs(currentscript(), filter, this);
+    PimCommon::Util::saveTextAs(currentscript(), filter, this, KUrl(), i18n("Save Script"));
 }
 
 QString SieveEditorAbstractWidget::currentscript()
@@ -65,7 +65,7 @@ void SieveEditorAbstractWidget::slotImport()
     KUrl url;
     const QString filter = i18n( "*.siv|sieve files (*.siv)\n*|all files (*)" );
     QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, this) );
-
+    fdlg->setCaption(i18n("Import Script Sieve"));
     fdlg->setMode( KFile::File );
     fdlg->setOperationMode( KFileDialog::Opening );
     if ( fdlg->exec() == QDialog::Accepted && fdlg ) {

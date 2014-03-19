@@ -37,9 +37,9 @@ namespace MessageCore {
  */
 class MESSAGECORE_EXPORT AttachmentPropertiesDialog: public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new attachment properties dialog.
      *
@@ -92,11 +92,11 @@ class MESSAGECORE_EXPORT AttachmentPropertiesDialog: public KDialog
      */
     bool isSignEnabled() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /* reimpl */
     virtual void accept();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

@@ -30,8 +30,6 @@ SnippetDialog::SnippetDialog( KActionCollection *actionCollection, bool inGroupM
 
     connect( mUi->nameEdit, SIGNAL(textChanged(QString)),
              this, SLOT(slotTextChanged()) );
-    connect( mUi->nameEdit, SIGNAL(returnPressed()),
-             this, SLOT(slotReturnPressed()) );
     connect( mUi->groupBox, SIGNAL(currentIndexChanged(QString)),
              this, SLOT(slotGroupChanged()));
 
@@ -108,13 +106,6 @@ bool SnippetDialog::snippetIsValid() const
                  !mUi->groupBox->currentText().trimmed().isEmpty() );
     else
         return ( !mUi->nameEdit->text().trimmed().isEmpty() );
-}
-
-void SnippetDialog::slotReturnPressed()
-{
-    if ( snippetIsValid() ) {
-        accept();
-    }
 }
 
 #include "moc_snippetdialog_p.cpp"

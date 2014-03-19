@@ -35,9 +35,9 @@ namespace MessageCore {
  */
 class MESSAGECORE_EXPORT AttachmentCompressJob : public KJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new attachment compress job.
      *
@@ -78,7 +78,7 @@ class MESSAGECORE_EXPORT AttachmentCompressJob : public KJob
      */
     bool isCompressedPartLarger() const;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

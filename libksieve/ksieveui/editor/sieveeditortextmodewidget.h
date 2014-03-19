@@ -27,6 +27,7 @@ class KTabWidget;
 namespace PimCommon {
 class PlainTextEditFindBar;
 class PlainTextEditor;
+class TextGoToLineWidget;
 }
 
 namespace KSieveUi {
@@ -62,7 +63,7 @@ public:
     void showParsingEditorWarning();
 
     void setParsingEditorWarningError(const QString &script, const QString &error);
-
+    void goToLine();
 Q_SIGNALS:
     void enableButtonOk( bool );
     void switchToGraphicalMode();
@@ -71,8 +72,9 @@ Q_SIGNALS:
 private slots:
     void slotTextChanged();
     void slotFind();
-    void slotReplace();
-
+    void slotReplace();    
+    void slotGoToLine(int line);
+    void slotShowGoToLine();
 private:
     void readConfig();
     void writeConfig();
@@ -89,6 +91,7 @@ private:
     SieveEditorWarning *mSieveEditorWarning;
     SieveEditorParsingMissingFeatureWarning *mSieveParsingWarning;
     SieveEditorTabWidget *mTabWidget;
+    PimCommon::TextGoToLineWidget *mGoToLine;
 };
 
 }

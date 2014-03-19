@@ -36,7 +36,6 @@ class KNoteFindDialog;
 class KNotesAkonadiTray;
 class KMenu;
 class KNote;
-class KAction;
 class KXMLGUIBuilder;
 class KXMLGUIFactory;
 namespace NoteShared {
@@ -95,10 +94,15 @@ private Q_SLOTS:
     void slotOpenFindDialog();
 
     void slotSelectNote(Akonadi::Item::Id);
+    void slotCollectionChanged(const Akonadi::Collection &, const QSet<QByteArray> &);
+    void slotItemFetchFinished(KJob *job);
+
 private:
     void saveNotes(bool force = false, bool sync = false);
     void updateNetworkListener();
     void updateSystray();
+    void createNote(const Akonadi::Item &item);
+    void fetchNotesFromCollection(const Akonadi::Collection &col);
     KXMLGUIFactory  *m_guiFactory;
     KXMLGUIBuilder  *m_guiBuilder;
     QDomDocument    m_noteGUI;
