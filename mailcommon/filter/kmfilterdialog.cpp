@@ -1719,7 +1719,7 @@ void KMFilterDialog::slotExportAsSieveScript()
         KMessageBox::information(
                     this,
                     i18nc( "@info",
-                           "Some filters were changed and not saved yet. "
+                           "Some filters were changed and not saved yet.<br>"
                            "You must save your filters before they can be exported." ),
                     i18n( "Filters changed." ) );
         return;
