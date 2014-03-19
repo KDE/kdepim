@@ -22,6 +22,7 @@
 #include "checkableproxymodel.h"
 #include "contactswitcher.h"
 #include "globalcontactmodel.h"
+#include "mailsender.h"
 #include "modelcolumnmanager.h"
 #include "printing/printingwizard.h"
 #include "merge/searchduplicatecontactwizard.h"
@@ -51,6 +52,7 @@
 #include <Akonadi/EntityMimeTypeFilterModel>
 #include <Akonadi/EntityTreeView>
 #include <Akonadi/ItemView>
+#include <Akonadi/ItemFetchJob>
 #include <Akonadi/MimeTypeChecker>
 #include <Akonadi/AttributeFactory>
 #include <Akonadi/CollectionPropertiesDialog>
@@ -938,20 +940,14 @@ void MainWidget::slotGrantleeThemesUpdated()
 }
 
 void MainWidget::slotSendMail() {
-    QStringList emails;
-    foreach (Akonadi::Item item, Utils::collectSelectedContactsItem(mItemView->selectionModel())) {
-        const KABC::Addressee address = item.payload<KABC::Addressee>();
-        emails << address.preferredEmail();
-    }
-
-    QProcess proc;
-    proc.startDetached( QLatin1String("ksendemail"), emails);
+    new MailSender(mItemView->selectionModel(), this);
 }
 
 void MainWidget::updateSendMailState()
 {
     bool atLeastOneContactSelected = ! Utils::collectSelectedContactsItem(mItemView->selectionModel()).isEmpty();
-    mXmlGuiClient->action("send_mail")->setEnabled(atLeastOneContactSelected);
+    bool atLeastOneGroupSelected = ! Utils::collectSelectedGroupItem(mItemView->selectionModel()).isEmpty();
+    mXmlGuiClient->action("send_mail")->setEnabled(atLeastOneContactSelected || atLeastOneGroupSelected);
 }
 
 void MainWidget::slotUpdateSelection()

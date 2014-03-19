@@ -90,6 +90,7 @@ set(kaddressbook_LIB_SRCS
   contactsorter.cpp
   contactswitcher.cpp
   globalcontactmodel.cpp
+  mailsender.cpp
   mainwidget.cpp
   modelcolumnmanager.cpp
   quicksearchwidget.cpp
