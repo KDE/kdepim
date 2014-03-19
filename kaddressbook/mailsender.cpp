@@ -29,6 +29,7 @@
 
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
+#include <KToolInvocation>
 
 #include <QDebug>
 #include <QItemSelectionModel>
@@ -107,6 +108,8 @@ void MailSender::fetchJobFinished(KJob *job)
 
 void MailSender::finishJob()
 {
-    QProcess proc;
-    proc.startDetached( QLatin1String("ksendemail"), mEmailAddresses.toList());
+    KUrl url;
+        url.setProtocol( QLatin1String( "mailto" ) );
+        url.setPath( QStringList(mEmailAddresses.toList()).join(QLatin1String(";")) );
+        KToolInvocation::invokeMailer( url );
 }
