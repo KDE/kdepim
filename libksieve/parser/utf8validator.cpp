@@ -83,58 +83,58 @@ static inline bool isUtf8Continuation( unsigned char ch ) {
 }
 
 bool KSieve::isValidUtf8( const char * s, unsigned int len ) {
-  for ( unsigned int i = 0 ; i < len ; ++i ) {
-    const unsigned char ch = s[i];
-    if ( !is8Bit( ch ) )
-      continue;
-    if ( isUtf8TupelIndicator( ch ) ) {
-      if ( len - i < 1 ) // too short
-        return false;
-      if ( isUtf8OverlongTupel( ch ) ) // not minimally encoded
-        return false;
-      if ( !isUtf8Continuation( s[i+1] ) ) // not followed by 10xx xxxx
-        return false;
-      i += 1;
-    } else if ( isUtf8TripleIndicator( ch ) ) {
-      if ( len - i < 2 ) // too short
-        return false;
-      if ( isUtf8OverlongTriple( ch, s[i+1] ) ) // not minimally encoded
-        return false;
-      if ( !isUtf8Continuation( s[i+2] ) ) // not followed by 10xx xxxx
-        return false;
-      i += 2;
-    } else if ( isUtf8QuartetIndicator( ch ) ) {
-      if ( len - i < 3 ) // too short
-        return false;
-      if ( isUtf8OverlongQuartet( ch, s[i+1] ) ) // not minimally encoded
-        return false;
-      if ( !isUtf8Continuation( s[i+2] ) ||
-           !isUtf8Continuation( s[i+3] ) ) // not followed by 2x 10xx xxxx
-        return false;
-      i += 3;
-    } else if ( isUtf8QuintetIndicator( ch ) ) {
-      if ( len - i < 4 ) // too short
-        return false;
-      if ( isUtf8OverlongQuintet( ch, s[i+1] ) ) // not minimally encoded
-        return false;
-      if ( !isUtf8Continuation( s[i+2] ) ||
-           !isUtf8Continuation( s[i+3] ) ||
-           !isUtf8Continuation( s[i+4] ) ) // not followed by 3x 10xx xxxx
-        return false;
-      i += 4;
-    } else if ( isUtf8SextetIndicator( ch ) ) {
-      if ( len - i < 5 ) // too short
-        return false;
-      if ( isUtf8OverlongSextet( ch, s[i+1] ) ) // not minimally encoded
-        return false;
-      if ( !isUtf8Continuation( s[i+2] ) ||
-           !isUtf8Continuation( s[i+3] ) ||
-           !isUtf8Continuation( s[i+4] ) ||
-           !isUtf8Continuation( s[i+5] ) ) // not followed by 4x 10xx xxxx
-        return false;
-      i += 5;
-    } else
-      return false;
-  }
-  return true;
+    for ( unsigned int i = 0 ; i < len ; ++i ) {
+        const unsigned char ch = s[i];
+        if ( !is8Bit( ch ) )
+            continue;
+        if ( isUtf8TupelIndicator( ch ) ) {
+            if ( len - i < 1 ) // too short
+                return false;
+            if ( isUtf8OverlongTupel( ch ) ) // not minimally encoded
+                return false;
+            if ( !isUtf8Continuation( s[i+1] ) ) // not followed by 10xx xxxx
+                return false;
+            i += 1;
+        } else if ( isUtf8TripleIndicator( ch ) ) {
+            if ( len - i < 2 ) // too short
+                return false;
+            if ( isUtf8OverlongTriple( ch, s[i+1] ) ) // not minimally encoded
+                return false;
+            if ( !isUtf8Continuation( s[i+2] ) ) // not followed by 10xx xxxx
+                return false;
+            i += 2;
+        } else if ( isUtf8QuartetIndicator( ch ) ) {
+            if ( len - i < 3 ) // too short
+                return false;
+            if ( isUtf8OverlongQuartet( ch, s[i+1] ) ) // not minimally encoded
+                return false;
+            if ( !isUtf8Continuation( s[i+2] ) ||
+                 !isUtf8Continuation( s[i+3] ) ) // not followed by 2x 10xx xxxx
+                return false;
+            i += 3;
+        } else if ( isUtf8QuintetIndicator( ch ) ) {
+            if ( len - i < 4 ) // too short
+                return false;
+            if ( isUtf8OverlongQuintet( ch, s[i+1] ) ) // not minimally encoded
+                return false;
+            if ( !isUtf8Continuation( s[i+2] ) ||
+                 !isUtf8Continuation( s[i+3] ) ||
+                 !isUtf8Continuation( s[i+4] ) ) // not followed by 3x 10xx xxxx
+                return false;
+            i += 4;
+        } else if ( isUtf8SextetIndicator( ch ) ) {
+            if ( len - i < 5 ) // too short
+                return false;
+            if ( isUtf8OverlongSextet( ch, s[i+1] ) ) // not minimally encoded
+                return false;
+            if ( !isUtf8Continuation( s[i+2] ) ||
+                 !isUtf8Continuation( s[i+3] ) ||
+                 !isUtf8Continuation( s[i+4] ) ||
+                 !isUtf8Continuation( s[i+5] ) ) // not followed by 4x 10xx xxxx
+                return false;
+            i += 5;
+        } else
+            return false;
+    }
+    return true;
 }
