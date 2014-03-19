@@ -35,7 +35,7 @@ QList<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplat
     tmp.name = i18n("Filter on Subject");
     tmp.text = QString::fromLatin1("require \"fileinto\";\n"
                                    "if header :contains \"Subject\" \"Foo Foo\" { \n"
-                                   "   fileinto \"INBOX.Foo\"; \n"
+                                   "    fileinto \"INBOX.Foo\"; \n"
                                    "}\n");
     lst << tmp;
 
@@ -43,7 +43,7 @@ QList<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplat
     tmp.name = i18n("Filter on Spamassassin");
     tmp.text = QString::fromLatin1("require \"fileinto\";\n"
                                    "if header :contains \"X-Spam-Level\" \"*********\" { \n"
-                                   "  fileinto \"Spam\";\n"
+                                   "    fileinto \"Spam\";\n"
                                    "}\n");
     lst << tmp;
 
@@ -51,22 +51,22 @@ QList<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplat
     tmp.name = i18n("Flag messages");
     tmp.text = QString::fromLatin1("require [\"imap4flags\"];\n"
                                    "if address \"From\" \"someone@example.org\" { \n"
-                                   "  setflag \"\\\\Seen\";\n"
+                                   "    setflag \"\\\\Seen\";\n"
                                    "}\n");
     lst << tmp;
 
     tmp.name = i18n("Forward Message");
     tmp.text = QString::fromLatin1("require [\"copy\"];\n"
                                    "if header :contains \"Subject\" \"foo\" { \n"
-                                   " redirect :copy \"other@example.net\";\n"
+                                   "    redirect :copy \"other@example.net\";\n"
                                    "}\n");
     lst << tmp;
 
     tmp.name = i18n("Forward Message and add copy");
     tmp.text = QString::fromLatin1("require [\"copy\", \"fileinto\"];\n"
                                    "if header :contains \"Subject\" \"foo\" { \n"
-                                   "  redirect :copy \"other@example.net\";\n"
-                                   "  fileinto \"Forwarded Messages\"; \n"
+                                   "    redirect :copy \"other@example.net\";\n"
+                                   "    fileinto \"Forwarded Messages\"; \n"
                                    "}\n");
     lst <<tmp;
 
@@ -77,8 +77,8 @@ QList<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplat
                                    "\"pub@foo.com\"\n"
                                    "]\n"
                                    "{\n"
-                                   "  discard;\n"
-                                   "  stop;\n"
+                                   "    discard;\n"
+                                   "    stop;\n"
                                    "}\n");
     lst << tmp;
 
