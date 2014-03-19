@@ -30,7 +30,7 @@
 void NoteShared::NoteEditorUtils::addCheckmark( QTextCursor &cursor )
 {
     static const QChar unicode[] = {0x2713};
-    int size = sizeof(unicode) / sizeof(QChar);
+    const int size = sizeof(unicode) / sizeof(QChar);
     cursor.insertText( QString::fromRawData(unicode, size) );
 }
 
