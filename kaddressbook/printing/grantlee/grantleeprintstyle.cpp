@@ -35,6 +35,8 @@
 
 #include <QPrinter>
 #include <QTextDocument>
+#include <QFile>
+#include <QDir>
 
 using namespace KABPrinting;
 
@@ -80,8 +82,10 @@ GrantleePrintStyle::GrantleePrintStyle( const QString &themePath, PrintingWizard
 {
     mEngine = new Grantlee::Engine;
     mTemplateLoader = Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
-    //TODO themePath + preview.png ?
-    //setPreview( QLatin1String("") );
+    QFile previewFile(QString(themePath + QDir::separator() + QLatin1String("preview.png")));
+    if (previewFile.exists()) {
+        setPreview( previewFile.fileName() );
+    }
 
     mTemplateLoader->setTemplateDirs( QStringList() << themePath );
     mEngine->addTemplateLoader( mTemplateLoader );
