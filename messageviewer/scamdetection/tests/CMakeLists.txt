@@ -19,7 +19,6 @@ add_scamdetection_test(test_scamdetection.cpp)
 set(scamdetection_gui_SRCS scamdetection_gui.cpp)
 kde4_add_executable(scamdetection_gui TEST ${scamdetection_gui_SRCS})
 target_link_libraries(scamdetection_gui
-  ${QT_QTTEST_LIBRARY}
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY}
   ${KDE4_KDEUI_LIBS}

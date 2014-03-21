@@ -116,6 +116,7 @@ public:
   bool mStorageUsesPrivateAggregation;   ///< true if the current folder does not use the global aggregation
   bool mStorageUsesPrivateSortOrder;     ///< true if the current folder does not use the global sort order
   KUrl mCurrentFolderUrl;                ///< The Akonadi URL of the current folder
+  Akonadi::Collection mCurrentFolder;    ///< The current folder
   int mCurrentStatusFilterIndex;
   bool mStatusFilterComboPopulationInProgress;
 };
@@ -984,7 +985,7 @@ void Widget::searchTimerFired()
 
   const QString text = d->quickSearchLine->searchEdit()->text();
 
-  d->mFilter->setCurrentFolder( d->mCurrentFolderUrl );
+  d->mFilter->setCurrentFolder( d->mCurrentFolder );
   d->mFilter->setSearchString( text, d->quickSearchLine->searchOptions() );
   if ( d->mFilter->isEmpty() ) {
     resetFilter();
@@ -1072,7 +1073,7 @@ bool Widget::selectionEmpty() const
 
 void Widget::setCurrentFolder( const Akonadi::Collection &collection )
 {
-  d->mCurrentFolderUrl = collection.url( Akonadi::Collection::UrlShort );
+  d->mCurrentFolder = collection;
 }
 
 bool Widget::searchEditHasFocus() const
