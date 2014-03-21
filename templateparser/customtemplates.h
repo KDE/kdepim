@@ -35,16 +35,16 @@ class CustomTemplateItem;
 
 class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     enum Type {
-      TUniversal,
-      TReply,
-      TReplyAll,
-      TForward
+        TUniversal,
+        TReply,
+        TReplyAll,
+        TForward
     };
 
-  public:
+public:
     explicit CustomTemplates( const QList<KActionCollection*> &actionCollection,
                               QWidget *parent = 0 );
     ~CustomTemplates();
@@ -52,11 +52,11 @@ class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
     void load();
     void save();
 
-  signals:
+signals:
     void changed();
     void templatesUpdated();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotInsertCommand( const QString &cmd, int adjustCursor = 0 );
     void slotTextChanged();
     void slotAddClicked();
@@ -69,7 +69,7 @@ class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
     void slotNameChanged( const QString &text );
     void slotDuplicateClicked();
 
-  private:
+private:
     bool nameAlreadyExists( const QString &str, QTreeWidgetItem *item = 0 );
     QString indexToType( int index );
     QString createUniqueName( const QString &name ) const;
@@ -91,7 +91,7 @@ class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget
 
 class CustomTemplateItem : public QTreeWidgetItem
 {
-  public:
+public:
     explicit CustomTemplateItem( QTreeWidget *parent,
                                  const QString &name,
                                  const QString &content,
@@ -118,7 +118,7 @@ class CustomTemplateItem : public QTreeWidgetItem
     QString oldName() const;
     void setOldName( const QString & );
 
-  private:
+private:
     QString mName, mContent;
     QKeySequence mShortcut;
     CustomTemplates::Type mType;
@@ -127,8 +127,8 @@ class CustomTemplateItem : public QTreeWidgetItem
 
 class CustomTemplateItemDelegate : public QStyledItemDelegate
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit CustomTemplateItemDelegate( QObject *parent = 0 );
     ~CustomTemplateItemDelegate();
     QWidget *createEditor ( QWidget *parent, const QStyleOptionViewItem &option,
