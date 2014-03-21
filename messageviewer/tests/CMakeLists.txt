@@ -45,7 +45,6 @@ add_messageviewer_unittest( todoedittest.cpp )
 set(viewertest_gui_SRCS viewertest_gui.cpp)
 kde4_add_executable(viewertest_gui TEST ${viewertest_gui_SRCS})
 target_link_libraries(viewertest_gui
-  ${QT_QTTEST_LIBRARY}
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY}
   ${QT_QTWEBKIT_LIBRARY}
