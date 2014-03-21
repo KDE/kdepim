@@ -31,16 +31,16 @@
 #include <QObject>
 
 namespace MessageViewer {
-  class ObjectTreeParser;
+class ObjectTreeParser;
 }
 
 namespace KPIMIdentities {
-  class IdentityManager;
+class IdentityManager;
 }
 
 namespace MessageCore {
-  class AttachmentCollector;
-  class ImageCollector;
+class AttachmentCollector;
+class ImageCollector;
 }
 
 namespace TemplateParser {
@@ -146,28 +146,28 @@ namespace TemplateParser {
  */
 class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     enum Mode {
-      NewMessage,
-      Reply,
-      ReplyAll,
-      Forward
+        NewMessage,
+        Reply,
+        ReplyAll,
+        Forward
     };
 
     enum AllowSelection {
-      SelectionAllowed,
-      NoSelectionAllowed
+        SelectionAllowed,
+        NoSelectionAllowed
     };
 
     enum Quotes {
-      ReplyAsOriginalMessage,
-      ReplyAsPlain,
-      ReplyAsHtml
+        ReplyAsOriginalMessage,
+        ReplyAsPlain,
+        ReplyAsHtml
     };
 
-  public:
+public:
     explicit TemplateParser( const KMime::Message::Ptr &amsg, const Mode amode );
     ~TemplateParser();
 
@@ -211,7 +211,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     virtual void process( const KMime::Message::Ptr &aorig_msg,
                           const Akonadi::Collection &afolder = Akonadi::Collection() );
     virtual void process( const QString &tmplName, const KMime::Message::Ptr &aorig_msg,
-                         const Akonadi::Collection &afolder = Akonadi::Collection() );
+                          const Akonadi::Collection &afolder = Akonadi::Collection() );
     virtual void processWithIdentity( uint uoid, const KMime::Message::Ptr &aorig_msg,
                                       const Akonadi::Collection &afolder = Akonadi::Collection() );
 
@@ -234,7 +234,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     virtual QString getLName( const QString &str );
 
     bool cursorPositionWasSet() const;
-  protected:
+protected:
     Mode mMode;
     Akonadi::Collection mFolder;          //Used to find a template
     uint mIdentity;
@@ -279,7 +279,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
 
     int parseQuotes( const QString &prefix, const QString &str, QString &quote ) const;
 
-  private:
+private:
     /**
      * Return the text signature used the by current identity.
      */

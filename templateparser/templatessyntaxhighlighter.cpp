@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2011-2014 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -23,9 +23,9 @@
 using namespace TemplateParser;
 
 TemplatesSyntaxHighlighter::TemplatesSyntaxHighlighter( QTextDocument *doc )
-  : QSyntaxHighlighter( doc )
+    : QSyntaxHighlighter( doc )
 {
-  init();
+    init();
 }
 
 TemplatesSyntaxHighlighter::~TemplatesSyntaxHighlighter()
@@ -34,40 +34,40 @@ TemplatesSyntaxHighlighter::~TemplatesSyntaxHighlighter()
 
 void TemplatesSyntaxHighlighter::highlightBlock( const QString &text )
 {
-  Q_FOREACH ( const Rule &rule, m_rules ) {
-    const QRegExp expression( rule.pattern );
-    int index = expression.indexIn( text );
-    int length = 0;
-    while ( index >= 0 && ( length = expression.matchedLength() ) > 0 ) {
-      setFormat( index, length, rule.format );
-      index = expression.indexIn( text, index + length );
+    Q_FOREACH ( const Rule &rule, m_rules ) {
+        const QRegExp expression( rule.pattern );
+        int index = expression.indexIn( text );
+        int length = 0;
+        while ( index >= 0 && ( length = expression.matchedLength() ) > 0 ) {
+            setFormat( index, length, rule.format );
+            index = expression.indexIn( text, index + length );
+        }
     }
-  }
 }
 
 void TemplatesSyntaxHighlighter::init()
 {
-  QTextCharFormat keywordFormat;
-  QPalette palette;
-  keywordFormat.setForeground( palette.link() );
+    QTextCharFormat keywordFormat;
+    QPalette palette;
+    keywordFormat.setForeground( palette.link() );
 
-  QStringList keywords;
-  keywords << Util::keywords();
+    QStringList keywords;
+    keywords << Util::keywords();
 
-  Q_FOREACH ( const QString & s, keywords ) {
-    const QRegExp regex( s, Qt::CaseInsensitive );
-    m_rules.append( Rule( regex, keywordFormat ) );
-  }
+    Q_FOREACH ( const QString & s, keywords ) {
+        const QRegExp regex( s, Qt::CaseInsensitive );
+        m_rules.append( Rule( regex, keywordFormat ) );
+    }
 
-  QTextCharFormat keywordWithArgsFormat;
-  keywordWithArgsFormat.setForeground( palette.link() );
-  QStringList keywordsWithArgs;
-  keywordsWithArgs << Util::keywordsWithArgs();
+    QTextCharFormat keywordWithArgsFormat;
+    keywordWithArgsFormat.setForeground( palette.link() );
+    QStringList keywordsWithArgs;
+    keywordsWithArgs << Util::keywordsWithArgs();
 
-  Q_FOREACH ( const QString & s, keywordsWithArgs ) {
-    const QRegExp regex( s, Qt::CaseInsensitive );
-    m_rules.append( Rule( regex, keywordWithArgsFormat ) );
-  }
+    Q_FOREACH ( const QString & s, keywordsWithArgs ) {
+        const QRegExp regex( s, Qt::CaseInsensitive );
+        m_rules.append( Rule( regex, keywordWithArgsFormat ) );
+    }
 
 }
 

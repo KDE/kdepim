@@ -26,9 +26,9 @@ namespace TemplateParser {
 
 class TEMPLATEPARSER_EXPORT TemplatesConfiguration : public QWidget, Ui::TemplatesConfigurationBase
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
 
     explicit TemplatesConfiguration( QWidget *parent = 0, const QString &name = QString() );
 
@@ -47,21 +47,21 @@ class TEMPLATEPARSER_EXPORT TemplatesConfiguration : public QWidget, Ui::Templat
      */
     static QString configIdString( uint id );
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotInsertCommand( const QString &cmd, int adjustCursor = 0 );
     void slotTextChanged();
 
-  signals:
+signals:
     void changed();
 
-  protected:
+protected:
     QString strOrBlank( const QString &str );
     QString mHelpString;
 
-  private:
+private:
     QTextEdit *currentTextEdit() const;
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotHelpLinkClicked( const QString & );
 };
 
