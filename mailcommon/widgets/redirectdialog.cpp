@@ -179,8 +179,9 @@ void RedirectDialog::Private::slotUser2()
 
 void RedirectDialog::Private::slotAddressChanged( const QString &text )
 {
-    q->enableButton( KDialog::User1, !text.isEmpty() );
-    q->enableButton( KDialog::User2, !text.isEmpty() );
+    const bool textIsNotEmpty(!text.isEmpty());
+    q->enableButton( KDialog::User1, textIsNotEmpty );
+    q->enableButton( KDialog::User2, textIsNotEmpty );
 }
 
 RedirectDialog::RedirectDialog( SendMode mode, QWidget *parent )
