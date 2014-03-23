@@ -54,7 +54,7 @@ bool UriHandler::process( const QString &uri, const Akonadi::Item& item )
 
     org::kde::kmail::kmail kmail(
       QLatin1String("org.kde.kmail"), QLatin1String("/KMail"), QDBusConnection::sessionBus() );
-    kmail.showMail( serialNumberStr.toUInt(), QString() );
+    kmail.showMail( serialNumberStr.toLongLong() );
     return true;
   } else if ( uri.startsWith( QLatin1String( "mailto:" ) ) ) {
     KToolInvocation::invokeMailer( uri.mid(7), QString() );
