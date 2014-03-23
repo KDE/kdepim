@@ -261,6 +261,7 @@ QString HubicStorageService::iconName()
 StorageServiceAbstract::Capabilities HubicStorageService::serviceCapabilities()
 {
     StorageServiceAbstract::Capabilities cap;
+#if 0 //Disable for the moment
     cap |= AccountInfoCapability;
     //cap |= UploadFileCapability;
     //cap |= DownloadFileCapability;
@@ -275,7 +276,7 @@ StorageServiceAbstract::Capabilities HubicStorageService::serviceCapabilities()
     //cap |= MoveFolderCapability;
     //cap |= CopyFileCapability;
     //cap |= CopyFolderCapability;
-
+#endif
 
     return cap;
 }
