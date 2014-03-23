@@ -39,8 +39,7 @@ int main( int argc, char **argv )
     KCmdLineOptions options = sieveeditor_options();
     KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
     KUniqueApplication::addCmdLineOptions();
-    if (!KUniqueApplication::start())
-    {
+    if (!KUniqueApplication::start()) {
         kDebug() << "sieveeditor is already running!";
         return (0);
     }

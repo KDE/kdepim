@@ -81,7 +81,12 @@ public:
     int priority;
 
 private:
-    Tag() {}
+    Tag() 
+       : inToolbar(false),
+         isImmutable(false),
+         priority(0)
+    {
+    }
     Akonadi::Tag mTag;
 };
 Q_DECLARE_OPERATORS_FOR_FLAGS(Tag::SaveFlags)

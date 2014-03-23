@@ -51,8 +51,12 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
 
 {
     QHBoxLayout *mainLayout = new QHBoxLayout;
+    mainLayout->setMargin(0);
+    mainLayout->setSpacing(0);
 
     QVBoxLayout *vlay = new QVBoxLayout;
+    vlay->setMargin(0);
+    vlay->setSpacing(0);
 
     mListService = new QListWidget;
     vlay->addWidget(mListService);

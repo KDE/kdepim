@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,28 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "contactgrantleeprintimobject.h"
-#include "akonadi/contact/improtocols.h"
+#include "kmail/mailmerge/mailmergewidget.h"
 
-using namespace KABPrinting;
-ContactGrantleePrintImObject::ContactGrantleePrintImObject(const QString &type, const QString &address, QObject *parent)
-    : QObject(parent),
-      mType(type),
-      mAddress(address)
+#include <kdebug.h>
+#include <kapplication.h>
+#include <KCmdLineArgs>
+#include <KLocalizedString>
+
+int main (int argc, char **argv)
 {
-}
+    KCmdLineArgs::init(argc, argv, "mailmergewidget_gui", 0, ki18n("MailMergeWidgetTest_Gui"),
+                       "1.0", ki18n("Test for mailmerge widget"));
 
-ContactGrantleePrintImObject::~ContactGrantleePrintImObject()
-{
+    KApplication app;
 
-}
-
-QString ContactGrantleePrintImObject::type() const
-{
-    return IMProtocols::self()->name(mType);
-}
-
-QString ContactGrantleePrintImObject::address() const
-{
-    return mAddress;
+    MailMergeWidget *w = new MailMergeWidget();
+    w->resize(800, 600);
+    w->show();
+    app.exec();
+    delete w;
+    return 0;
 }

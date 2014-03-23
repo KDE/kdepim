@@ -39,7 +39,7 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     : QSplitter(parent)
 {
     mTabWidget = new SieveEditorTabWidget;
-    connect(mTabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(slotTabCloseRequested(int)));
+    connect(mTabWidget, SIGNAL(tabCloseRequestedIndex(int)), this, SLOT(slotTabCloseRequested(int)));
     connect(mTabWidget, SIGNAL(tabRemoveAllExclude(int)), this, SLOT(slotTabRemoveAllExclude(int)));
     addWidget(mTabWidget);
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;

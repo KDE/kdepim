@@ -69,7 +69,7 @@ void CalendarSupport::IncidenceFetchJob::collectionFetchResult( KJob *job )
     emitResult();
   } else {
     foreach ( const Collection &col, fetch->collections() ) {
-      if ( !m_mimeTypeChecker.isWantedCollection( col ) ) {
+      if ( !m_mimeTypeChecker.isWantedCollection( col ) || col.isVirtual() ) {
         continue;
       }
       ItemFetchJob *itemFetch = new ItemFetchJob( col, this );

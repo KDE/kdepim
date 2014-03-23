@@ -65,6 +65,6 @@ void SieveEditorTabWidget::slotTabContextMenuRequest(const QPoint &pos)
     if ( action == allOther ) { // Close all other tabs
         Q_EMIT tabRemoveAllExclude(indexBar);
     } else if (action == closeTab) {
-        Q_EMIT tabCloseRequested(indexBar);
+        Q_EMIT tabCloseRequestedIndex(indexBar);
     }
 }

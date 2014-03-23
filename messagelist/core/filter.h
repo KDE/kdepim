@@ -26,7 +26,7 @@
 #include <QtCore/QString>
 
 #include <Akonadi/KMime/MessageStatus>
-#include <KUrl>
+#include <Akonadi/Collection>
 #include "quicksearchline.h"
 
 namespace MessageList
@@ -70,7 +70,7 @@ public:
   /**
    * Sets the current folder of this filter.
    */
-  void setCurrentFolder( const KUrl &url );
+  void setCurrentFolder( const Akonadi::Collection &collection );
 
   /**
    * Returns the currently set search string.
@@ -113,7 +113,7 @@ private:
   QList<Akonadi::MessageStatus> mStatus;    ///< Messages must match theses status, if non 0
   QString mSearchString;             ///< Messages must match this search string, if not empty
   QString mTagId;                    ///< Messages must have this tag, if not empty. Contains a tag url.
-  KUrl mCurrentFolder;
+  Akonadi::Collection mCurrentFolder;
   QSet<qint64> mMatchingItemIds;
   QuickSearchLine::SearchOptions mOptions;
 };
