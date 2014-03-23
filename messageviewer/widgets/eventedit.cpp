@@ -48,7 +48,7 @@ EventEdit::EventEdit(QWidget *parent)
     setLayout(vbox);
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->setMargin(0);
-    hbox->setSpacing(0);
+    hbox->setSpacing(2);
     vbox->addLayout(hbox);
 
     QToolButton *closeBtn = new QToolButton( this );
