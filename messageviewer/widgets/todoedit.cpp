@@ -82,6 +82,8 @@ TodoEdit::TodoEdit(QWidget *parent)
     hbox->addWidget(mCollectionCombobox);
     readConfig();
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
+    mCollectionCombobox->installEventFilter(this);
+    installEventFilter(this);
 }
 
 TodoEdit::~TodoEdit()
@@ -190,7 +192,7 @@ void TodoEdit::slotReturnPressed()
     }
 }
 
-bool TodoEdit::event(QEvent* e)
+bool TodoEdit::eventFilter(QObject *object, QEvent *e)
 {
     // Close the bar when pressing Escape.
     // Not using a QShortcut for this because it could conflict with
@@ -204,12 +206,17 @@ bool TodoEdit::event(QEvent* e)
             slotCloseWidget();
             return true;
         } else if ( kev->key() == Qt::Key_Enter ||
-                   kev->key() == Qt::Key_Return ) {
+                    kev->key() == Qt::Key_Return ||
+                    kev->key() == Qt::Key_Space) {
             e->accept();
             if ( shortCutOverride ) {
                 return true;
             }
+            if (object == mCollectionCombobox) {
+                mCollectionCombobox->showPopup();
+                return true;
+            }
         }
     }
-    return QWidget::event(e);
+    return QWidget::eventFilter(object,e);
 }

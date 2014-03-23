@@ -299,7 +299,7 @@ void QuickSearchLine::createQuickSearchButton(const QIcon &icon, const QString &
     button->setChecked(false);
     button->setProperty("statusvalue", value);
     quickSearchButtonLayout->addWidget(button);
-    installEventFilter(button);
+    button->installEventFilter(this);
     mListStatusButton.append(button);
     mButtonStatusGroup->addButton(button);
 }
