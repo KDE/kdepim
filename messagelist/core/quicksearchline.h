@@ -74,6 +74,8 @@ Q_SIGNALS:
     void searchOptionChanged();
     void statusButtonsClicked();
 
+protected:
+    bool eventFilter(QObject *object, QEvent *e);
 private slots:
     void slotLockSearchClicked(bool locked);
     void slotSearchOptionChanged();

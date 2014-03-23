@@ -339,9 +339,12 @@ void ManageSieveWidget::slotUpdateButtons()
 
 void ManageSieveWidget::slotGotList(KManageSieve::SieveJob *job, bool success, const QStringList &listScript, const QString &activeScript)
 {
+    qDebug()<<"void ManageSieveWidget::slotGotList(KManageSieve::SieveJob *job, bool success, const QStringList &listScript, const QString &activeScript) success: "<<success<<" listScript"<<listScript;
     if (mClearAll)
         return;
+    qDebug()<<" After mClear All";
     QTreeWidgetItem * parent = mJobs[job];
+    qDebug()<<" parent "<<parent;
     if ( !parent )
         return;
     (static_cast<SieveTreeWidgetItem*>(parent))->stopAnimation();
@@ -376,6 +379,7 @@ void ManageSieveWidget::slotGotList(KManageSieve::SieveJob *job, bool success, c
     }
     mBlockSignal = false;
 
+    qDebug()<<" LOAD";
     const bool hasIncludeCapability = job->sieveCapabilities().contains(QLatin1String("include"));
     const bool hasUserActiveScript = (activeScript.toLower() == QLatin1String("USER"));
     QStringList mUserActiveScriptList;

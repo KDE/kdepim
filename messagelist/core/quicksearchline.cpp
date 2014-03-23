@@ -35,6 +35,7 @@
 #include <QPushButton>
 #include <QButtonGroup>
 #include <QLabel>
+#include <QKeyEvent>
 
 
 using namespace MessageList::Core;
@@ -162,6 +163,18 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     connect(mButtonSearchAgainstGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotSearchOptionChanged()));
     mButtonSearchAgainstGroup->setExclusive(true);
     mQuickSearchFilterWidget->hide();
+
+    installEventFilter(this);
+    mMoreOptions->installEventFilter(this);
+    mTagFilterCombo->installEventFilter(this);
+    mLockSearch->installEventFilter(this);
+    mSearchEveryWhere->installEventFilter(this);
+    mSearchAgainstBody->installEventFilter(this);
+    mSearchAgainstSubject->installEventFilter(this);
+    mSearchAgainstFromOrTo->installEventFilter(this);
+    mSearchAgainstBcc->installEventFilter(this);
+    mQuickSearchFilterWidget->installEventFilter(this);
+    mExtraOption->installEventFilter(this);
 }
 
 QuickSearchLine::~QuickSearchLine()
@@ -286,6 +299,7 @@ void QuickSearchLine::createQuickSearchButton(const QIcon &icon, const QString &
     button->setChecked(false);
     button->setProperty("statusvalue", value);
     quickSearchButtonLayout->addWidget(button);
+    installEventFilter(button);
     mListStatusButton.append(button);
     mButtonStatusGroup->addButton(button);
 }
@@ -378,4 +392,29 @@ QList<Akonadi::MessageStatus> QuickSearchLine::status() const
 void QuickSearchLine::updateComboboxVisibility()
 {
     mTagFilterCombo->setVisible(mTagFilterCombo->count());
+}
+
+bool QuickSearchLine::eventFilter(QObject *object, QEvent *e)
+{
+    const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
+    if (shortCutOverride || e->type() == QEvent::KeyPress ) {
+        QKeyEvent *kev = static_cast<QKeyEvent* >(e);
+        if ( kev->key() == Qt::Key_Enter ||
+             kev->key() == Qt::Key_Return ||
+             kev->key() == Qt::Key_Space) {
+            e->accept();
+            QAbstractButton *button = qobject_cast<QAbstractButton *>(object);
+            if (button) {
+                button->animateClick();
+                return true;
+            } else if (object == mTagFilterCombo) {
+                mTagFilterCombo->showPopup();
+                return true;
+            } else if (object == mLockSearch) {
+                mLockSearch->animateClick();
+                return true;
+            }
+        }
+    }
+    return QWidget::eventFilter(object,e);
 }
