@@ -2,8 +2,10 @@
 Name=KAddressbook import file
 Name[bs]=KAddressbook uvozna datoteka
 Name[ca]=Importa un fitxer de KAddressbook
+Name[ca@valencia]=Importa un fitxer de KAddressbook
 Name[cs]=Importovat soubor KAddressbook
 Name[de]=Adressbuch-Importdatei
+Name[el]=Αρχείο εισαγωγής του KAddressBook
 Name[es]=Importar archivo de KAddressbook
 Name[fi]=Tiedoston tuonti KAddressbookiin
 Name[fr]=Importation d'un fichier KAddressbook
