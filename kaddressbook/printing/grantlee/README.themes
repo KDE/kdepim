@@ -1,0 +1,68 @@
+How to create kaddressbook printing based on Grantlee:
+------------------------------------------------------
+You need to provide a:
+- theme.desktop which define name/description about theme
+- theme.html html template used by Grantlee
+
+Example:
+<html>
+
+<h1>KAddressBook</h1>
+{% if contacts %}
+{% for contact in contacts %}
+<h1>{{ contact.realName|safe }}</h1>
+<p>{{ contact.emails|safe }}</p>
+<p>{{ contact.note|safe }}</p>
+<br>
+<br>
+{% endfor %}
+{% endif %}
+
+</html>
+
+
+=> All contact is stored in contacts object => We use a loop for as in example.
+We can use as variable:
+- realName (QString)
+  formattedName (QString)
+  prefix (QString)
+  givenName (QString)
+  additionalName (QString)
+  familyName (QString)
+  suffix (QString)
+  nickName (QString)
+  emails (QStringList => use loop for)
+  organization (QString)
+  note (QString)
+  webPage (QString)
+  title (QString)
+  preferredEmail (QString)
+  role (QString)
+  birthday (QString)
+  department (QString)
+  addresses (QVariant) we have more info here see below
+  phones (QVariant) we have more info here see below
+  instantManging (QVariant) we have more info here see below
+  addressBookName (QString)
+  photo (QString)
+  logo (QString)
+
+Element for address:
+ - type (QString)
+ - street (QString)
+ - postOfficeBox (QString)
+ - locality (QString)
+ - region (QString)
+ - postalCode (QString)
+ - country (QString)
+ - label (QString)
+ - formattedAddress (QString)
+
+Element for Phones:
+ - type (QString)
+ - number (QString)
+
+Element for IM:
+ - type (QString)
+ - address (QString)
+
