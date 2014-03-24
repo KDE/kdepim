@@ -25,6 +25,7 @@ namespace KABPrinting {
 class ContactGrantleePrintAddressObject;
 class ContactGrantleePrintPhoneObject;
 class ContactGrantleePrintImObject;
+class ContactGrantleePrintGeoObject;
 class ContactGrantleePrintObject : public QObject
 {
     Q_OBJECT
@@ -76,7 +77,8 @@ public:
     QVariant addresses() const;
     QVariant phones() const;
     QString addressBookName() const;
-    QVariant instantManging() const;    
+    QVariant instantManging() const;
+    QVariant geo() const;
     QString photo() const;
     QString logo() const;
 private:
@@ -84,6 +86,7 @@ private:
     QList<ContactGrantleePrintAddressObject*> mListAddress;
     QList<ContactGrantleePrintPhoneObject*> mListPhones;
     QList<ContactGrantleePrintImObject*> mListIm;
+    ContactGrantleePrintGeoObject *mGeoObject;
     KABC::Addressee mAddress;
 };
 }
@@ -91,4 +94,5 @@ Q_DECLARE_METATYPE(QList<KABPrinting::ContactGrantleePrintObject*>)
 Q_DECLARE_METATYPE(QList<KABPrinting::ContactGrantleePrintAddressObject*>)
 Q_DECLARE_METATYPE(QList<KABPrinting::ContactGrantleePrintPhoneObject*>)
 Q_DECLARE_METATYPE(QList<KABPrinting::ContactGrantleePrintImObject*>)
+Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintGeoObject*)
 #endif // CONTACTGRANTLEEPRINTOBJECT_H
