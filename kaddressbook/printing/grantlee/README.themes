@@ -40,9 +40,10 @@ We can use as variable:
   role (QString)
   birthday (QString)
   department (QString)
-  addresses (QVariant) we have more info here see below
-  phones (QVariant) we have more info here see below
-  instantManging (QVariant) we have more info here see below
+  addresses (QVariant) we have more info see below
+  phones (QVariant) we have more info see below
+  instantManging (QVariant) we have more info see below
+  geo (QVariant) we have more info see below
   addressBookName (QString)
   photo (QString)
   logo (QString)
@@ -66,3 +67,8 @@ Element for IM:
  - type (QString)
  - address (QString)
 
+Element for geo:
+ - latitude (float)
+ - longitude (float)
+ - isValid (bool) return true if valid
+ - toString (QString) return information as string
