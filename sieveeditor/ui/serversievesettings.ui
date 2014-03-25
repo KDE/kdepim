@@ -40,7 +40,7 @@
    </item>
    <item row="0" column="1">
     <widget class="KLineEdit" name="serverName">
-    <property name="showClearButton" stdset="0">
+     <property name="showClearButton" stdset="0">
       <bool>true</bool>
      </property>
     </widget>
@@ -57,10 +57,10 @@
    </item>
    <item row="1" column="1">
     <widget class="KLineEdit" name="userName">
-    <property name="showClearButton" stdset="0">
+     <property name="showClearButton" stdset="0">
       <bool>true</bool>
      </property>
-     </widget>
+    </widget>
    </item>
    <item row="1" column="0">
     <widget class="QLabel" name="label_2">
@@ -111,6 +111,13 @@
    <header>klineedit.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>serverName</tabstop>
+  <tabstop>userName</tabstop>
+  <tabstop>password</tabstop>
+  <tabstop>port</tabstop>
+  <tabstop>authenticationCombo</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

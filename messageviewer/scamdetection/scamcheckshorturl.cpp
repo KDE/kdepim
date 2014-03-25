@@ -43,13 +43,8 @@ ScamCheckShortUrl::ScamCheckShortUrl(QObject *parent)
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotExpandFinished(QNetworkReply*)));
     connect ( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
               this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
-    Solid::Networking::Status networkStatus = Solid::Networking::status();
-    if ( ( networkStatus == Solid::Networking::Unconnected ) ||
-         ( networkStatus == Solid::Networking::Disconnecting ) ||
-         ( networkStatus == Solid::Networking::Connecting ))
-        mNetworkUp = false;
-    else
-        mNetworkUp = true;
+    const Solid::Networking::Status networkStatus = Solid::Networking::status();
+    slotSystemNetworkStatusChanged(networkStatus);
 }
 
 ScamCheckShortUrl::~ScamCheckShortUrl()

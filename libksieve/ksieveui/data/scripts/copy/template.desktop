@@ -2,7 +2,9 @@
 Name=Move to directory
 Name[bs]=Premjesti u direktorij
 Name[ca]=Mou al directori
+Name[ca@valencia]=Mou al directori
 Name[de]=In Ordner schieben
+Name[el]=Μετακίνηση στον κατάλογο
 Name[es]=Mover a directorio
 Name[fi]=Siirrä kansioon
 Name[fr]=Déplacer dans le dossier
@@ -11,6 +13,7 @@ Name[hu]=Áthelyezés könyvtárba
 Name[ia]=Move a directorio
 Name[it]=Sposta nella cartella
 Name[nb]=Flytt til mappe
+Name[nds]=Na Orner verschuven
 Name[nl]=Naar map verplaatsen
 Name[pl]=Przenieś do katalogu
 Name[pt]=Mover para a pasta
