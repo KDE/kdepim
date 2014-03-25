@@ -204,7 +204,8 @@ void SieveEditorMainWindow::slotAddServerSieve()
 
 void SieveEditorMainWindow::slotUpdateActions()
 {
-    mSaveScript->setEnabled(mMainWidget->tabWidget()->count()>0);
+    const bool hasPage = (mMainWidget->tabWidget()->count()>0);
+    mSaveScript->setEnabled(hasPage);
     mSaveScript->setEnabled(hasPage && !mNetworkIsDown);
     mRefreshList->setEnabled(!mNetworkIsDown);
 }
