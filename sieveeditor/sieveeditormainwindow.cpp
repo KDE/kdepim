@@ -56,6 +56,7 @@ SieveEditorMainWindow::SieveEditorMainWindow()
     connect(mMainWidget->tabWidget(), SIGNAL(currentChanged(int)), SLOT(slotUpdateActions()));
     const Solid::Networking::Status status = Solid::Networking::status();
     slotSystemNetworkStatusChanged(status);
+    slotRefreshList();
 }
 
 SieveEditorMainWindow::~SieveEditorMainWindow()
@@ -84,6 +85,7 @@ void SieveEditorMainWindow::slotSystemNetworkStatusChanged(Solid::Networking::St
         mStatusBarInfo->setText(i18n("Network is Down."));
     }
     mMainWidget->setEnabled(!mNetworkIsDown);
+    slotUpdateActions();
 }
 
 void SieveEditorMainWindow::slotUpdateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction)
@@ -140,7 +142,8 @@ void SieveEditorMainWindow::setupActions()
 
 void SieveEditorMainWindow::slotRefreshList()
 {
-    mMainWidget->refreshList();
+    if (!mNetworkIsDown)
+        mMainWidget->refreshList();
 }
 
 void SieveEditorMainWindow::slotSaveScript()
@@ -202,5 +205,7 @@ void SieveEditorMainWindow::slotAddServerSieve()
 void SieveEditorMainWindow::slotUpdateActions()
 {
     mSaveScript->setEnabled(mMainWidget->tabWidget()->count()>0);
+    mSaveScript->setEnabled(hasPage && !mNetworkIsDown);
+    mRefreshList->setEnabled(!mNetworkIsDown);
 }
 
