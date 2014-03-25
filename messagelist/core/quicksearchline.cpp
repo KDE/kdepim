@@ -300,6 +300,7 @@ void QuickSearchLine::createQuickSearchButton(const QIcon &icon, const QString &
     button->setProperty("statusvalue", value);
     quickSearchButtonLayout->addWidget(button);
     button->installEventFilter(this);
+    button->setFocusPolicy(Qt::StrongFocus);
     mListStatusButton.append(button);
     mButtonStatusGroup->addButton(button);
 }
