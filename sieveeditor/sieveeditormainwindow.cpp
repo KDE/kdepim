@@ -214,6 +214,7 @@ void SieveEditorMainWindow::slotUpdateActions()
     const bool hasPage = (mMainWidget->tabWidget()->count()>0);
     mSaveScript->setEnabled(hasPage);
     mGoToLine->setEnabled(hasPage && mMainWidget->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
+    mSaveScript->setEnabled(hasPage && !mNetworkIsDown);
     mRefreshList->setEnabled(!mNetworkIsDown);
 }
 
