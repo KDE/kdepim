@@ -398,23 +398,8 @@ bool QuickSearchLine::eventFilter(QObject *object, QEvent *e)
 {
     const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
     if (shortCutOverride || e->type() == QEvent::KeyPress ) {
-        QKeyEvent *kev = static_cast<QKeyEvent* >(e);
-        if ( kev->key() == Qt::Key_Enter ||
-             kev->key() == Qt::Key_Return ||
-             kev->key() == Qt::Key_Space) {
-            e->accept();
-            QAbstractButton *button = qobject_cast<QAbstractButton *>(object);
-            if (button) {
-                button->animateClick();
-                return true;
-            } else if (object == mTagFilterCombo) {
-                mTagFilterCombo->showPopup();
-                return true;
-            } else if (object == mLockSearch) {
-                mLockSearch->animateClick();
-                return true;
-            }
-        }
+        e->accept();
+        return true;
     }
     return QWidget::eventFilter(object,e);
 }
