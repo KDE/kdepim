@@ -499,6 +499,7 @@ void IncidenceAttendee::slotOrganizerChanged( const QString &newOrganizer )
   bool success = KPIMUtils::extractEmailAddressAndName( newOrganizer, email, name );
 
   if ( !success ) {
+    kWarning() << "Could not extract email address and name";
     return;
   }
 
