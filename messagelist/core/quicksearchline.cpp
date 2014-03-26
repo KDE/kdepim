@@ -101,7 +101,6 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
 
     // The status filter button. Will be populated later, as populateStatusFilterCombo() is virtual
     mTagFilterCombo = new KComboBox( this ) ;
-    mTagFilterCombo->setVisible( Settings::self()->showQuickSearch() );
     mTagFilterCombo->setMaximumWidth(300);
     mTagFilterCombo->setMaximumWidth(200);
     mTagFilterCombo->hide();
@@ -300,6 +299,7 @@ void QuickSearchLine::createQuickSearchButton(const QIcon &icon, const QString &
     button->setProperty("statusvalue", value);
     quickSearchButtonLayout->addWidget(button);
     button->installEventFilter(this);
+    button->setFocusPolicy(Qt::StrongFocus);
     mListStatusButton.append(button);
     mButtonStatusGroup->addButton(button);
 }
