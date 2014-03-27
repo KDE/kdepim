@@ -81,15 +81,12 @@ endif()
 # Examples in chronological order:
 # 3.0, 3.0.1, 3.1 alpha1, 3.1 beta1, 3.1 beta2, 3.1 rc1, 3.1, 3.1.1, 3.2 pre, 3.2 alpha1
 
-# Do NOT add quote
-set(KDEPIM_DEV_VERSION)
+set(KDEPIM_VERSION_MAJOR 4)
+set(KDEPIM_VERSION_MINOR 13)
+set(KDEPIM_VERSION_PATCH 0)
+set(KDEPIM_VERSION_KOLAB 0)
+set(KDEPIM_VERSION ${KDEPIM_VERSION_MAJOR}.${KDEPIM_VERSION_MINOR}.${KDEPIM_VERSION_PATCH}.${KDEPIM_VERSION_KOLAB})
 
-# add an extra space
-if(DEFINED KDEPIM_DEV_VERSION)
-  set(KDEPIM_DEV_VERSION " ${KDEPIM_DEV_VERSION}")
-endif()
-
-set(KDEPIM_VERSION "4.13${KDEPIM_DEV_VERSION}")
 
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
 
