@@ -1834,7 +1834,7 @@ QStringList Kleo::KeyResolver::keysForAddress( const QString & address ) const {
     if( address.isEmpty() ) {
         return QStringList();
     }
-    QString addr = canonicalAddress( address ).toLower();
+    const QString addr = canonicalAddress( address ).toLower();
     const ContactPreferences pref = lookupContactPreferences( addr );
     return pref.pgpKeyFingerprints + pref.smimeCertFingerprints;
 }
@@ -1843,9 +1843,49 @@ void Kleo::KeyResolver::setKeysForAddress( const QString& address, const QString
     if( address.isEmpty() ) {
         return;
     }
-    QString addr = canonicalAddress( address ).toLower();
+    const QString addr = canonicalAddress( address ).toLower();
     ContactPreferences pref = lookupContactPreferences( addr );
     pref.pgpKeyFingerprints = pgpKeyFingerprints;
     pref.smimeCertFingerprints = smimeCertFingerprints;
     saveContactPreference( addr, pref );
+}
+
+bool Kleo::KeyResolver::encryptToSelf() const
+{
+    return mEncryptToSelf;
+}
+
+bool Kleo::KeyResolver::showApprovalDialog() const
+{
+    return mShowApprovalDialog;
+}
+
+int Kleo::KeyResolver::encryptKeyNearExpiryWarningThresholdInDays() const
+{
+    return mEncryptKeyNearExpiryWarningThreshold;
+}
+
+int Kleo::KeyResolver::signingKeyNearExpiryWarningThresholdInDays() const
+{
+    return mSigningKeyNearExpiryWarningThreshold;
+}
+
+int Kleo::KeyResolver::encryptRootCertNearExpiryWarningThresholdInDays() const
+{
+    return mEncryptRootCertNearExpiryWarningThreshold;
+}
+
+int Kleo::KeyResolver::signingRootCertNearExpiryWarningThresholdInDays() const
+{
+    return mSigningRootCertNearExpiryWarningThreshold;
+}
+
+int Kleo::KeyResolver::encryptChainCertNearExpiryWarningThresholdInDays() const
+{
+    return mEncryptChainCertNearExpiryWarningThreshold;
+}
+
+int Kleo::KeyResolver::signingChainCertNearExpiryWarningThresholdInDays() const
+{
+    return mSigningChainCertNearExpiryWarningThreshold;
 }

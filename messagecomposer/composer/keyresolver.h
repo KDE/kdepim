@@ -269,29 +269,17 @@ private:
     QStringList keysForAddress( const QString & address ) const;
     void setKeysForAddress( const QString & address, const QStringList& pgpKeyFingerprints, const QStringList& smimeCertFingerprints ) const;
 
-    bool encryptToSelf() const { return mEncryptToSelf; }
-    bool showApprovalDialog() const { return mShowApprovalDialog; }
+    bool encryptToSelf() const;
+    bool showApprovalDialog() const;
 
-    int encryptKeyNearExpiryWarningThresholdInDays() const {
-        return mEncryptKeyNearExpiryWarningThreshold;
-    }
-    int signingKeyNearExpiryWarningThresholdInDays() const {
-        return mSigningKeyNearExpiryWarningThreshold;
-    }
+    int encryptKeyNearExpiryWarningThresholdInDays() const;
+    int signingKeyNearExpiryWarningThresholdInDays() const;
 
-    int encryptRootCertNearExpiryWarningThresholdInDays() const {
-        return mEncryptRootCertNearExpiryWarningThreshold;
-    }
-    int signingRootCertNearExpiryWarningThresholdInDays() const {
-        return mSigningRootCertNearExpiryWarningThreshold;
-    }
+    int encryptRootCertNearExpiryWarningThresholdInDays() const;
+    int signingRootCertNearExpiryWarningThresholdInDays() const;
 
-    int encryptChainCertNearExpiryWarningThresholdInDays() const {
-        return mEncryptChainCertNearExpiryWarningThreshold;
-    }
-    int signingChainCertNearExpiryWarningThresholdInDays() const {
-        return mSigningChainCertNearExpiryWarningThreshold;
-    }
+    int encryptChainCertNearExpiryWarningThresholdInDays() const;
+    int signingChainCertNearExpiryWarningThresholdInDays() const;
 
 
     ContactPreferences lookupContactPreferences( const QString& address ) const;
