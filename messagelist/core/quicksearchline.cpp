@@ -58,6 +58,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mLockSearch = new QToolButton( this );
     mLockSearch->setCheckable( true );
     mLockSearch->setText( i18nc( "@action:button", "Lock search" ) );
+    mLockSearch->setFocusPolicy(Qt::StrongFocus);
     mLockSearch->setWhatsThis(
                 i18nc( "@info:whatsthis",
                        "Toggle this button if you want to keep your quick search "
@@ -397,7 +398,7 @@ void QuickSearchLine::updateComboboxVisibility()
 bool QuickSearchLine::eventFilter(QObject *object, QEvent *e)
 {
     const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
-    if (shortCutOverride || e->type() == QEvent::KeyPress ) {
+    if (shortCutOverride) {
         e->accept();
         return true;
     }
