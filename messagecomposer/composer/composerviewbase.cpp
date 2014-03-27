@@ -329,6 +329,7 @@ void MessageComposer::ComposerViewBase::readyForSending()
 
     // first, expand all addresses
     MessageComposer::EmailAddressResolveJob *job = new MessageComposer::EmailAddressResolveJob( this );
+    job->setDefaultDomainName(MessageComposer::MessageComposerSettings::defaultDomain());
     job->setFrom( from() );
     job->setTo( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::To ) );
     job->setCc( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::Cc ) );
