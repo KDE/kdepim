@@ -30,6 +30,7 @@ class KComboBox;
 class QToolButton;
 class QPushButton;
 class QButtonGroup;
+class QSignalMapper;
 class KPushButton;
 namespace MessageList {
 namespace Core {
@@ -99,9 +100,9 @@ private:
     QPushButton *mSearchAgainstBcc;
     QWidget *mExtraOption;
     QWidget *mQuickSearchFilterWidget;
-    QButtonGroup *mButtonStatusGroup;
     QButtonGroup *mButtonSearchAgainstGroup;
     bool mContainsOutboundMessages;
+    QSignalMapper *mFilterStatusMapper;
 };
 }
 }

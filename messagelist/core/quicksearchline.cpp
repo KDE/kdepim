@@ -36,12 +36,14 @@
 #include <QButtonGroup>
 #include <QLabel>
 #include <QKeyEvent>
+#include <QSignalMapper>
 
 
 using namespace MessageList::Core;
 QuickSearchLine::QuickSearchLine(QWidget *parent)
     : QWidget(parent),
-      mContainsOutboundMessages(false)
+      mContainsOutboundMessages(false),
+      mFilterStatusMapper(0)
 {
     QVBoxLayout *vbox = new QVBoxLayout;
     vbox->setMargin(0);
@@ -58,6 +60,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mLockSearch = new QToolButton( this );
     mLockSearch->setCheckable( true );
     mLockSearch->setText( i18nc( "@action:button", "Lock search" ) );
+    mLockSearch->setFocusPolicy(Qt::StrongFocus);
     mLockSearch->setWhatsThis(
                 i18nc( "@info:whatsthis",
                        "Toggle this button if you want to keep your quick search "
@@ -297,11 +300,12 @@ void QuickSearchLine::createQuickSearchButton(const QIcon &icon, const QString &
     button->setCheckable(true);
     button->setChecked(false);
     button->setProperty("statusvalue", value);
+    mFilterStatusMapper->setMapping(button, value);
+    connect( button, SIGNAL(clicked(bool)), mFilterStatusMapper, SLOT(map()) );
     quickSearchButtonLayout->addWidget(button);
     button->installEventFilter(this);
     button->setFocusPolicy(Qt::StrongFocus);
     mListStatusButton.append(button);
-    mButtonStatusGroup->addButton(button);
 }
 
 bool QuickSearchLine::containsOutboundMessages() const
@@ -328,9 +332,9 @@ void QuickSearchLine::changeSearchAgainstFromOrToText()
 
 void QuickSearchLine::initializeStatusSearchButton(QLayout *quickSearchButtonLayout)
 {
-    mButtonStatusGroup = new QButtonGroup(this);
-    mButtonStatusGroup->setExclusive(false);
-    connect(mButtonStatusGroup, SIGNAL(buttonClicked(int)), this, SIGNAL(statusButtonsClicked()));
+    //Bug Qt we can't use QButtonGroup + QToolButton + change focus. => use QSignalMapper();
+    mFilterStatusMapper = new QSignalMapper(this);
+    connect(mFilterStatusMapper, SIGNAL(mapped(int)), this, SIGNAL(statusButtonsClicked()));
 
     createQuickSearchButton(SmallIcon(QLatin1String( "mail-unread" )), i18nc( "@action:inmenu Status of a message", "Unread" ), Akonadi::MessageStatus::statusUnread().toQInt32(),quickSearchButtonLayout );
 
@@ -397,7 +401,7 @@ void QuickSearchLine::updateComboboxVisibility()
 bool QuickSearchLine::eventFilter(QObject *object, QEvent *e)
 {
     const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
-    if (shortCutOverride || e->type() == QEvent::KeyPress ) {
+    if (shortCutOverride) {
         e->accept();
         return true;
     }
