@@ -36,12 +36,14 @@
 #include <QButtonGroup>
 #include <QLabel>
 #include <QKeyEvent>
+#include <QSignalMapper>
 
 
 using namespace MessageList::Core;
 QuickSearchLine::QuickSearchLine(QWidget *parent)
     : QWidget(parent),
-      mContainsOutboundMessages(false)
+      mContainsOutboundMessages(false),
+      mFilterStatusMapper(0)
 {
     QVBoxLayout *vbox = new QVBoxLayout;
     vbox->setMargin(0);
@@ -298,11 +300,12 @@ void QuickSearchLine::createQuickSearchButton(const QIcon &icon, const QString &
     button->setCheckable(true);
     button->setChecked(false);
     button->setProperty("statusvalue", value);
+    mFilterStatusMapper->setMapping(button, value);
+    connect( button, SIGNAL(clicked(bool)), mFilterStatusMapper, SLOT(map()) );
     quickSearchButtonLayout->addWidget(button);
     button->installEventFilter(this);
     button->setFocusPolicy(Qt::StrongFocus);
     mListStatusButton.append(button);
-    mButtonStatusGroup->addButton(button);
 }
 
 bool QuickSearchLine::containsOutboundMessages() const
@@ -329,9 +332,9 @@ void QuickSearchLine::changeSearchAgainstFromOrToText()
 
 void QuickSearchLine::initializeStatusSearchButton(QLayout *quickSearchButtonLayout)
 {
-    mButtonStatusGroup = new QButtonGroup(this);
-    mButtonStatusGroup->setExclusive(false);
-    connect(mButtonStatusGroup, SIGNAL(buttonClicked(int)), this, SIGNAL(statusButtonsClicked()));
+    //Bug Qt we can't use QButtonGroup + QToolButton + change focus. => use QSignalMapper();
+    mFilterStatusMapper = new QSignalMapper(this);
+    connect(mFilterStatusMapper, SIGNAL(mapped(int)), this, SIGNAL(statusButtonsClicked()));
 
     createQuickSearchButton(SmallIcon(QLatin1String( "mail-unread" )), i18nc( "@action:inmenu Status of a message", "Unread" ), Akonadi::MessageStatus::statusUnread().toQInt32(),quickSearchButtonLayout );
 
