@@ -33,7 +33,9 @@ set( messagecomposer_src
      helper/messagehelper.cpp
      helper/messagefactory.cpp
      settings/messagecomposersettings.cpp
+
      composer/composerviewbase.cpp
+     composer/savecontactpreferencejob.cpp
 
      part/messagepart.cpp
      part/globalpart.cpp
