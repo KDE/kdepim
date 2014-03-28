@@ -329,7 +329,10 @@ void MessageComposer::ComposerViewBase::readyForSending()
 
     // first, expand all addresses
     MessageComposer::EmailAddressResolveJob *job = new MessageComposer::EmailAddressResolveJob( this );
-    job->setDefaultDomainName(MessageComposer::MessageComposerSettings::defaultDomain());
+    const KPIMIdentities::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
+    if (!identity.isNull()) {
+        job->setDefaultDomainName(identity.defaultDomainName());
+    }
     job->setFrom( from() );
     job->setTo( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::To ) );
     job->setCc( m_recipientsEditor->recipientStringList( MessageComposer::Recipient::Cc ) );

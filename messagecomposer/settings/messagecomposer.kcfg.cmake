@@ -5,12 +5,6 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
 
   <include>kglobalsettings.h</include>
   <kcfgfile name="mailcomposerrc" />
-  <group name="General">
-    <entry  name="DefaultDomain" type="String" key="Default domain">
-      <default></default>
-    </entry>
-  </group>
-
   <group name="Composer">
 
     <entry name="ReplyPrefixes" type="StringList" key="reply-prefixes">

@@ -100,7 +100,7 @@ set(CMAKE_AUTOMOC ON)
 find_package(KDE4 4.12.0 REQUIRED)
 include(KDE4Defaults)
 
-find_package(KdepimLibs 4.13.42)
+find_package(KdepimLibs 4.13.44)
 set_package_properties(KdepimLibs PROPERTIES DESCRIPTION "The KDEPIM libraries" URL "http://www.kde.org" TYPE REQUIRED)
 
 ############### Load the CTest options ###############
