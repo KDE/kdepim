@@ -109,6 +109,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mTagFilterCombo->hide();
     hbox->addWidget( mTagFilterCombo );
 
+    //Be disable until we have a storageModel => logical that it's disable.
     mSearchEdit->setEnabled( false );
     mTagFilterCombo->setEnabled( false );
 
