@@ -41,9 +41,9 @@ namespace KPIM {
 class KDEPIM_EXPORT KWeekdayCheckCombo : public KCheckComboBox
 {
 
-  Q_OBJECT
+    Q_OBJECT
 public:
-   /**
+    /**
     * @param first5Checked if true the first 5 weekdays will be checked by default
     */
     explicit KWeekdayCheckCombo( QWidget *parent = 0, bool first5Checked = false );

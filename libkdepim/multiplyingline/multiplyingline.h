@@ -40,7 +40,7 @@ namespace KPIM {
 */
 class KDEPIM_EXPORT MultiplyingLineData
 {
-  public:
+public:
     typedef QSharedPointer<MultiplyingLineData> Ptr;
     virtual ~MultiplyingLineData(){}
 
@@ -65,7 +65,7 @@ class KDEPIM_EXPORT MultiplyingLine : public QWidget
 {
 
     Q_OBJECT
-  public:
+public:
     explicit MultiplyingLine( QWidget *parent );
     virtual ~MultiplyingLine() {}
 
@@ -178,7 +178,7 @@ class KDEPIM_EXPORT MultiplyingLine : public QWidget
      */
     virtual void aboutToBeDeleted();
 
-  signals:
+signals:
     /**
       Emitted when the return/enter key is pressed
     */
@@ -203,16 +203,16 @@ class KDEPIM_EXPORT MultiplyingLine : public QWidget
       Emitted when the completion mode changes
     */
     void completionModeChanged( KGlobalSettings::Completion );
-  public slots:
+public slots:
     void slotPropagateDeletion();
 
-  protected slots:
+protected slots:
     void slotReturnPressed();
     void slotFocusUp();
     void slotFocusDown();
 
 
-  protected:
+protected:
     /**
       Handles key press events on this line.
       Default behavior handles Up and Down presses.

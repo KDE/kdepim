@@ -47,9 +47,9 @@ class LdapObject;
  */
 class KDEPIM_EXPORT LdapSearchDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new ldap search dialog.
      *
@@ -73,22 +73,22 @@ class KDEPIM_EXPORT LdapSearchDialog : public KDialog
      */
     KABC::Addressee::List selectedContacts() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the user clicked the
      * 'Add Selected' button.
      */
     void contactsAdded();
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     void slotUser1();
     void slotUser2();
     void slotCustomContextMenuRequested(const QPoint&);
 
-  protected:
+protected:
     void closeEvent( QCloseEvent* );
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private* const d;

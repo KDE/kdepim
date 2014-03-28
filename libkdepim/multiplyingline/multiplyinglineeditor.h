@@ -44,8 +44,8 @@ class MultiplyingLineView;
  */
 class KDEPIM_EXPORT MultiplyingLineFactory : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit MultiplyingLineFactory( QObject* parent ) : QObject( parent ) {}
     virtual ~MultiplyingLineFactory() {}
     virtual MultiplyingLine* newLine(  QWidget *parent ) = 0;
@@ -72,11 +72,11 @@ class KDEPIM_EXPORT MultiplyingLineFactory : public QObject
 */
 class KDEPIM_EXPORT MultiplyingLineEditor : public QWidget
 {
-  Q_OBJECT
-  Q_PROPERTY( bool autoResizeView READ autoResizeView WRITE setAutoResizeView )
-  Q_PROPERTY( bool dynamicSizeHint READ dynamicSizeHint WRITE setDynamicSizeHint )
+    Q_OBJECT
+    Q_PROPERTY( bool autoResizeView READ autoResizeView WRITE setAutoResizeView )
+    Q_PROPERTY( bool dynamicSizeHint READ dynamicSizeHint WRITE setDynamicSizeHint )
 
-  public:
+public:
 
     // We take ownership of factory
     explicit MultiplyingLineEditor( MultiplyingLineFactory* factory, QWidget *parent = 0 );
@@ -152,7 +152,7 @@ class KDEPIM_EXPORT MultiplyingLineEditor : public QWidget
     void setDynamicSizeHint( bool dynamic );
     bool dynamicSizeHint() const;
 
-  signals:
+signals:
     void focusUp();
     void focusDown();
     void completionModeChanged( KGlobalSettings::Completion );
@@ -160,17 +160,17 @@ class KDEPIM_EXPORT MultiplyingLineEditor : public QWidget
     void lineDeleted( int pos );
     void lineAdded( KPIM::MultiplyingLine * );
 
-  public slots:
+public slots:
     void setFocus();
     void setFocusTop();
     void setFocusBottom();
 
-  protected:
+protected:
     virtual QList<MultiplyingLine*> lines() const;
     virtual MultiplyingLine *activeLine() const;
     bool mModified;
 
-  private:
+private:
     MultiplyingLineFactory *mMultiplyingLineFactory;
     MultiplyingLineView *mView;
 };

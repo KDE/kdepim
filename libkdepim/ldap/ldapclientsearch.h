@@ -39,15 +39,15 @@ class LdapClient;
  */
 struct LdapResult
 {
-  /**
+    /**
    * A list of LdapResult objects.
    */
-  typedef QList<LdapResult> List;
+    typedef QList<LdapResult> List;
 
-  QString name;         ///< The full name of the contact.
-  QStringList email;    ///< The list of emails of the contact.
-  int clientNumber;     ///< The client the contact comes from (used for sorting in a ldap-only lookup).
-  int completionWeight; ///< The weight of the contact (used for sorting in a completion list).
+    QString name;         ///< The full name of the contact.
+    QStringList email;    ///< The list of emails of the contact.
+    int clientNumber;     ///< The client the contact comes from (used for sorting in a ldap-only lookup).
+    int completionWeight; ///< The weight of the contact (used for sorting in a completion list).
 };
 
 /**
@@ -55,9 +55,9 @@ struct LdapResult
  */
 class KDEPIM_EXPORT LdapClientSearch : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new ldap client search object.
      *
@@ -99,7 +99,7 @@ class KDEPIM_EXPORT LdapClientSearch : public QObject
      */
     QList<LdapClient*> clients() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever new contacts have been found
      * during the lookup.
@@ -122,7 +122,7 @@ class KDEPIM_EXPORT LdapClientSearch : public QObject
      */
     void searchDone();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private* const d;
