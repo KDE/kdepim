@@ -206,7 +206,7 @@ void QuickSearchLineTest::shouldSearchToOrFrom()
 {
     QuickSearchLine searchLine;
     QPushButton *button = qFindChild<QPushButton *>(&searchLine, QLatin1String("fromorto"));
-    button->setChecked(true);
+    QTest::mouseClick(button, Qt::LeftButton);
     searchLine.setContainsOutboundMessages(true);
     QuickSearchLine::SearchOptions options;
     options = QuickSearchLine::SearchAgainstTo;
