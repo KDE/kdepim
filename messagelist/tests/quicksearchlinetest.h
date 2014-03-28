@@ -44,6 +44,7 @@ private Q_SLOTS:
     void shouldShowMoreOptionWhenClickOnMoreButton();
     void shouldChangeFromButtonLabelWhenChangeOutboundMessagesValue();
     void shouldSearchToOrFrom();
+    void shouldEmitSearchOptionChangedWhenUseTabPress();
 };
 
 #endif // QUICKSEARCHLINETEST_H

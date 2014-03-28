@@ -12,9 +12,7 @@ include_directories( ${Boost_INCLUDE_DIR}
 
 ########### next target ###############
 
-set(messagecore_LIB_SRCS
-
-   misc/imagecollector.cpp
+set(messagecore_attachment_LIB_SRCS
    attachment/attachmentcollector.cpp
    attachment/attachmentcompressjob.cpp
    attachment/attachmentfromfolderjob.cpp
@@ -24,14 +22,31 @@ set(messagecore_LIB_SRCS
    attachment/attachmentloadjob.cpp
    attachment/attachmentpart.cpp
    attachment/attachmentpropertiesdialog.cpp
-   widgets/emailaddressrequester.cpp
-   settings/globalsettings.cpp
+)
+
+set(messagecore_misc_LIB_SRCS
+   misc/imagecollector.cpp
    misc/mailinglist.cpp
    misc/mdnstateattribute.cpp
+)
+
+set(messagecore_widget_LIB_SRCS
+   widgets/emailaddressrequester.cpp
+   widgets/annotationdialog.cpp
+)
+
+set(messagecore_helper_LIB_SRCS
    helpers/messagehelpers.cpp
    helpers/nodehelper.cpp
+)
+
+set(messagecore_LIB_SRCS
+   ${messagecore_attachment_LIB_SRCS}
+   ${messagecore_misc_LIB_SRCS}
+   ${messagecore_widget_LIB_SRCS}
+   ${messagecore_helper_LIB_SRCS}
+   settings/globalsettings.cpp
    utils/stringutil.cpp
-   widgets/annotationdialog.cpp
 )
 
 kde4_add_kcfg_files(messagecore_LIB_SRCS

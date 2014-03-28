@@ -109,6 +109,20 @@ void QuickSearchLineTest::shouldEmitSearchOptionChanged()
     QCOMPARE(spy.count(), 1);
 }
 
+void QuickSearchLineTest::shouldEmitSearchOptionChangedWhenUseTabPress()
+{
+    QuickSearchLine searchLine;
+    searchLine.show();
+    QTest::qWaitForWindowShown(&searchLine);
+    QPushButton *button = qFindChild<QPushButton *>(&searchLine, QLatin1String("full_message"));
+    QTest::mouseClick(button, Qt::LeftButton);
+    QTest::keyClick(button,Qt::Key_Right);
+    QSignalSpy spy(&searchLine, SIGNAL(searchOptionChanged()));
+    button = qFindChild<QPushButton *>(&searchLine, QLatin1String("body"));
+    QTest::mouseClick(button, Qt::LeftButton);
+    QCOMPARE(spy.count(), 1);
+}
+
 void QuickSearchLineTest::shouldResetAllWhenResetFilter()
 {
     QuickSearchLine searchLine;
@@ -206,7 +220,7 @@ void QuickSearchLineTest::shouldSearchToOrFrom()
 {
     QuickSearchLine searchLine;
     QPushButton *button = qFindChild<QPushButton *>(&searchLine, QLatin1String("fromorto"));
-    button->setChecked(true);
+    QTest::mouseClick(button, Qt::LeftButton);
     searchLine.setContainsOutboundMessages(true);
     QuickSearchLine::SearchOptions options;
     options = QuickSearchLine::SearchAgainstTo;

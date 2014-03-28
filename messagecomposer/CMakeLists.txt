@@ -20,26 +20,8 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 add_subdirectory( tests )
 include_directories(${Grantlee_INCLUDE_DIRS})
 
-set( messagecomposer_src
 
-     composer/composer.cpp
-     utils/util.cpp
-
-     attachment/attachmentcontrollerbase.cpp
-     attachment/attachmentmodel.cpp
-     job/attachmentfrompublickeyjob.cpp
-
-     sender/akonadisender.cpp
-     helper/messagehelper.cpp
-     helper/messagefactory.cpp
-     settings/messagecomposersettings.cpp
-     composer/composerviewbase.cpp
-
-     part/messagepart.cpp
-     part/globalpart.cpp
-     part/infopart.cpp
-     part/textpart.cpp
-
+set( messagecomposer_job_src
      job/jobbase.cpp
      job/contentjobbase.cpp
      job/attachmentjob.cpp
@@ -50,14 +32,24 @@ set( messagecomposer_src
      job/encryptjob.cpp
      job/signencryptjob.cpp
      job/transparentjob.cpp
-
-     job/skeletonmessagejob.cpp
-
-     composer/kmeditor.cpp
      job/inserttextfilejob.cpp
+     job/skeletonmessagejob.cpp
+     job/aliasesexpandjob.cpp
+     job/emailaddressresolvejob.cpp
+     job/attachmentfrompublickeyjob.cpp
+)
+
+set( messagecomposer_composer_src
+     composer/composer.cpp
+     composer/kmeditor.cpp
      composer/signaturecontroller.cpp
      composer/composerlineedit.cpp
+     composer/composerviewbase.cpp
+     composer/savecontactpreferencejob.cpp
+     composer/keyresolver.cpp
+)
 
+set( messagecomposer_recipient_src
      recipient/recipientspicker.cpp
      recipient/recipient.cpp
      recipient/recipientline.cpp
@@ -65,16 +57,37 @@ set( messagecomposer_src
      recipient/recipientseditorsidewidget.cpp
      recipient/kwindowpositioner.cpp
      recipient/distributionlistdialog.cpp
+)
 
-     job/aliasesexpandjob.cpp
-     job/emailaddressresolvejob.cpp
-
-     composer/keyresolver.cpp
-
+set( messagecomposer_imagescaling_src
      imagescaling/imagescalingjob.cpp
      imagescaling/imagescalingwidget.cpp
      imagescaling/imagescalingutils.cpp
      imagescaling/imagescalingselectformat.cpp
+)
+
+set( messagecomposer_part_src
+     part/messagepart.cpp
+     part/globalpart.cpp
+     part/infopart.cpp
+     part/textpart.cpp
+)
+
+set( messagecomposer_src
+     ${messagecomposer_part_src}
+     ${messagecomposer_imagescaling_src}
+     ${messagecomposer_job_src}
+     ${messagecomposer_composer_src}
+     ${messagecomposer_recipient_src}
+     utils/util.cpp
+
+     attachment/attachmentcontrollerbase.cpp
+     attachment/attachmentmodel.cpp
+
+     sender/akonadisender.cpp
+     helper/messagehelper.cpp
+     helper/messagefactory.cpp
+     settings/messagecomposersettings.cpp
 )
 
 kde4_add_ui_files(messagecomposer_src

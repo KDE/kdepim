@@ -3,6 +3,7 @@
 
     This file is part of KMail, the KDE mail client.
     Copyright (c) 2002 Marc Mutz <mutz@kde.org>
+    Copyright (c) 2014 Laurent Montel <montel@kde.org>
 
     KMail is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License, version 2, as
@@ -32,6 +33,8 @@
 #include "identitydialog.h"
 #include "identityeditvcarddialog.h"
 #include "identityaddvcarddialog.h"
+
+#include "messagecomposer/settings/messagecomposersettings.h"
 
 #include <kpimidentities/identitymanager.h>
 
@@ -91,6 +94,7 @@ using MailTransport::TransportManager;
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QFile>
+#include <QHostInfo>
 
 // other headers:
 #include <gpgme++/key.h>
@@ -493,6 +497,22 @@ IdentityDialog::IdentityDialog( QWidget * parent )
     label->setBuddy( mAutoCorrectionLanguage );
     glay->addWidget( label, row, 0 );
 
+    // "default domain" input field:
+    ++row;
+    mDefaultDomainEdit = new KLineEdit( tab );
+    glay->addWidget( mDefaultDomainEdit, row, 1 );
+    label = new QLabel( i18n("Defaul&t domain:"), tab );
+    label->setBuddy( mDefaultDomainEdit );
+    glay->addWidget( label, row, 0 );
+
+    // and now: add QWhatsThis:
+    msg = i18n( "<qt><p>The default domain is used to complete email "
+                "addresses that only consist of the user's name."
+                "</p></qt>" );
+    label->setWhatsThis( msg );
+    mDefaultDomainEdit->setWhatsThis( msg );
+
+
     ++row;
     glay->setRowStretch( row, 1 );
 
@@ -651,7 +671,7 @@ void IdentityDialog::slotButtonClicked( int button )
     // Validate email addresses
     const QString email = mEmailEdit->text().trimmed();
     if ( !KPIMUtils::isValidSimpleAddress( email ) ) {
-        QString errorMsg( KPIMUtils::simpleEmailAddressErrorMsg() );
+        const QString errorMsg( KPIMUtils::simpleEmailAddressErrorMsg() );
         KMessageBox::sorry( this, errorMsg, i18n("Invalid Email Address") );
         return;
     }
@@ -659,6 +679,8 @@ void IdentityDialog::slotButtonClicked( int button )
     // Check if the 'Reply to' and 'BCC' recipients are valid
     const QString recipients = mReplyToEdit->text().trimmed() + QLatin1String( ", " ) + mBccEdit->text().trimmed() + QLatin1String( ", " ) + mCcEdit->text().trimmed();
     AddressValidationJob *job = new AddressValidationJob( recipients, this, this );
+    //Use default Value
+    job->setDefaultDomain(mDefaultDomainEdit->text());
     job->setProperty( "email", email );
     connect( job, SIGNAL(result(KJob*)), SLOT(slotDelayedButtonClicked(KJob*)) );
     job->start();
@@ -830,6 +852,12 @@ void IdentityDialog::setIdentity( KPIMIdentities::Identity & ident ) {
         mVcardFilename = KStandardDirs::locateLocal("appdata",ident.identityName() + QLatin1String(".vcf"));
     }
     mAttachMyVCard->setChecked(ident.attachVcard());
+    QString defaultDomainName = ident.defaultDomainName();
+    if (defaultDomainName.isEmpty()) {
+        defaultDomainName = QHostInfo::localHostName();
+    }
+    mDefaultDomainEdit->setText(defaultDomainName);
+
     // "Templates" tab:
 #ifndef KDEPIM_MOBILE_UI
     uint identity = ident.uoid();
@@ -904,6 +932,8 @@ void IdentityDialog::updateIdentity( KPIMIdentities::Identity & ident ) {
     ident.setAutocorrectionLanguage(mAutoCorrectionLanguage->language());
     updateVcardButton();
     ident.setAttachVcard(mAttachMyVCard->isChecked());
+    //Add default ?
+    ident.setDefaultDomainName(mDefaultDomainEdit->text());
 
     // "Templates" tab:
 #ifndef KDEPIM_MOBILE_UI
