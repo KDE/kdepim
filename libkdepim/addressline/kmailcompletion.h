@@ -38,9 +38,9 @@ namespace KPIM {
  */
 class KMailCompletion : public KCompletion
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     KMailCompletion();
 
     /**
@@ -77,7 +77,7 @@ class KMailCompletion : public KCompletion
     // to override the other postProcessMatches() function
     using KCompletion::postProcessMatches;
 
-  private:
+private:
     QMap< QString, QStringList > m_keyMap;
 };
 

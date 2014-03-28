@@ -62,9 +62,9 @@ namespace KPIM {
 
 class KDEPIM_EXPORT KWidgetLister : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     //TODO KDE5 merge two constructors
     /**
      * Creates a new widget lister.
@@ -89,7 +89,7 @@ class KDEPIM_EXPORT KWidgetLister : public QWidget
      */
     virtual ~KWidgetLister();
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     /**
      * Called whenever the user clicks on the 'more' button.
      * Reimplementations should call this method, because this
@@ -117,7 +117,7 @@ class KDEPIM_EXPORT KWidgetLister : public QWidget
      */
     virtual void slotClear();
 
-  protected:
+protected:
     /**
      * Adds a single widget. Doesn't care if there are already @ref
      * mMaxWidgets on screen and whether it should enable/disable any
@@ -184,10 +184,10 @@ class KDEPIM_EXPORT KWidgetLister : public QWidget
      */
     virtual void addWidgetAfterThisWidget(QWidget*currentWidget, QWidget* widget = 0);
 
-  private:
+private:
     void init( bool fewerMoreButton = true );
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever a widget was added.
      */
@@ -205,7 +205,7 @@ class KDEPIM_EXPORT KWidgetLister : public QWidget
      */
     void widgetRemoved();
 
-  /**
+    /**
      * This signal is emitted whenever a widget was removed.
      */
     void widgetRemoved( QWidget *widget );
@@ -215,7 +215,7 @@ class KDEPIM_EXPORT KWidgetLister : public QWidget
      */
     void clearWidgets();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private* const d;

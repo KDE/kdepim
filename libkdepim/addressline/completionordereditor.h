@@ -52,7 +52,7 @@ class CompletionOrderEditor;
 // Base class for items in the list
 class CompletionItem
 {
-  public:
+public:
     virtual ~CompletionItem() {}
     virtual QString label() const = 0;
     virtual QIcon icon() const = 0;
@@ -64,25 +64,25 @@ class CompletionItem
 
 class KDEPIM_EXPORT CompletionOrderEditor : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearch, QWidget* parent );
     ~CompletionOrderEditor();
 
     KConfig* configFile() { return &mConfig; }
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void completionOrderChanged();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void rowsInserted( const QModelIndex &parent, int start, int end );
     void slotSelectionChanged();
     void slotMoveUp();
     void slotMoveDown();
     void slotOk();
 
-  private:
+private:
     void readConfig();
     void writeConfig();
     void loadCompletionItems();

@@ -34,11 +34,11 @@
 #include <QScrollArea>
 
 namespace KPIM {
-  
+
 class MultiplyingLineView : public QScrollArea
 {
     Q_OBJECT
-  public:
+public:
     MultiplyingLineView( MultiplyingLineFactory* factory, MultiplyingLineEditor *parent );
     ~MultiplyingLineView(){}
 
@@ -66,7 +66,7 @@ class MultiplyingLineView : public QScrollArea
     */
     void clearModified();
 
-     /** Activates the line */
+    /** Activates the line */
     void activateLine( MultiplyingLine *line );
 
     /**QScrollArea
@@ -93,7 +93,7 @@ class MultiplyingLineView : public QScrollArea
 
     QList<MultiplyingLine*> lines() const;
 
-  public slots:
+public slots:
     void setCompletionMode( KGlobalSettings::Completion mode );
     MultiplyingLine *addLine();
 
@@ -101,7 +101,7 @@ class MultiplyingLineView : public QScrollArea
     void setFocusTop();
     void setFocusBottom();
 
-  signals:
+signals:
     void focusUp();
     void focusDown();
     void focusRight();
@@ -110,11 +110,11 @@ class MultiplyingLineView : public QScrollArea
     void lineDeleted( int pos );
     void lineAdded( KPIM::MultiplyingLine * );
 
-  protected:
+protected:
     void resizeEvent( QResizeEvent * );
     void resizeView();
 
-  protected slots:
+protected slots:
     void slotReturnPressed( KPIM::MultiplyingLine * );
     void slotDownPressed( KPIM::MultiplyingLine * );
     void slotUpPressed( KPIM::MultiplyingLine * );
@@ -123,7 +123,7 @@ class MultiplyingLineView : public QScrollArea
     void moveCompletionPopup();
     void moveScrollBarToEnd();
 
-  private:
+private:
     QList<MultiplyingLine*> mLines;
     QPointer<MultiplyingLine> mCurDelLine;
     int mLineHeight;

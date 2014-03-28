@@ -41,12 +41,12 @@ class QMouseEvent;
 class QObject;
 
 namespace Akonadi {
-  class Item;
+class Item;
 }
 
 namespace KABC {
-  class Addressee;
-  class ContactGroup;
+class Addressee;
+class ContactGroup;
 }
 
 namespace KPIM {
@@ -54,9 +54,9 @@ namespace KPIM {
 
 class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new addressee line edit.
      *
@@ -79,10 +79,10 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
      * Reimplemented for setting the @p font for line edit and completion box.
      */
     void setFont( const QFont &font );
-  Q_SIGNALS:
+Q_SIGNALS:
     void textCompleted();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Moves the cursor at the end of the line edit.
      */
@@ -99,7 +99,7 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
      */
     virtual void setText( const QString &text );
 
-  protected:
+protected:
     /**
      * Adds a new @p contact to the completion with a given @p weight and @p source index.
      */
@@ -169,7 +169,7 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     virtual void contextMenuEvent( QContextMenuEvent * );
 #endif
 
-  private:
+private:
     virtual bool eventFilter( QObject *, QEvent * );
     void emitTextCompleted();
 

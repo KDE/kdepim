@@ -31,39 +31,39 @@ using namespace KPIM;
 
 class KDatePickerAction : public QWidgetAction
 {
-  public:
+public:
     KDatePickerAction( KDatePicker *widget, QObject *parent )
-      : QWidgetAction( parent ),
-        mDatePicker( widget ), mOriginalParent( widget->parentWidget() )
+        : QWidgetAction( parent ),
+          mDatePicker( widget ), mOriginalParent( widget->parentWidget() )
     {
     }
 
-  protected:
+protected:
     QWidget *createWidget( QWidget *parent )
     {
-      mDatePicker->setParent( parent );
-      return mDatePicker;
+        mDatePicker->setParent( parent );
+        return mDatePicker;
     }
 
     void deleteWidget( QWidget *widget )
     {
-      if ( widget != mDatePicker ) {
-        return;
-      }
+        if ( widget != mDatePicker ) {
+            return;
+        }
 
-      mDatePicker->setParent( mOriginalParent );
+        mDatePicker->setParent( mOriginalParent );
     }
 
-  private:
+private:
     KDatePicker *mDatePicker;
     QWidget *mOriginalParent;
 };
 
 class KDatePickerPopup::Private
 {
-  public:
+public:
     Private( KDatePickerPopup *qq )
-      : q( qq ), mDatePicker( 0 )
+        : q( qq ), mDatePicker( 0 )
     {
     }
 
@@ -83,95 +83,95 @@ class KDatePickerPopup::Private
 
 void KDatePickerPopup::Private::buildMenu()
 {
-  if ( q->isVisible() )
-    return;
+    if ( q->isVisible() )
+        return;
 
-  q->clear();
+    q->clear();
 
-  if ( mModes & DatePicker ) {
-    q->addAction( new KDatePickerAction( mDatePicker, q ) );
+    if ( mModes & DatePicker ) {
+        q->addAction( new KDatePickerAction( mDatePicker, q ) );
 
-    if ( (mModes & NoDate) || (mModes & Words) )
-      q->addSeparator();
-  }
+        if ( (mModes & NoDate) || (mModes & Words) )
+            q->addSeparator();
+    }
 
-  if ( mModes & Words ) {
-    q->addAction( i18nc( "@option today", "&Today" ), q, SLOT(slotToday()) );
-    q->addAction( i18nc( "@option tomorrow", "To&morrow" ), q, SLOT(slotTomorrow()) );
-    q->addAction( i18nc( "@option next week", "Next &Week" ), q, SLOT(slotNextWeek()) );
-    q->addAction( i18nc( "@option next month", "Next M&onth" ), q, SLOT(slotNextMonth()) );
+    if ( mModes & Words ) {
+        q->addAction( i18nc( "@option today", "&Today" ), q, SLOT(slotToday()) );
+        q->addAction( i18nc( "@option tomorrow", "To&morrow" ), q, SLOT(slotTomorrow()) );
+        q->addAction( i18nc( "@option next week", "Next &Week" ), q, SLOT(slotNextWeek()) );
+        q->addAction( i18nc( "@option next month", "Next M&onth" ), q, SLOT(slotNextMonth()) );
+
+        if ( mModes & NoDate )
+            q->addSeparator();
+    }
 
     if ( mModes & NoDate )
-      q->addSeparator();
-  }
-
-  if ( mModes & NoDate )
-    q->addAction( i18nc( "@option do not specify a date", "No Date" ), q, SLOT(slotNoDate()) );
+        q->addAction( i18nc( "@option do not specify a date", "No Date" ), q, SLOT(slotNoDate()) );
 }
 
 void KDatePickerPopup::Private::slotDateChanged( const QDate &date )
 {
-  emit q->dateChanged( date );
-  q->hide();
+    emit q->dateChanged( date );
+    q->hide();
 }
 
 void KDatePickerPopup::Private::slotToday()
 {
-  emit q->dateChanged( QDate::currentDate() );
+    emit q->dateChanged( QDate::currentDate() );
 }
 
 void KDatePickerPopup::Private::slotTomorrow()
 {
-  emit q->dateChanged( QDate::currentDate().addDays( 1 ) );
+    emit q->dateChanged( QDate::currentDate().addDays( 1 ) );
 }
 
 void KDatePickerPopup::Private::slotNoDate()
 {
-  emit q->dateChanged( QDate() );
+    emit q->dateChanged( QDate() );
 }
 
 void KDatePickerPopup::Private::slotNextWeek()
 {
-  emit q->dateChanged( QDate::currentDate().addDays( 7 ) );
+    emit q->dateChanged( QDate::currentDate().addDays( 7 ) );
 }
 
 void KDatePickerPopup::Private::slotNextMonth()
 {
-  emit q->dateChanged( QDate::currentDate().addMonths( 1 ) );
+    emit q->dateChanged( QDate::currentDate().addMonths( 1 ) );
 }
 
 
 KDatePickerPopup::KDatePickerPopup( Modes modes, const QDate &date, QWidget *parent )
-  : QMenu( parent ), d( new Private( this ) )
+    : QMenu( parent ), d( new Private( this ) )
 {
-  d->mModes = modes;
+    d->mModes = modes;
 
-  d->mDatePicker = new KDatePicker( this );
-  d->mDatePicker->setCloseButton( false );
+    d->mDatePicker = new KDatePicker( this );
+    d->mDatePicker->setCloseButton( false );
 
-  connect( d->mDatePicker, SIGNAL(dateEntered(QDate)),
-           SLOT(slotDateChanged(QDate)) );
-  connect( d->mDatePicker, SIGNAL(dateSelected(QDate)),
-           SLOT(slotDateChanged(QDate)) );
+    connect( d->mDatePicker, SIGNAL(dateEntered(QDate)),
+             SLOT(slotDateChanged(QDate)) );
+    connect( d->mDatePicker, SIGNAL(dateSelected(QDate)),
+             SLOT(slotDateChanged(QDate)) );
 
-  d->mDatePicker->setDate( date );
+    d->mDatePicker->setDate( date );
 
-  d->buildMenu();
+    d->buildMenu();
 }
 
 KDatePickerPopup::~KDatePickerPopup()
 {
-  delete d;
+    delete d;
 }
 
 KDatePicker *KDatePickerPopup::datePicker() const
 {
-  return d->mDatePicker;
+    return d->mDatePicker;
 }
 
 void KDatePickerPopup::setDate( const QDate &date )
 {
-  d->mDatePicker->setDate( date );
+    d->mDatePicker->setDate( date );
 }
 
 #include "moc_kdatepickerpopup.cpp"
