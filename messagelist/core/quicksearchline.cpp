@@ -109,6 +109,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mTagFilterCombo->hide();
     hbox->addWidget( mTagFilterCombo );
 
+    //Be disable until we have a storageModel => logical that it's disable.
     mSearchEdit->setEnabled( false );
     mTagFilterCombo->setEnabled( false );
 
@@ -128,18 +129,22 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mSearchEveryWhere->setObjectName(QLatin1String("full_message"));
     mSearchEveryWhere->setFlat(true);
     mSearchEveryWhere->setCheckable(true);
+    mSearchEveryWhere->setChecked(true);
+    connect( mSearchEveryWhere, SIGNAL(clicked()), this, SLOT(slotSearchBy()) );
     hbox->addWidget(mSearchEveryWhere);
 
     mSearchAgainstBody = new QPushButton(i18n("Body"));
     mSearchAgainstBody->setObjectName(QLatin1String("body"));
     mSearchAgainstBody->setFlat(true);
     mSearchAgainstBody->setCheckable(true);
+    connect( mSearchAgainstBody, SIGNAL(clicked()), this, SLOT(slotSearchBy()) );
     hbox->addWidget(mSearchAgainstBody);
 
     mSearchAgainstSubject = new QPushButton(i18n("Subject"));
     mSearchAgainstSubject->setCheckable(true);
     mSearchAgainstSubject->setFlat(true);
     mSearchAgainstSubject->setObjectName(QLatin1String("subject"));
+    connect( mSearchAgainstSubject, SIGNAL(clicked()), this, SLOT(slotSearchBy()) );
     hbox->addWidget(mSearchAgainstSubject);
 
     mSearchAgainstFromOrTo = new QPushButton;
@@ -147,23 +152,16 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mSearchAgainstFromOrTo->setObjectName(QLatin1String("fromorto"));
     mSearchAgainstFromOrTo->setCheckable(true);
     mSearchAgainstFromOrTo->setFlat(true);
+    connect( mSearchAgainstFromOrTo, SIGNAL(clicked()), this, SLOT(slotSearchBy()) );
     hbox->addWidget(mSearchAgainstFromOrTo);
 
     mSearchAgainstBcc = new QPushButton(i18n("Bcc"));
     mSearchAgainstBcc->setObjectName(QLatin1String("bcc"));
     mSearchAgainstBcc->setCheckable(true);
     mSearchAgainstBcc->setFlat(true);
+    connect( mSearchAgainstBcc, SIGNAL(clicked()), this, SLOT(slotSearchBy()) );
     hbox->addWidget(mSearchAgainstBcc);
 
-    mButtonSearchAgainstGroup = new QButtonGroup(this);
-    mButtonSearchAgainstGroup->addButton(mSearchEveryWhere, 0);
-    mButtonSearchAgainstGroup->addButton(mSearchAgainstBody);
-    mButtonSearchAgainstGroup->addButton(mSearchAgainstSubject);
-    mButtonSearchAgainstGroup->addButton(mSearchAgainstFromOrTo);
-    mButtonSearchAgainstGroup->addButton(mSearchAgainstBcc);
-    mButtonSearchAgainstGroup->button(0)->setChecked(true);
-    connect(mButtonSearchAgainstGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotSearchOptionChanged()));
-    mButtonSearchAgainstGroup->setExclusive(true);
     mQuickSearchFilterWidget->hide();
 
     installEventFilter(this);
@@ -182,6 +180,28 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
 QuickSearchLine::~QuickSearchLine()
 {
 
+}
+
+void QuickSearchLine::slotSearchBy()
+{
+    QObject *button = sender();
+    if (mSearchEveryWhere != button) {
+        mSearchEveryWhere->setChecked(false);
+    }
+    if (mSearchAgainstBody != button) {
+        mSearchAgainstBody->setChecked(false);
+    }
+    if (mSearchAgainstSubject != button) {
+        mSearchAgainstSubject->setChecked(false);
+    }
+    if (mSearchAgainstFromOrTo != button) {
+        mSearchAgainstFromOrTo->setChecked(false);
+    }
+    if (mSearchAgainstBcc != button) {
+        mSearchAgainstBcc->setChecked(false);
+    }
+
+    slotSearchOptionChanged();
 }
 
 void QuickSearchLine::slotMoreOptionClicked(bool b)
@@ -211,7 +231,7 @@ void QuickSearchLine::slotSearchEditTextEdited(const QString &text)
 void QuickSearchLine::slotClearButtonClicked()
 {
     mExtraOption->hide();
-    mButtonSearchAgainstGroup->button(0)->setChecked(true);
+    mSearchEveryWhere->setChecked(true);
     if (mTagFilterCombo->isVisible())
         mTagFilterCombo->setCurrentIndex(0);
     Q_EMIT clearButtonClicked();
@@ -286,7 +306,7 @@ void QuickSearchLine::resetFilter()
     if (mTagFilterCombo->isVisible())
         mTagFilterCombo->setCurrentIndex( 0 );
     mLockSearch->setChecked(false);
-    mButtonSearchAgainstGroup->button(0)->setChecked(true);
+    mSearchEveryWhere->setChecked(true);
     mExtraOption->hide();
 }
 
