@@ -185,7 +185,6 @@ QuickSearchLine::~QuickSearchLine()
 void QuickSearchLine::slotSearchBy()
 {
     QObject *button = sender();
-    qDebug()<<" void QuickSearchLine::slotSearchBy(QObject *button)";
     if (mSearchEveryWhere != button) {
         mSearchEveryWhere->setChecked(false);
     }
