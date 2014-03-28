@@ -457,7 +457,7 @@ const QStringList KPIM::AddresseeLineEdit::Private::adjustedCompletionItems( boo
 
     if ( s_static->completion->order() == KCompletion::Weighted ) {
       if ( lastSourceIndex == -1 || lastSourceIndex != index ) {
-        const QString sourceLabel( s_static->completionSources[ index ] );
+        const QString sourceLabel( s_static->completionSources.at( index ) );
         if ( sections.find( index ) == sections.end() ) {
           it = items.insert( it, sourceLabel );
           ++it; //skip new item
@@ -483,7 +483,7 @@ const QStringList KPIM::AddresseeLineEdit::Private::adjustedCompletionItems( boo
     const int numberOfCompletionSources(s_static->completionSources.size());
     for ( int i = 0; i < numberOfCompletionSources; ++i ) {
       SourceWithWeight sww;
-      sww.sourceName = s_static->completionSources[i];
+      sww.sourceName = s_static->completionSources.at(i);
       sww.weight = s_static->completionSourceWeights[sww.sourceName];
       sww.index = i;
       sourcesAndWeights.append( sww );
