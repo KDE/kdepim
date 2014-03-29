@@ -399,19 +399,15 @@ void AddresseeLineEdit::Private::setCompletedItems( const QStringList &items, bo
     }
 }
 
-void AddresseeLineEdit::Private::addCompletionItem( const QString &email, int weight,
+void AddresseeLineEdit::Private::addCompletionItem( const QString &string, int weight,
                                                     int completionItemSource,
                                                     const QStringList *keyWords )
 {
-    QString string = email;
-    if (string.contains(QLatin1Char(',')) && string.contains(QLatin1Char('<')) && !string.contains(QLatin1Char('"'))) {
-        const int index = string.indexOf(QLatin1Char('<'));
-        string = QLatin1Char('"') + string.left(index).trimmed() + QLatin1String("\" ") + string.right(string.length()-index);
-    }
     // Check if there is an exact match for item already, and use the
     // maximum weight if so. Since there's no way to get the information
     // from KCompletion, we have to keep our own QMap.
     // We also update the source since the item should always be shown from the source with the highest weight
+
     CompletionItemsMap::iterator it = s_static->completionItemMap.find( string );
     if ( it != s_static->completionItemMap.end() ) {
         weight = qMax( ( *it ).first, weight );
