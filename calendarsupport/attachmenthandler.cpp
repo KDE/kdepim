@@ -1,6 +1,7 @@
 /*
   Copyright (c) 2010 Klarlvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
     Author: Allen Winter <allen.winter@kdab.com>
+  Copyright (C) 2014 Sergio Martins <iamsergio@gmail.com>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -28,8 +29,9 @@
   @author Allen Winter \<winter@kde.org\>
 */
 #include "attachmenthandler.h"
-#include "next/incidencesearchjob.h"
+#include "calendarsupport/utils.h"
 
+#include <Akonadi/ItemFetchJob>
 #include <KFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -44,6 +46,7 @@
 #include <QPointer>
 
 using namespace KCalCore;
+using namespace Akonadi;
 
 namespace CalendarSupport {
 
@@ -195,9 +198,9 @@ bool AttachmentHandler::view( const QString &attachmentName,
 
 void AttachmentHandler::view( const QString &attachmentName, const QString &uid )
 {
-  IncidenceSearchJob *job = new IncidenceSearchJob();
-  job->setQuery( CalendarSupport::IncidenceSearchJob::IncidenceUid, uid,
-                 IncidenceSearchJob::ExactMatch );
+  Item item;
+  item.setGid(uid);
+  ItemFetchJob *job = new ItemFetchJob(item);
   connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFinishView(KJob*)) );
   ReceivedInfo info;
   info.attachmentName = attachmentName;
@@ -257,9 +260,9 @@ bool AttachmentHandler::saveAs( const QString &attachmentName,
 
 void AttachmentHandler::saveAs( const QString &attachmentName, const QString &uid )
 {
-  IncidenceSearchJob *job = new IncidenceSearchJob();
-  job->setQuery( CalendarSupport::IncidenceSearchJob::IncidenceUid, uid,
-                 IncidenceSearchJob::ExactMatch );
+  Item item;
+  item.setGid(uid);
+  ItemFetchJob *job = new ItemFetchJob(item);
   connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFinishView(KJob*)) );
 
   ReceivedInfo info;
@@ -276,15 +279,20 @@ bool AttachmentHandler::saveAs( const QString &attachmentName,
 
 void AttachmentHandler::slotFinishSaveAs( KJob *job )
 {
-  IncidenceSearchJob *searchJob = qobject_cast<IncidenceSearchJob*>( job );
-  const KCalCore::Incidence::List incidences = searchJob->incidences();
   ReceivedInfo info = d->mJobToReceivedInfo[job];
-
   bool success = false;
-  if ( !incidences.isEmpty() ) {
-    if ( saveAs( info.attachmentName, incidences.first() ) ) {
-      success = true;
+
+  if ( job->error() != 0 ) {
+    ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
+    const Item::List items = fetchJob->items();
+    if ( !items.isEmpty() ) {
+      Incidence::Ptr incidence = CalendarSupport::incidence( items.first() );
+      success = incidence && saveAs( info.attachmentName, incidence );
+    } else {
+      kWarning() << Q_FUNC_INFO << "No item found";
     }
+  } else {
+    kWarning() << Q_FUNC_INFO << "Job error:" << job->errorString();
   }
 
   emit saveAsFinished( info.uid, info.attachmentName, success );
@@ -293,15 +301,20 @@ void AttachmentHandler::slotFinishSaveAs( KJob *job )
 
 void AttachmentHandler::slotFinishView( KJob *job )
 {
-  IncidenceSearchJob *searchJob = qobject_cast<IncidenceSearchJob*>( job );
-  const KCalCore::Incidence::List incidences = searchJob->incidences();
   ReceivedInfo info = d->mJobToReceivedInfo[job];
-
   bool success = false;
-  if ( !incidences.isEmpty() ) {
-    if ( view( info.attachmentName, incidences.first() ) ) {
-      success = true;
+
+  if ( job->error() != 0 ) {
+    ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
+    const Item::List items = fetchJob->items();
+    if ( !items.isEmpty() ) {
+      Incidence::Ptr incidence = CalendarSupport::incidence( items.first() );
+      success = incidence && view( info.attachmentName, incidence );
+    } else {
+      kWarning() << Q_FUNC_INFO << "No item found";
     }
+  } else {
+    kWarning() << Q_FUNC_INFO << "Job error:" << job->errorString();
   }
 
   emit viewFinished( info.uid, info.attachmentName, success );
