@@ -39,7 +39,6 @@ set(calendarsupport_LIB_SRCS
   printing/yearprint.cpp
 
   next/incidencefetchjob.cpp
-  next/incidencesearchjob.cpp
   next/incidenceviewer.cpp
 )
 
