@@ -3008,7 +3008,7 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
 
                 if ( decryptionStarted ) {
                     writeDecryptionInProgressBlock();
-                    return;
+                    continue;
                 }
 
                 messagePart.isDecryptable = bOkDecrypt;
