@@ -343,9 +343,11 @@ void StringUtilTest::test_isCryptoPart()
   QVERIFY( StringUtil::isCryptoPart( QLatin1String("application"), QLatin1String("pkcs7-signature"), QString() ) );
   QVERIFY( StringUtil::isCryptoPart( QLatin1String("application"), QLatin1String("x-pkcs7-signature"), QString() ) );
   QVERIFY( StringUtil::isCryptoPart( QLatin1String("application"), QLatin1String("octet-stream"), QLatin1String("msg.asc") ) );
+  QVERIFY( StringUtil::isCryptoPart( QLatin1String("application"), QLatin1String("octet-stream"), QLatin1String("encrypted.asc") ) );
   QVERIFY( !StringUtil::isCryptoPart( QLatin1String("application"), QLatin1String("octet-stream"), QLatin1String("bla.foo") ) );
   QVERIFY( !StringUtil::isCryptoPart( QLatin1String("application"), QLatin1String("foo"), QString() ) );
   QVERIFY( !StringUtil::isCryptoPart( QLatin1String("application"), QLatin1String("foo"), QLatin1String("msg.asc") ) );
+  QVERIFY( !StringUtil::isCryptoPart( QLatin1String("application"), QLatin1String("foo"), QLatin1String("encrypted.asc") ) );
 }
 
 void StringUtilTest::test_stripOffMessagePrefix()
