@@ -63,7 +63,7 @@ void Kernel::KernelPrivate::instanceStatusChanged( const Akonadi::AgentInstance&
 
   if ( instance.status() == Akonadi::AgentInstance::Running ) {
       KPIM::ProgressItem *item = KPIM::ProgressManager::createProgressItem( 0, instance,
-            instance.identifier(), instance.name(), instance.statusMessage(), true, false);
+            instance.identifier(), instance.name(), instance.statusMessage(), true);
       item->setProperty( "AgentIdentifier", instance.identifier() );
   }
 }
