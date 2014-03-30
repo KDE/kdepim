@@ -48,6 +48,26 @@
 
 using namespace IncidenceEditorNG;
 
+static bool compareAttendees(const KCalCore::Attendee::Ptr &newAttendee,
+                             const KCalCore::Attendee::Ptr &originalAttendee)
+{
+    KCalCore::Attendee::Ptr originalClone(new KCalCore::Attendee(*originalAttendee));
+
+    if (newAttendee->name() != originalAttendee->name()) {
+        // What you put into an IncidenceEditorNG::AttendeeLine isn't exactly what you get out.
+        // In rare situations, such as "Doe\, John <john.doe@kde.org>", AttendeeLine will normalize
+        // the name, and set "Doe, John <john.doe@kde.org>" instead.
+        // So, for isDirty() purposes, have that in mind, so we don't return that the editor is dirty
+        // when the user didn't edit anything.
+        QString dummy;
+        QString originalNameNormalized;
+        KPIMUtils::extractEmailAddressAndName(originalAttendee->fullName(), dummy, originalNameNormalized);
+        originalClone->setName(originalNameNormalized);
+    }
+
+    return *newAttendee == *originalClone;
+}
+
 #ifdef KDEPIM_MOBILE_UI
 IncidenceAttendee::IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTime,
                                       Ui::EventOrTodoMore *ui )
@@ -236,7 +256,7 @@ bool IncidenceAttendee::isDirty() const
   foreach ( const KCalCore::Attendee::Ptr &attendee, originalList ) {
     bool found = false;
     for ( int i = 0; i < newList.size(); ++i ) {
-      if ( *newList.at( i )->attendee() == *attendee ) {
+      if ( compareAttendees( newList.at( i )->attendee(), attendee) ) {
         newList.removeAt( i );
         found = true;
         break;

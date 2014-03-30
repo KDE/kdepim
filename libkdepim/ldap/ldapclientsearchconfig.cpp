@@ -55,7 +55,7 @@ K_GLOBAL_STATIC_WITH_ARGS( KConfig, s_config, ( QLatin1String("kabldaprc"), KCon
 
 KConfig* LdapClientSearchConfig::config()
 {
-  return s_config;
+    return s_config;
 }
 
 LdapClientSearchConfig::LdapClientSearchConfig(QObject *parent)

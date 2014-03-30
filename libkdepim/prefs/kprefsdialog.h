@@ -62,8 +62,8 @@ namespace KPIM {
 */
 class KDEPIM_EXPORT KPrefsWid : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
       This function is called to read value of the setting from the
       stored configuration and display it in the widget.
@@ -80,7 +80,7 @@ class KDEPIM_EXPORT KPrefsWid : public QObject
     */
     virtual QList<QWidget *> widgets() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
       Emitted when widget value has changed.
     */
@@ -95,7 +95,7 @@ class KDEPIM_EXPORT KPrefsWid : public QObject
 */
 class KDEPIM_EXPORT KPrefsWidBool : public KPrefsWid
 {
-  public:
+public:
     /**
       Create a bool value control element consisting of a QCheckbox.
 
@@ -114,7 +114,7 @@ class KDEPIM_EXPORT KPrefsWidBool : public KPrefsWid
 
     QList<QWidget *> widgets() const;
 
-  private:
+private:
     KConfigSkeleton::ItemBool *mItem;
 
     QCheckBox *mCheck;
@@ -129,7 +129,7 @@ class KDEPIM_EXPORT KPrefsWidBool : public KPrefsWid
 */
 class KDEPIM_EXPORT KPrefsWidInt : public KPrefsWid
 {
-  public:
+public:
     /**
       Create a integer value control element consisting of a label and a
       spinbox.
@@ -154,7 +154,7 @@ class KDEPIM_EXPORT KPrefsWidInt : public KPrefsWid
 
     QList<QWidget *> widgets() const;
 
-  private:
+private:
     KConfigSkeleton::ItemInt *mItem;
 
     QLabel *mLabel;
@@ -170,7 +170,7 @@ class KDEPIM_EXPORT KPrefsWidInt : public KPrefsWid
 */
 class KDEPIM_EXPORT KPrefsWidTime : public KPrefsWid
 {
-  public:
+public:
     /**
       Create a time value control element consisting of a label and a spinbox.
 
@@ -192,7 +192,7 @@ class KDEPIM_EXPORT KPrefsWidTime : public KPrefsWid
     void readConfig();
     void writeConfig();
 
-  private:
+private:
     KConfigSkeleton::ItemDateTime *mItem;
 
     QLabel *mLabel;
@@ -208,7 +208,7 @@ class KDEPIM_EXPORT KPrefsWidTime : public KPrefsWid
 */
 class KDEPIM_EXPORT KPrefsWidDuration : public KPrefsWid
 {
-  public:
+public:
     /**
       Create a duration value control element consisting of a label and a
       spinbox.
@@ -231,7 +231,7 @@ class KDEPIM_EXPORT KPrefsWidDuration : public KPrefsWid
     void readConfig();
     void writeConfig();
 
-  private:
+private:
     KConfigSkeleton::ItemDateTime *mItem;
 
     QLabel *mLabel;
@@ -247,7 +247,7 @@ class KDEPIM_EXPORT KPrefsWidDuration : public KPrefsWid
 */
 class KDEPIM_EXPORT KPrefsWidDate : public KPrefsWid
 {
-  public:
+public:
     /**
       Create a time value control element consisting of a label and a date box.
 
@@ -269,7 +269,7 @@ class KDEPIM_EXPORT KPrefsWidDate : public KPrefsWid
     void readConfig();
     void writeConfig();
 
-  private:
+private:
     KConfigSkeleton::ItemDateTime *mItem;
 
     QLabel *mLabel;
@@ -285,8 +285,8 @@ class KDEPIM_EXPORT KPrefsWidDate : public KPrefsWid
 */
 class KDEPIM_EXPORT KPrefsWidColor : public KPrefsWid
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
       Create a color value control element consisting of a test field and a
       button for opening a color dialog.
@@ -313,7 +313,7 @@ class KDEPIM_EXPORT KPrefsWidColor : public KPrefsWid
     void readConfig();
     void writeConfig();
 
-  private:
+private:
     KConfigSkeleton::ItemColor *mItem;
 
     QLabel *mLabel;
@@ -328,8 +328,8 @@ class KDEPIM_EXPORT KPrefsWidColor : public KPrefsWid
 */
 class KDEPIM_EXPORT KPrefsWidFont : public KPrefsWid
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
       Create a font value control element consisting of a test field and a
       button for opening a font dialog.
@@ -363,10 +363,10 @@ class KDEPIM_EXPORT KPrefsWidFont : public KPrefsWid
     void readConfig();
     void writeConfig();
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     void selectFont();
 
-  private:
+private:
     KConfigSkeleton::ItemFont *mItem;
 
     QLabel *mLabel;
@@ -387,7 +387,7 @@ class KDEPIM_EXPORT KPrefsWidFont : public KPrefsWid
 */
 class KDEPIM_EXPORT KPrefsWidRadios : public KPrefsWid
 {
-  public:
+public:
     /**
       Create a control element for selection of an option. It consists of a box
       with several radio buttons.
@@ -421,7 +421,7 @@ class KDEPIM_EXPORT KPrefsWidRadios : public KPrefsWid
 
     QList<QWidget *> widgets() const;
 
-  private:
+private:
     KConfigSkeleton::ItemEnum *mItem;
 
     QGroupBox *mBox;
@@ -440,7 +440,7 @@ class KDEPIM_EXPORT KPrefsWidRadios : public KPrefsWid
 */
 class KDE_EXPORT KPrefsWidCombo : public KPrefsWid
 {
-  public:
+public:
     /**
       Create a control element for selection of an option. It consists of a
       combo box.
@@ -457,7 +457,7 @@ class KDE_EXPORT KPrefsWidCombo : public KPrefsWid
     KComboBox *comboBox();
     QList<QWidget *> widgets() const;
 
-  private:
+private:
     KConfigSkeleton::ItemEnum *mItem;
     KComboBox *mCombo;
 };
@@ -471,7 +471,7 @@ class KDE_EXPORT KPrefsWidCombo : public KPrefsWid
 */
 class KDEPIM_EXPORT KPrefsWidString : public KPrefsWid
 {
-  public:
+public:
     /**
       Create a string value control element consisting of a test label and a
       line edit.
@@ -502,7 +502,7 @@ class KDEPIM_EXPORT KPrefsWidString : public KPrefsWid
 
     QList<QWidget *> widgets() const;
 
-  private:
+private:
     KConfigSkeleton::ItemString *mItem;
 
     QLabel *mLabel;
@@ -518,7 +518,7 @@ class KDEPIM_EXPORT KPrefsWidString : public KPrefsWid
 */
 class KDEPIM_EXPORT KPrefsWidPath : public KPrefsWid
 {
-  public:
+public:
     /**
       Create a string value control element consisting of a test label and a
       line edit.
@@ -553,7 +553,7 @@ class KDEPIM_EXPORT KPrefsWidPath : public KPrefsWid
 
     QList<QWidget *> widgets() const;
 
-  private:
+private:
     KConfigSkeleton::ItemPath *mItem;
 
     QLabel *mLabel;
@@ -570,7 +570,7 @@ class KDEPIM_EXPORT KPrefsWidPath : public KPrefsWid
 */
 class KDEPIM_EXPORT KPrefsWidManager
 {
-  public:
+public:
     /**
       Create a KPrefsWidManager object for a KPrefs object.
 
@@ -718,7 +718,7 @@ class KDEPIM_EXPORT KPrefsWidManager
     /** Write preferences to config file. */
     void writeWidConfig();
 
-  private:
+private:
     KConfigSkeleton *mPrefs;
 
     QList<KPrefsWid*> mPrefsWids;
@@ -738,8 +738,8 @@ class KDEPIM_EXPORT KPrefsWidManager
 */
 class KDEPIM_EXPORT KPrefsDialog : public KPageDialog, public KPrefsWidManager
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
       Create a KPrefsDialog for a KPrefs object.
 
@@ -758,7 +758,7 @@ class KDEPIM_EXPORT KPrefsDialog : public KPageDialog, public KPrefsWidManager
 
     void autoCreate();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /** Set all widgets to default values. */
     void setDefaults();
 
@@ -768,11 +768,11 @@ class KDEPIM_EXPORT KPrefsDialog : public KPageDialog, public KPrefsWidManager
     /** Write preferences to config file. */
     void writeConfig();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /** Emitted when the a changed configuration has been stored. */
     void configChanged();
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     /** Apply changes to preferences */
     void slotApply();
 
@@ -782,7 +782,7 @@ class KDEPIM_EXPORT KPrefsDialog : public KPageDialog, public KPrefsWidManager
     /** Set preferences to default values */
     void slotDefault();
 
-  protected:
+protected:
     /** Implement this to read custom configuration widgets. */
     virtual void usrReadConfig() {}
     /** Implement this to write custom configuration widgets. */
@@ -791,8 +791,8 @@ class KDEPIM_EXPORT KPrefsDialog : public KPageDialog, public KPrefsWidManager
 
 class KDEPIM_EXPORT KPrefsModule : public KCModule, public KPrefsWidManager
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     KPrefsModule( KConfigSkeleton *, const KComponentData &instance,
                   QWidget *parent=0, const QVariantList &args=QVariantList() );
 
@@ -802,10 +802,10 @@ class KDEPIM_EXPORT KPrefsModule : public KCModule, public KPrefsWidManager
     void save();
     void defaults();
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     void slotWidChanged();
 
-  protected:
+protected:
     /** Implement this to read custom configuration widgets. */
     virtual void usrReadConfig() {}
     /** Implement this to write custom configuration widgets. */

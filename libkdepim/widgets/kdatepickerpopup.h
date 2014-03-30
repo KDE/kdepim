@@ -47,17 +47,17 @@ namespace KPIM {
  */
 class KDEPIM_EXPORT KDatePickerPopup: public QMenu
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Describes the available selection modes.
      */
     enum Mode
     {
-      NoDate = 1,     ///< A menu-item with "No Date". Will always return an invalid date.
-      DatePicker = 2, ///< A menu-item with a KDatePicker.
-      Words = 4       ///< A menu-item with list of words that describe a date.
+        NoDate = 1,     ///< A menu-item with "No Date". Will always return an invalid date.
+        DatePicker = 2, ///< A menu-item with a KDatePicker.
+        Words = 4       ///< A menu-item with list of words that describe a date.
     };
 
     /**
@@ -86,13 +86,13 @@ class KDEPIM_EXPORT KDatePickerPopup: public QMenu
      */
     KDatePicker *datePicker() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Sets the current @p date.
      */
     void setDate( const QDate &date );
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the user has selected a new date.
      *
@@ -100,7 +100,7 @@ class KDEPIM_EXPORT KDatePickerPopup: public QMenu
      */
     void dateChanged( const QDate &date );
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private* const d;

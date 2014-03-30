@@ -118,25 +118,4 @@ set_target_properties( messagecomposer PROPERTIES VERSION ${GENERIC_LIB_VERSION}
 install( TARGETS messagecomposer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 add_subdirectory(imagescaling/tests)
-#install( TARGETS messagecomposer EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS} )
-
-#install( FILES
-#         messagecomposer_export.h
-#         composer.h
-#         part/globalpart.h
-#         part/infopart.h
-#         messagepart.h
-#         part/textpart.h
-#         jobbase.h
-#         contentjobbase.h
-#         attachmentjob.h
-#         singlepartjob.h
-#         multipartjob.h
-#         maintextjob.h
-#         signjob.h
-#         encryptjob.h
-#         signencryptjob.h
-#         transparentjob.h
-#         skeletonmessagejob.h
-#         DESTINATION ${INCLUDE_INSTALL_DIR}/messagecomposer COMPONENT Devel )
 
