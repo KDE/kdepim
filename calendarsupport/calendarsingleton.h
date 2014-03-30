@@ -34,8 +34,6 @@ namespace CalendarSupport {
     /**
      * ETMCalendar to be used by kontact plugins to avoid having
      * 3 loaded calendars which occupy lots of memory.
-     *
-     * KOrganizer itself can't use this one since it disables calendar selection filtering.
      */
     CALENDARSUPPORT_EXPORT Akonadi::ETMCalendar* calendarSingleton();
 }
