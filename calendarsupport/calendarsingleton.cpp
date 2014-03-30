@@ -28,12 +28,6 @@
 
 #include <QCoreApplication>
 
-/**
- * Singleton is implemented through qApp parenting because we can't rely on K_GLOBAL_STATIC.
- *
- * QWidgets and QAbstractItemModels can't be global because their dtor depends on other globals
- * and the order of global destruction is undefined.
- */
 Akonadi::ETMCalendar* CalendarSupport::calendarSingleton()
 {
     static Akonadi::ETMCalendar *calendar = 0;
