@@ -49,7 +49,7 @@
 #include "selectioncontroller.h"
 #include "speechclient.h"
 #include "tabwidget.h"
-#include "searchwindow.h"
+// #include "searchwindow.h"
 #include "searchdescriptionattribute.h"
 #include "types.h"
 
@@ -134,7 +134,7 @@ Akregator2::MainWidget::MainWidget( Part *part, QWidget *parent, ActionManagerIm
      m_viewMode(NormalView),
      m_actionManager(actionManager)
 {
-    Akonadi::AttributeFactory::registerAttribute<Akregator2::SearchDescriptionAttribute>();
+//     Akonadi::AttributeFactory::registerAttribute<Akregator2::SearchDescriptionAttribute>();
     Akonadi::AttributeFactory::registerAttribute<Akonadi::PersistentSearchAttribute>();
 
     m_actionManager->initMainWidget(this);
@@ -1180,8 +1180,8 @@ void Akregator2::MainWidget::slotReloadAllTabs()
 
 void Akregator2::MainWidget::slotSearch()
 {
-    SearchWindow *window = new SearchWindow( m_itemModel, m_selectionController->selectedCollection(), this );
-    window->show();
+//     SearchWindow *window = new SearchWindow( m_itemModel, m_selectionController->selectedCollection(), this );
+//     window->show();
 }
 
 bool Akregator2::MainWidget::isNetworkAvailable() const

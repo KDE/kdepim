@@ -88,11 +88,11 @@ set(akregator2part_PART_SRCS
    akregator2_part.cpp
    mainwidget.cpp
    speechclient.cpp
-   searchdescriptionattribute.cpp
-   searchpatterneditor.cpp
-   searchpatternrow.cpp
+#    searchdescriptionattribute.cpp
+#    searchpatterneditor.cpp
+#    searchpatternrow.cpp
    searchproxymodel.cpp
-   searchwindow.cpp
+#    searchwindow.cpp
 )
 
 qt4_add_dbus_interfaces(akregator2part_PART_SRCS ${KDE4_DBUS_INTERFACES_DIR}/org.kde.KSpeech.xml)
