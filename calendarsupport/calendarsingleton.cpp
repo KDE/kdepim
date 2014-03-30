@@ -34,12 +34,12 @@
  * QWidgets and QAbstractItemModels can't be global because their dtor depends on other globals
  * and the order of global destruction is undefined.
  */
-Akonadi::ETMCalendar* CalendarSupport::calendarSingleton()
+Akonadi::ETMCalendar::Ptr CalendarSupport::calendarSingleton(bool createIfNull)
 {
-    static Akonadi::ETMCalendar *calendar = 0;
+    static Akonadi::ETMCalendar::Ptr calendar;
 
-    if (!calendar) {
-        calendar = new Akonadi::ETMCalendar(qApp);
+    if (!calendar && createIfNull) {
+        calendar = Akonadi::ETMCalendar::Ptr(new Akonadi::ETMCalendar());
         calendar->setCollectionFilteringEnabled(false);
         calendar->setOwner(KCalCore::Person::Ptr(new KCalCore::Person(KCalPrefs::instance()->fullName(),
                                                                       KCalPrefs::instance()->email())));
