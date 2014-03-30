@@ -30,18 +30,29 @@
 */
 
 #include "syncitiphandler.h"
+#include <calendarsupport/calendarsingleton.h>
+
+using namespace Akonadi;
 
 SyncItipHandler::SyncItipHandler(const QString &receiver, const QString &iCal,
                                  const QString &type, QObject *parent) : QObject(parent)
                                                                        , m_result(Akonadi::ITIPHandler::ResultSuccess)
 {
     Akonadi::ITIPHandler *handler = new Akonadi::ITIPHandler(this);
-
     QObject::connect(handler, SIGNAL(iTipMessageProcessed(Akonadi::ITIPHandler::Result,QString)),
                      SLOT(onITipMessageProcessed(Akonadi::ITIPHandler::Result,QString)));
 
     m_counterProposalEditorDelegate = new IncidenceEditorNG::GroupwareUiDelegate();
     handler->setGroupwareUiDelegate(m_counterProposalEditorDelegate);
+
+    Akonadi::ETMCalendar::Ptr etmCalendar = CalendarSupport::calendarSingleton(/*createIfNull=*/false);
+    if (etmCalendar && etmCalendar->isLoaded()) {
+        kDebug() << "Reusing exising ETM";
+        handler->setCalendar(etmCalendar);
+    } else {
+        kDebug() << "Not reusing any ETM";
+    }
+
     handler->processiTIPMessage(receiver, iCal, type);
 
     m_eventLoop.exec();
