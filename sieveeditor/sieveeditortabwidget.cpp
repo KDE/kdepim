@@ -32,6 +32,7 @@ SieveEditorTabWidget::SieveEditorTabWidget(QWidget *parent)
 {
     setMovable(true);
     setTabsClosable(true);
+    connect(this, SIGNAL(tabCloseRequested(int)), SIGNAL(tabCloseRequestedIndex(int)));
     setContextMenuPolicy( Qt::CustomContextMenu );
     connect( this, SIGNAL(customContextMenuRequested(QPoint)),
              this, SLOT(slotTabContextMenuRequest(QPoint)) );
