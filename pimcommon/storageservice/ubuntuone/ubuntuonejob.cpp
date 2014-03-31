@@ -407,11 +407,6 @@ QNetworkReply *UbuntuOneJob::downloadFile(const QString &name, const QString &fi
             delete file;
         }
     }
-    qDebug()<<" upload file not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    deleteLater();
-    return 0;
-
 
 #endif
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));

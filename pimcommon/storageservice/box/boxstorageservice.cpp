@@ -487,7 +487,6 @@ StorageServiceAbstract::Capabilities BoxStorageService::serviceCapabilities()
     return cap;
 }
 
-
 QString BoxStorageService::storageServiceName() const
 {
     return serviceName();

@@ -231,7 +231,7 @@ QString DropBoxJob::extractPathFromData(const QString &data)
 
 void DropBoxJob::parseCopyFile(const QString &data)
 {
-    qDebug()<<" data :"<<data;
+    //qDebug()<<" data :"<<data;
     const QString name = extractPathFromData(data);
     Q_EMIT copyFileDone(name);
     deleteLater();
@@ -239,7 +239,7 @@ void DropBoxJob::parseCopyFile(const QString &data)
 
 void DropBoxJob::parseCopyFolder(const QString &data)
 {
-    qDebug()<<" data :"<<data;
+    //qDebug()<<" data :"<<data;
     const QString name = extractPathFromData(data);
     Q_EMIT copyFolderDone(name);
     deleteLater();
@@ -247,7 +247,7 @@ void DropBoxJob::parseCopyFolder(const QString &data)
 
 void DropBoxJob::parseMoveFolder(const QString &data)
 {
-    qDebug()<<" data :"<<data;
+    //qDebug()<<" data :"<<data;
     const QString name = extractPathFromData(data);
     Q_EMIT moveFolderDone(name);
     deleteLater();
@@ -697,7 +697,7 @@ void DropBoxJob::parseListFolder(const QString &data)
 
 void DropBoxJob::parseDownLoadFile(const QString &data)
 {
-    qDebug()<<" data "<<data;
+    //qDebug()<<" data "<<data;
     Q_EMIT downLoadFileDone(QString());
     deleteLater();
 }
