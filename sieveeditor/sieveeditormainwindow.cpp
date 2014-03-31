@@ -121,9 +121,11 @@ void SieveEditorMainWindow::setupActions()
 
     mDeleteScript = ac->addAction(QLatin1String("delete_script"), this, SLOT(slotDeleteScript()));
     mDeleteScript->setText(i18n("Delete Script"));
+    mDeleteScript->setShortcut(QKeySequence( Qt::Key_Delete ));
     mDeleteScript->setEnabled(false);
 
     mNewScript = ac->addAction(QLatin1String("create_new_script"), this, SLOT(slotCreateNewScript()));
+    mNewScript->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_N ));
     mNewScript->setText(i18n("Create New Script..."));
     mNewScript->setEnabled(false);
 
