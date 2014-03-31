@@ -118,7 +118,7 @@ public:
 
             ldapClientToCompletionSourceMap.insert( clientIndex, sourceIndex );
 
-            clientIndex++;
+            ++clientIndex;
         }
     }
 
@@ -514,8 +514,8 @@ void AddresseeLineEdit::Private::updateSearchString()
 
     int n = -1;
     bool inQuote = false;
-    uint searchStringLength = m_searchString.length();
-    for ( uint i = 0; i < searchStringLength; ++i ) {
+    const int searchStringLength = m_searchString.length();
+    for ( int i = 0; i < searchStringLength; ++i ) {
         const QChar searchChar = m_searchString[ i ];
         if ( searchChar == QLatin1Char( '"' ) ) {
             inQuote = !inQuote;
