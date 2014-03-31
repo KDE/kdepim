@@ -1,0 +1,71 @@
+<html>
+<head>
+<style>
+ .whole_page {
+   font-family: arial,sans-serif; font-size: 80%;
+  }
+  .data {
+   vertical-align: top; font-size: 80%;
+  }
+  .last_data {
+   vertical-align: top; padding-bottom: 6px; font-size: 80%;
+  }
+  .data_header {
+    vertical-align: top; text-align: right; color: #a5a5a5; padding-right: 8px; font-size: 80%; white-space: nowrap;
+  }
+  .name {
+     border-top: 1px solid #aaaaaa; font-weight: bold; background-color: #e0e0e0; margin-bottom: 4px; padding: 2px;
+  }
+  .extra_name {
+     padding-left: 2px;
+  }
+  .last_extra_name {
+     padding-left: 2px; margin-bottom: 6px;
+  }
+</style>
+
+</head>
+<body>
+<div class=whole_page>
+{% if contacts %}
+{% for contact in contacts %}
+<div class=name>{{ contact.name }}</div>
+<div class=last_extra_name>{{ contact.realName|safe }}</div>
+
+<table cellpadding=0>
+  {% if contact.emails %}
+  <tr>
+   <td class=data_header>{{ contacti18n.emailsi18n }}</td>
+   <td class=data>{{ contact.emails|safe }}</td>
+  </tr>
+  {% endif %}
+  {% if contact.organization %}
+  <tr>
+   <td class=data_header>{{ contacti18n.organizationi18n }}</td>
+   <td class=last_data>{{ contact.organization }}</td>
+  </tr>
+  {% endif %}
+  {% if contact.webPage %}
+  <tr>
+   <td class=data_header>{{ contacti18n.websitei18n }}</td>
+   <td class=last_data>{{ contact.webPage|safe }}</td>
+  </tr>
+  {% endif %}
+  {% if contact.birthday %}
+  <tr>
+   <td class=data_header>{{ contacti18n.birthdayi18n }}</td>
+   <td class=last_data>{{ contact.birthday }}</td>
+  </tr>
+  {% endif %}
+  {% if contact.note %}
+  <tr>
+   <td class=data_header>{{ contacti18n.notei18n }}</td>
+   <td class=last_data>{{ contact.note }}</td>
+  </tr>
+  {% endif %}
+</table>
+<br>
+{% endfor %}
+{% endif %}
+
+<html>
