@@ -21,6 +21,25 @@ Example:
 </html>
 
 
+Default i18n variable:
+    "birthdayi18n" => i18n( "Birthday" );
+    "anniversaryi18n" => i18n( "Anniversary" );
+    "emailsi18n" => i18n( "Emails" );
+    "websitei18n" => i18n("Website");
+    "blogUrli18n" => i18n( "Blog Feed" );
+    "addressBookNamei18n" => i18n( "Address Book" );
+    "notei18n" => i18n( "Note" );
+    "departmenti18n" => i18n( "Department" );
+    "Professioni18n" => i18n( "Profession" );
+    "officei18n" => i18n( "Office" );
+    "manageri18n" => i18n( "Manager's Name" );
+    "assistanti18n" => i18n( "Assistant's Name" );
+    "spousei18n" => i18n( "Partner's Name" );
+    "imAddressi18n" => i18n( "IM Address" );
+    "latitudei18n" => i18n( "Latitude" );
+    "longitudei18n" => i18n( "Longitude" );
+
+
 => All contact is stored in contacts object => We use a loop for as in example.
 We can use as variable:
 - realName (QString)
