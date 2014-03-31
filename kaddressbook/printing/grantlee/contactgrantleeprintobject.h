@@ -30,6 +30,7 @@ class ContactGrantleePrintCryptoObject;
 class ContactGrantleePrintObject : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString name READ name)
     Q_PROPERTY(QString name READ realName)
     Q_PROPERTY(QString name READ formattedName)
     Q_PROPERTY(QString name READ prefix)
@@ -60,6 +61,7 @@ public:
     explicit ContactGrantleePrintObject(const KABC::Addressee &address, QObject *parent=0);
     ~ContactGrantleePrintObject();
 
+    QString name() const;
     QString realName() const;
     QString formattedName() const;
     QString prefix() const;

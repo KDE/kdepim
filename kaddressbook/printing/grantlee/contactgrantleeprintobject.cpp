@@ -107,6 +107,11 @@ QString ContactGrantleePrintObject::nickName() const
     return mAddress.nickName();
 }
 
+QString ContactGrantleePrintObject::name() const
+{
+    return mAddress.name();
+}
+
 QStringList ContactGrantleePrintObject::emails() const
 {
     QStringList emails;
