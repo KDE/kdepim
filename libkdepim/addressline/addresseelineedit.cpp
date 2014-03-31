@@ -516,13 +516,13 @@ void AddresseeLineEdit::Private::updateSearchString()
     bool inQuote = false;
     const int searchStringLength = m_searchString.length();
     for ( int i = 0; i < searchStringLength; ++i ) {
-        const QChar searchChar = m_searchString[ i ];
+        const QChar searchChar = m_searchString.at( i );
         if ( searchChar == QLatin1Char( '"' ) ) {
             inQuote = !inQuote;
         }
 
         if ( searchChar == QLatin1Char('\\') &&
-             ( i + 1 ) < searchStringLength && m_searchString[ i + 1 ] == QLatin1Char( '"' ) ) {
+             ( i + 1 ) < searchStringLength && m_searchString.at( i + 1 ) == QLatin1Char( '"' ) ) {
             ++i;
         }
 
@@ -543,7 +543,7 @@ void AddresseeLineEdit::Private::updateSearchString()
         const int len = m_searchString.length();
 
         // Increment past any whitespace...
-        while ( n < len && m_searchString[ n ].isSpace() ) {
+        while ( n < len && m_searchString.at( n ).isSpace() ) {
             ++n;
         }
 
@@ -1069,14 +1069,14 @@ void AddresseeLineEdit::insert( const QString &t )
     }
 
     int eot = contents.length();
-    while ( ( eot > 0 ) && contents[ eot - 1 ].isSpace() ) {
-        eot--;
+    while ( ( eot > 0 ) && contents.at( eot - 1 ).isSpace() ) {
+        --eot;
     }
     if ( eot == 0 ) {
         contents.clear();
     } else if ( pos >= eot ) {
-        if ( contents[ eot - 1 ] == QLatin1Char( ',' ) ) {
-            eot--;
+        if ( contents.at( eot - 1 ) == QLatin1Char( ',' ) ) {
+            --eot;
         }
         contents.truncate( eot );
         contents += QLatin1String( ", " );
@@ -1131,13 +1131,13 @@ void AddresseeLineEdit::dropEvent( QDropEvent *event )
             QString contents = text();
             // remove trailing white space and comma
             int eot = contents.length();
-            while ( ( eot > 0 ) && contents[ eot - 1 ].isSpace() ) {
-                eot--;
+            while ( ( eot > 0 ) && contents.at( eot - 1 ).isSpace() ) {
+                --eot;
             }
             if ( eot == 0 ) {
                 contents.clear();
-            } else if ( contents[ eot - 1 ] == QLatin1Char(',') ) {
-                eot--;
+            } else if ( contents.at( eot - 1 ) == QLatin1Char(',') ) {
+                --eot;
                 contents.truncate( eot );
             }
             bool mailtoURL = false;
