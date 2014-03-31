@@ -68,6 +68,8 @@ QString GrantleePrintStyle::contactsToHtml( const KABC::Addressee::List &contact
     contactI18n.insert( QLatin1String( "assistanti18n" ),GrantleeContactUtils::variableI18n(QLatin1String("assistanti18n") ) );
     contactI18n.insert( QLatin1String( "spousei18n" ),GrantleeContactUtils::variableI18n(QLatin1String("spousei18n") ) );
     contactI18n.insert( QLatin1String( "imAddressi18n" ), GrantleeContactUtils::variableI18n(QLatin1String("imAddressi18n") ));
+    contactI18n.insert( QLatin1String( "latitudei18n" ), GrantleeContactUtils::variableI18n(QLatin1String("latitudei18n") ));
+    contactI18n.insert( QLatin1String( "longitudei18n" ), GrantleeContactUtils::variableI18n(QLatin1String("longiturei18n") ));
     mapping.insert( QLatin1String("contacti18n"), contactI18n );
 
     Grantlee::Context context( mapping );
