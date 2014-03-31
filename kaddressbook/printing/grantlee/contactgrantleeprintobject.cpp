@@ -20,6 +20,7 @@
 #include "contactgrantleeprintphoneobject.h"
 #include "contactgrantleeprintimobject.h"
 #include "contactgrantleeprintgeoobject.h"
+#include "contactgrantleeprintcryptoobject.h"
 
 #include <KABC/Address>
 #include <KABC/PhoneNumber>
@@ -54,6 +55,7 @@ ContactGrantleePrintObject::ContactGrantleePrintObject(const KABC::Addressee &ad
         }
     }
     mGeoObject = new ContactGrantleePrintGeoObject(address.geo());
+    mCryptoObject = new ContactGrantleePrintCryptoObject(address);
 }
 
 ContactGrantleePrintObject::~ContactGrantleePrintObject()
@@ -61,6 +63,7 @@ ContactGrantleePrintObject::~ContactGrantleePrintObject()
     qDeleteAll(mListAddress);
     qDeleteAll(mListPhones);
     qDeleteAll(mListIm);
+    delete mCryptoObject;
 }
 
 QString ContactGrantleePrintObject::realName() const
@@ -174,6 +177,11 @@ QVariant ContactGrantleePrintObject::instantManging() const
 QVariant ContactGrantleePrintObject::geo() const
 {
     return QVariant::fromValue(mGeoObject);
+}
+
+QVariant ContactGrantleePrintObject::crypto() const
+{
+    return QVariant::fromValue(mCryptoObject);
 }
 
 QString ContactGrantleePrintObject::addressBookName() const

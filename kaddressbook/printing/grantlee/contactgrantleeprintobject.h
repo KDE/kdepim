@@ -26,6 +26,7 @@ class ContactGrantleePrintAddressObject;
 class ContactGrantleePrintPhoneObject;
 class ContactGrantleePrintImObject;
 class ContactGrantleePrintGeoObject;
+class ContactGrantleePrintCryptoObject;
 class ContactGrantleePrintObject : public QObject
 {
     Q_OBJECT
@@ -52,6 +53,8 @@ class ContactGrantleePrintObject : public QObject
     Q_PROPERTY(QString addressBookName READ addressBookName)
     Q_PROPERTY(QString photo READ photo)
     Q_PROPERTY(QString logo READ logo)
+    Q_PROPERTY(QVariant crypto READ crypto)
+
     //Add more functions
 public:
     explicit ContactGrantleePrintObject(const KABC::Addressee &address, QObject *parent=0);
@@ -81,12 +84,14 @@ public:
     QVariant geo() const;
     QString photo() const;
     QString logo() const;
+    QVariant crypto() const;
 private:
     QString imgToDataUrl( const QImage &image ) const;
     QList<ContactGrantleePrintAddressObject*> mListAddress;
     QList<ContactGrantleePrintPhoneObject*> mListPhones;
     QList<ContactGrantleePrintImObject*> mListIm;
     ContactGrantleePrintGeoObject *mGeoObject;
+    ContactGrantleePrintCryptoObject *mCryptoObject;
     KABC::Addressee mAddress;
 };
 }
@@ -95,4 +100,5 @@ Q_DECLARE_METATYPE(QList<KABPrinting::ContactGrantleePrintAddressObject*>)
 Q_DECLARE_METATYPE(QList<KABPrinting::ContactGrantleePrintPhoneObject*>)
 Q_DECLARE_METATYPE(QList<KABPrinting::ContactGrantleePrintImObject*>)
 Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintGeoObject*)
+Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintCryptoObject*)
 #endif // CONTACTGRANTLEEPRINTOBJECT_H

@@ -10,6 +10,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim/
   ${CMAKE_SOURCE_DIR}/grantleetheme/
   ${CMAKE_SOURCE_DIR}/kaddressbookgrantlee/
+  ${CMAKE_SOURCE_DIR}/libkleo
 )
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
@@ -45,6 +46,7 @@ set(kaddressbook_printing_SRCS
   printing/grantlee/contactgrantleeprintphoneobject.cpp
   printing/grantlee/contactgrantleeprintimobject.cpp
   printing/grantlee/contactgrantleeprintgeoobject.cpp
+  printing/grantlee/contactgrantleeprintcryptoobject.cpp
   printing/stylepage.cpp
 )
 
@@ -117,6 +119,7 @@ target_link_libraries(kaddressbookprivate
   ${KDE4_KPRINTUTILS_LIBS}
   ${Grantlee_CORE_LIBRARIES}
   grantleetheme
+  kleo
 )
 
 if(QGPGME_FOUND)
