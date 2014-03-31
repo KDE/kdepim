@@ -60,6 +60,7 @@ ContactGrantleePrintObject::ContactGrantleePrintObject(const KABC::Addressee &ad
 
 ContactGrantleePrintObject::~ContactGrantleePrintObject()
 {
+    delete mGeoObject;
     qDeleteAll(mListAddress);
     qDeleteAll(mListPhones);
     qDeleteAll(mListIm);
