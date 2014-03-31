@@ -54,6 +54,8 @@ QString GrantleeContactUtils::variableI18n(const QString &variable)
         return i18n( "Latitude" );
     } else if (variable == QLatin1String("longitudei18n")) {
         return i18n( "Longitude" );
+    } else if (variable == QLatin1String("organizationi18n")) {
+        return i18n( "Organization" );
     } else {
         return variable;
     }
