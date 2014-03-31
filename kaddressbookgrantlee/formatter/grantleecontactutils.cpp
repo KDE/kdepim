@@ -56,6 +56,10 @@ QString GrantleeContactUtils::variableI18n(const QString &variable)
         return i18n( "Longitude" );
     } else if (variable == QLatin1String("organizationi18n")) {
         return i18n( "Organization" );
+    } else if (variable == QLatin1String("namei18n")) {
+        return i18n( "Name" );
+    } else if (variable == QLatin1String("titlei18n")) {
+        return i18n( "Title" );
     } else {
         return variable;
     }

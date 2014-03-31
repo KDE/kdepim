@@ -29,7 +29,7 @@
 <div class=whole_page>
 {% if contacts %}
 {% for contact in contacts %}
-<div class=name>{{ contact.familyName }}</div>
+<div class=name>{{ contact.name }}</div>
 <div class=last_extra_name>{{ contact.realName|safe }}</div>
 
 <table cellpadding=0>
@@ -48,10 +48,32 @@
   {% if contact.webPage %}
   <tr>
    <td class=data_header>{{ contacti18n.websitei18n }}</td>
-   <td class=last_data>{{ contact.webPage }}</td>
+   <td class=last_data>{{ contact.webPage|safe }}</td>
   </tr>
   {% endif %}
+  {% if contact.birthday %}
+  <tr>
+   <td class=data_header>{{ contacti18n.birthdayi18n }}</td>
+   <td class=last_data>{{ contact.birthday }}</td>
+  </tr>
+  {% endif %}
+  {% if contact.note %}
+  <tr>
+   <td class=data_header>{{ contacti18n.notei18n }}</td>
+   <td class=last_data>{{ contact.note }}</td>
+  </tr>
+  {% endif %}
+  {% if contact.title %}
+  <tr>
+   <td class=data_header>{{ contacti18n.titlei18n }}</td>
+   <td class=last_data>{{ contact.title }}</td>
+  </tr>
+  {% endif %}
+  {% for address in addresses %}
+
+  {% endfor %}
 </table>
+<br>
 {% endfor %}
 {% endif %}
 
