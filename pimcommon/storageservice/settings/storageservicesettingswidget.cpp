@@ -71,7 +71,7 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     connect(mRemoveService, SIGNAL(clicked()), this, SLOT(slotRemoveService()));
     hlay->addWidget(mRemoveService);
 
-    mModifyService = new QPushButton(i18n("Modify"));
+    mModifyService = new QPushButton(i18n("Modify..."));
     connect(mModifyService, SIGNAL(clicked()), this, SLOT(slotModifyService()));
     hlay->addWidget(mModifyService);
 
