@@ -91,3 +91,8 @@ Element for geo:
  - longitude (float)
  - isValid (bool) return true if valid
  - toString (QString) return information as string
+
+Element for crypto:
+ - signaturePreference (QString)
+ - cryptoPreference (QString)
+
