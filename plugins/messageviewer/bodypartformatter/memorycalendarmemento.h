@@ -49,7 +49,7 @@ class MemoryCalendarMemento : public QObject, public Interface::BodyPartMemento
     void update( MessageViewer::Viewer::UpdateMode );
 
   private slots:
-    void slotSearchJobFinished( KJob *job );
+    void slotCalendarLoaded( bool success, const QString &errorMessage );
 
   private:
     bool mFinished;
