@@ -36,12 +36,12 @@ namespace Core
  */
 class SortOrder
 {
-  Q_GADGET
-  Q_ENUMS( GroupSorting )
-  Q_ENUMS( SortDirection )
-  Q_ENUMS( MessageSorting )
+    Q_GADGET
+    Q_ENUMS( GroupSorting )
+    Q_ENUMS( SortDirection )
+    Q_ENUMS( MessageSorting )
 
-  public:
+public:
 
     /**
     * How to sort the groups
@@ -50,13 +50,13 @@ class SortOrder
     */
     enum GroupSorting
     {
-      NoGroupSorting,                      ///< Don't sort the groups at all, add them as they come in
-      SortGroupsByDateTime,                ///< Sort groups by date/time of the group
-      SortGroupsByDateTimeOfMostRecent,    ///< Sort groups by date/time of the most recent message
-      SortGroupsBySenderOrReceiver,        ///< Sort groups by sender or receiver (makes sense only with GroupBySenderOrReceiver)
-      SortGroupsBySender,                  ///< Sort groups by sender (makes sense only with GroupBySender)
-      SortGroupsByReceiver                 ///< Sort groups by receiver (makes sense only with GroupByReceiver)
-      // Never add enum entries in the middle: always add them at the end (numeric values are stored in configuration)
+        NoGroupSorting,                      ///< Don't sort the groups at all, add them as they come in
+        SortGroupsByDateTime,                ///< Sort groups by date/time of the group
+        SortGroupsByDateTimeOfMostRecent,    ///< Sort groups by date/time of the most recent message
+        SortGroupsBySenderOrReceiver,        ///< Sort groups by sender or receiver (makes sense only with GroupBySenderOrReceiver)
+        SortGroupsBySender,                  ///< Sort groups by sender (makes sense only with GroupBySender)
+        SortGroupsByReceiver                 ///< Sort groups by receiver (makes sense only with GroupByReceiver)
+        // Never add enum entries in the middle: always add them at the end (numeric values are stored in configuration)
     };
 
     /**
@@ -66,8 +66,8 @@ class SortOrder
     */
     enum SortDirection
     {
-      Ascending,
-      Descending
+        Ascending,
+        Descending
     };
 
     /**
@@ -77,18 +77,18 @@ class SortOrder
     */
     enum MessageSorting
     {
-      NoMessageSorting,                    ///< Don't sort the messages at all
-      SortMessagesByDateTime,              ///< Sort the messages by date and time
-      SortMessagesByDateTimeOfMostRecent,  ///< Sort the messages by date and time of the most recent message in subtree
-      SortMessagesBySenderOrReceiver,      ///< Sort the messages by sender or receiver
-      SortMessagesBySender,                ///< Sort the messages by sender
-      SortMessagesByReceiver,              ///< Sort the messages by receiver
-      SortMessagesBySubject,               ///< Sort the messages by subject
-      SortMessagesBySize,                  ///< Sort the messages by size
-      SortMessagesByActionItemStatus,      ///< Sort the messages by the "Action Item" flag of status
-      SortMessagesByUnreadStatus,        ///< Sort the messages by the "Unread" flags of status
-      SortMessagesByImportantStatus        /// Sort the messages By "Important" flags of status
-      // Warning: Never add enum entries in the middle: always add them at the end (numeric values are stored in configuration)
+        NoMessageSorting,                    ///< Don't sort the messages at all
+        SortMessagesByDateTime,              ///< Sort the messages by date and time
+        SortMessagesByDateTimeOfMostRecent,  ///< Sort the messages by date and time of the most recent message in subtree
+        SortMessagesBySenderOrReceiver,      ///< Sort the messages by sender or receiver
+        SortMessagesBySender,                ///< Sort the messages by sender
+        SortMessagesByReceiver,              ///< Sort the messages by receiver
+        SortMessagesBySubject,               ///< Sort the messages by subject
+        SortMessagesBySize,                  ///< Sort the messages by size
+        SortMessagesByActionItemStatus,      ///< Sort the messages by the "Action Item" flag of status
+        SortMessagesByUnreadStatus,        ///< Sort the messages by the "Unread" flags of status
+        SortMessagesByImportantStatus        /// Sort the messages By "Important" flags of status
+        // Warning: Never add enum entries in the middle: always add them at the end (numeric values are stored in configuration)
     };
 
     explicit SortOrder();
@@ -97,7 +97,7 @@ class SortOrder
     * Returns the GroupSorting
     */
     GroupSorting groupSorting() const
-      { return mGroupSorting; }
+    { return mGroupSorting; }
 
     /**
     * Sets the GroupSorting option.
@@ -105,45 +105,45 @@ class SortOrder
     * is used in.
     */
     void setGroupSorting( GroupSorting gs )
-      { mGroupSorting = gs; }
+    { mGroupSorting = gs; }
 
     /**
     * Returns the current group SortDirection.
     */
     SortDirection groupSortDirection() const
-      { return mGroupSortDirection; }
+    { return mGroupSortDirection; }
 
     /**
     * Sets the SortDirection for the groups.
     * Note that this option has no meaning if group sorting is set to NoGroupSorting.
     */
     void setGroupSortDirection( SortDirection groupSortDirection )
-      { mGroupSortDirection = groupSortDirection; }
+    { mGroupSortDirection = groupSortDirection; }
 
-   /**
+    /**
     * Returns the current message sorting option
     */
     MessageSorting messageSorting() const
-      { return mMessageSorting; }
+    { return mMessageSorting; }
 
-   /**
+    /**
     * Sets the current message sorting option
     */
     void setMessageSorting( MessageSorting ms )
-      { mMessageSorting = ms; }
+    { mMessageSorting = ms; }
 
-   /**
+    /**
     * Returns the current message SortDirection.
     */
     SortDirection messageSortDirection() const
-      { return mMessageSortDirection; }
+    { return mMessageSortDirection; }
 
-   /**
+    /**
     * Sets the SortDirection for the message.
     * Note that this option has no meaning if message sorting is set to NoMessageSorting.
     */
     void setMessageSortDirection( SortDirection messageSortDirection )
-      { mMessageSortDirection = messageSortDirection; }
+    { mMessageSortDirection = messageSortDirection; }
 
     /**
     * Enumerates the message sorting options compatible with the specified Threading setting.
@@ -218,7 +218,7 @@ class SortOrder
     void writeConfig( KConfigGroup &conf, const QString &storageId,
                       bool storageUsesPrivateSortOrder ) const;
 
-  private:
+private:
 
     // Helper function to convert an enum value to a string and back
     static const QString nameForSortDirection( SortDirection sortDirection );

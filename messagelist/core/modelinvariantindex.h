@@ -43,23 +43,23 @@ class RowShift;
  */
 class MESSAGELIST_EXPORT ModelInvariantIndex
 {
-  friend class ModelInvariantRowMapper;
-  friend class ModelInvariantRowMapperPrivate;
-  friend class RowShift;
+    friend class ModelInvariantRowMapper;
+    friend class ModelInvariantRowMapperPrivate;
+    friend class RowShift;
 
 public:
-  explicit ModelInvariantIndex();
-  virtual ~ModelInvariantIndex();
+    explicit ModelInvariantIndex();
+    virtual ~ModelInvariantIndex();
 
 public:
-  /**
+    /**
    * Returns true if this ModelInvariantIndex is valid, that is, it has been attacched
    * to a ModelInvariantRowMapper. Returns false otherwise.
    * An invalid index will always map to the current row -1 (which is invalid as QModelIndex row).
    */
-  bool isValid() const;
+    bool isValid() const;
 
-  /**
+    /**
    * Returns the current model index row for this invariant index. This function
    * calls the mapper and asks it to perform the persistent mapping.
    * If this index isn't valid then the returned value is -1.
@@ -68,11 +68,11 @@ public:
    * by calling the modelInvariantIndexToModelIndexRow() by your own. If you don't
    * own the mapper then this function is the only way to go.
    */
-  int currentModelIndexRow();
+    int currentModelIndexRow();
 
 private:
-  class Private;
-  Private * const d;
+    class Private;
+    Private * const d;
 };
 
 } // namespace Core
