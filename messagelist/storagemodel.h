@@ -39,7 +39,7 @@ namespace MessageList
 
 namespace Core
 {
-  class MessageItem;
+class MessageItem;
 }
 
 /**
@@ -47,51 +47,51 @@ namespace Core
  */
 class MESSAGELIST_EXPORT StorageModel : public MessageList::Core::StorageModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /**
+    /**
    * Create a StorageModel wrapping the specified folder.
    */
-  explicit StorageModel( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QObject *parent = 0 );
-  ~StorageModel();
+    explicit StorageModel( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QObject *parent = 0 );
+    ~StorageModel();
 
-  Akonadi::Collection::List displayedCollections() const;
+    Akonadi::Collection::List displayedCollections() const;
 
-  virtual QString id() const;
-  virtual bool containsOutboundMessages() const;
+    virtual QString id() const;
+    virtual bool containsOutboundMessages() const;
 
-  virtual bool isOutBoundFolder( const Akonadi::Collection& c ) const;
+    virtual bool isOutBoundFolder( const Akonadi::Collection& c ) const;
 
-  virtual int initialUnreadRowCountGuess() const;
-  virtual bool initializeMessageItem( MessageList::Core::MessageItem *mi, int row, bool bUseReceiver ) const;
-  virtual void fillMessageItemThreadingData( MessageList::Core::MessageItem *mi, int row, ThreadingDataSubset subset ) const;
-  virtual void updateMessageItemData( MessageList::Core::MessageItem *mi, int row ) const;
-  virtual void setMessageItemStatus( MessageList::Core::MessageItem *mi, int row, const Akonadi::MessageStatus &status );
+    virtual int initialUnreadRowCountGuess() const;
+    virtual bool initializeMessageItem( MessageList::Core::MessageItem *mi, int row, bool bUseReceiver ) const;
+    virtual void fillMessageItemThreadingData( MessageList::Core::MessageItem *mi, int row, ThreadingDataSubset subset ) const;
+    virtual void updateMessageItemData( MessageList::Core::MessageItem *mi, int row ) const;
+    virtual void setMessageItemStatus( MessageList::Core::MessageItem *mi, int row, const Akonadi::MessageStatus &status );
 
-  virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;
-  virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
-  virtual QModelIndex index( int row, int column, const QModelIndex &parent = QModelIndex() ) const;
-  virtual QModelIndex parent( const QModelIndex &index ) const;
-  virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
+    virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;
+    virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
+    virtual QModelIndex index( int row, int column, const QModelIndex &parent = QModelIndex() ) const;
+    virtual QModelIndex parent( const QModelIndex &index ) const;
+    virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
 
-  virtual QMimeData* mimeData( const QList< MessageList::Core::MessageItem* >& ) const;
-  using MessageList::Core::StorageModel::mimeData;
+    virtual QMimeData* mimeData( const QList< MessageList::Core::MessageItem* >& ) const;
+    using MessageList::Core::StorageModel::mimeData;
 
-  virtual void prepareForScan();
+    virtual void prepareForScan();
 
-  Akonadi::Item itemForRow( int row ) const;
-  KMime::Message::Ptr messageForRow( int row ) const;
+    Akonadi::Item itemForRow( int row ) const;
+    KMime::Message::Ptr messageForRow( int row ) const;
 
-  void resetModelStorage();
+    void resetModelStorage();
 
 private:
-  Q_PRIVATE_SLOT(d, void onSourceDataChanged( const QModelIndex&, const QModelIndex& ))
-  Q_PRIVATE_SLOT(d, void onSelectionChanged())
-  Q_PRIVATE_SLOT(d, void loadSettings())
+    Q_PRIVATE_SLOT(d, void onSourceDataChanged( const QModelIndex&, const QModelIndex& ))
+    Q_PRIVATE_SLOT(d, void onSelectionChanged())
+    Q_PRIVATE_SLOT(d, void loadSettings())
 
-  class Private;
-  Private * const d;
+    class Private;
+    Private * const d;
 };
 
 } // namespace MessageList

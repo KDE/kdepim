@@ -92,31 +92,31 @@ class RowShift;
  */
 class MESSAGELIST_EXPORT ModelInvariantRowMapper : public QObject
 {
-  friend class ModelInvariantIndex;
+    friend class ModelInvariantIndex;
 
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  explicit ModelInvariantRowMapper();
-  virtual ~ModelInvariantRowMapper();
+    explicit ModelInvariantRowMapper();
+    virtual ~ModelInvariantRowMapper();
 
-  /**
+    /**
    * Sets the maximum time we can spend inside a single lazy update step.
    * The larger this time, the more resources we consume and leave less to UI processing
    * but also larger the update throughput (that is, we update more items per second).
    * This is 50 msec by default.
    */
-  void setLazyUpdateChunkInterval( int chunkInterval );
+    void setLazyUpdateChunkInterval( int chunkInterval );
 
-  /**
+    /**
    * Sets the idle time between two lazy updates in milliseconds.
    * The larger this time, the less resources we consume and leave more to UI processing
    * but also smaller the update throughput (that is, we update less items per second).
    * This is 50 msec by default.
    */
-  void setLazyUpdateIdleInterval( int idleInterval );
+    void setLazyUpdateIdleInterval( int idleInterval );
 
-  /**
+    /**
    * Maps a ModelInvariantIndex to the CURRENT associated row index in the model.
    * As long as the underlying model is consistent, the returned row index is guaranteed to
    * point to the content that this ModelInvariantIndex pointed at the time it was created.
@@ -124,9 +124,9 @@ public:
    * Returns the current associated row index in the model or -1 if the invariant
    * does not belong to this mapper (model) or is marked as invalid at all.
    */
-  int modelInvariantIndexToModelIndexRow( ModelInvariantIndex * invariant );
+    int modelInvariantIndexToModelIndexRow( ModelInvariantIndex * invariant );
 
-  /**
+    /**
    * Binds a ModelInvariantIndex structure to the specified CURRENT modelIndexRow.
    * Later you can use the ModelInvariantIndex to retrieve the model contents
    * that the parameter modelIndexRow refers to... even if the model changes.
@@ -135,32 +135,32 @@ public:
    *
    * This function ASSUMES that invariantToFill is a newly allocated ModelInvariantIndex.
    */
-  void createModelInvariantIndex( int modelIndexRow, ModelInvariantIndex * invariantToFill );
+    void createModelInvariantIndex( int modelIndexRow, ModelInvariantIndex * invariantToFill );
 
-  /**
+    /**
    * Finds the existing ModelInvariantIndex that belongs to the specified CURRENT modelIndexRow.
    * Returns the ModelInvariantIndex found or 0 if such an invariant wasn't yet
    * created (by the means of createModelInvariantIndex()).
    */
-  ModelInvariantIndex * modelIndexRowToModelInvariantIndex( int modelIndexRow );
+    ModelInvariantIndex * modelIndexRowToModelInvariantIndex( int modelIndexRow );
 
-  /**
+    /**
    * This basically applies modelIndexRowToModelInvariantIndex() to a range of elements.
    * The returned pointer can be null if no existing ModelInvariantIndex object were
    * present in the range (this can happen if you don't request some of them). If the returned
    * value is not 0 then you're responsable of deleting it.
    */
-  QList< ModelInvariantIndex * > * modelIndexRowRangeToModelInvariantIndexList( int startIndexRow, int count );
+    QList< ModelInvariantIndex * > * modelIndexRowRangeToModelInvariantIndexList( int startIndexRow, int count );
 
-  /**
+    /**
    * Call this function when rows are inserted to the underlying model
    * BEFORE scanning the model for the new items. You probably
    * want this function to be the first call in your rowsInserted() handler
    * or the last call in the rowsAboutToBeInserted() handler.
    */
-  void modelRowsInserted( int modelIndexRowPosition, int count );
+    void modelRowsInserted( int modelIndexRowPosition, int count );
 
-  /**
+    /**
    * Call this function when rows are removed from the underlying model
    * AFTER accessing the removed rows for the last time. You probably
    * want this function to be the first call of your rowsRemoved() handler
@@ -174,9 +174,9 @@ public:
    * (this can happen if you don't request some of them). If the returned
    * value is not 0 then you're responsable of deleting it.
    */
-  QList< ModelInvariantIndex * > * modelRowsRemoved( int modelIndexRowPosition, int count );
+    QList< ModelInvariantIndex * > * modelRowsRemoved( int modelIndexRowPosition, int count );
 
-  /**
+    /**
    * Call this function from your handlers of reset() and layoutChanged()
    * AFTER you ve last accessed the model underlying data.
    * You probably want this function to be the first call of your
@@ -185,12 +185,12 @@ public:
    * This function assumes that all the ModelInvariantIndex
    * are being invalidated and need to be requeried.
    */
-  void modelReset();
+    void modelReset();
 
 private:
-  Q_PRIVATE_SLOT(d, void slotPerformLazyUpdate())
+    Q_PRIVATE_SLOT(d, void slotPerformLazyUpdate())
 
-  ModelInvariantRowMapperPrivate * const d;
+    ModelInvariantRowMapperPrivate * const d;
 };
 
 } // namespace Core

@@ -25,7 +25,7 @@
 using namespace MessageList::Core;
 
 StorageModel::StorageModel( QObject * parent )
-  : QAbstractItemModel( parent )
+    : QAbstractItemModel( parent )
 {
 }
 
@@ -35,39 +35,39 @@ StorageModel::~StorageModel()
 
 int StorageModel::initialUnreadRowCountGuess() const
 {
-  return rowCount( QModelIndex() );
+    return rowCount( QModelIndex() );
 }
 
 unsigned long StorageModel::preSelectedMessage() const
 {
-  const QString storageModelId = id();
-  Q_ASSERT( !storageModelId.isEmpty() );
+    const QString storageModelId = id();
+    Q_ASSERT( !storageModelId.isEmpty() );
 
-  KConfigGroup conf( Settings::self()->config(),
-                     MessageList::Util::storageModelSelectedMessageGroup() );
+    KConfigGroup conf( Settings::self()->config(),
+                       MessageList::Util::storageModelSelectedMessageGroup() );
 
-  // QVariant supports unsigned int OR unsigned long long int, NOT unsigned long int... doh...
-  qulonglong defValue = 0;
+    // QVariant supports unsigned int OR unsigned long long int, NOT unsigned long int... doh...
+    qulonglong defValue = 0;
 
-  return conf.readEntry( MessageList::Util::messageUniqueIdConfigName().arg( storageModelId ), defValue );
+    return conf.readEntry( MessageList::Util::messageUniqueIdConfigName().arg( storageModelId ), defValue );
 }
 
 void StorageModel::savePreSelectedMessage( unsigned long uniqueIdOfMessage )
 {
-  const QString storageModelId = id();
-  Q_ASSERT( !storageModelId.isEmpty() );
+    const QString storageModelId = id();
+    Q_ASSERT( !storageModelId.isEmpty() );
 
-  KConfigGroup conf( Settings::self()->config(),
-                     MessageList::Util::storageModelSelectedMessageGroup() );
+    KConfigGroup conf( Settings::self()->config(),
+                       MessageList::Util::storageModelSelectedMessageGroup() );
 
-  if ( uniqueIdOfMessage )
-  {
-    // QVariant supports unsigned int OR unsigned long long int, NOT unsigned long int... doh...
-    qulonglong val = uniqueIdOfMessage;
+    if ( uniqueIdOfMessage )
+    {
+        // QVariant supports unsigned int OR unsigned long long int, NOT unsigned long int... doh...
+        qulonglong val = uniqueIdOfMessage;
 
-    conf.writeEntry( MessageList::Util::messageUniqueIdConfigName().arg( storageModelId ), val );
-  } else
-    conf.deleteEntry( MessageList::Util::messageUniqueIdConfigName().arg( storageModelId ) );
+        conf.writeEntry( MessageList::Util::messageUniqueIdConfigName().arg( storageModelId ), val );
+    } else
+        conf.deleteEntry( MessageList::Util::messageUniqueIdConfigName().arg( storageModelId ) );
 }
 
 
