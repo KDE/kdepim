@@ -173,7 +173,7 @@ QVariant ContactGrantleePrintObject::addresses() const
 
 QVariant ContactGrantleePrintObject::phones() const
 {
-    return QVariant::fromValue(mListAddress);
+    return QVariant::fromValue(mListPhones);
 }
 
 QVariant ContactGrantleePrintObject::instantManging() const
