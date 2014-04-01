@@ -18,8 +18,9 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "memorycalendarmemento.h"
-
+#include <calendarsupport/calendarsingleton.h>
 #include <Akonadi/Calendar/FetchJobCalendar>
+#include <Akonadi/Calendar/ETMCalendar>
 #include <KSystemTimeZones>
 
 using namespace MessageViewer;
@@ -28,20 +29,33 @@ using namespace Akonadi;
 MemoryCalendarMemento::MemoryCalendarMemento()
   : QObject( 0 ), mFinished( false )
 {
-  FetchJobCalendar::Ptr calendar = FetchJobCalendar::Ptr( new FetchJobCalendar( this ) );
-  mCalendar = calendar;
-  connect(calendar.data(), SIGNAL(loadFinished(bool,QString)),
-          SLOT(slotCalendarLoaded(bool,QString)) );
+
+  Akonadi::ETMCalendar::Ptr etmCalendar = CalendarSupport::calendarSingleton(/*createIfNull=*/false);
+  if (etmCalendar && etmCalendar->isLoaded()) {
+    // Good, either korganizer or kontact summary view are already running, so reuse ETM to save memory
+    mCalendar = etmCalendar;
+    QMetaObject::invokeMethod( this, "finalize", Qt::QueuedConnection );
+  } else {
+    FetchJobCalendar::Ptr calendar = FetchJobCalendar::Ptr( new FetchJobCalendar( this ) );
+    mCalendar = calendar;
+    connect(calendar.data(), SIGNAL(loadFinished(bool,QString)),
+            SLOT(slotCalendarLoaded(bool,QString)) );
+  }
 }
 
 void MemoryCalendarMemento::slotCalendarLoaded( bool success, const QString &errorMessage )
 {
   kDebug();
-  mFinished = true;
-
   if ( !success ) {
     kWarning() << "Unable to fetch incidences:" << errorMessage;
   }
+
+  finalize();
+}
+
+void MemoryCalendarMemento::finalize()
+{
+  mFinished = true;
   emit update( Viewer::Delayed );
 }
 

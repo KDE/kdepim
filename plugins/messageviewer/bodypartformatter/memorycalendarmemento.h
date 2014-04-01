@@ -50,6 +50,7 @@ class MemoryCalendarMemento : public QObject, public Interface::BodyPartMemento
 
   private slots:
     void slotCalendarLoaded( bool success, const QString &errorMessage );
+    void finalize();
 
   private:
     bool mFinished;
