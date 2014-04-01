@@ -41,6 +41,7 @@ public:
 private slots:
     void slotNoteCreationFinished(KJob *);
 
+    void slotFetchCollection(KJob *job);
 private:
     QString mTitle;
     QString mText;

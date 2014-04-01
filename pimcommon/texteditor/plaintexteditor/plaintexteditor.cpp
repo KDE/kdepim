@@ -125,16 +125,17 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
         speakAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
         speakAction->setEnabled(!emptyDocument );
         connect( speakAction, SIGNAL(triggered(bool)), this, SLOT(slotSpeakText()) );
-        addExtraMenuEntry(popup);
+        addExtraMenuEntry(popup, event->pos());
         popup->exec( event->globalPos() );
 
         delete popup;
     }
 }
 
-void PlainTextEditor::addExtraMenuEntry(QMenu *menu)
+void PlainTextEditor::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
 {
     Q_UNUSED(menu);
+    Q_UNUSED(pos);
 }
 
 void PlainTextEditor::slotSpeakText()

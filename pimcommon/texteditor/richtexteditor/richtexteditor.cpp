@@ -165,7 +165,7 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
         speakAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
         speakAction->setEnabled(!emptyDocument );
         connect( speakAction, SIGNAL(triggered(bool)), this, SLOT(slotSpeakText()) );
-        addExtraMenuEntry(popup);
+        addExtraMenuEntry(popup, pos);
         popup->exec( pos );
 
         delete popup;
@@ -211,9 +211,10 @@ void RichTextEditor::setSpellCheckingSupport( bool check )
     d->hasSpellCheckingSupport = check;
 }
 
-void RichTextEditor::addExtraMenuEntry(QMenu *menu)
+void RichTextEditor::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
 {
     Q_UNUSED(menu);
+    Q_UNUSED(pos);
 }
 
 void RichTextEditor::slotUndoableClear()

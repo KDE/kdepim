@@ -58,7 +58,7 @@ private Q_SLOTS:
     void slotSpellCheckerFinished();
 
 protected:
-    virtual void addExtraMenuEntry(QMenu *menu);
+    virtual void addExtraMenuEntry(QMenu *menu, const QPoint &pos);
 
 protected:
     void contextMenuEvent( QContextMenuEvent *event );

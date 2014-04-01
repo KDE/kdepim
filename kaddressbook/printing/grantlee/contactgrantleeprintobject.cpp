@@ -31,12 +31,16 @@
 #include <QBuffer>
 #include <QDebug>
 
+#include <grantlee/metatype.h>
+
+
 using namespace KABPrinting;
 
 ContactGrantleePrintObject::ContactGrantleePrintObject(const KABC::Addressee &address, QObject *parent)
     : QObject(parent),
       mAddress(address)
 {
+    Grantlee::registerSequentialContainer<QList<QObject*> >();
     Q_FOREACH ( const KABC::Address &addr, address.addresses() ) {
         mListAddress<<new ContactGrantleePrintAddressObject(addr);
     }

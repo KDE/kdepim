@@ -58,7 +58,7 @@ protected:
     void initCompleter();
     void keyPressEvent(QKeyEvent* e);
     void resizeEvent(QResizeEvent *event);    
-    void addExtraMenuEntry(QMenu *menu);
+    void addExtraMenuEntry(QMenu *menu, const QPoint &pos);
 
 Q_SIGNALS:
     void openHelp(const QString &variableName, const QString &url);
@@ -66,7 +66,7 @@ Q_SIGNALS:
 private:
     QStringList completerList() const;
     void setCompleterList(const QStringList &list);
-    QString selectedWord() const;
+    QString selectedWord(const QPoint &pos = QPoint()) const;
 
     QCompleter *m_completer;
     SieveLineNumberArea *m_sieveLineNumberArea;
