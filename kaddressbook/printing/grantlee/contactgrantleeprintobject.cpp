@@ -29,6 +29,7 @@
 #include <KLocale>
 
 #include <QBuffer>
+#include <QDebug>
 
 using namespace KABPrinting;
 

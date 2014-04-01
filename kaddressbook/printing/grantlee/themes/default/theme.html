@@ -69,8 +69,11 @@
    <td class=last_data>{{ contact.title }}</td>
   </tr>
   {% endif %}
-  {% for address in addresses %}
-
+  {% for address in contact.addresses %}
+  <tr>
+   <td class=data_header>Address</td>
+   <td class=last_data>{{ address.formattedAddress }}</td>
+  </tr>
   {% endfor %}
 </table>
 <br>

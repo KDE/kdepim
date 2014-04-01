@@ -38,6 +38,7 @@ Default i18n variable:
     "imAddressi18n" => i18n( "IM Address" );
     "latitudei18n" => i18n( "Latitude" );
     "longitudei18n" => i18n( "Longitude" );
+    "titlei18n" => i18n("Title");
 
 
 => All contact is stored in contacts object => We use a loop for as in example.
