@@ -85,16 +85,18 @@ public:
     QString logo() const;
 private:
     QString imgToDataUrl( const QImage &image ) const;
-    QList<ContactGrantleePrintAddressObject*> mListAddress;
-    QList<ContactGrantleePrintPhoneObject*> mListPhones;
-    QList<ContactGrantleePrintImObject*> mListIm;
+    QList<QObject*> mListAddress;
+    QList<QObject*> mListPhones;
+    QList<QObject*> mListIm;
     ContactGrantleePrintGeoObject *mGeoObject;
     KABC::Addressee mAddress;
 };
 }
-Q_DECLARE_METATYPE(QList<KABPrinting::ContactGrantleePrintObject*>)
-Q_DECLARE_METATYPE(QList<KABPrinting::ContactGrantleePrintAddressObject*>)
-Q_DECLARE_METATYPE(QList<KABPrinting::ContactGrantleePrintPhoneObject*>)
-Q_DECLARE_METATYPE(QList<KABPrinting::ContactGrantleePrintImObject*>)
+Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintObject*)
+Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintAddressObject*)
+Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintPhoneObject*)
+Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintImObject*)
 Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintGeoObject*)
+Q_DECLARE_METATYPE(QList<QObject*>)
+
 #endif // CONTACTGRANTLEEPRINTOBJECT_H
