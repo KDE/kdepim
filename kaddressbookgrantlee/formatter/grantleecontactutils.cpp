@@ -20,6 +20,11 @@
 
 #include <KLocale>
 
+void GrantleeContactUtils::insertVariableToQVariantHash(QVariantHash &contactI18n, const QString &variable)
+{
+    contactI18n.insert( variable, GrantleeContactUtils::variableI18n( variable ) );
+}
+
 QString GrantleeContactUtils::variableI18n(const QString &variable)
 {
     if (variable == QLatin1String("birthdayi18n")) {
