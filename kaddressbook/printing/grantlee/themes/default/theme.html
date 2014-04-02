@@ -63,26 +63,6 @@
    <td class=last_data>{{ contact.note }}</td>
   </tr>
   {% endif %}
-  {% if contact.title %}
-  <tr>
-   <td class=data_header>{{ contacti18n.titlei18n }}</td>
-   <td class=last_data>{{ contact.title }}</td>
-  </tr>
-  {% endif %}
-
-  {% for t in contact.addresses %}
-  <tr>
-   <td class=data_header>{{ t.type }}</td>
-   <td class=last_data>{{ t.street }}</td>
-  </tr>
-  {% endfor %}
-
-  {% for listphone in contact.phones %}
-  <tr>
-   <td class=data_header>{{ listphone.type }}</td>
-   <td class=last_data>{{ listphone.number }}</td>
-  </tr>
-  {% endfor %}
 </table>
 <br>
 {% endfor %}
