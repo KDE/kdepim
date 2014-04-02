@@ -232,6 +232,7 @@ public:
         connect( &m_delayedQueryTimer, SIGNAL(timeout()), q, SLOT(slotTriggerDelayedQueries()) );
     }
 
+    QStringList cleanupBalooContact(const QStringList &lst);
     void alternateColor();
     void init();
     void startLoadingLDAPEntries();
@@ -339,10 +340,24 @@ void AddresseeLineEdit::Private::stopLDAPLookup()
     s_static->ldapLineEdit = 0;
 }
 
+QStringList AddresseeLineEdit::Private::cleanupBalooContact(const QStringList &lst)
+{
+    if (lst.isEmpty())
+        return lst;
+    QHash<QString, QString> hashEmail;
+    Q_FOREACH (const QString &email, lst) {
+        if (!hashEmail.contains(email.toLower())) {
+            hashEmail.insert(email.toLower(), email);
+        }
+    }
+    return hashEmail.keys();
+}
+
 void AddresseeLineEdit::Private::searchInBaloo()
 {
     Baloo::PIM::ContactCompleter com(m_searchString.trimmed(), 20);
-    Q_FOREACH (const QString& email, com.complete()) {
+    const QStringList listEmail = cleanupBalooContact(com.complete());
+    Q_FOREACH (const QString& email, listEmail) {
         addCompletionItem(email, 1, s_static->balooCompletionSource);
     }
     doCompletion( m_lastSearchMode );
