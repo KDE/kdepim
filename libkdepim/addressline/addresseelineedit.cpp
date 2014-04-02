@@ -42,6 +42,7 @@
 #include <baloo/pim/contactcompleter.h>
 
 #include <KPIMUtils/Email>
+#include <KColorScheme>
 
 #include <KLDAP/LdapServer>
 
@@ -231,6 +232,7 @@ public:
         connect( &m_delayedQueryTimer, SIGNAL(timeout()), q, SLOT(slotTriggerDelayedQueries()) );
     }
 
+    void alternateColor();
     void init();
     void startLoadingLDAPEntries();
     void stopLDAPLookup();
@@ -269,6 +271,7 @@ public:
     bool m_searchExtended; //has \" been added?
     bool m_useSemicolonAsSeparator;
     QTimer m_delayedQueryTimer;
+    QColor m_alternateColor;
 };
 
 void AddresseeLineEdit::Private::init()
@@ -347,6 +350,11 @@ void AddresseeLineEdit::Private::searchInBaloo()
     //}
 }
 
+void AddresseeLineEdit::Private::alternateColor()
+{
+    const KColorScheme colorScheme( QPalette::Active, KColorScheme::View );
+    m_alternateColor = colorScheme.background(KColorScheme::AlternateBackground).color();
+}
 
 void AddresseeLineEdit::Private::setCompletedItems( const QStringList &items, bool autoSuggest )
 {
@@ -360,8 +368,12 @@ void AddresseeLineEdit::Private::setCompletedItems( const QStringList &items, bo
         for ( int i = 0; i< numberOfItems; ++i )
         {
             QListWidgetItem *item =new QListWidgetItem(items.at( i ), completionBox);
-            if ( !items.at( i ).startsWith( s_completionItemIndentString ) )
-                item->setFlags( item->flags()&~Qt::ItemIsSelectable );
+            if ( !items.at( i ).startsWith( s_completionItemIndentString ) ) {
+                if (!m_alternateColor.isValid()) {
+                    alternateColor();
+                }
+                item->setBackgroundColor(m_alternateColor);
+            }
             completionBox->addItem( item );
         }
         if ( !completionBox->isVisible() ) {
