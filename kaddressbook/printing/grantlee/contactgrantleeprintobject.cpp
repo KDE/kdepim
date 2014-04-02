@@ -20,6 +20,7 @@
 #include "contactgrantleeprintphoneobject.h"
 #include "contactgrantleeprintimobject.h"
 #include "contactgrantleeprintgeoobject.h"
+#include "contactgrantleeprintcryptoobject.h"
 
 #include <KABC/Address>
 #include <KABC/PhoneNumber>
@@ -28,6 +29,10 @@
 #include <KLocale>
 
 #include <QBuffer>
+#include <QDebug>
+
+#include <grantlee/metatype.h>
+
 
 using namespace KABPrinting;
 
@@ -35,6 +40,7 @@ ContactGrantleePrintObject::ContactGrantleePrintObject(const KABC::Addressee &ad
     : QObject(parent),
       mAddress(address)
 {
+    Grantlee::registerSequentialContainer<QList<QObject*> >();
     Q_FOREACH ( const KABC::Address &addr, address.addresses() ) {
         mListAddress<<new ContactGrantleePrintAddressObject(addr);
     }
@@ -54,13 +60,16 @@ ContactGrantleePrintObject::ContactGrantleePrintObject(const KABC::Addressee &ad
         }
     }
     mGeoObject = new ContactGrantleePrintGeoObject(address.geo());
+    mCryptoObject = new ContactGrantleePrintCryptoObject(address);
 }
 
 ContactGrantleePrintObject::~ContactGrantleePrintObject()
 {
+    delete mGeoObject;
     qDeleteAll(mListAddress);
     qDeleteAll(mListPhones);
     qDeleteAll(mListIm);
+    delete mCryptoObject;
 }
 
 QString ContactGrantleePrintObject::realName() const
@@ -101,6 +110,11 @@ QString ContactGrantleePrintObject::suffix() const
 QString ContactGrantleePrintObject::nickName() const
 {
     return mAddress.nickName();
+}
+
+QString ContactGrantleePrintObject::name() const
+{
+    return mAddress.name();
 }
 
 QStringList ContactGrantleePrintObject::emails() const
@@ -163,7 +177,7 @@ QVariant ContactGrantleePrintObject::addresses() const
 
 QVariant ContactGrantleePrintObject::phones() const
 {
-    return QVariant::fromValue(mListAddress);
+    return QVariant::fromValue(mListPhones);
 }
 
 QVariant ContactGrantleePrintObject::instantManging() const
@@ -174,6 +188,11 @@ QVariant ContactGrantleePrintObject::instantManging() const
 QVariant ContactGrantleePrintObject::geo() const
 {
     return QVariant::fromValue(mGeoObject);
+}
+
+QVariant ContactGrantleePrintObject::crypto() const
+{
+    return QVariant::fromValue(mCryptoObject);
 }
 
 QString ContactGrantleePrintObject::addressBookName() const

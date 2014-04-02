@@ -125,9 +125,8 @@ private Q_SLOTS:
     void scheduleRename( const QString& );
     void renameSearchFolder();
     void openSearchFolder();
-    bool slotShowMsg( const Akonadi::Item& );
     void slotViewSelectedMsg();
-    bool slotViewMsg( const Akonadi::Item& );
+    void slotViewMsg( const Akonadi::Item& );
     void slotCurrentChanged( const Akonadi::Item& );
     void updateContextMenuActions();
     void slotFolderActivated();
@@ -153,6 +152,7 @@ private Q_SLOTS:
 
     void slotSearchCollectionsFetched( KJob *job );
 
+    void slotJumpToFolder();
 private:
     void doSearch();
     QPointer<PimCommon::SelectMultiCollectionDialog> mSelectMultiCollectionDialog;
@@ -172,7 +172,7 @@ private:
 
     QAction *mReplyAction, *mReplyAllAction, *mReplyListAction, *mSaveAsAction,
     *mForwardInlineAction, *mForwardAttachedAction, *mPrintAction, *mClearAction,
-    *mSaveAtchAction;
+    *mSaveAtchAction, *mJumpToFolderAction;
     KActionMenu *mForwardActionMenu;
     QTimer mRenameTimer;
     QByteArray mHeaderState;

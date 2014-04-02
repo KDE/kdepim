@@ -413,95 +413,105 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
     }
 }
 
-void WebDavJob::parseCreateServiceFolder(const QString &data)
+void WebDavJob::parseCreateServiceFolder(const QString &/*data*/)
 {
-    //TODO
     Q_EMIT createFolderDone(QString());
     deleteLater();
 }
 
 void WebDavJob::parseShareLink(const QString &data)
 {
-    //TODO
     Q_EMIT shareLinkDone(data);
     deleteLater();
 }
 
 void WebDavJob::parseDownloadFile(const QString &data)
 {
+    Q_UNUSED(data);
     Q_EMIT downLoadFileDone(QString());
     deleteLater();
 }
 
 void WebDavJob::parseMoveFolder(const QString &data)
 {
+    Q_UNUSED(data);
     Q_EMIT moveFolderDone(QString());
     deleteLater();
 }
 
 void WebDavJob::parseMoveFile(const QString &data)
 {
+    Q_UNUSED(data);
     Q_EMIT moveFileDone(QString());
     deleteLater();
 }
 
 void WebDavJob::parseCopyFolder(const QString &data)
 {
+    Q_UNUSED(data);
     Q_EMIT copyFolderDone(QString());
     deleteLater();
 }
 
 void WebDavJob::parseCopyFile(const QString &data)
 {
+    Q_UNUSED(data);
     Q_EMIT copyFileDone(QString());
     deleteLater();
 }
 
 void WebDavJob::parseRenameFolder(const QString &data)
 {
+    Q_UNUSED(data);
     Q_EMIT renameFolderDone(QString());
     deleteLater();
 }
 
 void WebDavJob::parseRenameFile(const QString &data)
 {
+    Q_UNUSED(data);
     Q_EMIT renameFileDone(QString());
     deleteLater();
 }
 
 void WebDavJob::parseDeleteFile(const QString &data)
 {
+    Q_UNUSED(data);
     Q_EMIT deleteFileDone(QString());
     deleteLater();
 }
 
 void WebDavJob::parseDeleteFolder(const QString &data)
 {
+    Q_UNUSED(data);
     Q_EMIT deleteFolderDone(QString());
     deleteLater();
 }
 
 void WebDavJob::parseAccessToken(const QString &data)
 {
+    Q_UNUSED(data);
     Q_EMIT authorizationDone(mPublicLocation, mServiceLocation, mUserName, mPassword);
     deleteLater();
 }
 
 void WebDavJob::parseUploadFile(const QString &data)
 {
+    Q_UNUSED(data);
     Q_EMIT uploadFileDone(QString());
     shareLink(QString(), mCacheValue);
 }
 
 void WebDavJob::parseCreateFolder(const QString &data)
 {
+    Q_UNUSED(data);
     Q_EMIT createFolderDone(mCacheValue);
     deleteLater();
 }
 
 void WebDavJob::parseAccountInfo(const QString &data)
 {
-    qDebug()<<" parseAccountInfo "<<data;
+    //qDebug()<<" parseAccountInfo "<<data;
     PimCommon::AccountInfo accountInfo;
     QDomDocument dom;
     dom.setContent(data.toLatin1(), true);
@@ -549,6 +559,8 @@ void WebDavJob::parseAccountInfo(const QString &data)
 
 void WebDavJob::parseListFolder(const QString &data)
 {
+    Q_UNUSED(data);
+
     //qDebug()<<" data "<<data;
     Q_EMIT listFolderDone(data);
     deleteLater();

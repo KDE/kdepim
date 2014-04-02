@@ -938,7 +938,8 @@ bool isCryptoPart( const QString &type, const QString &subType, const QString &f
                subTypeLower == QLatin1String( "pkcs7-signature" ) ||
                subTypeLower == QLatin1String( "x-pkcs7-signature" ) ||
                ( subTypeLower == QLatin1String( "octet-stream" ) &&
-                 fileName.toLower() == QLatin1String( "msg.asc" ) ) ) );
+                 ( fileName.toLower() == QLatin1String( "msg.asc" ) ||
+                   fileName.toLower() == QLatin1String( "encrypted.asc" ) ) ) ) );
 }
 
 QString formatString( const QString &wildString, const QString &fromAddr )

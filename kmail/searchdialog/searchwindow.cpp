@@ -175,8 +175,6 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
 
     connect( mUi.mLbxMatches, SIGNAL(customContextMenuRequested(QPoint)),
              this, SLOT(slotContextMenuRequested(QPoint)) );
-    connect( mUi.mLbxMatches, SIGNAL(clicked(Akonadi::Item)),
-             this, SLOT(slotShowMsg(Akonadi::Item)) );
     connect( mUi.mLbxMatches, SIGNAL(doubleClicked(Akonadi::Item)),
              this, SLOT(slotViewMsg(Akonadi::Item)) );
     connect( mUi.mLbxMatches, SIGNAL(currentChanged(Akonadi::Item)),
@@ -275,6 +273,11 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
     mClearAction = new KAction( i18n( "Clear Selection" ), this );
     actionCollection()->addAction( QLatin1String("search_clear_selection"), mClearAction );
     connect( mClearAction, SIGNAL(triggered(bool)), SLOT(slotClearSelection()) );
+
+    mJumpToFolderAction = new KAction( i18n( "Jump to original folder" ), this );
+    actionCollection()->addAction( QLatin1String("search_jump_folder"), mJumpToFolderAction );
+    connect( mJumpToFolderAction, SIGNAL(triggered(bool)), SLOT(slotJumpToFolder()) );
+
 
     connect( mUi.mCbxFolders, SIGNAL(folderChanged(Akonadi::Collection)),
              this, SLOT(slotFolderActivated()) );
@@ -673,27 +676,16 @@ void SearchWindow::openSearchFolder()
     slotClose();
 }
 
-bool SearchWindow::slotShowMsg( const Akonadi::Item &item )
-{
-    if ( item.isValid() ) {
-        mKMMainWidget->slotMessageSelected( item );
-        return true;
-    }
-    return false;
-}
-
 void SearchWindow::slotViewSelectedMsg()
 {
     mKMMainWidget->slotMessageActivated( selectedMessage() );
 }
 
-bool SearchWindow::slotViewMsg( const Akonadi::Item &item )
+void SearchWindow::slotViewMsg( const Akonadi::Item &item )
 {
     if ( item.isValid() ) {
         mKMMainWidget->slotMessageActivated( item );
-        return true;
     }
-    return false;
 }
 
 void SearchWindow::slotCurrentChanged( const Akonadi::Item &item )
@@ -737,14 +729,17 @@ void SearchWindow::updateContextMenuActions()
 {
     const int count = selectedMessages().count();
     const bool singleActions = (count == 1);
+    const bool notEmpty = (count > 0);
+
+    mJumpToFolderAction->setEnabled( singleActions );
 
     mReplyAction->setEnabled( singleActions );
     mReplyAllAction->setEnabled( singleActions );
     mReplyListAction->setEnabled( singleActions );
     mPrintAction->setEnabled( singleActions );
-    mSaveAtchAction->setEnabled( count > 0 );
-    mSaveAsAction->setEnabled( count > 0 );
-    mClearAction->setEnabled( count > 0 );
+    mSaveAtchAction->setEnabled( notEmpty );
+    mSaveAsAction->setEnabled( notEmpty );
+    mClearAction->setEnabled( notEmpty );
 }
 
 void SearchWindow::slotContextMenuRequested( const QPoint& )
@@ -760,6 +755,8 @@ void SearchWindow::slotContextMenuRequested( const QPoint& )
     menu->addAction( mReplyAllAction );
     menu->addAction( mReplyListAction );
     menu->addAction( mForwardActionMenu );
+    menu->addSeparator();
+    menu->addAction( mJumpToFolderAction );
     menu->addSeparator();
     KAction *act = mAkonadiStandardAction->createAction( Akonadi::StandardActionManager::CopyItems );
     mAkonadiStandardAction->setActionText( Akonadi::StandardActionManager::CopyItems, ki18np( "Copy Message", "Copy %1 Messages" ) );
@@ -860,6 +857,13 @@ void SearchWindow::slotSelectMultipleFolders()
         mSelectMultiCollectionDialog = new PimCommon::SelectMultiCollectionDialog(KMime::Message::mimeType(), lst, this);
     }
     mSelectMultiCollectionDialog->show();
+}
+
+void SearchWindow::slotJumpToFolder()
+{
+    if (selectedMessage().isValid()) {
+        mKMMainWidget->slotSelectCollectionFolder( selectedMessage().parentCollection() );
+    }
 }
 
 }

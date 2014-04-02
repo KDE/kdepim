@@ -20,6 +20,11 @@
 
 #include <KLocale>
 
+void GrantleeContactUtils::insertVariableToQVariantHash(QVariantHash &contactI18n, const QString &variable)
+{
+    contactI18n.insert( variable, GrantleeContactUtils::variableI18n( variable ) );
+}
+
 QString GrantleeContactUtils::variableI18n(const QString &variable)
 {
     if (variable == QLatin1String("birthdayi18n")) {
@@ -50,6 +55,16 @@ QString GrantleeContactUtils::variableI18n(const QString &variable)
         return i18n( "Partner's Name" );
     } else if (variable == QLatin1String("imAddressi18n")) {
         return i18n( "IM Address" );
+    } else if (variable == QLatin1String("latitudei18n")) {
+        return i18n( "Latitude" );
+    } else if (variable == QLatin1String("longitudei18n")) {
+        return i18n( "Longitude" );
+    } else if (variable == QLatin1String("organizationi18n")) {
+        return i18n( "Organization" );
+    } else if (variable == QLatin1String("namei18n")) {
+        return i18n( "Name" );
+    } else if (variable == QLatin1String("titlei18n")) {
+        return i18n( "Title" );
     } else {
         return variable;
     }

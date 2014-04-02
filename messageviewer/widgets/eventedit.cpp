@@ -230,7 +230,7 @@ bool EventEdit::eventFilter(QObject *object, QEvent *e)
     // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
     // With a shortcut override we can catch this before it gets to kactions.
     const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
-    if (shortCutOverride || e->type() == QEvent::KeyPress ) {
+    if (shortCutOverride ) {
         QKeyEvent* kev = static_cast<QKeyEvent* >(e);
         if (kev->key() == Qt::Key_Escape) {
             e->accept();
@@ -240,13 +240,10 @@ bool EventEdit::eventFilter(QObject *object, QEvent *e)
                     kev->key() == Qt::Key_Return ||
                     kev->key() == Qt::Key_Space) {
             e->accept();
-            if ( shortCutOverride ) {
-                return true;
-            }
             if (object == mCollectionCombobox) {
                 mCollectionCombobox->showPopup();
-                return true;
             }
+            return true;
         }
     }
     return QWidget::eventFilter(object,e);

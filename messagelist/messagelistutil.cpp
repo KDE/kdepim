@@ -30,77 +30,77 @@ using namespace MessageList::Core;
 
 QString MessageList::Util::messageSortingConfigName()
 {
-  return QLatin1String( "MessageSorting" );
+    return QLatin1String( "MessageSorting" );
 }
 
 QString MessageList::Util::messageSortDirectionConfigName()
 {
-  return QLatin1String( "MessageSortDirection" );
+    return QLatin1String( "MessageSortDirection" );
 }
 
 QString MessageList::Util::groupSortingConfigName()
 {
-  return QLatin1String( "GroupSorting" );
+    return QLatin1String( "GroupSorting" );
 }
 
 QString MessageList::Util::groupSortDirectionConfigName()
 {
-  return QLatin1String( "GroupSortDirection" );
+    return QLatin1String( "GroupSortDirection" );
 }
 
 QString MessageList::Util::messageUniqueIdConfigName()
 {
-  return QString::fromLatin1( "MessageUniqueIdForStorageModel%1" );
+    return QString::fromLatin1( "MessageUniqueIdForStorageModel%1" );
 }
 
 QString MessageList::Util::storageModelSortOrderGroup()
 {
-  return QLatin1String( "MessageListView::StorageModelSortOrder" );
+    return QLatin1String( "MessageListView::StorageModelSortOrder" );
 }
 
 QString MessageList::Util::storageModelThemesGroup()
 {
-  return QLatin1String( "MessageListView::StorageModelThemes" );
+    return QLatin1String( "MessageListView::StorageModelThemes" );
 }
 
 QString MessageList::Util::storageModelAggregationsGroup()
 {
-  return QLatin1String( "MessageListView::StorageModelAggregations" );
+    return QLatin1String( "MessageListView::StorageModelAggregations" );
 }
 
 
 QString MessageList::Util::setForStorageModelConfigName()
 {
-  return QString::fromLatin1( "SetForStorageModel%1" );
+    return QString::fromLatin1( "SetForStorageModel%1" );
 }
 
 QString MessageList::Util::storageModelSelectedMessageGroup()
 {
-  return QLatin1String( "MessageListView::StorageModelSelectedMessages" );
+    return QLatin1String( "MessageListView::StorageModelSelectedMessages" );
 }
 
 
 void MessageList::Util::deleteConfig( const QString& collectionId )
 {
-  KConfigGroup confselectedMessage( Settings::self()->config(),
-                                    MessageList::Util::storageModelSelectedMessageGroup() );
-  confselectedMessage.deleteEntry( MessageList::Util::messageUniqueIdConfigName().arg( collectionId ) );
+    KConfigGroup confselectedMessage( Settings::self()->config(),
+                                      MessageList::Util::storageModelSelectedMessageGroup() );
+    confselectedMessage.deleteEntry( MessageList::Util::messageUniqueIdConfigName().arg( collectionId ) );
 
-  KConfigGroup storageModelOrder( Settings::self()->config(),
-                                  MessageList::Util::storageModelSortOrderGroup() );
-  storageModelOrder.deleteEntry( collectionId + groupSortDirectionConfigName() );
-  storageModelOrder.deleteEntry( collectionId + groupSortingConfigName() );
-  storageModelOrder.deleteEntry( collectionId + messageSortDirectionConfigName() );
-  storageModelOrder.deleteEntry( collectionId + messageSortingConfigName() );
+    KConfigGroup storageModelOrder( Settings::self()->config(),
+                                    MessageList::Util::storageModelSortOrderGroup() );
+    storageModelOrder.deleteEntry( collectionId + groupSortDirectionConfigName() );
+    storageModelOrder.deleteEntry( collectionId + groupSortingConfigName() );
+    storageModelOrder.deleteEntry( collectionId + messageSortDirectionConfigName() );
+    storageModelOrder.deleteEntry( collectionId + messageSortingConfigName() );
 
-  KConfigGroup storageModelTheme( Settings::self()->config(),
-                                  MessageList::Util::storageModelThemesGroup() );
-  storageModelTheme.deleteEntry( collectionId + setForStorageModelConfigName() );
+    KConfigGroup storageModelTheme( Settings::self()->config(),
+                                    MessageList::Util::storageModelThemesGroup() );
+    storageModelTheme.deleteEntry( collectionId + setForStorageModelConfigName() );
 
 
-  KConfigGroup storageModelAggregation( Settings::self()->config(),
-                                        MessageList::Util::storageModelAggregationsGroup() );
-  storageModelAggregation.deleteEntry( collectionId + setForStorageModelConfigName() );
+    KConfigGroup storageModelAggregation( Settings::self()->config(),
+                                          MessageList::Util::storageModelAggregationsGroup() );
+    storageModelAggregation.deleteEntry( collectionId + setForStorageModelConfigName() );
 
 }
 
@@ -121,56 +121,56 @@ QColor MessageList::Util::todoDefaultMessageColor()
 
 void MessageList::Util::fillViewMenu( KMenu * menu, QObject *receiver )
 {
-  KMenu* sortingMenu = new KMenu( i18n( "Sorting" ), menu );
-  sortingMenu->setIcon( KIcon( QLatin1String( "view-sort-ascending" ) ) );
-  menu->addMenu( sortingMenu );
-  QObject::connect( sortingMenu, SIGNAL(aboutToShow()),
-           receiver, SLOT(sortOrderMenuAboutToShow()) );
+    KMenu* sortingMenu = new KMenu( i18n( "Sorting" ), menu );
+    sortingMenu->setIcon( KIcon( QLatin1String( "view-sort-ascending" ) ) );
+    menu->addMenu( sortingMenu );
+    QObject::connect( sortingMenu, SIGNAL(aboutToShow()),
+                      receiver, SLOT(sortOrderMenuAboutToShow()) );
 
-  KMenu* aggregationMenu = new KMenu( i18n( "Aggregation" ), menu );
-  aggregationMenu->setIcon( KIcon( QLatin1String( "view-process-tree" ) ) );
-  menu->addMenu( aggregationMenu );
-  QObject::connect( aggregationMenu, SIGNAL(aboutToShow()),
-           receiver, SLOT(aggregationMenuAboutToShow()) );
+    KMenu* aggregationMenu = new KMenu( i18n( "Aggregation" ), menu );
+    aggregationMenu->setIcon( KIcon( QLatin1String( "view-process-tree" ) ) );
+    menu->addMenu( aggregationMenu );
+    QObject::connect( aggregationMenu, SIGNAL(aboutToShow()),
+                      receiver, SLOT(aggregationMenuAboutToShow()) );
 
-  KMenu* themeMenu = new KMenu( i18n( "Theme" ), menu );
-  themeMenu->setIcon( KIcon( QLatin1String( "preferences-desktop-theme" ) ) );
-  menu->addMenu( themeMenu );
-  QObject::connect( themeMenu, SIGNAL(aboutToShow()),
-           receiver, SLOT(themeMenuAboutToShow()) );
+    KMenu* themeMenu = new KMenu( i18n( "Theme" ), menu );
+    themeMenu->setIcon( KIcon( QLatin1String( "preferences-desktop-theme" ) ) );
+    menu->addMenu( themeMenu );
+    QObject::connect( themeMenu, SIGNAL(aboutToShow()),
+                      receiver, SLOT(themeMenuAboutToShow()) );
 }
 
 QString MessageList::Util::contentSummary( const Akonadi::Item &item )
 {
-  if ( !item.hasPayload<KMime::Message::Ptr>() ) {
-    return QString();
-  }
-
-  KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
-  KMime::Content *textContent = message->textContent();
-  if ( !textContent ) {
-    return QString();
-  }
-  const QString content = textContent->decodedText( true, true );
-  if ( content.isEmpty() ) {
-    return QString();
-  }
-
-  // Extract the first 5 non-empty, non-quoted lines from the content and return it
-  int numLines = 0;
-  const int maxLines = 5;
-  const QStringList lines = content.split( QLatin1Char( '\n' ) );
-  QString ret;
-  foreach( const QString &line, lines ) {
-    const QString lineTrimmed = line.trimmed();
-    const bool isQuoted = lineTrimmed.startsWith( QLatin1Char( '>' ) ) || lineTrimmed.startsWith( QLatin1Char( '|' ) );
-    if ( !isQuoted && !lineTrimmed.isEmpty() ) {
-      ret += line + QLatin1Char( '\n' );
-      numLines++;
-      if ( numLines >= maxLines )
-        break;
+    if ( !item.hasPayload<KMime::Message::Ptr>() ) {
+        return QString();
     }
-  }
-  return Qt::escape(ret);
+
+    KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
+    KMime::Content *textContent = message->textContent();
+    if ( !textContent ) {
+        return QString();
+    }
+    const QString content = textContent->decodedText( true, true );
+    if ( content.isEmpty() ) {
+        return QString();
+    }
+
+    // Extract the first 5 non-empty, non-quoted lines from the content and return it
+    int numLines = 0;
+    const int maxLines = 5;
+    const QStringList lines = content.split( QLatin1Char( '\n' ) );
+    QString ret;
+    foreach( const QString &line, lines ) {
+        const QString lineTrimmed = line.trimmed();
+        const bool isQuoted = lineTrimmed.startsWith( QLatin1Char( '>' ) ) || lineTrimmed.startsWith( QLatin1Char( '|' ) );
+        if ( !isQuoted && !lineTrimmed.isEmpty() ) {
+            ret += line + QLatin1Char( '\n' );
+            numLines++;
+            if ( numLines >= maxLines )
+                break;
+        }
+    }
+    return Qt::escape(ret);
 }
 

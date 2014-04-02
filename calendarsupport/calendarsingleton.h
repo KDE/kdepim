@@ -24,20 +24,15 @@
 #define CALENDARSUPPORT_CALENDARSINGLETON_H
 
 #include "calendarsupport_export.h"
-
-namespace Akonadi {
-class ETMCalendar;
-}
+#include <Akonadi/Calendar/ETMCalendar>
 
 namespace CalendarSupport {
 
     /**
      * ETMCalendar to be used by kontact plugins to avoid having
      * 3 loaded calendars which occupy lots of memory.
-     *
-     * KOrganizer itself can't use this one since it disables calendar selection filtering.
      */
-    CALENDARSUPPORT_EXPORT Akonadi::ETMCalendar* calendarSingleton();
+    CALENDARSUPPORT_EXPORT Akonadi::ETMCalendar::Ptr calendarSingleton(bool createIfNull = true);
 }
 
 #endif

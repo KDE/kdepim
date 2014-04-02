@@ -164,9 +164,9 @@ void SieveTextEdit::slotInsertCompletion( const QString& completion )
     setTextCursor(tc);
 }
 
-QString SieveTextEdit::selectedWord() const
+QString SieveTextEdit::selectedWord(const QPoint &pos) const
 {
-    QTextCursor wordSelectCursor(textCursor());
+    QTextCursor wordSelectCursor(pos.isNull() ? textCursor() : cursorForPosition(pos));
     wordSelectCursor.clearSelection();
     wordSelectCursor.select(QTextCursor::WordUnderCursor);
     const QString word = wordSelectCursor.selectedText();
@@ -237,10 +237,10 @@ void SieveTextEdit::setSieveCapabilities( const QStringList &capabilities )
     setCompleterList(completerList() + capabilities);
 }
 
-void SieveTextEdit::addExtraMenuEntry(QMenu *menu)
+void SieveTextEdit::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
 {
     if (!textCursor().hasSelection()) {
-        const QString word = selectedWord();
+        const QString word = selectedWord(pos);
         const KSieveUi::SieveEditorUtil::HelpVariableName type =  KSieveUi::SieveEditorUtil::strToVariableName(word);
         if (type != KSieveUi::SieveEditorUtil::UnknownHelp) {
             QAction *separator = new QAction(menu);

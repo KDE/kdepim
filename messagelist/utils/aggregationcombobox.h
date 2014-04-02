@@ -42,31 +42,31 @@ class AggregationComboBoxPrivate;
  */
 class MESSAGELIST_EXPORT AggregationComboBox : public KComboBox
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  explicit AggregationComboBox( QWidget * parent );
-  ~AggregationComboBox();
+    explicit AggregationComboBox( QWidget * parent );
+    ~AggregationComboBox();
 
-  QString currentAggregation() const;
+    QString currentAggregation() const;
 
-  void writeDefaultConfig() const;
+    void writeDefaultConfig() const;
 
-  void writeStorageModelConfig( MessageList::Core::StorageModel *storageModel, bool isPrivateSetting ) const;
-  void writeStorageModelConfig( const Akonadi::Collection &col, bool isPrivateSetting ) const;
-  void writeStorageModelConfig( const QString &id, bool isPrivateSetting ) const;
+    void writeStorageModelConfig( MessageList::Core::StorageModel *storageModel, bool isPrivateSetting ) const;
+    void writeStorageModelConfig( const Akonadi::Collection &col, bool isPrivateSetting ) const;
+    void writeStorageModelConfig( const QString &id, bool isPrivateSetting ) const;
 
-  void readStorageModelConfig( MessageList::Core::StorageModel *storageModel, bool &isPrivateSetting );
-  void readStorageModelConfig( const Akonadi::Collection &col, bool &isPrivateSetting );
-  void readStorageModelConfig( const QString &id, bool &isPrivateSetting );
+    void readStorageModelConfig( MessageList::Core::StorageModel *storageModel, bool &isPrivateSetting );
+    void readStorageModelConfig( const Akonadi::Collection &col, bool &isPrivateSetting );
+    void readStorageModelConfig( const QString &id, bool &isPrivateSetting );
 
 public Q_SLOTS:
-  void selectDefault();
+    void selectDefault();
 
 private:
-  Q_PRIVATE_SLOT(d, void slotLoadAggregations())
+    Q_PRIVATE_SLOT(d, void slotLoadAggregations())
 
-  AggregationComboBoxPrivate * const d;
+    AggregationComboBoxPrivate * const d;
 };
 
 } // namespace Utils
