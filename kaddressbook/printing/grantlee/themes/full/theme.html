@@ -31,8 +31,10 @@
 {% for contact in contacts %}
 <div class=name>{{ contact.name }}</div>
 <div class=last_extra_name>{{ contact.realName|safe }}</div>
-
 <table cellpadding=0>
+  <tr>
+   <td class=data_header>{{ contact.photo|safe }}</td>
+  </tr>
   {% if contact.emails %}
   <tr>
    <td class=data_header>{{ contacti18n.emailsi18n }}</td>
