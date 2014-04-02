@@ -145,6 +145,8 @@ public:
     void cancelUploadFile();
     void cancelDownloadFile();
     void cancelUploadDownloadFile();
+    void clearIsInProgress();
+
     virtual bool hasCancelSupport() const;
 
 Q_SIGNALS:

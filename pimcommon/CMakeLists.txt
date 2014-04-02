@@ -1,3 +1,4 @@
+project(pimcommon)
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim
   ${CMAKE_CURRENT_SOURCE_DIR}/util/
@@ -242,9 +243,9 @@ add_subdirectory(storageservice/yousendit/tests)
 add_subdirectory(storageservice/webdav/tests)
 add_subdirectory(storageservice/ubuntuone/tests)
 add_subdirectory(storageservice/box/tests)
-
 add_subdirectory(storageservice/dropbox/icons/)
 add_subdirectory(storageservice/ubuntuone/icons/)
+
 if( LibKGAPI2_FOUND )
 add_subdirectory(storageservice/gdrive/tests/)
 add_subdirectory(storageservice/gdrive/icons/)
