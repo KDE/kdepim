@@ -52,12 +52,12 @@
 #include <KConfig>
 #include <KAction>
 #include <KActionCollection>
+#include <KInputDialog>
 
 #include <QTreeView>
 #include <QToolButton>
 #include <QAction>
 #include <QMenu>
-#include <QInputDialog>
 #include <QVBoxLayout>
 
 #include <map>
@@ -527,17 +527,15 @@ void TabWidget::Private::slotNewTab() {
     tabWidget.setCurrentIndex( tabWidget.count()-1 );
 }
 
-#ifndef QT_NO_INPUTDIALOG
 void TabWidget::Private::renamePage( Page * page ) {
     if ( !page )
         return;
-    bool ok = false;
-    const QString text = QInputDialog::getText( q, i18n("Rename Tab"), i18n("New tab title:"), QLineEdit::Normal, page->title(), &ok );
+    bool ok;
+    const QString text = KInputDialog::getText( i18n("Rename Tab"), i18n("New tab title:"), page->title(), &ok, q);
     if ( !ok )
         return;
     page->setTitle( text );
 }
-#endif
 
 void TabWidget::Private::duplicatePage( Page * page ) {
     if ( !page )
