@@ -47,6 +47,11 @@ void StorageServiceAbstract::cancelUploadDownloadFile()
     cancelDownloadFile();
 }
 
+void StorageServiceAbstract::clearIsInProgress()
+{
+    mInProgress = false;
+}
+
 bool StorageServiceAbstract::hasCancelSupport() const
 {
     return true;
