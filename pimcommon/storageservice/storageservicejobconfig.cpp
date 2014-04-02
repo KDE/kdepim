@@ -158,14 +158,6 @@ QString StorageServiceJobConfig::oauth2RedirectUrl() const
     return mSettingsJob->oauth2RedirectUrl();
 }
 
-QString StorageServiceJobConfig::ubuntuOneAttachmentVolume() const
-{
-    if (!mSettingsJob) {
-        qDebug()<<" settings job not registered";
-        return QString();
-    }
-    return mSettingsJob->ubuntuOneAttachmentVolume();
-}
 
 QString StorageServiceJobConfig::hubicScope() const
 {
@@ -174,15 +166,6 @@ QString StorageServiceJobConfig::hubicScope() const
         return QString();
     }
     return mSettingsJob->hubicScope();
-}
-
-QString StorageServiceJobConfig::ubuntuOneTokenName() const
-{
-    if (!mSettingsJob) {
-        qDebug()<<" settings job not registered";
-        return QString();
-    }
-    return mSettingsJob->ubuntuOneTokenName();
 }
 
 QString StorageServiceJobConfig::gdriveClientId() const

@@ -48,10 +48,6 @@ public:
 
     virtual QString oauth2RedirectUrl() const = 0;
 
-    //UbuntuOne
-    virtual QString ubuntuOneAttachmentVolume() const = 0;
-    virtual QString ubuntuOneTokenName() const = 0;
-
     //GDrive
     virtual QString gdriveClientId() const = 0;
     virtual QString gdriveClientSecret() const = 0;

@@ -42,6 +42,7 @@
 #include <baloo/pim/contactcompleter.h>
 
 #include <KPIMUtils/Email>
+#include <KColorScheme>
 
 #include <KLDAP/LdapServer>
 
@@ -231,6 +232,8 @@ public:
         connect( &m_delayedQueryTimer, SIGNAL(timeout()), q, SLOT(slotTriggerDelayedQueries()) );
     }
 
+    QStringList cleanupBalooContact(const QStringList &lst);
+    void alternateColor();
     void init();
     void startLoadingLDAPEntries();
     void stopLDAPLookup();
@@ -269,6 +272,7 @@ public:
     bool m_searchExtended; //has \" been added?
     bool m_useSemicolonAsSeparator;
     QTimer m_delayedQueryTimer;
+    QColor m_alternateColor;
 };
 
 void AddresseeLineEdit::Private::init()
@@ -336,10 +340,24 @@ void AddresseeLineEdit::Private::stopLDAPLookup()
     s_static->ldapLineEdit = 0;
 }
 
+QStringList AddresseeLineEdit::Private::cleanupBalooContact(const QStringList &lst)
+{
+    if (lst.isEmpty())
+        return lst;
+    QHash<QString, QString> hashEmail;
+    Q_FOREACH (const QString &email, lst) {
+        if (!hashEmail.contains(email.toLower())) {
+            hashEmail.insert(email.toLower(), email);
+        }
+    }
+    return hashEmail.keys();
+}
+
 void AddresseeLineEdit::Private::searchInBaloo()
 {
     Baloo::PIM::ContactCompleter com(m_searchString.trimmed(), 20);
-    Q_FOREACH (const QString& email, com.complete()) {
+    const QStringList listEmail = cleanupBalooContact(com.complete());
+    Q_FOREACH (const QString& email, listEmail) {
         addCompletionItem(email, 1, s_static->balooCompletionSource);
     }
     doCompletion( m_lastSearchMode );
@@ -347,6 +365,11 @@ void AddresseeLineEdit::Private::searchInBaloo()
     //}
 }
 
+void AddresseeLineEdit::Private::alternateColor()
+{
+    const KColorScheme colorScheme( QPalette::Active, KColorScheme::View );
+    m_alternateColor = colorScheme.background(KColorScheme::AlternateBackground).color();
+}
 
 void AddresseeLineEdit::Private::setCompletedItems( const QStringList &items, bool autoSuggest )
 {
@@ -360,8 +383,12 @@ void AddresseeLineEdit::Private::setCompletedItems( const QStringList &items, bo
         for ( int i = 0; i< numberOfItems; ++i )
         {
             QListWidgetItem *item =new QListWidgetItem(items.at( i ), completionBox);
-            if ( !items.at( i ).startsWith( s_completionItemIndentString ) )
-                item->setFlags( item->flags()&~Qt::ItemIsSelectable );
+            if ( !items.at( i ).startsWith( s_completionItemIndentString ) ) {
+                if (!m_alternateColor.isValid()) {
+                    alternateColor();
+                }
+                item->setBackgroundColor(m_alternateColor);
+            }
             completionBox->addItem( item );
         }
         if ( !completionBox->isVisible() ) {

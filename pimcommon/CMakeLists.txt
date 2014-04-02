@@ -59,10 +59,6 @@ set(libpimcommon_storageservice_SRCS
   storageservice/settings/storagelistwidgetitem.cpp
   storageservice/settings/storageservicesettingswidget.cpp
 
-  storageservice/ubuntuone/ubuntuonestorageservice.cpp
-  storageservice/ubuntuone/ubuntuonejob.cpp
-  storageservice/ubuntuone/ubuntuoneutil.cpp
-
   storageservice/yousendit/yousenditjob.cpp
   storageservice/yousendit/yousenditstorageservice.cpp
   storageservice/yousendit/yousenditutil.cpp
@@ -243,10 +239,8 @@ add_subdirectory(storageservice/hubic/tests)
 add_subdirectory(storageservice/tests)
 add_subdirectory(storageservice/yousendit/tests)
 add_subdirectory(storageservice/webdav/tests)
-add_subdirectory(storageservice/ubuntuone/tests)
 add_subdirectory(storageservice/box/tests)
 add_subdirectory(storageservice/dropbox/icons/)
-add_subdirectory(storageservice/ubuntuone/icons/)
 
 if( LibKGAPI2_FOUND )
 add_subdirectory(storageservice/gdrive/tests/)

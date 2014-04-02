@@ -154,7 +154,7 @@ LookupCertificatesDialog::Private::~Private() {}
 LookupCertificatesDialog::LookupCertificatesDialog( QWidget * p, Qt::WindowFlags f )
     : QDialog( p, f ), d( new Private( this ) )
 {
-
+    d->ui.findPB->setEnabled(false);
 }
 
 LookupCertificatesDialog::~LookupCertificatesDialog() {}
