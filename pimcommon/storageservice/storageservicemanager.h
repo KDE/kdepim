@@ -33,7 +33,6 @@ public:
         Unknown = -1,
         DropBox = 0,
         Hubic,
-        UbuntuOne,
         YouSendIt,
         WebDav,
         Box,

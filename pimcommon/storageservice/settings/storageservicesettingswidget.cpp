@@ -21,7 +21,6 @@
 #include "storageservice/utils/storageserviceutils.h"
 #include "storageservice/dropbox/dropboxstorageservice.h"
 #include "storageservice/hubic/hubicstorageservice.h"
-#include "storageservice/ubuntuone/ubuntuonestorageservice.h"
 #include "storageservice/yousendit/yousenditstorageservice.h"
 #include "storageservice/box/boxstorageservice.h"
 #ifdef KDEPIM_STORAGESERVICE_GDRIVE
@@ -175,11 +174,6 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
             type = PimCommon::StorageServiceManager::Hubic;
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::Hubic);
             showItem = PimCommon::StorageServiceUtils::hasCapabilities(PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::Hubic), lstCap);
-        } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::UbuntuOne)) {
-            serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::UbuntuOne);
-            type = PimCommon::StorageServiceManager::UbuntuOne;
-            icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::UbuntuOne);
-            showItem = PimCommon::StorageServiceUtils::hasCapabilities(PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::UbuntuOne), lstCap);
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::YouSendIt)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::YouSendIt);
             showItem = PimCommon::StorageServiceUtils::hasCapabilities(PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::YouSendIt), lstCap);
@@ -265,10 +259,6 @@ void StorageServiceSettingsWidget::slotAddService()
             }
             case PimCommon::StorageServiceManager::Hubic: {
                 storage = new PimCommon::HubicStorageService;
-                break;
-            }
-            case PimCommon::StorageServiceManager::UbuntuOne: {
-                storage = new PimCommon::UbuntuoneStorageService;
                 break;
             }
             case PimCommon::StorageServiceManager::YouSendIt: {
