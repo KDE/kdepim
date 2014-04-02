@@ -100,7 +100,8 @@ void CreateNewNoteJob::slotFetchCollection(KJob* job)
         if (!col.hasAttribute<NoteShared::ShowFolderNotesAttribute>()) {
             if (KMessageBox::Yes == KMessageBox::warningYesNo(0, i18n("Collection is hidden. New note will stored but not displaying. Do you want to show collection?"))) {
                 col.addAttribute(new NoteShared::ShowFolderNotesAttribute());
-                new Akonadi::CollectionModifyJob( col );
+                Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( col );
+                connect( job, SIGNAL(result(KJob*)), SLOT(slotCollectionModifyFinished(KJob*)) );
             }
         }
         Akonadi::Item newItem;
@@ -151,4 +152,11 @@ void CreateNewNoteJob::slotNoteCreationFinished(KJob *job)
         KMessageBox::error(mWidget, i18n("Note was not created."), i18n("Create new note"));
     }
     deleteLater();
+}
+
+void CreateNewNoteJob::slotCollectionModifyFinished(KJob *job)
+{
+    if (job->error()) {
+        kWarning() << job->errorString();
+    }
 }
