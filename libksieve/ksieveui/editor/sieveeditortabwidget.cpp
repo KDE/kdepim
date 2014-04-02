@@ -21,6 +21,7 @@
 
 #include <KLocalizedString>
 
+#include <QTabBar>
 #include <QDebug>
 
 using namespace KSieveUi;
@@ -102,5 +103,6 @@ void SieveEditorTabWidget::tabInserted(int index)
         setTabBarHidden(false);
     }
     KTabWidget::tabInserted(index);
+    tabBar()->tabButton(0, QTabBar::RightSide)->setEnabled(false);
 }
 
