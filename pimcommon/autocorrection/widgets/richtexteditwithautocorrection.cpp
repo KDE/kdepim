@@ -64,18 +64,23 @@ void RichTextEditWithAutoCorrection::keyPressEvent ( QKeyEvent *e )
     if ((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
         const QTextCharFormat initialTextFormat = textCursor().charFormat();
         const bool richText = acceptRichText();
-        mAutoCorrection->autocorrect(richText, *document(),textCursor().position());
+        int position = textCursor().position();
+        mAutoCorrection->autocorrect(richText, *document(), position);
+        QTextCursor cur = textCursor();
+        cur.setPosition(position);
         if (e->key() == Qt::Key_Space) {
             if (richText && !isSpecial(initialTextFormat))
-                textCursor().insertText(QLatin1String(" "), initialTextFormat);
+                cur.insertText(QLatin1String(" "), initialTextFormat);
             else
-                textCursor().insertText(QLatin1String(" "));
+                cur.insertText(QLatin1String(" "));
+            setTextCursor(cur);
           return;
         } else {
             if (richText && !isSpecial(initialTextFormat))
-                textCursor().insertText(QLatin1String("\n"), initialTextFormat);
+                cur.insertText(QLatin1String("\n"), initialTextFormat);
             else
-                textCursor().insertText(QLatin1String("\n"));
+                cur.insertText(QLatin1String("\n"));
+            setTextCursor(cur);
           return;
         }
     }

@@ -25,6 +25,7 @@
 #include <KCalendarSystem>
 #include <KStandardDirs>
 #include <QTextBlock>
+#include <QTextDocument>
 #include <QDomDocument>
 #include <QFile>
 
@@ -90,11 +91,12 @@ void AutoCorrection::selectWord(QTextCursor &cursor, int cursorPosition)
 }
 
 
-void AutoCorrection::autocorrect(bool htmlMode, QTextDocument& document, int position)
+void AutoCorrection::autocorrect(bool htmlMode, QTextDocument& document, int &position)
 {
     if (!mEnabled)
         return;
     mCursor =  QTextCursor(&document);
+    int oldPosition = position;
     selectWord(mCursor,position);
     mWord = mCursor.selectedText();
     if (mWord.isEmpty())
@@ -127,6 +129,7 @@ void AutoCorrection::autocorrect(bool htmlMode, QTextDocument& document, int pos
 
     if (mCursor.selectedText() != mWord)
         mCursor.insertText(mWord);
+    position = oldPosition;
     mCursor.endEditBlock();
 }
 
