@@ -83,7 +83,6 @@ set(libkleo_ui_common_SRCS
    ui/cryptoconfigmodule.cpp
    ui/cryptoconfigdialog.cpp
    ui/directoryserviceswidget.cpp
-   ui/adddirectoryservicedialogimpl.cpp
    ui/progressbar.cpp
    ui/progressdialog.cpp
    )
@@ -96,7 +95,6 @@ set(libkleo_ui_SRCS    # make this a separate lib.
     )
 
 kde4_add_ui_files(libkleo_ui_common_SRCS
-    ui/adddirectoryservicedialog.ui
     ui/directoryserviceswidget.ui
 )
 
