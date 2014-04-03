@@ -252,18 +252,23 @@ void KMeditor::keyPressEvent ( QKeyEvent *e )
             if(d->mAutoCorrection && !isLineQuoted(textCursor().block().text())) {
                 const QTextCharFormat initialTextFormat = textCursor().charFormat();
                 const bool richText = (textMode() == KRichTextEdit::Rich);
-                d->mAutoCorrection->autocorrect(richText, *document(),textCursor().position());
+                int position = textCursor().position();
+                d->mAutoCorrection->autocorrect(richText, *document(), position);
+                QTextCursor cur = textCursor();
+                cur.setPosition(position);
                 if (e->key() == Qt::Key_Space) {
                     if (richText && !isSpecial(initialTextFormat))
-                        textCursor().insertText(QLatin1String(" "), initialTextFormat);
+                        cur.insertText(QLatin1String(" "), initialTextFormat);
                     else
-                        textCursor().insertText(QLatin1String(" "));
+                        cur.insertText(QLatin1String(" "));
+                    setTextCursor(cur);
                     return;
                 } else {
                     if (richText && !isSpecial(initialTextFormat))
-                        textCursor().insertText(QLatin1String("\n"), initialTextFormat);
+                        cur.insertText(QLatin1String("\n"), initialTextFormat);
                     else
-                        textCursor().insertText(QLatin1String("\n"));
+                        cur.insertText(QLatin1String("\n"));
+                    setTextCursor(cur);
                     return;
                 }
             }
