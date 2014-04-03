@@ -79,6 +79,7 @@
 #include <QMenu>
 #include <QTimer>
 #include <QProcess>
+#include <QVBoxLayout>
 
 #include <kleo/cryptobackendfactory.h>
 #include <ui/cryptoconfigdialog.h>
@@ -222,23 +223,35 @@ private:
 
         TabWidget tabWidget;
 
-        explicit UI( MainWindow * q )
-            : tabWidget( q )
-        {
-            KDAB_SET_OBJECT_NAME( tabWidget );
-
-            q->setCentralWidget(&tabWidget);
-            KPIM::ProgressDialog * progressDialog = new KPIM::ProgressDialog( q->statusBar(), q );
-            KDAB_SET_OBJECT_NAME( progressDialog );
-            progressDialog->hide();
-            KPIM::StatusbarProgressWidget * statusBarProgressWidget
-                    = new KPIM::StatusbarProgressWidget( progressDialog, q->statusBar() );
-            KDAB_SET_OBJECT_NAME( statusBarProgressWidget );
-            q->statusBar()->addPermanentWidget( statusBarProgressWidget, 0 );
-            statusBarProgressWidget->show();
-        }
+        explicit UI( MainWindow * q );
     } ui;
 };
+
+MainWindow::Private::UI::UI(MainWindow *q)
+    : tabWidget( q )
+{
+    KDAB_SET_OBJECT_NAME( tabWidget );
+
+    QWidget *mainWidget = new QWidget;
+    QVBoxLayout *vbox = new QVBoxLayout;
+    vbox->setSpacing(0);
+    mainWidget->setLayout(vbox);
+    SearchBar * const searchBar = new SearchBar;
+    vbox->addWidget(searchBar);
+    tabWidget.connectSearchBar( searchBar );
+    vbox->addWidget(&tabWidget);
+
+    q->setCentralWidget(mainWidget);
+    KPIM::ProgressDialog * progressDialog = new KPIM::ProgressDialog( q->statusBar(), q );
+    KDAB_SET_OBJECT_NAME( progressDialog );
+    progressDialog->hide();
+    KPIM::StatusbarProgressWidget * statusBarProgressWidget
+            = new KPIM::StatusbarProgressWidget( progressDialog, q->statusBar() );
+    KDAB_SET_OBJECT_NAME( statusBarProgressWidget );
+    q->statusBar()->addPermanentWidget( statusBarProgressWidget, 0 );
+    statusBarProgressWidget->show();
+}
+
 
 MainWindow::Private::Private( MainWindow * qq )
     : q( qq ),
@@ -288,14 +301,6 @@ MainWindow::~MainWindow() {}
 void MainWindow::Private::setupActions() {
 
     KActionCollection * const coll = q->actionCollection();
-
-    KAction * const searchBarAction = new KAction( q );
-    SearchBar * const searchBar = new SearchBar( q );
-
-    ui.tabWidget.connectSearchBar( searchBar );
-
-    searchBarAction->setDefaultWidget( searchBar );
-    coll->addAction( QLatin1String("key_search_bar"), searchBarAction );
 
     const action_data action_data[] = {
         // most have been MOVED TO keylistcontroller.cpp
