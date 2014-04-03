@@ -128,6 +128,22 @@ public:
                  q, SLOT(slotKeysMayHaveChanged()) );
     }
 
+    void readConfig()
+    {
+        KConfigGroup dialog( KGlobal::config(), "CertificateDetailsDialog" );
+        const QSize size = dialog.readEntry( "Size", QSize(600, 400) );
+        if ( size.isValid() ) {
+            q->resize( size );
+        }
+    }
+
+    void writeConfig()
+    {
+        KConfigGroup dialog( KGlobal::config(), "CertificateDetailsDialog" );
+        dialog.writeEntry( "Size", q->size() );
+        dialog.sync();
+    }
+
 private:
     void startCommandImplementation( const QPointer<Command> & ptr, const char * slot ) {
         connect( ptr, SIGNAL(finished()), q, slot );
@@ -442,10 +458,13 @@ private:
 CertificateDetailsDialog::CertificateDetailsDialog( QWidget * p, Qt::WindowFlags f )
     : KDialog( p, f ), d( new Private( this ) )
 {
-
+    d->readConfig();
 }
 
-CertificateDetailsDialog::~CertificateDetailsDialog() {}
+CertificateDetailsDialog::~CertificateDetailsDialog()
+{
+    d->writeConfig();
+}
 
 
 void CertificateDetailsDialog::setKey( const Key & key ) {
