@@ -110,7 +110,7 @@ public:
         @param data The data you want to add.
         Can be used to add an empty/default  line.
     */
-    void addData( const MultiplyingLineData::Ptr &data = MultiplyingLineData::Ptr() );
+    bool addData( const MultiplyingLineData::Ptr &data = MultiplyingLineData::Ptr() );
 
     /** Removes data provided it can be found. The Data class must support operator==
         @param data The data you want to add.

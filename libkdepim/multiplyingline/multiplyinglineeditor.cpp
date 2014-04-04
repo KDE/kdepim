@@ -55,13 +55,17 @@ MultiplyingLineEditor::~MultiplyingLineEditor()
     delete mMultiplyingLineFactory;
 }
 
-void MultiplyingLineEditor::addData( const MultiplyingLineData::Ptr &data )
+bool MultiplyingLineEditor::addData( const MultiplyingLineData::Ptr &data )
 {
     MultiplyingLine* line = mView->emptyLine();
+    bool tooManyAddress = false;
     if( !line )
         line = mView->addLine();
+    if (!line)
+        tooManyAddress = true;
     if( line && data )
         line->setData( data );
+    return tooManyAddress;
 }
 
 void MultiplyingLineEditor::removeData( const MultiplyingLineData::Ptr &data )

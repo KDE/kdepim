@@ -51,7 +51,7 @@ public slots:
     void pickRecipient();
 
 signals:
-    void pickedRecipient( const Recipient & );
+    void pickedRecipient( const Recipient &, bool & );
     void saveDistributionList();
 
 private:
