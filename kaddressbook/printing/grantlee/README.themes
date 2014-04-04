@@ -67,6 +67,13 @@ We can use as variable:
   addressBookName (QString)
   photo (QString)
   logo (QString)
+  anniversary (QString)
+  profession (QString)
+  office (QString)
+  manager (QString)
+  assistant (QString)
+  spouse (QString)
+
 
 Element for address:
  - type (QString)

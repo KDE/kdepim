@@ -55,6 +55,12 @@ class ContactGrantleePrintObject : public QObject
     Q_PROPERTY(QString photo READ photo)
     Q_PROPERTY(QString logo READ logo)
     Q_PROPERTY(QVariant crypto READ crypto)
+    Q_PROPERTY(QString anniversary READ anniversary)
+    Q_PROPERTY(QString profession READ profession)
+    Q_PROPERTY(QString office READ office)
+    Q_PROPERTY(QString manager READ manager)
+    Q_PROPERTY(QString assistant READ assistant)
+    Q_PROPERTY(QString spouse READ spouse)
 
     //Add more functions
 public:
@@ -87,6 +93,12 @@ public:
     QString photo() const;
     QString logo() const;
     QVariant crypto() const;
+    QString anniversary() const;
+    QString profession() const;
+    QString office() const;
+    QString manager() const;
+    QString assistant() const;
+    QString spouse() const;
 private:
     QString imgToDataUrl( const QImage &image ) const;
     QList<QObject*> mListAddress;
