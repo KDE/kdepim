@@ -1,16 +1,22 @@
 [Desktop Entry]
 Name=Full Information
+Name[ca]=Informació completa
 Name[cs]=Plná informace
 Name[de]=Vollständige Information
+Name[it]=Informazioni complete
 Name[pt]=Informação Completa
+Name[pt_BR]=Informações completas
 Name[sk]=Celé informácie
 Name[sv]=Fullständig information
 Name[uk]=Усі дані
 Name[x-test]=xxFull Informationxx
 Description=Display All Information
+Description[ca]=Mostra tota la informació
 Description[cs]=Zobrazit všechny informace
 Description[de]=Alle Informationen anzeigen
+Description[it]=Mostra tutte le informazioni
 Description[pt]=Mostrar Todas as Informações
+Description[pt_BR]=Mostrar todas as informações
 Description[sk]=Zobraziť všetky informácie
 Description[sv]=Visa all information
 Description[uk]=Показ усіх даних
