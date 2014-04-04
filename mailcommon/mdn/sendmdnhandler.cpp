@@ -41,9 +41,9 @@ using namespace MailCommon;
 
 class SendMdnHandler::Private
 {
-  public:
+public:
     Private( SendMdnHandler *qq, IKernel *kernel )
-      : q( qq ), mKernel( kernel )
+        : q( qq ), mKernel( kernel )
     {
     }
 
@@ -57,83 +57,83 @@ class SendMdnHandler::Private
 
 void SendMdnHandler::Private::handleMessages()
 {
-  while ( !mItemQueue.isEmpty() ) {
-    Akonadi::Item item = mItemQueue.dequeue();
+    while ( !mItemQueue.isEmpty() ) {
+        Akonadi::Item item = mItemQueue.dequeue();
 
 #if 0
-    // should we send an MDN?
-    if ( MessageViewer::GlobalSettings::notSendWhenEncrypted() &&
-         message()->encryptionState() != KMMsgNotEncrypted &&
-         message()->encryptionState() != KMMsgEncryptionStateUnknown ) {
-      return;
-    }
+        // should we send an MDN?
+        if ( MessageViewer::GlobalSettings::notSendWhenEncrypted() &&
+             message()->encryptionState() != KMMsgNotEncrypted &&
+             message()->encryptionState() != KMMsgEncryptionStateUnknown ) {
+            return;
+        }
 #else
-    kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
+        kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif
 
-    const Akonadi::Collection collection = item.parentCollection();
-    if ( collection.isValid() &&
-         ( CommonKernel->folderIsSentMailFolder( collection ) ||
-           CommonKernel->folderIsTrash( collection ) ||
-           CommonKernel->folderIsDraftOrOutbox( collection ) ||
-           CommonKernel->folderIsTemplates( collection ) ) ) {
-      continue;
-    }
-
-    const KMime::Message::Ptr message = MessageCore::Util::message( item );
-    if ( !message ) {
-      continue;
-    }
-
-    const QPair<bool, KMime::MDN::SendingMode> mdnSend =
-      MDNAdviceHelper::instance()->checkAndSetMDNInfo( item, KMime::MDN::Displayed );
-    if ( mdnSend.first ) {
-      const int quote =  MessageViewer::GlobalSettings::self()->quoteMessage();
-
-      MessageComposer::MessageFactory factory( message, Akonadi::Item().id() );
-      factory.setIdentityManager( mKernel->identityManager() );
-      factory.setFolderIdentity( MailCommon::Util::folderIdentity( item ) );
-
-      const KMime::Message::Ptr mdn =
-        factory.createMDN( KMime::MDN::ManualAction, KMime::MDN::Displayed, mdnSend.second, quote );
-      if ( mdn ) {
-        if ( !mKernel->msgSender()->send( mdn ) ) {
-          kDebug() << "Sending failed.";
+        const Akonadi::Collection collection = item.parentCollection();
+        if ( collection.isValid() &&
+             ( CommonKernel->folderIsSentMailFolder( collection ) ||
+               CommonKernel->folderIsTrash( collection ) ||
+               CommonKernel->folderIsDraftOrOutbox( collection ) ||
+               CommonKernel->folderIsTemplates( collection ) ) ) {
+            continue;
         }
-      }
+
+        const KMime::Message::Ptr message = MessageCore::Util::message( item );
+        if ( !message ) {
+            continue;
+        }
+
+        const QPair<bool, KMime::MDN::SendingMode> mdnSend =
+                MDNAdviceHelper::instance()->checkAndSetMDNInfo( item, KMime::MDN::Displayed );
+        if ( mdnSend.first ) {
+            const int quote =  MessageViewer::GlobalSettings::self()->quoteMessage();
+
+            MessageComposer::MessageFactory factory( message, Akonadi::Item().id() );
+            factory.setIdentityManager( mKernel->identityManager() );
+            factory.setFolderIdentity( MailCommon::Util::folderIdentity( item ) );
+
+            const KMime::Message::Ptr mdn =
+                    factory.createMDN( KMime::MDN::ManualAction, KMime::MDN::Displayed, mdnSend.second, quote );
+            if ( mdn ) {
+                if ( !mKernel->msgSender()->send( mdn ) ) {
+                    kDebug() << "Sending failed.";
+                }
+            }
+        }
     }
-  }
 }
 
 SendMdnHandler::SendMdnHandler( IKernel *kernel, QObject *parent )
-  : QObject( parent ), d( new Private( this, kernel ) )
+    : QObject( parent ), d( new Private( this, kernel ) )
 {
-  d->mTimer.setSingleShot( true );
-  connect( &d->mTimer, SIGNAL(timeout()), this, SLOT(handleMessages()) );
+    d->mTimer.setSingleShot( true );
+    connect( &d->mTimer, SIGNAL(timeout()), this, SLOT(handleMessages()) );
 }
 
 SendMdnHandler::~SendMdnHandler()
 {
-  delete d;
+    delete d;
 }
 
 void SendMdnHandler::setItem( const Akonadi::Item &item )
 {
-  if ( item.hasFlag( Akonadi::MessageFlags::Seen ) ) {
-    return;
-  }
+    if ( item.hasFlag( Akonadi::MessageFlags::Seen ) ) {
+        return;
+    }
 
-  d->mTimer.stop();
+    d->mTimer.stop();
 
-  d->mItemQueue.enqueue( item );
+    d->mItemQueue.enqueue( item );
 
-  if ( MessageViewer::GlobalSettings::self()->delayedMarkAsRead() &&
-       MessageViewer::GlobalSettings::self()->delayedMarkTime() != 0 ) {
-    d->mTimer.start( MessageViewer::GlobalSettings::self()->delayedMarkTime() * 1000 );
-    return;
-  }
+    if ( MessageViewer::GlobalSettings::self()->delayedMarkAsRead() &&
+         MessageViewer::GlobalSettings::self()->delayedMarkTime() != 0 ) {
+        d->mTimer.start( MessageViewer::GlobalSettings::self()->delayedMarkTime() * 1000 );
+        return;
+    }
 
-  d->handleMessages();
+    d->handleMessages();
 }
 
 #include "moc_sendmdnhandler.cpp"
