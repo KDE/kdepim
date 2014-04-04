@@ -73,6 +73,7 @@ class WebKitPartHtmlWriter;
 class HtmlStatusBar;
 class MailWebView;
 class ScamDetectionWarningWidget;
+class MimePartTreeView;
 }
 
 namespace GrantleeTheme {
@@ -285,8 +286,6 @@ public:
 private:
     /** HTML initialization. */
     void initHtmlWidget();
-    void saveMimePartTreeConfig();
-    void restoreMimePartTreeConfig();
     void createOpenWithMenu( KMenu *topMenu, const QString &contentTypeStr, bool fromCurrentContent );
 public:
     /** Event filter */
@@ -480,8 +479,6 @@ private slots:
 
     void collectionFetchedForStoringDecryptedMessage( KJob* job );
 
-    void slotMimePartDestroyed();
-
     void slotClear();
 
     void slotMessageRendered();
@@ -644,9 +641,8 @@ public:
     KHBox *mBox;
     HtmlStatusBar *mColorBar;
 #ifndef QT_NO_TREEVIEW
-    QTreeView* mMimePartTree; //FIXME(Andras) port the functionality from KMMimePartTree to a new view class or to here with signals/slots
+    MimePartTreeView* mMimePartTree; //FIXME(Andras) port the functionality from KMMimePartTree to a new view class or to here with signals/slots
 #endif
-    MimeTreeModel *mMimePartModel;
     MailWebView *mViewer;
     FindBarMailWebView *mFindBar;
     PimCommon::TranslatorWidget *mTranslatorWidget;

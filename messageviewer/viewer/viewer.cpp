@@ -32,11 +32,13 @@
 #include "settings/globalsettings.h"
 #include "viewer/mailwebview.h"
 #include "viewer/mimetreemodel.h"
+#include "viewer/mimeparttreeview.h"
 #include "adblock/adblockmanager.h"
 
 #include <akonadi/kmime/messageparts.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
+
 
 #include <mailtransport/errorattribute.h>
 
@@ -519,7 +521,11 @@ void Viewer::readConfig()
 
 QAbstractItemModel* Viewer::messageTreeModel() const
 {
-    return d_func()->mMimePartModel;
+#ifndef QT_NO_TREEVIEW
+    return d_func()->mMimePartTree->mimePartModel();
+#else
+    return 0;
+#endif
 }
 
 Akonadi::ItemFetchJob* Viewer::createFetchJob( const Akonadi::Item &item )
