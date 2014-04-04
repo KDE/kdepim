@@ -2777,14 +2777,8 @@ void ViewerPrivate::slotCopySelectedText()
 
 void ViewerPrivate::viewerSelectionChanged()
 {
-    if( mViewer->selectedText().isEmpty() )
-    {
-        mActionCollection->action( QLatin1String("kmail_copy") )->setEnabled( false );
-    } else {
-        mActionCollection->action( QLatin1String("kmail_copy") )->setEnabled( true );
-    }
+    mActionCollection->action( QLatin1String("kmail_copy") )->setEnabled( !mViewer->selectedText().isEmpty() );
 }
-
 
 void ViewerPrivate::selectAll()
 {
