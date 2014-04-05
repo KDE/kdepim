@@ -514,6 +514,7 @@ public:
     ContactListModel *mModel;
     KPIMUtils::ProgressIndicatorLabel *progressIndication;
     QSortFilterProxyModel *sortproxy;
+    KLineEdit *searchLine;
 };
 
 LdapSearchDialog::LdapSearchDialog( QWidget *parent )
@@ -582,6 +583,16 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
 
     topLayout->addWidget( groupBox );
 
+
+    QHBoxLayout *quickSearchLineLayout = new QHBoxLayout;
+    quickSearchLineLayout->addStretch();
+    d->searchLine = new KLineEdit;
+    d->searchLine->setClearButtonShown(true);
+    d->searchLine->setClickMessage(i18n("Search in result"));
+    quickSearchLineLayout->addWidget(d->searchLine);
+    topLayout->addLayout( quickSearchLineLayout );
+
+
     d->mResultView = new QTableView( page );
     d->mResultView->setSelectionMode( QTableView::MultiSelection );
     d->mResultView->setSelectionBehavior( QTableView::SelectRows );
@@ -589,6 +600,8 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
 
     d->sortproxy = new QSortFilterProxyModel( this );
     d->sortproxy->setSourceModel( d->mModel );
+    connect(d->searchLine, SIGNAL(textChanged(QString)), d->sortproxy, SLOT(setFilterFixedString(QString)));
+
 
     d->mResultView->setModel( d->sortproxy );
     d->mResultView->verticalHeader()->hide();
