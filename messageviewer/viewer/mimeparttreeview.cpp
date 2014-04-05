@@ -19,6 +19,8 @@
 #include "mimetreemodel.h"
 #include "settings/globalsettings.h"
 
+#include <KMime/Content>
+
 #include <KConfigGroup>
 #include <QHeaderView>
 
@@ -73,4 +75,10 @@ void MimePartTreeView::clearModel()
 {
     delete mMimePartModel->root();
     mMimePartModel->setRoot(0);
+}
+
+void MimePartTreeView::setRoot(KMime::Content *root)
+{
+    delete mMimePartModel->root();
+    mMimePartModel->setRoot( root );
 }

@@ -868,8 +868,7 @@ void ViewerPrivate::displayMessage()
     }
 
     parseContent( mMessage.get() );
-    delete mMimePartTree->mimePartModel()->root();
-    mMimePartTree->mimePartModel()->setRoot( mNodeHelper->messageWithExtraContent( mMessage.get() ) );
+    mMimePartTree->setRoot( mNodeHelper->messageWithExtraContent( mMessage.get() ) );
     mColorBar->update();
 
     htmlWriter()->queue(QLatin1String("</body></html>"));
@@ -1335,8 +1334,7 @@ void ViewerPrivate::setMessageInternal( const KMime::Message::Ptr message,
         mNodeHelper->setOverrideCodec( mMessage.get(), overrideCodec() );
     }
 
-    delete mMimePartTree->mimePartModel()->root();
-    mMimePartTree->mimePartModel()->setRoot( mNodeHelper->messageWithExtraContent( message.get() ) );
+    mMimePartTree->setRoot( mNodeHelper->messageWithExtraContent( message.get() ) );
     update( updateMode );
 }
 
