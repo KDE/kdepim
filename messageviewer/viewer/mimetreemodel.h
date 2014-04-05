@@ -23,7 +23,7 @@
 #include <QAbstractItemModel>
 
 namespace KMime {
-  class Content;
+class Content;
 }
 
 namespace MessageViewer {
@@ -33,16 +33,16 @@ namespace MessageViewer {
 */
 class MimeTreeModel : public QAbstractItemModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     enum Role {
-      ContentIndexRole = Qt::UserRole + 1,
-      ContentRole,
-      MimeTypeRole,
-      MainBodyPartRole,
-      AlternativeBodyPartRole,
-      UserRole = Qt::UserRole + 100
+        ContentIndexRole = Qt::UserRole + 1,
+        ContentRole,
+        MimeTypeRole,
+        MainBodyPartRole,
+        AlternativeBodyPartRole,
+        UserRole = Qt::UserRole + 100
     };
     explicit MimeTreeModel( QObject *parent = 0 );
     ~MimeTreeModel();
@@ -58,7 +58,7 @@ class MimeTreeModel : public QAbstractItemModel
     QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
     QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
-  private:
+private:
     class Private;
     Private* const d;
 };
