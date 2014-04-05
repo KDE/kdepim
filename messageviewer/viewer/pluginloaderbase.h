@@ -30,12 +30,12 @@ class QStringList;
 
 class PluginMetaData
 {
-  public:
+public:
     PluginMetaData() : loaded(false) {}
     PluginMetaData( const QString & lib, const QString & name,
                     const QString & comment )
-      : library( lib ), nameLabel( name ),
-        descriptionLabel( comment ), loaded( false ) {}
+        : library( lib ), nameLabel( name ),
+          descriptionLabel( comment ), loaded( false ) {}
     QString library;
     QString nameLabel;
     QString descriptionLabel;
@@ -44,11 +44,11 @@ class PluginMetaData
 
 class PluginLoaderBase
 {
-  protected:
+protected:
     PluginLoaderBase();
     virtual ~PluginLoaderBase();
 
-  public:
+public:
     /** Returns a list of all available plugin objects (of kind @p T) */
     QStringList types() const;
 
@@ -59,7 +59,7 @@ class PluginLoaderBase
         the right @p path argument */
     virtual void scan() = 0;
 
-  protected:
+protected:
     /** Rescans the plugin directory to find any newly installed
         plugins. Extend this method in subclasses to add any
         builtins. Subclasses must call this explicitly. It's not
@@ -71,7 +71,7 @@ class PluginLoaderBase
         implements the plugin of type @p type */
     KLibrary::void_function_ptr mainFunc( const QString & type, const char * main_func ) const;
 
-  private:
+private:
     const KLibrary * openLibrary( const QString & libName ) const;
     mutable QMap< QString, PluginMetaData > mPluginMap;
 

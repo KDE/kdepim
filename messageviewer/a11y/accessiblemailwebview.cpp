@@ -21,112 +21,112 @@
 #include <QWebFrame>
 
 QString Q_GUI_EXPORT qTextAfterOffsetFromString( int offset, QAccessible2::BoundaryType boundaryType,
-                                         int *startOffset, int *endOffset, const QString& text );
+                                                 int *startOffset, int *endOffset, const QString& text );
 QString Q_GUI_EXPORT qTextBeforeOffsetFromString( int offset, QAccessible2::BoundaryType boundaryType,
-                                         int *startOffset, int *endOffset, const QString& text );
+                                                  int *startOffset, int *endOffset, const QString& text );
 QString Q_GUI_EXPORT qTextAtOffsetFromString( int offset, QAccessible2::BoundaryType boundaryType,
-                                         int *startOffset, int *endOffset, const QString& text );
+                                              int *startOffset, int *endOffset, const QString& text );
 
 AccessibleMailWebView::AccessibleMailWebView( MessageViewer::MailWebView* widget ):
-  QAccessibleWidgetEx( widget, QAccessible::Document )
+    QAccessibleWidgetEx( widget, QAccessible::Document )
 {
-  m_widget = widget;
+    m_widget = widget;
 }
 
 
 int AccessibleMailWebView::characterCount()
 {
-  return m_widget->page()->mainFrame()->toPlainText().size();
+    return m_widget->page()->mainFrame()->toPlainText().size();
 }
 
 int AccessibleMailWebView::selectionCount()
 {
-  return m_widget->hasSelection() ? 1 : 0;
+    return m_widget->hasSelection() ? 1 : 0;
 }
 
 void AccessibleMailWebView::addSelection( int startOffset, int endOffset )
 {
-  Q_UNUSED( startOffset );
-  Q_UNUSED( endOffset );
+    Q_UNUSED( startOffset );
+    Q_UNUSED( endOffset );
 }
 
 void AccessibleMailWebView::removeSelection( int selectionIndex )
 {
-  if ( selectionIndex == 0 )
-    m_widget->clearSelection();
+    if ( selectionIndex == 0 )
+        m_widget->clearSelection();
 }
 
 void AccessibleMailWebView::setSelection( int selectionIndex, int startOffset, int endOffset )
 {
-  Q_UNUSED( selectionIndex );
-  Q_UNUSED( startOffset );
-  Q_UNUSED( endOffset );
+    Q_UNUSED( selectionIndex );
+    Q_UNUSED( startOffset );
+    Q_UNUSED( endOffset );
 }
 
 void AccessibleMailWebView::setCursorPosition( int position )
 {
-  Q_UNUSED( position );
+    Q_UNUSED( position );
 }
 
 QString AccessibleMailWebView::text( int startOffset, int endOffset )
 {
-  QString text = m_widget->page()->mainFrame()->toPlainText();
-  text.truncate( endOffset );
-  text.remove( 0, startOffset );
-  return text;
+    QString text = m_widget->page()->mainFrame()->toPlainText();
+    text.truncate( endOffset );
+    text.remove( 0, startOffset );
+    return text;
 }
 
 QString AccessibleMailWebView::attributes( int offset, int* startOffset, int* endOffset )
 {
-  Q_UNUSED( offset );
-  Q_UNUSED( startOffset );
-  Q_UNUSED( endOffset );
-  return QString();
+    Q_UNUSED( offset );
+    Q_UNUSED( startOffset );
+    Q_UNUSED( endOffset );
+    return QString();
 }
 
 void AccessibleMailWebView::selection( int selectionIndex, int* startOffset, int* endOffset )
 {
-  Q_UNUSED( selectionIndex );
-  *startOffset = -1;
-  *endOffset = -1;
+    Q_UNUSED( selectionIndex );
+    *startOffset = -1;
+    *endOffset = -1;
 }
 
 QRect AccessibleMailWebView::characterRect( int offset, QAccessible2::CoordinateType coordType )
 {
-  Q_UNUSED( offset );
-  Q_UNUSED( coordType );
-  return QRect();
+    Q_UNUSED( offset );
+    Q_UNUSED( coordType );
+    return QRect();
 }
 
 int AccessibleMailWebView::offsetAtPoint( const QPoint& point, QAccessible2::CoordinateType coordType )
 {
-  Q_UNUSED( point );
-  Q_UNUSED( coordType );
-  return 0;
+    Q_UNUSED( point );
+    Q_UNUSED( coordType );
+    return 0;
 }
 
 int AccessibleMailWebView::cursorPosition()
 {
-  return 0;
+    return 0;
 }
 
 void AccessibleMailWebView::scrollToSubstring( int startIndex, int endIndex )
 {
-  Q_UNUSED( startIndex );
-  Q_UNUSED( endIndex );
+    Q_UNUSED( startIndex );
+    Q_UNUSED( endIndex );
 }
 
 QString AccessibleMailWebView::textAfterOffset( int offset, QAccessible2::BoundaryType boundaryType, int* startOffset, int* endOffset )
 {
-  return qTextAfterOffsetFromString( offset, boundaryType, startOffset, endOffset, m_widget->page()->mainFrame()->toPlainText() );
+    return qTextAfterOffsetFromString( offset, boundaryType, startOffset, endOffset, m_widget->page()->mainFrame()->toPlainText() );
 }
 
 QString AccessibleMailWebView::textBeforeOffset( int offset, QAccessible2::BoundaryType boundaryType, int* startOffset, int* endOffset )
 {
-  return qTextBeforeOffsetFromString( offset, boundaryType, startOffset, endOffset, m_widget->page()->mainFrame()->toPlainText() );
+    return qTextBeforeOffsetFromString( offset, boundaryType, startOffset, endOffset, m_widget->page()->mainFrame()->toPlainText() );
 }
 
 QString AccessibleMailWebView::textAtOffset( int offset, QAccessible2::BoundaryType boundaryType, int* startOffset, int* endOffset )
 {
-  return qTextAtOffsetFromString( offset, boundaryType, startOffset, endOffset, m_widget->page()->mainFrame()->toPlainText() );
+    return qTextAtOffsetFromString( offset, boundaryType, startOffset, endOffset, m_widget->page()->mainFrame()->toPlainText() );
 }

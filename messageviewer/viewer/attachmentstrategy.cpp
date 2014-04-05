@@ -46,18 +46,18 @@ namespace MessageViewer {
 
 static AttachmentStrategy::Display smartDisplay( KMime::Content *node )
 {
-  if ( node->contentDisposition()->disposition() == KMime::Headers::CDinline )
-    // explict "inline" disposition:
-    return AttachmentStrategy::Inline;
-  if ( MessageCore::NodeHelper::isAttachment( node ) )
-    // explicit "attachment" disposition:
+    if ( node->contentDisposition()->disposition() == KMime::Headers::CDinline )
+        // explict "inline" disposition:
+        return AttachmentStrategy::Inline;
+    if ( MessageCore::NodeHelper::isAttachment( node ) )
+        // explicit "attachment" disposition:
+        return AttachmentStrategy::AsIcon;
+    if ( node->contentType()->isText() &&
+         node->contentDisposition()->filename().trimmed().isEmpty() &&
+         node->contentType()->name().trimmed().isEmpty() )
+        // text/* w/o filename parameter:
+        return AttachmentStrategy::Inline;
     return AttachmentStrategy::AsIcon;
-  if ( node->contentType()->isText() &&
-        node->contentDisposition()->filename().trimmed().isEmpty() &&
-        node->contentType()->name().trimmed().isEmpty() )
-    // text/* w/o filename parameter:
-    return AttachmentStrategy::Inline;
-  return AttachmentStrategy::AsIcon;
 }
 
 //
@@ -66,25 +66,25 @@ static AttachmentStrategy::Display smartDisplay( KMime::Content *node )
 //
 
 class IconicAttachmentStrategy : public AttachmentStrategy {
-  friend class AttachmentStrategy;
+    friend class AttachmentStrategy;
 protected:
-  IconicAttachmentStrategy() : AttachmentStrategy() {}
-  virtual ~IconicAttachmentStrategy() {}
+    IconicAttachmentStrategy() : AttachmentStrategy() {}
+    virtual ~IconicAttachmentStrategy() {}
 
 public:
-  const char * name() const { return "iconic"; }
-  const AttachmentStrategy * next() const { return smart(); }
-  const AttachmentStrategy * prev() const { return headerOnly(); }
+    const char * name() const { return "iconic"; }
+    const AttachmentStrategy * next() const { return smart(); }
+    const AttachmentStrategy * prev() const { return headerOnly(); }
 
-  bool inlineNestedMessages() const { return false; }
-  Display defaultDisplay( KMime::Content * node ) const {
-    if ( node->contentType()->isText() &&
-          node->contentDisposition()->filename().trimmed().isEmpty() &&
-          node->contentType()->name().trimmed().isEmpty() )
-      // text/* w/o filename parameter:
-      return Inline;
-    return AsIcon;
-  }
+    bool inlineNestedMessages() const { return false; }
+    Display defaultDisplay( KMime::Content * node ) const {
+        if ( node->contentType()->isText() &&
+             node->contentDisposition()->filename().trimmed().isEmpty() &&
+             node->contentType()->name().trimmed().isEmpty() )
+            // text/* w/o filename parameter:
+            return Inline;
+        return AsIcon;
+    }
 };
 
 //
@@ -95,20 +95,20 @@ public:
 //
 
 class SmartAttachmentStrategy : public AttachmentStrategy {
-  friend class AttachmentStrategy;
+    friend class AttachmentStrategy;
 protected:
-  SmartAttachmentStrategy() : AttachmentStrategy() {}
-  virtual ~SmartAttachmentStrategy() {}
+    SmartAttachmentStrategy() : AttachmentStrategy() {}
+    virtual ~SmartAttachmentStrategy() {}
 
 public:
-  const char * name() const { return "smart"; }
-  const AttachmentStrategy * next() const { return inlined(); }
-  const AttachmentStrategy * prev() const { return iconic(); }
+    const char * name() const { return "smart"; }
+    const AttachmentStrategy * next() const { return inlined(); }
+    const AttachmentStrategy * prev() const { return iconic(); }
 
-  bool inlineNestedMessages() const { return true; }
-  Display defaultDisplay( KMime::Content * node ) const {
-    return smartDisplay( node );
-  }
+    bool inlineNestedMessages() const { return true; }
+    Display defaultDisplay( KMime::Content * node ) const {
+        return smartDisplay( node );
+    }
 };
 
 //
@@ -117,18 +117,18 @@ public:
 //
 
 class InlinedAttachmentStrategy : public AttachmentStrategy {
-  friend class AttachmentStrategy;
+    friend class AttachmentStrategy;
 protected:
-  InlinedAttachmentStrategy() : AttachmentStrategy() {}
-  virtual ~InlinedAttachmentStrategy() {}
+    InlinedAttachmentStrategy() : AttachmentStrategy() {}
+    virtual ~InlinedAttachmentStrategy() {}
 
 public:
-  const char * name() const { return "inlined"; }
-  const AttachmentStrategy * next() const { return hidden(); }
-  const AttachmentStrategy * prev() const { return smart(); }
+    const char * name() const { return "inlined"; }
+    const AttachmentStrategy * next() const { return hidden(); }
+    const AttachmentStrategy * prev() const { return smart(); }
 
-  bool inlineNestedMessages() const { return true; }
-  Display defaultDisplay( KMime::Content * ) const { return Inline; }
+    bool inlineNestedMessages() const { return true; }
+    Display defaultDisplay( KMime::Content * ) const { return Inline; }
 };
 
 //
@@ -137,67 +137,67 @@ public:
 //
 
 class HiddenAttachmentStrategy : public AttachmentStrategy {
-  friend class AttachmentStrategy;
+    friend class AttachmentStrategy;
 protected:
-  HiddenAttachmentStrategy() : AttachmentStrategy() {}
-  virtual ~HiddenAttachmentStrategy() {}
+    HiddenAttachmentStrategy() : AttachmentStrategy() {}
+    virtual ~HiddenAttachmentStrategy() {}
 
 public:
-  const char * name() const { return "hidden"; }
-  const AttachmentStrategy * next() const { return headerOnly(); }
-  const AttachmentStrategy * prev() const { return inlined(); }
+    const char * name() const { return "hidden"; }
+    const AttachmentStrategy * next() const { return headerOnly(); }
+    const AttachmentStrategy * prev() const { return inlined(); }
 
-  bool inlineNestedMessages() const { return false; }
-  Display defaultDisplay( KMime::Content * node ) const {
-    if ( node->contentType()->isText() &&
-          node->contentDisposition()->filename().trimmed().isEmpty() &&
-          node->contentType()->name().trimmed().isEmpty() )
-      // text/* w/o filename parameter:
-      return Inline;
-    if (!node->parent())
-      return Inline;
+    bool inlineNestedMessages() const { return false; }
+    Display defaultDisplay( KMime::Content * node ) const {
+        if ( node->contentType()->isText() &&
+             node->contentDisposition()->filename().trimmed().isEmpty() &&
+             node->contentType()->name().trimmed().isEmpty() )
+            // text/* w/o filename parameter:
+            return Inline;
+        if (!node->parent())
+            return Inline;
 
-    if ( node->parent() && node->parent()->contentType()->isMultipart() &&
-          node->parent()->contentType()->subType() == "related" )
-      return Inline;
+        if ( node->parent() && node->parent()->contentType()->isMultipart() &&
+             node->parent()->contentType()->subType() == "related" )
+            return Inline;
 
-    return None;
-  }
+        return None;
+    }
 };
 
 class HeaderOnlyAttachmentStrategy : public AttachmentStrategy {
-  friend class AttachmentStrategy;
+    friend class AttachmentStrategy;
 protected:
-  HeaderOnlyAttachmentStrategy() : AttachmentStrategy() {}
-  virtual ~HeaderOnlyAttachmentStrategy() {}
+    HeaderOnlyAttachmentStrategy() : AttachmentStrategy() {}
+    virtual ~HeaderOnlyAttachmentStrategy() {}
 
 public:
-  const char * name() const { return "headerOnly"; }
-  const AttachmentStrategy * next() const { return iconic(); }
-  const AttachmentStrategy * prev() const { return hidden(); }
+    const char * name() const { return "headerOnly"; }
+    const AttachmentStrategy * next() const { return iconic(); }
+    const AttachmentStrategy * prev() const { return hidden(); }
 
-  bool inlineNestedMessages() const {
-    return true;
-  }
-
-  Display defaultDisplay( KMime::Content * node ) const {
-    if ( NodeHelper::isInEncapsulatedMessage( node ) ) {
-      return smartDisplay( node );
+    bool inlineNestedMessages() const {
+        return true;
     }
 
-    NodeHelper::AttachmentDisplayInfo info = NodeHelper::attachmentDisplayInfo( node );
-    if ( info.displayInHeader ) {
-      // The entire point about this attachment strategy: Hide attachments in the body that are
-      // already displayed in the attachment quick list
-      return None;
-    } else {
-      return smartDisplay( node );
-    }
-  }
+    Display defaultDisplay( KMime::Content * node ) const {
+        if ( NodeHelper::isInEncapsulatedMessage( node ) ) {
+            return smartDisplay( node );
+        }
 
-  virtual bool requiresAttachmentListInHeader() const {
-    return true;
-  }
+        NodeHelper::AttachmentDisplayInfo info = NodeHelper::attachmentDisplayInfo( node );
+        if ( info.displayInHeader ) {
+            // The entire point about this attachment strategy: Hide attachments in the body that are
+            // already displayed in the attachment quick list
+            return None;
+        } else {
+            return smartDisplay( node );
+        }
+    }
+
+    virtual bool requiresAttachmentListInHeader() const {
+        return true;
+    }
 };
 
 //
@@ -213,28 +213,28 @@ AttachmentStrategy::~AttachmentStrategy() {
 }
 
 const AttachmentStrategy * AttachmentStrategy::create( Type type ) {
-  switch ( type ) {
-  case Iconic:     return iconic();
-  case Smart:      return smart();
-  case Inlined:    return inlined();
-  case Hidden:     return hidden();
-  case HeaderOnly: return headerOnly();
-  }
-  kFatal() << "Unknown attachment startegy ( type =="
-           << (int)type << ") requested!";
-  return 0; // make compiler happy
+    switch ( type ) {
+    case Iconic:     return iconic();
+    case Smart:      return smart();
+    case Inlined:    return inlined();
+    case Hidden:     return hidden();
+    case HeaderOnly: return headerOnly();
+    }
+    kFatal() << "Unknown attachment startegy ( type =="
+             << (int)type << ") requested!";
+    return 0; // make compiler happy
 }
 
 const AttachmentStrategy * AttachmentStrategy::create( const QString & type ) {
-  const QString lowerType = type.toLower();
-  if ( lowerType == QLatin1String( "iconic" ) )     return iconic();
-  //if ( lowerType == "smart" )    return smart(); // not needed, see below
-  if ( lowerType == QLatin1String( "inlined" ) )    return inlined();
-  if ( lowerType == QLatin1String( "hidden" ) )     return hidden();
-  if ( lowerType == QLatin1String( "headeronly" ) ) return headerOnly();
-  // don't kFatal here, b/c the strings are user-provided
-  // (KConfig), so fail gracefully to the default:
-  return smart();
+    const QString lowerType = type.toLower();
+    if ( lowerType == QLatin1String( "iconic" ) )     return iconic();
+    //if ( lowerType == "smart" )    return smart(); // not needed, see below
+    if ( lowerType == QLatin1String( "inlined" ) )    return inlined();
+    if ( lowerType == QLatin1String( "hidden" ) )     return hidden();
+    if ( lowerType == QLatin1String( "headeronly" ) ) return headerOnly();
+    // don't kFatal here, b/c the strings are user-provided
+    // (KConfig), so fail gracefully to the default:
+    return smart();
 }
 
 static const AttachmentStrategy * iconicStrategy = 0;
@@ -244,34 +244,34 @@ static const AttachmentStrategy * hiddenStrategy = 0;
 static const AttachmentStrategy * headerOnlyStrategy = 0;
 
 const AttachmentStrategy * AttachmentStrategy::iconic() {
-  if ( !iconicStrategy )
-    iconicStrategy = new IconicAttachmentStrategy();
-  return iconicStrategy;
+    if ( !iconicStrategy )
+        iconicStrategy = new IconicAttachmentStrategy();
+    return iconicStrategy;
 }
 
 const AttachmentStrategy * AttachmentStrategy::smart() {
-  if ( !smartStrategy )
-    smartStrategy = new SmartAttachmentStrategy();
-  return smartStrategy;
+    if ( !smartStrategy )
+        smartStrategy = new SmartAttachmentStrategy();
+    return smartStrategy;
 }
 
 const AttachmentStrategy * AttachmentStrategy::inlined() {
-  if ( !inlinedStrategy )
-    inlinedStrategy = new InlinedAttachmentStrategy();
-  return inlinedStrategy;
+    if ( !inlinedStrategy )
+        inlinedStrategy = new InlinedAttachmentStrategy();
+    return inlinedStrategy;
 }
 
 const AttachmentStrategy * AttachmentStrategy::hidden() {
-  if ( !hiddenStrategy )
-    hiddenStrategy = new HiddenAttachmentStrategy();
-  return hiddenStrategy;
+    if ( !hiddenStrategy )
+        hiddenStrategy = new HiddenAttachmentStrategy();
+    return hiddenStrategy;
 }
 
 const AttachmentStrategy* AttachmentStrategy::headerOnly()
 {
-  if ( !headerOnlyStrategy )
-    headerOnlyStrategy = new HeaderOnlyAttachmentStrategy();
-  return headerOnlyStrategy;
+    if ( !headerOnlyStrategy )
+        headerOnlyStrategy = new HeaderOnlyAttachmentStrategy();
+    return headerOnlyStrategy;
 }
 
 }

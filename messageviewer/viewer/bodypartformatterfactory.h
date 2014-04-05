@@ -41,32 +41,32 @@ class QString;
 namespace MessageViewer {
 
 namespace Interface {
-  class BodyPartFormatter;
+class BodyPartFormatter;
 }
 
 class BodyPartFormatterFactory
 {
-  class gcc_shut_up;
-  friend class BodyPartFormatterFactory::gcc_shut_up;
+    class gcc_shut_up;
+    friend class BodyPartFormatterFactory::gcc_shut_up;
 public:
-  ~BodyPartFormatterFactory();
+    ~BodyPartFormatterFactory();
 
-  static const BodyPartFormatterFactory * instance();
+    static const BodyPartFormatterFactory * instance();
 
-  const Interface::BodyPartFormatter * createFor( const char * type, const char * subtype ) const;
-  const Interface::BodyPartFormatter * createFor( const QString & type, const QString & subtype ) const;
-  const Interface::BodyPartFormatter * createFor( const QByteArray & type, const QByteArray & subtype ) const;
+    const Interface::BodyPartFormatter * createFor( const char * type, const char * subtype ) const;
+    const Interface::BodyPartFormatter * createFor( const QString & type, const QString & subtype ) const;
+    const Interface::BodyPartFormatter * createFor( const QByteArray & type, const QByteArray & subtype ) const;
 
-  //
-  // Only boring stuff below:
-  //
+    //
+    // Only boring stuff below:
+    //
 private:
-  BodyPartFormatterFactory();
-  static BodyPartFormatterFactory * mSelf;
+    BodyPartFormatterFactory();
+    static BodyPartFormatterFactory * mSelf;
 private:
-  // disabled
-  const BodyPartFormatterFactory & operator=( const BodyPartFormatterFactory & );
-  BodyPartFormatterFactory( const BodyPartFormatterFactory & );
+    // disabled
+    const BodyPartFormatterFactory & operator=( const BodyPartFormatterFactory & );
+    BodyPartFormatterFactory( const BodyPartFormatterFactory & );
 };
 
 }

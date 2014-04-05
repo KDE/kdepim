@@ -45,10 +45,10 @@
 #include "viewer/viewer.h"
 
 namespace Kleo {
-  class DecryptVerifyJob;
-  class VerifyDetachedJob;
-  class VerifyOpaqueJob;
-  class KeyListJob;
+class DecryptVerifyJob;
+class VerifyDetachedJob;
+class VerifyOpaqueJob;
+class KeyListJob;
 }
 
 class QStringList;
@@ -56,151 +56,151 @@ class QStringList;
 namespace MessageViewer {
 
 class CryptoBodyPartMemento
-  : public QObject,
-    public Interface::BodyPartMemento
+        : public QObject,
+        public Interface::BodyPartMemento
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  CryptoBodyPartMemento();
-  ~CryptoBodyPartMemento();
+    CryptoBodyPartMemento();
+    ~CryptoBodyPartMemento();
 
-  bool isRunning() const { return m_running; }
+    bool isRunning() const { return m_running; }
 
-  const QString & auditLogAsHtml() const { return m_auditLog; }
-  GpgME::Error auditLogError() const { return m_auditLogError; }
+    const QString & auditLogAsHtml() const { return m_auditLog; }
+    GpgME::Error auditLogError() const { return m_auditLogError; }
 
-  void detach();
+    void detach();
 
 signals:
-  void update(MessageViewer::Viewer::UpdateMode);
+    void update(MessageViewer::Viewer::UpdateMode);
 
 protected slots:
-  void notify() {
-    emit update(Viewer::Force);
-  }
+    void notify() {
+        emit update(Viewer::Force);
+    }
 
 protected:
-  void setAuditLog( const GpgME::Error & err, const QString & log );
-  void setRunning( bool running );
+    void setAuditLog( const GpgME::Error & err, const QString & log );
+    void setRunning( bool running );
 
 private:
-  bool m_running;
-  QString m_auditLog;
-  GpgME::Error m_auditLogError;
+    bool m_running;
+    QString m_auditLog;
+    GpgME::Error m_auditLogError;
 };
 
 class DecryptVerifyBodyPartMemento
-  : public CryptoBodyPartMemento
+        : public CryptoBodyPartMemento
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  DecryptVerifyBodyPartMemento( Kleo::DecryptVerifyJob * job, const QByteArray & cipherText );
-  ~DecryptVerifyBodyPartMemento();
+    DecryptVerifyBodyPartMemento( Kleo::DecryptVerifyJob * job, const QByteArray & cipherText );
+    ~DecryptVerifyBodyPartMemento();
 
-  bool start();
-  void exec();
+    bool start();
+    void exec();
 
-  const QByteArray & plainText() const { return m_plainText; }
-  const GpgME::DecryptionResult & decryptResult() const { return m_dr; }
-  const GpgME::VerificationResult & verifyResult() const { return m_vr; }
+    const QByteArray & plainText() const { return m_plainText; }
+    const GpgME::DecryptionResult & decryptResult() const { return m_dr; }
+    const GpgME::VerificationResult & verifyResult() const { return m_vr; }
 
 private slots:
-  void slotResult( const GpgME::DecryptionResult & dr,
-                    const GpgME::VerificationResult & vr,
-                    const QByteArray & plainText );
+    void slotResult( const GpgME::DecryptionResult & dr,
+                     const GpgME::VerificationResult & vr,
+                     const QByteArray & plainText );
 
 private:
-  void saveResult( const GpgME::DecryptionResult &,
-                    const GpgME::VerificationResult &,
-                    const QByteArray & );
+    void saveResult( const GpgME::DecryptionResult &,
+                     const GpgME::VerificationResult &,
+                     const QByteArray & );
 private:
-  // input:
-  const QByteArray m_cipherText;
-  QPointer<Kleo::DecryptVerifyJob> m_job;
-  // output:
-  GpgME::DecryptionResult m_dr;
-  GpgME::VerificationResult m_vr;
-  QByteArray m_plainText;
+    // input:
+    const QByteArray m_cipherText;
+    QPointer<Kleo::DecryptVerifyJob> m_job;
+    // output:
+    GpgME::DecryptionResult m_dr;
+    GpgME::VerificationResult m_vr;
+    QByteArray m_plainText;
 };
 
 
 class VerifyDetachedBodyPartMemento
-  : public CryptoBodyPartMemento
+        : public CryptoBodyPartMemento
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  VerifyDetachedBodyPartMemento( Kleo::VerifyDetachedJob * job,
-                                  Kleo::KeyListJob * klj,
-                                  const QByteArray & signature,
-                                  const QByteArray & plainText );
-  ~VerifyDetachedBodyPartMemento();
+    VerifyDetachedBodyPartMemento( Kleo::VerifyDetachedJob * job,
+                                   Kleo::KeyListJob * klj,
+                                   const QByteArray & signature,
+                                   const QByteArray & plainText );
+    ~VerifyDetachedBodyPartMemento();
 
-  bool start();
-  void exec();
+    bool start();
+    void exec();
 
-  const GpgME::VerificationResult & verifyResult() const { return m_vr; }
-  const GpgME::Key & signingKey() const { return m_key; }
+    const GpgME::VerificationResult & verifyResult() const { return m_vr; }
+    const GpgME::Key & signingKey() const { return m_key; }
 
 private slots:
-  void slotResult( const GpgME::VerificationResult & vr );
-  void slotKeyListJobDone();
-  void slotNextKey( const GpgME::Key & );
+    void slotResult( const GpgME::VerificationResult & vr );
+    void slotKeyListJobDone();
+    void slotNextKey( const GpgME::Key & );
 
 private:
-  void saveResult( const GpgME::VerificationResult & );
-  bool canStartKeyListJob() const;
-  QStringList keyListPattern() const;
-  bool startKeyListJob();
+    void saveResult( const GpgME::VerificationResult & );
+    bool canStartKeyListJob() const;
+    QStringList keyListPattern() const;
+    bool startKeyListJob();
 private:
-  // input:
-  const QByteArray m_signature;
-  const QByteArray m_plainText;
-  QPointer<Kleo::VerifyDetachedJob> m_job;
-  QPointer<Kleo::KeyListJob> m_keylistjob;
-  // output:
-  GpgME::VerificationResult m_vr;
-  GpgME::Key m_key;
+    // input:
+    const QByteArray m_signature;
+    const QByteArray m_plainText;
+    QPointer<Kleo::VerifyDetachedJob> m_job;
+    QPointer<Kleo::KeyListJob> m_keylistjob;
+    // output:
+    GpgME::VerificationResult m_vr;
+    GpgME::Key m_key;
 };
 
 
 class VerifyOpaqueBodyPartMemento
-  : public CryptoBodyPartMemento
+        : public CryptoBodyPartMemento
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  VerifyOpaqueBodyPartMemento( Kleo::VerifyOpaqueJob * job,
-                                Kleo::KeyListJob * klj,
-                                const QByteArray & signature );
-  ~VerifyOpaqueBodyPartMemento();
+    VerifyOpaqueBodyPartMemento( Kleo::VerifyOpaqueJob * job,
+                                 Kleo::KeyListJob * klj,
+                                 const QByteArray & signature );
+    ~VerifyOpaqueBodyPartMemento();
 
-  bool start();
-  void exec();
+    bool start();
+    void exec();
 
-  const QByteArray & plainText() const { return m_plainText; }
-  const GpgME::VerificationResult & verifyResult() const { return m_vr; }
-  const GpgME::Key & signingKey() const { return m_key; }
+    const QByteArray & plainText() const { return m_plainText; }
+    const GpgME::VerificationResult & verifyResult() const { return m_vr; }
+    const GpgME::Key & signingKey() const { return m_key; }
 
 private slots:
-  void slotResult( const GpgME::VerificationResult & vr,
-                    const QByteArray & plainText );
-  void slotKeyListJobDone();
-  void slotNextKey( const GpgME::Key & );
+    void slotResult( const GpgME::VerificationResult & vr,
+                     const QByteArray & plainText );
+    void slotKeyListJobDone();
+    void slotNextKey( const GpgME::Key & );
 
 private:
-  void saveResult( const GpgME::VerificationResult &,
-                    const QByteArray & );
-  bool canStartKeyListJob() const;
-  QStringList keyListPattern() const;
-  bool startKeyListJob();
+    void saveResult( const GpgME::VerificationResult &,
+                     const QByteArray & );
+    bool canStartKeyListJob() const;
+    QStringList keyListPattern() const;
+    bool startKeyListJob();
 private:
-  // input:
-  const QByteArray m_signature;
-  QPointer<Kleo::VerifyOpaqueJob> m_job;
-  QPointer<Kleo::KeyListJob> m_keylistjob;
-  // output:
-  GpgME::VerificationResult m_vr;
-  QByteArray m_plainText;
-  GpgME::Key m_key;
+    // input:
+    const QByteArray m_signature;
+    QPointer<Kleo::VerifyOpaqueJob> m_job;
+    QPointer<Kleo::KeyListJob> m_keylistjob;
+    // output:
+    GpgME::VerificationResult m_vr;
+    QByteArray m_plainText;
+    GpgME::Key m_key;
 };
 
 }

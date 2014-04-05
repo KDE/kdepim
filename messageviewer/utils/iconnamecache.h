@@ -34,16 +34,16 @@ namespace MessageViewer {
  */
 class MESSAGEVIEWER_EXPORT IconNameCache
 {
-  public:
+public:
 
     static IconNameCache *instance();
     QString iconPath( const QString &name, int size ) const;
 
-  private:
+private:
 
     class Entry
     {
-      public:
+    public:
         QString fileName;
         int size;
 

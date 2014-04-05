@@ -24,20 +24,20 @@ Q_EXPORT_PLUGIN(MessageViewerAccessibleWidgetFactory)
 
 QAccessibleInterface *MessageViewerAccessibleWidgetFactory::create( const QString &key, QObject *object )
 {
-  if ( key == QLatin1String( "MessageViewer::MailWebView" ) ) {
-    return new AccessibleMailWebView( reinterpret_cast< MessageViewer::MailWebView* >( object ) );
-  }
-  return 0;
+    if ( key == QLatin1String( "MessageViewer::MailWebView" ) ) {
+        return new AccessibleMailWebView( reinterpret_cast< MessageViewer::MailWebView* >( object ) );
+    }
+    return 0;
 }
 
 MessageViewerAccessibleWidgetFactory::MessageViewerAccessibleWidgetFactory( QObject *parent ):
-  QAccessiblePlugin( parent )
+    QAccessiblePlugin( parent )
 {
 }
 
 QStringList MessageViewerAccessibleWidgetFactory::keys() const
 {
-  QStringList l;
-  l.append( QLatin1String( "MessageViewer::MailWebView" ) );
-  return l;
+    QStringList l;
+    l.append( QLatin1String( "MessageViewer::MailWebView" ) );
+    return l;
 }
