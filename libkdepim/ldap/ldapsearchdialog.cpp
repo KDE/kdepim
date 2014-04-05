@@ -647,6 +647,7 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
 
     connect( this, SIGNAL(user1Clicked()), this, SLOT(slotUser1()) );
     connect( this, SIGNAL(user2Clicked()), this, SLOT(slotUser2()) );
+    connect( this, SIGNAL(cancelClicked()), this, SLOT(slotCancelClicked()));
     d->slotSelectionChanged();
     d->restoreSettings();
 }
@@ -917,6 +918,12 @@ void LdapSearchDialog::slotUser2()
     if ( dialog.exec() ) { //krazy:exclude=crashy
         d->restoreSettings();
     }
+}
+
+void LdapSearchDialog::slotCancelClicked()
+{
+    d->slotStopSearch();
+    reject();
 }
 
 #include "moc_ldapsearchdialog.cpp"
