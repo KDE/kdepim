@@ -30,10 +30,10 @@
 class QEventLoop;
 
 namespace Kleo {
-  class DecryptVerifyJob;
-  class ImportJob;
-  class VerifyDetachedJob;
-  class VerifyOpaqueJob;
+class DecryptVerifyJob;
+class ImportJob;
+class VerifyDetachedJob;
+class VerifyOpaqueJob;
 }
 
 namespace MessageViewer {
@@ -43,8 +43,8 @@ namespace MessageViewer {
 */
 class KleoJobExecutor : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit KleoJobExecutor( QObject *parent = 0 );
 
     GpgME::VerificationResult exec( Kleo::VerifyDetachedJob* job,
@@ -61,7 +61,7 @@ class KleoJobExecutor : public QObject
     GpgME::Error auditLogError() const { return mAuditLogError; }
     QString auditLogAsHtml() const;
 
-  private slots:
+private slots:
     void verificationResult( const GpgME::VerificationResult &result );
     void verificationResult( const GpgME::VerificationResult &result, const QByteArray &plainText );
     void decryptResult( const GpgME::DecryptionResult & decryptionresult,
@@ -69,7 +69,7 @@ class KleoJobExecutor : public QObject
                         const QByteArray & plainText );
     void importResult( const GpgME::ImportResult &result );
 
-  private:
+private:
     QEventLoop *mEventLoop;
     GpgME::VerificationResult mVerificationResult;
     GpgME::DecryptionResult mDecryptResult;

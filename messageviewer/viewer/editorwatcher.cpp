@@ -55,125 +55,125 @@ EditorWatcher::EditorWatcher( const KUrl & url, const QString &mimeType, bool op
     mFileModified( true ), // assume the worst unless we know better
     mDone( false )
 {
-  assert( mUrl.isLocalFile() );
-  mTimer.setSingleShot( true );
-  connect( &mTimer, SIGNAL(timeout()), SLOT(checkEditDone()) );
+    assert( mUrl.isLocalFile() );
+    mTimer.setSingleShot( true );
+    connect( &mTimer, SIGNAL(timeout()), SLOT(checkEditDone()) );
 }
 
 bool EditorWatcher::start()
 {
-  // find an editor
-  KUrl::List list;
-  list.append( mUrl );
-  KService::Ptr offer = KMimeTypeTrader::self()->preferredService( mMimeType, QLatin1String("Application") );
-  if ( mOpenWith || !offer ) {
-    AutoQPointer<KOpenWithDialog> dlg( new KOpenWithDialog( list, i18n("Edit with:"),
-                                                            QString(), mParentWidget ) );
-    const int dlgrc = dlg->exec();
-    if ( dlgrc && dlg ) {
-      offer = dlg->service();
+    // find an editor
+    KUrl::List list;
+    list.append( mUrl );
+    KService::Ptr offer = KMimeTypeTrader::self()->preferredService( mMimeType, QLatin1String("Application") );
+    if ( mOpenWith || !offer ) {
+        AutoQPointer<KOpenWithDialog> dlg( new KOpenWithDialog( list, i18n("Edit with:"),
+                                                                QString(), mParentWidget ) );
+        const int dlgrc = dlg->exec();
+        if ( dlgrc && dlg ) {
+            offer = dlg->service();
+        }
+        if ( !dlgrc || !offer )
+            return false;
     }
-    if ( !dlgrc || !offer )
-      return false;
-  }
 
 #ifdef HAVE_SYS_INOTIFY_H
-  // monitor file
-  mInotifyFd = inotify_init();
-  if ( mInotifyFd > 0 ) {
-    mInotifyWatch = inotify_add_watch( mInotifyFd, mUrl.path().toLatin1(), IN_CLOSE | IN_OPEN | IN_MODIFY );
-    if ( mInotifyWatch >= 0 ) {
-      QSocketNotifier *sn = new QSocketNotifier( mInotifyFd, QSocketNotifier::Read, this );
-      connect( sn, SIGNAL(activated(int)), SLOT(inotifyEvent()) );
-      mHaveInotify = true;
-      mFileModified = false;
+    // monitor file
+    mInotifyFd = inotify_init();
+    if ( mInotifyFd > 0 ) {
+        mInotifyWatch = inotify_add_watch( mInotifyFd, mUrl.path().toLatin1(), IN_CLOSE | IN_OPEN | IN_MODIFY );
+        if ( mInotifyWatch >= 0 ) {
+            QSocketNotifier *sn = new QSocketNotifier( mInotifyFd, QSocketNotifier::Read, this );
+            connect( sn, SIGNAL(activated(int)), SLOT(inotifyEvent()) );
+            mHaveInotify = true;
+            mFileModified = false;
+        }
+    } else {
+        kWarning() << "Failed to activate INOTIFY!";
     }
-  } else {
-    kWarning() << "Failed to activate INOTIFY!";
-  }
 #endif
 
-  // start the editor
-  const QStringList params = KRun::processDesktopExec( *offer, list, false );
-  mEditor = new KProcess( this );
-  mEditor->setProgram( params );
-  connect( mEditor, SIGNAL(finished(int,QProcess::ExitStatus)),
-           SLOT(editorExited()) );
-  mEditor->start();
-  if ( !mEditor->waitForStarted() )
-    return false;
-  mEditorRunning = true;
+    // start the editor
+    const QStringList params = KRun::processDesktopExec( *offer, list, false );
+    mEditor = new KProcess( this );
+    mEditor->setProgram( params );
+    connect( mEditor, SIGNAL(finished(int,QProcess::ExitStatus)),
+             SLOT(editorExited()) );
+    mEditor->start();
+    if ( !mEditor->waitForStarted() )
+        return false;
+    mEditorRunning = true;
 
-  mEditTime.start();
-  return true;
+    mEditTime.start();
+    return true;
 }
 
 void EditorWatcher::inotifyEvent()
 {
-  assert( mHaveInotify );
+    assert( mHaveInotify );
 #ifdef HAVE_SYS_INOTIFY_H
-  int pending = -1;
-  char buffer[4096];
-  ioctl( mInotifyFd, FIONREAD, &pending );
-  while ( pending > 0 ) {
-    int size = read( mInotifyFd, buffer, qMin( pending, (int)sizeof(buffer) ) );
-    pending -= size;
-    if ( size < 0 )
-      break; // error
-    int offset = 0;
-    while ( size > 0 ) {
-      struct inotify_event *event = (struct inotify_event *) &buffer[offset];
-      size -= sizeof( struct inotify_event ) + event->len;
-      offset += sizeof( struct inotify_event ) + event->len;
-      if ( event->mask & IN_OPEN )
-        mFileOpen = true;
-      if ( event->mask & IN_CLOSE )
-        mFileOpen = false;
-      if ( event->mask & IN_MODIFY )
-        mFileModified = true;
+    int pending = -1;
+    char buffer[4096];
+    ioctl( mInotifyFd, FIONREAD, &pending );
+    while ( pending > 0 ) {
+        int size = read( mInotifyFd, buffer, qMin( pending, (int)sizeof(buffer) ) );
+        pending -= size;
+        if ( size < 0 )
+            break; // error
+        int offset = 0;
+        while ( size > 0 ) {
+            struct inotify_event *event = (struct inotify_event *) &buffer[offset];
+            size -= sizeof( struct inotify_event ) + event->len;
+            offset += sizeof( struct inotify_event ) + event->len;
+            if ( event->mask & IN_OPEN )
+                mFileOpen = true;
+            if ( event->mask & IN_CLOSE )
+                mFileOpen = false;
+            if ( event->mask & IN_MODIFY )
+                mFileModified = true;
+        }
     }
-  }
 #endif
-  mTimer.start( 500 );
+    mTimer.start( 500 );
 
 }
 
 void EditorWatcher::editorExited()
 {
-  mEditorRunning = false;
-  mTimer.start( 500 );
+    mEditorRunning = false;
+    mTimer.start( 500 );
 }
 
 void EditorWatcher::checkEditDone()
 {
-  if ( mEditorRunning || (mFileOpen && mHaveInotify) || mDone )
-    return;
+    if ( mEditorRunning || (mFileOpen && mHaveInotify) || mDone )
+        return;
 
-  static QStringList readOnlyMimeTypes;
-  if ( readOnlyMimeTypes.isEmpty() ) {
-    readOnlyMimeTypes << QLatin1String("message/rfc822")
-                      << QLatin1String("application/pdf");
-  }
+    static QStringList readOnlyMimeTypes;
+    if ( readOnlyMimeTypes.isEmpty() ) {
+        readOnlyMimeTypes << QLatin1String("message/rfc822")
+                          << QLatin1String("application/pdf");
+    }
 
-  // protect us against double-deletion by calling this method again while
-  // the subeventloop of the message box is running
-  mDone = true;
+    // protect us against double-deletion by calling this method again while
+    // the subeventloop of the message box is running
+    mDone = true;
 
-  // check if it's a mime type that's mostly handled read-only
-  const bool isReadOnlyMimeType = ( readOnlyMimeTypes.contains( mMimeType ) ||
-                                    mMimeType.startsWith( QLatin1String("image/") ) );
+    // check if it's a mime type that's mostly handled read-only
+    const bool isReadOnlyMimeType = ( readOnlyMimeTypes.contains( mMimeType ) ||
+                                      mMimeType.startsWith( QLatin1String("image/") ) );
 
-  // nobody can edit that fast, we seem to be unable to detect
-  // when the editor will be closed
-  if ( mEditTime.elapsed() <= 3000 && !isReadOnlyMimeType ) {
-    KMessageBox::information( mParentWidget,
-                        i18n( "KMail is unable to detect when the chosen editor is closed. "
-                              "To avoid data loss, editing the attachment will be aborted." ),
-                        i18n( "Unable to edit attachment" ),
-                        QLatin1String("UnableToEditAttachment") );
-  }
+    // nobody can edit that fast, we seem to be unable to detect
+    // when the editor will be closed
+    if ( mEditTime.elapsed() <= 3000 && !isReadOnlyMimeType ) {
+        KMessageBox::information( mParentWidget,
+                                  i18n( "KMail is unable to detect when the chosen editor is closed. "
+                                        "To avoid data loss, editing the attachment will be aborted." ),
+                                  i18n( "Unable to edit attachment" ),
+                                  QLatin1String("UnableToEditAttachment") );
+    }
 
-  emit editDone( this );
-  deleteLater();
+    emit editDone( this );
+    deleteLater();
 }
 }
