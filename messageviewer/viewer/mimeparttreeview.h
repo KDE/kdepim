@@ -19,9 +19,7 @@
 #define MIMEPARTTREEVIEW_H
 
 #include <QTreeView>
-namespace KMime {
-class Content;
-}
+#include <kmime/kmime_message.h>
 
 namespace MessageViewer {
 class MimeTreeModel;
@@ -37,6 +35,7 @@ public:
     void clearModel();
     void setRoot(KMime::Content *root);
 
+    KMime::Content::List selectedContents();
 private slots:
     void slotMimePartDestroyed();
 

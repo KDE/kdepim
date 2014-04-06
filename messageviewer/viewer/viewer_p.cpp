@@ -719,17 +719,8 @@ KMime::Content::List ViewerPrivate::selectedContents()
 {
     KMime::Content::List contents;
 #ifndef QT_NO_TREEVIEW
-    QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
-    QModelIndexList selectedRows = selectionModel->selectedRows();
-
-    Q_FOREACH( const QModelIndex &index, selectedRows )
-    {
-        KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
-        if ( content )
-            contents.append( content );
-    }
+    contents = mMimePartTree->selectedContents();
 #endif
-
     return contents;
 }
 

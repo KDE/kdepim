@@ -82,3 +82,21 @@ void MimePartTreeView::setRoot(KMime::Content *root)
     delete mMimePartModel->root();
     mMimePartModel->setRoot( root );
 }
+
+KMime::Content::List MimePartTreeView::selectedContents()
+{
+    KMime::Content::List contents;
+#ifndef QT_NO_TREEVIEW
+    QItemSelectionModel *selectModel = selectionModel();
+    QModelIndexList selectedRows = selectModel->selectedRows();
+
+    Q_FOREACH( const QModelIndex &index, selectedRows )
+    {
+        KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
+        if ( content )
+            contents.append( content );
+    }
+#endif
+
+    return contents;
+}
