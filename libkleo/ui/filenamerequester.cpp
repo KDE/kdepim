@@ -34,6 +34,7 @@
 
 #include <KIcon>
 #include <KLocalizedString>
+#include <KLineEdit>
 
 #include <QLayout>
 #include <QToolButton>
@@ -64,7 +65,7 @@ private:
     QDir::Filters filter;
 #endif
 
-    QLineEdit    lineedit;
+    KLineEdit    lineedit;
     QToolButton  button;
     QHBoxLayout hlay;
 
@@ -98,7 +99,7 @@ FileNameRequester::Private::Private( FileNameRequester * qq )
 #ifndef QT_NO_DIRMODEL
     lineedit.setCompleter( &completer );
 #endif
-
+    lineedit.setClearButtonShown(true);
     hlay.setMargin( 0 );
     hlay.addWidget( &lineedit );
     hlay.addWidget( &button );
