@@ -38,9 +38,9 @@ namespace KPIM {
  */
 class KDEPIM_EXPORT OpenEmailAddressJob : public KJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new open email address job.
      *
@@ -60,7 +60,7 @@ class KDEPIM_EXPORT OpenEmailAddressJob : public KJob
      */
     virtual void start();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private* const d;
