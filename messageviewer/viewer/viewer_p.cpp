@@ -381,7 +381,10 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
     const int choice = dialog.exec();
 
     if ( choice == AttachmentDialog::Save ) {
-        Util::saveContents( mMainWindow, KMime::Content::List() << node );
+         KUrl currentUrl;
+         if (Util::saveContents( mMainWindow, KMime::Content::List() << node, currentUrl )) {
+            showOpenAttachmentFolderWidget(currentUrl);
+        }
     }
     else if ( choice == AttachmentDialog::Open ) { // Open
         if( offer )
@@ -2546,18 +2549,26 @@ void ViewerPrivate::slotAttachmentOpen()
 #endif
 }
 
+void ViewerPrivate::showOpenAttachmentFolderWidget(const KUrl &url)
+{
+    mOpenAttachmentFolderWidget->setFolder(url);
+    mOpenAttachmentFolderWidget->slotShowWarning();
+}
+
 void ViewerPrivate::slotAttachmentSaveAs()
 {
     const KMime::Content::List contents = selectedContents();
-    if (Util::saveAttachments( contents, mMainWindow ))
-        mOpenAttachmentFolderWidget->slotShowWarning();
+    KUrl currentUrl;
+    if (Util::saveAttachments( contents, mMainWindow, currentUrl))
+        showOpenAttachmentFolderWidget(currentUrl);
 }
 
 void ViewerPrivate::slotAttachmentSaveAll()
 {
     const KMime::Content::List contents = Util::extractAttachments( mMessage.get() );
-    if (Util::saveAttachments( contents, mMainWindow ))
-        mOpenAttachmentFolderWidget->slotShowWarning();
+    KUrl currentUrl;
+    if (Util::saveAttachments( contents, mMainWindow, currentUrl ))
+        showOpenAttachmentFolderWidget(currentUrl);
 }
 
 void ViewerPrivate::slotAttachmentView()
@@ -2694,7 +2705,10 @@ void ViewerPrivate::slotHandleAttachment( int choice )
     } else if ( choice == Viewer::Properties ) {
         attachmentProperties( mCurrentContent );
     } else if ( choice == Viewer::Save ) {
-        Util::saveContents( mMainWindow, KMime::Content::List() << mCurrentContent );
+         KUrl currentUrl;
+         if (Util::saveContents( mMainWindow, KMime::Content::List() << mCurrentContent, currentUrl )) {
+            showOpenAttachmentFolderWidget(currentUrl);
+        }
     } else if ( choice == Viewer::OpenWith ) {
         attachmentOpenWith( mCurrentContent );
     } else if ( choice == Viewer::Open ) {

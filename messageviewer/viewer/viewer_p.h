@@ -459,6 +459,8 @@ public:
 
     bool isAShortUrl(const KUrl &url) const;
 
+    void showOpenAttachmentFolderWidget(const KUrl &url);
+
 private slots:
     void slotModifyItemDone(KJob* job);
     void slotMessageMayBeAScam();

@@ -707,6 +707,12 @@ KAction *Viewer::createEventAction()
     return d->mCreateEventAction;
 }
 
+void Viewer::showOpenAttachmentFolderWidget(const KUrl &url)
+{
+    Q_D( Viewer );
+    d->showOpenAttachmentFolderWidget(url);
+}
+
 }
 
 

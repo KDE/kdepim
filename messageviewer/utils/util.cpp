@@ -187,7 +187,7 @@ QList<KMime::Content*> Util::extractAttachments( const KMime::Message *message )
     return result;
 }
 
-bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents )
+bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents, KUrl &currentFolder )
 {
     KUrl url, dirUrl;
     const bool multiple = (contents.count() > 1);
@@ -202,6 +202,7 @@ bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents
 
         // we may not get a slash-terminated url out of KFileDialog
         dirUrl.adjustPath( KUrl::AddTrailingSlash );
+        currentFolder = dirUrl;
     } else {
         // only one item, get the desired filename
         KMime::Content *content = contents.first();
@@ -219,8 +220,8 @@ bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents
         if ( url.isEmpty() ) {
             return false;
         }
+        currentFolder = KUrl(url.upUrl());
     }
-
     QMap< QString, int > renameNumbering;
 
     bool globalResult = true;
@@ -450,14 +451,14 @@ int Util::getWritePermissions()
     }
 }
 
-bool Util::saveAttachments( const KMime::Content::List& contents, QWidget *parent )
+bool Util::saveAttachments( const KMime::Content::List& contents, QWidget *parent, KUrl &currentFolder )
 {
     if ( contents.isEmpty() ) {
         KMessageBox::information( parent, i18n( "Found no attachments to save." ) );
         return false;
     }
 
-    return Util::saveContents( parent, contents );
+    return Util::saveContents( parent, contents, currentFolder );
 }
 
 bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget *parent, bool appendMessages )

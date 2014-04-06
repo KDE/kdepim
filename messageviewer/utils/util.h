@@ -97,7 +97,7 @@ int MESSAGEVIEWER_EXPORT getWritePermissions();
 QList<KMime::Content*> MESSAGEVIEWER_EXPORT allContents( const KMime::Content *message );
 QList<KMime::Content*> MESSAGEVIEWER_EXPORT extractAttachments( const KMime::Message *message );
 bool MESSAGEVIEWER_EXPORT saveContents( QWidget *parent,
-                                        const QList<KMime::Content*> &contents );
+                                        const QList<KMime::Content*> &contents, KUrl &currentFolder );
 bool MESSAGEVIEWER_EXPORT saveContent( QWidget *parent, KMime::Content* content,
                                        const KUrl& url );
 
@@ -122,7 +122,7 @@ QString MESSAGEVIEWER_EXPORT fileNameForMimetype( const QString &mimeType, int i
                                                   const QString &fallbackFileName2 = QString() );
 bool MESSAGEVIEWER_EXPORT saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget*parent, bool appendMessages = false);
 
-bool MESSAGEVIEWER_EXPORT saveAttachments( const KMime::Content::List& contents, QWidget *parent );
+bool MESSAGEVIEWER_EXPORT saveAttachments( const KMime::Content::List& contents, QWidget *parent, KUrl &currentFolder );
 
 bool MESSAGEVIEWER_EXPORT speakSelectedText( const QString& text, QWidget *parent);
 MESSAGEVIEWER_EXPORT KAction* createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup, QObject *parent );
