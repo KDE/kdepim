@@ -204,6 +204,7 @@ QVariant MimeTreeModel::data(const QModelIndex & index, int role) const
     if ( role == Qt::ToolTipRole ) {
         // TODO
         //return d->root->indexForContent( content ).toString();
+        return QVariant();
     }
     if ( role == Qt::DisplayRole ) {
         switch( index.column() ) {
