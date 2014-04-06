@@ -240,7 +240,7 @@ void LdapClient::Private::finishCurrentObject()
     for ( KLDAP::LdapAttrValue::ConstIterator it = objectclasses.constBegin();
           it != endValue; ++it ) {
 
-        QByteArray sClass = (*it).toLower();
+        const QByteArray sClass = (*it).toLower();
         if ( sClass == "groupofnames" || sClass == "kolabgroupofnames" ) {
             groupofnames = true;
         }
@@ -252,7 +252,7 @@ void LdapClient::Private::finishCurrentObject()
             // No explicit mail address found so far?
             // Fine, then we use the address stored in the DN.
             QString sMail;
-            QStringList lMail = mCurrentObject.dn().toString().split( QLatin1String(",dc="), QString::SkipEmptyParts );
+            const QStringList lMail = mCurrentObject.dn().toString().split( QLatin1String(",dc="), QString::SkipEmptyParts );
             const int n = lMail.count();
             if ( n ) {
                 if ( lMail.first().toLower().startsWith( QLatin1String( "cn=" ) ) ) {
@@ -291,7 +291,7 @@ void LdapClient::Private::parseLDIF( const QByteArray &data )
         case KLDAP::Ldif::Item:
         {
             name = mLdif.attr();
-            QByteArray value = mLdif.value();
+            const QByteArray value = mLdif.value();
             mCurrentObject.addValue( name, value );
         }
             break;

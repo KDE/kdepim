@@ -904,6 +904,7 @@ void LdapSearchDialog::slotUser1()
         }
     }
 
+    d->slotStopSearch();
     emit contactsAdded();
 
     accept();
