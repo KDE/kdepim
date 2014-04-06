@@ -22,6 +22,7 @@
 #include <KRun>
 
 #include <QTimer>
+#include <QDebug>
 
 using namespace MessageViewer;
 
@@ -69,6 +70,7 @@ void OpenAttachmentFolderWidget::slotHideWarning()
 
 void OpenAttachmentFolderWidget::slotShowWarning()
 {
+    qDebug()<<" void OpenAttachmentFolderWidget::slotShowWarning()";
     if (mTimer->isActive())
         mTimer->stop();
     mTimer->start();

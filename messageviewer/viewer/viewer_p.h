@@ -43,7 +43,10 @@ namespace KIO {
 class Job;
 }
 
-namespace Kleo { class SpecialJob; }
+namespace Kleo
+{
+class SpecialJob;
+}
 
 class KAction;
 class KActionCollection;
@@ -56,6 +59,14 @@ class QPoint;
 class QSplitter;
 class QModelIndex;
 class QTreeView;
+
+namespace GrantleeTheme {
+class GrantleeThemeManager;
+}
+
+namespace PimCommon {
+class TranslatorWidget;
+}
 
 namespace MessageViewer {
 class TodoEdit;
@@ -74,17 +85,7 @@ class HtmlStatusBar;
 class MailWebView;
 class ScamDetectionWarningWidget;
 class MimePartTreeView;
-}
-
-namespace GrantleeTheme {
-class GrantleeThemeManager;
-}
-
-namespace PimCommon {
-class TranslatorWidget;
-}
-
-namespace MessageViewer {
+class OpenAttachmentFolderWidget;
 
 /**
 \brief Private class for the Viewer, the main widget in the messageviewer library.
@@ -725,6 +726,7 @@ public:
     ScamDetectionWarningWidget *mScamDetectionWarning;
     MessageViewer::TodoEdit *mCreateTodo;
     MessageViewer::EventEdit *mCreateEvent;
+    MessageViewer::OpenAttachmentFolderWidget *mOpenAttachmentFolderWidget;
     // zoom Factor
     static const qreal zoomBy;
     qreal mZoomFactor;

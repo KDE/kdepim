@@ -35,6 +35,7 @@
 #include "widgets/todoedit.h"
 #include "widgets/eventedit.h"
 #include "viewer/mimeparttreeview.h"
+#include "widgets/openattachmentfolderwidget.h"
 
 #ifdef MESSAGEVIEWER_READER_HTML_DEBUG
 #include "htmlwriter/filehtmlwriter.h"
@@ -218,6 +219,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
       mShowFullCcAddressList( true ),
       mPreviouslyViewedItem( -1 ),
       mScamDetectionWarning( 0 ),
+      mOpenAttachmentFolderWidget( 0 ),
       mZoomFactor( 100 )
 {
     mMimePartTree = 0;
@@ -1303,6 +1305,7 @@ void ViewerPrivate::resetStateForNewMessage()
     mCreateTodo->slotCloseWidget();
     mCreateEvent->slotCloseWidget();
     mScamDetectionWarning->setVisible(false);
+    mOpenAttachmentFolderWidget->setVisible(false);
 
     if ( mPrinting ) {
         if (MessageViewer::GlobalSettings::self()->respectExpandCollapseSettings()) {
@@ -1496,6 +1499,8 @@ void ViewerPrivate::createWidgets() {
     mColorBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Expanding );
 
     mScamDetectionWarning = new ScamDetectionWarningWidget(readerBox);
+
+    mOpenAttachmentFolderWidget = new OpenAttachmentFolderWidget(readerBox);
 
     mViewer = new MailWebView( mActionCollection, readerBox );
     mViewer->setObjectName( QLatin1String("mViewer") );
@@ -2544,13 +2549,15 @@ void ViewerPrivate::slotAttachmentOpen()
 void ViewerPrivate::slotAttachmentSaveAs()
 {
     const KMime::Content::List contents = selectedContents();
-    Util::saveAttachments( contents, mMainWindow );
+    if (Util::saveAttachments( contents, mMainWindow ))
+        mOpenAttachmentFolderWidget->slotShowWarning();
 }
 
 void ViewerPrivate::slotAttachmentSaveAll()
 {
     const KMime::Content::List contents = Util::extractAttachments( mMessage.get() );
-    Util::saveAttachments( contents, mMainWindow );
+    if (Util::saveAttachments( contents, mMainWindow ))
+        mOpenAttachmentFolderWidget->slotShowWarning();
 }
 
 void ViewerPrivate::slotAttachmentView()

@@ -31,9 +31,11 @@ public:
 
     void setFolder(const KUrl &url);
 
-private slots:
+public slots:
     void slotShowWarning();
     void slotHideWarning();
+
+private slots:
     void slotOpenAttachmentFolder();
     void slotTimeOut();
 private:
