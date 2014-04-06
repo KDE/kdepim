@@ -86,6 +86,8 @@ private:
         emit q->saveAsRequested( q->selectedCertificates() );
     }
 
+    void readConfig();
+    void writeConfig();
     void enableDisableWidgets();
 
     QString searchText() const { return ui.findED->text().trimmed(); }
@@ -151,13 +153,35 @@ LookupCertificatesDialog::Private::Private( LookupCertificatesDialog * qq )
 
 LookupCertificatesDialog::Private::~Private() {}
 
+
+void LookupCertificatesDialog::Private::readConfig()
+{
+    KConfigGroup dialog( KGlobal::config(), "LookupCertificatesDialog" );
+    const QSize size = dialog.readEntry( "Size", QSize(600, 400) );
+    if ( size.isValid() ) {
+        q->resize( size );
+    }
+}
+
+void LookupCertificatesDialog::Private::writeConfig()
+{
+    KConfigGroup dialog( KGlobal::config(), "LookupCertificatesDialog" );
+    dialog.writeEntry( "Size", q->size() );
+    dialog.sync();
+}
+
+
 LookupCertificatesDialog::LookupCertificatesDialog( QWidget * p, Qt::WindowFlags f )
     : QDialog( p, f ), d( new Private( this ) )
 {
-
+    d->ui.findPB->setEnabled(false);
+    d->readConfig();
 }
 
-LookupCertificatesDialog::~LookupCertificatesDialog() {}
+LookupCertificatesDialog::~LookupCertificatesDialog()
+{
+    d->writeConfig();
+}
 
 void LookupCertificatesDialog::setCertificates( const std::vector<Key> & certs ) {
     d->model->setKeys( certs );

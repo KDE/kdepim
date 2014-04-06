@@ -34,28 +34,28 @@
 
 
 namespace KMime {
-  class Content;
+class Content;
 }
 
 namespace MessageViewer {
-  class ObjectTreeParser;
-  class ProcessResult;
+class ObjectTreeParser;
+class ProcessResult;
 }
 
 namespace MessageViewer {
 
 class BodyPartFormatter
 {
-  const BodyPartFormatter & operator=( const BodyPartFormatter & );
-  BodyPartFormatter( const BodyPartFormatter & );
+    const BodyPartFormatter & operator=( const BodyPartFormatter & );
+    BodyPartFormatter( const BodyPartFormatter & );
 protected:
-  BodyPartFormatter() {}
+    BodyPartFormatter() {}
 public:
-  virtual ~BodyPartFormatter() {}
+    virtual ~BodyPartFormatter() {}
 
-  virtual bool process( ObjectTreeParser *, KMime::Content *, ProcessResult & ) const = 0;
+    virtual bool process( ObjectTreeParser *, KMime::Content *, ProcessResult & ) const = 0;
 
-  static const BodyPartFormatter * createFor( const char * type, const char * subtype );
+    static const BodyPartFormatter * createFor( const char * type, const char * subtype );
 };
 
 }

@@ -88,6 +88,7 @@ set(libmessageviewer_viewer_SRCS
   viewer/viewer_p.cpp
   viewer/messagedisplayformatattribute.cpp
   viewer/urlhandlermanager.cpp
+  viewer/mimeparttreeview.cpp
 )
 
 set(libmessageviewer_widgets_SRCS
@@ -99,6 +100,7 @@ set(libmessageviewer_widgets_SRCS
   widgets/invitationsettings.cpp
   widgets/todoedit.cpp
   widgets/eventedit.cpp
+  widgets/openattachmentfolderwidget.cpp
 )
 
 set(libmessageviewer_header_SRCS

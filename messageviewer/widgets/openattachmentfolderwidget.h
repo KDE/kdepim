@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,16 +15,33 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef UBUNTUONEUTIL_H
-#define UBUNTUONEUTIL_H
+#ifndef OPENATTACHMENTFOLDERWIDGET_H
+#define OPENATTACHMENTFOLDERWIDGET_H
 
-#include <QStringList>
-
-namespace PimCommon {
-namespace UbuntuOneUtil
+#include <KMessageWidget>
+#include <KUrl>
+class QTimer;
+namespace MessageViewer {
+class OpenAttachmentFolderWidget : public KMessageWidget
 {
-QStringList getListFolder(const QString &data);
-}
+    Q_OBJECT
+public:
+    explicit OpenAttachmentFolderWidget(QWidget *parent=0);
+    ~OpenAttachmentFolderWidget();
+
+    void setFolder(const KUrl &url);
+
+public slots:
+    void slotShowWarning();
+    void slotHideWarning();
+
+private slots:
+    void slotOpenAttachmentFolder();
+    void slotTimeOut();
+private:
+    KUrl mUrl;
+    QTimer *mTimer;
+};
 }
 
-#endif // UBUNTUONEUTIL_H
+#endif // OPENATTACHMENTFOLDERWIDGET_H

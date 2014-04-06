@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,16 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef TEST_UbuntuOne_GUI_H
-#define TEST_UbuntuOne_GUI_H
+#ifndef CRYPTOSTATEINDICATORWIDGET_H
+#define CRYPTOSTATEINDICATORWIDGET_H
 
 #include <QWidget>
-#include "pimcommon/storageservice/tests/servicetestwidget.h"
-class UbuntuOneTestWidget : public ServiceTestWidget
+class QLabel;
+
+class CryptoStateIndicatorWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit UbuntuOneTestWidget(QWidget *parent=0);
+    explicit CryptoStateIndicatorWidget(QWidget *parent=0);
+    ~CryptoStateIndicatorWidget();
+
+    void updateSignatureAndEncrypionStateIndicators(bool isSign, bool isEncrypted);
+
+private:
+    QLabel *mSignatureStateIndicator;
+    QLabel *mEncryptionStateIndicator;
+    bool mShowAlwaysIndicator;
 };
 
-#endif
+#endif // CRYPTOSTATEINDICATORWIDGET_H

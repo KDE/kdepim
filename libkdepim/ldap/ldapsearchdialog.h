@@ -84,6 +84,7 @@ protected Q_SLOTS:
     void slotUser1();
     void slotUser2();
     void slotCustomContextMenuRequested(const QPoint&);
+    void slotCancelClicked();
 
 protected:
     void closeEvent( QCloseEvent* );

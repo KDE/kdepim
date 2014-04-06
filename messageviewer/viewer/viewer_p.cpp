@@ -34,6 +34,8 @@
 #include "adblock/adblockmanager.h"
 #include "widgets/todoedit.h"
 #include "widgets/eventedit.h"
+#include "viewer/mimeparttreeview.h"
+#include "widgets/openattachmentfolderwidget.h"
 
 #ifdef MESSAGEVIEWER_READER_HTML_DEBUG
 #include "htmlwriter/filehtmlwriter.h"
@@ -217,8 +219,10 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
       mShowFullCcAddressList( true ),
       mPreviouslyViewedItem( -1 ),
       mScamDetectionWarning( 0 ),
+      mOpenAttachmentFolderWidget( 0 ),
       mZoomFactor( 100 )
 {
+    mMimePartTree = 0;
     if ( !mainWindow )
         mMainWindow = aParent;
     if ( _k_attributeInitialized.testAndSetAcquire( 0, 1 ) ) {
@@ -278,7 +282,6 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
 
 ViewerPrivate::~ViewerPrivate()
 {
-    saveMimePartTreeConfig();
     GlobalSettings::self()->writeConfig();
     delete mHtmlWriter; mHtmlWriter = 0;
     delete mViewer; mViewer = 0;
@@ -286,22 +289,6 @@ ViewerPrivate::~ViewerPrivate()
     mNodeHelper->forceCleanTempFiles();
     delete mNodeHelper;
     delete mThemeManager;
-}
-
-void ViewerPrivate::saveMimePartTreeConfig()
-{
-#ifndef QT_NO_TREEVIEW
-    KConfigGroup grp( GlobalSettings::self()->config(), "MimePartTree" );
-    grp.writeEntry( "State", mMimePartTree->header()->saveState() );
-#endif
-}
-
-void ViewerPrivate::restoreMimePartTreeConfig()
-{
-#ifndef QT_NO_TREEVIEW
-    KConfigGroup grp( GlobalSettings::self()->config(), "MimePartTree" );
-    mMimePartTree->header()->restoreState( grp.readEntry( "State", QByteArray() ) );
-#endif
 }
 
 
@@ -394,7 +381,10 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
     const int choice = dialog.exec();
 
     if ( choice == AttachmentDialog::Save ) {
-        Util::saveContents( mMainWindow, KMime::Content::List() << node );
+         KUrl currentUrl;
+         if (Util::saveContents( mMainWindow, KMime::Content::List() << node, currentUrl )) {
+            showOpenAttachmentFolderWidget(currentUrl);
+        }
     }
     else if ( choice == AttachmentDialog::Open ) { // Open
         if( offer )
@@ -432,8 +422,8 @@ bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
          != KMessageBox::Continue ) {
         return false; //cancelled
     }
-    delete mMimePartModel->root();
-    mMimePartModel->setRoot( 0 ); //don't confuse the model
+    //don't confuse the model
+    mMimePartTree->clearModel();
     QString filename;
     QString name;
     QByteArray mimetype;
@@ -468,7 +458,7 @@ bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
     parent->assemble();
 
     KMime::Message* modifiedMessage = mNodeHelper->messageWithExtraContent( mMessage.get() );
-    mMimePartModel->setRoot( modifiedMessage );
+    mMimePartTree->mimePartModel()->setRoot( modifiedMessage );
     mMessageItem.setPayloadFromData( modifiedMessage->encodedContent() );
     Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
     job->disableRevisionCheck();
@@ -734,17 +724,8 @@ KMime::Content::List ViewerPrivate::selectedContents()
 {
     KMime::Content::List contents;
 #ifndef QT_NO_TREEVIEW
-    QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
-    QModelIndexList selectedRows = selectionModel->selectedRows();
-
-    Q_FOREACH( const QModelIndex &index, selectedRows )
-    {
-        KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
-        if ( content )
-            contents.append( content );
-    }
+    contents = mMimePartTree->selectedContents();
 #endif
-
     return contents;
 }
 
@@ -883,8 +864,7 @@ void ViewerPrivate::displayMessage()
     }
 
     parseContent( mMessage.get() );
-    delete mMimePartModel->root();
-    mMimePartModel->setRoot( mNodeHelper->messageWithExtraContent( mMessage.get() ) );
+    mMimePartTree->setRoot( mNodeHelper->messageWithExtraContent( mMessage.get() ) );
     mColorBar->update();
 
     htmlWriter()->queue(QLatin1String("</body></html>"));
@@ -1319,8 +1299,7 @@ void ViewerPrivate::resetStateForNewMessage()
     mMessage.reset();
     mNodeHelper->clear();
     mMessagePartNode = 0;
-    delete mMimePartModel->root();
-    mMimePartModel->setRoot( 0 );
+    mMimePartTree->clearModel();
     mSavedRelativePosition = 0;
     setShowSignatureDetails( false );
     mShowRawToltecMail = !GlobalSettings::self()->showToltecReplacementText();
@@ -1329,6 +1308,7 @@ void ViewerPrivate::resetStateForNewMessage()
     mCreateTodo->slotCloseWidget();
     mCreateEvent->slotCloseWidget();
     mScamDetectionWarning->setVisible(false);
+    mOpenAttachmentFolderWidget->setVisible(false);
 
     if ( mPrinting ) {
         if (MessageViewer::GlobalSettings::self()->respectExpandCollapseSettings()) {
@@ -1351,8 +1331,7 @@ void ViewerPrivate::setMessageInternal( const KMime::Message::Ptr message,
         mNodeHelper->setOverrideCodec( mMessage.get(), overrideCodec() );
     }
 
-    delete mMimePartModel->root();
-    mMimePartModel->setRoot( mNodeHelper->messageWithExtraContent( message.get() ) );
+    mMimePartTree->setRoot( mNodeHelper->messageWithExtraContent( message.get() ) );
     update( updateMode );
 }
 
@@ -1504,19 +1483,9 @@ void ViewerPrivate::createWidgets() {
     mSplitter->setChildrenCollapsible( false );
     vlay->addWidget( mSplitter );
 #ifndef QT_NO_TREEVIEW
-    mMimePartTree = new QTreeView( mSplitter );
-    mMimePartTree->setObjectName( QLatin1String("mMimePartTree") );
-    mMimePartModel = new MimeTreeModel( mMimePartTree );
-    mMimePartTree->setModel( mMimePartModel );
-    mMimePartTree->setSelectionMode( QAbstractItemView::ExtendedSelection );
-    mMimePartTree->setSelectionBehavior( QAbstractItemView::SelectRows );
+    mMimePartTree = new MimePartTreeView( mSplitter );
     connect(mMimePartTree, SIGNAL(activated(QModelIndex)), this, SLOT(slotMimePartSelected(QModelIndex)) );
-    connect(mMimePartTree, SIGNAL(destroyed(QObject*)), this, SLOT(slotMimePartDestroyed()) );
-    mMimePartTree->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(mMimePartTree, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slotMimeTreeContextMenuRequested(QPoint)) );
-    mMimePartTree->header()->setResizeMode( QHeaderView::ResizeToContents );
-    connect(mMimePartModel,SIGNAL(modelReset()),mMimePartTree,SLOT(expandAll()));
-    restoreMimePartTreeConfig();
 #endif
 
     mBox = new KHBox( mSplitter );
@@ -1533,6 +1502,8 @@ void ViewerPrivate::createWidgets() {
     mColorBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Expanding );
 
     mScamDetectionWarning = new ScamDetectionWarningWidget(readerBox);
+
+    mOpenAttachmentFolderWidget = new OpenAttachmentFolderWidget(readerBox);
 
     mViewer = new MailWebView( mActionCollection, readerBox );
     mViewer->setObjectName( QLatin1String("mViewer") );
@@ -1553,15 +1524,6 @@ void ViewerPrivate::createWidgets() {
     mSplitter->setStretchFactor( mSplitter->indexOf(mMimePartTree), 0 );
 #endif
     mSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
-}
-
-void ViewerPrivate::slotMimePartDestroyed()
-{
-#ifndef QT_NO_TREEVIEW
-    //root is either null or a modified tree that we need to clean up
-    delete mMimePartModel->root();
-    mMimePartModel->setRoot(0);
-#endif
 }
 
 void ViewerPrivate::createActions()
@@ -2329,7 +2291,6 @@ void ViewerPrivate::updateReaderWin()
         mColorBar->hide();
 #ifndef QT_NO_TREEVIEW
         mMimePartTree->hide();
-        //FIXME(Andras)  mMimePartTree->clearAndResetSortOrder();
 #endif
         htmlWriter()->begin( QString() );
         htmlWriter()->write( mCSSHelper->htmlHead( mUseFixedFont ) + QLatin1String("</body></html>") );
@@ -2347,7 +2308,7 @@ void ViewerPrivate::updateReaderWin()
 void ViewerPrivate::slotMimePartSelected( const QModelIndex &index )
 {
     KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
-    if ( !mMimePartModel->parent( index ).isValid() && index.row() == 0 ) {
+    if ( !mMimePartTree->mimePartModel()->parent( index ).isValid() && index.row() == 0 ) {
         update( Viewer::Force );
     } else {
         setMessagePart( content );
@@ -2588,16 +2549,26 @@ void ViewerPrivate::slotAttachmentOpen()
 #endif
 }
 
+void ViewerPrivate::showOpenAttachmentFolderWidget(const KUrl &url)
+{
+    mOpenAttachmentFolderWidget->setFolder(url);
+    mOpenAttachmentFolderWidget->slotShowWarning();
+}
+
 void ViewerPrivate::slotAttachmentSaveAs()
 {
     const KMime::Content::List contents = selectedContents();
-    Util::saveAttachments( contents, mMainWindow );
+    KUrl currentUrl;
+    if (Util::saveAttachments( contents, mMainWindow, currentUrl))
+        showOpenAttachmentFolderWidget(currentUrl);
 }
 
 void ViewerPrivate::slotAttachmentSaveAll()
 {
     const KMime::Content::List contents = Util::extractAttachments( mMessage.get() );
-    Util::saveAttachments( contents, mMainWindow );
+    KUrl currentUrl;
+    if (Util::saveAttachments( contents, mMainWindow, currentUrl ))
+        showOpenAttachmentFolderWidget(currentUrl);
 }
 
 void ViewerPrivate::slotAttachmentView()
@@ -2734,7 +2705,10 @@ void ViewerPrivate::slotHandleAttachment( int choice )
     } else if ( choice == Viewer::Properties ) {
         attachmentProperties( mCurrentContent );
     } else if ( choice == Viewer::Save ) {
-        Util::saveContents( mMainWindow, KMime::Content::List() << mCurrentContent );
+         KUrl currentUrl;
+         if (Util::saveContents( mMainWindow, KMime::Content::List() << mCurrentContent, currentUrl )) {
+            showOpenAttachmentFolderWidget(currentUrl);
+        }
     } else if ( choice == Viewer::OpenWith ) {
         attachmentOpenWith( mCurrentContent );
     } else if ( choice == Viewer::Open ) {
@@ -2777,14 +2751,8 @@ void ViewerPrivate::slotCopySelectedText()
 
 void ViewerPrivate::viewerSelectionChanged()
 {
-    if( mViewer->selectedText().isEmpty() )
-    {
-        mActionCollection->action( QLatin1String("kmail_copy") )->setEnabled( false );
-    } else {
-        mActionCollection->action( QLatin1String("kmail_copy") )->setEnabled( true );
-    }
+    mActionCollection->action( QLatin1String("kmail_copy") )->setEnabled( !mViewer->selectedText().isEmpty() );
 }
-
 
 void ViewerPrivate::selectAll()
 {

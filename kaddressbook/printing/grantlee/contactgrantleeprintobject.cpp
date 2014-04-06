@@ -231,3 +231,43 @@ QString ContactGrantleePrintObject::logo() const
         return photoStr;
     }
 }
+
+QString ContactGrantleePrintObject::anniversary() const
+{
+    const QDate anniversary = QDate::fromString( mAddress.custom( QLatin1String( "KADDRESSBOOK" ),
+                                                  QLatin1String( "X-Anniversary" ) ), Qt::ISODate );
+    if ( anniversary.isValid() ) {
+        return (KGlobal::locale()->formatDate( anniversary ) );
+    }
+    return QString();
+}
+
+QString ContactGrantleePrintObject::profession() const
+{
+    return mAddress.custom( QLatin1String( "KADDRESSBOOK" ),
+                            QLatin1String( "X-Profession" ) );
+}
+
+QString ContactGrantleePrintObject::office() const
+{
+    return mAddress.custom( QLatin1String( "KADDRESSBOOK" ),
+                            QLatin1String( "X-Office" ) );
+}
+
+QString ContactGrantleePrintObject::manager() const
+{
+    return mAddress.custom( QLatin1String( "KADDRESSBOOK" ),
+                            QLatin1String( "X-ManagersName" ) );
+}
+
+QString ContactGrantleePrintObject::assistant() const
+{
+    return mAddress.custom( QLatin1String( "KADDRESSBOOK" ),
+                            QLatin1String( "X-AssistantsName" ) );
+}
+
+QString ContactGrantleePrintObject::spouse() const
+{
+    return mAddress.custom( QLatin1String( "KADDRESSBOOK" ),
+                            QLatin1String( "X-SpousesName" ) );
+}

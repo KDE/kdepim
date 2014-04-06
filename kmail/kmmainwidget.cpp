@@ -2401,7 +2401,6 @@ void KMMainWidget::slotSaveAttachments()
     const QList<Akonadi::Item> selectedMessages = mMessagePane->selectionAsMessageItemList();
     if ( selectedMessages.isEmpty() )
         return;
-
     // Avoid re-downloading in the common case that only one message is selected, and the message
     // is also displayed in the viewer. For this, create a dummy item without a parent collection / item id,
     // so that KMCommand doesn't download it.
@@ -2411,7 +2410,7 @@ void KMMainWidget::slotSaveAttachments()
          selectedMessages.first().id() == mMsgView->message().id() ) {
         Akonadi::Item dummyItem;
         dummyItem.setPayload<KMime::Message::Ptr>( mMsgView->message().payload<KMime::Message::Ptr>() );
-        saveCommand = new KMSaveAttachmentsCommand( this, dummyItem );
+        saveCommand = new KMSaveAttachmentsCommand( this, dummyItem, mMsgView->viewer() );
     } else {
         saveCommand = new KMSaveAttachmentsCommand( this, selectedMessages );
     }
@@ -4438,6 +4437,21 @@ void KMMainWidget::updateVacationScriptStatus( bool active, const QString &serve
 QWidget * KMMainWidget::vacationScriptIndicator() const
 {
     return mVacationScriptIndicator;
+}
+
+void KMMainWidget::updateVacationScriptStatus()
+{
+    updateVacationScriptStatus( mVacationIndicatorActive );
+}
+
+KMail::TagActionManager *KMMainWidget::tagActionManager() const
+{
+    return mTagActionManager;
+}
+
+KMail::FolderShortcutActionManager *KMMainWidget::folderShortcutActionManager() const
+{
+    return mFolderShortcutActionManager;
 }
 
 void KMMainWidget::slotMessageSelected(const Akonadi::Item &item)

@@ -71,8 +71,8 @@ RecipientsEditor::RecipientsEditor( QWidget* parent )
 
     layout()->addWidget( mSideWidget );
 
-    connect( mSideWidget, SIGNAL(pickedRecipient(Recipient)),
-             SLOT(slotPickedRecipient(Recipient)) );
+    connect( mSideWidget, SIGNAL(pickedRecipient(Recipient,bool&)),
+             SLOT(slotPickedRecipient(Recipient,bool&)) );
     connect( mSideWidget, SIGNAL(saveDistributionList()),
              SLOT(saveDistributionList()) );
 
@@ -89,9 +89,9 @@ RecipientsEditor::~RecipientsEditor()
 {
 }
 
-void RecipientsEditor::addRecipient( const QString& recipient, Recipient::Type type )
+bool RecipientsEditor::addRecipient( const QString& recipient, Recipient::Type type )
 {
-    addData( Recipient::Ptr(  new Recipient ( recipient, type ) ) );
+    return addData( Recipient::Ptr(  new Recipient ( recipient, type ) ) );
 }
 
 void RecipientsEditor::setRecipientString( const QList< KMime::Types::Mailbox >& mailboxes, Recipient::Type type )
@@ -191,10 +191,10 @@ void MessageComposer::RecipientsEditor::setRecentAddressConfig(KConfig* config)
     }
 }
 
-void MessageComposer::RecipientsEditor::slotPickedRecipient( const Recipient& rec )
+void MessageComposer::RecipientsEditor::slotPickedRecipient( const Recipient& rec, bool &tooManyAddress )
 {
     Recipient::Type t = rec.type();
-    addRecipient( rec.email(), t == Recipient::Undefined ? Recipient::To : t );
+    tooManyAddress = addRecipient( rec.email(), t == Recipient::Undefined ? Recipient::To : t );
     mModified = true;
 }
 

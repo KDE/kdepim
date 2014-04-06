@@ -45,6 +45,7 @@ int main( int argc, char **argv )
     }
     KUniqueApplication a;
     KGlobal::locale()->insertCatalog( QLatin1String("libksieve") );
+    KGlobal::locale()->insertCatalog( QLatin1String("libpimcommon") );
     SieveEditorMainWindow *mw = new SieveEditorMainWindow();
     mw->show();
     a.exec();

@@ -40,11 +40,11 @@
 class QTextCodec;
 
 namespace KMime {
-  class Content;
+class Content;
 }
 
 namespace MessageViewer {
-  class NodeHelper;
+class NodeHelper;
 }
 
 namespace MessageViewer {
@@ -54,32 +54,32 @@ namespace MessageViewer {
 */
 class PartNodeBodyPart : public Interface::BodyPart {
 public:
-  explicit PartNodeBodyPart( KMime::Content *topLevelContent, KMime::Content* content,
-                             NodeHelper *nodeHelper, const QTextCodec * codec=0 );
+    explicit PartNodeBodyPart( KMime::Content *topLevelContent, KMime::Content* content,
+                               NodeHelper *nodeHelper, const QTextCodec * codec=0 );
 
-  QString makeLink( const QString & path ) const;
-  QString asText() const;
-  QByteArray asBinary() const;
-  QString contentTypeParameter( const char * param ) const;
-  QString contentDescription() const;
-  //int contentDisposition() const;
-  QString contentDispositionParameter( const char * param ) const;
-  bool hasCompleteBody() const;
+    QString makeLink( const QString & path ) const;
+    QString asText() const;
+    QByteArray asBinary() const;
+    QString contentTypeParameter( const char * param ) const;
+    QString contentDescription() const;
+    //int contentDisposition() const;
+    QString contentDispositionParameter( const char * param ) const;
+    bool hasCompleteBody() const;
 
-  Interface::BodyPartMemento * memento() const;
-  void setBodyPartMemento( Interface::BodyPartMemento * memento );
-  BodyPart::Display defaultDisplay() const;
-  void setDefaultDisplay( BodyPart::Display );
-  KMime::Content* content() const { return mContent; }
-  KMime::Content* topLevelContent() const { return mTopLevelContent; }
-  NodeHelper* nodeHelper() const { return mNodeHelper; }
+    Interface::BodyPartMemento * memento() const;
+    void setBodyPartMemento( Interface::BodyPartMemento * memento );
+    BodyPart::Display defaultDisplay() const;
+    void setDefaultDisplay( BodyPart::Display );
+    KMime::Content* content() const { return mContent; }
+    KMime::Content* topLevelContent() const { return mTopLevelContent; }
+    NodeHelper* nodeHelper() const { return mNodeHelper; }
 
 private:
-  KMime::Content *mTopLevelContent;
-  KMime::Content *mContent;
-  const QTextCodec * mCodec;
-  BodyPart::Display mDefaultDisplay;
-  NodeHelper *mNodeHelper;
+    KMime::Content *mTopLevelContent;
+    KMime::Content *mContent;
+    const QTextCodec * mCodec;
+    BodyPart::Display mDefaultDisplay;
+    NodeHelper *mNodeHelper;
 };
 
 }

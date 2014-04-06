@@ -43,7 +43,10 @@ namespace KIO {
 class Job;
 }
 
-namespace Kleo { class SpecialJob; }
+namespace Kleo
+{
+class SpecialJob;
+}
 
 class KAction;
 class KActionCollection;
@@ -56,6 +59,14 @@ class QPoint;
 class QSplitter;
 class QModelIndex;
 class QTreeView;
+
+namespace GrantleeTheme {
+class GrantleeThemeManager;
+}
+
+namespace PimCommon {
+class TranslatorWidget;
+}
 
 namespace MessageViewer {
 class TodoEdit;
@@ -73,17 +84,8 @@ class WebKitPartHtmlWriter;
 class HtmlStatusBar;
 class MailWebView;
 class ScamDetectionWarningWidget;
-}
-
-namespace GrantleeTheme {
-class GrantleeThemeManager;
-}
-
-namespace PimCommon {
-class TranslatorWidget;
-}
-
-namespace MessageViewer {
+class MimePartTreeView;
+class OpenAttachmentFolderWidget;
 
 /**
 \brief Private class for the Viewer, the main widget in the messageviewer library.
@@ -285,8 +287,6 @@ public:
 private:
     /** HTML initialization. */
     void initHtmlWidget();
-    void saveMimePartTreeConfig();
-    void restoreMimePartTreeConfig();
     void createOpenWithMenu( KMenu *topMenu, const QString &contentTypeStr, bool fromCurrentContent );
 public:
     /** Event filter */
@@ -459,6 +459,8 @@ public:
 
     bool isAShortUrl(const KUrl &url) const;
 
+    void showOpenAttachmentFolderWidget(const KUrl &url);
+
 private slots:
     void slotModifyItemDone(KJob* job);
     void slotMessageMayBeAScam();
@@ -479,8 +481,6 @@ private slots:
     void itemModifiedResult( KJob* job );
 
     void collectionFetchedForStoringDecryptedMessage( KJob* job );
-
-    void slotMimePartDestroyed();
 
     void slotClear();
 
@@ -644,9 +644,8 @@ public:
     KHBox *mBox;
     HtmlStatusBar *mColorBar;
 #ifndef QT_NO_TREEVIEW
-    QTreeView* mMimePartTree; //FIXME(Andras) port the functionality from KMMimePartTree to a new view class or to here with signals/slots
+    MimePartTreeView* mMimePartTree; //FIXME(Andras) port the functionality from KMMimePartTree to a new view class or to here with signals/slots
 #endif
-    MimeTreeModel *mMimePartModel;
     MailWebView *mViewer;
     FindBarMailWebView *mFindBar;
     PimCommon::TranslatorWidget *mTranslatorWidget;
@@ -729,6 +728,7 @@ public:
     ScamDetectionWarningWidget *mScamDetectionWarning;
     MessageViewer::TodoEdit *mCreateTodo;
     MessageViewer::EventEdit *mCreateEvent;
+    MessageViewer::OpenAttachmentFolderWidget *mOpenAttachmentFolderWidget;
     // zoom Factor
     static const qreal zoomBy;
     qreal mZoomFactor;

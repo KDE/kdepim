@@ -32,9 +32,11 @@
 <div class=name>{{ contact.name }}</div>
 <div class=last_extra_name>{{ contact.realName|safe }}</div>
 <table cellpadding=0>
+  {% if contact.photo %}
   <tr>
    <td class=data_header>{{ contact.photo|safe }}</td>
   </tr>
+  {% endif %}
   {% if contact.emails %}
   <tr>
    <td class=data_header>{{ contacti18n.emailsi18n }}</td>
@@ -83,6 +85,12 @@
   <tr>
    <td class=data_header>{{ listphone.type }}</td>
    <td class=last_data>{{ listphone.number }}</td>
+  </tr>
+  {% endfor %}
+  {% for im in contact.instantManging %}
+  <tr>
+   <td class=data_header>{{ im.type }}</td>
+   <td class=last_data>{{ im.address }}</td>
   </tr>
   {% endfor %}
 </table>

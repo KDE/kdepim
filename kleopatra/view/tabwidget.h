@@ -107,9 +107,7 @@ namespace Kleo {
         Q_PRIVATE_SLOT( d, void slotPageKeyFilterChanged( const boost::shared_ptr<Kleo::KeyFilter> & ) )
         Q_PRIVATE_SLOT( d, void slotPageStringFilterChanged( const QString & ) )
         Q_PRIVATE_SLOT( d, void slotPageHierarchyChanged( bool ) )
-#ifndef QT_NO_INPUTDIALOG
         Q_PRIVATE_SLOT( d, void slotRenameCurrentTab() )
-#endif // QT_NO_INPUTDIALOG
         Q_PRIVATE_SLOT( d, void slotNewTab() )
         Q_PRIVATE_SLOT( d, void slotDuplicateCurrentTab() )
         Q_PRIVATE_SLOT( d, void slotCloseCurrentTab() )

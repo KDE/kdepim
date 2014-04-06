@@ -52,12 +52,12 @@
 #include <KConfig>
 #include <KAction>
 #include <KActionCollection>
+#include <KInputDialog>
 
 #include <QTreeView>
 #include <QToolButton>
 #include <QAction>
 #include <QMenu>
-#include <QInputDialog>
 #include <QVBoxLayout>
 
 #include <map>
@@ -386,28 +386,28 @@ TabWidget::Private::Private( TabWidget * qq )
 
     const action_data actionDataNew = {
         "window_new_tab", i18n("New Tab"), i18n("Open a new tab"),
-        "tab-new-background", q, SLOT(slotNewTab()), i18n("CTRL+SHIFT+N"), false, true
+        "tab-new-background", q, SLOT(slotNewTab()), QLatin1String("CTRL+SHIFT+N"), false, true
     };
 
     newAction = make_action_from_data( actionDataNew, q );
 
     struct action_data actionData[NumPageActions] = {
         { "window_rename_tab", i18n("Rename Tab..."), i18n("Rename this tab"),
-          "edit-rename", q, SLOT(slotRenameCurrentTab()), i18n("CTRL+SHIFT+R"), false, false },
+          "edit-rename", q, SLOT(slotRenameCurrentTab()), QLatin1String("CTRL+SHIFT+R"), false, false },
         { "window_duplicate_tab", i18n("Duplicate Tab"), i18n("Duplicate this tab"),
-          "tab-duplicate", q, SLOT(slotDuplicateCurrentTab()), i18n("CTRL+SHIFT+D"), false, true },
+          "tab-duplicate", q, SLOT(slotDuplicateCurrentTab()), QLatin1String("CTRL+SHIFT+D"), false, true },
         { "window_close_tab", i18n("Close Tab"), i18n("Close this tab"),
-          "tab-close", q, SLOT(slotCloseCurrentTab()), i18n("CTRL+SHIFT+W"), false, false }, // ### CTRL-W when available
+          "tab-close", q, SLOT(slotCloseCurrentTab()), QLatin1String("CTRL+SHIFT+W"), false, false }, // ### CTRL-W when available
         { "window_move_tab_left", i18n("Move Tab Left"), QString(),
-          0, q, SLOT(slotMoveCurrentTabLeft()), i18n("CTRL+SHIFT+LEFT"), false, false },
+          0, q, SLOT(slotMoveCurrentTabLeft()), QLatin1String("CTRL+SHIFT+LEFT"), false, false },
         { "window_move_tab_right", i18n("Move Tab Right"), QString(),
-          0, q, SLOT(slotMoveCurrentTabRight()), i18n("CTRL+SHIFT+RIGHT"), false, false },
+          0, q, SLOT(slotMoveCurrentTabRight()), QLatin1String("CTRL+SHIFT+RIGHT"), false, false },
         { "window_view_hierarchical", i18n("Hierarchical Certificate List"), QString(),
           0, q, SLOT(slotToggleHierarchicalView(bool)), QString(), true, false },
         { "window_expand_all", i18n("Expand All"), QString(),
-          0, q, SLOT(slotExpandAll()), i18n("CTRL+."), false, false },
+          0, q, SLOT(slotExpandAll()), QLatin1String("CTRL+."), false, false },
         { "window_collapse_all", i18n("Collapse All"), QString(),
-          0, q, SLOT(slotCollapseAll()), i18n("CTRL+,"), false, false },
+          0, q, SLOT(slotCollapseAll()), QLatin1String("CTRL+,"), false, false },
     };
 
     for ( unsigned int i = 0 ; i < NumPageActions ; ++i )
@@ -527,17 +527,15 @@ void TabWidget::Private::slotNewTab() {
     tabWidget.setCurrentIndex( tabWidget.count()-1 );
 }
 
-#ifndef QT_NO_INPUTDIALOG
 void TabWidget::Private::renamePage( Page * page ) {
     if ( !page )
         return;
-    bool ok = false;
-    const QString text = QInputDialog::getText( q, i18n("Rename Tab"), i18n("New tab title:"), QLineEdit::Normal, page->title(), &ok );
+    bool ok;
+    const QString text = KInputDialog::getText( i18n("Rename Tab"), i18n("New tab title:"), page->title(), &ok, q);
     if ( !ok )
         return;
     page->setTitle( text );
 }
-#endif
 
 void TabWidget::Private::duplicatePage( Page * page ) {
     if ( !page )

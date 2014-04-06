@@ -1,3 +1,4 @@
+project(pimcommon)
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim
   ${CMAKE_CURRENT_SOURCE_DIR}/util/
@@ -57,10 +58,6 @@ set(libpimcommon_storageservice_SRCS
   storageservice/settings/addservicestoragedialog.cpp
   storageservice/settings/storagelistwidgetitem.cpp
   storageservice/settings/storageservicesettingswidget.cpp
-
-  storageservice/ubuntuone/ubuntuonestorageservice.cpp
-  storageservice/ubuntuone/ubuntuonejob.cpp
-  storageservice/ubuntuone/ubuntuoneutil.cpp
 
   storageservice/yousendit/yousenditjob.cpp
   storageservice/yousendit/yousenditstorageservice.cpp
@@ -242,11 +239,9 @@ add_subdirectory(storageservice/hubic/tests)
 add_subdirectory(storageservice/tests)
 add_subdirectory(storageservice/yousendit/tests)
 add_subdirectory(storageservice/webdav/tests)
-add_subdirectory(storageservice/ubuntuone/tests)
 add_subdirectory(storageservice/box/tests)
-
 add_subdirectory(storageservice/dropbox/icons/)
-add_subdirectory(storageservice/ubuntuone/icons/)
+
 if( LibKGAPI2_FOUND )
 add_subdirectory(storageservice/gdrive/tests/)
 add_subdirectory(storageservice/gdrive/icons/)

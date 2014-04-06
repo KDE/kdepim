@@ -514,6 +514,7 @@ public:
     ContactListModel *mModel;
     KPIMUtils::ProgressIndicatorLabel *progressIndication;
     QSortFilterProxyModel *sortproxy;
+    KLineEdit *searchLine;
 };
 
 LdapSearchDialog::LdapSearchDialog( QWidget *parent )
@@ -582,13 +583,27 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
 
     topLayout->addWidget( groupBox );
 
+
+    QHBoxLayout *quickSearchLineLayout = new QHBoxLayout;
+    quickSearchLineLayout->addStretch();
+    d->searchLine = new KLineEdit;
+    d->searchLine->setClearButtonShown(true);
+    d->searchLine->setClickMessage(i18n("Search in result"));
+    quickSearchLineLayout->addWidget(d->searchLine);
+    topLayout->addLayout( quickSearchLineLayout );
+
+
     d->mResultView = new QTableView( page );
     d->mResultView->setSelectionMode( QTableView::MultiSelection );
     d->mResultView->setSelectionBehavior( QTableView::SelectRows );
     d->mModel = new ContactListModel( d->mResultView );
 
     d->sortproxy = new QSortFilterProxyModel( this );
+    d->sortproxy->setFilterKeyColumn(-1); //Search in all column
     d->sortproxy->setSourceModel( d->mModel );
+    d->sortproxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    connect(d->searchLine, SIGNAL(textChanged(QString)), d->sortproxy, SLOT(setFilterFixedString(QString)));
+
 
     d->mResultView->setModel( d->sortproxy );
     d->mResultView->verticalHeader()->hide();
@@ -634,6 +649,7 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
 
     connect( this, SIGNAL(user1Clicked()), this, SLOT(slotUser1()) );
     connect( this, SIGNAL(user2Clicked()), this, SLOT(slotUser2()) );
+    connect( this, SIGNAL(cancelClicked()), this, SLOT(slotCancelClicked()));
     d->slotSelectionChanged();
     d->restoreSettings();
 }
@@ -888,6 +904,7 @@ void LdapSearchDialog::slotUser1()
         }
     }
 
+    d->slotStopSearch();
     emit contactsAdded();
 
     accept();
@@ -904,6 +921,12 @@ void LdapSearchDialog::slotUser2()
     if ( dialog.exec() ) { //krazy:exclude=crashy
         d->restoreSettings();
     }
+}
+
+void LdapSearchDialog::slotCancelClicked()
+{
+    d->slotStopSearch();
+    reject();
 }
 
 #include "moc_ldapsearchdialog.cpp"
