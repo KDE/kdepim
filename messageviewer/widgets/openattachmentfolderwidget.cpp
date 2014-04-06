@@ -19,6 +19,7 @@
 
 #include <KLocalizedString>
 #include <KAction>
+#include <KRun>
 
 #include <QTimer>
 
@@ -53,9 +54,9 @@ void OpenAttachmentFolderWidget::setFolder(const KUrl &url)
 void OpenAttachmentFolderWidget::slotOpenAttachmentFolder()
 {
     if (!mUrl.isEmpty()) {
-
+        new KRun( mUrl, this );
+        slotHideWarning();
     }
-    //TODO
 }
 
 void OpenAttachmentFolderWidget::slotHideWarning()
