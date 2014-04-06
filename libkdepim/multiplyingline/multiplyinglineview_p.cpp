@@ -123,7 +123,8 @@ void MultiplyingLineView::slotReturnPressed( MultiplyingLine *line )
 {
     if ( !line->data()->isEmpty() ) {
         MultiplyingLine *empty = emptyLine();
-        if ( !empty ) empty = addLine();
+        if ( !empty )
+            empty = addLine();
         activateLine( empty );
     }
 }
