@@ -100,6 +100,7 @@ set(libmessageviewer_widgets_SRCS
   widgets/invitationsettings.cpp
   widgets/todoedit.cpp
   widgets/eventedit.cpp
+  widgets/openattachmentfolderwidget.cpp
 )
 
 set(libmessageviewer_header_SRCS
