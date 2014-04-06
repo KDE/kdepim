@@ -44,7 +44,7 @@ MimePartTreeView::MimePartTreeView(QWidget *parent)
 
 MimePartTreeView::~MimePartTreeView()
 {
-
+    saveMimePartTreeConfig();
 }
 
 MimeTreeModel *MimePartTreeView::mimePartModel() const
