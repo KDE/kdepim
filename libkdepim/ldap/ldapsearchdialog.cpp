@@ -599,7 +599,9 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
     d->mModel = new ContactListModel( d->mResultView );
 
     d->sortproxy = new QSortFilterProxyModel( this );
+    d->sortproxy->setFilterKeyColumn(-1); //Search in all column
     d->sortproxy->setSourceModel( d->mModel );
+    d->sortproxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
     connect(d->searchLine, SIGNAL(textChanged(QString)), d->sortproxy, SLOT(setFilterFixedString(QString)));
 
 
