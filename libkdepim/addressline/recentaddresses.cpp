@@ -37,6 +37,7 @@
 #include <KLocale>
 #include <KLineEdit>
 #include <KPushButton>
+#include <KMessageBox>
 
 #include <QCoreApplication>
 #include <QLayout>
@@ -270,10 +271,12 @@ void RecentAddressDialog::slotRemoveItem()
     QList<QListWidgetItem *> selectedItems = mListView->selectedItems();
     if (selectedItems.isEmpty())
         return;
-    Q_FOREACH(QListWidgetItem *item, selectedItems) {
-        delete mListView->takeItem(mListView->row(item));
+    if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18np("Do you want to remove this email?", "Do you want to remove %1 emails?", selectedItems.count()), i18n("Remove"))) {
+        Q_FOREACH(QListWidgetItem *item, selectedItems) {
+            delete mListView->takeItem(mListView->row(item));
+        }
+        updateButtonState();
     }
-    updateButtonState();
 }
 
 void RecentAddressDialog::updateButtonState()
