@@ -74,10 +74,10 @@
   </tr>
   {% endif %}
 
-  {% for t in contact.addresses %}
+  {% for address in contact.addresses %}
   <tr>
-   <td class=data_header>{{ t.type }}</td>
-   <td class=last_data>{{ t.street }}</td>
+   <td class=data_header>{{ address.type }}</td>
+   <td class=last_data>{{ address.formattedAddress }}</td>
   </tr>
   {% endfor %}
 
