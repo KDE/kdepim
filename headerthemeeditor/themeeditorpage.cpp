@@ -232,7 +232,7 @@ void ThemeEditorPage::addExtraPage()
 {
     QString filename = KInputDialog::getText(i18n("Filename of extra page"), i18n("Filename:"));
     if (!filename.isEmpty()) {
-        if (!filename.endsWith(QLatin1String(".html"))) {
+        if (!filename.endsWith(QLatin1String(".html")) && !filename.endsWith(QLatin1String(".css")) && !filename.endsWith(QLatin1String(".js"))) {
             filename += QLatin1String(".html");
         }
         createExtraPage(filename);

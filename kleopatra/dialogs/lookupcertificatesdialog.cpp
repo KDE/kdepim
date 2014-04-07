@@ -161,11 +161,15 @@ void LookupCertificatesDialog::Private::readConfig()
     if ( size.isValid() ) {
         q->resize( size );
     }
+    const QByteArray headerState = dialog.readEntry( "header", QByteArray());
+    if (!headerState.isEmpty())
+        ui.resultTV->header()->restoreState(headerState);
 }
 
 void LookupCertificatesDialog::Private::writeConfig()
 {
     KConfigGroup dialog( KGlobal::config(), "LookupCertificatesDialog" );
+    dialog.writeEntry( "header", ui.resultTV->header()->saveState());
     dialog.writeEntry( "Size", q->size() );
     dialog.sync();
 }
