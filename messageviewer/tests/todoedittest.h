@@ -52,7 +52,6 @@ private slots:
     void shouldSaveCollectionSettingsWhenCloseWidget();
     void shouldNotEmitTodoWhenMessageIsNull();
     void shouldHaveLineEditFocus();
-    void shouldClearUrlMessageWhenSwitchMessage();
     void shouldEmitNotEmitTodoWhenTextTrimmedIsEmpty();
     void shouldSaveCollectionSettingsWhenDeleteWidget();
     void shouldSetFocusWhenWeCallTodoEdit();

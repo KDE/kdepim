@@ -97,18 +97,6 @@ void TodoEdit::showToDoWidget()
     show();
 }
 
-void TodoEdit::setMessageUrlAkonadi(const QString &url)
-{
-    if (mMessageUrlAkonadi != url) {
-        mMessageUrlAkonadi = url;
-    }
-}
-
-QString TodoEdit::messageUrlAkonadi() const
-{
-    return mMessageUrlAkonadi;
-}
-
 void TodoEdit::writeConfig()
 {
     MessageViewer::GlobalSettingsBase::self()->setLastSelectedFolder(mCollectionCombobox->currentCollection().id());
@@ -150,7 +138,6 @@ void TodoEdit::setMessage(const KMime::Message::Ptr &value)
 {
     if (mMessage != value) {
         mMessage = value;
-        mMessageUrlAkonadi.clear();
         const KMime::Headers::Subject * const subject = mMessage ? mMessage->subject(false) : 0;
         if (subject) {
             mNoteEdit->setText(i18n("Reply to \"%1\"", subject->asUnicodeString()));
@@ -168,7 +155,6 @@ void TodoEdit::slotCloseWidget()
     writeConfig();
     mNoteEdit->clear();
     mMessage = KMime::Message::Ptr();
-    mMessageUrlAkonadi.clear();
     hide();
 }
 
@@ -187,7 +173,7 @@ void TodoEdit::slotReturnPressed()
     if (!mNoteEdit->text().trimmed().isEmpty()) {
         KCalCore::Todo::Ptr todo( new KCalCore::Todo );
         todo->setSummary(mNoteEdit->text());
-        Q_EMIT createTodo(todo, collection, mMessageUrlAkonadi);
+        Q_EMIT createTodo(todo, collection);
         mNoteEdit->clear();
     }
 }

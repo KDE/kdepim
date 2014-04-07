@@ -498,7 +498,7 @@ private slots:
     void saveSplitterSizes() const;
     void slotGrantleeThemesUpdated();
 
-    void slotCreateTodo(const KCalCore::Todo::Ptr &, const Akonadi::Collection &collection, const QString &urlMessageAkonadi);
+    void slotCreateTodo(const KCalCore::Todo::Ptr &, const Akonadi::Collection &collection);
 
     void slotCreateEvent(const KCalCore::Event::Ptr &eventPtr, const Akonadi::Collection &collection);
 
