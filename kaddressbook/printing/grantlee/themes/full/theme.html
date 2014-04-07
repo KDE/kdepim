@@ -77,7 +77,7 @@
   {% for address in contact.addresses %}
   <tr>
    <td class=data_header>{{ address.type }}</td>
-   <td class=last_data>{{ address.formattedAddress }}</td>
+   <td class=last_data>{{ address.formattedAddress|safe }}</td>
   </tr>
   {% endfor %}
 
