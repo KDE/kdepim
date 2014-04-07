@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="16">
+<kpartgui name="kaddressbook" version="18">
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
@@ -87,6 +87,9 @@
     <Action name="akonadi_item_cut"/>
     <Action name="akonadi_item_copy"/>
     <Action name="akonadi_paste"/>
+    <Separator/>
+      <Action name="file_print"/>
+      <Action name="file_print_preview"/>
     <Separator/>
     <Action name="akonadi_item_delete"/>
   </Menu>
