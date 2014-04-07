@@ -38,6 +38,7 @@ public slots:
 private slots:
     void slotOpenAttachmentFolder();
     void slotTimeOut();
+    void slotExplicitlyClosed();
 private:
     KUrl mUrl;
     QTimer *mTimer;

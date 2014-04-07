@@ -38,7 +38,12 @@ OpenAttachmentFolderWidget::OpenAttachmentFolderWidget(QWidget *parent)
     setCloseButtonVisible(true);
     setMessageType(Positive);
     setWordWrap(true);
-    QAction *action = new QAction( i18n( "Open folder where attachment was saved" ), this );
+    QAction *action = this->findChild<QAction *>(); // should give us the close action...
+    if ( action ) {
+      connect( action, SIGNAL(triggered(bool)), SLOT(slotExplicitlyClosed()) );
+    }
+
+    action = new QAction( i18n( "Open folder where attachment was saved" ), this );
     connect( action, SIGNAL(triggered(bool)), SLOT(slotOpenAttachmentFolder()) );
     addAction( action );
 }
@@ -46,6 +51,12 @@ OpenAttachmentFolderWidget::OpenAttachmentFolderWidget(QWidget *parent)
 OpenAttachmentFolderWidget::~OpenAttachmentFolderWidget()
 {
 
+}
+
+void OpenAttachmentFolderWidget::slotExplicitlyClosed()
+{
+    if (mTimer->isActive())
+        mTimer->stop();
 }
 
 void OpenAttachmentFolderWidget::setFolder(const KUrl &url)
