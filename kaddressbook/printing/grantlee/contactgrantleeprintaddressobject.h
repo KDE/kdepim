@@ -23,15 +23,15 @@ namespace KABPrinting {
 class ContactGrantleePrintAddressObject : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString name READ type)
-    Q_PROPERTY(QString name READ street)
-    Q_PROPERTY(QString name READ postOfficeBox)
-    Q_PROPERTY(QString name READ locality)
-    Q_PROPERTY(QString name READ region)
-    Q_PROPERTY(QString name READ postalCode)
-    Q_PROPERTY(QString name READ country)
-    Q_PROPERTY(QString name READ label)
-    Q_PROPERTY(QString name READ formattedAddress)
+    Q_PROPERTY(QString type READ type)
+    Q_PROPERTY(QString street READ street)
+    Q_PROPERTY(QString postOfficeBox READ postOfficeBox)
+    Q_PROPERTY(QString locality READ locality)
+    Q_PROPERTY(QString region READ region)
+    Q_PROPERTY(QString postalCode READ postalCode)
+    Q_PROPERTY(QString country READ country)
+    Q_PROPERTY(QString label READ label)
+    Q_PROPERTY(QString formattedAddress READ formattedAddress)
 
 public:
     explicit ContactGrantleePrintAddressObject(const KABC::Address &address, QObject *parent=0);
