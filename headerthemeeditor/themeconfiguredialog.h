@@ -21,6 +21,9 @@
 #include <KDialog>
 class KTextEdit;
 
+namespace PimCommon {
+class RichTextEditorWidget;
+}
 namespace GrantleeThemeEditor {
 class ConfigureWidget;
 }
@@ -41,8 +44,8 @@ private Q_SLOTS:
 
 private:
     GrantleeThemeEditor::ConfigureWidget *mConfigureWidget;
-    KTextEdit *mDefaultTemplate;
-    KTextEdit *mDefaultEmail;
+    PimCommon::RichTextEditorWidget *mDefaultTemplate;
+    PimCommon::RichTextEditorWidget *mDefaultEmail;
 };
 
 #endif // THEMECONFIGUREDIALOG_H
