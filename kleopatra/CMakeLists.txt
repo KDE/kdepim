@@ -358,7 +358,7 @@ endif()
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5151)
 
-kde4_add_app_icon(_kleopatra_mainwindow_SRCS "hi*-app-kleopatra.png")
+kde4_add_app_icon(_kleopatra_mainwindow_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-app-kleopatra.png")
 
 kde4_add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} ${_kleopatra_libkdepim_SRCS})
 set_target_properties(kleopatra_bin PROPERTIES OUTPUT_NAME kleopatra)
@@ -404,5 +404,4 @@ if(KDEPIM_MOBILE_UI)
     DESTINATION ${DATA_INSTALL_DIR}/kleopatra
   )
 endif()
-
-kde4_install_icons(${ICON_INSTALL_DIR})
+add_subdirectory(icons)
