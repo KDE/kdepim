@@ -17,6 +17,8 @@
 
 #include "contactconfigurationdialog.h"
 #include "contacteditorutil.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
+
 
 #include "configurewidget.h"
 
@@ -28,7 +30,6 @@
 #include <KConfig>
 #include <KGlobal>
 #include <KConfigGroup>
-#include <KTextEdit>
 
 #include <QVBoxLayout>
 #include <QLabel>
@@ -58,7 +59,7 @@ ContactConfigureDialog::ContactConfigureDialog(QWidget *parent)
 
     tab->addTab(w, i18n("General"));
 
-    mDefaultTemplate = new KTextEdit;
+    mDefaultTemplate = new PimCommon::RichTextEditorWidget;
     mDefaultTemplate->setAcceptRichText(false);
     tab->addTab(mDefaultTemplate, i18n("Default Template"));
 
