@@ -1,4 +1,6 @@
-/* Copyright 2010 Thomas McGuire <mcguire@kde.org>
+/*
+   Copyright 2010 Thomas McGuire <mcguire@kde.org>
+   Copyright 2014 Laurent Montel <montel@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -27,6 +29,7 @@
 #include <akonadi/item.h>
 #include <akonadi/entityannotationsattribute.h>
 
+#include <KComboBox>
 
 #include <QLabel>
 #include <QGridLayout>
@@ -38,12 +41,14 @@ class AnnotationEditDialog::Private
 public:
     Private()
         : mTextEdit( 0 ),
+          mNoteType( 0 ),
           mHasAnnotation( false )
     {
     }
 
     Akonadi::Item mItem;
     PimCommon::RichTextEditorWidget *mTextEdit;
+    KComboBox *mNoteType;
     bool mHasAnnotation;
 };
 
@@ -66,16 +71,33 @@ AnnotationEditDialog::AnnotationEditDialog( const Akonadi::Item &item, QWidget *
     setDefaultButton( KDialog::Ok );
 
     QLabel *label = new QLabel( i18n( "Enter the text that should be stored as a note to the mail:" ) );
-    QGridLayout *grid = new QGridLayout( mainWidget() );
+    QVBoxLayout *vbox = new QVBoxLayout( mainWidget() );
     d->mTextEdit = new PimCommon::RichTextEditorWidget( this );
     d->mTextEdit->setAcceptRichText(false);
-    grid->addWidget( label );
-    grid->addWidget( d->mTextEdit );
+    vbox->addWidget( label );
+    vbox->addWidget( d->mTextEdit );
     d->mTextEdit->setFocus();
 
+    QHBoxLayout *hbox = new QHBoxLayout;
+    hbox->addStretch();
+    label = new QLabel(i18n("Note type:"));
+    hbox->addWidget(label);
+    d->mNoteType = new KComboBox;
+    hbox->addWidget(d->mNoteType);
+    d->mNoteType->addItem(i18n("Private note"), QByteArray("/private/comment"));
+    d->mNoteType->addItem(i18n("Shared note"), QByteArray("/shared/comment"));
+
+    vbox->addLayout(hbox);
     if ( d->mHasAnnotation && item.attribute<Akonadi::EntityAnnotationsAttribute>() ) {
-        //TODO shared/private annotations
-        d->mTextEdit->setPlainText( item.attribute<Akonadi::EntityAnnotationsAttribute>()->value("/private/comment") );
+        if (item.attribute<Akonadi::EntityAnnotationsAttribute>()->contains("/private/comment")) {
+            d->mNoteType->setCurrentIndex(d->mNoteType->findData(QLatin1String("/private/comment")));
+            d->mTextEdit->setPlainText( item.attribute<Akonadi::EntityAnnotationsAttribute>()->value("/private/comment") );
+        } else {
+            d->mNoteType->setCurrentIndex(d->mNoteType->findData(QLatin1String("/shared/comment")));
+            d->mTextEdit->setPlainText( item.attribute<Akonadi::EntityAnnotationsAttribute>()->value("/shared/comment") );
+        }
+        //TODO activate it when fix crash
+        d->mNoteType->setEnabled(false);
     }
     readConfig();
 }
@@ -92,7 +114,7 @@ void AnnotationEditDialog::slotButtonClicked( int button )
         bool textIsEmpty = d->mTextEdit->toPlainText().isEmpty();
         if ( !textIsEmpty ) {
             Akonadi::EntityAnnotationsAttribute *annotation = d->mItem.attribute<Akonadi::EntityAnnotationsAttribute>(Akonadi::Entity::AddIfMissing);
-            annotation->insert("/private/comment", d->mTextEdit->toPlainText());
+            annotation->insert(d->mNoteType->itemData(d->mNoteType->currentIndex()).toByteArray(), d->mTextEdit->toPlainText());
             d->mItem.addAttribute(annotation);
         } else if ( d->mHasAnnotation && textIsEmpty ) {
             d->mItem.removeAttribute<Akonadi::EntityAnnotationsAttribute>();
@@ -130,6 +152,4 @@ void AnnotationEditDialog::writeConfig()
     KConfigGroup group( cfg, "AnnotationEditDialog" );
     group.writeEntry( "Size", size() );
 }
-
-
 
