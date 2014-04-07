@@ -18,11 +18,12 @@
 #include "openattachmentfolderwidget.h"
 
 #include <KLocalizedString>
-#include <KAction>
+
 #include <KRun>
 
 #include <QTimer>
 #include <QDebug>
+#include <QAction>
 
 using namespace MessageViewer;
 
@@ -37,7 +38,7 @@ OpenAttachmentFolderWidget::OpenAttachmentFolderWidget(QWidget *parent)
     setCloseButtonVisible(true);
     setMessageType(Positive);
     setWordWrap(true);
-    KAction *action = new KAction( i18n( "Open folder where attachment was saved" ), this );
+    QAction *action = new QAction( i18n( "Open folder where attachment was saved" ), this );
     connect( action, SIGNAL(triggered(bool)), SLOT(slotOpenAttachmentFolder()) );
     addAction( action );
 }
