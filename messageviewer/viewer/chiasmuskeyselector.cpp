@@ -9,7 +9,7 @@
 #include <QVBoxLayout>
 #include <KPushButton>
 
-namespace MessageViewer {
+using namespace MessageViewer;
 
 ChiasmusKeySelector::ChiasmusKeySelector( QWidget* parent, const QString& caption,
                                           const QStringList& keys, const QString& currentKey,
@@ -59,14 +59,12 @@ QString ChiasmusKeySelector::key() const
 {
     if (mListBox->selectedItems().isEmpty()) {
         return QString();
-    }
-    else
+    } else {
         return mListBox->currentItem()->text();
+    }
 }
 
 QString ChiasmusKeySelector::options() const
 {
     return mOptions->text();
-}
-
 }
