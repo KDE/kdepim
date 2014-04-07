@@ -644,7 +644,7 @@ public:
     KHBox *mBox;
     HtmlStatusBar *mColorBar;
 #ifndef QT_NO_TREEVIEW
-    MimePartTreeView* mMimePartTree; //FIXME(Andras) port the functionality from KMMimePartTree to a new view class or to here with signals/slots
+    MimePartTreeView* mMimePartTree;
 #endif
     MailWebView *mViewer;
     FindBarMailWebView *mFindBar;
