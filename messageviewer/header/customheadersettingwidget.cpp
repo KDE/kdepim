@@ -44,6 +44,8 @@ CustomHeaderSettingWidget::CustomHeaderSettingWidget(QWidget *parent)
     mHeaders = new PimCommon::SimpleStringListEditor( this, PimCommon::SimpleStringListEditor::All,
                                                            i18n("A&dd..."), i18n("Remo&ve"),
                                                            i18n("&Modify..."), i18n("Header:") );
+    mHeaders->setUpDownAutoRepeat(true);
+
     connect(mHeaders, SIGNAL(changed()), this, SIGNAL(changed()));
     topLayout->addWidget(mHeaders);
 

@@ -43,7 +43,8 @@ Default i18n variable:
 
 => All contact is stored in contacts object => We use a loop for as in example.
 We can use as variable:
-- realName (QString)
+- name (QString)
+  realName (QString)
   formattedName (QString)
   prefix (QString)
   givenName (QString)
