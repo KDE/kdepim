@@ -67,9 +67,10 @@ VacationPageWidget::VacationPageWidget(QWidget *parent)
                                   "office replies for you."
                                   "Please contact your system administrator." ) );
     vbox->addWidget(lab);
+    vbox->setAlignment(lab, Qt::AlignVCenter);
+
     lab->setWordWrap(true);
     w->setLayout(vbox);
-    vbox->addStretch();
     mStackWidget->addWidget(w);
 
     mStackWidget->setCurrentIndex(Script);
