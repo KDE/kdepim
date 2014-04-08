@@ -75,10 +75,13 @@
   {% endif %}
 
   {% for address in contact.addresses %}
+
+  {% if address.formattedAddress %}
   <tr>
    <td class=data_header>{{ address.type }}</td>
    <td class=last_data>{{ address.formattedAddress|safe }}</td>
   </tr>
+  {% endif %}
   {% endfor %}
 
   {% for listphone in contact.phones %}
