@@ -86,7 +86,6 @@ void MimePartTreeView::setRoot(KMime::Content *root)
 KMime::Content::List MimePartTreeView::selectedContents()
 {
     KMime::Content::List contents;
-#ifndef QT_NO_TREEVIEW
     QItemSelectionModel *selectModel = selectionModel();
     QModelIndexList selectedRows = selectModel->selectedRows();
 
@@ -96,7 +95,5 @@ KMime::Content::List MimePartTreeView::selectedContents()
         if ( content )
             contents.append( content );
     }
-#endif
-
     return contents;
 }
