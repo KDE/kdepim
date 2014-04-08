@@ -74,7 +74,7 @@ TodoEdit::TodoEdit(QWidget *parent)
     mCollectionCombobox->setMimeTypeFilter( QStringList() << KCalCore::Todo::todoMimeType() );
     mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
 #ifndef QT_NO_ACCESSIBILITY
-    mCollectionCombobox->setAccessibleDescription( i18n("Select collection where Todo will stored.") );
+    mCollectionCombobox->setAccessibleDescription( i18n("The most recently selected folder used for Todos.") );
 #endif
 
     connect(mCollectionCombobox, SIGNAL(currentIndexChanged(int)), SLOT(slotCollectionChanged(int)));
