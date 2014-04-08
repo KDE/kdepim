@@ -82,7 +82,7 @@ endif()
 # 3.0, 3.0.1, 3.1 alpha1, 3.1 beta1, 3.1 beta2, 3.1 rc1, 3.1, 3.1.1, 3.2 pre, 3.2 alpha1
 
 # Do NOT add quote
-set(KDEPIM_DEV_VERSION rc)
+set(KDEPIM_DEV_VERSION)
 
 # add an extra space
 if(DEFINED KDEPIM_DEV_VERSION)
@@ -100,7 +100,7 @@ set(CMAKE_AUTOMOC ON)
 find_package(KDE4 4.12.0 REQUIRED)
 include(KDE4Defaults)
 
-find_package(KdepimLibs 4.12.97)
+find_package(KdepimLibs 4.13.0)
 set_package_properties(KdepimLibs PROPERTIES DESCRIPTION "The KDEPIM libraries" URL "http://www.kde.org" TYPE REQUIRED)
 
 ############### Load the CTest options ###############
@@ -166,7 +166,7 @@ else()
 # Otherwise...
 ############### Find the stuff we need ###############
   # Akonadi
-  find_package(Akonadi 1.11.80 QUIET CONFIG)
+  find_package(Akonadi 1.12.0 QUIET CONFIG)
   set_package_properties(Akonadi PROPERTIES DESCRIPTION "Akonadi server libraries" URL "http://pim.kde.org/akonadi" TYPE REQUIRED PURPOSE "Akonadi is required to build KDEPIM")
 
   find_package(ZLIB)
@@ -178,7 +178,7 @@ else()
   find_package(Grantlee 0.3.0 QUIET CONFIG)
   set_package_properties(Grantlee PROPERTIES DESCRIPTION "The Grantlee Template System" URL "http://www.gitorious.org/grantlee/pages/Home" TYPE REQUIRED PURPOSE "Grantlee is requires for kmail and templating, theming for KJots, KaddressBook, KNotes and MessageViewer(KMail)." )
 
-  find_package(Baloo 4.12.83 QUIET CONFIG)
+  find_package(Baloo 4.13.0 QUIET CONFIG)
   set_package_properties(Baloo PROPERTIES DESCRIPTION "The Baloo libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Baloo provides search capabilities in KMail and Akonadi")
 
   # Xsltproc
