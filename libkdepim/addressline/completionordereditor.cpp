@@ -68,8 +68,9 @@ class LDAPCompletionItem : public CompletionItem
 {
 public:
     LDAPCompletionItem( KLDAP::LdapClient *ldapClient )
-        : mLdapClient( ldapClient ), mWeight(0)
+        : mLdapClient( ldapClient )
     {
+        mWeight = mLdapClient->completionWeight();
     }
 
     virtual QString label() const
@@ -84,7 +85,7 @@ public:
 
     virtual int completionWeight() const
     {
-        return mLdapClient->completionWeight();
+        return mWeight;
     }
 
     virtual void save( CompletionOrderEditor* )
