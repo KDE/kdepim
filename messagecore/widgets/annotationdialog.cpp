@@ -111,6 +111,7 @@ void AnnotationEditDialog::slotButtonClicked( int button )
     if ( button == KDialog::Ok ) {
         bool textIsEmpty = d->mTextEdit->toPlainText().isEmpty();
         if ( !textIsEmpty ) {
+            d->mItem.removeAttribute<Akonadi::EntityAnnotationsAttribute>();
             Akonadi::EntityAnnotationsAttribute *annotation = d->mItem.attribute<Akonadi::EntityAnnotationsAttribute>(Akonadi::Entity::AddIfMissing);
             QMap<QByteArray, QByteArray> map;
             map.insert(d->mNoteType->itemData(d->mNoteType->currentIndex()).toByteArray(), d->mTextEdit->toPlainText().toUtf8());
