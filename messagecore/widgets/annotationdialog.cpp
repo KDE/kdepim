@@ -96,8 +96,6 @@ AnnotationEditDialog::AnnotationEditDialog( const Akonadi::Item &item, QWidget *
             d->mNoteType->setCurrentIndex(d->mNoteType->findData(QLatin1String("/shared/comment")));
             d->mTextEdit->setPlainText( item.attribute<Akonadi::EntityAnnotationsAttribute>()->value("/shared/comment") );
         }
-        //TODO activate it when fix crash
-        d->mNoteType->setEnabled(false);
     }
     readConfig();
 }
@@ -114,7 +112,9 @@ void AnnotationEditDialog::slotButtonClicked( int button )
         bool textIsEmpty = d->mTextEdit->toPlainText().isEmpty();
         if ( !textIsEmpty ) {
             Akonadi::EntityAnnotationsAttribute *annotation = d->mItem.attribute<Akonadi::EntityAnnotationsAttribute>(Akonadi::Entity::AddIfMissing);
-            annotation->insert(d->mNoteType->itemData(d->mNoteType->currentIndex()).toByteArray(), d->mTextEdit->toPlainText());
+            QMap<QByteArray, QByteArray> map;
+            map.insert(d->mNoteType->itemData(d->mNoteType->currentIndex()).toByteArray(), d->mTextEdit->toPlainText().toUtf8());
+            annotation->setAnnotations(map);
             d->mItem.addAttribute(annotation);
         } else if ( d->mHasAnnotation && textIsEmpty ) {
             d->mItem.removeAttribute<Akonadi::EntityAnnotationsAttribute>();
