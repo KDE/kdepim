@@ -255,13 +255,10 @@ void RecentAddressDialog::slotTypedSomething(const QString& text)
 
 void RecentAddressDialog::slotAddItem()
 {
-    QStringList lst = addresses();
     mListView->blockSignals(true);
-    QStringList newList;
-    newList << QString() << lst;
-    setAddresses(newList);
+    mListView->insertItem(0, QString());
     mListView->blockSignals(false);
-    mListView->setCurrentRow(0);
+    mListView->setCurrentRow(0, QItemSelectionModel::ClearAndSelect);
     mLineEdit->setFocus();
     updateButtonState();
 }
