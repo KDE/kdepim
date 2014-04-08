@@ -91,6 +91,7 @@ void AnnotationEditDialog::slotButtonClicked( int button )
     if ( button == KDialog::Ok ) {
         bool textIsEmpty = d->mTextEdit->toPlainText().isEmpty();
         if ( !textIsEmpty ) {
+            d->mItem.removeAttribute<Akonadi::EntityAnnotationsAttribute>();
             Akonadi::EntityAnnotationsAttribute *annotation = d->mItem.attribute<Akonadi::EntityAnnotationsAttribute>(Akonadi::Entity::AddIfMissing);
             annotation->insert("/private/comment", d->mTextEdit->toPlainText());
             d->mItem.addAttribute(annotation);
