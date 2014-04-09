@@ -114,12 +114,24 @@ void KNotesSummaryWidget::updateFolderList()
         return;
     mInProgress = true;
     qDeleteAll( mLabels );
-    int counter = 0;
     mLabels.clear();
+    int counter = 0;
+
     mModelState->restoreState();
     displayNotes(QModelIndex(), counter);
-    qDebug()<<"void KNotesSummaryWidget::updateFolderList() ";
     mInProgress = false;
+
+    if ( counter == 0 ) {
+        QLabel *label = new QLabel( i18n( "No note found" ), this );
+        label->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
+        mLayout->addWidget( label, 0, 0 );
+        mLabels.append( label );
+    }
+    QList<QLabel*>::const_iterator lit;
+    QList<QLabel*>::const_iterator lend( mLabels.constEnd() );
+    for ( lit = mLabels.constBegin(); lit != lend; ++lit ) {
+        (*lit)->show();
+    }
 }
 
 void KNotesSummaryWidget::displayNotes( const QModelIndex &parent, int &counter)
@@ -131,7 +143,7 @@ void KNotesSummaryWidget::displayNotes( const QModelIndex &parent, int &counter)
                 mModelProxy->data( child,
                                   Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
         if (item.isValid()) {
-            qDebug()<<" createNote ";
+            qDebug()<<" createNote "<<counter;
             createNote(item, counter);
             ++counter;
         }

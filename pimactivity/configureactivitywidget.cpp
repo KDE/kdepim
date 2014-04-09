@@ -46,7 +46,7 @@ public:
           mailTransport( 0 )
     {
         QVBoxLayout * lay = new QVBoxLayout;
-        activateActivity = new QCheckBox(i18n("Enable Support Activity"));
+        activateActivity = new QCheckBox(i18n("Enable support for activities"));
         activateActivity->setChecked(true);
         lay->addWidget(activateActivity);
 

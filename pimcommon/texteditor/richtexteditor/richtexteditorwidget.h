@@ -34,6 +34,8 @@ public:
     explicit RichTextEditorWidget(RichTextEditor *customEditor, QWidget *parent=0);
     ~RichTextEditorWidget();
 
+    void clear();
+
     RichTextEditor *editor() const { return mEditor; }
 
     void setReadOnly(bool readOnly);

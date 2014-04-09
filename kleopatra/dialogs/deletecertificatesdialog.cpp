@@ -43,6 +43,8 @@
 #include <KMessageBox>
 #include <KStandardGuiItem>
 #include <KDebug>
+#include <KConfigGroup>
+#include <KSharedConfig>
 
 #include <QLabel>
 #include <QDialogButtonBox>
@@ -79,6 +81,22 @@ public:
         if ( QWidget * const widget = qobject_cast<QWidget*>( q->sender() ) )
             if ( !widget->whatsThis().isEmpty() )
                 QWhatsThis::showText( QCursor::pos(), widget->whatsThis() );
+    }
+
+    void readConfig()
+    {
+        KConfigGroup dialog( KGlobal::config(), "DeleteCertificatesDialog" );
+        const QSize size = dialog.readEntry( "Size", QSize(600, 400) );
+        if ( size.isValid() ) {
+            q->resize( size );
+        }
+    }
+
+    void writeConfig()
+    {
+        KConfigGroup dialog( KGlobal::config(), "DeleteCertificatesDialog" );
+        dialog.writeEntry( "Size", q->size() );
+        dialog.sync();
     }
 
 private:
@@ -147,10 +165,13 @@ private:
 DeleteCertificatesDialog::DeleteCertificatesDialog( QWidget * p, Qt::WindowFlags f )
     : QDialog( p, f ), d( new Private( this ) )
 {
-
+    d->readConfig();
 }
 
-DeleteCertificatesDialog::~DeleteCertificatesDialog() {}
+DeleteCertificatesDialog::~DeleteCertificatesDialog()
+{
+    d->writeConfig();
+}
 
 
 void DeleteCertificatesDialog::setSelectedKeys( const std::vector<Key> & keys ) {

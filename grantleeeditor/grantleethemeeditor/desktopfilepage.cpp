@@ -111,6 +111,9 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
     mAuthor->setText(GrantleeThemeEditor::GrantleeThemeEditorSettings::author());
 
     connect(mDescription->editor(), SIGNAL(textChanged()), this, SIGNAL(changed()));
+    connect(mEmail, SIGNAL(textChanged(QString)), this, SIGNAL(changed()));
+    connect(mAuthor, SIGNAL(textChanged(QString)), this, SIGNAL(changed()));
+    connect(mVersion, SIGNAL(textChanged(QString)), this, SIGNAL(changed()));
 }
 
 DesktopFilePage::~DesktopFilePage()

@@ -42,6 +42,11 @@ RichTextEditorWidget::~RichTextEditorWidget()
 
 }
 
+void RichTextEditorWidget::clear()
+{
+    mEditor->clear();
+}
+
 void RichTextEditorWidget::setAcceptRichText(bool b)
 {
     mEditor->setAcceptRichText(b);

@@ -28,7 +28,10 @@ namespace Akonadi {
 class ContactEditor;
 }
 
-class KTextEdit;
+
+namespace PimCommon {
+class RichTextEditorWidget;
+}
 class ContactConfigureDialog : public KDialog
 {
     Q_OBJECT
@@ -45,7 +48,7 @@ private Q_SLOTS:
 
 private:
     GrantleeThemeEditor::ConfigureWidget *mConfigureWidget;
-    KTextEdit *mDefaultTemplate;
+    PimCommon::RichTextEditorWidget *mDefaultTemplate;
     Akonadi::ContactEditor *mDefaultContact;
 };
 

@@ -45,6 +45,7 @@
 #include <KPushButton>
 #include <KStandardGuiItem>
 #include <KGlobalSettings>
+#include <KConfigGroup>
 
 #include <QString>
 #include <QByteArray>
@@ -61,7 +62,11 @@ namespace {
         explicit DumpCrlCacheDialog( QWidget * parent=0 )
             : QDialog( parent ), ui( this )
         {
-
+            readConfig();
+        }
+        ~DumpCrlCacheDialog()
+        {
+            writeConfig();
         }
 
     Q_SIGNALS:
@@ -76,6 +81,22 @@ namespace {
         }
 
     private:
+        void readConfig()
+        {
+            KConfigGroup dialog( KGlobal::config(), "DumpCrlCacheDialog" );
+            const QSize size = dialog.readEntry( "Size", QSize(600, 400) );
+            if ( size.isValid() ) {
+                resize( size );
+            }
+        }
+
+        void writeConfig()
+        {
+            KConfigGroup dialog( KGlobal::config(), "DumpCrlCacheDialog" );
+            dialog.writeEntry( "Size", size() );
+            dialog.sync();
+        }
+
         struct Ui {
             KDLogTextWidget logTextWidget;
             KPushButton     updateButton, closeButton;

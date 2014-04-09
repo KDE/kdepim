@@ -498,7 +498,7 @@ private slots:
     void saveSplitterSizes() const;
     void slotGrantleeThemesUpdated();
 
-    void slotCreateTodo(const KCalCore::Todo::Ptr &, const Akonadi::Collection &collection, const QString &urlMessageAkonadi);
+    void slotCreateTodo(const KCalCore::Todo::Ptr &, const Akonadi::Collection &collection);
 
     void slotCreateEvent(const KCalCore::Event::Ptr &eventPtr, const Akonadi::Collection &collection);
 
@@ -644,7 +644,7 @@ public:
     KHBox *mBox;
     HtmlStatusBar *mColorBar;
 #ifndef QT_NO_TREEVIEW
-    MimePartTreeView* mMimePartTree; //FIXME(Andras) port the functionality from KMMimePartTree to a new view class or to here with signals/slots
+    MimePartTreeView* mMimePartTree;
 #endif
     MailWebView *mViewer;
     FindBarMailWebView *mFindBar;

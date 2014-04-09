@@ -69,7 +69,6 @@ void TodoEditTest::shouldHaveDefaultValuesOnCreation()
     //We can't test if because it loads from settings and in Jenkins it doesn't exist but here it exists
     //QVERIFY(edit.collection().isValid());
     QVERIFY(!edit.message());
-    QVERIFY(edit.messageUrlAkonadi().isEmpty());
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
     QVERIFY(noteedit);
     QCOMPARE(noteedit->text(), QString());
@@ -192,7 +191,7 @@ void TodoEditTest::shouldEmitNotEmitTodoWhenTextIsEmpty()
     KMime::Message::Ptr msg(new KMime::Message);
     edit.setMessage(msg);
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
-    QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection,QString)));
+    QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection)));
     QTest::keyClick(noteedit, Qt::Key_Enter);
     QCOMPARE(spy.count(), 0);
 }
@@ -203,7 +202,7 @@ void TodoEditTest::shouldEmitNotEmitTodoWhenTextTrimmedIsEmpty()
     KMime::Message::Ptr msg(new KMime::Message);
     edit.setMessage(msg);
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
-    QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection,QString)));
+    QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection)));
     noteedit->setText(QLatin1String("      "));
     QTest::keyClick(noteedit, Qt::Key_Enter);
     QCOMPARE(spy.count(), 0);
@@ -221,7 +220,7 @@ void TodoEditTest::shouldEmitTodoWhenPressEnter()
     msg->subject(true)->fromUnicodeString(subject, "us-ascii");
     edit.setMessage(msg);
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
-    QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection,QString)));
+    QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection)));
     QTest::keyClick(noteedit, Qt::Key_Enter);
     QCOMPARE(spy.count(), 1);
 }
@@ -234,7 +233,7 @@ void TodoEditTest::shouldTodoHasCorrectSubject()
     msg->subject(true)->fromUnicodeString(subject, "us-ascii");
     edit.setMessage(msg);
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
-    QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection,QString)));
+    QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection)));
     QTest::keyClick(noteedit, Qt::Key_Enter);
     QCOMPARE(spy.count(), 1);
     KCalCore::Todo::Ptr todoPtr = spy.at(0).at(0).value<KCalCore::Todo::Ptr>();
@@ -249,11 +248,9 @@ void TodoEditTest::shouldClearAllWhenCloseWidget()
     QString subject = QLatin1String("Test Note");
     msg->subject(true)->fromUnicodeString(subject, "us-ascii");
     edit.setMessage(msg);
-    edit.setMessageUrlAkonadi(QLatin1String("foo"));
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
     edit.slotCloseWidget();
     QCOMPARE(noteedit->text(), QString());
-    QCOMPARE(edit.messageUrlAkonadi(), QString());
     QVERIFY(!edit.message());
 }
 
@@ -280,7 +277,7 @@ void TodoEditTest::shouldEmitCorrectCollection()
     akonadicombobox->setCurrentIndex(3);
     Akonadi::Collection col = akonadicombobox->currentCollection();
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
-    QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection,QString)));
+    QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection)));
     QTest::keyClick(noteedit, Qt::Key_Enter);
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0).at(1).value<Akonadi::Collection>(), col);
@@ -364,7 +361,7 @@ void TodoEditTest::shouldNotEmitTodoWhenMessageIsNull()
     QString subject = QLatin1String("Test Note");
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
     noteedit->setText(subject);
-    QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection,QString)));
+    QSignalSpy spy(&edit, SIGNAL(createTodo(KCalCore::Todo::Ptr,Akonadi::Collection)));
     QTest::keyClick(noteedit, Qt::Key_Enter);
     QCOMPARE(spy.count(), 0);
 }
@@ -392,18 +389,6 @@ void TodoEditTest::shouldHaveLineEditFocus()
     edit.setMessage(msg);
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
     QCOMPARE(noteedit->hasFocus(), true);
-}
-
-void TodoEditTest::shouldClearUrlMessageWhenSwitchMessage()
-{
-    MessageViewer::TodoEdit edit;
-    KMime::Message::Ptr msg(new KMime::Message);
-    edit.setMessage(msg);
-    edit.setMessageUrlAkonadi(QLatin1String("test"));
-    QCOMPARE(edit.messageUrlAkonadi(), QLatin1String("test"));
-    KMime::Message::Ptr msg2(new KMime::Message);
-    edit.setMessage(msg2);
-    QCOMPARE(edit.messageUrlAkonadi(), QString());
 }
 
 QTEST_KDEMAIN( TodoEditTest, GUI )

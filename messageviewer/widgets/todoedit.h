@@ -46,9 +46,6 @@ public:
 
     void writeConfig();
 
-    void setMessageUrlAkonadi(const QString &url);
-    QString messageUrlAkonadi() const;
-
     void showToDoWidget();
 public Q_SLOTS:
     void slotCloseWidget();
@@ -58,7 +55,7 @@ private Q_SLOTS:
     void slotCollectionChanged(int);
 
 Q_SIGNALS:
-    void createTodo(const KCalCore::Todo::Ptr &todo, const Akonadi::Collection &collection, const QString &messageUrlAkonadi);
+    void createTodo(const KCalCore::Todo::Ptr &todo, const Akonadi::Collection &collection);
     void collectionChanged(const Akonadi::Collection &col);
     void messageChanged(const KMime::Message::Ptr &msg);
 
@@ -66,7 +63,6 @@ protected:
     bool eventFilter(QObject *object, QEvent *e);
 private:
     void readConfig();
-    QString mMessageUrlAkonadi;
     Akonadi::Collection mCollection;
     KMime::Message::Ptr mMessage;
     KLineEdit *mNoteEdit;

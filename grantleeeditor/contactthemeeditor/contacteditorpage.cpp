@@ -15,17 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "themeeditorpage.h"
+#include "contacteditorpage.h"
 #include "desktopfilepage.h"
 #include "editorpage.h"
-#include "themeeditorwidget.h"
+#include "contacteditorwidget.h"
 #include "previewwidget.h"
 #include "themesession.h"
 #include "themeeditortabwidget.h"
 
 #include <knewstuff3/uploaddialog.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KInputDialog>
 #include <KZip>
 #include <KTempDir>
@@ -38,9 +38,9 @@
 #include <QPointer>
 #include <QDebug>
 
-ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &themeName, QWidget *parent)
+ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &themeName, QWidget *parent)
     : QWidget(parent),
-      mThemeSession(new GrantleeThemeEditor::ThemeSession(projectDir, QLatin1String("headerthemeeditor"))),
+      mThemeSession(new GrantleeThemeEditor::ThemeSession(projectDir, QLatin1String("contactthemeeditor"))),
       mChanged(false)
 {
     QHBoxLayout *lay = new QHBoxLayout;
@@ -48,72 +48,47 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
     connect(mTabWidget, SIGNAL(currentChanged(QWidget*)), this, SLOT(slotCurrentWidgetChanged(QWidget*)));
     lay->addWidget(mTabWidget);
     mEditorPage = new EditorPage(EditorPage::MainPage, projectDir);
+    mEditorPage->setPageFileName(QLatin1String("contact.html"));
     connect(mEditorPage, SIGNAL(needUpdateViewer()), this, SLOT(slotUpdateViewer()));
     connect(mEditorPage, SIGNAL(changed()), SLOT(slotChanged()));
-    mTabWidget->addTab(mEditorPage, i18n("Editor") + QLatin1String(" (header.html)"));
+    mTabWidget->addTab(mEditorPage, i18n("Editor") + QLatin1String(" (contact.html)"));
+
+    mEditorEmbeddedPage = createCustomPage(QLatin1String("contact_embedded.html"));
+
+    mEditorGroupPage = createCustomPage(QLatin1String("contactgroup.html"));
+
+    mEditorGroupEmbeddedPage = createCustomPage(QLatin1String("contactgroup_embedded.html"));
 
     GrantleeThemeEditor::DesktopFilePage::DesktopFileOptions opt;
-    opt |=GrantleeThemeEditor::DesktopFilePage::ExtraDisplayVariables;
-    opt |= GrantleeThemeEditor::DesktopFilePage::SpecifyFileName;
-
-    mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(QLatin1String("header.html"), opt);
-    mDesktopPage->setDefaultDesktopName(QLatin1String("header.desktop"));
+    mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(QLatin1String("contact.html"), opt);
+    mDesktopPage->setDefaultDesktopName(QLatin1String("theme.desktop"));
     mDesktopPage->setThemeName(themeName);
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
 
-    connect(mDesktopPage, SIGNAL(mainFileNameChanged(QString)), mEditorPage->preview(), SLOT(slotMainFileNameChanged(QString)));
-    connect(mDesktopPage, SIGNAL(mainFileNameChanged(QString)), mTabWidget, SLOT(slotMainFileNameChanged(QString)));
-    connect(mDesktopPage, SIGNAL(extraDisplayHeaderChanged(QStringList)), this, SLOT(slotExtraHeaderDisplayChanged(QStringList)));
+
     connect(mDesktopPage, SIGNAL(changed()), SLOT(slotChanged()));
     connect(mTabWidget, SIGNAL(tabCloseRequested(int)), SLOT(slotCloseTab(int)));
     setLayout(lay);
 }
 
-ThemeEditorPage::~ThemeEditorPage()
+ContactEditorPage::~ContactEditorPage()
 {
     qDeleteAll(mExtraPage);
     mExtraPage.clear();
     delete mThemeSession;
 }
 
-void ThemeEditorPage::slotCurrentWidgetChanged(QWidget *w)
-{
-    GrantleeThemeEditor::EditorPage *page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(w);
-    Q_EMIT canInsertFile(page);
-}
-
-void ThemeEditorPage::updatePreview()
+void ContactEditorPage::updatePreview()
 {
     mEditorPage->preview()->updateViewer();
 }
 
-void ThemeEditorPage::setPrinting(bool print)
-{
-    mEditorPage->preview()->setPrinting(print);
-}
-
-void ThemeEditorPage::slotExtraHeaderDisplayChanged(const QStringList &extraHeaders)
-{
-    mEditorPage->preview()->slotExtraHeaderDisplayChanged(extraHeaders);
-
-    QStringList result;
-    Q_FOREACH(QString var, extraHeaders) {
-        var = QLatin1String("header.") + var.remove(QLatin1Char('-'));
-        result <<var;
-    }
-
-    mEditorPage->editor()->createCompleterList(result);
-    Q_FOREACH (EditorPage *page, mExtraPage) {
-        page->editor()->createCompleterList(result);
-    }
-}
-
-void ThemeEditorPage::slotChanged()
+void ContactEditorPage::slotChanged()
 {
     setChanged(true);
 }
 
-void ThemeEditorPage::setChanged(bool b)
+void ContactEditorPage::setChanged(bool b)
 {
     if (mChanged != b) {
         mChanged = b;
@@ -121,7 +96,7 @@ void ThemeEditorPage::setChanged(bool b)
     }
 }
 
-void ThemeEditorPage::slotUpdateViewer()
+void ContactEditorPage::slotUpdateViewer()
 {
     if (themeWasChanged()) {
         saveTheme(false);
@@ -129,13 +104,13 @@ void ThemeEditorPage::slotUpdateViewer()
     mEditorPage->preview()->updateViewer();
 }
 
-void ThemeEditorPage::slotCloseTab(int index)
+void ContactEditorPage::slotCloseTab(int index)
 {
     mTabWidget->removeTab(index);
     setChanged(true);
 }
 
-void ThemeEditorPage::insertFile()
+void ContactEditorPage::insertFile()
 {
     QWidget *w = mTabWidget->currentWidget();
     if (!w)
@@ -149,12 +124,12 @@ void ThemeEditorPage::insertFile()
     }
 }
 
-bool ThemeEditorPage::themeWasChanged() const
+bool ContactEditorPage::themeWasChanged() const
 {
     return mChanged;
 }
 
-void ThemeEditorPage::installTheme(const QString &themePath)
+void ContactEditorPage::installTheme(const QString &themePath)
 {
     QDir dir(themePath);
     QDir themeDir(themePath + QDir::separator() + mDesktopPage->themeName());
@@ -170,6 +145,10 @@ void ThemeEditorPage::installTheme(const QString &themePath)
     }
     const QString newPath = themePath + QDir::separator() + mDesktopPage->themeName();
     mEditorPage->installTheme(newPath);
+    mEditorGroupPage->installTheme(newPath);
+    mEditorGroupEmbeddedPage->installTheme(newPath);
+    mEditorEmbeddedPage->installTheme(newPath);
+
 
     Q_FOREACH (EditorPage *page, mExtraPage) {
         page->installTheme(newPath);
@@ -178,7 +157,7 @@ void ThemeEditorPage::installTheme(const QString &themePath)
     KMessageBox::information(this, i18n("Theme installed in \"%1\"", themeDir.absolutePath()));
 }
 
-void ThemeEditorPage::uploadTheme()
+void ContactEditorPage::uploadTheme()
 {
     //force update for screenshot
     mEditorPage->preview()->updateViewer();
@@ -187,29 +166,37 @@ void ThemeEditorPage::uploadTheme()
     const QString zipFileName = tmp.name() + QDir::separator() + themename + QLatin1String(".zip");
     KZip *zip = new KZip(zipFileName);
     if (zip->open(QIODevice::WriteOnly)) {
-        const QString previewFileName = tmp.name() + QDir::separator() + themename + QLatin1String("_preview.png");
-        //qDebug()<<" previewFileName"<<previewFileName;
+
+        //TODO reactivate it when we will be able to create a preview
+        const QString previewContactFileName = tmp.name() + QDir::separator() + themename + QLatin1String("contact_preview.png");
+        const QString previewContactGroupFileName = tmp.name() + QDir::separator() + themename + QLatin1String("contactgroup_preview.png");
         QStringList lst;
-        lst << previewFileName;
+        lst << previewContactFileName << previewContactGroupFileName;
+
         mEditorPage->preview()->createScreenShot(lst);
 
-        const bool fileAdded  = zip->addLocalFile(previewFileName, themename + QLatin1Char('/') + QLatin1String("theme_preview.png"));
+        bool fileAdded  = zip->addLocalFile(previewContactFileName, themename + QLatin1Char('/') + QLatin1String("contact_preview.png"));
         if (!fileAdded) {
             KMessageBox::error(this, i18n("We cannot add preview file in zip file"), i18n("Failed to add file."));
             delete zip;
             return;
         }
-
+        fileAdded  = zip->addLocalFile(previewContactGroupFileName, themename + QLatin1Char('/') + QLatin1String("contactgroup_preview.png"));
+        if (!fileAdded) {
+            KMessageBox::error(this, i18n("We cannot add preview file in zip file"), i18n("Failed to add file."));
+            delete zip;
+            return;
+        }
         createZip(themename, zip);
         zip->close();
         //qDebug()<< "zipFilename"<<zipFileName;
 
-        QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("messageviewer_header_themes.knsrc"), this);
+        QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("kaddressbook_themes.knsrc"), this);
         dialog->setUploadFile(zipFileName);
         dialog->setUploadName(themename);
-        dialog->setPreviewImageFile(0, KUrl(previewFileName));
+        dialog->setPreviewImageFile(0, KUrl(previewContactFileName));
         const QString description = mDesktopPage->description();
-        dialog->setDescription(description.isEmpty() ? i18n("My favorite KMail header") : description);
+        dialog->setDescription(description.isEmpty() ? i18n("My favorite Kaddressbook theme") : description);
         dialog->exec();
         delete dialog;
     } else {
@@ -218,9 +205,13 @@ void ThemeEditorPage::uploadTheme()
     delete zip;
 }
 
-void ThemeEditorPage::createZip(const QString &themeName, KZip *zip)
+void ContactEditorPage::createZip(const QString &themeName, KZip *zip)
 {
     mEditorPage->createZip(themeName, zip);
+    mEditorGroupPage->createZip(themeName, zip);
+    mEditorGroupEmbeddedPage->createZip(themeName, zip);
+    mEditorEmbeddedPage->createZip(themeName, zip);
+
 
     Q_FOREACH (EditorPage *page, mExtraPage) {
         page->createZip(themeName, zip);
@@ -228,11 +219,11 @@ void ThemeEditorPage::createZip(const QString &themeName, KZip *zip)
     mDesktopPage->createZip(themeName, zip);
 }
 
-void ThemeEditorPage::addExtraPage()
+void ContactEditorPage::addExtraPage()
 {
     QString filename = KInputDialog::getText(i18n("Filename of extra page"), i18n("Filename:"));
     if (!filename.isEmpty()) {
-        if (!filename.endsWith(QLatin1String(".html"))) {
+        if (!filename.endsWith(QLatin1String(".html")) && !filename.endsWith(QLatin1String(".css")) && !filename.endsWith(QLatin1String(".js"))) {
             filename += QLatin1String(".html");
         }
         createExtraPage(filename);
@@ -241,7 +232,17 @@ void ThemeEditorPage::addExtraPage()
     }
 }
 
-EditorPage *ThemeEditorPage::createExtraPage(const QString &filename)
+EditorPage *ContactEditorPage::createCustomPage(const QString &filename)
+{
+    EditorPage *customPage = new EditorPage(EditorPage::SecondPage, QString());
+    connect(customPage, SIGNAL(changed()), SLOT(slotChanged()));
+    customPage->setPageFileName(filename);
+    mTabWidget->addTab(customPage, filename);
+    return customPage;
+}
+
+
+EditorPage *ContactEditorPage::createExtraPage(const QString &filename)
 {
     EditorPage *extraPage = new EditorPage(EditorPage::ExtraPage, QString());
     connect(extraPage, SIGNAL(changed()), SLOT(slotChanged()));
@@ -252,24 +253,27 @@ EditorPage *ThemeEditorPage::createExtraPage(const QString &filename)
     return extraPage;
 }
 
-void ThemeEditorPage::storeTheme(const QString &directory)
+void ContactEditorPage::storeTheme(const QString &directory)
 {
     const QString themeDirectory = directory.isEmpty() ? projectDirectory() : directory;
-    //set default page filename before saving
-    mEditorPage->setPageFileName(mDesktopPage->filename());
     mEditorPage->saveTheme(themeDirectory);
+
+    mEditorGroupPage->saveTheme(themeDirectory);
+    mEditorGroupEmbeddedPage->saveTheme(themeDirectory);
+    mEditorEmbeddedPage->saveTheme(themeDirectory);
+
 
     Q_FOREACH (EditorPage *page, mExtraPage) {
         page->saveTheme(themeDirectory);
     }
     mDesktopPage->saveTheme(themeDirectory);
-    mThemeSession->setMainPageFileName(mDesktopPage->filename());
-    mThemeSession->writeSession(directory);
+    mThemeSession->setMainPageFileName(mEditorPage->pageFileName());
+    mThemeSession->writeSession(themeDirectory);
     if (directory.isEmpty())
         setChanged(false);
 }
 
-bool ThemeEditorPage::saveTheme(bool withConfirmation)
+bool ContactEditorPage::saveTheme(bool withConfirmation)
 {
     if (themeWasChanged()) {
         if (withConfirmation) {
@@ -287,34 +291,46 @@ bool ThemeEditorPage::saveTheme(bool withConfirmation)
     return true;
 }
 
-void ThemeEditorPage::loadTheme(const QString &filename)
+void ContactEditorPage::loadTheme(const QString &filename)
 {
     if (mThemeSession->loadSession(filename)) {
-        mDesktopPage->loadTheme(mThemeSession->projectDirectory());
-        mEditorPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + mThemeSession->mainPageFileName());
-        mEditorPage->preview()->setThemePath(mThemeSession->projectDirectory(), mThemeSession->mainPageFileName());
+        const QString projectDirectory = mThemeSession->projectDirectory();
+        mDesktopPage->loadTheme(projectDirectory);
+        mEditorGroupPage->loadTheme(projectDirectory + QDir::separator() + QLatin1String("contactgroup.html"));
+        mEditorGroupEmbeddedPage->loadTheme(projectDirectory + QDir::separator() + QLatin1String("contactgroup_embedded.html"));
+        mEditorEmbeddedPage->loadTheme(projectDirectory + QDir::separator() + QLatin1String("contact_embedded.html"));
+
+
+        mEditorPage->loadTheme(projectDirectory + QDir::separator() + mThemeSession->mainPageFileName());
+        mEditorPage->preview()->setThemePath(projectDirectory, mThemeSession->mainPageFileName());
 
         const QStringList lstExtraPages = mThemeSession->extraPages();
         Q_FOREACH(const QString &page, lstExtraPages) {
             EditorPage *extraPage = createExtraPage(page);
-            extraPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + page);
+            extraPage->loadTheme(projectDirectory + QDir::separator() + page);
         }
         mTabWidget->setCurrentIndex(0);
         setChanged(false);
     }
 }
 
-void ThemeEditorPage::reloadConfig()
+void ContactEditorPage::reloadConfig()
 {
     mEditorPage->preview()->loadConfig();
 }
 
-QString ThemeEditorPage::projectDirectory() const
+QString ContactEditorPage::projectDirectory() const
 {
     return mThemeSession->projectDirectory();
 }
 
-void ThemeEditorPage::saveThemeAs(const QString &directory)
+void ContactEditorPage::slotCurrentWidgetChanged(QWidget *w)
+{
+    GrantleeThemeEditor::EditorPage *page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(w);
+    Q_EMIT canInsertFile(page);
+}
+
+void ContactEditorPage::saveThemeAs(const QString &directory)
 {
     storeTheme(directory);
 }

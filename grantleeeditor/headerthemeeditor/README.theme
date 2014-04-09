@@ -1,0 +1,54 @@
+How to create kmail header based on Grantlee:
+---------------------------------------------
+You can use directly headerthemeeditor
+
+When you want to add css file or js file you need to use:
+"<link href="{{ header.absoluteThemePath }}style.css" rel="stylesheet" type="text/css" />"
+header.abasoluteThemePath defines path where is installed themes. KMail doesn't load relative path
+
+
+We have some variable which can use to define theme:
+- i18n variables: (default translated string)
+        header.subjecti18n
+        header.replyToi18n
+        header.toi18n
+        header.cci18n
+        header.bcci18n
+        header.fromi18n
+        header.spamstatusi18n
+        header.datei18n
+        header.resentfromi18n
+        header.vcardi18n
+        header.resenttoi18n
+
+- theme variables:
+        header.absoluteThemePath
+        header.subject
+        header.replyTo
+        header.replyToStr
+        header.to
+        header.toStr
+        header.cc
+        header.ccStr
+        header.bcc
+        header.bccStr
+        header.from
+        header.fromStr
+        header.spamHTML
+        header.dateshort
+        header.date
+        header.useragent
+        header.xmailer
+        header.resentfrom
+        header.organization
+        header.vcardname
+        header.activecolordark
+        header.fontcolor
+        header.linkcolor
+        header.photowidth
+        header.photoheight
+        header.applicationDir
+        header.subjectDir
+        header.photourl
+        header.isprinting
+        header.resentto
