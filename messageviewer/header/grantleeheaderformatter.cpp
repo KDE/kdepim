@@ -71,10 +71,11 @@ QString GrantleeHeaderFormatter::toHtml(const QStringList &displayExtraHeaders, 
 {
     d->templateLoader->setTemplateDirs( QStringList() << absolutPath );
     Grantlee::Template headerTemplate = d->engine->loadByName( filename );
+    qDebug()<<" absolutPath"<<absolutPath;
     if ( headerTemplate->error() ) {
         return headerTemplate->errorString();
     }
-    return format(headerTemplate, displayExtraHeaders, isPrinting, style, message);
+    return format(absolutPath, headerTemplate, displayExtraHeaders, isPrinting, style, message);
 }
 
 QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme::Theme &theme, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const
@@ -90,10 +91,10 @@ QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme::Theme &theme, bool 
         errorMessage = headerTemplate->errorString();
         return errorMessage;
     }
-    return format(headerTemplate, theme.displayExtraVariables(), isPrinting, style, message);
+    return format(theme.absolutePath(), headerTemplate, theme.displayExtraVariables(), isPrinting, style, message);
 }
 
-QString GrantleeHeaderFormatter::format(Grantlee::Template headerTemplate, const QStringList &displayExtraHeaders, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const
+QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::Template headerTemplate, const QStringList &displayExtraHeaders, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const
 {
     QVariantHash headerObject;
 
@@ -102,7 +103,8 @@ QString GrantleeHeaderFormatter::format(Grantlee::Template headerTemplate, const
     // the "Re:" and "Fwd:" prefixes would always cause the subject to be
     // considered left-to-right, they are ignored when determining its
     // direction.
-
+    const QString absoluteThemePath = QLatin1String("file://") + absolutePath + QLatin1Char('/');
+    headerObject.insert(QLatin1String("absoluteThemePath"), absoluteThemePath);
     headerObject.insert(QLatin1String("applicationDir"), QApplication::isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr"));
     headerObject.insert(QLatin1String("subjectDir"), MessageViewer::HeaderStyleUtil::subjectDirectionString( message ));
 
