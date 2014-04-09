@@ -195,8 +195,10 @@ void ThemeEditorMainWindow::slotUploadTheme()
 bool ThemeEditorMainWindow::slotSaveTheme()
 {
     bool result = false;
-    if (mThemeEditor)
+    if (mThemeEditor) {
         result = mThemeEditor->saveTheme(false);
+        mSaveAction->setEnabled(!result);
+    }
     return result;
 }
 
@@ -213,6 +215,7 @@ void ThemeEditorMainWindow::slotOpenTheme()
     const QString directory = KFileDialog::getExistingDirectory(KUrl( "kfiledialog:///OpenTheme" ), this, i18n("Select theme directory"));
     loadTheme(directory);
     mRecentFileAction->addUrl(KUrl(directory));
+    mSaveAction->setEnabled(false);
 }
 
 void ThemeEditorMainWindow::loadTheme(const QString &directory)
@@ -243,8 +246,9 @@ void ThemeEditorMainWindow::slotAddExtraPage()
 bool ThemeEditorMainWindow::saveCurrentProject(bool createNewTheme)
 {
     if (mThemeEditor) {
-        if (!mThemeEditor->saveTheme())
+        if (!mThemeEditor->saveTheme()) {
             return false;
+        }
     }
     if (createNewTheme) {
         delete mThemeEditor;
@@ -313,6 +317,7 @@ void ThemeEditorMainWindow::slotThemeSelected(const KUrl &url)
     if (!saveCurrentProject(false))
         return;
     loadTheme(url.path());
+    mSaveAction->setEnabled(false);
 }
 
 void ThemeEditorMainWindow::slotSaveAsTheme()
