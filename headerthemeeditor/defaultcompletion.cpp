@@ -23,6 +23,7 @@ QStringList DefaultCompletion::defaultCompetion()
     QStringList lst;
     lst <<QLatin1String( "<div>" )
         <<QLatin1String( "class=\"fancy header\"" )
+        <<QLatin1String( "header.absoluteThemePath" )
         <<QLatin1String( "header.subjecti18n" )
         <<QLatin1String( "header.subject" )
         <<QLatin1String( "header.replyToi18n" )
