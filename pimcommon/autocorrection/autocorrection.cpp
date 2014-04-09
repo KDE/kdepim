@@ -84,8 +84,8 @@ void AutoCorrection::selectWord(QTextCursor &cursor, int cursorPosition)
         } else if (space) {
             break;
         }
-        pos++;
-        iter++;
+        ++pos;
+        ++iter;
     }
     cursor.setPosition(pos + block.position(), QTextCursor::KeepAnchor);
 }
@@ -823,8 +823,8 @@ void AutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
 
     if (mAutoCorrectLang.isEmpty())
         mAutoCorrectLang = kdelang;
-    qDebug()<<" fname :"<<fname;
-    qDebug()<<" LocalFile:"<<LocalFile;
+    //qDebug()<<" fname :"<<fname;
+    //qDebug()<<" LocalFile:"<<LocalFile;
 
     if (LocalFile.isEmpty()) {
         if (fname.isEmpty()) {

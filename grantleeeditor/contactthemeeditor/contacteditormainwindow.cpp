@@ -175,8 +175,10 @@ void ContactEditorMainWindow::slotUploadTheme()
 bool ContactEditorMainWindow::slotSaveTheme()
 {
     bool result = false;
-    if (mContactEditor)
+    if (mContactEditor) {
         result = mContactEditor->saveTheme(false);
+        mSaveAction->setEnabled(result);
+    }
     return result;
 }
 
@@ -193,6 +195,7 @@ void ContactEditorMainWindow::slotOpenTheme()
     const QString directory = KFileDialog::getExistingDirectory(KUrl( "kfiledialog:///OpenTheme" ), this, i18n("Select theme directory"));
     loadTheme(directory);
     mRecentFileAction->addUrl(KUrl(directory));
+    mSaveAction->setEnabled(false);
 }
 
 void ContactEditorMainWindow::loadTheme(const QString &directory)
@@ -294,6 +297,7 @@ void ContactEditorMainWindow::slotThemeSelected(const KUrl &url)
     if (!saveCurrentProject(false))
         return;
     loadTheme(url.path());
+    mSaveAction->setEnabled(false);
 }
 
 void ContactEditorMainWindow::slotSaveAsTheme()
