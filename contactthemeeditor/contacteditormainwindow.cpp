@@ -184,15 +184,18 @@ bool ContactEditorMainWindow::slotSaveTheme()
 
 void ContactEditorMainWindow::slotCloseTheme()
 {
-    saveCurrentProject(false);
+    saveCurrentProject(SaveAndCloseTheme);
 }
 
 void ContactEditorMainWindow::slotOpenTheme()
 {
-    if (!saveCurrentProject(false))
+    if (!saveCurrentProject(SaveOnly))
         return;
 
     const QString directory = KFileDialog::getExistingDirectory(KUrl( "kfiledialog:///OpenTheme" ), this, i18n("Select theme directory"));
+    if (directory.isEmpty())
+        return;
+    closeThemeEditor();
     loadTheme(directory);
     mRecentFileAction->addUrl(KUrl(directory));
     mSaveAction->setEnabled(false);
@@ -224,13 +227,28 @@ void ContactEditorMainWindow::slotAddExtraPage()
         mContactEditor->addExtraPage();
 }
 
-bool ContactEditorMainWindow::saveCurrentProject(bool createNewTheme)
+void ContactEditorMainWindow::closeThemeEditor()
+{
+    delete mContactEditor;
+    mContactEditor = 0;
+    setCentralWidget(0);
+    updateActions();
+}
+
+bool ContactEditorMainWindow::saveCurrentProject(ActionSaveTheme act)
 {
     if (mContactEditor) {
         if (!mContactEditor->saveTheme())
             return false;
     }
-    if (createNewTheme) {
+    switch(act) {
+    case SaveOnly:
+        break;
+    case SaveAndCloseTheme: {
+        closeThemeEditor();
+        break;
+    }
+    case SaveAndCreateNewTheme: {
         delete mContactEditor;
         mContactEditor = 0;
         QPointer<GrantleeThemeEditor::NewThemeDialog> dialog = new GrantleeThemeEditor::NewThemeDialog(this);
@@ -251,23 +269,20 @@ bool ContactEditorMainWindow::saveCurrentProject(bool createNewTheme)
         }
         delete dialog;
         updateActions();
-    } else {
-        delete mContactEditor;
-        mContactEditor = 0;
-        setCentralWidget(0);
-        updateActions();
+        break;
+    }
     }
     return true;
 }
 
 void ContactEditorMainWindow::slotNewTheme()
 {
-    saveCurrentProject(true);
+    saveCurrentProject(SaveAndCreateNewTheme);
 }
 
 void ContactEditorMainWindow::closeEvent(QCloseEvent *e)
 {
-    if (!saveCurrentProject(false))
+    if (!saveCurrentProject(SaveAndCloseTheme))
         e->ignore();
     else
         e->accept();
@@ -275,7 +290,7 @@ void ContactEditorMainWindow::closeEvent(QCloseEvent *e)
 
 void ContactEditorMainWindow::slotQuitApp()
 {
-    if (saveCurrentProject(false))
+    if (saveCurrentProject(SaveAndCloseTheme))
         kapp->quit();
 }
 
@@ -294,7 +309,7 @@ void ContactEditorMainWindow::slotCanInsertFile(bool b)
 
 void ContactEditorMainWindow::slotThemeSelected(const KUrl &url)
 {
-    if (!saveCurrentProject(false))
+    if (!saveCurrentProject(SaveAndCloseTheme))
         return;
     loadTheme(url.path());
     mSaveAction->setEnabled(false);
