@@ -62,7 +62,7 @@ private:
         SaveAndCreateNewTheme
     };
 
-    void loadTheme(const QString &directory);
+    bool loadTheme(const QString &directory);
     void readConfig();
     void updateActions();
     bool saveCurrentProject(ActionSaveTheme act);
