@@ -169,8 +169,8 @@ void ThemeEditorPage::installTheme(const QString &themePath)
         }
     }
     const QString newPath = themePath + QDir::separator() + mDesktopPage->themeName();
+    mEditorPage->setPageFileName(mDesktopPage->filename());
     mEditorPage->installTheme(newPath);
-
     Q_FOREACH (EditorPage *page, mExtraPage) {
         page->installTheme(newPath);
     }
