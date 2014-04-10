@@ -217,19 +217,19 @@ void ThemeEditorMainWindow::slotOpenTheme()
         return;
     }
     closeThemeEditor();
-    loadTheme(directory);
-    mRecentFileAction->addUrl(KUrl(directory));
+    if (loadTheme(directory))
+        mRecentFileAction->addUrl(KUrl(directory));
     mSaveAction->setEnabled(false);
 }
 
-void ThemeEditorMainWindow::loadTheme(const QString &directory)
+bool ThemeEditorMainWindow::loadTheme(const QString &directory)
 {
     if (!directory.isEmpty()) {
         const QString filename = directory + QDir::separator() + QLatin1String("theme.themerc");
         QFile file(filename);
         if (!file.exists()) {
             KMessageBox::error(this, i18n("Directory does not contain a theme file. We cannot load theme."));
-            return;
+            return false;
         }
 
         mThemeEditor = new ThemeEditorPage(QString(), QString());
@@ -239,6 +239,7 @@ void ThemeEditorMainWindow::loadTheme(const QString &directory)
         setCentralWidget(mThemeEditor);
         updateActions();
     }
+    return true;
 }
 
 void ThemeEditorMainWindow::slotAddExtraPage()

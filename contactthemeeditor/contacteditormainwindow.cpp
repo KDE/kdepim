@@ -196,19 +196,19 @@ void ContactEditorMainWindow::slotOpenTheme()
     if (directory.isEmpty())
         return;
     closeThemeEditor();
-    loadTheme(directory);
-    mRecentFileAction->addUrl(KUrl(directory));
+    if (loadTheme(directory))
+        mRecentFileAction->addUrl(KUrl(directory));
     mSaveAction->setEnabled(false);
 }
 
-void ContactEditorMainWindow::loadTheme(const QString &directory)
+bool ContactEditorMainWindow::loadTheme(const QString &directory)
 {
     if (!directory.isEmpty()) {
         const QString filename = directory + QDir::separator() + QLatin1String("theme.themerc");
         QFile file(filename);
         if (!file.exists()) {
             KMessageBox::error(this, i18n("Directory does not contain a theme file. We cannot load theme."));
-            return;
+            return false;
         }
 
         mContactEditor = new ContactEditorPage(QString(), QString());
@@ -218,6 +218,7 @@ void ContactEditorMainWindow::loadTheme(const QString &directory)
         setCentralWidget(mContactEditor);
         updateActions();
     }
+    return true;
 }
 
 
