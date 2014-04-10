@@ -41,6 +41,7 @@ WebDavJob::WebDavJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent),
       mNbAuthCheck(0)
 {
+    mShareApi = QLatin1String("/ocs/v1.php/apps/files_sharing/api/v1/shares");
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
     connect(mNetworkAccessManager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)), SLOT(slotAuthenticationRequired(QNetworkReply*,QAuthenticator*)));
 }
@@ -421,6 +422,7 @@ void WebDavJob::parseCreateServiceFolder(const QString &/*data*/)
 
 void WebDavJob::parseShareLink(const QString &data)
 {
+    qDebug()<<" data"<<data;
     Q_EMIT shareLinkDone(data);
     deleteLater();
 }
@@ -570,14 +572,22 @@ void WebDavJob::shareLink(const QString &/*root*/, const QString &path)
 {
     mActionType = PimCommon::StorageServiceAbstract::ShareLink;
     mError = false;
+    QString filePath(path);
     if (!path.startsWith(mServiceLocation)) {
         QUrl sourceFile(mServiceLocation);
         sourceFile.setPath(path);
-        parseShareLink(sourceFile.toString());
-    } else {
-        parseShareLink(path);
+        filePath = sourceFile.toString();
     }
-    deleteLater();
+    QUrl path2(mServiceLocation);
+    QNetworkRequest request(QUrl(path2.scheme() + QLatin1String("://") + path2.host() + mShareApi));
+    qDebug()<<" filePath"<<filePath;
+    qDebug()<<" url"<<(path2.scheme() + QLatin1String("://") + path2.host() + mShareApi);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    QUrl postData;
+    postData.addQueryItem(QLatin1String("path"), filePath);
+    postData.addQueryItem(QLatin1String("shareType"), QString::number(3)); //public link
+    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void WebDavJob::createServiceFolder()

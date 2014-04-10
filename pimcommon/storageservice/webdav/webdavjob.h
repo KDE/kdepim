@@ -103,6 +103,7 @@ private:
     QString mServiceLocation;
     QString mUserName;
     QString mPassword;
+    QString mShareApi;
 
     int mNbAuthCheck;
 };
