@@ -79,7 +79,8 @@ void BalsaAddressBook::readAddressBook(const KConfigGroup &grp)
                 file.close();
 
                 KABC::LDIFConverter::LDIFToAddressee( wholeFile, contacts, dtDefault );
-                Q_FOREACH (const KABC::Addressee&contact, contacts) {
+                Q_FOREACH (KABC::Addressee contact, contacts) {
+                    addImportNote(contact, QLatin1String("Balsa"));
                     createContact( contact );
                 }
             }

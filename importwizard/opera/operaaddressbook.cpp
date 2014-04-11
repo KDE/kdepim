@@ -83,6 +83,7 @@ OperaAddressBook::~OperaAddressBook()
 void OperaAddressBook::appendContact(KABC::Addressee *contact)
 {
     if (contact) {
+        addImportNote( *contact, QLatin1String("Opera"));
         createContact( *contact );
         delete contact;
         contact = 0;

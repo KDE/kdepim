@@ -143,6 +143,7 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
             } else {
                 kDebug()<<" problem uidPerson already stored"<<uidPerson;
             }
+            addImportNote(contact, QLatin1String("Sylpheed"));
             createContact( contact );
         } else if (tag == QLatin1String("group")) {
             QString name;

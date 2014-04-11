@@ -241,6 +241,7 @@ void ThunderBirdAddressBook::readAddressBook( const QString &filename )
                             if (birthDate.isValid()) {
                                 contact.setBirthday( birthDate );
                             }
+                            addImportNote(contact, QLatin1String("Thunderbird"));
                             createContact( contact );
                             kDebug()<<"-----------------------";
                         }
