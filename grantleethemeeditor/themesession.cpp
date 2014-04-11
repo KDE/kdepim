@@ -30,7 +30,7 @@ using namespace GrantleeThemeEditor;
 ThemeSession::ThemeSession(const QString &projectDirectory, const QString &themeTypeName)
     : mProjectDirectory(projectDirectory),
       mThemeTypeName(themeTypeName),
-      mVersion(1.0)
+      mVersion(1)
 {
 }
 
@@ -68,7 +68,7 @@ bool ThemeSession::loadSession(const QString &session)
     KConfig config(session);
     if (config.hasGroup(QLatin1String("Global"))) {
         KConfigGroup global = config.group(QLatin1String("Global"));
-        const int version = global.readEntry(QLatin1String("version"), 0.0);
+        const int version = global.readEntry(QLatin1String("version"), 0);
         if (version >= mVersion) {
             if (global.readEntry(QLatin1String("themeTypeName")) != mThemeTypeName) {
                 KMessageBox::error(0, i18n("Error during theme loading"), i18n("You are trying to load a theme which cannot be read by this application"));
