@@ -63,6 +63,9 @@ NoteAlarmDialog::NoteAlarmDialog( const QString &caption, QWidget *parent )
     QRadioButton *label_at = new QRadioButton( i18n( "Alarm &at:" ), at );
     m_atDate = new KDateComboBox( at );
     m_atTime = new KTimeComboBox( at );
+    const QDateTime dateTime = QDateTime::currentDateTime();
+    m_atDate->setMinimumDate(dateTime.date());
+    m_atTime->setMinimumTime(dateTime.time());
     at->setStretchFactor( m_atDate, 1 );
     layout->addWidget( at );
     m_buttons->addButton( label_at, 1 );
