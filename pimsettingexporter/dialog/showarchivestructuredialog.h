@@ -37,7 +37,7 @@ private Q_SLOTS:
 
 private:
     void exportAsLogFile();
-    void fillTree();
+    bool fillTree();
     void readConfig();
     void writeConfig();
 

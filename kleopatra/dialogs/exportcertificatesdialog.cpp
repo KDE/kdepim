@@ -40,7 +40,7 @@
 #include <KLocalizedString>
 #include <KPushButton>
 
-#include <QGridLayout>
+#include <QFormLayout>
 #include <QLabel>
 
 using namespace Kleo;
@@ -66,19 +66,21 @@ ExportCertificatesDialog::Private::Private( ExportCertificatesDialog * qq )
     q->setButtons( KDialog::Ok | KDialog::Cancel );
     q->setButtonGuiItem( KDialog::Ok, KGuiItem( i18n( "Export" ) ) );
     QWidget* const main = new QWidget;
-    QGridLayout* const grid = new QGridLayout( main );
+    QFormLayout *layout = new QFormLayout;
+    main->setLayout(layout);
+
     QLabel* const pgpLabel = new QLabel;
     pgpLabel->setText( i18n(" OpenPGP export file:" ) );
-    grid->addWidget( pgpLabel, 0, 0 );     
     pgpRequester = new FileNameRequester;
     connect( pgpRequester, SIGNAL(fileNameChanged(QString)), q, SLOT(fileNamesChanged()) );
-    grid->addWidget( pgpRequester, 0, 1 );
+    layout->addRow(pgpLabel, pgpRequester);
+
     QLabel* const cmsLabel = new QLabel;
     cmsLabel->setText( i18n( "S/MIME export file:" ) );
-    grid->addWidget( cmsLabel, 1, 0 );
     cmsRequester = new FileNameRequester;
+    layout->addRow(cmsLabel, cmsRequester);
+
     connect( cmsRequester, SIGNAL(fileNameChanged(QString)), q, SLOT(fileNamesChanged()) );
-    grid->addWidget( cmsRequester, 1, 1 );
     q->setMainWidget( main );
     fileNamesChanged();
 }

@@ -69,7 +69,10 @@ void NoteListWidget::createItem(const Akonadi::Item &note)
     if (!noteMessage)
         return;
     QListWidgetItem *item =new QListWidgetItem(this);
-    item->setText(noteMessage->subject(false)->asUnicodeString());
+
+    const KMime::Headers::Subject * const subject = noteMessage ? noteMessage->subject(false) : 0;
+    if (subject)
+        item->setText(subject->asUnicodeString());
 
     item->setToolTip(NoteShared::NoteUtils::createToolTip(note));
     item->setData(AkonadiId, note.id());
