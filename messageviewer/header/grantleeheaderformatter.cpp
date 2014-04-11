@@ -71,7 +71,6 @@ QString GrantleeHeaderFormatter::toHtml(const QStringList &displayExtraHeaders, 
 {
     d->templateLoader->setTemplateDirs( QStringList() << absolutPath );
     Grantlee::Template headerTemplate = d->engine->loadByName( filename );
-    qDebug()<<" absolutPath"<<absolutPath;
     if ( headerTemplate->error() ) {
         return headerTemplate->errorString();
     }
