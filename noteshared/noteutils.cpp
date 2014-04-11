@@ -92,7 +92,9 @@ QString NoteShared::NoteUtils::createToolTip(const Akonadi::Item &item)
 {
     const KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
     const QString description = QString::fromUtf8(noteMessage->mainBodyPart()->decodedContent());
-    const QString realName = noteMessage->subject(false)->asUnicodeString();
+    const KMime::Headers::Subject * const subject = noteMessage ? noteMessage->subject(false) : 0;
+
+    const QString realName = subject ? subject->asUnicodeString() : QString();
     const bool isRichText = noteMessage->contentType()->isHTMLText();
 
     QString tip;

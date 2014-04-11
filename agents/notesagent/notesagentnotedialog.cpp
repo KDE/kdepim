@@ -81,7 +81,9 @@ void NotesAgentNoteDialog::slotFetchItem(KJob* job)
         const Akonadi::Item item = lstItem.first();
         KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
         if (noteMessage) {
-            mSubject->setText(noteMessage->subject(false)->asUnicodeString());
+            const KMime::Headers::Subject * const subject = noteMessage ? noteMessage->subject(false) : 0;
+            if (subject)
+                mSubject->setText(subject->asUnicodeString());
             if ( noteMessage->contentType()->isHTMLText() ) {
                 mNote->setAcceptRichText(true);
                 mNote->setHtml(noteMessage->mainBodyPart()->decodedText());
