@@ -58,7 +58,6 @@ class KMenu;
 class QPoint;
 class QSplitter;
 class QModelIndex;
-class QTreeView;
 
 namespace GrantleeTheme {
 class GrantleeThemeManager;
@@ -79,7 +78,6 @@ class ObjectTreeParser;
 class HeaderStrategy;
 class HeaderStyle;
 class FindBarMailWebView;
-class MimeTreeModel;
 class WebKitPartHtmlWriter;
 class HtmlStatusBar;
 class MailWebView;
