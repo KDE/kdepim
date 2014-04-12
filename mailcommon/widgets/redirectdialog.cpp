@@ -134,14 +134,25 @@ class RedirectDialog::Private
 {
 public:
     Private( RedirectDialog *qq, RedirectDialog::SendMode mode )
-        : q( qq ), mEditTo( 0 ), mSendMode( mode ), mComboboxIdentity( 0 ), mTransportCombobox( 0 )
+        : q( qq ),
+          mEditTo( 0 ),
+          mEditCc( 0 ),
+          mEditBcc( 0 ),
+          mSendMode( mode ),
+          mComboboxIdentity( 0 ),
+          mTransportCombobox( 0 )
     {
     }
+    enum TypeAddress {
+        ResendTo,
+        ResendCc,
+        ResendBcc
+    };
 
     void slotUser1();
     void slotUser2();
     void slotAddressChanged( const QString & );
-    QString redirectLabelType(RedirectWidget::TypeAddress type) const;
+    QString redirectLabelType(TypeAddress type) const;
     RedirectDialog *q;
     RedirectWidget *mEditTo;
     RedirectWidget *mEditCc;
@@ -152,17 +163,17 @@ public:
     MailTransport::TransportComboBox *mTransportCombobox;
 };
 
-QString RedirectDialog::Private::redirectLabelType(MailCommon::RedirectWidget::TypeAddress type) const
+QString RedirectDialog::Private::redirectLabelType(TypeAddress type) const
 {
     QString label;
     switch(type) {
-    case RedirectWidget::ResendTo:
+    case ResendTo:
         label = i18n("Resend-To:");
         break;
-    case RedirectWidget::ResendCc:
+    case ResendCc:
         label = i18n("Resend-Cc:");
         break;
-    case RedirectWidget::ResendBcc:
+    case ResendBcc:
         label = i18n("Resend-Bcc:");
         break;
     }
@@ -208,14 +219,14 @@ RedirectDialog::RedirectDialog( SendMode mode, QWidget *parent )
 
     d->mEditTo = new RedirectWidget;
     mainLayout->addWidget(d->mEditTo);
-    formLayout->addRow(d->redirectLabelType(RedirectWidget::ResendTo), d->mEditTo);
+    formLayout->addRow(d->redirectLabelType(RedirectDialog::Private::ResendTo), d->mEditTo);
 
     connect( d->mEditTo, SIGNAL(addressChanged(QString)), SLOT(slotAddressChanged(QString)) );
 
     d->mEditCc = new RedirectWidget;
-    formLayout->addRow(d->redirectLabelType(RedirectWidget::ResendCc), d->mEditCc);
+    formLayout->addRow(d->redirectLabelType(RedirectDialog::Private::ResendCc), d->mEditCc);
     d->mEditBcc = new RedirectWidget;
-    formLayout->addRow(d->redirectLabelType(RedirectWidget::ResendBcc), d->mEditBcc);
+    formLayout->addRow(d->redirectLabelType(RedirectDialog::Private::ResendBcc), d->mEditBcc);
     d->mEditTo->setFocus();
 
     QHBoxLayout *hbox = new QHBoxLayout;

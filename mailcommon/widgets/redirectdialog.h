@@ -45,12 +45,6 @@ class RedirectWidget : public QWidget
 {
     Q_OBJECT
 public:
-    enum TypeAddress {
-        ResendTo,
-        ResendCc,
-        ResendBcc
-    };
-
     explicit RedirectWidget(QWidget *parent=0);
     ~RedirectWidget();
 
