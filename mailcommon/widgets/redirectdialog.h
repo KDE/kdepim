@@ -33,6 +33,7 @@
 #include "mailcommon_export.h"
 
 #include <KDialog>
+class QFormLayout;
 
 namespace MessageComposer {
 class ComposerLineEdit;
@@ -50,7 +51,7 @@ public:
         ResendBcc
     };
 
-    explicit RedirectWidget(TypeAddress type, QWidget *parent=0);
+    explicit RedirectWidget(QWidget *parent=0);
     ~RedirectWidget();
 
     void setFocus();

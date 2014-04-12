@@ -56,10 +56,11 @@
 #include <QPushButton>
 #include <QTreeView>
 #include <QHBoxLayout>
+#include <QFormLayout>
 
 using namespace MailCommon;
 
-RedirectWidget::RedirectWidget(TypeAddress type, QWidget *parent)
+RedirectWidget::RedirectWidget(QWidget *parent)
     : QWidget(parent)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
@@ -67,20 +68,6 @@ RedirectWidget::RedirectWidget(TypeAddress type, QWidget *parent)
     hbox->setMargin( 0 );
     hbox->setAlignment(Qt::AlignRight);
     setLayout(hbox);
-
-    QLabel *lab = new QLabel;
-    switch(type) {
-    case ResendTo:
-        lab->setText(i18n("Resend-To:"));
-        break;
-    case ResendCc:
-        lab->setText(i18n("Resend-Cc:"));
-        break;
-    case ResendBcc:
-        lab->setText(i18n("Resend-Bcc:"));
-        break;
-    }
-    hbox->addWidget(lab);
 
     mEdit = new MessageComposer::ComposerLineEdit( true );
     mEdit->setRecentAddressConfig( KernelIf->config().data() );
@@ -154,7 +141,7 @@ public:
     void slotUser1();
     void slotUser2();
     void slotAddressChanged( const QString & );
-
+    QString redirectLabelType(RedirectWidget::TypeAddress type) const;
     RedirectDialog *q;
     RedirectWidget *mEditTo;
     RedirectWidget *mEditCc;
@@ -164,6 +151,23 @@ public:
     KPIMIdentities::IdentityCombo *mComboboxIdentity;
     MailTransport::TransportComboBox *mTransportCombobox;
 };
+
+QString RedirectDialog::Private::redirectLabelType(MailCommon::RedirectWidget::TypeAddress type) const
+{
+    QString label;
+    switch(type) {
+    case RedirectWidget::ResendTo:
+        label = i18n("Resend-To:");
+        break;
+    case RedirectWidget::ResendCc:
+        label = i18n("Resend-Cc:");
+        break;
+    case RedirectWidget::ResendBcc:
+        label = i18n("Resend-Bcc:");
+        break;
+    }
+    return label;
+}
 
 void RedirectDialog::Private::slotUser1()
 {
@@ -199,15 +203,19 @@ RedirectDialog::RedirectDialog( SendMode mode, QWidget *parent )
     QLabel *LabelTo = new QLabel( i18n( "Select the recipient addresses to redirect:" ));
     mainLayout->addWidget(LabelTo);
 
-    d->mEditTo = new RedirectWidget(RedirectWidget::ResendTo);
+    QFormLayout *formLayout = new QFormLayout;
+    mainLayout->addLayout(formLayout);
+
+    d->mEditTo = new RedirectWidget;
     mainLayout->addWidget(d->mEditTo);
+    formLayout->addRow(d->redirectLabelType(RedirectWidget::ResendTo), d->mEditTo);
 
     connect( d->mEditTo, SIGNAL(addressChanged(QString)), SLOT(slotAddressChanged(QString)) );
 
-    d->mEditCc = new RedirectWidget(RedirectWidget::ResendCc);
-    mainLayout->addWidget(d->mEditCc);
-    d->mEditBcc = new RedirectWidget(RedirectWidget::ResendBcc);
-    mainLayout->addWidget(d->mEditBcc);
+    d->mEditCc = new RedirectWidget;
+    formLayout->addRow(d->redirectLabelType(RedirectWidget::ResendCc), d->mEditCc);
+    d->mEditBcc = new RedirectWidget;
+    formLayout->addRow(d->redirectLabelType(RedirectWidget::ResendBcc), d->mEditBcc);
     d->mEditTo->setFocus();
 
     QHBoxLayout *hbox = new QHBoxLayout;
