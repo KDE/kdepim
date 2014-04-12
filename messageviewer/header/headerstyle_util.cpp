@@ -68,17 +68,18 @@ QString dateString( KMime::Message *message, bool printing, bool shortDate ) {
 
 QString subjectString( KMime::Message *message, int flags )
 {
-    QString subject;
-    if ( message->subject(false) ) {
-        subject = message->subject()->asUnicodeString();
-        if ( subject.isEmpty() )
-            subject = i18n("No Subject");
+    QString subjectStr;
+    const KMime::Headers::Subject * const subject = message->subject(false);
+    if ( subject ) {
+        subjectStr = subject->asUnicodeString();
+        if ( subjectStr.isEmpty() )
+            subjectStr = i18n("No Subject");
         else
-            subject = strToHtml( subject, flags );
+            subjectStr = strToHtml( subjectStr, flags );
     } else {
-        subject = i18n("No Subject");
+        subjectStr = i18n("No Subject");
     }
-    return subject;
+    return subjectStr;
 }
 
 QString subjectDirectionString( KMime::Message *message )
