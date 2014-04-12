@@ -38,8 +38,10 @@ SelectThunderbirdFilterFilesDialog::SelectThunderbirdFilterFilesDialog(QWidget *
     setMainWidget( mainWidget );
 
     mSelectFilterFilesWidget = new SelectThunderbirdFilterFilesWidget(mainWidget);
+    connect(mSelectFilterFilesWidget, SIGNAL(enableOkButton(bool)), this, SLOT(enableButtonOk(bool)));
     mainLayout->addWidget(mSelectFilterFilesWidget);
     readConfig();
+    enableButtonOk(false);
 }
 
 SelectThunderbirdFilterFilesDialog::~SelectThunderbirdFilterFilesDialog()
