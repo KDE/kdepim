@@ -19,6 +19,8 @@
 #include <kdialog.h>
 #include <klocale.h>
 
+using namespace MailCommon;
+
 SnippetDialog::SnippetDialog( KActionCollection *actionCollection, bool inGroupMode, QWidget *parent )
     : KDialog( parent ), mActionCollection( actionCollection )
 {
