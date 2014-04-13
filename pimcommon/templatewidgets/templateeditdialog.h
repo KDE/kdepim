@@ -37,7 +37,7 @@ public:
     QString script() const;
 
 private Q_SLOTS:
-    void slotTemplateNameChanged(const QString &);
+    void slotTemplateChanged();
 
 private:
     void readConfig();
