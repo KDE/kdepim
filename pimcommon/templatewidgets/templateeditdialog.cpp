@@ -17,6 +17,7 @@
 
 #include "templateeditdialog.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
 #include <KLocalizedString>
 #include <KLineEdit>
@@ -60,7 +61,8 @@ TemplateEditDialog::TemplateEditDialog(QWidget *parent, bool defaultTemplate)
     setMainWidget(w);
     if (!defaultTemplate) {
         enableButtonOk(false);
-        connect(mTemplateNameEdit, SIGNAL(textChanged(QString)),SLOT(slotTemplateNameChanged(QString)));
+        connect(mTemplateNameEdit, SIGNAL(textChanged(QString)),SLOT(slotTemplateChanged()));
+        connect(mTextEdit->editor(), SIGNAL(textChanged()),SLOT(slotTemplateChanged()));
         mTemplateNameEdit->setFocus();
     }
     readConfig();
@@ -87,9 +89,10 @@ void TemplateEditDialog::readConfig()
     }
 }
 
-void TemplateEditDialog::slotTemplateNameChanged(const QString &text)
+
+void TemplateEditDialog::slotTemplateChanged()
 {
-    enableButtonOk(!text.trimmed().isEmpty());
+    enableButtonOk(!mTemplateNameEdit->text().trimmed().isEmpty() && !mTextEdit->editor()->toPlainText().trimmed().isEmpty());
 }
 
 void TemplateEditDialog::setScript(const QString &text)
