@@ -72,6 +72,7 @@
 #include <KEditToolBar>
 #include <KAboutApplicationDialog>
 #include <kdebug.h>
+#include <KLineEdit>
 
 #include <QAbstractItemView>
 #include <QApplication>
@@ -207,6 +208,9 @@ public:
     void aboutGpg4Win() {
         ( new KAboutApplicationDialog( aboutGpg4WinData(), KAboutApplicationDialog::HideKdeVersion|KAboutApplicationDialog::HideTranslators, q ) )->show();
     }
+    void slotFocusQuickSearch() {
+        ui.searchBar->lineEdit()->setFocus();
+    }
 
 private:
     void setupActions();
@@ -218,11 +222,10 @@ private:
 private:
     Kleo::KeyListController controller;
     bool firstShow : 1;
-
     struct UI {
 
         TabWidget tabWidget;
-
+        SearchBar * searchBar;
         explicit UI( MainWindow * q );
     } ui;
 };
@@ -236,7 +239,7 @@ MainWindow::Private::UI::UI(MainWindow *q)
     QVBoxLayout *vbox = new QVBoxLayout;
     vbox->setSpacing(0);
     mainWidget->setLayout(vbox);
-    SearchBar * const searchBar = new SearchBar;
+    searchBar = new SearchBar;
     vbox->addWidget(searchBar);
     tabWidget.connectSearchBar( searchBar );
     vbox->addWidget(&tabWidget);
@@ -339,6 +342,11 @@ void MainWindow::Private::setupActions() {
     KStandardAction::configureToolbars( q, SLOT(configureToolbars()), coll );
     KStandardAction::keyBindings( q, SLOT(editKeybindings()), coll );
     KStandardAction::preferences( qApp, SLOT(openOrRaiseConfigDialog()), coll );
+
+    KAction *act = new KAction(i18n("Set Focus to Quick Search"), q);
+    act->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Q ) );
+    coll->addAction( QLatin1String("focus_to_quickseach"), act );
+    connect( act, SIGNAL(triggered(bool)), q, SLOT(slotFocusQuickSearch()) );
 
     q->createStandardStatusBarAction();
     q->setStandardToolBarMenuEnabled( true );
