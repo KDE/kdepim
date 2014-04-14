@@ -190,24 +190,26 @@ void ConfigureAggregationsDialog::selectAggregation( const QString &aggregationI
 
 void ConfigureAggregationsDialog::Private::okButtonClicked()
 {
-    commitEditor();
+    if (Manager::instance()) {
+        commitEditor();
 
-    Manager::instance()->removeAllAggregations();
+        Manager::instance()->removeAllAggregations();
 
-    const int c = mAggregationList->count();
-    int i = 0;
-    while ( i < c )
-    {
-        AggregationListWidgetItem * item = dynamic_cast< AggregationListWidgetItem * >( mAggregationList->item( i ) );
-        if ( item )
+        const int c = mAggregationList->count();
+        int i = 0;
+        while ( i < c )
         {
-            Manager::instance()->addAggregation( item->aggregation() );
-            item->forgetAggregation();
+            AggregationListWidgetItem * item = dynamic_cast< AggregationListWidgetItem * >( mAggregationList->item( i ) );
+            if ( item )
+            {
+                Manager::instance()->addAggregation( item->aggregation() );
+                item->forgetAggregation();
+            }
+            ++i;
         }
-        ++i;
-    }
 
-    Manager::instance()->aggregationsConfigurationCompleted();
+        Manager::instance()->aggregationsConfigurationCompleted();
+    }
 
     q->close(); // this will delete too
 }
@@ -245,6 +247,8 @@ void ConfigureAggregationsDialog::Private::editedAggregationNameChanged()
 
 void ConfigureAggregationsDialog::Private::fillAggregationList()
 {
+    if (!Manager::instance())
+        return;
     const QHash< QString, Aggregation * > & sets = Manager::instance()->aggregations();
     QHash< QString, Aggregation * >::ConstIterator end( sets.constEnd() );
     for( QHash< QString, Aggregation * >::ConstIterator it = sets.constBegin(); it != end; ++it )

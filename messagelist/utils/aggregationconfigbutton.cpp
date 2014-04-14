@@ -52,6 +52,7 @@ AggregationConfigButton::AggregationConfigButton( QWidget * parent, const Aggreg
     if ( d->mAggregationComboBox != 0 )
         connect( this, SIGNAL(configureDialogCompleted()),
                  d->mAggregationComboBox, SLOT(slotLoadAggregations()) );
+    setEnabled(Manager::instance());
 }
 
 AggregationConfigButton::~AggregationConfigButton()
