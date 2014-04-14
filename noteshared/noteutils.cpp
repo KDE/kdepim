@@ -64,21 +64,19 @@ void NoteShared::NoteUtils::sendToNetwork(QWidget *parent, const QString &title,
     if ( hostDlg->exec() ) {
 
         const QString host = hostDlg->host();
+        if ( host.isEmpty() ) {
+            KMessageBox::sorry( parent, i18n( "The host cannot be empty." ) );
+            delete hostDlg;
+            return;
+        }
         quint16 port = hostDlg->port();
 
         if ( !port ) { // not specified, use default
             port = NoteShared::NoteSharedGlobalConfig::port();
         }
 
-        if ( host.isEmpty() ) {
-            KMessageBox::sorry( parent, i18n( "The host cannot be empty." ) );
-            delete hostDlg;
-            return;
-        }
 
         // Send the note
-
-        //TODO verify connectToHost
         NoteShared::NotesNetworkSender *sender = new NoteShared::NotesNetworkSender(
                     KSocketFactory::connectToHost( QLatin1String("notes"), host, port ) );
         sender->setSenderId( NoteShared::NoteSharedGlobalConfig::senderID() );
@@ -129,11 +127,7 @@ QString NoteShared::NoteUtils::createToolTip(const Akonadi::Item &item)
 
             QString content = description;
             if ( !content.trimmed().isEmpty() ) {
-                if ( textIsLeftToRight ) {
-                    tip += htmlCodeForStandardRow.arg(bckColorName).arg( txtColorName ).arg( isRichText ? content : content.replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) );
-                } else {
-                    tip += htmlCodeForStandardRow.arg(bckColorName).arg( txtColorName ).arg( isRichText ? content : content.replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) );
-                }
+                tip += htmlCodeForStandardRow.arg(bckColorName).arg( txtColorName ).arg( isRichText ? content : content.replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) );
             }
 
             tip += QString::fromLatin1(
