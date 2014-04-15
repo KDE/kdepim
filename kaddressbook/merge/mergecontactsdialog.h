@@ -22,6 +22,7 @@
 #include <KDialog>
 #include <Akonadi/Item>
 class QItemSelectionModel;
+namespace KABMergeContacts {
 class MergeContactsDialog : public KDialog
 {
     Q_OBJECT
@@ -36,5 +37,5 @@ private:
     void readConfig();
     void writeConfig();
 };
-
+}
 #endif // MERGECONTACTSDIALOG_H

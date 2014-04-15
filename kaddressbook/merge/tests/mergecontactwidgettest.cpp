@@ -22,6 +22,7 @@
 #include <qtestmouse.h>
 #include <QListWidget>
 #include <QPushButton>
+using namespace KABMergeContacts;
 
 MergeContactWidgetTest::MergeContactWidgetTest()
 {

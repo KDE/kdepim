@@ -21,7 +21,7 @@
 
 #include <Akonadi/Collection>
 #include <Akonadi/Item>
-
+namespace KABMergeContacts {
 class MergeContactsJob : public QObject
 {
     Q_OBJECT
@@ -39,5 +39,5 @@ private:
     Akonadi::Collection mCollection;
     Akonadi::Item::List mListItem;
 };
-
+}
 #endif // MERGECONTACTSJOB_H

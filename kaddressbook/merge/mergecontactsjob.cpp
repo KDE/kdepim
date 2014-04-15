@@ -18,6 +18,7 @@
 #include "mergecontactsjob.h"
 
 #include <QDebug>
+using namespace KABMergeContacts;
 
 MergeContactsJob::MergeContactsJob(QObject *parent)
     : QObject(parent)

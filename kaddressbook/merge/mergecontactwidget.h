@@ -24,7 +24,7 @@
 
 class QListWidget;
 class QPushButton;
-
+namespace KABMergeContacts {
 class MergeContactWidgetItem : public QListWidgetItem
 {
 public:
@@ -55,5 +55,6 @@ private:
     QListWidget *mListWidget;
     QPushButton *mMergeButton;
 };
+}
 
 #endif // MERGECONTACTWIDGET_H

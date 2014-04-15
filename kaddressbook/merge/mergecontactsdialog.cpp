@@ -28,7 +28,7 @@
 
 #include <QItemSelectionModel>
 #include <QLabel>
-
+using namespace KABMergeContacts;
 MergeContactsDialog::MergeContactsDialog(QItemSelectionModel *selectionModel, QWidget *parent)
     : KDialog(parent)
 {

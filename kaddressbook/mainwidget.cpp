@@ -912,7 +912,7 @@ void MainWidget::slotGrantleeThemesUpdated()
 
 void MainWidget::mergeContacts()
 {
-    QPointer<MergeContactsDialog> dlg = new MergeContactsDialog(mItemView->selectionModel(), this);
+    QPointer<KABMergeContacts::MergeContactsDialog> dlg = new KABMergeContacts::MergeContactsDialog(mItemView->selectionModel(), this);
     dlg->exec();
     delete dlg;
 }

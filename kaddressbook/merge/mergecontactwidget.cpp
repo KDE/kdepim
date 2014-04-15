@@ -25,7 +25,7 @@
 #include <QDebug>
 
 //TODO add delegate to show address info.
-
+using namespace KABMergeContacts;
 MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget *parent)
     : QWidget(parent),
       mItems(items)
