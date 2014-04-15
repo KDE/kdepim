@@ -47,6 +47,29 @@ void MergeContactWidgetTest::shouldFillList()
     MergeContactWidget mergeWidget(lst);
     QListWidget *listWidget = qFindChild<QListWidget *>(&mergeWidget, QLatin1String("listcontact"));
     QCOMPARE(listWidget->count(), 10);
+    QCOMPARE(listWidget->selectedItems().count(), 0);
+    QPushButton *button = qFindChild<QPushButton *>(&mergeWidget, QLatin1String("mergebutton"));
+    QCOMPARE(button->isEnabled(), false);
+}
+
+void MergeContactWidgetTest::shouldEnableButton()
+{
+#if 0 //Need to fix it
+    Akonadi::Item::List lst;
+    for (int i=0; i <10; ++i) {
+        lst.append(Akonadi::Item(i));
+    }
+    MergeContactWidget mergeWidget(lst);
+    QListWidget *listWidget = qFindChild<QListWidget *>(&mergeWidget, QLatin1String("listcontact"));
+    QPushButton *button = qFindChild<QPushButton *>(&mergeWidget, QLatin1String("mergebutton"));
+    listWidget->selectAll();
+    mergeWidget.show();
+    QTest::qWaitForWindowShown(&mergeWidget);
+    QCOMPARE(button->isEnabled(), true);
+
+    listWidget->clearSelection();
+    QCOMPARE(button->isEnabled(), false);
+#endif
 }
 
 

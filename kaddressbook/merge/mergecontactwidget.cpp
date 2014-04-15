@@ -22,6 +22,7 @@
 #include <QListWidget>
 #include <QVBoxLayout>
 #include <QPushButton>
+#include <QDebug>
 
 MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget *parent)
     : QWidget(parent),

@@ -29,6 +29,7 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValueOnCreation();
     void shouldFillList();
+    void shouldEnableButton();
 };
 
 #endif // MERGECONTACTWIDGETTEST_H
