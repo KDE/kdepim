@@ -17,7 +17,7 @@
 
 #include "mergecontactwidget.h"
 
-#include <QStackedWidget>
+#include <QListWidget>
 #include <QHBoxLayout>
 
 MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget *parent)
@@ -25,6 +25,9 @@ MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget
       mItems(items)
 {
     QHBoxLayout *lay = new QHBoxLayout;
+    mListWidget = new QListWidget;
+    mListWidget->setObjectName(QLatin1String("listcontact"));
+    lay->addWidget(mListWidget);
     setLayout(lay);
 }
 

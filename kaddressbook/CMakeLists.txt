@@ -121,6 +121,8 @@ target_link_libraries(kaddressbookprivate
   grantleetheme
   kleo
 )
+add_subdirectory(merge/tests)
+
 
 if(QGPGME_FOUND)
   target_link_libraries(kaddressbookprivate ${QGPGME_LIBRARIES})

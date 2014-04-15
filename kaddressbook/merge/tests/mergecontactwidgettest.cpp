@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,24 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MERGECONTACTWIDGET_H
-#define MERGECONTACTWIDGET_H
-
-#include <QWidget>
+#include "mergecontactwidgettest.h"
 #include <Akonadi/Item>
+#include "../mergecontactwidget.h"
+#include <qtest_kde.h>
+#include <QListWidget>
 
-class QListWidget;
-
-class MergeContactWidget : public QWidget
+MergeContactWidgetTest::MergeContactWidgetTest()
 {
-    Q_OBJECT
-public:
-    explicit MergeContactWidget(const Akonadi::Item::List &items, QWidget *parent=0);
-    ~MergeContactWidget();
+}
 
-private:
-    Akonadi::Item::List mItems;
-    QListWidget *mListWidget;
-};
+void MergeContactWidgetTest::shouldHaveDefaultValueOnCreation()
+{
+    Akonadi::Item::List lst;
+    MergeContactWidget mergeWidget(lst);
+    QListWidget *listWidget = qFindChild<QListWidget *>(&mergeWidget, QLatin1String("listcontact"));
+    QVERIFY(listWidget);
+    QCOMPARE(listWidget->count(), 0);
 
-#endif // MERGECONTACTWIDGET_H
+}
+
+QTEST_KDEMAIN(MergeContactWidgetTest , GUI )

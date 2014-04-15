@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,24 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MERGECONTACTWIDGET_H
-#define MERGECONTACTWIDGET_H
 
-#include <QWidget>
-#include <Akonadi/Item>
+#ifndef MERGECONTACTWIDGETTEST_H
+#define MERGECONTACTWIDGETTEST_H
 
-class QListWidget;
+#include <QObject>
 
-class MergeContactWidget : public QWidget
+class MergeContactWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit MergeContactWidget(const Akonadi::Item::List &items, QWidget *parent=0);
-    ~MergeContactWidget();
-
-private:
-    Akonadi::Item::List mItems;
-    QListWidget *mListWidget;
+    MergeContactWidgetTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValueOnCreation();
 };
 
-#endif // MERGECONTACTWIDGET_H
+#endif // MERGECONTACTWIDGETTEST_H
