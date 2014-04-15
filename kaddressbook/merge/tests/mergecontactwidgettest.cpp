@@ -130,5 +130,21 @@ void MergeContactWidgetTest::shouldEmitSignalsWhenThereIsElementSelected()
     QCOMPARE(spy.count(), 1); //Not new signal emited when we clear list
 }
 
+void MergeContactWidgetTest::shouldEmitSignalsWhenThereIsTwoElementsSelected()
+{
+    MergeContactWidget mergeWidget(createItems());
+    QListWidget *listWidget = qFindChild<QListWidget *>(&mergeWidget, QLatin1String("listcontact"));
+    QPushButton *button = qFindChild<QPushButton *>(&mergeWidget, QLatin1String("mergebutton"));
+    mergeWidget.show();
+    QTest::qWaitForWindowShown(&mergeWidget);
+    listWidget->item(0)->setSelected(true);
+    QSignalSpy spy(&mergeWidget, SIGNAL(mergeContact(Akonadi::Item::List,Akonadi::Collection)));
+    QTest::mouseClick(button, Qt::LeftButton);
+    QCOMPARE(spy.count(), 0);
+    listWidget->item(1)->setSelected(true);
+    QTest::mouseClick(button, Qt::LeftButton);
+    QCOMPARE(spy.count(), 1);
+}
+
 
 QTEST_KDEMAIN(MergeContactWidgetTest , GUI )

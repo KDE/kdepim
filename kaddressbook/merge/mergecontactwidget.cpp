@@ -94,7 +94,7 @@ void MergeContactWidget::fillListContact()
 
 void MergeContactWidget::slotUpdateMergeButton()
 {
-    mMergeButton->setEnabled(!mListWidget->selectedItems().isEmpty());
+    mMergeButton->setEnabled((mListWidget->selectedItems().count()>=2));
 }
 
 void MergeContactWidget::slotMergeContacts()
