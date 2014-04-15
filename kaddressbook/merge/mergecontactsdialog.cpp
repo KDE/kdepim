@@ -19,6 +19,7 @@
 #include "utils.h"
 #include "mergecontactutil.h"
 #include "mergecontactwidget.h"
+#include "mergecontactsjob.h"
 
 #include <Akonadi/Item>
 
@@ -44,7 +45,7 @@ MergeContactsDialog::MergeContactsDialog(QItemSelectionModel *selectionModel, QW
             setMainWidget(new QLabel(i18n("You selected %1 and some item has not the same name", lst.count())));
         } else {
             MergeContactWidget *contactWidget = new MergeContactWidget(lst);
-            connect(contactWidget, SIGNAL(mergeContact(Akonadi::Item::List)), this, SLOT(slotMergeContact(Akonadi::Item::List)));
+            connect(contactWidget, SIGNAL(mergeContact(Akonadi::Item::List,Akonadi::Collection)), this, SLOT(slotMergeContact(Akonadi::Item::List,Akonadi::Collection)));
             setMainWidget(contactWidget);
         }
     }
@@ -55,11 +56,20 @@ MergeContactsDialog::~MergeContactsDialog()
     writeConfig();
 }
 
-void MergeContactsDialog::slotMergeContact(const Akonadi::Item::List &lst)
+void MergeContactsDialog::slotMergeContact(const Akonadi::Item::List &lst, const Akonadi::Collection &col)
 {
     if (lst.isEmpty()) {
         return;
     }
+    MergeContactsJob *job = new MergeContactsJob(this);
+    connect(job,SIGNAL(finished()), this, SLOT(slotMergeContactFinished()));
+    job->setDestination(col);
+    job->setListItem(lst);
+    job->start();
+}
+
+void MergeContactsDialog::slotMergeContactFinished()
+{
     //TODO
 }
 

@@ -35,6 +35,9 @@ public:
 
     void setDestination(const Akonadi::Collection &collection);
 
+Q_SIGNALS:
+    void finished();
+
 private:
     Akonadi::Collection mCollection;
     Akonadi::Item::List mListItem;

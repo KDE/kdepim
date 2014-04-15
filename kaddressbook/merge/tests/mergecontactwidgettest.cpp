@@ -18,15 +18,54 @@
 #include "mergecontactwidgettest.h"
 #include <Akonadi/Item>
 #include "../mergecontactwidget.h"
+#include <KABC/Addressee>
+#include <Akonadi/EntityTreeModel>
+
 #include <qtest_kde.h>
 #include <qtestmouse.h>
 #include <QListWidget>
 #include <QPushButton>
+#include <QStandardItemModel>
 using namespace KABMergeContacts;
+
+namespace KABMergeContacts {
+extern KADDRESSBOOK_EXPORT QAbstractItemModel *_k_mergeStubModel;
+}
+
 
 MergeContactWidgetTest::MergeContactWidgetTest()
 {
     qRegisterMetaType<Akonadi::Item::List>();
+    qRegisterMetaType<Akonadi::Collection>();
+
+    QStandardItemModel *model = new QStandardItemModel;
+    for (int id = 42; id < 51; ++id) {
+        Akonadi::Collection collection(id);
+        collection.setRights(Akonadi::Collection::AllRights);
+        collection.setName(QString::number(id));
+        collection.setContentMimeTypes(QStringList() << KABC::Addressee::mimeType());
+
+        QStandardItem *item = new QStandardItem(collection.name());
+        item->setData(QVariant::fromValue(collection),
+                      Akonadi::EntityTreeModel::CollectionRole);
+        item->setData(QVariant::fromValue(collection.id()),
+                      Akonadi::EntityTreeModel::CollectionIdRole);
+
+        model->appendRow(item);
+    }
+    KABMergeContacts::_k_mergeStubModel = model;
+}
+
+Akonadi::Item::List MergeContactWidgetTest::createItems()
+{
+    Akonadi::Item::List lst;
+    for (int i=0; i <10; ++i) {
+        Akonadi::Item item(i);
+        KABC::Addressee address;
+        item.setPayload(address);
+        lst.append(item);
+    }
+    return lst;
 }
 
 void MergeContactWidgetTest::shouldHaveDefaultValueOnCreation()
@@ -43,11 +82,7 @@ void MergeContactWidgetTest::shouldHaveDefaultValueOnCreation()
 
 void MergeContactWidgetTest::shouldFillList()
 {
-    Akonadi::Item::List lst;
-    for (int i=0; i <10; ++i) {
-        lst.append(Akonadi::Item(i));
-    }
-    MergeContactWidget mergeWidget(lst);
+    MergeContactWidget mergeWidget(createItems());
     QListWidget *listWidget = qFindChild<QListWidget *>(&mergeWidget, QLatin1String("listcontact"));
     QCOMPARE(listWidget->count(), 10);
     QCOMPARE(listWidget->selectedItems().count(), 0);
@@ -55,13 +90,19 @@ void MergeContactWidgetTest::shouldFillList()
     QCOMPARE(button->isEnabled(), false);
 }
 
+void MergeContactWidgetTest::shouldFillListWithValidItem()
+{
+    Akonadi::Item::List lst = createItems();
+    QCOMPARE(lst.count(), 10);
+    lst.append(Akonadi::Item(25));
+    MergeContactWidget mergeWidget(lst);
+    QListWidget *listWidget = qFindChild<QListWidget *>(&mergeWidget, QLatin1String("listcontact"));
+    QCOMPARE(listWidget->count(), 10);
+}
+
 void MergeContactWidgetTest::shouldEnableButton()
 {
-    Akonadi::Item::List lst;
-    for (int i=0; i <10; ++i) {
-        lst.append(Akonadi::Item(i));
-    }
-    MergeContactWidget mergeWidget(lst);
+    MergeContactWidget mergeWidget(createItems());
     QListWidget *listWidget = qFindChild<QListWidget *>(&mergeWidget, QLatin1String("listcontact"));
     QPushButton *button = qFindChild<QPushButton *>(&mergeWidget, QLatin1String("mergebutton"));
     mergeWidget.show();
@@ -75,17 +116,13 @@ void MergeContactWidgetTest::shouldEnableButton()
 
 void MergeContactWidgetTest::shouldEmitSignalsWhenThereIsElementSelected()
 {
-    Akonadi::Item::List lst;
-    for (int i=0; i <10; ++i) {
-        lst.append(Akonadi::Item(i));
-    }
-    MergeContactWidget mergeWidget(lst);
+    MergeContactWidget mergeWidget(createItems());
     QListWidget *listWidget = qFindChild<QListWidget *>(&mergeWidget, QLatin1String("listcontact"));
     QPushButton *button = qFindChild<QPushButton *>(&mergeWidget, QLatin1String("mergebutton"));
     mergeWidget.show();
     QTest::qWaitForWindowShown(&mergeWidget);
     listWidget->selectAll();
-    QSignalSpy spy(&mergeWidget, SIGNAL(mergeContact(Akonadi::Item::List)));
+    QSignalSpy spy(&mergeWidget, SIGNAL(mergeContact(Akonadi::Item::List,Akonadi::Collection)));
     QTest::mouseClick(button, Qt::LeftButton);
     QCOMPARE(spy.count(), 1);
     listWidget->clearSelection();

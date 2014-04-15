@@ -20,8 +20,10 @@
 
 #include <QWidget>
 #include <Akonadi/Item>
-class SearchPotentialDuplicateContactJob;
+
 class QVBoxLayout;
+namespace KABMergeContacts {
+class SearchPotentialDuplicateContactJob;
 class PotentialDuplicateContactsWidget : public QWidget
 {
     Q_OBJECT
@@ -41,5 +43,6 @@ private:
     void createDuplicateWidget(const QList<Akonadi::Item> &item);
     QVBoxLayout *mMainLayout;
 };
+}
 
 #endif // POTENTIALDUPLICATECONTACTSWIDGET_H

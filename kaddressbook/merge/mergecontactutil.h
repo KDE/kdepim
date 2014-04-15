@@ -20,10 +20,11 @@
 #define MERGECONTACTUTIL_H
 
 #include <Akonadi/Item>
-
+namespace KABMergeContacts {
 namespace MergeContactUtil
 {
 bool hasSameNames(const Akonadi::Item::List &lst);
+}
 }
 
 #endif // MERGECONTACTUTIL_H

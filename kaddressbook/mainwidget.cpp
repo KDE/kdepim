@@ -919,7 +919,7 @@ void MainWidget::mergeContacts()
 
 void MainWidget::slotSearchDuplicateContacts()
 {
-    QPointer<SearchDuplicateContactWizard> wizard = new SearchDuplicateContactWizard(mItemView->selectionModel(), this);
+    QPointer<KABMergeContacts::SearchDuplicateContactWizard> wizard = new KABMergeContacts::SearchDuplicateContactWizard(mItemView->selectionModel(), this);
     wizard->exec();
     delete wizard;
 }

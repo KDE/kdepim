@@ -23,6 +23,7 @@
 
 #include <QVBoxLayout>
 #include <QLabel>
+using namespace KABMergeContacts;
 
 PotentialDuplicateContactsWidget::PotentialDuplicateContactsWidget(QWidget *parent)
     : QWidget(parent),

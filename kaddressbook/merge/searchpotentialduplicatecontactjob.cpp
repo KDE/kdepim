@@ -20,6 +20,8 @@
 
 #include <KABC/Addressee>
 
+using namespace KABMergeContacts;
+
 SearchPotentialDuplicateContactJob::SearchPotentialDuplicateContactJob(const Akonadi::Item::List &list, QObject *parent)
     : QObject(parent),
       mListItem(list)

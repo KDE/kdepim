@@ -24,7 +24,7 @@
 #include <KLocalizedString>
 #include <KConfigGroup>
 #include <KSharedConfig>
-
+using namespace KABMergeContacts;
 SearchDuplicateContactWizard::SearchDuplicateContactWizard(QItemSelectionModel *selectionModel, QWidget *parent)
     : KAssistantDialog(parent)
 {

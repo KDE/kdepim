@@ -21,9 +21,13 @@
 #include <QWidget>
 #include <QListWidgetItem>
 #include <Akonadi/Item>
+#include "kaddressbook_export.h"
 
 class QListWidget;
 class QPushButton;
+namespace Akonadi {
+class CollectionComboBox;
+}
 namespace KABMergeContacts {
 class MergeContactWidgetItem : public QListWidgetItem
 {
@@ -35,7 +39,7 @@ private:
     Akonadi::Item mItem;
 };
 
-class MergeContactWidget : public QWidget
+class KADDRESSBOOK_EXPORT MergeContactWidget : public QWidget
 {
     Q_OBJECT
 public:
@@ -43,7 +47,7 @@ public:
     ~MergeContactWidget();
 
 Q_SIGNALS:
-    void mergeContact(const Akonadi::Item::List &lst);
+    void mergeContact(const Akonadi::Item::List &lst, const Akonadi::Collection &col);
 
 private slots:
     void slotUpdateMergeButton();
@@ -54,6 +58,7 @@ private:
     Akonadi::Item::List mItems;
     QListWidget *mListWidget;
     QPushButton *mMergeButton;
+    Akonadi::CollectionComboBox *mCollectionCombobox;
 };
 }
 

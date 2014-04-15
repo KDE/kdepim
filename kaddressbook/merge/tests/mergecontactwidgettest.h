@@ -20,6 +20,7 @@
 #define MERGECONTACTWIDGETTEST_H
 
 #include <QObject>
+#include <Akonadi/Item>
 
 class MergeContactWidgetTest : public QObject
 {
@@ -29,8 +30,11 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValueOnCreation();
     void shouldFillList();
+    void shouldFillListWithValidItem();
     void shouldEnableButton();
     void shouldEmitSignalsWhenThereIsElementSelected();
+private:
+    Akonadi::Item::List createItems();
 };
 
 #endif // MERGECONTACTWIDGETTEST_H

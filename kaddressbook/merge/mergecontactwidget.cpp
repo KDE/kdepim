@@ -19,12 +19,22 @@
 
 #include <KLocalizedString>
 
+#include <KABC/Addressee>
+
+#include <Akonadi/CollectionComboBox>
 #include <QListWidget>
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QDebug>
+#include <QLabel>
 
 //TODO add delegate to show address info.
+
+namespace KABMergeContacts {
+KADDRESSBOOK_EXPORT QAbstractItemModel *_k_mergeStubModel = 0;
+}
+
+
 using namespace KABMergeContacts;
 MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget *parent)
     : QWidget(parent),
@@ -38,6 +48,21 @@ MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget
     connect(mListWidget, SIGNAL(itemSelectionChanged()), SLOT(slotUpdateMergeButton()));
 
     QHBoxLayout *hbox = new QHBoxLayout;
+    hbox->addStretch();
+
+    QLabel *lab = new QLabel(i18n("Select addressbook where to store merged contact:"));
+    hbox->addWidget(lab);
+
+    mCollectionCombobox = new Akonadi::CollectionComboBox(_k_mergeStubModel);
+    mCollectionCombobox->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
+    mCollectionCombobox->setMinimumWidth(250);
+    mCollectionCombobox->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
+    mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
+    hbox->addWidget(mCollectionCombobox);
+
+    lay->addLayout(hbox);
+
+    hbox = new QHBoxLayout;
     hbox->addStretch();
     mMergeButton = new QPushButton(i18n("merge"));
     mMergeButton->setObjectName(QLatin1String("mergebutton"));
@@ -59,8 +84,11 @@ MergeContactWidget::~MergeContactWidget()
 void MergeContactWidget::fillListContact()
 {
     Q_FOREACH(const Akonadi::Item &item, mItems) {
-        MergeContactWidgetItem *widgetItem = new MergeContactWidgetItem(item, mListWidget);
-        widgetItem->setText(QString::number(item.id()));
+        if (item.hasPayload<KABC::Addressee>()) {
+            MergeContactWidgetItem *widgetItem = new MergeContactWidgetItem(item, mListWidget);
+            KABC::Addressee address = item.payload<KABC::Addressee>();
+            widgetItem->setText(address.realName());
+        }
     }
 }
 
@@ -75,8 +103,11 @@ void MergeContactWidget::slotMergeContacts()
     Q_FOREACH(QListWidgetItem *item, mListWidget->selectedItems()) {
         lstItems.append((static_cast<MergeContactWidgetItem*>(item))->item());
     }
-    if (!lstItems.isEmpty()) {
-        Q_EMIT mergeContact(lstItems);
+    const Akonadi::Collection col = mCollectionCombobox->currentCollection();
+    if (col.isValid()) {
+        if (!lstItems.isEmpty()) {
+            Q_EMIT mergeContact(lstItems, col);
+        }
     }
 }
 
