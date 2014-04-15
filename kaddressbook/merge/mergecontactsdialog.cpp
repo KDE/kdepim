@@ -18,6 +18,7 @@
 #include "mergecontactsdialog.h"
 #include "utils.h"
 #include "mergecontactutil.h"
+#include "mergecontactwidget.h"
 
 #include <Akonadi/Item>
 
@@ -32,18 +33,17 @@ MergeContactsDialog::MergeContactsDialog(QItemSelectionModel *selectionModel, QW
     : KDialog(parent)
 {
     setCaption( i18n( "Select Contacts to merge" ) );
-    setButtons( Ok | Cancel );
+    setButtons( Close );
     readConfig();
 
     const Akonadi::Item::List lst = Utils::collectSelectedContactsItem(selectionModel);
     if (lst.count() < 2) {
-        enableButtonOk(false);
         setMainWidget(new QLabel(i18n("You must select at least two elements.")));
     } else {
         if (!MergeContactUtil::hasSameNames(lst)) {
             setMainWidget(new QLabel(i18n("You selected %1 and some item has not the same name", lst.count())));
         } else {
-            setMainWidget(new QLabel(i18n("You selected %1", lst.count())));
+            setMainWidget(new MergeContactWidget(lst));
         }
     }
 }

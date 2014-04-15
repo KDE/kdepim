@@ -20,12 +20,11 @@
 #include <QStackedWidget>
 #include <QHBoxLayout>
 
-MergeContactWidget::MergeContactWidget(QWidget *parent)
-    : QWidget(parent)
+MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget *parent)
+    : QWidget(parent),
+      mItems(items)
 {
     QHBoxLayout *lay = new QHBoxLayout;
-    mStackedWidget = new QStackedWidget;
-    lay->addWidget(mStackedWidget);
     setLayout(lay);
 }
 

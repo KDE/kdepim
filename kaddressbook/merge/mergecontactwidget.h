@@ -19,17 +19,19 @@
 #define MERGECONTACTWIDGET_H
 
 #include <QWidget>
+#include <Akonadi/Item>
+
 class QStackedWidget;
 
 class MergeContactWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MergeContactWidget(QWidget *parent=0);
+    explicit MergeContactWidget(const Akonadi::Item::List &items, QWidget *parent=0);
     ~MergeContactWidget();
 
 private:
-    QStackedWidget *mStackedWidget;
+    Akonadi::Item::List mItems;
 };
 
 #endif // MERGECONTACTWIDGET_H
