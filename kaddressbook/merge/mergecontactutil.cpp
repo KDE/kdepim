@@ -23,6 +23,8 @@ bool MergeContactUtil::hasSameNames(const Akonadi::Item::List &lst)
 {
     QStringList names;
     bool foundSameName = true;
+
+    //Improve check name
     Q_FOREACH (const Akonadi::Item &item, lst) {
         const KABC::Addressee address = item.payload<KABC::Addressee>();
         const QString name = address.realName();

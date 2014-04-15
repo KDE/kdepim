@@ -43,7 +43,9 @@ MergeContactsDialog::MergeContactsDialog(QItemSelectionModel *selectionModel, QW
         if (!MergeContactUtil::hasSameNames(lst)) {
             setMainWidget(new QLabel(i18n("You selected %1 and some item has not the same name", lst.count())));
         } else {
-            setMainWidget(new MergeContactWidget(lst));
+            MergeContactWidget *contactWidget = new MergeContactWidget(lst);
+            connect(contactWidget, SIGNAL(mergeContact(Akonadi::Item::List)), this, SLOT(slotMergeContact(Akonadi::Item::List)));
+            setMainWidget(contactWidget);
         }
     }
 }
@@ -51,6 +53,14 @@ MergeContactsDialog::MergeContactsDialog(QItemSelectionModel *selectionModel, QW
 MergeContactsDialog::~MergeContactsDialog()
 {
     writeConfig();
+}
+
+void MergeContactsDialog::slotMergeContact(const Akonadi::Item::List &lst)
+{
+    if (lst.isEmpty()) {
+        return;
+    }
+    //TODO
 }
 
 void MergeContactsDialog::readConfig()

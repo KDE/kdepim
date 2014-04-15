@@ -19,11 +19,13 @@
 #include <Akonadi/Item>
 #include "../mergecontactwidget.h"
 #include <qtest_kde.h>
+#include <qtestmouse.h>
 #include <QListWidget>
 #include <QPushButton>
 
 MergeContactWidgetTest::MergeContactWidgetTest()
 {
+    qRegisterMetaType<Akonadi::Item::List>();
 }
 
 void MergeContactWidgetTest::shouldHaveDefaultValueOnCreation()
@@ -54,7 +56,6 @@ void MergeContactWidgetTest::shouldFillList()
 
 void MergeContactWidgetTest::shouldEnableButton()
 {
-#if 0 //Need to fix it
     Akonadi::Item::List lst;
     for (int i=0; i <10; ++i) {
         lst.append(Akonadi::Item(i));
@@ -62,14 +63,33 @@ void MergeContactWidgetTest::shouldEnableButton()
     MergeContactWidget mergeWidget(lst);
     QListWidget *listWidget = qFindChild<QListWidget *>(&mergeWidget, QLatin1String("listcontact"));
     QPushButton *button = qFindChild<QPushButton *>(&mergeWidget, QLatin1String("mergebutton"));
-    listWidget->selectAll();
     mergeWidget.show();
     QTest::qWaitForWindowShown(&mergeWidget);
+    listWidget->selectAll();
     QCOMPARE(button->isEnabled(), true);
 
     listWidget->clearSelection();
     QCOMPARE(button->isEnabled(), false);
-#endif
+}
+
+void MergeContactWidgetTest::shouldEmitSignalsWhenThereIsElementSelected()
+{
+    Akonadi::Item::List lst;
+    for (int i=0; i <10; ++i) {
+        lst.append(Akonadi::Item(i));
+    }
+    MergeContactWidget mergeWidget(lst);
+    QListWidget *listWidget = qFindChild<QListWidget *>(&mergeWidget, QLatin1String("listcontact"));
+    QPushButton *button = qFindChild<QPushButton *>(&mergeWidget, QLatin1String("mergebutton"));
+    mergeWidget.show();
+    QTest::qWaitForWindowShown(&mergeWidget);
+    listWidget->selectAll();
+    QSignalSpy spy(&mergeWidget, SIGNAL(mergeContact(Akonadi::Item::List)));
+    QTest::mouseClick(button, Qt::LeftButton);
+    QCOMPARE(spy.count(), 1);
+    listWidget->clearSelection();
+    QTest::mouseClick(button, Qt::LeftButton);
+    QCOMPARE(spy.count(), 1); //Not new signal emited when we clear list
 }
 
 

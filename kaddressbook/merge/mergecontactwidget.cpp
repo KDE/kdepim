@@ -24,6 +24,8 @@
 #include <QPushButton>
 #include <QDebug>
 
+//TODO add delegate to show address info.
+
 MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget *parent)
     : QWidget(parent),
       mItems(items)
@@ -31,6 +33,7 @@ MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget
     QVBoxLayout *lay = new QVBoxLayout;
     mListWidget = new QListWidget;
     mListWidget->setObjectName(QLatin1String("listcontact"));
+    mListWidget->setSelectionMode(QAbstractItemView::MultiSelection);
     lay->addWidget(mListWidget);
     connect(mListWidget, SIGNAL(itemSelectionChanged()), SLOT(slotUpdateMergeButton()));
 
@@ -56,7 +59,7 @@ MergeContactWidget::~MergeContactWidget()
 void MergeContactWidget::fillListContact()
 {
     Q_FOREACH(const Akonadi::Item &item, mItems) {
-        QListWidgetItem *widgetItem = new QListWidgetItem(mListWidget);
+        MergeContactWidgetItem *widgetItem = new MergeContactWidgetItem(item, mListWidget);
         widgetItem->setText(QString::number(item.id()));
     }
 }
@@ -68,5 +71,24 @@ void MergeContactWidget::slotUpdateMergeButton()
 
 void MergeContactWidget::slotMergeContacts()
 {
-    //TODO
+    Akonadi::Item::List lstItems;
+    Q_FOREACH(QListWidgetItem *item, mListWidget->selectedItems()) {
+        lstItems.append((static_cast<MergeContactWidgetItem*>(item))->item());
+    }
+    if (!lstItems.isEmpty()) {
+        Q_EMIT mergeContact(lstItems);
+    }
+}
+
+
+MergeContactWidgetItem::MergeContactWidgetItem(const Akonadi::Item &item, QListWidget *parent)
+    : QListWidgetItem(parent),
+      mItem(item)
+{
+
+}
+
+Akonadi::Item MergeContactWidgetItem::item() const
+{
+    return mItem;
 }

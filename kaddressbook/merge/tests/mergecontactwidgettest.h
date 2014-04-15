@@ -30,6 +30,7 @@ private Q_SLOTS:
     void shouldHaveDefaultValueOnCreation();
     void shouldFillList();
     void shouldEnableButton();
+    void shouldEmitSignalsWhenThereIsElementSelected();
 };
 
 #endif // MERGECONTACTWIDGETTEST_H

@@ -20,6 +20,7 @@
 #define MERGECONTACTSDIALOG_H
 
 #include <KDialog>
+#include <Akonadi/Item>
 class QItemSelectionModel;
 class MergeContactsDialog : public KDialog
 {
@@ -27,6 +28,9 @@ class MergeContactsDialog : public KDialog
 public:
     explicit MergeContactsDialog(QItemSelectionModel *selectionModel, QWidget *parent=0);
     ~MergeContactsDialog();
+
+private slots:
+    void slotMergeContact(const Akonadi::Item::List &lst);
 
 private:
     void readConfig();

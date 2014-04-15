@@ -41,7 +41,8 @@ void MergeContactsJob::start()
         qDebug()<<" list item is empty !";
         return;
     }
-    //TODO
+    //TODO create new item.
+    //Merge other items into this new one.
 }
 
 void MergeContactsJob::setListItem(const Akonadi::Item::List &lstItem)

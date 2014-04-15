@@ -19,10 +19,21 @@
 #define MERGECONTACTWIDGET_H
 
 #include <QWidget>
+#include <QListWidgetItem>
 #include <Akonadi/Item>
 
 class QListWidget;
 class QPushButton;
+
+class MergeContactWidgetItem : public QListWidgetItem
+{
+public:
+    MergeContactWidgetItem(const Akonadi::Item &item, QListWidget *parent = 0);
+    Akonadi::Item item() const;
+
+private:
+    Akonadi::Item mItem;
+};
 
 class MergeContactWidget : public QWidget
 {
@@ -30,6 +41,9 @@ class MergeContactWidget : public QWidget
 public:
     explicit MergeContactWidget(const Akonadi::Item::List &items, QWidget *parent=0);
     ~MergeContactWidget();
+
+Q_SIGNALS:
+    void mergeContact(const Akonadi::Item::List &lst);
 
 private slots:
     void slotUpdateMergeButton();
