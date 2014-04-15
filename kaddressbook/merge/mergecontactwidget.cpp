@@ -17,21 +17,36 @@
 
 #include "mergecontactwidget.h"
 
+#include <KLocalizedString>
+
 #include <QListWidget>
-#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QPushButton>
 
 MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget *parent)
     : QWidget(parent),
       mItems(items)
 {
-    QHBoxLayout *lay = new QHBoxLayout;
+    QVBoxLayout *lay = new QVBoxLayout;
     mListWidget = new QListWidget;
     mListWidget->setObjectName(QLatin1String("listcontact"));
     lay->addWidget(mListWidget);
+    connect(mListWidget, SIGNAL(itemSelectionChanged()), SLOT(slotUpdateMergeButton()));
+
+    mMergeButton = new QPushButton(i18n("merge"));
+    mMergeButton->setObjectName(QLatin1String("mergebutton"));
+    lay->addWidget(mMergeButton);
+    mMergeButton->setEnabled(false);
+
     setLayout(lay);
 }
 
 MergeContactWidget::~MergeContactWidget()
 {
 
+}
+
+void MergeContactWidget::slotUpdateMergeButton()
+{
+    mMergeButton->setEnabled(!mListWidget->selectedItems().isEmpty());
 }

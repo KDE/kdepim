@@ -22,6 +22,7 @@
 #include <Akonadi/Item>
 
 class QListWidget;
+class QPushButton;
 
 class MergeContactWidget : public QWidget
 {
@@ -30,9 +31,12 @@ public:
     explicit MergeContactWidget(const Akonadi::Item::List &items, QWidget *parent=0);
     ~MergeContactWidget();
 
+private slots:
+    void slotUpdateMergeButton();
 private:
     Akonadi::Item::List mItems;
     QListWidget *mListWidget;
+    QPushButton *mMergeButton;
 };
 
 #endif // MERGECONTACTWIDGET_H

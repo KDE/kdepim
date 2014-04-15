@@ -20,6 +20,7 @@
 #include "../mergecontactwidget.h"
 #include <qtest_kde.h>
 #include <QListWidget>
+#include <QPushButton>
 
 MergeContactWidgetTest::MergeContactWidgetTest()
 {
@@ -32,7 +33,9 @@ void MergeContactWidgetTest::shouldHaveDefaultValueOnCreation()
     QListWidget *listWidget = qFindChild<QListWidget *>(&mergeWidget, QLatin1String("listcontact"));
     QVERIFY(listWidget);
     QCOMPARE(listWidget->count(), 0);
-
+    QPushButton *button = qFindChild<QPushButton *>(&mergeWidget, QLatin1String("mergebutton"));
+    QVERIFY(button);
+    QCOMPARE(button->isEnabled(), false);
 }
 
 QTEST_KDEMAIN(MergeContactWidgetTest , GUI )
