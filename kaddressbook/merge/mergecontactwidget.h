@@ -33,7 +33,10 @@ public:
 
 private slots:
     void slotUpdateMergeButton();
+    void slotMergeContacts();
+
 private:
+    void fillListContact();
     Akonadi::Item::List mItems;
     QListWidget *mListWidget;
     QPushButton *mMergeButton;

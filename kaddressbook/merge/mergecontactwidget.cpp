@@ -33,12 +33,18 @@ MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget
     lay->addWidget(mListWidget);
     connect(mListWidget, SIGNAL(itemSelectionChanged()), SLOT(slotUpdateMergeButton()));
 
+    QHBoxLayout *hbox = new QHBoxLayout;
+    hbox->addStretch();
     mMergeButton = new QPushButton(i18n("merge"));
     mMergeButton->setObjectName(QLatin1String("mergebutton"));
-    lay->addWidget(mMergeButton);
+    hbox->addWidget(mMergeButton);
     mMergeButton->setEnabled(false);
+    lay->addLayout(hbox);
+
+    connect(mMergeButton, SIGNAL(clicked()), this, SLOT(slotMergeContacts()));
 
     setLayout(lay);
+    fillListContact();
 }
 
 MergeContactWidget::~MergeContactWidget()
@@ -46,7 +52,20 @@ MergeContactWidget::~MergeContactWidget()
 
 }
 
+void MergeContactWidget::fillListContact()
+{
+    Q_FOREACH(const Akonadi::Item &item, mItems) {
+        QListWidgetItem *widgetItem = new QListWidgetItem(mListWidget);
+        widgetItem->setText(QString::number(item.id()));
+    }
+}
+
 void MergeContactWidget::slotUpdateMergeButton()
 {
     mMergeButton->setEnabled(!mListWidget->selectedItems().isEmpty());
+}
+
+void MergeContactWidget::slotMergeContacts()
+{
+    //TODO
 }

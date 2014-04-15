@@ -38,4 +38,16 @@ void MergeContactWidgetTest::shouldHaveDefaultValueOnCreation()
     QCOMPARE(button->isEnabled(), false);
 }
 
+void MergeContactWidgetTest::shouldFillList()
+{
+    Akonadi::Item::List lst;
+    for (int i=0; i <10; ++i) {
+        lst.append(Akonadi::Item(i));
+    }
+    MergeContactWidget mergeWidget(lst);
+    QListWidget *listWidget = qFindChild<QListWidget *>(&mergeWidget, QLatin1String("listcontact"));
+    QCOMPARE(listWidget->count(), 10);
+}
+
+
 QTEST_KDEMAIN(MergeContactWidgetTest , GUI )

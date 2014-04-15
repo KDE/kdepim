@@ -28,6 +28,7 @@ public:
     MergeContactWidgetTest();
 private Q_SLOTS:
     void shouldHaveDefaultValueOnCreation();
+    void shouldFillList();
 };
 
 #endif // MERGECONTACTWIDGETTEST_H
