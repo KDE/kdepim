@@ -40,7 +40,7 @@ OpenAttachmentFolderWidget::OpenAttachmentFolderWidget(QWidget *parent)
     setWordWrap(true);
     QAction *action = this->findChild<QAction *>(); // should give us the close action...
     if ( action ) {
-      connect( action, SIGNAL(triggered(bool)), SLOT(slotExplicitlyClosed()) );
+        connect( action, SIGNAL(triggered(bool)), SLOT(slotExplicitlyClosed()) );
     }
 
     action = new QAction( i18n( "Open folder where attachment was saved" ), this );
