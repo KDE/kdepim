@@ -682,8 +682,12 @@ void MainWidget::printPreview()
     wizard.setDefaultAddressBook( currentAddressBook() );
 
     const int result = wizard.exec();
-    if (result)
+    if (result) {
+        Settings::self()->setDefaultFileName( printer.outputFileName() );
+        Settings::self()->setPrintingStyle( wizard.printingStyle() );
+        Settings::self()->setSortOrder( wizard.sortOrder() );
         previewdlg.exec();
+    }
 }
 
 void MainWidget::print()
