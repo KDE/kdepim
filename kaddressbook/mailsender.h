@@ -43,8 +43,6 @@ private Q_SLOTS:
 private:
     void finishJob();
 
-    QString generateEnhancedMailAddress(QString fullname, QString mailAddress);
-
     QSet<QString> mEmailAddresses;
     int mFetchJobCount;
 

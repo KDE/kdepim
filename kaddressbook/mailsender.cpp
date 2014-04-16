@@ -20,6 +20,7 @@
 
 #include "mailsender.h"
 #include "utils.h"
+#include "kpimutils/email.h"
 
 #include <KJob>
 
@@ -41,14 +42,16 @@ MailSender::MailSender(QItemSelectionModel *selection, QObject *parent)
 {
     foreach (Akonadi::Item item, Utils::collectSelectedContactsItem(selection)) {
         const KABC::Addressee contact = item.payload<KABC::Addressee>();
-        mEmailAddresses << generateEnhancedMailAddress(contact.formattedName(), contact.preferredEmail());
+        if( ! contact.preferredEmail().isEmpty()){
+            mEmailAddresses <<  KPIMUtils::normalizedAddress(contact.formattedName(), contact.preferredEmail());
+        }
     }
 
     foreach (Akonadi::Item item, Utils::collectSelectedGroupItem(selection)) {
         const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
 
         for(unsigned int i=0; i<group.dataCount(); ++i){
-            mEmailAddresses << generateEnhancedMailAddress(group.data(i).name(), group.data(i).email());
+            mEmailAddresses << KPIMUtils::normalizedAddress(group.data(i).name(), group.data(i).email());
         }
 
         for(unsigned int i=0; i<group.contactReferenceCount(); ++i){
@@ -97,7 +100,9 @@ void MailSender::fetchJobFinished(KJob *job)
     const Akonadi::Item item = fetchJob->items().first();
     const KABC::Addressee contact = item.payload<KABC::Addressee>();
 
-    mEmailAddresses << generateEnhancedMailAddress(contact.formattedNameLabel(), contact.preferredEmail());
+    if( ! contact.preferredEmail().isEmpty()){
+        mEmailAddresses <<  KPIMUtils::normalizedAddress(contact.formattedName(), contact.preferredEmail());
+    }
 
     --mFetchJobCount;
 
@@ -108,13 +113,12 @@ void MailSender::fetchJobFinished(KJob *job)
 
 void MailSender::finishJob()
 {
+    if(mEmailAddresses.isEmpty()) {
+        return;
+    }
+
     KUrl url;
         url.setProtocol( QLatin1String( "mailto" ) );
         url.setPath( QStringList(mEmailAddresses.toList()).join(QLatin1String(";")) );
         KToolInvocation::invokeMailer( url );
-}
-
-QString MailSender::generateEnhancedMailAddress(QString fullname, QString mailAddress)
-{
-    return fullname + QLatin1String(" <") + mailAddress + QLatin1String(">");
 }
