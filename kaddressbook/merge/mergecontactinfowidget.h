@@ -37,7 +37,8 @@ public:
     explicit MergeContactInfoWidget(QWidget *parent=0);
     ~MergeContactInfoWidget();
 
-    void setContact(const Akonadi::Item::List &item);
+public Q_SLOTS:
+    void setContacts(const Akonadi::Item::List &item);
 
 private:
     QStackedWidget *mStackWidget;

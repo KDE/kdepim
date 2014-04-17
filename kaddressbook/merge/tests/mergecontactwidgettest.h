@@ -34,6 +34,7 @@ private Q_SLOTS:
     void shouldEnableButton();
     void shouldEmitSignalsWhenThereIsElementSelected();
     void shouldEmitSignalsWhenThereIsTwoElementsSelected();
+    void shouldEmitSignalsWhenSelectContact();
 private:
     Akonadi::Item::List createItems();
 };

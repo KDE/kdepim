@@ -28,6 +28,9 @@ public:
     MergeContactInfoWidgetTest();
 private Q_SLOTS:
     void shouldHaveDefaultValueOnCreation();
+    void shouldHaveActivateDisplayWidgetWhenSelectOneContact();
+    void shouldHaveActivateTooManyWidgetWhenSelectMultiContact();
+    void shouldHaveActivateNoWidgetWhenSelectNoContact();
 };
 
 #endif // MERGECONTACTINFOWIDGETTEST_H

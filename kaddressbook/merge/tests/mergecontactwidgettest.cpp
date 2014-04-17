@@ -146,5 +146,18 @@ void MergeContactWidgetTest::shouldEmitSignalsWhenThereIsTwoElementsSelected()
     QCOMPARE(spy.count(), 1);
 }
 
+void MergeContactWidgetTest::shouldEmitSignalsWhenSelectContact()
+{
+    MergeContactWidget mergeWidget(createItems());
+    QListWidget *listWidget = qFindChild<QListWidget *>(&mergeWidget, QLatin1String("listcontact"));
+    mergeWidget.show();
+    QSignalSpy spy(&mergeWidget, SIGNAL(contactSelected(Akonadi::Item::List)));
+    listWidget->selectAll();
+    QCOMPARE(spy.count(), 1);
+
+    listWidget->clearSelection();
+    QCOMPARE(spy.count(), 2);
+}
+
 
 QTEST_KDEMAIN(MergeContactWidgetTest , GUI )

@@ -46,7 +46,7 @@ MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget
     lay->addWidget(lab);
     mListWidget = new QListWidget;
     mListWidget->setObjectName(QLatin1String("listcontact"));
-    mListWidget->setSelectionMode(QAbstractItemView::MultiSelection);
+    mListWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     lay->addWidget(mListWidget);
     connect(mListWidget, SIGNAL(itemSelectionChanged()), SLOT(slotUpdateMergeButton()));
 
@@ -95,17 +95,25 @@ void MergeContactWidget::fillListContact()
     }
 }
 
-void MergeContactWidget::slotUpdateMergeButton()
-{
-    mMergeButton->setEnabled((mListWidget->selectedItems().count()>=2));
-}
-
-void MergeContactWidget::slotMergeContacts()
+Akonadi::Item::List MergeContactWidget::listSelectedContacts() const
 {
     Akonadi::Item::List lstItems;
     Q_FOREACH(QListWidgetItem *item, mListWidget->selectedItems()) {
         lstItems.append((static_cast<MergeContactWidgetItem*>(item))->item());
     }
+    return lstItems;
+}
+
+void MergeContactWidget::slotUpdateMergeButton()
+{
+    const Akonadi::Item::List lstItems = listSelectedContacts();
+    Q_EMIT contactSelected(lstItems);
+    mMergeButton->setEnabled((lstItems.count()>=2));
+}
+
+void MergeContactWidget::slotMergeContacts()
+{
+    const Akonadi::Item::List lstItems = listSelectedContacts();
     const Akonadi::Collection col = mCollectionCombobox->currentCollection();
     if (col.isValid()) {
         if (!lstItems.isEmpty()) {

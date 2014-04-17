@@ -59,7 +59,7 @@ MergeContactInfoWidget::~MergeContactInfoWidget()
 
 }
 
-void MergeContactInfoWidget::setContact(const Akonadi::Item::List &items)
+void MergeContactInfoWidget::setContacts(const Akonadi::Item::List &items)
 {
     const int numberContact(items.count());
     if (numberContact == 1) {

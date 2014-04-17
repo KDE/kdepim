@@ -19,6 +19,7 @@
 #include "utils.h"
 #include "mergecontactutil.h"
 #include "mergecontactwidget.h"
+#include "mergecontactinfowidget.h"
 #include "mergecontactsjob.h"
 
 #include <Akonadi/Item>
@@ -29,6 +30,8 @@
 
 #include <QItemSelectionModel>
 #include <QLabel>
+#include <QHBoxLayout>
+
 using namespace KABMergeContacts;
 MergeContactsDialog::MergeContactsDialog(QItemSelectionModel *selectionModel, QWidget *parent)
     : KDialog(parent)
@@ -44,9 +47,16 @@ MergeContactsDialog::MergeContactsDialog(QItemSelectionModel *selectionModel, QW
         if (!MergeContactUtil::hasSameNames(lst)) {
             setMainWidget(new QLabel(i18n("You selected %1 and some item has not the same name", lst.count())));
         } else {
+            QWidget *mainWidget = new QWidget;
+            QHBoxLayout *hbox = new QHBoxLayout;
+            mainWidget->setLayout(hbox);
             MergeContactWidget *contactWidget = new MergeContactWidget(lst);
+            hbox->addWidget(contactWidget);
+            MergeContactInfoWidget *contactInfo = new MergeContactInfoWidget;
+            hbox->addWidget(contactInfo);
+            connect(contactWidget, SIGNAL(contactSelected(Akonadi::Item::List)), contactInfo, SLOT(setContacts(Akonadi::Item::List)));
             connect(contactWidget, SIGNAL(mergeContact(Akonadi::Item::List,Akonadi::Collection)), this, SLOT(slotMergeContact(Akonadi::Item::List,Akonadi::Collection)));
-            setMainWidget(contactWidget);
+            setMainWidget(mainWidget);
         }
     }
 }

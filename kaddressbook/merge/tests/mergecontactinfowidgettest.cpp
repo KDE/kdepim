@@ -35,4 +35,35 @@ void MergeContactInfoWidgetTest::shouldHaveDefaultValueOnCreation()
     QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("nocontact"));
 }
 
+void MergeContactInfoWidgetTest::shouldHaveActivateDisplayWidgetWhenSelectOneContact()
+{
+    MergeContactInfoWidget infoWidget;
+    Akonadi::Item item(4);
+    infoWidget.setContacts(Akonadi::Item::List()<<item);
+    QStackedWidget *stackedWidget = qFindChild<QStackedWidget *>(&infoWidget, QLatin1String("stackedwidget"));
+    QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("contactwidget"));
+}
+
+
+void MergeContactInfoWidgetTest::shouldHaveActivateTooManyWidgetWhenSelectMultiContact()
+{
+    MergeContactInfoWidget infoWidget;
+    Akonadi::Item item(4);
+    Akonadi::Item item2(4);
+    infoWidget.setContacts(Akonadi::Item::List()<<item<<item2);
+    QStackedWidget *stackedWidget = qFindChild<QStackedWidget *>(&infoWidget, QLatin1String("stackedwidget"));
+    QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("toomanycontacts"));
+}
+
+void MergeContactInfoWidgetTest::shouldHaveActivateNoWidgetWhenSelectNoContact()
+{
+    MergeContactInfoWidget infoWidget;
+    Akonadi::Item item(4);
+    infoWidget.setContacts(Akonadi::Item::List()<<item);
+    QStackedWidget *stackedWidget = qFindChild<QStackedWidget *>(&infoWidget, QLatin1String("stackedwidget"));
+    QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("contactwidget"));
+    infoWidget.setContacts(Akonadi::Item::List());
+    QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("nocontact"));
+}
+
 QTEST_KDEMAIN(MergeContactInfoWidgetTest, GUI )
