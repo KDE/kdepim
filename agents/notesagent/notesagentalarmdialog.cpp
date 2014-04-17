@@ -207,7 +207,7 @@ void NotesAgentAlarmDialog::slotFetchAlarmItem(KJob *job)
             KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
             if (!noteMessage)
                 return;
-            const KMime::Headers::Subject * const subject = noteMessage ? noteMessage->subject(false) : 0;
+            const KMime::Headers::Subject * const subject = noteMessage->subject(false);
             QString caption;
             if (subject) {
                 caption = subject->asUnicodeString();
