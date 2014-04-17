@@ -66,26 +66,32 @@ void MergeContactsJob::setDestination(const Akonadi::Collection &collection)
     mCollection = collection;
 }
 
-void MergeContactsJob::createMergedContact(const KABC::Address &address)
+void MergeContactsJob::createMergedContact(const KABC::Addressee &addressee)
 {
     Akonadi::Item item;
     item.setMimeType( KABC::Addressee::mimeType() );
-    //FIXME
-    //item.setPayload<KABC::Address>(address);
+    item.setPayload<KABC::Addressee>( addressee );
+
     Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob(item, mCollection, this);
     connect(job, SIGNAL(result(KJob*)), SLOT(slotCreateMergedContactFinished(KJob*)) );
 }
 
 void MergeContactsJob::slotCreateMergedContactFinished(KJob *job)
 {
-    //TODO
-    //TODO delete old contact
+    if (job->error()) {
+        qDebug() << job->errorString();
+        deleteLater();
+        return;
+    }
     Akonadi::ItemDeleteJob *deleteJob = new Akonadi::ItemDeleteJob(mListItem, this);
     connect(deleteJob, SIGNAL(result(KJob*)), SLOT(slotDeleteContactsFinished(KJob*)) );
 }
 
 void MergeContactsJob::slotDeleteContactsFinished(KJob *job)
 {
+    if (job->error()) {
+        qDebug() << job->errorString();
+    }
     //TODO
     Q_EMIT finished();
     deleteLater();

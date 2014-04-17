@@ -45,10 +45,6 @@ MergeContactInfoWidget::MergeContactInfoWidget(QWidget *parent)
     mNoContactSelected->setObjectName(QLatin1String("nocontact"));
     mStackWidget->addWidget(mNoContactSelected);
 
-    mTooManyContactSelected = new QLabel(i18n("No infos for severals contacts selected"));
-    mTooManyContactSelected->setObjectName(QLatin1String("toomanycontacts"));
-    mStackWidget->addWidget(mTooManyContactSelected);
-
     lay->addWidget(mStackWidget);
     setLayout(lay);
     mStackWidget->setCurrentWidget(mNoContactSelected);
@@ -60,15 +56,12 @@ MergeContactInfoWidget::~MergeContactInfoWidget()
 
 }
 
-void MergeContactInfoWidget::setContacts(const Akonadi::Item::List &items)
+void MergeContactInfoWidget::setContact(const Akonadi::Item &item)
 {
-    const int numberContact(items.count());
-    if (numberContact == 1) {
-        mContactViewer->setContact(items.first());
+    if (item.isValid()) {
+        mContactViewer->setContact(item);
         mStackWidget->setCurrentWidget(mContactViewer);
-    } else if (numberContact == 0) {
-        mStackWidget->setCurrentWidget(mNoContactSelected);
     } else {
-        mStackWidget->setCurrentWidget(mTooManyContactSelected);
+        mStackWidget->setCurrentWidget(mNoContactSelected);
     }
 }

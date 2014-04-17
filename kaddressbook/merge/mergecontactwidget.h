@@ -48,7 +48,7 @@ public:
 
 Q_SIGNALS:
     void mergeContact(const Akonadi::Item::List &lst, const Akonadi::Collection &col);
-    void contactSelected(const Akonadi::Item::List &lst);
+    void contactSelected(const Akonadi::Item &item);
 
 private slots:
     void slotUpdateMergeButton();
@@ -56,6 +56,7 @@ private slots:
 
 private:
     Akonadi::Item::List listSelectedContacts() const;
+    Akonadi::Item currentItem() const;
     void fillListContact();
     Akonadi::Item::List mItems;
     QListWidget *mListWidget;

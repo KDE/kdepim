@@ -36,6 +36,7 @@ extern KADDRESSBOOK_EXPORT QAbstractItemModel *_k_mergeStubModel;
 MergeContactWidgetTest::MergeContactWidgetTest()
 {
     qRegisterMetaType<Akonadi::Item::List>();
+    qRegisterMetaType<Akonadi::Item>();
     qRegisterMetaType<Akonadi::Collection>();
 
     QStandardItemModel *model = new QStandardItemModel;
@@ -107,11 +108,9 @@ void MergeContactWidgetTest::shouldEnableButton()
     QPushButton *button = qFindChild<QPushButton *>(&mergeWidget, QLatin1String("mergebutton"));
     mergeWidget.show();
     QTest::qWaitForWindowShown(&mergeWidget);
-    listWidget->selectAll();
+    listWidget->item(0)->setCheckState(Qt::Checked);
+    listWidget->item(1)->setCheckState(Qt::Checked);
     QCOMPARE(button->isEnabled(), true);
-
-    listWidget->clearSelection();
-    QCOMPARE(button->isEnabled(), false);
 }
 
 void MergeContactWidgetTest::shouldEmitSignalsWhenThereIsElementSelected()
@@ -121,13 +120,14 @@ void MergeContactWidgetTest::shouldEmitSignalsWhenThereIsElementSelected()
     QPushButton *button = qFindChild<QPushButton *>(&mergeWidget, QLatin1String("mergebutton"));
     mergeWidget.show();
     QTest::qWaitForWindowShown(&mergeWidget);
-    listWidget->selectAll();
+    listWidget->item(0)->setCheckState(Qt::Checked);
+    listWidget->item(1)->setCheckState(Qt::Checked);
     QSignalSpy spy(&mergeWidget, SIGNAL(mergeContact(Akonadi::Item::List,Akonadi::Collection)));
     QTest::mouseClick(button, Qt::LeftButton);
     QCOMPARE(spy.count(), 1);
-    listWidget->clearSelection();
+    listWidget->item(1)->setCheckState(Qt::Unchecked);
     QTest::mouseClick(button, Qt::LeftButton);
-    QCOMPARE(spy.count(), 1); //Not new signal emited when we clear list
+    QCOMPARE(spy.count(), 1); //No new signal emited when we are not 2 items checked
 }
 
 void MergeContactWidgetTest::shouldEmitSignalsWhenThereIsTwoElementsSelected()
@@ -137,11 +137,11 @@ void MergeContactWidgetTest::shouldEmitSignalsWhenThereIsTwoElementsSelected()
     QPushButton *button = qFindChild<QPushButton *>(&mergeWidget, QLatin1String("mergebutton"));
     mergeWidget.show();
     QTest::qWaitForWindowShown(&mergeWidget);
-    listWidget->item(0)->setSelected(true);
+    listWidget->item(0)->setCheckState(Qt::Checked);
     QSignalSpy spy(&mergeWidget, SIGNAL(mergeContact(Akonadi::Item::List,Akonadi::Collection)));
     QTest::mouseClick(button, Qt::LeftButton);
     QCOMPARE(spy.count(), 0);
-    listWidget->item(1)->setSelected(true);
+    listWidget->item(1)->setCheckState(Qt::Checked);
     QTest::mouseClick(button, Qt::LeftButton);
     QCOMPARE(spy.count(), 1);
 }
@@ -151,8 +151,8 @@ void MergeContactWidgetTest::shouldEmitSignalsWhenSelectContact()
     MergeContactWidget mergeWidget(createItems());
     QListWidget *listWidget = qFindChild<QListWidget *>(&mergeWidget, QLatin1String("listcontact"));
     mergeWidget.show();
-    QSignalSpy spy(&mergeWidget, SIGNAL(contactSelected(Akonadi::Item::List)));
-    listWidget->selectAll();
+    QSignalSpy spy(&mergeWidget, SIGNAL(contactSelected(Akonadi::Item)));
+    listWidget->item(1)->setSelected(true);
     QCOMPARE(spy.count(), 1);
 
     listWidget->clearSelection();
