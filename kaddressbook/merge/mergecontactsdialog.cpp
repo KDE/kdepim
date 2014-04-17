@@ -18,6 +18,9 @@
 #include "mergecontactsdialog.h"
 #include "utils.h"
 #include "mergecontactutil.h"
+#include "mergecontactwidget.h"
+#include "mergecontactinfowidget.h"
+#include "mergecontactsjob.h"
 
 #include <Akonadi/Item>
 
@@ -27,23 +30,33 @@
 
 #include <QItemSelectionModel>
 #include <QLabel>
+#include <QSplitter>
+#include <QHBoxLayout>
 
+using namespace KABMergeContacts;
 MergeContactsDialog::MergeContactsDialog(QItemSelectionModel *selectionModel, QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Select Contacts to merge" ) );
-    setButtons( Ok | Cancel );
+    setButtons( Close );
     readConfig();
 
     const Akonadi::Item::List lst = Utils::collectSelectedContactsItem(selectionModel);
     if (lst.count() < 2) {
-        enableButtonOk(false);
         setMainWidget(new QLabel(i18n("You must select at least two elements.")));
     } else {
         if (!MergeContactUtil::hasSameNames(lst)) {
             setMainWidget(new QLabel(i18n("You selected %1 and some item has not the same name", lst.count())));
         } else {
-            setMainWidget(new QLabel(i18n("You selected %1", lst.count())));
+            QSplitter *mainWidget = new QSplitter;
+            mainWidget->setChildrenCollapsible(false);
+            MergeContactWidget *contactWidget = new MergeContactWidget(lst);
+            mainWidget->addWidget(contactWidget);
+            MergeContactInfoWidget *contactInfo = new MergeContactInfoWidget;
+            mainWidget->addWidget(contactInfo);
+            connect(contactWidget, SIGNAL(contactSelected(Akonadi::Item)), contactInfo, SLOT(setContact(Akonadi::Item)));
+            connect(contactWidget, SIGNAL(mergeContact(Akonadi::Item::List,Akonadi::Collection)), this, SLOT(slotMergeContact(Akonadi::Item::List,Akonadi::Collection)));
+            setMainWidget(mainWidget);
         }
     }
 }
@@ -51,6 +64,25 @@ MergeContactsDialog::MergeContactsDialog(QItemSelectionModel *selectionModel, QW
 MergeContactsDialog::~MergeContactsDialog()
 {
     writeConfig();
+}
+
+void MergeContactsDialog::slotMergeContact(const Akonadi::Item::List &lst, const Akonadi::Collection &col)
+{
+    if (lst.isEmpty()) {
+        return;
+    }
+    enableButton(Close, false);
+    MergeContactsJob *job = new MergeContactsJob(this);
+    connect(job,SIGNAL(finished()), this, SLOT(slotMergeContactFinished()));
+    job->setDestination(col);
+    job->setListItem(lst);
+    job->start();
+}
+
+void MergeContactsDialog::slotMergeContactFinished()
+{
+    //TODO
+    enableButton(Close, true);
 }
 
 void MergeContactsDialog::readConfig()

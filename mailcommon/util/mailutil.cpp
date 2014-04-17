@@ -100,9 +100,7 @@ bool MailCommon::Util::isVirtualCollection( const Akonadi::Collection &collectio
 
 bool MailCommon::Util::isVirtualCollection( const QString &resource )
 {
-    return
-            (
-                resource == QLatin1String( "akonadi_search_resource" ) );
+    return resource == QLatin1String( "akonadi_search_resource" );
 }
 
 bool MailCommon::Util::isLocalCollection( const QString &resource )

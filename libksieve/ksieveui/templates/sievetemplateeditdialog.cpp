@@ -71,7 +71,8 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
     setMainWidget(w);
     if (!defaultTemplate) {
         enableButtonOk(false);
-        connect(mTemplateNameEdit, SIGNAL(textChanged(QString)),SLOT(slotTemplateNameChanged(QString)));
+        connect(mTemplateNameEdit, SIGNAL(textChanged(QString)),SLOT(slotTemplateChanged()));
+        connect(mTextEdit, SIGNAL(textChanged()),SLOT(slotTemplateChanged()));
         mTemplateNameEdit->setFocus();
     }
     readConfig();
@@ -107,9 +108,9 @@ void SieveTemplateEditDialog::readConfig()
     }
 }
 
-void SieveTemplateEditDialog::slotTemplateNameChanged(const QString &text)
+void SieveTemplateEditDialog::slotTemplateChanged()
 {
-    enableButtonOk(!text.trimmed().isEmpty());
+    enableButtonOk(!mTemplateNameEdit->text().trimmed().isEmpty() && !mTextEdit->toPlainText().trimmed().isEmpty());
 }
 
 void SieveTemplateEditDialog::setScript(const QString &text)

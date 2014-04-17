@@ -19,17 +19,50 @@
 #define MERGECONTACTWIDGET_H
 
 #include <QWidget>
-class QStackedWidget;
+#include <QListWidgetItem>
+#include <Akonadi/Item>
+#include "kaddressbook_export.h"
 
-class MergeContactWidget : public QWidget
+class QListWidget;
+class QPushButton;
+namespace Akonadi {
+class CollectionComboBox;
+}
+namespace KABMergeContacts {
+class MergeContactWidgetItem : public QListWidgetItem
+{
+public:
+    MergeContactWidgetItem(const Akonadi::Item &item, QListWidget *parent = 0);
+    Akonadi::Item item() const;
+
+private:
+    Akonadi::Item mItem;
+};
+
+class KADDRESSBOOK_EXPORT MergeContactWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MergeContactWidget(QWidget *parent=0);
+    explicit MergeContactWidget(const Akonadi::Item::List &items, QWidget *parent=0);
     ~MergeContactWidget();
 
+Q_SIGNALS:
+    void mergeContact(const Akonadi::Item::List &lst, const Akonadi::Collection &col);
+    void contactSelected(const Akonadi::Item &item);
+
+private slots:
+    void slotUpdateMergeButton();
+    void slotMergeContacts();
+
 private:
-    QStackedWidget *mStackedWidget;
+    Akonadi::Item::List listSelectedContacts() const;
+    Akonadi::Item currentItem() const;
+    void fillListContact();
+    Akonadi::Item::List mItems;
+    QListWidget *mListWidget;
+    QPushButton *mMergeButton;
+    Akonadi::CollectionComboBox *mCollectionCombobox;
 };
+}
 
 #endif // MERGECONTACTWIDGET_H

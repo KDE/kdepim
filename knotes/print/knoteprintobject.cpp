@@ -51,7 +51,8 @@ QString KNotePrintObject::description() const
 QString KNotePrintObject::name() const
 {
     KMime::Message::Ptr noteMessage = mItem.payload<KMime::Message::Ptr>();
-    return noteMessage->subject(false)->asUnicodeString();
+    const KMime::Headers::Subject * const subject = noteMessage ? noteMessage->subject(false) : 0;
+    return subject ? subject->asUnicodeString() : QString();
 }
 
 QString KNotePrintObject::currentDateTime() const
@@ -69,7 +70,7 @@ QString KNotePrintObject::alarm() const
 {
     NoteShared::NoteAlarmAttribute *attr = mItem.attribute<NoteShared::NoteAlarmAttribute>();
     if (attr) {
-        return KGlobal::locale()->formatDateTime(attr->dateTime());
+        return KGlobal::locale()->formatDateTime(attr->dateTime(),KLocale::LongDate);
     }
     return QString();
 }

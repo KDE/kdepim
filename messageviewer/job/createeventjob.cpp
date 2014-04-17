@@ -83,7 +83,9 @@ void CreateEventJob::createEvent()
     KMime::Message::Ptr msg =  mItem.payload<KMime::Message::Ptr>();
 
     KCalCore::Attachment::Ptr attachmentPtr(new KCalCore::Attachment( msg->encodedContent().toBase64(), KMime::Message::mimeType() ));
-    attachmentPtr->setLabel(msg->subject(false)->asUnicodeString());
+    const KMime::Headers::Subject * const subject = msg->subject(false);
+    if (subject)
+        attachmentPtr->setLabel(subject->asUnicodeString());
     mEventPtr->addAttachment(attachmentPtr);
 
     Akonadi::Item newEventItem;

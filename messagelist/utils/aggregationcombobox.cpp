@@ -54,7 +54,8 @@ void AggregationComboBox::writeDefaultConfig() const
     const QString aggregationID = currentAggregation();
     group.writeEntry( QLatin1String( "DefaultSet" ), aggregationID );
 
-    Manager::instance()->aggregationsConfigurationCompleted();
+    if (Manager::instance())
+        Manager::instance()->aggregationsConfigurationCompleted();
 }
 
 void AggregationComboBox::writeStorageModelConfig( MessageList::Core::StorageModel *storageModel, bool isPrivateSetting ) const
@@ -64,15 +65,17 @@ void AggregationComboBox::writeStorageModelConfig( MessageList::Core::StorageMod
 
 void AggregationComboBox::writeStorageModelConfig( const QString &id, bool isPrivateSetting ) const
 {
-    // message list aggregation
-    QString aggregationID;
-    if ( isPrivateSetting ) {
-        aggregationID = currentAggregation();
-    } else { // explicitly use default aggregation id when using default aggregation.
-        aggregationID = Manager::instance()->defaultAggregation()->id();
+    if (Manager::instance()) {
+        // message list aggregation
+        QString aggregationID;
+        if ( isPrivateSetting ) {
+            aggregationID = currentAggregation();
+        } else { // explicitly use default aggregation id when using default aggregation.
+            aggregationID = Manager::instance()->defaultAggregation()->id();
+        }
+        Manager::instance()->saveAggregationForStorageModel( id, aggregationID, isPrivateSetting );
+        Manager::instance()->aggregationsConfigurationCompleted();
     }
-    Manager::instance()->saveAggregationForStorageModel( id, aggregationID, isPrivateSetting );
-    Manager::instance()->aggregationsConfigurationCompleted();
 }
 
 void AggregationComboBox::writeStorageModelConfig( const Akonadi::Collection&col, bool isPrivateSetting ) const
@@ -82,8 +85,10 @@ void AggregationComboBox::writeStorageModelConfig( const Akonadi::Collection&col
 
 void AggregationComboBox::readStorageModelConfig( const QString & id, bool &isPrivateSetting )
 {
-    const Aggregation *aggregation = Manager::instance()->aggregationForStorageModel( id, &isPrivateSetting );
-    d->setCurrentAggregation( aggregation );
+    if (Manager::instance()) {
+        const Aggregation *aggregation = Manager::instance()->aggregationForStorageModel( id, &isPrivateSetting );
+        d->setCurrentAggregation( aggregation );
+    }
 }
 
 void AggregationComboBox::readStorageModelConfig( MessageList::Core::StorageModel *storageModel, bool &isPrivateSetting )
@@ -99,12 +104,16 @@ void AggregationComboBox::readStorageModelConfig( const Akonadi::Collection &col
 
 void AggregationComboBox::selectDefault()
 {
-    const Aggregation *defaultAggregation = Manager::instance()->defaultAggregation();
-    d->setCurrentAggregation( defaultAggregation );
+    if (Manager::instance()) {
+        const Aggregation *defaultAggregation = Manager::instance()->defaultAggregation();
+        d->setCurrentAggregation( defaultAggregation );
+    }
 }
 
 void AggregationComboBoxPrivate::slotLoadAggregations()
 {
+    if (!Manager::instance())
+        return;
     q->clear();
 
     // Get all message list aggregations and sort them into alphabetical order.

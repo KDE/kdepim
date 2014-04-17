@@ -55,8 +55,8 @@ void ThemeComboBox::writeDefaultConfig() const
 
     const QString themeID = currentTheme();
     group.writeEntry( QLatin1String( "DefaultSet" ), themeID );
-
-    Manager::instance()->themesConfigurationCompleted();
+    if (Manager::instance())
+        Manager::instance()->themesConfigurationCompleted();
 }
 
 void ThemeComboBox::writeStorageModelConfig( const Akonadi::Collection &col, bool isPrivateSetting ) const
@@ -72,38 +72,47 @@ void ThemeComboBox::writeStorageModelConfig( MessageList::Core::StorageModel *st
 
 void ThemeComboBox::writeStorageModelConfig( const QString &id, bool isPrivateSetting )const
 {
-    QString themeID;
-    if ( isPrivateSetting ) {
-        themeID = currentTheme();
-    } else { // explicitly use default theme id when using default theme.
-        themeID = Manager::instance()->defaultTheme()->id();
+    if (Manager::instance()) {
+        QString themeID;
+        if ( isPrivateSetting ) {
+            themeID = currentTheme();
+        } else { // explicitly use default theme id when using default theme.
+            themeID = Manager::instance()->defaultTheme()->id();
+        }
+        Manager::instance()->saveThemeForStorageModel( id, themeID, isPrivateSetting );
+        Manager::instance()->themesConfigurationCompleted();
     }
-    Manager::instance()->saveThemeForStorageModel( id, themeID, isPrivateSetting );
-    Manager::instance()->themesConfigurationCompleted();
 }
 
 
 void ThemeComboBox::readStorageModelConfig( const Akonadi::Collection& col, bool &isPrivateSetting )
 {
-    const Theme *theme = Manager::instance()->themeForStorageModel( col, &isPrivateSetting );
-    d->setCurrentTheme( theme );
-
+    if (Manager::instance()) {
+        const Theme *theme = Manager::instance()->themeForStorageModel( col, &isPrivateSetting );
+        d->setCurrentTheme( theme );
+    }
 }
 
 void ThemeComboBox::readStorageModelConfig( MessageList::Core::StorageModel *storageModel, bool &isPrivateSetting )
 {
-    const Theme *theme = Manager::instance()->themeForStorageModel( storageModel, &isPrivateSetting );
-    d->setCurrentTheme( theme );
+    if (Manager::instance()) {
+        const Theme *theme = Manager::instance()->themeForStorageModel( storageModel, &isPrivateSetting );
+        d->setCurrentTheme( theme );
+    }
 }
 
 void ThemeComboBox::selectDefault()
 {
-    const Theme *defaultTheme = Manager::instance()->defaultTheme();
-    d->setCurrentTheme( defaultTheme );
+    if (Manager::instance()) {
+        const Theme *defaultTheme = Manager::instance()->defaultTheme();
+        d->setCurrentTheme( defaultTheme );
+    }
 }
 
 void ThemeComboBoxPrivate::slotLoadThemes()
 {
+    if (!Manager::instance())
+        return;
     q->clear();
 
     // Get all message list themes and sort them into alphabetical order.

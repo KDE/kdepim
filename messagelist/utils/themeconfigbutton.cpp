@@ -69,6 +69,7 @@ ThemeConfigButton::ThemeConfigButton( QWidget * parent, const ThemeComboBox * th
     if ( d->mThemeComboBox != 0 )
         connect( this, SIGNAL(configureDialogCompleted()),
                  d->mThemeComboBox, SLOT(slotLoadThemes()) );
+    setEnabled(Manager::instance());
 }
 
 ThemeConfigButton::~ThemeConfigButton()

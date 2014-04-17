@@ -682,8 +682,12 @@ void MainWidget::printPreview()
     wizard.setDefaultAddressBook( currentAddressBook() );
 
     const int result = wizard.exec();
-    if (result)
+    if (result) {
+        Settings::self()->setDefaultFileName( printer.outputFileName() );
+        Settings::self()->setPrintingStyle( wizard.printingStyle() );
+        Settings::self()->setSortOrder( wizard.sortOrder() );
         previewdlg.exec();
+    }
 }
 
 void MainWidget::print()
@@ -912,14 +916,14 @@ void MainWidget::slotGrantleeThemesUpdated()
 
 void MainWidget::mergeContacts()
 {
-    QPointer<MergeContactsDialog> dlg = new MergeContactsDialog(mItemView->selectionModel(), this);
+    QPointer<KABMergeContacts::MergeContactsDialog> dlg = new KABMergeContacts::MergeContactsDialog(mItemView->selectionModel(), this);
     dlg->exec();
     delete dlg;
 }
 
 void MainWidget::slotSearchDuplicateContacts()
 {
-    QPointer<SearchDuplicateContactWizard> wizard = new SearchDuplicateContactWizard(mItemView->selectionModel(), this);
+    QPointer<KABMergeContacts::SearchDuplicateContactWizard> wizard = new KABMergeContacts::SearchDuplicateContactWizard(mItemView->selectionModel(), this);
     wizard->exec();
     delete wizard;
 }

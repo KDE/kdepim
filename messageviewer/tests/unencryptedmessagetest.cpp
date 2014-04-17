@@ -38,6 +38,8 @@ class UnencryptedMessageTest : public QObject
     void testForwardedOpenPGPSignedEncrypted();
     void testSignedForwardedOpenPGPSignedEncrypted();
     void testOpenPGPEncrypted();
+    void testOpenPGPEncryptedNotDecrypted();
+    void testInlinePGPEncryptedNotDecrypted();
 };
 
 QTEST_KDEMAIN( UnencryptedMessageTest, GUI )
@@ -190,6 +192,39 @@ void UnencryptedMessageTest::testOpenPGPEncrypted()
   QCOMPARE( unencryptedMessage->contentType()->mimeType().data(), "text/plain" );
   QCOMPARE( unencryptedMessage->decodedContent().data(), "encrypted message text" );
   QCOMPARE( unencryptedMessage->contents().size(), 0 );
+}
+
+void UnencryptedMessageTest::testOpenPGPEncryptedNotDecrypted()
+{
+  KMime::Message::Ptr originalMessage = readAndParseMail( QLatin1String("openpgp-encrypted.mbox") );
+
+  NodeHelper nodeHelper;
+  EmptySource emptySource;
+  emptySource.setAllowDecryption( false );
+  ObjectTreeParser otp( &emptySource, &nodeHelper );
+  otp.parseObjectTree( originalMessage.get() );
+
+  QCOMPARE( nodeHelper.overallEncryptionState( originalMessage.get() ), KMMsgFullyEncrypted );
+  QCOMPARE( otp.plainTextContent().toLatin1().data(), "" );
+
+  KMime::Message::Ptr unencryptedMessage = nodeHelper.unencryptedMessage( originalMessage );
+  QCOMPARE( (bool) unencryptedMessage, false );
+}
+
+void UnencryptedMessageTest::testInlinePGPEncryptedNotDecrypted()
+{
+  KMime::Message::Ptr originalMessage = readAndParseMail( QLatin1String("inlinepgpencrypted.mbox") );
+
+  NodeHelper nodeHelper;
+  EmptySource emptySource;
+  emptySource.setAllowDecryption( false );
+  ObjectTreeParser otp( &emptySource, &nodeHelper );
+  otp.parseObjectTree( originalMessage.get() );
+
+  QCOMPARE( otp.plainTextContent().toLatin1().data(), "" );
+
+  KMime::Message::Ptr unencryptedMessage = nodeHelper.unencryptedMessage( originalMessage );
+  QCOMPARE( (bool) unencryptedMessage, false );
 }
 
 #include "unencryptedmessagetest.moc"

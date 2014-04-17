@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,17 +15,32 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLLOWUPREMINDERMANAGER_H
-#define FOLLOWUPREMINDERMANAGER_H
+#ifndef KMAIL_TASK_ATTRIBUTE_H
+#define KMAIL_TASK_ATTRIBUTE_H
 
-#include <QObject>
+#include <Akonadi/Attribute>
+#include <Akonadi/Item>
 
-class FollowUpReminderManager : public QObject
+#include <KDateTime>
+class TaskAttribute : public Akonadi::Attribute
 {
-    Q_OBJECT
 public:
-    explicit FollowUpReminderManager(QObject *parent = 0);
-    ~FollowUpReminderManager();
+    TaskAttribute();
+    ~TaskAttribute();
+
+    QByteArray type() const;
+
+    TaskAttribute* clone() const;
+
+    QByteArray serialized() const;
+
+    void deserialize( const QByteArray &data );
+
+    void setTaskId(Akonadi::Item::Id id);
+    Akonadi::Item::Id taskId() const;
+
+private:
+    Akonadi::Item::Id mId;
 };
 
-#endif // FOLLOWUPREMINDERMANAGER_H
+#endif

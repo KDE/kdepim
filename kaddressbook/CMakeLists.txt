@@ -72,8 +72,6 @@ set(kaddressbook_xxport_SRCS
 )
 
 set(kaddressbook_merge_SRCS
-   merge/matchcontact.cpp
-   merge/mergecontacts.cpp
    merge/mergecontactsdialog.cpp
    merge/searchduplicatecontactwizard.cpp
    merge/potentialduplicatecontactswidget.cpp
@@ -81,6 +79,7 @@ set(kaddressbook_merge_SRCS
    merge/mergecontactwidget.cpp
    merge/mergecontactutil.cpp
    merge/mergecontactsjob.cpp
+   merge/mergecontactinfowidget.cpp
 )
 
 set(kaddressbook_LIB_SRCS
@@ -121,6 +120,8 @@ target_link_libraries(kaddressbookprivate
   grantleetheme
   kleo
 )
+add_subdirectory(merge/tests)
+
 
 if(QGPGME_FOUND)
   target_link_libraries(kaddressbookprivate ${QGPGME_LIBRARIES})

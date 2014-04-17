@@ -21,6 +21,7 @@
 #include <KAssistantDialog>
 class QItemSelectionModel;
 class ContactSelectionWidget;
+namespace KABMergeContacts {
 class PotentialDuplicateContactsWidget;
 class SearchDuplicateContactWizard : public KAssistantDialog
 {
@@ -42,5 +43,6 @@ private:
     KPageWidgetItem *mSelectionPageItem;
     KPageWidgetItem *mDuplicateContactsPageItem;
 };
+}
 
 #endif // SearchDuplicateContactWizard_H

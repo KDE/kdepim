@@ -37,10 +37,11 @@ ShowArchiveStructureDialog::ShowArchiveStructureDialog(const QString &filename, 
     mTreeWidget->header()->hide();
     mTreeWidget->setAlternatingRowColors(true);
     setMainWidget(mTreeWidget);
-    fillTree();
+    const bool result = fillTree();
     mTreeWidget->expandAll();
     readConfig();
     setButtonText(User1, i18n("Save As Text..."));
+    enableButton(User1, result);
     connect(this, SIGNAL(user1Clicked()), SLOT(slotExportAsLogFile()));
 }
 
@@ -54,19 +55,20 @@ void ShowArchiveStructureDialog::slotExportAsLogFile()
     PimCommon::Util::saveTextAs(mLogFile, QLatin1String("*.txt"), this, KUrl(), i18n("Export Log File"));
 }
 
-void ShowArchiveStructureDialog::fillTree()
+bool ShowArchiveStructureDialog::fillTree()
 {
     KZip *zip = new KZip(mFileName);
     bool result = zip->open(QIODevice::ReadOnly);
     if (!result) {
         KMessageBox::error(this, i18n("Archive cannot be opened in read mode."), i18n("Cannot open archive"));
         delete zip;
-        return;
+        return result;
     }
     const KArchiveDirectory *topDirectory = zip->directory();
     const bool isAValidArchive = searchArchiveElement(Utils::infoPath(), topDirectory, i18n("Info"));
     if (!isAValidArchive) {
         KMessageBox::error(this, i18n("This is not kdepim archive."), i18n("Show information"));
+        result = false;
     } else {
         searchArchiveElement(Utils::mailsPath(), topDirectory, Utils::appTypeToI18n(Utils::KMail));
         searchArchiveElement(Utils::alarmPath(), topDirectory, Utils::appTypeToI18n(Utils::KAlarm));
@@ -81,6 +83,7 @@ void ShowArchiveStructureDialog::fillTree()
         searchArchiveElement(Utils::akonadiPath(), topDirectory, Utils::storedTypeToI18n(Utils::AkonadiDb));
     }
     delete zip;
+    return result;
 }
 
 bool ShowArchiveStructureDialog::searchArchiveElement(const QString &path, const KArchiveDirectory *topDirectory, const QString &name)

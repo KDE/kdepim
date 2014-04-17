@@ -59,7 +59,7 @@ public:
 
         q->connect(downloadThemesAction, SIGNAL(triggered(bool)), q, SLOT(slotDownloadHeaderThemes()) );
         q->connect( watch, SIGNAL(dirty(QString)), SLOT(directoryChanged()) );
-        setThemesPath();
+        updateThemesPath();
     }
 
     ~Private()
@@ -87,11 +87,12 @@ public:
 
     void directoryChanged()
     {
+        updateThemesPath();
         updateActionList();
         Q_EMIT q->updateThemes();
     }
 
-    void setThemesPath()
+    void updateThemesPath()
     {
         if ( !themesDirectories.isEmpty() ) {
             watch->stopScan();

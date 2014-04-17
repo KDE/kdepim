@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,26 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MATCHCONTACT_H
-#define MATCHCONTACT_H
 
-#include <Akonadi/Item>
+#ifndef MERGECONTACTINFOWIDGETTEST_H
+#define MERGECONTACTINFOWIDGETTEST_H
 
-struct MatchContact
+#include <QObject>
+
+class MergeContactInfoWidgetTest : public QObject
 {
-    enum MatchType {
-        None = 0,
-        Name = 1,
-        Emails = 2,
-        Phone = 4,
-        NickName = 8
-    };
-    Q_ENUMS(MatchType)
-    Q_DECLARE_FLAGS(MatchTypes, MatchType)
-    MatchContact(const QList<Akonadi::Item> &items);
-
-    QList<Akonadi::Item> mListItem;
-    MatchType mType;
+    Q_OBJECT
+public:
+    MergeContactInfoWidgetTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValueOnCreation();
+    void shouldHaveActivateDisplayWidgetWhenSelectOneContact();
+    void shouldHaveActivateNoWidgetWhenSelectNoContact();
 };
 
-#endif // MATCHCONTACT_H
+#endif // MERGECONTACTINFOWIDGETTEST_H

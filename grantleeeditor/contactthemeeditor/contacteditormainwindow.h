@@ -53,11 +53,18 @@ private Q_SLOTS:
     void slotSaveAsTheme();
 
 private:
-    void loadTheme(const QString &directory);
+    enum ActionSaveTheme {
+        SaveOnly = 0,
+        SaveAndCloseTheme,
+        SaveAndCreateNewTheme
+    };
+
+    bool loadTheme(const QString &directory);
     void readConfig();
     void updateActions();
-    bool saveCurrentProject(bool createNewTheme);
+    bool saveCurrentProject(ActionSaveTheme act);
     void setupActions();
+    void closeThemeEditor();
     ContactEditorPage *mContactEditor;
     KAction *mNewThemeAction;
     KAction *mCloseThemeAction;

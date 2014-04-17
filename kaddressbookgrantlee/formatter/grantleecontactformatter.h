@@ -54,6 +54,10 @@ public:
 
     void setGrantleeTheme(const GrantleeTheme::Theme &theme);
 
+    void setForceDisableQRCode(bool b);
+    bool forceDisableQRCode() const;
+
+
     /**
      * Returns the contact formatted as HTML
      */

@@ -204,28 +204,32 @@ bool ThemeEditorMainWindow::slotSaveTheme()
 
 void ThemeEditorMainWindow::slotCloseTheme()
 {
-    saveCurrentProject(false);
+    saveCurrentProject(SaveAndCloseTheme);
 }
 
 void ThemeEditorMainWindow::slotOpenTheme()
 {
-    if (!saveCurrentProject(false))
+    if (!saveCurrentProject(SaveOnly))
         return;
 
     const QString directory = KFileDialog::getExistingDirectory(KUrl( "kfiledialog:///OpenTheme" ), this, i18n("Select theme directory"));
-    loadTheme(directory);
-    mRecentFileAction->addUrl(KUrl(directory));
+    if (directory.isEmpty()) {
+        return;
+    }
+    closeThemeEditor();
+    if (loadTheme(directory))
+        mRecentFileAction->addUrl(KUrl(directory));
     mSaveAction->setEnabled(false);
 }
 
-void ThemeEditorMainWindow::loadTheme(const QString &directory)
+bool ThemeEditorMainWindow::loadTheme(const QString &directory)
 {
     if (!directory.isEmpty()) {
         const QString filename = directory + QDir::separator() + QLatin1String("theme.themerc");
         QFile file(filename);
         if (!file.exists()) {
             KMessageBox::error(this, i18n("Directory does not contain a theme file. We cannot load theme."));
-            return;
+            return false;
         }
 
         mThemeEditor = new ThemeEditorPage(QString(), QString());
@@ -235,6 +239,7 @@ void ThemeEditorMainWindow::loadTheme(const QString &directory)
         setCentralWidget(mThemeEditor);
         updateActions();
     }
+    return true;
 }
 
 void ThemeEditorMainWindow::slotAddExtraPage()
@@ -243,14 +248,29 @@ void ThemeEditorMainWindow::slotAddExtraPage()
         mThemeEditor->addExtraPage();
 }
 
-bool ThemeEditorMainWindow::saveCurrentProject(bool createNewTheme)
+void ThemeEditorMainWindow::closeThemeEditor()
+{
+    delete mThemeEditor;
+    mThemeEditor = 0;
+    setCentralWidget(0);
+    updateActions();
+}
+
+bool ThemeEditorMainWindow::saveCurrentProject(ActionSaveTheme act)
 {
     if (mThemeEditor) {
         if (!mThemeEditor->saveTheme()) {
             return false;
         }
     }
-    if (createNewTheme) {
+    switch(act) {
+    case SaveOnly:
+        break;
+    case SaveAndCloseTheme: {
+        closeThemeEditor();
+        break;
+    }
+    case SaveAndCreateNewTheme: {
         delete mThemeEditor;
         mThemeEditor = 0;
         QPointer<GrantleeThemeEditor::NewThemeDialog> dialog = new GrantleeThemeEditor::NewThemeDialog(this);
@@ -271,23 +291,21 @@ bool ThemeEditorMainWindow::saveCurrentProject(bool createNewTheme)
         }
         delete dialog;
         updateActions();
-    } else {
-        delete mThemeEditor;
-        mThemeEditor = 0;
-        setCentralWidget(0);
-        updateActions();
+        break;
     }
+    }
+
     return true;
 }
 
 void ThemeEditorMainWindow::slotNewTheme()
 {
-    saveCurrentProject(true);
+    saveCurrentProject(SaveAndCreateNewTheme);
 }
 
 void ThemeEditorMainWindow::closeEvent(QCloseEvent *e)
 {
-    if (!saveCurrentProject(false))
+    if (!saveCurrentProject(SaveAndCloseTheme))
         e->ignore();
     else
         e->accept();
@@ -295,7 +313,7 @@ void ThemeEditorMainWindow::closeEvent(QCloseEvent *e)
 
 void ThemeEditorMainWindow::slotQuitApp()
 {
-    if (saveCurrentProject(false))
+    if (saveCurrentProject(SaveAndCloseTheme))
         kapp->quit();
 }
 
@@ -314,7 +332,7 @@ void ThemeEditorMainWindow::slotCanInsertFile(bool b)
 
 void ThemeEditorMainWindow::slotThemeSelected(const KUrl &url)
 {
-    if (!saveCurrentProject(false))
+    if (!saveCurrentProject(SaveAndCloseTheme))
         return;
     loadTheme(url.path());
     mSaveAction->setEnabled(false);

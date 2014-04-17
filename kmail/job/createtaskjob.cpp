@@ -20,10 +20,19 @@
 
 
 #include "createtaskjob.h"
+#include "attributes/taskattribute.h"
 #include <akonadi/kmime/messagestatus.h>
+
+#include <KLocalizedString>
+
+#include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemFetchScope>
+
+#include <QDebug>
 
 CreateTaskJob::CreateTaskJob(const Akonadi::Item::List &items, bool revert, QObject *parent)
     : KJob(parent),
+      mListItem(items),
       mRevertStatus(revert)
 {
 }
@@ -35,6 +44,34 @@ CreateTaskJob::~CreateTaskJob()
 
 void CreateTaskJob::start()
 {
-
+    if (mListItem.isEmpty()) {
+        Q_EMIT emitResult();
+        return;
+    }
+    fetchItems();
 }
 
+void CreateTaskJob::fetchItems()
+{
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mListItem, this );
+    job->fetchScope().fetchFullPayload( true );
+    job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+    job->fetchScope().fetchAttribute<TaskAttribute>();
+    connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchJobDone(KJob*)) );
+}
+
+void CreateTaskJob::itemFetchJobDone(KJob *job)
+{
+    if (job->error()) {
+        qDebug() << job->errorString();
+        Q_EMIT emitResult();
+        return;
+    }
+    Akonadi::ItemFetchJob *fetchjob = qobject_cast<Akonadi::ItemFetchJob *>(job);
+    const Akonadi::Item::List lst = fetchjob->items();
+    if (lst.isEmpty()) {
+        Q_EMIT emitResult();
+        return;
+    }
+    //TODO
+}

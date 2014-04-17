@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,17 +15,28 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLLOWUPREMINDERCONFIGUREDIALOG_H
-#define FOLLOWUPREMINDERCONFIGUREDIALOG_H
 
-#include <KDialog>
+#ifndef MERGECONTACTWIDGETTEST_H
+#define MERGECONTACTWIDGETTEST_H
 
-class FollowUpReminderConfigureDialog : public KDialog
+#include <QObject>
+#include <Akonadi/Item>
+
+class MergeContactWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FollowUpReminderConfigureDialog(QWidget *parent = 0);
-    ~FollowUpReminderConfigureDialog();
+    MergeContactWidgetTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValueOnCreation();
+    void shouldFillList();
+    void shouldFillListWithValidItem();
+    void shouldEnableButton();
+    void shouldEmitSignalsWhenThereIsElementSelected();
+    void shouldEmitSignalsWhenThereIsTwoElementsSelected();
+    void shouldEmitSignalsWhenSelectContact();
+private:
+    Akonadi::Item::List createItems();
 };
 
-#endif // FOLLOWUPREMINDERCONFIGUREDIALOG_H
+#endif // MERGECONTACTWIDGETTEST_H

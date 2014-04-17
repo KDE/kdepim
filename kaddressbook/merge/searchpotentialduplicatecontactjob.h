@@ -21,7 +21,7 @@
 
 #include <QObject>
 #include <Akonadi/Item>
-
+namespace KABMergeContacts {
 class SearchPotentialDuplicateContactJob : public QObject
 {
     Q_OBJECT
@@ -42,5 +42,6 @@ private:
     Akonadi::Item::List mListItem;
     QList<QList<Akonadi::Item> > mListDuplicate;
 };
+}
 
 #endif // SEARCHPOTENTIALDUPLICATECONTACTJOB_H

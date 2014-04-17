@@ -67,6 +67,8 @@ public:
     static StorageServiceAbstract::Capabilities capabilities(ServiceType type);
     static QString kconfigName();
 
+    void removeService(const QString &serviceName);
+
 Q_SIGNALS:
     void servicesChanged();
     void deleteFolderDone(const QString &serviceName, const QString &filename);

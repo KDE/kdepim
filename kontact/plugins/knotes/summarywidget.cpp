@@ -143,7 +143,6 @@ void KNotesSummaryWidget::displayNotes( const QModelIndex &parent, int &counter)
                 mModelProxy->data( child,
                                   Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
         if (item.isValid()) {
-            qDebug()<<" createNote "<<counter;
             createNote(item, counter);
             ++counter;
         }
@@ -178,9 +177,14 @@ void KNotesSummaryWidget::deleteNote(const QString &note)
 
 void KNotesSummaryWidget::createNote(const Akonadi::Item &item, int counter)
 {
+    if (!item.hasPayload<KMime::Message::Ptr>())
+        return;
 
     KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
-    KUrlLabel *urlLabel = new KUrlLabel( QString::number( item.id() ), noteMessage->subject(false)->asUnicodeString(), this );
+    if (!noteMessage)
+        return;
+    const KMime::Headers::Subject * const subject = noteMessage->subject(false);
+    KUrlLabel *urlLabel = new KUrlLabel( QString::number( item.id() ), subject ? subject->asUnicodeString() : QString(), this );
 
     urlLabel->installEventFilter( this );
     urlLabel->setAlignment( Qt::AlignLeft );

@@ -2992,6 +2992,11 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
             QString text;
 
             if ( block.type() == Kpgp::PgpMessageBlock ) {
+                if ( !mSource->decryptMessage() ) {
+                    writeDeferredDecryptionBlock();
+                    continue;
+                }
+
                 QByteArray decryptedData;
                 bool signatureFound;
                 bool actuallyEncrypted = true;

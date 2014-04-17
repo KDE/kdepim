@@ -3,7 +3,7 @@
   Copyright (C) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
   Copyright (c) 2009 Andras Mantia <andras@kdab.net>
   Copyright (c) 2010 Torgny Nyblom <nyblom@kde.org>
-  Copyright (c) 2011, 2012 Laurent Montel <montel@kde.org>
+  Copyright (c) 2011, 2012, 2013, 2014 Laurent Montel <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -2060,8 +2060,7 @@ QString ViewerPrivate::renderAttachments( KMime::Content * node, const QColor &b
 KMime::Content* ViewerPrivate::findContentByType(KMime::Content *content, const QByteArray &type)
 {
     KMime::Content::List list = content->contents();
-    Q_FOREACH(KMime::Content *c, list)
-    {
+    Q_FOREACH(KMime::Content *c, list) {
         if (c->contentType()->mimeType() ==  type)
             return c;
     }
@@ -2277,8 +2276,7 @@ void ViewerPrivate::updateReaderWin()
 
     htmlWriter()->reset();
     //TODO: if the item doesn't have the payload fetched, try to fetch it? Maybe not here, but in setMessageItem.
-    if ( mMessage )
-    {
+    if ( mMessage ) {
         if ( GlobalSettings::self()->showColorBar() ) {
             mColorBar->show();
         } else {
@@ -2895,8 +2893,7 @@ void ViewerPrivate::scrollToAttachment( KMime::Content *node )
 void ViewerPrivate::setUseFixedFont( bool useFixedFont )
 {
     mUseFixedFont = useFixedFont;
-    if ( mToggleFixFontAction )
-    {
+    if ( mToggleFixFontAction ) {
         mToggleFixFontAction->setChecked( mUseFixedFont );
     }
 }
@@ -2987,7 +2984,8 @@ void ViewerPrivate::attachmentEncryptWithChiasmus( KMime::Content *content )
 }
 
 
-static const QString chomp( const QString & base, const QString & suffix, bool cs ) {
+static const QString chomp( const QString & base, const QString & suffix, bool cs )
+{
     return base.endsWith( suffix, cs ? (Qt::CaseSensitive) : (Qt::CaseInsensitive) ) ? base.left( base.length() - suffix.length() ) : base ;
 }
 

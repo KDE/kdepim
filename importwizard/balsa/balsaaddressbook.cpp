@@ -24,6 +24,7 @@
 
 #include <KConfig>
 #include <KConfigGroup>
+#include <KLocalizedString>
 
 #include <QDebug>
 #include <QFile>
@@ -34,6 +35,9 @@ BalsaAddressBook::BalsaAddressBook(const QString &filename, ImportWizard *parent
 {
     KConfig config(filename);
     const QStringList addressBookList = config.groupList().filter( QRegExp( "address-book-\\+d" ) );
+    if (addressBookList.isEmpty()) {
+        addAddressBookImportInfo(i18n("No addressbook found"));
+    }
     Q_FOREACH (const QString& addressbook,addressBookList) {
         KConfigGroup grp = config.group(addressbook);
         readAddressBook(grp);
@@ -50,6 +54,7 @@ void BalsaAddressBook::readAddressBook(const KConfigGroup &grp)
 {
     const QString type = grp.readEntry(QLatin1String("Type"));
     if (type.isEmpty()) {
+        addAddressBookImportInfo(i18n("No addressbook found"));
         return;
     }
     const QString name = grp.readEntry(QLatin1String("Name"));
@@ -63,6 +68,7 @@ void BalsaAddressBook::readAddressBook(const KConfigGroup &grp)
         //TODO: verify
         const QString bookDN  = grp.readEntry(QLatin1String("BookDN")); //TODO ?
         ImportWizardUtil::mergeLdap(ldap);
+        addAddressBookImportInfo(i18n("Ldap created"));
     } else if (type == QLatin1String("LibBalsaAddressBookGpe")) {
         qDebug()<<" Import it !";
     } else if (type == QLatin1String("LibBalsaAddressBookLdif")) {
@@ -79,7 +85,8 @@ void BalsaAddressBook::readAddressBook(const KConfigGroup &grp)
                 file.close();
 
                 KABC::LDIFConverter::LDIFToAddressee( wholeFile, contacts, dtDefault );
-                Q_FOREACH (const KABC::Addressee&contact, contacts) {
+                Q_FOREACH (KABC::Addressee contact, contacts) {
+                    addImportNote(contact, QLatin1String("Balsa"));
                     createContact( contact );
                 }
             }
@@ -90,7 +97,7 @@ void BalsaAddressBook::readAddressBook(const KConfigGroup &grp)
             QMap<QString, QVariant> settings;
             settings.insert(QLatin1String("Path"),path);
             settings.insert(QLatin1String("DisplayName"),name);
-            createResource(QLatin1String("akonadi_vcard_resource") ,name, settings);
+            addAddressBookImportInfo(i18n("New addressbook created: %1", createResource(QLatin1String("akonadi_vcard_resource") ,name, settings)));
         }
     } else {
         qDebug()<<" unknown addressbook type :"<<type;
