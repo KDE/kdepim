@@ -39,13 +39,15 @@ MergeContactsJob::~MergeContactsJob()
 void MergeContactsJob::start()
 {
     if (!mCollection.isValid()) {
-        deleteLater();
         qDebug()<<" mCollection is not valid !";
+        Q_EMIT finished();
+        deleteLater();
         return;
     }
     if (mListItem.isEmpty()) {
-        deleteLater();
         qDebug()<<" list item is empty !";
+        Q_EMIT finished();
+        deleteLater();
         return;
     }
     generateMergedContact();
@@ -80,6 +82,7 @@ void MergeContactsJob::slotCreateMergedContactFinished(KJob *job)
 {
     if (job->error()) {
         qDebug() << job->errorString();
+        Q_EMIT finished();
         deleteLater();
         return;
     }

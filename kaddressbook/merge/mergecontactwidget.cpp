@@ -28,8 +28,6 @@
 #include <QDebug>
 #include <QLabel>
 
-//TODO add delegate to show address info.
-
 namespace KABMergeContacts {
 KADDRESSBOOK_EXPORT QAbstractItemModel *_k_mergeStubModel = 0;
 }
