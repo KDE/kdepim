@@ -89,8 +89,10 @@ void NoteShared::NoteUtils::sendToNetwork(QWidget *parent, const QString &title,
 QString NoteShared::NoteUtils::createToolTip(const Akonadi::Item &item)
 {
     const KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
+    if (!noteMessage)
+        return QString();
     const QString description = QString::fromUtf8(noteMessage->mainBodyPart()->decodedContent());
-    const KMime::Headers::Subject * const subject = noteMessage ? noteMessage->subject(false) : 0;
+    const KMime::Headers::Subject * const subject = noteMessage->subject(false);
 
     const QString realName = subject ? subject->asUnicodeString() : QString();
     const bool isRichText = noteMessage->contentType()->isHTMLText();

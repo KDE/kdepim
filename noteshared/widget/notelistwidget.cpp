@@ -70,7 +70,7 @@ void NoteListWidget::createItem(const Akonadi::Item &note)
         return;
     QListWidgetItem *item =new QListWidgetItem(this);
 
-    const KMime::Headers::Subject * const subject = noteMessage ? noteMessage->subject(false) : 0;
+    const KMime::Headers::Subject * const subject = noteMessage->subject(false);
     if (subject)
         item->setText(subject->asUnicodeString());
 
