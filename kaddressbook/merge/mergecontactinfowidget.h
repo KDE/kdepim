@@ -19,17 +19,30 @@
 #define MERGECONTACTINFOWIDGET_H
 
 #include <QWidget>
+
+#include "kaddressbook_export.h"
+
+namespace Akonadi {
+class Item;
+}
+namespace KAddressBookGrantlee {
+class GrantleeContactViewer;
+}
+
 class QStackedWidget;
 namespace KABMergeContacts {
-class MergeContactInfoWidget : public QWidget
+class KADDRESSBOOK_EXPORT MergeContactInfoWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit MergeContactInfoWidget(QWidget *parent);
     ~MergeContactInfoWidget();
 
+    void setContact(const Akonadi::Item &item);
+
 private:
     QStackedWidget *mStackWidget;
+    KAddressBookGrantlee::GrantleeContactViewer *mContactViewer;
 };
 }
 

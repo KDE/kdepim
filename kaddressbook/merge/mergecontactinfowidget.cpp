@@ -16,6 +16,12 @@
 */
 #include "mergecontactinfowidget.h"
 
+#include "kaddressbookgrantlee/widget/grantleecontactviewer.h"
+
+#include <KLocalizedString>
+
+#include <Akonadi/Item>
+
 #include <QHBoxLayout>
 #include <QStackedWidget>
 
@@ -26,6 +32,9 @@ MergeContactInfoWidget::MergeContactInfoWidget(QWidget *parent)
 {
     QHBoxLayout *lay = new QHBoxLayout;
     mStackWidget = new QStackedWidget;
+
+    mContactViewer = new KAddressBookGrantlee::GrantleeContactViewer;
+    mStackWidget->addWidget(mContactViewer);
     lay->addWidget(mStackWidget);
     setLayout(lay);
 }
@@ -34,4 +43,9 @@ MergeContactInfoWidget::MergeContactInfoWidget(QWidget *parent)
 MergeContactInfoWidget::~MergeContactInfoWidget()
 {
 
+}
+
+void MergeContactInfoWidget::setContact(const Akonadi::Item &item)
+{
+    mContactViewer->setContact(item);
 }
