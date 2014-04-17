@@ -81,7 +81,7 @@ void NotesAgentNoteDialog::slotFetchItem(KJob* job)
         const Akonadi::Item item = lstItem.first();
         KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
         if (noteMessage) {
-            const KMime::Headers::Subject * const subject = noteMessage ? noteMessage->subject(false) : 0;
+            const KMime::Headers::Subject * const subject = noteMessage->subject(false);
             if (subject)
                 mSubject->setText(subject->asUnicodeString());
             if ( noteMessage->contentType()->isHTMLText() ) {
