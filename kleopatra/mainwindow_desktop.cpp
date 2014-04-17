@@ -174,6 +174,12 @@ public:
     }
     void editKeybindings() {
         KShortcutsDialog::configure( q->actionCollection(), KShortcutsEditor::LetterShortcutsAllowed );
+        updateSearchBarClickMessage();
+    }
+
+    void updateSearchBarClickMessage() {
+        const QString shortcutStr = focusToClickSearchAction->shortcut().toString();
+        ui.searchBar->updateClickMessage(shortcutStr);
     }
 
     void selfTest() {
@@ -228,6 +234,7 @@ private:
         SearchBar * searchBar;
         explicit UI( MainWindow * q );
     } ui;
+    KAction *focusToClickSearchAction;
 };
 
 MainWindow::Private::UI::UI(MainWindow *q)
@@ -289,6 +296,7 @@ MainWindow::Private::Private( MainWindow * qq )
     q->setAcceptDrops( true );
 
     q->setAutoSaveSettings();
+    updateSearchBarClickMessage();
 }
 
 MainWindow::Private::~Private() {}
@@ -343,10 +351,10 @@ void MainWindow::Private::setupActions() {
     KStandardAction::keyBindings( q, SLOT(editKeybindings()), coll );
     KStandardAction::preferences( qApp, SLOT(openOrRaiseConfigDialog()), coll );
 
-    KAction *act = new KAction(i18n("Set Focus to Quick Search"), q);
-    act->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Q ) );
-    coll->addAction( QLatin1String("focus_to_quickseach"), act );
-    connect( act, SIGNAL(triggered(bool)), q, SLOT(slotFocusQuickSearch()) );
+    focusToClickSearchAction = new KAction(i18n("Set Focus to Quick Search"), q);
+    focusToClickSearchAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Q ) );
+    coll->addAction( QLatin1String("focus_to_quickseach"), focusToClickSearchAction );
+    connect( focusToClickSearchAction, SIGNAL(triggered(bool)), q, SLOT(slotFocusQuickSearch()) );
 
     q->createStandardStatusBarAction();
     q->setStandardToolBarMenuEnabled( true );

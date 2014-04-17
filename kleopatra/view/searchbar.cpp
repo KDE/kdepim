@@ -116,6 +116,12 @@ SearchBar::SearchBar( QWidget * parent, Qt::WindowFlags f )
 
 SearchBar::~SearchBar() {}
 
+
+void SearchBar::updateClickMessage(const QString &shortcutStr)
+{
+    d->lineEdit->setClickMessage(i18n("Search...<%1>", shortcutStr));
+}
+
 // slot
 void SearchBar::setStringFilter( const QString & filter ) {
     d->lineEdit->setText( filter );
