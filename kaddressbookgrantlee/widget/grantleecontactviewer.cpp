@@ -24,12 +24,16 @@ using namespace KAddressBookGrantlee;
 GrantleeContactViewer::GrantleeContactViewer(QWidget *parent)
     : Akonadi::ContactViewer(parent)
 {
-    KAddressBookGrantlee::GrantleeContactFormatter *formatter = new KAddressBookGrantlee::GrantleeContactFormatter;
-    setContactFormatter( formatter );
-    formatter->setAbsoluteThemePath(KAddressBookGrantlee::GrantleeUtil::kaddressBookAbsoluteThemePath());
+    mFormatter = new KAddressBookGrantlee::GrantleeContactFormatter;
+    setContactFormatter( mFormatter );
+    mFormatter->setAbsoluteThemePath(KAddressBookGrantlee::GrantleeUtil::kaddressBookAbsoluteThemePath());
 }
 
 GrantleeContactViewer::~GrantleeContactViewer()
 {
 }
 
+void GrantleeContactViewer::setForceDisableQRCode(bool b)
+{
+    mFormatter->setForceDisableQRCode(b);
+}

@@ -37,6 +37,7 @@ MergeContactInfoWidget::MergeContactInfoWidget(QWidget *parent)
 
     mContactViewer = new KAddressBookGrantlee::GrantleeContactViewer;
     mContactViewer->setObjectName(QLatin1String("contactwidget"));
+    mContactViewer->setForceDisableQRCode(true);
 
     mStackWidget->addWidget(mContactViewer);
 

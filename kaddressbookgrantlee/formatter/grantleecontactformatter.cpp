@@ -52,6 +52,7 @@ class GrantleeContactFormatter::Private
 {
 public:
     Private()
+        : forceDisableQRCode(false)
     {
         mEngine = new Grantlee::Engine;
 
@@ -86,6 +87,7 @@ public:
     Grantlee::Template mSelfcontainedTemplate;
     Grantlee::Template mEmbeddableTemplate;
     QString mErrorMessage;
+    bool forceDisableQRCode;
 };
 
 GrantleeContactFormatter::GrantleeContactFormatter()
@@ -106,6 +108,16 @@ void GrantleeContactFormatter::setAbsoluteThemePath(const QString &path)
 void GrantleeContactFormatter::setGrantleeTheme(const GrantleeTheme::Theme &theme)
 {
     d->changeGrantleePath(theme.absolutePath());
+}
+
+void GrantleeContactFormatter::setForceDisableQRCode(bool b)
+{
+    d->forceDisableQRCode = b;
+}
+
+bool GrantleeContactFormatter::forceDisableQRCode() const
+{
+    return d->forceDisableQRCode;
 }
 
 inline static void setHashField( QVariantHash &hash, const QString &name, const QString &value )
@@ -489,10 +501,12 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
     contactObject.insert( QLatin1String( "customFieldsUrl" ), customFieldsUrl );
 
 #if defined(HAVE_PRISON)
-    KConfig config( QLatin1String( "akonadi_contactrc" ) );
-    KConfigGroup group( &config, QLatin1String( "View" ) );
-    if (group.readEntry( "QRCodes", true )) {
-        contactObject.insert( QLatin1String( "hasqrcode" ), QLatin1String("true") );
+    if (!d->forceDisableQRCode) {
+        KConfig config( QLatin1String( "akonadi_contactrc" ) );
+        KConfigGroup group( &config, QLatin1String( "View" ) );
+        if (group.readEntry( "QRCodes", true )) {
+            contactObject.insert( QLatin1String( "hasqrcode" ), QLatin1String("true") );
+        }
     }
 #endif
 
