@@ -61,6 +61,7 @@ void MergeContactsDialog::slotMergeContact(const Akonadi::Item::List &lst, const
     if (lst.isEmpty()) {
         return;
     }
+    enableButton(Close, false);
     MergeContactsJob *job = new MergeContactsJob(this);
     connect(job,SIGNAL(finished()), this, SLOT(slotMergeContactFinished()));
     job->setDestination(col);
@@ -71,6 +72,7 @@ void MergeContactsDialog::slotMergeContact(const Akonadi::Item::List &lst, const
 void MergeContactsDialog::slotMergeContactFinished()
 {
     //TODO
+    enableButton(Close, true);
 }
 
 void MergeContactsDialog::readConfig()

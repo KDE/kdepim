@@ -41,6 +41,9 @@ MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget
       mItems(items)
 {
     QVBoxLayout *lay = new QVBoxLayout;
+
+    QLabel *lab = new QLabel(i18n("Select contacts that you want really to merge:"));
+    lay->addWidget(lab);
     mListWidget = new QListWidget;
     mListWidget->setObjectName(QLatin1String("listcontact"));
     mListWidget->setSelectionMode(QAbstractItemView::MultiSelection);
@@ -50,7 +53,7 @@ MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->addStretch();
 
-    QLabel *lab = new QLabel(i18n("Select addressbook where to store merged contact:"));
+    lab = new QLabel(i18n("Select addressbook where to store merged contact:"));
     hbox->addWidget(lab);
 
     mCollectionCombobox = new Akonadi::CollectionComboBox(_k_mergeStubModel);
