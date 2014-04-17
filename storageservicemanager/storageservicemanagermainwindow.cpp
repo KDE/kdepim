@@ -233,6 +233,7 @@ void StorageServiceManagerMainWindow::slotConfigure()
 void StorageServiceManagerMainWindow::slotServiceRemoved(const QString &serviceName)
 {
     mStorageServiceTabWidget->serviceRemoved(serviceName);
+    mStorageManager->removeService(serviceName);
 }
 
 void StorageServiceManagerMainWindow::readConfig()

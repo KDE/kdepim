@@ -76,6 +76,13 @@ StorageServiceManager::~StorageServiceManager()
     qDeleteAll(mListService);
 }
 
+
+void StorageServiceManager::removeService(const QString &serviceName)
+{
+    if (mListService.contains(serviceName))
+        mListService.remove(serviceName);
+}
+
 QString StorageServiceManager::ourIdentifier() const
 {
     const QString identifier = QString::fromLatin1( "%1/%2" ).
