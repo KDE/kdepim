@@ -24,6 +24,7 @@
 
 #include <QHBoxLayout>
 #include <QStackedWidget>
+#include <QLabel>
 
 using namespace KABMergeContacts;
 
@@ -32,11 +33,24 @@ MergeContactInfoWidget::MergeContactInfoWidget(QWidget *parent)
 {
     QHBoxLayout *lay = new QHBoxLayout;
     mStackWidget = new QStackedWidget;
+    mStackWidget->setObjectName(QLatin1String("stackedwidget"));
 
     mContactViewer = new KAddressBookGrantlee::GrantleeContactViewer;
+    mContactViewer->setObjectName(QLatin1String("contactwidget"));
+
     mStackWidget->addWidget(mContactViewer);
+
+    mNoContactSelected = new QLabel;
+    mNoContactSelected->setObjectName(QLatin1String("nocontact"));
+    mStackWidget->addWidget(mNoContactSelected);
+
+    mTooManyContactSelected = new QLabel(i18n("No infos for severals contacts selected"));
+    mTooManyContactSelected->setObjectName(QLatin1String("toomanycontacts"));
+    mStackWidget->addWidget(mTooManyContactSelected);
+
     lay->addWidget(mStackWidget);
     setLayout(lay);
+    mStackWidget->setCurrentWidget(mNoContactSelected);
 }
 
 
@@ -45,7 +59,15 @@ MergeContactInfoWidget::~MergeContactInfoWidget()
 
 }
 
-void MergeContactInfoWidget::setContact(const Akonadi::Item &item)
+void MergeContactInfoWidget::setContact(const Akonadi::Item::List &items)
 {
-    mContactViewer->setContact(item);
+    const int numberContact(items.count());
+    if (numberContact == 1) {
+        mContactViewer->setContact(items.first());
+        mStackWidget->setCurrentWidget(mContactViewer);
+    } else if (numberContact == 0) {
+        mStackWidget->setCurrentWidget(mNoContactSelected);
+    } else {
+        mStackWidget->setCurrentWidget(mTooManyContactSelected);
+    }
 }

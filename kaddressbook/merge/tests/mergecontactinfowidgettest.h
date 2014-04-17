@@ -15,36 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MERGECONTACTINFOWIDGET_H
-#define MERGECONTACTINFOWIDGET_H
 
-#include <QWidget>
+#ifndef MERGECONTACTINFOWIDGETTEST_H
+#define MERGECONTACTINFOWIDGETTEST_H
 
-#include "kaddressbook_export.h"
+#include <QObject>
 
-#include <Akonadi/Item>
-class QLabel;
-namespace KAddressBookGrantlee {
-class GrantleeContactViewer;
-}
-
-class QStackedWidget;
-namespace KABMergeContacts {
-class KADDRESSBOOK_EXPORT MergeContactInfoWidget : public QWidget
+class MergeContactInfoWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit MergeContactInfoWidget(QWidget *parent=0);
-    ~MergeContactInfoWidget();
-
-    void setContact(const Akonadi::Item::List &item);
-
-private:
-    QStackedWidget *mStackWidget;
-    QLabel *mNoContactSelected;
-    QLabel *mTooManyContactSelected;
-    KAddressBookGrantlee::GrantleeContactViewer *mContactViewer;
+    MergeContactInfoWidgetTest();
+private Q_SLOTS:
+    void shouldHaveDefaultValueOnCreation();
 };
-}
 
-#endif // MERGECONTACTINFOWIDGET_H
+#endif // MERGECONTACTINFOWIDGETTEST_H

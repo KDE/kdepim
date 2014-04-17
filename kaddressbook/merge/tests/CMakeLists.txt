@@ -11,3 +11,4 @@ macro( kaddressbook_merge _source )
 endmacro()
 
 kaddressbook_merge(mergecontactwidgettest.cpp)
+kaddressbook_merge(mergecontactinfowidgettest.cpp)
