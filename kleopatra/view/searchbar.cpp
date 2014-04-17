@@ -87,11 +87,9 @@ SearchBar::Private::Private( SearchBar * qq )
 {
     QHBoxLayout * layout = new QHBoxLayout( q );
     layout->setMargin( 0 );
-    QLabel * label = new QLabel( i18n("&Find:"), q );
-    layout->addWidget( label );
     lineEdit = new KLineEdit( q );
     lineEdit->setClearButtonShown( true );
-    label->setBuddy( lineEdit );
+    lineEdit->setClickMessage(i18n("Search..."));
     layout->addWidget( lineEdit, /*stretch=*/1 );
     combo = new QComboBox( q );
     layout->addWidget( combo );
@@ -99,7 +97,6 @@ SearchBar::Private::Private( SearchBar * qq )
     combo->setModel( KeyFilterManager::instance()->model() );
 
     KDAB_SET_OBJECT_NAME( layout );
-    KDAB_SET_OBJECT_NAME( label );
     KDAB_SET_OBJECT_NAME( lineEdit );
     KDAB_SET_OBJECT_NAME( combo );
 
