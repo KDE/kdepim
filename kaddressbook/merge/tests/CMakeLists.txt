@@ -11,4 +11,10 @@ macro( kaddressbook_merge _source )
 endmacro()
 
 kaddressbook_merge(mergecontactwidgettest.cpp)
-kaddressbook_merge(mergecontactinfowidgettest.cpp)
+
+
+include(AkonadiMacros)
+set(KDEPIMLIBS_RUN_ISOLATED_TESTS TRUE)
+set(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS TRUE)
+
+add_akonadi_isolated_test_advanced( mergecontactinfowidgettest.cpp "" "kaddressbookprivate")
