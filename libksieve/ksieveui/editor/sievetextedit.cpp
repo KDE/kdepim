@@ -38,7 +38,8 @@
 using namespace KSieveUi;
 
 SieveTextEdit::SieveTextEdit( QWidget *parent )
-    : PimCommon::PlainTextEditor( parent )
+    : PimCommon::PlainTextEditor( parent ),
+      mShowHelpMenu(true)
 {
     setWordWrapMode ( QTextOption::NoWrap );
     setFont( KGlobalSettings::fixedFont() );
@@ -237,8 +238,16 @@ void SieveTextEdit::setSieveCapabilities( const QStringList &capabilities )
     setCompleterList(completerList() + capabilities);
 }
 
+void SieveTextEdit::setShowHelpMenu(bool b)
+{
+    mShowHelpMenu = b;
+}
+
 void SieveTextEdit::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
 {
+    if (!mShowHelpMenu)
+        return;
+
     if (!textCursor().hasSelection()) {
         const QString word = selectedWord(pos);
         const KSieveUi::SieveEditorUtil::HelpVariableName type =  KSieveUi::SieveEditorUtil::strToVariableName(word);

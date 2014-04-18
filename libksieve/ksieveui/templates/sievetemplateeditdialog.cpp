@@ -57,6 +57,7 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
     vbox->addLayout(hbox);
 
     mTextEdit = new KSieveUi::SieveTextEdit;
+    mTextEdit->setShowHelpMenu(false);
     mTextEdit->setReadOnly(defaultTemplate);
     vbox->addWidget(mTextEdit);
 
