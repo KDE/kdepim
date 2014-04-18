@@ -27,6 +27,7 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <KLocalizedString>
+#include <KMessageBox>
 
 #include <QItemSelectionModel>
 #include <QLabel>
@@ -50,12 +51,12 @@ MergeContactsDialog::MergeContactsDialog(QItemSelectionModel *selectionModel, QW
         } else {
             QSplitter *mainWidget = new QSplitter;
             mainWidget->setChildrenCollapsible(false);
-            MergeContactWidget *contactWidget = new MergeContactWidget(lst);
-            mainWidget->addWidget(contactWidget);
+            mContactWidget = new MergeContactWidget(lst);
+            mainWidget->addWidget(mContactWidget);
             MergeContactInfoWidget *contactInfo = new MergeContactInfoWidget;
             mainWidget->addWidget(contactInfo);
-            connect(contactWidget, SIGNAL(contactSelected(Akonadi::Item)), contactInfo, SLOT(setContact(Akonadi::Item)));
-            connect(contactWidget, SIGNAL(mergeContact(Akonadi::Item::List,Akonadi::Collection)), this, SLOT(slotMergeContact(Akonadi::Item::List,Akonadi::Collection)));
+            connect(mContactWidget, SIGNAL(contactSelected(Akonadi::Item)), contactInfo, SLOT(setContact(Akonadi::Item)));
+            connect(mContactWidget, SIGNAL(mergeContact(Akonadi::Item::List,Akonadi::Collection)), this, SLOT(slotMergeContact(Akonadi::Item::List,Akonadi::Collection)));
             setMainWidget(mainWidget);
         }
     }
@@ -73,15 +74,17 @@ void MergeContactsDialog::slotMergeContact(const Akonadi::Item::List &lst, const
     }
     enableButton(Close, false);
     MergeContactsJob *job = new MergeContactsJob(this);
-    connect(job,SIGNAL(finished()), this, SLOT(slotMergeContactFinished()));
+    connect(job,SIGNAL(finished(bool)), this, SLOT(slotMergeContactFinished(bool)));
     job->setDestination(col);
     job->setListItem(lst);
     job->start();
 }
 
-void MergeContactsDialog::slotMergeContactFinished()
+void MergeContactsDialog::slotMergeContactFinished(bool success)
 {
-    //TODO
+    mContactWidget->clear();
+    if (!success)
+        KMessageBox::error(this, i18n("Error during merge contacts."), i18n("Merge contact"));
     enableButton(Close, true);
 }
 

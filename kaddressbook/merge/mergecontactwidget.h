@@ -38,6 +38,8 @@ public:
     explicit MergeContactWidget(const Akonadi::Item::List &items, QWidget *parent=0);
     ~MergeContactWidget();
 
+    void clear();
+
 Q_SIGNALS:
     void mergeContact(const Akonadi::Item::List &lst, const Akonadi::Collection &col);
     void contactSelected(const Akonadi::Item &item);

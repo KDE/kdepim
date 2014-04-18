@@ -84,6 +84,11 @@ MergeContactWidget::~MergeContactWidget()
 
 }
 
+void MergeContactWidget::clear()
+{
+    mListWidget->clear();
+}
+
 void MergeContactWidget::fillListContact()
 {
     mListWidget->fillListContact(mItems);

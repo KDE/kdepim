@@ -23,6 +23,7 @@
 #include <Akonadi/Item>
 class QItemSelectionModel;
 namespace KABMergeContacts {
+class MergeContactWidget;
 class MergeContactsDialog : public KDialog
 {
     Q_OBJECT
@@ -33,11 +34,12 @@ public:
 private slots:
     void slotMergeContact(const Akonadi::Item::List &lst, const Akonadi::Collection &col);
 
-    void slotMergeContactFinished();
+    void slotMergeContactFinished(bool success);
 
 private:
     void readConfig();
     void writeConfig();
+    MergeContactWidget *mContactWidget;
 };
 }
 #endif // MERGECONTACTSDIALOG_H

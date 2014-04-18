@@ -37,7 +37,7 @@ public:
     void setDestination(const Akonadi::Collection &collection);
 
 Q_SIGNALS:
-    void finished();
+    void finished(bool success);
 
 private slots:
     void slotCreateMergedContactFinished(KJob *job);
