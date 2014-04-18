@@ -16,10 +16,12 @@
 */
 
 #include "mergecontactshowresultdialog.h"
+#include "mergecontactinfowidget.h"
 
 #include <KLocalizedString>
-#include <KTabWidget>
 #include <KSharedConfig>
+
+#include <QTabBar>
 
 using namespace KABMergeContacts;
 
@@ -29,14 +31,29 @@ MergeContactShowResultDialog::MergeContactShowResultDialog(QWidget *parent)
     setCaption( i18n( "Merged Contact" ) );
     setButtons( Close );
     readConfig();
-    mTabWidget = new KTabWidget;
+    mTabWidget = new MergeContactShowResultTabWidget;
     mTabWidget->setObjectName(QLatin1String("tabwidget"));
     setMainWidget(mTabWidget);
+    updateTabWidget();
 }
 
 MergeContactShowResultDialog::~MergeContactShowResultDialog()
 {
     writeConfig();
+}
+
+void MergeContactShowResultDialog::updateTabWidget()
+{
+    mTabWidget->updateTabWidget();
+}
+
+void MergeContactShowResultDialog::setContacts(const Akonadi::Item::List &lstItem)
+{
+    Q_FOREACH(const Akonadi::Item &item, lstItem) {
+        MergeContactInfoWidget *infoWidget = new MergeContactInfoWidget;
+        infoWidget->setContact(item);
+        mTabWidget->addTab(infoWidget, i18n("Contact")); //TODO customize it
+    }
 }
 
 void MergeContactShowResultDialog::readConfig()
@@ -53,4 +70,19 @@ void MergeContactShowResultDialog::writeConfig()
     KConfigGroup grp( KGlobal::config(), "MergeContactShowResultDialog");
     grp.writeEntry( "Size", size() );
     grp.sync();
+}
+
+
+MergeContactShowResultTabWidget::MergeContactShowResultTabWidget(QWidget *parent)
+    : QTabWidget(parent)
+{
+}
+
+MergeContactShowResultTabWidget::~MergeContactShowResultTabWidget()
+{
+}
+
+void MergeContactShowResultTabWidget::updateTabWidget()
+{
+    tabBar()->setVisible(count()>0);
 }

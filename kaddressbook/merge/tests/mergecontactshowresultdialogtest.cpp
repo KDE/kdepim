@@ -18,6 +18,8 @@
 #include "mergecontactshowresultdialogtest.h"
 #include "mergecontactshowresultdialog.h"
 #include <qtest_kde.h>
+#include <QTabWidget>
+#include <QTabBar>
 
 using namespace KABMergeContacts;
 
@@ -29,6 +31,13 @@ void MergeContactShowResultDialogTest::shouldHaveDefaultValueOnCreation()
 {
     MergeContactShowResultDialog dlg;
     dlg.show();
+#if 0
+    KABMergeContacts::MergeContactShowResultTabWidget *tabWidget = qFindChild<KABMergeContacts::MergeContactShowResultTabWidget *>(&dlg, QLatin1String("tabwidget"));
+    QVERIFY(tabWidget);
+    QCOMPARE(tabWidget->count(), 0);
+    //Port it
+    //QCOMPARE(tabWidget->tabBar()->isVisible(), true);
+#endif
 }
 
 QTEST_KDEMAIN(MergeContactShowResultDialogTest, GUI )

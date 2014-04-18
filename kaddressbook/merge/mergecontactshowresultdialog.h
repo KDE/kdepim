@@ -21,8 +21,23 @@
 
 #include <KDialog>
 #include "kaddressbook_export.h"
-class KTabWidget;
+
+#include <Akonadi/Item>
+#include <QTabWidget>
+
 namespace KABMergeContacts {
+
+class KADDRESSBOOK_EXPORT MergeContactShowResultTabWidget : public QTabWidget
+{
+    Q_OBJECT
+public:
+    explicit MergeContactShowResultTabWidget(QWidget *parent=0);
+    ~MergeContactShowResultTabWidget();
+
+    void updateTabWidget();
+
+};
+
 class KADDRESSBOOK_EXPORT MergeContactShowResultDialog : public KDialog
 {
     Q_OBJECT
@@ -30,10 +45,13 @@ public:
     explicit MergeContactShowResultDialog(QWidget *parent = 0);
     ~MergeContactShowResultDialog();
 
+    void setContacts(const Akonadi::Item::List &lstItem);
+
 private:
+    void updateTabWidget();
     void readConfig();
     void writeConfig();
-    KTabWidget *mTabWidget;
+    MergeContactShowResultTabWidget *mTabWidget;
 };
 }
 
