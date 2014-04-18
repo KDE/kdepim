@@ -55,7 +55,17 @@ void MergeContactsJob::start()
 
 void MergeContactsJob::generateMergedContact()
 {
+    KABC::Addressee newContact;
+    bool firstAddress = true;
+    Q_FOREACH (const Akonadi::Item &item, mListItem) {
+        KABC::Addressee address = item.payload<KABC::Addressee>();
+        if (firstAddress) {
+            firstAddress = false;
+            newContact.setName(address.name());
+        }
+    }
 
+    createMergedContact(newContact);
 }
 
 void MergeContactsJob::setListItem(const Akonadi::Item::List &lstItem)
