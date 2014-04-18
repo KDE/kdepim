@@ -67,7 +67,6 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
                        "locked when moving to other folders or when narrowing the search "
                        "by message status." ) );
     slotLockSearchClicked(false);
-    mLockSearch->setVisible( Settings::self()->showQuickSearch() );
     connect( mLockSearch, SIGNAL(toggled(bool)), SLOT(slotLockSearchClicked(bool)));
     hbox->addWidget( mLockSearch );
 
@@ -87,7 +86,6 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mSearchEdit->setClickMessage( i18nc( "Search for messages.", "Search" ) );
     mSearchEdit->setObjectName( QLatin1String( "quicksearch" ) );
     mSearchEdit->setClearButtonShown( true );
-    mSearchEdit->setVisible( Settings::self()->showQuickSearch() );
 
     connect( mSearchEdit, SIGNAL(textChanged(QString)), this, SLOT(slotSearchEditTextEdited(QString)));
     connect( mSearchEdit, SIGNAL(clearButtonClicked()), this, SLOT(slotClearButtonClicked()));
@@ -175,6 +173,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mSearchAgainstBcc->installEventFilter(this);
     mQuickSearchFilterWidget->installEventFilter(this);
     mExtraOption->installEventFilter(this);
+    changeQuicksearchVisibility(Settings::self()->showQuickSearch());
 }
 
 QuickSearchLine::~QuickSearchLine()
@@ -415,7 +414,7 @@ QList<Akonadi::MessageStatus> QuickSearchLine::status() const
 
 void QuickSearchLine::updateComboboxVisibility()
 {
-    mTagFilterCombo->setVisible(mTagFilterCombo->count());
+    mTagFilterCombo->setVisible(mSearchEdit->isVisible() && mTagFilterCombo->count());
 }
 
 bool QuickSearchLine::eventFilter(QObject *object, QEvent *e)
@@ -426,4 +425,12 @@ bool QuickSearchLine::eventFilter(QObject *object, QEvent *e)
         return true;
     }
     return QWidget::eventFilter(object,e);
+}
+
+void QuickSearchLine::changeQuicksearchVisibility(bool show)
+{
+    mSearchEdit->setVisible( show );
+    mTagFilterCombo->setVisible( show && mTagFilterCombo->count());
+    mLockSearch->setVisible( show );
+    mMoreOptions->setVisible( show );
 }

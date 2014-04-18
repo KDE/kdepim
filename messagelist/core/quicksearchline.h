@@ -68,6 +68,8 @@ public:
     bool containsOutboundMessages() const;
     void setContainsOutboundMessages(bool containsOutboundMessages);
 
+    void changeQuicksearchVisibility(bool show);
+
 Q_SIGNALS:
     void clearButtonClicked();
     void searchEditTextEdited(const QString &);
