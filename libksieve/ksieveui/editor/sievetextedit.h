@@ -47,6 +47,8 @@ public:
 
     void setSieveCapabilities( const QStringList &capabilities );
 
+    void setShowHelpMenu(bool b);
+
 private Q_SLOTS:
     void slotInsertCompletion( const QString& );
     void slotUpdateLineNumberAreaWidth(int newBlockCount);
@@ -71,6 +73,7 @@ private:
     QCompleter *m_completer;
     SieveLineNumberArea *m_sieveLineNumberArea;
     PimCommon::SieveSyntaxHighlighter *m_syntaxHighlighter;
+    bool mShowHelpMenu;
 };
 
 }

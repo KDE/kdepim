@@ -51,11 +51,13 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
     mTemplateNameEdit = new KLineEdit;
     mTemplateNameEdit->setEnabled(!defaultTemplate);
     mTemplateNameEdit->setTrapReturnKey(true);
+    mTemplateNameEdit->setClearButtonShown(true);
     hbox->addWidget(mTemplateNameEdit);
 
     vbox->addLayout(hbox);
 
     mTextEdit = new KSieveUi::SieveTextEdit;
+    mTextEdit->setShowHelpMenu(false);
     mTextEdit->setReadOnly(defaultTemplate);
     vbox->addWidget(mTextEdit);
 
