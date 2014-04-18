@@ -163,14 +163,14 @@ if(QGPGME_FOUND)
 endif()
 
 install(TARGETS kaddressbook ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(PROGRAMS kaddressbook.desktop kaddressbook-importer.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(PROGRAMS data/kaddressbook.desktop data/kaddressbook-importer.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES kaddressbookui.rc DESTINATION ${DATA_INSTALL_DIR}/kaddressbook)
 
 set(kaddressbook_PART_SRCS kaddressbookpart.cpp)
 kde4_add_plugin(kaddressbookpart ${kaddressbook_PART_SRCS})
 target_link_libraries(kaddressbookpart ${KDE4_KPARTS_LIBS} kaddressbookprivate)
 install(TARGETS kaddressbookpart DESTINATION ${PLUGIN_INSTALL_DIR})
-install(FILES kaddressbookpart.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+install(FILES data/kaddressbookpart.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 
 install(FILES
   viewertemplates/contact.html
