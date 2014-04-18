@@ -16,6 +16,7 @@
 */
 
 #include "mergecontactwidget.h"
+#include "mergecontactwidgetlist.h"
 
 #include <KLocalizedString>
 
@@ -42,7 +43,7 @@ MergeContactWidget::MergeContactWidget(const Akonadi::Item::List &items, QWidget
 
     QLabel *lab = new QLabel(i18n("Select contacts that you want really to merge:"));
     lay->addWidget(lab);
-    mListWidget = new QListWidget;
+    mListWidget = new MergeContactWidgetList;
     mListWidget->setObjectName(QLatin1String("listcontact"));
     mListWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     lay->addWidget(mListWidget);
@@ -85,34 +86,17 @@ MergeContactWidget::~MergeContactWidget()
 
 void MergeContactWidget::fillListContact()
 {
-    Q_FOREACH(const Akonadi::Item &item, mItems) {
-        if (item.hasPayload<KABC::Addressee>()) {
-            MergeContactWidgetItem *widgetItem = new MergeContactWidgetItem(item, mListWidget);
-            KABC::Addressee address = item.payload<KABC::Addressee>();
-            widgetItem->setText(address.realName());
-        }
-    }
+    mListWidget->fillListContact(mItems);
 }
 
 Akonadi::Item::List MergeContactWidget::listSelectedContacts() const
 {
-    Akonadi::Item::List lstItems;
-    for (int i = 0; i < mListWidget->count(); ++i) {
-        QListWidgetItem *item = mListWidget->item(i);
-        if (item->checkState() == Qt::Checked) {
-            lstItems.append((static_cast<MergeContactWidgetItem*>(item))->item());
-        }
-    }
-    return lstItems;
+    return mListWidget->listSelectedContacts();
 }
 
 Akonadi::Item MergeContactWidget::currentItem() const
 {
-    QListWidgetItem *item = mListWidget->currentItem();
-    if (item) {
-        return (static_cast<MergeContactWidgetItem*>(item))->item();
-    }
-    return Akonadi::Item();
+    return mListWidget->currentAkonadiItem();
 }
 
 void MergeContactWidget::slotUpdateMergeButton()
@@ -132,18 +116,4 @@ void MergeContactWidget::slotMergeContacts()
             Q_EMIT mergeContact(lstItems, col);
         }
     }
-}
-
-
-MergeContactWidgetItem::MergeContactWidgetItem(const Akonadi::Item &item, QListWidget *parent)
-    : QListWidgetItem(parent),
-      mItem(item)
-{
-    setFlags( Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable );
-    setCheckState( Qt::Unchecked );
-}
-
-Akonadi::Item MergeContactWidgetItem::item() const
-{
-    return mItem;
 }

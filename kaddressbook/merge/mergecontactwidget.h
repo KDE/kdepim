@@ -29,15 +29,7 @@ namespace Akonadi {
 class CollectionComboBox;
 }
 namespace KABMergeContacts {
-class MergeContactWidgetItem : public QListWidgetItem
-{
-public:
-    MergeContactWidgetItem(const Akonadi::Item &item, QListWidget *parent = 0);
-    Akonadi::Item item() const;
-
-private:
-    Akonadi::Item mItem;
-};
+class MergeContactWidgetList;
 
 class KADDRESSBOOK_EXPORT MergeContactWidget : public QWidget
 {
@@ -59,7 +51,7 @@ private:
     Akonadi::Item currentItem() const;
     void fillListContact();
     Akonadi::Item::List mItems;
-    QListWidget *mListWidget;
+    MergeContactWidgetList *mListWidget;
     QPushButton *mMergeButton;
     Akonadi::CollectionComboBox *mCollectionCombobox;
 };

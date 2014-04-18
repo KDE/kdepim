@@ -80,6 +80,7 @@ set(kaddressbook_merge_SRCS
    merge/mergecontactutil.cpp
    merge/mergecontactsjob.cpp
    merge/mergecontactinfowidget.cpp
+   merge/mergecontactwidgetlist.cpp
 )
 
 set(kaddressbook_LIB_SRCS
