@@ -740,12 +740,15 @@ static QStringList extractViewGroups( const KConfig * config ) {
 static const bool KCONFIG_DELETEGROUP_BROKEN = true;
 
 void TabWidget::loadViews( const KConfig * config ) {
-    if ( config )
-        Q_FOREACH( const QString & group, extractViewGroups( config ) ) {
+    if ( config ) {
+        QStringList groupList = extractViewGroups( config );
+        groupList.sort();
+        Q_FOREACH( const QString & group, groupList ) {
             const KConfigGroup kcg( config, group );
             if ( !KCONFIG_DELETEGROUP_BROKEN || kcg.readEntry( "magic", 0U ) == 0xFA1AFE1U )
                 addView( kcg );
         }
+    }
     if ( !count() ) {
         // add default views:
         addView( QString(), QLatin1String("my-certificates") );
