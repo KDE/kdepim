@@ -30,7 +30,7 @@ class QString;
 
 class KDEPIMDBUSINTERFACES_EXPORT UriHandler
 {
-  public:
+public:
     /**
       Process URI (e.g. open mailer, open browser, open incidence viewer etc.).
         @return true if handler handled the URI, otherwise false.
