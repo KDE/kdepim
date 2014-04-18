@@ -191,9 +191,7 @@ void Widget::changeQuicksearchVisibility(bool show)
             resetFilter();
         }
     }
-    lineEdit->setVisible( show );
-    comboBox->setVisible( show );
-    d->quickSearchLine->lockSearch()->setVisible( show );
+    d->quickSearchLine->changeQuicksearchVisibility(show);
     Settings::self()->setShowQuickSearch( show );
 }
 

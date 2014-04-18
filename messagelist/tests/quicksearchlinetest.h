@@ -45,6 +45,8 @@ private Q_SLOTS:
     void shouldChangeFromButtonLabelWhenChangeOutboundMessagesValue();
     void shouldSearchToOrFrom();
     void shouldEmitSearchOptionChangedWhenUseTabPress();
+    void shouldHideShowWidgetWhenWeChangeVisibility();
+    void shouldNotShowComboboxWhenWeAddNewItemWhenWeHiddedQuickSearchBarWidget();
 };
 
 #endif // QUICKSEARCHLINETEST_H
