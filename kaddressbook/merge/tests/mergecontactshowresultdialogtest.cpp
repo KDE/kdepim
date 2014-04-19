@@ -20,6 +20,7 @@
 #include <qtest_kde.h>
 #include <QTabWidget>
 #include <QTabBar>
+#include <Akonadi/Item>
 
 using namespace KABMergeContacts;
 
@@ -35,6 +36,28 @@ void MergeContactShowResultDialogTest::shouldHaveDefaultValueOnCreation()
     QVERIFY(tabWidget);
     QCOMPARE(tabWidget->count(), 0);
     QCOMPARE(tabWidget->tabBarVisible(), false);
+}
+
+void MergeContactShowResultDialogTest::shouldDontShowTabBarWhenWeHaveJustOneContact()
+{
+    MergeContactShowResultDialog dlg;
+    Akonadi::Item::List lst;
+    lst.append(Akonadi::Item(4));
+    dlg.setContacts(lst);
+    dlg.show();
+    KABMergeContacts::MergeContactShowResultTabWidget *tabWidget = qFindChild<KABMergeContacts::MergeContactShowResultTabWidget *>(&dlg, QLatin1String("tabwidget"));
+    QCOMPARE(tabWidget->tabBarVisible(), false);
+}
+
+void MergeContactShowResultDialogTest::shouldShowTabBarWhenWeHaveMoreThanOneContact()
+{
+    MergeContactShowResultDialog dlg;
+    Akonadi::Item::List lst;
+    lst<<Akonadi::Item(4)<<Akonadi::Item(5);
+    dlg.setContacts(lst);
+    dlg.show();
+    KABMergeContacts::MergeContactShowResultTabWidget *tabWidget = qFindChild<KABMergeContacts::MergeContactShowResultTabWidget *>(&dlg, QLatin1String("tabwidget"));
+    QCOMPARE(tabWidget->tabBarVisible(), true);
 }
 
 QTEST_KDEMAIN(MergeContactShowResultDialogTest, GUI )

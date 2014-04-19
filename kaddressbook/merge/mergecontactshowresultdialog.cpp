@@ -54,6 +54,7 @@ void MergeContactShowResultDialog::setContacts(const Akonadi::Item::List &lstIte
         infoWidget->setContact(item);
         mTabWidget->addTab(infoWidget, i18n("Contact")); //TODO customize it
     }
+    updateTabWidget();
 }
 
 void MergeContactShowResultDialog::readConfig()
@@ -84,7 +85,7 @@ MergeContactShowResultTabWidget::~MergeContactShowResultTabWidget()
 
 void MergeContactShowResultTabWidget::updateTabWidget()
 {
-    tabBar()->setVisible(count()>0);
+    tabBar()->setVisible(count()>1);
 }
 
 bool MergeContactShowResultTabWidget::tabBarVisible() const

@@ -28,6 +28,8 @@ public:
 
 private Q_SLOTS:
     void shouldHaveDefaultValueOnCreation();
+    void shouldDontShowTabBarWhenWeHaveJustOneContact();
+    void shouldShowTabBarWhenWeHaveMoreThanOneContact();
 };
 
 #endif // MERGECONTACTSHOWRESULTDIALOGTEST_H
