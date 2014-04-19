@@ -43,7 +43,6 @@ public Q_SLOTS:
 private:
     QStackedWidget *mStackWidget;
     QLabel *mNoContactSelected;
-    QLabel *mTooManyContactSelected;
     KAddressBookGrantlee::GrantleeContactViewer *mContactViewer;
 };
 }
