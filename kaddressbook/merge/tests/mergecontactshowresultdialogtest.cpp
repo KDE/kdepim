@@ -31,13 +31,10 @@ void MergeContactShowResultDialogTest::shouldHaveDefaultValueOnCreation()
 {
     MergeContactShowResultDialog dlg;
     dlg.show();
-#if 0
     KABMergeContacts::MergeContactShowResultTabWidget *tabWidget = qFindChild<KABMergeContacts::MergeContactShowResultTabWidget *>(&dlg, QLatin1String("tabwidget"));
     QVERIFY(tabWidget);
     QCOMPARE(tabWidget->count(), 0);
-    //Port it
-    //QCOMPARE(tabWidget->tabBar()->isVisible(), true);
-#endif
+    QCOMPARE(tabWidget->tabBarVisible(), false);
 }
 
 QTEST_KDEMAIN(MergeContactShowResultDialogTest, GUI )

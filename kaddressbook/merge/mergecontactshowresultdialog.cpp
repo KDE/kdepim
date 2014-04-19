@@ -31,7 +31,7 @@ MergeContactShowResultDialog::MergeContactShowResultDialog(QWidget *parent)
     setCaption( i18n( "Merged Contact" ) );
     setButtons( Close );
     readConfig();
-    mTabWidget = new MergeContactShowResultTabWidget;
+    mTabWidget = new MergeContactShowResultTabWidget(this);
     mTabWidget->setObjectName(QLatin1String("tabwidget"));
     setMainWidget(mTabWidget);
     updateTabWidget();
@@ -85,4 +85,9 @@ MergeContactShowResultTabWidget::~MergeContactShowResultTabWidget()
 void MergeContactShowResultTabWidget::updateTabWidget()
 {
     tabBar()->setVisible(count()>0);
+}
+
+bool MergeContactShowResultTabWidget::tabBarVisible() const
+{
+    return tabBar()->isVisible();
 }

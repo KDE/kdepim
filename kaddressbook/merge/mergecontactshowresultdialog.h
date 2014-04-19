@@ -36,6 +36,8 @@ public:
 
     void updateTabWidget();
 
+    bool tabBarVisible() const;
+
 };
 
 class KADDRESSBOOK_EXPORT MergeContactShowResultDialog : public KDialog
