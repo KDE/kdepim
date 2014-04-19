@@ -174,7 +174,6 @@ Widget::~Widget()
 void Widget::changeQuicksearchVisibility(bool show)
 {
     KLineEdit * const lineEdit = d->quickSearchLine->searchEdit();
-    QWidget * const comboBox = d->quickSearchLine->tagFilterComboBox();
     if ( !show ) {
         //if we hide it we do not want to apply the filter,
         //otherwise someone is maybe stuck with x new emails
