@@ -259,6 +259,7 @@ void ComposerView::contextMenuEvent(QContextMenuEvent *event)
 
 void ComposerView::addExtraAction(QMenu *menu)
 {
+    Q_UNUSED(menu);
     //Redefine if necessary.
 }
 
