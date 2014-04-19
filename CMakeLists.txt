@@ -280,7 +280,6 @@ else()
     add_definitions(-DKMAIL_SUPPORTED)
   endif()
 
-  macro_optional_add_subdirectory(pimactivity)
   macro_optional_add_subdirectory(korganizer)
   macro_optional_add_subdirectory(korgac)
   macro_optional_add_subdirectory(sieveeditor)
