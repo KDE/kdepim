@@ -460,7 +460,6 @@ public:
 #undef make_int_accessor
     private:
         EncryptionPreference mDefaultPreference;
-    bool mNoOps;
     unsigned int mTotal;
     unsigned int mNoKey;
     unsigned int mNeverEncrypt, mUnknownPreference, mAlwaysEncrypt,

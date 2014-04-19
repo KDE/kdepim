@@ -33,7 +33,7 @@ class TestLDAPClient : public QObject
     Q_OBJECT
 
   public:
-    TestLDAPClient() {}
+    TestLDAPClient();
     void setup();
     void runAll();
     void cleanup();
