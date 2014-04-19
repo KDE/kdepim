@@ -34,7 +34,7 @@ public:
 private slots:
     void slotMergeContact(const Akonadi::Item::List &lst, const Akonadi::Collection &col);
 
-    void slotMergeContactFinished(bool success);
+    void slotMergeContactFinished(const Akonadi::Item &item);
 
 private:
     void readConfig();

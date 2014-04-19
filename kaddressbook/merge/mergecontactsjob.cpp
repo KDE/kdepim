@@ -40,13 +40,13 @@ void MergeContactsJob::start()
 {
     if (!mCollection.isValid()) {
         qDebug()<<" mCollection is not valid !";
-        Q_EMIT finished(false);
+        Q_EMIT finished(mCreatedContact);
         deleteLater();
         return;
     }
     if (mListItem.isEmpty()) {
         qDebug()<<" list item is empty !";
-        Q_EMIT finished(false);
+        Q_EMIT finished(mCreatedContact);
         deleteLater();
         return;
     }
@@ -92,10 +92,13 @@ void MergeContactsJob::slotCreateMergedContactFinished(KJob *job)
 {
     if (job->error()) {
         qDebug() << job->errorString();
-        Q_EMIT finished(false);
+        Q_EMIT finished(mCreatedContact);
         deleteLater();
         return;
     }
+    Akonadi::ItemCreateJob *createdJob = qobject_cast<Akonadi::ItemCreateJob *>(job);
+    mCreatedContact = createdJob->item();
+
     Akonadi::ItemDeleteJob *deleteJob = new Akonadi::ItemDeleteJob(mListItem, this);
     connect(deleteJob, SIGNAL(result(KJob*)), SLOT(slotDeleteContactsFinished(KJob*)) );
 }
@@ -106,6 +109,6 @@ void MergeContactsJob::slotDeleteContactsFinished(KJob *job)
         qDebug() << job->errorString();
     }
     //TODO
-    Q_EMIT finished(true);
+    Q_EMIT finished(mCreatedContact);
     deleteLater();
 }

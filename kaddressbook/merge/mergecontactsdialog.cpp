@@ -21,6 +21,7 @@
 #include "mergecontactwidget.h"
 #include "mergecontactinfowidget.h"
 #include "mergecontactsjob.h"
+#include "mergecontactshowresultdialog.h"
 
 #include <Akonadi/Item>
 
@@ -33,6 +34,7 @@
 #include <QLabel>
 #include <QSplitter>
 #include <QHBoxLayout>
+#include <QPointer>
 
 using namespace KABMergeContacts;
 MergeContactsDialog::MergeContactsDialog(QItemSelectionModel *selectionModel, QWidget *parent)
@@ -74,17 +76,25 @@ void MergeContactsDialog::slotMergeContact(const Akonadi::Item::List &lst, const
     }
     enableButton(Close, false);
     MergeContactsJob *job = new MergeContactsJob(this);
-    connect(job,SIGNAL(finished(bool)), this, SLOT(slotMergeContactFinished(bool)));
+    connect(job,SIGNAL(finished(Akonadi::Item)), this, SLOT(slotMergeContactFinished(Akonadi::Item)));
     job->setDestination(col);
     job->setListItem(lst);
     job->start();
 }
 
-void MergeContactsDialog::slotMergeContactFinished(bool success)
+void MergeContactsDialog::slotMergeContactFinished(const Akonadi::Item &item)
 {
     mContactWidget->clear();
-    if (!success)
+    if (!item.isValid()) {
         KMessageBox::error(this, i18n("Error during merge contacts."), i18n("Merge contact"));
+    } else {
+        QPointer<MergeContactShowResultDialog> dlg = new MergeContactShowResultDialog(this);
+        Akonadi::Item::List lst;
+        lst << item;
+        dlg->setContacts(lst);
+        dlg->exec();
+        delete dlg;
+    }
     enableButton(Close, true);
 }
 

@@ -60,7 +60,7 @@ void MergeContactShowResultDialog::setContacts(const Akonadi::Item::List &lstIte
 void MergeContactShowResultDialog::readConfig()
 {
     KConfigGroup grp( KGlobal::config(), "MergeContactShowResultDialog" );
-    const QSize size = grp.readEntry( "Size", QSize(300, 200) );
+    const QSize size = grp.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
     }

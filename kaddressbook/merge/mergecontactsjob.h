@@ -37,7 +37,7 @@ public:
     void setDestination(const Akonadi::Collection &collection);
 
 Q_SIGNALS:
-    void finished(bool success);
+    void finished(const Akonadi::Item &item);
 
 private slots:
     void slotCreateMergedContactFinished(KJob *job);
@@ -49,6 +49,7 @@ private:
 
     Akonadi::Collection mCollection;
     Akonadi::Item::List mListItem;
+    Akonadi::Item mCreatedContact;
 };
 }
 #endif // MERGECONTACTSJOB_H
