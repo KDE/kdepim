@@ -30,6 +30,7 @@
 #include "incidencedatetime.h"
 #include "incidencedescription.h"
 #include "incidencerecurrence.h"
+#include "incidenceresource.h"
 #include "incidencesecrecy.h"
 #include "incidencewhatwhere.h"
 #include "templatemanagementdialog.h"
@@ -59,6 +60,7 @@ namespace IncidenceEditorNG {
 enum Tabs {
   GeneralTab = 0,
   AttendeesTab,
+  ResourcesTab,
   AlarmsTab,
   RecurrenceTab,
   AttachmentsTab
@@ -79,6 +81,7 @@ class IncidenceDialogPrivate : public ItemEditorUi
     IncidenceDateTime *mIeDateTime;
     IncidenceAttendee *mIeAttendee;
     IncidenceRecurrence *mIeRecurrence;
+    IncidenceResource *mIeResource;
     bool mInitiallyDirty;
     Akonadi::Item mItem;
     QString typeToString( const int type ) const;
@@ -96,6 +99,7 @@ class IncidenceDialogPrivate : public ItemEditorUi
     void storeTemplatesInConfig( const QStringList &newTemplates );
     void updateAttachmentCount( int newCount );
     void updateAttendeeCount( int newCount );
+    void updateResourceCount( int newCount );
     void updateButtonStatus( bool isDirty );
     void showMessage( const QString &text, KMessageWidget::MessageType type );
 
@@ -162,6 +166,9 @@ IncidenceDialogPrivate::IncidenceDialogPrivate( Akonadi::IncidenceChanger *chang
   mIeRecurrence = new IncidenceRecurrence( mIeDateTime, mUi );
   mEditor->combine( mIeRecurrence );
 
+  mIeResource = new IncidenceResource( mUi );
+  mEditor->combine( mIeResource );
+
   IncidenceSecrecy *ieSecrecy = new IncidenceSecrecy( mUi );
   mEditor->combine( ieSecrecy );
 
@@ -186,6 +193,8 @@ IncidenceDialogPrivate::IncidenceDialogPrivate( Akonadi::IncidenceChanger *chang
               SLOT(updateAttachmentCount(int)) );
   q->connect( mIeAttendee, SIGNAL(attendeeCountChanged(int)),
               SLOT(updateAttendeeCount(int)) );
+  q->connect( mIeResource, SIGNAL(resourceCountChanged(int)),
+              SLOT(updateResourceCount(int)) );
 }
 
 IncidenceDialogPrivate::~IncidenceDialogPrivate()
@@ -414,6 +423,21 @@ void IncidenceDialogPrivate::updateAttendeeCount( int newCount )
   }
 }
 
+void IncidenceDialogPrivate::updateResourceCount( int newCount )
+{
+  if ( newCount > 0 ) {
+    mUi->mTabWidget->setTabText(
+      ResourcesTab,
+      i18nc( "@title:tab Tab to modify attendees of an event or todo",
+             "&Resources (%1)", newCount ) );
+  } else {
+    mUi->mTabWidget->setTabText(
+      ResourcesTab,
+      i18nc( "@title:tab Tab to modify attendees of an event or todo",
+             "&Resources" ) );
+  }
+}
+
 void IncidenceDialogPrivate::updateButtonStatus( bool isDirty )
 {
   Q_Q( IncidenceDialog );
@@ -517,6 +541,7 @@ void IncidenceDialogPrivate::load( const Akonadi::Item &item )
     mUi->mTabWidget->removeTab( RecurrenceTab );
     mUi->mTabWidget->removeTab( AlarmsTab );
     mUi->mTabWidget->removeTab( AttendeesTab );
+    mUi->mTabWidget->removeTab( ResourcesTab );
   }
 
   mEditor->load( CalendarSupport::incidence( item ) );
@@ -558,6 +583,7 @@ void IncidenceDialogPrivate::load( const Akonadi::Item &item )
 
   // Initialize tab's titles
   updateAttachmentCount( incidence->attachments().size() );
+  updateResourceCount( mIeResource->resourcesCount() );
   handleRecurrenceChange( mIeRecurrence->currentRecurrenceType() );
   handleAlarmCountChange( incidence->alarms().count() );
 

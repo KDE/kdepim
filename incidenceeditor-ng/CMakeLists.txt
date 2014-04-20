@@ -43,6 +43,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   incidencewhatwhere.cpp
   incidencedatetime.cpp
   incidencerecurrence.cpp
+  incidenceresource.cpp
   incidencesecrecy.cpp
 
   freebusyitem.cpp
@@ -61,6 +62,11 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   categoryeditdialog.cpp
   categoryselectdialog.cpp
   categorydialog.cpp
+  resourcemanagement.cpp
+  resourceitem.cpp
+  resourcemodel.cpp
+  attendeetablemodel.cpp
+  attendeecomboboxdelegate.cpp
 )
 
 kde4_add_kcfg_files(incidenceeditors_ng_shared_LIB_SRCS globalsettings_base.kcfgc)
@@ -84,6 +90,7 @@ kde4_add_ui_files(incidenceeditors_ng_desktop_LIB_SRCS
   alarmdialog.ui
   attachmenteditdialog.ui
   schedulingdialog.ui
+  resourcemanagement.ui
 )
 
 kde4_add_library(incidenceeditorsng ${LIBRARY_TYPE} ${incidenceeditors_ng_desktop_LIB_SRCS})
