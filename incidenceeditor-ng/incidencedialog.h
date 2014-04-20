@@ -108,6 +108,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDialog : public KDialog
     Q_PRIVATE_SLOT( d_ptr, void storeTemplatesInConfig(QStringList) )
     Q_PRIVATE_SLOT( d_ptr, void updateAttachmentCount(int) )
     Q_PRIVATE_SLOT( d_ptr, void updateAttendeeCount(int) )
+    Q_PRIVATE_SLOT( d_ptr, void updateResourceCount(int) )
     Q_PRIVATE_SLOT( d_ptr, void updateButtonStatus(bool) )
     Q_PRIVATE_SLOT( d_ptr, void showMessage(QString,KMessageWidget::MessageType) )
 };
