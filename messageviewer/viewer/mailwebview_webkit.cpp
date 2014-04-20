@@ -290,17 +290,7 @@ void MailWebView::injectAttachments( const function<QString()> & delayedHtml )
 
 void MailWebView::scrollToAnchor( const QString & anchor )
 {
-    QWebElement doc = page()->mainFrame()->documentElement();
-    QWebElement link = doc.findFirst( QLatin1String("a[name=") + anchor +QLatin1Char(']') );
-    if ( link.isNull() ) {
-        return;
-    }
-
-    const int linkPos = link.geometry().bottom();
-    const int viewerPos  = page()->mainFrame()->scrollPosition().y();
-    link.setFocus();
-    page()->mainFrame()->scroll(0, linkPos - viewerPos );
-
+    page()->mainFrame()->scrollToAnchor(anchor);
 }
 
 bool MailWebView::removeAttachmentMarking( const QString & id )
