@@ -62,6 +62,8 @@ void MergeContactsJob::generateMergedContact()
         if (firstAddress) {
             firstAddress = false;
             newContact.setName(address.name());
+            newContact.setFamilyName(address.familyName());
+            newContact.setFormattedName(address.formattedName());
         }
     }
 
