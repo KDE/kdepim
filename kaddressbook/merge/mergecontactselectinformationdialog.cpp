@@ -18,8 +18,9 @@
 #include "mergecontactselectinformationdialog.h"
 
 using namespace KABMergeContacts;
-MergeContactSelectInformationDialog::MergeContactSelectInformationDialog(QWidget *parent)
-    : KDialog(parent)
+MergeContactSelectInformationDialog::MergeContactSelectInformationDialog(const Akonadi::Item::List &lst, QWidget *parent)
+    : KDialog(parent),
+      mList(lst)
 {
 }
 

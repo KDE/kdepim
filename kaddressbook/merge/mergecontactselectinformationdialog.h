@@ -22,13 +22,18 @@
 #include <KDialog>
 #include "kaddressbook_export.h"
 
+#include <Akonadi/Item>
+
 namespace KABMergeContacts {
 class KADDRESSBOOK_EXPORT MergeContactSelectInformationDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit MergeContactSelectInformationDialog(QWidget *parent=0);
+    explicit MergeContactSelectInformationDialog(const Akonadi::Item::List &lst, QWidget *parent=0);
     ~MergeContactSelectInformationDialog();
+
+private:
+    Akonadi::Item::List mList;
 };
 }
 
