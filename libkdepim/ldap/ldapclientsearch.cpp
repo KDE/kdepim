@@ -30,7 +30,6 @@
 #include "ldapsession.h"
 #include "ldapqueryjob.h"
 
-#include <kldap/ldapobject.h>
 #include <kldap/ldapserver.h>
 #include <kldap/ldapurl.h>
 #include <kldap/ldif.h>
@@ -65,11 +64,6 @@ public:
         delete mClientSearchConfig;
     }
 
-    struct ResultObject {
-        const LdapClient *client;
-        KLDAP::LdapObject object;
-    };
-
     void readWeighForClient( LdapClient *client, const KConfigGroup &config, int clientNumber );
     void readConfig();
     void finish();
@@ -83,11 +77,13 @@ public:
 
     LdapClientSearch *q;
     QList<LdapClient*> mClients;
+    QStringList mAttributes;
     QString mSearchText;
+    QString mFilter;
     QTimer mDataTimer;
     int mActiveClients;
     bool mNoLDAPLookup;
-    QList<ResultObject> mResults;
+    QList<LdapResultObject> mResults;
     QString mConfigFile;
     LdapClientSearchConfig *mClientSearchConfig;
 };
@@ -100,9 +96,20 @@ LdapClientSearch::LdapClientSearch( QObject *parent )
         return;
     }
 
+
+    d->mAttributes << QLatin1String("cn")
+                   << QLatin1String("mail")
+                   << QLatin1String("givenname")
+                   << QLatin1String("sn");
+
+    // Set the filter, to make sure old usage (before 4.14) of this object still works.
+    d->mFilter = QString::fromLatin1("&(|(objectclass=person)(objectclass=groupOfNames)(mail=*))"
+                                "(|(cn=%1*)(mail=%1*)(givenName=%1*)(sn=%1*))");
+
     d->readConfig();
     connect( KDirWatch::self(), SIGNAL(dirty(QString)), this,
              SLOT(slotFileChanged(QString)) );
+
 }
 
 LdapClientSearch::~LdapClientSearch()
@@ -132,6 +139,31 @@ QList<LdapClient*> LdapClientSearch::clients() const
     return d->mClients;
 }
 
+QString LdapClientSearch::filter() const
+{
+    return d->mFilter;
+}
+
+void LdapClientSearch::setFilter(const QString &filter)
+{
+    d->mFilter = filter;
+}
+
+QStringList LdapClientSearch::attributes() const
+{
+    return d->mAttributes;
+}
+
+void LdapClientSearch::setAttributes(const QStringList &attrs)
+{
+
+    if ( attrs != d->mAttributes ) {
+        d->mAttributes = attrs;
+        d->readConfig();
+    }
+}
+
+
 void LdapClientSearch::Private::readConfig()
 {
     q->cancelSearch();
@@ -155,9 +187,7 @@ void LdapClientSearch::Private::readConfig()
 
             readWeighForClient( ldapClient, config, j );
 
-            QStringList attrs;
-            attrs << QLatin1String("cn") << QLatin1String("mail") << QLatin1String("givenname") << QLatin1String("sn");
-            ldapClient->setAttributes( attrs );
+            ldapClient->setAttributes( mAttributes );
 
             q->connect( ldapClient, SIGNAL(result(KLDAP::LdapClient,KLDAP::LdapObject)),
                         q, SLOT(slotLDAPResult(KLDAP::LdapClient,KLDAP::LdapObject)) );
@@ -203,20 +233,7 @@ void LdapClientSearch::startSearch( const QString &txt )
         d->mSearchText = txt;
     }
 
-    /* The reasoning behind this filter is:
-   * If it's a person, or a distlist, show it, even if it doesn't have an email address.
-   * If it's not a person, or a distlist, only show it if it has an email attribute.
-   * This allows both resource accounts with an email address which are not a person and
-   * person entries without an email address to show up, while still not showing things
-   * like structural entries in the ldap tree. */
-
-#if 0
-    const QString filter = QString::fromLatin1( "&(|(objectclass=person)(objectclass=groupOfNames)(mail=*))"
-                                                "(|(cn=%1*)(mail=%1*)(mail=*@%1*)(givenName=%1*)(sn=%1*))" ).arg( d->mSearchText );
-#endif
-    //Fix bug 323272 "Exchange doesn't like any queries beginning with *."
-    const QString filter = QString::fromLatin1( "&(|(objectclass=person)(objectclass=groupOfNames)(mail=*))"
-                                                "(|(cn=%1*)(mail=%1*)(givenName=%1*)(sn=%1*))" ).arg( d->mSearchText );
+    const QString filter = d->mFilter.arg( d->mSearchText );
 
     QList<LdapClient*>::Iterator it;
     QList<LdapClient*>::Iterator end(d->mClients.end());
@@ -242,7 +259,7 @@ void LdapClientSearch::cancelSearch()
 void LdapClientSearch::Private::slotLDAPResult( const LdapClient &client,
                                                 const KLDAP::LdapObject &obj )
 {
-    ResultObject result;
+    LdapResultObject result;
     result.client = &client;
     result.object = obj;
 
@@ -271,6 +288,9 @@ void LdapClientSearch::Private::slotDataTimer()
 {
     QStringList lst;
     LdapResult::List reslist;
+
+    emit q->searchData(mResults);
+
     makeSearchData( lst, reslist );
     if ( !lst.isEmpty() ) {
         emit q->searchData( lst );
@@ -291,8 +311,8 @@ void LdapClientSearch::Private::finish()
 void LdapClientSearch::Private::makeSearchData( QStringList &ret, LdapResult::List &resList )
 {
 
-    QList< ResultObject >::ConstIterator it1;
-    QList< ResultObject >::ConstIterator end1(mResults.constEnd());
+    QList< LdapResultObject >::ConstIterator it1;
+    QList< LdapResultObject >::ConstIterator end1(mResults.constEnd());
     for ( it1 = mResults.constBegin(); it1 != end1; ++it1 ) {
         QString name, mail, givenname, sn;
         QStringList mails;
