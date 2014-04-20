@@ -185,7 +185,9 @@ void IncidenceAttendee::load( const KCalCore::Incidence::Ptr &incidence )
 
   const KCalCore::Attendee::List attendees = incidence->attendees();
   foreach ( const KCalCore::Attendee::Ptr &a, attendees ) {
-    mAttendeeEditor->addAttendee( a );
+    if (!(a->cuType() == KCalCore::Attendee::Resource || a->cuType() == KCalCore::Attendee::Room)) {
+      mAttendeeEditor->addAttendee( a );
+    }
   }
 
   mWasDirty = false;
@@ -193,7 +195,7 @@ void IncidenceAttendee::load( const KCalCore::Incidence::Ptr &incidence )
 
 void IncidenceAttendee::save( const KCalCore::Incidence::Ptr &incidence )
 {
-  incidence->clearAttendees();
+  /*incidence->clearAttendees();
   AttendeeData::List attendees = mAttendeeEditor->attendees();
 
   foreach ( AttendeeData::Ptr attendee, attendees ) {
@@ -219,7 +221,7 @@ void IncidenceAttendee::save( const KCalCore::Incidence::Ptr &incidence )
   // Must not have an organizer for items without attendees
   if ( !incidence->attendeeCount() ) {
     return;
-  }
+  }*/
 
   if ( mUi->mOrganizerStack->currentIndex() == 0 ) {
     incidence->setOrganizer( mUi->mOrganizerCombo->currentText() );
@@ -247,13 +249,16 @@ bool IncidenceAttendee::isDirty() const
 
   // The lists sizes *must* be the same. When the organizer is attending the
   // event as well, he should be in the attendees list as well.
-  if ( originalList.size() != newList.size() ) {
+  /*if ( originalList.size() != newList.size() ) {
     return true;
-  }
+  }*/
 
   // Okay, again not the most efficient algorithm, but I'm assuming that in the
   // bulk of the use cases, the number of attendees is not much higher than 10 or so.
   foreach ( const KCalCore::Attendee::Ptr &attendee, originalList ) {
+    if (attendee->cuType() == KCalCore::Attendee::Resource || attendee->cuType() == KCalCore::Attendee::Room) {
+      continue;
+    }
     bool found = false;
     for ( int i = 0; i < newList.size(); ++i ) {
       if ( compareAttendees( newList.at( i )->attendee(), attendee) ) {
@@ -265,6 +270,7 @@ bool IncidenceAttendee::isDirty() const
 
     if ( !found ) {
       // One of the attendees in the original list was not found in the new list.
+      kDebug() << "One of the attendees in the original list was not found in the new list";
       return true;
     }
   }
@@ -605,6 +611,7 @@ void IncidenceAttendee::printDebugInfo() const
                << attendee->RSVP()
                << attendee->role()
                << attendee->uid()
+               << attendee->cuType()
                << attendee->delegate()
                << attendee->delegator()
                << "; we have:";
@@ -616,6 +623,7 @@ void IncidenceAttendee::printDebugInfo() const
                  << attendee->RSVP()
                  << attendee->role()
                  << attendee->uid()
+                 << attendee->cuType()
                  << attendee->delegate()
                  << attendee->delegator();
       }
