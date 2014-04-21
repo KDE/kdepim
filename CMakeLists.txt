@@ -1,5 +1,71 @@
 project(kdepim)
 
+cmake_minimum_required(VERSION 2.8.12)
+
+# we need some parts of the ECM CMake helpers
+find_package (ECM 0.0.12 REQUIRED NO_MODULE)
+set(CMAKE_MODULE_PATH ${kdepim_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
+include(ECMOptionalAddSubdirectory)
+include(ECMInstallIcons)
+include(ECMSetupVersion)
+include(ECMAddTests)
+include(ECMMarkNonGuiExecutable)
+include(ECMGenerateHeaders)
+
+include(CMakePackageConfigHelpers)
+include(FeatureSummary)
+include(WriteBasicConfigVersionFile)
+include(CheckFunctionExists)
+
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDECompilerSettings)
+
+set(KF5_VERSION "4.98.0")
+
+option(KDEPIM_BUILD_EXAMPLES "Build the kdepim example applications." FALSE)
+option(KDEPIM_BUILD_MOBILE "Build the mobile applications. Note that you have to enable KDEPIM_MOBILE_UI if you want to run these applications on a mobile device." TRUE)
+option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
+option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" FALSE)
+option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will build only libkleo and kleopatra" FALSE)
+option(KDEPIM_BUILD_STATIC "Build KDEPIM static." FALSE)
+option(KDEPIM_BUILD_DESKTOP "Build Desktop Applications. Can be deactivated for mobile" TRUE)
+option(KDEPIM_NO_WEBKIT "Do not use WebKit in the kdepim applications" FALSE)
+
+
+find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Widgets Test)
+find_package(KF5Akonadi CONFIG REQUIRED)
+
+
+if(KDEPIM_ENTERPRISE_BUILD)
+  message(STATUS "Enterprise build is enabled.")
+endif()
+
+# if KDEPIM_ONLY_KLEO is defined, KDEPIM_BUILD_MOBILE and KDEPIM_MOBILE_UI are disabled.
+if(KDEPIM_ONLY_KLEO)
+ set(KDEPIM_BUILD_MOBILE FALSE)
+ set(KDEPIM_MOBILE_UI FALSE)
+ set(KDEPIM_DEFINITIONS "-DHAVE_CONFIG_H=1")
+ message(STATUS "Only libkleo and Kleopatra will be built.")
+endif()
+
+if(KDEPIM_MOBILE_UI)
+    # Build the mobile applications
+    set(KDEPIM_BUILD_MOBILE TRUE)
+endif()
+
+# config-enterprise.h is needed for both ENTERPRISE_BUILD and BUILD_EVERYTHING
+configure_file(config-enterprise.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-enterprise.h )
+
+
+
+feature_summary(WHAT ALL
+                INCLUDE_QUIET_PACKAGES
+                FATAL_ON_MISSING_REQUIRED_PACKAGES
+)
+
+
+if (false)
 # where to look first for cmake modules. This line must be the first one or cmake will use the system's FindFoo.cmake
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 
@@ -336,3 +402,4 @@ feature_summary(WHAT ALL
                      FATAL_ON_MISSING_REQUIRED_PACKAGES
                )
 
+endif()
