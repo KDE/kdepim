@@ -21,6 +21,7 @@ include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings)
 
+set(QT_REQUIRED_VERSION "5.2.0")
 set(KF5_VERSION "4.98.0")
 
 option(KDEPIM_BUILD_EXAMPLES "Build the kdepim example applications." FALSE)
@@ -35,6 +36,10 @@ option(KDEPIM_NO_WEBKIT "Do not use WebKit in the kdepim applications" FALSE)
 
 find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Widgets Test)
 find_package(KF5Akonadi CONFIG REQUIRED)
+
+set(AkonadiServer_MIN_VERSION "1.70.41")
+find_package(Akonadi ${AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
+
 
 find_package(ZLIB)
 set_package_properties(ZLIB PROPERTIES DESCRIPTION "The Zlib compression library" URL "http://www.zlib.net" TYPE REQUIRED)
