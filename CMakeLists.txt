@@ -41,6 +41,10 @@ set(AkonadiServer_MIN_VERSION "1.70.41")
 find_package(Akonadi ${AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
 
 
+find_package(Baloo "5.0.0" CONFIG REQUIRED)
+set_package_properties(Baloo PROPERTIES DESCRIPTION "The Baloo libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Baloo provides search capabilities in KMail and Akonadi")
+
+
 find_package(ZLIB)
 set_package_properties(ZLIB PROPERTIES DESCRIPTION "The Zlib compression library" URL "http://www.zlib.net" TYPE REQUIRED)
 
