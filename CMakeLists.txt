@@ -36,6 +36,9 @@ option(KDEPIM_NO_WEBKIT "Do not use WebKit in the kdepim applications" FALSE)
 find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Widgets Test)
 find_package(KF5Akonadi CONFIG REQUIRED)
 
+find_package(ZLIB)
+set_package_properties(ZLIB PROPERTIES DESCRIPTION "The Zlib compression library" URL "http://www.zlib.net" TYPE REQUIRED)
+
 
 if(KDEPIM_ENTERPRISE_BUILD)
   message(STATUS "Enterprise build is enabled.")
@@ -57,6 +60,23 @@ endif()
 # config-enterprise.h is needed for both ENTERPRISE_BUILD and BUILD_EVERYTHING
 configure_file(config-enterprise.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-enterprise.h )
 
+#add_subdirectory(noteshared)
+#add_subdirectory(akonadi_next)
+#add_subdirectory(libkdepim)
+#add_subdirectory(calendarsupport)
+#add_subdirectory(calendarviews)
+#add_subdirectory(incidenceeditor-ng)
+#add_subdirectory(libkdepimdbusinterfaces)
+#add_subdirectory(libkleo)
+#add_subdirectory(libkpgp)
+#add_subdirectory(libksieve)
+#add_subdirectory(kdgantt2)
+#add_subdirectory(icons)
+#add_subdirectory(composereditor-ng)
+#add_subdirectory(messagecore)
+#add_subdirectory(grantleetheme)
+#add_subdirectory(messagelist)
+#add_subdirectory(templateparser)
 
 
 feature_summary(WHAT ALL
