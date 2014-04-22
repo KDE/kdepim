@@ -1,5 +1,7 @@
 project(mailimporter)
 
+kde_enable_exceptions()
+
 set(libmailimporter_SRCS
   importmailswidget.cpp
   filterinfogui.cpp
@@ -28,17 +30,16 @@ set(libmailimporter_SRCS
 )
 
 include_directories(${Boost_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/libkdepim)
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-kde4_add_ui_files(libmailimporter_SRCS ui/importmailswidget.ui ui/selectthunderbirdprofilewidget.ui)
+qt5_wrap_ui(libmailimporter_SRCS ui/importmailswidget.ui ui/selectthunderbirdprofilewidget.ui)
 
-kde4_add_library(mailimporter ${LIBRARY_TYPE} ${libmailimporter_SRCS})
+add_library(mailimporter ${LIBRARY_TYPE} ${libmailimporter_SRCS})
 target_link_libraries(mailimporter
-  ${KDE4_KIO_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDEPIMLIBS_KPIMUTILS_LIBS}
+  KF5::KIOCore
+  KF5::AkonadiCore
+  KF5::AkonadiKMime
+  KF5::KMime
+  KF5::PimUtils
   kdepim
   messagecore
 )
