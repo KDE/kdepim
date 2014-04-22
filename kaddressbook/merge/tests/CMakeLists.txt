@@ -11,6 +11,7 @@ macro( kaddressbook_merge _source )
 endmacro()
 
 kaddressbook_merge(mergecontactwidgettest.cpp)
+kaddressbook_merge(mergecontacttest.cpp)
 
 
 include(AkonadiMacros)

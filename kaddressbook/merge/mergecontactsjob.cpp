@@ -16,6 +16,7 @@
 */
 
 #include "mergecontactsjob.h"
+#include "mergecontacts.h"
 #include <Akonadi/ItemCreateJob>
 #include <Akonadi/ItemDeleteJob>
 
@@ -55,18 +56,8 @@ void MergeContactsJob::start()
 
 void MergeContactsJob::generateMergedContact()
 {
-    KABC::Addressee newContact;
-    bool firstAddress = true;
-    Q_FOREACH (const Akonadi::Item &item, mListItem) {
-        KABC::Addressee address = item.payload<KABC::Addressee>();
-        if (firstAddress) {
-            firstAddress = false;
-            newContact.setName(address.name());
-            newContact.setFamilyName(address.familyName());
-            newContact.setFormattedName(address.formattedName());
-        }
-    }
-
+    MergeContacts mergeContact(mListItem);
+    KABC::Addressee newContact = mergeContact.mergedContact();
     createMergedContact(newContact);
 }
 
