@@ -23,7 +23,7 @@
 #include <QWebHitTestResult>
 
 class KToggleAction;
-class KAction;
+class QAction;
 class KSelectAction;
 class KFontAction;
 class ComposerImageResizeWidget;
@@ -154,7 +154,7 @@ public:
     int spellTextSelectionStart;
     int spellTextSelectionEnd;
 
-    QList<KAction*> htmlEditorActionList;
+    QList<QAction *> htmlEditorActionList;
     KToggleAction *action_text_bold;
     KToggleAction *action_text_italic;
     KToggleAction *action_text_underline;
@@ -167,33 +167,33 @@ public:
     KToggleAction *action_direction_rtl;
     KToggleAction *action_text_subscript;
     KToggleAction *action_text_superscript;
-    KAction *action_insert_horizontal_rule;
-    KAction *action_list_indent;
-    KAction *action_list_dedent;
+    QAction *action_insert_horizontal_rule;
+    QAction *action_list_indent;
+    QAction *action_list_dedent;
     KToggleAction *action_ordered_list;
     KToggleAction *action_unordered_list;
     KSelectAction *action_format_type;
     KSelectAction *action_font_size;
     KFontAction *action_font_family;
     KPIMTextEdit::EmoticonTextEditAction *action_add_emoticon;
-    KAction *action_insert_html;
-    KAction *action_insert_image;
-    KAction *action_insert_table;
-    KAction *action_text_foreground_color;
-    KAction *action_text_background_color;
-    KAction *action_format_reset;
-    KAction *action_insert_link;
-    KAction *action_spell_check;
-    KAction *action_find;
-    KAction *action_replace;
-    KAction *action_page_color;
-    KAction *action_block_quote;
-    KAction *action_save_as;
-    KAction *action_print;
-    KAction *action_print_preview;
-    KAction *action_paste_withoutformatting;
-    KAction *action_insert_specialchar;
-    KAction *action_insert_anchor;
+    QAction *action_insert_html;
+    QAction *action_insert_image;
+    QAction *action_insert_table;
+    QAction *action_text_foreground_color;
+    QAction *action_text_background_color;
+    QAction *action_format_reset;
+    QAction *action_insert_link;
+    QAction *action_spell_check;
+    QAction *action_find;
+    QAction *action_replace;
+    QAction *action_page_color;
+    QAction *action_block_quote;
+    QAction *action_save_as;
+    QAction *action_print;
+    QAction *action_print_preview;
+    QAction *action_paste_withoutformatting;
+    QAction *action_insert_specialchar;
+    QAction *action_insert_anchor;
 
     ComposerView *q;
     ComposerImageResizeWidget *imageResizeWidget;

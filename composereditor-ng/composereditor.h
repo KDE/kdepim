@@ -28,7 +28,7 @@
 #include <QWebPage>
 
 class KActionCollection;
-class KAction;
+class QAction;
 
 namespace ComposerEditorNG
 {

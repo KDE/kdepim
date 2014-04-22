@@ -33,7 +33,7 @@
 
 #include <kpimtextedit/emoticontexteditaction.h>
 #include <kpimtextedit/inserthtmldialog.h>
-#include <kpimtextedit/selectspecialchar.h>
+#include <kpimtextedit/selectspecialchardialog.h>
 
 #include <Sonnet/Dialog>
 #include <sonnet/backgroundchecker.h>
@@ -42,7 +42,7 @@
 #include <KToolInvocation>
 #include <KLocalizedString>
 #include <KToggleAction>
-#include <KAction>
+#include <QAction>
 #include <KSelectAction>
 #include <KActionCollection>
 #include <KColorDialog>
@@ -54,6 +54,9 @@
 #include <KPrintPreview>
 #include <kdeprintdialog.h>
 #include <KRun>
+#include <KUrl>
+#include <KIcon>
+#include <KShortcut>
 
 #include <QAction>
 #include <QDBusInterface>
@@ -202,7 +205,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::HorizontalRule:
     {
         if (!action_insert_horizontal_rule) {
-            action_insert_horizontal_rule = new KAction(KIcon(QLatin1String("insert-horizontal-rule")), i18nc("@action", "Insert Rule Line"), q);
+            action_insert_horizontal_rule = new QAction(KIcon(QLatin1String("insert-horizontal-rule")), i18nc("@action", "Insert Rule Line"), q);
             htmlEditorActionList.append((action_insert_horizontal_rule));
             q->connect( action_insert_horizontal_rule, SIGNAL(triggered(bool)), SLOT(_k_slotInsertHorizontalRule()) );
         }
@@ -211,7 +214,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::ListIndent:
     {
         if (!action_list_indent) {
-            action_list_indent = new KAction(KIcon(QLatin1String("format-indent-more")), i18nc("@action", "Increase Indent"), q);
+            action_list_indent = new QAction(KIcon(QLatin1String("format-indent-more")), i18nc("@action", "Increase Indent"), q);
             htmlEditorActionList.append((action_list_indent));
             FORWARD_ACTION(action_list_indent, QWebPage::Indent);
         }
@@ -220,7 +223,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::ListDedent:
     {
         if (!action_list_dedent) {
-            action_list_dedent = new KAction(KIcon(QLatin1String("format-indent-less")), i18nc("@action", "Decrease Indent"), q);
+            action_list_dedent = new QAction(KIcon(QLatin1String("format-indent-less")), i18nc("@action", "Decrease Indent"), q);
             htmlEditorActionList.append(action_list_dedent);
             FORWARD_ACTION(action_list_dedent, QWebPage::Outdent);
         }
@@ -248,7 +251,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     {
         if (!action_format_type) {
             action_format_type = new KSelectAction(KIcon(QLatin1String("format-list-unordered")), i18nc("@title:menu", "List Style"), q);
-            KAction *act = action_format_type->addAction(i18n( "Paragraph" ));
+            QAction *act = action_format_type->addAction(i18n( "Paragraph" ));
             act->setData(QVariant::fromValue(ComposerViewPrivate::Paragraph));
             act = action_format_type->addAction(i18n( "Heading 1" ));
             act->setData(QVariant::fromValue(ComposerViewPrivate::Header1));
@@ -314,7 +317,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::InsertImage:
     {
         if (!action_insert_image) {
-            action_insert_image = new KAction( KIcon( QLatin1String( "insert-image" ) ), i18n( "Add Image" ), q);
+            action_insert_image = new QAction( KIcon( QLatin1String( "insert-image" ) ), i18n( "Add Image" ), q);
             q->connect( action_insert_image, SIGNAL(triggered(bool)), SLOT(_k_slotAddImage()) );
         }
         break;
@@ -322,7 +325,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::InsertHtml:
     {
         if (!action_insert_html) {
-            action_insert_html = new KAction( i18n( "Insert HTML" ), q);
+            action_insert_html = new QAction( i18n( "Insert HTML" ), q);
             q->connect( action_insert_html, SIGNAL(triggered(bool)), SLOT(_k_slotInsertHtml()) );
         }
         break;
@@ -330,7 +333,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::InsertTable:
     {
         if (!action_insert_table) {
-            action_insert_table = new KAction( KIcon( QLatin1String( "insert-table" ) ), i18n( "Table..." ), q);
+            action_insert_table = new QAction( KIcon( QLatin1String( "insert-table" ) ), i18n( "Table..." ), q);
             htmlEditorActionList.append(action_insert_table);
             q->connect( action_insert_table, SIGNAL(triggered(bool)), SLOT(_k_slotInsertTable()) );
         }
@@ -339,7 +342,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::InsertLink:
     {
         if (!action_insert_link) {
-            action_insert_link = new KAction(KIcon(QLatin1String("insert-link")), i18nc("@action", "Link"), q);
+            action_insert_link = new QAction(KIcon(QLatin1String("insert-link")), i18nc("@action", "Link"), q);
             htmlEditorActionList.append(action_insert_link);
             q->connect(action_insert_link, SIGNAL(triggered(bool)), q, SLOT(_k_insertLink()));
         }
@@ -348,7 +351,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::TextForegroundColor:
     {
         if (!action_text_foreground_color) {
-            action_text_foreground_color = new KAction(KIcon(QLatin1String("format-stroke-color")), i18nc("@action", "Text &Color..."), q);
+            action_text_foreground_color = new QAction(KIcon(QLatin1String("format-stroke-color")), i18nc("@action", "Text &Color..."), q);
             action_text_foreground_color->setIconText(i18nc("@label stroke color", "Color"));
             htmlEditorActionList.append((action_text_foreground_color));
             q->connect(action_text_foreground_color, SIGNAL(triggered()), q, SLOT(_k_setTextForegroundColor()));
@@ -358,7 +361,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::TextBackgroundColor:
     {
         if (!action_text_background_color) {
-            action_text_background_color = new KAction(KIcon(QLatin1String("format-fill-color")), i18nc("@action", "Text &Highlight..."), q);
+            action_text_background_color = new QAction(KIcon(QLatin1String("format-fill-color")), i18nc("@action", "Text &Highlight..."), q);
             htmlEditorActionList.append((action_text_background_color));
             q->connect(action_text_background_color, SIGNAL(triggered()), q, SLOT(_k_setTextBackgroundColor()));
         }
@@ -367,7 +370,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::FormatReset:
     {
         if (!action_format_reset) {
-            action_format_reset = new KAction( KIcon( QLatin1String("draw-eraser") ), i18n("Reset Font Settings"), q);
+            action_format_reset = new QAction( KIcon( QLatin1String("draw-eraser") ), i18n("Reset Font Settings"), q);
             FORWARD_ACTION(action_format_reset, QWebPage::RemoveFormat);
         }
         break;
@@ -375,7 +378,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::SpellCheck:
     {
         if (!action_spell_check) {
-            action_spell_check = new KAction(KIcon(QLatin1String("tools-check-spelling")), i18n("Check Spelling..."), q);
+            action_spell_check = new QAction(KIcon(QLatin1String("tools-check-spelling")), i18n("Check Spelling..."), q);
             htmlEditorActionList.append(action_spell_check);
             q->connect(action_spell_check, SIGNAL(triggered(bool)), q, SLOT(_k_slotSpellCheck()));
         }
@@ -384,7 +387,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::PageColor:
     {
         if (!action_page_color) {
-            action_page_color = new KAction( i18n( "Page Color and Background..." ), q);
+            action_page_color = new QAction( i18n( "Page Color and Background..." ), q);
             htmlEditorActionList.append(action_page_color);
             q->connect( action_page_color, SIGNAL(triggered(bool)), SLOT(_k_slotChangePageColorAndBackground()) );
         }
@@ -393,7 +396,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::BlockQuote:
     {
         if (!action_block_quote) {
-            action_block_quote = new KAction(KIcon(QLatin1String("format-text-blockquote")), i18n( "Blockquote" ), q);
+            action_block_quote = new QAction(KIcon(QLatin1String("format-text-blockquote")), i18n( "Blockquote" ), q);
             htmlEditorActionList.append(action_block_quote);
             q->connect( action_block_quote, SIGNAL(triggered()), q, SLOT(_k_slotToggleBlockQuote()) );
         }
@@ -402,7 +405,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::Find:
     {
         if (!action_find) {
-            action_find = new KAction(KIcon(QLatin1String("edit-find")), i18n( "&Find..." ), q);
+            action_find = new QAction(KIcon(QLatin1String("edit-find")), i18n( "&Find..." ), q);
             action_find->setShortcut(KStandardShortcut::find());
             htmlEditorActionList.append(action_find);
             q->connect( action_find, SIGNAL(triggered()), q, SLOT(_k_slotFind()) );
@@ -412,7 +415,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::Replace:
     {
         if (!action_replace) {
-            action_replace = new KAction(KIcon(QLatin1String("edit-replace")), i18n( "&Replace..." ), q);
+            action_replace = new QAction(KIcon(QLatin1String("edit-replace")), i18n( "&Replace..." ), q);
             htmlEditorActionList.append(action_replace);
             action_replace->setShortcut(KStandardShortcut::replace());
             q->connect( action_replace, SIGNAL(triggered()), q, SLOT(_k_slotReplace()) );
@@ -422,7 +425,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::SaveAs:
     {
         if (!action_save_as) {
-            action_save_as = new KAction(KIcon(QLatin1String("file_save_as")), i18n( "Save &As..." ), q);
+            action_save_as = new QAction(KIcon(QLatin1String("file_save_as")), i18n( "Save &As..." ), q);
             htmlEditorActionList.append(action_save_as);
             action_replace->setShortcut(KStandardShortcut::save());
             q->connect( action_save_as, SIGNAL(triggered()), q, SLOT(_k_slotSaveAs()) );
@@ -432,7 +435,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::Print:
     {
         if (!action_print) {
-            action_print = new KAction(KIcon(QLatin1String("file_print")), i18n( "&Print..." ), q);
+            action_print = new QAction(KIcon(QLatin1String("file_print")), i18n( "&Print..." ), q);
             htmlEditorActionList.append(action_print);
             action_replace->setShortcut(KStandardShortcut::print());
             q->connect( action_print, SIGNAL(triggered()), q, SLOT(_k_slotPrint()) );
@@ -442,7 +445,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::PrintPreview:
     {
         if (!action_print_preview) {
-            action_print_preview = new KAction(KIcon(QLatin1String("file_print_preview")), i18n( "Print Previe&w" ), q);
+            action_print_preview = new QAction(KIcon(QLatin1String("file_print_preview")), i18n( "Print Previe&w" ), q);
             htmlEditorActionList.append(action_print_preview);
             q->connect( action_print_preview, SIGNAL(triggered()), q, SLOT(_k_slotPrintPreview()) );
         }
@@ -451,7 +454,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::PasteWithoutFormatting:
     {
         if (!action_paste_withoutformatting) {
-            action_paste_withoutformatting = new KAction(i18n( "Paste Without Formatting" ), q);
+            action_paste_withoutformatting = new QAction(i18n( "Paste Without Formatting" ), q);
             htmlEditorActionList.append(action_paste_withoutformatting);
             q->connect( action_paste_withoutformatting, SIGNAL(triggered()), q, SLOT(_k_slotPasteWithoutFormatting()) );
         }
@@ -460,7 +463,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::InsertSpecialChar:
     {
         if (!action_insert_specialchar) {
-            action_insert_specialchar = new KAction(i18n( "Insert Special Char..." ), q);
+            action_insert_specialchar = new QAction(i18n( "Insert Special Char..." ), q);
             htmlEditorActionList.append(action_insert_specialchar);
             q->connect( action_insert_specialchar, SIGNAL(triggered()), q, SLOT(_k_slotInsertSpecialChar()) );
         }
@@ -469,7 +472,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::InsertAnchor:
     {
         if (!action_insert_anchor) {
-            action_insert_anchor = new KAction(i18n( "Insert Anchor..." ), q);
+            action_insert_anchor = new QAction(i18n( "Insert Anchor..." ), q);
             htmlEditorActionList.append(action_insert_anchor);
             q->connect( action_insert_anchor, SIGNAL(triggered()), q, SLOT(_k_slotInsertAnchor()) );
         }

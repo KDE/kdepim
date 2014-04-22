@@ -1,4 +1,4 @@
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+kde_enable_exceptions()
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
@@ -8,7 +8,11 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 #add_subdirectory(tests)
 
 add_definitions(-DQT_STATICPLUGIN)
-qt4_wrap_cpp(wk_HEADERS_MOC spellplugin/qwebkitplatformplugin.h)
+#qt4_wrap_cpp(wk_HEADERS_MOC spellplugin/qwebkitplatformplugin.h)
+
+#generate_export_header(COMPOSEREDITORNG BASE_NAME composereditor)
+find_package(KF5WebKit ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Sonnet ${KF5_VERSION} CONFIG REQUIRED)
 
 set(libcomposereditor_ng_SRCS 
     composereditor.cpp
@@ -41,18 +45,18 @@ set(libcomposereditor_ng_SRCS
     ${wk_HEADERS_MOC}
 )
 
-kde4_add_kcfg_files(libcomposereditor_ng_SRCS
+kconfig_add_kcfg_files(libcomposereditor_ng_SRCS
    globalsettings_base.kcfgc 
 )
 
 
-kde4_add_ui_files(libcomposereditor_ng_SRCS ui/pagecolorbackgroundwidget.ui )
+qt5_wrap_ui(libcomposereditor_ng_SRCS ui/pagecolorbackgroundwidget.ui )
 
 
-kde4_add_library(composereditorng ${LIBRARY_TYPE} ${libcomposereditor_ng_SRCS})
+add_library(composereditorng ${LIBRARY_TYPE} ${libcomposereditor_ng_SRCS})
 
 target_link_libraries(composereditorng 
-   ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDE4_KPRINTUTILS_LIBS}
+   ${KDE4_KDEWEBKIT_LIBRARY} KF5::WebKit ${QT_QTWEBKIT_LIBRARY} KF5::PimTextEdit ${KDE4_KPRINTUTILS_LIBS} KF5::KDELibs4Support KF5::SonnetCore
 )
 
 

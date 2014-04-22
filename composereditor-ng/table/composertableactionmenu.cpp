@@ -74,22 +74,22 @@ public:
     void updateActions();
     QWebElement webElement;
 
-    KAction *action_insert_table;
-    KAction *action_insert_row_below;
-    KAction *action_insert_row_above;
-    KAction *action_table_format;
-    KAction *action_table_cell_format;
-    KAction *action_remove_cell_contents;
-    KAction *action_remove_cell;
-    KAction *action_insert_cell_before;
-    KAction *action_insert_cell_after;
-    KAction *action_remove_table;
-    KAction *action_remove_row;
-    KAction *action_remove_column;
-    KAction *action_insert_column_before;
-    KAction *action_insert_column_after;
-    KAction *action_merge_cell;
-    KAction *action_split_cell;
+    QAction *action_insert_table;
+    QAction *action_insert_row_below;
+    QAction *action_insert_row_above;
+    QAction *action_table_format;
+    QAction *action_table_cell_format;
+    QAction *action_remove_cell_contents;
+    QAction *action_remove_cell;
+    QAction *action_insert_cell_before;
+    QAction *action_insert_cell_after;
+    QAction *action_remove_table;
+    QAction *action_remove_row;
+    QAction *action_remove_column;
+    QAction *action_insert_column_before;
+    QAction *action_insert_column_after;
+    QAction *action_merge_cell;
+    QAction *action_split_cell;
     ComposerTableActionMenu *q;
     QWidget *parentWidget;
 };
@@ -228,77 +228,77 @@ ComposerTableActionMenu::ComposerTableActionMenu(const QWebElement& element,QObj
     KActionMenu *insertMenu = new KActionMenu( i18n( "Insert" ), this );
     addAction( insertMenu );
 
-    d->action_insert_table = new KAction( KIcon(QLatin1String("insert-table")), i18nc( "@item:inmenu Insert", "Table..." ), this );
+    d->action_insert_table = new QAction( KIcon(QLatin1String("insert-table")), i18nc( "@item:inmenu Insert", "Table..." ), this );
     insertMenu->addAction( d->action_insert_table );
     connect( d->action_insert_table, SIGNAL(triggered(bool)), SIGNAL(insertNewTable()) );
 
     insertMenu->addSeparator();
-    d->action_insert_row_below = new KAction( KIcon(QLatin1String("edit-table-insert-row-below")), i18nc( "@item:inmenu Insert", "Row Below" ), this );
+    d->action_insert_row_below = new QAction( KIcon(QLatin1String("edit-table-insert-row-below")), i18nc( "@item:inmenu Insert", "Row Below" ), this );
     insertMenu->addAction( d->action_insert_row_below );
     connect( d->action_insert_row_below, SIGNAL(triggered(bool)), SLOT(_k_slotInsertRowBelow()) );
 
-    d->action_insert_row_above = new KAction( KIcon(QLatin1String("edit-table-insert-row-above")), i18nc( "@item:inmenu Insert", "Row Above" ), this );
+    d->action_insert_row_above = new QAction( KIcon(QLatin1String("edit-table-insert-row-above")), i18nc( "@item:inmenu Insert", "Row Above" ), this );
     insertMenu->addAction( d->action_insert_row_above );
     connect( d->action_insert_row_above, SIGNAL(triggered(bool)), SLOT(_k_slotInsertRowAbove()) );
 
     insertMenu->addSeparator();
-    d->action_insert_column_before = new KAction( KIcon(QLatin1String("edit-table-insert-column-left")), i18nc( "@item:inmenu Insert", "Column Before" ), this );
+    d->action_insert_column_before = new QAction( KIcon(QLatin1String("edit-table-insert-column-left")), i18nc( "@item:inmenu Insert", "Column Before" ), this );
     insertMenu->addAction( d->action_insert_column_before );
     connect( d->action_insert_column_before, SIGNAL(triggered(bool)), SLOT(_k_slotInsertColumnBefore()) );
 
-    d->action_insert_column_after = new KAction( KIcon(QLatin1String("edit-table-insert-column-right")), i18nc( "@item:inmenu Insert", "Column After" ), this );
+    d->action_insert_column_after = new QAction( KIcon(QLatin1String("edit-table-insert-column-right")), i18nc( "@item:inmenu Insert", "Column After" ), this );
     insertMenu->addAction( d->action_insert_column_after );
     connect( d->action_insert_column_after, SIGNAL(triggered(bool)), SLOT(_k_slotInsertColumnAfter()) );
 
     insertMenu->addSeparator();
-    d->action_insert_cell_before = new KAction( i18nc( "@item:inmenu Insert", "Cell Before" ), this );
+    d->action_insert_cell_before = new QAction( i18nc( "@item:inmenu Insert", "Cell Before" ), this );
     insertMenu->addAction( d->action_insert_cell_before );
     connect( d->action_insert_cell_before, SIGNAL(triggered(bool)), SLOT(_k_slotInsertCellBefore()) );
 
-    d->action_insert_cell_after = new KAction( i18nc( "@item:inmenu Insert", "Cell After" ), this );
+    d->action_insert_cell_after = new QAction( i18nc( "@item:inmenu Insert", "Cell After" ), this );
     insertMenu->addAction( d->action_insert_cell_after );
     connect( d->action_insert_cell_after, SIGNAL(triggered(bool)), SLOT(_k_slotInsertCellAfter()) );
 
     KActionMenu *removeMenu = new KActionMenu( i18n( "Delete" ), this );
     addAction( removeMenu );
 
-    d->action_remove_table = new KAction( i18nc( "@item:inmenu Delete", "Table" ), this );
+    d->action_remove_table = new QAction( i18nc( "@item:inmenu Delete", "Table" ), this );
     removeMenu->addAction( d->action_remove_table );
     connect( d->action_remove_table, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveTable()) );
 
-    d->action_remove_row = new KAction( i18nc( "@item:inmenu Delete", "Row" ), this );
+    d->action_remove_row = new QAction( i18nc( "@item:inmenu Delete", "Row" ), this );
     removeMenu->addAction( d->action_remove_row );
     connect( d->action_remove_row, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveRow()) );
 
-    d->action_remove_column = new KAction( i18nc( "@item:inmenu Delete", "Column" ), this );
+    d->action_remove_column = new QAction( i18nc( "@item:inmenu Delete", "Column" ), this );
     removeMenu->addAction( d->action_remove_column );
     connect( d->action_remove_column, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveColumn()) );
 
-    d->action_remove_cell = new KAction( i18nc( "@item:inmenu Delete", "Cell" ), this );
+    d->action_remove_cell = new QAction( i18nc( "@item:inmenu Delete", "Cell" ), this );
     removeMenu->addAction( d->action_remove_cell );
     connect( d->action_remove_cell, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveCell()) );
 
-    d->action_remove_cell_contents = new KAction( i18nc( "@item:inmenu Delete", "Cell Contents" ), this );
+    d->action_remove_cell_contents = new QAction( i18nc( "@item:inmenu Delete", "Cell Contents" ), this );
     removeMenu->addAction( d->action_remove_cell_contents );
     connect( d->action_remove_cell_contents, SIGNAL(triggered(bool)), SLOT(_k_slotRemoveCellContents()) );
 
     addSeparator();
 
-    d->action_merge_cell = new KAction( KIcon(QLatin1String("edit-table-cell-merge")), i18n( "Join With Cell to the Right" ), this );
+    d->action_merge_cell = new QAction( KIcon(QLatin1String("edit-table-cell-merge")), i18n( "Join With Cell to the Right" ), this );
     connect( d->action_merge_cell, SIGNAL(triggered(bool)), SLOT(_k_slotMergeCellToTheRight()) );
     addAction( d->action_merge_cell );
 
-    d->action_split_cell = new KAction( KIcon(QLatin1String("edit-table-cell-split")), i18n( "Split cells" ), this );
+    d->action_split_cell = new QAction( KIcon(QLatin1String("edit-table-cell-split")), i18n( "Split cells" ), this );
     connect( d->action_split_cell, SIGNAL(triggered(bool)), SLOT(_k_slotSplitCell()) );
     addAction( d->action_split_cell );
 
     addSeparator();
 
-    d->action_table_format = new KAction( i18n( "Table Format..." ), this );
+    d->action_table_format = new QAction( i18n( "Table Format..." ), this );
     connect( d->action_table_format, SIGNAL(triggered(bool)), SLOT(_k_slotTableFormat()) );
     addAction( d->action_table_format );
 
-    d->action_table_cell_format = new KAction( i18n( "Table Cell Format..." ), this );
+    d->action_table_cell_format = new QAction( i18n( "Table Cell Format..." ), this );
     connect( d->action_table_cell_format, SIGNAL(triggered(bool)), SLOT(_k_slotTableCellFormat()) );
     addAction( d->action_table_cell_format );
 

@@ -28,7 +28,7 @@
 
 
 #include <KLocalizedString>
-#include <KAction>
+#include <QAction>
 #include <KToggleAction>
 #include <KFontAction>
 #include <KSelectAction>
@@ -38,6 +38,7 @@
 #include <KDebug>
 #include <KMenu>
 #include <KToolBar>
+#include <KIcon>
 
 #include <QAction>
 #include <QFileInfo>
