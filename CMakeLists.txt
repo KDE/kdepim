@@ -36,6 +36,9 @@ option(KDEPIM_NO_WEBKIT "Do not use WebKit in the kdepim applications" FALSE)
 
 find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Widgets Test)
 find_package(KF5Akonadi CONFIG REQUIRED)
+find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
+
+include(GenerateExportHeader)
 
 set(AkonadiServer_MIN_VERSION "1.70.41")
 find_package(Akonadi ${AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
@@ -54,6 +57,13 @@ set_package_properties(ZLIB PROPERTIES DESCRIPTION "The Zlib compression library
 if(KDEPIM_ENTERPRISE_BUILD)
   message(STATUS "Enterprise build is enabled.")
 endif()
+
+if(KDEPIM_BUILD_STATIC)
+  set(LIBRARY_TYPE STATIC)
+else()
+  set(LIBRARY_TYPE SHARED)
+endif()
+
 
 # if KDEPIM_ONLY_KLEO is defined, KDEPIM_BUILD_MOBILE and KDEPIM_MOBILE_UI are disabled.
 if(KDEPIM_ONLY_KLEO)
@@ -82,8 +92,8 @@ configure_file(config-enterprise.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-ente
 #add_subdirectory(libkpgp)
 #add_subdirectory(libksieve)
 #add_subdirectory(kdgantt2)
-#add_subdirectory(icons)
-#add_subdirectory(composereditor-ng)
+add_subdirectory(icons)
+add_subdirectory(composereditor-ng)
 #add_subdirectory(messagecore)
 #add_subdirectory(grantleetheme)
 #add_subdirectory(messagelist)
