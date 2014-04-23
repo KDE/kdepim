@@ -22,19 +22,19 @@
 #include "widgets/selectedcollectiondialog.h"
 
 
-#include <Akonadi/CollectionDialog>
+#include <CollectionDialog>
 #include <Akonadi/Contact/ContactSearchJob>
-#include <Akonadi/Item>
-#include <Akonadi/ItemCreateJob>
-#include <Akonadi/ItemModifyJob>
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/CollectionFetchScope>
-#include <Akonadi/Collection>
+#include <Item>
+#include <ItemCreateJob>
+#include <ItemModifyJob>
+#include <CollectionFetchJob>
+#include <CollectionFetchScope>
+#include <Collection>
 #include <Akonadi/Contact/ContactEditorDialog>
-#include <Akonadi/AgentTypeDialog>
-#include <Akonadi/AgentType>
-#include <Akonadi/AgentFilterProxyModel>
-#include <Akonadi/AgentInstanceCreateJob>
+#include <AgentTypeDialog>
+#include <AgentType>
+#include <AgentFilterProxyModel>
+#include <AgentInstanceCreateJob>
 
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>

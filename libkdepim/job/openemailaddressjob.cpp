@@ -21,11 +21,11 @@
 
 #include "job/addemailaddressjob.h"
 
-#include <akonadi/collectiondialog.h>
+#include <collectiondialog.h>
 #include <akonadi/contact/contacteditordialog.h>
 #include <akonadi/contact/contactsearchjob.h>
-#include <akonadi/item.h>
-#include <akonadi/itemcreatejob.h>
+#include <item.h>
+#include <itemcreatejob.h>
 #include <kabc/addressee.h>
 #include <klocale.h>
 #include <kmessagebox.h>

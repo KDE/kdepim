@@ -29,7 +29,7 @@
 #ifndef SELECTEDCOLLECTIONDIALOG_H
 #define SELECTEDCOLLECTIONDIALOG_H
 
-#include <Akonadi/CollectionDialog>
+#include <CollectionDialog>
 
 namespace KPIM {
 

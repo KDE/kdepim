@@ -41,8 +41,8 @@
 #include <QMenu>
 #include <QClipboard>
 
-#include <akonadi/collection.h>
-#include <akonadi/itemcreatejob.h>
+#include <collection.h>
+#include <itemcreatejob.h>
 #include <kcombobox.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
@@ -54,6 +54,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <KPushButton>
+#include <KGlobal>
 
 #include <KPIMUtils/ProgressIndicatorLabel>
 
@@ -915,7 +916,8 @@ void LdapSearchDialog::slotUser2()
     // Configure LDAP servers
 
     KCMultiDialog dialog( this );
-    dialog.setCaption( i18n( "Configure the Address Book LDAP Settings" ) );
+    //QT5
+    //dialog.setCaption( i18n( "Configure the Address Book LDAP Settings" ) );
     dialog.addModule( QLatin1String("kcmldap.desktop") );
 
     if ( dialog.exec() ) { //krazy:exclude=crashy

@@ -21,12 +21,12 @@
 #include "statisticsproxymodel.h"
 #include <QItemSelection>
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/collectionutils_p.h>
+#include <entitytreemodel.h>
+#include <collectionutils.h>
 
-#include <akonadi/collectionquotaattribute.h>
-#include <akonadi/collectionstatistics.h>
-#include <akonadi/entitydisplayattribute.h>
+#include <collectionquotaattribute.h>
+#include <collectionstatistics.h>
+#include <entitydisplayattribute.h>
 
 #include <kdebug.h>
 #include <kiconloader.h>
@@ -234,7 +234,7 @@ void StatisticsProxyModel::Private::proxyDataChanged(const QModelIndex& topLeft,
 
 void StatisticsProxyModel::Private::sourceLayoutAboutToBeChanged()
 {
-    // KIdentityProxyModel took care of the first columnCount() columns
+    // QIdentityProxyModel took care of the first columnCount() columns
     // We have to take care of the extra columns (by storing persistent indexes in column 0,
     // waiting for the source to update them, and then looking at where they ended up)
     QModelIndexList persistent = mParent->persistentIndexList();
@@ -272,7 +272,7 @@ void StatisticsProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
     // to the layoutChanged so that it can have the QPersistentModelIndexes uptodate in time.
     disconnect(this, SIGNAL(layoutChanged()), this, SLOT(sourceLayoutChanged()));
     connect(this, SIGNAL(layoutChanged()), SLOT(sourceLayoutChanged()));
-    KIdentityProxyModel::setSourceModel(sourceModel);
+    QIdentityProxyModel::setSourceModel(sourceModel);
     // This one should come *after* any downstream handlers of layoutAboutToBeChanged.
     // The connectNotify stuff below ensures that it remains the last one.
     disconnect(this, SIGNAL(layoutAboutToBeChanged()), this, SLOT(sourceLayoutAboutToBeChanged()));
@@ -282,18 +282,24 @@ void StatisticsProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
 void StatisticsProxyModel::connectNotify(const char *signal)
 {
     static bool ignore = false;
+//QT5
+#if 0
     if (ignore || QLatin1String(signal) == SIGNAL(layoutAboutToBeChanged()))
-        return KIdentityProxyModel::connectNotify(signal);
+        return QIdentityProxyModel::connectNotify(signal);
+#endif
     ignore = true;
     disconnect(this, SIGNAL(layoutAboutToBeChanged()), this, SLOT(sourceLayoutAboutToBeChanged()));
     connect(this, SIGNAL(layoutAboutToBeChanged()), SLOT(sourceLayoutAboutToBeChanged()));
     ignore = false;
-    KIdentityProxyModel::connectNotify(signal);
+//QT5
+#if 0
+    QIdentityProxyModel::connectNotify(signal);
+#endif
 }
 
 
 StatisticsProxyModel::StatisticsProxyModel( QObject *parent )
-    : KIdentityProxyModel( parent ),
+    : QIdentityProxyModel( parent ),
       d( new Private( this ) )
 {
     connect( this, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
@@ -336,7 +342,7 @@ QModelIndex StatisticsProxyModel::index( int row, int column, const QModelIndex 
         sourceColumn = 0;
     }
 
-    QModelIndex i = KIdentityProxyModel::index( row, sourceColumn, parent );
+    QModelIndex i = QIdentityProxyModel::index( row, sourceColumn, parent );
     return createIndex( i.row(), column, i.internalPointer() );
 }
 
@@ -374,7 +380,7 @@ QModelIndex StatisticsProxyModel::parent(const QModelIndex& child) const
         //kDebug() << "parent of" << child.data() << "is" << sourceParent.data();
         return mapFromSource(sourceParent);
     } else {
-        return KIdentityProxyModel::parent(child);
+        return QIdentityProxyModel::parent(child);
     }
 }
 
@@ -451,18 +457,18 @@ QVariant StatisticsProxyModel::headerData( int section, Qt::Orientation orientat
         return QVariant();
     }
 
-    return KIdentityProxyModel::headerData( section, orientation, role );
+    return QIdentityProxyModel::headerData( section, orientation, role );
 }
 
 Qt::ItemFlags StatisticsProxyModel::flags( const QModelIndex & index ) const
 {
     if ( index.column() >= d->sourceColumnCount() ) {
-        return KIdentityProxyModel::flags( index.sibling( index.row(), 0 ) )
+        return QIdentityProxyModel::flags( index.sibling( index.row(), 0 ) )
                 & ( Qt::ItemIsSelectable | Qt::ItemIsDragEnabled // Allowed flags
                     | Qt::ItemIsDropEnabled | Qt::ItemIsEnabled );
     }
 
-    return KIdentityProxyModel::flags( index );
+    return QIdentityProxyModel::flags( index );
 }
 
 int StatisticsProxyModel::columnCount( const QModelIndex & /*parent*/ ) const
@@ -479,7 +485,7 @@ QModelIndexList StatisticsProxyModel::match( const QModelIndex& start, int role,
                                              int hits, Qt::MatchFlags flags ) const
 {
     if ( role < Qt::UserRole )
-        return KIdentityProxyModel::match( start, role, value, hits, flags );
+        return QIdentityProxyModel::match( start, role, value, hits, flags );
 
     QModelIndexList list;
     QModelIndex proxyIndex;
@@ -498,7 +504,7 @@ QModelIndex StatisticsProxyModel::mapFromSource(const QModelIndex& sourceIndex) 
         return QModelIndex();
     Q_ASSERT(sourceIndex.model() == sourceModel());
     Q_ASSERT(sourceIndex.column() < d->sourceColumnCount());
-    return KIdentityProxyModel::mapFromSource(sourceIndex);
+    return QIdentityProxyModel::mapFromSource(sourceIndex);
 }
 
 QModelIndex StatisticsProxyModel::mapToSource(const QModelIndex& index) const
@@ -509,7 +515,7 @@ QModelIndex StatisticsProxyModel::mapToSource(const QModelIndex& index) const
     if (index.column() >= d->sourceColumnCount() ) {
         return QModelIndex();
     }
-    return KIdentityProxyModel::mapToSource(index);
+    return QIdentityProxyModel::mapToSource(index);
 }
 
 QModelIndex StatisticsProxyModel::buddy(const QModelIndex &index) const

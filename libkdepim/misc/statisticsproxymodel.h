@@ -22,7 +22,7 @@
 
 #include "kdepim_export.h"
 
-#include <kidentityproxymodel.h>
+#include <qidentityproxymodel.h>
 
 namespace KPIM {
 
@@ -47,7 +47,7 @@ namespace KPIM {
  * @author Kevin Ottens <ervin@kde.org>
  * @since 4.4
  */
-class KDEPIM_EXPORT StatisticsProxyModel : public KIdentityProxyModel
+class KDEPIM_EXPORT StatisticsProxyModel : public QIdentityProxyModel
 {
     Q_OBJECT
 

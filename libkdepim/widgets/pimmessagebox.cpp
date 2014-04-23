@@ -47,9 +47,13 @@ int PIMMessageBox::fourBtnMsgBox( QWidget *parent, QMessageBox::Icon type,
     //  QObject::connect( dialog, SIGNAL(noClicked()), dialog, SLOT(slotNo()));
 
     bool checkboxResult = false;
+    //QT5
+#if 0
     int result = KMessageBox::createKMessageBox(
                 dialog, type, text, QStringList(), QString(), &checkboxResult, options );
-
+#else
+    int result = 0;
+#endif
     switch (result) {
     case KDialog::Yes:
         result = KMessageBox::Yes;

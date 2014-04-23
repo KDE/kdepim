@@ -20,13 +20,13 @@
 #include <QLayout>
 #include <QItemSelectionModel>
 
-#include <Akonadi/Tag>
-#include <Akonadi/TagFetchJob>
-#include <Akonadi/TagFetchScope>
-#include <Akonadi/TagCreateJob>
-#include <Akonadi/TagWidget>
-#include <Akonadi/TagModel>
-#include <Akonadi/Monitor>
+#include <Tag>
+#include <TagFetchJob>
+#include <TagFetchScope>
+#include <TagCreateJob>
+#include <TagWidget>
+#include <TagModel>
+#include <Monitor>
 #include <KCheckableProxyModel>
 #include <KLineEdit>
 

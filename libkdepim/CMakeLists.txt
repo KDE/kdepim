@@ -1,18 +1,24 @@
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+kde_enable_exceptions()
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5300)
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
+find_package(KF5KCMUtils ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)
+#find_package(KF5KLdap ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Abc ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5PimUtils ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5AkonadiContact ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5PimTextEdit ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5KMime ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5PimIdentities ${KF5_VERSION} CONFIG REQUIRED)
+find_package(Baloo ${KF5_VERSION} CONFIG REQUIRED)
 
 add_subdirectory(tests)
 add_subdirectory(pics)
 
-add_definitions(${QT_QTDBUS_DEFINITIONS})
-
-include_directories( ${Boost_INCLUDE_DIR} )
-include_directories( ${BALOO_INCLUDE_DIR} )
 
 option(KDEPIM_INPROCESS_LDAP "Use in-process rather than KIO slave LDAP" FALSE)
 if (KDEPIM_INPROCESS_LDAP)
@@ -76,10 +82,11 @@ set(kdepim_LIB_SRCS
    ${kdepim_progresswidget_LIB_SRCS}
    ${kdepim_job_LIB_SRCS}
    ${kdepim_widgets_LIB_SRCS}
-   ${kdepim_ldap_LIB_SRCS}
+   #REactivate it
+   #${kdepim_ldap_LIB_SRCS}
    ${kdepim_misc_LIB_SRCS}
-   ${kdepim_addressline_LIB_SRCS}
-   prefs/kprefsdialog.cpp
+   #${kdepim_addressline_LIB_SRCS}
+   #prefs/kprefsdialog.cpp
    multiplyingline/multiplyingline.cpp
    multiplyingline/multiplyinglineeditor.cpp
    multiplyingline/multiplyinglineview_p.cpp
@@ -92,34 +99,37 @@ if (KDEPIM_INPROCESS_LDAP)
   )
 endif ()
 
-kde4_add_library(kdepim ${LIBRARY_TYPE} ${kdepim_LIB_SRCS})
+add_library(kdepim ${LIBRARY_TYPE} ${kdepim_LIB_SRCS})
 
 target_link_libraries(kdepim
-  ${KDEPIMLIBS_KRESOURCES_LIBS}
-  ${KDEPIMLIBS_KABC_LIBS}
-  ${KDEPIMLIBS_KPIMUTILS_LIBS}
-  ${KDEPIMLIBS_KLDAP_LIBS}
-  ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
-  ${KDE4_KCMUTILS_LIBS}
+  KF5::Abc
+  KF5::PimUtils
+  KF5::KLdap
+  KF5::PimIdentities
+  KF5::KCMUtils
   ${KDE4_SOLID_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
-  ${BALOO_LIBRARIES}
+  KF5::KMime
+  KF5::PimTextEdit
+  KF5::KMime
+  KF5::AkonadiCore
+  KF5::AkonadiContact
+  KF5::AkonadiAgentBase
+  KF5::AkonadiWidgets
+  KF5::SonnetCore
+  KF5::KCMUtils
+  KF5::Wallet
+  Baloo
 )
 
 
 target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
-  ${KDEPIMLIBS_KRESOURCES_LIBS}
-  ${KDEPIMLIBS_KABC_LIBS}
-  ${KDEPIMLIBS_KPIMUTILS_LIBS}
-  ${KDEPIMLIBS_KLDAP_LIBS}
-  ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
-  ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
+  KF5::Abc
+  KF5::PimUtils
+  KF5::KLdap
+  KF5::PimIdentities
+  KF5::PimTextEdit
+  KF5::AkonadiCore
+  KF5::AkonadiContact
 )
 
 if(MINGW)
@@ -136,10 +146,10 @@ if (QT_QTDESIGNER_FOUND)
   set(kdepimwidgets_PART_SRCS)
   kde4_add_widget_files(kdepimwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/designer/kdepim.widgets)
 
-  kde4_add_plugin(kdepimwidgets ${kdepimwidgets_PART_SRCS})
+  add_library(kdepimwidgets MODULE ${kdepimwidgets_PART_SRCS})
 
 
-  target_link_libraries(kdepimwidgets  ${KDE4_KIO_LIBS} kdepim)
+  target_link_libraries(kdepimwidgets  KF5::KIOCore kdepim)
 
   install(TARGETS kdepimwidgets  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
 endif ()
@@ -151,9 +161,9 @@ set( kcm_ldap_SRCS
      ldap/kcmldap.cpp
 )
 
-kde4_add_plugin(kcm_ldap ${kcm_ldap_SRCS})
+add_library(kcm_ldap MODULE ${kcm_ldap_SRCS})
 
-target_link_libraries(kcm_ldap ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} kdepim)
+target_link_libraries(kcm_ldap   kdepim)
 
 install(TARGETS kcm_ldap DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES ldap/kcmldap.desktop DESTINATION ${SERVICES_INSTALL_DIR})

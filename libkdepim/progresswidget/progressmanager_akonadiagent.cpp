@@ -27,7 +27,7 @@
 
 #include <KDebug>
 
-#include <Akonadi/AgentInstance>
+#include <AgentInstance>
 
 using namespace Akonadi;
 

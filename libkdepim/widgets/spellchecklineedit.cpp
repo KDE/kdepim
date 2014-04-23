@@ -35,6 +35,7 @@
 #include <QApplication>
 #include <QMenu>
 #include <QStyleOptionFrameV2>
+#include <QMimeData>
 
 #include <KLocale>
 
@@ -74,7 +75,8 @@ SpellCheckLineEdit::SpellCheckLineEdit(QWidget* parent, const QString& configFil
     setLineWrapMode(NoWrap);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setCheckSpellingEnabledInternal( true );
+    //QT5
+    //setCheckSpellingEnabledInternal( true );
     document()->adjustSize();
 
     document()->setDocumentMargin(2);
@@ -185,7 +187,7 @@ void SpellCheckLineEdit::insertFromMimeData(const QMimeData * source)
     }
 }
 
-static inline QString i18n_kdelibs4(const char *str) { return ki18n(str).toString(QLatin1String("kdelibs4")); }
+static inline QString i18n_kdelibs4(const char *str) { return ki18n(str).toString(("kdelibs4")); }
 
 void SpellCheckLineEdit::insertLanguageMenu(QMenu* contextMenu)
 {
