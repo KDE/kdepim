@@ -1,4 +1,3 @@
-KDE4_NO_ENABLE_FINAL(kdgantt2)
 # Those paths need to be absolute since this file is included from other CMakeLists.txt files
 set(libkdgantt2_SRCS
 kdganttabstractgrid.cpp
@@ -50,8 +49,8 @@ endforeach(it)
 
 qt4_generate_moc(kdganttgraphicsview_p.h ${CMAKE_BINARY_DIR}/kdgantt2/moc_kdganttgraphicsview_p.cpp)
 macro_add_file_dependencies(kdganttgraphicsview.cpp ${CMAKE_BINARY_DIR}/kdgantt2/moc_kdganttgraphicsview_p.cpp)
-kde4_add_library(kdgantt2 ${LIBRARY_TYPE} ${libkdgantt2_SRCS})
-target_link_libraries(kdgantt2  ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} )
+add_library(kdgantt2 ${LIBRARY_TYPE} ${libkdgantt2_SRCS})
+target_link_libraries(kdgantt2    )
 
 set_target_properties( kdgantt2 PROPERTIES VERSION 0.1.0 SOVERSION 0)
 install(TARGETS kdgantt2 ${INSTALL_TARGETS_DEFAULT_ARGS} )

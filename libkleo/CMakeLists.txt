@@ -1,5 +1,4 @@
 include_directories( ${GPGME_INCLUDES} ${Boost_INCLUDE_DIR} )
-KDE4_NO_ENABLE_FINAL(libkleo)
 if (KDEPIM_ONLY_KLEO)
   add_definitions( -DKDEPIM_ONLY_KLEO )
 endif ()
