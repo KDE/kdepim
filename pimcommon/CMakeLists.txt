@@ -219,7 +219,6 @@ target_link_libraries(pimcommon
     ${QJSON_LIBRARIES}
     ${KDE4_SOLID_LIBS}
     ${KDE4_KNEWSTUFF3_LIBS}
-    ${LibKGAPI2_LIBRARY}
     kdepim
 )
 
