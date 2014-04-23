@@ -110,7 +110,6 @@ void StorageServiceManager::setListService(const QMap<QString, StorageServiceAbs
     mListService = lst;
     writeConfig();
 
-    qDebug()<<"void StorageServiceManager::setListService(const QMap<QString, StorageServiceAbstract *> &lst) ";
     // DBus signal for other IdentityManager instances
     emit configChanged( ourIdentifier() );
 }
