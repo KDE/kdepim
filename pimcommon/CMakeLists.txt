@@ -10,6 +10,12 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 kde_enable_exceptions()
 
+find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5NewStuff ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Imap ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Abc ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5PimUtils ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5AkonadiContact ${KF5_VERSION} CONFIG REQUIRED)
 
 set(libpimcommon_shorturl_SRCS
   shorturl/abstractshorturl.cpp
@@ -170,10 +176,11 @@ set(libpimcommon_SRCS
   util/editorutil.cpp
   settings/pimcommonsettings.cpp
   ${libpimcommon_texteditor_SRCS}
-  ${libpimcommon_shorturl_SRCS}
-  ${libpimcommon_storageservice_SRCS}
-  ${libpimcommon_autocorrection_SRCS}
-  ${libpimcommon_translator_SRCS}
+  #REACTIVATE
+  #${libpimcommon_shorturl_SRCS}
+  #${libpimcommon_storageservice_SRCS}
+  #${libpimcommon_autocorrection_SRCS}
+  #${libpimcommon_translator_SRCS}
   ${libpimcommon_templatewidgets_SRCS}
   ${libpimcommon_folderdialog_SRCS}
   ${libpimcommon_acl_SRCS}
@@ -214,13 +221,18 @@ target_link_libraries(pimcommon
     KF5::AkonadiCore
     KF5::Imap
     KF5::PimUtils
+    KF5::SonnetCore
     ${KDE4_KDEUI_LIBS}
     ${QT_QTWEBKIT_LIBRARY}
     ${QJSON_LIBRARIES}
     ${KDE4_SOLID_LIBS}
     ${KDE4_KNEWSTUFF3_LIBS}
     ${LibKGAPI2_LIBRARY}
+    KF5::NewStuff
+    KF5::Wallet
     kdepim
+    KF5::Imap
+    KF5::AkonadiWidgets
 )
 
 set_target_properties(pimcommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})

@@ -22,7 +22,7 @@
 
 #include "pimcommon_export.h"
 
-#include <Akonadi/Collection>
+#include <Collection>
 
 #include <QObject>
 

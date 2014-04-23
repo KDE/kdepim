@@ -22,6 +22,7 @@
 #include <KStandardDirs>
 #include <KConfigGroup>
 #include <KConfig>
+#include <KGlobal>
 
 #include <QDirIterator>
 

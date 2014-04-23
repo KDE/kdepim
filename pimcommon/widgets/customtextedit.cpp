@@ -81,7 +81,7 @@ void CustomTextEdit::createHighlighter()
     }
 }
 
-static inline QString i18n_kdelibs4(const char *str) { return ki18n(str).toString(QLatin1String("kdelibs4")); }
+static inline QString i18n_kdelibs4(const char *str) { return ki18n(str).toString(("kdelibs4")); }
 
 void CustomTextEdit::insertLanguageMenu(QMenu* contextMenu)
 {

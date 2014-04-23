@@ -18,12 +18,12 @@
 #include "selectmulticollectionwidget.h"
 #include "pimcommon/folderdialog/checkedcollectionwidget.h"
 
-#include <Akonadi/RecursiveCollectionFilterProxyModel>
-#include <Akonadi/CollectionFilterProxyModel>
+#include <RecursiveCollectionFilterProxyModel>
+#include <CollectionFilterProxyModel>
 
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/EntityRightsFilterModel>
+#include <ChangeRecorder>
+#include <EntityTreeModel>
+#include <EntityRightsFilterModel>
 
 #include <KCheckableProxyModel>
 

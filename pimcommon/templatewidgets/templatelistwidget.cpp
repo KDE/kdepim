@@ -25,7 +25,7 @@
 #include <KMenu>
 #include <KFileDialog>
 #include <KNS3/DownloadDialog>
-
+#include <KIcon>
 
 #include <QListWidgetItem>
 #include <QPointer>

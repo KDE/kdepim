@@ -19,7 +19,7 @@
 #define SELECTMULTICOLLECTIONWIDGET_H
 
 #include <QWidget>
-#include <Akonadi/Collection>
+#include <Collection>
 #include <QModelIndex>
 
 namespace PimCommon {

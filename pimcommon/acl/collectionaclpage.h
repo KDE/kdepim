@@ -32,7 +32,7 @@
 #ifndef COLLECTIONACLPAGE_H
 #define COLLECTIONACLPAGE_H
 
-#include <akonadi/collectionpropertiespage.h>
+#include <collectionpropertiespage.h>
 #include "pimcommon_export.h"
 
 class KPushButton;

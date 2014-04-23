@@ -33,7 +33,7 @@
 #include "aclmanager.h"
 #include "imapaclattribute.h"
 
-#include <akonadi/collection.h>
+#include <collection.h>
 #include <kdialog.h>
 #include <klocale.h>
 #include <kvbox.h>

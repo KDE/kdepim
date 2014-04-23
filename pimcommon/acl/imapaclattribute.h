@@ -22,9 +22,9 @@
 
 #include "pimcommon_export.h"
 
-#include <Akonadi/Attribute>
+#include <Attribute>
 
-#include <KIMAP/Acl>
+#include <KImap/Acl>
 
 #include <QMap>
 

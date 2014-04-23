@@ -35,6 +35,7 @@
 
 #include <kinputdialog.h>
 #include <kiconloader.h>
+#include <KIcon>
 #include <klocale.h>
 #include <kdebug.h>
 #include <kpushbutton.h>

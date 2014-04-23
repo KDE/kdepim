@@ -24,6 +24,10 @@
 #include <KStandardAction>
 #include <KGlobalSettings>
 #include <KCursor>
+#include <KConfigGroup>
+#include <KDialog>
+#include <KIcon>
+#include <KIconTheme>
 
 #include <sonnet/backgroundchecker.h>
 #include <Sonnet/Dialog>
@@ -100,7 +104,7 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
             if ( idx < actionList.count() )
                 separatorAction = actionList.at( idx );
             if ( separatorAction ) {
-                KAction *clearAllAction = KStandardAction::clear(this, SLOT(slotUndoableClear()), popup);
+                QAction *clearAllAction = KStandardAction::clear(this, SLOT(slotUndoableClear()), popup);
                 if ( emptyDocument )
                     clearAllAction->setEnabled( false );
                 popup->insertAction( separatorAction, clearAllAction );

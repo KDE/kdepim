@@ -20,6 +20,7 @@
 
 #include <KLocalizedString>
 #include <KPushButton>
+#include <KIcon>
 
 #include <QHBoxLayout>
 #include <QKeyEvent>

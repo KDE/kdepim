@@ -27,6 +27,7 @@
 #include <KMessageBox>
 #include <KToggleAction>
 #include <KRun>
+#include <KIcon>
 
 #include <QLabel>
 #include <QGridLayout>

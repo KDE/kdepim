@@ -24,6 +24,7 @@
 #include <KColorScheme>
 #include <KCalendarSystem>
 #include <KStandardDirs>
+#include <KDebug>
 #include <QTextBlock>
 #include <QTextDocument>
 #include <QDomDocument>

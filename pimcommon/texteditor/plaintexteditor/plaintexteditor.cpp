@@ -26,6 +26,8 @@
 #include <KStandardAction>
 #include <KAction>
 #include <KCursor>
+#include <KIcon>
+#include <KDialog>
 
 #include <sonnet/backgroundchecker.h>
 #include <Sonnet/Dialog>
@@ -88,7 +90,7 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
             if ( idx < actionList.count() )
                 separatorAction = actionList.at( idx );
             if ( separatorAction ) {
-                KAction *clearAllAction = KStandardAction::clear(this, SLOT(slotUndoableClear()), popup);
+                QAction *clearAllAction = KStandardAction::clear(this, SLOT(slotUndoableClear()), popup);
                 if ( emptyDocument )
                     clearAllAction->setEnabled( false );
                 popup->insertAction( separatorAction, clearAllAction );
