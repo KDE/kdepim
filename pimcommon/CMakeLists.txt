@@ -8,7 +8,7 @@ include_directories(
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+kde_enable_exceptions()
 
 
 set(libpimcommon_shorturl_SRCS
@@ -90,7 +90,7 @@ set(libpimcommon_storageservice_SRCS
   storageservice/tests/testsettingsjob.cpp
 )
 
-qt4_add_dbus_adaptor(libpimcommon_storageservice_SRCS storageservice/org.kde.pim.StorageManager.xml storageservice/storageservicemanager.h PimCommon::StorageServiceManager )
+qt5_add_dbus_adaptor(libpimcommon_storageservice_SRCS storageservice/org.kde.pim.StorageManager.xml storageservice/storageservicemanager.h PimCommon::StorageServiceManager )
 
 set(libpimcommon_autocorrection_SRCS
   autocorrection/autocorrection.cpp
@@ -181,7 +181,7 @@ set(libpimcommon_SRCS
   ${libpimcommon_widgets_SRCS}
 )
 
-kde4_add_ui_files(libpimcommon_SRCS
+qt5_wrap_ui(libpimcommon_SRCS
      autocorrection/ui/autocorrectionwidget.ui
 )
 
@@ -195,11 +195,11 @@ endmacro()
 
 add_resource_iface(util/imapresource.kcfg org.kde.Akonadi.Imap.Settings ImapSettings imapresourcesettings)
 
-kde4_add_kcfg_files(libpimcommon_SRCS
+kconfig_add_kcfg_files(libpimcommon_SRCS
   settings/pimcommonsetting_base.kcfgc
 )
 
-kde4_add_library(pimcommon ${LIBRARY_TYPE} ${libpimcommon_SRCS})
+add_library(pimcommon ${LIBRARY_TYPE} ${libpimcommon_SRCS})
 
 if( LibKGAPI2_FOUND )
   target_link_libraries(pimcommon
@@ -209,11 +209,11 @@ endif()
 
 
 target_link_libraries(pimcommon
-    ${KDEPIMLIBS_KABC_LIBS}
-    ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
-    ${KDEPIMLIBS_AKONADI_LIBS}
-    ${KDEPIMLIBS_KIMAP_LIBS}
-    ${KDEPIMLIBS_KPIMUTILS_LIBS}
+    KF5::Abc
+    KF5::AkonadiContact
+    KF5::AkonadiCore
+    KF5::Imap
+    KF5::PimUtils
     ${KDE4_KDEUI_LIBS}
     ${QT_QTWEBKIT_LIBRARY}
     ${QJSON_LIBRARIES}
@@ -251,10 +251,10 @@ if (QT_QTDESIGNER_FOUND)
   set(pimcommonwidgets_PART_SRCS)
   kde4_add_widget_files(pimcommonwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/designer/pimcommon.widgets)
 
-  kde4_add_plugin(pimcommonwidgets ${pimcommonwidgets_PART_SRCS})
+  add_library(pimcommonwidgets MODULE ${pimcommonwidgets_PART_SRCS})
 
 
-  target_link_libraries(pimcommonwidgets  ${KDE4_KIO_LIBS} pimcommon)
+  target_link_libraries(pimcommonwidgets  KF5::KIOCore pimcommon)
 
   install(TARGETS pimcommonwidgets  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
 endif ()

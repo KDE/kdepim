@@ -20,9 +20,9 @@
 #include <KDebug>
 #include <KLocalizedString>
 
-#include <akonadi/agenttype.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/agentinstancecreatejob.h>
+#include <agenttype.h>
+#include <agentmanager.h>
+#include <agentinstancecreatejob.h>
 
 #include <QDBusReply>
 #include <QDBusInterface>
@@ -43,6 +43,8 @@ CreateResource::~CreateResource()
 //code from accountwizard
 static QVariant::Type argumentType( const QMetaObject *mo, const QString &method )
 {
+//QT5
+#if 0
     QMetaMethod m;
     const int numberOfMethod( mo->methodCount() );
     for ( int i = 0; i < numberOfMethod; ++i ) {
@@ -66,6 +68,9 @@ static QVariant::Type argumentType( const QMetaObject *mo, const QString &method
         return QVariant::Invalid;
 
     return QVariant::nameToType( argTypes.first() );
+#else
+        return QVariant::Invalid;
+#endif
 }
 
 QString CreateResource::createResource( const QString &resources, const QString &name, const QMap<QString, QVariant> &settings, bool synchronizeTree )

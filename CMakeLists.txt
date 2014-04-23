@@ -93,11 +93,74 @@ configure_file(config-enterprise.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-ente
 #add_subdirectory(libksieve)
 #add_subdirectory(kdgantt2)
 add_subdirectory(icons)
-add_subdirectory(composereditor-ng)
+#add_subdirectory(composereditor-ng)
 #add_subdirectory(messagecore)
 #add_subdirectory(grantleetheme)
 #add_subdirectory(messagelist)
 #add_subdirectory(templateparser)
+include (kleopatra/ConfigureChecks.cmake)
+
+  # These targets will always be built before anything else.
+
+  if(QGPGME_FOUND)
+    if(Boost_TOPOLOGICAL_SORT_DIR)
+      macro_optional_add_subdirectory(kleopatra)
+    endif()
+  endif()
+
+  # The following components depend on QGpgME.
+  #add_subdirectory(messageviewer)
+  #add_subdirectory(messagecomposer)
+  add_subdirectory(pimcommon)
+  #add_subdirectory(mailcommon) # TODO: does this make sense?!?
+  #macro_optional_add_subdirectory(kmail)
+  #macro_optional_add_subdirectory(grantleeeditor)
+  if(KDEPIM_BUILD_MOBILE)
+    add_subdirectory(mobile)
+  endif()
+
+  if(KDEPIM_BUILD_EXAMPLES)
+    add_subdirectory(examples)
+  endif()
+
+  # If kmail is compiled, KMAIL_SUPPORTED is true (used in several places)
+  if(BUILD_kmail)
+    set(KMAIL_SUPPORTED TRUE)
+    add_definitions(-DKMAIL_SUPPORTED)
+  endif()
+
+  #add_subdirectory(korganizer)
+  #add_subdirectory(korgac)
+  #add_subdirectory(sieveeditor)
+  #add_subdirectory(storageservicemanager)
+  #add_subdirectory(kaddressbookgrantlee)
+  if(KDEPIM_BUILD_DESKTOP)
+    #add_subdirectory(agents)
+    #add_subdirectory(akregator)
+    #add_subdirectory(importwizard)
+    #add_subdirectory(kaddressbook)
+    #add_subdirectory(kmailcvt)
+    #add_subdirectory(mboximporter)
+    #add_subdirectory(knotes)
+    #add_subdirectory(ksendemail)
+    #add_subdirectory(ktnef)
+    #add_subdirectory(mailimporter)
+    #add_subdirectory(pimsettingexporter)
+    #add_subdirectory(kalarm)
+
+    if(KDEPIMLIBS_KCAL_LIBRARY)
+      #add_subdirectory(blogilo)
+    endif()
+
+    #add_subdirectory(kjots)
+
+    #add_subdirectory(kontact) # must be the last one.
+  endif()
+
+  #add_subdirectory(akonadiconsole)
+  #add_subdirectory(console)
+
+  add_subdirectory(plugins) # Must be after KMail
 
 
 feature_summary(WHAT ALL
