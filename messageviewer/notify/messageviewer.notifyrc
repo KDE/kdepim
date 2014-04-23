@@ -33,7 +33,7 @@ Comment[zh_TW]=訊息檢視器
 [Event/adblock-list-download-done]
 Name=New Ad-Block list download done
 Name[bs]=Preuzimanje nove liste za blokiranje reklama završeno
-Name[ca]=La baixada de la nova llista de bloqueig publicitari està completa
+Name[ca]=La baixada de la nova llista de bloqueig publicitari ha finalitzat
 Name[ca@valencia]=La baixada de la nova llista de bloqueig publicitari està completa
 Name[da]=Download af ny Ad-Block-liste gennemført
 Name[de]=Das Herunterladen der neuen Werbefilterliste ist abgeschlossen
@@ -65,7 +65,7 @@ Name[x-test]=xxNew Ad-Block list download donexx
 Name[zh_TW]=新增 Ad-Block 清單下載完成
 Comment=New Ad-Block list download done
 Comment[bs]=Preuzimanje nove liste za blokiranje reklama završeno
-Comment[ca]=La baixada de la nova llista de bloqueig publicitari està completa
+Comment[ca]=La baixada de la nova llista de bloqueig publicitari ha finalitzat
 Comment[ca@valencia]=La baixada de la nova llista de bloqueig publicitari està completa
 Comment[da]=Download af ny Ad-Block-liste gennemført
 Comment[de]=Das Herunterladen der neuen Werbefilterliste ist abgeschlossen
