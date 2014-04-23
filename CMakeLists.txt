@@ -21,6 +21,34 @@ include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings)
 
+# KDEPIM_VERSION
+# Version scheme: "x.y.z build".
+#
+# x is the version number.
+# y is the major release number.
+# z is the minor release number.
+#
+# "x.y.z" follow the kdelibs version kdepim is released with.
+#
+# If "z" is 0, the version is "x.y"
+#
+# KDEPIM_DEV_VERSION is empty for final versions.
+# For development versions "build" is something like "pre", "alpha1", "alpha2", "beta1", "beta2", "rc1", "rc2".
+#
+# Examples in chronological order:
+# 3.0, 3.0.1, 3.1 alpha1, 3.1 beta1, 3.1 beta2, 3.1 rc1, 3.1, 3.1.1, 3.2 pre, 3.2 alpha1
+
+# Do NOT add quote
+set(KDEPIM_DEV_VERSION pre)
+
+# add an extra space
+if(DEFINED KDEPIM_DEV_VERSION)
+  set(KDEPIM_DEV_VERSION " ${KDEPIM_DEV_VERSION}")
+endif()
+
+set(KDEPIM_VERSION "4.98${KDEPIM_DEV_VERSION}")
+
+
 set(QT_REQUIRED_VERSION "5.2.0")
 set(KF5_VERSION "4.98.0")
 
@@ -39,6 +67,10 @@ find_package(KF5Akonadi CONFIG REQUIRED)
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 
 include(GenerateExportHeader)
+
+configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
+
+include_directories(${kdepim_SOURCE_DIR} ${kdepim_BINARY_DIR})
 
 set(AkonadiServer_MIN_VERSION "1.70.41")
 find_package(Akonadi ${AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
@@ -83,11 +115,11 @@ configure_file(config-enterprise.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-ente
 
 #add_subdirectory(noteshared)
 #add_subdirectory(akonadi_next)
-#add_subdirectory(libkdepim)
-#add_subdirectory(calendarsupport)
+add_subdirectory(libkdepim)
+add_subdirectory(calendarsupport)
 #add_subdirectory(calendarviews)
 #add_subdirectory(incidenceeditor-ng)
-#add_subdirectory(libkdepimdbusinterfaces)
+add_subdirectory(libkdepimdbusinterfaces)
 #add_subdirectory(libkleo)
 #add_subdirectory(libkpgp)
 #add_subdirectory(libksieve)
@@ -143,14 +175,11 @@ include (kleopatra/ConfigureChecks.cmake)
     #add_subdirectory(mboximporter)
     #add_subdirectory(knotes)
     #add_subdirectory(ksendemail)
-    #add_subdirectory(ktnef)
+    add_subdirectory(ktnef)
     #add_subdirectory(mailimporter)
     #add_subdirectory(pimsettingexporter)
     #add_subdirectory(kalarm)
-
-    if(KDEPIMLIBS_KCAL_LIBRARY)
-      #add_subdirectory(blogilo)
-    endif()
+    add_subdirectory(blogilo)
 
     #add_subdirectory(kjots)
 

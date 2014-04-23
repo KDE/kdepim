@@ -21,9 +21,9 @@ set(kpgp_LIB_SRCS
    kpgpbase6.cpp )
 
 
-kde4_add_library(kpgp ${LIBRARY_TYPE} ${kpgp_LIB_SRCS})
+add_library(kpgp ${LIBRARY_TYPE} ${kpgp_LIB_SRCS})
 
-target_link_libraries(kpgp ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBRARY} ${KDE4_KDEUI_LIBRARY})
+target_link_libraries(kpgp   ${KDE4_KDECORE_LIBRARY} ${KDE4_KDEUI_LIBRARY})
 
 set_target_properties(kpgp PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS kpgp ${INSTALL_TARGETS_DEFAULT_ARGS})
