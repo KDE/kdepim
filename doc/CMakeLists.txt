@@ -33,10 +33,6 @@ if(BUILD_kmail)
   endif()
 endif()
 
-if(BUILD_knode)
-  add_subdirectory(knode)
-endif()
-
 if(BUILD_knotes)
   add_subdirectory(knotes)
 endif()
