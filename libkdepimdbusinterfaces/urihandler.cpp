@@ -24,7 +24,6 @@
 */
 
 #include "urihandler.h"
-#include <knodeinterface.h>
 #include <kmailinterface.h>
 #include <korganizerinterface.h>
 #include <akonadi/contact/contacteditordialog.h>
@@ -80,11 +79,6 @@ bool UriHandler::process( const QString &uri, const Akonadi::Item& item )
                     QLatin1String("org.kde.korganizer"), QLatin1String("/Korganizer"), QDBusConnection::sessionBus() );
 
         return korganizerIface.showIncidence( uid );
-    } else if ( uri.startsWith( QLatin1String( "news:" ) ) ) {
-        KToolInvocation::startServiceByDesktopPath( QLatin1String("knode") );
-        org::kde::knode knode(
-                    QLatin1String("org.kde.knode"), QLatin1String("/KNode"), QDBusConnection::sessionBus() );
-        knode.openURL( uri );
     } else if ( uri.startsWith( QLatin1String( "akonadi:" ) ) ) {
         const KUrl url( uri );
         const QString mimeType = url.queryItem( QLatin1String( "type" ) );
