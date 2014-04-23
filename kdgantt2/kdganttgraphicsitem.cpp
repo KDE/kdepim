@@ -68,14 +68,16 @@ namespace {
 }
 
 GraphicsItem::GraphicsItem( QGraphicsItem* parent, GraphicsScene* scene )
-    : BASE( parent, scene ),  m_isupdating( false )
+    //QT5
+    : BASE( parent/*, scene*/ ),  m_isupdating( false )
 {
   init();
 }
 
 GraphicsItem::GraphicsItem( const QModelIndex& idx, QGraphicsItem* parent,
                                             GraphicsScene* scene )
-    : BASE( parent, scene ),  m_index( idx ), m_isupdating( false )
+     //QT5
+    : BASE( parent/*, scene*/ ),  m_index( idx ), m_isupdating( false )
 {
   init();
 }

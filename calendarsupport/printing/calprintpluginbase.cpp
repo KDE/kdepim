@@ -28,7 +28,7 @@
 #include "kcalprefs.h"
 #include "utils.h"
 
-#include <Akonadi/Item>
+#include <Item>
 
 #include <KCalendarSystem>
 #include <KConfigGroup>

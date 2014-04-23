@@ -29,6 +29,7 @@
 #include <Monitor>
 #include <KCheckableProxyModel>
 #include <KLineEdit>
+#include <KDebug>
 
 using namespace KPIM;
 

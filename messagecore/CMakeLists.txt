@@ -1,5 +1,5 @@
 project(messagecore)
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+kde_enable_exceptions()
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
@@ -50,34 +50,33 @@ set(messagecore_LIB_SRCS
    utils/stringutil.cpp
 )
 
-kde4_add_kcfg_files(messagecore_LIB_SRCS
+kconfig_add_kcfg_files(messagecore_LIB_SRCS
   settings/globalsettings_base.kcfgc
 )
 
-kde4_add_ui_files(messagecore_LIB_SRCS
+qt5_wrap_ui(messagecore_LIB_SRCS
   attachment/ui/attachmentpropertiesdialog.ui
   attachment/ui/attachmentpropertiesdialog_readonly.ui
 )
 
-kde4_add_library(messagecore ${LIBRARY_TYPE} ${messagecore_LIB_SRCS})
+add_library(messagecore ${LIBRARY_TYPE} ${messagecore_LIB_SRCS})
 
 target_link_libraries(messagecore
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDE4_KDEUI_LIBS}
-  ${KDE4_KIO_LIBS}
-  ${KDEPIMLIBS_KABC_LIBS}
-  ${KDEPIMLIBS_KPIMUTILS_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
-  ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+  KF5::KMime
+  
+  KF5::KIOCore
+  KF5::Abc
+  KF5::PimUtils
+  KF5::AkonadiCore
+  KF5::PimTextEdit
+  KF5::AkonadiContact
+  KF5::AkonadiKMime
   pimcommon
 )
 
 target_link_libraries(messagecore LINK_INTERFACE_LIBRARIES
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDE4_KDEUI_LIBS}
-  ${KDE4_KIO_LIBS}
+  KF5::KMime
+  KF5::KIOCore
 )
 
 set_target_properties(messagecore PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})

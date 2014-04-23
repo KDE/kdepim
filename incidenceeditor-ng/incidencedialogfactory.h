@@ -24,7 +24,7 @@
 #include "incidenceeditors-ng_export.h"
 
 #include <KCalCore/IncidenceBase>
-#include <Akonadi/Collection>
+#include <Collection>
 
 namespace Akonadi {
   class IncidenceChanger;

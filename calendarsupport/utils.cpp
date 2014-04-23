@@ -25,11 +25,11 @@
 #include "utils.h"
 #include "kcalprefs.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/CollectionDialog>
-#include <Akonadi/EntityDisplayAttribute>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/Item>
+#include <Collection>
+#include <CollectionDialog>
+#include <EntityDisplayAttribute>
+#include <EntityTreeModel>
+#include <Item>
 #include <Akonadi/Calendar/ETMCalendar>
 #include <akonadi/calendar/publishdialog.h>
 #include <akonadi/calendar/calendarsettings.h>
@@ -50,7 +50,7 @@
 #include <KCalUtils/ICalDrag>
 #include <KCalUtils/VCalDrag>
 
-#include <Mailtransport/TransportManager>
+#include <MailTransport/TransportManager>
 
 #include <KIconLoader>
 #include <KUrl>

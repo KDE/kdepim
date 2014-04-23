@@ -20,8 +20,8 @@
 
 #include "collectiongeneralpage.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/EntityDisplayAttribute>
+#include <Collection>
+#include <EntityDisplayAttribute>
 #include <akonadi/calendar/blockalarmsattribute.h>
 
 #include <KCalCore/Event>

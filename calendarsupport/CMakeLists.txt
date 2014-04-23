@@ -10,6 +10,8 @@ add_definitions(-DQT_NO_CAST_FROM_ASCII)
 add_definitions(-DQT_NO_CAST_TO_ASCII)
 kde_enable_exceptions()
 
+find_package(KF5PimIdentities ${KF5_VERSION} CONFIG REQUIRED)
+
 ########### next target ###############
 
 set(calendarsupport_LIB_SRCS
@@ -70,10 +72,8 @@ target_link_libraries(
   KF5::PimUtils
   KF5::Holidays
   KF5::MailTransport
-  
+  KF5::AkonadiCalendar
   KF5::KIOCore
-  
-  akonadi-calendar
 )
 
 set_target_properties(calendarsupport

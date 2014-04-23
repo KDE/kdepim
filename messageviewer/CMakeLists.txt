@@ -1,4 +1,4 @@
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+kde_enable_exceptions()
 
 include_directories(${Grantlee_INCLUDE_DIRS} ${QJSON_INCLUDE_DIR})
 
@@ -59,7 +59,7 @@ else()
                        adblock/adblockcreatefilterdialog.cpp
                        adblock/adblockblockableitemswidget.cpp
                        )
-  set(_mailwebview_lib ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY})
+  set(_mailwebview_lib KF5::WebKit ${QT_QTWEBKIT_LIBRARY})
   add_subdirectory(a11y)
 endif()
 
@@ -171,11 +171,11 @@ set(libmessageviewer_SRCS
   ${_mailwebview_cpp}
 )
 
-kde4_add_kcfg_files(libmessageviewer_SRCS
+kconfig_add_kcfg_files(libmessageviewer_SRCS
   settings/globalsettings_base.kcfgc
 )
 
-kde4_add_ui_files(libmessageviewer_SRCS
+qt5_wrap_ui(libmessageviewer_SRCS
   ui/settings.ui
   ui/invitationsettings.ui
   ui/printingsettings.ui
@@ -184,22 +184,22 @@ kde4_add_ui_files(libmessageviewer_SRCS
 )
 
 
-kde4_add_library(messageviewer ${LIBRARY_TYPE} ${libmessageviewer_SRCS})
+add_library(messageviewer ${LIBRARY_TYPE} ${libmessageviewer_SRCS})
 
 target_link_libraries(messageviewer messagecore kdepim kpgp kleo
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDEPIMLIBS_KMBOX_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  ${KDEPIMLIBS_KPIMUTILS_LIBS}
-  ${KDEPIMLIBS_KABC_LIBS}
-  ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
-  ${KDE4_KDEUI_LIBS}
+  KF5::KMime
+  KF5::Mbox
+  KF5::AkonadiCore
+  KF5::AkonadiKMime
+  KF5::PimUtils
+  KF5::Abc
+  KF5::MailTransport
+  
   ${KDE4_KPRINTUTILS_LIBS}
   ${QGPGME_LIBRARIES}
   ${_mailwebview_lib}
   ${Grantlee_CORE_LIBRARIES} 
-  ${KDE4_KNEWSTUFF3_LIBS}
+  KF5::NewStuff
   ${QJSON_LIBRARIES}
   ${KDE4_SOLID_LIBS}
   pimcommon

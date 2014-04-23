@@ -23,8 +23,8 @@
 
 #include "incidenceeditors-ng_export.h"
 
-#include <Akonadi/Calendar/IncidenceChanger>
-#include <Akonadi/Collection>
+#include <Calendar/IncidenceChanger>
+#include <Collection>
 #include <QObject>
 
 namespace Akonadi {

@@ -25,7 +25,6 @@
 #ifndef KDGANTTGLOBAL_H
 #define KDGANTTGLOBAL_H
 
-#include <Qt>
 #include <QDateTime>
 #include <QDebug>
 #include <QMetaType>

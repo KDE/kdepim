@@ -31,7 +31,7 @@
 #include "attachmenthandler.h"
 #include "calendarsupport/utils.h"
 
-#include <Akonadi/ItemFetchJob>
+#include <ItemFetchJob>
 #include <KFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -41,6 +41,8 @@
 #include <KToolInvocation>
 #include <KIO/NetAccess>
 #include <KJob>
+#include <KDebug>
+
 
 #include <QFile>
 #include <QPointer>

@@ -190,7 +190,8 @@ ArchiveDialog::ArchiveDialog( const Akonadi::ETMCalendar::Ptr &cal,
            "will not be modified or deleted. You can later load or merge the "
            "file like any other calendar. It is not saved in a special "
            "format, it uses the iCalendar format." ) );
-  mArchiveFile->fileDialog()->setOperationMode( KFileDialog::Saving );
+//QT5
+  //mArchiveFile->fileDialog()->setOperationMode( KFileDialog::Saving );
   l->setBuddy( mArchiveFile->lineEdit() );
   fileLayout->addWidget( mArchiveFile );
   topLayout->addLayout( fileLayout );

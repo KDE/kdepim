@@ -19,9 +19,9 @@
 
 #include "kcalmodel.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/Item>
-#include <Akonadi/ItemFetchScope>
+#include <Collection>
+#include <Item>
+#include <ItemFetchScope>
 
 #include <KCalCore/FreeBusy>
 #include <KCalCore/Event>

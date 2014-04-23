@@ -165,23 +165,23 @@ set(ksieveui_LIB_SRCS
 )
 
 
-kde4_add_kcfg_files(ksieveui_LIB_SRCS settings/sieve-vacation.kcfgc settings/sieve-editor.kcfgc)
+kconfig_add_kcfg_files(ksieveui_LIB_SRCS settings/sieve-vacation.kcfgc settings/sieve-editor.kcfgc)
 
-kde4_add_library(ksieveui ${LIBRARY_TYPE} ${ksieveui_LIB_SRCS})
+add_library(ksieveui ${LIBRARY_TYPE} ${ksieveui_LIB_SRCS})
 
 target_link_libraries(ksieveui
   kmanagesieve
   ksieve
   pimcommon
   kdepim
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
-  ${KDE4_KIO_LIBS}
-  ${KDE4_KDECORE_LIBS}
+  KF5::AkonadiCore
+  KF5::KMime
+  KF5::PimIdentities
+  KF5::KIOCore
+  
   ${QT_QTWEBKIT_LIBRARY}
   ${KDE4_SOLID_LIBS}
-  ${KDE4_KNEWSTUFF3_LIBS}
+  KF5::NewStuff
 )
 
 set_target_properties(

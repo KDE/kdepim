@@ -104,7 +104,7 @@ add_library(kdepim ${LIBRARY_TYPE} ${kdepim_LIB_SRCS})
 target_link_libraries(kdepim
   KF5::Abc
   KF5::PimUtils
-  KF5::KLdap
+  #KF5::KLdap
   KF5::PimIdentities
   KF5::KCMUtils
   ${KDE4_SOLID_LIBS}
@@ -118,7 +118,7 @@ target_link_libraries(kdepim
   KF5::SonnetCore
   KF5::KCMUtils
   KF5::Wallet
-  Baloo
+  ${BALOO_PIM_LIBRARY}
 )
 
 
@@ -156,17 +156,18 @@ endif ()
 
 ########### next target ###############
 
-set( kcm_ldap_SRCS
-     ldap/addhostdialog.cpp
-     ldap/kcmldap.cpp
-)
+#REACTIVATE
+#set( kcm_ldap_SRCS
+#     ldap/addhostdialog.cpp
+#     ldap/kcmldap.cpp
+#)
 
-add_library(kcm_ldap MODULE ${kcm_ldap_SRCS})
+#add_library(kcm_ldap MODULE ${kcm_ldap_SRCS})
 
-target_link_libraries(kcm_ldap   kdepim)
+#target_link_libraries(kcm_ldap   kdepim)
 
-install(TARGETS kcm_ldap DESTINATION ${PLUGIN_INSTALL_DIR})
-install(FILES ldap/kcmldap.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+#install(TARGETS kcm_ldap DESTINATION ${PLUGIN_INSTALL_DIR})
+#install(FILES ldap/kcmldap.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 
 ########### install files ###############
 

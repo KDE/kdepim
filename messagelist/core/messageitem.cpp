@@ -25,11 +25,11 @@
 #include "messagecore/widgets/annotationdialog.h"
 #include "theme.h"
 
-#include <akonadi/item.h>
-#include <akonadi/entityannotationsattribute.h>
-#include <akonadi/tagattribute.h>
-#include <akonadi/tagfetchjob.h>
-#include <akonadi/tagfetchscope.h>
+#include <item.h>
+#include <entityannotationsattribute.h>
+#include <tagattribute.h>
+#include <tagfetchjob.h>
+#include <tagfetchscope.h>
 #include <KIconLoader>
 #include <KLocalizedString>
 

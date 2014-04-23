@@ -35,6 +35,9 @@
 #include <KEMailSettings>
 #include <KSystemTimeZone>
 
+#include <KGlobal>
+#include <KDebug>
+
 using namespace CalendarSupport;
 
 K_GLOBAL_STATIC( KCalPrefs, globalPrefs )
@@ -180,7 +183,7 @@ void KCalPrefs::usrReadConfig()
   fillMailDefaults();
 }
 
-void KCalPrefs::usrWriteConfig()
+bool KCalPrefs::usrWriteConfig()
 {
   KConfigGroup generalConfig( config(), "General" );
   d->mCategoryConfig->setColors( d->mCategoryColors );
@@ -197,7 +200,7 @@ void KCalPrefs::usrWriteConfig()
   KConfigGroup defaultCalendarConfig( config(), "Calendar" );
   defaultCalendarConfig.writeEntry( "Default Calendar", defaultCalendarId() );
 
-  KConfigSkeleton::usrWriteConfig();
+  return KConfigSkeleton::usrWriteConfig();
 }
 
 QString KCalPrefs::fullName()

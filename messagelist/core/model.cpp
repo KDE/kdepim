@@ -53,8 +53,8 @@
 #include "core/messageitemsetmanager.h"
 #include "core/messageitem.h"
 
-#include <akonadi/item.h>
-#include <akonadi/kmime/messagestatus.h>
+#include <item.h>
+#include <kmime/messagestatus.h>
 #include "messagecore/utils/stringutil.h"
 
 #include <QApplication>

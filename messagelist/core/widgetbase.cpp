@@ -54,8 +54,8 @@
 #include <KDE/KMenu>
 #include <KDE/KStandardDirs>
 
-#include <akonadi/collection.h>
-#include <akonadi/kmime/messagestatus.h>
+#include <collection.h>
+#include <kmime/messagestatus.h>
 
 using namespace MessageList::Core;
 

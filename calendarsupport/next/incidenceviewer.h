@@ -24,7 +24,7 @@
 
 #include "../calendarsupport_export.h"
 
-#include <Akonadi/ItemMonitor>
+#include <ItemMonitor>
 
 #include <QDate>
 #include <QWidget>

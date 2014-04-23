@@ -23,13 +23,13 @@
 #include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
 
-#include <Akonadi/Item>
-#include <Akonadi/ItemDeleteJob>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/ItemMoveJob>
-#include <Akonadi/Monitor>
-#include <Akonadi/Session>
+#include <Item>
+#include <ItemDeleteJob>
+#include <ItemFetchJob>
+#include <ItemFetchScope>
+#include <ItemMoveJob>
+#include <Monitor>
+#include <Session>
 
 #include <KJob>
 #include <KLocalizedString>

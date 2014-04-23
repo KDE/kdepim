@@ -9,7 +9,7 @@ include_directories(
 
 include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+kde_enable_exceptions()
 
 set(akonadiconsole_bin_SRCS
   agentwidget.cpp
@@ -44,7 +44,7 @@ set(akonadiconsole_bin_SRCS
 )
 
 qt4_generate_dbus_interface(jobtracker.h org.freedesktop.Akonadi.JobTracker.xml)
-qt4_add_dbus_adaptor(akonadiconsole_bin_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.JobTracker.xml jobtracker.h JobTracker)
+qt5_add_dbus_adaptor(akonadiconsole_bin_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.JobTracker.xml jobtracker.h JobTracker)
 
 qt4_add_dbus_interfaces(akonadiconsole_bin_SRCS
   ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.TracerNotification.xml
@@ -77,7 +77,7 @@ qt4_add_dbus_interface(akonadiconsole_bin_SRCS
   storagedebuggerinterface
 )
 
-kde4_add_ui_files(akonadiconsole_bin_SRCS
+qt5_wrap_ui(akonadiconsole_bin_SRCS
   agentwidget.ui
   agentconfigdialog.ui
   browserwidget_itemview.ui
@@ -93,23 +93,20 @@ kde4_add_ui_files(akonadiconsole_bin_SRCS
 
 kde4_add_app_icon(akonadiconsole_bin_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-app-akonadiconsole.png")
 
-kde4_add_executable(akonadiconsole_bin ${akonadiconsole_bin_SRCS})
+add_executable(akonadiconsole_bin ${akonadiconsole_bin_SRCS})
 set_target_properties(akonadiconsole_bin PROPERTIES OUTPUT_NAME akonadiconsole)
 
 target_link_libraries(akonadiconsole_bin
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
+  KF5::AkonadiCore
+  KF5::AkonadiContact
   akonadi_next
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+  KF5::AkonadiKMime
   calendarsupport
-  ${KDEPIMLIBS_KCALCORE_LIBS}
+  KF5::CalendarCore
   kdepim
   messageviewer
-  ${KDE4_KCMUTILS_LIBS}
-  ${KDE4_KIO_LIBS}
-  ${QT_QTSQL_LIBRARY}
-  ${QT_QTNETWORK_LIBRARY}
-  ${AKONADI_COMMON_LIBRARIES}
+  KF5::KCMUtils
+  KF5::KIOCore
 )
 
 install(TARGETS akonadiconsole_bin ${INSTALL_TARGETS_DEFAULT_ARGS})

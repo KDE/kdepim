@@ -29,7 +29,7 @@
 #include "kcalprefs.h"
 #include "utils.h"
 
-#include <Akonadi/Item>
+#include <Item>
 
 #include <KCalCore/Visitor>
 

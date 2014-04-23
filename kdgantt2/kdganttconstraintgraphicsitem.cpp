@@ -38,7 +38,8 @@ using namespace KDGantt;
  */
 
 ConstraintGraphicsItem::ConstraintGraphicsItem( const Constraint& c, QGraphicsItem* parent, GraphicsScene* scene )
-    : QGraphicsItem( parent, scene ),  m_constraint( c )
+    //FIX QT5
+    : QGraphicsItem( parent/*, scene*/ ),  m_constraint( c )
 {
     setPos( QPointF( 0., 0. ) );
     setAcceptsHoverEvents( false );

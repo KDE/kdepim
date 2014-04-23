@@ -36,7 +36,7 @@
 
 #include <kmime/kmime_dateformatter.h> // kdepimlibs
 
-#include <Akonadi/Item>
+#include <Item>
 #include <QHelpEvent>
 #include <QToolTip>
 #include <QHeaderView>

@@ -10,13 +10,6 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 kde_enable_exceptions()
 
-find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5NewStuff ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5Imap ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5Abc ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5PimUtils ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5AkonadiContact ${KF5_VERSION} CONFIG REQUIRED)
-
 set(libpimcommon_shorturl_SRCS
   shorturl/abstractshorturl.cpp
   shorturl/shorturlwidget.cpp
@@ -219,7 +212,6 @@ target_link_libraries(pimcommon
     KF5::Abc
     KF5::AkonadiContact
     KF5::AkonadiCore
-    KF5::Imap
     KF5::PimUtils
     KF5::SonnetCore
     ${KDE4_KDEUI_LIBS}

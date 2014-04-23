@@ -22,7 +22,7 @@
 
 #include "calendarsupport_export.h"
 
-#include <Akonadi/CollectionPropertiesPage>
+#include <CollectionPropertiesPage>
 
 class KLineEdit;
 class KIconButton;

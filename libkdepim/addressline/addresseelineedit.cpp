@@ -55,6 +55,8 @@
 #include <KStandardDirs>
 #include <KStandardShortcut>
 #include <KUrl>
+#include <KGlobal>
+#include <KGlobalSettings>
 
 #include <solid/networking.h>
 

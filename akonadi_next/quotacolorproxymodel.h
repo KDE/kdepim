@@ -20,7 +20,7 @@
 #ifndef AKONADI_QUOTACOLORPROXYMODEL_H
 #define AKONADI_QUOTACOLORPROXYMODEL_H
 
-#include <kidentityproxymodel.h>
+#include <qidentityproxymodel.h>
 
 #include "akonadi_next_export.h"
 
@@ -45,7 +45,7 @@ namespace Akonadi {
  * @author Kevin Ottens <ervin@kde.org>
  * @since 4.4
  */
-class AKONADI_NEXT_EXPORT QuotaColorProxyModel : public KIdentityProxyModel
+class AKONADI_NEXT_EXPORT QuotaColorProxyModel : public QIdentityProxyModel
 {
   Q_OBJECT
 

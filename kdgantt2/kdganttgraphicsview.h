@@ -33,7 +33,7 @@ class QModelIndex;
 class QAbstractItemModel;
 class QAbstractProxyModel;
 class QItemSelectionModel;
-
+class QPrinter;
 namespace KDGantt {
     class AbstractRowController;
     class AbstractGrid;

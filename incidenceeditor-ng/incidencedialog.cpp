@@ -38,9 +38,9 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include <Akonadi/CollectionComboBox>
-#include <Akonadi/Item>
-#include <Akonadi/Calendar/ETMCalendar>
+#include <CollectionComboBox>
+#include <Item>
+#include <Calendar/ETMCalendar>
 
 #include <KCalCore/ICalFormat>
 #include <KCalCore/MemoryCalendar>

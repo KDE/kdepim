@@ -22,7 +22,7 @@
 
 #include <calendarsupport/utils.h>
 
-#include <Akonadi/Item>
+#include <Item>
 
 using namespace IncidenceEditorNG;
 

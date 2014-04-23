@@ -35,9 +35,9 @@
 #include "ui_dialogdesktop.h"
 #endif
 
-#include <Akonadi/Contact/ContactGroupExpandJob>
-#include <Akonadi/Contact/ContactGroupSearchJob>
-#include <Akonadi/Contact/EmailAddressSelectionDialog>
+#include <Contact/ContactGroupExpandJob>
+#include <Contact/ContactGroupSearchJob>
+#include <Contact/EmailAddressSelectionDialog>
 
 #include <KPIMUtils/Email>
 

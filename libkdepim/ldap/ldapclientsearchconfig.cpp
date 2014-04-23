@@ -26,6 +26,7 @@
 #include <KConfigGroup>
 #include <KMessageBox>
 #include <KLocale>
+#include <KGlobal>
 
 #include <kwallet.h>
 

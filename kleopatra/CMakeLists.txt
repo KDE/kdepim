@@ -1,4 +1,3 @@
-kde4_no_enable_final(kleopatra)
 project(kleopatra)
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )

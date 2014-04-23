@@ -32,7 +32,7 @@
 #include <KConfigSkeleton>
 #include <KDebug>
 
-#include <Akonadi/TagCreateJob>
+#include <TagCreateJob>
 
 using namespace IncidenceEditorNG;
 
