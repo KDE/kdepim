@@ -39,9 +39,9 @@
 #include <KMime/Message>
 #include <KNotification>
 #include <KWindowSystem>
-#include <Akonadi/AgentManager>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/AttributeFactory>
+#include <AgentManager>
+#include <ItemFetchJob>
+#include <AttributeFactory>
 
 #include <QtCore/QVector>
 #include <QtCore/QTimer>

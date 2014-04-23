@@ -23,8 +23,8 @@
 #include "sendlatermanager.h"
 
 #include <KMime/Message>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/Item>
+#include <ItemFetchScope>
+#include <Item>
 
 namespace SendLater {
 class SendLaterInfo;

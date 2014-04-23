@@ -14,24 +14,24 @@ set(notesagent_SRCS
     notesagentnotedialog.cpp
 )
 
-kde4_add_kcfg_files(notesagent_SRCS
+kconfig_add_kcfg_files(notesagent_SRCS
     settings/notesagentsettings.kcfgc
 )
 
 
-qt4_add_dbus_adaptor(notesagent_SRCS org.freedesktop.Akonadi.NotesAgent.xml notesagent.h NotesAgent)
+qt5_add_dbus_adaptor(notesagent_SRCS org.freedesktop.Akonadi.NotesAgent.xml notesagent.h NotesAgent)
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+kde_enable_exceptions()
 
-kde4_add_executable(akonadi_notes_agent ${notesagent_SRCS})
+add_executable(akonadi_notes_agent ${notesagent_SRCS})
 
 target_link_libraries(akonadi_notes_agent
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  ${KDE4_KIO_LIBS}
-  ${KDE4_KNOTIFYCONFIG_LIBS}
+  KF5::AkonadiCore
+  KF5::PimIdentities
+  KF5::KMime
+  KF5::AkonadiKMime
+  KF5::KIOCore
+  KF5::NotifyConfig
   noteshared
   pimcommon
 )

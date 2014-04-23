@@ -29,8 +29,8 @@
 #include <mailtransport/transportmanager.h>
 
 
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemDeleteJob>
+#include <ItemFetchJob>
+#include <ItemDeleteJob>
 
 #include <KNotification>
 #include <KLocale>

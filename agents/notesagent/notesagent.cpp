@@ -22,14 +22,14 @@
 #include "notesagentsettings.h"
 #include "notesagentsettingsdialog.h"
 
-#include <Akonadi/AgentInstance>
-#include <Akonadi/AgentManager>
+#include <AgentInstance>
+#include <AgentManager>
 #include <akonadi/dbusconnectionpool.h>
 #include <akonadi/changerecorder.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/session.h>
-#include <Akonadi/AttributeFactory>
-#include <Akonadi/CollectionFetchScope>
+#include <AttributeFactory>
+#include <CollectionFetchScope>
 
 #include <KWindowSystem>
 #include <KLocalizedString>

@@ -20,7 +20,7 @@
 
 
 #include <mailcommon/job/jobscheduler.h>
-#include <Akonadi/Collection>
+#include <Collection>
 
 class ArchiveMailInfo;
 class ArchiveMailManager;

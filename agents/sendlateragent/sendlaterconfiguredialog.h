@@ -22,7 +22,7 @@
 #include "ui_sendlaterconfigurewidget.h"
 
 
-#include <Akonadi/Item>
+#include <Item>
 
 #include <QTreeWidgetItem>
 

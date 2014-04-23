@@ -25,10 +25,10 @@
 #include "noteshared/attributes/notealarmattribute.h"
 #include "notesagentalarmdialog.h"
 
-#include <Akonadi/Session>
-#include <Akonadi/Collection>
-#include <Akonadi/Item>
-#include <Akonadi/ChangeRecorder>
+#include <Session>
+#include <Collection>
+#include <Item>
+#include <ChangeRecorder>
 
 #include <KMime/KMimeMessage>
 

@@ -23,9 +23,9 @@
 
 #include <KMime/KMimeMessage>
 
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/ItemModifyJob>
+#include <ItemFetchJob>
+#include <ItemFetchScope>
+#include <ItemModifyJob>
 
 #include <KLocalizedString>
 #include <KGlobal>

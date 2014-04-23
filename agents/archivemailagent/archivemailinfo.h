@@ -19,7 +19,7 @@
 
 #include "mailcommon/job/backupjob.h"
 #include <KConfigGroup>
-#include <Akonadi/Collection>
+#include <Collection>
 #include <KUrl>
 #include <QDate>
 

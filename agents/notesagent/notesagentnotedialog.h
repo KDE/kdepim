@@ -20,7 +20,7 @@
 #define NOTESAGENTNOTEDIALOG_H
 
 #include <KDialog>
-#include <Akonadi/Item>
+#include <Item>
 class QTextEdit;
 class QLineEdit;
 class KJob;

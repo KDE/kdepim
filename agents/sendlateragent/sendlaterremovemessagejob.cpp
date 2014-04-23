@@ -16,7 +16,7 @@
 */
 
 #include "sendlaterremovemessagejob.h"
-#include <Akonadi/ItemDeleteJob>
+#include <ItemDeleteJob>
 
 SendLaterRemoveMessageJob::SendLaterRemoveMessageJob(const QList<Akonadi::Item::Id> &listItem, QObject *parent)
     : QObject(parent),

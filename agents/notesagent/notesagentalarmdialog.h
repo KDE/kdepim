@@ -18,7 +18,7 @@
 #ifndef NOTESAGENTALARMDIALOG_H
 #define NOTESAGENTALARMDIALOG_H
 #include <KDialog>
-#include <Akonadi/Item>
+#include <Item>
 class QListWidget;
 class QLabel;
 class QListWidgetItem;

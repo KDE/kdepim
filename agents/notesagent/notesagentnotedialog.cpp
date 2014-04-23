@@ -18,8 +18,8 @@
 
 #include "notesagentnotedialog.h"
 
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
+#include <ItemFetchJob>
+#include <ItemFetchScope>
 #include "noteshared/attributes/notedisplayattribute.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditor.h"

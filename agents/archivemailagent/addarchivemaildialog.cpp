@@ -17,7 +17,7 @@
 #include "addarchivemaildialog.h"
 #include "mailcommon/folder/folderrequester.h"
 
-#include <Akonadi/Collection>
+#include <Collection>
 
 #include <KLocale>
 #include <KComboBox>

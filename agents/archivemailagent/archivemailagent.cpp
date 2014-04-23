@@ -23,9 +23,9 @@
 
 #include <mailcommon/kernel/mailkernel.h>
 #include <akonadi/dbusconnectionpool.h>
-#include <Akonadi/Monitor>
-#include <Akonadi/Session>
-#include <Akonadi/CollectionFetchScope>
+#include <Monitor>
+#include <Session>
+#include <CollectionFetchScope>
 #include <KMime/Message>
 #include <KWindowSystem>
 

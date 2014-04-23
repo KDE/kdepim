@@ -21,7 +21,7 @@
 #include "mailcommon/job/backupjob.h"
 #include "archivemailinfo.h"
 #include <kdialog.h>
-#include <Akonadi/Collection>
+#include <Collection>
 
 class KComboBox;
 class QCheckBox;

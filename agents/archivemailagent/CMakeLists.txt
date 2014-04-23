@@ -17,25 +17,25 @@ set(archivemailagent_SRCS
    archivemailagentutil.cpp
 )
 
-kde4_add_kcfg_files(archivemailagent_SRCS
+kconfig_add_kcfg_files(archivemailagent_SRCS
     settings/archivemailagentsettings.kcfgc
 )
 
 
-qt4_add_dbus_adaptor(archivemailagent_SRCS org.freedesktop.Akonadi.ArchiveMailAgent.xml archivemailagent.h ArchiveMailAgent)
+qt5_add_dbus_adaptor(archivemailagent_SRCS org.freedesktop.Akonadi.ArchiveMailAgent.xml archivemailagent.h ArchiveMailAgent)
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+kde_enable_exceptions()
 
-kde4_add_ui_files(archivemailagent_SRCS ui/archivemailwidget.ui )
+qt5_wrap_ui(archivemailagent_SRCS ui/archivemailwidget.ui )
 
-kde4_add_executable(akonadi_archivemail_agent ${archivemailagent_SRCS})
+add_executable(akonadi_archivemail_agent ${archivemailagent_SRCS})
 
 target_link_libraries(akonadi_archivemail_agent
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  ${KDE4_KIO_LIBS}
+  KF5::AkonadiCore
+  KF5::PimIdentities
+  KF5::KMime
+  KF5::AkonadiKMime
+  KF5::KIOCore
   mailcommon
 )
 
