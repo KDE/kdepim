@@ -32,6 +32,8 @@ MergeContacts::~MergeContacts()
 KABC::Addressee MergeContacts::mergedContact()
 {
     KABC::Addressee newContact;
+    if (mListItem.count() == 1)
+        return newContact;
     bool firstAddress = true;
     Q_FOREACH (const Akonadi::Item &item, mListItem) {
         KABC::Addressee address = item.payload<KABC::Addressee>();

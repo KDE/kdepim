@@ -17,10 +17,27 @@
 
 
 #include "mergecontacttest.h"
+#include "../mergecontacts.h"
 #include <qtest_kde.h>
+
+using namespace KABMergeContacts;
 
 MergeContactTest::MergeContactTest()
 {
+}
+
+void MergeContactTest::shouldReturnDefaultAddressWhenNoListItem()
+{
+    MergeContacts contacts;
+    KABC::Addressee result = contacts.mergedContact();
+    QCOMPARE(result.isEmpty(), true);
+}
+
+void MergeContactTest::shouldReturnDefaultAddressWhenOneItem()
+{
+    MergeContacts contacts;
+    KABC::Addressee result = contacts.mergedContact();
+    QCOMPARE(result.isEmpty(), true);
 }
 
 QTEST_KDEMAIN(MergeContactTest, NoGUI)
