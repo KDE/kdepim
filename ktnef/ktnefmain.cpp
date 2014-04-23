@@ -24,7 +24,7 @@
 #include <KTNEF/KTNEFParser>
 #include <KTNEF/KTNEFProperty>
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KApplication>
 #include <KDebug>
@@ -44,6 +44,9 @@
 #include <KStatusBar>
 #include <KTemporaryFile>
 #include <KRecentFilesAction>
+#include <KUrl>
+#include <KIcon>
+#include <KMimeType>
 
 #include <QContextMenuEvent>
 #include <QDir>
@@ -91,7 +94,7 @@ void KTNEFMain::setupActions()
 {
   KStandardAction::quit( this, SLOT(close()), actionCollection() );
 
-  KAction *action =
+  QAction *action =
     KStandardAction::keyBindings( this, SLOT(slotConfigureKeys()), actionCollection() );
   action->setWhatsThis(
     i18nc( "@info:whatsthis",
@@ -106,44 +109,44 @@ void KTNEFMain::setupActions()
   mOpenRecentFileAction = KStandardAction::openRecent(this, SLOT(openRecentFile(KUrl)), actionCollection());
 
   // Action menu
-  KAction *openAction = actionCollection()->addAction( QLatin1String("view_file") );
+  QAction *openAction = actionCollection()->addAction( QLatin1String("view_file") );
   openAction->setText( i18nc( "@action:inmenu", "View" ) );
   openAction->setIcon( KIcon( QLatin1String("document-open") ) );
   connect( openAction, SIGNAL(triggered()), this, SLOT(viewFile()) );
 
-  KAction *openAsAction = actionCollection()->addAction( QLatin1String("view_file_as") );
+  QAction *openAsAction = actionCollection()->addAction( QLatin1String("view_file_as") );
   openAsAction->setText( i18nc( "@action:inmenu", "View With..." ) );
   connect( openAsAction, SIGNAL(triggered()), this, SLOT(viewFileAs()) );
 
-  KAction *extractAction = actionCollection()->addAction( QLatin1String("extract_file") );
+  QAction *extractAction = actionCollection()->addAction( QLatin1String("extract_file") );
   extractAction->setText( i18nc( "@action:inmenu", "Extract" ) );
   connect( extractAction, SIGNAL(triggered()), this, SLOT(extractFile()) );
 
-  KAction *extractToAction = actionCollection()->addAction( QLatin1String("extract_file_to") );
+  QAction *extractToAction = actionCollection()->addAction( QLatin1String("extract_file_to") );
   extractToAction->setText( i18nc( "@action:inmenu", "Extract To..." ) );
   extractToAction->setIcon( KIcon( QLatin1String("archive-extract") ) );
   connect( extractToAction, SIGNAL(triggered()), this, SLOT(extractFileTo()) );
 
-  KAction *extractAllToAction = actionCollection()->addAction( QLatin1String("extract_all_files") );
+  QAction *extractAllToAction = actionCollection()->addAction( QLatin1String("extract_all_files") );
   extractAllToAction->setText( i18nc( "@action:inmenu", "Extract All To..." ) );
   extractAllToAction->setIcon( KIcon( QLatin1String("archive-extract") ) );
   connect( extractAllToAction, SIGNAL(triggered()), this, SLOT(extractAllFiles()) );
 
-  KAction *filePropsAction = actionCollection()->addAction( QLatin1String("properties_file") );
+  QAction *filePropsAction = actionCollection()->addAction( QLatin1String("properties_file") );
   filePropsAction->setText( i18nc( "@action:inmenu", "Properties" ) );
   filePropsAction->setIcon( KIcon( QLatin1String("document-properties") ) );
   connect( filePropsAction, SIGNAL(triggered()), this, SLOT(propertiesFile()));
 
-  KAction *messPropsAction = actionCollection()->addAction( QLatin1String("msg_properties") );
+  QAction *messPropsAction = actionCollection()->addAction( QLatin1String("msg_properties") );
   messPropsAction->setText( i18nc( "@action:inmenu", "Message Properties" ) );
   connect( messPropsAction, SIGNAL(triggered()), this, SLOT(slotShowMessageProperties()) );
 
-  KAction *messShowAction = actionCollection()->addAction( QLatin1String("msg_text") );
+  QAction *messShowAction = actionCollection()->addAction( QLatin1String("msg_text") );
   messShowAction->setText( i18nc( "@action:inmenu", "Show Message Text" ) );
   messShowAction->setIcon( KIcon( QLatin1String("document-preview-archive") ) );
   connect( messShowAction, SIGNAL(triggered()), this, SLOT(slotShowMessageText()) );
 
-  KAction *messSaveAction = actionCollection()->addAction( QLatin1String("msg_save") );
+  QAction *messSaveAction = actionCollection()->addAction( QLatin1String("msg_save") );
   messSaveAction->setText( i18nc( "@action:inmenu", "Save Message Text As..." ) );
   messSaveAction->setIcon( KIcon( QLatin1String("document-save") ) );
   connect( messSaveAction, SIGNAL(triggered()), this, SLOT(slotSaveMessageText()) );
@@ -156,7 +159,7 @@ void KTNEFMain::setupActions()
   actionCollection()->action( QLatin1String("properties_file") )->setEnabled( false );
 
   // Options menu
-  KAction *defFolderAction = actionCollection()->addAction( QLatin1String("options_default_dir") );
+  QAction *defFolderAction = actionCollection()->addAction( QLatin1String("options_default_dir") );
   defFolderAction->setText( i18nc( "@action:inmenu", "Default Folder..." ) );
   defFolderAction->setIcon( KIcon( QLatin1String("folder-open") ) );
   connect( defFolderAction, SIGNAL(triggered()), this, SLOT(optionDefaultDir()) );
@@ -170,8 +173,11 @@ void KTNEFMain::slotConfigureKeys()
 
 void KTNEFMain::setupStatusbar()
 {
+//QT5
+#if 0
   statusBar()->insertItem( i18nc( "@info:status", "100 attachments found" ), 0 );
   statusBar()->changeItem( i18nc( "@info:status", "No file loaded" ), 0 );
+#endif
 }
 
 void KTNEFMain::setupTNEF()
@@ -209,7 +215,8 @@ void KTNEFMain::loadFile( const QString &filename )
     QString msg;
     msg = i18ncp( "@info:status",
                   "%1 attachment found", "%1 attachments found", list.count() );
-    statusBar()->changeItem( msg, 0 );
+    //QT5
+    //statusBar()->changeItem( msg, 0 );
     mView->setAttachments( list );
     enableExtractAll( ( list.count() > 0 ) );
     enableSingleAction( false );
@@ -485,7 +492,8 @@ void KTNEFMain::viewDragRequested( const QList<KTNEFAttach *>& list )
 
 void KTNEFMain::slotEditToolbars()
 {
-  saveMainWindowSettings( KGlobal::config()->group( "MainWindow" ) );
+  KConfigGroup grp = KGlobal::config()->group( "MainWindow" );
+  saveMainWindowSettings( grp );
 
   KEditToolBar dlg( factory() );
   connect( &dlg, SIGNAL(newToolBarConfig()), this, SLOT(newToolbarConfig()) );

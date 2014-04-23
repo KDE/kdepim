@@ -9,6 +9,8 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 add_subdirectory(pics)
 
+find_package(KF5KTnef ${KF5_VERSION} CONFIG REQUIRED)
+
 set(ktnef_SRCS
   attachpropertydialog.cpp
   ktnefmain.cpp
@@ -20,10 +22,10 @@ set(ktnef_SRCS
 
 kde4_add_app_icon(ktnef_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/pics/hi*-app-ktnef.png")
 
-kde4_add_ui_files(ktnef_SRCS ui/attachpropertywidgetbase.ui)
+qt5_wrap_ui(ktnef_SRCS ui/attachpropertywidgetbase.ui)
 
-kde4_add_executable(ktnef ${ktnef_SRCS})
-target_link_libraries(ktnef ${KDEPIMLIBS_KTNEF_LIBS} ${KDE4_KIO_LIBS})
+add_executable(ktnef ${ktnef_SRCS})
+target_link_libraries(ktnef KF5::KTnef KF5::KIOCore KF5::KDELibs4Support)
 
 
 install(TARGETS ktnef ${INSTALL_TARGETS_DEFAULT_ARGS})

@@ -24,6 +24,7 @@
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <KMimeType>
+#include <KIcon>
 
 #include <QPixmap>
 #include <QTimer>

@@ -17,7 +17,7 @@
 #include "ktnefmain.h"
 #include "kdepim-version.h"
 
-#include <KAboutData>
+#include <k4aboutdata.h>
 #include <KApplication>
 #include <KCmdLineArgs>
 #include <KLocalizedString>
@@ -25,14 +25,15 @@
 int main( int argc, char *argv[] )
 {
 
-  KAboutData aboutData(
+  K4AboutData aboutData(
     "ktnef", 0,
     ki18n( "KTnef" ),
     KDEPIM_VERSION,
     ki18n( "Viewer for mail attachments using TNEF format" ),
-    KAboutData::License_GPL,
+    K4AboutData::License_GPL,
     ki18n( "Copyright 2000 Michael Goffioul\nCopyright 2012  Allen Winter" ) );
-
+//QT5
+#if 0
   aboutData.addAuthor(
     ki18n( "Michael Goffioul" ),
     ki18n( "Author" ),
@@ -44,7 +45,7 @@ int main( int argc, char *argv[] )
     ki18n( "Author, Ported to Qt4/KDE4" ),
     "winter@kde.org",
     0 );
-
+#endif
   KCmdLineArgs::init( argc, argv, &aboutData );
 
   KCmdLineOptions options;
