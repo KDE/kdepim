@@ -67,6 +67,7 @@
 #include <KPIMIdentities/IdentityManager>
 #include <KFileDialog>
 #include <KIO/NetAccess>
+#include <KDebug>
 
 using namespace CalendarSupport;
 using namespace KHolidays;

@@ -28,8 +28,8 @@
 
 #include "eventviews_export.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/Item>
+#include <Collection>
+#include <Item>
 #include <Akonadi/Calendar/ETMCalendar>
 
 #include <KCalCore/Incidence>

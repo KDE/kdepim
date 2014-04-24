@@ -35,6 +35,8 @@
 #include <KDebug>
 #include <KSystemTimeZones>
 #include <KWordWrap>
+#include <KGlobal>
+#include <KConfig>
 
 #include <QAbstractTextDocumentLayout>
 #include <QFrame>
@@ -1847,9 +1849,8 @@ void CalPrintPluginBase::drawTodoLines( QPainter &p,
   QStringList lines = plainEntry.split( QLatin1Char( '\n' ) );
   for ( int currentLine = 0; currentLine < lines.count(); currentLine++ ) {
     // split paragraphs into lines
-    KWordWrap *ww = KWordWrap::formatText( fm, textrect, flags, lines[currentLine] );
-    QStringList textLine = ww->wrappedString().split( QLatin1Char( '\n' ) );
-    delete ww;
+    KWordWrap ww = KWordWrap::formatText( fm, textrect, flags, lines[currentLine] );
+    QStringList textLine = ww.wrappedString().split( QLatin1Char( '\n' ) );
 
     // print each individual line
     for ( int lineCount = 0; lineCount < textLine.count(); lineCount++ ) {
@@ -2100,9 +2101,8 @@ void CalPrintPluginBase::drawTextLines( QPainter &p, const QString &entry,
   QStringList lines = plainEntry.split( QLatin1Char( '\n' ) );
   for ( int currentLine = 0; currentLine < lines.count(); currentLine++ ) {
     // split paragraphs into lines
-    KWordWrap *ww = KWordWrap::formatText( fm, textrect, flags, lines[currentLine] );
-    QStringList textLine = ww->wrappedString().split( QLatin1Char( '\n' ) );
-    delete ww;
+    KWordWrap ww = KWordWrap::formatText( fm, textrect, flags, lines[currentLine] );
+    QStringList textLine = ww.wrappedString().split( QLatin1Char( '\n' ) );
     // print each individual line
     for ( int lineCount = 0; lineCount < textLine.count(); lineCount++ ) {
       if ( y >= pageHeight ) {
