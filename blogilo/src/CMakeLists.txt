@@ -55,7 +55,7 @@ kconfig_add_kcfg_files( blogilo_SRCS settings.kcfgc)
 kde4_add_app_icon(blogilo_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/../icons/hi*-app-blogilo.png")
 add_executable( blogilo ${blogilo_SRCS})
 
-target_link_libraries( blogilo kdepim  ${QT_QTSQL_LIBRARY} ${KDE4_KTEXTEDITOR_LIBS} ${QT_QTWEBKIT_LIBRARY} KF5::WebKit KF5::Blog composereditorng  pimcommon KF5::Wallet)
+target_link_libraries( blogilo kdepim  KF5::KDEWebKit KF5::TextEditor  KF5::WebKit KF5::Blog composereditorng  pimcommon KF5::Wallet)
 
 
 install( TARGETS blogilo ${INSTALL_TARGETS_DEFAULT_ARGS} )

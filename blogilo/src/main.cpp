@@ -28,15 +28,17 @@
 #include "constants.h"
 
 
-#include <kaboutdata.h>
+#include <k4aboutdata.h>
 #include <kcmdlineargs.h>
+#include <KGlobal>
+
 static const char description[] =
     I18N_NOOP( "A KDE Blogging Client" );
 
 int main( int argc, char *argv[] )
 {
-    KAboutData about( "blogilo", 0, ki18n( APPNAME ), VERSION, ki18n( description ),
-                      KAboutData::License_GPL_V2, ki18n( "Copyright © 2008–2014 Blogilo authors" ),
+    K4AboutData about( "blogilo", 0, ki18n( APPNAME ), VERSION, ki18n( description ),
+                      K4AboutData::License_GPL_V2, ki18n( "Copyright © 2008–2014 Blogilo authors" ),
                       KLocalizedString(), "http://blogilo.gnufolks.org" );
     about.addAuthor( ki18n( "Mehrdad Momeny" ), ki18n( "Core Developer" ), "mehrdad.momeny@gmail.com" );
     about.addAuthor( ki18n( "Golnaz Nilieh" ), ki18n( "Core Developer" ), "g382nilieh@gmail.com" );

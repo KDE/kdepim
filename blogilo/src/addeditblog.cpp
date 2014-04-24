@@ -37,6 +37,7 @@
 #include <kdebug.h>
 #include <kio/jobclasses.h>
 #include <kio/job.h>
+#include <KLocalizedString>
 
 #include <QTableWidget>
 #include <QTimer>

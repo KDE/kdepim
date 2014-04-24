@@ -35,6 +35,7 @@
 #include "settings.h"
 
 #include <KMenu>
+#include <KIcon>
 #include <KAction>
 #include <KToolInvocation>
 #include <QClipboard>
@@ -57,9 +58,12 @@ Toolbox::Toolbox( QWidget *parent )
     : QWidget( parent ), d(new Private)
 {
     d->mCurrentBlogId = -1;
+//QT5
+#if 0
     if ( parent )
         d->statusbar = qobject_cast<KXmlGuiWindow*>( parent )->statusBar();
     else
+#endif
         d->statusbar = new KStatusBar( this );
     setupUi( this );
     setButtonsIcon();

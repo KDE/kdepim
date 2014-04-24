@@ -58,6 +58,7 @@
 #include <KToggleAction>
 #include <kactioncollection.h>
 #include <KActionMenu>
+#include <KAction>
 #include <kconfigdialog.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
