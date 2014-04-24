@@ -157,7 +157,8 @@ set(libpimcommon_widgets_SRCS
   widgets/simplestringlisteditor.cpp
   widgets/customtextedit.cpp
   widgets/customtreeview.cpp
-  widgets/customtoolswidget.cpp
+  #REACTIVATE IT
+  #widgets/customtoolswidget.cpp
   widgets/configureimmutablewidgetutils.cpp
 )
 
@@ -170,13 +171,13 @@ set(libpimcommon_SRCS
   settings/pimcommonsettings.cpp
   ${libpimcommon_texteditor_SRCS}
   #REACTIVATE
-  #${libpimcommon_shorturl_SRCS}
+  ${libpimcommon_shorturl_SRCS}
   #${libpimcommon_storageservice_SRCS}
   #${libpimcommon_autocorrection_SRCS}
   #${libpimcommon_translator_SRCS}
   ${libpimcommon_templatewidgets_SRCS}
   ${libpimcommon_folderdialog_SRCS}
-  ${libpimcommon_acl_SRCS}
+  #${libpimcommon_acl_SRCS}
   ${libpimcommon_sieve_SRCS}
   ${libpimcommon_widgets_SRCS}
 )
@@ -218,12 +219,12 @@ target_link_libraries(pimcommon
     ${QT_QTWEBKIT_LIBRARY}
     ${QJSON_LIBRARIES}
     ${KDE4_SOLID_LIBS}
-    ${KDE4_KNEWSTUFF3_LIBS}
     ${LibKGAPI2_LIBRARY}
     KF5::NewStuff
     KF5::Wallet
     kdepim
-    KF5::Imap
+    #KF5::KLdap
+    #KF5::Imap
     KF5::AkonadiWidgets
 )
 
