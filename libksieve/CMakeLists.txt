@@ -24,7 +24,7 @@ set(ksieve_LIB_SRCS
 
 add_library(ksieve ${LIBRARY_TYPE} ${ksieve_LIB_SRCS})
 
-target_link_libraries(ksieve Qt5::Core)
+target_link_libraries(ksieve Qt5::Core KF5::KDELibs4Support)
 
 set_target_properties(
   ksieve PROPERTIES

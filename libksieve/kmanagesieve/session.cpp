@@ -31,7 +31,7 @@
 #include <KLocalizedString>
 #include <KPasswordDialog>
 #include <KMessageBox>
-
+#include <kio/job.h>
 #include <QTimer>
 
 static sasl_callback_t callbacks[] = {
@@ -467,7 +467,8 @@ bool Session::saslInteract(void* in)
                 dlg->setKeepPassword( ai.keepPassword );
                 dlg->setPrompt( ai.prompt );
                 dlg->setUsernameReadOnly( ai.readOnly );
-                dlg->setCaption( ai.caption );
+                //QT5
+                //dlg->setCaption( ai.caption );
                 dlg->addCommentLine( ai.commentLabel, ai.comment );
 
                 bool gotIt = false;
