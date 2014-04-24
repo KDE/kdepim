@@ -177,7 +177,7 @@ set(libpimcommon_SRCS
   #${libpimcommon_translator_SRCS}
   ${libpimcommon_templatewidgets_SRCS}
   ${libpimcommon_folderdialog_SRCS}
-  #${libpimcommon_acl_SRCS}
+  ${libpimcommon_acl_SRCS}
   ${libpimcommon_sieve_SRCS}
   ${libpimcommon_widgets_SRCS}
 )

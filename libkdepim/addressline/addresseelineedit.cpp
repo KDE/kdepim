@@ -666,7 +666,8 @@ void AddresseeLineEdit::Private::akonadiHandlePending()
 void AddresseeLineEdit::Private::doCompletion( bool ctrlT )
 {
     m_lastSearchMode = ctrlT;
-
+//QT5
+#if 0
     const KGlobalSettings::Completion mode = q->completionMode();
 
     if ( mode == KGlobalSettings::CompletionNone ) {
@@ -689,7 +690,8 @@ void AddresseeLineEdit::Private::doCompletion( bool ctrlT )
         setCompletedItems( completions, true );
 
         q->cursorAtEnd();
-        q->setCompletionMode( mode ); //set back to previous mode
+        //QT5
+        //q->setCompletionMode( mode ); //set back to previous mode
         return;
     }
 
@@ -724,7 +726,8 @@ void AddresseeLineEdit::Private::doCompletion( bool ctrlT )
     case KGlobalSettings::CompletionAuto:
     {
         //force autoSuggest in KLineEdit::keyPressed or setCompletedText will have no effect
-        q->setCompletionMode( q->completionMode() );
+        //QT5
+        //q->setCompletionMode( q->completionMode() );
 
         if ( !m_searchString.isEmpty() ) {
 
@@ -774,6 +777,7 @@ void AddresseeLineEdit::Private::doCompletion( bool ctrlT )
     default: // fall through
         break;
     }
+#endif
 }
 
 void AddresseeLineEdit::Private::slotCompletion()
@@ -812,7 +816,8 @@ void AddresseeLineEdit::Private::slotStartLDAPLookup()
     if ( Solid::Networking::status() == Solid::Networking::Unconnected ) {
         return;
     }
-
+//QT5
+#if 0
     const KGlobalSettings::Completion mode = q->completionMode();
 
     if ( mode == KGlobalSettings::CompletionNone ) {
@@ -826,7 +831,7 @@ void AddresseeLineEdit::Private::slotStartLDAPLookup()
     if ( s_static->ldapLineEdit != q ) {
         return;
     }
-
+#endif
     startLoadingLDAPEntries();
 }
 
@@ -1189,6 +1194,8 @@ void AddresseeLineEdit::dropEvent( QDropEvent *event )
                 return;
             }
         } else {
+//QT5
+#if 0
             // Let's see if this drop contains a comma separated list of emails
             const QString dropData = QString::fromUtf8( event->encodedData( "text/plain" ) );
             const QStringList addrs = KPIMUtils::splitAddressList( dropData );
@@ -1197,6 +1204,7 @@ void AddresseeLineEdit::dropEvent( QDropEvent *event )
                 setModified( true );
                 return;
             }
+#endif
         }
     }
 
@@ -1290,8 +1298,9 @@ void AddresseeLineEdit::contextMenuEvent( QContextMenuEvent *event )
 QMenu *AddresseeLineEdit::createStandardContextMenu()
 {
     // disable modes not supported by KMailCompletion
-    setCompletionModeDisabled( KGlobalSettings::CompletionMan );
-    setCompletionModeDisabled( KGlobalSettings::CompletionPopupAuto );
+     //QT5
+    //setCompletionModeDisabled( KGlobalSettings::CompletionMan );
+    //setCompletionModeDisabled( KGlobalSettings::CompletionPopupAuto );
 
     QMenu *menu = KLineEdit::createStandardContextMenu();
     if ( !menu ) {

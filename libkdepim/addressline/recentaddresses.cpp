@@ -38,6 +38,7 @@
 #include <KLineEdit>
 #include <KPushButton>
 #include <KMessageBox>
+#include <KIcon>
 
 #include <QCoreApplication>
 #include <QLayout>
