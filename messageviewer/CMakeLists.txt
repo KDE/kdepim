@@ -91,6 +91,7 @@ set(libmessageviewer_viewer_SRCS
 )
 
 set(libmessageviewer_widgets_SRCS
+  widgets/customheadersettingdialog.cpp
   widgets/attachmentdialog.cpp
   
   widgets/configurewidget.cpp
