@@ -25,7 +25,7 @@
 #include <Solid/Networking>
 
 class KAction;
-class SieveEditorMainWidget;
+class SieveEditorCentralWidget;
 class QLabel;
 class SieveEditorMainWindow : public KXmlGuiWindow
 {
@@ -53,7 +53,7 @@ private:
     void initStatusBar();
     void readConfig();
     void setupActions();
-    SieveEditorMainWidget *mMainWidget;
+    SieveEditorCentralWidget *mMainWidget;
     KAction *mDeleteScript;
     KAction *mNewScript;
     KAction *mEditScript;

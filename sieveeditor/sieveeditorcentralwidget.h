@@ -19,14 +19,27 @@
 #ifndef SIEVEEDITORCENTRALWIDGET_H
 #define SIEVEEDITORCENTRALWIDGET_H
 
-#include <QWidget>
-
-class SieveEditorCentralWidget : public QWidget
+#include <QStackedWidget>
+class SieveEditorConfigureServerPage;
+class SieveEditorMainWidget;
+class SieveEditorCentralWidget : public QStackedWidget
 {
     Q_OBJECT
 public:
     explicit SieveEditorCentralWidget(QWidget *parent=0);
     ~SieveEditorCentralWidget();
+
+    SieveEditorMainWidget *sieveEditorMainWidget() const;
+
+Q_SIGNALS:
+    void configureClicked();
+
+private slots:
+    void slotServerSieveFound(bool hasServer);
+
+private:
+    SieveEditorConfigureServerPage *mConfigureWidget;
+    SieveEditorMainWidget *mSieveEditorMainWidget;
 };
 
 #endif // SIEVEEDITORCENTRALWIDGET_H

@@ -42,6 +42,7 @@ Q_SIGNALS:
     void createScriptPage(const KUrl &url, const QStringList &capabilities, bool isNewScript);
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
     void scriptDeleted(const KUrl &url);
+    void serverSieveFound(bool hasServerSieve);
 
 public Q_SLOTS:
     void slotCreateNewScript();

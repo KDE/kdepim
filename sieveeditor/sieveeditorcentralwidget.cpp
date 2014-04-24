@@ -17,13 +17,35 @@
 
 
 #include "sieveeditorcentralwidget.h"
+#include "sieveeditormainwidget.h"
+#include "sieveeditorconfigureserverpage.h"
 
 SieveEditorCentralWidget::SieveEditorCentralWidget(QWidget *parent)
-    : QWidget(parent)
+    : QStackedWidget(parent)
 {
+    mConfigureWidget = new SieveEditorConfigureServerPage;
+    connect(mConfigureWidget, SIGNAL(configureClicked()), SIGNAL(configureClicked()));
+    addWidget(mConfigureWidget);
+    mSieveEditorMainWidget = new SieveEditorMainWidget;
+    connect(mSieveEditorMainWidget, SIGNAL(serverSieveFound(bool)), SLOT(slotServerSieveFound(bool)));
+    addWidget(mSieveEditorMainWidget);
+    setCurrentWidget(mConfigureWidget);
 }
 
 SieveEditorCentralWidget::~SieveEditorCentralWidget()
 {
 
+}
+
+void SieveEditorCentralWidget::slotServerSieveFound(bool hasServer)
+{
+    if (hasServer)
+        setCurrentWidget(mSieveEditorMainWidget);
+    else
+        setCurrentWidget(mConfigureWidget);
+}
+
+SieveEditorMainWidget *SieveEditorCentralWidget::sieveEditorMainWidget() const
+{
+    return mSieveEditorMainWidget;
 }
