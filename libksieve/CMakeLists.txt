@@ -1,3 +1,4 @@
+project(libksieve)
 
 include(CheckTypeSize)
 check_type_size("unsigned long" SIZEOF_UNSIGNED_LONG)
