@@ -57,6 +57,8 @@
 #include <kpushbutton.h>
 #include <kglobalsettings.h>
 #include <klineedit.h>
+#include <KGlobal>
+#include <KIcon>
 
 #include <assert.h>
 #include <string.h> // for memcpy(3)
@@ -72,8 +74,9 @@ PassphraseDialog::PassphraseDialog( QWidget *parent,
                                     const QString &keyID )
   :KPasswordDialog( parent )
 {
-  setCaption( caption );
-  setButtons( Ok|Cancel );
+  setWindowTitle( caption );
+  //QT5
+  //setButtons( Ok|Cancel );
 
   setPixmap( BarIcon(QLatin1String("dialog-password")) );
 

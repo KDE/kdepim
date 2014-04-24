@@ -33,6 +33,7 @@
 #include <QApplication>
 #include <QByteArray>
 #include <QFileInfo>
+#include <KGlobal>
 
 #include <algorithm>
 
