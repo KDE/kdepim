@@ -23,6 +23,7 @@
 #include "kaddressbook_export.h"
 
 #include <Akonadi/Item>
+class QTabWidget;
 
 namespace KABMergeContacts {
 class KADDRESSBOOK_EXPORT MergeContactSelectInformationDialog : public KDialog
@@ -34,6 +35,7 @@ public:
 
 private:
     Akonadi::Item::List mList;
+    QTabWidget *mTabWidget;
 };
 }
 

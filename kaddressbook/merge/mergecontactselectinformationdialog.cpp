@@ -17,11 +17,19 @@
 
 #include "mergecontactselectinformationdialog.h"
 
+#include <KLocalizedString>
+#include <QTabWidget>
+
 using namespace KABMergeContacts;
 MergeContactSelectInformationDialog::MergeContactSelectInformationDialog(const Akonadi::Item::List &lst, QWidget *parent)
     : KDialog(parent),
       mList(lst)
 {
+    setCaption(i18n("Select Which Information to Use for new Contact"));
+    setButtons(Ok|Cancel);
+    mTabWidget = new QTabWidget(this);
+    mTabWidget->setObjectName(QLatin1String("tabwidget"));
+    setMainWidget(mTabWidget);
 }
 
 

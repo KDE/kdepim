@@ -25,6 +25,9 @@ class MergeContactSelectInformationDialogTest : public QObject
     Q_OBJECT
 public:
     MergeContactSelectInformationDialogTest();
+
+private Q_SLOTS:
+    void shouldHaveDefaultValueOnCreation();
 };
 
 #endif // MERGECONTACTSELECTINFORMATIONDIALOGTEST_H

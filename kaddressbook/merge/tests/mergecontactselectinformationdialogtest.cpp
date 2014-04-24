@@ -16,10 +16,25 @@
 */
 
 #include "mergecontactselectinformationdialogtest.h"
+#include "mergecontactselectinformationdialog.h"
 #include <qtest_kde.h>
+
+#include <QTabWidget>
+
+using namespace KABMergeContacts;
 
 MergeContactSelectInformationDialogTest::MergeContactSelectInformationDialogTest()
 {
+}
+
+void MergeContactSelectInformationDialogTest::shouldHaveDefaultValueOnCreation()
+{
+    Akonadi::Item::List lst;
+    MergeContactSelectInformationDialog dlg(lst);
+    dlg.show();
+    QTabWidget *tabWidget = qFindChild<QTabWidget *>(&dlg, QLatin1String("tabwidget"));
+    QVERIFY(tabWidget);
+    QCOMPARE(tabWidget->count(), 0);
 }
 
 QTEST_KDEMAIN(MergeContactSelectInformationDialogTest, GUI )
