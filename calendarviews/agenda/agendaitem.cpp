@@ -40,11 +40,14 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KWordWrap>
+#include <KIconLoader>
+#include <KGlobal>
 
 #include <QDragEnterEvent>
 #include <QPainter>
 #include <QPixmapCache>
 #include <QToolTip>
+#include <QMimeData>
 
 using namespace KCalCore;
 using namespace EventViews;
@@ -962,10 +965,9 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
     longH = i18n( "- %1", shortH );
   }
 
-  KWordWrap *ww = KWordWrap::formatText(
+  KWordWrap ww = KWordWrap::formatText(
     fm, QRect( 0, 0, width() - ( 2 * margin ), -1 ), 0, mLabelText );
-  int th = ww->boundingRect().height();
-  delete ww;
+  int th = ww.boundingRect().height();
 
   int hlHeight = qMax( fm.boundingRect( longH ).height(),
                        qMax( alarmPxmp->height(),
@@ -1027,8 +1029,7 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
     ww = KWordWrap::formatText(
       fm, QRect( 0, 0, txtWidth, ( height() - ( 2 * margin ) ) ), 0, mLabelText );
 
-    ww->drawText( &p, x, margin, Qt::AlignHCenter | KWordWrap::FadeOut );
-    delete ww;
+    ww.drawText( &p, x, margin, Qt::AlignHCenter | KWordWrap::FadeOut );
     return;
   }
 
@@ -1122,14 +1123,13 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
 
   p.setBackground( QBrush( bgColor ) );
   p.setPen( textColor );
-  QString ws = ww->wrappedString();
+  QString ws = ww.wrappedString();
   if ( ws.left( ws.length()-1 ).indexOf( QLatin1Char('\n') ) >= 0 ) {
-    ww->drawText( &p, eventX, y, Qt::AlignLeft | KWordWrap::FadeOut );
+    ww.drawText( &p, eventX, y, Qt::AlignLeft | KWordWrap::FadeOut );
   } else {
-    ww->drawText( &p, eventX + ( txtWidth - ww->boundingRect().width() - 2 * margin ) / 2, y,
+    ww.drawText( &p, eventX + ( txtWidth - ww.boundingRect().width() - 2 * margin ) / 2, y,
                   Qt::AlignHCenter | KWordWrap::FadeOut );
   }
-  delete ww;
 
 }
 

@@ -29,7 +29,7 @@
 
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <Akonadi/Calendar/ETMCalendar>
-#include <Akonadi/Item>
+#include <Item>
 #include <KVBox>
 
 #include <QDate>

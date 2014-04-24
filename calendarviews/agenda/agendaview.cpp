@@ -51,6 +51,9 @@
 #include <KServiceTypeTrader>
 #include <KVBox>
 #include <KWordWrap>
+#include <KDebug>
+#include <KGlobal>
+#include <KComponentData>
 
 #include <QApplication>
 #include <QDrag>
@@ -547,7 +550,7 @@ void AgendaView::Private::insertIncidence( const Akonadi::Item &aitem,
   const QDate insertAtDate = insertAtDateTime.date();
 
   // In case incidence->dtStart() isn't visible (crosses bounderies)
-  const int curCol = qMax( mSelectedDates.first().daysTo( insertAtDate ), 0 );
+  const int curCol = qMax( mSelectedDates.first().daysTo( insertAtDate ), qint64(0) );
 
   // The date for the event is not displayed, just ignore it
   if ( curCol >= mSelectedDates.count() ) {
@@ -1163,12 +1166,11 @@ void AgendaView::createDayLabels( bool force )
     const QStringList texts = CalendarSupport::holiday( date );
     Q_FOREACH ( const QString &text, texts ) {
       // Compute a small version of the holiday string for AlternateLabel
-      const KWordWrap *ww = KWordWrap::formatText( fm, topDayLabelBox->rect(), 0, text, -1 );
+      const KWordWrap ww = KWordWrap::formatText( fm, topDayLabelBox->rect(), 0, text, -1 );
       AlternateLabel *label =
-        new AlternateLabel( ww->truncatedString(), text, text, topDayLabelBox );
+        new AlternateLabel( ww.truncatedString(), text, text, topDayLabelBox );
       label->setMinimumWidth( 1 );
       label->setAlignment( Qt::AlignCenter );
-      delete ww;
     }
 
 #ifndef EVENTVIEWS_NODECOS

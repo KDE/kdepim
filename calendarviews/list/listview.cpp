@@ -40,6 +40,8 @@
 
 #include <KIconLoader>
 
+#include <KGlobal>
+#include <KDebug>
 #include <QBoxLayout>
 #include <QHeaderView>
 #include <QTreeWidget>

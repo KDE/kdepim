@@ -27,7 +27,7 @@
 #include "eventview_p.h"
 #include "prefs.h"
 
-#include <Akonadi/EntityTreeModel>
+#include <EntityTreeModel>
 
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/kcalprefs.h>
@@ -36,8 +36,8 @@
 #include <akonadi_next/kcolumnfilterproxymodel.h>
 using namespace Future;
 
-#include <Akonadi/EntityDisplayAttribute>
-#include <Akonadi/ETMViewStateSaver>
+#include <EntityDisplayAttribute>
+#include <ETMViewStateSaver>
 
 #include <KCalCore/Todo>
 #include <KCalCore/CalFilter>
@@ -51,6 +51,7 @@ using namespace Future;
 #include <KLocalizedString>
 #include <KRandom>
 #include <KViewStateMaintainer>
+#include <KDebug>
 
 #include <QApplication>
 #include <QKeyEvent>
@@ -60,7 +61,8 @@ using namespace KCalCore;
 using namespace EventViews;
 using namespace Akonadi;
 
-static const KCatalogLoader loaderCatalog( QLatin1String("libeventviews") );
+//QT5
+//static const KCatalogLoader loaderCatalog( QLatin1String("libeventviews") );
 
 CalendarSupport::CollectionSelection *EventViewPrivate::sGlobalCollectionSelection = 0;
 

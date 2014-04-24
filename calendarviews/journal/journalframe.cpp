@@ -38,7 +38,9 @@
 #include <KDialog>
 #include <KTextBrowser>
 #include <KLocalizedString>
+#include <KIconLoader>
 #include <KGlobalSettings>
+#include <KDebug>
 
 #include <QEvent>
 #include <QHBoxLayout>

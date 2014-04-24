@@ -38,6 +38,7 @@
 #include <QWidget>
 #include <QSet>
 #include <QByteArray>
+#include <QDate>
 
 namespace boost {
   template <typename T> class shared_ptr;

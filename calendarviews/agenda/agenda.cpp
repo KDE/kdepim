@@ -44,6 +44,7 @@
 #include <KGlobal>
 #include <KMessageBox>
 #include <KLocale>
+#include <KDebug>
 
 #include <QApplication>
 #include <QLabel>

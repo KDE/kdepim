@@ -28,7 +28,7 @@
 #include "eventviews_export.h"
 #include "agendaitem.h"
 
-#include <Akonadi/Item>
+#include <Item>
 
 #include <KCalCore/Todo>
 

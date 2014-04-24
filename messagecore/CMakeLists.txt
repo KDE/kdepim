@@ -71,6 +71,7 @@ target_link_libraries(messagecore
   KF5::PimTextEdit
   KF5::AkonadiContact
   KF5::AkonadiKMime
+  KF5::Archive
   pimcommon
 )
 

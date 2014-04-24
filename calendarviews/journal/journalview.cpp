@@ -31,7 +31,7 @@
 #include <calendarsupport/utils.h>
 
 #include <KVBox>
-
+#include <KDebug>
 #include <QEvent>
 #include <QScrollArea>
 #include <QVBoxLayout>

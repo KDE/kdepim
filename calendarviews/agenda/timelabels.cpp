@@ -30,6 +30,7 @@
 #include <KIcon>
 #include <KLocalizedString>
 #include <KGlobal>
+#include <KTimeZone>
 
 #include <QFrame>
 #include <QMenu>

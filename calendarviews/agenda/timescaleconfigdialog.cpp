@@ -23,6 +23,8 @@
 #include "prefs.h"
 
 #include <KSystemTimeZone>
+#include <KLocalizedString>
+#include <KIcon>
 
 using namespace EventViews;
 

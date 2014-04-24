@@ -27,6 +27,7 @@
 
 #include <QtCore/QBuffer>
 #include <QtCore/QTimer>
+#include <QDateTime>
 
 #include <boost/shared_ptr.hpp>
 

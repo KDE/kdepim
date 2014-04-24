@@ -28,6 +28,7 @@
 
 #include <KGlobalSettings>
 #include <KSystemTimeZone>
+#include <KDebug>
 
 using namespace EventViews;
 
@@ -113,7 +114,7 @@ class BaseConfig : public PrefsBase
   protected:
     void usrSetDefaults();
     void usrReadConfig();
-    void usrWriteConfig();
+    bool usrWriteConfig();
 
     void setTimeZoneDefault();
 };
@@ -209,7 +210,7 @@ void BaseConfig::usrReadConfig()
   KConfigSkeleton::usrReadConfig();
 }
 
-void BaseConfig::usrWriteConfig()
+bool BaseConfig::usrWriteConfig()
 {
   KConfigGroup generalConfig( config(), "General" );
 
@@ -241,7 +242,7 @@ void BaseConfig::usrWriteConfig()
   agendaViewConfig.writeEntry<QByteArray>( "agendaViewItemIcons", agendaIconArray );
   monthViewConfig.writeEntry<QByteArray>( "monthViewItemIcons", monthIconArray );
 
-  KConfigSkeleton::usrWriteConfig();
+  return KConfigSkeleton::usrWriteConfig();
 }
 
 void BaseConfig::setTimeZoneDefault()

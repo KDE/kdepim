@@ -52,7 +52,7 @@ add_definitions(-D_ASSUAN_ONLY_GPG_ERRORS)
 add_definitions(-DQT_STL)
 remove_definitions(-DQT_NO_STL)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+kde_enable_exceptions()
 if(GCC_IS_NEWER_THAN_4_3)
   if(CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-missing-braces -Wno-parentheses -Wno-ignored-qualifiers")
@@ -133,7 +133,7 @@ else()
   set(_kleopatra_uiserver_SRCS)
 endif()
 
-kde4_add_ui_files(_kleopatra_uiserver_SRCS crypto/gui/signingcertificateselectionwidget.ui)
+qt5_wrap_ui(_kleopatra_uiserver_SRCS crypto/gui/signingcertificateselectionwidget.ui)
 
 set(_kleopatra_SRCS
   utils/gnupg-helper.cpp
@@ -306,7 +306,7 @@ if(KLEO_MODEL_TEST)
   set(_kleopatra_SRCS ${_kleopatra_SRCS} models/modeltest.cpp)
 endif()
 
-kde4_add_ui_files(_kleopatra_SRCS
+qt5_wrap_ui(_kleopatra_SRCS
   dialogs/certificationoptionswidget.ui
   dialogs/expirydialog.ui
   dialogs/lookupcertificatesdialog.ui
@@ -326,7 +326,7 @@ kde4_add_ui_files(_kleopatra_SRCS
   newcertificatewizard/advancedsettingsdialog.ui
 )
 
-kde4_add_kcfg_files(_kleopatra_SRCS
+kconfig_add_kcfg_files(_kleopatra_SRCS
   kcfg/tooltippreferences.kcfgc
   kcfg/emailoperationspreferences.kcfgc
   kcfg/fileoperationspreferences.kcfgc
@@ -359,16 +359,16 @@ add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5151)
 
 kde4_add_app_icon(_kleopatra_mainwindow_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-app-kleopatra.png")
 
-kde4_add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} ${_kleopatra_libkdepim_SRCS})
+add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} ${_kleopatra_libkdepim_SRCS})
 set_target_properties(kleopatra_bin PROPERTIES OUTPUT_NAME kleopatra)
 
 target_link_libraries(kleopatra_bin
   ${_kleopatra_extra_libs}
   kleo
   ${QGPGME_LIBRARIES}
-  ${KDE4_KDEUI_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDE4_KCMUTILS_LIBS}
+  
+  KF5::KMime
+  KF5::KCMUtils
   ${_kleopatra_uiserver_extra_libs}
   ${_kleopatra_libkdepim_LIBS}
 )
@@ -378,7 +378,7 @@ if(KDEPIM_MOBILE_UI)
 endif()
 
 if(USABLE_ASSUAN_FOUND)
-  target_link_libraries(kleopatra_bin ${QT_QTNETWORK_LIBRARY})
+  target_link_libraries(kleopatra_bin )
 endif()
 
 install(TARGETS kleopatra_bin ${INSTALL_TARGETS_DEFAULT_ARGS})
