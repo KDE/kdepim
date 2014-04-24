@@ -16,6 +16,7 @@
 */
 
 #include "mergecontactselectinformationdialog.h"
+#include "mergecontactshowresulttabwidget.h"
 
 #include <KLocalizedString>
 #include <QTabWidget>
@@ -27,9 +28,10 @@ MergeContactSelectInformationDialog::MergeContactSelectInformationDialog(const A
 {
     setCaption(i18n("Select Which Information to Use for new Contact"));
     setButtons(Ok|Cancel);
-    mTabWidget = new QTabWidget(this);
+    mTabWidget = new MergeContactShowResultTabWidget(this);
     mTabWidget->setObjectName(QLatin1String("tabwidget"));
     setMainWidget(mTabWidget);
+    updateTabWidget();
 }
 
 
@@ -37,3 +39,9 @@ MergeContactSelectInformationDialog::~MergeContactSelectInformationDialog()
 {
 
 }
+
+void MergeContactSelectInformationDialog::updateTabWidget()
+{
+    mTabWidget->updateTabWidget();
+}
+

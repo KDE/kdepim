@@ -17,6 +17,7 @@
 
 #include "mergecontactselectinformationdialogtest.h"
 #include "mergecontactselectinformationdialog.h"
+#include "mergecontactshowresulttabwidget.h"
 #include <qtest_kde.h>
 
 #include <QTabWidget>
@@ -32,9 +33,11 @@ void MergeContactSelectInformationDialogTest::shouldHaveDefaultValueOnCreation()
     Akonadi::Item::List lst;
     MergeContactSelectInformationDialog dlg(lst);
     dlg.show();
-    QTabWidget *tabWidget = qFindChild<QTabWidget *>(&dlg, QLatin1String("tabwidget"));
+    KABMergeContacts::MergeContactShowResultTabWidget *tabWidget = qFindChild<KABMergeContacts::MergeContactShowResultTabWidget *>(&dlg, QLatin1String("tabwidget"));
     QVERIFY(tabWidget);
     QCOMPARE(tabWidget->count(), 0);
+    QCOMPARE(tabWidget->tabBarVisible(), false);
+
 }
 
 QTEST_KDEMAIN(MergeContactSelectInformationDialogTest, GUI )

@@ -16,31 +16,27 @@
 */
 
 
-#ifndef MERGECONTACTSHOWRESULTDIALOG_H
-#define MERGECONTACTSHOWRESULTDIALOG_H
+#include "mergecontactshowresulttabwidget.h"
+#include <QTabBar>
 
-#include <KDialog>
-#include "kaddressbook_export.h"
+using namespace KABMergeContacts;
 
-#include <Akonadi/Item>
-
-namespace KABMergeContacts {
-class MergeContactShowResultTabWidget;
-class KADDRESSBOOK_EXPORT MergeContactShowResultDialog : public KDialog
+MergeContactShowResultTabWidget::MergeContactShowResultTabWidget(QWidget *parent)
+    : QTabWidget(parent)
 {
-    Q_OBJECT
-public:
-    explicit MergeContactShowResultDialog(QWidget *parent = 0);
-    ~MergeContactShowResultDialog();
-
-    void setContacts(const Akonadi::Item::List &lstItem);
-
-private:
-    void updateTabWidget();
-    void readConfig();
-    void writeConfig();
-    MergeContactShowResultTabWidget *mTabWidget;
-};
 }
 
-#endif // MERGECONTACTSHOWRESULTDIALOG_H
+MergeContactShowResultTabWidget::~MergeContactShowResultTabWidget()
+{
+}
+
+void MergeContactShowResultTabWidget::updateTabWidget()
+{
+    tabBar()->setVisible(count()>1);
+}
+
+bool MergeContactShowResultTabWidget::tabBarVisible() const
+{
+    return tabBar()->isVisible();
+}
+

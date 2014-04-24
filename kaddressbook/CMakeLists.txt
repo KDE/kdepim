@@ -83,6 +83,7 @@ set(kaddressbook_merge_SRCS
    merge/mergecontactwidgetlist.cpp
    merge/mergecontactshowresultdialog.cpp
    merge/mergecontactselectinformationdialog.cpp
+   merge/mergecontactshowresulttabwidget.cpp
    merge/mergecontacts.cpp
 )
 

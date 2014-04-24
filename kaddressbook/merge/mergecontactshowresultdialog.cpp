@@ -16,6 +16,7 @@
 */
 
 #include "mergecontactshowresultdialog.h"
+#include "mergecontactshowresulttabwidget.h"
 #include "mergecontactinfowidget.h"
 
 #include <KLocalizedString>
@@ -71,24 +72,4 @@ void MergeContactShowResultDialog::writeConfig()
     KConfigGroup grp( KGlobal::config(), "MergeContactShowResultDialog");
     grp.writeEntry( "Size", size() );
     grp.sync();
-}
-
-
-MergeContactShowResultTabWidget::MergeContactShowResultTabWidget(QWidget *parent)
-    : QTabWidget(parent)
-{
-}
-
-MergeContactShowResultTabWidget::~MergeContactShowResultTabWidget()
-{
-}
-
-void MergeContactShowResultTabWidget::updateTabWidget()
-{
-    tabBar()->setVisible(count()>1);
-}
-
-bool MergeContactShowResultTabWidget::tabBarVisible() const
-{
-    return tabBar()->isVisible();
 }
