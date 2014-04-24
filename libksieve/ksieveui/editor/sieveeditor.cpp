@@ -22,6 +22,7 @@
 
 #include <klocale.h>
 #include <KStandardGuiItem>
+#include <KGlobal>
 
 #include <QPushButton>
 #include <QKeyEvent>

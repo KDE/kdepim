@@ -23,9 +23,9 @@
 #include "pimcommon/util/pimutil.h"
 #include "mailcommon/collectionpage/newmailnotifierattribute.h"
 
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/CollectionModifyJob>
+#include <ItemFetchJob>
+#include <ItemFetchScope>
+#include <CollectionModifyJob>
 
 using namespace Akonadi;
 

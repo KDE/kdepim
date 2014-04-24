@@ -41,7 +41,7 @@
 
 #include "ksieveui_export.h"
 
-#include <akonadi/agentinstance.h>
+#include <agentinstance.h>
 
 class KUrl;
 class QString;

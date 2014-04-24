@@ -70,7 +70,7 @@ void AttachmentCompressJob::Private::doStart()
 
     // Compress.
     zip.setCompression( KZip::DeflateCompression );
-    time_t zipTime = QDateTime::currentDateTime().toTime_t();
+    QDateTime zipTime = QDateTime::currentDateTime();
     if( !zip.writeFile( mOriginalPart->name(), QString( /*user*/ ), QString( /*group*/ ),
                         decoded.data(), decoded.size(), archivePerms, zipTime, zipTime, zipTime ) ) {
         q->setError( KJob::UserDefinedError );

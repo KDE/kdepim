@@ -93,18 +93,18 @@ set(libkleo_ui_SRCS    # make this a separate lib.
     ui/keyapprovaldialog.cpp
     )
 
-kde4_add_ui_files(libkleo_ui_common_SRCS
+qt5_wrap_ui(libkleo_ui_common_SRCS
     ui/directoryserviceswidget.ui
 )
 
 set(kleo_LIB_SRCS ${libkleo_core_SRCS} ${libkleo_ui_common_SRCS} ${libkleo_backend_qgpgme_SRCS})
-set(kleo_LIB_LIBS ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES})
+set(kleo_LIB_LIBS  ${QGPGME_LIBRARIES})
 if ( NOT KDEPIM_ONLY_KLEO )
    set( kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_backend_chiasmus_SRCS} ${libkleo_ui_SRCS})
-   set( kleo_LIB_LIBS ${kleo_LIB_LIBS} ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS})
+   set( kleo_LIB_LIBS ${kleo_LIB_LIBS}  KF5::KIOCore KF5::KDELibs4Support)
 endif ()
 
-kde4_add_library(kleo ${LIBRARY_TYPE} ${kleo_LIB_SRCS})
+add_library(kleo ${LIBRARY_TYPE} ${kleo_LIB_SRCS})
 if(WIN32)
 target_link_libraries(kleo ${kleo_LIB_LIBS}  ${GPGME_VANILLA_LIBRARIES} )
 else()

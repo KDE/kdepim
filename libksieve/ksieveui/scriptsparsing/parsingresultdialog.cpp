@@ -23,6 +23,7 @@
 
 #include <KLocalizedString>
 #include <KSharedConfig>
+#include <KGlobal>
 
 using namespace KSieveUi;
 

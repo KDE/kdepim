@@ -34,14 +34,14 @@
 
 #include <messagecore/settings/globalsettings.h>
 
-#include <Akonadi/AttributeFactory>
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/Collection>
-#include <Akonadi/EntityMimeTypeFilterModel>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/EntityTreeView>
-#include <Akonadi/ETMViewStateSaver>
-#include <Akonadi/ItemFetchScope>
+#include <AttributeFactory>
+#include <ChangeRecorder>
+#include <Collection>
+#include <EntityMimeTypeFilterModel>
+#include <EntityTreeModel>
+#include <EntityTreeView>
+#include <ETMViewStateSaver>
+#include <ItemFetchScope>
 
 #include <KLineEdit>
 #include <KLocalizedString>

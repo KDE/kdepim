@@ -62,12 +62,11 @@ option(KDEPIM_BUILD_DESKTOP "Build Desktop Applications. Can be deactivated for 
 option(KDEPIM_NO_WEBKIT "Do not use WebKit in the kdepim applications" FALSE)
 
 
-find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Widgets Test)
+find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql)
 find_package(KF5Akonadi CONFIG REQUIRED)
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5NewStuff ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5Imap ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Abc ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5PimUtils ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5AkonadiContact ${KF5_VERSION} CONFIG REQUIRED)
@@ -84,6 +83,8 @@ find_package(KF5Mbox ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5AkonadiCalendar ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5WebKit ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Archive ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Imap ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5NotifyConfig ${KF5_VERSION} CONFIG REQUIRED)
 
 include(GenerateExportHeader)
 
@@ -144,9 +145,9 @@ add_subdirectory(libkpgp)
 add_subdirectory(libksieve)
 add_subdirectory(kdgantt2)
 add_subdirectory(icons)
-#add_subdirectory(composereditor-ng)
+add_subdirectory(composereditor-ng)
 add_subdirectory(messagecore)
-#add_subdirectory(grantleetheme)
+add_subdirectory(grantleetheme)
 add_subdirectory(messagelist)
 #add_subdirectory(templateparser)
 include (kleopatra/ConfigureChecks.cmake)
@@ -164,8 +165,8 @@ include (kleopatra/ConfigureChecks.cmake)
   #add_subdirectory(messagecomposer)
   add_subdirectory(pimcommon)
   #add_subdirectory(mailcommon) # TODO: does this make sense?!?
-  #macro_optional_add_subdirectory(kmail)
-  #macro_optional_add_subdirectory(grantleeeditor)
+  #add_subdirectory(kmail)
+  #add_subdirectory(grantleeeditor)
   if(KDEPIM_BUILD_MOBILE)
     add_subdirectory(mobile)
   endif()
@@ -182,8 +183,8 @@ include (kleopatra/ConfigureChecks.cmake)
 
   #add_subdirectory(korganizer)
   #add_subdirectory(korgac)
-  #add_subdirectory(sieveeditor)
-  #add_subdirectory(storageservicemanager)
+  add_subdirectory(sieveeditor)
+  add_subdirectory(storageservicemanager)
   #add_subdirectory(kaddressbookgrantlee)
   if(KDEPIM_BUILD_DESKTOP)
     add_subdirectory(agents)
@@ -195,7 +196,7 @@ include (kleopatra/ConfigureChecks.cmake)
     #add_subdirectory(knotes)
     #add_subdirectory(ksendemail)
     add_subdirectory(ktnef)
-    #add_subdirectory(mailimporter)
+    add_subdirectory(mailimporter)
     #add_subdirectory(pimsettingexporter)
     #add_subdirectory(kalarm)
     add_subdirectory(blogilo)
@@ -210,12 +211,10 @@ include (kleopatra/ConfigureChecks.cmake)
 
   add_subdirectory(plugins) # Must be after KMail
 
-
 feature_summary(WHAT ALL
                 INCLUDE_QUIET_PACKAGES
                 FATAL_ON_MISSING_REQUIRED_PACKAGES
 )
-
 
 if (false)
 # where to look first for cmake modules. This line must be the first one or cmake will use the system's FindFoo.cmake

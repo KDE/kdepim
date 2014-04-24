@@ -26,8 +26,9 @@
 #include <kwindowsystem.h>
 #include <kpushbutton.h>
 #include <kmessagebox.h>
+#include <KGlobal>
 
-#include <akonadi/agentinstance.h>
+#include <agentinstance.h>
 #include <kmanagesieve/sievejob.h>
 #include <ksieveui/util/util.h>
 

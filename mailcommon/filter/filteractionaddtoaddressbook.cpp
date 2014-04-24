@@ -23,7 +23,7 @@
 
 #include "libkdepim/job/addcontactjob.h"
 
-#include <KDE/Akonadi/CollectionComboBox>
+#include <KDE/CollectionComboBox>
 #include <KDE/KABC/Addressee>
 #include <KDE/KLineEdit>
 #include <KDE/KLocale>

@@ -23,7 +23,7 @@
 #include "util/mailutil.h"
 #include "addtagdialog.h"
 
-#include <Akonadi/EntityMimeTypeFilterModel>
+#include <EntityMimeTypeFilterModel>
 
 #include <Mailtransport/TransportComboBox>
 #include <Mailtransport/Transport>

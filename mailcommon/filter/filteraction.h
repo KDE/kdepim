@@ -25,8 +25,8 @@
 
 #include "itemcontext.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/Item>
+#include <Collection>
+#include <Item>
 
 #include <KMime/MDN>
 #include <KMime/KMimeMessage>

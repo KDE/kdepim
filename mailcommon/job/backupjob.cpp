@@ -23,11 +23,11 @@
 
 #include <libkdepim/misc/broadcaststatus.h>
 
-#include <Akonadi/CollectionDeleteJob>
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/CollectionFetchScope>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
+#include <CollectionDeleteJob>
+#include <CollectionFetchJob>
+#include <CollectionFetchScope>
+#include <ItemFetchJob>
+#include <ItemFetchScope>
 
 #include <KMime/Message>
 

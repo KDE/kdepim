@@ -22,9 +22,9 @@
 #include "filterlog.h"
 using MailCommon::FilterLog;
 
-#include <Akonadi/Contact/ContactSearchJob>
+#include <Contact/ContactSearchJob>
 
-#include <Akonadi/SearchQuery>
+#include <SearchQuery>
 
 #include <KMime/KMimeMessage>
 

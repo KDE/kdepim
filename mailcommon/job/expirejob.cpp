@@ -35,13 +35,13 @@ using KPIM::BroadcastStatus;
 #include <KDebug>
 #include <KLocale>
 
-#include <Akonadi/ItemDeleteJob>
-#include <Akonadi/ItemModifyJob>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/ItemMoveJob>
-#include <Akonadi/KMime/MessageParts>
-#include <Akonadi/KMime/MessageStatus>
+#include <ItemDeleteJob>
+#include <ItemModifyJob>
+#include <ItemFetchJob>
+#include <ItemFetchScope>
+#include <ItemMoveJob>
+#include <KMime/MessageParts>
+#include <KMime/MessageStatus>
 #include <akonadi/kmime/messageflags.h>
 #include <KMime/Message>
 

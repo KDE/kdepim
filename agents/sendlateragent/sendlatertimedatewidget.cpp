@@ -19,6 +19,7 @@
 
 #include <KTimeComboBox>
 #include <KDateComboBox>
+#include <KLocalizedString>
 
 #include <QHBoxLayout>
 

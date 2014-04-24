@@ -39,10 +39,11 @@
 #include <KActionCollection>
 #include <KApplication>
 #include <KConfigGroup>
-#include <KAction>
+#include <QAction>
 #include <KStatusBar>
 #include <KMessageBox>
 #include <knotifyconfigwidget.h>
+#include <KGlobal>
 
 #include <QPointer>
 #include <QCloseEvent>

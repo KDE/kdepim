@@ -24,6 +24,7 @@
 #include <KDebug>
 #include <KGlobal>
 #include <KIO/Scheduler>
+#include <KIO/TransferJob>
 #include <KLocalizedString>
 #include <KMimeType>
 #include <KLocale>

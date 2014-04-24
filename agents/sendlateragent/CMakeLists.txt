@@ -25,7 +25,7 @@ qt5_wrap_ui(sendlaterlib_SRCS ui/sendlaterwidget.ui)
 
 
 add_library( sendlater ${LIBRARY_TYPE} ${sendlaterlib_SRCS} )
-target_link_libraries( sendlater ${KDE4_KDEUI_LIBS} )
+target_link_libraries( sendlater KF5::AkonadiCore )
 
 set_target_properties( sendlater PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
@@ -60,6 +60,7 @@ target_link_libraries(akonadi_sendlater_agent
   messagecomposer
   messagecore
   pimcommon
+  KF5::AkonadiAgentBase
 )
 
 if (Q_WS_MAC)

@@ -25,10 +25,12 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 #include "import/importabstractautocorrection.h"
 
 #include "settings/pimcommonsettings.h"
-#include <kpimtextedit/selectspecialchar.h>
+#include <kpimtextedit/selectspecialchardialog.h>
 
 #include <KFileDialog>
 #include <KMessageBox>
+#include <KLocalizedString>
+#include <KUrl>
 
 #include <QTreeWidgetItem>
 #include <QMenu>
@@ -254,7 +256,7 @@ void AutoCorrectionWidget::enableDoubleQuotes(bool state)
 
 void AutoCorrectionWidget::selectSingleQuoteCharOpen()
 {
-    KPIMTextEdit::SelectSpecialChar dlg(this);
+    KPIMTextEdit::SelectSpecialCharDialog dlg(this);
     dlg.setCurrentChar(m_singleQuotes.begin);
     dlg.showSelectButton(false);
     dlg.autoInsertChar();
@@ -267,7 +269,7 @@ void AutoCorrectionWidget::selectSingleQuoteCharOpen()
 
 void AutoCorrectionWidget::selectSingleQuoteCharClose()
 {
-    KPIMTextEdit::SelectSpecialChar dlg(this);
+    KPIMTextEdit::SelectSpecialCharDialog dlg(this);
     dlg.showSelectButton(false);
     dlg.setCurrentChar(m_singleQuotes.end);
     dlg.autoInsertChar();
@@ -288,7 +290,7 @@ void AutoCorrectionWidget::setDefaultSingleQuotes()
 
 void AutoCorrectionWidget::selectDoubleQuoteCharOpen()
 {
-    KPIMTextEdit::SelectSpecialChar dlg(this);
+    KPIMTextEdit::SelectSpecialCharDialog dlg(this);
     dlg.showSelectButton(false);
     dlg.setCurrentChar(m_doubleQuotes.begin);
     dlg.autoInsertChar();
@@ -301,7 +303,7 @@ void AutoCorrectionWidget::selectDoubleQuoteCharOpen()
 
 void AutoCorrectionWidget::selectDoubleQuoteCharClose()
 {
-    KPIMTextEdit::SelectSpecialChar dlg(this);
+    KPIMTextEdit::SelectSpecialCharDialog dlg(this);
     dlg.showSelectButton(false);
     dlg.setCurrentChar(m_doubleQuotes.end);
     dlg.autoInsertChar();

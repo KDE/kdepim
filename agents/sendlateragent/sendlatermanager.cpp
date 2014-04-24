@@ -28,6 +28,7 @@
 #include <KGlobal>
 #include <KMessageBox>
 #include <KLocale>
+#include <KDebug>
 
 #include <QStringList>
 #include <QTimer>

@@ -53,9 +53,10 @@
 #include <KDE/KLocale>
 #include <KDE/KMenu>
 #include <KDE/KStandardDirs>
+#include <KUrl>
 
 #include <collection.h>
-#include <kmime/messagestatus.h>
+#include <akonadi/kmime/messagestatus.h>
 
 using namespace MessageList::Core;
 

@@ -24,7 +24,7 @@
 #include <KDE/KLocale>
 #include <KDE/KMenu>
 #include <KDE/KXMLGUIClient>
-
+#include <KAction>
 #include <KToggleAction>
 
 #include <QtCore/QAbstractItemModel>
@@ -35,7 +35,7 @@
 #include <QMouseEvent>
 #include <QHeaderView>
 
-#include <akonadi/etmviewstatesaver.h>
+#include <etmviewstatesaver.h>
 
 #include "storagemodel.h"
 #include "widget.h"

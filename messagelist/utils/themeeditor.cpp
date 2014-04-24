@@ -44,6 +44,7 @@
 #include <QPushButton>
 #include <QSpinBox>
 #include <QStringList>
+#include <QMimeData>
 
 #include <KColorDialog>
 #include <KComboBox>

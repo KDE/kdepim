@@ -24,11 +24,11 @@
 #include "filterimporterexporter.h"
 #include "mailfilteragentinterface.h"
 #include <kconfiggroup.h>
-#include <Akonadi/Monitor>
-#include <Akonadi/Tag>
-#include <Akonadi/TagFetchJob>
-#include <Akonadi/TagFetchScope>
-#include <Akonadi/TagAttribute>
+#include <Monitor>
+#include <Tag>
+#include <TagFetchJob>
+#include <TagFetchScope>
+#include <TagAttribute>
 
 #include <QTimer>
 

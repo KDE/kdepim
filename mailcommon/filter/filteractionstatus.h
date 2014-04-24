@@ -19,7 +19,7 @@
 #define FILTERACTIONSTATUS_H
 
 #include "filteractionwithstringlist.h"
-#include <KDE/Akonadi/KMime/MessageStatus>
+#include <KDE/KMime/MessageStatus>
 
 namespace MailCommon {
 

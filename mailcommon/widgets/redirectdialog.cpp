@@ -34,7 +34,7 @@
 
 #include <messageviewer/utils/autoqpointer.h>
 
-#include <Akonadi/Contact/EmailAddressSelectionDialog>
+#include <Contact/EmailAddressSelectionDialog>
 
 #include <KPIMUtils/Email>
 #include <KDE/KPIMIdentities/Identity>

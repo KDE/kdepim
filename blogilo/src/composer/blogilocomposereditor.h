@@ -25,7 +25,7 @@
 #include <composereditor-ng/composereditor.h>
 
 class BilboMedia;
-
+class KAction;
 class BlogiloComposerEditor : public ComposerEditorNG::ComposerEditor
 {
     Q_OBJECT

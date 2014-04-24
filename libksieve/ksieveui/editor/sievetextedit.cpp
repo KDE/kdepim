@@ -25,7 +25,9 @@
 #include <KGlobalSettings>
 #include <KLocalizedString>
 #include <KAction>
+#include <KIcon>
 
+#include <QAbstractItemView>
 #include <QCompleter>
 #include <QStringListModel>
 #include <QKeyEvent>

@@ -17,6 +17,8 @@
 
 #include "sievetreewidgetitem.h"
 
+#include <KIconLoader>
+
 #include <QTimer>
 
 using namespace KSieveUi;

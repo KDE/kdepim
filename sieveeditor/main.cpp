@@ -22,15 +22,17 @@
 #include "kdepim-version.h"
 #include "sieveeditormainwindow.h"
 #include "sieveeditor_options.h"
-#include <kaboutdata.h>
+#include <k4aboutdata.h>
 #include <kcmdlineargs.h>
 #include <KDebug>
 #include <KUniqueApplication>
+#include <KGlobal>
+#include <KLocalizedString>
 
 int main( int argc, char **argv )
 {
-    KAboutData aboutData( "sieveeditor", 0, ki18n("Sieve Editor"),
-                          KDEPIM_VERSION, ki18n("Sieve Editor"), KAboutData::License_GPL_V2,
+    K4AboutData aboutData( "sieveeditor", 0, ki18n("Sieve Editor"),
+                          KDEPIM_VERSION, ki18n("Sieve Editor"), K4AboutData::License_GPL_V2,
                           ki18n("Copyright © 2013, 2014 sieveeditor authors"));
     aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
     aboutData.setProgramIconName(QLatin1String("kmail"));

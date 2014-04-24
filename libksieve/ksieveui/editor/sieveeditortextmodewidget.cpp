@@ -40,6 +40,7 @@
 #include <KLocalizedString>
 #include <KSharedConfig>
 #include <KTabWidget>
+#include <KGlobal>
 
 #include <QSplitter>
 #include <QShortcut>

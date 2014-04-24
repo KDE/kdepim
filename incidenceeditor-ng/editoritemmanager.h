@@ -23,7 +23,7 @@
 
 #include "incidenceeditors-ng_export.h"
 
-#include <Calendar/IncidenceChanger>
+#include <Akonadi/Calendar/IncidenceChanger>
 #include <Collection>
 #include <QObject>
 

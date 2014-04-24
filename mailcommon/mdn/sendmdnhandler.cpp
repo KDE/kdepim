@@ -30,9 +30,9 @@
 #include <messagecore/helpers/messagehelpers.h>
 #include <messageviewer/settings/globalsettings.h>
 
-#include <Akonadi/Collection>
-#include <Akonadi/Item>
-#include <Akonadi/KMime/MessageFlags>
+#include <Collection>
+#include <Item>
+#include <KMime/MessageFlags>
 
 #include <QQueue>
 #include <QTimer>

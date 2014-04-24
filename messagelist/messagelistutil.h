@@ -26,7 +26,7 @@
 namespace Akonadi {
 class Item;
 }
-class KMenu;
+class QMenu;
 
 namespace MessageList
 {
@@ -45,7 +45,7 @@ MESSAGELIST_EXPORT void deleteConfig( const QString& collectionId );
 MESSAGELIST_EXPORT QColor unreadDefaultMessageColor();
 MESSAGELIST_EXPORT QColor importantDefaultMessageColor();
 MESSAGELIST_EXPORT QColor todoDefaultMessageColor();
-MESSAGELIST_EXPORT void fillViewMenu( KMenu * menu, QObject *receiver );
+MESSAGELIST_EXPORT void fillViewMenu( QMenu * menu, QObject *receiver );
 
 /// Returns the first few lines of the actual email text if available.
 MESSAGELIST_EXPORT QString contentSummary( const Akonadi::Item &item );

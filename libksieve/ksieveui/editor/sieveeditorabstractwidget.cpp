@@ -65,7 +65,8 @@ void SieveEditorAbstractWidget::slotImport()
     KUrl url;
     const QString filter = i18n( "*.siv|sieve files (*.siv)\n*|all files (*)" );
     QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, this) );
-    fdlg->setCaption(i18n("Import Script Sieve"));
+    //QT5
+    //fdlg->setCaption(i18n("Import Script Sieve"));
     fdlg->setMode( KFile::File );
     fdlg->setOperationMode( KFileDialog::Opening );
     if ( fdlg->exec() == QDialog::Accepted && fdlg ) {

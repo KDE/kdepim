@@ -27,10 +27,10 @@ using MailCommon::RegExpLineEdit;
 #include <KLocale>
 #include <KJob>
 
-#include <Akonadi/Tag>
-#include <Akonadi/TagFetchJob>
-#include <Akonadi/TagFetchScope>
-#include <Akonadi/TagAttribute>
+#include <Tag>
+#include <TagFetchJob>
+#include <TagFetchScope>
+#include <TagAttribute>
 
 #include <QLineEdit>
 #include <QStackedWidget>

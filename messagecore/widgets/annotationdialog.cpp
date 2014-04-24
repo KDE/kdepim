@@ -24,12 +24,14 @@
 
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <Akonadi/ItemModifyJob>
+#include <ItemModifyJob>
 #include <KSharedConfig>
-#include <akonadi/item.h>
-#include <akonadi/entityannotationsattribute.h>
+#include <item.h>
+#include <entityannotationsattribute.h>
 
 #include <KComboBox>
+#include <KGlobal>
+#include <KIcon>
 
 #include <QLabel>
 #include <QGridLayout>

@@ -24,7 +24,7 @@
 #include <QListWidget>
 
 class KLineEdit;
-
+class KPushButton;
 namespace KSieveUi {
 
 class SelectHeadersWidget : public QListWidget

@@ -8,7 +8,7 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 #add_subdirectory(tests)
 
 add_definitions(-DQT_STATICPLUGIN)
-#qt4_wrap_cpp(wk_HEADERS_MOC spellplugin/qwebkitplatformplugin.h)
+qt5_wrap_cpp(wk_HEADERS_MOC spellplugin/qwebkitplatformplugin.h)
 
 #generate_export_header(COMPOSEREDITORNG BASE_NAME composereditor)
 find_package(KF5WebKit ${KF5_VERSION} CONFIG REQUIRED)

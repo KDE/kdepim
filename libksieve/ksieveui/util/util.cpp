@@ -42,7 +42,7 @@
 #include "imapresourcesettings.h"
 #include "sieve-vacation.h"
 
-#include <akonadi/agentmanager.h>
+#include <agentmanager.h>
 #include <kimap/loginjob.h>
 #include <kmime/kmime_message.h>
 #include <mailtransport/transport.h>

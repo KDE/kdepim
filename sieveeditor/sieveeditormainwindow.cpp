@@ -32,9 +32,10 @@
 #include <KStandardAction>
 #include <KApplication>
 #include <KActionCollection>
-#include <KAction>
+#include <QAction>
 #include <KStatusBar>
 #include <KTabWidget>
+#include <KIcon>
 
 #include <QPointer>
 #include <QLabel>
@@ -116,7 +117,7 @@ void SieveEditorMainWindow::setupActions()
     mSaveScript = KStandardAction::save( this, SLOT(slotSaveScript()), ac );
     mSaveScript->setEnabled(false);
 
-    KAction *act = ac->addAction(QLatin1String("add_server_sieve"), this, SLOT(slotAddServerSieve()));
+    QAction *act = ac->addAction(QLatin1String("add_server_sieve"), this, SLOT(slotAddServerSieve()));
     act->setText(i18n("Add Server Sieve..."));
 
     mDeleteScript = ac->addAction(QLatin1String("delete_script"), this, SLOT(slotDeleteScript()));

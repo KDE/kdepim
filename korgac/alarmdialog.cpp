@@ -43,9 +43,9 @@
 #include <KPIMIdentities/Identity>
 #include <KPIMIdentities/IdentityManager>
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
-#include <Mailtransport/TransportManager>
+#include <MailTransport/TransportManager>
 
 #include <KComboBox>
 #include <KDebug>

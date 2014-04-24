@@ -24,19 +24,20 @@
 #include "sendlateragentsettings.h"
 #include "sendlaterremovemessagejob.h"
 
-#include <KMime/SpecialMailCollections>
+#include <Akonadi/KMime/SpecialMailCollections>
 #include <AgentInstance>
 #include <AgentManager>
-#include <akonadi/dbusconnectionpool.h>
-#include <akonadi/changerecorder.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/session.h>
+#include <dbusconnectionpool.h>
+#include <changerecorder.h>
+#include <itemfetchscope.h>
+#include <AkonadiCore/session.h>
 #include <AttributeFactory>
 #include <CollectionFetchScope>
 #include <KMime/Message>
 
 #include <KWindowSystem>
 #include <KLocale>
+#include <KGlobal>
 
 #include <QPointer>
 

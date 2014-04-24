@@ -22,7 +22,7 @@
 #include "mailcommon_export.h"
 #include "foldertreewidgetproxymodel.h"
 
-#include <Akonadi/Collection>
+#include <Collection>
 
 #include <QAbstractItemView>
 #include <QWidget>

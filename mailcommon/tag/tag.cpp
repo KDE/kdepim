@@ -19,8 +19,8 @@
 */
 #include "tag.h"
 
-#include <Akonadi/Tag>
-#include <Akonadi/TagAttribute>
+#include <Tag>
+#include <TagAttribute>
 
 #include <QDebug>
 

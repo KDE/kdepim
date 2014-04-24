@@ -23,6 +23,7 @@
 #include <KLocale>
 #include <KPushButton>
 #include <KSeparator>
+#include <KIcon>
 
 #include <QVBoxLayout>
 #include <QCheckBox>

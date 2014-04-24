@@ -157,8 +157,7 @@ set(libpimcommon_widgets_SRCS
   widgets/simplestringlisteditor.cpp
   widgets/customtextedit.cpp
   widgets/customtreeview.cpp
-  #REACTIVATE IT
-  #widgets/customtoolswidget.cpp
+  widgets/customtoolswidget.cpp
   widgets/configureimmutablewidgetutils.cpp
 )
 
@@ -173,11 +172,11 @@ set(libpimcommon_SRCS
   #REACTIVATE
   ${libpimcommon_shorturl_SRCS}
   #${libpimcommon_storageservice_SRCS}
-  #${libpimcommon_autocorrection_SRCS}
-  #${libpimcommon_translator_SRCS}
+  ${libpimcommon_autocorrection_SRCS}
+  ${libpimcommon_translator_SRCS}
   ${libpimcommon_templatewidgets_SRCS}
   ${libpimcommon_folderdialog_SRCS}
-  ${libpimcommon_acl_SRCS}
+  #${libpimcommon_acl_SRCS}
   ${libpimcommon_sieve_SRCS}
   ${libpimcommon_widgets_SRCS}
 )
@@ -215,36 +214,35 @@ target_link_libraries(pimcommon
     KF5::AkonadiCore
     KF5::PimUtils
     KF5::SonnetCore
-    ${KDE4_KDEUI_LIBS}
     ${QT_QTWEBKIT_LIBRARY}
-    ${QJSON_LIBRARIES}
     ${KDE4_SOLID_LIBS}
     ${LibKGAPI2_LIBRARY}
     KF5::NewStuff
     KF5::Wallet
     kdepim
     #KF5::KLdap
-    #KF5::Imap
+    KF5::KImap
     KF5::AkonadiWidgets
+    KF5::Archive
 )
 
 set_target_properties(pimcommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS pimcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-add_subdirectory(translator/tests)
-add_subdirectory(texteditor/plaintexteditor/tests)
-add_subdirectory(texteditor/richtexteditor/tests)
-add_subdirectory(texteditor/commonwidget/tests/)
-add_subdirectory(widgets/tests)
-add_subdirectory(shorturl/tests)
-add_subdirectory(autocorrection/tests)
-add_subdirectory(folderdialog/tests/)
-add_subdirectory(storageservice/dropbox/tests)
-add_subdirectory(storageservice/hubic/tests)
-add_subdirectory(storageservice/tests)
-add_subdirectory(storageservice/yousendit/tests)
-add_subdirectory(storageservice/webdav/tests)
-add_subdirectory(storageservice/box/tests)
+#add_subdirectory(translator/tests)
+#add_subdirectory(texteditor/plaintexteditor/tests)
+#add_subdirectory(texteditor/richtexteditor/tests)
+#add_subdirectory(texteditor/commonwidget/tests/)
+#add_subdirectory(widgets/tests)
+#add_subdirectory(shorturl/tests)
+#add_subdirectory(autocorrection/tests)
+#add_subdirectory(folderdialog/tests/)
+#add_subdirectory(storageservice/dropbox/tests)
+#add_subdirectory(storageservice/hubic/tests)
+#add_subdirectory(storageservice/tests)
+#add_subdirectory(storageservice/yousendit/tests)
+#add_subdirectory(storageservice/webdav/tests)
+#add_subdirectory(storageservice/box/tests)
 add_subdirectory(storageservice/dropbox/icons/)
 
 if( LibKGAPI2_FOUND )

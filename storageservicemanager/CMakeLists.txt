@@ -10,7 +10,7 @@ include_directories(
 
 set( storageservicemanager_kcfg_SRCS settings/storageservicemanagerglobalconfig.kcfgc )
 
-kde4_add_kcfg_files(storageservicemanager_kcfg_SRCS ${storageservicemanager_kcfg_SRCS})
+kconfig_add_kcfg_files(storageservicemanager_kcfg_SRCS ${storageservicemanager_kcfg_SRCS})
 
 set(storageservicemanager_SRCS
   ${storageservicemanager_kcfg_SRCS}
@@ -30,12 +30,10 @@ set(storageservicemanager_SRCS
   storageserviceconfigurestoragewidget.cpp
 )
 
-kde4_add_executable(storageservicemanager ${storageservicemanager_SRCS} )
+add_executable(storageservicemanager ${storageservicemanager_SRCS} )
 TARGET_LINK_LIBRARIES(storageservicemanager 
-                       ${KDE4_KDEUI_LIBS} 
-                       ${KDE4_KIO_LIBS}
-		       ${KDE4_SOLID_LIBS}
-                       ${KDE4_KNOTIFYCONFIG_LIBS}
+                       KF5::KIOCore
+                       KF5::NotifyConfig
                        pimcommon
                        kdepim
 )

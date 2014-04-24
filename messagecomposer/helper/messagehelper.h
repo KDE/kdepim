@@ -26,7 +26,7 @@
 
 #include <kmime/kmime_headers.h>
 #include <kmime/kmime_message.h>
-#include <akonadi/item.h>
+#include <item.h>
 
 namespace KPIMIdentities {
 class IdentityManager;

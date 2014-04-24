@@ -26,6 +26,7 @@
 
 #include <KLocalizedString>
 #include <KSharedConfig>
+#include <KGlobal>
 
 #include <QTabWidget>
 #include <QVBoxLayout>

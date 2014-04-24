@@ -44,14 +44,14 @@ public:
     KZip::Compression mCompression;
     AttachmentPart::Ptr mCompressedFolder;
     QScopedPointer<KZip> mZip;
-    time_t mArchiveTime;
+    QDateTime mArchiveTime;
 };
 
 AttachmentFromFolderJob::Private::Private( AttachmentFromFolderJob* qq ) :
     q( qq ),
     mCompression( KZip::DeflateCompression ),
     mZip(0),
-    mArchiveTime(QDateTime::currentDateTime().toTime_t())
+    mArchiveTime(QDateTime::currentDateTime())
 {
 }
 

@@ -26,8 +26,10 @@
 #include <KLocale>
 #include <KHelpMenu>
 #include <KMenu>
-#include <KAboutData>
+#include <k4aboutdata.h>
 #include <KMessageBox>
+#include <KIcon>
+#include <KGlobal>
 
 #include <QPointer>
 
@@ -51,13 +53,13 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     connect(this, SIGNAL(okClicked()), SLOT(slotSave()));
 
     readConfig();
-    mAboutData = new KAboutData(
+    mAboutData = new K4AboutData(
                 QByteArray( "sendlateragent" ),
                 QByteArray(),
                 ki18n( "Send Later Agent" ),
                 QByteArray( KDEPIM_VERSION ),
                 ki18n( "Send emails later agent." ),
-                KAboutData::License_GPL_V2,
+                K4AboutData::License_GPL_V2,
                 ki18n( "Copyright (C) 2013, 2014 Laurent Montel" ) );
 
     mAboutData->addAuthor( ki18n( "Laurent Montel" ),
@@ -67,12 +69,14 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     mAboutData->setTranslator( ki18nc( "NAME OF TRANSLATORS", "Your names" ),
                              ki18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
 
-
+//QT5
+#if 0
     KHelpMenu *helpMenu = new KHelpMenu(this, mAboutData, true);
     //Initialize menu
-    KMenu *menu = helpMenu->menu();
+    QMenu *menu = helpMenu->menu();
     helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(KIcon(QLatin1String("kmail")));
     setButtonMenu( Help, menu );
+#endif
 }
 
 SendLaterConfigureDialog::~SendLaterConfigureDialog()

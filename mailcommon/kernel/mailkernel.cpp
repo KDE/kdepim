@@ -23,10 +23,9 @@
 
 #include "pimcommon/util/pimutil.h"
 
-#include <Akonadi/AgentInstance>
-#include <Akonadi/AgentManager>
-#include <Akonadi/EntityMimeTypeFilterModel>
-#include <Akonadi/KMime/SpecialMailCollections>
+#include <AgentInstance>
+#include <AgentManager>
+#include <entitymimetypefiltermodel.h>
 #include <Akonadi/KMime/SpecialMailCollectionsRequestJob>
 #include <Akonadi/KMime/SpecialMailCollectionsDiscoveryJob>
 
@@ -36,6 +35,7 @@
 #include <KDebug>
 #include <KLocale>
 #include <KMessageBox>
+#include <KGlobal>
 
 namespace MailCommon {
 
@@ -246,8 +246,8 @@ bool Kernel::folderIsDrafts( const Akonadi::Collection &col )
         return true;
     }
 
-    const QString idString = QString::number( col.id() );
-    if ( idString.isEmpty() ) {
+    const Akonadi::Item::Id id = col.id();
+    if ( id < 0 ) {
         return false;
     }
 
@@ -255,7 +255,7 @@ bool Kernel::folderIsDrafts( const Akonadi::Collection &col )
     const KPIMIdentities::IdentityManager * im = KernelIf->identityManager();
     KPIMIdentities::IdentityManager::ConstIterator end( im->end() );
     for ( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != end; ++it ) {
-        if ( (*it).drafts() == idString ) {
+        if ( (*it).drafts() == id ) {
             return true;
         }
     }
@@ -267,9 +267,8 @@ bool Kernel::folderIsTemplates( const Akonadi::Collection &col )
     if ( col == Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Templates ) ) {
         return true;
     }
-
-    const QString idString = QString::number( col.id() );
-    if ( idString.isEmpty() ) {
+    const Akonadi::Item::Id id = col.id();
+    if ( id < 0 ) {
         return false;
     }
 
@@ -277,7 +276,7 @@ bool Kernel::folderIsTemplates( const Akonadi::Collection &col )
     const KPIMIdentities::IdentityManager * im = KernelIf->identityManager();
     KPIMIdentities::IdentityManager::ConstIterator end( im->end() );
     for ( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != end; ++it ) {
-        if ( (*it).templates() == idString ) {
+        if ( (*it).templates() == id ) {
             return true;
         }
     }
@@ -315,9 +314,8 @@ bool Kernel::folderIsSentMailFolder( const Akonadi::Collection &col )
     if ( col == Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::SentMail ) ) {
         return true;
     }
-
-    const QString idString = QString::number( col.id() );
-    if ( idString.isEmpty() ) {
+    const Akonadi::Item::Id id = col.id();
+    if ( id < 0 ) {
         return false;
     }
 
@@ -325,7 +323,7 @@ bool Kernel::folderIsSentMailFolder( const Akonadi::Collection &col )
     const KPIMIdentities::IdentityManager * im = KernelIf->identityManager();
     KPIMIdentities::IdentityManager::ConstIterator end( im->end() );
     for ( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != end; ++it ) {
-        if ( (*it).fcc() == idString ) {
+        if ( (*it).fcc() == id ) {
             return true;
         }
     }

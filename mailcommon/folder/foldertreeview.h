@@ -23,8 +23,8 @@
 #include "foldertreewidget.h"
 #include "util/mailutil.h"
 
-#include <Akonadi/EntityTreeView>
-#include <Akonadi/Collection>
+#include <EntityTreeView>
+#include <Collection>
 
 class QMouseEvent;
 

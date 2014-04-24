@@ -24,7 +24,7 @@
 
 #include <QTextDocument>
 #include <QPointer>
-#include <Akonadi/Tag>
+#include <Tag>
 
 using namespace MailCommon;
 

@@ -26,6 +26,7 @@
 
 #include <KPushButton>
 #include <KLocalizedString>
+#include <KIcon>
 
 #include <QGridLayout>
 #include <QLabel>

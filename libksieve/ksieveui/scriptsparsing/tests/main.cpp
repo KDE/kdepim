@@ -28,6 +28,7 @@ using KSieve::Parser;
 #include <KFileDialog>
 #include <KCmdLineOptions>
 #include <KApplication>
+#include <KUrl>
 
 #include <QDebug>
 

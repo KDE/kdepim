@@ -23,6 +23,7 @@
 
 #include <KImageIO>
 #include <KFileDialog>
+#include <KUrl>
 
 using namespace ComposerEditorNG;
 
@@ -33,7 +34,8 @@ PageColorBackgroundWidget::PageColorBackgroundWidget(QWidget *parent) :
     ui->setupUi(this);
 
     const QStringList mimetypes = KImageIO::mimeTypes( KImageIO::Reading );
-    ui->backgroundImage->fileDialog()->setFilter(mimetypes.join( QLatin1String( " " ) ));
+//QT5
+    //ui->backgroundImage->fileDialog()->setFilter(mimetypes.join( QLatin1String( " " ) ));
     ui->groupBox->setEnabled(false);
     connect(ui->customColors,SIGNAL(toggled(bool)),ui->groupBox,SLOT(setEnabled(bool)));
 }

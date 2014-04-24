@@ -15,12 +15,13 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
-#include <akonadi/agentinstance.h>
+#include <agentinstance.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kmanagesieve/sievejob.h>
 #include <ksieveui/util/util.h>
+#include <KGlobal>
 
 #include <QtCore/QTimer>
 

@@ -178,6 +178,7 @@ target_link_libraries(ksieveui
   KF5::KMime
   KF5::PimIdentities
   KF5::KIOCore
+  KF5::MailTransport
   
   ${QT_QTWEBKIT_LIBRARY}
   ${KDE4_SOLID_LIBS}

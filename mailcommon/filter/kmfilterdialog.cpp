@@ -34,9 +34,9 @@ using MailCommon::FilterImporterExporter;
 #include "search/searchpatternedit.h"
 #include "filterconverter/filterconverttosieve.h"
 
-#include <Akonadi/AgentInstance>
-#include <Akonadi/AgentType>
-#include <Akonadi/ItemFetchJob>
+#include <AgentInstance>
+#include <AgentType>
+#include <ItemFetchJob>
 
 #include <KConfigGroup>
 #include <KDebug>

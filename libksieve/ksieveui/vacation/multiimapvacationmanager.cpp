@@ -19,7 +19,7 @@
 #include "vacationcheckjob.h"
 #include "util/util.h"
 
-#include <Akonadi/AgentInstance>
+#include <AgentInstance>
 
 #include <KMessageBox>
 #include <KLocalizedString>

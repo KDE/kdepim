@@ -18,9 +18,7 @@
  */
 
 #include "messagehelpers.h"
-
-#include <Akonadi/Item>
-
+#include <KDebug>
 using namespace MessageCore;
 using namespace MessageCore::Util;
 

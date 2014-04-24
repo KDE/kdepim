@@ -24,7 +24,6 @@
 #include <QNetworkRequest>
 #include <QPointer>
 
-#include <qjson/parser.h>
 
 
 using namespace PimCommon;
@@ -151,6 +150,8 @@ void GoogleTranslator::slotError(QNetworkReply::NetworkError /*error*/)
 
 void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
 {
+//QT5
+#if 0
     mJsonData = QString::fromUtf8(reply->readAll());
     reply->deleteLater();
     //  jsonData contains arrays like this: ["foo",,"bar"]
@@ -237,6 +238,7 @@ void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
         mResult = mInputText;
         Q_EMIT translateDone();
     }
+#endif
 }
 
 void GoogleTranslator::debug()

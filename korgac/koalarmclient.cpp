@@ -34,13 +34,13 @@
 
 #include <calendarsupport/utils.h>
 
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/Collection>
-#include <Akonadi/DBusConnectionPool>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/Item>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/Session>
+#include <AkonadiCore/ChangeRecorder>
+#include <AkonadiCore/Collection>
+#include <AkonadiCore/DBusConnectionPool>
+#include <AkonadiCore/EntityTreeModel>
+#include <AkonadiCore/Item>
+#include <AkonadiCore/ItemFetchScope>
+#include <AkonadiCore/Session>
 
 #include <KCalCore/Calendar>
 
@@ -49,6 +49,7 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <KDebug>
+#include <KGlobal>
 #include <KStandardDirs>
 
 #ifdef Q_WS_MAEMO_5

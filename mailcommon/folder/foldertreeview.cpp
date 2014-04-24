@@ -19,9 +19,9 @@
 #include "foldertreeview.h"
 #include "kernel/mailkernel.h"
 
-#include <Akonadi/CollectionStatistics>
-#include <Akonadi/CollectionStatisticsDelegate>
-#include <Akonadi/EntityTreeModel>
+#include <CollectionStatistics>
+#include <CollectionStatisticsDelegate>
+#include <EntityTreeModel>
 
 #include <KConfigGroup>
 #include <KDebug>

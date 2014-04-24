@@ -88,7 +88,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
             QFont bold;
             bold.setBold(true);
             action_text_bold->setFont(bold);
-            action_text_bold->setShortcut(KShortcut(Qt::CTRL + Qt::Key_B));
+            action_text_bold->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_B));
             FORWARD_ACTION(action_text_bold, QWebPage::ToggleBold);
             htmlEditorActionList.append(action_text_bold);
         }
@@ -100,7 +100,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
             QFont italic;
             italic.setItalic(true);
             action_text_italic->setFont(italic);
-            action_text_italic->setShortcut(KShortcut(Qt::CTRL + Qt::Key_I));
+            action_text_italic->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_I));
             FORWARD_ACTION(action_text_italic, QWebPage::ToggleItalic);
             htmlEditorActionList.append(action_text_italic);
         }
@@ -112,7 +112,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
             QFont underline;
             underline.setUnderline(true);
             action_text_underline->setFont(underline);
-            action_text_underline->setShortcut(KShortcut(Qt::CTRL + Qt::Key_U));
+            action_text_underline->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_U));
             FORWARD_ACTION(action_text_underline, QWebPage::ToggleUnderline);
             htmlEditorActionList.append(action_text_underline);
         }
@@ -121,7 +121,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     case ComposerView::StrikeOut: {
         if (!action_text_strikeout) {
             action_text_strikeout = new KToggleAction(KIcon(QLatin1String("format-text-strikethrough")), i18nc("@action", "&Strike Out"), q);
-            action_text_strikeout->setShortcut(KShortcut(Qt::CTRL + Qt::Key_L));
+            action_text_strikeout->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_L));
             FORWARD_ACTION(action_text_strikeout, QWebPage::ToggleStrikethrough);
             htmlEditorActionList.append(action_text_strikeout);
         }
@@ -406,7 +406,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
     {
         if (!action_find) {
             action_find = new QAction(KIcon(QLatin1String("edit-find")), i18n( "&Find..." ), q);
-            action_find->setShortcut(KStandardShortcut::find());
+            action_find->setShortcut(KStandardShortcut::find().first());
             htmlEditorActionList.append(action_find);
             q->connect( action_find, SIGNAL(triggered()), q, SLOT(_k_slotFind()) );
         }
@@ -417,7 +417,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         if (!action_replace) {
             action_replace = new QAction(KIcon(QLatin1String("edit-replace")), i18n( "&Replace..." ), q);
             htmlEditorActionList.append(action_replace);
-            action_replace->setShortcut(KStandardShortcut::replace());
+            action_replace->setShortcut(KStandardShortcut::replace().first());
             q->connect( action_replace, SIGNAL(triggered()), q, SLOT(_k_slotReplace()) );
         }
         break;
@@ -427,7 +427,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         if (!action_save_as) {
             action_save_as = new QAction(KIcon(QLatin1String("file_save_as")), i18n( "Save &As..." ), q);
             htmlEditorActionList.append(action_save_as);
-            action_replace->setShortcut(KStandardShortcut::save());
+            action_replace->setShortcut(KStandardShortcut::save().first());
             q->connect( action_save_as, SIGNAL(triggered()), q, SLOT(_k_slotSaveAs()) );
         }
         break;
@@ -437,7 +437,7 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         if (!action_print) {
             action_print = new QAction(KIcon(QLatin1String("file_print")), i18n( "&Print..." ), q);
             htmlEditorActionList.append(action_print);
-            action_replace->setShortcut(KStandardShortcut::print());
+            action_replace->setShortcut(KStandardShortcut::print().first());
             q->connect( action_print, SIGNAL(triggered()), q, SLOT(_k_slotPrint()) );
         }
         break;
@@ -963,7 +963,7 @@ void ComposerViewPrivate::_k_slotPasteWithoutFormatting()
 
 void ComposerViewPrivate::_k_slotInsertSpecialChar()
 {
-    KPIMTextEdit::SelectSpecialChar dlg(q);
+    KPIMTextEdit::SelectSpecialCharDialog dlg(q);
     dlg.showSelectButton(false);
     dlg.autoInsertChar();
     if (dlg.exec()) {

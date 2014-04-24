@@ -32,6 +32,7 @@
 #include <ktempdir.h>
 #include <kzip.h>
 #include <ktemporaryfile.h>
+#include <KIcon>
 
 #include <QPushButton>
 #include <QVBoxLayout>

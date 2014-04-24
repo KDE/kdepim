@@ -17,7 +17,7 @@
 */
 
 #include "filteractionstatus.h"
-#include <KDE/Akonadi/KMime/MessageStatus>
+#include <KDE/KMime/MessageStatus>
 #include <KDE/KLocale>
 using namespace MailCommon;
 

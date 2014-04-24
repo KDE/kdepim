@@ -24,10 +24,10 @@
 #include "foldertreewidgetproxymodel.h"
 #include "kernel/mailkernel.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/CollectionCreateJob>
-#include <Akonadi/EntityMimeTypeFilterModel>
-#include <Akonadi/EntityTreeModel>
+#include <Collection>
+#include <CollectionCreateJob>
+#include <EntityMimeTypeFilterModel>
+#include <EntityTreeModel>
 
 #include <KInputDialog>
 #include <KLocale>

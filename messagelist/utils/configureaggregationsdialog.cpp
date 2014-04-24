@@ -35,6 +35,8 @@
 #include <KIconLoader>
 #include <KMessageBox>
 #include <KFileDialog>
+#include <KIcon>
+#include <KConfig>
 
 namespace MessageList
 {

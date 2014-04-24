@@ -23,8 +23,8 @@
 #include <messagecore/misc/mailinglist.h>
 using MessageCore::MailingList;
 
-#include <Akonadi/Collection>
-#include <Akonadi/CollectionStatistics>
+#include <Collection>
+#include <CollectionStatistics>
 
 #include <KSharedConfig>
 #include <KShortcut>

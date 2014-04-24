@@ -10,7 +10,7 @@ add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 # enable exception handling
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+kde_enable_exceptions()
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/calendarsupport
@@ -45,7 +45,7 @@ qt4_add_dbus_interface(korgac_SRCS ${korganizer_xml}
   korganizer_interface
 )
 
-qt4_add_dbus_adaptor(korgac_SRCS org.kde.korganizer.KOrgac.xml koalarmclient.h
+qt5_add_dbus_adaptor(korgac_SRCS org.kde.korganizer.KOrgac.xml koalarmclient.h
   KOAlarmClient
 )
 
@@ -56,9 +56,9 @@ endif()
 kde4_add_app_icon(korgac_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/pixmap/hi*-apps-korganizer.png")
 
 if(KORGAC_AKONADI_AGENT)
-  kde4_add_plugin(korgac ${korgac_SRCS})
+  add_library(korgac MODULE ${korgac_SRCS})
 else()
-  kde4_add_executable(korgac ${korgac_SRCS})
+  add_executable(korgac ${korgac_SRCS})
   if(Q_WS_MAC)
     set_target_properties(korgac PROPERTIES
       MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/Info.plist.template
@@ -79,13 +79,11 @@ target_link_libraries(korgac
   incidenceeditorsng
   kdepim
   kdepimdbusinterfaces
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_KCALCORE_LIBS}
-  ${KDEPIMLIBS_KCALUTILS_LIBS}
-  ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
-  ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
-  ${KDE4_KDEUI_LIBS}
-  ${KDE4_PHONON_LIBS}
+  KF5::AkonadiCore
+  KF5::CalendarCore
+  KF5::CalendarUtils
+  KF5::PimIdentities
+  KF5::MailTransport
 )
 
 if(RUNTIME_PLUGINS_STATIC)

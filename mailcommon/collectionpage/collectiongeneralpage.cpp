@@ -24,11 +24,11 @@
 #include "util/mailutil.h"
 
 #include "pimcommon/util/pimutil.h"
-#include <Akonadi/AgentManager>
-#include <Akonadi/AttributeFactory>
-#include <Akonadi/Collection>
-#include <Akonadi/CollectionModifyJob>
-#include <Akonadi/EntityDisplayAttribute>
+#include <AgentManager>
+#include <AttributeFactory>
+#include <Collection>
+#include <CollectionModifyJob>
+#include <EntityDisplayAttribute>
 
 #include <KPIMIdentities/IdentityCombo>
 

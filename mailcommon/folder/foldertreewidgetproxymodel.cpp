@@ -24,11 +24,11 @@
 
 #include <messagecore/settings/globalsettings.h>
 
-#include <Akonadi/AgentInstance>
-#include <Akonadi/AgentManager>
-#include <Akonadi/Collection>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/MimeTypeChecker>
+#include <AgentInstance>
+#include <AgentManager>
+#include <Collection>
+#include <EntityTreeModel>
+#include <MimeTypeChecker>
 
 #include <KColorScheme>
 #include <KDebug>

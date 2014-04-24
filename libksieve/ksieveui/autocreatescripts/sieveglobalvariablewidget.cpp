@@ -24,6 +24,7 @@
 #include <KPushButton>
 #include <KLocalizedString>
 #include <KLineEdit>
+#include <KIcon>
 
 #include <QGridLayout>
 #include <QCheckBox>

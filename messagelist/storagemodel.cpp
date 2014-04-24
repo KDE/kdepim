@@ -22,16 +22,17 @@
 #include <messagecore/settings/globalsettings.h>
 #include <messagecore/helpers/nodehelper.h>
 
-#include <akonadi/attributefactory.h>
-#include <akonadi/collection.h>
-#include <akonadi/collectionstatistics.h>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/item.h>
-#include <akonadi/itemmodifyjob.h>
+#include <attributefactory.h>
+#include <collection.h>
+#include <collectionstatistics.h>
+#include <entitymimetypefiltermodel.h>
+#include <entitytreemodel.h>
+#include <item.h>
+#include <itemmodifyjob.h>
 #include <akonadi/kmime/messagefolderattribute.h>
-#include <akonadi/selectionproxymodel.h>
+#include <selectionproxymodel.h>
 
+#include <KDebug>
 #include <KDE/KLocale>
 #include "core/messageitem.h"
 #include "core/settings.h"
@@ -365,9 +366,11 @@ int StorageModel::columnCount( const QModelIndex &parent ) const
 
 QModelIndex StorageModel::index( int row, int column, const QModelIndex &parent ) const
 {
+//QT5
+#if 0
     if ( !parent.isValid() )
         return createIndex( row, column, 0 );
-
+#endif
     return QModelIndex(); // this model is flat.
 }
 

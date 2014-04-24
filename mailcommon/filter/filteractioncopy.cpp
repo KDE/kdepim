@@ -23,7 +23,7 @@
 #include "mailcommon/util/mailutil.h"
 
 
-#include <KDE/Akonadi/ItemCopyJob>
+#include <KDE/ItemCopyJob>
 #include <KDE/KLocale>
 
 using namespace MailCommon;

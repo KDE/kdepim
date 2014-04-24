@@ -28,13 +28,17 @@
 #include <KActionMenu>
 #include <KStandardDirs>
 #include <KDebug>
+#include <KAction>
+#include <KGlobal>
+#include <KIcon>
 
 #include <QDir>
 #include <QAction>
 #include <QDirIterator>
 #include <QActionGroup>
 
-static const KCatalogLoader loader( QLatin1String("libgrantleetheme") );
+//QT5
+//static const KCatalogLoader loader( QLatin1String("libgrantleetheme") );
 
 using namespace GrantleeTheme;
 

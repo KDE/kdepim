@@ -26,6 +26,7 @@
 #include <KLocalizedString>
 #include <KConfigGroup>
 #include <KSharedConfig>
+#include <KGlobal>
 
 #include <QHBoxLayout>
 

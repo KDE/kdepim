@@ -24,7 +24,7 @@
 #include "util/mailutil.h"
 #include "kernel/mailkernel.h"
 
-#include <Akonadi/CollectionModifyJob>
+#include <CollectionModifyJob>
 
 #include <KDialog>
 #include <KIntSpinBox>

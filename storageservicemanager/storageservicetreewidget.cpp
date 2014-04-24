@@ -31,6 +31,8 @@
 #include <KGlobalSettings>
 #include <KMessageBox>
 #include <KLocale>
+#include <KUrl>
+#include <KGlobal>
 
 #include <QPainter>
 #include <QHeaderView>

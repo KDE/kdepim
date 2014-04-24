@@ -25,10 +25,11 @@
 #include "ui_attachmentpropertiesdialog.h"
 #include "ui_attachmentpropertiesdialog_readonly.h"
 
-#include <KAboutData>
+#include <k4aboutdata.h>
 #include <KComponentData>
 #include <KDebug>
 #include <KGlobal>
+#include <KIconLoader>
 #include <KMimeType>
 
 #include <kmime/kmime_content.h>

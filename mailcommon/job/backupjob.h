@@ -24,8 +24,8 @@
 #include "mailcommon_export.h"
 #include "progresswidget/progressmanager.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/Item>
+#include <Collection>
+#include <Item>
 
 #include <KUrl>
 

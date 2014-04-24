@@ -33,7 +33,7 @@ using MailCommon::FilterLog;
 #include "pimcommon/util/pimutil.h"
 
 // KDEPIMLIBS headers
-#include <Akonadi/AgentManager>
+#include <AgentManager>
 
 // other KDE headers
 #include <klocale.h>

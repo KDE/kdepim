@@ -22,6 +22,7 @@
 #include <kiconloader.h>
 #include <klineedit.h>
 #include <klocale.h>
+#include <KIcon>
 
 #include <QHBoxLayout>
 #include <QPushButton>

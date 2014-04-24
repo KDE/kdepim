@@ -23,8 +23,8 @@
 #include "../mailcommon_export.h"
 #include "mailfilter.h"
 
-#include <Akonadi/Item>
-#include <Akonadi/ServerManager>
+#include <Item>
+#include <ServerManager>
 
 #include <QObject>
 

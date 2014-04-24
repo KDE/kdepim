@@ -26,6 +26,8 @@
 #include <KLocalizedString>
 #include <KInputDialog>
 #include <KPushButton>
+#include <KIconLoader>
+#include <KIcon>
 
 #include <QVBoxLayout>
 #include <QListWidget>

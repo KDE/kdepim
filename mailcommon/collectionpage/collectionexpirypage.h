@@ -21,8 +21,8 @@
 
 #include "mailcommon_export.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/CollectionPropertiesPage>
+#include <Collection>
+#include <CollectionPropertiesPage>
 
 class KIntSpinBox;
 class KJob;

@@ -20,16 +20,16 @@
 #include "foldercollection.h"
 #include "collectionpage/expirecollectionattribute.h"
 
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/Collection>
-#include <Akonadi/CollectionFetchScope>
-#include <Akonadi/CollectionModel>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/Item>
-#include <Akonadi/ItemDeleteJob>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/KMime/MessageParts>
+#include <ChangeRecorder>
+#include <Collection>
+#include <CollectionFetchScope>
+#include <CollectionModel>
+#include <EntityTreeModel>
+#include <Item>
+#include <ItemDeleteJob>
+#include <ItemFetchJob>
+#include <ItemFetchScope>
+#include <KMime/MessageParts>
 #include <akonadi/entityannotationsattribute.h>
 
 #include <KMime/KMimeMessage>

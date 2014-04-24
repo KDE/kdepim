@@ -16,20 +16,22 @@
 */
 
 #include <kcmdlineargs.h>
-#include <kaboutdata.h>
+#include <k4aboutdata.h>
 #include <klocale.h>
 #include <KApplication>
 #include <KFileDialog>
 #include "mboxmainwindow.h"
 
+#include <KLocalizedString>
 #include "kdepim-version.h"
 
 int main(int argc, char *argv[])
 {
-    KLocale::setMainCatalog("mboximporter");
+    //QT5
+    //KLocale::setMainCatalog("mboximporter");
 
-    KAboutData aboutData( "mboximporter", 0, ki18n("mbox importer"),
-                          KDEPIM_VERSION, ki18n("MBox importer tool"), KAboutData::License_GPL_V2,
+    K4AboutData aboutData( "mboximporter", 0, ki18n("mbox importer"),
+                          KDEPIM_VERSION, ki18n("MBox importer tool"), K4AboutData::License_GPL_V2,
                           ki18n("Copyright © 2013 MBoxImporter authors"));
     aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
 

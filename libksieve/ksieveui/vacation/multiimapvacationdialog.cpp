@@ -20,12 +20,15 @@
 #include "vacationpagewidget.h"
 #include "ksieveui/util/util.h"
 
-#include <Akonadi/AgentInstance>
+#include <AgentInstance>
 
 #include <KLocalizedString>
 #include <KSharedConfig>
 #include <kwindowsystem.h>
 #include <KTabWidget>
+#include <KIconLoader>
+#include <KUrl>
+#include <KGlobal>
 
 #include <QApplication>
 #include <QStackedWidget>

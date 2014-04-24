@@ -36,6 +36,8 @@
 #include <KMessageBox>
 #include <KFileDialog>
 #include <KConfigGroup>
+#include <KIcon>
+#include <KConfig>
 
 namespace MessageList
 {

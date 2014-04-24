@@ -23,6 +23,7 @@
 #include <mailtransport/transport.h>
 
 #include <KLocalizedString>
+#include <KDebug>
 
 /** static helper functions **/
 static QString authenticationModeString( MailTransport::Transport::EnumAuthenticationType::type mode )

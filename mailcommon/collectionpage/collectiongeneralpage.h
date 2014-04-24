@@ -20,7 +20,7 @@
 
 #include "mailcommon_export.h"
 
-#include <Akonadi/CollectionPropertiesPage>
+#include <CollectionPropertiesPage>
 
 class KComboBox;
 class KLineEdit;

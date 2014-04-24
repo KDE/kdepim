@@ -24,7 +24,7 @@
 #include <KIcon>
 #include <KLocalizedString>
 #include <KMime/Message>
-#include <Akonadi/Item>
+#include <Item>
 
 using namespace MessageList::Core;
 
@@ -119,7 +119,7 @@ QColor MessageList::Util::todoDefaultMessageColor()
     return QColor( 0x0, 0x98, 0x0 );
 }
 
-void MessageList::Util::fillViewMenu( KMenu * menu, QObject *receiver )
+void MessageList::Util::fillViewMenu( QMenu * menu, QObject *receiver )
 {
     KMenu* sortingMenu = new KMenu( i18n( "Sorting" ), menu );
     sortingMenu->setIcon( KIcon( QLatin1String( "view-sort-ascending" ) ) );

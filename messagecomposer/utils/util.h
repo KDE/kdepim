@@ -24,7 +24,7 @@
 
 #include "messagecomposer_export.h"
 #include "kleo/enum.h"
-#include <KDE/KMime/Message>
+#include <KMime/Message>
 
 #include <QTextEdit>
 

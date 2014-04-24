@@ -24,6 +24,7 @@
 #include "helper/tablehelper_p.h"
 
 #include <KLocalizedString>
+#include <KIcon>
 
 #include <QWebElement>
 #include <QDebug>

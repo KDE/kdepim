@@ -19,7 +19,7 @@
 #define MULTIIMAPVACATIONDIALOG_H
 
 #include <KDialog>
-
+#include <KUrl>
 #include "ksieveui_export.h"
 
 class KTabWidget;

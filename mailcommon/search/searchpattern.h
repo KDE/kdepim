@@ -22,7 +22,7 @@
 
 #include "mailcommon_export.h"
 
-#include <Akonadi/KMime/MessageStatus>
+#include <KMime/MessageStatus>
 
 #include <KLocale>
 #include <KUrl>

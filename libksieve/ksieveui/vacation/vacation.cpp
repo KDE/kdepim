@@ -21,7 +21,7 @@
 #include "vacationdialog.h"
 #include <kmanagesieve/sievejob.h>
 
-#include <akonadi/agentinstance.h>
+#include <agentinstance.h>
 #include <kdebug.h>
 #include <kglobal.h>
 #include <klocale.h>

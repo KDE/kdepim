@@ -31,8 +31,8 @@ using MessageComposer::MessageFactory;
 #endif
 #include <messageviewer/viewer/objecttreeparser.h>
 
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemModifyJob>
+#include <ItemFetchJob>
+#include <ItemModifyJob>
 
 #include <KDebug>
 #include <KLocale>

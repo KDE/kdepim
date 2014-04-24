@@ -26,6 +26,7 @@
 #include <ksieve/parser.h>
 #include <ksieve/scriptbuilder.h>
 
+#include <KDebug>
 #include <cassert>
 #include <limits.h>
 #include <map>

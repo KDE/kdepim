@@ -18,10 +18,10 @@
 
 #include "widget.h"
 
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
-#include <akonadi/itemcopyjob.h>
-#include <akonadi/itemmovejob.h>
+#include <collection.h>
+#include <item.h>
+#include <itemcopyjob.h>
+#include <itemmovejob.h>
 
 #include "storagemodel.h"
 #include "core/messageitem.h"
@@ -34,6 +34,7 @@
 #include <QDrag>
 #include <QDragMoveEvent>
 #include <QDropEvent>
+#include <QMimeData>
 
 #include <KDE/KActionCollection>
 #include <KDE/KComboBox>
@@ -48,11 +49,11 @@
 
 #include "core/groupheaderitem.h"
 
-#include <Akonadi/Monitor>
-#include <Akonadi/Tag>
-#include <Akonadi/TagFetchJob>
-#include <Akonadi/TagFetchScope>
-#include <Akonadi/TagAttribute>
+#include <Monitor>
+#include <Tag>
+#include <TagFetchJob>
+#include <TagFetchScope>
+#include <TagAttribute>
 
 
 namespace MessageList

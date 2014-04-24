@@ -20,10 +20,10 @@
 #include <kglobal.h>
 #include <kpimidentities/identitymanager.h>
 #include <mailcommon/folder/foldercollectionmonitor.h>
-#include <akonadi/session.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/changerecorder.h>
+#include <AkonadiCore/session.h>
+#include <entitytreemodel.h>
+#include <entitymimetypefiltermodel.h>
+#include <changerecorder.h>
 
 MBoxImporterKernel::MBoxImporterKernel( QObject *parent )
     : QObject( parent )

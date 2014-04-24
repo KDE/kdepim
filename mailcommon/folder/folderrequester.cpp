@@ -34,7 +34,7 @@
 
 #include <messageviewer/utils/autoqpointer.h>
 
-#include <Akonadi/CollectionFetchJob>
+#include <CollectionFetchJob>
 
 #include <KDialog>
 #include <KIconLoader>

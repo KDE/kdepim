@@ -24,6 +24,7 @@
 
 #include <KLocalizedString>
 #include <KSeparator>
+#include <KUrl>
 
 #include <QVBoxLayout>
 #include <QWebElement>

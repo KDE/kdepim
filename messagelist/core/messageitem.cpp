@@ -32,7 +32,8 @@
 #include <tagfetchscope.h>
 #include <KIconLoader>
 #include <KLocalizedString>
-
+#include <KGlobal>
+#include <KDebug>
 using namespace MessageList::Core;
 
 K_GLOBAL_STATIC( TagCache, s_tagCache )

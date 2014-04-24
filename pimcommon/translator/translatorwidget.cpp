@@ -32,6 +32,9 @@
 #include <KMessageBox>
 #include <KToggleAction>
 #include <kpimutils/progressindicatorwidget.h>
+#include <KIcon>
+#include <KGlobal>
+#include <QMimeData> 
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
