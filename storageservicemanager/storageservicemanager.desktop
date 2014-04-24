@@ -1,10 +1,24 @@
 [Desktop Entry]
 Name=Cloud Storage Manager
+Name[nds]=Datenaflaag-Pleger
+Name[nl]=Beheerder van cloud-opslag
+Name[pt]=Gestor de Armazenamento na 'Cloud'
+Name[sv]=Hantering av molnlagring
+Name[uk]=Керування збереженням у «хмарах»
+Name[x-test]=xxCloud Storage Managerxx
+Name[zh_TW]=雲端儲存管理員
 Type=Application
 Exec=storageservicemanager
 Icon=kmail
 X-DocPath=storageservicemanager/index.html
 GenericName=Cloud Storage Manager
+GenericName[nds]=Datenaflaag-Pleger
+GenericName[nl]=Beheerder van cloud-opslag
+GenericName[pt]=Gestor de Armazenamento na 'Cloud'
+GenericName[sv]=Hantering av molnlagring
+GenericName[uk]=Керування збереженням у «хмарах»
+GenericName[x-test]=xxCloud Storage Managerxx
+GenericName[zh_TW]=雲端儲存管理員
 Terminal=false
 Categories=Qt;KDE;Office;Network;
 InitialPreference=10

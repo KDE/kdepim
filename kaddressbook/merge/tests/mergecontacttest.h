@@ -26,6 +26,10 @@ class MergeContactTest : public QObject
     Q_OBJECT
 public:
     MergeContactTest();
+
+private Q_SLOTS:
+    void shouldReturnDefaultAddressWhenNoListItem();
+    void shouldReturnDefaultAddressWhenOneItem();
 };
 
 #endif // MERGECONTACTTEST_H

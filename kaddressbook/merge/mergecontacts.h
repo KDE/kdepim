@@ -27,7 +27,7 @@ namespace KABMergeContacts {
 class KADDRESSBOOK_EXPORT MergeContacts
 {
 public:
-    MergeContacts(const Akonadi::Item::List &items);
+    MergeContacts(const Akonadi::Item::List &items = Akonadi::Item::List());
     ~MergeContacts();
 
     KABC::Addressee mergedContact();
