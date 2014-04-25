@@ -61,7 +61,8 @@ else()
                        adblock/adblockblockableitemswidget.cpp
                        )
   set(_mailwebview_lib KF5::WebKit ${QT_QTWEBKIT_LIBRARY})
-  add_subdirectory(a11y)
+  #reactivate
+  #add_subdirectory(a11y)
 endif()
 
 set(libmessageviewer_viewer_SRCS
@@ -199,11 +200,9 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   KF5::Gpgmepp
   Qt5::WebKitWidgets
   KF5::KDELibs4Support
-  ${KDE4_KPRINTUTILS_LIBS}
   ${_mailwebview_lib}
   Grantlee::Templates
   KF5::NewStuff
-  ${KDE4_SOLID_LIBS}
   pimcommon
   grantleetheme
   kaddressbookgrantlee

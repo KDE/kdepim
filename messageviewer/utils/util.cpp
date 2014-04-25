@@ -66,6 +66,7 @@
 #include <KTemporaryFile>
 #include <ktoolinvocation.h>
 #include <KAction>
+#include <KIcon>
 
 #include <QTextCodec>
 #include <QWidget>
@@ -479,7 +480,7 @@ bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget
 
     const QString filter = i18n( "*.mbox|email messages (*.mbox)\n*|all files (*)" );
     QPointer<KFileDialog> dlg = new KFileDialog(KUrl::fromPath( fileName ), filter, parent);
-    dlg->setCaption(i18np("Save Message", "Save Messages", retrievedMsgs.count()));
+    //QT5 dlg->setCaption(i18np("Save Message", "Save Messages", retrievedMsgs.count()));
     dlg->setMode(KFile::File|KFile::LocalOnly);
     dlg->setOperationMode(KFileDialog::Saving);
     if( !appendMessages )

@@ -26,6 +26,7 @@
 #include <KIO/Job>
 #include <KTemporaryFile>
 #include <KSharedConfig>
+#include <KUrl>
 
 #include <QHBoxLayout>
 #include <KDebug>

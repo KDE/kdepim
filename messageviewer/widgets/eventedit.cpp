@@ -23,6 +23,8 @@
 #include <KLineEdit>
 #include <KIcon>
 #include <KDateTimeEdit>
+#include <QDateTime>
+#include <KDebug>
 
 #include <QHBoxLayout>
 #include <QEvent>
@@ -97,7 +99,7 @@ EventEdit::EventEdit(QWidget *parent)
     KDateTime currentDateTime = KDateTime::currentDateTime(KDateTime::LocalZone);
     mStartDateTimeEdit = new KDateTimeEdit;
     mStartDateTimeEdit->setObjectName(QLatin1String("startdatetimeedit"));
-    mStartDateTimeEdit->setDateTime(currentDateTime);
+    //QT5 mStartDateTimeEdit->setDateTime(currentDateTime);
 #ifndef QT_NO_ACCESSIBILITY
     mStartDateTimeEdit->setAccessibleDescription( i18n("Select start time for event.") );
 #endif
@@ -109,7 +111,7 @@ EventEdit::EventEdit(QWidget *parent)
     hbox->addWidget(lab);
     mEndDateTimeEdit = new KDateTimeEdit;
     mEndDateTimeEdit->setObjectName(QLatin1String("enddatetimeedit"));
-    mEndDateTimeEdit->setDateTime(currentDateTime.addSecs(3600));
+    //QT5 mEndDateTimeEdit->setDateTime(currentDateTime.addSecs(3600));
 #ifndef QT_NO_ACCESSIBILITY
     mEndDateTimeEdit->setAccessibleDescription( i18n("Select end time for event.") );
 #endif
@@ -205,8 +207,8 @@ void EventEdit::slotReturnPressed()
         return;
     }
 
-    const KDateTime dtstart = mStartDateTimeEdit->dateTime();
-    const KDateTime dtend = mEndDateTimeEdit->dateTime();
+    const QDateTime dtstart = mStartDateTimeEdit->dateTime();
+    const QDateTime dtend = mEndDateTimeEdit->dateTime();
     if (!dtstart.isValid() || !dtend.isValid()) {
         kDebug()<<" date is not valid !";
         return;
@@ -214,8 +216,10 @@ void EventEdit::slotReturnPressed()
 
     if (!mEventEdit->text().trimmed().isEmpty()) {
         KCalCore::Event::Ptr event( new KCalCore::Event );
+#if 0 //QT5
         event->setDtStart(dtstart);
         event->setDtEnd(dtend);
+#endif
         event->setSummary(mEventEdit->text());
         Q_EMIT createEvent(event, collection);
         mEventEdit->clear();

@@ -29,6 +29,8 @@
 
 #include <KConfigDialogManager>
 #include <KDialog>
+#include <KLocalizedString>
+#include <KDebug>
 
 using namespace MessageViewer;
 

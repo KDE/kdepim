@@ -28,6 +28,7 @@
 
 #include <KLocalizedString>
 #include <KGlobal>
+#include <KDebug>
 
 #include <QBuffer>
 #include "contactdisplaymessagememento.h"

@@ -43,6 +43,7 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 #include <KIcon>
 #include <KDebug>
 #include <KMessageBox>
+#include <KLocalizedString>
 
 // Qt Includes
 #include <QWhatsThis>

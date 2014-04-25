@@ -27,6 +27,7 @@
 #include <KLocalizedString>
 #include <KProtocolInfo>
 #include <KRun>
+#include <KGlobal>
 
 #include <QTimer>
 #include <QWidget>

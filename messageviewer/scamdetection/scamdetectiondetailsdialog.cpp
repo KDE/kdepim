@@ -21,6 +21,8 @@
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
 #include <KLocalizedString>
+#include <KDebug>
+#include <KUrl>
 
 #include <KTextEdit>
 #include <KFileDialog>

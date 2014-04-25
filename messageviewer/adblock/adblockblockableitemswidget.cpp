@@ -26,6 +26,7 @@
 #include <KMenu>
 #include <KConfigGroup>
 #include <KStandardDirs>
+#include <KUrl>
 #include <KRun>
 
 #include <QHeaderView>

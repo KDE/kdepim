@@ -18,7 +18,7 @@
 #include "createtodojob.h"
 
 #include <Akonadi/KMime/MessageParts>
-#include <Akonadi/ItemFetchJob>
+#include <AkonadiCore/ItemFetchJob>
 #include <AkonadiCore/ItemFetchScope>
 #include <AkonadiCore/ItemCreateJob>
 

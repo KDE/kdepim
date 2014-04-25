@@ -497,8 +497,9 @@ void MailWebView::showAccessKeys()
     }
     if (mActionCollection) {
         Q_FOREACH(QAction*act, mActionCollection->actions()) {
-            QAction *a = qobject_cast<KAction*>(act);
+            QAction *a = qobject_cast<QAction*>(act);
             if(a) {
+#if 0 //QT5
                 const KShortcut shortCut = a->shortcut();
                 if(!shortCut.isEmpty()) {
                     Q_FOREACH(const QChar& c, unusedKeys) {
@@ -507,6 +508,7 @@ void MailWebView::showAccessKeys()
                         }
                     }
                 }
+#endif
             }
         }
     }

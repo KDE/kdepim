@@ -36,14 +36,15 @@
 #include <KIO/FileCopyJob>
 #include <KStandardDirs>
 #include <KNotification>
-
+#include <KLocalizedString>
+#include <KComponentData>
 // Qt Includes
 #include <QUrl>
 #include <QTimer>
 #include <QWebElement>
 #include <QNetworkReply>
 #include <QNetworkRequest>
-#include <QtConcurrentRun>
+#include <QtConcurrent/QtConcurrentRun>
 #include <QFile>
 #include <QDateTime>
 #include <QWebFrame>
@@ -290,14 +291,14 @@ void AdBlockManager::slotFinished(KJob *job)
 {
     if (job->error()) {
         KNotification *notify = new KNotification( QLatin1String("adblock-list-download-failed") );
-        notify->setComponentData( KComponentData("messageviewer") );
+        notify->setComponentName( QLatin1String("messageviewer") );
         notify->setText( i18n("Download new ad-block list was failed." ) );
         notify->sendEvent();
         return;
     }
 
     KNotification *notify = new KNotification( QLatin1String("adblock-list-download-done") );
-    notify->setComponentData( KComponentData("messageviewer") );
+    notify->setComponentName( QLatin1String("messageviewer") );
     notify->setText( i18n("Download new ad-block list was done." ) );
     notify->sendEvent();
     const QString itemName = job->property("itemname").toString();

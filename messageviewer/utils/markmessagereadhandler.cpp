@@ -26,6 +26,8 @@
 #include <AkonadiCore/itemmodifyjob.h>
 #include <akonadi/kmime/messageflags.h>
 
+#include <KGlobal>
+
 #include <QtCore/QTimer>
 using namespace MessageViewer;
 K_GLOBAL_STATIC( Akonadi::Item::List, sListItem )

@@ -21,6 +21,7 @@
 #include <KLocalizedString>
 #include <KTreeWidgetSearchLine>
 #include <KMenu>
+#include <KGlobal>
 
 #include <QVBoxLayout>
 #include <QTreeWidget>

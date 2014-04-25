@@ -20,6 +20,8 @@
 #include "scamcheckshorturl.h"
 #include "settings/globalsettings.h"
 
+#include <KLocalizedString>
+
 #include <QWebElement>
 #include <QWebFrame>
 #include <QDebug>

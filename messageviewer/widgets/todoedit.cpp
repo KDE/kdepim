@@ -21,6 +21,7 @@
 #include <KLocalizedString>
 #include <KLineEdit>
 #include <KIcon>
+#include <KDebug>
 
 #include <QHBoxLayout>
 #include <QEvent>
