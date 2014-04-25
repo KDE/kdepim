@@ -23,7 +23,8 @@
 #include "ui_instanceselector.h"
 
 #include <KDebug>
-
+#include <KIcon>
+#include <KLocalizedString>
 #include <akonadi/private/protocol_p.h>
 
 #include <QApplication>

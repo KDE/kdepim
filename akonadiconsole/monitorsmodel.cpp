@@ -22,7 +22,7 @@
 
 #include <KDebug>
 
-#include <akonadi/servermanager.h>
+#include <AkonadiCore/servermanager.h>
 
 #include <QtDBus/QDBusConnection>
 

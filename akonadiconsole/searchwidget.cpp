@@ -21,10 +21,10 @@
 
 #include "searchwidget.h"
 
-#include <akonadi/control.h>
+#include <AkonadiCore/control.h>
 #include <AkonadiCore/itemfetchjob.h>
 #include <AkonadiCore/itemfetchscope.h>
-#include <akonadi/itemsearchjob.h>
+#include <AkonadiCore/itemsearchjob.h>
 
 #include <KComboBox>
 #include <KMessageBox>

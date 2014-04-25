@@ -33,13 +33,14 @@
 #include "monitorswidget.h"
 #include "querydebugger.h"
 
-#include <akonadi/agentinstancewidget.h>
-#include <akonadi/agentfilterproxymodel.h>
-#include <akonadi/control.h>
-#include <akonadi/searchcreatejob.h>
-#include <akonadi/servermanager.h>
+#include <AkonadiWidgets/agentinstancewidget.h>
+#include <AkonadiCore/agentfilterproxymodel.h>
+#include <AkonadiCore/control.h>
+#include <AkonadiCore/searchcreatejob.h>
+#include <AkonadiCore/servermanager.h>
 
-#include <KAction>
+#include <KIcon>
+#include <QAction>
 #include <KActionCollection>
 #include <KCMultiDialog>
 #include <KTabWidget>
@@ -70,7 +71,7 @@ MainWidget::MainWidget( KXmlGuiWindow *parent )
   tabWidget->addTab( new SearchWidget( tabWidget ), "Item Search" );
   tabWidget->addTab( new MonitorsWidget( tabWidget ), "Monitors" );
 
-  KAction *action = parent->actionCollection()->addAction( "akonadiconsole_search" );
+  QAction *action = parent->actionCollection()->addAction( "akonadiconsole_search" );
   action->setText( "Create Search..." );
   connect( action, SIGNAL(triggered()), this, SLOT(createSearch()) );
 

@@ -20,10 +20,11 @@
 #include "dbconsole.h"
 #include "dbaccess.h"
 
-#include <KAction>
+#include <QAction>
 #include <KDebug>
 #include <KGlobalSettings>
 #include <KStandardAction>
+#include <KIcon>
 
 #include <QApplication>
 #include <QClipboard>
@@ -36,7 +37,7 @@ DbConsole::DbConsole(QWidget* parent) :
 {
   ui.setupUi( this );
 
-  KAction *copyAction = KStandardAction::copy( this, SLOT(copyCell()), this );
+  QAction *copyAction = KStandardAction::copy( this, SLOT(copyCell()), this );
   ui.resultView->addAction( copyAction );
 
   ui.execButton->setIcon( KIcon( "application-x-executable" ) );

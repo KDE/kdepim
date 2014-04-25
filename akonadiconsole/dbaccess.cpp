@@ -19,7 +19,7 @@
 
 #include "dbaccess.h"
 
-#include <akonadi/servermanager.h>
+#include <AkonadiCore/servermanager.h>
 #include <akonadi/private/xdgbasedirs_p.h>
 
 #include <QSettings>
@@ -29,6 +29,7 @@
 
 #include <KLocalizedString>
 #include <KMessageBox>
+#include <KGlobal>
 
 using namespace Akonadi;
 

@@ -20,7 +20,7 @@
 #ifndef AKONADICONSOLE_AGENTCONFIGMODEL_H
 #define AKONADICONSOLE_AGENTCONFIGMODEL_H
 
-#include <Akonadi/AgentInstance>
+#include <AkonadiCore/AgentInstance>
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QVector>

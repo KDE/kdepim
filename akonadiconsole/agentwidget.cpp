@@ -22,12 +22,12 @@
 #include "agentwidget.h"
 #include "agentconfigdialog.h"
 
-#include <akonadi/agenttypedialog.h>
-#include <akonadi/agentinstancewidget.h>
+#include <AkonadiWidgets/agenttypedialog.h>
+#include <AkonadiWidgets/agentinstancewidget.h>
 #include <AkonadiCore/agentmanager.h>
-#include <Akonadi/AgentFilterProxyModel>
+#include <AkonadiCore/AgentFilterProxyModel>
 #include <AkonadiCore/agentinstancecreatejob.h>
-#include <akonadi/control.h>
+#include <AkonadiCore/control.h>
 #include <akonadi/private/notificationmessage_p.h>
 
 #include <KDebug>
@@ -36,6 +36,7 @@
 #include <KStandardGuiItem>
 #include <KTextEdit>
 #include <KLineEdit>
+#include <KIcon>
 
 #include <QtCore/QFile>
 #include <QtCore/QPointer>
@@ -115,7 +116,7 @@ AgentWidget::AgentWidget( QWidget *parent )
   connect( ui.restartButton, SIGNAL(clicked()), SLOT(restartAgent()) );
 
   ui.mFilterAccount->setProxy( ui.instanceWidget->agentFilterProxyModel() );
-  ui.mFilterAccount->lineEdit()->setTrapReturnKey( true );
+  //QT5 ui.mFilterAccount->lineEdit()->setTrapReturnKey( true );
 
   Control::widgetNeedsAkonadi( this );
 }
@@ -339,6 +340,7 @@ void AgentWidget::cloneAgent( KJob* job )
     const QMetaMethod method = sourceIface.metaObject()->method( i );
     if ( QByteArray( method.typeName() ).isEmpty() ) // returns void
       continue;
+#if 0 //QT5
     const QByteArray signature( method.signature() );
     if ( signature.isEmpty() )
       continue;
@@ -354,6 +356,7 @@ void AgentWidget::cloneAgent( KJob* job )
     }
     const QString setterName = QLatin1String("set") + methodName.at( 0 ).toUpper() + methodName.mid( 1 );
     targetIface.call( setterName, reply.arguments().at( 0 ) );
+#endif
   }
 
   cloneTarget.reconfigure();

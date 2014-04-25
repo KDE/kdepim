@@ -22,6 +22,8 @@
 
 #include <QSqlTableModel>
 
+#include <KIcon>
+
 DbBrowser::DbBrowser(QWidget* parent) :
   QWidget( parent ),
   mTableModel( 0 )

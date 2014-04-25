@@ -20,7 +20,8 @@
 #include "collectioninternalspage.h"
 
 #include <AkonadiCore/collection.h>
-
+#include <KIcon>
+#include <KLocalizedString>
 using namespace Akonadi;
 
 CollectionInternalsPage::CollectionInternalsPage(QWidget * parent) :

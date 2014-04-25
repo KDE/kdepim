@@ -20,6 +20,7 @@
 #include "agentconfigdialog.h"
 #include "agentconfigmodel.h"
 #include <KLocalizedString>
+#include <KIcon>
 
 AgentConfigDialog::AgentConfigDialog(QWidget* parent) :
   KDialog(parent),

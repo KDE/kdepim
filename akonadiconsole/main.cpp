@@ -19,7 +19,7 @@
     USA.
 */
 
-#include <kaboutdata.h>
+#include <k4aboutdata.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kdebug.h>
@@ -30,11 +30,11 @@
 
 int main( int argc, char **argv )
 {
-  KAboutData aboutData( "akonadiconsole", 0,
+  K4AboutData aboutData( "akonadiconsole", 0,
                         ki18n( "Akonadi Console" ),
                         "0.99",
                         ki18n( "The Management and Debugging Console for Akonadi" ),
-                        KAboutData::License_GPL,
+                        K4AboutData::License_GPL,
                         ki18n( "(c) 2006-2008 the Akonadi developer" ),
                         KLocalizedString(),
                         "http://pim.kde.org/akonadi/" );

@@ -24,13 +24,13 @@
 #include "tracernotificationinterface.h"
 #include "connectionpage.h"
 
-#include <akonadi/control.h>
+#include <AkonadiCore/control.h>
 
 #include <KFileDialog>
 #include <KLocalizedString>
 #include <KTabWidget>
 #include <KTextEdit>
-#include <Akonadi/ServerManager>
+#include <AkonadiCore/ServerManager>
 
 #include <QPushButton>
 #include <QSplitter>

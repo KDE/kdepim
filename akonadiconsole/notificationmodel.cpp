@@ -27,7 +27,7 @@
 #include <KLocale>
 #include <KGlobal>
 
-#include <Akonadi/ServerManager>
+#include <AkonadiCore/ServerManager>
 
 #include <akonadi/private/imapparser_p.h>
 #include <boost/concept_check.hpp>

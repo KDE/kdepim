@@ -22,7 +22,7 @@
 
 #include "ui_collectioninternalspage.h"
 
-#include <akonadi/collectionpropertiespage.h>
+#include <AkonadiWidgets/collectionpropertiespage.h>
 
 class CollectionInternalsPage : public Akonadi::CollectionPropertiesPage
 {

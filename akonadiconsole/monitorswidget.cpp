@@ -23,7 +23,7 @@
 #include <QtGui/QVBoxLayout>
 #include <QtGui/qheaderview.h>
 
-#include <akonadi/control.h>
+#include <AkonadiCore/control.h>
 
 #include <KGlobal>
 #include <KSharedConfig>

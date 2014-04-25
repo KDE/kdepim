@@ -27,7 +27,7 @@
 
 #include <AkonadiCore/attributefactory.h>
 #include <AkonadiCore/changerecorder.h>
-#include <akonadi/control.h>
+#include <AkonadiCore/control.h>
 #include <AkonadiCore/entitymimetypefiltermodel.h>
 #include <AkonadiCore/item.h>
 #include <AkonadiCore/itemfetchjob.h>
@@ -35,16 +35,16 @@
 #include <AkonadiCore/itemmodifyjob.h>
 #include <AkonadiCore/job.h>
 #include <AkonadiCore/collectionfilterproxymodel.h>
-#include <akonadi/collectionpropertiesdialog.h>
-#include <akonadi/selectionproxymodel.h>
+#include <AkonadiWidgets/collectionpropertiesdialog.h>
+#include <AkonadiCore/selectionproxymodel.h>
 #include <AkonadiCore/session.h>
-#include <AkonadiCore/standardactionmanager.h>
-#include <akonadi/entitylistview.h>
-#include <akonadi/entitytreeview.h>
-#include <akonadi/etmviewstatesaver.h>
-#include <akonadi/favoritecollectionsmodel.h>
+#include <AkonadiWidgets/standardactionmanager.h>
+#include <AkonadiWidgets/entitylistview.h>
+#include <AkonadiWidgets/entitytreeview.h>
+#include <AkonadiWidgets/etmviewstatesaver.h>
+#include <AkonadiCore/favoritecollectionsmodel.h>
 #include <akonadi_next/quotacolorproxymodel.h>
-#include <akonadi/tagmodel.h>
+#include <AkonadiCore/tagmodel.h>
 #include <libkdepim/misc/statisticsproxymodel.h>
 #include <kviewstatemaintainer.h>
 
@@ -60,6 +60,8 @@
 #include <kxmlguiwindow.h>
 #include <KToggleAction>
 #include <KActionCollection>
+#include <KGlobal>
+#include <KLocalizedString>
 
 #include <QSplitter>
 #include <QVBoxLayout>

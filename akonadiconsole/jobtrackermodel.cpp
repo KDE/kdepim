@@ -31,6 +31,7 @@
 #include <QtCore/QDateTime>
 #include <QFont>
 #include <QPair>
+#include <QColor>
 
 #include <cassert>
 
@@ -185,7 +186,7 @@ QVariant JobTrackerModel::data(const QModelIndex & idx, int role) const
     }
     else if ( role == Qt::ForegroundRole ) {
       if ( info.state == JobInfo::Failed )
-        return Qt::red;
+        return QColor(Qt::red);
     }
     else if ( role == Qt::FontRole ) {
       if ( info.state == JobInfo::Running ) {

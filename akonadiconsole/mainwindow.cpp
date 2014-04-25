@@ -28,6 +28,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KStandardAction>
+#include <KGlobal>
 #include <QApplication>
 
 MainWindow::MainWindow( QWidget *parent )

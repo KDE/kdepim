@@ -21,7 +21,7 @@
 #include "monitorsmodel.h"
 #include "notificationsourceinterface.h"
 
-#include <akonadi/servermanager.h>
+#include <AkonadiCore/servermanager.h>
 
 #include <QtCore/QStringList>
 #include <QtCore/QTimer>

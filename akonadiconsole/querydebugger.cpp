@@ -29,8 +29,8 @@
 #include <boost/concept_check.hpp>
 #include <QtCore/QDateTime>
 
-#include <akonadi/servermanager.h>
-#include <akonadi/control.h>
+#include <AkonadiCore/servermanager.h>
+#include <AkonadiCore/control.h>
 
 #include <KTextEdit>
 #include <KGlobalSettings>

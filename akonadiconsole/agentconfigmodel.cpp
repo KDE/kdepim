@@ -58,6 +58,7 @@ void AgentConfigModel::reload()
     const QMetaMethod method = m_interface->metaObject()->method( i );
     if ( QByteArray( method.typeName() ).isEmpty() ) // returns void
       continue;
+#if 0 //QT5
     const QByteArray signature( method.signature() );
     if ( signature.isEmpty() )
       continue;
@@ -73,6 +74,7 @@ void AgentConfigModel::reload()
     }
     const QString settingName = methodName.at( 0 ).toUpper() + methodName.mid( 1 );
     m_settings.append( qMakePair( settingName, reply.arguments().at( 0 ) ) );
+#endif
   }
   reset();
 }

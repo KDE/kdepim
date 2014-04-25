@@ -20,6 +20,8 @@
 #include "collectionaclpage.h"
 
 #include <AkonadiCore/collection.h>
+#include <KIcon>
+#include <KLocalizedString>
 
 using namespace Akonadi;
 

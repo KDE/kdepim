@@ -20,11 +20,12 @@
 #include "rawsocketconsole.h"
 
 #include <akonadi/private/xdgbasedirs_p.h>
-#include <akonadi/servermanager.h>
+#include <AkonadiCore/servermanager.h>
 
 #include <KDebug>
 #include <KGlobalSettings>
 #include <KIcon>
+#include <KLocalizedString>
 
 #include <QFile>
 #include <QLocalSocket>

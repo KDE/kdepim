@@ -25,7 +25,7 @@
 
 #include <AkonadiCore/collection.h>
 #include <AkonadiCore/item.h>
-#include <akonadi/etmviewstatesaver.h>
+#include <AkonadiWidgets/etmviewstatesaver.h>
 
 #include <QWidget>
 

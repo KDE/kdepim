@@ -107,6 +107,7 @@ target_link_libraries(akonadiconsole_bin
   messageviewer
   KF5::KCMUtils
   KF5::KIOCore
+  Qt5::Sql
 )
 
 install(TARGETS akonadiconsole_bin ${INSTALL_TARGETS_DEFAULT_ARGS})
