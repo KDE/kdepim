@@ -1,8 +1,11 @@
 [Desktop Entry]
 Name=Cloud Storage Manager
+Name[de]=Cloud-Speicherverwaltung
+Name[fi]=Pilvitallennuksen hallinta
 Name[nds]=Datenaflaag-Pleger
 Name[nl]=Beheerder van cloud-opslag
 Name[pt]=Gestor de Armazenamento na 'Cloud'
+Name[pt_BR]=Gerenciador de Serviços em Nuvem
 Name[sv]=Hantering av molnlagring
 Name[uk]=Керування збереженням у «хмарах»
 Name[x-test]=xxCloud Storage Managerxx
@@ -12,9 +15,12 @@ Exec=storageservicemanager
 Icon=kmail
 X-DocPath=storageservicemanager/index.html
 GenericName=Cloud Storage Manager
+GenericName[de]=Cloud-Speicherverwaltung
+GenericName[fi]=Pilvitallennuksen hallinta
 GenericName[nds]=Datenaflaag-Pleger
 GenericName[nl]=Beheerder van cloud-opslag
 GenericName[pt]=Gestor de Armazenamento na 'Cloud'
+GenericName[pt_BR]=Gerenciador de Serviços em Nuvem
 GenericName[sv]=Hantering av molnlagring
 GenericName[uk]=Керування збереженням у «хмарах»
 GenericName[x-test]=xxCloud Storage Managerxx
