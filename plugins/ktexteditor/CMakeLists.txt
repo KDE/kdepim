@@ -5,9 +5,9 @@ include_directories( ${KDE4_INCLUDE_DIR} )
 
 set(ktexteditorkabcbridge_PART_SRCS ktexteditorkabcbridge.cpp )
 
-kde4_add_plugin(ktexteditorkabcbridge  ${ktexteditorkabcbridge_PART_SRCS})
+add_library(ktexteditorkabcbridge MODULE ${ktexteditorkabcbridge_PART_SRCS})
 
-target_link_libraries(ktexteditorkabcbridge  ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KABC_LIBS}
-                                             ${KDEPIMLIBS_KPIMIDENTITIES_LIBS} ${KDE4_KCMUTILS_LIBS})
+target_link_libraries(ktexteditorkabcbridge   KF5::Abc
+                                             KF5::PimIdentities KF5::KCMUtils)
 
 install(TARGETS ktexteditorkabcbridge  DESTINATION ${PLUGIN_INSTALL_DIR})

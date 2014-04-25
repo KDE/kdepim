@@ -57,8 +57,8 @@ using namespace KCalCore;
 
 #include <KPIMUtils/Email>
 
-#include <Mailtransport/MessageQueueJob>
-#include <Mailtransport/TransportManager>
+#include <MailTransport/MessageQueueJob>
+#include <MailTransport/TransportManager>
 
 #include <KDBusServiceStarter>
 #include <KDebug>
@@ -72,6 +72,7 @@ using namespace KCalCore;
 #include <KTemporaryFile>
 #include <KToolInvocation>
 #include <KIO/NetAccess>
+#include <KIcon>
 
 using namespace MailTransport;
 

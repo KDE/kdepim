@@ -31,9 +31,9 @@ add_library(messageviewer_bodypartformatter_text_calendar MODULE ${messageviewer
 
 
 target_link_libraries(messageviewer_bodypartformatter_text_calendar
-  akonadi-calendar
+  KF5::AkonadiContact
   KF5::PimUtils
-  
+  Qt5::Core 
   KF5::CalendarCore
   KF5::CalendarUtils
   KF5::KMime
@@ -62,7 +62,7 @@ install(TARGETS messageviewer_bodypartformatter_text_xdiff  DESTINATION ${PLUGIN
 add_library(messageviewer_bodypartformatter_application_mstnef MODULE application_ms-tnef.cpp)
 target_link_libraries(messageviewer_bodypartformatter_application_mstnef
   
-  
+  Qt5::Core
   KF5::CalendarCore
   KF5::CalendarUtils
   KF5::KMime

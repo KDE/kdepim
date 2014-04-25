@@ -17,7 +17,7 @@
 
 #include "vcardmemento.h"
 #include <Akonadi/Contact/ContactSearchJob>
-
+#include <KDebug>
 using namespace MessageViewer;
 
 VcardMemento::VcardMemento( const QStringList& emails )

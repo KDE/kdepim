@@ -28,7 +28,7 @@
 #include "bilbopost.h"
 
 #include <kdebug.h>
-#include <KDE/KLocale>
+#include <KLocale>
 #include <kdatetime.h>
 #include <kurl.h>
 #include <kwallet.h>

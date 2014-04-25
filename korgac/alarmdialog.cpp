@@ -57,8 +57,10 @@
 #include <KSystemTimeZone>
 #include <KToolInvocation>
 #include <KWindowSystem>
+#include <KGlobal>
+#include <KIconLoader>
 
-#include <phonon/mediaobject.h>
+//QT5 #include <phonon/mediaobject.h>
 #include <QLabel>
 #include <QKeyEvent>
 #include <QSpinBox>
@@ -629,12 +631,14 @@ void AlarmDialog::eventNotification()
         QProcess::startDetached( program + QLatin1Char(' ') + alarm->programArguments() );
       } else if ( alarm->type() == Alarm::Audio ) {
         beeped = true;
+#if 0 //QT5
         Phonon::MediaObject *player =
           Phonon::createPlayer( Phonon::NotificationCategory,
                                 KUrl( alarm->audioFile() ) );
         player->setParent( this );
         connect( player, SIGNAL(finished()), player, SLOT(deleteLater()) );
         player->play();
+#endif
       } else if ( alarm->type() == Alarm::Email ) {
         QString from = CalendarSupport::KCalPrefs::instance()->email();
         Identity id = mIdentityManager->identityForAddress( from );

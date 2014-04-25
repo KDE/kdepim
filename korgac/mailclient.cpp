@@ -41,9 +41,9 @@
 
 #include <KPIMUtils/Email>
 
-#include <Mailtransport/MessageQueueJob>
-#include <Mailtransport/Transport>
-#include <Mailtransport/TransportManager>
+#include <MailTransport/MessageQueueJob>
+#include <MailTransport/Transport>
+#include <MailTransport/TransportManager>
 
 #include <KDebug>
 #include <KLocale>
@@ -336,7 +336,7 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
   if (identity.disabledFcc()) {
       qjob->sentBehaviourAttribute().setSentBehaviour( MailTransport::SentBehaviourAttribute::Delete );
   } else {
-      const Akonadi::Collection sentCollection( identity.fcc().toLongLong() );
+      const Akonadi::Collection sentCollection( identity.fcc() );
       if (sentCollection.isValid()) {
           qjob->sentBehaviourAttribute().setSentBehaviour( MailTransport::SentBehaviourAttribute::MoveToCollection );
           qjob->sentBehaviourAttribute().setMoveToCollection( sentCollection );

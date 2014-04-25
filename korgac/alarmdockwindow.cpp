@@ -37,6 +37,7 @@
 #include <KMenu>
 #include <KStandardAction>
 #include <KToolInvocation>
+#include <KGlobal>
 
 AlarmDockWindow::AlarmDockWindow()
   : KStatusNotifierItem( 0 )

@@ -62,7 +62,7 @@ option(KDEPIM_BUILD_DESKTOP "Build Desktop Applications. Can be deactivated for 
 option(KDEPIM_NO_WEBKIT "Do not use WebKit in the kdepim applications" FALSE)
 
 
-find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql)
+find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql Concurrent)
 #Need to use volatile_qt5_port branch from grantlee
 find_package(Grantlee "1.0" CONFIG REQUIRED)
 
@@ -74,7 +74,7 @@ find_package(KF5Abc ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5PimUtils ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5AkonadiContact ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5PimIdentities ${KF5_VERSION} CONFIG REQUIRED)
-#find_package(KF5KLdap ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5KLdap ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5MailTransport ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KCMUtils ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5AkonadiKMime ${KF5_VERSION} CONFIG REQUIRED)
@@ -92,6 +92,9 @@ find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Syndication ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KHtml ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Gpgmepp ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5QGpgme ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5KontactInterface ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5KAlarmCal ${KF5_VERSION} CONFIG REQUIRED)
 include(GenerateExportHeader)
 
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
@@ -146,7 +149,7 @@ add_subdirectory(calendarsupport)
 add_subdirectory(calendarviews)
 add_subdirectory(incidenceeditor-ng)
 add_subdirectory(libkdepimdbusinterfaces)
-#add_subdirectory(libkleo)
+add_subdirectory(libkleo)
 add_subdirectory(libkpgp)
 add_subdirectory(libksieve)
 add_subdirectory(kdgantt2)
@@ -155,14 +158,14 @@ add_subdirectory(composereditor-ng)
 add_subdirectory(messagecore)
 add_subdirectory(grantleetheme)
 add_subdirectory(messagelist)
-#add_subdirectory(templateparser)
+add_subdirectory(templateparser)
 include (kleopatra/ConfigureChecks.cmake)
 
   # These targets will always be built before anything else.
 
   if(QGPGME_FOUND)
     if(Boost_TOPOLOGICAL_SORT_DIR)
-      macro_optional_add_subdirectory(kleopatra)
+      add_subdirectory(kleopatra)
     endif()
   endif()
 
@@ -170,8 +173,8 @@ include (kleopatra/ConfigureChecks.cmake)
   add_subdirectory(messageviewer)
   add_subdirectory(messagecomposer)
   add_subdirectory(pimcommon)
-  add_subdirectory(mailcommon) # TODO: does this make sense?!?
-  #add_subdirectory(kmail)
+  add_subdirectory(mailcommon) 
+  add_subdirectory(kmail)
   add_subdirectory(grantleeeditor)
   if(KDEPIM_BUILD_MOBILE)
     add_subdirectory(mobile)
@@ -187,7 +190,7 @@ include (kleopatra/ConfigureChecks.cmake)
     add_definitions(-DKMAIL_SUPPORTED)
   endif()
 
-  #add_subdirectory(korganizer)
+  add_subdirectory(korganizer)
   add_subdirectory(korgac)
   add_subdirectory(sieveeditor)
   add_subdirectory(storageservicemanager)
@@ -200,20 +203,20 @@ include (kleopatra/ConfigureChecks.cmake)
     add_subdirectory(kmailcvt)
     add_subdirectory(mboximporter)
     #add_subdirectory(knotes)
-    #add_subdirectory(ksendemail)
+    add_subdirectory(ksendemail)
     add_subdirectory(ktnef)
     add_subdirectory(mailimporter)
     add_subdirectory(pimsettingexporter)
     #add_subdirectory(kalarm)
     add_subdirectory(blogilo)
 
-    #add_subdirectory(kjots)
+    add_subdirectory(kjots)
 
-    #add_subdirectory(kontact) # must be the last one.
+    add_subdirectory(kontact) # must be the last one.
   endif()
 
-  #add_subdirectory(akonadiconsole)
-  #add_subdirectory(console)
+  add_subdirectory(akonadiconsole)
+  add_subdirectory(console)
 
   add_subdirectory(plugins) # Must be after KMail
 

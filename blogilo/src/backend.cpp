@@ -37,7 +37,7 @@
 #include <kblog/wordpressbuggy.h>
 #include <kblog/blogmedia.h>
 #include <kdebug.h>
-#include <KDE/KLocale>
+#include <KLocale>
 
 #include <kio/netaccess.h>
 #include <kio/job.h>

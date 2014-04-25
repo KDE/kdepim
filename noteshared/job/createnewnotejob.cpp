@@ -26,7 +26,7 @@
 #include <AkonadiCore/ItemCreateJob>
 #include <AkonadiCore/EntityDisplayAttribute>
 #include <AkonadiCore/Item>
-#include <Akonadi/CollectionModifyJob>
+#include <AkonadiCore/CollectionModifyJob>
 #include <AkonadiCore/CollectionFetchJob>
 
 #include <KMime/KMimeMessage>

@@ -22,6 +22,7 @@
 #include <Akonadi/Calendar/FetchJobCalendar>
 #include <Akonadi/Calendar/ETMCalendar>
 #include <KSystemTimeZones>
+#include <KDebug>
 
 using namespace MessageViewer;
 using namespace Akonadi;

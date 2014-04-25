@@ -31,6 +31,7 @@
 
 #include "syncitiphandler.h"
 #include <calendarsupport/calendarsingleton.h>
+#include <KDebug>
 
 using namespace Akonadi;
 
