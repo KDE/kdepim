@@ -19,7 +19,7 @@
 #define TODOEDIT_H
 
 #include <QWidget>
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 #include <KMime/Message>
 #include <KCalCore/Todo>
 #include "messageviewer_export.h"

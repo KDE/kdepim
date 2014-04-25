@@ -36,13 +36,14 @@
 #include "adblock/adblockmanager.h"
 
 #include <akonadi/kmime/messageparts.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
 
 
 #include <mailtransport/errorattribute.h>
 
-//KDE includes
+#include <KLocalizedString>
+
 #include <QWebView>
 #include <QWebPage>
 #include <QWebFrame>

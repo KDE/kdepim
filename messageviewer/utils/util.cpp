@@ -48,7 +48,7 @@
 
 #include "pimcommon/widgets/renamefiledialog.h"
 
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 
 
 #include <kmbox/mbox.h>

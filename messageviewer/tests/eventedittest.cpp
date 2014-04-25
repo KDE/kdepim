@@ -20,9 +20,9 @@
 #include "widgets/eventedit.h"
 #include "messageviewer/globalsettings_base.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/CollectionComboBox>
-#include <Akonadi/EntityTreeModel>
+#include <AkonadiCore/Collection>
+#include <AkonadiWidgets/CollectionComboBox>
+#include <AkonadiCore/EntityTreeModel>
 #include <QStandardItemModel>
 #include <kcalcore/event.h>
 #include <KDateTimeEdit>

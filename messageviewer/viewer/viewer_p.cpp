@@ -77,8 +77,8 @@
 #include <KABC/Addressee>
 #include <KABC/VCardConverter>
 #include <KPIMUtils/Email>
-#include <Akonadi/ItemModifyJob>
-#include <Akonadi/ItemCreateJob>
+#include <AkonadiCore/ItemModifyJob>
+#include <AkonadiCore/ItemCreateJob>
 
 #include <kpimutils/kfileio.h>
 
@@ -105,12 +105,12 @@
 #include "libkdepim/misc/broadcaststatus.h"
 #include <messagecore/attachment/attachmentpropertiesdialog.h>
 
-#include <akonadi/collection.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
+#include <AkonadiCore/collection.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
 #include <akonadi/kmime/messagestatus.h>
 #include <akonadi/kmime/specialmailcollections.h>
-#include <akonadi/attributefactory.h>
+#include <AkonadiCore/attributefactory.h>
 #include <Akonadi/KMime/MessageParts>
 #include <kleo/specialjob.h>
 
@@ -151,12 +151,13 @@
 #include <gpgme++/error.h>
 #include <messagecore/helpers/nodehelper.h>
 #include "messagecore/settings/globalsettings.h"
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentmanager.h>
-#include <Akonadi/CollectionFetchJob>
-#include <akonadi/collectionfetchscope.h>
+#include <AkonadiCore/agentinstance.h>
+#include <AkonadiCore/agentmanager.h>
+#include <AkonadiCore/CollectionFetchJob>
+#include <AkonadiCore/collectionfetchscope.h>
 
 #include <boost/bind.hpp>
+#include <KJobWidgets/KJobWidgets>
 
 using namespace boost;
 using namespace MailTransport;
@@ -3023,7 +3024,7 @@ void ViewerPrivate::slotAtmDecryptWithChiasmusResult( const GpgME::Error & err, 
         return;
 
     KIO::Job * uploadJob = KIO::storedPut( result.toByteArray(), url, -1, KIO::Overwrite );
-    uploadJob->ui()->setWindow( mMainWindow );
+    KJobWidgets::setWindow(uploadJob, mMainWindow );
     connect( uploadJob, SIGNAL(result(KJob*)),
              this, SLOT(slotAtmDecryptWithChiasmusUploadResult(KJob*)) );
 }

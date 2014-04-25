@@ -41,6 +41,7 @@
 #include <kcharsets.h>
 #include <kde_file.h>
 #include <kpimutils/kfileio.h>
+#include <KUrl>
 
 #include <QDir>
 #include <QTextCodec>

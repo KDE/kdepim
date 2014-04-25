@@ -31,7 +31,7 @@
 #include <KIcon>
 #include <KLocalizedString>
 #include <KMimeType>
-
+#include <KGlobal>
 Q_DECLARE_METATYPE(KMime::Content*)
 Q_DECLARE_METATYPE(KMime::ContentIndex)
 

@@ -91,7 +91,7 @@
 #include <kiconloader.h>
 #include <kcodecs.h>
 #include <kconfiggroup.h>
-#include <kstyle.h>
+//#include <kstyle.h>
 
 // Qt includes
 #include <QApplication>
@@ -107,8 +107,8 @@
 #ifdef KDEPIM_NO_WEBKIT
 # include <QTextBrowser>
 #else
-# include <QtWebKit/QWebPage>
-# include <QtWebKit/QWebFrame>
+# include <QWebPage>
+# include <QWebFrame>
 #endif
 
 // other includes

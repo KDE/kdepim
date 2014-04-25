@@ -28,7 +28,7 @@
 #include <QLabel>
 #include <QToolButton>
 
-#include <Akonadi/CollectionComboBox>
+#include <AkonadiWidgets/CollectionComboBox>
 
 
 namespace MessageViewer {

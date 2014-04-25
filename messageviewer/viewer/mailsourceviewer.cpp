@@ -45,6 +45,9 @@
 #include <KFileDialog>
 #include <KMessageBox>
 #include <KAction>
+#include <KIcon>
+#include <KIconTheme>
+#include <KLocalizedString>
 
 #include <QtCore/QRegExp>
 #include <QApplication>

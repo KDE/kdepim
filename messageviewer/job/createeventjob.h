@@ -18,8 +18,8 @@
 #ifndef CREATEEVENTJOB_H
 #define CREATEEVENTJOB_H
 #include <KJob>
-#include <Akonadi/Item>
-#include <Akonadi/Collection>
+#include <AkonadiCore/Item>
+#include <AkonadiCore/Collection>
 #include <KCalCore/Event>
 
 #include <QObject>

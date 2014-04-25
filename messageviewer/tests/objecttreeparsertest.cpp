@@ -24,7 +24,7 @@
 #include "interfaces/htmlwriter.h"
 #include "messageviewer/viewer/csshelper.h"
 
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 
 #include "qtest_kde.h"
 #include <messagecore/tests/util.h>

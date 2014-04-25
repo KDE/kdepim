@@ -24,7 +24,8 @@
 
 #include "pluginloaderbase.h"
 #include <KLibrary>
-
+#include <KGlobal>
+#include <kdemacros.h>
 /**
  * @short A generic plugin loader for when KPart::Plugin is overkill
  * @author Marc Mutz <mutz@kde.org> based on KABC's FormatFactory

@@ -24,8 +24,8 @@
 #include "viewer/nodehelper.h"
 #include "viewer.h" //not so nice, it is actually for the enums from MailViewer
 
-#include <akonadi/item.h>
-#include <akonadi/monitor.h>
+#include <AkonadiCore/item.h>
+#include <AkonadiCore/monitor.h>
 #include <kio/job.h>
 #include <kmime/kmime_message.h>
 #include <kservice.h>

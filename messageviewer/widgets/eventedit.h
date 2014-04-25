@@ -22,7 +22,7 @@
 #include <QWidget>
 #include "messageviewer_export.h"
 
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 #include <KMime/Message>
 #include <KCalCore/Event>
 class KLineEdit;

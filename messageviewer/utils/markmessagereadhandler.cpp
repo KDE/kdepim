@@ -23,7 +23,7 @@
 
 #include "settings/globalsettings.h"
 
-#include <akonadi/itemmodifyjob.h>
+#include <AkonadiCore/itemmodifyjob.h>
 #include <akonadi/kmime/messageflags.h>
 
 #include <QtCore/QTimer>

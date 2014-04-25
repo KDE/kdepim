@@ -18,9 +18,9 @@
 #include "todoedittest.h"
 #include "messageviewer/globalsettings_base.h"
 #include "widgets/todoedit.h"
-#include <Akonadi/Collection>
-#include <Akonadi/CollectionComboBox>
-#include <Akonadi/EntityTreeModel>
+#include <AkonadiCore/Collection>
+#include <AkonadiWidgets/CollectionComboBox>
+#include <AkonadiCore/EntityTreeModel>
 #include <QStandardItemModel>
 #include <kcalcore/todo.h>
 #include <qtest_kde.h>

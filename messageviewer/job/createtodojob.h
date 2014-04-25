@@ -18,8 +18,8 @@
 #ifndef CREATETODOJOB_H
 #define CREATETODOJOB_H
 #include <KJob>
-#include <Akonadi/Item>
-#include <Akonadi/Collection>
+#include <AkonadiCore/Item>
+#include <AkonadiCore/Collection>
 #include <KCalCore/Todo>
 
 #include <QObject>

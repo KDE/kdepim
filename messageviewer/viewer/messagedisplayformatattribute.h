@@ -21,7 +21,7 @@
 #ifndef MESSAGEDISPLAYFORMATATTRIBUTE_H
 #define MESSAGEDISPLAYFORMATATTRIBUTE_H
 
-#include <akonadi/attribute.h>
+#include <AkonadiCore/attribute.h>
 #include "viewer/viewer.h"
 namespace MessageViewer {
 class MessageDisplayFormatAttributePrivate;

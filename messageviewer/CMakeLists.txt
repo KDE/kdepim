@@ -28,7 +28,8 @@ macro_bool_to_01(SYS_INOTIFY_H_FOUND HAVE_SYS_INOTIFY_H)
 configure_file(config-messageviewer.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-messageviewer.h)
 
 add_subdirectory(about)
-add_subdirectory(tests)
+#REACTIVATE
+#add_subdirectory(tests)
 add_subdirectory(pics)
 
 if(DEBUG_SIGNATURE)
@@ -195,11 +196,12 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   KF5::PimUtils
   KF5::Abc
   KF5::MailTransport
-  
+  KF5::Gpgmepp
+  Qt5::WebKitWidgets
+  KF5::KDELibs4Support
   ${KDE4_KPRINTUTILS_LIBS}
-  ${QGPGME_LIBRARIES}
   ${_mailwebview_lib}
-  ${Grantlee_CORE_LIBRARIES} 
+  Grantlee::Templates
   KF5::NewStuff
   ${KDE4_SOLID_LIBS}
   pimcommon
@@ -214,8 +216,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/libkdepim
     ${CMAKE_SOURCE_DIR}/libkleo
     ${CMAKE_SOURCE_DIR}/kaddressbookgrantlee
-    ${Boost_INCLUDE_DIR}
-    ${GPGME_INCLUDES}
 )
 
 set_target_properties( messageviewer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
@@ -228,7 +228,7 @@ install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/messageviewer )
 
 install(FILES header/data/messageviewer_header_themes.knsrc DESTINATION ${CONFIG_INSTALL_DIR} )
 
-add_subdirectory(grantleefilters)
+# REACTIVATE add_subdirectory(grantleefilters)
 add_subdirectory(scamdetection/tests)
 add_subdirectory(adblock/tests/)
 install(FILES notify/messageviewer.notifyrc DESTINATION ${DATA_INSTALL_DIR}/messageviewer )
