@@ -30,17 +30,18 @@
 #include <KParts/StatusBarExtension>
 #include <QAction>
 #include <KActionCollection>
+#include <KIcon>
 
 #include <QVBoxLayout>
 
-K_PLUGIN_FACTORY( KAddressBookFactory, registerPlugin<KAddressBookPart>(); )
+//QT5 K_PLUGIN_FACTORY( KAddressBookFactory, registerPlugin<KAddressBookPart>(); )
 K_EXPORT_PLUGIN( KAddressBookFactory( AboutData() ) )
 
 KAddressBookPart::KAddressBookPart( QWidget *parentWidget, QObject *parent,
                                     const QVariantList & )
   : KParts::ReadOnlyPart( parent )
 {
-  setComponentData( KAddressBookFactory::componentData() );
+  //QT5 setComponentData( KAddressBookFactory::componentData() );
 
   KAddressBook::insertLibraryCatalogues();
 

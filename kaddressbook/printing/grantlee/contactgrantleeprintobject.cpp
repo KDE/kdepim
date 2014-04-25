@@ -40,7 +40,7 @@ ContactGrantleePrintObject::ContactGrantleePrintObject(const KABC::Addressee &ad
     : QObject(parent),
       mAddress(address)
 {
-    Grantlee::registerSequentialContainer<QList<QObject*> >();
+    //QT5 Grantlee::registerSequentialContainer<QList<QObject*> >();
     Q_FOREACH ( const KABC::Address &addr, address.addresses() ) {
         mListAddress<<new ContactGrantleePrintAddressObject(addr);
     }
@@ -142,7 +142,7 @@ QString ContactGrantleePrintObject::note() const
 
 QString ContactGrantleePrintObject::webPage() const
 {
-    return mAddress.url().prettyUrl();
+    return mAddress.url().toDisplayString();
 }
 
 QString ContactGrantleePrintObject::title() const

@@ -25,6 +25,8 @@
 #include <KPushButton>
 #include <KStandardDirs>
 #include <KVBox>
+#include <KIcon>
+#include <KGlobal>
 
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QFile>

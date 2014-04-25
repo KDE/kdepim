@@ -120,8 +120,7 @@ target_link_libraries(kaddressbookprivate
   KF5::AkonadiContact
   KF5::KLdap
   KF5::KCMUtils
-  ${KDE4_KPRINTUTILS_LIBS}
-  ${Grantlee_CORE_LIBRARIES}
+  KF5::KontactInterface
   grantleetheme
   kleo
 )

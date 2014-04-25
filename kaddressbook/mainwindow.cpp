@@ -22,6 +22,9 @@
 #include "mainwidget.h"
 #include "xxportmanager.h"
 
+#include <KGlobal>
+#include <KConfigGroup>
+
 #include <QAction>
 #include <KActionCollection>
 #include <KEditToolBar>
@@ -85,7 +88,8 @@ void MainWindow::configureKeyBindings()
 
 void MainWindow::configureToolbars()
 {
-  saveMainWindowSettings( KGlobal::config()->group( "MainWindow" ) );
+  KConfigGroup grp = KGlobal::config()->group( "MainWindow");
+  saveMainWindowSettings( grp );
 
   KEditToolBar dlg( factory() );
   connect( &dlg, SIGNAL(newToolBarConfig()), this, SLOT(newToolbarConfig()) );
