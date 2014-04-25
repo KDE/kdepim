@@ -65,6 +65,7 @@
 #include <kdebug.h>
 #include <kmessagebox.h>
 #include <kpushbutton.h>
+#include <KIcon>
 
 // Qt
 #include <QApplication>

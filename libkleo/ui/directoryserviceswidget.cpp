@@ -36,6 +36,7 @@
 
 #include <KIcon>
 #include <KDebug>
+#include <KLocalizedString>
 
 #include <QItemDelegate>
 #include <QAbstractTableModel>

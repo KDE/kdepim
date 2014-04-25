@@ -51,6 +51,7 @@
 #include <kguiitem.h>
 #include <kdebug.h>
 #include <ktextedit.h>
+#include <KGlobal>
 
 #include <qtextstream.h>
 
@@ -372,9 +373,10 @@ void MessageBox::make( QWidget * parent, QMessageBox::Icon icon, const QString &
 
     if ( options & KMessageBox::PlainCaption )
         dialog->setPlainCaption( caption );
-
+#if 0 //QT5
     if ( KDialog::No == KMessageBox::createKMessageBox( dialog, icon, text, QStringList(), QString::null, 0, options ) )
         auditLog( 0, job );
+#endif
 }
 
 #include "moc_messagebox_p.cpp"

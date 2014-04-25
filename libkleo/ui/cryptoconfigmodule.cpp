@@ -45,6 +45,7 @@
 #include <kglobal.h>
 #include <kcomponentdata.h>
 #include <kicon.h>
+#include <KDialog>
 #ifndef KDEPIM_ONLY_KLEO
 # include <kurlrequester.h>
 #endif

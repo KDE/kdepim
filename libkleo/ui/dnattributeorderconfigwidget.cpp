@@ -39,6 +39,7 @@
 #include <kdialog.h>
 #include <kiconloader.h>
 #include <kconfig.h>
+#include <KIcon>
 
 #include <QToolButton>
 #include <QGridLayout>
