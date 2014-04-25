@@ -43,11 +43,11 @@
 #include <KCalCore/Event>
 #include <KCalUtils/HtmlExport>
 #include <KCalUtils/HTMLExportSettings>
-#include <Akonadi/AgentManager>
-#include <Akonadi/AgentInstanceCreateJob>
+#include <AkonadiCore/AgentManager>
+#include <AkonadiCore/AgentInstanceCreateJob>
 #include <AkonadiCore/CollectionFetchJob>
 #include <AkonadiCore/Collection>
-#include <Akonadi/CollectionFetchScope>
+#include <AkonadiCore/CollectionFetchScope>
 
 #include <QtCore/QDateTime>
 #include <QtCore/QFile>

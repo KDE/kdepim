@@ -26,7 +26,7 @@
 
 #include "kdepim-version.h"
 
-#include <KAboutData>
+#include <k4aboutdata.h>
 #include <KLocale>
 #include <KCmdLineArgs>
 #include <KApplication>
@@ -73,11 +73,11 @@ static void silenceStderr()
 
 int main(int argv, char *argc[])
 {
-    KAboutData aboutData(progName, 0,                 // internal program name
+    K4AboutData aboutData(progName, 0,                 // internal program name
                          ki18n(progDisplay),          // displayable program name.
                          progVersion,                 // version string
                          ki18n(progDesc),             // short program description
-                         KAboutData::License_GPL,     // license type
+                         K4AboutData::License_GPL,     // license type
                          ki18n("(c) 2013, Sérgio Martins"),
                          ki18n(0),                    // any free form text
                          0,                           // program home page address

@@ -25,10 +25,11 @@
 #include <KCalCore/Incidence>
 
 #include <AkonadiCore/CollectionFetchJob>
-#include <Akonadi/CollectionFetchScope>
+#include <AkonadiCore/CollectionFetchScope>
 #include <QString>
 #include <QSet>
 
+#include <KDebug>
 
 CollectionLoader::CollectionLoader(QObject *parent) :
     QObject(parent)

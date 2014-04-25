@@ -28,12 +28,13 @@
 #include <KCalCore/FileStorage>
 
 #include <AkonadiCore/CollectionFetchJob>
-#include <Akonadi/CollectionFetchScope>
-#include <Akonadi/ItemFetchJob>
+#include <AkonadiCore/CollectionFetchScope>
+#include <AkonadiCore/ItemFetchJob>
 #include <AkonadiCore/ItemFetchScope>
 
 #include <KLocale>
 #include <KJob>
+#include <KDebug>
 
 #include <QCoreApplication>
 

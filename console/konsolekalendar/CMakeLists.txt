@@ -33,15 +33,15 @@ include_directories(
 
 kde4_add_app_icon(konsolekalendar_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/office-calendar.png")
 
-kde4_add_executable(konsolekalendar NOGUI ${konsolekalendar_SRCS})
+add_executable(konsolekalendar ${konsolekalendar_SRCS})
 
 target_link_libraries(konsolekalendar
-                      ${KDE4_KDECORE_LIBS}
-                      ${KDEPIMLIBS_KCALUTILS_LIBS}
-                      ${KDEPIMLIBS_KCALCORE_LIBS}
+                      
+                      KF5::CalendarUtils
+                      KF5::CalendarCore
                       kdepim
                       calendarsupport
-                      akonadi-calendar)
+                      KF5::AkonadiCalendar)
 
 install(TARGETS konsolekalendar  ${INSTALL_TARGETS_DEFAULT_ARGS})
 
