@@ -36,6 +36,7 @@
 #include <KTar>
 #include <KZip>
 #include <kio/global.h> //krazy:exclude=camelcase as there is no such
+#include <KDebug>
 
 #include <QFileInfo>
 #include <QTimer>
@@ -45,7 +46,7 @@ static const mode_t archivePerms = S_IFREG | 0644;
 
 BackupJob::BackupJob( QWidget *parent )
     : QObject( parent ),
-      mArchiveTime(QDateTime::currentDateTime().toTime_t()),
+      mArchiveTime(QDateTime::currentDateTime()),
       mArchiveType( Zip ),
       mRootFolder( 0 ),
       mArchive( 0 ),

@@ -23,11 +23,11 @@
 #include "kernel/mailkernel.h"
 #include "dialog/filteractionmissingargumentdialog.h"
 
-#include <KDE/KPIMIdentities/Identity>
-#include <KDE/KPIMIdentities/IdentityCombo>
-#include <KDE/KPIMIdentities/IdentityManager>
+#include <KPIMIdentities/Identity>
+#include <KPIMIdentities/IdentityCombo>
+#include <KPIMIdentities/IdentityManager>
 
-#include <KDE/KLocale>
+#include <KLocale>
 #include <QPointer>
 
 using namespace MailCommon;

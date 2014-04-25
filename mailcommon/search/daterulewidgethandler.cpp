@@ -24,6 +24,7 @@
 #include <KDateComboBox>
 #include <KLocale>
 
+#include <QDate>
 #include <QObject>
 #include <QStackedWidget>
 

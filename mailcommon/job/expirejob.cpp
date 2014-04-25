@@ -40,8 +40,8 @@ using KPIM::BroadcastStatus;
 #include <ItemFetchJob>
 #include <ItemFetchScope>
 #include <ItemMoveJob>
-#include <KMime/MessageParts>
-#include <KMime/MessageStatus>
+#include <Akonadi/KMime/MessageParts>
+#include <Akonadi/KMime/MessageStatus>
 #include <akonadi/kmime/messageflags.h>
 #include <KMime/Message>
 

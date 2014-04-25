@@ -21,6 +21,8 @@
 #include "filtermanager.h"
 #include "mailfilter.h"
 
+#include <KDebug>
+
 #include <QFile>
 
 using namespace MailCommon;

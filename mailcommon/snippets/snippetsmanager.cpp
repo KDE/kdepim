@@ -29,6 +29,7 @@
 #include <KDebug>
 #include <KLocale>
 #include <KMessageBox>
+#include <KIcon>
 
 #include <QAction>
 #include <QPointer>
@@ -376,7 +377,7 @@ void SnippetsManager::Private::updateActionCollection( const QString &oldName,
         const QString actionName = i18nc( "@action", "Snippet %1", newName );
         const QString normalizedName = QString( actionName ).replace( QLatin1Char(' '), QLatin1Char('_') );
 
-        KAction *action =
+        QAction *action =
                 mActionCollection->addAction( normalizedName, q, SLOT(insertActionSnippet()) );
         action->setProperty( "snippetText", text );
         action->setText( actionName );

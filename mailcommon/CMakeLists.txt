@@ -199,7 +199,7 @@ target_link_libraries(mailcommon messageviewer messagecore messagecomposer maili
   KF5::AkonadiCore
   KF5::AkonadiKMime
   KF5::PimUtils
-  KF5::Imap
+  KF5::KImap
   KF5::MailTransport
   
 )

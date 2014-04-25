@@ -23,8 +23,9 @@
 #include "mailcommon/util/mailutil.h"
 
 
-#include <KDE/ItemCopyJob>
-#include <KDE/KLocale>
+#include <ItemCopyJob>
+#include <KLocale>
+#include <KDebug>
 
 using namespace MailCommon;
 

@@ -29,9 +29,9 @@
 #include <ItemDeleteJob>
 #include <ItemFetchJob>
 #include <ItemFetchScope>
-#include <KMime/MessageParts>
-#include <akonadi/entityannotationsattribute.h>
-
+#include <Akonadi/KMime/MessageParts>
+#include <AkonadiCore/entityannotationsattribute.h>
+#include <KDebug>
 #include <KMime/KMimeMessage>
 
 namespace MailCommon {

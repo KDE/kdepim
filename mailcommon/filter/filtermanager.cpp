@@ -30,6 +30,8 @@
 #include <TagFetchScope>
 #include <TagAttribute>
 
+#include <KDebug>
+
 #include <QTimer>
 
 namespace MailCommon {

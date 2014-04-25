@@ -32,6 +32,7 @@
 #include <QList>
 #include <QObject>
 #include <QPointer>
+#include <QDateTime>
 
 class KArchive;
 class KJob;
@@ -106,7 +107,7 @@ private:
 
     QString mRealPath;
     KUrl mMailArchivePath;
-    time_t mArchiveTime;
+    QDateTime mArchiveTime;
     ArchiveType mArchiveType;
     Akonadi::Collection mRootFolder;
     KArchive *mArchive;

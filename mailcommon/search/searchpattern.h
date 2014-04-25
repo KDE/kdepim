@@ -22,7 +22,7 @@
 
 #include "mailcommon_export.h"
 
-#include <KMime/MessageStatus>
+#include <Akonadi/KMime/MessageStatus>
 
 #include <KLocale>
 #include <KUrl>
@@ -31,7 +31,7 @@
 #include <QString>
 
 #include <boost/shared_ptr.hpp>
-#include <akonadi/searchquery.h>
+#include <AkonadiCore/searchquery.h>
 
 using Akonadi::MessageStatus;
 

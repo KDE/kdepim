@@ -19,7 +19,7 @@
 
 #include "filteractionwithstring.h"
 
-#include <KDE/KLineEdit>
+#include <KLineEdit>
 
 #include <QTextDocument>
 

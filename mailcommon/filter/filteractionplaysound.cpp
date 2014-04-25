@@ -21,9 +21,9 @@
 
 #include "dialog/filteractionmissingargumentdialog.h"
 
-#include <phonon/mediaobject.h>
+//QT5 #include <phonon/mediaobject.h>
 
-#include <KDE/KLocale>
+#include <KLocale>
 
 #include <QtCore/QFile>
 #include <QPointer>
@@ -50,13 +50,13 @@ FilterAction::ReturnCode FilterActionPlaySound::process(ItemContext& , bool) con
 {
     if ( mParameter.isEmpty() )
         return ErrorButGoOn;
-
+#if 0 //QT5
     if ( !mPlayer )
         mPlayer = Phonon::createPlayer( Phonon::NotificationCategory );
 
     mPlayer->setCurrentSource( mParameter );
     mPlayer->play();
-
+#endif
     return GoOn;
 }
 

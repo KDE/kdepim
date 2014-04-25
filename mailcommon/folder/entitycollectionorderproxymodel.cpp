@@ -22,7 +22,7 @@
 
 #include <Collection>
 #include <EntityTreeModel>
-#include <KMime/SpecialMailCollections>
+#include <Akonadi/KMime/SpecialMailCollections>
 #include <AgentManager>
 
 namespace MailCommon {

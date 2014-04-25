@@ -19,11 +19,12 @@
 
 #include "filteractionwithcommand.h"
 
-#include <KDE/KPIMUtils/KFileIO>
-#include <KDE/KProcess>
-#include <KDE/KShell>
-#include <KDE/KTemporaryFile>
-#include <KDE/KUrl>
+#include <KPIMUtils/KFileIO>
+#include <KProcess>
+#include <KShell>
+#include <KTemporaryFile>
+#include <KUrl>
+#include <KDebug>
 
 using namespace MailCommon;
 

@@ -32,7 +32,9 @@
 
 #include <Collection>
 #include <Item>
-#include <KMime/MessageFlags>
+#include <Akonadi/KMime/MessageFlags>
+
+#include <KDebug>
 
 #include <QQueue>
 #include <QTimer>

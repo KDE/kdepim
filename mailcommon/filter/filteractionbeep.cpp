@@ -19,8 +19,8 @@
 
 #include "filteractionbeep.h"
 
-#include <KDE/KLocale>
-#include <KDE/KNotification>
+#include <KLocale>
+#include <KNotification>
 
 using namespace MailCommon;
 

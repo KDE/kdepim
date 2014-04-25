@@ -23,11 +23,11 @@
 
 #include "libkdepim/job/addcontactjob.h"
 
-#include <KDE/CollectionComboBox>
-#include <KDE/KABC/Addressee>
-#include <KDE/KLineEdit>
-#include <KDE/KLocale>
-#include <KDE/KPIMUtils/Email>
+#include <CollectionComboBox>
+#include <KABC/Addressee>
+#include <KLineEdit>
+#include <KLocale>
+#include <KPIMUtils/Email>
 
 #include <QGridLayout>
 #include <QLabel>

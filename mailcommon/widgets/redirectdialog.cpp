@@ -34,22 +34,23 @@
 
 #include <messageviewer/utils/autoqpointer.h>
 
-#include <Contact/EmailAddressSelectionDialog>
+#include <Akonadi/Contact/EmailAddressSelectionDialog>
 
 #include <KPIMUtils/Email>
-#include <KDE/KPIMIdentities/Identity>
-#include <KDE/KPIMIdentities/IdentityCombo>
-#include <KDE/KPIMIdentities/IdentityManager>
+#include <KPIMIdentities/Identity>
+#include <KPIMIdentities/IdentityCombo>
+#include <KPIMIdentities/IdentityManager>
 
-#include <KDE/Mailtransport/Transport>
-#include <KDE/Mailtransport/TransportComboBox>
-#include <KDE/Mailtransport/TransportManager>
+#include <MailTransport/Transport>
+#include <MailTransport/TransportComboBox>
+#include <MailTransport/TransportManager>
 
 
 #include <KIconLoader>
 #include <KLocale>
 #include <KMessageBox>
 #include <KVBox>
+#include <KIcon>
 
 #include <QFrame>
 #include <QLabel>

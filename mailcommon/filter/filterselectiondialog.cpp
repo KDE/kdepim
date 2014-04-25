@@ -22,6 +22,7 @@
 #include <KDebug>
 #include <KListWidgetSearchLine>
 #include <KPushButton>
+#include <KGlobal>
 
 #include <QListWidget>
 #include <QVBoxLayout>

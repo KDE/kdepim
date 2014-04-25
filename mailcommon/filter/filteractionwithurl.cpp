@@ -19,7 +19,7 @@
 
 #include "filteractionwithurl.h"
 
-#include <KDE/KUrlRequester>
+#include <KUrlRequester>
 
 #include <QTextDocument>
 

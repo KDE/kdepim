@@ -30,6 +30,7 @@
 #include <KIntSpinBox>
 #include <KLocale>
 #include <KMessageBox>
+#include <KDebug>
 
 #include <QCheckBox>
 #include <QGroupBox>

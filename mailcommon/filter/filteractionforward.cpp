@@ -31,8 +31,9 @@
 #include <templateparser/customtemplates.h>
 #include <templateparser/customtemplates_kfg.h>
 
-#include <KDE/KLocale>
-#include <KDE/KLineEdit>
+#include <KDebug>
+#include <KLocale>
+#include <KLineEdit>
 
 #include <QHBoxLayout>
 

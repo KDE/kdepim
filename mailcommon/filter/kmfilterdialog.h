@@ -46,7 +46,7 @@ class QListWidget;
 class QModelIndex;
 class QPushButton;
 class QRadioButton;
-
+class KPushButton;
 namespace MailCommon {
 class SearchPatternEdit;
 class FilterActionWidgetLister;

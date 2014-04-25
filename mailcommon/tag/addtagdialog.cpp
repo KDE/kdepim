@@ -18,12 +18,13 @@
 #include "addtagdialog.h"
 #include "mailcommon/tag/tagwidget.h"
 
-#include <akonadi/tagcreatejob.h>
+#include <AkonadiCore/tagcreatejob.h>
 
 #include <KLocale>
 #include <KLineEdit>
 #include <KMessageBox>
 #include <KJob>
+#include <KDebug>
 
 #include <QVBoxLayout>
 

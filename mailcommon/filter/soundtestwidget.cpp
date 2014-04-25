@@ -24,11 +24,14 @@
 #include <KUrlRequester>
 #include <KLineEdit>
 #include <KStandardDirs>
+#include <KIcon>
+#include <KGlobal>
+#include <KUrl>
 
 #include <QHBoxLayout>
 #include <QPushButton>
 
-#include <phonon/mediaobject.h>
+//QT5 #include <phonon/mediaobject.h>
 
 using namespace MailCommon;
 
@@ -75,8 +78,8 @@ void SoundTestWidget::openSoundDialog( KUrlRequester * )
     }
 
     init = false;
-
-    KFileDialog *fileDialog = m_urlRequester->fileDialog();
+#if 0 //QT5
+    QFileDialog *fileDialog = m_urlRequester->fileDialog();
     fileDialog->setCaption( i18n( "Select Sound File" ) );
 
     QStringList filters;
@@ -103,6 +106,7 @@ void SoundTestWidget::openSoundDialog( KUrlRequester * )
             }
         }
     }
+#endif
 }
 
 void SoundTestWidget::playSound()
@@ -116,10 +120,11 @@ void SoundTestWidget::playSound()
     const QString play = ( parameter.startsWith( file ) ?
                                parameter.mid( file.length() ) :
                                parameter );
-
+#if 0 //QT5
     Phonon::MediaObject *player = Phonon::createPlayer( Phonon::NotificationCategory, QUrl::fromLocalFile(play) );
     player->play();
     connect( player, SIGNAL(finished()), player, SLOT(deleteLater()) );
+#endif
 }
 
 QString SoundTestWidget::url() const

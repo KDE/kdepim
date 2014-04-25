@@ -21,8 +21,8 @@
 
 #include "pimcommon/widgets/minimumcombobox.h"
 
-#include <KDE/KLocale>
-#include <KDE/KLineEdit>
+#include <KLocale>
+#include <KLineEdit>
 
 using namespace MailCommon;
 

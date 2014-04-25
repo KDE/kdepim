@@ -51,6 +51,7 @@ using MailCommon::FilterImporterExporter;
 #include <KTabWidget>
 #include <KWindowSystem>
 #include <KIconButton>
+#include <KIcon>
 
 #include <QApplication>
 #include <QHeaderView>
@@ -925,7 +926,7 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
              SLOT(slotRowsMoved(QModelIndex,int,int,QModelIndex,int)) );
 
     KListWidgetSearchLine *mSearchListWidget = new KListWidgetSearchLine( this, mListWidget );
-    mSearchListWidget->setTrapReturnKey( true );
+    //QT5 mSearchListWidget->setTrapReturnKey( true );
     mSearchListWidget->setClickMessage(
                 i18nc( "@info/plain Displayed grayed-out inside the textbox, verb to search",
                        "Search" ) );

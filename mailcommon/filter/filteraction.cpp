@@ -29,7 +29,8 @@
 #include <messagecore/helpers/messagehelpers.h>
 #include <messageviewer/settings/globalsettings.h>
 
-#include <KDE/KLocale>
+#include <KLocale>
+#include <KDebug>
 
 using namespace MailCommon;
 

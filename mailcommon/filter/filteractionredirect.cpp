@@ -26,7 +26,8 @@
 #include <messagecomposer/sender/messagesender.h>
 #include <messagecore/helpers/messagehelpers.h>
 
-#include <KDE/KLocale>
+#include <KLocale>
+#include <KDebug>
 
 using namespace MailCommon;
 

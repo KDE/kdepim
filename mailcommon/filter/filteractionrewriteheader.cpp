@@ -22,8 +22,8 @@
 #include "widgets/regexplineedit.h"
 #include <pimcommon/widgets/minimumcombobox.h>
 
-#include <KDE/KLineEdit>
-#include <KDE/KLocale>
+#include <KLineEdit>
+#include <KLocale>
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -105,7 +105,7 @@ QWidget* FilterActionRewriteHeader::createParamWidget( QWidget *parent ) const
     KCompletion *comp = comboBox->completionObject();
     comp->setIgnoreCase(true);
     comp->insertItems(mParameterList);
-    comp->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
+    //QT5 comp->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
 
     QLabel *label = new QLabel( i18n( "Replace:" ), widget );
     label->setFixedWidth( label->sizeHint().width() );

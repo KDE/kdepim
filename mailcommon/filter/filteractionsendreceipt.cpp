@@ -25,7 +25,7 @@
 #include "messagecomposer/helper/messagefactory.h"
 #include "messagecomposer/sender/messagesender.h"
 
-#include <KDE/KLocale>
+#include <KLocale>
 
 using namespace MailCommon;
 

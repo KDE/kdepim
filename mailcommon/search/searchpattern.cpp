@@ -22,7 +22,7 @@
 #include "filterlog.h"
 using MailCommon::FilterLog;
 
-#include <Contact/ContactSearchJob>
+#include <Akonadi/Contact/ContactSearchJob>
 
 #include <SearchQuery>
 
@@ -43,7 +43,7 @@ using MailCommon::FilterLog;
 
 #include <algorithm>
 #include <boost/bind.hpp>
-#include <akonadi/searchquery.h>
+#include <AkonadiCore/searchquery.h>
 
 
 using namespace MailCommon;

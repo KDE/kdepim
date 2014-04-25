@@ -25,9 +25,9 @@
 
 #include <EntityMimeTypeFilterModel>
 
-#include <Mailtransport/TransportComboBox>
-#include <Mailtransport/Transport>
-#include <Mailtransport/TransportManager>
+#include <MailTransport/TransportComboBox>
+#include <MailTransport/Transport>
+#include <MailTransport/TransportManager>
 
 #include <KPIMIdentities/IdentityCombo>
 

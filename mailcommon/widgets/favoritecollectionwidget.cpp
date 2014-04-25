@@ -22,9 +22,9 @@
 
 #include <messagecore/settings/globalsettings.h>
 
-#include <KDE/KGlobalSettings>
-#include <KDE/KLocale>
-#include <KDE/KXMLGUIClient>
+#include <KGlobalSettings>
+#include <KLocale>
+#include <KXMLGUIClient>
 #include <KActionMenu>
 #include <KActionCollection>
 

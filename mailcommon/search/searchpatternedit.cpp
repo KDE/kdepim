@@ -28,6 +28,7 @@ using MailCommon::RuleWidgetHandlerManager;
 #include <KLocale>
 #include <KPushButton>
 #include <KLineEdit>
+#include <KIcon>
 
 #include <QButtonGroup>
 #include <QByteArray>
@@ -177,7 +178,7 @@ void SearchRuleWidget::initWidget(SearchPatternEdit::SearchModeType modeType)
     KCompletion *comp = mRuleField->completionObject();
     comp->setIgnoreCase(true);
     comp->insertItems(mFilterFieldList);
-    comp->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
+    //QT5 comp->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
 
     // don't show sliders when popping up this menu
     mRuleField->setMaxCount( mRuleField->count() );

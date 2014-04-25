@@ -29,6 +29,7 @@
 #include <KActionCollection>
 #include <KLineEdit>
 #include <KLocale>
+#include <KIcon>
 using namespace MailCommon;
 
 TagWidget::TagWidget(const QList<KActionCollection*>& actionCollections, QWidget *parent)

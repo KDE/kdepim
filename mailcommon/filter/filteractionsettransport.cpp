@@ -21,10 +21,10 @@
 
 #include "dialog/filteractionmissingargumentdialog.h"
 
-#include <KDE/KLocale>
-#include <KDE/Mailtransport/Transport>
-#include <KDE/Mailtransport/TransportComboBox>
-#include <KDE/Mailtransport/TransportManager>
+#include <KLocale>
+#include <MailTransport/Transport>
+#include <MailTransport/TransportComboBox>
+#include <MailTransport/TransportManager>
 
 #include <QTextDocument>
 #include <QPointer>

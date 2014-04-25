@@ -101,6 +101,7 @@ MDNAdviceDialog::MDNAdviceDialog( const QString &text, bool canDeny, QWidget *pa
     setButtonText( KDialog::Yes, i18n( "&Ignore" ) );
     setButtonText( KDialog::User1, i18n( "&Send" ) );
     setEscapeButton( KDialog::Yes );
+#if 0 //QT5
     KMessageBox::createKMessageBox(
                 this,
                 QMessageBox::Question,
@@ -109,6 +110,7 @@ MDNAdviceDialog::MDNAdviceDialog( const QString &text, bool canDeny, QWidget *pa
                 QString(),
                 0,
                 KMessageBox::NoExec );
+#endif
 }
 
 MDNAdviceDialog::~MDNAdviceDialog()
