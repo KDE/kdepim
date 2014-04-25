@@ -28,7 +28,7 @@
 #include <KLocalizedString>
 #include <KPluginFactory>
 #include <KParts/StatusBarExtension>
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 
 #include <QVBoxLayout>
@@ -66,7 +66,7 @@ void KAddressBookPart::updateQuickSearchText()
 
 void KAddressBookPart::initAction()
 {
-  KAction *action = new KAction( KIcon( QLatin1String("configure") ), i18n( "&Configure KAddressBook..." ), this );
+  QAction *action = new QAction( KIcon( QLatin1String("configure") ), i18n( "&Configure KAddressBook..." ), this );
   actionCollection()->addAction( QLatin1String("kaddressbook_configure"), action );
   connect( action, SIGNAL(triggered(bool)), mMainWidget,
            SLOT(configure()) );

@@ -20,7 +20,7 @@
 #define MERGECONTACTWIDGETTEST_H
 
 #include <QObject>
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 class MergeContactWidgetTest : public QObject
 {

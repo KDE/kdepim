@@ -23,7 +23,7 @@
 
 #include "xxport/xxportfactory.h"
 #include "kaddressbook_export.h"
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 
 #include <QtCore/QObject>
 

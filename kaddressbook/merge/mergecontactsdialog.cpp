@@ -23,12 +23,13 @@
 #include "mergecontactsjob.h"
 #include "mergecontactshowresultdialog.h"
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <KLocalizedString>
 #include <KMessageBox>
+#include <KGlobal>
 
 #include <QItemSelectionModel>
 #include <QLabel>

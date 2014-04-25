@@ -56,8 +56,8 @@ PrintingWizard::PrintingWizard( QPrinter *printer, QItemSelectionModel *selectio
                                 QWidget *parent )
   : KAssistantDialog( parent ), mPrinter( printer ), mStyle( 0 )
 {
-  setCaption( i18n( "Print Contacts" ) );
-  showButton( Help, false );
+  //QT5 setCaption( i18n( "Print Contacts" ) );
+  //QT5 showButton( Help, false );
 
   mSelectionPage = new ContactSelectionWidget( selectionModel, this );
   mSelectionPage->setMessageText( i18n( "Which contacts do you want to print?" ) );
@@ -231,8 +231,8 @@ void PrintingWizard::print()
 
   kDebug() <<"printing" << contacts.count() << "contacts.";
   // ... print:
-  enableButton( KDialog::User3, false ); // back button
-  enableButton( KDialog::Cancel, false );
+  //QT5 enableButton( KDialog::User3, false ); // back button
+  //QT5 enableButton( KDialog::Cancel, false );
   mStyle->print( contacts, mProgress );
 }
 

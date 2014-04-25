@@ -128,7 +128,7 @@ QString contactsToHtml( const KABC::Addressee::List &contacts, const ColorSettin
     if ( contact.url().isValid() ) {
       ContactBlock block;
       block.header = i18n( "Web page:" );
-      block.entries.append( contact.url().prettyUrl() );
+      block.entries.append( contact.url().toDisplayString() );
 
       blocks.append( block );
     }

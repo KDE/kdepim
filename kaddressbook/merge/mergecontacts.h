@@ -18,7 +18,7 @@
 #ifndef MERGECONTACTS_H
 #define MERGECONTACTS_H
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 #include <KABC/Addressee>
 
 #include "kaddressbook_export.h"

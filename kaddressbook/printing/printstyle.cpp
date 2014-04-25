@@ -26,6 +26,7 @@
 
 #include <KDebug>
 #include <KStandardDirs>
+#include <KDialog>
 
 #include <QPixmap>
 #include <QWidget>
@@ -98,8 +99,8 @@ void PrintStyle::showPages()
     mWizard->setAppropriate( mPageItems[ wdg ], true );
   }
 
-  mWizard->enableButton( KDialog::User2, wdg ); // next button
-  mWizard->enableButton( KDialog::User1, !wdg ); // finish button
+  //QT5 mWizard->enableButton( KDialog::User2, wdg ); // next button
+  //QT5 mWizard->enableButton( KDialog::User1, !wdg ); // finish button
 }
 
 void PrintStyle::hidePages()

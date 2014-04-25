@@ -19,7 +19,7 @@
 #define MERGECONTACTWIDGETLIST_H
 
 #include <QListWidget>
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 namespace KABMergeContacts {
 

@@ -28,7 +28,7 @@
 namespace GrantleeTheme {
 class GrantleeThemeManager;
 }
-class KAction;
+class QAction;
 namespace Akonadi {
   class Collection;
   class ContactGroupViewer;
@@ -146,7 +146,7 @@ private:
     KAddressBookGrantlee::GrantleeContactGroupFormatter *mGroupFormatter;
     GrantleeTheme::GrantleeThemeManager *mGrantleeThemeManager;
     Akonadi::EntityTreeModel *entityTreeModel() const;
-    KAction *mQuickSearchAction;
+    QAction *mQuickSearchAction;
 };
 
 #endif

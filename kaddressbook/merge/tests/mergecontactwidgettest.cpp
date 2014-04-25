@@ -16,10 +16,10 @@
 */
 
 #include "mergecontactwidgettest.h"
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 #include "../mergecontactwidget.h"
 #include <KABC/Addressee>
-#include <Akonadi/EntityTreeModel>
+#include <AkonadiCore/EntityTreeModel>
 
 #include <qtest_kde.h>
 #include <qtestmouse.h>

@@ -19,7 +19,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 class QItemSelectionModel;
 namespace Utils {
 Akonadi::Item::List collectSelectedContactsItem(QItemSelectionModel *model);

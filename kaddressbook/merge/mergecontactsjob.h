@@ -19,8 +19,8 @@
 #define MERGECONTACTSJOB_H
 #include <QObject>
 
-#include <Akonadi/Collection>
-#include <Akonadi/Item>
+#include <AkonadiCore/Collection>
+#include <AkonadiCore/Item>
 #include <KABC/Addressee>
 namespace KABMergeContacts {
 class MergeContactsJob : public QObject

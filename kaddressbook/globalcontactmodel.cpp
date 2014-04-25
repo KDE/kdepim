@@ -20,10 +20,10 @@
 
 #include "globalcontactmodel.h"
 
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/EntityDisplayAttribute>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/Session>
+#include <AkonadiCore/ChangeRecorder>
+#include <AkonadiCore/EntityDisplayAttribute>
+#include <AkonadiCore/ItemFetchScope>
+#include <AkonadiCore/Session>
 #include <Akonadi/Contact/ContactsTreeModel>
 
 #include <KABC/Addressee>

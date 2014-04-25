@@ -22,7 +22,7 @@
 #include "mainwidget.h"
 #include "xxportmanager.h"
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KEditToolBar>
 #include <KShortcutsDialog>
@@ -61,7 +61,7 @@ void MainWindow::initActions()
 {
   KStandardAction::quit( this, SLOT(close()), actionCollection() );
 
-  KAction *action =
+  QAction *action =
     KStandardAction::keyBindings( this, SLOT(configureKeyBindings()), actionCollection() );
   action->setWhatsThis(
     i18nc( "@info:whatsthis",

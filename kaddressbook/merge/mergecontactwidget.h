@@ -20,7 +20,7 @@
 
 #include <QWidget>
 #include <QListWidgetItem>
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 #include "kaddressbook_export.h"
 
 class QListWidget;

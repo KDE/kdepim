@@ -43,16 +43,16 @@
 #include <pimcommon/acl/imapaclattribute.h>
 
 
-#include <Akonadi/ETMViewStateSaver>
-#include <Akonadi/CollectionFilterProxyModel>
-#include <Akonadi/CollectionModel>
-#include <Akonadi/Control>
-#include <Akonadi/EntityMimeTypeFilterModel>
-#include <Akonadi/EntityTreeView>
-#include <Akonadi/ItemView>
-#include <Akonadi/MimeTypeChecker>
-#include <Akonadi/AttributeFactory>
-#include <Akonadi/CollectionPropertiesDialog>
+#include <AkonadiWidgets/ETMViewStateSaver>
+#include <AkonadiCore/CollectionFilterProxyModel>
+#include <AkonadiCore/CollectionModel>
+#include <AkonadiCore/Control>
+#include <AkonadiCore/EntityMimeTypeFilterModel>
+#include <AkonadiWidgets/EntityTreeView>
+#include <AkonadiWidgets/ItemView>
+#include <AkonadiCore/MimeTypeChecker>
+#include <AkonadiCore/AttributeFactory>
+#include <AkonadiWidgets/CollectionPropertiesDialog>
 #include <Akonadi/Contact/ContactDefaultActions>
 #include <Akonadi/Contact/ContactGroupEditorDialog>
 #include <Akonadi/Contact/ContactGroupViewer>
@@ -63,9 +63,9 @@
 
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
-
+#include <KDebug>
 #include <KCmdLineArgs>
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KActionMenu>
 #include <KApplication>
@@ -549,7 +549,7 @@ void MainWidget::setupActions( KActionCollection *collection )
   mGrantleeThemeManager->setThemeMenu(themeMenu);
   mGrantleeThemeManager->setActionGroup(group);
 
-  KAction *action = KStandardAction::print( this, SLOT(print()), collection );
+  QAction *action = KStandardAction::print( this, SLOT(print()), collection );
   action->setWhatsThis(
     i18nc( "@info:whatsthis",
            "Print the complete address book or a selected number of contacts." ) );
@@ -559,7 +559,8 @@ void MainWidget::setupActions( KActionCollection *collection )
 
   action = collection->addAction( QLatin1String("quick_search") );
   action->setText( i18n( "Quick search" ) );
-  action->setDefaultWidget( mQuickSearchWidget );
+  //QT5
+  //action->setDefaultWidget( mQuickSearchWidget );
 
   action = collection->addAction( QLatin1String("select_all") );
   action->setText( i18n( "Select All" ) );
@@ -577,20 +578,20 @@ void MainWidget::setupActions( KActionCollection *collection )
 
   mViewModeGroup = new QActionGroup( this );
 
-  KAction *act = new KAction( i18nc( "@action:inmenu", "Simple (one column)" ), mViewModeGroup );
+  QAction *act = new QAction( i18nc( "@action:inmenu", "Simple (one column)" ), mViewModeGroup );
   act->setCheckable( true );
   act->setData( 1 );
   act->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_1 ) );
   act->setWhatsThis( i18n( "Show a simple mode of the address book view." ) );
   collection->addAction( QLatin1String("view_mode_simple"), act );
 
-  act = new KAction( i18nc( "@action:inmenu", "Two Columns" ), mViewModeGroup );
+  act = new QAction( i18nc( "@action:inmenu", "Two Columns" ), mViewModeGroup );
   act->setCheckable( true );
   act->setData( 2 );
   act->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_2 ) );
   collection->addAction( QLatin1String("view_mode_2columns"), act );
 
-  act = new KAction( i18nc( "@action:inmenu", "Three Columns" ), mViewModeGroup );
+  act = new QAction( i18nc( "@action:inmenu", "Three Columns" ), mViewModeGroup );
   act->setCheckable( true );
   act->setData( 3 );
   act->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_3 ) );
@@ -662,7 +663,7 @@ void MainWidget::setupActions( KActionCollection *collection )
   action->setText( i18n( "Search Duplicate Contacts..." ) );
   connect( action, SIGNAL(triggered(bool)), this, SLOT(slotSearchDuplicateContacts()) );
 
-  mQuickSearchAction = new KAction( i18n("Set Focus to Quick Search"), this );
+  mQuickSearchAction = new QAction( i18n("Set Focus to Quick Search"), this );
   //If change shortcut change in quicksearchwidget->lineedit->setClickMessage
   mQuickSearchAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Q ) );
   collection->addAction( QLatin1String("focus_to_quickseach"), mQuickSearchAction );

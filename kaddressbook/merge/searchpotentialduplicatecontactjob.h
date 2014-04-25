@@ -20,7 +20,7 @@
 #define SEARCHPOTENTIALDUPLICATECONTACTJOB_H
 
 #include <QObject>
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 namespace KABMergeContacts {
 class SearchPotentialDuplicateContactJob : public QObject
 {

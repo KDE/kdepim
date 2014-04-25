@@ -21,7 +21,7 @@
 #include <qtest_kde.h>
 #include <QTabWidget>
 #include <QTabBar>
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 using namespace KABMergeContacts;
 

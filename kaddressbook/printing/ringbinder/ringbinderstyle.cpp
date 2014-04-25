@@ -30,6 +30,7 @@
 #include <KConfig>
 #include <KGlobal>
 #include <KLocalizedString>
+#include <KConfigGroup>
 
 #include <QPrinter>
 #include <QTextDocument>

@@ -20,7 +20,7 @@
 
 #include <KLocalizedString>
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 #include <QHBoxLayout>
 #include <QStackedWidget>

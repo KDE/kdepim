@@ -21,11 +21,11 @@
 #include "xxportmanager.h"
 #include "contactselectiondialog.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/CollectionDialog>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/Item>
-#include <Akonadi/ItemCreateJob>
+#include <AkonadiCore/Collection>
+#include <AkonadiWidgets/CollectionDialog>
+#include <AkonadiCore/EntityTreeModel>
+#include <AkonadiCore/Item>
+#include <AkonadiCore/ItemCreateJob>
 
 #include <KLocalizedString>
 #include <KMessageBox>

@@ -19,7 +19,7 @@
 #define POTENTIALDUPLICATECONTACTSWIDGET_H
 
 #include <QWidget>
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 class QVBoxLayout;
 namespace KABMergeContacts {

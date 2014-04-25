@@ -22,7 +22,7 @@
 
 #include <KABC/Addressee>
 
-#include <Akonadi/CollectionComboBox>
+#include <AkonadiWidgets/CollectionComboBox>
 #include <QListWidget>
 #include <QVBoxLayout>
 #include <QPushButton>

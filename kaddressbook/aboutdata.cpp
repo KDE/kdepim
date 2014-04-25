@@ -25,9 +25,9 @@
 #include <KLocalizedString>
 
 AboutData::AboutData()
-  : KAboutData( "kaddressbook", 0, ki18n( "KAddressBook" ),
+  : K4AboutData( "kaddressbook", 0, ki18n( "KAddressBook" ),
                 KDEPIM_VERSION, ki18n( "The KDE Address Book Application" ),
-                KAboutData::License_GPL_V2,
+                K4AboutData::License_GPL_V2,
                 ki18n( "Copyright © 2007–2014 KAddressBook authors" ) )
 {
     addAuthor( ki18n( "Laurent Montel" ), ki18n( "Current maintainer" ), "montel@kde.org" );

@@ -31,7 +31,8 @@
 #include <KABC/Addressee>
 
 #include <KLocalizedString>
-
+#include <KConfigGroup>
+#include <KGlobal>
 #include <QCheckBox>
 #include <QPrinter>
 #include <QTextDocument>
