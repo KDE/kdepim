@@ -4,6 +4,6 @@ NameSpace=TemplateParser
 Mutators=true
 ItemAccessors=true
 SetUserTexts=true
-visibility=TEMPLATEPARSER_EXPORT
+Visibility=TEMPLATEPARSER_EXPORT
 IncludeFiles=templateparser_export.h
 

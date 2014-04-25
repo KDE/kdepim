@@ -23,6 +23,8 @@
 #include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
 #include <KMessageBox>
+#include <KLocalizedString>
+#include <KDebug>
 
 #include <QWhatsThis>
 

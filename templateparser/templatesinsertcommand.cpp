@@ -18,7 +18,7 @@
 
 #include "templatesinsertcommand.h"
 
-#include <KAction>
+#include <QAction>
 #include <KActionMenu>
 #include <KDebug>
 #include <KLocalizedString>
@@ -330,7 +330,7 @@ static void fillMenuFromActionMap( const QMap< QString, TemplatesInsertCommand::
     QMap< QString, TemplatesInsertCommand::Command >::const_iterator end = map.constEnd();
 
     while ( it != end ) {
-        KAction *action = new KAction( it.key(), menu ); //krazy:exclude=tipsandthis
+        QAction *action = new QAction( it.key(), menu ); //krazy:exclude=tipsandthis
         QObject::connect( action, SIGNAL(triggered(bool)), mapper, SLOT(map()) );
         mapper->setMapping( action, it.value() );
         menu->addAction( action );

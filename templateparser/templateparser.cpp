@@ -39,6 +39,7 @@
 #include <KMessageBox>
 #include <KProcess>
 #include <KShell>
+#include <KDebug>
 
 #include <QDir>
 #include <QFile>

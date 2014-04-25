@@ -25,6 +25,7 @@
 #include <QKeyEvent>
 #include <QScrollBar>
 #include <QStringListModel>
+#include <QAbstractItemView>
 
 using namespace TemplateParser;
 

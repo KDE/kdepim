@@ -26,6 +26,7 @@
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <KMessageBox>
+#include <KIcon>
 
 #include <QWhatsThis>
 
