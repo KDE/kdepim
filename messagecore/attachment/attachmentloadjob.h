@@ -24,7 +24,7 @@
 
 #include "attachmentpart.h"
 
-#include <KDE/KJob>
+#include <KJob>
 
 namespace MessageCore {
 
