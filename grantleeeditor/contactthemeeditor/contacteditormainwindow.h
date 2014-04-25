@@ -21,7 +21,7 @@
 #include <KXmlGuiWindow>
 
 class ContactEditorPage;
-class KAction;
+class QAction;
 class KRecentFilesAction;
 class KUrl;
 
@@ -66,18 +66,18 @@ private:
     void setupActions();
     void closeThemeEditor();
     ContactEditorPage *mContactEditor;
-    KAction *mNewThemeAction;
-    KAction *mCloseThemeAction;
-    KAction *mAddExtraPage;
-    KAction *mCloseAction;
-    KAction *mOpenAction;
-    KAction *mUploadTheme;
-    KAction *mSaveAction;
-    KAction *mInstallTheme;
-    KAction *mInsertFile;
-    KAction *mManageTheme;
-    KAction *mUpdateView;
-    KAction *mSaveAsAction;
+    QAction *mNewThemeAction;
+    QAction *mCloseThemeAction;
+    QAction *mAddExtraPage;
+    QAction *mCloseAction;
+    QAction *mOpenAction;
+    QAction *mUploadTheme;
+    QAction *mSaveAction;
+    QAction *mInstallTheme;
+    QAction *mInsertFile;
+    QAction *mManageTheme;
+    QAction *mUpdateView;
+    QAction *mSaveAsAction;
     KRecentFilesAction *mRecentFileAction;
 };
 

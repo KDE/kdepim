@@ -22,13 +22,13 @@
 #include "kdepim-version.h"
 #include "contacteditormainwindow.h"
 #include <kapplication.h>
-#include <kaboutdata.h>
+#include <k4aboutdata.h>
 #include <kcmdlineargs.h>
 
 int main( int argc, char **argv )
 {
-    KAboutData aboutData( "contactthemeeditor", 0, ki18n("Contact Theme Editor"),
-      KDEPIM_VERSION, ki18n("Contact Theme Editor"), KAboutData::License_GPL_V2,
+    K4AboutData aboutData( "contactthemeeditor", 0, ki18n("Contact Theme Editor"),
+      KDEPIM_VERSION, ki18n("Contact Theme Editor"), K4AboutData::License_GPL_V2,
       ki18n("Copyright © 2013-2014 contactthemeeditor authors"));
     aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
     aboutData.setProgramIconName(QLatin1String("kaddressbook"));

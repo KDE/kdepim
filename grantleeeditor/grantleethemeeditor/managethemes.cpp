@@ -23,6 +23,7 @@
 #include <KMessageBox>
 #include <KTempDir>
 #include <KSharedConfig>
+#include <KGlobal>
 
 #include <QLabel>
 #include <QListWidget>
@@ -30,7 +31,8 @@
 #include <QDir>
 #include <QDirIterator>
 
-static const KCatalogLoader loader( QLatin1String("libgrantleethemeeditor") );
+//QT5
+//static const KCatalogLoader loader( QLatin1String("libgrantleethemeeditor") );
 
 using namespace GrantleeThemeEditor;
 

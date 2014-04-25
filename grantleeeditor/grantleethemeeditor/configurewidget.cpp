@@ -21,6 +21,7 @@
 #include "globalsettings_base.h"
 
 #include <KSharedConfig>
+#include <KUrl>
 
 using namespace GrantleeThemeEditor;
 ConfigureWidget::ConfigureWidget(QWidget *parent)

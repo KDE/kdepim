@@ -32,6 +32,7 @@
 #include <KDebug>
 #include <KMessageBox>
 #include <KFileDialog>
+#include <KUrl>
 
 #include <QHBoxLayout>
 #include <QDir>

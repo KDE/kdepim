@@ -22,6 +22,7 @@
 #include <KLineEdit>
 #include <KLocalizedString>
 #include <KUrlRequester>
+#include <KUrl>
 
 #include <QVBoxLayout>
 #include <QLabel>

@@ -24,6 +24,7 @@
 #include <KPushButton>
 #include <KLocale>
 #include <KConfigGroup>
+#include <KGlobal>
 
 #include <QVBoxLayout>
 

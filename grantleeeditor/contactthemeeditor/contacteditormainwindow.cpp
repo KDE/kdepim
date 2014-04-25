@@ -24,7 +24,7 @@
 
 #include <KStandardAction>
 #include <KApplication>
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -34,6 +34,8 @@
 #include <KRecentFilesAction>
 #include <KLocalizedString>
 #include <KLocale>
+#include <KUrl>
+#include <KGlobal>
 
 #include <KNS3/KNewStuffAction>
 
@@ -95,7 +97,7 @@ void ContactEditorMainWindow::setupActions()
     KConfigGroup groupConfig = config->group( QLatin1String("ContactEditorMainWindow") );
     mRecentFileAction->loadEntries(groupConfig);
 
-    mAddExtraPage = new KAction(i18n("Add Extra Page..."), this);
+    mAddExtraPage = new QAction(i18n("Add Extra Page..."), this);
     connect(mAddExtraPage, SIGNAL(triggered(bool)),SLOT(slotAddExtraPage()));
     actionCollection()->addAction( QLatin1String( "add_extra_page" ), mAddExtraPage );
 
@@ -115,19 +117,19 @@ void ContactEditorMainWindow::setupActions()
     KStandardAction::quit(this, SLOT(slotQuitApp()), actionCollection() );
     KStandardAction::preferences( this, SLOT(slotConfigure()), actionCollection() );
 
-    mInstallTheme = new KAction(i18n("Install theme"), this);
+    mInstallTheme = new QAction(i18n("Install theme"), this);
     actionCollection()->addAction( QLatin1String( "install_theme" ), mInstallTheme );
     connect(mInstallTheme, SIGNAL(triggered(bool)), SLOT(slotInstallTheme()));
 
-    mInsertFile = new KAction(i18n("Insert File..."), this);
+    mInsertFile = new QAction(i18n("Insert File..."), this);
     actionCollection()->addAction( QLatin1String( "insert_file" ), mInsertFile );
     connect(mInsertFile, SIGNAL(triggered(bool)), SLOT(slotInsertFile()));
 
-    mManageTheme = new KAction(i18n("Manage themes..."), this);
+    mManageTheme = new QAction(i18n("Manage themes..."), this);
     connect(mManageTheme, SIGNAL(triggered(bool)),SLOT(slotManageTheme()));
     actionCollection()->addAction( QLatin1String( "manage_themes" ), mManageTheme );
 
-    mUpdateView = new KAction(i18n("Update view"), this);
+    mUpdateView = new QAction(i18n("Update view"), this);
     mUpdateView->setShortcut(QKeySequence( Qt::Key_F5 ));
     connect(mUpdateView, SIGNAL(triggered(bool)),SLOT(slotUpdateView()));
     actionCollection()->addAction( QLatin1String( "update_view" ), mUpdateView );
