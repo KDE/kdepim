@@ -21,7 +21,7 @@
 
 #include "collectionfetchwatcher.h"
 
-#include <akonadi/collectionstatistics.h>
+#include <AkonadiCore/collectionstatistics.h>
 #include <AkonadiCore/entitytreemodel.h>
 
 #include <QtCore/QAbstractItemModel>

@@ -21,7 +21,7 @@
 #include "stylesheetloader.h"
 
 #include <AkonadiCore/agentinstance.h>
-#include <akonadi/agentinstancemodel.h>
+#include <AkonadiCore/agentinstancemodel.h>
 #include <AkonadiWidgets/etmviewstatesaver.h>
 
 #include <KCmdLineArgs>

@@ -21,7 +21,7 @@
 
 #include "searchmanager.h"
 
-#include <akonadi/collectiondeletejob.h>
+#include <AkonadiCore/collectiondeletejob.h>
 #include <AkonadiCore/searchcreatejob.h>
 #include <klocale.h>
 

@@ -33,7 +33,7 @@
 #include "statemachinebuilder.h"
 
 #include <akonadi/agentactionmanager.h>
-#include <akonadi/agentinstancemodel.h>
+#include <AkonadiCore/agentinstancemodel.h>
 #include <AkonadiCore/agentmanager.h>
 #include <AkonadiCore/changerecorder.h>
 #include <AkonadiCore/entitydisplayattribute.h>

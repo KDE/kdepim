@@ -23,7 +23,7 @@
 
 #include "kdeclarativemainview.h"
 
-#include <Akonadi/Entity>
+#include <AkonadiCore/Entity>
 
 namespace KLDAP {
 class LdapSearchDialog;
