@@ -23,7 +23,7 @@
 #include "messagelist/core/manager.h"
 #include "messagelist/core/settings.h"
 #include "messagelist/storagemodel.h"
-#include <KDE/KGlobal>
+#include <KGlobal>
 
 using namespace MessageList::Core;
 using namespace MessageList::Utils;

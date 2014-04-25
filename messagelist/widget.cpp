@@ -36,16 +36,16 @@
 #include <QDropEvent>
 #include <QMimeData>
 
-#include <KDE/KActionCollection>
-#include <KDE/KComboBox>
-#include <KDE/KDebug>
-#include <KDE/KIcon>
-#include <KDE/KIconLoader>
-#include <KDE/KLocale>
-#include <KDE/KMenu>
-#include <KDE/KToggleAction>
-#include <KDE/KXMLGUIClient>
-#include <KDE/KXMLGUIFactory>
+#include <KActionCollection>
+#include <KComboBox>
+#include <KDebug>
+#include <KIcon>
+#include <KIconLoader>
+#include <KLocale>
+#include <KMenu>
+#include <KToggleAction>
+#include <KXMLGUIClient>
+#include <KXMLGUIFactory>
 
 #include "core/groupheaderitem.h"
 

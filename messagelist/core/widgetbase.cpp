@@ -43,16 +43,16 @@
 #include <QToolButton>
 #include <QVariant>
 
-#include <KDE/KAction>
-#include <KDE/KComboBox>
-#include <KDE/KConfig>
-#include <KDE/KDebug>
-#include <KDE/KIcon>
-#include <KDE/KIconLoader>
-#include <KDE/KLineEdit>
-#include <KDE/KLocale>
-#include <KDE/KMenu>
-#include <KDE/KStandardDirs>
+#include <KAction>
+#include <KComboBox>
+#include <KConfig>
+#include <KDebug>
+#include <KIcon>
+#include <KIconLoader>
+#include <KLineEdit>
+#include <KLocale>
+#include <KMenu>
+#include <KStandardDirs>
 #include <KUrl>
 
 #include <collection.h>

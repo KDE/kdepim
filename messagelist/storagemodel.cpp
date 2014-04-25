@@ -33,7 +33,7 @@
 #include <selectionproxymodel.h>
 
 #include <KDebug>
-#include <KDE/KLocale>
+#include <KLocale>
 #include "core/messageitem.h"
 #include "core/settings.h"
 #include "messagelistutil.h"

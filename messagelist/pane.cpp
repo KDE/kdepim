@@ -18,12 +18,12 @@
 
 #include "pane.h"
 
-#include <KDE/KActionCollection>
-#include <KDE/KActionMenu>
-#include <KDE/KIcon>
-#include <KDE/KLocale>
-#include <KDE/KMenu>
-#include <KDE/KXMLGUIClient>
+#include <KActionCollection>
+#include <KActionMenu>
+#include <KIcon>
+#include <KLocale>
+#include <KMenu>
+#include <KXMLGUIClient>
 #include <KAction>
 #include <KToggleAction>
 
