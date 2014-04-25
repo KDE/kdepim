@@ -22,7 +22,7 @@
 #include "archivemailagentsettings.h"
 
 #include <mailcommon/kernel/mailkernel.h>
-#include <akonadi/dbusconnectionpool.h>
+#include <AkonadiCore/dbusconnectionpool.h>
 #include <Monitor>
 #include <Session>
 #include <CollectionFetchScope>
