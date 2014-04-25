@@ -24,7 +24,7 @@
 #include <kdialog.h>
 #include <kmessagebox.h>
 #include <klocale.h>
-
+#include <KGlobal>
 using namespace MessageViewer;
 
 //---------------------------------------------------------------------

@@ -393,7 +393,7 @@ KToggleAction *Viewer::toggleMimePartTreeAction()
     return d->mToggleMimePartTreeAction;
 }
 
-KAction *Viewer::selectAllAction()
+QAction *Viewer::selectAllAction()
 {
     Q_D( Viewer );
     return d->mSelectAllAction;
@@ -424,49 +424,49 @@ void Viewer::setExternalWindow( bool b )
     d->setExternalWindow( b );
 }
 
-KAction *Viewer::viewSourceAction()
+QAction *Viewer::viewSourceAction()
 {
     Q_D( Viewer );
     return d->mViewSourceAction;
 }
 
-KAction *Viewer::copyURLAction()
+QAction *Viewer::copyURLAction()
 {
     Q_D( Viewer );
     return d->mCopyURLAction;
 }
 
-KAction *Viewer::copyAction()
+QAction *Viewer::copyAction()
 {
     Q_D( Viewer );
     return d->mCopyAction;
 }
 
-KAction *Viewer::speakTextAction()
+QAction *Viewer::speakTextAction()
 {
     Q_D( Viewer );
     return d->mSpeakTextAction;
 }
 
-KAction *Viewer::copyImageLocation()
+QAction *Viewer::copyImageLocation()
 {
     Q_D( Viewer );
     return d->mCopyImageLocation;
 }
 
-KAction *Viewer::translateAction()
+QAction *Viewer::translateAction()
 {
     Q_D( Viewer );
     return d->mTranslateAction;
 }
 
-KAction *Viewer::saveAsAction()
+QAction *Viewer::saveAsAction()
 {
     Q_D( Viewer );
     return d->mSaveMessageAction;
 }
 
-KAction *Viewer::urlOpenAction()
+QAction *Viewer::urlOpenAction()
 {
     Q_D( Viewer );
     return d->mUrlOpenAction;
@@ -623,7 +623,7 @@ bool Viewer::zoomTextOnly() const
     return d->mZoomTextOnly;
 }
 
-KAction *Viewer::findInMessageAction()
+QAction *Viewer::findInMessageAction()
 {
     Q_D( Viewer );
     return d->mFindInMessageAction;
@@ -645,13 +645,13 @@ void Viewer::slotChangeDisplayMail(Viewer::ForceDisplayTo mode,bool loadExternal
     update(Viewer::Force);
 }
 
-KAction *Viewer::saveMessageDisplayFormatAction()
+QAction *Viewer::saveMessageDisplayFormatAction()
 {
     Q_D( Viewer );
     return d->mSaveMessageDisplayFormat;
 }
 
-KAction *Viewer::resetMessageDisplayFormatAction()
+QAction *Viewer::resetMessageDisplayFormatAction()
 {
     Q_D( Viewer );
     return d->mResetMessageDisplayFormat;
@@ -663,7 +663,7 @@ void Viewer::saveMainFrameScreenshotInFile(const QString &filename)
     return d->saveMainFrameScreenshotInFile(filename);
 }
 
-KAction *Viewer::blockImage()
+QAction *Viewer::blockImage()
 {
     Q_D( Viewer );
     return d->mBlockImage;
@@ -678,7 +678,7 @@ bool Viewer::adblockEnabled() const
 #endif
 }
 
-KAction *Viewer::openBlockableItems()
+QAction *Viewer::openBlockableItems()
 {
     Q_D( Viewer );
     return d->mBlockableItems;
@@ -690,19 +690,19 @@ bool Viewer::isAShortUrl(const KUrl &url) const
     return d->isAShortUrl(url);
 }
 
-KAction *Viewer::expandShortUrlAction()
+QAction *Viewer::expandShortUrlAction()
 {
     Q_D( Viewer );
     return d->mExpandUrlAction;
 }
 
-KAction *Viewer::createTodoAction()
+QAction *Viewer::createTodoAction()
 {
     Q_D( Viewer );
     return d->mCreateTodoAction;
 }
 
-KAction *Viewer::createEventAction()
+QAction *Viewer::createEventAction()
 {
     Q_D( Viewer );
     return d->mCreateEventAction;

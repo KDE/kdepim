@@ -48,7 +48,7 @@ namespace Kleo
 class SpecialJob;
 }
 
-class KAction;
+class QAction;
 class KActionCollection;
 class KSelectAction;
 class KToggleAction;
@@ -667,7 +667,7 @@ public:
     QString mIdOfLastViewedMessage;
     QWidget *mMainWindow;
     KActionCollection *mActionCollection;
-    KAction *mCopyAction, *mCopyURLAction,
+    QAction *mCopyAction, *mCopyURLAction,
     *mUrlOpenAction, *mSelectAllAction,
     *mScrollUpAction, *mScrollDownAction, *mScrollUpMoreAction, *mScrollDownMoreAction,
     *mViewSourceAction, *mSaveMessageAction, *mFindInMessageAction, *mSaveMessageDisplayFormat, *mResetMessageDisplayFormat;
@@ -679,16 +679,17 @@ public:
     KToggleAction *mCaretBrowsing;
 #endif
 #endif
-    KAction *mZoomTextOnlyAction, *mZoomInAction, *mZoomOutAction, *mZoomResetAction;
+    KToggleAction *mZoomTextOnlyAction;
+    QAction *mZoomInAction, *mZoomOutAction, *mZoomResetAction;
     KToggleAction *mToggleMimePartTreeAction;
-    KAction *mSpeakTextAction;
-    KAction *mCopyImageLocation;
-    KAction *mTranslateAction;
-    KAction *mBlockImage;
-    KAction *mBlockableItems;
-    KAction *mExpandUrlAction;
-    KAction *mCreateTodoAction;
-    KAction *mCreateEventAction;
+    QAction *mSpeakTextAction;
+    QAction *mCopyImageLocation;
+    QAction *mTranslateAction;
+    QAction *mBlockImage;
+    QAction *mBlockableItems;
+    QAction *mExpandUrlAction;
+    QAction *mCreateTodoAction;
+    QAction *mCreateEventAction;
     KUrl mHoveredUrl;
     KUrl mClickedUrl;
     KUrl mImageUrl;

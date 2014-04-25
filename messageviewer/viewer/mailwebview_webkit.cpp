@@ -27,7 +27,7 @@
 
 #include <KDebug>
 #include <KActionCollection>
-#include <KAction>
+#include <QAction>
 
 #include <QCoreApplication>
 #include <QContextMenuEvent>
@@ -497,7 +497,7 @@ void MailWebView::showAccessKeys()
     }
     if (mActionCollection) {
         Q_FOREACH(QAction*act, mActionCollection->actions()) {
-            KAction *a = qobject_cast<KAction*>(act);
+            QAction *a = qobject_cast<KAction*>(act);
             if(a) {
                 const KShortcut shortCut = a->shortcut();
                 if(!shortCut.isEmpty()) {

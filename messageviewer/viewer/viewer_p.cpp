@@ -44,7 +44,9 @@
 #include <unistd.h> // link()
 #include <errno.h>
 //KDE includes
-#include <KAction>
+#include <KHBox>
+#include <KVBox>
+#include <QAction>
 #include <KActionCollection>
 #include <KActionMenu>
 #include <kascii.h>
@@ -69,6 +71,7 @@
 #include <KToggleAction>
 #include <KPrintPreview>
 #include <kdeprintdialog.h>
+#include <KIcon>
 
 #include <kfileitemactions.h>
 #include <KFileItemListProperties>
@@ -533,10 +536,13 @@ void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, const QString &contentTy
         KService::List::ConstIterator it = offers.constBegin();
         KService::List::ConstIterator end = offers.constEnd();
         for(; it != end; ++it) {
-            KAction* act = MessageViewer::Util::createAppAction(*it,
+//QT5
+#if 0
+            QAction * act = MessageViewer::Util::createAppAction(*it,
                                                                 // no submenu -> prefix single offer
                                                                 menu == topMenu, actionGroup, menu);
             menu->addAction(act);
+#endif
         }
 
         QString openWithActionName;
@@ -546,7 +552,7 @@ void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, const QString &contentTy
         } else {
             openWithActionName = i18nc("@title:menu", "&Open With...");
         }
-        KAction *openWithAct = new KAction(menu);
+        QAction *openWithAct = new QAction(menu);
         openWithAct->setText(openWithActionName);
         if(fromCurrentContent)
             connect(openWithAct, SIGNAL(triggered()), this, SLOT(slotOpenWithDialogCurrentContent()));
@@ -555,7 +561,7 @@ void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, const QString &contentTy
 
         menu->addAction(openWithAct);
     } else { // no app offers -> Open With...
-        KAction *act = new KAction(topMenu);
+        QAction *act = new QAction(topMenu);
         act->setText(i18nc("@title:menu", "&Open With..."));
         if(fromCurrentContent)
             connect(act, SIGNAL(triggered()), this, SLOT(slotOpenWithDialogCurrentContent()));
@@ -1539,55 +1545,55 @@ void ViewerPrivate::createActions()
     // header style
     KActionMenu *headerMenu  = new KActionMenu(i18nc("View->", "&Headers"), this);
     ac->addAction(QLatin1String("view_headers"), headerMenu );
-    headerMenu->setHelpText( i18n("Choose display style of message headers") );
+    //QT5 headerMenu->setHelpText( i18n("Choose display style of message headers") );
 
     QActionGroup *group = new QActionGroup( this );
     raction = new KToggleAction( i18nc("View->headers->", "&Enterprise Headers"), this);
     ac->addAction( QLatin1String("view_headers_enterprise"), raction );
     connect( raction, SIGNAL(triggered(bool)), SLOT(slotEnterpriseHeaders()) );
-    raction->setHelpText( i18n("Show the list of headers in Enterprise style") );
+    //QT5 raction->setHelpText( i18n("Show the list of headers in Enterprise style") );
     group->addAction( raction );
     headerMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->headers->", "&Fancy Headers"), this);
     ac->addAction(QLatin1String("view_headers_fancy"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotFancyHeaders()));
-    raction->setHelpText( i18n("Show the list of headers in a fancy format") );
+    //QT5 raction->setHelpText( i18n("Show the list of headers in a fancy format") );
     group->addAction( raction );
     headerMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->headers->", "&Brief Headers"), this);
     ac->addAction(QLatin1String("view_headers_brief"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotBriefHeaders()));
-    raction->setHelpText( i18n("Show brief list of message headers") );
+    //QT5 raction->setHelpText( i18n("Show brief list of message headers") );
     group->addAction( raction );
     headerMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->headers->", "&Standard Headers"), this);
     ac->addAction(QLatin1String("view_headers_standard"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotStandardHeaders()));
-    raction->setHelpText( i18n("Show standard list of message headers") );
+    //QT5 raction->setHelpText( i18n("Show standard list of message headers") );
     group->addAction( raction );
     headerMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->headers->", "&Long Headers"), this);
     ac->addAction(QLatin1String("view_headers_long"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotLongHeaders()));
-    raction->setHelpText( i18n("Show long list of message headers") );
+    //QT5 raction->setHelpText( i18n("Show long list of message headers") );
     group->addAction( raction );
     headerMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->headers->", "&All Headers"), this);
     ac->addAction(QLatin1String("view_headers_all"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotAllHeaders()));
-    raction->setHelpText( i18n("Show all message headers") );
+    //QT5 raction->setHelpText( i18n("Show all message headers") );
     group->addAction( raction );
     headerMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->headers->", "&Custom Headers"), this);
     ac->addAction(QLatin1String("view_custom_headers"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotCustomHeaders()));
-    raction->setHelpText( i18n("Show custom headers") );
+    //QT5 raction->setHelpText( i18n("Show custom headers") );
     group->addAction( raction );
     headerMenu->addAction( raction );
     //Same action group
@@ -1597,34 +1603,34 @@ void ViewerPrivate::createActions()
     // attachment style
     KActionMenu *attachmentMenu  = new KActionMenu(i18nc("View->", "&Attachments"), this);
     ac->addAction(QLatin1String("view_attachments"), attachmentMenu );
-    attachmentMenu->setHelpText( i18n("Choose display style of attachments") );
+    //QT5 attachmentMenu->setHelpText( i18n("Choose display style of attachments") );
 
     group = new QActionGroup( this );
     raction  = new KToggleAction(i18nc("View->attachments->", "&As Icons"), this);
     ac->addAction(QLatin1String("view_attachments_as_icons"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotIconicAttachments()));
-    raction->setHelpText( i18n("Show all attachments as icons. Click to see them.") );
+    //QT5 raction->setHelpText( i18n("Show all attachments as icons. Click to see them.") );
     group->addAction( raction );
     attachmentMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->attachments->", "&Smart"), this);
     ac->addAction(QLatin1String("view_attachments_smart"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotSmartAttachments()));
-    raction->setHelpText( i18n("Show attachments as suggested by sender.") );
+    //QT5 raction->setHelpText( i18n("Show attachments as suggested by sender.") );
     group->addAction( raction );
     attachmentMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->attachments->", "&Inline"), this);
     ac->addAction(QLatin1String("view_attachments_inline"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotInlineAttachments()));
-    raction->setHelpText( i18n("Show all attachments inline (if possible)") );
+    //QT5 raction->setHelpText( i18n("Show all attachments inline (if possible)") );
     group->addAction( raction );
     attachmentMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->attachments->", "&Hide"), this);
     ac->addAction(QLatin1String("view_attachments_hide"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotHideAttachments()));
-    raction->setHelpText( i18n("Do not show attachments in the message viewer") );
+    //QT5 raction->setHelpText( i18n("Do not show attachments in the message viewer") );
     group->addAction( raction );
     attachmentMenu->addAction( raction );
 
@@ -1632,7 +1638,7 @@ void ViewerPrivate::createActions()
     ac->addAction( QLatin1String("view_attachments_headeronly"), mHeaderOnlyAttachmentsAction );
     connect( mHeaderOnlyAttachmentsAction, SIGNAL(triggered(bool)),
              SLOT(slotHeaderOnlyAttachments()) );
-    mHeaderOnlyAttachmentsAction->setHelpText( i18n( "Show Attachments only in the header of the mail" ) );
+    //QT5 mHeaderOnlyAttachmentsAction->setHelpText( i18n( "Show Attachments only in the header of the mail" ) );
     group->addAction( mHeaderOnlyAttachmentsAction );
     attachmentMenu->addAction( mHeaderOnlyAttachmentsAction );
 
@@ -1660,19 +1666,19 @@ void ViewerPrivate::createActions()
     viewerSelectionChanged();
 
     // copy all text to clipboard
-    mSelectAllAction  = new KAction(i18n("Select All Text"), this);
+    mSelectAllAction  = new QAction(i18n("Select All Text"), this);
     ac->addAction(QLatin1String("mark_all_text"), mSelectAllAction );
     connect(mSelectAllAction, SIGNAL(triggered(bool)), SLOT(selectAll()));
     mSelectAllAction->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_A ) );
 
     // copy Email address to clipboard
-    mCopyURLAction = new KAction( KIcon( QLatin1String("edit-copy" )),
+    mCopyURLAction = new QAction( KIcon( QLatin1String("edit-copy" )),
                                   i18n( "Copy Link Address" ), this );
     ac->addAction( QLatin1String("copy_url"), mCopyURLAction );
     connect( mCopyURLAction, SIGNAL(triggered(bool)), SLOT(slotUrlCopy()) );
 
     // open URL
-    mUrlOpenAction = new KAction( KIcon(QLatin1String( "document-open" )), i18n( "Open URL" ), this );
+    mUrlOpenAction = new QAction( KIcon(QLatin1String( "document-open" )), i18n( "Open URL" ), this );
     ac->addAction( QLatin1String("open_url"), mUrlOpenAction );
     connect( mUrlOpenAction, SIGNAL(triggered(bool)), this, SLOT(slotUrlOpen()) );
 
@@ -1687,17 +1693,17 @@ void ViewerPrivate::createActions()
     mZoomTextOnlyAction = new KToggleAction( i18n( "Zoom Text Only" ), this );
     ac->addAction( QLatin1String("toggle_zoomtextonly"), mZoomTextOnlyAction );
     connect( mZoomTextOnlyAction, SIGNAL(triggered(bool)), SLOT(slotZoomTextOnly()) );
-    mZoomInAction = new KAction( KIcon(QLatin1String("zoom-in")), i18n("&Zoom In"), this);
+    mZoomInAction = new QAction( KIcon(QLatin1String("zoom-in")), i18n("&Zoom In"), this);
     ac->addAction(QLatin1String("zoom_in"), mZoomInAction);
     connect(mZoomInAction, SIGNAL(triggered(bool)), SLOT(slotZoomIn()));
     mZoomInAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Plus));
 
-    mZoomOutAction = new KAction( KIcon(QLatin1String("zoom-out")), i18n("Zoom &Out"), this);
+    mZoomOutAction = new QAction( KIcon(QLatin1String("zoom-out")), i18n("Zoom &Out"), this);
     ac->addAction(QLatin1String("zoom_out"), mZoomOutAction);
     connect(mZoomOutAction, SIGNAL(triggered(bool)), SLOT(slotZoomOut()));
     mZoomOutAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Minus));
 
-    mZoomResetAction = new KAction( i18n("Reset"), this);
+    mZoomResetAction = new QAction( i18n("Reset"), this);
     ac->addAction(QLatin1String("zoom_reset"), mZoomResetAction);
     connect(mZoomResetAction, SIGNAL(triggered(bool)), SLOT(slotZoomReset()));
     mZoomResetAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_0));
@@ -1709,47 +1715,47 @@ void ViewerPrivate::createActions()
     connect( mToggleMimePartTreeAction, SIGNAL(toggled(bool)),
              SLOT(slotToggleMimePartTree()));
 
-    mViewSourceAction  = new KAction(i18n("&View Source"), this);
+    mViewSourceAction  = new QAction(i18n("&View Source"), this);
     ac->addAction(QLatin1String("view_source"), mViewSourceAction );
     connect(mViewSourceAction, SIGNAL(triggered(bool)), SLOT(slotShowMessageSource()));
     mViewSourceAction->setShortcut(QKeySequence(Qt::Key_V));
 
-    mSaveMessageAction = new KAction(KIcon(QLatin1String("document-save-as")), i18n("&Save message..."), this);
+    mSaveMessageAction = new QAction(KIcon(QLatin1String("document-save-as")), i18n("&Save message..."), this);
     ac->addAction(QLatin1String("save_message"), mSaveMessageAction);
     connect(mSaveMessageAction, SIGNAL(triggered(bool)), SLOT(slotSaveMessage()));
     //Laurent: conflict with kmail shortcut
     //mSaveMessageAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
 
-    mSaveMessageDisplayFormat = new KAction( i18n("&Save Display Format"), this);
+    mSaveMessageDisplayFormat = new QAction( i18n("&Save Display Format"), this);
     ac->addAction(QLatin1String("save_message_display_format"), mSaveMessageDisplayFormat );
     connect(mSaveMessageDisplayFormat, SIGNAL(triggered(bool)), SLOT(slotSaveMessageDisplayFormat()));
 
-    mResetMessageDisplayFormat = new KAction( i18n("&Reset Display Format"), this);
+    mResetMessageDisplayFormat = new QAction( i18n("&Reset Display Format"), this);
     ac->addAction(QLatin1String("reset_message_display_format"), mResetMessageDisplayFormat );
     connect(mResetMessageDisplayFormat, SIGNAL(triggered(bool)), SLOT(slotResetMessageDisplayFormat()));
 
     //
     // Scroll actions
     //
-    mScrollUpAction = new KAction( i18n("Scroll Message Up"), this );
+    mScrollUpAction = new QAction( i18n("Scroll Message Up"), this );
     mScrollUpAction->setShortcut( QKeySequence( Qt::Key_Up ) );
     ac->addAction( QLatin1String("scroll_up"), mScrollUpAction );
     connect( mScrollUpAction, SIGNAL(triggered(bool)),
              q, SLOT(slotScrollUp()) );
 
-    mScrollDownAction = new KAction( i18n("Scroll Message Down"), this );
+    mScrollDownAction = new QAction( i18n("Scroll Message Down"), this );
     mScrollDownAction->setShortcut( QKeySequence( Qt::Key_Down ) );
     ac->addAction( QLatin1String("scroll_down"), mScrollDownAction );
     connect( mScrollDownAction, SIGNAL(triggered(bool)),
              q, SLOT(slotScrollDown()) );
 
-    mScrollUpMoreAction = new KAction( i18n("Scroll Message Up (More)"), this );
+    mScrollUpMoreAction = new QAction( i18n("Scroll Message Up (More)"), this );
     mScrollUpMoreAction->setShortcut( QKeySequence( Qt::Key_PageUp ) );
     ac->addAction( QLatin1String("scroll_up_more"), mScrollUpMoreAction );
     connect( mScrollUpMoreAction, SIGNAL(triggered(bool)),
              q, SLOT(slotScrollPrior()) );
 
-    mScrollDownMoreAction = new KAction( i18n("Scroll Message Down (More)"), this );
+    mScrollDownMoreAction = new QAction( i18n("Scroll Message Down (More)"), this );
     mScrollDownMoreAction->setShortcut( QKeySequence( Qt::Key_PageDown ) );
     ac->addAction( QLatin1String("scroll_down_more"), mScrollDownMoreAction );
     connect( mScrollDownMoreAction, SIGNAL(triggered(bool)),
@@ -1765,41 +1771,41 @@ void ViewerPrivate::createActions()
     mToggleDisplayModeAction->setShortcut(QKeySequence(Qt::SHIFT + Qt::Key_H));
     connect( mToggleDisplayModeAction, SIGNAL(triggered(bool)),
              SLOT(slotToggleHtmlMode()) );
-    mToggleDisplayModeAction->setHelpText( i18n( "Toggle display mode between HTML and plain text" ) );
+    //QT5 mToggleDisplayModeAction->setHelpText( i18n( "Toggle display mode between HTML and plain text" ) );
 
     // Load external reference
-    KAction *loadExternalReferenceAction = new KAction( i18n( "Load external references" ), this );
+    QAction *loadExternalReferenceAction = new QAction( i18n( "Load external references" ), this );
     ac->addAction( QLatin1String("load_external_reference"), loadExternalReferenceAction );
     loadExternalReferenceAction->setShortcut(QKeySequence(Qt::SHIFT + Qt::CTRL + Qt::Key_R));
     connect( loadExternalReferenceAction, SIGNAL(triggered(bool)),
              SLOT(slotLoadExternalReference()) );
-    loadExternalReferenceAction->setHelpText( i18n( "Load external references from the Internet for this message." ) );
+    //QT5 loadExternalReferenceAction->setHelpText( i18n( "Load external references from the Internet for this message." ) );
 
 
-    mSpeakTextAction = new KAction(i18n("Speak Text"),this);
+    mSpeakTextAction = new QAction(i18n("Speak Text"),this);
     mSpeakTextAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
     ac->addAction( QLatin1String("speak_text"), mSpeakTextAction );
     connect( mSpeakTextAction, SIGNAL(triggered(bool)),
              this, SLOT(slotSpeakText()) );
 
-    mCopyImageLocation = new KAction(i18n("Copy Image Location"),this);
+    mCopyImageLocation = new QAction(i18n("Copy Image Location"),this);
     mCopyImageLocation->setIcon(KIcon(QLatin1String("view-media-visualization")));
     ac->addAction(QLatin1String("copy_image_location"), mCopyImageLocation);
-    mCopyImageLocation->setShortcutConfigurable( false );
+    //QT5 mCopyImageLocation->setShortcutConfigurable( false );
     connect( mCopyImageLocation, SIGNAL(triggered(bool)),
              SLOT(slotCopyImageLocation()) );
 
-    mTranslateAction = new KAction(i18n("Translate..."),this);
+    mTranslateAction = new QAction(i18n("Translate..."),this);
     mTranslateAction->setShortcut(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_T));
     mTranslateAction->setIcon(KIcon(QLatin1String("preferences-desktop-locale")));
     ac->addAction(QLatin1String("translate_text"), mTranslateAction);
     connect( mTranslateAction, SIGNAL(triggered(bool)),
              SLOT(slotTranslate()) );
 
-    mFindInMessageAction = new KAction(KIcon(QLatin1String("edit-find")), i18n("&Find in Message..."), this);
+    mFindInMessageAction = new QAction(KIcon(QLatin1String("edit-find")), i18n("&Find in Message..."), this);
     ac->addAction(QLatin1String("find_in_messages"), mFindInMessageAction );
     connect(mFindInMessageAction, SIGNAL(triggered(bool)), SLOT(slotFind()));
-    mFindInMessageAction->setShortcut(KStandardShortcut::find());
+    mFindInMessageAction->setShortcut(KStandardShortcut::find().first());
 
 #ifndef KDEPIM_NO_WEBKIT
 #if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
@@ -1810,32 +1816,32 @@ void ViewerPrivate::createActions()
     mCaretBrowsing->setChecked(false);
 #endif
 #endif
-    mBlockImage = new KAction(i18n("Block image"), this);
+    mBlockImage = new QAction(i18n("Block image"), this);
     ac->addAction(QLatin1String("adblock_image"), mBlockImage);
-    mBlockImage->setShortcutConfigurable( false );
+    //QT5 mBlockImage->setShortcutConfigurable( false );
     connect( mBlockImage, SIGNAL(triggered(bool)), SLOT(slotBlockImage()) );
 
-    mBlockableItems = new KAction(i18n("Open Blockable Items..."), this);
+    mBlockableItems = new QAction(i18n("Open Blockable Items..."), this);
     ac->addAction(QLatin1String("adblock_blockable_items"), mBlockableItems);
     connect( mBlockableItems, SIGNAL(triggered(bool)), SLOT(slotOpenBlockableItems()) );
 
 
-    mExpandUrlAction = new KAction(i18n("Expand Short URL"), this);
+    mExpandUrlAction = new QAction(i18n("Expand Short URL"), this);
     ac->addAction(QLatin1String("expand_short_url"), mExpandUrlAction);
-    mExpandUrlAction->setShortcutConfigurable( false );
+    //QT5 mExpandUrlAction->setShortcutConfigurable( false );
     connect( mExpandUrlAction, SIGNAL(triggered(bool)), SLOT(slotExpandShortUrl()) );
 
-    mCreateTodoAction = new KAction(KIcon( QLatin1String("task-new") ),i18n("Create Todo"), this);
+    mCreateTodoAction = new QAction(KIcon( QLatin1String("task-new") ),i18n("Create Todo"), this);
     mCreateTodoAction->setIconText( i18n( "Create To-do" ) );
-    mCreateTodoAction->setHelpText( i18n( "Allows you to create a calendar to-do or reminder from this message" ) );
+    //QT5 mCreateTodoAction->setHelpText( i18n( "Allows you to create a calendar to-do or reminder from this message" ) );
     mCreateTodoAction->setWhatsThis( i18n( "This option starts the KOrganizer to-do editor with initial values taken from the currently selected message. Then you can edit the to-do to your liking before saving it to your calendar." ) );
     ac->addAction(QLatin1String("create_todo"), mCreateTodoAction);
     mCreateTodoAction->setShortcut(Qt::CTRL + Qt::Key_T);
     connect( mCreateTodoAction, SIGNAL(triggered(bool)), SLOT(slotShowCreateTodoWidget()) );
 
-    mCreateEventAction = new KAction(KIcon( QLatin1String("appointment-new") ),i18n("Create Event"), this);
+    mCreateEventAction = new QAction(KIcon( QLatin1String("appointment-new") ),i18n("Create Event"), this);
     mCreateEventAction->setIconText( i18n( "Create Event" ) );
-    mCreateEventAction->setHelpText( i18n( "Allows you to create a calendar Event" ) );
+    //QT5 mCreateEventAction->setHelpText( i18n( "Allows you to create a calendar Event" ) );
     ac->addAction(QLatin1String("create_event"), mCreateEventAction);
     mCreateEventAction->setShortcut(Qt::CTRL + Qt::Key_E);
     connect( mCreateEventAction, SIGNAL(triggered(bool)), SLOT(slotShowCreateEventWidget()) );

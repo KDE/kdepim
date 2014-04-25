@@ -61,6 +61,8 @@
 #include <KRun>
 #include <KStandardDirs>
 #include <KUrl>
+#include <KIcon>
+#include <KDebug>
 
 #include <QApplication>
 #include <QClipboard>

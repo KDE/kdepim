@@ -34,7 +34,7 @@ class ItemFetchJob;
 }
 
 class KActionCollection;
-class KAction;
+class QAction;
 class KToggleAction;
 class KUrl;
 
@@ -268,23 +268,23 @@ public:
 
     KToggleAction *toggleMimePartTreeAction();
 
-    KAction *selectAllAction();
-    KAction *copyURLAction();
-    KAction *copyAction();
-    KAction *urlOpenAction();
-    KAction *speakTextAction();
-    KAction *copyImageLocation();
-    KAction *translateAction();
-    KAction *viewSourceAction();
-    KAction *findInMessageAction();
-    KAction *saveAsAction();
-    KAction *saveMessageDisplayFormatAction();
-    KAction *resetMessageDisplayFormatAction();
-    KAction *blockImage();
-    KAction *openBlockableItems();
-    KAction *expandShortUrlAction();
-    KAction *createTodoAction();
-    KAction *createEventAction();
+    QAction *selectAllAction();
+    QAction *copyURLAction();
+    QAction *copyAction();
+    QAction *urlOpenAction();
+    QAction *speakTextAction();
+    QAction *copyImageLocation();
+    QAction *translateAction();
+    QAction *viewSourceAction();
+    QAction *findInMessageAction();
+    QAction *saveAsAction();
+    QAction *saveMessageDisplayFormatAction();
+    QAction *resetMessageDisplayFormatAction();
+    QAction *blockImage();
+    QAction *openBlockableItems();
+    QAction *expandShortUrlAction();
+    QAction *createTodoAction();
+    QAction *createEventAction();
 
     HeaderStrategy * headerStrategy() const;
 

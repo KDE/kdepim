@@ -44,7 +44,7 @@
 #include <KTabWidget>
 #include <KFileDialog>
 #include <KMessageBox>
-#include <KAction>
+#include <QAction>
 #include <KIcon>
 #include <KIconTheme>
 #include <KLocalizedString>
