@@ -23,7 +23,7 @@
 #include "mailcommon/filter/filterimporterexporter.h"
 
 #include <Akonadi/AgentManager>
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/CollectionFetchScope>
 

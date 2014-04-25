@@ -19,7 +19,7 @@
 #define ABSTRACTIMPORTEXPORTJOB_H
 
 #include "utils.h"
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 #include <QStringList>
 
 class QWidget;

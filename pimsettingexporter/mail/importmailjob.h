@@ -19,7 +19,7 @@
 #define ImportMailJob_H
 
 #include "abstractimportexportjob.h"
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 #include <QStringList>
 #include <QHash>
 

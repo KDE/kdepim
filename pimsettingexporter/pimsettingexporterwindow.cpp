@@ -59,7 +59,7 @@
 #include "pimcommon/util/pimutil.h"
 
 
-#include <Akonadi/Control>
+#include <AkonadiCore/Control>
 
 #include <KStandardAction>
 #include <KAction>
