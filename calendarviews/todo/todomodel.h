@@ -28,11 +28,11 @@
 
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <Akonadi/Calendar/ETMCalendar>
-#include <Akonadi/Item>
+#include <Item>
 
 #include <KCalCore/Todo>
 #include <QAbstractItemModel>
-#include <Akonadi/EntityTreeModel>
+#include <EntityTreeModel>
 #include <QAbstractProxyModel>
 
 class QMimeData;

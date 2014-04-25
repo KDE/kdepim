@@ -40,6 +40,8 @@
 #include <calendarsupport/kcalprefs.h>
 #include <Akonadi/Calendar/IncidenceChanger>
 
+#include <KDebug>
+
 #include <QApplication>
 #include <QPainter>
 #include <QStandardItemModel>

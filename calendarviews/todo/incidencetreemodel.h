@@ -23,7 +23,7 @@
 #ifndef INCIDENCE_TREEMODEL_H_
 #define INCIDENCE_TREEMODEL_H_
 
-#include <Akonadi/Item>
+#include <Item>
 #include <QAbstractProxyModel>
 
 class IncidenceTreeModel : public QAbstractProxyModel {

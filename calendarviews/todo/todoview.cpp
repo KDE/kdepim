@@ -44,10 +44,10 @@
 
 #include <libkdepim/widgets/kdatepickerpopup.h>
 
-#include <Akonadi/EntityMimeTypeFilterModel>
-#include <Akonadi/ETMViewStateSaver>
-#include <Akonadi/TagFetchJob>
-#include <Akonadi/Tag>
+#include <entitymimetypefiltermodel.h>
+#include <ETMViewStateSaver>
+#include <TagFetchJob>
+#include <Tag>
 
 #include <KCalCore/CalFormat>
 #include <KIcon>
@@ -55,6 +55,7 @@
 #include <KGlobal>
 #include <KComponentData>
 #include <KJob>
+#include <KDebug>
 
 #include <QCheckBox>
 #include <QGridLayout>

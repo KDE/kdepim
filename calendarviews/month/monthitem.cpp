@@ -36,6 +36,7 @@
 #include <KCalUtils/RecurrenceActions>
 
 #include <KMessageBox>
+#include <KDebug>
 
 using namespace EventViews;
 using namespace KCalCore;

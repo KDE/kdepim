@@ -26,7 +26,7 @@
 
 #include "eventview.h"
 
-#include <Akonadi/Item>
+#include <Item>
 
 #include <QDateTime>
 

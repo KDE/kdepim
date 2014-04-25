@@ -25,8 +25,8 @@
 
 #include "timelineview.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/Item>
+#include <Collection>
+#include <AkonadiCore/Item>
 
 
 #include <QMap>

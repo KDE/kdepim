@@ -34,6 +34,8 @@
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <KCalCore/OccurrenceIterator>
 
+#include <KDebug>
+
 #include <QStandardItemModel>
 #include <QResizeEvent>
 #include <QSplitter>

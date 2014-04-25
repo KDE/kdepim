@@ -36,6 +36,8 @@
 #include <KCalCore/OccurrenceIterator>
 #include <KCheckableProxyModel>
 #include <KIcon>
+#include <KDebug>
+#include <KGlobal>
 
 #include <QHBoxLayout>
 #include <QTimer>

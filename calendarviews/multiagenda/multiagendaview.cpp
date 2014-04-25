@@ -25,12 +25,12 @@
 #include "agenda/agendaview.h"
 #include "agenda/timelabelszone.h"
 
-#include <Akonadi/EntityTreeModel>
+#include <entitytreemodel.h>
 #include <Akonadi/Calendar/ETMCalendar>
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/utils.h>
 
-#include <Akonadi/ETMViewStateSaver>
+#include <ETMViewStateSaver>
 
 #include <akonadi_next/kcolumnfilterproxymodel.h>
 using namespace Future;
@@ -42,6 +42,7 @@ using namespace Future;
 #include <KLocalizedString>
 #include <KVBox>
 #include <KViewStateMaintainer>
+#include <KDebug>
 
 #include <QHBoxLayout>
 #include <QItemSelectionModel>

@@ -31,6 +31,7 @@
 #include <KCalUtils/IncidenceFormatter>
 
 #include <KIconLoader>
+#include <KGlobal>
 
 #include <QBoxLayout>
 

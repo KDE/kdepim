@@ -40,6 +40,8 @@
 #include <Akonadi/Calendar/ETMCalendar>
 
 #include <KMessageBox>
+#include <KDebug>
+#include <KIconLoader>
 
 #include <QMimeData>
 #include <QIcon>
@@ -379,9 +381,12 @@ QVariant TodoModel::data( const QModelIndex &index, int role ) const
   }
 
   if ( role == TodoRole ) {
+ //QT5
+#if 0 
     QVariant ret( QMetaType::VoidStar );
     ret.setValue( item );
     return ret;
+#endif
   }
 
   if ( role == IsRichTextRole ) {

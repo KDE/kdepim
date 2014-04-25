@@ -22,8 +22,9 @@
 
 #include "incidencetreemodel_p.h"
 
-#include <Akonadi/EntityTreeModel>
+#include <entitytreemodel.h>
 #include <QElapsedTimer>
+#include <KDebug>
 
 using namespace Akonadi;
 QDebug operator<<( QDebug s, const Node::Ptr &node );
