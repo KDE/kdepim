@@ -24,8 +24,8 @@
 #include "microblogdelegate.h"
 #include "akonaditabbar.h"
 
-#include <akonadi/agentinstancemodel.h>
-#include <akonadi/agentfilterproxymodel.h>
+#include <AkonadiCore/agentinstancemodel.h>
+#include <AkonadiCore/agentfilterproxymodel.h>
 #include <AkonadiCore/collectionfetchjob.h>
 
 #include <QVBoxLayout>

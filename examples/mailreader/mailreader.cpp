@@ -7,7 +7,7 @@
 
 #include <AkonadiCore/changerecorder.h>
 #include <AkonadiCore/entitytreemodel.h>
-#include <akonadi/entitytreeview.h>
+#include <AkonadiWidgets/entitytreeview.h>
 #include <AkonadiCore/itemfetchjob.h>
 #include <AkonadiCore/itemfetchscope.h>
 #include <AkonadiCore/entitymimetypefiltermodel.h>
@@ -15,12 +15,12 @@
 #include <libkdepim/misc/statisticsproxymodel.h>
 #include <akonadi/kmime/messageparts.h>
 
-#include <KDE/KAction>
-#include <KDE/KConfigDialog>
-#include <KDE/KActionCollection>
-#include <KDE/KLocale>
-#include <KDE/KStandardAction>
-#include <KDE/KStatusBar>
+#include <KAction>
+#include <KConfigDialog>
+#include <KActionCollection>
+#include <KLocale>
+#include <KStandardAction>
+#include <KStatusBar>
 
 #include <QDockWidget>
 #include <QSortFilterProxyModel>

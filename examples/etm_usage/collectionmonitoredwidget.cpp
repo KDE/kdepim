@@ -31,7 +31,7 @@
 #include <AkonadiWidgets/EntityTreeView>
 #include <AkonadiCore/EntityTreeModel>
 #include <AkonadiCore/ChangeRecorder>
-#include <Akonadi/CollectionFetchScope>
+#include <AkonadiCore/CollectionFetchScope>
 
 CollectionMonitoredWidget::CollectionMonitoredWidget(QWidget* parent, Qt::WindowFlags f)
   : QWidget(parent, f)

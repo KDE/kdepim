@@ -32,7 +32,7 @@
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/entitymimetypefiltermodel.h>
 #include <AkonadiCore/collection.h>
-#include <akonadi/collectionstatistics.h>
+#include <AkonadiCore/collectionstatistics.h>
 
 #include "entitytreewidget.h"
 #include "itemviewerwidget.h"

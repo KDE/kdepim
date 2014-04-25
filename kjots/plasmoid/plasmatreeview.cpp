@@ -22,7 +22,7 @@
 
 #include <kiconloader.h>
 
-#include <akonadi/entitytreeview.h>
+#include <AkonadiWidgets/entitytreeview.h>
 
 // #include "private/style_p.h"
 

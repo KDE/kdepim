@@ -20,7 +20,7 @@
 */
 
 #include "kjotslockjob.h"
-#include <Akonadi/CollectionModifyJob>
+#include <AkonadiCore/CollectionModifyJob>
 #include <AkonadiCore/ItemModifyJob>
 #include "noteshared/attributes/notelockattribute.h"
 

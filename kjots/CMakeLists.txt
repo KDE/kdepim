@@ -1,6 +1,6 @@
 project(kjots)
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+kde_enable_exceptions()
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
@@ -14,7 +14,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/noteshared
 )
 
-set(kjotsLibs ${KDE4_KIO_LIBS} kdepim)
+set(kjotsLibs KF5::KIOCore kdepim)
 
 add_subdirectory( icons )
 add_subdirectory( plasmoid )
@@ -27,9 +27,9 @@ add_subdirectory( plasmoid )
 
 set(kjots_config_SRCS kjotsconfigdlg.cpp)
 
-kde4_add_kcfg_files(kjots_config_SRCS KJotsSettings.kcfgc )
+kconfig_add_kcfg_files(kjots_config_SRCS KJotsSettings.kcfgc )
 
-kde4_add_ui_files(kjots_config_SRCS confpagemisc.ui)
+qt5_wrap_ui(kjots_config_SRCS confpagemisc.ui)
 
 
 set (kjots_common_SRCS
@@ -69,17 +69,17 @@ set(kjots_SRCS
 )
 kde4_add_app_icon(kjots_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-apps-kjots.png")
 
-kde4_add_executable(kjots ${kjots_SRCS})
+add_executable(kjots ${kjots_SRCS})
 
 target_link_libraries(kjots
   ${kjotsLibs}
-  ${KDE4_KCMUTILS_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+  KF5::KCMUtils
+  KF5::AkonadiCore
+  KF5::KMime
+  KF5::AkonadiKMime
   ${Grantlee_CORE_LIBRARIES}
   ${Grantlee_GUI_LIBRARIES}
-  ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
+  KF5::PimTextEdit
   ${KDEPIMLIBS_KONTACTINTERFACE_LIBS}
    ${KDE4_KPRINTUTILS_LIBS}
   akonadi_next
@@ -106,21 +106,21 @@ install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/kjots PATTERN *.svn EXC
     ${kjots_common_SRCS}
   )
 
-  kde4_add_plugin(kjotspart ${kjotspart_PART_SRCS}
+  add_library(kjotspart MODULE ${kjotspart_PART_SRCS}
   )
 
 
   target_link_libraries(kjotspart
-    ${KDE4_KCMUTILS_LIBS}
+    KF5::KCMUtils
     ${KDE4_KPARTS_LIBS}
     kdepim
-    ${KDEPIMLIBS_KMIME_LIBS}
-    ${KDEPIMLIBS_AKONADI_LIBS}
-    ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-    ${KDEPIMLIBS_KMIME_LIBS}
+    KF5::KMime
+    KF5::AkonadiCore
+    KF5::AkonadiKMime
+    KF5::KMime
     ${Grantlee_CORE_LIBRARIES}
     ${Grantlee_GUI_LIBRARIES}
-    ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
+    KF5::PimTextEdit
     ${KDE4_KPRINTUTILS_LIBS}
     akonadi_next
     noteshared
@@ -135,9 +135,9 @@ install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/kjots PATTERN *.svn EXC
   ###########################################################################
   set(kcm_kjots_PART_SRCS kcm_kjots.cpp ${kjots_config_SRCS} )
 
-  kde4_add_plugin(kcm_kjots ${kcm_kjots_PART_SRCS})
+  add_library(kcm_kjots MODULE ${kcm_kjots_PART_SRCS})
 
-  target_link_libraries(kcm_kjots  ${KDE4_KDEUI_LIBS} ${KDE4_KCMUTILS_LIBS})
+  target_link_libraries(kcm_kjots   KF5::KCMUtils)
 
   install(TARGETS kcm_kjots DESTINATION ${PLUGIN_INSTALL_DIR})
 

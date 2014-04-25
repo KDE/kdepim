@@ -31,8 +31,8 @@
 #include <AkonadiCore/changerecorder.h>
 
 #include <akonadi/contact/contactstreemodel.h>
-#include <akonadi/entitylistview.h>
-#include <akonadi/entitytreeview.h>
+#include <AkonadiWidgets/entitylistview.h>
+#include <AkonadiWidgets/entitytreeview.h>
 #include <KABC/Addressee>
 #include <AkonadiCore/ItemFetchScope>
 

@@ -42,13 +42,13 @@
 #include <QDBusConnection>
 
 // Akonadi
-#include <akonadi/control.h>
-#include <akonadi/collectiondeletejob.h>
+#include <AkonadiCore/control.h>
+#include <AkonadiCore/collectiondeletejob.h>
 #include <akonadi/collectioncreatejob.h>
 #include <AkonadiCore/changerecorder.h>
 #include <AkonadiCore/entitydisplayattribute.h>
-#include <akonadi/entitytreeview.h>
-#include <akonadi/etmviewstatesaver.h>
+#include <AkonadiWidgets/entitytreeview.h>
+#include <AkonadiWidgets/etmviewstatesaver.h>
 #include <AkonadiCore/item.h>
 #include <AkonadiCore/ItemCreateJob>
 #include <AkonadiCore/ItemDeleteJob>

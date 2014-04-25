@@ -19,12 +19,12 @@
 
 // Akonadi
 #include <AkonadiCore/changerecorder.h>
-#include <akonadi/entitytreeview.h>
+#include <AkonadiWidgets/entitytreeview.h>
 #include <AkonadiCore/entitymimetypefiltermodel.h>
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/itemfetchscope.h>
 #include <AkonadiCore/monitor.h>
-#include <akonadi/selectionproxymodel.h>
+#include <AkonadiCore/selectionproxymodel.h>
 #include <AkonadiCore/session.h>
 #include <libkdepim/misc/statisticsproxymodel.h>
 

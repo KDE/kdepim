@@ -35,15 +35,15 @@
 #include <kcheckableproxymodel.h>
 
 #include <AkonadiCore/entitytreemodel.h>
-#include <akonadi/entitytreeview.h>
-#include <akonadi/etmviewstatesaver.h>
+#include <AkonadiWidgets/entitytreeview.h>
+#include <AkonadiWidgets/etmviewstatesaver.h>
 
 #include "mailmodel.h"
 
 #include <AkonadiCore/ChangeRecorder>
 #include <AkonadiCore/ItemFetchScope>
 #include <AkonadiCore/entitymimetypefiltermodel.h>
-#include <akonadi/selectionproxymodel.h>
+#include <AkonadiCore/selectionproxymodel.h>
 #include <akonadi/kmime/messagestatus.h>
 
 #include <KMime/Message>
