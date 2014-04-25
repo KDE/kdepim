@@ -28,7 +28,7 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/entitytreemodel.h>
 
 #include "messageviewer/viewer/viewer.h"
 #include "akonadi/contact/contactviewer.h"

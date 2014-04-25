@@ -21,9 +21,9 @@
 #include <KLocalizedString>
 
 #include <Akonadi/Contact/ContactSearchJob>
-#include <Akonadi/CollectionDialog>
-#include <Akonadi/ItemCreateJob>
-#include <Akonadi/ItemModifyJob>
+#include <AkonadiWidgets/CollectionDialog>
+#include <AkonadiCore/ItemCreateJob>
+#include <AkonadiCore/ItemModifyJob>
 
 #include <QPointer>
 #include <QDebug>

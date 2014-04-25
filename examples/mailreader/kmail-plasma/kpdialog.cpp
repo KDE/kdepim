@@ -18,14 +18,14 @@
  ***************************************************************************/
 
 // Akonadi
-#include <akonadi/changerecorder.h>
+#include <AkonadiCore/changerecorder.h>
 #include <akonadi/entitytreeview.h>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/monitor.h>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <AkonadiCore/monitor.h>
 #include <akonadi/selectionproxymodel.h>
-#include <akonadi/session.h>
+#include <AkonadiCore/session.h>
 #include <libkdepim/misc/statisticsproxymodel.h>
 
 #include <messagelist/pane.h>

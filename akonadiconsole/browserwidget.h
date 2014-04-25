@@ -23,8 +23,8 @@
 #include <ui_browserwidget_itemview.h>
 #include <ui_browserwidget_contentview.h>
 
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
+#include <AkonadiCore/collection.h>
+#include <AkonadiCore/item.h>
 #include <akonadi/etmviewstatesaver.h>
 
 #include <QWidget>

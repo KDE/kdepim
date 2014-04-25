@@ -28,8 +28,8 @@
 
 #include <KStandardDirs>
 
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/ItemFetchScope>
+#include <AkonadiCore/ChangeRecorder>
+#include <AkonadiCore/ItemFetchScope>
 
 #include "tripmodel.h"
 #include <qdeclarative.h>

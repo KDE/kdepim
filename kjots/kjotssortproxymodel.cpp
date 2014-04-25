@@ -20,7 +20,7 @@
 */
 
 #include "kjotssortproxymodel.h"
-#include <Akonadi/EntityTreeModel>
+#include <AkonadiCore/EntityTreeModel>
 #include <KMime/KMimeMessage>
 
 

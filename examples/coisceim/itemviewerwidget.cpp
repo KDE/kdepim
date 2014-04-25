@@ -28,7 +28,7 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/entitytreemodel.h>
 
 #include <KCalCore/Todo>
 

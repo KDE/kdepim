@@ -22,7 +22,7 @@
 #include "settings/messagecomposersettings.h"
 #include "messagecomposer/utils/util.h"
 
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 #ifndef QT_NO_CURSOR
 #include <messageviewer/utils/kcursorsaver.h>
 #endif

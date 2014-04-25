@@ -22,10 +22,10 @@
 
 #include "distributionlistdialog.h"
 
-#include <akonadi/collectiondialog.h>
+#include <AkonadiWidgets/collectiondialog.h>
 #include <akonadi/contact/contactgroupsearchjob.h>
 #include <akonadi/contact/contactsearchjob.h>
-#include <akonadi/itemcreatejob.h>
+#include <AkonadiCore/itemcreatejob.h>
 #include <kpimutils/email.h>
 
 #include <KLocalizedString>

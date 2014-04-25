@@ -38,11 +38,11 @@
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_util.h>
 #include <mailtransport/messagequeuejob.h>
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 #include <akonadi/kmime/messagestatus.h>
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentinstancecreatejob.h>
-#include <akonadi/agentmanager.h>
+#include <AkonadiCore/agentinstance.h>
+#include <AkonadiCore/agentinstancecreatejob.h>
+#include <AkonadiCore/agentmanager.h>
 #include <messagecore/helpers/messagehelpers.h>
 
 KMime::Content* setBodyAndCTE( QByteArray &encodedBody, KMime::Headers::ContentType* contentType, KMime::Content* ret ){

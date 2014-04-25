@@ -22,12 +22,12 @@
 
 #include "akonadi_next/note.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/ItemCreateJob>
-#include <Akonadi/EntityDisplayAttribute>
-#include <Akonadi/Item>
+#include <AkonadiCore/Collection>
+#include <AkonadiCore/ItemCreateJob>
+#include <AkonadiCore/EntityDisplayAttribute>
+#include <AkonadiCore/Item>
 #include <Akonadi/CollectionModifyJob>
-#include <Akonadi/CollectionFetchJob>
+#include <AkonadiCore/CollectionFetchJob>
 
 #include <KMime/KMimeMessage>
 

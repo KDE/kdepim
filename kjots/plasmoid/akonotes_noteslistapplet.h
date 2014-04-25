@@ -24,7 +24,7 @@
 
 #include "ui_akonotes_applet.h"
 
-#include <akonadi/collection.h>
+#include <AkonadiCore/collection.h>
 
 class QAbstractItemModel;
 

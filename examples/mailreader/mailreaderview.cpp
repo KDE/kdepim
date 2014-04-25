@@ -17,7 +17,7 @@
 #include <KDebug>
 #include <KApplication>
 
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 #include "messagelist/core/settings.h"
 #include "ui_prefs_messagelist.h"
 

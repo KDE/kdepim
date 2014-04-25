@@ -26,15 +26,15 @@
 #include <QHBoxLayout>
 #include <QListView>
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/changerecorder.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
+#include <AkonadiCore/changerecorder.h>
 
 #include <akonadi/contact/contactstreemodel.h>
 #include <akonadi/entitylistview.h>
 #include <akonadi/entitytreeview.h>
 #include <KABC/Addressee>
-#include <Akonadi/ItemFetchScope>
+#include <AkonadiCore/ItemFetchScope>
 
 RecursiveItemListWidget::RecursiveItemListWidget(QWidget* parent, Qt::WindowFlags f)
   : QWidget(parent, f)

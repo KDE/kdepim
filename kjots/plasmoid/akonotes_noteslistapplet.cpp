@@ -23,15 +23,15 @@
 
 #include <KConfigDialog>
 
-#include <akonadi/changerecorder.h>
-#include <akonadi/collection.h>
-#include <akonadi/collectionfilterproxymodel.h>
-#include <akonadi/entitydisplayattribute.h>
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/changerecorder.h>
+#include <AkonadiCore/collection.h>
+#include <AkonadiCore/collectionfilterproxymodel.h>
+#include <AkonadiCore/entitydisplayattribute.h>
+#include <AkonadiCore/entitytreemodel.h>
 #include <akonadi/entityrightsfiltermodel.h>
 #include <akonadi/itemmodel.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/session.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <AkonadiCore/session.h>
 
 #include "akonadi_next/note.h"
 

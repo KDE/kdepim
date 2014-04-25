@@ -20,7 +20,7 @@
 #include "notificationmonitor.h"
 #include "notificationmodel.h"
 
-#include <Akonadi/Control>
+#include <AkonadiCore/Control>
 
 #include <KLocalizedString>
 #include <KFileDialog>

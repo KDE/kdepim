@@ -19,7 +19,7 @@
 
 #include "collectioninternalspage.h"
 
-#include <akonadi/collection.h>
+#include <AkonadiCore/collection.h>
 
 using namespace Akonadi;
 

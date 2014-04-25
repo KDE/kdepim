@@ -37,8 +37,8 @@
 #include <kcategorydrawer.h>
 #include <kcheckableproxymodel.h>
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/entitymimetypefiltermodel.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
 
 class Tab6TreeWidget : public EntityTreeWidget
 {

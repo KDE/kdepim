@@ -28,8 +28,8 @@
 #include <KConfigGroup>
 #include <KConfig>
 
-#include <Akonadi/Item>
-#include <Akonadi/ChangeRecorder>
+#include <AkonadiCore/Item>
+#include <AkonadiCore/ChangeRecorder>
 
 #include "trip.h"
 #include "tripwidget.h"

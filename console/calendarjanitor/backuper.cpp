@@ -27,10 +27,10 @@
 #include <KCalCore/Incidence>
 #include <KCalCore/FileStorage>
 
-#include <Akonadi/CollectionFetchJob>
+#include <AkonadiCore/CollectionFetchJob>
 #include <Akonadi/CollectionFetchScope>
 #include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
+#include <AkonadiCore/ItemFetchScope>
 
 #include <KLocale>
 #include <KJob>

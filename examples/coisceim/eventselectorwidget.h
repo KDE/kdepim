@@ -23,7 +23,7 @@
 #define EVENTSELECTORWIDGET_H
 
 #include <KDialog>
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 class QTreeView;
 

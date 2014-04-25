@@ -20,8 +20,8 @@
 #ifndef AKONADIBROWSERMODEL_H
 #define AKONADIBROWSERMODEL_H
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/changerecorder.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/changerecorder.h>
 
 using namespace Akonadi;
 

@@ -23,7 +23,7 @@
 
 #include <QItemSelectionModel>
 #include <KDebug>
-#include <Akonadi/EntityTreeModel>
+#include <AkonadiCore/EntityTreeModel>
 #include <KCalCore/Todo>
 #include <KMime/Message>
 #include "note.h"

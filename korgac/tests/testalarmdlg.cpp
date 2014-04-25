@@ -24,7 +24,7 @@
 
 #include "../alarmdialog.h" //fullpath since incidenceeditors also has an alarmdialog.h
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 #include <KCalCore/Event>
 #include <KCalCore/Todo>

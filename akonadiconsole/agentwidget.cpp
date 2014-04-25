@@ -24,9 +24,9 @@
 
 #include <akonadi/agenttypedialog.h>
 #include <akonadi/agentinstancewidget.h>
-#include <akonadi/agentmanager.h>
+#include <AkonadiCore/agentmanager.h>
 #include <Akonadi/AgentFilterProxyModel>
-#include <akonadi/agentinstancecreatejob.h>
+#include <AkonadiCore/agentinstancecreatejob.h>
 #include <akonadi/control.h>
 #include <akonadi/private/notificationmessage_p.h>
 

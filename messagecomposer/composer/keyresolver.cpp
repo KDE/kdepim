@@ -51,10 +51,10 @@
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>
 
-#include <akonadi/collectiondialog.h>
+#include <AkonadiWidgets/collectiondialog.h>
 #include <akonadi/contact/contactsearchjob.h>
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/itemmodifyjob.h>
+#include <AkonadiCore/itemcreatejob.h>
+#include <AkonadiCore/itemmodifyjob.h>
 #include <klocale.h>
 #include <kdebug.h>
 #include <kinputdialog.h>

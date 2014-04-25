@@ -27,7 +27,7 @@
 #include "mailclient.h"
 #include "kdepim-version.h"
 
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 
 #include <KCalCore/Attendee>
 #include <KCalCore/Incidence>

@@ -22,8 +22,8 @@
 #include "searchwidget.h"
 
 #include <akonadi/control.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
 #include <akonadi/itemsearchjob.h>
 
 #include <KComboBox>

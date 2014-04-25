@@ -23,7 +23,7 @@
 #ifndef COLLECTIONLOADER_H
 #define COLLECTIONLOADER_H
 
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 
 #include <QObject>
 

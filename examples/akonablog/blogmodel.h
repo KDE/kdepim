@@ -21,7 +21,7 @@
 #define AKONADI_BLOGMODEL_H
 
 #include <akonadi/itemmodel.h>
-#include <akonadi/job.h>
+#include <AkonadiCore/job.h>
 
 /**
   A flat self-updating message model.

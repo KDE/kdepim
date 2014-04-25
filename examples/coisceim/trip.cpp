@@ -23,7 +23,7 @@
 
 #include <QSortFilterProxyModel>
 
-#include <Akonadi/ChangeRecorder>
+#include <AkonadiCore/ChangeRecorder>
 
 #include <kcalcore/incidence.h>
 

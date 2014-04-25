@@ -34,15 +34,15 @@
 #include <ksharedconfig.h>
 #include <kcheckableproxymodel.h>
 
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/entitytreemodel.h>
 #include <akonadi/entitytreeview.h>
 #include <akonadi/etmviewstatesaver.h>
 
 #include "mailmodel.h"
 
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/ItemFetchScope>
-#include <akonadi/entitymimetypefiltermodel.h>
+#include <AkonadiCore/ChangeRecorder>
+#include <AkonadiCore/ItemFetchScope>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
 #include <akonadi/selectionproxymodel.h>
 #include <akonadi/kmime/messagestatus.h>
 

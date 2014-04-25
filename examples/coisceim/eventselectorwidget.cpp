@@ -29,8 +29,8 @@
 
 #include <calendarsupport/next/incidenceviewer.h>
 
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/ItemFetchScope>
+#include <AkonadiCore/ChangeRecorder>
+#include <AkonadiCore/ItemFetchScope>
 
 #include <KCalCore/Event>
 

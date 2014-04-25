@@ -26,9 +26,9 @@
 #include <KDebug>
 #include <KSharedConfig>
 
-#include <akonadi/agenttype.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/agentinstancecreatejob.h>
+#include <AkonadiCore/agenttype.h>
+#include <AkonadiCore/agentmanager.h>
+#include <AkonadiCore/agentinstancecreatejob.h>
 
 #include <QMetaMethod>
 

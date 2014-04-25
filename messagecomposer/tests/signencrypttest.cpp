@@ -25,7 +25,7 @@
 #include "qtest_messagecomposer.h"
 #include "cryptofunctions.h"
 
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 
 #include <kmime/kmime_content.h>
 

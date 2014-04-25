@@ -22,7 +22,7 @@
 #ifndef KABCVIEWER_H
 #define KABCVIEWER_H
 
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 
 #include "kdialog.h"
 

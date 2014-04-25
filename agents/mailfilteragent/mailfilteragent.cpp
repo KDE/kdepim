@@ -26,14 +26,14 @@
 #include "mailfilteragentadaptor.h"
 #include "pop3resourceattribute.h"
 
-#include <akonadi/changerecorder.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionfetchscope.h>
+#include <AkonadiCore/changerecorder.h>
+#include <AkonadiCore/collectionfetchjob.h>
+#include <AkonadiCore/collectionfetchscope.h>
 #include <akonadi/dbusconnectionpool.h>
-#include <akonadi/itemfetchscope.h>
+#include <AkonadiCore/itemfetchscope.h>
 #include <akonadi/kmime/messageparts.h>
 #include <akonadi/kmime/messagestatus.h>
-#include <akonadi/session.h>
+#include <AkonadiCore/session.h>
 #include <mailcommon/kernel/mailkernel.h>
 #include <KLocalizedString>
 #include <KMime/Message>

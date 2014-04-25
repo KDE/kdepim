@@ -26,7 +26,7 @@
 #include "../search/searchpattern.h"
 
 #include <kshortcut.h>
-#include <akonadi/collection.h>
+#include <AkonadiCore/collection.h>
 
 #include <kmime/kmime_message.h>
 

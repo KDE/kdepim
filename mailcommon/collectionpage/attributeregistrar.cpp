@@ -21,7 +21,7 @@
 #include "collectionpage/expirecollectionattribute.h"
 #include "collectionpage/newmailnotifierattribute.h"
 
-#include <akonadi/attributefactory.h>
+#include <AkonadiCore/attributefactory.h>
 
 
 #ifndef KDELIBS_STATIC_LIBS

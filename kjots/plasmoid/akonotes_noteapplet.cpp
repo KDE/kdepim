@@ -40,17 +40,17 @@
 
 #include <KMime/Message>
 
-#include <akonadi/agentinstancecreatejob.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionfetchscope.h>
-#include <akonadi/item.h>
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
+#include <AkonadiCore/agentinstancecreatejob.h>
+#include <AkonadiCore/agentmanager.h>
+#include <AkonadiCore/collectionfetchjob.h>
+#include <AkonadiCore/collectionfetchscope.h>
+#include <AkonadiCore/item.h>
+#include <AkonadiCore/itemcreatejob.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
 #include <akonadi/itemmonitor.h>
-#include <akonadi/itemmodifyjob.h>
-#include <akonadi/monitor.h>
+#include <AkonadiCore/itemmodifyjob.h>
+#include <AkonadiCore/monitor.h>
 #include <akonadi/resourcesynchronizationjob.h>
 
 #include "akonadi_next/note.h"

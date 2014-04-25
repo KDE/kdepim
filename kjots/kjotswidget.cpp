@@ -45,15 +45,15 @@
 #include <akonadi/control.h>
 #include <akonadi/collectiondeletejob.h>
 #include <akonadi/collectioncreatejob.h>
-#include <akonadi/changerecorder.h>
-#include <akonadi/entitydisplayattribute.h>
+#include <AkonadiCore/changerecorder.h>
+#include <AkonadiCore/entitydisplayattribute.h>
 #include <akonadi/entitytreeview.h>
 #include <akonadi/etmviewstatesaver.h>
-#include <akonadi/item.h>
-#include <Akonadi/ItemCreateJob>
-#include <Akonadi/ItemDeleteJob>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
+#include <AkonadiCore/item.h>
+#include <AkonadiCore/ItemCreateJob>
+#include <AkonadiCore/ItemDeleteJob>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
 
 #include "akonadi/entityorderproxymodel.h"
 #include "akonadi_next/note.h"

@@ -21,7 +21,7 @@
 #define __AKONADITABBAR_H__
 
 #include <KTabBar>
-#include <akonadi/collection.h>
+#include <AkonadiCore/collection.h>
 
 /**
     This class is a KTabBar which you can use to show your top level folders of

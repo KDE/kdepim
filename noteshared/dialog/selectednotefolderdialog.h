@@ -18,7 +18,7 @@
 #ifndef SELECTEDNOTEFOLDERDIALOG_H
 #define SELECTEDNOTEFOLDERDIALOG_H
 
-#include <Akonadi/CollectionDialog>
+#include <AkonadiWidgets/CollectionDialog>
 #include "noteshared_export.h"
 
 namespace NoteShared {

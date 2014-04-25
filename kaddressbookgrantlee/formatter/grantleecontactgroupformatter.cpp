@@ -27,7 +27,7 @@
 #include <grantlee/engine.h>
 #include <grantlee/templateloader.h>
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 #include <Akonadi/Contact/ContactGroupExpandJob>
 
 #include <KABC/Addressee>

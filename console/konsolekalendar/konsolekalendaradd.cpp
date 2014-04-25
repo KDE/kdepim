@@ -41,7 +41,7 @@
 
 #include <KCalCore/Event>
 #include <Akonadi/Calendar/IncidenceChanger>
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 
 #include <QtCore/QDateTime>
 #include <QtCore/QObject>

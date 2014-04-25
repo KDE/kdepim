@@ -33,8 +33,8 @@
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <KCalCore/Event>
 
-#include <Akonadi/Collection>
-#include <Akonadi/Control>
+#include <AkonadiCore/Collection>
+#include <AkonadiCore/Control>
 
 #include <KCheckableProxyModel>
 

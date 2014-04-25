@@ -26,7 +26,7 @@
 #include "messagecomposer/recipient/recipient.h"
 #include "agents/sendlateragent/sendlaterdialog.h"
 
-#include <akonadi/collection.h>
+#include <AkonadiCore/collection.h>
 #include <KDE/KMime/Message>
 
 #include <QObject>

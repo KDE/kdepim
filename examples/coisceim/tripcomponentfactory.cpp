@@ -21,10 +21,10 @@
 
 #include "tripcomponentfactory.h"
 
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/EntityMimeTypeFilterModel>
+#include <AkonadiCore/EntityTreeModel>
+#include <AkonadiCore/ChangeRecorder>
+#include <AkonadiCore/ItemFetchScope>
+#include <AkonadiCore/EntityMimeTypeFilterModel>
 
 #include <KMime/Message>
 

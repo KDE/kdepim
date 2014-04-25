@@ -27,7 +27,7 @@
 #include <KDE/KUrl>
 
 #include <messagecore/attachment/attachmentpart.h>
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 
 namespace MessageComposer {
 

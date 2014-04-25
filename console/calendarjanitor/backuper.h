@@ -26,7 +26,7 @@
 #include "options.h"
 
 #include <KCalCore/MemoryCalendar>
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 
 #include <QObject>
 #include <QList>

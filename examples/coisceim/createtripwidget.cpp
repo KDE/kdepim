@@ -31,7 +31,7 @@
 #include <KConfig>
 #include <KSharedConfigPtr>
 
-#include <Akonadi/ChangeRecorder>
+#include <AkonadiCore/ChangeRecorder>
 
 #include "createfoldercontentswidget.h"
 #include "eventselectorwidget.h"

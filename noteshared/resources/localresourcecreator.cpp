@@ -19,8 +19,8 @@
 
 #include "localresourcecreator.h"
 
-#include <akonadi/agentmanager.h>
-#include <akonadi/agentinstancecreatejob.h>
+#include <AkonadiCore/agentmanager.h>
+#include <AkonadiCore/agentinstancecreatejob.h>
 #include "maildirsettings.h"
 
 #include "akonadi_next/note.h"

@@ -29,9 +29,9 @@
 
 #include <kselectionproxymodel.h>
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/collection.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
+#include <AkonadiCore/collection.h>
 #include <akonadi/collectionstatistics.h>
 
 #include "entitytreewidget.h"

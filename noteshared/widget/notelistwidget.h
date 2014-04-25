@@ -20,7 +20,7 @@
 
 #include "noteshared_export.h"
 #include <QListWidget>
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 namespace NoteShared {
 class NOTESHARED_EXPORT NoteListWidget : public QListWidget

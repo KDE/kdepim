@@ -24,7 +24,7 @@
 
 #include "ui_agentwidget.h"
 
-#include <akonadi/agentinstance.h>
+#include <AkonadiCore/agentinstance.h>
 
 class KJob;
 class QMenu;

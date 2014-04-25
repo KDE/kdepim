@@ -45,8 +45,8 @@
 #include <KCalUtils/HTMLExportSettings>
 #include <Akonadi/AgentManager>
 #include <Akonadi/AgentInstanceCreateJob>
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/Collection>
+#include <AkonadiCore/CollectionFetchJob>
+#include <AkonadiCore/Collection>
 #include <Akonadi/CollectionFetchScope>
 
 #include <QtCore/QDateTime>

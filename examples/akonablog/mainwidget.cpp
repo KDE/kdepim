@@ -26,7 +26,7 @@
 
 #include <akonadi/agentinstancemodel.h>
 #include <akonadi/agentfilterproxymodel.h>
-#include <akonadi/collectionfetchjob.h>
+#include <AkonadiCore/collectionfetchjob.h>
 
 #include <QVBoxLayout>
 #include <QSplitter>

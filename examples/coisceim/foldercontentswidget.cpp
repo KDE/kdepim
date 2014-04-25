@@ -28,9 +28,9 @@
 
 #include <KLocale>
 
-#include <Akonadi/CollectionDialog>
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/EntityTreeView>
+#include <AkonadiWidgets/CollectionDialog>
+#include <AkonadiCore/EntityTreeModel>
+#include <AkonadiWidgets/EntityTreeView>
 
 #include <kmime/kmime_message.h>
 

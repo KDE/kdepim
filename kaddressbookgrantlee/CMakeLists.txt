@@ -26,9 +26,8 @@ set(kaddressbook_grantlee_LIB_SRCS
 
 add_library(kaddressbookgrantlee ${LIBRARY_TYPE} ${kaddressbook_grantlee_LIB_SRCS})
 target_link_libraries(kaddressbookgrantlee
-  ${Grantlee_CORE_LIBRARIES}
+  Grantlee::Templates
   grantleetheme
-  
   KF5::AkonadiCore
   KF5::Abc
   KF5::AkonadiContact

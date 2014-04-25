@@ -21,9 +21,9 @@
 #include <kdebug.h>
 
 #include <KTabBar>
-#include <akonadi/collection.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionfetchscope.h>
+#include <AkonadiCore/collection.h>
+#include <AkonadiCore/collectionfetchjob.h>
+#include <AkonadiCore/collectionfetchscope.h>
 
 using namespace Akonadi;
 

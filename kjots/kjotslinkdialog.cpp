@@ -30,12 +30,12 @@
 #include <KComboBox>
 #include <KLineEdit>
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 #include "KJotsSettings.h"
 #include "kjotsbookshelfentryvalidator.h"
 #include <kdescendantsproxymodel.h>
-#include <Akonadi/EntityTreeModel>
+#include <AkonadiCore/EntityTreeModel>
 
 KJotsLinkDialog::KJotsLinkDialog( QAbstractItemModel *kjotsModel, QWidget *parent)
   : KDialog(parent), m_kjotsModel(kjotsModel)

@@ -18,7 +18,7 @@
 #ifndef ABSTRACTADDRESSBOOK_H
 #define ABSTRACTADDRESSBOOK_H
 
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 #include "abstractbase.h"
 
 class ImportWizard;

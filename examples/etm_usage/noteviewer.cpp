@@ -28,10 +28,10 @@
 #include <QTextEdit>
 #include <QEvent>
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/item.h>
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/itemmodifyjob.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/item.h>
+#include <AkonadiCore/itemcreatejob.h>
+#include <AkonadiCore/itemmodifyjob.h>
 
 #include <KMime/Message>
 

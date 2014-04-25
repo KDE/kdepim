@@ -21,8 +21,8 @@
 #define KPDIALOG_H
 
 // Akonadi
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
+#include <AkonadiCore/collection.h>
+#include <AkonadiCore/item.h>
 
 //Qt
 #include <QGraphicsWidget>

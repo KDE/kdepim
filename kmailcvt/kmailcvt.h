@@ -15,7 +15,7 @@
 #define KMAILCVT_H
 
 #include <KAssistantDialog>
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 
 class KPageWidgetItem;
 class KSelFilterPage;

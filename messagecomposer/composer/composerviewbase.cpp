@@ -58,8 +58,8 @@
 #include <mailtransport/transportmanager.h>
 
 #include <akonadi/kmime/specialmailcollections.h>
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/collectionfetchjob.h>
+#include <AkonadiCore/itemcreatejob.h>
+#include <AkonadiCore/collectionfetchjob.h>
 #include <akonadi/collectioncombobox.h>
 
 #include <kpimidentities/identitycombo.h>

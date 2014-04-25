@@ -25,8 +25,8 @@
 
 #include <KIcon>
 
-#include <akonadi/changerecorder.h>
-#include <akonadi/entitydisplayattribute.h>
+#include <AkonadiCore/changerecorder.h>
+#include <AkonadiCore/entitydisplayattribute.h>
 
 #include "akonadi_next/note.h"
 

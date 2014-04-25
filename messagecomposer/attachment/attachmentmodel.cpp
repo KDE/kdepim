@@ -31,7 +31,7 @@
 #include <KTempDir>
 
 #include <kmime/kmime_util.h>
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 
 #include <kpimutils/kfileio.h>
 

@@ -28,7 +28,7 @@
 
 #include <krun.h>
 #include <kdebug.h>
-#include <Akonadi/EntityTreeModel>
+#include <AkonadiCore/EntityTreeModel>
 
 KJotsBrowser::KJotsBrowser ( QItemSelectionModel *selectionModel, QWidget *parent )
   : QTextBrowser(parent), m_itemSelectionModel( selectionModel )

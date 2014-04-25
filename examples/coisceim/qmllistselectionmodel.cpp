@@ -22,7 +22,7 @@
 #include "qmllistselectionmodel.h"
 
 #include <KDebug>
-#include <Akonadi/EntityTreeModel>
+#include <AkonadiCore/EntityTreeModel>
 
 QMLListSelectionModel::QMLListSelectionModel(QItemSelectionModel *selectionModel, QObject* parent)
   : QObject(parent), m_selectionModel(selectionModel)

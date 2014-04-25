@@ -19,15 +19,15 @@
  */
 #include "filtermanager.h"
 
-#include <akonadi/agentmanager.h>
-#include <akonadi/changerecorder.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionfetchscope.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemmodifyjob.h>
+#include <AkonadiCore/agentmanager.h>
+#include <AkonadiCore/changerecorder.h>
+#include <AkonadiCore/collectionfetchjob.h>
+#include <AkonadiCore/collectionfetchscope.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <AkonadiCore/itemmodifyjob.h>
 #include <akonadi/itemmovejob.h>
-#include <akonadi/itemdeletejob.h>
+#include <AkonadiCore/itemdeletejob.h>
 #include <akonadi/kmime/messageparts.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>

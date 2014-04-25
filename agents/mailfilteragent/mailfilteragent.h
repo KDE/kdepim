@@ -24,7 +24,7 @@
 
 #include "mailcommon/search/searchpattern.h"
 #include <Collection>
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 
 
 class FilterLogDialog;

@@ -32,7 +32,7 @@
 #include "messageviewer/viewer/nodehelper.h"
 #include "messageviewer/utils/util.h"
 
-#include <akonadi/itemfetchjob.h>
+#include <AkonadiCore/itemfetchjob.h>
 #include <kio/jobuidelegate.h>
 
 #include <QMenu>

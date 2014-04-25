@@ -24,7 +24,7 @@
 
 #include <KCalCore/Incidence>
 
-#include <Akonadi/CollectionFetchJob>
+#include <AkonadiCore/CollectionFetchJob>
 #include <Akonadi/CollectionFetchScope>
 #include <QString>
 #include <QSet>

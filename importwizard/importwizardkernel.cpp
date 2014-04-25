@@ -21,10 +21,10 @@
 #include <kpimidentities/identitymanager.h>
 #include <messagecomposer/sender/akonadisender.h>
 #include <mailcommon/folder/foldercollectionmonitor.h>
-#include <akonadi/session.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/changerecorder.h>
+#include <AkonadiCore/session.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
+#include <AkonadiCore/changerecorder.h>
 
 ImportWizardKernel::ImportWizardKernel( QObject *parent )
     : QObject( parent )
