@@ -15,19 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MERGECONTACTSELECTINFORMATIONDIALOGTEST_H
-#define MERGECONTACTSELECTINFORMATIONDIALOGTEST_H
 
-#include <QObject>
+#ifndef MERGECONTACTSHOWRESULTTABWIDGET_H
+#define MERGECONTACTSHOWRESULTTABWIDGET_H
 
-class MergeContactSelectInformationDialogTest : public QObject
+#include <QTabWidget>
+#include "kaddressbook_export.h"
+
+namespace KABMergeContacts {
+
+class KADDRESSBOOK_EXPORT MergeContactShowResultTabWidget : public QTabWidget
 {
     Q_OBJECT
 public:
-    MergeContactSelectInformationDialogTest();
+    explicit MergeContactShowResultTabWidget(QWidget *parent=0);
+    ~MergeContactShowResultTabWidget();
 
-private Q_SLOTS:
-    void shouldHaveDefaultValueOnCreation();
+    void updateTabWidget();
+
+    bool tabBarVisible() const;
+
 };
-
-#endif // MERGECONTACTSELECTINFORMATIONDIALOGTEST_H
+}
+#endif // MERGECONTACTSHOWRESULTTABWIDGET_H

@@ -15,19 +15,31 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MERGECONTACTSELECTINFORMATIONDIALOGTEST_H
-#define MERGECONTACTSELECTINFORMATIONDIALOGTEST_H
 
-#include <QObject>
+#ifndef SIEVEEDITORCENTRALWIDGET_H
+#define SIEVEEDITORCENTRALWIDGET_H
 
-class MergeContactSelectInformationDialogTest : public QObject
+#include <QStackedWidget>
+class SieveEditorConfigureServerPage;
+class SieveEditorMainWidget;
+class SieveEditorCentralWidget : public QStackedWidget
 {
     Q_OBJECT
 public:
-    MergeContactSelectInformationDialogTest();
+    explicit SieveEditorCentralWidget(QWidget *parent=0);
+    ~SieveEditorCentralWidget();
 
-private Q_SLOTS:
-    void shouldHaveDefaultValueOnCreation();
+    SieveEditorMainWidget *sieveEditorMainWidget() const;
+
+Q_SIGNALS:
+    void configureClicked();
+
+private slots:
+    void slotServerSieveFound(bool hasServer);
+
+private:
+    SieveEditorConfigureServerPage *mConfigureWidget;
+    SieveEditorMainWidget *mSieveEditorMainWidget;
 };
 
-#endif // MERGECONTACTSELECTINFORMATIONDIALOGTEST_H
+#endif // SIEVEEDITORCENTRALWIDGET_H

@@ -53,7 +53,7 @@ private:
     void initStatusBar();
     void readConfig();
     void setupActions();
-    SieveEditorMainWidget *mMainWidget;
+    SieveEditorCentralWidget *mMainWidget;
     QAction *mDeleteScript;
     QAction *mNewScript;
     QAction *mEditScript;

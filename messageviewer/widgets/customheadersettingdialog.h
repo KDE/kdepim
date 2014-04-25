@@ -15,19 +15,28 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MERGECONTACTSELECTINFORMATIONDIALOGTEST_H
-#define MERGECONTACTSELECTINFORMATIONDIALOGTEST_H
+#ifndef CUSTOMHEADERSETTINGDIALOG_H
+#define CUSTOMHEADERSETTINGDIALOG_H
 
-#include <QObject>
+#include <KDialog>
 
-class MergeContactSelectInformationDialogTest : public QObject
+namespace MessageViewer {
+class CustomHeaderSettingWidget;
+class CustomHeaderSettingDialog : public KDialog
 {
     Q_OBJECT
 public:
-    MergeContactSelectInformationDialogTest();
+    explicit CustomHeaderSettingDialog(QWidget *parent=0);
+    ~CustomHeaderSettingDialog();
 
-private Q_SLOTS:
-    void shouldHaveDefaultValueOnCreation();
+    void writeSettings();
+
+private:
+    void readConfig();
+    void writeConfig();
+
+    CustomHeaderSettingWidget *mCustomHeaderWidget;
 };
+}
 
-#endif // MERGECONTACTSELECTINFORMATIONDIALOGTEST_H
+#endif // CUSTOMHEADERSETTINGDIALOG_H

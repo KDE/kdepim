@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>SelfTestDialog</class>
- <widget class="QDialog" name="SelfTestDialog" >
-  <property name="geometry" >
+ <widget class="QDialog" name="SelfTestDialog">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,82 +10,88 @@
     <height>610</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Kleopatra Self-Test Results</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_6" >
-   <property name="sizeConstraint" >
+  <layout class="QVBoxLayout" name="verticalLayout_6">
+   <property name="sizeConstraint">
     <enum>QLayout::SetMinimumSize</enum>
    </property>
    <item>
-    <widget class="QLabel" name="label" >
-     <property name="text" >
-      <string comment="@info" >&lt;para>These are the results of the Kleopatra self-test suite. Click on a test for details.&lt;/para>&lt;para>Note that all but the first failure might be due to prior tests failing.&lt;/para></string>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string comment="@info">&lt;para&gt;These are the results of the Kleopatra self-test suite. Click on a test for details.&lt;/para&gt;&lt;para&gt;Note that all but the first failure might be due to prior tests failing.&lt;/para&gt;</string>
      </property>
-     <property name="wordWrap" >
+     <property name="wordWrap">
       <bool>true</bool>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QSplitter" name="splitter" >
-     <property name="orientation" >
+    <widget class="QSplitter" name="splitter">
+     <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <widget class="QWidget" name="layoutWidget" >
-      <layout class="QVBoxLayout" name="verticalLayout_5" >
+     <widget class="QWidget" name="layoutWidget">
+      <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
-        <widget class="QTreeView" name="resultsTV" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+        <widget class="QTreeView" name="resultsTV">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
            <verstretch>1</verstretch>
           </sizepolicy>
          </property>
-         <property name="minimumSize" >
+         <property name="minimumSize">
           <size>
            <width>0</width>
            <height>100</height>
           </size>
          </property>
-         <property name="rootIsDecorated" >
+         <property name="rootIsDecorated">
           <bool>false</bool>
          </property>
-         <property name="allColumnsShowFocus" >
+         <property name="allColumnsShowFocus">
           <bool>true</bool>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="showAllCB" >
-         <property name="text" >
+        <widget class="QCheckBox" name="showAllCB">
+         <property name="text">
           <string>Show all test results</string>
          </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+         <property name="tristate">
+          <bool>false</bool>
+         </property>
         </widget>
        </item>
       </layout>
      </widget>
-     <widget class="QGroupBox" name="detailsGB" >
-      <property name="title" >
+     <widget class="QGroupBox" name="detailsGB">
+      <property name="title">
        <string>Details</string>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_3" >
+      <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="Kleo::ScrollArea" name="scrollArea_2" >
-         <property name="minimumSize" >
+        <widget class="Kleo::ScrollArea" name="scrollArea_2">
+         <property name="minimumSize">
           <size>
            <width>0</width>
            <height>100</height>
           </size>
          </property>
-         <property name="frameShape" >
+         <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
          </property>
-         <property name="horizontalScrollBarPolicy" >
+         <property name="horizontalScrollBarPolicy">
           <enum>Qt::ScrollBarAlwaysOff</enum>
          </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents_2" >
-          <property name="geometry" >
+         <widget class="QWidget" name="scrollAreaWidgetContents_2">
+          <property name="geometry">
            <rect>
             <x>0</x>
             <y>0</y>
@@ -92,16 +99,25 @@
             <height>100</height>
            </rect>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_4" >
-           <property name="margin" >
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
-            <widget class="QLabel" name="detailsLB" >
-             <property name="textFormat" >
+            <widget class="QLabel" name="detailsLB">
+             <property name="textFormat">
               <enum>Qt::RichText</enum>
              </property>
-             <property name="wordWrap" >
+             <property name="wordWrap">
               <bool>true</bool>
              </property>
             </widget>
@@ -112,27 +128,27 @@
        </item>
       </layout>
      </widget>
-     <widget class="QGroupBox" name="proposedCorrectiveActionGB" >
-      <property name="title" >
+     <widget class="QGroupBox" name="proposedCorrectiveActionGB">
+      <property name="title">
        <string>Proposed Corrective Action</string>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2" >
+      <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="Kleo::ScrollArea" name="scrollArea" >
-         <property name="minimumSize" >
+        <widget class="Kleo::ScrollArea" name="scrollArea">
+         <property name="minimumSize">
           <size>
            <width>0</width>
            <height>100</height>
           </size>
          </property>
-         <property name="frameShape" >
+         <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
          </property>
-         <property name="horizontalScrollBarPolicy" >
+         <property name="horizontalScrollBarPolicy">
           <enum>Qt::ScrollBarAlwaysOff</enum>
          </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents" >
-          <property name="geometry" >
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
            <rect>
             <x>0</x>
             <y>0</y>
@@ -140,16 +156,25 @@
             <height>100</height>
            </rect>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout" >
-           <property name="margin" >
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
-            <widget class="QLabel" name="proposedCorrectiveActionLB" >
-             <property name="textFormat" >
+            <widget class="QLabel" name="proposedCorrectiveActionLB">
+             <property name="textFormat">
               <enum>Qt::RichText</enum>
              </property>
-             <property name="wordWrap" >
+             <property name="wordWrap">
               <bool>true</bool>
              </property>
             </widget>
@@ -159,13 +184,13 @@
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout" >
+        <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
-          <spacer name="horizontalSpacer" >
-           <property name="orientation" >
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
-           <property name="sizeHint" stdset="0" >
+           <property name="sizeHint" stdset="0">
             <size>
              <width>40</width>
              <height>20</height>
@@ -174,11 +199,11 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="doItPB" >
-           <property name="enabled" >
+          <widget class="QPushButton" name="doItPB">
+           <property name="enabled">
             <bool>false</bool>
            </property>
-           <property name="text" >
+           <property name="text">
             <string>Do It</string>
            </property>
           </widget>
@@ -190,18 +215,18 @@
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="runAtStartUpCB" >
-     <property name="text" >
+    <widget class="QCheckBox" name="runAtStartUpCB">
+     <property name="text">
       <string>Run these tests at startup</string>
      </property>
-     <property name="checked" >
+     <property name="checked">
       <bool>true</bool>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="buttonBox" >
-     <property name="standardButtons" >
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Close|QDialogButtonBox::Ok</set>
      </property>
     </widget>
@@ -224,11 +249,11 @@
    <receiver>SelfTestDialog</receiver>
    <slot>accept()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>236</x>
      <y>490</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>157</x>
      <y>274</y>
     </hint>
@@ -240,11 +265,11 @@
    <receiver>SelfTestDialog</receiver>
    <slot>reject()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>304</x>
      <y>490</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
     </hint>
@@ -256,11 +281,11 @@
    <receiver>SelfTestDialog</receiver>
    <slot>slotDoItClicked()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>354</x>
      <y>398</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>375</x>
      <y>304</y>
     </hint>

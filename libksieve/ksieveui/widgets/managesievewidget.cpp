@@ -330,6 +330,7 @@ void ManageSieveWidget::slotRefresh()
     mTreeView->setNoImapFound(noImapFound);
     if (!noImapFound)
        mBlockSignal = false;
+    Q_EMIT serverSieveFound(!noImapFound);
 }
 
 void ManageSieveWidget::slotUpdateButtons()

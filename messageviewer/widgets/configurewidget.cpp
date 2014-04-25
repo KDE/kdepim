@@ -18,13 +18,12 @@
 */
 
 #include "configurewidget.h"
+#include "customheadersettingdialog.h"
 
 #include "ui_settings.h"
 #include "utils/util.h"
 #include "settings/globalsettings.h"
 #include "viewer/nodehelper.h"
-
-#include "header/customheadersettingwidget.h"
 
 #include "messagecore/settings/globalsettings.h"
 
@@ -147,16 +146,11 @@ void ConfigureWidget::readCurrentOverrideCodec()
 
 void ConfigureWidget::showCustomHeadersDialog()
 {
-    KDialog dialog( this );
-    dialog.setButtons( KDialog::Default | KDialog::Ok | KDialog::Cancel );
-    dialog.resize(500,250);
-    CustomHeaderSettingWidget *widget = new CustomHeaderSettingWidget();
-    connect( &dialog, SIGNAL(defaultClicked()), widget, SLOT(resetToDefault()) );
-    widget->readConfig();
-    dialog.setMainWidget( widget );
-    if ( dialog.exec() == QDialog::Accepted ) {
-        widget->writeConfig();
+    QPointer<CustomHeaderSettingDialog> dlg = new CustomHeaderSettingDialog(this);
+    if ( dlg->exec() ) {
+        dlg->writeSettings();
         settingsChanged();
     }
+    delete dlg;
 }
 

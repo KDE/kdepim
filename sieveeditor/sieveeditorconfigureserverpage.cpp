@@ -15,19 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MERGECONTACTSELECTINFORMATIONDIALOGTEST_H
-#define MERGECONTACTSELECTINFORMATIONDIALOGTEST_H
+#include "sieveeditorconfigureserverpage.h"
 
-#include <QObject>
+#include <KLocalizedString>
 
-class MergeContactSelectInformationDialogTest : public QObject
+#include <QHBoxLayout>
+#include <QPushButton>
+
+SieveEditorConfigureServerPage::SieveEditorConfigureServerPage(QWidget *parent)
+    : QWidget(parent)
 {
-    Q_OBJECT
-public:
-    MergeContactSelectInformationDialogTest();
+    QHBoxLayout *hbox = new QHBoxLayout;
+    QPushButton *button = new QPushButton(i18n("Configure..."));
+    button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    connect(button, SIGNAL(clicked()), SIGNAL(configureClicked()));
+    hbox->addWidget(button);
+    setLayout(hbox);
+}
 
-private Q_SLOTS:
-    void shouldHaveDefaultValueOnCreation();
-};
 
-#endif // MERGECONTACTSELECTINFORMATIONDIALOGTEST_H
+SieveEditorConfigureServerPage::~SieveEditorConfigureServerPage()
+{
+
+}

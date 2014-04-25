@@ -47,6 +47,7 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     connect(mScriptManagerWidget, SIGNAL(createScriptPage(KUrl,QStringList,bool)), this, SLOT(slotCreateScriptPage(KUrl,QStringList,bool)));
     connect(mScriptManagerWidget, SIGNAL(updateButtons(bool,bool,bool,bool)), SIGNAL(updateButtons(bool,bool,bool,bool)));
     connect(mScriptManagerWidget, SIGNAL(scriptDeleted(KUrl)), this, SLOT(slotScriptDeleted(KUrl)));
+    connect(mScriptManagerWidget, SIGNAL(serverSieveFound(bool)), this, SIGNAL(serverSieveFound(bool)));
     connect(this, SIGNAL(updateScriptList()), mScriptManagerWidget, SLOT(slotRefreshList()));
     addWidget(mScriptManagerWidget);
     setChildrenCollapsible(false);

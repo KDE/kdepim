@@ -15,19 +15,28 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MERGECONTACTSELECTINFORMATIONDIALOGTEST_H
-#define MERGECONTACTSELECTINFORMATIONDIALOGTEST_H
 
-#include <QObject>
+#include "mergecontactshowresulttabwidget.h"
+#include <QTabBar>
 
-class MergeContactSelectInformationDialogTest : public QObject
+using namespace KABMergeContacts;
+
+MergeContactShowResultTabWidget::MergeContactShowResultTabWidget(QWidget *parent)
+    : QTabWidget(parent)
 {
-    Q_OBJECT
-public:
-    MergeContactSelectInformationDialogTest();
+}
 
-private Q_SLOTS:
-    void shouldHaveDefaultValueOnCreation();
-};
+MergeContactShowResultTabWidget::~MergeContactShowResultTabWidget()
+{
+}
 
-#endif // MERGECONTACTSELECTINFORMATIONDIALOGTEST_H
+void MergeContactShowResultTabWidget::updateTabWidget()
+{
+    tabBar()->setVisible(count()>1);
+}
+
+bool MergeContactShowResultTabWidget::tabBarVisible() const
+{
+    return tabBar()->isVisible();
+}
+

@@ -23,23 +23,9 @@
 #include "kaddressbook_export.h"
 
 #include <Akonadi/Item>
-#include <QTabWidget>
 
 namespace KABMergeContacts {
-
-class KADDRESSBOOK_EXPORT MergeContactShowResultTabWidget : public QTabWidget
-{
-    Q_OBJECT
-public:
-    explicit MergeContactShowResultTabWidget(QWidget *parent=0);
-    ~MergeContactShowResultTabWidget();
-
-    void updateTabWidget();
-
-    bool tabBarVisible() const;
-
-};
-
+class MergeContactShowResultTabWidget;
 class KADDRESSBOOK_EXPORT MergeContactShowResultDialog : public KDialog
 {
     Q_OBJECT
