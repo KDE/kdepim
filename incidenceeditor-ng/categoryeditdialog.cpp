@@ -28,6 +28,7 @@
 #include <calendarsupport/categoryconfig.h>
 
 #include <KLocalizedString>
+#include <KIcon>
 
 #include <QHeaderView>
 #include <QList>

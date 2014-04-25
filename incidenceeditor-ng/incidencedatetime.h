@@ -27,6 +27,8 @@
 #include <KCalCore/Journal>
 #include <KCalCore/Todo>
 
+#include <QDate>
+
 namespace Ui {
   class EventOrTodoDesktop;
 }

@@ -35,16 +35,18 @@
 #include "ui_dialogdesktop.h"
 #endif
 
-#include <Contact/ContactGroupExpandJob>
-#include <Contact/ContactGroupSearchJob>
-#include <Contact/EmailAddressSelectionDialog>
+#include <Akonadi/Contact/ContactGroupExpandJob>
+#include <Akonadi/Contact/ContactGroupSearchJob>
+#include <Akonadi/Contact/EmailAddressSelectionDialog>
 
 #include <KPIMUtils/Email>
 
 #include <KDebug>
 #include <KMessageBox>
+#include <KLocalizedString>
 
 #include <QTreeView>
+#include <QDateTime>
 
 using namespace IncidenceEditorNG;
 

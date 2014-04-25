@@ -30,6 +30,7 @@
 #include <KUrl>
 
 #include <QStringList>
+#include <QDateTime>
 
 class KConfigSkeleton;
 

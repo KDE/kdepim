@@ -88,10 +88,7 @@ qt5_wrap_ui(incidenceeditors_ng_desktop_LIB_SRCS
 add_library(incidenceeditorsng ${LIBRARY_TYPE} ${incidenceeditors_ng_desktop_LIB_SRCS})
 
 target_link_libraries(incidenceeditorsng
-  akonadi-calendar
-  
-  
-  
+  KF5::AkonadiCalendar
   KF5::CalendarCore
   KF5::CalendarUtils
   kdepim

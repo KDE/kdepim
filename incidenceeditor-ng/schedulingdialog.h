@@ -29,7 +29,7 @@
 #endif
 
 #include <KDialog>
-
+#include <KDateTime>
 namespace IncidenceEditorNG {
 
 class FreePeriodModel;

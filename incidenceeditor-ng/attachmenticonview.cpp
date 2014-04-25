@@ -134,6 +134,8 @@ QPixmap AttachmentIconItem::icon( KMimeType::Ptr mimeType,
                                   const QString &uri,
                                   bool binary )
 {
+//QT5
+#if 0
   QString iconStr = mimeType->iconName( uri );
   QStringList overlays;
   if ( !uri.isEmpty() && !binary ) {
@@ -143,6 +145,9 @@ QPixmap AttachmentIconItem::icon( KMimeType::Ptr mimeType,
   return KIconLoader::global()->loadIcon( iconStr, KIconLoader::Desktop, 0,
                                           KIconLoader::DefaultState,
                                           overlays );
+#else
+return QPixmap();
+#endif
 }
 
 void AttachmentIconItem::readAttachment()

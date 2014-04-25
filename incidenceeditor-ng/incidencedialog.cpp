@@ -40,7 +40,7 @@
 
 #include <CollectionComboBox>
 #include <Item>
-#include <Calendar/ETMCalendar>
+#include <Akonadi/Calendar/ETMCalendar>
 
 #include <KCalCore/ICalFormat>
 #include <KCalCore/MemoryCalendar>
@@ -49,6 +49,10 @@
 #include <KMessageBox>
 #include <KStandardDirs>
 #include <KSystemTimeZones>
+#include <KGlobal>
+#include <KIconLoader>
+#include <KIcon>
+#include <KDebug>
 
 #include <QCloseEvent>
 

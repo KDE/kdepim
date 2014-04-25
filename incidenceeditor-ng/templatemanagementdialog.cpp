@@ -41,6 +41,7 @@
 
 #include <KInputDialog>
 #include <KMessageBox>
+#include <KLocalizedString>
 
 #include <QTimer>
 

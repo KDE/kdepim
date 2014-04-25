@@ -261,10 +261,12 @@ void ConflictResolver::findAllFreeSlots()
     return;
   }
 
+//QT5
+#if 0
   kDebug() << "from " << begin << " to " << end
            << "; mSlotResolutionSeconds = " << mSlotResolutionSeconds
            << "; range = " << range;
-
+#endif
   // filter out attendees for which we don't have FB data
   // and which don't match the mandatory role contrstaint
   QList<KCalCore::FreeBusy::Ptr> filteredFBItems;
@@ -333,7 +335,8 @@ void ConflictResolver::findAllFreeSlots()
           start_index = 0;
           duration = range - 1;
         } else {
-          kFatal() << "impossible condition reached" << it->start() << it->end();
+          //QT5
+          //kFatal() << "impossible condition reached" << it->start() << it->end();
         }
         //      kDebug() << start_index << "+" << duration << "="
         //               << start_index + duration << "<=" << range;

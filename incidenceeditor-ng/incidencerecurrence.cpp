@@ -29,6 +29,7 @@
 #include <KCalendarSystem>
 
 #include <KDebug>
+#include <KGlobal>
 
 using namespace IncidenceEditorNG;
 

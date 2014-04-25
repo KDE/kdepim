@@ -24,6 +24,9 @@
 
 #include <calendarsupport/categoryconfig.h>
 
+#include <KIcon>
+#include <KLocalizedString>
+
 using namespace IncidenceEditorNG;
 using namespace CalendarSupport;
 

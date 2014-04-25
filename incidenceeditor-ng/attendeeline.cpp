@@ -29,6 +29,7 @@
 #include <KDebug>
 #include <KDialog>
 #include <KLocalizedString>
+#include <KIconLoader>
 
 #include <QBoxLayout>
 #include <QKeyEvent>
@@ -428,7 +429,8 @@ void AttendeeLine::setActions( AttendeeActions actions )
 
 void AttendeeLine::setCompletionMode( KGlobalSettings::Completion mode )
 {
-  mEdit->setCompletionMode( mode );
+//QT5
+  //mEdit->setCompletionMode( mode );
 }
 
 void AttendeeLine::setData( const KPIM::MultiplyingLineData::Ptr &data )

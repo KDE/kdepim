@@ -28,12 +28,11 @@ namespace Ui {
   class EventOrTodoMore;
 }
 
-class KAction;
 class KMenu;
 
 class QListWidgetItem;
 class QMimeData;
-
+class QAction;
 namespace IncidenceEditorNG {
 
 class AttachmentIconView;
@@ -97,14 +96,14 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttachment : public IncidenceEditor
 #endif
 
     KMenu *mPopupMenu;
-    KAction *mOpenAction;
-    KAction *mSaveAsAction;
+    QAction *mOpenAction;
+    QAction *mSaveAsAction;
 #ifndef QT_NO_CLIPBOARD
-    KAction *mCopyAction;
-    KAction *mCutAction;
+    QAction *mCopyAction;
+    QAction *mCutAction;
 #endif
-    KAction *mDeleteAction;
-    KAction *mEditAction;
+    QAction *mDeleteAction;
+    QAction *mEditAction;
 };
 
 }

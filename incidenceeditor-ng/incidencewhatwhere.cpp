@@ -27,6 +27,7 @@
 #endif
 
 #include <KDebug>
+#include <KLocalizedString>
 
 using namespace IncidenceEditorNG;
 

@@ -25,7 +25,7 @@
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
 #include <Item>
-#include <Calendar/IncidenceChanger>
+#include <Akonadi/Calendar/IncidenceChanger>
 
 using namespace IncidenceEditorNG;
 using namespace KCalCore;

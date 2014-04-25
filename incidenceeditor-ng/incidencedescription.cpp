@@ -28,6 +28,7 @@
 #include <KDebug>
 #include <KActionCollection>
 #include <KToolBar>
+#include <KLocalizedString>
 
 using namespace IncidenceEditorNG;
 
@@ -165,7 +166,8 @@ void IncidenceDescription::setupToolBar()
 {
 #ifndef QT_NO_TOOLBAR
   KActionCollection *collection = new KActionCollection( this );
-  mUi->mDescriptionEdit->createActions( collection );
+//QT5
+  //mUi->mDescriptionEdit->createActions( collection );
 
   KToolBar *mEditToolBar = new KToolBar( mUi->mEditToolBarPlaceHolder );
   mEditToolBar->setToolButtonStyle( Qt::ToolButtonIconOnly );

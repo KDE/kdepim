@@ -42,6 +42,8 @@
 #include <KRun>
 #include <KIO/Job>
 #include <KIO/NetAccess>
+#include <KLocalizedString>
+#include <KIcon>
 
 #include <QClipboard>
 #include <QMimeData>
@@ -411,7 +413,8 @@ void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
   } else if ( KUrl::List::canDecode( mimeData ) ) {
     QMap<QString,QString> metadata;
 
-    urls = KUrl::List::fromMimeData( mimeData, &metadata );
+     //QT5
+    //urls = KUrl::List::fromMimeData( mimeData, &metadata );
     probablyWeHaveUris = true;
     labels = metadata["labels"].split( ':', QString::SkipEmptyParts );
     for ( QStringList::Iterator it = labels.begin(); it != labels.end(); ++it ) {
@@ -485,13 +488,13 @@ void IncidenceAttachment::setupActions()
   KActionCollection *ac = new KActionCollection( this );
 //  ac->addAssociatedWidget( this );
 
-  mOpenAction = new KAction( i18nc( "@action:inmenu open the attachment in a viewer",
+  mOpenAction = new QAction( i18nc( "@action:inmenu open the attachment in a viewer",
                                     "&Open" ), this );
   connect( mOpenAction, SIGNAL(triggered(bool)), SLOT(showSelectedAttachments()) );
   ac->addAction( "view", mOpenAction );
   mPopupMenu->addAction( mOpenAction );
 
-  mSaveAsAction = new KAction( i18nc( "@action:inmenu save the attachment to a file",
+  mSaveAsAction = new QAction( i18nc( "@action:inmenu save the attachment to a file",
                                       "Save As..." ), this );
   connect( mSaveAsAction, SIGNAL(triggered(bool)), SLOT(saveSelectedAttachments()) );
   mPopupMenu->addAction( mSaveAsAction );
@@ -504,12 +507,12 @@ void IncidenceAttachment::setupActions()
   mCutAction = KStandardAction::cut( this, SLOT(cutToClipboard()), ac );
   mPopupMenu->addAction( mCutAction );
 
-  KAction *action = KStandardAction::paste( this, SLOT(pasteFromClipboard()), ac );
+  QAction *action = KStandardAction::paste( this, SLOT(pasteFromClipboard()), ac );
   mPopupMenu->addAction( action );
   mPopupMenu->addSeparator();
 #endif
 
-  mDeleteAction = new KAction( i18nc( "@action:inmenu remove the attachment",
+  mDeleteAction = new QAction( i18nc( "@action:inmenu remove the attachment",
                                       "&Remove" ), this );
   connect( mDeleteAction, SIGNAL(triggered(bool)), SLOT(removeSelectedAttachments()) );
   ac->addAction( "remove", mDeleteAction );
@@ -517,7 +520,7 @@ void IncidenceAttachment::setupActions()
   mPopupMenu->addAction( mDeleteAction );
   mPopupMenu->addSeparator();
 
-  mEditAction = new KAction( i18nc( "@action:inmenu show a dialog used to edit the attachment",
+  mEditAction = new QAction( i18nc( "@action:inmenu show a dialog used to edit the attachment",
                                     "&Properties..." ), this );
   connect( mEditAction, SIGNAL(triggered(bool)), SLOT(editSelectedAttachments()) );
   ac->addAction( "edit", mEditAction );

@@ -23,6 +23,7 @@
 #include "ui_alarmdialog.h"
 
 #include <KPIMUtils/Email>
+#include <KLocalizedString>
 
 using namespace IncidenceEditorNG;
 

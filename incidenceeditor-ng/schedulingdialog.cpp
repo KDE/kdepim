@@ -27,7 +27,8 @@
 #include <KCalUtils/Stringify>
 
 #include <KCalendarSystem>
-
+#include <KGlobal>
+#include <KIconLoader>
 using namespace IncidenceEditorNG;
 
 SchedulingDialog::SchedulingDialog( const QDate &startDate, const QTime &startTime, int duration,

@@ -70,7 +70,7 @@ QVariant FreeBusyGanttProxyModel::data( const QModelIndex &index, int role ) con
   case KDGantt::EndTimeRole:
     return period.end().toTimeSpec( timeSpec ).dateTime();
   case Qt::BackgroundRole:
-    return Qt::red;
+    return QColor(Qt::red);
   case Qt::ToolTipRole:
     return tooltipify( period, timeSpec );
   case Qt::DisplayRole:

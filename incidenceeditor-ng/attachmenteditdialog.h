@@ -30,7 +30,7 @@
 #include "incidenceeditors-ng_export.h"
 
 #include <KCalCore/Attachment>
-
+#include <KUrl>
 #include <KDialog>
 #include <KMimeType>
 
