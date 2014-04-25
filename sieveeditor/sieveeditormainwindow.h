@@ -25,7 +25,7 @@
 #include <Solid/Networking>
 
 class QAction;
-class SieveEditorMainWidget;
+class SieveEditorCentralWidget;
 class QLabel;
 class SieveEditorMainWindow : public KXmlGuiWindow
 {
