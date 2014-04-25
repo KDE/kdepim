@@ -204,10 +204,6 @@ target_link_libraries(mailcommon messageviewer messagecore messagecomposer maili
   
 )
 
-target_link_libraries(mailcommon
-  incidenceeditorsng
-)
-
 set_target_properties(mailcommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS mailcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 

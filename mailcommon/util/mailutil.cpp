@@ -57,9 +57,6 @@
 #include "mailimporter/filter_opera.h"
 #include "mailimporter/othermailerutil.h"
 
-//#include <incidenceeditor-ng/globalsettings.h>
-//#include <incidenceeditor-ng/incidencedialogfactory.h>
-
 #include <messagecore/utils/stringutil.h>
 #include <messagecore/helpers/messagehelpers.h>
 

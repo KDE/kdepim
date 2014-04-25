@@ -9,7 +9,7 @@ add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+kde_enable_exceptions()
 
 if(Prison_FOUND)
   add_definitions(-DHAVE_PRISON)
@@ -24,14 +24,14 @@ set(kaddressbook_grantlee_LIB_SRCS
   grantleeutil.cpp
 )
 
-kde4_add_library(kaddressbookgrantlee ${LIBRARY_TYPE} ${kaddressbook_grantlee_LIB_SRCS})
+add_library(kaddressbookgrantlee ${LIBRARY_TYPE} ${kaddressbook_grantlee_LIB_SRCS})
 target_link_libraries(kaddressbookgrantlee
   ${Grantlee_CORE_LIBRARIES}
   grantleetheme
-  ${KDE4_KDEUI_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_KABC_LIBS}
-  ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
+  
+  KF5::AkonadiCore
+  KF5::Abc
+  KF5::AkonadiContact
 )
 
 if(PRISON_FOUND)
