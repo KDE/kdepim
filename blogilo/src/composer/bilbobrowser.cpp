@@ -31,6 +31,7 @@
 #include <kmessagebox.h>
 #include <kseparator.h>
 #include <kpushbutton.h>
+#include <KDebug>
 
 #include "stylegetter.h"
 #include "global.h"

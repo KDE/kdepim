@@ -35,6 +35,9 @@
 #include <KFileDialog>
 #include <kio/jobclasses.h>
 #include <kio/job.h>
+#include <KLocalizedString>
+#include <KMimeType>
+#include <KIcon>
 
 #include <QClipboard>
 
@@ -175,7 +178,7 @@ void UploadMediaDialog::slotMediaObjectUploaded(KJob *job)
             tmpUrl.setFileName(ui.kcfg_Name->text());
             destUrl = tmpUrl.prettyUrl();
         } else {
-            destUrl = fcj->destUrl().prettyUrl();
+            destUrl = fcj->destUrl().toDisplayString();
         }
         QString msg;
         if ( Settings::copyMediaUrl() ) {

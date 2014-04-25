@@ -25,6 +25,7 @@
 #include <KStandardDirs>
 #include <KMessageBox>
 #include <KUrlRequester>
+#include <KUrl>
 
 #include <QVBoxLayout>
 #include <QProcess>

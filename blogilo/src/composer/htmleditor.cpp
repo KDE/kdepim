@@ -27,14 +27,14 @@
 
 #include <kglobal.h>
 #include <ktexteditor/editor.h>
-#include <ktexteditor/editorchooser.h>
+//#include <ktexteditor/editorchooser.h>
 #include <ktexteditor/view.h>
 #include <ktexteditor/configpage.h>
 #include <ktexteditor/configinterface.h>
 #include <kaction.h>
 #include <klocalizedstring.h>
 
-
+#include <KDebug>
 #include <QMenu>
 
 class HtmlEditorPrivate
@@ -52,14 +52,16 @@ HtmlEditor* HtmlEditor::self()
 
 HtmlEditor::HtmlEditor() : QObject()
 {
-    mEditor = KTextEditor::EditorChooser::editor();
+//QT5
+    //mEditor = KTextEditor::EditorChooser::editor();
 }
 
 HtmlEditor::~HtmlEditor()
 {
     kDebug();
     if ( !instancePrivate.isDestroyed() ) {
-        delete mEditor;
+//QT5
+        //delete mEditor;
         kDebug() << "editor deleted";
     }
 }

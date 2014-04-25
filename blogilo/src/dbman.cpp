@@ -39,6 +39,7 @@
 #include <QSqlQuery>
 #include <QFile>
 #include <QSqlDatabase>
+#include <QDateTime>
 
 class DBMan::Private
 {

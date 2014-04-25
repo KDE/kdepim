@@ -27,9 +27,11 @@
 #include <KMimeType>
 #include <KAction>
 #include <KLocale>
+#include <KIcon>
 
 #include <QWebElementCollection>
 #include <QWebFrame>
+
 
 BlogiloComposerEditor::BlogiloComposerEditor(BlogiloComposerView *view, QWidget *parent)
     : ComposerEditorNG::ComposerEditor(view,parent),

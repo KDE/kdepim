@@ -28,7 +28,8 @@
 
 #include <kdebug.h>
 #include <KMessageBox>
-
+#include <KIcon>
+#include <KLocalizedString>
 
 BlogSettings::BlogSettings( QWidget *parent )
     : QWidget( parent )
