@@ -22,7 +22,7 @@
 #include "searchmanager.h"
 
 #include <akonadi/collectiondeletejob.h>
-#include <akonadi/searchcreatejob.h>
+#include <AkonadiCore/searchcreatejob.h>
 #include <klocale.h>
 
 #include <QtCore/QUuid>

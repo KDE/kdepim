@@ -27,10 +27,10 @@
 #include "searchmanager.h"
 #include "statemachinebuilder.h"
 
-#include <akonadi/agentfilterproxymodel.h>
+#include <AkonadiCore/agentfilterproxymodel.h>
 #include <AkonadiCore/changerecorder.h>
 #include <AkonadiCore/entitymimetypefiltermodel.h>
-#include <akonadi/etmviewstatesaver.h>
+#include <AkonadiWidgets/etmviewstatesaver.h>
 #include <kviewstatemaintainer.h>
 #include <klineedit.h>
 

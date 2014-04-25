@@ -22,8 +22,8 @@
 #include "locationmodel.h"
 #include "ui_editorlocation.h"
 
-#include <KDE/KABC/Addressee>
-#include <KDE/KMessageBox>
+#include <KABC/Addressee>
+#include <KMessageBox>
 
 #include <QCheckBox>
 #include <QDataWidgetMapper>

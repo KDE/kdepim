@@ -20,8 +20,8 @@
 #include "kdeclarativefullscreenview.h"
 #include "stylesheetloader.h"
 
-#include <akonadi/control.h>
-#include <akonadi/servermanager.h>
+#include <AkonadiCore/control.h>
+#include <AkonadiCore/servermanager.h>
 
 #include <KDebug>
 #include <KGlobalSettings>

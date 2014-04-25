@@ -23,7 +23,7 @@
 
 #include "favoriteslistmodel.h"
 
-#include <akonadi/etmviewstatesaver.h>
+#include <AkonadiWidgets/etmviewstatesaver.h>
 #include <kconfiggroup.h>
 #include <klocale.h>
 #include <kmessagebox.h>

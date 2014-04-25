@@ -50,7 +50,7 @@
 #include <messagecomposer/settings/messagecomposersettings.h>
 #include <messagecomposer/recipient/recipientseditor.h>
 #include <messagecomposer/utils/util.h>
-#include <akonadi/collectioncombobox.h>
+#include <AkonadiWidgets/collectioncombobox.h>
 
 #include <klocalizedstring.h>
 #include <KDebug>

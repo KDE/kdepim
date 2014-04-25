@@ -22,14 +22,14 @@
 
 #include <AkonadiCore/agentinstance.h>
 #include <akonadi/agentinstancemodel.h>
-#include <akonadi/etmviewstatesaver.h>
+#include <AkonadiWidgets/etmviewstatesaver.h>
 
-#include <KDE/KCmdLineArgs>
-#include <KDE/KConfigGroup>
-#include <KDE/KGlobal>
-#include <KDE/KLineEdit>
-#include <KDE/KSharedConfig>
-#include <KDE/KProcess>
+#include <KCmdLineArgs>
+#include <KConfigGroup>
+#include <KGlobal>
+#include <KLineEdit>
+#include <KSharedConfig>
+#include <KProcess>
 
 #include <QtDBus/QDBusInterface>
 #include <qplatformdefs.h>

@@ -25,7 +25,7 @@
 
 #include <AkonadiCore/Collection>
 #include <AkonadiCore/Item>
-#include <Akonadi/ItemFetchJob>
+#include <AkonadiCore/ItemFetchJob>
 #include <AkonadiCore/ItemFetchScope>
 
 #include <KABC/Addressee>

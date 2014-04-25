@@ -31,7 +31,7 @@
 #include <akonadi/agentactionmanager.h>
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/itemfetchscope.h>
-#include <AkonadiCore/standardactionmanager.h>
+#include <AkonadiWidgets/standardactionmanager.h>
 #include <akonadi_next/note.h>
 #include <akonadi_next/notecreatorandselector.h>
 

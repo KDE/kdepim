@@ -48,11 +48,11 @@
 #include <akonadi/calendar/freebusymanager.h>
 #include <akonadi/calendar/calendarsettings.h>
 #include <akonadi/collectionmodel.h>
-#include <akonadi/collectionpropertiesdialog.h>
+#include <AkonadiWidgets/collectionpropertiesdialog.h>
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/itemfetchjob.h>
 #include <AkonadiCore/itemfetchscope.h>
-#include <AkonadiCore/standardactionmanager.h>
+#include <AkonadiWidgets/standardactionmanager.h>
 #include <calendarsupport/archivedialog.h>
 #include <calendarsupport/categoryconfig.h>
 #include <calendarsupport/collectiongeneralpage.h>

@@ -21,7 +21,7 @@
 #ifndef TEMPLATEEMAILMODEL_H
 #define TEMPLATEEMAILMODEL_H
 
-#include <akonadi/selectionproxymodel.h>
+#include <AkonadiCore/selectionproxymodel.h>
 
 /** A simple model that overrides the data() method, so the display role is the subject of the mails.
  * Then in QML one can use "display" to get it.

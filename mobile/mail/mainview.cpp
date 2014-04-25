@@ -67,7 +67,7 @@
 #include <akonadi/agentactionmanager.h>
 #include <AkonadiCore/collection.h>
 #include <akonadi/collectionmodel.h>
-#include <akonadi/collectionpropertiesdialog.h>
+#include <AkonadiWidgets/collectionpropertiesdialog.h>
 #include <AkonadiCore/entitymimetypefiltermodel.h>
 #include <AkonadiCore/itemdeletejob.h>
 #include <AkonadiCore/itemfetchscope.h>
