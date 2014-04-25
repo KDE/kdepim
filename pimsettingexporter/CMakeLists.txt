@@ -48,19 +48,19 @@ set(pimsettingexporter_SRCS
   synchronizeresourcejob.cpp
 )
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+kde_enable_exceptions()
 
-kde4_add_executable(pimsettingexporter ${pimsettingexporter_SRCS})
+add_executable(pimsettingexporter ${pimsettingexporter_SRCS})
 
 target_link_libraries(pimsettingexporter
-  ${KDE4_KIO_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${KDEPIMLIBS_KPIMUTILS_LIBS}
-  ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
+  KF5::KIOCore
+  KF5::AkonadiCore
+  KF5::AkonadiKMime
+  KF5::KMime
+  KF5::PimUtils
+  KF5::MailTransport
   ${AKONADI_COMMON_LIBRARIES}
-  ${KDEPIMLIBS_KALARMCAL_LIBS}
+  KF5::KAlarmCal
   mailimporter
   mailcommon
   pimcommon
@@ -79,5 +79,5 @@ install(FILES backup-structure.txt DESTINATION ${DATA_INSTALL_DIR}/pimsettingexp
 
 ########### install files ###############
 
-kde4_install_icons( ${ICON_INSTALL_DIR} )
+ecm_install_icons( ${ICON_INSTALL_DIR} )
 add_subdirectory(tests)
