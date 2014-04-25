@@ -32,11 +32,12 @@
 #include <KHelpMenu>
 #include <KMenu>
 #include <KComponentData>
+#include <KConfigGroup>
 
 // Qt includes
 #include <QPushButton>
 
-#include <akonadi/control.h>
+#include <AkonadiCore/control.h>
 using namespace MailImporter;
 
 KMailCVT::KMailCVT(QWidget *parent)
@@ -66,9 +67,11 @@ KMailCVT::KMailCVT(QWidget *parent)
              this, SLOT(collectionChanged(Akonadi::Collection)) );
     Akonadi::Control::widgetNeedsAkonadi(this);
     readConfig();
+#if 0 //QT5
     KHelpMenu *helpMenu = new KHelpMenu(this, KGlobal::mainComponent().aboutData(), true);
     setButtonMenu( Help, helpMenu->menu() );
     setHelp(QString(), QLatin1String("kmailcvt"));
+#endif
 }
 
 KMailCVT::~KMailCVT()
@@ -107,7 +110,7 @@ void KMailCVT::next()
         KAssistantDialog::next();
         // Disable back & finish
         setValid( currentPage(), false );
-        enableButton(KDialog::User3,false);
+        //QT5 enableButton(KDialog::User3,false);
         // Start import
         FilterInfo *info = new FilterInfo();
         KMailCvtFilterInfoGui *infoGui = new KMailCvtFilterInfoGui(importpage, this);
@@ -123,7 +126,7 @@ void KMailCVT::next()
         delete info;
         // Enable finish & back buttons
         setValid( currentPage(), true );
-        enableButton(KDialog::User3,true);
+        //QT5 enableButton(KDialog::User3,true);
 
     }
     else

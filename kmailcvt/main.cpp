@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include <kcmdlineargs.h>
-#include <kaboutdata.h>
+#include <k4aboutdata.h>
 #include <klocale.h>
 #include <KApplication>
 
@@ -25,10 +25,10 @@
 
 int main(int argc, char *argv[])
 {
-    KLocale::setMainCatalog("kmailcvt");
+    //QT5 KLocale::setMainCatalog("kmailcvt");
 
-    KAboutData aboutData( "kmailcvt", 0, ki18n("KMailCVT"),
-                          KDEPIM_VERSION, ki18n("Mail Import Tool"), KAboutData::License_GPL_V2,
+    K4AboutData aboutData( "kmailcvt", 0, ki18n("KMailCVT"),
+                          KDEPIM_VERSION, ki18n("Mail Import Tool"), K4AboutData::License_GPL_V2,
                           ki18n("Copyright © 2000–2014 KMailCVT authors"));
     aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer & New filter & cleanups"), "montel@kde.org");
     aboutData.addAuthor(ki18n("Hans Dijkema"),ki18n("Original author"), "kmailcvt@hum.org");
