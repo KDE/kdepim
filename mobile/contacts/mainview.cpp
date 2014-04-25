@@ -34,12 +34,12 @@
 #include "libkdepim/ldap/ldapsearchdialog.h"
 
 #include <akonadi/agentactionmanager.h>
-#include <akonadi/collectiondialog.h>
+#include <AkonadiWidgets/collectiondialog.h>
 #include <akonadi/contact/contactgroupexpandjob.h>
 #include <akonadi/contact/contactsfilterproxymodel.h>
 #include <akonadi/contact/standardcontactactionmanager.h>
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/itemfetchscope.h>
+#include <AkonadiCore/itemcreatejob.h>
+#include <AkonadiCore/itemfetchscope.h>
 #include <calendarsupport/categoryconfig.h>
 #include <incidenceeditor-ng/categoryeditdialog.h>
 #include <incidenceeditor-ng/editorconfig.h>

@@ -49,10 +49,10 @@
 #include <akonadi/calendar/calendarsettings.h>
 #include <akonadi/collectionmodel.h>
 #include <akonadi/collectionpropertiesdialog.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/standardactionmanager.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <AkonadiCore/standardactionmanager.h>
 #include <calendarsupport/archivedialog.h>
 #include <calendarsupport/categoryconfig.h>
 #include <calendarsupport/collectiongeneralpage.h>

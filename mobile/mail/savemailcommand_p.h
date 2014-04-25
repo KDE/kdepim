@@ -29,7 +29,7 @@
 
 #include <QObject>
 
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 
 #include <KUrl>
 

@@ -19,9 +19,9 @@
 
 #include "importhandlerbase.h"
 
-#include <akonadi/collectiondialog.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/itemcreatejob.h>
+#include <AkonadiWidgets/collectiondialog.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/itemcreatejob.h>
 #include <kfiledialog.h>
 #include <kprogressdialog.h>
 

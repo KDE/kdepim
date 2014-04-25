@@ -19,7 +19,7 @@
     02110-1301, USA.
 */
 
-#include <akonadi/standardactionmanager.h>
+#include <AkonadiCore/standardactionmanager.h>
 #include <kaction.h>
 #include <klocale.h>
 

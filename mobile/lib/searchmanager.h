@@ -22,7 +22,7 @@
 #ifndef SEARCHMANAGER_H
 #define SEARCHMANAGER_H
 
-#include <akonadi/collection.h>
+#include <AkonadiCore/collection.h>
 
 #include <QtCore/QObject>
 

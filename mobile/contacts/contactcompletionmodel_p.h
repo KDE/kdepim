@@ -22,7 +22,7 @@
 #ifndef AKONADI_CONTACTCOMPLETIONMODEL_P_H
 #define AKONADI_CONTACTCOMPLETIONMODEL_P_H
 
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/entitytreemodel.h>
 
 namespace Akonadi {
 

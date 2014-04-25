@@ -22,9 +22,9 @@
 #include "messagecore/utils/stringutil.h"
 #include "messageviewer/viewer/nodehelper.h"
 
-#include <akonadi/collection.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
+#include <AkonadiCore/collection.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
 
 #include <KUrl>
 #include <KFileDialog>

@@ -19,7 +19,7 @@
 
 #include "eventlistproxy.h"
 
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 
 #include <KCalCore/Event>
 #include <KCalCore/Todo>

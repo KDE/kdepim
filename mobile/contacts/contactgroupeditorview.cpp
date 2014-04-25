@@ -24,8 +24,8 @@
 
 #include <incidenceeditor-ng/editoritemmanager.h>
 
-#include <Akonadi/Collection>
-#include <Akonadi/Item>
+#include <AkonadiCore/Collection>
+#include <AkonadiCore/Item>
 
 #include <KABC/ContactGroup>
 #include <KLocalizedString>

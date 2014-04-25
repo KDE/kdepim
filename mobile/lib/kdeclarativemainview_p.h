@@ -28,8 +28,8 @@
 #include "statemachinebuilder.h"
 
 #include <akonadi/agentfilterproxymodel.h>
-#include <akonadi/changerecorder.h>
-#include <akonadi/entitymimetypefiltermodel.h>
+#include <AkonadiCore/changerecorder.h>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
 #include <akonadi/etmviewstatesaver.h>
 #include <kviewstatemaintainer.h>
 #include <klineedit.h>

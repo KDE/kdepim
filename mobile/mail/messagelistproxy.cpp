@@ -19,7 +19,7 @@
 
 #include "messagelistproxy.h"
 
-#include <akonadi/item.h>
+#include <AkonadiCore/item.h>
 #include <KMime/Message>
 
 #include <akonadi/kmime/messagestatus.h>

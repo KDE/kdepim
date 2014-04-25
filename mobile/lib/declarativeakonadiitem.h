@@ -3,7 +3,7 @@
 
 #include <QDeclarativeItem>
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 #include "mobileui_export.h"
 

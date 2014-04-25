@@ -19,8 +19,8 @@
 
 #include "listproxy.h"
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/item.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/item.h>
 
 ListProxy::ListProxy( QObject* parent ) : QSortFilterProxyModel( parent )
 {

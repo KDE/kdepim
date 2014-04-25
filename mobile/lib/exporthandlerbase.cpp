@@ -19,9 +19,9 @@
 
 #include "exporthandlerbase.h"
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
 #include <akonadi/recursiveitemfetchjob.h>
 #include <kmessagebox.h>
 

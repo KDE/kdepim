@@ -21,9 +21,9 @@
 
 #include "incidenceview.h"
 
-#include <akonadi/changerecorder.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/session.h>
+#include <AkonadiCore/changerecorder.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <AkonadiCore/session.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 #include <klocale.h>

@@ -65,14 +65,14 @@
 #include "vacationmanager.h"
 
 #include <akonadi/agentactionmanager.h>
-#include <akonadi/collection.h>
+#include <AkonadiCore/collection.h>
 #include <akonadi/collectionmodel.h>
 #include <akonadi/collectionpropertiesdialog.h>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/itemdeletejob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemmodifyjob.h>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
+#include <AkonadiCore/itemdeletejob.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemmodifyjob.h>
 #include <akonadi/kmime/messageflags.h>
 #include <akonadi/kmime/messagefolderattribute.h>
 #include <akonadi/kmime/messageparts.h>

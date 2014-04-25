@@ -20,7 +20,7 @@
 #include "guistatemanager.h"
 #include "stylesheetloader.h"
 
-#include <akonadi/agentinstance.h>
+#include <AkonadiCore/agentinstance.h>
 #include <akonadi/agentinstancemodel.h>
 #include <akonadi/etmviewstatesaver.h>
 

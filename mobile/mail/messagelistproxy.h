@@ -21,7 +21,7 @@
 #define MESSAGELISTPROXY_H
 
 #include "listproxy.h"
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/entitytreemodel.h>
 
 /** Proxy model to provide roles for accessing KMime::Message properties from QML. */
 class MessageListProxy : public ListProxy

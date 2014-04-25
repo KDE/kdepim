@@ -19,7 +19,7 @@
 
 #include "tasksfilterproxymodel.h"
 
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/entitytreemodel.h>
 #include <KCalCore/Todo>
 
 static bool taskMatchesFilter( const KCalCore::Todo::Ptr &task, const QString &filterString );

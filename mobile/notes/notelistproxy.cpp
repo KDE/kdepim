@@ -23,7 +23,7 @@
 
 #include <QTextDocument>
 
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/entitytreemodel.h>
 #include <KMime/KMimeMessage>
 
 using namespace Akonadi;

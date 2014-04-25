@@ -21,8 +21,8 @@
 
 #include "acleditor.h"
 
-#include <akonadi/attributefactory.h>
-#include <akonadi/entitydisplayattribute.h>
+#include <AkonadiCore/attributefactory.h>
+#include <AkonadiCore/entitydisplayattribute.h>
 #include <kactioncollection.h>
 #include <pimcommon/acl/aclmanager.h>
 #include <pimcommon/acl/imapaclattribute.h>

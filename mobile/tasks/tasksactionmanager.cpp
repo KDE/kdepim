@@ -19,8 +19,8 @@
 #include "tasksactionmanager.h"
 
 
-#include <Akonadi/EntityTreeModel>
-#include <Akonadi/Item>
+#include <AkonadiCore/EntityTreeModel>
+#include <AkonadiCore/Item>
 
 #include <KCalCore/Todo>
 

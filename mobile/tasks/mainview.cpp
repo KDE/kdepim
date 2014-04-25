@@ -50,10 +50,10 @@
 #include <akonadi/calendar/freebusymanager.h>
 #include <akonadi/calendar/calendarsettings.h>
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/itemmodifyjob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/itemmodifyjob.h>
+#include <AkonadiCore/itemfetchjob.h>
+#include <AkonadiCore/itemfetchscope.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>

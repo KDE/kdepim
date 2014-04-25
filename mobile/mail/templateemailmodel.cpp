@@ -19,7 +19,7 @@
 
 
 #include "templateemailmodel.h"
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/entitytreemodel.h>
 #include <kmime/kmime_message.h>
 
 QVariant TemplateEmailModel::data(const QModelIndex& index, int role) const

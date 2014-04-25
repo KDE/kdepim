@@ -19,8 +19,8 @@
 
 #include "agentstatusmonitor.h"
 
-#include <akonadi/agentmanager.h>
-#include <akonadi/mimetypechecker.h>
+#include <AkonadiCore/agentmanager.h>
+#include <AkonadiCore/mimetypechecker.h>
 
 #include <solid/networking.h>
 

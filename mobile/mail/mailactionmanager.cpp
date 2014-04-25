@@ -28,7 +28,7 @@
 #include <KIcon>
 #include <KAction>
 
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/entitytreemodel.h>
 #include <KMime/KMimeMessage>
 
 MailActionManager::MailActionManager( KActionCollection *actionCollection, QObject *parent )

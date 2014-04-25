@@ -33,8 +33,8 @@
 #include <KDebug>
 #include <KDialog>
 #include <KLocalizedString>
-#include <Akonadi/Item>
-#include <Akonadi/ItemCreateJob>
+#include <AkonadiCore/Item>
+#include <AkonadiCore/ItemCreateJob>
 #include <Akonadi/Calendar/ETMCalendar>
 
 #include "declarativeeditors.h"

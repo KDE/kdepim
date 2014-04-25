@@ -19,7 +19,7 @@
 
 #include "eventsfilterproxymodel.h"
 
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/entitytreemodel.h>
 #include <KCalCore/Event>
 
 static bool eventMatchesFilter( const KCalCore::Event::Ptr &event, const QString &filterString );

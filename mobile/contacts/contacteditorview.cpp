@@ -29,9 +29,9 @@
 
 #include <incidenceeditor-ng/editoritemmanager.h>
 
-#include <Akonadi/Collection>
-#include <Akonadi/Item>
-#include <Akonadi/ItemFetchScope>
+#include <AkonadiCore/Collection>
+#include <AkonadiCore/Item>
+#include <AkonadiCore/ItemFetchScope>
 
 #include <KABC/Addressee>
 #include <KLocalizedString>

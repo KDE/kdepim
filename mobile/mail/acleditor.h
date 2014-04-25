@@ -22,7 +22,7 @@
 #ifndef ACLEDITOR_H
 #define ACLEDITOR_H
 
-#include <akonadi/collection.h>
+#include <AkonadiCore/collection.h>
 
 #include <QtCore/QObject>
 

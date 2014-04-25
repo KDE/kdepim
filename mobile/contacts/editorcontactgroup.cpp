@@ -23,10 +23,10 @@
 
 #include "contactcompletionmodel_p.h"
 
-#include <Akonadi/Collection>
-#include <Akonadi/Item>
+#include <AkonadiCore/Collection>
+#include <AkonadiCore/Item>
 #include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
+#include <AkonadiCore/ItemFetchScope>
 
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>

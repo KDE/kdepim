@@ -34,15 +34,15 @@
 
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/agentinstancemodel.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/changerecorder.h>
-#include <akonadi/entitydisplayattribute.h>
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/agentmanager.h>
+#include <AkonadiCore/changerecorder.h>
+#include <AkonadiCore/entitydisplayattribute.h>
+#include <AkonadiCore/entitytreemodel.h>
 #include <akonadi/etmviewstatesaver.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemmodifyjob.h>
+#include <AkonadiCore/itemfetchscope.h>
+#include <AkonadiCore/itemmodifyjob.h>
 #include <akonadi/selectionproxymodel.h>
-#include <akonadi/standardactionmanager.h>
+#include <AkonadiCore/standardactionmanager.h>
 #include <kviewstatemaintainer.h>
 #include <kbreadcrumbselectionmodel.h>
 #include <klinkitemselectionmodel.h>

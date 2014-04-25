@@ -23,7 +23,7 @@
 
 #include <calendarsupport/kcalprefs.h>
 
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/entitytreemodel.h>
 #include <KCalCore/Todo>
 
 using namespace Akonadi;

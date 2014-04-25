@@ -22,7 +22,7 @@
 
 #include "listproxy.h"
 
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/entitytreemodel.h>
 #include <kdatetime.h>
 
 /** Proxy model to provide roles for accessing KMime::Message properties from QML. */

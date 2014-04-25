@@ -23,7 +23,7 @@
 
 #include "orderedchildcollectionsmodel.h"
 
-#include <akonadi/entitymimetypefiltermodel.h>
+#include <AkonadiCore/entitymimetypefiltermodel.h>
 
 using namespace Akonadi;
 

@@ -19,7 +19,7 @@
 
 #include "notesfilterproxymodel.h"
 
-#include <akonadi/entitytreemodel.h>
+#include <AkonadiCore/entitytreemodel.h>
 #include <KMime/Message>
 
 static bool noteMatchesFilter( const KMime::Message::Ptr &note, const QString &filterString );
