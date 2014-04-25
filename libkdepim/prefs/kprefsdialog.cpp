@@ -36,6 +36,7 @@
 #include <KPageWidget>
 #include <KTimeComboBox>
 #include <KUrlRequester>
+#include <KUrl>
 
 #include <QFont>
 #include <QFrame>
@@ -781,11 +782,11 @@ KPrefsDialog::KPrefsDialog( KConfigSkeleton *prefs, QWidget *parent, bool modal 
       KPrefsWidManager( prefs )
 {
     setFaceType( List );
-    setCaption( i18n( "Preferences" ) );
-    setButtons( Ok|Apply|Cancel|Default );
-    setDefaultButton( Ok );
+    // QT5 setCaption( i18n( "Preferences" ) );
+    //QT5 setButtons( Ok|Apply|Cancel|Default );
+    //QT5 setDefaultButton( Ok );
     setModal( modal );
-    showButtonSeparator( true );
+    //QT5 showButtonSeparator( true );
     connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
     connect( this, SIGNAL(applyClicked()), SLOT(slotApply()) );
     connect( this, SIGNAL(defaultClicked()), SLOT(slotDefault()) );
@@ -899,7 +900,7 @@ void KPrefsDialog::slotDefault()
 
 KPrefsModule::KPrefsModule( KConfigSkeleton *prefs, const KComponentData &instance,
                             QWidget *parent, const QVariantList &args )
-    : KCModule( instance, parent, args ),
+    : KCModule( /*instance,*/ parent, args ),
       KPrefsWidManager( prefs )
 {
     emit changed( false );

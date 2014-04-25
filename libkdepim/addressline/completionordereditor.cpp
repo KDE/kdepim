@@ -47,12 +47,12 @@
 #include <KGlobal>
 
 
-#include <KDE/KConfigGroup>
-#include <KDE/KHBox>
-#include <KDE/KIcon>
-#include <KDE/KLocale>
-#include <KDE/KPushButton>
-#include <KDE/KVBox>
+#include <KConfigGroup>
+#include <KHBox>
+#include <KIcon>
+#include <KLocale>
+#include <KPushButton>
+#include <KVBox>
 
 #include <QtDBus/QDBusConnection>
 #include <QToolButton>

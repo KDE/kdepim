@@ -33,8 +33,8 @@
 
 #include "kdepim_export.h"
 
-#include <KDE/KConfig>
-#include <KDE/KDialog>
+#include <KConfig>
+#include <KDialog>
 
 class KPushButton;
 class QAbstractItemModel;
