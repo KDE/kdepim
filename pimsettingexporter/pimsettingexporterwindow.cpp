@@ -62,7 +62,7 @@
 #include <AkonadiCore/Control>
 
 #include <KStandardAction>
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KFileDialog>
 #include <KMessageBox>
@@ -71,7 +71,7 @@
 #include <KStatusBar>
 #include <KRecentFilesAction>
 #include <KCmdLineArgs>
-
+#include <KGlobal>
 #include <QPointer>
 
 PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)

@@ -22,7 +22,7 @@
 #include <AkonadiCore/Collection>
 #include <QStringList>
 #include <QHash>
-
+#include <KArchive>
 class KArchiveDirectory;
 class KArchiveFile;
 class ArchiveStorage;

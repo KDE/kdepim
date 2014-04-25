@@ -20,6 +20,7 @@
 
 #include "abstractimportexportjob.h"
 #include <KSharedConfig>
+#include <QDateTime>
 class KUrl;
 class ArchiveStorage;
 
@@ -42,7 +43,7 @@ private:
     void backupAkonadiDb();
     void writeDirectory(const QString &path, const QString &relativePath, KZip *mailArchive);
     bool checkProgram();
-    time_t mArchiveTime;
+    QDateTime mArchiveTime;
 };
 
 #endif // ExportMailJob_H

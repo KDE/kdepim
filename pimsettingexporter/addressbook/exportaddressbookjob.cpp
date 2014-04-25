@@ -18,7 +18,7 @@
 #include "exportaddressbookjob.h"
 #include "messageviewer/utils/kcursorsaver.h"
 
-#include <Akonadi/AgentManager>
+#include <AkonadiCore/AgentManager>
 
 #include <KLocalizedString>
 #include <KStandardDirs>

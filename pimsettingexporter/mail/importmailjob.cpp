@@ -40,6 +40,7 @@
 #include <KMessageBox>
 #include <KArchiveFile>
 #include <KZip>
+#include <KDebug>
 
 #include <AkonadiCore/agenttype.h>
 #include <AkonadiCore/agentmanager.h>
@@ -1027,9 +1028,9 @@ void ImportMailJob::copyArchiveMailAgentConfigGroup(KSharedConfig::Ptr archiveCo
                 KConfigGroup newGroup( archiveConfigDestination, archiveGroupPattern + QString::number(id));
                 oldGroup.copyTo( &newGroup );
                 newGroup.writeEntry(QLatin1String("saveCollectionId"),id);
-                KUrl path = newGroup.readEntry("storePath",KUrl());
+                QUrl path = newGroup.readEntry("storePath",QUrl());
                 if (!QDir(path.path()).exists()) {
-                    newGroup.writeEntry(QLatin1String("storePath"),KUrl(QDir::homePath()));
+                    newGroup.writeEntry(QLatin1String("storePath"),QUrl(QDir::homePath()));
                 }
             }
             oldGroup.deleteGroup();

@@ -18,6 +18,7 @@
 #include "selectiontypedialog.h"
 #include "widgets/selectiontypetreewidget.h"
 
+#include <KGlobal>
 #include <KLocalizedString>
 #include <QHBoxLayout>
 #include <QPushButton>

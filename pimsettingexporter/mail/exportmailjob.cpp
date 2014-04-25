@@ -22,12 +22,12 @@
 #include "mailcommon/filter/filtermanager.h"
 #include "mailcommon/filter/filterimporterexporter.h"
 
-#include <Akonadi/AgentManager>
+#include <AkonadiCore/AgentManager>
 #include <AkonadiCore/Collection>
 #include <AkonadiCore/CollectionFetchJob>
-#include <Akonadi/CollectionFetchScope>
+#include <AkonadiCore/CollectionFetchScope>
 
-#include <Mailtransport/TransportManager>
+#include <MailTransport/TransportManager>
 
 
 #include <KZip>
@@ -35,6 +35,7 @@
 #include <KTemporaryFile>
 #include <KStandardDirs>
 #include <KProcess>
+#include <KDebug>
 
 #include <QDebug>
 #include <QFile>
@@ -42,7 +43,7 @@
 
 ExportMailJob::ExportMailJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
     : AbstractImportExportJob(parent,archiveStorage,typeSelected,numberOfStep),
-      mArchiveTime(QDateTime::currentDateTime().toTime_t())
+      mArchiveTime(QDateTime::currentDateTime())
 {
 }
 

@@ -25,7 +25,10 @@
 #include <KConfigGroup>
 #include <KArchiveDirectory>
 #include <KArchiveEntry>
+#include <KArchive>
 #include <KZip>
+#include <KGlobal>
+#include <KDebug>
 
 #include <QFile>
 #include <QDir>

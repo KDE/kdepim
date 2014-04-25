@@ -18,8 +18,8 @@
 #include "synchronizeresourcejob.h"
 
 #include <akonadi/resourcesynchronizationjob.h>
-#include <Akonadi/AgentInstance>
-#include <Akonadi/AgentManager>
+#include <AkonadiCore/AgentInstance>
+#include <AkonadiCore/AgentManager>
 
 
 #include <QStringList>
