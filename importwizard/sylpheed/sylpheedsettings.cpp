@@ -25,6 +25,7 @@
 
 #include <KConfig>
 #include <KConfigGroup>
+#include <KDebug>
 
 #include <QRegExp>
 #include <QStringList>

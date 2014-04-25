@@ -19,6 +19,7 @@
 #include "importwizard.h"
 #include "importcalendarpage.h"
 
+#include <KConfigGroup>
 
 AbstractCalendar::AbstractCalendar(ImportWizard *parent)
     : mImportWizard(parent)

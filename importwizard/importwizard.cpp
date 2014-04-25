@@ -48,7 +48,7 @@
 #include <KMessageBox>
 #include <KHelpMenu>
 #include <KMenu>
-#include <akonadi/control.h>
+#include <AkonadiCore/control.h>
 #include <mailcommon/kernel/mailkernel.h>
 
 ImportWizard::ImportWizard(QWidget *parent)

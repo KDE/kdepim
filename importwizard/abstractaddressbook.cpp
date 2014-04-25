@@ -21,6 +21,7 @@
 #include <KABC/Addressee>
 #include <kabc/contactgroup.h>
 #include <KLocale>
+#include <KDebug>
 #include <AkonadiCore/ItemCreateJob>
 #include <AkonadiCore/Item>
 #include <AkonadiWidgets/CollectionDialog>

@@ -20,9 +20,9 @@
 #include <KConfigGroup>
 #include <QDebug>
 #include <kwallet.h>
-#include <Akonadi/Tag>
-#include <Akonadi/TagAttribute>
-#include <Akonadi/TagCreateJob>
+#include <AkonadiCore/Tag>
+#include <AkonadiCore/TagAttribute>
+#include <AkonadiCore/TagCreateJob>
 
 
 
