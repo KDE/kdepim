@@ -201,7 +201,6 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   ${_mailwebview_lib}
   ${Grantlee_CORE_LIBRARIES} 
   KF5::NewStuff
-  ${QJSON_LIBRARIES}
   ${KDE4_SOLID_LIBS}
   pimcommon
   grantleetheme
