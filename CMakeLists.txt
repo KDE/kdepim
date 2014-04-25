@@ -63,6 +63,9 @@ option(KDEPIM_NO_WEBKIT "Do not use WebKit in the kdepim applications" FALSE)
 
 
 find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql)
+#Need to use volatile_qt5_port branch from grantlee
+find_package(Grantlee "1.0" CONFIG REQUIRED)
+
 find_package(KF5Akonadi CONFIG REQUIRED)
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)
