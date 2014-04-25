@@ -24,7 +24,7 @@
 
 #include <AgentInstance>
 #include <AgentManager>
-#include <akonadi/dbusconnectionpool.h>
+#include <AkonadiCore/dbusconnectionpool.h>
 #include <AkonadiCore/changerecorder.h>
 #include <AkonadiCore/itemfetchscope.h>
 #include <AkonadiCore/session.h>

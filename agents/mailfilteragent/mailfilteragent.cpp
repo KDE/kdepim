@@ -29,13 +29,17 @@
 #include <AkonadiCore/changerecorder.h>
 #include <AkonadiCore/collectionfetchjob.h>
 #include <AkonadiCore/collectionfetchscope.h>
-#include <akonadi/dbusconnectionpool.h>
+#include <AkonadiCore/dbusconnectionpool.h>
 #include <AkonadiCore/itemfetchscope.h>
 #include <akonadi/kmime/messageparts.h>
 #include <akonadi/kmime/messagestatus.h>
 #include <AkonadiCore/session.h>
 #include <mailcommon/kernel/mailkernel.h>
 #include <KLocalizedString>
+#include <KGlobal>
+#include <KIcon>
+#include <KDebug>
+#include <KIconLoader>
 #include <KMime/Message>
 #include <KNotification>
 #include <KWindowSystem>
@@ -97,11 +101,13 @@ MailFilterAgent::MailFilterAgent( const QString &id )
             if ( group.readEntry( "Enabled", false ) ) {
                 m_filterLogDialog = new FilterLogDialog( 0 );
                 const QPixmap pixmap = KIcon( QLatin1String("view-filter") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+#if 0 //QT5
                 KNotification *notify = new KNotification( QLatin1String("mailfilterlogenabled") );
                 notify->setComponentData( componentData() );
                 notify->setPixmap( pixmap );
                 notify->setText( i18nc("Notification when the filter log was enabled", "Mail Filter Log Enabled" ) );
                 notify->sendEvent();
+#endif
             }
         }
     }

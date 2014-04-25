@@ -26,7 +26,7 @@
 #include <AkonadiCore/itemfetchjob.h>
 #include <AkonadiCore/itemfetchscope.h>
 #include <AkonadiCore/itemmodifyjob.h>
-#include <akonadi/itemmovejob.h>
+#include <AkonadiCore/itemmovejob.h>
 #include <AkonadiCore/itemdeletejob.h>
 #include <akonadi/kmime/messageparts.h>
 #include <kconfig.h>

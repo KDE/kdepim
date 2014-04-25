@@ -24,6 +24,7 @@
 #include <KUrlRequester>
 #include <KIntSpinBox>
 #include <KSeparator>
+#include <KIcon>
 
 #include <QGridLayout>
 #include <QLabel>

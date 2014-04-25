@@ -20,7 +20,7 @@
 #ifndef MAILFILTERAGENT_H
 #define MAILFILTERAGENT_H
 
-#include <akonadi/agentbase.h>
+#include <AkonadiAgentBase/agentbase.h>
 
 #include "mailcommon/search/searchpattern.h"
 #include <Collection>

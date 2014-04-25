@@ -17,6 +17,7 @@
 #include "archivemailinfo.h"
 
 #include <KLocale>
+#include <KDebug>
 #include <QDir>
 
 ArchiveMailInfo::ArchiveMailInfo()
@@ -172,7 +173,7 @@ QDate ArchiveMailInfo::lastDateSaved() const
 
 void ArchiveMailInfo::readConfig(const KConfigGroup &config)
 {
-    mPath = config.readEntry("storePath", KUrl());
+    mPath = config.readEntry("storePath", QUrl());
 
     if (config.hasKey(QLatin1String("lastDateSaved"))) {
         mLastDateSaved = QDate::fromString(config.readEntry("lastDateSaved"),Qt::ISODate);

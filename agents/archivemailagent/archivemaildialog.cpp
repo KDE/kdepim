@@ -29,7 +29,8 @@
 #include <KMenu>
 #include <KRun>
 #include <KHelpMenu>
-#include <KAboutData>
+#include <k4aboutdata.h>
+#include <KIcon>
 
 #include <QHBoxLayout>
 
@@ -55,13 +56,13 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     connect(this, SIGNAL(okClicked()), SLOT(slotSave()));
     readConfig();
 
-    mAboutData = new KAboutData(
+    mAboutData = new K4AboutData(
                 QByteArray( "archivemailagent" ),
                 QByteArray(),
                 ki18n( "Archive Mail Agent" ),
                 QByteArray( KDEPIM_VERSION ),
                 ki18n( "Archive emails automatically." ),
-                KAboutData::License_GPL_V2,
+                K4AboutData::License_GPL_V2,
                 ki18n( "Copyright (C) 2012, 2013, 2014 Laurent Montel" ) );
 
     mAboutData->addAuthor( ki18n( "Laurent Montel" ),
@@ -71,12 +72,13 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     mAboutData->setTranslator( ki18nc( "NAME OF TRANSLATORS", "Your names" ),
                              ki18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
 
-
+#if 0 //QT5
     KHelpMenu *helpMenu = new KHelpMenu(this, mAboutData, true);
     //Initialize menu
     KMenu *menu = helpMenu->menu();
     helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(KIcon(QLatin1String("kmail")));
     setButtonMenu( Help, menu );
+#endif
 }
 
 ArchiveMailDialog::~ArchiveMailDialog()

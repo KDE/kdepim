@@ -66,12 +66,14 @@ void ArchiveJob::execute()
         backupJob->setRealPath(realPath);
         const QString summary = i18n("Start to archive %1",realPath );
         const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+#if 0 //QT5
         KNotification::event( QLatin1String("archivemailstarted"),
                               summary,
                               pixmap,
                               0,
                               KNotification::CloseOnTimeout,
                               KGlobal::mainComponent());
+#endif
         connect(backupJob, SIGNAL(backupDone(QString)), this, SLOT(slotBackupDone(QString)));
         connect(backupJob, SIGNAL(error(QString)), this, SLOT(slotError(QString)));
         backupJob->start();
@@ -81,13 +83,14 @@ void ArchiveJob::execute()
 void ArchiveJob::slotError(const QString &error)
 {
     const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
-
+#if 0 //QT5
     KNotification::event( QLatin1String("archivemailerror"),
                           error,
                           pixmap,
                           0,
                           KNotification::CloseOnTimeout,
                           KGlobal::mainComponent());
+#endif
     mManager->backupDone(mInfo);
     deleteLater();
 }
@@ -95,13 +98,14 @@ void ArchiveJob::slotError(const QString &error)
 void ArchiveJob::slotBackupDone(const QString &info)
 {
     const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
-
+#if 0 //QT5
     KNotification::event( QLatin1String("archivemailfinished"),
                           info,
                           pixmap,
                           0,
                           KNotification::CloseOnTimeout,
                           KGlobal::mainComponent());
+#endif
     mManager->backupDone(mInfo);
     deleteLater();
 }

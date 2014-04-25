@@ -38,6 +38,9 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kvbox.h>
+#include <KIcon>
+#include <KGlobal>
+#include <KUrl>
 
 #include <QCheckBox>
 #include <QLabel>

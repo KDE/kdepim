@@ -84,7 +84,7 @@ private:
     MailCommon::BackupJob::ArchiveType mArchiveType;
     ArchiveUnit mArchiveUnit;
     Akonadi::Collection::Id mSaveCollectionId;
-    KUrl mPath;
+    QUrl mPath;
     int mMaximumArchiveCount;
     bool mSaveSubCollection;
     bool mIsEnabled;
