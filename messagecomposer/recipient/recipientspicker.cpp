@@ -34,6 +34,8 @@
 #include <kmessagebox.h>
 #include <KLineEdit>
 #include <KPushButton>
+#include <KDebug>
+#include <KGlobal>
 
 #include <QKeyEvent>
 #include <QTreeView>

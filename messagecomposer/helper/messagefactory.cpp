@@ -38,6 +38,8 @@
 #include "helper/messagehelper.h"
 #include "templateparser/templateparser.h"
 #include <KLocalizedString>
+#include <KDebug>
+#include <KGlobal>
 #include <kcharsets.h>
 #include <QTextCodec>
 

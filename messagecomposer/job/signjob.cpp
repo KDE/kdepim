@@ -188,7 +188,7 @@ void SignJob::process()
 
             if ( d->content->contentTransferEncoding()->encoding() == KMime::Headers::CE7Bit ) {
                 for ( int i = 0; i < search.size(); ++i ) {
-                    QByteArray start = "\n"  % search[i];
+                    QByteArray start = "\n"  + search[i];
                     if ( body.indexOf( start ) > -1 ||
                          body.startsWith( search[i] ) ){
                         changed = true;
@@ -204,8 +204,8 @@ void SignJob::process()
 
 
             for ( int i = 0; i < search.size(); ++i ) {
-                QByteArray start = "\n"  % search[i];
-                QByteArray replace = "\n" % replacements[i];
+                QByteArray start = "\n"  + search[i];
+                QByteArray replace = "\n" + replacements[i];
                 if ( body.indexOf( start ) > -1 ){
                     changed = true;
                     body.replace( start, replace );

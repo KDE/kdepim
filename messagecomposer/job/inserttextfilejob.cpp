@@ -23,6 +23,7 @@
 #include <KCharsets>
 #include <KDebug>
 #include <KIO/Job>
+#include <KGlobal>
 
 #include <QTextCodec>
 

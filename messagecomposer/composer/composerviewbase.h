@@ -27,7 +27,7 @@
 #include "agents/sendlateragent/sendlaterdialog.h"
 
 #include <AkonadiCore/collection.h>
-#include <KDE/KMime/Message>
+#include <KMime/Message>
 
 #include <QObject>
 #include <KUrl>

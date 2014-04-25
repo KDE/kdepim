@@ -34,6 +34,7 @@
 
 #include <AkonadiCore/itemfetchjob.h>
 #include <kio/jobuidelegate.h>
+#include <KIcon>
 
 #include <QMenu>
 #include <QPointer>
@@ -629,6 +630,7 @@ void AttachmentControllerBase::openAttachment( AttachmentPart::Ptr part )
                                  true /*tempFile*/,
                                  false /*runExecutables*/ );
     if( !success ) {
+#if 0 //QT5
         if( KMimeTypeTrader::self()->preferredService( QString::fromLatin1( part->mimeType() ) ).isNull() ) {
             // KRun showed an Open-With dialog, and it was canceled.
         } else {
@@ -639,6 +641,7 @@ void AttachmentControllerBase::openAttachment( AttachmentPart::Ptr part )
         }
         delete tempFile;
         tempFile = 0;
+#endif
     } else {
         // The file was opened.  Delete it only when the composer is closed
         // (and this object is destroyed).
@@ -744,8 +747,10 @@ void AttachmentControllerBase::slotPutResult(KJob *job)
                 byteArrayToRemoteFile(_job->data(), _job->url(), true);
         }
         else {
+#if 0 //QT5
             KIO::JobUiDelegate *ui = static_cast<KIO::Job*>( job )->ui();
             ui->showErrorMessage();
+#endif
         }
     }
 }
@@ -767,6 +772,7 @@ void AttachmentControllerBase::attachmentProperties( AttachmentPart::Ptr part )
 void AttachmentControllerBase::showAddAttachmentDialog()
 {
 #ifndef KDEPIM_MOBILE_UI
+#if 0 //QT5
     QPointer<KEncodingFileDialog> dialog = new KEncodingFileDialog(
                 QString( /*startDir*/ ), QString( /*encoding*/ ), QString( /*filter*/ ),
                 i18n( "Attach File" ), KFileDialog::Other, d->wParent );
@@ -792,6 +798,7 @@ void AttachmentControllerBase::showAddAttachmentDialog()
         }
     }
     delete dialog;
+#endif
 #else
     // use native dialog, while being much simpler, it actually fits on the screen much better than our own monster dialog
     const QString fileName = KFileDialog::getOpenFileName( KUrl(), QString(), d->wParent, i18n("Attach File" ) );

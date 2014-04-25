@@ -39,6 +39,7 @@
 #include <kmessagebox.h>
 #include <kcompletionbox.h>
 #include <klocale.h>
+#include <KGlobal>
 
 #include <QFile>
 #include <QCursor>
@@ -100,7 +101,8 @@ void ComposerLineEdit::insertEmails( const QStringList & emails )
     const QAction *result = menu.exec( QCursor::pos() );
     if ( !result )
         return;
-    setText( contents + KGlobal::locale()->removeAcceleratorMarker( result->text() ) );
+    //QT5 setText( contents + KGlobal::locale()->removeAcceleratorMarker( result->text() ) );
+    setText( contents + result->text());
 }
 
 #ifndef QT_NO_DRAGANDDROP

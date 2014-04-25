@@ -230,7 +230,7 @@ void RecipientLineNG::moveCompletionPopup()
 
 void RecipientLineNG::setCompletionMode( KGlobalSettings::Completion mode )
 {
-    mEdit->setCompletionMode( mode );
+    //QT5 mEdit->setCompletionMode( mode );
 }
 
 Recipient::Type RecipientLineNG::recipientType() const

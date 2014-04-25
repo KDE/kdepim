@@ -60,7 +60,7 @@
 #include <akonadi/kmime/specialmailcollections.h>
 #include <AkonadiCore/itemcreatejob.h>
 #include <AkonadiCore/collectionfetchjob.h>
-#include <akonadi/collectioncombobox.h>
+#include <AkonadiWidgets/collectioncombobox.h>
 
 #include <kpimidentities/identitycombo.h>
 #include <kpimidentities/identitymanager.h>
@@ -71,6 +71,7 @@
 #include <KMessageBox>
 #include <krichtextwidget.h>
 #include <KStandardDirs>
+#include <KDebug>
 
 #include <QDir>
 #include <QTimer>
@@ -1075,12 +1076,12 @@ void MessageComposer::ComposerViewBase::saveMessage( KMime::Message::Ptr message
     item.setPayload( message );
     if ( !identity.isNull() ) { // we have a valid identity
         if ( saveIn == MessageComposer::MessageSender::SaveInTemplates ) {
-            if ( !identity.templates().isEmpty() ) { // the user has specified a custom templates collection
-                target = Akonadi::Collection( identity.templates().toLongLong() );
+            if ( identity.templates()<0 ) { // the user has specified a custom templates collection
+                target = Akonadi::Collection( identity.templates() );
             }
         } else {
-            if ( !identity.drafts().isEmpty() ) { // the user has specified a custom drafts collection
-                target = Akonadi::Collection( identity.drafts().toLongLong() );
+            if ( identity.drafts()<0 ) { // the user has specified a custom drafts collection
+                target = Akonadi::Collection( identity.drafts() );            
             }
         }
         Akonadi::CollectionFetchJob *saveMessageJob = new Akonadi::CollectionFetchJob( target, Akonadi::CollectionFetchJob::Base );

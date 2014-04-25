@@ -29,6 +29,7 @@
 #include <kmacroexpander.h>
 #include <KShell>
 
+#include <KPIMIdentities/Signature>
 
 #include <grantlee/plaintextmarkupbuilder.h>
 
@@ -39,6 +40,7 @@
 #include <KPushButton>
 #include <KTemporaryFile>
 #include <KColorScheme>
+#include <KFileDialog>
 
 #include <QApplication>
 #include <QClipboard>
@@ -337,6 +339,7 @@ void KMeditor::setFontForWholeText( const QFont &font )
 
 KUrl KMeditor::insertFile()
 {
+#if 0 //QT5
     QPointer<KEncodingFileDialog> fdlg =
             new KEncodingFileDialog( QString(), QString(),  QString(), QString(),
                                      KFileDialog::Opening, this );
@@ -350,6 +353,9 @@ KUrl KMeditor::insertFile()
     }
     delete fdlg;
     return url;
+#else
+    return KUrl();
+#endif
 }
 
 void KMeditor::enableWordWrap( int wrapColumn )

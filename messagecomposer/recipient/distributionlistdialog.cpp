@@ -33,6 +33,7 @@
 #include <KLineEdit>
 #include <KMessageBox>
 #include <KInputDialog>
+#include <KGlobal>
 
 #include <QLabel>
 #include <QTreeWidget>

@@ -112,7 +112,7 @@ kconfig_add_kcfg_files(messagecomposer_src
 
 add_library( messagecomposer ${LIBRARY_TYPE} ${messagecomposer_src} )
 target_link_libraries( messagecomposer KF5::KIOCore KF5::KMime KF5::AkonadiKMime KF5::AkonadiCore KF5::MailTransport KF5::PimTextEdit KF5::PimIdentities
- messagecore messageviewer templateparser kleo kdepim ${QGPGME_LIBRARIES} ${Grantlee_GUI_LIBRARIES} sendlater pimcommon)
+ messagecore messageviewer templateparser kleo kdepim Grantlee::TextDocument sendlater pimcommon KF5::AkonadiWidgets)
 
 set_target_properties( messagecomposer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 

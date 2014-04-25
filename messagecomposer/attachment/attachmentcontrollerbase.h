@@ -25,7 +25,7 @@
 
 #include <QtCore/QObject>
 
-#include <KDE/KUrl>
+#include <KUrl>
 
 #include <KPIMIdentities/Identity>
 #include <messagecore/attachment/attachmentpart.h>
