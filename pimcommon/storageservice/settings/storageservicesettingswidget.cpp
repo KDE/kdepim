@@ -32,6 +32,7 @@
 #include <KLocale>
 #include <KMessageBox>
 #include <KTextBrowser>
+#include <KGlobal>
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>

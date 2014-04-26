@@ -20,7 +20,6 @@
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 #include "storageservice/authdialog/storageauthviewdialog.h"
 
-#include <qjson/parser.h>
 
 #include <KLocalizedString>
 
@@ -147,6 +146,7 @@ void HubicJob::getTokenAccess(const QString &authorizeCode)
 
 void HubicJob::slotSendDataFinished(QNetworkReply *reply)
 {
+#if 0 //QT5
     const QString data = QString::fromUtf8(reply->readAll());
     reply->deleteLater();
     if (mError) {
@@ -264,11 +264,13 @@ void HubicJob::slotSendDataFinished(QNetworkReply *reply)
         parseDownloadFile(data);
         break;
     }
+#endif
 }
 
 
 void HubicJob::parseAccountInfo(const QString &data)
 {
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
 
@@ -282,6 +284,7 @@ void HubicJob::parseAccountInfo(const QString &data)
         accountInfo.quota = info.value(QLatin1String("quota")).toLongLong();
     }
     Q_EMIT accountInfoDone(accountInfo);
+#endif
     deleteLater();
 }
 
@@ -533,19 +536,23 @@ void HubicJob::parseMoveFile(const QString &data)
 
 QString HubicJob::parseNameInfo(const QString &data)
 {
+    QString filename;
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
 
-    QString filename;
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     if (info.contains(QLatin1String("name"))) {
         filename = info.value(QLatin1String("name")).toString();
     }
+#endif
     return filename;
+
 }
 
 void HubicJob::parseShareLink(const QString &data)
 {
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
 
@@ -558,6 +565,7 @@ void HubicJob::parseShareLink(const QString &data)
         }
     }
     Q_EMIT shareLinkDone(url);
+#endif
     deleteLater();
 }
 
@@ -600,6 +608,7 @@ QNetworkReply * HubicJob::downloadFile(const QString &name, const QString &fileI
 
 void HubicJob::parseAccessToken(const QString &data)
 {
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
 
@@ -618,4 +627,6 @@ void HubicJob::parseAccessToken(const QString &data)
     qDebug()<<" parseAccessToken";
     Q_EMIT authorizationDone(mRefreshToken, mToken, expireInTime);
     deleteLater();
+#endif
 }
+

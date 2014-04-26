@@ -26,7 +26,6 @@
 
 #include <kwallet.h>
 
-#include <qjson/parser.h>
 
 #include <KLocalizedString>
 #include <KGlobal>
@@ -452,6 +451,8 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
 {
     Q_UNUSED(currentFolder);
     listWidget->clear();
+    QString parentFolder;
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
     QString parentFolder;
@@ -511,6 +512,7 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
             }
         }
     }
+#endif
     return parentFolder;
 }
 

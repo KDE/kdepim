@@ -31,7 +31,6 @@
 #include <KGlobal>
 #include <KLocale>
 
-#include <qjson/parser.h>
 
 #include <QDebug>
 
@@ -471,6 +470,7 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
     Q_UNUSED(currentFolder);
     listWidget->clear();
     listWidget->createMoveUpItem();
+#if 0
     QJson::Parser parser;
     bool ok;
     const QMap<QString, QVariant> info = parser.parse(data.toString().toUtf8(), &ok).toMap();
@@ -523,6 +523,7 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
             }
         }
     }
+#endif
     return QString();
 }
 

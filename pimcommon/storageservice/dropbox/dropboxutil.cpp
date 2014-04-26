@@ -16,12 +16,14 @@
 */
 
 #include "dropboxutil.h"
-#include <qjson/parser.h>
 #include <QVariant>
 #include <QLocale>
+#include <QDateTime>
 
 QStringList PimCommon::DropBoxUtil::getListFolder(const QString &data)
 {
+QStringList listFolder;
+#if 0
     QJson::Parser parser;
     bool ok;
 
@@ -40,6 +42,7 @@ QStringList PimCommon::DropBoxUtil::getListFolder(const QString &data)
             }
         }
     }
+#endif
     return listFolder;
 }
 

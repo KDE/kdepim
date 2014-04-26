@@ -16,12 +16,14 @@
 */
 
 #include "yousenditutil.h"
-#include <qjson/parser.h>
 #include <QVariant>
 #include <QDebug>
+#include <QDateTime>
 
 QStringList PimCommon::YouSendItUtil::getListFolder(const QString &data)
 {
+    QStringList listFolder;
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
     QStringList listFolder;
@@ -36,6 +38,7 @@ QStringList PimCommon::YouSendItUtil::getListFolder(const QString &data)
             }
         }
     }
+#endif
     return listFolder;
 }
 
