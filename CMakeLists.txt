@@ -139,6 +139,18 @@ if(KDEPIM_MOBILE_UI)
     set(KDEPIM_BUILD_MOBILE TRUE)
 endif()
 
+find_package(Boost 1.34.0)
+set_package_properties(Boost PROPERTIES DESCRIPTION "Boost C++ Libraries" URL "http://www.boost.org" TYPE REQUIRED PURPOSE "Boost is required for building most KDEPIM applications")
+
+# Kleopatra needs to know if the topological.hpp header exists (part of Boost_graph).
+find_path(Boost_TOPOLOGICAL_SORT_DIR NAMES boost/graph/topological_sort.hpp PATHS ${Boost_INCLUDE_DIRS})
+if(Boost_TOPOLOGICAL_SORT_DIR)
+  message(STATUS "The Boost Topological_sort header was found. Building Kleopatra")
+else()
+  message(STATUS "The Boost Topological_sort header was NOT found. Kleopatra will not be built")
+endif()
+
+
 # config-enterprise.h is needed for both ENTERPRISE_BUILD and BUILD_EVERYTHING
 configure_file(config-enterprise.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-enterprise.h )
 
@@ -163,11 +175,11 @@ include (kleopatra/ConfigureChecks.cmake)
 
   # These targets will always be built before anything else.
 
-  if(QGPGME_FOUND)
+  #if(QGpgme_FOUND)
     if(Boost_TOPOLOGICAL_SORT_DIR)
       add_subdirectory(kleopatra)
     endif()
-  endif()
+  #endif()
 
   # The following components depend on QGpgME.
   add_subdirectory(messageviewer)

@@ -6,8 +6,6 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 option(KLEO_STATIC_KCMODULES "Build Kleopatra's KCMs into Kleopatra; don't install plugins" WINCE)
 
-include(MacroOptionalAddSubdirectory)
-
 set(kleopatra_version 2.2.0)
 set(kleopatra_release FALSE)
 
@@ -36,8 +34,6 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim
   ${CMAKE_SOURCE_DIR}/mobile/lib
   ${Boost_INCLUDE_DIR}
-  ${QGPGME_INCLUDES}
-  ${GPGME_INCLUDES}
 )
 
 if(USABLE_ASSUAN_FOUND)
