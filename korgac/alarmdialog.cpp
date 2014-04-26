@@ -59,7 +59,7 @@
 #include <KWindowSystem>
 #include <KGlobal>
 #include <KIconLoader>
-
+#include <KIcon>
 //QT5 #include <phonon/mediaobject.h>
 #include <QLabel>
 #include <QKeyEvent>
@@ -735,7 +735,7 @@ void AlarmDialog::slotSave()
                                   QString::fromLatin1( "Incidence-%1" ).arg( numReminders + 1 ) );
 
     Incidence::Ptr incidence = CalendarSupport::incidence( item->mIncidence );
-    incidenceConfig.writeEntry( "AkonadiUrl", item->mIncidence.url() );
+    //QT5 port to QUrl incidenceConfig.writeEntry( "AkonadiUrl", item->mIncidence.url() );
     incidenceConfig.writeEntry( "RemindAt", item->mRemindAt );
     ++numReminders;
     ++it;
@@ -1034,7 +1034,7 @@ void AlarmDialog::removeFromConfig( const QList<Akonadi::Item::Id> &ids )
     KConfigGroup incGroup( config, group );
     incGroup.writeEntry( "UID", newReminders[i].uid );
     incGroup.writeEntry( "RemindAt", newReminders[i].remindAt );
-    incGroup.writeEntry( "AkonadiUrl", newReminders[i].akonadiUrl );
+    //QT5 port to QUrl incGroup.writeEntry( "AkonadiUrl", newReminders[i].akonadiUrl );
     incGroup.sync();
   }
   genGroup.sync();
