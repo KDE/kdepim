@@ -35,7 +35,7 @@ class MainWindow : public KXmlGuiWindow
     ~MainWindow();
 
   protected:
-    bool queryExit();
+    void closeEvent( QCloseEvent *event );
 
   private:
     MainWidget *mMain;

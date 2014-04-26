@@ -55,12 +55,10 @@ MainWindow::~MainWindow()
   delete mMain;
 }
 
-bool MainWindow::queryExit()
+void MainWindow::closeEvent(QCloseEvent *event)
 {
   KConfigGroup config( KGlobal::config(), "UiState" );
   KPIM::UiStateSaver::saveState( this, config );
   KGlobal::config()->sync();
-  delete mMain;
-  mMain = 0;
-  return KXmlGuiWindow::queryExit();
+  KXmlGuiWindow::closeEvent(event);
 }
