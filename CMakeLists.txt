@@ -95,6 +95,7 @@ find_package(KF5Gpgmepp ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5QGpgme ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KontactInterface ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KAlarmCal ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Service ${KF5_VERSION} CONFIG REQUIRED)
 include(GenerateExportHeader)
 
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
