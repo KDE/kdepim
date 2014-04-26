@@ -26,6 +26,7 @@
 #include <QtCore/QPointer>
 #include <QtCore/QThread>
 #include <QtCore/QWaitCondition>
+#include <QDebug>
 
 #include <cassert>
 #include <cstring>
@@ -59,7 +60,7 @@ namespace {
     KDPipeIODevice::DebugLevel s_debugLevel = KDPipeIODevice::NoDebug;
 }
 
-#define qDebug if( s_debugLevel == KDPipeIODevice::NoDebug ){}else qDebug
+//QT5 #define qDebug if( s_debugLevel == KDPipeIODevice::NoDebug ){}else qDebug
 
 namespace {
 

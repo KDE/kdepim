@@ -36,7 +36,9 @@
 
 #include <KToggleAction>
 #include <KActionCollection>
-
+#include <KAction>
+#include <KIcon>
+#include <KShortcut>
 KAction * Kleo::make_action_from_data( const action_data & ad, QObject * parent ) {
 
     KAction * const a = ad.toggle ? new KToggleAction( parent ) : new KAction( parent ) ;
