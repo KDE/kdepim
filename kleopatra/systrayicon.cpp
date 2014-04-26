@@ -53,7 +53,8 @@
 #include <KIcon>
 #include <KLocalizedString>
 #include <KAboutApplicationDialog>
-#include <KAboutData>
+#include <k4aboutdata.h>
+#include <KGlobal>
 
 #include <QMenu>
 #include <QAction>
@@ -81,8 +82,8 @@ public:
 private:
     void slotAbout() {
         if ( !aboutDialog ) {
-            aboutDialog = new KAboutApplicationDialog( KGlobal::mainComponent().aboutData() );
-            aboutDialog->setAttribute( Qt::WA_DeleteOnClose );
+            //QT5 aboutDialog = new KAboutApplicationDialog( KGlobal::mainComponent().aboutData() );
+            //QT5 aboutDialog->setAttribute( Qt::WA_DeleteOnClose );
         }
 
         if ( aboutDialog->isVisible() )

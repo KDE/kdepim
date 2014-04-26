@@ -42,7 +42,8 @@
 #include <utils/headerview.h>
 
 #include <kleo/stl_util.h>
-
+#include <KConfigGroup>
+#include <KGlobal>
 #include <gpgme++/key.h>
 
 #include <KLocalizedString>

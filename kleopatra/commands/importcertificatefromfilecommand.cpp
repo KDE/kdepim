@@ -46,6 +46,7 @@
 
 #include <KLocalizedString>
 #include <KConfigGroup>
+#include <KGlobal>
 
 #include <QFile>
 #include <QString>

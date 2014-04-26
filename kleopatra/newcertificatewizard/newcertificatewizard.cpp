@@ -69,6 +69,7 @@
 #include <KDebug>
 #include <KTempDir>
 #include <KMessageBox>
+#include <KIcon>
 
 #include <QRegExpValidator>
 #include <QLineEdit>

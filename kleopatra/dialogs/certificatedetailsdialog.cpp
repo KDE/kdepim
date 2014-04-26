@@ -62,6 +62,7 @@
 #include <KMessageBox>
 #include <KLocalizedString>
 #include <KGlobalSettings>
+#include <KGlobal>
 
 #include <QPointer>
 #include <QHeaderView>

@@ -73,6 +73,7 @@
 #include <KAboutApplicationDialog>
 #include <kdebug.h>
 #include <KLineEdit>
+#include <KGlobal>
 
 #include <QAbstractItemView>
 #include <QApplication>
@@ -81,6 +82,7 @@
 #include <QTimer>
 #include <QProcess>
 #include <QVBoxLayout>
+#include <QMimeData>
 
 #include <kleo/cryptobackendfactory.h>
 #include <ui/cryptoconfigdialog.h>

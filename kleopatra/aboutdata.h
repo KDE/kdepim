@@ -33,14 +33,14 @@
 #ifndef __ABOUTDATA_H__
 #define __ABOUTDATA_H__
 
-#include <kaboutdata.h>
+#include <k4aboutdata.h>
 
-class AboutData : public KAboutData {
+class AboutData : public K4AboutData {
 public:
   AboutData();
 };
 
-class AboutGpg4WinData : public KAboutData {
+class AboutGpg4WinData : public K4AboutData {
 public:
     AboutGpg4WinData();
 };

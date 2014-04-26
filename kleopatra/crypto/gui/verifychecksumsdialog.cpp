@@ -88,7 +88,7 @@ namespace {
                     it = statusMap.find( filePath( mi ) );
                 if ( it != statusMap.end() )
                     if ( const Qt::GlobalColor c = statusColor[*it] )
-                        return c;
+                        return QColor(c);
             }
             return QDirModel::data( mi, role );
         }

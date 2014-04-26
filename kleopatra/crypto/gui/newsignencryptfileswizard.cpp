@@ -76,6 +76,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
 
+#include <KGlobal>
+
 using namespace GpgME;
 using namespace boost;
 using namespace Kleo;

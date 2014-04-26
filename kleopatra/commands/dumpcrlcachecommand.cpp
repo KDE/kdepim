@@ -46,6 +46,7 @@
 #include <KStandardGuiItem>
 #include <KGlobalSettings>
 #include <KConfigGroup>
+#include <KGlobal>
 
 #include <QString>
 #include <QByteArray>

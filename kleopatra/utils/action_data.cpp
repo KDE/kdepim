@@ -39,9 +39,9 @@
 #include <KAction>
 #include <KIcon>
 #include <KShortcut>
-KAction * Kleo::make_action_from_data( const action_data & ad, QObject * parent ) {
+QAction * Kleo::make_action_from_data( const action_data & ad, QObject * parent ) {
 
-    KAction * const a = ad.toggle ? new KToggleAction( parent ) : new KAction( parent ) ;
+    QAction * const a = ad.toggle ? new KToggleAction( parent ) : new QAction( parent ) ;
     a->setObjectName( QLatin1String(ad.name) );
     a->setText( ad.text );
     if ( !ad.tooltip.isEmpty() )

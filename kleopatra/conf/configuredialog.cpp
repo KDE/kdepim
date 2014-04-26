@@ -34,14 +34,14 @@
 #include <config-kleopatra.h>
 
 #include "configuredialog.h"
-
+#include <QIcon>
 #include <kwindowsystem.h>
 #include <kconfig.h>
 #include <kiconloader.h>
 #include <kcmultidialog.h>
 #include <klocale.h>
 #include <kconfiggroup.h>
-
+#include <KGlobal>
 #include <QApplication>
 
 #ifdef KLEO_STATIC_KCMODULES
@@ -69,12 +69,12 @@ ConfigureDialog::ConfigureDialog( QWidget * parent )
   : KCMultiDialog( parent )
 {
   setFaceType( KPageDialog::List );
-  setCaption( i18n( "Configure" ) );
+  //QT5 setCaption( i18n( "Configure" ) );
 #ifdef Q_OS_UNIX
   KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap( IconSize( KIconLoader::Desktop ), IconSize( KIconLoader::Desktop ) ),
                   qApp->windowIcon().pixmap( IconSize( KIconLoader::Small ), IconSize( KIconLoader::Small ) ) );
 #endif
-  showButton( User1, true );
+  //QT5 showButton( User1, true );
 
   addMyModule( kleopatra_config_dirserv );
 #ifndef KDEPIM_MOBILE_UI

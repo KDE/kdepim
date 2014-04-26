@@ -85,7 +85,7 @@ static const about_data credits[] = {
 
 
 AboutData::AboutData()
-  : KAboutData( "kleopatra", 0, ki18n("Kleopatra"),
+  : K4AboutData( "kleopatra", 0, ki18n("Kleopatra"),
                 kleopatra_version, ki18n(description), License_GPL,
                 ki18n("(c) 2002 Steffen\xC2\xA0Hansen, Matthias\xC2\xA0Kalle\xC2\xA0" "Dalheimer, Klar\xC3\xA4lvdalens\xC2\xA0" "Datakonsult\xC2\xA0" "AB\n"
                       "(c) 2004, 2007, 2008, 2009 Marc\xC2\xA0Mutz, Klar\xC3\xA4lvdalens\xC2\xA0" "Datakonsult\xC2\xA0" "AB") )
@@ -164,7 +164,7 @@ static QPixmap UserIcon_nocached2( const char * name ) {
 
 
 AboutGpg4WinData::AboutGpg4WinData()
-    : KAboutData( "gpg4win", 0, ki18n("Gpg4win"),
+    : K4AboutData( "gpg4win", 0, ki18n("Gpg4win"),
                   gpg4win_version().toLatin1(), ki18n(gpg4win_description),
                   License_GPL, KLocalizedString(), KLocalizedString(), "http://www.gpg4win.de" )
 {

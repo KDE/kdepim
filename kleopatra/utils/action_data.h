@@ -36,7 +36,7 @@
 #include <QString>
 
 class QObject;
-class KAction;
+class QAction;
 class KActionCollection;
 
 namespace Kleo {
@@ -65,7 +65,7 @@ namespace Kleo {
         make_actions_from_data( data, N, parent );
     }
 
-    KAction * make_action_from_data( const action_data & data, QObject * parent );
+    QAction * make_action_from_data( const action_data & data, QObject * parent );
 
 }
 
