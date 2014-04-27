@@ -188,7 +188,7 @@ void MainWindow::slotCloseTabClicked()
     }
 }
 
-bool MainWindow::queryExit()
+void MainWindow::closeEvent(QCloseEvent *event)
 {
     writeConfigs();
     if ( !DBMan::self()->clearTempEntries() )
@@ -201,7 +201,7 @@ bool MainWindow::queryExit()
             DBMan::self()->saveTempEntry(*pst->currentPost(), pst->currentPostBlogId());
         }
     }
-    return true;
+    event->accept();
 }
 
 void MainWindow::setupActions()

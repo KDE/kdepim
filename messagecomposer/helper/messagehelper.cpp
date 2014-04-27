@@ -158,6 +158,7 @@ void applyIdentity( const KMime::Message::Ptr &message, const KPIMIdentities::Id
     }
 
     if (ident.disabledFcc()) {
+        //TODO verify why ident.templates ? bug ?
         KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-FccDisabled", message.get(), QString::number(ident.templates()), "utf-8" );
         message->setHeader( header );
     } else {
