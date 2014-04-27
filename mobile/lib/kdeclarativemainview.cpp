@@ -32,7 +32,7 @@
 #include "qmllistselectionmodel.h"
 #include "statemachinebuilder.h"
 
-#include <akonadi/agentactionmanager.h>
+#include <AkonadiWidgets/agentactionmanager.h>
 #include <AkonadiCore/agentinstancemodel.h>
 #include <AkonadiCore/agentmanager.h>
 #include <AkonadiCore/changerecorder.h>

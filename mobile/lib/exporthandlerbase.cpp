@@ -22,9 +22,9 @@
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/itemfetchjob.h>
 #include <AkonadiCore/itemfetchscope.h>
-#include <akonadi/recursiveitemfetchjob.h>
+#include <AkonadiCore/recursiveitemfetchjob.h>
 #include <kmessagebox.h>
-
+#include <KDebug>
 #include <QItemSelectionModel>
 
 ExportHandlerBase::ExportHandlerBase( QObject *parent )

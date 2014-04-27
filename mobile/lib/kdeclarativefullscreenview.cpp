@@ -31,6 +31,7 @@
 #include <KAction>
 #include <KActionCollection>
 #include <KCmdLineArgs>
+#include <KGlobal>
 
 #include <QtCore/QDir>
 #include <QtCore/QTimer>
@@ -126,7 +127,7 @@ void KDeclarativeFullScreenView::delayedInit()
   // TODO: Get this from a KXMLGUIClient?
   mActionCollection = new KActionCollection( this );
 
-  KAction *action = KStandardAction::close( this, SLOT(close()), this );
+  QAction *action = KStandardAction::close( this, SLOT(close()), this );
   mActionCollection->addAction( QLatin1String( "close" ), action );
 
   action = new KAction( i18n( "Full Shutdown" ), this );

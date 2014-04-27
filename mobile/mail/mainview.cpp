@@ -64,7 +64,7 @@
 #include "threadselectionmodel.h"
 #include "vacationmanager.h"
 
-#include <akonadi/agentactionmanager.h>
+#include <AkonadiWidgets/agentactionmanager.h>
 #include <AkonadiCore/collection.h>
 #include <akonadi/collectionmodel.h>
 #include <AkonadiWidgets/collectionpropertiesdialog.h>

@@ -41,7 +41,7 @@
 #include "timelineviewitem.h"
 #include "qmldateedit.h"
 
-#include <akonadi/agentactionmanager.h>
+#include <AkonadiWidgets/agentactionmanager.h>
 #include <akonadi/calendar/standardcalendaractionmanager.h>
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <Akonadi/Calendar/ITIPHandler>

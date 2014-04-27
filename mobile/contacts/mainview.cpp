@@ -33,7 +33,7 @@
 
 #include "libkdepim/ldap/ldapsearchdialog.h"
 
-#include <akonadi/agentactionmanager.h>
+#include <AkonadiWidgets/agentactionmanager.h>
 #include <AkonadiWidgets/collectiondialog.h>
 #include <akonadi/contact/contactgroupexpandjob.h>
 #include <akonadi/contact/contactsfilterproxymodel.h>

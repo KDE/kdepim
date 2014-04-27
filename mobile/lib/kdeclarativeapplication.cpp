@@ -22,6 +22,7 @@
 
 #include <kglobalsettings.h>
 #include <KDebug>
+#include <KGlobal>
 #include <QFont>
 #include <KCmdLineArgs>
 #include <QThread>

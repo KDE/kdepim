@@ -44,7 +44,7 @@
 #include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
 
-#include <akonadi/agentactionmanager.h>
+#include <AkonadiWidgets/agentactionmanager.h>
 #include <akonadi/calendar/standardcalendaractionmanager.h>
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <akonadi/calendar/freebusymanager.h>

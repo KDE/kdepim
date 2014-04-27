@@ -28,7 +28,7 @@
 #include "notesimporthandler.h"
 #include "searchwidget.h"
 
-#include <akonadi/agentactionmanager.h>
+#include <AkonadiWidgets/agentactionmanager.h>
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/itemfetchscope.h>
 #include <AkonadiWidgets/standardactionmanager.h>
