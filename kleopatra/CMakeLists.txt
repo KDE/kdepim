@@ -61,7 +61,8 @@ add_subdirectory(conf)
 if(USABLE_ASSUAN_FOUND AND BUILD_libkleopatraclient)
   # can't use macro_optional_add_subdirectory here, since it's split
   # off into ConfigureChecks.cmake..
-  add_subdirectory(libkleopatraclient)
+  #REACTIVATE
+  #add_subdirectory(libkleopatraclient)
 endif()
 
 add_subdirectory(kgpgconf)
