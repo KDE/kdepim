@@ -22,7 +22,7 @@
 #include <kcmodule.h>
 #include <kcmultidialog.h>
 #include "ui_confpagemisc.h"
-
+#include <KComponentData>
 class confPageMisc : public QWidget, public Ui::confPageMisc
 {
   Q_OBJECT

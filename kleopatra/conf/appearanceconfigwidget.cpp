@@ -49,6 +49,7 @@
 #else
 # include <kicondialog.h>
 #endif
+#include <KIcon>
 
 #include <kconfig.h>
 #include <klocale.h>

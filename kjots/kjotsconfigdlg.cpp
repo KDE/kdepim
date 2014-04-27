@@ -20,12 +20,12 @@
 KJotsConfigDlg::KJotsConfigDlg( const QString & title, QWidget *parent )
   : KCMultiDialog( parent )
 {
-    setCaption( title );
+    //QT5 setCaption( title );
     setFaceType( KPageDialog::List );
-    setButtons( Default | Ok | Cancel );
-    setDefaultButton( Ok );
+    //QT5 setButtons( Default | Ok | Cancel );
+    //QT5 setDefaultButton( Ok );
 
-    showButtonSeparator( true );
+    //QT5 showButtonSeparator( true );
 
     addModule( QLatin1String("kjots_config_misc") );
     connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
@@ -40,7 +40,7 @@ void KJotsConfigDlg::slotOk()
 }
 
 KJotsConfigMisc::KJotsConfigMisc( const KComponentData &inst, QWidget *parent )
-    :KCModule( inst, parent )
+    :KCModule( /*inst,*/ parent )
 {
     QHBoxLayout *lay = new QHBoxLayout( this );
     miscPage = new confPageMisc( 0 );
