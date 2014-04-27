@@ -22,7 +22,6 @@ kde_enable_exceptions()
 
 if(Prison_FOUND)
   add_definitions(-DHAVE_PRISON)
-  include_directories(${PRISON_INCLUDE_DIR})
 endif()
 
 add_subdirectory(icons)

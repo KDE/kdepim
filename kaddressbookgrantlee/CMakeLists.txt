@@ -13,7 +13,7 @@ kde_enable_exceptions()
 
 if(Prison_FOUND)
   add_definitions(-DHAVE_PRISON)
-  include_directories(${PRISON_INCLUDE_DIR})
+  #include_directories(${PRISON_INCLUDE_DIR})
 endif()
 
 set(kaddressbook_grantlee_LIB_SRCS
