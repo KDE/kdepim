@@ -2,7 +2,7 @@
 #include "mainwindow.h"
 
 #include "breadcrumbnavigationcontext.h"
-
+#include <QItemSelectionModel>
 MainWindow::MainWindow(QWidget *parent)
   : QWidget(parent)
 {

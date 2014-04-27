@@ -28,6 +28,7 @@
 #include <calendarsupport/utils.h>
 #include <klocale.h>
 #include <ksystemtimezone.h>
+#include <KDebug>
 
 GroupwareUiDelegate::GroupwareUiDelegate()
 {

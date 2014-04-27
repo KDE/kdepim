@@ -48,7 +48,10 @@
 #include <klinkitemselectionmodel.h>
 #include <kselectionproxymodel.h>
 
-#include <KAboutData>
+#include <KIconLoader>
+#include <KMimeType>
+#include <KComponentData>
+#include <K4AboutData>
 #include <KAction>
 #include <KActionCollection>
 #include <KCmdLineArgs>
@@ -77,7 +80,7 @@
 #include <QDeclarativeImageProvider>
 #include <QApplication>
 #include <QTreeView>
-
+#include <QTimer>
 #include <QDeclarativeItem>
 
 #include <sys/utsname.h>
@@ -234,14 +237,14 @@ void KDeclarativeMainView::doDelayedInitInternal()
 
   setupAgentActionManager( d->mAgentInstanceSelectionModel );
 
-  KAction *action = KStandardAction::quit( qApp, SLOT(quit()), this );
+  QAction *action = KStandardAction::quit( qApp, SLOT(quit()), this );
   actionCollection()->addAction( QLatin1String( "quit" ), action );
 
-  action = new KAction( i18n( "Synchronize all" ), this );
+  action = new QAction( i18n( "Synchronize all" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(synchronizeAllItems()) );
   actionCollection()->addAction( QLatin1String( "synchronize_all_items" ), action );
 
-  action = new KAction( i18n( "Report Bug Or Request Feature" ), this );
+  action = new QAction( i18n( "Report Bug Or Request Feature" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(reportBug()) );
   actionCollection()->addAction( QLatin1String( "report_bug" ), action );
 
