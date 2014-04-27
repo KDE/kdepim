@@ -808,7 +808,7 @@ void ThunderbirdSettings::readIdentity( const QString& account )
         if ( useSpecificDraftFolder == 1 )
         {
             const QString draftFolder = convertThunderbirdPath( mHashConfig.value( identity + QLatin1String( ".draft_folder" ) ).toString() );
-            newIdentity->setDrafts( draftFolder );
+            //QT5 newIdentity->setDrafts( draftFolder );
         }
     }
 
@@ -823,7 +823,7 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     {
         if (mHashConfig.contains( identity + QLatin1String( ".fcc_folder" ) )) {
             const QString fccFolder = convertThunderbirdPath( mHashConfig.value( identity + QLatin1String( ".fcc_folder" ) ).toString() );
-            newIdentity->setFcc( fccFolder );
+            //QT5 newIdentity->setFcc( fccFolder );
         }
     }
 
@@ -831,7 +831,7 @@ void ThunderbirdSettings::readIdentity( const QString& account )
     {
         if (mHashConfig.contains( identity + QLatin1String( ".stationery_folder" ) )) {
             const QString templateFolder = convertThunderbirdPath( mHashConfig.value( identity + QLatin1String( ".stationery_folder" ) ).toString() );
-            newIdentity->setTemplates( templateFolder );
+            //QT5 newIdentity->setTemplates( templateFolder );
         }
     }
 

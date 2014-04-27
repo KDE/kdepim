@@ -19,7 +19,7 @@ kde4_add_executable(testalarmdlg TEST ${testalarmdlg_SRCS})
 
 target_link_libraries(testalarmdlg
   KF5::AkonadiCalendar
-  akonadi-kmime
+  KF5::AkonadiKMime
   calendarsupport
   incidenceeditorsng
   kdepimdbusinterfaces

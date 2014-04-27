@@ -96,6 +96,7 @@ AlarmDockWindow::AlarmDockWindow()
 
   // Disable standard quit behaviour. We have to intercept the quit even,
   // if the main window is hidden.
+#if 0 //QT5
   KActionCollection *ac = actionCollection();
   const char *quitName = KStandardAction::name( KStandardAction::Quit );
   QAction *quit = ac->action( QLatin1String(quitName) );
@@ -105,7 +106,7 @@ AlarmDockWindow::AlarmDockWindow()
     quit->disconnect( SIGNAL(triggered(bool)), this, SLOT(maybeQuit()) );
     connect( quit, SIGNAL(activated()), SLOT(slotQuit()) );
   }
-
+#endif
   mAutostartSet = autostartSet;
 }
 

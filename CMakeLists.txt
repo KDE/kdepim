@@ -140,6 +140,20 @@ if(KDEPIM_MOBILE_UI)
     set(KDEPIM_BUILD_MOBILE TRUE)
 endif()
 
+############### Desktop vs. Mobile options ##############
+
+  if(KDEPIM_MOBILE_UI)
+    add_definitions( -DKDEPIM_MOBILE_UI )
+    if(NOT QT_QTDECLARATIVE_FOUND)
+      message(FATAL_ERROR "The QtDeclarative (QML) module is required for building the mobile UI")
+    endif()
+  else()
+    if(NOT QT_QTDECLARATIVE_FOUND)
+      message(STATUS "The Qt Declarative (QML) module was not found. The mobile applications will not be built.")
+      set(KDEPIM_BUILD_MOBILE FALSE)
+    endif()
+  endif()
+
 find_package(Boost 1.34.0)
 set_package_properties(Boost PROPERTIES DESCRIPTION "Boost C++ Libraries" URL "http://www.boost.org" TYPE REQUIRED PURPOSE "Boost is required for building most KDEPIM applications")
 
@@ -190,7 +204,8 @@ include (kleopatra/ConfigureChecks.cmake)
   add_subdirectory(kmail)
   add_subdirectory(grantleeeditor)
   if(KDEPIM_BUILD_MOBILE)
-    add_subdirectory(mobile)
+    #REACTIVATE
+    # add_subdirectory(mobile)
   endif()
 
   if(KDEPIM_BUILD_EXAMPLES)
@@ -210,7 +225,7 @@ include (kleopatra/ConfigureChecks.cmake)
   add_subdirectory(kaddressbookgrantlee)
   if(KDEPIM_BUILD_DESKTOP)
     add_subdirectory(agents)
-    add_subdirectory(akregator)
+    # REACTIVATE add_subdirectory(akregator)
     add_subdirectory(importwizard)
     add_subdirectory(kaddressbook)
     add_subdirectory(kmailcvt)
@@ -219,11 +234,11 @@ include (kleopatra/ConfigureChecks.cmake)
     add_subdirectory(ksendemail)
     add_subdirectory(ktnef)
     add_subdirectory(mailimporter)
-    add_subdirectory(pimsettingexporter)
+    #add_subdirectory(pimsettingexporter)
     #add_subdirectory(kalarm)
     add_subdirectory(blogilo)
 
-    add_subdirectory(kjots)
+    #add_subdirectory(kjots)
 
     add_subdirectory(kontact) # must be the last one.
   endif()
@@ -231,7 +246,7 @@ include (kleopatra/ConfigureChecks.cmake)
   add_subdirectory(akonadiconsole)
   add_subdirectory(console)
 
-  add_subdirectory(plugins) # Must be after KMail
+  #add_subdirectory(plugins) # Must be after KMail
 
 feature_summary(WHAT ALL
                 INCLUDE_QUIET_PACKAGES

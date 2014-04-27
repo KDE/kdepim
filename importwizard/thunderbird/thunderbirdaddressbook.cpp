@@ -21,6 +21,8 @@
 #include <KABC/Addressee>
 #include <kabc/contactgroup.h>
 
+#include <KDebug>
+
 ThunderBirdAddressBook::ThunderBirdAddressBook(const QDir& dir, ImportWizard *parent)
     : AbstractAddressBook( parent )
 {

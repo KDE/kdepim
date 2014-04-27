@@ -24,7 +24,7 @@
 #include <kpimidentities/identity.h>
 #include <kpimidentities/signature.h>
 
-
+#include <KDebug>
 #include <KConfig>
 #include <KConfigGroup>
 #include <QFile>

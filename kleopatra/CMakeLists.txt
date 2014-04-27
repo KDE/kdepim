@@ -56,7 +56,8 @@ if(GCC_IS_NEWER_THAN_4_3)
 endif()
 
 add_subdirectory(pics)
-add_subdirectory(conf)
+#REACTIVATE
+#add_subdirectory(conf)
 
 if(USABLE_ASSUAN_FOUND AND BUILD_libkleopatraclient)
   # can't use macro_optional_add_subdirectory here, since it's split
@@ -65,9 +66,10 @@ if(USABLE_ASSUAN_FOUND AND BUILD_libkleopatraclient)
   #add_subdirectory(libkleopatraclient)
 endif()
 
-add_subdirectory(kgpgconf)
-add_subdirectory(kwatchgnupg)
-add_subdirectory(tests)
+#REACTIVATE
+#add_subdirectory(kgpgconf)
+#add_subdirectory(kwatchgnupg)
+#add_subdirectory(tests)
 
 if(WIN32)
   set(_kleopatra_extra_uiserver_SRCS uiserver/uiserver_win.cpp)

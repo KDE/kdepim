@@ -23,6 +23,8 @@
 #include <kpimidentities/identity.h>
 #include <kpimidentities/signature.h>
 
+#include <KDebug>
+
 #include <QSettings>
 
 TrojitaSettings::TrojitaSettings(const QString& filename,ImportWizard *parent)

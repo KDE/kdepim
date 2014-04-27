@@ -475,11 +475,13 @@ void SylpheedSettings::readIdentity( const KConfigGroup& accountConfig )
     if ( SylpheedSettingsUtils::readConfig( QLatin1String("auto_replyto") , accountConfig, value, true ) )
         identity->setReplyToAddr(value);
 
-    if ( SylpheedSettingsUtils::readConfig( QLatin1String("daft_folder") , accountConfig, value, false ) )
-        identity->setDrafts(MailCommon::Util::convertFolderPathToCollectionStr(value));
+    if ( SylpheedSettingsUtils::readConfig( QLatin1String("daft_folder") , accountConfig, value, false ) ) {
+        //QT5 identity->setDrafts(MailCommon::Util::convertFolderPathToCollectionStr(value));
+    }
 
-    if ( SylpheedSettingsUtils::readConfig( QLatin1String("sent_folder") , accountConfig, value, false ) )
-        identity->setFcc(MailCommon::Util::convertFolderPathToCollectionStr(value));
+    if ( SylpheedSettingsUtils::readConfig( QLatin1String("sent_folder") , accountConfig, value, false ) ) {
+        //QT5 identity->setFcc(MailCommon::Util::convertFolderPathToCollectionStr(value));
+    }
 
     const QString transportId = readTransport(accountConfig);
     if (!transportId.isEmpty())

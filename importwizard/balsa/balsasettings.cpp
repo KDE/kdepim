@@ -98,7 +98,7 @@ void BalsaSettings::readIdentity(const KConfigGroup &grp)
     QString name = grp.readEntry(QLatin1String("FullName"));
     KPIMIdentities::Identity* newIdentity = createIdentity(name);
     newIdentity->setFullName(name);
-    newIdentity->setEmailAddr(grp.readEntry(QLatin1String("Address")));
+    //QT5 newIdentity->setEmailAddr(grp.readEntry(QLatin1String("Address")));
     newIdentity->setReplyToAddr(grp.readEntry(QLatin1String("ReplyTo")));
     newIdentity->setBcc(grp.readEntry(QLatin1String("Bcc")));
     const QString smtp = grp.readEntry(QLatin1String("SmtpServer"));
