@@ -73,7 +73,7 @@ else()
 endif()
 
 target_link_libraries(korgac
-  akonadi-calendar
+  KF5::AkonadiCalendar
   akonadi-kmime
   calendarsupport
   incidenceeditorsng

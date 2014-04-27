@@ -128,10 +128,7 @@ install(TARGETS incidenceeditorsng ${INSTALL_TARGETS_DEFAULT_ARGS})
   add_library(incidenceeditorsngmobile ${LIBRARY_TYPE} ${incidenceeditors_ng_mobile_LIB_SRCS})
 
   target_link_libraries(incidenceeditorsngmobile
-    akonadi-calendar
-    
-    
-    
+    KF5::AkonadiCalendar
     kdepim               # For KPIM::K{Date|Time}Edit
     calendarsupport      # For KCalPrefs
     kdepimdbusinterfaces # For UriHandler
@@ -156,8 +153,7 @@ set(testincidenceeditor_SRCS main.cpp)
 add_executable(kincidenceeditor ${testincidenceeditor_SRCS})
 
 target_link_libraries(kincidenceeditor
-  akonadi-calendar
-  
+  KF5::AkonadiCalendar
   KF5::AkonadiCore
   KF5::CalendarCore
   KF5::CalendarUtils

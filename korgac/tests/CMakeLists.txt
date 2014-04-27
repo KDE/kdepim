@@ -18,7 +18,7 @@ qt4_add_dbus_interface(testalarmdlg_SRCS ${korganizer_xml}
 kde4_add_executable(testalarmdlg TEST ${testalarmdlg_SRCS})
 
 target_link_libraries(testalarmdlg
-  akonadi-calendar
+  KF5::AkonadiCalendar
   akonadi-kmime
   calendarsupport
   incidenceeditorsng
