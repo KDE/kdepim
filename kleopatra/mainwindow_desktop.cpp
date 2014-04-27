@@ -57,7 +57,7 @@
 // from libkdepim
 #include "progresswidget/statusbarprogresswidget.h"
 #include "progresswidget/progressdialog.h"
-
+#include <KShortcut>
 #include <KStatusBar>
 #include <KXMLGUIFactory>
 #include <KApplication>
@@ -107,7 +107,7 @@ using namespace GpgME;
 
 namespace {
 
-    static const KAboutData * aboutGpg4WinData() {
+    static const K4AboutData * aboutGpg4WinData() {
         static const AboutGpg4WinData data;
         return &data;
     }
@@ -214,7 +214,7 @@ public:
     }
 
     void aboutGpg4Win() {
-        ( new KAboutApplicationDialog( aboutGpg4WinData(), KAboutApplicationDialog::HideKdeVersion|KAboutApplicationDialog::HideTranslators, q ) )->show();
+        //QT5 ( new KAboutApplicationDialog( aboutGpg4WinData(), KAboutApplicationDialog::HideKdeVersion|KAboutApplicationDialog::HideTranslators, q ) )->show();
     }
     void slotFocusQuickSearch() {
         ui.searchBar->lineEdit()->setFocus();
@@ -425,7 +425,8 @@ void MainWindow::closeEvent( QCloseEvent * e ) {
     }
     if ( isQuitting || kapp->sessionSaving() ) {
         d->ui.tabWidget.saveViews( KGlobal::config().data() );
-        saveMainWindowSettings( KConfigGroup( KGlobal::config(), autoSaveGroup() ) );
+        KConfigGroup grp( KConfigGroup( KGlobal::config(), autoSaveGroup() ) );
+        saveMainWindowSettings( grp );
         e->accept();
     } else {
         e->ignore();
