@@ -53,8 +53,8 @@ target_link_libraries(templateparser
   ${QT_QTWEBKIT_LIBRARY}
 )
 set_target_properties(templateparser PROPERTIES
-  VERSION ${GENERIC_LIB_VERSION}
-  SOVERSION ${GENERIC_LIB_SOVERSION}
+  VERSION ${KDEPIM_LIB_VERSION}
+  SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
 
 install(TARGETS templateparser ${INSTALL_TARGETS_DEFAULT_ARGS})

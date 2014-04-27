@@ -135,7 +135,7 @@ if(MINGW)
    target_link_libraries(kdepim oleaut32)
 endif()
 
-set_target_properties(kdepim PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+set_target_properties(kdepim PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS kdepim ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 

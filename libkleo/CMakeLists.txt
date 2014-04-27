@@ -110,7 +110,7 @@ target_link_libraries(kleo ${kleo_LIB_LIBS}  ${GPGME_VANILLA_LIBRARIES} )
 else()
 target_link_libraries(kleo ${kleo_LIB_LIBS} )
 endif()
-set_target_properties(kleo PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+set_target_properties(kleo PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 install(TARGETS kleo ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 if ( WIN32 )

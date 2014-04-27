@@ -28,8 +28,8 @@ target_link_libraries(ksieve Qt5::Core KF5::KDELibs4Support)
 
 set_target_properties(
   ksieve PROPERTIES
-  VERSION ${GENERIC_LIB_VERSION}
-  SOVERSION ${GENERIC_LIB_SOVERSION}
+  VERSION ${KDEPIM_LIB_VERSION}
+  SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
 
 install(TARGETS ksieve ${INSTALL_TARGETS_DEFAULT_ARGS})

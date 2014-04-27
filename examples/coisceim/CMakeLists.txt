@@ -52,7 +52,7 @@ target_link_libraries(coisceim_widget
 )
 
 set_target_properties(coisceim_widget
-    PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION}
+    PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
 
 kde4_add_executable(coisceim ${coisceim_SRCS})

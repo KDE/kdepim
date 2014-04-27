@@ -80,5 +80,5 @@ target_link_libraries(messagecore LINK_INTERFACE_LIBRARIES
   KF5::KIOCore
 )
 
-set_target_properties(messagecore PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+set_target_properties(messagecore PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS messagecore ${INSTALL_TARGETS_DEFAULT_ARGS})

@@ -27,7 +27,7 @@ qt5_wrap_ui(sendlaterlib_SRCS ui/sendlaterwidget.ui)
 add_library( sendlater ${LIBRARY_TYPE} ${sendlaterlib_SRCS} )
 target_link_libraries( sendlater KF5::AkonadiCore )
 
-set_target_properties( sendlater PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+set_target_properties( sendlater PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 
 install( TARGETS sendlater ${INSTALL_TARGETS_DEFAULT_ARGS} )
 

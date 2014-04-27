@@ -26,7 +26,7 @@ target_link_libraries(akonadi_next
   KF5::Abc
 )
 
-set_target_properties(akonadi_next PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+set_target_properties(akonadi_next PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 
 install(TARGETS akonadi_next ${INSTALL_TARGETS_DEFAULT_ARGS})
 

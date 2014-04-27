@@ -187,8 +187,8 @@ target_link_libraries(ksieveui
 
 set_target_properties(
   ksieveui PROPERTIES
-  VERSION ${GENERIC_LIB_VERSION}
-  SOVERSION ${GENERIC_LIB_SOVERSION}
+  VERSION ${KDEPIM_LIB_VERSION}
+  SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
 
 install(TARGETS ksieveui ${INSTALL_TARGETS_DEFAULT_ARGS})

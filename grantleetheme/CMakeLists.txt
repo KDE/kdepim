@@ -15,7 +15,7 @@ add_library(grantleetheme ${LIBRARY_TYPE} ${libgrantleetheme_SRCS})
 
 target_link_libraries(grantleetheme    KF5::NewStuff KF5::KDELibs4Support)
 
-set_target_properties(grantleetheme PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+set_target_properties(grantleetheme PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS grantleetheme ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(kconf_update)

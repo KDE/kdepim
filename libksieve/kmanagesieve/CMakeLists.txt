@@ -19,8 +19,8 @@ target_link_libraries(kmanagesieve
 
 set_target_properties(
   kmanagesieve PROPERTIES
-  VERSION ${GENERIC_LIB_VERSION}
-  SOVERSION ${GENERIC_LIB_SOVERSION}
+  VERSION ${KDEPIM_LIB_VERSION}
+  SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
 
 install(TARGETS kmanagesieve ${INSTALL_TARGETS_DEFAULT_ARGS})

@@ -69,5 +69,5 @@ target_link_libraries(noteshared
      KF5::AkonadiCore KF5::DNSSD pimcommon akonadi_next KF5::KMime
 )
 
-set_target_properties(noteshared PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+set_target_properties(noteshared PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS noteshared ${INSTALL_TARGETS_DEFAULT_ARGS})

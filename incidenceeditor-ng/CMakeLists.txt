@@ -98,8 +98,8 @@ target_link_libraries(incidenceeditorsng
 )
 
 set_target_properties(incidenceeditorsng
-  PROPERTIES VERSION ${GENERIC_LIB_VERSION}
-  SOVERSION ${GENERIC_LIB_SOVERSION}
+  PROPERTIES VERSION ${KDEPIM_LIB_VERSION}
+  SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
 
 install(TARGETS incidenceeditorsng ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -139,8 +139,8 @@ install(TARGETS incidenceeditorsng ${INSTALL_TARGETS_DEFAULT_ARGS})
 
   set_target_properties(incidenceeditorsngmobile PROPERTIES
     COMPILE_FLAGS -DKDEPIM_MOBILE_UI
-    VERSION ${GENERIC_LIB_VERSION}
-    SOVERSION ${GENERIC_LIB_SOVERSION}
+    VERSION ${KDEPIM_LIB_VERSION}
+    SOVERSION ${KDEPIM_LIB_SOVERSION}
   )
 
   install(TARGETS incidenceeditorsngmobile ${INSTALL_TARGETS_DEFAULT_ARGS})

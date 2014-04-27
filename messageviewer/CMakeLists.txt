@@ -217,7 +217,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/kaddressbookgrantlee
 )
 
-set_target_properties( messageviewer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+set_target_properties( messageviewer PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )
 install(TARGETS messageviewer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 #install( FILES viewer/viewer.h viewer/attachmentstrategy.h header/headerstrategy.h messageviewer_export.h DESTINATION  ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)

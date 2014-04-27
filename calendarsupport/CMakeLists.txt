@@ -78,8 +78,8 @@ target_link_libraries(
 )
 
 set_target_properties(calendarsupport
-  PROPERTIES VERSION ${GENERIC_LIB_VERSION}
-  SOVERSION ${GENERIC_LIB_SOVERSION}
+  PROPERTIES VERSION ${KDEPIM_LIB_VERSION}
+  SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
 
 install(TARGETS calendarsupport ${INSTALL_TARGETS_DEFAULT_ARGS})

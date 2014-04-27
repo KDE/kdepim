@@ -99,8 +99,8 @@ target_link_libraries(messagelist
 )
 
 set_target_properties(messagelist PROPERTIES
-  VERSION ${GENERIC_LIB_VERSION}
-  SOVERSION ${GENERIC_LIB_SOVERSION}
+  VERSION ${KDEPIM_LIB_VERSION}
+  SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
 
 install(TARGETS messagelist ${INSTALL_TARGETS_DEFAULT_ARGS})
