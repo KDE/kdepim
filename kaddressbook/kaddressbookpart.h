@@ -23,6 +23,7 @@
 
 #include <KParts/Event>
 #include <KParts/Part>
+#include <kparts/readonlypart.h>
 
 class MainWidget;
 

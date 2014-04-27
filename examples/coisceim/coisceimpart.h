@@ -24,6 +24,7 @@
 
 #include <kparts/part.h>
 #include <kparts/statusbarextension.h>
+#include <kparts/readonlypart.h>
 #include "coisceimwidget.h"
 
 class QWidget;
