@@ -10,7 +10,7 @@ include_directories(
   ${Boost_INCLUDE_DIR}
 )
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+kde_enable_exceptions()
 
 set(korganizer_mobile_SRCS
   agendaviewitem.cpp
@@ -30,10 +30,10 @@ set(korganizer_mobile_SRCS
   qmldateedit.cpp
 )
 
-qt4_wrap_ui(korganizer_mobile_SRCS configwidget.ui searchwidget.ui)
-kde4_add_kcfg_files(korganizer_mobile_SRCS settings.kcfgc)
+qt5_wrap_ui(korganizer_mobile_SRCS configwidget.ui searchwidget.ui)
+kconfig_add_kcfg_files(korganizer_mobile_SRCS settings.kcfgc)
 
-qt4_add_dbus_adaptor(korganizer_mobile_SRCS ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml calendarinterface.h CalendarInterface )
+qt5_add_dbus_adaptor(korganizer_mobile_SRCS ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml calendarinterface.h CalendarInterface )
 
 if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
@@ -41,17 +41,17 @@ endif ()
 
 kde4_add_app_icon(korganizer_mobile_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-korganizer-mobile.png")
 
-kde4_add_executable(korganizer-mobile ${korganizer_mobile_SRCS} )
+add_executable(korganizer-mobile ${korganizer_mobile_SRCS} )
 
 target_link_libraries(korganizer-mobile
-  ${QT_QTDECLARATIVE_LIBRARY}
-  ${KDE4_KDECORE_LIBS}
-  ${KDE4_KDEUI_LIBS}
+  Qt5::Declarative
+  
+  
   ${KDE4_KDECLARATIVE_LIBS}
-  ${KDEPIMLIBS_KCALCORE_LIBS}
-  ${KDEPIMLIBS_KCALUTILS_LIBS}
-  ${KDEPIMLIBS_KHOLIDAYS_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
+  KF5::CalendarCore
+  KF5::CalendarUtils
+  KF5::Holidays
+  KF5::AkonadiCore
   ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}
   kdepimdbusinterfaces
   kdepimmobileui
@@ -80,4 +80,4 @@ install(FILES
   TimelineView.qml
   DESTINATION ${DATA_INSTALL_DIR}/korganizer-mobile
 )
-kde4_install_icons( ${ICON_INSTALL_DIR} )
+ecm_install_icons( ${ICON_INSTALL_DIR} )

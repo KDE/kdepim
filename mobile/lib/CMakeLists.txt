@@ -51,8 +51,9 @@ add_library(kdepimmobileui ${LIBRARY_TYPE} ${mobileui_SRCS})
 set_target_properties(kdepimmobileui PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 
 target_link_libraries(kdepimmobileui
-  ${QT_QTDECLARATIVE_LIBRARY}
+  Qt5::Declarative
   ${QT_QTOPENGL_LIBRARY}
+  Qt5::Declarative
   KF5::AkonadiKMime
   ${KDE4_SOLID_LIBRARY}
   akonadi_next

@@ -1,6 +1,6 @@
 project( kaddressbook-mobile )
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+kde_enable_exceptions()
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkleo/
@@ -42,7 +42,7 @@ set(kab_mobile_srcs
   searchwidget.cpp
 )
 
-kde4_add_ui_files(kab_mobile_srcs
+qt5_wrap_ui(kab_mobile_srcs
   editorbusiness.ui
   editorcontactgroup.ui
   editorcrypto.ui
@@ -56,8 +56,8 @@ kde4_add_ui_files(kab_mobile_srcs
   editormore_personalpage.ui
 )
 
-qt4_wrap_ui(kab_mobile_srcs configwidget.ui searchwidget.ui)
-kde4_add_kcfg_files(kab_mobile_srcs settings.kcfgc)
+qt5_wrap_ui(kab_mobile_srcs configwidget.ui searchwidget.ui)
+kconfig_add_kcfg_files(kab_mobile_srcs settings.kcfgc)
 
 if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
@@ -65,14 +65,14 @@ endif ()
 
 kde4_add_app_icon(kab_mobile_srcs "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-kaddressbook-mobile.png")
 
-kde4_add_executable(kaddressbook-mobile ${kab_mobile_srcs} )
+add_executable(kaddressbook-mobile ${kab_mobile_srcs} )
 
 target_link_libraries(kaddressbook-mobile
-    ${QT_QTDECLARATIVE_LIBRARY}
+    Qt5::Declarative
     ${KDEPIMLIBS_AKONADI_CONTACTS_LIBRARY}
-    ${KDEPIMLIBS_KABC_LIBS}
-    ${KDEPIMLIBS_AKONADI_LIBS}
-    ${KDE4_KCMUTILS_LIBS}
+    KF5::Abc
+    KF5::AkonadiCore
+    KF5::KCMUtils
     kdepim
     kdepimmobileui
     kleo
@@ -97,4 +97,4 @@ install(FILES
   ContactListView.qml
   DESTINATION ${DATA_INSTALL_DIR}/kaddressbook-mobile
 )
-kde4_install_icons( ${ICON_INSTALL_DIR} )
+ecm_install_icons( ${ICON_INSTALL_DIR} )

@@ -9,7 +9,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/calendarviews
 )
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+kde_enable_exceptions()
 
 set(mobile_tasks_SRCS
   configwidget.cpp
@@ -24,8 +24,8 @@ set(mobile_tasks_SRCS
   main.cpp
 )
 
-qt4_wrap_ui(mobile_tasks_SRCS configwidget.ui searchwidget.ui)
-kde4_add_kcfg_files(mobile_tasks_SRCS settings.kcfgc)
+qt5_wrap_ui(mobile_tasks_SRCS configwidget.ui searchwidget.ui)
+kconfig_add_kcfg_files(mobile_tasks_SRCS settings.kcfgc)
 
 if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DKCALCORE_SERIALIZER_PLUGIN_STATIC)
@@ -33,11 +33,11 @@ endif ()
 
 kde4_add_app_icon(mobile_tasks_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-tasks-mobile.png")
 
-kde4_add_executable(tasks-mobile ${mobile_tasks_SRCS} )
+add_executable(tasks-mobile ${mobile_tasks_SRCS} )
 
 target_link_libraries(tasks-mobile
-  ${QT_QTDECLARATIVE_LIBRARY}
-  ${KDEPIMLIBS_KCALCORE_LIBS}
+  Qt5::Declarative
+  KF5::CalendarCore
   ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}
   kdepimdbusinterfaces
   kdepimmobileui
@@ -61,4 +61,4 @@ install(FILES
   TaskListView.qml
   DESTINATION ${DATA_INSTALL_DIR}/tasks-mobile
 )
-kde4_install_icons( ${ICON_INSTALL_DIR} )
+ecm_install_icons( ${ICON_INSTALL_DIR} )
