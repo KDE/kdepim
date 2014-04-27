@@ -24,7 +24,7 @@
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 #include "pimcommon/storageservice/utils/storageserviceutils.h"
 
-#include <qjson/parser.h>
+//#include <qjson/parser.h>
 
 #include <kwallet.h>
 
@@ -525,6 +525,7 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
 {
     Q_UNUSED(currentFolder);
     listWidget->clear();
+#if 0 //QT5
     QJson::Parser parser;
     bool ok;
 
@@ -563,6 +564,8 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
     }
     //qDebug()<<" parentId"<<parentId;
     return parentId;
+#endif
+return QString();
 }
 
 QMap<QString, QString> BoxStorageService::itemInformation(const QVariantMap &variantMap)

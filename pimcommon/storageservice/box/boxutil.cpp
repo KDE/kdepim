@@ -16,7 +16,8 @@
 */
 
 #include "boxutil.h"
-
+#include <QString>
+#include <QDateTime>
 KDateTime PimCommon::BoxUtil::convertToDateTime(QString dateTime)
 {
     dateTime.chop(6); // chop() removes the time zone

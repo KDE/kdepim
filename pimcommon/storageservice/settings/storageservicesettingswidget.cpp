@@ -271,7 +271,7 @@ void StorageServiceSettingsWidget::slotAddService()
                 break;
             }
             case PimCommon::StorageServiceManager::WebDav: {
-                storage = new PimCommon::WebDavStorageService;
+                //storage = new PimCommon::WebDavStorageService;
                 break;
             }
 #ifdef KDEPIM_STORAGESERVICE_GDRIVE

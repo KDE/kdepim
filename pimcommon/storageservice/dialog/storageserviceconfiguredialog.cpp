@@ -26,6 +26,7 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <KUrlRequester>
+#include <KGlobal>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>

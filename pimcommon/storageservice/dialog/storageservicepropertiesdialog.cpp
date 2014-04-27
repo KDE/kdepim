@@ -22,7 +22,7 @@
 
 #include <KLocalizedString>
 #include <KSharedConfig>
-
+#include <KGlobal>
 #include <QGridLayout>
 #include <QLabel>
 

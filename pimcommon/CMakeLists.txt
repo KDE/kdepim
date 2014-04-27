@@ -62,10 +62,10 @@ set(libpimcommon_storageservice_SRCS
   storageservice/yousendit/yousenditstorageservice.cpp
   storageservice/yousendit/yousenditutil.cpp
 
-  storageservice/webdav/webdavstorageservice.cpp
-  storageservice/webdav/webdavjob.cpp
-  storageservice/webdav/webdavsettingsdialog.cpp
-  storageservice/webdav/protocol/webdav_url_info.cpp
+  #storageservice/webdav/webdavstorageservice.cpp
+  #storageservice/webdav/webdavjob.cpp
+  #storageservice/webdav/webdavsettingsdialog.cpp
+  #storageservice/webdav/protocol/webdav_url_info.cpp
 
   storageservice/utils/storageserviceutils.cpp
 
@@ -169,9 +169,8 @@ set(libpimcommon_SRCS
   util/editorutil.cpp
   settings/pimcommonsettings.cpp
   ${libpimcommon_texteditor_SRCS}
-  #REACTIVATE
   ${libpimcommon_shorturl_SRCS}
-  #${libpimcommon_storageservice_SRCS}
+  ${libpimcommon_storageservice_SRCS}
   ${libpimcommon_autocorrection_SRCS}
   ${libpimcommon_translator_SRCS}
   ${libpimcommon_templatewidgets_SRCS}

@@ -345,7 +345,7 @@ void StorageServiceManager::readConfig()
             }
         } else if (service == serviceName(WebDav)) {
             if (!mListService.contains(serviceName(WebDav))) {
-                storageService = new WebDavStorageService();
+                //QT5 storageService = new WebDavStorageService();
             }
         } else if (service == serviceName(Box)) {
             if (!mListService.contains(serviceName(Box))) {
@@ -380,7 +380,7 @@ QString StorageServiceManager::description(ServiceType type)
     case Hubic:
         return PimCommon::HubicStorageService::description();
     case WebDav:
-        return PimCommon::WebDavStorageService::description();
+        //return PimCommon::WebDavStorageService::description();
     case Box:
         return PimCommon::BoxStorageService::description();
     case YouSendIt:
@@ -406,7 +406,7 @@ QUrl StorageServiceManager::serviceUrl(ServiceType type)
     case YouSendIt:
         return PimCommon::YouSendItStorageService::serviceUrl();
     case WebDav:
-        return PimCommon::WebDavStorageService::serviceUrl();
+        //return PimCommon::WebDavStorageService::serviceUrl();
     case Box:
         return PimCommon::BoxStorageService::serviceUrl();
 #ifdef KDEPIM_STORAGESERVICE_GDRIVE
@@ -431,7 +431,7 @@ QString StorageServiceManager::serviceName(ServiceType type)
     case YouSendIt:
         return PimCommon::YouSendItStorageService::serviceName();
     case WebDav:
-        return PimCommon::WebDavStorageService::serviceName();
+        //return PimCommon::WebDavStorageService::serviceName();
     case Box:
         return PimCommon::BoxStorageService::serviceName();
 #ifdef KDEPIM_STORAGESERVICE_GDRIVE
@@ -455,7 +455,7 @@ QString StorageServiceManager::serviceToI18n(ServiceType type)
     case YouSendIt:
         return PimCommon::YouSendItStorageService::name();
     case WebDav:
-        return PimCommon::WebDavStorageService::name();
+        //return PimCommon::WebDavStorageService::name();
     case Box:
         return PimCommon::BoxStorageService::name();
 #ifdef KDEPIM_STORAGESERVICE_GDRIVE
@@ -479,7 +479,7 @@ QString StorageServiceManager::icon(ServiceType type)
     case YouSendIt:
         return PimCommon::YouSendItStorageService::iconName();
     case WebDav:
-        return PimCommon::WebDavStorageService::iconName();
+        //return PimCommon::WebDavStorageService::iconName();
     case Box:
         return PimCommon::BoxStorageService::iconName();
 #ifdef KDEPIM_STORAGESERVICE_GDRIVE
@@ -503,7 +503,7 @@ StorageServiceAbstract::Capabilities StorageServiceManager::capabilities(Service
     case YouSendIt:
         return PimCommon::YouSendItStorageService::serviceCapabilities();
     case WebDav:
-        return PimCommon::WebDavStorageService::serviceCapabilities();
+        ///return PimCommon::WebDavStorageService::serviceCapabilities();
     case Box:
         return PimCommon::BoxStorageService::serviceCapabilities();
 #ifdef KDEPIM_STORAGESERVICE_GDRIVE

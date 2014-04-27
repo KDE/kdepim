@@ -20,6 +20,7 @@
 
 #include "storageserviceprogressindicator.h"
 #include <QTimer>
+#include <KIconLoader>
 
 using namespace PimCommon;
 

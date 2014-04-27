@@ -28,6 +28,7 @@
 #include <KMessageBox>
 #include <KFileDialog>
 #include <KMenu>
+#include <KUrl>
 
 #include <QGridLayout>
 #include <QLabel>
