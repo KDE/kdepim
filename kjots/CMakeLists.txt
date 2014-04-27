@@ -80,7 +80,7 @@ target_link_libraries(kjots
   ${Grantlee_CORE_LIBRARIES}
   ${Grantlee_GUI_LIBRARIES}
   KF5::PimTextEdit
-  ${KDEPIMLIBS_KONTACTINTERFACE_LIBS}
+  KF5::KontactInterface
    ${KDE4_KPRINTUTILS_LIBS}
   akonadi_next
   noteshared

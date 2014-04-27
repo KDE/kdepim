@@ -156,7 +156,7 @@ target_link_libraries(kaddressbook
   KF5::KCMUtils
   KF5::KIOCore
   ${KDE4_PHONON_LIBS}
-  ${KDEPIMLIBS_KONTACTINTERFACE_LIBS}
+  KF5::KontactInterface
   kaddressbookprivate
   grantleetheme
 )
