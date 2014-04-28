@@ -22,12 +22,12 @@
 
 
 #include "header/headerstrategy.h"
-#include <kpimutils/linklocator.h>
+#include <KPIMUtils/linklocator.h>
 using KPIMUtils::LinkLocator;
 #include "settings/globalsettings.h"
 #include "viewer/nodehelper.h"
 
-#include <kpimutils/email.h>
+#include <KPIMUtils/email.h>
 #include <messagecore/utils/stringutil.h>
 
 #include <kdebug.h>
@@ -47,8 +47,8 @@ using KPIMUtils::LinkLocator;
 #include <kstandarddirs.h>
 #include <KApplication>
 
-#include <kmime/kmime_message.h>
-#include <kmime/kmime_dateformatter.h>
+#include <KMime/kmime_message.h>
+#include <KMime/kmime_dateformatter.h>
 
 using namespace MessageCore;
 

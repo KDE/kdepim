@@ -53,18 +53,18 @@
 #include <messagecore/attachment/attachmentcollector.h>
 #include <messagecore/helpers/nodehelper.h>
 
-#include <mailtransport/transportcombobox.h>
-#include <mailtransport/messagequeuejob.h>
-#include <mailtransport/transportmanager.h>
+#include <MailTransport/transportcombobox.h>
+#include <MailTransport/messagequeuejob.h>
+#include <MailTransport/transportmanager.h>
 
 #include <akonadi/kmime/specialmailcollections.h>
 #include <AkonadiCore/itemcreatejob.h>
 #include <AkonadiCore/collectionfetchjob.h>
 #include <AkonadiWidgets/collectioncombobox.h>
 
-#include <kpimidentities/identitycombo.h>
-#include <kpimidentities/identitymanager.h>
-#include <kpimutils/email.h>
+#include <KPIMIdentities/identitycombo.h>
+#include <KPIMIdentities/identitymanager.h>
+#include <KPIMUtils/email.h>
 
 #include <KSaveFile>
 #include <KLocalizedString>
@@ -1076,12 +1076,12 @@ void MessageComposer::ComposerViewBase::saveMessage( KMime::Message::Ptr message
     item.setPayload( message );
     if ( !identity.isNull() ) { // we have a valid identity
         if ( saveIn == MessageComposer::MessageSender::SaveInTemplates ) {
-            if ( identity.templates()<0 ) { // the user has specified a custom templates collection
-                target = Akonadi::Collection( identity.templates() );
+            if ( !identity.templates().isEmpty() ) { // the user has specified a custom templates collection
+                target = Akonadi::Collection( identity.templates().toLongLong() );
             }
         } else {
-            if ( identity.drafts()<0 ) { // the user has specified a custom drafts collection
-                target = Akonadi::Collection( identity.drafts() );            
+            if ( !identity.drafts().isEmpty() ) { // the user has specified a custom drafts collection
+                target = Akonadi::Collection( identity.drafts().toLongLong() );            
             }
         }
         Akonadi::CollectionFetchJob *saveMessageJob = new Akonadi::CollectionFetchJob( target, Akonadi::CollectionFetchJob::Base );

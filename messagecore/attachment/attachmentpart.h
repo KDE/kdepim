@@ -22,7 +22,7 @@
 
 #include "messagecore_export.h"
 
-#include <kmime/kmime_headers.h>
+#include <KMime/kmime_headers.h>
 
 #include <QtCore/QList>
 #include <QtCore/QMetaType>

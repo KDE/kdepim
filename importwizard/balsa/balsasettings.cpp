@@ -18,12 +18,12 @@
 #include "balsasettings.h"
 
 
-#include <mailtransport/transportmanager.h>
+#include <MailTransport/transportmanager.h>
 #include "mailcommon/util/mailutil.h"
 #include "messageviewer/header/kxface.h"
 
-#include <kpimidentities/identity.h>
-#include <kpimidentities/signature.h>
+#include <KPIMIdentities/identity.h>
+#include <KPIMIdentities/signature.h>
 
 
 #include <KConfig>

@@ -24,7 +24,7 @@
 #include <AkonadiWidgets/CollectionComboBox>
 #include <AkonadiCore/EntityTreeModel>
 #include <QStandardItemModel>
-#include <kcalcore/event.h>
+#include <KCalCore/event.h>
 #include <KDateTimeEdit>
 
 #include <qtest_kde.h>

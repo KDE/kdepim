@@ -29,7 +29,7 @@
 #include <KLineEdit>
 #include <qtest_kde.h>
 
-#include <kmime/kmime_content.h>
+#include <KMime/kmime_content.h>
 using namespace KMime;
 
 #include <messagecore/attachment/attachmentpart.h>

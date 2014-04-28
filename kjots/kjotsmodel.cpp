@@ -33,7 +33,7 @@
 #include <kdebug.h>
 #include <KMime/KMimeMessage>
 
-#include <kpimtextedit/textutils.h>
+#include <KPIMTextEdit/textutils.h>
 
 #include <grantlee/markupdirector.h>
 #include <grantlee/texthtmlbuilder.h>

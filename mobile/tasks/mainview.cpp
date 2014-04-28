@@ -57,7 +57,7 @@
 
 #include <kaction.h>
 #include <kactioncollection.h>
-#include <kcalcore/todo.h>
+#include <KCalCore/todo.h>
 #include <KDebug>
 #include <KGlobal>
 #include <klocale.h>

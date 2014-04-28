@@ -32,9 +32,9 @@
 #include <AkonadiCore/EntityTreeModel>
 #include <AkonadiWidgets/EntityTreeView>
 
-#include <kmime/kmime_message.h>
+#include <KMime/kmime_message.h>
 
-#include <kcalcore/todo.h>
+#include <KCalCore/todo.h>
 
 #include "trip.h"
 #include "note.h"

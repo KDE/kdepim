@@ -28,10 +28,10 @@
 
 #include <messagecore/utils/stringutil.h>
 
-#include <kpimutils/email.h>
-#include <kabc/vcarddrag.h>
-#include <kabc/contactgroup.h>
-#include <kabc/vcardconverter.h>
+#include <KPIMUtils/email.h>
+#include <KABC/vcarddrag.h>
+#include <KABC/contactgroup.h>
+#include <KABC/vcardconverter.h>
 
 #include <kio/netaccess.h>
 #include <kmenu.h>
@@ -45,7 +45,7 @@
 #include <QCursor>
 #include <QKeyEvent>
 #include <QDropEvent>
-#include <kabc/contactgrouptool.h>
+#include <KABC/contactgrouptool.h>
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include <QtCore/QBuffer>
 

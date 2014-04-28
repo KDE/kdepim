@@ -26,7 +26,7 @@
 
 #include "libkdepim/kdepim_export.h"
 
-#include <kabc/addressee.h>
+#include <KABC/addressee.h>
 #include <kdialog.h>
 
 class QCloseEvent;

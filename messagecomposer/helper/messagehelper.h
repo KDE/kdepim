@@ -24,8 +24,8 @@
 #include <akonadi/kmime/messagestatus.h>
 #include "messagecomposer_export.h"
 
-#include <kmime/kmime_headers.h>
-#include <kmime/kmime_message.h>
+#include <KMime/kmime_headers.h>
+#include <KMime/kmime_message.h>
 #include <item.h>
 
 namespace KPIMIdentities {

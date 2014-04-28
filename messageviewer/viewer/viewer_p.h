@@ -27,7 +27,7 @@
 #include <AkonadiCore/item.h>
 #include <AkonadiCore/monitor.h>
 #include <kio/job.h>
-#include <kmime/kmime_message.h>
+#include <KMime/kmime_message.h>
 #include <kservice.h>
 #include <ksharedconfig.h>
 #include <kurl.h>

@@ -18,9 +18,9 @@
 #include "importwizard.h"
 #include "importsettingpage.h"
 
-#include <kpimidentities/identitymanager.h>
-#include <kpimidentities/identity.h>
-#include <mailtransport/transportmanager.h>
+#include <KPIMIdentities/identitymanager.h>
+#include <KPIMIdentities/identity.h>
+#include <MailTransport/transportmanager.h>
 
 #include <KLocale>
 #include <KDebug>

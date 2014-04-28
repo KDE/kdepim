@@ -27,7 +27,7 @@
 #include <QColor>
 #include <QFont>
 
-#include <kmime/kmime_message.h>
+#include <KMime/kmime_message.h>
 
 #include <messagelist/messagelist_export.h>
 

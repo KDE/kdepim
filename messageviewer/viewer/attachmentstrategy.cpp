@@ -37,7 +37,7 @@
 
 #include "viewer/nodehelper.h"
 
-#include <kmime/kmime_content.h>
+#include <KMime/kmime_content.h>
 #include <kdebug.h>
 
 #include <messagecore/helpers/nodehelper.h>

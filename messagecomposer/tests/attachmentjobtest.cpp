@@ -23,8 +23,8 @@
 #include <KDebug>
 #include <qtest_kde.h>
 
-#include <kmime/kmime_content.h>
-#include <kmime/kmime_headers.h>
+#include <KMime/kmime_content.h>
+#include <KMime/kmime_headers.h>
 using namespace KMime;
 
 #include <messagecomposer/composer/composer.h>

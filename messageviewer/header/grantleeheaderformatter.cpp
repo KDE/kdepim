@@ -21,11 +21,11 @@
 #include "settings/globalsettings.h"
 #include "config-messageviewer.h"
 
-#include <kpimutils/email.h>
+#include <KPIMUtils/email.h>
 #include <messagecore/utils/stringutil.h>
 
-#include <kmime/kmime_message.h>
-#include <kmime/kmime_dateformatter.h>
+#include <KMime/kmime_message.h>
+#include <KMime/kmime_dateformatter.h>
 
 
 #include <KLocalizedString>

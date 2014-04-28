@@ -25,7 +25,7 @@
 #include <KIconLoader>
 #include <qtest_kde.h>
 
-#include <kmime/kmime_content.h>
+#include <KMime/kmime_content.h>
 using namespace KMime;
 
 #include <messagecomposer/composer/composer.h>
@@ -34,7 +34,7 @@ using namespace KMime;
 #include <messagecomposer/part/textpart.h>
 using namespace MessageComposer;
 
-#include <kpimtextedit/textedit.h>
+#include <KPIMTextEdit/textedit.h>
 
 QTEST_KDEMAIN( MainTextJobTest, GUI )
 

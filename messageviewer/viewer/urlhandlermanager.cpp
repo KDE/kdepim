@@ -52,7 +52,7 @@
 
 #include <akonadi/contact/contactsearchjob.h>
 
-#include <kmime/kmime_content.h>
+#include <KMime/kmime_content.h>
 #include <KPIMUtils/Email>
 #include <KPIMUtils/KFileIO>
 

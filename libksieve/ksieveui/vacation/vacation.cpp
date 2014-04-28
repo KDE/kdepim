@@ -27,8 +27,8 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
-#include <kpimidentities/identity.h>
-#include <kpimidentities/identitymanager.h>
+#include <KPIMIdentities/identity.h>
+#include <KPIMIdentities/identitymanager.h>
 
 
 using namespace KSieveUi;

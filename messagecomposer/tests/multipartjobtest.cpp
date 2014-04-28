@@ -22,7 +22,7 @@
 #include <KDebug>
 #include <qtest_kde.h>
 
-#include <kmime/kmime_content.h>
+#include <KMime/kmime_content.h>
 using namespace KMime;
 
 #include <messagecomposer/composer/composer.h>

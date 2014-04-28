@@ -28,7 +28,7 @@
 #include <KDebug>
 #include <KLocale>
 #include <KStandardDirs>
-#include <kontactinterface/pimuniqueapplication.h>
+#include <KontactInterface/pimuniqueapplication.h>
 
 #include "version.h"
 #include "mainwindow.h"

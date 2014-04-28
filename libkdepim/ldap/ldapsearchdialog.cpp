@@ -48,8 +48,8 @@
 #include <kconfiggroup.h>
 #include <kcmultidialog.h>
 #include <kdialogbuttonbox.h>
-#include <kldap/ldapobject.h>
-#include <kldap/ldapserver.h>
+#include <KLDAP/ldapobject.h>
+#include <KLDAP/ldapserver.h>
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>

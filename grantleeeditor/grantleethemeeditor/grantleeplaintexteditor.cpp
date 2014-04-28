@@ -16,7 +16,7 @@
 */
 
 #include "grantleeplaintexteditor.h"
-#include <kpimtextedit/htmlhighlighter.h>
+#include <KPIMTextEdit/htmlhighlighter.h>
 
 #include <QStringListModel>
 #include <QCompleter>

@@ -26,7 +26,7 @@
 #include <akonadi/contact/contactgroupsearchjob.h>
 #include <akonadi/contact/contactsearchjob.h>
 #include <AkonadiCore/itemcreatejob.h>
-#include <kpimutils/email.h>
+#include <KPIMUtils/email.h>
 
 #include <KLocalizedString>
 #include <KDebug>

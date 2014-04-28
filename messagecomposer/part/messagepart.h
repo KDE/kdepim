@@ -24,7 +24,7 @@
 
 #include <QtCore/QObject>
 
-#include <kmime/kmime_headers.h>
+#include <KMime/kmime_headers.h>
 
 namespace MessageComposer {
 

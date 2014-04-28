@@ -24,9 +24,9 @@
 #include "settings/messagecomposersettings.h"
 
 #include <akonadi/contact/emailaddressselectionwidget.h>
-#include <kabc/contactgroup.h>
+#include <KABC/contactgroup.h>
 #include <libkdepim/ldap/ldapsearchdialog.h>
-#include <kpimutils/email.h>
+#include <KPIMUtils/email.h>
 
 #include <kconfiggroup.h>
 #include <khbox.h>

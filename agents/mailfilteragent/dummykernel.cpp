@@ -1,7 +1,7 @@
 #include "dummykernel.h"
 
 #include <kglobal.h>
-#include <kpimidentities/identitymanager.h>
+#include <KPIMIdentities/identitymanager.h>
 #include <messagecomposer/sender/akonadisender.h>
 #include <mailcommon/folder/foldercollectionmonitor.h>
 #include <AkonadiCore/session.h>

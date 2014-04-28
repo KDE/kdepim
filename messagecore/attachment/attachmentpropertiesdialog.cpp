@@ -32,9 +32,9 @@
 #include <KIconLoader>
 #include <KMimeType>
 
-#include <kmime/kmime_content.h>
-#include <kmime/kmime_headers.h>
-#include <kmime/kmime_util.h>
+#include <KMime/kmime_content.h>
+#include <KMime/kmime_headers.h>
+#include <KMime/kmime_util.h>
 
 #include <boost/shared_ptr.hpp>
 

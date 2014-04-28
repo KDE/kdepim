@@ -42,7 +42,7 @@
 #endif
 #include "kleo_util.h"
 
-#include <kpimutils/email.h>
+#include <KPIMUtils/email.h>
 #include "libkleo/ui/keyselectiondialog.h"
 #include "kleo/cryptobackendfactory.h"
 #include "kleo/keylistjob.h"

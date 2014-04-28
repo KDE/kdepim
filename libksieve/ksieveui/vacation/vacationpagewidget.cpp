@@ -22,7 +22,7 @@
 #include "vacationutils.h"
 #include "sieve-vacation.h"
 
-#include <kmime/kmime_header_parsing.h>
+#include <KMime/kmime_header_parsing.h>
 
 #include <kmanagesieve/sievejob.h>
 

@@ -17,7 +17,7 @@
 
 #include "trojitaaddressbook.h"
 #include <KABC/Addressee>
-#include <kabc/contactgroup.h>
+#include <KABC/contactgroup.h>
 
 #include <KDebug>
 

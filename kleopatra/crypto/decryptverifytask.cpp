@@ -55,7 +55,7 @@
 #include <utils/kleo_assert.h>
 #include <utils/auditlog.h>
 
-#include <kmime/kmime_header_parsing.h>
+#include <KMime/kmime_header_parsing.h>
 
 #include <gpgme++/error.h>
 #include <gpgme++/key.h>

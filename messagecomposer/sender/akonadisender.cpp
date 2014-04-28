@@ -26,15 +26,15 @@
 #include "settings/messagecomposersettings.h"
 #include "messagecomposer/utils/util.h"
 
-#include <kmime/kmime_message.h>
+#include <KMime/kmime_message.h>
 #include <boost/shared_ptr.hpp>
 
 #include <progresswidget/progressmanager.h>
 
-#include <mailtransport/dispatcherinterface.h>
-#include <mailtransport/messagequeuejob.h>
-#include <mailtransport/transport.h>
-#include <mailtransport/transportmanager.h>
+#include <MailTransport/dispatcherinterface.h>
+#include <MailTransport/messagequeuejob.h>
+#include <MailTransport/transport.h>
+#include <MailTransport/transportmanager.h>
 #include <messagecore/utils/stringutil.h>
 #include <messagecore/helpers/messagehelpers.h>
 

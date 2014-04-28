@@ -24,7 +24,7 @@
 
 #include "threadgroupermodel.h"
 
-#include <kmime/kmime_message.h>
+#include <KMime/kmime_message.h>
 
 class MailThreadGrouperComparator : public ThreadGrouperComparator
 {

@@ -22,11 +22,11 @@
 #include "messagecore/helpers/messagehelpers.h"
 #include "messagecore/utils/stringutil.h"
 
-#include <mailtransport/transportattribute.h>
-#include <mailtransport/sentbehaviourattribute.h>
-#include <mailtransport/messagequeuejob.h>
-#include <mailtransport/transport.h>
-#include <mailtransport/transportmanager.h>
+#include <MailTransport/transportattribute.h>
+#include <MailTransport/sentbehaviourattribute.h>
+#include <MailTransport/messagequeuejob.h>
+#include <MailTransport/transport.h>
+#include <MailTransport/transportmanager.h>
 
 
 #include <ItemFetchJob>

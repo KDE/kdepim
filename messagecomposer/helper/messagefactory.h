@@ -22,8 +22,8 @@
 
 #include "messagecomposer_export.h"
 
-#include <kmime/kmime_message.h>
-#include <kmime/kmime_mdn.h>
+#include <KMime/kmime_message.h>
+#include <KMime/kmime_mdn.h>
 #include <entity.h>
 #include <item.h>
 #include <Collection>

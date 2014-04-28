@@ -19,10 +19,10 @@
 
 #include "tasksimporthandler.h"
 
-#include <kcalcore/filestorage.h>
-#include <kcalcore/icalformat.h>
-#include <kcalcore/memorycalendar.h>
-#include <kcalcore/todo.h>
+#include <KCalCore/filestorage.h>
+#include <KCalCore/icalformat.h>
+#include <KCalCore/memorycalendar.h>
+#include <KCalCore/todo.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 

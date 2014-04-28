@@ -24,7 +24,7 @@
 #include <QtCore/QHash>
 #include <KTabWidget>
 
-#include <kmime/kmime_message.h>
+#include <KMime/kmime_message.h>
 #include <collection.h>
 #include <item.h>
 #include <messagelist/messagelist_export.h>

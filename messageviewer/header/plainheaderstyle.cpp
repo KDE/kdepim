@@ -22,14 +22,14 @@
 
 #include "header/headerstrategy.h"
 
-#include <kpimutils/email.h>
+#include <KPIMUtils/email.h>
 #include <messagecore/utils/stringutil.h>
 
 #include <kdebug.h>
 #include <KLocalizedString>
 #include <KApplication>
 
-#include <kmime/kmime_message.h>
+#include <KMime/kmime_message.h>
 
 using namespace MessageCore;
 

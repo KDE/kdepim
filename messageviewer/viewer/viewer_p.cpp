@@ -83,12 +83,12 @@
 #include <AkonadiCore/ItemModifyJob>
 #include <AkonadiCore/ItemCreateJob>
 
-#include <kpimutils/kfileio.h>
+#include <KPIMUtils/kfileio.h>
 
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/cryptobackend.h>
 
-#include <mailtransport/errorattribute.h>
+#include <MailTransport/errorattribute.h>
 
 //Qt includes
 #include <QClipboard>

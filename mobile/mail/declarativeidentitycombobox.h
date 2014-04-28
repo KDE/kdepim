@@ -23,7 +23,7 @@
 #include "declarativewidgetbase.h"
 #include "composerview.h"
 
-#include <kpimidentities/identitycombo.h>
+#include <KPIMIdentities/identitycombo.h>
 
 class QDeclarativeItem;
 

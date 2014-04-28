@@ -19,10 +19,10 @@
 
 #include "eventsimporthandler.h"
 
-#include <kcalcore/event.h>
-#include <kcalcore/filestorage.h>
-#include <kcalcore/icalformat.h>
-#include <kcalcore/memorycalendar.h>
+#include <KCalCore/event.h>
+#include <KCalCore/filestorage.h>
+#include <KCalCore/icalformat.h>
+#include <KCalCore/memorycalendar.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 

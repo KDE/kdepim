@@ -24,7 +24,7 @@
 
 #include "nodehelper.h"
 
-#include <kmime/kmime_content.h>
+#include <KMime/kmime_content.h>
 #include <KMime/Message>
 
 #include <KDebug>

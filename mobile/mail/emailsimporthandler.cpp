@@ -19,8 +19,8 @@
 
 #include "emailsimporthandler.h"
 
-#include <kmbox/mbox.h>
-#include <kmime/kmime_message.h>
+#include <KMbox/mbox.h>
+#include <KMime/kmime_message.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 

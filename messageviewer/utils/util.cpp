@@ -51,7 +51,7 @@
 #include <AkonadiCore/item.h>
 
 
-#include <kmbox/mbox.h>
+#include <KMbox/mbox.h>
 
 #include <KMime/Message>
 

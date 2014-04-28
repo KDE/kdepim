@@ -27,7 +27,7 @@
 
 #include <AkonadiCore/item.h>
 
-#include <kmime/kmime_content.h>
+#include <KMime/kmime_content.h>
 
 #include <kleo/enum.h>
 #include <kleo/keylistjob.h>

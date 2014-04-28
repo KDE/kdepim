@@ -21,8 +21,8 @@
 
 #include "stylesheetloader.h"
 
-#include <kabc/addressee.h>
-#include <kabc/contactgroup.h>
+#include <KABC/addressee.h>
+#include <KABC/contactgroup.h>
 
 SearchWidget::SearchWidget( QWidget *parent )
   : QWidget( parent )

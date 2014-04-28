@@ -18,10 +18,10 @@
 #include "trojitasettings.h"
 #include "importwizardutil.h"
 
-#include <mailtransport/transportmanager.h>
+#include <MailTransport/transportmanager.h>
 
-#include <kpimidentities/identity.h>
-#include <kpimidentities/signature.h>
+#include <KPIMIdentities/identity.h>
+#include <KPIMIdentities/signature.h>
 
 #include <KDebug>
 

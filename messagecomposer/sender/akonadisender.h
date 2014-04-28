@@ -26,7 +26,7 @@
 #include <QString>
 #include <QSet>
 
-#include <kmime/kmime_message.h>
+#include <KMime/kmime_message.h>
 
 class KJob;
 

@@ -41,9 +41,9 @@
 #include <entitytreemodel.h>
 #include <monitor.h>
 
-#include <kabc/addressee.h>
-#include <kabc/contactgroup.h>
-#include <kldap/ldapserver.h>
+#include <KABC/addressee.h>
+#include <KABC/contactgroup.h>
+#include <KLDAP/ldapserver.h>
 #include <KGlobal>
 
 

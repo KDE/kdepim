@@ -23,7 +23,7 @@
 
 #include <kdebug.h>
 #include <entitytreemodel.h>
-#include <kabc/addressee.h>
+#include <KABC/addressee.h>
 #include <klocalizedstring.h>
 #include <entitydisplayattribute.h>
 

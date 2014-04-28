@@ -20,13 +20,13 @@
 
 #include "akonadibrowsermodel.h"
 
-#include <kmime/kmime_message.h>
+#include <KMime/kmime_message.h>
 
-#include <kabc/addressee.h>
-#include <kabc/contactgroup.h>
+#include <KABC/addressee.h>
+#include <KABC/contactgroup.h>
 
-#include <kcalcore/incidence.h>
-#include <kcalcore/event.h>
+#include <KCalCore/incidence.h>
+#include <KCalCore/event.h>
 
 #include <boost/shared_ptr.hpp>
 

@@ -21,11 +21,11 @@
 #include "config-enterprise.h"
 #include "settings/globalsettings.h"
 
-#include <kmime/kmime_charfreq.h>
-#include <kmime/kmime_header_parsing.h>
-#include <kmime/kmime_util.h>
-#include <kmime/kmime_headers.h>
-#include <kmime/kmime_message.h>
+#include <KMime/kmime_charfreq.h>
+#include <KMime/kmime_header_parsing.h>
+#include <KMime/kmime_util.h>
+#include <KMime/kmime_headers.h>
+#include <KMime/kmime_message.h>
 #include <KPIMUtils/Email>
 
 #include <kascii.h>
@@ -38,7 +38,7 @@
 #include <QHostInfo>
 #include <QRegExp>
 #include <QStringList>
-#include <kpimtextedit/textutils.h>
+#include <KPIMTextEdit/textutils.h>
 
 using namespace KMime;
 using namespace KMime::Types;

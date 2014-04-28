@@ -24,7 +24,7 @@
 
 #include <QWidget>
 
-#include <kabc/addressee.h>
+#include <KABC/addressee.h>
 
 class KComboBox;
 

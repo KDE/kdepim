@@ -65,8 +65,8 @@
 #include <calendarviews/month/monthview.h>
 #include <kaction.h>
 #include <kactioncollection.h>
-#include <kcalcore/event.h>
-#include <kcalcore/todo.h>
+#include <KCalCore/event.h>
+#include <KCalCore/todo.h>
 #include <kcolorcombo.h>
 #include <kcolordialog.h>
 #include <kmessagebox.h>

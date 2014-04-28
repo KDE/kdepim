@@ -23,7 +23,7 @@
 #include <messagelist/core/view.h>
 #include <item.h>
 
-#include <kmime/kmime_message.h>
+#include <KMime/kmime_message.h>
 #include <KJob>
 
 #include <messagelist/messagelist_export.h>

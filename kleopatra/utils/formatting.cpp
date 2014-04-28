@@ -38,7 +38,7 @@
 
 #include <kleo/dn.h>
 
-#include <kmime/kmime_header_parsing.h>
+#include <KMime/kmime_header_parsing.h>
 
 #include <gpgme++/key.h>
 #include <gpgme++/importresult.h>

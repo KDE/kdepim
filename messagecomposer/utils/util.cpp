@@ -35,10 +35,10 @@
 #include <KMessageBox>
 #include <KGlobal>
 
-#include <kmime/kmime_charfreq.h>
-#include <kmime/kmime_content.h>
-#include <kmime/kmime_util.h>
-#include <mailtransport/messagequeuejob.h>
+#include <KMime/kmime_charfreq.h>
+#include <KMime/kmime_content.h>
+#include <KMime/kmime_util.h>
+#include <MailTransport/messagequeuejob.h>
 #include <AkonadiCore/item.h>
 #include <akonadi/kmime/messagestatus.h>
 #include <AkonadiCore/agentinstance.h>

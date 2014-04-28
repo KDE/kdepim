@@ -28,7 +28,7 @@
 #include <QPainter>
 #include <QStyledItemDelegate>
 
-#include <kabc/addressee.h>
+#include <KABC/addressee.h>
 #include <kcombobox.h>
 #include <kdialog.h>
 #include <klocale.h>

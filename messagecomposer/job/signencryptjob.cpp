@@ -28,9 +28,9 @@
 #include "util.h"
 
 #include <kdebug.h>
-#include <kmime/kmime_message.h>
-#include <kmime/kmime_content.h>
-#include <kmime/kmime_util.h>
+#include <KMime/kmime_message.h>
+#include <KMime/kmime_content.h>
+#include <KMime/kmime_util.h>
 #include <QBuffer>
 
 #include <gpgme++/global.h>

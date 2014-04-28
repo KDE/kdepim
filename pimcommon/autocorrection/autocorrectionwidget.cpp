@@ -25,7 +25,7 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 #include "import/importabstractautocorrection.h"
 
 #include "settings/pimcommonsettings.h"
-#include <kpimtextedit/selectspecialchardialog.h>
+#include <KPIMTextEdit/selectspecialchardialog.h>
 
 #include <KFileDialog>
 #include <KMessageBox>

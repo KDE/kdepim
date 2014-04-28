@@ -19,7 +19,7 @@
 
 #include "blogmodel.h"
 
-#include <microblog/statusitem.h>
+#include <MicroBlog/statusitem.h>
 #include <AkonadiCore/itemfetchscope.h>
 #include <AkonadiCore/monitor.h>
 #include <AkonadiCore/session.h>

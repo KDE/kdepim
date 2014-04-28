@@ -20,9 +20,9 @@
 #include "mailcommon/util/mailutil.h"
 #include "importwizardutil.h"
 
-#include <kpimidentities/identity.h>
+#include <KPIMIdentities/identity.h>
 
-#include <mailtransport/transportmanager.h>
+#include <MailTransport/transportmanager.h>
 
 #include <KConfig>
 #include <KDebug>

@@ -16,13 +16,13 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include <kabc/addressee.h>
+#include <KABC/addressee.h>
 #include <kcmultidialog.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kpimidentities/identity.h>
-#include <kpimidentities/identitymanager.h>
+#include <KPIMIdentities/identity.h>
+#include <KPIMIdentities/identitymanager.h>
 
 #include <QWidget>
 

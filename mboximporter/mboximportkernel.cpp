@@ -18,7 +18,7 @@
 #include "mboximportkernel.h"
 
 #include <kglobal.h>
-#include <kpimidentities/identitymanager.h>
+#include <KPIMIdentities/identitymanager.h>
 #include <mailcommon/folder/foldercollectionmonitor.h>
 #include <AkonadiCore/session.h>
 #include <entitytreemodel.h>

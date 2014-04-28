@@ -23,7 +23,7 @@
 #include "contentjobbase.h"
 #include "jobbase_p.h"
 
-#include <kmime/kmime_content.h>
+#include <KMime/kmime_content.h>
 
 namespace MessageComposer {
 

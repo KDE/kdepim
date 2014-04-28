@@ -35,8 +35,8 @@
 #include <KGlobal>
 #include <KProtocolManager>
 
-#include <kmime/kmime_message.h>
-#include <kpimutils/email.h>
+#include <KMime/kmime_message.h>
+#include <KPIMUtils/email.h>
 
 using namespace MessageComposer;
 

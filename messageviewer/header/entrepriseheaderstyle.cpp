@@ -19,10 +19,10 @@
 #include "header/headerstyle_util.h"
 
 #include "header/headerstrategy.h"
-#include <kpimutils/linklocator.h>
+#include <KPIMUtils/linklocator.h>
 using KPIMUtils::LinkLocator;
 
-#include <kpimutils/email.h>
+#include <KPIMUtils/email.h>
 #include <messagecore/utils/stringutil.h>
 
 #include <kdebug.h>
@@ -31,8 +31,8 @@ using KPIMUtils::LinkLocator;
 #include <KStandardDirs>
 
 
-#include <kmime/kmime_message.h>
-#include <kmime/kmime_dateformatter.h>
+#include <KMime/kmime_message.h>
+#include <KMime/kmime_dateformatter.h>
 
 using namespace MessageCore;
 using KPIMUtils::LinkLocator;

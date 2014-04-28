@@ -27,7 +27,7 @@
 
 #include "category.h"
 
-#include <kblog/blogpost.h>
+#include <KBlog/blogpost.h>
 
 
 class BilboPostPrivate;

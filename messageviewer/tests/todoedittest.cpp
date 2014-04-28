@@ -22,7 +22,7 @@
 #include <AkonadiWidgets/CollectionComboBox>
 #include <AkonadiCore/EntityTreeModel>
 #include <QStandardItemModel>
-#include <kcalcore/todo.h>
+#include <KCalCore/todo.h>
 #include <qtest_kde.h>
 #include <qtestkeyboard.h>
 #include <qtestmouse.h>

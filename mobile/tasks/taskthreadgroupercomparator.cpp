@@ -24,7 +24,7 @@
 #include "settings.h"
 
 #include <calendarsupport/utils.h>
-#include <kcalcore/todo.h>
+#include <KCalCore/todo.h>
 
 #include <KDebug>
 

@@ -19,10 +19,10 @@
 #define HEADERSTYLE_UTIL_H
 
 #include <QString>
-#include <kpimutils/linklocator.h>
+#include <KPIMUtils/linklocator.h>
 
-#include <kmime/kmime_message.h>
-#include <kmime/kmime_dateformatter.h>
+#include <KMime/kmime_message.h>
+#include <KMime/kmime_dateformatter.h>
 #include "antispam/spamheaderanalyzer.h"
 
 #include "header/headerstyle.h"

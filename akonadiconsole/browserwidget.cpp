@@ -48,9 +48,9 @@
 #include <libkdepim/misc/statisticsproxymodel.h>
 #include <kviewstatemaintainer.h>
 
-#include <kabc/addressee.h>
-#include <kabc/contactgroup.h>
-#include <kcalcore/incidence.h>
+#include <KABC/addressee.h>
+#include <KABC/contactgroup.h>
+#include <KCalCore/incidence.h>
 
 #include <kdebug.h>
 #include <kconfig.h>

@@ -24,7 +24,7 @@
 #include "core/manager.h"
 
 #include <kio/global.h> // for KIO::filesize_t and related functions
-#include <kmime/kmime_dateformatter.h> // kdepimlibs
+#include <KMime/kmime_dateformatter.h> // kdepimlibs
 
 #include <KLocalizedString>
 

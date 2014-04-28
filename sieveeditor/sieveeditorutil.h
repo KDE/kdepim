@@ -23,7 +23,7 @@
 
 #include <QString>
 #include <KUrl>
-#include <mailtransport/transport.h>
+#include <MailTransport/transport.h>
 
 namespace SieveEditorUtil {
 struct SieveServerConfig {

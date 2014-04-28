@@ -16,12 +16,12 @@
 */
 
 #include "thunderbirdsettings.h"
-#include <mailtransport/transportmanager.h>
+#include <MailTransport/transportmanager.h>
 #include "mailcommon/util/mailutil.h"
 #include "importwizardutil.h"
 
-#include <kpimidentities/identity.h>
-#include <kpimidentities/signature.h>
+#include <KPIMIdentities/identity.h>
+#include <KPIMIdentities/signature.h>
 #include <KStandardDirs>
 
 #include <KABC/VCardConverter>

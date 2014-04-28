@@ -26,11 +26,11 @@
 #ifndef QT_NO_CURSOR
 #include <messageviewer/utils/kcursorsaver.h>
 #endif
-#include <kpimidentities/identitymanager.h>
-#include <kpimidentities/identity.h>
+#include <KPIMIdentities/identitymanager.h>
+#include <KPIMIdentities/identity.h>
 
 #include <akonadi/kmime/messagestatus.h>
-#include <kmime/kmime_dateformatter.h>
+#include <KMime/kmime_dateformatter.h>
 #include <KPIMUtils/Email>
 #include <messagecore/misc/mailinglist.h>
 #include <messagecore/helpers/messagehelpers.h>

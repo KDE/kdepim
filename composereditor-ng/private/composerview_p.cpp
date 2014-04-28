@@ -31,9 +31,9 @@
 #include "globalsettings_base.h"
 
 
-#include <kpimtextedit/emoticontexteditaction.h>
-#include <kpimtextedit/inserthtmldialog.h>
-#include <kpimtextedit/selectspecialchardialog.h>
+#include <KPIMTextEdit/emoticontexteditaction.h>
+#include <KPIMTextEdit/inserthtmldialog.h>
+#include <KPIMTextEdit/selectspecialchardialog.h>
 
 #include <Sonnet/Dialog>
 #include <sonnet/backgroundchecker.h>

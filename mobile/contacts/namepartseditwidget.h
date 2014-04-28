@@ -22,7 +22,7 @@
 #ifndef NAMEPARTSEDITWIDGET_H
 #define NAMEPARTSEDITWIDGET_H
 
-#include <kabc/addressee.h>
+#include <KABC/addressee.h>
 
 #include <QWidget>
 

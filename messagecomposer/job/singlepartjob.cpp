@@ -27,8 +27,8 @@
 #include <KDebug>
 #include <KLocalizedString>
 
-#include <kmime/kmime_content.h>
-#include <kmime/kmime_headers.h>
+#include <KMime/kmime_content.h>
+#include <KMime/kmime_headers.h>
 
 using namespace MessageComposer;
 

@@ -26,7 +26,7 @@
 #include <AkonadiCore/itemfetchscope.h>
 #include <AkonadiCore/session.h>
 
-#include <kabc/addressee.h>
+#include <KABC/addressee.h>
 
 using namespace Akonadi;
 

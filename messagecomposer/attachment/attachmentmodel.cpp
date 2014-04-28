@@ -30,10 +30,10 @@
 #include <KLocale>
 #include <KTempDir>
 
-#include <kmime/kmime_util.h>
+#include <KMime/kmime_util.h>
 #include <AkonadiCore/item.h>
 
-#include <kpimutils/kfileio.h>
+#include <KPIMUtils/kfileio.h>
 
 using namespace MessageComposer;
 using namespace MessageCore;

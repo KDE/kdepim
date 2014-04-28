@@ -28,11 +28,11 @@
 #include <KDateTime>
 #include <KProtocolManager>
 #include <KMime/Message>
-#include <kmime/kmime_mdn.h>
-#include <kmime/kmime_dateformatter.h>
-#include <kmime/kmime_headers.h>
-#include <kpimidentities/identitymanager.h>
-#include <kpimidentities/identity.h>
+#include <KMime/kmime_mdn.h>
+#include <KMime/kmime_dateformatter.h>
+#include <KMime/kmime_headers.h>
+#include <KPIMIdentities/identitymanager.h>
+#include <KPIMIdentities/identity.h>
 #include <KPIMUtils/Email>
 #include <KDebug>
 
@@ -136,30 +136,30 @@ void applyIdentity( const KMime::Message::Ptr &message, const KPIMIdentities::Id
         message->setHeader( header );
     }
 
-    if (ident.fcc() == -1)
+    if (ident.fcc().isEmpty() )
         message->removeHeader("X-KMail-Fcc");
     else {
-        KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Fcc", message.get(), QString::number(ident.fcc()), "utf-8" );
+        KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Fcc", message.get(), ident.fcc(), "utf-8" );
         message->setHeader( header );
     }
 
-    if (ident.drafts() == -1)
+    if (ident.drafts().isEmpty())
         message->removeHeader("X-KMail-Drafts");
     else {
-        KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Drafts", message.get(), QString::number(ident.drafts()), "utf-8" );
+        KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Drafts", message.get(), ident.drafts(), "utf-8" );
         message->setHeader( header );
     }
 
-    if (ident.templates() == -1)
+    if (ident.templates().isEmpty())
         message->removeHeader("X-KMail-Templates");
     else {
-        KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Templates", message.get(), QString::number(ident.templates()), "utf-8" );
+        KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Templates", message.get(), ident.templates(), "utf-8" );
         message->setHeader( header );
     }
 
     if (ident.disabledFcc()) {
         //TODO verify why ident.templates ? bug ?
-        KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-FccDisabled", message.get(), QString::number(ident.templates()), "utf-8" );
+        KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-FccDisabled", message.get(), ident.templates(), "utf-8" );
         message->setHeader( header );
     } else {
         message->removeHeader("X-KMail-FccDisabled");

@@ -39,7 +39,7 @@
 
 #include <kurl.h>
 
-#include <kmime/kmime_content.h>
+#include <KMime/kmime_content.h>
 
 #include <KDebug>
 

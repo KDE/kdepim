@@ -30,12 +30,12 @@
 #include "settings.h"
 
 #include <kurl.h>
-#include <kblog/blogger1.h>
-#include <kblog/gdata.h>
-#include <kblog/metaweblog.h>
-#include <kblog/movabletype.h>
-#include <kblog/wordpressbuggy.h>
-#include <kblog/blogmedia.h>
+#include <KBlog/blogger1.h>
+#include <KBlog/gdata.h>
+#include <KBlog/metaweblog.h>
+#include <KBlog/movabletype.h>
+#include <KBlog/wordpressbuggy.h>
+#include <KBlog/blogmedia.h>
 #include <kdebug.h>
 #include <KLocale>
 

@@ -20,7 +20,7 @@
 
 #include "recipientline.h"
 
-#include <kpimutils/email.h>
+#include <KPIMUtils/email.h>
 #include <KDialog>
 #include <KLocalizedString>
 #include <KCompletionBox>

@@ -23,8 +23,8 @@
 #undef protected
 #include "messageviewer/viewer/objecttreeparser.h"
 #include "messageviewer/viewer/objecttreeemptysource.h"
-#include <kpimidentities/identitymanager.h>
-#include <kpimidentities/identity.h>
+#include <KPIMIdentities/identitymanager.h>
+#include <KPIMIdentities/identity.h>
 #include "qwebpage.h"
 #include "qwebframe.h"
 #include "qtest_kde.h"

@@ -34,7 +34,7 @@
 #include "contactdisplaymessagememento.h"
 #include "kxface.h"
 
-#include <kpimutils/email.h>
+#include <KPIMUtils/email.h>
 
 using namespace MessageCore;
 

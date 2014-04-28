@@ -34,9 +34,9 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 
-#include <kmime/kmime_content.h>
+#include <KMime/kmime_content.h>
 
-#include <kpimtextedit/textedit.h>
+#include <KPIMTextEdit/textedit.h>
 
 using namespace MessageComposer;
 

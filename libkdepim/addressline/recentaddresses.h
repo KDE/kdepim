@@ -31,7 +31,7 @@
 #define KDEPIM_RECENTADDRESSES_H
 
 #include "kdepim_export.h"
-#include <kabc/addressee.h>
+#include <KABC/addressee.h>
 #include <KDialog>
 #include <QStringList>
 class KConfig;

@@ -71,15 +71,15 @@
 #include <libkpgp/kpgp.h>
 
 // KDEPIMLIBS includes
-#include <kpimutils/email.h>
-#include <kpimutils/linklocator.h>
+#include <KPIMUtils/email.h>
+#include <KPIMUtils/linklocator.h>
 #include <gpgme++/importresult.h>
 #include <gpgme++/decryptionresult.h>
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>
 #include <gpgme.h>
-#include <kmime/kmime_message.h>
-#include <kmime/kmime_util.h>
+#include <KMime/kmime_message.h>
+#include <KMime/kmime_util.h>
 
 // KDE includes
 #include <kdebug.h>

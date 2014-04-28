@@ -19,7 +19,7 @@
 #include "declarativeidentitycombobox.h"
 #include "mobilekernel.h"
 
-#include <kpimidentities/identitymanager.h>
+#include <KPIMIdentities/identitymanager.h>
 
 #include <QDeclarativeItem>
 

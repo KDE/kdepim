@@ -24,7 +24,7 @@
 
 #include "messageviewer_export.h"
 
-#include <kmime/kmime_message.h>
+#include <KMime/kmime_message.h>
 
 #include <QWidget>
 

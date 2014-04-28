@@ -34,7 +34,7 @@
 #define __KMAIL_MESSAGESENDER_H__
 #include <QString>
 
-#include <kmime/kmime_message.h>
+#include <KMime/kmime_message.h>
 namespace MessageComposer {
 class MessageSender {
 protected:

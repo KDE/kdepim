@@ -19,7 +19,7 @@
 #include "importaddressbookpage.h"
 
 #include <KABC/Addressee>
-#include <kabc/contactgroup.h>
+#include <KABC/contactgroup.h>
 #include <KLocale>
 #include <KDebug>
 #include <AkonadiCore/ItemCreateJob>

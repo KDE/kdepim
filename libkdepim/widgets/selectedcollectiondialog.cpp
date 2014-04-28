@@ -33,7 +33,7 @@
 #include <KGlobal>
 #include <KConfigGroup>
 
-#include <kabc/addressee.h>
+#include <KABC/addressee.h>
 
 namespace KPIM {
 
