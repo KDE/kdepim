@@ -40,6 +40,7 @@
 #include <QPrinter>
 #include <QAbstractTextDocumentLayout>
 #include <QDBusConnection>
+#include <QMenu>
 
 // Akonadi
 #include <AkonadiCore/control.h>
@@ -65,7 +66,7 @@
 #include <grantlee/context.h>
 
 // KDE
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KBookmarkMenu>
 #include <KFileDialog>
@@ -81,7 +82,9 @@
 #include <KProcess>
 #include <KPrintPreview>
 #include <KGlobal>
-
+#include <KActionMenu>
+#include <KAction>
+#include <KIcon>
 // KMime
 #include <KMime/KMimeMessage>
 
@@ -188,7 +191,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   KActionCollection *actionCollection = xmlGuiClient->actionCollection();
 
   editor = new KJotsEdit( treeview->selectionModel(), stackedWidget );
-  editor->createActions( actionCollection );
+  //QT5 editor->createActions( actionCollection );
   stackedWidget->addWidget( editor );
 
   layout->addWidget( m_splitter );
@@ -198,7 +201,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   stackedWidget->setCurrentWidget( browser );
 
 
-  KAction *action;
+  QAction *action;
 
   action = actionCollection->addAction( QLatin1String("go_next_book") );
   action->setText( i18n( "Next Book" ) );
@@ -354,7 +357,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
   // "Add bookmark" and "make text bold" actions have conflicting shortcuts (ctrl + b)
   // Make add_bookmark use ctrl+shift+b to resolve that.
-  KAction *bm_action = qobject_cast<KAction *>(actionCollection->action(QLatin1String("add_bookmark")));
+  QAction *bm_action = qobject_cast<KAction *>(actionCollection->action(QLatin1String("add_bookmark")));
   Q_ASSERT(bm_action);
   bm_action->setShortcut( Qt::CTRL + Qt::SHIFT + Qt::Key_B );
 
@@ -1576,7 +1579,7 @@ void KJotsWidget::onRepeatReplace()
       QRegExp regExp ( searchPattern, ( replaceOptions & Qt::CaseSensitive ) ?
                                         Qt::CaseSensitive : Qt::CaseInsensitive, QRegExp::RegExp2 );
       regExp.indexIn(cursor.selectedText());
-      int capCount = regExp.numCaptures();
+      int capCount = 0; //QT5 regExp.numCaptures();
       for ( int i=0; i <= capCount; ++i ) {
         QString c = QString::fromLatin1( "\\%1" ).arg( i );
         replacementText.replace( c, regExp.cap( i ) );

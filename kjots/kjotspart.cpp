@@ -79,7 +79,7 @@ KJotsPart::~KJotsPart()
 
 void KJotsPart::initAction()
 {
-  KAction *action = new KAction( KIcon( QLatin1String("configure") ), i18n( "&Configure KJots..." ), this );
+  QAction *action = new QAction( KIcon( QLatin1String("configure") ), i18n( "&Configure KJots..." ), this );
   actionCollection()->addAction( QLatin1String("kjots_configure"), action );
   connect( action, SIGNAL(triggered(bool)), mComponent,
            SLOT(configure()) );
