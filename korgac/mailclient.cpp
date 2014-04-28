@@ -336,7 +336,7 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
   if (identity.disabledFcc()) {
       qjob->sentBehaviourAttribute().setSentBehaviour( MailTransport::SentBehaviourAttribute::Delete );
   } else {
-      const Akonadi::Collection sentCollection( identity.fcc() );
+      const Akonadi::Collection sentCollection( identity.fcc().toLongLong() );
       if (sentCollection.isValid()) {
           qjob->sentBehaviourAttribute().setSentBehaviour( MailTransport::SentBehaviourAttribute::MoveToCollection );
           qjob->sentBehaviourAttribute().setMoveToCollection( sentCollection );
