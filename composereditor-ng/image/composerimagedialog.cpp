@@ -21,7 +21,7 @@
 #include "composerimagedialog.h"
 #include "extendattributes/extendattributesbutton.h"
 
-#include "kpimtextedit/insertimagewidget.h"
+#include <KPIMTextEdit/insertimagewidget.h>
 
 #include <KLocalizedString>
 #include <KLineEdit>

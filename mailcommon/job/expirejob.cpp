@@ -42,7 +42,7 @@ using KPIM::BroadcastStatus;
 #include <ItemMoveJob>
 #include <Akonadi/KMime/MessageParts>
 #include <Akonadi/KMime/MessageStatus>
-#include <akonadi/kmime/messageflags.h>
+#include <Akonadi/KMime/messageflags.h>
 #include <KMime/Message>
 
 /*

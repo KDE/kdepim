@@ -23,7 +23,7 @@
 #include "messagecore_export.h"
 
 #include <item.h>
-#include <akonadi/kmime/messagestatus.h>
+#include <Akonadi/KMime/messagestatus.h>
 #include <boost/shared_ptr.hpp>
 #include <KMime/Message>
 

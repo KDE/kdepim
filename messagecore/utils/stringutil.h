@@ -20,8 +20,8 @@
 #define MESSAGECORE_STRINGUTIL_H
 
 #include "messagecore_export.h"
-#include "kmime/kmime_message.h"
-#include "kmime/kmime_header_parsing.h"
+#include "KMime/kmime_message.h"
+#include "KMime/kmime_header_parsing.h"
 
 #include <QtCore/QStringList>
 

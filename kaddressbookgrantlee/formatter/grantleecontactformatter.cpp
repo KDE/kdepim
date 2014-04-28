@@ -38,7 +38,7 @@
 #include <KStringHandler>
 #include <KConfigGroup>
 
-#include "akonadi/contact/improtocols.h"
+#include "Akonadi/Contact/improtocols.h"
 
 #include <QSet>
 #include <QRegExp>

@@ -56,7 +56,7 @@
 #include <KUrl>
 
 #include <collection.h>
-#include <akonadi/kmime/messagestatus.h>
+#include <Akonadi/KMime/messagestatus.h>
 
 using namespace MessageList::Core;
 

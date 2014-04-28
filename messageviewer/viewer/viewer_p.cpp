@@ -111,8 +111,8 @@
 #include <AkonadiCore/collection.h>
 #include <AkonadiCore/itemfetchjob.h>
 #include <AkonadiCore/itemfetchscope.h>
-#include <akonadi/kmime/messagestatus.h>
-#include <akonadi/kmime/specialmailcollections.h>
+#include <Akonadi/KMime/messagestatus.h>
+#include <Akonadi/KMime/specialmailcollections.h>
 #include <AkonadiCore/attributefactory.h>
 #include <Akonadi/KMime/MessageParts>
 #include <kleo/specialjob.h>

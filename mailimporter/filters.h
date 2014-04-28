@@ -29,7 +29,7 @@
 
 #include <Collection>
 #include <KMime/KMimeMessage>
-#include <akonadi/kmime/messagestatus.h>
+#include <Akonadi/KMime/messagestatus.h>
 
 
 

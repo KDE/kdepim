@@ -31,8 +31,8 @@
 #include <AkonadiCore/collectionfetchscope.h>
 #include <AkonadiCore/dbusconnectionpool.h>
 #include <AkonadiCore/itemfetchscope.h>
-#include <akonadi/kmime/messageparts.h>
-#include <akonadi/kmime/messagestatus.h>
+#include <Akonadi/KMime/messageparts.h>
+#include <Akonadi/KMime/messagestatus.h>
 #include <AkonadiCore/session.h>
 #include <mailcommon/kernel/mailkernel.h>
 #include <KLocalizedString>

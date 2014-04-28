@@ -41,7 +41,7 @@
 #include "widget.h"
 #include "core/settings.h"
 #include "core/manager.h"
-#include <akonadi/kmime/messagestatus.h>
+#include <Akonadi/KMime/messagestatus.h>
 #include "core/model.h"
 
 namespace MessageList
