@@ -12,7 +12,7 @@ find_package(KF5Abc ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5PimUtils ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5AkonadiContact ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5PimTextEdit ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5KMime ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Mime ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5PimIdentities ${KF5_VERSION} CONFIG REQUIRED)
 find_package(Baloo ${KF5_VERSION} CONFIG REQUIRED)
 
@@ -107,9 +107,9 @@ target_link_libraries(kdepim
   KF5::PimIdentities
   KF5::KCMUtils
   ${KDE4_SOLID_LIBS}
-  KF5::KMime
+  KF5::Mime
   KF5::PimTextEdit
-  KF5::KMime
+  KF5::Mime
   KF5::AkonadiCore
   KF5::AkonadiContact
   KF5::AkonadiAgentBase

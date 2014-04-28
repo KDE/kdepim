@@ -14,7 +14,7 @@ kde_enable_exceptions()
 
 set(messageviewer_bodypartformatter_text_vcard_PART_SRCS text_vcard.cpp vcardmemento.cpp updatecontactjob.cpp)
 add_library(messageviewer_bodypartformatter_text_vcard MODULE ${messageviewer_bodypartformatter_text_vcard_PART_SRCS})
-target_link_libraries(messageviewer_bodypartformatter_text_vcard  KF5::KMime KF5::Abc kdepim messageviewer)
+target_link_libraries(messageviewer_bodypartformatter_text_vcard  KF5::Mime KF5::Abc kdepim messageviewer)
 install(TARGETS messageviewer_bodypartformatter_text_vcard DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### next target ###############
@@ -36,10 +36,10 @@ target_link_libraries(messageviewer_bodypartformatter_text_calendar
   Qt5::Core 
   KF5::CalendarCore
   KF5::CalendarUtils
-  KF5::KMime
+  KF5::Mime
   KF5::PimIdentities
   KF5::MailTransport
-  KF5::AkonadiKMime
+  KF5::AkonadiMime
   calendarsupport
   kdepim
   mailcommon
@@ -65,7 +65,7 @@ target_link_libraries(messageviewer_bodypartformatter_application_mstnef
   Qt5::Core
   KF5::CalendarCore
   KF5::CalendarUtils
-  KF5::KMime
+  KF5::Mime
   KF5::PimUtils
   KF5::KTnef
   messagecore

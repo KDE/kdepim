@@ -54,9 +54,9 @@ add_executable(akonadi_sendlater_agent ${sendlateragent_SRCS})
 target_link_libraries(akonadi_sendlater_agent
   sendlater
   KF5::AkonadiCore
-  KF5::AkonadiKMime
+  KF5::AkonadiMime
   KF5::MailTransport
-  KF5::KMime
+  KF5::Mime
   messagecomposer
   messagecore
   pimcommon

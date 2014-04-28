@@ -76,8 +76,8 @@ target_link_libraries(kjots
   ${kjotsLibs}
   KF5::KCMUtils
   KF5::AkonadiCore
-  KF5::KMime
-  KF5::AkonadiKMime
+  KF5::Mime
+  KF5::AkonadiMime
   ${Grantlee_CORE_LIBRARIES}
   ${Grantlee_GUI_LIBRARIES}
   KF5::PimTextEdit
@@ -115,10 +115,10 @@ install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/kjots PATTERN *.svn EXC
     KF5::KCMUtils
     ${KDE4_KPARTS_LIBS}
     kdepim
-    KF5::KMime
+    KF5::Mime
     KF5::AkonadiCore
-    KF5::AkonadiKMime
-    KF5::KMime
+    KF5::AkonadiMime
+    KF5::Mime
     ${Grantlee_CORE_LIBRARIES}
     ${Grantlee_GUI_LIBRARIES}
     KF5::PimTextEdit

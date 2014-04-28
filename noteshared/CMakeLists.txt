@@ -66,7 +66,7 @@ kconfig_add_kcfg_files(libnoteshared_kcfg_lib_SRCS ${libnoteshared_kcfg_lib_SRCS
 add_library(noteshared ${LIBRARY_TYPE} ${libnoteshared_SRCS} ${libnoteshared_kcfg_lib_SRCS} )
 
 target_link_libraries(noteshared
-     KF5::AkonadiCore KF5::DNSSD pimcommon akonadi_next KF5::KMime
+     KF5::AkonadiCore KF5::DNSSD pimcommon akonadi_next KF5::Mime
 )
 
 set_target_properties(noteshared PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})

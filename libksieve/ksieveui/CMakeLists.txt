@@ -175,7 +175,7 @@ target_link_libraries(ksieveui
   pimcommon
   kdepim
   KF5::AkonadiCore
-  KF5::KMime
+  KF5::Mime
   KF5::PimIdentities
   KF5::KIOCore
   KF5::MailTransport

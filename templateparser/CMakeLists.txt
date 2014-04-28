@@ -41,7 +41,7 @@ add_library(templateparser ${LIBRARY_TYPE} ${templateparser_LIB_SRCS})
 target_link_libraries(templateparser
   messageviewer
   KF5::KIOCore
-  KF5::KMime
+  KF5::Mime
   KF5::AkonadiCore
   KF5::PimTextEdit
   KF5::PimIdentities

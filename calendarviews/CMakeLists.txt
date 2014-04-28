@@ -97,7 +97,7 @@ kde_enable_exceptions()
 
 target_link_libraries(eventviews
   ${QT_QTUITOOLS_LIBRARY}
-  KF5::KMime
+  KF5::Mime
   KF5::KCMUtils
   ${ZLIB_LIBRARIES}
   KF5::PimIdentities

@@ -190,10 +190,10 @@ qt5_wrap_ui(libmessageviewer_SRCS
 add_library(messageviewer ${LIBRARY_TYPE} ${libmessageviewer_SRCS})
 
 target_link_libraries(messageviewer messagecore kdepim kpgp kleo
-  KF5::KMime
+  KF5::Mime
   KF5::Mbox
   KF5::AkonadiCore
-  KF5::AkonadiKMime
+  KF5::AkonadiMime
   KF5::PimUtils
   KF5::Abc
   KF5::MailTransport

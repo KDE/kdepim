@@ -62,7 +62,7 @@ qt5_wrap_ui(messagecore_LIB_SRCS
 add_library(messagecore ${LIBRARY_TYPE} ${messagecore_LIB_SRCS})
 
 target_link_libraries(messagecore
-  KF5::KMime
+  KF5::Mime
   
   KF5::KIOCore
   KF5::Abc
@@ -70,13 +70,13 @@ target_link_libraries(messagecore
   KF5::AkonadiCore
   KF5::PimTextEdit
   KF5::AkonadiContact
-  KF5::AkonadiKMime
+  KF5::AkonadiMime
   KF5::Archive
   pimcommon
 )
 
 target_link_libraries(messagecore LINK_INTERFACE_LIBRARIES
-  KF5::KMime
+  KF5::Mime
   KF5::KIOCore
 )
 

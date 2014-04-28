@@ -366,7 +366,7 @@ target_link_libraries(kleopatra_bin
   kleo
   ${QGPGME_LIBRARIES}
   
-  KF5::KMime
+  KF5::Mime
   KF5::KCMUtils
   ${_kleopatra_uiserver_extra_libs}
   ${_kleopatra_libkdepim_LIBS}

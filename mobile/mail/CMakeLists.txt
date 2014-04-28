@@ -77,8 +77,8 @@ add_executable(kmail-mobile ${kmail_mobile_srcs})
 target_link_libraries(kmail-mobile
   Qt5::Declarative
   KF5::KCMUtils
-  KF5::AkonadiKMime
-  KF5::KMime
+  KF5::AkonadiMime
+  KF5::Mime
   KF5::AkonadiCore
   KF5::MailTransport
   KF5::Mbox

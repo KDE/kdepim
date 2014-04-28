@@ -74,7 +74,7 @@ endif()
 
 target_link_libraries(korgac
   KF5::AkonadiCalendar
-  KF5::AkonadiKMime
+  KF5::AkonadiMime
   calendarsupport
   incidenceeditorsng
   kdepim

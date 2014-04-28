@@ -54,7 +54,7 @@ target_link_libraries(kdepimmobileui
   Qt5::Declarative
   ${QT_QTOPENGL_LIBRARY}
   Qt5::Declarative
-  KF5::AkonadiKMime
+  KF5::AkonadiMime
   ${KDE4_SOLID_LIBRARY}
   akonadi_next
   kdepim

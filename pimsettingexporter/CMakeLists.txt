@@ -55,8 +55,8 @@ add_executable(pimsettingexporter ${pimsettingexporter_SRCS})
 target_link_libraries(pimsettingexporter
   KF5::KIOCore
   KF5::AkonadiCore
-  KF5::AkonadiKMime
-  KF5::KMime
+  KF5::AkonadiMime
+  KF5::Mime
   KF5::PimUtils
   KF5::MailTransport
   ${AKONADI_COMMON_LIBRARIES}

@@ -37,8 +37,8 @@ add_library(mailimporter ${LIBRARY_TYPE} ${libmailimporter_SRCS})
 target_link_libraries(mailimporter
   KF5::KIOCore
   KF5::AkonadiCore
-  KF5::AkonadiKMime
-  KF5::KMime
+  KF5::AkonadiMime
+  KF5::Mime
   KF5::PimUtils
   kdepim
   messagecore

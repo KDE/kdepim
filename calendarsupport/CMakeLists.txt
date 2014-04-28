@@ -66,8 +66,8 @@ target_link_libraries(
   KF5::CalendarCore
   KF5::CalendarUtils
   KF5::AkonadiContact
-  KF5::AkonadiKMime
-  KF5::KMime
+  KF5::AkonadiMime
+  KF5::Mime
   KF5::PimIdentities
   KF5::PimUtils
   KF5::Holidays

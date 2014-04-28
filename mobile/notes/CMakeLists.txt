@@ -30,8 +30,8 @@ add_executable(notes-mobile ${notes_mobile_SRCS})
 
 target_link_libraries(notes-mobile
   Qt5::Declarative
-  KF5::AkonadiKMime
-  KF5::KMime
+  KF5::AkonadiMime
+  KF5::Mime
   KF5::Mbox
   kdepimmobileui
   kdepim
