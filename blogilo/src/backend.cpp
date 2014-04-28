@@ -36,7 +36,7 @@
 #include <KBlog/movabletype.h>
 #include <KBlog/wordpressbuggy.h>
 #include <KBlog/blogmedia.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KLocale>
 
 #include <kio/netaccess.h>
@@ -62,7 +62,7 @@ public:
 Backend::Backend( int blog_id, QObject* parent )
     : QObject( parent ), d(new Private)
 {
-    kDebug() << "with blog id: " << blog_id;
+    qDebug() << "with blog id: " << blog_id;
     d->bBlog = DBMan::self()->blog( blog_id );
     d->kBlog = d->bBlog->blogBackend();
 
@@ -79,13 +79,13 @@ Backend::Backend( int blog_id, QObject* parent )
 
 Backend::~Backend()
 {
-    kDebug();
+    qDebug();
     delete d;
 }
 
 void Backend::getCategoryListFromServer()
 {
-    kDebug() << "Blog Id: " << d->bBlog->id();
+    qDebug() << "Blog Id: " << d->bBlog->id();
     if ( d->bBlog->api() == BilboBlog::METAWEBLOG_API ||
          d->bBlog->api() == BilboBlog::MOVABLETYPE_API ||
          d->bBlog->api() == BilboBlog::WORDPRESSBUGGY_API ) {
@@ -100,7 +100,7 @@ void Backend::getCategoryListFromServer()
 
 void Backend::categoriesListed( const QList< QMap < QString , QString > > & categories )
 {
-    kDebug() << "Blog Id: " << d->bBlog->id();
+    qDebug() << "Blog Id: " << d->bBlog->id();
     DBMan::self()->clearCategories( d->bBlog->id() );
 
     const int categoriesCount(categories.count());
@@ -120,13 +120,13 @@ void Backend::categoriesListed( const QList< QMap < QString , QString > > & cate
 
         DBMan::self()->addCategory( name, description, htmlUrl, rssUrl, categoryId, parentId, d->bBlog->id() );
     }
-    kDebug() << "Emitting sigCategoryListFetched...";
+    qDebug() << "Emitting sigCategoryListFetched...";
     Q_EMIT sigCategoryListFetched( d->bBlog->id() );
 }
 
 void Backend::getEntriesListFromServer( int count )
 {
-    kDebug() << "Blog Id: " << d->bBlog->id();
+    qDebug() << "Blog Id: " << d->bBlog->id();
     connect( d->kBlog, SIGNAL(listedRecentPosts(QList<KBlog::BlogPost>)),
              this, SLOT(entriesListed(QList<KBlog::BlogPost>)) );
     d->kBlog->listRecentPosts( count );
@@ -134,7 +134,7 @@ void Backend::getEntriesListFromServer( int count )
 
 void Backend::entriesListed( const QList< KBlog::BlogPost > & posts )
 {
-    kDebug() << "Blog Id: " << d->bBlog->id();
+    qDebug() << "Blog Id: " << d->bBlog->id();
 //     DBMan::self()->clearPosts( d->bBlog->id() );
 
     const int postCount(posts.count());
@@ -146,13 +146,13 @@ void Backend::entriesListed( const QList< KBlog::BlogPost > & posts )
         }
         DBMan::self()->addPost( tempPost, d->bBlog->id() );
     }
-    kDebug() << "Emitting sigEntriesListFetched ...";
+    qDebug() << "Emitting sigEntriesListFetched ...";
     Q_EMIT sigEntriesListFetched( d->bBlog->id() );
 }
 
 void Backend::publishPost( BilboPost* post )
 {
-    kDebug() << "Blog Id: " << d->bBlog->id();
+    qDebug() << "Blog Id: " << d->bBlog->id();
 //     BilboPost tmpPost = post;
     if( Settings::addPoweredBy() ) {
         QString poweredStr = QLatin1String("<p>=-=-=-=-=<br/>"
@@ -167,15 +167,15 @@ void Backend::publishPost( BilboPost* post )
 
 void Backend::postPublished( KBlog::BlogPost *post )
 {
-    kDebug() << "Blog Id: " << d->bBlog->id();
+    qDebug() << "Blog Id: " << d->bBlog->id();
     if ( post->status() == KBlog::BlogPost::Error ) {
-        kDebug() << "Publishing/Modifying Failed";
+        qDebug() << "Publishing/Modifying Failed";
         const QString tmp( i18n( "Publishing/Modifying post failed: %1", post->error() ) );
-        kDebug() << "Emitting sigError...";
+        qDebug() << "Emitting sigError...";
         Q_EMIT sigError( tmp );
         return;
     }
-    kDebug()<<"isPrivate: "<<post->isPrivate();
+    qDebug()<<"isPrivate: "<<post->isPrivate();
     if(post->isPrivate() && d->bBlog->api() == BilboBlog::GDATA_API){
         //GData do not support fetching drafts!
         savePostInDbAndEmitResult(post);
@@ -189,14 +189,14 @@ void Backend::postPublished( KBlog::BlogPost *post )
 
 void Backend::uploadMedia( BilboMedia * media )
 {
-    kDebug() << "Blog Id: " << d->bBlog->id();
+    qDebug() << "Blog Id: " << d->bBlog->id();
     QString tmp;
     switch ( d->bBlog->api() ) {
         case BilboBlog::BLOGGER1_API:
         case BilboBlog::GDATA_API:
-            kDebug() << "The Blogger1 and GData API type doesn't support uploading Media files.";
+            qDebug() << "The Blogger1 and GData API type doesn't support uploading Media files.";
             tmp = i18n( "Uploading media failed: Your Blog API does not support uploading media objects.");
-            kDebug() << "Emitting sigError...";
+            qDebug() << "Emitting sigError...";
             Q_EMIT sigMediaError( tmp, media );
             return;
         case BilboBlog::METAWEBLOG_API:
@@ -210,16 +210,16 @@ void Backend::uploadMedia( BilboMedia * media )
             QByteArray data;
             KIO::TransferJob *job = KIO::get( media->localUrl(), KIO::Reload, KIO::HideProgressInfo);
             if( !KIO::NetAccess::synchronousRun(job, 0, &data) ){
-                kError()<<"Job error: " << job->errorString();
+                qCritical()<<"Job error: " << job->errorString();
                 tmp = i18n( "Uploading media failed: Cannot read the media file, please check if it exists. Path: %1", media->localUrl().pathOrUrl() );
-                kDebug() << "Emitting sigError...";
+                qDebug() << "Emitting sigError...";
                 Q_EMIT sigMediaError( tmp, media );
             }
 
             if ( data.count() == 0 ) {
-                kError() << "Cannot read the media file, please check if it exists.";
+                qCritical() << "Cannot read the media file, please check if it exists.";
                 tmp = i18n( "Uploading media failed: Cannot read the media file, please check if it exists. Path: %1", media->localUrl().pathOrUrl() );
-                kDebug() << "Emitting sigError...";
+                qDebug() << "Emitting sigError...";
                 Q_EMIT sigMediaError( tmp, media );
                 delete m;
                 return;
@@ -231,19 +231,19 @@ void Backend::uploadMedia( BilboMedia * media )
             media->setCheckSum( qChecksum( data.data(), data.count() ) );
 
             if ( media->checksum() == 0 ) {
-                kError() << "Media file checksum is zero";
+                qCritical() << "Media file checksum is zero";
                 tmp = i18n( "Uploading media failed: Media file checksum is zero, please check file path. Path: %1",
                                          media->localUrl().pathOrUrl() );
-                kDebug() << "Emitting sigError...";
+                qDebug() << "Emitting sigError...";
                 Q_EMIT sigMediaError( tmp, media );
                 delete m;
                 return;
             }
 
             if ( !MWBlog ) {
-                kError() << "MWBlog is NULL: casting has not worked, this should NEVER happen, has the gui allowed using GDATA?";
+                qCritical() << "MWBlog is NULL: casting has not worked, this should NEVER happen, has the gui allowed using GDATA?";
                 tmp = i18n( "INTERNAL ERROR: MWBlog is NULL: casting has not worked, this should NEVER happen." );
-                kDebug() << "Emitting sigError...";
+                qDebug() << "Emitting sigError...";
                 Q_EMIT sigError( tmp );
                 delete m;
                 return;
@@ -255,51 +255,51 @@ void Backend::uploadMedia( BilboMedia * media )
             MWBlog->createMedia( m );
             return;
     }
-    kError() << "Api type isn't set correctly!";
+    qCritical() << "Api type isn't set correctly!";
     tmp = i18n( "API type is not set correctly." );
     Q_EMIT sigError( tmp );
 }
 
 void Backend::mediaUploaded( KBlog::BlogMedia * media )
 {
-    kDebug() << "Blog Id: " << d->bBlog->id() << "Media: "<<media->url();
+    qDebug() << "Blog Id: " << d->bBlog->id() << "Media: "<<media->url();
     if(!media){
-        kError()<<"ERROR! Media returned from KBlog is NULL!";
+        qCritical()<<"ERROR! Media returned from KBlog is NULL!";
         return;
     }
     BilboMedia * m = d->mPublishMediaMap.value( media );
     if(!m){
-        kError()<<"ERROR! Media returned from KBlog doesn't exist on the Map! Url is:"
+        qCritical()<<"ERROR! Media returned from KBlog doesn't exist on the Map! Url is:"
                 << media->url();
         return;
     }
     d->mPublishMediaMap.remove( media );
     if ( media->status() == KBlog::BlogMedia::Error ) {
-        kError() << "Upload error! with this message: " << media->error();
+        qCritical() << "Upload error! with this message: " << media->error();
         const QString tmp( i18n( "Uploading media failed: %1", media->error() ) );
-        kDebug() << "Emitting sigMediaError ...";
+        qDebug() << "Emitting sigMediaError ...";
         Q_EMIT sigMediaError( tmp, m );
         return;
     }
     quint16 newChecksum = qChecksum( media->data().data(), media->data().count() );
     if ( newChecksum != m->checksum() ) {
-        kError() << "Check sum error: checksum of sent file: " << m->checksum() <<
+        qCritical() << "Check sum error: checksum of sent file: " << m->checksum() <<
                 " Checksum of received file: " << newChecksum << "Error: " << media->error() << endl;
         const QString tmp( i18n( "Uploading media failed: Checksum error. Returned error: %1",
                            media->error() ) );
-        kDebug() << "Emitting sigMediaError ...";
+        qDebug() << "Emitting sigMediaError ...";
         Q_EMIT sigMediaError( tmp, m );
         return;
     }
     m->setRemoteUrl( QUrl( media->url().url() ).toString() );
     m->setUploaded( true );
-    kDebug() << "Emitting sigMediaUploaded...";
+    qDebug() << "Emitting sigMediaUploaded...";
     Q_EMIT sigMediaUploaded( m );
 }
 
 void Backend::modifyPost( BilboPost* post )
 {
-    kDebug() << "Blog Id: " << d->bBlog->id();
+    qDebug() << "Blog Id: " << d->bBlog->id();
 //     BilboPost tmpPost = post;
     preparePost( post );
     connect( d->kBlog, SIGNAL(modifiedPost(KBlog::BlogPost*)),
@@ -309,7 +309,7 @@ void Backend::modifyPost( BilboPost* post )
 
 void Backend::removePost( BilboPost* post )
 {
-    kDebug() << "Blog Id: " << d->bBlog->id();
+    qDebug() << "Blog Id: " << d->bBlog->id();
 
 //     KBlog::BlogPost *bp = post.toKBlogPost();
     connect( d->kBlog, SIGNAL(removedPost(KBlog::BlogPost*)),
@@ -320,11 +320,11 @@ void Backend::removePost( BilboPost* post )
 void Backend::slotPostRemoved( KBlog::BlogPost *post )
 {
     if(!post) {
-        kDebug()<<"post returned from server is NULL";
+        qDebug()<<"post returned from server is NULL";
         return;
     }
     if( !DBMan::self()->removePost(d->bBlog->id(), post->postId()) ) {
-        kDebug()<<"cannot remove post from database, error: "<<DBMan::self()->lastErrorText();
+        qDebug()<<"cannot remove post from database, error: "<<DBMan::self()->lastErrorText();
     }
     emit sigPostRemoved(d->bBlog->id(), BilboPost(*post));
 }
@@ -345,22 +345,22 @@ void Backend::slotPostFetched( KBlog::BlogPost *post )
 
 void Backend::error( KBlog::Blog::ErrorType type, const QString & errorMessage )
 {
-    kDebug() << "Blog Id: " << d->bBlog->id();
+    qDebug() << "Blog Id: " << d->bBlog->id();
     QString errType = errorTypeToString( type );
     errType += errorMessage;
-    kDebug() << errType;
-    kDebug() << "Emitting sigError";
+    qDebug() << errType;
+    qDebug() << "Emitting sigError";
     Q_EMIT sigError( errType );
 }
 
 void Backend::slotMediaError( KBlog::Blog::ErrorType type, const QString & errorMessage,
                               KBlog::BlogMedia * media )
 {
-    kDebug();
+    qDebug();
     QString errType = errorTypeToString( type );
     errType += errorMessage;
-    kDebug() << errType;
-    kDebug() << "Emitting sigMediaError ...";
+    qDebug() << errType;
+    qDebug() << "Emitting sigMediaError ...";
     emit sigMediaError( errorMessage, d->mPublishMediaMap[ media ] );
     d->mPublishMediaMap.remove( media );
 }
@@ -393,11 +393,11 @@ QString Backend::errorTypeToString( KBlog::Blog::ErrorType type )
 void Backend::savePostInDbAndEmitResult( KBlog::BlogPost *post )
 {
     if(!post) {
-        kError()<<"ERROR: post is NULL ";
+        qCritical()<<"ERROR: post is NULL ";
         Q_EMIT sigError( i18n("post is NULL") );
         return;
     }
-    kDebug()<<"isPrivate: "<<post->isPrivate();
+    qDebug()<<"isPrivate: "<<post->isPrivate();
     BilboPost *pp = new BilboPost( *post );
     int post_id;
     if( d->mSubmitPostStatusMap[ post ] == KBlog::BlogPost::Modified) {
@@ -409,7 +409,7 @@ void Backend::savePostInDbAndEmitResult( KBlog::BlogPost *post )
     if ( post_id != -1 ) {
         pp->setPrivate( post->isPrivate() );
         pp->setId( post_id );
-        kDebug() << "Emitting sigPostPublished ...";
+        qDebug() << "Emitting sigPostPublished ...";
         Q_EMIT sigPostPublished( d->bBlog->id(), pp );
     }
     // TODO crashes stylegetter on GData. Somehow the post gets deleted before

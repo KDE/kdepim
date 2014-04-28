@@ -38,7 +38,7 @@
 #include <KActionCollection>
 #include <KConfig>
 #include <KConfigDialog>
-#include <KDebug>
+#include <QDebug>
 #include <KFileDialog>
 #include <KGlobal>
 #include <KIcon>
@@ -406,7 +406,7 @@ bool TimetrackerWidget::closeAllFiles()
 
 void TimetrackerWidget::slotCurrentChanged()
 {
-    kDebug() << "entering KTimetrackerWidget::slotCurrentChanged";
+    qDebug() << "entering KTimetrackerWidget::slotCurrentChanged";
 
     if ( d->mTaskView )
     {
@@ -782,7 +782,7 @@ int TimetrackerWidget::totalMinutesForTaskId( const QString &taskId ) const
 
 void TimetrackerWidget::startTimerFor( const QString &taskId )
 {
-    kDebug();
+    qDebug();
         
     TaskView *taskView = currentTaskView();
     if ( !taskView ) return;

@@ -21,7 +21,7 @@
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
 #include <KLocalizedString>
-#include <KDebug>
+#include <QDebug>
 #include <KUrl>
 
 #include <KTextEdit>
@@ -66,7 +66,7 @@ void ScamDetectionDetailsDialog::slotSaveAs()
         if ( !fileName.isEmpty() ) {
             QFile file(fileName);
             if ( !file.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
-                kDebug()<<"We can't save in file :"<<fileName;
+                qDebug()<<"We can't save in file :"<<fileName;
                 return;
             }
             QTextStream ts( &file );

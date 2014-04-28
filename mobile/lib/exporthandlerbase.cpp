@@ -24,7 +24,7 @@
 #include <AkonadiCore/itemfetchscope.h>
 #include <AkonadiCore/recursiveitemfetchjob.h>
 #include <kmessagebox.h>
-#include <KDebug>
+#include <QDebug>
 #include <QItemSelectionModel>
 
 ExportHandlerBase::ExportHandlerBase( QObject *parent )
@@ -103,7 +103,7 @@ void ExportHandlerBase::exec()
         if ( item.isValid() ) {
           items << item;
         } else {
-          kDebug() << "Invalid item encountered during export!";
+          qDebug() << "Invalid item encountered during export!";
         }
       }
     }

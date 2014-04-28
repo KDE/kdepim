@@ -46,7 +46,7 @@
 #include <KAction>
 #include <KComboBox>
 #include <KConfig>
-#include <KDebug>
+#include <QDebug>
 #include <KIcon>
 #include <KIconLoader>
 #include <KLineEdit>
@@ -282,7 +282,7 @@ void Widget::Private::setDefaultThemeForStorageModel( const StorageModel * stora
 void Widget::Private::checkSortOrder( const StorageModel *storageModel )
 {
     if ( storageModel && mAggregation && !mSortOrder.validForAggregation( mAggregation ) ) {
-        kDebug() << "Could not restore sort order for folder" << storageModel->id();
+        qDebug() << "Could not restore sort order for folder" << storageModel->id();
         mSortOrder = SortOrder::defaultForAggregation( mAggregation, mSortOrder );
 
         // Change the global sort order if the sort order didn't fit the global aggregation.

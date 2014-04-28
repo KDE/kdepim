@@ -34,7 +34,7 @@ using MessageComposer::MessageFactory;
 #include <ItemFetchJob>
 #include <ItemModifyJob>
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
 #include <KMessageBox>
 
@@ -273,7 +273,7 @@ int MDNAdviceHelper::requestAdviceOnMDN( const char *what )
             }
         }
     }
-    kWarning() << "didn't find data for message box \""  << what << "\"";
+    qWarning() << "didn't find data for message box \""  << what << "\"";
     return MessageComposer::MDNIgnore;
 }
 

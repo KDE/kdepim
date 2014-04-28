@@ -23,7 +23,7 @@
 #include "mainwidget.h"
 #include "startup.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <KPluginFactory>
@@ -94,7 +94,7 @@ bool KAddressBookPart::openFile()
 
 void KAddressBookPart::guiActivateEvent( KParts::GUIActivateEvent *e )
 {
-   kDebug();
+   qDebug();
    KParts::ReadOnlyPart::guiActivateEvent( e );
 }
 

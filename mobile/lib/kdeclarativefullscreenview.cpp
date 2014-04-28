@@ -23,7 +23,7 @@
 #include <AkonadiCore/control.h>
 #include <AkonadiCore/servermanager.h>
 
-#include <KDebug>
+#include <QDebug>
 #include <KGlobalSettings>
 #include <KStandardDirs>
 #include <KMessageBox>
@@ -102,7 +102,7 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
 
 void KDeclarativeFullScreenView::delayedInit()
 {
-  kDebug();
+  qDebug();
   static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet("timeit");
   QTime t;
 
@@ -111,14 +111,14 @@ void KDeclarativeFullScreenView::delayedInit()
   engine()->rootContext()->setContextProperty( QLatin1String("window"), QVariant::fromValue( static_cast<QObject*>( this ) ) );
 
   if ( debugTiming ) {
-    kWarning() << "Adding QML import paths" << t.elapsed() << &t;
+    qWarning() << "Adding QML import paths" << t.elapsed() << &t;
   }
   foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", QLatin1String("imports") ) )
     engine()->addImportPath( importPath );
   QString qmlPath = KStandardDirs::locate( "appdata", m_qmlFileName + QLatin1String(".qml") );
 
   if ( debugTiming ) {
-    kWarning() << "Adding QML import paths done" << t.elapsed() << &t;
+    qWarning() << "Adding QML import paths done" << t.elapsed() << &t;
   }
 
   if ( qmlPath.isEmpty() ) // Try harder
@@ -135,7 +135,7 @@ void KDeclarativeFullScreenView::delayedInit()
   mActionCollection->addAction( QLatin1String( "quit_akonadi" ), action );
 
   if ( debugTiming ) {
-    kWarning() << "KDeclarativeFullScreenView ctor done" << t.elapsed() << &t << QDateTime::currentDateTime();
+    qWarning() << "KDeclarativeFullScreenView ctor done" << t.elapsed() << &t << QDateTime::currentDateTime();
   }
 
   doDelayedInitInternal();
@@ -158,12 +158,12 @@ void KDeclarativeFullScreenView::setQmlFile(const QString& source)
   QTime t;
   if ( debugTiming ) {
     t.start();
-    kWarning() << "start setSource" << &t << " - " << QDateTime::currentDateTime();
+    qWarning() << "start setSource" << &t << " - " << QDateTime::currentDateTime();
   }
   qDebug() << QLatin1String("trying to load \"") +  source << QLatin1String("\"");
   setSource( QUrl::fromLocalFile(source) );
   if ( debugTiming ) {
-    kWarning() << "setSourceDone" << t.elapsed() << &t;
+    qWarning() << "setSourceDone" << t.elapsed() << &t;
   }
 }
 

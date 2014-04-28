@@ -34,7 +34,7 @@
 #include <kmessagebox.h>
 #include <KLineEdit>
 #include <KPushButton>
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 
 #include <QKeyEvent>
@@ -141,7 +141,7 @@ void RecipientsPicker::slotPicked()
 
 void RecipientsPicker::pick( Recipient::Type type )
 {
-    kDebug() << int( type );
+    qDebug() << int( type );
 
     const Akonadi::EmailAddressSelection::List selections = mView->selectedAddresses();
 

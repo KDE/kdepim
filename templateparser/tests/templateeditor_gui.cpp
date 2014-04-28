@@ -18,7 +18,7 @@
 #include "templateeditor_gui.h"
 #include "templateparser/templatestextedit.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kapplication.h>
 #include <KCmdLineArgs>
 #include <KLocalizedString>

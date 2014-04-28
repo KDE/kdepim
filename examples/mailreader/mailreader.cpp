@@ -170,7 +170,7 @@ void mailreader::itemsReceived(const Akonadi::Item::List &list )
 
   Akonadi::Item item = list.first();
 
-  kDebug() << item.payloadData() << item.hasPayload<KMime::Message::Ptr>();
+  qDebug() << item.payloadData() << item.hasPayload<KMime::Message::Ptr>();
 
   if ( !item.hasPayload<KMime::Message::Ptr>() )
     return;
@@ -181,7 +181,7 @@ void mailreader::itemsReceived(const Akonadi::Item::List &list )
 void mailreader::itemFetchDone(KJob *job)
 {
   if (job->error())
-    kDebug() << job->errorString();
+    qDebug() << job->errorString();
 }
 
 

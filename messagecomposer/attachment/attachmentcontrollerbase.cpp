@@ -41,7 +41,7 @@
 
 #include <KAction>
 #include <KActionCollection>
-#include <KDebug>
+#include <QDebug>
 #include <KEncodingFileDialog>
 #include <KFileDialog>
 #include <KLocalizedString>
@@ -208,12 +208,12 @@ void AttachmentControllerBase::Private::compressJobResult( KJob *job )
         }
     }
 
-    kDebug() << "Replacing uncompressed part in model.";
+    qDebug() << "Replacing uncompressed part in model.";
     uncompressedParts[ compressedPart ] = originalPart;
     bool ok = model->replaceAttachment( originalPart, compressedPart );
     if( !ok ) {
         // The attachment was removed from the model while we were compressing.
-        kDebug() << "Compressed a zombie.";
+        qDebug() << "Compressed a zombie.";
     }
 }
 
@@ -287,7 +287,7 @@ void AttachmentControllerBase::Private::editDone( MessageViewer::EditorWatcher *
     Q_ASSERT( tempFile );
 
     if( watcher->fileChanged() ) {
-        kDebug() << "File has changed.";
+        qDebug() << "File has changed.";
 
         // Read the new data and update the part in the model.
         tempFile->reset();
@@ -315,7 +315,7 @@ void AttachmentControllerBase::Private::createOpenWithMenu( QMenu *topMenu, Atta
             menu->menuAction()->setObjectName(QLatin1String("openWith_submenu")); // for the unittest
             topMenu->addMenu(menu);
         }
-        //kDebug() << offers.count() << "offers" << topMenu << menu;
+        //qDebug() << offers.count() << "offers" << topMenu << menu;
 
         KService::List::ConstIterator it = offers.constBegin();
         KService::List::ConstIterator end = offers.constEnd();
@@ -351,7 +351,7 @@ void AttachmentControllerBase::Private::createOpenWithMenu( QMenu *topMenu, Atta
 void AttachmentControllerBase::exportPublicKey( const QString &fingerprint )
 {
     if( fingerprint.isEmpty() || !Kleo::CryptoBackendFactory::instance()->openpgp() ) {
-        kWarning() << "Tried to export key with empty fingerprint, or no OpenPGP.";
+        qWarning() << "Tried to export key with empty fingerprint, or no OpenPGP.";
         Q_ASSERT( false ); // Can this happen?
         return;
     }
@@ -382,12 +382,12 @@ static KTemporaryFile *dumpAttachmentToTempFile( const AttachmentPart::Ptr part 
 {
     KTemporaryFile *file = new KTemporaryFile;
     if( !file->open() ) {
-        kError() << "Could not open tempfile" << file->fileName();
+        qCritical() << "Could not open tempfile" << file->fileName();
         delete file;
         return 0;
     }
     if( file->write( part->data() ) == -1 ) {
-        kError() << "Could not dump attachment to tempfile.";
+        qCritical() << "Could not dump attachment to tempfile.";
         delete file;
         return 0;
     }
@@ -516,13 +516,13 @@ void AttachmentControllerBase::setSignEnabled( bool enabled )
 void AttachmentControllerBase::compressAttachment( AttachmentPart::Ptr part, bool compress )
 {
     if( compress ) {
-        kDebug() << "Compressing part.";
+        qDebug() << "Compressing part.";
 
         AttachmentCompressJob *ajob = new AttachmentCompressJob( part, this );
         connect( ajob, SIGNAL(result(KJob*)), this, SLOT(compressJobResult(KJob*)) );
         ajob->start();
     } else {
-        kDebug() << "Uncompressing part.";
+        qDebug() << "Uncompressing part.";
 
         // Replace the compressed part with the original uncompressed part, and delete
         // the compressed part.
@@ -667,7 +667,7 @@ void AttachmentControllerBase::Private::slotAttachmentContentCreated( KJob *job 
         emit q->showAttachment( attachmentJob->content(), QByteArray() );
     } else {
         // TODO: show warning to the user
-        kWarning() << "Error creating KMime::Content for attachment:" << job->errorText();
+        qWarning() << "Error creating KMime::Content for attachment:" << job->errorText();
     }
 }
 
@@ -697,7 +697,7 @@ void AttachmentControllerBase::editAttachment( AttachmentPart::Ptr part, bool op
         // Delete the temp file if the composer is closed (and this object is destroyed).
         tempFile->setParent( this ); // Manages lifetime.
     } else {
-        kWarning() << "Could not start EditorWatcher.";
+        qWarning() << "Could not start EditorWatcher.";
         delete watcher;
         delete tempFile;
     }
@@ -720,7 +720,7 @@ void AttachmentControllerBase::saveAttachmentAs( AttachmentPart::Ptr part )
                                         i18n( "Save Attachment As" ) );
 
     if( url.isEmpty() ) {
-        kDebug() << "Save Attachment As dialog canceled.";
+        qDebug() << "Save Attachment As dialog canceled.";
         return;
     }
 
@@ -824,11 +824,11 @@ MessageCore::AttachmentFromUrlBaseJob * AttachmentControllerBase::createAttachme
 {
     MessageCore::AttachmentFromUrlBaseJob *ajob = 0;
     if( KMimeType::findByUrl( url )->name() == QLatin1String( "inode/directory" ) ) {
-        kDebug() << "Creating attachment from folder";
+        qDebug() << "Creating attachment from folder";
         ajob = new AttachmentFromFolderJob ( url, this );
     } else {
         ajob = new AttachmentFromUrlJob( url, this );
-        kDebug() << "Creating attachment from file";
+        qDebug() << "Creating attachment from file";
     }
     if( MessageComposer::MessageComposerSettings::maximumAttachmentSize() > 0 ) {
         ajob->setMaximumAllowedSize( MessageComposer::MessageComposerSettings::maximumAttachmentSize() );

@@ -28,7 +28,7 @@
 #include <KLocalizedString>
 #include <KPushButton>
 #include <KIcon>
-#include <KDebug>
+#include <QDebug>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -314,7 +314,7 @@ void FilterActionWidgetLister::setActionList( QList<FilterAction*> *list )
 
     int superfluousItems = (int)d->mActionList->count() - widgetsMaximum();
     if ( superfluousItems > 0 ) {
-        kDebug() << "FilterActionWidgetLister: Clipping action list to"
+        qDebug() << "FilterActionWidgetLister: Clipping action list to"
                  << widgetsMaximum() << "items!";
 
         for ( ; superfluousItems ; superfluousItems-- ) {

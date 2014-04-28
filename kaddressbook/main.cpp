@@ -25,7 +25,7 @@
 #include "kaddressbook_options.h"
 
 #include <KCmdLineArgs>
-#include <KDebug>
+#include <QDebug>
 #include <KontactInterface/pimuniqueapplication.h>
 
 //-----------------------------------------------------------------------------
@@ -46,7 +46,7 @@ private:
 
 int KAddressBookApplication::newInstance()
 {
-    kDebug();
+    qDebug();
     if (!mMainWindow) {
         mMainWindow = new MainWindow;
         mMainWindow->show();

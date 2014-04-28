@@ -32,7 +32,7 @@
 #include <KPIMIdentities/Identity>
 #include <KPIMIdentities/IdentityManager>
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
 #include <KMessageBox>
 #include <KGlobal>
@@ -48,7 +48,7 @@ public:
 
     ~KernelPrivate()
     {
-        kDebug();
+        qDebug();
         delete kernel;
     }
     Kernel *kernel;
@@ -65,7 +65,7 @@ Kernel::Kernel( QObject *parent ) : QObject( parent )
 
 Kernel::~Kernel()
 {
-    kDebug();
+    qDebug();
 }
 
 Kernel *Kernel::self()
@@ -142,7 +142,7 @@ bool Kernel::isMainFolderCollection( const Akonadi::Collection &col )
 //-----------------------------------------------------------------------------
 void Kernel::initFolders()
 {
-    kDebug() << "Initialized and looking for specialcollection folders.";
+    qDebug() << "Initialized and looking for specialcollection folders.";
     findCreateDefaultCollection( Akonadi::SpecialMailCollections::Inbox );
     findCreateDefaultCollection( Akonadi::SpecialMailCollections::Outbox );
     findCreateDefaultCollection( Akonadi::SpecialMailCollections::SentMail );
@@ -218,7 +218,7 @@ void Kernel::emergencyExit( const QString &reason )
                      "The error was:\n%1", reason );
     }
 
-    kWarning() << mesg;
+    qWarning() << mesg;
 
     // Show error box for the first error that caused emergencyExit.
     static bool s_showingErrorBox = false;

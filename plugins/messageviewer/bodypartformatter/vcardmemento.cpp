@@ -17,7 +17,7 @@
 
 #include "vcardmemento.h"
 #include <Akonadi/Contact/ContactSearchJob>
-#include <KDebug>
+#include <QDebug>
 using namespace MessageViewer;
 
 VcardMemento::VcardMemento( const QStringList& emails )
@@ -49,7 +49,7 @@ void VcardMemento::slotSearchJobFinished( KJob *job )
 {
   Akonadi::ContactSearchJob *searchJob = static_cast<Akonadi::ContactSearchJob*>( job );
   if ( searchJob->error() ) {
-    kWarning() << "Unable to fetch contact:" << searchJob->errorText();
+    qWarning() << "Unable to fetch contact:" << searchJob->errorText();
     mIndex++;
     continueToCheckEmail();
     return;
@@ -62,7 +62,7 @@ void VcardMemento::slotSearchJobFinished( KJob *job )
     vcard.address = searchJob->contacts().first();
     mVCardList[mIndex] = vcard;
     if (contactSize>1)
-        kDebug()<<" more than 1 contact was found";
+        qDebug()<<" more than 1 contact was found";
   }
 
   mIndex++;

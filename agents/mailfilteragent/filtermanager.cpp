@@ -31,7 +31,7 @@
 #include <akonadi/kmime/messageparts.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -144,14 +144,14 @@ void FilterManager::Private::slotItemsFetchedForFilter( const Akonadi::Item::Lis
 void FilterManager::Private::itemsFetchJobForFilterDone( KJob *job )
 {
     if ( job->error() ) {
-        kError() << "Error while fetching items. " << job->error() << job->errorString();
+        qCritical() << "Error while fetching items. " << job->error() << job->errorString();
     }
 }
 
 void FilterManager::Private::itemFetchJobForFilterDone( KJob *job )
 {
     if ( job->error() ) {
-        kError() << "Error while fetching item. " << job->error() << job->errorString();
+        qCritical() << "Error while fetching item. " << job->error() << job->errorString();
         return;
     }
 
@@ -159,7 +159,7 @@ void FilterManager::Private::itemFetchJobForFilterDone( KJob *job )
 
     const Akonadi::Item::List items = fetchJob->items();
     if ( items.isEmpty() ) {
-        kError() << "Error while fetching item: item not found";
+        qCritical() << "Error while fetching item: item not found";
         return;
     }
 
@@ -179,7 +179,7 @@ void FilterManager::Private::itemFetchJobForFilterDone( KJob *job )
         }
 
         if ( !wantedFilter ) {
-            kError() << "Cannot find filter object with id" << filterId;
+            qCritical() << "Cannot find filter object with id" << filterId;
             return;
         }
 
@@ -200,10 +200,10 @@ void FilterManager::Private::moveJobResult( KJob *job )
     if ( job->error() ) {
         const Akonadi::ItemMoveJob *movejob = qobject_cast<Akonadi::ItemMoveJob*>( job );
         if( movejob ) {
-            kError() << "Error while moving items. "<< job->error() << job->errorString()
+            qCritical() << "Error while moving items. "<< job->error() << job->errorString()
                      << " to destinationCollection.id() :" << movejob->destinationCollection().id();
         } else {
-            kError() << "Error while moving items. " << job->error() << job->errorString();
+            qCritical() << "Error while moving items. " << job->error() << job->errorString();
         }
         //Laurent: not real info and when we have 200 errors it's very long to click all the time on ok.
         //KMessageBox::error(qApp->activeWindow(), job->errorString(), i18n("Error applying mail filter move"));
@@ -213,7 +213,7 @@ void FilterManager::Private::moveJobResult( KJob *job )
 void FilterManager::Private::deleteJobResult( KJob *job )
 {
     if ( job->error() ) {
-        kError() << "Error while delete items. " << job->error() << job->errorString();
+        qCritical() << "Error while delete items. " << job->error() << job->errorString();
         KMessageBox::error(qApp->activeWindow(), job->errorString(), i18n("Error applying mail filter delete"));
     }
 }
@@ -221,7 +221,7 @@ void FilterManager::Private::deleteJobResult( KJob *job )
 void FilterManager::Private::modifyJobResult( KJob *job )
 {
     if ( job->error() ) {
-        kError() << "Error while modifying items. " << job->error() << job->errorString();
+        qCritical() << "Error while modifying items. " << job->error() << job->errorString();
         KMessageBox::error(qApp->activeWindow(), job->errorString(), i18n("Error applying mail filter modifications"));
     }
 }
@@ -414,7 +414,7 @@ bool FilterManager::process( const Akonadi::Item& item, bool needsFullPayload, c
     }
 
     if ( !item.hasPayload<KMime::Message::Ptr>() ) {
-        kError() << "Filter is null or item doesn't have correct payload.";
+        qCritical() << "Filter is null or item doesn't have correct payload.";
         return false;
     }
 
@@ -487,12 +487,12 @@ bool FilterManager::processContextItem( ItemContext context )
 bool FilterManager::process(const QList< MailFilter* >& mailFilters, const Akonadi::Item& item, bool needsFullPayload, FilterManager::FilterSet set, bool account, const QString& accountId )
 {
     if ( set == NoSet ) {
-        kDebug() << "FilterManager: process() called with not filter set selected";
+        qDebug() << "FilterManager: process() called with not filter set selected";
         return false;
     }
 
     if ( !item.hasPayload<KMime::Message::Ptr>() ) {
-        kError() << "Filter is null or item doesn't have correct payload.";
+        qCritical() << "Filter is null or item doesn't have correct payload.";
         return false;
     }
 
@@ -578,7 +578,7 @@ MailCommon::SearchRule::RequiredPart FilterManager::requiredPart(const QString& 
 void FilterManager::dump() const
 {
     foreach ( const MailCommon::MailFilter *filter, d->mFilters ) {
-        kDebug() << filter->asString();
+        qDebug() << filter->asString();
     }
 }
 #endif

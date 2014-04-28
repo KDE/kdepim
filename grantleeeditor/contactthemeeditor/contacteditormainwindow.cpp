@@ -29,7 +29,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KFileDialog>
-#include <KDebug>
+#include <QDebug>
 #include <KStandardDirs>
 #include <KRecentFilesAction>
 #include <KLocalizedString>

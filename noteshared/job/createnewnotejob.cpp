@@ -150,7 +150,7 @@ void CreateNewNoteJob::slotFetchCollection(KJob* job)
 void CreateNewNoteJob::slotNoteCreationFinished(KJob *job)
 {
     if (job->error()) {
-        kWarning() << job->errorString();
+        qWarning() << job->errorString();
         NoteShared::NoteSharedGlobalConfig::self()->setDefaultFolder(-1);
         NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
         KMessageBox::error(mWidget, i18n("Note was not created."), i18n("Create new note"));
@@ -161,6 +161,6 @@ void CreateNewNoteJob::slotNoteCreationFinished(KJob *job)
 void CreateNewNoteJob::slotCollectionModifyFinished(KJob *job)
 {
     if (job->error()) {
-        kWarning() << job->errorString();
+        qWarning() << job->errorString();
     }
 }

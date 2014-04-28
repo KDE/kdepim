@@ -30,7 +30,7 @@
 
 #include "akonadi_next/note.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KMime/KMimeMessage>
 
 #include <KPIMTextEdit/textutils.h>

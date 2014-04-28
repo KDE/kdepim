@@ -48,7 +48,7 @@
 #include <KColorDialog>
 #include <KMessageBox>
 #include <KStandardDirs>
-#include <KDebug>
+#include <QDebug>
 #include <KFontAction>
 #include <KFileDialog>
 #include <KPrintPreview>
@@ -757,13 +757,13 @@ void ComposerViewPrivate::_k_spellCheckerCorrected(const QString& original, int 
     script += QString::number(index + original.length());
     script += QLatin1String(")");
 
-    //kDebug() << "**** script:" << script;
+    //qDebug() << "**** script:" << script;
     execJScript(contextMenuResult.element(), script);
 }
 
 void ComposerViewPrivate::_k_spellCheckerMisspelling(const QString& text, int pos)
 {
-    // kDebug() << text << pos;
+    // qDebug() << text << pos;
     QString selectionScript(QLatin1String("this.setSelectionRange("));
     selectionScript += QString::number(pos + spellTextSelectionStart);
     selectionScript += QLatin1Char(',');

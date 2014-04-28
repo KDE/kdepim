@@ -24,7 +24,7 @@
 #include <KShell>
 #include <KTemporaryFile>
 #include <KUrl>
-#include <KDebug>
+#include <QDebug>
 
 using namespace MailCommon;
 
@@ -98,7 +98,7 @@ QString FilterActionWithCommand::substituteCommandLineArgsFor( const KMime::Mess
             KTemporaryFile *tempFile = new KTemporaryFile();
             if ( !tempFile->open() ) {
                 delete tempFile;
-                kDebug() << "FilterActionWithCommand: Could not create temp file!";
+                qDebug() << "FilterActionWithCommand: Could not create temp file!";
                 return QString();
             }
 

@@ -32,7 +32,7 @@
 #include <messagecomposer/recipient/distributionlistdialog.h>
 #include "messageviewer/utils/autoqpointer.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KMime/Headers>
 #include <KLocalizedString>
 #include <KMessageBox>

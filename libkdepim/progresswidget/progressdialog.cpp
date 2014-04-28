@@ -32,7 +32,7 @@
 #include "progressdialog.h"
 #include "ssllabel.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KHBox>
 #include <KLocale>
 #include <KStandardGuiItem>

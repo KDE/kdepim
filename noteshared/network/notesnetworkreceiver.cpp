@@ -39,7 +39,7 @@
 #include <QTcpSocket>
 #include <QTimer>
 #include <QTextCodec>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
 

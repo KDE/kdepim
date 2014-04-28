@@ -19,7 +19,7 @@
 #include "pimcommon/storageservice/hubic/hubicstorageservice.h"
 #include <QWidget>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kapplication.h>
 #include <KCmdLineArgs>
 #include <KLocalizedString>

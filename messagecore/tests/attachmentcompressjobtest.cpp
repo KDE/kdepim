@@ -22,7 +22,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <KDebug>
+#include <QDebug>
 #include <KZip>
 #include <qtest_kde.h>
 
@@ -58,8 +58,8 @@ void AttachmentCompressJobTest::testCompress()
   VERIFYEXEC( cjob );
   QCOMPARE( cjob->originalPart(), origPart );
   AttachmentPart::Ptr zipPart = cjob->compressedPart();
-  //kDebug() << data;
-  //kDebug() << zipPart->data();
+  //qDebug() << data;
+  //qDebug() << zipPart->data();
   QVERIFY( zipPart->isAutoEncoding() );
   QVERIFY( zipPart->isCompressed() );
   QCOMPARE( zipPart->name(), QString( name + QString::fromLatin1( ".zip" ) ) );

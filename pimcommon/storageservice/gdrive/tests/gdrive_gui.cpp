@@ -19,7 +19,7 @@
 #include "pimcommon/storageservice/gdrive/gdrivestorageservice.h"
 #include <QWidget>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kapplication.h>
 #include <KCmdLineArgs>
 #include <KLocalizedString>

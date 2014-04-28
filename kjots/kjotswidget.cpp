@@ -99,7 +99,7 @@
 #include "KJotsSettings.h"
 #include "kjotslockjob.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <memory>
 #include "noteshared/attributes/notelockattribute.h"
@@ -567,7 +567,7 @@ void KJotsWidget::migrateNoteData( const QString &migrator, const QString &type 
   const int currentVersion = migrationCfg.readEntry( "Version", 0 );
   const int targetVersion = migrationCfg.readEntry( "TargetVersion", 1 );
   if ( enabled && !completed && currentVersion < targetVersion ) {
-    kDebug() << "Performing Akonadi migration. Good luck!";
+    qDebug() << "Performing Akonadi migration. Good luck!";
     KProcess proc;
     QStringList args = QStringList() << QLatin1String("--interactive-on-change");
     if ( !type.isEmpty() )
@@ -581,14 +581,14 @@ void KJotsWidget::migrateNoteData( const QString &migrator, const QString &type 
       result = proc.waitForFinished();
     }
     if ( result && proc.exitCode() == 0 ) {
-      kDebug() << "Akonadi migration has been successful";
+      qDebug() << "Akonadi migration has been successful";
     } else {
       // exit code 1 means it is already running, so we are probably called by a migrator instance
-      kError() << "Akonadi migration failed!";
-      kError() << "command was: " << proc.program();
-      kError() << "exit code: " << proc.exitCode();
-      kError() << "stdout: " << proc.readAllStandardOutput();
-      kError() << "stderr: " << proc.readAllStandardError();
+      qCritical() << "Akonadi migration failed!";
+      qCritical() << "command was: " << proc.program();
+      qCritical() << "exit code: " << proc.exitCode();
+      qCritical() << "stdout: " << proc.readAllStandardOutput();
+      qCritical() << "stderr: " << proc.readAllStandardError();
     }
     migrationCfg.writeEntry( "Version", targetVersion );
     migrationCfg.writeEntry( "Completed", true );
@@ -857,13 +857,13 @@ void KJotsWidget::doCreateNewPage(const Collection &collection)
 void KJotsWidget::newPageResult( KJob* job )
 {
   if ( job->error() )
-    kDebug() << job->errorString();
+    qDebug() << job->errorString();
 }
 
 void KJotsWidget::newBookResult( KJob* job )
 {
   if ( job->error() ) {
-    kDebug() << job->errorString();
+    qDebug() << job->errorString();
     return;
   }
   Akonadi::CollectionCreateJob *createJob = qobject_cast<Akonadi::CollectionCreateJob*>(job);
@@ -1242,7 +1242,7 @@ void KJotsWidget::selectNext( int role, int step )
     }
     sibling = sibling.sibling( sibling.row() + step, column );
   }
-  kWarning() << "No valid selection";
+  qWarning() << "No valid selection";
 }
 
 void KJotsWidget::nextBook()

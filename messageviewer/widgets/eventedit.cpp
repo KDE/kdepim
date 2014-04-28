@@ -24,7 +24,7 @@
 #include <KIcon>
 #include <KDateTimeEdit>
 #include <QDateTime>
-#include <KDebug>
+#include <QDebug>
 
 #include <QHBoxLayout>
 #include <QEvent>
@@ -198,19 +198,19 @@ void EventEdit::slotCloseWidget()
 void EventEdit::slotReturnPressed()
 {
     if (!mMessage) {
-        kDebug()<<" Message is null";
+        qDebug()<<" Message is null";
         return;
     }
     const Akonadi::Collection collection = mCollectionCombobox->currentCollection();
     if (!collection.isValid()) {
-        kDebug()<<" Collection is not valid";
+        qDebug()<<" Collection is not valid";
         return;
     }
 
     const QDateTime dtstart = mStartDateTimeEdit->dateTime();
     const QDateTime dtend = mEndDateTimeEdit->dateTime();
     if (!dtstart.isValid() || !dtend.isValid()) {
-        kDebug()<<" date is not valid !";
+        qDebug()<<" date is not valid !";
         return;
     }
 

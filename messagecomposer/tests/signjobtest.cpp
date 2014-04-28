@@ -20,7 +20,7 @@
 
 #include "signjobtest.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <qtest_kde.h>
 #include "qtest_messagecomposer.h"
 #include "cryptofunctions.h"
@@ -117,7 +117,7 @@ void SignJobTest::testHeaders()
 
   KMime::Content *result = sJob->content();
   result->assemble();
-  kDebug() << result->encodedContent();
+  qDebug() << result->encodedContent();
 
   QVERIFY( result->contentType( false ) );
   QCOMPARE( result->contentType()->mimeType(), mimeType );
@@ -151,7 +151,7 @@ void SignJobTest::testRecommentationRFC3156()
 
   KMime::Content *result = sJob->content();
   result->assemble();
-  kDebug() << result->encodedContent();
+  qDebug() << result->encodedContent();
 
   QByteArray body = MessageCore::NodeHelper::firstChild( result )->body();
   QCOMPARE( QString::fromUtf8( body ),

@@ -32,7 +32,7 @@ using namespace Akonadi;
 #include <KPIMIdentities/IdentityManager>
 #include <KPIMIdentities/Identity>
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QMutex>
 #include <QMutexLocker>
@@ -79,7 +79,7 @@ FolderCollection::FolderCollection( const Akonadi::Collection & col, bool writec
 
 FolderCollection::~FolderCollection()
 {
-  //kDebug()<<" FolderCollection::~FolderCollection"<<this;
+  //qDebug()<<" FolderCollection::~FolderCollection"<<this;
   if ( mWriteConfig ) {
     writeConfig();
   }

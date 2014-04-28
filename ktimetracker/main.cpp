@@ -25,7 +25,7 @@
 #include <QFile>
 #include <KAboutData>
 #include <KCmdLineArgs>
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
 #include <KStandardDirs>
 #include <KontactInterface/pimuniqueapplication.h>

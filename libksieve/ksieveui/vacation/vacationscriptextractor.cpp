@@ -23,7 +23,7 @@ VacationDataExtractor::VacationDataExtractor()
       mContext( None ),
       mNotificationInterval( 0 )
 {
-    kDebug();
+    qDebug();
 }
 
 VacationDataExtractor::~VacationDataExtractor()
@@ -32,7 +32,7 @@ VacationDataExtractor::~VacationDataExtractor()
 }
 
 void VacationDataExtractor::commandStart( const QString & identifier ) {
-    kDebug() << "( \"" << identifier <<"\" )";
+    qDebug() << "( \"" << identifier <<"\" )";
     if ( identifier != QLatin1String("vacation") )
         return;
     reset();
@@ -40,13 +40,13 @@ void VacationDataExtractor::commandStart( const QString & identifier ) {
 }
 
 void VacationDataExtractor::commandEnd() {
-    kDebug();
+    qDebug();
     mContext = None;
 }
 
 void VacationDataExtractor::error( const KSieve::Error & e )
 {
-    kDebug() << e.asString() << "@" << e.line() << "," << e.column();
+    qDebug() << e.asString() << "@" << e.line() << "," << e.column();
 }
 
 void VacationDataExtractor::finished()
@@ -56,7 +56,7 @@ void VacationDataExtractor::finished()
 
 void VacationDataExtractor::taggedArgument( const QString & tag )
 {
-    kDebug() << "( \"" << tag <<"\" )";
+    qDebug() << "( \"" << tag <<"\" )";
     if ( mContext != VacationCommand )
         return;
     if ( tag == QLatin1String("days") )
@@ -67,7 +67,7 @@ void VacationDataExtractor::taggedArgument( const QString & tag )
 
 void VacationDataExtractor::stringArgument( const QString & string, bool, const QString & )
 {
-    kDebug() << "( \"" << string <<"\" )";
+    qDebug() << "( \"" << string <<"\" )";
     if ( mContext == Addresses ) {
         mAliases.push_back( string );
         mContext = VacationCommand;
@@ -79,7 +79,7 @@ void VacationDataExtractor::stringArgument( const QString & string, bool, const 
 
 void VacationDataExtractor::numberArgument( unsigned long number, char )
 {
-    kDebug() << "( \"" << number <<"\" )";
+    qDebug() << "( \"" << number <<"\" )";
     if ( mContext != Days )
         return;
     if ( number > INT_MAX )
@@ -95,7 +95,7 @@ void VacationDataExtractor::stringListArgumentStart()
 }
 void VacationDataExtractor::stringListEntry( const QString & string, bool, const QString & )
 {
-    kDebug() << "( \"" << string <<"\" )";
+    qDebug() << "( \"" << string <<"\" )";
     if ( mContext != Addresses )
         return;
     mAliases.push_back( string );
@@ -103,7 +103,7 @@ void VacationDataExtractor::stringListEntry( const QString & string, bool, const
 
 void VacationDataExtractor::stringListArgumentEnd()
 {
-    kDebug();
+    qDebug();
     if ( mContext != Addresses )
         return;
     mContext = VacationCommand;
@@ -111,7 +111,7 @@ void VacationDataExtractor::stringListArgumentEnd()
 
 void VacationDataExtractor::reset()
 {
-    kDebug();
+    qDebug();
     mContext = None;
     mNotificationInterval = 0;
     mAliases.clear();

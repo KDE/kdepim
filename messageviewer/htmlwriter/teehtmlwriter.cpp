@@ -34,7 +34,7 @@
 
 #include "teehtmlwriter.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 
 

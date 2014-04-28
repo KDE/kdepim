@@ -19,7 +19,7 @@
 #include "filtermanager.h"
 #include "mailfilter.h"
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QFile>
 #include <QDir>
@@ -36,7 +36,7 @@ FilterImporterSylpheed::FilterImporterSylpheed( QFile *file )
     QDomElement filters = doc.documentElement();
 
     if ( filters.isNull() ) {
-        kDebug() << "No filters defined";
+        qDebug() << "No filters defined";
         return;
     }
 
@@ -45,7 +45,7 @@ FilterImporterSylpheed::FilterImporterSylpheed( QFile *file )
         if ( tag == QLatin1String( "rule" ) ) {
             parseFilters(e);
         } else {
-            kDebug() << " unknown tag " << tag;
+            qDebug() << " unknown tag " << tag;
         }
     }
 }
@@ -68,7 +68,7 @@ void FilterImporterSylpheed::parseConditions( const QDomElement &e, MailCommon::
         } else if ( attr == QLatin1String( "or" ) ) {
             filter->pattern()->setOp( SearchPattern::OpOr );
         } else {
-            kDebug() << " bool not defined: " << attr;
+            qDebug() << " bool not defined: " << attr;
         }
     }
     for ( QDomElement ruleFilter = e.firstChildElement();
@@ -98,7 +98,7 @@ void FilterImporterSylpheed::parseConditions( const QDomElement &e, MailCommon::
                     fieldName = "x-mailing-list";
                 }
                 if ( fieldName.isEmpty() ) {
-                    kDebug()<<" match-header not implemented " << attr;
+                    qDebug()<<" match-header not implemented " << attr;
                 }
             }
             contentsName = ruleFilter.text();
@@ -134,10 +134,10 @@ void FilterImporterSylpheed::parseConditions( const QDomElement &e, MailCommon::
         } else if ( nexttag == QLatin1String( "target-folder" ) ) {
             //TODO
         } else {
-            kDebug() << " tag not recognize " << nexttag;
+            qDebug() << " tag not recognize " << nexttag;
         }
         if (fieldName.isEmpty()) {
-            kDebug()<<" field not implemented "<<nexttag;
+            qDebug()<<" field not implemented "<<nexttag;
         }
 
         if ( ruleFilter.hasAttribute( QLatin1String("type") ) ) {
@@ -163,7 +163,7 @@ void FilterImporterSylpheed::parseConditions( const QDomElement &e, MailCommon::
             } else if ( attr == QLatin1String( "lt" ) ) {
                 functionName = SearchRule::FuncIsLess;
             } else {
-                kDebug() << " Attr type not implemented :" << attr;
+                qDebug() << " Attr type not implemented :" << attr;
             }
         }
         SearchRule::Ptr rule = SearchRule::createInstance( fieldName, functionName, contentsName );
@@ -217,7 +217,7 @@ void FilterImporterSylpheed::parseActions( const QDomElement &e,
         }
 
         if ( actionName.isEmpty() ) {
-            kDebug() << " tag not recognize " << nexttag;
+            qDebug() << " tag not recognize " << nexttag;
         }
         createFilterAction( filter, actionName, value );
     }
@@ -250,7 +250,7 @@ void FilterImporterSylpheed::parseFilters( const QDomElement &e )
             filter->setApplyOnInbound( false );
             filter->setApplyOnExplicit( true );
         } else {
-            kDebug() << " timing not defined: " << attr;
+            qDebug() << " timing not defined: " << attr;
         }
 
     }
@@ -263,7 +263,7 @@ void FilterImporterSylpheed::parseFilters( const QDomElement &e )
         } else if ( nexttag == QLatin1String( "action-list" ) ) {
             parseActions( ruleFilter, filter );
         } else {
-            kDebug() << " next tag not implemented " << nexttag;
+            qDebug() << " next tag not implemented " << nexttag;
         }
     }
 

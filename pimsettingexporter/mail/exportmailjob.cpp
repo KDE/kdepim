@@ -35,7 +35,7 @@
 #include <KTemporaryFile>
 #include <KStandardDirs>
 #include <KProcess>
-#include <KDebug>
+#include <QDebug>
 
 #include <QDebug>
 #include <QFile>
@@ -560,7 +560,7 @@ void ExportMailJob::backupAkonadiDb()
     const int result = proc->execute();
     delete proc;
     if ( result != 0 ) {
-        kDebug()<<" Error during dump Database";
+        qDebug()<<" Error during dump Database";
         return;
     }
     const bool fileAdded  = archive()->addLocalFile(tmp.fileName(), Utils::akonadiPath() + QLatin1String("akonadidatabase.sql"));

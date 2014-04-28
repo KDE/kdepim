@@ -24,7 +24,7 @@
 #include <KColorScheme>
 #include <KCalendarSystem>
 #include <KStandardDirs>
-#include <KDebug>
+#include <QDebug>
 #include <QTextBlock>
 #include <QTextDocument>
 #include <QDomDocument>
@@ -374,7 +374,7 @@ QString AutoCorrection::autoDetectURL(const QString &_word) const
 
     /* this method is ported from lib/kotext/KoAutoFormat.cpp KoAutoFormat::doAutoDetectUrl
      * from Calligra 1.x branch */
-    // kDebug() <<"link:" << word;
+    // qDebug() <<"link:" << word;
 
     bool secure = false;
     int link_type = 0;
@@ -453,7 +453,7 @@ QString AutoCorrection::autoDetectURL(const QString &_word) const
             newWord = (secure ? QLatin1String("ftps://") : QLatin1String("ftp://")) + word;
             break;
         }
-        //kDebug() <<"newWord:" << newWord;
+        //qDebug() <<"newWord:" << newWord;
         return newWord;
     }
 
@@ -873,7 +873,7 @@ void AutoCorrection::writeAutoCorrectionXmlFile(const QString &filename)
     const QString fname = filename.isEmpty() ? KGlobal::dirs()->locateLocal("data", QLatin1String("autocorrect/custom-") + (mAutoCorrectLang == QLatin1String("en_US") ? QLatin1String("autocorrect") : mAutoCorrectLang) + QLatin1String(".xml")) : filename;
     QFile file(fname);
     if ( !file.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
-        kDebug()<<"We can't save in file :"<<fname;
+        qDebug()<<"We can't save in file :"<<fname;
         return;
     }
     QDomDocument root(QLatin1String("autocorrection"));

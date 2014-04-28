@@ -19,7 +19,7 @@
 #include "testldapclient.h"
 
 #include <kapplication.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kcmdlineargs.h>
 #include <KLDAP/ldapobject.h>
 
@@ -38,7 +38,7 @@ int main( int argc, char *argv[] )
   test.setup();
   test.runAll();
   test.cleanup();
-  kDebug() << "All tests OK.";
+  qDebug() << "All tests OK.";
   return 0;
 }
 
@@ -67,9 +67,9 @@ bool TestLDAPClient::check( const QString &txt, QString a, QString b )
   }
 
   if ( a == b ) {
-    kDebug() << txt <<" : checking '" << a <<"' against expected value '" << b <<"'..." <<"ok";
+    qDebug() << txt <<" : checking '" << a <<"' against expected value '" << b <<"'..." <<"ok";
   } else {
-    kDebug() << txt <<" : checking '" << a <<"' against expected value '" << b <<"'..." <<"KO !";
+    qDebug() << txt <<" : checking '" << a <<"' against expected value '" << b <<"'..." <<"KO !";
     cleanup();
     exit( 1 );
   }
@@ -84,7 +84,7 @@ void TestLDAPClient::cleanup()
 
 void TestLDAPClient::testIntevation()
 {
-  kDebug() ;
+  qDebug() ;
   mClient = new KLDAP::LdapClient( 0, this );
 
 #ifdef __GNUC__
@@ -172,22 +172,22 @@ static QString join( const KLDAP::LdapAttrValue &lst, const QString &sep )
 void TestLDAPClient::slotLDAPResult( const KLDAP::LdapClient&, const KLDAP::LdapObject &obj )
 {
   QString cn = join( obj.attributes()[ QLatin1String("cn") ], QLatin1String(", ") );
-  kDebug() <<" cn:" << cn;
+  qDebug() <<" cn:" << cn;
   assert( !obj.attributes()[ QLatin1String("mail") ].isEmpty() );
   QString mail = join( obj.attributes()[ QLatin1String("mail") ], QLatin1String(", ") );
-  kDebug() <<" mail:" << mail;
+  qDebug() <<" mail:" << mail;
   assert( mail.contains( QLatin1Char('@') ) );
 }
 
 void TestLDAPClient::slotLDAPError( const QString& err )
 {
-  kDebug() << err;
+  qDebug() << err;
   ::exit( 1 );
 }
 
 void TestLDAPClient::slotLDAPDone()
 {
-  kDebug() ;
+  qDebug() ;
   emit leaveModality();
 }
 

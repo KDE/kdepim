@@ -1007,7 +1007,7 @@ void CalPrintBase::drawDayIncidence(QPainter &p, const QRect &dayBox,
                                     int &textY,
                                     bool richDescription) const
 {
-    kDebug() << "summary =" << summary;
+    qDebug() << "summary =" << summary;
 
     int flags = Qt::AlignLeft | Qt::OpaqueMode;
     QFontMetrics fm = p.fontMetrics();

@@ -35,7 +35,7 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <klocale.h>
 #include <QEventLoop>
 
@@ -55,7 +55,7 @@ bool KonsoleKalendarDelete::deleteEvent()
 {
   bool status = false;
 
-  kDebug() << "konsolekalendardelete.cpp::deleteEvent()";
+  qDebug() << "konsolekalendardelete.cpp::deleteEvent()";
 
   /*
    * Retrieve event on the basis of the unique string ID
@@ -67,7 +67,7 @@ bool KonsoleKalendarDelete::deleteEvent()
            << endl;
       printSpecs( event );
     } else {
-      kDebug() << "konsolekalendardelete.cpp:deleteEvent() :"
+      qDebug() << "konsolekalendardelete.cpp:deleteEvent() :"
                << m_variables->getUID().data();
 
       if ( m_variables->isVerbose() ) {
@@ -82,7 +82,7 @@ bool KonsoleKalendarDelete::deleteEvent()
                        &loop, SLOT(quit()));
       calendar->deleteEvent( event );
       loop.exec();
-      kDebug() << "Finished deleting";
+      qDebug() << "Finished deleting";
       status = calendar->incidence(event->uid()) == 0;
 
       if (status) {
@@ -93,7 +93,7 @@ bool KonsoleKalendarDelete::deleteEvent()
     }
   }
 
-  kDebug() << "konsolekalendardelete.cpp::deleteEvent() | Done";
+  qDebug() << "konsolekalendardelete.cpp::deleteEvent() | Done";
   return status;
 }
 

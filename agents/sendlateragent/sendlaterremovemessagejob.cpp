@@ -17,7 +17,7 @@
 
 #include "sendlaterremovemessagejob.h"
 #include <ItemDeleteJob>
-#include <KDebug>
+#include <QDebug>
 
 SendLaterRemoveMessageJob::SendLaterRemoveMessageJob(const QList<Akonadi::Item::Id> &listItem, QObject *parent)
     : QObject(parent),
@@ -44,7 +44,7 @@ void SendLaterRemoveMessageJob::deleteItem()
 void SendLaterRemoveMessageJob::slotItemDeleteDone(KJob* job)
 {
     if ( job->error() ) {
-        kDebug()<<" Error during delete item :"<<job->errorString();
+        qDebug()<<" Error during delete item :"<<job->errorString();
     }
     ++mIndex;
     deleteItem();

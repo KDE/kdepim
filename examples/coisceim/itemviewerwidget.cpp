@@ -62,7 +62,7 @@ ItemViewerWidget::ItemViewerWidget( ItemSelection *itemSelection, QWidget* paren
 
 void ItemViewerWidget::selectionChanged( const QModelIndex &selectedIndex )
 {
-  kDebug() << selectedIndex;
+  qDebug() << selectedIndex;
   if(!selectedIndex.isValid())
     return; // No meaningful selection.
 

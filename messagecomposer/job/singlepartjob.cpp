@@ -24,7 +24,7 @@
 #include "part/globalpart.h"
 #include "util.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 
 #include <KMime/kmime_content.h>
@@ -94,7 +94,7 @@ bool SinglepartJobPrivate::chooseCTE()
         contentTransferEncoding = new KMime::Headers::ContentTransferEncoding;
         contentTransferEncoding->setEncoding( allowed.first() );
     }
-    kDebug() << "Settled on encoding" << KMime::nameForEncoding( contentTransferEncoding->encoding() );
+    qDebug() << "Settled on encoding" << KMime::nameForEncoding( contentTransferEncoding->encoding() );
     return true;
 }
 

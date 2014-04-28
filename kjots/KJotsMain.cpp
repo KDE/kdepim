@@ -30,7 +30,7 @@
 
 #include <kaction.h>
 #include <kactioncollection.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kglobalsettings.h>
 #include <kinputdialog.h>
 #include <kstandardaction.h>

@@ -36,7 +36,7 @@
 #include <KCalCore/OccurrenceIterator>
 #include <KCheckableProxyModel>
 #include <KIcon>
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 
 #include <QHBoxLayout>
@@ -601,7 +601,7 @@ void MonthView::reloadIncidences()
 
 void MonthView::calendarReset()
 {
-  kDebug();
+  qDebug();
   d->triggerDelayedReload( ResourcesChanged );
 }
 

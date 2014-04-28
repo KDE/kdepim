@@ -56,7 +56,7 @@
 #include <KActionCollection>
 #include <KCmdLineArgs>
 #include <KConfigGroup>
-#include <KDebug>
+#include <QDebug>
 #include <KFileDialog>
 #include <KGlobal>
 #include <KInputDialog>
@@ -154,14 +154,14 @@ void KDeclarativeMainView::doDelayedInitInternal()
   QTime time;
   if ( debugTiming ) {
     time.start();
-    kWarning() << "Start KDeclarativeMainView ctor" << &time << " - " << QDateTime::currentDateTime();
+    qWarning() << "Start KDeclarativeMainView ctor" << &time << " - " << QDateTime::currentDateTime();
   }
 
   KGlobal::locale()->insertCatalog( QLatin1String( "libkdepimmobileui" ) );
   KGlobal::locale()->insertCatalog( QLatin1String( "libincidenceeditors" ) ); // for category dialog
 
   if ( debugTiming ) {
-    kWarning() << "Catalog inserted" << time.elapsed() << &time;
+    qWarning() << "Catalog inserted" << time.elapsed() << &time;
   }
 
   d->mChangeRecorder = new Akonadi::ChangeRecorder( this );
@@ -174,7 +174,7 @@ void KDeclarativeMainView::doDelayedInitInternal()
   d->mEtm->setIncludeUnsubscribed( false );
 
   if ( debugTiming ) {
-    kWarning() << "ETM created" << time.elapsed() << &time;
+    qWarning() << "ETM created" << time.elapsed() << &time;
   }
 
   QAbstractItemModel *mainModel = d->mEtm;
@@ -191,7 +191,7 @@ void KDeclarativeMainView::doDelayedInitInternal()
   connect( d->mBnf, SIGNAL(collectionSelectionChanged()), SIGNAL(collectionSelectionChanged()) );
 
   if ( debugTiming ) {
-    kWarning() << "BreadcrumbNavigation factory created" << time.elapsed() << &time;
+    qWarning() << "BreadcrumbNavigation factory created" << time.elapsed() << &time;
   }
 
   QDeclarativeContext *context = engine()->rootContext();
@@ -262,20 +262,20 @@ void KDeclarativeMainView::doDelayedInitInternal()
   connect( d->mBnf->qmlSelectedItemModel(), SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(breadcrumbsSelectionChanged()) );
 
   if ( debugTiming ) {
-    kWarning() << "Restoring state" << time.elapsed() << &time;
+    qWarning() << "Restoring state" << time.elapsed() << &time;
   }
 
   QTimer::singleShot(1000, d, SLOT(initializeStateSaver()));
 
   if ( debugTiming ) {
-    kWarning() << "restore state done" << time.elapsed() << &time;
+    qWarning() << "restore state done" << time.elapsed() << &time;
   }
 
   connect( d->mBnf->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(numSelectedAccountsChanged()) );
 
   if ( debugTiming ) {
     time.start();
-    kWarning() << "Finished KDeclarativeMainView ctor: " << time.elapsed() << " - " << &time;
+    qWarning() << "Finished KDeclarativeMainView ctor: " << time.elapsed() << " - " << &time;
   }
 
   qmlRegisterUncreatableType<AgentStatusMonitor>( "org.kde.pim.mobileui", 4, 5, "AgentStatusMonitor", QLatin1String( "This type is only exported for its enums" ) );
@@ -490,7 +490,7 @@ void KDeclarativeMainView::launchAccountWizard()
 {
 #ifdef Q_OS_UNIX
   const QString inProcessAccountWizard = KStandardDirs::locate( "module", QLatin1String("accountwizard_plugin.so") );
-  kDebug() << inProcessAccountWizard;
+  qDebug() << inProcessAccountWizard;
   if ( !inProcessAccountWizard.isEmpty() ) {
     QPluginLoader loader( inProcessAccountWizard );
     if ( loader.load() ) {
@@ -500,7 +500,7 @@ void KDeclarativeMainView::launchAccountWizard()
       loader.unload();
       return;
     } else {
-      kDebug() << loader.fileName() << loader.errorString();
+      qDebug() << loader.fileName() << loader.errorString();
     }
   }
 #endif
@@ -511,7 +511,7 @@ void KDeclarativeMainView::launchAccountWizard()
   int pid = KProcess::startDetached( QLatin1String( "accountwizard" ), args );
   if ( !pid ) {
     // Handle error
-    kDebug() << "error creating accountwizard";
+    qDebug() << "error creating accountwizard";
   }
 }
 

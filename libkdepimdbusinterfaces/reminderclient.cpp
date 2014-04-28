@@ -23,7 +23,7 @@
 #include "reminderclient.h"
 #include "korgacinterface.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KStandardDirs>
 #include <KToolInvocation>
 
@@ -42,11 +42,11 @@ void ReminderClient::startDaemon()
 
     const QString desktopFile = KStandardDirs::locate( "autostart", QLatin1String("korgac.desktop") );
     if ( desktopFile.isEmpty() ) {
-        kWarning() << "Couldn't find autostart/korgac.desktop!";
+        qWarning() << "Couldn't find autostart/korgac.desktop!";
     } else {
         QString error;
         if ( KToolInvocation::startServiceByDesktopPath( desktopFile, QStringList(), &error ) != 0 ) {
-            kWarning() << "Failure starting korgac:" << error;
+            qWarning() << "Failure starting korgac:" << error;
             // try harder...
             const QString korgacExe = KStandardDirs::findExe( QLatin1String( "korgac" ) );
             QProcess::startDetached( korgacExe );

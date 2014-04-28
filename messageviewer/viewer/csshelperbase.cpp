@@ -33,7 +33,7 @@
 #include "csshelperbase.h"
 
 #include <KColorScheme>
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 #include <KGlobalSettings>
 

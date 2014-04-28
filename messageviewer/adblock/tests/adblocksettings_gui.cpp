@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kcmdlineargs.h>
 #include <kapplication.h>
 #include "messageviewer/adblock/adblocksettingwidget.h"

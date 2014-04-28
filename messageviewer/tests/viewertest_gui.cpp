@@ -22,7 +22,7 @@
 #include "header/headerstyle.h"
 #include "header/headerstrategy.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kcmdlineargs.h>
 #include <kapplication.h>
 
@@ -64,7 +64,7 @@ int main (int argc, char **argv)
     if (file.open(QIODevice::ReadOnly)) {
       msg->setContent(file.readAll());
     } else {
-      kWarning() << "Couldn't read" << fileName;
+      qWarning() << "Couldn't read" << fileName;
     }
   }
   msg->parse();

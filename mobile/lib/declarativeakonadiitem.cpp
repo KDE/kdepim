@@ -1,6 +1,6 @@
 #include "declarativeakonadiitem.h"
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QtCore/QTimer>
 #include <QGraphicsProxyWidget>

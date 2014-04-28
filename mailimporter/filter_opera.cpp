@@ -18,7 +18,7 @@
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <ktemporaryfile.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <QPointer>
 
 #include "filter_opera.h"

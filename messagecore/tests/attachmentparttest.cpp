@@ -22,7 +22,7 @@
 
 #include <QHash>
 
-#include <KDebug>
+#include <QDebug>
 #include <qtest_kde.h>
 
 #include <messagecore/attachment/attachmentpart.h>

@@ -35,7 +35,7 @@
 
 #include <messagecore/helpers/nodehelper.h>
 
-#include <KDebug>
+#include <QDebug>
 #include <QDir>
 #include <QFile>
 #include <QtTest>
@@ -55,7 +55,7 @@ void ComposerTestUtil::verify( bool sign, bool encrypt, KMime::Content* content,
 }
 
 void ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray signedContent, Kleo::CryptoMessageFormat f, KMime::Headers::contentEncoding encoding ) {
-  kDebug() << "verifySignature";
+  qDebug() << "verifySignature";
   // store it in a KMime::Message, that's what OTP needs
   KMime::Message* resultMessage =  new KMime::Message;
   resultMessage->setContent( content->encodedContent() );
@@ -212,7 +212,7 @@ void ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QB
     QCOMPARE( nh->encryptionState( resultMessage.get() ), MessageViewer::KMMsgFullyEncrypted );
 
     QList< KMime::Content* > extra = nh->extraContents( resultMessage.get() );
-    kDebug() << "size:" << extra.size();
+    qDebug() << "size:" << extra.size();
     QCOMPARE( extra.size(), 1 );
     QCOMPARE( nh->signatureState( extra[ 0 ]  ), MessageViewer::KMMsgFullySigned );
   } else if( f & Kleo::InlineOpenPGPFormat ) {
@@ -234,7 +234,7 @@ void ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QB
     QCOMPARE( nh->encryptionState( resultMessage.get() ), MessageViewer::KMMsgFullyEncrypted );
 
     QList< KMime::Content* > extra = nh->extraContents( resultMessage.get() );
-    kDebug() << "size:" << extra.size();
+    qDebug() << "size:" << extra.size();
     QCOMPARE( extra.size(), 1 );
     QCOMPARE( nh->signatureState( extra[ 0 ] ), MessageViewer::KMMsgFullySigned );
   }

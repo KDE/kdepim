@@ -20,7 +20,7 @@
 */
 
 #include "kmailcompletion.h"
-#include <KDebug>
+#include <QDebug>
 #include <QRegExp>
 
 using namespace KPIM;

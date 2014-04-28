@@ -22,7 +22,7 @@
 
 #include <KGlobal>
 #include <KGlobalSettings>
-#include <KDebug>
+#include <QDebug>
 
 #include <Akonadi/Calendar/ETMCalendar>
 #include <calendarviews/timeline/timelineview.h>
@@ -68,7 +68,7 @@ QDate TimelineViewItem::startDate() const
 
 void TimelineViewItem::setStartDate(const QDate& startDate)
 {
-  kDebug() << startDate;
+  qDebug() << startDate;
   if ( startDate.isValid() )
     m_view->showDates( startDate, endDate() );
 }
@@ -80,7 +80,7 @@ QDate TimelineViewItem::endDate() const
 
 void TimelineViewItem::setEndDate(const QDate& endDate)
 {
-  kDebug() << endDate;
+  qDebug() << endDate;
   if ( endDate.isValid() )
     m_view->showDates( startDate(), endDate );
 }
@@ -93,7 +93,7 @@ QObject* TimelineViewItem::calendar() const
 void TimelineViewItem::setCalendar(QObject* calendarObj)
 {
   Akonadi::ETMCalendar* cal = qobject_cast<Akonadi::ETMCalendar*>( calendarObj );
-  kDebug() << calendarObj << cal;
+  qDebug() << calendarObj << cal;
   if ( cal ) {
     m_view->setCalendar( cal->weakPointer().toStrongRef().dynamicCast<Akonadi::ETMCalendar>() );
     m_view->updateConfig();

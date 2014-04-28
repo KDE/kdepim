@@ -40,7 +40,7 @@
 
 #include <QTimer>
 
-#include <KDebug>
+#include <QDebug>
 #include <klocalizedstring.h>
 
 using namespace MessageComposer;
@@ -160,7 +160,7 @@ void ComposerPrivate::composeStep2()
     MainTextJob *mainTextJob = new MainTextJob( textPart, q );
 
     if( ( sign || encrypt ) && format & Kleo::InlineOpenPGPFormat ) { // needs custom handling --- one SignEncryptJob by itself
-        kDebug() << "sending to sign/enc inline job!";
+        qDebug() << "sending to sign/enc inline job!";
 
         if ( encrypt ) {
             //TODO: fix Inline PGP with encrypted attachments
@@ -217,9 +217,9 @@ void ComposerPrivate::composeStep2()
         QMutableListIterator<AttachmentPart::Ptr> iter( attachmentParts );
         while( iter.hasNext() ) {
             AttachmentPart::Ptr part = iter.next();
-            kDebug() << "Checking attachment crypto policy..." << part->isSigned() << part->isEncrypted();
+            qDebug() << "Checking attachment crypto policy..." << part->isSigned() << part->isEncrypted();
             if( !noCrypto && !autoSaving && ( sign != part->isSigned() || encrypt != part->isEncrypted() ) ) { // different policy
-                kDebug() << "got attachment with different crypto policy!";
+                qDebug() << "got attachment with different crypto policy!";
                 lateAttachmentParts.append( part );
                 iter.remove();
             }
@@ -267,9 +267,9 @@ QList<ContentJobBase *> ComposerPrivate::createEncryptJobs( ContentJobBase *cont
     // each SplitInfo holds a list of recipients/keys, if there is more than
     // one item in it then it means there are secondary recipients that need
     // different messages w/ clean headers
-    kDebug() << "starting enc jobs";
-    kDebug() << "format:" << format;
-    kDebug() << "enc data:" << encData.size();
+    qDebug() << "starting enc jobs";
+    qDebug() << "format:" << format;
+    qDebug() << "enc data:" << encData.size();
 
     if( encData.size() == 0 ) { // no key data! bail!
         q->setErrorText( i18n( "No key data for recipients found." ) );
@@ -280,7 +280,7 @@ QList<ContentJobBase *> ComposerPrivate::createEncryptJobs( ContentJobBase *cont
 
     for( int i = 0; i < encData.size(); ++i ) {
         QPair<QStringList, std::vector<GpgME::Key> > recipients = encData[ i ];
-        kDebug() << "got first list of recipients:" << recipients.first;
+        qDebug() << "got first list of recipients:" << recipients.first;
         ContentJobBase *subJob = 0;
         if ( sign ) {
             SignEncryptJob* seJob = new SignEncryptJob( q );
@@ -298,11 +298,11 @@ QList<ContentJobBase *> ComposerPrivate::createEncryptJobs( ContentJobBase *cont
             eJob->setRecipients( recipients.first );
             subJob = eJob;
         }
-        kDebug() << "subJob" << subJob;
+        qDebug() << "subJob" << subJob;
         subJob->appendSubjob( contentJob );
         jobs.append( subJob );
     }
-    kDebug() << jobs.size();
+    qDebug() << jobs.size();
     return jobs;
 }
 
@@ -312,7 +312,7 @@ void ComposerPrivate::contentJobFinished( KJob *job )
     if( job->error() ) {
         return; // KCompositeJob takes care of the error.
     }
-    kDebug() << "composing final message";
+    qDebug() << "composing final message";
 
     KMime::Message* headers;
     KMime::Content* resultContent;
@@ -344,13 +344,13 @@ void ComposerPrivate::contentJobFinished( KJob *job )
                 new KMime::Headers::Generic( "X-KMail-EncBccRecipients",
                                              headers, eJob->recipients().join( QLatin1String( "%" ) ),  "utf-8" );
 
-        kDebug() << "got one of multiple messages sending to:" << realTo->asUnicodeString();
-        kDebug() << "sending to recipients:" << recipients;
+        qDebug() << "got one of multiple messages sending to:" << realTo->asUnicodeString();
+        qDebug() << "sending to recipients:" << recipients;
         headers->setHeader( realTo );
         headers->assemble();
     } else { // just use the saved headers from before
         if( encData.size() > 0 ) {
-            kDebug() << "setting enc data:" << encData[ 0 ].first << "with num keys:" << encData[ 0 ].second.size();
+            qDebug() << "setting enc data:" << encData[ 0 ].first << "with num keys:" << encData[ 0 ].second.size();
             keys = encData[ 0 ].second;
             recipients = encData[ 0 ].first;
         }
@@ -380,15 +380,15 @@ void ComposerPrivate::composeWithLateAttachments( KMime::Message* headers, KMime
     multiJob->appendSubjob( tJob );
     multiJob->setExtraContent( headers );
 
-    kDebug() << "attachment encr key size:" << keys.size() << recipients;
+    qDebug() << "attachment encr key size:" << keys.size() << recipients;
 
     // operate correctly on each attachment that has a different crypto policy than body.
     foreach( AttachmentPart::Ptr attachment, parts ) {
         AttachmentJob* attachJob = new AttachmentJob( attachment, q );
 
-        kDebug() << "got a late attachment";
+        qDebug() << "got a late attachment";
         if( attachment->isSigned() ) {
-            kDebug() << "adding signjob for late attachment";
+            qDebug() << "adding signjob for late attachment";
             SignJob* sJob = new SignJob( q );
             sJob->setContent( 0 );
             sJob->setCryptoMessageFormat( format );
@@ -396,7 +396,7 @@ void ComposerPrivate::composeWithLateAttachments( KMime::Message* headers, KMime
 
             sJob->appendSubjob( attachJob );
             if( attachment->isEncrypted() ) {
-                kDebug() << "adding sign + encrypt job for late attachment";
+                qDebug() << "adding sign + encrypt job for late attachment";
                 EncryptJob* eJob = new EncryptJob( q );
                 eJob->setCryptoMessageFormat( format );
                 eJob->setEncryptionKeys( keys );
@@ -406,11 +406,11 @@ void ComposerPrivate::composeWithLateAttachments( KMime::Message* headers, KMime
 
                 multiJob->appendSubjob( eJob );
             } else {
-                kDebug() << "Just signing late attachment";
+                qDebug() << "Just signing late attachment";
                 multiJob->appendSubjob( sJob );
             }
         } else if( attachment->isEncrypted() ) { // only encryption
-            kDebug() << "just encrypting late attachment";
+            qDebug() << "just encrypting late attachment";
             EncryptJob* eJob = new EncryptJob( q );
             eJob->setCryptoMessageFormat( format );
             eJob->setEncryptionKeys( keys );
@@ -419,7 +419,7 @@ void ComposerPrivate::composeWithLateAttachments( KMime::Message* headers, KMime
             eJob->appendSubjob( attachJob );
             multiJob->appendSubjob( eJob );
         } else {
-            kDebug() << "attaching plain non-crypto attachment";
+            qDebug() << "attaching plain non-crypto attachment";
             AttachmentJob* attachJob = new AttachmentJob( attachment, q );
             multiJob->appendSubjob( attachJob );
         }
@@ -436,7 +436,7 @@ void ComposerPrivate::attachmentsFinished( KJob* job )
     if( job->error() ) {
         return; // KCompositeJob takes care of the error.
     }
-    kDebug() << "composing final message with late attachments";
+    qDebug() << "composing final message with late attachments";
 
     Q_ASSERT( dynamic_cast<ContentJobBase*>( job ) );
     ContentJobBase* contentJob = static_cast<ContentJobBase*>( job );
@@ -538,7 +538,7 @@ void Composer::removeAttachmentPart( AttachmentPart::Ptr part )
     if( d->attachmentParts.contains( part ) ) {
         d->attachmentParts.removeAll( part );
     } else {
-        kError() << "Unknown attachment part" << part.get();
+        qCritical() << "Unknown attachment part" << part.get();
         Q_ASSERT( false );
         return;
     }

@@ -18,7 +18,7 @@
 */
 
 #include "akonaditabbar.h"
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <KTabBar>
 #include <AkonadiCore/collection.h>

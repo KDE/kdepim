@@ -61,7 +61,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kio/netaccess.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KMimeType>
 #include <KTemporaryFile>
 #include <ktoolinvocation.h>
@@ -116,7 +116,7 @@ QString Util::fileNameForMimetype( const QString &mimeType, int iconSize,
     } else {
         fileName = QLatin1String( "unknown" );
         if ( !tMimeType.isEmpty() ) {
-            kWarning() << "unknown mimetype" << tMimeType;
+            qWarning() << "unknown mimetype" << tMimeType;
         }
     }
     //WorkAround for #199083
@@ -369,7 +369,7 @@ bool Util::saveContent( QWidget *parent, KMime::Content* content, const KUrl& ur
     }
 #else
     const QByteArray data = content->decodedContent();
-    kWarning() << "Port the encryption/signature handling when saving a KMime::Content.";
+    qWarning() << "Port the encryption/signature handling when saving a KMime::Content.";
 #endif
     QDataStream ds;
     QFile file;

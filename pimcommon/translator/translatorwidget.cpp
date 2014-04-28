@@ -26,7 +26,7 @@
 #include <KPushButton>
 #include <KLocalizedString>
 #include <kio/job.h>
-#include <KDebug>
+#include <QDebug>
 #include <KConfigGroup>
 #include <KSeparator>
 #include <KMessageBox>

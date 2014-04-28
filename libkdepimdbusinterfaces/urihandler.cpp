@@ -32,14 +32,14 @@
 #include <krun.h>
 #include <kapplication.h>
 #include <kshell.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <ktoolinvocation.h>
 
 #include <QObject>
 
 bool UriHandler::process( const QString &uri, const Akonadi::Item& item )
 {
-    kDebug() << uri;
+    qDebug() << uri;
 
     if ( uri.startsWith( QLatin1String( "kmail:" ) ) ) {
         // make sure kmail is running or the part is shown
@@ -66,7 +66,7 @@ bool UriHandler::process( const QString &uri, const Akonadi::Item& item )
             dlg->show();
             return true;
         } else {
-            kDebug()<<"Item is not valid.";
+            qDebug()<<"Item is not valid.";
             return false;
         }
     } else if ( uri.startsWith( QLatin1String( "urn:x-ical" ) ) ) {

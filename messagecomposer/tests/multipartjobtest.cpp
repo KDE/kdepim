@@ -19,7 +19,7 @@
 
 #include "multipartjobtest.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <qtest_kde.h>
 
 #include <KMime/kmime_content.h>
@@ -59,7 +59,7 @@ void MultipartJobTest::testMultipartMixed()
   QVERIFY( mjob->exec() );
   Content *result = mjob->content();
   result->assemble();
-  kDebug() << result->encodedContent();
+  qDebug() << result->encodedContent();
 
   QVERIFY( result->contentType( false ) );
   QCOMPARE( result->contentType()->mimeType(), QByteArray( "multipart/mixed" ) );
@@ -97,7 +97,7 @@ void MultipartJobTest::test8BitPropagation()
   QVERIFY( mjob->exec() );
   Content *content = mjob->content();
   content->assemble();
-  kDebug() << content->encodedContent();
+  qDebug() << content->encodedContent();
   QVERIFY( content->contentTransferEncoding( false ) );
   QCOMPARE( content->contentTransferEncoding()->encoding(), Headers::CE8Bit );
 }

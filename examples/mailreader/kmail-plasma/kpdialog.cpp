@@ -36,7 +36,7 @@
 #include <QTimer>
 
 //KDE
-#include <KDebug>
+#include <QDebug>
 
 //plasma
 #include <Plasma/Dialog>
@@ -123,7 +123,7 @@ void KPDialog::updateColors()
 
 void KPDialog::setupPane()
 {
-    kDebug() << "Setting up";
+    qDebug() << "Setting up";
     // Setup the core model
     Akonadi::Session *session = new Akonadi::Session( "KPApplet", m_folderListWidget );
 

@@ -20,7 +20,7 @@
 
 #include "encryptjobtest.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <qtest_kde.h>
 #include "qtest_messagecomposer.h"
 #include "cryptofunctions.h"
@@ -107,7 +107,7 @@ void EncryptJobTest::testContentChained()
   VERIFYEXEC( mainTextJob );
 
   std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
-  kDebug() << "done getting keys";
+  qDebug() << "done getting keys";
   MessageComposer::EncryptJob* eJob = new MessageComposer::EncryptJob( composer );
 
   QStringList recipients;
@@ -152,7 +152,7 @@ void EncryptJobTest::testHeaders()
 
   KMime::Content *result = eJob->content();
   result->assemble();
-  kDebug() << result->encodedContent();
+  qDebug() << result->encodedContent();
 
   QVERIFY( result->contentType( false ) );
   QCOMPARE( result->contentType()->mimeType(), mimeType );

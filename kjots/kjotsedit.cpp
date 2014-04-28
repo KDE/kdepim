@@ -46,7 +46,7 @@
 
 #include <KMime/Message>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include "kjotsmodel.h"
 #include "noteshared/attributes/notelockattribute.h"
 #include "noteshared/editor/noteeditorutils.h"
@@ -311,7 +311,7 @@ void KJotsEdit::insertFromMimeData ( const QMimeData *source )
      } else if( source->hasHtml() ) {
         // Don't have an action to set top and bottom margins on paragraphs yet.
         // Remove the margins for all inserted html.
-//         kDebug() << source->html();
+//         qDebug() << source->html();
         QString str = source->html();
         int styleBegin = 0;
         while ((styleBegin = str.indexOf(QLatin1String("style=\""), styleBegin, Qt::CaseInsensitive) + 7) != (-1 + 7)) {
@@ -337,7 +337,7 @@ void KJotsEdit::insertFromMimeData ( const QMimeData *source )
             }
             styleBegin = styleEnd;
         }
-//         kDebug() << str;
+//         qDebug() << str;
         insertHtml(str);
     } else {
         KTextEdit::insertFromMimeData(source);

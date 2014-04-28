@@ -34,7 +34,7 @@
 
 #include <KLocale>
 #include <KJob>
-#include <KDebug>
+#include <QDebug>
 
 #include <QCoreApplication>
 
@@ -105,7 +105,7 @@ void Backuper::onCollectionsFetched(KJob *job)
             emitFinished(false, i18n("No data to backup."));
         }
     } else {
-        kError() << job->errorString();
+        qCritical() << job->errorString();
         m_backupInProgress = false;
         emitFinished(false, job->errorString());
     }

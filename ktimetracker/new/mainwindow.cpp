@@ -28,7 +28,7 @@
 
 #include <KAction>
 #include <KApplication>       // kapp
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 #include <KIcon>
 #include <KLocale>            // i18n

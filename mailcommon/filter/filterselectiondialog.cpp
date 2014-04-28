@@ -19,7 +19,7 @@
 #include "filterselectiondialog.h"
 #include "mailfilter.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KListWidgetSearchLine>
 #include <KPushButton>
 #include <KGlobal>

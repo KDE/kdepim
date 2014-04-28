@@ -37,19 +37,19 @@
 #include <KGlobal>
 #include <KIcon>
 #include <KIconLoader>
-#include <KDebug>
+#include <QDebug>
 
 SendLaterJob::SendLaterJob(SendLaterManager *manager, SendLater::SendLaterInfo *info, QObject *parent)
     : QObject(parent),
       mManager(manager),
       mInfo(info)
 {
-    kDebug()<<" SendLaterJob::SendLaterJob"<<this;
+    qDebug()<<" SendLaterJob::SendLaterJob"<<this;
 }
 
 SendLaterJob::~SendLaterJob()
 {
-    kDebug()<<" SendLaterJob::~SendLaterJob()"<<this;
+    qDebug()<<" SendLaterJob::~SendLaterJob()"<<this;
 }
 
 void SendLaterJob::start()
@@ -80,7 +80,7 @@ void SendLaterJob::slotMessageTransfered(const Akonadi::Item::List& items)
         mItem = items.first();
         return;
     }
-    kDebug()<<"Error during fetching message.";
+    qDebug()<<"Error during fetching message.";
     sendError(i18n("Error during fetching message."), SendLaterManager::TooManyItemFound);
 }
 
@@ -91,7 +91,7 @@ void SendLaterJob::slotJobFinished(KJob* job)
         return;
     }
     if ( !MailTransport::TransportManager::self()->showTransportCreationDialog( 0, MailTransport::TransportManager::IfNoTransportExists ) ) {
-        kDebug()<<" we can't create transport ";
+        qDebug()<<" we can't create transport ";
         sendError(i18n("We can't create transport"), SendLaterManager::CanNotCreateTransport);
         return;
     }
@@ -130,7 +130,7 @@ void SendLaterJob::updateAndCleanMessageBeforeSending(const KMime::Message::Ptr 
 void SendLaterJob::slotDeleteItem( KJob *job )
 {
     if ( job->error() ) {
-        kDebug()<<" void SendLaterJob::slotDeleteItem( KJob *job ) :"<<job->errorString();
+        qDebug()<<" void SendLaterJob::slotDeleteItem( KJob *job ) :"<<job->errorString();
     }
     sendDone();
 }

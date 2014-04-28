@@ -60,7 +60,7 @@
 #include <KActionMenu>
 #include <KAction>
 #include <kconfigdialog.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kmessagebox.h>
 #include <KLocale>
 #include <KSelectAction>
@@ -192,7 +192,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     writeConfigs();
     if ( !DBMan::self()->clearTempEntries() )
-        kDebug()<<"Could not erase temp_post table: "<< DBMan::self()->lastErrorText();
+        qDebug()<<"Could not erase temp_post table: "<< DBMan::self()->lastErrorText();
     const int count = tabPosts->count();
     if (count > 0) {
         toolbox->getFieldsValue(activePost->currentPost());
@@ -256,7 +256,7 @@ void MainWindow::setupActions()
 
 void MainWindow::loadTempPosts()
 {
-    kDebug();
+    qDebug();
     QMap<BilboPost*, int> tempList = DBMan::self()->listTempPosts();
     const int count = tempList.count();
     if ( count > 0 ){
@@ -276,7 +276,7 @@ void MainWindow::loadTempPosts()
 
 void MainWindow::setCurrentBlog( int blog_id )
 {
-    kDebug()<<blog_id;
+    qDebug()<<blog_id;
     if (blog_id == -1) {
         blogs->setCurrentItem( -1 );
         toolbox->setCurrentBlogId( blog_id );
@@ -317,7 +317,7 @@ void MainWindow::currentBlogChanged( QAction *act )
 
 void MainWindow::slotCreateNewPost()
 {
-    kDebug();
+    qDebug();
 
     tabPosts->setCurrentWidget( createPostEntry( mCurrentBlogId, BilboPost()) );
     if ( mCurrentBlogId == -1 ) {
@@ -438,7 +438,7 @@ void MainWindow::setupSystemTray()
 
 void MainWindow::slotPostTitleChanged( const QString& title )
 {
-//     kDebug();
+//     qDebug();
     tabPosts->setTabText( tabPosts->currentIndex(), title );
 }
 
@@ -454,7 +454,7 @@ void MainWindow::slotToolboxVisibilityChanged(bool)
 
 void MainWindow::slotActivePostChanged( int index )
 {
-    kDebug() << "new post index: " << index << "\tPrev Index: " << previousActivePostIndex;
+    qDebug() << "new post index: " << index << "\tPrev Index: " << previousActivePostIndex;
 
     activePost = qobject_cast<PostEntry*>( tabPosts->widget( index ) );
     PostEntry *prevActivePost = qobject_cast<PostEntry*>( tabPosts->widget( previousActivePostIndex ) );
@@ -474,14 +474,14 @@ void MainWindow::slotActivePostChanged( int index )
         }
         toolbox->setFieldsValue( activePost->currentPost() );
     } else {
-        kError() << "ActivePost is NULL! tabPosts Current index is: " << tabPosts->currentIndex() ;
+        qCritical() << "ActivePost is NULL! tabPosts Current index is: " << tabPosts->currentIndex() ;
     }
     previousActivePostIndex = index;
 }
 
 void MainWindow::slotPublishPost()
 {
-    kDebug();
+    qDebug();
     if ( mCurrentBlogId == -1 ) {
         KMessageBox::sorry( this, i18n( "You have to select a blog to publish this post to." ) );
         return;
@@ -520,7 +520,7 @@ void MainWindow::slotRemoveAllExclude(int pos)
 
 void MainWindow::slotRemovePostEntry( int pos )
 {
-    kDebug();
+    qDebug();
 
     PostEntry *widget = qobject_cast<PostEntry*>( tabPosts->widget( pos ) );
     
@@ -543,14 +543,14 @@ void MainWindow::slotRemovePostEntry( int pos )
 
 void MainWindow::slotNewPostOpened( BilboPost &newPost, int blog_id )
 {
-    kDebug();
+    qDebug();
     QWidget * w = createPostEntry( blog_id, newPost );
     tabPosts->setCurrentWidget( w );
 }
 
 void MainWindow::slotSavePostLocally()
 {
-    kDebug();
+    qDebug();
     if (activePost && (tabPosts->count() > 0)) {
         toolbox->getFieldsValue(activePost->currentPost());
         activePost->saveLocally();
@@ -560,7 +560,7 @@ void MainWindow::slotSavePostLocally()
 
 void MainWindow::slotError( const QString & errorMessage )
 {
-    kDebug() << "Error message: " << errorMessage;
+    qDebug() << "Error message: " << errorMessage;
     KMessageBox::detailedError( this, i18n( "An error occurred in the last transaction." ), errorMessage );
     statusBar()->clearMessage();
     slotBusy(false);
@@ -568,7 +568,7 @@ void MainWindow::slotError( const QString & errorMessage )
 
 void MainWindow::writeConfigs()
 {
-    kDebug();
+    qDebug();
     if ( toolboxDock->isVisible() )
         Settings::setShowToolboxOnStart( true );
     else
@@ -606,7 +606,7 @@ void MainWindow::keyPressEvent( QKeyEvent * event )
 
 void MainWindow::postManipulationDone( bool isError, const QString &customMessage )
 {
-    kDebug();
+    qDebug();
     if (isError){
         KMessageBox::detailedError(this, i18n("Submitting post failed"), customMessage);
     } else {
@@ -627,7 +627,7 @@ void MainWindow::postManipulationDone( bool isError, const QString &customMessag
 
 void MainWindow::slotBusy(bool isBusy)
 {
-    kDebug()<<"isBusy="<<isBusy<<"\tbusyNumber="<<busyNumber;
+    qDebug()<<"isBusy="<<isBusy<<"\tbusyNumber="<<busyNumber;
     if (isBusy){
         this->setCursor(Qt::BusyCursor);
         toolbox->setCursor( Qt::BusyCursor );
@@ -656,7 +656,7 @@ void MainWindow::slotBusy(bool isBusy)
 
 QWidget* MainWindow::createPostEntry(int blog_id, const BilboPost& post)
 {
-    kDebug();
+    qDebug();
     PostEntry *temp = new PostEntry( this );
     temp->setAttribute( Qt::WA_DeleteOnClose );
     temp->setCurrentPost(post);

@@ -109,7 +109,7 @@ void EntityFindingWidget::findCollection()
   if ( !ok )
     return;
   QModelIndex idx = Akonadi::EntityTreeModel::modelIndexForCollection( m_etw->view()->model(), Akonadi::Collection( id ) );
-  kDebug() << idx.data();
+  qDebug() << idx.data();
   if ( !idx.isValid() )
     return;
 

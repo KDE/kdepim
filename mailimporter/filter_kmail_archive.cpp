@@ -25,7 +25,7 @@
 #include <KTar>
 #include <KUrl>
 #include <KMimeType>
-#include <KDebug>
+#include <QDebug>
 #include <QApplication>
 
 #include <QSharedPointer>
@@ -100,7 +100,7 @@ bool FilterKMailArchive::importMessage( const KArchiveFile *file, const QString 
 
 bool FilterKMailArchive::importFolder( const KArchiveDirectory *folder, const QString &folderPath )
 {
-    kDebug() << "Importing folder" << folder->name();
+    qDebug() << "Importing folder" << folder->name();
     filterInfo()->addInfoLogEntry( i18n( "Importing folder '%1'...", folderPath ) );
     filterInfo()->setTo( filterInfo()->rootCollection().name() + folderPath );
     const KArchiveDirectory * const messageDir =
@@ -139,7 +139,7 @@ bool FilterKMailArchive::importFolder( const KArchiveDirectory *folder, const QS
 
 bool FilterKMailArchive::importDirectory( const KArchiveDirectory *directory, const QString &folderPath )
 {
-    kDebug() << "Importing directory" << directory->name();
+    qDebug() << "Importing directory" << directory->name();
     foreach( const QString &entryName, directory->entries() ) {
         const KArchiveEntry * const entry = directory->entry( entryName );
 

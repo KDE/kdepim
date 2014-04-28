@@ -42,7 +42,7 @@
 #include <libkdepim/widgets/spellchecklineedit.h>
 
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <klocalizedstring.h>
 #include <klineedit.h>
 #include <KMessageBox>
@@ -115,7 +115,7 @@ PostEntry::~PostEntry()
 
 void PostEntry::settingsChanged()
 {
-    kDebug();
+    qDebug();
     d->mTimer->setInterval(Settings::autosaveInterval() * MINUTE);
     if (Settings::autosaveInterval())
         d->mTimer->start();
@@ -298,7 +298,7 @@ void PostEntry::setCurrentPostBlogId( int blog_id )
 void PostEntry::setCurrentPostFromEditor()
 {
     if ( d->isPostContentModified ) {
-        kDebug();
+        qDebug();
         const QString& str = htmlContent();
         d->mCurrentPost.setContent( str );
         d->isPostContentModified = false;
@@ -315,7 +315,7 @@ BilboPost* PostEntry::currentPost()
 void PostEntry::setCurrentPost( const BilboPost &post )
 {
     d->mCurrentPost = post;
-    kDebug()<<"local_id: "<<d->mCurrentPost.localId();
+    qDebug()<<"local_id: "<<d->mCurrentPost.localId();
     this->setPostBody( d->mCurrentPost.content(), d->mCurrentPost.additionalContent() );
     this->setPostTitle( d->mCurrentPost.title() );
 }
@@ -327,7 +327,7 @@ Qt::LayoutDirection PostEntry::defaultLayoutDirection() const
 
 void PostEntry::setDefaultLayoutDirection( Qt::LayoutDirection direction )
 {
-    kDebug();
+    qDebug();
     d->tabWidget->setLayoutDirection( direction );
     d->txtTitle->setLayoutDirection( direction );
 }
@@ -426,7 +426,7 @@ void PostEntry::submitPost( int blogId, const BilboPost &postData )
         Backend *b = new Backend(d->mCurrentPostBlogId, this);
         connect( b, SIGNAL(sigError(QString)), this, SLOT(slotError(QString)) );
         if ( uploadMediaFiles(b) ) {
-            kDebug()<<"Uploading";
+            qDebug()<<"Uploading";
             showProgressBar();
             connect( b, SIGNAL(sigPostPublished(int,BilboPost*)),
                      this, SLOT(slotPostPublished(int,BilboPost*)) );
@@ -443,7 +443,7 @@ void PostEntry::submitPost( int blogId, const BilboPost &postData )
 
 void PostEntry::slotPostPublished( int blog_id, BilboPost *post )
 {
-    kDebug() << "BlogId: " << blog_id << "Post Id on server: " << post->postId();
+    qDebug() << "BlogId: " << blog_id << "Post Id on server: " << post->postId();
     DBMan::self()->removeTempEntry(d->mCurrentPost);
     QString msg;
     setCurrentPost(*post);
@@ -493,7 +493,7 @@ void PostEntry::saveLocally()
     d->mCurrentPost.setLocalId( resId );
     emit postSavedLocally();
     emit showStatusMessage(i18n( "Post saved locally." ), false);
-    kDebug()<<"Locally saved";
+    qDebug()<<"Locally saved";
 }
 
 void PostEntry::saveTemporary()
@@ -503,16 +503,16 @@ void PostEntry::saveTemporary()
         if (res != -1) {
             d->mCurrentPost.setLocalId( res );
             emit postSavedTemporary();
-            kDebug()<<"Temporary saved";
+            qDebug()<<"Temporary saved";
         } else {
-            kDebug()<<"Saving temporary failed: "<< DBMan::self()->lastErrorText();
+            qDebug()<<"Saving temporary failed: "<< DBMan::self()->lastErrorText();
         }
     }
 }
 
 void PostEntry::slotPostModified()
 {
-    kDebug();
+    qDebug();
     disconnect( this, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
     //         disconnect( txtTitle, SIGNAL(textChanged(QString)), this, SLOT(slotPostModified()) );
     //     emit postModified();

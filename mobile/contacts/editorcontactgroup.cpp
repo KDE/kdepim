@@ -32,7 +32,7 @@
 #include <KABC/ContactGroup>
 
 #include <KLocalizedString>
-#include <KDebug>
+#include <QDebug>
 #include <KIconLoader>
 
 #include <QCompleter>
@@ -139,9 +139,9 @@ void EditorContactGroup::Private::fetchResult( KJob *job )
 
   const Akonadi::Item item = fetchJob->items().isEmpty() ? recipient->mItem : fetchJob->items().first();
   if ( fetchJob->error() != 0 ) {
-    kError() << "Fetching contact item" << item.id() << "failed:" << fetchJob->errorString();
+    qCritical() << "Fetching contact item" << item.id() << "failed:" << fetchJob->errorString();
   } else if ( !item.hasPayload<KABC::Addressee>() ) {
-    kError() << "Fetching contact item" << item.id() << "worked but it is not a contact";
+    qCritical() << "Fetching contact item" << item.id() << "worked but it is not a contact";
   } else {
     const KABC::Addressee contact = item.payload<KABC::Addressee>();
 

@@ -23,7 +23,7 @@
 #include "settings/globalsettings.h"
 #include "adblockmanager.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 #include <KProtocolInfo>
 #include <KRun>
@@ -119,7 +119,7 @@ static void hideBlockedElements(const QUrl& url, QWebElementCollection& collecti
             continue;
         const QUrl resolvedUrl (baseUrl.resolved(src));
         if (url == resolvedUrl) {
-            //kDebug() << "*** HIDING ELEMENT: " << (*it).tagName() << resolvedUrl;
+            //qDebug() << "*** HIDING ELEMENT: " << (*it).tagName() << resolvedUrl;
             (*it).removeFromDocument();
         }
     }

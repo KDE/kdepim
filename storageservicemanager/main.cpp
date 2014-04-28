@@ -23,7 +23,7 @@
 #include "storageservicemanagermainwindow.h"
 #include <k4aboutdata.h>
 #include <kcmdlineargs.h>
-#include <KDebug>
+#include <QDebug>
 #include <KUniqueApplication>
 #include <KGlobal>
 
@@ -41,7 +41,7 @@ int main( int argc, char **argv )
 
     KUniqueApplication::addCmdLineOptions();
     if (!KUniqueApplication::start()) {
-        kDebug() << "storageservicemanager is already running!";
+        qDebug() << "storageservicemanager is already running!";
         return (0);
     }
     KUniqueApplication a;

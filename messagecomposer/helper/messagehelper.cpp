@@ -34,7 +34,7 @@
 #include <KPIMIdentities/identitymanager.h>
 #include <KPIMIdentities/identity.h>
 #include <KPIMUtils/Email>
-#include <KDebug>
+#include <QDebug>
 
 using namespace MessageCore;
 
@@ -227,7 +227,7 @@ QString replacePrefixes( const QString& str, const QStringList &prefixRegExps,
                 return tmp.replace( 0, rx.matchedLength(), newPrefix + QString::fromLatin1( " " ) );
         }
     } else {
-        kWarning() << "bigRegExp = \""
+        qWarning() << "bigRegExp = \""
                    << bigRegExp << "\"\n"
                    << "prefix regexp is invalid!";
         // try good ole Re/Fwd:

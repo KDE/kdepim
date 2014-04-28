@@ -34,7 +34,7 @@
 
 #include <calendarsupport/kcalprefs.h>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kstandarddirs.h>
 #include <ksystemtimezone.h>
 #include <klocale.h>
@@ -46,6 +46,7 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QObject>
 #include <QEventLoop>
+#include <QElapsedTimer>
 
 #include <stdlib.h>
 #include <iostream>
@@ -70,7 +71,7 @@ bool KonsoleKalendarAdd::addEvent()
 {
   bool status = true;
 
-  kDebug() << "konsolekalendaradd.cpp::addEvent()";
+  qDebug() << "konsolekalendaradd.cpp::addEvent()";
 
   if ( m_variables->isDryRun() ) {
     cout << i18n( "Insert Event &lt;Dry Run&gt;:" ).toLocal8Bit().data()
@@ -115,7 +116,7 @@ bool KonsoleKalendarAdd::addEvent()
     }
     calendar->addEvent(event);
     loop.exec();
-    kDebug() << "Creation took " << t.elapsed() << "ms.";
+    qDebug() << "Creation took " << t.elapsed() << "ms.";
     status = calendar->incidence(event->uid()) != 0;
     if ( status ) {
       cout << i18n( "Success: \"%1\" inserted",
@@ -130,7 +131,7 @@ bool KonsoleKalendarAdd::addEvent()
     }
   }
 
-  kDebug() << "konsolekalendaradd.cpp::addEvent() | Done";
+  qDebug() << "konsolekalendaradd.cpp::addEvent() | Done";
   return status;
 }
 
@@ -152,12 +153,12 @@ bool KonsoleKalendarAdd::addImportedCalendar()
   if ( !cal->load( fileName ) ||
        !cal->load( m_variables->getImportFile() ) ||
        !cal->save( fileName ) ) {
-    kDebug() << "konsolekalendaradd.cpp::importCalendar() |"
+    qDebug() << "konsolekalendaradd.cpp::importCalendar() |"
              << "Can't import file:"
              << m_variables->getImportFile();
     return false;
   }
-  kDebug() << "konsolekalendaradd.cpp::importCalendar() |"
+  qDebug() << "konsolekalendaradd.cpp::importCalendar() |"
            << "Successfully imported file:"
            << m_variables->getImportFile();
            */

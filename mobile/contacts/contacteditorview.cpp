@@ -35,7 +35,7 @@
 
 #include <KABC/Addressee>
 #include <KLocalizedString>
-#include <KDebug>
+#include <QDebug>
 
 #include <QDeclarativeItem>
 
@@ -127,13 +127,13 @@ void ContactEditorView::Private::addDetailEditor( EditorBase *editor )
 
 void ContactEditorView::Private::saveFinished()
 {
-  kDebug();
+  qDebug();
   q->deleteLater();
 }
 
 void ContactEditorView::Private::saveFailed( IncidenceEditorNG::EditorItemManager::SaveAction, const QString &errorMessage )
 {
-  kError() << errorMessage;
+  qCritical() << errorMessage;
 }
 
 void ContactEditorView::Private::load( const Item &item )
@@ -193,11 +193,11 @@ void ContactEditorView::Private::reject( RejectReason reason, const QString &err
 {
   switch ( reason ) {
     case ItemFetchFailed:
-      kWarning() << "Item Fetch Failed:" << errorMessage;
+      qWarning() << "Item Fetch Failed:" << errorMessage;
       break;
 
     case ItemHasInvalidPayload:
-      kWarning() << "Item has Invalid Payload:" << errorMessage;
+      qWarning() << "Item has Invalid Payload:" << errorMessage;
       break;
   }
 

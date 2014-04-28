@@ -34,7 +34,7 @@
 #include <QClipboard>
 
 #include <KApplication>       // kapp
-#include <KDebug>
+#include <QDebug>
 #include <KFileDialog>
 #include <KLocale>            // i18n
 #include <KMessageBox>
@@ -493,7 +493,7 @@ is stored in the _preferences object. */
 
 void TaskView::itemStateChanged( QTreeWidgetItem *item )
 {
-    kDebug() << "Entering function";
+    qDebug() << "Entering function";
     if ( !item || _isloading ) return;
     Task *t = (Task *)item;
     kDebug(5970) <<"TaskView::itemStateChanged()" <<" uid=" << t->uid() <<" state=" << t->isExpanded();
@@ -514,7 +514,7 @@ void TaskView::iCalFileModified()
 {
     KTimeTracker::KTTCalendar *calendar = qobject_cast<KTimeTracker::KTTCalendar*>( sender() );
     if ( !calendar || !calendar->weakPointer() ) {
-      kWarning() << "TaskView::iCalFileModified(): calendar or weakPointer is null: " << calendar;
+      qWarning() << "TaskView::iCalFileModified(): calendar or weakPointer is null: " << calendar;
     } else {
       kDebug(5970) << "entering function";
       calendar->reload();

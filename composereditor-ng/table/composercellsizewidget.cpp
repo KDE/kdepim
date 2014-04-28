@@ -21,7 +21,7 @@
 
 #include <KComboBox>
 #include <KLocalizedString>
-#include <KDebug>
+#include <QDebug>
 
 #include <QSpinBox>
 #include <QHBoxLayout>
@@ -123,7 +123,7 @@ void ComposerCellSizeWidgetPrivate::slotTypeChanged(int index)
         size->setMaximum( 9999 );
         break;
     default:
-        kDebug() << " index not defined " << index;
+        qDebug() << " index not defined " << index;
         break;
     }
 }

@@ -19,7 +19,7 @@
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <ktemporaryfile.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <QFileInfo>
 
 #include "filter_lnotes.h"

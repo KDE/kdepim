@@ -17,7 +17,7 @@
 
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kapplication.h>
 #include <KCmdLineArgs>
 #include <KLocalizedString>

@@ -27,7 +27,7 @@
 
 #include <KDateTime>
 #include <KDirWatch>
-#include <KDebug>
+#include <QDebug>
 
 using namespace KCalCore;
 using namespace KTimeTracker;
@@ -68,7 +68,7 @@ bool KTTCalendar::reload()
                                                                               new ICalFormat() ) );
   const bool result = fileStorage->load();
   if ( !result )
-    kError() << "KTTCalendar::reload: problem loading calendar";
+    qCritical() << "KTTCalendar::reload: problem loading calendar";
   return result;
 }
 
@@ -100,6 +100,6 @@ bool KTTCalendar::save()
 
   const bool result = fileStorage->save();
   if ( !result )
-    kError() << "KTTCalendar::save: problem saving calendar";
+    qCritical() << "KTTCalendar::save: problem saving calendar";
   return result;
 }

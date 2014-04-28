@@ -17,7 +17,7 @@
 #include "archivemailinfo.h"
 
 #include <KLocale>
-#include <KDebug>
+#include <QDebug>
 #include <QDir>
 
 ArchiveMailInfo::ArchiveMailInfo()
@@ -90,7 +90,7 @@ QString ArchiveMailInfo::dirArchive() const
     QString dirPath = url().path();
     if (!dir.exists()) {
         dirPath = QDir::homePath();
-        kDebug()<<" Path doesn't exist"<<dir.path();
+        qDebug()<<" Path doesn't exist"<<dir.path();
     }
     return dirPath;
 }

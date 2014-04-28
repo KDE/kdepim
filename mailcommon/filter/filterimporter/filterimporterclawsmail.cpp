@@ -21,7 +21,7 @@
 
 #include <KConfig>
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QFile>
 #include <QDir>
@@ -35,7 +35,7 @@ FilterImporterClawsMails::FilterImporterClawsMails( QFile *file )
     MailFilter *filter = 0;
     while ( !stream.atEnd() ) {
         QString line = stream.readLine();
-        kDebug() << " line :" << line << " filter " << filter;
+        qDebug() << " line :" << line << " filter " << filter;
 
         if (line.isEmpty()) {
             //Nothing

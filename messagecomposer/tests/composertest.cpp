@@ -22,7 +22,7 @@
 
 #include "qtest_messagecomposer.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <qtest_kde.h>
 
 #include <KMime/kmime_headers.h>
@@ -52,7 +52,7 @@ void ComposerTest::testAttachments()
   QVERIFY( composer->exec() );
   QCOMPARE( composer->resultMessages().size(), 1 );
   KMime::Message::Ptr message = composer->resultMessages().first();
-  kDebug() << message->encodedContent();
+  qDebug() << message->encodedContent();
   delete composer;
   composer = 0;
 
@@ -119,7 +119,7 @@ void ComposerTest::testNonAsciiHeaders()
   QVERIFY( composer->exec() );
   QCOMPARE( composer->resultMessages().size(), 1 );
   const KMime::Message::Ptr message = composer->resultMessages().first();
-  kDebug() << message->encodedContent();
+  qDebug() << message->encodedContent();
   message->assemble();
   message->parse();
   QCOMPARE( message->bcc( false )->displayNames().size(), 1 );

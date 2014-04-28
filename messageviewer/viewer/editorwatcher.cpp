@@ -20,7 +20,7 @@
 #include "editorwatcher.h"
 #include "utils/autoqpointer.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kopenwithdialog.h>
@@ -89,7 +89,7 @@ bool EditorWatcher::start()
             mFileModified = false;
         }
     } else {
-        kWarning() << "Failed to activate INOTIFY!";
+        qWarning() << "Failed to activate INOTIFY!";
     }
 #endif
 

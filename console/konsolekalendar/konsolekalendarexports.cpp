@@ -33,7 +33,7 @@
 #include "konsolekalendarexports.h"
 
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <klocale.h>
 #include <KGlobal>
 

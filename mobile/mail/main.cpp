@@ -68,7 +68,7 @@ int KMailMobileApplication::newInstance()
 
 int main( int argc, char **argv )
 {
-  kWarning() << "Starting main function" << QDateTime::currentDateTime();
+  qWarning() << "Starting main function" << QDateTime::currentDateTime();
 
 #ifdef KDEPIM_STATIC_LIBS
     ___MailTransport____INIT();

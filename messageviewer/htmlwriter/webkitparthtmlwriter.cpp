@@ -37,7 +37,7 @@
 
 #include "viewer/mailwebview.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KUrl>
 
 #include <cassert>
@@ -63,7 +63,7 @@ void WebKitPartHtmlWriter::begin( const QString & css ) {
     // The stylesheet is now included CSSHelper::htmlHead()
     Q_UNUSED( css );
     if ( mState != Ended ) {
-        kWarning() << "begin() called on non-ended session!";
+        qWarning() << "begin() called on non-ended session!";
         reset();
     }
 
@@ -81,7 +81,7 @@ void WebKitPartHtmlWriter::begin( const QString & css ) {
 
 void WebKitPartHtmlWriter::end() {
     if ( mState != Begun ) {
-        kWarning() << "Called on non-begun or queued session!";
+        qWarning() << "Called on non-begun or queued session!";
     }
     if(!mExtraHead.isEmpty()) {
         insertExtraHead();
@@ -112,7 +112,7 @@ void WebKitPartHtmlWriter::reset() {
 
 void WebKitPartHtmlWriter::write( const QString & str ) {
     if ( mState != Begun ) {
-        kWarning() << "Called in Ended or Queued state!";
+        qWarning() << "Called in Ended or Queued state!";
     }
     mHtml.append( str );
 }
@@ -145,7 +145,7 @@ void WebKitPartHtmlWriter::resolveCidUrls()
         if ( url.protocol() == QLatin1String( "cid" ) ) {
             EmbeddedPartMap::const_iterator cit = mEmbeddedPartMap.constFind( url.path() );
             if ( cit != mEmbeddedPartMap.constEnd() ) {
-                kDebug() << "Replacing" << url.prettyUrl() << "by" << cit.value();
+                qDebug() << "Replacing" << url.prettyUrl() << "by" << cit.value();
                 (*it).setAttribute( QLatin1String("src"), cit.value() );
             }
         }

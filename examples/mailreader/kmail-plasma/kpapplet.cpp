@@ -90,7 +90,7 @@ QGraphicsWidget* KPApplet::graphicsWidget()
 void KPApplet::popupEvent(bool show)
 {
     if (show) {
-        kDebug() << "showing";
+        qDebug() << "showing";
     }
 }
 

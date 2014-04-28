@@ -22,7 +22,7 @@
 #include <kmanagesieve/sievejob.h>
 
 #include <agentinstance.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -45,7 +45,7 @@ Vacation::Vacation(QObject * parent, bool checkOnly, const KUrl &url)
     } else {
         mUrl = url;
     }
-    kDebug() << "Vacation: found url \"" << mUrl.prettyUrl() <<"\"";
+    qDebug() << "Vacation: found url \"" << mUrl.prettyUrl() <<"\"";
     if ( mUrl.isEmpty() ) // nothing to do...
         return;
     mSieveJob = KManageSieve::SieveJob::get( mUrl );
@@ -62,7 +62,7 @@ Vacation::~Vacation() {
     mSieveJob = 0;
     delete mDialog;
     mDialog = 0;
-    kDebug() << "~Vacation()";
+    qDebug() << "~Vacation()";
 }
 
 
@@ -85,7 +85,7 @@ KUrl Vacation::findURL(QString &serverName) const
 
 void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
                               const QString & script, bool active ) {
-    kDebug() << success
+    qDebug() << success
              << ", ?," << active << ")" << endl
              << "script:" << endl
              << script;
@@ -147,7 +147,7 @@ void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
 }
 
 void Vacation::slotDialogOk() {
-    kDebug();
+    qDebug();
     // compose a new script:
     const QString script = VacationUtils::composeScript( mDialog->messageText(),
                                           mDialog->notificationInterval(),
@@ -157,7 +157,7 @@ void Vacation::slotDialogOk() {
     const bool active = mDialog->activateVacation();
     emit scriptActive( active, mServerName);
 
-    kDebug() << "script:" << endl << script;
+    qDebug() << "script:" << endl << script;
 
     // and commit the dialog's settings to the server:
     mSieveJob = KManageSieve::SieveJob::put( mUrl, script, active, mWasActive );
@@ -174,7 +174,7 @@ void Vacation::slotDialogOk() {
 }
 
 void Vacation::slotDialogCancel() {
-    kDebug();
+    qDebug();
     mDialog->delayedDestruct();
     mDialog = 0;
     emit result( false );
@@ -196,7 +196,7 @@ void Vacation::handlePutResult( KManageSieve::SieveJob *, bool success, bool act
                                   : i18n("Sieve script installed successfully on the server.\n"
                                          "Out of Office reply has been deactivated.") );
 
-    kDebug() << "( ???," << success << ", ? )";
+    qDebug() << "( ???," << success << ", ? )";
     mSieveJob = 0; // job deletes itself after returning from this slot!
     emit result( success );
     emit scriptActive( activated, mServerName );

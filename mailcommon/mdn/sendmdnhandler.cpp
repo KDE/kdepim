@@ -34,7 +34,7 @@
 #include <Item>
 #include <Akonadi/KMime/MessageFlags>
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QQueue>
 #include <QTimer>
@@ -70,7 +70,7 @@ void SendMdnHandler::Private::handleMessages()
             return;
         }
 #else
-        kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
+        qDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif
 
         const Akonadi::Collection collection = item.parentCollection();
@@ -100,7 +100,7 @@ void SendMdnHandler::Private::handleMessages()
                     factory.createMDN( KMime::MDN::ManualAction, KMime::MDN::Displayed, mdnSend.second, quote );
             if ( mdn ) {
                 if ( !mKernel->msgSender()->send( mdn ) ) {
-                    kDebug() << "Sending failed.";
+                    qDebug() << "Sending failed.";
                 }
             }
         }

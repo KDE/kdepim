@@ -23,7 +23,7 @@
 
 #include "cellitem.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
 
 using namespace PimPrint::Calendar;

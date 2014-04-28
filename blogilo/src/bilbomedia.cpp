@@ -25,7 +25,7 @@
 #include "bilbomedia.h"
 
 #include <kicon.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QPixmap>
 
@@ -144,7 +144,7 @@ KIcon BilboMedia::icon() const
         if ( !iconPic.isNull() ) {
             return KIcon( iconPic );
         } else {
-            kDebug() << "iconPic is Null";
+            qDebug() << "iconPic is Null";
         }
     }
 

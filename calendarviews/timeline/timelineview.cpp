@@ -40,7 +40,7 @@
 #include <calendarsupport/kcalprefs.h>
 #include <Akonadi/Calendar/IncidenceChanger>
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QApplication>
 #include <QPainter>
@@ -263,7 +263,7 @@ TimelineView::TimelineView( QWidget *parent )
     d->mGantt->setHourFormat( KDGanttView::Hour_24_FourDigit );
   }
 #else
-  kDebug() << "Disabled code, port to KDGantt2";
+  qDebug() << "Disabled code, port to KDGantt2";
 #endif
   d->mGantt->setItemDelegate( new GanttItemDelegate );
 
@@ -273,7 +273,7 @@ TimelineView::TimelineView( QWidget *parent )
   connect( d->mGantt, SIGNAL(rescaling(KDGanttView::Scale)),
            SLOT(overscale(KDGanttView::Scale)) );
 #else
-  kDebug() << "Disabled code, port to KDGantt2";
+  qDebug() << "Disabled code, port to KDGantt2";
 #endif
   connect( model, SIGNAL(itemChanged(QStandardItem*)),
            d, SLOT(itemChanged(QStandardItem*)) );
@@ -289,7 +289,7 @@ TimelineView::TimelineView( QWidget *parent )
   connect( d->mGantt, SIGNAL(dateTimeDoubleClicked(QDateTime)),
            d, SLOT(newEventWithHint(QDateTime)) );
 #else
-  kDebug() << "Disabled code, port to KDGantt2";
+  qDebug() << "Disabled code, port to KDGantt2";
 #endif
 }
 
@@ -325,7 +325,7 @@ void TimelineView::showDates( const QDate &start, const QDate &end, const QDate 
   Q_ASSERT_X( start.isValid(), "showDates()", "start date must be valid" );
   Q_ASSERT_X( end.isValid(), "showDates()", "end date must be valid" );
 
-  kDebug() << "start=" << start << "end=" << end;
+  qDebug() << "start=" << start << "end=" << end;
 
   d->mStartDate = start;
   d->mEndDate = end;
@@ -344,7 +344,7 @@ void TimelineView::showDates( const QDate &start, const QDate &end, const QDate 
   d->mGantt->setUpdateEnabled( false );
   d->mGantt->clear();
 #else
-  kDebug() << "Disabled code, port to KDGantt2";
+  qDebug() << "Disabled code, port to KDGantt2";
 #endif
 
   d->mLeftView->clear();
@@ -377,7 +377,7 @@ void TimelineView::showDates( const QDate &start, const QDate &end, const QDate 
         if ( resourceColor.isValid() ) {
           item->setColor( resourceColor );
         }
-        kDebug() << "Created item " << item
+        qDebug() << "Created item " << item
                  << " (" <<  CalendarSupport::displayName( calendar().data(), collection ) << ") "
                  << "with index " <<  index - 1 << " from collection " << collection.id();
         d->mCalendarItemMap.insert( collection.id(), item );

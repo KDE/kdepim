@@ -21,7 +21,7 @@
  */
 
 #include "desktoptracker.h"
-#include <KDebug>
+#include <QDebug>
 #include "ktimetracker.h"
 #include "ktimetrackerutility.h"
 #include <KWindowSystem>

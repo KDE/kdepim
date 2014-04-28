@@ -18,7 +18,7 @@
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <ktemporaryfile.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include "filter_mbox.h"
 
@@ -125,7 +125,7 @@ void FilterMBox::importMails(const QStringList &filenames)
                         addMessage_fastImport( folderName, tmp.fileName() );
                 }
                 else
-                    kWarning() << "Message size is 0 bytes, not importing it.";
+                    qWarning() << "Message size is 0 bytes, not importing it.";
 
                 int currentPercentage = (int) ( ( (float) mbox.pos() / filenameInfo.size() ) * 100 );
                 filterInfo()->setCurrent( currentPercentage );

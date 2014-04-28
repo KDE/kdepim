@@ -41,7 +41,7 @@
 
 #include <messageviewer/viewer/stl_util.h>
 
-#include <KDebug>
+#include <QDebug>
 #include <QObject>
 #include <QStackedWidget>
 

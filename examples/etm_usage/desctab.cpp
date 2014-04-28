@@ -62,7 +62,7 @@ void DescTabWidget::connectProxy()
   Akonadi::EntityRightsFilterModel *collectionFilter = new Akonadi::EntityRightsFilterModel( this );
   collectionFilter->setSourceModel( m_etw->model() );
 
-  kDebug() << descProxy;
+  qDebug() << descProxy;
   descProxy->setSourceModel( collectionFilter );
 
 //  new ModelTest(descProxy, this);

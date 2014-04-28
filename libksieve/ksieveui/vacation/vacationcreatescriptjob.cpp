@@ -20,7 +20,7 @@
 
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <KDebug>
+#include <QDebug>
 
 using namespace KSieveUi;
 
@@ -94,7 +94,7 @@ void VacationCreateScriptJob::handlePutResult( KManageSieve::SieveJob *, bool su
                                   : i18n("Sieve script installed successfully on the server \'%1\'.\n"
                                          "Out of Office reply has been deactivated.", mServerName) );
 
-    kDebug() << "( ???," << success << ", ? )";
+    qDebug() << "( ???," << success << ", ? )";
     mSieveJob = 0; // job deletes itself after returning from this slot!
     Q_EMIT result( success );
     Q_EMIT scriptActive( activated, mServerName );

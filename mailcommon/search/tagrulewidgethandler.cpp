@@ -22,7 +22,7 @@ using MailCommon::RegExpLineEdit;
 
 #include <pimcommon/widgets/minimumcombobox.h>
 
-#include <KDebug>
+#include <QDebug>
 #include <KIcon>
 #include <KLocale>
 #include <KJob>
@@ -62,7 +62,7 @@ void FillTagComboJob::onDestroyed()
 {
     mComboBox = 0;
     setError(KJob::UserDefinedError);
-    kDebug() << "Combobox destroyed";
+    qDebug() << "Combobox destroyed";
     emitResult();
 }
 
@@ -76,12 +76,12 @@ void FillTagComboJob::start()
 void FillTagComboJob::onTagsFetched(KJob *job)
 {
     if (job->error()) {
-        kWarning() << job->errorString();
+        qWarning() << job->errorString();
         setError(KJob::UserDefinedError);
         emitResult();
     }
     if (!mComboBox) {
-        kDebug() << "combobox already destroyed";
+        qDebug() << "combobox already destroyed";
         emitResult();
         return;
     }

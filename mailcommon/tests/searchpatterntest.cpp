@@ -69,7 +69,7 @@ class SearchPatternTest : public QObject
       KConfigGroup cfgGroup( &config, "Filter #0" );
 
       SearchPattern pattern( cfgGroup );
-      kDebug() << pattern.asString();
+      qDebug() << pattern.asString();
 
       QFile file( sparqlFile );
       QVERIFY( file.open( QIODevice::ReadOnly ) );

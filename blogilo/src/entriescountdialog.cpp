@@ -25,7 +25,7 @@
 #include "entriescountdialog.h"
 #include "settings.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 
 EntriesCountDialog::EntriesCountDialog( QWidget *parent )

@@ -38,7 +38,7 @@
 #include <KLocalizedString>
 #include <KGlobal>
 #include <KIcon>
-#include <KDebug>
+#include <QDebug>
 #include <KIconLoader>
 #include <KMime/Message>
 #include <KNotification>
@@ -165,7 +165,7 @@ void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Colle
    * for the mimetype of the item here.
    */
     if ( item.mimeType() != KMime::Message::mimeType() ) {
-        kDebug() << "MailFilterAgent::itemAdded called for a non-message item!";
+        qDebug() << "MailFilterAgent::itemAdded called for a non-message item!";
         return;
     }
 
@@ -191,7 +191,7 @@ void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Colle
 void MailFilterAgent::itemsReceiviedForFiltering (const Akonadi::Item::List& items)
 {
     if (items.isEmpty()) {
-        kDebug() << "MailFilterAgent::itemsReceiviedForFiltering items is empty!";
+        qDebug() << "MailFilterAgent::itemsReceiviedForFiltering items is empty!";
         return;
     }
 
@@ -200,7 +200,7 @@ void MailFilterAgent::itemsReceiviedForFiltering (const Akonadi::Item::List& ite
    * happens when item no longer exists etc, and queue compression didn't happen yet
    */
     if ( !item.hasPayload() ) {
-        kDebug() << "MailFilterAgent::itemsReceiviedForFiltering item has no payload!";
+        qDebug() << "MailFilterAgent::itemsReceiviedForFiltering item has no payload!";
         return;
     }
 

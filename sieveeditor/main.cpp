@@ -24,7 +24,7 @@
 #include "sieveeditor_options.h"
 #include <k4aboutdata.h>
 #include <kcmdlineargs.h>
-#include <KDebug>
+#include <QDebug>
 #include <KUniqueApplication>
 #include <KGlobal>
 #include <KLocalizedString>
@@ -42,7 +42,7 @@ int main( int argc, char **argv )
     KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
     KUniqueApplication::addCmdLineOptions();
     if (!KUniqueApplication::start()) {
-        kDebug() << "sieveeditor is already running!";
+        qDebug() << "sieveeditor is already running!";
         return (0);
     }
     KUniqueApplication a;

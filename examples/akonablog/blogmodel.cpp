@@ -24,7 +24,7 @@
 #include <AkonadiCore/monitor.h>
 #include <AkonadiCore/session.h>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kio/job.h>

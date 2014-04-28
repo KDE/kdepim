@@ -23,7 +23,7 @@
 
 #include "akonadi_next/note.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 #include <KRandom>
 #include <AkonadiCore/CollectionFetchJob>
@@ -50,7 +50,7 @@ void LocalResourceCreator::finishCreateResource()
 void LocalResourceCreator::rootFetchFinished(KJob* job)
 {
   if (job->error()) {
-    kWarning() << job->errorString();
+    qWarning() << job->errorString();
     deleteLater();
     return;
   }
@@ -65,7 +65,7 @@ void LocalResourceCreator::rootFetchFinished(KJob* job)
 
   if (list.isEmpty())
   {
-    kWarning() << "Couldn't find new collection in resource";
+    qWarning() << "Couldn't find new collection in resource";
     deleteLater();
     return;
   }
@@ -88,7 +88,7 @@ void LocalResourceCreator::rootFetchFinished(KJob* job)
 void LocalResourceCreator::topLevelFetchFinished(KJob* job)
 {
   if (job->error()) {
-    kWarning() << job->errorString();
+    qWarning() << job->errorString();
     deleteLater();
     return;
   }
@@ -128,7 +128,7 @@ void LocalResourceCreator::topLevelFetchFinished(KJob* job)
 void LocalResourceCreator::createFinished(KJob* job)
 {
   if (job->error()) {
-    kWarning() << job->errorString();
+    qWarning() << job->errorString();
     deleteLater();
     return;
   }
@@ -170,7 +170,7 @@ void LocalResourceCreator::createFinished(KJob* job)
 void LocalResourceCreator::itemCreateFinished(KJob* job)
 {
   if (job->error()) {
-    kWarning() << job->errorString();
+    qWarning() << job->errorString();
   }
   deleteLater();
 }

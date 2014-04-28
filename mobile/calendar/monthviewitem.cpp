@@ -24,7 +24,7 @@
 #include <calendarviews/month/monthview.h>
 
 #include <KGlobal>
-#include <KDebug>
+#include <QDebug>
 #include <KGlobalSettings>
 
 using namespace EventViews;
@@ -74,7 +74,7 @@ QObject* MonthViewItem::calendar() const
 void MonthViewItem::setCalendar( QObject* calendarObj )
 {
   Akonadi::ETMCalendar* cal = qobject_cast<Akonadi::ETMCalendar*>( calendarObj );
-  kDebug() << calendarObj << cal;
+  qDebug() << calendarObj << cal;
   if ( cal ) {
     mView->setCalendar( cal->weakPointer().toStrongRef().dynamicCast<Akonadi::ETMCalendar>() );
     mView->updateConfig();

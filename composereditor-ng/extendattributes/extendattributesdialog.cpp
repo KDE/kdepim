@@ -27,7 +27,7 @@
 #include <KComboBox>
 #include <KLineEdit>
 #include <KPushButton>
-#include <KDebug>
+#include <QDebug>
 
 #include <QWebElement>
 #include <QVBoxLayout>
@@ -76,7 +76,7 @@ public:
             tagName = QLatin1String("dl");
             break;
         default:
-            kDebug()<<" extendattribute not implemented"<<extendType;
+            qDebug()<<" extendattribute not implemented"<<extendType;
             break;
         }
 

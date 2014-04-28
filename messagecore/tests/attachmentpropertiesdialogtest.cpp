@@ -24,7 +24,7 @@
 
 #include <QCheckBox>
 
-#include <KDebug>
+#include <QDebug>
 #include <KComboBox>
 #include <KLineEdit>
 #include <qtest_kde.h>

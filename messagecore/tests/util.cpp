@@ -25,7 +25,7 @@
 #include <kleo/cryptobackendfactory.h>
 
 #include <QFile>
-#include <KDebug>
+#include <QDebug>
 #include <QDir>
 
 void MessageCore::Test::setupEnv() {
@@ -53,13 +53,13 @@ std::vector< GpgME::Key, std::allocator< GpgME::Key > > MessageCore::Test::getKe
     Q_ASSERT( keys.size() == 3 );
 
   Q_ASSERT( !res.error() );
-  kDebug() << "got private keys:" << keys.size();
+  qDebug() << "got private keys:" << keys.size();
 
   for(std::vector< GpgME::Key >::iterator i = keys.begin(); i != keys.end(); ++i ) {
-    kDebug() << "key isnull:" << i->isNull() << "isexpired:" << i->isExpired();
-    kDebug() << "key numuserIds:" << i->numUserIDs();
+    qDebug() << "key isnull:" << i->isNull() << "isexpired:" << i->isExpired();
+    qDebug() << "key numuserIds:" << i->numUserIDs();
     for(uint k = 0; k < i->numUserIDs(); ++k ) {
-      kDebug() << "userIDs:" << i->userID( k ).email();
+      qDebug() << "userIDs:" << i->userID( k ).email();
     }
   }
 

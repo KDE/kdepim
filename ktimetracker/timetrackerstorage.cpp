@@ -42,7 +42,7 @@
 #include <KDirWatch>
 #include <KLockFile>
 #include <KApplication>       // kapp
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>            // i18n
 #include <KMessageBox>
 #include <KProgressDialog>
@@ -847,7 +847,7 @@ QString timetrackerstorage::exportcsvHistory (TaskView      *taskview,
         retval.append(cr);
     }
 
-    kDebug() << "Retval is \n" << retval;
+    qDebug() << "Retval is \n" << retval;
 
     if (rc.bExPortToClipBoard)
         taskview->setClipBoardText(retval);
@@ -865,7 +865,7 @@ QString timetrackerstorage::exportcsvHistory (TaskView      *taskview,
                 err = i18n( "Could not open \"%1\".", filename );
                 kDebug(5970) << "Could not open file";
             }
-            kDebug() << "Err is " << err;
+            qDebug() << "Err is " << err;
             if (err.length()==0)
             {
                 QTextStream stream(&f);
@@ -1054,7 +1054,7 @@ QString timetrackerstorage::saveCalendar()
     if ( d->mCalendar ) {
       d->m_fileLock->lock();
     } else {
-      kDebug() << "mCalendar not set";
+      qDebug() << "mCalendar not set";
       return errorMessage;
     }
 

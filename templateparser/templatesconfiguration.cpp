@@ -24,7 +24,7 @@
 
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <KDebug>
+#include <QDebug>
 
 #include <QWhatsThis>
 
@@ -116,7 +116,7 @@ void TemplatesConfiguration::resetToDefault()
         } else if( toolBox1->widget( toolboxCurrentIndex ) == page_forward ) {
             textEdit_forward->setPlainText( DefaultTemplates::defaultForward() );
         } else {
-            kDebug() << "Unknown current page in TemplatesConfiguration!";
+            qDebug() << "Unknown current page in TemplatesConfiguration!";
         }
     } else {
         textEdit_new->setPlainText( DefaultTemplates::defaultNewMessage() );
@@ -335,7 +335,7 @@ QTextEdit *TemplatesConfiguration::currentTextEdit() const
     } else if( toolBox1->widget( toolboxCurrentIndex ) == page_forward ) {
         edit = textEdit_forward->editor();
     } else {
-        kDebug() << "Unknown current page in TemplatesConfiguration!";
+        qDebug() << "Unknown current page in TemplatesConfiguration!";
         edit = 0;
     }
     return edit;
@@ -348,7 +348,7 @@ void TemplatesConfiguration::slotInsertCommand( const QString &cmd, int adjustCu
         return;
     }
 
-    // kDebug() << "Insert command:" << cmd;
+    // qDebug() << "Insert command:" << cmd;
     const QString editText( edit->toPlainText() );
     if ( ( editText.contains( QLatin1String("%FORCEDPLAIN") ) && ( cmd == QLatin1String( "%FORCEDHTML" ) ) ) ||
          ( editText.contains( QLatin1String("%FORCEDHTML") ) && ( cmd == QLatin1String( "%FORCEDPLAIN" ) ) ) ) {

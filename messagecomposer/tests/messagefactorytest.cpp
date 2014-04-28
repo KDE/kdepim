@@ -122,7 +122,7 @@ void MessageFactoryTest::testCreateReply()
 
   MessageFactory::MessageReply reply =  factory.createReply();
   QVERIFY( reply.replyAll = true );
-  kDebug() << reply.msg->body();
+  qDebug() << reply.msg->body();
 
   QDateTime date = msg->date()->dateTime().dateTime();
   QString datetime = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
@@ -138,14 +138,14 @@ void MessageFactoryTest::testCreateReplyHtml()
   KMime::Message::Ptr msg = loadMessageFromFile( QLatin1String("html_utf8_encoded.mbox") );
   KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
 
-  kDebug() << "html message:" << msg->encodedContent();
+  qDebug() << "html message:" << msg->encodedContent();
 
   MessageFactory factory( msg, 0 );
   factory.setIdentityManager( identMan );
 
   MessageFactory::MessageReply reply =  factory.createReply();
   QVERIFY( reply.replyAll = true );
-  kDebug() << "html reply" << reply.msg->encodedContent();
+  qDebug() << "html reply" << reply.msg->encodedContent();
 
   QDateTime date = msg->date()->dateTime().dateTime();
   QString datetime = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
@@ -163,14 +163,14 @@ void MessageFactoryTest::testCreateReplyUTF16Base64()
   KMime::Message::Ptr msg = loadMessageFromFile( QLatin1String("plain_utf16.mbox") );
   KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
 
-//   kDebug() << "plain base64 msg message:" << msg->encodedContent();
+//   qDebug() << "plain base64 msg message:" << msg->encodedContent();
 
   MessageFactory factory( msg, 0 );
   factory.setIdentityManager( identMan );
 
   MessageFactory::MessageReply reply =  factory.createReply();
   QVERIFY( reply.replyAll = true );
-//   kDebug() << "html reply" << reply.msg->encodedContent();
+//   qDebug() << "html reply" << reply.msg->encodedContent();
 
   QDateTime date = msg->date()->dateTime().dateTime();
   QString datetime = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
@@ -226,7 +226,7 @@ void MessageFactoryTest::testCreateForward()
   fwdMsg = fwdMsg.arg( datetime ).arg( fw->date()->asUnicodeString() ).arg( fw->userAgent()->asUnicodeString() );
 
   
-//   kDebug() << "got:" << fw->encodedContent() << "against" << fwdMsg.toLatin1();
+//   qDebug() << "got:" << fw->encodedContent() << "against" << fwdMsg.toLatin1();
   QCOMPARE( fw->subject()->asUnicodeString(), QLatin1String( "Fwd: Test Email Subject" ) );
   QCOMPARE_OR_DIFF( fw->encodedContent(), fwdMsg.toLatin1() );
 }
@@ -250,7 +250,7 @@ void MessageFactoryTest::testCreateRedirect()
   QString datetime = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
   datetime = rdir->date()->asUnicodeString();
 
-//   kDebug() << rdir->encodedContent();
+//   qDebug() << rdir->encodedContent();
   
   QString msgId = MessageCore::StringUtil::generateMessageId( msg->sender()->asUnicodeString(), QString() );
 
@@ -259,7 +259,7 @@ void MessageFactoryTest::testCreateRedirect()
 
   QRegExp rxmessageid( QString::fromLatin1( "Message-ID: ([^\n]+)" ) );
   rxmessageid.indexIn( QString::fromLatin1( rdir->head() ) );
-  kWarning() << "messageid:" << rxmessageid.cap(1) << "(" << rdir->head() << ")";
+  qWarning() << "messageid:" << rxmessageid.cap(1) << "(" << rdir->head() << ")";
   QString baseline = QString::fromLatin1( "From: me@me.me\n"
                                           "Cc: cc@cc.cc\n"
                                           "Bcc: bcc@bcc.bcc\n"
@@ -280,8 +280,8 @@ void MessageFactoryTest::testCreateRedirect()
                                           "All happy families are alike; each unhappy family is unhappy in its own way." );
   baseline = baseline.arg( datetime ).arg( rxmessageid.cap(1) ).arg( rx.cap(1) ).arg( datetime ).arg( QLatin1String( "another <another@another.com>" ) );
 
-//   kDebug() << baseline.toLatin1();
-//   kDebug() << "instead:" << rdir->encodedContent();
+//   qDebug() << baseline.toLatin1();
+//   qDebug() << "instead:" << rdir->encodedContent();
 
 //   QString fwdStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n" );
   QCOMPARE( rdir->subject()->asUnicodeString(), QLatin1String( "Test Email Subject" ) );
@@ -306,7 +306,7 @@ void MessageFactoryTest::testCreateResend()
   QString datetime = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
   datetime = rdir->date()->asUnicodeString();
 
-//   kDebug() << msg->encodedContent();
+//   qDebug() << msg->encodedContent();
 
   QString msgId = MessageCore::StringUtil::generateMessageId( msg->sender()->asUnicodeString(), QString() );
 
@@ -331,8 +331,8 @@ void MessageFactoryTest::testCreateResend()
                                           "All happy families are alike; each unhappy family is unhappy in its own way." );
   baseline = baseline.arg( msg->to()->asUnicodeString() ).arg( datetime ).arg( rxmessageid.cap(1) );
 
-  kDebug() << baseline.toLatin1();
-  kDebug() << "instead:" << rdir->encodedContent();
+  qDebug() << baseline.toLatin1();
+  qDebug() << "instead:" << rdir->encodedContent();
 
 //   QString fwdStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n" );
   QCOMPARE( rdir->subject()->asUnicodeString(), QLatin1String( "Test Email Subject" ) );
@@ -351,7 +351,7 @@ void MessageFactoryTest::testCreateMDN()
   KMime::Message::Ptr mdn = factory.createMDN( KMime::MDN::AutomaticAction, KMime::MDN::Displayed, KMime::MDN::SentAutomatically );
 
   QVERIFY( mdn.get() );
-  kDebug() << "mdn" << mdn->encodedContent();
+  qDebug() << "mdn" << mdn->encodedContent();
 /*
   // parse the result and make sure it is valid in various ways
   TestHtmlWriter testWriter;
@@ -361,8 +361,8 @@ void MessageFactoryTest::testCreateMDN()
   MessageViewer::ObjectTreeParser otp( &testSource, nh, 0, false, true, 0 );
   MessageViewer::ProcessResult pResult( nh ); */
 
-//   kDebug() << MessageCore::NodeHelper::firstChild( mdn->mainBodyPart() )->encodedContent();
-//   kDebug() << MessageCore::NodeHelper::next(  MessageViewer::ObjectTreeParser::findType( mdn.get(), "multipart", "report", true, true ) )->body();
+//   qDebug() << MessageCore::NodeHelper::firstChild( mdn->mainBodyPart() )->encodedContent();
+//   qDebug() << MessageCore::NodeHelper::next(  MessageViewer::ObjectTreeParser::findType( mdn.get(), "multipart", "report", true, true ) )->body();
 
 
   QString mdnContent = QString::fromLatin1( "The message sent on %1 to %2 with subject \"%3\" has been displayed. "
@@ -370,7 +370,7 @@ void MessageFactoryTest::testCreateMDN()
   mdnContent = mdnContent.arg( KMime::DateFormatter::formatDate( KMime::DateFormatter::Localized, msg->date()->dateTime().dateTime().toTime_t() ) )
                          .arg( msg->to()->asUnicodeString() ).arg( msg->subject()->asUnicodeString() );
 
-  kDebug() << "comparing with:" << mdnContent;
+  qDebug() << "comparing with:" << mdnContent;
 
   QCOMPARE_OR_DIFF( MessageCore::NodeHelper::next(  MessageViewer::ObjectTreeParser::findType( mdn.get(), "multipart", "report", true, true ) )->body(),
                     mdnContent.toLatin1() );

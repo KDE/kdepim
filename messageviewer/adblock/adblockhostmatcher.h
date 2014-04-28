@@ -31,7 +31,7 @@
 #include <QSet>
 #include <QString>
 
-#include <KDebug>
+#include <QDebug>
 
 namespace MessageViewer {
 class AdBlockHostMatcher

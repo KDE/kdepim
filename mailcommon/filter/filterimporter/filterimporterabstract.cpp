@@ -21,7 +21,7 @@
 #include "filtermanager.h"
 #include "mailfilter.h"
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QFile>
 
@@ -95,7 +95,7 @@ bool FilterImporterAbstract::loadDomElement( QDomDocument &doc, QFile *file )
     int errorRow;
     int errorCol;
     if ( !doc.setContent( file, &errorMsg, &errorRow, &errorCol ) ) {
-        kDebug() << "Unable to load document.Parse error in line " << errorRow
+        qDebug() << "Unable to load document.Parse error in line " << errorRow
                  << ", col " << errorCol << ": " << errorMsg;
         return false;
     }

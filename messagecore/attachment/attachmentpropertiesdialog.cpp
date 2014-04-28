@@ -27,7 +27,7 @@
 
 #include <k4aboutdata.h>
 #include <KComponentData>
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 #include <KIconLoader>
 #include <KMimeType>
@@ -284,7 +284,7 @@ void AttachmentPropertiesDialog::Private::saveToPart()
     if ( ui->mimeType->currentText().startsWith( QLatin1String( "message" ) ) &&
          ui->encoding->itemData( ui->encoding->currentIndex() ) != KMime::Headers::CE7Bit &&
          ui->encoding->itemData( ui->encoding->currentIndex() ) != KMime::Headers::CE8Bit ) {
-        kWarning() << "Encoding on message/rfc822 must be \"7bit\" or \"8bit\".";
+        qWarning() << "Encoding on message/rfc822 must be \"7bit\" or \"8bit\".";
     }
 
     mPart->setEncoding( KMime::Headers::contentEncoding(
@@ -308,7 +308,7 @@ AttachmentPropertiesDialog::AttachmentPropertiesDialog( const KMime::Content *co
     AttachmentFromMimeContentJob *job = new AttachmentFromMimeContentJob( content, this );
     job->exec();
     if ( job->error() ) {
-        kError() << "AttachmentFromMimeContentJob failed."<<job->errorString();
+        qCritical() << "AttachmentFromMimeContentJob failed."<<job->errorString();
     }
 
     const AttachmentPart::Ptr part = job->attachmentPart();

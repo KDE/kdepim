@@ -30,7 +30,7 @@
 #include <KIntSpinBox>
 #include <KLocale>
 #include <KMessageBox>
-#include <KDebug>
+#include <QDebug>
 
 #include <QCheckBox>
 #include <QGroupBox>
@@ -241,7 +241,7 @@ void CollectionExpiryPage::slotSaveAndExpire()
 void CollectionExpiryPage::slotCollectionModified(KJob* job)
 {
     if ( job->error() ) {
-        kDebug()<<" Error when we modified collection";
+        qDebug()<<" Error when we modified collection";
         return;
     }
 

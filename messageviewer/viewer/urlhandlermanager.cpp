@@ -62,7 +62,7 @@
 #include <KStandardDirs>
 #include <KUrl>
 #include <KIcon>
-#include <KDebug>
+#include <QDebug>
 
 #include <QApplication>
 #include <QClipboard>
@@ -263,7 +263,7 @@ static KMime::Content * partNodeFromXKMailUrl( const KUrl & url, ViewerPrivate *
 
     // urlPath format is: /bodypart/<random number>/<part id>/<path>
 
-    kDebug() << "BodyPartURLHandler: urlPath ==" << urlPath;
+    qDebug() << "BodyPartURLHandler: urlPath ==" << urlPath;
     if ( !urlPath.startsWith( QLatin1String("/bodypart/") ) )
         return 0;
 

@@ -61,7 +61,7 @@ using namespace KCalCore;
 #include <MailTransport/TransportManager>
 
 #include <KDBusServiceStarter>
-#include <KDebug>
+#include <QDebug>
 #include <KFileDialog>
 #include <KInputDialog>
 #include <KMenu>
@@ -119,7 +119,7 @@ static bool hasMyWritableEventsFolders( const QString &family )
   return false;
 #endif
 #else
-  kDebug() << "Disabled code, port to Akonadi";
+  qDebug() << "Disabled code, port to Akonadi";
   return true;
 #endif
 }
@@ -166,7 +166,7 @@ CalendarManager::CalendarManager()
     }
   }
   if ( multipleKolabResources ) {
-    kDebug() << "disabling calendar lookup because multiple active Kolab resources";
+    qDebug() << "disabling calendar lookup because multiple active Kolab resources";
     delete mCalendar;
     mCalendar = 0;
   }
@@ -252,7 +252,7 @@ class Formatter : public Interface::BodyPartFormatter
       if ( memento ) {
         KMime::Message *const message = dynamic_cast<KMime::Message*>( bodyPart->topLevelContent() );
         if ( !message ) {
-          kWarning() << "The top-level content is not a message. Cannot handle the invitation then.";
+          qWarning() << "The top-level content is not a message. Cannot handle the invitation then.";
           return Failed;
         }
 
@@ -322,7 +322,7 @@ static Incidence::Ptr stringToIncidence( const QString &iCal )
   ScheduleMessage::Ptr message = format.parseScheduleMessage( calendar, iCal );
   if ( !message ) {
     //TODO: Error message?
-    kWarning() << "Can't parse this ical string: "  << iCal;
+    qWarning() << "Can't parse this ical string: "  << iCal;
     return Incidence::Ptr();
   }
 
@@ -334,7 +334,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
   public:
     UrlHandler()
     {
-      //kDebug() << "UrlHandler() (iCalendar)";
+      //qDebug() << "UrlHandler() (iCalendar)";
     }
 
     Attendee::Ptr findMyself( const Incidence::Ptr &incidence, const QString &receiver ) const
@@ -557,7 +557,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
                    const QString &subject, const QString &status,
                    bool delMessage, Viewer *viewerInstance ) const
     {
-      kDebug() << "Mailing message:" << iCal;
+      qDebug() << "Mailing message:" << iCal;
 
       KMime::Message::Ptr msg( new KMime::Message );
       if ( GlobalSettings::self()->exchangeCompatibleInvitations() ) {
@@ -694,7 +694,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       job->setMessage( msg );
 
       if( ! job->exec() ) {
-        kWarning() << "Error queuing message in outbox:" << job->errorText();
+        qWarning() << "Error queuing message in outbox:" << job->errorText();
         return false;
       }
       // We are not notified when mail was sent, so assume it was sent when queued.
@@ -762,11 +762,11 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
       // If result is ResultCancelled, then we don't show the message box and return false so kmail
       // doesn't delete the e-mail.
-      kDebug() << "ITIPHandler result was " << itipHandler->result();
+      qDebug() << "ITIPHandler result was " << itipHandler->result();
       if ( itipHandler->result() == Akonadi::ITIPHandler::ResultError ) {
         const QString errorMessage = itipHandler->errorMessage();
         if ( !errorMessage.isEmpty() ) {
-          kError() << "Error while processing invitation: " << errorMessage;
+          qCritical() << "Error while processing invitation: " << errorMessage;
           KMessageBox::error( 0, errorMessage );
         }
       }
@@ -908,7 +908,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
     {
       bool ok = true;
       const QString receiver = findReceiver( part->content() );
-      kDebug() << receiver;
+      qDebug() << receiver;
 
       if ( receiver.isEmpty() ) {
         // Must be some error. Still return true though, since we did handle it
@@ -916,7 +916,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       }
 
       Incidence::Ptr incidence = stringToIncidence( iCal );
-      kDebug() << "Handling invitation: uid is : " << incidence->uid()
+      qDebug() << "Handling invitation: uid is : " << incidence->uid()
                << "; schedulingId is:" << incidence->schedulingID()
                << "; Attendee::PartStat = " << status;
 
@@ -1150,7 +1150,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
                   new OrgKdeKorganizerCalendarInterface( QLatin1String("org.kde.korganizer"), QLatin1String("/Calendar"),
                                                          QDBusConnection::sessionBus(), 0 );
           if ( !iface->isValid() ) {
-              kDebug() << "Calendar interface is not valid! " << iface->lastError().message();
+              qDebug() << "Calendar interface is not valid! " << iface->lastError().message();
               delete iface;
               return;
           }
@@ -1361,7 +1361,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
         }
       }
 #else
-      kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
+      qDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif
       return result;
     }

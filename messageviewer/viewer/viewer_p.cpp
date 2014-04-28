@@ -72,7 +72,7 @@
 #include <KPrintPreview>
 #include <kdeprintdialog.h>
 #include <KIcon>
-
+#include <KDebug>
 #include <kfileitemactions.h>
 #include <KFileItemListProperties>
 

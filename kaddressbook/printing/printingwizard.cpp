@@ -40,7 +40,7 @@
 #include "printing/grantlee/grantleeprintstyle.h"
 
 #include <KApplication>
-#include <KDebug>
+#include <QDebug>
 #include <KDialog>
 #include <KGlobal>
 #include <KLocalizedString>
@@ -186,7 +186,7 @@ void PrintingWizard::slotStyleSelected( int index )
   mStyle = mStyleList.value( index );
   if ( !mStyle ) {
     PrintStyleFactory *factory = mStyleFactories.at( index );
-    kDebug() << "creating print style" << factory->description();
+    qDebug() << "creating print style" << factory->description();
 
     mStyle = factory->create();
     mStyleList.insert( index, mStyle );
@@ -229,7 +229,7 @@ void PrintingWizard::print()
   const ContactSorter sorter( mStylePage->sortField(), mStylePage->sortOrder() );
   sorter.sort( contacts );
 
-  kDebug() <<"printing" << contacts.count() << "contacts.";
+  qDebug() <<"printing" << contacts.count() << "contacts.";
   // ... print:
   //QT5 enableButton( KDialog::User3, false ); // back button
   //QT5 enableButton( KDialog::Cancel, false );

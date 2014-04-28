@@ -22,7 +22,7 @@
 
 #include "contentjobbase_p.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KMime/kmime_message.h>
 #include <KMime/kmime_content.h>
 using namespace MessageComposer;

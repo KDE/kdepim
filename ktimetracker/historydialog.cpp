@@ -27,7 +27,7 @@
 #include <QItemDelegate>
 #include <KDateTimeWidget>
 #include <KMessageBox>
-#include <KDebug>
+#include <QDebug>
 
 class HistoryWidgetDelegate : public QItemDelegate
 {
@@ -122,11 +122,11 @@ QString historydialog::listallevents()
             // we need to handle both differently
             QDateTime start = QDateTime::fromTime_t( (*i)->dtStart().toTime_t() );
             QDateTime end = QDateTime::fromString( (*i)->dtEnd().toString(), Qt::ISODate );
-            kDebug() << "start =" << start << "; end =" << end;
+            qDebug() << "start =" << start << "; end =" << end;
             m_ui->historytablewidget->setItem( row, 1, new QTableWidgetItem( start.toString( "yyyy-MM-dd HH:mm:ss" ) ) );
             m_ui->historytablewidget->setItem( row, 2, new QTableWidgetItem( end.toString( "yyyy-MM-dd HH:mm:ss" ) ) );
             m_ui->historytablewidget->setItem( row, 4, new QTableWidgetItem( (*i)->uid() ) );
-            kDebug() <<"(*i)->comments.count() ="  << (*i)->comments().count();
+            qDebug() <<"(*i)->comments.count() ="  << (*i)->comments().count();
             if ( (*i)->comments().count() > 0 )
             {
                 m_ui->historytablewidget->setItem( row, 3, new QTableWidgetItem( (*i)->comments().last() ) );
@@ -198,7 +198,7 @@ void historydialog::historyWidgetCellChanged( int row, int col )
             KCalCore::Event::List eventList = mparent->storage()->rawevents();
             for( KCalCore::Event::List::iterator i = eventList.begin(); i != eventList.end(); ++i)
             {
-                kDebug() <<"row=" << row <<" col=" << col;
+                qDebug() <<"row=" << row <<" col=" << col;
                 if ( (*i)->uid() == uid )
                 {
                     if ( KDateTime::fromString( m_ui->historytablewidget->item( row, col )->text() ).isValid() )
@@ -218,15 +218,15 @@ void historydialog::historyWidgetCellChanged( int row, int col )
         { // Comment changed
             kDebug( 5970 ) <<"user changed Comment to" << m_ui->historytablewidget->item(row,col)->text();
             QString uid = m_ui->historytablewidget->item( row, 4 )->text();
-            kDebug() <<"uid =" << uid;
+            qDebug() <<"uid =" << uid;
             KCalCore::Event::List eventList = mparent->storage()->rawevents();
             for ( KCalCore::Event::List::iterator i = eventList.begin(); i != eventList.end(); ++i )
             {
-                kDebug() <<"row=" << row <<" col=" << col;
+                qDebug() <<"row=" << row <<" col=" << col;
                 if ( (*i)->uid() == uid )
                 {
                     (*i)->addComment( m_ui->historytablewidget->item( row, col )->text() );
-                    kDebug() <<"added" << m_ui->historytablewidget->item( row, col )->text();
+                    qDebug() <<"added" << m_ui->historytablewidget->item( row, col )->text();
                 }
             }
         }
@@ -248,7 +248,7 @@ void historydialog::on_deletepushbutton_clicked()
     if (m_ui->historytablewidget->item( m_ui->historytablewidget->currentRow(), 4))
     { // if an item is current
         QString uid = m_ui->historytablewidget->item( m_ui->historytablewidget->currentRow(), 4 )->text();
-        kDebug() <<"uid =" << uid;
+        qDebug() <<"uid =" << uid;
         KCalCore::Event::List eventList = mparent->storage()->rawevents();
         for ( KCalCore::Event::List::iterator i = eventList.begin(); i != eventList.end(); ++i )
         {

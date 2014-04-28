@@ -25,7 +25,7 @@
 
 
 #include <stdio.h>
-#include <KDebug>
+#include <QDebug>
 #include "kspellplugin.h"
 #include <QTextBoundaryFinder>
 #include "globalsettings_base.h"
@@ -94,7 +94,7 @@ void KWebSpellChecker::checkSpellingOfString(const QString& word, int* misspelli
     *misspellingLocation = -1;
     *misspellingLength = 0;
 
-    kDebug() << word << endl;
+    qDebug() << word << endl;
 
     QTextBoundaryFinder finder =  QTextBoundaryFinder(QTextBoundaryFinder::Word, word);
 

@@ -17,7 +17,7 @@
 
 #include "createresource.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 
 #include <agenttype.h>
@@ -56,10 +56,10 @@ static QVariant::Type argumentType( const QMetaObject *mo, const QString &method
     }
 
     if ( !m.signature() ) {
-        kWarning() << "Did not find D-Bus method: " << method << " available methods are:";
+        qWarning() << "Did not find D-Bus method: " << method << " available methods are:";
         const int numberOfMethod(mo->methodCount());
         for ( int i = 0; i < numberOfMethod; ++ i )
-            kWarning() << mo->method( i ).signature();
+            qWarning() << mo->method( i ).signature();
         return QVariant::Invalid;
     }
 
@@ -82,10 +82,10 @@ QString CreateResource::createResource( const QString &resources, const QString 
     }
 
     // check if unique instance already exists
-    kDebug() << type.capabilities();
+    qDebug() << type.capabilities();
     if ( type.capabilities().contains( QLatin1String( "Unique" ) ) ) {
         Q_FOREACH ( const AgentInstance &instance, AgentManager::self()->instances() ) {
-            kDebug() << instance.type().identifier() << (instance.type() == type);
+            qDebug() << instance.type().identifier() << (instance.type() == type);
             if ( instance.type() == type ) {
                 Q_EMIT createResourceInfo(i18n( "Resource '%1' is already set up.", type.name() ) );
                 return QString();
@@ -111,7 +111,7 @@ QString CreateResource::createResource( const QString &resources, const QString 
                 instance.setName( name );
             QMap<QString, QVariant>::const_iterator end( settings.constEnd());
             for ( QMap<QString, QVariant>::const_iterator it = settings.constBegin(); it != end; ++it ) {
-                kDebug() << "Setting up " << it.key() << " for agent " << instance.identifier();
+                qDebug() << "Setting up " << it.key() << " for agent " << instance.identifier();
                 const QString methodName = QString::fromLatin1("set%1").arg( it.key() );
                 QVariant arg = it.value();
                 const QVariant::Type targetType = argumentType( iface.metaObject(), methodName );

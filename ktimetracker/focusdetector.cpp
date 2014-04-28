@@ -23,7 +23,7 @@
 #include "ktimetrackerutility.h"
 
 
-#include <KDebug>
+#include <QDebug>
 
 FocusDetector::FocusDetector()
 {

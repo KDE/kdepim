@@ -22,7 +22,7 @@
 #include "calendarinterface.h"
 #include "mainview.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <QGraphicsItem>
 
 void CalendarInterface::showDate( const QDate &date )
@@ -32,24 +32,24 @@ void CalendarInterface::showDate( const QDate &date )
 
 void CalendarInterface::goDate( const QDate& )
 {
-  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
 }
 
 void CalendarInterface::goDate( const QString& )
 {
-  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
 }
 
 void CalendarInterface::openEventEditor( const QString& )
 {
-  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
 }
 
 void CalendarInterface::openEventEditor( const QString &summary,
                                          const QString &description,
                                          const QStringList &attachments)
 {
-  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
   Q_UNUSED( summary );
   Q_UNUSED( description );
   Q_UNUSED( attachments );
@@ -60,7 +60,7 @@ void CalendarInterface::openEventEditor( const QString &summary,
                                          const QStringList &attachments,
                                          const QStringList &attendees)
 {
-  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
   Q_UNUSED( summary );
   Q_UNUSED( description );
   Q_UNUSED( attachments );
@@ -74,7 +74,7 @@ void CalendarInterface::openEventEditor( const QString &summary,
                                          const QStringList &attendees,
                                          const QString &attachmentMimetype)
 {
-  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
   Q_UNUSED( summary );
   Q_UNUSED( description );
   Q_UNUSED( uri );
@@ -97,32 +97,32 @@ void CalendarInterface::openEventEditor( const QString &summary,
 
 void CalendarInterface::openJournalEditor( const QDate & )
 {
-  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
 }
 
 void CalendarInterface::openJournalEditor( const QString &text, const QDate &date )
 {
-  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
   Q_UNUSED( text );
   Q_UNUSED( date );
 }
 
 void CalendarInterface::openJournalEditor( const QString &text )
 {
-  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
   Q_UNUSED( text );
 }
 
 void CalendarInterface::openTodoEditor( const QString& )
 {
-  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
 }
 
 void CalendarInterface::openTodoEditor( const QString &summary,
                                         const QString &description,
                                         const QStringList &attachments )
 {
-  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
   Q_UNUSED( summary );
   Q_UNUSED( description );
   Q_UNUSED( attachments );
@@ -134,7 +134,7 @@ void CalendarInterface::openTodoEditor( const QString &summary,
                                         const QStringList &attachments,
                                         const QStringList &attendees )
 {
-  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
   Q_UNUSED( summary );
   Q_UNUSED( description );
   Q_UNUSED( attachments );
@@ -148,7 +148,7 @@ void CalendarInterface::openTodoEditor( const QString &summary,
                                         const QStringList &attendees,
                                         const QString &attachmentMimetype )
 {
-  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
   Q_UNUSED( summary );
   Q_UNUSED( description );
   Q_UNUSED( uri );
@@ -176,11 +176,11 @@ void CalendarInterface::showEventView()
 
 void CalendarInterface::showJournalView()
 {
-  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
 }
 
 void CalendarInterface::showTodoView()
 {
-  kWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
+  qWarning() << Q_FUNC_INFO << " is not yet implemented in korganzier-mobile";
 }
 

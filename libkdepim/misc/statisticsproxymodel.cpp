@@ -28,7 +28,7 @@
 #include <collectionstatistics.h>
 #include <entitydisplayattribute.h>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kio/global.h>
@@ -377,7 +377,7 @@ QModelIndex StatisticsProxyModel::parent(const QModelIndex& child) const
         // So the only way is to create a source index ourselves.
         const QModelIndex sourceIndex = d->sourceIndexAtFirstColumn(child);
         const QModelIndex sourceParent = sourceIndex.parent();
-        //kDebug() << "parent of" << child.data() << "is" << sourceParent.data();
+        //qDebug() << "parent of" << child.data() << "is" << sourceParent.data();
         return mapFromSource(sourceParent);
     } else {
         return QIdentityProxyModel::parent(child);
@@ -407,7 +407,7 @@ QVariant StatisticsProxyModel::data( const QModelIndex & index, int role) const
                     return QString();
                 }
             } else {
-                kWarning() << "We shouldn't get there for a column which is not total, unread or size.";
+                qWarning() << "We shouldn't get there for a column which is not total, unread or size.";
                 return QVariant();
             }
         }

@@ -16,7 +16,7 @@
 #include "vacationdialog.h"
 #include "vacationeditwidget.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <KMime/kmime_header_parsing.h>
@@ -58,7 +58,7 @@ VacationDialog::VacationDialog( const QString &caption, QWidget * parent,
 
 VacationDialog::~VacationDialog()
 {
-    kDebug() << "~VacationDialog()";
+    qDebug() << "~VacationDialog()";
     writeConfig();
 }
 

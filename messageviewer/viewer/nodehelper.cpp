@@ -34,7 +34,7 @@
 #include <KMime/kmime_message.h>
 #include <KMime/kmime_headers.h>
 #include <kmimetype.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kascii.h>
 #include <ktemporaryfile.h>
 #include <klocale.h>
@@ -98,7 +98,7 @@ void NodeHelper::setNodeProcessed(KMime::Content* node, bool recurse )
   if ( !node )
     return;
   mProcessedNodes.append( node );
-  //kDebug() << "Node processed: " << node->index().toString() << node->contentType()->as7BitString();
+  //qDebug() << "Node processed: " << node->index().toString() << node->contentType()->as7BitString();
            //<< " decodedContent" << node->decodedContent();
   if ( recurse ) {
     KMime::Content::List contents = node->contents();
@@ -124,11 +124,11 @@ void NodeHelper::setNodeUnprocessed(KMime::Content* node, bool recurse )
           p->removeContent( c );
       }
       qDeleteAll( it.value() );
-      //kDebug() << "mExtraContents deleted for" << it.key();
+      //qDebug() << "mExtraContents deleted for" << it.key();
       mExtraContents.erase( it );
   }
 
-  //kDebug() << "Node UNprocessed: " << node;
+  //qDebug() << "Node UNprocessed: " << node;
   if ( recurse ) {
     KMime::Content::List contents = node->contents();
     Q_FOREACH( KMime::Content *c, contents )
@@ -176,7 +176,7 @@ void NodeHelper::clear()
         p->removeContent( c );
     }
     qDeleteAll( it.value() );
-    kDebug() << "mExtraContents deleted for" << it.key();
+    qDebug() << "mExtraContents deleted for" << it.key();
   }
   mExtraContents.clear();
   mDisplayEmbeddedNodes.clear();
@@ -237,7 +237,7 @@ QString NodeHelper::writeNodeToTempFile(KMime::Content* node)
     fileName = QLatin1String("unnamed");
   fname += QLatin1Char('/') + fileName;
 
-  //kDebug() << "Create temp file: " << fname;
+  //qDebug() << "Create temp file: " << fname;
   QByteArray data = node->decodedContent();
   if ( node->contentType()->isText() && data.size() > 0 ) {
     // convert CRLF to LF before writing text attachments to disk
@@ -414,7 +414,7 @@ KMMsgEncryptionState NodeHelper::overallEncryptionState( KMime::Content *node ) 
         }
     }
 
-//kDebug() <<"\n\n  KMMsgEncryptionState:" << myState;
+//qDebug() <<"\n\n  KMMsgEncryptionState:" << myState;
 
     return myState;
 }
@@ -462,7 +462,7 @@ KMMsgSignatureState NodeHelper::overallSignatureState( KMime::Content* node ) co
         }
     }
 
-//kDebug() <<"\n\n  KMMsgSignatureState:" << myState;
+//qDebug() <<"\n\n  KMMsgSignatureState:" << myState;
 
     return myState;
 }
@@ -505,7 +505,7 @@ QString NodeHelper::replacePrefixes( const QString& str,
                       .arg( prefixRegExps.join(QLatin1String(")|(?:")) );
   QRegExp rx( bigRegExp, Qt::CaseInsensitive );
   if ( !rx.isValid() ) {
-    kWarning() << "bigRegExp = \""
+    qWarning() << "bigRegExp = \""
                    << bigRegExp << "\"\n"
                    << "prefix regexp is invalid!";
     // try good ole Re/Fwd:
@@ -631,13 +631,13 @@ void NodeHelper::setBodyPartMemento( KMime::Content* node, const QByteArray &whi
 
 bool NodeHelper::isNodeDisplayedEmbedded( KMime::Content* node ) const
 {
-  //kDebug() << "IS NODE: " << mDisplayEmbeddedNodes.contains( node );
+  //qDebug() << "IS NODE: " << mDisplayEmbeddedNodes.contains( node );
   return mDisplayEmbeddedNodes.contains( node );
 }
 
 void NodeHelper::setNodeDisplayedEmbedded( KMime::Content* node, bool displayedEmbedded )
 {
-  //kDebug() << "SET NODE: " << node << displayedEmbedded;
+  //qDebug() << "SET NODE: " << node << displayedEmbedded;
   if ( displayedEmbedded )
     mDisplayEmbeddedNodes.insert( node );
   else
@@ -762,7 +762,7 @@ QByteArray NodeHelper::autoDetectCharset(const QByteArray &_encoding, const QStr
        {
          const QTextCodec *codec = codecForName(encoding);
          if (!codec) {
-           kDebug() << "Auto-Charset: Something is wrong and I cannot get a codec:" << encoding;
+           qDebug() << "Auto-Charset: Something is wrong and I cannot get a codec:" << encoding;
          } else {
            if (codec->canEncode(text))
               return encoding;
@@ -797,7 +797,7 @@ QString NodeHelper::fromAsString( KMime::Content* node )
 
 void NodeHelper::attachExtraContent( KMime::Content *topLevelNode, KMime::Content* content )
 {
-  //kDebug() << "mExtraContents added for" << topLevelNode << " extra content: " << content;
+  //qDebug() << "mExtraContents added for" << topLevelNode << " extra content: " << content;
   mExtraContents[topLevelNode].append( content );
 }
 
@@ -837,7 +837,7 @@ void NodeHelper::mergeExtraNodes( KMime::Content *node )
   QList<KMime::Content* > extraNodes = extraContents( node );
   Q_FOREACH( KMime::Content* extra, extraNodes ) {
     if( node->bodyIsMessage() ) {
-      kWarning() << "Asked to attach extra content to a kmime::message, this does not make sense. Attaching to:" << node <<
+      qWarning() << "Asked to attach extra content to a kmime::message, this does not make sense. Attaching to:" << node <<
                     node->encodedContent() << "\n====== with =======\n" <<  extra << extra->encodedContent();
         continue;
       }
@@ -930,7 +930,7 @@ KMime::Content * NodeHelper::decryptedNodeForContent( KMime::Content * content )
     if ( xc.size() == 1 ) {
       return xc.front();
     } else {
-      kWarning() << "WTF, encrypted node has multiple extra contents?";
+      qWarning() << "WTF, encrypted node has multiple extra contents?";
     }
   }
   return 0;
@@ -948,7 +948,7 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
     const bool isMultipart = node->contentType( false ) && node->contentType()->isMultipart();
     bool isSignature = false;
 
-    //kDebug() << "(" << recursionLevel << ") Looking at" << type << "/" << subType;
+    //qDebug() << "(" << recursionLevel << ") Looking at" << type << "/" << subType;
 
     if ( isMultipart ) {
       if ( subType == "signed" ) {
@@ -971,7 +971,7 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
     }
 
     if ( decryptedNode ) {
-      //kDebug() << "Current node has an associated decrypted node, adding a modified header "
+      //qDebug() << "Current node has an associated decrypted node, adding a modified header "
       //            "and then processing the children.";
 
       Q_ASSERT( addHeaders );
@@ -1007,7 +1007,7 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
     }
 
     else if ( isSignature ) {
-      //kDebug() << "Current node is a signature, adding it as-is.";
+      //qDebug() << "Current node is a signature, adding it as-is.";
       // We can't change the nodes under the signature, as that would invalidate it. Add the signature
       // and its child as-is
       if ( addHeaders ) {
@@ -1018,7 +1018,7 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
     }
 
     else if ( isMultipart ) {
-      //kDebug() << "Current node is a multipart node, adding its header and then processing all children.";
+      //qDebug() << "Current node is a multipart node, adding its header and then processing all children.";
       // Normal multipart node, add the header and all of its children
       bool somethingChanged = false;
       if ( addHeaders ) {
@@ -1037,7 +1037,7 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
     }
 
     else if ( curNode->bodyIsMessage() ) {
-      //kDebug() << "Current node is a message, adding the header and then processing the child.";
+      //qDebug() << "Current node is a message, adding the header and then processing the child.";
       if ( addHeaders ) {
         resultingData += curNode->head() + '\n';
       }
@@ -1046,7 +1046,7 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
     }
 
     else {
-      //kDebug() << "Current node is an ordinary leaf node, adding it as-is.";
+      //qDebug() << "Current node is an ordinary leaf node, adding it as-is.";
       if ( addHeaders ) {
         resultingData += curNode->head() + '\n';
       }
@@ -1055,7 +1055,7 @@ bool NodeHelper::unencryptedMessage_helper( KMime::Content *node, QByteArray &re
     }
   }
 
-  //kDebug() << "(" << recursionLevel << ") done.";
+  //qDebug() << "(" << recursionLevel << ") done.";
   return returnValue;
 }
 
@@ -1065,7 +1065,7 @@ KMime::Message::Ptr NodeHelper::unencryptedMessage( const KMime::Message::Ptr& o
   const bool messageChanged = unencryptedMessage_helper( originalMessage.get(), resultingData, true );
   if ( messageChanged ) {
 #if 0
-    kDebug() << "Resulting data is:" << resultingData;
+    qDebug() << "Resulting data is:" << resultingData;
     QFile bla("stripped.mbox");
     bla.open(QIODevice::WriteOnly);
     bla.write(resultingData);

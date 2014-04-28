@@ -53,7 +53,7 @@
 #include <AkonadiWidgets/collectioncombobox.h>
 
 #include <klocalizedstring.h>
-#include <KDebug>
+#include <QDebug>
 #include <KIcon>
 #include <QAction>
 #include <KMessageBox>
@@ -100,7 +100,7 @@ ComposerView::ComposerView(QWidget* parent) :
 
 void ComposerView::doDelayedInit()
 {
-  kDebug();
+  qDebug();
   qmlRegisterType<DeclarativeEditor>( "org.kde.messagecomposer", 4, 5, "Editor" );
   qmlRegisterType<DeclarativeIdentityComboBox>( "org.kde.kpimidentities", 4, 5, "IdentityComboBox" );
   qmlRegisterType<DeclarativeRecipientsEditor>( "org.kde.messagecomposer", 4, 5, "RecipientsEditor" );
@@ -262,8 +262,8 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
   Q_ASSERT( m_composerBase->attachmentModel() );
   Q_ASSERT( m_composerBase->attachmentController() );
 
-//   kDebug() << m_identityCombo;
-//   kDebug() << m_editor;
+//   qDebug() << m_identityCombo;
+//   qDebug() << m_editor;
 
   MessageComposer::SignatureController *signatureController = new MessageComposer::SignatureController( this );
   signatureController->setEditor( m_composerBase->editor() );
@@ -321,7 +321,7 @@ void ComposerView::setMessage(const KMime::Message::Ptr& msg, bool mayAutoSign)
 
 void ComposerView::send( MessageComposer::MessageSender::SendMethod method, MessageComposer::MessageSender::SaveIn saveIn )
 {
-  kDebug();
+  qDebug();
 
   if ( !m_composerBase->editor()->checkExternalEditorFinished() )
     return;
@@ -402,7 +402,7 @@ void ComposerView::setBusy(bool busy)
 
 QObject* ComposerView::getAction( const QString &name ) const
 {
-  kDebug() << actionCollection() << actionCollection()->action( name );
+  qDebug() << actionCollection() << actionCollection()->action( name );
   return actionCollection()->action( name );
 }
 

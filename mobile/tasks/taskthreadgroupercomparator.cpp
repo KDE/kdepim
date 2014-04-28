@@ -26,7 +26,7 @@
 #include <calendarsupport/utils.h>
 #include <KCalCore/todo.h>
 
-#include <KDebug>
+#include <QDebug>
 
 TaskThreadGrouperComparator::TaskThreadGrouperComparator()
 {
@@ -78,7 +78,7 @@ bool TaskThreadGrouperComparator::lessThan( const Akonadi::Item &leftItem, const
     const KCalCore::Todo::Ptr rightTodo = CalendarSupport::todo( rightThreadRootItem );
 
     if ( !leftTodo || !rightTodo ) {
-      kDebug() << "This shouldn't happen, but i didn't check. Better safe than sorry.";
+      qDebug() << "This shouldn't happen, but i didn't check. Better safe than sorry.";
       return false;
     }
 

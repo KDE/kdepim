@@ -22,7 +22,7 @@
 
 #include "csvexportdialog.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KDateComboBox>
 #include <KGlobal>
 #include <KLocale>

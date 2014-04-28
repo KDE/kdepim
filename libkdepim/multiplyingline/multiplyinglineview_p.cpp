@@ -23,7 +23,7 @@
 */
 #include "multiplyinglineview_p.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KMessageBox>
 #include <KLocale>
 
@@ -342,10 +342,10 @@ void MultiplyingLineView::setFocusTop()
         if ( line )
             line->activate();
         else
-            kWarning() <<"No first";
+            qWarning() <<"No first";
     }
     else
-        kWarning() <<"No first";
+        qWarning() <<"No first";
 }
 
 void MultiplyingLineView::setFocusBottom()
@@ -356,7 +356,7 @@ void MultiplyingLineView::setFocusBottom()
         line->activate();
     }
     else
-        kWarning() <<"No last";
+        qWarning() <<"No last";
 }
 
 int MultiplyingLineView::setFirstColumnWidth( int w )

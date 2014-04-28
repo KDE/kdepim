@@ -26,7 +26,7 @@
 #include <messagecomposer/recipient/recipientseditor.h>
 
 #include <kapplication.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <klocale.h>
 #include <kcmdlineargs.h>
 #include <kmessagebox.h>
@@ -56,7 +56,7 @@ Composer::Composer( QWidget *parent )
   mRecipients = new RecipientsEditor( this );
   topLayout->addWidget( mRecipients, 1, 0, 1, 2 );
 
-  kDebug() << "SIZEHINT:" << mRecipients->sizeHint();
+  qDebug() << "SIZEHINT:" << mRecipients->sizeHint();
 
 //  mRecipients->setFixedHeight( 10 );
 

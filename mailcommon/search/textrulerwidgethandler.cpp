@@ -22,7 +22,7 @@
 #include "widgets/regexplineedit.h"
 using MailCommon::RegExpLineEdit;
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
 
 #include <QLineEdit>

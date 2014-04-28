@@ -23,7 +23,7 @@ using MailCommon::RuleWidgetHandlerManager;
 
 #include <pimcommon/widgets/minimumcombobox.h>
 #include <KComboBox>
-#include <KDebug>
+#include <QDebug>
 #include <KDialog>
 #include <KLocale>
 #include <KPushButton>
@@ -246,7 +246,7 @@ void SearchRuleWidget::setRule( SearchRule::Ptr aRule )
 {
     Q_ASSERT( aRule );
 
-    kDebug() << "(" << aRule->asString() << ")";
+    qDebug() << "(" << aRule->asString() << ")";
 
     //--------------set the field
     int i = indexOfRuleField( aRule->field() );
@@ -462,7 +462,7 @@ void SearchRuleWidgetLister::setRuleList( QList<SearchRule::Ptr> *aList )
 
     int superfluousItems = (int)mRuleList->count() - widgetsMaximum();
     if ( superfluousItems > 0 ) {
-        kDebug() << "Clipping rule list to" << widgetsMaximum() << "items!";
+        qDebug() << "Clipping rule list to" << widgetsMaximum() << "items!";
 
         for ( ; superfluousItems ; superfluousItems-- ) {
             mRuleList->removeLast();
@@ -667,7 +667,7 @@ void SearchPatternEdit::initLayout( SearchPatternEditOptions options, SearchMode
                      this, SIGNAL(returnPressed()) );
         }
     } else {
-        kDebug() << "No first SearchRuleWidget, though slotClear() has been called!";
+        qDebug() << "No first SearchRuleWidget, though slotClear() has been called!";
     }
 
     connect( mRuleLister, SIGNAL(widgetAdded(QWidget*)),

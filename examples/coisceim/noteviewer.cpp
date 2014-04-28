@@ -102,7 +102,7 @@ void NoteViewer::dataChanged(const QModelIndex& topLeft, const QModelIndex& bott
 void NoteViewer::populateWidget(const QModelIndex& index)
 {
   Item item = index.data(EntityTreeModel::ItemRole).value<Item>();
-  kDebug() << "NOTE" << item.id() << item.remoteId() << item.hasPayload<KMime::Message::Ptr>();
+  qDebug() << "NOTE" << item.id() << item.remoteId() << item.hasPayload<KMime::Message::Ptr>();
   if (!item.hasPayload<KMime::Message::Ptr>())
     return;
   KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
@@ -149,7 +149,7 @@ void NoteViewer::modifyDone( KJob *job )
 {
   if ( job->error() )
   {
-    kDebug() << job->errorString();
+    qDebug() << job->errorString();
   }
 }
 

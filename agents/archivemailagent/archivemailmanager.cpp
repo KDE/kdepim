@@ -27,7 +27,7 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <KGlobal>
-#include <KDebug>
+#include <QDebug>
 
 #include <QDate>
 #include <QFile>
@@ -129,7 +129,7 @@ void ArchiveMailManager::backupDone(ArchiveMailInfo *info)
             const int diff = (lst.count() - info->maximumArchiveCount());
             for (int i = 0; i < diff; ++i) {
                 const QString fileToRemove(info->url().path() + QDir::separator() + lst.at(i));
-                kDebug()<<" file to remove "<<fileToRemove;
+                qDebug()<<" file to remove "<<fileToRemove;
                 QFile::remove(fileToRemove);
             }
         }
@@ -159,7 +159,7 @@ void ArchiveMailManager::resume()
 void ArchiveMailManager::printArchiveListInfo()
 {
     Q_FOREACH (ArchiveMailInfo *info, mListArchiveInfo) {
-        kDebug()<<"info: collectionId:"<<info->saveCollectionId()
+        qDebug()<<"info: collectionId:"<<info->saveCollectionId()
                 <<" saveSubCollection ?"<<info->saveSubCollection()
                 <<" lastDateSaved:"<<info->lastDateSaved()
                 <<" number of archive:"<<info->maximumArchiveCount()

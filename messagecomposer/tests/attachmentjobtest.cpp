@@ -20,7 +20,7 @@
 #include "attachmentjobtest.h"
 #include "qtest_messagecomposer.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <qtest_kde.h>
 
 #include <KMime/kmime_content.h>
@@ -64,7 +64,7 @@ void AttachmentJobTest::testAttachment()
   delete ajob;
   ajob = 0;
   result->assemble();
-  kDebug() << result->encodedContent();
+  qDebug() << result->encodedContent();
 
   QCOMPARE( result->contentType( false )->name(), name );
   QCOMPARE( result->contentDisposition( false )->filename(), fileName );
@@ -109,7 +109,7 @@ void AttachmentJobTest::testTextCharsetAutodetect()
   delete ajob;
   ajob = 0;
   result->assemble();
-  kDebug() << result->encodedContent();
+  qDebug() << result->encodedContent();
 
   QCOMPARE( result->contentType( false )->charset(), charset );
 }

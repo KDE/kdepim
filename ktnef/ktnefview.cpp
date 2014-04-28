@@ -20,7 +20,7 @@
 #include <KTNEF/KTNEFAttach>
 
 #include <KApplication>
-#include <KDebug>
+#include <QDebug>
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <KMimeType>

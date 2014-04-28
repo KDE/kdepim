@@ -30,7 +30,7 @@
 #include "ui_ds_appearance.h"
 
 #include <KConfig>
-#include <KDebug>
+#include <QDebug>
 #include <KDialog>
 #include <KGlobal>
 #include <KLocalizedString>

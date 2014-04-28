@@ -43,7 +43,7 @@
 #include <KMime/kmime_dateformatter.h> // kdepimlibs
 
 #include <KConfig>
-#include <KDebug>
+#include <QDebug>
 #include <KIconLoader>
 #include <KGlobalSettings>
 #include <KApplication>
@@ -988,7 +988,7 @@ void Manager::loadConfiguration()
                         delete old;
                     mThemes.insert( set->id(), set );
                 } else {
-                    kWarning() << "Saved theme loading failed";
+                    qWarning() << "Saved theme loading failed";
                     delete set; // b0rken
                 }
             }

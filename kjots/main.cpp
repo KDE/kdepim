@@ -30,7 +30,7 @@
 
 #include <kcmdlineargs.h>
 #include <kconfig.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <klocale.h>
 #include <kglobal.h>
 #include <kconfiggroup.h>
@@ -42,7 +42,7 @@ int main( int argc, char **argv )
 
     KontactInterface::PimUniqueApplication::addCmdLineOptions();
     if (!KontactInterface::PimUniqueApplication::start()) {
-        kWarning() << "kjots is already running!";
+        qWarning() << "kjots is already running!";
         exit(0);
     }
     KontactInterface::PimUniqueApplication a;

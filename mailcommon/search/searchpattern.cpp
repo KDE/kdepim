@@ -32,7 +32,7 @@ using MailCommon::FilterLog;
 
 //note: lowercase include for compatibility
 #include <kascii.h>
-#include <KDebug>
+#include <QDebug>
 #include <KConfigGroup>
 #include <KLocale>
 #include <KGlobal>
@@ -593,7 +593,7 @@ Akonadi::SearchTerm::Condition SearchRule::akonadiComparator() const
         //TODO is this sufficient?
         return Akonadi::SearchTerm::CondContains;
     default:
-        kDebug() << "Unhandled function type: " << function();
+        qDebug() << "Unhandled function type: " << function();
     }
 
     return Akonadi::SearchTerm::CondEqual;
@@ -1370,7 +1370,7 @@ void SearchPattern::purify()
         --it;
         if ( (*it)->isEmpty() ) {
 #ifndef NDEBUG
-            kDebug() << "Removing" << (*it)->asString();
+            qDebug() << "Removing" << (*it)->asString();
 #endif
             erase( it );
             it = end();
@@ -1384,7 +1384,7 @@ void SearchPattern::readConfig( const KConfigGroup &config )
 
     mName = config.readEntry( "name" );
     if ( !config.hasKey( "rules" ) ) {
-        kDebug() << "Found legacy config! Converting.";
+        qDebug() << "Found legacy config! Converting.";
         importLegacyConfig( config );
         return;
     }

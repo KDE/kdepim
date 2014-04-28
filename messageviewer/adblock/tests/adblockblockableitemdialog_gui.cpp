@@ -18,7 +18,7 @@
 #include "adblockblockableitemdialog_gui.h"
 #include "adblock/adblockblockableitemswidget.h"
 #include "KPIMUtils/ProgressIndicatorLabel"
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kapplication.h>
 #include <KFileDialog>
 #include <KCmdLineArgs>

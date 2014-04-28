@@ -27,7 +27,7 @@
 #include <messagecore/helpers/messagehelpers.h>
 
 #include <KLocale>
-#include <KDebug>
+#include <QDebug>
 
 using namespace MailCommon;
 
@@ -59,7 +59,7 @@ FilterAction::ReturnCode FilterActionRedirect::process(ItemContext &context , bo
     sendMDN( context.item(), KMime::MDN::Dispatched );
 
     if ( !KernelIf->msgSender()->send( rmsg, MessageComposer::MessageSender::SendLater ) ) {
-        kDebug() << "FilterAction: could not redirect message (sending failed)";
+        qDebug() << "FilterAction: could not redirect message (sending failed)";
         return ErrorButGoOn; // error: couldn't send
     }
 

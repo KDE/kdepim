@@ -25,7 +25,7 @@
 
 #include <KApplication>
 #include <KComboBox>
-#include <KDebug>
+#include <QDebug>
 #include <KInputDialog>
 #include <KLineEdit>
 #include <KLocalizedString>

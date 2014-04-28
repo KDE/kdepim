@@ -28,7 +28,7 @@
 
 
 #include "jobscheduler.h"
-#include <kdebug.h>
+#include <qdebug.h>
 
 namespace MailCommon {
 
@@ -71,7 +71,7 @@ void JobScheduler::registerTask( ScheduledTask* task )
         for ( TaskList::Iterator it = mTaskList.begin(); it != end; ++it ) {
             if ( (*it)->taskTypeId() == typeId && (*it)->folder() == folder ) {
 #ifdef DEBUG_SCHEDULER
-                kDebug() << "JobScheduler: already having task type" << typeId << "for folder" << folder->label();
+                qDebug() << "JobScheduler: already having task type" << typeId << "for folder" << folder->label();
 #endif
                 delete task;
                 if ( !mCurrentTask && immediate ) {
@@ -88,7 +88,7 @@ void JobScheduler::registerTask( ScheduledTask* task )
         runTaskNow( task );
     else {
 #ifdef DEBUG_SCHEDULER
-        kDebug() << "JobScheduler: adding task" << task << "(type" << task->taskTypeId()
+        qDebug() << "JobScheduler: adding task" << task << "(type" << task->taskTypeId()
                  << ") for folder" << task->folder() << task->folder().name();
 #endif
         mTaskList.append( task );
@@ -110,7 +110,7 @@ void JobScheduler::interruptCurrentTask()
 {
     Q_ASSERT( mCurrentTask );
 #ifdef DEBUG_SCHEDULER
-    kDebug() << "JobScheduler: interrupting job" << mCurrentJob << "for folder" << mCurrentTask->folder()->label();
+    qDebug() << "JobScheduler: interrupting job" << mCurrentJob << "for folder" << mCurrentTask->folder()->label();
 #endif
     // File it again. This will either delete it or put it in mTaskList.
     registerTask( mCurrentTask );
@@ -122,7 +122,7 @@ void JobScheduler::slotRunNextJob()
 {
     while ( !mCurrentJob ) {
 #ifdef DEBUG_SCHEDULER
-        kDebug() << "JobScheduler: slotRunNextJob";
+        qDebug() << "JobScheduler: slotRunNextJob";
 #endif
         Q_ASSERT( mCurrentTask == 0 );
         ScheduledTask* task = 0;
@@ -133,7 +133,7 @@ void JobScheduler::slotRunNextJob()
             const Akonadi::Collection folder = (*it)->folder();
             if ( !folder.isValid() ) {
 #ifdef DEBUG_SCHEDULER
-                kDebug() << "  folder for task" << (*it) << "was deleted";
+                qDebug() << "  folder for task" << (*it) << "was deleted";
 #endif
                 removeTask( it );
                 if ( !mTaskList.isEmpty() )
@@ -143,7 +143,7 @@ void JobScheduler::slotRunNextJob()
                 return;
             }
 #ifdef DEBUG_SCHEDULER
-            kDebug() << "  looking at folder" << folder.name();
+            qDebug() << "  looking at folder" << folder.name();
 #endif
             task = *it;
             removeTask( it );
@@ -181,7 +181,7 @@ void JobScheduler::runTaskNow( ScheduledTask* task )
     mTimer.stop();
     mCurrentJob = mCurrentTask->run();
 #ifdef DEBUG_SCHEDULER
-    kDebug() << "JobScheduler: task" << mCurrentTask
+    qDebug() << "JobScheduler: task" << mCurrentTask
              << "(type" << mCurrentTask->taskTypeId() << ")"
              << "for folder" << mCurrentTask->folder()->label()
              << "returned job" << mCurrentJob
@@ -206,7 +206,7 @@ void JobScheduler::slotJobFinished()
 {
     // Do we need to test for mCurrentJob->error()? What do we do then?
 #ifdef DEBUG_SCHEDULER
-    kDebug() << "JobScheduler: slotJobFinished";
+    qDebug() << "JobScheduler: slotJobFinished";
 #endif
     delete mCurrentTask;
     mCurrentTask = 0;

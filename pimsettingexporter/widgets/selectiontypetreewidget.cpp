@@ -21,7 +21,7 @@
 
 #include <QTreeWidgetItem>
 #include <QHeaderView>
-#include <KDebug>
+#include <QDebug>
 
 SelectionTypeTreeWidget::SelectionTypeTreeWidget(QWidget *parent)
     : QTreeWidget(parent)
@@ -212,7 +212,7 @@ void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::Stor
         break;
     }
     default:
-        kDebug()<<" Type not supported: "<<type;
+        qDebug()<<" Type not supported: "<<type;
         break;
     }
 }

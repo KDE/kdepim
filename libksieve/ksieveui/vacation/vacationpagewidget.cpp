@@ -26,7 +26,7 @@
 
 #include <kmanagesieve/sievejob.h>
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 
 #include <QStackedWidget>
@@ -100,7 +100,7 @@ void VacationPageWidget::setServerName(const QString &serverName)
 
 void VacationPageWidget::slotGetResult( KManageSieve::SieveJob * job, bool success, const QString & script, bool active )
 {
-    kDebug() << success
+    qDebug() << success
              << ", ?," << active << ")" << endl
              << "script:" << endl
              << script;

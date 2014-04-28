@@ -21,7 +21,7 @@
 
 #include "attachmentcompressjob.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 #include <KZip>
 

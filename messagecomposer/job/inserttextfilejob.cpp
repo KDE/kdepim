@@ -21,7 +21,7 @@
 #include "composer/kmeditor.h"
 
 #include <KCharsets>
-#include <KDebug>
+#include <QDebug>
 #include <KIO/Job>
 #include <KGlobal>
 
@@ -47,7 +47,7 @@ void InsertTextFileJob::slotFileData ( KIO::Job* job, const QByteArray& data )
 void InsertTextFileJob::slotGetJobFinished( KJob* job )
 {
     if ( job->error() ) {
-        kWarning() << job->errorString();
+        qWarning() << job->errorString();
         setError( job->error() );
         setErrorText( job->errorText() );
         emitResult();

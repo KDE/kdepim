@@ -31,7 +31,7 @@
 #include <ItemFetchScope>
 #include <Akonadi/KMime/MessageParts>
 #include <AkonadiCore/entityannotationsattribute.h>
-#include <KDebug>
+#include <QDebug>
 #include <KMime/KMimeMessage>
 
 namespace MailCommon {
@@ -119,7 +119,7 @@ void FolderCollectionMonitor::expunge( const Akonadi::Collection & col, bool syn
       job->exec();
     }
   } else {
-    kDebug() << " Try to expunge an invalid collection :" << col;
+    qDebug() << " Try to expunge an invalid collection :" << col;
   }
 }
 

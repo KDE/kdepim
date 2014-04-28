@@ -146,7 +146,7 @@ void NoteViewer::modifyDone( KJob *job )
 {
   if ( job->error() )
   {
-    kDebug() << job->errorString();
+    qDebug() << job->errorString();
   }
 }
 

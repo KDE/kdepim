@@ -38,7 +38,7 @@
 
 #include <KActionCollection>
 #include <KComboBox>
-#include <KDebug>
+#include <QDebug>
 #include <KIcon>
 #include <KIconLoader>
 #include <KLocale>
@@ -216,7 +216,7 @@ void Widget::fillMessageTagCombo()
 void Widget::slotTagsFetched(KJob *job)
 {
     if (job->error()) {
-        kWarning() << "Failed to load tags " << job->errorString();
+        qWarning() << "Failed to load tags " << job->errorString();
         return;
     }
     Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob*>(job);
@@ -412,7 +412,7 @@ void Widget::viewDropEvent( QDropEvent *e )
 
     KUrl::List urls = KUrl::List::fromMimeData( e->mimeData() );
     if ( urls.isEmpty() ) {
-        kWarning() << "Could not decode drag data!";
+        qWarning() << "Could not decode drag data!";
         e->ignore();
         return;
     }

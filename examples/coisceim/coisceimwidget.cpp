@@ -68,6 +68,6 @@ CoisceimWidget::CoisceimWidget(QWidget *parent)
 
 void CoisceimWidget::createTrip()
 {
-  kDebug() << "CREATE";
+  qDebug() << "CREATE";
 }
 

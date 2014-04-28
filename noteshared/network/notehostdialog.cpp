@@ -34,7 +34,7 @@
 #include "notesharedglobalconfig.h"
 
 #include <kconfig.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kglobal.h>
 #include <khistorycombobox.h>
 #include <klocale.h>

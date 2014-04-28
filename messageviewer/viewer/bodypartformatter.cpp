@@ -40,7 +40,7 @@
 
 #include <KMime/kmime_content.h>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kascii.h>
 
 using namespace MessageViewer;
@@ -52,7 +52,7 @@ class AnyTypeBodyPartFormatter
     static const AnyTypeBodyPartFormatter * self;
 public:
     Result format( Interface::BodyPart *, HtmlWriter * ) const {
-        kDebug() << "Acting as a Interface::BodyPartFormatter!";
+        qDebug() << "Acting as a Interface::BodyPartFormatter!";
         return AsIcon;
     }
 

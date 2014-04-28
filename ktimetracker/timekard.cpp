@@ -28,7 +28,7 @@
 #include <QList>
 #include <QMap>
 
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 #include <KLocale>
 

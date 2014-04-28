@@ -179,7 +179,7 @@ void AkonotesNoteApplet::defaultCreated( KJob *job )
                                               QLatin1String("/Settings"), QString(), QDBusConnection::sessionBus(), this );
 
   if ( !iface.isValid() ) {
-    kError() << "Unable to obtain the KConfigXT D-Bus interface of " << instance.identifier();
+    qCritical() << "Unable to obtain the KConfigXT D-Bus interface of " << instance.identifier();
     return;
   }
   iface.call( QLatin1String("setPath"), KStandardDirs::locateLocal( "data", QLatin1String("unsortednotes/") ) );
@@ -208,7 +208,7 @@ void AkonotesNoteApplet::collectionFetchDone( KJob *job )
 {
   if ( job->error() )
   {
-    kWarning() << job->errorString(); // Could be that the collection in the config does not exist.
+    qWarning() << job->errorString(); // Could be that the collection in the config does not exist.
     KConfig noteCollectionConfig( QLatin1String("notesrc") );
     KConfigGroup generalGroup( &noteCollectionConfig, "General" );
     generalGroup.writeEntry( "unsortedCollection", -1 );
@@ -266,7 +266,7 @@ void AkonotesNoteApplet::itemFetchDone( KJob *job )
 {
   if ( job->error() )
   {
-    kDebug() << job->errorString();
+    qDebug() << job->errorString();
   }
   if ( !m_item.isValid() )
   {
@@ -333,7 +333,7 @@ void AkonotesNoteApplet::modifyDone( KJob *job )
 {
   if ( job->error() )
   {
-    kDebug() << job->errorString();
+    qDebug() << job->errorString();
   }
 }
 
@@ -359,7 +359,7 @@ void AkonotesNoteApplet::itemCreateJobFinished( KJob *job )
 {
   if ( job->error() )
   {
-    kDebug() << job->errorString();
+    qDebug() << job->errorString();
     return;
   }
 

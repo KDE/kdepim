@@ -19,7 +19,7 @@
 #include "filtermanager.h"
 #include "mailfilter.h"
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QFile>
 #include <QDir>
@@ -37,7 +37,7 @@ FilterImporterEvolution::FilterImporterEvolution( QFile *file )
     QDomElement filters = doc.documentElement();
 
     if ( filters.isNull() ) {
-        kDebug() << "No filters defined";
+        qDebug() << "No filters defined";
         return;
     }
     filters = filters.firstChildElement( QLatin1String("ruleset") );
@@ -46,7 +46,7 @@ FilterImporterEvolution::FilterImporterEvolution( QFile *file )
         if ( tag == QLatin1String( "rule" ) ) {
             parseFilters(e);
         } else {
-            kDebug() << " unknown tag " << tag;
+            qDebug() << " unknown tag " << tag;
         }
     }
 }
@@ -71,7 +71,7 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
         if ( nexttag == QLatin1String( "part" ) ) {
             if ( partFilter.hasAttribute( QLatin1String("name") ) ) {
                 const QString name = partFilter.attribute( QLatin1String("name") );
-                kDebug() << " parsePartAction name attribute :" << name;
+                qDebug() << " parsePartAction name attribute :" << name;
                 if ( type == FilterImporterEvolution::PartType ) {
                     QByteArray fieldName;
 
@@ -126,10 +126,10 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                         filter->pattern()->setOp( SearchPattern::OpAll );
                         break;
                     } else {
-                        kDebug() << " parttype part : name : not implemented :" << name;
+                        qDebug() << " parttype part : name : not implemented :" << name;
                     }
                     if (fieldName.isEmpty()) {
-                        kDebug()<<" parttype part : name : not implemented :" << name;
+                        qDebug()<<" parttype part : name : not implemented :" << name;
                         continue;
                     }
                     QString contents;
@@ -147,7 +147,7 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                                 if (name==QLatin1String("flag")) {
 
                                     const QString flag = valueFilter.attribute( QLatin1String("value") );
-                                    kDebug()<<" flag :"<<flag;
+                                    qDebug()<<" flag :"<<flag;
                                     if (flag==QLatin1String("Seen")) {
                                         contents = QLatin1String("Read");
                                     } else if (flag==QLatin1String("Answered")) {
@@ -159,10 +159,10 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                                     } else if (flag==QLatin1String("Junk")) {
                                         contents = QLatin1String("Spam");
                                     } else {
-                                        kDebug()<<" unknown status flags "<<flag;
+                                        qDebug()<<" unknown status flags "<<flag;
                                     }
                                 }
-                                kDebug() << " value filter name :" << name;
+                                qDebug() << " value filter name :" << name;
                             }
                             if ( valueFilter.hasAttribute( QLatin1String("type") ) ) {
                                 const QString name = valueFilter.attribute( QLatin1String("type") );
@@ -190,13 +190,13 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                                         contents = QString::number(val);
                                     }
                                 } else {
-                                    kDebug() << " type not implemented " << name;
+                                    qDebug() << " type not implemented " << name;
                                 }
 
                             }
                             if ( valueFilter.hasAttribute( QLatin1String("value") ) ) {
                                 const QString value = valueFilter.attribute( QLatin1String("value") );
-                                kDebug() << " value filter value :" << name;
+                                qDebug() << " value filter value :" << name;
                                 if ( value == QLatin1String( "contains" ) ) {
                                     functionName = SearchRule::FuncContains;
                                 } else if ( value == QLatin1String( "not contains" ) ) {
@@ -271,7 +271,7 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                         actionName = QLatin1String( "forward" );
                     }
                     if ( actionName.isEmpty() ){
-                        kDebug() << " actiontype part : name : not implemented :" << name;
+                        qDebug() << " actiontype part : name : not implemented :" << name;
                     }
                     QString value;
                     for ( QDomElement valueFilter = partFilter.firstChildElement();
@@ -281,11 +281,11 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                         if ( valueTag == QLatin1String( "value" ) ) {
                             if ( valueFilter.hasAttribute( QLatin1String("name") ) ) {
                                 const QString name = valueFilter.attribute( QLatin1String("name") );
-                                kDebug() << " value filter name :" << name;
+                                qDebug() << " value filter name :" << name;
                             }
                             if ( valueFilter.hasAttribute( QLatin1String("type") ) ) {
                                 const QString name = valueFilter.attribute( QLatin1String("type" ));
-                                kDebug() << " value filter type :" << name;
+                                qDebug() << " value filter type :" << name;
                                 if ( name == QLatin1String( "option" ) ){
                                     //Nothing we will look at value
                                 } else if ( name == QLatin1String( "string" ) ) {
@@ -298,7 +298,7 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                                         if ( !value.isEmpty() ) {
                                             value.remove( QLatin1String( "folder://" ) );
                                         }
-                                        kDebug() << " contents folder :" << value;
+                                        qDebug() << " contents folder :" << value;
                                     }
                                 } else if ( name == QLatin1String( "address" ) ) {
                                     //TODO
@@ -307,7 +307,7 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                             }
                             if ( valueFilter.hasAttribute( QLatin1String("value") ) ) {
                                 const QString name = valueFilter.attribute( QLatin1String("value") );
-                                kDebug() << " value filter value :" << name;
+                                qDebug() << " value filter value :" << name;
                                 if ( value == QLatin1String( "contains" ) ) {
                                     //TODO
                                 }
@@ -338,7 +338,7 @@ void FilterImporterEvolution::parseFilters( const QDomElement &e )
         } else if ( attr == QLatin1String( "any" ) ) {
             filter->pattern()->setOp( SearchPattern::OpOr );
         } else {
-            kDebug() << " grouping not implemented: " << attr;
+            qDebug() << " grouping not implemented: " << attr;
         }
 
     }
@@ -351,7 +351,7 @@ void FilterImporterEvolution::parseFilters( const QDomElement &e )
             filter->setApplyOnInbound( false );
             filter->setApplyOnOutbound( true );
         } else {
-            kDebug() << " source not implemented :" << attr;
+            qDebug() << " source not implemented :" << attr;
         }
     }
     for ( QDomElement ruleFilter = e.firstChildElement();
@@ -367,7 +367,7 @@ void FilterImporterEvolution::parseFilters( const QDomElement &e )
         } else if ( nexttag == QLatin1String( "actionset" ) ) {
             parsePartAction( ruleFilter, filter, ActionType );
         } else {
-            kDebug() << " tag not implemented : " << nexttag;
+            qDebug() << " tag not implemented : " << nexttag;
         }
     }
 

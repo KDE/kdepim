@@ -63,7 +63,7 @@
 
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
-#include <KDebug>
+#include <QDebug>
 #include <KCmdLineArgs>
 #include <QAction>
 #include <KActionCollection>
@@ -826,7 +826,7 @@ void MainWidget::setViewMode( QAction *action )
 void MainWidget::setViewMode( int mode )
 {
   int currentMode = Settings::self()->viewMode();
-  //kDebug() << "cur" << currentMode << "new" << mode;
+  //qDebug() << "cur" << currentMode << "new" << mode;
   if ( mode == currentMode ) return;                        // nothing to do
 
   if ( mode == 0 ) {
@@ -869,7 +869,7 @@ void MainWidget::saveSplitterStates() const
     return;
 
   QString groupName = QString::fromLatin1( "UiState_MainWidgetSplitter_%1" ).arg( currentMode );
-  //kDebug() << "saving to group" << groupName;
+  //qDebug() << "saving to group" << groupName;
   KConfigGroup group( Settings::self()->config(), groupName );
   KPIM::UiStateSaver::saveState( mMainWidgetSplitter1, group );
   KPIM::UiStateSaver::saveState( mMainWidgetSplitter2, group );
@@ -884,7 +884,7 @@ void MainWidget::restoreSplitterStates()
     return;
 
   QString groupName = QString::fromLatin1( "UiState_MainWidgetSplitter_%1" ).arg( currentMode );
-  //kDebug() << "restoring from group" << groupName;
+  //qDebug() << "restoring from group" << groupName;
   KConfigGroup group( Settings::self()->config(), groupName );
   KPIM::UiStateSaver::restoreState( mMainWidgetSplitter1, group );
   KPIM::UiStateSaver::restoreState( mMainWidgetSplitter2, group );
@@ -940,7 +940,7 @@ Akonadi::EntityTreeModel *MainWidget::entityTreeModel() const
         proxy = qobject_cast<QAbstractProxyModel*>( proxy->sourceModel() );
     }
 
-    kWarning() << "Couldn't find EntityTreeModel";
+    qWarning() << "Couldn't find EntityTreeModel";
     return 0;
 }
 

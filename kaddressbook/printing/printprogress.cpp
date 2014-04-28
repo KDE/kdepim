@@ -24,7 +24,7 @@
 #include "printprogress.h"
 
 #include <KApplication>
-#include <KDebug>
+#include <QDebug>
 #include <KDialog>
 #include <KLocalizedString>
 #include <KTextBrowser>

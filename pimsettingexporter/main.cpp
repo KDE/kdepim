@@ -23,7 +23,7 @@
 #include <k4aboutdata.h>
 #include <klocale.h>
 #include <KUniqueApplication>
-#include <KDebug>
+#include <QDebug>
 #include "kdepim-version.h"
 
 int main(int argc, char *argv[])
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 
     if (!KUniqueApplication::start())
     {
-        kDebug() << "pimsettingexporter is already running!";
+        qDebug() << "pimsettingexporter is already running!";
         return (0);
     }
     KUniqueApplication a;

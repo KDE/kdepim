@@ -20,7 +20,7 @@
 
 #include <QAction>
 #include <KActionMenu>
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 #include <KMenu>
 
@@ -616,7 +616,7 @@ void TemplatesInsertCommand::slotMapped( int cmd )
         emit insertCommand( QLatin1String("%FORCEDHTML") );
         break;
     default:
-        kDebug() << "Unknown template command index:" << cmd;
+        qDebug() << "Unknown template command index:" << cmd;
         break;
     }
 }

@@ -35,7 +35,7 @@
 
 #include <KVBox>
 #include <KTabBar>
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
 
 using namespace Akonadi;

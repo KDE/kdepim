@@ -21,7 +21,7 @@
 #include <KLocalizedString>
 #include <KLineEdit>
 #include <KIcon>
-#include <KDebug>
+#include <QDebug>
 
 #include <QHBoxLayout>
 #include <QEvent>
@@ -162,12 +162,12 @@ void TodoEdit::slotCloseWidget()
 void TodoEdit::slotReturnPressed()
 {
     if (!mMessage) {
-        kDebug()<<" Message is null";
+        qDebug()<<" Message is null";
         return;
     }
     const Akonadi::Collection collection = mCollectionCombobox->currentCollection();
     if (!collection.isValid()) {
-        kDebug()<<" Collection is not valid";
+        qDebug()<<" Collection is not valid";
         return;
     }
 

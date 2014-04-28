@@ -31,7 +31,7 @@
 #include <MimeTypeChecker>
 
 #include <KColorScheme>
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
 
 #include <QApplication>

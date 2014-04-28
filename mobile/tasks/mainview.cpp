@@ -58,7 +58,7 @@
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <KCalCore/todo.h>
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 #include <klocale.h>
 #include <KStandardDirs>
@@ -447,7 +447,7 @@ void MainView::saveAllAttachments()
 void MainView::fetchForSaveAllAttachmentsDone( KJob* job )
 {
   if ( job->error() ) {
-      kDebug() << "Error trying to fetch item";
+      qDebug() << "Error trying to fetch item";
       //###: review error string
       KMessageBox::sorry( this,
                           i18n( "Cannot fetch calendar item." ),

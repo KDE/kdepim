@@ -30,7 +30,7 @@
 #include "backend.h"
 
 #include <KApplication>
-#include <KDebug>
+#include <QDebug>
 #include <KMessageBox>
 #include <KFileDialog>
 #include <kio/jobclasses.h>
@@ -167,7 +167,7 @@ void UploadMediaDialog::slotMediaObjectUploaded(KJob *job)
 {
     emit sigBusy(false);
     if (job->error()) {
-        kDebug()<<"Job error: "<<job->errorString();
+        qDebug()<<"Job error: "<<job->errorString();
         slotError(job->errorString());
     } else {
         KIO::FileCopyJob *fcj = qobject_cast<KIO::FileCopyJob*>(job);

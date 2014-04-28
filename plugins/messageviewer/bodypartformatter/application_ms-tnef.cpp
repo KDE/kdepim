@@ -49,7 +49,7 @@
 #include <KTNEF/ktnefmessage.h>
 #include <KTNEF/ktnefattach.h>
 
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 #include <KIconLoader>
 #include <KLocalizedString>
@@ -75,7 +75,7 @@ namespace {
       const QString fileName = bodyPart->nodeHelper()->writeNodeToTempFile( bodyPart->content() );
       KTnef::KTNEFParser parser;
       if ( !parser.openFile( fileName ) || !parser.message()) {
-        kDebug() << "Could not parse" << fileName;
+        qDebug() << "Could not parse" << fileName;
         return Failed;
       }
 
@@ -98,7 +98,7 @@ namespace {
 
       QList<KTnef::KTNEFAttach*> tnefatts = parser.message()->attachmentList();
       if ( tnefatts.isEmpty() && inviteStr.isEmpty() ) {
-        kDebug() << "No attachments or invitation found in" << fileName;
+        qDebug() << "No attachments or invitation found in" << fileName;
 
         QString label = MessageViewer::NodeHelper::fileName( bodyPart->content() );
         label = MessageCore::StringUtil::quoteHtmlChars( label, true );

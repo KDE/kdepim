@@ -19,7 +19,7 @@
 
 #include "microblogdelegate.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
 #include <KToolInvocation>
 
@@ -68,7 +68,7 @@ void MicroblogDelegate::updateItemWidgets( const QList<QWidget*> widgets,
     text.append( QLatin1String("<Br>") + getData( model, row, BlogModel::User ).toString() );
     text.append( QLatin1String("</td></tr></table>") );
     text.append( QLatin1String("<Br>") + getData( model, row, BlogModel::Text ).toString() );
-    //kDebug() << text;
+    //qDebug() << text;
     edit->setHtml( text );
 }
 

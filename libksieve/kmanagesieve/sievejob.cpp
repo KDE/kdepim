@@ -16,7 +16,7 @@
 #include "sievejob_p.h"
 #include "session.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KUrl>
 #include <KMessageBox>
 #include <KLocalizedString>
@@ -142,7 +142,7 @@ bool SieveJob::Private::handleResponse( const Response &response, const QByteArr
             }
             break;
         default:
-            kDebug() << "Unhandled response: " << response.key() << response.value() << response.extra() << data;
+            qDebug() << "Unhandled response: " << response.key() << response.value() << response.extra() << data;
         }
         if ( lastCmd != Put )
             return false; // we expect more

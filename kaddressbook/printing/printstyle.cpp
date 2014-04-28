@@ -24,7 +24,7 @@
 #include "printstyle.h"
 #include "printingwizard.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KStandardDirs>
 #include <KDialog>
 
@@ -60,14 +60,14 @@ bool PrintStyle::setPreview( const QString &fileName )
 
   const QString path = KStandardDirs::locate( "data", QLatin1String("kaddressbook/printing/") + fileName );
   if ( path.isEmpty() ) {
-    kDebug() << "cannot locate preview image " << fileName << " in appdata";
+    qDebug() << "cannot locate preview image " << fileName << " in appdata";
     return false;
   } else {
     if ( preview.load( path ) ) {
       setPreview( preview );
       return true;
     } else {
-      kDebug() << "preview at '" << path <<"' cannot be loaded.";
+      qDebug() << "preview at '" << path <<"' cannot be loaded.";
       return false;
     }
   }

@@ -28,7 +28,7 @@
 #include <KGlobal>
 #include <KMessageBox>
 #include <KLocale>
-#include <KDebug>
+#include <QDebug>
 
 #include <QStringList>
 #include <QTimer>
@@ -130,7 +130,7 @@ void SendLaterManager::sendNow(Akonadi::Item::Id id)
             mCurrentInfo = info;
             slotCreateJob();
         } else {
-            kDebug()<<" can't find info about current id: "<<id;
+            qDebug()<<" can't find info about current id: "<<id;
             itemRemoved(id);
         }
     } else {
@@ -142,7 +142,7 @@ void SendLaterManager::sendNow(Akonadi::Item::Id id)
 void SendLaterManager::slotCreateJob()
 {
     if (mCurrentJob) {
-        kDebug()<<" Problem we have already a job"<<mCurrentJob;
+        qDebug()<<" Problem we have already a job"<<mCurrentJob;
         return;
     }
     mCurrentJob = new SendLaterJob(this, mCurrentInfo);
@@ -220,7 +220,7 @@ void SendLaterManager::removeLaterInfo(SendLater::SendLaterInfo *info)
 void SendLaterManager::printDebugInfo()
 {
     Q_FOREACH (SendLater::SendLaterInfo *info, mListSendLaterInfo) {
-        kDebug() <<" recusive "<<info->isRecurrence() <<
+        qDebug() <<" recusive "<<info->isRecurrence() <<
                    " id :"<<info->itemId()<<
                    " date :"<<info->dateTime().toString()<<
                    " last saved date"<<info->lastDateTimeSend().toString()<<

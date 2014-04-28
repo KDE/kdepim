@@ -44,7 +44,7 @@ using KPIM::ProgressManager;
 
 #include <KLocale>
 #include <KIconLoader>
-#include <KDebug>
+#include <QDebug>
 
 #include <QEvent>
 #include <QFrame>

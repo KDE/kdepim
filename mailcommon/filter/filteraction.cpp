@@ -30,7 +30,7 @@
 #include <messageviewer/settings/globalsettings.h>
 
 #include <KLocale>
-#include <KDebug>
+#include <QDebug>
 
 using namespace MailCommon;
 
@@ -119,7 +119,7 @@ void FilterAction::sendMDN( const Akonadi::Item &item, KMime::MDN::DispositionTy
         const KMime::Message::Ptr mdn = factory.createMDN( KMime::MDN::AutomaticAction, type, mdnSend.second, quote, modifiers );
         if ( mdn ) {
             if ( !KernelIf->msgSender()->send( mdn, MessageComposer::MessageSender::SendLater ) ) {
-                kDebug() << "Sending failed.";
+                qDebug() << "Sending failed.";
             }
         }
     }

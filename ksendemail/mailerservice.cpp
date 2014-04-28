@@ -25,7 +25,7 @@
 #include <QtDBus/QtDBus>
 #include <QtCore/QProcess>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kdbusservicestarter.h>
 #include <kmessagebox.h>
 #include <kurl.h>
@@ -73,7 +73,7 @@ bool MailerService::start()
     if(  result != 0 ) {
       const bool ok = QProcess::startDetached( QLatin1String("kontact") );
       if ( !ok ) {
-        kWarning() << "Error: unable to execute binary kontact";
+        qWarning() << "Error: unable to execute binary kontact";
         return false;
       }
     } else {
@@ -89,7 +89,7 @@ bool MailerService::start()
   mEventLoop = 0;
 
   if ( !mSuccess ) {
-    kWarning() << "Could not start Mailer Service!";
+    qWarning() << "Could not start Mailer Service!";
   }
 
   return mSuccess;

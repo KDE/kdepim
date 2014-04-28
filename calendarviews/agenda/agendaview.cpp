@@ -51,7 +51,7 @@
 #include <KServiceTypeTrader>
 #include <KVBox>
 #include <KWordWrap>
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 #include <KComponentData>
 
@@ -394,7 +394,7 @@ void AgendaView::Private::reevaluateIncidence( const KCalCore::Incidence::Ptr &i
 {
   const Akonadi::Item item = q->calendar()->item( incidence );
   if ( !incidence || !item.isValid() ) {
-    kWarning() << "invalid incidence or item not found." << item.isValid() << incidence;
+    qWarning() << "invalid incidence or item not found." << item.isValid() << incidence;
     return;
   }
 
@@ -408,7 +408,7 @@ void AgendaView::Private::calendarIncidenceAdded( const KCalCore::Incidence::Ptr
 {
   Akonadi::Item item = q->calendar()->item( incidence );
   if ( !incidence || incidence->uid().isEmpty() || !item.isValid()) {
-    kError() << "AgendaView::Private::calendarIncidenceAdded() Invalid incidence or item:" << incidence << item.isValid();
+    qCritical() << "AgendaView::Private::calendarIncidenceAdded() Invalid incidence or item:" << incidence << item.isValid();
     Q_ASSERT( false );
     return;
   }
@@ -428,20 +428,20 @@ void AgendaView::Private::calendarIncidenceAdded( const KCalCore::Incidence::Ptr
 void AgendaView::Private::calendarIncidenceChanged( const KCalCore::Incidence::Ptr &incidence )
 {
   if ( !incidence || incidence->uid().isEmpty() ) {
-    kError() << "AgendaView::calendarIncidenceChanged() Invalid incidence or empty UID. " << incidence;
+    qCritical() << "AgendaView::calendarIncidenceChanged() Invalid incidence or empty UID. " << incidence;
     Q_ASSERT( false );
     return;
   }
 
   Akonadi::Item item = q->calendar()->item( incidence->instanceIdentifier() );
   if ( !item.isValid() ) {
-    kWarning() << "AgendaView::calendarIncidenceChanged() Invalid item for incidence " << incidence->uid();
+    qWarning() << "AgendaView::calendarIncidenceChanged() Invalid item for incidence " << incidence->uid();
     return;
   }
 
   AgendaItem::List agendaItems = this->agendaItems( item.id() );
   if ( agendaItems.isEmpty() ) {
-    kWarning() << "AgendaView::calendarIncidenceChanged() Invalid agendaItem for incidence " << incidence->uid();
+    qWarning() << "AgendaView::calendarIncidenceChanged() Invalid agendaItem for incidence " << incidence->uid();
     return;
   }
 
@@ -476,7 +476,7 @@ void AgendaView::Private::calendarIncidenceChanged( const KCalCore::Incidence::P
 void AgendaView::Private::calendarIncidenceDeleted( const KCalCore::Incidence::Ptr &incidence )
 {
   if ( !incidence || incidence->uid().isEmpty() ) {
-    kWarning() << "invalid incidence or empty uid: " << incidence;
+    qWarning() << "invalid incidence or empty uid: " << incidence;
     Q_ASSERT( false );
     return;
   }
@@ -987,7 +987,7 @@ void AgendaView::zoomOutHorizontally( const QDate &date )
   }
 
   if ( abs( count ) >= 31 ) {
-    kDebug() << "change to the month view?";
+    qDebug() << "change to the month view?";
   } else {
     //We want to center the date
     emit zoomViewHorizontally( newBegin, count );
@@ -1390,7 +1390,7 @@ void AgendaView::updateTimeBarWidth()
 void AgendaView::updateEventDates( AgendaItem *item, bool addIncidence,
                                    Akonadi::Collection::Id collectionId )
 {
-  kDebug() << item->text()
+  qDebug() << item->text()
            << "; item->cellXLeft(): " << item->cellXLeft()
            << "; item->cellYTop(): " << item->cellYTop()
            << "; item->lastMultiItem(): " << item->lastMultiItem()
@@ -1424,7 +1424,7 @@ void AgendaView::updateEventDates( AgendaItem *item, bool addIncidence,
   const Akonadi::Item aitem = item->incidence();
   KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
   if ( !incidence || !changer() ) {
-    kWarning() << "changer is " << changer() << " and incidence is " << incidence.data();
+    qWarning() << "changer is " << changer() << " and incidence is " << incidence.data();
     return;
   }
 
@@ -1528,7 +1528,7 @@ void AgendaView::updateEventDates( AgendaItem *item, bool addIncidence,
   bool result;
   if ( addIncidence ) {
     Akonadi::Collection collection = calendar()->collection( collectionId );
-    kDebug() << "Collection isValid() = " << collection.isValid();
+    qDebug() << "Collection isValid() = " << collection.isValid();
     result = changer()->createIncidence( incidence, collection, this ) != -1;
   } else {
     result = changer()->modifyIncidence( aitem, oldIncidence, this ) != -1;
@@ -1585,7 +1585,7 @@ void AgendaView::showDates( const QDate &start, const QDate &end, const QDate &p
 
   if ( !start.isValid() || !end.isValid() || start > end ||
        start.daysTo( end ) > MAX_DAY_COUNT ) {
-    kWarning() << "got bizare parameters: " << start << end << " - aborting here";
+    qWarning() << "got bizare parameters: " << start << end << " - aborting here";
     return;
   }
 
@@ -1601,7 +1601,7 @@ void AgendaView::showIncidences( const Akonadi::Item::List &incidences, const QD
   Q_UNUSED( date );
 
   if ( !calendar() ) {
-    kError() << "No Calendar set";
+    qCritical() << "No Calendar set";
     return;
   }
 
@@ -1655,12 +1655,12 @@ void AgendaView::fillAgenda()
   }
 
   if ( !calendar() ) {
-    kWarning() << "No calendar is set";
+    qWarning() << "No calendar is set";
     return;
   }
 
   /*
-  kDebug() << "changes = " << changes()
+  qDebug() << "changes = " << changes()
            << "; mUpdateAgenda = " << d->mUpdateAgenda
            << "; mUpdateAllDayAgenda = " << d->mUpdateAllDayAgenda; */
 
@@ -1783,7 +1783,7 @@ bool AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelect
 
       const Akonadi::Item item = calendar()->item( rIt.incidence() );
       if ( !item.isValid() ) {
-        kWarning() << "Couldn't find item for "
+        qWarning() << "Couldn't find item for "
                    << rIt.incidence()->uid() << rIt.incidence()->recurrenceId().toString();
         continue;
       }
@@ -1901,7 +1901,7 @@ void AgendaView::slotIncidencesDropped( const QList<KUrl> &items, const QPoint &
       calendar()->itemForIncidence( calendar()->todo( todo->uid() ) );
 
     if ( Todo::Ptr existingTodo = CalendarSupport::todo( existingTodoItem ) ) {
-      kDebug() << "Drop existing Todo";
+      qDebug() << "Drop existing Todo";
       Todo::Ptr oldTodo( existingTodo->clone() );
       if ( changer() ) {
         existingTodo->setDtDue( newTime );
@@ -1912,7 +1912,7 @@ void AgendaView::slotIncidencesDropped( const QList<KUrl> &items, const QPoint &
                                         "because it cannot be locked." ) );
       }
     } else {
-      kDebug() << "Drop new Todo";
+      qDebug() << "Drop new Todo";
       todo->setDtDue( newTime );
       todo->setAllDay( allDay );
       if ( !changer()->addIncidence( todo, this ) ) {
@@ -1923,7 +1923,7 @@ void AgendaView::slotIncidencesDropped( const QList<KUrl> &items, const QPoint &
     }
   }
 #else
-  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
+  qDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif
 }
 
@@ -1977,7 +1977,7 @@ void AgendaView::slotIncidencesDropped( const KCalCore::Incidence::List &inciden
 void AgendaView::startDrag( const Akonadi::Item &incidence )
 {
   if ( !calendar() ) {
-    kError() << "No Calendar set";
+    qCritical() << "No Calendar set";
     return;
   }
 #ifndef KORG_NODND
@@ -2212,7 +2212,7 @@ CalendarDecoration::Decoration *AgendaView::Private::loadCalendarDecoration( con
       KPluginFactory *factory = loader.factory();
 
       if ( !factory ) {
-        kDebug() << "Factory creation failed";
+        qDebug() << "Factory creation failed";
         return 0;
       }
 
@@ -2220,7 +2220,7 @@ CalendarDecoration::Decoration *AgendaView::Private::loadCalendarDecoration( con
         static_cast<CalendarDecoration::DecorationFactory *>( factory );
 
       if ( !pluginFactory ) {
-        kDebug() << "Cast failed";
+        qDebug() << "Cast failed";
         return 0;
       }
 

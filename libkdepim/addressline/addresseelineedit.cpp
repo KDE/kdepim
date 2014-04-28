@@ -50,7 +50,7 @@
 
 #include <KConfigGroup>
 #include <KCompletionBox>
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
 #include <KStandardDirs>
 #include <KStandardShortcut>
@@ -608,7 +608,7 @@ void AddresseeLineEdit::Private::akonadiPerformSearch()
     if ( m_searchString.size() < 2 ) {
         return;
     }
-    kDebug() << "searching akonadi with:" << m_searchString;
+    qDebug() << "searching akonadi with:" << m_searchString;
 
     // first, kill all job still in flight, they are no longer current
     Q_FOREACH( QWeakPointer<Akonadi::Job> job, s_static->akonadiJobsInFlight ) {
@@ -644,7 +644,7 @@ void AddresseeLineEdit::Private::akonadiPerformSearch()
 
 void AddresseeLineEdit::Private::akonadiHandlePending()
 {
-    kDebug() << "Pending items: " << s_static->akonadiPendingItems.size();
+    qDebug() << "Pending items: " << s_static->akonadiPendingItems.size();
     Akonadi::Item::List::iterator it = s_static->akonadiPendingItems.begin();
     while ( it != s_static->akonadiPendingItems.end() ) {
         const Akonadi::Item item = *it;
@@ -652,7 +652,7 @@ void AddresseeLineEdit::Private::akonadiHandlePending()
         const int sourceIndex =
                 s_static->akonadiCollectionToCompletionSourceMap.value( item.parentCollection().id(), -1 );
         if ( sourceIndex >= 0 ) {
-            kDebug() << "identified collection: " << s_static->completionSources[sourceIndex];
+            qDebug() << "identified collection: " << s_static->completionSources[sourceIndex];
             q->addItem( item, 1, sourceIndex );
 
             // remove from the pending
@@ -894,7 +894,7 @@ void AddresseeLineEdit::Private::slotAkonadiHandleItems( const Akonadi::Item::Li
         const int sourceIndex =
                 s_static->akonadiCollectionToCompletionSourceMap.value( item.parentCollection().id(), -1 );
         if ( sourceIndex == -1 ) {
-            kDebug() << "Fetching New collection: " << item.parentCollection().id();
+            qDebug() << "Fetching New collection: " << item.parentCollection().id();
             // the collection isn't there, start the fetch job.
             Akonadi::CollectionFetchJob *collectionJob =
                     new Akonadi::CollectionFetchJob( item.parentCollection(),
@@ -926,10 +926,10 @@ void AddresseeLineEdit::Private::slotAkonadiHandleItems( const Akonadi::Item::Li
 void AddresseeLineEdit::Private::slotAkonadiSearchResult( KJob *job )
 {
     if ( job->error() ) {
-        kWarning() << "Akonadi search job failed: " << job->errorString();
+        qWarning() << "Akonadi search job failed: " << job->errorString();
     } else {
         Akonadi::ItemSearchJob *searchJob = static_cast<Akonadi::ItemSearchJob*>(job);
-        kDebug() << "Found" << searchJob->items().size() << "items";
+        qDebug() << "Found" << searchJob->items().size() << "items";
     }
     const int index = s_static->akonadiJobsInFlight.indexOf( qobject_cast<Akonadi::Job*>( job ) );
     if( index != -1 )
@@ -943,7 +943,7 @@ void AddresseeLineEdit::Private::slotAkonadiCollectionsReceived(
         if ( collection.isValid() ) {
             const QString sourceString = collection.displayName();
             const int index = q->addCompletionSource( sourceString, 1 );
-            kDebug() << "\treceived: " << sourceString << "index: " << index;
+            qDebug() << "\treceived: " << sourceString << "index: " << index;
             s_static->akonadiCollectionToCompletionSourceMap.insert( collection.id(), index );
         }
     }
@@ -1386,7 +1386,7 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *object, QEvent *event )
             return true;
         }
         if ( keyEvent->key() == Qt::Key_Up ) {
-            //kDebug() <<"EVENTFILTER: Qt::Key_Up currentIndex=" << currentIndex;
+            //qDebug() <<"EVENTFILTER: Qt::Key_Up currentIndex=" << currentIndex;
             // figure out if the item we would be moving to is one we want
             // to ignore. If so, go one further
             const QListWidgetItem *itemAbove = completionBox()->item( currentIndex );
@@ -1394,7 +1394,7 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *object, QEvent *event )
                 // there is a header above is, check if there is even further up
                 // and if so go one up, so it'll be selected
                 if ( currentIndex > 0 && completionBox()->item( currentIndex - 1 ) ) {
-                    //kDebug() <<"EVENTFILTER: Qt::Key_Up -> skipping" << currentIndex - 1;
+                    //qDebug() <<"EVENTFILTER: Qt::Key_Up -> skipping" << currentIndex - 1;
                     completionBox()->setCurrentRow( currentIndex - 1 );
                     completionBox()->item( currentIndex - 1 )->setSelected( true );
                 } else if ( currentIndex == 0 ) {
@@ -1416,11 +1416,11 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *object, QEvent *event )
             }
         } else if ( keyEvent->key() == Qt::Key_Down ) {
             // same strategy for downwards
-            //kDebug() <<"EVENTFILTER: Qt::Key_Down. currentIndex=" << currentIndex;
+            //qDebug() <<"EVENTFILTER: Qt::Key_Down. currentIndex=" << currentIndex;
             const QListWidgetItem *itemBelow = completionBox()->item( currentIndex );
             if ( itemBelow && itemIsHeader( itemBelow ) ) {
                 if ( completionBox()->item( currentIndex + 1 ) ) {
-                    //kDebug() <<"EVENTFILTER: Qt::Key_Down -> skipping" << currentIndex+1;
+                    //qDebug() <<"EVENTFILTER: Qt::Key_Down -> skipping" << currentIndex+1;
                     completionBox()->setCurrentRow( currentIndex + 1 );
                     completionBox()->item( currentIndex + 1 )->setSelected( true );
                 } else {

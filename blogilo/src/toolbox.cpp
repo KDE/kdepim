@@ -41,7 +41,7 @@
 #include <QClipboard>
 #include <QTimer>
 #include <kstatusbar.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kxmlguiwindow.h>
 #include <kmessagebox.h>
 #include <kdatetime.h>
@@ -160,7 +160,7 @@ void Toolbox::slotUpdateEntries(int count)
 void Toolbox::slotLoadEntriesFromDB( int blog_id )
 {
     if ( blog_id == -1 ) {
-        kDebug() << "Blog Id doesn't set correctly";
+        qDebug() << "Blog Id doesn't set correctly";
         return;
     }
     lstEntriesList->clear();
@@ -184,7 +184,7 @@ void Toolbox::slotLoadEntriesFromDB( int blog_id )
 void Toolbox::slotLoadCategoryListFromDB( int blog_id )
 {
     if ( blog_id == -1 ) {
-        kDebug() << "Blog Id do not sets correctly";
+        qDebug() << "Blog Id do not sets correctly";
         return;
     }
     clearCatList();
@@ -293,7 +293,7 @@ void Toolbox::getFieldsValue( BilboPost* currentPost )
         currentPost->setModificationDateTime( KDateTime( optionsDate->date(), optionsTime->time() ) );
     }
     if ( currentPost->creationDateTime().isUtc() || currentPost->modificationDateTime().isUtc() ){
-        kDebug()<<"creationDateTime was UTC!";
+        qDebug()<<"creationDateTime was UTC!";
         currentPost->setCreationDateTime( KDateTime( currentPost->creationDateTime().dateTime(),
                                                     KDateTime::LocalZone ) );
         currentPost->setModificationDateTime( KDateTime( currentPost->modificationDateTime().dateTime(),
@@ -310,13 +310,13 @@ void Toolbox::setFieldsValue( BilboPost* post )
 {
     if ( post == 0 ) {
         resetFields();
-        kDebug()<<"post is NULL";
+        qDebug()<<"post is NULL";
         return;
     }
 
     setSelectedCategories( post->categories() );
     txtCatTags->setText( post->tags().join( QLatin1String(", ") ) );
-//     kDebug() << "Post status is: " << post->status();
+//     qDebug() << "Post status is: " << post->status();
     if ( post->status() == KBlog::BlogPost::New )
         comboOptionsStatus->setCurrentIndex( 2 );
     else if ( post->isPrivate() )
@@ -327,7 +327,7 @@ void Toolbox::setFieldsValue( BilboPost* post )
     chkOptionsTrackback->setChecked( post->isTrackBackAllowed() );
     chkOptionsTime->setChecked( post->isModifyTimeStamp() );
     if ( post->creationDateTime().isUtc() || post->modificationDateTime().isUtc() ){
-        kDebug()<<"creationDateTime was UTC!";
+        qDebug()<<"creationDateTime was UTC!";
         post->setCreationDateTime(KDateTime(post->creationDateTime().dateTime(), KDateTime::LocalZone));
         post->setModificationDateTime(KDateTime(post->modificationDateTime().dateTime(), KDateTime::LocalZone));
     }
@@ -381,7 +381,7 @@ QStringList Toolbox::currentTags()
 void Toolbox::slotEntrySelected( QListWidgetItem * item )
 {
     BilboPost post = DBMan::self()->getPostInfo( item->data( BlogEntryID ).toInt() );
-    kDebug() << "Emiting sigEntrySelected...";
+    qDebug() << "Emiting sigEntrySelected...";
     Q_EMIT sigEntrySelected( post, d->mCurrentBlogId );
 }
 
@@ -425,7 +425,7 @@ void Toolbox::setButtonsIcon()
 
 void Toolbox::reloadLocalPosts()
 {
-    kDebug();
+    qDebug();
 
     localEntries->clear();
 
@@ -444,7 +444,7 @@ void Toolbox::reloadLocalPosts()
 
 void Toolbox::slotLocalEntrySelected( QTreeWidgetItem* item,int column )
 {
-    kDebug()<<"Emitting sigEntrySelected...";
+    qDebug()<<"Emitting sigEntrySelected...";
     Q_UNUSED(column);
     BilboPost post = DBMan::self()->localPost(item->data(0, LocalEntryID).toInt());
     emit sigEntrySelected( post, item->data(1, LocalEntryID).toInt() );

@@ -51,7 +51,7 @@ using namespace Future;
 #include <KLocalizedString>
 #include <KRandom>
 #include <KViewStateMaintainer>
-#include <KDebug>
+#include <QDebug>
 
 #include <QApplication>
 #include <QKeyEvent>
@@ -99,13 +99,13 @@ EventView::~EventView()
 
 void EventView::defaultAction( const Akonadi::Item &aitem )
 {
-  kDebug();
+  qDebug();
   const Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
   if ( !incidence ) {
     return;
   }
 
-  kDebug() << "  type:" << int( incidence->type() );
+  qDebug() << "  type:" << int( incidence->type() );
 
   if ( incidence->isReadOnly() ) {
     emit showIncidenceSignal(aitem);
@@ -493,7 +493,7 @@ void EventView::incidencesChanged( const Akonadi::Item::List & )
 
 void EventView::handleBackendError( const QString &errorString )
 {
-  kError() << errorString;
+  qCritical() << errorString;
 }
 
 void EventView::calendarReset()

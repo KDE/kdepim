@@ -21,7 +21,7 @@
 
 #include "breadcrumbnavigation.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QtCore/QStringList>
 

@@ -24,7 +24,7 @@
 
 #include "sendtoblogdialog.h"
 #include "ui_sendtoblogbase.h"
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KLocalizedString>
 
 class SendToBlogDialog::Private

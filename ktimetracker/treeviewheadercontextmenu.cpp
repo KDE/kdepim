@@ -27,7 +27,7 @@
 
 #include <KMenu>
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
 
 TreeViewHeaderContextMenu::TreeViewHeaderContextMenu( QObject *parent, QTreeView *widget, int style, QVector<int> excludedColumns )

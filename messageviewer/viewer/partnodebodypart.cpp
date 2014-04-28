@@ -41,7 +41,7 @@
 
 #include <KMime/kmime_content.h>
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QTextCodec>
 
@@ -85,7 +85,7 @@ QString PartNodeBodyPart::contentDispositionParameter( const char * param ) cons
 }
 
 bool PartNodeBodyPart::hasCompleteBody() const {
-    kWarning() << "Sorry, not yet implemented.";
+    qWarning() << "Sorry, not yet implemented.";
     return true;
 }
 

@@ -49,7 +49,7 @@ bool UnreadMailsTree::acceptRow(int sourceRow, const QModelIndex& sourceParent) 
 {
   QModelIndex idx = sourceModel()->index(sourceRow, 0, sourceParent);
     Collection col = idx.data(EntityTreeModel::CollectionRole).value<Collection>();
-  kDebug() << sourceRow << sourceParent << col.statistics().unreadCount() << idx.data().toString();
+  qDebug() << sourceRow << sourceParent << col.statistics().unreadCount() << idx.data().toString();
     return col.statistics().unreadCount() > 0;
 }
 

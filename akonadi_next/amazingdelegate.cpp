@@ -21,7 +21,7 @@
 
 #include <QPainter>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <entitytreemodel.h>
 #include <KABC/addressee.h>
 #include <klocalizedstring.h>
@@ -44,7 +44,7 @@ void AmazingContactItemDelegate::paint(QPainter* painter, const QStyleOptionView
 
   if (!item.hasPayload<KABC::Addressee>())
   {
-    kWarning() << "Not a KABC::Addressee" << item.id() << item.remoteId();
+    qWarning() << "Not a KABC::Addressee" << item.id() << item.remoteId();
     return;
   }
 

@@ -21,7 +21,7 @@
 #include "stylesheetloader.h"
 
 #include <kglobalsettings.h>
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 #include <QFont>
 #include <KCmdLineArgs>
@@ -60,7 +60,7 @@ void KDeclarativeApplicationBase::postApplicationSetup()
   static bool run = false;
 
   if ( run ) {
-    kDebug() << "called twice";
+    qDebug() << "called twice";
     return;
   }
 
@@ -87,7 +87,7 @@ void KDeclarativeApplicationBase::preApplicationSetup( const KCmdLineOptions & a
   static bool run = false;
 
   if ( run ) {
-    kDebug() << "called twice";
+    qDebug() << "called twice";
     return;
   }
 

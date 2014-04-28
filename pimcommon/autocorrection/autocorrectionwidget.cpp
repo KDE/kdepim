@@ -382,7 +382,7 @@ void AutoCorrectionWidget::removeAutocorrectEntry()
 
         QString findStr;
         if ( below ) {
-            //kDebug() << "below";
+            //qDebug() << "below";
             findStr = item->text(0);
             delete item;
             item = 0;

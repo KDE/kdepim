@@ -22,7 +22,7 @@
 
 #include "kwindowpositioner.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QWidget>
 #include <QApplication>
@@ -44,7 +44,7 @@ void KWindowPositioner::reposition()
         relativePos = QPoint( mMaster->width() - mSlave->frameGeometry().width(),
                               mMaster->height() );
     } else {
-        kError() <<"KWindowPositioner: Illegal mode";
+        qCritical() <<"KWindowPositioner: Illegal mode";
     }
     QPoint pos = mMaster->mapToGlobal( relativePos );
 
@@ -54,7 +54,7 @@ void KWindowPositioner::reposition()
         pos.setX( desktopRect.width() - mSlave->frameGeometry().width() );
     if ( ( pos.y() + mSlave->frameGeometry().height() ) > desktopRect.height() )
         pos.setY( desktopRect.height() - mSlave->frameGeometry().height() - mMaster->height() );
-    kDebug() << mMaster->pos() << mMaster->mapToGlobal(mMaster->pos()) << pos.y() << (mMaster->pos().y() - pos.y()) << mSlave->frameGeometry().height();
+    qDebug() << mMaster->pos() << mMaster->mapToGlobal(mMaster->pos()) << pos.y() << (mMaster->pos().y() - pos.y()) << mSlave->frameGeometry().height();
     if ( mMode == Bottom && mMaster->mapToGlobal(mMaster->pos()).y() > pos.y() && (mMaster->pos().y() - pos.y()) < mSlave->frameGeometry().height() ) {
         pos.setY( mMaster->mapToGlobal(  QPoint( 0, -mSlave->frameGeometry().height() ) ).y() );
     }

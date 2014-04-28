@@ -41,7 +41,7 @@
 #include <KIconLoader>
 
 #include <KGlobal>
-#include <KDebug>
+#include <QDebug>
 #include <QBoxLayout>
 #include <QHeaderView>
 #include <QTreeWidget>
@@ -504,7 +504,7 @@ void ListView::changeIncidenceDisplay( const Akonadi::Item &aitem, int action )
     break;
   }
   default:
-    kDebug() << "Illegal action" << action;
+    qDebug() << "Illegal action" << action;
   }
 }
 

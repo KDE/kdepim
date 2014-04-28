@@ -19,7 +19,7 @@
 #include "customtoolswidget_gui.h"
 #include "pimcommon/widgets/customtoolswidget.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kapplication.h>
 #include <KCmdLineArgs>
 #include <KLocalizedString>

@@ -19,7 +19,7 @@
 
 #include <QFile>
 #include <QDomDocument>
-#include <KDebug>
+#include <QDebug>
 using namespace PimCommon;
 
 
@@ -86,7 +86,7 @@ bool ImportKMailAutocorrection::import(const QString& fileName, LoadAttribute lo
                 mTypographicDoubleQuotes.begin = element.attribute(QLatin1String("begin")).at(0);
                 mTypographicDoubleQuotes.end = element.attribute(QLatin1String("end")).at(0);
             } else {
-                kDebug()<<" number of double quote invalid "<<nl.count();
+                qDebug()<<" number of double quote invalid "<<nl.count();
             }
         }
 
@@ -98,7 +98,7 @@ bool ImportKMailAutocorrection::import(const QString& fileName, LoadAttribute lo
                 mTypographicSingleQuotes.begin = element.attribute(QLatin1String("begin")).at(0);
                 mTypographicSingleQuotes.end = element.attribute(QLatin1String("end")).at(0);
             } else {
-                kDebug()<<" number of simple quote invalid "<<nl.count();
+                qDebug()<<" number of simple quote invalid "<<nl.count();
             }
         }
     }

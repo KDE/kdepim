@@ -22,7 +22,7 @@
 #ifndef KTIMETRACKERUTILITY_H
 #define KTIMETRACKERUTILITY_H
 
-#include <KDebug>
+#include <QDebug>
 #include <KWindowSystem>
 #include <QString>
 

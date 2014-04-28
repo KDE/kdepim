@@ -21,7 +21,7 @@
 
 #include <AgentManager>
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QWeakPointer>
 

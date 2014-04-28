@@ -25,7 +25,7 @@
 #include <calendarviews/agenda/agendaview.h>
 #include <Akonadi/Calendar/ETMCalendar>
 #include <KLocale>
-#include <KDebug>
+#include <QDebug>
 
 using namespace EventViews;
 
@@ -66,7 +66,7 @@ QDate AgendaViewItem::startDate() const
 
 void AgendaViewItem::setStartDate(const QDate& startDate)
 {
-  kDebug() << startDate;
+  qDebug() << startDate;
   if ( startDate.isValid() )
     m_view->showDates( startDate, endDate() );
 }
@@ -78,7 +78,7 @@ QDate AgendaViewItem::endDate() const
 
 void AgendaViewItem::setEndDate(const QDate& endDate)
 {
-  kDebug() << endDate;
+  qDebug() << endDate;
   if ( endDate.isValid() )
     m_view->showDates( startDate(), endDate );
 }
@@ -92,7 +92,7 @@ void AgendaViewItem::setCalendar(QObject* calendarObj)
 {
   Akonadi::ETMCalendar *cal = qobject_cast<Akonadi::ETMCalendar*>( calendarObj );
 
-  kDebug() << calendarObj << cal;
+  qDebug() << calendarObj << cal;
   if ( cal ) {
     m_view->setCalendar( cal->weakPointer().toStrongRef().dynamicCast<Akonadi::ETMCalendar>() );
     m_view->updateConfig();

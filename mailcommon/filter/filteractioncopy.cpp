@@ -25,7 +25,7 @@
 
 #include <ItemCopyJob>
 #include <KLocale>
-#include <KDebug>
+#include <QDebug>
 
 using namespace MailCommon;
 
@@ -46,7 +46,7 @@ FilterAction::ReturnCode FilterActionCopy::process(ItemContext &context , bool) 
 void FilterActionCopy::jobFinished(KJob* job)
 {
     if (job->error()) {
-        kError() << "Error while moving mail: " << job->errorString();
+        qCritical() << "Error while moving mail: " << job->errorString();
     }
 }
 

@@ -19,7 +19,7 @@
 
 #include "stylesheetloader.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 #include <KStandardDirs>
 #include <QFile>
@@ -34,9 +34,9 @@ class StyleSheetLoaderPrivate
       QFile f( KStandardDirs::locate( "data", QLatin1String("mobileui/stylesheet.css") ) );
       if ( f.open( QFile::ReadOnly ) ) {
         styleSheet = QString::fromUtf8( f.readAll() );
-        kDebug() << "loaded stylesheet" << f.fileName();
+        qDebug() << "loaded stylesheet" << f.fileName();
       } else {
-        kError() << "failed to read stylesheet: " << f.fileName();
+        qCritical() << "failed to read stylesheet: " << f.fileName();
       }
     }
 

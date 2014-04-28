@@ -26,7 +26,7 @@
 #include "testhtmlwriter.h"
 #include "testcsshelper.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <qtest_kde.h>
 
 #include <kleo/enum.h>
@@ -96,7 +96,7 @@ void CryptoComposerTest::testOpenPGPMime()
   delete composer;
   composer = 0;
 
-  //kDebug()<< "message:" << message.get()->encodedContent();
+  //qDebug()<< "message:" << message.get()->encodedContent();
   ComposerTestUtil::verify( sign, encrypt, message.get(), data.toUtf8(),
       Kleo::OpenPGPMIMEFormat, cte );
 
@@ -143,7 +143,7 @@ void CryptoComposerTest::testEncryptSameAttachments()
   composer = 0;
 
 
-  //kDebug()<< "message:" << message.get()->encodedContent();
+  //qDebug()<< "message:" << message.get()->encodedContent();
   ComposerTestUtil::verifyEncryption( message.get(), data.toUtf8(),
       (Kleo::CryptoMessageFormat) format , true );
 
@@ -316,7 +316,7 @@ void CryptoComposerTest::testOpenPGPInline()
 
   if ( sign && !encrypt )
     data += QString::fromLatin1( "\n" );
-  kDebug() << "message:" << message->encodedContent();
+  qDebug() << "message:" << message->encodedContent();
   ComposerTestUtil::verify( sign, encrypt, message.get(), data.toUtf8(),
       Kleo::InlineOpenPGPFormat, cte );
 
@@ -430,7 +430,7 @@ void CryptoComposerTest::fillComposerCryptoData( Composer* composer )
 {
   std::vector<GpgME::Key> keys = MessageCore::Test::getKeys();
 
-  kDebug() << "got num of keys:" << keys.size();
+  qDebug() << "got num of keys:" << keys.size();
 
   QStringList recipients;
   recipients << QString::fromLocal8Bit( "you@you.you" );
@@ -477,7 +477,7 @@ void CryptoComposerTest::runSMIMETest( bool sign, bool enc, bool opaque )
     delete composer;
     composer = 0;
 
-    kDebug() << "message:" << message->encodedContent();
+    qDebug() << "message:" << message->encodedContent();
 
     ComposerTestUtil::verify( sign, enc, message.get(), data.toUtf8(),  f, cte );
 

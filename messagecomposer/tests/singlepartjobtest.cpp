@@ -19,7 +19,7 @@
 
 #include "singlepartjobtest.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <qtest_kde.h>
 
 #include <KMime/kmime_content.h>
@@ -41,7 +41,7 @@ void SinglepartJobTest::testContent()
   QVERIFY( cjob->exec() );
   Content *result = cjob->content();
   result->assemble();
-  kDebug() << result->encodedContent();
+  qDebug() << result->encodedContent();
   QCOMPARE( result->body(), data );
   QVERIFY( result->contentDisposition( false ) == 0 ); // Not created unless demanded.
   QVERIFY( result->contentType( false ) == 0 ); // Not created unless demanded.
@@ -60,7 +60,7 @@ void SinglepartJobTest::testContentDisposition()
   QVERIFY( cjob->exec() );
   Content *result = cjob->content();
   result->assemble();
-  kDebug() << result->encodedContent();
+  qDebug() << result->encodedContent();
   QCOMPARE( result->body(), data );
   QVERIFY( result->contentDisposition( false ) );
   QCOMPARE( result->contentDisposition()->disposition(), Headers::CDattachment );
@@ -78,7 +78,7 @@ void SinglepartJobTest::testContentID()
   QVERIFY( cjob->exec() );
   Content *result = cjob->content();
   result->assemble();
-  kDebug() << result->encodedContent();
+  qDebug() << result->encodedContent();
   QCOMPARE( result->body(), data );
   QVERIFY( result->header<Headers::ContentID>() );
   QCOMPARE( result->header<Headers::ContentID>()->identifier(), id );
@@ -97,7 +97,7 @@ void SinglepartJobTest::testContentType()
   QVERIFY( cjob->exec() );
   Content *result = cjob->content();
   result->assemble();
-  kDebug() << result->encodedContent();
+  qDebug() << result->encodedContent();
   QCOMPARE( result->body(), data );
   QVERIFY( result->contentType( false ) );
   QCOMPARE( result->contentType()->mimeType(), mimeType );
@@ -118,7 +118,7 @@ void SinglepartJobTest::testContentTransferEncoding()
     QVERIFY( cjob->exec() );
     Content *result = cjob->content();
     result->assemble();
-    kDebug() << result->encodedContent();
+    qDebug() << result->encodedContent();
     QVERIFY( result->contentTransferEncoding( false ) );
     QCOMPARE( result->contentTransferEncoding()->encoding(), Headers::CE7Bit );
     QCOMPARE( result->body(), data );
@@ -132,7 +132,7 @@ void SinglepartJobTest::testContentTransferEncoding()
     QVERIFY( cjob->exec() );
     Content *result = cjob->content();
     result->assemble();
-    kDebug() << result->encodedContent();
+    qDebug() << result->encodedContent();
     QVERIFY( result->contentTransferEncoding( false ) );
     QCOMPARE( result->contentTransferEncoding()->encoding(), Headers::CEquPr );
     QCOMPARE( result->body(), data );
@@ -146,7 +146,7 @@ void SinglepartJobTest::testContentTransferEncoding()
     QVERIFY( cjob->exec() );
     Content *result = cjob->content();
     result->assemble();
-    kDebug() << result->encodedContent();
+    qDebug() << result->encodedContent();
     QVERIFY( result->contentTransferEncoding( false ) );
     QCOMPARE( result->contentTransferEncoding()->encoding(), Headers::CEbase64 );
     QCOMPARE( result->body(), data );
@@ -161,7 +161,7 @@ void SinglepartJobTest::testContentTransferEncoding()
     QVERIFY( cjob->exec() );
     Content *result = cjob->content();
     result->assemble();
-    kDebug() << result->encodedContent();
+    qDebug() << result->encodedContent();
     QVERIFY( result->contentTransferEncoding( false ) );
     QCOMPARE( result->contentTransferEncoding()->encoding(), Headers::CE8Bit );
     QCOMPARE( result->body(), data );

@@ -40,7 +40,7 @@
 #include <Akonadi/Calendar/ETMCalendar>
 
 #include <KMessageBox>
-#include <KDebug>
+#include <QDebug>
 #include <KIconLoader>
 
 #include <QMimeData>
@@ -242,17 +242,17 @@ QVariant TodoModel::data( const QModelIndex &index, int role ) const
   const Akonadi::Item item =
     sourceIndex.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
   if ( !item.isValid() ) {
-    kWarning() << "Invalid index: " << sourceIndex;
+    qWarning() << "Invalid index: " << sourceIndex;
     //Q_ASSERT( false );
     return QVariant();
   }
   const KCalCore::Todo::Ptr todo = CalendarSupport::todo( item );
   if ( !todo ) {
-    kError() << "item.hasPayload()" << item.hasPayload();
+    qCritical() << "item.hasPayload()" << item.hasPayload();
     if ( item.hasPayload<KCalCore::Incidence::Ptr>() ) {
       KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
       if ( incidence )
-        kError() << "It's actually " << incidence->type();
+        qCritical() << "It's actually " << incidence->type();
     }
 
     Q_ASSERT(!"There's no to-do.");
@@ -440,7 +440,7 @@ bool TodoModel::setData( const QModelIndex &index, const QVariant &value, int ro
   const KCalCore::Todo::Ptr todo = CalendarSupport::todo( item );
 
   if ( !item.isValid() || !todo ) {
-    kWarning() << "TodoModel::setData() called, bug item is invalid or doesn't have payload";
+    qWarning() << "TodoModel::setData() called, bug item is invalid or doesn't have payload";
     Q_ASSERT( false );
     return false;
   }
@@ -504,7 +504,7 @@ bool TodoModel::setData( const QModelIndex &index, const QVariant &value, int ro
   } else {
     if ( !( role == Qt::CheckStateRole && index.column() == 0 ) ) {
       //KOHelper::showSaveIncidenceErrorMsg( 0, todo ); //TODO pass parent
-      kError() << "Unable to modify incidence";
+      qCritical() << "Unable to modify incidence";
     }
     return false;
   }
@@ -704,7 +704,7 @@ bool TodoModel::dropMimeData( const QMimeData *data, Qt::DropAction action,
   Q_UNUSED( column );
 
   if ( action != Qt::MoveAction ) {
-    kWarning() << "No action other than MoveAction currently supported!"; //TODO
+    qWarning() << "No action other than MoveAction currently supported!"; //TODO
     return false;
   }
 
@@ -750,7 +750,7 @@ bool TodoModel::dropMimeData( const QMimeData *data, Qt::DropAction action,
         // again, no need to emit dataChanged, that's done by processChange
         return true;
       } else {
-        kDebug() << "Todo's with recurring id can't have child todos yet.";
+        qDebug() << "Todo's with recurring id can't have child todos yet.";
         return false;
       }
 
@@ -759,7 +759,7 @@ bool TodoModel::dropMimeData( const QMimeData *data, Qt::DropAction action,
     } else {
       if ( !parent.isValid() ) {
         // TODO we should create a new todo with the data in the drop object
-        kDebug() << "TODO: Create a new todo with the given data";
+        qDebug() << "TODO: Create a new todo with the given data";
         return false;
       }
 
@@ -808,7 +808,7 @@ Qt::ItemFlags TodoModel::flags( const QModelIndex &index ) const
 
   if ( !item.isValid() ) {
     Q_ASSERT( mapToSource( index ).isValid() );
-    kWarning() << "Item is invalid " << index;
+    qWarning() << "Item is invalid " << index;
     Q_ASSERT( false );
     return 0;
   }
@@ -864,7 +864,7 @@ QModelIndex TodoModel::mapToSource( const QModelIndex &proxyIndex ) const
   }
 
   if ( proxyIndex.column() != 0 ) {
-    kError() << "Map to source called with column>0, but source model only has 1 column";
+    qCritical() << "Map to source called with column>0, but source model only has 1 column";
     Q_ASSERT( false );
   }
 

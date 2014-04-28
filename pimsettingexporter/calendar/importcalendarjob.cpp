@@ -28,7 +28,7 @@
 #include <KArchive>
 #include <KZip>
 #include <KGlobal>
-#include <KDebug>
+#include <QDebug>
 
 #include <QFile>
 #include <QDir>
@@ -185,7 +185,7 @@ void ImportCalendarJob::storeCalendarArchiveResource(const KArchiveDirectory *di
                 files.debug();
                 mListResourceFile.append(files);
             } else {
-                kDebug()<<" Problem in archive. number of file "<<lst.count();
+                qDebug()<<" Problem in archive. number of file "<<lst.count();
             }
         }
     }

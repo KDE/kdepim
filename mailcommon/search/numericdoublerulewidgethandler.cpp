@@ -22,7 +22,7 @@
 using MailCommon::RegExpLineEdit;
 
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
 
 #include <KDoubleNumInput>

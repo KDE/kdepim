@@ -29,7 +29,7 @@
 #include <KInputDialog>
 #include <KZip>
 #include <KTempDir>
-#include <KDebug>
+#include <QDebug>
 #include <KMessageBox>
 #include <KFileDialog>
 #include <KUrl>
@@ -214,7 +214,7 @@ void ThemeEditorPage::uploadTheme()
         dialog->exec();
         delete dialog;
     } else {
-        kDebug()<<" We can't open in zip write mode";
+        qDebug()<<" We can't open in zip write mode";
     }
     delete zip;
 }

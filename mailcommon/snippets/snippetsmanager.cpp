@@ -26,7 +26,7 @@
 
 #include <KAction>
 #include <KActionCollection>
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
 #include <KMessageBox>
 #include <KIcon>
@@ -251,7 +251,7 @@ void SnippetsManager::Private::addSnippetGroup()
     if ( dlg->exec() ) {
 
         if ( !mModel->insertRow( mModel->rowCount(), QModelIndex() ) ) {
-            kDebug() << "unable to insert row";
+            qDebug() << "unable to insert row";
             delete dlg;
             return;
         }
@@ -473,7 +473,7 @@ void SnippetsManager::Private::loadFromOldFormat( const KConfigGroup &group )
         const int iIdVal =
                 group.readEntry( QString::fromLatin1( "snippetGroupId_%1" ).arg( i ), -1 );
 
-        //kDebug() << "Read group "  << " " << iIdVal;
+        //qDebug() << "Read group "  << " " << iIdVal;
 
         if ( !strNameVal.isEmpty() && iIdVal != -1 ) {
             // create group

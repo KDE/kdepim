@@ -24,7 +24,7 @@
 
 #include "syncuploader.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include "backend.h"
 #include "bilbomedia.h"
 #include <QEventLoop>
@@ -61,7 +61,7 @@ QString SyncUploader::errorMessage() const
 bool SyncUploader::uploadMedia( Backend *backend, BilboMedia *media )
 {
     if (!backend || !media){
-        kError()<<"Media or Backend is NULL";
+        qCritical()<<"Media or Backend is NULL";
         return false;
     }
     d->loop = new QEventLoop(this);
@@ -80,7 +80,7 @@ bool SyncUploader::uploadMedia( Backend *backend, BilboMedia *media )
 void SyncUploader::slotMediaFileUploaded( BilboMedia *media )
 {
     if (media && media == d->mCurrentMedia){
-        kDebug();
+        qDebug();
         d->success = true;
         d->loop->exit();
     }

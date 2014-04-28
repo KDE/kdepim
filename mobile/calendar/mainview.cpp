@@ -82,7 +82,7 @@
 #include <QDeclarativeContext>
 #include <QGraphicsItem>
 
-#include <KDebug>
+#include <QDebug>
 
 Q_DECLARE_METATYPE(KCalCore::iTIPMethod)
 
@@ -367,7 +367,7 @@ void MainView::openIncidenceEditor( const QString &summary,
                                     bool attachmentsAreInline,
                                     KCalCore::Incidence::IncidenceType type )
 {
-  kDebug();
+  qDebug();
 
   IncidenceEditorNG::IncidenceDefaults defaults = IncidenceEditorNG::IncidenceDefaults::minimalIncidenceDefaults( attachmentsAreInline );
   // if attach or attendee list is empty, these methods don't do anything, so
@@ -588,7 +588,7 @@ void MainView::sendAsICalendar()
 void MainView::fetchForSendICalDone( KJob *job )
 {
   if ( job->error() ) {
-    kDebug() << "Error trying to fetch item";
+    qDebug() << "Error trying to fetch item";
     //###: review error string
     KMessageBox::sorry( this,
                         i18n( "Cannot fetch calendar item." ),
@@ -619,7 +619,7 @@ void MainView::publishItemInformation()
 void MainView::fetchForPublishItemDone( KJob *job )
 {
   if ( job->error() ) {
-    kDebug() << "Error trying to fetch item";
+    qDebug() << "Error trying to fetch item";
     //###: review error string
     KMessageBox::sorry( this,
                         i18n( "Cannot fetch calendar item." ),
@@ -677,7 +677,7 @@ void MainView::scheduleiTIPMethod( KCalCore::iTIPMethod method )
 void MainView::fetchForiTIPMethodDone( KJob *job )
 {
   if ( job->error() ) {
-    kDebug() << "Error trying to fetch item";
+    qDebug() << "Error trying to fetch item";
     //###: review error string
     KMessageBox::sorry( this,
                         i18n( "Cannot fetch calendar item." ),
@@ -709,7 +709,7 @@ void MainView::saveAllAttachments()
 void MainView::fetchForSaveAllAttachmentsDone( KJob *job )
 {
   if ( job->error() ) {
-    kDebug() << "Error trying to fetch item";
+    qDebug() << "Error trying to fetch item";
     //###: review error string
     KMessageBox::sorry( this,
                         i18n( "Cannot fetch calendar item." ),

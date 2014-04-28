@@ -26,7 +26,7 @@
 
 #include "aboutdata.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>

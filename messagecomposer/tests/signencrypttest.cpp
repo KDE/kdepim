@@ -20,7 +20,7 @@
 
 #include "signencrypttest.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <qtest_kde.h>
 #include "qtest_messagecomposer.h"
 #include "cryptofunctions.h"
@@ -99,7 +99,7 @@ void SignEncryptTest::testContent()
   QVERIFY( result );
   result->assemble();
 
-  kDebug() << "result:" << result->encodedContent();
+  qDebug() << "result:" << result->encodedContent();
 
   ComposerTestUtil::verifySignatureAndEncryption(
       result,

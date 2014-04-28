@@ -19,7 +19,7 @@
 */
 
 #include "response.h"
-#include <KDebug>
+#include <QDebug>
 
 void KManageSieve::Response::clear()
 {
@@ -99,7 +99,7 @@ bool KManageSieve::Response::parseResponse(const QByteArray &line)
     int start = 0;
     int end = line.indexOf( '"', start + 1 );
     if ( end == -1 ) {
-        kDebug() << "Invalid protocol in:" << line;
+        qDebug() << "Invalid protocol in:" << line;
         m_key = line.right( line.length() - start );
         return true;
     }
@@ -115,7 +115,7 @@ bool KManageSieve::Response::parseResponse(const QByteArray &line)
 
     end = line.indexOf( '"', start + 1 );
     if ( end == -1 ) {
-        kDebug() << "Invalid protocol in:" << line;
+        qDebug() << "Invalid protocol in:" << line;
         m_value = line.right( line.length() - start );
         return true;
     }

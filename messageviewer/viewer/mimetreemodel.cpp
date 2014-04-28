@@ -27,7 +27,7 @@
 #include <KMime/kmime_content.h>
 #include <KMime/Message>
 
-#include <KDebug>
+#include <QDebug>
 #include <KIcon>
 #include <KLocalizedString>
 #include <KMimeType>

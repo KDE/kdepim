@@ -22,7 +22,7 @@
 
 #include <QTimer>
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 
 #include <KMime/kmime_content.h>
@@ -44,7 +44,7 @@ void ContentJobBasePrivate::doNextSubjob()
     if( q->hasSubjobs() ) {
         q->subjobs().first()->start();
     } else {
-        kDebug() << "Calling process.";
+        qDebug() << "Calling process.";
         q->process();
     }
 }
@@ -104,7 +104,7 @@ KMime::Content* ContentJobBase::extraContent() const {
 bool ContentJobBase::addSubjob( KJob *job )
 {
     Q_UNUSED( job );
-    kError() << "Use appendJob() instead.";
+    qCritical() << "Use appendJob() instead.";
     Q_ASSERT( false );
     return false;
 }
@@ -121,7 +121,7 @@ void ContentJobBase::slotResult( KJob *job )
 {
     Q_D( ContentJobBase );
     KCompositeJob::slotResult( job ); // Handles errors and removes subjob.
-    kDebug() << "A subjob finished." << subjobs().count() << "more to go.";
+    qDebug() << "A subjob finished." << subjobs().count() << "more to go.";
     if( error() ) {
         return;
     }

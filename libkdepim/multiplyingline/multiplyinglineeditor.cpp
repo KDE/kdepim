@@ -25,7 +25,7 @@
 #include "multiplyinglineeditor.h"
 #include "multiplyinglineview_p.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KDialog>
 
 #include <QHBoxLayout>

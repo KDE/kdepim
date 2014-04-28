@@ -40,7 +40,7 @@
 #include <KLocalizedString>
 #include <KIconLoader>
 #include <KGlobalSettings>
-#include <KDebug>
+#include <QDebug>
 
 #include <QEvent>
 #include <QHBoxLayout>
@@ -271,7 +271,7 @@ void JournalFrame::setJournal( const Akonadi::Item &journal )
 void JournalFrame::setDirty()
 {
   mDirty = true;
-  kDebug();
+  qDebug();
 }
 
 void JournalFrame::printJournal()

@@ -28,7 +28,7 @@
 #include <KComboBox>
 #include <KConfigSkeleton>
 #include <KDateComboBox>
-#include <KDebug>
+#include <QDebug>
 #include <KFontDialog>
 #include <KLineEdit>
 #include <KLocale>
@@ -75,7 +75,7 @@ KPrefsWid *create( KConfigSkeletonItem *item, QWidget *parent )
     if ( enumItem ) {
         QList<KConfigSkeleton::ItemEnum::Choice> choices = enumItem->choices();
         if ( choices.isEmpty() ) {
-            kError() << "Enum has no choices.";
+            qCritical() << "Enum has no choices.";
             return 0;
         } else {
             KPrefsWidRadios *radios = new KPrefsWidRadios( enumItem, parent );
@@ -838,7 +838,7 @@ void KPrefsDialog::autoCreate()
                 layout->addWidget( widgets[ 0 ], currentRow, 0 );
                 layout->addWidget( widgets[ 1 ], currentRow, 1 );
             } else {
-                kError() <<"More widgets than expected:" << widgets.count();
+                qCritical() <<"More widgets than expected:" << widgets.count();
             }
 
             if ( (*it)->isImmutable() ) {

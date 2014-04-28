@@ -28,7 +28,7 @@
 #include <KCmdLineArgs>
 #include <KIcon>
 #include <KLocale>
-#include <kdebug.h>
+#include <qdebug.h>
 
 EXPORT_KONTACT_PLUGIN( CoisceimPlugin, coisceim )
 
@@ -85,7 +85,7 @@ org::kde::coisceim::CoisceimWidget *CoisceimPlugin::interface()
 
 void CoisceimPlugin::createTrip()
 {
-  kDebug() << "CALL CREATE";
+  qDebug() << "CALL CREATE";
   core()->selectPlugin( this );
   interface()->createTrip();
 }

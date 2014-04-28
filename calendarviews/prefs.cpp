@@ -28,6 +28,7 @@
 
 #include <KGlobalSettings>
 #include <KSystemTimeZone>
+#include <QDebug>
 #include <KDebug>
 
 using namespace EventViews;
@@ -37,7 +38,7 @@ QSet<EventViews::EventView::ItemIcon> iconArrayToSet( const QByteArray &array )
   QSet<EventViews::EventView::ItemIcon> set;
   for ( int i=0; i<array.count(); ++i ) {
     if ( i >= EventViews::EventView::IconCount ) {
-      kWarning() << "Icon array is too big: " << array.count();
+      qWarning() << "Icon array is too big: " << array.count();
       return set;
     }
     if ( array[i] != 0 ) {
@@ -177,7 +178,7 @@ void BaseConfig::usrReadConfig()
   QStringList::ConstIterator it3;
   for ( it3 = colorKeyList.begin(); it3 != colorKeyList.end(); ++it3 ) {
     QColor color = rColorsConfig.readEntry( *it3, mDefaultResourceColor );
-    //kDebug() << "key:" << (*it3) << "value:" << color;
+    //qDebug() << "key:" << (*it3) << "value:" << color;
     setResourceColor( *it3, color );
   }
 
@@ -249,7 +250,7 @@ void BaseConfig::setTimeZoneDefault()
 {
   KTimeZone zone = KSystemTimeZones::local();
   if ( !zone.isValid() ) {
-    kError() << "KSystemTimeZones::local() return 0";
+    qCritical() << "KSystemTimeZones::local() return 0";
     return;
   }
 
@@ -319,7 +320,7 @@ void Prefs::Private::setBool( KCoreConfigSkeleton::ItemBool *baseConfigItem, boo
     if ( item ) {
       item->setValue( value );
     } else {
-      kError() << "Application config item" << appItem->name() << "is not of type Bool";
+      qCritical() << "Application config item" << appItem->name() << "is not of type Bool";
     }
   } else {
     baseConfigItem->setValue( value );
@@ -334,7 +335,7 @@ bool Prefs::Private::getBool( const KCoreConfigSkeleton::ItemBool *baseConfigIte
     if ( item ) {
       return item->value();
     }
-    kError() << "Application config item" << appItem->name() << "is not of type Bool";
+    qCritical() << "Application config item" << appItem->name() << "is not of type Bool";
   }
   return baseConfigItem->value();
 }
@@ -347,7 +348,7 @@ void Prefs::Private::setInt( KCoreConfigSkeleton::ItemInt *baseConfigItem, int v
     if ( item ) {
       item->setValue( value );
     } else {
-      kError() << "Application config item" << appItem->name() << "is not of type Int";
+      qCritical() << "Application config item" << appItem->name() << "is not of type Int";
     }
   } else {
     baseConfigItem->setValue( value );
@@ -362,7 +363,7 @@ int Prefs::Private::getInt( const KCoreConfigSkeleton::ItemInt *baseConfigItem )
     if ( item ) {
       return item->value();
     }
-    kError() << "Application config item" << appItem->name() << "is not of type Int";
+    qCritical() << "Application config item" << appItem->name() << "is not of type Int";
   }
   return baseConfigItem->value();
 }
@@ -378,7 +379,7 @@ void Prefs::Private::setString( KCoreConfigSkeleton::ItemString *baseConfigItem,
     if ( item ) {
       item->setValue( value );
     } else {
-      kError() << "Application config item" << appItem->name() << "is not of type String";
+      qCritical() << "Application config item" << appItem->name() << "is not of type String";
     }
   } else {
     baseConfigItem->setValue( value );
@@ -395,7 +396,7 @@ QString Prefs::Private::getString( const KCoreConfigSkeleton::ItemString *baseCo
     if ( item ) {
       return item->value();
     }
-    kError() << "Application config item" << appItem->name() << "is not of type String";
+    qCritical() << "Application config item" << appItem->name() << "is not of type String";
   }
   return baseConfigItem->value();
 }
@@ -411,7 +412,7 @@ void Prefs::Private::setDateTime( KCoreConfigSkeleton::ItemDateTime *baseConfigI
     if ( item ) {
       item->setValue( value );
     } else {
-      kError() << "Application config item" << appItem->name() << "is not of type DateTime";
+      qCritical() << "Application config item" << appItem->name() << "is not of type DateTime";
     }
   } else {
     baseConfigItem->setValue( value );
@@ -429,7 +430,7 @@ QDateTime Prefs::Private::getDateTime(
     if ( item ) {
       return item->value();
     }
-    kError() << "Application config item" << appItem->name() << "is not of type DateTime";
+    qCritical() << "Application config item" << appItem->name() << "is not of type DateTime";
   }
   return baseConfigItem->value();
 }
@@ -445,7 +446,7 @@ void Prefs::Private::setStringList( KCoreConfigSkeleton::ItemStringList *baseCon
     if ( item ) {
       item->setValue( value );
     } else {
-      kError() << "Application config item" << appItem->name() << "is not of type StringList";
+      qCritical() << "Application config item" << appItem->name() << "is not of type StringList";
     }
   } else {
     baseConfigItem->setValue( value );
@@ -463,7 +464,7 @@ QStringList Prefs::Private::getStringList(
     if ( item ) {
       return item->value();
     }
-    kError() << "Application config item" << appItem->name() << "is not of type StringList";
+    qCritical() << "Application config item" << appItem->name() << "is not of type StringList";
   }
   return baseConfigItem->value();
 }
@@ -476,7 +477,7 @@ void Prefs::Private::setColor( KConfigSkeleton::ItemColor *baseConfigItem, const
     if ( item ) {
       item->setValue( value );
     } else {
-      kError() << "Application config item" << appItem->name() << "is not of type Color";
+      qCritical() << "Application config item" << appItem->name() << "is not of type Color";
     }
   } else {
     baseConfigItem->setValue( value );
@@ -491,7 +492,7 @@ QColor Prefs::Private::getColor( const KConfigSkeleton::ItemColor *baseConfigIte
     if ( item ) {
       return item->value();
     }
-    kError() << "Application config item" << appItem->name() << "is not of type Color";
+    qCritical() << "Application config item" << appItem->name() << "is not of type Color";
   }
   return baseConfigItem->value();
 }
@@ -504,7 +505,7 @@ void Prefs::Private::setFont( KConfigSkeleton::ItemFont *baseConfigItem, const Q
     if ( item ) {
       item->setValue( value );
     } else {
-      kError() << "Application config item" << appItem->name() << "is not of type Font";
+      qCritical() << "Application config item" << appItem->name() << "is not of type Font";
     }
   } else {
     baseConfigItem->setValue( value );
@@ -519,7 +520,7 @@ QFont Prefs::Private::getFont( const KConfigSkeleton::ItemFont *baseConfigItem )
     if ( item ) {
       return item->value();
     }
-    kError() << "Application config item" << appItem->name() << "is not of type Font";
+    qCritical() << "Application config item" << appItem->name() << "is not of type Font";
   }
   return baseConfigItem->value();
 }

@@ -33,7 +33,7 @@
 
 #include <KABC/addressee.h>
 #include <kcombobox.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kdialog.h>
 #include <khbox.h>
 #include <kiconloader.h>

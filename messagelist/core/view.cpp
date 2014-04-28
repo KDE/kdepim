@@ -49,7 +49,7 @@
 
 #include <KMenu>
 #include <KLocalizedString>
-#include <KDebug>
+#include <QDebug>
 #include <KGlobalSettings>
 #include <KIcon>
 #include <KLineEdit>
@@ -335,7 +335,7 @@ void View::applyThemeColumns()
     if ( !d->mTheme )
         return;
 
-    //kDebug() << "Apply theme columns";
+    //qDebug() << "Apply theme columns";
 
 
     const QList< Theme::Column * > & columns = d->mTheme->columns();
@@ -387,15 +387,15 @@ void View::applyThemeColumns()
     {
         if ( ( *it )->currentlyVisible() || ( idx == 0 ) )
         {
-            //kDebug() << "Column " << idx << " will be visible";
+            //qDebug() << "Column " << idx << " will be visible";
             // Column visible
             const int savedWidth = ( *it )->currentWidth();
             const int hintWidth = d->mDelegate->sizeHintForItemTypeAndColumn( Item::Message, idx ).width();
             totalVisibleWidthHint += savedWidth > 0 ? savedWidth : hintWidth;
             lColumnSizeHints.append( hintWidth );
-            //kDebug() << "Column " << idx << " size hint is " << hintWidth;
+            //qDebug() << "Column " << idx << " size hint is " << hintWidth;
         } else {
-            //kDebug() << "Column " << idx << " will be not visible";
+            //qDebug() << "Column " << idx << " will be not visible";
             // The column is not visible
             lColumnSizeHints.append( -1 ); // dummy
         }
@@ -535,13 +535,13 @@ void View::applyThemeColumns()
 
     idx = 0;
 
-    //kDebug() << "Entering column show/hide loop";
+    //qDebug() << "Entering column show/hide loop";
 
     end = columns.constEnd();
     for ( it = columns.constBegin(); it != end; ++it )
     {
         bool visible = ( idx == 0 ) || ( *it )->currentlyVisible();
-        //kDebug() << "Column " << idx << " visible " << visible;
+        //qDebug() << "Column " << idx << " visible " << visible;
         ( *it )->setCurrentlyVisible( visible );
         header()->setSectionHidden( idx, !visible );
         idx++;
@@ -558,7 +558,7 @@ void View::applyThemeColumns()
     {
         if ( ( *it )->currentlyVisible() )
         {
-            //kDebug() << "Resize section " << idx << " to " << lColumnWidths[ idx ];
+            //qDebug() << "Resize section " << idx << " to " << lColumnWidths[ idx ];
             const int columnWidth( lColumnWidths[ idx ] );
             ( *it )->setCurrentWidth( columnWidth );
             header()->resizeSection( idx, columnWidth );
@@ -594,7 +594,7 @@ void View::applyThemeColumns()
     if (bTriggeredQtBug && bAllowRecursion)
     {
         bAllowRecursion = false;
-        //kDebug() << "I've triggered the QHeaderView bug: trying to fix by calling myself again";
+        //qDebug() << "I've triggered the QHeaderView bug: trying to fix by calling myself again";
         applyThemeColumns();
         bAllowRecursion = true;
     }
@@ -619,7 +619,7 @@ void View::saveThemeColumnState()
     if ( d->mNeedToApplyThemeColumns )
         return; // don't save the state if it hasn't been applied at all
 
-    //kDebug() << "Save theme column state";
+    //qDebug() << "Save theme column state";
 
     const QList< Theme::Column * > & columns = d->mTheme->columns();
 
@@ -633,11 +633,11 @@ void View::saveThemeColumnState()
     {
         if ( header()->isSectionHidden( idx ) )
         {
-            //kDebug() << "Section " << idx << " is hidden";
+            //qDebug() << "Section " << idx << " is hidden";
             ( *it )->setCurrentlyVisible( false );
             ( *it )->setCurrentWidth( -1 ); // reset (hmmm... we could use the "don't touch" policy here too...)
         } else {
-            //kDebug() << "Section " << idx << " is visible and has size " << header()->sectionSize( idx );
+            //qDebug() << "Section " << idx << " is visible and has size " << header()->sectionSize( idx );
             ( *it )->setCurrentlyVisible( true );
             ( *it )->setCurrentWidth( header()->sectionSize( idx ) );
         }
@@ -655,7 +655,7 @@ void View::triggerDelayedSaveThemeColumnState()
 
 void View::resizeEvent( QResizeEvent * e )
 {
-    kDebug() << "Resize event enter (viewport width is " << viewport()->width() << ")";
+    qDebug() << "Resize event enter (viewport width is " << viewport()->width() << ")";
 
     QTreeView::resizeEvent( e );
 
@@ -883,7 +883,7 @@ void View::setCurrentMessageItem( MessageItem * it, bool center )
 {
     if ( it )
     {
-        kDebug() << "Setting current message to" << it->subject();
+        qDebug() << "Setting current message to" << it->subject();
 
         const QModelIndex index = d->mModel->index( it, 0 );
         selectionModel()->setCurrentIndex( index, QItemSelectionModel::Select |
@@ -1960,7 +1960,7 @@ void View::slotSelectionChanged( const QItemSelection &, const QItemSelection & 
     {
         if ( d->mLastCurrentItem != it )
         {
-            kDebug() << "View message selected [" << static_cast< MessageItem * >( it )->subject() << "]";
+            qDebug() << "View message selected [" << static_cast< MessageItem * >( it )->subject() << "]";
             d->mWidget->viewMessageSelected( static_cast< MessageItem * >( it ) );
             d->mLastCurrentItem = it;
         }
@@ -2123,7 +2123,7 @@ void View::mousePressEvent( QMouseEvent * e )
             // the content item is quite unclear.
             if ( d->mDelegate->hitContentItem() && ( selectedIndexes().count() > 1 ) )
             {
-                kDebug() << "Left hit with selectedIndexes().count() == " << selectedIndexes().count();
+                qDebug() << "Left hit with selectedIndexes().count() == " << selectedIndexes().count();
 
                 switch ( d->mDelegate->hitContentItem()->type() )
                 {

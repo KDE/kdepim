@@ -18,7 +18,7 @@
 #include "scamdetection_gui.h"
 #include "scamdetection/scamdetectionwarningwidget.h"
 #include "scamdetection/scamdetection.h"
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kapplication.h>
 #include <KFileDialog>
 #include <KCmdLineArgs>

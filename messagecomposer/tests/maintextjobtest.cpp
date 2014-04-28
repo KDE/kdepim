@@ -21,7 +21,7 @@
 
 #include <QTextCodec>
 
-#include <KDebug>
+#include <QDebug>
 #include <KIconLoader>
 #include <qtest_kde.h>
 
@@ -52,7 +52,7 @@ void MainTextJobTest::testPlainText()
   QVERIFY( mjob->exec() );
   Content *result = mjob->content();
   result->assemble();
-  kDebug() << result->encodedContent();
+  qDebug() << result->encodedContent();
   QVERIFY( result->contentType( false ) );
   QCOMPARE( result->contentType()->mimeType(), QByteArray( "text/plain" ) );
   QCOMPARE( result->contentType()->charset(), QByteArray( "us-ascii" ) );
@@ -100,7 +100,7 @@ void MainTextJobTest::testCustomCharset()
   QVERIFY( mjob->exec() );
   Content *result = mjob->content();
   result->assemble();
-  kDebug() << result->encodedContent();
+  qDebug() << result->encodedContent();
   QVERIFY( result->contentType( false ) );
   QCOMPARE( result->contentType()->mimeType(), QByteArray( "text/plain" ) );
   QCOMPARE( result->contentType()->charset(), charset );
@@ -122,7 +122,7 @@ void MainTextJobTest::testNoCharset()
   QSKIP("This tests has been failing for a long time, please someone fix it", SkipSingle);
   QVERIFY( !mjob->exec() ); // Error.
   QCOMPARE( mjob->error(), int( JobBase::BugError ) );
-  kDebug() << mjob->errorString();
+  qDebug() << mjob->errorString();
 }
 
 void MainTextJobTest::testBadCharset()
@@ -138,7 +138,7 @@ void MainTextJobTest::testBadCharset()
   QSKIP("This tests has been failing for a long time, please someone fix it", SkipSingle);
   QVERIFY( !mjob->exec() ); // Error.
   QCOMPARE( mjob->error(), int( JobBase::UserError ) );
-  kDebug() << mjob->errorString();
+  qDebug() << mjob->errorString();
 }
 
 void MainTextJobTest::testFallbackCharset()
@@ -153,7 +153,7 @@ void MainTextJobTest::testFallbackCharset()
   QVERIFY( mjob->exec() );
   Content *result = mjob->content();
   result->assemble();
-  kDebug() << result->encodedContent();
+  qDebug() << result->encodedContent();
   QVERIFY( result->contentType( false ) );
   QCOMPARE( result->contentType()->mimeType(), QByteArray( "text/plain" ) );
   QCOMPARE( result->contentType()->charset(), QByteArray( "us-ascii" ) ); // Fallback is us-ascii or utf8.
@@ -178,7 +178,7 @@ void MainTextJobTest::testHtml()
   QVERIFY( mjob->exec() );
   Content *result = mjob->content();
   result->assemble();
-  kDebug() << result->encodedContent();
+  qDebug() << result->encodedContent();
 
   // multipart/alternative
   {
@@ -231,7 +231,7 @@ void MainTextJobTest::testHtmlWithImages()
   QVERIFY( mjob->exec() );
   Content *result = mjob->content();
   result->assemble();
-  kDebug() << result->encodedContent();
+  qDebug() << result->encodedContent();
 
   // multipart/related
   {

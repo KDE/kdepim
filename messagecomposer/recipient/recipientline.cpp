@@ -24,7 +24,7 @@
 #include <KDialog>
 #include <KLocalizedString>
 #include <KCompletionBox>
-#include <KDebug>
+#include <QDebug>
 
 #include <QKeyEvent>
 #include <QHBoxLayout>

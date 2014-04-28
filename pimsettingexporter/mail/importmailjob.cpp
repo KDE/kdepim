@@ -40,7 +40,7 @@
 #include <KMessageBox>
 #include <KArchiveFile>
 #include <KZip>
-#include <KDebug>
+#include <QDebug>
 
 #include <AkonadiCore/agenttype.h>
 #include <AkonadiCore/agentmanager.h>
@@ -142,7 +142,7 @@ void ImportMailJob::storeMailArchiveResource(const KArchiveDirectory*dir, const 
                 files.debug();
                 mListResourceFile.append(files);
             } else {
-                kDebug()<<" Problem in archive. number of file "<<lst.count();
+                qDebug()<<" Problem in archive. number of file "<<lst.count();
             }
         }
     }
@@ -395,7 +395,7 @@ void ImportMailJob::restoreResources()
                         if (collection != -1) {
                             settings.insert(QLatin1String("TrashCollection"),collection);
                         } else {
-                            kDebug()<<" Use default trash folder";
+                            qDebug()<<" Use default trash folder";
                         }
                     }
 
@@ -423,7 +423,7 @@ void ImportMailJob::restoreResources()
                         infoAboutNewResource(newResource);
                     }
                 } else {
-                    kDebug()<<" problem with resource";
+                    qDebug()<<" problem with resource";
                 }
             }
         }
@@ -549,7 +549,7 @@ void ImportMailJob::restoreMails()
                 }
                 listResourceToSync << newResource;
             } else {
-                kDebug()<<" resource name not supported "<<resourceName;
+                qDebug()<<" resource name not supported "<<resourceName;
             }
             //qDebug()<<"url "<<url;
         }

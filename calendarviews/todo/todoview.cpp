@@ -55,7 +55,7 @@
 #include <KGlobal>
 #include <KComponentData>
 #include <KJob>
-#include <KDebug>
+#include <QDebug>
 
 #include <QCheckBox>
 #include <QGridLayout>
@@ -698,7 +698,7 @@ void TodoView::addQuickTodo( Qt::KeyboardModifiers modifiers )
   } else if ( modifiers == Qt::ControlModifier ) {
     QModelIndexList selection = mView->selectionModel()->selectedRows();
     if ( selection.count() != 1 ) {
-      kWarning() << "No to-do selected" << selection;
+      qWarning() << "No to-do selected" << selection;
       return;
     }
     const QModelIndex idx = mProxyModel->mapToSource( selection[0] );
@@ -849,7 +849,7 @@ void TodoView::newSubTodo()
     emit newSubTodoSignal( todoItem );
   } else {
     // This never happens
-    kWarning() << "Selection size isn't 1";
+    qWarning() << "Selection size isn't 1";
   }
 }
 
@@ -936,7 +936,7 @@ QMenu *TodoView::createCategoryPopupMenu()
 void TodoView::onTagsFetched(KJob *job)
 {
   if (job->error()) {
-    kWarning() << "Failed to fetch tags " << job->errorString();
+    qWarning() << "Failed to fetch tags " << job->errorString();
     return;
   }
   Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob*>(job);
@@ -980,7 +980,7 @@ void TodoView::setNewDate( const QDate &date )
 
     changer()->modifyIncidence( todoItem, oldTodo, this );
   } else {
-    kDebug() << "Item is readOnly";
+    qDebug() << "Item is readOnly";
   }
 }
 
@@ -1011,7 +1011,7 @@ void TodoView::setNewPercentage( QAction *action )
       changer()->modifyIncidence( todoItem, oldTodo, this );
     }
   } else {
-    kDebug() << "Item is read only";
+    qDebug() << "Item is read only";
   }
 }
 
@@ -1055,7 +1055,7 @@ void TodoView::changedCategories( QAction *action )
     todo->setCategories( categories );
     changer()->modifyIncidence( todoItem, oldTodo, this );
   } else {
-    kDebug() << "No active item, active item is read-only, or locking failed";
+    qDebug() << "No active item, active item is read-only, or locking failed";
   }
 }
 
@@ -1221,7 +1221,7 @@ void TodoView::restoreViewState()
   KConfigGroup group( KGlobal::activeComponent().config().data(), stateSaverGroup() );
   mTreeStateRestorer->setView( mView );
   mTreeStateRestorer->restoreState( group );
-  //kDebug() << "Took " << timer.elapsed();
+  //qDebug() << "Took " << timer.elapsed();
 }
 
 QString TodoView::stateSaverGroup() const

@@ -24,36 +24,36 @@
 
 #include "waitwidget.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 
 WaitWidget::WaitWidget(QWidget* parent )
     : QDialog(parent)
 {
-    kDebug();
+    qDebug();
     setupUi(this);
 }
 
 WaitWidget::~WaitWidget()
 {
-    kDebug();
+    qDebug();
 }
 
 void WaitWidget::setText( const QString& text )
 {
-    kDebug();
+    qDebug();
     operationNameLabel->setText( text );
     setWindowTitle( text );
 }
 
 void WaitWidget::setMaxJobs( int max )
 {
-    kDebug();
+    qDebug();
     progressBar->setMaximum( max );
 }
 
 void WaitWidget::jobDone()
 {
-    kDebug();
+    qDebug();
     progressBar->setValue(progressBar->value()+1);
 }
 

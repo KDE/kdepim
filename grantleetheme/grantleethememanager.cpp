@@ -27,7 +27,7 @@
 #include <KNS3/DownloadDialog>
 #include <KActionMenu>
 #include <KStandardDirs>
-#include <KDebug>
+#include <QDebug>
 #include <KAction>
 #include <KGlobal>
 #include <KIcon>
@@ -130,7 +130,7 @@ public:
                     }
                     alreadyLoadedThemeName << themeName;
                     themes.insert( dirName, theme );
-                    //kDebug()<<" theme.name()"<<theme.name();
+                    //qDebug()<<" theme.name()"<<theme.name();
                 }
             }
             watch->addDir( directory );

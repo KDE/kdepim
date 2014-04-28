@@ -86,7 +86,7 @@
 #include <kcmdlineargs.h>
 #include <kcmultidialog.h>
 #include <kcodecs.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <klinkitemselectionmodel.h>
 #include <klocalizedstring.h>
 #include <kmessagebox.h>
@@ -286,7 +286,7 @@ KMime::Content *MainView::createAttachment( const KUrl &url ) const
   QFile file(fileName);
 
   if ( !file.open(QIODevice::ReadOnly) ) {
-      kWarning() << "Error opening file" << fileName << "for attaching: " << file.errorString();
+      qWarning() << "Error opening file" << fileName << "for attaching: " << file.errorString();
       return 0;
   }
 
@@ -296,7 +296,7 @@ KMime::Content *MainView::createAttachment( const KUrl &url ) const
   file.close();
 
   if ( contents.size() < size ) {
-      kDebug() << "Short read while attaching file" << fileName;
+      qDebug() << "Short read while attaching file" << fileName;
   }
 
   QByteArray coded = KCodecs::base64Encode( contents, true );
@@ -466,7 +466,7 @@ void MainView::doDelayedInit()
   QTime time;
   if ( debugTiming ) {
     time.start();
-    kWarning() << "Start MainView ctor" << &time << " - " << QDateTime::currentDateTime();
+    qWarning() << "Start MainView ctor" << &time << " - " << QDateTime::currentDateTime();
   }
 
   qmlRegisterType<MessageViewer::MessageViewItem>( "org.kde.messageviewer", 4, 5, "MessageView" );
@@ -544,7 +544,7 @@ void MainView::doDelayedInit()
   recoverAutoSavedMessages();
 
   if ( debugTiming ) {
-    kWarning() << "Finished MainView ctor: " << time.elapsed() << " - "<< &time;
+    qWarning() << "Finished MainView ctor: " << time.elapsed() << " - "<< &time;
   }
 
   connect( this, SIGNAL(statusChanged(QDeclarativeView::Status)),
@@ -595,14 +595,14 @@ void MainView::slotDeleteMessage( const Akonadi::Item &item )
 
 void MainView::recoverAutoSavedMessages()
 {
-  kDebug() << "Any message to recover?";
+  qDebug() << "Any message to recover?";
   QDir autoSaveDir( KStandardDirs::locateLocal( "data", QLatin1String( "kmail2/" ) ) + QLatin1String( "autosave" ) );
   //### move directory creation to here
 
   const QFileInfoList savedMessages = autoSaveDir.entryInfoList( QDir::Files );
 
   if ( savedMessages.empty() ) {
-    kDebug() << "No messages to recover";
+    qDebug() << "No messages to recover";
     return;
   }
 
@@ -622,7 +622,7 @@ void MainView::recoverAutoSavedMessages()
 
       file.close();
     } else {
-      kDebug() << "error!!";
+      qDebug() << "error!!";
       //###: review error string
       KMessageBox::sorry( this,
                           i18n( "Could not recover a saved message." ),
@@ -676,7 +676,7 @@ void MainView::composeFetchResult( KJob *job )
 {
   const ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
   if ( job->error() || fetchJob->items().isEmpty() ) {
-    kDebug() << "error:" << job->errorText();
+    qDebug() << "error:" << job->errorText();
     //###: review error string
     KMessageBox::sorry( this,
                         i18n( "Could not restore a draft." ),
@@ -1080,7 +1080,7 @@ Item MainView::currentItem() const
 void MainView::modifyDone( KJob *job )
 {
   if ( job->error() ) {
-    kWarning() << "Modify error: " << job->errorString();
+    qWarning() << "Modify error: " << job->errorString();
     //###: review error string
     //## Use a notification instead?
     KMessageBox::sorry( this,
@@ -1188,7 +1188,7 @@ void MainView::findCreateDefaultCollection( SpecialMailCollections::Type type )
   if ( SpecialMailCollections::self()->hasDefaultCollection( type ) ) {
     const Collection collection = SpecialMailCollections::self()->defaultCollection( type );
     if ( !( collection.rights() & Collection::AllRights ) )
-      kDebug() << "You do not have read/write permission to your inbox folder";
+      qDebug() << "You do not have read/write permission to your inbox folder";
   } else {
     SpecialMailCollectionsRequestJob *job =
         new SpecialMailCollectionsRequestJob( this );
@@ -1203,7 +1203,7 @@ void MainView::findCreateDefaultCollection( SpecialMailCollections::Type type )
 void MainView::createDefaultCollectionDone( KJob *job )
 {
   if ( job->error() ) {
-    kDebug() << "Error creating default collection: " << job->errorText();
+    qDebug() << "Error creating default collection: " << job->errorText();
     //###: review error string
     // disabled for now, triggers too often without good reason on the n900 (too short timeouts probably)
 /*    KMessageBox::sorry( this,
@@ -1221,7 +1221,7 @@ void MainView::createDefaultCollectionDone( KJob *job )
 
   const Collection collection = requestJob->collection();
   if ( !( collection.rights() & Collection::AllRights ) )
-    kDebug() << "You do not have read/write permission to your inbox folder.";
+    qDebug() << "You do not have read/write permission to your inbox folder.";
 
   connect( SpecialMailCollections::self(), SIGNAL(defaultCollectionsChanged()),
            this, SLOT(initDefaultFolders()), Qt::UniqueConnection );
@@ -1278,7 +1278,7 @@ bool MainView::folderIsTemplates( const Collection &collection )
 void MainView::deleteItemResult( KJob *job )
 {
   if ( job->error() ) {
-    kDebug() << "Error trying to delete item";
+    qDebug() << "Error trying to delete item";
     //###: review error string
     KMessageBox::sorry( this,
                         i18n( "Cannot delete draft." ),
@@ -1657,7 +1657,7 @@ void MainView::moveToOrEmptyTrash()
 
   if ( indexes.count() == 1 && CommonKernel->folderIsTrash( collection ) ) {
     //empty trash
-    kDebug() << "EMPTY TRASH";
+    qDebug() << "EMPTY TRASH";
     mMailActionManager->action( Akonadi::StandardMailActionManager::EmptyTrash )->trigger();
   } else {
     mMailActionManager->action( Akonadi::StandardMailActionManager::MoveAllToTrash )->trigger();
@@ -1702,7 +1702,7 @@ void MainView::templateFetchResult( KJob* job)
 {
   const ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
   if ( job->error() || fetchJob->items().isEmpty() ) {
-    kDebug() << "error!!";
+    qDebug() << "error!!";
     //###: review error string
     KMessageBox::sorry( this,
                         i18n( "Could not fetch template." ),

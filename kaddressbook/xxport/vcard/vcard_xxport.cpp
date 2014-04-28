@@ -32,7 +32,7 @@
 
 #include <KABC/VCardConverter>
 
-#include <KDebug>
+#include <QDebug>
 #include <KDialog>
 #include <KFileDialog>
 #include <KLocalizedString>
@@ -460,7 +460,7 @@ void VCardXXPort::addKey( KABC::Addressee &addr, KABC::Key::Type type ) const
 
   GpgME::Context *context = GpgME::Context::createForProtocol( GpgME::OpenPGP );
   if ( !context ) {
-    kError() << "No context available";
+    qCritical() << "No context available";
     return;
   }
 
@@ -473,7 +473,7 @@ void VCardXXPort::addKey( KABC::Addressee &addr, KABC::Key::Type type ) const
   delete context;
 
   if ( error ) {
-    kError() << error.asString();
+    qCritical() << error.asString();
     return;
   }
 

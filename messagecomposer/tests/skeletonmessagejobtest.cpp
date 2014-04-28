@@ -19,7 +19,7 @@
 
 #include "skeletonmessagejobtest.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <qtest_kde.h>
 
 #include <KMime/kmime_message.h>
@@ -50,13 +50,13 @@ void SkeletonMessageJobTest::testSubject()
   Q_ASSERT( infoPart );
 
   QFETCH( QString, subject );
-  //kDebug() << subject;
+  //qDebug() << subject;
   infoPart->setSubject( subject );
   SkeletonMessageJob *sjob = new SkeletonMessageJob( infoPart, globalPart, composer );
   QVERIFY( sjob->exec() );
   KMime::Message *message = sjob->message();
   QVERIFY( message->subject( false ) );
-  kDebug() << message->subject()->asUnicodeString();
+  qDebug() << message->subject()->asUnicodeString();
   QCOMPARE( subject, message->subject()->asUnicodeString() );
 }
 
@@ -154,21 +154,21 @@ void SkeletonMessageJobTest::testAddresses()
 
   {
     QVERIFY( message->from( false ) );
-    kDebug() << "From:" << message->from()->asUnicodeString();
+    qDebug() << "From:" << message->from()->asUnicodeString();
     QCOMPARE( from, message->from()->asUnicodeString() );
   }
 
   {
     QVERIFY( message->replyTo( false ) );
-    kDebug() << "Reply-To:" << message->replyTo()->asUnicodeString();
+    qDebug() << "Reply-To:" << message->replyTo()->asUnicodeString();
     QCOMPARE( replyto, message->replyTo()->asUnicodeString() );
   }
 
   {
     QVERIFY( message->to( false ) );
-    kDebug() << "To:" << message->to()->asUnicodeString();
+    qDebug() << "To:" << message->to()->asUnicodeString();
     foreach( const QString &addr, message->to()->prettyAddresses() ) {
-      kDebug() << addr;
+      qDebug() << addr;
       QVERIFY( to.contains( addr ) );
       to.removeOne( addr );
     }
@@ -177,9 +177,9 @@ void SkeletonMessageJobTest::testAddresses()
 
   {
     QVERIFY( message->cc( false ) );
-    kDebug() << "Cc:" << message->cc()->asUnicodeString();
+    qDebug() << "Cc:" << message->cc()->asUnicodeString();
     foreach( const QString &addr, message->cc()->prettyAddresses() ) {
-      kDebug() << addr;
+      qDebug() << addr;
       QVERIFY( cc.contains( addr ) );
       cc.removeOne( addr );
     }
@@ -188,9 +188,9 @@ void SkeletonMessageJobTest::testAddresses()
 
   {
     QVERIFY( message->bcc( false ) );
-    kDebug() << "Bcc:" << message->bcc()->asUnicodeString();
+    qDebug() << "Bcc:" << message->bcc()->asUnicodeString();
     foreach( const QString &addr, message->bcc()->prettyAddresses() ) {
-      kDebug() << addr;
+      qDebug() << addr;
       QVERIFY( bcc.contains( addr ) );
       bcc.removeOne( addr );
     }

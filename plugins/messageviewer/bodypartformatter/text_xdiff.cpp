@@ -39,7 +39,7 @@
 #include <kstringhandler.h>
 #include <kglobalsettings.h>
 #include <kiconloader.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <kapplication.h>

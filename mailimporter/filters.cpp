@@ -35,7 +35,7 @@
 // KDE Includes
 #include <KUrl>
 #include <KLocalizedString>
-#include <KDebug>
+#include <QDebug>
 #include <KMessageBox>
 
 #include <QScopedPointer>

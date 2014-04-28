@@ -27,7 +27,7 @@
 #include <QTimer>
 #include <QPixmap>
 
-#include <KDebug>
+#include <QDebug>
 #include <KIconLoader>
 #include <KComponentData>
 
@@ -393,7 +393,7 @@ QString Task::setSessionTime( long minutes )
 void Task::changeTimes( long minutesSession, long minutes, timetrackerstorage* storage)
 {
     kDebug(5970) << "Entering function";
-    kDebug() << "Task's sessionStartTiMe is " << mSessionStartTiMe;
+    qDebug() << "Task's sessionStartTiMe is " << mSessionStartTiMe;
     if( minutesSession != 0 || minutes != 0)
     {
         mSessionTime += minutesSession;
@@ -496,7 +496,7 @@ KCalCore::Todo::Ptr Task::asTodo(const KCalCore::Todo::Ptr &todo) const
         QByteArray( "totalSessionTime" ), QString::number( mSessionTime) );
     todo->setCustomProperty( KGlobal::mainComponent().componentName().toUtf8(),
         QByteArray( "sessionStartTiMe" ), mSessionStartTiMe.toString() );
-    kDebug() << "mSessionStartTiMe=" << mSessionStartTiMe.toString() ;
+    qDebug() << "mSessionStartTiMe=" << mSessionStartTiMe.toString() ;
 
     if (getDesktopStr().isEmpty())
         todo->removeCustomProperty(KGlobal::mainComponent().componentName().toUtf8(), QByteArray("desktopList"));

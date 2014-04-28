@@ -16,7 +16,7 @@
 */
 
 #include "editorsieve_gui.h"
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kcmdlineargs.h>
 #include <kapplication.h>
 #include <QDebug>

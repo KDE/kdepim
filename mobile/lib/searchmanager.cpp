@@ -24,7 +24,7 @@
 #include <AkonadiCore/collectiondeletejob.h>
 #include <AkonadiCore/searchcreatejob.h>
 #include <klocale.h>
-#include <KDebug>
+#include <QDebug>
 #include <QtCore/QUuid>
 
 SearchManager::SearchManager( QObject *parent )
@@ -57,7 +57,7 @@ void SearchManager::stopSearch()
 void SearchManager::result( KJob *job )
 {
   if ( job->error() ) {
-    kWarning() << "Unable to create search collection:" << job->errorText();
+    qWarning() << "Unable to create search collection:" << job->errorText();
     return;
   }
 

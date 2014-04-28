@@ -28,7 +28,7 @@
 #include <calendarsupport/utils.h>
 #include <klocale.h>
 #include <ksystemtimezone.h>
-#include <KDebug>
+#include <QDebug>
 
 GroupwareUiDelegate::GroupwareUiDelegate()
 {
@@ -53,7 +53,7 @@ void GroupwareUiDelegate::requestIncidenceEditor( const Akonadi::Item &item )
 {
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
   if ( !incidence ) {
-    kWarning() << "Incidence is null, won't open the editor";
+    qWarning() << "Incidence is null, won't open the editor";
     return;
   }
 

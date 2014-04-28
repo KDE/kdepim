@@ -34,7 +34,7 @@
 #include <kaction.h>
 #include <klocalizedstring.h>
 
-#include <KDebug>
+#include <QDebug>
 #include <QMenu>
 
 class HtmlEditorPrivate
@@ -58,11 +58,11 @@ HtmlEditor::HtmlEditor() : QObject()
 
 HtmlEditor::~HtmlEditor()
 {
-    kDebug();
+    qDebug();
     if ( !instancePrivate.isDestroyed() ) {
 //QT5
         //delete mEditor;
-        kDebug() << "editor deleted";
+        qDebug() << "editor deleted";
     }
 }
 
@@ -71,7 +71,7 @@ KTextEditor::View* HtmlEditor::createView( QWidget* parent )
     KTextEditor::Document *document = mEditor->createDocument( parent );
     bool result = document->setHighlightingMode( QLatin1String("html") );
     if ( result ) {
-        kDebug() << "Syntax highlighting enabled";
+        qDebug() << "Syntax highlighting enabled";
     }
     KTextEditor::View *view = document->createView( parent );
     QMenu *menu = view->defaultContextMenu();

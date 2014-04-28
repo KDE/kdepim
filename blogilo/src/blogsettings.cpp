@@ -26,7 +26,7 @@
 #include "addeditblog.h"
 #include "dbman.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KMessageBox>
 #include <KIcon>
 #include <KLocalizedString>
@@ -109,7 +109,7 @@ void BlogSettings::removeBlog()
             emit blogRemoved( blog_id );
         } else {
             ///cannot remove
-            kError()<<"Cannot remove blog with id "<<blog_id;
+            qCritical()<<"Cannot remove blog with id "<<blog_id;
         }
     }
 }

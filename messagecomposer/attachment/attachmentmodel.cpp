@@ -24,7 +24,7 @@
 #include <QMimeData>
 #include <QUrl>
 
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 #include <KLocalizedString>
 #include <KLocale>
@@ -112,7 +112,7 @@ bool AttachmentModel::dropMimeData( const QMimeData *data, Qt::DropAction action
     Q_UNUSED( column );
     Q_UNUSED( parent );
 
-    kDebug() << "data has formats" << data->formats()
+    qDebug() << "data has formats" << data->formats()
              << "urls" << data->urls()
              << "action" << int( action );
 
@@ -144,13 +144,13 @@ bool AttachmentModel::dropMimeData( const QMimeData *data, Qt::DropAction action
 
 QMimeData *AttachmentModel::mimeData( const QModelIndexList &indexes ) const
 {
-    kDebug();
+    qDebug();
     QList<QUrl> urls;
     foreach( const QModelIndex &index, indexes ) {
         if( index.column() != 0 ) {
             // Avoid processing the same attachment more than once, since the entire
             // row is selected.
-            kWarning() << "column != 0. Possibly duplicate rows passed to mimeData().";
+            qWarning() << "column != 0. Possibly duplicate rows passed to mimeData().";
             continue;
         }
 
@@ -173,7 +173,7 @@ QMimeData *AttachmentModel::mimeData( const QModelIndexList &indexes ) const
         QUrl url;
         url.setScheme( QLatin1String( "file" ) );
         url.setPath( fileName );
-        kDebug() << url;
+        qDebug() << url;
         urls.append( url );
     }
 
@@ -304,7 +304,7 @@ QVariant AttachmentModel::data( const QModelIndex &index, int role ) const
         if( index.column() == 0 ) {
             return QVariant::fromValue( part );
         } else {
-            kWarning() << "AttachmentPartRole and column != 0.";
+            qWarning() << "AttachmentPartRole and column != 0.";
             return QVariant();
         }
     } else if ( role == NameRole ) {
@@ -380,7 +380,7 @@ bool AttachmentModel::updateAttachment( AttachmentPart::Ptr part )
 {
     int idx = d->parts.indexOf( part );
     if( idx == -1 ) {
-        kWarning() << "Tried to update non-existent part.";
+        qWarning() << "Tried to update non-existent part.";
         return false;
     }
     // Emit dataChanged() for the whole row.
@@ -394,7 +394,7 @@ bool AttachmentModel::replaceAttachment( AttachmentPart::Ptr oldPart, Attachment
 
     int idx = d->parts.indexOf( oldPart );
     if( idx == -1 ) {
-        kWarning() << "Tried to replace non-existent part.";
+        qWarning() << "Tried to replace non-existent part.";
         return false;
     }
     d->parts[ idx ] = newPart;
@@ -407,7 +407,7 @@ bool AttachmentModel::removeAttachment( AttachmentPart::Ptr part )
 {
     int idx = d->parts.indexOf( part );
     if( idx < 0 ) {
-        kWarning() << "Attachment not found.";
+        qWarning() << "Attachment not found.";
         return false;
     }
 
@@ -465,7 +465,7 @@ QVariant AttachmentModel::headerData( int section, Qt::Orientation orientation, 
     case AutoDisplayColumn:
         return i18nc( "@title column attachment inlined checkbox.", "Suggest Automatic Display" );
     default:
-        kWarning() << "Bad column" << section;
+        qWarning() << "Bad column" << section;
         return QVariant();
     };
 }
@@ -478,7 +478,7 @@ QModelIndex AttachmentModel::index( int row, int column, const QModelIndex &pare
     Q_ASSERT( row >= 0 && row < rowCount() );
 
     if( parent.isValid() ) {
-        kWarning() << "Called with weird parent.";
+        qWarning() << "Called with weird parent.";
         return QModelIndex();
     }
 

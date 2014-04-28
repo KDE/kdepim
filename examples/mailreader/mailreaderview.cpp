@@ -14,7 +14,7 @@
 #include <klocale.h>
 #include <QLabel>
 #include <QHBoxLayout>
-#include <KDebug>
+#include <QDebug>
 #include <KApplication>
 
 #include <AkonadiCore/item.h>
@@ -56,7 +56,7 @@ void mailreaderView::settingsChanged()
 
 void mailreaderView::showItem(const Akonadi::Item& item)
 {
-  kDebug() << "Show item with ID: " << item.id();
+  qDebug() << "Show item with ID: " << item.id();
   m_readerWin->enableMessageDisplay();
   m_readerWin->setDecryptMessageOverwrite( false );
   m_readerWin->setMessageItem(item, MessageViewer::Viewer::Force);
@@ -84,7 +84,7 @@ void mailreaderView::urlClicked( const Akonadi::Item & item , const KUrl& url )
 {
   Q_UNUSED( item );
   //TODO "Handle click"
-  kDebug() << url << " clicked in the mail viewer";
+  qDebug() << url << " clicked in the mail viewer";
 }
 
 void mailreaderView::slotConfigure()

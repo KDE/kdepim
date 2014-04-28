@@ -29,7 +29,7 @@
 #include <QString>
 #include <QSet>
 
-#include <KDebug>
+#include <QDebug>
 
 CollectionLoader::CollectionLoader(QObject *parent) :
     QObject(parent)
@@ -64,7 +64,7 @@ void CollectionLoader::onCollectionsLoaded(KJob *job)
         }
         emit loaded(true);
     } else {
-        kError() << job->errorString();
+        qCritical() << job->errorString();
         emit loaded(false);
     }
 }

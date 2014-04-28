@@ -30,7 +30,7 @@
 #include <TagFetchScope>
 #include <TagAttribute>
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QTimer>
 
@@ -165,7 +165,7 @@ void FilterManager::slotReadConfig()
 void FilterManager::slotFinishedTagListing(KJob *job)
 {
     if (job->error()) {
-        kWarning() << "failed to retrieve tags " << job->errorString();
+        qWarning() << "failed to retrieve tags " << job->errorString();
     }
     Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob*>(job);
     Q_FOREACH(const Akonadi::Tag &tag, fetchJob->tags() ) {

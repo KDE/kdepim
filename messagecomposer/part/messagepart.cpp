@@ -19,7 +19,7 @@
 
 #include "messagepart.h"
 
-#include <KDebug>
+#include <QDebug>
 
 using namespace MessageComposer;
 

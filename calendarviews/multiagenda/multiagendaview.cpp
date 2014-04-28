@@ -42,7 +42,7 @@ using namespace Future;
 #include <KLocalizedString>
 #include <KVBox>
 #include <KViewStateMaintainer>
-#include <KDebug>
+#include <QDebug>
 
 #include <QHBoxLayout>
 #include <QItemSelectionModel>
@@ -651,7 +651,7 @@ void MultiAgendaView::setupScrollBar()
 
 void MultiAgendaView::collectionSelectionChanged()
 {
-  kDebug();
+  qDebug();
   d->mPendingChanges = true;
   recreateViews();
 }
@@ -668,7 +668,7 @@ bool MultiAgendaView::hasConfigurationDialog() const
 void MultiAgendaView::doRestoreConfig( const KConfigGroup &configGroup )
 {
   if ( !calendar() ) {
-    kError() << "Calendar is not set.";
+    qCritical() << "Calendar is not set.";
     Q_ASSERT( false );
     return;
   }

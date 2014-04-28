@@ -15,10 +15,10 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kcmdlineargs.h>
 #include <kapplication.h>
-#include <KDebug>
+#include <QDebug>
 
 #include "../sendlaterdialog.h"
 

@@ -30,10 +30,10 @@
 
 #include <kascii.h>
 #include <KConfigGroup>
-#include <KDebug>
+#include <QDebug>
 #include <KUser>
 #include <KUrl>
-#include <KDebug>
+#include <QDebug>
 
 #include <QHostInfo>
 #include <QRegExp>
@@ -255,7 +255,7 @@ AddressList splitAddressField( const QByteArray &text )
     const char* const end = text.begin() + text.length();
 
     if ( !parseAddressList( begin, end, result ) )
-        kDebug() << "Error in address splitting: parseAddressList returned false!";
+        qDebug() << "Error in address splitting: parseAddressList returned false!";
 
     return result;
 }
@@ -487,14 +487,14 @@ QByteArray stripEmailAddr( const QByteArray& aStr )
         result += angleAddress;
     }
 
-    //kDebug() << "Returns \"" << result << "\"";
+    //qDebug() << "Returns \"" << result << "\"";
     return result;
 }
 
 #ifndef MESSAGECORE_NO_DEPRECATED
 QString stripEmailAddr( const QString& aStr )
 {
-    //kDebug() << "(" << aStr << ")";
+    //qDebug() << "(" << aStr << ")";
 
     if ( aStr.isEmpty() )
         return QString();
@@ -635,7 +635,7 @@ QString stripEmailAddr( const QString& aStr )
         result += angleAddress;
     }
 
-    //kDebug() << "Returns \"" << result << "\"";
+    //qDebug() << "Returns \"" << result << "\"";
     return result;
 }
 #endif
@@ -1069,7 +1069,7 @@ QString stripOffPrefixes( const QString &subject )
             return tmp.remove( 0, regExp.matchedLength() );
         }
     } else {
-        kWarning() << "bigRegExp = \""
+        qWarning() << "bigRegExp = \""
                    << bigRegExp << "\"\n"
                    << "prefix regexp is invalid!";
     }
@@ -1108,7 +1108,7 @@ KMime::Types::Mailbox mailboxFromUnicodeString( const QString &address )
     }
 
     if( mailboxes.size() > 1 ) {
-        kDebug()<<" mailboxes size > 1 ";
+        qDebug()<<" mailboxes size > 1 ";
     }
     return mailboxes.first();
 }
@@ -1130,7 +1130,7 @@ KMime::Types::Mailbox mailboxFrom7BitString( const QByteArray &address )
         return KMime::Types::Mailbox();
     }
     if( mailboxes.size() > 1 ) {
-        kDebug()<<" mailboxes size > 1 ";
+        qDebug()<<" mailboxes size > 1 ";
     }
     return mailboxes.first();
 }
