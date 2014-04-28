@@ -97,7 +97,7 @@ find_package(KF5KHtml ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Gpgmepp ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5QGpgme ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KontactInterface ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5KAlarmCal ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5AlarmCalendar ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Service ${KF5_VERSION} CONFIG REQUIRED)
 include(GenerateExportHeader)
 
