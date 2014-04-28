@@ -210,10 +210,9 @@ include (kleopatra/ConfigureChecks.cmake)
   add_subdirectory(mailcommon) 
   add_subdirectory(kmail)
   add_subdirectory(grantleeeditor)
-  #if(KDEPIM_BUILD_MOBILE)
-    #REACTIVATE
+  if(KDEPIM_BUILD_MOBILE)
     add_subdirectory(mobile)
-  #endif()
+  endif()
 
   if(KDEPIM_BUILD_EXAMPLES)
     add_subdirectory(examples)

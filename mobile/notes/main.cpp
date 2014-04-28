@@ -20,7 +20,7 @@
 */
 
 #include <kdeclarativeapplication.h>
-#include <kaboutdata.h>
+#include <k4aboutdata.h>
 #include <kcmdlineargs.h>
 
 #include "mainview.h"
@@ -36,7 +36,7 @@ int main( int argc, char **argv )
  const QByteArray& ba = QByteArray( "notes-mobile" );
   const KLocalizedString name = ki18n( "Kontact Touch Notes" );
 
-  KAboutData aboutData( ba, ba, name, ba, name );
+  K4AboutData aboutData( ba, ba, name, ba, name );
   aboutData.setProductName( "KJots Mobile" ); //has to match the bugzilla product name
 
   KCmdLineArgs::init( argc, argv, &aboutData );

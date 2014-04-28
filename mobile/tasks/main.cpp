@@ -20,12 +20,14 @@
 */
 
 #include <kdeclarativeapplication.h>
-#include <kaboutdata.h>
+#include <k4aboutdata.h>
 #include <kcmdlineargs.h>
 
 #include <incidenceeditor-ng/korganizereditorconfig.h>
 
 #include "mainview.h"
+
+#include <KGlobal>
 
 #ifdef KCALCORE_SERIALIZER_PLUGIN_STATIC
 #include <QtPlugin>
@@ -45,7 +47,7 @@ int main( int argc, char **argv )
 
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
 
-  KAboutData aboutData( ba, ba, name, ba, name );
+  K4AboutData aboutData( ba, ba, name, ba, name );
   aboutData.setProductName( "KOrganizer Mobile/tasks" ); //has to match the bugzilla product name
 
   KCmdLineArgs::init( argc, argv, &aboutData );

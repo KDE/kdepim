@@ -26,6 +26,8 @@
 #include <calendarsupport/utils.h>
 #include <kcalcore/todo.h>
 
+#include <KDebug>
+
 TaskThreadGrouperComparator::TaskThreadGrouperComparator()
 {
 }

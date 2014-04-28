@@ -146,7 +146,7 @@ void MainView::doDelayedInit()
   connect( actionCollection()->action( QLatin1String( "archive_old_entries" ) ),
            SIGNAL(triggered(bool)), SLOT(archiveOldEntries()) );
 
-  KAction *action = new KAction( i18n( "Configure Categories" ), this );
+  QAction *action = new QAction( i18n( "Configure Categories" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(configureCategories()) );
   actionCollection()->addAction( QLatin1String( "configure_categories" ), action );
 
