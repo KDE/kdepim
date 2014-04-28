@@ -198,6 +198,7 @@ private:
         }
 #endif // QT_NO_PROGRESSDIALOG
         ResultDialog * const dlg = new ResultDialog( created, errors );
+        dlg->setAttribute(Qt::WA_DeleteOnClose);
         q->bringToForeground( dlg );
         if ( !errors.empty() )
             q->setLastError( gpg_error( GPG_ERR_GENERAL ),
