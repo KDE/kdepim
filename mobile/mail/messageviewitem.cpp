@@ -35,7 +35,7 @@
 #include <messageviewer/viewer/viewer.h>
 #include <messageviewer/viewer/viewer_p.h>
 #include "attachmentproxymodel.h"
-#include <KAction>
+#include <QAction>
 
 using namespace MessageViewer;
 

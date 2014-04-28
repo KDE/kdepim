@@ -33,6 +33,7 @@
 #include <KIO/JobUiDelegate>
 #include <kio/job.h>
 #include <KMessageBox>
+#include <KDebug>
 
 //TODO: Review if it is needed in other place as well
 KUrl subjectToUrl( const QString &subject )

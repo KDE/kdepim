@@ -36,7 +36,7 @@
 
 #include <KABC/Addressee>
 
-#include <phonon/mediaobject.h>
+//QT5 #include <phonon/mediaobject.h>
 
 #include <QtCore/QBuffer>
 #include <QtCore/QSignalMapper>
@@ -135,7 +135,7 @@ class EditorMore::Private
     {
       if ( mContact.sound().data().isEmpty() )
         return;
-
+#if 0 //QT5
       Phonon::MediaObject* player = Phonon::createPlayer( Phonon::NotificationCategory );
       QBuffer* soundData = new QBuffer( player );
       soundData->setData( mContact.sound().data() );
@@ -143,6 +143,7 @@ class EditorMore::Private
       player->setParent( q );
       connect( player, SIGNAL(finished()), player, SLOT(deleteLater()) );
       player->play();
+#endif
     }
 
     void addCustomField()

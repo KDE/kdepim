@@ -22,8 +22,9 @@
 #include "mainview.h"
 #include "kmailmobileoptions.h"
 
-#include <kaboutdata.h>
+#include <k4aboutdata.h>
 #include <kdeclarativeapplication.h>
+#include <KGlobal>
 
 #include <QtCore/QDateTime>
 
@@ -75,7 +76,7 @@ int main( int argc, char **argv )
 
   const QByteArray& ba = QByteArray( "kmail-mobile" );
   const KLocalizedString name = ki18n( "Kontact Touch Mail" );
-  KAboutData aboutData( ba, ba, name, ba, name );
+  K4AboutData aboutData( ba, ba, name, ba, name );
   aboutData.setProductName( "KMail Mobile" ); //has to match the bugzilla product name
 
   KCmdLineArgs::init( argc, argv, &aboutData );

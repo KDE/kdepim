@@ -26,7 +26,7 @@
 
 #include <KLocale>
 #include <KIcon>
-#include <KAction>
+#include <QAction>
 
 #include <AkonadiCore/entitytreemodel.h>
 #include <KMime/KMimeMessage>
@@ -37,7 +37,7 @@ MailActionManager::MailActionManager( KActionCollection *actionCollection, QObje
     m_itemSelectionModel( 0 ),
     m_itemActionSelectionModel( 0 )
 {
-  KAction *action;
+  QAction *action;
   action = actionCollection->addAction( QLatin1String("mark_message_important") );
   action->setText( i18n( "Important" ) );
   action->setIcon( KIcon( QLatin1String("emblem-important") ) );

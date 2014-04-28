@@ -29,7 +29,7 @@
 #include <AkonadiCore/collection.h>
 #include <akonadi/collectionview.h>
 #include <AkonadiCore/collectionfilterproxymodel.h>
-#include <akonadi/collectionmodel.h>
+#include <AkonadiCore/collectionmodel.h>
 #include "calendarsupport/kcalmodel.h"
 #include "calendarsupport/next/incidenceviewer.h"
 

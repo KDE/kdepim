@@ -508,31 +508,31 @@ void MainView::doDelayedInit()
 
   connect( itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()) );
 
-  KAction *action = new KAction( i18n( "New Email" ), this );
+  QAction *action = new QAction( i18n( "New Email" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(startComposer()) );
   actionCollection()->addAction( QLatin1String("add_new_mail"), action );
 
-  action = new KAction( i18n( "Import Emails" ), this );
+  action = new QAction( i18n( "Import Emails" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(importItems()) );
   actionCollection()->addAction( QLatin1String( "import_emails" ), action );
 
-  action = new KAction( i18n( "Export Emails From This Account" ), this );
+  action = new QAction( i18n( "Export Emails From This Account" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(exportItems()) );
   actionCollection()->addAction( QLatin1String( "export_account_emails" ), action );
 
-  action = new KAction( i18n( "Export Displayed Emails" ), this );
+  action = new QAction( i18n( "Export Displayed Emails" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(exportItems()) );
   actionCollection()->addAction( QLatin1String( "export_selected_emails" ), action );
 
-  action = new KAction( i18n( "Show Source" ), this );
+  action = new QAction( i18n( "Show Source" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(showMessageSource()) );
   actionCollection()->addAction( QLatin1String( "show_message_source" ), action );
 
-  action = new KAction( i18n( "Email Encoding" ), this );
+  action = new QAction( i18n( "Email Encoding" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(selectOverrideEncoding()) );
   actionCollection()->addAction( QLatin1String( "change_message_encoding" ), action );
 
-  action = new KAction( i18n( "Show All Recipients" ), this );
+  action = new QAction( i18n( "Show All Recipients" ), this );
   action->setCheckable( true );
   connect( action, SIGNAL(triggered(bool)), SLOT(toggleShowExtendedHeaders(bool)) );
   actionCollection()->addAction( QLatin1String( "show_extended_headers" ), action );
@@ -1108,7 +1108,7 @@ void MainView::configureIdentity()
   KCMultiDialog dlg;
   dlg.addModule( QLatin1String("kcm_kpimidentities") );
   dlg.currentPage()->setHeader( QLatin1String( "" ) ); // hide header to save space
-  dlg.setButtons( KDialog::Ok | KDialog::Cancel );
+  //QT5 dlg.setButtons( KDialog::Ok | KDialog::Cancel );
   dlg.exec();
 }
 
@@ -1241,14 +1241,14 @@ bool MainView::folderIsDrafts( const Collection &collection )
   const QString idString = QString::number( collection.id() );
   if ( idString.isEmpty() )
     return false;
-
+#if 0 //QT5
   // search the identities if the folder matches the drafts-folder
   const KPIMIdentities::IdentityManager *im = MobileKernel::self()->identityManager();
   for ( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it ) {
     if ( (*it).drafts() == idString )
       return true;
   }
-
+#endif
   return false;
 }
 
@@ -1264,14 +1264,14 @@ bool MainView::folderIsTemplates( const Collection &collection )
   const QString idString = QString::number( collection.id() );
   if ( idString.isEmpty() )
     return false;
-
+#if 0 //QT5
   // search the identities if the folder matches the drafts-folder
   const KPIMIdentities::IdentityManager *im = MobileKernel::self()->identityManager();
   for ( KPIMIdentities::IdentityManager::ConstIterator it = im->begin(); it != im->end(); ++it ) {
     if ( (*it).templates() == idString )
       return true;
   }
-
+#endif
   return false;
 }
 

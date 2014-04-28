@@ -65,7 +65,7 @@ option(KDEPIM_BUILD_DESKTOP "Build Desktop Applications. Can be deactivated for 
 option(KDEPIM_NO_WEBKIT "Do not use WebKit in the kdepim applications" FALSE)
 
 
-find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql Concurrent UiTools)
+find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql Concurrent UiTools Declarative)
 #Need to use volatile_qt5_port branch from grantlee
 find_package(Grantlee "1.0" CONFIG REQUIRED)
 
@@ -210,10 +210,10 @@ include (kleopatra/ConfigureChecks.cmake)
   add_subdirectory(mailcommon) 
   add_subdirectory(kmail)
   add_subdirectory(grantleeeditor)
-  if(KDEPIM_BUILD_MOBILE)
+  #if(KDEPIM_BUILD_MOBILE)
     #REACTIVATE
-    # add_subdirectory(mobile)
-  endif()
+    add_subdirectory(mobile)
+  #endif()
 
   if(KDEPIM_BUILD_EXAMPLES)
     add_subdirectory(examples)

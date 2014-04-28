@@ -29,7 +29,7 @@ namespace KSieveUi {
 class Vacation;
 }
 
-class KAction;
+class QAction;
 class KActionCollection;
 
 /**
@@ -84,7 +84,7 @@ class VacationManager : public QObject
     QPointer<KSieveUi::Vacation> mVacation;
     QObject *mKernel;
     bool mVacationScriptIsActive;
-    KAction *mEditAction;
+    QAction *mEditAction;
 };
 
 #endif
