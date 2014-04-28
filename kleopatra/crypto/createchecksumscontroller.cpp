@@ -45,6 +45,8 @@
 #include <KLocalizedString>
 #include <kdebug.h>
 #include <KSaveFile>
+#include <KConfigGroup>
+#include <KSharedConfig>
 
 #include <QDialog>
 #include <QDialogButtonBox>
@@ -119,6 +121,26 @@ namespace {
 
             connect( &buttonBox, SIGNAL(accepted()), this, SLOT(accept()) );
             connect( &buttonBox, SIGNAL(rejected()), this, SLOT(reject()) );
+            readConfig();
+        }
+        ~ResultDialog()
+        {
+            writeConfig();
+        }
+
+        void readConfig()
+        {
+            KConfigGroup dialog( KGlobal::config(), "ResultDialog" );
+            const QSize size = dialog.readEntry( "Size", QSize(600, 400) );
+            if ( size.isValid() ) {
+                resize( size );
+            }
+        }
+        void writeConfig()
+        {
+            KConfigGroup dialog( KGlobal::config(), "ResultDialog" );
+            dialog.writeEntry( "Size",size() );
+            dialog.sync();
         }
 
     private:
