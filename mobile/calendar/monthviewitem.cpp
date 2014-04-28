@@ -24,6 +24,7 @@
 #include <calendarviews/month/monthview.h>
 
 #include <KGlobal>
+#include <KDebug>
 #include <KGlobalSettings>
 
 using namespace EventViews;

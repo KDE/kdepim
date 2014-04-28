@@ -31,6 +31,10 @@
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
 
+#include <KLocalizedString>
+#include <KDebug>
+#include <KIconLoader>
+
 #include <QCompleter>
 #include <QSortFilterProxyModel>
 

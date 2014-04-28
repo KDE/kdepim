@@ -26,6 +26,8 @@
 #include <KABC/Addressee>
 #include <KABC/PhoneNumber>
 
+#include <KIconLoader>
+
 class PhoneWidgets
 {
   public:

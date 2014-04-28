@@ -29,6 +29,7 @@
 
 #include <KABC/ContactGroup>
 #include <KLocalizedString>
+#include <KDebug>
 
 #include <QDeclarativeItem>
 

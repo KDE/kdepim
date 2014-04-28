@@ -25,6 +25,7 @@
 #include <calendarviews/agenda/agendaview.h>
 #include <Akonadi/Calendar/ETMCalendar>
 #include <KLocale>
+#include <KDebug>
 
 using namespace EventViews;
 

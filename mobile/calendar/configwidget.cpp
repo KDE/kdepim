@@ -28,6 +28,8 @@
 #include <kholidays/holidays.h>
 #include <qplatformdefs.h>
 
+#include <KGlobal>
+
 using namespace CalendarSupport;
 
 ConfigWidget::ConfigWidget( QWidget *parent )

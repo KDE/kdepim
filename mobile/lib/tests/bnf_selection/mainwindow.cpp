@@ -3,6 +3,14 @@
 
 #include "breadcrumbnavigationcontext.h"
 #include <QItemSelectionModel>
+#include <QListView>
+#include <QStandardItemModel>
+#include <QHBoxLayout>
+#include <QTreeView>
+#include <QListView>
+#include <QVBoxLayout>
+#include <QTimer>
+
 MainWindow::MainWindow(QWidget *parent)
   : QWidget(parent)
 {

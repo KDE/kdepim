@@ -22,6 +22,7 @@
 
 #include <KGlobal>
 #include <KGlobalSettings>
+#include <KDebug>
 
 #include <Akonadi/Calendar/ETMCalendar>
 #include <calendarviews/timeline/timelineview.h>

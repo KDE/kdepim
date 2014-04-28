@@ -18,9 +18,9 @@
 */
 
 #include <kdeclarativeapplication.h>
-#include <kaboutdata.h>
+#include <k4aboutdata.h>
 #include <kcmdlineargs.h>
-
+#include <KGlobal>
 #include <incidenceeditor-ng/korganizereditorconfig.h>
 
 #include "mainview.h"
@@ -39,7 +39,7 @@ int main( int argc, char **argv )
 
   IncidenceEditorNG::EditorConfig::setEditorConfig( new IncidenceEditorNG::KOrganizerEditorConfig ); //FIXME: use our own config for contacts
 
-  KAboutData aboutData( ba, ba, name, ba, name );
+  K4AboutData aboutData( ba, ba, name, ba, name );
   aboutData.setProductName( "KAddressbook Mobile" ); //has to match the bugzilla product name
 
   KCmdLineArgs::init( argc, argv, &aboutData );

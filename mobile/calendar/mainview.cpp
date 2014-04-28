@@ -47,7 +47,7 @@
 #include <Akonadi/Calendar/ITIPHandler>
 #include <akonadi/calendar/freebusymanager.h>
 #include <akonadi/calendar/calendarsettings.h>
-#include <akonadi/collectionmodel.h>
+#include <AkonadiCore/collectionmodel.h>
 #include <AkonadiWidgets/collectionpropertiesdialog.h>
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/itemfetchjob.h>
@@ -81,6 +81,8 @@
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
 #include <QGraphicsItem>
+
+#include <KDebug>
 
 Q_DECLARE_METATYPE(KCalCore::iTIPMethod)
 

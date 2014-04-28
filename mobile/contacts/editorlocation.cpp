@@ -25,6 +25,9 @@
 #include <KABC/Addressee>
 #include <KMessageBox>
 
+#include <KLocalizedString>
+#include <KDialog>
+
 #include <QCheckBox>
 #include <QDataWidgetMapper>
 #include <QGroupBox>
@@ -35,7 +38,7 @@ class AddressTypeDialog : public KDialog
     AddressTypeDialog( QWidget *parent = 0 )
       : KDialog( parent)
     {
-      setCaption( i18nc( "street/postal", "New Address" ) );
+      //QT5 setCaption( i18nc( "street/postal", "New Address" ) );
 
       QWidget *page = new QWidget(this);
       setMainWidget( page );
