@@ -23,7 +23,7 @@
 #define KJOTS_LOCK_ATTRIBUTE_H
 
 #include "noteshared_export.h"
-#include <Akonadi/Attribute>
+#include <AkonadiCore/Attribute>
 namespace NoteShared {
 class NOTESHARED_EXPORT NoteLockAttribute : public Akonadi::Attribute
 {
