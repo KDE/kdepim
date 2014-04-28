@@ -26,7 +26,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 
-#include <akonadi/contact/contacteditor.h>
+#include <Akonadi/contact/contacteditor.h>
 #include <AkonadiCore/item.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>

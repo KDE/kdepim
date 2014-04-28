@@ -21,7 +21,7 @@
 #include <Collection>
 #include "widgets/selectedcollectiondialog.h"
 
-#include <akonadi/contact/contactsearchjob.h>
+#include <Akonadi/contact/contactsearchjob.h>
 #include <item.h>
 #include <itemcreatejob.h>
 #include <KABC/addressee.h>

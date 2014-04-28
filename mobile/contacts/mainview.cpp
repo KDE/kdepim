@@ -35,9 +35,9 @@
 
 #include <AkonadiWidgets/agentactionmanager.h>
 #include <AkonadiWidgets/collectiondialog.h>
-#include <akonadi/contact/contactgroupexpandjob.h>
-#include <akonadi/contact/contactsfilterproxymodel.h>
-#include <akonadi/contact/standardcontactactionmanager.h>
+#include <Akonadi/contact/contactgroupexpandjob.h>
+#include <Akonadi/contact/contactsfilterproxymodel.h>
+#include <Akonadi/contact/standardcontactactionmanager.h>
 #include <AkonadiCore/itemcreatejob.h>
 #include <AkonadiCore/itemfetchscope.h>
 #include <calendarsupport/categoryconfig.h>

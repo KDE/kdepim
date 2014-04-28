@@ -45,10 +45,10 @@
 #include <calendarsupport/kcalprefs.h>
 
 #include <AkonadiWidgets/agentactionmanager.h>
-#include <akonadi/calendar/standardcalendaractionmanager.h>
+#include <Akonadi/calendar/standardcalendaractionmanager.h>
 #include <Akonadi/Calendar/IncidenceChanger>
-#include <akonadi/calendar/freebusymanager.h>
-#include <akonadi/calendar/calendarsettings.h>
+#include <Akonadi/calendar/freebusymanager.h>
+#include <Akonadi/calendar/calendarsettings.h>
 
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/itemmodifyjob.h>

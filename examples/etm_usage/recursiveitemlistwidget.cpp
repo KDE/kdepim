@@ -30,7 +30,7 @@
 #include <AkonadiCore/entitymimetypefiltermodel.h>
 #include <AkonadiCore/changerecorder.h>
 
-#include <akonadi/contact/contactstreemodel.h>
+#include <Akonadi/contact/contactstreemodel.h>
 #include <AkonadiWidgets/entitylistview.h>
 #include <AkonadiWidgets/entitytreeview.h>
 #include <KABC/Addressee>

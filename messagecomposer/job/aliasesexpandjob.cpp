@@ -23,9 +23,9 @@
 #include "aliasesexpandjob.h"
 #include "aliasesexpandjob_p.h"
 
-#include <akonadi/contact/contactgroupexpandjob.h>
-#include <akonadi/contact/contactgroupsearchjob.h>
-#include <akonadi/contact/contactsearchjob.h>
+#include <Akonadi/contact/contactgroupexpandjob.h>
+#include <Akonadi/contact/contactgroupsearchjob.h>
+#include <Akonadi/contact/contactsearchjob.h>
 
 #include <KPIMUtils/Email>
 

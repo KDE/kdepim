@@ -18,7 +18,7 @@
 
 #include "emailaddressrequester.h"
 
-#include <akonadi/contact/emailaddressselectiondialog.h>
+#include <Akonadi/contact/emailaddressselectiondialog.h>
 #include <kiconloader.h>
 #include <klineedit.h>
 #include <klocale.h>

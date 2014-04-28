@@ -31,8 +31,8 @@
 #include <EntityTreeModel>
 #include <Item>
 #include <Akonadi/Calendar/ETMCalendar>
-#include <akonadi/calendar/publishdialog.h>
-#include <akonadi/calendar/calendarsettings.h>
+#include <Akonadi/calendar/publishdialog.h>
+#include <Akonadi/calendar/calendarsettings.h>
 
 #include <KHolidays/Holidays>
 

@@ -22,8 +22,8 @@
 #include "job/addemailaddressjob.h"
 
 #include <collectiondialog.h>
-#include <akonadi/contact/contacteditordialog.h>
-#include <akonadi/contact/contactsearchjob.h>
+#include <Akonadi/contact/contacteditordialog.h>
+#include <Akonadi/contact/contactsearchjob.h>
 #include <item.h>
 #include <itemcreatejob.h>
 #include <KABC/addressee.h>

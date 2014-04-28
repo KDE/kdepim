@@ -42,11 +42,11 @@
 #include "qmldateedit.h"
 
 #include <AkonadiWidgets/agentactionmanager.h>
-#include <akonadi/calendar/standardcalendaractionmanager.h>
+#include <Akonadi/calendar/standardcalendaractionmanager.h>
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <Akonadi/Calendar/ITIPHandler>
-#include <akonadi/calendar/freebusymanager.h>
-#include <akonadi/calendar/calendarsettings.h>
+#include <Akonadi/calendar/freebusymanager.h>
+#include <Akonadi/calendar/calendarsettings.h>
 #include <AkonadiCore/collectionmodel.h>
 #include <AkonadiWidgets/collectionpropertiesdialog.h>
 #include <AkonadiCore/entitytreemodel.h>

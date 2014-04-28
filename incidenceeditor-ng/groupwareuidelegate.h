@@ -18,7 +18,7 @@
 
 #include "incidenceeditors-ng_export.h"
 
-#include <akonadi/calendar/itiphandler.h>
+#include <Akonadi/calendar/itiphandler.h>
 
 // Class to edit counter proposals through incidence editors
 namespace IncidenceEditorNG {
