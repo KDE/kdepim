@@ -23,7 +23,7 @@
 #include <MailTransport/transportmanager.h>
 
 #include <KLocale>
-#include <KDebug>
+#include <QDebug>
 #include <KSharedConfig>
 
 #include <AkonadiCore/agenttype.h>

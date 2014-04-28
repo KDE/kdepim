@@ -21,7 +21,7 @@
 #include <KABC/Addressee>
 #include <KABC/contactgroup.h>
 #include <KLocale>
-#include <KDebug>
+#include <QDebug>
 #include <AkonadiCore/ItemCreateJob>
 #include <AkonadiCore/Item>
 #include <AkonadiWidgets/CollectionDialog>
@@ -97,7 +97,7 @@ void AbstractAddressBook::createContact( const KABC::Addressee& address )
 void AbstractAddressBook::slotStoreDone(KJob*job)
 {
     if ( job->error() ) {
-        kDebug()<<" job->errorString() : "<<job->errorString();
+        qDebug()<<" job->errorString() : "<<job->errorString();
         addAddressBookImportError( i18n( "Error during contact creation: %1", job->errorString() ) );
         return;
     }

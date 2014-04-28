@@ -20,7 +20,7 @@
 #include <KABC/Addressee>
 #include <KABC/contactgroup.h>
 
-#include <KDebug>
+#include <QDebug>
 #include <QFile>
 
 OperaAddressBook::OperaAddressBook(const QString &filename, ImportWizard *parent)
@@ -28,7 +28,7 @@ OperaAddressBook::OperaAddressBook(const QString &filename, ImportWizard *parent
 {
     QFile file(filename);
     if ( !file.open( QIODevice::ReadOnly ) ) {
-        kDebug()<<" We can't open file"<<filename;
+        qDebug()<<" We can't open file"<<filename;
         return;
     }
 

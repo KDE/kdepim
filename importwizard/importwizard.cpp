@@ -44,7 +44,7 @@
 #include <kaboutapplicationdialog.h>
 #include <kglobal.h>
 #include <klocale.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KMessageBox>
 #include <KHelpMenu>
 #include <KMenu>

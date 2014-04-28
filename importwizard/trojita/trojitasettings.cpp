@@ -23,7 +23,7 @@
 #include <KPIMIdentities/identity.h>
 #include <KPIMIdentities/signature.h>
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QSettings>
 
@@ -172,7 +172,7 @@ void TrojitaSettings::readIdentity()
             signature.setText( signatureStr );
             identity->setSignature( signature );
         }
-        kDebug()<<" realName :"<<realName<<" address : "<<address<<" organisation : "<<organisation<<" signature: "<<signatureStr;
+        qDebug()<<" realName :"<<realName<<" address : "<<address<<" organisation : "<<organisation<<" signature: "<<signatureStr;
         storeIdentity(identity);
     }
     settings->endArray();

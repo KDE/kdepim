@@ -19,7 +19,7 @@
 #include <KABC/Addressee>
 #include <KABC/contactgroup.h>
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
 
 #include <QDir>
@@ -47,9 +47,9 @@ SylpheedAddressBook::~SylpheedAddressBook()
 void SylpheedAddressBook::readAddressBook( const QString& filename )
 {
     QFile file(filename);
-    //kDebug()<<" import filename :"<<filename;
+    //qDebug()<<" import filename :"<<filename;
     if ( !file.open( QIODevice::ReadOnly ) ) {
-        kDebug()<<" We can't open file"<<filename;
+        qDebug()<<" We can't open file"<<filename;
         return;
     }
     QString errorMsg;
@@ -57,14 +57,14 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
     int errorCol;
     QDomDocument doc;
     if ( !doc.setContent( &file, &errorMsg, &errorRow, &errorCol ) ) {
-        kDebug() << "Unable to load document.Parse error in line " << errorRow
+        qDebug() << "Unable to load document.Parse error in line " << errorRow
                  << ", col " << errorCol << ": " << errorMsg;
         return;
     }
     QDomElement domElement = doc.documentElement();
 
     if ( domElement.isNull() ) {
-        kDebug() << "addressbook not found";
+        qDebug() << "addressbook not found";
         return;
     }
 
@@ -117,7 +117,7 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
                                 uidAddress<<addresslist.attribute(QLatin1String("uid"));
                             }
                         } else {
-                            kDebug()<<" tagAddressList unknown :"<<tagAddressList;
+                            qDebug()<<" tagAddressList unknown :"<<tagAddressList;
                         }
                     }
                     if ( !emails.isEmpty() ) {
@@ -134,18 +134,18 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
                                 contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), name, value );
                             }
                         } else {
-                            kDebug()<<"tagAttributeList not implemented "<<tagAttributeList;
+                            qDebug()<<"tagAttributeList not implemented "<<tagAttributeList;
                         }
                     }
 
                 } else {
-                    kDebug()<<" addressTag unknown :"<<addressTag;
+                    qDebug()<<" addressTag unknown :"<<addressTag;
                 }
             }
             if (!mAddressBookUid.contains(uidPerson)) {
                 mAddressBookUid.insert(uidPerson,uidAddress);
             } else {
-                kDebug()<<" problem uidPerson already stored"<<uidPerson;
+                qDebug()<<" problem uidPerson already stored"<<uidPerson;
             }
             addImportNote(contact, QLatin1String("Sylpheed"));
             createContact( contact );
@@ -182,7 +182,7 @@ void SylpheedAddressBook::readAddressBook( const QString& filename )
             }
             createGroup(group);
         } else {
-            kDebug()<<" SylpheedAddressBook::readAddressBook  tag unknown :"<<tag;
+            qDebug()<<" SylpheedAddressBook::readAddressBook  tag unknown :"<<tag;
         }
     }
 }

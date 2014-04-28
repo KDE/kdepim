@@ -19,7 +19,7 @@
 #include <KABC/Addressee>
 #include <KABC/contactgroup.h>
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QSettings>
 

@@ -18,7 +18,7 @@
 #include "abstractbase.h"
 #include "pimcommon/util/createresource.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KSharedConfig>
 
 #include <AkonadiCore/agenttype.h>

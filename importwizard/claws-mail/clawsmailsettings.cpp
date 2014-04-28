@@ -24,7 +24,7 @@
 #include <KPIMIdentities/identity.h>
 #include <KPIMIdentities/signature.h>
 
-#include <KDebug>
+#include <QDebug>
 #include <KConfig>
 #include <KConfigGroup>
 #include <QFile>
@@ -68,7 +68,7 @@ void ClawsMailSettings::importSettings(const QString& filename, const QString& p
     QFile customHeaderFile(customheaderrc);
     if (customHeaderFile.exists()) {
         if ( !customHeaderFile.open( QIODevice::ReadOnly ) ) {
-            kDebug()<<" We can't open file"<<customheaderrc;
+            qDebug()<<" We can't open file"<<customheaderrc;
         } else {
             readCustomHeader(&customHeaderFile);
         }
