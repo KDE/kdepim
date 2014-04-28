@@ -25,7 +25,7 @@
 #include <QClipboard>
 #include <QContextMenuEvent>
 #include <QMenu>
-
+#include <QMimeData>
 #include <KActionCollection>
 #include <KXMLGUIClient>
 #include <KColorDialog>

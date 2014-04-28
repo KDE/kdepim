@@ -58,8 +58,8 @@ KJotsMain::KJotsMain()
     component = new KJotsWidget(this, this );
 
     setCentralWidget(component);
-    statusBar()->insertItem(QString(), 0, 1);
-    statusBar()->setItemAlignment(0, Qt::AlignLeft | Qt::AlignVCenter);
+    //QT5 statusBar()->insertItem(QString(), 0, 1);
+    //QT5 statusBar()->setItemAlignment(0, Qt::AlignLeft | Qt::AlignVCenter);
 
     connect(component, SIGNAL(activeAnchorChanged(QString,QString)),
             SLOT(activeAnchorChanged(QString,QString)));
@@ -81,9 +81,9 @@ void KJotsMain::activeAnchorChanged(const QString &anchorTarget, const QString &
 {
     if (!anchorTarget.isEmpty())
     {
-        statusBar()->changeItem(anchorText + QLatin1String(" -> ") + anchorTarget, 0);
+        //QT5 statusBar()->changeItem(anchorText + QLatin1String(" -> ") + anchorTarget, 0);
     } else {
-        statusBar()->changeItem(QString(), 0);
+        //QT5 statusBar()->changeItem(QString(), 0);
     }
 }
 

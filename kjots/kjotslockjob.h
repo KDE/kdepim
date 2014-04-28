@@ -22,7 +22,7 @@
 #ifndef KJOTS_LOCK_JOB_H
 #define KJOTS_LOCK_JOB_H
 
-#include <Akonadi/Job>
+#include <AkonadiCore/Job>
 #include <AkonadiCore/Collection>
 #include <AkonadiCore/Item>
 

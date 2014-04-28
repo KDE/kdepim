@@ -138,7 +138,7 @@ install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/kjots PATTERN *.svn EXC
 
   add_library(kcm_kjots MODULE ${kcm_kjots_PART_SRCS})
 
-  target_link_libraries(kcm_kjots   KF5::KCMUtils)
+  target_link_libraries(kcm_kjots   KF5::KCMUtils KF5::KDELibs4Support)
 
   install(TARGETS kcm_kjots DESTINATION ${PLUGIN_INSTALL_DIR})
 

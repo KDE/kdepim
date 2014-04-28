@@ -30,6 +30,7 @@
 #include <QItemSelection>
 #include <QAbstractItemDelegate>
 #include <AkonadiCore/item.h>
+#include <QPrinter>
 
 #include <grantlee/templateloader.h>
 

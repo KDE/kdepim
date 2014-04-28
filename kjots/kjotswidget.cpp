@@ -44,7 +44,7 @@
 // Akonadi
 #include <AkonadiCore/control.h>
 #include <AkonadiCore/collectiondeletejob.h>
-#include <akonadi/collectioncreatejob.h>
+#include <AkonadiCore/collectioncreatejob.h>
 #include <AkonadiCore/changerecorder.h>
 #include <AkonadiCore/entitydisplayattribute.h>
 #include <AkonadiWidgets/entitytreeview.h>
@@ -55,7 +55,7 @@
 #include <AkonadiCore/itemfetchjob.h>
 #include <AkonadiCore/itemfetchscope.h>
 
-#include "akonadi/entityorderproxymodel.h"
+#include "AkonadiCore/entityorderproxymodel.h"
 #include "akonadi_next/note.h"
 #include "akonadi_next/notecreatorandselector.h"
 
@@ -80,6 +80,7 @@
 #include <KXMLGUIClient>
 #include <KProcess>
 #include <KPrintPreview>
+#include <KGlobal>
 
 // KMime
 #include <KMime/KMimeMessage>
