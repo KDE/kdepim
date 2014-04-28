@@ -220,7 +220,7 @@ target_link_libraries(pimcommon
     KF5::Wallet
     kdepim
     #KF5::KLdap
-    KF5::KImap
+    KF5::Imap
     KF5::AkonadiWidgets
     KF5::Archive
 )
