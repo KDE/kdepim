@@ -19,7 +19,7 @@
 
 #include "contactviewitem.h"
 
-#include <Akonadi/contact/contactdefaultactions.h>
+#include <Akonadi/Contact/contactdefaultactions.h>
 #include <AkonadiCore/item.h>
 
 using namespace Akonadi;

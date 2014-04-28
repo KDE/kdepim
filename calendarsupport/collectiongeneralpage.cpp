@@ -22,7 +22,7 @@
 
 #include <Collection>
 #include <EntityDisplayAttribute>
-#include <Akonadi/calendar/blockalarmsattribute.h>
+#include <Akonadi/Calendar/blockalarmsattribute.h>
 
 #include <KCalCore/Event>
 #include <KCalCore/Journal>

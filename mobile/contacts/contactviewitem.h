@@ -22,7 +22,7 @@
 
 #include "declarativeakonadiitem.h"
 
-#include <Akonadi/contact/contactviewer.h>
+#include <Akonadi/Contact/contactviewer.h>
 
 namespace Akonadi {
 

@@ -52,7 +52,7 @@
 #include <gpgme++/keylistresult.h>
 
 #include <AkonadiWidgets/collectiondialog.h>
-#include <Akonadi/contact/contactsearchjob.h>
+#include <Akonadi/Contact/contactsearchjob.h>
 #include <AkonadiCore/itemcreatejob.h>
 #include <AkonadiCore/itemmodifyjob.h>
 #include <klocale.h>

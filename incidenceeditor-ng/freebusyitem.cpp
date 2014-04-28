@@ -22,7 +22,7 @@
 
 #include "freebusyitem.h"
 
-#include <Akonadi/calendar/freebusymanager.h>
+#include <Akonadi/Calendar/freebusymanager.h>
 
 using namespace IncidenceEditorNG;
 
