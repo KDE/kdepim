@@ -117,7 +117,7 @@ target_link_libraries(kaddressbookprivate
   KF5::AkonadiCore
   KF5::Abc
   KF5::AkonadiContact
-  KF5::KLdap
+  KF5::Ldap
   KF5::KCMUtils
   KF5::KontactInterface
   grantleetheme

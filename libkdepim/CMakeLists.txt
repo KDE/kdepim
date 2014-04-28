@@ -7,7 +7,7 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 find_package(KF5KCMUtils ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)
-#find_package(KF5KLdap ${KF5_VERSION} CONFIG REQUIRED)
+#find_package(KF5Ldap ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Abc ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5PimUtils ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5AkonadiContact ${KF5_VERSION} CONFIG REQUIRED)
@@ -103,7 +103,7 @@ add_library(kdepim ${LIBRARY_TYPE} ${kdepim_LIB_SRCS})
 target_link_libraries(kdepim
   KF5::Abc
   KF5::PimUtils
-  KF5::KLdap
+  KF5::Ldap
   KF5::PimIdentities
   KF5::KCMUtils
   ${KDE4_SOLID_LIBS}
@@ -124,7 +124,7 @@ target_link_libraries(kdepim
 target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
   KF5::Abc
   KF5::PimUtils
-  KF5::KLdap
+  KF5::Ldap
   KF5::PimIdentities
   KF5::PimTextEdit
   KF5::AkonadiCore

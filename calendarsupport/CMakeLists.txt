@@ -74,7 +74,7 @@ target_link_libraries(
   KF5::MailTransport
   KF5::AkonadiCalendar
   KF5::KIOCore
-  #KF5::KLdap
+  #KF5::Ldap
 )
 
 set_target_properties(calendarsupport
