@@ -46,8 +46,6 @@ class EntityTreeView;
 class Job;
 class StandardActionManager;
 class Monitor;
-}
-namespace KPIM {
 class StatisticsProxyModel;
 }
 
@@ -82,7 +80,7 @@ class BrowserWidget: public QWidget
     Akonadi::ChangeRecorder *mBrowserMonitor;
     AkonadiBrowserModel *mBrowserModel;
     Akonadi::EntityTreeView *mCollectionView;
-    KPIM::StatisticsProxyModel *statisticsProxyModel;
+    Akonadi::StatisticsProxyModel *statisticsProxyModel;
     Ui::ItemViewWidget itemUi;
     Ui::ContentViewWidget contentUi;
     Akonadi::Item mCurrentItem;

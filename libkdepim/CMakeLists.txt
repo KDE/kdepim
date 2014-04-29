@@ -68,7 +68,6 @@ set(kdepim_misc_LIB_SRCS
    misc/broadcaststatus.cpp
    misc/maillistdrag.cpp
    misc/uistatesaver.cpp
-   misc/statisticsproxymodel.cpp
 )
 
 set(kdepim_addressline_LIB_SRCS

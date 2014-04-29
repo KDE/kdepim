@@ -28,7 +28,7 @@
 
 #include <akonadi_next/quotacolorproxymodel.h>
 
-#include <libkdepim/misc/statisticsproxymodel.h>
+#include <AkonadiCore/statisticsproxymodel.h>
 
 #include <messageviewer/settings/globalsettings.h>
 
@@ -69,7 +69,7 @@ class FolderTreeWidget::FolderTreeWidgetPrivate
 
     QString filter;
     QString oldFilterStr;
-    KPIM::StatisticsProxyModel *filterModel;
+    Akonadi::StatisticsProxyModel *filterModel;
     FolderTreeView *folderTreeView;
     Akonadi::QuotaColorProxyModel *quotaModel;
     FolderTreeWidgetProxyModel *readableproxy;
@@ -113,7 +113,7 @@ FolderTreeWidget::FolderTreeWidget(
   d->quotaModel = new Akonadi::QuotaColorProxyModel( this );
   d->quotaModel->setSourceModel( KernelIf->collectionModel() );
 
-  d->filterModel = new KPIM::StatisticsProxyModel( this );
+  d->filterModel = new Akonadi::StatisticsProxyModel( this );
   d->filterModel->setSourceModel( d->quotaModel );
 
   d->readableproxy = new FolderTreeWidgetProxyModel( this, optReadableProxy );
@@ -337,7 +337,7 @@ void FolderTreeWidget::readQuotaConfig()
   quotaWarningParameters( quotaColor, threshold );
 }
 
-KPIM::StatisticsProxyModel *FolderTreeWidget::statisticsProxyModel() const
+Akonadi::StatisticsProxyModel *FolderTreeWidget::statisticsProxyModel() const
 {
   return d->filterModel;
 }
