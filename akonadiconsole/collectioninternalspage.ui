@@ -53,7 +53,7 @@ color:#ff0000;</string>
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="KLineEdit" name="ridEdit"/>
+       <widget class="QLineEdit" name="ridEdit"/>
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="label_3">
@@ -80,7 +80,7 @@ color:#ff0000;</string>
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="KLineEdit" name="rrevEdit"/>
+       <widget class="QLineEdit" name="rrevEdit"/>
       </item>
       <item row="4" column="0">
         <widget class="QLabel" name="label_5">
@@ -139,11 +139,6 @@ color:#ff0000;</string>
    <class>KEditListWidget</class>
    <extends>QWidget</extends>
    <header>keditlistwidget.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

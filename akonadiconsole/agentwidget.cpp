@@ -35,7 +35,7 @@
 #include <KMessageBox>
 #include <KStandardGuiItem>
 #include <KTextEdit>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KIcon>
 
 #include <QtCore/QFile>

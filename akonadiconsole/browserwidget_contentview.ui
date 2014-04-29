@@ -127,8 +127,8 @@
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="KLineEdit" name="attrName">
-         <property name="clickMessage">
+        <widget class="QLineEdit" name="attrName">
+         <property name="placeholderText">
           <string>New Attribute</string>
          </property>
         </widget>
@@ -211,7 +211,7 @@
           </widget>
          </item>
          <item>
-          <widget class="KLineEdit" name="remoteId"/>
+          <widget class="QLineEdit" name="remoteId"/>
          </item>
         </layout>
        </item>
@@ -380,11 +380,6 @@
    <header>ktextbrowser.h</header>
   </customwidget>
   <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>KPushButton</class>
    <extends>QPushButton</extends>
    <header>kpushbutton.h</header>
@@ -413,13 +408,13 @@
   <customwidget>
    <class>Akonadi::ContactViewer</class>
    <extends>QWidget</extends>
-   <header location="global">akonadi/contact/contactviewer.h</header>
+   <header location="global">Akonadi/Contact/contactviewer.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>Akonadi::ContactGroupViewer</class>
    <extends>QWidget</extends>
-   <header location="global">akonadi/contact/contactgroupviewer.h</header>
+   <header location="global">Akonadi/Contact/contactgroupviewer.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

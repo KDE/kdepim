@@ -23,7 +23,7 @@
 
 #include <kdialog.h>
 
-class KLineEdit;
+class QLineEdit;
 class KTextEdit;
 
 class SearchDialog : public KDialog
@@ -36,7 +36,7 @@ class SearchDialog : public KDialog
     QString searchQuery() const;
 
   private:
-    KLineEdit *mName;
+    QLineEdit *mName;
     KTextEdit *mEdit;
 };
 

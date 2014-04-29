@@ -21,7 +21,7 @@
 
 #include "searchdialog.h"
 
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KTextEdit>
 
 #include <QLabel>
@@ -38,7 +38,7 @@ SearchDialog::SearchDialog( QWidget *parent )
 
   QGridLayout *layout = new QGridLayout( widget );
 
-  mName = new KLineEdit;
+  mName = new QLineEdit;
   mName->setText( "My Search" );
   mEdit = new KTextEdit;
   mEdit->setAcceptRichText( false );

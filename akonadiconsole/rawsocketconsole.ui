@@ -21,8 +21,8 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="KLineEdit" name="commandEdit">
-       <property name="clickMessage">
+      <widget class="QLineEdit" name="commandEdit">
+       <property name="placeholderText">
         <string>COMMAND</string>
        </property>
       </widget>
@@ -60,11 +60,6 @@
    <class>KPushButton</class>
    <extends></extends>
    <header>kpushbutton.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KLineEdit</class>
-   <extends></extends>
-   <header>klineedit.h</header>
   </customwidget>
   <customwidget>
    <class>KTextEdit</class>

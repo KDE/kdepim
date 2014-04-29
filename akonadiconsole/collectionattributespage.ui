@@ -18,8 +18,8 @@
     </widget>
    </item>
    <item row="1" column="0" >
-    <widget class="KLineEdit" name="attrName" >
-     <property name="clickMessage" >
+    <widget class="QLineEdit" name="attrName" >
+     <property name="placeholderText" >
       <string>New Attribute</string>
      </property>
     </widget>
@@ -44,11 +44,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
-  </customwidget>
   <customwidget>
    <class>KPushButton</class>
    <extends>QPushButton</extends>
