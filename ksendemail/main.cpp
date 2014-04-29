@@ -20,7 +20,7 @@
 
 #include "mailerservice.h"
 
-#include <kaboutdata.h>
+#include <k4aboutdata.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 
@@ -49,8 +49,8 @@ static KCmdLineOptions kmail_options ()
 
 int main( int argc, char **argv )
 {
-  KAboutData aboutData( "ksendemail", 0, ki18n( "KSendEmail" ), "0.01", ki18n(description),
-                      KAboutData::License_GPL,
+  K4AboutData aboutData( "ksendemail", 0, ki18n( "KSendEmail" ), "0.01", ki18n(description),
+                      K4AboutData::License_GPL,
                       ki18n( "(C) 2008 Pradeepto Bhattacharya" ),
                              KLocalizedString(), "http://kontact.kde.org" );
 
