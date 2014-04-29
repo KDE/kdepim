@@ -35,7 +35,7 @@
 #include <KDialog>
 #include <QStringList>
 class KConfig;
-class KPushButton;
+class QPushButton;
 class QListWidget;
 class KLineEdit;
 
@@ -65,7 +65,7 @@ protected:
 private:
     void readConfig();
     void writeConfig();
-    KPushButton* mNewButton, *mRemoveButton;
+    QPushButton* mNewButton, *mRemoveButton;
     QListWidget *mListView;
     KLineEdit *mLineEdit;
 };

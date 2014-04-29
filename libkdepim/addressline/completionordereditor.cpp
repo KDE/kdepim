@@ -49,9 +49,9 @@
 
 #include <KConfigGroup>
 #include <KHBox>
-#include <KIcon>
+#include <QIcon>
 #include <KLocale>
-#include <KPushButton>
+#include <QPushButton>
 #include <KVBox>
 
 #include <QtDBus/QDBusConnection>
@@ -82,7 +82,7 @@ public:
 
     virtual QIcon icon() const
     {
-        return KIcon( QLatin1String("view-ldap-resource") );
+        return QIcon::fromTheme( QLatin1String("view-ldap-resource") );
     }
 
     virtual int completionWeight() const
@@ -217,17 +217,17 @@ CompletionOrderEditor::CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearc
     mListView->setSortingEnabled( true );
 
     KVBox* upDownBox = new KVBox( page );
-    mUpButton = new KPushButton( upDownBox );
+    mUpButton = new QPushButton( upDownBox );
     mUpButton->setAutoRepeat(true);
     mUpButton->setObjectName( QLatin1String("mUpButton") );
-    mUpButton->setIcon( KIcon(QLatin1String("go-up")) );
+    mUpButton->setIcon( QIcon::fromTheme(QLatin1String("go-up")) );
     mUpButton->setEnabled( false ); // b/c no item is selected yet
     mUpButton->setFocusPolicy( Qt::StrongFocus );
 
-    mDownButton = new KPushButton( upDownBox );
+    mDownButton = new QPushButton( upDownBox );
     mDownButton->setAutoRepeat(true);
     mDownButton->setObjectName( QLatin1String("mDownButton") );
-    mDownButton->setIcon( KIcon(QLatin1String("go-down")) );
+    mDownButton->setIcon( QIcon::fromTheme(QLatin1String("go-down")) );
     mDownButton->setEnabled( false ); // b/c no item is selected yet
     mDownButton->setFocusPolicy( Qt::StrongFocus );
 

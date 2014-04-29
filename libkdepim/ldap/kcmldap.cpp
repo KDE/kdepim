@@ -328,12 +328,12 @@ void KCMLdap::initGUI()
     KVBox *upDownBox = new KVBox( hBox );
     upDownBox->setSpacing( 6 );
     mUpButton = new QToolButton( upDownBox );
-    mUpButton->setIcon( KIcon( QLatin1String("go-up") ) );
+    mUpButton->setIcon( QIcon::fromTheme( QLatin1String("go-up") ) );
     mUpButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mUpButton->setEnabled( false ); // b/c no item is selected yet
 
     mDownButton = new QToolButton( upDownBox );
-    mDownButton->setIcon( KIcon( QLatin1String("go-down") ) );
+    mDownButton->setIcon( QIcon::fromTheme( QLatin1String("go-down") ) );
     mDownButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mDownButton->setEnabled( false ); // b/c no item is selected yet
 
