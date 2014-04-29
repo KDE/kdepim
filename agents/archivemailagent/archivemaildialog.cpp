@@ -26,7 +26,7 @@
 #include <KGlobal>
 #include <KLocale>
 #include <KMessageBox>
-#include <KMenu>
+#include <QMenu>
 #include <KRun>
 #include <KHelpMenu>
 #include <k4aboutdata.h>
@@ -75,7 +75,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
 #if 0 //QT5
     KHelpMenu *helpMenu = new KHelpMenu(this, mAboutData, true);
     //Initialize menu
-    KMenu *menu = helpMenu->menu();
+    QMenu *menu = helpMenu->menu();
     helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(KIcon(QLatin1String("kmail")));
     setButtonMenu( Help, menu );
 #endif
@@ -176,7 +176,7 @@ ArchiveMailWidget::~ArchiveMailWidget()
 void ArchiveMailWidget::customContextMenuRequested(const QPoint &)
 {
     const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
-    KMenu menu;
+    QMenu menu;
     menu.addAction(i18n("Add..."),this,SLOT(slotAddItem()));
     if ( !listItems.isEmpty() ) {
         if ( listItems.count() == 1) {

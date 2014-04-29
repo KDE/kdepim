@@ -30,7 +30,7 @@
 #include <klocale.h>
 #include <qdebug.h>
 #include <KHelpMenu>
-#include <KMenu>
+#include <QMenu>
 #include <KComponentData>
 #include <KConfigGroup>
 

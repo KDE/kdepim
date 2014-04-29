@@ -36,7 +36,7 @@
 #include <QAction>
 #include <KStatusBar>
 #include <KTabWidget>
-#include <KIcon>
+#include <QIcon>
 
 #include <QPointer>
 #include <QLabel>
@@ -142,12 +142,12 @@ void SieveEditorMainWindow::setupActions()
 
     mRefreshList = ac->addAction(QLatin1String("refresh_list"), this, SLOT(slotRefreshList()));
     mRefreshList->setText(i18n("Refresh List"));
-    mRefreshList->setIcon(KIcon(QLatin1String("view-refresh")));
+    mRefreshList->setIcon(QIcon::fromTheme(QLatin1String("view-refresh")));
     mRefreshList->setShortcut(QKeySequence( Qt::Key_F5 ));
 
     mGoToLine = ac->addAction(QLatin1String("gotoline"), mMainWidget->sieveEditorMainWidget(), SLOT(slotGoToLine()));
     mGoToLine->setText(i18n("Go to Line"));
-    mGoToLine->setIcon(KIcon(QLatin1String("go-jump")));
+    mGoToLine->setIcon(QIcon::fromTheme(QLatin1String("go-jump")));
     mGoToLine->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_G ));
     mGoToLine->setEnabled(false);
 }

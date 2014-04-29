@@ -20,7 +20,7 @@
 #include "noteshared/config/notenetworkconfig.h"
 
 #include "kdepim-version.h"
-#include <KMenu>
+#include <QMenu>
 #include <KHelpMenu>
 #include <KLocalizedString>
 #include <KIcon>
@@ -78,7 +78,7 @@ NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
 
     KHelpMenu *helpMenu = new KHelpMenu(this, mAboutData, true);
     //Initialize menu
-    KMenu *menu = helpMenu->menu();
+    QMenu *menu = helpMenu->menu();
     helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(KIcon(QLatin1String("knotes")));
     setButtonMenu( Help, menu );
 }

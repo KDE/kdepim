@@ -31,8 +31,8 @@
 #include <KGlobal>
 #include <KLocale>
 #include <KDateTime>
-#include <KMenu>
-#include <KAction>
+#include <QMenu>
+#include <QAction>
 #include <KMessageBox>
 
 #include <QListWidget>
@@ -87,12 +87,12 @@ void NotesAgentAlarmDialog::slotCustomContextMenuRequested(const QPoint &pos)
     if ( mListWidget->selectedItems().isEmpty() )
         return;
     Q_UNUSED(pos);
-    KMenu *entriesContextMenu = new KMenu;
-    KAction *removeAlarm = new KAction(KIcon(QLatin1String("edit-delete")), i18n("Remove Alarm"), entriesContextMenu);
+    QMenu *entriesContextMenu = new QMenu;
+    QAction *removeAlarm = new QAction(KIcon(QLatin1String("edit-delete")), i18n("Remove Alarm"), entriesContextMenu);
     connect(removeAlarm, SIGNAL(triggered()), this, SLOT(slotRemoveAlarm()));
-    KAction *showNote = new KAction(i18n("Show Note..."), entriesContextMenu);
+    QAction *showNote = new QAction(i18n("Show Note..."), entriesContextMenu);
     connect(showNote, SIGNAL(triggered()), this, SLOT(slotShowNote()));
-    KAction *modifyAlarm = new KAction(i18n("Modify Alarm..."), entriesContextMenu);
+    QAction *modifyAlarm = new QAction(i18n("Modify Alarm..."), entriesContextMenu);
     connect(modifyAlarm, SIGNAL(triggered()), this, SLOT(slotModifyAlarm()));
     entriesContextMenu->addAction( showNote );
     entriesContextMenu->addAction( modifyAlarm );

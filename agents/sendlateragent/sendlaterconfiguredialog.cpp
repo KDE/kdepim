@@ -25,7 +25,7 @@
 #include <KConfigGroup>
 #include <KLocale>
 #include <KHelpMenu>
-#include <KMenu>
+#include <QMenu>
 #include <k4aboutdata.h>
 #include <KMessageBox>
 #include <KIcon>
@@ -179,7 +179,7 @@ void SendLaterWidget::customContextMenuRequested(const QPoint &)
 {
     const QList<QTreeWidgetItem *> listItems = mWidget->treeWidget->selectedItems();
     if ( !listItems.isEmpty() ) {
-        KMenu menu;
+        QMenu menu;
         if ( listItems.count() == 1) {
             menu.addAction(i18n("Send now"), this, SLOT(slotSendNow()));
         }
