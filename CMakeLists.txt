@@ -99,6 +99,9 @@ find_package(KF5QGpgme ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KontactInterface ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5AlarmCalendar ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Service ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5DNSSD ${KF5_VERSION} CONFIG REQUIRED)
+
 include(GenerateExportHeader)
 
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
@@ -176,7 +179,7 @@ endif()
 # config-enterprise.h is needed for both ENTERPRISE_BUILD and BUILD_EVERYTHING
 configure_file(config-enterprise.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-enterprise.h )
 
-#add_subdirectory(noteshared)
+add_subdirectory(noteshared)
 add_subdirectory(akonadi_next)
 add_subdirectory(libkdepim)
 add_subdirectory(calendarsupport)
@@ -233,7 +236,7 @@ include (kleopatra/ConfigureChecks.cmake)
     add_subdirectory(kaddressbook)
     add_subdirectory(kmailcvt)
     add_subdirectory(mboximporter)
-    #add_subdirectory(knotes)
+    add_subdirectory(knotes)
     add_subdirectory(ksendemail)
     add_subdirectory(ktnef)
     add_subdirectory(mailimporter)
@@ -241,7 +244,7 @@ include (kleopatra/ConfigureChecks.cmake)
     #add_subdirectory(kalarm)
     add_subdirectory(blogilo)
 
-    #add_subdirectory(kjots)
+    add_subdirectory(kjots)
 
     add_subdirectory(kontact) # must be the last one.
   endif()
