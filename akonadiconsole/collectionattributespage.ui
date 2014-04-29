@@ -25,14 +25,14 @@
     </widget>
    </item>
    <item row="1" column="1" >
-    <widget class="KPushButton" name="addButton" >
+    <widget class="QPushButton" name="addButton" >
      <property name="text" >
       <string>&amp;Add</string>
      </property>
     </widget>
    </item>
    <item row="1" column="2" >
-    <widget class="KPushButton" name="deleteButton" >
+    <widget class="QPushButton" name="deleteButton" >
      <property name="enabled" >
       <bool>true</bool>
      </property>
@@ -43,13 +43,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

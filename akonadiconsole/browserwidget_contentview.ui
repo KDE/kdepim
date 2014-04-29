@@ -25,7 +25,7 @@
     </spacer>
    </item>
    <item row="1" column="1">
-    <widget class="KPushButton" name="saveButton">
+    <widget class="QPushButton" name="saveButton">
      <property name="text">
       <string>&amp;Save</string>
      </property>
@@ -134,14 +134,14 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="KPushButton" name="attrAddButton">
+        <widget class="QPushButton" name="attrAddButton">
          <property name="text">
           <string>&amp;Add</string>
          </property>
         </widget>
        </item>
        <item row="1" column="2">
-        <widget class="KPushButton" name="attrDeleteButton">
+        <widget class="QPushButton" name="attrDeleteButton">
          <property name="text">
           <string>&amp;Delete</string>
          </property>
@@ -378,11 +378,6 @@
    <class>KTextBrowser</class>
    <extends>QTextBrowser</extends>
    <header>ktextbrowser.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
   </customwidget>
   <customwidget>
    <class>KTextEdit</class>
