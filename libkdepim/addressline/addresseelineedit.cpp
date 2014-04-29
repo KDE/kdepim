@@ -289,6 +289,22 @@ void AddresseeLineEdit::Private::init()
             s_static->ldapTimer = new QTimer;
             s_static->ldapSearch = new KLDAP::LdapClientSearch;
 
+            /* The reasoning behind this filter is:
+             * If it's a person, or a distlist, show it, even if it doesn't have an email address.
+             * If it's not a person, or a distlist, only show it if it has an email attribute.
+             * This allows both resource accounts with an email address which are not a person and
+             * person entries without an email address to show up, while still not showing things
+             * like structural entries in the ldap tree.
+             */
+
+            #if 0
+                s_static->ldapSearch->setFilter(QString::fromLatin1("&(|(objectclass=person)(objectclass=groupOfNames)(mail=*))"
+                                                          "(|(cn=%1*)(mail=%1*)(mail=*@%1*)(givenName=%1*)(sn=%1*))"));
+            #endif
+            //Fix bug 323272 "Exchange doesn't like any queries beginning with *."
+            s_static->ldapSearch->setFilter(QString::fromLatin1( "&(|(objectclass=person)(objectclass=groupOfNames)(mail=*))"
+                                "(|(cn=%1*)(mail=%1*)(givenName=%1*)(sn=%1*))" ));
+
         }
 
         s_static->balooCompletionSource = q->addCompletionSource( i18nc( "@title:group", "Contacts found in your data"), -1 );
