@@ -47,3 +47,17 @@ KABC::Addressee MergeContacts::mergedContact()
     return newContact;
 }
 
+
+bool MergeContacts::needManualSelectInformations()
+{
+    bool result = false;
+    //TODO
+    Q_FOREACH (const Akonadi::Item &item, mListItem) {
+        KABC::Addressee address = item.payload<KABC::Addressee>();
+        if (address.birthday().isValid()) {
+            result = true;
+        }
+    }
+
+    return result;
+}
