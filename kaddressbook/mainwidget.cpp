@@ -23,7 +23,6 @@
 #include "globalcontactmodel.h"
 #include "modelcolumnmanager.h"
 #include "printing/printingwizard.h"
-#include "merge/searchduplicatecontactwizard.h"
 #include "merge/mergecontactsdialog.h"
 #include "quicksearchwidget.h"
 #include "settings.h"
@@ -924,9 +923,7 @@ void MainWidget::mergeContacts()
 
 void MainWidget::slotSearchDuplicateContacts()
 {
-    QPointer<KABMergeContacts::SearchDuplicateContactWizard> wizard = new KABMergeContacts::SearchDuplicateContactWizard(mItemView->selectionModel(), this);
-    wizard->exec();
-    delete wizard;
+    //TODO
 }
 
 Akonadi::EntityTreeModel *MainWidget::entityTreeModel() const

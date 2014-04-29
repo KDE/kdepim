@@ -32,6 +32,8 @@ public:
 
     KABC::Addressee mergedContact();
 
+    bool needManualSelectInformations();
+
 private:
     Akonadi::Item::List mListItem;
 };

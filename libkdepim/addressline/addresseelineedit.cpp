@@ -368,7 +368,7 @@ QStringList AddresseeLineEdit::Private::cleanupBalooContact(const QStringList &l
             hashEmail.insert(email.toLower(), email);
         }
     }
-    return hashEmail.keys();
+    return hashEmail.values();
 }
 
 void AddresseeLineEdit::Private::searchInBaloo()

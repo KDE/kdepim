@@ -47,12 +47,10 @@ SieveActionWidget::SieveActionWidget(QWidget *parent)
     : QWidget(parent)
 {
     initWidget();
-    qDebug()<<"SieveActionWidget::SieveActionWidget "<<this;
 }
 
 SieveActionWidget::~SieveActionWidget()
 {
-    qDebug()<<" SieveActionWidget::~SieveActionWidget()"<<this;
     qDeleteAll(mActionList);
     mActionList.clear();
 }
