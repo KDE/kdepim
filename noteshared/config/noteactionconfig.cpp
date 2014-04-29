@@ -29,7 +29,7 @@
 using namespace NoteShared;
 
 NoteActionConfig::NoteActionConfig(const KComponentData &inst, QWidget *parent )
-    :KCModule( inst, parent )
+    :KCModule( /*inst,*/ parent )
 {
     QVBoxLayout *lay = new QVBoxLayout( this );
     QWidget * w =  new QWidget( this );

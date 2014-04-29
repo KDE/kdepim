@@ -62,10 +62,10 @@ NoteHostDialog::NoteHostDialog( const QString &caption, QWidget *parent )
 
     m_servicesView = new QTreeView( page );
     m_servicesView->setRootIsDecorated(false);
-    DNSSD::ServiceModel* mdl = new DNSSD::ServiceModel( new DNSSD::ServiceBrowser( QLatin1String("_knotes._tcp"), true ), this );
+    KDNSSD::ServiceModel* mdl = new KDNSSD::ServiceModel( new KDNSSD::ServiceBrowser( QLatin1String("_knotes._tcp"), true ), this );
     m_servicesView->setModel( mdl );
     m_servicesView->setSelectionBehavior( QAbstractItemView::SelectRows );
-    m_servicesView->hideColumn( DNSSD::ServiceModel::Port );
+    m_servicesView->hideColumn( KDNSSD::ServiceModel::Port );
     connect( m_servicesView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
              SLOT(serviceSelected(QModelIndex)) );
     connect( m_servicesView, SIGNAL(activated(QModelIndex)),
@@ -117,7 +117,7 @@ void NoteHostDialog::slotTextChanged( const QString &text )
 
 void NoteHostDialog::serviceSelected( const QModelIndex& idx )
 {
-    DNSSD::RemoteService::Ptr srv=idx.data( DNSSD::ServiceModel::ServicePtrRole ).value<DNSSD::RemoteService::Ptr>();
+    KDNSSD::RemoteService::Ptr srv=idx.data( KDNSSD::ServiceModel::ServicePtrRole ).value<KDNSSD::RemoteService::Ptr>();
     m_hostCombo->lineEdit()->setText( srv->hostName() + QLatin1String(":") + QString::number( srv->port() ) );
 }
 
@@ -133,7 +133,7 @@ quint16 NoteHostDialog::port() const
 
 void NoteHostDialog::slotServiceDoubleClicked(const QModelIndex &idx)
 {
-    DNSSD::RemoteService::Ptr srv = idx.data( DNSSD::ServiceModel::ServicePtrRole ).value<DNSSD::RemoteService::Ptr>();
+    KDNSSD::RemoteService::Ptr srv = idx.data( KDNSSD::ServiceModel::ServicePtrRole ).value<KDNSSD::RemoteService::Ptr>();
     m_hostCombo->lineEdit()->setText( srv->hostName() + QLatin1String(":") + QString::number( srv->port() ) );
     accept();
 }

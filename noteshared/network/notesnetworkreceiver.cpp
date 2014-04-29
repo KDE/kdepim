@@ -42,7 +42,7 @@
 #include <qdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
-
+#include <KDebug>
 
 // Maximum note size in chars we are going to accept,
 // to prevent "note floods".

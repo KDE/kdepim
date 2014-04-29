@@ -35,6 +35,7 @@
 #include <KLocalizedString>
 #include <KTimeComboBox>
 #include <KVBox>
+#include <KDateTime>
 
 #include <QButtonGroup>
 #include <QGroupBox>

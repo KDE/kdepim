@@ -104,7 +104,7 @@ void NoteNetworkConfigWidget::load()
 
 
 NoteNetworkConfig::NoteNetworkConfig(const KComponentData &inst, QWidget *parent )
-    :KCModule( inst, parent )
+    :KCModule( /*inst,*/ parent )
 {
     QVBoxLayout *lay = new QVBoxLayout( this );
     lay->setMargin(0);

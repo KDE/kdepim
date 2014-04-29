@@ -48,13 +48,13 @@ macro(add_resource_iface _kcfgFile _ifaceName _className)
   )
 endmacro()
 
-add_resource_iface( ${CMAKE_CURRENT_SOURCE_DIR}/resources/maildirresource.kcfg
-                    org.kde.Akonadi.Maildir.Settings MaildirSettings )
+#add_resource_iface( ${CMAKE_CURRENT_SOURCE_DIR}/resources/maildirresource.kcfg
+#                    org.kde.Akonadi.Maildir.Settings MaildirSettings )
 
-add_custom_target(noteshared_settings_xml ALL
-  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Maildir.Settings.xml
-  SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/resources/maildirresource.kcfg
-)
+#add_custom_target(noteshared_settings_xml ALL
+#  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Maildir.Settings.xml
+#  SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/resources/maildirresource.kcfg
+#)
 
 
 

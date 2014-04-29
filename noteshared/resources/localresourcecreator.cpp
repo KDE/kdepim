@@ -21,7 +21,7 @@
 
 #include <AkonadiCore/agentmanager.h>
 #include <AkonadiCore/agentinstancecreatejob.h>
-#include "maildirsettings.h"
+//QT5 #include "maildirsettings.h"
 
 #include "akonadi_next/note.h"
 
@@ -30,7 +30,7 @@
 #include <KLocalizedString>
 #include <KRandom>
 #include <KStandardDirs>
-#include <akonadi/resourcesynchronizationjob.h>
+#include <AkonadiCore/resourcesynchronizationjob.h>
 
 using namespace NoteShared;
 
@@ -85,7 +85,7 @@ void LocalResourceCreator::slotInstanceCreated( KJob *job )
     Akonadi::AgentInstance instance = createJob->instance();
 
     instance.setName( i18nc( "Default name for resource holding notes", "Local Notes" ) );
-
+#if 0 //QT5
     OrgKdeAkonadiMaildirSettingsInterface *iface = new OrgKdeAkonadiMaildirSettingsInterface(
                 QLatin1String("org.freedesktop.Akonadi.Resource.") + instance.identifier(),
                 QLatin1String("/Settings"), QDBusConnection::sessionBus(), this );
@@ -98,7 +98,7 @@ void LocalResourceCreator::slotInstanceCreated( KJob *job )
         return;
     }
     delete iface;
-
+#endif
     instance.reconfigure();
 
     Akonadi::ResourceSynchronizationJob *syncJob = new Akonadi::ResourceSynchronizationJob(instance, this);
