@@ -37,7 +37,7 @@
 #include <kpluginfactory.h>
 #include <klocale.h>
 #include <kstatusbar.h>
-
+#include <KIcon>
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 #include <QTimer>
@@ -49,14 +49,14 @@ const KAboutData &createAboutData()
     return aboutData;
 }
 
-K_PLUGIN_FACTORY(KJotsPartFactory, registerPlugin<KJotsPart>();)
+//QT5 K_PLUGIN_FACTORY(KJotsPartFactory, registerPlugin<KJotsPart>();)
 K_EXPORT_PLUGIN(KJotsPartFactory(createAboutData()))
 
 KJotsPart::KJotsPart( QWidget *parentWidget, QObject *parent, const QVariantList & /*args*/ )
     : KParts::ReadOnlyPart(parent)
 {
     // we need an instance
-    setComponentData( KJotsPartFactory::componentData() );
+    //QT5 setComponentData( KJotsPartFactory::componentData() );
 
     // this should be your custom internal widget
     mComponent = new KJotsWidget(parentWidget, this);

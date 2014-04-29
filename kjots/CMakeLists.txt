@@ -78,11 +78,10 @@ target_link_libraries(kjots
   KF5::AkonadiCore
   KF5::Mime
   KF5::AkonadiMime
-  ${Grantlee_CORE_LIBRARIES}
-  ${Grantlee_GUI_LIBRARIES}
+  Grantlee::TextDocument
+  Grantlee::Templates
   KF5::PimTextEdit
   KF5::KontactInterface
-   ${KDE4_KPRINTUTILS_LIBS}
   akonadi_next
   noteshared
 )
@@ -113,16 +112,14 @@ install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/kjots PATTERN *.svn EXC
 
   target_link_libraries(kjotspart
     KF5::KCMUtils
-    ${KDE4_KPARTS_LIBS}
     kdepim
     KF5::Mime
     KF5::AkonadiCore
     KF5::AkonadiMime
     KF5::Mime
-    ${Grantlee_CORE_LIBRARIES}
-    ${Grantlee_GUI_LIBRARIES}
+    Grantlee::Templates
+    Grantlee::TextDocument
     KF5::PimTextEdit
-    ${KDE4_KPRINTUTILS_LIBS}
     akonadi_next
     noteshared
   )
