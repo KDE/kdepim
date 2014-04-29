@@ -73,8 +73,6 @@ set(kaddressbook_xxport_SRCS
 
 set(kaddressbook_merge_SRCS
    merge/mergecontactsdialog.cpp
-   merge/searchduplicatecontactwizard.cpp
-   merge/potentialduplicatecontactswidget.cpp
    merge/searchpotentialduplicatecontactjob.cpp 
    merge/mergecontactwidget.cpp
    merge/mergecontactutil.cpp
