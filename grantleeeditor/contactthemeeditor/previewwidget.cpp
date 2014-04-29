@@ -18,8 +18,6 @@
 #include "previewwidget.h"
 #include "contactpreviewwidget.h"
 
-#include <KPushButton>
-
 #include <QHBoxLayout>
 
 PreviewWidget::PreviewWidget(const QString &projectDirectory, QWidget *parent)

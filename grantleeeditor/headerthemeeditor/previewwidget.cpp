@@ -21,7 +21,7 @@
 #include "messageviewer/header/headerstrategy.h"
 #include "messageviewer/header/grantleeheaderteststyle.h"
 
-#include <KPushButton>
+#include <QPushButton>
 #include <KLocale>
 #include <KConfigGroup>
 #include <KGlobal>
@@ -40,7 +40,7 @@ PreviewWidget::PreviewWidget(const QString &projectDirectory, QWidget *parent)
     mViewer->setHeaderStyleAndStrategy(mGrantleeHeaderStyle,
                                        MessageViewer::HeaderStrategy::create(QString()));
     lay->addWidget(mViewer);
-    KPushButton *update = new KPushButton(i18n("Update view"));
+    QPushButton *update = new QPushButton(i18n("Update view"));
     connect(update, SIGNAL(clicked(bool)), this, SIGNAL(needUpdateViewer()));
     lay->addWidget(update);
     setLayout(lay);
