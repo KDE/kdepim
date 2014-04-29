@@ -25,7 +25,7 @@
 #include <KPushButton>
 #include <KStandardDirs>
 #include <KVBox>
-#include <KIcon>
+#include <QIcon>
 #include <KGlobal>
 
 #include <QtCore/QAbstractTableModel>
@@ -197,7 +197,7 @@ class TemplateSelectionDelegate : public QStyledItemDelegate
     }
 
   private:
-    KIcon mIcon;
+    QIcon mIcon;
 };
 
 TemplateSelectionDialog::TemplateSelectionDialog( QWidget *parent )
