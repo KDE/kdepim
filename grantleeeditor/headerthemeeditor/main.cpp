@@ -22,24 +22,35 @@
 
 #include "kdepim-version.h"
 
-#include <kapplication.h>
-#include <k4aboutdata.h>
-#include <kcmdlineargs.h>
+#include <qapplication.h>
+#include <kaboutdata.h>
+#include <KLocalizedString>
 #include <KGlobal>
+#include <KDBusService>
 
 int main( int argc, char **argv )
 {
-    K4AboutData aboutData( "headerthemeeditor", 0, ki18n("Messageviewer Header Theme Editor"),
-      KDEPIM_VERSION, ki18n("Header Theme Editor"), K4AboutData::License_GPL_V2,
-      ki18n("Copyright © 2013, 2014 headerthemeeditor authors"));
-    aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
+    QApplication app(argc, argv);
+    KAboutData aboutData( QStringLiteral("headerthemeeditor"), 
+                          i18n("Header Theme Editor"), 
+                          QLatin1String(KDEPIM_VERSION),
+                          i18n("Messageviewer Header Theme Editor"),
+                          KAboutData::License_GPL_V2,
+                          i18n("Copyright © 2013, 2014 headerthemeeditor authors"));
+    aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
     aboutData.setProgramIconName(QLatin1String("kmail"));
-    KCmdLineArgs::init( argc, argv, &aboutData );
+    aboutData.setOrganizationDomain(QByteArray("kde.org"));
+    aboutData.setProductName(QByteArray("headerthemeeditor"));
 
-    KCmdLineOptions options;
-    KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
+    KAboutData::setApplicationData(aboutData);
 
-    KApplication app;
+    app.setApplicationName(aboutData.componentName());
+    app.setApplicationDisplayName(aboutData.displayName());
+    app.setOrganizationDomain(aboutData.organizationDomain());
+    app.setApplicationVersion(aboutData.version());
+
+    KDBusService service();
+
     KGlobal::locale()->insertCatalog(QLatin1String("libpimcommon"));
     ThemeEditorMainWindow *mw = new ThemeEditorMainWindow();
     mw->show();
