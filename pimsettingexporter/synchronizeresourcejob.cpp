@@ -17,7 +17,7 @@
 
 #include "synchronizeresourcejob.h"
 
-#include <akonadi/resourcesynchronizationjob.h>
+#include <AkonadiCore/resourcesynchronizationjob.h>
 #include <AkonadiCore/AgentInstance>
 #include <AkonadiCore/AgentManager>
 

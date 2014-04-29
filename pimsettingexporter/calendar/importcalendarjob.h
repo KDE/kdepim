@@ -22,7 +22,7 @@
 
 class ArchiveStorage;
 class QWidget;
-
+class KArchive;
 class ImportCalendarJob : public AbstractImportExportJob
 {
     Q_OBJECT

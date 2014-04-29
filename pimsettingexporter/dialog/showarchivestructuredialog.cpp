@@ -22,6 +22,7 @@
 #include <KLocalizedString>
 #include <KZip>
 #include <KMessageBox>
+#include <KGlobal>
 
 #include <QTreeWidget>
 #include <QHeaderView>
