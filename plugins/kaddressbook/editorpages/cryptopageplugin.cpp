@@ -38,6 +38,7 @@
 #include <khbox.h>
 #include <kiconloader.h>
 #include <klocale.h>
+#include <KGlobal>
 
 #include "gpgme++/data.h"
 #include "gpgme++/key.h"
@@ -201,5 +202,5 @@ void CryptoPagePlugin::setReadOnly( bool readOnly )
   mSmimeCert->setEnabled( !readOnly );
 }
 
-Q_EXPORT_PLUGIN2( cryptopageplugin, CryptoPagePlugin )
+//QT5 Q_EXPORT_PLUGIN2( cryptopageplugin, CryptoPagePlugin )
 

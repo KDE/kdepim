@@ -54,7 +54,7 @@ install(TARGETS messageviewer_bodypartformatter_text_calendar  DESTINATION ${PLU
 
 set(messageviewer_bodypartformatter_text_xdiff_PART_SRCS text_xdiff.cpp)
 add_library(messageviewer_bodypartformatter_text_xdiff MODULE ${messageviewer_bodypartformatter_text_xdiff_PART_SRCS})
-target_link_libraries(messageviewer_bodypartformatter_text_xdiff   )
+target_link_libraries(messageviewer_bodypartformatter_text_xdiff  Qt5::Core KF5::KDELibs4Support)
 install(TARGETS messageviewer_bodypartformatter_text_xdiff  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### next target ###############

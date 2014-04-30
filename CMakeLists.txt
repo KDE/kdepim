@@ -252,7 +252,7 @@ include (kleopatra/ConfigureChecks.cmake)
   add_subdirectory(akonadiconsole)
   add_subdirectory(console)
 
-  #add_subdirectory(plugins) # Must be after KMail
+  add_subdirectory(plugins) # Must be after KMail
 
 feature_summary(WHAT ALL
                 INCLUDE_QUIET_PACKAGES
