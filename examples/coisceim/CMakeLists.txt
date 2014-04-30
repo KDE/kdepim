@@ -1,6 +1,6 @@
 project(coisceim)
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+kde_enable_exceptions()
 
 include_directories( ${Boost_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/messageviewer )
 
@@ -32,22 +32,22 @@ set (coisceim_part_SRCS
   coisceimpart.cpp
 )
 
-kde4_add_library(coisceim_widget ${LIBRARY_TYPE} ${coisceim_widget_SRCS})
+add_library(coisceim_widget ${LIBRARY_TYPE} ${coisceim_widget_SRCS})
 
 qt4_generate_dbus_interface(coisceimwidget.h
   org.kde.coisceim.CoisceimWidget.xml
 )
 
-qt4_add_dbus_adaptor(coisceim_widget_SRCS
+qt5_add_dbus_adaptor(coisceim_widget_SRCS
   ${CMAKE_BINARY_DIR}/org.kde.coisceim.CoisceimWidget.xml
   coisceimwidget.h
   CoisceimWidget
 )
 
 target_link_libraries(coisceim_widget
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
-  ${KDEPIMLIBS_KCALCORE_LIBS}
+  KF5::AkonadiCore
+  KF5::AkonadiContact
+  KF5::CalendarCore
   messageviewer calendarsupport
 )
 
@@ -55,20 +55,20 @@ set_target_properties(coisceim_widget
     PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION}
 )
 
-kde4_add_executable(coisceim ${coisceim_SRCS})
+add_executable(coisceim ${coisceim_SRCS})
 
 target_link_libraries(coisceim
   coisceim_widget
   ${QT_QTCORE_LIBRARIES}
-  ${KDE4_KDECORE_LIBS}
-  ${KDE4_KDEUI_LIBS}
+  
+  
 )
 
-kde4_add_plugin(coisceimpart ${coisceim_part_SRCS})
+add_library(coisceimpart MODULE ${coisceim_part_SRCS})
 
 target_link_libraries(coisceimpart
   coisceim_widget
-  ${KDE4_KPARTS_LIBS}
+  
 )
 
 install(TARGETS coisceim ${INSTALL_TARGETS_DEFAULT_ARGS} )

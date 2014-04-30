@@ -20,7 +20,7 @@
 */
 
 #include <KApplication>
-#include <KAboutData>
+#include <K4AboutData>
 #include <KCmdLineArgs>
 
 #include "coisceimwidget.h"
@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 {
   const QByteArray& ba = QByteArray( "coisceim" );
   const KLocalizedString name = ki18n( "Coisceim application" );
-  KAboutData aboutData( ba, ba, name, ba, name );
+  K4AboutData aboutData( ba, ba, name, ba, name );
   KCmdLineArgs::init( argc, argv, &aboutData );
   KApplication app;
 

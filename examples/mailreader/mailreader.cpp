@@ -21,6 +21,7 @@
 #include <KLocale>
 #include <KStandardAction>
 #include <KStatusBar>
+#include <KIcon>
 
 #include <QDockWidget>
 #include <QSortFilterProxyModel>

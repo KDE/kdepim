@@ -27,7 +27,7 @@
 #include <QHBoxLayout>
 
 #include <AkonadiCore/collection.h>
-#include <akonadi/collectionview.h>
+#include <AkonadiWidgets/collectionview.h>
 #include <AkonadiCore/collectionfilterproxymodel.h>
 #include <AkonadiCore/collectionmodel.h>
 #include "calendarsupport/kcalmodel.h"

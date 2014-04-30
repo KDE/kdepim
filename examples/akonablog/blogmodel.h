@@ -20,7 +20,7 @@
 #ifndef AKONADI_BLOGMODEL_H
 #define AKONADI_BLOGMODEL_H
 
-#include <akonadi/itemmodel.h>
+#include <AkonadiCore/itemmodel.h>
 #include <AkonadiCore/job.h>
 
 /**

@@ -133,7 +133,7 @@ void Tab7Widget::initModel(Akonadi::EntityTreeModel *model)
   categorizedModel->setCategorizedModel(true);
 
   m_itemView->setModel(categorizedModel);
-  m_itemView->setCategoryDrawer(new KCategoryDrawerV2());
+  m_itemView->setCategoryDrawer(new KCategoryDrawer(m_itemView));
 
   ItemViewerWidget *viewerWidget = new ItemViewerWidget(m_itemView->selectionModel(), rhsContainer);
 }

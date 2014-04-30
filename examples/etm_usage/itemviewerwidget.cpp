@@ -31,7 +31,7 @@
 #include <AkonadiCore/entitytreemodel.h>
 
 #include "messageviewer/viewer/viewer.h"
-#include "akonadi/contact/contactviewer.h"
+#include "Akonadi/Contact/contactviewer.h"
 #include "noteviewer.h"
 
 using namespace Akonadi;

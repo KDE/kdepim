@@ -21,18 +21,18 @@
 
 #include <KApplication>
 #include <KLocale>
-#include <KAboutData>
+#include <K4AboutData>
 #include <KCmdLineArgs>
 
 #include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {
-  KAboutData aboutData( "etm_usage", 0,
+  K4AboutData aboutData( "etm_usage", 0,
                         ki18n( "ETM Test application" ),
                         "0.99",
                         ki18n( "Test app for EntityTreeModel" ),
-                        KAboutData::License_GPL,
+                        K4AboutData::License_GPL,
                         ki18n( "" ),
                         KLocalizedString(),
                         "http://pim.kde.org/akonadi/" );

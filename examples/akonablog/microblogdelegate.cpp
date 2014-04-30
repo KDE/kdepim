@@ -34,7 +34,7 @@ MicroblogDelegate::MicroblogDelegate( QAbstractItemView *itemView, QObject * par
 {
 }
 
-QList<QWidget*> MicroblogDelegate::createItemWidgets() const
+QList<QWidget*> MicroblogDelegate::createItemWidgets(const QModelIndex &index) const
 {
     QList<QWidget*> list;
 

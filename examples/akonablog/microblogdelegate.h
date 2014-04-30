@@ -31,7 +31,7 @@ class MicroblogDelegate : public KWidgetItemDelegate
 public:
     MicroblogDelegate( QAbstractItemView *itemView, QObject * parent );
 
-    QList<QWidget*> createItemWidgets() const;
+    QList<QWidget*> createItemWidgets(const QModelIndex &index) const;
 
     void updateItemWidgets( const QList<QWidget*> widgets,
                             const QStyleOptionViewItem &option,

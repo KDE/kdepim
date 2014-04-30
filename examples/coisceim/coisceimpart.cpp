@@ -29,7 +29,7 @@
 #include <kstandarddirs.h>
 #include <kpluginfactory.h>
 #include <klocale.h>
-#include <KAboutData>
+#include <K4AboutData>
 
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
@@ -37,22 +37,22 @@
 #include <QTextEdit>
 #include <QLabel>
 
-const KAboutData &createAboutData()
+const K4AboutData &createAboutData()
 {
   const QByteArray& ba = QByteArray( "coisceim" );
   const KLocalizedString name = ki18n( "Coisceim part" );
-  static KAboutData aboutData( ba, ba, name, ba, name );
+  static K4AboutData aboutData( ba, ba, name, ba, name );
   return aboutData;
 }
 
-K_PLUGIN_FACTORY(CoisceimPartFactory, registerPlugin<CoisceimPart>();)
+//QT5 K_PLUGIN_FACTORY(CoisceimPartFactory, registerPlugin<CoisceimPart>();)
 K_EXPORT_PLUGIN(CoisceimPartFactory(createAboutData()))
 
 CoisceimPart::CoisceimPart( QWidget *parentWidget, QObject *parent, const QVariantList & /*args*/ )
     : KParts::ReadOnlyPart(parent)
 {
     // we need an instance
-    setComponentData( CoisceimPartFactory::componentData() );
+    //QT5 setComponentData( CoisceimPartFactory::componentData() );
 
     component = new CoisceimWidget(parentWidget);
 

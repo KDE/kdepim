@@ -30,7 +30,7 @@
 #include "entitytreewidget.h"
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/collectionfilterproxymodel.h>
-#include <akonadi/entityrightsfiltermodel.h>
+#include <AkonadiCore/entityrightsfiltermodel.h>
 #include <kdescendantsproxymodel.h>
 
 #include <QTimer>

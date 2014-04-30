@@ -1,6 +1,7 @@
 project(mailreader)
 
-add_subdirectory(kmail-plasma)
+#REACTIVATE
+#add_subdirectory(kmail-plasma)
 
 set(mailreader_SRCS
   mailreader.cpp
@@ -14,16 +15,16 @@ include_directories(
   ${Boost_INCLUDE_DIRS}
 )
 
-kde4_add_ui_files(mailreader_SRCS mailreaderview.ui prefs_base.ui prefs_messagelist.ui)
+qt5_wrap_ui(mailreader_SRCS mailreaderview.ui prefs_base.ui prefs_messagelist.ui)
 
-kde4_add_kcfg_files(mailreader_SRCS settings.kcfgc)
+kconfig_add_kcfg_files(mailreader_SRCS settings.kcfgc)
 
-kde4_add_executable(akonadimailreader ${mailreader_SRCS})
+add_executable(akonadimailreader ${mailreader_SRCS})
 
 target_link_libraries(akonadimailreader
-  ${KDE4_KDEUI_LIBS}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
+  
+  KF5::AkonadiMime
+  KF5::AkonadiCore
   ${KDEPIMLIBS_QGPGME_LIBS}
   akonadi_next
   kdepim

@@ -34,17 +34,17 @@ set(etm_usage_SRCS
   checkable2.cpp
 )
 
-kde4_add_executable(etm_usage ${etm_usage_SRCS})
+add_executable(etm_usage ${etm_usage_SRCS})
 
 target_link_libraries(etm_usage
-  ${KDE4_KDEUI_LIBS}
-  ${KDE4_KHTML_LIBS}
-  ${KDE4_KIO_LIBS}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_KABC_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
+  
+  KF5::KHtml
+  KF5::KIOCore
+  KF5::AkonadiMime
+  KF5::AkonadiCore
+  KF5::AkonadiCore
+  KF5::Abc
+  KF5::Mime
   ${KDEPIMLIBS_QGPGME_LIBSS}
   akonadi_next
   kdepim

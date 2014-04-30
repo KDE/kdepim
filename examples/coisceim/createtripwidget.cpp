@@ -30,6 +30,7 @@
 #include <KLocale>
 #include <KConfig>
 #include <KSharedConfigPtr>
+#include <KGlobal>
 
 #include <AkonadiCore/ChangeRecorder>
 

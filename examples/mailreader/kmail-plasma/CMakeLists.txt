@@ -16,20 +16,20 @@ include_directories(
 
 )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+kde_enable_exceptions()
 
 set(kpapplet_SRCS
     kpapplet.cpp
     kpdialog.cpp
 )
 
-kde4_add_plugin(plasma_applet_kpapplet ${kpapplet_SRCS})
+add_library(plasma_applet_kpapplet MODULE ${kpapplet_SRCS})
 
 target_link_libraries(
   plasma_applet_kpapplet
   ${KDE4_PLASMA_LIBS}
-  ${KDE4_KIO_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
+  KF5::KIOCore
+  KF5::AkonadiCore
   akonadi_next
   kdepim
   kleo
