@@ -28,7 +28,7 @@
 
 #include <qdebug.h>
 #include <KMessageBox>
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
 
 BlogSettings::BlogSettings( QWidget *parent )
@@ -44,9 +44,9 @@ BlogSettings::BlogSettings( QWidget *parent )
     connect (blogsTable, SIGNAL(doubleClicked(QModelIndex)), SLOT(editBlog()));
 
     blogsTable->setHeaderLabels(QStringList()<<i18n("Title")<<i18n("URL"));
-    btnAdd->setIcon( KIcon( QLatin1String("list-add") ) );
-    btnEdit->setIcon( KIcon( QLatin1String("edit-rename") ) );
-    btnRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
+    btnAdd->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
+    btnEdit->setIcon( QIcon::fromTheme( QLatin1String("edit-rename") ) );
+    btnRemove->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
     loadBlogsList();
 }
 

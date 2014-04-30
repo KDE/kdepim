@@ -132,7 +132,7 @@ void BilboMedia::setName( const QString &name )
     d->mName = name;
 }
 
-KIcon BilboMedia::icon() const
+QIcon BilboMedia::icon() const
 {
     QPixmap iconPic;
     QString type;
@@ -142,14 +142,14 @@ KIcon BilboMedia::icon() const
 //   iconPic.scaled(64, 64, Qt::IgnoreAspectRatio);
         iconPic.scaledToHeight( 32 );
         if ( !iconPic.isNull() ) {
-            return KIcon( iconPic );
+            return QIcon( iconPic );
         } else {
             qDebug() << "iconPic is Null";
         }
     }
 
     type.replace( QLatin1Char( '/' ), QLatin1Char( '-' ) );
-    return KIcon( type );
+    return QIcon( type );
 }
 
 quint16 BilboMedia::checksum() const

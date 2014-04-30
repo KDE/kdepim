@@ -69,7 +69,7 @@ public:
     QString name() const;
     void setName( const QString &name );
 
-    KIcon icon() const;
+    QIcon icon() const;
 
     quint16 checksum() const;
     void setCheckSum( quint16 sum );

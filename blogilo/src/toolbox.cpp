@@ -35,7 +35,7 @@
 #include "settings.h"
 
 #include <KMenu>
-#include <KIcon>
+#include <QIcon>
 #include <KAction>
 #include <KToolInvocation>
 #include <QClipboard>
@@ -414,12 +414,12 @@ void Toolbox::unCheckCatList()
 
 void Toolbox::setButtonsIcon()
 {
-    btnEntriesUpdate->setIcon( KIcon( QLatin1String("view-refresh") ) );
-    btnEntriesRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
-    btnEntriesClear->setIcon( KIcon( QLatin1String("edit-clear") ) );
-    btnCatReload->setIcon( KIcon( QLatin1String("view-refresh") ) );
-    btnCatAdd->setIcon( KIcon( QLatin1String("list-add") ) );
-    btnLocalRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
+    btnEntriesUpdate->setIcon( QIcon::fromTheme( QLatin1String("view-refresh") ) );
+    btnEntriesRemove->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
+    btnEntriesClear->setIcon( QIcon::fromTheme( QLatin1String("edit-clear") ) );
+    btnCatReload->setIcon( QIcon::fromTheme( QLatin1String("view-refresh") ) );
+    btnCatAdd->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
+    btnLocalRemove->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
     ///TODO Add option for selecting only text or only Icon for Toolbox buttons!
 }
 
@@ -493,13 +493,13 @@ void Toolbox::requestEntriesListContextMenu( const QPoint & pos )
         return;
     Q_UNUSED(pos);
     KMenu *entriesContextMenu = new KMenu;
-    KAction *actEntriesOpenInBrowser = new KAction( KIcon(QLatin1String("applications-internet")),
+    KAction *actEntriesOpenInBrowser = new KAction( QIcon::fromTheme(QLatin1String("applications-internet")),
                                                     i18n("Open in browser"), entriesContextMenu );
     connect( actEntriesOpenInBrowser, SIGNAL(triggered()), this, SLOT(openPostInBrowser()) );
-    KAction *actEntriesCopyUrl = new KAction( KIcon(QLatin1String("edit-copy")),
+    KAction *actEntriesCopyUrl = new KAction( QIcon::fromTheme(QLatin1String("edit-copy")),
                                               i18n("Copy URL"), entriesContextMenu );
     connect( actEntriesCopyUrl, SIGNAL(triggered(bool)), this, SLOT(slotEntriesCopyUrl()) );
-    KAction *actEntriesCopyTitle = new KAction( KIcon(QLatin1String("edit-copy")),
+    KAction *actEntriesCopyTitle = new KAction( QIcon::fromTheme(QLatin1String("edit-copy")),
                                                 i18n("Copy title"), entriesContextMenu );
     connect( actEntriesCopyTitle, SIGNAL(triggered(bool)), this, SLOT(copyPostTitle()) );
     entriesContextMenu->addAction( actEntriesOpenInBrowser );

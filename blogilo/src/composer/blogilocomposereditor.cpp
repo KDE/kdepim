@@ -27,7 +27,7 @@
 #include <KMimeType>
 #include <KAction>
 #include <KLocale>
-#include <KIcon>
+#include <QIcon>
 
 #include <QWebElementCollection>
 #include <QWebFrame>
@@ -83,11 +83,11 @@ BlogiloComposerEditor::BlogiloComposerEditor(BlogiloComposerView *view, QWidget 
     KToolBar *mainToolBar = createToolBar(toolBarActions);
 
 
-    mActSplitPost = new KAction( KIcon( QLatin1String("insert-more-mark") ), i18n( "Split text" ), this );
+    mActSplitPost = new KAction( QIcon::fromTheme( QLatin1String("insert-more-mark") ), i18n( "Split text" ), this );
     connect( mActSplitPost, SIGNAL(triggered(bool)), this, SLOT(slotAddPostSplitter()) );
     addActionInToolBar(mActSplitPost, mainToolBar);
 
-    mActCode = new KAction( KIcon( QLatin1String("format-text-code") ), i18nc( "Sets text font to code style",
+    mActCode = new KAction( QIcon::fromTheme( QLatin1String("format-text-code") ), i18nc( "Sets text font to code style",
                            "Code" ), this );
     connect( mActCode, SIGNAL(triggered(bool)), this, SLOT(slotToggleCode(bool)) );
     addActionInToolBar(mActCode, mainToolBar);
