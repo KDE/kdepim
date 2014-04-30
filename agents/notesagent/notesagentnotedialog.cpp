@@ -29,6 +29,9 @@
 
 #include <KMime/KMimeMessage>
 
+#include <KIcon>
+#include <KGlobal>
+
 #include <QLineEdit>
 #include <QVBoxLayout>
 #include <QTextEdit>

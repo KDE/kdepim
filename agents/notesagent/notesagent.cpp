@@ -34,6 +34,7 @@
 #include <KWindowSystem>
 #include <KLocalizedString>
 #include <KLocale>
+#include <KGlobal>
 
 #include <QPointer>
 

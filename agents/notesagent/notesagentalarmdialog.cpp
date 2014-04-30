@@ -34,6 +34,7 @@
 #include <QMenu>
 #include <QAction>
 #include <KMessageBox>
+#include <KIcon>
 
 #include <QListWidget>
 #include <QLabel>

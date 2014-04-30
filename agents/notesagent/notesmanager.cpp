@@ -25,18 +25,20 @@
 #include "noteshared/attributes/notealarmattribute.h"
 #include "notesagentalarmdialog.h"
 
-#include <Session>
-#include <Collection>
-#include <Item>
-#include <ChangeRecorder>
+#include <AkonadiCore/Session>
+#include <AkonadiCore/Collection>
+#include <AkonadiCore/Item>
+#include <AkonadiCore/ChangeRecorder>
 
 #include <KMime/KMimeMessage>
+
 
 #include <ksocketfactory.h>
 #include <KNotification>
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <KIcon>
+#include <KGlobal>
 
 #include <QTcpServer>
 #include <QTimer>
@@ -170,14 +172,14 @@ void NotesManager::slotAcceptConnection()
 void NotesManager::slotNewNote(const QString &name, const QString &text)
 {
     const QPixmap pixmap = KIcon( QLatin1String("knotes") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
-
+#if 0 //QT5
     KNotification::event( QLatin1String("receivednotes"),
                           i18n("Note Received"),
                           pixmap,
                           0,
                           KNotification::CloseOnTimeout,
                           KGlobal::mainComponent());
-
+#endif
     NoteShared::CreateNewNoteJob *job = new NoteShared::CreateNewNoteJob(this, 0);
     //For the moment it doesn't support richtext.
     job->setRichText(false);

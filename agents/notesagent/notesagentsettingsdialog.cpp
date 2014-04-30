@@ -24,9 +24,10 @@
 #include <KHelpMenu>
 #include <KLocalizedString>
 #include <KIcon>
-#include <KAboutData>
+#include <K4AboutData>
 #include <KNotifyConfigWidget>
 
+#include <KGlobal>
 #include <QHBoxLayout>
 #include <QTabWidget>
 
@@ -59,13 +60,13 @@ NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
 
     setMainWidget(mainWidget);
     readConfig();
-    mAboutData = new KAboutData(
+    mAboutData = new K4AboutData(
                 QByteArray( "notesagent" ),
                 QByteArray(),
                 ki18n( "Notes Agent" ),
                 QByteArray( KDEPIM_VERSION ),
                 ki18n( "Notes Agent." ),
-                KAboutData::License_GPL_V2,
+                K4AboutData::License_GPL_V2,
                 ki18n( "Copyright (C) 2013, 2014 Laurent Montel" ) );
 
     mAboutData->addAuthor( ki18n( "Laurent Montel" ),
@@ -75,12 +76,13 @@ NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
     mAboutData->setTranslator( ki18nc( "NAME OF TRANSLATORS", "Your names" ),
                              ki18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
 
-
+#if 0 //QT5
     KHelpMenu *helpMenu = new KHelpMenu(this, mAboutData, true);
     //Initialize menu
     QMenu *menu = helpMenu->menu();
     helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(KIcon(QLatin1String("knotes")));
     setButtonMenu( Help, menu );
+#endif
 }
 
 NotesAgentSettingsDialog::~NotesAgentSettingsDialog()
