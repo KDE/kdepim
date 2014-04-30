@@ -179,10 +179,11 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
 void RichTextEditor::slotSpeakText()
 {
     // If KTTSD not running, start it.
-    if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.kttsd"))) {
-        QString error;
-        if (KToolInvocation::startServiceByDesktopName(QLatin1String("kttsd"), QStringList(), &error)) {
-            KMessageBox::error(this, i18n( "Starting Jovie Text-to-Speech Service Failed"), error );
+    QDBusConnectionInterface *bus = QDBusConnection::sessionBus().interface();
+    if (!bus->isServiceRegistered(QLatin1String("org.kde.kttsd"))) {
+        QDBusReply<void> reply = bus->startService(QLatin1String("org.kde.kttsd"));
+        if (!reply.isValid()) {
+            KMessageBox::error(this, i18n("Starting Jovie Text-to-Speech Service Failed"), reply.error().message());
             return;
         }
     }
