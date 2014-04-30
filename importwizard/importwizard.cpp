@@ -47,7 +47,7 @@
 #include <qdebug.h>
 #include <KMessageBox>
 #include <KHelpMenu>
-#include <KMenu>
+#include <QMenu>
 #include <AkonadiCore/control.h>
 #include <mailcommon/kernel/mailkernel.h>
 

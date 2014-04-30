@@ -19,7 +19,7 @@
 
 #include <KLocale>
 #include <QIcon>
-#include <KMenu>
+#include <QMenu>
 
 #include <QToolButton>
 #include <QTabBar>
@@ -72,7 +72,7 @@ void PostsTabWidget::slotTabContextMenuRequest( const QPoint &pos )
     if ( indexBar == -1 )
         return;
 
-    KMenu menu( this );
+    QMenu menu( this );
     QAction *closeTab = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
     closeTab->setIcon( QIcon::fromTheme( QLatin1String( "tab-close" ) ) );
 

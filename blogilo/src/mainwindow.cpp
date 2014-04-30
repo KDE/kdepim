@@ -58,7 +58,7 @@
 #include <KToggleAction>
 #include <kactioncollection.h>
 #include <KActionMenu>
-#include <KAction>
+#include <QAction>
 #include <kconfigdialog.h>
 #include <qdebug.h>
 #include <kmessagebox.h>
@@ -66,7 +66,7 @@
 #include <KSelectAction>
 #include <kimagefilepreview.h>
 #include <KToolInvocation>
-#include <KMenu>
+#include <QMenu>
 
 #include <QDockWidget>
 #include <QProgressBar>
@@ -211,24 +211,24 @@ void MainWindow::setupActions()
     KStandardAction::preferences( this, SLOT(optionsPreferences()), actionCollection() );
 
     // custom menu and menu item
-    KAction *actNewPost = new KAction( QIcon::fromTheme( QLatin1String("document-new") ), i18n( "New Post" ), this );
+    QAction *actNewPost = new QAction( QIcon::fromTheme( QLatin1String("document-new") ), i18n( "New Post" ), this );
     actionCollection()->addAction( QLatin1String( "new_post" ), actNewPost );
     actNewPost->setShortcut( Qt::CTRL + Qt::Key_N );
     connect( actNewPost, SIGNAL(triggered(bool)), this, SLOT(slotCreateNewPost()) );
 
-    KAction *actAddBlog = new KAction( QIcon::fromTheme( QLatin1String("list-add") ), i18n( "Add Blog..." ), this );
+    QAction *actAddBlog = new QAction( QIcon::fromTheme( QLatin1String("list-add") ), i18n( "Add Blog..." ), this );
     actionCollection()->addAction( QLatin1String( "add_blog" ), actAddBlog );
     connect( actAddBlog, SIGNAL(triggered(bool)), this, SLOT(addBlog()) );
 
-    KAction *actPublish = new KAction( QIcon::fromTheme( QLatin1String("arrow-up") ), i18n( "Submit..." ), this );
+    QAction *actPublish = new QAction( QIcon::fromTheme( QLatin1String("arrow-up") ), i18n( "Submit..." ), this );
     actionCollection()->addAction( QLatin1String( "publish_post" ), actPublish );
     connect( actPublish, SIGNAL(triggered(bool)), this, SLOT(slotPublishPost()) );
 
-    KAction *actUpload = new KAction( QIcon::fromTheme( QLatin1String("upload-media") ), i18n( "Upload Media..." ), this );
+    QAction *actUpload = new QAction( QIcon::fromTheme( QLatin1String("upload-media") ), i18n( "Upload Media..." ), this );
     actionCollection()->addAction( QLatin1String( "upload_media" ), actUpload );
     connect( actUpload, SIGNAL(triggered(bool)), this, SLOT(uploadMediaObject()) );
 
-    KAction *actSaveLocally = new KAction( QIcon::fromTheme( QLatin1String("document-save") ), i18n( "Save Locally" ), this );
+    QAction *actSaveLocally = new QAction( QIcon::fromTheme( QLatin1String("document-save") ), i18n( "Save Locally" ), this );
     actionCollection()->addAction( QLatin1String( "save_locally" ), actSaveLocally );
     actSaveLocally->setShortcut( Qt::CTRL + Qt::Key_S );
     connect( actSaveLocally, SIGNAL(triggered(bool)), this, SLOT(slotSavePostLocally()) );
@@ -244,7 +244,7 @@ void MainWindow::setupActions()
     blogs = new KSelectAction( this );
     actionCollection()->addAction( QLatin1String( "blogs_list" ), blogs );
 
-    KAction *actOpenBlog = new KAction(QIcon::fromTheme(QLatin1String("applications-internet")), i18n("Open in browser"), this);
+    QAction *actOpenBlog = new QAction(QIcon::fromTheme(QLatin1String("applications-internet")), i18n("Open in browser"), this);
     actionCollection()->addAction( QLatin1String("open_blog_in_browser"), actOpenBlog);
     actOpenBlog->setToolTip(i18n("Open current blog in browser"));
     connect( actOpenBlog, SIGNAL(triggered(bool)), this, SLOT(slotOpenCurrentBlogInBrowser()) );

@@ -3,7 +3,7 @@ project(kgpgconf)
 include_directories(${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme)
 add_definitions(-D_ASSUAN_ONLY_GPG_ERRORS -DKDE_DEFAULT_DEBUG_AREA=5154)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+kde_enable_exceptions()
 
 set(_kgpgconf_SRCS
   configreader.cpp
@@ -14,13 +14,13 @@ set(_kgpgconf_SRCS
   mainwindow.cpp
 )
 
-kde4_add_ui_files(_kgpgconf_SRCS mainwidget.ui)
+qt5_wrap_ui(_kgpgconf_SRCS mainwidget.ui)
 
 # todo: more appropriate icon?
 kde4_add_app_icon(_kgpgconf_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/preferences-desktop-cryptography.png")
 
-kde4_add_executable(kgpgconf ${_kgpgconf_SRCS})
+add_executable(kgpgconf ${_kgpgconf_SRCS})
 
-target_link_libraries(kgpgconf ${QGPGME_LIBRARIES} ${KDE4_KDEUI_LIBS})
+target_link_libraries(kgpgconf ${QGPGME_LIBRARIES} Qt5::Core KF5::KDELibs4Support )
 
 install(TARGETS kgpgconf ${INSTALL_TARGETS_DEFAULT_ARGS})

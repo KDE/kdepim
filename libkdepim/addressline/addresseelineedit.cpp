@@ -1210,17 +1210,17 @@ void AddresseeLineEdit::dropEvent( QDropEvent *event )
                 return;
             }
         } else {
-//QT5
-#if 0
             // Let's see if this drop contains a comma separated list of emails
-            const QString dropData = QString::fromUtf8( event->encodedData( "text/plain" ) );
-            const QStringList addrs = KPIMUtils::splitAddressList( dropData );
-            if ( !addrs.isEmpty() ) {
-                setText( KPIMUtils::normalizeAddressesAndDecodeIdn( dropData ) );
-                setModified( true );
-                return;
+            const QMimeData *mimeData = event->mimeData();
+            if (mimeData->hasText() ) {
+                const QString dropData = mimeData->text();
+                const QStringList addrs = KPIMUtils::splitAddressList( dropData );
+                if ( !addrs.isEmpty() ) {
+                    setText( KPIMUtils::normalizeAddressesAndDecodeIdn( dropData ) );
+                    setModified( true );
+                    return;
+                }
             }
-#endif
         }
     }
 

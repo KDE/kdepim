@@ -34,9 +34,9 @@
 #include "catcheckbox.h"
 #include "settings.h"
 
-#include <KMenu>
+#include <QMenu>
 #include <QIcon>
-#include <KAction>
+#include <QAction>
 #include <KToolInvocation>
 #include <QClipboard>
 #include <QTimer>
@@ -492,14 +492,14 @@ void Toolbox::requestEntriesListContextMenu( const QPoint & pos )
     if ( lstEntriesList->selectedItems().isEmpty() )
         return;
     Q_UNUSED(pos);
-    KMenu *entriesContextMenu = new KMenu;
-    KAction *actEntriesOpenInBrowser = new KAction( QIcon::fromTheme(QLatin1String("applications-internet")),
+    QMenu *entriesContextMenu = new QMenu;
+    QAction *actEntriesOpenInBrowser = new QAction( QIcon::fromTheme(QLatin1String("applications-internet")),
                                                     i18n("Open in browser"), entriesContextMenu );
     connect( actEntriesOpenInBrowser, SIGNAL(triggered()), this, SLOT(openPostInBrowser()) );
-    KAction *actEntriesCopyUrl = new KAction( QIcon::fromTheme(QLatin1String("edit-copy")),
+    QAction *actEntriesCopyUrl = new QAction( QIcon::fromTheme(QLatin1String("edit-copy")),
                                               i18n("Copy URL"), entriesContextMenu );
     connect( actEntriesCopyUrl, SIGNAL(triggered(bool)), this, SLOT(slotEntriesCopyUrl()) );
-    KAction *actEntriesCopyTitle = new KAction( QIcon::fromTheme(QLatin1String("edit-copy")),
+    QAction *actEntriesCopyTitle = new QAction( QIcon::fromTheme(QLatin1String("edit-copy")),
                                                 i18n("Copy title"), entriesContextMenu );
     connect( actEntriesCopyTitle, SIGNAL(triggered(bool)), this, SLOT(copyPostTitle()) );
     entriesContextMenu->addAction( actEntriesOpenInBrowser );
