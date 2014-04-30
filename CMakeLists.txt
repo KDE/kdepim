@@ -101,7 +101,7 @@ find_package(KF5AlarmCalendar ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Service ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5DNSSD ${KF5_VERSION} CONFIG REQUIRED)
-
+find_package(KF5DocTools REQUIRED)
 include(GenerateExportHeader)
 
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
@@ -198,61 +198,61 @@ add_subdirectory(messagelist)
 add_subdirectory(templateparser)
 include (kleopatra/ConfigureChecks.cmake)
 
-  # These targets will always be built before anything else.
-
-  #if(QGpgme_FOUND)
-    if(Boost_TOPOLOGICAL_SORT_DIR)
-      add_subdirectory(kleopatra)
-    endif()
-  #endif()
-
-  # The following components depend on QGpgME.
-  add_subdirectory(messageviewer)
-  add_subdirectory(messagecomposer)
-  add_subdirectory(pimcommon)
-  add_subdirectory(mailcommon) 
-  add_subdirectory(kmail)
-  add_subdirectory(grantleeeditor)
-  if(KDEPIM_BUILD_MOBILE)
-    add_subdirectory(mobile)
+#if(QGpgme_FOUND)
+  if(Boost_TOPOLOGICAL_SORT_DIR)
+    add_subdirectory(kleopatra)
   endif()
+#endif()
 
-  if(KDEPIM_BUILD_EXAMPLES)
-    add_subdirectory(examples)
-  endif()
+add_subdirectory(messageviewer)
+add_subdirectory(messagecomposer)
+add_subdirectory(pimcommon)
+add_subdirectory(mailcommon) 
+add_subdirectory(kmail)
+add_subdirectory(grantleeeditor)
+if(KDEPIM_BUILD_MOBILE)
+  add_subdirectory(mobile)
+endif()
 
-  set(KMAIL_SUPPORTED TRUE)
-  add_definitions(-DKMAIL_SUPPORTED)
+if(KDEPIM_BUILD_EXAMPLES)
+  add_subdirectory(examples)
+endif()
 
-  add_subdirectory(korganizer)
-  add_subdirectory(korgac)
-  add_subdirectory(sieveeditor)
-  add_subdirectory(storageservicemanager)
-  add_subdirectory(kaddressbookgrantlee)
-  if(KDEPIM_BUILD_DESKTOP)
-    add_subdirectory(agents)
-    add_subdirectory(akregator)
-    add_subdirectory(importwizard)
-    add_subdirectory(kaddressbook)
-    add_subdirectory(kmailcvt)
-    add_subdirectory(mboximporter)
-    add_subdirectory(knotes)
-    add_subdirectory(ksendemail)
-    add_subdirectory(ktnef)
-    add_subdirectory(mailimporter)
-    add_subdirectory(pimsettingexporter)
-    #add_subdirectory(kalarm)
-    add_subdirectory(blogilo)
+set(KMAIL_SUPPORTED TRUE)
+add_definitions(-DKMAIL_SUPPORTED)
 
-    add_subdirectory(kjots)
+add_subdirectory(korganizer)
+add_subdirectory(korgac)
+add_subdirectory(sieveeditor)
+add_subdirectory(storageservicemanager)
+add_subdirectory(kaddressbookgrantlee)
+if(KDEPIM_BUILD_DESKTOP)
+  add_subdirectory(agents)
+  add_subdirectory(akregator)
+  add_subdirectory(importwizard)
+  add_subdirectory(kaddressbook)
+  add_subdirectory(kmailcvt)
+  add_subdirectory(mboximporter)
+  add_subdirectory(knotes)
+  add_subdirectory(ksendemail)
+  add_subdirectory(ktnef)
+  add_subdirectory(mailimporter)
+  add_subdirectory(pimsettingexporter)
+  #add_subdirectory(kalarm)
+  add_subdirectory(blogilo)
 
-    add_subdirectory(kontact) # must be the last one.
-  endif()
+  add_subdirectory(kjots)
 
-  add_subdirectory(akonadiconsole)
-  add_subdirectory(console)
+  add_subdirectory(kontact) # must be the last one.
+endif()
 
-  add_subdirectory(plugins) # Must be after KMail
+add_subdirectory(akonadiconsole)
+add_subdirectory(console)
+
+add_subdirectory(plugins) # Must be after KMail
+
+# doc must be a subdir of kdepim or packagers will kill us
+add_subdirectory(doc)
 
 feature_summary(WHAT ALL
                 INCLUDE_QUIET_PACKAGES
