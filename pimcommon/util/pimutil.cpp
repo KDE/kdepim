@@ -60,11 +60,8 @@ OrgKdeAkonadiImapSettingsInterface *PimCommon::Util::createImapSettingsInterface
 void PimCommon::Util::saveTextAs( const QString &text, const QString &filter, QWidget *parent, const KUrl &url, const QString &caption )
 {
     QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, parent) );
-//QT5
-#if 0
     if (!caption.isEmpty())
-        fdlg->setCaption(caption);
-#endif
+        fdlg->setWindowTitle(caption);
     fdlg->setMode( KFile::File );
     fdlg->setOperationMode( KFileDialog::Saving );
     fdlg->setConfirmOverwrite(true);
@@ -97,11 +94,8 @@ bool PimCommon::Util::saveToFile( const QString &filename, const QString &text)
 QString PimCommon::Util::loadToFile(const QString &filter, QWidget *parent, const KUrl &url, const QString &caption)
 {
     QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, parent) );
-//QT5
-#if 0
     if (!caption.isEmpty())
-        fdlg->setCaption(caption);
-#endif
+        fdlg->setWindowTitle(caption);
     fdlg->setMode( KFile::File );
     fdlg->setOperationMode( KFileDialog::Opening );
     QString result;

@@ -69,7 +69,7 @@ ConfigureDialog::ConfigureDialog( QWidget * parent )
   : KCMultiDialog( parent )
 {
   setFaceType( KPageDialog::List );
-  //QT5 setCaption( i18n( "Configure" ) );
+  setWindowTitle( i18n( "Configure" ) );
 #ifdef Q_OS_UNIX
   KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap( IconSize( KIconLoader::Desktop ), IconSize( KIconLoader::Desktop ) ),
                   qApp->windowIcon().pixmap( IconSize( KIconLoader::Small ), IconSize( KIconLoader::Small ) ) );

@@ -782,7 +782,7 @@ KPrefsDialog::KPrefsDialog( KConfigSkeleton *prefs, QWidget *parent, bool modal 
       KPrefsWidManager( prefs )
 {
     setFaceType( List );
-    // QT5 setCaption( i18n( "Preferences" ) );
+    setWindowTitle( i18n( "Preferences" ) );
     //QT5 setButtons( Ok|Apply|Cancel|Default );
     //QT5 setDefaultButton( Ok );
     setModal( modal );

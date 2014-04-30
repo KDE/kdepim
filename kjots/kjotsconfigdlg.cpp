@@ -20,7 +20,7 @@
 KJotsConfigDlg::KJotsConfigDlg( const QString & title, QWidget *parent )
   : KCMultiDialog( parent )
 {
-    //QT5 setCaption( title );
+    setWindowTitle( title );
     setFaceType( KPageDialog::List );
     //QT5 setButtons( Default | Ok | Cancel );
     //QT5 setDefaultButton( Ok );
