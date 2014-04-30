@@ -34,7 +34,7 @@
 #include <KIconLoader>
 #include <KLocale>
 #include <KMessageBox>
-#include <KMenu>
+#include <QMenu>
 #include <KStandardAction>
 #include <KToolInvocation>
 #include <KGlobal>
@@ -101,7 +101,7 @@ AlarmDockWindow::AlarmDockWindow()
   const char *quitName = KStandardAction::name( KStandardAction::Quit );
   QAction *quit = ac->action( QLatin1String(quitName) );
   if ( !quit ) {
-    kDebug() << "No Quit standard action.";
+    qDebug() << "No Quit standard action.";
   } else {
     quit->disconnect( SIGNAL(triggered(bool)), this, SLOT(maybeQuit()) );
     connect( quit, SIGNAL(activated()), SLOT(slotQuit()) );
@@ -139,7 +139,7 @@ void AlarmDockWindow::toggleAlarmsEnabled( bool checked )
 
 void AlarmDockWindow::toggleAutostart( bool checked )
 {
-  kDebug();
+  qDebug();
   mAutostartSet = true;
   enableAutostart( checked );
 }

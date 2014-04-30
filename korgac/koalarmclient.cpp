@@ -63,7 +63,7 @@ KOAlarmClient::KOAlarmClient( QObject *parent )
 {
   new KOrgacAdaptor( this );
   Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String("/ac"), this );
-  kDebug();
+  qDebug();
 
 #if !defined(KORGAC_AKONADI_AGENT)
   if ( dockerEnabled() ) {
@@ -86,7 +86,7 @@ KOAlarmClient::KOAlarmClient( QObject *parent )
 
   KConfigGroup alarmGroup( KGlobal::config(), "Alarms" );
   const int interval = alarmGroup.readEntry( "Interval", 60 );
-  kDebug() << "KOAlarmClient check interval:" << interval << "seconds.";
+  qDebug() << "KOAlarmClient check interval:" << interval << "seconds.";
   mLastChecked = alarmGroup.readEntry( "CalendarsLastChecked", QDateTime() );
 
   checkAlarms();
@@ -279,7 +279,7 @@ void KOAlarmClient::saveLastCheckTime()
 
 void KOAlarmClient::quit()
 {
-  kDebug();
+  qDebug();
 #if !defined(KORGAC_AKONADI_AGENT)
   kapp->quit();
 #endif
@@ -302,7 +302,7 @@ void KOAlarmClient::dumpDebug()
 {
   KConfigGroup cfg( KGlobal::config(), "Alarms" );
   const QDateTime lastChecked = cfg.readEntry( "CalendarsLastChecked", QDateTime() );
-  kDebug() << "Last Check:" << lastChecked;
+  qDebug() << "Last Check:" << lastChecked;
 }
 
 QStringList KOAlarmClient::dumpAlarms()

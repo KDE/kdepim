@@ -59,7 +59,7 @@
 #include <KWindowSystem>
 #include <KGlobal>
 #include <KIconLoader>
-#include <KIcon>
+#include <QIcon>
 //QT5 #include <phonon/mediaobject.h>
 #include <QLabel>
 #include <QKeyEvent>
@@ -165,7 +165,7 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
   }
   setMainWidget( topBox );
   setCaption( i18nc( "@title:window", "Reminders" ) );
-  setWindowIcon( KIcon( QLatin1String("korgac") ) );
+  setWindowIcon( QIcon::fromTheme( QLatin1String("korgac") ) );
   setButtons( Ok | User1 | User2 | User3 );
   setDefaultButton( NoDefault );
   setButtonText( User3, i18nc( "@action:button", "Dismiss Reminder" ) );
@@ -424,7 +424,7 @@ void AlarmDialog::dismiss( ReminderList selections )
 {
   QList<Akonadi::Item::Id> ids;
   for ( ReminderList::Iterator it = selections.begin(); it != selections.end(); ++it ) {
-    kDebug() << "removing " << CalendarSupport::incidence( (*it)->mIncidence )->summary();
+    qDebug() << "removing " << CalendarSupport::incidence( (*it)->mIncidence )->summary();
     if ( mIncidenceTree->itemBelow( *it ) ) {
       mIncidenceTree->setCurrentItem( mIncidenceTree->itemBelow( *it ) );
     } else if ( mIncidenceTree->itemAbove( *it ) ) {
@@ -617,7 +617,7 @@ void AlarmDialog::eventNotification()
       // FIXME: Check whether this should be done for all multiple alarms
       if ( alarm->type() == Alarm::Procedure ) {
         // FIXME: Add a message box asking whether the procedure should really be executed
-        kDebug() << "Starting program: '" << alarm->programFile() << "'";
+        qDebug() << "Starting program: '" << alarm->programFile() << "'";
 
         QString program = alarm->programFile();
 
@@ -770,7 +770,7 @@ int AlarmDialog::activeCount()
     }
     ++it;
   }
-  kDebug() << "computed " << count << " active reminders";
+  qDebug() << "computed " << count << " active reminders";
   return count;
 }
 
@@ -783,7 +783,7 @@ void AlarmDialog::closeEvent( QCloseEvent * )
 void AlarmDialog::updateButtons()
 {
   const int count = selectedItems().count();
-  kDebug() << "selected items=" << count;
+  qDebug() << "selected items=" << count;
   enableButton( User3, count > 0 );  // enable Dismiss, if >1 selected
   enableButton( User1, count == 1 ); // enable Edit, if only 1 selected
   enableButton( Ok, count > 0 );     // enable Suspend, if >1 selected
@@ -948,7 +948,7 @@ bool AlarmDialog::openIncidenceEditorThroughKOrganizer( const Incidence::Ptr &in
   org::kde::korganizer::Korganizer korganizer(
     QLatin1String("org.kde.korganizer"), QLatin1String("/Korganizer"), QDBusConnection::sessionBus() );
 
-  kDebug() << "editing incidence " << incidence->summary();
+  qDebug() << "editing incidence " << incidence->summary();
   if ( !korganizer.editIncidence( incidence->uid() ) ) {
     KMessageBox::error(
       this,
