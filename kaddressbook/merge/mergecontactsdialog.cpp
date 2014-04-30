@@ -39,7 +39,8 @@
 
 using namespace KABMergeContacts;
 MergeContactsDialog::MergeContactsDialog(QItemSelectionModel *selectionModel, QWidget *parent)
-    : KDialog(parent)
+    : KDialog(parent),
+      mContactWidget(0)
 {
     setCaption( i18n( "Select Contacts to merge" ) );
     setButtons( Close );

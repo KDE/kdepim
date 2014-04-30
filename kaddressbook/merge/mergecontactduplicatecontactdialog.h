@@ -15,29 +15,28 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef MERGECONTACTDUPLICATECONTACTDIALOG_H
+#define MERGECONTACTDUPLICATECONTACTDIALOG_H
 
-#include "mergecontactshowresulttabwidget.h"
-#include <QTabBar>
+#include <KDialog>
 
-using namespace KABMergeContacts;
-
-MergeContactShowResultTabWidget::MergeContactShowResultTabWidget(QWidget *parent)
-    : QTabWidget(parent)
+namespace KABMergeContacts {
+class MergeContactShowResultTabWidget;
+class MergeContactDuplicateContactDialog : public KDialog
 {
-    updateTabWidget();
+    Q_OBJECT
+public:
+    explicit MergeContactDuplicateContactDialog(QWidget *parent=0);
+    ~MergeContactDuplicateContactDialog();
+
+private slots:
+    void slotAddDuplicateContact();
+
+private:
+    void readConfig();
+    void writeConfig();
+    MergeContactShowResultTabWidget *mMergeContact;
+};
 }
 
-MergeContactShowResultTabWidget::~MergeContactShowResultTabWidget()
-{
-}
-
-void MergeContactShowResultTabWidget::updateTabWidget()
-{
-    tabBar()->setVisible(count()>1);
-}
-
-bool MergeContactShowResultTabWidget::tabBarVisible() const
-{
-    return tabBar()->isVisible();
-}
-
+#endif // MERGECONTACTDUPLICATECONTACTDIALOG_H
