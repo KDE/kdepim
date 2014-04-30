@@ -20,7 +20,7 @@
 #include "tasksimporthandler.h"
 
 #include <KCalCore/FileStorage>
-#include <KCalCore/IcalFormat>
+#include <KCalCore/ICalFormat>
 #include <KCalCore/MemoryCalendar>
 #include <KCalCore/Todo>
 #include <klocale.h>

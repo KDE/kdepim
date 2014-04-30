@@ -21,7 +21,7 @@
 
 #include <KCalCore/Event>
 #include <KCalCore/FileStorage>
-#include <KCalCore/IcalFormat>
+#include <KCalCore/ICalFormat>
 #include <KCalCore/MemoryCalendar>
 #include <kfiledialog.h>
 #include <klocale.h>
