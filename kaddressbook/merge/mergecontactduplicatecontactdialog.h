@@ -19,23 +19,32 @@
 #define MERGECONTACTDUPLICATECONTACTDIALOG_H
 
 #include <KDialog>
+#include <Akonadi/Item>
 
+#include "kaddressbook_export.h"
+class QStackedWidget;
+class QLabel;
 namespace KABMergeContacts {
 class MergeContactShowResultTabWidget;
-class MergeContactDuplicateContactDialog : public KDialog
+class KADDRESSBOOK_EXPORT MergeContactDuplicateContactDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit MergeContactDuplicateContactDialog(QWidget *parent=0);
+    explicit MergeContactDuplicateContactDialog(const Akonadi::Item::List &list, QWidget *parent=0);
     ~MergeContactDuplicateContactDialog();
 
 private slots:
     void slotAddDuplicateContact();
 
 private:
+    void searchPotentialDuplicateContacts(const Akonadi::Item::List &list);
     void readConfig();
     void writeConfig();
     MergeContactShowResultTabWidget *mMergeContact;
+    QLabel *mNoContactSelected;
+    QLabel *mNoDuplicateContactFound;
+    QLabel *mNoEnoughContactSelected;
+    QStackedWidget *mStackedWidget;
 };
 }
 
