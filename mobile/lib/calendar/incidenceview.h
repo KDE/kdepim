@@ -22,7 +22,7 @@
 
 #include <AkonadiCore/Collection>
 #include <AkonadiCore/Item>
-#include <KCalCore/incidence.h>
+#include <KCalCore/Incidence>
 
 #include <incidenceeditor-ng/combinedincidenceeditor.h>
 #include <incidenceeditor-ng/editoritemmanager.h>

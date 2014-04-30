@@ -34,7 +34,7 @@
 
 #include <KMime/kmime_message.h>
 
-#include <KCalCore/todo.h>
+#include <KCalCore/Todo>
 
 #include "trip.h"
 #include "note.h"

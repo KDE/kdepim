@@ -25,7 +25,7 @@
 
 #include <AkonadiCore/ChangeRecorder>
 
-#include <KCalCore/incidence.h>
+#include <KCalCore/Incidence>
 
 #include "tripcomponentfactory.h"
 #include "tripmodel.h"

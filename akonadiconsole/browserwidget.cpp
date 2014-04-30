@@ -50,7 +50,7 @@
 
 #include <KABC/addressee.h>
 #include <KABC/contactgroup.h>
-#include <KCalCore/incidence.h>
+#include <KCalCore/Incidence>
 
 #include <kdebug.h>
 #include <kconfig.h>
