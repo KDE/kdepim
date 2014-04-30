@@ -29,7 +29,7 @@
 #include <calendarsupport/categoryconfig.h>
 
 #include <KDebug>
-#include <KIcon>
+#include <QIcon>
 
 using namespace IncidenceEditorNG;
 using namespace CalendarSupport;
@@ -52,8 +52,8 @@ CategoryWidget::CategoryWidget( CategoryConfig *cc, QWidget *parent )
   mWidgets = new CategoryWidgetBase( this );
   topL->addWidget( mWidgets );
 
-  mWidgets->mButtonAdd->setIcon( KIcon( "list-add" ) );
-  mWidgets->mButtonRemove->setIcon( KIcon( "list-remove" ) );
+  mWidgets->mButtonAdd->setIcon( QIcon::fromTheme( "list-add" ) );
+  mWidgets->mButtonRemove->setIcon( QIcon::fromTheme( "list-remove" ) );
   mWidgets->mLineEdit->setClickMessage( i18n( "Click to add a new category" ) );
 
   connect( mWidgets->mLineEdit, SIGNAL(textChanged(QString)),

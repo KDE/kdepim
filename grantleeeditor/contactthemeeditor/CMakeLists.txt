@@ -32,7 +32,7 @@ set(contactthemeeditor_SRCS
 add_executable(contactthemeeditor ${contactthemeeditor_SRCS} )
 TARGET_LINK_LIBRARIES(contactthemeeditor 
                        KF5::Mime 
-                        
+                       KF5::DBusAddons                        
                        KF5::PimTextEdit 
                        KF5::KIOCore 
                        KF5::NewStuff 

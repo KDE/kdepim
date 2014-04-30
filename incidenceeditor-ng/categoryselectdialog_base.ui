@@ -56,14 +56,14 @@
        </spacer>
      </item>
      <item>
-      <widget class="KPushButton" name="mButtonClear" >
+      <widget class="QPushButton" name="mButtonClear" >
        <property name="text" >
         <string>&amp;Clear Selection</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="KPushButton" name="mButtonEdit" >
+      <widget class="QPushButton" name="mButtonEdit" >
        <property name="text" >
         <string>&amp;Edit Categories...</string>
        </property>
@@ -80,13 +80,6 @@
    <header>autochecktreewidget.h</header>
    <container>0</container>
    <pixmap></pixmap>
-  </customwidget>
-  <customwidget>
-    <class>KPushButton</class>
-    <extends>QPushButton</extends>
-    <header>KPushButton</header>
-    <container>0</container>
-    <pixmap></pixmap>
   </customwidget>
  </customwidgets>
  <tabstops>

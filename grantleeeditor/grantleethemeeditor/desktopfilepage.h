@@ -21,7 +21,7 @@
 
 #include <QWidget>
 #include "grantleethemeeditor_export.h"
-class KLineEdit;
+class QLineEdit;
 class KZip;
 
 namespace PimCommon {
@@ -68,12 +68,12 @@ private Q_SLOTS:
 private:
     void saveAsFilename(const QString &filename);
     QString mDefaultDesktopName;
-    KLineEdit *mName;
+    QLineEdit *mName;
     PimCommon::RichTextEditorWidget *mDescription;
-    KLineEdit *mFilename;
-    KLineEdit *mAuthor;
-    KLineEdit *mEmail;
-    KLineEdit *mVersion;
+    QLineEdit *mFilename;
+    QLineEdit *mAuthor;
+    QLineEdit *mEmail;
+    QLineEdit *mVersion;
     PimCommon::SimpleStringListEditor *mExtraDisplayHeaders;
 };
 }

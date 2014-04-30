@@ -28,7 +28,7 @@ namespace Ui {
   class EventOrTodoMore;
 }
 
-class KMenu;
+class QMenu;
 
 class QListWidgetItem;
 class QMimeData;
@@ -95,7 +95,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttachment : public IncidenceEditor
     Ui::EventOrTodoDesktop *mUi;
 #endif
 
-    KMenu *mPopupMenu;
+    QMenu *mPopupMenu;
     QAction *mOpenAction;
     QAction *mSaveAsAction;
 #ifndef QT_NO_CLIPBOARD

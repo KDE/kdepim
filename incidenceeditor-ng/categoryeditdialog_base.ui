@@ -41,7 +41,7 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="KPushButton" name="mButtonAdd" >
+      <widget class="QPushButton" name="mButtonAdd" >
        <property name="toolTip" >
         <string>Add the entry to the category list</string>
        </property>
@@ -54,7 +54,7 @@
       </widget>
      </item>
      <item>
-      <widget class="KPushButton" name="mButtonAddSubcategory" >
+      <widget class="QPushButton" name="mButtonAddSubcategory" >
        <property name="toolTip" >
         <string>Add the entry as a subcategory of the selected category</string>
        </property>
@@ -67,7 +67,7 @@
       </widget>
      </item>
      <item>
-      <widget class="KPushButton" name="mButtonRemove" >
+      <widget class="QPushButton" name="mButtonRemove" >
        <property name="toolTip" >
         <string>Remove the selected category</string>
        </property>
@@ -131,11 +131,6 @@
    <class>KLineEdit</class>
    <extends>QLineEdit</extends>
    <header>klineedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
   </customwidget>
   <customwidget>
    <class>IncidenceEditorNG::AutoCheckTreeWidget</class>

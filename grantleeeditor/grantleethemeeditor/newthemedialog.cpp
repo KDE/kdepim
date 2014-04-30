@@ -19,10 +19,11 @@
 #include "newthemedialog.h"
 #include "globalsettings_base.h"
 
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocalizedString>
 #include <KUrlRequester>
 #include <KUrl>
+#include <KLineEdit>
 
 #include <QVBoxLayout>
 #include <QLabel>
@@ -43,7 +44,7 @@ NewThemeDialog::NewThemeDialog(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Theme name:"));
     lay->addWidget(lab);
 
-    mThemeName = new KLineEdit;
+    mThemeName = new QLineEdit;
     connect(mThemeName, SIGNAL(textChanged(QString)), this, SLOT(slotUpdateOkButton()));
     lay->addWidget(mThemeName);
 

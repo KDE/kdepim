@@ -299,7 +299,7 @@ VisualFreeBusyWidget::~VisualFreeBusyWidget()
 
 void VisualFreeBusyWidget::showAttendeeStatusMenu()
 {
-//   KMenu *menu = new KMenu( 0 );
+//   QMenu *menu = new QMenu( 0 );
 //
 //   QAction *needsaction =
 //     menu->addAction( SmallIcon( "help-about" ),

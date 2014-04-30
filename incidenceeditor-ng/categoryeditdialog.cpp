@@ -28,7 +28,7 @@
 #include <calendarsupport/categoryconfig.h>
 
 #include <KLocalizedString>
-#include <KIcon>
+#include <QIcon>
 
 #include <QHeaderView>
 #include <QList>
@@ -49,13 +49,13 @@ CategoryEditDialog::CategoryEditDialog( CategoryConfig *categoryConfig,
   mWidgets->setupUi( widget );
 
   mWidgets->mCategories->header()->hide();
-  mWidgets->mButtonAdd->setIcon( KIcon( "list-add" ) );
+  mWidgets->mButtonAdd->setIcon( QIcon::fromTheme( "list-add" ) );
 
   mWidgets->mButtonAddSubcategory->setEnabled( false );
-  mWidgets->mButtonAddSubcategory->setIcon( KIcon( "list-add" ) );
+  mWidgets->mButtonAddSubcategory->setIcon( QIcon::fromTheme( "list-add" ) );
 
   mWidgets->mButtonRemove->setEnabled( false );
-  mWidgets->mButtonRemove->setIcon( KIcon( "list-remove" ) );
+  mWidgets->mButtonRemove->setIcon( QIcon::fromTheme( "list-remove" ) );
 
 #ifndef KDEPIM_MOBILE_UI
   mWidgets->mCategories->setDragDropMode( QAbstractItemView::InternalMove );

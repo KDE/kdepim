@@ -33,17 +33,17 @@
 
 #include <KMime/Message>
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KFileDialog>
-#include <KMenu>
+#include <QMenu>
 #include <KMessageBox>
 #include <KProtocolManager>
 #include <KRun>
 #include <KIO/Job>
 #include <KIO/NetAccess>
 #include <KLocalizedString>
-#include <KIcon>
+#include <QIcon>
 
 #include <QClipboard>
 #include <QMimeData>
@@ -57,7 +57,7 @@ IncidenceAttachment::IncidenceAttachment( Ui::EventOrTodoDesktop *ui )
 #endif
   : IncidenceEditor( 0 ),
     mUi( ui ),
-    mPopupMenu( new KMenu )
+    mPopupMenu( new QMenu )
 {
   setupActions();
   setupAttachmentIconView();
@@ -428,10 +428,10 @@ void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
     }
     probablyWeHaveUris = true;
   }
-  KMenu menu;
+  QMenu menu;
   QAction *linkAction = 0, *cancelAction;
   if ( probablyWeHaveUris ) {
-    linkAction = menu.addAction( KIcon( "insert-link" ), i18nc( "@action:inmenu", "&Link here" ) );
+    linkAction = menu.addAction( QIcon::fromTheme( "insert-link" ), i18nc( "@action:inmenu", "&Link here" ) );
     // we need to check if we can reasonably expect to copy the objects
     bool weCanCopy = true;
     for ( KUrl::List::ConstIterator it = urls.constBegin(); it != urls.constEnd(); ++it ) {
@@ -440,14 +440,14 @@ void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
       }
     }
     if ( weCanCopy ) {
-      menu.addAction( KIcon( "edit-copy" ), i18nc( "@action:inmenu", "&Copy here" ) );
+      menu.addAction( QIcon::fromTheme( "edit-copy" ), i18nc( "@action:inmenu", "&Copy here" ) );
     }
   } else {
-    menu.addAction( KIcon( "edit-copy" ), i18nc( "@action:inmenu", "&Copy here" ) );
+    menu.addAction( QIcon::fromTheme( "edit-copy" ), i18nc( "@action:inmenu", "&Copy here" ) );
   }
 
   menu.addSeparator();
-  cancelAction = menu.addAction( KIcon( "process-stop" ), i18nc( "@action:inmenu", "C&ancel" ) );
+  cancelAction = menu.addAction( QIcon::fromTheme( "process-stop" ), i18nc( "@action:inmenu", "C&ancel" ) );
 
   QByteArray data;
   QString mimeType;

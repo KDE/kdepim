@@ -23,7 +23,7 @@
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocalizedString>
 #include <KDesktopFile>
 #include <KZip>
@@ -43,7 +43,7 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
 {
     QGridLayout *lay = new QGridLayout;
     QLabel *lab = new QLabel(i18n("Name:"));
-    mName = new KLineEdit;
+    mName = new QLineEdit;
     mName->setReadOnly(true);
     int row = 0;
     lay->addWidget(lab, row,0);
@@ -51,15 +51,15 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
 
     ++row;
     lab = new QLabel(i18n("Author:"));
-    mAuthor = new KLineEdit;
-    mAuthor->setClearButtonShown(true);
+    mAuthor = new QLineEdit;
+    mAuthor->setClearButtonEnabled(true);
     lay->addWidget(lab,row,0);
     lay->addWidget(mAuthor,row,1);
 
     ++row;
     lab = new QLabel(i18n("Email:"));
-    mEmail = new KLineEdit;
-    mEmail->setClearButtonShown(true);
+    mEmail = new QLineEdit;
+    mEmail->setClearButtonEnabled(true);
     lay->addWidget(lab, row,0);
     lay->addWidget(mEmail,row,1);
 
@@ -73,7 +73,7 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
     if (options & SpecifyFileName) {
         ++row;
         lab = new QLabel(i18n("Filename:"));
-        mFilename = new KLineEdit;
+        mFilename = new QLineEdit;
         mFilename->setText(defaultFileName);
         connect(mFilename, SIGNAL(textChanged(QString)), this, SLOT(slotFileNameChanged(QString)));
         lay->addWidget(lab, row,0);
@@ -82,8 +82,8 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
 
     ++row;
     lab = new QLabel(i18n("Version:"));
-    mVersion = new KLineEdit;
-    mVersion->setClearButtonShown(true);
+    mVersion = new QLineEdit;
+    mVersion->setClearButtonEnabled(true);
     mVersion->setText(QLatin1String("0.1"));
     lay->addWidget(lab, row,0);
     lay->addWidget(mVersion, row,1);

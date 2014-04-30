@@ -21,23 +21,34 @@
 
 #include "kdepim-version.h"
 #include "contacteditormainwindow.h"
-#include <kapplication.h>
-#include <k4aboutdata.h>
+#include <qapplication.h>
+#include <kaboutdata.h>
 #include <kcmdlineargs.h>
+#include <KDBusService>
 
 int main( int argc, char **argv )
 {
-    K4AboutData aboutData( "contactthemeeditor", 0, ki18n("Contact Theme Editor"),
-      KDEPIM_VERSION, ki18n("Contact Theme Editor"), K4AboutData::License_GPL_V2,
-      ki18n("Copyright © 2013-2014 contactthemeeditor authors"));
-    aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
+    QApplication app(argc, argv);
+    KAboutData aboutData( QStringLiteral("contactthemeeditor"),
+                          i18n("Contact Theme Editor"),
+                          QLatin1String(KDEPIM_VERSION),
+                          i18n("Contact Theme Editor"),
+                          KAboutData::License_GPL_V2,
+                          i18n("Copyright © 2013-2014 contactthemeeditor authors"));
+    aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
     aboutData.setProgramIconName(QLatin1String("kaddressbook"));
-    KCmdLineArgs::init( argc, argv, &aboutData );
+    aboutData.setOrganizationDomain(QByteArray("kde.org"));
+    aboutData.setProductName(QByteArray("contactthemeeditor"));
 
-    KCmdLineOptions options;
-    KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
+    KAboutData::setApplicationData(aboutData);
 
-    KApplication app;
+    app.setApplicationName(aboutData.componentName());
+    app.setApplicationDisplayName(aboutData.displayName());
+    app.setOrganizationDomain(aboutData.organizationDomain());
+    app.setApplicationVersion(aboutData.version());
+
+    KDBusService service();
+
     ContactEditorMainWindow *mw = new ContactEditorMainWindow();
     mw->show();
     app.exec();

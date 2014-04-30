@@ -51,7 +51,7 @@
 #include <KSystemTimeZones>
 #include <KGlobal>
 #include <KIconLoader>
-#include <KIcon>
+#include <QIcon>
 #include <KDebug>
 
 #include <QCloseEvent>
@@ -641,7 +641,7 @@ IncidenceDialog::IncidenceDialog( Akonadi::IncidenceChanger *changer,
   enableButton( Apply, false );
 
   setButtonText( Default, i18nc( "@action:button", "&Templates..." ) );
-  setButtonIcon( Default, KIcon( "project-development-new-template" ) );
+  setButtonIcon( Default, QIcon::fromTheme( "project-development-new-template" ) );
   setButtonToolTip( Default,
                     i18nc( "@info:tooltip",
                            "Manage templates for this item" ) );

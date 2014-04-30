@@ -21,7 +21,7 @@
 #include "grantleethemeeditor_export.h"
 #include <KDialog>
 
-class KLineEdit;
+class QLineEdit;
 class KUrlRequester;
 namespace GrantleeThemeEditor {
 class GRANTLEETHEMEEDITOR_EXPORT NewThemeDialog : public KDialog
@@ -39,7 +39,7 @@ private Q_SLOTS:
 
 private:
     void readConfig();
-    KLineEdit *mThemeName;
+    QLineEdit *mThemeName;
     KUrlRequester *mUrlRequester;
 };
 }
