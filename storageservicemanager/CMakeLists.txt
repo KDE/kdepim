@@ -47,7 +47,7 @@ install(FILES
 install(PROGRAMS storageservicemanager.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 
 install(FILES data/storageservicemanager.notifyrc
-    DESTINATION ${DATA_INSTALL_DIR}/storageservicemanager
+    DESTINATION ${KNOTIFYRC_INSTALL_DIR}
   )
 
 

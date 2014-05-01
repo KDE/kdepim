@@ -230,5 +230,5 @@ install(FILES header/data/messageviewer_header_themes.knsrc DESTINATION ${CONFIG
 # REACTIVATE add_subdirectory(grantleefilters)
 add_subdirectory(scamdetection/tests)
 add_subdirectory(adblock/tests/)
-install(FILES notify/messageviewer.notifyrc DESTINATION ${DATA_INSTALL_DIR}/messageviewer )
+install(FILES notify/messageviewer.notifyrc DESTINATION ${KNOTIFYRC_INSTALL_DIR} )
 install(FILES scamdetection/data/longurlServices.json DESTINATION ${DATA_INSTALL_DIR}/messageviewer )
