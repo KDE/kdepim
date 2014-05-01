@@ -19,7 +19,7 @@
 #define MERGECONTACTDUPLICATECONTACTDIALOG_H
 
 #include <KDialog>
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 #include "kaddressbook_export.h"
 class QStackedWidget;
