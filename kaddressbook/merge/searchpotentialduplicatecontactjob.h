@@ -37,7 +37,7 @@ public:
     QList<QList<Akonadi::Item> > potentialDuplicateContacts() const;
 
 Q_SIGNALS:
-    void finished(SearchPotentialDuplicateContactJob *);
+    void finished(const QList<QList<Akonadi::Item> >&);
 
 private:
     QList<Akonadi::Item> checkList(const QList<Akonadi::Item> &lstItem);

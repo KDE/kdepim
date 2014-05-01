@@ -41,7 +41,7 @@ void SearchPotentialDuplicateContactJob::start()
         result = checkList(result);
     }
     qDebug()<<" result.count()"<< mListDuplicate.count();
-    Q_EMIT finished(this);
+    Q_EMIT finished(mListDuplicate);
 }
 
 QList<QList<Akonadi::Item> > SearchPotentialDuplicateContactJob::potentialDuplicateContacts() const

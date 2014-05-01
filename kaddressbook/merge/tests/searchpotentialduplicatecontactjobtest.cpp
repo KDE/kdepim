@@ -16,11 +16,24 @@
 */
 
 #include "searchpotentialduplicatecontactjobtest.h"
+#include "../searchpotentialduplicatecontactjob.h"
+
 
 #include <qtest_kde.h>
 
+using namespace KABMergeContacts;
 SearchPotentialDuplicateContactJobTest::SearchPotentialDuplicateContactJobTest()
 {
+}
+
+void SearchPotentialDuplicateContactJobTest::shouldReturnEmptyListWhenNoItem()
+{
+    Akonadi::Item::List lst;
+    SearchPotentialDuplicateContactJob job(lst);
+    QSignalSpy spy(&job, SIGNAL(finished(QList<QList<Akonadi::Item> >)));
+    job.start();
+    QCOMPARE(spy.count(), 1);
+    //FIXME QCOMPARE(spy.at(0), 0);
 }
 
 QTEST_KDEMAIN(SearchPotentialDuplicateContactJobTest, NoGUI)
