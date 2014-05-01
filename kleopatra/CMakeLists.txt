@@ -56,14 +56,14 @@ if(GCC_IS_NEWER_THAN_4_3)
 endif()
 
 add_subdirectory(pics)
-#REACTIVATE
 #add_subdirectory(conf)
 
-if(USABLE_ASSUAN_FOUND AND BUILD_libkleopatraclient)
+if(USABLE_ASSUAN_FOUND)
   # can't use macro_optional_add_subdirectory here, since it's split
   # off into ConfigureChecks.cmake..
   #REACTIVATE
-  #add_subdirectory(libkleopatraclient)
+  # WORKAROUND add_definitions(-DKLEOPATRACLIENT_NAMESPACE=KleopatraClientCopy -DKLEOPATRACLIENTCORE_EXPORT=)
+  # add_subdirectory(libkleopatraclient)
 endif()
 
 #REACTIVATE
