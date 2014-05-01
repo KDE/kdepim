@@ -79,5 +79,4 @@ install(FILES backup-structure.txt DESTINATION ${DATA_INSTALL_DIR}/pimsettingexp
 
 ########### install files ###############
 
-ecm_install_icons( ${ICON_INSTALL_DIR} )
 add_subdirectory(tests)
