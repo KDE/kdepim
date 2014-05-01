@@ -27,6 +27,7 @@ public:
     SearchPotentialDuplicateContactJobTest();
 private slots:
     void shouldReturnEmptyListWhenNoItem();
+    void shouldReturnEmptyListWhenOneItem();
 };
 
 #endif // SEARCHPOTENTIALDUPLICATECONTACTJOBTEST_H
