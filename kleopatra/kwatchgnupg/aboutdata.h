@@ -33,9 +33,9 @@
 #ifndef ABOUTDATA_H
 #define ABOUTDATA_H
 
-#include <kaboutdata.h>
+#include <K4AboutData>
 
-class AboutData : public KAboutData {
+class AboutData : public K4AboutData {
 public:
   AboutData();
 };

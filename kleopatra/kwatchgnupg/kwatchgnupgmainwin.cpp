@@ -101,7 +101,7 @@ void KWatchGnuPGMainWindow::slotClear()
 
 void KWatchGnuPGMainWindow::createActions()
 {
-  KAction *action = actionCollection()->addAction( QLatin1String("clear_log") );
+  QAction *action = actionCollection()->addAction( QLatin1String("clear_log") );
   action->setIcon( KIcon(QLatin1String("edit-clear-history")) );
   action->setText( i18n("C&lear History") );
   connect(action, SIGNAL(triggered()), SLOT(slotClear()));

@@ -68,7 +68,7 @@ endif()
 
 #REACTIVATE
 #add_subdirectory(kgpgconf)
-#add_subdirectory(kwatchgnupg)
+add_subdirectory(kwatchgnupg)
 #add_subdirectory(tests)
 
 if(WIN32)
