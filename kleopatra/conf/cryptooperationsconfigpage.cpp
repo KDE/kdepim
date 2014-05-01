@@ -39,12 +39,12 @@
 #include <kcomponentdata.h>
 
 #include <QVBoxLayout>
-
+#include <kdemacros.h>
 using namespace Kleo;
 using namespace Kleo::Config;
 
 CryptoOperationsConfigurationPage::CryptoOperationsConfigurationPage( const KComponentData &instance, QWidget *parent, const QVariantList &args )
-    : KCModule( instance, parent, args )
+    : KCModule( /*instance,*/ parent, args )
 {
   QVBoxLayout* lay = new QVBoxLayout( this );
   mWidget = new CryptoOperationsConfigWidget( this );

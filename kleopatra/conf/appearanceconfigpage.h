@@ -34,7 +34,7 @@
 #define KLEOPATRA_CONFIG_APPEARANCECONFIGPAGE_H
 
 #include <kcmodule.h>
-
+class KComponentData;
 namespace Kleo {
 namespace Config {
 

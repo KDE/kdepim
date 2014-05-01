@@ -150,7 +150,7 @@ static const char s_addnewservers_groupName[] = "LDAP";
 static const char s_addnewservers_entryName[] = "add-servers";
 
 DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( const KComponentData &instance, QWidget *parent, const QVariantList &args )
-    : KCModule( instance, parent, args )
+    : KCModule( /*instance,*/ parent, args )
 {
   mConfig = Kleo::CryptoBackendFactory::instance()->config();
   QGridLayout * glay = new QGridLayout( this );

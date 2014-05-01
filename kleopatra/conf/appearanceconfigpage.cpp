@@ -40,6 +40,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kcomponentdata.h>
+#include <kdemacros.h>
 
 #include <QVBoxLayout>
 
@@ -47,7 +48,7 @@ using namespace Kleo;
 using namespace Kleo::Config;
 
 AppearanceConfigurationPage::AppearanceConfigurationPage( const KComponentData &instance, QWidget *parent, const QVariantList &args )
-    : KCModule( instance, parent, args )
+    : KCModule( /*instance,*/ parent, args )
 {
   QVBoxLayout* lay = new QVBoxLayout( this );
   mWidget = new AppearanceConfigWidget( this );

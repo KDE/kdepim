@@ -44,7 +44,7 @@
 using namespace Kleo::Config;
 
 GnuPGSystemConfigurationPage::GnuPGSystemConfigurationPage( const KComponentData &instance, QWidget *parent, const QVariantList &args )
-    : KCModule( instance, parent, args )
+    : KCModule( /*instance,*/ parent, args )
 {
   QVBoxLayout * lay = new QVBoxLayout( this );
   lay->setMargin( 0 );

@@ -41,6 +41,7 @@ class QCheckBox;
 class QLabel;
 class QTimeEdit;
 class KIntNumInput;
+class KComponentData;
 namespace Kleo {
   class CryptoConfig;
   class CryptoConfigEntry;

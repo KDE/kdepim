@@ -41,6 +41,8 @@
 #include <kleo/cryptoconfig.h>
 #include <kleo/cryptobackendfactory.h>
 
+
+#include <KLocalizedString>
 #include <kdebug.h>
 
 #include <QDBusConnection>
