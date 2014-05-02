@@ -47,4 +47,6 @@ private:
 };
 }
 
+Q_DECLARE_METATYPE( QList<Akonadi::Item::List> )
+
 #endif // SEARCHPOTENTIALDUPLICATECONTACTJOB_H
