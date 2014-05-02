@@ -22,12 +22,12 @@
 #include <KConfig>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KPushButton>
 #include <KStandardDirs>
 #include <KVBox>
 #include <QIcon>
 #include <KGlobal>
 
+#include <QPushButton>
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>

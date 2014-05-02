@@ -37,7 +37,6 @@
 #include <KFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KPushButton>
 #include <KTemporaryFile>
 #include <KUrl>
 #include <KStandardGuiItem>
@@ -50,7 +49,6 @@
 #include <QFont>
 #include <QFrame>
 #include <QLabel>
-#include <QPushButton>
 #include <QVBoxLayout>
 #include <QGroupBox>
 
