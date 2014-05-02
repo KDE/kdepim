@@ -5,7 +5,7 @@ set(kontact_coisceimplugin_PART_SRCS
   coisceim_plugin.cpp
 )
 
-qt4_add_dbus_interfaces(kontact_coisceimplugin_PART_SRCS ${CMAKE_BINARY_DIR}/examples/coisceim/org.kde.coisceim.CoisceimWidget.xml)
+qt5_add_dbus_interfaces(kontact_coisceimplugin_PART_SRCS ${CMAKE_BINARY_DIR}/examples/coisceim/org.kde.coisceim.CoisceimWidget.xml)
 
 kde4_add_plugin(kontact_coisceimplugin ${kontact_coisceimplugin_PART_SRCS} )
 

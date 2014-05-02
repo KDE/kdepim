@@ -165,7 +165,7 @@ kconfig_add_kcfg_files(libmailcommon_SRCS
 
 set_source_files_properties(${CMAKE_SOURCE_DIR}/agents/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml PROPERTIES INCLUDE "dbusoperators.h")
 
-qt4_add_dbus_interfaces(libmailcommon_SRCS
+qt5_add_dbus_interfaces(libmailcommon_SRCS
   ${CMAKE_SOURCE_DIR}/agents/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml
 )
 
@@ -184,7 +184,7 @@ endmacro()
 
 add_resource_iface(settings.kcfg org.kde.Akonadi.POP3.Settings Pop3Settings)
 
-qt4_add_dbus_interfaces(libmailcommon_SRCS
+qt5_add_dbus_interfaces(libmailcommon_SRCS
   ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml
 )
 

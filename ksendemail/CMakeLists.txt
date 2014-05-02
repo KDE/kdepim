@@ -6,7 +6,7 @@ if(KMAIL_SUPPORTED)
 
   set( ksendemail_SRCS main.cpp mailerservice.cpp )
 
-  qt4_add_dbus_interfaces( ksendemail_SRCS  ${CMAKE_BINARY_DIR}/kmail/org.kde.kmail.kmail.xml )
+  qt5_add_dbus_interfaces( ksendemail_SRCS  ${CMAKE_BINARY_DIR}/kmail/org.kde.kmail.kmail.xml )
 
   add_executable( ksendemail ${ksendemail_SRCS})
   add_dependencies( ksendemail kmail_xml )

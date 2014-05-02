@@ -46,7 +46,7 @@ set(akonadiconsole_bin_SRCS
 qt4_generate_dbus_interface(jobtracker.h org.freedesktop.Akonadi.JobTracker.xml)
 qt5_add_dbus_adaptor(akonadiconsole_bin_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.JobTracker.xml jobtracker.h JobTracker)
 
-qt4_add_dbus_interfaces(akonadiconsole_bin_SRCS
+qt5_add_dbus_interfaces(akonadiconsole_bin_SRCS
   ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.TracerNotification.xml
 )
 # Use intalled interface once we can depend on Akoandi 1.1
