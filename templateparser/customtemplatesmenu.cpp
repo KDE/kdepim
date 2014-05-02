@@ -23,7 +23,7 @@
 
 #include <KActionCollection>
 #include <KActionMenu>
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
 #include <KMenu>
 
@@ -35,15 +35,15 @@ CustomTemplatesMenu::CustomTemplatesMenu( QWidget *owner, KActionCollection *ac 
 {
     mOwnerActionCollection = ac;
 
-    mCustomForwardActionMenu = new KActionMenu( KIcon( QLatin1String("mail-forward-custom") ),
+    mCustomForwardActionMenu = new KActionMenu( QIcon::fromTheme( QLatin1String("mail-forward-custom") ),
                                                 i18n( "With Custom Template" ), owner );
     mOwnerActionCollection->addAction( QLatin1String("custom_forward"), mCustomForwardActionMenu );
 
-    mCustomReplyActionMenu = new KActionMenu( KIcon( QLatin1String("mail-reply-custom") ),
+    mCustomReplyActionMenu = new KActionMenu( QIcon::fromTheme( QLatin1String("mail-reply-custom") ),
                                               i18n( "Reply With Custom Template" ), owner );
     mOwnerActionCollection->addAction( QLatin1String("custom_reply"), mCustomReplyActionMenu );
 
-    mCustomReplyAllActionMenu = new KActionMenu( KIcon( QLatin1String("mail-reply-all-custom") ),
+    mCustomReplyAllActionMenu = new KActionMenu( QIcon::fromTheme( QLatin1String("mail-reply-all-custom") ),
                                                  i18n( "Reply to All With Custom Template" ), owner );
     mOwnerActionCollection->addAction( QLatin1String("custom_reply_all"), mCustomReplyAllActionMenu );
 
