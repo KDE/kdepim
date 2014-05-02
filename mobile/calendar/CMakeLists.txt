@@ -45,14 +45,10 @@ add_executable(korganizer-mobile ${korganizer_mobile_SRCS} )
 
 target_link_libraries(korganizer-mobile
   Qt5::Declarative
-  
-  
-  ${KDE4_KDECLARATIVE_LIBS}
   KF5::CalendarCore
   KF5::CalendarUtils
   KF5::Holidays
   KF5::AkonadiCore
-  ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}
   kdepimdbusinterfaces
   kdepimmobileui
   kdepimmobileuicalendar

@@ -1,8 +1,6 @@
 project(task-mobile)
 
 include_directories(
-  
-  ${AKONADI_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/calendarsupport/
   ${CMAKE_BINARY_DIR}/calendarsupport/
@@ -38,7 +36,6 @@ add_executable(tasks-mobile ${mobile_tasks_SRCS} )
 target_link_libraries(tasks-mobile
   Qt5::Declarative
   KF5::CalendarCore
-  ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}
   kdepimdbusinterfaces
   kdepimmobileui
   kdepimmobileuicalendar
