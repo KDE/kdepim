@@ -507,7 +507,7 @@ public:
 
     KComboBox *mFilterCombo;
     KComboBox *mSearchType;
-    KLineEdit *mSearchEdit;
+    QLineEdit *mSearchEdit;
 
     QCheckBox *mRecursiveCheckbox;
     QTableView *mResultView;
@@ -515,7 +515,7 @@ public:
     ContactListModel *mModel;
     KPIMUtils::ProgressIndicatorLabel *progressIndication;
     QSortFilterProxyModel *sortproxy;
-    KLineEdit *searchLine;
+    QLineEdit *searchLine;
 };
 
 LdapSearchDialog::LdapSearchDialog( QWidget *parent )
@@ -543,8 +543,8 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
     QLabel *label = new QLabel( i18n( "Search for:" ), groupBox );
     boxLayout->addWidget( label, 0, 0 );
 
-    d->mSearchEdit = new KLineEdit( groupBox );
-    d->mSearchEdit->setClearButtonShown(true);
+    d->mSearchEdit = new QLineEdit( groupBox );
+    d->mSearchEdit->setClearButtonEnabled(true);
     boxLayout->addWidget( d->mSearchEdit, 0, 1 );
     label->setBuddy( d->mSearchEdit );
 
@@ -587,9 +587,9 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
 
     QHBoxLayout *quickSearchLineLayout = new QHBoxLayout;
     quickSearchLineLayout->addStretch();
-    d->searchLine = new KLineEdit;
-    d->searchLine->setClearButtonShown(true);
-    d->searchLine->setClickMessage(i18n("Search in result"));
+    d->searchLine = new QLineEdit;
+    d->searchLine->setClearButtonEnabled(true);
+    d->searchLine->setPlaceholderText(i18n("Search in result"));
     quickSearchLineLayout->addWidget(d->searchLine);
     topLayout->addLayout( quickSearchLineLayout );
 
