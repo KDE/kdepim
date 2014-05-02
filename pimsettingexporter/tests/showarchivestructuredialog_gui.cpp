@@ -22,6 +22,7 @@
 #include <KCmdLineArgs>
 #include <KLocalizedString>
 #include <KFileDialog>
+#include <KUrl>
 
 int main (int argc, char **argv)
 {
