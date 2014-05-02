@@ -41,7 +41,7 @@ set(korgac_SRCS
 
 set(korganizer_xml ${CMAKE_SOURCE_DIR}/korganizer/org.kde.korganizer.Korganizer.xml)
 
-qt4_add_dbus_interface(korgac_SRCS ${korganizer_xml}
+qt5_add_dbus_interface(korgac_SRCS ${korganizer_xml}
   korganizer_interface
 )
 

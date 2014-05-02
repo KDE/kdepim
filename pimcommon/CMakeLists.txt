@@ -187,7 +187,7 @@ qt5_wrap_ui(libpimcommon_SRCS
 macro(add_resource_iface _kcfgFile _ifaceName _className _fileName)
   kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/${_kcfgFile} ${_ifaceName})
   set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml PROPERTIES INCLUDE "metatype.h")
-  qt4_add_dbus_interface(libpimcommon_SRCS
+  qt5_add_dbus_interface(libpimcommon_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml ${_fileName} ${_className}
   )
 endmacro()

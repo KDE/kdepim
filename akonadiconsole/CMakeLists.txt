@@ -51,7 +51,7 @@ qt5_add_dbus_interfaces(akonadiconsole_bin_SRCS
 )
 # Use intalled interface once we can depend on Akoandi 1.1
 set_source_files_properties(org.freedesktop.Akonadi.DebugInterface.xml PROPERTIES CLASSNAME DebugInterface)
-qt4_add_dbus_interface(akonadiconsole_bin_SRCS
+qt5_add_dbus_interface(akonadiconsole_bin_SRCS
   org.freedesktop.Akonadi.DebugInterface.xml
   debuginterface
 )
@@ -62,17 +62,17 @@ set_source_files_properties(${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akona
 set_source_files_properties(${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml
   PROPERTIES INCLUDE "akonadi/private/notificationmessagev3_p.h")
 
-qt4_add_dbus_interface(akonadiconsole_bin_SRCS
+qt5_add_dbus_interface(akonadiconsole_bin_SRCS
   ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml
   notificationmanagerinterface
 )
 
-qt4_add_dbus_interface(akonadiconsole_bin_SRCS
+qt5_add_dbus_interface(akonadiconsole_bin_SRCS
   ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml
   notificationsourceinterface
 )
 
-qt4_add_dbus_interface(akonadiconsole_bin_SRCS
+qt5_add_dbus_interface(akonadiconsole_bin_SRCS
   ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.StorageDebugger.xml
   storagedebuggerinterface
 )
