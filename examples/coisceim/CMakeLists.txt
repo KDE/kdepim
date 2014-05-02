@@ -59,9 +59,6 @@ add_executable(coisceim ${coisceim_SRCS})
 
 target_link_libraries(coisceim
   coisceim_widget
-  ${QT_QTCORE_LIBRARIES}
-  
-  
 )
 
 add_library(coisceimpart MODULE ${coisceim_part_SRCS})

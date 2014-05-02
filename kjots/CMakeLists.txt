@@ -7,8 +7,6 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 
 include_directories(
-  ${KDE4_INCLUDES}
-  ${KDEPIMLIBS_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
   ${Grantlee_INCLUDE_DIRS}
   ${CMAKE_SOURCE_DIR}/noteshared
@@ -55,7 +53,7 @@ set (kjots_common_SRCS
 #########################################################################
 
 qt4_generate_dbus_interface( kjotswidget.h org.kde.KJotsWidget.xml OPTIONS -m )
-qt4_add_dbus_interfaces(kjots_common_SRCS
+qt5_add_dbus_interfaces(kjots_common_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/org.kde.KJotsWidget.xml)
 
 

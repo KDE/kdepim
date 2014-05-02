@@ -1,7 +1,7 @@
 project(task-mobile)
 
 include_directories(
-  ${KDEPIMLIBS_INCLUDE_DIR}
+  
   ${AKONADI_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/calendarsupport/
