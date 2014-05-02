@@ -32,7 +32,7 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnEmptyListWhenNoItem()
 {
     Akonadi::Item::List lst;
     SearchPotentialDuplicateContactJob job(lst);
-    QSignalSpy spy(&job, SIGNAL(finished(QList<QList<Akonadi::Item> >)));
+    QSignalSpy spy(&job, SIGNAL(finished(QList<Akonadi::Item::List>)));
     job.start();
     QCOMPARE(spy.count(), 1);
     //FIXME QCOMPARE(spy.at(0), 0);
@@ -43,7 +43,7 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnEmptyListWhenOneItem()
     Akonadi::Item::List lst;
     lst << Akonadi::Item(42);
     SearchPotentialDuplicateContactJob job(lst);
-    QSignalSpy spy(&job, SIGNAL(finished(QList<QList<Akonadi::Item> >)));
+    QSignalSpy spy(&job, SIGNAL(finished(QList<Akonadi::Item::List>)));
     job.start();
     QCOMPARE(spy.count(), 1);
     //FIXME QCOMPARE(spy.at(0), 0);
