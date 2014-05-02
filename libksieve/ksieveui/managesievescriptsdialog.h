@@ -27,7 +27,7 @@
 #include <QMap>
 
 class QTreeWidgetItem;
-class KPushButton;
+class QPushButton;
 
 namespace KManageSieve {
 class SieveJob;
@@ -80,10 +80,10 @@ private:
     KUrl mCurrentURL;
     QStringList mCurrentCapabilities;
 
-    KPushButton *mNewScript;
-    KPushButton *mEditScript;
-    KPushButton *mDeleteScript;
-    KPushButton *mDeactivateScript;
+    QPushButton *mNewScript;
+    QPushButton *mEditScript;
+    QPushButton *mDeleteScript;
+    QPushButton *mDeactivateScript;
 
     bool mIsNewScript : 1;
     bool mWasActive : 1;

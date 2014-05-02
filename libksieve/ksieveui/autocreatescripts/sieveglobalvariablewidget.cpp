@@ -21,7 +21,7 @@
 #include "commonwidgets/sievehelpbutton.h"
 #include "editor/sieveeditorutil.h"
 
-#include <KPushButton>
+#include <QPushButton>
 #include <KLocalizedString>
 #include <KLineEdit>
 #include <KIcon>
@@ -86,11 +86,11 @@ void SieveGlobalVariableActionWidget::initWidget()
 
     connect(mSetValueTo, SIGNAL(clicked(bool)), mVariableValue, SLOT(setEnabled(bool)));
 
-    mAdd = new KPushButton( this );
+    mAdd = new QPushButton( this );
     mAdd->setIcon( KIcon( QLatin1String("list-add") ) );
     mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
 
-    mRemove = new KPushButton( this );
+    mRemove = new QPushButton( this );
     mRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
     mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
     mLayout->addWidget( mAdd, 1, 4 );

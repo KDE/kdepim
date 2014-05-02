@@ -22,7 +22,7 @@
 #include <libkdepim/widgets/kwidgetlister.h>
 #include <KComboBox>
 
-class KPushButton;
+class QPushButton;
 class KLineEdit;
 class QGridLayout;
 class QCheckBox;
@@ -69,8 +69,8 @@ Q_SIGNALS:
 
 private:
     void initWidget();
-    KPushButton *mAdd;
-    KPushButton *mRemove;
+    QPushButton *mAdd;
+    QPushButton *mRemove;
     QGridLayout *mLayout;
     QCheckBox *mOptional;
     QCheckBox *mOnce;

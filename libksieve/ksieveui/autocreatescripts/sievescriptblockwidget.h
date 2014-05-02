@@ -24,7 +24,7 @@ class QRadioButton;
 class QGroupBox;
 class QAbstractButton;
 class KComboBox;
-class KPushButton;
+class QPushButton;
 class QDomElement;
 
 namespace KSieveUi {
@@ -70,7 +70,7 @@ private:
     QRadioButton *mMatchAny;
     QRadioButton *mAllMessageRBtn;
     KComboBox *mNewBlockType;
-    KPushButton *mAddBlockType;
+    QPushButton *mAddBlockType;
 };
 }
 

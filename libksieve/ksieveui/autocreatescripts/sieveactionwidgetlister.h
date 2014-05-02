@@ -21,7 +21,7 @@
 
 #include <libkdepim/widgets/kwidgetlister.h>
 
-class KPushButton;
+class QPushButton;
 
 class QGridLayout;
 class QToolButton;
@@ -63,8 +63,8 @@ private:
     void setFilterAction( QWidget *widget );
     void initWidget();
     QList<KSieveUi::SieveAction*> mActionList;
-    KPushButton *mAdd;
-    KPushButton *mRemove;
+    QPushButton *mAdd;
+    QPushButton *mRemove;
     PimCommon::MinimumComboBox *mComboBox;
     QGridLayout *mLayout;
     SieveHelpButton *mHelpButton;

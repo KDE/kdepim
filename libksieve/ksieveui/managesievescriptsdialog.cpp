@@ -24,7 +24,8 @@
 #include <klocale.h>
 #include <kiconloader.h>
 #include <kwindowsystem.h>
-#include <kpushbutton.h>
+#include <QPushButton>
+#include <KPushButton>
 #include <kmessagebox.h>
 #include <KGlobal>
 
@@ -112,19 +113,19 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent )
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     vlay->addLayout( buttonLayout );
 
-    mNewScript = new KPushButton( i18nc( "create a new sieve script", "New..." ) );
+    mNewScript = new QPushButton( i18nc( "create a new sieve script", "New..." ) );
     connect( mNewScript, SIGNAL(clicked()), mTreeView, SLOT(slotNewScript()) );
     buttonLayout->addWidget( mNewScript );
 
-    mEditScript = new KPushButton( i18n( "Edit..." ) );
+    mEditScript = new QPushButton( i18n( "Edit..." ) );
     connect( mEditScript, SIGNAL(clicked()), mTreeView, SLOT(slotEditScript()) );
     buttonLayout->addWidget( mEditScript );
 
-    mDeleteScript = new KPushButton( i18n( "Delete" ) );
+    mDeleteScript = new QPushButton( i18n( "Delete" ) );
     connect( mDeleteScript, SIGNAL(clicked()), mTreeView, SLOT(slotDeleteScript()) );
     buttonLayout->addWidget( mDeleteScript );
 
-    mDeactivateScript = new KPushButton( i18n( "Deactivate" ) );
+    mDeactivateScript = new QPushButton( i18n( "Deactivate" ) );
     connect( mDeactivateScript, SIGNAL(clicked()), mTreeView, SLOT(slotDeactivateScript()) );
     buttonLayout->addWidget( mDeactivateScript );
 

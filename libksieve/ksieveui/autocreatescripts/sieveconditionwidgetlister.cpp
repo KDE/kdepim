@@ -24,7 +24,7 @@
 #include "sieveconditions/sievecondition.h"
 #include "pimcommon/widgets/minimumcombobox.h"
 
-#include <KPushButton>
+#include <QPushButton>
 #include <KLocalizedString>
 #include <KIcon>
 
@@ -129,11 +129,11 @@ void SieveConditionWidget::initWidget()
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
     mComboBox->adjustSize();
 
-    mAdd = new KPushButton( this );
+    mAdd = new QPushButton( this );
     mAdd->setIcon( KIcon( QLatin1String("list-add") ) );
     mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
 
-    mRemove = new KPushButton( this );
+    mRemove = new QPushButton( this );
     mRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
     mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
 

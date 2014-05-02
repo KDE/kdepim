@@ -21,7 +21,7 @@
 
 #include <KLocalizedString>
 #include <KComboBox>
-#include <KPushButton>
+#include <QPushButton>
 #include <KIcon>
 
 #include <QDomElement>
@@ -85,7 +85,7 @@ SieveScriptBlockWidget::SieveScriptBlockWidget(QWidget *parent)
     mNewBlockType->addItem(i18n("\"elsif\" block"));
     mNewBlockType->addItem(i18n("\"else\" block"));
 
-    mAddBlockType = new KPushButton;
+    mAddBlockType = new QPushButton;
     mAddBlockType->setIcon( KIcon( QLatin1String("list-add") ) );
     mAddBlockType->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
     newBlockLayout->addWidget(mAddBlockType);

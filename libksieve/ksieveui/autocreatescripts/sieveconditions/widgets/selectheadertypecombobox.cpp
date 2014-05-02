@@ -20,7 +20,7 @@
 
 #include <KLocalizedString>
 #include <KLineEdit>
-#include <KPushButton>
+#include <QPushButton>
 #include <KIcon>
 
 #include <QVBoxLayout>
@@ -54,7 +54,7 @@ SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
     hbox->addWidget(mNewHeader);
 
 
-    mAddNewHeader = new KPushButton;
+    mAddNewHeader = new QPushButton;
     mAddNewHeader->setEnabled(false);
     mAddNewHeader->setIcon( KIcon( QLatin1String("list-add") ) );
     mAddNewHeader->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
