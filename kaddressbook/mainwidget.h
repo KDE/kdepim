@@ -59,6 +59,8 @@ class QStackedWidget;
 class QuickSearchWidget;
 class XXPortManager;
 class QActionGroup;
+class CategorySelectWidget;
+class CategoryFilterProxyModel;
 
 class KADDRESSBOOK_EXPORT MainWidget : public QWidget
 {
@@ -121,10 +123,13 @@ private:
     Akonadi::EntityMimeTypeFilterModel *mItemTree;
     Akonadi::EntityMimeTypeFilterModel *mAllContactsModel;
     Akonadi::ContactsFilterProxyModel *mContactsFilterModel;
+    CategoryFilterProxyModel *mCategoryFilterModel;
 
     QuickSearchWidget *mQuickSearchWidget;
     Akonadi::EntityTreeView *mCollectionView;
     Akonadi::EntityTreeView *mItemView;
+    CategorySelectWidget *mCategorySelectWidget;
+
     QWidget *mDetailsPane;
     QStackedWidget *mDetailsViewStack;
     ContactSwitcher *mContactSwitcher;
