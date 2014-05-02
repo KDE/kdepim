@@ -42,6 +42,7 @@ void SearchPotentialDuplicateContactJob::start()
     }
     qDebug()<<" result.count()"<< mListDuplicate.count();
     Q_EMIT finished(mListDuplicate);
+    deleteLater();
 }
 
 QList<Akonadi::Item::List > SearchPotentialDuplicateContactJob::potentialDuplicateContacts() const
@@ -76,6 +77,13 @@ Akonadi::Item::List SearchPotentialDuplicateContactJob::checkList(const Akonadi:
 
 bool SearchPotentialDuplicateContactJob::isDuplicate(const Akonadi::Item &itemA, const Akonadi::Item &itemB)
 {
+    if (!itemA.hasPayload<KABC::Addressee>()) {
+        return false;
+    }
+    if (!itemB.hasPayload<KABC::Addressee>()) {
+        return false;
+    }
+
     KABC::Addressee addressA = itemA.payload<KABC::Addressee>();
     KABC::Addressee addressB = itemB.payload<KABC::Addressee>();
     //
@@ -99,5 +107,4 @@ bool SearchPotentialDuplicateContactJob::isDuplicate(const Akonadi::Item &itemA,
         }
     }
     return false;
-
 }
