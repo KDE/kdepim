@@ -1,4 +1,5 @@
 project(mboximporter)
+kde_enable_exceptions()
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
@@ -15,7 +16,6 @@ qt5_wrap_ui(mboximporter_SRCS
 )
 
 include_directories(${Boost_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/mailimporter ${CMAKE_SOURCE_DIR}/mailcommon ${CMAKE_SOURCE_DIR}/messagecomposer)
-kde_enable_exceptions()
 
 add_executable(mboximporter ${mboximporter_SRCS})
 

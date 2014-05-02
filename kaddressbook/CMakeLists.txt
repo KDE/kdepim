@@ -1,9 +1,9 @@
 project(kaddressbook)
+kde_enable_exceptions()
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/xxport/shared
   ${CMAKE_CURRENT_SOURCE_DIR}/printing/
-  ${QT_QTDBUS_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
   ${Grantlee_INCLUDE_DIRS}
   ${CMAKE_SOURCE_DIR}/pimcommon/
@@ -15,9 +15,6 @@ include_directories(
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
-
-
-kde_enable_exceptions()
 
 
 if(Prison_FOUND)
@@ -112,7 +109,6 @@ target_link_libraries(kaddressbookprivate
   kdepim
   pimcommon
   kaddressbookgrantlee
-  
   KF5::AkonadiCore
   KF5::Abc
   KF5::AkonadiContact
@@ -150,10 +146,8 @@ add_executable(kaddressbook ${kaddressbook_SRCS})
 target_link_libraries(kaddressbook
   KF5::AkonadiCore
   KF5::Syndication
-  
   KF5::KCMUtils
   KF5::KIOCore
-  ${KDE4_PHONON_LIBS}
   KF5::KontactInterface
   kaddressbookprivate
   grantleetheme
