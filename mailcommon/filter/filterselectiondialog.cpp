@@ -21,7 +21,7 @@
 
 #include <QDebug>
 #include <KListWidgetSearchLine>
-#include <KPushButton>
+#include <QPushButton>
 #include <KGlobal>
 
 #include <QListWidget>
@@ -56,9 +56,9 @@ FilterSelectionDialog::FilterSelectionDialog( QWidget *parent )
 
     QHBoxLayout *const buttonLayout = new QHBoxLayout();
     top->addLayout( buttonLayout );
-    selectAllButton = new KPushButton( i18n( "Select All" ) );
+    selectAllButton = new QPushButton( i18n( "Select All" ) );
     buttonLayout->addWidget( selectAllButton );
-    unselectAllButton = new KPushButton( i18n( "Unselect All" ) );
+    unselectAllButton = new QPushButton( i18n( "Unselect All" ) );
     buttonLayout->addWidget( unselectAllButton );
 
     connect( selectAllButton, SIGNAL(clicked()), this, SLOT(slotSelectAllButton()) );

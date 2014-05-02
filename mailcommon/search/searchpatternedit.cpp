@@ -26,7 +26,7 @@ using MailCommon::RuleWidgetHandlerManager;
 #include <QDebug>
 #include <KDialog>
 #include <KLocale>
-#include <KPushButton>
+#include <QPushButton>
 #include <KLineEdit>
 #include <KIcon>
 
@@ -196,12 +196,12 @@ void SearchRuleWidget::initWidget(SearchPatternEdit::SearchModeType modeType)
     hlay->addWidget( mValueStack );
     hlay->setStretchFactor( mValueStack, 10 );
 
-    mAdd = new KPushButton( this );
+    mAdd = new QPushButton( this );
     mAdd->setIcon( KIcon( QLatin1String("list-add") ) );
     mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
     hlay->addWidget( mAdd );
 
-    mRemove = new KPushButton( this );
+    mRemove = new QPushButton( this );
     mRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
     mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
     hlay->addWidget( mRemove );

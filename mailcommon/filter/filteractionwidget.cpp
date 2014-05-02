@@ -26,7 +26,7 @@
 #include <pimcommon/widgets/minimumcombobox.h>
 
 #include <KLocalizedString>
-#include <KPushButton>
+#include <QPushButton>
 #include <KIcon>
 #include <QDebug>
 
@@ -64,8 +64,8 @@ public:
     FilterActionWidget *q;
     QList<MailCommon::FilterAction*> mActionList;
     KComboBox *mComboBox;
-    KPushButton *mAdd;
-    KPushButton *mRemove;
+    QPushButton *mAdd;
+    QPushButton *mRemove;
 
     QGridLayout *mLayout;
 };
@@ -114,11 +114,11 @@ FilterActionWidget::FilterActionWidget( QWidget *parent )
     d->mComboBox->setEditable( false );
     Q_ASSERT( d->mComboBox );
     d->mLayout->addWidget( d->mComboBox, 1, 1 );
-    d->mAdd = new KPushButton( widget );
+    d->mAdd = new QPushButton( widget );
     d->mAdd->setIcon( KIcon( QLatin1String("list-add") ) );
     d->mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
 
-    d->mRemove = new KPushButton( widget );
+    d->mRemove = new QPushButton( widget );
     d->mRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
     d->mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
 

@@ -46,7 +46,7 @@ class QListWidget;
 class QModelIndex;
 class QPushButton;
 class QRadioButton;
-class KPushButton;
+class QPushButton;
 namespace MailCommon {
 class SearchPatternEdit;
 class FilterActionWidgetLister;
@@ -470,7 +470,7 @@ protected:
 
     MailCommon::MailFilter *mFilter;
     MailCommon::FolderRequester *mFolderRequester;
-    KPushButton *mRunNow;
+    QPushButton *mRunNow;
     bool mDoNotClose;
     bool mIgnoreFilterUpdates;
 };

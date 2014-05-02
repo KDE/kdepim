@@ -47,8 +47,8 @@ using MailCommon::FilterImporterExporter;
 #include <KListWidgetSearchLine>
 #include <KLocale>
 #include <KMessageBox>
-#include <KPushButton>
-#include <KTabWidget>
+#include <QPushButton>
+#include <QTabWidget>
 #include <KWindowSystem>
 #include <KIconButton>
 #include <KIcon>
@@ -378,7 +378,7 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
 
     mFilterList = new KMFilterListBox( i18n( "Available Filters" ) );
     splitter->addWidget(mFilterList);
-    KTabWidget *tabWidget = new KTabWidget;
+    QTabWidget *tabWidget = new QTabWidget;
     splitter->addWidget(tabWidget);
 
     QWidget *page1 = new QWidget( tabWidget );
@@ -516,7 +516,7 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
     applySpecificFiltersLayout->addWidget( mFolderRequester );
     connect( mFolderRequester, SIGNAL(folderChanged(Akonadi::Collection)),
              this, SLOT(slotFolderChanged(Akonadi::Collection)) );
-    mRunNow = new KPushButton( i18n( "Run Now" ) );
+    mRunNow = new QPushButton( i18n( "Run Now" ) );
     mRunNow->setEnabled( false );
     applySpecificFiltersLayout->addWidget( mRunNow );
     connect( mRunNow, SIGNAL(clicked()), this, SLOT(slotRunFilters()) );
@@ -938,23 +938,23 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
     KHBox *hb = new KHBox( this );
     hb->setSpacing( 4 );
 
-    mBtnTop = new KPushButton( QString(), hb );
+    mBtnTop = new QPushButton( QString(), hb );
     mBtnTop->setIcon( KIcon( QLatin1String("go-top") ) );
     mBtnTop->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnTop->setMinimumSize( mBtnTop->sizeHint() * 1.2 );
 
-    mBtnUp = new KPushButton( QString(), hb );
+    mBtnUp = new QPushButton( QString(), hb );
     mBtnUp->setAutoRepeat( true );
     mBtnUp->setIcon( KIcon( QLatin1String("go-up") ) );
     mBtnUp->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnUp->setMinimumSize( mBtnUp->sizeHint() * 1.2 );
-    mBtnDown = new KPushButton( QString(), hb );
+    mBtnDown = new QPushButton( QString(), hb );
     mBtnDown->setAutoRepeat( true );
     mBtnDown->setIcon( KIcon( QLatin1String("go-down") ) );
     mBtnDown->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnDown->setMinimumSize( mBtnDown->sizeHint() * 1.2 );
 
-    mBtnBottom = new KPushButton( QString(), hb );
+    mBtnBottom = new QPushButton( QString(), hb );
     mBtnBottom->setIcon( KIcon( QLatin1String("go-bottom") ) );
     mBtnBottom->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnBottom->setMinimumSize( mBtnBottom->sizeHint() * 1.2 );

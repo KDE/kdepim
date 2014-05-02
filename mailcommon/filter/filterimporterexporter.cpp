@@ -48,7 +48,7 @@
 #include <KFileDialog>
 #include <KListWidgetSearchLine>
 #include <KMessageBox>
-#include <KPushButton>
+#include <QPushButton>
 
 #include <QRegExp>
 
