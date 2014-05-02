@@ -18,7 +18,7 @@
 #include "logindialog.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -39,15 +39,15 @@ LoginDialog::LoginDialog(QWidget *parent)
     mLabUsername = new QLabel(i18n("Username:"));
     grid->addWidget(mLabUsername, 0, 0);
 
-    mUsername = new KLineEdit;
-    mUsername->setClearButtonShown(true);
+    mUsername = new QLineEdit;
+    mUsername->setClearButtonEnabled(true);
     grid->addWidget(mUsername, 0, 1);
 
     QLabel *lab = new QLabel(i18n("Password:"));
     grid->addWidget(lab, 1, 0);
-    mPassword = new KLineEdit;
+    mPassword = new QLineEdit;
     grid->addWidget(mPassword, 1, 1);
-    mPassword->setEchoMode(KLineEdit::Password);
+    mPassword->setEchoMode(QLineEdit::Password);
 
     setMainWidget(w);
     connect(mUsername, SIGNAL(textChanged(QString)), this, SLOT(slotUserNameChanged(QString)));

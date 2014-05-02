@@ -27,7 +27,7 @@
 
 
 #include <KCheckableProxyModel>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocalizedString>
 
 #include <QVBoxLayout>
@@ -70,9 +70,9 @@ CheckedCollectionWidget::CheckedCollectionWidget(const QString &mimetype, QWidge
     mCollectionFilter->setDynamicSortFilter(true);
     mCollectionFilter->setFilterCaseSensitivity(Qt::CaseInsensitive);
 
-    KLineEdit *searchLine = new KLineEdit(this);
+    QLineEdit *searchLine = new QLineEdit(this);
     searchLine->setPlaceholderText(i18n("Search..."));
-    searchLine->setClearButtonShown(true);
+    searchLine->setClearButtonEnabled(true);
     connect(searchLine, SIGNAL(textChanged(QString)),
             this, SLOT(slotSetCollectionFilter(QString)));
 

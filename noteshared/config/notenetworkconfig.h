@@ -20,7 +20,7 @@
 #define NOTENETWORKCONFIG_H
 #include "noteshared_export.h"
 #include <KCModule>
-class KLineEdit;
+class QLineEdit;
 class QCheckBox;
 class KComponentData;
 class KIntNumInput;
@@ -37,7 +37,7 @@ public:
     void load();
 private:
     QCheckBox *mTmpChkB;
-    KLineEdit *kcfg_SenderID;
+    QLineEdit *kcfg_SenderID;
     KIntNumInput *kcfg_Port;
 };
 

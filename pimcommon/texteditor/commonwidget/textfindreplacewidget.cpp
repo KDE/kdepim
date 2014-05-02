@@ -37,8 +37,8 @@ TextReplaceWidget::TextReplaceWidget(QWidget *parent)
     QLabel *label = new QLabel( i18nc( "Replace text", "Replace:" ), this );
     lay->addWidget( label );
 
-    mReplace = new KLineEdit;
-    mReplace->setClearButtonShown(true);
+    mReplace = new QLineEdit;
+    mReplace->setClearButtonEnabled(true);
     lay->addWidget(mReplace);
 
     mReplaceBtn = new QPushButton( i18n( "Replace" ), this );
@@ -57,7 +57,7 @@ TextReplaceWidget::~TextReplaceWidget()
 
 }
 
-KLineEdit *TextReplaceWidget::replace() const
+QLineEdit *TextReplaceWidget::replace() const
 {
     return mReplace;
 }
@@ -76,9 +76,9 @@ TextFindWidget::TextFindWidget(QWidget *parent)
     QLabel *label = new QLabel( i18nc( "Find text", "F&ind:" ), this );
     lay->addWidget( label );
 
-    mSearch = new KLineEdit( this );
+    mSearch = new QLineEdit( this );
     mSearch->setToolTip( i18n( "Text to search for" ) );
-    mSearch->setClearButtonShown( true );
+    mSearch->setClearButtonEnabled( true );
     label->setBuddy( mSearch );
     lay->addWidget( mSearch );
 
@@ -162,7 +162,7 @@ void TextFindWidget::slotAutoSearch(const QString &str)
     Q_EMIT autoSearch(str);
 }
 
-KLineEdit *TextFindWidget::search() const
+QLineEdit *TextFindWidget::search() const
 {
     return mSearch;
 }

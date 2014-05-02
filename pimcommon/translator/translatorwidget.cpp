@@ -295,7 +295,7 @@ void TranslatorWidget::init()
     d->inputText->setObjectName(QLatin1String("inputtext"));
     d->inputText->enableFindReplace(false);
     d->inputText->setAcceptRichText(false);
-    d->inputText->setClickMessage(i18n("Drag text that you want to translate."));
+    d->inputText->setPlaceholderText(i18n("Drag text that you want to translate."));
     connect( d->inputText, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
     connect( d->inputText, SIGNAL(translateText()), SLOT(slotTranslate()));
 

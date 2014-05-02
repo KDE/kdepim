@@ -20,7 +20,7 @@
 
 #include "notesharedglobalconfig.h"
 
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KComponentData>
 #include <KLocalizedString>
 #include <KDialog>
@@ -57,8 +57,8 @@ NoteNetworkConfigWidget::NoteNetworkConfigWidget(QWidget *parent)
     tmpLayout = new QHBoxLayout;
 
     QLabel *label_SenderID = new QLabel( i18n( "&Sender ID:" ) );
-    kcfg_SenderID = new KLineEdit;
-    kcfg_SenderID->setClearButtonShown(true);
+    kcfg_SenderID = new QLineEdit;
+    kcfg_SenderID->setClearButtonEnabled(true);
     kcfg_SenderID->setObjectName( QLatin1String("kcfg_SenderID") );
     label_SenderID->setBuddy( kcfg_SenderID );
     tmpLayout->addWidget( label_SenderID );

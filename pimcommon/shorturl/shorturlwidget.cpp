@@ -19,10 +19,10 @@
 #include "shorturlutils.h"
 #include "abstractshorturl.h"
 #include "shorturl/shorturlconfiguredialog.h"
-
+#include <KLineEdit>
 #include <KPIMUtils/ProgressIndicatorLabel>
 
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KToggleAction>
@@ -83,9 +83,9 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Original url:"));
     grid->addWidget(lab, 3, 0);
 
-    mOriginalUrl = new KLineEdit;
-    mOriginalUrl->setClearButtonShown(true);
-    mOriginalUrl->setTrapReturnKey(true);
+    mOriginalUrl = new QLineEdit;
+    mOriginalUrl->setClearButtonEnabled(true);
+    //QT5 mOriginalUrl->setTrapReturnKey(true);
     connect(mOriginalUrl, SIGNAL(textChanged(QString)), this, SLOT(slotOriginalUrlChanged(QString)));
     connect(mOriginalUrl, SIGNAL(returnPressed(QString)), this, SLOT(slotConvertUrl()));
     grid->addWidget(mOriginalUrl, 3, 1);
@@ -98,7 +98,7 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     lab = new QLabel(i18n("Short url:"));
     grid->addWidget(lab, 4, 0);
 
-    mShortUrl = new KLineEdit;
+    mShortUrl = new QLineEdit;
     connect(mShortUrl, SIGNAL(textChanged(QString)), this, SLOT(slotShortUrlChanged(QString)));
     mShortUrl->setReadOnly(true);
     grid->addWidget(mShortUrl, 4, 1);

@@ -19,7 +19,7 @@
 #include "webdavsettingsdialog.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QLabel>
 #include <QVBoxLayout>
@@ -37,8 +37,8 @@ WebDavSettingsDialog::WebDavSettingsDialog(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Service Location (e.g. https://dav.example.com/)"));
     lay->addWidget(lab);
 
-    mServiceLocation = new KLineEdit;
-    mServiceLocation->setClearButtonShown(true);
+    mServiceLocation = new QLineEdit;
+    mServiceLocation->setClearButtonEnabled(true);
     lay->addWidget(mServiceLocation);
 
     //Hide for the moment not implemented.
@@ -46,7 +46,7 @@ WebDavSettingsDialog::WebDavSettingsDialog(QWidget *parent)
     lab->hide();
     lay->addWidget(lab);
 
-    mPublicLocation = new KLineEdit;
+    mPublicLocation = new QLineEdit;
     mPublicLocation->hide();
     lay->addWidget(mPublicLocation);
 

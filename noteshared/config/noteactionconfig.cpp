@@ -18,7 +18,7 @@
 #include "noteactionconfig.h"
 #include "notesharedglobalconfig.h"
 
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KComponentData>
 #include <KLocalizedString>
 #include <KDialog>
@@ -41,7 +41,7 @@ NoteActionConfig::NoteActionConfig(const KComponentData &inst, QWidget *parent )
     QLabel *label_MailAction = new QLabel( i18n( "&Mail action:" ), this );
     layout->addWidget( label_MailAction, 0, 0 );
 
-    KLineEdit *kcfg_MailAction = new KLineEdit( this );
+    QLineEdit *kcfg_MailAction = new QLineEdit( this );
     kcfg_MailAction->setObjectName( QLatin1String("kcfg_MailAction") );
     label_MailAction->setBuddy( kcfg_MailAction );
     layout->addWidget( kcfg_MailAction, 0, 1 );

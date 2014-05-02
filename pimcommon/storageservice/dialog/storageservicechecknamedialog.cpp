@@ -20,7 +20,7 @@
 
 #include <KLocalizedString>
 
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -44,7 +44,7 @@ StorageServiceCheckNameDialog::StorageServiceCheckNameDialog(QWidget *parent)
     QHBoxLayout *hbox = new QHBoxLayout;
     QLabel *lab = new QLabel(i18n("New name:"));
     hbox->addWidget(lab);
-    mName = new KLineEdit;
+    mName = new QLineEdit;
     hbox->addWidget(mName);
     lay->addLayout(hbox);
     connect(mName, SIGNAL(textChanged(QString)), this, SLOT(slotNameChanged(QString)));

@@ -21,7 +21,7 @@
 
 #include <KDialog>
 
-class KLineEdit;
+class QLineEdit;
 namespace PimCommon {
 class WebDavSettingsDialog : public KDialog
 {
@@ -38,8 +38,8 @@ private slots:
     void slotServiceLocationChanged(const QString &text);
 
 private:
-    KLineEdit *mServiceLocation;
-    KLineEdit *mPublicLocation;
+    QLineEdit *mServiceLocation;
+    QLineEdit *mPublicLocation;
 };
 }
 

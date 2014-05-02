@@ -28,7 +28,7 @@
 #include "renamefiledialog.h"
 
 #include <kseparator.h>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KPushButton>
 #include <KLocalizedString>
 #include <kio/global.h>
@@ -63,7 +63,7 @@ public:
     QCheckBox *applyAll;
     KPushButton *rename;
     KPushButton *suggestNewName;
-    KLineEdit *nameEdit;
+    QLineEdit *nameEdit;
     RenameFileDialog *q;
 
 };
@@ -133,9 +133,9 @@ RenameFileDialog::RenameFileDialog(const KUrl& url, bool multiFiles, QWidget * p
     pLayout->addLayout(renameLayout);
 
 
-    d->nameEdit = new KLineEdit(this);
+    d->nameEdit = new QLineEdit(this);
     renameLayout->addWidget(d->nameEdit);
-    d->nameEdit->setClearButtonShown(true);
+    d->nameEdit->setClearButtonEnabled(true);
     d->nameEdit->setText(url.fileName());
     d->suggestNewName = new KPushButton(i18n("Suggest New &Name"), this);
     renameLayout->addWidget(d->suggestNewName);

@@ -22,7 +22,7 @@
 #include <QTextDocument>
 
 class QAction;
-class KLineEdit;
+class QLineEdit;
 class QPushButton;
 namespace PimCommon {
 
@@ -35,7 +35,7 @@ public:
 
     QTextDocument::FindFlags searchOptions() const;
 
-    KLineEdit *search() const;
+    QLineEdit *search() const;
 
     void setFoundMatch( bool match );
     QRegExp findRegExp() const;
@@ -52,7 +52,7 @@ Q_SIGNALS:
     void searchStringEmpty(bool);
 
 private:
-    KLineEdit *mSearch;
+    QLineEdit *mSearch;
     QAction *mCaseSensitiveAct;
     QAction *mWholeWordAct;
 
@@ -67,7 +67,7 @@ public:
     explicit TextReplaceWidget(QWidget *parent=0);
     ~TextReplaceWidget();
 
-    KLineEdit *replace() const;
+    QLineEdit *replace() const;
 
 public Q_SLOTS:
     void slotSearchStringEmpty(bool);
@@ -77,7 +77,7 @@ Q_SIGNALS:
     void replaceAllText();
 
 private:
-    KLineEdit *mReplace;
+    QLineEdit *mReplace;
     QPushButton *mReplaceBtn;
     QPushButton *mReplaceAllBtn;
 };

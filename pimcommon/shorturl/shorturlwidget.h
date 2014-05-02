@@ -23,7 +23,7 @@
 
 #include <Solid/Networking>
 
-class KLineEdit;
+class QLineEdit;
 class KToggleAction;
 class QPushButton;
 class QLabel;
@@ -67,8 +67,8 @@ Q_SIGNALS:
 private:
     void loadEngine();
     QLabel *mShorturlServiceName;
-    KLineEdit *mOriginalUrl;
-    KLineEdit *mShortUrl;
+    QLineEdit *mOriginalUrl;
+    QLineEdit *mShortUrl;
     QPushButton *mConvertButton;
     QPushButton *mCopyToClipboard;
     QPushButton *mInsertShortUrl;
