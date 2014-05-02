@@ -25,6 +25,9 @@ class SearchPotentialDuplicateContactJobTest : public QObject
     Q_OBJECT
 public:
     SearchPotentialDuplicateContactJobTest();
+private slots:
+    void shouldReturnEmptyListWhenNoItem();
+    void shouldReturnEmptyListWhenOneItem();
 };
 
 #endif // SEARCHPOTENTIALDUPLICATECONTACTJOBTEST_H
