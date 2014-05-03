@@ -29,8 +29,8 @@
 #include <qstandarditemmodel.h>
 #include <qtimer.h>
 
-#include <akonadi/monitor.h>
-#include <akonadi/tagmodel.h>
+#include <AkonadiCore/monitor.h>
+#include <AkonadiCore/tagmodel.h>
 
 #include <widgets/kcheckcombobox.h>
 

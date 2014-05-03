@@ -22,7 +22,7 @@
 
 #include <qsortfilterproxymodel.h>
 
-#include <akonadi/tag.h>
+#include <AkonadiCore/tag.h>
 
 class CategoryFilterProxyModelPrivate;
 

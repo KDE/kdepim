@@ -581,7 +581,7 @@ void MainWidget::setupActions( KActionCollection *collection )
 
   action = collection->addAction( QLatin1String("category_filter") );
   action->setText( i18n( "Category filter" ) );
-  action->setDefaultWidget( mCategorySelectWidget );
+  //QT5 action->setDefaultWidget( mCategorySelectWidget );
 
   action = collection->addAction( QLatin1String("select_all") );
   action->setText( i18n( "Select All" ) );

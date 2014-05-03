@@ -22,11 +22,11 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/item.h>
+#include <AkonadiCore/entitytreemodel.h>
+#include <AkonadiCore/item.h>
 
-#include <kabc/addressee.h>
-#include <kabc/contactgroup.h>
+#include <KABC/addressee.h>
+#include <KABC/contactgroup.h>
 
 #include "categoryselectwidget.h"
 
