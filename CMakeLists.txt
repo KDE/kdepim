@@ -69,6 +69,12 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sq
 #Need to use volatile_qt5_port branch from grantlee
 find_package(Grantlee "1.0" CONFIG REQUIRED)
 
+find_package(Qt5Designer NO_MODULE)
+set_package_properties(Qt5Designer PROPERTIES
+   PURPOSE "Required to build the Qt Designer plugins"
+   TYPE OPTIONAL
+)
+
 find_package(KF5Akonadi CONFIG REQUIRED)
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)

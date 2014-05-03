@@ -212,16 +212,40 @@ install(TARGETS mailcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 #install(FILES viewer/viewer.h viewer/attachmentstrategy.h header/headerstrategy.h messageviewer_export.h DESTINATION ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
 
-if (QT_QTDESIGNER_FOUND)
-  set(mailcommonwidgets_PART_SRCS)
-  kde4_add_widget_files(mailcommonwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/designer/mailcommon.widgets)
 
-  add_library(mailcommonwidgets MODULE ${mailcommonwidgets_PART_SRCS})
+if (Qt5Designer_FOUND)
+    include_directories(${Qt5Designer_INCLUDE_DIRS})
 
+    add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/mailcommonwidgets.cpp
+        COMMAND kgendesignerplugin -o ${CMAKE_CURRENT_BINARY_DIR}/mailcommonwidgets.cpp ${CMAKE_CURRENT_SOURCE_DIR}/designer/mailcommon.widgets
+        MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/designer/mailcommon.widgets)
 
-  target_link_libraries(mailcommonwidgets  KF5::KIOCore mailcommon)
+    set(mailcommonwidgets_SRCS
+        ${CMAKE_CURRENT_BINARY_DIR}/mailcommonwidgets.cpp
+        ${CMAKE_CURRENT_BINARY_DIR}/mailcommonwidgets.moc
+    )
 
-  install(TARGETS mailcommonwidgets  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
-endif ()
+    qt5_generate_moc(${CMAKE_CURRENT_BINARY_DIR}/mailcommonwidgets.cpp
+        ${CMAKE_CURRENT_BINARY_DIR}/mailcommonwidgets.moc
+    )
 
+    add_library(mailcommonwidgets MODULE ${mailcommonwidgets})
+    target_link_libraries(mailcommonwidgets
+        mailcommon
+    )
+
+    if(NOT WIN32)
+        set_target_properties(mailcommonwidgets PROPERTIES
+            INSTALL_RPATH_USE_LINK_PATH TRUE
+            SKIP_BUILD_RPATH TRUE
+            BUILD_WITH_INSTALL_RPATH TRUE
+            INSTALL_RPATH ${LIB_INSTALL_DIR}
+        )
+    endif()
+
+    install(TARGETS
+        mailcommonwidgets
+        DESTINATION ${QT_PLUGIN_INSTALL_DIR}/designer
+    )
+endif()
 
