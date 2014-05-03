@@ -730,9 +730,6 @@ void AutoCorrection::replaceTypographicQuotes()
                 ending = (c2 == QChar::Punctuation_InitialQuote);
             }
 
-//QT5
-#if 0
-
             if (doubleQuotes && mReplaceDoubleQuotes) {
                 if (!ending) {
                     if (addNonBreakingSpace)
@@ -758,12 +755,9 @@ void AutoCorrection::replaceTypographicQuotes()
                         mWord[i-1] = mTypographicSingleQuotes.end;
                 }
             }
-#endif
         }
     }
 
-//QT5
-#if 0
     // first character
     if (mWord.at(0) == QLatin1Char('"') && mReplaceDoubleQuotes) {
         if (addNonBreakingSpace)
@@ -776,8 +770,6 @@ void AutoCorrection::replaceTypographicQuotes()
         else
             mWord[0] = mTypographicSingleQuotes.begin;
     }
-#endif
-
 }
 
 
