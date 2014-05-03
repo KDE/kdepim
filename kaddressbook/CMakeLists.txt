@@ -85,6 +85,8 @@ set(kaddressbook_merge_SRCS
 set(kaddressbook_LIB_SRCS
   startup.cpp
   aboutdata.cpp
+  categoryfilterproxymodel.cpp
+  categoryselectwidget.cpp
   contactfields.cpp
   contactselectiondialog.cpp
   contactselectionwidget.cpp

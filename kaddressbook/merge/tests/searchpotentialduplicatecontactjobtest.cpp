@@ -26,16 +26,18 @@ using namespace KABMergeContacts;
 SearchPotentialDuplicateContactJobTest::SearchPotentialDuplicateContactJobTest()
 {
     qRegisterMetaType<QList<Akonadi::Item> >();
+    qRegisterMetaType<QList<Akonadi::Item::List> >();
 }
 
 void SearchPotentialDuplicateContactJobTest::shouldReturnEmptyListWhenNoItem()
 {
     Akonadi::Item::List lst;
     SearchPotentialDuplicateContactJob job(lst);
-    QSignalSpy spy(&job, SIGNAL(finished(QList<QList<Akonadi::Item> >)));
+    QSignalSpy spy(&job, SIGNAL(finished(QList<Akonadi::Item::List>)));
     job.start();
     QCOMPARE(spy.count(), 1);
-    //FIXME QCOMPARE(spy.at(0), 0);
+    QList<Akonadi::Item::List> lstResult = spy.at(0).at(0).value< QList<Akonadi::Item::List> >();
+    QCOMPARE(lstResult.count(), 0);
 }
 
 void SearchPotentialDuplicateContactJobTest::shouldReturnEmptyListWhenOneItem()
@@ -43,10 +45,11 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnEmptyListWhenOneItem()
     Akonadi::Item::List lst;
     lst << Akonadi::Item(42);
     SearchPotentialDuplicateContactJob job(lst);
-    QSignalSpy spy(&job, SIGNAL(finished(QList<QList<Akonadi::Item> >)));
+    QSignalSpy spy(&job, SIGNAL(finished(QList<Akonadi::Item::List>)));
     job.start();
     QCOMPARE(spy.count(), 1);
-    //FIXME QCOMPARE(spy.at(0), 0);
+    QList<Akonadi::Item::List> lstResult = spy.at(0).at(0).value< QList<Akonadi::Item::List> >();
+    QCOMPARE(lstResult.count(), 0);
 }
 
 QTEST_KDEMAIN(SearchPotentialDuplicateContactJobTest, NoGUI)

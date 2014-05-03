@@ -29,7 +29,8 @@
 #include "xxportmanager.h"
 #include "utils.h"
 #include "kaddressbookadaptor.h"
-
+#include "categoryselectwidget.h"
+#include "categoryfilterproxymodel.h"
 
 #include "kaddressbookgrantlee/formatter/grantleecontactformatter.h"
 #include "kaddressbookgrantlee/formatter/grantleecontactgroupformatter.h"
@@ -154,6 +155,9 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
    *                           mContactsFilterModel
    *                                   ^
    *                                   |
+   * mCategorySelectWidget --> mCategoryFilterModel
+   *                                   ^
+   *                                   |
    *                               mItemTree
    *                                   ^
    *                                   |
@@ -184,6 +188,8 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
    *             selectionProxyModel:  Filters out all collections and items that are no children
    *                                   of the collections currently selected in selectionModel
    *                       mItemTree:  Filters out all collections
+   *           mCategorySelectWidget:  Selects a list of categories for filtering
+   *            mCategoryFilterModel:  Filters the contacts by the selected categories
    *            mContactsFilterModel:  Filters the contacts by the content of mQuickSearchWidget
    *                       mItemView:  Shows the items (contacts and contact groups) in a view
    *
@@ -226,8 +232,17 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mItemTree->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
   mItemTree->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
 
+  mCategoryFilterModel = new CategoryFilterProxyModel( this );
+  mCategoryFilterModel->setSourceModel( mItemTree );
+  mCategoryFilterModel->setFilterCategories( mCategorySelectWidget->filterTags() );
+  mCategoryFilterModel->setFilterEnabled( true );
+
+  connect(mCategorySelectWidget, SIGNAL(filterChanged(const QList<Akonadi::Tag::Id> &)),
+          mCategoryFilterModel, SLOT(setFilterCategories(const QList<Akonadi::Tag::Id> &)));
+
   mContactsFilterModel = new Akonadi::ContactsFilterProxyModel( this );
-  mContactsFilterModel->setSourceModel( mItemTree );
+  mContactsFilterModel->setSourceModel( mCategoryFilterModel );
+
   connect( mQuickSearchWidget, SIGNAL(filterStringChanged(QString)),
            mContactsFilterModel, SLOT(setFilterString(QString)) );
   connect( mQuickSearchWidget, SIGNAL(filterStringChanged(QString)),
@@ -519,6 +534,9 @@ void MainWidget::setupGui()
   // the quick search widget which is embedded in the toolbar action
   mQuickSearchWidget = new QuickSearchWidget;
 
+  // the category filter widget which is embedded in the toolbar action
+  mCategorySelectWidget = new CategorySelectWidget;
+
   // setup the default actions
   Akonadi::ContactDefaultActions *actions = new Akonadi::ContactDefaultActions( this );
   actions->connectToView( mContactDetails );
@@ -560,6 +578,10 @@ void MainWidget::setupActions( KActionCollection *collection )
   action->setText( i18n( "Quick search" ) );
   //QT5
   //action->setDefaultWidget( mQuickSearchWidget );
+
+  action = collection->addAction( QLatin1String("category_filter") );
+  action->setText( i18n( "Category filter" ) );
+  action->setDefaultWidget( mCategorySelectWidget );
 
   action = collection->addAction( QLatin1String("select_all") );
   action->setText( i18n( "Select All" ) );
@@ -956,5 +978,3 @@ void MainWidget::slotCheckNewCalendar( const QModelIndex &parent, int begin, int
         }
     }
 }
-
-

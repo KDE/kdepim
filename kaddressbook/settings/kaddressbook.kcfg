@@ -55,7 +55,8 @@
       <label>Viewing mode</label>
       <tooltip>Viewing mode (number of columns)</tooltip>
       <whatsthis>Choose the layout for the main view</whatsthis>
-      </entry>
+    </entry>
+
   </group>
 
 </kcfg>
