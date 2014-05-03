@@ -32,7 +32,7 @@
 
 #include <KMime/KMimeMessage>
 
-
+#include <KComponentData>
 #include <ksocketfactory.h>
 #include <KNotification>
 #include <KIconLoader>
@@ -172,14 +172,12 @@ void NotesManager::slotAcceptConnection()
 void NotesManager::slotNewNote(const QString &name, const QString &text)
 {
     const QPixmap pixmap = KIcon( QLatin1String("knotes") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
-#if 0 //QT5
     KNotification::event( QLatin1String("receivednotes"),
                           i18n("Note Received"),
                           pixmap,
                           0,
                           KNotification::CloseOnTimeout,
-                          KGlobal::mainComponent());
-#endif
+                          KGlobal::mainComponent().componentName());
     NoteShared::CreateNewNoteJob *job = new NoteShared::CreateNewNoteJob(this, 0);
     //For the moment it doesn't support richtext.
     job->setRichText(false);

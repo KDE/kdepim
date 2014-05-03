@@ -28,6 +28,7 @@
 #include <KGlobal>
 #include <KIcon>
 #include <KIconLoader>
+#include <KComponentData>
 
 
 ArchiveJob::ArchiveJob(ArchiveMailManager *manager, ArchiveMailInfo *info, const Akonadi::Collection &folder, bool immediate )
@@ -66,14 +67,12 @@ void ArchiveJob::execute()
         backupJob->setRealPath(realPath);
         const QString summary = i18n("Start to archive %1",realPath );
         const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
-#if 0 //QT5
         KNotification::event( QLatin1String("archivemailstarted"),
                               summary,
                               pixmap,
                               0,
                               KNotification::CloseOnTimeout,
-                              KGlobal::mainComponent());
-#endif
+                              KGlobal::mainComponent().componentName());
         connect(backupJob, SIGNAL(backupDone(QString)), this, SLOT(slotBackupDone(QString)));
         connect(backupJob, SIGNAL(error(QString)), this, SLOT(slotError(QString)));
         backupJob->start();

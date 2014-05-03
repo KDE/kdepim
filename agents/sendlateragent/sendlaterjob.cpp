@@ -32,6 +32,7 @@
 #include <ItemFetchJob>
 #include <ItemDeleteJob>
 
+#include <KComponentData>
 #include <KNotification>
 #include <KLocale>
 #include <KGlobal>
@@ -138,7 +139,6 @@ void SendLaterJob::slotDeleteItem( KJob *job )
 
 void SendLaterJob::sendDone()
 {
-#if 0 //QT5
     const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
 
     KNotification::event( QLatin1String("mailsend"),
@@ -146,23 +146,20 @@ void SendLaterJob::sendDone()
                           pixmap,
                           0,
                           KNotification::CloseOnTimeout,
-                          KGlobal::mainComponent());
-#endif
+                          KGlobal::mainComponent().componentName());
     mManager->sendDone(mInfo);
     deleteLater();
 }
 
 void SendLaterJob::sendError(const QString &error, SendLaterManager::ErrorType type)
 {
-#if 0 //QT5
     const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
     KNotification::event( QLatin1String("mailsendfailed"),
                           error,
                           pixmap,
                           0,
                           KNotification::CloseOnTimeout,
-                          KGlobal::mainComponent());
-#endif
+                          KGlobal::mainComponent().componentName());
     mManager->sendError(mInfo, type);
     deleteLater();
 }
