@@ -490,12 +490,12 @@ void EvolutionSettings::extractAccountInfo(const QString& info)
         else if ( tag == QLatin1String( "drafts-folder" ) )
         {
             const QString selectedFolder = MailCommon::Util::convertFolderPathToCollectionStr( e.text().remove( QLatin1String( "folder://" ) ) );
-            //QT5 newIdentity->setDrafts(selectedFolder);
+            newIdentity->setDrafts(selectedFolder);
         }
         else if ( tag == QLatin1String( "sent-folder" ) )
         {
             const QString selectedFolder = MailCommon::Util::convertFolderPathToCollectionStr( e.text().remove( QLatin1String( "folder://" ) ) );
-            //QT5 newIdentity->setFcc(selectedFolder);
+            newIdentity->setFcc(selectedFolder);
         }
         else if ( tag == QLatin1String( "auto-cc" ) )
         {
