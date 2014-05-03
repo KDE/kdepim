@@ -20,6 +20,9 @@
 
 #include "abstractimportexportjob.h"
 #include <KSharedConfig>
+
+#include <time.h>
+
 class KUrl;
 class ArchiveStorage;
 
