@@ -190,8 +190,7 @@ void FilterKMailArchive::import()
 
     KFileDialog fileDialog( KUrl(), QString(), filterInfo()->parent() );
     fileDialog.setMode( KFile::File | KFile::LocalOnly );
-//QT5
-    //fileDialog.setCaption( i18n( "Select KMail Archive File to Import" ) );
+    fileDialog.setWindowTitle( i18n( "Select KMail Archive File to Import" ) );
     fileDialog.setFilter( "*.tar.bz2 *.tar.gz *.tar *.zip|" +
                           i18n( "KMail Archive Files (*.tar, *.tar.gz, *.tar.bz2, *.zip)" ) );
     if ( !fileDialog.exec() ) {

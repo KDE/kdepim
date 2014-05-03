@@ -916,8 +916,7 @@ void LdapSearchDialog::slotUser2()
     // Configure LDAP servers
 
     KCMultiDialog dialog( this );
-    //QT5
-    //dialog.setCaption( i18n( "Configure the Address Book LDAP Settings" ) );
+    dialog.setWindowTitle( i18n( "Configure the Address Book LDAP Settings" ) );
     dialog.addModule( QLatin1String("kcmldap.desktop") );
 
     if ( dialog.exec() ) { //krazy:exclude=crashy

@@ -56,7 +56,7 @@ PrintingWizard::PrintingWizard( QPrinter *printer, QItemSelectionModel *selectio
                                 QWidget *parent )
   : KAssistantDialog( parent ), mPrinter( printer ), mStyle( 0 )
 {
-  //QT5 setCaption( i18n( "Print Contacts" ) );
+  setWindowTitle( i18n( "Print Contacts" ) );
   //QT5 showButton( Help, false );
 
   mSelectionPage = new ContactSelectionWidget( selectionModel, this );

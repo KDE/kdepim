@@ -467,8 +467,7 @@ bool Session::saslInteract(void* in)
                 dlg->setKeepPassword( ai.keepPassword );
                 dlg->setPrompt( ai.prompt );
                 dlg->setUsernameReadOnly( ai.readOnly );
-                //QT5
-                //dlg->setCaption( ai.caption );
+                dlg->setWindowTitle( ai.caption );
                 dlg->addCommentLine( ai.commentLabel, ai.comment );
 
                 bool gotIt = false;

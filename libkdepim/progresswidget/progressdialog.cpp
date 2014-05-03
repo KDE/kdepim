@@ -37,6 +37,7 @@
 #include <KLocale>
 #include <KStandardGuiItem>
 #include <QIcon>
+#include <KIconLoader>
 
 #include <QApplication>
 #include <QCloseEvent>
@@ -168,8 +169,7 @@ TransactionItem::TransactionItem( QWidget *parent,
     h->layout()->addWidget( mProgress );
 
     if ( item->canBeCanceled() ) {
-        //QT5
-        mCancelButton = new QPushButton( /*SmallIcon*/QIcon::fromTheme( QLatin1String("dialog-cancel") ), QString(), h );
+        mCancelButton = new QPushButton( SmallIcon( QLatin1String("dialog-cancel") ), QString(), h );
         mCancelButton->setToolTip( i18n( "Cancel this operation." ) );
         connect ( mCancelButton, SIGNAL(clicked()),
                   this, SLOT(slotItemCanceled()));
