@@ -36,7 +36,7 @@ using namespace Akonadi;
 class CategoryFilterProxyModelPrivate : public QObject
 {
     Q_OBJECT
-    Q_DECLARE_PUBLIC(CategoryFilterProxyModel);
+    Q_DECLARE_PUBLIC(CategoryFilterProxyModel)
 
 public:
     CategoryFilterProxyModelPrivate(CategoryFilterProxyModel *parent);

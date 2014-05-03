@@ -43,7 +43,7 @@ static const int FILTER_ROLE = Qt::UserRole+1;
 class CategorySelectWidgetPrivate : public QObject
 {
     Q_OBJECT
-    Q_DECLARE_PUBLIC(CategorySelectWidget);
+    Q_DECLARE_PUBLIC(CategorySelectWidget)
 
 public:
     CategorySelectWidgetPrivate(CategorySelectWidget *parent);

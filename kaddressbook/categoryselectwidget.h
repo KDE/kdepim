@@ -35,7 +35,7 @@ class CategorySelectWidgetPrivate;
 class CategorySelectWidget : public QWidget
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(CategorySelectWidget);
+    Q_DECLARE_PRIVATE(CategorySelectWidget)
 
 public:
     /**
