@@ -42,12 +42,12 @@ class QString;
 class QPoint;
 
 namespace MessageViewer {
-  namespace Interface {
-    class BodyPartURLHandler;
-  }
+namespace Interface {
+class BodyPartURLHandler;
+}
 
-  class ViewerPrivate;
-  class URLHandler;
+class ViewerPrivate;
+class URLHandler;
 }
 
 namespace MessageViewer {
@@ -57,36 +57,36 @@ namespace MessageViewer {
   * @author Marc Mutz <mutz@kde.org>
   */
 class URLHandlerManager {
-  static URLHandlerManager * self;
+    static URLHandlerManager * self;
 
-  URLHandlerManager();
+    URLHandlerManager();
 public:
-  ~URLHandlerManager();
+    ~URLHandlerManager();
 
-  static URLHandlerManager * instance() {
-    if ( !self )
-      self = new URLHandlerManager();
-    return self;
-  }
+    static URLHandlerManager * instance() {
+        if ( !self )
+            self = new URLHandlerManager();
+        return self;
+    }
 
-  void registerHandler( const URLHandler * handler );
-  void unregisterHandler( const URLHandler * handler );
+    void registerHandler( const URLHandler * handler );
+    void unregisterHandler( const URLHandler * handler );
 
-  void registerHandler( const Interface::BodyPartURLHandler * handler );
-  void unregisterHandler( const Interface::BodyPartURLHandler * handler );
+    void registerHandler( const Interface::BodyPartURLHandler * handler );
+    void unregisterHandler( const Interface::BodyPartURLHandler * handler );
 
-  bool handleClick( const KUrl & url, ViewerPrivate * w = 0 ) const;
-  bool handleShiftClick( const KUrl &url, ViewerPrivate *window = 0 ) const;
-  bool handleContextMenuRequest( const KUrl & url, const QPoint & p, ViewerPrivate * w = 0 ) const;
-  bool willHandleDrag( const KUrl &url, ViewerPrivate *window = 0 ) const;
-  bool handleDrag( const KUrl &url, ViewerPrivate *window = 0 ) const;
-  QString statusBarMessage( const KUrl & url, ViewerPrivate * w = 0 ) const;
+    bool handleClick( const KUrl & url, ViewerPrivate * w = 0 ) const;
+    bool handleShiftClick( const KUrl &url, ViewerPrivate *window = 0 ) const;
+    bool handleContextMenuRequest( const KUrl & url, const QPoint & p, ViewerPrivate * w = 0 ) const;
+    bool willHandleDrag( const KUrl &url, ViewerPrivate *window = 0 ) const;
+    bool handleDrag( const KUrl &url, ViewerPrivate *window = 0 ) const;
+    QString statusBarMessage( const KUrl & url, ViewerPrivate * w = 0 ) const;
 
 private:
-  typedef QVector<const URLHandler*> HandlerList;
-  HandlerList mHandlers;
-  class BodyPartURLHandlerManager;
-  BodyPartURLHandlerManager * mBodyPartURLHandlerManager;
+    typedef QVector<const URLHandler*> HandlerList;
+    HandlerList mHandlers;
+    class BodyPartURLHandlerManager;
+    BodyPartURLHandlerManager * mBodyPartURLHandlerManager;
 };
 }
 

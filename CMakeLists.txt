@@ -100,7 +100,7 @@ set(CMAKE_AUTOMOC ON)
 find_package(KDE4 4.12.0 REQUIRED)
 include(KDE4Defaults)
 
-find_package(KdepimLibs 4.13.42)
+find_package(KdepimLibs 4.13.45)
 set_package_properties(KdepimLibs PROPERTIES DESCRIPTION "The KDEPIM libraries" URL "http://www.kde.org" TYPE REQUIRED)
 
 ############### Load the CTest options ###############
@@ -166,7 +166,7 @@ else()
 # Otherwise...
 ############### Find the stuff we need ###############
   # Akonadi
-  find_package(Akonadi 1.11.80 QUIET CONFIG)
+  find_package(Akonadi 1.12.0 QUIET CONFIG)
   set_package_properties(Akonadi PROPERTIES DESCRIPTION "Akonadi server libraries" URL "http://pim.kde.org/akonadi" TYPE REQUIRED PURPOSE "Akonadi is required to build KDEPIM")
 
   find_package(ZLIB)
@@ -245,7 +245,6 @@ else()
   add_subdirectory(kdgantt2)
   add_subdirectory(icons)
   add_subdirectory(composereditor-ng)
-  add_subdirectory(grammar)
   add_subdirectory(messagecore)
   add_subdirectory(grantleetheme)
   add_subdirectory(messagelist)
@@ -263,10 +262,7 @@ else()
   add_subdirectory(pimcommon)
   add_subdirectory(mailcommon) # TODO: does this make sense?!?
   macro_optional_add_subdirectory(kmail)
-  macro_optional_add_subdirectory(headerthemeeditor)
-  macro_optional_add_subdirectory(contactthemeeditor)
-  add_subdirectory(grantleethemeeditor)
-
+  macro_optional_add_subdirectory(grantleeeditor)
   if(KDEPIM_BUILD_MOBILE)
     add_subdirectory(mobile)
   endif()
@@ -281,7 +277,6 @@ else()
     add_definitions(-DKMAIL_SUPPORTED)
   endif()
 
-  macro_optional_add_subdirectory(pimactivity)
   macro_optional_add_subdirectory(korganizer)
   macro_optional_add_subdirectory(korgac)
   macro_optional_add_subdirectory(sieveeditor)

@@ -40,72 +40,72 @@
 
 namespace MessageViewer {
 
-  FileHtmlWriter::FileHtmlWriter( const QString & filename )
+FileHtmlWriter::FileHtmlWriter( const QString & filename )
     : HtmlWriter(),
       mFile( filename.isEmpty() ? QLatin1String( "filehtmlwriter.out" ) : filename )
-  {
+{
     mStream.setCodec( "UTF-8" );
-  }
+}
 
-  FileHtmlWriter::~FileHtmlWriter() {
+FileHtmlWriter::~FileHtmlWriter() {
     if ( mFile.isOpen() ) {
-      kWarning() << "FileHtmlWriter: file still open!";
-      mStream.setDevice(0);
-      mFile.close();
+        kWarning() << "FileHtmlWriter: file still open!";
+        mStream.setDevice(0);
+        mFile.close();
     }
-  }
+}
 
-  void FileHtmlWriter::begin( const QString & css ) {
+void FileHtmlWriter::begin( const QString & css ) {
     openOrWarn();
     if ( !css.isEmpty() )
-      write( QLatin1String("<!-- CSS Definitions \n") + css + QLatin1String("-->\n") );
-  }
+        write( QLatin1String("<!-- CSS Definitions \n") + css + QLatin1String("-->\n") );
+}
 
-  void FileHtmlWriter::end() {
+void FileHtmlWriter::end() {
     flush();
     mStream.setDevice(0);
     mFile.close();
-  }
+}
 
-  void FileHtmlWriter::reset() {
+void FileHtmlWriter::reset() {
     if ( mFile.isOpen() ) {
-      mStream.setDevice( 0 );
-      mFile.close();
+        mStream.setDevice( 0 );
+        mFile.close();
     }
-  }
+}
 
-  void FileHtmlWriter::write( const QString & str ) {
+void FileHtmlWriter::write( const QString & str ) {
     mStream << str.toUtf8();
     flush();
-  }
+}
 
-  void FileHtmlWriter::queue( const QString & str ) {
+void FileHtmlWriter::queue( const QString & str ) {
     write( str );
-  }
+}
 
-  void FileHtmlWriter::flush() {
+void FileHtmlWriter::flush() {
     mStream.flush();
     mFile.flush();
-  }
+}
 
-  void FileHtmlWriter::openOrWarn() {
+void FileHtmlWriter::openOrWarn() {
     if ( mFile.isOpen() ) {
-      kWarning() << "FileHtmlWriter: file still open!";
-      mStream.setDevice( 0 );
-      mFile.close();
+        kWarning() << "FileHtmlWriter: file still open!";
+        mStream.setDevice( 0 );
+        mFile.close();
     }
     if ( !mFile.open( QIODevice::WriteOnly ) )
-      kWarning() << "FileHtmlWriter: Cannot open file" << mFile.fileName();
+        kWarning() << "FileHtmlWriter: Cannot open file" << mFile.fileName();
     else
-      mStream.setDevice( &mFile );
-  }
+        mStream.setDevice( &mFile );
+}
 
-  void FileHtmlWriter::embedPart( const QByteArray & contentId, const QString & url ) {
+void FileHtmlWriter::embedPart( const QByteArray & contentId, const QString & url ) {
     mStream << "<!-- embedPart(contentID=" << contentId << ", url=" << url << ") -->" << endl;
     flush();
-  }
-  void FileHtmlWriter::extraHead( const QString& ) {
+}
+void FileHtmlWriter::extraHead( const QString& ) {
 
-  }
+}
 
 } // 

@@ -72,6 +72,7 @@
 #include <KEditToolBar>
 #include <KAboutApplicationDialog>
 #include <kdebug.h>
+#include <KLineEdit>
 
 #include <QAbstractItemView>
 #include <QApplication>
@@ -79,6 +80,7 @@
 #include <QMenu>
 #include <QTimer>
 #include <QProcess>
+#include <QVBoxLayout>
 
 #include <kleo/cryptobackendfactory.h>
 #include <ui/cryptoconfigdialog.h>
@@ -172,6 +174,12 @@ public:
     }
     void editKeybindings() {
         KShortcutsDialog::configure( q->actionCollection(), KShortcutsEditor::LetterShortcutsAllowed );
+        updateSearchBarClickMessage();
+    }
+
+    void updateSearchBarClickMessage() {
+        const QString shortcutStr = focusToClickSearchAction->shortcut().toString();
+        ui.searchBar->updateClickMessage(shortcutStr);
     }
 
     void selfTest() {
@@ -206,6 +214,9 @@ public:
     void aboutGpg4Win() {
         ( new KAboutApplicationDialog( aboutGpg4WinData(), KAboutApplicationDialog::HideKdeVersion|KAboutApplicationDialog::HideTranslators, q ) )->show();
     }
+    void slotFocusQuickSearch() {
+        ui.searchBar->lineEdit()->setFocus();
+    }
 
 private:
     void setupActions();
@@ -217,28 +228,40 @@ private:
 private:
     Kleo::KeyListController controller;
     bool firstShow : 1;
-
     struct UI {
 
         TabWidget tabWidget;
-
-        explicit UI( MainWindow * q )
-            : tabWidget( q )
-        {
-            KDAB_SET_OBJECT_NAME( tabWidget );
-
-            q->setCentralWidget(&tabWidget);
-            KPIM::ProgressDialog * progressDialog = new KPIM::ProgressDialog( q->statusBar(), q );
-            KDAB_SET_OBJECT_NAME( progressDialog );
-            progressDialog->hide();
-            KPIM::StatusbarProgressWidget * statusBarProgressWidget
-                    = new KPIM::StatusbarProgressWidget( progressDialog, q->statusBar() );
-            KDAB_SET_OBJECT_NAME( statusBarProgressWidget );
-            q->statusBar()->addPermanentWidget( statusBarProgressWidget, 0 );
-            statusBarProgressWidget->show();
-        }
+        SearchBar * searchBar;
+        explicit UI( MainWindow * q );
     } ui;
+    KAction *focusToClickSearchAction;
 };
+
+MainWindow::Private::UI::UI(MainWindow *q)
+    : tabWidget( q )
+{
+    KDAB_SET_OBJECT_NAME( tabWidget );
+
+    QWidget *mainWidget = new QWidget;
+    QVBoxLayout *vbox = new QVBoxLayout;
+    vbox->setSpacing(0);
+    mainWidget->setLayout(vbox);
+    searchBar = new SearchBar;
+    vbox->addWidget(searchBar);
+    tabWidget.connectSearchBar( searchBar );
+    vbox->addWidget(&tabWidget);
+
+    q->setCentralWidget(mainWidget);
+    KPIM::ProgressDialog * progressDialog = new KPIM::ProgressDialog( q->statusBar(), q );
+    KDAB_SET_OBJECT_NAME( progressDialog );
+    progressDialog->hide();
+    KPIM::StatusbarProgressWidget * statusBarProgressWidget
+            = new KPIM::StatusbarProgressWidget( progressDialog, q->statusBar() );
+    KDAB_SET_OBJECT_NAME( statusBarProgressWidget );
+    q->statusBar()->addPermanentWidget( statusBarProgressWidget, 0 );
+    statusBarProgressWidget->show();
+}
+
 
 MainWindow::Private::Private( MainWindow * qq )
     : q( qq ),
@@ -273,6 +296,7 @@ MainWindow::Private::Private( MainWindow * qq )
     q->setAcceptDrops( true );
 
     q->setAutoSaveSettings();
+    updateSearchBarClickMessage();
 }
 
 MainWindow::Private::~Private() {}
@@ -288,14 +312,6 @@ MainWindow::~MainWindow() {}
 void MainWindow::Private::setupActions() {
 
     KActionCollection * const coll = q->actionCollection();
-
-    KAction * const searchBarAction = new KAction( q );
-    SearchBar * const searchBar = new SearchBar( q );
-
-    ui.tabWidget.connectSearchBar( searchBar );
-
-    searchBarAction->setDefaultWidget( searchBar );
-    coll->addAction( QLatin1String("key_search_bar"), searchBarAction );
 
     const action_data action_data[] = {
         // most have been MOVED TO keylistcontroller.cpp
@@ -334,6 +350,11 @@ void MainWindow::Private::setupActions() {
     KStandardAction::configureToolbars( q, SLOT(configureToolbars()), coll );
     KStandardAction::keyBindings( q, SLOT(editKeybindings()), coll );
     KStandardAction::preferences( qApp, SLOT(openOrRaiseConfigDialog()), coll );
+
+    focusToClickSearchAction = new KAction(i18n("Set Focus to Quick Search"), q);
+    focusToClickSearchAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Q ) );
+    coll->addAction( QLatin1String("focus_to_quickseach"), focusToClickSearchAction );
+    connect( focusToClickSearchAction, SIGNAL(triggered(bool)), q, SLOT(slotFocusQuickSearch()) );
 
     q->createStandardStatusBarAction();
     q->setStandardToolBarMenuEnabled( true );

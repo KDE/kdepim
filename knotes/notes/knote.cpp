@@ -145,7 +145,8 @@ void KNote::setChangeItem(const Akonadi::Item &item, const QSet<QByteArray> &set
     }
     if (set.contains("PLD:RFC822")) {
         KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
-        setName(noteMessage->subject(false)->asUnicodeString());
+        const KMime::Headers::Subject * const subject = noteMessage ? noteMessage->subject(false) : 0;
+        setName(subject ? subject->asUnicodeString() : QString());
         if ( noteMessage->contentType()->isHTMLText() ) {
             m_editor->setAcceptRichText(true);
             m_editor->setHtml(noteMessage->mainBodyPart()->decodedText());
@@ -214,7 +215,9 @@ void KNote::saveNote(bool force, bool sync)
         saveNoteContent();
     }
     if (needToSave) {
-        qDebug()<<" saveNote "<<force;
+#ifdef DEBUG_SAVE_NOTE
+        qDebug()<<"save Note slotClose() slotNoteSaved(KJob*) : sync"<<sync;
+#endif
         Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
         if (sync) {
             job->exec();
@@ -319,6 +322,7 @@ void KNote::slotUpdateReadOnly()
         }
     }
     if (!mBlockSave) {
+        updateAllAttributes();
         Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
 #ifdef DEBUG_SAVE_NOTE
         qDebug()<<" void KNote::slotUpdateReadOnly() slotNoteSaved(KJob*)";
@@ -358,7 +362,7 @@ void KNote::slotUpdateReadOnly()
     updateFocus();
 }
 
-void KNote::slotClose()
+void KNote::updateAllAttributes()
 {
     NoteShared::NoteDisplayAttribute *attribute =  mItem.attribute<NoteShared::NoteDisplayAttribute>(Akonadi::Entity::AddIfMissing);
 #ifdef Q_WS_X11
@@ -370,9 +374,18 @@ void KNote::slotClose()
     }
 #endif
     saveNoteContent();
-    m_editor->clearFocus();
     attribute->setIsHidden(true);
     attribute->setPosition(pos());
+    const QSize currentSize(QSize(width(), height()));
+    if (attribute->size() != currentSize) {
+        attribute->setSize(currentSize);
+    }
+}
+
+void KNote::slotClose()
+{
+    updateAllAttributes();
+    m_editor->clearFocus();
     Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
 #ifdef DEBUG_SAVE_NOTE
     qDebug()<<"slotClose() slotNoteSaved(KJob*)";
@@ -855,7 +868,10 @@ void KNote::prepare()
 {
     mBlockSave = true;
     KMime::Message::Ptr noteMessage = mItem.payload<KMime::Message::Ptr>();
-    setName(noteMessage->subject(false)->asUnicodeString());
+    const KMime::Headers::Subject * const subject = noteMessage ? noteMessage->subject(false) : 0;
+    if (subject) {
+        setName(subject->asUnicodeString());
+    }
     if ( noteMessage->contentType()->isHTMLText() ) {
         m_editor->setAcceptRichText(true);
         m_editor->setHtml(noteMessage->mainBodyPart()->decodedText());
@@ -922,17 +938,18 @@ void KNote::prepare()
     // HACK: update the icon color - again after showing the note, to make kicker
     // aware of the new colors
     KIconEffect effect;
-    QPixmap icon = effect.apply( qApp->windowIcon().pixmap(
+    const QColor col = mDisplayAttribute->backgroundColor();
+    const QPixmap icon = effect.apply( qApp->windowIcon().pixmap(
                                      IconSize( KIconLoader::Desktop ),
                                      IconSize( KIconLoader::Desktop ) ),
                                  KIconEffect::Colorize,
-                                 1, mDisplayAttribute->backgroundColor(), false );
-    QPixmap miniIcon = effect.apply( qApp->windowIcon().pixmap(
+                                 1, col, false );
+#ifdef Q_WS_X11
+    const QPixmap miniIcon = effect.apply( qApp->windowIcon().pixmap(
                                          IconSize( KIconLoader::Small ),
                                          IconSize( KIconLoader::Small ) ),
                                      KIconEffect::Colorize,
-                                     1, mDisplayAttribute->backgroundColor(), false );
-#ifdef Q_WS_X11
+                                     1, col, false );
     KWindowSystem::setIcons( winId(), icon, miniIcon );
 #endif
 

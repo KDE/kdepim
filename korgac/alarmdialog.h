@@ -125,7 +125,6 @@ class AlarmDialog : public KDialog
     void showDetails( QTreeWidgetItem *item );
 
     Akonadi::ETMCalendar::Ptr mCalendar;
-    QVBoxLayout *mTopLayout;
     QTreeWidget *mIncidenceTree;
     CalendarSupport::IncidenceViewer *mDetailView;
     KPIMIdentities::IdentityManager *mIdentityManager;

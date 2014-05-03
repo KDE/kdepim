@@ -1,7 +1,7 @@
 /*
  *  akonadimodel.h  -  KAlarm calendar file access using Akonadi
  *  Program:  kalarm
- *  Copyright © 2010-2012 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2010-2014 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -84,6 +84,8 @@ class AkonadiModel : public Akonadi::EntityTreeModel
 
         static AkonadiModel* instance();
 
+        ~AkonadiModel();
+
         /** Return the display name for a collection. */
         QString displayName(Akonadi::Collection&) const;
         /** Return the storage type (file/directory/URL etc.) for a collection. */
@@ -131,6 +133,9 @@ class AkonadiModel : public Akonadi::EntityTreeModel
 
         /** Reload all collections' data from Akonadi storage (not from the backend). */
         void reload();
+
+        /** Return whether calendar migration/creation at initialisation has completed. */
+        bool isMigrationCompleted() const;
 
         bool isCollectionBeingDeleted(Akonadi::Collection::Id) const;
 
@@ -231,16 +236,20 @@ class AkonadiModel : public Akonadi::EntityTreeModel
          */
         void itemDone(Akonadi::Item::Id, bool status = true);
 
+        /** Signal emitted when calendar migration/creation has completed. */
+        void migrationCompleted();
+
     protected:
         virtual QVariant entityHeaderData(int section, Qt::Orientation, int role, HeaderGroup) const;
         virtual int entityColumnCount(HeaderGroup) const;
 
     private slots:
         void checkResources(Akonadi::ServerManager::State);
+        void slotMigrationCompleted();
         void slotCollectionChanged(const Akonadi::Collection& c, const QSet<QByteArray>& attrNames)
                        { setCollectionChanged(c, attrNames, false); }
         void slotCollectionRemoved(const Akonadi::Collection&);
-        void slotCollectionBeingCreated(const QString& path, bool finished);
+        void slotCollectionBeingCreated(const QString& path, Akonadi::Collection::Id, bool finished);
         void slotUpdateTimeTo();
         void slotUpdateArchivedColour(const QColor&);
         void slotUpdateDisabledColour(const QColor&);
@@ -309,12 +318,14 @@ class AkonadiModel : public Akonadi::EntityTreeModel
         QMap<KJob*, CollTypeData> mPendingColCreateJobs;  // default alarm type for pending collection creation jobs
         QMap<KJob*, Akonadi::Item::Id> mPendingItemJobs;  // pending item creation/deletion jobs, with event ID
         QMap<Akonadi::Item::Id, Akonadi::Item> mItemModifyJobQueue;  // pending item modification jobs, invalid item = queue empty but job active
-        QList<QString>     mCollectionsBeingCreated;  // path names of new collections being created
+        QList<QString>     mCollectionsBeingCreated;  // path names of new collections being created by migrator
+        QList<Akonadi::Collection::Id> mCollectionIdsBeingCreated;  // ids of new collections being created by migrator
         QList<Akonadi::Item::Id> mItemsBeingCreated;  // new items not fully initialised yet
         QList<Akonadi::Collection::Id> mCollectionsDeleting;  // collections currently being removed
         QList<Akonadi::Collection::Id> mCollectionsDeleted;   // collections recently removed
         QQueue<Event>   mPendingEventChanges;   // changed events with changedEvent() signal pending
         bool            mResourcesChecked;      // whether resource existence has been checked yet
+        bool            mMigrating;             // currently migrating calendars
 };
 
 #endif // AKONADIMODEL_H

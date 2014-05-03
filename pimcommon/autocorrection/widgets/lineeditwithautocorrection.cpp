@@ -58,9 +58,13 @@ void LineEditWithAutoCorrection::keyPressEvent ( QKeyEvent *e )
     if ((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
         if (mAutoCorrection) {
             // no Html format in subject.
-            mAutoCorrection->autocorrect(false, *document(),textCursor().position());
+            int position = textCursor().position();
+            mAutoCorrection->autocorrect(false, *document(), position);
+            QTextCursor cur = textCursor();
+            cur.setPosition(position);
             if (e->key() == Qt::Key_Space) {
-                textCursor().insertText(QLatin1String(" "));
+                cur.insertText(QLatin1String(" "));
+                setTextCursor(cur);
                 return;
             }
         }

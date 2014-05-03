@@ -118,7 +118,6 @@ private slots:
     void slotNoteSaved(KJob *job);
 
 private:
-    QString createConfig();
     void buildGui();
     void createActions();
     void createNoteEditor(const QString &configFile);
@@ -135,6 +134,7 @@ private:
     void setDisplayDefaultValue();
 
 private:
+    void updateAllAttributes();
     void saveNoteContent();
     Akonadi::Item mItem;
     QLayout       *m_noteLayout;

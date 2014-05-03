@@ -50,6 +50,7 @@ VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
     setButtonGuiItem( User3, KGuiItem(i18n("&Previous Card")) );
 
     mContactViewer = new KAddressBookGrantlee::GrantleeContactViewer( this );
+    mContactViewer->setForceDisableQRCode(true);
     setMainWidget(mContactViewer);
 
     VCardConverter vcc;

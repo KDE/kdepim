@@ -80,7 +80,7 @@ public:
     QSet<QString> twoUpperLetterExceptions() const;
     QHash<QString, QString> autocorrectEntries() const;
 
-    void autocorrect(bool htmlMode, QTextDocument &document, int position);
+    void autocorrect(bool htmlMode, QTextDocument &document, int &position);
     void writeConfig();
 
     void addAutoCorrect(const QString& currentWord, const QString& replaceWord);

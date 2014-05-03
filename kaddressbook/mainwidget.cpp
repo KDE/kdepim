@@ -25,14 +25,15 @@
 #include "mailsender.h"
 #include "modelcolumnmanager.h"
 #include "printing/printingwizard.h"
-#include "merge/searchduplicatecontactwizard.h"
 #include "merge/mergecontactsdialog.h"
+#include "merge/mergecontactduplicatecontactdialog.h"
 #include "quicksearchwidget.h"
 #include "settings.h"
 #include "xxportmanager.h"
 #include "utils.h"
 #include "kaddressbookadaptor.h"
-
+#include "categoryselectwidget.h"
+#include "categoryfilterproxymodel.h"
 
 #include "kaddressbookgrantlee/formatter/grantleecontactformatter.h"
 #include "kaddressbookgrantlee/formatter/grantleecontactgroupformatter.h"
@@ -162,6 +163,9 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
    *                           mContactsFilterModel
    *                                   ^
    *                                   |
+   * mCategorySelectWidget --> mCategoryFilterModel
+   *                                   ^
+   *                                   |
    *                               mItemTree
    *                                   ^
    *                                   |
@@ -192,6 +196,8 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
    *             selectionProxyModel:  Filters out all collections and items that are no children
    *                                   of the collections currently selected in selectionModel
    *                       mItemTree:  Filters out all collections
+   *           mCategorySelectWidget:  Selects a list of categories for filtering
+   *            mCategoryFilterModel:  Filters the contacts by the selected categories
    *            mContactsFilterModel:  Filters the contacts by the content of mQuickSearchWidget
    *            mCheckableProxyModel:  Adds a checkbox to select the contacts
    *                       mItemView:  Shows the items (contacts and contact groups) in a view
@@ -201,128 +207,140 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
    *                                   address books
    */
 
-    mCollectionTree = new Akonadi::EntityMimeTypeFilterModel( this );
-    mCollectionTree->setDynamicSortFilter( true );
-    mCollectionTree->setSortCaseSensitivity( Qt::CaseInsensitive );
-    mCollectionTree->setSourceModel( GlobalContactModel::instance()->model() );
-    mCollectionTree->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
-    mCollectionTree->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
+  mCollectionTree = new Akonadi::EntityMimeTypeFilterModel( this );
+  mCollectionTree->setDynamicSortFilter( true );
+  mCollectionTree->setSortCaseSensitivity( Qt::CaseInsensitive );
+  mCollectionTree->setSourceModel( GlobalContactModel::instance()->model() );
+  mCollectionTree->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
+  mCollectionTree->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
 
-    mCollectionSelectionModel = new QItemSelectionModel( mCollectionTree );
-    StructuralCollectionsNotCheckableProxy *checkableProxyModel =
-            new StructuralCollectionsNotCheckableProxy( this );
-    checkableProxyModel->setSelectionModel( mCollectionSelectionModel );
-    checkableProxyModel->setSourceModel( mCollectionTree );
+  mCollectionSelectionModel = new QItemSelectionModel( mCollectionTree );
+  StructuralCollectionsNotCheckableProxy *checkableProxyModel =
+    new StructuralCollectionsNotCheckableProxy( this );
+  checkableProxyModel->setSelectionModel( mCollectionSelectionModel );
+  checkableProxyModel->setSourceModel( mCollectionTree );
 
-    mCollectionView->setModel( checkableProxyModel );
-    mCollectionView->setXmlGuiClient( guiClient );
-    mCollectionView->header()->setDefaultAlignment( Qt::AlignCenter );
-    mCollectionView->header()->setSortIndicatorShown( false );
+  mCheckableProxyModel = new CheckableProxyModel( this );
+  mCheckableProxyModel->setSourceModel( mContactsFilterModel );
 
-    connect( mCollectionView->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
-             SLOT(slotCheckNewCalendar(QModelIndex,int,int)) );
+  mItemView->setModel( mCheckableProxyModel );
 
-    connect( mCollectionView, SIGNAL(currentChanged(Akonadi::Collection)),
-             mXXPortManager, SLOT(setDefaultAddressBook(Akonadi::Collection)) );
 
-    KSelectionProxyModel *selectionProxyModel =
-            new KSelectionProxyModel( mCollectionSelectionModel, this );
-    selectionProxyModel->setSourceModel( GlobalContactModel::instance()->model() );
-    selectionProxyModel->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
+  mCollectionView->setModel( checkableProxyModel );
+  mCollectionView->setXmlGuiClient( guiClient );
+  mCollectionView->header()->setDefaultAlignment( Qt::AlignCenter );
+  mCollectionView->header()->setSortIndicatorShown( false );
 
-    mItemTree = new Akonadi::EntityMimeTypeFilterModel( this );
-    mItemTree->setSourceModel( selectionProxyModel );
-    mItemTree->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
-    mItemTree->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
+  connect( mCollectionView->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
+           SLOT(slotCheckNewCalendar(QModelIndex,int,int)) );
 
-    mContactsFilterModel = new Akonadi::ContactsFilterProxyModel( this );
-    mContactsFilterModel->setSourceModel( mItemTree );
-    connect( mQuickSearchWidget, SIGNAL(filterStringChanged(QString)),
-             mContactsFilterModel, SLOT(setFilterString(QString)) );
-    connect( mQuickSearchWidget, SIGNAL(filterStringChanged(QString)),
-             this, SLOT(selectFirstItem()) );
-    connect( mQuickSearchWidget, SIGNAL(arrowDownKeyPressed()),
-             mItemView, SLOT(setFocus()) );
+  connect( mCollectionView, SIGNAL(currentChanged(Akonadi::Collection)),
+           mXXPortManager, SLOT(setDefaultAddressBook(Akonadi::Collection)) );
 
-    mCheckableProxyModel = new CheckableProxyModel( this );
-    mCheckableProxyModel->setSourceModel( mContactsFilterModel );
+  KSelectionProxyModel *selectionProxyModel =
+    new KSelectionProxyModel( mCollectionSelectionModel, this );
+  selectionProxyModel->setSourceModel( GlobalContactModel::instance()->model() );
+  selectionProxyModel->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
 
-    mItemView->setModel( mCheckableProxyModel );
-    mItemView->setXmlGuiClient( guiClient );
-    mItemView->setSelectionMode( QAbstractItemView::ExtendedSelection );
-    mItemView->setRootIsDecorated( false );
-    mItemView->header()->setDefaultAlignment( Qt::AlignCenter );
+  mItemTree = new Akonadi::EntityMimeTypeFilterModel( this );
+  mItemTree->setSourceModel( selectionProxyModel );
+  mItemTree->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
+  mItemTree->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
 
-    mXXPortManager->setSelectionModel( mItemView->selectionModel() );
+  mCategoryFilterModel = new CategoryFilterProxyModel( this );
+  mCategoryFilterModel->setSourceModel( mItemTree );
+  mCategoryFilterModel->setFilterCategories( mCategorySelectWidget->filterTags() );
+  mCategoryFilterModel->setFilterEnabled( true );
 
-    mActionManager = new Akonadi::StandardContactActionManager( guiClient->actionCollection(), this );
-    mActionManager->setCollectionSelectionModel( mCollectionView->selectionModel() );
-    mActionManager->setItemSelectionModel( mItemView->selectionModel() );
+  connect(mCategorySelectWidget, SIGNAL(filterChanged(const QList<Akonadi::Tag::Id> &)),
+          mCategoryFilterModel, SLOT(setFilterCategories(const QList<Akonadi::Tag::Id> &)));
 
-    QList<Akonadi::StandardActionManager::Type> standardActions;
-    standardActions << Akonadi::StandardActionManager::CreateCollection
-                    << Akonadi::StandardActionManager::CopyCollections
-                    << Akonadi::StandardActionManager::DeleteCollections
-                    << Akonadi::StandardActionManager::SynchronizeCollections
-                    << Akonadi::StandardActionManager::CollectionProperties
-                    << Akonadi::StandardActionManager::CopyItems
-                    << Akonadi::StandardActionManager::Paste
-                    << Akonadi::StandardActionManager::DeleteItems
-                    << Akonadi::StandardActionManager::CutItems
-                    << Akonadi::StandardActionManager::CutCollections
-                    << Akonadi::StandardActionManager::CreateResource
-                    << Akonadi::StandardActionManager::DeleteResources
-                    << Akonadi::StandardActionManager::ResourceProperties
-                    << Akonadi::StandardActionManager::SynchronizeResources
-                    << Akonadi::StandardActionManager::SynchronizeCollectionsRecursive;
+  mContactsFilterModel = new Akonadi::ContactsFilterProxyModel( this );
+  mContactsFilterModel->setSourceModel( mCategoryFilterModel );
 
-    Q_FOREACH( Akonadi::StandardActionManager::Type standardAction, standardActions ) {
-        mActionManager->createAction( standardAction );
-    }
+  connect( mQuickSearchWidget, SIGNAL(filterStringChanged(QString)),
+           mContactsFilterModel, SLOT(setFilterString(QString)) );
+  connect( mQuickSearchWidget, SIGNAL(filterStringChanged(QString)),
+           this, SLOT(selectFirstItem()) );
+  connect( mQuickSearchWidget, SIGNAL(arrowDownKeyPressed()),
+           mItemView, SLOT(setFocus()) );
 
-    QList<Akonadi::StandardContactActionManager::Type> contactActions;
-    contactActions << Akonadi::StandardContactActionManager::CreateContact
-                   << Akonadi::StandardContactActionManager::CreateContactGroup
-                   << Akonadi::StandardContactActionManager::EditItem;
+  mItemView->setModel( mContactsFilterModel );
+  mItemView->setXmlGuiClient( guiClient );
+  mItemView->setSelectionMode( QAbstractItemView::ExtendedSelection );
+  mItemView->setRootIsDecorated( false );
+  mItemView->header()->setDefaultAlignment( Qt::AlignCenter );
 
-    Q_FOREACH( Akonadi::StandardContactActionManager::Type contactAction, contactActions ) {
-        mActionManager->createAction( contactAction );
-    }
-    static bool pageRegistered = false;
+  mXXPortManager->setSelectionModel( mItemView->selectionModel() );
 
-    if ( !pageRegistered ) {
-        Akonadi::CollectionPropertiesDialog::registerPage( new PimCommon::CollectionAclPageFactory );
-        pageRegistered = true;
-    }
+  mActionManager = new Akonadi::StandardContactActionManager( guiClient->actionCollection(), this );
+  mActionManager->setCollectionSelectionModel( mCollectionView->selectionModel() );
+  mActionManager->setItemSelectionModel( mItemView->selectionModel() );
 
-    const QStringList pages =
-            QStringList() << QLatin1String( "Akonadi::CollectionGeneralPropertiesPage" )
-                          << QLatin1String( "Akonadi::CachePolicyPage" )
-                          << QLatin1String( "PimCommon::CollectionAclPage" );
+  QList<Akonadi::StandardActionManager::Type> standardActions;
+  standardActions << Akonadi::StandardActionManager::CreateCollection
+                  << Akonadi::StandardActionManager::CopyCollections
+                  << Akonadi::StandardActionManager::DeleteCollections
+                  << Akonadi::StandardActionManager::SynchronizeCollections
+                  << Akonadi::StandardActionManager::CollectionProperties
+                  << Akonadi::StandardActionManager::CopyItems
+                  << Akonadi::StandardActionManager::Paste
+                  << Akonadi::StandardActionManager::DeleteItems
+                  << Akonadi::StandardActionManager::CutItems
+                  << Akonadi::StandardActionManager::CutCollections
+                  << Akonadi::StandardActionManager::CreateResource
+                  << Akonadi::StandardActionManager::DeleteResources
+                  << Akonadi::StandardActionManager::ResourceProperties
+                  << Akonadi::StandardActionManager::SynchronizeResources
+                  << Akonadi::StandardActionManager::SynchronizeCollectionsRecursive;
 
-    mActionManager->setCollectionPropertiesPageNames( pages );
+  Q_FOREACH( Akonadi::StandardActionManager::Type standardAction, standardActions ) {
+    mActionManager->createAction( standardAction );
+  }
 
-    connect( mItemView, SIGNAL(currentChanged(Akonadi::Item)),
-             this, SLOT(itemSelected(Akonadi::Item)) );
-    connect( mItemView, SIGNAL(doubleClicked(Akonadi::Item)),
-             mActionManager->action( Akonadi::StandardContactActionManager::EditItem ),
-             SLOT(trigger()) );
-    connect( mItemView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-             this, SLOT(itemSelectionChanged(QModelIndex,QModelIndex)) );
+  QList<Akonadi::StandardContactActionManager::Type> contactActions;
+  contactActions << Akonadi::StandardContactActionManager::CreateContact
+                 << Akonadi::StandardContactActionManager::CreateContactGroup
+                 << Akonadi::StandardContactActionManager::EditItem;
 
-    // show the contact details view as default
-    mDetailsViewStack->setCurrentWidget( mContactDetails );
+  Q_FOREACH( Akonadi::StandardContactActionManager::Type contactAction, contactActions ) {
+    mActionManager->createAction( contactAction );
+  }
+  static bool pageRegistered = false;
 
-    mContactSwitcher->setView( mItemView );
+  if ( !pageRegistered ) {
+    Akonadi::CollectionPropertiesDialog::registerPage( new PimCommon::CollectionAclPageFactory );
+    pageRegistered = true;
+  }
 
-    Akonadi::Control::widgetNeedsAkonadi( this );
+  const QStringList pages =
+      QStringList() << QLatin1String( "Akonadi::CollectionGeneralPropertiesPage" )
+                    << QLatin1String( "Akonadi::CachePolicyPage" )
+                    << QLatin1String( "PimCommon::CollectionAclPage" );
 
-    mModelColumnManager = new ModelColumnManager( GlobalContactModel::instance()->model(), this );
-    mModelColumnManager->setWidget( mItemView->header() );
-    mModelColumnManager->load();
+  mActionManager->setCollectionPropertiesPageNames( pages );
 
-    QMetaObject::invokeMethod( this, "delayedInit", Qt::QueuedConnection );
-    updateQuickSearchText();
+  connect( mItemView, SIGNAL(currentChanged(Akonadi::Item)),
+           this, SLOT(itemSelected(Akonadi::Item)) );
+  connect( mItemView, SIGNAL(doubleClicked(Akonadi::Item)),
+           mActionManager->action( Akonadi::StandardContactActionManager::EditItem ),
+           SLOT(trigger()) );
+  connect( mItemView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+           this, SLOT(itemSelectionChanged(QModelIndex,QModelIndex)) );
+
+  // show the contact details view as default
+  mDetailsViewStack->setCurrentWidget( mContactDetails );
+
+  mContactSwitcher->setView( mItemView );
+
+  Akonadi::Control::widgetNeedsAkonadi( this );
+
+  mModelColumnManager = new ModelColumnManager( GlobalContactModel::instance()->model(), this );
+  mModelColumnManager->setWidget( mItemView->header() );
+  mModelColumnManager->load();
+
+  QMetaObject::invokeMethod( this, "delayedInit", Qt::QueuedConnection );
+  updateQuickSearchText();
 }
 
 void MainWidget::configure()
@@ -539,11 +557,14 @@ void MainWidget::setupGui()
     // the quick search widget which is embedded in the toolbar action
     mQuickSearchWidget = new QuickSearchWidget;
 
-    // setup the default actions
-    Akonadi::ContactDefaultActions *actions = new Akonadi::ContactDefaultActions( this );
-    actions->connectToView( mContactDetails );
-    actions->connectToView( mContactGroupDetails );
-    mFormatter = new KAddressBookGrantlee::GrantleeContactFormatter;
+  // the category filter widget which is embedded in the toolbar action
+  mCategorySelectWidget = new CategorySelectWidget;
+
+  // setup the default actions
+  Akonadi::ContactDefaultActions *actions = new Akonadi::ContactDefaultActions( this );
+  actions->connectToView( mContactDetails );
+  actions->connectToView( mContactGroupDetails );
+  mFormatter = new KAddressBookGrantlee::GrantleeContactFormatter;
 
     mContactDetails->setContactFormatter( mFormatter );
 
@@ -580,11 +601,15 @@ void MainWidget::setupActions( KActionCollection *collection )
     action->setText( i18n( "Quick search" ) );
     action->setDefaultWidget( mQuickSearchWidget );
 
-    action = collection->addAction( QLatin1String("select_all") );
-    action->setText( i18n( "Select All" ) );
-    action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_A ) );
-    action->setWhatsThis( i18n( "Select all contacts in the current address book view." ) );
-    connect( action, SIGNAL(triggered(bool)), mItemView, SLOT(selectAll()) );
+  action = collection->addAction( QLatin1String("category_filter") );
+  action->setText( i18n( "Category filter" ) );
+  action->setDefaultWidget( mCategorySelectWidget );
+
+  action = collection->addAction( QLatin1String("select_all") );
+  action->setText( i18n( "Select All" ) );
+  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_A ) );
+  action->setWhatsThis( i18n( "Select all contacts in the current address book view." ) );
+  connect( action, SIGNAL(triggered(bool)), mItemView, SLOT(selectAll()) );
 
 #if defined(HAVE_PRISON)
     KToggleAction *toggleAction = collection->add<KToggleAction>( QLatin1String("options_show_qrcodes") );
@@ -712,8 +737,12 @@ void MainWidget::printPreview()
     wizard.setDefaultAddressBook( currentAddressBook() );
 
     const int result = wizard.exec();
-    if (result)
+    if (result) {
+        Settings::self()->setDefaultFileName( printer.outputFileName() );
+        Settings::self()->setPrintingStyle( wizard.printingStyle() );
+        Settings::self()->setSortOrder( wizard.sortOrder() );
         previewdlg.exec();
+    }
 }
 
 void MainWidget::print()
@@ -978,16 +1007,18 @@ void MainWidget::slotUpdateCheckboxes(const QItemSelection &selected, const QIte
 
 void MainWidget::mergeContacts()
 {
-    QPointer<MergeContactsDialog> dlg = new MergeContactsDialog(mItemView->selectionModel(), this);
+    const Akonadi::Item::List lst = Utils::collectSelectedContactsItem(mItemView->selectionModel());
+    QPointer<KABMergeContacts::MergeContactsDialog> dlg = new KABMergeContacts::MergeContactsDialog(lst, this);
     dlg->exec();
     delete dlg;
 }
 
 void MainWidget::slotSearchDuplicateContacts()
 {
-    QPointer<SearchDuplicateContactWizard> wizard = new SearchDuplicateContactWizard(mItemView->selectionModel(), this);
-    wizard->exec();
-    delete wizard;
+    const Akonadi::Item::List lst = Utils::collectSelectedContactsItem(mItemView->selectionModel());
+    QPointer<KABMergeContacts::MergeContactDuplicateContactDialog> dlg = new KABMergeContacts::MergeContactDuplicateContactDialog(lst, this);
+    dlg->exec();
+    delete dlg;
 }
 
 Akonadi::EntityTreeModel *MainWidget::entityTreeModel() const
@@ -1020,5 +1051,3 @@ void MainWidget::slotCheckNewCalendar( const QModelIndex &parent, int begin, int
         }
     }
 }
-
-

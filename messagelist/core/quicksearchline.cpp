@@ -35,12 +35,15 @@
 #include <QPushButton>
 #include <QButtonGroup>
 #include <QLabel>
+#include <QKeyEvent>
+#include <QSignalMapper>
 
 
 using namespace MessageList::Core;
 QuickSearchLine::QuickSearchLine(QWidget *parent)
     : QWidget(parent),
-      mContainsOutboundMessages(false)
+      mContainsOutboundMessages(false),
+      mFilterStatusMapper(0)
 {
     QVBoxLayout *vbox = new QVBoxLayout;
     vbox->setMargin(0);
@@ -57,13 +60,13 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mLockSearch = new QToolButton( this );
     mLockSearch->setCheckable( true );
     mLockSearch->setText( i18nc( "@action:button", "Lock search" ) );
+    mLockSearch->setFocusPolicy(Qt::StrongFocus);
     mLockSearch->setWhatsThis(
                 i18nc( "@info:whatsthis",
                        "Toggle this button if you want to keep your quick search "
                        "locked when moving to other folders or when narrowing the search "
                        "by message status." ) );
     slotLockSearchClicked(false);
-    mLockSearch->setVisible( Settings::self()->showQuickSearch() );
     connect( mLockSearch, SIGNAL(toggled(bool)), SLOT(slotLockSearchClicked(bool)));
     hbox->addWidget( mLockSearch );
 
@@ -83,7 +86,6 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mSearchEdit->setClickMessage( i18nc( "Search for messages.", "Search" ) );
     mSearchEdit->setObjectName( QLatin1String( "quicksearch" ) );
     mSearchEdit->setClearButtonShown( true );
-    mSearchEdit->setVisible( Settings::self()->showQuickSearch() );
 
     connect( mSearchEdit, SIGNAL(textChanged(QString)), this, SLOT(slotSearchEditTextEdited(QString)));
     connect( mSearchEdit, SIGNAL(clearButtonClicked()), this, SLOT(slotClearButtonClicked()));
@@ -100,12 +102,12 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
 
     // The status filter button. Will be populated later, as populateStatusFilterCombo() is virtual
     mTagFilterCombo = new KComboBox( this ) ;
-    mTagFilterCombo->setVisible( Settings::self()->showQuickSearch() );
     mTagFilterCombo->setMaximumWidth(300);
     mTagFilterCombo->setMaximumWidth(200);
     mTagFilterCombo->hide();
     hbox->addWidget( mTagFilterCombo );
 
+    //Be disable until we have a storageModel => logical that it's disable.
     mSearchEdit->setEnabled( false );
     mTagFilterCombo->setEnabled( false );
 
@@ -125,18 +127,22 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mSearchEveryWhere->setObjectName(QLatin1String("full_message"));
     mSearchEveryWhere->setFlat(true);
     mSearchEveryWhere->setCheckable(true);
+    mSearchEveryWhere->setChecked(true);
+    connect( mSearchEveryWhere, SIGNAL(clicked()), this, SLOT(slotSearchBy()) );
     hbox->addWidget(mSearchEveryWhere);
 
     mSearchAgainstBody = new QPushButton(i18n("Body"));
     mSearchAgainstBody->setObjectName(QLatin1String("body"));
     mSearchAgainstBody->setFlat(true);
     mSearchAgainstBody->setCheckable(true);
+    connect( mSearchAgainstBody, SIGNAL(clicked()), this, SLOT(slotSearchBy()) );
     hbox->addWidget(mSearchAgainstBody);
 
     mSearchAgainstSubject = new QPushButton(i18n("Subject"));
     mSearchAgainstSubject->setCheckable(true);
     mSearchAgainstSubject->setFlat(true);
     mSearchAgainstSubject->setObjectName(QLatin1String("subject"));
+    connect( mSearchAgainstSubject, SIGNAL(clicked()), this, SLOT(slotSearchBy()) );
     hbox->addWidget(mSearchAgainstSubject);
 
     mSearchAgainstFromOrTo = new QPushButton;
@@ -144,29 +150,57 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
     mSearchAgainstFromOrTo->setObjectName(QLatin1String("fromorto"));
     mSearchAgainstFromOrTo->setCheckable(true);
     mSearchAgainstFromOrTo->setFlat(true);
+    connect( mSearchAgainstFromOrTo, SIGNAL(clicked()), this, SLOT(slotSearchBy()) );
     hbox->addWidget(mSearchAgainstFromOrTo);
 
     mSearchAgainstBcc = new QPushButton(i18n("Bcc"));
     mSearchAgainstBcc->setObjectName(QLatin1String("bcc"));
     mSearchAgainstBcc->setCheckable(true);
     mSearchAgainstBcc->setFlat(true);
+    connect( mSearchAgainstBcc, SIGNAL(clicked()), this, SLOT(slotSearchBy()) );
     hbox->addWidget(mSearchAgainstBcc);
 
-    mButtonSearchAgainstGroup = new QButtonGroup(this);
-    mButtonSearchAgainstGroup->addButton(mSearchEveryWhere, 0);
-    mButtonSearchAgainstGroup->addButton(mSearchAgainstBody);
-    mButtonSearchAgainstGroup->addButton(mSearchAgainstSubject);
-    mButtonSearchAgainstGroup->addButton(mSearchAgainstFromOrTo);
-    mButtonSearchAgainstGroup->addButton(mSearchAgainstBcc);
-    mButtonSearchAgainstGroup->button(0)->setChecked(true);
-    connect(mButtonSearchAgainstGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotSearchOptionChanged()));
-    mButtonSearchAgainstGroup->setExclusive(true);
     mQuickSearchFilterWidget->hide();
+
+    installEventFilter(this);
+    mMoreOptions->installEventFilter(this);
+    mTagFilterCombo->installEventFilter(this);
+    mLockSearch->installEventFilter(this);
+    mSearchEveryWhere->installEventFilter(this);
+    mSearchAgainstBody->installEventFilter(this);
+    mSearchAgainstSubject->installEventFilter(this);
+    mSearchAgainstFromOrTo->installEventFilter(this);
+    mSearchAgainstBcc->installEventFilter(this);
+    mQuickSearchFilterWidget->installEventFilter(this);
+    mExtraOption->installEventFilter(this);
+    changeQuicksearchVisibility(Settings::self()->showQuickSearch());
 }
 
 QuickSearchLine::~QuickSearchLine()
 {
 
+}
+
+void QuickSearchLine::slotSearchBy()
+{
+    QObject *button = sender();
+    if (mSearchEveryWhere != button) {
+        mSearchEveryWhere->setChecked(false);
+    }
+    if (mSearchAgainstBody != button) {
+        mSearchAgainstBody->setChecked(false);
+    }
+    if (mSearchAgainstSubject != button) {
+        mSearchAgainstSubject->setChecked(false);
+    }
+    if (mSearchAgainstFromOrTo != button) {
+        mSearchAgainstFromOrTo->setChecked(false);
+    }
+    if (mSearchAgainstBcc != button) {
+        mSearchAgainstBcc->setChecked(false);
+    }
+
+    slotSearchOptionChanged();
 }
 
 void QuickSearchLine::slotMoreOptionClicked(bool b)
@@ -196,7 +230,7 @@ void QuickSearchLine::slotSearchEditTextEdited(const QString &text)
 void QuickSearchLine::slotClearButtonClicked()
 {
     mExtraOption->hide();
-    mButtonSearchAgainstGroup->button(0)->setChecked(true);
+    mSearchEveryWhere->setChecked(true);
     if (mTagFilterCombo->isVisible())
         mTagFilterCombo->setCurrentIndex(0);
     Q_EMIT clearButtonClicked();
@@ -271,7 +305,7 @@ void QuickSearchLine::resetFilter()
     if (mTagFilterCombo->isVisible())
         mTagFilterCombo->setCurrentIndex( 0 );
     mLockSearch->setChecked(false);
-    mButtonSearchAgainstGroup->button(0)->setChecked(true);
+    mSearchEveryWhere->setChecked(true);
     mExtraOption->hide();
 }
 
@@ -285,9 +319,12 @@ void QuickSearchLine::createQuickSearchButton(const QIcon &icon, const QString &
     button->setCheckable(true);
     button->setChecked(false);
     button->setProperty("statusvalue", value);
+    mFilterStatusMapper->setMapping(button, value);
+    connect( button, SIGNAL(clicked(bool)), mFilterStatusMapper, SLOT(map()) );
     quickSearchButtonLayout->addWidget(button);
+    button->installEventFilter(this);
+    button->setFocusPolicy(Qt::StrongFocus);
     mListStatusButton.append(button);
-    mButtonStatusGroup->addButton(button);
 }
 
 bool QuickSearchLine::containsOutboundMessages() const
@@ -314,9 +351,9 @@ void QuickSearchLine::changeSearchAgainstFromOrToText()
 
 void QuickSearchLine::initializeStatusSearchButton(QLayout *quickSearchButtonLayout)
 {
-    mButtonStatusGroup = new QButtonGroup(this);
-    mButtonStatusGroup->setExclusive(false);
-    connect(mButtonStatusGroup, SIGNAL(buttonClicked(int)), this, SIGNAL(statusButtonsClicked()));
+    //Bug Qt we can't use QButtonGroup + QToolButton + change focus. => use QSignalMapper();
+    mFilterStatusMapper = new QSignalMapper(this);
+    connect(mFilterStatusMapper, SIGNAL(mapped(int)), this, SIGNAL(statusButtonsClicked()));
 
     createQuickSearchButton(SmallIcon(QLatin1String( "mail-unread" )), i18nc( "@action:inmenu Status of a message", "Unread" ), Akonadi::MessageStatus::statusUnread().toQInt32(),quickSearchButtonLayout );
 
@@ -377,5 +414,23 @@ QList<Akonadi::MessageStatus> QuickSearchLine::status() const
 
 void QuickSearchLine::updateComboboxVisibility()
 {
-    mTagFilterCombo->setVisible(mTagFilterCombo->count());
+    mTagFilterCombo->setVisible(mSearchEdit->isVisible() && mTagFilterCombo->count());
+}
+
+bool QuickSearchLine::eventFilter(QObject *object, QEvent *e)
+{
+    const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
+    if (shortCutOverride) {
+        e->accept();
+        return true;
+    }
+    return QWidget::eventFilter(object,e);
+}
+
+void QuickSearchLine::changeQuicksearchVisibility(bool show)
+{
+    mSearchEdit->setVisible( show );
+    mTagFilterCombo->setVisible( show && mTagFilterCombo->count());
+    mLockSearch->setVisible( show );
+    mMoreOptions->setVisible( show );
 }

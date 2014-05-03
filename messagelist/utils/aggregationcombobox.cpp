@@ -29,101 +29,110 @@ using namespace MessageList::Core;
 using namespace MessageList::Utils;
 
 AggregationComboBox::AggregationComboBox( QWidget * parent )
-: KComboBox( parent ), d( new AggregationComboBoxPrivate( this ) )
+    : KComboBox( parent ), d( new AggregationComboBoxPrivate( this ) )
 {
-  if( Manager::instance() ) 
-    d->slotLoadAggregations();
-  else
-    setEnabled(false);
+    if( Manager::instance() )
+        d->slotLoadAggregations();
+    else
+        setEnabled(false);
 }
 
 AggregationComboBox::~AggregationComboBox()
 {
-  delete d;
+    delete d;
 }
 
 QString AggregationComboBox::currentAggregation() const
 {
-  return itemData( currentIndex() ).toString();
+    return itemData( currentIndex() ).toString();
 }
 
 void AggregationComboBox::writeDefaultConfig() const
 {
-  KConfigGroup group( Settings::self()->config(), "MessageListView::StorageModelAggregations" );
+    KConfigGroup group( Settings::self()->config(), "MessageListView::StorageModelAggregations" );
 
-  const QString aggregationID = currentAggregation();
-  group.writeEntry( QLatin1String( "DefaultSet" ), aggregationID );
+    const QString aggregationID = currentAggregation();
+    group.writeEntry( QLatin1String( "DefaultSet" ), aggregationID );
 
-  Manager::instance()->aggregationsConfigurationCompleted();
+    if (Manager::instance())
+        Manager::instance()->aggregationsConfigurationCompleted();
 }
 
 void AggregationComboBox::writeStorageModelConfig( MessageList::Core::StorageModel *storageModel, bool isPrivateSetting ) const
 {
-  writeStorageModelConfig( storageModel->id(), isPrivateSetting );
+    writeStorageModelConfig( storageModel->id(), isPrivateSetting );
 }
 
 void AggregationComboBox::writeStorageModelConfig( const QString &id, bool isPrivateSetting ) const
 {
-  // message list aggregation
-  QString aggregationID;
-  if ( isPrivateSetting ) {
-    aggregationID = currentAggregation();
-  } else { // explicitly use default aggregation id when using default aggregation.
-    aggregationID = Manager::instance()->defaultAggregation()->id();
-  }
-  Manager::instance()->saveAggregationForStorageModel( id, aggregationID, isPrivateSetting );
-  Manager::instance()->aggregationsConfigurationCompleted();
+    if (Manager::instance()) {
+        // message list aggregation
+        QString aggregationID;
+        if ( isPrivateSetting ) {
+            aggregationID = currentAggregation();
+        } else { // explicitly use default aggregation id when using default aggregation.
+            aggregationID = Manager::instance()->defaultAggregation()->id();
+        }
+        Manager::instance()->saveAggregationForStorageModel( id, aggregationID, isPrivateSetting );
+        Manager::instance()->aggregationsConfigurationCompleted();
+    }
 }
 
 void AggregationComboBox::writeStorageModelConfig( const Akonadi::Collection&col, bool isPrivateSetting ) const
 {
-  writeStorageModelConfig( QString::number( col.id() ), isPrivateSetting );
+    writeStorageModelConfig( QString::number( col.id() ), isPrivateSetting );
 }
 
 void AggregationComboBox::readStorageModelConfig( const QString & id, bool &isPrivateSetting )
 {
-  const Aggregation *aggregation = Manager::instance()->aggregationForStorageModel( id, &isPrivateSetting );
-  d->setCurrentAggregation( aggregation );
+    if (Manager::instance()) {
+        const Aggregation *aggregation = Manager::instance()->aggregationForStorageModel( id, &isPrivateSetting );
+        d->setCurrentAggregation( aggregation );
+    }
 }
 
 void AggregationComboBox::readStorageModelConfig( MessageList::Core::StorageModel *storageModel, bool &isPrivateSetting )
 {
-  readStorageModelConfig( storageModel->id(), isPrivateSetting );
+    readStorageModelConfig( storageModel->id(), isPrivateSetting );
 }
 
 void AggregationComboBox::readStorageModelConfig( const Akonadi::Collection &col, bool &isPrivateSetting )
 {
-  if ( col.isValid() )
-    readStorageModelConfig( QString::number( col.id() ), isPrivateSetting );
+    if ( col.isValid() )
+        readStorageModelConfig( QString::number( col.id() ), isPrivateSetting );
 }
 
 void AggregationComboBox::selectDefault()
 {
-  const Aggregation *defaultAggregation = Manager::instance()->defaultAggregation();
-  d->setCurrentAggregation( defaultAggregation );
+    if (Manager::instance()) {
+        const Aggregation *defaultAggregation = Manager::instance()->defaultAggregation();
+        d->setCurrentAggregation( defaultAggregation );
+    }
 }
 
 void AggregationComboBoxPrivate::slotLoadAggregations()
 {
-  q->clear();
+    if (!Manager::instance())
+        return;
+    q->clear();
 
-  // Get all message list aggregations and sort them into alphabetical order.
-  QList< Aggregation * > aggregations = Manager::instance()->aggregations().values();
-  qSort( aggregations.begin(), aggregations.end(), MessageList::Core::Aggregation::compareName );
+    // Get all message list aggregations and sort them into alphabetical order.
+    QList< Aggregation * > aggregations = Manager::instance()->aggregations().values();
+    qSort( aggregations.begin(), aggregations.end(), MessageList::Core::Aggregation::compareName );
 
-  foreach( const Aggregation * aggregation, aggregations )
-  {
-    q->addItem( aggregation->name(), QVariant( aggregation->id() ) );
-  }
+    foreach( const Aggregation * aggregation, aggregations )
+    {
+        q->addItem( aggregation->name(), QVariant( aggregation->id() ) );
+    }
 }
 
 void AggregationComboBoxPrivate::setCurrentAggregation( const Aggregation *aggregation )
 {
-  Q_ASSERT( aggregation != 0 );
+    Q_ASSERT( aggregation != 0 );
 
-  const QString aggregationID = aggregation->id();
-  const int aggregationIndex = q->findData( QVariant( aggregationID ) );
-  q->setCurrentIndex( aggregationIndex );
+    const QString aggregationID = aggregation->id();
+    const int aggregationIndex = q->findData( QVariant( aggregationID ) );
+    q->setCurrentIndex( aggregationIndex );
 }
 
 #include "moc_aggregationcombobox.cpp"

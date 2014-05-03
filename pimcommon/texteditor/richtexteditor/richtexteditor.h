@@ -68,7 +68,7 @@ private Q_SLOTS:
 
 
 protected:
-    virtual void addExtraMenuEntry(QMenu *menu);
+    virtual void addExtraMenuEntry(QMenu *menu, const QPoint &pos);
     void contextMenuEvent( QContextMenuEvent *event );
     void wheelEvent( QWheelEvent *event );
     void focusInEvent( QFocusEvent *event );

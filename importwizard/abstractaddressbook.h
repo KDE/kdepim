@@ -47,6 +47,7 @@ protected:
     void addAddressBookImportInfo( const QString& log );
     void addAddressBookImportError( const QString& log );
     void cleanUp();
+    void addImportNote(KABC::Addressee &address, const QString &applicationName);
 
 private Q_SLOTS:
     void slotStoreDone(KJob*job);

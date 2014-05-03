@@ -40,9 +40,9 @@ class ProgressItem;
 class KDEPIM_EXPORT BroadcastStatus : public QObject
 {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     virtual ~BroadcastStatus();
 
     /** Return the instance of the singleton object for this class */
@@ -69,7 +69,7 @@ class KDEPIM_EXPORT BroadcastStatus : public QObject
                                             bool mLeaveOnServer = false,
                                             KPIM::ProgressItem *progressItem = 0 );
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
       Emit an update status bar signal. It's a slot so it can be hooked up
       to other signals.
@@ -88,11 +88,11 @@ class KDEPIM_EXPORT BroadcastStatus : public QObject
      */
     void reset();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /** Emitted when setStatusMsg is called. */
     void statusMsg( const QString & );
 
-  protected:
+protected:
     BroadcastStatus();
     QString mStatusMsg;
     bool mTransientActive;

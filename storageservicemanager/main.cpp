@@ -39,14 +39,14 @@ int main( int argc, char **argv )
     KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
     KUniqueApplication::addCmdLineOptions();
-    if (!KUniqueApplication::start())
-    {
+    if (!KUniqueApplication::start()) {
         kDebug() << "storageservicemanager is already running!";
         return (0);
     }
     KUniqueApplication a;
     StorageServiceManagerMainWindow *mw = new StorageServiceManagerMainWindow();
     KGlobal::locale()->insertCatalog( QLatin1String("libpimcommon") );
+    KGlobal::locale()->insertCatalog( QLatin1String("libkgapi") );
     mw->show();
     a.exec();
 }

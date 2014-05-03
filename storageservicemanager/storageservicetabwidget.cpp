@@ -57,6 +57,7 @@ void StorageServiceTabWidget::updateListService(const QMap<QString, PimCommon::S
             }
         }
     }
+    Q_EMIT tabCountChanged(count() > 0);
 }
 
 void StorageServiceTabWidget::setListStorageService(const QMap<QString, PimCommon::StorageServiceAbstract *> &list)
@@ -66,6 +67,7 @@ void StorageServiceTabWidget::setListStorageService(const QMap<QString, PimCommo
         i.next();
         createPage(i.key(), i.value());
     }
+    Q_EMIT tabCountChanged(count() > 0);
 }
 
 void StorageServiceTabWidget::createPage(const QString &name, PimCommon::StorageServiceAbstract *service)
@@ -190,6 +192,7 @@ void StorageServiceTabWidget::serviceRemoved(const QString &serviceName)
         if (page->serviceName() == serviceName) {
             //removeTab(nbPage);
             delete widget(nbPage);
+            Q_EMIT tabCountChanged(count()>0);
             break;
         }
     }

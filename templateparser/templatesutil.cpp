@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2011 Montel Laurent <montel@kde.org>
+  Copyright (c) 2011-2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -24,15 +24,15 @@ using namespace TemplateParser;
 
 void TemplateParser::Util::deleteTemplate( const QString &id )
 {
-  KSharedConfig::Ptr config =
-    KSharedConfig::openConfig( QLatin1String("templatesconfigurationrc"), KConfig::NoGlobals );
+    KSharedConfig::Ptr config =
+            KSharedConfig::openConfig( QLatin1String("templatesconfigurationrc"), KConfig::NoGlobals );
 
-  const QString key = QString::fromLatin1( "Templates #%1" ).arg( id );
-  if ( config->hasGroup( key ) ) {
-    KConfigGroup group = config->group( key );
-    group.deleteGroup();
-    group.sync();
-  }
+    const QString key = QString::fromLatin1( "Templates #%1" ).arg( id );
+    if ( config->hasGroup( key ) ) {
+        KConfigGroup group = config->group( key );
+        group.deleteGroup();
+        group.sync();
+    }
 }
 
 QStringList TemplateParser::Util::keywordsWithArgs()

@@ -79,9 +79,9 @@ void Filter::clear()
     mMatchingItemIds.clear();
 }
 
-void Filter::setCurrentFolder( const KUrl &url )
+void Filter::setCurrentFolder( const Akonadi::Collection &folder )
 {
-    mCurrentFolder = url;
+    mCurrentFolder = folder;
 }
 
 void Filter::setSearchString( const QString &search, QuickSearchLine::SearchOptions options )
@@ -114,14 +114,15 @@ void Filter::setSearchString( const QString &search, QuickSearchLine::SearchOpti
     }
 
 
-    Akonadi::Collection col = Akonadi::Collection::fromUrl(mCurrentFolder);
-    if (col.isValid()) {
-        query.addCollection(col.id());
+    //If the collection is virtual we're probably trying to filter the search collection, so we just search globally
+    if (mCurrentFolder.isValid() && !mCurrentFolder.isVirtual()) {
+        query.addCollection(mCurrentFolder.id());
     }
 
     Baloo::PIM::ResultIterator it = query.exec();
-    while (it.next())
+    while (it.next()) {
         mMatchingItemIds << it.id();
+    }
 
     emit finished();
 }

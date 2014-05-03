@@ -358,7 +358,7 @@ endif()
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5151)
 
-kde4_add_app_icon(_kleopatra_mainwindow_SRCS "hi*-app-kleopatra.png")
+kde4_add_app_icon(_kleopatra_mainwindow_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-app-kleopatra.png")
 
 kde4_add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} ${_kleopatra_libkdepim_SRCS})
 set_target_properties(kleopatra_bin PROPERTIES OUTPUT_NAME kleopatra)
@@ -385,14 +385,14 @@ endif()
 install(TARGETS kleopatra_bin ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(
-  PROGRAMS kleopatra.desktop kleopatra_import.desktop
+  PROGRAMS data/kleopatra.desktop data/kleopatra_import.desktop
   DESTINATION ${XDG_APPS_INSTALL_DIR}
 )
 install(
-  FILES kleopatra_signencryptfiles.desktop
-        kleopatra_signencryptfolders.desktop
-        kleopatra_decryptverifyfiles.desktop
-        kleopatra_decryptverifyfolders.desktop
+  FILES data/kleopatra_signencryptfiles.desktop
+        data/kleopatra_signencryptfolders.desktop
+        data/kleopatra_decryptverifyfiles.desktop
+        data/kleopatra_decryptverifyfolders.desktop
   DESTINATION ${SERVICES_INSTALL_DIR}
 )
 
@@ -404,5 +404,4 @@ if(KDEPIM_MOBILE_UI)
     DESTINATION ${DATA_INSTALL_DIR}/kleopatra
   )
 endif()
-
-kde4_install_icons(${ICON_INSTALL_DIR})
+add_subdirectory(icons)

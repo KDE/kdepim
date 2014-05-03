@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -17,9 +17,10 @@
 
 #include "mergecontacts.h"
 
+using namespace KABMergeContacts;
 
-MergeContacts::MergeContacts(QObject *parent)
-    : QObject(parent)
+MergeContacts::MergeContacts(const Akonadi::Item::List &items)
+    : mListItem(items)
 {
 }
 
@@ -28,8 +29,35 @@ MergeContacts::~MergeContacts()
 
 }
 
-KABC::Address MergeContacts::merge(const KABC::Addressee::List &contacts)
+KABC::Addressee MergeContacts::mergedContact()
 {
+    KABC::Addressee newContact;
+    if (mListItem.count() == 1)
+        return newContact;
+    bool firstAddress = true;
+    Q_FOREACH (const Akonadi::Item &item, mListItem) {
+        KABC::Addressee address = item.payload<KABC::Addressee>();
+        if (firstAddress) {
+            firstAddress = false;
+            newContact.setName(address.name());
+            newContact.setFamilyName(address.familyName());
+            newContact.setFormattedName(address.formattedName());
+        }
+    }
+    return newContact;
+}
+
+
+bool MergeContacts::needManualSelectInformations()
+{
+    bool result = false;
     //TODO
-    return KABC::Address();
+    Q_FOREACH (const Akonadi::Item &item, mListItem) {
+        KABC::Addressee address = item.payload<KABC::Addressee>();
+        if (address.birthday().isValid()) {
+            result = true;
+        }
+    }
+
+    return result;
 }

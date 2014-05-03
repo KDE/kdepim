@@ -39,13 +39,14 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     : QSplitter(parent)
 {
     mTabWidget = new SieveEditorTabWidget;
-    connect(mTabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(slotTabCloseRequested(int)));
+    connect(mTabWidget, SIGNAL(tabCloseRequestedIndex(int)), this, SLOT(slotTabCloseRequested(int)));
     connect(mTabWidget, SIGNAL(tabRemoveAllExclude(int)), this, SLOT(slotTabRemoveAllExclude(int)));
     addWidget(mTabWidget);
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
     connect(mScriptManagerWidget, SIGNAL(createScriptPage(KUrl,QStringList,bool)), this, SLOT(slotCreateScriptPage(KUrl,QStringList,bool)));
     connect(mScriptManagerWidget, SIGNAL(updateButtons(bool,bool,bool,bool)), SIGNAL(updateButtons(bool,bool,bool,bool)));
     connect(mScriptManagerWidget, SIGNAL(scriptDeleted(KUrl)), this, SLOT(slotScriptDeleted(KUrl)));
+    connect(mScriptManagerWidget, SIGNAL(serverSieveFound(bool)), this, SIGNAL(serverSieveFound(bool)));
     connect(this, SIGNAL(updateScriptList()), mScriptManagerWidget, SLOT(slotRefreshList()));
     addWidget(mScriptManagerWidget);
     setChildrenCollapsible(false);

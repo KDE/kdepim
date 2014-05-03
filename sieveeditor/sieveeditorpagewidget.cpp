@@ -155,7 +155,6 @@ bool SieveEditorPageWidget::needToSaveScript()
 
 void SieveEditorPageWidget::slotValueChanged(bool b)
 {
-    qDebug()<<"void SieveEditorPageWidget::slotValueChanged() ";
     Q_EMIT scriptModified(b, this);
 }
 

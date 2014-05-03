@@ -21,6 +21,7 @@
 #include "storageservicemanagermainwindow.h"
 #include "storageservicetabwidget.h"
 #include "storageserviceconfiguredialog.h"
+#include "storageservicemanagermainwidget.h"
 #include "storageservicemanagersettingsjob.h"
 #include "storageservicemanagerglobalconfig.h"
 #include "pimcommon/storageservice/storageservicemanager.h"
@@ -60,12 +61,13 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
 
     mStorageManager = new PimCommon::StorageServiceManager(this);
     connect(mStorageManager, SIGNAL(servicesChanged()), this, SLOT(slotServicesChanged()));
-    mStorageServiceTabWidget = new StorageServiceTabWidget;
-    connect(mStorageServiceTabWidget, SIGNAL(currentChanged(QWidget*)), this, SLOT(slotUpdateActions()));
-    connect(mStorageServiceTabWidget, SIGNAL(updateStatusBarMessage(QString)), this, SLOT(slotSetStatusBarMessage(QString)));
-    connect(mStorageServiceTabWidget, SIGNAL(listFileWasInitialized()), this, SLOT(slotUpdateActions()));
-    connect(mStorageServiceTabWidget, SIGNAL(selectionChanged()), this, SLOT(slotUpdateActions()));
-    setCentralWidget(mStorageServiceTabWidget);
+    mStorageServiceMainWidget = new StorageServiceManagerMainWidget;
+    connect(mStorageServiceMainWidget, SIGNAL(configureClicked()), SLOT(slotConfigure()));
+    connect(mStorageServiceMainWidget->storageServiceTabWidget(), SIGNAL(currentChanged(QWidget*)), this, SLOT(slotUpdateActions()));
+    connect(mStorageServiceMainWidget->storageServiceTabWidget(), SIGNAL(updateStatusBarMessage(QString)), this, SLOT(slotSetStatusBarMessage(QString)));
+    connect(mStorageServiceMainWidget->storageServiceTabWidget(), SIGNAL(listFileWasInitialized()), this, SLOT(slotUpdateActions()));
+    connect(mStorageServiceMainWidget->storageServiceTabWidget(), SIGNAL(selectionChanged()), this, SLOT(slotUpdateActions()));
+    setCentralWidget(mStorageServiceMainWidget);
 
     connect( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
               this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
@@ -73,7 +75,7 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     setupActions();
     setupGUI(Keys | StatusBar | Save | Create);
     readConfig();
-    mStorageServiceTabWidget->setListStorageService(mStorageManager->listService());
+    mStorageServiceMainWidget->storageServiceTabWidget()->setListStorageService(mStorageManager->listService());
     slotUpdateActions();
     initStatusBar();
     const Solid::Networking::Status status = Solid::Networking::status();
@@ -82,7 +84,7 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
 
 StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
 {
-    delete mStorageServiceTabWidget;
+    delete mStorageServiceMainWidget;
     KSharedConfig::Ptr config = KGlobal::config();
 
     KConfigGroup group = config->group( QLatin1String("StorageServiceManagerMainWindow") );
@@ -94,7 +96,7 @@ StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
 
 void StorageServiceManagerMainWindow::slotServicesChanged()
 {
-    mStorageServiceTabWidget->updateListService(mStorageManager->listService());
+    mStorageServiceMainWidget->storageServiceTabWidget()->updateListService(mStorageManager->listService());
 }
 
 void StorageServiceManagerMainWindow::initStatusBar()
@@ -108,11 +110,11 @@ void StorageServiceManagerMainWindow::initStatusBar()
 void StorageServiceManagerMainWindow::slotSystemNetworkStatusChanged(Solid::Networking::Status status)
 {
     if ( status == Solid::Networking::Connected || status == Solid::Networking::Unknown) {
-        mStorageServiceTabWidget->setNetworkIsDown(false);
+        mStorageServiceMainWidget->storageServiceTabWidget()->setNetworkIsDown(false);
         slotSetStatusBarMessage(i18n("Network connection is up."));
         mNetworkIsDown = false;
     } else {
-        mStorageServiceTabWidget->setNetworkIsDown(true);
+        mStorageServiceMainWidget->storageServiceTabWidget()->setNetworkIsDown(true);
         slotSetStatusBarMessage(i18n("Network connection is down."));
         mNetworkIsDown = true;
     }
@@ -131,22 +133,24 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
         mRefreshList->setDisabled(true);
         mShowLog->setDisabled(true);
         mRenameItem->setDisabled(true);
+        mRefreshAll->setDisabled(true);
     } else {
-        const PimCommon::StorageServiceAbstract::Capabilities capabilities = mStorageServiceTabWidget->capabilities();
-        const bool listFolderWasLoaded = mStorageServiceTabWidget->listFolderWasLoaded();
-        PimCommon::StorageServiceTreeWidget::ItemType type = mStorageServiceTabWidget->itemTypeSelected();
+        const PimCommon::StorageServiceAbstract::Capabilities capabilities = mStorageServiceMainWidget->storageServiceTabWidget()->capabilities();
+        const bool listFolderWasLoaded = mStorageServiceMainWidget->storageServiceTabWidget()->listFolderWasLoaded();
+        PimCommon::StorageServiceTreeWidget::ItemType type = mStorageServiceMainWidget->storageServiceTabWidget()->itemTypeSelected();
         mDownloadFile->setEnabled(listFolderWasLoaded && (capabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability) && (type == PimCommon::StorageServiceTreeWidget::File));
         mCreateFolder->setEnabled(listFolderWasLoaded && (capabilities & PimCommon::StorageServiceAbstract::CreateFolderCapability));
         mAccountInfo->setEnabled(capabilities & PimCommon::StorageServiceAbstract::AccountInfoCapability);
         mUploadFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::UploadFileCapability);
         mDelete->setEnabled(listFolderWasLoaded && (capabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability) &&
                             (type == PimCommon::StorageServiceTreeWidget::File || type == PimCommon::StorageServiceTreeWidget::Folder));
-        mAuthenticate->setDisabled((capabilities & PimCommon::StorageServiceAbstract::NoCapability) || (mStorageServiceTabWidget->count() == 0));
-        mRefreshList->setDisabled((capabilities & PimCommon::StorageServiceAbstract::NoCapability) || (mStorageServiceTabWidget->count() == 0));
+        mAuthenticate->setDisabled((capabilities & PimCommon::StorageServiceAbstract::NoCapability) || (mStorageServiceMainWidget->storageServiceTabWidget()->count() == 0));
+        mRefreshList->setDisabled((capabilities & PimCommon::StorageServiceAbstract::NoCapability) || (mStorageServiceMainWidget->storageServiceTabWidget()->count() == 0));
         mRenameItem->setEnabled(listFolderWasLoaded && (capabilities & PimCommon::StorageServiceAbstract::RenameFileCapabilitity || capabilities & PimCommon::StorageServiceAbstract::RenameFolderCapability) &&
                 (type == PimCommon::StorageServiceTreeWidget::File || type == PimCommon::StorageServiceTreeWidget::Folder));
 
-        mShowLog->setDisabled((mStorageServiceTabWidget->count() == 0));
+        mShowLog->setDisabled((mStorageServiceMainWidget->storageServiceTabWidget()->count() == 0));
+        mRefreshAll->setDisabled((mStorageServiceMainWidget->storageServiceTabWidget()->count() == 0));
         mLogout->setEnabled(listFolderWasLoaded);
     }
 }
@@ -156,33 +160,33 @@ void StorageServiceManagerMainWindow::setupActions()
     KActionCollection *ac = actionCollection();
     KStandardAction::quit(this, SLOT(close()), ac );
 
-    mAuthenticate = ac->addAction(QLatin1String("authenticate"), mStorageServiceTabWidget, SLOT(slotAuthenticate()));
+    mAuthenticate = ac->addAction(QLatin1String("authenticate"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotAuthenticate()));
     mAuthenticate->setText(i18n("Authenticate..."));
 
-    mCreateFolder = ac->addAction(QLatin1String("create_folder"), mStorageServiceTabWidget, SLOT(slotCreateFolder()));
+    mCreateFolder = ac->addAction(QLatin1String("create_folder"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotCreateFolder()));
     mCreateFolder->setText(i18n("Create Folder..."));
     mCreateFolder->setIcon(KIcon(QLatin1String("folder-new")));
 
-    mRefreshList = ac->addAction(QLatin1String("refresh_list"), mStorageServiceTabWidget, SLOT(slotRefreshList()));
+    mRefreshList = ac->addAction(QLatin1String("refresh_list"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotRefreshList()));
     mRefreshList->setText(i18n("Refresh List"));
     mRefreshList->setShortcut(QKeySequence( Qt::Key_F5 ));
 
-    mAccountInfo = ac->addAction(QLatin1String("account_info"), mStorageServiceTabWidget, SLOT(slotAccountInfo()));
+    mAccountInfo = ac->addAction(QLatin1String("account_info"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotAccountInfo()));
     mAccountInfo->setText(i18n("Account Info..."));
 
-    mUploadFile = ac->addAction(QLatin1String("upload_file"), mStorageServiceTabWidget, SLOT(slotUploadFile()));
+    mUploadFile = ac->addAction(QLatin1String("upload_file"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotUploadFile()));
     mUploadFile->setText(i18n("Upload File..."));
 
-    mDelete = ac->addAction(QLatin1String("delete"), mStorageServiceTabWidget, SLOT(slotDelete()));
+    mDelete = ac->addAction(QLatin1String("delete"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotDelete()));
     mDelete->setShortcut(QKeySequence(Qt::Key_Delete));
     mDelete->setText(i18n("Delete..."));
     mDelete->setIcon(KIcon(QLatin1String("edit-delete")));
 
-    mDownloadFile = ac->addAction(QLatin1String("download_file"), mStorageServiceTabWidget, SLOT(slotDownloadFile()));
+    mDownloadFile = ac->addAction(QLatin1String("download_file"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotDownloadFile()));
     mDownloadFile->setText(i18n("Download File..."));
     mDownloadFile->setIcon(KIcon(QLatin1String("download")));
 
-    mShowLog = ac->addAction(QLatin1String("show_log"), mStorageServiceTabWidget, SLOT(slotShowLog()));
+    mShowLog = ac->addAction(QLatin1String("show_log"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotShowLog()));
     mShowLog->setText(i18n("Show Log..."));
 
     mLogout = ac->addAction(QLatin1String("logout"), this, SLOT(slotLogout()));
@@ -195,7 +199,7 @@ void StorageServiceManagerMainWindow::setupActions()
     mRefreshAll->setText(i18n("Refresh All"));
     mRefreshAll->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_F5 ));
 
-    mRenameItem = ac->addAction(QLatin1String("rename"), mStorageServiceTabWidget, SLOT(slotRename()));
+    mRenameItem = ac->addAction(QLatin1String("rename"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotRename()));
     mRenameItem->setText(i18n("Rename..."));
     mRenameItem->setShortcut(QKeySequence( Qt::Key_F2 ));
 
@@ -210,13 +214,13 @@ void StorageServiceManagerMainWindow::slotShowNotificationOptions()
 
 void StorageServiceManagerMainWindow::slotLogout()
 {
-    mStorageServiceTabWidget->logout();
+    mStorageServiceMainWidget->storageServiceTabWidget()->logout();
     slotUpdateActions();
 }
 
 void StorageServiceManagerMainWindow::closeEvent(QCloseEvent *e)
 {
-    if (mStorageServiceTabWidget->hasUploadDownloadProgress()) {
+    if (mStorageServiceMainWidget->storageServiceTabWidget()->hasUploadDownloadProgress()) {
         if (KMessageBox::No == KMessageBox::warningYesNo(this, i18n("There is still upload or download in progress. Do you want to close anyway?"))) {
             e->ignore();
             return;
@@ -232,7 +236,7 @@ void StorageServiceManagerMainWindow::slotConfigure()
     dlg->setListService(mStorageManager->listService());
     if (dlg->exec()) {
         mStorageManager->setListService(dlg->listService());
-        mStorageServiceTabWidget->updateListService(dlg->listService());
+        mStorageServiceMainWidget->storageServiceTabWidget()->updateListService(dlg->listService());
         dlg->writeSettings();
     }
     delete dlg;
@@ -240,7 +244,8 @@ void StorageServiceManagerMainWindow::slotConfigure()
 
 void StorageServiceManagerMainWindow::slotServiceRemoved(const QString &serviceName)
 {
-    mStorageServiceTabWidget->serviceRemoved(serviceName);
+    mStorageServiceMainWidget->storageServiceTabWidget()->serviceRemoved(serviceName);
+    mStorageManager->removeService(serviceName);
 }
 
 void StorageServiceManagerMainWindow::readConfig()
@@ -260,12 +265,12 @@ void StorageServiceManagerMainWindow::slotSetStatusBarMessage(const QString &mes
 
 void StorageServiceManagerMainWindow::slotShutdownAllServices()
 {
-    mStorageServiceTabWidget->shutdownAllServices();
+    mStorageServiceMainWidget->storageServiceTabWidget()->shutdownAllServices();
     slotUpdateActions();
 }
 
 void StorageServiceManagerMainWindow::slotRefreshAll()
 {
-    mStorageServiceTabWidget->refreshAll();
+    mStorageServiceMainWidget->storageServiceTabWidget()->refreshAll();
     slotUpdateActions();
 }

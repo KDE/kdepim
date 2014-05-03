@@ -25,7 +25,7 @@
 
 namespace MessageViewer {
 MailViewerSource::MailViewerSource( ViewerPrivate *viewer ) :
-  ObjectTreeSourceIf(), mViewer( viewer )
+    ObjectTreeSourceIf(), mViewer( viewer )
 {
 }
 
@@ -35,62 +35,62 @@ MailViewerSource::~MailViewerSource()
 
 bool MailViewerSource::htmlMail()
 {
-  return mViewer->htmlMail();
+    return mViewer->htmlMail();
 }
 
 bool MailViewerSource::decryptMessage()
 {
-  return mViewer->decryptMessage();
+    return mViewer->decryptMessage();
 }
 
 bool MailViewerSource::htmlLoadExternal()
 {
-  return mViewer->htmlLoadExternal();
+    return mViewer->htmlLoadExternal();
 }
 
 bool MailViewerSource::showSignatureDetails()
 {
-  return mViewer->mShowSignatureDetails;
+    return mViewer->mShowSignatureDetails;
 }
 
 void MailViewerSource::setHtmlMode( Util::HtmlMode mode )
 {
-  mViewer->mColorBar->setMode( mode );
+    mViewer->mColorBar->setMode( mode );
 }
 
 int MailViewerSource::levelQuote()
 {
-  return mViewer->mLevelQuote;
+    return mViewer->mLevelQuote;
 }
 
 const QTextCodec * MailViewerSource::overrideCodec()
 {
-  return mViewer->overrideCodec();
+    return mViewer->overrideCodec();
 }
 
 QString MailViewerSource::createMessageHeader( KMime::Message *message )
 {
-  return mViewer->writeMsgHeader( message );
+    return mViewer->writeMsgHeader( message );
 }
 
 QObject *MailViewerSource::sourceObject()
 {
-  return mViewer;
+    return mViewer;
 }
 
 const AttachmentStrategy * MailViewerSource::attachmentStrategy()
 {
-  return mViewer->attachmentStrategy();
+    return mViewer->attachmentStrategy();
 }
 
 HtmlWriter * MailViewerSource::htmlWriter()
 {
-  return mViewer->htmlWriter();
+    return mViewer->htmlWriter();
 }
 
 CSSHelper* MailViewerSource::cssHelper()
 {
-  return mViewer->cssHelper();
+    return mViewer->cssHelper();
 }
 
 }

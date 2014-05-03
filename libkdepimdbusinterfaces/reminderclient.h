@@ -30,25 +30,25 @@ namespace KPIM {
 */
 namespace ReminderClient
 {
-    /**
+/**
       Start reminder daemon.
     */
-    KDEPIMDBUSINTERFACES_EXPORT void startDaemon();
+KDEPIMDBUSINTERFACES_EXPORT void startDaemon();
 
-    /**
+/**
       Stop reminder daemon.
     */
-    KDEPIMDBUSINTERFACES_EXPORT void stopDaemon();
+KDEPIMDBUSINTERFACES_EXPORT void stopDaemon();
 
-    /**
+/**
       Hide the reminder daemon.
     */
-    KDEPIMDBUSINTERFACES_EXPORT void hideDaemon();
+KDEPIMDBUSINTERFACES_EXPORT void hideDaemon();
 
-    /**
+/**
       Show the reminder daemon.
     */
-    KDEPIMDBUSINTERFACES_EXPORT void showDaemon();
+KDEPIMDBUSINTERFACES_EXPORT void showDaemon();
 }
 
 }

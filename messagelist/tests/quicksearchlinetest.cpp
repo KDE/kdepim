@@ -109,6 +109,20 @@ void QuickSearchLineTest::shouldEmitSearchOptionChanged()
     QCOMPARE(spy.count(), 1);
 }
 
+void QuickSearchLineTest::shouldEmitSearchOptionChangedWhenUseTabPress()
+{
+    QuickSearchLine searchLine;
+    searchLine.show();
+    QTest::qWaitForWindowShown(&searchLine);
+    QPushButton *button = qFindChild<QPushButton *>(&searchLine, QLatin1String("full_message"));
+    QTest::mouseClick(button, Qt::LeftButton);
+    QTest::keyClick(button,Qt::Key_Right);
+    QSignalSpy spy(&searchLine, SIGNAL(searchOptionChanged()));
+    button = qFindChild<QPushButton *>(&searchLine, QLatin1String("body"));
+    QTest::mouseClick(button, Qt::LeftButton);
+    QCOMPARE(spy.count(), 1);
+}
+
 void QuickSearchLineTest::shouldResetAllWhenResetFilter()
 {
     QuickSearchLine searchLine;
@@ -206,7 +220,7 @@ void QuickSearchLineTest::shouldSearchToOrFrom()
 {
     QuickSearchLine searchLine;
     QPushButton *button = qFindChild<QPushButton *>(&searchLine, QLatin1String("fromorto"));
-    button->setChecked(true);
+    QTest::mouseClick(button, Qt::LeftButton);
     searchLine.setContainsOutboundMessages(true);
     QuickSearchLine::SearchOptions options;
     options = QuickSearchLine::SearchAgainstTo;
@@ -216,5 +230,54 @@ void QuickSearchLineTest::shouldSearchToOrFrom()
     options = QuickSearchLine::SearchAgainstFrom;
     QCOMPARE(searchLine.searchOptions(), options);
 }
+
+void QuickSearchLineTest::shouldHideShowWidgetWhenWeChangeVisibility()
+{
+    QuickSearchLine searchLine;
+    searchLine.show();
+
+    QWidget *widget = qFindChild<QWidget *>(&searchLine, QLatin1String("extraoptions"));
+
+    KPushButton *moreButton = qFindChild<KPushButton *>(&searchLine, QLatin1String("moreoptions"));
+    QWidget *quickSearchFilterWidget = qFindChild<QWidget *>(&searchLine, QLatin1String("quicksearchfilterwidget"));
+    searchLine.changeQuicksearchVisibility(false);
+    QCOMPARE(quickSearchFilterWidget->isVisible(), false);
+    QCOMPARE(moreButton->isVisible(), false);
+    QCOMPARE(widget->isVisible(), false);
+    QCOMPARE(searchLine.searchEdit()->isVisible(), false);
+    QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), false);
+
+
+    searchLine.changeQuicksearchVisibility(true);
+    QCOMPARE(quickSearchFilterWidget->isVisible(), false);
+    QCOMPARE(moreButton->isVisible(), true);
+    QCOMPARE(widget->isVisible(), false);
+    QCOMPARE(searchLine.searchEdit()->isVisible(), true);
+    QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), false);
+
+    //Fill Combobox
+    searchLine.tagFilterComboBox()->addItems(QStringList()<<QLatin1String("1")<<QLatin1String("2"));
+    searchLine.changeQuicksearchVisibility(false);
+    QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), false);
+
+    searchLine.changeQuicksearchVisibility(true);
+    QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), true);
+}
+
+void QuickSearchLineTest::shouldNotShowComboboxWhenWeAddNewItemWhenWeHiddedQuickSearchBarWidget()
+{
+    QuickSearchLine searchLine;
+    searchLine.show();
+    searchLine.tagFilterComboBox()->addItems(QStringList()<<QLatin1String("1")<<QLatin1String("2"));
+    searchLine.updateComboboxVisibility();
+    QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), true);
+
+    searchLine.changeQuicksearchVisibility(false);
+    searchLine.tagFilterComboBox()->addItems(QStringList()<<QLatin1String("1")<<QLatin1String("2"));
+    searchLine.updateComboboxVisibility();
+    QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), false);
+
+}
+
 
 QTEST_KDEMAIN( QuickSearchLineTest, GUI )

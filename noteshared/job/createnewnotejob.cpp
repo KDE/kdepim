@@ -17,7 +17,7 @@
 
 #include "createnewnotejob.h"
 #include "notesharedglobalconfig.h"
-
+#include "noteshared/attributes/showfoldernotesattribute.h"
 #include "dialog/selectednotefolderdialog.h"
 
 #include "akonadi_next/note.h"
@@ -26,6 +26,8 @@
 #include <Akonadi/ItemCreateJob>
 #include <Akonadi/EntityDisplayAttribute>
 #include <Akonadi/Item>
+#include <Akonadi/CollectionModifyJob>
+#include <Akonadi/CollectionFetchJob>
 
 #include <KMime/KMimeMessage>
 
@@ -76,8 +78,32 @@ void CreateNewNoteJob::start()
     } else {
         col = Akonadi::Collection(id);
     }
+    Akonadi::CollectionFetchJob *fetchCollection = new Akonadi::CollectionFetchJob( col, Akonadi::CollectionFetchJob::Base );
+    connect(fetchCollection, SIGNAL(result(KJob*)), this, SLOT(slotFetchCollection(KJob*)));
+}
 
+void CreateNewNoteJob::slotFetchCollection(KJob* job)
+{
+    if (job->error()) {
+        qDebug()<<" Error during fetch";
+        deleteLater();
+        return;
+    }
+    Akonadi::CollectionFetchJob *fetchCollection = qobject_cast<Akonadi::CollectionFetchJob*>(job);
+    if (fetchCollection->collections().isEmpty()) {
+        qDebug()<<"No collection fetched";
+        deleteLater();
+        return;
+    }
+    Akonadi::Collection col = fetchCollection->collections().at(0);
     if (col.isValid()) {
+        if (!col.hasAttribute<NoteShared::ShowFolderNotesAttribute>()) {
+            if (KMessageBox::Yes == KMessageBox::warningYesNo(0, i18n("Collection is hidden. New note will stored but not displaying. Do you want to show collection?"))) {
+                col.addAttribute(new NoteShared::ShowFolderNotesAttribute());
+                Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( col );
+                connect( job, SIGNAL(result(KJob*)), SLOT(slotCollectionModifyFinished(KJob*)) );
+            }
+        }
         Akonadi::Item newItem;
         newItem.setMimeType( Akonotes::Note::mimeType() );
 
@@ -130,4 +156,11 @@ void CreateNewNoteJob::slotNoteCreationFinished(KJob *job)
         KMessageBox::error(mWidget, i18n("Note was not created."), i18n("Create new note"));
     }
     deleteLater();
+}
+
+void CreateNewNoteJob::slotCollectionModifyFinished(KJob *job)
+{
+    if (job->error()) {
+        kWarning() << job->errorString();
+    }
 }

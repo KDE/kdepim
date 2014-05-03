@@ -73,6 +73,15 @@ void AbstractAddressBook::createGroup(const KABC::ContactGroup& group)
     }
 }
 
+void AbstractAddressBook::addImportNote(KABC::Addressee& address, const QString &applicationName)
+{
+    QString currentNote = address.note();
+    if (!currentNote.isEmpty())
+        currentNote += QLatin1Char('\n');
+    currentNote += i18n("Imported from \"%1\"", applicationName);
+    address.setNote(currentNote);
+}
+
 void AbstractAddressBook::createContact( const KABC::Addressee& address )
 {
     if (selectAddressBook()) {

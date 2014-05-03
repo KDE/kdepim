@@ -292,6 +292,10 @@
         QStringList()
         </default>
       </entry>
+      <entry name="ShowCryptoLabelIndicator" type="Bool">
+       <label>Show crypto label indicator</label>
+       <default>true</default>
+      </entry>
     </group>
 <!-- Composer -->
 
@@ -470,6 +474,10 @@
    <entry name="FolderWidth" type="Int">
      <label>Specifies the width of the folder field in the Search Window dialog (for internal use only)</label>
      <default>100</default>
+   </entry>
+ </group>
+ <group name="AccountOrder">
+   <entry name="order" type="StringList">
    </entry>
  </group>
 </kcfg>

@@ -30,7 +30,7 @@ class StorageServiceManager;
 
 class KAction;
 class QLabel;
-class StorageServiceTabWidget;
+class StorageServiceManagerMainWidget;
 class StorageServiceManagerMainWindow : public KXmlGuiWindow
 {
     Q_OBJECT
@@ -58,7 +58,7 @@ private:
     void setupActions();
     void readConfig();
     void initStatusBar();
-    StorageServiceTabWidget *mStorageServiceTabWidget;
+    StorageServiceManagerMainWidget *mStorageServiceMainWidget;
     PimCommon::StorageServiceManager *mStorageManager;
     KAction *mDownloadFile;
     KAction *mCreateFolder;

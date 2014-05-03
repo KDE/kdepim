@@ -23,14 +23,25 @@
 #define LDAPCLIENTSEARCH_H
 
 #include "libkdepim/kdepim_export.h"
+#include <kldap/ldapobject.h>
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
 
 
 
 namespace KLDAP {
-class LdapObject;
 class LdapClient;
+
+
+/**
+ * Describes the result returned by an LdapClientSearch query.
+ *
+ * @since 4.14
+ */
+struct LdapResultObject {
+    const LdapClient *client;
+    KLDAP::LdapObject object;
+};
 
 /**
  * Describes the result returned by an LdapClientSearch query.
@@ -39,15 +50,15 @@ class LdapClient;
  */
 struct LdapResult
 {
-  /**
+    /**
    * A list of LdapResult objects.
    */
-  typedef QList<LdapResult> List;
+    typedef QList<LdapResult> List;
 
-  QString name;         ///< The full name of the contact.
-  QStringList email;    ///< The list of emails of the contact.
-  int clientNumber;     ///< The client the contact comes from (used for sorting in a ldap-only lookup).
-  int completionWeight; ///< The weight of the contact (used for sorting in a completion list).
+    QString name;         ///< The full name of the contact.
+    QStringList email;    ///< The list of emails of the contact.
+    int clientNumber;     ///< The client the contact comes from (used for sorting in a ldap-only lookup).
+    int completionWeight; ///< The weight of the contact (used for sorting in a completion list).
 };
 
 /**
@@ -55,9 +66,9 @@ struct LdapResult
  */
 class KDEPIM_EXPORT LdapClientSearch : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new ldap client search object.
      *
@@ -99,7 +110,36 @@ class KDEPIM_EXPORT LdapClientSearch : public QObject
      */
     QList<LdapClient*> clients() const;
 
-  Q_SIGNALS:
+
+    /**
+     * Returns the filter for the Query
+     *
+     * @since 4.14
+     */
+    QString filter() const;
+
+    /**
+     * Sets the filter for the Query
+     *
+     * @since 4.14
+     */
+    void setFilter(const QString &);
+
+    /**
+     * Returns the attributes, that are queried the LDAP Server.
+     *
+     * @since 4.14
+     */
+    QStringList attributes() const;
+
+     /**
+     * Sets the attributes, that are queried the LDAP Server.
+     *
+     * @since 4.14
+     */
+    void setAttributes(const QStringList&);
+
+Q_SIGNALS:
     /**
      * This signal is emitted whenever new contacts have been found
      * during the lookup.
@@ -117,12 +157,20 @@ class KDEPIM_EXPORT LdapClientSearch : public QObject
     void searchData( const KLDAP::LdapResult::List &results );
 
     /**
+     * This signal is emitted whenever new contacts have been found
+     * during the lookup.
+     *
+     * @param results The list of found contacts.
+     */
+    void searchData( const QList<KLDAP::LdapResultObject> &results );
+
+    /**
      * This signal is emitted whenever the lookup is complete or the
      * user has canceled the query.
      */
     void searchDone();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private* const d;

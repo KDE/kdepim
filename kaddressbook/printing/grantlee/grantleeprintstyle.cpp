@@ -35,8 +35,11 @@
 
 #include <QPrinter>
 #include <QTextDocument>
+#include <QFile>
+#include <QDir>
 
 using namespace KABPrinting;
+
 
 QString GrantleePrintStyle::contactsToHtml( const KABC::Addressee::List &contacts )
 {
@@ -52,20 +55,24 @@ QString GrantleePrintStyle::contactsToHtml( const KABC::Addressee::List &contact
     }
     QVariantHash mapping;
     QVariantHash contactI18n;
-    contactI18n.insert( QLatin1String( "birthdayi18n" ), GrantleeContactUtils::variableI18n(QLatin1String("birthdayi18n") ) );
-    contactI18n.insert( QLatin1String("anniversaryi18n"), GrantleeContactUtils::variableI18n(QLatin1String("anniversaryi18n") ) );
-    contactI18n.insert( QLatin1String( "emailsi18n" ), GrantleeContactUtils::variableI18n(QLatin1String("emailsi18n") ) );
-    contactI18n.insert( QLatin1String( "websitei18n" ), GrantleeContactUtils::variableI18n(QLatin1String("websitei18n") ) );
-    contactI18n.insert( QLatin1String( "blogUrli18n" ), GrantleeContactUtils::variableI18n(QLatin1String("blogUrli18n")) );
-    contactI18n.insert( QLatin1String( "addressBookNamei18n" ), GrantleeContactUtils::variableI18n(QLatin1String("addressBookNamei18n") ));
-    contactI18n.insert( QLatin1String( "notei18n" ),GrantleeContactUtils::variableI18n(QLatin1String("notei18n") ) );
-    contactI18n.insert( QLatin1String( "departmenti18n" ),GrantleeContactUtils::variableI18n(QLatin1String("departmenti18n") ) );
-    contactI18n.insert( QLatin1String( "Professioni18n" ),GrantleeContactUtils::variableI18n(QLatin1String("Professioni18n") ) );
-    contactI18n.insert( QLatin1String( "officei18n" ),GrantleeContactUtils::variableI18n(QLatin1String("officei18n") ) );
-    contactI18n.insert( QLatin1String( "manageri18n" ),GrantleeContactUtils::variableI18n(QLatin1String("manageri18n") ) );
-    contactI18n.insert( QLatin1String( "assistanti18n" ),GrantleeContactUtils::variableI18n(QLatin1String("assistanti18n") ) );
-    contactI18n.insert( QLatin1String( "spousei18n" ),GrantleeContactUtils::variableI18n(QLatin1String("spousei18n") ) );
-    contactI18n.insert( QLatin1String( "imAddressi18n" ), GrantleeContactUtils::variableI18n(QLatin1String("imAddressi18n") ));
+    GrantleeContactUtils::insertVariableToQVariantHash( contactI18n, QLatin1String( "birthdayi18n" ) );
+    GrantleeContactUtils::insertVariableToQVariantHash( contactI18n, QLatin1String("anniversaryi18n") );
+    GrantleeContactUtils::insertVariableToQVariantHash( contactI18n, QLatin1String( "emailsi18n" ) );
+    GrantleeContactUtils::insertVariableToQVariantHash( contactI18n, QLatin1String( "websitei18n" ) );
+    GrantleeContactUtils::insertVariableToQVariantHash( contactI18n, QLatin1String( "blogUrli18n" ) );
+    GrantleeContactUtils::insertVariableToQVariantHash( contactI18n, QLatin1String( "addressBookNamei18n" ) );
+    GrantleeContactUtils::insertVariableToQVariantHash( contactI18n, QLatin1String( "notei18n" ) );
+    GrantleeContactUtils::insertVariableToQVariantHash( contactI18n, QLatin1String( "departmenti18n" ) );
+    GrantleeContactUtils::insertVariableToQVariantHash( contactI18n, QLatin1String( "Professioni18n" ) );
+    GrantleeContactUtils::insertVariableToQVariantHash( contactI18n, QLatin1String( "officei18n" ) );
+    GrantleeContactUtils::insertVariableToQVariantHash( contactI18n, QLatin1String( "manageri18n" ) );
+    GrantleeContactUtils::insertVariableToQVariantHash( contactI18n, QLatin1String( "assistanti18n" ) );
+    GrantleeContactUtils::insertVariableToQVariantHash( contactI18n, QLatin1String( "spousei18n" ) );
+    GrantleeContactUtils::insertVariableToQVariantHash( contactI18n, QLatin1String( "imAddressi18n" ) );
+    GrantleeContactUtils::insertVariableToQVariantHash( contactI18n, QLatin1String( "latitudei18n" ));
+    GrantleeContactUtils::insertVariableToQVariantHash( contactI18n, QLatin1String( "longitudei18n" ));
+    GrantleeContactUtils::insertVariableToQVariantHash( contactI18n, QLatin1String( "organizationi18n" ));
+    GrantleeContactUtils::insertVariableToQVariantHash( contactI18n, QLatin1String( "titlei18n" ));
     mapping.insert( QLatin1String("contacti18n"), contactI18n );
 
     Grantlee::Context context( mapping );
@@ -80,8 +87,10 @@ GrantleePrintStyle::GrantleePrintStyle( const QString &themePath, PrintingWizard
 {
     mEngine = new Grantlee::Engine;
     mTemplateLoader = Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
-    //TODO themePath + preview.png ?
-    //setPreview( QLatin1String("") );
+    QFile previewFile(QString(themePath + QDir::separator() + QLatin1String("preview.png")));
+    if (previewFile.exists()) {
+        setPreview( previewFile.fileName() );
+    }
 
     mTemplateLoader->setTemplateDirs( QStringList() << themePath );
     mEngine->addTemplateLoader( mTemplateLoader );

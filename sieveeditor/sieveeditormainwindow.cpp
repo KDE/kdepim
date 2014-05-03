@@ -23,6 +23,7 @@
 #include "sieveeditorconfiguredialog.h"
 #include "serversievesettingsdialog.h"
 #include "sieveserversettings.h"
+#include "sieveeditorcentralwidget.h"
 #include "sieveeditorglobalconfig.h"
 
 #include <KSharedConfig>
@@ -44,8 +45,9 @@ SieveEditorMainWindow::SieveEditorMainWindow()
     : KXmlGuiWindow(),
       mNetworkIsDown(false)
 {    
-    mMainWidget = new SieveEditorMainWidget;
-    connect(mMainWidget, SIGNAL(updateButtons(bool,bool,bool,bool)), this, SLOT(slotUpdateButtons(bool,bool,bool,bool)));
+    mMainWidget = new SieveEditorCentralWidget;
+    connect(mMainWidget, SIGNAL(configureClicked()), SLOT(slotConfigure()));
+    connect(mMainWidget->sieveEditorMainWidget(), SIGNAL(updateButtons(bool,bool,bool,bool)), this, SLOT(slotUpdateButtons(bool,bool,bool,bool)));
     setCentralWidget(mMainWidget);
     setupActions();
     setupGUI();
@@ -53,10 +55,11 @@ SieveEditorMainWindow::SieveEditorMainWindow()
     initStatusBar();
     connect( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
               this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
-    connect(mMainWidget->tabWidget(), SIGNAL(currentChanged(int)), SLOT(slotUpdateActions()));
-    connect(mMainWidget, SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)), SLOT(slotUpdateActions()));
+    connect(mMainWidget->sieveEditorMainWidget()->tabWidget(), SIGNAL(currentChanged(int)), SLOT(slotUpdateActions()));
+    connect(mMainWidget->sieveEditorMainWidget(), SIGNAL(modeEditorChanged(KSieveUi::SieveEditorWidget::EditorMode)), SLOT(slotUpdateActions()));
     const Solid::Networking::Status status = Solid::Networking::status();
     slotSystemNetworkStatusChanged(status);
+    slotRefreshList();
 }
 
 SieveEditorMainWindow::~SieveEditorMainWindow()
@@ -84,7 +87,8 @@ void SieveEditorMainWindow::slotSystemNetworkStatusChanged(Solid::Networking::St
         mNetworkIsDown = true;
         mStatusBarInfo->setText(i18n("Network is Down."));
     }
-    mMainWidget->setEnabled(!mNetworkIsDown);
+    mMainWidget->sieveEditorMainWidget()->setEnabled(!mNetworkIsDown);
+    slotUpdateActions();
 }
 
 void SieveEditorMainWindow::slotUpdateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction)
@@ -119,9 +123,11 @@ void SieveEditorMainWindow::setupActions()
 
     mDeleteScript = ac->addAction(QLatin1String("delete_script"), this, SLOT(slotDeleteScript()));
     mDeleteScript->setText(i18n("Delete Script"));
+    mDeleteScript->setShortcut(QKeySequence( Qt::Key_Delete ));
     mDeleteScript->setEnabled(false);
 
     mNewScript = ac->addAction(QLatin1String("create_new_script"), this, SLOT(slotCreateNewScript()));
+    mNewScript->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_N ));
     mNewScript->setText(i18n("Create New Script..."));
     mNewScript->setEnabled(false);
 
@@ -138,7 +144,7 @@ void SieveEditorMainWindow::setupActions()
     mRefreshList->setIcon(KIcon(QLatin1String("view-refresh")));
     mRefreshList->setShortcut(QKeySequence( Qt::Key_F5 ));
 
-    mGoToLine = ac->addAction(QLatin1String("gotoline"), mMainWidget, SLOT(slotGoToLine()));
+    mGoToLine = ac->addAction(QLatin1String("gotoline"), mMainWidget->sieveEditorMainWidget(), SLOT(slotGoToLine()));
     mGoToLine->setText(i18n("Go to Line"));
     mGoToLine->setIcon(KIcon(QLatin1String("go-jump")));
     mGoToLine->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_G ));
@@ -147,37 +153,38 @@ void SieveEditorMainWindow::setupActions()
 
 void SieveEditorMainWindow::slotRefreshList()
 {
-    mMainWidget->refreshList();
+    if (!mNetworkIsDown)
+        mMainWidget->sieveEditorMainWidget()->refreshList();
 }
 
 void SieveEditorMainWindow::slotSaveScript()
 {
-    mMainWidget->saveScript();
+    mMainWidget->sieveEditorMainWidget()->saveScript();
 }
 
 void SieveEditorMainWindow::slotDesactivateScript()
 {
-    mMainWidget->desactivateScript();
+    mMainWidget->sieveEditorMainWidget()->desactivateScript();
 }
 
 void SieveEditorMainWindow::slotEditScript()
 {
-    mMainWidget->editScript();
+    mMainWidget->sieveEditorMainWidget()->editScript();
 }
 
 void SieveEditorMainWindow::slotCreateNewScript()
 {
-    mMainWidget->createNewScript();
+    mMainWidget->sieveEditorMainWidget()->createNewScript();
 }
 
 void SieveEditorMainWindow::slotDeleteScript()
 {
-    mMainWidget->deleteScript();
+    mMainWidget->sieveEditorMainWidget()->deleteScript();
 }
 
 void SieveEditorMainWindow::closeEvent(QCloseEvent *e)
 {
-    if (mMainWidget->needToSaveScript()) {
+    if (mMainWidget->sieveEditorMainWidget()->needToSaveScript()) {
         e->ignore();
         return;
     } else {
@@ -190,7 +197,7 @@ void SieveEditorMainWindow::slotConfigure()
     QPointer<SieveEditorConfigureDialog> dlg = new SieveEditorConfigureDialog(this);
     if (dlg->exec()) {
         dlg->saveServerSieveConfig();
-        mMainWidget->updateServerList();
+        mMainWidget->sieveEditorMainWidget()->updateServerList();
     }
     delete dlg;
 }
@@ -201,15 +208,17 @@ void SieveEditorMainWindow::slotAddServerSieve()
     if (dlg->exec()) {
         const SieveEditorUtil::SieveServerConfig conf = dlg->serverSieveConfig();
         SieveEditorUtil::addServerSieveConfig(conf);
-        mMainWidget->updateServerList();
+        mMainWidget->sieveEditorMainWidget()->updateServerList();
     }
     delete dlg;
 }
 
 void SieveEditorMainWindow::slotUpdateActions()
 {
-    const bool hasPage = (mMainWidget->tabWidget()->count()>0);
+    const bool hasPage = (mMainWidget->sieveEditorMainWidget()->tabWidget()->count()>0);
     mSaveScript->setEnabled(hasPage);
-    mGoToLine->setEnabled(hasPage && mMainWidget->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
+    mGoToLine->setEnabled(hasPage && mMainWidget->sieveEditorMainWidget()->pageMode() == KSieveUi::SieveEditorWidget::TextMode);
+    mSaveScript->setEnabled(hasPage && !mNetworkIsDown);
+    mRefreshList->setEnabled(!mNetworkIsDown);
 }
 

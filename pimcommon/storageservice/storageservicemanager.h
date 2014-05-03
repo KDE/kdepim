@@ -33,7 +33,6 @@ public:
         Unknown = -1,
         DropBox = 0,
         Hubic,
-        UbuntuOne,
         YouSendIt,
         WebDav,
         Box,
@@ -67,6 +66,8 @@ public:
     static QString icon(ServiceType type);
     static StorageServiceAbstract::Capabilities capabilities(ServiceType type);
     static QString kconfigName();
+
+    void removeService(const QString &serviceName);
 
 Q_SIGNALS:
     void servicesChanged();

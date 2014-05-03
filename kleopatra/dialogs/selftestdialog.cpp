@@ -151,7 +151,7 @@ namespace {
         Q_OBJECT
     public:
         explicit Proxy( QObject * parent=0 )
-            : QSortFilterProxyModel( parent ), m_showAll( false )
+            : QSortFilterProxyModel( parent ), m_showAll( true )
         {
             setDynamicSortFilter( true );
         }

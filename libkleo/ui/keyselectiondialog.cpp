@@ -482,6 +482,9 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
 
     KConfigGroup dialogConfig( KGlobal::config(), "Key Selection Dialog" );
     dialogSize = dialogConfig.readEntry( "Dialog size", dialogSize );
+    const QByteArray headerState = dialogConfig.readEntry( "header", QByteArray());
+    if (!headerState.isEmpty())
+        mKeyListView->header()->restoreState(headerState);
     resize( dialogSize );
   }
 }
@@ -489,6 +492,7 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
 Kleo::KeySelectionDialog::~KeySelectionDialog() {
   KConfigGroup dialogConfig( KGlobal::config(), "Key Selection Dialog" );
   dialogConfig.writeEntry( "Dialog size", size() );
+  dialogConfig.writeEntry( "header", mKeyListView->header()->saveState());
   dialogConfig.sync();
 }
 

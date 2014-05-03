@@ -35,6 +35,7 @@
 */
 
 #include "keyresolver.h"
+#include "savecontactpreferencejob.h"
 
 #ifndef QT_NO_CURSOR
 #include "messageviewer/utils/kcursorsaver.h"
@@ -460,7 +461,6 @@ public:
 #undef make_int_accessor
     private:
         EncryptionPreference mDefaultPreference;
-    bool mNoOps;
     unsigned int mTotal;
     unsigned int mNoKey;
     unsigned int mNeverEncrypt, mUnknownPreference, mAlwaysEncrypt,
@@ -1815,66 +1815,11 @@ Kleo::KeyResolver::ContactPreferences Kleo::KeyResolver::lookupContactPreference
     return pref;
 }
 
-void Kleo::KeyResolver::writeCustomContactProperties( KABC::Addressee &contact, const ContactPreferences& pref ) const
-{
-    contact.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOENCRYPTPREF"), QLatin1String( Kleo::encryptionPreferenceToString( pref.encryptionPreference ) ) );
-    contact.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOSIGNPREF"), QLatin1String( Kleo::signingPreferenceToString( pref.signingPreference ) ) );
-    contact.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOPROTOPREF"), QLatin1String( cryptoMessageFormatToString( pref.cryptoMessageFormat ) ) );
-    contact.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("OPENPGPFP"), pref.pgpKeyFingerprints.join( QLatin1String(",") ) );
-    contact.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("SMIMEFP"), pref.smimeCertFingerprints.join( QLatin1String(",") ) );
-}
-
 void Kleo::KeyResolver::saveContactPreference( const QString& email, const ContactPreferences& pref ) const
 {
     d->mContactPreferencesMap.insert( std::make_pair( email, pref ) );
-
-    Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
-    job->setLimit( 1 );
-    job->setQuery( Akonadi::ContactSearchJob::Email, email );
-    job->exec();
-
-    const Akonadi::Item::List items = job->items();
-
-    if ( items.isEmpty() ) {
-        bool ok = true;
-        const QString fullName = KInputDialog::getText( i18n( "Name Selection" ), i18n( "Which name shall the contact '%1' have in your address book?", email ), QString(), &ok );
-        if ( !ok )
-            return;
-
-        QPointer<Akonadi::CollectionDialog> dlg =
-                new Akonadi::CollectionDialog( Akonadi::CollectionDialog::KeepTreeExpanded );
-        dlg->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
-        dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-        dlg->setDescription( i18n( "Select the address book folder to store the new contact in:" ) );
-        if ( !dlg->exec() ) {
-            delete dlg;
-            return;
-        }
-
-        const Akonadi::Collection targetCollection = dlg->selectedCollection();
-        delete dlg;
-
-        KABC::Addressee contact;
-        contact.setNameFromString( fullName );
-        contact.insertEmail( email, true );
-        writeCustomContactProperties( contact, pref );
-
-        Akonadi::Item item( KABC::Addressee::mimeType() );
-        item.setPayload<KABC::Addressee>( contact );
-
-        new Akonadi::ItemCreateJob( item, targetCollection );
-    } else {
-        Akonadi::Item item = items.first();
-
-        KABC::Addressee contact = item.payload<KABC::Addressee>();
-        writeCustomContactProperties( contact, pref );
-
-        item.setPayload<KABC::Addressee>( contact );
-
-        new Akonadi::ItemModifyJob( item );
-    }
-
-    // Assumption: 'pref' comes from d->mContactPreferencesMap already, no need to update that
+    SaveContactPreferenceJob *saveContactPreferencesJob = new SaveContactPreferenceJob(email, pref);
+    saveContactPreferencesJob->start();
 }
 
 Kleo::KeyResolver::ContactPreferences::ContactPreferences()
@@ -1888,7 +1833,7 @@ QStringList Kleo::KeyResolver::keysForAddress( const QString & address ) const {
     if( address.isEmpty() ) {
         return QStringList();
     }
-    QString addr = canonicalAddress( address ).toLower();
+    const QString addr = canonicalAddress( address ).toLower();
     const ContactPreferences pref = lookupContactPreferences( addr );
     return pref.pgpKeyFingerprints + pref.smimeCertFingerprints;
 }
@@ -1897,9 +1842,49 @@ void Kleo::KeyResolver::setKeysForAddress( const QString& address, const QString
     if( address.isEmpty() ) {
         return;
     }
-    QString addr = canonicalAddress( address ).toLower();
+    const QString addr = canonicalAddress( address ).toLower();
     ContactPreferences pref = lookupContactPreferences( addr );
     pref.pgpKeyFingerprints = pgpKeyFingerprints;
     pref.smimeCertFingerprints = smimeCertFingerprints;
     saveContactPreference( addr, pref );
+}
+
+bool Kleo::KeyResolver::encryptToSelf() const
+{
+    return mEncryptToSelf;
+}
+
+bool Kleo::KeyResolver::showApprovalDialog() const
+{
+    return mShowApprovalDialog;
+}
+
+int Kleo::KeyResolver::encryptKeyNearExpiryWarningThresholdInDays() const
+{
+    return mEncryptKeyNearExpiryWarningThreshold;
+}
+
+int Kleo::KeyResolver::signingKeyNearExpiryWarningThresholdInDays() const
+{
+    return mSigningKeyNearExpiryWarningThreshold;
+}
+
+int Kleo::KeyResolver::encryptRootCertNearExpiryWarningThresholdInDays() const
+{
+    return mEncryptRootCertNearExpiryWarningThreshold;
+}
+
+int Kleo::KeyResolver::signingRootCertNearExpiryWarningThresholdInDays() const
+{
+    return mSigningRootCertNearExpiryWarningThreshold;
+}
+
+int Kleo::KeyResolver::encryptChainCertNearExpiryWarningThresholdInDays() const
+{
+    return mEncryptChainCertNearExpiryWarningThreshold;
+}
+
+int Kleo::KeyResolver::signingChainCertNearExpiryWarningThresholdInDays() const
+{
+    return mSigningChainCertNearExpiryWarningThreshold;
 }

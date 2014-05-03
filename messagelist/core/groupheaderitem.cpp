@@ -23,7 +23,7 @@
 using namespace MessageList::Core;
 
 GroupHeaderItem::GroupHeaderItem( const QString &label )
-  : Item( GroupHeader ), mLabel( label )
+    : Item( GroupHeader ), mLabel( label )
 {
 }
 

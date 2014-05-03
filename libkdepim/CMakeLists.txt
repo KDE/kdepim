@@ -32,28 +32,14 @@ set(kdepim_progresswidget_LIB_SRCS
    progresswidget/progressstatusbarwidget.cpp
 )
 
-set(kdepim_LIB_SRCS
-   ${kdepim_progresswidget_LIB_SRCS}
+set(kdepim_job_LIB_SRCS
    job/addemailaddressjob.cpp
    job/addcontactjob.cpp
    job/openemailaddressjob.cpp
    job/addemaildisplayjob.cpp
-   addressline/completionordereditor.cpp
-   addressline/addresseelineedit.cpp
-   addressline/recentaddresses.cpp
-   addressline/kmailcompletion.cpp
-   prefs/kprefsdialog.cpp
-   ldap/ldapclient.cpp
-   ldap/ldapsearchdialog.cpp
-   ldap/ldapclientsearch.cpp
-   ldap/ldapclientsearchconfig.cpp
-   misc/broadcaststatus.cpp
-   misc/maillistdrag.cpp
-   misc/uistatesaver.cpp
-   misc/statisticsproxymodel.cpp
-   multiplyingline/multiplyingline.cpp
-   multiplyingline/multiplyinglineeditor.cpp
-   multiplyingline/multiplyinglineview_p.cpp
+)
+
+set(kdepim_widgets_LIB_SRCS
    widgets/customlogwidget.cpp
    widgets/spellchecklineedit.cpp
    widgets/selectedcollectiondialog.cpp
@@ -64,6 +50,40 @@ set(kdepim_LIB_SRCS
    widgets/pimmessagebox.cpp
    widgets/overlaywidget.cpp
    widgets/tagwidgets.cpp
+)
+
+set(kdepim_ldap_LIB_SRCS
+   ldap/ldapclient.cpp
+   ldap/ldapsearchdialog.cpp
+   ldap/ldapclientsearch.cpp
+   ldap/ldapclientsearchconfig.cpp
+)
+
+set(kdepim_misc_LIB_SRCS
+   misc/broadcaststatus.cpp
+   misc/maillistdrag.cpp
+   misc/uistatesaver.cpp
+   misc/statisticsproxymodel.cpp
+)
+
+set(kdepim_addressline_LIB_SRCS
+   addressline/completionordereditor.cpp
+   addressline/addresseelineedit.cpp
+   addressline/recentaddresses.cpp
+   addressline/kmailcompletion.cpp
+)
+
+set(kdepim_LIB_SRCS
+   ${kdepim_progresswidget_LIB_SRCS}
+   ${kdepim_job_LIB_SRCS}
+   ${kdepim_widgets_LIB_SRCS}
+   ${kdepim_ldap_LIB_SRCS}
+   ${kdepim_misc_LIB_SRCS}
+   ${kdepim_addressline_LIB_SRCS}
+   prefs/kprefsdialog.cpp
+   multiplyingline/multiplyingline.cpp
+   multiplyingline/multiplyinglineeditor.cpp
+   multiplyingline/multiplyinglineview_p.cpp
 )
 
 if (KDEPIM_INPROCESS_LDAP)

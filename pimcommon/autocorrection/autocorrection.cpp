@@ -25,6 +25,7 @@
 #include <KCalendarSystem>
 #include <KStandardDirs>
 #include <QTextBlock>
+#include <QTextDocument>
 #include <QDomDocument>
 #include <QFile>
 
@@ -83,18 +84,19 @@ void AutoCorrection::selectWord(QTextCursor &cursor, int cursorPosition)
         } else if (space) {
             break;
         }
-        pos++;
-        iter++;
+        ++pos;
+        ++iter;
     }
     cursor.setPosition(pos + block.position(), QTextCursor::KeepAnchor);
 }
 
 
-void AutoCorrection::autocorrect(bool htmlMode, QTextDocument& document, int position)
+void AutoCorrection::autocorrect(bool htmlMode, QTextDocument& document, int &position)
 {
     if (!mEnabled)
         return;
     mCursor =  QTextCursor(&document);
+    int oldPosition = position;
     selectWord(mCursor,position);
     mWord = mCursor.selectedText();
     if (mWord.isEmpty())
@@ -127,6 +129,7 @@ void AutoCorrection::autocorrect(bool htmlMode, QTextDocument& document, int pos
 
     if (mCursor.selectedText() != mWord)
         mCursor.insertText(mWord);
+    position = oldPosition;
     mCursor.endEditBlock();
 }
 
@@ -820,8 +823,8 @@ void AutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
 
     if (mAutoCorrectLang.isEmpty())
         mAutoCorrectLang = kdelang;
-    qDebug()<<" fname :"<<fname;
-    qDebug()<<" LocalFile:"<<LocalFile;
+    //qDebug()<<" fname :"<<fname;
+    //qDebug()<<" LocalFile:"<<LocalFile;
 
     if (LocalFile.isEmpty()) {
         if (fname.isEmpty()) {

@@ -55,7 +55,9 @@ namespace Kleo {
         const boost::shared_ptr<KeyFilter> & keyFilter() const;
 
         KLineEdit * lineEdit() const;
-                                                         
+
+        void updateClickMessage(const QString &shortcutStr);
+
     public Q_SLOTS:
         void setStringFilter( const QString & text );
         void setKeyFilter( const boost::shared_ptr<Kleo::KeyFilter> & filter );

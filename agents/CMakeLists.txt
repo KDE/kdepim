@@ -6,6 +6,4 @@ add_subdirectory(sendlateragent)
 add_subdirectory(archivemailagent)
 add_subdirectory(mailfilteragent)
 add_subdirectory(notesagent)
-#comment until 4.13
-#add_subdirectory(followupreminderagent)
 install(FILES folderarchiveagent.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")

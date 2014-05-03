@@ -112,7 +112,7 @@ private slots:
 
 protected:
     void keyPressEvent( QKeyEvent * event );
-    virtual bool queryExit();
+    void closeEvent( QCloseEvent *event );
 
 private:
     void setCurrentBlog( int blog_id );

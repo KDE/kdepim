@@ -20,6 +20,8 @@
 
 #include <KABC/Addressee>
 
+using namespace KABMergeContacts;
+
 SearchPotentialDuplicateContactJob::SearchPotentialDuplicateContactJob(const Akonadi::Item::List &list, QObject *parent)
     : QObject(parent),
       mListItem(list)
@@ -33,21 +35,22 @@ SearchPotentialDuplicateContactJob::~SearchPotentialDuplicateContactJob()
 
 void SearchPotentialDuplicateContactJob::start()
 {
-    QList<Akonadi::Item> result = mListItem;
+    Akonadi::Item::List result = mListItem;
     while(!result.isEmpty()) {
         //qDebug()<<" loop";
         result = checkList(result);
     }
     qDebug()<<" result.count()"<< mListDuplicate.count();
-    Q_EMIT finished(this);
+    Q_EMIT finished(mListDuplicate);
+    deleteLater();
 }
 
-QList<QList<Akonadi::Item> > SearchPotentialDuplicateContactJob::potentialDuplicateContacts() const
+QList<Akonadi::Item::List > SearchPotentialDuplicateContactJob::potentialDuplicateContacts() const
 {
     return mListDuplicate;
 }
 
-QList<Akonadi::Item> SearchPotentialDuplicateContactJob::checkList(const QList<Akonadi::Item> &lstItem)
+Akonadi::Item::List SearchPotentialDuplicateContactJob::checkList(const Akonadi::Item::List &lstItem)
 {
     QList<Akonadi::Item> notDuplicate;
     QList<Akonadi::Item> lst;
@@ -74,6 +77,13 @@ QList<Akonadi::Item> SearchPotentialDuplicateContactJob::checkList(const QList<A
 
 bool SearchPotentialDuplicateContactJob::isDuplicate(const Akonadi::Item &itemA, const Akonadi::Item &itemB)
 {
+    if (!itemA.hasPayload<KABC::Addressee>()) {
+        return false;
+    }
+    if (!itemB.hasPayload<KABC::Addressee>()) {
+        return false;
+    }
+
     KABC::Addressee addressA = itemA.payload<KABC::Addressee>();
     KABC::Addressee addressB = itemB.payload<KABC::Addressee>();
     //
@@ -97,5 +107,4 @@ bool SearchPotentialDuplicateContactJob::isDuplicate(const Akonadi::Item &itemA,
         }
     }
     return false;
-
 }

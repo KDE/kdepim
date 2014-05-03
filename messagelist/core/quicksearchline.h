@@ -29,7 +29,7 @@ class KLineEdit;
 class KComboBox;
 class QToolButton;
 class QPushButton;
-class QButtonGroup;
+class QSignalMapper;
 class KPushButton;
 namespace MessageList {
 namespace Core {
@@ -68,18 +68,23 @@ public:
     bool containsOutboundMessages() const;
     void setContainsOutboundMessages(bool containsOutboundMessages);
 
+    void changeQuicksearchVisibility(bool show);
+
 Q_SIGNALS:
     void clearButtonClicked();
     void searchEditTextEdited(const QString &);
     void searchOptionChanged();
     void statusButtonsClicked();
 
+protected:
+    bool eventFilter(QObject *object, QEvent *e);
 private slots:
     void slotLockSearchClicked(bool locked);
     void slotSearchOptionChanged();
     void slotSearchEditTextEdited(const QString &text);
     void slotClearButtonClicked();
-    void slotMoreOptionClicked(bool b);
+    void slotMoreOptionClicked(bool b);    
+    void slotSearchBy();
 
 private:
     void initializeStatusSearchButton(QLayout *quickSearchButtonLayout);
@@ -97,9 +102,8 @@ private:
     QPushButton *mSearchAgainstBcc;
     QWidget *mExtraOption;
     QWidget *mQuickSearchFilterWidget;
-    QButtonGroup *mButtonStatusGroup;
-    QButtonGroup *mButtonSearchAgainstGroup;
     bool mContainsOutboundMessages;
+    QSignalMapper *mFilterStatusMapper;
 };
 }
 }

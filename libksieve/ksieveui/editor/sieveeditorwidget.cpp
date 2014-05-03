@@ -318,10 +318,10 @@ void SieveEditorWidget::slotSaveAs()
 {
     switch (mMode) {
     case TextMode:
-        mTextModeWidget->slotSaveAs();
+        mTextModeWidget->saveAs(mScriptName->text());
         break;
     case GraphicMode:
-        mGraphicalModeWidget->slotSaveAs();
+        mGraphicalModeWidget->saveAs(mScriptName->text());
         break;
     case Unknown:
         qDebug()<<" Unknown mode";

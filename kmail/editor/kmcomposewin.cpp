@@ -53,7 +53,9 @@
 #include "pimcommon/widgets/customtoolswidget.h"
 #include "warningwidgets/attachmentmissingwarning.h"
 #include "job/createnewcontactjob.h"
+#include "job/savedraftjob.h"
 #include "warningwidgets/externaleditorwarning.h"
+#include "cryptostateindicatorwidget.h"
 
 #include "libkdepim/progresswidget/statusbarprogresswidget.h"
 #include "libkdepim/progresswidget/progressstatusbarwidget.h"
@@ -114,6 +116,7 @@
 #include <kpimidentities/identitymanager.h>
 #include <kpimidentities/identitycombo.h>
 #include <kpimidentities/identity.h>
+#include <kpimidentities/signature.h>
 #include <mailtransport/transportcombobox.h>
 #include <mailtransport/transportmanager.h>
 #include <mailtransport/transport.h>
@@ -162,8 +165,6 @@
 #include <memory>
 #include <boost/shared_ptr.hpp>
 
-// MOC
-
 using Sonnet::DictionaryComboBox;
 using MailTransport::TransportManager;
 using MailTransport::Transport;
@@ -202,6 +203,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
       mIdentityAction( 0 ), mTransportAction( 0 ), mFccAction( 0 ),
       mWordWrapAction( 0 ), mFixedFontAction( 0 ), mAutoSpellCheckingAction( 0 ),
       mDictionaryAction( 0 ), mSnippetAction( 0 ), mTranslateAction(0),
+      mAppendSignature( 0 ), mPrependSignature( 0 ), mInsertSignatureAtCursorPosition( 0 ),
       mGenerateShortenUrl( 0 ),
       mCodecAction( 0 ),
       mCryptoModuleAction( 0 ),
@@ -214,12 +216,12 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
       mLabelWidth( 0 ),
       mComposerBase( 0 ),
       mSelectSpecialChar( 0 ),
-      mSignatureStateIndicator( 0 ), mEncryptionStateIndicator( 0 ),
       mPreventFccOverwrite( false ),
       mCheckForForgottenAttachments( true ),
       mIgnoreStickyFields( false ),
       mWasModified( false ),
-      mNumProgressUploadFile(0)
+      mNumProgressUploadFile(0),
+      mCryptoStateIndicatorWidget(0)
 {
 
     mComposerBase = new MessageComposer::ComposerViewBase( this, this );
@@ -341,44 +343,16 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     mSplitter->addWidget( mSnippetSplitter );
 
     QWidget *editorAndCryptoStateIndicators = new QWidget( mSplitter );
-    QVBoxLayout *vbox = new QVBoxLayout( editorAndCryptoStateIndicators );
+    mCryptoStateIndicatorWidget = new CryptoStateIndicatorWidget;
+
+    QVBoxLayout *vbox = new QVBoxLayout(editorAndCryptoStateIndicators);
     vbox->setMargin(0);
-    QHBoxLayout *hbox = new QHBoxLayout();
-    {
-        hbox->setMargin(0);
-        mSignatureStateIndicator = new QLabel( editorAndCryptoStateIndicators );
-        mSignatureStateIndicator->setAlignment( Qt::AlignHCenter );
-        hbox->addWidget( mSignatureStateIndicator );
-        // Get the colors for the label
-        QPalette p( mSignatureStateIndicator->palette() );
-        KColorScheme scheme( QPalette::Active, KColorScheme::View );
-        QColor defaultSignedColor =  // pgp signed
-                scheme.background( KColorScheme::PositiveBackground ).color();
-        QColor defaultEncryptedColor( 0x00, 0x80, 0xFF ); // light blue // pgp encrypted
-        QColor signedColor = defaultSignedColor;
-        QColor encryptedColor = defaultEncryptedColor;
-        if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
-            signedColor = MessageCore::GlobalSettings::self()->pgpSignedMessageColor();
-            encryptedColor = MessageCore::GlobalSettings::self()->pgpEncryptedMessageColor();
-        }
+    KMComposerEditor* editor = new KMComposerEditor( this, mCryptoStateIndicatorWidget );
 
-        p.setColor( QPalette::Window, signedColor );
-        mSignatureStateIndicator->setPalette( p );
-        mSignatureStateIndicator->setAutoFillBackground( true );
-
-        mEncryptionStateIndicator = new QLabel( editorAndCryptoStateIndicators );
-        mEncryptionStateIndicator->setAlignment( Qt::AlignHCenter );
-        hbox->addWidget( mEncryptionStateIndicator );
-        p.setColor( QPalette::Window, encryptedColor);
-        mEncryptionStateIndicator->setPalette( p );
-        mEncryptionStateIndicator->setAutoFillBackground( true );
-    }
-
-    KMComposerEditor* editor = new KMComposerEditor( this, editorAndCryptoStateIndicators );
     connect( editor, SIGNAL(textChanged()),
              this, SLOT(slotEditorTextChanged()) );
     mComposerBase->setEditor( editor );
-    vbox->addLayout( hbox );
+    vbox->addWidget( mCryptoStateIndicatorWidget );
     vbox->addWidget( editor );
 
     mSnippetSplitter->insertWidget( 0, editorAndCryptoStateIndicators );
@@ -438,9 +412,11 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
     connect(mAttachmentMissing, SIGNAL(explicitClosedMissingAttachment()), this, SLOT(slotExplicitClosedMissingAttachment()));
     v->addWidget(mAttachmentMissing);
 
-    m_verifyMissingAttachment = new QTimer(this);
-    m_verifyMissingAttachment->start(1000*5);
-    connect( m_verifyMissingAttachment, SIGNAL(timeout()), this, SLOT(slotVerifyMissingAttachmentTimeout()) );
+    if (GlobalSettings::self()->showForgottenAttachmentWarning()) {
+        m_verifyMissingAttachment = new QTimer(this);
+        m_verifyMissingAttachment->start(1000*5);
+        connect( m_verifyMissingAttachment, SIGNAL(timeout()), this, SLOT(slotVerifyMissingAttachmentTimeout()) );
+    }
     connect( attachmentController, SIGNAL(fileAttached()), mAttachmentMissing, SLOT(slotFileAttached()) );
 
     mExternalEditorWarning = new ExternalEditorWarning(this);
@@ -510,15 +486,8 @@ KMComposeWin::~KMComposeWin()
     // Note that when we save the message or sent it, mFolder is set back to 0.
     // So this for example kicks in when opening a draft and then closing the window.
     if ( mFolder.isValid() && mMsg && isModified() ) {
-        Akonadi::Item item;
-        item.setPayload( mMsg );
-        item.setMimeType( KMime::Message::mimeType() );
-        MessageStatus status;
-        status.setRead();
-        item.setFlags( status.statusFlags() );
-        new Akonadi::ItemCreateJob( item, mFolder );
-        // FIXME: listen to the result signal. The whole thing needs to be moved
-        //        out of the destructor for this
+        SaveDraftJob *saveDraftJob = new SaveDraftJob(mMsg, mFolder);
+        saveDraftJob->start();
     }
 
     delete mComposerBase;
@@ -1349,15 +1318,17 @@ void KMComposeWin::setupActions( void )
     connect(mSubjectAction, SIGNAL(triggered(bool)), SLOT(slotView()));
     //end of checkable
 
-    action = new KAction( i18n("Append S&ignature"), this );
-    actionCollection()->addAction( QLatin1String("append_signature"), action );
-    connect( action, SIGNAL(triggered(bool)), mComposerBase->signatureController(), SLOT(appendSignature()));
-    action = new KAction( i18n("Pr&epend Signature"), this );
-    actionCollection()->addAction( QLatin1String("prepend_signature"), action );
-    connect( action, SIGNAL(triggered(bool)), mComposerBase->signatureController(), SLOT(prependSignature()) );
-    action = new KAction( i18n("Insert Signature At C&ursor Position"), this );
-    actionCollection()->addAction( QLatin1String("insert_signature_at_cursor_position"), action );
-    connect( action, SIGNAL(triggered(bool)), mComposerBase->signatureController(), SLOT(insertSignatureAtCursor()) );
+    mAppendSignature = new KAction( i18n("Append S&ignature"), this );
+    actionCollection()->addAction( QLatin1String("append_signature"), mAppendSignature );
+    connect( mAppendSignature, SIGNAL(triggered(bool)), mComposerBase->signatureController(), SLOT(appendSignature()));
+
+    mPrependSignature = new KAction( i18n("Pr&epend Signature"), this );
+    actionCollection()->addAction( QLatin1String("prepend_signature"), mPrependSignature );
+    connect( mPrependSignature, SIGNAL(triggered(bool)), mComposerBase->signatureController(), SLOT(prependSignature()) );
+
+    mInsertSignatureAtCursorPosition = new KAction( i18n("Insert Signature At C&ursor Position"), this );
+    actionCollection()->addAction( QLatin1String("insert_signature_at_cursor_position"), mInsertSignatureAtCursorPosition );
+    connect( mInsertSignatureAtCursorPosition, SIGNAL(triggered(bool)), mComposerBase->signatureController(), SLOT(insertSignatureAtCursor()) );
 
 
     action = new KAction( i18n("Insert Special Character..."), this );
@@ -2446,7 +2417,8 @@ void KMComposeWin::slotNewComposer()
     KMime::Message::Ptr msg( new KMime::Message );
 
     MessageHelper::initHeader( msg, KMKernel::self()->identityManager() );
-    win = new KMComposeWin( msg, false, false );
+    win = new KMComposeWin( msg, false, false, KMail::Composer::New );
+    win->setCollectionForNewMessage(mCollectionForNewMessage);
     win->show();
 }
 
@@ -2744,6 +2716,12 @@ void KMComposeWin::doSend( MessageComposer::MessageSender::SendMethod method,
         const QStringList recipients = QStringList() << mComposerBase->to().trimmed() << mComposerBase->cc().trimmed() << mComposerBase->bcc().trimmed();
 
         AddressValidationJob *job = new AddressValidationJob( recipients.join( QLatin1String( ", ") ), this, this );
+        const KPIMIdentities::Identity &ident = KMKernel::self()->identityManager()->identityForUoid( mComposerBase->identityCombo()->currentIdentity() );
+        QString defaultDomainName;
+        if ( !ident.isNull() ) {
+            defaultDomainName = ident.defaultDomainName();
+        }
+        job->setDefaultDomain(defaultDomainName);
         job->setProperty( "method", static_cast<int>( method ) );
         job->setProperty( "saveIn", static_cast<int>( saveIn ) );
         connect( job, SIGNAL(result(KJob*)), SLOT(slotDoDelayedSend(KJob*)) );
@@ -3215,6 +3193,11 @@ void KMComposeWin::slotIdentityChanged( uint uoid, bool initalChange )
 
     mLastIdentityHasSigningKey = bNewIdentityHasSigningKey;
     mLastIdentityHasEncryptionKey = bNewIdentityHasEncryptionKey;
+    const KPIMIdentities::Signature sig = const_cast<KPIMIdentities::Identity&>( ident ).signature();
+    bool isEnabledSignature = sig.isEnabledSignature();
+    mAppendSignature->setEnabled(isEnabledSignature);
+    mPrependSignature->setEnabled(isEnabledSignature);
+    mInsertSignatureAtCursorPosition->setEnabled(isEnabledSignature);
 
     mId = uoid;
     changeCryptoAction();
@@ -3432,17 +3415,7 @@ void KMComposeWin::setMaximumHeaderSize()
 
 void KMComposeWin::slotUpdateSignatureAndEncrypionStateIndicators()
 {
-    const bool showIndicatorsAlways = false; // FIXME config option?
-    mSignatureStateIndicator->setText( mSignAction->isChecked() ?
-                                           i18n("Message will be signed") :
-                                           i18n("Message will not be signed") );
-    mEncryptionStateIndicator->setText( mEncryptAction->isChecked() ?
-                                            i18n("Message will be encrypted") :
-                                            i18n("Message will not be encrypted") );
-    if ( !showIndicatorsAlways ) {
-        mSignatureStateIndicator->setVisible( mSignAction->isChecked() );
-        mEncryptionStateIndicator->setVisible( mEncryptAction->isChecked() );
-    }
+    mCryptoStateIndicatorWidget->updateSignatureAndEncrypionStateIndicators(mSignAction->isChecked(), mEncryptAction->isChecked());
 }
 
 void KMComposeWin::slotLanguageChanged( const QString &language )
@@ -3588,6 +3561,7 @@ void KMComposeWin::slotUploadFileDone(const QString &serviceName, const QString 
 void KMComposeWin::slotUploadFileFailed(const QString &serviceName, const QString &fileName)
 {
     Q_UNUSED(serviceName);
+    Q_UNUSED(fileName);
     KMessageBox::error(this, i18n("An error occurred while sending the file."), i18n("Upload file"));
     --mNumProgressUploadFile;
 }

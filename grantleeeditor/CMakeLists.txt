@@ -1,0 +1,4 @@
+add_subdirectory(headerthemeeditor)
+add_subdirectory(contactthemeeditor)
+add_subdirectory(grantleethemeeditor)
+

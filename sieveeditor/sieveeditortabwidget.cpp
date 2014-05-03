@@ -32,6 +32,7 @@ SieveEditorTabWidget::SieveEditorTabWidget(QWidget *parent)
 {
     setMovable(true);
     setTabsClosable(true);
+    connect(this, SIGNAL(tabCloseRequested(int)), SIGNAL(tabCloseRequestedIndex(int)));
     setContextMenuPolicy( Qt::CustomContextMenu );
     connect( this, SIGNAL(customContextMenuRequested(QPoint)),
              this, SLOT(slotTabContextMenuRequest(QPoint)) );
@@ -65,6 +66,6 @@ void SieveEditorTabWidget::slotTabContextMenuRequest(const QPoint &pos)
     if ( action == allOther ) { // Close all other tabs
         Q_EMIT tabRemoveAllExclude(indexBar);
     } else if (action == closeTab) {
-        Q_EMIT tabCloseRequested(indexBar);
+        Q_EMIT tabCloseRequestedIndex(indexBar);
     }
 }

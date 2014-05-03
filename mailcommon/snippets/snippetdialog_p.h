@@ -25,6 +25,8 @@ class KActionCollection;
 class QAbstractItemModel;
 class QModelIndex;
 
+namespace MailCommon {
+
 class SnippetDialog : public KDialog
 {
     Q_OBJECT
@@ -57,5 +59,5 @@ private:
     KActionCollection *mActionCollection;
     Ui::SnippetDialog *mUi;
 };
-
+}
 #endif

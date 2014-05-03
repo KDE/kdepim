@@ -41,14 +41,14 @@ namespace KPIM {
  */
 class KDEPIM_EXPORT KCheckComboBox : public KComboBox
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  Q_PROPERTY( QString separator READ separator WRITE setSeparator )
-  Q_PROPERTY( QString defaultText READ defaultText WRITE setDefaultText )
-  Q_PROPERTY( bool squeezeText READ squeezeText WRITE setSqueezeText )
-  Q_PROPERTY( QStringList checkedItems READ checkedItems WRITE setCheckedItems )
+    Q_PROPERTY( QString separator READ separator WRITE setSeparator )
+    Q_PROPERTY( QString defaultText READ defaultText WRITE setDefaultText )
+    Q_PROPERTY( bool squeezeText READ squeezeText WRITE setSqueezeText )
+    Q_PROPERTY( QStringList checkedItems READ checkedItems WRITE setCheckedItems )
 
-  public:
+public:
     /**
      * Creates a new checkable combobox.
      *
@@ -153,7 +153,7 @@ class KDEPIM_EXPORT KCheckComboBox : public KComboBox
      */
     QStringList checkedItems( int role = Qt::DisplayRole ) const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Sets the currently selected items. Items that are not found in the model
      * are silently ignored.
@@ -163,7 +163,7 @@ class KDEPIM_EXPORT KCheckComboBox : public KComboBox
      */
     void setCheckedItems( const QStringList &items, int role = Qt::DisplayRole );
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * Signal to notify listeners that the current selections has changed.
      *
@@ -171,7 +171,7 @@ class KDEPIM_EXPORT KCheckComboBox : public KComboBox
      */
     void checkedItemsChanged( const QStringList &items );
 
-  protected:
+protected:
     virtual bool eventFilter( QObject *receiver, QEvent *event );
     virtual void keyPressEvent( QKeyEvent *event );
     virtual void resizeEvent( QResizeEvent * event );
@@ -179,7 +179,7 @@ class KDEPIM_EXPORT KCheckComboBox : public KComboBox
     virtual void wheelEvent( QWheelEvent *event );
 #endif
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

@@ -395,7 +395,7 @@ KMCommand::Result KMMailtoComposeCommand::execute()
 
     MessageHelper::initHeader( msg, KMKernel::self()->identityManager(),id );
     msg->contentType()->setCharset("utf-8");
-    msg->to()->fromUnicodeString( KPIMUtils::decodeMailtoUrl( mUrl ).toLower(), "utf-8" );
+    msg->to()->fromUnicodeString( KPIMUtils::decodeMailtoUrl( mUrl ), "utf-8" );
 
     KMail::Composer * win = KMail::makeComposer( msg, false, false,KMail::Composer::New, id );
     win->setFocusToSubject();
@@ -426,7 +426,7 @@ KMCommand::Result KMMailtoReplyCommand::execute()
     factory.setReplyStrategy( MessageComposer::ReplyNone );
     factory.setSelection( mSelection );
     KMime::Message::Ptr rmsg = factory.createReply().msg;
-    rmsg->to()->fromUnicodeString( KPIMUtils::decodeMailtoUrl( mUrl ).toLower(), "utf-8" ); //TODO Check the UTF-8
+    rmsg->to()->fromUnicodeString( KPIMUtils::decodeMailtoUrl( mUrl ), "utf-8" ); //TODO Check the UTF-8
     bool lastEncrypt = false;
     bool lastSign = false;
     KMail::Util::lastEncryptAndSignState(lastEncrypt, lastSign, msg);
@@ -1523,14 +1523,16 @@ Akonadi::Collection KMTrashMsgCommand::findTrashFolder( const Akonadi::Collectio
     return Akonadi::Collection();
 }
 
-KMSaveAttachmentsCommand::KMSaveAttachmentsCommand( QWidget *parent, const Akonadi::Item& msg )
-    : KMCommand( parent, msg )
+KMSaveAttachmentsCommand::KMSaveAttachmentsCommand(QWidget *parent, const Akonadi::Item& msg , MessageViewer::Viewer *viewer)
+    : KMCommand( parent, msg ),
+      mViewer(viewer)
 {
     fetchScope().fetchFullPayload( true );
 }
 
 KMSaveAttachmentsCommand::KMSaveAttachmentsCommand( QWidget *parent, const QList<Akonadi::Item>& msgs )
-    : KMCommand( parent, msgs )
+    : KMCommand( parent, msgs ),
+      mViewer(0)
 {
     fetchScope().fetchFullPayload( true );
 }
@@ -1545,8 +1547,13 @@ KMCommand::Result KMSaveAttachmentsCommand::execute()
             kWarning() << "Retrieved item has no payload? Ignoring for saving the attachments";
         }
     }
-    if ( MessageViewer::Util::saveAttachments( contentsToSave, parentWidget() ) )
+    KUrl currentUrl;
+    if ( MessageViewer::Util::saveAttachments( contentsToSave, parentWidget(), currentUrl ) ) {
+        if (mViewer) {
+            mViewer->showOpenAttachmentFolderWidget(currentUrl);
+        }
         return OK;
+    }
     return Failed;
 }
 

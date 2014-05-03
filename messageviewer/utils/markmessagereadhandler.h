@@ -35,9 +35,9 @@ namespace MessageViewer {
  */
 class MESSAGEVIEWER_EXPORT MarkMessageReadHandler : public QObject, public AbstractMessageLoadedHandler
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new mark message read handler.
      *
@@ -55,7 +55,7 @@ class MESSAGEVIEWER_EXPORT MarkMessageReadHandler : public QObject, public Abstr
      */
     void setItem( const Akonadi::Item &item );
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private* const d;

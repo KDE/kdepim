@@ -40,11 +40,11 @@ class QString;
 
 namespace MessageViewer {
 
-  /** @short A HtmlWriter that dispatches all calls to a list of other HtmlWriters
+/** @short A HtmlWriter that dispatches all calls to a list of other HtmlWriters
       @author Marc Mutz <mutz@kde.org>
   **/
-  class TeeHtmlWriter : public HtmlWriter {
-  public:
+class TeeHtmlWriter : public HtmlWriter {
+public:
     explicit TeeHtmlWriter( HtmlWriter * writer1 = 0,
                             HtmlWriter * writer2 = 0 );
     virtual ~TeeHtmlWriter();
@@ -61,12 +61,12 @@ namespace MessageViewer {
     void queue( const QString & str );
     void flush();
     void embedPart( const QByteArray & contentId, const QString & url );
-    void extraHead( const QString& str ); 
+    void extraHead( const QString& str );
 
-  private:
+private:
     /** We own the HtmlWriters added to us! */
     QList<HtmlWriter*> mWriters;
-  };
+};
 
 } // namespace MessageViewer
 

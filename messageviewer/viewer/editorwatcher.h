@@ -38,8 +38,8 @@ namespace MessageViewer {
 */
 class MESSAGEVIEWER_EXPORT EditorWatcher : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
 
     /**
      * Constructs an EditorWatcher.
@@ -54,15 +54,15 @@ class MESSAGEVIEWER_EXPORT EditorWatcher : public QObject
     bool start();
     bool fileChanged() const { return mFileModified; }
     KUrl url() const { return mUrl;}
-  signals:
+signals:
     void editDone( MessageViewer::EditorWatcher* watcher );
 
-  private slots:
+private slots:
     void editorExited();
     void inotifyEvent();
     void checkEditDone();
 
-  private:
+private:
     KUrl mUrl;
     QString mMimeType;
     bool mOpenWith;

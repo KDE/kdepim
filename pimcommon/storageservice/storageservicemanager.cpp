@@ -28,7 +28,6 @@
 
 #include "dropbox/dropboxstorageservice.h"
 #include "hubic/hubicstorageservice.h"
-#include "ubuntuone/ubuntuonestorageservice.h"
 #include "yousendit/yousenditstorageservice.h"
 #include "webdav/webdavstorageservice.h"
 #include "box/boxstorageservice.h"
@@ -77,6 +76,13 @@ StorageServiceManager::~StorageServiceManager()
     qDeleteAll(mListService);
 }
 
+
+void StorageServiceManager::removeService(const QString &serviceName)
+{
+    if (mListService.contains(serviceName))
+        mListService.remove(serviceName);
+}
+
 QString StorageServiceManager::ourIdentifier() const
 {
     const QString identifier = QString::fromLatin1( "%1/%2" ).
@@ -104,7 +110,6 @@ void StorageServiceManager::setListService(const QMap<QString, StorageServiceAbs
     mListService = lst;
     writeConfig();
 
-    qDebug()<<"void StorageServiceManager::setListService(const QMap<QString, StorageServiceAbstract *> &lst) ";
     // DBus signal for other IdentityManager instances
     emit configChanged( ourIdentifier() );
 }
@@ -334,10 +339,6 @@ void StorageServiceManager::readConfig()
             if (!mListService.contains(serviceName(Hubic))) {
                 storageService = new HubicStorageService();
             }
-        } else if (service == serviceName(UbuntuOne)) {
-            if (!mListService.contains(serviceName(UbuntuOne))) {
-                storageService = new UbuntuoneStorageService();
-            }
         } else if (service == serviceName(YouSendIt)) {
             if (!mListService.contains(serviceName(YouSendIt))) {
                 storageService = new YouSendItStorageService();
@@ -378,8 +379,6 @@ QString StorageServiceManager::description(ServiceType type)
         return PimCommon::DropBoxStorageService::description();
     case Hubic:
         return PimCommon::HubicStorageService::description();
-    case UbuntuOne:
-        return PimCommon::UbuntuoneStorageService::description();
     case WebDav:
         return PimCommon::WebDavStorageService::description();
     case Box:
@@ -404,8 +403,6 @@ QUrl StorageServiceManager::serviceUrl(ServiceType type)
         return PimCommon::DropBoxStorageService::serviceUrl();
     case Hubic:
         return PimCommon::HubicStorageService::serviceUrl();
-    case UbuntuOne:
-        return PimCommon::UbuntuoneStorageService::serviceUrl();
     case YouSendIt:
         return PimCommon::YouSendItStorageService::serviceUrl();
     case WebDav:
@@ -431,8 +428,6 @@ QString StorageServiceManager::serviceName(ServiceType type)
         return PimCommon::DropBoxStorageService::serviceName();
     case Hubic:
         return PimCommon::HubicStorageService::serviceName();
-    case UbuntuOne:
-        return PimCommon::UbuntuoneStorageService::serviceName();
     case YouSendIt:
         return PimCommon::YouSendItStorageService::serviceName();
     case WebDav:
@@ -457,8 +452,6 @@ QString StorageServiceManager::serviceToI18n(ServiceType type)
         return PimCommon::DropBoxStorageService::name();
     case Hubic:
         return PimCommon::HubicStorageService::name();
-    case UbuntuOne:
-        return PimCommon::UbuntuoneStorageService::name();
     case YouSendIt:
         return PimCommon::YouSendItStorageService::name();
     case WebDav:
@@ -483,8 +476,6 @@ QString StorageServiceManager::icon(ServiceType type)
         return PimCommon::DropBoxStorageService::iconName();
     case Hubic:
         return PimCommon::HubicStorageService::iconName();
-    case UbuntuOne:
-        return PimCommon::UbuntuoneStorageService::iconName();
     case YouSendIt:
         return PimCommon::YouSendItStorageService::iconName();
     case WebDav:
@@ -509,8 +500,6 @@ StorageServiceAbstract::Capabilities StorageServiceManager::capabilities(Service
         return PimCommon::DropBoxStorageService::serviceCapabilities();
     case Hubic:
         return PimCommon::HubicStorageService::serviceCapabilities();
-    case UbuntuOne:
-        return PimCommon::UbuntuoneStorageService::serviceCapabilities();
     case YouSendIt:
         return PimCommon::YouSendItStorageService::serviceCapabilities();
     case WebDav:

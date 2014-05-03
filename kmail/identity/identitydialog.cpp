@@ -3,6 +3,7 @@
 
     This file is part of KMail, the KDE mail client.
     Copyright (c) 2002 Marc Mutz <mutz@kde.org>
+    Copyright (c) 2014 Laurent Montel <montel@kde.org>
 
     KMail is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License, version 2, as
@@ -32,6 +33,8 @@
 #include "identitydialog.h"
 #include "identityeditvcarddialog.h"
 #include "identityaddvcarddialog.h"
+
+#include "messagecomposer/settings/messagecomposersettings.h"
 
 #include <kpimidentities/identitymanager.h>
 
@@ -83,6 +86,7 @@ using MailTransport::TransportManager;
 #include <kcombobox.h>
 #include <ktabwidget.h>
 #include <KStandardDirs>
+#include <KIcon>
 #include <sonnet/dictionarycombobox.h>
 
 // Qt headers:
@@ -91,6 +95,8 @@ using MailTransport::TransportManager;
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QFile>
+#include <QHostInfo>
+#include <QToolButton>
 
 // other headers:
 #include <gpgme++/key.h>
@@ -197,7 +203,7 @@ IdentityDialog::IdentityDialog( QWidget * parent )
     KPIMUtils::EmailValidator* emailValidator = new KPIMUtils::EmailValidator( this );
     mEmailEdit->setValidator( emailValidator );
 
-    // "Email Aliases" stsring text edit and label:
+    // "Email Aliases" string text edit and label:
     ++row;
     mAliasEdit = new PimCommon::SimpleStringListEditor( tab );
     glay->addWidget( mAliasEdit, row, 1 );
@@ -373,6 +379,7 @@ IdentityDialog::IdentityDialog( QWidget * parent )
     // "Reply-To Address" line edit and label:
     ++row;
     mReplyToEdit = new KPIM::AddresseeLineEdit( tab, true );
+    mReplyToEdit->setClearButtonShown(true);
     mReplyToEdit->setObjectName( QLatin1String("mReplyToEdit") );
     glay->addWidget( mReplyToEdit, row, 1 );
     label = new QLabel ( i18n("&Reply-To address:"), tab );
@@ -396,6 +403,7 @@ IdentityDialog::IdentityDialog( QWidget * parent )
     // "CC addresses" line edit and label:
     ++row;
     mCcEdit = new KPIM::AddresseeLineEdit( tab, true );
+    mCcEdit->setClearButtonShown(true);
     mCcEdit->setObjectName( QLatin1String("mCcEdit") );
     glay->addWidget( mCcEdit, row, 1 );
     label = new QLabel( i18n("&CC addresses:"), tab );
@@ -416,6 +424,7 @@ IdentityDialog::IdentityDialog( QWidget * parent )
     // "BCC addresses" line edit and label:
     ++row;
     mBccEdit = new KPIM::AddresseeLineEdit( tab, true );
+    mBccEdit->setClearButtonShown(true);
     mBccEdit->setObjectName( QLatin1String("mBccEdit") );
     glay->addWidget( mBccEdit, row, 1 );
     label = new QLabel( i18n("&BCC addresses:"), tab );
@@ -492,6 +501,30 @@ IdentityDialog::IdentityDialog( QWidget * parent )
     label = new QLabel( i18n("Autocorrection language:"), tab );
     label->setBuddy( mAutoCorrectionLanguage );
     glay->addWidget( label, row, 0 );
+
+    // "default domain" input field:
+    ++row;
+    QHBoxLayout *hbox = new QHBoxLayout;
+    mDefaultDomainEdit = new KLineEdit( tab );
+    mDefaultDomainEdit->setClearButtonShown(true);
+    hbox->addWidget(mDefaultDomainEdit);
+    QToolButton *restoreDefaultDomainName = new QToolButton;
+    restoreDefaultDomainName->setIcon(KIcon(QLatin1String("view-refresh")));
+    restoreDefaultDomainName->setToolTip(i18n("Restore default domain name"));
+    hbox->addWidget(restoreDefaultDomainName);
+    connect(restoreDefaultDomainName, SIGNAL(clicked()), this, SLOT(slotRefreshDefaultDomainName()));
+    glay->addLayout(hbox, row, 1 );
+    label = new QLabel( i18n("Defaul&t domain:"), tab );
+    label->setBuddy( mDefaultDomainEdit );
+    glay->addWidget( label, row, 0 );
+
+    // and now: add QWhatsThis:
+    msg = i18n( "<qt><p>The default domain is used to complete email "
+                "addresses that only consist of the user's name."
+                "</p></qt>" );
+    label->setWhatsThis( msg );
+    mDefaultDomainEdit->setWhatsThis( msg );
+
 
     ++row;
     glay->setRowStretch( row, 1 );
@@ -632,6 +665,11 @@ QString DoesntMatchEMailAddress::extractEmail( const char * e ) {
 }
 }
 
+void IdentityDialog::slotRefreshDefaultDomainName()
+{
+    mDefaultDomainEdit->setText(QHostInfo::localHostName());
+}
+
 void IdentityDialog::slotButtonClicked( int button )
 {
     if ( button != KDialog::Ok ) {
@@ -651,7 +689,7 @@ void IdentityDialog::slotButtonClicked( int button )
     // Validate email addresses
     const QString email = mEmailEdit->text().trimmed();
     if ( !KPIMUtils::isValidSimpleAddress( email ) ) {
-        QString errorMsg( KPIMUtils::simpleEmailAddressErrorMsg() );
+        const QString errorMsg( KPIMUtils::simpleEmailAddressErrorMsg() );
         KMessageBox::sorry( this, errorMsg, i18n("Invalid Email Address") );
         return;
     }
@@ -659,6 +697,8 @@ void IdentityDialog::slotButtonClicked( int button )
     // Check if the 'Reply to' and 'BCC' recipients are valid
     const QString recipients = mReplyToEdit->text().trimmed() + QLatin1String( ", " ) + mBccEdit->text().trimmed() + QLatin1String( ", " ) + mCcEdit->text().trimmed();
     AddressValidationJob *job = new AddressValidationJob( recipients, this, this );
+    //Use default Value
+    job->setDefaultDomain(mDefaultDomainEdit->text());
     job->setProperty( "email", email );
     connect( job, SIGNAL(result(KJob*)), SLOT(slotDelayedButtonClicked(KJob*)) );
     job->start();
@@ -830,6 +870,12 @@ void IdentityDialog::setIdentity( KPIMIdentities::Identity & ident ) {
         mVcardFilename = KStandardDirs::locateLocal("appdata",ident.identityName() + QLatin1String(".vcf"));
     }
     mAttachMyVCard->setChecked(ident.attachVcard());
+    QString defaultDomainName = ident.defaultDomainName();
+    if (defaultDomainName.isEmpty()) {
+        defaultDomainName = QHostInfo::localHostName();
+    }
+    mDefaultDomainEdit->setText(defaultDomainName);
+
     // "Templates" tab:
 #ifndef KDEPIM_MOBILE_UI
     uint identity = ident.uoid();
@@ -904,6 +950,8 @@ void IdentityDialog::updateIdentity( KPIMIdentities::Identity & ident ) {
     ident.setAutocorrectionLanguage(mAutoCorrectionLanguage->language());
     updateVcardButton();
     ident.setAttachVcard(mAttachMyVCard->isChecked());
+    //Add default ?
+    ident.setDefaultDomainName(mDefaultDomainEdit->text());
 
     // "Templates" tab:
 #ifndef KDEPIM_MOBILE_UI

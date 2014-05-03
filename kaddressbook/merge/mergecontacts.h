@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -18,18 +18,25 @@
 #ifndef MERGECONTACTS_H
 #define MERGECONTACTS_H
 
-#include <QObject>
+#include <Akonadi/Item>
 #include <KABC/Addressee>
 
-class MergeContacts : public QObject
+#include "kaddressbook_export.h"
+
+namespace KABMergeContacts {
+class KADDRESSBOOK_EXPORT MergeContacts
 {
-    Q_OBJECT
 public:
-    explicit MergeContacts(QObject *parent=0);
+    MergeContacts(const Akonadi::Item::List &items = Akonadi::Item::List());
     ~MergeContacts();
 
+    KABC::Addressee mergedContact();
+
+    bool needManualSelectInformations();
+
 private:
-    KABC::Address merge(const KABC::Addressee::List &contacts);
+    Akonadi::Item::List mListItem;
 };
+}
 
 #endif // MERGECONTACTS_H

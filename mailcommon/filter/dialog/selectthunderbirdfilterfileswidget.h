@@ -37,10 +37,15 @@ public:
 
     void setStartDir(const KUrl&);
 
+Q_SIGNALS:
+    void enableOkButton(bool);
+
 private Q_SLOTS:
     void slotButtonClicked(QAbstractButton*button);
     void slotProfileChanged(int);
 
+    void slotUrlChanged(const QString &path);
+    void slotItemSelectionChanged();
 private:
     Ui::SelectThunderbirdFilterFilesWidget *ui;
 };

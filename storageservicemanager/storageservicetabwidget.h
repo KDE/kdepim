@@ -48,6 +48,7 @@ Q_SIGNALS:
     void updateStatusBarMessage(const QString &msg);
     void listFileWasInitialized();
     void selectionChanged();
+    void tabCountChanged(bool hasTab);
 
 public slots:
     void slotAuthenticate();

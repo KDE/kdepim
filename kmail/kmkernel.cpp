@@ -190,7 +190,6 @@ KMKernel::KMKernel (QObject *parent) :
 
     mFolderCollectionMonitor = new FolderCollectionMonitor( session, this );
 
-    connect( mFolderCollectionMonitor->monitor(), SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)), SLOT(slotCollectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)) );
     connect( mFolderCollectionMonitor->monitor(), SIGNAL(collectionRemoved(Akonadi::Collection)), SLOT(slotCollectionRemoved(Akonadi::Collection)));
 
     mEntityTreeModel = new Akonadi::EntityTreeModel( folderCollectionMonitor(), this );
@@ -602,7 +601,8 @@ int KMKernel::openComposer(const QString &to, const QString &cc,
     if (!to.isEmpty())
         cWin->setFocusToSubject();
     KUrl::List attachURLs = KUrl::List( attachmentPaths );
-    for ( KUrl::List::ConstIterator it = attachURLs.constBegin() ; it != attachURLs.constEnd() ; ++it ) {
+    KUrl::List::ConstIterator endAttachment(attachURLs.constEnd());
+    for ( KUrl::List::ConstIterator it = attachURLs.constBegin() ; it != endAttachment; ++it ) {
         if( KMimeType::findByUrl( *it )->name() == QLatin1String( "inode/directory" ) ) {
             if(KMessageBox::questionYesNo(0, i18n("Do you want to attach this folder \"%1\"?",(*it).prettyUrl()), i18n("Attach Folder")) == KMessageBox::No ) {
                 continue;
@@ -683,7 +683,6 @@ int KMKernel::openComposer (const QString &to, const QString &cc,
     bool iCalAutoSend = false;
     bool noWordWrap = false;
     bool isICalInvitation = false;
-    //KConfigGroup options( config(), "Groupware" );
     if ( !attachData.isEmpty() ) {
         isICalInvitation = (attachName ==QLatin1String("cal.ics")) &&
                 attachType == "text" &&
@@ -867,7 +866,7 @@ void KMKernel::raise()
 
 }
 
-bool KMKernel::showMail( quint32 serialNumber, const QString& /* messageId */ )
+bool KMKernel::showMail(qint64 serialNumber)
 {
     KMMainWidget *mainWidget = 0;
 
@@ -1221,7 +1220,7 @@ bool KMKernel::doSessionManagement()
             //only restore main windows! (Matthias);
             if (KMMainWin::classNameOfToplevel(n) == QLatin1String("KMMainWin"))
                 (new KMMainWin)->restoreDockedState(n);
-            n++;
+            ++n;
         }
         return true; // we were restored by SM
     }
@@ -1751,7 +1750,7 @@ void KMKernel::instanceStatusChanged( const Akonadi::AgentInstance &instance )
 
 void KMKernel::agentInstanceBroken( const Akonadi::AgentInstance &instance )
 {
-    const QString summary = i18n( "Resource %1 is broken. This resource is now %2",  instance.name(), instance.isOnline() ? i18n( "online" ) : i18n( "offline" ) );
+    const QString summary = i18n( "Resource %1 is broken.",  instance.name() );
     if( xmlGuiInstance().isValid() ) {
         KNotification::event( QLatin1String("akonadi-resource-broken"),
                               summary,
@@ -1825,11 +1824,6 @@ void KMKernel::slotCollectionRemoved(const Akonadi::Collection &col)
 void KMKernel::slotDeleteIdentity( uint identity)
 {
     TemplateParser::Util::deleteTemplate( QString::fromLatin1( "IDENTITY_%1" ).arg( identity ) );
-}
-
-void KMKernel::slotCollectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &destination )
-{
-    //TODO add undo/redo move collection
 }
 
 bool KMKernel::showPopupAfterDnD()

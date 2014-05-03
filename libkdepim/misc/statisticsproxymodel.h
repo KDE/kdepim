@@ -49,9 +49,9 @@ namespace KPIM {
  */
 class KDEPIM_EXPORT StatisticsProxyModel : public KIdentityProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new statistics proxy model.
      *
@@ -104,7 +104,7 @@ class KDEPIM_EXPORT StatisticsProxyModel : public KIdentityProxyModel
 
     QItemSelection mapSelectionToSource(const QItemSelection& selection) const;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private* const d;

@@ -39,7 +39,7 @@ ExportBlogiloJob::~ExportBlogiloJob()
 
 void ExportBlogiloJob::start()
 {
-    Q_EMIT title(i18n("Start export KNotes settings..."));
+    Q_EMIT title(i18n("Start export Blogilo settings..."));
     mArchiveDirectory = archive()->directory();
     if (mTypeSelected & Utils::Config) {
         backupConfig();

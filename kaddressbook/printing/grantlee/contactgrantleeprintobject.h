@@ -25,17 +25,20 @@ namespace KABPrinting {
 class ContactGrantleePrintAddressObject;
 class ContactGrantleePrintPhoneObject;
 class ContactGrantleePrintImObject;
+class ContactGrantleePrintGeoObject;
+class ContactGrantleePrintCryptoObject;
 class ContactGrantleePrintObject : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString name READ realName)
-    Q_PROPERTY(QString name READ formattedName)
-    Q_PROPERTY(QString name READ prefix)
-    Q_PROPERTY(QString name READ givenName)
-    Q_PROPERTY(QString name READ additionalName)
-    Q_PROPERTY(QString name READ familyName)
-    Q_PROPERTY(QString name READ suffix)
-    Q_PROPERTY(QString name READ nickName)
+    Q_PROPERTY(QString name READ name)
+    Q_PROPERTY(QString realName READ realName)
+    Q_PROPERTY(QString formattedName READ formattedName)
+    Q_PROPERTY(QString prefix READ prefix)
+    Q_PROPERTY(QString givenName READ givenName)
+    Q_PROPERTY(QString additionalName READ additionalName)
+    Q_PROPERTY(QString familyName READ familyName)
+    Q_PROPERTY(QString suffix READ suffix)
+    Q_PROPERTY(QString nickName READ nickName)
     Q_PROPERTY(QStringList emails READ emails)
     Q_PROPERTY(QString organization READ organization)
     Q_PROPERTY(QString note READ note)
@@ -51,11 +54,20 @@ class ContactGrantleePrintObject : public QObject
     Q_PROPERTY(QString addressBookName READ addressBookName)
     Q_PROPERTY(QString photo READ photo)
     Q_PROPERTY(QString logo READ logo)
+    Q_PROPERTY(QVariant crypto READ crypto)
+    Q_PROPERTY(QString anniversary READ anniversary)
+    Q_PROPERTY(QString profession READ profession)
+    Q_PROPERTY(QString office READ office)
+    Q_PROPERTY(QString manager READ manager)
+    Q_PROPERTY(QString assistant READ assistant)
+    Q_PROPERTY(QString spouse READ spouse)
+
     //Add more functions
 public:
     explicit ContactGrantleePrintObject(const KABC::Addressee &address, QObject *parent=0);
     ~ContactGrantleePrintObject();
 
+    QString name() const;
     QString realName() const;
     QString formattedName() const;
     QString prefix() const;
@@ -76,19 +88,32 @@ public:
     QVariant addresses() const;
     QVariant phones() const;
     QString addressBookName() const;
-    QVariant instantManging() const;    
+    QVariant instantManging() const;
+    QVariant geo() const;
     QString photo() const;
     QString logo() const;
+    QVariant crypto() const;
+    QString anniversary() const;
+    QString profession() const;
+    QString office() const;
+    QString manager() const;
+    QString assistant() const;
+    QString spouse() const;
 private:
     QString imgToDataUrl( const QImage &image ) const;
-    QList<ContactGrantleePrintAddressObject*> mListAddress;
-    QList<ContactGrantleePrintPhoneObject*> mListPhones;
-    QList<ContactGrantleePrintImObject*> mListIm;
+    QList<QObject*> mListAddress;
+    QList<QObject*> mListPhones;
+    QList<QObject*> mListIm;
+    ContactGrantleePrintGeoObject *mGeoObject;
+    ContactGrantleePrintCryptoObject *mCryptoObject;
     KABC::Addressee mAddress;
 };
 }
-Q_DECLARE_METATYPE(QList<KABPrinting::ContactGrantleePrintObject*>)
-Q_DECLARE_METATYPE(QList<KABPrinting::ContactGrantleePrintAddressObject*>)
-Q_DECLARE_METATYPE(QList<KABPrinting::ContactGrantleePrintPhoneObject*>)
-Q_DECLARE_METATYPE(QList<KABPrinting::ContactGrantleePrintImObject*>)
+Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintObject*)
+Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintAddressObject*)
+Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintPhoneObject*)
+Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintImObject*)
+Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintGeoObject*)
+Q_DECLARE_METATYPE(KABPrinting::ContactGrantleePrintCryptoObject*)
+Q_DECLARE_METATYPE(QList<QObject*>)
 #endif // CONTACTGRANTLEEPRINTOBJECT_H

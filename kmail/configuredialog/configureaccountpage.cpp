@@ -139,12 +139,6 @@ AccountsPageSendingTab::AccountsPageSendingTab( QWidget * parent )
     connect( mSendMethodCombo, SIGNAL(activated(int)),
              this, SLOT(slotEmitChanged()) );
 
-    // "default domain" input field:
-    mDefaultDomainEdit = new KLineEdit( group );
-    glay->addWidget( mDefaultDomainEdit, 4, 1 );
-    connect( mDefaultDomainEdit, SIGNAL(textChanged(QString)),
-             this, SLOT(slotEmitChanged()) );
-
     // labels:
     QLabel *l =  new QLabel( i18n("Send &messages in outbox folder:"), group );
     l->setBuddy( mSendOnCheckCombo );
@@ -157,16 +151,6 @@ AccountsPageSendingTab::AccountsPageSendingTab( QWidget * parent )
     l = new QLabel( i18n("Defa&ult send method:"), group );
     l->setBuddy( mSendMethodCombo );
     glay->addWidget( l, 3, 0 );
-    l = new QLabel( i18n("Defaul&t domain:"), group );
-    l->setBuddy( mDefaultDomainEdit );
-    glay->addWidget( l, 4, 0 );
-
-    // and now: add QWhatsThis:
-    msg = i18n( "<qt><p>The default domain is used to complete email "
-                "addresses that only consist of the user's name."
-                "</p></qt>" );
-    l->setWhatsThis( msg );
-    mDefaultDomainEdit->setWhatsThis( msg );
 }
 
 void AccountsPage::SendingTab::doLoadFromGlobalSettings()
@@ -179,19 +163,11 @@ void AccountsPage::SendingTab::doLoadOther()
     mSendMethodCombo->setCurrentIndex( MessageComposer::MessageComposerSettings::self()->sendImmediate() ? 0 : 1 );
     loadWidget(mConfirmSendCheck, GlobalSettings::self()->confirmBeforeSendItem() );
     loadWidget(mCheckSpellingBeforeSending,GlobalSettings::self()->checkSpellingBeforeSendItem());
-
-    loadWidget(mDefaultDomainEdit, MessageComposer::MessageComposerSettings::self()->defaultDomainItem());
-    QString defaultDomain = MessageComposer::MessageComposerSettings::defaultDomain();
-    if( defaultDomain.isEmpty() ) {
-        defaultDomain = QHostInfo::localHostName();
-    }
-    mDefaultDomainEdit->setText( defaultDomain );
 }
 
 void AccountsPage::SendingTab::save()
 {
     GlobalSettings::self()->setSendOnCheck( mSendOnCheckCombo->currentIndex() );
-    saveLineEdit(mDefaultDomainEdit, MessageComposer::MessageComposerSettings::self()->defaultDomainItem());
     saveCheckBox(mConfirmSendCheck, GlobalSettings::self()->confirmBeforeSendItem() );
     saveCheckBox(mCheckSpellingBeforeSending,GlobalSettings::self()->checkSpellingBeforeSendItem());
     MessageComposer::MessageComposerSettings::self()->setSendImmediate( mSendMethodCombo->currentIndex() == 0 );
@@ -293,7 +269,15 @@ void AccountsPageReceivingTab::slotShowMailCheckMenu( const QString &ident, cons
     bool CheckOnStartup;
     if( !mRetrievalHash.contains( ident ) ) {
         const QString resourceGroupPattern( QLatin1String("Resource %1") );
-        KConfigGroup group( KMKernel::self()->config(), resourceGroupPattern.arg( ident ) );
+
+        KConfigGroup group;
+        KConfig *conf = 0;
+        if (KMKernel::self()) {
+            group = KConfigGroup( KMKernel::self()->config(), resourceGroupPattern.arg( ident ) );
+        } else {
+            conf = new KConfig(QLatin1String("kmail2rc"));
+            group = KConfigGroup( conf, resourceGroupPattern.arg( ident ) );
+        }
 
         IncludeInManualChecks = group.readEntry( "IncludeInManualChecks", true );
 
@@ -303,6 +287,7 @@ void AccountsPageReceivingTab::slotShowMailCheckMenu( const QString &ident, cons
         CheckOnStartup = group.readEntry( "CheckOnStartup", false );
         QSharedPointer<RetrievalOptions> opts( new RetrievalOptions( IncludeInManualChecks, OfflineOnShutdown, CheckOnStartup ) );
         mRetrievalHash.insert( ident, opts );
+        delete conf;
     } else {
         QSharedPointer<RetrievalOptions> opts = mRetrievalHash.value( ident );
         IncludeInManualChecks = opts->IncludeInManualChecks;
@@ -471,11 +456,19 @@ void AccountsPage::ReceivingTab::save()
     QHashIterator<QString, QSharedPointer<RetrievalOptions> > it( mRetrievalHash );
     while( it.hasNext() ) {
         it.next();
-        KConfigGroup group( KMKernel::self()->config(), resourceGroupPattern.arg( it.key() ) );
+        KConfigGroup group;
+        KConfig *conf = 0;
+        if (KMKernel::self()) {
+            group = KConfigGroup( KMKernel::self()->config(), resourceGroupPattern.arg( it.key() ) );
+        } else {
+            conf = new KConfig(QLatin1String("kmail2rc"));
+            group = KConfigGroup( conf, resourceGroupPattern.arg( it.key() ) );
+        }
         QSharedPointer<RetrievalOptions> opts = it.value();
         group.writeEntry( "IncludeInManualChecks", opts->IncludeInManualChecks);
         group.writeEntry( "OfflineOnShutdown", opts->OfflineOnShutdown);
         group.writeEntry( "CheckOnStartup", opts->CheckOnStartup);
+        delete conf;
     }
 }
 

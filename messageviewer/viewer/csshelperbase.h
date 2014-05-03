@@ -42,7 +42,7 @@ class QPaintDevice;
 namespace MessageViewer {
 
 class MESSAGEVIEWER_EXPORT CSSHelperBase {
-  public:
+public:
     /** Construct a CSSHelper object and set its font and color settings to
         default values.
         Sub-Classes should put their config loading here.
@@ -73,12 +73,12 @@ class MESSAGEVIEWER_EXPORT CSSHelperBase {
 
     QColor pgpWarnColor() const;
 
-  protected:
+protected:
     /** Recalculate PGP frame and body colors (should be called after changing
         color settings) */
     void recalculatePGPColors();
 
-  protected:
+protected:
     QFont mBodyFont, mPrintFont, mFixedFont, mFixedPrintFont;
     QFont mQuoteFont[3];
     QColor mQuoteColor[3];
@@ -96,16 +96,16 @@ class MESSAGEVIEWER_EXPORT CSSHelperBase {
     // color of frame of warning preceding the source of HTML messages
     QColor cHtmlWarning;
 
-  private:
+private:
     int fontSize( bool fixed, bool print = false ) const;
-     // returns CSS rules specific to the print media type
+    // returns CSS rules specific to the print media type
     QString printCssDefinitions( bool fixed ) const;
     // returns CSS rules specific to the screen media type
     QString screenCssDefinitions( const CSSHelperBase * helper, bool fixed ) const;
     // returns CSS rules common to both screen and print media types
     QString commonCssDefinitions() const;
 
-  private:
+private:
     const QPaintDevice *mPaintDevice;
 
 };

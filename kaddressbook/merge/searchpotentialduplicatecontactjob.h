@@ -22,7 +22,10 @@
 #include <QObject>
 #include <Akonadi/Item>
 
-class SearchPotentialDuplicateContactJob : public QObject
+#include "kaddressbook_export.h"
+
+namespace KABMergeContacts {
+class KADDRESSBOOK_EXPORT SearchPotentialDuplicateContactJob : public QObject
 {
     Q_OBJECT
 public:
@@ -31,16 +34,19 @@ public:
 
     void start();
 
-    QList<QList<Akonadi::Item> > potentialDuplicateContacts() const;
+    QList<Akonadi::Item::List> potentialDuplicateContacts() const;
 
 Q_SIGNALS:
-    void finished(SearchPotentialDuplicateContactJob *);
+    void finished(const QList<Akonadi::Item::List>&);
 
 private:
-    QList<Akonadi::Item> checkList(const QList<Akonadi::Item> &lstItem);
+    Akonadi::Item::List checkList(const Akonadi::Item::List &lstItem);
     bool isDuplicate(const Akonadi::Item &itemA, const Akonadi::Item &itemB);
     Akonadi::Item::List mListItem;
-    QList<QList<Akonadi::Item> > mListDuplicate;
+    QList<Akonadi::Item::List > mListDuplicate;
 };
+}
+
+Q_DECLARE_METATYPE( QList<Akonadi::Item::List> )
 
 #endif // SEARCHPOTENTIALDUPLICATECONTACTJOB_H

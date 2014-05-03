@@ -48,7 +48,7 @@ EventEdit::EventEdit(QWidget *parent)
     setLayout(vbox);
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->setMargin(0);
-    hbox->setSpacing(0);
+    hbox->setSpacing(2);
     vbox->addLayout(hbox);
 
     QToolButton *closeBtn = new QToolButton( this );
@@ -81,7 +81,7 @@ EventEdit::EventEdit(QWidget *parent)
     mCollectionCombobox->setMimeTypeFilter( QStringList() << KCalCore::Event::eventMimeType() );
     mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
 #ifndef QT_NO_ACCESSIBILITY
-    mCollectionCombobox->setAccessibleDescription( i18n("Select collection where Todo will stored.") );
+    mCollectionCombobox->setAccessibleDescription( i18n("The most recently selected folder used for Events.") );
 #endif
 
     connect(mCollectionCombobox, SIGNAL(currentIndexChanged(int)), SLOT(slotCollectionChanged(int)));
@@ -117,6 +117,8 @@ EventEdit::EventEdit(QWidget *parent)
 
     readConfig();
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
+    installEventFilter(this);
+    mCollectionCombobox->installEventFilter(this);
 }
 
 EventEdit::~EventEdit()
@@ -221,26 +223,28 @@ void EventEdit::slotReturnPressed()
     }
 }
 
-bool EventEdit::event(QEvent* e)
+bool EventEdit::eventFilter(QObject *object, QEvent *e)
 {
     // Close the bar when pressing Escape.
     // Not using a QShortcut for this because it could conflict with
     // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
     // With a shortcut override we can catch this before it gets to kactions.
     const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
-    if (shortCutOverride || e->type() == QEvent::KeyPress ) {
+    if (shortCutOverride ) {
         QKeyEvent* kev = static_cast<QKeyEvent* >(e);
         if (kev->key() == Qt::Key_Escape) {
             e->accept();
             slotCloseWidget();
             return true;
         } else if ( kev->key() == Qt::Key_Enter ||
-                   kev->key() == Qt::Key_Return ) {
+                    kev->key() == Qt::Key_Return ||
+                    kev->key() == Qt::Key_Space) {
             e->accept();
-            if ( shortCutOverride ) {
-                return true;
+            if (object == mCollectionCombobox) {
+                mCollectionCombobox->showPopup();
             }
+            return true;
         }
     }
-    return QWidget::event(e);
+    return QWidget::eventFilter(object,e);
 }

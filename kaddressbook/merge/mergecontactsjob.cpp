@@ -16,8 +16,16 @@
 */
 
 #include "mergecontactsjob.h"
+#include "mergecontacts.h"
+#include <Akonadi/ItemCreateJob>
+#include <Akonadi/ItemDeleteJob>
+
+#include <KABC/Address>
+#include <KABC/Addressee>
 
 #include <QDebug>
+
+using namespace KABMergeContacts;
 
 MergeContactsJob::MergeContactsJob(QObject *parent)
     : QObject(parent)
@@ -32,16 +40,30 @@ MergeContactsJob::~MergeContactsJob()
 void MergeContactsJob::start()
 {
     if (!mCollection.isValid()) {
-        deleteLater();
         qDebug()<<" mCollection is not valid !";
+        Q_EMIT finished(mCreatedContact);
+        deleteLater();
         return;
     }
     if (mListItem.isEmpty()) {
-        deleteLater();
         qDebug()<<" list item is empty !";
+        Q_EMIT finished(mCreatedContact);
+        deleteLater();
         return;
     }
-    //TODO
+    generateMergedContact();
+}
+
+void MergeContactsJob::generateMergedContact()
+{
+    MergeContacts mergeContact(mListItem);
+    KABC::Addressee newContact = mergeContact.mergedContact();
+    if (newContact.isEmpty()) {
+        Q_EMIT finished(mCreatedContact);
+        deleteLater();
+        return;
+    }
+    createMergedContact(newContact);
 }
 
 void MergeContactsJob::setListItem(const Akonadi::Item::List &lstItem)
@@ -52,4 +74,39 @@ void MergeContactsJob::setListItem(const Akonadi::Item::List &lstItem)
 void MergeContactsJob::setDestination(const Akonadi::Collection &collection)
 {
     mCollection = collection;
+}
+
+void MergeContactsJob::createMergedContact(const KABC::Addressee &addressee)
+{
+    Akonadi::Item item;
+    item.setMimeType( KABC::Addressee::mimeType() );
+    item.setPayload<KABC::Addressee>( addressee );
+
+    Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob(item, mCollection, this);
+    connect(job, SIGNAL(result(KJob*)), SLOT(slotCreateMergedContactFinished(KJob*)) );
+}
+
+void MergeContactsJob::slotCreateMergedContactFinished(KJob *job)
+{
+    if (job->error()) {
+        qDebug() << job->errorString();
+        Q_EMIT finished(mCreatedContact);
+        deleteLater();
+        return;
+    }
+    Akonadi::ItemCreateJob *createdJob = qobject_cast<Akonadi::ItemCreateJob *>(job);
+    mCreatedContact = createdJob->item();
+
+    Akonadi::ItemDeleteJob *deleteJob = new Akonadi::ItemDeleteJob(mListItem, this);
+    connect(deleteJob, SIGNAL(result(KJob*)), SLOT(slotDeleteContactsFinished(KJob*)) );
+}
+
+void MergeContactsJob::slotDeleteContactsFinished(KJob *job)
+{
+    if (job->error()) {
+        qDebug() << job->errorString();
+    }
+    //TODO
+    Q_EMIT finished(mCreatedContact);
+    deleteLater();
 }

@@ -99,6 +99,7 @@ public:
      */
     virtual QStringList expandedBcc() const;
 
+    void setDefaultDomainName(const QString &domainName);
 private Q_SLOTS:
     void slotAliasExpansionDone( KJob* );
 
@@ -107,6 +108,7 @@ private:
     QVariantMap mResultMap;
     QString mFrom;
     QStringList mTo, mCc, mBcc;
+    QString mDefaultDomainName;
 };
 
 }

@@ -42,6 +42,11 @@ int main( int argc, char *argv[] )
   return 0;
 }
 
+TestLDAPClient::TestLDAPClient()
+  : mClient(0)
+{
+}
+
 void TestLDAPClient::setup()
 {
 }

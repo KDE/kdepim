@@ -18,32 +18,48 @@
 #include "mergecontactsdialog.h"
 #include "utils.h"
 #include "mergecontactutil.h"
+#include "mergecontactwidget.h"
+#include "mergecontactinfowidget.h"
+#include "mergecontactsjob.h"
+#include "mergecontactshowresultdialog.h"
 
 #include <Akonadi/Item>
 
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <KLocalizedString>
+#include <KMessageBox>
 
 #include <QItemSelectionModel>
 #include <QLabel>
+#include <QSplitter>
+#include <QHBoxLayout>
+#include <QPointer>
 
-MergeContactsDialog::MergeContactsDialog(QItemSelectionModel *selectionModel, QWidget *parent)
-    : KDialog(parent)
+using namespace KABMergeContacts;
+MergeContactsDialog::MergeContactsDialog(const Akonadi::Item::List &lst, QWidget *parent)
+    : KDialog(parent),
+      mContactWidget(0)
 {
     setCaption( i18n( "Select Contacts to merge" ) );
-    setButtons( Ok | Cancel );
+    setButtons( Close );
     readConfig();
 
-    const Akonadi::Item::List lst = Utils::collectSelectedContactsItem(selectionModel);
     if (lst.count() < 2) {
-        enableButtonOk(false);
         setMainWidget(new QLabel(i18n("You must select at least two elements.")));
     } else {
         if (!MergeContactUtil::hasSameNames(lst)) {
             setMainWidget(new QLabel(i18n("You selected %1 and some item has not the same name", lst.count())));
         } else {
-            setMainWidget(new QLabel(i18n("You selected %1", lst.count())));
+            QSplitter *mainWidget = new QSplitter;
+            mainWidget->setChildrenCollapsible(false);
+            mContactWidget = new MergeContactWidget(lst);
+            mainWidget->addWidget(mContactWidget);
+            MergeContactInfoWidget *contactInfo = new MergeContactInfoWidget;
+            mainWidget->addWidget(contactInfo);
+            connect(mContactWidget, SIGNAL(contactSelected(Akonadi::Item)), contactInfo, SLOT(setContact(Akonadi::Item)));
+            connect(mContactWidget, SIGNAL(mergeContact(Akonadi::Item::List,Akonadi::Collection)), this, SLOT(slotMergeContact(Akonadi::Item::List,Akonadi::Collection)));
+            setMainWidget(mainWidget);
         }
     }
 }
@@ -51,6 +67,35 @@ MergeContactsDialog::MergeContactsDialog(QItemSelectionModel *selectionModel, QW
 MergeContactsDialog::~MergeContactsDialog()
 {
     writeConfig();
+}
+
+void MergeContactsDialog::slotMergeContact(const Akonadi::Item::List &lst, const Akonadi::Collection &col)
+{
+    if (lst.isEmpty()) {
+        return;
+    }
+    enableButton(Close, false);
+    MergeContactsJob *job = new MergeContactsJob(this);
+    connect(job,SIGNAL(finished(Akonadi::Item)), this, SLOT(slotMergeContactFinished(Akonadi::Item)));
+    job->setDestination(col);
+    job->setListItem(lst);
+    job->start();
+}
+
+void MergeContactsDialog::slotMergeContactFinished(const Akonadi::Item &item)
+{
+    mContactWidget->clear();
+    if (!item.isValid()) {
+        KMessageBox::error(this, i18n("Error during merge contacts."), i18n("Merge contact"));
+    } else {
+        QPointer<MergeContactShowResultDialog> dlg = new MergeContactShowResultDialog(this);
+        Akonadi::Item::List lst;
+        lst << item;
+        dlg->setContacts(lst);
+        dlg->exec();
+        delete dlg;
+    }
+    enableButton(Close, true);
 }
 
 void MergeContactsDialog::readConfig()

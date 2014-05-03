@@ -19,10 +19,12 @@
 #define GRANTLEECONTACTUTILS_H
 
 #include "kaddressbook_grantlee_export.h"
+#include <QVariantHash>
 
 namespace GrantleeContactUtils
 {
 KADDRESSBOOK_GRANTLEE_EXPORT QString variableI18n(const QString &variable);
+KADDRESSBOOK_GRANTLEE_EXPORT void insertVariableToQVariantHash(QVariantHash &contactI18n, const QString &variable);
 }
 
 #endif // GRANTLEECONTACTUTILS_H

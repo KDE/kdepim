@@ -45,11 +45,24 @@ SelectThunderbirdFilterFilesWidget::SelectThunderbirdFilterFilesWidget(QWidget *
     ui->profiles->setEnabled(false);
     ui->listFiles->setEnabled(false);
     slotProfileChanged(0);
+    connect(ui->fileUrl, SIGNAL(textChanged(QString)), SLOT(slotUrlChanged(QString)));
+    connect(ui->listFiles, SIGNAL(itemSelectionChanged()), SLOT(slotItemSelectionChanged()));
+    Q_EMIT enableOkButton(false);
 }
 
 SelectThunderbirdFilterFilesWidget::~SelectThunderbirdFilterFilesWidget()
 {
     delete ui;
+}
+
+void SelectThunderbirdFilterFilesWidget::slotItemSelectionChanged()
+{
+    Q_EMIT enableOkButton(!ui->listFiles->selectedItems().isEmpty());
+}
+
+void SelectThunderbirdFilterFilesWidget::slotUrlChanged(const QString &path)
+{
+    Q_EMIT enableOkButton(!path.isEmpty());
 }
 
 void SelectThunderbirdFilterFilesWidget::slotButtonClicked(QAbstractButton*button)
@@ -58,10 +71,12 @@ void SelectThunderbirdFilterFilesWidget::slotButtonClicked(QAbstractButton*butto
         ui->fileUrl->setEnabled(true);
         ui->profiles->setEnabled(false);
         ui->listFiles->setEnabled(false);
+        Q_EMIT enableOkButton(!ui->fileUrl->text().isEmpty());
     } else {
         ui->fileUrl->setEnabled(false);
         ui->profiles->setEnabled(true);
         ui->listFiles->setEnabled(true);
+        slotItemSelectionChanged();
     }
 }
 

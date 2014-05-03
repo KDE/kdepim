@@ -19,7 +19,7 @@
 #include "akonadi/contact/improtocols.h"
 
 using namespace KABPrinting;
-ContactGrantleePrintImObject::ContactGrantleePrintImObject(const QString &type, const QString address, QObject *parent)
+ContactGrantleePrintImObject::ContactGrantleePrintImObject(const QString &type, const QString &address, QObject *parent)
     : QObject(parent),
       mType(type),
       mAddress(address)

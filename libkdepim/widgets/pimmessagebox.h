@@ -34,7 +34,7 @@
 
 class KDEPIM_EXPORT PIMMessageBox
 {
-  public:
+public:
     static int fourBtnMsgBox( QWidget *parent, QMessageBox::Icon type,
                               const QString &text,
                               const QString &caption = QString(),

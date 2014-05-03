@@ -1,0 +1,107 @@
+How to create kaddressbook printing based on Grantlee:
+------------------------------------------------------
+You need to provide a:
+- theme.desktop which define name/description about theme
+- theme.html html template used by Grantlee
+
+Example:
+<html>
+
+<h1>KAddressBook</h1>
+{% if contacts %}
+{% for contact in contacts %}
+<h1>{{ contact.realName|safe }}</h1>
+<p>{{ contact.emails|safe }}</p>
+<p>{{ contact.note|safe }}</p>
+<br>
+<br>
+{% endfor %}
+{% endif %}
+
+</html>
+
+
+Default i18n variable:
+    "birthdayi18n" => i18n( "Birthday" );
+    "anniversaryi18n" => i18n( "Anniversary" );
+    "emailsi18n" => i18n( "Emails" );
+    "websitei18n" => i18n("Website");
+    "blogUrli18n" => i18n( "Blog Feed" );
+    "addressBookNamei18n" => i18n( "Address Book" );
+    "notei18n" => i18n( "Note" );
+    "departmenti18n" => i18n( "Department" );
+    "Professioni18n" => i18n( "Profession" );
+    "officei18n" => i18n( "Office" );
+    "manageri18n" => i18n( "Manager's Name" );
+    "assistanti18n" => i18n( "Assistant's Name" );
+    "spousei18n" => i18n( "Partner's Name" );
+    "imAddressi18n" => i18n( "IM Address" );
+    "latitudei18n" => i18n( "Latitude" );
+    "longitudei18n" => i18n( "Longitude" );
+    "titlei18n" => i18n("Title");
+
+
+=> All contact is stored in contacts object => We use a loop for as in example.
+We can use as variable:
+- name (QString)
+  realName (QString)
+  formattedName (QString)
+  prefix (QString)
+  givenName (QString)
+  additionalName (QString)
+  familyName (QString)
+  suffix (QString)
+  nickName (QString)
+  emails (QStringList => use loop for)
+  organization (QString)
+  note (QString)
+  webPage (QString)
+  title (QString)
+  preferredEmail (QString)
+  role (QString)
+  birthday (QString)
+  department (QString)
+  addresses (QVariant) we have more info see below
+  phones (QVariant) we have more info see below
+  instantManging (QVariant) we have more info see below
+  geo (QVariant) we have more info see below
+  addressBookName (QString)
+  photo (QString)
+  logo (QString)
+  anniversary (QString)
+  profession (QString)
+  office (QString)
+  manager (QString)
+  assistant (QString)
+  spouse (QString)
+
+
+Element for address:
+ - type (QString)
+ - street (QString)
+ - postOfficeBox (QString)
+ - locality (QString)
+ - region (QString)
+ - postalCode (QString)
+ - country (QString)
+ - label (QString)
+ - formattedAddress (QString)
+
+Element for Phones:
+ - type (QString)
+ - number (QString)
+
+Element for IM:
+ - type (QString)
+ - address (QString)
+
+Element for geo:
+ - latitude (float)
+ - longitude (float)
+ - isValid (bool) return true if valid
+ - toString (QString) return information as string
+
+Element for crypto:
+ - signaturePreference (QString)
+ - cryptoPreference (QString)
+

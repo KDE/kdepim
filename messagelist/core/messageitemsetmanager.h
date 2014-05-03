@@ -48,20 +48,20 @@ typedef long int MessageItemSetReference;
 class MessageItemSetManager
 {
 public:
-  MessageItemSetManager();
-  ~MessageItemSetManager();
+    MessageItemSetManager();
+    ~MessageItemSetManager();
 
 private:
-  QHash< MessageItemSetReference, QHash< MessageItem *, MessageItem * > * > * mSets;
+    QHash< MessageItemSetReference, QHash< MessageItem *, MessageItem * > * > * mSets;
 
 public:
-  void clearAllSets();
-  int setCount() const;
-  void removeSet( MessageItemSetReference ref );
-  void removeMessageItemFromAllSets( MessageItem * mi );
-  QList< MessageItem * > messageItems( MessageItemSetReference ref );
-  MessageItemSetReference createSet();
-  bool addMessageItem( MessageItemSetReference ref, MessageItem * mi );
+    void clearAllSets();
+    int setCount() const;
+    void removeSet( MessageItemSetReference ref );
+    void removeMessageItemFromAllSets( MessageItem * mi );
+    QList< MessageItem * > messageItems( MessageItemSetReference ref );
+    MessageItemSetReference createSet();
+    bool addMessageItem( MessageItemSetReference ref, MessageItem * mi );
 };
 
 } // namespace Core

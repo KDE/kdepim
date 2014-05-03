@@ -16,6 +16,7 @@
 */
 
 #include "contactgrantleeprintaddressobject.h"
+#include <QDebug>
 
 using namespace KABPrinting;
 ContactGrantleePrintAddressObject::ContactGrantleePrintAddressObject(const KABC::Address &address, QObject *parent)
@@ -70,5 +71,5 @@ QString ContactGrantleePrintAddressObject::label() const
 
 QString ContactGrantleePrintAddressObject::formattedAddress() const
 {
-    return mAddress.formattedAddress();
+    return mAddress.formattedAddress().replace(QLatin1String("\n"), QLatin1String("<br>"));
 }

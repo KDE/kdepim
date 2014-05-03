@@ -28,9 +28,8 @@ AttachmentListWidget::AttachmentListWidget(QWidget * parent,
                                            ButtonCode buttons,
                                            const QString & addLabel,
                                            const QString & removeLabel,
-                                           const QString & modifyLabel,
-                                           const QString & addDialogLabel)
-    : PimCommon::SimpleStringListEditor(parent, buttons, addLabel, removeLabel, modifyLabel, addDialogLabel)
+                                           const QString & modifyLabel)
+    : PimCommon::SimpleStringListEditor(parent, buttons, addLabel, removeLabel, modifyLabel, QString())
 {
 }
 
@@ -67,13 +66,15 @@ SelectAttachmentDialog::SelectAttachmentDialog(QWidget *parent)
     setCaption(i18n("Attachment"));
     setButtons(Ok|Cancel);
 
+    QWidget *mainWidget = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
-    setLayout(vbox);
+    mainWidget->setLayout(vbox);
     QLabel *lab = new QLabel(i18n("Select attachment:"));
     vbox->addWidget(lab);
     mUrlRequester = new KUrlRequester;
     mUrlRequester->setMode(KFile::LocalOnly|KFile::ExistingOnly);
     vbox->addWidget(mUrlRequester);
+    setMainWidget(mainWidget);
 }
 
 SelectAttachmentDialog::~SelectAttachmentDialog()
