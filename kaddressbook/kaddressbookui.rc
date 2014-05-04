@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="19">
+<kpartgui name="kaddressbook" version="20">
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
@@ -97,6 +97,9 @@
   <ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
     <Action name="akonadi_contact_create"/>
     <Action name="akonadi_contact_group_create"/>
+    <Separator/>
+    <Action name="akonadi_contact_item_edit" append="edit_edit_merge"/>
+    <Separator/>
     <Action name="quick_search"/>
     <Action name="category_filter"/>
   </ToolBar>
