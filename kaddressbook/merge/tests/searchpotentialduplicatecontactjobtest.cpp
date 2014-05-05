@@ -19,6 +19,7 @@
 #include "../searchpotentialduplicatecontactjob.h"
 
 #include <Akonadi/Item>
+#include <kabc/addressee.h>
 #include <QList>
 #include <qtest_kde.h>
 
@@ -50,6 +51,25 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnEmptyListWhenOneItem()
     QCOMPARE(spy.count(), 1);
     QList<Akonadi::Item::List> lstResult = spy.at(0).at(0).value< QList<Akonadi::Item::List> >();
     QCOMPARE(lstResult.count(), 0);
+}
+
+void SearchPotentialDuplicateContactJobTest::shouldReturnListWhenTwoItemsAreDuplicated()
+{
+    Akonadi::Item::List lst;
+    Akonadi::Item itemA;
+    KABC::Addressee address;
+    address.setName(QLatin1String("foo1"));
+    itemA.setPayload<KABC::Addressee>( address );
+    itemA.setMimeType( KABC::Addressee::mimeType() );
+
+    lst << itemA << itemA;
+
+    SearchPotentialDuplicateContactJob job(lst);
+    QSignalSpy spy(&job, SIGNAL(finished(QList<Akonadi::Item::List>)));
+    job.start();
+    QCOMPARE(spy.count(), 1);
+    QList<Akonadi::Item::List> lstResult = spy.at(0).at(0).value< QList<Akonadi::Item::List> >();
+    QCOMPARE(lstResult.count(), 1);
 }
 
 QTEST_KDEMAIN(SearchPotentialDuplicateContactJobTest, NoGUI)

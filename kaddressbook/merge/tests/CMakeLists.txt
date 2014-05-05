@@ -22,4 +22,4 @@ add_akonadi_isolated_test_advanced( mergecontactinfowidgettest.cpp "" "kaddressb
 add_akonadi_isolated_test_advanced( mergecontactshowresultdialogtest.cpp "" "kaddressbookprivate")
 add_akonadi_isolated_test_advanced( mergecontactselectinformationdialogtest.cpp "" "kaddressbookprivate")
 add_akonadi_isolated_test_advanced( mergecontactduplicatecontactdialogtest.cpp "" "kaddressbookprivate")
-add_akonadi_isolated_test_advanced( searchpotentialduplicatecontactjobtest.cpp "" "kaddressbookprivate")
+add_akonadi_isolated_test_advanced( searchpotentialduplicatecontactjobtest.cpp "" "kaddressbookprivate;kabc")

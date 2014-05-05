@@ -35,12 +35,11 @@ SearchPotentialDuplicateContactJob::~SearchPotentialDuplicateContactJob()
 
 void SearchPotentialDuplicateContactJob::start()
 {
+    mListDuplicate.clear();
     Akonadi::Item::List result = mListItem;
     while(!result.isEmpty()) {
-        //qDebug()<<" loop";
         result = checkList(result);
     }
-    qDebug()<<" result.count()"<< mListDuplicate.count();
     Q_EMIT finished(mListDuplicate);
     deleteLater();
 }
