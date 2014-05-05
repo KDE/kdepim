@@ -48,6 +48,7 @@ private slots:
     void shouldEmitCorrectCollection();
     void shouldHideWidgetWhenClickOnCloseButton();
     void shouldHideWidgetWhenPressEscape();
+    void shouldHideWidgetWhenSaveClicked();
     void shouldSaveCollectionSettings();
     void shouldSaveCollectionSettingsWhenCloseWidget();
     void shouldNotEmitTodoWhenMessageIsNull();
@@ -55,6 +56,8 @@ private slots:
     void shouldEmitNotEmitTodoWhenTextTrimmedIsEmpty();
     void shouldSaveCollectionSettingsWhenDeleteWidget();
     void shouldSetFocusWhenWeCallTodoEdit();
+    void shouldShowMessageWidget();
+    void shouldHideMessageWidget();
 };
 
 #endif // TODOEDITTEST_H

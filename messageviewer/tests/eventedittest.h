@@ -36,12 +36,14 @@ private Q_SLOTS:
     void shouldSaveCollectionSettingsWhenCloseWidget();
     void shouldSaveCollectionSettings();
     void shouldHideWidgetWhenPressEscape();
+    void shouldHideWidgetWhenSaveClicked();
     void shouldEventHasCorrectSubject();
     void shouldSelectLineWhenPutMessage();
     void shouldHaveCorrectStartEndDateTime();
     void shouldSaveCollectionSettingsWhenDeleteWidget();
     void shouldNotEmitCreateEventWhenDateIsInvalid();
     void shouldSetFocusWhenWeCallTodoEdit();
+    void shouldEnsureEndDateIsNotBeforeStartDate();
 };
 
 #endif // EVENTEDITTEST_H

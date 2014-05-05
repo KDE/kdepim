@@ -25,6 +25,7 @@
 #include <Akonadi/Collection>
 #include <KMime/Message>
 #include <KCalCore/Event>
+
 class KLineEdit;
 class KDateTimeEdit;
 namespace Akonadi {
@@ -54,6 +55,8 @@ public Q_SLOTS:
 private Q_SLOTS:
     void slotReturnPressed();
     void slotCollectionChanged(int);
+    void slotOpenEditor();
+    void slotStartDateTimeChanged(const KDateTime &newDateTime);
 
 Q_SIGNALS:
     void createEvent(const KCalCore::Event::Ptr &event, const Akonadi::Collection &collection);
