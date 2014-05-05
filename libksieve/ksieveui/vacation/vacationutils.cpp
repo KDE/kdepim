@@ -18,8 +18,8 @@
 #include "vacationutils.h"
 #include "vacationscriptextractor.h"
 #include "sieve-vacation.h"
-#include <KPIMIdentities/IdentityManager>
-#include <KPIMIdentities/Identity>
+#include <KPIMIdentities/kpimidentities/IdentityManager>
+#include <KPIMIdentities/kpimidentities/Identity>
 
 #include <KLocalizedString>
 #include <KLocale>

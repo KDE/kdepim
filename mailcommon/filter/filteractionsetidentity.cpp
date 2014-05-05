@@ -23,9 +23,9 @@
 #include "kernel/mailkernel.h"
 #include "dialog/filteractionmissingargumentdialog.h"
 
-#include <KPIMIdentities/Identity>
-#include <KPIMIdentities/IdentityCombo>
-#include <KPIMIdentities/IdentityManager>
+#include <KPIMIdentities/kpimidentities/Identity>
+#include <KPIMIdentities/kpimidentities/IdentityCombo>
+#include <KPIMIdentities/kpimidentities/IdentityManager>
 
 #include <KLocale>
 #include <QPointer>

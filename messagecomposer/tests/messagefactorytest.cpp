@@ -43,8 +43,8 @@
 #include "qtest_messagecomposer.h"
 #include <KMime/kmime_dateformatter.h>
 
-#include <KPIMIdentities/identitymanager.h>
-#include <KPIMIdentities/identity.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
 #include <qtest_kde.h>
 #include <QDateTime>
 #include <KCharsets>

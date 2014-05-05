@@ -48,17 +48,17 @@ using namespace MessageViewer;
 #include <KCalCore/ICalFormat>
 using namespace KCalCore;
 
-#include <KCalUtils/IncidenceFormatter>
+#include <KCalUtils/kcalutils/IncidenceFormatter>
 
 #include <KMime/Message>
 
-#include <KPIMIdentities/Identity>
-#include <KPIMIdentities/IdentityManager>
+#include <KPIMIdentities/kpimidentities/Identity>
+#include <KPIMIdentities/kpimidentities/IdentityManager>
 
 #include <KPIMUtils/kpimutils/Email>
 
-#include <MailTransport/MessageQueueJob>
-#include <MailTransport/TransportManager>
+#include <MailTransport/mailtransport/MessageQueueJob>
+#include <MailTransport/mailtransport/TransportManager>
 
 #include <KDBusServiceStarter>
 #include <QDebug>

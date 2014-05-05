@@ -35,7 +35,7 @@
 #include <calendarsupport/kcalprefs.h>
 
 #include <KCalCore/ICalTimeZones>
-#include <KCalUtils/IncidenceFormatter>
+#include <KCalUtils/kcalutils/IncidenceFormatter>
 
 #include <KDebug>
 #include <KSystemTimeZone>

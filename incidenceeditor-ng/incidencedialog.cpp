@@ -44,7 +44,7 @@
 
 #include <KCalCore/ICalFormat>
 #include <KCalCore/MemoryCalendar>
-#include <KCalUtils/Stringify>
+#include <KCalUtils/kcalutils/Stringify>
 
 #include <KMessageBox>
 #include <KStandardDirs>

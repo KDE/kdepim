@@ -27,7 +27,7 @@
 #include <AkonadiCore/CollectionFetchJob>
 #include <AkonadiCore/CollectionFetchScope>
 
-#include <MailTransport/TransportManager>
+#include <MailTransport/mailtransport/TransportManager>
 
 
 #include <KZip>

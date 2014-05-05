@@ -29,7 +29,7 @@
 #include <kmacroexpander.h>
 #include <KShell>
 
-#include <KPIMIdentities/Signature>
+#include <KPIMIdentities/kpimidentities/Signature>
 
 #include <grantlee/plaintextmarkupbuilder.h>
 

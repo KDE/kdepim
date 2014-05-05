@@ -35,7 +35,7 @@
 #include <Akonadi/Calendar/ETMCalendar>
 #include <Akonadi/Calendar/IncidenceChanger>
 
-#include <KCalUtils/IncidenceFormatter>
+#include <KCalUtils/kcalutils/IncidenceFormatter>
 #include <KCalCore/Visitor>
 
 #include <KIconLoader>

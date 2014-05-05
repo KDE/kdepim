@@ -88,7 +88,7 @@
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/cryptobackend.h>
 
-#include <MailTransport/errorattribute.h>
+#include <MailTransport/mailtransport/errorattribute.h>
 
 //Qt includes
 #include <QClipboard>

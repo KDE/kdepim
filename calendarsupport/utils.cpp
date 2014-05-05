@@ -34,7 +34,7 @@
 #include <Akonadi/Calendar/publishdialog.h>
 #include <Akonadi/Calendar/calendarsettings.h>
 
-#include <KHolidays/Holidays>
+#include <KHolidays/kholidays/Holidays>
 
 #include <KCalCore/CalFilter>
 #include <KCalCore/Event>
@@ -46,11 +46,11 @@
 #include <KCalCore/ICalFormat>
 #include <KCalCore/FileStorage>
 
-#include <KCalUtils/DndFactory>
-#include <KCalUtils/ICalDrag>
-#include <KCalUtils/VCalDrag>
+#include <KCalUtils/kcalutils/DndFactory>
+#include <KCalUtils/kcalutils/ICalDrag>
+#include <KCalUtils/kcalutils/VCalDrag>
 
-#include <MailTransport/TransportManager>
+#include <MailTransport/mailtransport/TransportManager>
 
 #include <KIconLoader>
 #include <KUrl>
@@ -64,7 +64,7 @@
 
 #include <boost/bind.hpp>
 #include <KMessageBox>
-#include <KPIMIdentities/IdentityManager>
+#include <KPIMIdentities/kpimidentities/IdentityManager>
 #include <KFileDialog>
 #include <KIO/NetAccess>
 #include <KDebug>

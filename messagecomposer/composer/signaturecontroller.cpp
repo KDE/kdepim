@@ -26,9 +26,9 @@
 #include "composer/kmeditor.h"
 #include "settings/messagecomposersettings.h"
 
-#include <KPIMIdentities/identity.h>
-#include <KPIMIdentities/identitycombo.h>
-#include <KPIMIdentities/identitymanager.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
+#include <KPIMIdentities/kpimidentities/identitycombo.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
 
 using namespace MessageComposer;
 

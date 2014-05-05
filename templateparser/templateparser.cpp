@@ -29,8 +29,8 @@
 
 #include <messageviewer/viewer/objecttreeparser.h>
 
-#include <KPIMIdentities/Identity>
-#include <KPIMIdentities/IdentityManager>
+#include <KPIMIdentities/kpimidentities/Identity>
+#include <KPIMIdentities/kpimidentities/IdentityManager>
 
 #include <KCalendarSystem>
 #include <KCharsets>

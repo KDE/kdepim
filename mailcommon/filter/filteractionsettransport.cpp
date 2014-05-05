@@ -22,9 +22,9 @@
 #include "dialog/filteractionmissingargumentdialog.h"
 
 #include <KLocale>
-#include <MailTransport/Transport>
-#include <MailTransport/TransportComboBox>
-#include <MailTransport/TransportManager>
+#include <MailTransport/mailtransport/Transport>
+#include <MailTransport/mailtransport/TransportComboBox>
+#include <MailTransport/mailtransport/TransportManager>
 
 #include <QTextDocument>
 #include <QPointer>

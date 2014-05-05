@@ -40,7 +40,7 @@
 #include <AkonadiCore/itemfetchscope.h>
 
 
-#include <MailTransport/errorattribute.h>
+#include <MailTransport/mailtransport/errorattribute.h>
 
 #include <KLocalizedString>
 

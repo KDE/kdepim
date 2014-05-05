@@ -31,10 +31,10 @@
 
 #include <progresswidget/progressmanager.h>
 
-#include <MailTransport/dispatcherinterface.h>
-#include <MailTransport/messagequeuejob.h>
-#include <MailTransport/transport.h>
-#include <MailTransport/transportmanager.h>
+#include <MailTransport/mailtransport/dispatcherinterface.h>
+#include <MailTransport/mailtransport/messagequeuejob.h>
+#include <MailTransport/mailtransport/transport.h>
+#include <MailTransport/mailtransport/transportmanager.h>
 #include <messagecore/utils/stringutil.h>
 #include <messagecore/helpers/messagehelpers.h>
 

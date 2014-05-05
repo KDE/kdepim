@@ -25,7 +25,7 @@
 
 #include <calendarsupport/kcalprefs.h>
 #include <kconfigdialogmanager.h>
-#include <KHolidays/holidays.h>
+#include <KHolidays/kholidays/holidays.h>
 #include <qplatformdefs.h>
 
 #include <KGlobal>

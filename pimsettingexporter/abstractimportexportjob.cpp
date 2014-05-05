@@ -23,7 +23,7 @@
 
 #include "pimcommon/util/createresource.h"
 
-#include <KPIMIdentities/identitymanager.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
 #include <KZip>
 #include <KTempDir>
 #include <KLocalizedString>

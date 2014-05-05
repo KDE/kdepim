@@ -37,13 +37,13 @@
 #include <Akonadi/Contact/EmailAddressSelectionDialog>
 
 #include <KPIMUtils/kpimutils/Email>
-#include <KPIMIdentities/Identity>
-#include <KPIMIdentities/IdentityCombo>
-#include <KPIMIdentities/IdentityManager>
+#include <KPIMIdentities/kpimidentities/Identity>
+#include <KPIMIdentities/kpimidentities/IdentityCombo>
+#include <KPIMIdentities/kpimidentities/IdentityManager>
 
-#include <MailTransport/Transport>
-#include <MailTransport/TransportComboBox>
-#include <MailTransport/TransportManager>
+#include <MailTransport/mailtransport/Transport>
+#include <MailTransport/mailtransport/TransportComboBox>
+#include <MailTransport/mailtransport/TransportManager>
 
 
 #include <KIconLoader>

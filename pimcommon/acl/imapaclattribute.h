@@ -24,7 +24,7 @@
 
 #include <Attribute>
 
-#include <KImap/Acl>
+#include <KImap/kimap/Acl>
 
 #include <QMap>
 

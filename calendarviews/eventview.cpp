@@ -42,9 +42,9 @@ using namespace Future;
 #include <KCalCore/Todo>
 #include <KCalCore/CalFilter>
 
-#include <KCalUtils/RecurrenceActions>
+#include <KCalUtils/kcalutils/RecurrenceActions>
 
-#include <KHolidays/Holidays>
+#include <KHolidays/kholidays/Holidays>
 
 #include <KCheckableProxyModel>
 #include <KGuiItem>

@@ -20,7 +20,7 @@
 #ifndef MAILCOMMON_ACLUTILS_P_H
 #define MAILCOMMON_ACLUTILS_P_H
 
-#include <KImap/Acl>
+#include <KImap/kimap/Acl>
 
 namespace PimCommon {
 

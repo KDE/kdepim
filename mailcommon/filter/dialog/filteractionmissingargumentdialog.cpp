@@ -25,11 +25,11 @@
 
 #include <EntityMimeTypeFilterModel>
 
-#include <MailTransport/TransportComboBox>
-#include <MailTransport/Transport>
-#include <MailTransport/TransportManager>
+#include <MailTransport/mailtransport/TransportComboBox>
+#include <MailTransport/mailtransport/Transport>
+#include <MailTransport/mailtransport/TransportManager>
 
-#include <KPIMIdentities/IdentityCombo>
+#include <KPIMIdentities/kpimidentities/IdentityCombo>
 
 #include <KLocale>
 #include <KUrlRequester>

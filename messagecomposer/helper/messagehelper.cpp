@@ -31,8 +31,8 @@
 #include <KMime/kmime_mdn.h>
 #include <KMime/kmime_dateformatter.h>
 #include <KMime/kmime_headers.h>
-#include <KPIMIdentities/identitymanager.h>
-#include <KPIMIdentities/identity.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
 #include <KPIMUtils/kpimutils/Email>
 #include <QDebug>
 

@@ -27,7 +27,7 @@
 
 #include <KUrl>
 
-#include <KPIMIdentities/Identity>
+#include <KPIMIdentities/kpimidentities/Identity>
 #include <messagecore/attachment/attachmentpart.h>
 #include <AkonadiCore/item.h>
 #include <KJob>

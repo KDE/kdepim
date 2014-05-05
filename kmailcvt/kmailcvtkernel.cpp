@@ -18,7 +18,7 @@
 #include "kmailcvtkernel.h"
 
 #include <kglobal.h>
-#include <KPIMIdentities/identitymanager.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
 #include <mailcommon/folder/foldercollectionmonitor.h>
 #include <messagecomposer/sender/akonadisender.h>
 #include <AkonadiCore/session.h>

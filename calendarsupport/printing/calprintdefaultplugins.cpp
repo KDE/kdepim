@@ -33,8 +33,8 @@
 
 #include <KCalCore/Visitor>
 
-#include <KCalUtils/IncidenceFormatter>
-#include <KCalUtils/Stringify>
+#include <KCalUtils/kcalutils/IncidenceFormatter>
+#include <KCalUtils/kcalutils/Stringify>
 
 #include <KCalendarSystem>
 #include <KDateTime>

@@ -27,7 +27,7 @@
 
 #include "messagecomposer_export.h"
 #include <QtCore/QObject>
-#include <KPIMIdentities/signature.h>
+#include <KPIMIdentities/kpimidentities/signature.h>
 
 namespace KPIMIdentities
 {

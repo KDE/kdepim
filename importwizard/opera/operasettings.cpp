@@ -19,11 +19,11 @@
 
 #include "mailimporter/filter_opera.h"
 
-#include <MailTransport/transportmanager.h>
+#include <MailTransport/mailtransport/transportmanager.h>
 #include "mailcommon/util/mailutil.h"
 
-#include <KPIMIdentities/identity.h>
-#include <KPIMIdentities/signature.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
+#include <KPIMIdentities/kpimidentities/signature.h>
 
 
 #include <KConfig>

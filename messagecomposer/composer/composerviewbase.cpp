@@ -53,17 +53,17 @@
 #include <messagecore/attachment/attachmentcollector.h>
 #include <messagecore/helpers/nodehelper.h>
 
-#include <MailTransport/transportcombobox.h>
-#include <MailTransport/messagequeuejob.h>
-#include <MailTransport/transportmanager.h>
+#include <MailTransport/mailtransport/transportcombobox.h>
+#include <MailTransport/mailtransport/messagequeuejob.h>
+#include <MailTransport/mailtransport/transportmanager.h>
 
 #include <Akonadi/KMime/specialmailcollections.h>
 #include <AkonadiCore/itemcreatejob.h>
 #include <AkonadiCore/collectionfetchjob.h>
 #include <AkonadiWidgets/collectioncombobox.h>
 
-#include <KPIMIdentities/identitycombo.h>
-#include <KPIMIdentities/identitymanager.h>
+#include <KPIMIdentities/kpimidentities/identitycombo.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
 #include <KPIMUtils/kpimutils/email.h>
 
 #include <KSaveFile>

@@ -20,7 +20,7 @@
 #ifndef MAILCOMMON_ACLENTRYDIALOG_P_H
 #define MAILCOMMON_ACLENTRYDIALOG_P_H
 
-#include <KImap/Acl>
+#include <KImap/kimap/Acl>
 
 #include <KDialog>
 

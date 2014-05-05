@@ -27,10 +27,10 @@
 #include "messageviewer/utils/kcursorsaver.h"
 
 
-#include <MailTransport/transportmanager.h>
+#include <MailTransport/mailtransport/transportmanager.h>
 
-#include <KPIMIdentities/identitymanager.h>
-#include <KPIMIdentities/identity.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
 #include <KStandardDirs>
 #include <KLocalizedString>
 #include <KProcess>

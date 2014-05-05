@@ -28,12 +28,12 @@
 #include "settings.h"
 #include "snippetseditor.h"
 
-#include <KPIMIdentities/identity.h>
-#include <KPIMIdentities/identitycombo.h>
-#include <KPIMIdentities/identitymanager.h>
-#include <MailTransport/messagequeuejob.h>
-#include <MailTransport/transportcombobox.h>
-#include <MailTransport/transportmanager.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
+#include <KPIMIdentities/kpimidentities/identitycombo.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <MailTransport/mailtransport/messagequeuejob.h>
+#include <MailTransport/mailtransport/transportcombobox.h>
+#include <MailTransport/mailtransport/transportmanager.h>
 #include <messageviewer/settings/globalsettings.h>
 #include <messageviewer/viewer/objecttreeemptysource.h>
 #include <messageviewer/viewer/objecttreeparser.h>

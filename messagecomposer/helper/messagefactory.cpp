@@ -26,8 +26,8 @@
 #ifndef QT_NO_CURSOR
 #include <messageviewer/utils/kcursorsaver.h>
 #endif
-#include <KPIMIdentities/identitymanager.h>
-#include <KPIMIdentities/identity.h>
+#include <KPIMIdentities/kpimidentities/identitymanager.h>
+#include <KPIMIdentities/kpimidentities/identity.h>
 
 #include <Akonadi/KMime/messagestatus.h>
 #include <KMime/kmime_dateformatter.h>

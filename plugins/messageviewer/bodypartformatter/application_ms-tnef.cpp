@@ -42,7 +42,7 @@
 #include <KCalCore/ICalFormat>
 #include <KCalCore/MemoryCalendar>
 
-#include <KCalUtils/IncidenceFormatter>
+#include <KCalUtils/kcalutils/IncidenceFormatter>
 
 #include <KTNEF/ktnef/formatter.h>
 #include <KTNEF/ktnef/ktnefparser.h>

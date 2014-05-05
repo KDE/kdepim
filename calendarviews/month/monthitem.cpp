@@ -32,8 +32,8 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include <KCalUtils/IncidenceFormatter>
-#include <KCalUtils/RecurrenceActions>
+#include <KCalUtils/kcalutils/IncidenceFormatter>
+#include <KCalUtils/kcalutils/RecurrenceActions>
 
 #include <KMessageBox>
 #include <QDebug>

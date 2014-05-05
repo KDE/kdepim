@@ -31,9 +31,9 @@
 
 #include <KABC/kabc/VCardDrag>
 
-#include <KCalUtils/ICalDrag>
-#include <KCalUtils/VCalDrag>
-#include <KCalUtils/IncidenceFormatter>
+#include <KCalUtils/kcalutils/ICalDrag>
+#include <KCalUtils/kcalutils/VCalDrag>
+#include <KCalUtils/kcalutils/IncidenceFormatter>
 
 #include <KPIMUtils/kpimutils/Email>
 
