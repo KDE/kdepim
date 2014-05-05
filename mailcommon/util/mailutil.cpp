@@ -71,7 +71,7 @@
 
 #include <KMime/KMimeMessage>
 
-#include <KPIMUtils/Email>
+#include <KPIMUtils/kpimutils/Email>
 
 #include <KColorScheme>
 #include <KDBusServiceStarter>

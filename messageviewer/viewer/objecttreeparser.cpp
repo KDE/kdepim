@@ -71,8 +71,8 @@
 #include <libkpgp/kpgp.h>
 
 // KDEPIMLIBS includes
-#include <KPIMUtils/email.h>
-#include <KPIMUtils/linklocator.h>
+#include <KPIMUtils/kpimutils/email.h>
+#include <KPIMUtils/kpimutils/linklocator.h>
 #include <gpgme++/importresult.h>
 #include <gpgme++/decryptionresult.h>
 #include <gpgme++/key.h>

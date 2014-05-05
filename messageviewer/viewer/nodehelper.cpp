@@ -40,7 +40,7 @@
 #include <klocale.h>
 #include <kcharsets.h>
 #include <kde_file.h>
-#include <KPIMUtils/kfileio.h>
+#include <KPIMUtils/kpimutils/kfileio.h>
 #include <KUrl>
 
 #include <QDir>

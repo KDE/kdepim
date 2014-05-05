@@ -31,7 +31,7 @@
 #include <KCalCore/Event>
 #include <KCalCore/Attachment>
 #include <KCalUtils/IncidenceFormatter>
-#include <KPIMUtils/Email>
+#include <KPIMUtils/kpimutils/Email>
 
 #include <KCalUtils/DndFactory>
 #include <KCalUtils/ICalDrag>

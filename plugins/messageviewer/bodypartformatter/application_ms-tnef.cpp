@@ -35,7 +35,7 @@
 #include <messagecore/utils/stringutil.h>
 #include <messageviewer/utils/util.h>
 
-#include <KPIMUtils/KFileIO>
+#include <KPIMUtils/kpimutils/KFileIO>
 
 #include <KCalCore/Event>
 #include <KCalCore/Incidence>

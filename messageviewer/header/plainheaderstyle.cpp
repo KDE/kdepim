@@ -22,7 +22,7 @@
 
 #include "header/headerstrategy.h"
 
-#include <KPIMUtils/email.h>
+#include <KPIMUtils/kpimutils/email.h>
 #include <messagecore/utils/stringutil.h>
 
 #include <kdebug.h>

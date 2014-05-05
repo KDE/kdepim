@@ -30,7 +30,7 @@
 #include <KPIMIdentities/Identity>
 #include <KPIMIdentities/IdentityManager>
 
-#include <KPIMUtils/Email>
+#include <KPIMUtils/kpimutils/Email>
 
 #include <KEMailSettings>
 #include <KSystemTimeZone>

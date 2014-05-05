@@ -64,7 +64,7 @@
 
 #include <KPIMIdentities/identitycombo.h>
 #include <KPIMIdentities/identitymanager.h>
-#include <KPIMUtils/email.h>
+#include <KPIMUtils/kpimutils/email.h>
 
 #include <KSaveFile>
 #include <KLocalizedString>

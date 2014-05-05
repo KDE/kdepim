@@ -79,11 +79,11 @@
 #include <KIO/NetAccess>
 #include <KABC/kabc/Addressee>
 #include <KABC/kabc/VCardConverter>
-#include <KPIMUtils/Email>
+#include <KPIMUtils/kpimutils/Email>
 #include <AkonadiCore/ItemModifyJob>
 #include <AkonadiCore/ItemCreateJob>
 
-#include <KPIMUtils/kfileio.h>
+#include <KPIMUtils/kpimutils/kfileio.h>
 
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/cryptobackend.h>

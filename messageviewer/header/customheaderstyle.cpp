@@ -20,12 +20,12 @@
 #include "header/headerstyle_util.h"
 
 #include "header/headerstrategy.h"
-#include <KPIMUtils/linklocator.h>
+#include <KPIMUtils/kpimutils/linklocator.h>
 using KPIMUtils::LinkLocator;
 #include "settings/globalsettings.h"
 #include "viewer/nodehelper.h"
 
-#include <KPIMUtils/email.h>
+#include <KPIMUtils/kpimutils/email.h>
 #include <messagecore/utils/stringutil.h>
 
 #include <kdebug.h>

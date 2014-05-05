@@ -28,7 +28,7 @@
 
 #include <messagecore/utils/stringutil.h>
 
-#include <KPIMUtils/email.h>
+#include <KPIMUtils/kpimutils/email.h>
 #include <KABC/kabc/vcarddrag.h>
 #include <KABC/kabc/contactgroup.h>
 #include <KABC/kabc/vcardconverter.h>

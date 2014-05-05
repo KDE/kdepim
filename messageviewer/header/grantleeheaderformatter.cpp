@@ -21,7 +21,7 @@
 #include "settings/globalsettings.h"
 #include "config-messageviewer.h"
 
-#include <KPIMUtils/email.h>
+#include <KPIMUtils/kpimutils/email.h>
 #include <messagecore/utils/stringutil.h>
 
 #include <KMime/kmime_message.h>

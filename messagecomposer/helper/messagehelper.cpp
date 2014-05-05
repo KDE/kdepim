@@ -33,7 +33,7 @@
 #include <KMime/kmime_headers.h>
 #include <KPIMIdentities/identitymanager.h>
 #include <KPIMIdentities/identity.h>
-#include <KPIMUtils/Email>
+#include <KPIMUtils/kpimutils/Email>
 #include <QDebug>
 
 using namespace MessageCore;

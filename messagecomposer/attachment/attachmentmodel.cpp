@@ -33,7 +33,7 @@
 #include <KMime/kmime_util.h>
 #include <AkonadiCore/item.h>
 
-#include <KPIMUtils/kfileio.h>
+#include <KPIMUtils/kpimutils/kfileio.h>
 
 using namespace MessageComposer;
 using namespace MessageCore;

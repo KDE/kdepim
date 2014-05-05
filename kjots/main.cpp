@@ -26,7 +26,7 @@
 #include "KJotsMain.h"
 #include "aboutdata.h"
 
-#include <KontactInterface/pimuniqueapplication.h>
+#include <KontactInterface/kontactinterface/pimuniqueapplication.h>
 
 #include <kcmdlineargs.h>
 #include <kconfig.h>

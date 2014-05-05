@@ -31,7 +31,7 @@
 #include <KSeparator>
 #include <KMessageBox>
 #include <KToggleAction>
-#include <KPIMUtils/progressindicatorwidget.h>
+#include <KPIMUtils/kpimutils/progressindicatorwidget.h>
 #include <KIcon>
 #include <KGlobal>
 #include <QMimeData> 

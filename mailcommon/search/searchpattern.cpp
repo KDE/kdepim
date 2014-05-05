@@ -28,7 +28,7 @@ using MailCommon::FilterLog;
 
 #include <KMime/KMimeMessage>
 
-#include <KPIMUtils/Email>
+#include <KPIMUtils/kpimutils/Email>
 
 //note: lowercase include for compatibility
 #include <kascii.h>

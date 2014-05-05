@@ -33,7 +33,7 @@
 #include <KCalCore/Journal>
 #include <KCalCore/Alarm>
 
-#include <KPIMUtils/Email>
+#include <KPIMUtils/kpimutils/Email>
 #include <KIO/Job>
 #include <KIO/NetAccess>
 #include <KDebug>

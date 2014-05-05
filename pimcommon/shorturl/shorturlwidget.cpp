@@ -20,7 +20,7 @@
 #include "abstractshorturl.h"
 #include "shorturl/shorturlconfiguredialog.h"
 #include <KLineEdit>
-#include <KPIMUtils/ProgressIndicatorLabel>
+#include <KPIMUtils/kpimutils/ProgressIndicatorLabel>
 
 #include <QLineEdit>
 #include <KLocalizedString>

@@ -23,7 +23,7 @@
 
 #include <KCalUtils/Stringify>
 
-#include <KPIMUtils/Email>
+#include <KPIMUtils/kpimutils/Email>
 
 #include <KCompletionBox>
 #include <KDebug>

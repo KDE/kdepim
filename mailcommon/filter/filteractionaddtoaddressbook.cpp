@@ -27,7 +27,7 @@
 #include <KABC/kabc/Addressee>
 #include <KLineEdit>
 #include <KLocale>
-#include <KPIMUtils/Email>
+#include <KPIMUtils/kpimutils/Email>
 
 #include <QGridLayout>
 #include <QLabel>

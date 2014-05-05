@@ -35,7 +35,7 @@
 #include <KCalUtils/VCalDrag>
 #include <KCalUtils/IncidenceFormatter>
 
-#include <KPIMUtils/Email>
+#include <KPIMUtils/kpimutils/Email>
 
 #include <KLocalizedString>
 #include <KMessageBox>

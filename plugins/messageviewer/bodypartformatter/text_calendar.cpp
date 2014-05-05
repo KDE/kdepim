@@ -55,7 +55,7 @@ using namespace KCalCore;
 #include <KPIMIdentities/Identity>
 #include <KPIMIdentities/IdentityManager>
 
-#include <KPIMUtils/Email>
+#include <KPIMUtils/kpimutils/Email>
 
 #include <MailTransport/MessageQueueJob>
 #include <MailTransport/TransportManager>

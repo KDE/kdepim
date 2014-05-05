@@ -53,7 +53,7 @@
 #include <KFileItemActions>
 #include <KActionMenu>
 
-#include <KPIMUtils/kfileio.h>
+#include <KPIMUtils/kpimutils/kfileio.h>
 
 #include <libkleo/kleo/cryptobackendfactory.h>
 #include <libkleo/ui/keyselectiondialog.h>

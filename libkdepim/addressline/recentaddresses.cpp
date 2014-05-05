@@ -28,7 +28,7 @@
  *  your version.
  */
 #include "recentaddresses.h"
-#include <KPIMUtils/email.h>
+#include <KPIMUtils/kpimutils/email.h>
 
 #include <KConfig>
 #include <KConfigGroup>

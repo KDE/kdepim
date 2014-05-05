@@ -26,7 +26,7 @@
 #include <KMime/kmime_util.h>
 #include <KMime/kmime_headers.h>
 #include <KMime/kmime_message.h>
-#include <KPIMUtils/Email>
+#include <KPIMUtils/kpimutils/Email>
 
 #include <kascii.h>
 #include <KConfigGroup>

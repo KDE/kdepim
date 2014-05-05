@@ -39,7 +39,7 @@
 
 #include <KPIMIdentities/Identity>
 
-#include <KPIMUtils/Email>
+#include <KPIMUtils/kpimutils/Email>
 
 #include <MailTransport/MessageQueueJob>
 #include <MailTransport/Transport>

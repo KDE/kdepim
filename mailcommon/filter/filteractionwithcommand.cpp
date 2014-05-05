@@ -19,7 +19,7 @@
 
 #include "filteractionwithcommand.h"
 
-#include <KPIMUtils/KFileIO>
+#include <KPIMUtils/kpimutils/KFileIO>
 #include <KProcess>
 #include <KShell>
 #include <KTemporaryFile>
