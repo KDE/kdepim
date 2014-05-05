@@ -110,12 +110,14 @@ Q_SIGNALS:
     void finished();
 
 private:
+    bool containString(const QString &searchInString) const;
     QList<Akonadi::MessageStatus> mStatus;    ///< Messages must match theses status, if non 0
     QString mSearchString;             ///< Messages must match this search string, if not empty
     QString mTagId;                    ///< Messages must have this tag, if not empty. Contains a tag url.
     Akonadi::Collection mCurrentFolder;
     QSet<qint64> mMatchingItemIds;
     QuickSearchLine::SearchOptions mOptions;
+    QStringList mSearchList;
 };
 
 } // namespace Core
