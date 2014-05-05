@@ -34,7 +34,7 @@
 #include "mailsourceviewer.h"
 #include "utils/util.h"
 #include "findbar/findbarsourceview.h"
-#include <KPIMTextEdit/htmlhighlighter.h>
+#include <kpimtextedit/htmlhighlighter.h>
 #include "pimcommon/util/pimutil.h"
 #include <kiconloader.h>
 #include <KLocalizedString>

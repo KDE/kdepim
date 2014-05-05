@@ -34,7 +34,7 @@ using namespace KMime;
 #include <messagecomposer/part/textpart.h>
 using namespace MessageComposer;
 
-#include <KPIMTextEdit/textedit.h>
+#include <kpimtextedit/textedit.h>
 
 QTEST_KDEMAIN( MainTextJobTest, GUI )
 

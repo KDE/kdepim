@@ -22,9 +22,9 @@
 #define KLDAP_LDAPQUERYJOB_H
 
 #include <KJob>
-#include <KLDAP/ldapurl.h>
+#include <kldap/ldapurl.h>
 #include "ldapsession.h"
-#include <KLDAP/ldapoperation.h>
+#include <kldap/ldapoperation.h>
 
 namespace KLDAP {
 

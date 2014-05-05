@@ -18,7 +18,7 @@
 #include "editorwidget.h"
 #include "grantleeplaintexteditor.h"
 
-#include <KPIMTextEdit/htmlhighlighter.h>
+#include <kpimtextedit/htmlhighlighter.h>
 
 
 using namespace GrantleeThemeEditor;

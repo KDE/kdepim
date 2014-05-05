@@ -43,7 +43,7 @@
 
 #include <KABC/addressee.h>
 #include <KABC/contactgroup.h>
-#include <KLDAP/ldapserver.h>
+#include <kldap/ldapserver.h>
 #include <KGlobal>
 
 

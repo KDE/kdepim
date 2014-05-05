@@ -46,7 +46,7 @@
 
 #include "ldapclientsearch.h"
 #include "ldapclientsearchconfig.h"
-#include <KLDAP/ldapserver.h>
+#include <kldap/ldapserver.h>
 
 #include "addhostdialog_p.h"
 

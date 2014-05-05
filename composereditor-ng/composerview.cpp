@@ -24,7 +24,7 @@
 #include "table/composertableactionmenu.h"
 #include "globalsettings_base.h"
 
-#include <KPIMTextEdit/emoticontexteditaction.h>
+#include <kpimtextedit/emoticontexteditaction.h>
 
 
 #include <KLocalizedString>

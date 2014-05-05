@@ -38,7 +38,7 @@
 #include <QHostInfo>
 #include <QRegExp>
 #include <QStringList>
-#include <KPIMTextEdit/textutils.h>
+#include <kpimtextedit/textutils.h>
 
 using namespace KMime;
 using namespace KMime::Types;

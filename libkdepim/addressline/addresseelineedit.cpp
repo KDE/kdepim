@@ -44,7 +44,7 @@
 #include <KPIMUtils/Email>
 #include <KColorScheme>
 
-#include <KLDAP/LdapServer>
+#include <kldap/LdapServer>
 
 #include <KMime/Util>
 

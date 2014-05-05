@@ -30,10 +30,10 @@
 #include "ldapsession.h"
 #include "ldapqueryjob.h"
 
-#include <KLDAP/ldapobject.h>
-#include <KLDAP/ldapserver.h>
-#include <KLDAP/ldapurl.h>
-#include <KLDAP/ldif.h>
+#include <kldap/ldapobject.h>
+#include <kldap/ldapserver.h>
+#include <kldap/ldapurl.h>
+#include <kldap/ldif.h>
 
 #include <KConfig>
 #include <KConfigGroup>

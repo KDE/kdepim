@@ -22,7 +22,7 @@
 #define KLDAP_LDAPSESSION_H
 
 #include <QThread>
-#include <KLDAP/ldapconnection.h>
+#include <kldap/ldapconnection.h>
 #include <QtCore/QQueue>
 #include <QtCore/QMutex>
 

@@ -24,8 +24,8 @@
 #include <QHBoxLayout>
 
 #include <kacceleratormanager.h>
-#include <KLDAP/ldapserver.h>
-#include <KLDAP/ldapconfigwidget.h>
+#include <kldap/ldapserver.h>
+#include <kldap/ldapconfigwidget.h>
 #include <klocale.h>
 
 AddHostDialog::AddHostDialog( KLDAP::LdapServer *server, QWidget *parent )

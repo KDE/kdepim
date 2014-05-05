@@ -25,7 +25,7 @@
 #include "messagecomposer_export.h"
 #include "messagepart.h"
 
-#include <KPIMTextEdit/textedit.h>
+#include <kpimtextedit/textedit.h>
 
 namespace MessageComposer {
 

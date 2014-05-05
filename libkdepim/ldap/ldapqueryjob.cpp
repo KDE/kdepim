@@ -20,11 +20,11 @@
 
 #include "ldapqueryjob.h"
 
-#include <KLDAP/ldif.h>
-#include <KLDAP/ldapcontrol.h>
-#include <KLDAP/ldapdefs.h>
-#include <KLDAP/ldapconnection.h>
-#include <KLDAP/ldapdn.h>
+#include <kldap/ldif.h>
+#include <kldap/ldapcontrol.h>
+#include <kldap/ldapdefs.h>
+#include <kldap/ldapconnection.h>
+#include <kldap/ldapdn.h>
 
 #include <KDebug>
 

@@ -20,10 +20,10 @@
 
 #include "ldapsession.h"
 
-#include <KLDAP/ldapoperation.h>
-#include <KLDAP/ldif.h>
-#include <KLDAP/ldapcontrol.h>
-#include <KLDAP/ldapdefs.h>
+#include <kldap/ldapoperation.h>
+#include <kldap/ldif.h>
+#include <kldap/ldapcontrol.h>
+#include <kldap/ldapdefs.h>
 
 #include <KDebug>
 #include "ldapqueryjob.h"

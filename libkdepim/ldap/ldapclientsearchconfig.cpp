@@ -18,7 +18,7 @@
  */
 
 #include "ldapclientsearchconfig.h"
-#include <KLDAP/ldapserver.h>
+#include <kldap/ldapserver.h>
 
 
 #include <KStandardDirs>

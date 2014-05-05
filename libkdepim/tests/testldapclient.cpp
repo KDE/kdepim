@@ -21,7 +21,7 @@
 #include <kapplication.h>
 #include <qdebug.h>
 #include <kcmdlineargs.h>
-#include <KLDAP/ldapobject.h>
+#include <kldap/ldapobject.h>
 
 #include <QEventLoop>
 

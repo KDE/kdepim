@@ -36,7 +36,7 @@
 
 #include <KMime/kmime_content.h>
 
-#include <KPIMTextEdit/textedit.h>
+#include <kpimtextedit/textedit.h>
 
 using namespace MessageComposer;
 
