@@ -26,13 +26,13 @@
 #include <QStandardItemModel>
 #include <kcalcore/event.h>
 #include <KDateTimeEdit>
+#include <KPushButton>
 
 #include <qtest_kde.h>
 #include <qtestkeyboard.h>
 #include <qtestmouse.h>
 
 #include <QLineEdit>
-#include <QToolButton>
 #include <QHBoxLayout>
 #include <QShortcut>
 #include <QAction>
@@ -170,13 +170,28 @@ void EventEditTest::shouldHideWidgetWhenPressEscape()
     QCOMPARE(edit.isVisible(), false);
 }
 
+void EventEditTest::shouldHideWidgetWhenSaveClicked()
+{
+    MessageViewer::EventEdit edit;
+    edit.show();
+    QTest::qWaitForWindowShown(&edit);
+
+    KMime::Message::Ptr msg(new KMime::Message);
+    msg->subject(true)->fromUnicodeString(QLatin1String("Test Note"), "us-ascii");
+    edit.setMessage(msg);
+    KPushButton *save = qFindChild<KPushButton*>(&edit, QLatin1String("save-button"));
+    QTest::mouseClick(save, Qt::LeftButton);
+    QCOMPARE(edit.isVisible(), false);
+}
+
+
 void EventEditTest::shouldSaveCollectionSettings()
 {
     MessageViewer::EventEdit edit;
     Akonadi::CollectionComboBox *akonadicombobox = qFindChild<Akonadi::CollectionComboBox *>(&edit, QLatin1String("akonadicombobox"));
     akonadicombobox->setCurrentIndex(3);
     const Akonadi::Collection::Id id = akonadicombobox->currentCollection().id();
-    QToolButton *close = qFindChild<QToolButton *>(&edit, QLatin1String("close-button"));
+    KPushButton *close = qFindChild<KPushButton *>(&edit, QLatin1String("close-button"));
     QTest::mouseClick(close, Qt::LeftButton);
     QCOMPARE(MessageViewer::GlobalSettingsBase::self()->lastEventSelectedFolder(), id);
 }
@@ -289,6 +304,26 @@ void EventEditTest::shouldSetFocusWhenWeCallTodoEdit()
     edit.showEventEdit();
     QVERIFY(noteedit->hasFocus());
 }
+
+void EventEditTest::shouldEnsureEndDateIsNotBeforeStartDate()
+{
+    MessageViewer::EventEdit edit;
+    KDateTimeEdit *startDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("startdatetimeedit"));
+    KDateTimeEdit *endDateTime = qFindChild<KDateTimeEdit *>(&edit, QLatin1String("enddatetimeedit"));
+
+    KDateTime startDt = startDateTime->dateTime();
+    QVERIFY(startDt < endDateTime->dateTime());
+
+    startDt = startDt.addDays(1);
+    startDateTime->setDateTime(startDt);
+    QCOMPARE(startDt.date(), endDateTime->date());
+    QVERIFY(startDt.time() < endDateTime->time());
+
+    startDt = startDt.addSecs(2*3600);
+    startDateTime->setDateTime(startDt);
+    QCOMPARE(startDt.time(), endDateTime->time());
+}
+
 
 
 QTEST_KDEMAIN( EventEditTest, GUI )
