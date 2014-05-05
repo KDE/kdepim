@@ -630,8 +630,7 @@ void AttachmentControllerBase::openAttachment( AttachmentPart::Ptr part )
                                  true /*tempFile*/,
                                  false /*runExecutables*/ );
     if( !success ) {
-#if 0 //QT5
-        if( KMimeTypeTrader::self()->preferredService( QString::fromLatin1( part->mimeType() ) ).isNull() ) {
+        if( !KMimeTypeTrader::self()->preferredService( QString::fromLatin1( part->mimeType() ) ).data() ) {
             // KRun showed an Open-With dialog, and it was canceled.
         } else {
             // KRun failed.
@@ -641,7 +640,6 @@ void AttachmentControllerBase::openAttachment( AttachmentPart::Ptr part )
         }
         delete tempFile;
         tempFile = 0;
-#endif
     } else {
         // The file was opened.  Delete it only when the composer is closed
         // (and this object is destroyed).

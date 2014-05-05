@@ -34,7 +34,7 @@
 #include <KGlobal>
 #include <KIconLoader>
 #include <KLocalizedString>
-#include <KMenu>
+#include <QMenu>
 #include <KMessageBox>
 #include <KProcess>
 #include <KRun>
@@ -432,7 +432,7 @@ void KTNEFMain::contextMenuEvent( QContextMenuEvent *event )
   QAction *view = 0;
   QAction *viewWith = 0;
   QAction *prop = 0;
-  KMenu *menu = new KMenu();
+  QMenu *menu = new QMenu();
   if ( list.count() == 1 ) {
     view = menu->addAction( KIcon( QLatin1String("document-open") ),
                             i18nc( "@action:inmenu", "View" ) );
