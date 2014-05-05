@@ -28,7 +28,7 @@ class MergeContactsDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit MergeContactsDialog(QItemSelectionModel *selectionModel, QWidget *parent=0);
+    explicit MergeContactsDialog(const Akonadi::Item::List &lst, QWidget *parent=0);
     ~MergeContactsDialog();
 
 private slots:

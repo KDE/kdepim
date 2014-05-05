@@ -43,7 +43,7 @@ static const int FILTER_ROLE = Qt::UserRole+1;
 class CategorySelectWidgetPrivate : public QObject
 {
     Q_OBJECT
-    Q_DECLARE_PUBLIC(CategorySelectWidget);
+    Q_DECLARE_PUBLIC(CategorySelectWidget)
 
 public:
     CategorySelectWidgetPrivate(CategorySelectWidget *parent);
@@ -89,6 +89,7 @@ void CategorySelectWidgetPrivate::init()
     hbox->setSpacing(0);
 
     checkCombo = new KPIM::KCheckComboBox;
+    checkCombo->setMinimumWidth(150);
     checkCombo->setSqueezeText(true);
     connect(checkCombo, SIGNAL(checkedItemsChanged(QStringList)),
             SLOT(slotCheckedItemsChanged()));

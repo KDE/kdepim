@@ -24,6 +24,7 @@
 #include "modelcolumnmanager.h"
 #include "printing/printingwizard.h"
 #include "merge/mergecontactsdialog.h"
+#include "merge/mergecontactduplicatecontactdialog.h"
 #include "quicksearchwidget.h"
 #include "settings.h"
 #include "xxportmanager.h"
@@ -938,14 +939,18 @@ void MainWidget::slotGrantleeThemesUpdated()
 
 void MainWidget::mergeContacts()
 {
-    QPointer<KABMergeContacts::MergeContactsDialog> dlg = new KABMergeContacts::MergeContactsDialog(mItemView->selectionModel(), this);
+    const Akonadi::Item::List lst = Utils::collectSelectedContactsItem(mItemView->selectionModel());
+    QPointer<KABMergeContacts::MergeContactsDialog> dlg = new KABMergeContacts::MergeContactsDialog(lst, this);
     dlg->exec();
     delete dlg;
 }
 
 void MainWidget::slotSearchDuplicateContacts()
 {
-    //TODO
+    const Akonadi::Item::List lst = Utils::collectSelectedContactsItem(mItemView->selectionModel());
+    QPointer<KABMergeContacts::MergeContactDuplicateContactDialog> dlg = new KABMergeContacts::MergeContactDuplicateContactDialog(lst, this);
+    dlg->exec();
+    delete dlg;
 }
 
 Akonadi::EntityTreeModel *MainWidget::entityTreeModel() const

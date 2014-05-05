@@ -37,7 +37,7 @@ class CategoryFilterProxyModelPrivate;
 class CategoryFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(CategoryFilterProxyModel);
+    Q_DECLARE_PRIVATE(CategoryFilterProxyModel)
 
 public:
     /**

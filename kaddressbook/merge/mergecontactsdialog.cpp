@@ -38,7 +38,7 @@
 #include <QPointer>
 
 using namespace KABMergeContacts;
-MergeContactsDialog::MergeContactsDialog(QItemSelectionModel *selectionModel, QWidget *parent)
+MergeContactsDialog::MergeContactsDialog(const Akonadi::Item::List &lst, QWidget *parent)
     : KDialog(parent),
       mContactWidget(0)
 {
@@ -46,7 +46,6 @@ MergeContactsDialog::MergeContactsDialog(QItemSelectionModel *selectionModel, QW
     setButtons( Close );
     readConfig();
 
-    const Akonadi::Item::List lst = Utils::collectSelectedContactsItem(selectionModel);
     if (lst.count() < 2) {
         setMainWidget(new QLabel(i18n("You must select at least two elements.")));
     } else {

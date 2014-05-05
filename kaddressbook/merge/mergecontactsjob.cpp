@@ -106,7 +106,6 @@ void MergeContactsJob::slotDeleteContactsFinished(KJob *job)
     if (job->error()) {
         qDebug() << job->errorString();
     }
-    //TODO
     Q_EMIT finished(mCreatedContact);
     deleteLater();
 }

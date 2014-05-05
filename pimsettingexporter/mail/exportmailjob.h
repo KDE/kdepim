@@ -21,6 +21,7 @@
 #include "abstractimportexportjob.h"
 #include <KSharedConfig>
 #include <QDateTime>
+#include <time.h>
 class KUrl;
 class ArchiveStorage;
 
