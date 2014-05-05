@@ -19,10 +19,10 @@
 #include "ktnefview.h"
 #include "messagepropertydialog.h"
 
-#include <KTNEF/ktnef/KTNEFAttach>
-#include <KTNEF/ktnef/KTNEFMessage>
-#include <KTNEF/ktnef/KTNEFParser>
-#include <KTNEF/ktnef/KTNEFProperty>
+#include <KTNEF/KTNEFAttach>
+#include <KTNEF/KTNEFMessage>
+#include <KTNEF/KTNEFParser>
+#include <KTNEF/KTNEFProperty>
 
 #include <QAction>
 #include <KActionCollection>

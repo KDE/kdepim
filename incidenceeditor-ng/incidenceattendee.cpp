@@ -39,7 +39,7 @@
 #include <Akonadi/Contact/ContactGroupSearchJob>
 #include <Akonadi/Contact/EmailAddressSelectionDialog>
 
-#include <KPIMUtils/kpimutils/Email>
+#include <KPIMUtils/Email>
 
 #include <KDebug>
 #include <KMessageBox>

@@ -48,7 +48,7 @@
 #include <utils/formatting.h>
 #include <utils/kleo_assert.h>
 
-#include <KMime/kmime_header_parsing.h>
+#include <kmime/kmime_header_parsing.h>
 
 #include <gpgme++/key.h>
 

@@ -30,9 +30,9 @@
 #include <messagecore/utils/stringutil.h>
 #include "messagecore/settings/globalsettings.h"
 
-#include <KMime/kmime_content.h>
-#include <KMime/kmime_message.h>
-#include <KMime/kmime_headers.h>
+#include <kmime/kmime_content.h>
+#include <kmime/kmime_message.h>
+#include <kmime/kmime_headers.h>
 #include <kmimetype.h>
 #include <qdebug.h>
 #include <kascii.h>

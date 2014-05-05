@@ -27,7 +27,7 @@
 
 #include <time.h> // for time_t
 
-#include <KMime/kmime_headers.h>
+#include <kmime/kmime_headers.h>
 
 #include <Akonadi/KMime/messagestatus.h>
 

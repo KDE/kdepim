@@ -35,7 +35,7 @@
 
 #include <crypto/gui/resolverecipientspage.h>
 
-#include <KMime/kmime_header_parsing.h>
+#include <kmime/kmime_header_parsing.h>
 
 #include <QHash>
 

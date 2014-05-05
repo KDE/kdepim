@@ -29,7 +29,7 @@
 
 #include <libkdepimdbusinterfaces/urihandler.h>
 
-#include <KABC/kabc/VCardDrag>
+#include <KABC/VCardDrag>
 
 #include <KMime/Message>
 

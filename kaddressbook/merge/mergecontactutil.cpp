@@ -17,7 +17,7 @@
 
 #include "mergecontactutil.h"
 
-#include <KABC/kabc/Addressee>
+#include <KABC/Addressee>
 using namespace KABMergeContacts;
 bool MergeContactUtil::hasSameNames(const Akonadi::Item::List &lst)
 {

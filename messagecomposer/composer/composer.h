@@ -27,7 +27,7 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QStringList>
 
-#include <KMime/kmime_message.h>
+#include <kmime/kmime_message.h>
 
 #include <messagecore/attachment/attachmentpart.h>
 

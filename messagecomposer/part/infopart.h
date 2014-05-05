@@ -24,8 +24,8 @@
 
 #include <QtCore/QStringList>
 
-#include <KMime/kmime_message.h>
-#include <KMime/kmime_headers.h>
+#include <kmime/kmime_message.h>
+#include <kmime/kmime_headers.h>
 #include <boost/shared_ptr.hpp>
 
 namespace MessageComposer {

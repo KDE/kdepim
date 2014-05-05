@@ -20,7 +20,7 @@
 
 #include <QItemSelectionModel>
 
-#include <KABC/kabc/Addressee>
+#include <KABC/Addressee>
 #include <AkonadiCore/EntityTreeModel>
 
 Akonadi::Item::List Utils::collectSelectedContactsItem(QItemSelectionModel *model)

@@ -27,7 +27,7 @@
 #include <AkonadiCore/Collection>
 #include <AkonadiCore/Item>
 
-#include <KABC/kabc/ContactGroup>
+#include <KABC/ContactGroup>
 #include <KLocalizedString>
 #include <QDebug>
 

@@ -16,7 +16,7 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include <KABC/kabc/addressee.h>
+#include <kabc/addressee.h>
 #include <kcmultidialog.h>
 #include <kglobal.h>
 #include <klocale.h>

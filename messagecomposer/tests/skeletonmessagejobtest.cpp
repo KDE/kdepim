@@ -22,7 +22,7 @@
 #include <QDebug>
 #include <qtest_kde.h>
 
-#include <KMime/kmime_message.h>
+#include <kmime/kmime_message.h>
 
 #include <messagecomposer/composer/composer.h>
 #include <messagecomposer/part/infopart.h>

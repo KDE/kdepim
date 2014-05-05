@@ -22,7 +22,7 @@
 #define MESSAGEFACTORY_TEST_H
 
 #include <QtCore/QObject>
-#include <KMime/kmime_message.h>
+#include <kmime/kmime_message.h>
 
 
 class MessageFactoryTest : public QObject

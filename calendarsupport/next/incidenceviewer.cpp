@@ -30,7 +30,7 @@
 #include <ItemFetchScope>
 #include <Akonadi/Calendar/calendarbase.h>
 
-#include <KCalUtils/kcalutils/IncidenceFormatter>
+#include <KCalUtils/IncidenceFormatter>
 
 #include <KJob>
 #include <KSystemTimeZone>

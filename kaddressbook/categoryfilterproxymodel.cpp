@@ -25,8 +25,8 @@
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/item.h>
 
-#include <KABC/kabc/addressee.h>
-#include <KABC/kabc/contactgroup.h>
+#include <kabc/addressee.h>
+#include <kabc/contactgroup.h>
 
 #include "categoryselectwidget.h"
 

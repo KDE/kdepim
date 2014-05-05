@@ -20,8 +20,8 @@
 
 #include "nodehelper.h"
 
-#include <KMime/kmime_content.h>
-#include <KMime/kmime_message.h>
+#include <kmime/kmime_content.h>
+#include <kmime/kmime_message.h>
 
 KMime::Content *MessageCore::NodeHelper::nextSibling( const KMime::Content *node )
 {

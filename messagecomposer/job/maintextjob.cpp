@@ -34,7 +34,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 
-#include <KMime/kmime_content.h>
+#include <kmime/kmime_content.h>
 
 #include <kpimtextedit/textedit.h>
 

@@ -22,7 +22,7 @@
 #define CRYPTO_FUNCTIONS_H
 
 #include <kleo/enum.h>
-#include <KMime/kmime_headers.h>
+#include <kmime/kmime_headers.h>
 #include <QByteArray>
 
 namespace KMime {

@@ -18,7 +18,7 @@
 #ifndef CONTACTGRANTLEEPRINTOBJECT_H
 #define CONTACTGRANTLEEPRINTOBJECT_H
 #include <QObject>
-#include <KABC/kabc/Addressee>
+#include <KABC/Addressee>
 
 
 namespace KABPrinting {

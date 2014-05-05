@@ -21,7 +21,7 @@
 #include "sieve-vacation.h"
 #include "util/util.h"
 
-#include <KMime/kmime_header_parsing.h>
+#include <kmime/kmime_header_parsing.h>
 #include <ksieve/error.h>
 #include <ksieve/parser.h>
 #include <ksieve/scriptbuilder.h>

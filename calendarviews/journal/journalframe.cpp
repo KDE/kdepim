@@ -32,7 +32,7 @@
 
 #include <KCalCore/Journal>
 
-#include <KCalUtils/kcalutils/IncidenceFormatter>
+#include <KCalUtils/IncidenceFormatter>
 #include <Akonadi/Calendar/ETMCalendar>
 
 #include <KDialog>

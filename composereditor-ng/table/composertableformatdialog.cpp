@@ -21,7 +21,7 @@
 #include "composertableformatdialog.h"
 #include "extendattributes/extendattributesbutton.h"
 
-#include <KPIMTextEdit/kpimtextedit/InsertTableWidget>
+#include <KPIMTextEdit/InsertTableWidget>
 
 #include <KLocalizedString>
 #include <KColorButton>

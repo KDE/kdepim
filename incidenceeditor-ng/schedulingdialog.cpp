@@ -24,7 +24,7 @@
 #ifndef KDEPIM_MOBILE_UI
 #include "visualfreebusywidget.h"
 #endif
-#include <KCalUtils/kcalutils/Stringify>
+#include <KCalUtils/Stringify>
 
 #include <KCalendarSystem>
 #include <KGlobal>

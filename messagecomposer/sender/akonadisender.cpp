@@ -26,7 +26,7 @@
 #include "settings/messagecomposersettings.h"
 #include "messagecomposer/utils/util.h"
 
-#include <KMime/kmime_message.h>
+#include <kmime/kmime_message.h>
 #include <boost/shared_ptr.hpp>
 
 #include <progresswidget/progressmanager.h>

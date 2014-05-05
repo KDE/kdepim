@@ -32,7 +32,7 @@
 #include <AkonadiCore/EntityTreeModel>
 #include <AkonadiWidgets/EntityTreeView>
 
-#include <KMime/kmime_message.h>
+#include <kmime/kmime_message.h>
 
 #include <KCalCore/Todo>
 

@@ -29,7 +29,7 @@
 #include <KLocalizedString>
 #include <KApplication>
 
-#include <KMime/kmime_message.h>
+#include <kmime/kmime_message.h>
 
 using namespace MessageCore;
 

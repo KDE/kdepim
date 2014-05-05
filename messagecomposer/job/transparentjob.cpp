@@ -23,8 +23,8 @@
 #include "contentjobbase_p.h"
 
 #include <qdebug.h>
-#include <KMime/kmime_message.h>
-#include <KMime/kmime_content.h>
+#include <kmime/kmime_message.h>
+#include <kmime/kmime_content.h>
 using namespace MessageComposer;
 
 class MessageComposer::TransparentJobPrivate : public MessageComposer::ContentJobBasePrivate

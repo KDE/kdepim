@@ -30,8 +30,8 @@
 #include <AkonadiCore/Item>
 #include <Akonadi/Contact/ContactGroupExpandJob>
 
-#include <KABC/kabc/Addressee>
-#include <KABC/kabc/ContactGroup>
+#include <KABC/Addressee>
+#include <KABC/ContactGroup>
 
 #include <KColorScheme>
 #include <KGlobal>

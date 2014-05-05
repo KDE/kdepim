@@ -19,8 +19,8 @@
 
 #include "contactsimporthandler.h"
 
-#include <KABC/kabc/addressee.h>
-#include <KABC/kabc/vcardconverter.h>
+#include <kabc/addressee.h>
+#include <KABC/vcardconverter.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 

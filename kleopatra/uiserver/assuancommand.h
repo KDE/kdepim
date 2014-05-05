@@ -43,7 +43,7 @@
 #include <gpg-error.h>
 
 #endif
-#include <KMime/kmime_header_parsing.h>
+#include <kmime/kmime_header_parsing.h>
 
 #include <qwindowdefs.h> // for WId
 

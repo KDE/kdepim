@@ -21,7 +21,7 @@
 
 #include "coisceim_plugin.h"
 
-#include <KontactInterface/kontactinterface/Core>
+#include <KontactInterface/Core>
 
 #include <KAction>
 #include <KActionCollection>

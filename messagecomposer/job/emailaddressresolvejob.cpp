@@ -29,7 +29,7 @@
 #include "messagecomposer/composer/composer.h"
 #include "messagecomposer/part/infopart.h"
 
-#include <KPIMUtils/kpimutils/Email>
+#include <KPIMUtils/Email>
 
 using namespace MessageComposer;
 

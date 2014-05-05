@@ -18,7 +18,7 @@
 #include "updatecontactjob.h"
 #include <Akonadi/Contact/contactsearchjob.h>
 #include <AkonadiCore/itemmodifyjob.h>
-#include <KABC/kabc/addressee.h>
+#include <kabc/addressee.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 

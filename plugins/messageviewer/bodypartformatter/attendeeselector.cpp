@@ -20,7 +20,7 @@
 #include "attendeeselector.h"
 
 #include <libkdepim/addressline/addresseelineedit.h>
-#include <KPIMUtils/kpimutils/Email>
+#include <KPIMUtils/Email>
 
 #include <klocale.h>
 #include <kpushbutton.h>

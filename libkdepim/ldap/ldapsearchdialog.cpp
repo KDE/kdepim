@@ -56,7 +56,7 @@
 #include <KPushButton>
 #include <KGlobal>
 
-#include <kpimutils/ProgressIndicatorLabel>
+#include <KPIMUtils/ProgressIndicatorLabel>
 
 using namespace KLDAP;
 

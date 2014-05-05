@@ -43,8 +43,8 @@
 #include <calendarsupport/categoryconfig.h>
 #include <incidenceeditor-ng/categoryeditdialog.h>
 #include <incidenceeditor-ng/editorconfig.h>
-#include <KABC/kabc/addressee.h>
-#include <KABC/kabc/contactgroup.h>
+#include <kabc/addressee.h>
+#include <kabc/contactgroup.h>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kconfigskeleton.h>

@@ -24,10 +24,10 @@
 #include "libkdepim/job/addcontactjob.h"
 
 #include <CollectionComboBox>
-#include <KABC/kabc/Addressee>
+#include <KABC/Addressee>
 #include <KLineEdit>
 #include <KLocale>
-#include <KPIMUtils/kpimutils/Email>
+#include <KPIMUtils/Email>
 
 #include <QGridLayout>
 #include <QLabel>

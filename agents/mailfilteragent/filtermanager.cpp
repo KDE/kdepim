@@ -35,7 +35,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <KMime/kmime_message.h>
+#include <kmime/kmime_message.h>
 #include <mailcommon/filter/filterimporterexporter.h>
 #include <mailcommon/filter/filterlog.h>
 #include <mailcommon/filter/mailfilter.h>

@@ -26,7 +26,7 @@
 
 #include "contactfields.h"
 
-#include <KABC/kabc/Addressee>
+#include <KABC/Addressee>
 
 #include <QtCore/QHash>
 #include <QtCore/QStringList>

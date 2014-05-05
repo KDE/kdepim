@@ -30,7 +30,7 @@
 #include "ui_addeditblogbase.h"
 #include "bilboblog.h"
 
-#include <KBlog/blog.h>
+#include <kblog/blog.h>
 
 class BilboBlog;
 class KJob;

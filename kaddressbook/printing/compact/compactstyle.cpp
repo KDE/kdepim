@@ -28,7 +28,7 @@
 #include "printingwizard.h"
 #include "ui_compactstyle.h"
 
-#include <KABC/kabc/Addressee>
+#include <KABC/Addressee>
 
 #include <KLocalizedString>
 #include <KConfigGroup>

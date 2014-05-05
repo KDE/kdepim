@@ -30,12 +30,12 @@
 #include <KCalCore/Todo>
 #include <KCalCore/Event>
 #include <KCalCore/Attachment>
-#include <KCalUtils/kcalutils/IncidenceFormatter>
-#include <KPIMUtils/kpimutils/Email>
+#include <KCalUtils/IncidenceFormatter>
+#include <KPIMUtils/Email>
 
-#include <KCalUtils/kcalutils/DndFactory>
-#include <KCalUtils/kcalutils/ICalDrag>
-#include <KCalUtils/kcalutils/VCalDrag>
+#include <KCalUtils/DndFactory>
+#include <KCalUtils/ICalDrag>
+#include <KCalUtils/VCalDrag>
 
 #include <Akonadi/Calendar/ETMCalendar>
 

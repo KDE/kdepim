@@ -31,7 +31,7 @@
 
 #include <Akonadi/KMime/messagestatus.h>
 #include <KMime/kmime_dateformatter.h>
-#include <KPIMUtils/kpimutils/Email>
+#include <KPIMUtils/Email>
 #include <messagecore/misc/mailinglist.h>
 #include <messagecore/helpers/messagehelpers.h>
 #include <messagecore/utils/stringutil.h>

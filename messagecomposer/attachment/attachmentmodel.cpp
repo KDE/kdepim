@@ -30,7 +30,7 @@
 #include <KLocale>
 #include <KTempDir>
 
-#include <KMime/kmime_util.h>
+#include <kmime/kmime_headers.h>
 #include <AkonadiCore/item.h>
 
 #include <KPIMUtils/kpimutils/kfileio.h>

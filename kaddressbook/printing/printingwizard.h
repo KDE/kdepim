@@ -27,7 +27,7 @@
 #ifndef PRINTINGWIZARD_H
 #define PRINTINGWIZARD_H
 
-#include <KABC/kabc/Addressee>
+#include <KABC/Addressee>
 #include <KAssistantDialog>
 
 #include <QtCore/QStringList>

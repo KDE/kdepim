@@ -18,8 +18,8 @@
 #include "importwizard.h"
 #include "importaddressbookpage.h"
 
-#include <KABC/kabc/Addressee>
-#include <KABC/kabc/contactgroup.h>
+#include <KABC/Addressee>
+#include <kabc/contactgroup.h>
 #include <KLocale>
 #include <QDebug>
 #include <AkonadiCore/ItemCreateJob>

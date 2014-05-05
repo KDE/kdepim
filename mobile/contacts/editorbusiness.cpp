@@ -21,7 +21,7 @@
 
 #include "ui_editorbusiness.h"
 
-#include <KABC/kabc/Addressee>
+#include <KABC/Addressee>
 
 #include <QAbstractTextDocumentLayout>
 

@@ -33,7 +33,7 @@
 #include <KCalCore/FileStorage>
 #include <KCalCore/MemoryCalendar>
 
-#include <KCalUtils/kcalutils/Stringify>
+#include <KCalUtils/Stringify>
 
 #include <KDebug>
 #include <KGlobal>

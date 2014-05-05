@@ -52,8 +52,8 @@
 
 #include <Akonadi/Contact/contactsearchjob.h>
 
-#include <KMime/kmime_content.h>
-#include <KPIMUtils/kpimutils/Email>
+#include <kmime/kmime_content.h>
+#include <KPIMUtils/Email>
 #include <KPIMUtils/kpimutils/KFileIO>
 
 #include <KMenu>

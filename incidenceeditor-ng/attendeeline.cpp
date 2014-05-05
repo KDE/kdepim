@@ -21,9 +21,9 @@
 #include "attendeeline.h"
 #include "attendeedata.h"
 
-#include <KCalUtils/kcalutils/Stringify>
+#include <KCalUtils/Stringify>
 
-#include <KPIMUtils/kpimutils/Email>
+#include <KPIMUtils/Email>
 
 #include <KCompletionBox>
 #include <KDebug>

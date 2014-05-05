@@ -5,7 +5,7 @@
 
 #include "messagecore_export.h"
 
-#include <KMime/kmime_message.h>
+#include <kmime/kmime_message.h>
 #include <kurl.h>
 
 #include <QtCore/QByteArray>

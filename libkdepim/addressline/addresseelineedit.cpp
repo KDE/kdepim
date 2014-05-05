@@ -41,7 +41,7 @@
 
 #include <baloo/pim/contactcompleter.h>
 
-#include <KPIMUtils/kpimutils/Email>
+#include <KPIMUtils/Email>
 #include <KColorScheme>
 
 #include <kldap/LdapServer>

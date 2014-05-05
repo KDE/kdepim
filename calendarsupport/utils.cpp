@@ -46,11 +46,11 @@
 #include <KCalCore/ICalFormat>
 #include <KCalCore/FileStorage>
 
-#include <KCalUtils/kcalutils/DndFactory>
-#include <KCalUtils/kcalutils/ICalDrag>
-#include <KCalUtils/kcalutils/VCalDrag>
+#include <KCalUtils/DndFactory>
+#include <KCalUtils/ICalDrag>
+#include <KCalUtils/VCalDrag>
 
-#include <MailTransport/mailtransport/TransportManager>
+#include <MailTransport/TransportManager>
 
 #include <KIconLoader>
 #include <KUrl>
@@ -64,7 +64,7 @@
 
 #include <boost/bind.hpp>
 #include <KMessageBox>
-#include <KPIMIdentities/kpimidentities/IdentityManager>
+#include <KPIMIdentities/IdentityManager>
 #include <KFileDialog>
 #include <KIO/NetAccess>
 #include <KDebug>

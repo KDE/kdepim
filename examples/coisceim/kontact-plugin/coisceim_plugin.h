@@ -24,7 +24,7 @@
 
 #include "coisceimwidgetinterface.h"
 
-#include <KontactInterface/kontactinterface/UniqueAppHandler>
+#include <KontactInterface/UniqueAppHandler>
 
 namespace KontactInterface {
   class Plugin;

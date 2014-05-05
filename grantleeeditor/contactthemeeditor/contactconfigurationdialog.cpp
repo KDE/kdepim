@@ -24,7 +24,7 @@
 
 #include <Akonadi/Contact/ContactEditor>
 
-#include <KABC/kabc/VCardConverter>
+#include <KABC/VCardConverter>
 
 #include <KLocalizedString>
 #include <KConfig>

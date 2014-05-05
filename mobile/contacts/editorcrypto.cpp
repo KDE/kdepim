@@ -23,7 +23,7 @@
 
 #include "libkleo/kleo/enum.h"
 
-#include <KABC/kabc/Addressee>
+#include <KABC/Addressee>
 
 class EditorCrypto::Private
 {

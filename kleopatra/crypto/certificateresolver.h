@@ -36,7 +36,7 @@
 #include <utils/pimpl_ptr.h>
 
 #include <gpgme++/key.h>
-#include <KMime/kmime_header_parsing.h>
+#include <kmime/kmime_header_parsing.h>
 
 #include <KSharedConfig>
 

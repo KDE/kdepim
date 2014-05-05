@@ -78,8 +78,8 @@
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>
 #include <gpgme.h>
-#include <KMime/kmime_message.h>
-#include <KMime/kmime_util.h>
+#include <kmime/kmime_message.h>
+#include <kmime/kmime_headers.h>
 
 // KDE includes
 #include <kdebug.h>

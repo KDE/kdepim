@@ -39,7 +39,7 @@
 #define MAILVIEWERUTIL_H
 
 #include "messageviewer_export.h"
-#include "KMime/kmime_content.h"
+#include "kmime/kmime_content.h"
 #include <KMimeType>
 #include <QString>
 #include <KService>

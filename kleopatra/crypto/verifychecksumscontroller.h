@@ -40,7 +40,7 @@
 #include <utils/pimpl_ptr.h>
 
 #include <gpgme++/global.h>
-#include <KMime/kmime_header_parsing.h>
+#include <kmime/kmime_header_parsing.h>
 
 #include <boost/shared_ptr.hpp>
 

@@ -22,7 +22,7 @@
 #include "locationmodel.h"
 #include "ui_editorlocation.h"
 
-#include <KABC/kabc/Addressee>
+#include <KABC/Addressee>
 #include <KMessageBox>
 
 #include <KLocalizedString>

@@ -17,10 +17,10 @@
 #include "attachpropertydialog.h"
 #include "qwmf.h"
 
-#include <KTNEF/ktnef/KTNEFAttach>
-#include <KTNEF/ktnef/KTNEFProperty>
-#include <KTNEF/ktnef/KTNEFPropertySet>
-#include <KTNEF/ktnef/KTNEFDefs>
+#include <KTNEF/KTNEFAttach>
+#include <KTNEF/KTNEFProperty>
+#include <KTNEF/KTNEFPropertySet>
+#include <KTNEF/KTNEFDefs>
 
 #include <KApplication>
 #include <QDebug>

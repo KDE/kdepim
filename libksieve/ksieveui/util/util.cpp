@@ -43,8 +43,8 @@
 #include "sieve-vacation.h"
 
 #include <agentmanager.h>
-#include <KImap/kimap/loginjob.h>
-#include <KMime/kmime_message.h>
+#include <kimap/loginjob.h>
+#include <kmime/kmime_message.h>
 #include <MailTransport/mailtransport/transport.h>
 
 using namespace KSieveUi;

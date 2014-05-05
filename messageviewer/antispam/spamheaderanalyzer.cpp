@@ -38,8 +38,8 @@
 
 #include "antispamconfig.h"
 
-#include <KMime/kmime_message.h>
-#include <KMime/kmime_headers.h>
+#include <kmime/kmime_message.h>
+#include <kmime/kmime_headers.h>
 
 #include <qdebug.h>
 

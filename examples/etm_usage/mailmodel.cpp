@@ -21,7 +21,7 @@
 
 #include "mailmodel.h"
 
-#include <KMime/kmime_message.h>
+#include <kmime/kmime_message.h>
 
 #include <boost/shared_ptr.hpp>
 

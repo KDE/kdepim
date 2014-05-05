@@ -25,7 +25,7 @@
 #include "qtest_messagecomposer.h"
 #include "cryptofunctions.h"
 
-#include <KMime/kmime_content.h>
+#include <kmime/kmime_content.h>
 
 #include <kleo/enum.h>
 #include <kleo/keylistjob.h>

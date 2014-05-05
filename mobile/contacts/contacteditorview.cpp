@@ -33,7 +33,7 @@
 #include <AkonadiCore/Item>
 #include <AkonadiCore/ItemFetchScope>
 
-#include <KABC/kabc/Addressee>
+#include <KABC/Addressee>
 #include <KLocalizedString>
 #include <QDebug>
 

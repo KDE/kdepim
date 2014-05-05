@@ -25,8 +25,8 @@
 #include <QDebug>
 #include <qtest_kde.h>
 
-#include <KMime/kmime_content.h>
-#include <KMime/kmime_headers.h>
+#include <kmime/kmime_content.h>
+#include <kmime/kmime_headers.h>
 using namespace KMime;
 
 #include <messagecore/attachment/attachmentfrommimecontentjob.h>

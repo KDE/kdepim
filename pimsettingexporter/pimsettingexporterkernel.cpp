@@ -17,8 +17,8 @@
 
 #include "pimsettingexporterkernel.h"
 
-#include <KABC/kabc/Addressee>
-#include <KABC/kabc/ContactGroup>
+#include <KABC/Addressee>
+#include <KABC/ContactGroup>
 
 #include <KAlarmCal/kacalendar.h>
 #include <kglobal.h>

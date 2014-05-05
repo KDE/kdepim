@@ -29,8 +29,8 @@
 
 #include <qdebug.h>
 
-#include <KMime/kmime_message.h>
-#include <KMime/kmime_content.h>
+#include <kmime/kmime_message.h>
+#include <kmime/kmime_content.h>
 #include <QBuffer>
 
 #include <gpgme++/global.h>

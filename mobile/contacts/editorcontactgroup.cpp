@@ -28,8 +28,8 @@
 #include <AkonadiCore/ItemFetchJob>
 #include <AkonadiCore/ItemFetchScope>
 
-#include <KABC/kabc/Addressee>
-#include <KABC/kabc/ContactGroup>
+#include <KABC/Addressee>
+#include <KABC/ContactGroup>
 
 #include <KLocalizedString>
 #include <QDebug>

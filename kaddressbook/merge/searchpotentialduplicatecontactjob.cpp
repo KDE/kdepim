@@ -18,7 +18,7 @@
 
 #include "searchpotentialduplicatecontactjob.h"
 
-#include <KABC/kabc/Addressee>
+#include <KABC/Addressee>
 
 using namespace KABMergeContacts;
 

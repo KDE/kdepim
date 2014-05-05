@@ -21,7 +21,7 @@
 #include <QString>
 #include <KPIMUtils/kpimutils/linklocator.h>
 
-#include <KMime/kmime_message.h>
+#include <kmime/kmime_message.h>
 #include <KMime/kmime_dateformatter.h>
 #include "antispam/spamheaderanalyzer.h"
 

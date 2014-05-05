@@ -21,9 +21,9 @@
 
 #include <kfiledialog.h>
 #include <klocale.h>
-#include <KMbox/mbox.h>
+#include <kmbox/mbox.h>
 #include <kmessagebox.h>
-#include <KMime/kmime_message.h>
+#include <kmime/kmime_message.h>
 
 QString NotesExportHandler::dialogText() const
 {

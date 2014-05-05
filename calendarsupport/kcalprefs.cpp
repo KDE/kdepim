@@ -27,10 +27,10 @@
 
 #include <KMime/HeaderParsing>
 
-#include <KPIMIdentities/kpimidentities/Identity>
-#include <KPIMIdentities/kpimidentities/IdentityManager>
+#include <KPIMIdentities/Identity>
+#include <KPIMIdentities/IdentityManager>
 
-#include <KPIMUtils/kpimutils/Email>
+#include <KPIMUtils/Email>
 
 #include <KEMailSettings>
 #include <KSystemTimeZone>

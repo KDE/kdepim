@@ -22,8 +22,8 @@
 #include "interfaces/bodypart.h"
 #include "viewer/viewer.h"
 
-#include <KABC/kabc/Picture>
-#include <KABC/kabc/Addressee>
+#include <KABC/Picture>
+#include <KABC/Addressee>
 
 #include <QObject>
 

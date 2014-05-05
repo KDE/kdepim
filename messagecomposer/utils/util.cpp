@@ -36,8 +36,8 @@
 #include <KGlobal>
 
 #include <KMime/kmime_charfreq.h>
-#include <KMime/kmime_content.h>
-#include <KMime/kmime_util.h>
+#include <kmime/kmime_content.h>
+#include <kmime/kmime_headers.h>
 #include <MailTransport/mailtransport/messagequeuejob.h>
 #include <AkonadiCore/item.h>
 #include <Akonadi/KMime/messagestatus.h>

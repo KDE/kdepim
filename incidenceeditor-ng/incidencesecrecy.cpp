@@ -25,7 +25,7 @@
 #include "ui_dialogdesktop.h"
 #endif
 
-#include <KCalUtils/kcalutils/Stringify>
+#include <KCalUtils/Stringify>
 
 using namespace IncidenceEditorNG;
 

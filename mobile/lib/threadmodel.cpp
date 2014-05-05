@@ -25,7 +25,7 @@
 #include "threadgroupermodel.h"
 
 #include <Akonadi/KMime/messagestatus.h>
-#include <KMime/kmime_message.h>
+#include <kmime/kmime_message.h>
 
 class ThreadModelPrivate
 {

@@ -39,7 +39,7 @@
 #include <KCalCore/Incidence>
 #include <KCalCore/Todo>
 
-#include <KCalUtils/kcalutils/RecurrenceActions>
+#include <KCalUtils/RecurrenceActions>
 
 #include <KGlobal>
 #include <KMessageBox>

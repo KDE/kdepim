@@ -18,9 +18,9 @@
 #include "balsaaddressbook.h"
 #include "importwizardutil.h"
 
-#include <KABC/kabc/Addressee>
-#include <KABC/kabc/contactgroup.h>
-#include <KABC/kabc/LDIFConverter>
+#include <KABC/Addressee>
+#include <kabc/contactgroup.h>
+#include <KABC/LDIFConverter>
 
 #include <KConfig>
 #include <KConfigGroup>

@@ -30,7 +30,7 @@
 #include <qgpgme/dataprovider.h>
 #endif // QGPGME_FOUND
 
-#include <KABC/kabc/VCardConverter>
+#include <KABC/VCardConverter>
 
 #include <QDebug>
 #include <KDialog>

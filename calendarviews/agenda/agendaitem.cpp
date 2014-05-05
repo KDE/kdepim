@@ -29,13 +29,13 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include <KABC/kabc/VCardDrag>
+#include <KABC/VCardDrag>
 
-#include <KCalUtils/kcalutils/ICalDrag>
-#include <KCalUtils/kcalutils/VCalDrag>
-#include <KCalUtils/kcalutils/IncidenceFormatter>
+#include <KCalUtils/ICalDrag>
+#include <KCalUtils/VCalDrag>
+#include <KCalUtils/IncidenceFormatter>
 
-#include <KPIMUtils/kpimutils/Email>
+#include <KPIMUtils/Email>
 
 #include <KLocalizedString>
 #include <KMessageBox>

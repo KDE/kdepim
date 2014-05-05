@@ -30,10 +30,10 @@
 #include <KMime/Message>
 #include <KMime/kmime_mdn.h>
 #include <KMime/kmime_dateformatter.h>
-#include <KMime/kmime_headers.h>
+#include <kmime/kmime_headers.h>
 #include <KPIMIdentities/kpimidentities/identitymanager.h>
 #include <KPIMIdentities/kpimidentities/identity.h>
-#include <KPIMUtils/kpimutils/Email>
+#include <KPIMUtils/Email>
 #include <QDebug>
 
 using namespace MessageCore;

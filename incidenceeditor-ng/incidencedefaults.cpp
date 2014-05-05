@@ -26,14 +26,14 @@
 #include <calendarsupport/kcalprefs.h>
 #include <Akonadi/Calendar/calendarsettings.h>
 
-#include <KABC/kabc/Addressee>
+#include <KABC/Addressee>
 
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
 #include <KCalCore/Journal>
 #include <KCalCore/Alarm>
 
-#include <KPIMUtils/kpimutils/Email>
+#include <KPIMUtils/Email>
 #include <KIO/Job>
 #include <KIO/NetAccess>
 #include <KDebug>

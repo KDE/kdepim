@@ -27,7 +27,7 @@
 #include <calendarsupport/utils.h>
 
 #include <KCalCore/Incidence>
-#include <KCalUtils/kcalutils/IncidenceFormatter>
+#include <KCalUtils/IncidenceFormatter>
 
 #include <QDebug>
 

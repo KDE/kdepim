@@ -28,7 +28,7 @@
 #include "constants.h"
 
 #include <kurl.h>
-#include <KBlog/blog.h>
+#include <kblog/blog.h>
 
 #include <QObject>
 /**

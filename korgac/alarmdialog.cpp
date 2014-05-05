@@ -38,14 +38,14 @@
 
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
-#include <KCalUtils/kcalutils/IncidenceFormatter>
+#include <KCalUtils/IncidenceFormatter>
 
-#include <KPIMIdentities/kpimidentities/Identity>
-#include <KPIMIdentities/kpimidentities/IdentityManager>
+#include <KPIMIdentities/Identity>
+#include <KPIMIdentities/IdentityManager>
 
 #include <AkonadiCore/Item>
 
-#include <MailTransport/mailtransport/TransportManager>
+#include <MailTransport/TransportManager>
 
 #include <KComboBox>
 #include <KDebug>

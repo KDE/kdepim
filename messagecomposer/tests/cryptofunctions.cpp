@@ -26,8 +26,8 @@
 #include <kleo/enum.h>
 #include <kleo/keylistjob.h>
 #include <kleo/cryptobackendfactory.h>
-#include <KMime/kmime_message.h>
-#include <KMime/kmime_content.h>
+#include <kmime/kmime_message.h>
+#include <kmime/kmime_content.h>
 
 #include <messageviewer/viewer/objecttreeparser.h>
 #include <messageviewer/viewer/objecttreeemptysource.h>

@@ -26,7 +26,7 @@
 
 #include "printing/printstyle.h"
 
-#include <KABC/kabc/Addressee>
+#include <KABC/Addressee>
 
 namespace KABPrinting {
 

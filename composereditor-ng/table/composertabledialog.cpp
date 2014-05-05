@@ -20,7 +20,7 @@
 
 #include "composertabledialog.h"
 
-#include <KPIMTextEdit/kpimtextedit/InsertTableWidget>
+#include <KPIMTextEdit/InsertTableWidget>
 
 #include <KLocalizedString>
 #include <KSeparator>

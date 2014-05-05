@@ -41,8 +41,8 @@
 #include <ksystemtimezone.h>
 
 #include <KCalCore/Event>
-#include <KCalUtils/kcalutils/HtmlExport>
-#include <KCalUtils/kcalutils/HTMLExportSettings>
+#include <KCalUtils/HtmlExport>
+#include <kcalutils/htmlexportsettings.h>
 #include <AkonadiCore/AgentManager>
 #include <AkonadiCore/AgentInstanceCreateJob>
 #include <AkonadiCore/CollectionFetchJob>

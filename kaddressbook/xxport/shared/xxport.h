@@ -20,7 +20,7 @@
 #ifndef XXPORT_H
 #define XXPORT_H
 
-#include <KABC/kabc/Addressee>
+#include <KABC/Addressee>
 
 #include <QtCore/QMap>
 

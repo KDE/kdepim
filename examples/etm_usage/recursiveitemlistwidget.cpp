@@ -33,7 +33,7 @@
 #include <Akonadi/Contact/contactstreemodel.h>
 #include <AkonadiWidgets/entitylistview.h>
 #include <AkonadiWidgets/entitytreeview.h>
-#include <KABC/kabc/Addressee>
+#include <KABC/Addressee>
 #include <AkonadiCore/ItemFetchScope>
 
 RecursiveItemListWidget::RecursiveItemListWidget(QWidget* parent, Qt::WindowFlags f)

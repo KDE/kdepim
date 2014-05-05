@@ -16,7 +16,7 @@
 */
 
 #include "mergecontactwidgetlist.h"
-#include <KABC/kabc/Addressee>
+#include <KABC/Addressee>
 
 using namespace KABMergeContacts;
 MergeContactWidgetList::MergeContactWidgetList(QWidget *parent)

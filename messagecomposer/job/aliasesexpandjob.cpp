@@ -27,7 +27,7 @@
 #include <Akonadi/Contact/contactgroupsearchjob.h>
 #include <Akonadi/Contact/contactsearchjob.h>
 
-#include <KPIMUtils/kpimutils/Email>
+#include <KPIMUtils/Email>
 
 #include <messagecore/utils/stringutil.h>
 

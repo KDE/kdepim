@@ -90,7 +90,7 @@
 #include <klinkitemselectionmodel.h>
 #include <klocalizedstring.h>
 #include <kmessagebox.h>
-#include <KMime/kmime_message.h>
+#include <kmime/kmime_message.h>
 #include <kmimetype.h>
 #include <KPIMIdentities/kpimidentities/identity.h>
 #include <KPIMIdentities/kpimidentities/identitymanager.h>

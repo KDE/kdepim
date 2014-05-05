@@ -27,7 +27,7 @@
 #include <KLocale>
 #include <KCalCore/Incidence>
 #include "note.h"
-#include <KABC/kabc/Addressee>
+#include <KABC/Addressee>
 
 MixedTreeModel::MixedTreeModel(Akonadi::ChangeRecorder* monitor, QObject* parent)
   : EntityTreeModel(monitor, parent)

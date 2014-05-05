@@ -22,7 +22,7 @@
 
 #include <QDebug>
 
-#include <KMime/kmime_content.h>
+#include <kmime/kmime_content.h>
 
 using namespace MessageComposer;
 

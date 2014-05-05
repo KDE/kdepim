@@ -20,7 +20,7 @@
 #include "header/grantleeheaderformatter.h"
 #include "header/headerstrategy.h"
 
-#include <KMime/kmime_message.h>
+#include <kmime/kmime_message.h>
 
 using namespace MessageViewer;
 

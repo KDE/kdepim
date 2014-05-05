@@ -19,7 +19,7 @@
 #include <qdebug.h>
 #include <kiconloader.h>
 #include <klocale.h>
-#include <KMime/kmime_header_parsing.h>
+#include <kmime/kmime_header_parsing.h>
 #include <kwindowsystem.h>
 #include <KSeparator>
 #include <KGlobal>

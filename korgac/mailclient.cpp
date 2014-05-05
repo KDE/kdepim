@@ -33,17 +33,17 @@
 #include <KCalCore/Incidence>
 #include <KCalCore/IncidenceBase>
 
-#include <KCalUtils/kcalutils/IncidenceFormatter>
+#include <KCalUtils/IncidenceFormatter>
 
 #include <KMime/Message>
 
-#include <KPIMIdentities/kpimidentities/Identity>
+#include <KPIMIdentities/Identity>
 
-#include <KPIMUtils/kpimutils/Email>
+#include <KPIMUtils/Email>
 
-#include <MailTransport/mailtransport/MessageQueueJob>
-#include <MailTransport/mailtransport/Transport>
-#include <MailTransport/mailtransport/TransportManager>
+#include <MailTransport/MessageQueueJob>
+#include <MailTransport/Transport>
+#include <MailTransport/TransportManager>
 
 #include <KDebug>
 #include <KLocale>

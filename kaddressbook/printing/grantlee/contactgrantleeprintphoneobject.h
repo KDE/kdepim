@@ -18,7 +18,7 @@
 #ifndef CONTACTGRANTLEEPRINTPHONEOBJECT_H
 #define CONTACTGRANTLEEPRINTPHONEOBJECT_H
 #include <QObject>
-#include <KABC/kabc/PhoneNumber>
+#include <KABC/PhoneNumber>
 namespace KABPrinting {
 class ContactGrantleePrintPhoneObject : public QObject
 {

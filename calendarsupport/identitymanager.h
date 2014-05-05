@@ -24,7 +24,7 @@
 #define CALENDARSUPPORT_IDENTITYMANAGER_H
 
 #include "calendarsupport_export.h"
-#include <KPIMIdentities/kpimidentities/IdentityManager>
+#include <KPIMIdentities/IdentityManager>
 
 namespace CalendarSupport {
 
