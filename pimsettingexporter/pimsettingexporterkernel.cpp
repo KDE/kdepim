@@ -20,7 +20,7 @@
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
 
-#include <KAlarmCal/kacalendar.h>
+#include <kalarmcal/kacalendar.h>
 #include <kglobal.h>
 #include <KPIMIdentities/kpimidentities/identitymanager.h>
 #include <messagecomposer/sender/akonadisender.h>

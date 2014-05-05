@@ -27,11 +27,11 @@
 #include "bilboblog.h"
 #include "dbman.h"
 
-#include <KBlog/gdata.h>
-#include <KBlog/blogger1.h>
-#include <KBlog/metaweblog.h>
-#include <KBlog/movabletype.h>
-#include <KBlog/wordpressbuggy.h>
+#include <kblog/gdata.h>
+#include <kblog/blogger1.h>
+#include <kblog/metaweblog.h>
+#include <kblog/movabletype.h>
+#include <kblog/wordpressbuggy.h>
 #include <kurl.h>
 #include <kmessagebox.h>
 #include <qdebug.h>

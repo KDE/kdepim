@@ -29,8 +29,8 @@
 #include <Akonadi/KMime/SpecialMailCollectionsRequestJob>
 #include <Akonadi/KMime/SpecialMailCollectionsDiscoveryJob>
 
-#include <KPIMIdentities/kpimidentities/Identity>
-#include <KPIMIdentities/kpimidentities/IdentityManager>
+#include <KPIMIdentities/Identity>
+#include <KPIMIdentities/IdentityManager>
 
 #include <QDebug>
 #include <KLocale>

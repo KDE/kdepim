@@ -20,7 +20,7 @@
 #include "contactsimporthandler.h"
 
 #include <kabc/addressee.h>
-#include <KABC/vcardconverter.h>
+#include <kabc/vcardconverter.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 

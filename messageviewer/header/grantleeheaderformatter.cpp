@@ -25,7 +25,7 @@
 #include <messagecore/utils/stringutil.h>
 
 #include <kmime/kmime_message.h>
-#include <KMime/kmime_dateformatter.h>
+#include <kmime/kmime_dateformatter.h>
 
 
 #include <KLocalizedString>

@@ -21,7 +21,7 @@
 #include "filterinfo.h"
 
 // KDEPIM Includes
-#include <KPIMUtils/kpimutils/KFileIO>
+#include <KPIMUtils/KFileIO>
 
 // Akonadi Includes
 #include <CollectionFetchJob>

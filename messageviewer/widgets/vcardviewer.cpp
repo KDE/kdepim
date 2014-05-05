@@ -24,7 +24,7 @@
 #include "settings/globalsettings.h"
 #include "kaddressbookgrantlee/widget/grantleecontactviewer.h"
 
-#include <KABC/vcardconverter.h>
+#include <kabc/vcardconverter.h>
 using KABC::VCardConverter;
 using KABC::Addressee;
 

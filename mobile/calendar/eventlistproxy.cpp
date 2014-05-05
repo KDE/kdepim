@@ -23,7 +23,7 @@
 
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
-#include <KCalUtils/kcalutils/IncidenceFormatter>
+#include <KCalUtils/IncidenceFormatter>
 
 #include <KGlobal>
 #include <KLocale>

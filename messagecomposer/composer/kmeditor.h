@@ -25,7 +25,7 @@
 
 #include "messagecomposer_export.h"
 
-#include <kpimtextedit/TextEdit>
+#include <KPIMTextEdit/TextEdit>
 #include <KUrl>
 
 namespace KPIMIdentities {

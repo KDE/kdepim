@@ -26,7 +26,7 @@
 
 #include <KCmdLineArgs>
 #include <QDebug>
-#include <KontactInterface/pimuniqueapplication.h>
+#include <kontactinterface/pimuniqueapplication.h>
 
 //-----------------------------------------------------------------------------
 

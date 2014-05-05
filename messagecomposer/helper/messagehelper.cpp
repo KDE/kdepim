@@ -28,11 +28,11 @@
 #include <KDateTime>
 #include <KProtocolManager>
 #include <KMime/Message>
-#include <KMime/kmime_mdn.h>
-#include <KMime/kmime_dateformatter.h>
+#include <kmime/kmime_mdn.h>
+#include <kmime/kmime_dateformatter.h>
 #include <kmime/kmime_headers.h>
-#include <KPIMIdentities/kpimidentities/identitymanager.h>
-#include <KPIMIdentities/kpimidentities/identity.h>
+#include <kpimidentities/identitymanager.h>
+#include <kpimidentities/identity.h>
 #include <KPIMUtils/Email>
 #include <QDebug>
 

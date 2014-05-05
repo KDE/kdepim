@@ -30,7 +30,7 @@
 #include <CollectionModifyJob>
 #include <EntityDisplayAttribute>
 
-#include <KPIMIdentities/kpimidentities/IdentityCombo>
+#include <KPIMIdentities/IdentityCombo>
 
 #include <KColorScheme>
 #include <KComboBox>

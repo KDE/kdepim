@@ -30,7 +30,7 @@
 #include <KPIMIdentities/kpimidentities/identity.h>
 
 #include <Akonadi/KMime/messagestatus.h>
-#include <KMime/kmime_dateformatter.h>
+#include <kmime/kmime_dateformatter.h>
 #include <KPIMUtils/Email>
 #include <messagecore/misc/mailinglist.h>
 #include <messagecore/helpers/messagehelpers.h>

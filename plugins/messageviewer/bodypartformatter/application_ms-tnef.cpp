@@ -35,19 +35,19 @@
 #include <messagecore/utils/stringutil.h>
 #include <messageviewer/utils/util.h>
 
-#include <KPIMUtils/kpimutils/KFileIO>
+#include <KPIMUtils/KFileIO>
 
 #include <KCalCore/Event>
 #include <KCalCore/Incidence>
 #include <KCalCore/ICalFormat>
 #include <KCalCore/MemoryCalendar>
 
-#include <KCalUtils/kcalutils/IncidenceFormatter>
+#include <KCalUtils/IncidenceFormatter>
 
-#include <KTNEF/formatter.h>
-#include <KTNEF/ktnefparser.h>
-#include <KTNEF/ktnefmessage.h>
-#include <KTNEF/ktnefattach.h>
+#include <ktnef/formatter.h>
+#include <ktnef/ktnefparser.h>
+#include <ktnef/ktnefmessage.h>
+#include <ktnef/ktnefattach.h>
 
 #include <QDebug>
 #include <KGlobal>

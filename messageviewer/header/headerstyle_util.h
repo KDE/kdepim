@@ -22,7 +22,7 @@
 #include <KPIMUtils/kpimutils/linklocator.h>
 
 #include <kmime/kmime_message.h>
-#include <KMime/kmime_dateformatter.h>
+#include <kmime/kmime_dateformatter.h>
 #include "antispam/spamheaderanalyzer.h"
 
 #include "header/headerstyle.h"

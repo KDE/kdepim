@@ -34,7 +34,7 @@
 
 #include "messagecore/utils/stringutil.h"
 
-#include <KMime/kmime_dateformatter.h> // kdepimlibs
+#include <kmime/kmime_dateformatter.h> // kdepimlibs
 
 #include <Item>
 #include <QHelpEvent>

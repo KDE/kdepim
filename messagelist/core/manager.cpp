@@ -40,7 +40,7 @@
 
 #include <QPixmap>
 
-#include <KMime/kmime_dateformatter.h> // kdepimlibs
+#include <kmime/kmime_dateformatter.h> // kdepimlibs
 
 #include <KConfig>
 #include <QDebug>

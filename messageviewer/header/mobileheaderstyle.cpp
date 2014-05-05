@@ -35,7 +35,7 @@ using KPIMUtils::LinkLocator;
 #include <KApplication>
 
 #include <kmime/kmime_message.h>
-#include <KMime/kmime_dateformatter.h>
+#include <kmime/kmime_dateformatter.h>
 
 using namespace MessageCore;
 using KPIMUtils::LinkLocator;

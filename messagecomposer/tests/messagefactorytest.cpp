@@ -41,7 +41,7 @@
 #include <messageviewer/viewer/objecttreeparser.h>
 
 #include "qtest_messagecomposer.h"
-#include <KMime/kmime_dateformatter.h>
+#include <kmime/kmime_dateformatter.h>
 
 #include <KPIMIdentities/kpimidentities/identitymanager.h>
 #include <KPIMIdentities/kpimidentities/identity.h>

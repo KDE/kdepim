@@ -23,8 +23,8 @@
 */
 
 #include "bilboblog.h"
-#include <KBlog/wordpressbuggy.h>
-#include <KBlog/gdata.h>
+#include <kblog/wordpressbuggy.h>
+#include <kblog/gdata.h>
 #include <QDebug>
 
 #include <QApplication>
