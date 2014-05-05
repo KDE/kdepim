@@ -61,8 +61,8 @@
 #include <Akonadi/Contact/ContactViewer>
 #include <Akonadi/Contact/StandardContactActionManager>
 
-#include <KABC/Addressee>
-#include <KABC/ContactGroup>
+#include <KABC/kabc/Addressee>
+#include <KABC/kabc/ContactGroup>
 #include <QDebug>
 #include <KCmdLineArgs>
 #include <QAction>

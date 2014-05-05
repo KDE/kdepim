@@ -24,7 +24,7 @@
 #include <KPIMIdentities/signature.h>
 #include <KStandardDirs>
 
-#include <KABC/VCardConverter>
+#include <KABC/kabc/VCardConverter>
 #include <QTextStream>
 #include <QStringList>
 #include <QFile>

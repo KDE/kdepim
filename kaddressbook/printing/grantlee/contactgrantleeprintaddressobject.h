@@ -18,7 +18,7 @@
 #ifndef CONTACTGRANTLEEPRINTADDRESSOBJECT_H
 #define CONTACTGRANTLEEPRINTADDRESSOBJECT_H
 #include <QObject>
-#include <KABC/Addressee>
+#include <KABC/kabc/Addressee>
 namespace KABPrinting {
 class ContactGrantleePrintAddressObject : public QObject
 {

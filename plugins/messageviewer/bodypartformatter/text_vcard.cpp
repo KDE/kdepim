@@ -45,8 +45,8 @@ using MessageViewer::Interface::BodyPart;
 #include <Akonadi/Contact/ContactViewer>
 #include <Akonadi/Contact/StandardContactFormatter>
 
-#include <KABC/VCardConverter>
-#include <KABC/Addressee>
+#include <KABC/kabc/VCardConverter>
+#include <KABC/kabc/Addressee>
 
 #include <KLocale>
 #include <kdemacros.h>

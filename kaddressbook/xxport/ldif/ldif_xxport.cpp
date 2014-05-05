@@ -37,7 +37,7 @@
 
 #include "pimcommon/widgets/renamefiledialog.h"
 
-#include <KABC/LDIFConverter>
+#include <KABC/kabc/LDIFConverter>
 
 #include <KFileDialog>
 #include <KLocalizedString>

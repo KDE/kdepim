@@ -20,7 +20,7 @@
 
 #include <KLocalizedString>
 
-#include <KABC/Addressee>
+#include <KABC/kabc/Addressee>
 
 #include <AkonadiWidgets/CollectionComboBox>
 #include <QListWidget>

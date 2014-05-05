@@ -20,7 +20,7 @@
 
 #include "contactsorter.h"
 
-#include <KABC/Addressee>
+#include <KABC/kabc/Addressee>
 
 class ContactSortHelper
 {

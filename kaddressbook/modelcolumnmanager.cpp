@@ -21,7 +21,7 @@
 #include "modelcolumnmanager.h"
 #include "settings.h"
 
-#include <KABC/Addressee>
+#include <KABC/kabc/Addressee>
 
 #include <KLocalizedString>
 

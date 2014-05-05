@@ -26,7 +26,7 @@
 #include <calendarsupport/kcalprefs.h>
 #include <Akonadi/Calendar/calendarsettings.h>
 
-#include <KABC/Addressee>
+#include <KABC/kabc/Addressee>
 
 #include <KCalCore/Event>
 #include <KCalCore/Todo>

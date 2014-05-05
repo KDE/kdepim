@@ -19,7 +19,7 @@
 #define SAVECONTACTPREFERENCEJOB_H
 
 #include <KJob>
-#include <KABC/Addressee>
+#include <KABC/kabc/Addressee>
 #include "keyresolver.h"
 
 namespace Kleo {

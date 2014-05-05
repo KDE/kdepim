@@ -29,7 +29,7 @@
 
 #include <AkonadiCore/Item>
 
-#include <KABC/Addressee>
+#include <KABC/kabc/Addressee>
 
 #include <KColorScheme>
 #include <KGlobal>

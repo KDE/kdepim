@@ -17,7 +17,7 @@
 #include "messagepropertydialog.h"
 #include "attachpropertydialog.h"
 
-#include <KTNEF/KTNEFMessage>
+#include <KTNEF/ktnef/KTNEFMessage>
 
 #include <KLocalizedString>
 #include <KStandardGuiItem>

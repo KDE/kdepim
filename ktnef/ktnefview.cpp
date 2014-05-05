@@ -17,7 +17,7 @@
 #include "ktnefview.h"
 #include "attachpropertydialog.h"
 
-#include <KTNEF/KTNEFAttach>
+#include <KTNEF/ktnef/KTNEFAttach>
 
 #include <KApplication>
 #include <QDebug>

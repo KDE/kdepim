@@ -34,7 +34,7 @@
 #include <calendarsupport/categoryconfig.h>
 #include <incidenceeditor-ng/categorydialog.h>
 
-#include <KABC/Addressee>
+#include <KABC/kabc/Addressee>
 
 //QT5 #include <phonon/mediaobject.h>
 

@@ -77,8 +77,8 @@
 #include <KFileItemListProperties>
 
 #include <KIO/NetAccess>
-#include <KABC/Addressee>
-#include <KABC/VCardConverter>
+#include <KABC/kabc/Addressee>
+#include <KABC/kabc/VCardConverter>
 #include <KPIMUtils/Email>
 #include <AkonadiCore/ItemModifyJob>
 #include <AkonadiCore/ItemCreateJob>

@@ -44,10 +44,10 @@
 
 #include <KCalUtils/IncidenceFormatter>
 
-#include <KTNEF/formatter.h>
-#include <KTNEF/ktnefparser.h>
-#include <KTNEF/ktnefmessage.h>
-#include <KTNEF/ktnefattach.h>
+#include <KTNEF/ktnef/formatter.h>
+#include <KTNEF/ktnef/ktnefparser.h>
+#include <KTNEF/ktnef/ktnefmessage.h>
+#include <KTNEF/ktnef/ktnefattach.h>
 
 #include <QDebug>
 #include <KGlobal>

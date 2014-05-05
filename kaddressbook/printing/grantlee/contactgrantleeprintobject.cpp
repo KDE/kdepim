@@ -22,8 +22,8 @@
 #include "contactgrantleeprintgeoobject.h"
 #include "contactgrantleeprintcryptoobject.h"
 
-#include <KABC/Address>
-#include <KABC/PhoneNumber>
+#include <KABC/kabc/Address>
+#include <KABC/kabc/PhoneNumber>
 #include <KLocalizedString>
 #include <KGlobal>
 #include <KLocale>

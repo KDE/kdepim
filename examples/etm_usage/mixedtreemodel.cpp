@@ -24,7 +24,7 @@
 #include "mixedtreemodel.h"
 
 #include <KMime/Message>
-#include <KABC/Addressee>
+#include <KABC/kabc/Addressee>
 
 MixedTreeModel::MixedTreeModel(Akonadi::ChangeRecorder* monitor, QObject* parent)
   : EntityTreeModel(monitor, parent)

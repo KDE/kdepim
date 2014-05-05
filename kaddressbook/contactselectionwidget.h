@@ -20,7 +20,7 @@
 #ifndef CONTACTSELECTIONWIDGET_H
 #define CONTACTSELECTIONWIDGET_H
 
-#include <KABC/Addressee>
+#include <KABC/kabc/Addressee>
 #include <AkonadiCore/Item>
 #include <QWidget>
 

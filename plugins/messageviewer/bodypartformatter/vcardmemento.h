@@ -25,7 +25,7 @@
 
 #include <QObject>
 #include <QMap>
-#include <KABC/Addressee>
+#include <KABC/kabc/Addressee>
 
 class KJob;
 

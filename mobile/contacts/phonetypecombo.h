@@ -23,7 +23,7 @@
 
 #include <QComboBox>
 
-#include <KABC/PhoneNumber>
+#include <KABC/kabc/PhoneNumber>
 
 /**
  * @short A combobox to select a phone number type.

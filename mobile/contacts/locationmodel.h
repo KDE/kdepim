@@ -20,7 +20,7 @@
 #ifndef LOCATIONMODEL_H
 #define LOCATIONMODEL_H
 
-#include <KABC/Address>
+#include <KABC/kabc/Address>
 
 #include <QtCore/QAbstractTableModel>
 

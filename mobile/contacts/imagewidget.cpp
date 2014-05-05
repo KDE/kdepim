@@ -21,7 +21,7 @@
 
 #include "imagewidget.h"
 
-#include <KABC/addressee.h>
+#include <KABC/kabc/addressee.h>
 #include <kfiledialog.h>
 #include <kglobalsettings.h>
 #include <kicon.h>

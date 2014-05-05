@@ -22,7 +22,7 @@
 
 #include "contactfields.h"
 
-#include <KABC/Addressee>
+#include <KABC/kabc/Addressee>
 
 #include <KDialog>
 

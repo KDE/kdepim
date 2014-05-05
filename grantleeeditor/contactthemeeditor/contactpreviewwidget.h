@@ -20,7 +20,7 @@
 
 #include <QWidget>
 
-#include <KABC/Addressee>
+#include <KABC/kabc/Addressee>
 
 class QTabWidget;
 

@@ -18,7 +18,7 @@
 #include "contactpreviewwidget.h"
 #include "contacteditorutil.h"
 
-#include <KABC/VCardConverter>
+#include <KABC/kabc/VCardConverter>
 
 #include "kaddressbookgrantlee/formatter/grantleecontactformatter.h"
 #include "kaddressbookgrantlee/formatter/grantleecontactgroupformatter.h"

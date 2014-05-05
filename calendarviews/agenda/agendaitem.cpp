@@ -29,7 +29,7 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include <KABC/VCardDrag>
+#include <KABC/kabc/VCardDrag>
 
 #include <KCalUtils/ICalDrag>
 #include <KCalUtils/VCalDrag>

@@ -20,8 +20,8 @@
 #include <AkonadiCore/ItemCreateJob>
 #include <AkonadiCore/ItemDeleteJob>
 
-#include <KABC/Address>
-#include <KABC/Addressee>
+#include <KABC/kabc/Address>
+#include <KABC/kabc/Addressee>
 
 #include <QDebug>
 

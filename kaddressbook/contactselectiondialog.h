@@ -20,7 +20,7 @@
 #ifndef CONTACTSELECTIONDIALOG_H
 #define CONTACTSELECTIONDIALOG_H
 
-#include <KABC/Addressee>
+#include <KABC/kabc/Addressee>
 #include <KDialog>
 
 class ContactSelectionWidget;

@@ -16,8 +16,8 @@
 */
 
 #include "sylpheedaddressbook.h"
-#include <KABC/Addressee>
-#include <KABC/contactgroup.h>
+#include <KABC/kabc/Addressee>
+#include <KABC/kabc/contactgroup.h>
 
 #include <QDebug>
 #include <KLocale>

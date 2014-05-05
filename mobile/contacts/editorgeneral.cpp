@@ -23,8 +23,8 @@
 
 #include <AkonadiCore/Collection>
 
-#include <KABC/Addressee>
-#include <KABC/PhoneNumber>
+#include <KABC/kabc/Addressee>
+#include <KABC/kabc/PhoneNumber>
 
 #include <KIconLoader>
 

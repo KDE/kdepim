@@ -18,7 +18,7 @@
 #ifndef CONTACTGRANTLEEPRINTCRYPTOOBJECT_H
 #define CONTACTGRANTLEEPRINTCRYPTOOBJECT_H
 #include <QObject>
-#include <KABC/Addressee>
+#include <KABC/kabc/Addressee>
 namespace KABPrinting {
 class ContactGrantleePrintCryptoObject : public QObject
 {

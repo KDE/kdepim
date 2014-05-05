@@ -26,8 +26,8 @@
 #include <AkonadiCore/Session>
 #include <Akonadi/Contact/ContactsTreeModel>
 
-#include <KABC/Addressee>
-#include <KABC/ContactGroup>
+#include <KABC/kabc/Addressee>
+#include <KABC/kabc/ContactGroup>
 
 
 GlobalContactModel *GlobalContactModel::mInstance = 0;

@@ -31,7 +31,7 @@
 #include <QLayout>
 #include <QPushButton>
 
-#include <KABC/addressee.h>
+#include <KABC/kabc/addressee.h>
 #include <kcombobox.h>
 #include <qdebug.h>
 #include <kdialog.h>

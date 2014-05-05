@@ -21,8 +21,8 @@
 #include "contactlistproxy.h"
 
 #include <AkonadiCore/entitytreemodel.h>
-#include <KABC/addressee.h>
-#include <KABC/contactgroup.h>
+#include <KABC/kabc/addressee.h>
+#include <KABC/kabc/contactgroup.h>
 #include <QIcon>
 #include <QPixmap>
 #include <KIconLoader>

@@ -29,7 +29,7 @@
 #include "printprogress.h"
 #include "printstyle.h"
 
-#include <KABC/Addressee>
+#include <KABC/kabc/Addressee>
 
 #include <QDebug>
 #include <KLocalizedString>

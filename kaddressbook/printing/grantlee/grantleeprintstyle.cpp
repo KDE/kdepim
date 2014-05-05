@@ -28,7 +28,7 @@
 #include <grantlee/engine.h>
 #include <grantlee/templateloader.h>
 
-#include <KABC/Addressee>
+#include <KABC/kabc/Addressee>
 
 #include <QDebug>
 #include <KLocalizedString>

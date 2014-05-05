@@ -20,7 +20,7 @@
 #define CONTACTGRANTLEEPRINTGEOOBJECT_H
 
 #include <QObject>
-#include <KABC/geo.h>
+#include <KABC/kabc/geo.h>
 
 namespace KABPrinting {
 

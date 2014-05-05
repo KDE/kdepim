@@ -48,8 +48,8 @@
 #include <AkonadiCore/statisticsproxymodel.h>
 #include <kviewstatemaintainer.h>
 
-#include <KABC/addressee.h>
-#include <KABC/contactgroup.h>
+#include <KABC/kabc/addressee.h>
+#include <KABC/kabc/contactgroup.h>
 #include <KCalCore/Incidence>
 
 #include <kdebug.h>

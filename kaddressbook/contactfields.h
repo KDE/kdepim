@@ -21,7 +21,7 @@
 #ifndef CONTACTFIELDS_H
 #define CONTACTFIELDS_H
 
-#include <KABC/Addressee>
+#include <KABC/kabc/Addressee>
 
 class ContactFields
 {

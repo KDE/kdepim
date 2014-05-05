@@ -21,7 +21,7 @@
 
 #include <AkonadiCore/Collection>
 #include <AkonadiCore/Item>
-#include <KABC/Addressee>
+#include <KABC/kabc/Addressee>
 namespace KABMergeContacts {
 class MergeContactsJob : public QObject
 {

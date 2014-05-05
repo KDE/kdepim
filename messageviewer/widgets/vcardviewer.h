@@ -21,7 +21,7 @@
 #ifndef MESSAGEVIEWER_VCARDVIEWER_H
 #define MESSAGEVIEWER_VCARDVIEWER_H
 #include <kdialog.h>
-#include <KABC/addressee.h>
+#include <KABC/kabc/addressee.h>
 
 namespace Akonadi {
 class ContactViewer;

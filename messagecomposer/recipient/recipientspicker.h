@@ -23,7 +23,7 @@
 
 #include <messagecomposer/recipient/recipient.h>
 
-#include <KABC/addressee.h>
+#include <KABC/kabc/addressee.h>
 #include <kdialog.h>
 
 namespace Akonadi {
