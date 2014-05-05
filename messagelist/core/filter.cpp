@@ -30,6 +30,20 @@ Filter::Filter()
 {
 }
 
+bool Filter::containString(const QString &searchInString) const
+{
+    bool found = false;
+    Q_FOREACH(const QString &str, mSearchList) {
+        if(searchInString.contains(str,Qt::CaseInsensitive)) {
+            found = true;
+        } else {
+            found = false;
+            break;
+        }
+    }
+    return found;
+}
+
 bool Filter::match( const MessageItem * item ) const
 {
     if ( !mStatus.isEmpty() ) {
@@ -43,7 +57,15 @@ bool Filter::match( const MessageItem * item ) const
     if ( !mSearchString.isEmpty() ) {
         if ( mMatchingItemIds.contains( item->itemId() ) )
             return true;
-        else
+        bool searchMatches = false;
+        if ( containString(item->subject()) ) {
+            searchMatches = true;
+        } else if ( containString(item->sender()) ) {
+            searchMatches = true;
+        } else if ( containString(item->receiver()) ) {
+            searchMatches = true;
+        }
+        if ( !searchMatches )
             return false;
     }
 
@@ -77,6 +99,7 @@ void Filter::clear()
     mSearchString.clear();
     mTagId.clear();
     mMatchingItemIds.clear();
+    mSearchList.clear();
 }
 
 void Filter::setCurrentFolder( const Akonadi::Collection &folder )
@@ -90,8 +113,8 @@ void Filter::setSearchString( const QString &search, QuickSearchLine::SearchOpti
     if ((mSearchString == trimStr) && (mOptions == options)) {
         return;
     }
-
     mSearchString = trimStr;
+    mSearchList = mSearchString.split(QLatin1Char(' '), QString::SkipEmptyParts);
     mMatchingItemIds.clear();
 
     if (mSearchString.isEmpty()) {
