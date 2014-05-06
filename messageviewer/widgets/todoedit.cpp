@@ -194,6 +194,7 @@ void TodoEdit::slotCloseWidget()
     writeConfig();
     mNoteEdit->clear();
     mMessage = KMime::Message::Ptr();
+    mMsgWidget->hide();
     hide();
 }
 

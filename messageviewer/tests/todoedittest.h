@@ -58,6 +58,8 @@ private slots:
     void shouldSetFocusWhenWeCallTodoEdit();
     void shouldShowMessageWidget();
     void shouldHideMessageWidget();
+    void shouldHideMessageWidgetWhenAddNewMessage();
+    void shouldHideMessageWidgetWhenCloseWidget();
 };
 
 #endif // TODOEDITTEST_H
