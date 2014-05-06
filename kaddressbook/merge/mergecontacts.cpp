@@ -53,9 +53,11 @@ bool MergeContacts::needManualSelectInformations()
     bool result = false;
     //TODO
     Q_FOREACH (const Akonadi::Item &item, mListItem) {
-        KABC::Addressee address = item.payload<KABC::Addressee>();
-        if (address.birthday().isValid()) {
-            result = true;
+        if (item.hasPayload<KABC::Addressee>()) {
+            KABC::Addressee address = item.payload<KABC::Addressee>();
+            if (address.birthday().isValid()) {
+                result = true;
+            }
         }
     }
 
