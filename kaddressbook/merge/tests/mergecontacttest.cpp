@@ -35,9 +35,37 @@ void MergeContactTest::shouldReturnDefaultAddressWhenNoListItem()
 
 void MergeContactTest::shouldReturnDefaultAddressWhenOneItem()
 {
-    MergeContacts contacts;
+    Akonadi::Item::List lst;
+    Akonadi::Item item;
+    KABC::Addressee address;
+    address.setName(QLatin1String("foo1"));
+    item.setPayload<KABC::Addressee>( address );
+    lst<<item;
+
+    MergeContacts contacts(lst);
     KABC::Addressee result = contacts.mergedContact();
     QCOMPARE(result.isEmpty(), true);
 }
+
+void MergeContactTest::noNneedManualSelectionCheckWhenEmptyList()
+{
+    MergeContacts contacts;
+    const bool result = contacts.needManualSelectInformations();
+    QCOMPARE(result, false);
+}
+
+void MergeContactTest::noNneedManualSelectionCheckWhenOneItem()
+{
+    Akonadi::Item::List lst;
+    KABC::Addressee address;
+    Akonadi::Item item;
+    address.setName(QLatin1String("foo1"));
+    item.setPayload<KABC::Addressee>( address );
+    lst<<item;
+    MergeContacts contacts(lst);
+    const bool result = contacts.needManualSelectInformations();
+    QCOMPARE(result, false);
+}
+
 
 QTEST_KDEMAIN(MergeContactTest, NoGUI)

@@ -22,6 +22,7 @@
 #include <QTabWidget>
 #include <QTabBar>
 #include <Akonadi/Item>
+#include <KABC/Addressee>
 
 using namespace KABMergeContacts;
 
@@ -43,22 +44,33 @@ void MergeContactShowResultDialogTest::shouldDontShowTabBarWhenWeHaveJustOneCont
 {
     MergeContactShowResultDialog dlg;
     Akonadi::Item::List lst;
-    lst.append(Akonadi::Item(4));
+    Akonadi::Item item;
+    KABC::Addressee address;
+    address.setName(QLatin1String("foo1"));
+    item.setPayload<KABC::Addressee>( address );
+
+    lst.append(item);
     dlg.setContacts(lst);
     dlg.show();
     KABMergeContacts::MergeContactShowResultTabWidget *tabWidget = qFindChild<KABMergeContacts::MergeContactShowResultTabWidget *>(&dlg, QLatin1String("tabwidget"));
     QCOMPARE(tabWidget->tabBarVisible(), false);
+    QCOMPARE(tabWidget->count(), 1);
 }
 
 void MergeContactShowResultDialogTest::shouldShowTabBarWhenWeHaveMoreThanOneContact()
 {
     MergeContactShowResultDialog dlg;
+    Akonadi::Item item;
+    KABC::Addressee address;
+    address.setName(QLatin1String("foo1"));
+    item.setPayload<KABC::Addressee>( address );
     Akonadi::Item::List lst;
-    lst<<Akonadi::Item(4)<<Akonadi::Item(5);
+    lst<<item<<item;
     dlg.setContacts(lst);
     dlg.show();
     KABMergeContacts::MergeContactShowResultTabWidget *tabWidget = qFindChild<KABMergeContacts::MergeContactShowResultTabWidget *>(&dlg, QLatin1String("tabwidget"));
     QCOMPARE(tabWidget->tabBarVisible(), true);
+    QCOMPARE(tabWidget->count(), 2);
 }
 
 QTEST_KDEMAIN(MergeContactShowResultDialogTest, GUI )

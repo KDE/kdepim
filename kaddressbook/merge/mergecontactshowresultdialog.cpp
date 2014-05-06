@@ -19,6 +19,8 @@
 #include "mergecontactshowresulttabwidget.h"
 #include "mergecontactinfowidget.h"
 
+#include <KABC/Addressee>
+
 #include <KLocalizedString>
 #include <KSharedConfig>
 
@@ -51,9 +53,12 @@ void MergeContactShowResultDialog::updateTabWidget()
 void MergeContactShowResultDialog::setContacts(const Akonadi::Item::List &lstItem)
 {
     Q_FOREACH(const Akonadi::Item &item, lstItem) {
-        MergeContactInfoWidget *infoWidget = new MergeContactInfoWidget;
-        infoWidget->setContact(item);
-        mTabWidget->addTab(infoWidget, i18n("Contact")); //TODO customize it
+        if (item.hasPayload<KABC::Addressee>()) {
+            const KABC::Addressee address = item.payload<KABC::Addressee>();
+            MergeContactInfoWidget *infoWidget = new MergeContactInfoWidget;
+            infoWidget->setContact(item);
+            mTabWidget->addTab(infoWidget, address.name());
+        }
     }
     updateTabWidget();
 }
