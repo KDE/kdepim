@@ -95,7 +95,6 @@ public:
     void updateThemesPath()
     {
         if ( !themesDirectories.isEmpty() ) {
-            watch->stopScan();
             Q_FOREACH (const QString &directory, themesDirectories) {
                 watch->removeDir( directory );
             }

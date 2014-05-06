@@ -45,7 +45,7 @@
 
 #include <boost/range.hpp>
 
-#ifdef __GNUC__
+#ifdef __GLIBCXX__
 # include <ext/algorithm>
 #endif
 
@@ -152,7 +152,7 @@ unsigned int Kleo::classify( const QStringList & fileNames ) {
 }
 
 unsigned int Kleo::classify( const QString & filename ) {
-#ifdef __GNUC__
+#ifdef __GLIBCXX__
     assert( __gnu_cxx::is_sorted( begin( classifications ), end( classifications ), ByExtension<std::less>() ) );
 #endif
 
@@ -181,7 +181,7 @@ unsigned int Kleo::classify( const QString & filename ) {
 }
 
 unsigned int Kleo::classifyContent( const QByteArray & data ) {
-#ifdef __GNUC__
+#ifdef __GLIBCXX__
     assert( __gnu_cxx::is_sorted( begin( content_classifications ), end( content_classifications ), ByContent<std::less>(100) ) );
 #endif
 
