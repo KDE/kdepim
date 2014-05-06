@@ -49,6 +49,7 @@
 #include <string>
 #include <sstream>
 #include <algorithm>
+#include <KCharsets>
 
 
 namespace MessageViewer {
@@ -581,7 +582,7 @@ const QTextCodec* NodeHelper::codecForName(const QByteArray& _str)
     return 0;
   QByteArray codec = _str;
   kAsciiToLower(codec.data());
-  return KGlobal::charsets()->codecForName(QLatin1String(codec));
+  return KCharsets::charsets()->codecForName(QLatin1String(codec));
 }
 
 QString NodeHelper::fileName( const KMime::Content *node )
@@ -702,30 +703,30 @@ QString NodeHelper::fixEncoding( const QString &encoding )
 //-----------------------------------------------------------------------------
 QString NodeHelper::encodingForName( const QString &descriptiveName )
 {
-  QString encoding = KGlobal::charsets()->encodingForName( descriptiveName );
+  QString encoding = KCharsets::charsets()->encodingForName( descriptiveName );
   return NodeHelper::fixEncoding( encoding );
 }
 
 QStringList NodeHelper::supportedEncodings(bool usAscii)
 {
-  QStringList encodingNames = KGlobal::charsets()->availableEncodingNames();
+  QStringList encodingNames = KCharsets::charsets()->availableEncodingNames();
   QStringList encodings;
   QMap<QString,bool> mimeNames;
   QStringList::ConstIterator constEnd( encodingNames.constEnd() );
   for (QStringList::ConstIterator it = encodingNames.constBegin();
     it != constEnd; ++it)
   {
-    QTextCodec *codec = KGlobal::charsets()->codecForName(*it);
+    QTextCodec *codec = KCharsets::charsets()->codecForName(*it);
     QString mimeName = (codec) ? QString::fromLatin1(codec->name()).toLower() : (*it);
     if (!mimeNames.contains(mimeName) )
     {
-      encodings.append( KGlobal::charsets()->descriptionForEncoding(*it) );
+      encodings.append( KCharsets::charsets()->descriptionForEncoding(*it) );
       mimeNames.insert( mimeName, true );
     }
   }
   encodings.sort();
   if (usAscii)
-    encodings.prepend(KGlobal::charsets()->descriptionForEncoding(QLatin1String("us-ascii")) );
+    encodings.prepend(KCharsets::charsets()->descriptionForEncoding(QLatin1String("us-ascii")) );
   return encodings;
 }
 

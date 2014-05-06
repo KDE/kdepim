@@ -63,7 +63,7 @@ QTextCodec *selectCharset( const QStringList &charsets, const QString &text )
         if ( name == QLatin1String( "locale" ) ) {
             codec = QTextCodec::codecForLocale();
         } else {
-            codec = KGlobal::charsets()->codecForName( name, ok );
+            codec = KCharsets::charsets()->codecForName( name, ok );
         }
         if( !ok || !codec ) {
             qWarning() << "Could not get text codec for charset" << name;
@@ -79,7 +79,7 @@ QTextCodec *selectCharset( const QStringList &charsets, const QString &text )
         }
     }
     qDebug() << "No appropriate charset found.";
-    return KGlobal::charsets()->codecForName( QLatin1String("utf-8") );
+    return KCharsets::charsets()->codecForName( QLatin1String("utf-8") );
 }
 
 TemplateParser::TemplateParser( const KMime::Message::Ptr &amsg, const Mode amode ) :

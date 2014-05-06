@@ -184,7 +184,7 @@ public:
             KToggleAction *act = dynamic_cast<KToggleAction *>(q->sender());
             if (act) {
                 GrantleeSettings::self()->setGrantleeThemeName( act->data().toString() );
-                GrantleeSettings::self()->writeConfig();
+                GrantleeSettings::self()->save();
             }
             Q_EMIT q->grantleeThemeSelected();
         }

@@ -1006,7 +1006,7 @@ void Manager::loadConfiguration()
 
 void Manager::saveGlobalConfiguration()
 {
-    Settings::self()->writeConfig();
+    Settings::self()->save();
 }
 
 void Manager::saveConfiguration()

@@ -64,7 +64,7 @@ UploadMediaDialog::~UploadMediaDialog()
 {
     Settings::setFtpServerPath(ui.kcfg_FtpPath->text());
     Settings::setHttpUrl(ui.kcfg_httpUrl->text());
-    Settings::self()->writeConfig();
+    Settings::self()->save();
 }
 
 void UploadMediaDialog::init( const BilboBlog *currentBlog )

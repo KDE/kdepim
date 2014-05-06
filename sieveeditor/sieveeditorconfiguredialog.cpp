@@ -74,7 +74,7 @@ void SieveEditorConfigureDialog::saveServerSieveConfig()
 {
     mServerWidget->writeConfig();
     PimCommon::ConfigureImmutableWidgetUtils::saveCheckBox(mCloseWallet, SieveEditorGlobalConfig::self()->closeWalletItem());
-    SieveEditorGlobalConfig::self()->writeConfig();
+    SieveEditorGlobalConfig::self()->save();
 }
 
 void SieveEditorConfigureDialog::readConfig()

@@ -286,7 +286,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
 
 ViewerPrivate::~ViewerPrivate()
 {
-    GlobalSettings::self()->writeConfig();
+    GlobalSettings::self()->save();
     delete mHtmlWriter; mHtmlWriter = 0;
     delete mViewer; mViewer = 0;
     delete mCSSHelper;
@@ -2083,7 +2083,7 @@ const QTextCodec* ViewerPrivate::codecForName(const QByteArray& _str)
         return 0;
     QByteArray codec = _str;
     kAsciiToLower(codec.data());
-    return KGlobal::charsets()->codecForName(QLatin1String(codec));
+    return KCharsets::charsets()->codecForName(QLatin1String(codec));
 }
 
 void ViewerPrivate::update( MessageViewer::Viewer::UpdateMode updateMode )
@@ -2416,9 +2416,9 @@ void ViewerPrivate::attachmentView( KMime::Content *atmNode )
         const bool isEncapsulatedMessage = atmNode->parent() && atmNode->parent()->bodyIsMessage();
         if ( isEncapsulatedMessage ) {
             atmViewMsg( atmNode->parent()->bodyAsMessage() );
-        } else if ((kasciistricmp(atmNode->contentType()->mediaType(), "text")==0) &&
-                   ( (kasciistricmp(atmNode->contentType()->subType(), "x-vcard")==0) ||
-                     (kasciistricmp(atmNode->contentType()->subType(), "directory")==0) )) {
+        } else if ((qstricmp(atmNode->contentType()->mediaType(), "text")==0) &&
+                   ( (qstricmp(atmNode->contentType()->subType(), "x-vcard")==0) ||
+                     (qstricmp(atmNode->contentType()->subType(), "directory")==0) )) {
             setMessagePart( atmNode );
         } else {
             emit showReader( atmNode, htmlMail(), overrideEncoding() );
@@ -3332,7 +3332,7 @@ void ViewerPrivate::slotAddToWhiteList()
                 return;
             lst << email;
             MessageViewer::GlobalSettings::self()->setScamDetectionWhiteList( lst );
-            MessageViewer::GlobalSettings::self()->writeConfig();
+            MessageViewer::GlobalSettings::self()->save();
         }
     }
 }

@@ -62,6 +62,7 @@
 
 #include <assert.h>
 #include <string.h> // for memcpy(3)
+#include <KCharsets>
 
 #ifndef QT_NO_TREEWIDGET
 const int Kpgp::KeySelectionDialog::sCheckSelectionDelay = 250;
@@ -1649,7 +1650,7 @@ CipherTextDialog::CipherTextDialog( const QByteArray & text,
     unicodeText = QString::fromLocal8Bit(text.data());
   else {
     bool ok=true;
-    QTextCodec *codec = KGlobal::charsets()->codecForName(QLatin1String(charset), ok);
+    QTextCodec *codec = KCharsets::charsets()->codecForName(QLatin1String(charset), ok);
     if(!ok)
       unicodeText = QString::fromLocal8Bit(text.data());
     else

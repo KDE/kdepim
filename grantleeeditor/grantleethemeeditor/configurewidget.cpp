@@ -41,7 +41,7 @@ void ConfigureWidget::writeConfig()
     GrantleeThemeEditor::GrantleeThemeEditorSettings::setAuthorEmail(ui->authorEmail->text());
     GrantleeThemeEditor::GrantleeThemeEditorSettings::setAuthor(ui->author->text());
     GrantleeThemeEditor::GrantleeThemeEditorSettings::setPath(ui->defaultPath->url().path());
-    GrantleeThemeEditor::GrantleeThemeEditorSettings::self()->writeConfig();
+    GrantleeThemeEditor::GrantleeThemeEditorSettings::self()->save();
 }
 
 void ConfigureWidget::readConfig()

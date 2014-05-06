@@ -396,7 +396,7 @@ MainWidget::~MainWidget()
   saveState();
   delete mGrantleeThemeManager;
 
-  Settings::self()->writeConfig();
+  Settings::self()->save();
 }
 
 void MainWidget::restoreState()

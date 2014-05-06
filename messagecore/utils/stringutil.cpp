@@ -798,7 +798,7 @@ QStringList stripAddressFromAddressList( const QString &address,
     const QString addrSpec( KPIMUtils::extractEmailAddress( address ) );
 
     for ( QStringList::Iterator it = addresses.begin(); it != addresses.end(); ) {
-        if ( kasciistricmp( addrSpec.toUtf8().data(),
+        if ( qstricmp( addrSpec.toUtf8().data(),
                             KPIMUtils::extractEmailAddress( *it ).toUtf8().data() ) == 0 ) {
             it = addresses.erase( it );
         } else
@@ -815,7 +815,7 @@ bool addressIsInAddressList( const QString &address,
 
     QStringList::ConstIterator end( addresses.constEnd() );
     for( QStringList::ConstIterator it = addresses.constBegin(); it != end; ++it ) {
-        if ( kasciistricmp( addrSpec.toUtf8().data(),
+        if ( qstricmp( addrSpec.toUtf8().data(),
                             KPIMUtils::extractEmailAddress( *it ).toUtf8().data() ) == 0 )
             return true;
     }

@@ -174,9 +174,9 @@ void ConfigWidget::saveToExternalSettings()
   MessageViewer::GlobalSettings::self()->setDefaultPolicy( Settings::self()->mDNPolicy() );
   MessageViewer::GlobalSettings::self()->setQuoteMessage( Settings::self()->mDNQuoteType() );
 
-  Settings::self()->writeConfig();
-  MessageViewer::GlobalSettings::self()->writeConfig();
-  TemplateParser::GlobalSettings::self()->writeConfig();
+  Settings::self()->save();
+  MessageViewer::GlobalSettings::self()->save();
+  TemplateParser::GlobalSettings::self()->save();
 }
 
 

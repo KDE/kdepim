@@ -92,7 +92,7 @@ void NoteNetworkConfigWidget::save()
     NoteShared::NoteSharedGlobalConfig::self()->setReceiveNotes(mTmpChkB->isChecked());
     NoteShared::NoteSharedGlobalConfig::self()->setSenderID(kcfg_SenderID->text());
     NoteShared::NoteSharedGlobalConfig::self()->setPort(kcfg_Port->value());
-    NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+    NoteShared::NoteSharedGlobalConfig::self()->save();
 }
 
 void NoteNetworkConfigWidget::load()

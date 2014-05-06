@@ -156,7 +156,7 @@ bool MainTextJobPrivate::chooseCharsetAndEncode()
 bool MainTextJobPrivate::encodeTexts()
 {
     Q_Q( MainTextJob );
-    QTextCodec *codec = KGlobal::charsets()->codecForName( QString::fromLatin1( chosenCharset ) );
+    QTextCodec *codec = KCharsets::charsets()->codecForName( QString::fromLatin1( chosenCharset ) );
     if( !codec ) {
         qCritical() << "Could not get text codec for charset" << chosenCharset;
         q->setError( JobBase::BugError );

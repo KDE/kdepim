@@ -251,7 +251,7 @@ void CustomTemplates::save()
     }
 
     GlobalSettings::self()->setCustomTemplates( list );
-    GlobalSettings::self()->writeConfig();
+    GlobalSettings::self()->save();
 
     emit templatesUpdated();
 }

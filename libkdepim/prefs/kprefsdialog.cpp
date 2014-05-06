@@ -783,10 +783,9 @@ KPrefsDialog::KPrefsDialog( KConfigSkeleton *prefs, QWidget *parent, bool modal 
 {
     setFaceType( List );
     setWindowTitle( i18n( "Preferences" ) );
-    //QT5 setButtons( Ok|Apply|Cancel|Default );
-    //QT5 setDefaultButton( Ok );
+    setStandardButtons( QDialogButtonBox::Ok | QDialogButtonBox::Apply |QDialogButtonBox::Cancel | QDialogButtonBox::RestoreDefaults);
+    button ( QDialogButtonBox::Ok )->setDefault(true);    
     setModal( modal );
-    //QT5 showButtonSeparator( true );
     connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
     connect( this, SIGNAL(applyClicked()), SLOT(slotApply()) );
     connect( this, SIGNAL(defaultClicked()), SLOT(slotDefault()) );
@@ -809,7 +808,6 @@ void KPrefsDialog::autoCreate()
     KConfigSkeletonItem::List::ConstIterator it;
     for ( it = items.constBegin(); it != items.constEnd(); ++it ) {
         QString group = (*it)->group();
-        //QString name = (*it)->name();
 
         QWidget *page;
         QGridLayout *layout;

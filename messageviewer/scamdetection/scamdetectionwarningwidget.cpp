@@ -85,7 +85,7 @@ void ScamDetectionWarningWidget::slotDisableScamDetection()
 {
     if (!mUseInTestApps) {
         MessageViewer::GlobalSettings::self()->setScamDetectionEnabled( false );
-        MessageViewer::GlobalSettings::self()->writeConfig();
+        MessageViewer::GlobalSettings::self()->save();
     }
     setVisible(false);
 }

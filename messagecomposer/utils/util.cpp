@@ -236,7 +236,7 @@ QByteArray MessageComposer::Util::selectCharset( const QList<QByteArray> &charse
     foreach( const QByteArray &name, charsets ) {
         // We use KCharsets::codecForName() instead of QTextCodec::codecForName() here, because
         // the former knows us-ascii is latin1.
-        QTextCodec *codec = KGlobal::charsets()->codecForName( QString::fromLatin1( name ) );
+        QTextCodec *codec = KCharsets::charsets()->codecForName( QString::fromLatin1( name ) );
         if( !codec ) {
             qWarning() << "Could not get text codec for charset" << name;
             continue;

@@ -73,7 +73,7 @@ void CreateNewNoteJob::start()
         }
         if (dlg->useFolderByDefault()) {
             NoteShared::NoteSharedGlobalConfig::self()->setDefaultFolder(col.id());
-            NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+            NoteShared::NoteSharedGlobalConfig::self()->save();
         }
         delete dlg;
     } else {
@@ -153,7 +153,7 @@ void CreateNewNoteJob::slotNoteCreationFinished(KJob *job)
     if (job->error()) {
         qWarning() << job->errorString();
         NoteShared::NoteSharedGlobalConfig::self()->setDefaultFolder(-1);
-        NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+        NoteShared::NoteSharedGlobalConfig::self()->save();
         KMessageBox::error(mWidget, i18n("Note was not created."), i18n("Create new note"));
     }
     deleteLater();

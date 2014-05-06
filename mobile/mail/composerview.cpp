@@ -354,12 +354,10 @@ void ComposerView::send( MessageComposer::MessageSender::SendMethod method, Mess
   const KPIMIdentities::Identity identity = m_composerBase->identityManager()->identityForUoidOrDefault( m_composerBase->identityCombo()->currentIdentity() );
   m_composerBase->setFrom( identity.fullEmailAddr() );
   m_composerBase->setReplyTo( identity.replyToAddr() );
-#if 0 //QT5
   if ( !identity.fcc().isEmpty() ) {
     const Akonadi::Collection customSentFolder( identity.fcc().toLongLong() );
     m_composerBase->setFcc( customSentFolder );
   }
-#endif
 
   m_composerBase->setCryptoOptions( m_sign, m_encrypt, m_cryptoFormat );
 

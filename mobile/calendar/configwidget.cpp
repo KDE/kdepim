@@ -223,7 +223,7 @@ void ConfigWidget::saveToExternalSettings()
   // Group scheduling
   KCalPrefs::instance()->setUseGroupwareCommunication( Settings::self()->useGroupwareCommunication() );
 
-  Settings::self()->writeConfig();
+  Settings::self()->save();
   KCalPrefs::instance()->writeConfig();
   mViewPrefs->writeConfig();
 }

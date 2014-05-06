@@ -137,7 +137,7 @@ void AutocorrectionTestWidget::slotConfigure()
 {
     QPointer<ConfigureTestDialog> dlg = new ConfigureTestDialog(mAutoCorrection, this);
     if(dlg->exec())
-        PimCommon::PimCommonSettings::self()->writeConfig();
+        PimCommon::PimCommonSettings::self()->save();
     delete dlg;
 }
 

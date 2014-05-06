@@ -154,7 +154,7 @@ void FavoriteCollectionWidget::slotChangeMode(bool)
     }
 
     MailCommon::MailCommonSettings::self()->setFavoriteCollectionViewMode(mode);
-    MailCommon::MailCommonSettings::self()->writeConfig();
+    MailCommon::MailCommonSettings::self()->save();
 }
 
 void FavoriteCollectionWidget::slotChangeIconSize(bool )
@@ -178,7 +178,7 @@ void FavoriteCollectionWidget::slotChangeIconSize(bool )
     }
     setIconSize( newIconSize );
     MailCommon::MailCommonSettings::self()->setIconSize(iconSize().width());
-    MailCommon::MailCommonSettings::self()->writeConfig();
+    MailCommon::MailCommonSettings::self()->save();
 }
 
 void FavoriteCollectionWidget::slotGeneralPaletteChanged()

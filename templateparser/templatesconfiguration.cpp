@@ -169,7 +169,7 @@ void TemplatesConfiguration::saveToGlobal()
     GlobalSettings::self()->setTemplateReplyAll( strOrBlank( textEdit_reply_all->toPlainText() ) );
     GlobalSettings::self()->setTemplateForward( strOrBlank( textEdit_forward->toPlainText() ) );
     GlobalSettings::self()->setQuoteString( lineEdit_quote->text() );
-    GlobalSettings::self()->writeConfig();
+    GlobalSettings::self()->save();
 }
 
 void TemplatesConfiguration::loadFromIdentity( uint id )

@@ -1769,7 +1769,7 @@ bool KJotsWidget::queryClose()
 {
   KJotsSettings::setSplitterSizes(m_splitter->sizes());
 
-  KJotsSettings::self()->writeConfig();
+  KJotsSettings::self()->save();
   m_orderProxy->saveOrder();
 
   return true;

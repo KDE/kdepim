@@ -1673,7 +1673,7 @@ void MainView::useFixedFont()
     item->viewer()->setUseFixedFont( !fixedFont );
     item->viewer()->update( MessageViewer::Viewer::Force );
     MessageViewer::GlobalSettings::self()->setUseFixedFont( !fixedFont );
-    MessageViewer::GlobalSettings::self()->writeConfig();
+    MessageViewer::GlobalSettings::self()->save();
   }
 }
 

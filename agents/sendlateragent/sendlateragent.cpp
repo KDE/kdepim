@@ -94,7 +94,7 @@ void SendLaterAgent::setEnableAgent(bool enabled)
         return;
 
     SendLaterAgentSettings::setEnabled(enabled);
-    SendLaterAgentSettings::self()->writeConfig();
+    SendLaterAgentSettings::self()->save();
     if (enabled) {
         mManager->load();
     } else {

@@ -42,6 +42,7 @@
 #include <KGlobal>
 #include <kcharsets.h>
 #include <QTextCodec>
+#include <KCharsets>
 
 using namespace MessageComposer;
 
@@ -939,16 +940,16 @@ void MessageFactory::applyCharset( const KMime::Message::Ptr msg )
 {
     if ( MessageComposer::MessageComposerSettings::forceReplyCharset() ) {
         // first convert the body from its current encoding to unicode representation
-        QTextCodec *bodyCodec = KGlobal::charsets()->codecForName( QString::fromLatin1( msg->contentType()->charset() ) );
+        QTextCodec *bodyCodec = KCharsets::charsets()->codecForName( QString::fromLatin1( msg->contentType()->charset() ) );
         if ( !bodyCodec )
-            bodyCodec = KGlobal::charsets()->codecForName( QLatin1String( "UTF-8" ) );
+            bodyCodec = KCharsets::charsets()->codecForName( QLatin1String( "UTF-8" ) );
 
         const QString body = bodyCodec->toUnicode( msg->body() );
 
         // then apply the encoding of the original message
         msg->contentType()->setCharset( m_origMsg->contentType()->charset() );
 
-        QTextCodec *codec = KGlobal::charsets()->codecForName( QString::fromLatin1( msg->contentType()->charset() ) );
+        QTextCodec *codec = KCharsets::charsets()->codecForName( QString::fromLatin1( msg->contentType()->charset() ) );
         if ( !codec ) {
             qCritical() << "Could not get text codec for charset" << msg->contentType()->charset();
         } else if ( !codec->canEncode( body ) ) { // charset can't encode body, fall back to preferred
@@ -962,7 +963,7 @@ void MessageFactory::applyCharset( const KMime::Message::Ptr msg )
             if ( fallbackCharset.isEmpty() ) // UTF-8 as fall-through
                 fallbackCharset = "UTF-8";
 
-            codec = KGlobal::charsets()->codecForName( QString::fromLatin1( fallbackCharset ) );
+            codec = KCharsets::charsets()->codecForName( QString::fromLatin1( fallbackCharset ) );
             msg->setBody( codec->fromUnicode( body ) );
         } else {
             msg->setBody( codec->fromUnicode( body ) );
