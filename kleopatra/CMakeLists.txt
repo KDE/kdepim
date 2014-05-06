@@ -62,12 +62,11 @@ if(USABLE_ASSUAN_FOUND)
   # can't use macro_optional_add_subdirectory here, since it's split
   # off into ConfigureChecks.cmake..
   #REACTIVATE
-  # WORKAROUND add_definitions(-DKLEOPATRACLIENT_NAMESPACE=KleopatraClientCopy -DKLEOPATRACLIENTCORE_EXPORT=)
-  # add_subdirectory(libkleopatraclient)
+  #add_definitions(-DKLEOPATRACLIENT_NAMESPACE=KleopatraClientCopy -DKLEOPATRACLIENTCORE_EXPORT=)
+  #add_subdirectory(libkleopatraclient)
 endif()
 
-#REACTIVATE
-#add_subdirectory(kgpgconf)
+add_subdirectory(kgpgconf)
 add_subdirectory(kwatchgnupg)
 #add_subdirectory(tests)
 
@@ -104,8 +103,8 @@ if(USABLE_ASSUAN_FOUND)
   )
   set_source_files_properties(libkleopatraclient/core/command.cpp PROPERTIES SKIP_AUTOMOC TRUE)
 
-  qt4_generate_moc(libkleopatraclient/core/command_p.h "${CMAKE_CURRENT_BINARY_DIR}/libkleopatraclient/core/moc_command_p.cpp")
-  qt4_generate_moc(libkleopatraclient/core/command.h "${CMAKE_CURRENT_BINARY_DIR}/libkleopatraclient/core/moc_command.cpp")
+  qt5_generate_moc(libkleopatraclient/core/command_p.h "${CMAKE_CURRENT_BINARY_DIR}/libkleopatraclient/core/moc_command_p.cpp")
+  qt5_generate_moc(libkleopatraclient/core/command.h "${CMAKE_CURRENT_BINARY_DIR}/libkleopatraclient/core/moc_command.cpp")
 
   list(APPEND _kleopatra_uiserver_SRCS
     "${CMAKE_CURRENT_BINARY_DIR}/libkleopatraclient/core/moc_command_p.cpp"
