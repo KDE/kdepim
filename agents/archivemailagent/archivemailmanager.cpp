@@ -155,15 +155,40 @@ void ArchiveMailManager::resume()
     mArchiveMailKernel->jobScheduler()->resume();
 }
 
-void ArchiveMailManager::printArchiveListInfo()
+QString ArchiveMailManager::printCurrentListInfo()
 {
+    QString infoStr;
     Q_FOREACH (ArchiveMailInfo *info, mListArchiveInfo) {
-        kDebug()<<"info: collectionId:"<<info->saveCollectionId()
-                <<" saveSubCollection ?"<<info->saveSubCollection()
-                <<" lastDateSaved:"<<info->lastDateSaved()
-                <<" number of archive:"<<info->maximumArchiveCount()
-                <<" directory"<<info->url()
-                <<" enabled ?"<<info->isEnabled();
+        if (!infoStr.isEmpty())
+            infoStr += QLatin1Char('\n');
+        infoStr += infoToStr(info);
     }
+    return infoStr;
+}
+
+QString ArchiveMailManager::infoToStr(ArchiveMailInfo *info) const
+{
+    QString infoStr = QLatin1String("collectionId: ") + QString::number(info->saveCollectionId()) + QLatin1Char('\n');
+    infoStr += QLatin1String("save sub collection: ") + (info->saveSubCollection() ? QLatin1String("true") : QLatin1String("false")) + QLatin1Char('\n');
+    infoStr += QLatin1String("last Date Saved: ") + info->lastDateSaved().toString() + QLatin1Char('\n');
+    infoStr += QLatin1String("maximum achive number: ") + QString::number(info->maximumArchiveCount()) + QLatin1Char('\n');
+    infoStr += QLatin1String("directory: ") + info->url().pathOrUrl() + QLatin1Char('\n');
+    infoStr += QLatin1String("Enabled: ") + (info->isEnabled() ? QLatin1String("true") : QLatin1String("false"));
+    return infoStr;
+}
+
+QString ArchiveMailManager::printArchiveListInfo()
+{
+    QString infoStr;
+    const QStringList collectionList = mConfig->groupList().filter( QRegExp( QLatin1String("ArchiveMailCollection \\d+") ) );
+    const int numberOfCollection = collectionList.count();
+    for (int i = 0 ; i < numberOfCollection; ++i) {
+        KConfigGroup group = mConfig->group(collectionList.at(i));
+        ArchiveMailInfo info(group);
+        if (!infoStr.isEmpty())
+            infoStr += QLatin1Char('\n');
+        infoStr += infoToStr(&info);
+    }
+    return infoStr;
 }
 

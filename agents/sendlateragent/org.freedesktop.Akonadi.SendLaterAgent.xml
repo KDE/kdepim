@@ -10,7 +10,9 @@
     <method name="enabledAgent" >
       <arg type="b" direction="out"/>
     </method>
-    <method name="printDebugInfo" />
+    <method name="printDebugInfo" >
+       <arg type="s" direction="out"/>
+    </method>
     <method name="reload" />
   </interface>
 </node>
