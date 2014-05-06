@@ -93,7 +93,7 @@ TodoEdit::TodoEdit(QWidget *parent)
     vbox->addLayout(hbox);
 
     hbox->addStretch(1);
-    KPushButton *btn = new KPushButton(KIcon(QLatin1String("todo-new")), i18n("&Save"));
+    KPushButton *btn = new KPushButton(KIcon(QLatin1String("task-new")), i18n("&Save"));
     btn->setObjectName(QLatin1String("save-button"));
 #ifndef QT_NO_ACCESSIBILITY
     btn->setAccessibleDescription(i18n("Create new todo and close this widget."));
