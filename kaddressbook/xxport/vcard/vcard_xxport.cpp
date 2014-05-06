@@ -538,7 +538,7 @@ VCardViewerDialog::~VCardViewerDialog()
 
 void VCardViewerDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "VCardViewerDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "VCardViewerDialog" );
     const QSize size = group.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
@@ -547,7 +547,7 @@ void VCardViewerDialog::readConfig()
 
 void VCardViewerDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "VCardViewerDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "VCardViewerDialog" );
     group.writeEntry( "Size", size() );
     group.sync();
 }

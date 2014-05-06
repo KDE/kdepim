@@ -54,7 +54,7 @@ void ParsingResultDialog::setResultParsing(const QString &result)
 
 void ParsingResultDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "ParsingResultDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "ParsingResultDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
@@ -63,7 +63,7 @@ void ParsingResultDialog::readConfig()
 
 void ParsingResultDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "ParsingResultDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "ParsingResultDialog" );
     group.writeEntry( "Size", size() );
 }
 

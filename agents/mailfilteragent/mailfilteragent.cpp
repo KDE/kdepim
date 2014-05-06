@@ -49,6 +49,7 @@
 
 #include <QtCore/QVector>
 #include <QtCore/QTimer>
+#include <KSharedConfig>
 
 static bool isFilterableCollection( const Akonadi::Collection &collection )
 {
@@ -94,7 +95,7 @@ MailFilterAgent::MailFilterAgent( const QString &id )
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/MailFilterAgent" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.MailFilterAgent" ) );
     //Enabled or not filterlogdialog
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     if ( config->hasGroup( "FilterLog" ) ) {
         KConfigGroup group( config, "FilterLog" );
         if ( group.hasKey( "Enabled" ) ) {

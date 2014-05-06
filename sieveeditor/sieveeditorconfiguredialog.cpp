@@ -79,7 +79,7 @@ void SieveEditorConfigureDialog::saveServerSieveConfig()
 
 void SieveEditorConfigureDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SieveEditorConfigureDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SieveEditorConfigureDialog" );
     const QSize size = group.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
@@ -88,7 +88,7 @@ void SieveEditorConfigureDialog::readConfig()
 
 void SieveEditorConfigureDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SieveEditorConfigureDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SieveEditorConfigureDialog" );
     group.writeEntry( "Size", size() );
     group.sync();
 }

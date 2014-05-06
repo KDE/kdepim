@@ -36,6 +36,7 @@
 #include <QCheckBox>
 #include <QPrinter>
 #include <QTextDocument>
+#include <KSharedConfig>
 
 using namespace KABPrinting;
 
@@ -139,7 +140,7 @@ CompactStyle::CompactStyle( PrintingWizard *parent )
            this, SLOT(setAlternatingColors()) );
 
   // set the controls, with the values in config
-  KConfigGroup config( KGlobal::config(), CompactStyleConfigSectionName );
+  KConfigGroup config( KSharedConfig::openConfig(), CompactStyleConfigSectionName );
 
   withAlternating = config.readEntry( WithAlternating, true );
   withHomeAddress = config.readEntry( WithHomeAddress, true );
@@ -175,7 +176,7 @@ void CompactStyle::print( const KABC::Addressee::List &contacts, PrintProgress *
   withEMail = mPageSettings->cbWithEMail->isChecked();
 
   // to config
-  KConfigGroup config( KGlobal::config(), CompactStyleConfigSectionName );
+  KConfigGroup config( KSharedConfig::openConfig(), CompactStyleConfigSectionName );
 
   config.writeEntry( WithAlternating, withAlternating );
   config.writeEntry( FirstColor, firstColor );

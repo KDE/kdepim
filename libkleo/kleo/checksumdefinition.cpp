@@ -52,6 +52,7 @@
 #include <QCoreApplication>
 
 #include <boost/shared_ptr.hpp>
+#include <KSharedConfig>
 
 #ifdef stdin
 # undef stdin // pah..
@@ -361,7 +362,7 @@ std::vector< shared_ptr<ChecksumDefinition> > ChecksumDefinition::getChecksumDef
 
 // static
 shared_ptr<ChecksumDefinition> ChecksumDefinition::getDefaultChecksumDefinition( const std::vector< shared_ptr<ChecksumDefinition> > & checksumDefinitions ) {
-    const KConfigGroup group( KGlobal::config(), "ChecksumOperations" );
+    const KConfigGroup group( KSharedConfig::openConfig(), "ChecksumOperations" );
     const QString checksumDefinitionId = group.readEntry( CHECKSUM_DEFINITION_ID_ENTRY );
     if ( !checksumDefinitionId.isEmpty() )
         Q_FOREACH( const shared_ptr<ChecksumDefinition> & cd, checksumDefinitions )
@@ -377,7 +378,7 @@ shared_ptr<ChecksumDefinition> ChecksumDefinition::getDefaultChecksumDefinition(
 void ChecksumDefinition::setDefaultChecksumDefinition( const shared_ptr<ChecksumDefinition> & checksumDefinition ) {
     if ( !checksumDefinition )
         return;
-    KConfigGroup group( KGlobal::config(), "ChecksumOperations" );
+    KConfigGroup group( KSharedConfig::openConfig(), "ChecksumOperations" );
     group.writeEntry( CHECKSUM_DEFINITION_ID_ENTRY, checksumDefinition->id() );
     group.sync();
 }

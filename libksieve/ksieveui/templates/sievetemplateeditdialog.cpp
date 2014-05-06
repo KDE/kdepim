@@ -28,6 +28,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QShortcut>
+#include <KSharedConfig>
 
 
 using namespace KSieveUi;
@@ -98,13 +99,13 @@ void SieveTemplateEditDialog::slotFind()
 
 void SieveTemplateEditDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SieveTemplateEditDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SieveTemplateEditDialog" );
     group.writeEntry( "Size", size() );
 }
 
 void SieveTemplateEditDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SieveTemplateEditDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SieveTemplateEditDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );

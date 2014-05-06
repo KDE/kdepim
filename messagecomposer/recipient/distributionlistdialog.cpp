@@ -41,6 +41,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QHeaderView>
+#include <KSharedConfig>
 
 using namespace MessageComposer;
 
@@ -333,7 +334,7 @@ void DistributionListDialog::slotTitleChanged( const QString& text )
 
 void DistributionListDialog::readConfig()
 {
-    KSharedConfig::Ptr cfg = KGlobal::config();
+    KSharedConfig::Ptr cfg = KSharedConfig::openConfig();
     KConfigGroup group( cfg, "DistributionListDialog" );
     const QSize size = group.readEntry( "Size", QSize() );
     if ( !size.isEmpty() ) {
@@ -344,7 +345,7 @@ void DistributionListDialog::readConfig()
 
 void DistributionListDialog::writeConfig()
 {
-    KSharedConfig::Ptr cfg = KGlobal::config();
+    KSharedConfig::Ptr cfg = KSharedConfig::openConfig();
     KConfigGroup group( cfg, "DistributionListDialog" );
     group.writeEntry( "Size", size() );
     group.writeEntry( "Header", mRecipientsList->header()->saveState() );

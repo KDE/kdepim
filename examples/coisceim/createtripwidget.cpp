@@ -33,6 +33,7 @@
 #include <KGlobal>
 
 #include <AkonadiCore/ChangeRecorder>
+#include <KSharedConfig>
 
 #include "createfoldercontentswidget.h"
 #include "eventselectorwidget.h"
@@ -96,7 +97,7 @@ void CreateTripWidget::create()
     KMessageBox::error(this, i18n("You need to select an event first"));
     return;
   }
-  KSharedConfigPtr config = KGlobal::config();
+  KSharedConfigPtr config = KSharedConfig::openConfig();
 
   KConfigGroup generalGroup( config, "General" );
 

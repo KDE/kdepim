@@ -40,6 +40,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QPointer>
+#include <KSharedConfig>
 
 NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
     : KDialog(parent)
@@ -106,7 +107,7 @@ void NotesAgentAlarmDialog::slotCustomContextMenuRequested(const QPoint &pos)
 
 void NotesAgentAlarmDialog::readConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "NotesAgentAlarmDialog" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "NotesAgentAlarmDialog" );
     const QSize size = grp.readEntry( "Size", QSize(300, 200) );
     if ( size.isValid() ) {
         resize( size );
@@ -115,7 +116,7 @@ void NotesAgentAlarmDialog::readConfig()
 
 void NotesAgentAlarmDialog::writeConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "NotesAgentAlarmDialog" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "NotesAgentAlarmDialog" );
     grp.writeEntry( "Size", size() );
     grp.sync();
 }

@@ -118,12 +118,12 @@ private:
     }
 
     bool runAtStartUp() const {
-        const KConfigGroup config( KGlobal::config(), "Self-Test" );
+        const KConfigGroup config( KSharedConfig::openConfig(), "Self-Test" );
         return config.readEntry( "run-at-startup", true );
     }
 
     void setRunAtStartUp( bool on ) {
-        KConfigGroup config( KGlobal::config(), "Self-Test" );
+        KConfigGroup config( KSharedConfig::openConfig(), "Self-Test" );
         config.writeEntry( "run-at-startup", on );
     }
 

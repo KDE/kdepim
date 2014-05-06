@@ -50,6 +50,7 @@
 #include <QVBoxLayout>
 
 #include <errno.h>
+#include <KSharedConfig>
 
 using namespace MailCommon;
 
@@ -182,7 +183,7 @@ void FilterLogDialog::slotTextChanged()
 
 void FilterLogDialog::readConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup group( config, "FilterLog" );
     const bool isEnabled = group.readEntry( "Enabled", false );
     const bool isLogPatternDescription = group.readEntry( "LogPatternDescription", false );
@@ -215,7 +216,7 @@ void FilterLogDialog::readConfig()
 
 FilterLogDialog::~FilterLogDialog()
 {
-    KConfigGroup myGroup( KGlobal::config(), "Geometry" );
+    KConfigGroup myGroup( KSharedConfig::openConfig(), "Geometry" );
     myGroup.writeEntry( "filterLogSize", size() );
     myGroup.sync();
 }
@@ -225,7 +226,7 @@ void FilterLogDialog::writeConfig()
     if ( !mIsInitialized )
         return;
 
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup group( config, "FilterLog" );
     group.writeEntry( "Enabled", FilterLog::instance()->isLogging() );
     group.writeEntry( "LogPatternDescription", FilterLog::instance()->isContentTypeEnabled( FilterLog::PatternDescription ) );

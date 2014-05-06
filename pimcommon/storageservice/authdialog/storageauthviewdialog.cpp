@@ -41,7 +41,7 @@ StorageAuthViewDialog::~StorageAuthViewDialog()
 
 void StorageAuthViewDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "StorageAuthViewDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "StorageAuthViewDialog" );
     const QSize size = group.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
@@ -50,7 +50,7 @@ void StorageAuthViewDialog::readConfig()
 
 void StorageAuthViewDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "StorageAuthViewDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "StorageAuthViewDialog" );
     group.writeEntry( "Size", size() );
     group.sync();
 }

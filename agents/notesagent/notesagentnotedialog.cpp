@@ -107,7 +107,7 @@ void NotesAgentNoteDialog::slotFetchItem(KJob* job)
 
 void NotesAgentNoteDialog::readConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "NotesAgentNoteDialog" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "NotesAgentNoteDialog" );
     const QSize size = grp.readEntry( "Size", QSize(300, 200) );
     if ( size.isValid() ) {
         resize( size );
@@ -116,7 +116,7 @@ void NotesAgentNoteDialog::readConfig()
 
 void NotesAgentNoteDialog::writeConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "NotesAgentNoteDialog" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "NotesAgentNoteDialog" );
     grp.writeEntry( "Size", size() );
     grp.sync();
 }

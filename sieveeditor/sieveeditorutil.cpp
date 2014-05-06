@@ -30,6 +30,7 @@
 #include <KConfigGroup>
 
 #include <QRegExp>
+#include <KSharedConfig>
 
 
 KUrl SieveEditorUtil::SieveServerConfig::url() const {
@@ -72,7 +73,7 @@ KUrl SieveEditorUtil::SieveServerConfig::url() const {
 QList<SieveEditorUtil::SieveServerConfig> SieveEditorUtil::readServerSieveConfig()
 {
     QList<SieveServerConfig> lstConfig;
-    KSharedConfigPtr cfg = KGlobal::config();
+    KSharedConfigPtr cfg = KSharedConfig::openConfig();
     QRegExp re( QLatin1String( "^ServerSieve (.+)$" ) );
     const QStringList groups = cfg->groupList().filter( re );
     KWallet::Wallet *wallet = SieveServerSettings::self()->wallet();
@@ -100,7 +101,7 @@ QList<SieveEditorUtil::SieveServerConfig> SieveEditorUtil::readServerSieveConfig
 
 void SieveEditorUtil::writeServerSieveConfig(const QList<SieveEditorUtil::SieveServerConfig> &lstConfig)
 {
-    KSharedConfigPtr cfg = KGlobal::config();
+    KSharedConfigPtr cfg = KSharedConfig::openConfig();
     const QRegExp re( QLatin1String( "^ServerSieve (.+)$" ) );
     //Delete Old Group
     const QStringList groups = cfg->groupList().filter( re );
@@ -143,7 +144,7 @@ void SieveEditorUtil::addServerSieveConfig(const SieveEditorUtil::SieveServerCon
         }
         wallet->setFolder( QLatin1String("sieveeditor") );
     }
-    KSharedConfigPtr cfg = KGlobal::config();
+    KSharedConfigPtr cfg = KSharedConfig::openConfig();
     const QRegExp re( QLatin1String( "^ServerSieve (.+)$" ) );
     const QStringList groups = cfg->groupList().filter( re );
     KConfigGroup group = cfg->group(QString::fromLatin1("ServerSieve %1").arg(groups.count()));

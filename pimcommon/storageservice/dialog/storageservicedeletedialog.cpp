@@ -168,7 +168,7 @@ void StorageServiceDeleteDialog::slotUpdatePixmap(const QPixmap &pix)
 
 void StorageServiceDeleteDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "StorageServiceDeleteDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "StorageServiceDeleteDialog" );
     const QSize size = group.readEntry( "Size", QSize(600, 400) );
     mTreeWidget->header()->restoreState( group.readEntry( mStorage->storageServiceName(), QByteArray() ) );
     if ( size.isValid() ) {
@@ -178,7 +178,7 @@ void StorageServiceDeleteDialog::readConfig()
 
 void StorageServiceDeleteDialog::writeConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     KConfigGroup group = config->group( QLatin1String("StorageServiceDeleteDialog") );
     group.writeEntry( "Size", size() );

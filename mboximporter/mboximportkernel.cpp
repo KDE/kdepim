@@ -24,6 +24,7 @@
 #include <entitytreemodel.h>
 #include <entitymimetypefiltermodel.h>
 #include <changerecorder.h>
+#include <KSharedConfig>
 
 MBoxImporterKernel::MBoxImporterKernel( QObject *parent )
     : QObject( parent )
@@ -61,7 +62,7 @@ Akonadi::EntityMimeTypeFilterModel *MBoxImporterKernel::collectionModel() const
 
 KSharedConfig::Ptr MBoxImporterKernel::config()
 {
-    return KGlobal::config();
+    return KSharedConfig::openConfig();
 }
 
 void MBoxImporterKernel::syncConfig()

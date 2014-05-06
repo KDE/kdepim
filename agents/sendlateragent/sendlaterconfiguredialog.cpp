@@ -32,6 +32,7 @@
 #include <KGlobal>
 
 #include <QPointer>
+#include <KSharedConfig>
 
 static QString sendLaterItemPattern = QLatin1String( "SendLaterItem \\d+" );
 
@@ -103,7 +104,7 @@ void SendLaterConfigureDialog::slotNeedToReloadConfig()
 
 void SendLaterConfigureDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SendLaterConfigureDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SendLaterConfigureDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
@@ -113,7 +114,7 @@ void SendLaterConfigureDialog::readConfig()
 
 void SendLaterConfigureDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SendLaterConfigureDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SendLaterConfigureDialog" );
     group.writeEntry( "Size", size() );
     mWidget->saveTreeWidgetHeader(group);
 }
@@ -225,7 +226,7 @@ void SendLaterWidget::updateButtons()
 
 void SendLaterWidget::load()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     const QStringList filterGroups = config->groupList().filter( QRegExp( sendLaterItemPattern ) );
     const int numberOfItem = filterGroups.count();
     for (int i = 0 ; i < numberOfItem; ++i) {
@@ -254,7 +255,7 @@ void SendLaterWidget::save()
 {
     if (!mChanged)
         return;
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     // first, delete all filter groups:
     const QStringList filterGroups =config->groupList().filter( QRegExp( sendLaterItemPattern ) );
@@ -323,7 +324,7 @@ void SendLaterWidget::slotModifyItem()
 void SendLaterWidget::needToReload()
 {
     mWidget->treeWidget->clear();
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     config->reparseConfiguration();
     load();
 }

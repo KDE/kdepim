@@ -39,6 +39,7 @@
 #include <QVBoxLayout>
 
 #include <errno.h>
+#include <KSharedConfig>
 
 using namespace KSieveUi;
 
@@ -133,7 +134,7 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent )
     connect( close, SIGNAL(clicked()), this, SLOT(accept()) );
     buttonLayout->addWidget( close );
 
-    KConfigGroup group( KGlobal::config(), "ManageSieveScriptsDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "ManageSieveScriptsDialog" );
     const QSize size = group.readEntry( "Size", QSize() );
     if ( size.isValid() ) {
         resize( size );
@@ -146,7 +147,7 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent )
 
 ManageSieveScriptsDialog::~ManageSieveScriptsDialog()
 {
-    KConfigGroup group( KGlobal::config(), "ManageSieveScriptsDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "ManageSieveScriptsDialog" );
     group.writeEntry( "Size", size() );
 }
 

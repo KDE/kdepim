@@ -27,6 +27,7 @@
 #include <QPushButton>
 #include <QKeyEvent>
 #include <QDebug>
+#include <KSharedConfig>
 
 using namespace KSieveUi;
 
@@ -75,13 +76,13 @@ void SieveEditor::slotEnableButtonOk(bool b)
 
 void SieveEditor::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SieveEditor" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SieveEditor" );
     group.writeEntry( "Size", size() );
 }
 
 void SieveEditor::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SieveEditor" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SieveEditor" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );

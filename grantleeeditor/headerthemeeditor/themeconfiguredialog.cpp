@@ -31,6 +31,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QTabWidget>
+#include <KSharedConfig>
 
 ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
     : KDialog(parent)
@@ -69,7 +70,7 @@ ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
 
 ThemeConfigureDialog::~ThemeConfigureDialog()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     KConfigGroup group = config->group( QLatin1String("ThemeConfigureDialog") );
     group.writeEntry( "Size", size() );
@@ -89,7 +90,7 @@ void ThemeConfigureDialog::slotOkClicked()
 
 void ThemeConfigureDialog::readConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     if (config->hasGroup(QLatin1String("Global"))) {
         KConfigGroup group = config->group(QLatin1String("Global"));
         mConfigureWidget->readConfig();
@@ -108,7 +109,7 @@ void ThemeConfigureDialog::readConfig()
 
 void ThemeConfigureDialog::writeConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup group = config->group(QLatin1String("Global"));
     group.writeEntry("defaultEmail", mDefaultEmail->toPlainText());
     group.writeEntry("defaultTemplate", mDefaultTemplate->toPlainText());

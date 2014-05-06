@@ -32,6 +32,7 @@
 #include <KStandardAction>
 #include <KLocalizedString>
 #include <KToolBar>
+#include <KSharedConfig>
 
 MainWindow::MainWindow()
   : KXmlGuiWindow( 0 )
@@ -88,7 +89,7 @@ void MainWindow::configureKeyBindings()
 
 void MainWindow::configureToolbars()
 {
-  KConfigGroup grp = KGlobal::config()->group( "MainWindow");
+  KConfigGroup grp = KSharedConfig::openConfig()->group( "MainWindow");
   saveMainWindowSettings( grp );
 
   KEditToolBar dlg( factory() );
@@ -100,6 +101,6 @@ void MainWindow::newToolbarConfig()
 {
   createGUI( QLatin1String("kaddressbookui.rc") );
 
-  applyMainWindowSettings( KGlobal::config()->group( "MainWindow" ) );
+  applyMainWindowSettings( KSharedConfig::openConfig()->group( "MainWindow" ) );
 }
 

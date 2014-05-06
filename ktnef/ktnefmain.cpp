@@ -53,6 +53,7 @@
 #include <QDrag>
 #include <QMimeData>
 #include <QPixmap>
+#include <KSharedConfig>
 
 KTNEFMain::KTNEFMain( QWidget *parent )
   : KXmlGuiWindow( parent )
@@ -62,10 +63,10 @@ KTNEFMain::KTNEFMain( QWidget *parent )
 
   setupTNEF();
 
-  KConfigGroup config( KGlobal::config(), "Settings" );
+  KConfigGroup config( KSharedConfig::openConfig(), "Settings" );
   mDefaultDir = config.readPathEntry( "defaultdir", QLatin1String("/tmp/") );
 
-  config = KConfigGroup( KGlobal::config(), "Recent Files" );
+  config = KConfigGroup( KSharedConfig::openConfig(), "Recent Files" );
   mOpenRecentFileAction->loadEntries(config);
 
   mLastDir = mDefaultDir;
@@ -244,7 +245,7 @@ void KTNEFMain::openRecentFile(const KUrl &url)
 void KTNEFMain::addRecentFile(const KUrl &url)
 {
     mOpenRecentFileAction->addUrl(url);
-    KConfigGroup config( KGlobal::config(), "Recent Files" );
+    KConfigGroup config( KSharedConfig::openConfig(), "Recent Files" );
     mOpenRecentFileAction->saveEntries(config);
     config.sync();
 }
@@ -348,7 +349,7 @@ void KTNEFMain::optionDefaultDir()
   if ( !dirname.isEmpty() ) {
     mDefaultDir = dirname;
 
-    KConfigGroup config( KGlobal::config(), "Settings" );
+    KConfigGroup config( KSharedConfig::openConfig(), "Settings" );
     config.writePathEntry( "defaultdir", mDefaultDir );
   }
 }
@@ -492,7 +493,7 @@ void KTNEFMain::viewDragRequested( const QList<KTNEFAttach *>& list )
 
 void KTNEFMain::slotEditToolbars()
 {
-  KConfigGroup grp = KGlobal::config()->group( "MainWindow" );
+  KConfigGroup grp = KSharedConfig::openConfig()->group( "MainWindow" );
   saveMainWindowSettings( grp );
 
   KEditToolBar dlg( factory() );
@@ -503,7 +504,7 @@ void KTNEFMain::slotEditToolbars()
 void KTNEFMain::slotNewToolbarConfig()
 {
   createGUI( QLatin1String("ktnefui.rc") );
-  applyMainWindowSettings( KGlobal::config()->group( "MainWindow" ) );
+  applyMainWindowSettings( KSharedConfig::openConfig()->group( "MainWindow" ) );
 }
 
 void KTNEFMain::slotShowMessageProperties()

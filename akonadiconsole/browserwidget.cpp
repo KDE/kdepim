@@ -69,6 +69,7 @@
 #include <QSqlQuery>
 #include <QTimer>
 #include <QSqlError>
+#include <KSharedConfig>
 
 using namespace Akonadi;
 
@@ -158,7 +159,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   itemFilter->addMimeTypeExclusionFilter( Collection::mimeType() );
   itemFilter->setHeaderGroup( EntityTreeModel::ItemListHeaders );
 
-  const KConfigGroup group = KGlobal::config()->group( "FavoriteCollectionsModel" );
+  const KConfigGroup group = KSharedConfig::openConfig()->group( "FavoriteCollectionsModel" );
   FavoriteCollectionsModel *favoritesModel = new FavoriteCollectionsModel( mBrowserModel, group, this );
   favoritesView->setModel( favoritesModel );
 
@@ -211,7 +212,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   xmlGuiWindow->actionCollection()->addAction( "akonadiconsole_cacheonly", mCacheOnlyAction );
   connect( mCacheOnlyAction, SIGNAL(toggled(bool)), SLOT(updateItemFetchScope()) );
 
-  m_stateMaintainer = new KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config()->group("CollectionViewState"), this );
+  m_stateMaintainer = new KViewStateMaintainer<ETMViewStateSaver>( KSharedConfig::openConfig()->group("CollectionViewState"), this );
   m_stateMaintainer->setView( mCollectionView );
 
   m_stateMaintainer->restoreState();

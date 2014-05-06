@@ -38,6 +38,7 @@
 #include <QPushButton>
 
 #include <AkonadiCore/control.h>
+#include <KSharedConfig>
 using namespace MailImporter;
 
 KMailCVT::KMailCVT(QWidget *parent)
@@ -81,7 +82,7 @@ KMailCVT::~KMailCVT()
 
 void KMailCVT::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "FolderSelectionDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "FolderSelectionDialog" );
     if ( group.hasKey( "LastSelectedFolder" ) ) {
         selfilterpage->widget()->mCollectionRequestor->setCollection( CommonKernel->collectionFromId(group.readEntry("LastSelectedFolder", -1 )));
     }
@@ -89,7 +90,7 @@ void KMailCVT::readConfig()
 
 void KMailCVT::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "FolderSelectionDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "FolderSelectionDialog" );
     group.writeEntry( "LastSelectedFolder", selfilterpage->widget()->mCollectionRequestor->collection().id() );
     group.sync();
 }

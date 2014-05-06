@@ -57,6 +57,7 @@
 #include <QtDBus/QDBusConnection>
 #include <QToolButton>
 #include <QTreeWidget>
+#include <KSharedConfig>
 
 using namespace KPIM;
 
@@ -253,7 +254,7 @@ CompletionOrderEditor::~CompletionOrderEditor()
 
 void CompletionOrderEditor::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "CompletionOrderEditor" );
+    KConfigGroup group( KSharedConfig::openConfig(), "CompletionOrderEditor" );
     const QSize size = group.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
@@ -262,7 +263,7 @@ void CompletionOrderEditor::readConfig()
 
 void CompletionOrderEditor::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "CompletionOrderEditor" );
+    KConfigGroup group( KSharedConfig::openConfig(), "CompletionOrderEditor" );
     group.writeEntry( "Size", size() );
     group.sync();
 }

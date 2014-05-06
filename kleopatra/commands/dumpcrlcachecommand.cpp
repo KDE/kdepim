@@ -53,6 +53,7 @@
 #include <QTimer>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <KSharedConfig>
 
 static const int PROCESS_TERMINATE_TIMEOUT = 5000; // milliseconds
 
@@ -84,7 +85,7 @@ namespace {
     private:
         void readConfig()
         {
-            KConfigGroup dialog( KGlobal::config(), "DumpCrlCacheDialog" );
+            KConfigGroup dialog( KSharedConfig::openConfig(), "DumpCrlCacheDialog" );
             const QSize size = dialog.readEntry( "Size", QSize(600, 400) );
             if ( size.isValid() ) {
                 resize( size );
@@ -93,7 +94,7 @@ namespace {
 
         void writeConfig()
         {
-            KConfigGroup dialog( KGlobal::config(), "DumpCrlCacheDialog" );
+            KConfigGroup dialog( KSharedConfig::openConfig(), "DumpCrlCacheDialog" );
             dialog.writeEntry( "Size", size() );
             dialog.sync();
         }

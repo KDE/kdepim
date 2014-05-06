@@ -34,6 +34,7 @@
 #include <KConfigGroup>
 
 #include <kabc/addressee.h>
+#include <KSharedConfig>
 
 namespace KPIM {
 
@@ -58,7 +59,7 @@ SelectedCollectionDialog::~SelectedCollectionDialog()
 
 void SelectedCollectionDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SelectedCollectionDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SelectedCollectionDialog" );
     const QSize size = group.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
@@ -67,7 +68,7 @@ void SelectedCollectionDialog::readConfig()
 
 void SelectedCollectionDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SelectedCollectionDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SelectedCollectionDialog" );
     group.writeEntry( "Size", size() );
     group.sync();
 }

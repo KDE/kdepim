@@ -55,6 +55,7 @@
 #include <KDebug>
 
 #include <QCloseEvent>
+#include <KSharedConfig>
 
 using namespace IncidenceEditorNG;
 
@@ -664,7 +665,7 @@ IncidenceDialog::IncidenceDialog( Akonadi::IncidenceChanger *changer,
            d->mIeAttendee, SLOT(declineForMe()) );
   connect( d->mUi->mDeclineInvitationButton, SIGNAL(clicked()),
            d->mUi->mInvitationBar, SLOT(hide()) );
-  KConfigGroup group( KGlobal::config(), "IncidenceDialog" );
+  KConfigGroup group( KSharedConfig::openConfig(), "IncidenceDialog" );
   const QSize size = group.readEntry( "Size", QSize() );
   if ( size.isValid() ) {
       resize( size );
@@ -677,7 +678,7 @@ IncidenceDialog::IncidenceDialog( Akonadi::IncidenceChanger *changer,
 
 IncidenceDialog::~IncidenceDialog()
 {
-  KConfigGroup group( KGlobal::config(), "IncidenceDialog" );
+  KConfigGroup group( KSharedConfig::openConfig(), "IncidenceDialog" );
   group.writeEntry( "Size", size() );
   delete d_ptr;
 }

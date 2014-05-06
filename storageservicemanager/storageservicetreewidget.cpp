@@ -38,6 +38,7 @@
 #include <QHeaderView>
 #include <QTimer>
 #include <QPointer>
+#include <KSharedConfig>
 
 StorageServiceTreeWidget::StorageServiceTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
     : PimCommon::StorageServiceTreeWidget(storageService, parent),
@@ -60,13 +61,13 @@ StorageServiceTreeWidget::~StorageServiceTreeWidget()
 
 void StorageServiceTreeWidget::writeConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "StorageServiceTreeWidget" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "StorageServiceTreeWidget" );
     grp.writeEntry(mStorageService->storageServiceName(), header()->saveState());
 }
 
 void StorageServiceTreeWidget::readConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "StorageServiceTreeWidget" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "StorageServiceTreeWidget" );
     header()->restoreState( grp.readEntry( mStorageService->storageServiceName(), QByteArray() ) );
 }
 

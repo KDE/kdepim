@@ -39,7 +39,7 @@ ArchiveMailManager::ArchiveMailManager(QObject *parent)
     mArchiveMailKernel = new ArchiveMailKernel( this );
     CommonKernel->registerKernelIf( mArchiveMailKernel ); //register KernelIf early, it is used by the Filter classes
     CommonKernel->registerSettingsIf( mArchiveMailKernel ); //SettingsIf is used in FolderTreeWidget
-    mConfig = KGlobal::config();
+    mConfig = KSharedConfig::openConfig();
 }
 
 ArchiveMailManager::~ArchiveMailManager()

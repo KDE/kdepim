@@ -105,6 +105,7 @@
 #include "noteshared/attributes/notelockattribute.h"
 #include "localresourcecreator.h"
 #include <krandom.h>
+#include <KSharedConfig>
 #include "kjotsbrowser.h"
 
 #ifndef KDE_USE_FINAL
@@ -119,7 +120,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 {
   Akonadi::Control::widgetNeedsAkonadi( this );
 
-  KConfigGroup migrationCfg( KGlobal::config(), "General" );
+  KConfigGroup migrationCfg( KSharedConfig::openConfig(), "General" );
   const bool autoCreate = migrationCfg.readEntry( "AutoCreateResourceOnStart", true );
   migrationCfg.writeEntry("AutoCreateResourceOnStart", autoCreate);
   migrationCfg.sync();
@@ -167,7 +168,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   m_orderProxy = new EntityOrderProxyModel( this );
   m_orderProxy->setSourceModel( m_sortProxyModel );
 
-  KConfigGroup cfg( KGlobal::config(), "KJotsEntityOrder" );
+  KConfigGroup cfg( KSharedConfig::openConfig(), "KJotsEntityOrder" );
 
   m_orderProxy->setOrderConfig( cfg );
 
@@ -423,7 +424,7 @@ void KJotsWidget::restoreState()
 {
   ETMViewStateSaver *saver = new ETMViewStateSaver;
   saver->setView( treeview );
-  KConfigGroup cfg( KGlobal::config(), "TreeState" );
+  KConfigGroup cfg( KSharedConfig::openConfig(), "TreeState" );
   saver->restoreState( cfg );
 }
 
@@ -431,7 +432,7 @@ void KJotsWidget::saveState()
 {
   ETMViewStateSaver saver;
   saver.setView( treeview );
-  KConfigGroup cfg( KGlobal::config(), "TreeState" );
+  KConfigGroup cfg( KSharedConfig::openConfig(), "TreeState" );
   saver.saveState( cfg );
   cfg.sync();
 }

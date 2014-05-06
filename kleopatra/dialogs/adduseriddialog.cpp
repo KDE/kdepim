@@ -51,6 +51,7 @@
 #include <KDebug>
 
 #include <cassert>
+#include <KSharedConfig>
 
 using namespace Kleo;
 using namespace Kleo::Dialogs;
@@ -179,7 +180,7 @@ private:
             errorLB->setFixedHeight( errorLB->minimumSizeHint().height() );
             errorLB->clear();
 
-            const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
+            const KConfigGroup config( KSharedConfig::openConfig(), "CertificateCreationWizard" );
             const QStringList attrOrder = config.readEntry( "OpenPGPAttributeOrder",
                                                             QStringList() << QLatin1String("NAME!") << QLatin1String("EMAIL!") << QLatin1String("COMMENT") );
 

@@ -74,7 +74,7 @@ ManageThemes::~ManageThemes()
 
 void ManageThemes::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "ManageThemesDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "ManageThemesDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(300, 150) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
@@ -83,7 +83,7 @@ void ManageThemes::readConfig()
 
 void ManageThemes::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "ManageThemesDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "ManageThemesDialog" );
     group.writeEntry( "Size", size() );
 }
 

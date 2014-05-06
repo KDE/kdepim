@@ -40,6 +40,7 @@
 #include <QKeyEvent>
 #include <QTreeView>
 #include <QVBoxLayout>
+#include <KSharedConfig>
 
 using namespace MessageComposer;
 
@@ -181,7 +182,7 @@ void RecipientsPicker::keyPressEvent( QKeyEvent *event )
 
 void RecipientsPicker::readConfig()
 {
-    KSharedConfig::Ptr cfg = KGlobal::config();
+    KSharedConfig::Ptr cfg = KSharedConfig::openConfig();
     KConfigGroup group( cfg, "RecipientsPicker" );
     QSize size = group.readEntry( "Size", QSize() );
     if ( !size.isEmpty() ) {
@@ -191,7 +192,7 @@ void RecipientsPicker::readConfig()
 
 void RecipientsPicker::writeConfig()
 {
-    KSharedConfig::Ptr cfg = KGlobal::config();
+    KSharedConfig::Ptr cfg = KSharedConfig::openConfig();
     KConfigGroup group( cfg, "RecipientsPicker" );
     group.writeEntry( "Size", size() );
 }

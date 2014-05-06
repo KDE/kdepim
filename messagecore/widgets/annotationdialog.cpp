@@ -141,7 +141,7 @@ void AnnotationEditDialog::slotButtonClicked( int button )
 
 void AnnotationEditDialog::readConfig()
 {
-    KSharedConfig::Ptr cfg = KGlobal::config();
+    KSharedConfig::Ptr cfg = KSharedConfig::openConfig();
     KConfigGroup group( cfg, "AnnotationEditDialog" );
     QSize size = group.readEntry( "Size", QSize() );
     if ( !size.isEmpty() ) {
@@ -151,7 +151,7 @@ void AnnotationEditDialog::readConfig()
 
 void AnnotationEditDialog::writeConfig()
 {
-    KSharedConfig::Ptr cfg = KGlobal::config();
+    KSharedConfig::Ptr cfg = KSharedConfig::openConfig();
     KConfigGroup group( cfg, "AnnotationEditDialog" );
     group.writeEntry( "Size", size() );
 }

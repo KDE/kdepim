@@ -25,6 +25,7 @@
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/entitymimetypefiltermodel.h>
 #include <AkonadiCore/changerecorder.h>
+#include <KSharedConfig>
 
 FilterTestKernel::FilterTestKernel( QObject *parent )
     : QObject( parent )
@@ -63,7 +64,7 @@ Akonadi::EntityMimeTypeFilterModel *FilterTestKernel::collectionModel() const
 
 KSharedConfig::Ptr FilterTestKernel::config()
 {
-    return KGlobal::config();
+    return KSharedConfig::openConfig();
 }
 
 void FilterTestKernel::syncConfig()

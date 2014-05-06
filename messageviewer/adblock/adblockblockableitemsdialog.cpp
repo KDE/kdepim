@@ -26,6 +26,7 @@
 #include <QVBoxLayout>
 #include <QTreeWidget>
 #include <QWebFrame>
+#include <KSharedConfig>
 
 using namespace MessageViewer;
 AdBlockBlockableItemsDialog::AdBlockBlockableItemsDialog(QWidget *parent)
@@ -57,13 +58,13 @@ void AdBlockBlockableItemsDialog::saveFilters()
 
 void AdBlockBlockableItemsDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "AdBlockBlockableItemsDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "AdBlockBlockableItemsDialog" );
     group.writeEntry( "Size", size() );
 }
 
 void AdBlockBlockableItemsDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "AdBlockBlockableItemsDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "AdBlockBlockableItemsDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(500,300) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );

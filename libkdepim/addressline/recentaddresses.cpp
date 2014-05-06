@@ -45,6 +45,7 @@
 #include <QVBoxLayout>
 #include <QListWidget>
 #include <QKeyEvent>
+#include <KSharedConfig>
 
 using namespace KPIM;
 
@@ -73,7 +74,7 @@ bool RecentAddresses::exists()
 RecentAddresses::RecentAddresses( KConfig *config )
 {
     if ( !config ) {
-        load( KGlobal::config().data() );
+        load( KSharedConfig::openConfig().data() );
     } else {
         load( config );
     }
@@ -338,7 +339,7 @@ void RecentAddressDialog::addAddresses(KConfig *config)
 
 void RecentAddressDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "RecentAddressDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "RecentAddressDialog" );
     const QSize size = group.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
@@ -347,7 +348,7 @@ void RecentAddressDialog::readConfig()
 
 void RecentAddressDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "RecentAddressDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "RecentAddressDialog" );
     group.writeEntry( "Size", size() );
     group.sync();
 }

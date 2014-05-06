@@ -154,7 +154,7 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
 
   KIconLoader::global()->addAppDir( QLatin1String("korgac") );
 
-  KSharedConfig::Ptr config = KGlobal::config();
+  KSharedConfig::Ptr config = KSharedConfig::openConfig();
   KConfigGroup generalConfig( config, "General" );
   QPoint pos = generalConfig.readEntry( "Position", QPoint( 0, 0 ) );
 
@@ -724,7 +724,7 @@ void AlarmDialog::wakeUp()
 
 void AlarmDialog::slotSave()
 {
-  KSharedConfig::Ptr config = KGlobal::config();
+  KSharedConfig::Ptr config = KSharedConfig::openConfig();
   KConfigGroup generalConfig( config, "General" );
   int numReminders = 0;
 
@@ -1002,7 +1002,7 @@ bool AlarmDialog::openIncidenceEditorNG( const Akonadi::Item &item )
 
 void AlarmDialog::removeFromConfig( const QList<Akonadi::Item::Id> &ids )
 {
-  KSharedConfig::Ptr config = KGlobal::config();
+  KSharedConfig::Ptr config = KSharedConfig::openConfig();
   KConfigGroup genGroup( config, "General" );
 
   const int oldNumReminders = genGroup.readEntry( "Reminders", 0 );

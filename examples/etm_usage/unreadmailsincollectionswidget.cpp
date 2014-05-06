@@ -47,6 +47,7 @@
 #include <Akonadi/KMime/messagestatus.h>
 
 #include <KMime/Message>
+#include <KSharedConfig>
 
 #include "itemviewerwidget.h"
 
@@ -152,7 +153,7 @@ void UnreadMailsInCollectionsWidget::saveCheckState()
   ETMViewStateSaver saver;
   saver.setSelectionModel(m_checkedItemModel);
 
-  KConfigGroup cfg( KGlobal::config(), "CheckState" );
+  KConfigGroup cfg( KSharedConfig::openConfig(), "CheckState" );
   saver.saveState(cfg);
   cfg.sync();
 }
@@ -162,7 +163,7 @@ void UnreadMailsInCollectionsWidget::restoreCheckState()
   ETMViewStateSaver *restorer = new ETMViewStateSaver;
   restorer->setSelectionModel(m_checkedItemModel);
 
-  KConfigGroup cfg( KGlobal::config(), "CheckState" );
+  KConfigGroup cfg( KSharedConfig::openConfig(), "CheckState" );
   restorer->restoreState(cfg);
 }
 

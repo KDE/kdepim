@@ -79,7 +79,7 @@ void StorageServiceLogDialog::setLog(const QString &log)
 
 void StorageServiceLogDialog::writeConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     KConfigGroup group = config->group( QLatin1String("StorageServiceLogDialog") );
     group.writeEntry( "Size", size() );
@@ -87,7 +87,7 @@ void StorageServiceLogDialog::writeConfig()
 
 void StorageServiceLogDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "StorageServiceLogDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "StorageServiceLogDialog" );
     const QSize size = group.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );

@@ -34,6 +34,7 @@
 #include <QDataStream>
 #include <QLabel>
 #include <QTreeWidget>
+#include <KSharedConfig>
 
 AttachPropertyDialog::AttachPropertyDialog( QWidget *parent )
   : KDialog( parent ),
@@ -58,7 +59,7 @@ AttachPropertyDialog::~AttachPropertyDialog()
 
 void AttachPropertyDialog::readConfig()
 {
-  KConfigGroup group( KGlobal::config(), "AttachPropertyDialog" );
+  KConfigGroup group( KSharedConfig::openConfig(), "AttachPropertyDialog" );
   const QSize size = group.readEntry( "Size", QSize(500, 400) );
   if ( size.isValid() ) {
     resize( size );
@@ -67,7 +68,7 @@ void AttachPropertyDialog::readConfig()
 
 void AttachPropertyDialog::writeConfig()
 {
-  KConfigGroup group( KGlobal::config(), "AttachPropertyDialog" );
+  KConfigGroup group( KSharedConfig::openConfig(), "AttachPropertyDialog" );
   group.writeEntry( "Size", size() );
   group.sync();
 }

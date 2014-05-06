@@ -25,6 +25,7 @@
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/entitymimetypefiltermodel.h>
 #include <AkonadiCore/changerecorder.h>
+#include <KSharedConfig>
 
 ImportWizardKernel::ImportWizardKernel( QObject *parent )
     : QObject( parent )
@@ -63,7 +64,7 @@ Akonadi::EntityMimeTypeFilterModel *ImportWizardKernel::collectionModel() const
 
 KSharedConfig::Ptr ImportWizardKernel::config()
 {
-    return KGlobal::config();
+    return KSharedConfig::openConfig();
 }
 
 void ImportWizardKernel::syncConfig()

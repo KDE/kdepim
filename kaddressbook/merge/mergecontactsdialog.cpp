@@ -101,7 +101,7 @@ void MergeContactsDialog::slotMergeContactFinished(const Akonadi::Item &item)
 
 void MergeContactsDialog::readConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "MergeContactsDialog" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "MergeContactsDialog" );
     const QSize size = grp.readEntry( "Size", QSize(300, 200) );
     if ( size.isValid() ) {
         resize( size );
@@ -110,7 +110,7 @@ void MergeContactsDialog::readConfig()
 
 void MergeContactsDialog::writeConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "MergeContactsDialog");
+    KConfigGroup grp( KSharedConfig::openConfig(), "MergeContactsDialog");
     grp.writeEntry( "Size", size() );
     grp.sync();
 }

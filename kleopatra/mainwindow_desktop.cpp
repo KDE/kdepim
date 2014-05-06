@@ -93,6 +93,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include <vector>
+#include <KSharedConfig>
 
 #ifdef Q_OS_WIN32
 static const bool OS_WIN = true;
@@ -424,8 +425,8 @@ void MainWindow::closeEvent( QCloseEvent * e ) {
         }
     }
     if ( isQuitting || kapp->sessionSaving() ) {
-        d->ui.tabWidget.saveViews( KGlobal::config().data() );
-        KConfigGroup grp( KConfigGroup( KGlobal::config(), autoSaveGroup() ) );
+        d->ui.tabWidget.saveViews( KSharedConfig::openConfig().data() );
+        KConfigGroup grp( KConfigGroup( KSharedConfig::openConfig(), autoSaveGroup() ) );
         saveMainWindowSettings( grp );
         e->accept();
     } else {
@@ -437,7 +438,7 @@ void MainWindow::closeEvent( QCloseEvent * e ) {
 void MainWindow::showEvent( QShowEvent * e ) {
     KXmlGuiWindow::showEvent( e );
     if ( d->firstShow ) {
-        d->ui.tabWidget.loadViews( KGlobal::config().data() );
+        d->ui.tabWidget.loadViews( KSharedConfig::openConfig().data() );
         d->firstShow = false;
     }
 

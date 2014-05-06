@@ -54,6 +54,7 @@
 #include <boost/bind.hpp>
 
 #include <cassert>
+#include <KSharedConfig>
 
 using namespace Kleo;
 using namespace Kleo::Dialogs;
@@ -157,7 +158,7 @@ LookupCertificatesDialog::Private::~Private() {}
 
 void LookupCertificatesDialog::Private::readConfig()
 {
-    KConfigGroup dialog( KGlobal::config(), "LookupCertificatesDialog" );
+    KConfigGroup dialog( KSharedConfig::openConfig(), "LookupCertificatesDialog" );
     const QSize size = dialog.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         q->resize( size );
@@ -169,7 +170,7 @@ void LookupCertificatesDialog::Private::readConfig()
 
 void LookupCertificatesDialog::Private::writeConfig()
 {
-    KConfigGroup dialog( KGlobal::config(), "LookupCertificatesDialog" );
+    KConfigGroup dialog( KSharedConfig::openConfig(), "LookupCertificatesDialog" );
     dialog.writeEntry( "header", ui.resultTV->header()->saveState());
     dialog.writeEntry( "Size", q->size() );
     dialog.sync();

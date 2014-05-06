@@ -83,7 +83,7 @@ void MergeContactDuplicateContactDialog::searchPotentialDuplicateContacts(const 
 
 void MergeContactDuplicateContactDialog::readConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "MergeContactDuplicateContactDialog" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "MergeContactDuplicateContactDialog" );
     const QSize size = grp.readEntry( "Size", QSize(300, 200) );
     if ( size.isValid() ) {
         resize( size );
@@ -92,7 +92,7 @@ void MergeContactDuplicateContactDialog::readConfig()
 
 void MergeContactDuplicateContactDialog::writeConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "MergeContactDuplicateContactDialog");
+    KConfigGroup grp( KSharedConfig::openConfig(), "MergeContactDuplicateContactDialog");
     grp.writeEntry( "Size", size() );
     grp.sync();
 }

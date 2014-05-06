@@ -170,7 +170,7 @@ void StorageServiceDownloadDialog::setDefaultDownloadPath(const QString &path)
 
 void StorageServiceDownloadDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "StorageServiceDownloadDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "StorageServiceDownloadDialog" );
     const QSize size = group.readEntry( "Size", QSize(600, 400) );
     mTreeWidget->header()->restoreState( group.readEntry( mStorage->storageServiceName(), QByteArray() ) );
     if ( size.isValid() ) {
@@ -180,7 +180,7 @@ void StorageServiceDownloadDialog::readConfig()
 
 void StorageServiceDownloadDialog::writeConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     KConfigGroup group = config->group( QLatin1String("StorageServiceDownloadDialog") );
     group.writeEntry( "Size", size() );

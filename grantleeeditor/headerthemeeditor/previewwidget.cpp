@@ -27,6 +27,7 @@
 #include <KGlobal>
 
 #include <QVBoxLayout>
+#include <KSharedConfig>
 
 PreviewWidget::PreviewWidget(const QString &projectDirectory, QWidget *parent)
     : GrantleeThemeEditor::PreviewWidget(parent)
@@ -66,7 +67,7 @@ void PreviewWidget::slotMainFileNameChanged(const QString &filename)
 
 void PreviewWidget::loadConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     if (config->hasGroup(QLatin1String("Global"))) {
         KConfigGroup group = config->group(QLatin1String("Global"));
         mDefaultEmail = group.readEntry("defaultEmail", themeeditorutil::defaultMail()).toLatin1();

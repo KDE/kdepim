@@ -61,7 +61,7 @@ QString AutoCreateScriptDialog::script(QString &requires) const
 
 void AutoCreateScriptDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "AutoCreateScriptDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "AutoCreateScriptDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
@@ -70,7 +70,7 @@ void AutoCreateScriptDialog::readConfig()
 
 void AutoCreateScriptDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "AutoCreateScriptDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "AutoCreateScriptDialog" );
     group.writeEntry( "Size", size() );
 }
 

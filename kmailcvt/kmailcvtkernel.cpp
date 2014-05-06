@@ -25,6 +25,7 @@
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/entitymimetypefiltermodel.h>
 #include <AkonadiCore/changerecorder.h>
+#include <KSharedConfig>
 
 KMailCVTKernel::KMailCVTKernel( QObject *parent )
     : QObject( parent )
@@ -62,7 +63,7 @@ Akonadi::EntityMimeTypeFilterModel *KMailCVTKernel::collectionModel() const
 
 KSharedConfig::Ptr KMailCVTKernel::config()
 {
-    return KGlobal::config();
+    return KSharedConfig::openConfig();
 }
 
 void KMailCVTKernel::syncConfig()

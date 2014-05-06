@@ -49,6 +49,7 @@
 #include <QCloseEvent>
 #include <QLabel>
 #include <QDebug>
+#include <KSharedConfig>
 
 
 
@@ -86,7 +87,7 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
 StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
 {
     delete mStorageServiceMainWidget;
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     KConfigGroup group = config->group( QLatin1String("StorageServiceManagerMainWindow") );
     group.writeEntry( "Size", size() );
@@ -251,7 +252,7 @@ void StorageServiceManagerMainWindow::slotServiceRemoved(const QString &serviceN
 
 void StorageServiceManagerMainWindow::readConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup group = KConfigGroup( config, "StorageServiceManagerMainWindow" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {

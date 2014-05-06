@@ -73,6 +73,7 @@
 #include <KCmdLineArgs>
 #include <KGlobal>
 #include <QPointer>
+#include <KSharedConfig>
 
 PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
     : KXmlGuiWindow(parent),
@@ -110,7 +111,7 @@ PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
 PimSettingExporterWindow::~PimSettingExporterWindow()
 {
     delete mImportExportData;
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup groupConfig = config->group( QLatin1String("Recent File") );
     mRecentFilesAction->saveEntries(groupConfig);
 }
@@ -155,7 +156,7 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
     KStandardAction::quit( this, SLOT(close()), ac );
     mRecentFilesAction = KStandardAction::openRecent(this, SLOT(slotRestoreFile(KUrl)), ac);
 
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup groupConfig = config->group( QLatin1String("Recent File") );
     mRecentFilesAction->loadEntries(groupConfig);
 }

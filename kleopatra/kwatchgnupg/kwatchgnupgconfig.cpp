@@ -48,6 +48,7 @@
 #include <QComboBox>
 #include <QPushButton>
 #include <QGroupBox>
+#include <KSharedConfig>
 
 static const char* log_levels[] = { "none", "basic", "advanced", "expert", "guru" };
 
@@ -174,12 +175,12 @@ void KWatchGnuPGConfig::slotSetHistorySizeUnlimited() {
 
 void KWatchGnuPGConfig::loadConfig()
 {
-  const KConfigGroup watchGnuPG( KGlobal::config(), "WatchGnuPG" );
+  const KConfigGroup watchGnuPG( KSharedConfig::openConfig(), "WatchGnuPG" );
   mExeED->setFileName( watchGnuPG.readEntry( "Executable", WATCHGNUPGBINARY ) );
   mSocketED->setFileName( watchGnuPG.readEntry( "Socket", WATCHGNUPGSOCKET ) );
   mLogLevelCB->setCurrentIndex( log_level_to_int( watchGnuPG.readEntry( "LogLevel", "basic" ) ) );
 
-  const KConfigGroup logWindow( KGlobal::config(), "LogWindow" );
+  const KConfigGroup logWindow( KSharedConfig::openConfig(), "LogWindow" );
   mLoglenSB->setValue( logWindow.readEntry( "MaxLogLen", 10000 ) );
   mWordWrapCB->setChecked( logWindow.readEntry("WordWrap", false ) );
 
@@ -189,16 +190,16 @@ void KWatchGnuPGConfig::loadConfig()
 
 void KWatchGnuPGConfig::saveConfig()
 {
-  KConfigGroup watchGnuPG( KGlobal::config(), "WatchGnuPG" );
+  KConfigGroup watchGnuPG( KSharedConfig::openConfig(), "WatchGnuPG" );
   watchGnuPG.writeEntry( "Executable", mExeED->fileName() );
   watchGnuPG.writeEntry( "Socket", mSocketED->fileName() );
   watchGnuPG.writeEntry( "LogLevel", log_levels[mLogLevelCB->currentIndex()] );
 
-  KConfigGroup logWindow( KGlobal::config(), "LogWindow" );
+  KConfigGroup logWindow( KSharedConfig::openConfig(), "LogWindow" );
   logWindow.writeEntry( "MaxLogLen", mLoglenSB->value() );
   logWindow.writeEntry( "WordWrap", mWordWrapCB->isChecked() );
 
-  KGlobal::config()->sync();
+  KSharedConfig::openConfig()->sync();
 
   enableButtonOk( false );
   enableButtonApply( false );

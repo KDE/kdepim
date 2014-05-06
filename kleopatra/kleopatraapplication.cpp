@@ -75,6 +75,7 @@
 #include <boost/mem_fn.hpp>
 
 #include <memory>
+#include <KSharedConfig>
 
 using namespace Kleo;
 using namespace Kleo::Commands;
@@ -240,7 +241,7 @@ KleopatraApplication::KleopatraApplication()
 
 KleopatraApplication::~KleopatraApplication() {
     // work around kdelibs bug https://bugs.kde.org/show_bug.cgi?id=162514
-    KGlobal::config()->sync();
+    KSharedConfig::openConfig()->sync();
 }
 
 static QStringList files_from_args( const shared_ptr<const KCmdLineArgs> & args ) {

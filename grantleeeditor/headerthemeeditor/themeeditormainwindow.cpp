@@ -39,6 +39,7 @@
 #include <QPointer>
 #include <QCloseEvent>
 #include <QActionGroup>
+#include <KSharedConfig>
 
 ThemeEditorMainWindow::ThemeEditorMainWindow()
     : KXmlGuiWindow(),
@@ -52,7 +53,7 @@ ThemeEditorMainWindow::ThemeEditorMainWindow()
 
 ThemeEditorMainWindow::~ThemeEditorMainWindow()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     KConfigGroup group = config->group( QLatin1String("ThemeEditorMainWindow") );
     group.writeEntry( "Size", size() );
@@ -61,7 +62,7 @@ ThemeEditorMainWindow::~ThemeEditorMainWindow()
 
 void ThemeEditorMainWindow::readConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup group = KConfigGroup( config, "ThemeEditorMainWindow" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
     if ( sizeDialog.isValid() ) {
@@ -89,7 +90,7 @@ void ThemeEditorMainWindow::setupActions()
     mRecentFileAction = new KRecentFilesAction(i18n("Load Recent Theme..."), this);
     connect(mRecentFileAction, SIGNAL(urlSelected(KUrl)), this, SLOT(slotThemeSelected(KUrl)));
     actionCollection()->addAction( QLatin1String( "load_recent_theme" ), mRecentFileAction );
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup groupConfig = config->group( QLatin1String("ThemeEditorMainWindow") );
     mRecentFileAction->loadEntries(groupConfig);
 

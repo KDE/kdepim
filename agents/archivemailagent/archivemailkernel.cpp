@@ -25,6 +25,7 @@
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/entitymimetypefiltermodel.h>
 #include <AkonadiCore/changerecorder.h>
+#include <KSharedConfig>
 
 ArchiveMailKernel::ArchiveMailKernel( QObject *parent )
     : QObject( parent )
@@ -65,7 +66,7 @@ Akonadi::EntityMimeTypeFilterModel *ArchiveMailKernel::collectionModel() const
 
 KSharedConfig::Ptr ArchiveMailKernel::config()
 {
-    return KGlobal::config();
+    return KSharedConfig::openConfig();
 }
 
 void ArchiveMailKernel::syncConfig()

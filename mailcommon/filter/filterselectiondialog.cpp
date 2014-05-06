@@ -26,6 +26,7 @@
 
 #include <QListWidget>
 #include <QVBoxLayout>
+#include <KSharedConfig>
 
 
 using namespace MailCommon;
@@ -80,13 +81,13 @@ void FilterSelectionDialog::reject()
 
 void FilterSelectionDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "FilterSelectionDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "FilterSelectionDialog" );
     group.writeEntry( "Size", size() );
 }
 
 void FilterSelectionDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "FilterSelectionDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "FilterSelectionDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(300, 350) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );

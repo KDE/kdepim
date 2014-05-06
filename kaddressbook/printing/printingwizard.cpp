@@ -49,6 +49,7 @@
 #include <QPushButton>
 #include <QPrinter>
 #include <QDirIterator>
+#include <KSharedConfig>
 
 using namespace KABPrinting;
 
@@ -91,7 +92,7 @@ PrintingWizard::~PrintingWizard()
 
 void PrintingWizard::readConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "PrintingWizard" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "PrintingWizard" );
     const QSize size = grp.readEntry( "Size", QSize(300, 200) );
     if ( size.isValid() ) {
         resize( size );
@@ -100,7 +101,7 @@ void PrintingWizard::readConfig()
 
 void PrintingWizard::writeConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "PrintingWizard" );
+    KConfigGroup grp( KSharedConfig::openConfig(), "PrintingWizard" );
     grp.writeEntry( "Size", size() );
     grp.sync();
 }

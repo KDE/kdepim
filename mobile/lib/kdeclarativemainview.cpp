@@ -220,7 +220,7 @@ void KDeclarativeMainView::doDelayedInitInternal()
   connect( d->mGuiStateManager, SIGNAL(guiStateChanged(int,int)), d, SLOT(guiStateChanged(int,int)) );
 
   // A list of available favorites
-  d->mFavoritesEditor = new FavoritesEditor( actionCollection(), KGlobal::config(), this );
+  d->mFavoritesEditor = new FavoritesEditor( actionCollection(), KSharedConfig::openConfig(), this );
   d->mFavoritesEditor->setCollectionSelectionModel( d->mBnf->selectionModel() );
 
   context->setContextProperty( QLatin1String("favoritesEditor"), d->mFavoritesEditor );
@@ -327,7 +327,7 @@ void KDeclarativeMainView::setItemNaigationAndActionSelectionModels( QItemSelect
 {
   d->mItemNavigationSelectionModel = itemNavigationSelectionModel;
 
-  d->mItemViewStateMaintainer = new KViewStateMaintainer<ETMViewStateSaver>( KGlobal::config()->group( QLatin1String( "ItemSelectionState" ) ), this );
+  d->mItemViewStateMaintainer = new KViewStateMaintainer<ETMViewStateSaver>( KSharedConfig::openConfig()->group( QLatin1String( "ItemSelectionState" ) ), this );
   d->mItemViewStateMaintainer->setSelectionModel( d->mItemNavigationSelectionModel );
 
   d->mItemActionSelectionModel = itemActionSelectionModel;

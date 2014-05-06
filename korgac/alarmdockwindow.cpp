@@ -38,12 +38,13 @@
 #include <KStandardAction>
 #include <KToolInvocation>
 #include <KGlobal>
+#include <KSharedConfig>
 
 AlarmDockWindow::AlarmDockWindow()
   : KStatusNotifierItem( 0 )
 {
   // Read the autostart status from the config file
-  KConfigGroup config( KGlobal::config(), "General" );
+  KConfigGroup config( KSharedConfig::openConfig(), "General" );
   bool autostartSet = config.hasKey( "Autostart" );
   bool autostart = config.readEntry( "Autostart", true );
   bool alarmsEnabled = config.readEntry( "Enabled", true );
@@ -132,7 +133,7 @@ void AlarmDockWindow::toggleAlarmsEnabled( bool checked )
 {
   changeSystrayIcon( checked );
 
-  KConfigGroup config( KGlobal::config(), "General" );
+  KConfigGroup config( KSharedConfig::openConfig(), "General" );
   config.writeEntry( "Enabled", checked );
   config.sync();
 }
@@ -156,7 +157,7 @@ void AlarmDockWindow::slotDismissAll()
 
 void AlarmDockWindow::enableAutostart( bool enable )
 {
-  KConfigGroup config( KGlobal::config(), "General" );
+  KConfigGroup config( KSharedConfig::openConfig(), "General" );
   config.writeEntry( "Autostart", enable );
   config.sync();
 }

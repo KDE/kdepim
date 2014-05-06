@@ -30,6 +30,7 @@
 
 #include <AkonadiCore/Item>
 #include <AkonadiCore/ChangeRecorder>
+#include <KSharedConfig>
 
 #include "trip.h"
 #include "tripwidget.h"
@@ -146,7 +147,7 @@ Trip* TripModel::createTrip(const QModelIndex &index, Akonadi::Item::Id id) cons
 
   Trip *trip = new Trip(index, m_monitor, &factory);
 
-  KSharedConfigPtr config = KGlobal::config();
+  KSharedConfigPtr config = KSharedConfig::openConfig();
 
   KConfigGroup tripsGroup( config, "Trips" );
 
@@ -180,7 +181,7 @@ bool TripModel::removeRows(int row, int count, const QModelIndex& parent)
   const QModelIndex idx = index(row, 0, parent);
   const Item item = idx.data(MixedTreeModel::ItemRole).value<Item>();
 
-  KSharedConfigPtr config = KGlobal::config();
+  KSharedConfigPtr config = KSharedConfig::openConfig();
 
   KConfigGroup generalGroup( config, "General" );
 
@@ -209,7 +210,7 @@ bool TripModel::removeRows(int row, int count, const QModelIndex& parent)
 
 void TripModel::repopulate()
 {
-  KSharedConfigPtr config = KGlobal::config();
+  KSharedConfigPtr config = KSharedConfig::openConfig();
 
   KConfigGroup generalGroup( config, "General" );
 

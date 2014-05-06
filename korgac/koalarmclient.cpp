@@ -54,6 +54,7 @@
 
 #ifdef Q_WS_MAEMO_5
 #include <QtMaemo5/QMaemo5InformationBox>
+#include <KSharedConfig>
 #endif
 
 using namespace KCalCore;
@@ -84,7 +85,7 @@ KOAlarmClient::KOAlarmClient( QObject *parent )
   connect( mETM, SIGNAL(collectionTreeFetched(Akonadi::Collection::List)),
            SLOT(deferredInit()) );
 
-  KConfigGroup alarmGroup( KGlobal::config(), "Alarms" );
+  KConfigGroup alarmGroup( KSharedConfig::openConfig(), "Alarms" );
   const int interval = alarmGroup.readEntry( "Interval", 60 );
   qDebug() << "KOAlarmClient check interval:" << interval << "seconds.";
   mLastChecked = alarmGroup.readEntry( "CalendarsLastChecked", QDateTime() );
@@ -123,12 +124,12 @@ void KOAlarmClient::deferredInit()
   kDebug(5891) << "Performing delayed initialization.";
 
   // load reminders that were active when quitting
-  KConfigGroup genGroup( KGlobal::config(), "General" );
+  KConfigGroup genGroup( KSharedConfig::openConfig(), "General" );
   const int numReminders = genGroup.readEntry( "Reminders", 0 );
 
   for ( int i=1; i<=numReminders; ++i ) {
     const QString group( QString::fromLatin1( "Incidence-%1" ).arg( i ) );
-    const KConfigGroup incGroup( KGlobal::config(), group );
+    const KConfigGroup incGroup( KSharedConfig::openConfig(), group );
 
     const KUrl url = incGroup.readEntry( "AkonadiUrl" );
     Akonadi::Item::Id akonadiItemId = -1;
@@ -189,7 +190,7 @@ bool KOAlarmClient::collectionsAvailable() const
 
 void KOAlarmClient::checkAlarms()
 {
-  KConfigGroup cfg( KGlobal::config(), "General" );
+  KConfigGroup cfg( KSharedConfig::openConfig(), "General" );
 
   if ( !cfg.readEntry( "Enabled", true ) ) {
     return;
@@ -272,9 +273,9 @@ void KOAlarmClient::slotQuit()
 
 void KOAlarmClient::saveLastCheckTime()
 {
-  KConfigGroup cg( KGlobal::config(), "Alarms" );
+  KConfigGroup cg( KSharedConfig::openConfig(), "Alarms" );
   cg.writeEntry( "CalendarsLastChecked", mLastChecked );
-  KGlobal::config()->sync();
+  KSharedConfig::openConfig()->sync();
 }
 
 void KOAlarmClient::quit()
@@ -300,7 +301,7 @@ void KOAlarmClient::forceAlarmCheck()
 
 void KOAlarmClient::dumpDebug()
 {
-  KConfigGroup cfg( KGlobal::config(), "Alarms" );
+  KConfigGroup cfg( KSharedConfig::openConfig(), "Alarms" );
   const QDateTime lastChecked = cfg.readEntry( "CalendarsLastChecked", QDateTime() );
   qDebug() << "Last Check:" << lastChecked;
 }

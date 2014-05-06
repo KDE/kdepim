@@ -145,7 +145,7 @@ SieveEditorTextModeWidget::~SieveEditorTextModeWidget()
 
 void SieveEditorTextModeWidget::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SieveEditor" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SieveEditor" );
     group.writeEntry( "mainSplitter", mMainSplitter->sizes());
     group.writeEntry( "extraSplitter", mExtraSplitter->sizes());
     group.writeEntry( "templateSplitter", mTemplateSplitter->sizes());
@@ -153,7 +153,7 @@ void SieveEditorTextModeWidget::writeConfig()
 
 void SieveEditorTextModeWidget::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SieveEditor" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SieveEditor" );
     QList<int> size;
     size << 400 << 100;
 

@@ -44,6 +44,7 @@
 #include <QShortcut>
 #include <QPainter>
 #include <QSplitter>
+#include <KSharedConfig>
 
 using namespace PimCommon;
 
@@ -183,7 +184,7 @@ TranslatorWidget::~TranslatorWidget()
 
 void TranslatorWidget::writeConfig()
 {
-    KConfigGroup myGroup( KGlobal::config(), "TranslatorWidget" );
+    KConfigGroup myGroup( KSharedConfig::openConfig(), "TranslatorWidget" );
     if (d->languageSettingsChanged) {
         myGroup.writeEntry( QLatin1String( "FromLanguage" ), d->from->itemData(d->from->currentIndex()).toString() );
         myGroup.writeEntry( "ToLanguage", d->to->itemData(d->to->currentIndex()).toString() );
@@ -194,7 +195,7 @@ void TranslatorWidget::writeConfig()
 
 void TranslatorWidget::readConfig()
 {
-    KConfigGroup myGroup( KGlobal::config(), "TranslatorWidget" );
+    KConfigGroup myGroup( KSharedConfig::openConfig(), "TranslatorWidget" );
     const QString from = myGroup.readEntry( QLatin1String( "FromLanguage" ) );
     const QString to = myGroup.readEntry( QLatin1String( "ToLanguage" ) );
     if ( from.isEmpty() )

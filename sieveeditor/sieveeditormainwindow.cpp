@@ -65,7 +65,7 @@ SieveEditorMainWindow::SieveEditorMainWindow()
 
 SieveEditorMainWindow::~SieveEditorMainWindow()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     KConfigGroup group = config->group( QLatin1String("SieveEditorMainWindow") );
     group.writeEntry( "Size", size() );
@@ -102,7 +102,7 @@ void SieveEditorMainWindow::slotUpdateButtons(bool newScriptAction, bool editScr
 
 void SieveEditorMainWindow::readConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup group = KConfigGroup( config, "SieveEditorMainWindow" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {

@@ -34,6 +34,7 @@
 
 #include <QPrinter>
 #include <QTextDocument>
+#include <KSharedConfig>
 
 using namespace KABPrinting;
 
@@ -150,7 +151,7 @@ RingBinderPrintStyle::RingBinderPrintStyle( PrintingWizard *parent )
   addPage( mPageAppearance, i18n( "Ring Binder Printing Style - Appearance" ) );
 
   // applying previous settings
-  KConfigGroup config( KGlobal::config(), RingBinderConfigSectionName );
+  KConfigGroup config( KSharedConfig::openConfig(), RingBinderConfigSectionName );
   mPageAppearance->cbPhoneNumbers->setChecked( config.readEntry( ShowPhoneNumbers, true ) );
   mPageAppearance->cbEmails->setChecked( config.readEntry( ShowEmailAddresses, true ) );
   mPageAppearance->cbStreetAddresses->setChecked( config.readEntry( ShowStreetAddresses, true ) );
@@ -169,7 +170,7 @@ void RingBinderPrintStyle::print( const KABC::Addressee::List &contacts, PrintPr
   progress->setProgress( 0 );
 
   // first write current config settings
-  KConfigGroup config( KGlobal::config(), RingBinderConfigSectionName );
+  KConfigGroup config( KSharedConfig::openConfig(), RingBinderConfigSectionName );
   config.writeEntry( ShowPhoneNumbers, mPageAppearance->cbPhoneNumbers->isChecked() );
   config.writeEntry( ShowEmailAddresses, mPageAppearance->cbEmails->isChecked() );
   config.writeEntry( ShowStreetAddresses, mPageAppearance->cbStreetAddresses->isChecked() );

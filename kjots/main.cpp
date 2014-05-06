@@ -34,6 +34,7 @@
 #include <klocale.h>
 #include <kglobal.h>
 #include <kconfiggroup.h>
+#include <KSharedConfig>
 
 int main( int argc, char **argv )
 {
@@ -49,7 +50,7 @@ int main( int argc, char **argv )
 
     // backwards compatibility code to convert "old" user font settings
     // to the new config settings
-    KConfigGroup config(KGlobal::config(), "kjots");
+    KConfigGroup config(KSharedConfig::openConfig(), "kjots");
     if (config.hasKey("EFontFamily")) {
       // read old font and create it
       QFont font( config.readEntry("EFontFamily"),

@@ -26,6 +26,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <KSharedConfig>
 
 
 using namespace PimCommon;
@@ -77,13 +78,13 @@ TemplateEditDialog::~TemplateEditDialog()
 
 void TemplateEditDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "TemplateEditDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "TemplateEditDialog" );
     group.writeEntry( "Size", size() );
 }
 
 void TemplateEditDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "TemplateEditDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "TemplateEditDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );

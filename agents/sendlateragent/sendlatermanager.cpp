@@ -39,7 +39,7 @@ SendLaterManager::SendLaterManager(QObject *parent)
       mCurrentJob(0),
       mSender(new MessageComposer::AkonadiSender)
 {
-    mConfig = KGlobal::config();
+    mConfig = KSharedConfig::openConfig();
     mTimer = new QTimer(this);
     connect(mTimer, SIGNAL(timeout()), this, SLOT(slotCreateJob()));
 }

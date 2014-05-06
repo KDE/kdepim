@@ -26,6 +26,7 @@
 
 #include <QApplication>
 #include <QVBoxLayout>
+#include <KSharedConfig>
 using KMime::Types::AddrSpecList;
 
 using namespace KSieveUi;
@@ -64,13 +65,13 @@ VacationDialog::~VacationDialog()
 
 void VacationDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "VacationDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "VacationDialog" );
     group.writeEntry( "Size", size() );
 }
 
 void VacationDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "VacationDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "VacationDialog" );
     const QSize size = group.readEntry( "Size", QSize() );
     if ( size.isValid() ) {
         resize( size );

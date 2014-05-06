@@ -131,7 +131,7 @@ namespace {
 
         void readConfig()
         {
-            KConfigGroup dialog( KGlobal::config(), "ResultDialog" );
+            KConfigGroup dialog( KSharedConfig::openConfig(), "ResultDialog" );
             const QSize size = dialog.readEntry( "Size", QSize(600, 400) );
             if ( size.isValid() ) {
                 resize( size );
@@ -139,7 +139,7 @@ namespace {
         }
         void writeConfig()
         {
-            KConfigGroup dialog( KGlobal::config(), "ResultDialog" );
+            KConfigGroup dialog( KSharedConfig::openConfig(), "ResultDialog" );
             dialog.writeEntry( "Size",size() );
             dialog.sync();
         }

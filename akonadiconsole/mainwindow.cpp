@@ -30,6 +30,7 @@
 #include <KStandardAction>
 #include <KGlobal>
 #include <QApplication>
+#include <KSharedConfig>
 
 MainWindow::MainWindow( QWidget *parent )
   : KXmlGuiWindow( parent )
@@ -41,7 +42,7 @@ MainWindow::MainWindow( QWidget *parent )
 
   setupGUI( Keys /*| ToolBar | StatusBar*/ | Save | Create, "akonadiconsoleui.rc" );
 
-  KPIM::UiStateSaver::restoreState( this, KConfigGroup( KGlobal::config(), "UiState" ) );
+  KPIM::UiStateSaver::restoreState( this, KConfigGroup( KSharedConfig::openConfig(), "UiState" ) );
 
   KMessageBox::information( this, i18n("<p>Akonadi Console is purely a development tool. "
       "It allows you to view and change internal data structures of Akonadi. "
@@ -58,8 +59,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-  KConfigGroup config( KGlobal::config(), "UiState" );
+  KConfigGroup config( KSharedConfig::openConfig(), "UiState" );
   KPIM::UiStateSaver::saveState( this, config );
-  KGlobal::config()->sync();
+  KSharedConfig::openConfig()->sync();
   KXmlGuiWindow::closeEvent(event);
 }

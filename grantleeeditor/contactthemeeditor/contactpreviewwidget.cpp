@@ -108,7 +108,7 @@ void ContactPreviewWidget::createScreenShot(const QStringList &fileName)
 
 void ContactPreviewWidget::loadConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     if (config->hasGroup(QLatin1String("Global"))) {
         KConfigGroup group = config->group(QLatin1String("Global"));

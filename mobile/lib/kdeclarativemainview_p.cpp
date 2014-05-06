@@ -57,7 +57,7 @@ void KDeclarativeMainViewPrivate::restoreState()
 {
   Akonadi::ETMViewStateSaver *saver = new Akonadi::ETMViewStateSaver;
   saver->setSelectionModel( mBnf->selectionModel() );
-  KConfigGroup cfg( KGlobal::config(), "SelectionState" );
+  KConfigGroup cfg( KSharedConfig::openConfig(), "SelectionState" );
   saver->restoreState( cfg );
 }
 
@@ -66,7 +66,7 @@ void KDeclarativeMainViewPrivate::saveState()
   Akonadi::ETMViewStateSaver saver;
   saver.setSelectionModel( mBnf->selectionModel() );
 
-  KConfigGroup cfg( KGlobal::config(), "SelectionState" );
+  KConfigGroup cfg( KSharedConfig::openConfig(), "SelectionState" );
   saver.saveState( cfg );
   cfg.sync();
 }

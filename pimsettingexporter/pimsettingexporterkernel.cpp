@@ -29,6 +29,7 @@
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/entitymimetypefiltermodel.h>
 #include <AkonadiCore/changerecorder.h>
+#include <KSharedConfig>
 
 PimSettingExporterKernel::PimSettingExporterKernel( QObject *parent )
     : QObject( parent )
@@ -73,7 +74,7 @@ Akonadi::EntityMimeTypeFilterModel *PimSettingExporterKernel::collectionModel() 
 
 KSharedConfig::Ptr PimSettingExporterKernel::config()
 {
-    return KGlobal::config();
+    return KSharedConfig::openConfig();
 }
 
 void PimSettingExporterKernel::syncConfig()

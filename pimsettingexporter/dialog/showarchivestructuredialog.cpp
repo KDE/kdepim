@@ -26,6 +26,7 @@
 
 #include <QTreeWidget>
 #include <QHeaderView>
+#include <KSharedConfig>
 
 ShowArchiveStructureDialog::ShowArchiveStructureDialog(const QString &filename, QWidget *parent)
     : KDialog(parent),
@@ -146,13 +147,13 @@ QTreeWidgetItem *ShowArchiveStructureDialog::addTopItem(const QString &name)
 
 void ShowArchiveStructureDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "ShowArchiveStructureDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "ShowArchiveStructureDialog" );
     group.writeEntry( "Size", size() );
 }
 
 void ShowArchiveStructureDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "ShowArchiveStructureDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "ShowArchiveStructureDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );

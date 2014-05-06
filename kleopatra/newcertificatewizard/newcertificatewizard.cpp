@@ -82,6 +82,7 @@
 #include <boost/range.hpp>
 
 #include <algorithm>
+#include <KSharedConfig>
 
 using namespace Kleo;
 using namespace Kleo::NewCertificateUi;
@@ -729,7 +730,7 @@ namespace {
         void slotSendRequestByEMail() {
             if ( pgp() )
                 return;
-            const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
+            const KConfigGroup config( KSharedConfig::openConfig(), "CertificateCreationWizard" );
             invokeMailer( config.readEntry( "CAEmailAddress" ), // to
                           i18n("Please process this certificate."), // subject
                           i18n("Please process this certificate and inform the sender about the location to fetch the resulting certificate.\n\nThanks,\n"), // body
@@ -1065,7 +1066,7 @@ void EnterDetailsPage::updateForm() {
 
     clearForm();
 
-    const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
+    const KConfigGroup config( KSharedConfig::openConfig(), "CertificateCreationWizard" );
 
     QStringList attrOrder = config.readEntry( pgp() ? "OpenPGPAttributeOrder" : "DNAttributeOrder", QStringList() );
     if ( attrOrder.empty() ) {
@@ -1400,7 +1401,7 @@ static void fill_combobox( QComboBox & cb, const QList<int> & sizes, const QStri
 
 void AdvancedSettingsDialog::fillKeySizeComboBoxen() {
 
-    const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
+    const KConfigGroup config( KSharedConfig::openConfig(), "CertificateCreationWizard" );
 
     const QList<int> rsaKeySizes = config.readEntry( RSA_KEYSIZES_ENTRY, QList<int>() << 1536 << -2048 << 3072 << 4096 );
     const QList<int> dsaKeySizes = config.readEntry( DSA_KEYSIZES_ENTRY, QList<int>() << -2048 );
@@ -1421,7 +1422,7 @@ void AdvancedSettingsDialog::loadDefaultKeyType() {
     if ( protocol != CMS && protocol != OpenPGP )
         return;
 
-    const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
+    const KConfigGroup config( KSharedConfig::openConfig(), "CertificateCreationWizard" );
 
     const QString entry = protocol == CMS ? QLatin1String(CMS_KEY_TYPE_ENTRY) : QLatin1String(PGP_KEY_TYPE_ENTRY) ;
     const QString keyType = config.readEntry( entry ).trimmed().toUpper();

@@ -38,6 +38,7 @@
 #include <QCheckBox>
 #include <QPrinter>
 #include <QTextDocument>
+#include <KSharedConfig>
 
 using namespace KABPrinting;
 
@@ -260,7 +261,7 @@ DetailledPrintStyle::DetailledPrintStyle( PrintingWizard *parent )
 
   addPage( mPageAppearance, i18n( "Detailed Print Style - Appearance" ) );
 
-  KConfigGroup config( KGlobal::config(), ConfigSectionName );
+  KConfigGroup config( KSharedConfig::openConfig(), ConfigSectionName );
 
   mPageAppearance->kcbHeaderBGColor->
     setColor( config.readEntry( ContactHeaderBGColor, QColor( Qt::black ) ) );
@@ -284,7 +285,7 @@ void DetailledPrintStyle::print( const KABC::Addressee::List &contacts, PrintPro
   const QColor headerBackgroundColor = mPageAppearance->kcbHeaderBGColor->color();
   const QColor headerForegroundColor = mPageAppearance->kcbHeaderTextColor->color();
 
-  KConfigGroup config( KGlobal::config(), ConfigSectionName );
+  KConfigGroup config( KSharedConfig::openConfig(), ConfigSectionName );
   config.writeEntry( ContactHeaderForeColor, headerForegroundColor );
   config.writeEntry( ContactHeaderBGColor, headerBackgroundColor );
   config.sync();

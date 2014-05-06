@@ -56,6 +56,7 @@
 #include <qtextstream.h>
 
 #include <gpg-error.h>
+#include <KSharedConfig>
 
 using namespace Kleo;
 using namespace Kleo::Private;
@@ -175,7 +176,7 @@ void AuditLogViewer::slotUser2() {
 
 void AuditLogViewer::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "AuditLogViewer" );
+    KConfigGroup group( KSharedConfig::openConfig(), "AuditLogViewer" );
     const QSize size = group.readEntry( "Size", QSize() );
     if ( size.isValid() ) {
         resize( size );
@@ -186,7 +187,7 @@ void AuditLogViewer::readConfig()
 
 void AuditLogViewer::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "AuditLogViewer" );
+    KConfigGroup group( KSharedConfig::openConfig(), "AuditLogViewer" );
     group.writeEntry( "Size", size() );
     group.sync();
 }

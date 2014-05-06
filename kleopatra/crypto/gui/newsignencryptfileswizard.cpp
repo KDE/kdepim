@@ -77,6 +77,7 @@
 #include <boost/bind.hpp>
 
 #include <KGlobal>
+#include <KSharedConfig>
 
 using namespace GpgME;
 using namespace boost;
@@ -878,7 +879,7 @@ namespace {
             }
 
             if ( !signPref ) {
-                signPref.reset( new KConfigBasedSigningPreferences( KGlobal::config() ) );
+                signPref.reset( new KConfigBasedSigningPreferences( KSharedConfig::openConfig() ) );
                 widget.setSelectedCertificates( signPref->preferredCertificate( OpenPGP ),
                                                 signPref->preferredCertificate( CMS ) );
             }

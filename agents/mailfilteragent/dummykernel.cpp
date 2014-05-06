@@ -8,6 +8,7 @@
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/entitymimetypefiltermodel.h>
 #include <AkonadiCore/changerecorder.h>
+#include <KSharedConfig>
 
 DummyKernel::DummyKernel( QObject *parent )
     : QObject( parent )
@@ -47,7 +48,7 @@ Akonadi::EntityMimeTypeFilterModel *DummyKernel::collectionModel() const
 
 KSharedConfig::Ptr DummyKernel::config()
 {
-    return KGlobal::config();
+    return KSharedConfig::openConfig();
 }
 
 void DummyKernel::syncConfig()

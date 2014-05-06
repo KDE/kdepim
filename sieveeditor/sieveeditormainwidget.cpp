@@ -53,14 +53,14 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     setChildrenCollapsible(false);
     QList<int> splitterSizes;
     splitterSizes << 80 << 20;
-    KConfigGroup myGroup( KGlobal::config(), "SieveEditorMainWidget" );
+    KConfigGroup myGroup( KSharedConfig::openConfig(), "SieveEditorMainWidget" );
     setSizes(myGroup.readEntry( "mainSplitter", splitterSizes));
     connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), this, SLOT(slotGeneralPaletteChanged()));
 }
 
 SieveEditorMainWidget::~SieveEditorMainWidget()
 {
-    KConfigGroup myGroup( KGlobal::config(), "SieveEditorMainWidget" );
+    KConfigGroup myGroup( KSharedConfig::openConfig(), "SieveEditorMainWidget" );
     myGroup.writeEntry( "mainSplitter", sizes());
     myGroup.sync();
 }

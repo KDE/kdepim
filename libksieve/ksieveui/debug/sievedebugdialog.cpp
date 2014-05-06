@@ -24,6 +24,7 @@
 #include <KGlobal>
 
 #include <QtCore/QTimer>
+#include <KSharedConfig>
 
 using namespace KSieveUi;
 
@@ -64,7 +65,7 @@ SieveDebugDialog::~SieveDebugDialog()
 
 void SieveDebugDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SieveDebugDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SieveDebugDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(640, 480) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
@@ -73,7 +74,7 @@ void SieveDebugDialog::readConfig()
 
 void SieveDebugDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SieveDebugDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SieveDebugDialog" );
     group.writeEntry( "Size", size() );
 }
 

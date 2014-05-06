@@ -49,6 +49,7 @@
 #include <assert.h>
 #include <boost/bind.hpp>
 #include <errno.h>
+#include <KSharedConfig>
 
 using namespace MailCommon;
 
@@ -330,7 +331,7 @@ void FilterManager::clear()
 
 void FilterManager::readConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config(); // use akonadi_mailfilter_agentrc
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(); // use akonadi_mailfilter_agentrc
     config->reparseConfiguration();
     clear();
 

@@ -34,6 +34,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QTabWidget>
+#include <KSharedConfig>
 
 ContactConfigureDialog::ContactConfigureDialog(QWidget *parent)
     : KDialog(parent)
@@ -71,7 +72,7 @@ ContactConfigureDialog::ContactConfigureDialog(QWidget *parent)
 
 ContactConfigureDialog::~ContactConfigureDialog()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     KConfigGroup group = config->group( QLatin1String("ContactConfigureDialog") );
     group.writeEntry( "Size", size() );
@@ -98,7 +99,7 @@ void ContactConfigureDialog::slotOkClicked()
 
 void ContactConfigureDialog::readConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     if (config->hasGroup(QLatin1String("Global"))) {
         KConfigGroup group = config->group(QLatin1String("Global"));
@@ -133,7 +134,7 @@ void ContactConfigureDialog::readConfig()
 
 void ContactConfigureDialog::writeConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup group = config->group(QLatin1String("Global"));
     const KABC::Addressee addr = mDefaultContact->contact();
     KABC::VCardConverter converter;

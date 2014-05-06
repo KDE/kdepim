@@ -30,6 +30,7 @@
 #include <KGlobal>
 #include <QHBoxLayout>
 #include <QTabWidget>
+#include <KSharedConfig>
 
 NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
     : KDialog(parent)
@@ -94,7 +95,7 @@ NotesAgentSettingsDialog::~NotesAgentSettingsDialog()
 static const char *myConfigGroupName = "NotesAgentSettingsDialog";
 void NotesAgentSettingsDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), myConfigGroupName );
+    KConfigGroup group( KSharedConfig::openConfig(), myConfigGroupName );
 
     const QSize size = group.readEntry( "Size", QSize(500, 300) );
     if ( size.isValid() ) {
@@ -104,7 +105,7 @@ void NotesAgentSettingsDialog::writeConfig()
 
 void NotesAgentSettingsDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), myConfigGroupName );
+    KConfigGroup group( KSharedConfig::openConfig(), myConfigGroupName );
     group.writeEntry( "Size", size() );
     group.sync();
 }

@@ -71,6 +71,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <KSharedConfig>
 
 using namespace Kleo;
 using namespace Kleo::Dialogs;
@@ -131,7 +132,7 @@ public:
 
     void readConfig()
     {
-        KConfigGroup dialog( KGlobal::config(), "CertificateDetailsDialog" );
+        KConfigGroup dialog( KSharedConfig::openConfig(), "CertificateDetailsDialog" );
         const QSize size = dialog.readEntry( "Size", QSize(600, 400) );
         if ( size.isValid() ) {
             q->resize( size );
@@ -140,7 +141,7 @@ public:
 
     void writeConfig()
     {
-        KConfigGroup dialog( KGlobal::config(), "CertificateDetailsDialog" );
+        KConfigGroup dialog( KSharedConfig::openConfig(), "CertificateDetailsDialog" );
         dialog.writeEntry( "Size", q->size() );
         dialog.sync();
     }

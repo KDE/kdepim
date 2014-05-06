@@ -33,6 +33,7 @@
 #include <KIcon>
 
 #include <QHBoxLayout>
+#include <KSharedConfig>
 
 
 static QString archiveMailCollectionPattern = QLatin1String( "ArchiveMailCollection \\d+" );
@@ -96,7 +97,7 @@ static const char *myConfigGroupName = "ArchiveMailDialog";
 
 void ArchiveMailDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), myConfigGroupName );
+    KConfigGroup group( KSharedConfig::openConfig(), myConfigGroupName );
 
     const QSize size = group.readEntry( "Size", QSize(500, 300) );
     if ( size.isValid() ) {
@@ -108,7 +109,7 @@ void ArchiveMailDialog::readConfig()
 
 void ArchiveMailDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), myConfigGroupName );
+    KConfigGroup group( KSharedConfig::openConfig(), myConfigGroupName );
     group.writeEntry( "Size", size() );
     mWidget->saveTreeWidgetHeader(group);
     group.sync();
@@ -224,7 +225,7 @@ void ArchiveMailWidget::needReloadConfig()
 
 void ArchiveMailWidget::load()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     const QStringList collectionList = config->groupList().filter( QRegExp( archiveMailCollectionPattern ) );
     const int numberOfCollection = collectionList.count();
     for (int i = 0 ; i < numberOfCollection; ++i) {
@@ -270,7 +271,7 @@ void ArchiveMailWidget::save()
 {
     if (!mChanged)
         return;
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
 
     // first, delete all filter groups:
     const QStringList filterGroups =config->groupList().filter( QRegExp( archiveMailCollectionPattern ) );
