@@ -114,12 +114,12 @@ void Filter::setSearchString( const QString &search, QuickSearchLine::SearchOpti
         return;
     }
     mSearchString = trimStr;
-    mSearchList = mSearchString.split(QLatin1Char(' '), QString::SkipEmptyParts);
     mMatchingItemIds.clear();
 
     if (mSearchString.isEmpty()) {
         return;
     }
+    mSearchList = mSearchString.split(QLatin1Char(' '), QString::SkipEmptyParts);
 
     Baloo::PIM::EmailQuery query;
     if (options & QuickSearchLine::SearchEveryWhere) {
