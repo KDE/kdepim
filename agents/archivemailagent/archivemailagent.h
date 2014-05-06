@@ -35,12 +35,12 @@ public:
     ~ArchiveMailAgent();
 
     void showConfigureDialog(qlonglong windowId = 0);
-    void printArchiveListInfo();
+    QString printArchiveListInfo();
 
     void setEnableAgent(bool b);
     bool enabledAgent() const;
 
-
+    QString printCurrentListInfo();
 Q_SIGNALS:
     void archiveNow(ArchiveMailInfo *info);
     void needUpdateConfigDialogBox();

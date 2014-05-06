@@ -52,7 +52,7 @@ public:
 
     void sendDone(SendLater::SendLaterInfo *info);
     void sendError(SendLater::SendLaterInfo *info, ErrorType type);
-    void printDebugInfo();
+    QString printDebugInfo();
 
     void stopAll();
     void itemRemoved(Akonadi::Item::Id id);
@@ -72,6 +72,7 @@ private Q_SLOTS:
     void createSendInfoList();
 
 private:
+    QString infoToStr(SendLater::SendLaterInfo *info);
     void removeLaterInfo(SendLater::SendLaterInfo *info);
     SendLater::SendLaterInfo *searchInfo(Akonadi::Item::Id id);
     void recreateSendList();
