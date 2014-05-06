@@ -94,7 +94,7 @@ public:
     QList<MultiplyingLine*> lines() const;
 
 public slots:
-    void setCompletionMode( KGlobalSettings::Completion mode );
+    void setCompletionMode( KCompletion::CompletionMode mode );
     MultiplyingLine *addLine();
 
     void setFocus();
@@ -105,7 +105,7 @@ signals:
     void focusUp();
     void focusDown();
     void focusRight();
-    void completionModeChanged( KGlobalSettings::Completion );
+    void completionModeChanged( KCompletion::CompletionMode );
     void sizeHintChanged();
     void lineDeleted( int pos );
     void lineAdded( KPIM::MultiplyingLine * );
@@ -129,7 +129,7 @@ private:
     int mLineHeight;
     int mFirstColumnWidth;
     bool mModified;
-    KGlobalSettings::Completion mCompletionMode;
+    KCompletion::CompletionMode mCompletionMode;
     QWidget *mPage;
     QLayout *mTopLayout;
     MultiplyingLineFactory *mMultiplyingLineFactory;

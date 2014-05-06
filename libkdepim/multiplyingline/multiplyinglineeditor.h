@@ -29,6 +29,7 @@
 
 #include "multiplyingline.h"
 
+#include <KCompletion>
 #include <KGlobalSettings>
 #include <QWidget>
 #include <QObject>
@@ -130,7 +131,7 @@ public:
       Set completion mode for all lines
       @param mode the completion mode
       */
-    void setCompletionMode( KGlobalSettings::Completion mode );
+    void setCompletionMode( KCompletion::CompletionMode mode );
 
     /**
      Set the underlying view's frame shape, default is none.
@@ -155,7 +156,7 @@ public:
 signals:
     void focusUp();
     void focusDown();
-    void completionModeChanged( KGlobalSettings::Completion );
+    void completionModeChanged( KCompletion::CompletionMode );
     void sizeHintChanged();
     void lineDeleted( int pos );
     void lineAdded( KPIM::MultiplyingLine * );

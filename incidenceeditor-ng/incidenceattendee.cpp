@@ -88,7 +88,7 @@ IncidenceAttendee::IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTi
   layout->setSpacing( 0 );
   layout->addWidget( mAttendeeEditor );
 
-  mAttendeeEditor->setCompletionMode( KGlobalSettings::self()->completionMode() );
+  //QT5 mAttendeeEditor->setCompletionMode( KGlobalSettings::self()->completionMode() );
   mAttendeeEditor->setFrameStyle( QFrame::Sunken | QFrame::StyledPanel );
 
 #ifdef KDEPIM_MOBILE_UI

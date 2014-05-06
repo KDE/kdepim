@@ -115,7 +115,7 @@ class INCIDENCEEDITORS_NG_EXPORT AttendeeLine : public KPIM::MultiplyingLine
     virtual QWidget *tabOut() const;
 
     virtual void moveCompletionPopup();
-    virtual void setCompletionMode( KGlobalSettings::Completion );
+    virtual void setCompletionMode( KCompletion::CompletionMode );
 
     virtual int setColumnWidth( int w );
 

@@ -81,7 +81,7 @@ QWidget* FilterActionAddHeader::createParamWidget( QWidget *parent ) const
     KCompletion *comp = comboBox->completionObject();
     comp->setIgnoreCase(true);
     comp->insertItems(mParameterList);
-    //QT5 comp->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
+    comp->setCompletionMode(KCompletion::CompletionPopupAuto);
 
 
     layout->addWidget( comboBox, 0 /* stretch */ );

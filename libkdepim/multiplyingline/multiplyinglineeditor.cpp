@@ -42,8 +42,8 @@ MultiplyingLineEditor::MultiplyingLineEditor( MultiplyingLineFactory* factory, Q
     topLayout->addWidget( mView );
     connect( mView, SIGNAL(focusUp()), SIGNAL(focusUp()) );
     connect( mView, SIGNAL(focusDown()), SIGNAL(focusDown()) );
-    connect( mView, SIGNAL(completionModeChanged(KGlobalSettings::Completion)),
-             SIGNAL(completionModeChanged(KGlobalSettings::Completion)) );
+    connect( mView, SIGNAL(completionModeChanged(KCompletion::CompletionMode)),
+             SIGNAL(completionModeChanged(KCompletion::CompletionMode)) );
     connect( mView, SIGNAL(lineDeleted(int)), SIGNAL(lineDeleted(int)) );
     connect( mView, SIGNAL(lineAdded(KPIM::MultiplyingLine*)), SIGNAL(lineAdded(KPIM::MultiplyingLine*)) );
     connect( mView, SIGNAL(sizeHintChanged()),
@@ -110,7 +110,7 @@ int MultiplyingLineEditor::setFirstColumnWidth( int w )
     return mView->setFirstColumnWidth( w );
 }
 
-void MultiplyingLineEditor::setCompletionMode( KGlobalSettings::Completion mode )
+void MultiplyingLineEditor::setCompletionMode( KCompletion::CompletionMode mode )
 {
     mView->setCompletionMode( mode );
 }

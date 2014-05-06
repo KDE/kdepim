@@ -178,7 +178,7 @@ void SearchRuleWidget::initWidget(SearchPatternEdit::SearchModeType modeType)
     KCompletion *comp = mRuleField->completionObject();
     comp->setIgnoreCase(true);
     comp->insertItems(mFilterFieldList);
-    //QT5 comp->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
+    comp->setCompletionMode(KCompletion::CompletionPopupAuto);
 
     // don't show sliders when popping up this menu
     mRuleField->setMaxCount( mRuleField->count() );

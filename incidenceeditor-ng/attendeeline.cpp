@@ -427,10 +427,9 @@ void AttendeeLine::setActions( AttendeeActions actions )
   }
 }
 
-void AttendeeLine::setCompletionMode( KGlobalSettings::Completion mode )
+void AttendeeLine::setCompletionMode( KCompletion::CompletionMode mode )
 {
-//QT5
-  //mEdit->setCompletionMode( mode );
+  mEdit->setCompletionMode( mode );
 }
 
 void AttendeeLine::setData( const KPIM::MultiplyingLineData::Ptr &data )

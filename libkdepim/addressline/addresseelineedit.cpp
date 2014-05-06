@@ -682,11 +682,9 @@ void AddresseeLineEdit::Private::akonadiHandlePending()
 void AddresseeLineEdit::Private::doCompletion( bool ctrlT )
 {
     m_lastSearchMode = ctrlT;
-//QT5
-#if 0
-    const KGlobalSettings::Completion mode = q->completionMode();
+    const KCompletion::CompletionMode mode = q->completionMode();
 
-    if ( mode == KGlobalSettings::CompletionNone ) {
+    if ( mode == KCompletion::CompletionNone ) {
         return;
     }
 
@@ -706,13 +704,12 @@ void AddresseeLineEdit::Private::doCompletion( bool ctrlT )
         setCompletedItems( completions, true );
 
         q->cursorAtEnd();
-        //QT5
-        //q->setCompletionMode( mode ); //set back to previous mode
+        q->setCompletionMode( mode ); //set back to previous mode
         return;
     }
 
     switch ( mode ) {
-    case KGlobalSettings::CompletionPopupAuto:
+    case KCompletion::CompletionPopupAuto:
     {
         if ( m_searchString.isEmpty() ) {
             break;
@@ -720,14 +717,14 @@ void AddresseeLineEdit::Private::doCompletion( bool ctrlT )
         //else: fall-through to the CompletionPopup case
     }
 
-    case KGlobalSettings::CompletionPopup:
+    case KCompletion::CompletionPopup:
     {
         const QStringList items = adjustedCompletionItems( false );
         setCompletedItems( items, false );
     }
         break;
 
-    case KGlobalSettings::CompletionShell:
+    case KCompletion::CompletionShell:
     {
         const QString match = s_static->completion->makeCompletion( m_searchString );
         if ( !match.isNull() && match != m_searchString ) {
@@ -738,12 +735,11 @@ void AddresseeLineEdit::Private::doCompletion( bool ctrlT )
     }
         break;
 
-    case KGlobalSettings::CompletionMan: // Short-Auto in fact
-    case KGlobalSettings::CompletionAuto:
+    case KCompletion::CompletionMan: // Short-Auto in fact
+    case KCompletion::CompletionAuto:
     {
         //force autoSuggest in KLineEdit::keyPressed or setCompletedText will have no effect
-        //QT5
-        //q->setCompletionMode( q->completionMode() );
+        q->setCompletionMode( q->completionMode() );
 
         if ( !m_searchString.isEmpty() ) {
 
@@ -789,11 +785,10 @@ void AddresseeLineEdit::Private::doCompletion( bool ctrlT )
     }
         break;
 
-    case KGlobalSettings::CompletionNone:
+    case KCompletion::CompletionNone:
     default: // fall through
         break;
     }
-#endif
 }
 
 void AddresseeLineEdit::Private::slotCompletion()
@@ -834,9 +829,9 @@ void AddresseeLineEdit::Private::slotStartLDAPLookup()
     }
 //QT5
 #if 0
-    const KGlobalSettings::Completion mode = q->completionMode();
+    const KCompletion::Completion mode = q->completionMode();
 
-    if ( mode == KGlobalSettings::CompletionNone ) {
+    if ( mode == KCompletion::CompletionNone ) {
         return;
     }
 
@@ -871,8 +866,8 @@ void AddresseeLineEdit::Private::slotLDAPSearchData( const KLDAP::LdapResult::Li
     }
 
     if ( ( q->hasFocus() || q->completionBox()->hasFocus() ) &&
-         q->completionMode() != KGlobalSettings::CompletionNone &&
-         q->completionMode() != KGlobalSettings::CompletionShell ) {
+         q->completionMode() != KCompletion::CompletionNone &&
+         q->completionMode() != KCompletion::CompletionShell ) {
         q->setText( m_previousAddresses + m_searchString );
         // only complete again if the user didn't change the selection while
         // we were waiting; otherwise the completion box will be closed
@@ -1314,9 +1309,8 @@ void AddresseeLineEdit::contextMenuEvent( QContextMenuEvent *event )
 QMenu *AddresseeLineEdit::createStandardContextMenu()
 {
     // disable modes not supported by KMailCompletion
-     //QT5
-    //setCompletionModeDisabled( KGlobalSettings::CompletionMan );
-    //setCompletionModeDisabled( KGlobalSettings::CompletionPopupAuto );
+    setCompletionModeDisabled( KCompletion::CompletionMan );
+    setCompletionModeDisabled( KCompletion::CompletionPopupAuto );
 
     QMenu *menu = KLineEdit::createStandardContextMenu();
     if ( !menu ) {

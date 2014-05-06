@@ -37,7 +37,7 @@ using namespace KPIM;
 MultiplyingLineView::MultiplyingLineView( MultiplyingLineFactory* factory, MultiplyingLineEditor *parent )
     : QScrollArea( parent ), mCurDelLine( 0 ),
       mLineHeight( 0 ), mFirstColumnWidth( 0 ),
-      mModified( false ), mCompletionMode( KGlobalSettings::completionMode() ),
+      mModified( false ), 
       mPage( new QWidget( this ) ), mTopLayout( new QVBoxLayout( this ) ),
       mMultiplyingLineFactory( factory ), mAutoResize( false ), mDynamicSizeHint( true )
 {
@@ -92,8 +92,8 @@ MultiplyingLine* MultiplyingLineView::addLine()
     connect( line, SIGNAL(rightPressed()), SIGNAL(focusRight()) );
     connect( line, SIGNAL(deleteLine(KPIM::MultiplyingLine*)),
              SLOT(slotDecideLineDeletion(KPIM::MultiplyingLine*)) );
-    connect( line, SIGNAL(completionModeChanged(KGlobalSettings::Completion)),
-             SLOT(setCompletionMode(KGlobalSettings::Completion)) );
+    connect( line, SIGNAL(completionModeChanged(KCompletion::Completion)),
+             SLOT(setCompletionMode(KCompletion::Completion)) );
 
     if( !mLines.isEmpty() ) {
         line->fixTabOrder( mLines.last()->tabOut() );
@@ -268,7 +268,7 @@ QList<MultiplyingLineData::Ptr> MultiplyingLineView::allData() const
     return data;
 }
 
-void MultiplyingLineView::setCompletionMode ( KGlobalSettings::Completion mode )
+void MultiplyingLineView::setCompletionMode ( KCompletion::CompletionMode mode )
 {
     if ( mCompletionMode == mode )
         return;
