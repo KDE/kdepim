@@ -265,7 +265,7 @@ if(KDEPIM_BUILD_DESKTOP)
 
   add_subdirectory(kjots)
 
-  add_subdirectory(kontact) # must be the last one.
+  add_subdirectory(kontact)
 endif()
 
 add_subdirectory(akonadiconsole)
