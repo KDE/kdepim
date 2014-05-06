@@ -24,6 +24,7 @@
 #include <KCalCore/Todo>
 #include "messageviewer_export.h"
 
+class KMessageWidget;
 class KLineEdit;
 
 namespace Akonadi {
@@ -53,6 +54,8 @@ public Q_SLOTS:
 private Q_SLOTS:
     void slotReturnPressed();
     void slotCollectionChanged(int);
+    void slotOpenEditor();
+    void slotTextEdited();
 
 Q_SIGNALS:
     void createTodo(const KCalCore::Todo::Ptr &todo, const Akonadi::Collection &collection);
@@ -67,6 +70,7 @@ private:
     KMime::Message::Ptr mMessage;
     KLineEdit *mNoteEdit;
     Akonadi::CollectionComboBox *mCollectionCombobox;
+    KMessageWidget *mMsgWidget;
 };
 }
 #endif // TODOEDIT_H

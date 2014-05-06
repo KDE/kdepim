@@ -206,6 +206,7 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   pimcommon
   grantleetheme
   kaddressbookgrantlee
+  incidenceeditorsng
 )
 
 include_directories(

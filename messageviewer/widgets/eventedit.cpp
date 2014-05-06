@@ -30,9 +30,12 @@
 #include <QEvent>
 #include <QKeyEvent>
 #include <QLabel>
-#include <QToolButton>
 
 #include <AkonadiWidgets/CollectionComboBox>
+#include <KPushButton>
+
+#include <incidenceeditor-ng/incidencedialogfactory.h>
+#include <incidenceeditor-ng/incidencedialog.h>
 
 
 namespace MessageViewer {
@@ -45,28 +48,14 @@ EventEdit::EventEdit(QWidget *parent)
     : QWidget(parent)
 {
     QVBoxLayout *vbox = new QVBoxLayout;
-    vbox->setMargin(2);
-    vbox->setSpacing(0);
+    vbox->setMargin(5);
+    vbox->setSpacing(2);
     setLayout(vbox);
+
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->setMargin(0);
     hbox->setSpacing(2);
     vbox->addLayout(hbox);
-
-    QToolButton *closeBtn = new QToolButton( this );
-    closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );
-    closeBtn->setObjectName(QLatin1String("close-button"));
-    closeBtn->setIconSize( QSize( 16, 16 ) );
-    closeBtn->setToolTip( i18n( "Close" ) );
-
-#ifndef QT_NO_ACCESSIBILITY
-    closeBtn->setAccessibleName( i18n( "Close" ) );
-    closeBtn->setAccessibleDescription( i18n("Close widget to create new Todo") );
-#endif
-
-    closeBtn->setAutoRaise( true );
-    hbox->addWidget( closeBtn );
-    connect( closeBtn, SIGNAL(clicked()), this, SLOT(slotCloseWidget()) );
 
     QLabel *lab = new QLabel(i18n("Event:"));
     hbox->addWidget(lab);
@@ -77,23 +66,28 @@ EventEdit::EventEdit(QWidget *parent)
     mEventEdit->setFocus();
     connect(mEventEdit, SIGNAL(returnPressed()), SLOT(slotReturnPressed()));
     hbox->addWidget(mEventEdit);
+
+    hbox->addSpacing(5);
+
     mCollectionCombobox = new Akonadi::CollectionComboBox(_k_eventEditStubModel);
     mCollectionCombobox->setAccessRightsFilter(Akonadi::Collection::CanCreateItem);
     mCollectionCombobox->setMinimumWidth(250);
     mCollectionCombobox->setMimeTypeFilter( QStringList() << KCalCore::Event::eventMimeType() );
     mCollectionCombobox->setObjectName(QLatin1String("akonadicombobox"));
 #ifndef QT_NO_ACCESSIBILITY
-    mCollectionCombobox->setAccessibleDescription( i18n("The most recently selected folder used for Events.") );
+    mCollectionCombobox->setAccessibleDescription( i18n("Calendar where the new event will be stored.") );
 #endif
+    mCollectionCombobox->setToolTip( i18n("Calendar where the new event will be stored.") );
 
     connect(mCollectionCombobox, SIGNAL(currentIndexChanged(int)), SLOT(slotCollectionChanged(int)));
     connect(mCollectionCombobox, SIGNAL(activated(int)), SLOT(slotCollectionChanged(int)));
     hbox->addWidget(mCollectionCombobox);
 
     hbox = new QHBoxLayout;
+    hbox->setMargin(0);
+    hbox->setSpacing(2);
     vbox->addLayout(hbox);
 
-    hbox->addStretch();
     lab = new QLabel(i18n("Start:"));
     hbox->addWidget(lab);
     KDateTime currentDateTime = KDateTime::currentDateTime(KDateTime::LocalZone);
@@ -103,9 +97,11 @@ EventEdit::EventEdit(QWidget *parent)
 #ifndef QT_NO_ACCESSIBILITY
     mStartDateTimeEdit->setAccessibleDescription( i18n("Select start time for event.") );
 #endif
-
-
+    connect(mStartDateTimeEdit, SIGNAL(dateTimeChanged(KDateTime)),
+            this, SLOT(slotStartDateTimeChanged(KDateTime)));
     hbox->addWidget(mStartDateTimeEdit);
+
+    hbox->addSpacing(5);
 
     lab = new QLabel(i18n("End:"));
     hbox->addWidget(lab);
@@ -116,6 +112,38 @@ EventEdit::EventEdit(QWidget *parent)
     mEndDateTimeEdit->setAccessibleDescription( i18n("Select end time for event.") );
 #endif
     hbox->addWidget(mEndDateTimeEdit);
+
+    hbox->addStretch(1);
+
+    hbox = new QHBoxLayout;
+    hbox->setSpacing(2);
+    hbox->setMargin(0);
+    vbox->addLayout(hbox);
+
+    hbox->addStretch(1);
+
+    KPushButton *btn = new KPushButton(KIcon(QLatin1String("appointment-new")), i18n("&Save"));
+    btn->setObjectName(QLatin1String("save-button"));
+#ifndef QT_NO_ACCESSIBILITY
+    btn->setAccessibleDescription(i18n("Create new event and close this widget."));
+#endif
+    connect(btn, SIGNAL(clicked(bool)), this, SLOT(slotReturnPressed()));
+    hbox->addWidget(btn);
+
+    btn = new KPushButton(i18n("Open &editor..."));
+#ifndef QT_NO_ACCESSIBILITY
+    btn->setAccessibleDescription(i18n("Open event editor, where more details can be changed."));
+#endif
+    connect(btn, SIGNAL(clicked(bool)), this, SLOT(slotOpenEditor()));
+    hbox->addWidget(btn);
+
+    btn = new KPushButton(i18n("&Cancel"));
+    btn->setObjectName(QLatin1String("close-button"));
+#ifndef QT_NO_ACCESSIBILITY
+    btn->setAccessibleDescription(i18n("Close the widget for creating new events."));
+#endif
+    connect(btn, SIGNAL(clicked(bool)), this, SLOT(slotCloseWidget()));
+    hbox->addWidget(btn);
 
     readConfig();
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
@@ -251,4 +279,45 @@ bool EventEdit::eventFilter(QObject *object, QEvent *e)
         }
     }
     return QWidget::eventFilter(object,e);
+}
+
+void EventEdit::slotStartDateTimeChanged(const KDateTime &newDateTime)
+{
+    if (!newDateTime.isValid()) {
+      return;
+    }
+
+    if (mEndDateTimeEdit->date() == newDateTime.date() && mEndDateTimeEdit->time() < newDateTime.time()) {
+        mEndDateTimeEdit->setTime(newDateTime.time());
+    }
+    if (mEndDateTimeEdit->date() < newDateTime.date()) {
+        mEndDateTimeEdit->setDate(newDateTime.date());
+    }
+
+    //QT5 mEndDateTimeEdit->setMinimumDateTime(newDateTime);
+}
+
+
+void EventEdit::slotOpenEditor()
+{
+    KCalCore::Attachment::Ptr attachment(new KCalCore::Attachment(mMessage->encodedContent().toBase64(), KMime::Message::mimeType()));
+    const KMime::Headers::Subject * const subject = mMessage->subject(false);
+    if (subject) {
+        attachment->setLabel(subject->asUnicodeString());
+    }
+
+    KCalCore::Event::Ptr event(new KCalCore::Event);
+    event->setSummary(mEventEdit->text());
+    //QT5 event->setDtStart(mStartDateTimeEdit->dateTime());
+    //QT5 event->setDtEnd(mEndDateTimeEdit->dateTime());
+    event->addAttachment(attachment);
+
+    Akonadi::Item item;
+    item.setPayload<KCalCore::Event::Ptr>(event);
+    item.setMimeType(KCalCore::Event::eventMimeType());
+
+    IncidenceEditorNG::IncidenceDialog *dlg = IncidenceEditorNG::IncidenceDialogFactory::create(true, KCalCore::IncidenceBase::TypeEvent, 0, this);
+    connect(dlg, SIGNAL(finished()), this, SLOT(slotCloseWidget()));
+    dlg->load(item);
+    dlg->open();
 }

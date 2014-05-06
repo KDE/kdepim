@@ -15,20 +15,14 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SEARCHPOTENTIALDUPLICATECONTACTJOBTEST_H
-#define SEARCHPOTENTIALDUPLICATECONTACTJOBTEST_H
 
-#include <QObject>
+#include "templateselection.h"
 
-class SearchPotentialDuplicateContactJobTest : public QObject
+TemplateSelection::TemplateSelection()
 {
-    Q_OBJECT
-public:
-    SearchPotentialDuplicateContactJobTest();
-private slots:
-    void shouldReturnEmptyListWhenNoItem();
-    void shouldReturnEmptyListWhenOneItem();
-    void shouldReturnListWhenTwoItemsAreDuplicated();
-};
+}
 
-#endif // SEARCHPOTENTIALDUPLICATECONTACTJOBTEST_H
+TemplateSelection::~TemplateSelection()
+{
+
+}
