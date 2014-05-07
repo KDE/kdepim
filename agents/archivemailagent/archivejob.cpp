@@ -54,6 +54,12 @@ void ArchiveJob::execute()
             deleteLater();
             return;
         }
+        if (mInfo->url().isEmpty()) {
+            qDebug()<<" Path is empty";
+            mManager->collectionDoesntExist(mInfo);
+            deleteLater();
+            return;
+        }
 
         MailCommon::BackupJob *backupJob = new MailCommon::BackupJob();
         backupJob->setRootFolder( MailCommon::Util::updatedCollection(collection) );
