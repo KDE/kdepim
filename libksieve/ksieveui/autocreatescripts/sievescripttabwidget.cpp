@@ -18,7 +18,7 @@
 #include "sievescripttabwidget.h"
 #include "sievewidgetpageabstract.h"
 
-#include <KMenu>
+#include <QMenu>
 #include <KLocalizedString>
 #include <KIcon>
 
@@ -53,7 +53,7 @@ void SieveScriptTabWidget::slotTabContextMenuRequest( const QPoint &pos )
     if (!page)
         return;
     if ((page->pageType() == SieveWidgetPageAbstract::BlockElsIf) || page->pageType() == SieveWidgetPageAbstract::BlockElse) {
-        KMenu menu( this );
+        QMenu menu( this );
         QAction *closeTab = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
         closeTab->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
 
