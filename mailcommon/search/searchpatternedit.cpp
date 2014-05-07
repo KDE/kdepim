@@ -27,7 +27,7 @@ using MailCommon::RuleWidgetHandlerManager;
 #include <KDialog>
 #include <KLocale>
 #include <QPushButton>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KIcon>
 
 #include <QButtonGroup>
@@ -167,10 +167,10 @@ void SearchRuleWidget::initWidget(SearchPatternEdit::SearchModeType modeType)
     mRuleField = new PimCommon::MinimumComboBox( this );
     mRuleField->setObjectName( QLatin1String("mRuleField") );
     mRuleField->setEditable( true );
-    KLineEdit *edit = new KLineEdit;
-    edit->setClickMessage( i18n("Choose or type your own criteria"));
+    QLineEdit *edit = new QLineEdit;
+    edit->setPlaceholderText( i18n("Choose or type your own criteria"));
     mRuleField->setToolTip(i18n("Choose or type your own criteria"));
-    edit->setClearButtonShown(true);
+    edit->setClearButtonEnabled(true);
     mRuleField->setLineEdit(edit);
     mRuleField->setTrapReturnKey(true);
 

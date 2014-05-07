@@ -31,7 +31,7 @@
 #include "regexplineedit.h"
 
 #include <KDialog>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocale>
 #include <KRegExpEditorInterface>
 #include <KServiceTypeTrader>
@@ -66,9 +66,9 @@ void RegExpLineEdit::initWidget( const QString &str )
     hlay->setSpacing( KDialog::spacingHint() );
     hlay->setMargin( 0 );
 
-    mLineEdit = new KLineEdit( str, this );
-    mLineEdit->setClearButtonShown( true );
-    mLineEdit->setTrapReturnKey(true);
+    mLineEdit = new QLineEdit( str, this );
+    mLineEdit->setClearButtonEnabled( true );
+    //QT5 mLineEdit->setTrapReturnKey(true);
     setFocusProxy( mLineEdit );
     hlay->addWidget( mLineEdit );
 

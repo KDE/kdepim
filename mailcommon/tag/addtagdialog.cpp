@@ -21,7 +21,7 @@
 #include <AkonadiCore/tagcreatejob.h>
 
 #include <KLocale>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KMessageBox>
 #include <KJob>
 #include <QDebug>

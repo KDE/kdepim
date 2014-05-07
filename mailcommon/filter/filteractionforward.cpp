@@ -98,7 +98,7 @@ QWidget* FilterActionForward::createParamWidget( QWidget *parent ) const
     MessageCore::EmailAddressRequester *addressRequester = qobject_cast<MessageCore::EmailAddressRequester*>( addressEdit );
     Q_ASSERT( addressRequester );
     KLineEdit *lineEdit = addressRequester->lineEdit();
-    lineEdit->setClearButtonShown(true);
+    lineEdit->setClearButtonEnabled(true);
     lineEdit->setTrapReturnKey(true);
     lineEdit->setToolTip( i18n( "The addressee to whom the message will be forwarded." ) );
     lineEdit->setWhatsThis( i18n( "The filter will forward the message to the addressee entered here." ) );

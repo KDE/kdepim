@@ -43,7 +43,7 @@
 #include <ETMViewStateSaver>
 #include <ItemFetchScope>
 
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocalizedString>
 
 #include <QKeyEvent>
@@ -74,7 +74,7 @@ class FolderTreeWidget::FolderTreeWidgetPrivate
     Akonadi::QuotaColorProxyModel *quotaModel;
     FolderTreeWidgetProxyModel *readableproxy;
     EntityCollectionOrderProxyModel *entityOrderProxy;
-    KLineEdit *filterFolderLineEdit;
+    QLineEdit *filterFolderLineEdit;
     QPointer<Akonadi::ETMViewStateSaver> saver;
     QStringList expandedItems;
     QString currentItem;
@@ -102,9 +102,9 @@ FolderTreeWidget::FolderTreeWidget(
   d->label = new QLabel( i18n( "You can start typing to filter the list of folders." ), this );
   lay->addWidget( d->label );
 
-  d->filterFolderLineEdit = new KLineEdit( this );
-  d->filterFolderLineEdit->setClearButtonShown( true );
-  d->filterFolderLineEdit->setClickMessage(
+  d->filterFolderLineEdit = new QLineEdit( this );
+  d->filterFolderLineEdit->setClearButtonEnabled( true );
+  d->filterFolderLineEdit->setPlaceholderText(
     i18nc( "@info/plain Displayed grayed-out inside the textbox, verb to search",
            "Search" ) );
   lay->addWidget( d->filterFolderLineEdit );
@@ -352,7 +352,7 @@ EntityCollectionOrderProxyModel *FolderTreeWidget::entityOrderProxy() const
   return d->entityOrderProxy;
 }
 
-KLineEdit *FolderTreeWidget::filterFolderLineEdit() const
+QLineEdit *FolderTreeWidget::filterFolderLineEdit() const
 {
   return d->filterFolderLineEdit;
 }

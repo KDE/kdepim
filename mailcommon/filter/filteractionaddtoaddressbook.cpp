@@ -25,7 +25,7 @@
 
 #include <CollectionComboBox>
 #include <KABC/Addressee>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocale>
 #include <KPIMUtils/Email>
 
@@ -106,9 +106,9 @@ QWidget* FilterActionAddToAddressBook::createParamWidget( QWidget *parent ) cons
     QLabel *label = new QLabel( i18n( "with category" ), widget );
     layout->addWidget( label, 0, 1 );
 
-    KLineEdit *categoryEdit = new KLineEdit( widget );
+    QLineEdit *categoryEdit = new QLineEdit( widget );
     categoryEdit->setObjectName( QLatin1String("CategoryEdit") );
-    categoryEdit->setTrapReturnKey(true);
+    //QT5 categoryEdit->setTrapReturnKey(true);
     layout->addWidget( categoryEdit, 0, 2 );
 
     label = new QLabel( i18n( "in address book" ), widget );
@@ -147,7 +147,7 @@ void FilterActionAddToAddressBook::setParamWidgetValue( QWidget *paramWidget ) c
 
     headerCombo->setCurrentIndex( headerCombo->findData( mHeaderType ) );
 
-    KLineEdit *categoryEdit = paramWidget->findChild<KLineEdit*>( QLatin1String("CategoryEdit") );
+    QLineEdit *categoryEdit = paramWidget->findChild<QLineEdit*>( QLatin1String("CategoryEdit") );
     Q_ASSERT( categoryEdit );
     categoryEdit->setText( mCategory );
 
@@ -163,7 +163,7 @@ void FilterActionAddToAddressBook::applyParamWidgetValue( QWidget *paramWidget )
     Q_ASSERT( headerCombo );
     mHeaderType = static_cast<HeaderType>( headerCombo->itemData( headerCombo->currentIndex() ).toInt() );
 
-    const KLineEdit *categoryEdit = paramWidget->findChild<KLineEdit*>( QLatin1String("CategoryEdit") );
+    const QLineEdit *categoryEdit = paramWidget->findChild<QLineEdit*>( QLatin1String("CategoryEdit") );
     Q_ASSERT( categoryEdit );
     mCategory = categoryEdit->text();
 
@@ -190,7 +190,7 @@ void FilterActionAddToAddressBook::clearParamWidget( QWidget *paramWidget ) cons
     Q_ASSERT( headerCombo );
     headerCombo->setCurrentIndex( 0 );
 
-    KLineEdit *categoryEdit = paramWidget->findChild<KLineEdit*>( QLatin1String("CategoryEdit") );
+    QLineEdit *categoryEdit = paramWidget->findChild<QLineEdit*>( QLatin1String("CategoryEdit") );
     Q_ASSERT( categoryEdit );
     categoryEdit->setText( mCategory );
 }

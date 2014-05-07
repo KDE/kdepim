@@ -927,7 +927,7 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
 
     KListWidgetSearchLine *mSearchListWidget = new KListWidgetSearchLine( this, mListWidget );
     //QT5 mSearchListWidget->setTrapReturnKey( true );
-    mSearchListWidget->setClickMessage(
+    mSearchListWidget->setPlaceholderText(
                 i18nc( "@info/plain Displayed grayed-out inside the textbox, verb to search",
                        "Search" ) );
 

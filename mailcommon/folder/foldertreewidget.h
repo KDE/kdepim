@@ -31,7 +31,7 @@ namespace Akonadi {
   class StatisticsProxyModel;
 }
 
-class KLineEdit;
+class QLineEdit;
 class KXMLGUIClient;
 
 class QItemSelectionModel;
@@ -112,7 +112,7 @@ class MAILCOMMON_EXPORT FolderTreeWidget : public QWidget
     void quotaWarningParameters( const QColor &color, qreal threshold );
     void readQuotaConfig();
 
-    KLineEdit *filterFolderLineEdit() const;
+    QLineEdit *filterFolderLineEdit() const;
     void applyFilter( const QString & );
     void clearFilter();
 

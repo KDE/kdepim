@@ -23,7 +23,7 @@
 #include <CollectionPropertiesPage>
 
 class KComboBox;
-class KLineEdit;
+class QLineEdit;
 
 class QCheckBox;
 
@@ -84,7 +84,7 @@ private:
     QCheckBox   *mKeepRepliesInSameFolderCheckBox;
     QCheckBox   *mHideInSelectionDialogCheckBox;
     QCheckBox   *mUseDefaultIdentityCheckBox;
-    KLineEdit   *mNameEdit;
+    QLineEdit   *mNameEdit;
     KPIMIdentities::IdentityCombo *mIdentityComboBox;
     QSharedPointer<MailCommon::FolderCollection> mFolderCollection;
     bool mIsLocalSystemFolder;

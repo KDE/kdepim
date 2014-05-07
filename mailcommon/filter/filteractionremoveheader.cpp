@@ -22,7 +22,7 @@
 #include "pimcommon/widgets/minimumcombobox.h"
 
 #include <KLocale>
-#include <KLineEdit>
+#include <QLineEdit>
 
 using namespace MailCommon;
 

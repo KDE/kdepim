@@ -33,7 +33,7 @@
 
 #include <Collection>
 
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QWidget>
 
@@ -44,7 +44,7 @@ class KJob;
 namespace MailCommon {
 
 /**
- * A widget that contains a KLineEdit which shows the current folder
+ * A widget that contains a QLineEdit which shows the current folder
  * and a button that fires a FolderSelectionDialog
  * The dialog is set to disable readonly folders by default
  * Search folders are excluded
@@ -119,7 +119,7 @@ class MAILCOMMON_EXPORT FolderRequester: public QWidget
 
   protected:
     Akonadi::Collection mCollection;
-    KLineEdit *mEdit;
+    QLineEdit *mEdit;
     bool mMustBeReadWrite;
     bool mShowOutbox;
     bool mNotCreateNewFolder;

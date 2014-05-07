@@ -73,7 +73,7 @@ RedirectWidget::RedirectWidget(QWidget *parent)
     mEdit = new MessageComposer::ComposerLineEdit( true );
     mEdit->setRecentAddressConfig( KernelIf->config().data() );
     mEdit->setMinimumWidth( 300 );
-    mEdit->setClearButtonShown( true );
+    mEdit->setClearButtonEnabled( true );
     hbox->addWidget(mEdit);
 
     QPushButton *BtnTo = new QPushButton( QString() );

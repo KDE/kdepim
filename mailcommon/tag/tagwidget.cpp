@@ -27,7 +27,7 @@
 #include <KIconButton>
 #include <KKeySequenceWidget>
 #include <KActionCollection>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocale>
 #include <KIcon>
 using namespace MailCommon;
@@ -46,9 +46,9 @@ TagWidget::TagWidget(const QList<KActionCollection*>& actionCollections, QWidget
     spacer->addSpacing( 2 * KDialog::spacingHint() );
 
     //First row for renaming
-    mTagNameLineEdit = new KLineEdit( this );
-    mTagNameLineEdit->setClearButtonShown(true);
-    mTagNameLineEdit->setTrapReturnKey( true );
+    mTagNameLineEdit = new QLineEdit( this );
+    mTagNameLineEdit->setClearButtonEnabled(true);
+    //QT5 mTagNameLineEdit->setTrapReturnKey( true );
     settings->addWidget( mTagNameLineEdit, 1, 1 );
 
     QLabel *namelabel = new QLabel( i18nc("@label:listbox Name of the tag", "Name:")
