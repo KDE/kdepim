@@ -86,8 +86,6 @@ PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
       mArchiveStructureInfo(0),
       mShowArchiveInformationsAction(0)
 {
-    KGlobal::locale()->insertCatalog( QLatin1String("libmailcommon") );
-    KGlobal::locale()->insertCatalog( QLatin1String("libpimcommon") );
     //Initialize filtermanager
     (void)MailCommon::FilterManager::instance();
     PimSettingExporterKernel *kernel = new PimSettingExporterKernel( this );

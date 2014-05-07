@@ -2,6 +2,8 @@ if(KDEPIM_MOBILE_UI)
   remove_definitions(-DKDEPIM_MOBILE_UI)
 endif()
 
+add_definitions(-DTRANSLATION_DOMAIN=\"libincidenceeditors\")
+
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}/calendarsupport

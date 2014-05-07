@@ -44,8 +44,6 @@
 #include <QRegExp>
 #include <QTextDocument>
 
-static const KCatalogLoader loader( QLatin1String("libkaddressbookgrantlee") );
-
 using namespace KAddressBookGrantlee;
 
 class GrantleeContactFormatter::Private

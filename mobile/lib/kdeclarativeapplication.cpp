@@ -68,10 +68,6 @@ void KDeclarativeApplicationBase::postApplicationSetup()
 
   setFont(KGlobalSettings::generalFont());
 
-  KGlobal::locale()->insertCatalog( QLatin1String("libakonadi") );
-  KGlobal::locale()->insertCatalog( QLatin1String("accountwizard") );
-  KGlobal::locale()->insertCatalog( QLatin1String("libkdepimmobileui") );
-  KGlobal::locale()->insertCatalog( QLatin1String("akonadi_serializer_plugins") ); // for conflict handling
 }
 
 // static

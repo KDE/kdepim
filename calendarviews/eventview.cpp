@@ -61,9 +61,6 @@ using namespace KCalCore;
 using namespace EventViews;
 using namespace Akonadi;
 
-//QT5
-//static const KCatalogLoader loaderCatalog( QLatin1String("libeventviews") );
-
 CalendarSupport::CollectionSelection *EventViewPrivate::sGlobalCollectionSelection = 0;
 
 /* static */

@@ -30,7 +30,7 @@
 
 #include <KLocalizedString>
 #include <QDebug>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KMessageBox>
 #include <KInputDialog>
 #include <KGlobal>
@@ -125,10 +125,10 @@ DistributionListDialog::DistributionListDialog( QWidget *parent )
                 i18nc("@label:textbox Name of the distribution list.", "&Name:"), topFrame );
     titleLayout->addWidget( label );
 
-    mTitleEdit = new KLineEdit( topFrame );
+    mTitleEdit = new QLineEdit( topFrame );
     titleLayout->addWidget( mTitleEdit );
     mTitleEdit->setFocus();
-    mTitleEdit->setClearButtonShown( true );
+    mTitleEdit->setClearButtonEnabled( true );
     label->setBuddy( mTitleEdit );
 
     mRecipientsList = new QTreeWidget( topFrame );

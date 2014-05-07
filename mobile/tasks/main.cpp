@@ -53,9 +53,6 @@ int main( int argc, char **argv )
   KCmdLineArgs::init( argc, argv, &aboutData );
   KDeclarativeApplication<MainView> app;
 
-  KGlobal::locale()->insertCatalog( QLatin1String("libkcalutils") );
-  KGlobal::locale()->insertCatalog( QLatin1String("libincidenceeditors") );
-
   return app.exec();
 }
 

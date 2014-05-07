@@ -22,7 +22,7 @@
 #include <KActionMenu>
 #include <QDebug>
 #include <KLocalizedString>
-#include <KMenu>
+#include <QMenu>
 
 #include <QSignalMapper>
 

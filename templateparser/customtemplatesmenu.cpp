@@ -25,7 +25,7 @@
 #include <KActionMenu>
 #include <QIcon>
 #include <KLocalizedString>
-#include <KMenu>
+#include <QMenu>
 
 #include <QSignalMapper>
 

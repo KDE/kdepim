@@ -47,7 +47,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KMimeTypeTrader>
-#include <KPushButton>
+#include <QPushButton>
 #include <KRun>
 #include <KTemporaryFile>
 #include <KFileItemActions>

@@ -19,8 +19,8 @@
 
 #include <KDialog>
 
-class KLineEdit;
-class KPushButton;
+class QLineEdit;
+class QPushButton;
 class QListWidget;
 
 namespace MessageComposer {
@@ -61,8 +61,8 @@ private Q_SLOTS:
     void slotSelectFormat();
 
 private:
-    KLineEdit *mFormat;
-    KPushButton *mSelectFormat;
+    QLineEdit *mFormat;
+    QPushButton *mSelectFormat;
 };
 }
 

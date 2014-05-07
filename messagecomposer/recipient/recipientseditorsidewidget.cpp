@@ -29,7 +29,7 @@
 
 #include <KDialog>
 #include <KLocalizedString>
-#include <KPushButton>
+#include <QPushButton>
 
 #include <QLabel>
 #include <QBoxLayout>
@@ -53,7 +53,7 @@ RecipientsEditorSideWidget::RecipientsEditorSideWidget( RecipientsEditor *view, 
 
     topLayout->addStretch( 1 );
 
-    mDistributionListButton = new KPushButton(
+    mDistributionListButton = new QPushButton(
                 i18nc("@action:button","Save List..."), this );
     topLayout->addWidget( mDistributionListButton );
     mDistributionListButton->hide();

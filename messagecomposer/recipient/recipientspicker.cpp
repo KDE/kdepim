@@ -32,8 +32,8 @@
 #include <khbox.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <KLineEdit>
-#include <KPushButton>
+#include <QLineEdit>
+#include <QPushButton>
 #include <QDebug>
 #include <KGlobal>
 

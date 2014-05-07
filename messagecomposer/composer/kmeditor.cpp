@@ -37,7 +37,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KProcess>
-#include <KPushButton>
+#include <QPushButton>
 #include <KTemporaryFile>
 #include <KColorScheme>
 #include <KFileDialog>

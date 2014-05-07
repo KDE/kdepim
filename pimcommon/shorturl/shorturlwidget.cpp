@@ -19,7 +19,6 @@
 #include "shorturlutils.h"
 #include "abstractshorturl.h"
 #include "shorturl/shorturlconfiguredialog.h"
-#include <KLineEdit>
 #include <KPIMUtils/ProgressIndicatorLabel>
 
 #include <QLineEdit>
@@ -35,6 +34,7 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QToolButton>
+#include <QPointer>
 
 using namespace PimCommon;
 

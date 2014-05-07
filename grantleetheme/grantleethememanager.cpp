@@ -37,9 +37,6 @@
 #include <QDirIterator>
 #include <QActionGroup>
 
-//QT5
-//static const KCatalogLoader loader( QLatin1String("libgrantleetheme") );
-
 using namespace GrantleeTheme;
 
 class GrantleeThemeManager::Private

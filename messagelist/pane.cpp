@@ -24,7 +24,7 @@
 #include <KLocale>
 #include <KMenu>
 #include <KXMLGUIClient>
-#include <KAction>
+#include <QAction>
 #include <KToggleAction>
 
 #include <QtCore/QAbstractItemModel>
@@ -101,11 +101,11 @@ public:
 
     QToolButton *mNewTabButton;
     QToolButton *mCloseTabButton;
-    KAction *mCloseTabAction;
-    KAction *mActivateNextTabAction;
-    KAction *mActivatePreviousTabAction;
-    KAction *mMoveTabLeftAction;
-    KAction *mMoveTabRightAction;
+    QAction *mCloseTabAction;
+    QAction *mActivateNextTabAction;
+    QAction *mActivatePreviousTabAction;
+    QAction *mMoveTabLeftAction;
+    QAction *mMoveTabRightAction;
     bool mPreferEmptyTab;
     int mMaxTabCreated;
 };
@@ -200,7 +200,7 @@ void Pane::Private::addActivateTabAction(int i)
 {
     QString actionname;
     actionname.sprintf("activate_tab_%02d", i);
-    KAction *action = new KAction( i18n("Activate Tab %1", i), q);
+    QAction *action = new QAction( i18n("Activate Tab %1", i), q);
     action->setShortcut( QKeySequence( QString::fromLatin1( "Alt+%1" ).arg( i ) ) );
     mXmlGuiClient->actionCollection()->addAction( actionname, action );
     connect( action, SIGNAL(triggered(bool)),q, SLOT(activateTab()) );
@@ -236,7 +236,7 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
 
         d->mActionMenu->addSeparator();
 
-        KAction *action = new KAction( i18n("Create New Tab"), this );
+        QAction *action = new QAction( i18n("Create New Tab"), this );
         action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_O ) );
         d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "create_new_tab" ), action );
         connect( action, SIGNAL(triggered(bool)), SLOT(onNewTabClicked()) );
@@ -248,30 +248,30 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
         }
 
 
-        d->mCloseTabAction = new KAction( i18n("Close Tab"), this );
+        d->mCloseTabAction = new QAction( i18n("Close Tab"), this );
         d->mCloseTabAction->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_W ) );
         d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "close_current_tab" ), d->mCloseTabAction );
         connect( d->mCloseTabAction, SIGNAL(triggered(bool)), SLOT(onCloseTabClicked()) );
         d->mActionMenu->addAction( d->mCloseTabAction );
         d->mCloseTabAction->setEnabled( false );
 
-        d->mActivateNextTabAction = new KAction( i18n("Activate Next Tab"),this );
+        d->mActivateNextTabAction = new QAction( i18n("Activate Next Tab"),this );
         d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "activate_next_tab" ), d->mActivateNextTabAction );
         d->mActivateNextTabAction->setEnabled( false );
         connect( d->mActivateNextTabAction, SIGNAL(triggered(bool)), SLOT(activateNextTab()) );
 
-        d->mActivatePreviousTabAction = new KAction( i18n("Activate Previous Tab"),this );
+        d->mActivatePreviousTabAction = new QAction( i18n("Activate Previous Tab"),this );
         d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "activate_previous_tab" ), d->mActivatePreviousTabAction );
         d->mActivatePreviousTabAction->setEnabled( false );
         connect( d->mActivatePreviousTabAction, SIGNAL(triggered(bool)), SLOT(activatePreviousTab()) );
 
 
-        d->mMoveTabLeftAction = new KAction( i18n("Move Tab Left"),this );
+        d->mMoveTabLeftAction = new QAction( i18n("Move Tab Left"),this );
         d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "move_tab_left" ), d->mMoveTabLeftAction );
         d->mMoveTabLeftAction->setEnabled( false );
         connect( d->mMoveTabLeftAction, SIGNAL(triggered(bool)), SLOT(moveTabLeft()) );
 
-        d->mMoveTabRightAction = new KAction( i18n("Move Tab Right"),this );
+        d->mMoveTabRightAction = new QAction( i18n("Move Tab Right"),this );
         d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "move_tab_right" ), d->mMoveTabRightAction );
         d->mMoveTabRightAction->setEnabled( false );
         connect( d->mMoveTabRightAction, SIGNAL(triggered(bool)), SLOT(moveTabRight()) );

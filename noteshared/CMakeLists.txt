@@ -10,6 +10,7 @@ set(QT_REQUIRED_VERSION "5.2.0")
 
 find_package(KF5DNSSD ${KF5_VERSION} CONFIG REQUIRED)
 
+add_definitions(-DTRANSLATION_DOMAIN=\"libnoteshared\")
 
 set(libnoteshared_akonadi_SRCS
     akonadi/notesakonaditreemodel.cpp

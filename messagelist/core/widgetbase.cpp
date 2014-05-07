@@ -43,7 +43,7 @@
 #include <QToolButton>
 #include <QVariant>
 
-#include <KAction>
+#include <QAction>
 #include <KComboBox>
 #include <KConfig>
 #include <QDebug>

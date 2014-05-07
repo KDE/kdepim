@@ -17,12 +17,13 @@
 
 #include "imagescalingselectformat.h"
 
-#include <KLineEdit>
-#include <KPushButton>
+#include <QLineEdit>
+#include <QPushButton>
 #include <KLocalizedString>
 
 #include <QListWidget>
 #include <QHBoxLayout>
+#include <QPointer>
 
 using namespace MessageComposer;
 
@@ -94,11 +95,11 @@ ImageScalingSelectFormat::ImageScalingSelectFormat(QWidget *parent)
     : QWidget(parent)
 {
     QHBoxLayout *lay = new QHBoxLayout(this);
-    mFormat = new KLineEdit;
+    mFormat = new QLineEdit;
     connect(mFormat, SIGNAL(textChanged(QString)),SIGNAL(textChanged(QString)));
     mFormat->setReadOnly(true);
     lay->addWidget(mFormat);
-    mSelectFormat = new KPushButton(i18n("Select Format..."));
+    mSelectFormat = new QPushButton(i18n("Select Format..."));
     connect(mSelectFormat, SIGNAL(clicked(bool)), this, SLOT(slotSelectFormat()));
     lay->addWidget(mSelectFormat);
 }

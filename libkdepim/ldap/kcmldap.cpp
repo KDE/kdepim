@@ -92,7 +92,6 @@ KCMLdap::KCMLdap( QWidget *parent, const QVariantList& )
                                         ki18n( "(c) 2009 - 2010 Tobias Koenig" ) );
 
     about->addAuthor( ki18n( "Tobias Koenig" ), KLocalizedString(), "tokoe@kde.org" );
-    KGlobal::locale()->insertCatalog(QLatin1String("libkdepim"));
     setAboutData( about );
     mClientSearchConfig = new KLDAP::LdapClientSearchConfig;
     initGUI();

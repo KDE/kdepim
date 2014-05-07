@@ -1,3 +1,4 @@
+add_definitions(-DTRANSLATION_DOMAIN=\"kdgantt2\")
 # Those paths need to be absolute since this file is included from other CMakeLists.txt files
 set(libkdgantt2_SRCS
 kdganttabstractgrid.cpp

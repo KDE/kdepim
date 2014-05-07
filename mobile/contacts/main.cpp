@@ -45,12 +45,6 @@ int main( int argc, char **argv )
   KCmdLineArgs::init( argc, argv, &aboutData );
   KDeclarativeApplication<MainView> app;
 
-  KGlobal::locale()->insertCatalog( QLatin1String("kabc") );
-  KGlobal::locale()->insertCatalog( QLatin1String("akonadicontact") );
-  KGlobal::locale()->insertCatalog( QLatin1String("libkdepim") );
-  KGlobal::locale()->insertCatalog( QLatin1String("libkldap") ); // for ldap server dialog
-  KGlobal::locale()->insertCatalog( QLatin1String("calendarsupport") ); // for categories
-
   return app.exec();
 }
 

@@ -46,8 +46,6 @@ int main( int argc, char **argv )
     }
     KUniqueApplication a;
     StorageServiceManagerMainWindow *mw = new StorageServiceManagerMainWindow();
-    KGlobal::locale()->insertCatalog( QLatin1String("libpimcommon") );
-    KGlobal::locale()->insertCatalog( QLatin1String("libkgapi") );
     mw->show();
     a.exec();
 }

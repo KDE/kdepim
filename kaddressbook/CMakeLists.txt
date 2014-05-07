@@ -13,6 +13,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libkleo
 )
 
+
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
@@ -83,7 +84,6 @@ set(kaddressbook_merge_SRCS
 )
 
 set(kaddressbook_LIB_SRCS
-  startup.cpp
   aboutdata.cpp
   categoryfilterproxymodel.cpp
   categoryselectwidget.cpp

@@ -51,7 +51,6 @@ int main( int argc, char **argv )
 
     KDBusService service();
 
-    KGlobal::locale()->insertCatalog(QLatin1String("libpimcommon"));
     ThemeEditorMainWindow *mw = new ThemeEditorMainWindow();
     mw->show();
     app.exec();

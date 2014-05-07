@@ -20,7 +20,6 @@
 
 #include "aboutdata.h"
 #include "mainwindow.h"
-#include "startup.h"
 #include "mainwidget.h"
 #include "kaddressbook_options.h"
 
@@ -68,7 +67,6 @@ int main( int argc, char **argv )
   }
 
   KAddressBookApplication app;
-  KAddressBook::insertLibraryCatalogues();
 
   return app.exec();
 }

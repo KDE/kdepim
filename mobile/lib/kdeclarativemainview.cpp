@@ -157,8 +157,6 @@ void KDeclarativeMainView::doDelayedInitInternal()
     qWarning() << "Start KDeclarativeMainView ctor" << &time << " - " << QDateTime::currentDateTime();
   }
 
-  KGlobal::locale()->insertCatalog( QLatin1String( "libkdepimmobileui" ) );
-  KGlobal::locale()->insertCatalog( QLatin1String( "libincidenceeditors" ) ); // for category dialog
 
   if ( debugTiming ) {
     qWarning() << "Catalog inserted" << time.elapsed() << &time;

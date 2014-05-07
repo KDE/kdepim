@@ -23,8 +23,6 @@
 #include <KDebug>
 #include <KGlobal>
 
-static const KCatalogLoader loader( "libincidenceeditors" );
-
 using namespace IncidenceEditorNG;
 
 IncidenceEditor::IncidenceEditor( QObject *parent )
