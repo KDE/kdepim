@@ -19,7 +19,7 @@
 
 #include <KLocalizedString>
 #include <KStandardDirs>
-#include <KPushButton>
+#include <QPushButton>
 #include <KMessageBox>
 #include <KTempDir>
 #include <KSharedConfig>
@@ -30,9 +30,6 @@
 #include <QVBoxLayout>
 #include <QDir>
 #include <QDirIterator>
-
-//QT5
-//static const KCatalogLoader loader( QLatin1String("libgrantleethemeeditor") );
 
 using namespace GrantleeThemeEditor;
 
@@ -54,7 +51,7 @@ ManageThemes::ManageThemes(const QString &relativeThemePath, QWidget *parent)
     connect(mListThemes, SIGNAL(itemSelectionChanged()), this, SLOT(slotItemSelectionChanged()));
     lay->addWidget(mListThemes);
 
-    mDeleteTheme = new KPushButton(i18n("Delete theme"));
+    mDeleteTheme = new QPushButton(i18n("Delete theme"));
     connect(mDeleteTheme, SIGNAL(clicked()), this, SLOT(slotDeleteTheme()));
     mDeleteTheme->setEnabled(false);
     lay->addWidget(mDeleteTheme);

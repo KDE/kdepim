@@ -22,7 +22,7 @@
 #include <KDialog>
 
 class QListWidget;
-class KPushButton;
+class QPushButton;
 namespace GrantleeThemeEditor {
 
 class GRANTLEETHEMEEDITOR_EXPORT ManageThemes : public KDialog
@@ -42,7 +42,7 @@ private:
     void initialize();
     QString mLocalDirectory;
     QListWidget *mListThemes;
-    KPushButton *mDeleteTheme;
+    QPushButton *mDeleteTheme;
 };
 }
 #endif // MANAGETHEMES_H

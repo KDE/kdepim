@@ -47,10 +47,6 @@ ContactEditorMainWindow::ContactEditorMainWindow()
     : KXmlGuiWindow(),
       mContactEditor(0)
 {
-    KGlobal::locale()->insertCatalog( QLatin1String("akonadicontact") );
-    KGlobal::locale()->insertCatalog( QLatin1String("kabc") );
-    KGlobal::locale()->insertCatalog( QLatin1String("libpimcommon") );
-
     setupActions();
     setupGUI();
     updateActions();
