@@ -6,7 +6,12 @@
     </method>
     <method name="pause"/>
     <method name="resume"/>
-    <method name="printArchiveListInfo"/>
+    <method name="printArchiveListInfo">
+       <arg direction="out" type="s" />
+    </method>
+    <method name="printCurrentListInfo">
+       <arg direction="out" type="s" />
+    </method>
     <method name="setEnableAgent" >
       <arg direction="in" type="b" name="enabled" />
     </method>

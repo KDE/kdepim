@@ -145,7 +145,7 @@ void WebDavStorageService::storageServiceShareLink(const QString &root, const QS
     if (needInitialized()) {
         mNextAction->setRootPath(root);
         mNextAction->setPath(path);
-        mNextAction->setNextActionType(ShareLink);
+        mNextAction->setNextActionType(ShareLinkAction);
         storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
@@ -159,7 +159,7 @@ void WebDavStorageService::storageServiceShareLink(const QString &root, const QS
 void WebDavStorageService::storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
     if (needInitialized()) {
-        mNextAction->setNextActionType(DownLoadFile);
+        mNextAction->setNextActionType(DownLoadFileAction);
         mNextAction->setNextActionName(name);
         mNextAction->setDownloadDestination(destination);
         mNextAction->setFileId(fileId);
@@ -178,7 +178,7 @@ void WebDavStorageService::storageServicedownloadFile(const QString &name, const
 void WebDavStorageService::storageServicecreateServiceFolder()
 {
     if (needInitialized()) {
-        mNextAction->setNextActionType(CreateServiceFolder);
+        mNextAction->setNextActionType(CreateServiceFolderAction);
         storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
@@ -192,7 +192,7 @@ void WebDavStorageService::storageServicecreateServiceFolder()
 void WebDavStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (needInitialized()) {
-        mNextAction->setNextActionType(DeleteFile);
+        mNextAction->setNextActionType(DeleteFileAction);
         mNextAction->setNextActionName(filename);
         storageServiceauthentication();
     } else {
@@ -207,7 +207,7 @@ void WebDavStorageService::storageServicedeleteFile(const QString &filename)
 void WebDavStorageService::storageServicedeleteFolder(const QString &foldername)
 {
     if (needInitialized()) {
-        mNextAction->setNextActionType(DeleteFolder);
+        mNextAction->setNextActionType(DeleteFolderAction);
         mNextAction->setNextActionName(foldername);
         storageServiceauthentication();
     } else {
@@ -222,7 +222,7 @@ void WebDavStorageService::storageServicedeleteFolder(const QString &foldername)
 void WebDavStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
 {
     if (needInitialized()) {
-        mNextAction->setNextActionType(RenameFolder);
+        mNextAction->setNextActionType(RenameFolderAction);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {
@@ -237,7 +237,7 @@ void WebDavStorageService::storageServiceRenameFolder(const QString &source, con
 void WebDavStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
 {
     if (needInitialized()) {
-        mNextAction->setNextActionType(RenameFile);
+        mNextAction->setNextActionType(RenameFileAction);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {
@@ -252,7 +252,7 @@ void WebDavStorageService::storageServiceRenameFile(const QString &source, const
 void WebDavStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
 {
     if (needInitialized()) {
-        mNextAction->setNextActionType(MoveFolder);
+        mNextAction->setNextActionType(MoveFolderAction);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {
@@ -267,7 +267,7 @@ void WebDavStorageService::storageServiceMoveFolder(const QString &source, const
 void WebDavStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
 {
     if (needInitialized()) {
-        mNextAction->setNextActionType(MoveFile);
+        mNextAction->setNextActionType(MoveFileAction);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {
@@ -282,7 +282,7 @@ void WebDavStorageService::storageServiceMoveFile(const QString &source, const Q
 void WebDavStorageService::storageServiceCopyFile(const QString &source, const QString &destination)
 {
     if (needInitialized()) {
-        mNextAction->setNextActionType(CopyFile);
+        mNextAction->setNextActionType(CopyFileAction);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {
@@ -297,7 +297,7 @@ void WebDavStorageService::storageServiceCopyFile(const QString &source, const Q
 void WebDavStorageService::storageServiceCopyFolder(const QString &source, const QString &destination)
 {
     if (needInitialized()) {
-        mNextAction->setNextActionType(CopyFolder);
+        mNextAction->setNextActionType(CopyFolderAction);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {
@@ -411,7 +411,7 @@ QString WebDavStorageService::fileShareRoot(const QVariantMap &variantMap)
 void WebDavStorageService::storageServicelistFolder(const QString &folder)
 {
     if (needInitialized()) {
-        mNextAction->setNextActionType(ListFolder);
+        mNextAction->setNextActionType(ListFolderAction);
         mNextAction->setNextActionFolder(folder);
         storageServiceauthentication();
     } else {
@@ -426,7 +426,7 @@ void WebDavStorageService::storageServicelistFolder(const QString &folder)
 void WebDavStorageService::storageServicecreateFolder(const QString &name, const QString &destination)
 {
     if (needInitialized()) {
-        mNextAction->setNextActionType(CreateFolder);
+        mNextAction->setNextActionType(CreateFolderAction);
         mNextAction->setNextActionName(name);
         mNextAction->setNextActionFolder(destination);
         storageServiceauthentication();
@@ -442,7 +442,7 @@ void WebDavStorageService::storageServicecreateFolder(const QString &name, const
 void WebDavStorageService::storageServiceaccountInfo()
 {
     if (needInitialized()) {
-        mNextAction->setNextActionType(AccountInfo);
+        mNextAction->setNextActionType(AccountInfoAction);
         storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
@@ -461,7 +461,7 @@ QString WebDavStorageService::name()
 void WebDavStorageService::storageServiceuploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
     if (needInitialized()) {
-        mNextAction->setNextActionType(UploadFile);
+        mNextAction->setNextActionType(UploadFileAction);
         mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
         mNextAction->setUploadAsName(uploadAsName);

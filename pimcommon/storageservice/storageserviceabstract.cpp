@@ -271,54 +271,54 @@ void StorageServiceAbstract::executeNextAction()
     switch(mNextAction->nextActionType()) {
     case NoneAction:
         break;
-    case RequestToken:
+    case RequestTokenAction:
         storageServiceauthentication();
         break;
-    case AccessToken:
+    case AccessTokenAction:
         break;
-    case UploadFile:
+    case UploadFileAction:
         storageServiceuploadFile(mNextAction->nextActionName(), mNextAction->uploadAsName(), mNextAction->nextActionFolder());
         break;
-    case CreateFolder:
+    case CreateFolderAction:
         storageServicecreateFolder(mNextAction->nextActionName(), mNextAction->nextActionFolder());
         break;
-    case ListFolder:
+    case ListFolderAction:
         storageServicelistFolder(mNextAction->nextActionFolder());
         break;
-    case AccountInfo:
+    case AccountInfoAction:
         storageServiceaccountInfo();
         break;
-    case ShareLink:
+    case ShareLinkAction:
         storageServiceShareLink(mNextAction->rootPath(), mNextAction->path());
         break;
-    case CreateServiceFolder:
+    case CreateServiceFolderAction:
         storageServicecreateServiceFolder();
         break;
-    case DownLoadFile:
+    case DownLoadFileAction:
         storageServicedownloadFile(mNextAction->nextActionName(), mNextAction->fileId(), mNextAction->downloadDestination());
         break;
-    case DeleteFile:
+    case DeleteFileAction:
         storageServicedeleteFile(mNextAction->nextActionName());
         break;
-    case DeleteFolder:
+    case DeleteFolderAction:
         storageServicedeleteFolder(mNextAction->nextActionFolder());
         break;
-    case RenameFolder:
+    case RenameFolderAction:
         storageServiceRenameFolder(mNextAction->renameSource(), mNextAction->renameDestination());
         break;
-    case RenameFile:
+    case RenameFileAction:
         storageServiceRenameFile(mNextAction->renameSource(), mNextAction->renameDestination());
         break;
-    case MoveFile:
+    case MoveFileAction:
         storageServiceMoveFile(mNextAction->renameSource(), mNextAction->renameDestination());
         break;
-    case MoveFolder:
+    case MoveFolderAction:
         storageServiceMoveFolder(mNextAction->renameSource(), mNextAction->renameDestination());
         break;
-    case CopyFile:
+    case CopyFileAction:
         storageServiceCopyFile(mNextAction->renameSource(), mNextAction->renameDestination());
         break;
-    case CopyFolder:
+    case CopyFolderAction:
         storageServiceCopyFolder(mNextAction->renameSource(), mNextAction->renameDestination());
         break;
     }

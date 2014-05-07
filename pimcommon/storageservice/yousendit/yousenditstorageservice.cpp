@@ -138,7 +138,7 @@ void YouSendItStorageService::slotAuthorizationDone(const QString &password, con
 void YouSendItStorageService::storageServicelistFolder(const QString &folder)
 {
     if (needAuthenticate()) {
-        mNextAction->setNextActionType(ListFolder);
+        mNextAction->setNextActionType(ListFolderAction);
         mNextAction->setNextActionFolder(folder);
         storageServiceauthentication();
     } else {
@@ -155,7 +155,7 @@ void YouSendItStorageService::storageServicecreateFolder(const QString &name, co
     if (needAuthenticate()) {
         mNextAction->setNextActionName(name);
         mNextAction->setNextActionFolder(destination);
-        mNextAction->setNextActionType(CreateFolder);
+        mNextAction->setNextActionType(CreateFolderAction);
         storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -169,7 +169,7 @@ void YouSendItStorageService::storageServicecreateFolder(const QString &name, co
 void YouSendItStorageService::storageServiceaccountInfo()
 {
     if (needAuthenticate()) {
-        mNextAction->setNextActionType(AccountInfo);
+        mNextAction->setNextActionType(AccountInfoAction);
         storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -191,7 +191,7 @@ void YouSendItStorageService::storageServiceuploadFile(const QString &filename, 
         mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
         mNextAction->setUploadAsName(uploadAsName);
-        mNextAction->setNextActionType(UploadFile);
+        mNextAction->setNextActionType(UploadFileAction);
         storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -254,7 +254,7 @@ void YouSendItStorageService::storageServiceShareLink(const QString &root, const
     if (needAuthenticate()) {
         mNextAction->setRootPath(root);
         mNextAction->setPath(path);
-        mNextAction->setNextActionType(ShareLink);
+        mNextAction->setNextActionType(ShareLinkAction);
         storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -269,7 +269,7 @@ void YouSendItStorageService::storageServicedownloadFile(const QString &name, co
 {
     if (needAuthenticate()) {
         mNextAction->setNextActionName(name);
-        mNextAction->setNextActionType(DownLoadFile);
+        mNextAction->setNextActionType(DownLoadFileAction);
         mNextAction->setDownloadDestination(destination);
         mNextAction->setFileId(fileId);
         storageServiceauthentication();
@@ -287,7 +287,7 @@ void YouSendItStorageService::storageServicedownloadFile(const QString &name, co
 void YouSendItStorageService::storageServicecreateServiceFolder()
 {
     if (needAuthenticate()) {
-        mNextAction->setNextActionType(CreateServiceFolder);
+        mNextAction->setNextActionType(CreateServiceFolderAction);
         storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -302,7 +302,7 @@ void YouSendItStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (needAuthenticate()) {
         mNextAction->setNextActionName(filename);
-        mNextAction->setNextActionType(DeleteFile);
+        mNextAction->setNextActionType(DeleteFileAction);
         storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -317,7 +317,7 @@ void YouSendItStorageService::storageServicedeleteFolder(const QString &folderna
 {
     if (needAuthenticate()) {
         mNextAction->setNextActionName(foldername);
-        mNextAction->setNextActionType(DeleteFolder);
+        mNextAction->setNextActionType(DeleteFolderAction);
         storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -331,7 +331,7 @@ void YouSendItStorageService::storageServicedeleteFolder(const QString &folderna
 void YouSendItStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
 {
     if (needAuthenticate()) {
-        mNextAction->setNextActionType(RenameFolder);
+        mNextAction->setNextActionType(RenameFolderAction);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {
@@ -346,7 +346,7 @@ void YouSendItStorageService::storageServiceRenameFolder(const QString &source, 
 void YouSendItStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
 {
     if (needAuthenticate()) {
-        mNextAction->setNextActionType(RenameFile);
+        mNextAction->setNextActionType(RenameFileAction);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {
@@ -361,7 +361,7 @@ void YouSendItStorageService::storageServiceRenameFile(const QString &source, co
 void YouSendItStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
 {
     if (needAuthenticate()) {
-        mNextAction->setNextActionType(MoveFolder);
+        mNextAction->setNextActionType(MoveFolderAction);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {
@@ -376,7 +376,7 @@ void YouSendItStorageService::storageServiceMoveFolder(const QString &source, co
 void YouSendItStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
 {
     if (needAuthenticate()) {
-        mNextAction->setNextActionType(MoveFile);
+        mNextAction->setNextActionType(MoveFileAction);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {
@@ -391,7 +391,7 @@ void YouSendItStorageService::storageServiceMoveFile(const QString &source, cons
 void YouSendItStorageService::storageServiceCopyFile(const QString &source, const QString &destination)
 {
     if (needAuthenticate()) {
-        mNextAction->setNextActionType(CopyFile);
+        mNextAction->setNextActionType(CopyFileAction);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {
@@ -406,7 +406,7 @@ void YouSendItStorageService::storageServiceCopyFile(const QString &source, cons
 void YouSendItStorageService::storageServiceCopyFolder(const QString &source, const QString &destination)
 {
     if (needAuthenticate()) {
-        mNextAction->setNextActionType(CopyFolder);
+        mNextAction->setNextActionType(CopyFolderAction);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {

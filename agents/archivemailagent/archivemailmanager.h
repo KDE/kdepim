@@ -37,8 +37,10 @@ public:
     void pause();
     void resume();
 
-    void printArchiveListInfo();
+    QString printArchiveListInfo();
     void collectionDoesntExist(ArchiveMailInfo *info);
+
+    QString printCurrentListInfo();
 
 public Q_SLOTS:
     void load();
@@ -48,6 +50,7 @@ Q_SIGNALS:
     void needUpdateConfigDialogBox();
 
 private:
+    QString infoToStr(ArchiveMailInfo *info) const;
     void removeCollectionId(Akonadi::Collection::Id id);
     KSharedConfig::Ptr mConfig;
     QList<ArchiveMailInfo *> mListArchiveInfo;

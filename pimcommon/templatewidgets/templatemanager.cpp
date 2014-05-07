@@ -27,6 +27,7 @@
 #include <QDirIterator>
 
 using namespace PimCommon;
+
 TemplateManager::TemplateManager(const QString &relativeTemplateDir, PimCommon::TemplateListWidget *templateListWidget)
     : QObject(templateListWidget),
       mTemplateListWidget(templateListWidget)
@@ -40,7 +41,6 @@ TemplateManager::TemplateManager(const QString &relativeTemplateDir, PimCommon::
 
 TemplateManager::~TemplateManager()
 {
-
 }
 
 void TemplateManager::slotDirectoryChanged()
@@ -66,7 +66,6 @@ void TemplateManager::initTemplatesDirectories(const QString &templatesRelativeP
 void TemplateManager::loadTemplates()
 {
     if ( !mTemplatesDirectories.isEmpty() ) {
-        mDirWatch->stopScan();
         Q_FOREACH (const QString &directory, mTemplatesDirectories) {
             mDirWatch->removeDir( directory );
         }

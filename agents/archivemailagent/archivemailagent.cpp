@@ -145,9 +145,14 @@ void ArchiveMailAgent::resume()
     }
 }
 
-void ArchiveMailAgent::printArchiveListInfo()
+QString ArchiveMailAgent::printArchiveListInfo()
 {
-    mArchiveManager->printArchiveListInfo();
+    return mArchiveManager->printArchiveListInfo();
+}
+
+QString ArchiveMailAgent::printCurrentListInfo()
+{
+    return mArchiveManager->printCurrentListInfo();
 }
 
 AKONADI_AGENT_MAIN( ArchiveMailAgent )

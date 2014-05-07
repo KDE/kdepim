@@ -114,7 +114,7 @@ bool DropBoxStorageService::checkNeedAuthenticate()
 void DropBoxStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
     if (checkNeedAuthenticate()) {
-        mNextAction->setNextActionType(ShareLink);
+        mNextAction->setNextActionType(ShareLinkAction);
         mNextAction->setRootPath(root);
         mNextAction->setPath(path);
         storageServiceauthentication();
@@ -130,7 +130,7 @@ void DropBoxStorageService::storageServiceShareLink(const QString &root, const Q
 void DropBoxStorageService::storageServicecreateServiceFolder()
 {
     if (checkNeedAuthenticate()) {
-        mNextAction->setNextActionType(CreateServiceFolder);
+        mNextAction->setNextActionType(CreateServiceFolderAction);
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -165,7 +165,7 @@ void DropBoxStorageService::slotAuthorizationDone(const QString &accessToken, co
 void DropBoxStorageService::storageServicelistFolder(const QString &folder)
 {
     if (checkNeedAuthenticate()) {
-        mNextAction->setNextActionType(ListFolder);
+        mNextAction->setNextActionType(ListFolderAction);
         mNextAction->setNextActionFolder(folder);
         storageServiceauthentication();
     } else {
@@ -180,7 +180,7 @@ void DropBoxStorageService::storageServicelistFolder(const QString &folder)
 void DropBoxStorageService::storageServiceaccountInfo()
 {
     if (checkNeedAuthenticate()) {
-        mNextAction->setNextActionType(AccountInfo);
+        mNextAction->setNextActionType(AccountInfoAction);
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -194,7 +194,7 @@ void DropBoxStorageService::storageServiceaccountInfo()
 void DropBoxStorageService::storageServicecreateFolder(const QString &name, const QString &destination)
 {
     if (checkNeedAuthenticate()) {
-        mNextAction->setNextActionType(CreateFolder);
+        mNextAction->setNextActionType(CreateFolderAction);
         mNextAction->setNextActionName(name);
         mNextAction->setNextActionFolder(destination);
         storageServiceauthentication();
@@ -210,7 +210,7 @@ void DropBoxStorageService::storageServicecreateFolder(const QString &name, cons
 void DropBoxStorageService::storageServiceuploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
     if (checkNeedAuthenticate()) {
-        mNextAction->setNextActionType(UploadFile);
+        mNextAction->setNextActionType(UploadFileAction);
         mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
         mNextAction->setUploadAsName(uploadAsName);
@@ -290,7 +290,7 @@ QString DropBoxStorageService::storageServiceName() const
 void DropBoxStorageService::storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
     if (checkNeedAuthenticate()) {
-        mNextAction->setNextActionType(DownLoadFile);
+        mNextAction->setNextActionType(DownLoadFileAction);
         mNextAction->setNextActionName(name);
         mNextAction->setDownloadDestination(destination);
         mNextAction->setFileId(fileId);
@@ -309,7 +309,7 @@ void DropBoxStorageService::storageServicedownloadFile(const QString &name, cons
 void DropBoxStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (checkNeedAuthenticate()) {
-        mNextAction->setNextActionType(DeleteFile);
+        mNextAction->setNextActionType(DeleteFileAction);
         mNextAction->setNextActionName(filename);
         storageServiceauthentication();
     } else {
@@ -324,7 +324,7 @@ void DropBoxStorageService::storageServicedeleteFile(const QString &filename)
 void DropBoxStorageService::storageServicedeleteFolder(const QString &foldername)
 {
     if (checkNeedAuthenticate()) {
-        mNextAction->setNextActionType(DeleteFolder);
+        mNextAction->setNextActionType(DeleteFolderAction);
         mNextAction->setNextActionFolder(foldername);
         storageServiceauthentication();
     } else {
@@ -339,7 +339,7 @@ void DropBoxStorageService::storageServicedeleteFolder(const QString &foldername
 void DropBoxStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
 {
     if (checkNeedAuthenticate()) {
-        mNextAction->setNextActionType(RenameFolder);
+        mNextAction->setNextActionType(RenameFolderAction);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {
@@ -354,7 +354,7 @@ void DropBoxStorageService::storageServiceRenameFolder(const QString &source, co
 void DropBoxStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
 {
     if (checkNeedAuthenticate()) {
-        mNextAction->setNextActionType(RenameFile);
+        mNextAction->setNextActionType(RenameFileAction);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {
@@ -369,7 +369,7 @@ void DropBoxStorageService::storageServiceRenameFile(const QString &source, cons
 void DropBoxStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
 {
     if (checkNeedAuthenticate()) {
-        mNextAction->setNextActionType(MoveFolder);
+        mNextAction->setNextActionType(MoveFolderAction);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {
@@ -384,7 +384,7 @@ void DropBoxStorageService::storageServiceMoveFolder(const QString &source, cons
 void DropBoxStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
 {
     if (checkNeedAuthenticate()) {
-        mNextAction->setNextActionType(RenameFolder);
+        mNextAction->setNextActionType(RenameFolderAction);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {
@@ -399,7 +399,7 @@ void DropBoxStorageService::storageServiceMoveFile(const QString &source, const 
 void DropBoxStorageService::storageServiceCopyFile(const QString &source, const QString &destination)
 {
     if (checkNeedAuthenticate()) {
-        mNextAction->setNextActionType(CopyFile);
+        mNextAction->setNextActionType(CopyFileAction);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {
@@ -414,7 +414,7 @@ void DropBoxStorageService::storageServiceCopyFile(const QString &source, const 
 void DropBoxStorageService::storageServiceCopyFolder(const QString &source, const QString &destination)
 {
     if (checkNeedAuthenticate()) {
-        mNextAction->setNextActionType(CopyFolder);
+        mNextAction->setNextActionType(CopyFolderAction);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {

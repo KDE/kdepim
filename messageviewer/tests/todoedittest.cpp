@@ -417,9 +417,9 @@ void TodoEditTest::shouldShowMessageWidget()
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
     noteedit->setText(QLatin1String("Test Note"));
     KMessageWidget *msgwidget = qFindChild<KMessageWidget *>(&edit, QLatin1String("msgwidget"));
-    QVERIFY(!msgwidget->isVisible());
+    QCOMPARE(msgwidget->isVisible(), false);
     QTest::keyClick(noteedit, Qt::Key_Enter);
-    QVERIFY(msgwidget->isVisible());
+    QCOMPARE(msgwidget->isVisible(), true);
 }
 
 void TodoEditTest::shouldHideMessageWidget()
@@ -435,9 +435,49 @@ void TodoEditTest::shouldHideMessageWidget()
     edit.setMessage(msg);
     KMessageWidget *msgwidget = qFindChild<KMessageWidget *>(&edit, QLatin1String("msgwidget"));
     msgwidget->show();
-    QVERIFY(msgwidget->isVisible());
+    QCOMPARE(msgwidget->isVisible(), true);
     noteedit->setText(QLatin1String("Another note"));
-    QVERIFY(!msgwidget->isVisible());
+    QCOMPARE(msgwidget->isVisible(), false);
+}
+
+void TodoEditTest::shouldHideMessageWidgetWhenAddNewMessage()
+{
+    MessageViewer::TodoEdit edit;
+    edit.show();
+    QTest::qWaitForWindowShown(&edit);
+
+    KMime::Message::Ptr msg(new KMime::Message);
+    msg->subject(true)->fromUnicodeString(QLatin1String("Test note"), "us-ascii");
+    edit.setMessage(msg);
+    QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
+    noteedit->setText(QLatin1String("Test Note"));
+    KMessageWidget *msgwidget = qFindChild<KMessageWidget *>(&edit, QLatin1String("msgwidget"));
+    QTest::keyClick(noteedit, Qt::Key_Enter);
+    QCOMPARE(msgwidget->isVisible(), true);
+
+    KMime::Message::Ptr msg2(new KMime::Message);
+    msg2->subject(true)->fromUnicodeString(QLatin1String("Test note 2"), "us-ascii");
+    edit.setMessage(msg2);
+    QCOMPARE(msgwidget->isVisible(), false);
+}
+
+void TodoEditTest::shouldHideMessageWidgetWhenCloseWidget()
+{
+    MessageViewer::TodoEdit edit;
+    edit.show();
+    QTest::qWaitForWindowShown(&edit);
+
+    KMime::Message::Ptr msg(new KMime::Message);
+    msg->subject(true)->fromUnicodeString(QLatin1String("Test note"), "us-ascii");
+    edit.setMessage(msg);
+    QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
+    noteedit->setText(QLatin1String("Test Note"));
+    KMessageWidget *msgwidget = qFindChild<KMessageWidget *>(&edit, QLatin1String("msgwidget"));
+    QTest::keyClick(noteedit, Qt::Key_Enter);
+    QCOMPARE(msgwidget->isVisible(), true);
+    edit.slotCloseWidget();
+
+    QCOMPARE(msgwidget->isHidden(), true);
 }
 
 

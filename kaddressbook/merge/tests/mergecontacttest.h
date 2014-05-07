@@ -30,6 +30,8 @@ public:
 private Q_SLOTS:
     void shouldReturnDefaultAddressWhenNoListItem();
     void shouldReturnDefaultAddressWhenOneItem();
+    void noNneedManualSelectionCheckWhenEmptyList();
+    void noNneedManualSelectionCheckWhenOneItem();
 };
 
 #endif // MERGECONTACTTEST_H

@@ -217,16 +217,26 @@ void SendLaterManager::removeLaterInfo(SendLater::SendLaterInfo *info)
     removeInfo(info->itemId());
 }
 
-void SendLaterManager::printDebugInfo()
+QString SendLaterManager::printDebugInfo()
 {
+    QString infoStr;
     Q_FOREACH (SendLater::SendLaterInfo *info, mListSendLaterInfo) {
-        qDebug() <<" recusive "<<info->isRecurrence() <<
-                   " id :"<<info->itemId()<<
-                   " date :"<<info->dateTime().toString()<<
-                   " last saved date"<<info->lastDateTimeSend().toString()<<
-                   " subject :"<<info->subject()<<
-                   " to :"<<info->to();
+        if (!infoStr.isEmpty())
+            infoStr += QLatin1Char('\n');
+        infoStr += infoToStr(info);
     }
+    return infoStr;
+}
+
+QString SendLaterManager::infoToStr(SendLater::SendLaterInfo *info)
+{
+    QString infoStr = QLatin1String("Recusive ") + (info->isRecurrence() ? QLatin1String("true") : QLatin1String("false"));
+    infoStr += QLatin1String("Item id :") + QString::number(info->itemId());
+    infoStr += QLatin1String("Send date:") + info->dateTime().toString();
+    infoStr += QLatin1String("Last saved date: ") + info->lastDateTimeSend().toString();
+    infoStr += QLatin1String("Mail subject :") + info->subject();
+    infoStr += QLatin1String("To: ") + info->to();
+    return infoStr;
 }
 
 MessageComposer::AkonadiSender *SendLaterManager::sender() const

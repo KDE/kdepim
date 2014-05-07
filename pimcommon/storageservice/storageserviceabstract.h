@@ -83,25 +83,25 @@ public:
     enum ActionType {
         NoneAction = 0,
         //Account
-        RequestToken,
-        AccessToken,
-        AccountInfo,
+        RequestTokenAction,
+        AccessTokenAction,
+        AccountInfoAction,
         //File
-        UploadFile,
-        DownLoadFile,
-        ShareLink,
-        DeleteFile,
-        RenameFile,
-        MoveFile,
-        CopyFile,
+        UploadFileAction,
+        DownLoadFileAction,
+        ShareLinkAction,
+        DeleteFileAction,
+        RenameFileAction,
+        MoveFileAction,
+        CopyFileAction,
         //Folder
-        CreateFolder,
-        ListFolder,
-        CreateServiceFolder,
-        DeleteFolder,
-        RenameFolder,
-        MoveFolder,
-        CopyFolder
+        CreateFolderAction,
+        ListFolderAction,
+        CreateServiceFolderAction,
+        DeleteFolderAction,
+        RenameFolderAction,
+        MoveFolderAction,
+        CopyFolderAction
     };
 
     bool isInProgress() const;

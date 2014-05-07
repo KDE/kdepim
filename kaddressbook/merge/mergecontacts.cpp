@@ -36,12 +36,14 @@ KABC::Addressee MergeContacts::mergedContact()
         return newContact;
     bool firstAddress = true;
     Q_FOREACH (const Akonadi::Item &item, mListItem) {
-        KABC::Addressee address = item.payload<KABC::Addressee>();
-        if (firstAddress) {
-            firstAddress = false;
-            newContact.setName(address.name());
-            newContact.setFamilyName(address.familyName());
-            newContact.setFormattedName(address.formattedName());
+        if (item.hasPayload<KABC::Addressee>()) {
+            KABC::Addressee address = item.payload<KABC::Addressee>();
+            if (firstAddress) {
+                firstAddress = false;
+                newContact.setName(address.name());
+                newContact.setFamilyName(address.familyName());
+                newContact.setFormattedName(address.formattedName());
+            }
         }
     }
     return newContact;
@@ -51,11 +53,15 @@ KABC::Addressee MergeContacts::mergedContact()
 bool MergeContacts::needManualSelectInformations()
 {
     bool result = false;
+    if (mListItem.count() < 2)
+        return result;
     //TODO
     Q_FOREACH (const Akonadi::Item &item, mListItem) {
-        KABC::Addressee address = item.payload<KABC::Addressee>();
-        if (address.birthday().isValid()) {
-            result = true;
+        if (item.hasPayload<KABC::Addressee>()) {
+            const KABC::Addressee address = item.payload<KABC::Addressee>();
+            if (address.birthday().isValid()) {
+                result = true;
+            }
         }
     }
 

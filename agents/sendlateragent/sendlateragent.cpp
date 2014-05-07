@@ -157,9 +157,9 @@ void SendLaterAgent::itemsMoved(const Akonadi::Item::List &items, const Akonadi:
     }
 }
 
-void SendLaterAgent::printDebugInfo()
+QString SendLaterAgent::printDebugInfo()
 {
-    mManager->printDebugInfo();
+    return mManager->printDebugInfo();
 }
 
 AKONADI_AGENT_MAIN( SendLaterAgent )

@@ -14,37 +14,86 @@ include_directories(${AKONADI_INCLUDE_DIR}
 
 ########### next target ###############
 
-set(pimsettingexporter_SRCS
-  main.cpp
-  widgets/selectiontypetreewidget.cpp
-  abstractimportexportjob.cpp
-  pimsettingexporterwindow.cpp
-  widgets/logwidget.cpp
-  mail/exportmailjob.cpp
-  mail/importmailjob.cpp
-  pimsettingexporterkernel.cpp
-  utils.cpp
-  dialog/selectiontypedialog.cpp
-  akonadidatabase.cpp
+set(pimsettingexporter_calendar_SRCS
   calendar/exportcalendarjob.cpp
   calendar/importcalendarjob.cpp
+)
+
+set(pimsettingexporter_addressbook_SRCS
   addressbook/exportaddressbookjob.cpp
   addressbook/importaddressbookjob.cpp
-  alarm/exportalarmjob.cpp
-  alarm/importalarmjob.cpp
-  jot/exportjotjob.cpp
-  jot/importjotjob.cpp
-  notes/exportnotesjob.cpp
-  notes/importnotesjob.cpp
-  akregator/exportakregatorjob.cpp
-  akregator/importakregatorjob.cpp
-  blogilo/exportblogilojob.cpp
-  blogilo/importblogilojob.cpp
-  archivestorage.cpp
+)
+
+set(pimsettingexporter_mail_SRCS
+  mail/exportmailjob.cpp
+  mail/importmailjob.cpp
+)
+
+set(pimsettingexporter_knode_SRCS
   knode/exportknodejob.cpp
   knode/importknodejob.cpp
+)
+
+set(pimsettingexporter_alarm_SRCS
+  alarm/exportalarmjob.cpp
+  alarm/importalarmjob.cpp
+)
+
+set(pimsettingexporter_notes_SRCS
+  notes/exportnotesjob.cpp
+  notes/importnotesjob.cpp
+)
+
+set(pimsettingexporter_dialog_SRCS
+  dialog/selectiontypedialog.cpp
   dialog/backupfilestructureinfodialog.cpp
   dialog/showarchivestructuredialog.cpp
+)
+
+set(pimsettingexporter_widget_SRCS
+  widgets/selectiontypetreewidget.cpp
+  widgets/logwidget.cpp
+)
+
+set(pimsettingexporter_xml_SRCS
+  xml/templateselection.cpp
+)
+
+set(pimsettingexporter_jot_SRCS
+  jot/exportjotjob.cpp
+  jot/importjotjob.cpp
+)
+
+set(pimsettingexporter_akregator_SRCS
+  akregator/exportakregatorjob.cpp
+  akregator/importakregatorjob.cpp
+)
+
+set(pimsettingexporter_blogilo_SRCS
+  blogilo/exportblogilojob.cpp
+  blogilo/importblogilojob.cpp
+)
+
+set(pimsettingexporter_SRCS
+  ${pimsettingexporter_widget_SRCS}
+  ${pimsettingexporter_xml_SRCS}
+  ${pimsettingexporter_notes_SRCS}
+  ${pimsettingexporter_alarm_SRCS}
+  ${pimsettingexporter_knode_SRCS}
+  ${pimsettingexporter_mail_SRCS}
+  ${pimsettingexporter_calendar_SRCS}
+  ${pimsettingexporter_addressbook_SRCS}
+  ${pimsettingexporter_dialog_SRCS}
+  ${pimsettingexporter_jot_SRCS}
+  ${pimsettingexporter_akregator_SRCS}
+  ${pimsettingexporter_blogilo_SRCS}
+  main.cpp
+  abstractimportexportjob.cpp
+  pimsettingexporterwindow.cpp
+  pimsettingexporterkernel.cpp
+  utils.cpp
+  akonadidatabase.cpp
+  archivestorage.cpp
   synchronizeresourcejob.cpp
 )
 

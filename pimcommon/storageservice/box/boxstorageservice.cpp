@@ -156,7 +156,7 @@ void BoxStorageService::storageServiceShareLink(const QString &root, const QStri
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(ShareLink);
+        mNextAction->setNextActionType(ShareLinkAction);
         mNextAction->setPath(path);
         mNextAction->setRootPath(root);
         if (mToken.isEmpty()) {
@@ -177,7 +177,7 @@ void BoxStorageService::storageServicedownloadFile(const QString &name, const QS
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(DownLoadFile);
+        mNextAction->setNextActionType(DownLoadFileAction);
         mNextAction->setNextActionName(name);
         mNextAction->setDownloadDestination(destination);
         mNextAction->setFileId(fileId);
@@ -201,7 +201,7 @@ void BoxStorageService::storageServicedeleteFile(const QString &filename)
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(DeleteFile);
+        mNextAction->setNextActionType(DeleteFileAction);
         mNextAction->setNextActionName(filename);
         if (mToken.isEmpty()) {
             storageServiceauthentication();
@@ -221,7 +221,7 @@ void BoxStorageService::storageServicedeleteFolder(const QString &foldername)
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(DeleteFolder);
+        mNextAction->setNextActionType(DeleteFolderAction);
         mNextAction->setNextActionFolder(foldername);
         if (mToken.isEmpty()) {
             storageServiceauthentication();
@@ -241,7 +241,7 @@ void BoxStorageService::storageServiceRenameFolder(const QString &source, const 
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(RenameFolder);
+        mNextAction->setNextActionType(RenameFolderAction);
         mNextAction->setRenameFolder(source, destination);
         if (mToken.isEmpty()) {
             storageServiceauthentication();
@@ -261,7 +261,7 @@ void BoxStorageService::storageServiceRenameFile(const QString &source, const QS
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(RenameFile);
+        mNextAction->setNextActionType(RenameFileAction);
         mNextAction->setRenameFolder(source, destination);
         if (mToken.isEmpty()) {
             storageServiceauthentication();
@@ -281,7 +281,7 @@ void BoxStorageService::storageServiceMoveFolder(const QString &source, const QS
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(MoveFolder);
+        mNextAction->setNextActionType(MoveFolderAction);
         mNextAction->setRenameFolder(source, destination);
         if (mToken.isEmpty()) {
             storageServiceauthentication();
@@ -301,7 +301,7 @@ void BoxStorageService::storageServiceMoveFile(const QString &source, const QStr
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(MoveFile);
+        mNextAction->setNextActionType(MoveFileAction);
         mNextAction->setRenameFolder(source, destination);
         if (mToken.isEmpty()) {
             storageServiceauthentication();
@@ -321,7 +321,7 @@ void BoxStorageService::storageServiceCopyFile(const QString &source, const QStr
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(CopyFile);
+        mNextAction->setNextActionType(CopyFileAction);
         mNextAction->setRenameFolder(source, destination);
         if (mToken.isEmpty()) {
             storageServiceauthentication();
@@ -341,7 +341,7 @@ void BoxStorageService::storageServiceCopyFolder(const QString &source, const QS
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(CopyFolder);
+        mNextAction->setNextActionType(CopyFolderAction);
         mNextAction->setRenameFolder(source, destination);
         if (mToken.isEmpty()) {
             storageServiceauthentication();
@@ -361,7 +361,7 @@ void BoxStorageService::storageServicelistFolder(const QString &folder)
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(ListFolder);
+        mNextAction->setNextActionType(ListFolderAction);
         mNextAction->setNextActionFolder(folder);
         if (mToken.isEmpty()) {
             storageServiceauthentication();
@@ -381,7 +381,7 @@ void BoxStorageService::storageServicecreateFolder(const QString &name, const QS
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(CreateFolder);
+        mNextAction->setNextActionType(CreateFolderAction);
         mNextAction->setNextActionName(name);
         mNextAction->setNextActionFolder(destination);
         if (mToken.isEmpty()) {
@@ -402,7 +402,7 @@ void BoxStorageService::storageServiceaccountInfo()
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(AccountInfo);
+        mNextAction->setNextActionType(AccountInfoAction);
         if (mToken.isEmpty()) {
             storageServiceauthentication();
         } else {
@@ -426,7 +426,7 @@ void BoxStorageService::storageServiceuploadFile(const QString &filename, const 
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(UploadFile);
+        mNextAction->setNextActionType(UploadFileAction);
         mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
         mNextAction->setUploadAsName(uploadAsName);
@@ -506,7 +506,7 @@ void BoxStorageService::storageServicecreateServiceFolder()
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(CreateServiceFolder);
+        mNextAction->setNextActionType(CreateServiceFolderAction);
         if (mToken.isEmpty()) {
             storageServiceauthentication();
         } else {
