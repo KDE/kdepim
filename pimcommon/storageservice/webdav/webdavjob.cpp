@@ -90,7 +90,7 @@ void WebDavJob::slotAuthenticationRequired(QNetworkReply *,QAuthenticator *auth)
 void WebDavJob::requestTokenAccess()
 {
     mError = false;
-    mActionType = PimCommon::StorageServiceAbstract::AccessToken;
+    mActionType = PimCommon::StorageServiceAbstract::AccessTokenAction;
     QPointer<WebDavSettingsDialog> dlg = new WebDavSettingsDialog;
     if (dlg->exec()) {
         mServiceLocation = dlg->serviceLocation();
@@ -109,7 +109,7 @@ void WebDavJob::requestTokenAccess()
 
 void WebDavJob::copyFile(const QString &source, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::CopyFile;
+    mActionType = PimCommon::StorageServiceAbstract::CopyFileAction;
     mError = false;
     QString filename;
     if (!source.isEmpty()) {
@@ -128,7 +128,7 @@ void WebDavJob::copyFile(const QString &source, const QString &destination)
 
 void WebDavJob::copyFolder(const QString &source, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::CopyFolder;
+    mActionType = PimCommon::StorageServiceAbstract::CopyFolderAction;
     mError = false;
     QString filename;
     if (!source.isEmpty()) {
@@ -146,7 +146,7 @@ void WebDavJob::copyFolder(const QString &source, const QString &destination)
 
 void WebDavJob::deleteFile(const QString &filename)
 {
-    mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFileAction;
     mError = false;
     QUrl url(mServiceLocation);
     url.setPath(filename);
@@ -155,7 +155,7 @@ void WebDavJob::deleteFile(const QString &filename)
 
 void WebDavJob::deleteFolder(const QString &foldername)
 {
-    mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFolderAction;
     mError = false;
     QUrl url(mServiceLocation);
     url.setPath(foldername);
@@ -164,7 +164,7 @@ void WebDavJob::deleteFolder(const QString &foldername)
 
 void WebDavJob::renameFolder(const QString &source, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::RenameFolder;
+    mActionType = PimCommon::StorageServiceAbstract::RenameFolderAction;
     mError = false;
 
     QString destinationFolder;
@@ -197,7 +197,7 @@ void WebDavJob::renameFolder(const QString &source, const QString &destination)
 
 void WebDavJob::renameFile(const QString &oldName, const QString &newName)
 {
-    mActionType = PimCommon::StorageServiceAbstract::RenameFile;
+    mActionType = PimCommon::StorageServiceAbstract::RenameFileAction;
     mError = false;
 
     QString destination;
@@ -228,7 +228,7 @@ QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &upl
 {
     QFile *file = new QFile(filename);
     if (file->exists()) {
-        mActionType = PimCommon::StorageServiceAbstract::UploadFile;
+        mActionType = PimCommon::StorageServiceAbstract::UploadFileAction;
         mError = false;
         if (file->open(QIODevice::ReadOnly)) {
             QUrl destinationFile(mServiceLocation);
@@ -255,7 +255,7 @@ QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &upl
 
 void WebDavJob::listFolder(const QString &folder)
 {
-    mActionType = PimCommon::StorageServiceAbstract::ListFolder;
+    mActionType = PimCommon::StorageServiceAbstract::ListFolderAction;
     mError = false;
     QUrl url(mServiceLocation);
     if (!folder.isEmpty())
@@ -265,7 +265,7 @@ void WebDavJob::listFolder(const QString &folder)
 
 void WebDavJob::moveFolder(const QString &source, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::MoveFolder;
+    mActionType = PimCommon::StorageServiceAbstract::MoveFolderAction;
     mError = false;
     QString destinationPath;
     if (!source.isEmpty()) {
@@ -291,7 +291,7 @@ void WebDavJob::moveFolder(const QString &source, const QString &destination)
 
 void WebDavJob::moveFile(const QString &source, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::MoveFile;
+    mActionType = PimCommon::StorageServiceAbstract::MoveFileAction;
     mError = false;
     QString destinationPath;
     if (!source.isEmpty()) {
@@ -326,7 +326,7 @@ void WebDavJob::createFolderJob(const QString &foldername, const QString &destin
 
 void WebDavJob::createFolder(const QString &foldername, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
+    mActionType = PimCommon::StorageServiceAbstract::CreateFolderAction;
     mError = false;
     createFolderJob(foldername, destination);
 }
@@ -339,7 +339,7 @@ void WebDavJob::slotListInfo(const QString &data)
 
 void WebDavJob::accountInfo()
 {
-    mActionType = PimCommon::StorageServiceAbstract::AccountInfo;
+    mActionType = PimCommon::StorageServiceAbstract::AccountInfoAction;
     mError = false;
     QUrl url(mServiceLocation);
     accountInfo(url.toString());
@@ -359,55 +359,55 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
         case PimCommon::StorageServiceAbstract::NoneAction:
             deleteLater();
             break;
-        case PimCommon::StorageServiceAbstract::RequestToken:
+        case PimCommon::StorageServiceAbstract::RequestTokenAction:
             deleteLater();
             break;
-        case PimCommon::StorageServiceAbstract::AccessToken:
+        case PimCommon::StorageServiceAbstract::AccessTokenAction:
             parseAccessToken(data);
             break;
-        case PimCommon::StorageServiceAbstract::UploadFile:
+        case PimCommon::StorageServiceAbstract::UploadFileAction:
             parseUploadFile(data);
             break;
-        case PimCommon::StorageServiceAbstract::CreateFolder:
+        case PimCommon::StorageServiceAbstract::CreateFolderAction:
             parseCreateFolder(data);
             break;
-        case PimCommon::StorageServiceAbstract::AccountInfo:
+        case PimCommon::StorageServiceAbstract::AccountInfoAction:
             parseAccountInfo(data);
             break;
-        case PimCommon::StorageServiceAbstract::ListFolder:
+        case PimCommon::StorageServiceAbstract::ListFolderAction:
             parseListFolder(data);
             break;
-        case PimCommon::StorageServiceAbstract::DeleteFile:
+        case PimCommon::StorageServiceAbstract::DeleteFileAction:
             parseDeleteFile(data);
             break;
-        case PimCommon::StorageServiceAbstract::DeleteFolder:
+        case PimCommon::StorageServiceAbstract::DeleteFolderAction:
             parseDeleteFolder(data);
             break;
-        case PimCommon::StorageServiceAbstract::RenameFolder:
+        case PimCommon::StorageServiceAbstract::RenameFolderAction:
             parseRenameFolder(data);
             break;
-        case PimCommon::StorageServiceAbstract::RenameFile:
+        case PimCommon::StorageServiceAbstract::RenameFileAction:
             parseRenameFile(data);
             break;
-        case PimCommon::StorageServiceAbstract::MoveFolder:
+        case PimCommon::StorageServiceAbstract::MoveFolderAction:
             parseMoveFolder(data);
             break;
-        case PimCommon::StorageServiceAbstract::MoveFile:
+        case PimCommon::StorageServiceAbstract::MoveFileAction:
             parseMoveFile(data);
             break;
-        case PimCommon::StorageServiceAbstract::CopyFile:
+        case PimCommon::StorageServiceAbstract::CopyFileAction:
             parseCopyFile(data);
             break;
-        case PimCommon::StorageServiceAbstract::CopyFolder:
+        case PimCommon::StorageServiceAbstract::CopyFolderAction:
             parseCopyFolder(data);
             break;
-        case PimCommon::StorageServiceAbstract::DownLoadFile:
+        case PimCommon::StorageServiceAbstract::DownLoadFileAction:
             parseDownloadFile(data);
             break;
-        case PimCommon::StorageServiceAbstract::ShareLink:
+        case PimCommon::StorageServiceAbstract::ShareLinkAction:
             parseShareLink(data);
             break;
-        case PimCommon::StorageServiceAbstract::CreateServiceFolder:
+        case PimCommon::StorageServiceAbstract::CreateServiceFolderAction:
             parseCreateServiceFolder(data);
             break;
         }
@@ -570,7 +570,7 @@ void WebDavJob::parseListFolder(const QString &data)
 
 void WebDavJob::shareLink(const QString &/*root*/, const QString &path)
 {
-    mActionType = PimCommon::StorageServiceAbstract::ShareLink;
+    mActionType = PimCommon::StorageServiceAbstract::ShareLinkAction;
     mError = false;
     QString filePath(path);
     if (!path.startsWith(mServiceLocation)) {
@@ -592,14 +592,14 @@ void WebDavJob::shareLink(const QString &/*root*/, const QString &path)
 
 void WebDavJob::createServiceFolder()
 {
-    mActionType = PimCommon::StorageServiceAbstract::CreateServiceFolder;
+    mActionType = PimCommon::StorageServiceAbstract::CreateServiceFolderAction;
     mError = false;
     createFolderJob(PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder(), QString());
 }
 
 QNetworkReply *WebDavJob::downloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
+    mActionType = PimCommon::StorageServiceAbstract::DownLoadFileAction;
     mError = false;
     const QString defaultDestination = (destination.isEmpty() ? PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
     delete mDownloadFile;

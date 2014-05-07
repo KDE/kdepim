@@ -60,55 +60,55 @@ void StorageServiceAbstractJob::errorMessage(PimCommon::StorageServiceAbstract::
     switch(type) {
     case PimCommon::StorageServiceAbstract::NoneAction:
         break;
-    case PimCommon::StorageServiceAbstract::RequestToken:
+    case PimCommon::StorageServiceAbstract::RequestTokenAction:
         error = i18n("Request Token returns an error: %1",errorStr);
         break;
-    case PimCommon::StorageServiceAbstract::AccessToken:
+    case PimCommon::StorageServiceAbstract::AccessTokenAction:
         error = i18n("Access Token returns an error: %1",errorStr);
         break;
-    case PimCommon::StorageServiceAbstract::UploadFile:
+    case PimCommon::StorageServiceAbstract::UploadFileAction:
         error = i18n("Upload File returns an error: %1",errorStr);
         break;
-    case PimCommon::StorageServiceAbstract::CreateFolder:
+    case PimCommon::StorageServiceAbstract::CreateFolderAction:
         error = i18n("Create Folder returns an error: %1",errorStr);
         break;
-    case PimCommon::StorageServiceAbstract::AccountInfo:
+    case PimCommon::StorageServiceAbstract::AccountInfoAction:
         error = i18n("Get account info returns an error: %1",errorStr);
         break;
-    case PimCommon::StorageServiceAbstract::ListFolder:
+    case PimCommon::StorageServiceAbstract::ListFolderAction:
         error = i18n("List folder returns an error: %1",errorStr);
         break;
-    case PimCommon::StorageServiceAbstract::ShareLink:
+    case PimCommon::StorageServiceAbstract::ShareLinkAction:
         error = i18n("Share Link returns an error: %1",errorStr);
         break;
-    case PimCommon::StorageServiceAbstract::CreateServiceFolder:
+    case PimCommon::StorageServiceAbstract::CreateServiceFolderAction:
         error = i18n("Create Service Folder returns an error: %1",errorStr);
         break;
-    case PimCommon::StorageServiceAbstract::DownLoadFile:
+    case PimCommon::StorageServiceAbstract::DownLoadFileAction:
         error = i18n("Download file returns an error: %1",errorStr);
         break;
-    case PimCommon::StorageServiceAbstract::DeleteFile:
+    case PimCommon::StorageServiceAbstract::DeleteFileAction:
         error = i18n("Delete File returns an error: %1",errorStr);
         break;
-    case PimCommon::StorageServiceAbstract::DeleteFolder:
+    case PimCommon::StorageServiceAbstract::DeleteFolderAction:
         error = i18n("Delete Folder returns an error: %1",errorStr);
         break;
-    case PimCommon::StorageServiceAbstract::RenameFolder:
+    case PimCommon::StorageServiceAbstract::RenameFolderAction:
         error = i18n("Rename Folder returns an error: %1",errorStr);
         break;
-    case PimCommon::StorageServiceAbstract::RenameFile:
+    case PimCommon::StorageServiceAbstract::RenameFileAction:
         error = i18n("Rename File returns an error: %1",errorStr);
         break;
-    case PimCommon::StorageServiceAbstract::MoveFile:
+    case PimCommon::StorageServiceAbstract::MoveFileAction:
         error = i18n("Move File returns an error: %1",errorStr);
         break;
-    case PimCommon::StorageServiceAbstract::MoveFolder:
+    case PimCommon::StorageServiceAbstract::MoveFolderAction:
         error = i18n("Move Folder returns an error: %1",errorStr);
         break;
-    case PimCommon::StorageServiceAbstract::CopyFile:
+    case PimCommon::StorageServiceAbstract::CopyFileAction:
         error = i18n("Copy File returns an error: %1",errorStr);
         break;
-    case PimCommon::StorageServiceAbstract::CopyFolder:
+    case PimCommon::StorageServiceAbstract::CopyFolderAction:
         error = i18n("Copy Folder returns an error: %1",errorStr);
         break;
     }

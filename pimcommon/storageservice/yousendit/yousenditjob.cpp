@@ -55,7 +55,7 @@ void YouSendItJob::initializeToken(const QString &password, const QString &userN
 
 void YouSendItJob::copyFile(const QString &/*source*/, const QString &/*destination*/)
 {
-    mActionType = PimCommon::StorageServiceAbstract::CopyFile;
+    mActionType = PimCommon::StorageServiceAbstract::CopyFileAction;
     mError = false;
     qDebug()<<" not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
@@ -64,7 +64,7 @@ void YouSendItJob::copyFile(const QString &/*source*/, const QString &/*destinat
 
 void YouSendItJob::copyFolder(const QString &/*source*/, const QString &/*destination*/)
 {
-    mActionType = PimCommon::StorageServiceAbstract::CopyFolder;
+    mActionType = PimCommon::StorageServiceAbstract::CopyFolderAction;
     mError = false;
     qDebug()<<" not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
@@ -73,7 +73,7 @@ void YouSendItJob::copyFolder(const QString &/*source*/, const QString &/*destin
 
 void YouSendItJob::createServiceFolder()
 {
-    mActionType = PimCommon::StorageServiceAbstract::CreateServiceFolder;
+    mActionType = PimCommon::StorageServiceAbstract::CreateServiceFolderAction;
     mError = false;
     createFolderJob(PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder(), QString());
 }
@@ -97,7 +97,7 @@ QNetworkRequest YouSendItJob::setDefaultHeader(const QUrl &url)
 
 void YouSendItJob::deleteFile(const QString &filename)
 {
-    mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFileAction;
     mError = false;
     QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/file/%1").arg(filename));
     qDebug()<<" url"<<url;
@@ -108,7 +108,7 @@ void YouSendItJob::deleteFile(const QString &filename)
 
 void YouSendItJob::deleteFolder(const QString &foldername)
 {
-    mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFolderAction;
     mError = false;
     QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/%1").arg(foldername));
     QNetworkRequest request = setDefaultHeader(url);
@@ -118,7 +118,7 @@ void YouSendItJob::deleteFolder(const QString &foldername)
 
 void YouSendItJob::renameFolder(const QString &source, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::RenameFolder;
+    mActionType = PimCommon::StorageServiceAbstract::RenameFolderAction;
     mError = false;
     QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/%1/rename?name=%2").arg(source).arg(destination));
     QNetworkRequest request = setDefaultHeader(url);
@@ -132,7 +132,7 @@ void YouSendItJob::renameFolder(const QString &source, const QString &destinatio
 
 void YouSendItJob::renameFile(const QString &oldName, const QString &newName)
 {
-    mActionType = PimCommon::StorageServiceAbstract::RenameFile;
+    mActionType = PimCommon::StorageServiceAbstract::RenameFileAction;
     mError = false;
     QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/file/%1/rename?name=%2").arg(oldName).arg(newName));
     QNetworkRequest request = setDefaultHeader(url);
@@ -147,7 +147,7 @@ void YouSendItJob::renameFile(const QString &oldName, const QString &newName)
 
 void YouSendItJob::moveFolder(const QString &source, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::MoveFolder;
+    mActionType = PimCommon::StorageServiceAbstract::MoveFolderAction;
     mError = false;
     QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/%1/move?parentId=%2").arg(source).arg(destination));
     QNetworkRequest request = setDefaultHeader(url);
@@ -161,7 +161,7 @@ void YouSendItJob::moveFolder(const QString &source, const QString &destination)
 
 void YouSendItJob::moveFile(const QString &source, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::MoveFile;
+    mActionType = PimCommon::StorageServiceAbstract::MoveFileAction;
     mError = false;
     QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/file/%1/move?parentId=%2").arg(source).arg(destination));
     QNetworkRequest request = setDefaultHeader(url);
@@ -189,7 +189,7 @@ void YouSendItJob::requestTokenAccess()
     }
     delete dlg;
 
-    mActionType = PimCommon::StorageServiceAbstract::RequestToken;
+    mActionType = PimCommon::StorageServiceAbstract::RequestTokenAction;
     mError = false;
     QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/auth"));
     QNetworkRequest request(url);
@@ -209,7 +209,7 @@ void YouSendItJob::requestTokenAccess()
 QNetworkReply *YouSendItJob::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
     //FIXME filename
-    mActionType = PimCommon::StorageServiceAbstract::UploadFile;
+    mActionType = PimCommon::StorageServiceAbstract::UploadFileAction;
     mError = false;
     QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/folder/file/initUpload"));
     QNetworkRequest request = setDefaultHeader(url);
@@ -223,7 +223,7 @@ QNetworkReply *YouSendItJob::uploadFile(const QString &filename, const QString &
 
 void YouSendItJob::listFolder(const QString &folder)
 {
-    mActionType = PimCommon::StorageServiceAbstract::ListFolder;
+    mActionType = PimCommon::StorageServiceAbstract::ListFolderAction;
     mError = false;
     //Show root folder => 0
     QUrl url;
@@ -242,7 +242,7 @@ void YouSendItJob::listFolder(const QString &folder)
 
 void YouSendItJob::accountInfo()
 {
-    mActionType = PimCommon::StorageServiceAbstract::AccountInfo;
+    mActionType = PimCommon::StorageServiceAbstract::AccountInfoAction;
     mError = false;
     QUrl url(mDefaultUrl + QLatin1String("/dpi/v2/user"));
     url.addQueryItem(QLatin1String("email"),mUsername);
@@ -255,7 +255,7 @@ void YouSendItJob::accountInfo()
 
 void YouSendItJob::createFolder(const QString &foldername, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
+    mActionType = PimCommon::StorageServiceAbstract::CreateFolderAction;
     mError = false;
     createFolderJob(foldername, destination);
 }
@@ -295,37 +295,37 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         case PimCommon::StorageServiceAbstract::NoneAction:
             deleteLater();
             break;
-        case PimCommon::StorageServiceAbstract::RequestToken:
+        case PimCommon::StorageServiceAbstract::RequestTokenAction:
             Q_EMIT authorizationFailed(errorStr);
             deleteLater();
             break;
-        case PimCommon::StorageServiceAbstract::AccessToken:
+        case PimCommon::StorageServiceAbstract::AccessTokenAction:
             Q_EMIT authorizationFailed(errorStr);
             deleteLater();
             break;
-        case PimCommon::StorageServiceAbstract::UploadFile:
+        case PimCommon::StorageServiceAbstract::UploadFileAction:
             Q_EMIT uploadFileFailed(errorStr);
             errorMessage(mActionType, errorStr);
             deleteLater();
             break;
-        case PimCommon::StorageServiceAbstract::DownLoadFile:
+        case PimCommon::StorageServiceAbstract::DownLoadFileAction:
             Q_EMIT downLoadFileFailed(errorStr);
             errorMessage(mActionType, errorStr);
             deleteLater();
             break;
-        case PimCommon::StorageServiceAbstract::DeleteFile:
-        case PimCommon::StorageServiceAbstract::DeleteFolder:
-        case PimCommon::StorageServiceAbstract::CreateFolder:
-        case PimCommon::StorageServiceAbstract::AccountInfo:
-        case PimCommon::StorageServiceAbstract::ListFolder:
-        case PimCommon::StorageServiceAbstract::CreateServiceFolder:
-        case PimCommon::StorageServiceAbstract::RenameFolder:
-        case PimCommon::StorageServiceAbstract::RenameFile:
-        case PimCommon::StorageServiceAbstract::MoveFolder:
-        case PimCommon::StorageServiceAbstract::MoveFile:
-        case PimCommon::StorageServiceAbstract::CopyFile:
-        case PimCommon::StorageServiceAbstract::CopyFolder:
-        case PimCommon::StorageServiceAbstract::ShareLink:
+        case PimCommon::StorageServiceAbstract::DeleteFileAction:
+        case PimCommon::StorageServiceAbstract::DeleteFolderAction:
+        case PimCommon::StorageServiceAbstract::CreateFolderAction:
+        case PimCommon::StorageServiceAbstract::AccountInfoAction:
+        case PimCommon::StorageServiceAbstract::ListFolderAction:
+        case PimCommon::StorageServiceAbstract::CreateServiceFolderAction:
+        case PimCommon::StorageServiceAbstract::RenameFolderAction:
+        case PimCommon::StorageServiceAbstract::RenameFileAction:
+        case PimCommon::StorageServiceAbstract::MoveFolderAction:
+        case PimCommon::StorageServiceAbstract::MoveFileAction:
+        case PimCommon::StorageServiceAbstract::CopyFileAction:
+        case PimCommon::StorageServiceAbstract::CopyFolderAction:
+        case PimCommon::StorageServiceAbstract::ShareLinkAction:
             errorMessage(mActionType, errorStr);
             deleteLater();
             break;
@@ -336,55 +336,55 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::NoneAction:
         deleteLater();
         break;
-    case PimCommon::StorageServiceAbstract::RequestToken:
+    case PimCommon::StorageServiceAbstract::RequestTokenAction:
         parseRequestToken(data);
         break;
-    case PimCommon::StorageServiceAbstract::AccessToken:
+    case PimCommon::StorageServiceAbstract::AccessTokenAction:
         deleteLater();
         break;
-    case PimCommon::StorageServiceAbstract::UploadFile:
+    case PimCommon::StorageServiceAbstract::UploadFileAction:
         parseUploadFile(data);
         break;
-    case PimCommon::StorageServiceAbstract::CreateFolder:
+    case PimCommon::StorageServiceAbstract::CreateFolderAction:
         parseCreateFolder(data);
         break;
-    case PimCommon::StorageServiceAbstract::AccountInfo:
+    case PimCommon::StorageServiceAbstract::AccountInfoAction:
         parseAccountInfo(data);
         break;
-    case PimCommon::StorageServiceAbstract::ListFolder:
+    case PimCommon::StorageServiceAbstract::ListFolderAction:
         parseListFolder(data);
         break;
-    case PimCommon::StorageServiceAbstract::CreateServiceFolder:
+    case PimCommon::StorageServiceAbstract::CreateServiceFolderAction:
         parseCreateServiceFolder(data);
         break;
-    case PimCommon::StorageServiceAbstract::DeleteFolder:
+    case PimCommon::StorageServiceAbstract::DeleteFolderAction:
         parseDeleteFolder(data);
         break;
-    case PimCommon::StorageServiceAbstract::DeleteFile:
+    case PimCommon::StorageServiceAbstract::DeleteFileAction:
         parseDeleteFile(data);
         break;
-    case PimCommon::StorageServiceAbstract::DownLoadFile:
+    case PimCommon::StorageServiceAbstract::DownLoadFileAction:
         parseDownloadFile(data);
         break;
-    case PimCommon::StorageServiceAbstract::RenameFolder:
+    case PimCommon::StorageServiceAbstract::RenameFolderAction:
         parseRenameFolder(data);
         break;
-    case PimCommon::StorageServiceAbstract::RenameFile:
+    case PimCommon::StorageServiceAbstract::RenameFileAction:
         parseRenameFile(data);
         break;
-    case PimCommon::StorageServiceAbstract::MoveFolder:
+    case PimCommon::StorageServiceAbstract::MoveFolderAction:
         parseMoveFolder(data);
         break;
-    case PimCommon::StorageServiceAbstract::MoveFile:
+    case PimCommon::StorageServiceAbstract::MoveFileAction:
         parseMoveFile(data);
         break;
-    case PimCommon::StorageServiceAbstract::CopyFile:
+    case PimCommon::StorageServiceAbstract::CopyFileAction:
         parseCopyFile(data);
         break;
-    case PimCommon::StorageServiceAbstract::CopyFolder:
+    case PimCommon::StorageServiceAbstract::CopyFolderAction:
         parseCopyFolder(data);
         break;
-    case PimCommon::StorageServiceAbstract::ShareLink:
+    case PimCommon::StorageServiceAbstract::ShareLinkAction:
         parseShareLink(data);
         break;
     }
@@ -593,7 +593,7 @@ void YouSendItJob::parseUploadFile(const QString &data)
 
 void YouSendItJob::startUploadFile(const QString &fileId)
 {
-    mActionType = PimCommon::StorageServiceAbstract::UploadFile;
+    mActionType = PimCommon::StorageServiceAbstract::UploadFileAction;
     mError = false;
     QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/folder/file/initUpload"));
     QNetworkRequest request(url);
@@ -615,7 +615,7 @@ void YouSendItJob::startUploadFile(const QString &fileId)
 void YouSendItJob::shareLink(const QString &root, const QString &path)
 {
     mError = false;
-    mActionType = PimCommon::StorageServiceAbstract::ShareLink;
+    mActionType = PimCommon::StorageServiceAbstract::ShareLinkAction;
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     qDebug()<<" not implemented";
     deleteLater();

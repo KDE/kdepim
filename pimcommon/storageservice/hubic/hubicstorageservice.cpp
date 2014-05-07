@@ -152,7 +152,7 @@ void HubicStorageService::storageServicelistFolder(const QString &folder)
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(ListFolder);
+        mNextAction->setNextActionType(ListFolderAction);
         mNextAction->setNextActionFolder(folder);
         if (mToken.isEmpty()) {
             storageServiceauthentication();
@@ -172,7 +172,7 @@ void HubicStorageService::storageServicecreateFolder(const QString &name, const 
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(CreateFolder);
+        mNextAction->setNextActionType(CreateFolderAction);
         mNextAction->setNextActionName(name);
         mNextAction->setNextActionFolder(destination);
         if (mToken.isEmpty()) {
@@ -193,7 +193,7 @@ void HubicStorageService::storageServiceaccountInfo()
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(AccountInfo);
+        mNextAction->setNextActionType(AccountInfoAction);
         if (mToken.isEmpty()) {
             storageServiceauthentication();
         } else {
@@ -217,7 +217,7 @@ void HubicStorageService::storageServiceuploadFile(const QString &filename, cons
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(UploadFile);
+        mNextAction->setNextActionType(UploadFileAction);
         mNextAction->setNextActionName(filename);
         mNextAction->setUploadAsName(uploadAsName);
         mNextAction->setNextActionFolder(destination);
@@ -285,7 +285,7 @@ void HubicStorageService::storageServiceShareLink(const QString &root, const QSt
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(ShareLink);
+        mNextAction->setNextActionType(ShareLinkAction);
         mNextAction->setRootPath(root);
         mNextAction->setPath(path);
         if (mToken.isEmpty()) {
@@ -311,7 +311,7 @@ void HubicStorageService::storageServicedownloadFile(const QString &name, const 
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(DownLoadFile);
+        mNextAction->setNextActionType(DownLoadFileAction);
         mNextAction->setNextActionName(name);
         mNextAction->setDownloadDestination(destination);
         mNextAction->setFileId(fileId);
@@ -335,7 +335,7 @@ void HubicStorageService::storageServicecreateServiceFolder()
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(CreateServiceFolder);
+        mNextAction->setNextActionType(CreateServiceFolderAction);
         if (mToken.isEmpty()) {
             storageServiceauthentication();
         } else {
@@ -354,7 +354,7 @@ void HubicStorageService::storageServicedeleteFile(const QString &filename)
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(DeleteFile);
+        mNextAction->setNextActionType(DeleteFileAction);
         mNextAction->setNextActionName(filename);
         if (mToken.isEmpty()) {
             storageServiceauthentication();
@@ -374,7 +374,7 @@ void HubicStorageService::storageServicedeleteFolder(const QString &foldername)
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(DeleteFolder);
+        mNextAction->setNextActionType(DeleteFolderAction);
         mNextAction->setNextActionFolder(foldername);
         if (mToken.isEmpty()) {
             storageServiceauthentication();
@@ -394,7 +394,7 @@ void HubicStorageService::storageServiceRenameFolder(const QString &source, cons
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(RenameFolder);
+        mNextAction->setNextActionType(RenameFolderAction);
         mNextAction->setRenameFolder(source, destination);
         if (mToken.isEmpty()) {
             storageServiceauthentication();
@@ -414,7 +414,7 @@ void HubicStorageService::storageServiceRenameFile(const QString &source, const 
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(RenameFile);
+        mNextAction->setNextActionType(RenameFileAction);
         mNextAction->setRenameFolder(source, destination);
         if (mToken.isEmpty()) {
             storageServiceauthentication();
@@ -434,7 +434,7 @@ void HubicStorageService::storageServiceMoveFolder(const QString &source, const 
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(MoveFolder);
+        mNextAction->setNextActionType(MoveFolderAction);
         mNextAction->setRenameFolder(source, destination);
         if (mToken.isEmpty()) {
             storageServiceauthentication();
@@ -454,7 +454,7 @@ void HubicStorageService::storageServiceMoveFile(const QString &source, const QS
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(MoveFile);
+        mNextAction->setNextActionType(MoveFileAction);
         mNextAction->setRenameFolder(source, destination);
         if (mToken.isEmpty()) {
             storageServiceauthentication();
@@ -474,7 +474,7 @@ void HubicStorageService::storageServiceCopyFile(const QString &source, const QS
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(CopyFile);
+        mNextAction->setNextActionType(CopyFileAction);
         mNextAction->setRenameFolder(source, destination);
         if (mToken.isEmpty()) {
             storageServiceauthentication();
@@ -494,7 +494,7 @@ void HubicStorageService::storageServiceCopyFolder(const QString &source, const 
 {
     const bool needRefresh = needToRefreshToken();
     if (mToken.isEmpty() || needRefresh) {
-        mNextAction->setNextActionType(CopyFolder);
+        mNextAction->setNextActionType(CopyFolderAction);
         mNextAction->setRenameFolder(source, destination);
         if (mToken.isEmpty()) {
             storageServiceauthentication();
