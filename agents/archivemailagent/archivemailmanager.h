@@ -42,6 +42,8 @@ public:
 
     QString printCurrentListInfo();
 
+    void archiveFolder(const QString &path, Akonadi::Collection::Id collectionId);
+
 public Q_SLOTS:
     void load();
     void slotArchiveNow(ArchiveMailInfo *info);

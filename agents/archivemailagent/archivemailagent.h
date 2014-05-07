@@ -20,6 +20,7 @@
 
 #include <akonadi/agentbase.h>
 
+#include <Akonadi/Collection>
 class QTimer;
 
 
@@ -41,6 +42,7 @@ public:
     bool enabledAgent() const;
 
     QString printCurrentListInfo();
+    void archiveFolder(const QString &path, Akonadi::Collection::Id collectionId);
 Q_SIGNALS:
     void archiveNow(ArchiveMailInfo *info);
     void needUpdateConfigDialogBox();

@@ -18,5 +18,10 @@
     <method name="enabledAgent" >
       <arg direction="out" type="b" />
     </method>
+    <method name="archiveFolder" >
+      <arg direction="in" type="s" name="path" />
+      <arg direction="in" type="x" name="collectionId" />
+    </method>
+
   </interface>
 </node>
