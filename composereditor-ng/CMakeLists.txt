@@ -7,6 +7,8 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 # Laurent install it if you want to debug it
 #add_subdirectory(tests)
 
+add_definitions(-DTRANSLATION_DOMAIN=\"libcomposereditorng\")
+
 add_definitions(-DQT_STATICPLUGIN)
 qt5_wrap_cpp(wk_HEADERS_MOC spellplugin/qwebkitplatformplugin.h)
 

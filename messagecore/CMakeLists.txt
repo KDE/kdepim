@@ -11,6 +11,8 @@ include_directories( ${Boost_INCLUDE_DIR}
                      ${CMAKE_SOURCE_DIR}/pimcommon
                    )
 
+add_definitions(-DTRANSLATION_DOMAIN=\"libmessagecore\")
+
 ########### next target ###############
 
 set(messagecore_attachment_LIB_SRCS

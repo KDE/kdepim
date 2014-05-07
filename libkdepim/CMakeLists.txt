@@ -7,7 +7,7 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 find_package(KF5KCMUtils ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)
-#find_package(KF5Ldap ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Ldap ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Abc ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5PimUtils ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5AkonadiContact ${KF5_VERSION} CONFIG REQUIRED)
@@ -19,6 +19,8 @@ find_package(Baloo ${KF5_VERSION} CONFIG REQUIRED)
 add_subdirectory(tests)
 add_subdirectory(pics)
 
+
+add_definitions(-DTRANSLATION_DOMAIN=\"libkdepim\")
 
 option(KDEPIM_INPROCESS_LDAP "Use in-process rather than KIO slave LDAP" FALSE)
 if (KDEPIM_INPROCESS_LDAP)

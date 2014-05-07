@@ -3,12 +3,13 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim
   ${CMAKE_CURRENT_SOURCE_DIR}/util/
   ${CMAKE_CURRENT_SOURCE_DIR}/shorturl/
-  ${QJSON_INCLUDE_DIR}
 )
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 kde_enable_exceptions()
+
+add_definitions(-DTRANSLATION_DOMAIN=\"libpimcommon\")
 
 set(libpimcommon_shorturl_SRCS
   shorturl/abstractshorturl.cpp

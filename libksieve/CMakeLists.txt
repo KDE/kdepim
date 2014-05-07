@@ -10,6 +10,8 @@ set(libksieve_parser_SRCS
   ${CMAKE_SOURCE_DIR}/libksieve/parser/parser.cpp
 )
 
+add_definitions(-DTRANSLATION_DOMAIN=\"libksieve\")
+
 add_subdirectory(ksieve)
 add_subdirectory(kmanagesieve)
 add_subdirectory(ksieveui)

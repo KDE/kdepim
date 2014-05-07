@@ -1,5 +1,7 @@
 kde_enable_exceptions()
 
+add_definitions(-DTRANSLATION_DOMAIN=\"libmessagecomposer\")
+
 include_directories(
     ${Boost_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/libkdepim
