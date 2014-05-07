@@ -24,7 +24,7 @@
 
 #include <libkleopatraclient/core/command.h>
 
-namespace KLEOPATRACLIENT_NAMESPACE {
+namespace KleopatraClientCopy {
 
     class KLEOPATRACLIENTCORE_EXPORT SignEncryptFilesCommand : public Command {
         Q_OBJECT

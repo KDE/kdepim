@@ -57,8 +57,8 @@
 # define KLEOPATRACLIENTGUI_EXPORT KDE_EXPORT
 #endif
 
-#ifndef KLEOPATRACLIENT_NAMESPACE
-# define KLEOPATRACLIENT_NAMESPACE KleopatraClient
+#ifndef KleopatraClientCopy
+# define KleopatraClientCopy KleopatraClient
 #endif
 
 #endif /* LIBKLEOPATRACLIENT_KLEOPATRACLIENT_EXPORT_H */

@@ -31,11 +31,11 @@
 
 #include <memory>
 
-using namespace KLEOPATRACLIENT_NAMESPACE;
-using namespace KLEOPATRACLIENT_NAMESPACE::Gui;
+using namespace KleopatraClientCopy;
+using namespace KleopatraClientCopy::Gui;
 
 class CertificateRequester::Private {
-    friend class ::KLEOPATRACLIENT_NAMESPACE::Gui::CertificateRequester;
+    friend class ::KleopatraClientCopy::Gui::CertificateRequester;
     CertificateRequester * const q;
 public:
     explicit Private( CertificateRequester * qq )

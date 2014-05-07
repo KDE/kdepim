@@ -21,7 +21,7 @@
 
 #include "decryptverifyfilescommand.h"
 
-using namespace KLEOPATRACLIENT_NAMESPACE;
+using namespace KleopatraClientCopy;
 
 DecryptVerifyFilesCommand::DecryptVerifyFilesCommand( QObject * p )
     : Command( p )

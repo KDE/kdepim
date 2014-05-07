@@ -5,7 +5,7 @@
 #include <QApplication>
 #include <QMessageBox>
 
-using namespace KLEOPATRACLIENT_NAMESPACE;
+using namespace KleopatraClientCopy;
 
 int main( int argc, char * argv[] ) {
 

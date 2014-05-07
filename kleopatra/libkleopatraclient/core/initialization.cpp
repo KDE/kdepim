@@ -26,7 +26,7 @@
 #include <assuan.h>
 #include <gpg-error.h>
 
-using namespace KLEOPATRACLIENT_NAMESPACE;
+using namespace KleopatraClientCopy;
 
 Initialization::Initialization() {
 #ifndef HAVE_ASSUAN2

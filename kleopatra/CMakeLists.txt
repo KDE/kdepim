@@ -4,8 +4,6 @@ add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 
-option(KLEO_STATIC_KCMODULES "Build Kleopatra's KCMs into Kleopatra; don't install plugins" WINCE)
-
 set(kleopatra_version 2.2.0)
 set(kleopatra_release FALSE)
 
@@ -56,14 +54,12 @@ if(GCC_IS_NEWER_THAN_4_3)
 endif()
 
 add_subdirectory(pics)
-#add_subdirectory(conf)
+add_subdirectory(conf)
 
 if(USABLE_ASSUAN_FOUND)
   # can't use macro_optional_add_subdirectory here, since it's split
   # off into ConfigureChecks.cmake..
-  #REACTIVATE
-  #add_definitions(-DKLEOPATRACLIENT_NAMESPACE=KleopatraClientCopy -DKLEOPATRACLIENTCORE_EXPORT=)
-  #add_subdirectory(libkleopatraclient)
+  add_subdirectory(libkleopatraclient)
 endif()
 
 add_subdirectory(kgpgconf)
@@ -79,7 +75,6 @@ else()
 endif()
 
 if(USABLE_ASSUAN_FOUND)
-  add_definitions(-DKLEOPATRACLIENT_NAMESPACE=KleopatraClientCopy -DKLEOPATRACLIENTCORE_EXPORT=)
   set(_kleopatra_uiserver_SRCS
     uiserver/sessiondata.cpp
     uiserver/uiserver.cpp
@@ -291,13 +286,6 @@ set(_kleopatra_SRCS
   kleopatraapplication.cpp
   main.cpp
 )
-
-if(KLEO_STATIC_KCMODULES)
-  add_definitions(-DKLEO_STATIC_KCMODULES)
-  set(_kleopatra_extra_libs kcm_kleopatra)
-else()
-  set(_kleopatra_extra_libs)
-endif()
 
 if(KLEO_MODEL_TEST)
   add_definitions(-DKLEO_MODEL_TEST)

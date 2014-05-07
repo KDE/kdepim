@@ -82,7 +82,6 @@ using namespace Kleo::Commands;
 using namespace boost;
 
 static void add_resources() {
-  KGlobal::locale()->insertCatalog( QLatin1String("libkleopatra") );
   KIconLoader::global()->addAppDir( QLatin1String("libkleopatra") );
   KIconLoader::global()->addAppDir( QLatin1String("kwatchgnupg") );
   KIconLoader::global()->addAppDir( QLatin1String("kdepim") );

@@ -24,7 +24,7 @@
 
 #include <libkleopatraclient/kleopatraclient_export.h>
 
-namespace KLEOPATRACLIENT_NAMESPACE {
+namespace KleopatraClientCopy {
 
     class KLEOPATRACLIENTCORE_EXPORT Initialization {
     public:
