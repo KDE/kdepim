@@ -21,7 +21,7 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditfindbar.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KGlobal>
 
 #include <QVBoxLayout>
@@ -50,10 +50,10 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
     QLabel *label = new QLabel(i18n("Name:"));
     hbox->addWidget(label);
 
-    mTemplateNameEdit = new KLineEdit;
+    mTemplateNameEdit = new QLineEdit;
     mTemplateNameEdit->setEnabled(!defaultTemplate);
-    mTemplateNameEdit->setTrapReturnKey(true);
-    mTemplateNameEdit->setClearButtonShown(true);
+    //QT5 mTemplateNameEdit->setTrapReturnKey(true);
+    mTemplateNameEdit->setClearButtonEnabled(true);
     hbox->addWidget(mTemplateNameEdit);
 
     vbox->addLayout(hbox);

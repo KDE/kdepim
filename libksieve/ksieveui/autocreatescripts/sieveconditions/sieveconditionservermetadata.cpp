@@ -21,7 +21,7 @@
 #include "editor/sieveeditorutil.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QWidget>
 #include <QHBoxLayout>
@@ -59,7 +59,7 @@ QWidget *SieveConditionServerMetaData::createParamWidget( QWidget *parent ) cons
     QLabel *lab = new QLabel(i18n("Mailbox:"));
     grid->addWidget(lab, 0, 0);
 
-    KLineEdit *mailbox = new KLineEdit;
+    QLineEdit *mailbox = new QLineEdit;
     mailbox->setObjectName(QLatin1String("mailbox"));
     connect(mailbox, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     grid->addWidget(mailbox, 0, 1);
@@ -67,7 +67,7 @@ QWidget *SieveConditionServerMetaData::createParamWidget( QWidget *parent ) cons
     lab = new QLabel(i18n("Annotations:"));
     grid->addWidget(lab, 1, 0);
 
-    KLineEdit *annotation = new KLineEdit;
+    QLineEdit *annotation = new QLineEdit;
     connect(annotation, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     annotation->setObjectName(QLatin1String("annotation"));
     grid->addWidget(annotation, 1, 1);
@@ -75,7 +75,7 @@ QWidget *SieveConditionServerMetaData::createParamWidget( QWidget *parent ) cons
     lab = new QLabel(i18n("Value:"));
     grid->addWidget(lab, 2, 0);
 
-    KLineEdit *value = new KLineEdit;
+    QLineEdit *value = new QLineEdit;
     connect(value, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     value->setObjectName(QLatin1String("value"));
     grid->addWidget(value, 2, 1);
@@ -92,17 +92,17 @@ QString SieveConditionServerMetaData::code(QWidget *w) const
     QString result = (isNegative ? QLatin1String("not ") : QString()) + QString::fromLatin1("servermetadata %1 ").arg(matchString);
 
 
-    const KLineEdit *mailbox = w->findChild<KLineEdit*>( QLatin1String("mailbox"));
+    const QLineEdit *mailbox = w->findChild<QLineEdit*>( QLatin1String("mailbox"));
     const QString mailboxStr = mailbox->text();
 
     result += QString::fromLatin1("\"%1\" ").arg(mailboxStr);
 
-    const KLineEdit *annotation = w->findChild<KLineEdit*>( QLatin1String("annotation"));
+    const QLineEdit *annotation = w->findChild<QLineEdit*>( QLatin1String("annotation"));
     const QString annotationStr = annotation->text();
 
     result += QString::fromLatin1("\"%1\" ").arg(annotationStr);
 
-    const KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value"));
+    const QLineEdit *value = w->findChild<QLineEdit*>( QLatin1String("value"));
     const QString valueStr = value->text();
 
     result += QString::fromLatin1("\"%1\"").arg(valueStr);
@@ -141,17 +141,17 @@ bool SieveConditionServerMetaData::setParamWidgetValue(const QDomElement &elemen
                 const QString tagValue = e.text();
                 switch(index) {
                 case 0: {
-                    KLineEdit *mailbox = w->findChild<KLineEdit*>( QLatin1String("mailbox"));
+                    QLineEdit *mailbox = w->findChild<QLineEdit*>( QLatin1String("mailbox"));
                     mailbox->setText(tagValue);
                     break;
                 }
                 case 1: {
-                    KLineEdit *annotation = w->findChild<KLineEdit*>( QLatin1String("annotation"));
+                    QLineEdit *annotation = w->findChild<QLineEdit*>( QLatin1String("annotation"));
                     annotation->setText(tagValue);
                     break;
                 }
                 case 2: {
-                    KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value"));
+                    QLineEdit *value = w->findChild<QLineEdit*>( QLatin1String("value"));
                     value->setText(tagValue);
                     break;
                 }

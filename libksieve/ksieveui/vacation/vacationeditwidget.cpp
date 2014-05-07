@@ -20,7 +20,7 @@
 
 #include <KLocalizedString>
 #include <KIntSpinBox>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <pimcommon/texteditor/richtexteditor/richtexteditorwidget.h>
 
@@ -82,9 +82,9 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
 
     // "Send responses for these addresses" lineedit and label:
     ++row;
-    mMailAliasesEdit = new KLineEdit( this );
+    mMailAliasesEdit = new QLineEdit( this );
     mMailAliasesEdit->setObjectName( QLatin1String("mMailAliasesEdit") );
-    mMailAliasesEdit->setClearButtonShown( true );
+    mMailAliasesEdit->setClearButtonEnabled( true );
     QLabel *tmpLabel = new QLabel( i18n("&Send responses for these addresses:"), this );
     tmpLabel->setBuddy( mMailAliasesEdit );
     glay->addWidget( tmpLabel, row, 0 );
@@ -102,9 +102,9 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     mDomainCheck = new QCheckBox( i18n("Only react to mail coming from domain"), this );
     mDomainCheck->setObjectName( QLatin1String("mDomainCheck") );
     mDomainCheck->setChecked( false );
-    mDomainEdit = new KLineEdit( this );
+    mDomainEdit = new QLineEdit( this );
     mDomainEdit->setObjectName( QLatin1String("mDomainEdit") );
-    mDomainEdit->setClearButtonShown( true );
+    mDomainEdit->setClearButtonEnabled( true );
     mDomainEdit->setEnabled( false );
     mDomainEdit->setValidator( new QRegExpValidator( QRegExp( QLatin1String("[a-zA-Z0-9+-]+(?:\\.[a-zA-Z0-9+-]+)*") ), mDomainEdit ) );
     glay->addWidget( mDomainCheck, row, 0 );

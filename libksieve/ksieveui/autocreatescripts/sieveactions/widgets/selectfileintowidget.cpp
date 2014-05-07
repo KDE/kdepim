@@ -17,11 +17,12 @@
 
 #include "selectfileintowidget.h"
 
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocalizedString>
 
 #include <QPushButton>
 #include <QHBoxLayout>
+#include <QPointer>
 
 using namespace KSieveUi;
 
@@ -51,7 +52,7 @@ SelectFileIntoWidget::SelectFileIntoWidget(QWidget *parent)
 {
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
-    mLineEdit = new KLineEdit;
+    mLineEdit = new QLineEdit;
     connect(mLineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     lay->addWidget(mLineEdit);
     QPushButton *selectFileInfo = new QPushButton(i18n("..."));

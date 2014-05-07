@@ -19,7 +19,7 @@
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <QPushButton>
 #include <KIcon>
 
@@ -49,8 +49,8 @@ SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
 
     QHBoxLayout *hbox = new QHBoxLayout;
 
-    mNewHeader = new KLineEdit;
-    mNewHeader->setClearButtonShown(true);
+    mNewHeader = new QLineEdit;
+    mNewHeader->setClearButtonEnabled(true);
     hbox->addWidget(mNewHeader);
 
 

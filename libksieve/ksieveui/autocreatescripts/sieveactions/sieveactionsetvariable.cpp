@@ -22,7 +22,7 @@
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QCheckBox>
 #include <QLabel>
@@ -64,7 +64,7 @@ QWidget *SieveActionSetVariable::createParamWidget( QWidget *parent ) const
     QLabel *lab = new QLabel(i18n("Value:"));
     grid->addWidget(lab, 1, 0);
 
-    KLineEdit *value = new KLineEdit;
+    QLineEdit *value = new QLineEdit;
     value->setObjectName(QLatin1String("value"));
     connect(value, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     grid->addWidget(value, 1, 1);
@@ -72,7 +72,7 @@ QWidget *SieveActionSetVariable::createParamWidget( QWidget *parent ) const
     lab = new QLabel(i18n("In variable:"));
     grid->addWidget(lab, 2, 0);
 
-    KLineEdit *variable = new KLineEdit;
+    QLineEdit *variable = new QLineEdit;
     variable->setObjectName(QLatin1String("variable"));
     connect(variable, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     grid->addWidget(variable, 2, 1);
@@ -94,14 +94,14 @@ bool SieveActionSetVariable::setParamWidgetValue(const QDomElement &element, QWi
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("str")) {
                 const QString tagValue = e.text();
-                KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
+                QLineEdit *value = w->findChild<QLineEdit*>(QLatin1String("value"));
                 value->setText(tagValue);
                 node = node.nextSibling();
                 QDomElement variableElement = node.toElement();
                 if (!variableElement.isNull()) {
                     const QString variableTagName = variableElement.tagName();
                     if (variableTagName == QLatin1String("str")) {
-                        KLineEdit *variable = w->findChild<KLineEdit*>(QLatin1String("variable"));
+                        QLineEdit *variable = w->findChild<QLineEdit*>(QLatin1String("variable"));
                         variable->setText(variableElement.text());
                     }
                 } else {
@@ -150,11 +150,11 @@ QString SieveActionSetVariable::code(QWidget *w) const
         }
     }
 
-    const KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
+    const QLineEdit *value = w->findChild<QLineEdit*>(QLatin1String("value"));
     const QString valueStr = value->text();
     result += QString::fromLatin1("\"%1\" ").arg(valueStr);
 
-    const KLineEdit *variable = w->findChild<KLineEdit*>(QLatin1String("variable"));
+    const QLineEdit *variable = w->findChild<QLineEdit*>(QLatin1String("variable"));
     const QString variableStr = variable->text();
     result += QString::fromLatin1("\"%1\";").arg(variableStr);
 

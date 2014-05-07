@@ -20,7 +20,7 @@
 
 #include <KDialog>
 #include <QListWidget>
-class KLineEdit;
+class QLineEdit;
 
 namespace KSieveUi {
 
@@ -75,7 +75,7 @@ private Q_SLOTS:
     void slotSelectFlags();
 
 private:
-    KLineEdit *mEdit;
+    QLineEdit *mEdit;
 };
 }
 

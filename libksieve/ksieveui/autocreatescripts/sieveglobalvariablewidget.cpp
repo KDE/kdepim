@@ -23,7 +23,7 @@
 
 #include <QPushButton>
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KIcon>
 
 #include <QGridLayout>
@@ -70,7 +70,7 @@ void SieveGlobalVariableActionWidget::initWidget()
     QLabel *lab = new QLabel(i18n("Variable name:"));
     mLayout->addWidget( lab, 1, 0 );
 
-    mVariableName = new KLineEdit;
+    mVariableName = new QLineEdit;
     connect(mVariableName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     mLayout->addWidget( mVariableName, 1, 1 );
 
@@ -79,7 +79,7 @@ void SieveGlobalVariableActionWidget::initWidget()
     mLayout->addWidget( mSetValueTo, 1, 2 );
     mSetValueTo->setChecked(false);
 
-    mVariableValue = new KLineEdit;
+    mVariableValue = new QLineEdit;
     connect(mVariableValue, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     mVariableValue->setEnabled(false);
     mLayout->addWidget( mVariableValue, 1, 3 );

@@ -20,7 +20,7 @@
 #include "editor/sieveeditorutil.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -48,7 +48,7 @@ QWidget *SieveActionBreak::createParamWidget( QWidget *parent ) const
     QLabel *lab = new QLabel(i18n("Name (optional):"));
     lay->addWidget(lab);
 
-    KLineEdit *subject = new KLineEdit;
+    QLineEdit *subject = new QLineEdit;
     subject->setObjectName(QLatin1String("name"));
     connect(subject, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     lay->addWidget(subject);
@@ -65,7 +65,7 @@ bool SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *
             if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
                 if (tagValue == QLatin1String("name")) {
-                    KLineEdit *name = w->findChild<KLineEdit*>(QLatin1String("name"));
+                    QLineEdit *name = w->findChild<QLineEdit*>(QLatin1String("name"));
                     name->setText(AutoCreateScriptUtil::strValue(e));
                 } else {
                     unknowTagValue(tagValue, error);
@@ -94,7 +94,7 @@ QString SieveActionBreak::href() const
 
 QString SieveActionBreak::code(QWidget *w) const
 {
-    const KLineEdit *name = w->findChild<KLineEdit*>(QLatin1String("name"));
+    const QLineEdit *name = w->findChild<QLineEdit*>(QLatin1String("name"));
     const QString nameStr = name->text();
     if (!nameStr.isEmpty()) {
         return QString::fromLatin1("break :name \"%1\";").arg(nameStr);

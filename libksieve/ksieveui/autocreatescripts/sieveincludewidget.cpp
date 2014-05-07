@@ -24,7 +24,7 @@
 
 #include <QPushButton>
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KIcon>
 
 #include <QGridLayout>
@@ -141,7 +141,7 @@ void SieveIncludeActionWidget::initWidget()
     lab = new QLabel(i18n("Name:"));
     mLayout->addWidget( lab, 1, 2 );
 
-    mIncludeName = new KLineEdit;
+    mIncludeName = new QLineEdit;
     connect(mIncludeName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     mLayout->addWidget( mIncludeName, 1, 3 );
 

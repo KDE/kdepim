@@ -22,7 +22,7 @@
 #include <libkdepim/widgets/kwidgetlister.h>
 
 class QPushButton;
-class KLineEdit;
+class QLineEdit;
 class QGridLayout;
 class QCheckBox;
 class QDomElement;
@@ -59,9 +59,9 @@ private:
     QPushButton *mAdd;
     QPushButton *mRemove;
     QGridLayout *mLayout;
-    KLineEdit *mVariableName;
+    QLineEdit *mVariableName;
     QCheckBox *mSetValueTo;
-    KLineEdit *mVariableValue;
+    QLineEdit *mVariableValue;
 };
 
 class SieveGlobalVariableLister : public KPIM::KWidgetLister

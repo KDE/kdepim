@@ -22,7 +22,7 @@
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 
 #include <QHBoxLayout>
@@ -57,7 +57,7 @@ QWidget *SieveActionNotify::createParamWidget( QWidget *parent ) const
     QLabel *lab = new QLabel(i18n("message:"));
     lay->addWidget(lab);
 
-    KLineEdit *message = new KLineEdit;
+    QLineEdit *message = new QLineEdit;
     message->setObjectName(QLatin1String("message"));
     connect(message, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     lay->addWidget(message);
@@ -65,7 +65,7 @@ QWidget *SieveActionNotify::createParamWidget( QWidget *parent ) const
     lab = new QLabel(i18n("method:"));
     lay->addWidget(lab);
 
-    KLineEdit *method = new KLineEdit;
+    QLineEdit *method = new QLineEdit;
     method->setObjectName(QLatin1String("method"));
     lay->addWidget(method);
     connect(method, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
@@ -86,7 +86,7 @@ bool SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget 
                 if (tagValue == QLatin1String("message")) {
                     const QString strValue = AutoCreateScriptUtil::strValue(node);
                     if (!strValue.isEmpty()) {
-                        KLineEdit *message = w->findChild<KLineEdit*>( QLatin1String("message") );
+                        QLineEdit *message = w->findChild<QLineEdit*>( QLatin1String("message") );
                         message->setText(AutoCreateScriptUtil::quoteStr(strValue));
                     }
                 } else if (tagValue == QLatin1String("importance")) {
@@ -104,7 +104,7 @@ bool SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget 
             } else if (tagName == QLatin1String("comment")) {
                 //implement in the future ?
             } else if (tagName == QLatin1String("str")) {
-                KLineEdit *method = w->findChild<KLineEdit*>( QLatin1String("method") );
+                QLineEdit *method = w->findChild<QLineEdit*>( QLatin1String("method") );
                 method->setText(AutoCreateScriptUtil::quoteStr(e.text()));
             } else {
                 unknownTag(tagName, error);
@@ -125,13 +125,13 @@ QString SieveActionNotify::code(QWidget *w) const
         result += QString::fromLatin1(" :importance \"%1\"").arg(importanceStr);
     }
 
-    const KLineEdit *message = w->findChild<KLineEdit*>( QLatin1String("message") );
+    const QLineEdit *message = w->findChild<QLineEdit*>( QLatin1String("message") );
     const QString messageStr = message->text();
     if (!messageStr.isEmpty()) {
         result += QString::fromLatin1(" :message \"%2\"").arg(messageStr);
     }
 
-    const KLineEdit *method = w->findChild<KLineEdit*>( QLatin1String("method") );
+    const QLineEdit *method = w->findChild<QLineEdit*>( QLatin1String("method") );
     const QString methodStr = method->text();
     result += QString::fromLatin1(" \"%3\";").arg(methodStr);
 

@@ -20,7 +20,7 @@
 
 #include <KLocalizedString>
 #include <KComboBox>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QHBoxLayout>
 
@@ -49,7 +49,7 @@ void SelectBodyTypeWidget::initialize()
     mBodyCombobox->addItem(i18n("text"), QLatin1String(":text"));
     connect(mBodyCombobox, SIGNAL(activated(int)), this, SLOT(slotBodyTypeChanged(int)));
 
-    mBodyLineEdit = new KLineEdit;
+    mBodyLineEdit = new QLineEdit;
     connect(mBodyLineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     lay->addWidget(mBodyLineEdit);
     mBodyLineEdit->hide();

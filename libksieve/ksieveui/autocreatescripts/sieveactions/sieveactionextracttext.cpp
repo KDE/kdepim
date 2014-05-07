@@ -20,7 +20,7 @@
 #include "editor/sieveeditorutil.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QLabel>
 #include <QSpinBox>
@@ -59,7 +59,7 @@ QWidget *SieveActionExtractText::createParamWidget( QWidget *parent ) const
     lab = new QLabel(i18n("Stored in variable name:"));
     grid->addWidget(lab, 1, 0);
 
-    KLineEdit *variableName = new KLineEdit;
+    QLineEdit *variableName = new QLineEdit;
     connect(variableName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     variableName->setObjectName(QLatin1String("variablename"));
     grid->addWidget(variableName, 1, 1);
@@ -80,7 +80,7 @@ bool SieveActionExtractText::setParamWidgetValue(const QDomElement &element, QWi
                 QSpinBox *numberOfCharacters = w->findChild<QSpinBox*>(QLatin1String("numberOfCharacters"));
                 numberOfCharacters->setValue(e.text().toInt());
             } else if (tagName == QLatin1String("str")) {
-                KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
+                QLineEdit *variableName = w->findChild<QLineEdit*>(QLatin1String("variablename"));
                 variableName->setText(e.text());
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
@@ -101,7 +101,7 @@ QString SieveActionExtractText::code(QWidget *w) const
     const QSpinBox *numberOfCharacters = w->findChild<QSpinBox*>(QLatin1String("numberOfCharacters"));
     const QString numberOfCharactersStr = QString::number(numberOfCharacters->value());
 
-    const KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
+    const QLineEdit *variableName = w->findChild<QLineEdit*>(QLatin1String("variablename"));
     const QString variableNameStr = variableName->text();
 
     const QString result = QString::fromLatin1("extracttext :first %1 \"%2\";").arg(numberOfCharactersStr).arg(variableNameStr);

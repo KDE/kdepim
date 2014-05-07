@@ -21,7 +21,7 @@
 #include <QWidget>
 
 class KComboBox;
-class KLineEdit;
+class QLineEdit;
 class QStackedWidget;
 class QSpinBox;
 class KDateComboBox;
@@ -64,7 +64,7 @@ private:
     QString dateType(DateType type) const;
     QString dateValue(DateType type) const;
     KComboBox *mDateType;
-    KLineEdit *mDateLineEdit;
+    QLineEdit *mDateLineEdit;
     QSpinBox *mDateValue;
     KDateComboBox *mDateEdit;
     KTimeComboBox *mTimeEdit;

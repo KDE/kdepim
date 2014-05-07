@@ -22,7 +22,7 @@
 #include "editor/sieveeditorutil.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QWidget>
 #include <QHBoxLayout>
@@ -62,7 +62,7 @@ QWidget *SieveConditionHasFlag::createParamWidget( QWidget *parent ) const
     grid->addWidget(lab, 0, 0);
 
     if (hasVariableSupport) {
-        KLineEdit *variableName = new KLineEdit;
+        QLineEdit *variableName = new QLineEdit;
         variableName->setObjectName(QLatin1String("variablename"));
         connect(variableName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
         grid->addWidget(variableName, 0, 1);
@@ -70,7 +70,7 @@ QWidget *SieveConditionHasFlag::createParamWidget( QWidget *parent ) const
     lab = new QLabel(i18n("Value:"));
     grid->addWidget(lab, 1, 0);
 
-    KLineEdit *value = new KLineEdit;
+    QLineEdit *value = new QLineEdit;
     connect(value, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     value->setObjectName(QLatin1String("value"));
     grid->addWidget(value, 1, 1);
@@ -87,13 +87,13 @@ QString SieveConditionHasFlag::code(QWidget *w) const
     QString result = AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("hasflag %1").arg(matchString);
 
     if (hasVariableSupport) {
-        const KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
+        const QLineEdit *variableName = w->findChild<QLineEdit*>(QLatin1String("variablename"));
         const QString variableNameStr = variableName->text();
         if (!variableNameStr.isEmpty()) {
             result += QLatin1String(" \"") + variableNameStr + QLatin1Char('"');
         }
 
-        const KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
+        const QLineEdit *value = w->findChild<QLineEdit*>(QLatin1String("value"));
         const QString valueStr = value->text();
         result += QLatin1String(" \"") + valueStr + QLatin1Char('"');
     }
@@ -156,15 +156,15 @@ bool SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWid
     }
     switch (strList.count()) {
     case 1: {
-        KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
+        QLineEdit *value = w->findChild<QLineEdit*>(QLatin1String("value"));
         value->setText(strList.at(0));
         break;
     }
     case 2: {
         if (hasVariableSupport) {
-            KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
+            QLineEdit *variableName = w->findChild<QLineEdit*>(QLatin1String("variablename"));
             variableName->setText(strList.at(0));
-            KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
+            QLineEdit *value = w->findChild<QLineEdit*>(QLatin1String("value"));
             value->setText(strList.at(1));
         } else {
             qDebug()<<" SieveConditionHasFlag has not variable support";

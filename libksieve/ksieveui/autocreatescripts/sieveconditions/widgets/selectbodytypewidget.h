@@ -21,7 +21,7 @@
 #include <QWidget>
 
 class KComboBox;
-class KLineEdit;
+class QLineEdit;
 
 namespace KSieveUi {
 class SelectBodyTypeWidget : public QWidget
@@ -43,7 +43,7 @@ private Q_SLOTS:
 private:
     void initialize();
     KComboBox *mBodyCombobox;
-    KLineEdit *mBodyLineEdit;
+    QLineEdit *mBodyLineEdit;
 };
 }
 

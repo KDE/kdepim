@@ -18,12 +18,12 @@
 #include "selectflagswidget.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocalizedString>
 
 #include <QPushButton>
 #include <QHBoxLayout>
-
+#include <QPointer>
 
 using namespace KSieveUi;
 
@@ -111,7 +111,7 @@ SelectFlagsWidget::SelectFlagsWidget(QWidget *parent)
 {
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
-    mEdit = new KLineEdit;
+    mEdit = new QLineEdit;
     mEdit->setReadOnly(true);
     connect(mEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     lay->addWidget(mEdit);

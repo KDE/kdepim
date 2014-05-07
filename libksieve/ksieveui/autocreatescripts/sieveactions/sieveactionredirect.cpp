@@ -22,7 +22,7 @@
 #include "widgets/addresslineedit.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QHBoxLayout>
 #include <QCheckBox>
@@ -76,7 +76,7 @@ bool SieveActionRedirect::setParamWidgetValue(const QDomElement &element, QWidge
         if (!e.isNull()) {
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("str")) {
-                KLineEdit *edit = w->findChild<AddressLineEdit*>( QLatin1String("RedirectEdit") );
+                QLineEdit *edit = w->findChild<AddressLineEdit*>( QLatin1String("RedirectEdit") );
                 const QString tagValue = e.text();
                 edit->setText(AutoCreateScriptUtil::quoteStr(tagValue));
             } else if (tagName == QLatin1String("tag")) {
@@ -116,7 +116,7 @@ bool SieveActionRedirect::setParamWidgetValue(const QDomElement &element, QWidge
 QString SieveActionRedirect::code(QWidget *w) const
 {
     QString result = QLatin1String("redirect ");
-    const KLineEdit *edit = w->findChild<AddressLineEdit*>( QLatin1String("RedirectEdit") );
+    const QLineEdit *edit = w->findChild<AddressLineEdit*>( QLatin1String("RedirectEdit") );
     const QString text = edit->text();
 
     if (mHasCopySupport) {

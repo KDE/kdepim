@@ -20,7 +20,7 @@
 
 #include <QWidget>
 class KIntSpinBox;
-class KLineEdit;
+class QLineEdit;
 
 namespace PimCommon {
 class RichTextEditorWidget;
@@ -76,11 +76,11 @@ private Q_SLOTS:
 protected:
     QCheckBox *mActiveCheck;
     KIntSpinBox *mIntervalSpin;
-    KLineEdit *mMailAliasesEdit;
+    QLineEdit *mMailAliasesEdit;
     PimCommon::RichTextEditorWidget *mTextEdit;
     QCheckBox *mSpamCheck;
     QCheckBox *mDomainCheck;
-    KLineEdit *mDomainEdit;
+    QLineEdit *mDomainEdit;
 };
 }
 

@@ -23,7 +23,7 @@
 
 #include <QListWidget>
 
-class KLineEdit;
+class QLineEdit;
 class QPushButton;
 namespace KSieveUi {
 
@@ -61,7 +61,7 @@ private Q_SLOTS:
 
 private:
     SelectHeadersWidget *mListWidget;
-    KLineEdit *mNewHeader;
+    QLineEdit *mNewHeader;
     QPushButton *mAddNewHeader;
 };
 

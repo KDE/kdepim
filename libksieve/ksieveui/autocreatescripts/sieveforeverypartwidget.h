@@ -20,7 +20,7 @@
 
 #include "sievewidgetpageabstract.h"
 class QCheckBox;
-class KLineEdit;
+class QLineEdit;
 class QDomElement;
 
 namespace KSieveUi {
@@ -40,7 +40,7 @@ private Q_SLOTS:
 
 private:
     QCheckBox *mForLoop;
-    KLineEdit *mName;
+    QLineEdit *mName;
     SieveHelpButton *mHelpButton;
 };
 }

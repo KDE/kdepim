@@ -22,7 +22,7 @@
 #include "editor/sieveeditorutil.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 
 #include <QWidget>
 #include <QHBoxLayout>
@@ -56,9 +56,9 @@ QWidget *SieveConditionBody::createParamWidget( QWidget *parent ) const
     matchType->setObjectName(QLatin1String("matchtype"));
     connect(matchType, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
 
-    KLineEdit *edit = new KLineEdit;
+    QLineEdit *edit = new QLineEdit;
     connect(edit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
-    edit->setClearButtonShown(true);
+    edit->setClearButtonEnabled(true);
     lay->addWidget(edit);
     edit->setObjectName(QLatin1String("edit"));
 
@@ -73,7 +73,7 @@ QString SieveConditionBody::code(QWidget *w) const
     bool isNegative = false;
     const QString matchValue = matchType->code(isNegative);
 
-    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
+    QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("edit"));
     const QString editValue = edit->text();
     return AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("body %1 %2 \"%3\"").arg(bodyValue).arg(matchValue).arg(editValue);
 }
@@ -141,14 +141,14 @@ bool SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget
         bodyType->setCode(tagValueList.at(0), QString(), name(), error);
         SelectMatchTypeComboBox *matchType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype"));
         matchType->setCode(tagValueList.at(1), name(), error);
-        KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
+        QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("edit"));
         edit->setText(AutoCreateScriptUtil::quoteStr(strValue.at(0)));
     } else if (strValue.count() == 2) {
         SelectBodyTypeWidget *bodyType =  w->findChild<SelectBodyTypeWidget*>( QLatin1String("bodytype") );
         bodyType->setCode(tagValueList.at(0), indexStr == 2 ? strValue.at(0) : QString(), name(), error);
         SelectMatchTypeComboBox *matchType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype"));
         matchType->setCode(tagValueList.at(1), name(), error);
-        KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
+        QLineEdit *edit = w->findChild<QLineEdit*>( QLatin1String("edit"));
         edit->setText(indexStr == 1 ? AutoCreateScriptUtil::quoteStr(strValue.at(0)) : AutoCreateScriptUtil::quoteStr(strValue.at(1)));
     }
     return true;
