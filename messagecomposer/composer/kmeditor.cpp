@@ -339,23 +339,17 @@ void KMeditor::setFontForWholeText( const QFont &font )
 
 KUrl KMeditor::insertFile()
 {
-#if 0 //QT5
-    QPointer<KEncodingFileDialog> fdlg =
-            new KEncodingFileDialog( QString(), QString(),  QString(), QString(),
-                                     KFileDialog::Opening, this );
-    fdlg->okButton()->setText( i18nc( "@action:button", "&Insert" ) );
-    fdlg->setCaption( i18nc( "@title:window", "Insert File" ) );
-
+    const KEncodingFileDialog::Result result = KEncodingFileDialog::getOpenUrlAndEncoding(QString(),
+            QUrl(),
+            QString(),
+            this,
+            i18nc( "@title:window", "Insert File" ));
     KUrl url;
-    if ( fdlg->exec() && fdlg ) {
-        url = fdlg->selectedUrl();
-        url.setFileEncoding( MessageViewer::NodeHelper::fixEncoding( fdlg->selectedEncoding() ) );
+    if (!result.URLs.isEmpty()) {
+       url = result.URLs.first();
+       url.setFileEncoding( MessageViewer::NodeHelper::fixEncoding( result.encoding ) );
     }
-    delete fdlg;
     return url;
-#else
-    return KUrl();
-#endif
 }
 
 void KMeditor::enableWordWrap( int wrapColumn )
