@@ -27,7 +27,7 @@
 # if defined(KDEPIM_STATIC_LIBS)
    /* No export/import for static libraries */
 #  define NOTESHARED_EXPORT
-# elif defined(MAKE_PIMCOMMON_LIB)
+# elif defined(MAKE_NOTESHARED_LIB)
    /* We are building this library */
 #  define NOTESHARED_EXPORT KDE_EXPORT
 # else
