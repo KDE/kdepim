@@ -175,7 +175,7 @@ void GDriveStorageService::storageServiceShareLink(const QString &root, const QS
     if (mNeedToReadConfigFirst)
         readConfig();
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
-        mNextAction->setNextActionType(ShareLink);
+        mNextAction->setNextActionType(ShareLinkAction);
         mNextAction->setPath(path);
         mNextAction->setRootPath(root);
         if (mAccount->accessToken().isEmpty()) {
@@ -198,7 +198,7 @@ void GDriveStorageService::storageServicedownloadFile(const QString &name, const
         readConfig();
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
-        mNextAction->setNextActionType(DownLoadFile);
+        mNextAction->setNextActionType(DownLoadFileAction);
         mNextAction->setNextActionName(name);
         mNextAction->setDownloadDestination(destination);
         mNextAction->setFileId(fileId);
@@ -224,7 +224,7 @@ void GDriveStorageService::storageServicedeleteFile(const QString &filename)
         readConfig();
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
-        mNextAction->setNextActionType(DeleteFile);
+        mNextAction->setNextActionType(DeleteFileAction);
         mNextAction->setNextActionName(filename);
         if (mAccount->accessToken().isEmpty()) {
             storageServiceauthentication();
@@ -246,7 +246,7 @@ void GDriveStorageService::storageServicedeleteFolder(const QString &foldername)
         readConfig();
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
-        mNextAction->setNextActionType(DeleteFolder);
+        mNextAction->setNextActionType(DeleteFolderAction);
         mNextAction->setNextActionFolder(foldername);
         if (mAccount->accessToken().isEmpty()) {
             storageServiceauthentication();
@@ -268,7 +268,7 @@ void GDriveStorageService::storageServiceRenameFolder(const QString &source, con
         readConfig();
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
-        mNextAction->setNextActionType(RenameFolder);
+        mNextAction->setNextActionType(RenameFolderAction);
         mNextAction->setRenameFolder(source, destination);
         if (mAccount->accessToken().isEmpty()) {
             storageServiceauthentication();
@@ -290,7 +290,7 @@ void GDriveStorageService::storageServiceRenameFile(const QString &source, const
         readConfig();
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
-        mNextAction->setNextActionType(RenameFile);
+        mNextAction->setNextActionType(RenameFileAction);
         mNextAction->setRenameFolder(source, destination);
         if (mAccount->accessToken().isEmpty()) {
             storageServiceauthentication();
@@ -312,7 +312,7 @@ void GDriveStorageService::storageServiceMoveFolder(const QString &source, const
         readConfig();
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
-        mNextAction->setNextActionType(MoveFolder);
+        mNextAction->setNextActionType(MoveFolderAction);
         mNextAction->setRenameFolder(source, destination);
         if (mAccount->accessToken().isEmpty()) {
             storageServiceauthentication();
@@ -334,7 +334,7 @@ void GDriveStorageService::storageServiceMoveFile(const QString &source, const Q
         readConfig();
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
-        mNextAction->setNextActionType(MoveFile);
+        mNextAction->setNextActionType(MoveFileAction);
         mNextAction->setRenameFolder(source, destination);
         if (mAccount->accessToken().isEmpty()) {
             storageServiceauthentication();
@@ -356,7 +356,7 @@ void GDriveStorageService::storageServiceCopyFile(const QString &source, const Q
         readConfig();
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
-        mNextAction->setNextActionType(CopyFile);
+        mNextAction->setNextActionType(CopyFileAction);
         mNextAction->setRenameFolder(source, destination);
         if (mAccount->accessToken().isEmpty()) {
             storageServiceauthentication();
@@ -378,7 +378,7 @@ void GDriveStorageService::storageServiceCopyFolder(const QString &source, const
         readConfig();
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
-        mNextAction->setNextActionType(CopyFolder);
+        mNextAction->setNextActionType(CopyFolderAction);
         mNextAction->setRenameFolder(source, destination);
         if (mAccount->accessToken().isEmpty()) {
             storageServiceauthentication();
@@ -420,7 +420,7 @@ void GDriveStorageService::storageServicelistFolder(const QString &folder)
         readConfig();
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
-        mNextAction->setNextActionType(ListFolder);
+        mNextAction->setNextActionType(ListFolderAction);
         mNextAction->setNextActionFolder(folder);
         if (mAccount->accessToken().isEmpty()) {
             storageServiceauthentication();
@@ -442,7 +442,7 @@ void GDriveStorageService::storageServicecreateFolder(const QString &name, const
         readConfig();
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
-        mNextAction->setNextActionType(CreateFolder);
+        mNextAction->setNextActionType(CreateFolderAction);
         mNextAction->setNextActionName(name);
         mNextAction->setNextActionFolder(destination);
         if (mAccount->accessToken().isEmpty()) {
@@ -465,7 +465,7 @@ void GDriveStorageService::storageServiceaccountInfo()
         readConfig();
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
-        mNextAction->setNextActionType(AccountInfo);
+        mNextAction->setNextActionType(AccountInfoAction);
         if (mAccount->accessToken().isEmpty()) {
             storageServiceauthentication();
         } else {
@@ -491,7 +491,7 @@ void GDriveStorageService::storageServiceuploadFile(const QString &filename, con
         readConfig();
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
-        mNextAction->setNextActionType(UploadFile);
+        mNextAction->setNextActionType(UploadFileAction);
         mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
         mNextAction->setUploadAsName(uploadAsName);
@@ -585,7 +585,7 @@ void GDriveStorageService::storageServicecreateServiceFolder()
         readConfig();
 
     if (mAccount->accessToken().isEmpty() || needToRefreshToken()) {
-        mNextAction->setNextActionType(CreateServiceFolder);
+        mNextAction->setNextActionType(CreateServiceFolderAction);
         if (mAccount->accessToken().isEmpty()) {
             storageServiceauthentication();
         } else {
