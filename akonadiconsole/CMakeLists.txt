@@ -43,7 +43,7 @@ set(akonadiconsole_bin_SRCS
   jobtrackermodel.cpp
 )
 
-qt4_generate_dbus_interface(jobtracker.h org.freedesktop.Akonadi.JobTracker.xml)
+qt5_generate_dbus_interface(jobtracker.h org.freedesktop.Akonadi.JobTracker.xml)
 qt5_add_dbus_adaptor(akonadiconsole_bin_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.JobTracker.xml jobtracker.h JobTracker)
 
 qt5_add_dbus_interfaces(akonadiconsole_bin_SRCS

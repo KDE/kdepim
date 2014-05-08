@@ -52,7 +52,7 @@ set (kjots_common_SRCS
 # D-Bus interface
 #########################################################################
 
-qt4_generate_dbus_interface( kjotswidget.h org.kde.KJotsWidget.xml OPTIONS -m )
+qt5_generate_dbus_interface( kjotswidget.h org.kde.KJotsWidget.xml OPTIONS -m )
 qt5_add_dbus_interfaces(kjots_common_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/org.kde.KJotsWidget.xml)
 
