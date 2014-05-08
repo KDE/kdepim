@@ -20,7 +20,7 @@
 
 #include <AkonadiAgentBase/agentbase.h>
 
-#include <Akonadi/Collection>
+#include <AkonadiCore/Collection>
 class QTimer;
 
 
