@@ -1,6 +1,6 @@
 kde_enable_exceptions()
 
-include_directories(${Grantlee_INCLUDE_DIRS} ${QJSON_INCLUDE_DIR})
+include_directories(${Grantlee_INCLUDE_DIRS})
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )

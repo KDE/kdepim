@@ -89,13 +89,6 @@ void SelectionTypeTreeWidget::initialize()
     createSubItem(mBlogiloItem, Utils::Config);
     createSubItem(mBlogiloItem, Utils::Data);
 
-    mKNodeItem = new QTreeWidgetItem(this);
-    mKNodeItem->setText(0, Utils::appTypeToI18n(Utils::KNode));
-    mKNodeItem->setCheckState(0, Qt::Checked);
-    createSubItem(mKNodeItem, Utils::Config);
-    createSubItem(mKNodeItem, Utils::Data);
-
-
     connect(this, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(slotItemChanged(QTreeWidgetItem*,int)));
 }
 
@@ -126,9 +119,6 @@ QHash<Utils::AppsType, Utils::importExportParameters> SelectionTypeTreeWidget::s
     var = typeChecked(mBlogiloItem);
     if (!var.isEmpty())
         stored.insert(Utils::Blogilo, var);
-    var = typeChecked(mKNodeItem);
-    if (!var.isEmpty())
-        stored.insert(Utils::KNode, var);
     return stored;
 }
 
@@ -237,7 +227,6 @@ void SelectionTypeTreeWidget::setSelectItems(bool b)
     changeState(mKNotesItem, b);
     changeState(mAkregatorItem, b);
     changeState(mBlogiloItem, b);
-    changeState(mKNodeItem, b);
 }
 
 void SelectionTypeTreeWidget::changeState(QTreeWidgetItem *item, bool b)

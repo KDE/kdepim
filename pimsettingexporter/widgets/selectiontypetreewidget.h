@@ -59,7 +59,6 @@ private:
     QTreeWidgetItem *mKNotesItem;
     QTreeWidgetItem *mAkregatorItem;
     QTreeWidgetItem *mBlogiloItem;
-    QTreeWidgetItem *mKNodeItem;
 };
 
 #endif // SELECTIONTYPETREEWIDGET_H

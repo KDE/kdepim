@@ -29,11 +29,6 @@ set(pimsettingexporter_mail_SRCS
   mail/importmailjob.cpp
 )
 
-set(pimsettingexporter_knode_SRCS
-  knode/exportknodejob.cpp
-  knode/importknodejob.cpp
-)
-
 set(pimsettingexporter_alarm_SRCS
   alarm/exportalarmjob.cpp
   alarm/importalarmjob.cpp
@@ -79,7 +74,6 @@ set(pimsettingexporter_SRCS
   ${pimsettingexporter_xml_SRCS}
   ${pimsettingexporter_notes_SRCS}
   ${pimsettingexporter_alarm_SRCS}
-  ${pimsettingexporter_knode_SRCS}
   ${pimsettingexporter_mail_SRCS}
   ${pimsettingexporter_calendar_SRCS}
   ${pimsettingexporter_addressbook_SRCS}

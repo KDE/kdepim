@@ -74,7 +74,6 @@ Root
 |       |---------messageviewer.notifyrc
 |       |---------kontactrc
 |       |---------kontact_summaryrc
-|       |---------knoderc
 |       |---------globalnotesettings
 |       |---------akonadi_mailfilter_agent.notifyrc
 |       |---------storageservicerc
@@ -91,4 +90,3 @@ Root
 |       |---------knotes/print/*
 |       |---------akregator/*
 |       |---------blogilo/blogilo.db
-|       |---------knode/*

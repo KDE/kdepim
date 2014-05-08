@@ -319,8 +319,6 @@ QString Utils::appTypeToI18n(AppsType type)
         return i18n("Akregator");
     case Blogilo:
         return i18n("Blogilo");
-    case KNode:
-        return i18n("KNode");
     }
     qDebug()<<" type unknown "<<type;
     return QString();
