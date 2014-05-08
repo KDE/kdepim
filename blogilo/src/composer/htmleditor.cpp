@@ -52,16 +52,13 @@ HtmlEditor* HtmlEditor::self()
 
 HtmlEditor::HtmlEditor() : QObject()
 {
-//QT5
-    //mEditor = KTextEditor::EditorChooser::editor();
+    mEditor = KTextEditor::Editor::instance();
 }
 
 HtmlEditor::~HtmlEditor()
 {
     qDebug();
     if ( !instancePrivate.isDestroyed() ) {
-//QT5
-        //delete mEditor;
         qDebug() << "editor deleted";
     }
 }
@@ -79,11 +76,11 @@ KTextEditor::View* HtmlEditor::createView( QWidget* parent )
     KTextEditor::ConfigInterface *interface = qobject_cast< KTextEditor::ConfigInterface* >( view );
 
     if ( interface ) {
-        KAction *actWordWrap = new KAction( i18n( "Dynamic Word Wrap" ), view );
+        QAction *actWordWrap = new QAction( i18n( "Dynamic Word Wrap" ), view );
         actWordWrap->setCheckable( true );
         connect( actWordWrap, SIGNAL(triggered(bool)), this, SLOT(toggleWordWrap()) );
 
-        KAction *actLineNumber = new KAction( i18n("Show line numbers"), view );
+        QAction *actLineNumber = new QAction( i18n("Show line numbers"), view );
         actLineNumber->setCheckable( true );
         connect( actLineNumber, SIGNAL(triggered(bool)), this, SLOT(toggleLineNumber()) );
 

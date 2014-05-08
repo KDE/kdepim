@@ -52,19 +52,16 @@ class Toolbox::Private
 public:
     QList<CatCheckBox*> listCategoryCheckBoxes;
     int mCurrentBlogId;
-    KStatusBar *statusbar;
+    QStatusBar *statusbar;
 };
 Toolbox::Toolbox( QWidget *parent )
     : QWidget( parent ), d(new Private)
 {
     d->mCurrentBlogId = -1;
-//QT5
-#if 0
     if ( parent )
         d->statusbar = qobject_cast<KXmlGuiWindow*>( parent )->statusBar();
     else
-#endif
-        d->statusbar = new KStatusBar( this );
+        d->statusbar = new QStatusBar( this );
     setupUi( this );
     setButtonsIcon();
     frameCat->layout()->setAlignment( Qt::AlignTop );
