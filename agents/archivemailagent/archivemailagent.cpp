@@ -155,5 +155,10 @@ QString ArchiveMailAgent::printCurrentListInfo()
     return mArchiveManager->printCurrentListInfo();
 }
 
+void ArchiveMailAgent::archiveFolder(const QString &path, Akonadi::Collection::Id collectionId)
+{
+    mArchiveManager->archiveFolder(path, collectionId);
+}
+
 AKONADI_AGENT_MAIN( ArchiveMailAgent )
 

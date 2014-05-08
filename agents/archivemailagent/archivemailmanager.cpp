@@ -193,3 +193,12 @@ QString ArchiveMailManager::printArchiveListInfo()
     return infoStr;
 }
 
+void ArchiveMailManager::archiveFolder(const QString &path, Akonadi::Collection::Id collectionId)
+{
+    ArchiveMailInfo *info = new ArchiveMailInfo;
+    info->setSaveCollectionId(collectionId);
+    info->setUrl(KUrl(path));
+    slotArchiveNow(info);
+    delete info;
+}
+

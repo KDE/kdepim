@@ -97,7 +97,7 @@ QString GDriveJob::lastPathComponent( const QUrl &url ) const
 
 void GDriveJob::listFolder(const QString &folder)
 {
-    mActionType = PimCommon::StorageServiceAbstract::ListFolder;
+    mActionType = PimCommon::StorageServiceAbstract::ListFolderAction;
     mError = false;
     const QString folderId = folder.isEmpty() ? QLatin1String("root") : folder;
     KGAPI2::Drive::ChildReferenceFetchJob *fetchJob = new KGAPI2::Drive::ChildReferenceFetchJob( folderId, mAccount );
@@ -147,7 +147,7 @@ void GDriveJob::slotFileFetchFinished(KGAPI2::Job* job)
 void GDriveJob::requestTokenAccess()
 {
     mError = false;
-    mActionType = PimCommon::StorageServiceAbstract::RequestToken;
+    mActionType = PimCommon::StorageServiceAbstract::RequestTokenAction;
 
     KGAPI2::AuthJob *authJob = new KGAPI2::AuthJob(
                 mAccount,
@@ -184,7 +184,7 @@ void GDriveJob::initializeToken(KGAPI2::AccountPtr account)
 
 void GDriveJob::accountInfo()
 {
-    mActionType = PimCommon::StorageServiceAbstract::AccountInfo;
+    mActionType = PimCommon::StorageServiceAbstract::AccountInfoAction;
     mError = false;
     KGAPI2::Drive::AboutFetchJob *aboutFetchJob = new KGAPI2::Drive::AboutFetchJob(mAccount, this);
     connect(aboutFetchJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotAboutFetchJobFinished(KGAPI2::Job*)));
@@ -211,7 +211,7 @@ void GDriveJob::slotAboutFetchJobFinished(KGAPI2::Job *job)
 
 QNetworkReply *GDriveJob::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::UploadFile;
+    mActionType = PimCommon::StorageServiceAbstract::UploadFileAction;
     mError = false;
     KGAPI2::Drive::FilePtr file( new KGAPI2::Drive::File() );
     file->setTitle( uploadAsName );
@@ -245,7 +245,7 @@ void GDriveJob::slotUploadJobFinished(KGAPI2::Job* job)
 
 void GDriveJob::deleteFile(const QString &filename)
 {
-    mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFileAction;
     mError = false;
     const QString folderId = filename;
     KGAPI2::Drive::FileDeleteJob *fileDeleteJob = new KGAPI2::Drive::FileDeleteJob(folderId, mAccount, this);
@@ -254,7 +254,7 @@ void GDriveJob::deleteFile(const QString &filename)
 
 void GDriveJob::deleteFolder(const QString &foldername)
 {
-    mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFolderAction;
     mError = false;
     const QString folderId = foldername;
     KGAPI2::Drive::FileDeleteJob *fileDeleteJob = new KGAPI2::Drive::FileDeleteJob(folderId, mAccount, this);
@@ -286,7 +286,7 @@ void GDriveJob::slotDeleteFileFinished(KGAPI2::Job*job)
 
 QNetworkReply * GDriveJob::downloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
+    mActionType = PimCommon::StorageServiceAbstract::DownLoadFileAction;
     mError = false;
     const QString defaultDestination = (destination.isEmpty() ? PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
 
@@ -305,7 +305,7 @@ QNetworkReply * GDriveJob::downloadFile(const QString &name, const QString &file
 
 void GDriveJob::refreshToken()
 {
-    mActionType = PimCommon::StorageServiceAbstract::AccessToken;
+    mActionType = PimCommon::StorageServiceAbstract::AccessTokenAction;
     KGAPI2::AuthJob *authJob = new KGAPI2::AuthJob(
                 mAccount,
                 mClientId,
@@ -315,7 +315,7 @@ void GDriveJob::refreshToken()
 
 void GDriveJob::createFolder(const QString &foldername, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
+    mActionType = PimCommon::StorageServiceAbstract::CreateFolderAction;
     mError = false;
 
     KGAPI2::Drive::FilePtr file( new KGAPI2::Drive::File() );
@@ -342,7 +342,7 @@ void GDriveJob::slotCreateJobFinished(KGAPI2::Job *job)
 
 void GDriveJob::createServiceFolder()
 {
-    mActionType = PimCommon::StorageServiceAbstract::CreateServiceFolder;
+    mActionType = PimCommon::StorageServiceAbstract::CreateServiceFolderAction;
     mError = false;
     const QString folderName = lastPathComponent( QString() );
 
@@ -361,7 +361,7 @@ void GDriveJob::copyFile(const QString &source, const QString &destination)
 {
     qDebug()<<"source "<<source<<" destination"<<destination;
 
-    mActionType = PimCommon::StorageServiceAbstract::CopyFile;
+    mActionType = PimCommon::StorageServiceAbstract::CopyFileAction;
     mError = false;
     KGAPI2::Drive::FilePtr file( new KGAPI2::Drive::File() );
     file->setTitle( QLatin1String("copy") );
@@ -387,7 +387,7 @@ void GDriveJob::slotCopyJobFinished(KGAPI2::Job *job)
 
 void GDriveJob::copyFolder(const QString &source, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::CopyFolder;
+    mActionType = PimCommon::StorageServiceAbstract::CopyFolderAction;
     mError = false;
     KGAPI2::Drive::FilePtr file( new KGAPI2::Drive::File() );
     file->setTitle( QLatin1String("copy") );
@@ -413,7 +413,7 @@ void GDriveJob::slotCopyFolderJobFinished(KGAPI2::Job *job)
 
 void GDriveJob::renameFolder(const QString &source, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::RenameFolder;
+    mActionType = PimCommon::StorageServiceAbstract::RenameFolderAction;
     qDebug()<<" source "<<source<<" destination "<<destination;
     mError = false;
     qDebug()<<" not implemented";
@@ -424,7 +424,7 @@ void GDriveJob::renameFolder(const QString &source, const QString &destination)
 
 void GDriveJob::renameFile(const QString &oldName, const QString &newName)
 {
-    mActionType = PimCommon::StorageServiceAbstract::RenameFile;
+    mActionType = PimCommon::StorageServiceAbstract::RenameFileAction;
     qDebug()<<" oldName "<<oldName<<" newName "<<newName;
     mError = false;
     qDebug()<<" not implemented";
@@ -441,7 +441,7 @@ void GDriveJob::renameFile(const QString &oldName, const QString &newName)
 
 void GDriveJob::moveFolder(const QString &source, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::MoveFolder;
+    mActionType = PimCommon::StorageServiceAbstract::MoveFolderAction;
     mError = false;
     qDebug()<<" not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
@@ -451,7 +451,7 @@ void GDriveJob::moveFolder(const QString &source, const QString &destination)
 
 void GDriveJob::moveFile(const QString &source, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::MoveFile;
+    mActionType = PimCommon::StorageServiceAbstract::MoveFileAction;
     mError = false;
     qDebug()<<" not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
@@ -461,7 +461,7 @@ void GDriveJob::moveFile(const QString &source, const QString &destination)
 
 void GDriveJob::shareLink(const QString &root, const QString &path)
 {
-    mActionType = PimCommon::StorageServiceAbstract::ShareLink;
+    mActionType = PimCommon::StorageServiceAbstract::ShareLinkAction;
     mError = false;
     QUrl url;
     QString fileId; //TODO
