@@ -1,4 +1,5 @@
 project(kleopatra)
+kde_enable_exceptions()
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
@@ -46,11 +47,8 @@ add_definitions(-D_ASSUAN_ONLY_GPG_ERRORS)
 add_definitions(-DQT_STL)
 remove_definitions(-DQT_NO_STL)
 
-kde_enable_exceptions()
-if(GCC_IS_NEWER_THAN_4_3)
-  if(CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-missing-braces -Wno-parentheses -Wno-ignored-qualifiers")
-  endif()
+if(CMAKE_COMPILER_IS_GNUCXX)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-missing-braces -Wno-parentheses -Wno-ignored-qualifiers")
 endif()
 
 add_subdirectory(pics)
@@ -352,7 +350,6 @@ target_link_libraries(kleopatra_bin
   ${_kleopatra_extra_libs}
   kleo
   ${QGPGME_LIBRARIES}
-  
   KF5::Mime
   KF5::KCMUtils
   ${_kleopatra_uiserver_extra_libs}
