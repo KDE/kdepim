@@ -19,7 +19,6 @@
 #include "importwizardutil.h"
 
 #include <KABC/Addressee>
-#include <kabc/contactgroup.h>
 #include <KABC/LDIFConverter>
 
 #include <KConfig>

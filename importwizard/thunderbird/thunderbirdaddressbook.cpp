@@ -19,7 +19,6 @@
 #include "addressbook/MorkParser.h"
 
 #include <KABC/Addressee>
-#include <kabc/contactgroup.h>
 
 #include <QDebug>
 

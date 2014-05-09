@@ -18,7 +18,6 @@
 #include "operaaddressbook.h"
 
 #include <KABC/Addressee>
-#include <kabc/contactgroup.h>
 
 #include <QDebug>
 #include <QFile>
