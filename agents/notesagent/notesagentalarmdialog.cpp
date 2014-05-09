@@ -55,7 +55,7 @@ NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
     w->setLayout(vbox);
 
     mCurrentDateTime = new QLabel;
-    mCurrentDateTime->setText(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime()));
+    mCurrentDateTime->setText(KLocale::global()->formatDateTime(QDateTime::currentDateTime()));
     vbox->addWidget(mCurrentDateTime);
 
     QLabel *lab = new QLabel(i18n("The following notes triggered alarms:"));
@@ -124,7 +124,7 @@ void NotesAgentAlarmDialog::writeConfig()
 void NotesAgentAlarmDialog::addListAlarm(const Akonadi::Item::List &lstAlarm)
 {
     mListWidget->setNotes(lstAlarm);
-    mCurrentDateTime->setText(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime()));
+    mCurrentDateTime->setText(KLocale::global()->formatDateTime(QDateTime::currentDateTime()));
 }
 
 void NotesAgentAlarmDialog::slotItemDoubleClicked(QListWidgetItem *item)

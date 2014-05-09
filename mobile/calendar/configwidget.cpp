@@ -29,6 +29,7 @@
 #include <qplatformdefs.h>
 
 #include <KGlobal>
+#include <KLocale>
 
 using namespace CalendarSupport;
 
@@ -70,7 +71,7 @@ ConfigWidget::ConfigWidget( QWidget *parent )
 
   foreach ( const QString & regionCode, regions ) {
     const QString name = KHolidays::HolidayRegion::name( regionCode );
-    const QString languageName = KGlobal::locale()->languageCodeToName( KHolidays::HolidayRegion::languageCode( regionCode ) );
+    const QString languageName = KLocale::global()->languageCodeToName( KHolidays::HolidayRegion::languageCode( regionCode ) );
 
     QString label;
     if ( languageName.isEmpty() ) {

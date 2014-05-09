@@ -24,7 +24,7 @@ using namespace PimCommon;
 AutoCorrectionLanguage::AutoCorrectionLanguage(QWidget *parent)
     : KComboBox(parent)
 {
-    KLocale *locale = KGlobal::locale();
+    KLocale *locale = KLocale::global();
     const QStringList lstLang = locale->allLanguagesList();
     Q_FOREACH (const QString& lang, lstLang) {
         if (lang != QLatin1String("x-test")) {

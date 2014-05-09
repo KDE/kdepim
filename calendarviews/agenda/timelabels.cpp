@@ -36,6 +36,7 @@
 #include <QMenu>
 #include <QPainter>
 #include <QPointer>
+#include <KLocale>
 
 static const KCatalogLoader loader( QLatin1String("timezones4") );
 
@@ -127,11 +128,11 @@ void TimeLabels::updateConfig()
   setFont( mTimeLabelsZone->preferences()->agendaTimeLabelsFont() );
 
   QString test = QLatin1String("20");
-  if ( KGlobal::locale()->use12Clock() ) {
+  if ( KLocale::global()->use12Clock() ) {
     test = QLatin1String("12");
   }
   mMiniWidth = fontMetrics().width( test );
-  if ( KGlobal::locale()->use12Clock() ) {
+  if ( KLocale::global()->use12Clock() ) {
     test = QLatin1String("pm");
   } else {
     test = QLatin1String("00");
@@ -211,7 +212,7 @@ void TimeLabels::paintEvent( QPaintEvent * )
   //TODO: rewrite this using KLocale's time formats. "am/pm" doesn't make sense
   // in some locale's
   QString suffix;
-  if ( !KGlobal::locale()->use12Clock() ) {
+  if ( !KLocale::global()->use12Clock() ) {
     suffix = QLatin1String("00");
   } else {
     suffix = QLatin1String("am");
@@ -263,7 +264,7 @@ void TimeLabels::paintEvent( QPaintEvent * )
       hour.setNum( cell + 24 );
     }
     // handle 24h and am/pm time formats
-    if ( KGlobal::locale()->use12Clock() ) {
+    if ( KLocale::global()->use12Clock() ) {
       if ( cell == 12 ) {
         suffix =QLatin1String( "pm");
       }

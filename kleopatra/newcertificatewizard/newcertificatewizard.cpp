@@ -83,6 +83,7 @@
 
 #include <algorithm>
 #include <KSharedConfig>
+#include <KLocale>
 
 using namespace Kleo;
 using namespace Kleo::NewCertificateUi;
@@ -1323,7 +1324,7 @@ QString OverviewPage::i18nFormatGnupgKeyParms( bool details ) const {
         }
     }
     if ( pgp() && details && expiryDate().isValid() )
-        s         << Row<        >( i18n("Valid Until:"),       KGlobal::locale()->formatDate( expiryDate() ) );
+        s         << Row<        >( i18n("Valid Until:"),       KLocale::global()->formatDate( expiryDate() ) );
     if ( !pgp() && details ) {
         Q_FOREACH( const QString & email, additionalEMailAddresses() )
             s     << Row<        >( i18n("Add. Email Address:"),email );

@@ -97,10 +97,10 @@ QString FreeBusyGanttProxyModel::tooltipify( const KCalCore::FreeBusyPeriod &per
     toolTip += "<br>";
   }
   toolTip += "<i>" + i18nc( "@info:tooltip period start time", "Start:" ) + "</i>" + "&nbsp;";
-  toolTip += KGlobal::locale()->formatDateTime( period.start().toTimeSpec( timeSpec ).dateTime() );
+  toolTip += KLocale::global()->formatDateTime( period.start().toTimeSpec( timeSpec ).dateTime() );
   toolTip += "<br>";
   toolTip += "<i>" + i18nc( "@info:tooltip period end time", "End:" ) + "</i>" + "&nbsp;";
-  toolTip += KGlobal::locale()->formatDateTime( period.end().toTimeSpec( timeSpec ).dateTime() );
+  toolTip += KLocale::global()->formatDateTime( period.end().toTimeSpec( timeSpec ).dateTime() );
   toolTip += "<br>";
   toolTip += "</qt>";
   return toolTip;

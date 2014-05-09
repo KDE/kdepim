@@ -119,6 +119,7 @@
 #include <memory>
 #include <messagecore/helpers/nodehelper.h>
 #include <qtextdocument.h>
+#include <KLocale>
 
 using KPIMUtils::LinkLocator;
 using namespace MessageViewer;
@@ -2713,7 +2714,7 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
                                                      keyWithWithoutURL );
                                 else
                                     htmlStr += i18n( "Message was signed on %1 with key %2.",
-                                                     KGlobal::locale()->formatDateTime( created ),
+                                                     KLocale::global()->formatDateTime( created ),
                                                      keyWithWithoutURL );
                             }
                             else {
@@ -2722,7 +2723,7 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
                                                      keyWithWithoutURL );
                                 else
                                     htmlStr += i18n( "Message was signed by %3 on %1 with key %2",
-                                                     KGlobal::locale()->formatDateTime( created ),
+                                                     KLocale::global()->formatDateTime( created ),
                                                      keyWithWithoutURL,
                                                      signer );
                             }
@@ -2771,7 +2772,7 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
                         QDateTime created = block.creationTime;
                         if ( created.isValid() )
                             htmlStr += i18n( "Message was signed on %1 with unknown key %2.",
-                                             KGlobal::locale()->formatDateTime( created ),
+                                             KLocale::global()->formatDateTime( created ),
                                              keyWithWithoutURL );
                         else
                             htmlStr += i18n( "Message was signed with unknown key %1.",

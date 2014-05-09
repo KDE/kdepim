@@ -41,6 +41,7 @@
 #include <KMessageBox>
 #include <KTemporaryFile>
 #include <KIO/NetAccess>
+#include <KLocale>
 
 using namespace KCalCore;
 using namespace KCalUtils;
@@ -141,7 +142,7 @@ void EventArchiver::run( const Akonadi::ETMCalendar::Ptr &calendar,
     if ( withGUI && errorIfNone ) {
       KMessageBox::information( widget,
                                 i18n( "There are no items before %1",
-                                      KGlobal::locale()->formatDate( limitDate ) ),
+                                      KLocale::global()->formatDate( limitDate ) ),
                                 QLatin1String("ArchiverNoIncidences") );
     }
     return;
@@ -173,7 +174,7 @@ void EventArchiver::deleteIncidences( Akonadi::IncidenceChanger *changer,
                                               widget,
                                               i18n( "Delete all items before %1 without saving?\n"
                                                     "The following items will be deleted:",
-                                                    KGlobal::locale()->formatDate( limitDate ) ),
+                                                    KLocale::global()->formatDate( limitDate ) ),
                                               incidenceStrs,
                                               i18n( "Delete Old Items" ), KStandardGuiItem::del() );
     if ( result != KMessageBox::Continue ) {

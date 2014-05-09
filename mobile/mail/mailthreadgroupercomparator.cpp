@@ -27,6 +27,7 @@
 #include <klocale.h>
 #include <kglobal.h>
 #include <kcalendarsystem.h>
+#include <KLocale>
 
 MailThreadGrouperComparator::MailThreadGrouperComparator()
   : mSortingOption( SortByDateTimeMostRecent ),
@@ -222,7 +223,7 @@ QString MailThreadGrouperComparator::grouperString( const Akonadi::Item &item ) 
     // simplified version taken from libmessagelist
     const KDateTime& dt = msg->date()->dateTime();
     const QDate dDate = dt.date();
-    const KCalendarSystem *calendar = KGlobal::locale()->calendar();
+    const KCalendarSystem *calendar = KLocale::global()->calendar();
     int daysAgo = -1;
     if ( calendar->isValid( dDate ) && calendar->isValid( QDate::currentDate() ) ) {
       daysAgo = dDate.daysTo( QDate::currentDate() );
@@ -235,13 +236,13 @@ QString MailThreadGrouperComparator::grouperString( const Akonadi::Item &item ) 
     else if ( daysAgo == 1 ) // Yesterday
       return i18n( "Yesterday" );
     else if ( daysAgo > 1 && daysAgo < calendar->daysInWeek( QDate::currentDate() ) ) // Within last seven days
-      return KGlobal::locale()->calendar()->weekDayName( dDate );
+      return KLocale::global()->calendar()->weekDayName( dDate );
     else if( calendar->month( dDate ) == calendar->month( QDate::currentDate() ) && calendar->year( dDate ) == calendar->year( QDate::currentDate() ) ) { // within this month
       const int startOfWeekDaysAgo = ( calendar->daysInWeek( QDate::currentDate() ) + calendar->dayOfWeek( QDate::currentDate() ) -
-                                       KGlobal::locale()->weekStartDay() ) % calendar->daysInWeek( QDate::currentDate() );
+                                       KLocale::global()->weekStartDay() ) % calendar->daysInWeek( QDate::currentDate() );
       const int weeksAgo = ( ( daysAgo - startOfWeekDaysAgo ) / calendar->daysInWeek( QDate::currentDate() ) ) + 1;
       if ( weeksAgo == 0 )
-        return KGlobal::locale()->calendar()->weekDayName( dDate );
+        return KLocale::global()->calendar()->weekDayName( dDate );
       else
         return i18np( "One Week Ago", "%1 Weeks Ago", weeksAgo );
     } else if ( calendar->year( dDate ) == calendar->year( QDate::currentDate() ) ) { // within this year

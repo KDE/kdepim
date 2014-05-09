@@ -51,6 +51,7 @@
 #include <QPointer>
 #include <QVBoxLayout>
 #include <QHelpEvent>
+#include <KLocale>
 
 using namespace KCalCore;
 using namespace EventViews;
@@ -257,7 +258,7 @@ TimelineView::TimelineView( QWidget *parent )
   d->mGantt->removeColumn( 0 );
   d->mGantt->addColumn( i18n( "Calendar" ) );
   d->mGantt->setHeaderVisible( true );
-  if ( KGlobal::locale()->use12Clock() ) {
+  if ( KLocale::global()->use12Clock() ) {
     d->mGantt->setHourFormat( KDGanttView::Hour_12 );
   } else {
     d->mGantt->setHourFormat( KDGanttView::Hour_24_FourDigit );

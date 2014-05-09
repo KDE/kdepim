@@ -111,15 +111,15 @@ void AgendaViewItem::showRange( const QDate &date, int range )
     break;
   }
   case Week: {
-    int weekStartDay = KGlobal::locale()->weekStartDay();
+    int weekStartDay = KLocale::global()->weekStartDay();
     if ( weekStartDay > date.dayOfWeek() )
       weekStartDay = weekStartDay - 7;
     m_view->showDates( date.addDays( weekStartDay - date.dayOfWeek() ), date.addDays( weekStartDay + 6 - date.dayOfWeek() ) );
     break;
   }
   case WorkWeek: {
-    int workingWeekStartDay = KGlobal::locale()->workingWeekStartDay();
-    int workingWeekEndDay = KGlobal::locale()->workingWeekEndDay();
+    int workingWeekStartDay = KLocale::global()->workingWeekStartDay();
+    int workingWeekEndDay = KLocale::global()->workingWeekEndDay();
     m_view->showDates( date.addDays( workingWeekStartDay - date.dayOfWeek() ), date.addDays( workingWeekEndDay - date.dayOfWeek() ) );
     break;
   }

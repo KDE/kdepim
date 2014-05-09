@@ -34,6 +34,7 @@
 #include <QNetworkReply>
 #include <QWebFrame>
 #include <QWebElementCollection>
+#include <KLocale>
 
 
 #define HIDABLE_ELEMENTS   QLatin1String("audio,img,embed,object,iframe,frame,video")
@@ -66,7 +67,7 @@ namespace MessageViewer {
 MyNetworkAccessManager::MyNetworkAccessManager(QObject *parent)
     : KIO::AccessManager(parent)
 {
-    QString c = KGlobal::locale()->language();
+    QString c = KLocale::global()->language();
 
     if (c == QLatin1String("C"))
         c = QLatin1String("en-US");

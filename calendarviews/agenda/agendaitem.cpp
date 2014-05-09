@@ -48,6 +48,7 @@
 #include <QPixmapCache>
 #include <QToolTip>
 #include <QMimeData>
+#include <KLocale>
 
 using namespace KCalCore;
 using namespace EventViews;
@@ -942,24 +943,24 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
   QString shortH;
   QString longH;
   if ( !isMultiItem() ) {
-    shortH = KGlobal::locale()->formatTime(incidence->dateTime( KCalCore::Incidence::RoleDisplayStart ).
+    shortH = KLocale::global()->formatTime(incidence->dateTime( KCalCore::Incidence::RoleDisplayStart ).
              toTimeSpec( mEventView->preferences()->timeSpec() ).time() );
 
     if ( CalendarSupport::hasEvent( mIncidence ) ) {
       longH = i18n( "%1 - %2",
                     shortH,
-                    KGlobal::locale()->formatTime(
+                    KLocale::global()->formatTime(
                       incidence->dateTime( KCalCore::Incidence::RoleEnd ).toTimeSpec(
                         mEventView->preferences()->timeSpec() ).time() ) );
     } else {
       longH = shortH;
     }
   } else if ( !mMultiItemInfo->mFirstMultiItem ) {
-    shortH = KGlobal::locale()->formatTime(
+    shortH = KLocale::global()->formatTime(
       incidence->dtStart().toTimeSpec( mEventView->preferences()->timeSpec() ).time() );
     longH = shortH;
   } else {
-    shortH = KGlobal::locale()->formatTime(
+    shortH = KLocale::global()->formatTime(
       incidence->dateTime( KCalCore::Incidence::RoleEnd ).toTimeSpec(
         mEventView->preferences()->timeSpec() ).time() );
     longH = i18n( "- %1", shortH );
@@ -1051,9 +1052,9 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
         // multi-day, all-day event
         shortH =
           i18n( "%1 - %2",
-                KGlobal::locale()->formatDate(
+                KLocale::global()->formatDate(
                   incidence->dtStart().toTimeSpec( mEventView->preferences()->timeSpec() ).date() ),
-                KGlobal::locale()->formatDate(
+                KLocale::global()->formatDate(
                   incidence->dateTime( KCalCore::Incidence::RoleEnd ).toTimeSpec(
                     mEventView->preferences()->timeSpec() ).date() ) );
         longH = shortH;

@@ -50,6 +50,7 @@
 #include <boost/bind.hpp>
 #include <errno.h>
 #include <KSharedConfig>
+#include <KLocale>
 
 using namespace MailCommon;
 
@@ -256,7 +257,7 @@ bool FilterManager::Private::beginFiltering( const Akonadi::Item &item ) const
         const QString subject = msg->subject()->asUnicodeString();
         const QString from = msg->from()->asUnicodeString();
         const KDateTime dateTime = msg->date()->dateTime();
-        const QString date = KGlobal::locale()->formatDateTime( dateTime, KLocale::LongDate );
+        const QString date = KLocale::global()->formatDateTime( dateTime, KLocale::LongDate );
         const QString logText( i18n( "<b>Begin filtering on message \"%1\" from \"%2\" at \"%3\" :</b>",
                                      subject, from, date ) );
         FilterLog::instance()->add( logText, FilterLog::PatternDescription );

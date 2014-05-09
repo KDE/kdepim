@@ -58,6 +58,7 @@
 
 #include <QApplication>
 #include <QDir>
+#include <KLocale>
 
 namespace {
 
@@ -200,6 +201,6 @@ namespace {
 extern "C"
 KDE_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
 messageviewer_bodypartformatter_application_mstnef_create_bodypart_formatter_plugin() {
-  KGlobal::locale()->insertCatalog( QLatin1String("messageviewer_application_mstnef_plugin") );
+  //QT5 KLocale::global()->insertCatalog( QLatin1String("messageviewer_application_mstnef_plugin") );
   return new Plugin();
 }

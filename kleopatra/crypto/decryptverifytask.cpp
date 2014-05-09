@@ -248,7 +248,7 @@ static QString renderKeyEMailOnlyNameAsFallback( const Key & key ) {
 }
 
 static QString formatDate( const QDateTime & dt ) {
-    return KGlobal::locale()->formatDateTime( dt );
+    return KLocale::global()->formatDateTime( dt );
 }
 static QString formatSigningInformation( const Signature & sig, const Key & key ) {
     if ( sig.isNull() )

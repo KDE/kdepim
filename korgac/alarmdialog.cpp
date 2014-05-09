@@ -491,7 +491,7 @@ void AlarmDialog::suspend()
       item->mRemindAt = QDateTime::currentDateTime().addSecs( unit * mSuspendSpin->value() );
       item->mHappening = KDateTime( item->mRemindAt, KDateTime::Spec::LocalZone() );
       item->mNotified = false;
-      (*it)->setText( 1, KGlobal::locale()->formatDateTime( item->mHappening ) );
+      (*it)->setText( 1, KLocale::global()->formatDateTime( item->mHappening ) );
       selitem = item;
     }
     ++it;
@@ -880,7 +880,7 @@ KDateTime AlarmDialog::triggerDateForIncidence( const Incidence::Ptr &incidence,
     result = incidence->recurrence()->getNextDateTime(
       KDateTime( reminderAt, KDateTime::Spec::LocalZone( ) ) );
 
-      displayStr = KGlobal::locale()->formatDateTime( result.toLocalZone() );
+      displayStr = KLocale::global()->formatDateTime( result.toLocalZone() );
   }
 
   if ( !result.isValid() ) {

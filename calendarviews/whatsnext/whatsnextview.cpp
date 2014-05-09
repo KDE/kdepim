@@ -34,6 +34,7 @@
 #include <KGlobal>
 
 #include <QBoxLayout>
+#include <KLocale>
 
 using namespace EventViews;
 
@@ -87,12 +88,12 @@ void WhatsNextView::updateView()
 
   mText += QLatin1String("<h2>");
   if ( mStartDate.daysTo( mEndDate ) < 1 ) {
-    mText += KGlobal::locale()->formatDate( mStartDate );
+    mText += KLocale::global()->formatDate( mStartDate );
   } else {
     mText += i18nc(
       "date from - to", "%1 - %2",
-      KGlobal::locale()->formatDate( mStartDate ),
-      KGlobal::locale()->formatDate( mEndDate ) );
+      KLocale::global()->formatDate( mStartDate ),
+      KLocale::global()->formatDate( mEndDate ) );
   }
   mText+=QLatin1String("</h2>\n");
 
@@ -261,19 +262,19 @@ void WhatsNextView::appendEvent( const KCalCore::Incidence::Ptr &incidence, cons
     if ( starttime.date().daysTo( endtime.date() ) >= 1 ) {
       mText += i18nc(
         "date from - to", "%1 - %2",
-        KGlobal::locale()->formatDateTime(
+        KLocale::global()->formatDateTime(
           starttime.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ) ),
-        KGlobal::locale()->formatDateTime(
+        KLocale::global()->formatDateTime(
           endtime.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ) ) );
     } else {
       mText += i18nc(
         "date, from - to", "%1, %2 - %3",
-        KGlobal::locale()->formatDate(
+        KLocale::global()->formatDate(
           starttime.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).date(),
           KLocale::ShortDate ),
-        KGlobal::locale()->formatTime(
+        KLocale::global()->formatTime(
           starttime.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).time() ),
-        KGlobal::locale()->formatTime(
+        KLocale::global()->formatTime(
           endtime.toTimeSpec( CalendarSupport::KCalPrefs::instance()->timeSpec() ).time() ) );
     }
   }

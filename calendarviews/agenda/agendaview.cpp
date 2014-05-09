@@ -64,6 +64,7 @@
 #include <QSplitter>
 #include <QStyle>
 #include <QTimer>
+#include <KLocale>
 
 using namespace EventViews;
 
@@ -1125,7 +1126,7 @@ void AgendaView::createDayLabels( bool force )
   KVBox *bottomWeekLabelBox = new KVBox( d->mBottomDayLabels );
   d->mLayoutBottomDayLabels->addWidget( bottomWeekLabelBox );
 
-  const KCalendarSystem *calsys = KGlobal::locale()->calendar();
+  const KCalendarSystem *calsys = KLocale::global()->calendar();
 
 #ifndef EVENTVIEWS_NODECOS
   QList<CalendarDecoration::Decoration *> topDecos;
@@ -1145,7 +1146,7 @@ void AgendaView::createDayLabels( bool force )
     d->mLayoutBottomDayLabels->addWidget( bottomDayLabelBox );
 
     int dW = calsys->dayOfWeek( date );
-    QString veryLongStr = KGlobal::locale()->formatDate( date );
+    QString veryLongStr = KLocale::global()->formatDate( date );
     QString longstr = i18nc( "short_weekday date (e.g. Mon 13)","%1 %2",
                              calsys->weekDayName( dW, KCalendarSystem::ShortDayName ),
                              calsys->day( date ) );

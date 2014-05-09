@@ -145,7 +145,7 @@ void AttachmentFromUrlJob::doStart()
         if ( size > maximumAllowedSize() ) {
             setError( KJob::UserDefinedError );
             setErrorText( i18n( "You may not attach files bigger than %1. Share it with storage service.",
-                                KGlobal::locale()->formatByteSize( maximumAllowedSize() ) ) );
+                                KLocale::global()->formatByteSize( maximumAllowedSize() ) ) );
             emitResult();
             return;
         }

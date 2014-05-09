@@ -162,7 +162,7 @@ QString ContactGrantleePrintObject::role() const
 
 QString ContactGrantleePrintObject::birthday() const
 {
-    return KGlobal::locale()->formatDate( mAddress.birthday().date(), KLocale::LongDate );
+    return KLocale::global()->formatDate( mAddress.birthday().date(), KLocale::LongDate );
 }
 
 QString ContactGrantleePrintObject::department() const
@@ -237,7 +237,7 @@ QString ContactGrantleePrintObject::anniversary() const
     const QDate anniversary = QDate::fromString( mAddress.custom( QLatin1String( "KADDRESSBOOK" ),
                                                   QLatin1String( "X-Anniversary" ) ), Qt::ISODate );
     if ( anniversary.isValid() ) {
-        return (KGlobal::locale()->formatDate( anniversary ) );
+        return (KLocale::global()->formatDate( anniversary ) );
     }
     return QString();
 }

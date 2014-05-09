@@ -71,6 +71,7 @@
 #include <KGlobal>
 #include <QPointer>
 #include <KSharedConfig>
+#include <KLocale>
 
 PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
     : KXmlGuiWindow(parent),
@@ -239,7 +240,7 @@ void PimSettingExporterWindow::backupStart()
     mAction = Backup;
     mStoreIterator = mStored.constBegin();
     const QDateTime now = QDateTime::currentDateTime();
-    slotAddInfo(QLatin1Char('[') + KGlobal::locale()->formatDateTime( now ) + QLatin1Char(']'));
+    slotAddInfo(QLatin1Char('[') + KLocale::global()->formatDateTime( now ) + QLatin1Char(']'));
     slotAddInfo(i18n("Start to backup data in \'%1\'", mArchiveStorage->filename()));
     slotAddEndLine();
     //Add version
@@ -445,7 +446,7 @@ void PimSettingExporterWindow::restoreStart()
     AbstractImportExportJob::setArchiveVersion(version);
 
     const QDateTime now = QDateTime::currentDateTime();
-    slotAddInfo(QLatin1Char('[') + KGlobal::locale()->formatDateTime( now ) + QLatin1Char(']'));
+    slotAddInfo(QLatin1Char('[') + KLocale::global()->formatDateTime( now ) + QLatin1Char(']'));
 
     slotAddInfo(i18n("Start to restore data from \'%1\'", mArchiveStorage->filename()));
     slotAddEndLine();

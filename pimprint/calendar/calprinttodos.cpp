@@ -274,7 +274,7 @@ void CalPrintTodos::drawTodo(int &count, const KCalCore::Todo::Ptr &todo, QPaint
                              TodoParentStart *r)
 {
     QString outStr;
-    const KLocale *local = KGlobal::locale();  //TODO: set in ctor
+    const KLocale *local = KLocale::global();  //TODO: set in ctor
     QRect rect;
     TodoParentStart startpt;
     // This list keeps all starting points of the parent to-dos so the connection

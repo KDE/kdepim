@@ -36,5 +36,5 @@ void NoteShared::NoteEditorUtils::addCheckmark( QTextCursor &cursor )
 
 void NoteShared::NoteEditorUtils::insertDate( QTextEdit *editor )
 {
-    editor->insertPlainText(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime(), KLocale::ShortDate) + QLatin1Char(' '));
+    editor->insertPlainText(KLocale::global()->formatDateTime(QDateTime::currentDateTime(), KLocale::ShortDate) + QLatin1Char(' '));
 }

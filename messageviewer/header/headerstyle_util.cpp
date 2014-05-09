@@ -35,6 +35,7 @@
 #include "kxface.h"
 
 #include <KPIMUtils/kpimutils/email.h>
+#include <KLocale>
 
 using namespace MessageCore;
 
@@ -57,7 +58,7 @@ QString dateString( KMime::Message *message, bool printing, bool shortDate ) {
     if ( !dateTime.isValid() )
         return i18nc( "Unknown date", "Unknown" );
     if( printing ) {
-        KLocale * locale = KGlobal::locale();
+        KLocale * locale = KLocale::global();
         return locale->formatDateTime( dateTime );
     } else {
         if ( shortDate )
@@ -219,7 +220,7 @@ QString dateStr(const KDateTime &dateTime)
 
 QString dateShortStr(const KDateTime &dateTime)
 {
-    return KGlobal::locale()->formatDateTime( dateTime, KLocale::FancyShortDate );
+    return KLocale::global()->formatDateTime( dateTime, KLocale::FancyShortDate );
 }
 
 

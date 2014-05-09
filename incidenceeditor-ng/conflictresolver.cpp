@@ -26,6 +26,7 @@
 #include <KCalendarSystem>
 #include <KDebug>
 #include <KGlobal>
+#include <KLocale>
 
 static const int DEFAULT_RESOLUTION_SECONDS = 15 * 60; // 15 minutes, 1 slot = 15 minutes
 
@@ -354,7 +355,7 @@ void ConflictResolver::findAllFreeSlots()
 
   // Now, create another array to represent the allowed weekdays constraints
   // All days which are not allowed, will be marked as busy
-  const KCalendarSystem *calSys = KGlobal::locale()->calendar();
+  const KCalendarSystem *calSys = KLocale::global()->calendar();
   QVector<int> fbArray( range );
   fbArray.fill( 0 ); // initialize to zero
   for ( int slot = 0; slot < fbArray.size(); ++slot ) {

@@ -35,6 +35,7 @@
 #include <QBoxLayout>
 #include <QPainter>
 #include <QPaintEvent>
+#include <KLocale>
 
 using namespace EventViews;
 
@@ -68,11 +69,11 @@ class TimeSpentWidget : public QWidget
 
       QString dateText;
       if ( mTimeSpentView->mStartDate.daysTo( mTimeSpentView->mEndDate ) < 1 ) {
-        dateText = KGlobal::locale()->formatDate( mTimeSpentView->mStartDate );
+        dateText = KLocale::global()->formatDate( mTimeSpentView->mStartDate );
       } else {
         dateText = i18nc( "Date from - to", "%1 - %2",
-                          KGlobal::locale()->formatDate( mTimeSpentView->mStartDate ),
-                          KGlobal::locale()->formatDate( mTimeSpentView->mEndDate ) );
+                          KLocale::global()->formatDate( mTimeSpentView->mStartDate ),
+                          KLocale::global()->formatDate( mTimeSpentView->mEndDate ) );
       }
       font.setPixelSize( 20 );
       font.setBold( true );
@@ -245,11 +246,11 @@ void TimeSpentView::updateView()
 
   text += "<h2>";
   if ( mStartDate.daysTo( mEndDate ) < 1 ) {
-    text += KGlobal::locale()->formatDate( mStartDate );
+    text += KLocale::global()->formatDate( mStartDate );
   } else {
     text += i18nc("Date from - to", "%1 - %2",
-              KGlobal::locale()->formatDate( mStartDate ) ,
-              KGlobal::locale()->formatDate( mEndDate ) );
+              KLocale::global()->formatDate( mStartDate ) ,
+              KLocale::global()->formatDate( mEndDate ) );
   }
   text+="</h2>\n";
   */

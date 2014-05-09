@@ -67,6 +67,7 @@
 #include <KGlobal>
 #include <KIcon>
 #include <QDebug>
+#include <KLocale>
 
 namespace MessageList
 {
@@ -1233,7 +1234,7 @@ void ModelPrivate::attachMessageToGroupHeader( MessageItem *mi )
         QDateTime dt;
         dt.setTime_t( date );
         QDate dDate = dt.date();
-        const KCalendarSystem *calendar = KGlobal::locale()->calendar();
+        const KCalendarSystem *calendar = KLocale::global()->calendar();
         int daysAgo = -1;
         if ( calendar->isValid( dDate ) && calendar->isValid( mTodayDate ) ) {
             daysAgo = dDate.daysTo( mTodayDate );
@@ -1251,19 +1252,19 @@ void ModelPrivate::attachMessageToGroupHeader( MessageItem *mi )
             groupLabel = mCachedYesterdayLabel;
         } else if ( daysAgo > 1 && daysAgo < calendar->daysInWeek( mTodayDate ) ) // Within last seven days
         {
-            groupLabel = KGlobal::locale()->calendar()->weekDayName( dDate );
+            groupLabel = KLocale::global()->calendar()->weekDayName( dDate );
         } else if ( mAggregation->grouping() == Aggregation::GroupByDate ) { // GroupByDate seven days or more ago
-            groupLabel = KGlobal::locale()->formatDate( dDate, KLocale::ShortDate );
+            groupLabel = KLocale::global()->formatDate( dDate, KLocale::ShortDate );
         } else if( ( calendar->month( dDate ) == calendar->month( mTodayDate ) ) && // GroupByDateRange within this month
                    ( calendar->year( dDate ) == calendar->year( mTodayDate ) ) )
         {
             int startOfWeekDaysAgo = ( calendar->daysInWeek( mTodayDate ) + calendar->dayOfWeek( mTodayDate ) -
-                                       KGlobal::locale()->weekStartDay() ) % calendar->daysInWeek( mTodayDate );
+                                       KLocale::global()->weekStartDay() ) % calendar->daysInWeek( mTodayDate );
             int weeksAgo = ( ( daysAgo - startOfWeekDaysAgo ) / calendar->daysInWeek( mTodayDate ) ) + 1;
             switch( weeksAgo )
             {
             case 0: // This week
-                groupLabel = KGlobal::locale()->calendar()->weekDayName( dDate );
+                groupLabel = KLocale::global()->calendar()->weekDayName( dDate );
                 break;
             case 1: // 1 week ago
                 groupLabel = mCachedLastWeekLabel;

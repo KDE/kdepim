@@ -30,6 +30,7 @@
 #include <KSystemTimeZones>
 
 #include <qmath.h>
+#include <KLocale>
 
 using namespace PimPrint::Calendar;
 
@@ -139,7 +140,7 @@ QRect CalPrintDay::drawHeader(QPainter &p,
         return QRect();
     }
 
-    KLocale *local = KGlobal::locale();
+    KLocale *local = KLocale::global();
 
     QString title;
     if (endDate.isValid()) {

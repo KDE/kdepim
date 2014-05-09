@@ -32,6 +32,7 @@
 
 #include <KMimeType>
 #include <KIO/NetAccess>
+#include <KLocale>
 
 using namespace IncidenceEditorNG;
 
@@ -74,7 +75,7 @@ AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
     mUi->mStackedWidget->setCurrentIndex( 1 );
     mUi->mSizeLabel->setText( QString::fromLatin1( "%1 (%2)" ).
                                  arg( KIO::convertSize( item->attachment()->size() ) ).
-                                 arg( KGlobal::locale()->formatNumber(
+                                 arg( KLocale::global()->formatNumber(
                                         item->attachment()->size(), 0 ) ) );
   }
 

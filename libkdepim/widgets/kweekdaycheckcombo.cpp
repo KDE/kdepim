@@ -30,8 +30,8 @@ using namespace KPIM;
 
 KWeekdayCheckCombo::KWeekdayCheckCombo(QWidget* parent,bool first5Checked ): KCheckComboBox( parent )
 {
-    const KCalendarSystem *calSys = KGlobal::locale()->calendar();
-    const int weekStart = KGlobal::locale()->weekStartDay();
+    const KCalendarSystem *calSys = KLocale::global()->calendar();
+    const int weekStart = KLocale::global()->weekStartDay();
     QStringList checkedItems;
     for ( int i = 0; i < 7; ++i ) {
         // i is the nr of the combobox, not the day of week!
@@ -58,7 +58,7 @@ KWeekdayCheckCombo::~KWeekdayCheckCombo()
 QBitArray KWeekdayCheckCombo::days() const
 {
     QBitArray days( 7 );
-    const int weekStart = KGlobal::locale()->weekStartDay();
+    const int weekStart = KLocale::global()->weekStartDay();
 
     for ( int i = 0; i < 7; ++i ) {
         // i is the nr of the combobox, not the day of week!
@@ -73,8 +73,8 @@ int KWeekdayCheckCombo::weekdayIndex( const QDate &date ) const
 {
     if ( !date.isValid() )
         return -1;
-    const int weekStart = KGlobal::locale()->weekStartDay();
-    const KCalendarSystem *calSys = KGlobal::locale()->calendar();
+    const int weekStart = KLocale::global()->weekStartDay();
+    const KCalendarSystem *calSys = KLocale::global()->calendar();
     const int dayOfWeek = calSys->dayOfWeek( date ) - 1; // Values 1 - 7, we need 0 - 6
 
     // qDebug() << "dayOfWeek = " << dayOfWeek << " weekStart = " << weekStart
@@ -87,7 +87,7 @@ void KWeekdayCheckCombo::setDays( const QBitArray &days,  const QBitArray &disab
     Q_ASSERT( count() == 7 ); // The combobox must be filled.
 
     QStringList checkedDays;
-    const int weekStart = KGlobal::locale()->weekStartDay();
+    const int weekStart = KLocale::global()->weekStartDay();
     for ( int i = 0; i < 7; ++i ) {
         // i is the nr of the combobox, not the day of week!
         const int index = ( 1 + i +  ( 7 - weekStart ) ) % 7;

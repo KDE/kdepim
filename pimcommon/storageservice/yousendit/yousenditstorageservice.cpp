@@ -428,20 +428,20 @@ QMap<QString, QString> YouSendItStorageService::itemInformation(const QVariantMa
     }
     if (variantMap.contains(QLatin1String("updatedOn"))) {
         const QString t = variantMap.value(QLatin1String("updatedOn")).toString();
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), KGlobal::locale()->formatDateTime(YouSendItUtil::convertToDateTime(t,true)));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), KLocale::global()->formatDateTime(YouSendItUtil::convertToDateTime(t,true)));
         folder = true;
     }
     information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Type), folder ? i18n("Directory") : i18n("File"));
     if (variantMap.contains(QLatin1String("createdOn"))) {
         const QString t = variantMap.value(QLatin1String("createdOn")).toString();
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), KGlobal::locale()->formatDateTime(YouSendItUtil::convertToDateTime(t,folder ? true : false)));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Created), KLocale::global()->formatDateTime(YouSendItUtil::convertToDateTime(t,folder ? true : false)));
     }
     if (variantMap.contains(QLatin1String("lastUpdatedOn"))) {
         const QString t = variantMap.value(QLatin1String("lastUpdatedOn")).toString();
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), KGlobal::locale()->formatDateTime(YouSendItUtil::convertToDateTime(t)));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), KLocale::global()->formatDateTime(YouSendItUtil::convertToDateTime(t)));
     }
     if (!folder && variantMap.contains(QLatin1String("size"))) {
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KGlobal::locale()->formatByteSize(variantMap.value(QLatin1String("size")).toULongLong()));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KLocale::global()->formatByteSize(variantMap.value(QLatin1String("size")).toULongLong()));
     }
     if (variantMap.contains(QLatin1String("writeable"))) {
         information.insert(i18n("writable:"), (variantMap.value(QLatin1String("writeable")).toString() == QLatin1String("true")) ? i18n("Yes") : i18n("No"));

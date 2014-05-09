@@ -49,7 +49,7 @@ QVariant EventListProxy::data(const QModelIndex& index, int role) const
       case SummaryRole:
         return incidence->summary();
       case BeginRole:
-        return KGlobal::locale()->formatDateTime( incidence->dtStart(), KLocale::FancyShortDate );
+        return KLocale::global()->formatDateTime( incidence->dtStart(), KLocale::FancyShortDate );
       case DurationRole:
         return KCalUtils::IncidenceFormatter::durationString( incidence );
     }

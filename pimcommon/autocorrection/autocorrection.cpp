@@ -29,6 +29,7 @@
 #include <QTextDocument>
 #include <QDomDocument>
 #include <QFile>
+#include <KLocale>
 
 using namespace PimCommon;
 
@@ -55,7 +56,7 @@ AutoCorrection::AutoCorrection()
 
     readConfig();
 
-    KLocale *locale = KGlobal::locale();
+    KLocale *locale = KLocale::global();
     for (int i = 1; i <=7; ++i)
         mCacheNameOfDays.append(locale->calendar()->weekDayName(i).toLower());
 }
@@ -775,7 +776,7 @@ void AutoCorrection::replaceTypographicQuotes()
 
 void AutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
 {
-    KLocale *locale = KGlobal::locale();
+    KLocale *locale = KLocale::global();
     QString kdelang = locale->languageList().first();
     kdelang.remove(QRegExp(QLatin1String("@.*")));
 

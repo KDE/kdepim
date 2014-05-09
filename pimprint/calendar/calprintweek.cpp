@@ -131,7 +131,7 @@ QRect CalPrintWeek::drawHeader(QPainter &p, const QDate &date, bool printWeekNum
         return QRect();
     }
 
-    KLocale *local = KGlobal::locale();
+    KLocale *local = KLocale::global();
 
     const QDate startDate =  date.addDays(-6);
     const QString line1 = local->formatDate(startDate);

@@ -42,7 +42,7 @@ NotesAgent::NotesAgent(const QString &id)
     : Akonadi::AgentBase( id )
 {
     mNotesManager = new NotesManager(this);
-    KGlobal::locale()->insertCatalog( QLatin1String("akonadi_notes_agent") );
+    //QT5 KLocale::global()->insertCatalog( QLatin1String("akonadi_notes_agent") );
     new NotesAgentAdaptor( this );
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/NotesAgent" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.NotesAgent" ) );

@@ -37,6 +37,7 @@
 #include <kmime/kmime_headers.h>
 
 #include <boost/shared_ptr.hpp>
+#include <KLocale>
 
 using namespace MessageCore;
 
@@ -242,13 +243,13 @@ void AttachmentPropertiesDialog::Private::loadFromPart()
     if(mReadOnly) {
         uiReadOnly->mimeType->setText( QString::fromLatin1(mPart->mimeType()) );
         mimeTypeChanged( QString::fromLatin1(mPart->mimeType()) );
-        uiReadOnly->size->setText( KGlobal::locale()->formatByteSize( mPart->size() ) );
+        uiReadOnly->size->setText( KLocale::global()->formatByteSize( mPart->size() ) );
         uiReadOnly->name->setText( mPart->name().isEmpty() ? mPart->fileName() : mPart->name()  );
         uiReadOnly->description->setText( mPart->description() );
         uiReadOnly->encoding->setText( KMime::nameForEncoding( mPart->encoding() ) );
     } else {
         ui->mimeType->setCurrentItem( QString::fromLatin1(mPart->mimeType()), true );
-        ui->size->setText( KGlobal::locale()->formatByteSize( mPart->size() ) );
+        ui->size->setText( KLocale::global()->formatByteSize( mPart->size() ) );
         ui->name->setText( mPart->name().isEmpty() ? mPart->fileName() : mPart->name()  );
         ui->description->setText( mPart->description() );
         ui->encoding->setCurrentIndex( int( mPart->encoding() ) );

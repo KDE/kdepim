@@ -258,7 +258,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
     if ( birthday.isValid() ) {
         GrantleeContactUtils::insertVariableToQVariantHash(contactObject, QLatin1String( "birthdayi18n" ));
 
-        const QString formattedBirthday = KGlobal::locale()->formatDate( birthday );
+        const QString formattedBirthday = KLocale::global()->formatDate( birthday );
         contactObject.insert( QLatin1String( "birthday" ), formattedBirthday );
 
         const int years = contactAge( birthday );
@@ -273,7 +273,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
                                                   QLatin1String( "X-Anniversary" ) ), Qt::ISODate );
     if ( anniversary.isValid() ) {
         contactObject.insert( QLatin1String( "anniversary" ),
-                              KGlobal::locale()->formatDate( anniversary ) );
+                              KLocale::global()->formatDate( anniversary ) );
         GrantleeContactUtils::insertVariableToQVariantHash(contactObject, QLatin1String("anniversaryi18n") );
     }
 
@@ -466,15 +466,15 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
 
                         } else if ( descriptionType  == QLatin1String( "date" ) ) {
                             const QDate date = QDate::fromString( value, Qt::ISODate );
-                            value = KGlobal::locale()->formatDate( date, KLocale::ShortDate );
+                            value = KLocale::global()->formatDate( date, KLocale::ShortDate );
 
                         } else if ( descriptionType == QLatin1String( "time" ) ) {
                             const QTime time = QTime::fromString( value, Qt::ISODate );
-                            value = KGlobal::locale()->formatTime( time );
+                            value = KLocale::global()->formatTime( time );
 
                         } else if ( descriptionType == QLatin1String( "datetime" ) ) {
                             const QDateTime dateTime = QDateTime::fromString( value, Qt::ISODate );
-                            value = KGlobal::locale()->formatDateTime( dateTime, KLocale::ShortDate );
+                            value = KLocale::global()->formatDateTime( dateTime, KLocale::ShortDate );
                         } else if ( descriptionType == QLatin1String("url") ) {
                             value = KStringHandler::tagUrls( Qt::escape(value) );
                             addUrl = true;

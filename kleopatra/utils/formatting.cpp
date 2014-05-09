@@ -239,7 +239,7 @@ namespace {
     static QString time_t2string( time_t t ) {
         QDateTime dt;
         dt.setTime_t( t );
-        return KGlobal::locale()->formatDateTime( dt, KLocale::ShortDate );
+        return KLocale::global()->formatDateTime( dt, KLocale::ShortDate );
     }
 
     static QString make_red( const QString & txt ) {
@@ -331,7 +331,7 @@ namespace {
         return dt.date();
     }
     static QString date2string( const QDate & date ) {
-        return KGlobal::locale()->formatDate( date, KLocale::ShortDate );
+        return KLocale::global()->formatDate( date, KLocale::ShortDate );
     }
 
     template <typename T>

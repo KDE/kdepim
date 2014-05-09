@@ -50,6 +50,7 @@
 #include <sstream>
 #include <algorithm>
 #include <KCharsets>
+#include <KLocale>
 
 
 namespace MessageViewer {
@@ -62,7 +63,7 @@ NodeHelper::NodeHelper() :
 {
   //TODO(Andras) add methods to modify these prefixes
 
-  mLocalCodec = QTextCodec::codecForName( KGlobal::locale()->encoding() );
+  mLocalCodec = QTextCodec::codecForName( KLocale::global()->encoding() );
 
   // In the case of Japan. Japanese locale name is "eucjp" but
   // The Japanese mail systems normally used "iso-2022-jp" of locale name.
@@ -82,7 +83,7 @@ NodeHelper::NodeHelper() :
       mLocalCodec = QTextCodec::codecForName("jis7");
       // QTextCodec *cdc = QTextCodec::codecForName("jis7");
       // QTextCodec::setCodecForLocale(cdc);
-      // KGlobal::locale()->setEncoding(cdc->mibEnum());
+      // KLocale::global()->setEncoding(cdc->mibEnum());
     }
   }
 }
@@ -748,7 +749,7 @@ QByteArray NodeHelper::autoDetectCharset(const QByteArray &_encoding, const QStr
        QByteArray encoding = (*it).toLatin1();
        if (encoding == "locale")
        {
-         encoding = QTextCodec::codecForName( KGlobal::locale()->encoding() )->name();
+         encoding = QTextCodec::codecForName( KLocale::global()->encoding() )->name();
          kAsciiToLower(encoding.data());
        }
        if (text.isEmpty())

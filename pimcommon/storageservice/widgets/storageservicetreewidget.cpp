@@ -272,17 +272,17 @@ bool StorageServiceTreeWidgetItem::operator<(const QTreeWidgetItem &other) const
 
 void StorageServiceTreeWidgetItem::setSize(qulonglong size)
 {
-    setText(StorageServiceTreeWidget::ColumnSize, KGlobal::locale()->formatByteSize(size));
+    setText(StorageServiceTreeWidget::ColumnSize, KLocale::global()->formatByteSize(size));
 }
 
 void StorageServiceTreeWidgetItem::setDateCreated(const KDateTime &date)
 {
-    setText(StorageServiceTreeWidget::ColumnCreated, KGlobal::locale()->formatDateTime(date));
+    setText(StorageServiceTreeWidget::ColumnCreated, KLocale::global()->formatDateTime(date));
 }
 
 void StorageServiceTreeWidgetItem::setLastModification(const KDateTime &date)
 {
-    setText(StorageServiceTreeWidget::ColumnLastModification, KGlobal::locale()->formatDateTime(date));
+    setText(StorageServiceTreeWidget::ColumnLastModification, KLocale::global()->formatDateTime(date));
 }
 
 void StorageServiceTreeWidgetItem::setStoreInfo(const QVariantMap &data)

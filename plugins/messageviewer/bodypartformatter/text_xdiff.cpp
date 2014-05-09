@@ -50,6 +50,7 @@
 #include <QFile>
 #include <QDir>
 #include <QTextDocument>
+#include <KLocale>
 
 namespace {
 
@@ -142,6 +143,6 @@ namespace {
 extern "C"
 KDE_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
 messageviewer_bodypartformatter_text_xdiff_create_bodypart_formatter_plugin() {
-  KGlobal::locale()->insertCatalog( QLatin1String("messageviewer_text_xdiff_plugin") );
+  //QT5 KLocale::global()->insertCatalog( QLatin1String("messageviewer_text_xdiff_plugin") );
   return new Plugin();
 }

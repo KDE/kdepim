@@ -31,6 +31,7 @@
 
 #include <QTimer>
 #include <QPointer>
+#include <KLocale>
 
 //#define DEBUG_ARCHIVEMAILAGENT 1
 
@@ -39,8 +40,8 @@ ArchiveMailAgent::ArchiveMailAgent( const QString &id )
 {
     mArchiveManager = new ArchiveMailManager(this);
     connect(mArchiveManager, SIGNAL(needUpdateConfigDialogBox()), SIGNAL(needUpdateConfigDialogBox()));
-    //QT5 KGlobal::locale()->insertCatalog( QLatin1String("akonadi_archivemail_agent") );
-    //QT5 KGlobal::locale()->insertCatalog( QLatin1String("libmailcommon") );
+    //QT5 KLocale::global()->insertCatalog( QLatin1String("akonadi_archivemail_agent") );
+    //QT5 KLocale::global()->insertCatalog( QLatin1String("libmailcommon") );
 
     Akonadi::Monitor *collectionMonitor = new Akonadi::Monitor( this );
     collectionMonitor->fetchCollection( true );

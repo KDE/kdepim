@@ -73,6 +73,7 @@ using namespace KCalCore;
 #include <KToolInvocation>
 #include <KIO/NetAccess>
 #include <KIcon>
+#include <KLocale>
 
 using namespace MailTransport;
 
@@ -1518,6 +1519,6 @@ extern "C"
 KDE_EXPORT Interface::BodyPartFormatterPlugin *
 messageviewer_bodypartformatter_text_calendar_create_bodypart_formatter_plugin()
 {
-  KGlobal::locale()->insertCatalog( QLatin1String("messageviewer_text_calendar_plugin") );
+  //QT5 KLocale::global()->insertCatalog( QLatin1String("messageviewer_text_calendar_plugin") );
   return new Plugin();
 }

@@ -667,7 +667,7 @@ static QString lookupDocumentation( const QString &fileName )
   // therefore manual must be installed in data dir
   const QStringList localDirectories = KGlobal::dirs()->resourceDirs( "data" );
 
-  QStringList languages = KGlobal::locale()->languageList();
+  QStringList languages = KLocale::global()->languageList();
   languages.append( QLatin1String("en") );
   languages.removeAll( QLatin1String("C") );
 

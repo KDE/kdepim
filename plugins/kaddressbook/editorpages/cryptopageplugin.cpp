@@ -39,6 +39,7 @@
 #include <kiconloader.h>
 #include <klocale.h>
 #include <KGlobal>
+#include <KLocale>
 
 #include "gpgme++/data.h"
 #include "gpgme++/key.h"
@@ -51,8 +52,8 @@ using namespace Akonadi;
 CryptoPagePlugin::CryptoPagePlugin()
   : mReadOnly( false )
 {
-  KGlobal::locale()->insertCatalog( QLatin1String("libkleopatra") );
-  KGlobal::locale()->insertCatalog( QLatin1String("cryptopageplugin") );
+  //KLocale::global()->insertCatalog( QLatin1String("libkleopatra") );
+  //KLocale::global()->insertCatalog( QLatin1String("cryptopageplugin") );
   KIconLoader::global()->addAppDir( QLatin1String("libkleopatra") );
   KIconLoader::global()->addAppDir( QLatin1String("kdepim") );
 

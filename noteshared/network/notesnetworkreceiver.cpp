@@ -43,6 +43,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <KDebug>
+#include <KLocale>
 
 // Maximum note size in chars we are going to accept,
 // to prevent "note floods".
@@ -62,7 +63,7 @@ NotesNetworkReceiver::NotesNetworkReceiver( QTcpSocket *s )
       m_sock( s )
 {
     const QString date =
-            KGlobal::locale()->formatDateTime( QDateTime::currentDateTime(),
+            KLocale::global()->formatDateTime( QDateTime::currentDateTime(),
                                                KLocale::ShortDate, false );
 
     // Add the remote IP or hostname and the date to the title, to help the

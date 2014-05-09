@@ -48,6 +48,7 @@
 #include <kabc/contactgrouptool.h>
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include <QtCore/QBuffer>
+#include <KLocale>
 
 using namespace MessageComposer;
 
@@ -101,7 +102,7 @@ void ComposerLineEdit::insertEmails( const QStringList & emails )
     const QAction *result = menu.exec( QCursor::pos() );
     if ( !result )
         return;
-    //QT5 setText( contents + KGlobal::locale()->removeAcceleratorMarker( result->text() ) );
+    //QT5 setText( contents + KLocale::global()->removeAcceleratorMarker( result->text() ) );
     setText( contents + result->text());
 }
 

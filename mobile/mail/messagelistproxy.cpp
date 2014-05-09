@@ -66,21 +66,21 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
         const KDateTime &dateTime = msg->date()->dateTime().toLocalZone();
         const QDate date = dateTime.date();
         if ( date == QDate::currentDate() ) {
-          return KGlobal::locale()->formatTime( dateTime.time() );
+          return KLocale::global()->formatTime( dateTime.time() );
         }
 
         const QHash<QDate, QString>::const_iterator key = dateNameHash.constFind( date );
         if ( key != dateNameHash.constEnd() )
           return *key;
 
-        const QString dateName = KGlobal::locale()->formatDate( date, KLocale::FancyShortDate );
+        const QString dateName = KLocale::global()->formatDate( date, KLocale::FancyShortDate );
         dateNameHash.insert( date, dateName );
 
         return dateName;
       }
       case SizeRole:
       {
-        return KGlobal::locale()->formatByteSize( qMax( 0LL, item.size() ) );
+        return KLocale::global()->formatByteSize( qMax( 0LL, item.size() ) );
       }
       case IsUnreadRole:
         return !messageStatus.isRead();
@@ -103,7 +103,7 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
         // simplified version taken from libmessagelist
         const KDateTime& dt = msg->date()->dateTime();
         const QDate dDate = dt.date();
-        const KCalendarSystem *calendar = KGlobal::locale()->calendar();
+        const KCalendarSystem *calendar = KLocale::global()->calendar();
         int daysAgo = -1;
         if ( calendar->isValid( dDate ) && calendar->isValid( QDate::currentDate() ) ) {
           daysAgo = dDate.daysTo( QDate::currentDate() );
@@ -116,13 +116,13 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
         else if ( daysAgo == 1 ) // Yesterday
           return i18n( "Yesterday" );
         else if ( daysAgo > 1 && daysAgo < calendar->daysInWeek( QDate::currentDate() ) ) // Within last seven days
-          return KGlobal::locale()->calendar()->weekDayName( dDate );
+          return KLocale::global()->calendar()->weekDayName( dDate );
         else if( calendar->month( dDate ) == calendar->month( QDate::currentDate() ) && calendar->year( dDate ) == calendar->year( QDate::currentDate() ) ) { // within this month
           const int startOfWeekDaysAgo = ( calendar->daysInWeek( QDate::currentDate() ) + calendar->dayOfWeek( QDate::currentDate() ) -
-                                           KGlobal::locale()->weekStartDay() ) % calendar->daysInWeek( QDate::currentDate() );
+                                           KLocale::global()->weekStartDay() ) % calendar->daysInWeek( QDate::currentDate() );
           const int weeksAgo = ( ( daysAgo - startOfWeekDaysAgo ) / calendar->daysInWeek( QDate::currentDate() ) ) + 1;
           if ( weeksAgo == 0 )
-            return KGlobal::locale()->calendar()->weekDayName( dDate );
+            return KLocale::global()->calendar()->weekDayName( dDate );
           else
             return i18np( "One Week Ago", "%1 Weeks Ago", weeksAgo );
         } else if ( calendar->year( dDate ) == calendar->year( QDate::currentDate() ) ) { // within this year

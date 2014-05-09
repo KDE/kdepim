@@ -133,7 +133,7 @@ int JobTrackerModel::columnCount(const QModelIndex & parent) const
 
 static QString formatTimeWithMsec( const QTime &time )
 {
-  return QString(KGlobal::locale()->formatTime( time, true )
+  return QString(KLocale::global()->formatTime( time, true )
                  + QString::fromLatin1( ".%1" ).arg( time.msec(), 3, 10, QLatin1Char('0') ) );
 }
 

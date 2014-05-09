@@ -25,6 +25,7 @@
 #include <KPIMIdentities/kpimidentities/identitymanager.h>
 
 #include <QWidget>
+#include <KLocale>
 
 using namespace KPIMIdentities;
 
@@ -33,7 +34,7 @@ using namespace KPIMIdentities;
 // This function is used by kate/kwrite
 extern "C" KDE_EXPORT QString ktexteditorkabcbridge( const QString &placeHolder, QWidget *widget, bool *ok )
 {
-  KGlobal::locale()->insertCatalog( QLatin1String("ktexteditorkabcbridge_plugin") );
+  //KLocale::global()->insertCatalog( QLatin1String("ktexteditorkabcbridge_plugin") );
 
   IdentityManager manager( true, widget );
   Identity defaultIdentity = manager.defaultIdentity();

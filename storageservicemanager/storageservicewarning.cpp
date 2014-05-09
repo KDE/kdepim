@@ -54,7 +54,7 @@ void StorageServiceWarning::slotShowDetails(const QString &content)
 
 void StorageServiceWarning::addLog(const QString &log)
 {
-    const QString dateTime = QString::fromLatin1("<b>[%1] </b>").arg(KGlobal::locale()->formatDateTime(KDateTime::currentLocalDateTime()));
+    const QString dateTime = QString::fromLatin1("<b>[%1] </b>").arg(KLocale::global()->formatDateTime(KDateTime::currentLocalDateTime()));
     mLogInformation.append(dateTime + log + QLatin1String("<br>"));
 }
 

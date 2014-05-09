@@ -63,6 +63,7 @@
 #include <assert.h>
 #include <string.h> // for memcpy(3)
 #include <KCharsets>
+#include <KLocale>
 
 #ifndef QT_NO_TREEWIDGET
 const int Kpgp::KeySelectionDialog::sCheckSelectionDelay = 250;
@@ -567,13 +568,13 @@ QString KeySelectionDialog::keyInfo( const Kpgp::Key *key ) const
   if( remark.isEmpty() ) {
     return QLatin1Char(' ') + i18nc("creation date and status of an OpenPGP key",
                       "Creation date: %1, Status: %2",
-                       KGlobal::locale()->formatDate( dt.date(), KLocale::ShortDate ) ,
+                       KLocale::global()->formatDate( dt.date(), KLocale::ShortDate ) ,
                        status );
   }
   else {
     return QLatin1Char(' ') + i18nc("creation date, status and remark of an OpenPGP key",
                       "Creation date: %1, Status: %2 (%3)",
-                       KGlobal::locale()->formatDate( dt.date(), KLocale::ShortDate ) ,
+                       KLocale::global()->formatDate( dt.date(), KLocale::ShortDate ) ,
                        status ,
                        remark );
   }
