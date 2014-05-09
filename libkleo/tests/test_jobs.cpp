@@ -40,7 +40,7 @@
 
 #include <kdebug.h>
 #include <assert.h>
-#include <kaboutdata.h>
+#include <K4AboutData>
 #include <kcmdlineargs.h>
 #include <kapplication.h>
 
@@ -95,7 +95,7 @@ int main( int argc, char** argv ) {
     protocol = argv[1];
     argc = 1; // hide from KDE
   }
-  KAboutData aboutData( "test_jobs", 0, ki18n("Signing Job Test"), "0.1" );
+  K4AboutData aboutData( "test_jobs", 0, ki18n("Signing Job Test"), "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
   KApplication app;
 

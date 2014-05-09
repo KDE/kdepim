@@ -29,7 +29,7 @@
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
 
-#include <KAboutData>
+#include <K4AboutData>
 #include <KApplication>
 #include <KCmdLineArgs>
 
@@ -44,7 +44,7 @@ template<class T> Akonadi::Item incidenceToItem(T* incidence)
 
 int main( int argc, char **argv )
 {
-  KAboutData aboutData( "testkabc", 0, ki18n( "TestKabc" ), "0.1" );
+  K4AboutData aboutData( "testkabc", 0, ki18n( "TestKabc" ), "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
 
   KApplication app;

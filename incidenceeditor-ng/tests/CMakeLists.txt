@@ -33,6 +33,7 @@ kde4_add_unit_test(ktimezonecomboboxtest TESTNAME ktimezonecomboboxtest ${ktimez
 target_link_libraries(
   ktimezonecomboboxtest
   KF5::CalendarCore
+  Qt5::Test
   incidenceeditorsng
 )
 

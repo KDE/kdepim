@@ -65,7 +65,7 @@
 #include <KLocalizedString>
 #include <KStandardAction>
 #include <KAction>
-#include <KAboutData>
+#include <K4AboutData>
 #include <KMessageBox>
 #include <KStandardGuiItem>
 #include <KShortcutsDialog>

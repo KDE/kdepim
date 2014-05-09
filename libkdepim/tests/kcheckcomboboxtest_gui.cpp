@@ -19,7 +19,7 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <kaboutdata.h>
+#include <K4AboutData>
 #include <kapplication.h>
 #include <qdebug.h>
 #include <klocale.h>
@@ -29,7 +29,7 @@
 
 int main(int argc, char* argv[])
 {
-  KAboutData aboutData("testcheckcombo", 0, ki18n("Test KCheckComboBox"), "0.1");
+  K4AboutData aboutData("testcheckcombo", 0, ki18n("Test KCheckComboBox"), "0.1");
   KCmdLineArgs::init(argc,argv,&aboutData);
 
   KApplication app;

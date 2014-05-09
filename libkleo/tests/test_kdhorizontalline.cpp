@@ -31,8 +31,11 @@
 
 #include "libkleo/ui/kdhorizontalline.h"
 
-#include <QtGui>
 
+#include <QApplication>
+#include <QGridLayout>
+#include <QLabel>
+#include <QLineEdit>
 int main( int argc, char * argv[] ) {
 
     QApplication app( argc, argv );

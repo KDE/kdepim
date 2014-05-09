@@ -43,7 +43,7 @@
 #include <QTimer>
 #include "kjotswidget.h"
 
-const KAboutData &createAboutData()
+const K4AboutData &createAboutData()
 {
     static AboutData aboutData;
     return aboutData;

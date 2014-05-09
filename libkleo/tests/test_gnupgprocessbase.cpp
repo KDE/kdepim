@@ -35,7 +35,7 @@
 #include "libkleo/backends/qgpgme/gnupgprocessbase.h"
 
 #include <kapplication.h>
-#include <kaboutdata.h>
+#include <K4AboutData>
 #include <kcmdlineargs.h>
 #include <kmessagebox.h>
 #include <kdebug.h>
@@ -115,7 +115,7 @@ int main( int argc, char** argv ) {
     kDebug(5150) <<"Need at least two arguments";
     return 1;
   }
-  KAboutData aboutData( "test_gnupgprocessbase", 0, ki18n("GnuPGProcessBase Test"), "0.1" );
+  K4AboutData aboutData( "test_gnupgprocessbase", 0, ki18n("GnuPGProcessBase Test"), "0.1" );
   KCmdLineArgs::init( &aboutData );
   KApplication app;
 

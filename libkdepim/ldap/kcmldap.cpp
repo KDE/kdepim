@@ -30,7 +30,7 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 
-#include <kaboutdata.h>
+#include <K4AboutData>
 #include <kapplication.h>
 #include <kcomponentdata.h>
 #include <kconfig.h>
@@ -86,9 +86,9 @@ KCMLdap::KCMLdap( QWidget *parent, const QVariantList& )
     : KCModule( KCMLdapFactory::componentData(), parent )
 {
     setButtons(KCModule::Apply);
-    KAboutData *about = new KAboutData( I18N_NOOP( "kcmldap" ), 0,
+    K4AboutData *about = new K4AboutData( I18N_NOOP( "kcmldap" ), 0,
                                         ki18n( "LDAP Server Settings" ),
-                                        0, KLocalizedString(), KAboutData::License_LGPL,
+                                        0, KLocalizedString(), K4AboutData::License_LGPL,
                                         ki18n( "(c) 2009 - 2010 Tobias Koenig" ) );
 
     about->addAuthor( ki18n( "Tobias Koenig" ), KLocalizedString(), "tokoe@kde.org" );

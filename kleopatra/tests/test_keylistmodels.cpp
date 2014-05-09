@@ -38,7 +38,7 @@
 #include <utils/formatting.h>
 
 #include <kapplication.h>
-#include <kaboutdata.h>
+#include <K4AboutData>
 #include <kcmdlineargs.h>
 
 #include <QTreeView>
@@ -93,7 +93,7 @@ int main( int argc, char * argv[] ) {
         return 1;
     }
 
-    KAboutData aboutData( "test_flatkeylistmodel", 0, ki18n("FlatKeyListModel Test"), "0.2" );
+    K4AboutData aboutData( "test_flatkeylistmodel", 0, ki18n("FlatKeyListModel Test"), "0.2" );
     KCmdLineArgs::init( argc, argv, &aboutData );
 
     KCmdLineOptions options;

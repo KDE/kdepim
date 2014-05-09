@@ -30,7 +30,7 @@
 #include <klocale.h>
 #include <kcmdlineargs.h>
 #include <kmessagebox.h>
-#include <kaboutdata.h>
+#include <K4AboutData>
 
 #include <QPushButton>
 #include <QLayout>
@@ -92,7 +92,7 @@ void Composer::slotClose()
 
 int main( int argc, char **argv )
 {
-  KAboutData aboutData( "testrecipienteditor", 0,
+  K4AboutData aboutData( "testrecipienteditor", 0,
    ki18n("Test Recipient Editor"), "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
 

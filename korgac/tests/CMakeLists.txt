@@ -15,7 +15,7 @@ qt5_add_dbus_interface(testalarmdlg_SRCS ${korganizer_xml}
   korganizer_interface
 )
 
-kde4_add_executable(testalarmdlg TEST ${testalarmdlg_SRCS})
+add_executable(testalarmdlg ${testalarmdlg_SRCS})
 
 target_link_libraries(testalarmdlg
   KF5::AkonadiCalendar
@@ -23,15 +23,15 @@ target_link_libraries(testalarmdlg
   calendarsupport
   incidenceeditorsng
   kdepimdbusinterfaces
-  kio
-  kmime
-  kpimutils
+  KF5::KIOCore
+  KF5::Mime
+  KF5::PimUtils
   korganizer_core
-  ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_KCALCORE_LIBS}
-  ${KDEPIMLIBS_KCALUTILS_LIBS}
-  ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
-  ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
-  ${KDE4_KDEUI_LIBS}
+  KF5::AkonadiCore
+  KF5::CalendarCore
+  KF5::CalendarUtils
+  KF5::PimIdentities
+  KF5::MailTransport
+  
   ${KDE4_PHONON_LIBS}
 )

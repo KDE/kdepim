@@ -38,7 +38,7 @@
 #include <gpgme++/key.h>
 
 #include <kapplication.h>
-#include <kaboutdata.h>
+#include <K4AboutData>
 #include <kcmdlineargs.h>
 #include <kdebug.h>
 
@@ -129,7 +129,7 @@ void CertListView::slotStart() {
 
 int main( int argc, char** argv ) {
 
-  KAboutData aboutData( "test_keylister", 0, ki18n("KeyLister Test"), "0.1" );
+  K4AboutData aboutData( "test_keylister", 0, ki18n("KeyLister Test"), "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
   KApplication app;
 

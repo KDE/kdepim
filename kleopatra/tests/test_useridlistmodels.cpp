@@ -36,7 +36,7 @@
 
 #include <KApplication>
 #include <KCmdLineArgs>
-#include <KAboutData>
+#include <K4AboutData>
 
 #include <QTreeView>
 
@@ -155,7 +155,7 @@ static void start( const QString & str, Protocol proto ) {
 
 int main( int argc, char * argv[] ) {
 
-    KAboutData aboutData( "test_useridlistmodels", 0, ki18n("UserIDListModel Test"), "0.1" );
+    K4AboutData aboutData( "test_useridlistmodels", 0, ki18n("UserIDListModel Test"), "0.1" );
     KCmdLineArgs::init( argc, argv, &aboutData );
 
     KCmdLineOptions options;

@@ -69,7 +69,7 @@
 #include <KLocalizedString>
 #include <KStandardAction>
 #include <KAction>
-#include <KAboutData>
+#include <K4AboutData>
 #include <KMessageBox>
 #include <KStandardGuiItem>
 #include <KLineEdit>
@@ -111,7 +111,7 @@ using namespace GpgME;
 
 namespace {
 
-    static const KAboutData * aboutGpg4WinData() {
+    static const K4AboutData * aboutGpg4WinData() {
         static const AboutGpg4WinData data;
         return &data;
     }

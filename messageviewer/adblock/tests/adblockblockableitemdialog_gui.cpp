@@ -17,12 +17,13 @@
 
 #include "adblockblockableitemdialog_gui.h"
 #include "adblock/adblockblockableitemswidget.h"
-#include "KPIMUtils/kpimutils/ProgressIndicatorLabel"
+#include "KPIMUtils/ProgressIndicatorLabel"
 #include <qdebug.h>
 #include <kapplication.h>
 #include <KFileDialog>
 #include <KCmdLineArgs>
 #include <KLocalizedString>
+#include <KUrl>
 
 #include <QDebug>
 #include <QPointer>

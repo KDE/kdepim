@@ -18,7 +18,7 @@
 #include <QWidget>
 #include <QVBoxLayout>
 
-#include <kaboutdata.h>
+#include <K4AboutData>
 #include <kapplication.h>
 #include <qdebug.h>
 #include <klocale.h>
@@ -28,7 +28,7 @@
 
 int main(int argc, char* argv[])
 {
-  KAboutData aboutData("testspellchecklineedit", 0,ki18n("Test SpellCheckLineEdit"),"0.1");
+  K4AboutData aboutData("testspellchecklineedit", 0,ki18n("Test SpellCheckLineEdit"),"0.1");
   KCmdLineArgs::init(argc,argv,&aboutData);
 
   KApplication app;

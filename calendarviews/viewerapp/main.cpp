@@ -19,7 +19,7 @@
 #include "mainwindow.h"
 
 #include <kapplication.h>
-#include <kaboutdata.h>
+#include <K4AboutData>
 #include <kcmdlineargs.h>
 #include <KLocalizedString>
 
@@ -29,8 +29,8 @@ static const char version[] = "0.1";
 #include <QDebug>
 int main( int argc, char **argv )
 {
-    KAboutData about( "viewerapp", 0, ki18n( "ViewerApp" ), version, ki18n( description ),
-                     KAboutData::License_GPL,
+    K4AboutData about( "viewerapp", 0, ki18n( "ViewerApp" ), version, ki18n( description ),
+                     K4AboutData::License_GPL,
                      ki18n( "Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net" ), KLocalizedString(), 0, "info@kdab.net");
     about.addAuthor( ki18n( "Kevin Krammer" ), KLocalizedString(), "krake@kdab.com" );
     KCmdLineArgs::init( argc, argv, &about );

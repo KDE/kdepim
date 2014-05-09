@@ -23,6 +23,7 @@
 #include <KFileDialog>
 #include <KCmdLineArgs>
 #include <KLocalizedString>
+#include <KUrl>
 
 #include <QDebug>
 #include <QPointer>

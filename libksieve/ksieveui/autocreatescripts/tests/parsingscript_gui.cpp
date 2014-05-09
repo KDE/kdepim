@@ -21,7 +21,7 @@
 #include <KFileDialog>
 #include <QDebug>
 #include <QPointer>
-
+#include <KUrl>
 #include "xmlprintingscriptbuilder.h"
 #include "parsingresultdialog.h"
 
