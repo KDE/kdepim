@@ -225,7 +225,7 @@ void ConfigWidget::saveToExternalSettings()
   KCalPrefs::instance()->setUseGroupwareCommunication( Settings::self()->useGroupwareCommunication() );
 
   Settings::self()->save();
-  KCalPrefs::instance()->writeConfig();
+  KCalPrefs::instance()->save();
   mViewPrefs->writeConfig();
 }
 
