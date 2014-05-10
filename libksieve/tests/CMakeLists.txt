@@ -5,17 +5,4 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libksieve
 )
 
-########### next target ###############
-set(lexertest_SRCS lexertest.cpp)
-
-kde4_add_unit_test(lexertest TESTNAME ksieve-lexertest ${lexertest_SRCS})
-
-target_link_libraries(lexertest ksieve ${KDE4_KDECORE_LIBS})
-
-########### next target ###############
-
-set(parsertest_SRCS parsertest.cpp)
-
-kde4_add_unit_test(parsertest TESTNAME ksieve-parsertest ${parsertest_SRCS})
-
-target_link_libraries(parsertest ksieve ${KDE4_KDECORE_LIBS})
+ecm_add_tests( lexertest.cpp parsertest.cpp  NAME_PREFIX "libksieve-parser-" LINK_LIBRARIES ksieve Qt5::Test)
