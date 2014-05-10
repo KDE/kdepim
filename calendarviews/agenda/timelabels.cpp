@@ -38,7 +38,7 @@
 #include <QPointer>
 #include <KLocale>
 
-static const KCatalogLoader loader( QLatin1String("timezones4") );
+//QT5 static const KCatalogLoader loader( QLatin1String("timezones4") );
 
 using namespace EventViews;
 

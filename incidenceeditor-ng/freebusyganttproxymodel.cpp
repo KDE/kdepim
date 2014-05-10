@@ -25,7 +25,6 @@
 
 #include <KCalCore/FreeBusyPeriod>
 
-#include <KGlobal>
 #include <KLocale>
 #include <KLocalizedString>
 #include <KSystemTimeZones>

@@ -42,6 +42,7 @@
 #include <KPIMUtils/Email>
 
 #include <KDebug>
+#include <QDebug>
 #include <KMessageBox>
 #include <KLocalizedString>
 
@@ -408,7 +409,7 @@ void IncidenceAttendee::slotSelectAddresses()
         }
       }
     } else {
-      kDebug() << "dialog was already deleted";
+      qDebug() << "dialog was already deleted";
     }
   }
 
@@ -521,7 +522,7 @@ void IncidenceAttendee::slotOrganizerChanged( const QString &newOrganizer )
   bool success = KPIMUtils::extractEmailAddressAndName( newOrganizer, email, name );
 
   if ( !success ) {
-    kWarning() << "Could not extract email address and name";
+    qWarning() << "Could not extract email address and name";
     return;
   }
 
@@ -571,18 +572,18 @@ void IncidenceAttendee::slotOrganizerChanged( const QString &newOrganizer )
 
 void IncidenceAttendee::printDebugInfo() const
 {
-  kDebug() << "I'm organizer   : " << iAmOrganizer();
-  kDebug() << "Loaded organizer: "<< mLoadedIncidence->organizer()->email();
+  qDebug() << "I'm organizer   : " << iAmOrganizer();
+  qDebug() << "Loaded organizer: "<< mLoadedIncidence->organizer()->email();
 
   if ( iAmOrganizer() ) {
     KCalCore::Event tmp;
     tmp.setOrganizer( mUi->mOrganizerCombo->currentText() );
-    kDebug() << "Organizer combo: " << tmp.organizer()->email();
+    qDebug() << "Organizer combo: " << tmp.organizer()->email();
   }
 
   const KCalCore::Attendee::List originalList = mLoadedIncidence->attendees();
   AttendeeData::List newList = mAttendeeEditor->attendees();
-  kDebug() << "List sizes: " << originalList.count() << newList.count();
+  qDebug() << "List sizes: " << originalList.count() << newList.count();
 
   if ( originalList.count() != newList.count() ) {
     return;
@@ -612,7 +613,7 @@ void IncidenceAttendee::printDebugInfo() const
                << "; we have:";
       for ( int i = 0; i < newList.count(); ++i ) {
         KCalCore::Attendee::Ptr attendee = newList.at( i )->attendee();
-        kDebug() << "Attendee: " << attendee->email()
+        qDebug() << "Attendee: " << attendee->email()
                  << attendee->name()
                  << attendee->status()
                  << attendee->RSVP()
