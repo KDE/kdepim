@@ -2242,7 +2242,7 @@ void View::mouseMoveEvent( QMouseEvent * e )
     if ( d->mMousePressPosition.isNull() )
         return;
 
-    if ( ( e->pos() - d->mMousePressPosition ).manhattanLength() <= KGlobalSettings::dndEventDelay() )
+    if ( ( e->pos() - d->mMousePressPosition ).manhattanLength() <= QApplication::startDragDistance() )
         return;
 
     d->mWidget->viewStartDragRequest();

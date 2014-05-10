@@ -161,6 +161,7 @@
 
 #include <boost/bind.hpp>
 #include <KJobWidgets/KJobWidgets>
+#include <QApplication>
 
 using namespace boost;
 using namespace MailTransport;
@@ -1120,7 +1121,7 @@ bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
         // If we are potentially handling a drag, deal with that.
         if ( mCanStartDrag && me->buttons() & Qt::LeftButton ) {
 
-            if ( ( mLastClickPosition - me->pos() ).manhattanLength() > KGlobalSettings::dndEventDelay() ) {
+            if ( ( mLastClickPosition - me->pos() ).manhattanLength() > QApplication::startDragDistance() ) {
                 if ( URLHandlerManager::instance()->handleDrag( mHoveredUrl, this ) ) {
 
                     // If the URL handler manager started a drag, don't handle this in the future

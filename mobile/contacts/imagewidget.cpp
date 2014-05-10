@@ -36,6 +36,7 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QMenu>
+#include <QApplication>
 
 /**
  * @short Small helper class to load image from network
@@ -240,7 +241,7 @@ void ImageWidget::mouseMoveEvent( QMouseEvent *event )
 {
 #ifndef QT_NO_DRAGANDDROP
   if ( (event->buttons() & Qt::LeftButton) &&
-       (event->pos() - mDragStartPos).manhattanLength() > KGlobalSettings::dndEventDelay() ) {
+       (event->pos() - mDragStartPos).manhattanLength() > QApplication::startDragDistance() ) {
 
     if ( mHasImage ) {
       QDrag *drag = new QDrag( this );
