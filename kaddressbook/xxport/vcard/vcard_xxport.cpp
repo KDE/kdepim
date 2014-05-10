@@ -170,7 +170,8 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
     }
     case KMessageBox::Yes:
     {
-      url = KFileDialog::getSaveUrl( KUrl( QLatin1String("addressbook.vcf") ) );
+      url = KFileDialog::getSaveUrl( KUrl( QLatin1String("addressbook.vcf") ),
+                                     QLatin1String("text/vcard") );
       if ( url.isEmpty() ) {
         return true; // user canceled export
       }
@@ -203,7 +204,7 @@ KABC::Addressee::List VCardXXPort::importContacts() const
     if ( !option( QLatin1String("importUrl") ).isEmpty() ) {
       urls.append( KUrl( option( QLatin1String("importUrl") ) ) );
     } else {
-      const QString filter = i18n( "*.vcf|Vcard (*.vcf)\n*|all files (*)" );
+      const QString filter = i18n( "*.vcf|vCard (*.vcf)\n*|All Files" );
       urls =
         KFileDialog::getOpenUrls(
           KUrl(),
