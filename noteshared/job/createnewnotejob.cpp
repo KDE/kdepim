@@ -85,7 +85,7 @@ void CreateNewNoteJob::start()
 void CreateNewNoteJob::slotFetchCollection(KJob* job)
 {
     if (job->error()) {
-        qDebug()<<" Error during fetch";
+        qDebug()<<" Error during fetch: "<<job->errorString();
         deleteLater();
         return;
     }
