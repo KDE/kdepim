@@ -103,7 +103,7 @@ CategoryConfig::~CategoryConfig()
 
 void CategoryConfig::writeConfig()
 {
-  d->config->writeConfig();
+  d->config->save();
 }
 
 QStringList CategoryConfig::customCategories() const
