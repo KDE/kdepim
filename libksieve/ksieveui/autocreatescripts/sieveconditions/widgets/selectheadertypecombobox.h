@@ -60,6 +60,8 @@ private Q_SLOTS:
     void slotAddNewHeader();
 
 private:
+    void readConfig();
+    void writeConfig();
     SelectHeadersWidget *mListWidget;
     KLineEdit *mNewHeader;
     KPushButton *mAddNewHeader;

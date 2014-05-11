@@ -64,12 +64,31 @@ SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
     lay->addLayout(hbox);
 
     setMainWidget(w);
-    resize(400,300);
+    readConfig();
 }
 
 SelectHeadersDialog::~SelectHeadersDialog()
 {
+    writeConfig();
 }
+
+void SelectHeadersDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SelectHeadersDialog" );
+    const QSize size = group.readEntry( "Size", QSize(400,300) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void SelectHeadersDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SelectHeadersDialog" );
+    group.writeEntry( "Size", size() );
+    group.sync();
+}
+
+
 
 void SelectHeadersDialog::slotNewHeaderTextChanged(const QString &text)
 {
