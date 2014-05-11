@@ -49,6 +49,8 @@ SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
     QHBoxLayout *hbox = new QHBoxLayout;
 
     mNewHeader = new KLineEdit;
+    mNewHeader->setTrapReturnKey(true);
+    connect(mNewHeader,SIGNAL(returnPressed()), SLOT(slotAddNewHeader()));
     mNewHeader->setClearButtonShown(true);
     hbox->addWidget(mNewHeader);
 
@@ -98,8 +100,10 @@ void SelectHeadersDialog::slotNewHeaderTextChanged(const QString &text)
 void SelectHeadersDialog::slotAddNewHeader()
 {
     const QString headerText = mNewHeader->text().trimmed();
-    if (!headerText.isEmpty())
+    if (!headerText.isEmpty()) {
         mListWidget->addNewHeader(headerText);
+        mNewHeader->clear();
+    }
 }
 
 void SelectHeadersDialog::setListHeaders(const QMap<QString, QString> &lst, const QStringList &selectedHeaders)
@@ -123,6 +127,14 @@ SelectHeadersWidget::~SelectHeadersWidget()
 
 void SelectHeadersWidget::addNewHeader(const QString &header)
 {
+    const int numberOfItem = count();
+    for (int i = 0; i < numberOfItem; ++i) {
+        QListWidgetItem *it = item(i);
+        if (it->data(HeaderId).toString() == header) {
+            return;
+        }
+    }
+
     QListWidgetItem *item = new QListWidgetItem(header, this);
     item->setData(HeaderId, header);
     item->setCheckState(Qt::Unchecked);
