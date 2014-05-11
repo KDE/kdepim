@@ -38,7 +38,7 @@
 #include "viewer/nodehelper.h"
 
 #include <kmime/kmime_content.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <messagecore/helpers/nodehelper.h>
 
@@ -220,7 +220,7 @@ const AttachmentStrategy * AttachmentStrategy::create( Type type ) {
     case Hidden:     return hidden();
     case HeaderOnly: return headerOnly();
     }
-    kFatal() << "Unknown attachment startegy ( type =="
+    qCritical() << "Unknown attachment startegy ( type =="
              << (int)type << ") requested!";
     return 0; // make compiler happy
 }

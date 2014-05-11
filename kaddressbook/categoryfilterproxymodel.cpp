@@ -19,7 +19,7 @@
 
 #include "categoryfilterproxymodel.h"
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <klocale.h>
 
 #include <AkonadiCore/entitytreemodel.h>
@@ -83,12 +83,12 @@ bool CategoryFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &pare
 							// all accepted
     if (d->filterIdList.first()==CategorySelectWidget::FilterAll) return true;
 
-    //kDebug() << "for row" << row << "item" << item.url() << "filter" << d->filterIdList;
+    //qDebug() << "for row" << row << "item" << item.url() << "filter" << d->filterIdList;
     if (item.hasPayload<KABC::Addressee>()) {
         const KABC::Addressee contact = item.payload<KABC::Addressee>();
 
         const QStringList categories = contact.categories();
-        //kDebug() << "is contact" << contact.assembledName() << "cats" << categories;
+        //qDebug() << "is contact" << contact.assembledName() << "cats" << categories;
 
         int validCategories = 0;
         int count = categories.count();
@@ -100,7 +100,7 @@ bool CategoryFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &pare
                     ++validCategories;
                     Tag::Id id = cat.mid(idx+5).toInt();
                     if (d->filterIdList.contains(id)) {
-                        //kDebug() << "matches category" << cat;
+                        //qDebug() << "matches category" << cat;
                         return true;			// a category matches filter
                     }
                 }
@@ -108,10 +108,10 @@ bool CategoryFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &pare
         }
 
         if (validCategories>0) {
-            //kDebug() << "valid item but no match";
+            //qDebug() << "valid item but no match";
             return false;				// categorised but no match
         } else {
-            //kDebug() << "item with no categories";
+            //qDebug() << "item with no categories";
             return d->filterIdList.contains(CategorySelectWidget::FilterUntagged);
         }
     }
@@ -128,7 +128,7 @@ void CategoryFilterProxyModel::setFilterCategories(const QList<Akonadi::Tag::Id>
     Q_D(CategoryFilterProxyModel);
 
     if (idList!=d->filterIdList) {
-        kDebug() << idList;
+        qDebug() << idList;
         d->filterIdList = idList;
         invalidateFilter();
     }
@@ -140,7 +140,7 @@ void CategoryFilterProxyModel::setFilterEnabled(bool enable)
     Q_D(CategoryFilterProxyModel);
 
     if (enable!=d->filterEnabled) {
-        kDebug() << enable;
+        qDebug() << enable;
         d->filterEnabled = enable;
         invalidateFilter();
     }

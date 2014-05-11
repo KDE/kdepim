@@ -322,7 +322,7 @@ xfaceSettings xface(const MessageViewer::HeaderStyle *style, KMime::Message *mes
         const QString faceheader = message->headerByType( "Face" )->asUnicodeString();
         if ( !faceheader.isEmpty() ) {
 
-            kDebug() << "Found Face: header";
+            qDebug() << "Found Face: header";
 
             const QByteArray facestring = faceheader.toUtf8();
             // Spec says header should be less than 998 bytes
@@ -338,14 +338,14 @@ xfaceSettings xface(const MessageViewer::HeaderStyle *style, KMime::Message *mes
                         settings.photoWidth = 48;
                         settings.photoHeight = 48;
                     } else {
-                        kDebug() << "Face: header image is" << faceimage.width() << "by"
+                        qDebug() << "Face: header image is" << faceimage.width() << "by"
                                  << faceimage.height() << "not 48x48 Pixels";
                     }
                 } else {
-                    kDebug() << "Failed to load decoded png from Face: header";
+                    qDebug() << "Failed to load decoded png from Face: header";
                 }
             } else {
-                kDebug() << "Face: header too long at" << facestring.length();
+                qDebug() << "Face: header too long at" << facestring.length();
             }
         }
     }

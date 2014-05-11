@@ -399,7 +399,7 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
     } else if ( choice == AttachmentDialog::OpenWith ) {
         attachmentOpenWith( node );
     } else { // Cancel
-        kDebug() << "Canceled opening attachment";
+        qDebug() << "Canceled opening attachment";
     }
 
 }
@@ -475,7 +475,7 @@ bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
 void ViewerPrivate::itemModifiedResult( KJob* job )
 {
     if ( job->error() ) {
-        kDebug() << "Item update failed:" << job->errorString();
+        qDebug() << "Item update failed:" << job->errorString();
     } else {
         setMessageItem( mMessageItem, MessageViewer::Viewer::Force );
     }
@@ -496,7 +496,7 @@ bool ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
     KTemporaryFile file;
     file.setAutoRemove( false );
     if ( !file.open() ) {
-        kWarning() << "Edit Attachment: Unable to open temp file.";
+        qWarning() << "Edit Attachment: Unable to open temp file.";
         return true;
     }
     file.write( node->decodedContent() );
@@ -532,7 +532,7 @@ void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, const QString &contentTy
             menu->menuAction()->setObjectName(QLatin1String("openWith_submenu")); // for the unittest
             topMenu->addMenu(menu);
         }
-        //kDebug() << offers.count() << "offers" << topMenu << menu;
+        //qDebug() << offers.count() << "offers" << topMenu << menu;
 
         KService::List::ConstIterator it = offers.constBegin();
         KService::List::ConstIterator end = offers.constEnd();
@@ -770,7 +770,7 @@ void ViewerPrivate::attachmentOpen( KMime::Content *node )
 {
     KService::Ptr offer = getServiceOffer( node );
     if ( !offer ) {
-        kDebug() << "got no offer";
+        qDebug() << "got no offer";
         return;
     }
     attachmentOpenWith( node, offer );
@@ -1025,9 +1025,9 @@ QString ViewerPrivate::writeMsgHeader( KMime::Message *aMsg, KMime::Content* vCa
                                        bool topLevel )
 {
     if ( !headerStyle() )
-        kFatal() << "trying to writeMsgHeader() without a header style set!";
+        qCritical() << "trying to writeMsgHeader() without a header style set!";
     if ( !headerStrategy() )
-        kFatal() << "trying to writeMsgHeader() without a header strategy set!";
+        qCritical() << "trying to writeMsgHeader() without a header strategy set!";
     QString href;
     if ( vCardNode )
         href = mNodeHelper->asHREF( vCardNode, QLatin1String("body") );
@@ -1274,7 +1274,7 @@ void ViewerPrivate::setOverrideEncoding( const QString & encoding )
             }
             if ( i == encodings.size() ) {
                 // the value of encoding is unknown => use Auto
-                kWarning() << "Unknown override character encoding" << encoding
+                qWarning() << "Unknown override character encoding" << encoding
                            << ". Using Auto instead.";
                 mSelectEncodingAction->setCurrentItem( 0 );
                 mOverrideEncoding.clear();
@@ -1357,7 +1357,7 @@ void ViewerPrivate::setMessageItem( const Akonadi::Item &item, Viewer::UpdateMod
 
     if ( !mMessageItem.hasPayload<KMime::Message::Ptr>() ) {
         if ( mMessageItem.isValid() )
-            kWarning() << "Payload is not a MessagePtr!";
+            qWarning() << "Payload is not a MessagePtr!";
         return;
     }
 
@@ -2275,7 +2275,7 @@ void ViewerPrivate::updateReaderWin()
         //
         // While the exec() eventloop is running, it is possible that a timer calls updateReaderWin(),
         // and not aborting here would confuse the state terribly.
-        kWarning() << "Danger, recursion while displaying a message!";
+        qWarning() << "Danger, recursion while displaying a message!";
         return;
     }
     mRecursionCountForDisplayMessage++;
@@ -2729,7 +2729,7 @@ void ViewerPrivate::slotHandleAttachment( int choice )
         scrollToAttachment( mCurrentContent );
     }
     else {
-        kDebug() << " not implemented :" << choice;
+        qDebug() << " not implemented :" << choice;
     }
 }
 
@@ -2794,7 +2794,7 @@ void ViewerPrivate::slotSaveMessage()
 {
     if ( !mMessageItem.hasPayload<KMime::Message::Ptr>() ) {
         if ( mMessageItem.isValid() ) {
-            kWarning() << "Payload is not a MessagePtr!";
+            qWarning() << "Payload is not a MessagePtr!";
         }
         return;
     }
@@ -3119,7 +3119,7 @@ void ViewerPrivate::itemFetchResult( KJob* job )
 void ViewerPrivate::slotItemChanged( const Akonadi::Item &item, const QSet<QByteArray> & parts )
 {
     if ( item.id() != messageItem().id() ) {
-        kDebug() << "Update for an already forgotten item. Weird.";
+        qDebug() << "Update for an already forgotten item. Weird.";
         return;
     }
     if( parts.contains( "PLD:RFC822" ) )
@@ -3306,7 +3306,7 @@ void ViewerPrivate::slotMessageIsNotAScam()
 void ViewerPrivate::slotModifyItemDone(KJob* job)
 {
     if ( job && job->error() ) {
-        kWarning() << " Error trying to change attribute:" << job->errorText();
+        qWarning() << " Error trying to change attribute:" << job->errorText();
     }
 }
 

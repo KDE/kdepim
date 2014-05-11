@@ -25,7 +25,7 @@
 #include <KPIMUtils/kpimutils/email.h>
 #include <messagecore/utils/stringutil.h>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KLocalizedString>
 #include <KApplication>
 

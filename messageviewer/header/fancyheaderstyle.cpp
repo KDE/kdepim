@@ -30,7 +30,7 @@ using KPIMUtils::LinkLocator;
 #include <KPIMUtils/kpimutils/email.h>
 #include <messagecore/utils/stringutil.h>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <klocale.h>
 #include <kglobal.h>
 #include <kcodecs.h>
@@ -91,7 +91,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
     MessageViewer::HeaderStyleUtil::xfaceSettings xface = MessageViewer::HeaderStyleUtil::xface(this, message);
     if( !xface.photoURL.isEmpty() )
     {
-        //kDebug() << "Got a photo:" << photoURL;
+        //qDebug() << "Got a photo:" << photoURL;
         userHTML = QString::fromLatin1("<img src=\"%1\" width=\"%2\" height=\"%3\">")
                 .arg( xface.photoURL ).arg( xface.photoWidth ).arg( xface.photoHeight );
         userHTML = QLatin1String("<div class=\"senderpic\">") + userHTML + QLatin1String("</div>");

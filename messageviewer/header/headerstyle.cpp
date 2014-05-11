@@ -86,7 +86,7 @@ HeaderStyle * HeaderStyle::create( Type type ) {
     case Custom: return custom();
     case Grantlee: return grantlee();
     }
-    kFatal() << "Unknown header style ( type ==" << (int)type << ") requested!";
+    qCritical() << "Unknown header style ( type ==" << (int)type << ") requested!";
     return 0; // make compiler happy
 }
 

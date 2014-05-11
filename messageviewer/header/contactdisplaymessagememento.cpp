@@ -48,7 +48,7 @@ void ContactDisplayMessageMemento::slotSearchJobFinished( KJob *job )
     mFinished = true;
     Akonadi::ContactSearchJob *searchJob = static_cast<Akonadi::ContactSearchJob*>( job );
     if ( searchJob->error() ) {
-        kWarning() << "Unable to fetch contact:" << searchJob->errorText();
+        qWarning() << "Unable to fetch contact:" << searchJob->errorText();
         emit update( Viewer::Delayed );
         return;
     }
@@ -60,7 +60,7 @@ void ContactDisplayMessageMemento::slotSearchJobFinished( KJob *job )
         processAddress( addressee );
         emit update( Viewer::Delayed );
         if (contactSize>1)
-            kDebug()<<" more than 1 contact was found we return first contact";
+            qDebug()<<" more than 1 contact was found we return first contact";
     }
 }
 

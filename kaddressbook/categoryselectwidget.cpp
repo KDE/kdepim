@@ -21,7 +21,7 @@
 
 #include <kicon.h>
 #include <klocale.h>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kdialog.h>
 
 #include <qtoolbutton.h>
@@ -173,7 +173,7 @@ void CategorySelectWidgetPrivate::slotTagsInserted(const QModelIndex &parent, in
 {
     for (int row = start; row<=end; ++row) {
         QModelIndex idx = tagModel->index(row, 0, parent);
-        kDebug() << "idx" << idx << "=" << tagModel->data(idx, Qt::DisplayRole).toString()
+        qDebug() << "idx" << idx << "=" << tagModel->data(idx, Qt::DisplayRole).toString()
             << "name" << tagModel->data(idx, TagModel::NameRole).toString()
             << "tag" << tagModel->data(idx, TagModel::TagRole)
             << "id" << tagModel->data(idx, TagModel::IdRole).toInt();
@@ -197,7 +197,7 @@ void CategorySelectWidgetPrivate::slotTagsInserted(const QModelIndex &parent, in
                 QModelIndex parentIndex = matchList.first();
                 itemModel()->itemFromIndex(parentIndex)->appendRow(it);
             } else {
-                kWarning() << "Cannot find parent with ID" << parentId;
+                qWarning() << "Cannot find parent with ID" << parentId;
                 itemModel()->insertRow(row+rowOffset, it);
             }
         } else {
@@ -287,7 +287,7 @@ QList<Akonadi::Tag::Id> CategorySelectWidgetPrivate::filterTags() const
         filter.append(CategorySelectWidget::FilterAll);
     }
 
-    kDebug() << "filter" << filter;
+    qDebug() << "filter" << filter;
     return filter;
 }
 
