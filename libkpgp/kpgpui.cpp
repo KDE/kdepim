@@ -65,6 +65,7 @@
 #include <string.h> // for memcpy(3)
 #include <KCharsets>
 #include <KLocale>
+#include <QDesktopWidget>
 
 #ifndef QT_NO_TREEWIDGET
 const int Kpgp::KeySelectionDialog::sCheckSelectionDelay = 250;
@@ -1509,7 +1510,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   QSize size = sizeHint();
 
   // don't make the dialog too large
-  QRect desk = KGlobalSettings::desktopGeometry(this);
+  QRect desk = QApplication::desktop()->screenGeometry(this);
   int screenWidth = desk.width();
   if( size.width() > 3*screenWidth/4 )
     size.setWidth( 3*screenWidth/4 );
@@ -1675,7 +1676,7 @@ void CipherTextDialog::setMinimumSize()
   int textWidth = mEditBox->viewport()->width() + 30;
 
 
-  int maxWidth = KGlobalSettings::desktopGeometry(parentWidget()).width()-100;
+  int maxWidth = QApplication::desktop()->screenGeometry(parentWidget()).width()-100;
 
   mEditBox->setMinimumWidth( qMin( textWidth, maxWidth ) );
 }

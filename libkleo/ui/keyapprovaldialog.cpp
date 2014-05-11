@@ -57,6 +57,8 @@
 #include <gpgme++/key.h>
 
 #include <assert.h>
+#include <QApplication>
+#include <QDesktopWidget>
 
 static Kleo::EncryptionPreference cb2pref( int i ) {
   switch ( i ) {
@@ -177,7 +179,7 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients
   QSize size = sizeHint();
 
   // don't make the dialog too large
-  const QRect desk = KGlobalSettings::desktopGeometry( this );
+  const QRect desk = QApplication::desktop()->screenGeometry( this );
   setInitialSize( QSize( qMin( size.width(), 3 * desk.width() / 4 ),
                          qMin( size.height(), 7 * desk.height() / 8 ) ) );
 }
