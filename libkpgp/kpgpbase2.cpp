@@ -18,6 +18,7 @@
 
 #include "kpgpbase.h"
 #include "kpgp.h"
+#include "kpgp_debug.h"
 
 #include <string.h> /* strncmp */
 #include <assert.h>
@@ -26,7 +27,7 @@
 
 #include <klocale.h>
 #include <kshell.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <algorithm>
 
@@ -74,7 +75,7 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
     cmd = PGP2 " +batchmode +language=en +verbose=1 -sat";
   else
   {
-    kDebug( 5326 ) <<"kpgpbase: Neither recipients nor passphrase specified.";
+    qCDebug(KPGP_LOG) <<"kpgpbase: Neither recipients nor passphrase specified.";
     return OK;
   }
 
@@ -187,7 +188,7 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
   {
     if(error.contains("Pass phrase is good") )
     {
-      //kDebug( 5326 ) <<"Base: Good Passphrase!";
+      //qCDebug(KPGP_LOG) <<"Base: Good Passphrase!";
       status |= SIGNED;
     }
     if( error.contains("Bad pass phrase") )
@@ -215,7 +216,7 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
     status |= ERROR;
   }
 
-  //kDebug( 5326 ) <<"status =" << status;
+  //qCDebug(KPGP_LOG) <<"status =" << status;
   block.setStatus( status );
   return status;
 }
@@ -238,7 +239,7 @@ Base2::decrypt( Block& block, const char *passphrase )
   // this hack can solve parts of the problem
   if(error.contains("ASCII armor corrupted.") )
   {
-    kDebug( 5326 ) <<"removing ASCII armor header";
+    qCDebug(KPGP_LOG) <<"removing ASCII armor header";
     int index1 = input.indexOf("-----BEGIN PGP SIGNED MESSAGE-----");
     if(index1 != -1)
       index1 = input.indexOf("-----BEGIN PGP SIGNATURE-----", index1);
@@ -282,7 +283,7 @@ Base2::decrypt( Block& block, const char *passphrase )
    */
   if(error.contains("File is encrypted.") )
   {
-    //kDebug( 5326 ) <<"kpgpbase: message is encrypted";
+    //qCDebug(KPGP_LOG) <<"kpgpbase: message is encrypted";
     status |= ENCRYPTED;
     if((index = error.indexOf("Key for user ID:")) != -1 )
     {
@@ -290,12 +291,12 @@ Base2::decrypt( Block& block, const char *passphrase )
       index  += 17;
       index2 = error.indexOf('\n', index);
       block.setRequiredUserId( QLatin1String(error.mid(index, index2 - index)) );
-      //kDebug( 5326 ) <<"Base: key needed is \"" << block.requiredUserId() <<"\"!";
+      //qCDebug(KPGP_LOG) <<"Base: key needed is \"" << block.requiredUserId() <<"\"!";
 
       if((passphrase != 0) && (error.contains("Bad pass phrase") ))
       {
         errMsg = i18n("Bad passphrase; could not decrypt.");
-        kDebug( 5326 ) <<"Base: passphrase is bad";
+        qCDebug(KPGP_LOG) <<"Base: passphrase is bad";
         status |= BADPHRASE;
         status |= ERROR;
       }
@@ -306,7 +307,7 @@ Base2::decrypt( Block& block, const char *passphrase )
       status |= NO_SEC_KEY;
       status |= ERROR;
       errMsg = i18n("You do not have the secret key needed to decrypt this message.");
-      kDebug( 5326 ) <<"Base: no secret key for this message";
+      qCDebug(KPGP_LOG) <<"Base: no secret key for this message";
     }
     // check for persons
 #if 0
@@ -394,17 +395,17 @@ Base2::decrypt( Block& block, const char *passphrase )
   {
     // move index to start of next line
     index = error.indexOf('\n', index+18) + 1;
-    //kDebug( 5326 ) <<"Base: message is signed";
+    //qCDebug(KPGP_LOG) <<"Base: message is signed";
     status |= SIGNED;
     // get signature date and signature key ID
     if ((index2 = error.indexOf("Signature made", index)) != -1 ) {
       index2 += 15;
       int index3 = error.indexOf("using", index2);
       block.setSignatureDate( error.mid(index2, index3-index2-1) );
-      kDebug( 5326 ) <<"Message was signed on '" << block.signatureDate() <<"'";
+      qCDebug(KPGP_LOG) <<"Message was signed on '" << block.signatureDate() <<"'";
       index3 = error.indexOf("key ID ", index3) + 7;
       block.setSignatureKeyId( error.mid(index3,8) );
-      kDebug( 5326 ) <<"Message was signed with key '" << block.signatureKeyId() <<"'";
+      qCDebug(KPGP_LOG) <<"Message was signed with key '" << block.signatureKeyId() <<"'";
     }
     else {
       // if pgp can't find the keyring it unfortunately doesn't print
@@ -454,7 +455,7 @@ Base2::decrypt( Block& block, const char *passphrase )
       block.setSignatureUserId( i18n("Unknown error") );
     }
   }
-  //kDebug( 5326 ) <<"status =" << status;
+  //qCDebug(KPGP_LOG) <<"status =" << status;
   block.setStatus( status );
   return status;
 }
@@ -689,7 +690,7 @@ Base2::parsePublicKeyData( const QByteArray& output, Key* key /* = 0 */ )
         key->setExpired( true );
         break;
       default:
-        kDebug( 5326 ) <<"Unknown key flag.";
+        qCDebug(KPGP_LOG) <<"Unknown key flag.";
       }
 
       // Key Length
@@ -808,7 +809,7 @@ Base2::parsePublicKeyData( const QByteArray& output, Key* key /* = 0 */ )
     index = index2 + 1;
   }
 
-  //kDebug( 5326 ) <<"finished parsing key data";
+  //qCDebug(KPGP_LOG) <<"finished parsing key data";
 
   return key;
 }
@@ -877,7 +878,7 @@ Base2::parseTrustDataForKey( Key* key, const QByteArray& str )
       for( UserIDList::Iterator it = userIDs.begin(); it != userIDs.end(); ++it )
         if( (*it)->text() == uid )
         {
-          kDebug( 5326 )<<"Setting the validity of"<<uid<<" to"<<validity;
+          qCDebug(KPGP_LOG)<<"Setting the validity of"<<uid<<" to"<<validity;
           (*it)->setValidity( validity );
           break;
         }
@@ -892,7 +893,7 @@ Base2::parseTrustDataForKey( Key* key, const QByteArray& str )
 KeyList
 Base2::parseKeyList( const QByteArray& output, bool secretKeys )
 {
-  kDebug( 5326 ) <<"Kpgp::Base2::parseKeyList()";
+  qCDebug(KPGP_LOG) <<"Kpgp::Base2::parseKeyList()";
   KeyList keys;
   Key *key = 0;
   Subkey *subkey = 0;
@@ -969,7 +970,7 @@ Base2::parseKeyList( const QByteArray& output, bool secretKeys )
         key->setExpired( true );
         break;
       default:
-        kDebug( 5326 ) <<"Unknown key flag.";
+        qCDebug(KPGP_LOG) <<"Unknown key flag.";
       }
 
       // Key Length
@@ -1091,7 +1092,7 @@ Base2::parseKeyList( const QByteArray& output, bool secretKeys )
   if (key != 0) // store the last key in the key list
     keys.append( key );
 
-  //kDebug( 5326 ) <<"finished parsing keys";
+  //qCDebug(KPGP_LOG) <<"finished parsing keys";
 
   return keys;
 }

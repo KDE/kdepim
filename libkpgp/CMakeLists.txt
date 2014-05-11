@@ -12,6 +12,7 @@ configure_file(config-libkpgp.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-libkpgp
 ########### next target ###############
 
 set(kpgp_LIB_SRCS
+   kpgp_debug.cpp
    kpgpblock.cpp
    kpgpui.cpp
    kpgpkey.cpp

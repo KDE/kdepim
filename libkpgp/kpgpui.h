@@ -30,7 +30,7 @@
 #include <QPixmap>
 #include <QLabel>
 
-#include <kdebug.h>       // used in inlined methods
+#include <qdebug.h>       // used in inlined methods
 #include <kdialog.h>      // base class of all dialogs here
 #include <kpassworddialog.h>
 

@@ -18,10 +18,11 @@
 
 #include "kpgpbase.h"
 #include "kpgp.h"
+#include "kpgp_debug.h"
 
 #include <klocale.h>
 #include <kshell.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QTextCodec>
 #include <QByteArray>
@@ -41,7 +42,7 @@ BaseG::BaseG()
     int pos = output.lastIndexOf( ' ', eol - 1 );
     if( pos != -1 ) {
       mVersion = output.mid( pos + 1, eol - pos - 1 );
-      kDebug( 5326 ) <<"found GnuPG" << mVersion;
+      qCDebug(KPGP_LOG) <<"found GnuPG" << mVersion;
     }
   }
 }
@@ -81,7 +82,7 @@ BaseG::encsign( Block& block, const KeyIDList& recipients,
     cmd = "--batch --escape-from --clearsign";
   else
   {
-    kDebug( 5326 ) <<"kpgpbase: Neither recipients nor passphrase specified.";
+    qCDebug(KPGP_LOG) <<"kpgpbase: Neither recipients nor passphrase specified.";
     return OK;
   }
 
@@ -191,12 +192,12 @@ BaseG::encsign( Block& block, const KeyIDList& recipients,
     }
     else if( !( status & ERROR ) )
     {
-      //kDebug( 5326 ) <<"Base: Good Passphrase!";
+      //qCDebug(KPGP_LOG) <<"Base: Good Passphrase!";
       status |= SIGNED;
     }
   }
 
-  //kDebug( 5326 ) <<"status =" << status;
+  //qCDebug(KPGP_LOG) <<"status =" << status;
   block.setStatus( status );
   return status;
 }
@@ -250,7 +251,7 @@ BaseG::decrypt( Block& block, const char *passphrase )
   // gpg: public key decryption failed: General error [..]
   if( error.contains( "gpg: encrypted with" ) )
   {
-    //kDebug( 5326 ) <<"kpgpbase: message is encrypted";
+    //qCDebug(KPGP_LOG) <<"kpgpbase: message is encrypted";
     status |= ENCRYPTED;
     if( error.contains( "\ngpg: decryption failed" ) )
     {
@@ -259,7 +260,7 @@ BaseG::decrypt( Block& block, const char *passphrase )
         if( passphrase != 0 )
         {
           errMsg = i18n( "Bad passphrase; could not decrypt." );
-          kDebug( 5326 ) <<"Base: passphrase is bad";
+          qCDebug(KPGP_LOG) <<"Base: passphrase is bad";
           status |= BADPHRASE;
           status |= ERROR;
         }
@@ -271,7 +272,7 @@ BaseG::decrypt( Block& block, const char *passphrase )
           // The conversion from UTF8 is necessary because gpg stores and
           // prints user IDs in UTF8
           block.setRequiredUserId( QString::fromUtf8( error.mid( index, index2 - index + 1 ) ) );
-          kDebug( 5326 ) <<"Base: key needed is \"" << block.requiredUserId() <<"\"!";
+          qCDebug(KPGP_LOG) <<"Base: key needed is \"" << block.requiredUserId() <<"\"!";
         }
       }
       else if( error.contains( "secret key not available" ) )
@@ -280,14 +281,14 @@ BaseG::decrypt( Block& block, const char *passphrase )
         status |= NO_SEC_KEY;
         status |= ERROR;
         errMsg = i18n("You do not have the secret key needed to decrypt this message.");
-        kDebug( 5326 ) <<"Base: no secret key for this message";
+        qCDebug(KPGP_LOG) <<"Base: no secret key for this message";
       }
       else if( error.contains( "cancelled by user" ) )
       {
         status |= CANCEL;
         status |= ERROR;
         errMsg = i18n("The passphrase dialog was cancelled.");
-        kDebug( 5326 ) << errMsg;
+        qCDebug(KPGP_LOG) << errMsg;
       }
     }
     // check for persons
@@ -317,16 +318,16 @@ BaseG::decrypt( Block& block, const char *passphrase )
   // gpg: Can't check signature: public key not found
   if( ( index = error.indexOf("Signature made") ) != -1 )
   {
-    //kDebug( 5326 ) <<"Base: message is signed";
+    //qCDebug(KPGP_LOG) <<"Base: message is signed";
     status |= SIGNED;
     // get signature date and signature key ID
     // Example: Signature made Sun 06 May 2001 03:49:27 PM CEST using DSA key ID 12345678
     index2 = error.indexOf("using", index+15);
     block.setSignatureDate( error.mid(index+15, index2-(index+15)-1) );
-    kDebug( 5326 ) <<"Message was signed on '" << block.signatureDate() <<"'";
+    qCDebug(KPGP_LOG) <<"Message was signed on '" << block.signatureDate() <<"'";
     index2 = error.indexOf("key ID ", index2) + 7;
     block.setSignatureKeyId( error.mid(index2,8) );
-    kDebug( 5326 ) <<"Message was signed with key '" << block.signatureKeyId() <<"'";
+    qCDebug(KPGP_LOG) <<"Message was signed with key '" << block.signatureKeyId() <<"'";
     // move index to start of next line
     index = error.indexOf('\n', index2)+1;
 
@@ -348,7 +349,7 @@ BaseG::decrypt( Block& block, const char *passphrase )
     }
     else if( error.indexOf("BAD signature", index) != -1 )
     {
-      //kDebug( 5326 ) <<"BAD signature";
+      //qCDebug(KPGP_LOG) <<"BAD signature";
       status |= ERROR;
       // get the primary user ID of the signer
       index = error.indexOf('"',index);
@@ -371,7 +372,7 @@ BaseG::decrypt( Block& block, const char *passphrase )
       block.setSignatureUserId( QString() );
     }
   }
-  //kDebug( 5326 ) <<"status =" << status;
+  //qCDebug(KPGP_LOG) <<"status =" << status;
   block.setStatus( status );
   return status;
 }
@@ -604,7 +605,7 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
               // from the trust values of the user ids.
               break;
             default:
-              kDebug( 5326 ) <<"Unknown trust value";
+              qCDebug(KPGP_LOG) <<"Unknown trust value";
             }
           }
           break;
@@ -658,7 +659,7 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
               key->setCanCertify( true );
               break;
             default:
-              kDebug( 5326 ) <<"Unknown key capability";
+              qCDebug(KPGP_LOG) <<"Unknown key capability";
             }
           break;
         }
@@ -707,7 +708,7 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
               userID->setValidity( KPGP_VALIDITY_ULTIMATE );
               break;
             default:
-              kDebug( 5326 ) <<"Unknown trust value";
+              qCDebug(KPGP_LOG) <<"Unknown trust value";
             }
           }
           break;
@@ -743,7 +744,7 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
           if( !isUtf8 ) {
             // The user id isn't utf-8 encoded. It was most likely
             // created with PGP which either used latin1 or koi8-r.
-            kDebug( 5326 ) <<"User Id '" << uid
+            qCDebug(KPGP_LOG) <<"User Id '" << uid
                           << "' doesn't seem to be utf-8 encoded.";
 
             // We determine the ratio between non-ASCII and ASCII chars.
@@ -761,11 +762,11 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
               else if( *ch < 0 )
                 ++nonAsciiCount;
             }
-            kDebug( 5326 ) <<"ascii-nonAscii ratio :" << asciiCount
+            qCDebug(KPGP_LOG) <<"ascii-nonAscii ratio :" << asciiCount
                           << ":" << nonAsciiCount;
             if( nonAsciiCount > asciiCount ) {
               // assume koi8-r encoding
-              kDebug( 5326 ) <<"Assume koi8-r encoding.";
+              qCDebug(KPGP_LOG) <<"Assume koi8-r encoding.";
               QTextCodec *codec = QTextCodec::codecForName("KOI8-R");
               uidString = codec->toUnicode( uid.data() );
               // check the case of the first two characters to find out
@@ -780,7 +781,7 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
                   && ( uidString[1].toUpper() == uidString[1] ) ) {
                 // koi8-r decoded user id has inverted case, so assume
                 // CP1251 encoding
-                kDebug( 5326 ) <<"No, it doesn't seem to be koi8-r."
+                qCDebug(KPGP_LOG) <<"No, it doesn't seem to be koi8-r."
                                  "Use CP 1251 instead.";
                 QTextCodec *codec = QTextCodec::codecForName("CP1251");
                 uidString = codec->toUnicode( uid.data() );
@@ -788,7 +789,7 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
             }
             else {
               // assume latin1 encoding
-              kDebug( 5326 ) <<"Assume latin1 encoding.";
+              qCDebug(KPGP_LOG) <<"Assume latin1 encoding.";
               uidString = QString::fromLatin1( uid.data() );
             }
           }
@@ -820,7 +821,7 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
     index = eol + 1;
   }
 
-  //kDebug( 5326 ) <<"finished parsing key data";
+  //qCDebug(KPGP_LOG) <<"finished parsing key data";
 
   offset = index;
 
@@ -858,7 +859,7 @@ BaseG::parseKeyList( const QByteArray& output, bool secretKeys )
   }
   while( key != 0 );
 
-  //kDebug( 5326 ) <<"finished parsing keys";
+  //qCDebug(KPGP_LOG) <<"finished parsing keys";
 
   return keys;
 }

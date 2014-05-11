@@ -19,6 +19,7 @@
 #include "kpgpui.h"
 #include "kpgp.h"
 #include "kpgpkey.h"
+#include "kpgp_debug.h"
 
 #include <QLabel>
 #include <QApplication>
@@ -702,10 +703,10 @@ void KeySelectionDialog::updateKeyInfo( const Kpgp::Key* key,
   if( 0 == key ) {
     // the key doesn't exist anymore -> delete it from the list view
     while( lvi->childCount() ) {
-      kDebug( 5326 ) <<"Deleting '" << lvi->child( 0 )->text( 1 ) <<"'";
+      qCDebug(KPGP_LOG) <<"Deleting '" << lvi->child( 0 )->text( 1 ) <<"'";
       delete lvi->takeChild( 0 );
     }
-    kDebug( 5326 ) <<"Deleting key 0x" << lvi->text( 0 ) <<" ("
+    qCDebug(KPGP_LOG) <<"Deleting key 0x" << lvi->text( 0 ) <<" ("
                   << lvi->text( 1 ) << ")\n";
     delete lvi;
     lvi = 0;
@@ -802,7 +803,7 @@ KeySelectionDialog::keyAdmissibility( QTreeWidgetItem* lvi,
     return 1;
     break;
   default:
-    kDebug( 5326 ) <<"Error: Invalid key status value.";
+    qCDebug(KPGP_LOG) <<"Error: Invalid key status value.";
   }
 
   return 0;
@@ -866,7 +867,7 @@ void KeySelectionDialog::slotRereadKeys()
 
 void KeySelectionDialog::slotSelectionChanged()
 {
-  kDebug( 5326 ) <<"KeySelectionDialog::slotSelectionChanged()";
+  qCDebug(KPGP_LOG) <<"KeySelectionDialog::slotSelectionChanged()";
 
   if ( mListView->selectionMode() == QTreeWidget::ExtendedSelection ) {
     // (re)start the check selection timer. Checking the selection is delayed
@@ -882,7 +883,7 @@ void KeySelectionDialog::slotSelectionChanged()
 
 void KeySelectionDialog::slotCheckSelection( QTreeWidgetItem* plvi /* = 0 */ )
 {
-  kDebug( 5326 ) <<"KeySelectionDialog::slotCheckSelection()";
+  qCDebug(KPGP_LOG) <<"KeySelectionDialog::slotCheckSelection()";
 
   if( mListView->selectionMode() != QTreeWidget::ExtendedSelection ) {
     mKeyIds.clear();
@@ -935,7 +936,7 @@ void KeySelectionDialog::slotCheckSelection( QTreeWidgetItem* plvi /* = 0 */ )
           if( -1 == mKeyIds.indexOf( lvi->text(0).toLocal8Bit() ) ) {
             // some items of this key are selected and the key wasn't selected
             // before => the user selected something
-            kDebug( 5326 ) <<"selectedCount:"<<selectedCount<<"/"<<itemCount
+            qCDebug(KPGP_LOG) <<"selectedCount:"<<selectedCount<<"/"<<itemCount
                           <<"--- User selected key"<<lvi->text(0);
             userAction = SELECTED;
           }
@@ -943,7 +944,7 @@ void KeySelectionDialog::slotCheckSelection( QTreeWidgetItem* plvi /* = 0 */ )
                    ( -1 != mKeyIds.indexOf( lvi->text(0).toLocal8Bit() ) ) ) {
             // some items of this key are unselected and the key was selected
             // before => the user deselected something
-            kDebug( 5326 ) <<"selectedCount:"<<selectedCount<<"/"<<itemCount
+            qCDebug(KPGP_LOG) <<"selectedCount:"<<selectedCount<<"/"<<itemCount
                           <<"--- User deselected key"<<lvi->text(0);
             userAction = DESELECTED;
           }
@@ -992,7 +993,7 @@ void KeySelectionDialog::slotCheckSelection( QTreeWidgetItem* plvi /* = 0 */ )
         }
       }
     }
-    kDebug( 5326 ) <<"Selected keys:" << newKeyIdList.toStringList().join(QLatin1String(","));
+    qCDebug(KPGP_LOG) <<"Selected keys:" << newKeyIdList.toStringList().join(QLatin1String(","));
     mKeyIds = newKeyIdList;
     if( !keysToBeChecked.isEmpty() ) {
       keysAllowed = keysAllowed && checkKeys( keysToBeChecked );
@@ -1009,7 +1010,7 @@ bool KeySelectionDialog::checkKeys( const QList<QTreeWidgetItem*>& keys ) const
 {
   KProgressDialog* pProgressDlg = 0;
   bool keysAllowed = true;
-  kDebug( 5326 ) <<"Checking keys...";
+  qCDebug(KPGP_LOG) <<"Checking keys...";
 
   pProgressDlg = new KProgressDialog( 0, i18n("Checking Keys"),
                                       i18n("Checking key 0xMMMMMMMM..."));
@@ -1022,7 +1023,7 @@ bool KeySelectionDialog::checkKeys( const QList<QTreeWidgetItem*>& keys ) const
   for( QList<QTreeWidgetItem*>::ConstIterator it = keys.begin();
        it != keys.end();
        ++it ) {
-    kDebug( 5326 ) <<"Checking key 0x" << getKeyId( *it ) <<"...";
+    qCDebug(KPGP_LOG) <<"Checking key 0x" << getKeyId( *it ) <<"...";
     pProgressDlg->setLabelText( i18n("Checking key 0x%1...",
                               QString::fromLatin1( getKeyId( *it ) ) ) );
     qApp->processEvents();
@@ -1246,7 +1247,7 @@ void KeyRequester::slotDialogButtonClicked() {
   Module * pgp = Module::getKpgp();
 
   if ( !pgp ) {
-    kWarning(5326) <<"Kpgp::KeyRequester::slotDialogButtonClicked(): No pgp module found!";
+    qCWarning(KPGP_LOG) <<"Kpgp::KeyRequester::slotDialogButtonClicked(): No pgp module found!";
     return;
   }
 
@@ -1525,7 +1526,7 @@ KeyApprovalDialog::slotChangeEncryptionKey( int nr )
 {
   Kpgp::Module *pgp = Kpgp::Module::getKpgp();
 
-  kDebug( 5326 )<<"Key approval dialog size is"
+  qCDebug(KPGP_LOG)<<"Key approval dialog size is"
                <<width()<<"x"<<height();
 
   if( pgp == 0 )

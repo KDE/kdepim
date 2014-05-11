@@ -17,7 +17,8 @@
  */
 
 #include "kpgpkey.h"
-#include "kdebug.h"
+#include "qdebug.h"
+#include "kpgp_debug.h"
 
 #include <QByteArray>
 
@@ -106,7 +107,7 @@ Key::Key(const KeyID& keyid, const QString& uid, const bool secret) :
 
 Key::~Key()
 {
-  //kDebug( 5326 ) <<"Kpgp::Key: Deleting key" << primaryUserID();
+  //qCDebug(KPGP_LOG) <<"Kpgp::Key: Deleting key" << primaryUserID();
   qDeleteAll( mUserIDs );
   mUserIDs.clear();
   qDeleteAll( mSubkeys );
@@ -256,7 +257,7 @@ void Key::setFingerprint(const KeyID& keyID, const QByteArray &fpr)
     key->setFingerprint(fpr);
   }
   else
-    kDebug(5326) <<"Error: Can't set fingerprint. A subkey with key ID 0x"
+    qCDebug(KPGP_LOG) <<"Error: Can't set fingerprint. A subkey with key ID 0x"
                   << keyID << "doesn't exist.";
 }
 
