@@ -25,9 +25,9 @@
 
 class TemplateParserTester : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  private slots:
+private slots:
     /**
      * checks whether text/plain only mails are converted to a valid HTML
      */
