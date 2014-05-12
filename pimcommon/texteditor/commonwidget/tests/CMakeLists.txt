@@ -9,8 +9,8 @@ macro(add_plaintext_unittest _source)
   target_link_libraries( ${_name}
     pimcommon
     ${QT_QTTEST_LIBRARY}
-    ${QT_QTCORE_LIBRARY}
-    ${KDE4_KDEUI_LIBS}
+    
+    
   )
 endmacro ()
 
