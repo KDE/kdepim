@@ -146,8 +146,10 @@ void TodoEdit::showToDoWidget()
 
 void TodoEdit::writeConfig()
 {
-    MessageViewer::GlobalSettingsBase::self()->setLastSelectedFolder(mCollectionCombobox->currentCollection().id());
-    MessageViewer::GlobalSettingsBase::self()->writeConfig();
+    if (MessageViewer::GlobalSettingsBase::self()->lastSelectedFolder() != mCollectionCombobox->currentCollection().id()) {
+        MessageViewer::GlobalSettingsBase::self()->setLastSelectedFolder(mCollectionCombobox->currentCollection().id());
+        MessageViewer::GlobalSettingsBase::self()->writeConfig();
+    }
 }
 
 void TodoEdit::readConfig()
