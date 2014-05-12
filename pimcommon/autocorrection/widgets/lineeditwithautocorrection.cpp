@@ -56,7 +56,7 @@ void LineEditWithAutoCorrection::setAutocorrectionLanguage(const QString &langua
 void LineEditWithAutoCorrection::keyPressEvent ( QKeyEvent *e )
 {
     if ((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
-        if (mAutoCorrection) {
+        if (mAutoCorrection && !textCursor().hasSelection()) {
             // no Html format in subject.
             int position = textCursor().position();
             mAutoCorrection->autocorrect(false, *document(), position);
