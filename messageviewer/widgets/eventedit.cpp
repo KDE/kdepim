@@ -156,8 +156,10 @@ EventEdit::~EventEdit()
 
 void EventEdit::writeConfig()
 {
-    MessageViewer::GlobalSettingsBase::self()->setLastEventSelectedFolder(mCollectionCombobox->currentCollection().id());
-    MessageViewer::GlobalSettingsBase::self()->writeConfig();
+    if (mCollectionCombobox->currentCollection().id() != MessageViewer::GlobalSettingsBase::self()->lastEventSelectedFolder()) {
+        MessageViewer::GlobalSettingsBase::self()->setLastEventSelectedFolder(mCollectionCombobox->currentCollection().id());
+        MessageViewer::GlobalSettingsBase::self()->writeConfig();
+    }
 }
 
 void EventEdit::showEventEdit()
