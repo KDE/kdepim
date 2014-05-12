@@ -40,8 +40,6 @@ public:
     ~ContactDisplayMessageMemento();
     void processAddress( const KABC::Addressee& addressee );
     bool allowToRemoteContent() const;
-    bool forceToHtml() const;
-    bool forceToText() const;
     KABC::Picture photo() const;
 
     bool finished() const;
