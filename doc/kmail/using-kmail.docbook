@@ -252,7 +252,7 @@ Shortcuts...</guimenuitem></menuchoice> dialog.</para>
           <para><menuchoice><guimenu>Message</guimenu><guimenuitem>New Message...</guimenuitem></menuchoice></para>
         </listitem>
         <listitem>
-          <para>The <guiicon>New Message</guiicon> icon on the main toolbar.</para>
+          <para>The <guiicon>New</guiicon> icon on the main toolbar.</para>
         </listitem>
       </itemizedlist>
       <para>To write your message, fill in the appropriate fields in the
