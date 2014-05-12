@@ -51,7 +51,9 @@ SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
 
     mNewHeader = new QLineEdit;
     mNewHeader->setClearButtonEnabled(true);
-    hbox->addWidget(mNewHeader);
+    //QT5 mNewHeader->setTrapReturnKey(true);
+    connect(mNewHeader,SIGNAL(returnPressed()), SLOT(slotAddNewHeader()));
+    mNewHeader->setClearButtonShown(true);
 
 
     mAddNewHeader = new QPushButton;
@@ -65,12 +67,31 @@ SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
     lay->addLayout(hbox);
 
     setMainWidget(w);
-    resize(400,300);
+    readConfig();
 }
 
 SelectHeadersDialog::~SelectHeadersDialog()
 {
+    writeConfig();
 }
+
+void SelectHeadersDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SelectHeadersDialog" );
+    const QSize size = group.readEntry( "Size", QSize(400,300) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void SelectHeadersDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SelectHeadersDialog" );
+    group.writeEntry( "Size", size() );
+    group.sync();
+}
+
+
 
 void SelectHeadersDialog::slotNewHeaderTextChanged(const QString &text)
 {
@@ -80,8 +101,10 @@ void SelectHeadersDialog::slotNewHeaderTextChanged(const QString &text)
 void SelectHeadersDialog::slotAddNewHeader()
 {
     const QString headerText = mNewHeader->text().trimmed();
-    if (!headerText.isEmpty())
+    if (!headerText.isEmpty()) {
         mListWidget->addNewHeader(headerText);
+        mNewHeader->clear();
+    }
 }
 
 void SelectHeadersDialog::setListHeaders(const QMap<QString, QString> &lst, const QStringList &selectedHeaders)
@@ -105,6 +128,14 @@ SelectHeadersWidget::~SelectHeadersWidget()
 
 void SelectHeadersWidget::addNewHeader(const QString &header)
 {
+    const int numberOfItem = count();
+    for (int i = 0; i < numberOfItem; ++i) {
+        QListWidgetItem *it = item(i);
+        if (it->data(HeaderId).toString() == header) {
+            return;
+        }
+    }
+
     QListWidgetItem *item = new QListWidgetItem(header, this);
     item->setData(HeaderId, header);
     item->setCheckState(Qt::Unchecked);
