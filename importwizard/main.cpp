@@ -28,8 +28,6 @@
 
 int main(int argc, char *argv[])
 {
-    //QT5 KLocale::setMainCatalog("importwizard");
-
     //FIXME: "wizards" are "assistents" in new KDE slang
     K4AboutData aboutData( "importwizard", 0, ki18n("importwizard"),
                           KDEPIM_VERSION, ki18n("PIM Import Tool"), K4AboutData::License_GPL_V2,

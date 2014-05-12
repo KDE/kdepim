@@ -108,6 +108,7 @@ find_package(KF5Service ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5DNSSD ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5DocTools REQUIRED)
+find_package(Phonon4Qt5 CONFIG REQUIRED)
 include(GenerateExportHeader)
 
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)

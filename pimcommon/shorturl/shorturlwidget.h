@@ -23,10 +23,11 @@
 
 #include <Solid/Networking>
 
-class QLineEdit;
+class KLineEdit;
 class KToggleAction;
 class QPushButton;
 class QLabel;
+class QLineEdit;
 namespace KPIMUtils {
 class ProgressIndicatorLabel;
 }
@@ -67,7 +68,7 @@ Q_SIGNALS:
 private:
     void loadEngine();
     QLabel *mShorturlServiceName;
-    QLineEdit *mOriginalUrl;
+    KLineEdit *mOriginalUrl;
     QLineEdit *mShortUrl;
     QPushButton *mConvertButton;
     QPushButton *mCopyToClipboard;

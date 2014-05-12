@@ -25,8 +25,6 @@
 
 int main(int argc, char *argv[])
 {
-    //QT5 KLocale::setMainCatalog("kmailcvt");
-
     K4AboutData aboutData( "kmailcvt", 0, ki18n("KMailCVT"),
                           KDEPIM_VERSION, ki18n("Mail Import Tool"), K4AboutData::License_GPL_V2,
                           ki18n("Copyright © 2000–2014 KMailCVT authors"));

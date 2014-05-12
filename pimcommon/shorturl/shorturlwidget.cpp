@@ -21,7 +21,7 @@
 #include "shorturl/shorturlconfiguredialog.h"
 #include <KPIMUtils/ProgressIndicatorLabel>
 
-#include <QLineEdit>
+#include <KLineEdit>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KToggleAction>
@@ -83,9 +83,9 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Original url:"));
     grid->addWidget(lab, 3, 0);
 
-    mOriginalUrl = new QLineEdit;
+    mOriginalUrl = new KLineEdit;
     mOriginalUrl->setClearButtonEnabled(true);
-    //QT5 mOriginalUrl->setTrapReturnKey(true);
+    mOriginalUrl->setTrapReturnKey(true);
     connect(mOriginalUrl, SIGNAL(textChanged(QString)), this, SLOT(slotOriginalUrlChanged(QString)));
     connect(mOriginalUrl, SIGNAL(returnPressed(QString)), this, SLOT(slotConvertUrl()));
     grid->addWidget(mOriginalUrl, 3, 1);
