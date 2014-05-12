@@ -75,8 +75,7 @@ SpellCheckLineEdit::SpellCheckLineEdit(QWidget* parent, const QString& configFil
     setLineWrapMode(NoWrap);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    //QT5
-    //setCheckSpellingEnabledInternal( true );
+    setCheckSpellingEnabled(true);
     document()->adjustSize();
 
     document()->setDocumentMargin(2);
