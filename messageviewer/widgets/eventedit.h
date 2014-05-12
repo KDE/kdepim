@@ -26,7 +26,7 @@
 #include <KMime/Message>
 #include <KCalCore/Event>
 
-class KLineEdit;
+class QLineEdit;
 class KDateTimeEdit;
 namespace Akonadi {
 class CollectionComboBox;
@@ -69,7 +69,7 @@ private:
     void readConfig();
     Akonadi::Collection mCollection;
     KMime::Message::Ptr mMessage;
-    KLineEdit *mEventEdit;
+    QLineEdit *mEventEdit;
     Akonadi::CollectionComboBox *mCollectionCombobox;
     KDateTimeEdit *mStartDateTimeEdit;
     KDateTimeEdit *mEndDateTimeEdit;

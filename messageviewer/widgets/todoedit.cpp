@@ -19,7 +19,7 @@
 #include "messageviewer/globalsettings_base.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KIcon>
 #include <QDebug>
 #include <KMessageWidget>
@@ -65,8 +65,8 @@ TodoEdit::TodoEdit(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Todo:"));
     hbox->addWidget(lab);
 
-    mNoteEdit = new KLineEdit;
-    mNoteEdit->setClearButtonShown(true);
+    mNoteEdit = new QLineEdit;
+    mNoteEdit->setClearButtonEnabled(true);
     mNoteEdit->setObjectName(QLatin1String("noteedit"));
     mNoteEdit->setFocus();
     connect(mNoteEdit, SIGNAL(textChanged(QString)), SLOT(slotTextEdited()));

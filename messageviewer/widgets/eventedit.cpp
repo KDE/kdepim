@@ -20,7 +20,7 @@
 #include "messageviewer/globalsettings_base.h"
 
 #include <KLocalizedString>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KIcon>
 #include <KDateTimeEdit>
 #include <QDateTime>
@@ -60,8 +60,8 @@ EventEdit::EventEdit(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Event:"));
     hbox->addWidget(lab);
 
-    mEventEdit = new KLineEdit;
-    mEventEdit->setClearButtonShown(true);
+    mEventEdit = new QLineEdit;
+    mEventEdit->setClearButtonEnabled(true);
     mEventEdit->setObjectName(QLatin1String("noteedit"));
     mEventEdit->setFocus();
     connect(mEventEdit, SIGNAL(returnPressed()), SLOT(slotReturnPressed()));

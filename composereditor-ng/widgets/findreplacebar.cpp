@@ -28,7 +28,7 @@
 #include <QHBoxLayout>
 #include <QToolButton>
 #include <QLabel>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <QPushButton>
 #include <QAction>
 #include <QMenu>
@@ -74,7 +74,7 @@ public:
     QString lastSearchStr;
 
     FindReplaceBar *q;
-    KLineEdit *search;
+    QLineEdit *search;
     QAction *caseSensitiveAct;
     QAction *highlightAll;
 
@@ -237,9 +237,9 @@ FindReplaceBar::FindReplaceBar(KWebView *parent)
     QLabel * label = new QLabel( i18nc( "Find text", "F&ind:" ), this );
     lay->addWidget( label );
 
-    d->search = new KLineEdit( this );
+    d->search = new QLineEdit( this );
     d->search->setToolTip( i18n( "Text to search for" ) );
-    d->search->setClearButtonShown( true );
+    d->search->setClearButtonEnabled( true );
     label->setBuddy( d->search );
     lay->addWidget( d->search );
 

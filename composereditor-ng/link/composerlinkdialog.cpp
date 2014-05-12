@@ -22,7 +22,7 @@
 #include "extendattributes/extendattributesbutton.h"
 #include "utils/composereditorutils_p.h"
 
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocalizedString>
 #include <KSeparator>
 #include <KComboBox>
@@ -55,8 +55,8 @@ public:
     void _k_slotWebElementChanged();
 
     QWebElement webElement;
-    KLineEdit *linkText;
-    KLineEdit *linkLocation;
+    QLineEdit *linkText;
+    QLineEdit *linkLocation;
     KComboBox *target;
     ComposerLinkDialog *q;
 };
@@ -76,15 +76,15 @@ void ComposerLinkDialogPrivate::initialize(const QWebElement &element)
     QLabel *label = new QLabel(i18n("Enter text to display for the link:"));
     layout->addWidget( label, 0, 0 );
 
-    linkText = new KLineEdit;
+    linkText = new QLineEdit;
     linkText->setReadOnly(!webElement.isNull());
-    linkText->setClearButtonShown(true);
+    linkText->setClearButtonEnabled(true);
     layout->addWidget( linkText, 0, 1 );
 
     label = new QLabel(i18n("Enter the location:"));
     layout->addWidget( label, 1, 0 );
-    linkLocation = new KLineEdit;
-    linkLocation->setClearButtonShown(true);
+    linkLocation = new QLineEdit;
+    linkLocation->setClearButtonEnabled(true);
     layout->addWidget( linkLocation, 1, 1 );
 
     label = new QLabel(i18n("Target"));

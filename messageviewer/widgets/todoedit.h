@@ -25,7 +25,7 @@
 #include "messageviewer_export.h"
 
 class KMessageWidget;
-class KLineEdit;
+class QLineEdit;
 
 namespace Akonadi {
 class CollectionComboBox;
@@ -68,7 +68,7 @@ private:
     void readConfig();
     Akonadi::Collection mCollection;
     KMime::Message::Ptr mMessage;
-    KLineEdit *mNoteEdit;
+    QLineEdit *mNoteEdit;
     Akonadi::CollectionComboBox *mCollectionCombobox;
     KMessageWidget *mMsgWidget;
 };

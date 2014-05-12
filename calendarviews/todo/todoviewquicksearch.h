@@ -35,7 +35,7 @@ namespace KPIM {
   class TagSelectionCombo;
 }
 
-class KLineEdit;
+class QLineEdit;
 
 class TodoViewQuickSearch : public QWidget
 {
@@ -72,7 +72,7 @@ class TodoViewQuickSearch : public QWidget
 
     Akonadi::ETMCalendar::Ptr mCalendar;
 
-    KLineEdit *mSearchLine;
+    QLineEdit *mSearchLine;
     KPIM::TagSelectionCombo *mCategoryCombo;
     KPIM::KCheckComboBox *mPriorityCombo;
 };
