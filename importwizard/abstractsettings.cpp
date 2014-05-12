@@ -83,7 +83,7 @@ MailTransport::Transport *AbstractSettings::createTransport()
 void AbstractSettings::storeTransport(MailTransport::Transport *mt, bool isDefault )
 {
     mt->forceUniqueName();
-    mt->writeConfig();
+    mt->save();
     MailTransport::TransportManager::self()->addTransport( mt );
     if ( isDefault )
         MailTransport::TransportManager::self()->setDefaultTransport( mt->id() );

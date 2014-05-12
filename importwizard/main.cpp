@@ -17,9 +17,9 @@
 
 
 #include <kcmdlineargs.h>
-#include <k4aboutdata.h>
+#include <kaboutdata.h>
 #include <klocale.h>
-#include <KUniqueApplication>
+#include <KDBusService>
 
 #include "importwizard.h"
 
@@ -29,27 +29,31 @@
 int main(int argc, char *argv[])
 {
     //FIXME: "wizards" are "assistents" in new KDE slang
-    K4AboutData aboutData( "importwizard", 0, ki18n("importwizard"),
-                          KDEPIM_VERSION, ki18n("PIM Import Tool"), K4AboutData::License_GPL_V2,
-                          ki18n("Copyright © 2012-2013-2014 importwizard authors"));
-    aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
+    KAboutData aboutData( QStringLiteral("importwizard"), 
+                          i18n("PIM Import Tool"), 
+                          QLatin1String(KDEPIM_VERSION),
+                          i18n("PIM Import Tool"),
+                          KAboutData::License_GPL_V2,
+                          i18n("Copyright © 2012-2013-2014 importwizard authors"));
+
+    aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
     aboutData.setProgramIconName(QLatin1String("kontact-import-wizard"));
-    KCmdLineArgs::init( argc, argv, &aboutData );
+    aboutData.setOrganizationDomain(QByteArray("kde.org"));
+    aboutData.setProductName(QByteArray("importwizard"));
 
-    KCmdLineOptions options;
-    KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
-    KUniqueApplication::addCmdLineOptions();
+    KAboutData::setApplicationData(aboutData);
 
-    if ( !KUniqueApplication::start() ) {
-        fprintf( stderr, "importwizard is already running!\n" );
-        exit( 0 );
-    }
-    KUniqueApplication a;
+    QApplication app(argc, argv);
+    app.setApplicationName(aboutData.componentName());
+    app.setApplicationDisplayName(aboutData.displayName());
+    app.setOrganizationDomain(aboutData.organizationDomain());
+    app.setApplicationVersion(aboutData.version());
+
+    KDBusService service();
 
     ImportWizard *wizard = new ImportWizard();
-    a.setTopWidget(wizard);
     wizard->show();
-    int ret = a.exec();
+    int ret = app.exec();
     delete wizard;
     return ret;
 }
