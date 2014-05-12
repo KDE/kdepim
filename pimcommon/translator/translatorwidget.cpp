@@ -23,7 +23,7 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 
 #include <KTextEdit>
-#include <KPushButton>
+#include <QPushButton>
 #include <KLocalizedString>
 #include <kio/job.h>
 #include <QDebug>
@@ -75,10 +75,10 @@ public:
     TranslatorResultTextEdit *translatorResultTextEdit;
     MinimumComboBox *from;
     MinimumComboBox *to;
-    KPushButton *translate;
+    QPushButton *translate;
     PimCommon::AbstractTranslator *abstractTranslator;
     KPIMUtils::ProgressIndicatorWidget *progressIndictor;
-    KPushButton *invert;
+    QPushButton *invert;
     QSplitter *splitter;
     KToggleAction *action;
     bool languageSettingsChanged;
@@ -253,13 +253,13 @@ void TranslatorWidget::init()
     separator->setOrientation(Qt::Vertical);
     hboxLayout->addWidget( separator );
 
-    d->invert = new KPushButton(
+    d->invert = new QPushButton(
                 i18nc("Invert language choices so that from becomes to and to becomes from", "Invert"),this);
     d->invert->setObjectName(QLatin1String("invert-button"));
     connect(d->invert, SIGNAL(clicked()), this, SLOT(slotInvertLanguage()));
     hboxLayout->addWidget(d->invert);
 
-    KPushButton *clear = new KPushButton(i18n("Clear"),this);
+    QPushButton *clear = new QPushButton(i18n("Clear"),this);
     clear->setObjectName(QLatin1String("clear-button"));
 #ifndef QT_NO_ACCESSIBILITY
     clear->setAccessibleName( i18n("Clear") );
@@ -267,7 +267,7 @@ void TranslatorWidget::init()
     connect(clear, SIGNAL(clicked()), this, SLOT(slotClear()));
     hboxLayout->addWidget(clear);
 
-    d->translate = new KPushButton( i18n( "Translate" ) );
+    d->translate = new QPushButton( i18n( "Translate" ) );
     d->translate->setObjectName(QLatin1String("translate-button"));
 #ifndef QT_NO_ACCESSIBILITY
     d->translate->setAccessibleName( i18n("Translate") );

@@ -38,9 +38,9 @@
 #include <KIcon>
 #include <klocale.h>
 #include <qdebug.h>
-#include <kpushbutton.h>
+#include <QPushButton>
 #include <kdialog.h>
-#include <KMenu>
+#include <QMenu>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QListWidget>
@@ -126,7 +126,7 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
             qDebug() << "Are you sure you want to use an Up button"
                         "without a Down button??";
         }
-        mUpButton = new KPushButton( QString(), this );
+        mUpButton = new QPushButton( QString(), this );
         mUpButton->setIcon( KIcon( QLatin1String("go-up") ) );
         mUpButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
         mUpButton->setAutoDefault( false );
@@ -141,7 +141,7 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
             qDebug() << "Are you sure you want to use a Down button"
                         "without an Up button??";
         }
-        mDownButton = new KPushButton( QString(), this );
+        mDownButton = new QPushButton( QString(), this );
         mDownButton->setIcon( KIcon( QLatin1String("go-down") ) );
         mDownButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
         mDownButton->setAutoDefault( false );
@@ -404,7 +404,7 @@ void SimpleStringListEditor::slotContextMenu(const QPoint &pos)
 {
     QList<QListWidgetItem *> lstSelectedItems = mListBox->selectedItems();
     const bool hasItemsSelected = !lstSelectedItems.isEmpty();
-    KMenu *menu = new KMenu( this );
+    QMenu *menu = new QMenu( this );
     if (mAddButton) {
         menu->addAction( mAddButton->text(), this, SLOT(slotAdd()));
     }

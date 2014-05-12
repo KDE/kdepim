@@ -29,7 +29,7 @@
 
 #include <kseparator.h>
 #include <QLineEdit>
-#include <KPushButton>
+#include <QPushButton>
 #include <KLocalizedString>
 #include <kio/global.h>
 #include <kio/netaccess.h>
@@ -61,8 +61,8 @@ public:
 
     KUrl url;
     QCheckBox *applyAll;
-    KPushButton *rename;
-    KPushButton *suggestNewName;
+    QPushButton *rename;
+    QPushButton *suggestNewName;
     QLineEdit *nameEdit;
     RenameFileDialog *q;
 
@@ -137,18 +137,18 @@ RenameFileDialog::RenameFileDialog(const KUrl& url, bool multiFiles, QWidget * p
     renameLayout->addWidget(d->nameEdit);
     d->nameEdit->setClearButtonEnabled(true);
     d->nameEdit->setText(url.fileName());
-    d->suggestNewName = new KPushButton(i18n("Suggest New &Name"), this);
+    d->suggestNewName = new QPushButton(i18n("Suggest New &Name"), this);
     renameLayout->addWidget(d->suggestNewName);
     connect(d->suggestNewName, SIGNAL(clicked()), this, SLOT(slotSuggestNewNamePressed()));
 
 
-    KPushButton *overWrite = new KPushButton(i18n("&Overwrite"),this);
+    QPushButton *overWrite = new QPushButton(i18n("&Overwrite"),this);
     connect(overWrite,SIGNAL(clicked()),this,SLOT(slotOverwritePressed()));
 
-    KPushButton *ignore = new KPushButton(i18n("&Ignore"),this);
+    QPushButton *ignore = new QPushButton(i18n("&Ignore"),this);
     connect(ignore,SIGNAL(clicked()),this,SLOT(slotIgnorePressed()));
 
-    d->rename = new KPushButton(i18n("&Rename"),this);
+    d->rename = new QPushButton(i18n("&Rename"),this);
     connect(d->rename,SIGNAL(clicked()),this,SLOT(slotRenamePressed()));
 
     KSeparator* separator = new KSeparator(this);
