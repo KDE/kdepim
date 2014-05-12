@@ -60,6 +60,7 @@ private slots:
     void shouldHideMessageWidget();
     void shouldHideMessageWidgetWhenAddNewMessage();
     void shouldHideMessageWidgetWhenCloseWidget();
+    void shouldShouldEnabledSaveOpenEditorButton();
 };
 
 #endif // TODOEDITTEST_H

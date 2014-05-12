@@ -68,7 +68,7 @@ TodoEdit::TodoEdit(QWidget *parent)
     mNoteEdit->setClearButtonShown(true);
     mNoteEdit->setObjectName(QLatin1String("noteedit"));
     mNoteEdit->setFocus();
-    connect(mNoteEdit, SIGNAL(textChanged(QString)), SLOT(slotTextEdited()));
+    connect(mNoteEdit, SIGNAL(textChanged(QString)), SLOT(slotTextEdited(QString)));
     connect(mNoteEdit, SIGNAL(returnPressed()), SLOT(slotReturnPressed()));
     hbox->addWidget(mNoteEdit, 1);
 
@@ -93,22 +93,25 @@ TodoEdit::TodoEdit(QWidget *parent)
     vbox->addLayout(hbox);
 
     hbox->addStretch(1);
-    KPushButton *btn = new KPushButton(KIcon(QLatin1String("task-new")), i18n("&Save"));
-    btn->setObjectName(QLatin1String("save-button"));
+    mSaveButton = new KPushButton(KIcon(QLatin1String("task-new")), i18n("&Save"));
+    mSaveButton->setObjectName(QLatin1String("save-button"));
+    mSaveButton->setEnabled(false);
 #ifndef QT_NO_ACCESSIBILITY
-    btn->setAccessibleDescription(i18n("Create new todo and close this widget."));
+    mSaveButton->setAccessibleDescription(i18n("Create new todo and close this widget."));
 #endif
-    connect(btn, SIGNAL(clicked(bool)), this, SLOT(slotReturnPressed()));
-    hbox->addWidget(btn);
+    connect(mSaveButton, SIGNAL(clicked(bool)), this, SLOT(slotReturnPressed()));
+    hbox->addWidget(mSaveButton);
 
-    btn = new KPushButton(i18n("Open &editor..."));
+    mOpenEditorButton = new KPushButton(i18n("Open &editor..."));
+    mOpenEditorButton->setObjectName(QLatin1String("open-editor-button"));
 #ifndef QT_NO_ACCESSIBILITY
-    btn->setAccessibleDescription(i18n("Open todo editor, where more details can be changed."));
+    mOpenEditorButton->setAccessibleDescription(i18n("Open todo editor, where more details can be changed."));
 #endif
-    connect(btn, SIGNAL(clicked(bool)), this, SLOT(slotOpenEditor()));
-    hbox->addWidget(btn);
+    mOpenEditorButton->setEnabled(false);
+    connect(mOpenEditorButton, SIGNAL(clicked(bool)), this, SLOT(slotOpenEditor()));
+    hbox->addWidget(mOpenEditorButton);
 
-    btn = new KPushButton(KStandardGuiItem::cancel());
+    KPushButton *btn = new KPushButton(KStandardGuiItem::cancel());
     btn->setObjectName(QLatin1String("close-button"));
 #ifndef QT_NO_ACCESSIBILITY
     btn->setAccessibleDescription(i18n("Close the widget for creating new todos."));
@@ -126,6 +129,13 @@ TodoEdit::TodoEdit(QWidget *parent)
 TodoEdit::~TodoEdit()
 {
     writeConfig();
+}
+
+void TodoEdit::updateButtons(const QString &subject)
+{
+    const bool subjectIsNotEmpty = !subject.isEmpty();
+    mSaveButton->setEnabled(subjectIsNotEmpty);
+    mOpenEditorButton->setEnabled(subjectIsNotEmpty);
 }
 
 void TodoEdit::showToDoWidget()
@@ -265,8 +275,9 @@ void TodoEdit::slotOpenEditor()
     dlg->open();
 }
 
-void TodoEdit::slotTextEdited()
+void TodoEdit::slotTextEdited(const QString &subject)
 {
+    updateButtons(subject);
     if (mMsgWidget->isVisible()) {
         mMsgWidget->hide();
     }

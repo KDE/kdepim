@@ -28,6 +28,7 @@
 
 class KLineEdit;
 class KDateTimeEdit;
+class KPushButton;
 namespace Akonadi {
 class CollectionComboBox;
 }
@@ -57,6 +58,7 @@ private Q_SLOTS:
     void slotCollectionChanged(int);
     void slotOpenEditor();
     void slotStartDateTimeChanged(const KDateTime &newDateTime);
+    void slotUpdateButtons(const QString &subject);
 
 Q_SIGNALS:
     void createEvent(const KCalCore::Event::Ptr &event, const Akonadi::Collection &collection);
@@ -73,6 +75,8 @@ private:
     Akonadi::CollectionComboBox *mCollectionCombobox;
     KDateTimeEdit *mStartDateTimeEdit;
     KDateTimeEdit *mEndDateTimeEdit;
+    KPushButton *mSaveButton;
+    KPushButton *mOpenEditorButton;
 };
 }
 
