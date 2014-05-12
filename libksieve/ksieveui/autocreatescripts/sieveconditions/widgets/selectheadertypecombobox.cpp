@@ -26,6 +26,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <KSharedConfig>
 
 using namespace KSieveUi;
 
@@ -53,7 +54,7 @@ SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
     mNewHeader->setClearButtonEnabled(true);
     //QT5 mNewHeader->setTrapReturnKey(true);
     connect(mNewHeader,SIGNAL(returnPressed()), SLOT(slotAddNewHeader()));
-    mNewHeader->setClearButtonShown(true);
+    mNewHeader->setClearButtonEnabled(true);
 
 
     mAddNewHeader = new QPushButton;
@@ -77,7 +78,7 @@ SelectHeadersDialog::~SelectHeadersDialog()
 
 void SelectHeadersDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SelectHeadersDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SelectHeadersDialog" );
     const QSize size = group.readEntry( "Size", QSize(400,300) );
     if ( size.isValid() ) {
         resize( size );
@@ -86,7 +87,7 @@ void SelectHeadersDialog::readConfig()
 
 void SelectHeadersDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SelectHeadersDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SelectHeadersDialog" );
     group.writeEntry( "Size", size() );
     group.sync();
 }
