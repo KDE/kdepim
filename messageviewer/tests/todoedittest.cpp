@@ -71,6 +71,12 @@ void TodoEditTest::shouldHaveDefaultValuesOnCreation()
     //QVERIFY(edit.collection().isValid());
     QVERIFY(!edit.message());
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
+    KPushButton *openEditor = qFindChild<KPushButton *>(&edit, QLatin1String("open-editor-button"));
+    KPushButton *save = qFindChild<KPushButton *>(&edit, QLatin1String("save-button"));
+    QVERIFY(openEditor);
+    QVERIFY(save);
+    QCOMPARE(openEditor->isEnabled(), false);
+    QCOMPARE(save->isEnabled(), false);
     QVERIFY(noteedit);
     QCOMPARE(noteedit->text(), QString());
 }
@@ -479,6 +485,24 @@ void TodoEditTest::shouldHideMessageWidgetWhenCloseWidget()
     edit.slotCloseWidget();
 
     QCOMPARE(msgwidget->isHidden(), true);
+}
+
+void TodoEditTest::shouldShouldEnabledSaveOpenEditorButton()
+{
+    MessageViewer::TodoEdit edit;
+    KMime::Message::Ptr msg(new KMime::Message);
+    msg->subject(true)->fromUnicodeString(QLatin1String("Test note"), "us-ascii");
+    edit.setMessage(msg);
+
+    QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
+    KPushButton *openEditor = qFindChild<KPushButton *>(&edit, QLatin1String("open-editor-button"));
+    KPushButton *save = qFindChild<KPushButton *>(&edit, QLatin1String("save-button"));
+    QCOMPARE(openEditor->isEnabled(), true);
+    QCOMPARE(save->isEnabled(), true);
+    noteedit->clear();
+
+    QCOMPARE(openEditor->isEnabled(), false);
+    QCOMPARE(save->isEnabled(), false);
 }
 
 

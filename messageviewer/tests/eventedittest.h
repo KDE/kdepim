@@ -44,6 +44,7 @@ private Q_SLOTS:
     void shouldNotEmitCreateEventWhenDateIsInvalid();
     void shouldSetFocusWhenWeCallTodoEdit();
     void shouldEnsureEndDateIsNotBeforeStartDate();
+    void shouldShouldEnabledSaveOpenEditorButton();
 };
 
 #endif // EVENTEDITTEST_H
