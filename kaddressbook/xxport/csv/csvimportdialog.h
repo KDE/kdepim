@@ -52,7 +52,7 @@ class CSVImportDialog : public KDialog
 
   private Q_SLOTS:
     void setFile( const QString & );
-    void setFile( const KUrl & );
+    void setFile( const QUrl & );
     void urlChanged( const QString & );
 
     void customDelimiterChanged();

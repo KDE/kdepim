@@ -23,7 +23,7 @@
 class ContactEditorPage;
 class QAction;
 class KRecentFilesAction;
-class KUrl;
+class QUrl;
 
 class ContactEditorMainWindow : public KXmlGuiWindow
 {
@@ -49,7 +49,7 @@ private Q_SLOTS:
     void slotUpdateView();
     void slotConfigure();
     void slotCanInsertFile(bool b);
-    void slotThemeSelected(const KUrl &);
+    void slotThemeSelected(const QUrl &);
     void slotSaveAsTheme();
 
 private:

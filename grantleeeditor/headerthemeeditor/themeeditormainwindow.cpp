@@ -88,7 +88,7 @@ void ThemeEditorMainWindow::updateActions()
 void ThemeEditorMainWindow::setupActions()
 {
     mRecentFileAction = new KRecentFilesAction(i18n("Load Recent Theme..."), this);
-    connect(mRecentFileAction, SIGNAL(urlSelected(KUrl)), this, SLOT(slotThemeSelected(KUrl)));
+    connect(mRecentFileAction, SIGNAL(urlSelected(QUrl)), this, SLOT(slotThemeSelected(QUrl)));
     actionCollection()->addAction( QLatin1String( "load_recent_theme" ), mRecentFileAction );
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup groupConfig = config->group( QLatin1String("ThemeEditorMainWindow") );
@@ -333,7 +333,7 @@ void ThemeEditorMainWindow::slotCanInsertFile(bool b)
     mInsertFile->setEnabled(b);
 }
 
-void ThemeEditorMainWindow::slotThemeSelected(const KUrl &url)
+void ThemeEditorMainWindow::slotThemeSelected(const QUrl &url)
 {
     if (!saveCurrentProject(SaveAndCloseTheme))
         return;

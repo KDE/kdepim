@@ -189,8 +189,8 @@ CSVImportDialog::CSVImportDialog( QWidget *parent )
 
   connect( mUrlRequester, SIGNAL(returnPressed(QString)),
            this, SLOT(setFile(QString)) );
-  connect( mUrlRequester, SIGNAL(urlSelected(KUrl)),
-           this, SLOT(setFile(KUrl)) );
+  connect( mUrlRequester, SIGNAL(urlSelected(QUrl)),
+           this, SLOT(setFile(QUrl)) );
   connect( mUrlRequester->lineEdit(), SIGNAL(textChanged(QString)),
            this, SLOT(urlChanged(QString)) );
   connect( mDelimiterGroup, SIGNAL(buttonClicked(int)),
@@ -696,7 +696,7 @@ void CSVImportDialog::saveTemplate()
   config.sync();
 }
 
-void CSVImportDialog::setFile( const KUrl &fileName )
+void CSVImportDialog::setFile( const QUrl &fileName )
 {
    setFile( fileName.toLocalFile() );
 }

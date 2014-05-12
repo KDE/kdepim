@@ -30,7 +30,7 @@
 #include "incidenceeditors-ng_export.h"
 
 #include <KCalCore/Attachment>
-#include <KUrl>
+#include <QUrl>
 #include <KDialog>
 #include <KMimeType>
 
@@ -52,7 +52,7 @@ class INCIDENCEEDITORS_NG_EXPORT AttachmentEditDialog : public KDialog
 
   protected slots:
     void inlineChanged( int state );
-    void urlChanged( const KUrl &url );
+    void urlChanged( const QUrl &url );
     void urlChanged( const QString & url );
     virtual void slotApply();
 

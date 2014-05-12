@@ -32,7 +32,7 @@
 #include <KInputDialog>
 #include <KLocale>
 #include <KMessageBox>
-#include <KMenu>
+#include <QMenu>
 
 #include <QKeyEvent>
 #include <QVBoxLayout>
@@ -140,7 +140,7 @@ FolderSelectionDialog::~FolderSelectionDialog()
 void FolderSelectionDialog::slotFolderTreeWidgetContextMenuRequested(const QPoint& pos)
 {
     if (isButtonEnabled( KDialog::User1 ) && d->folderTreeWidget->folderTreeView()->indexAt(pos).isValid()) {
-        KMenu menu;
+        QMenu menu;
         menu.addAction(i18n( "&New Subfolder..." ),this, SLOT(slotAddChildFolder()));
         menu.exec(QCursor::pos());
     }

@@ -827,9 +827,7 @@ void AddresseeLineEdit::Private::slotStartLDAPLookup()
     if ( Solid::Networking::status() == Solid::Networking::Unconnected ) {
         return;
     }
-//QT5
-#if 0
-    const KCompletion::Completion mode = q->completionMode();
+    const KCompletion::CompletionMode mode = q->completionMode();
 
     if ( mode == KCompletion::CompletionNone ) {
         return;
@@ -842,7 +840,6 @@ void AddresseeLineEdit::Private::slotStartLDAPLookup()
     if ( s_static->ldapLineEdit != q ) {
         return;
     }
-#endif
     startLoadingLDAPEntries();
 }
 

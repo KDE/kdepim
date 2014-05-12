@@ -81,8 +81,8 @@ AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
 
   connect( mUi->mInlineCheck, SIGNAL(stateChanged(int)),
            SLOT(inlineChanged(int)) );
-  connect( mUi->mURLRequester, SIGNAL(urlSelected(KUrl)),
-           SLOT(urlChanged(KUrl)) );
+  connect( mUi->mURLRequester, SIGNAL(urlSelected(QUrl)),
+           SLOT(urlChanged(QUrl)) );
   connect( mUi->mURLRequester, SIGNAL(textChanged(QString)),
            SLOT(urlChanged(QString)) );
 }
@@ -173,7 +173,7 @@ void AttachmentEditDialog::urlChanged( const QString &url )
                                  mUi->mStackedWidget->currentIndex() == 1 );
 }
 
-void AttachmentEditDialog::urlChanged( const KUrl &url )
+void AttachmentEditDialog::urlChanged( const QUrl &url )
 {
   mMimeType = KMimeType::findByUrl( url );
   mUi->mTypeLabel->setText( mMimeType->comment() );

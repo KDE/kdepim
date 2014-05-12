@@ -24,7 +24,7 @@ class ThemeEditorPage;
 class QAction;
 class KToggleAction;
 class KRecentFilesAction;
-class KUrl;
+class QUrl;
 
 class ThemeEditorMainWindow : public KXmlGuiWindow
 {
@@ -52,7 +52,7 @@ private Q_SLOTS:
     void slotManageTheme();
     void slotUpdateView();
     void slotCanInsertFile(bool b);
-    void slotThemeSelected(const KUrl &);
+    void slotThemeSelected(const QUrl &);
     void slotSaveAsTheme();
 
 private:
