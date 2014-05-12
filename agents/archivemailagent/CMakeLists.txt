@@ -6,6 +6,8 @@ include_directories(
    ${CMAKE_SOURCE_DIR}/messagecomposer/
 )
 
+add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_archivemail_agent\")
+
 set(archivemailagent_SRCS
    archivemailkernel.cpp
    archivemailagent.cpp
