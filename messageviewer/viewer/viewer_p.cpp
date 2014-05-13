@@ -235,7 +235,9 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
     mThemeManager->setDownloadNewStuffConfigFile(QLatin1String("messageviewer_header_themes.knsrc"));
     connect(mThemeManager, SIGNAL(grantleeThemeSelected()), this, SLOT(slotGrantleeHeaders()));
     connect(mThemeManager, SIGNAL(updateThemes()), this, SLOT(slotGrantleeThemesUpdated()));
+
     mHtmlOverride = false;
+    mDisplayFormatMessageOverwrite = MessageViewer::Viewer::UseGlobalSetting;
     mHtmlLoadExtOverride = false;
 
     mHtmlLoadExternalGlobalSetting = false;
@@ -2812,6 +2814,19 @@ bool ViewerPrivate::htmlLoadExternal() const
 {
     return ((mHtmlLoadExternalGlobalSetting && !mHtmlLoadExtOverride) ||
             (!mHtmlLoadExternalGlobalSetting && mHtmlLoadExtOverride));
+}
+
+void ViewerPrivate::setDisplayFormatMessageOverwrite(Viewer::DisplayFormatMessage format)
+{
+    mDisplayFormatMessageOverwrite = format;
+    // keep toggle display mode action state in sync.
+    if ( mToggleDisplayModeAction )
+        mToggleDisplayModeAction->setChecked( htmlMail() );
+}
+
+Viewer::DisplayFormatMessage ViewerPrivate::displayFormatMessageOverwrite() const
+{
+    return mDisplayFormatMessageOverwrite;
 }
 
 void ViewerPrivate::setHtmlOverride( bool override )

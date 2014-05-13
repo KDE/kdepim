@@ -237,6 +237,18 @@ QString Viewer::selectedText() const
     return temp;
 }
 
+Viewer::DisplayFormatMessage Viewer::displayFormatMessageOverwrite() const
+{
+    Q_D(const Viewer);
+    return d->displayFormatMessageOverwrite();
+}
+
+void Viewer::setDisplayFormatMessageOverwrite(Viewer::DisplayFormatMessage format)
+{
+    Q_D(Viewer);
+    d->setDisplayFormatMessageOverwrite(format);
+}
+
 void Viewer::setHtmlOverride( bool override )
 {
     Q_D(Viewer);
@@ -245,7 +257,7 @@ void Viewer::setHtmlOverride( bool override )
 
 bool Viewer::htmlOverride() const
 {
-    Q_D(const Viewer);;
+    Q_D(const Viewer);
     return d->htmlOverride();
 }
 
