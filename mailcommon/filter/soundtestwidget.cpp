@@ -31,7 +31,7 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 
-//QT5 #include <phonon/mediaobject.h>
+#include <phonon/mediaobject.h>
 
 using namespace MailCommon;
 
@@ -120,11 +120,9 @@ void SoundTestWidget::playSound()
     const QString play = ( parameter.startsWith( file ) ?
                                parameter.mid( file.length() ) :
                                parameter );
-#if 0 //QT5
     Phonon::MediaObject *player = Phonon::createPlayer( Phonon::NotificationCategory, QUrl::fromLocalFile(play) );
     player->play();
     connect( player, SIGNAL(finished()), player, SLOT(deleteLater()) );
-#endif
 }
 
 QString SoundTestWidget::url() const
