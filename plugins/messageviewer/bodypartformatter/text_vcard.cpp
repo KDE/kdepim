@@ -36,6 +36,7 @@
 #include <messageviewer/viewer/nodehelper.h>
 #include "updatecontactjob.h"
 #include "vcardmemento.h"
+#define TRANSLATION_DOMAIN "messageviewer_text_vcard_plugin"
 
 using MessageViewer::Interface::BodyPart;
 #include "messageviewer/htmlwriter/webkitparthtmlwriter.h"
@@ -359,7 +360,6 @@ extern "C"
 KDE_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
 messageviewer_bodypartformatter_text_vcard_create_bodypart_formatter_plugin()
 {
-  //QT5 KLocale::global()->insertCatalog( QLatin1String("messageviewer_text_vcard_plugin") );
   return new Plugin();
 }
 

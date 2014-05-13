@@ -27,12 +27,13 @@
 #include <KComboBox>
 #include <QDebug>
 #include <KInputDialog>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KProgressDialog>
 #include <KStandardDirs>
 #include <KUrlRequester>
+#include <KLineEdit>
 
 #include <QtCore/QPointer>
 #include <QtCore/QTextCodec>
@@ -358,7 +359,7 @@ void CSVImportDialog::initGUI()
   mDelimiterGroup->addButton( button, 4 );
   delimiterLayout->addWidget( button, 0, 2 );
 
-  mDelimiterEdit = new KLineEdit( group );
+  mDelimiterEdit = new QLineEdit( group );
   mDelimiterEdit->setToolTip(
     i18nc( "@info:tooltip",
           "Set the custom delimiter character" ) );
@@ -392,7 +393,7 @@ void CSVImportDialog::initGUI()
   label = new QLabel( i18nc( "@label:listbox", "Date format:" ), page );
   layout->addWidget( label, 2, 2 );
 
-  mDatePatternEdit = new KLineEdit( page );
+  mDatePatternEdit = new QLineEdit( page );
   mDatePatternEdit->setText( QLatin1String("Y-M-D") ); // ISO 8601 date format as default
   mDatePatternEdit->setToolTip(
     i18nc( "@info:tooltip",

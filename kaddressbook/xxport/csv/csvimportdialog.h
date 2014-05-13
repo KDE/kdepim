@@ -29,7 +29,7 @@
 #include <QtCore/QList>
 
 class KComboBox;
-class KLineEdit;
+class QLineEdit;
 class KUrlRequester;
 
 class QButtonGroup;
@@ -71,8 +71,8 @@ class CSVImportDialog : public KDialog
 
     QTableView *mTable;
     QButtonGroup *mDelimiterGroup;
-    KLineEdit *mDelimiterEdit;
-    KLineEdit *mDatePatternEdit;
+    QLineEdit *mDelimiterEdit;
+    QLineEdit *mDatePatternEdit;
     KComboBox *mComboQuote;
     KComboBox *mCodecCombo;
     QCheckBox *mSkipFirstRow;

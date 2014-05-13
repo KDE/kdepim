@@ -21,7 +21,7 @@
 
 #include "quicksearchwidget.h"
 
-#include <KLineEdit>
+#include <QLineEdit>
 #include <KLocalizedString>
 
 #include <QtCore/QTimer>
@@ -34,9 +34,9 @@ QuickSearchWidget::QuickSearchWidget( QWidget *parent )
   QVBoxLayout *layout = new QVBoxLayout( this );
   layout->setMargin( 0 );
 
-  mEdit = new KLineEdit;
+  mEdit = new QLineEdit;
   //If change shortcut changes it in mainwidget
-  mEdit->setClearButtonShown( true );
+  mEdit->setClearButtonEnabled( true );
   mEdit->setToolTip(
     i18nc( "@info:tooltip", "Search contacts in list" ) );
   mEdit->setWhatsThis(
@@ -95,5 +95,5 @@ void QuickSearchWidget::keyPressEvent( QKeyEvent *event )
 
 void QuickSearchWidget::updateQuickSearchText( const QString &text )
 {
-    mEdit->setClickMessage( text );
+    mEdit->setPlaceholderText( text );
 }

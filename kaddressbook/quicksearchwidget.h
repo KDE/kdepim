@@ -24,7 +24,7 @@
 
 #include <QWidget>
 
-class KLineEdit;
+class QLineEdit;
 
 /**
  * @short The quick search widget from the toolbar
@@ -88,7 +88,7 @@ Q_SIGNALS:
     void keyPressEvent( QKeyEvent * );
 
   private:
-    KLineEdit *mEdit;
+    QLineEdit *mEdit;
     QTimer *mTimer;
 };
 
