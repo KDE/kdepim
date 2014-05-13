@@ -47,10 +47,10 @@
        </widget>
       </item>
       <item row="2" column="2" colspan="2">
-       <widget class="KLineEdit" name="kcfg_Name"/>
+       <widget class="QLineEdit" name="kcfg_Name"/>
       </item>
       <item row="1" column="3">
-       <widget class="KPushButton" name="kcfg_urlBrowser">
+       <widget class="QPushButton" name="kcfg_urlBrowser">
         <property name="maximumSize">
          <size>
           <width>25</width>
@@ -63,7 +63,7 @@
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="KLineEdit" name="kcfg_urlLineEdit"/>
+       <widget class="QLineEdit" name="kcfg_urlLineEdit"/>
       </item>
      </layout>
     </widget>
@@ -203,16 +203,6 @@
    <class>KImageFilePreview</class>
    <extends>QWidget</extends>
    <header>kimagefilepreview.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
   </customwidget>
   <customwidget>
    <class>KComboBox</class>

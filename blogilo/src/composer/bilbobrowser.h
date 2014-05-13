@@ -33,7 +33,7 @@
 class QCheckBox;
 class QProgressBar;
 class KWebView;
-class KPushButton;
+class QPushButton;
 class KStatusBar;
 
 /**
@@ -92,7 +92,7 @@ private:
 
     KWebView *mWebView;
     QCheckBox *viewInBlogStyle;
-    KPushButton *btnGetStyle;
+    QPushButton *btnGetStyle;
     QProgressBar *browserProgress;
     KStatusBar *browserStatus;
 

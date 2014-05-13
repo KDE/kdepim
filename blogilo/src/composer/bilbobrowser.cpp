@@ -30,7 +30,7 @@
 #include <kstatusbar.h>
 #include <kmessagebox.h>
 #include <kseparator.h>
-#include <kpushbutton.h>
+#include <QPushButton>
 #include <QDebug>
 
 #include "stylegetter.h"
@@ -64,7 +64,7 @@ BilboBrowser::~BilboBrowser()
 
 void BilboBrowser::createUi( QWidget *parent )
 {
-    btnGetStyle = new KPushButton( this );
+    btnGetStyle = new QPushButton( this );
     btnGetStyle->setText( i18n( "Get blog style" ) );
     connect( btnGetStyle, SIGNAL(clicked(bool)), this, SLOT(slotGetBlogStyle()) );
 
