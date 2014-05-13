@@ -441,7 +441,7 @@ bool KMailProtocolURLHandler::handleClick( const KUrl & url, ViewerPrivate * w )
             return false;
         const QString urlPath( url.path() );
         if ( urlPath == QLatin1String( "showHTML" ) ) {
-            w->setHtmlOverride( !w->htmlOverride() );
+            w->setDisplayFormatMessageOverwrite( MessageViewer::Viewer::Html );
             w->update( Viewer::Force );
             return true;
         }

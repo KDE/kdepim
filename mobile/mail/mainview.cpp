@@ -1554,7 +1554,7 @@ void MainView::preferHTML(bool useHtml)
       group.writeEntry( "htmlMailOverride", useHtml );
     }
 
-    item->viewer()->setHtmlOverride( useHtml );
+    item->viewer()->setDisplayFormatMessageOverwrite( useHtml ? MessageViewer::Viewer::Html : MessageViewer::Viewer::Text );
     item->viewer()->update( MessageViewer::Viewer::Force );
   }
 
@@ -1570,7 +1570,7 @@ void MainView::preferHtmlViewer( bool useHtml )
   MessageViewer::MessageViewItem* item = messageViewerItem();
 
   if ( item ) {
-    item->viewer()->setHtmlOverride( useHtml );
+    item->viewer()->setDisplayFormatMessageOverwrite( useHtml ? MessageViewer::Viewer::Html : MessageViewer::Viewer::Text );
     item->viewer()->update( MessageViewer::Viewer::Force );
   }
 }
