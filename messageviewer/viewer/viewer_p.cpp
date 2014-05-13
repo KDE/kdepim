@@ -237,7 +237,10 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
     connect(mThemeManager, SIGNAL(updateThemes()), this, SLOT(slotGrantleeThemesUpdated()));
     mHtmlOverride = false;
     mHtmlLoadExtOverride = false;
+
     mHtmlLoadExternalGlobalSetting = false;
+    mHtmlMailGlobalSetting = false;
+
     mZoomTextOnly = false;
 
     mUpdateReaderWinTimer.setObjectName( QLatin1String("mUpdateReaderWinTimer") );
