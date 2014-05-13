@@ -44,311 +44,311 @@ static QMutex mapMutex;
 static QMap<Collection::Id,QSharedPointer<FolderCollection> > fcMap;
 
 QSharedPointer<FolderCollection> FolderCollection::forCollection(
-  const Akonadi::Collection &coll, bool writeConfig )
+        const Akonadi::Collection &coll, bool writeConfig )
 {
-  QMutexLocker lock( &mapMutex );
+    QMutexLocker lock( &mapMutex );
 
-  QSharedPointer<FolderCollection> sptr = fcMap.value( coll.id() );
+    QSharedPointer<FolderCollection> sptr = fcMap.value( coll.id() );
 
-  if ( !sptr ) {
-    sptr = QSharedPointer<FolderCollection>( new FolderCollection( coll, writeConfig ) );
-    fcMap.insert( coll.id(), sptr );
-  } else {
-    sptr->setCollection( coll );
-    if ( !sptr->isWriteConfig() && writeConfig ) {
-      sptr->setWriteConfig( true );
+    if ( !sptr ) {
+        sptr = QSharedPointer<FolderCollection>( new FolderCollection( coll, writeConfig ) );
+        fcMap.insert( coll.id(), sptr );
+    } else {
+        sptr->setCollection( coll );
+        if ( !sptr->isWriteConfig() && writeConfig ) {
+            sptr->setWriteConfig( true );
+        }
     }
-  }
 
-  return sptr;
+    return sptr;
 }
 
 FolderCollection::FolderCollection( const Akonadi::Collection & col, bool writeconfig )
-  : mCollection( col ),
-    mPutRepliesInSameFolder( false ),
-    mHideInSelectionDialog( false ),
-    mWriteConfig( writeconfig )
+    : mCollection( col ),
+      mPutRepliesInSameFolder( false ),
+      mHideInSelectionDialog( false ),
+      mWriteConfig( writeconfig )
 {
-  Q_ASSERT( col.isValid() );
-  mIdentity = KernelIf->identityManager()->defaultIdentity().uoid();
+    Q_ASSERT( col.isValid() );
+    mIdentity = KernelIf->identityManager()->defaultIdentity().uoid();
 
-  readConfig();
-  connect( KernelIf->identityManager(), SIGNAL(changed()),
-           this, SLOT(slotIdentitiesChanged()) );
+    readConfig();
+    connect( KernelIf->identityManager(), SIGNAL(changed()),
+             this, SLOT(slotIdentitiesChanged()) );
 }
 
 FolderCollection::~FolderCollection()
 {
-  //kDebug()<<" FolderCollection::~FolderCollection"<<this;
-  if ( mWriteConfig ) {
-    writeConfig();
-  }
+    //kDebug()<<" FolderCollection::~FolderCollection"<<this;
+    if ( mWriteConfig ) {
+        writeConfig();
+    }
 }
 
 void FolderCollection::clearCache()
 {
-  QMutexLocker lock( &mapMutex );
-  fcMap.clear();
+    QMutexLocker lock( &mapMutex );
+    fcMap.clear();
 }
 
 bool FolderCollection::isWriteConfig() const
 {
-  return mWriteConfig;
+    return mWriteConfig;
 }
 
 void FolderCollection::setWriteConfig( bool writeConfig )
 {
-  mWriteConfig = writeConfig;
+    mWriteConfig = writeConfig;
 }
 
 QString FolderCollection::name() const
 {
-  return mCollection.name();
+    return mCollection.name();
 }
 
 bool FolderCollection::isSystemFolder() const
 {
-  return Kernel::self()->isSystemFolderCollection( mCollection );
+    return Kernel::self()->isSystemFolderCollection( mCollection );
 }
 
 bool FolderCollection::isStructural() const
 {
-  return mCollection.contentMimeTypes().isEmpty();
+    return mCollection.contentMimeTypes().isEmpty();
 }
 
 bool FolderCollection::isReadOnly() const
 {
-  return mCollection.rights() & Akonadi::Collection::ReadOnly;
+    return mCollection.rights() & Akonadi::Collection::ReadOnly;
 }
 
 bool FolderCollection::canDeleteMessages() const
 {
-  return mCollection.rights() & Akonadi::Collection::CanDeleteItem;
+    return mCollection.rights() & Akonadi::Collection::CanDeleteItem;
 }
 
 bool FolderCollection::canCreateMessages() const
 {
-  return mCollection.rights() & Akonadi::Collection::CanCreateItem;
+    return mCollection.rights() & Akonadi::Collection::CanCreateItem;
 }
 
 qint64 FolderCollection::count() const
 {
-  return mCollection.statistics().count();
+    return mCollection.statistics().count();
 }
 
 Akonadi::Collection::Rights FolderCollection::rights() const
 {
-  return mCollection.rights();
+    return mCollection.rights();
 }
 
 Akonadi::CollectionStatistics FolderCollection::statistics() const
 {
-  return mCollection.statistics();
+    return mCollection.statistics();
 }
 
 Akonadi::Collection FolderCollection::collection() const
 {
-  return mCollection;
+    return mCollection;
 }
 
 void FolderCollection::setCollection( const Akonadi::Collection &collection )
 {
-  mCollection = collection;
+    mCollection = collection;
 }
 
 void FolderCollection::slotIdentitiesChanged()
 {
-  uint defaultIdentity =  KernelIf->identityManager()->defaultIdentity().uoid();
-  // The default identity may have changed, therefore set it again if necessary
-  if ( mUseDefaultIdentity ) {
-    mIdentity = defaultIdentity;
-  }
+    uint defaultIdentity =  KernelIf->identityManager()->defaultIdentity().uoid();
+    // The default identity may have changed, therefore set it again if necessary
+    if ( mUseDefaultIdentity ) {
+        mIdentity = defaultIdentity;
+    }
 
-  // Fall back to the default identity if the one used currently is invalid
-  if ( KernelIf->identityManager()->identityForUoid( mIdentity ).isNull() ) {
-    mIdentity = defaultIdentity;
-    mUseDefaultIdentity = true;
-  }
+    // Fall back to the default identity if the one used currently is invalid
+    if ( KernelIf->identityManager()->identityForUoid( mIdentity ).isNull() ) {
+        mIdentity = defaultIdentity;
+        mUseDefaultIdentity = true;
+    }
 }
 
 QString FolderCollection::configGroupName( const Akonadi::Collection &col )
 {
-  return QString::fromLatin1( "Folder-%1" ).arg( QString::number( col.id() ) );
+    return QString::fromLatin1( "Folder-%1" ).arg( QString::number( col.id() ) );
 }
 
 void FolderCollection::readConfig()
 {
-  KConfigGroup configGroup( KernelIf->config(), configGroupName( mCollection ) );
-  mMailingListEnabled = configGroup.readEntry( "MailingListEnabled", false );
-  mMailingList.readConfig( configGroup );
+    KConfigGroup configGroup( KernelIf->config(), configGroupName( mCollection ) );
+    mMailingListEnabled = configGroup.readEntry( "MailingListEnabled", false );
+    mMailingList.readConfig( configGroup );
 
-  mUseDefaultIdentity = configGroup.readEntry( "UseDefaultIdentity", true );
-  uint defaultIdentity = KernelIf->identityManager()->defaultIdentity().uoid();
-  mIdentity = configGroup.readEntry( "Identity", defaultIdentity );
-  slotIdentitiesChanged();
+    mUseDefaultIdentity = configGroup.readEntry( "UseDefaultIdentity", true );
+    uint defaultIdentity = KernelIf->identityManager()->defaultIdentity().uoid();
+    mIdentity = configGroup.readEntry( "Identity", defaultIdentity );
+    slotIdentitiesChanged();
 
-  mPutRepliesInSameFolder = configGroup.readEntry( "PutRepliesInSameFolder", false );
-  mHideInSelectionDialog = configGroup.readEntry( "HideInSelectionDialog", false );
+    mPutRepliesInSameFolder = configGroup.readEntry( "PutRepliesInSameFolder", false );
+    mHideInSelectionDialog = configGroup.readEntry( "HideInSelectionDialog", false );
 
-  if (configGroup.hasKey(QLatin1String("IgnoreNewMail"))) {
-      if ( configGroup.readEntry( QLatin1String("IgnoreNewMail"), false ) ) {
-          //migrate config.
-          MailCommon::NewMailNotifierAttribute *newMailNotifierAttr = mCollection.attribute<MailCommon::NewMailNotifierAttribute>( Akonadi::Entity::AddIfMissing );
-          newMailNotifierAttr->setIgnoreNewMail(true);
-          new Akonadi::CollectionModifyJob( mCollection, this );
-          //TODO verify if it works;
-      }
-      configGroup.deleteEntry("IgnoreNewMail");
-  }
+    if (configGroup.hasKey(QLatin1String("IgnoreNewMail"))) {
+        if ( configGroup.readEntry( QLatin1String("IgnoreNewMail"), false ) ) {
+            //migrate config.
+            MailCommon::NewMailNotifierAttribute *newMailNotifierAttr = mCollection.attribute<MailCommon::NewMailNotifierAttribute>( Akonadi::Entity::AddIfMissing );
+            newMailNotifierAttr->setIgnoreNewMail(true);
+            new Akonadi::CollectionModifyJob( mCollection, this );
+            //TODO verify if it works;
+        }
+        configGroup.deleteEntry("IgnoreNewMail");
+    }
 
-  const QString shortcut( configGroup.readEntry( "Shortcut" ) );
-  if ( !shortcut.isEmpty() ) {
-    KShortcut sc( shortcut );
-    setShortcut( sc );
-  }
+    const QString shortcut( configGroup.readEntry( "Shortcut" ) );
+    if ( !shortcut.isEmpty() ) {
+        KShortcut sc( shortcut );
+        setShortcut( sc );
+    }
 }
 
 bool FolderCollection::isValid() const
 {
-  return mCollection.isValid();
+    return mCollection.isValid();
 }
 
 void FolderCollection::writeConfig() const
 {
-  KConfigGroup configGroup( KernelIf->config(), configGroupName( mCollection ) );
+    KConfigGroup configGroup( KernelIf->config(), configGroupName( mCollection ) );
 
-  configGroup.writeEntry( "MailingListEnabled", mMailingListEnabled );
-  mMailingList.writeConfig( configGroup );
+    configGroup.writeEntry( "MailingListEnabled", mMailingListEnabled );
+    mMailingList.writeConfig( configGroup );
 
-  configGroup.writeEntry( "UseDefaultIdentity", mUseDefaultIdentity );
+    configGroup.writeEntry( "UseDefaultIdentity", mUseDefaultIdentity );
 
-  if ( !mUseDefaultIdentity ) {
-    uint defaultIdentityId = -1;
+    if ( !mUseDefaultIdentity ) {
+        uint defaultIdentityId = -1;
 
-    if ( mCollection.resource().contains( IMAP_RESOURCE_IDENTIFIER ) ) {
-      OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface =
-        PimCommon::Util::createImapSettingsInterface( mCollection.resource() );
+        if ( mCollection.resource().contains( IMAP_RESOURCE_IDENTIFIER ) ) {
+            OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface =
+                    PimCommon::Util::createImapSettingsInterface( mCollection.resource() );
 
-      if ( imapSettingsInterface->isValid() ) {
-        QDBusReply<int> reply = imapSettingsInterface->accountIdentity();
-        if ( reply.isValid() ) {
-          defaultIdentityId = static_cast<uint>( reply );
+            if ( imapSettingsInterface->isValid() ) {
+                QDBusReply<int> reply = imapSettingsInterface->accountIdentity();
+                if ( reply.isValid() ) {
+                    defaultIdentityId = static_cast<uint>( reply );
+                }
+            }
+            delete imapSettingsInterface;
+        } else {
+            defaultIdentityId = KernelIf->identityManager()->defaultIdentity().uoid();
         }
-      }
-      delete imapSettingsInterface;
+
+        if ( mIdentity != defaultIdentityId ) {
+            configGroup.writeEntry( "Identity", mIdentity );
+        } else {
+            configGroup.deleteEntry( "Identity" );
+        }
     } else {
-      defaultIdentityId = KernelIf->identityManager()->defaultIdentity().uoid();
+        configGroup.deleteEntry( "Identity" );
     }
 
-    if ( mIdentity != defaultIdentityId ) {
-      configGroup.writeEntry( "Identity", mIdentity );
+    configGroup.writeEntry( "PutRepliesInSameFolder", mPutRepliesInSameFolder );
+    if (mHideInSelectionDialog)
+        configGroup.writeEntry( "HideInSelectionDialog", mHideInSelectionDialog );
+    else
+        configGroup.deleteEntry("HideInSelectionDialog");
+
+    if ( !mShortcut.isEmpty() ) {
+        configGroup.writeEntry( "Shortcut", mShortcut.toString() );
     } else {
-      configGroup.deleteEntry( "Identity" );
+        configGroup.deleteEntry( "Shortcut" );
     }
-  } else {
-    configGroup.deleteEntry( "Identity" );
-  }
-
-  configGroup.writeEntry( "PutRepliesInSameFolder", mPutRepliesInSameFolder );
-  if (mHideInSelectionDialog)
-      configGroup.writeEntry( "HideInSelectionDialog", mHideInSelectionDialog );
-  else
-      configGroup.deleteEntry("HideInSelectionDialog");
-
-  if ( !mShortcut.isEmpty() ) {
-    configGroup.writeEntry( "Shortcut", mShortcut.toString() );
-  } else {
-    configGroup.deleteEntry( "Shortcut" );
-  }
 }
 
 void FolderCollection::setShortcut( const KShortcut &sc )
 {
-  if ( mShortcut != sc ) {
-    mShortcut = sc;
-  }
+    if ( mShortcut != sc ) {
+        mShortcut = sc;
+    }
 }
 
 void FolderCollection::setUseDefaultIdentity( bool useDefaultIdentity )
 {
-  if ( mUseDefaultIdentity != useDefaultIdentity ) {
-    mUseDefaultIdentity = useDefaultIdentity;
-    if ( mUseDefaultIdentity ) {
-      mIdentity = KernelIf->identityManager()->defaultIdentity().uoid();
+    if ( mUseDefaultIdentity != useDefaultIdentity ) {
+        mUseDefaultIdentity = useDefaultIdentity;
+        if ( mUseDefaultIdentity ) {
+            mIdentity = KernelIf->identityManager()->defaultIdentity().uoid();
+        }
+        KernelIf->syncConfig();
     }
-    KernelIf->syncConfig();
-  }
 }
 
 void FolderCollection::setIdentity( uint identity )
 {
-  if ( mIdentity != identity ) {
-    mIdentity = identity;
-    KernelIf->syncConfig();
-  }
+    if ( mIdentity != identity ) {
+        mIdentity = identity;
+        KernelIf->syncConfig();
+    }
 }
 
 uint FolderCollection::identity() const
 {
-  if ( mUseDefaultIdentity ) {
-    int identityId = -1;
-    OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface =
-      PimCommon::Util::createImapSettingsInterface( mCollection.resource() );
+    if ( mUseDefaultIdentity ) {
+        int identityId = -1;
+        OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface =
+                PimCommon::Util::createImapSettingsInterface( mCollection.resource() );
 
-    if ( imapSettingsInterface->isValid() ) {
-      QDBusReply<bool> useDefault = imapSettingsInterface->useDefaultIdentity();
-      if ( useDefault.isValid() && useDefault.value() ) {
+        if ( imapSettingsInterface->isValid() ) {
+            QDBusReply<bool> useDefault = imapSettingsInterface->useDefaultIdentity();
+            if ( useDefault.isValid() && useDefault.value() ) {
+                delete imapSettingsInterface;
+                return mIdentity;
+            }
+
+            QDBusReply<int> remoteAccountIdent = imapSettingsInterface->accountIdentity();
+            if ( remoteAccountIdent.isValid() && remoteAccountIdent.value() > 0 ) {
+                identityId = remoteAccountIdent;
+            }
+        }
         delete imapSettingsInterface;
-        return mIdentity;
-      }
-
-      QDBusReply<int> remoteAccountIdent = imapSettingsInterface->accountIdentity();
-      if ( remoteAccountIdent.isValid() && remoteAccountIdent.value() > 0 ) {
-        identityId = remoteAccountIdent;
-      }
+        if ( identityId != -1 &&
+             !KernelIf->identityManager()->identityForUoid( identityId ).isNull() ) {
+            return identityId;
+        }
     }
-    delete imapSettingsInterface;
-    if ( identityId != -1 &&
-         !KernelIf->identityManager()->identityForUoid( identityId ).isNull() ) {
-      return identityId;
-    }
-  }
-  return mIdentity;
+    return mIdentity;
 }
 
 QString FolderCollection::mailingListPostAddress() const
 {
-  if ( mMailingList.features() & MailingList::Post ) {
-    KUrl::List post = mMailingList.postUrls();
-    KUrl::List::const_iterator end( post.constEnd() );
-    for ( KUrl::List::const_iterator it = post.constBegin(); it != end; ++it ) {
-      // We check for isEmpty because before 3.3 postAddress was just an
-      // email@kde.org and that leaves protocol() field in the kurl class
-      const QString protocol = (*it).protocol();
-      if ( protocol == QLatin1String( "mailto" ) || protocol.isEmpty() ) {
-        return (*it).path();
-      }
+    if ( mMailingList.features() & MailingList::Post ) {
+        KUrl::List post = mMailingList.postUrls();
+        KUrl::List::const_iterator end( post.constEnd() );
+        for ( KUrl::List::const_iterator it = post.constBegin(); it != end; ++it ) {
+            // We check for isEmpty because before 3.3 postAddress was just an
+            // email@kde.org and that leaves protocol() field in the kurl class
+            const QString protocol = (*it).protocol();
+            if ( protocol == QLatin1String( "mailto" ) || protocol.isEmpty() ) {
+                return (*it).path();
+            }
+        }
     }
-  }
-  return QString();
+    return QString();
 }
 
 void FolderCollection::setMailingListEnabled( bool enabled )
 {
-  if ( mMailingListEnabled != enabled ) {
-    mMailingListEnabled = enabled;
-    writeConfig();
-  }
+    if ( mMailingListEnabled != enabled ) {
+        mMailingListEnabled = enabled;
+        writeConfig();
+    }
 }
 
 void FolderCollection::setMailingList( const MailingList &mlist )
 {
-  if ( mMailingList == mlist ) {
-    return;
-  }
+    if ( mMailingList == mlist ) {
+        return;
+    }
 
-  mMailingList = mlist;
-  writeConfig();
+    mMailingList = mlist;
+    writeConfig();
 }
 
 }

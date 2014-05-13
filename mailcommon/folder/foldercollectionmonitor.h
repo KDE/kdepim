@@ -29,18 +29,18 @@
 class QAbstractItemModel;
 
 namespace Akonadi {
-  class ChangeRecorder;
-  class Collection;
-  class Session;
+class ChangeRecorder;
+class Collection;
+class Session;
 }
 
 namespace MailCommon {
 
 class MAILCOMMON_EXPORT FolderCollectionMonitor : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit FolderCollectionMonitor(Akonadi::Session *session, QObject *parent = 0 );
     ~FolderCollectionMonitor();
 
@@ -48,14 +48,14 @@ class MAILCOMMON_EXPORT FolderCollectionMonitor : public QObject
     void expireAllFolders( bool immediate, QAbstractItemModel *collectionModel );
     void expunge( const Akonadi::Collection &, bool sync = false );
 
-  private slots:
+private slots:
     void slotDeleteJob( KJob *job );
 
-  protected:
+protected:
     void expireAllCollection( const QAbstractItemModel *model, bool immediate,
                               const QModelIndex &parentIndex = QModelIndex() );
 
-  private:
+private:
     Akonadi::ChangeRecorder *mMonitor;
 };
 

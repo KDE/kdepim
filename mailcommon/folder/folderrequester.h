@@ -58,9 +58,9 @@ namespace MailCommon {
  */
 class MAILCOMMON_EXPORT FolderRequester: public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Constructor
      * @param parent the parent widget
@@ -95,7 +95,7 @@ class MAILCOMMON_EXPORT FolderRequester: public QWidget
 
     void setNotAllowToCreateNewFolder( bool notCreateNewFolder );
 
-  protected slots:
+protected slots:
     /**
      * Opens the folder dialog.
      */
@@ -106,18 +106,18 @@ class MAILCOMMON_EXPORT FolderRequester: public QWidget
      */
     void slotCollectionsReceived( KJob * );
 
-  signals:
+signals:
     /**
      * Emitted when the folder changed.
      */
     void folderChanged( const Akonadi::Collection & );
 
-  protected:
+protected:
     /** Capture space key to open the dialog */
     void keyPressEvent( QKeyEvent *e );
     void setCollectionFullPath( const Akonadi::Collection &col );
 
-  protected:
+protected:
     Akonadi::Collection mCollection;
     KLineEdit *mEdit;
     bool mMustBeReadWrite;

@@ -34,11 +34,11 @@ namespace MailCommon {
 
 class MAILCOMMON_EXPORT FolderCollection : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     static QSharedPointer<FolderCollection> forCollection(
-      const Akonadi::Collection &coll, bool writeConfig = true );
+            const Akonadi::Collection &coll, bool writeConfig = true );
 
     ~FolderCollection();
 
@@ -77,7 +77,7 @@ class MAILCOMMON_EXPORT FolderCollection : public QObject
     void setShortcut( const KShortcut & );
     const KShortcut &shortcut() const
     {
-      return mShortcut;
+        return mShortcut;
     }
 
     /**
@@ -87,7 +87,7 @@ class MAILCOMMON_EXPORT FolderCollection : public QObject
     void setUseDefaultIdentity( bool useDefaultIdentity );
     bool useDefaultIdentity() const
     {
-      return mUseDefaultIdentity;
+        return mUseDefaultIdentity;
     }
 
     void setIdentity( uint identity );
@@ -99,14 +99,14 @@ class MAILCOMMON_EXPORT FolderCollection : public QObject
     void setMailingListEnabled( bool enabled );
     bool isMailingListEnabled() const
     {
-      return mMailingListEnabled;
+        return mMailingListEnabled;
     }
 
     void setMailingList( const MailingList &mlist );
 
     MailingList mailingList() const
     {
-      return mMailingList;
+        return mMailingList;
     }
 
     /**
@@ -115,11 +115,11 @@ class MAILCOMMON_EXPORT FolderCollection : public QObject
      */
     bool putRepliesInSameFolder() const
     {
-      return mPutRepliesInSameFolder;
+        return mPutRepliesInSameFolder;
     }
     void setPutRepliesInSameFolder( bool b )
     {
-      mPutRepliesInSameFolder = b;
+        mPutRepliesInSameFolder = b;
     }
 
     /**
@@ -127,19 +127,19 @@ class MAILCOMMON_EXPORT FolderCollection : public QObject
      */
     bool hideInSelectionDialog() const
     {
-      return mHideInSelectionDialog;
+        return mHideInSelectionDialog;
     }
     void setHideInSelectionDialog( bool hide )
     {
-      mHideInSelectionDialog = hide;
+        mHideInSelectionDialog = hide;
     }
 
     QString mailingListPostAddress() const;
 
-  protected slots:
+protected slots:
     void slotIdentitiesChanged();
 
-  private:
+private:
     explicit FolderCollection( const Akonadi::Collection &col, bool writeconfig );
 
     Akonadi::Collection mCollection;
