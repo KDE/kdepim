@@ -398,9 +398,11 @@ public:
 
     /** Get the html override setting */
     bool htmlOverride() const;
+    Viewer::DisplayFormatMessage displayFormatMessageOverwrite() const;
 
     /** Override default html mail setting */
     void setHtmlOverride( bool override );
+    void setDisplayFormatMessageOverwrite(Viewer::DisplayFormatMessage format);
 
     /** Get the load external references override setting */
     bool htmlLoadExtOverride() const;
@@ -625,7 +627,7 @@ signals:
     void itemRemoved();
     void makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode mode);
 
-    void changeDisplayMail(Viewer::ForceDisplayTo,bool);
+    void changeDisplayMail(Viewer::DisplayFormatMessage,bool);
     void moveMessageToTrash();
 private:
     QString attachmentInjectionHtml() const;
@@ -634,7 +636,7 @@ private:
 
 public:
     NodeHelper* mNodeHelper;
-    bool mHtmlMail, mHtmlLoadExternal, mHtmlOverride, mHtmlLoadExtOverride;
+    bool mHtmlMailGlobalSetting, mHtmlLoadExternalGlobalSetting, mHtmlOverride, mHtmlLoadExtOverride;
     KMime::Message::Ptr mMessage; //the current message, if it was set manually
     Akonadi::Item mMessageItem; //the message item from Akonadi
     // widgets:
@@ -731,6 +733,7 @@ public:
     // zoom Factor
     static const qreal zoomBy;
     qreal mZoomFactor;
+    Viewer::DisplayFormatMessage mDisplayFormatMessageOverwrite;
 };
 
 }

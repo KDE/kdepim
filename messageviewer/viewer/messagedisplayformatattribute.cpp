@@ -28,12 +28,12 @@ class MessageViewer::MessageDisplayFormatAttributePrivate
 {
 public:
     MessageDisplayFormatAttributePrivate()
-        : messageFormat(Viewer::Unknown),
+        : messageFormat(Viewer::UseGlobalSetting),
           remoteContent(false)
     {
 
     }
-    Viewer::ForceDisplayTo messageFormat;
+    Viewer::DisplayFormatMessage messageFormat;
     bool remoteContent;
 };
 
@@ -71,7 +71,7 @@ QByteArray MessageDisplayFormatAttribute::serialized() const
     return result;
 }
 
-void MessageDisplayFormatAttribute::setMessageFormat(Viewer::ForceDisplayTo format)
+void MessageDisplayFormatAttribute::setMessageFormat(Viewer::DisplayFormatMessage format)
 {
     d->messageFormat = format;
 }
@@ -86,7 +86,7 @@ bool MessageDisplayFormatAttribute::remoteContent() const
     return d->remoteContent;
 }
 
-Viewer::ForceDisplayTo MessageDisplayFormatAttribute::messageFormat() const
+Viewer::DisplayFormatMessage MessageDisplayFormatAttribute::messageFormat() const
 {
     return d->messageFormat;
 }
@@ -96,6 +96,6 @@ void MessageDisplayFormatAttribute::deserialize( const QByteArray &data )
     QDataStream s( data );
     int value = 0;
     s >> value;
-    d->messageFormat = static_cast<Viewer::ForceDisplayTo>(value);
+    d->messageFormat = static_cast<Viewer::DisplayFormatMessage>(value);
     s >> d->remoteContent;
 }

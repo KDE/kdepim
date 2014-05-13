@@ -49,7 +49,7 @@ public:
 signals:
     // TODO: Factor our update and detach into base class
     void update( MessageViewer::Viewer::UpdateMode );
-    void changeDisplayMail(Viewer::ForceDisplayTo displayAsHtml, bool remoteContent);
+    void changeDisplayMail(Viewer::DisplayFormatMessage displayAsHtml, bool remoteContent);
 
 private Q_SLOTS:
     void slotSearchJobFinished( KJob *job );
@@ -58,7 +58,7 @@ private:
     void searchPhoto(const KABC::AddresseeList &list);
     bool mFinished;
     bool mMailAllowToRemoteContent;
-    Viewer::ForceDisplayTo mForceDisplayTo;
+    Viewer::DisplayFormatMessage mForceDisplayTo;
     KABC::Picture mPhoto;
 };
 
