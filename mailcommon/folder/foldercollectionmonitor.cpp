@@ -37,26 +37,26 @@
 namespace MailCommon {
 
 FolderCollectionMonitor::FolderCollectionMonitor( Akonadi::Session *session, QObject *parent )
-  : QObject( parent )
+    : QObject( parent )
 {
-  // monitor collection changes
-  mMonitor = new Akonadi::ChangeRecorder( this );
-  mMonitor->setSession(session);
-  mMonitor->setCollectionMonitored( Akonadi::Collection::root() );
-  mMonitor->fetchCollectionStatistics( true );
-  mMonitor->collectionFetchScope().setIncludeStatistics( true );
-  mMonitor->fetchCollection( true );
-  mMonitor->setAllMonitored( true );
-  mMonitor->setMimeTypeMonitored( KMime::Message::mimeType() );
+    // monitor collection changes
+    mMonitor = new Akonadi::ChangeRecorder( this );
+    mMonitor->setSession(session);
+    mMonitor->setCollectionMonitored( Akonadi::Collection::root() );
+    mMonitor->fetchCollectionStatistics( true );
+    mMonitor->collectionFetchScope().setIncludeStatistics( true );
+    mMonitor->fetchCollection( true );
+    mMonitor->setAllMonitored( true );
+    mMonitor->setMimeTypeMonitored( KMime::Message::mimeType() );
 #ifdef MERGE_KNODE_IN_KMAIL
-  mMonitor->setMimeTypeMonitored( QString::fromLatin1("message/news") );
+    mMonitor->setMimeTypeMonitored( QString::fromLatin1("message/news") );
 #endif
-  mMonitor->setResourceMonitored( "akonadi_search_resource", true );
-  mMonitor->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope );
-  mMonitor->itemFetchScope().setFetchModificationTime( false );
-  mMonitor->itemFetchScope().setFetchRemoteIdentification( false );
-  mMonitor->itemFetchScope().setFetchTags( true );
-  mMonitor->itemFetchScope().fetchAttribute<Akonadi::EntityAnnotationsAttribute>( true );
+    mMonitor->setResourceMonitored( "akonadi_search_resource", true );
+    mMonitor->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope );
+    mMonitor->itemFetchScope().setFetchModificationTime( false );
+    mMonitor->itemFetchScope().setFetchRemoteIdentification( false );
+    mMonitor->itemFetchScope().setFetchTags( true );
+    mMonitor->itemFetchScope().fetchAttribute<Akonadi::EntityAnnotationsAttribute>( true );
 }
 
 FolderCollectionMonitor::~FolderCollectionMonitor()
@@ -65,67 +65,67 @@ FolderCollectionMonitor::~FolderCollectionMonitor()
 
 Akonadi::ChangeRecorder *FolderCollectionMonitor::monitor() const
 {
-  return mMonitor;
+    return mMonitor;
 }
 
 void FolderCollectionMonitor::expireAllFolders( bool immediate,
                                                 QAbstractItemModel *collectionModel )
 {
-  if ( collectionModel ) {
-    expireAllCollection( collectionModel, immediate );
-  }
+    if ( collectionModel ) {
+        expireAllCollection( collectionModel, immediate );
+    }
 }
 
 void FolderCollectionMonitor::expireAllCollection( const QAbstractItemModel *model,
                                                    bool immediate,
                                                    const QModelIndex &parentIndex )
 {
-  const int rowCount = model->rowCount( parentIndex );
-  for ( int row = 0; row < rowCount; ++row ) {
-    const QModelIndex index = model->index( row, 0, parentIndex );
-    const Akonadi::Collection collection =
-      model->data(
-        index, Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
+    const int rowCount = model->rowCount( parentIndex );
+    for ( int row = 0; row < rowCount; ++row ) {
+        const QModelIndex index = model->index( row, 0, parentIndex );
+        const Akonadi::Collection collection =
+                model->data(
+                    index, Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
 
-    if ( !collection.isValid() || Util::isVirtualCollection( collection ) ) {
-      continue;
+        if ( !collection.isValid() || Util::isVirtualCollection( collection ) ) {
+            continue;
+        }
+
+        bool mustDeleteExpirationAttribute = false;
+        MailCommon::ExpireCollectionAttribute *attr =
+                MailCommon::ExpireCollectionAttribute::expirationCollectionAttribute(
+                    collection, mustDeleteExpirationAttribute );
+
+        if ( attr->isAutoExpire() ) {
+            MailCommon::Util::expireOldMessages( collection, immediate );
+        }
+
+        if ( model->rowCount( index ) > 0 ) {
+            expireAllCollection( model, immediate, index );
+        }
+
+        if ( mustDeleteExpirationAttribute ) {
+            delete attr;
+        }
     }
-
-    bool mustDeleteExpirationAttribute = false;
-    MailCommon::ExpireCollectionAttribute *attr =
-      MailCommon::ExpireCollectionAttribute::expirationCollectionAttribute(
-        collection, mustDeleteExpirationAttribute );
-
-    if ( attr->isAutoExpire() ) {
-       MailCommon::Util::expireOldMessages( collection, immediate );
-    }
-
-    if ( model->rowCount( index ) > 0 ) {
-      expireAllCollection( model, immediate, index );
-    }
-
-    if ( mustDeleteExpirationAttribute ) {
-      delete attr;
-    }
-  }
 }
 
 void FolderCollectionMonitor::expunge( const Akonadi::Collection & col, bool sync )
 {
-  if ( col.isValid() ) {
-    Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( col, this );
-    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotDeleteJob(KJob*)) );
-    if ( sync ) {
-      job->exec();
+    if ( col.isValid() ) {
+        Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( col, this );
+        connect( job, SIGNAL(result(KJob*)), this, SLOT(slotDeleteJob(KJob*)) );
+        if ( sync ) {
+            job->exec();
+        }
+    } else {
+        kDebug() << " Try to expunge an invalid collection :" << col;
     }
-  } else {
-    kDebug() << " Try to expunge an invalid collection :" << col;
-  }
 }
 
 void FolderCollectionMonitor::slotDeleteJob( KJob *job )
 {
-  Util::showJobErrorMessage( job );
+    Util::showJobErrorMessage( job );
 }
 
 }

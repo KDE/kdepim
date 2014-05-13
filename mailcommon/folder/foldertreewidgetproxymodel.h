@@ -27,20 +27,20 @@ namespace MailCommon {
 
 class FolderTreeWidgetProxyModel : public Akonadi::EntityRightsFilterModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     enum FolderTreeWidgetProxyModelOption {
-      None = 0,
-      HideVirtualFolder = 1,
-      HideSpecificFolder = 2,
-      HideOutboxFolder = 4
+        None = 0,
+        HideVirtualFolder = 1,
+        HideSpecificFolder = 2,
+        HideOutboxFolder = 4
     };
     Q_DECLARE_FLAGS( FolderTreeWidgetProxyModelOptions, FolderTreeWidgetProxyModelOption )
 
     explicit FolderTreeWidgetProxyModel(
-      QObject *parent = 0,
-      FolderTreeWidgetProxyModelOptions = FolderTreeWidgetProxyModel::None );
+            QObject *parent = 0,
+            FolderTreeWidgetProxyModelOptions = FolderTreeWidgetProxyModel::None );
 
     virtual ~FolderTreeWidgetProxyModel();
 
@@ -66,10 +66,10 @@ class FolderTreeWidgetProxyModel : public Akonadi::EntityRightsFilterModel
     void updatePalette();
     void readConfig();
 
-  protected:
+protected:
     virtual bool acceptRow( int sourceRow, const QModelIndex &sourceParent ) const;
 
-  private:
+private:
     class Private;
     Private *const d;
 };
