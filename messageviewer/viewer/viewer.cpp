@@ -79,7 +79,7 @@ void Viewer::initialize()
              this, SIGNAL(showStatusBarMessage(QString)) );
     connect( d_ptr, SIGNAL(itemRemoved()),
              this, SIGNAL(itemRemoved()) );
-    connect( d_ptr, SIGNAL(changeDisplayMail(Viewer::ForceDisplayTo,bool)), SLOT(slotChangeDisplayMail(Viewer::ForceDisplayTo,bool)) );
+    connect( d_ptr, SIGNAL(changeDisplayMail(Viewer::DisplayFormatMessage,bool)), SLOT(slotChangeDisplayMail(Viewer::DisplayFormatMessage,bool)) );
     connect( d_ptr, SIGNAL(moveMessageToTrash()), SIGNAL(moveMessageToTrash()));
 
     setMessage( KMime::Message::Ptr(), Delayed );
@@ -628,7 +628,7 @@ KAction *Viewer::findInMessageAction()
     return d->mFindInMessageAction;
 }
 
-void Viewer::slotChangeDisplayMail(Viewer::ForceDisplayTo mode,bool loadExternal)
+void Viewer::slotChangeDisplayMail(Viewer::DisplayFormatMessage mode,bool loadExternal)
 {
     setHtmlLoadExtOverride(loadExternal);
     switch(mode) {

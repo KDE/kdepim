@@ -625,7 +625,7 @@ signals:
     void itemRemoved();
     void makeResourceOnline(MessageViewer::Viewer::ResourceOnlineMode mode);
 
-    void changeDisplayMail(Viewer::ForceDisplayTo,bool);
+    void changeDisplayMail(Viewer::DisplayFormatMessage,bool);
     void moveMessageToTrash();
 private:
     QString attachmentInjectionHtml() const;
@@ -634,7 +634,7 @@ private:
 
 public:
     NodeHelper* mNodeHelper;
-    bool mHtmlMail, mHtmlLoadExternal, mHtmlOverride, mHtmlLoadExtOverride;
+    bool mHtmlMailGlobalSetting, mHtmlLoadExternalGlobalSetting, mHtmlOverride, mHtmlLoadExtOverride;
     KMime::Message::Ptr mMessage; //the current message, if it was set manually
     Akonadi::Item mMessageItem; //the message item from Akonadi
     // widgets:

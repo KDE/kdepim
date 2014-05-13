@@ -26,7 +26,7 @@ ContactDisplayMessageMemento::ContactDisplayMessageMemento( const QString &email
     : QObject( 0 ),
       mFinished( false ),
       mMailAllowToRemoteContent( false ),
-      mForceDisplayTo( Viewer::Unknown )
+      mForceDisplayTo( Viewer::UseGlobalSetting )
 {
     if( !emailAddress.isEmpty() ) {
         Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob();
@@ -71,7 +71,7 @@ bool ContactDisplayMessageMemento::finished() const
 void ContactDisplayMessageMemento::detach()
 {
     disconnect( this, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), 0, 0 );
-    disconnect(this, SIGNAL(changeDisplayMail(Viewer::ForceDisplayTo,bool)),0 ,0 );
+    disconnect(this, SIGNAL(changeDisplayMail(Viewer::DisplayFormatMessage,bool)),0 ,0 );
 }
 
 bool ContactDisplayMessageMemento::allowToRemoteContent() const
@@ -100,7 +100,7 @@ void ContactDisplayMessageMemento::processAddress( const KABC::Addressee& addres
             } else if ( value == QLatin1String( "HTML" ) ) {
                 mForceDisplayTo = Viewer::Html;
             } else {
-                mForceDisplayTo = Viewer::Unknown;
+                mForceDisplayTo = Viewer::UseGlobalSetting;
             }
         } else if ( custom.contains(QLatin1String( "MailAllowToRemoteContent")) ) {
             const QString value = addressee.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "MailAllowToRemoteContent" ) );

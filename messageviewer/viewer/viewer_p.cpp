@@ -237,7 +237,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
     connect(mThemeManager, SIGNAL(updateThemes()), this, SLOT(slotGrantleeThemesUpdated()));
     mHtmlOverride = false;
     mHtmlLoadExtOverride = false;
-    mHtmlLoadExternal = false;
+    mHtmlLoadExternalGlobalSetting = false;
     mZoomTextOnly = false;
 
     mUpdateReaderWinTimer.setObjectName( QLatin1String("mUpdateReaderWinTimer") );
@@ -1153,8 +1153,8 @@ void ViewerPrivate::readConfig()
     if ( mToggleFixFontAction )
         mToggleFixFontAction->setChecked( mUseFixedFont );
 
-    mHtmlMail = GlobalSettings::self()->htmlMail();
-    mHtmlLoadExternal = GlobalSettings::self()->htmlLoadExternal();
+    mHtmlMailGlobalSetting = GlobalSettings::self()->htmlMail();
+    mHtmlLoadExternalGlobalSetting = GlobalSettings::self()->htmlLoadExternal();
 
     mZoomTextOnly = GlobalSettings::self()->zoomTextOnly();
     setZoomTextOnly( mZoomTextOnly );
@@ -2802,13 +2802,13 @@ void ViewerPrivate::saveRelativePosition()
 //TODO(Andras) inline them
 bool ViewerPrivate::htmlMail() const
 {
-    return ((mHtmlMail && !mHtmlOverride) || (!mHtmlMail && mHtmlOverride));
+    return ((mHtmlMailGlobalSetting && !mHtmlOverride) || (!mHtmlMailGlobalSetting && mHtmlOverride));
 }
 
 bool ViewerPrivate::htmlLoadExternal() const
 {
-    return ((mHtmlLoadExternal && !mHtmlLoadExtOverride) ||
-            (!mHtmlLoadExternal && mHtmlLoadExtOverride));
+    return ((mHtmlLoadExternalGlobalSetting && !mHtmlLoadExtOverride) ||
+            (!mHtmlLoadExternalGlobalSetting && mHtmlLoadExtOverride));
 }
 
 void ViewerPrivate::setHtmlOverride( bool override )

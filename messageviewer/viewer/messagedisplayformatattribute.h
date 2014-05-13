@@ -38,8 +38,8 @@ public:
     QByteArray serialized() const;
     void deserialize( const QByteArray &data );
 
-    void setMessageFormat(Viewer::ForceDisplayTo format);
-    Viewer::ForceDisplayTo messageFormat() const;
+    void setMessageFormat(Viewer::DisplayFormatMessage format);
+    Viewer::DisplayFormatMessage messageFormat() const;
 
     void setRemoteContent(bool remote);
     bool remoteContent() const;

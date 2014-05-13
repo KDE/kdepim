@@ -105,8 +105,8 @@ public:
    */
     Akonadi::Item messageItem() const;
 
-    enum ForceDisplayTo {
-        Unknown = 0,
+    enum DisplayFormatMessage {
+        UseGlobalSetting = 0,
         Text = 1,
         Html = 2
     };
@@ -409,7 +409,7 @@ public slots:
     void slotZoomIn();
     void slotZoomOut();
     void slotZoomReset();
-    void slotChangeDisplayMail(Viewer::ForceDisplayTo,bool);
+    void slotChangeDisplayMail(Viewer::DisplayFormatMessage,bool);
 protected:
     /** Some necessary event handling. */
     virtual void closeEvent(QCloseEvent *);

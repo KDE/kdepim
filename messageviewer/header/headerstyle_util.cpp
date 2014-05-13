@@ -280,8 +280,8 @@ xfaceSettings xface(const MessageViewer::HeaderStyle *style, KMime::Message *mes
             QObject::connect( photoMemento, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
                               style->sourceObject(), SLOT(update(MessageViewer::Viewer::UpdateMode)) );
 
-            QObject::connect( photoMemento, SIGNAL(changeDisplayMail(Viewer::ForceDisplayTo,bool)),
-                              style->sourceObject(), SIGNAL(changeDisplayMail(Viewer::ForceDisplayTo,bool)) );
+            QObject::connect( photoMemento, SIGNAL(changeDisplayMail(Viewer::DisplayFormatMessage,bool)),
+                              style->sourceObject(), SIGNAL(changeDisplayMail(Viewer::DisplayFormatMessage,bool)) );
         }
 
         if ( photoMemento->finished() ) {
