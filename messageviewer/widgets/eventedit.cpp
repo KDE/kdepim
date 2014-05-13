@@ -65,6 +65,7 @@ EventEdit::EventEdit(QWidget *parent)
     mEventEdit->setObjectName(QLatin1String("noteedit"));
     mEventEdit->setFocus();
     connect(mEventEdit, SIGNAL(returnPressed()), SLOT(slotReturnPressed()));
+    connect(mEventEdit, SIGNAL(textChanged(QString)), SLOT(slotUpdateButtons(QString)));
     hbox->addWidget(mEventEdit);
 
     hbox->addSpacing(5);
@@ -122,22 +123,25 @@ EventEdit::EventEdit(QWidget *parent)
 
     hbox->addStretch(1);
 
-    KPushButton *btn = new KPushButton(KIcon(QLatin1String("appointment-new")), i18n("&Save"));
-    btn->setObjectName(QLatin1String("save-button"));
+    mSaveButton = new KPushButton(KIcon(QLatin1String("appointment-new")), i18n("&Save"));
+    mSaveButton->setObjectName(QLatin1String("save-button"));
+    mSaveButton->setEnabled(false);
 #ifndef QT_NO_ACCESSIBILITY
-    btn->setAccessibleDescription(i18n("Create new event and close this widget."));
+    mSaveButton->setAccessibleDescription(i18n("Create new event and close this widget."));
 #endif
-    connect(btn, SIGNAL(clicked(bool)), this, SLOT(slotReturnPressed()));
-    hbox->addWidget(btn);
+    connect(mSaveButton, SIGNAL(clicked(bool)), this, SLOT(slotReturnPressed()));
+    hbox->addWidget(mSaveButton);
 
-    btn = new KPushButton(i18n("Open &editor..."));
+    mOpenEditorButton = new KPushButton(i18n("Open &editor..."));
 #ifndef QT_NO_ACCESSIBILITY
-    btn->setAccessibleDescription(i18n("Open event editor, where more details can be changed."));
+    mOpenEditorButton->setAccessibleDescription(i18n("Open event editor, where more details can be changed."));
 #endif
-    connect(btn, SIGNAL(clicked(bool)), this, SLOT(slotOpenEditor()));
-    hbox->addWidget(btn);
+    mOpenEditorButton->setObjectName(QLatin1String("open-editor-button"));
+    mOpenEditorButton->setEnabled(false);
+    connect(mOpenEditorButton, SIGNAL(clicked(bool)), this, SLOT(slotOpenEditor()));
+    hbox->addWidget(mOpenEditorButton);
 
-    btn = new KPushButton(i18n("&Cancel"));
+    KPushButton *btn = new KPushButton(KStandardGuiItem::cancel());
     btn->setObjectName(QLatin1String("close-button"));
 #ifndef QT_NO_ACCESSIBILITY
     btn->setAccessibleDescription(i18n("Close the widget for creating new events."));
@@ -158,8 +162,17 @@ EventEdit::~EventEdit()
 
 void EventEdit::writeConfig()
 {
-    MessageViewer::GlobalSettingsBase::self()->setLastEventSelectedFolder(mCollectionCombobox->currentCollection().id());
-    MessageViewer::GlobalSettingsBase::self()->save();
+    if (mCollectionCombobox->currentCollection().id() != MessageViewer::GlobalSettingsBase::self()->lastEventSelectedFolder()) {
+        MessageViewer::GlobalSettingsBase::self()->setLastEventSelectedFolder(mCollectionCombobox->currentCollection().id());
+        MessageViewer::GlobalSettingsBase::self()->save();
+    }
+}
+
+void EventEdit::slotUpdateButtons(const QString &subject)
+{
+    const bool subjectIsNotEmpty = !subject.isEmpty();
+    mSaveButton->setEnabled(subjectIsNotEmpty);
+    mOpenEditorButton->setEnabled(subjectIsNotEmpty);
 }
 
 void EventEdit::showEventEdit()

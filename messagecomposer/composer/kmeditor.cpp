@@ -251,7 +251,7 @@ void KMeditor::keyPressEvent ( QKeyEvent *e )
         emit focusUp();
     } else {
         if((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
-            if(d->mAutoCorrection && !isLineQuoted(textCursor().block().text())) {
+            if(d->mAutoCorrection && !isLineQuoted(textCursor().block().text()) && !textCursor().hasSelection()) {
                 const QTextCharFormat initialTextFormat = textCursor().charFormat();
                 const bool richText = (textMode() == KRichTextEdit::Rich);
                 int position = textCursor().position();

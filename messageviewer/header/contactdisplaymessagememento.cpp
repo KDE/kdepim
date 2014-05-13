@@ -80,16 +80,6 @@ bool ContactDisplayMessageMemento::allowToRemoteContent() const
     return mMailAllowToRemoteContent;
 }
 
-bool ContactDisplayMessageMemento::forceToHtml() const
-{
-    return ( mForceDisplayTo == Viewer::Html );
-}
-
-bool ContactDisplayMessageMemento::forceToText() const
-{
-    return ( mForceDisplayTo == Viewer::Text );
-}
-
 void ContactDisplayMessageMemento::searchPhoto(const KABC::AddresseeList &list)
 {
     Q_FOREACH (const KABC::Addressee &addressee, list) {

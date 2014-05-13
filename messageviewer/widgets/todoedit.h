@@ -26,7 +26,7 @@
 
 class KMessageWidget;
 class QLineEdit;
-
+class KPushButton;
 namespace Akonadi {
 class CollectionComboBox;
 }
@@ -55,7 +55,7 @@ private Q_SLOTS:
     void slotReturnPressed();
     void slotCollectionChanged(int);
     void slotOpenEditor();
-    void slotTextEdited();
+    void slotTextEdited(const QString &subject);
 
 Q_SIGNALS:
     void createTodo(const KCalCore::Todo::Ptr &todo, const Akonadi::Collection &collection);
@@ -65,12 +65,15 @@ Q_SIGNALS:
 protected:
     bool eventFilter(QObject *object, QEvent *e);
 private:
+    void updateButtons(const QString &subject);
     void readConfig();
     Akonadi::Collection mCollection;
     KMime::Message::Ptr mMessage;
     QLineEdit *mNoteEdit;
     Akonadi::CollectionComboBox *mCollectionCombobox;
     KMessageWidget *mMsgWidget;
+    KPushButton *mSaveButton;
+    KPushButton *mOpenEditorButton;
 };
 }
 #endif // TODOEDIT_H

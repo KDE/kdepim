@@ -71,9 +71,9 @@ QByteArray MessageDisplayFormatAttribute::serialized() const
     return result;
 }
 
-void MessageDisplayFormatAttribute::setMessageFormat(Viewer::ForceDisplayTo html)
+void MessageDisplayFormatAttribute::setMessageFormat(Viewer::ForceDisplayTo format)
 {
-    d->messageFormat = html;
+    d->messageFormat = format;
 }
 
 void MessageDisplayFormatAttribute::setRemoteContent(bool remote)
