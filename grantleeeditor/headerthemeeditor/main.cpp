@@ -35,7 +35,7 @@ int main( int argc, char **argv )
                           i18n("Header Theme Editor"), 
                           QLatin1String(KDEPIM_VERSION),
                           i18n("Messageviewer Header Theme Editor"),
-                          KAboutData::License_GPL_V2,
+                          KAboutLicense::GPL_V2,
                           i18n("Copyright © 2013, 2014 headerthemeeditor authors"));
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
     aboutData.setProgramIconName(QLatin1String("kmail"));

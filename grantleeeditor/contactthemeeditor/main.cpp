@@ -33,7 +33,7 @@ int main( int argc, char **argv )
                           i18n("Contact Theme Editor"),
                           QLatin1String(KDEPIM_VERSION),
                           i18n("Contact Theme Editor"),
-                          KAboutData::License_GPL_V2,
+                          KAboutLicense::GPL_V2,
                           i18n("Copyright © 2013-2014 contactthemeeditor authors"));
     aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QStringLiteral("montel@kde.org"));
     aboutData.setProgramIconName(QLatin1String("kaddressbook"));
