@@ -192,11 +192,9 @@ public:
     void printPreview();
 
     /** Get the html override setting */
-    bool htmlOverride() const;
     Viewer::DisplayFormatMessage displayFormatMessageOverwrite() const;
 
     /** Override default html mail setting */
-    void setHtmlOverride( bool override );
     void setDisplayFormatMessageOverwrite(Viewer::DisplayFormatMessage format);
 
     /** Get the load external references override setting */

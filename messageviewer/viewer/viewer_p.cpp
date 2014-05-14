@@ -241,7 +241,6 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
     connect(mThemeManager, SIGNAL(grantleeThemeSelected()), this, SLOT(slotGrantleeHeaders()));
     connect(mThemeManager, SIGNAL(updateThemes()), this, SLOT(slotGrantleeThemesUpdated()));
 
-    mHtmlOverride = false;
     mDisplayFormatMessageOverwrite = MessageViewer::Viewer::UseGlobalSetting;
     mHtmlLoadExtOverride = false;
 
@@ -843,16 +842,7 @@ void ViewerPrivate::displayMessage()
     if ( mMessageItem.hasAttribute<MessageViewer::MessageDisplayFormatAttribute>() ) {
         const MessageViewer::MessageDisplayFormatAttribute* const attr = mMessageItem.attribute<MessageViewer::MessageDisplayFormatAttribute>();
         setHtmlLoadExtOverride(attr->remoteContent());
-        switch(attr->messageFormat()) {
-        case Viewer::Html:
-            setHtmlOverride(true);
-            break;
-        case Viewer::Text:
-            setHtmlOverride(false);
-            break;
-        default:
-            break;
-        }
+        setDisplayFormatMessageOverwrite(attr->messageFormat());
     }
 
     htmlWriter()->begin( QString() );
@@ -2193,7 +2183,8 @@ void ViewerPrivate::slotToggleHtmlMode()
     if(mColorBar->isNormal())
         return;
     mScamDetectionWarning->setVisible(false);
-    setHtmlOverride( !htmlMail() );
+    const bool useHtml  = !htmlMail();
+    setDisplayFormatMessageOverwrite( useHtml ? MessageViewer::Viewer::Html : MessageViewer::Viewer::Text );
     update( Viewer::Force );
 }
 
@@ -2815,7 +2806,11 @@ void ViewerPrivate::saveRelativePosition()
 //TODO(Andras) inline them
 bool ViewerPrivate::htmlMail() const
 {
-    return ((mHtmlMailGlobalSetting && !mHtmlOverride) || (!mHtmlMailGlobalSetting && mHtmlOverride));
+    if (mDisplayFormatMessageOverwrite == Viewer::UseGlobalSetting) {
+        return mHtmlMailGlobalSetting;
+    } else {
+        return (mDisplayFormatMessageOverwrite == Viewer::Html);
+    }
 }
 
 bool ViewerPrivate::htmlLoadExternal() const
@@ -2835,20 +2830,6 @@ void ViewerPrivate::setDisplayFormatMessageOverwrite(Viewer::DisplayFormatMessag
 Viewer::DisplayFormatMessage ViewerPrivate::displayFormatMessageOverwrite() const
 {
     return mDisplayFormatMessageOverwrite;
-}
-
-void ViewerPrivate::setHtmlOverride( bool override )
-{
-    mHtmlOverride = override;
-
-    // keep toggle display mode action state in sync.
-    if ( mToggleDisplayModeAction )
-        mToggleDisplayModeAction->setChecked( htmlMail() );
-}
-
-bool ViewerPrivate::htmlOverride() const
-{
-    return mHtmlOverride;
 }
 
 void ViewerPrivate::setHtmlLoadExtOverride( bool override )
@@ -3265,10 +3246,7 @@ void ViewerPrivate::slotSaveMessageDisplayFormat()
     if (mMessageItem.isValid()) {
         MessageViewer::MessageDisplayFormatAttribute *attr  = mMessageItem.attribute<MessageViewer::MessageDisplayFormatAttribute>( Akonadi::Entity::AddIfMissing );
         attr->setRemoteContent(htmlLoadExtOverride());
-        if (htmlOverride())
-            attr->setMessageFormat(Viewer::Html);
-        else
-            attr->setMessageFormat(Viewer::Text);
+        attr->setMessageFormat(displayFormatMessageOverwrite());
         Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob( mMessageItem );
         modify->setIgnorePayload( true );
         modify->disableRevisionCheck();

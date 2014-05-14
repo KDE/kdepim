@@ -29,7 +29,7 @@
 class QMouseEvent;
 
 namespace Akonadi {
-  class CollectionStatisticsDelegate;
+class CollectionStatisticsDelegate;
 }
 
 namespace MailCommon {
@@ -40,9 +40,9 @@ namespace MailCommon {
  */
 class MAILCOMMON_EXPORT FolderTreeView : public Akonadi::EntityTreeView
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit FolderTreeView( QWidget *parent = 0, bool showUnreadCount = true );
 
     explicit FolderTreeView( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0,
@@ -69,10 +69,10 @@ class MAILCOMMON_EXPORT FolderTreeView : public Akonadi::EntityTreeView
     void updatePalette();
 
     void keyboardSearch( const QString & ); // reimp
-  protected:
+protected:
     enum Move {
-      Next = 0,
-      Previous = 1
+        Next = 0,
+        Previous = 1
     };
 
     void init( bool showUnreadCount );
@@ -88,26 +88,26 @@ class MAILCOMMON_EXPORT FolderTreeView : public Akonadi::EntityTreeView
 
     virtual void mousePressEvent( QMouseEvent *e );
 
-  public slots:
+public slots:
     void slotFocusNextFolder();
     void slotFocusPrevFolder();
     void slotSelectFocusFolder();
     void slotFocusFirstFolder();
     void slotFocusLastFolder();
 
-  protected slots:
+protected slots:
     void slotHeaderContextMenuRequested( const QPoint & );
     void slotHeaderContextMenuChangeIconSize( bool );
     void slotHeaderContextMenuChangeHeader( bool );
     void slotHeaderContextMenuChangeToolTipDisplayPolicy( bool );
     void slotHeaderContextMenuChangeSortingPolicy( bool );
 
-  signals:
+signals:
     void changeTooltipsPolicy( FolderTreeWidget::ToolTipDisplayPolicy );
     void manualSortingChanged( bool actif );
     void prefereCreateNewTab( bool );
 
-  private:
+private:
     bool ignoreUnreadFolder( const Akonadi::Collection &, bool ) const;
     bool allowedToEnterFolder( const Akonadi::Collection &, bool ) const;
     bool trySelectNextUnreadFolder( const QModelIndex &, MailCommon::Util::SearchDirection, bool );

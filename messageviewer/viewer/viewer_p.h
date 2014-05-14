@@ -397,11 +397,9 @@ public:
     bool htmlLoadExternal() const;
 
     /** Get the html override setting */
-    bool htmlOverride() const;
     Viewer::DisplayFormatMessage displayFormatMessageOverwrite() const;
 
     /** Override default html mail setting */
-    void setHtmlOverride( bool override );
     void setDisplayFormatMessageOverwrite(Viewer::DisplayFormatMessage format);
 
     /** Get the load external references override setting */
@@ -636,7 +634,7 @@ private:
 
 public:
     NodeHelper* mNodeHelper;
-    bool mHtmlMailGlobalSetting, mHtmlLoadExternalGlobalSetting, mHtmlOverride, mHtmlLoadExtOverride;
+    bool mHtmlMailGlobalSetting, mHtmlLoadExternalGlobalSetting, mHtmlLoadExtOverride;
     KMime::Message::Ptr mMessage; //the current message, if it was set manually
     Akonadi::Item mMessageItem; //the message item from Akonadi
     // widgets:

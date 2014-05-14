@@ -37,17 +37,17 @@ namespace MailCommon {
  */
 class MAILCOMMON_EXPORT FolderSelectionDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     enum SelectionFolderOption {
-      None = 0,
-      EnableCheck = 1,
-      ShowUnreadCount = 2,
-      HideVirtualFolder = 4,
-      NotAllowToCreateNewFolder = 8,
-      HideOutboxFolder = 16,
-      NotUseGlobalSettings = 64
+        None = 0,
+        EnableCheck = 1,
+        ShowUnreadCount = 2,
+        HideVirtualFolder = 4,
+        NotAllowToCreateNewFolder = 8,
+        HideOutboxFolder = 16,
+        NotUseGlobalSettings = 64
     };
     Q_DECLARE_FLAGS( SelectionFolderOptions, SelectionFolderOption )
 
@@ -62,7 +62,7 @@ class MAILCOMMON_EXPORT FolderSelectionDialog : public KDialog
 
     Akonadi::Collection::List selectedCollections() const;
 
-  private slots:
+private slots:
     void slotSelectionChanged();
     void slotAddChildFolder();
     void collectionCreationResult( KJob * );
@@ -70,7 +70,7 @@ class MAILCOMMON_EXPORT FolderSelectionDialog : public KDialog
     void slotDoubleClick(const QModelIndex&);
     void slotFolderTreeWidgetContextMenuRequested(const QPoint&);
 
-  protected:
+protected:
     void focusTreeView();
     void readConfig();
     void writeConfig();
@@ -82,7 +82,7 @@ class MAILCOMMON_EXPORT FolderSelectionDialog : public KDialog
     /*reimp*/
     void showEvent( QShowEvent * );
 
-  private:
+private:
     class FolderSelectionDialogPrivate;
     FolderSelectionDialogPrivate *const d;
 };

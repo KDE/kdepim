@@ -250,18 +250,6 @@ void Viewer::setDisplayFormatMessageOverwrite(Viewer::DisplayFormatMessage forma
     d->setDisplayFormatMessageOverwrite(format);
 }
 
-void Viewer::setHtmlOverride( bool override )
-{
-    Q_D(Viewer);
-    d->setHtmlOverride( override );
-}
-
-bool Viewer::htmlOverride() const
-{
-    Q_D(const Viewer);
-    return d->htmlOverride();
-}
-
 void Viewer::setHtmlLoadExtOverride( bool override )
 {
     Q_D(Viewer);
@@ -644,16 +632,7 @@ QAction *Viewer::findInMessageAction()
 void Viewer::slotChangeDisplayMail(Viewer::DisplayFormatMessage mode,bool loadExternal)
 {
     setHtmlLoadExtOverride(loadExternal);
-    switch(mode) {
-    case Viewer::Html:
-        setHtmlOverride(true);
-        break;
-    case Viewer::Text:
-        setHtmlOverride(false);
-        break;
-    default:
-        break;
-    }
+    setDisplayFormatMessageOverwrite(mode);
     update(Viewer::Force);
 }
 
