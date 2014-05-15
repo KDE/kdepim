@@ -1,14 +1,9 @@
-set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
+include(ECMAddTests)
 
+set(QT_REQUIRED_VERSION "5.2.0")
+find_package(Qt5Test ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. )
 
-# Convenience macro to add unit tests.
-macro( add_messagelist_test _source )
-  set( _test ${_source} )
-  get_filename_component( _name ${_source} NAME_WE )
-  kde4_add_unit_test( ${_name} TESTNAME messagelist-${_name} ${_test} )
-  target_link_libraries( ${_name} messagecore messagelist ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} )
-endmacro()
+########### next target ###############
 
-add_messagelist_test(itemsizetest.cpp)
-add_messagelist_test(quicksearchlinetest.cpp)
+ecm_add_tests(itemsizetest.cpp quicksearchlinetest.cpp NAME_PREFIX "messagelist-" LINK_LIBRARIES messagecore messagelist Qt5::Test)

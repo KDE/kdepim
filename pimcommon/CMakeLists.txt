@@ -220,7 +220,6 @@ target_link_libraries(pimcommon
     KF5::NewStuff
     KF5::Wallet
     kdepim
-    #KF5::Ldap
     KF5::Imap
     KF5::AkonadiWidgets
     KF5::Archive
@@ -230,12 +229,12 @@ set_target_properties(pimcommon PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSI
 install(TARGETS pimcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 #add_subdirectory(translator/tests)
-#add_subdirectory(texteditor/plaintexteditor/tests)
-#add_subdirectory(texteditor/richtexteditor/tests)
-#add_subdirectory(texteditor/commonwidget/tests/)
-#add_subdirectory(widgets/tests)
+add_subdirectory(texteditor/plaintexteditor/tests)
+add_subdirectory(texteditor/richtexteditor/tests)
+add_subdirectory(texteditor/commonwidget/tests/)
+add_subdirectory(widgets/tests)
 #add_subdirectory(shorturl/tests)
-#add_subdirectory(autocorrection/tests)
+add_subdirectory(autocorrection/tests)
 #add_subdirectory(folderdialog/tests/)
 #add_subdirectory(storageservice/dropbox/tests)
 #add_subdirectory(storageservice/hubic/tests)
