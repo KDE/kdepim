@@ -75,9 +75,25 @@ void MailSenderJobTest::shouldSendSignalWhenOneEmail()
     KABMailSender::MailSenderJob mailsender(lst);
     QSignalSpy spy(&mailsender, SIGNAL(sendMails(QStringList)));
     mailsender.start();
-    //QCOMPARE(spy.count(), 1);
-    //const QStringList resultLst = spy.at(0).at(0).value<QStringList>();
-    //QCOMPARE(resultLst.count(), 1);
+    QCOMPARE(spy.count(), 1);
+    const QStringList resultLst = spy.at(0).at(0).value<QStringList>();
+    QCOMPARE(resultLst.count(), 1);
+}
+
+void MailSenderJobTest::shouldNotSendTwiceEmails()
+{
+    Akonadi::Item::List lst;
+    Akonadi::Item item;
+    KABC::Addressee address;
+    address.setName(QLatin1String("foo1"));
+    address.insertEmail(QLatin1String("foo@kde.org"), true);
+    item.setPayload<KABC::Addressee>( address );
+    lst <<item<<item;
+    KABMailSender::MailSenderJob mailsender(lst);
+    QSignalSpy spy(&mailsender, SIGNAL(sendMails(QStringList)));
+    mailsender.start();
+    const QStringList resultLst = spy.at(0).at(0).value<QStringList>();
+    QCOMPARE(resultLst.count(), 1);
 }
 
 
