@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,15 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef MAILSENDERTEST_H
+#define MAILSENDERTEST_H
 
-#ifndef UTILS_H
-#define UTILS_H
+#include <QObject>
 
-#include <Akonadi/Item>
-class QItemSelectionModel;
-namespace Utils {
-Akonadi::Item::List collectSelectedContactsItem(QItemSelectionModel *model);
-Akonadi::Item::List collectSelectedAllContactsItem(QItemSelectionModel *model);
-}
+class MailSenderTest : public QObject
+{
+    Q_OBJECT
+public:
+    MailSenderTest();
 
-#endif // UTILS_H
+private Q_SLOTS:
+    void shouldNotSendSignalWhenWeDontSelectItem();
+    void shouldNotSendSignalWhenNoValidAddressItem();
+    void shouldNotSendSignalWhenNoEmails();
+    void shouldSendSignalWhenOneEmail();
+};
+
+#endif // MAILSENDERTEST_H

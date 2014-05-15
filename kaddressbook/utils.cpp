@@ -21,6 +21,7 @@
 #include <QItemSelectionModel>
 
 #include <KABC/Addressee>
+#include <KABC/ContactGroup>
 #include <Akonadi/EntityTreeModel>
 
 Akonadi::Item::List Utils::collectSelectedContactsItem(QItemSelectionModel *model)
@@ -41,3 +42,22 @@ Akonadi::Item::List Utils::collectSelectedContactsItem(QItemSelectionModel *mode
     return lst;
 }
 
+Akonadi::Item::List Utils::collectSelectedAllContactsItem(QItemSelectionModel *model)
+{
+    Akonadi::Item::List lst;
+
+    const QModelIndexList indexes = model->selectedRows( 0 );
+    for ( int i = 0; i < indexes.count(); ++i ) {
+        const QModelIndex index = indexes.at( i );
+        if ( index.isValid() ) {
+            const Akonadi::Item item =
+                    index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+            if ( item.isValid() ) {
+                if ( item.hasPayload<KABC::Addressee>()  || item.hasPayload<KABC::ContactGroup>() ) {
+                    lst.append( item );
+                }
+            }
+        }
+    }
+    return lst;
+}

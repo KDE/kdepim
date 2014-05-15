@@ -33,6 +33,8 @@
 #include "categoryselectwidget.h"
 #include "categoryfilterproxymodel.h"
 
+#include "sendmail/mailsender.h"
+
 #include "kaddressbookgrantlee/formatter/grantleecontactformatter.h"
 #include "kaddressbookgrantlee/formatter/grantleecontactgroupformatter.h"
 #include "grantleetheme/grantleethememanager.h"
@@ -80,6 +82,7 @@
 #include <kdeprintdialog.h>
 #include <KPrintPreview>
 #include <KXMLGUIClient>
+#include <KToolInvocation>
 
 #include <QAction>
 #include <QActionGroup>
@@ -689,6 +692,11 @@ void MainWidget::setupActions( KActionCollection *collection )
   mQuickSearchAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Q ) );
   collection->addAction( QLatin1String("focus_to_quickseach"), mQuickSearchAction );
   connect( mQuickSearchAction, SIGNAL(triggered(bool)), mQuickSearchWidget, SLOT(slotFocusQuickSearch()) );
+
+  action = collection->addAction( QLatin1String("send_mail") );
+  action->setText( i18n( "Send an email...") );
+  action->setIcon(KIconLoader::global()->loadIcon( QLatin1String( "mail-message-new"), KIconLoader::Small ));
+  connect( action, SIGNAL(triggered(bool)), this, SLOT(slotSendMail()));
 }
 
 void MainWidget::printPreview()
@@ -980,5 +988,24 @@ void MainWidget::slotCheckNewCalendar( const QModelIndex &parent, int begin, int
         if ( parent.isValid() ) {
             mCollectionView->setExpanded( parent, true );
         }
+    }
+}
+
+void MainWidget::slotSendMail()
+{
+    const Akonadi::Item::List lst = Utils::collectSelectedAllContactsItem(mItemView->selectionModel());
+    if (!lst.isEmpty()) {
+        KABMailSender::MailSender *mailSender = new KABMailSender::MailSender(lst, this);
+        connect(mailSender, SIGNAL(sendMails(QStringList)), this, SLOT(slotSendMails(QStringList)));
+    }
+}
+
+void MainWidget::slotSendMails(const QStringList &emails)
+{
+    if (!emails.isEmpty()) {
+        KUrl url;
+        url.setProtocol( QLatin1String( "mailto" ) );
+        url.setPath( emails.join(QLatin1String(";")) );
+        KToolInvocation::invokeMailer( url );
     }
 }

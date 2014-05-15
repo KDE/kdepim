@@ -101,6 +101,10 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     void slotGrantleeThemesUpdated();  
     void slotCheckNewCalendar(const QModelIndex &parent, int begin, int end);
 
+    void slotSendMail();
+
+    void slotSendMails(const QStringList &emails);
+
 private:
     void initGrantleeThemeName();
     void setupGui();
