@@ -19,7 +19,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include "mailsender.h"
+#include "mailsenderjob.h"
 #include "utils.h"
 #include "kpimutils/email.h"
 
@@ -37,19 +37,19 @@
 #include <QItemSelectionModel>
 using namespace KABMailSender;
 
-MailSender::MailSender(const Akonadi::Item::List &listItem, QObject *parent)
+MailSenderJob::MailSenderJob(const Akonadi::Item::List &listItem, QObject *parent)
     : QObject(parent),
       mListItem(listItem),
       mFetchJobCount(0)
 {
 }
 
-MailSender::~MailSender()
+MailSenderJob::~MailSenderJob()
 {
 
 }
 
-void MailSender::start()
+void MailSenderJob::start()
 {
     Q_FOREACH (const Akonadi::Item &item, mListItem) {
         if (item.hasPayload<KABC::Addressee>()) {
@@ -87,7 +87,7 @@ void MailSender::start()
     }
 }
 
-void MailSender::fetchNextItem()
+void MailSenderJob::fetchNextItem()
 {
     if (mFetchJobCount<mItemToFetch.count()) {
         fetchItem(mItemToFetch.at(mFetchJobCount));
@@ -97,7 +97,7 @@ void MailSender::fetchNextItem()
     }
 }
 
-void MailSender::fetchItem(const Akonadi::Item &item)
+void MailSenderJob::fetchItem(const Akonadi::Item &item)
 {
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
     job->fetchScope().fetchFullPayload();
@@ -105,7 +105,7 @@ void MailSender::fetchItem(const Akonadi::Item &item)
     connect( job, SIGNAL(result(KJob*)), SLOT(fetchJobFinished(KJob*)) );
 }
 
-void MailSender::fetchJobFinished(KJob *job)
+void MailSenderJob::fetchJobFinished(KJob *job)
 {
     if ( job->error() ) {
         qDebug()<<" error during fetching "<<job->errorString();
@@ -129,7 +129,7 @@ void MailSender::fetchJobFinished(KJob *job)
     fetchNextItem();
 }
 
-void MailSender::finishJob()
+void MailSenderJob::finishJob()
 {
 #if 0
     if (!mEmailAddresses.isEmpty()) {

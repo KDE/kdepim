@@ -15,16 +15,16 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MAILSENDERTEST_H
-#define MAILSENDERTEST_H
+#ifndef MAILSENDERJOBTEST_H
+#define MAILSENDERJOBTEST_H
 
 #include <QObject>
 
-class MailSenderTest : public QObject
+class MailSenderJobTest : public QObject
 {
     Q_OBJECT
 public:
-    MailSenderTest();
+    MailSenderJobTest();
 
 private Q_SLOTS:
     void shouldNotSendSignalWhenWeDontSelectItem();
@@ -33,4 +33,4 @@ private Q_SLOTS:
     void shouldSendSignalWhenOneEmail();
 };
 
-#endif // MAILSENDERTEST_H
+#endif // MAILSENDERJOBTEST_H

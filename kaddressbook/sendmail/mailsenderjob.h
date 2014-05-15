@@ -19,8 +19,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef MAILSENDER_H
-#define MAILSENDER_H
+#ifndef MAILSENDERJOB_H
+#define MAILSENDERJOB_H
 
 #include "kaddressbook_export.h"
 #include <Akonadi/Item>
@@ -30,13 +30,13 @@
 class QItemSelectionModel;
 class KJob;
 namespace KABMailSender {
-class KADDRESSBOOK_EXPORT MailSender : public QObject
+class KADDRESSBOOK_EXPORT MailSenderJob : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit MailSender(const Akonadi::Item::List &listItem, QObject* parent = 0);
-    ~MailSender();
+    explicit MailSenderJob(const Akonadi::Item::List &listItem, QObject* parent = 0);
+    ~MailSenderJob();
 
     void start();
 

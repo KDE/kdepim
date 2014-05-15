@@ -33,7 +33,7 @@
 #include "categoryselectwidget.h"
 #include "categoryfilterproxymodel.h"
 
-#include "sendmail/mailsender.h"
+#include "sendmail/mailsenderjob.h"
 
 #include "kaddressbookgrantlee/formatter/grantleecontactformatter.h"
 #include "kaddressbookgrantlee/formatter/grantleecontactgroupformatter.h"
@@ -995,7 +995,7 @@ void MainWidget::slotSendMail()
 {
     const Akonadi::Item::List lst = Utils::collectSelectedAllContactsItem(mItemView->selectionModel());
     if (!lst.isEmpty()) {
-        KABMailSender::MailSender *mailSender = new KABMailSender::MailSender(lst, this);
+        KABMailSender::MailSenderJob *mailSender = new KABMailSender::MailSenderJob(lst, this);
         connect(mailSender, SIGNAL(sendMails(QStringList)), this, SLOT(slotSendMails(QStringList)));
     }
 }

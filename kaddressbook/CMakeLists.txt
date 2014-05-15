@@ -33,7 +33,7 @@ if(QGPGME_FOUND)
 endif()
 
 set(kaddressbook_sendmail_SRCS
-  sendmail/mailsender.cpp
+  sendmail/mailsenderjob.cpp
 )
 
 set(kaddressbook_printing_SRCS

@@ -15,41 +15,41 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "mailsendertest.h"
-#include "mailsender.h"
+#include "mailsenderjobtest.h"
+#include "mailsenderjob.h"
 
 #include <KABC/Addressee>
 
 #include <qtest_kde.h>
 
 
-MailSenderTest::MailSenderTest()
+MailSenderJobTest::MailSenderJobTest()
 {
 }
 
-void MailSenderTest::shouldNotSendSignalWhenWeDontSelectItem()
+void MailSenderJobTest::shouldNotSendSignalWhenWeDontSelectItem()
 {
     Akonadi::Item::List lst;
-    KABMailSender::MailSender mailsender(lst);
+    KABMailSender::MailSenderJob mailsender(lst);
     QSignalSpy spy(&mailsender, SIGNAL(sendMails(QStringList)));
     mailsender.start();
     QCOMPARE(spy.count(), 0);
 }
 
-void MailSenderTest::shouldNotSendSignalWhenNoValidAddressItem()
+void MailSenderJobTest::shouldNotSendSignalWhenNoValidAddressItem()
 {
     Akonadi::Item::List lst;
     Akonadi::Item item;
     KABC::Addressee address;
     address.setName(QLatin1String("foo1"));
     lst <<item<<item;
-    KABMailSender::MailSender mailsender(lst);
+    KABMailSender::MailSenderJob mailsender(lst);
     QSignalSpy spy(&mailsender, SIGNAL(sendMails(QStringList)));
     mailsender.start();
     QCOMPARE(spy.count(), 0);
 }
 
-void MailSenderTest::shouldNotSendSignalWhenNoEmails()
+void MailSenderJobTest::shouldNotSendSignalWhenNoEmails()
 {
     Akonadi::Item::List lst;
     Akonadi::Item item;
@@ -57,13 +57,13 @@ void MailSenderTest::shouldNotSendSignalWhenNoEmails()
     address.setName(QLatin1String("foo1"));
     item.setPayload<KABC::Addressee>( address );
     lst <<item<<item;
-    KABMailSender::MailSender mailsender(lst);
+    KABMailSender::MailSenderJob mailsender(lst);
     QSignalSpy spy(&mailsender, SIGNAL(sendMails(QStringList)));
     mailsender.start();
     QCOMPARE(spy.count(), 0);
 }
 
-void MailSenderTest::shouldSendSignalWhenOneEmail()
+void MailSenderJobTest::shouldSendSignalWhenOneEmail()
 {
     Akonadi::Item::List lst;
     Akonadi::Item item;
@@ -72,7 +72,7 @@ void MailSenderTest::shouldSendSignalWhenOneEmail()
     address.insertEmail(QLatin1String("foo@kde.org"), true);
     item.setPayload<KABC::Addressee>( address );
     lst <<item;
-    KABMailSender::MailSender mailsender(lst);
+    KABMailSender::MailSenderJob mailsender(lst);
     QSignalSpy spy(&mailsender, SIGNAL(sendMails(QStringList)));
     mailsender.start();
     //QCOMPARE(spy.count(), 1);
@@ -81,4 +81,4 @@ void MailSenderTest::shouldSendSignalWhenOneEmail()
 }
 
 
-QTEST_KDEMAIN(MailSenderTest, NoGUI)
+QTEST_KDEMAIN(MailSenderJobTest, NoGUI)
