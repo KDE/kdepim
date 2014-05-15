@@ -88,6 +88,8 @@
     <Action name="akonadi_contact_group_create"/>
     <Action name="akonadi_contact_item_edit"/>
     <Separator/>
+    <Action name="send_mail"/>
+    <Separator/>
     <Action name="akonadi_item_cut"/>
     <Action name="akonadi_item_copy"/>
     <Action name="akonadi_paste"/>
