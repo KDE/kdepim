@@ -40,9 +40,9 @@ namespace KABPrinting {
  */
 class PrintProgress : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit PrintProgress( QWidget *parent, const char *name = 0 );
     ~PrintProgress();
 
@@ -56,7 +56,7 @@ class PrintProgress : public QWidget
      */
     void setProgress( int );
 
-  private:
+private:
     QStringList mMessages;
 
     KTextBrowser *mLogBrowser;

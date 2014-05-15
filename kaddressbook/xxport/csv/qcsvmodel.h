@@ -24,9 +24,9 @@
 
 class QCsvModel : public QAbstractTableModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new csv model.
      */
@@ -116,13 +116,13 @@ class QCsvModel : public QAbstractTableModel
      */
     virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the model has loaded all data.
      */
     void finishedLoading();
 
-  private:
+private:
     class Private;
     Private *const d;
 

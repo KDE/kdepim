@@ -25,13 +25,13 @@
 
 class ContactSorter
 {
-  public:
+public:
     explicit ContactSorter( ContactFields::Field field,
                             Qt::SortOrder sortOrder = Qt::AscendingOrder );
 
     void sort( QList<KABC::Addressee> &contacts ) const;
 
-  private:
+private:
     const ContactFields::Field mSortField;
     const Qt::SortOrder mSortOrder;
 };

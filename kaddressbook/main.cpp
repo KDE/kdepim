@@ -57,18 +57,18 @@ int KAddressBookApplication::newInstance()
 
 int main( int argc, char **argv )
 {
-  AboutData about;
+    AboutData about;
 
-  KCmdLineArgs::init( argc, argv, &about );
+    KCmdLineArgs::init( argc, argv, &about );
 
-  KCmdLineArgs::addCmdLineOptions( kaddressbook_options() ); // Add KAddressBook options
-  KUniqueApplication::addCmdLineOptions();
-  if ( !KAddressBookApplication::start() ) {
-      return 0;
-  }
+    KCmdLineArgs::addCmdLineOptions( kaddressbook_options() ); // Add KAddressBook options
+    KUniqueApplication::addCmdLineOptions();
+    if ( !KAddressBookApplication::start() ) {
+        return 0;
+    }
 
-  KAddressBookApplication app;
-  KAddressBook::insertLibraryCatalogues();
+    KAddressBookApplication app;
+    KAddressBook::insertLibraryCatalogues();
 
-  return app.exec();
+    return app.exec();
 }

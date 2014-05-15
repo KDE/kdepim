@@ -28,9 +28,9 @@ class MainWidget;
 
 class KAddressBookPart: public KParts::ReadOnlyPart
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     KAddressBookPart( QWidget *parentWidget, QObject *parent, const QVariantList & );
     virtual ~KAddressBookPart();
 
@@ -39,11 +39,11 @@ public Q_SLOTS:
     void newGroup();
     void updateQuickSearchText();
 
-  protected:
+protected:
     virtual bool openFile();
     virtual void guiActivateEvent( KParts::GUIActivateEvent * );
     void initAction();
-  private:
+private:
     MainWidget *mMainWidget;
 };
 

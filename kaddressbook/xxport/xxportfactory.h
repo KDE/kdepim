@@ -32,7 +32,7 @@
  */
 class XXPortFactory
 {
-  public:
+public:
     /**
      * Returns a new import/export module that matches the given
      * @p identifier or a null pointer if the identifier is invalid.

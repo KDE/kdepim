@@ -31,7 +31,7 @@
  */
 class XXPort
 {
-  public:
+public:
     /**
      * Creates a new xxport object.
      *
@@ -68,7 +68,7 @@ class XXPort
      */
     QString option( const QString &key ) const;
 
-  protected:
+protected:
     /**
      * Returns the parent widget that can be used as parent for
      * GUI components.
@@ -80,7 +80,7 @@ class XXPort
      */
     QString contactFileName( const KABC::Addressee &contact ) const;
 
-  private:
+private:
     QWidget *mParentWidget;
     QMap<QString, QString> mOptions;
 };

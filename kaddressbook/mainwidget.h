@@ -30,16 +30,16 @@ class GrantleeThemeManager;
 }
 class KAction;
 namespace Akonadi {
-  class Collection;
-  class ContactGroupViewer;
-  class ContactViewer;
-  class ContactsFilterProxyModel;
-  class EntityMimeTypeFilterModel;
-  class EntityTreeView;
-  class Item;
-  class ItemView;
-  class StandardContactActionManager;
-  class EntityTreeModel;
+class Collection;
+class ContactGroupViewer;
+class ContactViewer;
+class ContactsFilterProxyModel;
+class EntityMimeTypeFilterModel;
+class EntityTreeView;
+class Item;
+class ItemView;
+class StandardContactActionManager;
+class EntityTreeModel;
 }
 
 namespace KAddressBookGrantlee {
@@ -62,16 +62,16 @@ class QActionGroup;
 
 class KADDRESSBOOK_EXPORT MainWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit MainWidget( KXMLGUIClient *guiClient, QWidget *parent = 0 );
     ~MainWidget();
 
     XXPortManager *importManager() const;
     void updateQuickSearchText();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void newContact();
     void newGroup();
     void print();
@@ -82,7 +82,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
 
     bool handleCommandLine();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void delayedInit();
 
     void itemSelected( const Akonadi::Item &item );

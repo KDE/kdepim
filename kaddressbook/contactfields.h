@@ -25,68 +25,68 @@
 
 class ContactFields
 {
-  public:
+public:
 
     /**
      * Describes the standard fields that are available for every contact
      */
     enum Field {
-      Undefined = 0,
+        Undefined = 0,
 
-      FormattedName,
-      Prefix,
-      GivenName,
-      AdditionalName,
-      FamilyName,
-      Suffix,
-      NickName,
+        FormattedName,
+        Prefix,
+        GivenName,
+        AdditionalName,
+        FamilyName,
+        Suffix,
+        NickName,
 
-      Birthday,
-      Anniversary,
+        Birthday,
+        Anniversary,
 
-      HomeAddressStreet,
-      HomeAddressPostOfficeBox,
-      HomeAddressLocality,
-      HomeAddressRegion,
-      HomeAddressPostalCode,
-      HomeAddressCountry,
-      HomeAddressLabel,
+        HomeAddressStreet,
+        HomeAddressPostOfficeBox,
+        HomeAddressLocality,
+        HomeAddressRegion,
+        HomeAddressPostalCode,
+        HomeAddressCountry,
+        HomeAddressLabel,
 
-      BusinessAddressStreet,
-      BusinessAddressPostOfficeBox,
-      BusinessAddressLocality,
-      BusinessAddressRegion,
-      BusinessAddressPostalCode,
-      BusinessAddressCountry,
-      BusinessAddressLabel,
+        BusinessAddressStreet,
+        BusinessAddressPostOfficeBox,
+        BusinessAddressLocality,
+        BusinessAddressRegion,
+        BusinessAddressPostalCode,
+        BusinessAddressCountry,
+        BusinessAddressLabel,
 
-      HomePhone,
-      BusinessPhone,
-      MobilePhone,
-      HomeFax,
-      BusinessFax,
-      CarPhone,
-      Isdn,
-      Pager,
+        HomePhone,
+        BusinessPhone,
+        MobilePhone,
+        HomeFax,
+        BusinessFax,
+        CarPhone,
+        Isdn,
+        Pager,
 
-      PreferredEmail,
-      Email2,
-      Email3,
-      Email4,
+        PreferredEmail,
+        Email2,
+        Email3,
+        Email4,
 
-      Mailer,
-      Title,
-      Role,
-      Organization,
-      Note,
-      Homepage,
+        Mailer,
+        Title,
+        Role,
+        Organization,
+        Note,
+        Homepage,
 
-      BlogFeed,
-      Profession,
-      Office,
-      Manager,
-      Assistant,
-      Spouse
+        BlogFeed,
+        Profession,
+        Office,
+        Manager,
+        Assistant,
+        Spouse
     };
 
     /**

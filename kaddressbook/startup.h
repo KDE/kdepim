@@ -3,7 +3,7 @@
 #include "kaddressbook_export.h"
 
 namespace KAddressBook {
-  KADDRESSBOOK_EXPORT void insertLibraryCatalogues();
+KADDRESSBOOK_EXPORT void insertLibraryCatalogues();
 }
 
 #endif // STARTUP_H

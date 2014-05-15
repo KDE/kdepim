@@ -34,19 +34,19 @@ class RingBinderStyleAppearanceForm;
 
 class RingBinderPrintStyle : public PrintStyle
 {
-  public:
+public:
     explicit RingBinderPrintStyle( PrintingWizard *parent );
     ~RingBinderPrintStyle();
 
     void print( const KABC::Addressee::List &contacts, PrintProgress * );
 
-  private:
+private:
     RingBinderStyleAppearanceForm *mPageAppearance;
 };
 
 class RingBinderPrintStyleFactory : public PrintStyleFactory
 {
-  public:
+public:
     explicit RingBinderPrintStyleFactory( PrintingWizard *parent );
 
     PrintStyle *create() const;
