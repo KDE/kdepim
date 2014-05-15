@@ -32,6 +32,5 @@ target_link_libraries(testalarmdlg
   KF5::CalendarUtils
   KF5::PimIdentities
   KF5::MailTransport
-  
-  ${KDE4_PHONON_LIBS}
+  Phonon::phonon4qt5  
 )

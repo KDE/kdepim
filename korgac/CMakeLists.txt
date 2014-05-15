@@ -1,6 +1,6 @@
 project(korgac)
 
-option(KORGAC_AKONADI_AGENT FALSE "Build Korgac as Akonadi agent instead of a stand-alone process")
+option(KORGAC_AKONADI_AGENT "Build Korgac as Akonadi agent instead of a stand-alone process" FALSE)
 if(KORGAC_AKONADI_AGENT)
   add_definitions(-DKORGAC_AKONADI_AGENT)
 endif()
@@ -84,6 +84,7 @@ target_link_libraries(korgac
   KF5::CalendarUtils
   KF5::PimIdentities
   KF5::MailTransport
+  Phonon::phonon4qt5
 )
 
 if(RUNTIME_PLUGINS_STATIC)

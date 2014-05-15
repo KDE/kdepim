@@ -255,7 +255,7 @@ void KOAlarmClient::createReminder( const Akonadi::ETMCalendar::Ptr &calendar,
 #if defined(Q_WS_MAEMO_5)
   QMaemo5InformationBox::information( 0, incidence->summary(), QMaemo5InformationBox::NoTimeout );
 #else
-  KNotification *notify = new KNotification( "reminder", 0, KNotification::Persistent );
+  KNotification *notify = new KNotification( QLatin1String("reminder"), 0, KNotification::Persistent );
   notify->setText( incidence->summary() );
   notify->sendEvent();
 #endif

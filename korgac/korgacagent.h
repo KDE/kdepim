@@ -22,7 +22,7 @@
 #ifndef KORGAC_KORGACAGENT_H
 #define KORGAC_KORGACAGENT_H
 
-#include <Akonadi/AgentBase>
+#include <AkonadiAgentBase/AgentBase>
 
 class KOAlarmClient;
 

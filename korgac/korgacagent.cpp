@@ -22,7 +22,7 @@
 #include "korgacagent.h"
 #include "koalarmclient.h"
 
-#include <Akonadi/AgentFactory>
+#include <AkonadiAgentBase/AgentFactory>
 
 #include <KLocale>
 
