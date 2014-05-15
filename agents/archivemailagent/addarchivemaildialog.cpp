@@ -22,7 +22,7 @@
 #include <KLocale>
 #include <KComboBox>
 #include <KUrlRequester>
-#include <KIntSpinBox>
+#include <QSpinBox>
 #include <KSeparator>
 #include <KIcon>
 
@@ -114,7 +114,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent
 
     QLabel *maxCountlabel = new QLabel( i18n( "Maximum number of archive:" ), mainWidget );
     mainLayout->addWidget( maxCountlabel, row, 0 );
-    mMaximumArchive = new KIntSpinBox( mainWidget );
+    mMaximumArchive = new QSpinBox( mainWidget );
     mMaximumArchive->setMinimum(0);
     mMaximumArchive->setMaximum(9999);
     mMaximumArchive->setSpecialValueText(i18n("unlimited"));
