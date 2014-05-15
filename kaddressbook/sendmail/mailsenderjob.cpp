@@ -55,7 +55,7 @@ void MailSenderJob::start()
         if (item.hasPayload<KABC::Addressee>()) {
             const KABC::Addressee contact = item.payload<KABC::Addressee>();
             const QString preferredEmail = contact.preferredEmail();
-            if( !preferredEmail.isEmpty() && mEmailAddresses.contains(preferredEmail) ){
+            if( !preferredEmail.isEmpty() && !mEmailAddresses.contains(preferredEmail) ){
                 mEmailAddresses <<  KPIMUtils::normalizedAddress(contact.formattedName(), contact.preferredEmail());
             }
         } else if (item.hasPayload<KABC::ContactGroup>()) {
@@ -131,14 +131,6 @@ void MailSenderJob::fetchJobFinished(KJob *job)
 
 void MailSenderJob::finishJob()
 {
-#if 0
-    if (!mEmailAddresses.isEmpty()) {
-        KUrl url;
-        url.setProtocol( QLatin1String( "mailto" ) );
-        url.setPath( QStringList(mEmailAddresses.toList()).join(QLatin1String(";")) );
-        KToolInvocation::invokeMailer( url );
-    }
-#endif
     if (!mEmailAddresses.isEmpty()) {
         emit sendMails(mEmailAddresses);
     }

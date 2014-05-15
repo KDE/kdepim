@@ -997,6 +997,7 @@ void MainWidget::slotSendMail()
     if (!lst.isEmpty()) {
         KABMailSender::MailSenderJob *mailSender = new KABMailSender::MailSenderJob(lst, this);
         connect(mailSender, SIGNAL(sendMails(QStringList)), this, SLOT(slotSendMails(QStringList)));
+        mailSender->start();
     }
 }
 
