@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="20">
+<kpartgui name="kaddressbook" version="21">
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
@@ -48,6 +48,10 @@
       <Action name="akonadi_resource_delete"/>
     </Menu>
 
+    <Menu name="action" noMerge="1"><text>&amp;Action</text>
+      <Action name="send_mail"/>
+    </Menu>
+
     <Menu name="view" noMerge="1"><text>&amp;View</text>
       <Action name="theme_menu"/>
       <Separator/>
@@ -83,6 +87,8 @@
     <Action name="akonadi_contact_create"/>
     <Action name="akonadi_contact_group_create"/>
     <Action name="akonadi_contact_item_edit"/>
+    <Separator/>
+    <Action name="send_mail"/>
     <Separator/>
     <Action name="akonadi_item_cut"/>
     <Action name="akonadi_item_copy"/>

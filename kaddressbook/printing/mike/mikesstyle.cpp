@@ -41,80 +41,80 @@ using namespace KABPrinting;
 
 static QString contactsToHtml( const KABC::Addressee::List &contacts )
 {
-  QString content;
+    QString content;
 
-  ContactFields::Fields leftFields, rightFields;
-  ContactFields::Fields allFields = ContactFields::allFields();
-  allFields.remove( 0 ); // drop 'Undefined' field
+    ContactFields::Fields leftFields, rightFields;
+    ContactFields::Fields allFields = ContactFields::allFields();
+    allFields.remove( 0 ); // drop 'Undefined' field
 
-  const int middle = allFields.count() / 2;
+    const int middle = allFields.count() / 2;
 
-  for ( int i = 0; i < middle; ++i ) {
-    leftFields.append( allFields.at( i ) );
-  }
-
-  for ( int i = middle; i < allFields.count(); ++i ) {
-    rightFields.append( allFields.at( i ) );
-  }
-
-  int counter = 0;
-  content += QLatin1String("<html>\n");
-  content += QLatin1String(" <body>\n");
-  foreach ( const KABC::Addressee &contact, contacts ) {
-    const int max = qMax( leftFields.count(), rightFields.count() );
-
-    const QString name = contact.realName();
-
-    if ( counter % 2 ) {
-      content += QLatin1String("  <br/><br/>\n");
+    for ( int i = 0; i < middle; ++i ) {
+        leftFields.append( allFields.at( i ) );
     }
 
-    // start a new page after every second table
-    const QString pageBreak = ( ( counter % 2 ) ? QLatin1String("page-break-after: always;" ): QString() );
-
-    content += QLatin1String("  <table style=\"border-width: 0px; ") + pageBreak + QLatin1String("\" width=\"100%\">\n");
-    content += QLatin1String("   <tr>\n");
-    content += QLatin1String("    <th align=\"left\" style=\"color: black;\" bgcolor=\"gray\" "
-               "style=\"padding-left: 20px\" colspan=\"4\">") + name + QLatin1String("</th>\n");
-    content += QLatin1String("   </tr>\n");
-
-    for ( int i = 0; i < max; i ++ ) {
-      QString leftTitle, leftValue, rightTitle, rightValue;
-
-      if ( i < leftFields.count() ) {
-        leftTitle = ContactFields::label( leftFields.at( i ) ) + QLatin1Char(':');
-        leftTitle = leftTitle.replace( QLatin1Char(' '), QLatin1String("&nbsp;") );
-        leftValue = ContactFields::value( leftFields.at( i ), contact );
-      }
-
-      if ( i < rightFields.count() ) {
-        rightTitle = ContactFields::label( rightFields.at( i ) ) + QLatin1Char(':');
-        rightTitle = rightTitle.replace( QLatin1Char(' '), QLatin1String("&nbsp;") );
-        rightValue = ContactFields::value( rightFields.at( i ), contact );
-      }
-
-      content += QLatin1String("   <tr>\n");
-      content += QLatin1String("    <td>") + leftTitle + QLatin1String("</td>\n");
-      content += QLatin1String("    <td>") + leftValue + QLatin1String("</td>\n");
-      content += QLatin1String("    <td>") + rightTitle + QLatin1String("</td>\n");
-      content += QLatin1String("    <td>") + rightValue + QLatin1String("</td>\n");
-      content += QLatin1String("   </tr>\n");
+    for ( int i = middle; i < allFields.count(); ++i ) {
+        rightFields.append( allFields.at( i ) );
     }
-    content += QLatin1String("  </table>\n");
 
-    counter++;
-  }
-  content += QLatin1String(" </body>\n");
-  content += QLatin1String("</html>\n");
+    int counter = 0;
+    content += QLatin1String("<html>\n");
+    content += QLatin1String(" <body>\n");
+    foreach ( const KABC::Addressee &contact, contacts ) {
+        const int max = qMax( leftFields.count(), rightFields.count() );
 
-  return content;
+        const QString name = contact.realName();
+
+        if ( counter % 2 ) {
+            content += QLatin1String("  <br/><br/>\n");
+        }
+
+        // start a new page after every second table
+        const QString pageBreak = ( ( counter % 2 ) ? QLatin1String("page-break-after: always;" ): QString() );
+
+        content += QLatin1String("  <table style=\"border-width: 0px; ") + pageBreak + QLatin1String("\" width=\"100%\">\n");
+        content += QLatin1String("   <tr>\n");
+        content += QLatin1String("    <th align=\"left\" style=\"color: black;\" bgcolor=\"gray\" "
+                                 "style=\"padding-left: 20px\" colspan=\"4\">") + name + QLatin1String("</th>\n");
+        content += QLatin1String("   </tr>\n");
+
+        for ( int i = 0; i < max; i ++ ) {
+            QString leftTitle, leftValue, rightTitle, rightValue;
+
+            if ( i < leftFields.count() ) {
+                leftTitle = ContactFields::label( leftFields.at( i ) ) + QLatin1Char(':');
+                leftTitle = leftTitle.replace( QLatin1Char(' '), QLatin1String("&nbsp;") );
+                leftValue = ContactFields::value( leftFields.at( i ), contact );
+            }
+
+            if ( i < rightFields.count() ) {
+                rightTitle = ContactFields::label( rightFields.at( i ) ) + QLatin1Char(':');
+                rightTitle = rightTitle.replace( QLatin1Char(' '), QLatin1String("&nbsp;") );
+                rightValue = ContactFields::value( rightFields.at( i ), contact );
+            }
+
+            content += QLatin1String("   <tr>\n");
+            content += QLatin1String("    <td>") + leftTitle + QLatin1String("</td>\n");
+            content += QLatin1String("    <td>") + leftValue + QLatin1String("</td>\n");
+            content += QLatin1String("    <td>") + rightTitle + QLatin1String("</td>\n");
+            content += QLatin1String("    <td>") + rightValue + QLatin1String("</td>\n");
+            content += QLatin1String("   </tr>\n");
+        }
+        content += QLatin1String("  </table>\n");
+
+        counter++;
+    }
+    content += QLatin1String(" </body>\n");
+    content += QLatin1String("</html>\n");
+
+    return content;
 }
 
 MikesStyle::MikesStyle( PrintingWizard *parent )
-  : PrintStyle( parent )
+    : PrintStyle( parent )
 {
-  setPreview( QLatin1String("mike-style.png") );
-  setPreferredSortOptions( ContactFields::FormattedName, Qt::AscendingOrder );
+    setPreview( QLatin1String("mike-style.png") );
+    setPreferredSortOptions( ContactFields::FormattedName, Qt::AscendingOrder );
 }
 
 MikesStyle::~MikesStyle()
@@ -123,35 +123,35 @@ MikesStyle::~MikesStyle()
 
 void MikesStyle::print( const KABC::Addressee::List &contacts, PrintProgress *progress )
 {
-  QPrinter *printer = wizard()->printer();
-  printer->setPageMargins( 20, 20, 20, 20, QPrinter::DevicePixel );
+    QPrinter *printer = wizard()->printer();
+    printer->setPageMargins( 20, 20, 20, 20, QPrinter::DevicePixel );
 
-  progress->addMessage( i18n( "Setting up document" ) );
+    progress->addMessage( i18n( "Setting up document" ) );
 
-  const QString html = contactsToHtml( contacts );
+    const QString html = contactsToHtml( contacts );
 
-  QTextDocument document;
-  document.setHtml( html );
+    QTextDocument document;
+    document.setHtml( html );
 
-  progress->addMessage( i18n( "Printing" ) );
+    progress->addMessage( i18n( "Printing" ) );
 
-  document.print( printer );
+    document.print( printer );
 
-  progress->addMessage( i18nc( "Finished printing", "Done" ) );
+    progress->addMessage( i18nc( "Finished printing", "Done" ) );
 }
 
 MikesStyleFactory::MikesStyleFactory( PrintingWizard *parent )
-  : PrintStyleFactory( parent )
+    : PrintStyleFactory( parent )
 {
 }
 
 PrintStyle *MikesStyleFactory::create() const
 {
-  return new MikesStyle( mParent );
+    return new MikesStyle( mParent );
 }
 
 QString MikesStyleFactory::description() const
 {
-  return i18n( "Mike's Printing Style" );
+    return i18n( "Mike's Printing Style" );
 }
 

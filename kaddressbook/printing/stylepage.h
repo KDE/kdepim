@@ -36,9 +36,9 @@ class KComboBox;
 
 class StylePage : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit StylePage( QWidget *parent = 0, const char *name = 0 );
     ~StylePage();
 
@@ -88,14 +88,14 @@ class StylePage : public QWidget
      */
     void setPrintingStyle( int index );
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emmited when the user selects a new style in the
      * style combo box.
      */
     void styleChanged( int index );
 
-  private:
+private:
     void initGUI();
     void initFieldCombo();
 

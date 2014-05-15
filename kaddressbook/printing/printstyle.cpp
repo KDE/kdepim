@@ -34,10 +34,10 @@
 using namespace KABPrinting;
 
 PrintStyle::PrintStyle( PrintingWizard *parent )
-  : QObject( parent ), mWizard( parent )
+    : QObject( parent ), mWizard( parent )
 {
-  mSortField = ContactFields::GivenName;
-  mSortOrder = Qt::AscendingOrder;
+    mSortField = ContactFields::GivenName;
+    mSortOrder = Qt::AscendingOrder;
 }
 
 PrintStyle::~PrintStyle()
@@ -46,88 +46,88 @@ PrintStyle::~PrintStyle()
 
 const QPixmap &PrintStyle::preview() const
 {
-  return mPreview;
+    return mPreview;
 }
 
 void PrintStyle::setPreview( const QPixmap &image )
 {
-  mPreview = image;
+    mPreview = image;
 }
 
 bool PrintStyle::setPreview( const QString &fileName )
 {
-  QPixmap preview;
+    QPixmap preview;
 
-  const QString path = KStandardDirs::locate( "data", QLatin1String("kaddressbook/printing/") + fileName );
-  if ( path.isEmpty() ) {
-    qDebug() << "cannot locate preview image " << fileName << " in appdata";
-    return false;
-  } else {
-    if ( preview.load( path ) ) {
-      setPreview( preview );
-      return true;
+    const QString path = KStandardDirs::locate( "data", QLatin1String("kaddressbook/printing/") + fileName );
+    if ( path.isEmpty() ) {
+        qDebug() << "cannot locate preview image " << fileName << " in appdata";
+        return false;
     } else {
-      qDebug() << "preview at '" << path <<"' cannot be loaded.";
-      return false;
+        if ( preview.load( path ) ) {
+            setPreview( preview );
+            return true;
+        } else {
+            qDebug() << "preview at '" << path <<"' cannot be loaded.";
+            return false;
+        }
     }
-  }
 }
 
 PrintingWizard *PrintStyle::wizard() const
 {
-  return mWizard;
+    return mWizard;
 }
 
 void PrintStyle::addPage( QWidget *page, const QString &title )
 {
-  if ( mPageList.indexOf( page ) == -1 ) { // not yet in the list
-    mPageList.append( page );
-    mPageTitles.append( title );
+    if ( mPageList.indexOf( page ) == -1 ) { // not yet in the list
+        mPageList.append( page );
+        mPageTitles.append( title );
 
-    KPageWidgetItem *item = new KPageWidgetItem( page, title );
-    mPageItems.insert( page, item );
-    mWizard->addPage( item );
-    mWizard->setAppropriate( item, false );
-  }
+        KPageWidgetItem *item = new KPageWidgetItem( page, title );
+        mPageItems.insert( page, item );
+        mWizard->addPage( item );
+        mWizard->setAppropriate( item, false );
+    }
 }
 
 void PrintStyle::showPages()
 {
-  QWidget *wdg = 0;
+    QWidget *wdg = 0;
 
-  Q_FOREACH ( wdg, mPageList ) {
-    mWizard->setAppropriate( mPageItems[ wdg ], true );
-  }
+    Q_FOREACH ( wdg, mPageList ) {
+        mWizard->setAppropriate( mPageItems[ wdg ], true );
+    }
 
-  //QT5 mWizard->enableButton( KDialog::User2, wdg ); // next button
-  //QT5 mWizard->enableButton( KDialog::User1, !wdg ); // finish button
+    //QT5 mWizard->enableButton( KDialog::User2, wdg ); // next button
+    //QT5 mWizard->enableButton( KDialog::User1, !wdg ); // finish button
 }
 
 void PrintStyle::hidePages()
 {
-  Q_FOREACH ( QWidget *wdg, mPageList ) {
-    mWizard->setAppropriate( mPageItems[ wdg ], false );
-  }
+    Q_FOREACH ( QWidget *wdg, mPageList ) {
+        mWizard->setAppropriate( mPageItems[ wdg ], false );
+    }
 }
 
 void PrintStyle::setPreferredSortOptions( ContactFields::Field field, Qt::SortOrder sortOrder )
 {
-  mSortField = field;
-  mSortOrder = sortOrder;
+    mSortField = field;
+    mSortOrder = sortOrder;
 }
 
 ContactFields::Field PrintStyle::preferredSortField() const
 {
-  return mSortField;
+    return mSortField;
 }
 
 Qt::SortOrder PrintStyle::preferredSortOrder() const
 {
-  return mSortOrder;
+    return mSortOrder;
 }
 
 PrintStyleFactory::PrintStyleFactory( PrintingWizard *parent )
-  : mParent( parent )
+    : mParent( parent )
 {
 }
 

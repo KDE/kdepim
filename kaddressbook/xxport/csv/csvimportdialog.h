@@ -39,18 +39,18 @@ class QTableView;
 
 class CSVImportDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit CSVImportDialog( QWidget *parent = 0 );
     ~CSVImportDialog();
 
     KABC::AddresseeList contacts() const;
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     virtual void slotButtonClicked( int );
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void setFile( const QString & );
     void setFile( const QUrl & );
     void urlChanged( const QString & );
@@ -65,7 +65,7 @@ class CSVImportDialog : public KDialog
     void modelFinishedLoading();
     void finalizeApplyTemplate();
 
-  private:
+private:
     void applyTemplate();
     void saveTemplate();
 

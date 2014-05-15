@@ -38,8 +38,8 @@ class QWidget;
  */
 class ModelColumnManager : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Creates a new model column manager.
      *
@@ -64,13 +64,13 @@ class ModelColumnManager : public QObject
      */
     void setWidget( QWidget *view );
 
-  protected:
+protected:
     virtual bool eventFilter( QObject *watched, QEvent *event );
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void adaptHeaderView();
 
-  private:
+private:
     Akonadi::ContactsTreeModel *mModel;
     Akonadi::ContactsTreeModel::Columns mColumns;
     QWidget *mWidget;

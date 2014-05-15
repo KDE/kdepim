@@ -51,97 +51,97 @@
 
 void doExport( QFile *file, const KABC::Addressee::List &list )
 {
-  QString data;
-  KABC::LDIFConverter::addresseeToLDIF( list, data );
+    QString data;
+    KABC::LDIFConverter::addresseeToLDIF( list, data );
 
-  QTextStream stream( file );
-  stream.setCodec( "UTF-8" );
-  stream << data;
+    QTextStream stream( file );
+    stream.setCodec( "UTF-8" );
+    stream << data;
 }
 
 LDIFXXPort::LDIFXXPort( QWidget *parentWidget )
-  : XXPort( parentWidget )
+    : XXPort( parentWidget )
 {
 }
 
 KABC::Addressee::List LDIFXXPort::importContacts() const
 {
-  KABC::Addressee::List contacts;
+    KABC::Addressee::List contacts;
 
-  const QString fileName = KFileDialog::getOpenFileName( QDir::homePath(), QLatin1String("text/x-ldif"), 0 );
-  if ( fileName.isEmpty() ) {
+    const QString fileName = KFileDialog::getOpenFileName( QDir::homePath(), QLatin1String("text/x-ldif"), 0 );
+    if ( fileName.isEmpty() ) {
+        return contacts;
+    }
+
+    QFile file( fileName );
+    if ( !file.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
+        const QString msg = i18n( "<qt>Unable to open <b>%1</b> for reading.</qt>", fileName );
+        KMessageBox::error( parentWidget(), msg );
+        return contacts;
+    }
+
+    QTextStream stream( &file );
+    stream.setCodec( "ISO 8859-1" );
+
+    const QString wholeFile = stream.readAll();
+    const QDateTime dtDefault = QFileInfo( file ).lastModified();
+    file.close();
+
+    KABC::LDIFConverter::LDIFToAddressee( wholeFile, contacts, dtDefault );
+
     return contacts;
-  }
-
-  QFile file( fileName );
-  if ( !file.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
-    const QString msg = i18n( "<qt>Unable to open <b>%1</b> for reading.</qt>", fileName );
-    KMessageBox::error( parentWidget(), msg );
-    return contacts;
-  }
-
-  QTextStream stream( &file );
-  stream.setCodec( "ISO 8859-1" );
-
-  const QString wholeFile = stream.readAll();
-  const QDateTime dtDefault = QFileInfo( file ).lastModified();
-  file.close();
-
-  KABC::LDIFConverter::LDIFToAddressee( wholeFile, contacts, dtDefault );
-
-  return contacts;
 }
 
 bool LDIFXXPort::exportContacts( const KABC::Addressee::List &list ) const
 {
-  const KUrl url =
-    KFileDialog::getSaveUrl( KUrl( QDir::homePath() + QLatin1String("/addressbook.ldif") ), QLatin1String("text/x-ldif") );
-  if ( url.isEmpty() ) {
-    return true;
-  }
-
-  if ( !url.isLocalFile() ) {
-    KTemporaryFile tmpFile;
-    if ( !tmpFile.open() ) {
-      const QString msg = i18n( "<qt>Unable to open file <b>%1</b></qt>", url.url() );
-      KMessageBox::error( parentWidget(), msg );
-      return false;
+    const KUrl url =
+            KFileDialog::getSaveUrl( KUrl( QDir::homePath() + QLatin1String("/addressbook.ldif") ), QLatin1String("text/x-ldif") );
+    if ( url.isEmpty() ) {
+        return true;
     }
 
-    doExport( &tmpFile, list );
-    tmpFile.flush();
-
-    return KIO::NetAccess::upload( tmpFile.fileName(), url, parentWidget() );
-  } else {
-    QString fileName = url.toLocalFile();
-
-    if ( QFileInfo( fileName ).exists() ) {    
-        if ( url.isLocalFile() && QFileInfo( url.toLocalFile() ).exists() ) {
-            PimCommon::RenameFileDialog::RenameFileDialogResult result = PimCommon::RenameFileDialog::RENAMEFILE_IGNORE;
-            PimCommon::RenameFileDialog *dialog = new PimCommon::RenameFileDialog(url, false, parentWidget());
-            result = static_cast<PimCommon::RenameFileDialog::RenameFileDialogResult>(dialog->exec());
-            if ( result == PimCommon::RenameFileDialog::RENAMEFILE_RENAME ) {
-                fileName = dialog->newName().toLocalFile();
-            } else if (result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE) {
-                delete dialog;
-                return true;
-            }
-            delete dialog;
+    if ( !url.isLocalFile() ) {
+        KTemporaryFile tmpFile;
+        if ( !tmpFile.open() ) {
+            const QString msg = i18n( "<qt>Unable to open file <b>%1</b></qt>", url.url() );
+            KMessageBox::error( parentWidget(), msg );
+            return false;
         }
+
+        doExport( &tmpFile, list );
+        tmpFile.flush();
+
+        return KIO::NetAccess::upload( tmpFile.fileName(), url, parentWidget() );
+    } else {
+        QString fileName = url.toLocalFile();
+
+        if ( QFileInfo( fileName ).exists() ) {
+            if ( url.isLocalFile() && QFileInfo( url.toLocalFile() ).exists() ) {
+                PimCommon::RenameFileDialog::RenameFileDialogResult result = PimCommon::RenameFileDialog::RENAMEFILE_IGNORE;
+                PimCommon::RenameFileDialog *dialog = new PimCommon::RenameFileDialog(url, false, parentWidget());
+                result = static_cast<PimCommon::RenameFileDialog::RenameFileDialogResult>(dialog->exec());
+                if ( result == PimCommon::RenameFileDialog::RENAMEFILE_RENAME ) {
+                    fileName = dialog->newName().toLocalFile();
+                } else if (result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE) {
+                    delete dialog;
+                    return true;
+                }
+                delete dialog;
+            }
+        }
+
+        //TODO fix export in network as other export function
+        QFile file( fileName );
+
+        if ( !file.open( QIODevice::WriteOnly ) ) {
+            QString txt = i18n( "<qt>Unable to open file <b>%1</b>.</qt>", fileName );
+            KMessageBox::error( parentWidget(), txt );
+            return false;
+        }
+
+        doExport( &file, list );
+        file.close();
+
+        return true;
     }
-
-    //TODO fix export in network as other export function
-    QFile file( fileName );
-
-    if ( !file.open( QIODevice::WriteOnly ) ) {
-      QString txt = i18n( "<qt>Unable to open file <b>%1</b>.</qt>", fileName );
-      KMessageBox::error( parentWidget(), txt );
-      return false;
-    }
-
-    doExport( &file, list );
-    file.close();
-
-    return true;
-  }
 }

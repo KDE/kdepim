@@ -29,6 +29,10 @@ if(QGPGME_FOUND)
   add_definitions(-DQGPGME_FOUND)
 endif()
 
+set(kaddressbook_sendmail_SRCS
+  sendmail/mailsenderjob.cpp
+)
+
 set(kaddressbook_printing_SRCS
   printing/detailled/detailledstyle.cpp
   printing/mike/mikesstyle.cpp
@@ -101,6 +105,7 @@ set(kaddressbook_LIB_SRCS
   ${kaddressbook_merge_SRCS}
   ${kaddressbook_printing_SRCS}
   ${kaddressbook_xxport_SRCS}
+  ${kaddressbook_sendmail_SRCS}
 )
 
 qt5_add_dbus_adaptor( kaddressbook_LIB_SRCS org.kde.kaddressbook.xml mainwidget.h MainWidget)
@@ -121,7 +126,7 @@ target_link_libraries(kaddressbookprivate
   kleo
 )
 add_subdirectory(merge/tests)
-
+add_subdirectory(sendmail/tests)
 
 if(QGPGME_FOUND)
   target_link_libraries(kaddressbookprivate ${QGPGME_LIBRARIES})

@@ -27,7 +27,7 @@
 
 class KADDRESSBOOK_EXPORT AboutData : public K4AboutData
 {
-  public:
+public:
     /**
      * Creates a new about data object.
      */

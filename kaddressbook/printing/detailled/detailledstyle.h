@@ -34,21 +34,21 @@ class AppearancePage;
 
 class DetailledPrintStyle : public PrintStyle
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit DetailledPrintStyle( PrintingWizard *parent );
     ~DetailledPrintStyle();
 
     void print( const KABC::Addressee::List &contacts, PrintProgress * );
 
-  private:
+private:
     AppearancePage *mPageAppearance;
 };
 
 class DetailledPrintStyleFactory : public PrintStyleFactory
 {
-  public:
+public:
     explicit DetailledPrintStyleFactory( PrintingWizard *parent );
 
     PrintStyle *create() const;

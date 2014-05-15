@@ -24,65 +24,65 @@
 
 class ContactSortHelper
 {
-  public:
+public:
     ContactSortHelper( ContactFields::Field field, Qt::SortOrder sortOrder )
-      : mSortField( field ), mSortOrder( sortOrder )
+        : mSortField( field ), mSortOrder( sortOrder )
     {
     }
 
     inline bool operator()( const KABC::Addressee &contact,
                             const KABC::Addressee &otherContact ) const
     {
-      int result =
-        QString::localeAwareCompare(
-          ContactFields::value( mSortField, contact ),
-          ContactFields::value( mSortField, otherContact ) );
+        int result =
+                QString::localeAwareCompare(
+                    ContactFields::value( mSortField, contact ),
+                    ContactFields::value( mSortField, otherContact ) );
 
-      if ( result == 0 ) {
-        int givenNameResult =
-          QString::localeAwareCompare(
-            ContactFields::value( ContactFields::GivenName, contact ),
-            ContactFields::value( ContactFields::GivenName, otherContact ) );
+        if ( result == 0 ) {
+            int givenNameResult =
+                    QString::localeAwareCompare(
+                        ContactFields::value( ContactFields::GivenName, contact ),
+                        ContactFields::value( ContactFields::GivenName, otherContact ) );
 
-        if ( givenNameResult == 0 ) {
-          int familyNameResult =
-            QString::localeAwareCompare(
-              ContactFields::value( ContactFields::FamilyName, contact ),
-              ContactFields::value( ContactFields::FamilyName, otherContact ) );
+            if ( givenNameResult == 0 ) {
+                int familyNameResult =
+                        QString::localeAwareCompare(
+                            ContactFields::value( ContactFields::FamilyName, contact ),
+                            ContactFields::value( ContactFields::FamilyName, otherContact ) );
 
-          if ( familyNameResult == 0 ) {
-            result =
-              QString::localeAwareCompare(
-                ContactFields::value( ContactFields::FormattedName, contact ),
-                ContactFields::value( ContactFields::FormattedName, otherContact ) );
-          } else {
-            result = familyNameResult;
-          }
-        } else {
-          result = givenNameResult;
+                if ( familyNameResult == 0 ) {
+                    result =
+                            QString::localeAwareCompare(
+                                ContactFields::value( ContactFields::FormattedName, contact ),
+                                ContactFields::value( ContactFields::FormattedName, otherContact ) );
+                } else {
+                    result = familyNameResult;
+                }
+            } else {
+                result = givenNameResult;
+            }
         }
-      }
 
-      bool lesser = result < 0;
+        bool lesser = result < 0;
 
-      if ( mSortOrder == Qt::DescendingOrder ) {
-        lesser = !lesser;
-      }
+        if ( mSortOrder == Qt::DescendingOrder ) {
+            lesser = !lesser;
+        }
 
-      return lesser;
+        return lesser;
     }
 
-  private:
+private:
     const ContactFields::Field mSortField;
     const Qt::SortOrder mSortOrder;
 };
 
 ContactSorter::ContactSorter( ContactFields::Field field, Qt::SortOrder sortOrder )
-  : mSortField( field ), mSortOrder( sortOrder )
+    : mSortField( field ), mSortOrder( sortOrder )
 {
 }
 
 void ContactSorter::sort( QList<KABC::Addressee> &contacts ) const
 {
-  qStableSort( contacts.begin(), contacts.end(), ContactSortHelper( mSortField, mSortOrder ) );
+    qStableSort( contacts.begin(), contacts.end(), ContactSortHelper( mSortField, mSortOrder ) );
 }

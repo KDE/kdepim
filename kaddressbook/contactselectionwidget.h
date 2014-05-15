@@ -30,8 +30,8 @@ class QLabel;
 class QRadioButton;
 
 namespace Akonadi {
-  class Collection;
-  class CollectionComboBox;
+class Collection;
+class CollectionComboBox;
 }
 
 /**
@@ -41,9 +41,9 @@ namespace Akonadi {
  */
 class ContactSelectionWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new contact selection widget.
      *
