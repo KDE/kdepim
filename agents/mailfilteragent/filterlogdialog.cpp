@@ -59,7 +59,6 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
     : KDialog( parent ), mIsInitialized( false )
 {
     //QT5 KLocale::global()->insertCatalog(QLatin1String("akonadi_mailfilter_agent"));
-    //QT5 KLocale::global()->insertCatalog(QLatin1String("libpimcommon"));
     setCaption( i18n( "Filter Log Viewer" ) );
     setButtons( User1|User2|Close );
     setWindowIcon( KIcon( QLatin1String("view-filter") ) );

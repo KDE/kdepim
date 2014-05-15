@@ -157,7 +157,7 @@ public:
     {
         const QList<QListWidgetItem *> lstSelectedItems = q->selectedItems();
         const bool listSelectedIsEmpty = lstSelectedItems.isEmpty();
-        KMenu *menu = new KMenu( q );
+        QMenu *menu = new QMenu( q );
 
         if (!listSelectedIsEmpty) {
             menu->addAction( i18n("Insert template"), q, SLOT(slotInsertTemplate()));

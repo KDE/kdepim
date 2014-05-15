@@ -26,7 +26,7 @@ PimCommonSettings *PimCommonSettings::self()
 {
     if ( !mSelf ) {
         mSelf = new PimCommonSettings();
-        mSelf->readConfig();
+        mSelf->load();
     }
 
     return mSelf;

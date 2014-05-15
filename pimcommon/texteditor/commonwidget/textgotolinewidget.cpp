@@ -19,8 +19,8 @@
 #include "textgotolinewidget.h"
 
 #include <KLocalizedString>
-#include <KPushButton>
-#include <KIcon>
+#include <QPushButton>
+#include <QIcon>
 
 #include <QHBoxLayout>
 #include <QKeyEvent>
@@ -37,7 +37,7 @@ TextGoToLineWidget::TextGoToLineWidget(QWidget *parent)
     hbox->setMargin( 2 );
     setLayout(hbox);
     QToolButton * closeBtn = new QToolButton( this );
-    closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );
+    closeBtn->setIcon( QIcon::fromTheme( QLatin1String("dialog-close") ) );
     closeBtn->setIconSize( QSize( 16, 16 ) );
     closeBtn->setToolTip( i18n( "Close" ) );
     closeBtn->setObjectName(QLatin1String("closebutton"));
@@ -56,7 +56,7 @@ TextGoToLineWidget::TextGoToLineWidget(QWidget *parent)
     mSpinbox->setObjectName(QLatin1String("line"));
     connect(mSpinbox, SIGNAL(editingFinished()), this, SLOT(slotGoToLine()));
     hbox->addWidget(mSpinbox);
-    mGoToLine = new KPushButton(KIcon(QLatin1String("go-jump")), i18n("Go"));
+    mGoToLine = new QPushButton(QIcon::fromTheme(QLatin1String("go-jump")), i18n("Go"));
     mGoToLine->setFlat(true);
     connect(mGoToLine, SIGNAL(clicked(bool)), this, SLOT(slotGoToLine()));
     mGoToLine->setObjectName(QLatin1String("gotoline"));
