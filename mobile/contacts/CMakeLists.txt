@@ -77,6 +77,7 @@ target_link_libraries(kaddressbook-mobile
     kleo
     incidenceeditorsngmobile
     calendarsupport
+    Phonon::phonon4qt5
 )
 
 if (RUNTIME_PLUGINS_STATIC)
