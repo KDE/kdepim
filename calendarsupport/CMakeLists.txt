@@ -1,7 +1,4 @@
 kde4_no_enable_final(calendarsupport)
-# Commented because it uses your real calendar. You can loose data.
-# I'll uncomment this when tests use testrunner.
-# add_subdirectory(next/tests)
 
 include_directories(
   ${QT_QTDBUS_INCLUDE_DIR}
