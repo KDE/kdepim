@@ -24,29 +24,29 @@
 
 ContactSelectionDialog::ContactSelectionDialog( QItemSelectionModel *selectionModel,
                                                 QWidget *parent )
-  : KDialog( parent )
+    : KDialog( parent )
 {
-  setCaption( i18n( "Select Contacts" ) );
-  setButtons( Ok | Cancel );
+    setCaption( i18n( "Select Contacts" ) );
+    setButtons( Ok | Cancel );
 
-  mSelectionWidget = new ContactSelectionWidget( selectionModel, this );
-  setMainWidget( mSelectionWidget );
+    mSelectionWidget = new ContactSelectionWidget( selectionModel, this );
+    setMainWidget( mSelectionWidget );
 
-  setInitialSize( QSize( 450, 220 ) );
+    setInitialSize( QSize( 450, 220 ) );
 }
 
 void ContactSelectionDialog::setMessageText( const QString &message )
 {
-  mSelectionWidget->setMessageText( message );
+    mSelectionWidget->setMessageText( message );
 }
 
 void ContactSelectionDialog::setDefaultAddressBook( const Akonadi::Collection &addressBook )
 {
-  mSelectionWidget->setDefaultAddressBook( addressBook );
+    mSelectionWidget->setDefaultAddressBook( addressBook );
 }
 
 KABC::Addressee::List ContactSelectionDialog::selectedContacts() const
 {
-  return mSelectionWidget->selectedContacts();
+    return mSelectionWidget->selectedContacts();
 }
 

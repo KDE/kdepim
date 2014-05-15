@@ -35,23 +35,23 @@
 using namespace KABPrinting;
 
 PrintProgress::PrintProgress( QWidget *parent, const char *name )
-  : QWidget( parent )
+    : QWidget( parent )
 {
-  setObjectName( QLatin1String(name) );
-  setWindowTitle( i18n( "Printing: Progress" ) );
+    setObjectName( QLatin1String(name) );
+    setWindowTitle( i18n( "Printing: Progress" ) );
 
-  QGridLayout *topLayout = new QGridLayout( this );
-  topLayout->setSpacing( KDialog::spacingHint() );
-  topLayout->setMargin( KDialog::marginHint() );
+    QGridLayout *topLayout = new QGridLayout( this );
+    topLayout->setSpacing( KDialog::spacingHint() );
+    topLayout->setMargin( KDialog::marginHint() );
 
-  mLogBrowser = new KTextBrowser( this );
-  topLayout->addWidget( mLogBrowser, 0, 0 );
+    mLogBrowser = new KTextBrowser( this );
+    topLayout->addWidget( mLogBrowser, 0, 0 );
 
-  mProgressBar = new QProgressBar( this );
-  mProgressBar->setValue( 0 );
-  topLayout->addWidget( mProgressBar, 1, 0 );
+    mProgressBar = new QProgressBar( this );
+    mProgressBar->setValue( 0 );
+    topLayout->addWidget( mProgressBar, 1, 0 );
 
-  resize( QSize( 370, 220 ).expandedTo( minimumSizeHint() ) );
+    resize( QSize( 370, 220 ).expandedTo( minimumSizeHint() ) );
 }
 
 PrintProgress::~PrintProgress()
@@ -60,27 +60,27 @@ PrintProgress::~PrintProgress()
 
 void PrintProgress::addMessage( const QString &msg )
 {
-  mMessages.append( msg );
+    mMessages.append( msg );
 
-  QString head = QLatin1String( "<qt><b>" ) + i18n( "Progress" ) +
-                 QLatin1String( ":</b><ul>" );
+    QString head = QLatin1String( "<qt><b>" ) + i18n( "Progress" ) +
+            QLatin1String( ":</b><ul>" );
 
-  QString foot = QLatin1String( "</ul></qt>" );
+    QString foot = QLatin1String( "</ul></qt>" );
 
-  QString body;
-  QStringList::ConstIterator it;
-  QStringList::ConstIterator end(mMessages.constEnd());
-  for ( it = mMessages.constBegin(); it != end; ++it ) {
-    body.append( QLatin1String( "<li>" ) + (*it) + QLatin1String( "</li>" ) );
-  }
+    QString body;
+    QStringList::ConstIterator it;
+    QStringList::ConstIterator end(mMessages.constEnd());
+    for ( it = mMessages.constBegin(); it != end; ++it ) {
+        body.append( QLatin1String( "<li>" ) + (*it) + QLatin1String( "</li>" ) );
+    }
 
-  mLogBrowser->setText( head + body + foot );
-  kapp->processEvents();
+    mLogBrowser->setText( head + body + foot );
+    kapp->processEvents();
 }
 
 void PrintProgress::setProgress( int step )
 {
-  mProgressBar->setValue( step );
-  kapp->processEvents();
+    mProgressBar->setValue( step );
+    kapp->processEvents();
 }
 

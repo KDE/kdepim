@@ -29,29 +29,29 @@
 #include <QVBoxLayout>
 
 QuickSearchWidget::QuickSearchWidget( QWidget *parent )
-  : QWidget( parent )
+    : QWidget( parent )
 {
-  QVBoxLayout *layout = new QVBoxLayout( this );
-  layout->setMargin( 0 );
+    QVBoxLayout *layout = new QVBoxLayout( this );
+    layout->setMargin( 0 );
 
-  mEdit = new KLineEdit;
-  //If change shortcut changes it in mainwidget
-  mEdit->setClearButtonShown( true );
-  mEdit->setToolTip(
-    i18nc( "@info:tooltip", "Search contacts in list" ) );
-  mEdit->setWhatsThis(
-    i18nc( "@info:whatsthis",
-           "Start typing a search string in this box and the list of contacts "
-           "matching that string will be displayed.  This is a quick way of searching "
-           "for contacts of interest." ) );
-  mEdit->installEventFilter( this );
+    mEdit = new KLineEdit;
+    //If change shortcut changes it in mainwidget
+    mEdit->setClearButtonShown( true );
+    mEdit->setToolTip(
+                i18nc( "@info:tooltip", "Search contacts in list" ) );
+    mEdit->setWhatsThis(
+                i18nc( "@info:whatsthis",
+                       "Start typing a search string in this box and the list of contacts "
+                       "matching that string will be displayed.  This is a quick way of searching "
+                       "for contacts of interest." ) );
+    mEdit->installEventFilter( this );
 
-  layout->addWidget( mEdit );
+    layout->addWidget( mEdit );
 
-  mTimer = new QTimer( this );
+    mTimer = new QTimer( this );
 
-  connect( mEdit, SIGNAL(textChanged(QString)), SLOT(resetTimer()) );
-  connect( mTimer, SIGNAL(timeout()), SLOT(delayedTextChanged()) );
+    connect( mEdit, SIGNAL(textChanged(QString)), SLOT(resetTimer()) );
+    connect( mTimer, SIGNAL(timeout()), SLOT(delayedTextChanged()) );
 }
 
 QuickSearchWidget::~QuickSearchWidget()
@@ -60,8 +60,8 @@ QuickSearchWidget::~QuickSearchWidget()
 
 QSize QuickSearchWidget::sizeHint() const
 {
-  const QSize size = mEdit->sizeHint();
-  return QSize( 200, size.height() );
+    const QSize size = mEdit->sizeHint();
+    return QSize( 200, size.height() );
 }
 
 void QuickSearchWidget::slotFocusQuickSearch()
@@ -71,26 +71,26 @@ void QuickSearchWidget::slotFocusQuickSearch()
 
 void QuickSearchWidget::resetTimer()
 {
-  mTimer->stop();
-  mTimer->start( 500 );
+    mTimer->stop();
+    mTimer->start( 500 );
 }
 
 void QuickSearchWidget::delayedTextChanged()
 {
-  mTimer->stop();
-  emit filterStringChanged( mEdit->text() );
+    mTimer->stop();
+    emit filterStringChanged( mEdit->text() );
 }
 
 void QuickSearchWidget::keyPressEvent( QKeyEvent *event )
 {
-  if ( event->key() == Qt::Key_Down ) {
-    event->accept();
-    delayedTextChanged();
-    emit arrowDownKeyPressed();
-    return;
-  }
+    if ( event->key() == Qt::Key_Down ) {
+        event->accept();
+        delayedTextChanged();
+        emit arrowDownKeyPressed();
+        return;
+    }
 
-  QWidget::keyPressEvent( event );
+    QWidget::keyPressEvent( event );
 }
 
 void QuickSearchWidget::updateQuickSearchText( const QString &text )

@@ -26,19 +26,19 @@ class QListView;
 
 class TemplateSelectionDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit TemplateSelectionDialog( QWidget *parent = 0 );
 
     bool templatesAvailable() const;
 
     QString selectedTemplate() const;
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void updateButtons();
 
-  private:
+private:
     QListView *mView;
 };
 

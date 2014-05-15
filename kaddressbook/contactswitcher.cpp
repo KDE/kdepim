@@ -27,106 +27,106 @@
 #include <QPushButton>
 
 ContactSwitcher::ContactSwitcher( QWidget *parent )
-  : QWidget( parent ), mView( 0 )
+    : QWidget( parent ), mView( 0 )
 {
-  QHBoxLayout *layout = new QHBoxLayout( this );
+    QHBoxLayout *layout = new QHBoxLayout( this );
 
-  mPreviousButton = new QPushButton( i18nc( "@action:button Previous contact", "Previous" ) );
-  mPreviousButton->setToolTip(
-    i18nc( "@info:tooltip", "Move to the previous contact in the list" ) );
-  mPreviousButton->setWhatsThis(
-    i18nc( "@info:whatsthis",
-           "Press this button to move to the previous contact in the list." ) );
+    mPreviousButton = new QPushButton( i18nc( "@action:button Previous contact", "Previous" ) );
+    mPreviousButton->setToolTip(
+                i18nc( "@info:tooltip", "Move to the previous contact in the list" ) );
+    mPreviousButton->setWhatsThis(
+                i18nc( "@info:whatsthis",
+                       "Press this button to move to the previous contact in the list." ) );
 
-  mNextButton = new QPushButton( i18nc( "@action:button Next contact", "Next" ) );
-  mNextButton->setToolTip(
-    i18nc( "@info:tooltip", "Move to the next contact in the list" ) );
-  mNextButton->setWhatsThis(
-    i18nc( "@info:whatsthis",
-            "Press this button to move to the next contact in the list." ) );
+    mNextButton = new QPushButton( i18nc( "@action:button Next contact", "Next" ) );
+    mNextButton->setToolTip(
+                i18nc( "@info:tooltip", "Move to the next contact in the list" ) );
+    mNextButton->setWhatsThis(
+                i18nc( "@info:whatsthis",
+                       "Press this button to move to the next contact in the list." ) );
 
-  mStatusLabel = new QLabel();
+    mStatusLabel = new QLabel();
 
-  layout->addWidget( mPreviousButton );
-  layout->addWidget( mNextButton );
-  layout->addStretch( 1 );
-  layout->addWidget( mStatusLabel );
+    layout->addWidget( mPreviousButton );
+    layout->addWidget( mNextButton );
+    layout->addStretch( 1 );
+    layout->addWidget( mStatusLabel );
 
-  connect( mPreviousButton, SIGNAL(clicked()), SLOT(previousClicked()) );
-  connect( mNextButton, SIGNAL(clicked()), SLOT(nextClicked()) );
+    connect( mPreviousButton, SIGNAL(clicked()), SLOT(previousClicked()) );
+    connect( mNextButton, SIGNAL(clicked()), SLOT(nextClicked()) );
 }
 
 void ContactSwitcher::setView( QAbstractItemView *view )
 {
-  mView = view;
+    mView = view;
 
-  Q_ASSERT_X( mView->model(), "ContactSwitcher::setView", "The view has no model set!" );
+    Q_ASSERT_X( mView->model(), "ContactSwitcher::setView", "The view has no model set!" );
 
-  connect( mView->model(), SIGNAL(layoutChanged()), SLOT(updateStatus()) );
-  connect( mView->model(), SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(updateStatus()) );
-  connect( mView->model(), SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(updateStatus()) );
-  connect( mView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateStatus()));
+    connect( mView->model(), SIGNAL(layoutChanged()), SLOT(updateStatus()) );
+    connect( mView->model(), SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(updateStatus()) );
+    connect( mView->model(), SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(updateStatus()) );
+    connect( mView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateStatus()));
 
-  updateStatus();
+    updateStatus();
 }
 
 void ContactSwitcher::nextClicked()
 {
-  if ( !mView || !mView->model() ) {
-    return;
-  }
+    if ( !mView || !mView->model() ) {
+        return;
+    }
 
-  const QModelIndex index = mView->selectionModel()->currentIndex();
+    const QModelIndex index = mView->selectionModel()->currentIndex();
 
-  int row = 0;
-  if ( index.isValid() ) {
-    row = index.row() + 1;
-  }
+    int row = 0;
+    if ( index.isValid() ) {
+        row = index.row() + 1;
+    }
 
-  mView->selectionModel()->setCurrentIndex( mView->model()->index( row, 0 ),
-                                            QItemSelectionModel::Rows |
-                                            QItemSelectionModel::ClearAndSelect );
+    mView->selectionModel()->setCurrentIndex( mView->model()->index( row, 0 ),
+                                              QItemSelectionModel::Rows |
+                                              QItemSelectionModel::ClearAndSelect );
 
-  updateStatus();
+    updateStatus();
 }
 
 void ContactSwitcher::previousClicked()
 {
-  if ( !mView || !mView->model() ) {
-    return;
-  }
+    if ( !mView || !mView->model() ) {
+        return;
+    }
 
-  const QModelIndex index = mView->selectionModel()->currentIndex();
+    const QModelIndex index = mView->selectionModel()->currentIndex();
 
-  int row = 0;
-  if ( index.isValid() ) {
-    row = index.row() - 1;
-  }
+    int row = 0;
+    if ( index.isValid() ) {
+        row = index.row() - 1;
+    }
 
-  mView->selectionModel()->setCurrentIndex( mView->model()->index( row, 0 ),
-                                            QItemSelectionModel::Rows |
-                                            QItemSelectionModel::ClearAndSelect );
+    mView->selectionModel()->setCurrentIndex( mView->model()->index( row, 0 ),
+                                              QItemSelectionModel::Rows |
+                                              QItemSelectionModel::ClearAndSelect );
 
-  updateStatus();
+    updateStatus();
 }
 
 void ContactSwitcher::updateStatus()
 {
-  if ( !mView || !mView->model() ) {
-    return;
-  }
+    if ( !mView || !mView->model() ) {
+        return;
+    }
 
-  const QModelIndex index = mView->selectionModel()->currentIndex();
+    const QModelIndex index = mView->selectionModel()->currentIndex();
 
-  int row = 0;
-  if ( index.isValid() ) {
-    row = index.row();
-  }
+    int row = 0;
+    if ( index.isValid() ) {
+        row = index.row();
+    }
 
-  mPreviousButton->setEnabled( row != 0 );
-  mNextButton->setEnabled( row != ( mView->model()->rowCount() - 1 ) );
+    mPreviousButton->setEnabled( row != 0 );
+    mNextButton->setEnabled( row != ( mView->model()->rowCount() - 1 ) );
 
-  mStatusLabel->setText( i18nc( "@info:status",
-                                "%1 out of %2", row + 1, mView->model()->rowCount() ) );
+    mStatusLabel->setText( i18nc( "@info:status",
+                                  "%1 out of %2", row + 1, mView->model()->rowCount() ) );
 }
 

@@ -34,9 +34,9 @@ class PrintProgress;
 
 class MikesStyle : public PrintStyle
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit MikesStyle( PrintingWizard *parent );
     ~MikesStyle();
 
@@ -45,7 +45,7 @@ class MikesStyle : public PrintStyle
 
 class MikesStyleFactory : public PrintStyleFactory
 {
-  public:
+public:
     explicit MikesStyleFactory( PrintingWizard *parent );
 
     PrintStyle *create() const;

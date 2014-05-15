@@ -36,9 +36,9 @@ class QPushButton;
  */
 class ContactSwitcher : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new contact switcher.
      *
@@ -51,7 +51,7 @@ class ContactSwitcher : public QWidget
      */
     void setView( QAbstractItemView *view );
 
-  private Q_SLOTS:
+private Q_SLOTS:
     /**
      * This slot is called when the 'Next' button is clicked.
      */
@@ -68,7 +68,7 @@ class ContactSwitcher : public QWidget
      */
     void updateStatus();
 
-  private:
+private:
     QAbstractItemView *mView;
     QPushButton *mNextButton;
     QPushButton *mPreviousButton;

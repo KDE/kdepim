@@ -40,13 +40,13 @@
  */
 class DateParser
 {
-  public:
+public:
     explicit DateParser( const QString &pattern );
     ~DateParser();
 
     QDateTime parse( const QString &dateStr ) const;
 
-  private:
+private:
     QString mPattern;
 };
 

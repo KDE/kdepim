@@ -32,9 +32,9 @@ class CompactStyleForm;
 
 class CompactStyle : public PrintStyle
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit CompactStyle( PrintingWizard *parent );
     ~CompactStyle();
 
@@ -43,7 +43,7 @@ class CompactStyle : public PrintStyle
      */
     void print( const KABC::Addressee::List &, PrintProgress * );
 
-  private:
+private:
     QString contactsToHtml( const KABC::Addressee::List &contacts ) const;
 
     CompactStyleForm *mPageSettings;
@@ -59,7 +59,7 @@ class CompactStyle : public PrintStyle
     QColor firstColor;
     QColor secondColor;
 
-  private Q_SLOTS:
+private Q_SLOTS:
     /**
      * Enable or disable the controls for color selection. The colors
      * are needed for alternating background color of the rows.
@@ -69,7 +69,7 @@ class CompactStyle : public PrintStyle
 
 class CompactStyleFactory : public PrintStyleFactory
 {
-  public:
+public:
     explicit CompactStyleFactory( PrintingWizard *parent );
 
     PrintStyle *create() const;

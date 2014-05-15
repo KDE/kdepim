@@ -22,10 +22,10 @@
 #define GLOBALCONTACTMODEL_H
 
 namespace Akonadi {
-  class ChangeRecorder;
-  class ContactsTreeModel;
-  class Monitor;
-  class Session;
+class ChangeRecorder;
+class ContactsTreeModel;
+class Monitor;
+class Session;
 }
 
 /**
@@ -36,7 +36,7 @@ namespace Akonadi {
  */
 class GlobalContactModel
 {
-  public:
+public:
     /**
      * Destroys the global contact model.
      */
@@ -52,7 +52,7 @@ class GlobalContactModel
      */
     Akonadi::ContactsTreeModel *model() const;
 
-  private:
+private:
     GlobalContactModel();
 
     static GlobalContactModel *mInstance;

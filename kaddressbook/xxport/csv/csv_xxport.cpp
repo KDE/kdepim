@@ -35,129 +35,129 @@
 #include <QtCore/QTextStream>
 
 CsvXXPort::CsvXXPort( QWidget *parent )
-  : XXPort( parent )
+    : XXPort( parent )
 {
 }
 
 bool CsvXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
 {
-  KUrl url = KFileDialog::getSaveUrl( KUrl( QLatin1String("addressbook.csv") ) );
-  if ( url.isEmpty() ) {
-      return true;
-  }
-
-  if ( QFileInfo( url.isLocalFile() ? url.toLocalFile() : url.path() ).exists() ) {
-      if ( url.isLocalFile() && QFileInfo( url.toLocalFile() ).exists() ) {
-          PimCommon::RenameFileDialog::RenameFileDialogResult result = PimCommon::RenameFileDialog::RENAMEFILE_IGNORE;
-          PimCommon::RenameFileDialog *dialog = new PimCommon::RenameFileDialog(url, false, parentWidget());
-          result = static_cast<PimCommon::RenameFileDialog::RenameFileDialogResult>(dialog->exec());
-          if ( result == PimCommon::RenameFileDialog::RENAMEFILE_RENAME ) {
-              url = dialog->newName();
-          } else if (result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE) {
-              delete dialog;
-              return true;
-          }
-          delete dialog;
-      }
-  }
-
-  if ( !url.isLocalFile() ) {
-    KTemporaryFile tmpFile;
-    if ( !tmpFile.open() ) {
-      const QString msg = i18n( "<qt>Unable to open file <b>%1</b></qt>", url.url() );
-      KMessageBox::error( parentWidget(), msg );
-      return false;
+    KUrl url = KFileDialog::getSaveUrl( KUrl( QLatin1String("addressbook.csv") ) );
+    if ( url.isEmpty() ) {
+        return true;
     }
 
-    exportToFile( &tmpFile, contacts );
-    tmpFile.flush();
-
-    return KIO::NetAccess::upload( tmpFile.fileName(), url, parentWidget() );
-
-  } else {
-    QFile file( url.toLocalFile() );
-    if ( !file.open( QIODevice::WriteOnly ) ) {
-      const QString msg = i18n( "<qt>Unable to open file <b>%1</b>.</qt>", url.toLocalFile() );
-      KMessageBox::error( parentWidget(), msg );
-      return false;
+    if ( QFileInfo( url.isLocalFile() ? url.toLocalFile() : url.path() ).exists() ) {
+        if ( url.isLocalFile() && QFileInfo( url.toLocalFile() ).exists() ) {
+            PimCommon::RenameFileDialog::RenameFileDialogResult result = PimCommon::RenameFileDialog::RENAMEFILE_IGNORE;
+            PimCommon::RenameFileDialog *dialog = new PimCommon::RenameFileDialog(url, false, parentWidget());
+            result = static_cast<PimCommon::RenameFileDialog::RenameFileDialogResult>(dialog->exec());
+            if ( result == PimCommon::RenameFileDialog::RENAMEFILE_RENAME ) {
+                url = dialog->newName();
+            } else if (result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE) {
+                delete dialog;
+                return true;
+            }
+            delete dialog;
+        }
     }
 
-    exportToFile( &file, contacts );
-    file.close();
+    if ( !url.isLocalFile() ) {
+        KTemporaryFile tmpFile;
+        if ( !tmpFile.open() ) {
+            const QString msg = i18n( "<qt>Unable to open file <b>%1</b></qt>", url.url() );
+            KMessageBox::error( parentWidget(), msg );
+            return false;
+        }
 
-    return true;
-  }
+        exportToFile( &tmpFile, contacts );
+        tmpFile.flush();
+
+        return KIO::NetAccess::upload( tmpFile.fileName(), url, parentWidget() );
+
+    } else {
+        QFile file( url.toLocalFile() );
+        if ( !file.open( QIODevice::WriteOnly ) ) {
+            const QString msg = i18n( "<qt>Unable to open file <b>%1</b>.</qt>", url.toLocalFile() );
+            KMessageBox::error( parentWidget(), msg );
+            return false;
+        }
+
+        exportToFile( &file, contacts );
+        file.close();
+
+        return true;
+    }
 }
 
 void CsvXXPort::exportToFile( QFile *file, const KABC::Addressee::List &contacts ) const
 {
-  QTextStream stream( file );
-  stream.setCodec( QTextCodec::codecForLocale() );
+    QTextStream stream( file );
+    stream.setCodec( QTextCodec::codecForLocale() );
 
-  ContactFields::Fields fields = ContactFields::allFields();
-  fields.remove( ContactFields::Undefined );
+    ContactFields::Fields fields = ContactFields::allFields();
+    fields.remove( ContactFields::Undefined );
 
-  bool first = true;
+    bool first = true;
 
-  // First output the column headings
-  for ( int i = 0; i < fields.count(); ++i ) {
-    if ( !first ) {
-      stream << ",";
-    }
-
-    // add quoting as defined in RFC 4180
-    QString label = ContactFields::label( fields.at( i ) );
-    label.replace( QLatin1Char( '"' ), QLatin1String( "\"\"" ) );
-
-    stream << "\"" << label << "\"";
-    first = false;
-  }
-  stream << "\n";
-
-  // Then all the contacts
-  for ( int i = 0; i < contacts.count(); ++i ) {
-
-    const KABC::Addressee contact = contacts.at( i );
-    first = true;
-
-    for ( int j = 0; j < fields.count(); ++j ) {
-      if ( !first ) {
-        stream << ",";
-      }
-
-      QString content;
-      if ( fields.at( j ) == ContactFields::Birthday ||
-           fields.at( j ) == ContactFields::Anniversary ) {
-        const QDateTime dateTime =
-          QDateTime::fromString( ContactFields::value( fields.at( j ), contact ), Qt::ISODate );
-        if ( dateTime.isValid() ) {
-          content = dateTime.date().toString( Qt::ISODate );
+    // First output the column headings
+    for ( int i = 0; i < fields.count(); ++i ) {
+        if ( !first ) {
+            stream << ",";
         }
-      } else {
-        content = ContactFields::value( fields.at( j ), contact ).replace( QLatin1Char('\n'), QLatin1String("\\n") );
-      }
 
-      // add quoting as defined in RFC 4180
-      content.replace( QLatin1Char( '"' ), QLatin1String( "\"\"" ) );
+        // add quoting as defined in RFC 4180
+        QString label = ContactFields::label( fields.at( i ) );
+        label.replace( QLatin1Char( '"' ), QLatin1String( "\"\"" ) );
 
-      stream << '\"' << content << '\"';
-      first = false;
+        stream << "\"" << label << "\"";
+        first = false;
     }
-
     stream << "\n";
-  }
+
+    // Then all the contacts
+    for ( int i = 0; i < contacts.count(); ++i ) {
+
+        const KABC::Addressee contact = contacts.at( i );
+        first = true;
+
+        for ( int j = 0; j < fields.count(); ++j ) {
+            if ( !first ) {
+                stream << ",";
+            }
+
+            QString content;
+            if ( fields.at( j ) == ContactFields::Birthday ||
+                 fields.at( j ) == ContactFields::Anniversary ) {
+                const QDateTime dateTime =
+                        QDateTime::fromString( ContactFields::value( fields.at( j ), contact ), Qt::ISODate );
+                if ( dateTime.isValid() ) {
+                    content = dateTime.date().toString( Qt::ISODate );
+                }
+            } else {
+                content = ContactFields::value( fields.at( j ), contact ).replace( QLatin1Char('\n'), QLatin1String("\\n") );
+            }
+
+            // add quoting as defined in RFC 4180
+            content.replace( QLatin1Char( '"' ), QLatin1String( "\"\"" ) );
+
+            stream << '\"' << content << '\"';
+            first = false;
+        }
+
+        stream << "\n";
+    }
 }
 
 KABC::Addressee::List CsvXXPort::importContacts() const
 {
-  KABC::Addressee::List contacts;
+    KABC::Addressee::List contacts;
 
-  QPointer<CSVImportDialog> dlg = new CSVImportDialog( parentWidget() );
-  if ( dlg->exec() && dlg ) {
-    contacts = dlg->contacts();
-  }
+    QPointer<CSVImportDialog> dlg = new CSVImportDialog( parentWidget() );
+    if ( dlg->exec() && dlg ) {
+        contacts = dlg->contacts();
+    }
 
-  delete dlg;
+    delete dlg;
 
-  return contacts;
+    return contacts;
 }

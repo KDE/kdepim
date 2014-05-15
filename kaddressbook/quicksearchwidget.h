@@ -38,9 +38,9 @@ class KLineEdit;
  */
 class QuickSearchWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates the quick search widget.
      *
@@ -80,14 +80,14 @@ Q_SIGNALS:
      */
     void arrowDownKeyPressed();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void resetTimer();
     void delayedTextChanged();
 
-  protected:
+protected:
     void keyPressEvent( QKeyEvent * );
 
-  private:
+private:
     KLineEdit *mEdit;
     QTimer *mTimer;
 };

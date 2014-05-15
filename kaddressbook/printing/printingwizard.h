@@ -39,7 +39,7 @@ class QItemSelectionModel;
 class QPrinter;
 
 namespace Akonadi {
-  class Collection;
+class Collection;
 }
 
 namespace KABPrinting {
@@ -54,9 +54,9 @@ class PrintStyleFactory;
  */
 class PrintingWizard : public KAssistantDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new printing wizard.
      *
@@ -103,14 +103,14 @@ class PrintingWizard : public KAssistantDialog
      */
     int sortOrder() const;
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     /**
      * A print style has been selected. The argument is the index
      * in the cbStyle combo and in styles.
      */
     void slotStyleSelected(int);
 
-  protected:
+protected:
     QList<PrintStyleFactory*> mStyleFactories;
     QList<PrintStyle*> mStyleList;
     QPrinter *mPrinter;

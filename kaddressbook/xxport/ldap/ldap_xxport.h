@@ -30,7 +30,7 @@
 
 class LDAPXXPort : public XXPort
 {
-  public:
+public:
     explicit LDAPXXPort( QWidget *parent = 0 );
     KABC::Addressee::List importContacts() const;
     bool exportContacts( const KABC::Addressee::List &contacts ) const;

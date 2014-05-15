@@ -20,7 +20,7 @@
 #include "xxport.h"
 
 XXPort::XXPort( QWidget *parent )
-  : mParentWidget( parent )
+    : mParentWidget( parent )
 {
 }
 
@@ -30,46 +30,46 @@ XXPort::~XXPort()
 
 KABC::Addressee::List XXPort::importContacts() const
 {
-  return KABC::Addressee::List();
+    return KABC::Addressee::List();
 }
 
 bool XXPort::exportContacts( const KABC::Addressee::List & ) const
 {
-  return false;
+    return false;
 }
 
 void XXPort::setOption( const QString &key, const QString &value )
 {
-  mOptions.insert( key, value );
+    mOptions.insert( key, value );
 }
 
 QString XXPort::option( const QString &key ) const
 {
-  return mOptions.value( key );
+    return mOptions.value( key );
 }
 
 QWidget *XXPort::parentWidget() const
 {
-  return mParentWidget;
+    return mParentWidget;
 }
 
 QString XXPort::contactFileName( const KABC::Addressee &contact ) const
 {
-  if ( !contact.givenName().isEmpty() && !contact.familyName().isEmpty() ) {
-    return QString::fromLatin1( "%1_%2" ).arg( contact.givenName() ).arg( contact.familyName() );
-  }
+    if ( !contact.givenName().isEmpty() && !contact.familyName().isEmpty() ) {
+        return QString::fromLatin1( "%1_%2" ).arg( contact.givenName() ).arg( contact.familyName() );
+    }
 
-  if ( !contact.familyName().isEmpty() ) {
-    return contact.familyName();
-  }
+    if ( !contact.familyName().isEmpty() ) {
+        return contact.familyName();
+    }
 
-  if ( !contact.givenName().isEmpty() ) {
-    return contact.givenName();
-  }
+    if ( !contact.givenName().isEmpty() ) {
+        return contact.givenName();
+    }
 
-  if ( !contact.organization().isEmpty() ) {
-    return contact.organization();
-  }
+    if ( !contact.organization().isEmpty() ) {
+        return contact.organization();
+    }
 
-  return contact.uid();
+    return contact.uid();
 }

@@ -66,9 +66,9 @@ class PrintProgress;
  */
 class PrintStyle : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new print style.
      *
@@ -118,7 +118,7 @@ class PrintStyle : public QObject
      */
     Qt::SortOrder preferredSortOrder() const;
 
-  protected:
+protected:
     /**
      * Loads the preview image from the kaddressbook data directory.
      *
@@ -153,7 +153,7 @@ class PrintStyle : public QObject
      */
     void addPage( QWidget *page, const QString &title );
 
-  private:
+private:
     PrintingWizard *mWizard;
     QPixmap mPreview;
     QList<QWidget*> mPageList;
@@ -170,7 +170,7 @@ class PrintStyle : public QObject
  */
 class PrintStyleFactory
 {
-  public:
+public:
     explicit PrintStyleFactory( PrintingWizard *parent );
     virtual ~PrintStyleFactory();
 
@@ -182,7 +182,7 @@ class PrintStyleFactory
      */
     virtual QString description() const = 0;
 
-  protected:
+protected:
     PrintingWizard *mParent;
 };
 

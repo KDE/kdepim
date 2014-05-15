@@ -45,117 +45,117 @@ const char *ShowBirthday = "ShowBirthday";
 const char *ShowNote = "ShowNote";
 
 enum PrintField {
-  PhoneNumbers = 1,
-  Emails = 2,
-  Addresses = 4,
-  Organization = 8,
-  Birthday = 16,
-  Note = 32
+    PhoneNumbers = 1,
+    Emails = 2,
+    Addresses = 4,
+    Organization = 8,
+    Birthday = 16,
+    Note = 32
 };
 
 static QString contactsToHtml( const KABC::Addressee::List &contacts, int fields )
 {
-  QString content;
+    QString content;
 
-  content += QLatin1String("<html>\n");
-  content += QLatin1String(" <body>\n");
-  content += QLatin1String("  <table style=\"border-width: 1px; border-style: solid; "
-             "border-color: gray;\" width=\"100%\" cellspacing=\"0\">\n");
-  foreach ( const KABC::Addressee &contact, contacts ) {
-    QString nameString = contact.familyName() + QLatin1String(", ") + contact.givenName();
+    content += QLatin1String("<html>\n");
+    content += QLatin1String(" <body>\n");
+    content += QLatin1String("  <table style=\"border-width: 1px; border-style: solid; "
+                             "border-color: gray;\" width=\"100%\" cellspacing=\"0\">\n");
+    foreach ( const KABC::Addressee &contact, contacts ) {
+        QString nameString = contact.familyName() + QLatin1String(", ") + contact.givenName();
 
-    if ( fields & Organization ) {
-      if ( !contact.organization().isEmpty() ) {
-        nameString += QLatin1String(" (") + contact.organization() + QLatin1Char(')');
-      }
+        if ( fields & Organization ) {
+            if ( !contact.organization().isEmpty() ) {
+                nameString += QLatin1String(" (") + contact.organization() + QLatin1Char(')');
+            }
+        }
+
+        if ( fields & Birthday ) {
+            if ( contact.birthday().isValid() ) {
+                nameString += QLatin1String(" *") + KGlobal::locale()->formatDate( contact.birthday().date(),
+                                                                                   KLocale::ShortDate );
+            }
+        }
+
+        QStringList leftBlock, rightBlock;
+        if ( fields & PhoneNumbers ) {
+            const KABC::PhoneNumber::List numbers = contact.phoneNumbers();
+            foreach ( const KABC::PhoneNumber &number, numbers ) {
+                rightBlock.append( number.typeLabel() + QLatin1String(": ") + number.number() );
+            }
+        }
+        if ( fields & Emails ) {
+            const QStringList emails = contact.emails();
+            foreach ( const QString &email, emails ) {
+                rightBlock.append( email );
+            }
+        }
+        if ( fields & Note ) {
+            if ( !contact.note().isEmpty() ) {
+                const QString note = QLatin1String( "Note: " ) + contact.note().replace( QLatin1Char('\n'), QLatin1String("<br/>") );
+
+                rightBlock.append( note );
+            }
+        }
+        if ( fields & Addresses ) {
+            const KABC::Address::List addresses = contact.addresses();
+            foreach ( const KABC::Address &address, addresses ) {
+                const QString data =
+                        address.formattedAddress().replace( QLatin1String("\n\n"), QLatin1String("\n") ).replace( QLatin1Char('\n'), QLatin1String("<br/>") );
+                const QString subBlock= QLatin1String("<p style=\"margin-top: 0px; margin-left: 20px\">") + data +QLatin1String( "</p>");
+
+                leftBlock.append( subBlock );
+            }
+        }
+
+        content += QLatin1String("   <tr>\n");
+        content += QLatin1String("    <td style=\"padding-left: 3px; padding-top: 3px; padding-right: 3px; "
+                                 "padding-bottom: 3px;\">") +
+                nameString + leftBlock.join( QString() ) + QLatin1String("</td>\n");
+        content += QLatin1String("    <td style=\"padding-left: 3px; padding-top: 3px; padding-right: 3px; "
+                                 "padding-bottom: 3px;\">") +
+                rightBlock.join( QLatin1String("<br/>") ) + QLatin1String("</td>\n");
+        content += QLatin1String("   </tr>\n");
     }
+    content += QLatin1String("  </table>\n");
+    content += QLatin1String(" </body>\n");
+    content += QLatin1String("</html>\n");
 
-    if ( fields & Birthday ) {
-      if ( contact.birthday().isValid() ) {
-        nameString += QLatin1String(" *") + KGlobal::locale()->formatDate( contact.birthday().date(),
-                                                            KLocale::ShortDate );
-      }
-    }
-
-    QStringList leftBlock, rightBlock;
-    if ( fields & PhoneNumbers ) {
-      const KABC::PhoneNumber::List numbers = contact.phoneNumbers();
-      foreach ( const KABC::PhoneNumber &number, numbers ) {
-        rightBlock.append( number.typeLabel() + QLatin1String(": ") + number.number() );
-      }
-    }
-    if ( fields & Emails ) {
-      const QStringList emails = contact.emails();
-      foreach ( const QString &email, emails ) {
-        rightBlock.append( email );
-      }
-    }
-    if ( fields & Note ) {
-      if ( !contact.note().isEmpty() ) {
-        const QString note = QLatin1String( "Note: " ) + contact.note().replace( QLatin1Char('\n'), QLatin1String("<br/>") );
-
-        rightBlock.append( note );
-      }
-    }
-    if ( fields & Addresses ) {
-      const KABC::Address::List addresses = contact.addresses();
-      foreach ( const KABC::Address &address, addresses ) {
-        const QString data =
-          address.formattedAddress().replace( QLatin1String("\n\n"), QLatin1String("\n") ).replace( QLatin1Char('\n'), QLatin1String("<br/>") );
-        const QString subBlock= QLatin1String("<p style=\"margin-top: 0px; margin-left: 20px\">") + data +QLatin1String( "</p>");
-
-        leftBlock.append( subBlock );
-      }
-    }
-
-    content += QLatin1String("   <tr>\n");
-    content += QLatin1String("    <td style=\"padding-left: 3px; padding-top: 3px; padding-right: 3px; "
-               "padding-bottom: 3px;\">") +
-               nameString + leftBlock.join( QString() ) + QLatin1String("</td>\n");
-    content += QLatin1String("    <td style=\"padding-left: 3px; padding-top: 3px; padding-right: 3px; "
-               "padding-bottom: 3px;\">") +
-               rightBlock.join( QLatin1String("<br/>") ) + QLatin1String("</td>\n");
-    content += QLatin1String("   </tr>\n");
-  }
-  content += QLatin1String("  </table>\n");
-  content += QLatin1String(" </body>\n");
-  content += QLatin1String("</html>\n");
-
-  return content;
+    return content;
 }
 
 namespace KABPrinting {
 
 class RingBinderStyleAppearanceForm : public QWidget, public Ui::RingBinderStyleAppearanceForm_Base
 {
-  public:
+public:
     explicit RingBinderStyleAppearanceForm( QWidget *parent )
-      : QWidget( parent )
+        : QWidget( parent )
     {
-      setObjectName( QLatin1String("AppearancePage") );
-      setupUi( this );
+        setObjectName( QLatin1String("AppearancePage") );
+        setupUi( this );
     }
 };
 
 }
 
 RingBinderPrintStyle::RingBinderPrintStyle( PrintingWizard *parent )
-  : PrintStyle( parent ),
-    mPageAppearance( new RingBinderStyleAppearanceForm( parent ) )
+    : PrintStyle( parent ),
+      mPageAppearance( new RingBinderStyleAppearanceForm( parent ) )
 {
-  setPreview( QLatin1String("ringbinder-style.png") );
-  setPreferredSortOptions( ContactFields::FamilyName, Qt::AscendingOrder );
+    setPreview( QLatin1String("ringbinder-style.png") );
+    setPreferredSortOptions( ContactFields::FamilyName, Qt::AscendingOrder );
 
-  addPage( mPageAppearance, i18n( "Ring Binder Printing Style - Appearance" ) );
+    addPage( mPageAppearance, i18n( "Ring Binder Printing Style - Appearance" ) );
 
-  // applying previous settings
-  KConfigGroup config( KGlobal::config(), RingBinderConfigSectionName );
-  mPageAppearance->cbPhoneNumbers->setChecked( config.readEntry( ShowPhoneNumbers, true ) );
-  mPageAppearance->cbEmails->setChecked( config.readEntry( ShowEmailAddresses, true ) );
-  mPageAppearance->cbStreetAddresses->setChecked( config.readEntry( ShowStreetAddresses, true ) );
-  mPageAppearance->cbOrganization->setChecked( config.readEntry( ShowOrganization, true ) );
-  mPageAppearance->cbBirthday->setChecked( config.readEntry( ShowBirthday, false ) );
-  mPageAppearance->cbNote->setChecked( config.readEntry( ShowNote, false ) );
+    // applying previous settings
+    KConfigGroup config( KGlobal::config(), RingBinderConfigSectionName );
+    mPageAppearance->cbPhoneNumbers->setChecked( config.readEntry( ShowPhoneNumbers, true ) );
+    mPageAppearance->cbEmails->setChecked( config.readEntry( ShowEmailAddresses, true ) );
+    mPageAppearance->cbStreetAddresses->setChecked( config.readEntry( ShowStreetAddresses, true ) );
+    mPageAppearance->cbOrganization->setChecked( config.readEntry( ShowOrganization, true ) );
+    mPageAppearance->cbBirthday->setChecked( config.readEntry( ShowBirthday, false ) );
+    mPageAppearance->cbNote->setChecked( config.readEntry( ShowNote, false ) );
 }
 
 RingBinderPrintStyle::~RingBinderPrintStyle()
@@ -164,73 +164,73 @@ RingBinderPrintStyle::~RingBinderPrintStyle()
 
 void RingBinderPrintStyle::print( const KABC::Addressee::List &contacts, PrintProgress *progress )
 {
-  progress->addMessage( i18n( "Setting up fields" ) );
-  progress->setProgress( 0 );
+    progress->addMessage( i18n( "Setting up fields" ) );
+    progress->setProgress( 0 );
 
-  // first write current config settings
-  KConfigGroup config( KGlobal::config(), RingBinderConfigSectionName );
-  config.writeEntry( ShowPhoneNumbers, mPageAppearance->cbPhoneNumbers->isChecked() );
-  config.writeEntry( ShowEmailAddresses, mPageAppearance->cbEmails->isChecked() );
-  config.writeEntry( ShowStreetAddresses, mPageAppearance->cbStreetAddresses->isChecked() );
-  config.writeEntry( ShowOrganization, mPageAppearance->cbOrganization->isChecked() );
-  config.writeEntry( ShowBirthday, mPageAppearance->cbBirthday->isChecked() );
-  config.writeEntry( ShowNote, mPageAppearance->cbNote->isChecked() );
-  config.sync();
+    // first write current config settings
+    KConfigGroup config( KGlobal::config(), RingBinderConfigSectionName );
+    config.writeEntry( ShowPhoneNumbers, mPageAppearance->cbPhoneNumbers->isChecked() );
+    config.writeEntry( ShowEmailAddresses, mPageAppearance->cbEmails->isChecked() );
+    config.writeEntry( ShowStreetAddresses, mPageAppearance->cbStreetAddresses->isChecked() );
+    config.writeEntry( ShowOrganization, mPageAppearance->cbOrganization->isChecked() );
+    config.writeEntry( ShowBirthday, mPageAppearance->cbBirthday->isChecked() );
+    config.writeEntry( ShowNote, mPageAppearance->cbNote->isChecked() );
+    config.sync();
 
-  QPrinter *printer = wizard()->printer();
-  printer->setPageMargins( 50, 20, 0, 50, QPrinter::DevicePixel );
+    QPrinter *printer = wizard()->printer();
+    printer->setPageMargins( 50, 20, 0, 50, QPrinter::DevicePixel );
 
-  progress->addMessage( i18n( "Setting up document" ) );
+    progress->addMessage( i18n( "Setting up document" ) );
 
-  int fields = 0;
+    int fields = 0;
 
-  if ( mPageAppearance->cbPhoneNumbers->isChecked() ) {
-    fields |= PhoneNumbers;
-  }
+    if ( mPageAppearance->cbPhoneNumbers->isChecked() ) {
+        fields |= PhoneNumbers;
+    }
 
-  if ( mPageAppearance->cbEmails->isChecked() ) {
-    fields |= Emails;
-  }
+    if ( mPageAppearance->cbEmails->isChecked() ) {
+        fields |= Emails;
+    }
 
-  if ( mPageAppearance->cbStreetAddresses->isChecked() ) {
-    fields |= Addresses;
-  }
+    if ( mPageAppearance->cbStreetAddresses->isChecked() ) {
+        fields |= Addresses;
+    }
 
-  if ( mPageAppearance->cbOrganization->isChecked() ) {
-    fields |= Organization;
-  }
+    if ( mPageAppearance->cbOrganization->isChecked() ) {
+        fields |= Organization;
+    }
 
-  if ( mPageAppearance->cbBirthday->isChecked() ) {
-    fields |= Birthday;
-  }
+    if ( mPageAppearance->cbBirthday->isChecked() ) {
+        fields |= Birthday;
+    }
 
-  if ( mPageAppearance->cbNote->isChecked() ) {
-    fields |= Note;
-  }
+    if ( mPageAppearance->cbNote->isChecked() ) {
+        fields |= Note;
+    }
 
-  const QString html = contactsToHtml( contacts, fields );
+    const QString html = contactsToHtml( contacts, fields );
 
-  QTextDocument document;
-  document.setHtml( html );
+    QTextDocument document;
+    document.setHtml( html );
 
-  progress->addMessage( i18n( "Printing" ) );
+    progress->addMessage( i18n( "Printing" ) );
 
-  document.print( printer );
+    document.print( printer );
 
-  progress->addMessage( i18nc( "Finished printing", "Done" ) );
+    progress->addMessage( i18nc( "Finished printing", "Done" ) );
 }
 
 RingBinderPrintStyleFactory::RingBinderPrintStyleFactory( PrintingWizard *parent )
-  : PrintStyleFactory( parent )
+    : PrintStyleFactory( parent )
 {
 }
 
 PrintStyle *RingBinderPrintStyleFactory::create() const
 {
-  return new RingBinderPrintStyle( mParent );
+    return new RingBinderPrintStyle( mParent );
 }
 
 QString RingBinderPrintStyleFactory::description() const
 {
-  return i18n( "Printout for Ring Binders" );
+    return i18n( "Printout for Ring Binders" );
 }

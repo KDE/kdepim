@@ -39,9 +39,9 @@ class QSignalMapper;
  */
 class KADDRESSBOOK_EXPORT XXPortManager : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new xxport manager.
      *
@@ -80,20 +80,20 @@ class KADDRESSBOOK_EXPORT XXPortManager : public QObject
     void importFile( const KUrl &url);
 
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Sets the @p addressBook that shall be preselected in the
      * ContactSelectionDialog.
      */
     void setDefaultAddressBook( const Akonadi::Collection &addressBook );
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotImport( const QString & );
     void slotExport( const QString & );
 
     void slotImportJobDone( KJob * );
 
-  private:
+private:
     void import(const KABC::Addressee::List &contacts);
     QItemSelectionModel *mSelectionModel;
     QWidget *mParentWidget;

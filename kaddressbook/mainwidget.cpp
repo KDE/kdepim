@@ -97,40 +97,40 @@
 namespace {
 static bool isStructuralCollection( const Akonadi::Collection &collection )
 {
-  QStringList mimeTypes;
-  mimeTypes << KABC::Addressee::mimeType() << KABC::ContactGroup::mimeType();
-  const QStringList collectionMimeTypes = collection.contentMimeTypes();
-  foreach ( const QString &mimeType, mimeTypes ) {
-    if ( collectionMimeTypes.contains( mimeType ) ) {
-      return false;
+    QStringList mimeTypes;
+    mimeTypes << KABC::Addressee::mimeType() << KABC::ContactGroup::mimeType();
+    const QStringList collectionMimeTypes = collection.contentMimeTypes();
+    foreach ( const QString &mimeType, mimeTypes ) {
+        if ( collectionMimeTypes.contains( mimeType ) ) {
+            return false;
+        }
     }
-  }
-  return true;
+    return true;
 }
 
 class StructuralCollectionsNotCheckableProxy : public KCheckableProxyModel
 {
-  public:
+public:
     StructuralCollectionsNotCheckableProxy( QObject *parent )
-      : KCheckableProxyModel( parent )
+        : KCheckableProxyModel( parent )
     {
     }
 
     /* reimp */QVariant data( const QModelIndex &index, int role ) const
     {
-      if ( !index.isValid() ) {
-        return QVariant();
-      }
-
-      if ( role == Qt::CheckStateRole ) {
-        // Don't show the checkbox if the collection can't contain incidences
-        const Akonadi::Collection collection =
-          index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-        if ( collection.isValid() && isStructuralCollection( collection ) ) {
-          return QVariant();
+        if ( !index.isValid() ) {
+            return QVariant();
         }
-      }
-      return KCheckableProxyModel::data( index, role );
+
+        if ( role == Qt::CheckStateRole ) {
+            // Don't show the checkbox if the collection can't contain incidences
+            const Akonadi::Collection collection =
+                    index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+            if ( collection.isValid() && isStructuralCollection( collection ) ) {
+                return QVariant();
+            }
+        }
+        return KCheckableProxyModel::data( index, role );
     }
 };
 
@@ -140,17 +140,17 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
     : QWidget( parent ), mAllContactsModel( 0 ), mXmlGuiClient( guiClient ), mGrantleeThemeManager(0), mQuickSearchAction(0)
 {
 
-  (void) new KaddressbookAdaptor( this );
-  QDBusConnection::sessionBus().registerObject(QLatin1String("/KAddressBook"), this);
+    (void) new KaddressbookAdaptor( this );
+    QDBusConnection::sessionBus().registerObject(QLatin1String("/KAddressBook"), this);
 
 
-  mXXPortManager = new XXPortManager( this );
-  Akonadi::AttributeFactory::registerAttribute<PimCommon::ImapAclAttribute>();
+    mXXPortManager = new XXPortManager( this );
+    Akonadi::AttributeFactory::registerAttribute<PimCommon::ImapAclAttribute>();
 
-  setupGui();
-  setupActions( guiClient->actionCollection() );
+    setupGui();
+    setupActions( guiClient->actionCollection() );
 
-  /*
+    /*
    *  The item models, proxies and views have the following structure:
    *
    *                               mItemView
@@ -722,37 +722,37 @@ void MainWidget::printPreview()
 
 void MainWidget::print()
 {
-  QPrinter printer;
-  printer.setDocName( i18n( "Address Book" ) );
-  printer.setOutputFileName( Settings::self()->defaultFileName() );
-  printer.setOutputFormat( QPrinter::PdfFormat );
-  printer.setCollateCopies( true );
+    QPrinter printer;
+    printer.setDocName( i18n( "Address Book" ) );
+    printer.setOutputFileName( Settings::self()->defaultFileName() );
+    printer.setOutputFormat( QPrinter::PdfFormat );
+    printer.setCollateCopies( true );
 
-  QPrintDialog printDialog(KdePrint::createPrintDialog(&printer));
+    QPrintDialog printDialog(KdePrint::createPrintDialog(&printer));
 
-  printDialog.setWindowTitle( i18n( "Print Contacts" ) );
-  if ( !printDialog.exec() ) { //krazy:exclude=crashy
-    return;
-  }
+    printDialog.setWindowTitle( i18n( "Print Contacts" ) );
+    if ( !printDialog.exec() ) { //krazy:exclude=crashy
+        return;
+    }
 
-  KABPrinting::PrintingWizard wizard( &printer, mItemView->selectionModel(), this );
-  wizard.setDefaultAddressBook( currentAddressBook() );
+    KABPrinting::PrintingWizard wizard( &printer, mItemView->selectionModel(), this );
+    wizard.setDefaultAddressBook( currentAddressBook() );
 
-  wizard.exec(); //krazy:exclude=crashy
+    wizard.exec(); //krazy:exclude=crashy
 
-  Settings::self()->setDefaultFileName( printer.outputFileName() );
-  Settings::self()->setPrintingStyle( wizard.printingStyle() );
-  Settings::self()->setSortOrder( wizard.sortOrder() );
+    Settings::self()->setDefaultFileName( printer.outputFileName() );
+    Settings::self()->setPrintingStyle( wizard.printingStyle() );
+    Settings::self()->setSortOrder( wizard.sortOrder() );
 }
 
 void MainWidget::newContact()
 {
-  mActionManager->action( Akonadi::StandardContactActionManager::CreateContact )->trigger();
+    mActionManager->action( Akonadi::StandardContactActionManager::CreateContact )->trigger();
 }
 
 void MainWidget::newGroup()
 {
-  mActionManager->action( Akonadi::StandardContactActionManager::CreateContactGroup )->trigger();
+    mActionManager->action( Akonadi::StandardContactActionManager::CreateContactGroup )->trigger();
 }
 
 /**
@@ -762,13 +762,13 @@ void MainWidget::newGroup()
  */
 void MainWidget::itemSelected( const Akonadi::Item &item )
 {
-  if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::Addressee::mimeType() ) ) {
-    mDetailsViewStack->setCurrentWidget( mContactDetails );
-    mContactDetails->setContact( item );
-  } else if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::ContactGroup::mimeType() ) ) {
-    mDetailsViewStack->setCurrentWidget( mContactGroupDetails );
-    mContactGroupDetails->setContactGroup( item );
-  }
+    if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::Addressee::mimeType() ) ) {
+        mDetailsViewStack->setCurrentWidget( mContactDetails );
+        mContactDetails->setContact( item );
+    } else if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::ContactGroup::mimeType() ) ) {
+        mDetailsViewStack->setCurrentWidget( mContactGroupDetails );
+        mContactGroupDetails->setContactGroup( item );
+    }
 }
 
 /**
@@ -777,43 +777,43 @@ void MainWidget::itemSelected( const Akonadi::Item &item )
  */
 void MainWidget::itemSelectionChanged( const QModelIndex &current, const QModelIndex & )
 {
-  if ( !current.isValid() ) {
-    mDetailsViewStack->setCurrentWidget( mEmptyDetails );
-  }
+    if ( !current.isValid() ) {
+        mDetailsViewStack->setCurrentWidget( mEmptyDetails );
+    }
 }
 
 void MainWidget::selectFirstItem()
 {
-  // Whenever the quick search has changed, we select the first item
-  // in the item view, so that the detailsview is updated
-  if ( mItemView && mItemView->selectionModel() ) {
-    mItemView->selectionModel()->setCurrentIndex( mItemView->model()->index( 0, 0 ),
-                                                  QItemSelectionModel::Rows |
-                                                  QItemSelectionModel::ClearAndSelect );
-  }
+    // Whenever the quick search has changed, we select the first item
+    // in the item view, so that the detailsview is updated
+    if ( mItemView && mItemView->selectionModel() ) {
+        mItemView->selectionModel()->setCurrentIndex( mItemView->model()->index( 0, 0 ),
+                                                      QItemSelectionModel::Rows |
+                                                      QItemSelectionModel::ClearAndSelect );
+    }
 }
 
 bool MainWidget::showQRCodes()
 {
 #if defined(HAVE_PRISON)
-  KConfig config( QLatin1String( "akonadi_contactrc" ) );
-  KConfigGroup group( &config, QLatin1String( "View" ) );
-  return group.readEntry( "QRCodes", true );
+    KConfig config( QLatin1String( "akonadi_contactrc" ) );
+    KConfigGroup group( &config, QLatin1String( "View" ) );
+    return group.readEntry( "QRCodes", true );
 #else
-  return true;
+    return true;
 #endif
 }
 
 void MainWidget::setQRCodeShow( bool on )
 {
 #if defined(HAVE_PRISON)
-  // must write the configuration setting first before updating the view.
-  KConfig config( QLatin1String( "akonadi_contactrc" ) );
-  KConfigGroup group( &config, QLatin1String( "View" ) );
-  group.writeEntry( "QRCodes", on );
-  if ( mItemView->model() ) {
-    mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
-  }
+    // must write the configuration setting first before updating the view.
+    KConfig config( QLatin1String( "akonadi_contactrc" ) );
+    KConfigGroup group( &config, QLatin1String( "View" ) );
+    group.writeEntry( "QRCodes", on );
+    if ( mItemView->model() ) {
+        mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
+    }
 #else
     Q_UNUSED( on );
 #endif
@@ -821,102 +821,102 @@ void MainWidget::setQRCodeShow( bool on )
 
 Akonadi::Collection MainWidget::currentAddressBook() const
 {
-  if ( mCollectionView->selectionModel() && mCollectionView->selectionModel()->hasSelection() ) {
-    const QModelIndex index = mCollectionView->selectionModel()->selectedIndexes().first();
-    const Akonadi::Collection collection =
-      index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    if ( mCollectionView->selectionModel() && mCollectionView->selectionModel()->hasSelection() ) {
+        const QModelIndex index = mCollectionView->selectionModel()->selectedIndexes().first();
+        const Akonadi::Collection collection =
+                index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
 
-    return collection;
-  }
+        return collection;
+    }
 
-  return Akonadi::Collection();
+    return Akonadi::Collection();
 }
 
 QAbstractItemModel *MainWidget::allContactsModel()
 {
-  if ( !mAllContactsModel ) {
-    KDescendantsProxyModel *descendantsModel = new KDescendantsProxyModel( this );
-    descendantsModel->setSourceModel( GlobalContactModel::instance()->model() );
+    if ( !mAllContactsModel ) {
+        KDescendantsProxyModel *descendantsModel = new KDescendantsProxyModel( this );
+        descendantsModel->setSourceModel( GlobalContactModel::instance()->model() );
 
-    mAllContactsModel = new Akonadi::EntityMimeTypeFilterModel( this );
-    mAllContactsModel->setSourceModel( descendantsModel );
-    mAllContactsModel->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
-    mAllContactsModel->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
-  }
+        mAllContactsModel = new Akonadi::EntityMimeTypeFilterModel( this );
+        mAllContactsModel->setSourceModel( descendantsModel );
+        mAllContactsModel->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
+        mAllContactsModel->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
+    }
 
-  return mAllContactsModel;
+    return mAllContactsModel;
 }
 
 void MainWidget::setViewMode( QAction *action )
 {
-  setViewMode( action->data().toInt() );
+    setViewMode( action->data().toInt() );
 }
 
 void MainWidget::setViewMode( int mode )
 {
-  int currentMode = Settings::self()->viewMode();
-  //kDebug() << "cur" << currentMode << "new" << mode;
-  if ( mode == currentMode ) return;                        // nothing to do
+    int currentMode = Settings::self()->viewMode();
+    //kDebug() << "cur" << currentMode << "new" << mode;
+    if ( mode == currentMode ) return;                        // nothing to do
 
-  if ( mode == 0 ) {
-      mode = currentMode;// initialisation, no save
-  } else {
-      saveSplitterStates();                                // for 2- or 3-column mode
-  }
-  if ( mode == 1 ) {                                        // simple mode
-    mMainWidgetSplitter2->setVisible( false );
-    mDetailsPane->setVisible( true );
-    mContactSwitcher->setVisible( true );
-  }
-  else {
-    mMainWidgetSplitter2->setVisible( true );
-    mContactSwitcher->setVisible( false );
-
-    if ( mode == 2 ) {                                        // 2 columns
-        mMainWidgetSplitter2->setOrientation( Qt::Vertical );
+    if ( mode == 0 ) {
+        mode = currentMode;// initialisation, no save
+    } else {
+        saveSplitterStates();                                // for 2- or 3-column mode
     }
-    else if ( mode == 3 ) {                                // 3 columns
-        mMainWidgetSplitter2->setOrientation( Qt::Horizontal );
+    if ( mode == 1 ) {                                        // simple mode
+        mMainWidgetSplitter2->setVisible( false );
+        mDetailsPane->setVisible( true );
+        mContactSwitcher->setVisible( true );
     }
-  }
+    else {
+        mMainWidgetSplitter2->setVisible( true );
+        mContactSwitcher->setVisible( false );
 
-  Settings::self()->setViewMode( mode );                // save new mode in settings
-  restoreSplitterStates();                                // restore state for new mode
-  mViewModeGroup->actions().at( mode-1 )->setChecked( true );
+        if ( mode == 2 ) {                                        // 2 columns
+            mMainWidgetSplitter2->setOrientation( Qt::Vertical );
+        }
+        else if ( mode == 3 ) {                                // 3 columns
+            mMainWidgetSplitter2->setOrientation( Qt::Horizontal );
+        }
+    }
 
-  if ( mItemView->model() ) {
-    mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
-  }
+    Settings::self()->setViewMode( mode );                // save new mode in settings
+    restoreSplitterStates();                                // restore state for new mode
+    mViewModeGroup->actions().at( mode-1 )->setChecked( true );
+
+    if ( mItemView->model() ) {
+        mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
+    }
 }
 
 void MainWidget::saveSplitterStates() const
 {
-  // The splitter states are saved separately for each column view mode,
-  // but only if not in simple mode (1 column).
-  int currentMode = Settings::self()->viewMode();
-  if ( currentMode == 1 )
-    return;
+    // The splitter states are saved separately for each column view mode,
+    // but only if not in simple mode (1 column).
+    int currentMode = Settings::self()->viewMode();
+    if ( currentMode == 1 )
+        return;
 
-  QString groupName = QString::fromLatin1( "UiState_MainWidgetSplitter_%1" ).arg( currentMode );
-  //kDebug() << "saving to group" << groupName;
-  KConfigGroup group( Settings::self()->config(), groupName );
-  KPIM::UiStateSaver::saveState( mMainWidgetSplitter1, group );
-  KPIM::UiStateSaver::saveState( mMainWidgetSplitter2, group );
+    QString groupName = QString::fromLatin1( "UiState_MainWidgetSplitter_%1" ).arg( currentMode );
+    //kDebug() << "saving to group" << groupName;
+    KConfigGroup group( Settings::self()->config(), groupName );
+    KPIM::UiStateSaver::saveState( mMainWidgetSplitter1, group );
+    KPIM::UiStateSaver::saveState( mMainWidgetSplitter2, group );
 }
 
 void MainWidget::restoreSplitterStates()
 {
-  // The splitter states are restored as appropriate for the current
-  // column view mode, but not for simple mode (1 column).
-  int currentMode = Settings::self()->viewMode();
-  if ( currentMode == 1 )
-    return;
+    // The splitter states are restored as appropriate for the current
+    // column view mode, but not for simple mode (1 column).
+    int currentMode = Settings::self()->viewMode();
+    if ( currentMode == 1 )
+        return;
 
-  QString groupName = QString::fromLatin1( "UiState_MainWidgetSplitter_%1" ).arg( currentMode );
-  //kDebug() << "restoring from group" << groupName;
-  KConfigGroup group( Settings::self()->config(), groupName );
-  KPIM::UiStateSaver::restoreState( mMainWidgetSplitter1, group );
-  KPIM::UiStateSaver::restoreState( mMainWidgetSplitter2, group );
+    QString groupName = QString::fromLatin1( "UiState_MainWidgetSplitter_%1" ).arg( currentMode );
+    //kDebug() << "restoring from group" << groupName;
+    KConfigGroup group( Settings::self()->config(), groupName );
+    KPIM::UiStateSaver::restoreState( mMainWidgetSplitter1, group );
+    KPIM::UiStateSaver::restoreState( mMainWidgetSplitter2, group );
 }
 
 void MainWidget::initGrantleeThemeName()
@@ -933,14 +933,14 @@ void MainWidget::slotGrantleeThemeSelected()
 {
     initGrantleeThemeName();
     if ( mItemView->model() ) {
-      mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
+        mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
     }
 }
 
 void MainWidget::slotGrantleeThemesUpdated()
 {
     if ( mItemView->model() ) {
-      mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
+        mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
     }
 }
 
