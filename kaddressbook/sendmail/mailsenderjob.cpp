@@ -25,9 +25,8 @@
 
 #include <KJob>
 
-#include <Akonadi/Item>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
+#include <AkonadiCore/ItemFetchJob>
+#include <AkonadiCore/ItemFetchScope>
 
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>

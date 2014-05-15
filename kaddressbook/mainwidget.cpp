@@ -83,6 +83,7 @@
 #include <KPrintPreview>
 #include <KXMLGUIClient>
 #include <KToolInvocation>
+#include <KIconLoader>
 
 #include <QAction>
 #include <QActionGroup>

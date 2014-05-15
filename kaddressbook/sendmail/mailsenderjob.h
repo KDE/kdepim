@@ -23,7 +23,7 @@
 #define MAILSENDERJOB_H
 
 #include "kaddressbook_export.h"
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 #include <QObject>
 #include <QStringList>
 
