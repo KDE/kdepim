@@ -96,5 +96,6 @@ void MailSenderJobTest::shouldNotSendTwiceEmails()
     QCOMPARE(resultLst.count(), 1);
 }
 
+//TODO Create unittest for ContactGroup too
 
 QTEST_KDEMAIN(MailSenderJobTest, NoGUI)
