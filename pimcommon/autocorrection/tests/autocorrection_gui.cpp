@@ -99,7 +99,7 @@ AutocorrectionTestWidget::AutocorrectionTestWidget(QWidget *parent)
 {
     mConfig = KSharedConfig::openConfig( QLatin1String("autocorrectionguirc") );
     PimCommon::PimCommonSettings::self()->setSharedConfig( mConfig );
-    PimCommon::PimCommonSettings::self()->readConfig();
+    PimCommon::PimCommonSettings::self()->load();
 
     mAutoCorrection = new PimCommon::AutoCorrection;
     QVBoxLayout *lay = new QVBoxLayout;
