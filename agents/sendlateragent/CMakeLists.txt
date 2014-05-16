@@ -1,4 +1,5 @@
 project(sendlateragent)
+kde_enable_exceptions()
 
 include_directories(
    ${CMAKE_SOURCE_DIR}/pimcommon/
@@ -39,11 +40,6 @@ set(sendlateragent_SRCS
    sendlaterjob.cpp
    sendlaterremovemessagejob.cpp
 )
-
-
- 
-
-kde_enable_exceptions()
 
 qt5_add_dbus_adaptor(sendlateragent_SRCS org.freedesktop.Akonadi.SendLaterAgent.xml sendlateragent.h SendLaterAgent)
 
