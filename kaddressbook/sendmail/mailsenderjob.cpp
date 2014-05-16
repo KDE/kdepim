@@ -70,10 +70,10 @@ void MailSenderJob::start()
                 KABC::ContactGroup::ContactReference reference = group.contactReference(i);
 
                 Akonadi::Item item;
-                if ( !reference.gid().isEmpty() ) {
-                    item.setGid( reference.gid() );
-                } else {
+                if (reference.gid().isEmpty()) {
                     item.setId( reference.uid().toLongLong() );
+                } else {
+                    item.setGid( reference.gid() );
                 }
                 mItemToFetch << item;
             }
@@ -89,7 +89,7 @@ void MailSenderJob::start()
 
 void MailSenderJob::fetchNextItem()
 {
-    if (mFetchJobCount<mItemToFetch.count()) {
+    if (mFetchJobCount < mItemToFetch.count()) {
         fetchItem(mItemToFetch.at(mFetchJobCount));
         ++mFetchJobCount;
     } else {
