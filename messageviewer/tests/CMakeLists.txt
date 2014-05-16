@@ -21,9 +21,8 @@ macro(add_messageviewer_unittest _source)
     messageviewer
     kleo
     ${QGPGME_LIBRARIES}
-    ${QT_QTTEST_LIBRARY}
-    
-    ${QT_QTWEBKIT_LIBRARY}
+    Qt5::Test
+    Qt5::WebKitWidgets
     KF5::KIOCore
     KF5::Mime
     KF5::AkonadiCore
@@ -46,7 +45,7 @@ add_messageviewer_unittest( eventedittest.cpp )
 set(viewertest_gui_SRCS viewertest_gui.cpp)
 add_executable(viewertest_gui TEST ${viewertest_gui_SRCS})
 target_link_libraries(viewertest_gui
-  ${QT_QTWEBKIT_LIBRARY}
+  Qt5::WebKitWidgets
   KF5::Mime
   messageviewer
 )

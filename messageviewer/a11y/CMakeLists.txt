@@ -6,16 +6,15 @@ set(messagevieweraccessiblewidgetfactory_SRCS
     accessiblemailwebview.cpp
     )
 
-kde4_add_plugin(messagevieweraccessiblewidgetfactory
+add_library(messagevieweraccessiblewidgetfactory
+ MODULE 
     ${messagevieweraccessiblewidgetfactory_SRCS}
 )
 
 target_link_libraries(messagevieweraccessiblewidgetfactory
-    ${QT_LIBRARIES}
-    ${KDE4_KDEUI_LIBS}
     messageviewer
-    ${KDE4_KDEWEBKIT_LIBRARY}
-    ${QT_QTWEBKIT_LIBRARY}
+    KF5::WebKit
+    Qt5::WebKitWidgets
 )
 
 install(TARGETS messagevieweraccessiblewidgetfactory DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/accessible)
