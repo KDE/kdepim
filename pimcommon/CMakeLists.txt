@@ -214,28 +214,26 @@ target_link_libraries(pimcommon
     KF5::AkonadiCore
     KF5::PimUtils
     KF5::SonnetCore
-    ${QT_QTWEBKIT_LIBRARY}
-    ${KDE4_SOLID_LIBS}
-    ${LibKGAPI2_LIBRARY}
     KF5::NewStuff
     KF5::Wallet
     kdepim
     KF5::Imap
     KF5::AkonadiWidgets
     KF5::Archive
+    Qt5::WebKitWidgets
 )
 
 set_target_properties(pimcommon PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS pimcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-#add_subdirectory(translator/tests)
+add_subdirectory(translator/tests)
 add_subdirectory(texteditor/plaintexteditor/tests)
 add_subdirectory(texteditor/richtexteditor/tests)
 add_subdirectory(texteditor/commonwidget/tests/)
 add_subdirectory(widgets/tests)
-#add_subdirectory(shorturl/tests)
+add_subdirectory(shorturl/tests)
 add_subdirectory(autocorrection/tests)
-#add_subdirectory(folderdialog/tests/)
+add_subdirectory(folderdialog/tests/)
 #add_subdirectory(storageservice/dropbox/tests)
 #add_subdirectory(storageservice/hubic/tests)
 #add_subdirectory(storageservice/tests)
