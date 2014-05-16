@@ -44,6 +44,11 @@ SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
     QPushButton *unselectAll = new QPushButton(i18n("Unselect All"));
     connect(unselectAll, SIGNAL(clicked()), this, SLOT(slotUnselectAll()));
     hbox->addWidget(unselectAll);
+
+    QPushButton *saveTemplate = new QPushButton(i18n("Save as Template"));
+    connect(saveTemplate, SIGNAL(clicked()), this, SLOT(slotSaveAsTemplate()));
+    hbox->addWidget(saveTemplate);
+
     mainLayout->addLayout(hbox);
 
     setMainWidget(mainWidget);
@@ -85,4 +90,7 @@ void SelectionTypeDialog::slotUnselectAll()
     mSelectionTreeWidget->unSelectAllItems();
 }
 
-
+void SelectionTypeDialog::slotSaveAsTemplate()
+{
+    mSelectionTreeWidget->saveAsTemplate();
+}

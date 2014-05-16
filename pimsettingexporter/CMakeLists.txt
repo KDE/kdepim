@@ -110,6 +110,7 @@ target_link_libraries(pimsettingexporter
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${AKONADI_COMMON_LIBRARIES}
   ${KDEPIMLIBS_KALARMCAL_LIBS}
+  ${QT_QTXML_LIBRARY}
   mailimporter
   mailcommon
   pimcommon

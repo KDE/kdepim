@@ -18,11 +18,24 @@
 #ifndef TEMPLATESELECTION_H
 #define TEMPLATESELECTION_H
 
+#include <QHash>
+#include <QDomDocument>
+#include "utils.h"
+
 class TemplateSelection
 {
 public:
     TemplateSelection();
     ~TemplateSelection();
+
+    void createTemplate(const QHash<Utils::AppsType, Utils::importExportParameters> &stored);
+
+    QDomDocument document() const;
+
+    QHash<Utils::AppsType, Utils::importExportParameters> loadTemplate(const QDomDocument &doc);
+private:
+    void saveParameters(Utils::StoredTypes type, QDomElement &elem);
+    QDomDocument mDocument;
 };
 
 #endif // TEMPLATESELECTION_H

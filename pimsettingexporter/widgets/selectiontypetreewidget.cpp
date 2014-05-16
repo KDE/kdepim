@@ -18,6 +18,7 @@
 
 #include "selectiontypetreewidget.h"
 #include "pimsettingexporter/utils.h"
+#include "xml/templateselection.h"
 
 #include <QTreeWidgetItem>
 #include <QHeaderView>
@@ -276,3 +277,9 @@ void SelectionTypeTreeWidget::slotItemChanged(QTreeWidgetItem *item, int column)
     }
 }
 
+void SelectionTypeTreeWidget::saveAsTemplate()
+{
+    TemplateSelection templateSelection;
+    templateSelection.createTemplate(storedType());
+    qDebug()<<" template :"<<templateSelection.document().toString();
+}

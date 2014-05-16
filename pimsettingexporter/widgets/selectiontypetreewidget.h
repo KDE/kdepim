@@ -36,6 +36,8 @@ public:
     void selectAllItems();
     void unSelectAllItems();
 
+    void saveAsTemplate();
+
 private Q_SLOTS:
     void slotItemChanged(QTreeWidgetItem*,int);
 
