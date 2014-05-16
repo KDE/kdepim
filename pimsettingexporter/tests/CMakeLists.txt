@@ -13,6 +13,7 @@ target_link_libraries(selectiontreewidget_gui
   ${AKONADI_COMMON_LIBRARIES}
   ${QT_QTXML_LIBRARY}
   mailcommon
+  pimcommon
 )
 
 set(showarchivestructuredialog_gui_SRCS showarchivestructuredialog_gui.cpp ../dialog/showarchivestructuredialog.cpp ../utils.cpp ../xml/templateselection.cpp)

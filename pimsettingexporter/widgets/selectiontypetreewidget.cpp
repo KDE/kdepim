@@ -20,6 +20,8 @@
 #include "pimsettingexporter/utils.h"
 #include "xml/templateselection.h"
 
+#include "pimcommon/util/pimutil.h"
+
 #include <QTreeWidgetItem>
 #include <QHeaderView>
 #include <KDebug>
@@ -281,5 +283,7 @@ void SelectionTypeTreeWidget::saveAsTemplate()
 {
     TemplateSelection templateSelection;
     templateSelection.createTemplate(storedType());
-    qDebug()<<" template :"<<templateSelection.document().toString();
+    const QString templateStr = templateSelection.document().toString(2);
+    const QString filter(QLatin1String("*.xml"));
+    PimCommon::Util::saveTextAs(templateStr, filter, this);
 }

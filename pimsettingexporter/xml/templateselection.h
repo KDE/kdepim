@@ -25,7 +25,7 @@
 class TemplateSelection
 {
 public:
-    TemplateSelection();
+    TemplateSelection(const QString &path = QString());
     ~TemplateSelection();
 
     void createTemplate(const QHash<Utils::AppsType, Utils::importExportParameters> &stored);
@@ -34,6 +34,7 @@ public:
 
     QHash<Utils::AppsType, Utils::importExportParameters> loadTemplate(const QDomDocument &doc);
 private:
+    Utils::StoredTypes loadStoredTypes(const QDomElement &element);
     void saveParameters(Utils::StoredTypes type, QDomElement &elem);
     QDomDocument mDocument;
 };
