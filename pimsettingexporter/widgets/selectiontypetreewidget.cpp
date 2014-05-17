@@ -22,9 +22,12 @@
 
 #include "pimcommon/util/pimutil.h"
 
+#include <KDebug>
+#include <KFileDialog>
+
 #include <QTreeWidgetItem>
 #include <QHeaderView>
-#include <KDebug>
+#include <QPointer>
 
 SelectionTypeTreeWidget::SelectionTypeTreeWidget(QWidget *parent)
     : QTreeWidget(parent)
@@ -279,6 +282,19 @@ void SelectionTypeTreeWidget::slotItemChanged(QTreeWidgetItem *item, int column)
     }
 }
 
+void SelectionTypeTreeWidget::loadTemplate()
+{
+    QPointer<KFileDialog> dlg = new KFileDialog(KUrl(), QLatin1String("*.xml"), this);
+    dlg->setMode(KFile::File);
+    if (dlg->exec()) {
+        const QString file = dlg->selectedFile();
+        TemplateSelection templateSelection(file);
+        const QHash<Utils::AppsType, Utils::importExportParameters> params = templateSelection.loadTemplate();
+    }
+    delete dlg;
+
+}
+
 void SelectionTypeTreeWidget::saveAsTemplate()
 {
     TemplateSelection templateSelection;
@@ -286,4 +302,9 @@ void SelectionTypeTreeWidget::saveAsTemplate()
     const QString templateStr = templateSelection.document().toString(2);
     const QString filter(QLatin1String("*.xml"));
     PimCommon::Util::saveTextAs(templateStr, filter, this);
+}
+
+void SelectionTypeTreeWidget::setParameters(const QHash<Utils::AppsType, Utils::importExportParameters> &params)
+{
+    //TODO
 }

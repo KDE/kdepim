@@ -37,6 +37,7 @@ private Q_SLOTS:
     void slotUnselectAll();
 
     void slotSaveAsTemplate();
+    void slotLoadTemplate();
 private:
     void readConfig();
     void writeConfig();

@@ -12,6 +12,7 @@ target_link_libraries(selectiontreewidget_gui
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${AKONADI_COMMON_LIBRARIES}
   ${QT_QTXML_LIBRARY}
+  ${KDE4_KFILE_LIBS}
   mailcommon
   pimcommon
 )
@@ -26,6 +27,7 @@ target_link_libraries(showarchivestructuredialog_gui
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${AKONADI_COMMON_LIBRARIES}
   ${QT_QTXML_LIBRARY}
+  ${KDE4_KFILE_LIBS}
   mailcommon
   pimcommon
 )

@@ -102,6 +102,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 kde4_add_executable(pimsettingexporter ${pimsettingexporter_SRCS})
 
 target_link_libraries(pimsettingexporter
+  ${KDE4_KFILE_LIBS}
   ${KDE4_KIO_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
