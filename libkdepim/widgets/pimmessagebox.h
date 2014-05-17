@@ -38,9 +38,9 @@ public:
     static int fourBtnMsgBox( QWidget *parent, QMessageBox::Icon type,
                               const QString &text,
                               const QString &caption = QString(),
-                              const KGuiItem &button1 = KStandardGuiItem::yes(),
-                              const KGuiItem &button2 = KStandardGuiItem::no(),
-                              const KGuiItem &button3 = KStandardGuiItem::cont(),
+                              const QString &button1Text = QString(),
+                              const QString &button2Text = QString(),
+                              const QString &button3Text = QString(),
                               KMessageBox::Options options = KMessageBox::Notify );
 };
 
