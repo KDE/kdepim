@@ -306,5 +306,39 @@ void SelectionTypeTreeWidget::saveAsTemplate()
 
 void SelectionTypeTreeWidget::setParameters(const QHash<Utils::AppsType, Utils::importExportParameters> &params)
 {
+    QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = params.constBegin();
+    while (i != params.constEnd())  {
+        switch(i.key()) {
+        case Utils::KMail: {
+            break;
+        }
+        case Utils::KAddressBook: {
+            break;
+        }
+        case Utils::KAlarm: {
+            break;
+        }
+        case Utils::KOrganizer: {
+            break;
+        }
+        case Utils::KJots: {
+            break;
+        }
+        case Utils::KNotes: {
+            break;
+        }
+        case Utils::Akregator: {
+            break;
+        }
+        case Utils::Blogilo: {
+            break;
+        }
+        case Utils::KNode: {
+            break;
+        }
+        }
+        ++i;
+    }
+
     //TODO
 }
