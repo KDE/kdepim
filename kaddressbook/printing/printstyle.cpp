@@ -28,6 +28,7 @@
 #include <KStandardDirs>
 #include <KDialog>
 
+#include <QPushButton>
 #include <QPixmap>
 #include <QWidget>
 
@@ -98,9 +99,8 @@ void PrintStyle::showPages()
     Q_FOREACH ( wdg, mPageList ) {
         mWizard->setAppropriate( mPageItems[ wdg ], true );
     }
-
-    //QT5 mWizard->enableButton( KDialog::User2, wdg ); // next button
-    //QT5 mWizard->enableButton( KDialog::User1, !wdg ); // finish button
+    mWizard->nextButton()->setEnabled(wdg);
+    mWizard->finishButton()->setEnabled(!wdg);
 }
 
 void PrintStyle::hidePages()

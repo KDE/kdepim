@@ -232,7 +232,8 @@ void PrintingWizard::print()
 
   qDebug() <<"printing" << contacts.count() << "contacts.";
   // ... print:
-  //QT5 enableButton( KDialog::User3, false ); // back button
+  backButton()->setEnabled(false);
+
   //QT5 enableButton( KDialog::Cancel, false );
   mStyle->print( contacts, mProgress );
 }
