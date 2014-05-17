@@ -32,6 +32,8 @@ private Q_SLOTS:
     void shouldNotSendSignalWhenNoEmails();
     void shouldSendSignalWhenOneEmail();
     void shouldNotSendTwiceEmails();
+    void shouldNotAddInvalidEmail();
+    void shouldEmitSignalIfThereIsAValidEmail();
 };
 
 #endif // MAILSENDERJOBTEST_H

@@ -55,24 +55,28 @@ void MailSenderJob::start()
             const KABC::Addressee contact = item.payload<KABC::Addressee>();
             const QString preferredEmail = contact.preferredEmail();
             if( !preferredEmail.isEmpty() && !mEmailAddresses.contains(preferredEmail) ){
-                mEmailAddresses <<  KPIMUtils::normalizedAddress(contact.formattedName(), contact.preferredEmail());
+                if (KPIMUtils::isValidSimpleAddress(contact.preferredEmail())) {
+                    mEmailAddresses <<  KPIMUtils::normalizedAddress(contact.formattedName(), contact.preferredEmail());
+                }
             }
         } else if (item.hasPayload<KABC::ContactGroup>()) {
             const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
             for(unsigned int i=0; i<group.dataCount(); ++i){
-                const QString email = KPIMUtils::normalizedAddress(group.data(i).name(), group.data(i).email());
-                if (!email.isEmpty() && !mEmailAddresses.contains(email)) {
-                    mEmailAddresses << email;
+                if (KPIMUtils::isValidSimpleAddress(group.data(i).email())) {
+                    const QString email = KPIMUtils::normalizedAddress(group.data(i).name(), group.data(i).email());
+                    if (!email.isEmpty() && !mEmailAddresses.contains(email)) {
+                        mEmailAddresses << email;
+                    }
                 }
             }
             for(unsigned int i=0; i<group.contactReferenceCount(); ++i){
                 KABC::ContactGroup::ContactReference reference = group.contactReference(i);
 
                 Akonadi::Item item;
-                if ( !reference.gid().isEmpty() ) {
-                    item.setGid( reference.gid() );
-                } else {
+                if (reference.gid().isEmpty()) {
                     item.setId( reference.uid().toLongLong() );
+                } else {
+                    item.setGid( reference.gid() );
                 }
                 mItemToFetch << item;
             }
@@ -88,7 +92,7 @@ void MailSenderJob::start()
 
 void MailSenderJob::fetchNextItem()
 {
-    if (mFetchJobCount<mItemToFetch.count()) {
+    if (mFetchJobCount < mItemToFetch.count()) {
         fetchItem(mItemToFetch.at(mFetchJobCount));
         ++mFetchJobCount;
     } else {
@@ -122,8 +126,10 @@ void MailSenderJob::fetchJobFinished(KJob *job)
     const Akonadi::Item item = fetchJob->items().first();
     const KABC::Addressee contact = item.payload<KABC::Addressee>();
 
-    if( !contact.preferredEmail().isEmpty()){
-        mEmailAddresses <<  KPIMUtils::normalizedAddress(contact.formattedName(), contact.preferredEmail());
+    if( !contact.preferredEmail().isEmpty()) {
+        if (KPIMUtils::isValidSimpleAddress(contact.preferredEmail())) {
+            mEmailAddresses <<  KPIMUtils::normalizedAddress(contact.formattedName(), contact.preferredEmail());
+        }
     }
     fetchNextItem();
 }

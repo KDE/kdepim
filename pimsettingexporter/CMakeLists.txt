@@ -102,7 +102,6 @@ target_link_libraries(pimsettingexporter
   KF5::Mime
   KF5::PimUtils
   KF5::MailTransport
-  ${AKONADI_COMMON_LIBRARIES}
   KF5::AlarmCalendar
   mailimporter
   mailcommon

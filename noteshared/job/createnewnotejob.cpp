@@ -70,6 +70,9 @@ void CreateNewNoteJob::start()
         QPointer<SelectedNotefolderDialog> dlg = new SelectedNotefolderDialog(mWidget);
         if (dlg->exec()) {
             col = dlg->selectedCollection();
+        } else {
+            deleteLater();
+            return;
         }
         if (dlg->useFolderByDefault()) {
             NoteShared::NoteSharedGlobalConfig::self()->setDefaultFolder(col.id());

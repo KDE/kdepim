@@ -96,6 +96,62 @@ void MailSenderJobTest::shouldNotSendTwiceEmails()
     QCOMPARE(resultLst.count(), 1);
 }
 
+void MailSenderJobTest::shouldNotAddInvalidEmail()
+{
+    Akonadi::Item::List lst;
+    Akonadi::Item item;
+    KABC::Addressee address;
+    address.setName(QLatin1String("foo1"));
+    //Invalid email
+    address.insertEmail(QLatin1String("foo2"), true);
+    item.setPayload<KABC::Addressee>( address );
+    lst <<item<<item;
+    KABMailSender::MailSenderJob mailsender(lst);
+    QSignalSpy spy(&mailsender, SIGNAL(sendMails(QStringList)));
+    mailsender.start();
+    QCOMPARE(spy.count(), 0);
+}
+
+void MailSenderJobTest::shouldEmitSignalIfThereIsAValidEmail()
+{
+    Akonadi::Item::List lst;
+    Akonadi::Item item;
+    KABC::Addressee address;
+    address.setName(QLatin1String("foo1"));
+    //Invalid email
+    address.insertEmail(QLatin1String("foo2"), true);
+    item.setPayload<KABC::Addressee>( address );
+    lst <<item;
+
+    Akonadi::Item item2;
+    KABC::Addressee address2;
+    address2.setName(QLatin1String("foo2"));
+    address2.insertEmail(QLatin1String("foo2@kde.org"), true);
+    item2.setPayload<KABC::Addressee>( address2 );
+    lst <<item2;
+
+    Akonadi::Item item3;
+    KABC::Addressee address3;
+    address3.setName(QLatin1String("foo3"));
+    address3.insertEmail(QLatin1String("foo3@"), true);
+    item3.setPayload<KABC::Addressee>( address3 );
+    lst <<item3;
+
+    Akonadi::Item item4;
+    KABC::Addressee address4;
+    address4.setName(QLatin1String("foo4"));
+    address4.insertEmail(QLatin1String("foo4@kde.org"), true);
+    item4.setPayload<KABC::Addressee>( address4 );
+    lst <<item4;
+
+    KABMailSender::MailSenderJob mailsender(lst);
+    QSignalSpy spy(&mailsender, SIGNAL(sendMails(QStringList)));
+    mailsender.start();
+    QCOMPARE(spy.count(), 1);
+    const QStringList resultLst = spy.at(0).at(0).value<QStringList>();
+    QCOMPARE(resultLst.count(), 2);
+}
+
 //TODO Create unittest for ContactGroup too
 
 QTEST_KDEMAIN(MailSenderJobTest, NoGUI)
