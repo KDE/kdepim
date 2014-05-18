@@ -28,6 +28,7 @@
 
 int main( int argc, char **argv )
 {
+    KLocalizedString::setApplicationDomain("contactthemeeditor");
     QApplication app(argc, argv);
     KAboutData aboutData( QStringLiteral("contactthemeeditor"),
                           i18n("Contact Theme Editor"),

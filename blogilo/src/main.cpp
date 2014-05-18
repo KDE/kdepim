@@ -37,6 +37,7 @@ static const char description[] =
 
 int main( int argc, char *argv[] )
 {
+    KLocalizedString::setApplicationDomain("blogilo");
     K4AboutData about( "blogilo", 0, ki18n( APPNAME ), VERSION, ki18n( description ),
                       K4AboutData::License_GPL_V2, ki18n( "Copyright © 2008–2014 Blogilo authors" ),
                       KLocalizedString(), "http://blogilo.gnufolks.org" );

@@ -56,6 +56,7 @@ int KAddressBookApplication::newInstance()
 
 int main( int argc, char **argv )
 {
+    KLocalizedString::setApplicationDomain("kaddressbook");
     AboutData about;
 
     KCmdLineArgs::init( argc, argv, &about );

@@ -28,6 +28,7 @@
 
 int main(int argc, char *argv[])
 {
+    KLocalizedString::setApplicationDomain("importwizard");
     //FIXME: "wizards" are "assistents" in new KDE slang
     KAboutData aboutData( QStringLiteral("importwizard"), 
                           i18n("PIM Import Tool"), 

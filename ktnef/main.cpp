@@ -24,7 +24,7 @@
 
 int main( int argc, char *argv[] )
 {
-
+  KLocalizedString::setApplicationDomain("ktnef");
   K4AboutData aboutData(
     "ktnef", 0,
     ki18n( "KTnef" ),

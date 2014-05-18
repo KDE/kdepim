@@ -30,6 +30,7 @@
 
 int main( int argc, char **argv )
 {
+    KLocalizedString::setApplicationDomain("headerthemeeditor");
     QApplication app(argc, argv);
     KAboutData aboutData( QStringLiteral("headerthemeeditor"), 
                           i18n("Header Theme Editor"), 

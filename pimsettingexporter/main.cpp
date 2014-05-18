@@ -28,6 +28,7 @@
 
 int main(int argc, char *argv[])
 {
+    KLocalizedString::setApplicationDomain("pimsettingexporter");
     K4AboutData aboutData( "pimsettingexporter", 0, ki18n("PIM Setting Exporter"),
                           KDEPIM_VERSION, ki18n("PIM Setting Exporter"), K4AboutData::License_GPL_V2,
                           ki18n("Copyright © 2012-2014 pimsettingexporter authors"));
