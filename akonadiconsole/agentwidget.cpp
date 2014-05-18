@@ -340,8 +340,7 @@ void AgentWidget::cloneAgent( KJob* job )
     const QMetaMethod method = sourceIface.metaObject()->method( i );
     if ( QByteArray( method.typeName() ).isEmpty() ) // returns void
       continue;
-#if 0 //QT5
-    const QByteArray signature( method.signature() );
+    const QByteArray signature( method.methodSignature() );
     if ( signature.isEmpty() )
       continue;
     if ( signature.startsWith( "set" ) || !signature.contains( "()" ) ) // setter or takes parameters // krazy:exclude=strings
@@ -356,7 +355,6 @@ void AgentWidget::cloneAgent( KJob* job )
     }
     const QString setterName = QLatin1String("set") + methodName.at( 0 ).toUpper() + methodName.mid( 1 );
     targetIface.call( setterName, reply.arguments().at( 0 ) );
-#endif
   }
 
   cloneTarget.reconfigure();
