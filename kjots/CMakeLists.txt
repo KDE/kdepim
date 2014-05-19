@@ -15,8 +15,6 @@ include_directories(
 set(kjotsLibs KF5::KIOCore kdepim)
 
 add_subdirectory( icons )
-#PORT IT
-#add_subdirectory( plasmoid )
 
 #########################################################################
 # Code common to the kjots application and the kontact plugin
