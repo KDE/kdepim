@@ -19,7 +19,7 @@
 #include "followupreminderagent.h"
 #include "followupreminderadaptor.h"
 //#include "followupreminderconfiguredialog.h"
-//#include "followupreminderagentsettings.h"
+#include "followupreminderagentsettings.h"
 #include <KWindowSystem>
 #include <KLocale>
 
@@ -37,13 +37,13 @@ FollowUpReminderAgent::FollowUpReminderAgent(const QString &id)
     new FollowUpReminderAgentAdaptor(this);
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/FollowUpReminder" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.FollowUpReminder" ) );
-    //if (FollowUpReminderAgentSettings::enabled()) {
+    if (FollowUpReminderAgentSettings::enabled()) {
 #ifdef DEBUG_FOLLOWUPREMINDERAGENT
         //QTimer::singleShot(1000, mManager, SLOT(load()));
 #else
         //QTimer::singleShot(1000*60*4, mManager, SLOT(load()));
 #endif
-    //}
+    }
 }
 
 FollowUpReminderAgent::~FollowUpReminderAgent()
@@ -52,13 +52,12 @@ FollowUpReminderAgent::~FollowUpReminderAgent()
 
 void FollowUpReminderAgent::setEnableAgent(bool b)
 {
-    //FollowUpReminderAgentSettings::self()->setEnabled(b);
+    FollowUpReminderAgentSettings::self()->setEnabled(b);
 }
 
 bool FollowUpReminderAgent::enabledAgent() const
 {
-    //return FollowUpReminderAgentSettings::self()->enabled();
-    return false;
+    return FollowUpReminderAgentSettings::self()->enabled();
 }
 
 void FollowUpReminderAgent::showConfigureDialog(qlonglong windowId)

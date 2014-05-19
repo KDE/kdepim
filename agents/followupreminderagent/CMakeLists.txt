@@ -12,9 +12,9 @@ set(followupreminderagent_SRCS
 
 qt4_add_dbus_adaptor(followupreminderagent_SRCS org.freedesktop.Akonadi.FollowUpReminder.xml followupreminderagent.h FollowUpReminderAgent)
 
-#kde4_add_kcfg_files(followupreminderagent_SRCS
-#    followupreminderagentsettings.kcfgc
-#)
+kde4_add_kcfg_files(followupreminderagent_SRCS
+    followupreminderagentsettings.kcfgc
+)
 
 kde4_add_executable(akonadi_followupreminder_agent ${followupreminderagent_SRCS})
 
