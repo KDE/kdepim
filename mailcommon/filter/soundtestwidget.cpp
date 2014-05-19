@@ -78,9 +78,8 @@ void SoundTestWidget::openSoundDialog( KUrlRequester * )
     }
 
     init = false;
-#if 0 //QT5
     QFileDialog *fileDialog = m_urlRequester->fileDialog();
-    fileDialog->setCaption( i18n( "Select Sound File" ) );
+    fileDialog->setWindowTitle( i18n( "Select Sound File" ) );
 
     QStringList filters;
     filters << QLatin1String("audio/x-wav")
@@ -88,7 +87,7 @@ void SoundTestWidget::openSoundDialog( KUrlRequester * )
             << QLatin1String("application/ogg")
             << QLatin1String("audio/x-adpcm");
 
-    fileDialog->setMimeFilter( filters );
+    fileDialog->setMimeTypeFilters( filters );
 
     const QStringList soundDirs = KGlobal::dirs()->resourceDirs( "sound" );
 
@@ -101,12 +100,11 @@ void SoundTestWidget::openSoundDialog( KUrlRequester * )
             dir = soundDir;
             if ( dir.isReadable() && dir.count() > 2 ) {
                 soundURL.setPath( soundDir );
-                fileDialog->setUrl( soundURL );
+                fileDialog->setDirectoryUrl( soundURL );
                 break;
             }
         }
     }
-#endif
 }
 
 void SoundTestWidget::playSound()
