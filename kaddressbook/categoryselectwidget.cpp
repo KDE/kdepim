@@ -173,11 +173,12 @@ void CategorySelectWidgetPrivate::slotTagsInserted(const QModelIndex &parent, in
 {
     for (int row = start; row<=end; ++row) {
         QModelIndex idx = tagModel->index(row, 0, parent);
-        kDebug() << "idx" << idx << "=" << tagModel->data(idx, Qt::DisplayRole).toString()
+#if 0
+	kDebug() << "idx" << idx << "=" << tagModel->data(idx, Qt::DisplayRole).toString()
             << "name" << tagModel->data(idx, TagModel::NameRole).toString()
             << "tag" << tagModel->data(idx, TagModel::TagRole)
             << "id" << tagModel->data(idx, TagModel::IdRole).toInt();
-
+#endif
         QStandardItem *it = new QStandardItem(tagModel->data(idx, TagModel::NameRole).toString());
         it->setIcon(tagModel->data(idx, Qt::DecorationRole).value<QIcon>());
         it->setData(tagModel->data(idx, TagModel::IdRole), FILTER_ROLE);
@@ -287,7 +288,7 @@ QList<Akonadi::Tag::Id> CategorySelectWidgetPrivate::filterTags() const
         filter.append(CategorySelectWidget::FilterAll);
     }
 
-    kDebug() << "filter" << filter;
+    //kDebug() << "filter" << filter;
     return filter;
 }
 
