@@ -39,20 +39,21 @@ Utils::StoredTypes TemplateSelection::loadStoredTypes(const QDomElement &element
 
 QHash<Utils::AppsType, Utils::importExportParameters> TemplateSelection::loadTemplate(const QDomDocument &doc)
 {
-    mDocument = doc;
+    QHash<Utils::AppsType, Utils::importExportParameters> value;
+    if (!doc.isNull()) {
+        mDocument = doc;
+    }
     QDomElement docElem = mDocument.documentElement();
-#if 0
     QDomNode n = docElem.firstChild();
     while(!n.isNull())  {
-        QDomElement e = n.toElement(); // try to convert the node to an element.
+        QDomElement e = n.toElement();
         if(!e.isNull())  {
-            cout << qPrintable(e.tagName()) << endl; // the node really is an element.
+            qDebug()<<"tag :"<< e.tagName();
         }
         n = n.nextSibling();
     }
-#endif
     //TODO
-    return QHash<Utils::AppsType, Utils::importExportParameters>();
+    return value;
 }
 
 void TemplateSelection::saveParameters(Utils::StoredTypes type, QDomElement &elem)

@@ -56,20 +56,23 @@ void MailSenderJob::start()
             const QString preferredEmail = contact.preferredEmail();
             if( !preferredEmail.isEmpty() && !mEmailAddresses.contains(preferredEmail) ){
                 if (KPIMUtils::isValidSimpleAddress(contact.preferredEmail())) {
-                    mEmailAddresses <<  KPIMUtils::normalizedAddress(contact.formattedName(), contact.preferredEmail());
+                    mEmailAddresses <<  KPIMUtils::normalizedAddress(contact.formattedName(), preferredEmail);
                 }
             }
         } else if (item.hasPayload<KABC::ContactGroup>()) {
             const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
-            for(unsigned int i=0; i<group.dataCount(); ++i){
-                if (KPIMUtils::isValidSimpleAddress(group.data(i).email())) {
-                    const QString email = KPIMUtils::normalizedAddress(group.data(i).name(), group.data(i).email());
+            unsigned int nbDataCount(group.dataCount());
+            for(unsigned int i=0; i<nbDataCount; ++i) {
+                const QString currentEmail(group.data(i).email());
+                if (KPIMUtils::isValidSimpleAddress(currentEmail)) {
+                    const QString email = KPIMUtils::normalizedAddress(group.data(i).name(), currentEmail);
                     if (!email.isEmpty() && !mEmailAddresses.contains(email)) {
                         mEmailAddresses << email;
                     }
                 }
             }
-            for(unsigned int i=0; i<group.contactReferenceCount(); ++i){
+            const unsigned int nbContactReference(group.contactReferenceCount());
+            for(unsigned int i=0; i<nbContactReference; ++i){
                 KABC::ContactGroup::ContactReference reference = group.contactReference(i);
 
                 Akonadi::Item item;

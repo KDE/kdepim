@@ -47,9 +47,14 @@ SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
     connect(unselectAll, SIGNAL(clicked()), this, SLOT(slotUnselectAll()));
     hbox->addWidget(unselectAll);
 
-    QPushButton *saveTemplate = new QPushButton(i18n("Save as Template"));
+    QPushButton *saveTemplate = new QPushButton(i18n("Save as Template..."));
     connect(saveTemplate, SIGNAL(clicked()), this, SLOT(slotSaveAsTemplate()));
     hbox->addWidget(saveTemplate);
+
+    QPushButton *loadTemplate = new QPushButton(i18n("Load Template..."));
+    connect(loadTemplate, SIGNAL(clicked()), this, SLOT(slotLoadTemplate()));
+    hbox->addWidget(loadTemplate);
+
 
     mainLayout->addLayout(hbox);
 
@@ -95,4 +100,9 @@ void SelectionTypeDialog::slotUnselectAll()
 void SelectionTypeDialog::slotSaveAsTemplate()
 {
     mSelectionTreeWidget->saveAsTemplate();
+}
+
+void SelectionTypeDialog::slotLoadTemplate()
+{
+    mSelectionTreeWidget->loadTemplate();
 }
