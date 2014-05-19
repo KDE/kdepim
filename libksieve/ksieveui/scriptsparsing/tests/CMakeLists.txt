@@ -10,6 +10,6 @@ set(xmlsieveparsing_SRCS
   main.cpp
 )
 
-KDE4_ADD_EXECUTABLE(xmlsieveparsing ${xmlsieveparsing_SRCS} )
-TARGET_LINK_LIBRARIES(xmlsieveparsing ${KDE4_KDEUI_LIBS} ${KDE4_KFILE_LIBS} ksieveui ksieve)
+add_executable(xmlsieveparsing ${xmlsieveparsing_SRCS} )
+TARGET_LINK_LIBRARIES(xmlsieveparsing   ksieveui ksieve)
 
