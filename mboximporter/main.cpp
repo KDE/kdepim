@@ -27,9 +27,7 @@
 
 int main(int argc, char *argv[])
 {
-    //QT5
-    //KLocale::setMainCatalog("mboximporter");
-
+    KLocalizedString::setApplicationDomain("mboximporter");
     K4AboutData aboutData( "mboximporter", 0, ki18n("mbox importer"),
                           KDEPIM_VERSION, ki18n("MBox importer tool"), K4AboutData::License_GPL_V2,
                           ki18n("Copyright © 2013 MBoxImporter authors"));
