@@ -1,8 +1,3 @@
-
-include_directories( ${KDE4_INCLUDE_DIR} )
-
-########### next target ###############
-
 set(ktexteditorkabcbridge_PART_SRCS ktexteditorkabcbridge.cpp )
 
 add_library(ktexteditorkabcbridge MODULE ${ktexteditorkabcbridge_PART_SRCS})
