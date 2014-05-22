@@ -1,4 +1,5 @@
 project(kaddressbookgrantlee)
+kde_enable_exceptions()
 
 include_directories(
   ${Grantlee_INCLUDE_DIRS}
@@ -9,12 +10,8 @@ add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 add_definitions(-DTRANSLATION_DOMAIN=\"libkaddressbookgrantlee\")
 
-
-kde_enable_exceptions()
-
 if(Prison_FOUND)
   add_definitions(-DHAVE_PRISON)
-  #include_directories(${PRISON_INCLUDE_DIR})
 endif()
 
 set(kaddressbook_grantlee_LIB_SRCS
@@ -33,10 +30,6 @@ target_link_libraries(kaddressbookgrantlee
   KF5::Abc
   KF5::AkonadiContact
 )
-
-if(PRISON_FOUND)
-  target_link_libraries(kaddressbookgrantlee ${PRISON_LIBRARIES})
-endif()
 
 set_target_properties(kaddressbookgrantlee PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})
 install(TARGETS kaddressbookgrantlee ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
