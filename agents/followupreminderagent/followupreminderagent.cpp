@@ -22,7 +22,7 @@
 //#include "followupreminderagentsettings.h"
 #include <KWindowSystem>
 #include <KLocale>
-
+#include <KGlobal>
 #include <akonadi/dbusconnectionpool.h>
 
 #include <QPointer>
