@@ -102,13 +102,11 @@ MailFilterAgent::MailFilterAgent( const QString &id )
             if ( group.readEntry( "Enabled", false ) ) {
                 m_filterLogDialog = new FilterLogDialog( 0 );
                 const QPixmap pixmap = KIcon( QLatin1String("view-filter") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
-#if 0 //QT5
                 KNotification *notify = new KNotification( QLatin1String("mailfilterlogenabled") );
-                notify->setComponentData( componentData() );
+                notify->setComponentName( componentData().componentName() );
                 notify->setPixmap( pixmap );
                 notify->setText( i18nc("Notification when the filter log was enabled", "Mail Filter Log Enabled" ) );
                 notify->sendEvent();
-#endif
             }
         }
     }
