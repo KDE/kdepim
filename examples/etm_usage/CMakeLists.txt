@@ -37,7 +37,6 @@ set(etm_usage_SRCS
 add_executable(etm_usage ${etm_usage_SRCS})
 
 target_link_libraries(etm_usage
-  
   KF5::KHtml
   KF5::KIOCore
   KF5::AkonadiMime
@@ -45,7 +44,6 @@ target_link_libraries(etm_usage
   KF5::AkonadiCore
   KF5::Abc
   KF5::Mime
-  ${KDEPIMLIBS_QGPGME_LIBSS}
   akonadi_next
   kdepim
   kleo

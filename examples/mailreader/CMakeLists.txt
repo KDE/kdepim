@@ -1,8 +1,5 @@
 project(mailreader)
 
-#REACTIVATE
-#add_subdirectory(kmail-plasma)
-
 set(mailreader_SRCS
   mailreader.cpp
   main.cpp
@@ -22,10 +19,8 @@ kconfig_add_kcfg_files(mailreader_SRCS settings.kcfgc)
 add_executable(akonadimailreader ${mailreader_SRCS})
 
 target_link_libraries(akonadimailreader
-  
   KF5::AkonadiMime
   KF5::AkonadiCore
-  ${KDEPIMLIBS_QGPGME_LIBS}
   akonadi_next
   kdepim
   kleo

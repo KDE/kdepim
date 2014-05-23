@@ -11,11 +11,11 @@ set(coisceim_mobile_srcs
   messageviewitem.cpp
 )
 
-kde4_add_executable(coisceim-mobile ${coisceim_mobile_srcs})
+add_executable(coisceim-mobile ${coisceim_mobile_srcs})
 
 target_link_libraries(coisceim-mobile
   ${QT_QTDECLARATIVE_LIBRARIES}
-  ${KDEPIMLIBS_KCALCORE_LIBS}
+  KF5::CalendarCore
   ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}
   calendarsupport
 
