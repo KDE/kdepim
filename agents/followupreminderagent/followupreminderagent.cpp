@@ -23,7 +23,7 @@
 #include <KWindowSystem>
 #include <KLocale>
 #include <KGlobal>
-#include <akonadi/dbusconnectionpool.h>
+#include <AkonadiCore/dbusconnectionpool.h>
 
 #include <QPointer>
 #include <QDebug>

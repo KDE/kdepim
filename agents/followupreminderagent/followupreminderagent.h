@@ -18,7 +18,7 @@
 #ifndef FOLLOWUPREMINDERAGENT_H
 #define FOLLOWUPREMINDERAGENT_H
 
-#include <akonadi/agentbase.h>
+#include <AkonadiAgentBase/agentbase.h>
 class FollowUpReminderAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV3
 {
     Q_OBJECT
