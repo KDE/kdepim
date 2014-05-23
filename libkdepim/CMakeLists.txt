@@ -107,7 +107,6 @@ target_link_libraries(kdepim
   KF5::Ldap
   KF5::PimIdentities
   KF5::KCMUtils
-  ${KDE4_SOLID_LIBS}
   KF5::Mime
   KF5::PimTextEdit
   KF5::Mime
@@ -118,7 +117,7 @@ target_link_libraries(kdepim
   KF5::SonnetCore
   KF5::KCMUtils
   KF5::Wallet
-  ${BALOO_PIM_LIBRARY}
+  baloopim
 )
 
 
