@@ -94,48 +94,45 @@ install( FILES kjotsui.rc  DESTINATION ${DATA_INSTALL_DIR}/kjots)
 
 install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/kjots PATTERN *.svn EXCLUDE )
 
+set(kjotspart_PART_SRCS
+  kjotspart.cpp
+  ${kjots_common_SRCS}
+)
+
+add_library(kjotspart MODULE ${kjotspart_PART_SRCS}
+)
 
 
+target_link_libraries(kjotspart
+  KF5::KCMUtils
+  kdepim
+  KF5::Mime
+  KF5::AkonadiCore
+  KF5::AkonadiMime
+  KF5::Mime
+  Grantlee::Templates
+  Grantlee::TextDocument
+  KF5::PimTextEdit
+  akonadi_next
+  noteshared
+)
 
-  set(kjotspart_PART_SRCS
-    kjotspart.cpp
-    ${kjots_common_SRCS}
-  )
+install( FILES kjotspart.desktop  DESTINATION ${SERVICES_INSTALL_DIR} )
+install( FILES kjotspartui.rc  DESTINATION ${DATA_INSTALL_DIR}/kjots)
 
-  add_library(kjotspart MODULE ${kjotspart_PART_SRCS}
-  )
-
-
-  target_link_libraries(kjotspart
-    KF5::KCMUtils
-    kdepim
-    KF5::Mime
-    KF5::AkonadiCore
-    KF5::AkonadiMime
-    KF5::Mime
-    Grantlee::Templates
-    Grantlee::TextDocument
-    KF5::PimTextEdit
-    akonadi_next
-    noteshared
-  )
-
-  install( FILES kjotspart.desktop  DESTINATION ${SERVICES_INSTALL_DIR} )
-  install( FILES kjotspartui.rc  DESTINATION ${DATA_INSTALL_DIR}/kjots)
-
-  install(TARGETS kjotspart  DESTINATION ${PLUGIN_INSTALL_DIR} )
+install(TARGETS kjotspart  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 
-  ###########################################################################
-  set(kcm_kjots_PART_SRCS kcm_kjots.cpp ${kjots_config_SRCS} )
+###########################################################################
+set(kcm_kjots_PART_SRCS kcm_kjots.cpp ${kjots_config_SRCS} )
+add_library(kcm_kjots MODULE ${kcm_kjots_PART_SRCS})
 
-  add_library(kcm_kjots MODULE ${kcm_kjots_PART_SRCS})
+target_link_libraries(kcm_kjots   KF5::KCMUtils KF5::KDELibs4Support)
 
-  target_link_libraries(kcm_kjots   KF5::KCMUtils KF5::KDELibs4Support)
-
-  install(TARGETS kcm_kjots DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS kcm_kjots DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
-  install(FILES
-        kjots_config_misc.desktop
-        DESTINATION ${SERVICES_INSTALL_DIR})
+install(FILES
+      kjots_config_misc.desktop
+      DESTINATION ${SERVICES_INSTALL_DIR})
+
