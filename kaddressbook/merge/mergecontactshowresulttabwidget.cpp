@@ -17,6 +17,9 @@
 
 
 #include "mergecontactshowresulttabwidget.h"
+#include "mergecontactinfowidget.h"
+#include <KABC/Addressee>
+
 #include <QTabBar>
 
 using namespace KABMergeContacts;
@@ -41,3 +44,16 @@ bool MergeContactShowResultTabWidget::tabBarVisible() const
     return tabBar()->isVisible();
 }
 
+void MergeContactShowResultTabWidget::setContacts(const Akonadi::Item::List &lstItem)
+{
+    clear();
+    Q_FOREACH(const Akonadi::Item &item, lstItem) {
+        if (item.hasPayload<KABC::Addressee>()) {
+            const KABC::Addressee address = item.payload<KABC::Addressee>();
+            MergeContactInfoWidget *infoWidget = new MergeContactInfoWidget;
+            infoWidget->setContact(item);
+            addTab(infoWidget, address.name());
+        }
+    }
+    updateTabWidget();
+}

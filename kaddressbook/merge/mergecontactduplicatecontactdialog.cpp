@@ -103,6 +103,6 @@ void MergeContactDuplicateContactDialog::slotDuplicateFound(const QList<Akonadi:
         mStackedWidget->setCurrentWidget(mNoDuplicateContactFound);
     } else {
         mStackedWidget->setCurrentWidget(mMergeContact);
-        //TODO
+        //TODO mMergeContact->setContacts(duplicate);
     }
 }
