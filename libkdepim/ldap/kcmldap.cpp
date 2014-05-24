@@ -50,7 +50,7 @@
 
 #include "addhostdialog_p.h"
 
-K_PLUGIN_FACTORY( KCMLdapFactory, registerPlugin<KCMLdap>(); )
+//K_PLUGIN_FACTORY( KCMLdapFactory, registerPlugin<KCMLdap>(); )
 K_EXPORT_PLUGIN( KCMLdapFactory( "kcmldap" ) )
 
 class LDAPItem : public QListWidgetItem
@@ -83,7 +83,7 @@ private:
 };
 
 KCMLdap::KCMLdap( QWidget *parent, const QVariantList& )
-    : KCModule( KCMLdapFactory::componentData(), parent )
+    : KCModule( /*KCMLdapFactory::componentData(),*/ parent )
 {
     setButtons(KCModule::Apply);
     K4AboutData *about = new K4AboutData( I18N_NOOP( "kcmldap" ), 0,
@@ -92,7 +92,7 @@ KCMLdap::KCMLdap( QWidget *parent, const QVariantList& )
                                         ki18n( "(c) 2009 - 2010 Tobias Koenig" ) );
 
     about->addAuthor( ki18n( "Tobias Koenig" ), KLocalizedString(), "tokoe@kde.org" );
-    setAboutData( about );
+    //QT5 setAboutData( about );
     mClientSearchConfig = new KLDAP::LdapClientSearchConfig;
     initGUI();
 

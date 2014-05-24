@@ -180,18 +180,17 @@ endif()
 
 ########### next target ###############
 
-#REACTIVATE
-#set( kcm_ldap_SRCS
-#     ldap/addhostdialog.cpp
-#     ldap/kcmldap.cpp
-#)
+set( kcm_ldap_SRCS
+     ldap/addhostdialog.cpp
+     ldap/kcmldap.cpp
+)
 
-#add_library(kcm_ldap MODULE ${kcm_ldap_SRCS})
+add_library(kcm_ldap MODULE ${kcm_ldap_SRCS})
 
-#target_link_libraries(kcm_ldap   kdepim)
+target_link_libraries(kcm_ldap   kdepim)
 
-#install(TARGETS kcm_ldap DESTINATION ${PLUGIN_INSTALL_DIR})
-#install(FILES ldap/kcmldap.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+install(TARGETS kcm_ldap DESTINATION ${PLUGIN_INSTALL_DIR})
+install(FILES ldap/kcmldap.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 
 ########### install files ###############
 
