@@ -20,13 +20,12 @@
 
 #include <QWidget>
 #include <QDateTime>
-#include "sendlater_export.h"
 
 class KTimeComboBox;
 class KDateComboBox;
 
 namespace SendLater {
-class SENDLATER_EXPORT SendLaterTimeDateWidget : public QWidget
+class SendLaterTimeDateWidget : public QWidget
 {
     Q_OBJECT
 public:
