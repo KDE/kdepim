@@ -75,9 +75,9 @@ void MergeContactDuplicateContactDialog::searchPotentialDuplicateContacts(const 
     } else if (list.count() < 2){
         mStackedWidget->setCurrentWidget(mNoEnoughContactSelected);
     } else {
-        //TODO
-        //SearchPotentialDuplicateContactJob *job = new SearchPotentialDuplicateContactJob(list, this);
-        //job->start();
+        SearchPotentialDuplicateContactJob *job = new SearchPotentialDuplicateContactJob(list, this);
+        connect(job,SIGNAL(finished(QList<Akonadi::Item::List>)), this, SLOT(slotDuplicateFound(QList<Akonadi::Item::List>)));
+        job->start();
     }
 }
 
@@ -97,7 +97,11 @@ void MergeContactDuplicateContactDialog::writeConfig()
     grp.sync();
 }
 
-void MergeContactDuplicateContactDialog::slotAddDuplicateContact()
+void MergeContactDuplicateContactDialog::slotDuplicateFound(const QList<Akonadi::Item::List> &duplicate)
 {
-    //TODO
+    if (duplicate.isEmpty()) {
+        mStackedWidget->setCurrentWidget(mNoDuplicateContactFound);
+    } else {
+        //TODO
+    }
 }
