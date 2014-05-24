@@ -8,6 +8,7 @@ include_directories(
 
 set(followupreminderagent_SRCS
     followupreminderagent.cpp
+    followupremindermanager.cpp
 )
 
 qt4_add_dbus_adaptor(followupreminderagent_SRCS org.freedesktop.Akonadi.FollowUpReminder.xml followupreminderagent.h FollowUpReminderAgent)
@@ -21,6 +22,7 @@ kde4_add_executable(akonadi_followupreminder_agent ${followupreminderagent_SRCS}
 target_link_libraries(akonadi_followupreminder_agent
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+  ${KDEPIMLIBS_KMIME_LIBS}
 )
 
 if (Q_WS_MAC)

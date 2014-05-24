@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,26 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLLOWUPREMINDERAGENT_H
-#define FOLLOWUPREMINDERAGENT_H
+#ifndef FOLLOWUPREMINDERMANAGER_H
+#define FOLLOWUPREMINDERMANAGER_H
 
-#include <akonadi/agentbase.h>
-class FollowUpReminderAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV3
+#include <QObject>
+
+class FollowUpReminderManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit FollowUpReminderAgent(const QString &id);
-    ~FollowUpReminderAgent();
-
-    void setEnableAgent(bool b);
-    bool enabledAgent() const;
-
-    void showConfigureDialog(qlonglong windowId = 0);
-
-    void itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection);
-
-public Q_SLOTS:
-    void configure( WId windowId );
+    explicit FollowUpReminderManager(QObject *parent = 0);
+    ~FollowUpReminderManager();
 };
 
-#endif // FOLLOWUPREMINDERAGENT_H
+#endif // FOLLOWUPREMINDERMANAGER_H

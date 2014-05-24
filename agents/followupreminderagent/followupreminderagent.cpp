@@ -22,7 +22,10 @@
 #include "followupreminderagentsettings.h"
 #include <KWindowSystem>
 #include <KLocale>
+#include <KMime/Message>
 
+#include <Akonadi/ChangeRecorder>
+#include <Akonadi/ItemFetchScope>
 #include <akonadi/dbusconnectionpool.h>
 
 #include <QPointer>
@@ -44,6 +47,10 @@ FollowUpReminderAgent::FollowUpReminderAgent(const QString &id)
         //QTimer::singleShot(1000*60*4, mManager, SLOT(load()));
 #endif
     }
+    changeRecorder()->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+    changeRecorder()->itemFetchScope().setCacheOnly(true);
+    changeRecorder()->fetchCollection( true );
+    changeRecorder()->setChangeRecordingEnabled( false );
 }
 
 FollowUpReminderAgent::~FollowUpReminderAgent()
@@ -68,6 +75,16 @@ void FollowUpReminderAgent::showConfigureDialog(qlonglong windowId)
 void FollowUpReminderAgent::configure( WId windowId )
 {
     //showConfigureDialog((qulonglong)windowId);
+}
+
+void FollowUpReminderAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
+{
+    if ( item.mimeType() != KMime::Message::mimeType() ) {
+        kDebug() << "MailFilterAgent::itemAdded called for a non-message item!";
+        return;
+    }
+    //TODO fetch to get messageid
+
 }
 
 
