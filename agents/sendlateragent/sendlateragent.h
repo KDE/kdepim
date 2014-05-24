@@ -19,7 +19,6 @@
 #define SENDLATERAGENT_H
 
 #include <akonadi/agentbase.h>
-#include "sendlaterdialog.h"
 
 class SendLaterManager;
 
