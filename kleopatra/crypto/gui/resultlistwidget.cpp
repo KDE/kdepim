@@ -119,7 +119,7 @@ ResultListWidget::~ResultListWidget()
         return;
     EMailOperationsPreferences prefs;
     prefs.setDecryptVerifyPopupGeometry( geometry() );
-    prefs.writeConfig();
+    prefs.save();
 }
 
 void ResultListWidget::Private::setupSingle()

@@ -1386,7 +1386,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
         iCal = part->asText();
       }
 
-      KMenu *menu = new KMenu();
+      QMenu *menu = new QMenu();
       QAction *open =
         menu->addAction( KIcon( QLatin1String("document-open") ), i18n( "Open Attachment" ) );
       QAction *saveas =

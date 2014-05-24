@@ -245,7 +245,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         return true;
       }
 
-      KMenu *menu = new KMenu();
+      QMenu *menu = new QMenu();
       QAction *open =
         menu->addAction( KIcon( QLatin1String("document-open") ), i18n( "View Business Card" ) );
       QAction *saveas =
