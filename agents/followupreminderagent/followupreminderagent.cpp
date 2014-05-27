@@ -25,9 +25,9 @@
 #include <KGlobal>
 #include <KMime/Message>
 
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/ItemFetchScope>
-#include <akonadi/dbusconnectionpool.h>
+#include <AkonadiCore/ChangeRecorder>
+#include <AkonadiCore/ItemFetchScope>
+#include <AkonadiCore/dbusconnectionpool.h>
 
 #include <QPointer>
 #include <QDebug>
@@ -81,7 +81,7 @@ void FollowUpReminderAgent::configure( WId windowId )
 void FollowUpReminderAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
     if ( item.mimeType() != KMime::Message::mimeType() ) {
-        kDebug() << "MailFilterAgent::itemAdded called for a non-message item!";
+        qDebug() << "MailFilterAgent::itemAdded called for a non-message item!";
         return;
     }
     //TODO fetch to get messageid
