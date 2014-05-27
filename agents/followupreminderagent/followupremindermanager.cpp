@@ -15,26 +15,16 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLLOWUPREMINDERAGENT_H
-#define FOLLOWUPREMINDERAGENT_H
+#include "followupremindermanager.h"
 
-#include <AkonadiAgentBase/agentbase.h>
-class FollowUpReminderAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV3
+FollowUpReminderManager::FollowUpReminderManager(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit FollowUpReminderAgent(const QString &id);
-    ~FollowUpReminderAgent();
+}
 
-    void setEnableAgent(bool b);
-    bool enabledAgent() const;
+FollowUpReminderManager::~FollowUpReminderManager()
+{
 
-    void showConfigureDialog(qlonglong windowId = 0);
+}
 
-    void itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection);
-
-public Q_SLOTS:
-    void configure( WId windowId );
-};
-
-#endif // FOLLOWUPREMINDERAGENT_H
+#include "followupremindermanager.moc"

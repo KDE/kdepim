@@ -34,7 +34,7 @@ public:
     ~MergeContactDuplicateContactDialog();
 
 private slots:
-    void slotAddDuplicateContact();
+    void slotDuplicateFound(const QList<Akonadi::Item::List> &duplicate);
 
 private:
     void searchPotentialDuplicateContacts(const Akonadi::Item::List &list);

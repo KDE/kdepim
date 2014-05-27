@@ -8,13 +8,15 @@ include_directories(
 
 set(followupreminderagent_SRCS
     followupreminderagent.cpp
+    followupremindermanager.cpp
+    followupreminderinfodialog.cpp
 )
 
 qt5_add_dbus_adaptor(followupreminderagent_SRCS org.freedesktop.Akonadi.FollowUpReminder.xml followupreminderagent.h FollowUpReminderAgent)
 
-#kconfig_add_kcfg_files(followupreminderagent_SRCS
-#    followupreminderagentsettings.kcfgc
-#)
+kconfig_add_kcfg_files(followupreminderagent_SRCS
+    followupreminderagentsettings.kcfgc
+)
 
 add_executable(akonadi_followupreminder_agent ${followupreminderagent_SRCS})
 

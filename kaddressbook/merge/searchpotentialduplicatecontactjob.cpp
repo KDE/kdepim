@@ -55,7 +55,8 @@ Akonadi::Item::List SearchPotentialDuplicateContactJob::checkList(const Akonadi:
     QList<Akonadi::Item> lst;
     if (!lstItem.isEmpty()) {
         Akonadi::Item firstItem = lstItem.at(0);
-        for (int j = 1; j < lstItem.count(); ++j) {
+        const int numberOfItems(lstItem.count());
+        for (int j = 1; j < numberOfItems; ++j) {
             if (isDuplicate(firstItem, mListItem.at(j))) {
                 lst.append(lstItem.at(j));
             } else {
@@ -66,20 +67,14 @@ Akonadi::Item::List SearchPotentialDuplicateContactJob::checkList(const Akonadi:
             lst.append(firstItem);
             mListDuplicate.append(lst);
         }
-
-        //qDebug()<<"not duplicate number"<<notDuplicate.count();
         qDebug()<<" duplicate number "<<lst.count();
     }
-    //qDebug()<<" notDuplicate.count"<<notDuplicate.count();
     return notDuplicate;
 }
 
 bool SearchPotentialDuplicateContactJob::isDuplicate(const Akonadi::Item &itemA, const Akonadi::Item &itemB)
 {
-    if (!itemA.hasPayload<KABC::Addressee>()) {
-        return false;
-    }
-    if (!itemB.hasPayload<KABC::Addressee>()) {
+    if (!itemA.hasPayload<KABC::Addressee>() || !itemB.hasPayload<KABC::Addressee>()) {
         return false;
     }
 

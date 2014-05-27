@@ -53,15 +53,7 @@ void MergeContactShowResultDialog::updateTabWidget()
 
 void MergeContactShowResultDialog::setContacts(const Akonadi::Item::List &lstItem)
 {
-    Q_FOREACH(const Akonadi::Item &item, lstItem) {
-        if (item.hasPayload<KABC::Addressee>()) {
-            const KABC::Addressee address = item.payload<KABC::Addressee>();
-            MergeContactInfoWidget *infoWidget = new MergeContactInfoWidget;
-            infoWidget->setContact(item);
-            mTabWidget->addTab(infoWidget, address.name());
-        }
-    }
-    updateTabWidget();
+    mTabWidget->setContacts(lstItem);
 }
 
 void MergeContactShowResultDialog::readConfig()

@@ -19,11 +19,15 @@
 #include "followupreminderagent.h"
 #include "followupreminderadaptor.h"
 //#include "followupreminderconfiguredialog.h"
-//#include "followupreminderagentsettings.h"
+#include "followupreminderagentsettings.h"
 #include <KWindowSystem>
 #include <KLocale>
 #include <KGlobal>
-#include <AkonadiCore/dbusconnectionpool.h>
+#include <KMime/Message>
+
+#include <Akonadi/ChangeRecorder>
+#include <Akonadi/ItemFetchScope>
+#include <akonadi/dbusconnectionpool.h>
 
 #include <QPointer>
 #include <QDebug>
@@ -37,13 +41,17 @@ FollowUpReminderAgent::FollowUpReminderAgent(const QString &id)
     new FollowUpReminderAgentAdaptor(this);
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/FollowUpReminder" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.FollowUpReminder" ) );
-    //if (FollowUpReminderAgentSettings::enabled()) {
+    if (FollowUpReminderAgentSettings::enabled()) {
 #ifdef DEBUG_FOLLOWUPREMINDERAGENT
         //QTimer::singleShot(1000, mManager, SLOT(load()));
 #else
         //QTimer::singleShot(1000*60*4, mManager, SLOT(load()));
 #endif
-    //}
+    }
+    changeRecorder()->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+    changeRecorder()->itemFetchScope().setCacheOnly(true);
+    changeRecorder()->fetchCollection( true );
+    changeRecorder()->setChangeRecordingEnabled( false );
 }
 
 FollowUpReminderAgent::~FollowUpReminderAgent()
@@ -52,13 +60,12 @@ FollowUpReminderAgent::~FollowUpReminderAgent()
 
 void FollowUpReminderAgent::setEnableAgent(bool b)
 {
-    //FollowUpReminderAgentSettings::self()->setEnabled(b);
+    FollowUpReminderAgentSettings::self()->setEnabled(b);
 }
 
 bool FollowUpReminderAgent::enabledAgent() const
 {
-    //return FollowUpReminderAgentSettings::self()->enabled();
-    return false;
+    return FollowUpReminderAgentSettings::self()->enabled();
 }
 
 void FollowUpReminderAgent::showConfigureDialog(qlonglong windowId)
@@ -69,6 +76,16 @@ void FollowUpReminderAgent::showConfigureDialog(qlonglong windowId)
 void FollowUpReminderAgent::configure( WId windowId )
 {
     //showConfigureDialog((qulonglong)windowId);
+}
+
+void FollowUpReminderAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
+{
+    if ( item.mimeType() != KMime::Message::mimeType() ) {
+        kDebug() << "MailFilterAgent::itemAdded called for a non-message item!";
+        return;
+    }
+    //TODO fetch to get messageid
+
 }
 
 
