@@ -22,7 +22,7 @@
 #include "sieveeditorabstractwidget.h"
 
 class QSplitter;
-class KTabWidget;
+class QTabWidget;
 
 namespace PimCommon {
 class PlainTextEditFindBar;

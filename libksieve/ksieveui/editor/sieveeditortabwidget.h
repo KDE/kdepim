@@ -19,11 +19,11 @@
 #ifndef SIEVEEDITORTABWIDGET_H
 #define SIEVEEDITORTABWIDGET_H
 
-#include <KTabWidget>
+#include <QTabWidget>
 
 namespace KSieveUi {
 class SieveEditorHelpHtmlWidget;
-class SieveEditorTabWidget : public KTabWidget
+class SieveEditorTabWidget : public QTabWidget
 {
     Q_OBJECT
 public:

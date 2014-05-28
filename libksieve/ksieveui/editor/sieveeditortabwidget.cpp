@@ -26,7 +26,7 @@
 
 using namespace KSieveUi;
 SieveEditorTabWidget::SieveEditorTabWidget(QWidget *parent)
-    : KTabWidget(parent)
+    : QTabWidget(parent)
 {
     setTabsClosable(true);
     connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(slotTabCloseRequested(int)));
@@ -92,17 +92,17 @@ void SieveEditorTabWidget::slotTitleChanged(KSieveUi::SieveEditorHelpHtmlWidget 
 void SieveEditorTabWidget::tabRemoved(int index)
 {
     if (count() <= 1) {
-        setTabBarHidden(true);
+        tabBar()->hide();
     }
-    KTabWidget::tabRemoved(index);
+    QTabWidget::tabRemoved(index);
 }
 
 void SieveEditorTabWidget::tabInserted(int index)
 {
     if (count()>1) {
-        setTabBarHidden(false);
+        tabBar()->show();
     }
-    KTabWidget::tabInserted(index);
+    QTabWidget::tabInserted(index);
     tabBar()->tabButton(0, QTabBar::RightSide)->setEnabled(false);
 }
 

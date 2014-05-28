@@ -18,10 +18,10 @@
 #ifndef SIEVESCRIPTTABWIDGET_H
 #define SIEVESCRIPTTABWIDGET_H
 
-#include <KTabWidget>
+#include <QTabWidget>
 
 namespace KSieveUi {
-class SieveScriptTabWidget : public KTabWidget
+class SieveScriptTabWidget : public QTabWidget
 {
     Q_OBJECT
 public:

@@ -22,7 +22,7 @@
 #include <KUrl>
 #include "ksieveui_export.h"
 
-class KTabWidget;
+class QTabWidget;
 class QStackedWidget;
 namespace KSieveUi {
 class VacationCreateScriptJob;
@@ -47,7 +47,7 @@ private:
     void readConfig();
     void writeConfig();
     QList<VacationCreateScriptJob *> mListCreateJob;
-    KTabWidget *mTabWidget;
+    QTabWidget *mTabWidget;
     QStackedWidget *mStackedWidget;
 };
 }

@@ -35,7 +35,7 @@
 #include <QSyntaxHighlighter>
 #include <QPlainTextEdit>
 #include <KDialog>
-class KTabWidget;
+class QTabWidget;
 
 namespace MessageViewer {
 class FindBarSourceView;
@@ -130,7 +130,7 @@ private:
     MailSourceViewTextBrowserWidget *mRawBrowser;
     FindBarSourceView *mFindBar;
 #ifndef NDEBUG
-    KTabWidget *mTabWidget;
+    QTabWidget *mTabWidget;
     MailSourceViewTextBrowserWidget *mHtmlBrowser;
 #endif
 };

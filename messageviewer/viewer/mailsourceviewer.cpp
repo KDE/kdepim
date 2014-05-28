@@ -41,7 +41,7 @@
 #include <KStandardAction>
 #include <kwindowsystem.h>
 #include <kglobalsettings.h>
-#include <KTabWidget>
+#include <QTabWidget>
 #include <KFileDialog>
 #include <KMessageBox>
 #include <QAction>
@@ -250,7 +250,7 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
     mRawBrowser = new MailSourceViewTextBrowserWidget();
 
 #ifndef NDEBUG
-    mTabWidget = new KTabWidget;
+    mTabWidget = new QTabWidget;
     layout->addWidget( mTabWidget );
 
     mTabWidget->addTab( mRawBrowser, i18nc( "Unchanged mail message", "Raw Source" ) );

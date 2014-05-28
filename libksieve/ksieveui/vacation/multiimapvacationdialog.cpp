@@ -25,10 +25,11 @@
 #include <KLocalizedString>
 #include <KSharedConfig>
 #include <kwindowsystem.h>
-#include <KTabWidget>
+#include <QTabWidget>
 #include <KIconLoader>
 #include <KUrl>
 #include <KGlobal>
+#include <QTabBar>
 
 #include <QApplication>
 #include <QStackedWidget>
@@ -46,7 +47,7 @@ MultiImapVacationDialog::MultiImapVacationDialog(QWidget *parent)
 
     mStackedWidget = new QStackedWidget;
     setMainWidget(mStackedWidget);
-    mTabWidget = new KTabWidget;
+    mTabWidget = new QTabWidget;
     mStackedWidget->addWidget(mTabWidget);
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
@@ -109,7 +110,7 @@ void MultiImapVacationDialog::init()
         setButtons( Close );
     }
     if (mTabWidget->count() <= 1)
-        mTabWidget->setTabBarHidden(true);
+        mTabWidget->tabBar()->hide();
 }
 
 void MultiImapVacationDialog::createPage(const QString &serverName, const KUrl &url)

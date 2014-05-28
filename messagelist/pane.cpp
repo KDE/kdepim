@@ -117,7 +117,7 @@ using namespace MessageList;
 
 
 Pane::Pane( bool restoreSession, QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWidget *parent )
-    : KTabWidget( parent ), d( new Private( this ) )
+    : QTabWidget( parent ), d( new Private( this ) )
 {
     setDocumentMode( true );
     d->mModel = model;
@@ -617,7 +617,7 @@ bool Pane::eventFilter( QObject *object, QEvent *event )
             return true;
         }
     }
-    return KTabWidget::eventFilter( object, event );
+    return QTabWidget::eventFilter( object, event );
 }
 
 void Pane::Private::onCurrentTabChanged()

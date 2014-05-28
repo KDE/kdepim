@@ -27,7 +27,7 @@
 namespace KSieveUi {
 
 SieveScriptTabWidget::SieveScriptTabWidget(QWidget *parent)
-    : KTabWidget(parent)
+    : QTabWidget(parent)
 {
     setElideMode( Qt::ElideRight );
     tabBar()->setSelectionBehaviorOnRemove( QTabBar::SelectPreviousTab );

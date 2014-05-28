@@ -39,7 +39,7 @@
 
 #include <KLocalizedString>
 #include <KSharedConfig>
-#include <KTabWidget>
+#include <QTabWidget>
 #include <KGlobal>
 
 #include <QSplitter>
@@ -87,7 +87,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mTextEdit = new SieveTextEdit;
     connect(mTextEdit, SIGNAL(textChanged()), this, SIGNAL(valueChanged()));
     mTabWidget->addTab(mTextEdit, i18n("Editor"));
-    mTabWidget->setTabBarHidden(true);
+    mTabWidget->tabBar()->hide();
     textEditLayout->addWidget(mTabWidget);
     connect(mTextEdit, SIGNAL(openHelp(QString,QString)), mTabWidget, SLOT(slotAddHelpPage(QString,QString)));
 
