@@ -28,7 +28,7 @@
 #include <QAction>
 
 SieveEditorTabWidget::SieveEditorTabWidget(QWidget *parent)
-    : KTabWidget(parent)
+    : QTabWidget(parent)
 {
     setMovable(true);
     setTabsClosable(true);

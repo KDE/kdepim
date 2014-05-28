@@ -27,7 +27,7 @@
 #include <KLocalizedString>
 
 #include <KSharedConfig>
-#include <KTabWidget>
+#include <QTabWidget>
 #include <KGlobalSettings>
 #include <KColorScheme>
 #include <KMessageBox>
@@ -161,7 +161,7 @@ bool SieveEditorMainWidget::needToSaveScript()
     return scriptSaved;
 }
 
-KTabWidget *SieveEditorMainWidget::tabWidget() const
+QTabWidget *SieveEditorMainWidget::tabWidget() const
 {
     return mTabWidget;
 }
@@ -184,7 +184,7 @@ void SieveEditorMainWidget::slotScriptModified(bool modified,SieveEditorPageWidg
         if (!mScriptColor.isValid()) {
             slotGeneralPaletteChanged();
         }
-        mTabWidget->setTabTextColor(index, modified ? mModifiedScriptColor : mScriptColor);
+        mTabWidget->tabBar()->setTabTextColor(index, modified ? mModifiedScriptColor : mScriptColor);
     }
 }
 

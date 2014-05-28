@@ -28,7 +28,7 @@
 
 #include <KFileDialog>
 #include <KLocalizedString>
-#include <KTabWidget>
+#include <QTabWidget>
 #include <KTextEdit>
 #include <AkonadiCore/ServerManager>
 
@@ -58,7 +58,7 @@ DebugWidget::DebugWidget( QWidget *parent )
   splitter->setObjectName( "debugSplitter" );
   layout->addWidget( splitter );
 
-  mConnectionPages = new KTabWidget( splitter );
+  mConnectionPages = new QTabWidget( splitter );
   mConnectionPages->setTabsClosable( true );
 
   mGeneralView = new KTextEdit( splitter );

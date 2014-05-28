@@ -35,7 +35,7 @@
 #include <KActionCollection>
 #include <QAction>
 #include <KStatusBar>
-#include <KTabWidget>
+#include <QTabWidget>
 #include <QIcon>
 
 #include <QPointer>

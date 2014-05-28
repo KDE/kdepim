@@ -26,7 +26,7 @@
 using namespace GrantleeThemeEditor;
 
 ThemeEditorTabWidget::ThemeEditorTabWidget(QWidget *parent)
-    : KTabWidget(parent)
+    : QTabWidget(parent)
 {
     setElideMode( Qt::ElideRight );
     tabBar()->setSelectionBehaviorOnRemove( QTabBar::SelectPreviousTab );

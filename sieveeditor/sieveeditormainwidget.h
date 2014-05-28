@@ -24,7 +24,7 @@
 #include <QSplitter>
 #include <KUrl>
 #include "ksieveui/editor/sieveeditorwidget.h"
-class KTabWidget;
+class QTabWidget;
 class SieveEditorTabWidget;
 class SieveEditorScriptManagerWidget;
 class SieveEditorPageWidget;
@@ -44,7 +44,7 @@ public:
     void saveScript();
     bool needToSaveScript();
 
-    KTabWidget *tabWidget() const;
+    QTabWidget *tabWidget() const;
 
     KSieveUi::SieveEditorWidget::EditorMode pageMode() const;
 public Q_SLOTS:
