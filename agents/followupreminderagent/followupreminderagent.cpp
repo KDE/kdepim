@@ -17,6 +17,7 @@
 
 
 #include "followupreminderagent.h"
+#include "followupremindermanager.h"
 #include "followupreminderadaptor.h"
 //#include "followupreminderconfiguredialog.h"
 #include "followupreminderagentsettings.h"
@@ -32,8 +33,6 @@
 #include <QPointer>
 #include <QDebug>
 
-//#define DEBUG_FOLLOWUPREMINDERAGENT 1
-
 FollowUpReminderAgent::FollowUpReminderAgent(const QString &id)
     : Akonadi::AgentBase( id )
 {
@@ -41,12 +40,9 @@ FollowUpReminderAgent::FollowUpReminderAgent(const QString &id)
     new FollowUpReminderAgentAdaptor(this);
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/FollowUpReminder" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.FollowUpReminder" ) );
+    mManager = new FollowUpReminderManager(this);
     if (FollowUpReminderAgentSettings::enabled()) {
-#ifdef DEBUG_FOLLOWUPREMINDERAGENT
-        //QTimer::singleShot(1000, mManager, SLOT(load()));
-#else
-        //QTimer::singleShot(1000*60*4, mManager, SLOT(load()));
-#endif
+        mManager->load();
     }
     changeRecorder()->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
     changeRecorder()->itemFetchScope().setCacheOnly(true);
