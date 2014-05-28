@@ -27,4 +27,9 @@ FollowUpReminderManager::~FollowUpReminderManager()
 
 }
 
+void FollowUpReminderManager::load()
+{
+
+}
+
 #include "followupremindermanager.moc"

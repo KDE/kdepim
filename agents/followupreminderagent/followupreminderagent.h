@@ -19,6 +19,7 @@
 #define FOLLOWUPREMINDERAGENT_H
 
 #include <akonadi/agentbase.h>
+class FollowUpReminderManager;
 class FollowUpReminderAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV3
 {
     Q_OBJECT
@@ -35,6 +36,9 @@ public:
 
 public Q_SLOTS:
     void configure( WId windowId );
+
+private:
+    FollowUpReminderManager *mManager;
 };
 
 #endif // FOLLOWUPREMINDERAGENT_H

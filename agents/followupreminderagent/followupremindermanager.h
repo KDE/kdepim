@@ -26,6 +26,8 @@ class FollowUpReminderManager : public QObject
 public:
     explicit FollowUpReminderManager(QObject *parent = 0);
     ~FollowUpReminderManager();
+
+    void load();
 };
 
 #endif // FOLLOWUPREMINDERMANAGER_H
