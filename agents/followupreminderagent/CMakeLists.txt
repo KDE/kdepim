@@ -2,6 +2,8 @@ project(followupreminderagent)
 
 kde_enable_exceptions()
 
+add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_followupreminder_agent\")
+
 include_directories(
    ${CMAKE_SOURCE_DIR}/messagecomposer/
 )

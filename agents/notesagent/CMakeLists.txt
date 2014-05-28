@@ -1,10 +1,13 @@
 project(notesagent)
+kde_enable_exceptions()
 
 include_directories(
    ${CMAKE_SOURCE_DIR}/noteshared
    ${CMAKE_BINARY_DIR}/noteshared
    ${CMAKE_SOURCE_DIR}/pimcommon
 )
+
+add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_notes_agent\")
 
 set(notesagent_SRCS
     notesagent.cpp
@@ -20,8 +23,6 @@ kconfig_add_kcfg_files(notesagent_SRCS
 
 
 qt5_add_dbus_adaptor(notesagent_SRCS org.freedesktop.Akonadi.NotesAgent.xml notesagent.h NotesAgent)
-
-kde_enable_exceptions()
 
 add_executable(akonadi_notes_agent ${notesagent_SRCS})
 
