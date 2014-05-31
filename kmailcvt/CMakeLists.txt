@@ -19,7 +19,7 @@ set(kmailcvt_SRCS
 include_directories(${Boost_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/mailimporter ${CMAKE_SOURCE_DIR}/mailcommon ${CMAKE_SOURCE_DIR}/messagecomposer)
 kde_enable_exceptions()
 
-qt5_wrap_ui(kmailcvt_SRCS ui/kselfilterpagedlg.ui ui/kimportpagedlg.ui)
+ki18n_wrap_ui(kmailcvt_SRCS ui/kselfilterpagedlg.ui ui/kimportpagedlg.ui)
 
 kde4_add_app_icon(kmailcvt_SRCS "icons/hi*-app-kmailcvt.png")
 add_executable(kmailcvt ${kmailcvt_SRCS})

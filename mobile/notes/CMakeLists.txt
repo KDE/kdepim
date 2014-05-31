@@ -18,7 +18,7 @@ set(notes_mobile_SRCS
   searchwidget.cpp
 )
 
-qt5_wrap_ui(notes_mobile_SRCS searchwidget.ui)
+ki18n_wrap_ui(notes_mobile_SRCS searchwidget.ui)
 
 if(RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)

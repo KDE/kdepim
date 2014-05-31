@@ -22,7 +22,7 @@ set(ktnef_SRCS
 
 kde4_add_app_icon(ktnef_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/pics/hi*-app-ktnef.png")
 
-qt5_wrap_ui(ktnef_SRCS ui/attachpropertywidgetbase.ui)
+ki18n_wrap_ui(ktnef_SRCS ui/attachpropertywidgetbase.ui)
 
 add_executable(ktnef ${ktnef_SRCS})
 target_link_libraries(ktnef KF5::Tnef KF5::KIOCore KF5::KDELibs4Support)

@@ -16,7 +16,7 @@ if(BUILD_libkleopatraclient)
     cryptooperationsconfigpage.cpp
   )
 
-  qt5_wrap_ui(_kcm_kleopatra_libkleopatraclient_extra_SRCS
+  ki18n_wrap_ui(_kcm_kleopatra_libkleopatraclient_extra_SRCS
     smimevalidationconfigurationwidget.ui
     cryptooperationsconfigwidget.ui
   )
@@ -51,7 +51,7 @@ set(kcm_kleopatra_PART_SRCS
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5152)
 
-qt5_wrap_ui(kcm_kleopatra_PART_SRCS
+ki18n_wrap_ui(kcm_kleopatra_PART_SRCS
   appearanceconfigwidget.ui
   smimevalidationconfigurationwidget.ui
 )

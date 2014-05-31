@@ -68,7 +68,7 @@ include_directories(${CMAKE_SOURCE_DIR}/mailimporter
 
 kde_enable_exceptions()
 
-qt5_wrap_ui(importwizard_SRCS 
+ki18n_wrap_ui(importwizard_SRCS 
                   ui/selectprogrampage.ui
                   ui/importaddressbookpage.ui
                   ui/importfilterpage.ui

@@ -76,7 +76,7 @@ set(incidenceeditors_ng_desktop_LIB_SRCS
   visualfreebusywidget.cpp
 )
 
-qt5_wrap_ui(incidenceeditors_ng_desktop_LIB_SRCS
+ki18n_wrap_ui(incidenceeditors_ng_desktop_LIB_SRCS
   categoryeditdialog_base.ui
   categoryselectdialog_base.ui
   categorydialog_base.ui
@@ -114,7 +114,7 @@ install(TARGETS incidenceeditorsng ${INSTALL_TARGETS_DEFAULT_ARGS})
     ${incidenceeditors_ng_shared_LIB_SRCS}
   )
 
-  qt5_wrap_ui(incidenceeditors_ng_mobile_LIB_SRCS
+  ki18n_wrap_ui(incidenceeditors_ng_mobile_LIB_SRCS
     categoryeditdialog_base.ui
     categoryselectdialog_base.ui
     categorydialog_base.ui

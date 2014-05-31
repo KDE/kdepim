@@ -44,7 +44,7 @@ set(calendarsupport_LIB_SRCS
   next/incidenceviewer.cpp
 )
 
-qt5_wrap_ui(calendarsupport_LIB_SRCS
+ki18n_wrap_ui(calendarsupport_LIB_SRCS
   printing/calprintdayconfig_base.ui
   printing/calprintincidenceconfig_base.ui
   printing/calprintjournalconfig_base.ui

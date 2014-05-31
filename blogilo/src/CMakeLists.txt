@@ -37,7 +37,7 @@ set(blogilo_SRCS
 )
 
 
-qt5_wrap_ui(
+ki18n_wrap_ui(
    blogilo_SRCS
   ui/toolboxbase.ui
   ui/addeditblogbase.ui

@@ -22,7 +22,7 @@ set(akonadi_mailfilter_agent_SRCS
 qt5_add_dbus_adaptor(akonadi_mailfilter_agent_SRCS org.freedesktop.Akonadi.MailFilterAgent.xml mailfilteragent.h MailFilterAgent)
 
 #kconfig_add_kcfg_files(akonadi_mailfilter_agent_SRCS settings.kcfgc)
-#qt5_wrap_ui(akonadi_mailfilter_agent_SRCS configdialog.ui)
+#ki18n_wrap_ui(akonadi_mailfilter_agent_SRCS configdialog.ui)
 
 add_executable(akonadi_mailfilter_agent ${akonadi_mailfilter_agent_SRCS})
 

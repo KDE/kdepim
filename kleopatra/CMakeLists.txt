@@ -124,7 +124,7 @@ else()
   set(_kleopatra_uiserver_SRCS)
 endif()
 
-qt5_wrap_ui(_kleopatra_uiserver_SRCS crypto/gui/signingcertificateselectionwidget.ui)
+ki18n_wrap_ui(_kleopatra_uiserver_SRCS crypto/gui/signingcertificateselectionwidget.ui)
 
 set(_kleopatra_SRCS
   utils/gnupg-helper.cpp
@@ -290,7 +290,7 @@ if(KLEO_MODEL_TEST)
   set(_kleopatra_SRCS ${_kleopatra_SRCS} models/modeltest.cpp)
 endif()
 
-qt5_wrap_ui(_kleopatra_SRCS
+ki18n_wrap_ui(_kleopatra_SRCS
   dialogs/certificationoptionswidget.ui
   dialogs/expirydialog.ui
   dialogs/lookupcertificatesdialog.ui

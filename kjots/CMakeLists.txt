@@ -26,7 +26,7 @@ set(kjots_config_SRCS kjotsconfigdlg.cpp)
 
 kconfig_add_kcfg_files(kjots_config_SRCS KJotsSettings.kcfgc )
 
-qt5_wrap_ui(kjots_config_SRCS confpagemisc.ui)
+ki18n_wrap_ui(kjots_config_SRCS confpagemisc.ui)
 
 
 set (kjots_common_SRCS

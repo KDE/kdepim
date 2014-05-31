@@ -94,7 +94,7 @@ set(libkleo_ui_SRCS    # make this a separate lib.
     ui/keyapprovaldialog.cpp
     )
 
-qt5_wrap_ui(libkleo_ui_common_SRCS
+ki18n_wrap_ui(libkleo_ui_common_SRCS
     ui/directoryserviceswidget.ui
 )
 

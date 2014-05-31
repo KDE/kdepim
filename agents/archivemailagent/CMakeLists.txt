@@ -28,7 +28,7 @@ qt5_add_dbus_adaptor(archivemailagent_SRCS org.freedesktop.Akonadi.ArchiveMailAg
 
 kde_enable_exceptions()
 
-qt5_wrap_ui(archivemailagent_SRCS ui/archivemailwidget.ui )
+ki18n_wrap_ui(archivemailagent_SRCS ui/archivemailwidget.ui )
 
 add_executable(akonadi_archivemail_agent ${archivemailagent_SRCS})
 

@@ -42,7 +42,7 @@ set(kab_mobile_srcs
   searchwidget.cpp
 )
 
-qt5_wrap_ui(kab_mobile_srcs
+ki18n_wrap_ui(kab_mobile_srcs
   editorbusiness.ui
   editorcontactgroup.ui
   editorcrypto.ui
@@ -56,7 +56,7 @@ qt5_wrap_ui(kab_mobile_srcs
   editormore_personalpage.ui
 )
 
-qt5_wrap_ui(kab_mobile_srcs configwidget.ui searchwidget.ui)
+ki18n_wrap_ui(kab_mobile_srcs configwidget.ui searchwidget.ui)
 kconfig_add_kcfg_files(kab_mobile_srcs settings.kcfgc)
 
 if (RUNTIME_PLUGINS_STATIC)

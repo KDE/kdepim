@@ -35,7 +35,7 @@ set(sieveeditor_SRCS
   sieveeditorconfigureserverpage.cpp
 )
 
-qt5_wrap_ui(sieveeditor_SRCS
+ki18n_wrap_ui(sieveeditor_SRCS
     ui/serversievesettings.ui
     ui/sieveeditorconfigureserverwidget.ui
 )

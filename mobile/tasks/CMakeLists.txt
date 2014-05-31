@@ -22,7 +22,7 @@ set(mobile_tasks_SRCS
   main.cpp
 )
 
-qt5_wrap_ui(mobile_tasks_SRCS configwidget.ui searchwidget.ui)
+ki18n_wrap_ui(mobile_tasks_SRCS configwidget.ui searchwidget.ui)
 kconfig_add_kcfg_files(mobile_tasks_SRCS settings.kcfgc)
 
 if (RUNTIME_PLUGINS_STATIC)

@@ -14,7 +14,7 @@ set(_kgpgconf_SRCS
   mainwindow.cpp
 )
 
-qt5_wrap_ui(_kgpgconf_SRCS mainwidget.ui)
+ki18n_wrap_ui(_kgpgconf_SRCS mainwidget.ui)
 
 # todo: more appropriate icon?
 kde4_add_app_icon(_kgpgconf_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/preferences-desktop-cryptography.png")

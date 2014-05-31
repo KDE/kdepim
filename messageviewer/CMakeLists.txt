@@ -178,7 +178,7 @@ kconfig_add_kcfg_files(libmessageviewer_SRCS
   settings/globalsettings_base.kcfgc
 )
 
-qt5_wrap_ui(libmessageviewer_SRCS
+ki18n_wrap_ui(libmessageviewer_SRCS
   ui/settings.ui
   ui/invitationsettings.ui
   ui/printingsettings.ui

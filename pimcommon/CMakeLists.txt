@@ -181,7 +181,7 @@ set(libpimcommon_SRCS
   ${libpimcommon_widgets_SRCS}
 )
 
-qt5_wrap_ui(libpimcommon_SRCS
+ki18n_wrap_ui(libpimcommon_SRCS
      autocorrection/ui/autocorrectionwidget.ui
 )
 

@@ -12,7 +12,7 @@ include_directories(
   ${Boost_INCLUDE_DIRS}
 )
 
-qt5_wrap_ui(mailreader_SRCS mailreaderview.ui prefs_base.ui prefs_messagelist.ui)
+ki18n_wrap_ui(mailreader_SRCS mailreaderview.ui prefs_base.ui prefs_messagelist.ui)
 
 kconfig_add_kcfg_files(mailreader_SRCS settings.kcfgc)
 

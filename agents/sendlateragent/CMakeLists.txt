@@ -22,7 +22,7 @@ kconfig_add_kcfg_files(sendlaterlib_SRCS
     settings/sendlateragentsettings.kcfgc 
   )
 
-qt5_wrap_ui(sendlaterlib_SRCS ui/sendlaterwidget.ui)
+ki18n_wrap_ui(sendlaterlib_SRCS ui/sendlaterwidget.ui)
 
 
 add_library( sendlater ${LIBRARY_TYPE} ${sendlaterlib_SRCS} )
@@ -43,7 +43,7 @@ set(sendlateragent_SRCS
 
 qt5_add_dbus_adaptor(sendlateragent_SRCS org.freedesktop.Akonadi.SendLaterAgent.xml sendlateragent.h SendLaterAgent)
 
-qt5_wrap_ui(sendlateragent_SRCS ui/sendlaterconfigurewidget.ui)
+ki18n_wrap_ui(sendlateragent_SRCS ui/sendlaterconfigurewidget.ui)
 
 add_executable(akonadi_sendlater_agent ${sendlateragent_SRCS})
 

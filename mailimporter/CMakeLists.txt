@@ -33,7 +33,7 @@ set(libmailimporter_SRCS
 
 include_directories(${Boost_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/libkdepim)
 
-qt5_wrap_ui(libmailimporter_SRCS ui/importmailswidget.ui ui/selectthunderbirdprofilewidget.ui)
+ki18n_wrap_ui(libmailimporter_SRCS ui/importmailswidget.ui ui/selectthunderbirdprofilewidget.ui)
 
 add_library(mailimporter ${LIBRARY_TYPE} ${libmailimporter_SRCS})
 target_link_libraries(mailimporter

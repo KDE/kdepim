@@ -52,7 +52,7 @@ kconfig_add_kcfg_files(libcomposereditor_ng_SRCS
 )
 
 
-qt5_wrap_ui(libcomposereditor_ng_SRCS ui/pagecolorbackgroundwidget.ui )
+ki18n_wrap_ui(libcomposereditor_ng_SRCS ui/pagecolorbackgroundwidget.ui )
 
 
 add_library(composereditorng ${LIBRARY_TYPE} ${libcomposereditor_ng_SRCS})

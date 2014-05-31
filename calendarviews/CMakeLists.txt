@@ -88,7 +88,7 @@ set(eventviews_LIB_SRCS
 
 kconfig_add_kcfg_files(eventviews_LIB_SRCS prefs_base.kcfgc)
 
-qt5_wrap_ui(eventviews_LIB_SRCS
+ki18n_wrap_ui(eventviews_LIB_SRCS
   agenda/timescaleedit_base.ui
 )
 

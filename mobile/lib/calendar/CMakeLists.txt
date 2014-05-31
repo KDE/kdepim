@@ -18,7 +18,7 @@ set(mobileui_calendar_SRCS
 
 kde_enable_exceptions()
 
-qt5_wrap_ui(mobileui_calendar_SRCS
+ki18n_wrap_ui(mobileui_calendar_SRCS
   ${CMAKE_SOURCE_DIR}/incidenceeditor-ng/dialogmobile.ui
   ${CMAKE_SOURCE_DIR}/incidenceeditor-ng/dialogmoremobile.ui
 )

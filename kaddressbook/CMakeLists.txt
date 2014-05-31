@@ -51,7 +51,7 @@ set(kaddressbook_printing_SRCS
   printing/stylepage.cpp
 )
 
-qt5_wrap_ui(kaddressbook_printing_SRCS
+ki18n_wrap_ui(kaddressbook_printing_SRCS
   printing/ringbinder/rbs_appearance.ui
   printing/detailled/ds_appearance.ui
   printing/compact/compactstyle.ui

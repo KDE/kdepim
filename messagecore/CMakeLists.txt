@@ -56,7 +56,7 @@ kconfig_add_kcfg_files(messagecore_LIB_SRCS
   settings/globalsettings_base.kcfgc
 )
 
-qt5_wrap_ui(messagecore_LIB_SRCS
+ki18n_wrap_ui(messagecore_LIB_SRCS
   attachment/ui/attachmentpropertiesdialog.ui
   attachment/ui/attachmentpropertiesdialog_readonly.ui
 )

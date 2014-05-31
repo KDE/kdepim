@@ -35,7 +35,7 @@ kconfig_add_kcfg_files(templateparser_LIB_SRCS
   settings/globalsettings_base.kcfgc
 )
 
-qt5_wrap_ui(templateparser_LIB_SRCS
+ki18n_wrap_ui(templateparser_LIB_SRCS
   ui/templatesconfiguration_base.ui
   ui/customtemplates_base.ui
 )

@@ -27,7 +27,7 @@ kconfig_add_kcfg_files(libgrantleethemeeditor_SRCS
   settings/globalsettings_base.kcfgc
 )
 
-qt5_wrap_ui(libgrantleethemeeditor_SRCS
+ki18n_wrap_ui(libgrantleethemeeditor_SRCS
     ui/configurewidget.ui
 )
 

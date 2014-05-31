@@ -11,7 +11,7 @@ set(mboximporter_SRCS
   mboximportkernel.cpp
 )
 
-qt5_wrap_ui(mboximporter_SRCS 
+ki18n_wrap_ui(mboximporter_SRCS 
                   ui/mboximportwidget.ui
 )
 

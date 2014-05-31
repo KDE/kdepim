@@ -93,7 +93,7 @@ set( messagecomposer_src
      settings/messagecomposersettings.cpp
 )
 
-qt5_wrap_ui(messagecomposer_src
+ki18n_wrap_ui(messagecomposer_src
      imagescaling/ui/imagescalingwidget.ui
 )
 

@@ -171,7 +171,7 @@ qt5_add_dbus_interfaces(libmailcommon_SRCS
   ${CMAKE_SOURCE_DIR}/agents/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml
 )
 
-qt5_wrap_ui(libmailcommon_SRCS filter/ui/filterconfigwidget.ui snippets/ui/snippetdialog.ui filter/ui/selectthunderbirdfilterfileswidget.ui)
+ki18n_wrap_ui(libmailcommon_SRCS filter/ui/filterconfigwidget.ui snippets/ui/snippetdialog.ui filter/ui/selectthunderbirdfilterfileswidget.ui)
 
 set(libmailcommon_SRCS ${libmailcommon_SRCS} filter/soundtestwidget.cpp)
 
