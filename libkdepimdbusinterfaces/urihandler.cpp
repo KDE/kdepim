@@ -26,7 +26,7 @@
 #include "urihandler.h"
 #include <kmailinterface.h>
 #include <korganizerinterface.h>
-#include <Akonadi/Contact/contacteditordialog.h>
+#include <Akonadi/Contact/ContactEditorDialog>
 
 #include <kiconloader.h>
 #include <krun.h>
