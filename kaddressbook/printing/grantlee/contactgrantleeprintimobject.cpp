@@ -16,7 +16,7 @@
 */
 
 #include "contactgrantleeprintimobject.h"
-#include "Akonadi/Contact/improtocols.h"
+#include "akonadi/contact/improtocols.h"
 
 using namespace KABPrinting;
 ContactGrantleePrintImObject::ContactGrantleePrintImObject(const QString &type, const QString &address, QObject *parent)

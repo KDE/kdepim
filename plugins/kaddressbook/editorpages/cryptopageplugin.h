@@ -24,7 +24,7 @@
 #ifndef CRYPTOPAGEPLUGIN_H
 #define CRYPTOPAGEPLUGIN_H
 
-#include <Akonadi/Contact/contacteditorpageplugin.h>
+#include <Akonadi/Contact/ContactEditorPagePlugin>
 
 namespace Kleo {
 class KeyRequester;

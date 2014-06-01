@@ -28,7 +28,7 @@
 
 #include <CollectionFetchJob>
 #include <ItemFetchScope>
-#include <Akonadi/Calendar/calendarbase.h>
+#include <Akonadi/Calendar/CalendarBase>
 
 #include <KCalUtils/IncidenceFormatter>
 
