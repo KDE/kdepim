@@ -19,17 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#include "mailplugin.h"
-
-#include <qdeclarative.h>
-#include <folderlist.h>
 #include <message.h>
 
-void MailPlugin::registerTypes(const char *uri)
+Message::Message(QObject* parent): QObject(parent)
 {
-    Q_ASSERT(uri == QLatinString("org.kde.pim.mail"));
-    qmlRegisterType<FolderList>(uri, 0, 1, "FolderList");
-    qmlRegisterType<Message>(uri, 0, 1, "Message");
-}
 
-Q_EXPORT_PLUGIN2(mailplugin, MailPlugin);
+}

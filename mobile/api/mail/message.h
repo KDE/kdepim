@@ -19,17 +19,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#include "mailplugin.h"
+#ifndef MESSAGE_H
+#define MESSAGE_H
 
-#include <qdeclarative.h>
-#include <folderlist.h>
-#include <message.h>
+#include <QObject>
 
-void MailPlugin::registerTypes(const char *uri)
+class Message : public QObject
 {
-    Q_ASSERT(uri == QLatinString("org.kde.pim.mail"));
-    qmlRegisterType<FolderList>(uri, 0, 1, "FolderList");
-    qmlRegisterType<Message>(uri, 0, 1, "Message");
-}
+    Q_OBJECT
 
-Q_EXPORT_PLUGIN2(mailplugin, MailPlugin);
+public:
+    explicit Message( QObject *parten = 0 );
+};
+
+
+#endif //MESSAGE_H

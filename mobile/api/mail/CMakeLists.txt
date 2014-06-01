@@ -3,6 +3,7 @@ project(mail)
 set(mail_SRCS
     mailplugin.cpp
     folderlist.cpp
+    message.cpp
 )
 
 INCLUDE_DIRECTORIES(
