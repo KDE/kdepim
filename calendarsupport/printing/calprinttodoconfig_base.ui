@@ -36,7 +36,7 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item>
-      <widget class="KLineEdit" name="mTitle">
+      <widget class="QLineEdit" name="mTitle">
        <property name="toolTip">
         <string>Name for this to-do list</string>
        </property>
@@ -449,11 +449,6 @@ p, li { white-space: pre-wrap; }
    <class>KComboBox</class>
    <extends>QComboBox</extends>
    <header>kcombobox.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

@@ -274,7 +274,7 @@ TodoView::TodoView( const EventViews::PrefsPtr &prefs,
            SLOT(selectionChanged(QItemSelection,QItemSelection)) );
 
   mQuickAdd = new TodoViewQuickAddLine( this );
-  mQuickAdd->setClearButtonShown( true );
+  mQuickAdd->setClearButtonEnabled( true );
   mQuickAdd->setVisible( preferences()->enableQuickTodo() );
   connect( mQuickAdd, SIGNAL(returnPressed(Qt::KeyboardModifiers)),
            this, SLOT(addQuickTodo(Qt::KeyboardModifiers)) );
