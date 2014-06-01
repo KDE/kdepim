@@ -3,7 +3,7 @@ project(kdepim)
 cmake_minimum_required(VERSION 2.8.12)
 
 # we need some parts of the ECM CMake helpers
-find_package (ECM 0.0.13 REQUIRED NO_MODULE)
+find_package(ECM 0.0.14 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${kdepim_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
 include(ECMOptionalAddSubdirectory)
 include(ECMInstallIcons)
