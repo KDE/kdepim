@@ -34,7 +34,7 @@ class Message : public QObject
     Q_PROPERTY(QString textContent READ textContent NOTIFY messageChanged)
 
 public:
-    explicit Message( QObject *parten = 0 );
+    explicit Message( QObject *parent = 0 );
 
     QString subject() const;
     QString from() const;
