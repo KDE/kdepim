@@ -246,7 +246,7 @@ void CustomTemplates::save()
         t.setType( it->customType() );
         t.setTo( it->to() );
         t.setCC( it->cc() );
-        t.writeConfig();
+        t.save();
         ++lit;
     }
 

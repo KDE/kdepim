@@ -232,7 +232,7 @@ void TemplatesConfiguration::saveToIdentity( uint id )
     t.setTemplateReplyAll( strOrBlank( textEdit_reply_all->toPlainText() ) );
     t.setTemplateForward( strOrBlank( textEdit_forward->toPlainText() ) );
     t.setQuoteString( lineEdit_quote->text() );
-    t.writeConfig();
+    t.save();
 }
 
 void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
@@ -318,7 +318,7 @@ void TemplatesConfiguration::saveToFolder( const QString &id )
     t.setTemplateReplyAll( strOrBlank( textEdit_reply_all->toPlainText() ) );
     t.setTemplateForward( strOrBlank( textEdit_forward->toPlainText() ) );
     t.setQuoteString( lineEdit_quote->text() );
-    t.writeConfig();
+    t.save();
 }
 
 QTextEdit *TemplatesConfiguration::currentTextEdit() const
