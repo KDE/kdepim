@@ -21,7 +21,59 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <message.h>
 
+#include <Akonadi/ItemFetchScope>
+#include <KMime/Message>
+
+#include <KMimeType>
+#include <KUrl>
+
 Message::Message(QObject* parent): QObject(parent)
 {
 
 }
+
+QString Message::subject() const
+{
+    return m_subject;
+}
+
+QString Message::from() const
+{
+    return m_from;
+}
+
+QString Message::textContent() const
+{
+    return m_textContent;
+}
+
+void Message::loadMessage(const QString &id)
+{
+    m_akonadiId = id;
+    Akonadi::ItemFetchJob *fetchJob = new Akonadi::ItemFetchJob(Akonadi::Item::fromUrl(KUrl(m_akonadiId)));
+    fetchJob->fetchScope().fetchFullPayload();
+
+    connect(fetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)), this, SLOT(slotItemReceived(Akonadi::Item::List)));
+}
+
+void Message::slotItemReceived(const Akonadi::Item::List &itemList)
+{
+    if (itemList.empty()) {
+        //TODO handle Message not found?
+        return;
+    }
+
+    Akonadi::Item item = itemList.first();
+
+    KMime::Message msg;
+    msg.setContent(item.payloadData());
+    msg.setFrozen(true);
+    msg.parse();
+
+    m_subject = msg.subject()->asUnicodeString();
+    m_from = msg.from()->asUnicodeString();
+    m_textContent = msg.textContent()->decodedText(true,true);
+    emit messageChanged();
+}
+
+

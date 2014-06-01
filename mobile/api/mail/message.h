@@ -23,13 +23,37 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MESSAGE_H
 
 #include <QObject>
+#include <QString>
+#include <Akonadi/ItemFetchJob>
 
 class Message : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString subject READ subject NOTIFY messageChanged)
+    Q_PROPERTY(QString from READ from NOTIFY messageChanged)
+    Q_PROPERTY(QString textContent READ textContent NOTIFY messageChanged)
 
 public:
     explicit Message( QObject *parten = 0 );
+
+    QString subject() const;
+    QString from() const;
+    QString textContent() const;
+
+signals:
+    void messageChanged();
+
+public slots:
+    void loadMessage(const QString &id);
+
+private slots:
+    void slotItemReceived(const Akonadi::Item::List &itemList);
+
+private:
+    QString m_akonadiId;
+    QString m_subject;
+    QString m_from;
+    QString m_textContent;
 };
 
 
