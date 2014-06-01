@@ -29,7 +29,7 @@
 #include <entitytreemodel.h>
 #include <item.h>
 #include <itemmodifyjob.h>
-#include <Akonadi/KMime/messagefolderattribute.h>
+#include <Akonadi/KMime/MessageFolderAttribute>
 #include <selectionproxymodel.h>
 
 #include <QDebug>

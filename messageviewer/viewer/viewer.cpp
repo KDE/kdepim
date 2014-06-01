@@ -35,7 +35,7 @@
 #include "viewer/mimeparttreeview.h"
 #include "adblock/adblockmanager.h"
 
-#include <Akonadi/KMime/messageparts.h>
+#include <Akonadi/KMime/MessageParts>
 #include <AkonadiCore/itemfetchjob.h>
 #include <AkonadiCore/itemfetchscope.h>
 

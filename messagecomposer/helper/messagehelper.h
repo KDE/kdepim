@@ -21,7 +21,7 @@
 #ifndef KMAIL_MESSAGE_HELPER_H
 #define KMAIL_MESSAGE_HELPER_H
 
-#include <Akonadi/KMime/messagestatus.h>
+#include <Akonadi/KMime/MessageStatus>
 #include "messagecomposer_export.h"
 
 #include <kmime/kmime_headers.h>

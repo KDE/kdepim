@@ -20,7 +20,7 @@
 
 #include "quicksearchline.h"
 #include "core/settings.h"
-#include <Akonadi/KMime/messagestatus.h>
+#include <Akonadi/KMime/MessageStatus>
 
 #include <KLocalizedString>
 #include <KLineEdit>

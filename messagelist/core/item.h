@@ -29,7 +29,7 @@
 
 #include <kmime/kmime_headers.h>
 
-#include <Akonadi/KMime/messagestatus.h>
+#include <Akonadi/KMime/MessageStatus>
 
 #include <messagelist/core/model.h>
 #include <messagelist/messagelist_export.h>

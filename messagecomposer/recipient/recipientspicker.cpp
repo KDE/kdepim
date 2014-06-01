@@ -23,7 +23,7 @@
 #include "recipientspicker.h"
 #include "settings/messagecomposersettings.h"
 
-#include <Akonadi/Contact/emailaddressselectionwidget.h>
+#include <Akonadi/Contact/EmailAddressSelectionWidget>
 #include <kabc/contactgroup.h>
 #include <libkdepim/ldap/ldapsearchdialog.h>
 #include <KPIMUtils/kpimutils/email.h>

@@ -40,7 +40,7 @@
 #include <kmime/kmime_headers.h>
 #include <MailTransport/mailtransport/messagequeuejob.h>
 #include <AkonadiCore/item.h>
-#include <Akonadi/KMime/messagestatus.h>
+#include <Akonadi/KMime/MessageStatus>
 #include <AkonadiCore/agentinstance.h>
 #include <AkonadiCore/agentinstancecreatejob.h>
 #include <AkonadiCore/agentmanager.h>

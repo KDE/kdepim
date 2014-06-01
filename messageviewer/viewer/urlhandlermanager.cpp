@@ -50,7 +50,7 @@
 #include <libkdepim/misc/broadcaststatus.h>
 #include <libkdepim/job/openemailaddressjob.h>
 
-#include <Akonadi/Contact/contactsearchjob.h>
+#include <Akonadi/Contact/ContactSearchJob>
 
 #include <kmime/kmime_content.h>
 #include <KPIMUtils/Email>

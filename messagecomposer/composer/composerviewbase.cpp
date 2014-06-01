@@ -57,7 +57,7 @@
 #include <MailTransport/mailtransport/messagequeuejob.h>
 #include <MailTransport/mailtransport/transportmanager.h>
 
-#include <Akonadi/KMime/specialmailcollections.h>
+#include <Akonadi/KMime/SpecialMailCollections>
 #include <AkonadiCore/itemcreatejob.h>
 #include <AkonadiCore/collectionfetchjob.h>
 #include <AkonadiWidgets/collectioncombobox.h>

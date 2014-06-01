@@ -22,7 +22,7 @@
 #include <AkonadiCore/item.h>
 #include <KMime/Message>
 
-#include <Akonadi/KMime/messagestatus.h>
+#include <Akonadi/KMime/MessageStatus>
 
 #include <KCalendarSystem>
 #include <KLocale>

@@ -24,7 +24,7 @@
 #include "rangemanager_p.h"
 #include "threadgroupermodel.h"
 
-#include <Akonadi/KMime/messagestatus.h>
+#include <Akonadi/KMime/MessageStatus>
 #include <kmime/kmime_message.h>
 
 class ThreadModelPrivate

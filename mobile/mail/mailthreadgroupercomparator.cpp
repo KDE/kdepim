@@ -21,7 +21,7 @@
 
 #include "mailthreadgroupercomparator.h"
 
-#include <Akonadi/KMime/messageflags.h>
+#include <Akonadi/KMime/MessageFlags>
 #include <messagecore/utils/stringutil.h>
 
 #include <klocale.h>

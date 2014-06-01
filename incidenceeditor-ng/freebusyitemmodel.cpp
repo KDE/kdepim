@@ -20,7 +20,7 @@
 
 #include "freebusyitemmodel.h"
 
-#include <Akonadi/Calendar/freebusymanager.h>
+#include <Akonadi/Calendar/FreeBusyManager>
 
 #include <KDebug>
 #include <KGlobal>

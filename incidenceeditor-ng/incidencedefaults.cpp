@@ -24,7 +24,7 @@
 #include "alarmpresets.h"
 
 #include <calendarsupport/kcalprefs.h>
-#include <Akonadi/Calendar/calendarsettings.h>
+#include <akonadi/calendar/calendarsettings.h>
 
 #include <KABC/Addressee>
 

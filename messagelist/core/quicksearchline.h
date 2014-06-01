@@ -23,7 +23,7 @@
 
 #include <QWidget>
 #include "messagelist_export.h"
-#include <Akonadi/KMime/messagestatus.h>
+#include <Akonadi/KMime/MessageStatus>
 
 class KLineEdit;
 class KComboBox;

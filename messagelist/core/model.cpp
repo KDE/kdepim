@@ -54,7 +54,7 @@
 #include "core/messageitem.h"
 
 #include <item.h>
-#include <Akonadi/KMime/messagestatus.h>
+#include <Akonadi/KMime/MessageStatus>
 #include "messagecore/utils/stringutil.h"
 
 #include <QApplication>

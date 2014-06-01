@@ -24,7 +24,7 @@
 #include "settings/globalsettings.h"
 
 #include <AkonadiCore/itemmodifyjob.h>
-#include <Akonadi/KMime/messageflags.h>
+#include <Akonadi/KMime/MessageFlags>
 
 #include <KGlobal>
 

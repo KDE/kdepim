@@ -23,8 +23,8 @@
 #include "distributionlistdialog.h"
 
 #include <AkonadiWidgets/collectiondialog.h>
-#include <Akonadi/Contact/contactgroupsearchjob.h>
-#include <Akonadi/Contact/contactsearchjob.h>
+#include <Akonadi/Contact/ContactGroupSearchJob>
+#include <Akonadi/Contact/ContactSearchJob>
 #include <AkonadiCore/itemcreatejob.h>
 #include <KPIMUtils/kpimutils/email.h>
 

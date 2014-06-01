@@ -35,11 +35,11 @@
 
 #include <AkonadiWidgets/agentactionmanager.h>
 #include <AkonadiWidgets/collectiondialog.h>
-#include <Akonadi/Contact/contactgroupexpandjob.h>
-#include <Akonadi/Contact/contactsfilterproxymodel.h>
-#include <Akonadi/Contact/standardcontactactionmanager.h>
-#include <AkonadiCore/itemcreatejob.h>
-#include <AkonadiCore/itemfetchscope.h>
+#include <Akonadi/Contact/ContactGroupExpandJob>
+#include <Akonadi/Contact/ContactsFilterProxyModel>
+#include <Akonadi/Contact/StandardContactActionManager>
+#include <AkonadiCore/ItemCreateJob>
+#include <AkonadiCore/ItemFetchScope>
 #include <calendarsupport/categoryconfig.h>
 #include <incidenceeditor-ng/categoryeditdialog.h>
 #include <incidenceeditor-ng/editorconfig.h>

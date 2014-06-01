@@ -28,7 +28,7 @@
 #include <AkonadiCore/itemmodifyjob.h>
 #include <AkonadiCore/itemmovejob.h>
 #include <AkonadiCore/itemdeletejob.h>
-#include <Akonadi/KMime/messageparts.h>
+#include <Akonadi/KMime/MessageParts>
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <qdebug.h>

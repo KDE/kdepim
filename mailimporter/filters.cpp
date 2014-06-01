@@ -30,7 +30,7 @@
 #include <ItemFetchJob>
 #include <ItemFetchScope>
 #include <CollectionCreateJob>
-#include <Akonadi/KMime/messageparts.h>
+#include <Akonadi/KMime/MessageParts>
 
 // KDE Includes
 #include <KUrl>

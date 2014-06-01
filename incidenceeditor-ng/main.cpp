@@ -24,7 +24,7 @@
 #include <KCmdLineArgs>
 
 #include <calendarsupport/kcalprefs.h>
-#include <Akonadi/Calendar/calendarsettings.h>
+#include <akonadi/calendar/calendarsettings.h>
 
 #include <Item>
 #include <KCalCore/Event>

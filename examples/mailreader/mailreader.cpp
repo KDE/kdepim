@@ -13,7 +13,7 @@
 #include <AkonadiCore/entitymimetypefiltermodel.h>
 #include <AkonadiCore/session.h>
 #include <AkonadiCore/statisticsproxymodel.h>
-#include <Akonadi/KMime/messageparts.h>
+#include <Akonadi/KMime/MessageParts>
 
 #include <KAction>
 #include <KConfigDialog>

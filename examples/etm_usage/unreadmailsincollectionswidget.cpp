@@ -44,7 +44,7 @@
 #include <AkonadiCore/ItemFetchScope>
 #include <AkonadiCore/entitymimetypefiltermodel.h>
 #include <AkonadiCore/selectionproxymodel.h>
-#include <Akonadi/KMime/messagestatus.h>
+#include <Akonadi/KMime/MessageStatus>
 
 #include <KMime/Message>
 #include <KSharedConfig>

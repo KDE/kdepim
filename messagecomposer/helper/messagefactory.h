@@ -28,7 +28,7 @@
 #include <item.h>
 #include <Collection>
 
-#include <Akonadi/KMime/messagestatus.h>
+#include <Akonadi/KMime/MessageStatus>
 #include <messagecore/misc/mdnstateattribute.h>
 
 namespace KPIMIdentities {

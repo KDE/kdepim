@@ -29,7 +29,7 @@
 #include <KPIMIdentities/kpimidentities/identitymanager.h>
 #include <KPIMIdentities/kpimidentities/identity.h>
 
-#include <Akonadi/KMime/messagestatus.h>
+#include <Akonadi/KMime/MessageStatus>
 #include <kmime/kmime_dateformatter.h>
 #include <KPIMUtils/Email>
 #include <messagecore/misc/mailinglist.h>

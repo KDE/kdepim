@@ -397,13 +397,13 @@
   <customwidget>
    <class>Akonadi::ContactViewer</class>
    <extends>QWidget</extends>
-   <header location="global">Akonadi/Contact/contactviewer.h</header>
+   <header location="global">Akonadi/Contact/ContactViewer</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>Akonadi::ContactGroupViewer</class>
    <extends>QWidget</extends>
-   <header location="global">Akonadi/Contact/contactgroupviewer.h</header>
+   <header location="global">Akonadi/Contact/ContactGroupViewer</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
