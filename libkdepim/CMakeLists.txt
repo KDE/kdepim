@@ -142,35 +142,11 @@ install(TARGETS kdepim ${INSTALL_TARGETS_DEFAULT_ARGS})
 ########### next target ###############
 
 if (Qt5Designer_FOUND)
-    include_directories(${Qt5Designer_INCLUDE_DIRS})
+    kf5designerplugin_add_plugin(kdepimwidgets ${CMAKE_CURRENT_SOURCE_DIR}/designer/kdepim.widgets)
 
-    add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/kdepimwidgets.cpp
-        COMMAND kgendesignerplugin -o ${CMAKE_CURRENT_BINARY_DIR}/kdepimwidgets.cpp ${CMAKE_CURRENT_SOURCE_DIR}/designer/kdepim.widgets
-        MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/designer/kdepim.widgets)
-
-    set(kdepimwidgets_SRCS
-        ${CMAKE_CURRENT_BINARY_DIR}/kdepimwidgets.cpp
-        ${CMAKE_CURRENT_BINARY_DIR}/kdepimwidgets.moc
-    )
-
-    qt5_generate_moc(${CMAKE_CURRENT_BINARY_DIR}/kdepimwidgets.cpp
-        ${CMAKE_CURRENT_BINARY_DIR}/kdepimwidgets.moc
-    )
-
-    add_library(kdepimwidgets MODULE ${kdepimwidgets_SRCS})
     target_link_libraries(kdepimwidgets
         kdepim
     )
-
-    if(NOT WIN32)
-        set_target_properties(kdepimwidgets PROPERTIES
-            INSTALL_RPATH_USE_LINK_PATH TRUE
-            SKIP_BUILD_RPATH TRUE
-            BUILD_WITH_INSTALL_RPATH TRUE
-            INSTALL_RPATH ${LIB_INSTALL_DIR}
-        )
-    endif()
-
     install(TARGETS
         kdepimwidgets
         DESTINATION ${QT_PLUGIN_INSTALL_DIR}/designer

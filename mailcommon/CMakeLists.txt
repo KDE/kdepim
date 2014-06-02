@@ -216,34 +216,11 @@ install(TARGETS mailcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 if (Qt5Designer_FOUND)
-    include_directories(${Qt5Designer_INCLUDE_DIRS})
-
-    add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/mailcommonwidgets.cpp
-        COMMAND kgendesignerplugin -o ${CMAKE_CURRENT_BINARY_DIR}/mailcommonwidgets.cpp ${CMAKE_CURRENT_SOURCE_DIR}/designer/mailcommon.widgets
-        MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/designer/mailcommon.widgets)
-
-    set(mailcommonwidgets_SRCS
-        ${CMAKE_CURRENT_BINARY_DIR}/mailcommonwidgets.cpp
-        ${CMAKE_CURRENT_BINARY_DIR}/mailcommonwidgets.moc
-    )
-
-    qt5_generate_moc(${CMAKE_CURRENT_BINARY_DIR}/mailcommonwidgets.cpp
-        ${CMAKE_CURRENT_BINARY_DIR}/mailcommonwidgets.moc
-    )
-
-    add_library(mailcommonwidgets MODULE ${mailcommonwidgets})
+    kf5designerplugin_add_plugin(mailcommonwidgets ${CMAKE_CURRENT_SOURCE_DIR}/designer/mailcommon.widgets)
+ 
     target_link_libraries(mailcommonwidgets
         mailcommon
     )
-
-    if(NOT WIN32)
-        set_target_properties(mailcommonwidgets PROPERTIES
-            INSTALL_RPATH_USE_LINK_PATH TRUE
-            SKIP_BUILD_RPATH TRUE
-            BUILD_WITH_INSTALL_RPATH TRUE
-            INSTALL_RPATH ${LIB_INSTALL_DIR}
-        )
-    endif()
 
     install(TARGETS
         mailcommonwidgets

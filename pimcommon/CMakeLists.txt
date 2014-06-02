@@ -248,34 +248,10 @@ add_subdirectory(storageservice/gdrive/icons/)
 endif()
 
 if (Qt5Designer_FOUND)
-    include_directories(${Qt5Designer_INCLUDE_DIRS})
-
-    add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/pimcommonwidgets.cpp
-        COMMAND kgendesignerplugin -o ${CMAKE_CURRENT_BINARY_DIR}/pimcommonwidgets.cpp ${CMAKE_CURRENT_SOURCE_DIR}/designer/pimcommon.widgets
-        MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/designer/pimcommon.widgets)
-
-    set(pimcommonwidgets_SRCS
-        ${CMAKE_CURRENT_BINARY_DIR}/pimcommonwidgets.cpp
-        ${CMAKE_CURRENT_BINARY_DIR}/pimcommonwidgets.moc
-    )
-
-    qt5_generate_moc(${CMAKE_CURRENT_BINARY_DIR}/pimcommonwidgets.cpp
-        ${CMAKE_CURRENT_BINARY_DIR}/pimcommonwidgets.moc
-    )
-
-    add_library(pimcommonwidgets MODULE ${pimcommonwidgets_SRCS})
+    kf5designerplugin_add_plugin(pimcommonwidgets ${CMAKE_CURRENT_SOURCE_DIR}/designer/pimcommon.widgets)
     target_link_libraries(pimcommonwidgets
         pimcommon
     )
-
-    if(NOT WIN32)
-        set_target_properties(pimcommonwidgets PROPERTIES
-            INSTALL_RPATH_USE_LINK_PATH TRUE
-            SKIP_BUILD_RPATH TRUE
-            BUILD_WITH_INSTALL_RPATH TRUE
-            INSTALL_RPATH ${LIB_INSTALL_DIR}
-        )
-    endif()
 
     install(TARGETS
         pimcommonwidgets
