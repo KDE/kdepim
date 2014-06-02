@@ -29,9 +29,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 void MailPlugin::registerTypes(const char *uri)
 {
-    Q_ASSERT(uri == QLatin1String("org.kde.pim.mail"));
+    Q_ASSERT(uri == "org.kde.pim.mail");
     qmlRegisterType<FolderList>(uri, 0, 1, "FolderList");
     qmlRegisterType<Message>(uri, 0, 1, "Message");
 }
 
-Q_EXPORT_PLUGIN2(mailplugin, MailPlugin);
+Q_EXPORT_PLUGIN2(mailplugin, MailPlugin)
