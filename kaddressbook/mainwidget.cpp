@@ -557,7 +557,7 @@ void MainWidget::setupGui()
 
 void MainWidget::setupActions( KActionCollection *collection )
 {
-  mGrantleeThemeManager = new GrantleeTheme::GrantleeThemeManager(QString::fromLatin1( "theme.desktop" ), collection, QLatin1String("kaddressbook/viewertemplates/"));
+  mGrantleeThemeManager = new GrantleeTheme::GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Addressbook, QString::fromLatin1( "theme.desktop" ), collection, QLatin1String("kaddressbook/viewertemplates/"));
   mGrantleeThemeManager->setDownloadNewStuffConfigFile(QLatin1String("kaddressbook_themes.knsrc"));
   connect(mGrantleeThemeManager, SIGNAL(grantleeThemeSelected()), this, SLOT(slotGrantleeThemeSelected()));
   connect(mGrantleeThemeManager, SIGNAL(updateThemes()), this, SLOT(slotGrantleeThemesUpdated()));
@@ -923,7 +923,7 @@ void MainWidget::restoreSplitterStates()
 
 void MainWidget::initGrantleeThemeName()
 {
-    QString themeName = GrantleeTheme::GrantleeSettings::self()->grantleeThemeName();
+    QString themeName = GrantleeTheme::GrantleeSettings::self()->grantleeAddressBookThemeName();
     if (themeName.isEmpty()) {
         themeName = QLatin1String("default");
     }

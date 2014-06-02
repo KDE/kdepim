@@ -14,4 +14,6 @@ add_subdirectory(mail)
 add_subdirectory(tasks)
 add_subdirectory(notes)
 
+add_subdirectory(api)
+
 add_subdirectory(licenses)
