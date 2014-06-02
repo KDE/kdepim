@@ -650,6 +650,11 @@ void MainWidget::setupActions( KActionCollection *collection )
   mXXPortManager->addImportAction( action, QLatin1String("gmx") );
 
   // export actions
+  action = collection->addAction( QLatin1String("file_export_vcard40") );
+  action->setText( i18n( "Export vCard 4.0..." ) );
+  action->setWhatsThis( i18n( "Export contacts to a vCard 4.0 file." ) );
+  mXXPortManager->addExportAction( action, QLatin1String("vcard40") );
+
   action = collection->addAction( QLatin1String("file_export_vcard30") );
   action->setText( i18n( "Export vCard 3.0..." ) );
   action->setWhatsThis( i18n( "Export contacts to a vCard 3.0 file." ) );

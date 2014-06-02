@@ -131,8 +131,10 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
 
         if ( option( QLatin1String("version") ) == QLatin1String("v21") ) {
             ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v2_1 ) );
-        } else {
+        } else if ( option( QLatin1String("version") ) == QLatin1String("v30") ) {
             ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v3_0 ) );
+        } else {
+            ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v4_0 ) );
         }
     } else {
         const int answer =
@@ -162,8 +164,10 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
 
                 if ( option( QLatin1String("version") ) == QLatin1String("v21") ) {
                     tmpOk = doExport( url, converter.exportVCard( contact, KABC::VCardConverter::v2_1 ) );
-                } else {
+                } else if ( option( QLatin1String("version") ) == QLatin1String("v30") ) {
                     tmpOk = doExport( url, converter.exportVCard( contact, KABC::VCardConverter::v3_0 ) );
+                } else {
+                    tmpOk = doExport( url, converter.exportVCard( contact, KABC::VCardConverter::v4_0 ) );
                 }
 
                 ok = ok && tmpOk;
@@ -179,8 +183,10 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
 
             if ( option( QLatin1String("version") ) == QLatin1String("v21") ) {
                 ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v2_1 ) );
-            } else {
+            } else if ( option( QLatin1String("version") ) == QLatin1String("v30") ) {
                 ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v3_0 ) );
+            } else {
+                ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v4_0 ) );
             }
             break;
         }
