@@ -745,10 +745,8 @@ void AttachmentControllerBase::slotPutResult(KJob *job)
                 byteArrayToRemoteFile(_job->data(), _job->url(), true);
         }
         else {
-#if 0 //QT5
-            KIO::JobUiDelegate *ui = static_cast<KIO::Job*>( job )->ui();
+            KJobUiDelegate *ui = static_cast<KIO::Job*>( job )->ui();
             ui->showErrorMessage();
-#endif
         }
     }
 }
