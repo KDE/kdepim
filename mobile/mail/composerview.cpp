@@ -54,7 +54,7 @@
 
 #include <klocalizedstring.h>
 #include <QDebug>
-#include <KIcon>
+#include <QIcon>
 #include <QAction>
 #include <KMessageBox>
 #include <KCMultiDialog>
@@ -151,13 +151,13 @@ void ComposerView::doDelayedInit()
 
   QAction *action = actionCollection()->addAction(QLatin1String("sign_email"));
   action->setText( i18n( "Sign" ) );
-  action->setIcon( KIcon( QLatin1String("document-sign") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("document-sign") ) );
   action->setCheckable(true);
   connect(action, SIGNAL(triggered(bool)), SLOT(signEmail(bool)));
 
   action = actionCollection()->addAction(QLatin1String("encrypt_email"));
   action->setText( i18n( "Encrypt" ) );
-  action->setIcon( KIcon( QLatin1String("mail-encrypt") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("mail-encrypt") ) );
   action->setCheckable(true);
   connect(action, SIGNAL(triggered(bool)), SLOT(encryptEmail(bool)));
 
@@ -167,7 +167,7 @@ void ComposerView::doDelayedInit()
 
   action = actionCollection()->addAction(QLatin1String("save_in_drafts"));
   action->setText( i18n( "Save As Draft" ) );
-  action->setIcon( KIcon( QLatin1String("document-save" )) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("document-save" )) );
   connect(action, SIGNAL(triggered(Qt::MouseButtons,Qt::KeyboardModifiers)), SLOT(saveDraft()));
 
   action = actionCollection()->addAction(QLatin1String("save_as_template"));
@@ -446,7 +446,7 @@ void ComposerView::success()
 
 void ComposerView::failed( const QString &errorMessage )
 {
-  QPixmap pix = KIcon(QLatin1String("kmail-mobile")).pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
+  QPixmap pix = QIcon::fromTheme(QLatin1String("kmail-mobile")).pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
   KNotification *notify = new KNotification(QLatin1String("sendfailed"));
   notify->setComponentName(QLatin1String("kmail-mobile"));
   notify->setPixmap(pix);

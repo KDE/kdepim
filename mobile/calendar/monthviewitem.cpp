@@ -27,6 +27,7 @@
 #include <QDebug>
 #include <KGlobalSettings>
 #include <KSharedConfig>
+#include <KColorScheme>
 
 using namespace EventViews;
 
@@ -35,7 +36,7 @@ MonthViewItem::MonthViewItem( QDeclarativeItem* parent )
   , mView( new MonthView( MonthView::Hidden ) )
 {
   // start with the oxygen palette (which is not necessarily the default on all platforms)
-  QPalette pal = KGlobalSettings::createApplicationPalette( KSharedConfig::openConfig() );
+  QPalette pal = KColorScheme::createApplicationPalette( KSharedConfig::openConfig() );
   mView->setPalette( pal );
   setWidget( mView );
 

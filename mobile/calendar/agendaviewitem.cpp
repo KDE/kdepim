@@ -27,6 +27,7 @@
 #include <KLocale>
 #include <QDebug>
 #include <KSharedConfig>
+#include <KColorScheme>
 
 using namespace EventViews;
 
@@ -39,7 +40,7 @@ AgendaViewItem::AgendaViewItem(QDeclarativeItem* parent)
   , m_currentRange( Week )
 {
   // start with the oxygen palette (which is not necessarily the default on all platforms)
-  QPalette pal = KGlobalSettings::createApplicationPalette( KSharedConfig::openConfig() );
+  QPalette pal = KColorScheme::createApplicationPalette( KSharedConfig::openConfig() );
   m_view->setPalette( pal );
   m_view->setDateRangeSelectionEnabled( false );
 

@@ -53,7 +53,7 @@ MobileLineEdit::MobileLineEdit( QWidget *parent )
   box->addWidget( d->mEdit );
 
   d->mButton = new QPushButton( this );
-  d->mButton->setIcon( KIcon( QLatin1String("edit-clear-locationbar-rtl") ) );
+  d->mButton->setIcon( QIcon::fromTheme( QLatin1String("edit-clear-locationbar-rtl") ) );
   d->mButton->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Maximum );
   box->addWidget( d->mButton );
 

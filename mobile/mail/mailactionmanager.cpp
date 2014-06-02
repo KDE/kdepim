@@ -25,7 +25,7 @@
 #include <Akonadi/KMime/MessageStatus>
 
 #include <KLocale>
-#include <KIcon>
+#include <QIcon>
 #include <QAction>
 
 #include <AkonadiCore/entitytreemodel.h>
@@ -40,12 +40,12 @@ MailActionManager::MailActionManager( KActionCollection *actionCollection, QObje
   QAction *action;
   action = actionCollection->addAction( QLatin1String("mark_message_important") );
   action->setText( i18n( "Important" ) );
-  action->setIcon( KIcon( QLatin1String("emblem-important") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("emblem-important") ) );
   action->setCheckable(true);
 
   action = actionCollection->addAction( QLatin1String("mark_message_action_item") );
   action->setText( i18n( "Action Item" ) );
-  action->setIcon( KIcon( QLatin1String("mail-mark-task") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("mail-mark-task") ) );
   action->setCheckable( true );
 
   action = actionCollection->addAction( QLatin1String("write_new_email") );

@@ -29,6 +29,7 @@
 #include <KLocale>
 #include <QLayout>
 #include <KSharedConfig>
+#include <KColorScheme>
 
 using namespace EventViews;
 
@@ -40,7 +41,7 @@ TimelineViewItem::TimelineViewItem(QDeclarativeItem* parent)
   , m_currentRange( Week )
 {
   // start with the oxygen palette (which is not necessarily the default on all platforms)
-  QPalette pal = KGlobalSettings::createApplicationPalette( KSharedConfig::openConfig() );
+  QPalette pal = KColorScheme::createApplicationPalette( KSharedConfig::openConfig() );
   StyleSheetLoader::applyStyle( m_view );
   m_view->setPalette( pal );
   m_view->setDateRangeSelectionEnabled( false );

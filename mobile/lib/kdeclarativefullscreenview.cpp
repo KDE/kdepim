@@ -28,7 +28,7 @@
 #include <KStandardDirs>
 #include <KMessageBox>
 #include <klocalizedstring.h>
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KCmdLineArgs>
 #include <KGlobal>
@@ -130,7 +130,7 @@ void KDeclarativeFullScreenView::delayedInit()
   QAction *action = KStandardAction::close( this, SLOT(close()), this );
   mActionCollection->addAction( QLatin1String( "close" ), action );
 
-  action = new KAction( i18n( "Full Shutdown" ), this );
+  action = new QAction( i18n( "Full Shutdown" ), this );
   connect( action, SIGNAL(triggered()), SLOT(closeAkonadi()) );
   mActionCollection->addAction( QLatin1String( "quit_akonadi" ), action );
 

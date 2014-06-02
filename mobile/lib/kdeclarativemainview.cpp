@@ -52,7 +52,7 @@
 #include <KMimeType>
 #include <KComponentData>
 #include <K4AboutData>
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KCmdLineArgs>
 #include <KConfigGroup>

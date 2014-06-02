@@ -22,7 +22,7 @@
 
 #include "mobileui_export.h"
 #include <kuniqueapplication.h>
-#include <kdebug.h>
+#include <qdebug.h>
 
 class KCmdLineOptions;
 
@@ -69,7 +69,7 @@ class KDeclarativeApplication : public KDeclarativeApplicationBase
 
     int newInstance()
     {
-      kDebug();
+      qDebug();
       if ( !m_mainView ) {
         m_mainView = new T;
         m_mainView->show();
