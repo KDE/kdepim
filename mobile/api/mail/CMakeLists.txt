@@ -14,14 +14,14 @@ INCLUDE_DIRECTORIES(
 
 qt4_automoc( ${mail_SRCS})
 
-kde4_add_library(mailplugin SHARED ${mail_SRCS})
+add_library(mailplugin SHARED ${mail_SRCS})
 
 target_link_libraries(mailplugin
 
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTDECLARATIVE_LIBRARY}
-    ${KDEPIMLIBS_AKONADI_LIBS}
-    ${KDEPIMLIBS_KMIME_LIBS}
+    
+    Qt5::Declarative
+    KF5::AkonadiCore
+    KF5::Mime
 
 )
 

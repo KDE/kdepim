@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <message.h>
 
-#include <Akonadi/ItemFetchScope>
+#include <AkonadiCore/ItemFetchScope>
 #include <KMime/Message>
 
 #include <KMimeType>

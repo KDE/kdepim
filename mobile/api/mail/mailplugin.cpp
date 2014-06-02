@@ -34,4 +34,4 @@ void MailPlugin::registerTypes(const char *uri)
     qmlRegisterType<Message>(uri, 0, 1, "Message");
 }
 
-Q_EXPORT_PLUGIN2(mailplugin, MailPlugin)
+//QT5 Q_EXPORT_PLUGIN2(mailplugin, MailPlugin)
