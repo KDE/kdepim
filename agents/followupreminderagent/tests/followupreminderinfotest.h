@@ -15,24 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLLOWUPREMINDERINFO_H
-#define FOLLOWUPREMINDERINFO_H
+#ifndef FOLLOWUPREMINDERINFOTEST_H
+#define FOLLOWUPREMINDERINFOTEST_H
 
-#include <Akonadi/Item>
-class KConfigGroup;
-class FollowUpReminderInfo
+#include <QObject>
+
+class FollowUpReminderInfoTest : public QObject
 {
+    Q_OBJECT
 public:
-    FollowUpReminderInfo();
-    FollowUpReminderInfo(const KConfigGroup &config);
+    FollowUpReminderInfoTest();
 
-    Akonadi::Item::Id id() const;
-    void setId(Akonadi::Item::Id value);
-
-    bool isValid() const;
-
-private:
-    Akonadi::Item::Id mId;
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
 };
 
-#endif // FOLLOWUPREMINDERINFO_H
+#endif // FOLLOWUPREMINDERINFOTEST_H

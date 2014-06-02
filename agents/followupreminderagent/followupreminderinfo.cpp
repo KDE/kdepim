@@ -17,6 +17,31 @@
 
 #include "followupreminderinfo.h"
 
+#include <KConfigGroup>
+
 FollowUpReminderInfo::FollowUpReminderInfo()
+    : mId(-1)
 {
 }
+
+FollowUpReminderInfo::FollowUpReminderInfo(const KConfigGroup &config)
+    : mId(-1)
+{
+    //TODO
+}
+
+Akonadi::Item::Id FollowUpReminderInfo::id() const
+{
+    return mId;
+}
+
+void FollowUpReminderInfo::setId(Akonadi::Item::Id value)
+{
+    mId = value;
+}
+
+bool FollowUpReminderInfo::isValid() const
+{
+    return (mId != -1);
+}
+
