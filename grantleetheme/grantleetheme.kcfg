@@ -3,8 +3,12 @@
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
 
-  <group name="GrantleeTheme">
-    <entry name="grantleeThemeName" type="String" key="grantlee-theme-name">
+   <group name="GrantleeTheme">
+    <entry name="grantleeMailThemeName" type="String" key="grantlee-mail-theme-name">
+      <label></label>
+      <default></default>
+    </entry>
+    <entry name="grantleeAddressBookThemeName" type="String" key="grantlee-addressbook-theme-name">
       <label></label>
       <default></default>
     </entry>
