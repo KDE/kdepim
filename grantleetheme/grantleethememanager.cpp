@@ -41,8 +41,9 @@ using namespace GrantleeTheme;
 class GrantleeThemeManager::Private
 {
 public:
-    Private(const QString &desktopFileName, KActionCollection *ac, const QString &relativePath, GrantleeThemeManager *qq)
-        : defaultDesktopFileName(desktopFileName),
+    Private(GrantleeTheme::GrantleeThemeManager::Application type, const QString &desktopFileName, KActionCollection *ac, const QString &relativePath, GrantleeThemeManager *qq)
+        : applicationType(type),
+          defaultDesktopFileName(desktopFileName),
           actionGroup(0),
           menu(0),
           actionCollection(ac),
@@ -178,7 +179,14 @@ public:
         if (q->sender() ) {
             KToggleAction *act = dynamic_cast<KToggleAction *>(q->sender());
             if (act) {
-                GrantleeSettings::self()->setGrantleeThemeName( act->data().toString() );
+                switch(applicationType) {
+                case GrantleeThemeManager::Mail:
+                    GrantleeSettings::self()->setGrantleeMailThemeName( act->data().toString() );
+                    break;
+                case GrantleeThemeManager::Addressbook:
+                    GrantleeSettings::self()->setGrantleeAddressBookThemeName( act->data().toString() );
+                    break;
+                }
                 GrantleeSettings::self()->writeConfig();
             }
             Q_EMIT q->grantleeThemeSelected();
@@ -187,7 +195,15 @@ public:
 
     KToggleAction *actionForTheme()
     {
-        const QString themeName = GrantleeSettings::self()->grantleeThemeName();
+        QString themeName;
+        switch(applicationType) {
+        case GrantleeThemeManager::Mail:
+            themeName = GrantleeSettings::self()->grantleeMailThemeName();
+            break;
+        case GrantleeThemeManager::Addressbook:
+            themeName = GrantleeSettings::self()->grantleeAddressBookThemeName();
+            break;
+        }
         if (themeName.isEmpty())
             return 0;
         Q_FOREACH(KToggleAction *act, themesActionList) {
@@ -211,7 +227,7 @@ public:
             }
         }
     }
-
+    GrantleeThemeManager::Application applicationType;
     QString defaultDesktopFileName;
     QString downloadConfigFileName;
     QStringList themesDirectories;
@@ -228,8 +244,8 @@ public:
     GrantleeThemeManager *q;
 };
 
-GrantleeThemeManager::GrantleeThemeManager(const QString &defaultDesktopFileName, KActionCollection *actionCollection, const QString &path, QObject *parent)
-    : QObject(parent), d(new Private(defaultDesktopFileName, actionCollection, path,this))
+GrantleeThemeManager::GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Application applicationType, const QString &defaultDesktopFileName, KActionCollection *actionCollection, const QString &path, QObject *parent)
+    : QObject(parent), d(new Private(applicationType, defaultDesktopFileName, actionCollection, path,this))
 {
 }
 

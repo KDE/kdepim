@@ -32,7 +32,12 @@ class GRANTLEETHEME_EXPORT GrantleeThemeManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit GrantleeThemeManager(const QString &defaultDesktopFileName, KActionCollection *actionCollection, const QString &path, QObject *parent = 0);
+    enum Application {
+        Mail = 0,
+        Addressbook
+    };
+
+    explicit GrantleeThemeManager(GrantleeTheme::GrantleeThemeManager::Application applicationType, const QString &defaultDesktopFileName, KActionCollection *actionCollection, const QString &path, QObject *parent = 0);
     ~GrantleeThemeManager();
 
     QMap<QString, GrantleeTheme::Theme> themes() const;

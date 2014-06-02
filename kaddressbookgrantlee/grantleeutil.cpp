@@ -24,10 +24,7 @@
 
 QString KAddressBookGrantlee::GrantleeUtil::kaddressBookAbsoluteThemePath()
 {
-    KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kaddressbookrc") );
-    GrantleeTheme::GrantleeSettings::self()->setSharedConfig(config);
-    GrantleeTheme::GrantleeSettings::self()->readConfig();
-    QString themeName = GrantleeTheme::GrantleeSettings::self()->grantleeThemeName();
+    QString themeName = GrantleeTheme::GrantleeSettings::self()->grantleeAddressBookThemeName();
     if (themeName.isEmpty()) {
         themeName = QLatin1String("default");
     }
