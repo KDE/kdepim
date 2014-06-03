@@ -52,7 +52,7 @@
 #include <kmime/kmime_header_parsing.h>
 
 #include <KLocalizedString>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QPointer>
 #include <QTimer>
@@ -130,7 +130,7 @@ SignEncryptFilesController::Private::Private( SignEncryptFilesController * qq )
 
 }
 
-SignEncryptFilesController::Private::~Private() { kDebug(); }
+SignEncryptFilesController::Private::~Private() { qDebug(); }
 
 QString SignEncryptFilesController::Private::titleForOperation( unsigned int op ) {
     const bool signDisallowed = (op & SignMask) == SignDisallowed;
@@ -172,7 +172,7 @@ SignEncryptFilesController::SignEncryptFilesController( const shared_ptr<const E
 }
 
 SignEncryptFilesController::~SignEncryptFilesController() {
-    kDebug();
+    qDebug();
     if ( d->wizard && !d->wizard->isVisible() )
         delete d->wizard;
         //d->wizard->close(); ### ?
@@ -274,7 +274,7 @@ void SignEncryptFilesController::setFiles( const QStringList & files ) {
 }
 
 void SignEncryptFilesController::Private::slotWizardCanceled() {
-    kDebug();
+    qDebug();
     reportError( gpg_error( GPG_ERR_CANCELED ), i18n("User cancel") );
 }
 
@@ -536,13 +536,13 @@ void SignEncryptFilesController::doTaskDone( const Task * task, const shared_ptr
 }
 
 void SignEncryptFilesController::cancel() {
-    kDebug();
+    qDebug();
     try {
         if ( d->wizard )
             d->wizard->close();
         d->cancelAllTasks();
     } catch ( const std::exception & e ) {
-        kDebug() << "Caught exception: " << e.what();
+        qDebug() << "Caught exception: " << e.what();
     }
 }
 

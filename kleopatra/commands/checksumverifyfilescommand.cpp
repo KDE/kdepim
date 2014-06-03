@@ -43,7 +43,7 @@
 #include <kleo/stl_util.h>
 
 #include <KLocalizedString>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QStringList>
 
@@ -95,7 +95,7 @@ ChecksumVerifyFilesCommand::Private::Private( ChecksumVerifyFilesCommand * qq, K
 
 }
 
-ChecksumVerifyFilesCommand::Private::~Private() { kDebug(); }
+ChecksumVerifyFilesCommand::Private::~Private() { qDebug(); }
 
 ChecksumVerifyFilesCommand::ChecksumVerifyFilesCommand( KeyListController * c )
     : Command( new Private( this, c ) )
@@ -129,7 +129,7 @@ void ChecksumVerifyFilesCommand::Private::init() {
     connect( &controller, SIGNAL(error(int,QString)), q, SLOT(slotControllerError(int,QString)) );
 }
 
-ChecksumVerifyFilesCommand::~ChecksumVerifyFilesCommand() { kDebug(); }
+ChecksumVerifyFilesCommand::~ChecksumVerifyFilesCommand() { qDebug(); }
 
 void ChecksumVerifyFilesCommand::setFiles( const QStringList & files ) {
     d->files = files;
@@ -158,7 +158,7 @@ void ChecksumVerifyFilesCommand::doStart() {
 }
 
 void ChecksumVerifyFilesCommand::doCancel() {
-    kDebug();
+    qDebug();
     d->controller.cancel();
 }
 

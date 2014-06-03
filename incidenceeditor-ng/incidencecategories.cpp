@@ -122,8 +122,8 @@ void IncidenceCategories::setCategories( const QStringList &categories )
 
 void IncidenceCategories::printDebugInfo() const
 {
-  kDebug() << "mSelectedCategories = " << categories();
-  kDebug() << "mLoadedIncidence->categories() = " << mLoadedIncidence->categories();
+  qDebug() << "mSelectedCategories = " << categories();
+  qDebug() << "mLoadedIncidence->categories() = " << mLoadedIncidence->categories();
 }
 
 void IncidenceCategories::checkForUnknownCategories( const QStringList &categoriesToCheck )

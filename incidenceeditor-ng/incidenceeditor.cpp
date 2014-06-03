@@ -37,7 +37,7 @@ IncidenceEditor::~IncidenceEditor()
 void IncidenceEditor::checkDirtyStatus()
 {
   if ( !mLoadedIncidence ) {
-    kDebug() << "checkDirtyStatus called on an invalid incidence";
+    qDebug() << "checkDirtyStatus called on an invalid incidence";
     return;
   }
 

@@ -257,14 +257,14 @@ void ConflictResolver::findAllFreeSlots()
   //          So, the array would have a length of 672
   const int range = begin.secsTo( end ) / mSlotResolutionSeconds;
   if ( range <= 0 ) {
-    kWarning() << "free slot calculation: invalid range. range( " << begin.secsTo( end )
+    qWarning() << "free slot calculation: invalid range. range( " << begin.secsTo( end )
                << ") / mSlotResolutionSeconds(" << mSlotResolutionSeconds << ") = " << range;
     return;
   }
 
 //QT5
 #if 0
-  kDebug() << "from " << begin << " to " << end
+  qDebug() << "from " << begin << " to " << end
            << "; mSlotResolutionSeconds = " << mSlotResolutionSeconds
            << "; range = " << range;
 #endif
@@ -288,10 +288,10 @@ void ConflictResolver::findAllFreeSlots()
   // now we know the number of attendees we are calculating for
   const int number_attendees = filteredFBItems.size();
   if ( number_attendees <= 0 ) {
-    kDebug() << "no attendees match search criteria";
+    qDebug() << "no attendees match search criteria";
     return;
   }
-  kDebug() << "num attendees: " << number_attendees;
+  qDebug() << "num attendees: " << number_attendees;
   // this is a 2 dimensional array where the rows are attendees
   // and the columns are 0 or 1 denoting freee or busy respectively.
   QVector< QVector<int> > fbTable;
@@ -337,9 +337,9 @@ void ConflictResolver::findAllFreeSlots()
           duration = range - 1;
         } else {
           //QT5
-          //kFatal() << "impossible condition reached" << it->start() << it->end();
+          //qFatal() << "impossible condition reached" << it->start() << it->end();
         }
-        //      kDebug() << start_index << "+" << duration << "="
+        //      qDebug() << start_index << "+" << duration << "="
         //               << start_index + duration << "<=" << range;
         Q_ASSERT( ( start_index + duration ) < range ); // sanity check
         for ( int i = start_index; i <= start_index + duration; ++i ) {

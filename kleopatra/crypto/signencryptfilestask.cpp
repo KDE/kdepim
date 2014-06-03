@@ -109,7 +109,7 @@ namespace {
               m_outputCreated( outputCreated ),
               m_auditLog( auditLog )
         {
-            kDebug() << endl
+            qDebug() << endl
                      << "inputError :" << m_inputErrorString << endl
                      << "outputError:" << m_outputErrorString;
             assert( !m_sresult.isNull() );
@@ -125,7 +125,7 @@ namespace {
               m_outputCreated( outputCreated ),
               m_auditLog( auditLog )
         {
-            kDebug() << endl
+            qDebug() << endl
                      << "inputError :" << m_inputErrorString << endl
                      << "outputError:" << m_outputErrorString;
             assert( !m_eresult.isNull() );
@@ -142,7 +142,7 @@ namespace {
               m_outputCreated( outputCreated ),
               m_auditLog( auditLog )
         {
-            kDebug() << endl
+            qDebug() << endl
                      << "inputError :" << m_inputErrorString << endl
                      << "outputError:" << m_outputErrorString;
             assert( !m_sresult.isNull() || !m_eresult.isNull() );

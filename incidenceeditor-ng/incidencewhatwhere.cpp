@@ -43,7 +43,7 @@ IncidenceWhatWhere::IncidenceWhatWhere( Ui::EventOrTodoDesktop *ui )
 
 void IncidenceWhatWhere::load( const KCalCore::Incidence::Ptr &incidence )
 {
-  kDebug();
+  qDebug();
   mLoadedIncidence = incidence;
   if ( mLoadedIncidence ) {
     mUi->mSummaryEdit->setText( mLoadedIncidence->summary() );
@@ -82,7 +82,7 @@ bool IncidenceWhatWhere::isDirty() const
 bool IncidenceWhatWhere::isValid() const
 {
   if ( mUi->mSummaryEdit->text().isEmpty() ) {
-    kDebug() << "Specify a title";
+    qDebug() << "Specify a title";
     mLastErrorString = i18nc( "@info", "Please specify a title." );
     return false;
   } else {

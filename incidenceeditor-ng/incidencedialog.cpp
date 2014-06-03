@@ -503,7 +503,7 @@ bool IncidenceDialogPrivate::isValid() const
     if ( mCalSelector->currentCollection().isValid() ) {
       return true;
     } else {
-      kWarning() << "Select a collection first";
+      qWarning() << "Select a collection first";
     }
   }
 
@@ -540,7 +540,7 @@ void IncidenceDialogPrivate::load( const Akonadi::Item &item )
     mUi->mInvitationBar->hide();
   }
 
-  kDebug() << "Loading item " << item.id() << "; parent " << item.parentCollection().id()
+  qDebug() << "Loading item " << item.id() << "; parent " << item.parentCollection().id()
            << "; storage " << item.storageCollectionId();
 
   if ( item.parentCollection().isValid() ) {
@@ -614,7 +614,7 @@ void IncidenceDialogPrivate::reject( RejectReason reason, const QString &errorMe
   Q_UNUSED( reason );
 
   Q_Q( IncidenceDialog );
-  kError() << "Rejecting:" << errorMessage;
+  qCritical() << "Rejecting:" << errorMessage;
   q->deleteLater();
 }
 

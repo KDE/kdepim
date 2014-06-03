@@ -303,7 +303,7 @@ void SignEMailController::cancel() {
             d->wizard->close();
         d->cancelAllJobs();
     } catch ( const std::exception & e ) {
-        kDebug() << "Caught exception: " << e.what();
+        qDebug() << "Caught exception: " << e.what();
     }
 }
 

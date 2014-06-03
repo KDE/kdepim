@@ -47,7 +47,7 @@
 #include <gpgme++/key.h>
 
 #include <KLocalizedString>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <cassert>
 
@@ -98,7 +98,7 @@ AddUserIDCommand::Private::Private( AddUserIDCommand * qq, KeyListController * c
 
 }
 
-AddUserIDCommand::Private::~Private() { kDebug(); }
+AddUserIDCommand::Private::~Private() { qDebug(); }
 
 AddUserIDCommand::AddUserIDCommand( KeyListController * c )
     : Command( new Private( this, c ) )
@@ -122,7 +122,7 @@ void AddUserIDCommand::Private::init() {
 
 }
 
-AddUserIDCommand::~AddUserIDCommand() { kDebug(); }
+AddUserIDCommand::~AddUserIDCommand() { qDebug(); }
 
 void AddUserIDCommand::doStart() {
 
@@ -177,7 +177,7 @@ void AddUserIDCommand::Private::slotResult( const Error & err ) {
 }
 
 void AddUserIDCommand::doCancel() {
-    kDebug();
+    qDebug();
     if ( d->job )
         d->job->slotCancel();
 }

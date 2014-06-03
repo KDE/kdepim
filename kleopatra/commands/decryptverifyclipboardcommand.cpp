@@ -49,7 +49,7 @@
 #include <kleo/stl_util.h>
 
 #include <KLocalizedString>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <exception>
 
@@ -97,7 +97,7 @@ DecryptVerifyClipboardCommand::Private::Private( DecryptVerifyClipboardCommand *
 
 }
 
-DecryptVerifyClipboardCommand::Private::~Private() { kDebug(); }
+DecryptVerifyClipboardCommand::Private::~Private() { qDebug(); }
 
 DecryptVerifyClipboardCommand::DecryptVerifyClipboardCommand( KeyListController * c )
     : Command( new Private( this, c ) )
@@ -117,7 +117,7 @@ void DecryptVerifyClipboardCommand::Private::init() {
     connect( &controller, SIGNAL(error(int,QString)), q, SLOT(slotControllerError(int,QString)) );
 }
 
-DecryptVerifyClipboardCommand::~DecryptVerifyClipboardCommand() { kDebug(); }
+DecryptVerifyClipboardCommand::~DecryptVerifyClipboardCommand() { qDebug(); }
 
 // static
 bool DecryptVerifyClipboardCommand::canDecryptVerifyCurrentClipboard() {
@@ -164,7 +164,7 @@ void DecryptVerifyClipboardCommand::doStart() {
 }
 
 void DecryptVerifyClipboardCommand::doCancel() {
-    kDebug();
+    qDebug();
     d->controller.cancel();
 }
 

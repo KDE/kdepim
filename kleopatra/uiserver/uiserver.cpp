@@ -120,9 +120,9 @@ bool UiServer::registerCommandFactory( const shared_ptr<AssuanCommandFactory> & 
         return true;
     } else {
         if ( !cf ) {
-            kWarning() << "NULL factory";
+            qWarning() << "NULL factory";
         } else {
-            kWarning() <<  ( void* )cf.get() << " factory already registered";
+            qWarning() <<  ( void* )cf.get() << " factory already registered";
         }
 
         return false;
@@ -181,7 +181,7 @@ bool UiServer::isStopping() const {
 }
 
 void UiServer::Private::slotConnectionClosed( Kleo::AssuanServerConnection * conn ) {
-    kDebug() << "UiServer: connection " << ( void* )conn << " closed";
+    qDebug() << "UiServer: connection " << ( void* )conn << " closed";
     connections.erase( std::remove_if( connections.begin(), connections.end(),
                                        boost::bind( &boost::shared_ptr<AssuanServerConnection>::get, _1 ) == conn ),
                        connections.end() );
@@ -194,10 +194,10 @@ void UiServer::Private::slotConnectionClosed( Kleo::AssuanServerConnection * con
 
 void UiServer::Private::incomingConnection( int fd ) {
     try {
-        kDebug() << "UiServer: client connect on fd " << fd;
+        qDebug() << "UiServer: client connect on fd " << fd;
 #if defined(HAVE_ASSUAN_SOCK_GET_NONCE) || defined(HAVE_ASSUAN2)
         if ( assuan_sock_check_nonce( (assuan_fd_t)fd, &nonce ) ) {
-            kDebug() << "UiServer: nonce check failed";
+            qDebug() << "UiServer: nonce check failed";
             assuan_sock_close( (assuan_fd_t)fd );
             return;
         }
@@ -211,16 +211,16 @@ void UiServer::Private::incomingConnection( int fd ) {
                  q, SIGNAL(startConfigDialogRequested()), Qt::QueuedConnection );
         c->enableCryptoCommands( cryptoCommandsEnabled );
         connections.push_back( c );
-        kDebug() << "UiServer: client connection " << ( void *)c.get() << " established successfully";
+        qDebug() << "UiServer: client connection " << ( void *)c.get() << " established successfully";
     } catch ( const Exception & e ) {
-        kDebug() << "UiServer: client connection failed: " << e.what();
+        qDebug() << "UiServer: client connection failed: " << e.what();
         QTcpSocket s;
         s.setSocketDescriptor( fd );
         QTextStream( &s ) << "ERR " << e.error_code() << " " << e.what() << "\r\n";
         s.waitForBytesWritten();
         s.close();
     } catch ( ... ) {
-        kDebug() << "UiServer: client connection failed: unknown exception caught";
+        qDebug() << "UiServer: client connection failed: unknown exception caught";
         // this should never happen...
         QTcpSocket s;
         s.setSocketDescriptor( fd );

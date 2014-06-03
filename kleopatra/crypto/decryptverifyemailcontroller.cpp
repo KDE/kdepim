@@ -159,7 +159,7 @@ DecryptVerifyEMailController::Private::Private( DecryptVerifyEMailController* qq
 
 void DecryptVerifyEMailController::Private::slotWizardCanceled()
 {
-    kDebug();
+    qDebug();
     if ( !m_operationCompleted )
         reportError( gpg_error( GPG_ERR_CANCELED ), i18n("User canceled") );
 }
@@ -234,7 +234,7 @@ DecryptVerifyEMailWizard * DecryptVerifyEMailController::Private::findOrCreateWi
 
     collectGarbage( s_wizards );
 
-    kDebug() << "id = " << id;
+    qDebug() << "id = " << id;
 
     if ( id != 0 ) {
 
@@ -377,7 +377,7 @@ DecryptVerifyEMailController::DecryptVerifyEMailController( const shared_ptr<con
 {
 }
 
-DecryptVerifyEMailController::~DecryptVerifyEMailController() { kDebug(); }
+DecryptVerifyEMailController::~DecryptVerifyEMailController() { qDebug(); }
 
 void DecryptVerifyEMailController::start()
 {
@@ -456,13 +456,13 @@ void DecryptVerifyEMailController::setProtocol( Protocol prot )
 
 void DecryptVerifyEMailController::setSessionId( unsigned int id )
 {
-    kDebug() << "id = " << id;
+    qDebug() << "id = " << id;
     d->m_sessionId = id;
 }
 
 void DecryptVerifyEMailController::cancel()
 {
-    kDebug();
+    qDebug();
     try {
         if ( d->m_wizard ) {
             disconnect( d->m_wizard );
@@ -470,7 +470,7 @@ void DecryptVerifyEMailController::cancel()
         }
         d->cancelAllTasks();
     } catch ( const std::exception & e ) {
-        kDebug() << "Caught exception: " << e.what();
+        qDebug() << "Caught exception: " << e.what();
     }
 }
 

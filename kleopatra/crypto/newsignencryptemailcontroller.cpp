@@ -272,7 +272,7 @@ NewSignEncryptEMailController::NewSignEncryptEMailController( QObject * p )
 
 }
 
-NewSignEncryptEMailController::~NewSignEncryptEMailController() { kDebug(); }
+NewSignEncryptEMailController::~NewSignEncryptEMailController() { qDebug(); }
 
 void NewSignEncryptEMailController::setSubject( const QString & subject ) {
     d->dialog->setSubject( subject );
@@ -545,7 +545,7 @@ void NewSignEncryptEMailController::cancel() {
         d->dialog->close();
         d->cancelAllTasks();
     } catch ( const std::exception & e ) {
-        kDebug() << "Caught exception: " << e.what();
+        qDebug() << "Caught exception: " << e.what();
     }
 }
 

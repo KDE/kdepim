@@ -424,7 +424,7 @@ void VisualFreeBusyWidget::slotZoomToTime()
 #if 0
   mGanttGraphicsView->zoomToFit();
 #else
-  kDebug() << "Disabled code, port to KDGantt2";
+  qDebug() << "Disabled code, port to KDGantt2";
 #endif
 }
 

@@ -96,7 +96,7 @@ void ItemEditorPrivate::moveJobFinished( KJob *job )
 {
   Q_Q( EditorItemManager );
   if ( job->error() ) {
-    kError() << "Error while moving and modifying " << job->errorString();
+    qCritical() << "Error while moving and modifying " << job->errorString();
     mItemUi->reject( ItemEditorUi::ItemMoveFailed, job->errorString() );
   } else {
     Akonadi::Item item( mItem.id() );
@@ -147,7 +147,7 @@ void ItemEditorPrivate::itemMoveResult( KJob *job )
     Q_UNUSED( moveJob );
     //Q_ASSERT( !moveJob->items().isEmpty() );
     // TODO: What is reasonable behavior at this point?
-    kError() << "Error while moving item ";// << moveJob->items().first().id() << " to collection "
+    qCritical() << "Error while moving item ";// << moveJob->items().first().id() << " to collection "
              //<< moveJob->destinationCollection() << job->errorString();
     emit q->itemSaveFailed( EditorItemManager::Move, job->errorString() );
   } else {
@@ -179,7 +179,7 @@ void ItemEditorPrivate::onModifyFinished( int, const Akonadi::Item &item,
     emit q->itemSaveFailed( EditorItemManager::Modify, QString() );
     q->load( Akonadi::Item( mItem.id() ) );
   } else {
-    kError() << "Modify failed " << errorString;
+    qCritical() << "Modify failed " << errorString;
     emit q->itemSaveFailed( EditorItemManager::Modify, errorString );
   }
 }
@@ -195,7 +195,7 @@ void ItemEditorPrivate::onCreateFinished( int,
     emit q->itemSaveFinished( EditorItemManager::Create );
     setupMonitor();
   } else {
-    kError() << "Creation failed " << errorString;
+    qCritical() << "Creation failed " << errorString;
     emit q->itemSaveFailed( EditorItemManager::Create, errorString );
   }
 }
@@ -270,7 +270,7 @@ Akonadi::Item EditorItemManager::item( ItemState state ) const
     if ( d->mItem.hasPayload() ) {
       return d->mItem;
     } else {
-      kDebug() << "Won't return mItem because isValid = " << d->mItem.isValid()
+      qDebug() << "Won't return mItem because isValid = " << d->mItem.isValid()
                << "; and haPayload is " << d->mItem.hasPayload();
     }
     break;
@@ -278,12 +278,12 @@ Akonadi::Item EditorItemManager::item( ItemState state ) const
     if ( d->mPrevItem.hasPayload() ) {
       return d->mPrevItem;
     } else {
-      kDebug() << "Won't return mPrevItem because isValid = " << d->mPrevItem.isValid()
+      qDebug() << "Won't return mPrevItem because isValid = " << d->mPrevItem.isValid()
                << "; and haPayload is " << d->mPrevItem.hasPayload();
     }
     break;
   default:
-    kDebug() << "state = " << state;
+    qDebug() << "state = " << state;
     Q_ASSERT_X( false, "EditorItemManager::item", "Unknown enum value" ) ;
   }
   return Akonadi::Item();
@@ -340,7 +340,7 @@ void EditorItemManager::save()
 
       // ETM and the KSelectionProxyModel has a bug wrt collections moves, so this is disabled.
       // To test this, enable the collection combo-box and remove the following assert.
-      kError() << "Moving between collections is disabled for now: "
+      qCritical() << "Moving between collections is disabled for now: "
                << d->mItemUi->selectedCollection().id()
                << d->mItem.parentCollection().id();
       Q_ASSERT_X( false, "save()", "Moving between collections is disabled for now" );

@@ -150,7 +150,7 @@ static void set_keysize( QComboBox * cb, unsigned int strength ) {
         return;
     const int idx = cb->findData( static_cast<int>( strength ) );
     if ( idx < 0 )
-        kWarning() << "keysize " << strength << " not allowed";
+        qWarning() << "keysize " << strength << " not allowed";
     cb->setCurrentIndex( idx );
 }
 
@@ -753,7 +753,7 @@ namespace {
                 return;
             // ### better error handling?
             const QString fileName = exportCertificateCommand->openPGPFileName();
-            kDebug() << "fileName" << fileName;
+            qDebug() << "fileName" << fileName;
             exportCertificateCommand = 0;
             if ( fileName.isEmpty() )
                 return;
@@ -773,7 +773,7 @@ namespace {
         }
 
         void invokeMailer( const QString & to, const QString & subject, QString body, const QString & attachment ) {
-            kDebug() << "to:" << to << "subject:" << subject
+            qDebug() << "to:" << to << "subject:" << subject
                      << "body:" << body << "attachment:" << attachment;
             // KToolInvocation::invokeMailer is broken on Windows, and openUrl works fine on Unix, too.
 
@@ -786,7 +786,7 @@ namespace {
                 + "&body=" + QUrl::toPercentEncoding( body ) ;
             if ( !attachment.isEmpty() )
                 encoded += "&attach=" + ol_quote( QUrl::toPercentEncoding( QFileInfo( attachment ).absoluteFilePath() ) );
-            kDebug() << "openUrl" << QUrl::fromEncoded( encoded );
+            qDebug() << "openUrl" << QUrl::fromEncoded( encoded );
             QDesktopServices::openUrl( QUrl::fromEncoded( encoded ) );
             KMessageBox::information( this,
                                       i18nc("@info",
@@ -1184,7 +1184,7 @@ static bool requirementsAreMet( const QVector<Line> & list, QString & error ) {
     if ( !le )
       continue;
     const QString key = line.attr;
-    kDebug() << "requirementsAreMet(): checking \"" << key << "\" against \"" << le->text() << "\":";
+    qDebug() << "requirementsAreMet(): checking \"" << key << "\" against \"" << le->text() << "\":";
     if ( le->text().trimmed().isEmpty() ) {
         if ( key.endsWith(QLatin1Char('!')) ) {
             if ( line.regex.isEmpty() )
@@ -1209,7 +1209,7 @@ static bool requirementsAreMet( const QVector<Line> & list, QString & error ) {
                           "Local Admin rule: <icode>%2</icode>", line.label, line.regex );
         return false;
     }
-    kDebug() << "ok" << endl;
+    qDebug() << "ok" << endl;
   }
   return true;
 }
@@ -1380,7 +1380,7 @@ QString KeyCreationPage::createGnupgKeyParms() const {
             s << "name-uri:      " << uri                  << endl;
     }
     s     << "</GnupgKeyParms>"                            << endl;
-    kDebug() << '\n' << result;
+    qDebug() << '\n' << result;
     return result;
 }
 
@@ -1436,7 +1436,7 @@ void AdvancedSettingsDialog::loadDefaultKeyType() {
         setSubkeyType( GPGME_PK_ELG_E );
     } else {
         if ( !keyType.isEmpty() && keyType != QLatin1String("RSA") )
-            kWarning() << "invalid value \"" << qPrintable( keyType )
+            qWarning() << "invalid value \"" << qPrintable( keyType )
                        << "\" for entry \"[CertificateCreationWizard]"
                        << qPrintable( entry ) << "\"";
         setKeyType( GPGME_PK_RSA );

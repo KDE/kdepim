@@ -148,7 +148,7 @@ private:
         if ( dialog )
             dialog->message( msg );
         else
-            kDebug() << msg;
+            qDebug() << msg;
     }
 
 private:

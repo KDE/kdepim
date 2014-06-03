@@ -201,20 +201,20 @@ void IncidenceDescription::setupToolBar()
 void IncidenceDescription::printDebugInfo() const
 {
   // We're going to crash
-  kDebug() << "RichText enabled " << d->mRichTextEnabled;
+  qDebug() << "RichText enabled " << d->mRichTextEnabled;
 
   if ( mLoadedIncidence ) {
-    kDebug() << "Incidence description is rich " << mLoadedIncidence->descriptionIsRich();
+    qDebug() << "Incidence description is rich " << mLoadedIncidence->descriptionIsRich();
 
     if ( mLoadedIncidence->descriptionIsRich() ) {
-      kDebug() << "desc is rich, and it is <desc>" <<  mLoadedIncidence->richDescription()
+      qDebug() << "desc is rich, and it is <desc>" <<  mLoadedIncidence->richDescription()
                << "</desc>; "
                << "widget has <desc>" << mUi->mDescriptionEdit->toHtml()
                << "</desc>; "
                << "expr mLoadedIncidence->richDescription() != mUi->mDescriptionEdit->toHtml() is "
                << ( mLoadedIncidence->richDescription() != mUi->mDescriptionEdit->toHtml() );
     } else {
-      kDebug() << "desc is not rich, and it is <desc>" << mLoadedIncidence->description()
+      qDebug() << "desc is not rich, and it is <desc>" << mLoadedIncidence->description()
                << "</desc>; "
                << "widget has <desc>" << mUi->mDescriptionEdit->toPlainText()
                << "</desc>; "
@@ -223,7 +223,7 @@ void IncidenceDescription::printDebugInfo() const
     }
 
   } else {
-    kDebug() << "Incidence is invalid";
+    qDebug() << "Incidence is invalid";
   }
 }
 

@@ -43,7 +43,7 @@
 #include <kleo/stl_util.h>
 
 #include <KLocalizedString>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QStringList>
 
@@ -95,7 +95,7 @@ SignEncryptFilesCommand::Private::Private( SignEncryptFilesCommand * qq, KeyList
     controller.setOperationMode( SignEncryptFilesController::SignAllowed | SignEncryptFilesController::EncryptAllowed | SignEncryptFilesController::ArchiveAllowed );
 }
 
-SignEncryptFilesCommand::Private::~Private() { kDebug(); }
+SignEncryptFilesCommand::Private::~Private() { qDebug(); }
 
 SignEncryptFilesCommand::SignEncryptFilesCommand( KeyListController * c )
     : Command( new Private( this, c ) )
@@ -129,7 +129,7 @@ void SignEncryptFilesCommand::Private::init() {
     connect( &controller, SIGNAL(error(int,QString)), q, SLOT(slotControllerError(int,QString)) );
 }
 
-SignEncryptFilesCommand::~SignEncryptFilesCommand() { kDebug(); }
+SignEncryptFilesCommand::~SignEncryptFilesCommand() { qDebug(); }
 
 void SignEncryptFilesCommand::setFiles( const QStringList & files ) {
     d->files = files;
@@ -236,7 +236,7 @@ void SignEncryptFilesCommand::doStart() {
 }
 
 void SignEncryptFilesCommand::doCancel() {
-    kDebug();
+    qDebug();
     d->controller.cancel();
 }
 

@@ -50,7 +50,7 @@
 #include <gpgme++/key.h>
 
 #include <KLocalizedString>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <boost/bind.hpp>
 
@@ -101,7 +101,7 @@ CertifyCertificateCommand::Private::Private( CertifyCertificateCommand * qq, Key
 
 }
 
-CertifyCertificateCommand::Private::~Private() { kDebug(); }
+CertifyCertificateCommand::Private::~Private() { qDebug(); }
 
 CertifyCertificateCommand::CertifyCertificateCommand( KeyListController * c )
     : Command( new Private( this, c ) )
@@ -139,7 +139,7 @@ void CertifyCertificateCommand::Private::init() {
 
 }
 
-CertifyCertificateCommand::~CertifyCertificateCommand() { kDebug(); }
+CertifyCertificateCommand::~CertifyCertificateCommand() { qDebug(); }
 
 void CertifyCertificateCommand::setCertificationExportable( bool on ) {
     Q_UNUSED( on );
@@ -187,7 +187,7 @@ void CertifyCertificateCommand::doStart() {
 
     Q_FOREACH( const UserID & uid, d->uids )
         if ( qstricmp( uid.parent().primaryFingerprint(), key.primaryFingerprint() ) != 0 ) {
-            kWarning() << "User-ID <-> Key mismatch!";
+            qWarning() << "User-ID <-> Key mismatch!";
             d->finished();
             return;
         }
@@ -234,7 +234,7 @@ void CertifyCertificateCommand::Private::slotCertificationPrepared() {
 }
 
 void CertifyCertificateCommand::doCancel() {
-    kDebug();
+    qDebug();
     if ( d->job )
         d->job->slotCancel();
 }

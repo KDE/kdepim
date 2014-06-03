@@ -43,7 +43,7 @@
 #include <kleo/checksumdefinition.h>
 
 #include <KLocalizedString>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KSaveFile>
 #include <KConfigGroup>
 #include <KSharedConfig>
@@ -229,7 +229,7 @@ private:
         q->emitDoneOrError();
     }
     void slotProgress( int current, int total, const QString & what ) {
-        kDebug() << "progress: " << current << "/" << total << ": " << qPrintable( what );
+        qDebug() << "progress: " << current << "/" << total << ": " << qPrintable( what );
 #ifndef QT_NO_PROGRESSDIALOG
         if ( !progressDialog )
             return;
@@ -277,7 +277,7 @@ CreateChecksumsController::Private::Private( CreateChecksumsController * qq )
              q, SLOT(slotOperationFinished()) );
 }
 
-CreateChecksumsController::Private::~Private() { kDebug(); }
+CreateChecksumsController::Private::~Private() { qDebug(); }
 
 CreateChecksumsController::CreateChecksumsController( QObject * p )
     : Controller( p ), d( new Private( this ) )
@@ -292,7 +292,7 @@ CreateChecksumsController::CreateChecksumsController( const shared_ptr<const Exe
 }
 
 CreateChecksumsController::~CreateChecksumsController() {
-    kDebug();
+    qDebug();
 }
 
 void CreateChecksumsController::setFiles( const QStringList & files ) {
@@ -341,7 +341,7 @@ void CreateChecksumsController::start() {
 }
 
 void CreateChecksumsController::cancel() {
-    kDebug();
+    qDebug();
     const QMutexLocker locker( &d->mutex );
     d->canceled = true;
 }
@@ -385,7 +385,7 @@ static QString decode( const QString & encoded ) {
             case '\\': decoded += QLatin1Char( '\\' ); break;
             case 'n':  decoded += QLatin1Char( '\n' ); break;
             default:
-                kDebug() << "invalid escape sequence" << '\\' << ch << "(interpreted as '" << ch << "')";
+                qDebug() << "invalid escape sequence" << '\\' << ch << "(interpreted as '" << ch << "')";
                 decoded += ch;
                 break;
             }
@@ -566,7 +566,7 @@ static QString process( const Dir & dir, bool * fatal ) {
     const QString program = dir.checksumDefinition->createCommand();
     dir.checksumDefinition->startCreateCommand( &p, dir.inputFiles );
     p.waitForFinished();
-    kDebug() << "[" << &p << "] Exit code " << p.exitCode();
+    qDebug() << "[" << &p << "] Exit code " << p.exitCode();
 
     if ( p.exitStatus() != QProcess::NormalExit || p.exitCode() != 0 ) {
         file.abort();
@@ -612,7 +612,7 @@ void CreateChecksumsController::Private::run() {
         this->errors = errors;
         return;
     } else {
-        kDebug() << "using checksum-definition" << checksumDefinition->id();
+        qDebug() << "using checksum-definition" << checksumDefinition->id();
     }
 
     //
@@ -630,7 +630,7 @@ void CreateChecksumsController::Private::run() {
         : find_dirs_by_input_files( files, checksumDefinition, allowAddition, progressCb, checksumDefinitions ) ;
 
     Q_FOREACH( const Dir & dir, dirs )
-        kDebug() << dir;
+        qDebug() << dir;
 
     if ( !canceled ) {
 

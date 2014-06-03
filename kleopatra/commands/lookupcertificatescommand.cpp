@@ -55,7 +55,7 @@
 
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QRegExp>
 
@@ -140,7 +140,7 @@ LookupCertificatesCommand::Private::Private( LookupCertificatesCommand * qq, Key
 }
 
 LookupCertificatesCommand::Private::~Private() {
-    kDebug();
+    qDebug();
     delete dialog;
 }
 
@@ -167,7 +167,7 @@ void LookupCertificatesCommand::Private::init() {
 
 }
 
-LookupCertificatesCommand::~LookupCertificatesCommand() { kDebug(); }
+LookupCertificatesCommand::~LookupCertificatesCommand() { qDebug(); }
 
 
 void LookupCertificatesCommand::doStart() {
@@ -264,7 +264,7 @@ void LookupCertificatesCommand::Private::slotKeyListResult( const KeyListResult 
     else if ( q->sender() == keyListing.openpgp )
         keyListing.openpgp = 0;
     else
-        kDebug() << "unknown sender()" << q->sender();
+        qDebug() << "unknown sender()" << q->sender();
 
     keyListing.result.mergeWith( r );
     if ( keyListing.cms || keyListing.openpgp ) // still waiting for jobs to complete
@@ -318,7 +318,7 @@ void LookupCertificatesCommand::Private::slotImportRequested( const std::vector<
 
 void LookupCertificatesCommand::Private::slotSaveAsRequested( const std::vector<Key> & keys ) {
     Q_UNUSED( keys );
-    kDebug() << "not implemented";
+    qDebug() << "not implemented";
 }
 
 void LookupCertificatesCommand::Private::slotDetailsRequested( const Key & key ) {

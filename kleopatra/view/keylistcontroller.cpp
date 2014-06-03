@@ -124,7 +124,7 @@ public:
 
 public:
     void slotDestroyed( QObject * o ) {
-        kDebug() << ( void* )o;
+        qDebug() << ( void* )o;
         views.erase( std::remove( views.begin(), views.end(), o ), views.end() );
         commands.erase( std::remove( commands.begin(), commands.end(), o ), commands.end() );
     }
@@ -143,7 +143,7 @@ public:
     void slotActionTriggered();
     void slotCurrentViewChanged( QAbstractItemView * view ) {
         if ( view && !kdtools::binary_search( views, view ) ) {
-            kDebug() << "you need to register view" << view << "before trying to set it as the current view!";
+            qDebug() << "you need to register view" << view << "before trying to set it as the current view!";
             addView( view );
         }
         currentView = view;
@@ -461,7 +461,7 @@ void KeyListController::registerCommand( Command * cmd ) {
     if ( !cmd || kdtools::binary_search( d->commands, cmd ) )
         return;
     d->addCommand( cmd );
-    kDebug() << ( void* )cmd;
+    qDebug() << ( void* )cmd;
     if ( d->commands.size() == 1 )
         emit commandsExecuting( true );
 }
@@ -544,14 +544,14 @@ void KeyListController::Private::slotContextMenu( const QPoint & p ) {
     if ( view && kdtools::binary_search( views, view ) )
         emit q->contextMenuRequested( view, view->viewport()->mapToGlobal( p ) );
     else
-        kDebug() << "sender is not a QAbstractItemView*!";
+        qDebug() << "sender is not a QAbstractItemView*!";
 }
 
 void KeyListController::Private::slotCommandFinished() {
     Command * const cmd = qobject_cast<Command*>( q->sender() );
     if ( !cmd || !kdtools::binary_search( commands, cmd ) )
         return;
-    kDebug() << ( void* )cmd;
+    qDebug() << ( void* )cmd;
     if ( commands.size() == 1 )
         emit q->commandsExecuting( false );
 }
@@ -646,12 +646,12 @@ void KeyListController::Private::slotActionTriggered() {
                 c->start();
             }
             else
-                kDebug() << "createCommand() == NULL for action(?) \""
+                qDebug() << "createCommand() == NULL for action(?) \""
                          << qPrintable( s->objectName() ) << "\"";
         else
-            kDebug() << "I don't know anything about action(?) \"%s\"", qPrintable( s->objectName() );
+            qDebug() << "I don't know anything about action(?) \"%s\"", qPrintable( s->objectName() );
     } else {
-        kDebug() << "not called through a signal/slot connection (sender() == NULL)";
+        qDebug() << "not called through a signal/slot connection (sender() == NULL)";
     }
 }
 

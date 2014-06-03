@@ -238,7 +238,7 @@ bool IncidenceAttendee::isDirty() const
     tmp.setOrganizer( mUi->mOrganizerCombo->currentText() );
 
     if ( mLoadedIncidence->organizer()->email() != tmp.organizer()->email() ) {
-      kDebug() << "Organizer changed. Old was " << mLoadedIncidence->organizer()->name()
+      qDebug() << "Organizer changed. Old was " << mLoadedIncidence->organizer()->name()
                << mLoadedIncidence->organizer()->email() << "; new is " << tmp.organizer()->name()
                << tmp.organizer()->email();
       return true;
@@ -320,7 +320,7 @@ void IncidenceAttendee::checkIfExpansionIsNeeded( KPIM::MultiplyingLine *line )
 {
   AttendeeData::Ptr data = qSharedPointerDynamicCast<AttendeeData>( line->data() );
   if ( !data ) {
-    kDebug() << "dynamic cast failed";
+    qDebug() << "dynamic cast failed";
     return;
   }
 
@@ -602,7 +602,7 @@ void IncidenceAttendee::printDebugInfo() const
     }
 
     if ( !found ) {
-      kDebug() << "Attendee not found: " << attendee->email()
+      qDebug() << "Attendee not found: " << attendee->email()
                << attendee->name()
                << attendee->status()
                << attendee->RSVP()

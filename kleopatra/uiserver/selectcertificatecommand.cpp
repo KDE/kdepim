@@ -140,17 +140,17 @@ int SelectCertificateCommand::doStart() {
 }
 
 void SelectCertificateCommand::Private::slotSelectedCertificates( int err, const QByteArray & data ) {
-    kDebug() << err << ", " << data.constData();
+    qDebug() << err << ", " << data.constData();
     if ( err )
         return;
     const std::vector<std::string> fprs = kdtools::transform< std::vector<std::string> >( data.split( '\n' ), mem_fn( &QByteArray::constData ) );
     const std::vector<Key> keys = KeyCache::instance()->findByKeyIDOrFingerprint( fprs );
     Q_FOREACH( const Key & key, keys )
-        kDebug() << "found key " << key.userID(0).id();
+        qDebug() << "found key " << key.userID(0).id();
     if ( dialog )
         dialog->selectCertificates( keys );
     else
-        kWarning() << "dialog == NULL in slotSelectedCertificates";
+        qWarning() << "dialog == NULL in slotSelectedCertificates";
 }
 
 void SelectCertificateCommand::doCanceled() {

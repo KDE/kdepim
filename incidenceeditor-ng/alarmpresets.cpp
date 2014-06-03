@@ -185,7 +185,7 @@ KCalCore::Alarm::Ptr preset( When when, const QString &name )
     // The name should exists and only once
     if ( sBeforeStartPresetNames->count( name ) != 1 ) {
       // print some debug info before crashing
-      kDebug() << " name = " << name << "; when = " << when
+      qDebug() << " name = " << name << "; when = " << when
                << "; count for name = " << sBeforeStartPresetNames->count( name )
                <<  "; global count = " << sBeforeStartPresetNames->count();
       Q_ASSERT_X( false, "preset", "Number of presets should be one" );

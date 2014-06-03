@@ -171,7 +171,7 @@ void ChangeRootTrustCommand::doStart() {
     if ( keys.size() == 1 )
         key = keys.front();
     else
-        kWarning() << "can only work with one certificate at a time";
+        qWarning() << "can only work with one certificate at a time";
 
     if ( key.isNull() ) {
         d->Command::Private::finished();
@@ -271,7 +271,7 @@ QString change_trust_file( const QString & trustListFile, const QString & key, K
 
     const QString keyColon = add_colons( key );
 
-    kDebug() << qPrintable( key ) << " -> " << qPrintable( keyColon );
+    qDebug() << qPrintable( key ) << " -> " << qPrintable( keyColon );
 
     //               ( 1)    (                         2                           )    (  3  )( 4)
     QRegExp rx( QLatin1String("\\s*(!?)\\s*([a-fA-F0-9]{40}|(?:[a-fA-F0-9]{2}:){19}[a-fA-F0-9]{2})\\s*([SsPp*])(.*)") );
@@ -281,13 +281,13 @@ QString change_trust_file( const QString & trustListFile, const QString & key, K
 
         const QString line = QString::fromLatin1( rawLine.data(), rawLine.size() );
         if ( !rx.exactMatch( line ) ) {
-            kDebug() << "line \"" << rawLine.data() << "\" does not match";
+            qDebug() << "line \"" << rawLine.data() << "\" does not match";
             out.write( rawLine + '\n' );
             continue;
         }
         const QString cap2 = rx.cap(2);
         if ( cap2 != key && cap2 != keyColon ) {
-            kDebug() << qPrintable( key ) << " != "
+            qDebug() << qPrintable( key ) << " != "
                      << qPrintable( cap2 ) << " != "
                      << qPrintable( keyColon );
             out.write( rawLine + '\n' );
@@ -333,10 +333,10 @@ QString run_gpgconf_reload_gpg_agent( const QString & gpgConfPath )
 
     QProcess p;
     p.start( gpgConfPath, QStringList() << QLatin1String("--reload") << QLatin1String("gpg-agent") );
-    kDebug() <<  "starting " << qPrintable( gpgConfPath )
+    qDebug() <<  "starting " << qPrintable( gpgConfPath )
              << " --reload gpg-agent";
     p.waitForFinished( -1 );
-    kDebug() << "done";
+    qDebug() << "done";
     if ( p.error() == QProcess::UnknownError )
         return QString();
     else

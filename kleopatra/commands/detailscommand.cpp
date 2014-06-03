@@ -136,7 +136,7 @@ void DetailsCommand::doStart() {
     if ( keys.size() == 1 )
         key = keys.front();
     else
-        kWarning() << "can only work with one certificate at a time";
+        qWarning() << "can only work with one certificate at a time";
 
     if ( key.isNull() ) {
         d->finished();

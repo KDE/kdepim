@@ -46,7 +46,7 @@
 #include <kleo/stl_util.h>
 
 #include <KLocalizedString>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QApplication>
 #include <QClipboard>
@@ -99,7 +99,7 @@ EncryptClipboardCommand::Private::Private( EncryptClipboardCommand * qq, KeyList
 
 }
 
-EncryptClipboardCommand::Private::~Private() { kDebug(); }
+EncryptClipboardCommand::Private::~Private() { qDebug(); }
 
 EncryptClipboardCommand::EncryptClipboardCommand( KeyListController * c )
     : Command( new Private( this, c ) )
@@ -119,7 +119,7 @@ void EncryptClipboardCommand::Private::init() {
     connect( &controller, SIGNAL(error(int,QString)), q, SLOT(slotControllerError(int,QString)) );
 }
 
-EncryptClipboardCommand::~EncryptClipboardCommand() { kDebug(); }
+EncryptClipboardCommand::~EncryptClipboardCommand() { qDebug(); }
 
 // static
 bool EncryptClipboardCommand::canEncryptCurrentClipboard() {
@@ -163,7 +163,7 @@ void EncryptClipboardCommand::Private::slotRecipientsResolved() {
 }
 
 void EncryptClipboardCommand::doCancel() {
-    kDebug();
+    qDebug();
     d->controller.cancel();
 }
 

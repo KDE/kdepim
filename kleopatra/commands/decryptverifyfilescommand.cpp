@@ -43,7 +43,7 @@
 #include <kleo/stl_util.h>
 
 #include <KLocalizedString>
-#include <kdebug.h>
+#include <qdebug.h>
 
 #include <QStringList>
 
@@ -94,7 +94,7 @@ DecryptVerifyFilesCommand::Private::Private( DecryptVerifyFilesCommand * qq, Key
 {
 }
 
-DecryptVerifyFilesCommand::Private::~Private() { kDebug(); }
+DecryptVerifyFilesCommand::Private::~Private() { qDebug(); }
 
 DecryptVerifyFilesCommand::DecryptVerifyFilesCommand( KeyListController * c )
     : Command( new Private( this, c ) )
@@ -128,7 +128,7 @@ void DecryptVerifyFilesCommand::Private::init() {
     connect( &controller, SIGNAL(error(int,QString)), q, SLOT(slotControllerError(int,QString)) );
 }
 
-DecryptVerifyFilesCommand::~DecryptVerifyFilesCommand() { kDebug(); }
+DecryptVerifyFilesCommand::~DecryptVerifyFilesCommand() { qDebug(); }
 
 void DecryptVerifyFilesCommand::setFiles( const QStringList & files ) {
     d->files = files;
@@ -166,7 +166,7 @@ void DecryptVerifyFilesCommand::doStart() {
 }
 
 void DecryptVerifyFilesCommand::doCancel() {
-    kDebug();
+    qDebug();
     d->controller.cancel();
 }
 

@@ -462,12 +462,12 @@ bool IncidenceRecurrence::isValid() const
            incidence->recurrence()->getNextDateTime( referenceDate ).isValid() ) ) {
         mLastErrorString = i18n( "A recurring event or to-do must occur at least once. "
                                  "Adjust the recurring parameters." );
-        kDebug() << mLastErrorString;
+        qDebug() << mLastErrorString;
         return false;
       }
     } else {
       mLastErrorString = i18n( "The incidence's start date is invalid." );
-      kDebug() << mLastErrorString;
+      qDebug() << mLastErrorString;
       return false;
     }
 

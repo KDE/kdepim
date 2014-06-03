@@ -273,7 +273,7 @@ void EncryptEMailController::cancel() {
             d->wizard->close();
         d->cancelAllTasks();
     } catch ( const std::exception & e ) {
-        kDebug() << "Caught exception: " << e.what();
+        qDebug() << "Caught exception: " << e.what();
     }
 }
 
