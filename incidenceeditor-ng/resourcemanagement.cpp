@@ -82,6 +82,19 @@ void ResourceManagement::showDetails(const KLDAP::LdapObject &obj)
         }
         ui->formDetails->addRow(key, new QLabel(list.join("\n")));
     }
+
+    /*
+     * TODO: Has to be needed and tested : )
+    KUrl httpUrl;
+    httpUrl.setUser(  userName );
+    httpUrl.setPassword(  password );
+    httpUrl.setHost(  host );
+    httpUrl.setProtocol(  QLatin1String(  "https" ) );
+    httpUrl.setPath(  QLatin1String( "/freebusy/" ) + user + QLatin1String( ".ifb" ) );
+
+    KIO::Job *job = KIO::get(  url, KIO::NoReload, KIO::HideProgressInfo );
+    */
+
 }
 
 #include "resourcemanagement.moc"
