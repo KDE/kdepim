@@ -108,6 +108,8 @@ MainWidget::~MainWidget()
 
 void MainWidget::createSearch()
 {
+//QT5
+#if 0
   SearchDialog dlg;
   if ( !dlg.exec() )
     return;
@@ -121,6 +123,7 @@ void MainWidget::createSearch()
     name = "My Search";
 
   new Akonadi::SearchCreateJob( name, query );
+#endif
 }
 
 void MainWidget::startServer()

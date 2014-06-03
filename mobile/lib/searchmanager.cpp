@@ -41,10 +41,11 @@ SearchManager::~SearchManager()
 void SearchManager::startSearch( const QString &query )
 {
   cleanUpSearch();
-
+#if 0 //QT5
   const QString searchName = i18n( "Search Results" ) + QLatin1String( "                                      " ) + QUuid::createUuid().toString();
   Akonadi::SearchCreateJob *job = new Akonadi::SearchCreateJob( searchName, query );
   connect( job, SIGNAL(result(KJob*)), this, SLOT(result(KJob*)) );
+#endif
 }
 
 void SearchManager::stopSearch()
