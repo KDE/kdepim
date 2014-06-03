@@ -49,4 +49,10 @@ void FollowUpReminderManager::load()
     }
 }
 
+bool FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item)
+{
+    //TODO
+    return false;
+}
+
 #include "followupremindermanager.moc"
