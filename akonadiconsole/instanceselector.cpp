@@ -22,7 +22,7 @@
 #include "instanceselector.h"
 #include "ui_instanceselector.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KIcon>
 #include <KLocalizedString>
 #include <akonadi/private/protocol_p.h>
@@ -45,7 +45,7 @@ InstanceSelector::InstanceSelector( const QString& remoteHost, QWidget* parent, 
   setButtonText(Ok, i18n("Connect"));
 
   const QStringList insts = instances();
-  kDebug() << "Found running Akonadi instances:" << insts;
+  qDebug() << "Found running Akonadi instances:" << insts;
   if ( insts.size() <= 1 ) {
     m_instance = QString::fromUtf8( qgetenv("AKONADI_INSTANCE") );
     if ( insts.size() == 1 && m_instance.isEmpty() )

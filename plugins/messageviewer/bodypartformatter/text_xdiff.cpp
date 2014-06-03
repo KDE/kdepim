@@ -113,7 +113,7 @@ namespace {
       }
 
       html += QLatin1String("</pre></div>");
-      //kDebug( "%s", html.toLatin1() );
+      //qDebug( "%s", html.toLatin1() );
       writer->queue( html );
 
       return Ok;
