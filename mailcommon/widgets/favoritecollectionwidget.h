@@ -38,6 +38,8 @@ public:
     void readConfig();
     void updateMode();
 
+    void changeViewMode(QListView::ViewMode mode);
+
 protected slots:
     void slotGeneralFontChanged();
     void slotGeneralPaletteChanged();
