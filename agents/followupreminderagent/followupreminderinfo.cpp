@@ -19,6 +19,7 @@
 
 #include <KConfigGroup>
 
+
 FollowUpReminderInfo::FollowUpReminderInfo()
     : mId(-1)
 {
@@ -27,8 +28,28 @@ FollowUpReminderInfo::FollowUpReminderInfo()
 FollowUpReminderInfo::FollowUpReminderInfo(const KConfigGroup &config)
     : mId(-1)
 {
-    //TODO
+    readConfig(config);
 }
+
+void FollowUpReminderInfo::readConfig(const KConfigGroup &config)
+{
+    if (config.hasKey(QLatin1String("followUpReminderDate"))) {
+        mFollowUpReminderDate = QDateTime::fromString(config.readEntry("followUpReminderDate"), Qt::ISODate);
+    }
+    mId = config.readEntry("itemId", -1);
+    mMessageId = config.readEntry("messageId", QString());
+}
+
+void FollowUpReminderInfo::writeConfig(KConfigGroup &config )
+{
+    if (mFollowUpReminderDate.isValid()) {
+        config.writeEntry("followUpReminderDate", mFollowUpReminderDate.toString(Qt::ISODate) );
+    }
+    config.writeEntry("messageId", mMessageId);
+    config.writeEntry("itemId", mId);
+    config.sync();
+}
+
 
 Akonadi::Item::Id FollowUpReminderInfo::id() const
 {
@@ -42,6 +63,28 @@ void FollowUpReminderInfo::setId(Akonadi::Item::Id value)
 
 bool FollowUpReminderInfo::isValid() const
 {
-    return (mId != -1);
+    return (mId != -1 && !mMessageId.isEmpty() && mFollowUpReminderDate.isValid());
 }
+
+QString FollowUpReminderInfo::messageId() const
+{
+    return mMessageId;
+}
+
+void FollowUpReminderInfo::setMessageId(const QString &messageId)
+{
+    mMessageId = messageId;
+}
+
+QDateTime FollowUpReminderInfo::followUpReminderDate() const
+{
+    return mFollowUpReminderDate;
+}
+
+void FollowUpReminderInfo::setFollowUpReminderDate(const QDateTime &followUpReminderDate)
+{
+    mFollowUpReminderDate = followUpReminderDate;
+}
+
+
 

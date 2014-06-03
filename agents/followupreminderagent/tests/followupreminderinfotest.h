@@ -28,6 +28,7 @@ public:
 
 private Q_SLOTS:
     void shouldHaveDefaultValue();
+    void shoudBeNotValid();
 };
 
 #endif // FOLLOWUPREMINDERINFOTEST_H

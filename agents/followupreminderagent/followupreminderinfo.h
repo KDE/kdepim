@@ -19,6 +19,7 @@
 #define FOLLOWUPREMINDERINFO_H
 
 #include <Akonadi/Item>
+#include <QDateTime>
 class KConfigGroup;
 class FollowUpReminderInfo
 {
@@ -31,8 +32,19 @@ public:
 
     bool isValid() const;
 
+    QString messageId() const;
+    void setMessageId(const QString &messageId);
+
+    QDateTime followUpReminderDate() const;
+    void setFollowUpReminderDate(const QDateTime &followUpReminderDate);
+
+    void writeConfig(KConfigGroup &config);
+
 private:
+    void readConfig(const KConfigGroup &config);
     Akonadi::Item::Id mId;
+    QString mMessageId;
+    QDateTime mFollowUpReminderDate;
 };
 
 #endif // FOLLOWUPREMINDERINFO_H
