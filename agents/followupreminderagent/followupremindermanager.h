@@ -19,7 +19,8 @@
 #define FOLLOWUPREMINDERMANAGER_H
 
 #include <QObject>
-
+#include <KSharedConfig>
+class FollowUpReminderInfo;
 class FollowUpReminderManager : public QObject
 {
     Q_OBJECT
@@ -28,6 +29,9 @@ public:
     ~FollowUpReminderManager();
 
     void load();
+private:
+    KSharedConfig::Ptr mConfig;
+    QList<FollowUpReminderInfo*> mFollowUpReminderInfoList;
 };
 
 #endif // FOLLOWUPREMINDERMANAGER_H
