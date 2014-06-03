@@ -19,7 +19,7 @@
 #include "followupreminderagent.h"
 #include "followupremindermanager.h"
 #include "followupreminderadaptor.h"
-//#include "followupreminderconfiguredialog.h"
+#include "followupreminderinfodialog.h"
 #include "followupreminderagentsettings.h"
 #include <KWindowSystem>
 #include <KLocale>
@@ -65,12 +65,23 @@ bool FollowUpReminderAgent::enabledAgent() const
 
 void FollowUpReminderAgent::showConfigureDialog(qlonglong windowId)
 {
-    //TODO
+    QPointer<FollowUpReminderInfoDialog> dialog = new FollowUpReminderInfoDialog();
+    if (windowId) {
+#ifndef Q_WS_WIN
+        KWindowSystem::setMainWindow( dialog, windowId );
+#else
+        KWindowSystem::setMainWindow( dialog, (HWND)windowId );
+#endif
+    }
+    if (dialog->exec()) {
+        //TODO
+    }
+    delete dialog;
 }
 
 void FollowUpReminderAgent::configure( WId windowId )
 {
-    //showConfigureDialog((qulonglong)windowId);
+    showConfigureDialog((qulonglong)windowId);
 }
 
 void FollowUpReminderAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
@@ -79,8 +90,7 @@ void FollowUpReminderAgent::itemAdded( const Akonadi::Item &item, const Akonadi:
         kDebug() << "MailFilterAgent::itemAdded called for a non-message item!";
         return;
     }
-    //TODO fetch to get messageid
-
+    mManager->checkFollowUp(item);
 }
 
 
