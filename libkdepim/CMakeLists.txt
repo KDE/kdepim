@@ -147,6 +147,16 @@ if (Qt5Designer_FOUND)
     target_link_libraries(kdepimwidgets
         kdepim
     )
+    if(NOT WIN32)
+        # Since there are no libraries provided by this module,
+        # there is no point including the build tree in RPath,
+        # and then having to edit it at install time.
+        set_target_properties(kdepimwidgets PROPERTIES
+            SKIP_BUILD_RPATH TRUE
+            BUILD_WITH_INSTALL_RPATH TRUE
+        )
+    endif()
+
     install(TARGETS
         kdepimwidgets
         DESTINATION ${QT_PLUGIN_INSTALL_DIR}/designer
