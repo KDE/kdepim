@@ -159,34 +159,70 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
         bool tmpOk = false;
 
         if ( option( QLatin1String("version") ) == QLatin1String("v21") ) {
-          tmpOk = doExport( url, converter.exportVCard( contact, KABC::VCardConverter::v2_1 ) );
+            ok = doExport( url, converter.exportVCard( contact, KABC::VCardConverter::v2_1 ) );
+        } else if ( option( QLatin1String("version") ) == QLatin1String("v30") ) {
+            ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v3_0 ) );
         } else {
-          tmpOk = doExport( url, converter.exportVCard( contact, KABC::VCardConverter::v3_0 ) );
+            ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v4_0 ) );
         }
+    } else {
+        const int answer =
+                KMessageBox::questionYesNoCancel(
+                    parentWidget(),
+                    i18nc( "@info",
+                           "You have selected a list of contacts, "
+                           "shall they be exported to several files?" ),
+                    QString(),
+                    KGuiItem( i18nc( "@action:button", "Export to One File" ) ),
+                    KGuiItem( i18nc( "@action:button", "Export to Several Files" ) ) );
 
-        ok = ok && tmpOk;
-      }
-      break;
-    }
-    case KMessageBox::Yes:
-    {
-      url = KFileDialog::getSaveUrl( KUrl( QLatin1String("addressbook.vcf") ),
-                                     QLatin1String("text/vcard") );
-      if ( url.isEmpty() ) {
-        return true; // user canceled export
-      }
+        switch( answer ) {
+        case KMessageBox::No:
+        {
+            const KUrl baseUrl = KFileDialog::getExistingDirectoryUrl();
+            if ( baseUrl.isEmpty() ) {
+                return true; // user canceled export
+            }
 
-      if ( option( QLatin1String("version") ) == QLatin1String("v21") ) {
-        ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v2_1 ) );
-      } else {
-        ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v3_0 ) );
-      }
-      break;
-    }
-    case KMessageBox::Cancel:
-    default:
-      return true; // user canceled export
-    }
+            for ( int i = 0; i < list.count(); ++i ) {
+                const KABC::Addressee contact = list.at( i );
+
+                url = baseUrl.url() + QLatin1Char('/') + contactFileName( contact ) + QLatin1String(".vcf");
+
+                bool tmpOk = false;
+
+                if ( option( QLatin1String("version") ) == QLatin1String("v21") ) {
+                    tmpOk = doExport( url, converter.exportVCard( contact, KABC::VCardConverter::v2_1 ) );
+                } else if ( option( QLatin1String("version") ) == QLatin1String("v30") ) {
+                    tmpOk = doExport( url, converter.exportVCard( contact, KABC::VCardConverter::v3_0 ) );
+                } else {
+                    tmpOk = doExport( url, converter.exportVCard( contact, KABC::VCardConverter::v4_0 ) );
+                }
+
+                ok = ok && tmpOk;
+            }
+            break;
+        }
+        case KMessageBox::Yes:
+        {
+            url = KFileDialog::getSaveUrl( KUrl( QLatin1String("addressbook.vcf") ) );
+            if ( url.isEmpty() ) {
+                return true; // user canceled export
+            }
+
+            if ( option( QLatin1String("version") ) == QLatin1String("v21") ) {
+                ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v2_1 ) );
+            } else if ( option( QLatin1String("version") ) == QLatin1String("v30") ) {
+                ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v3_0 ) );
+            } else {
+                ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v4_0 ) );
+            }
+            break;
+        }
+        case KMessageBox::Cancel:
+        default:
+            return true; // user canceled export
+        }
   }
 
   return ok;

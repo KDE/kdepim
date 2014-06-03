@@ -15,25 +15,20 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLLOWUPREMINDERMANAGER_H
-#define FOLLOWUPREMINDERMANAGER_H
+#ifndef FOLLOWUPREMINDERINFOTEST_H
+#define FOLLOWUPREMINDERINFOTEST_H
 
 #include <QObject>
-#include <KSharedConfig>
-#include <Akonadi/Item>
-class FollowUpReminderInfo;
-class FollowUpReminderManager : public QObject
+
+class FollowUpReminderInfoTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit FollowUpReminderManager(QObject *parent = 0);
-    ~FollowUpReminderManager();
+    FollowUpReminderInfoTest();
 
-    void load();
-    bool checkFollowUp(const Akonadi::Item &item);
-private:
-    KSharedConfig::Ptr mConfig;
-    QList<FollowUpReminderInfo*> mFollowUpReminderInfoList;
+private Q_SLOTS:
+    void shouldHaveDefaultValue();
+    void shoudBeNotValid();
 };
 
-#endif // FOLLOWUPREMINDERMANAGER_H
+#endif // FOLLOWUPREMINDERINFOTEST_H

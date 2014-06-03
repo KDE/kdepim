@@ -12,6 +12,8 @@ set(followupreminderagent_SRCS
     followupreminderagent.cpp
     followupremindermanager.cpp
     followupreminderinfodialog.cpp
+    followupreminderinfo.cpp
+    followupreminderjob.cpp
 )
 
 qt5_add_dbus_adaptor(followupreminderagent_SRCS org.freedesktop.Akonadi.FollowUpReminder.xml followupreminderagent.h FollowUpReminderAgent)
@@ -38,4 +40,6 @@ install(TARGETS akonadi_followupreminder_agent ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install(FILES followupreminder.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
 
-#install(FILES akonadi_followupreminder_agent.notifyrc DESTINATION ${KNOTIFYRC_INSTALL_DIR} )
+add_subdirectory(tests)
+
+install(FILES akonadi_followupreminder_agent.notifyrc DESTINATION ${KNOTIFYRC_INSTALL_DIR} )

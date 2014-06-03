@@ -27,10 +27,14 @@
 
 XXPort *XXPortFactory::createXXPort( const QString &identifier, QWidget *parentWidget ) const
 {
-    if ( identifier == QLatin1String("vcard21") || identifier == QLatin1String("vcard30") ) {
+    if ( identifier == QLatin1String("vcard21") || identifier == QLatin1String("vcard30") || identifier == QLatin1String("vcard40") ) {
         XXPort *xxport = new VCardXXPort( parentWidget );
         if ( identifier == QLatin1String("vcard21") ) {
             xxport->setOption( QLatin1String("version"), QLatin1String("v21") );
+        } else if ( identifier == QLatin1String("vcard30") ) {
+            xxport->setOption( QLatin1String("version"), QLatin1String("v30") );
+        } else if ( identifier == QLatin1String("vcard40") ) {
+            xxport->setOption( QLatin1String("version"), QLatin1String("v40") );
         }
         return xxport;
     } else if ( identifier == QLatin1String("csv") ) {

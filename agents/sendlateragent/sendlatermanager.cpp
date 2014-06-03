@@ -68,8 +68,11 @@ void SendLaterManager::load(bool forcereload)
     const int numberOfItems = itemList.count();
     for (int i = 0 ; i < numberOfItems; ++i) {
         KConfigGroup group = mConfig->group(itemList.at(i));
-        SendLater::SendLaterInfo *info = new SendLater::SendLaterInfo(group);        
-        mListSendLaterInfo.append(info);
+        SendLater::SendLaterInfo *info = new SendLater::SendLaterInfo(group);
+        if (info->isValid())
+            mListSendLaterInfo.append(info);
+        else
+            delete info;
     }
     createSendInfoList();
 }

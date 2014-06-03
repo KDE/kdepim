@@ -16,20 +16,43 @@
 */
 
 #include "followupremindermanager.h"
+#include "followupreminderinfo.h"
+
+#include <KGlobal>
+#include <KConfigGroup>
+#include <KConfig>
 
 FollowUpReminderManager::FollowUpReminderManager(QObject *parent)
     : QObject(parent)
 {
+    mConfig = KGlobal::config();
 }
 
 FollowUpReminderManager::~FollowUpReminderManager()
 {
-
+    qDeleteAll(mFollowUpReminderInfoList);
+    mFollowUpReminderInfoList.clear();
 }
 
 void FollowUpReminderManager::load()
 {
+    const QStringList itemList = mConfig->groupList().filter( QRegExp( QLatin1String("FollowupReminderItem \\d+") ) );
+    const int numberOfItems = itemList.count();
+    for (int i = 0 ; i < numberOfItems; ++i) {
+        KConfigGroup group = mConfig->group(itemList.at(i));
 
+        FollowUpReminderInfo *info = new FollowUpReminderInfo(group);
+        if (info->isValid())
+            mFollowUpReminderInfoList.append(info);
+        else
+            delete info;
+    }
+}
+
+bool FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item)
+{
+    //TODO
+    return false;
 }
 
 #include "followupremindermanager.moc"

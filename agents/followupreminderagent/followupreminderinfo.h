@@ -15,25 +15,36 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLLOWUPREMINDERMANAGER_H
-#define FOLLOWUPREMINDERMANAGER_H
+#ifndef FOLLOWUPREMINDERINFO_H
+#define FOLLOWUPREMINDERINFO_H
 
-#include <QObject>
-#include <KSharedConfig>
 #include <Akonadi/Item>
-class FollowUpReminderInfo;
-class FollowUpReminderManager : public QObject
+#include <QDateTime>
+class KConfigGroup;
+class FollowUpReminderInfo
 {
-    Q_OBJECT
 public:
-    explicit FollowUpReminderManager(QObject *parent = 0);
-    ~FollowUpReminderManager();
+    FollowUpReminderInfo();
+    FollowUpReminderInfo(const KConfigGroup &config);
 
-    void load();
-    bool checkFollowUp(const Akonadi::Item &item);
+    Akonadi::Item::Id id() const;
+    void setId(Akonadi::Item::Id value);
+
+    bool isValid() const;
+
+    QString messageId() const;
+    void setMessageId(const QString &messageId);
+
+    QDateTime followUpReminderDate() const;
+    void setFollowUpReminderDate(const QDateTime &followUpReminderDate);
+
+    void writeConfig(KConfigGroup &config);
+
 private:
-    KSharedConfig::Ptr mConfig;
-    QList<FollowUpReminderInfo*> mFollowUpReminderInfoList;
+    void readConfig(const KConfigGroup &config);
+    Akonadi::Item::Id mId;
+    QString mMessageId;
+    QDateTime mFollowUpReminderDate;
 };
 
-#endif // FOLLOWUPREMINDERMANAGER_H
+#endif // FOLLOWUPREMINDERINFO_H

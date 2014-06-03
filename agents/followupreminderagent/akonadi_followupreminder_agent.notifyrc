@@ -1,0 +1,23 @@
+[Global]
+IconName=kmail
+Comment=Followup reminder agent
+Comment[bs]=Prateći agent koji Vas podsjeća
+Comment[ca@valencia]=Agent per a recordatoris de seguiment
+Comment[da]=Agent til opfølgningspåmindelse
+Comment[de]=Agent zur Erinnerung an Folgenachrichten
+Comment[el]=Πράκτορας υπενθύμισης συνέχισης επικοινωνίας
+Comment[fi]=Vastaamisesta muistuttaja
+Comment[fr]=Agent de rappel des messages suivis
+Comment[gl]=Axente de lembranzas de seguimento
+Comment[hu]=Nyomkövető emlékeztető ügynök
+Comment[ia]=Agente de memorar de continuation (Followup Reminder Agent)
+Comment[kk]=Жауап беру туралы ескерту агенті
+Comment[nds]=Antwoortnaricht-Anstoothölper
+Comment[nl]=Agent voor herinneren aan vervolgactie
+Comment[pl]=Agent ponaglającego przypominania
+Comment[ru]=Агент напоминания о продолжении
+Comment[sv]=Påminnelseuppföljningsmodul
+Comment[tr]=Takip hatırlatma aracı
+Comment[uk]=Агент стеження за нагадуваннями
+Comment[zh_TW]=回覆提醒代理程式
+
