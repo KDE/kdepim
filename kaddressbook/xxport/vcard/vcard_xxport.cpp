@@ -108,58 +108,27 @@ VCardXXPort::VCardXXPort( QWidget *parent )
 
 bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
 {
-  KABC::VCardConverter converter;
-  KUrl url;
+    KABC::VCardConverter converter;
+    KUrl url;
 
-  const KABC::Addressee::List list = filterContacts( contacts );
-  if ( list.isEmpty() ) { // no contact selected
-    return true;
-  }
-
-  bool ok = true;
-  if ( list.count() == 1 ) {
-    url = KFileDialog::getSaveUrl(
-      QString( list[ 0 ].givenName() +
-               QLatin1Char( QLatin1Char('_') ) +
-               list[ 0 ].familyName() +
-               QLatin1String( ".vcf" ) ) );
-    if ( url.isEmpty() ) { // user canceled export
-      return true;
+    const KABC::Addressee::List list = filterContacts( contacts );
+    if ( list.isEmpty() ) { // no contact selected
+        return true;
     }
 
-    if ( option( QLatin1String("version") ) == QLatin1String("v21") ) {
-      ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v2_1 ) );
-    } else {
-      ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v3_0 ) );
-    }
-  } else {
-    const int answer =
-      KMessageBox::questionYesNoCancel(
-        parentWidget(),
-        i18nc( "@info",
-               "You have selected a list of contacts, "
-               "shall they be exported to several files?" ),
-        QString(),
-        KGuiItem( i18nc( "@action:button", "Export to One File" ) ),
-        KGuiItem( i18nc( "@action:button", "Export to Several Files" ) ) );
-
-    switch( answer ) {
-    case KMessageBox::No:
-    {
-      const KUrl baseUrl = KFileDialog::getExistingDirectoryUrl();
-      if ( baseUrl.isEmpty() ) {
-        return true; // user canceled export
-      }
-
-      for ( int i = 0; i < list.count(); ++i ) {
-        const KABC::Addressee contact = list.at( i );
-
-        url = baseUrl.url() + QLatin1Char('/') + contactFileName( contact ) + QLatin1String(".vcf");
-
-        bool tmpOk = false;
+    bool ok = true;
+    if ( list.count() == 1 ) {
+        url = KFileDialog::getSaveUrl(
+                    QString( list[ 0 ].givenName() +
+                    QLatin1Char( QLatin1Char('_') ) +
+                    list[ 0 ].familyName() +
+                QLatin1String( ".vcf" ) ) );
+        if ( url.isEmpty() ) { // user canceled export
+            return true;
+        }
 
         if ( option( QLatin1String("version") ) == QLatin1String("v21") ) {
-            ok = doExport( url, converter.exportVCard( contact, KABC::VCardConverter::v2_1 ) );
+            ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v2_1 ) );
         } else if ( option( QLatin1String("version") ) == QLatin1String("v30") ) {
             ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v3_0 ) );
         } else {
@@ -223,9 +192,9 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
         default:
             return true; // user canceled export
         }
-  }
+    }
 
-  return ok;
+    return ok;
 }
 
 KABC::Addressee::List VCardXXPort::importContacts() const
