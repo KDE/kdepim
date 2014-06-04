@@ -611,6 +611,8 @@ public slots:
     void slotExpandShortUrl();
     void slotShowCreateTodoWidget();
 
+    void slotGeneralFontChanged();
+
 signals:
     void showStatusBarMessage( const QString &message );
     void replaceMsgByUnencryptedVersion();
