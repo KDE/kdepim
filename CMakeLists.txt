@@ -133,11 +133,6 @@ set(Prison_MIN_VERSION "0.2.0")
 find_package(Prison ${Prison_MIN_VERSION})
 set_package_properties(Prison PROPERTIES DESCRIPTION "The Prison library" URL "http://projects.kde.org/prison" TYPE OPTIONAL PURPOSE "Needed to show mobile barcodes of your contacts")
 
-set(Prison_MIN_VERSION "0.2.0")
-
-find_package(Prison ${Prison_MIN_VERSION})
-set_package_properties(Prison PROPERTIES DESCRIPTION "The Prison library" URL "http://projects.kde.org/prison" TYPE OPTIONAL PURPOSE "Needed to show mobile barcodes of your contacts")
-
 # Libkgapi2
 #find_package(LibKGAPI2 2.1.0 QUIET CONFIG)
 #set_package_properties(LibKGAPI2 PROPERTIES DESCRIPTION "KDE-based library for accessing various Google services" URL "https://projects.kde.org/libkgapi" TYPE OPTIONAL PURPOSE "LibKGAPI is required to build Google Drive Storage Service")

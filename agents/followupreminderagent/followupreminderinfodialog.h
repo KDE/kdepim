@@ -19,6 +19,16 @@
 #define FOLLOWUPREMINDERINFODIALOG_H
 
 #include <KDialog>
+class KAboutData;
+
+
+class FollowUpReminderInfoWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit FollowUpReminderInfoWidget(QWidget *parent=0);
+    ~FollowUpReminderInfoWidget();
+};
 
 class FollowUpReminderInfoDialog : public KDialog
 {
@@ -26,6 +36,11 @@ class FollowUpReminderInfoDialog : public KDialog
 public:
     explicit FollowUpReminderInfoDialog(QWidget *parent=0);
     ~FollowUpReminderInfoDialog();
+
+private:
+    void readConfig();
+    void writeConfig();
+    KAboutData *mAboutData;
 };
 
 #endif // FOLLOWUPREMINDERINFODIALOG_H

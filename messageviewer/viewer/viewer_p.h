@@ -614,6 +614,8 @@ public slots:
     void slotShowCreateTodoWidget();
     void slotShowCreateEventWidget();
 
+    void slotGeneralFontChanged();
+
 signals:
     void showStatusBarMessage( const QString &message );
     void replaceMsgByUnencryptedVersion();

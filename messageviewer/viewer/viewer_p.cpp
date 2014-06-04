@@ -1194,6 +1194,14 @@ void ViewerPrivate::readConfig()
     mColorBar->update();
 }
 
+void ViewerPrivate::slotGeneralFontChanged()
+{
+    delete mCSSHelper;
+    mCSSHelper = new CSSHelper( mViewer );
+    if ( mMessage )
+        update();
+}
+
 
 void ViewerPrivate::writeConfig( bool sync )
 {

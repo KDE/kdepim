@@ -83,6 +83,8 @@ void Viewer::initialize()
     connect( d_ptr, SIGNAL(changeDisplayMail(Viewer::DisplayFormatMessage,bool)), SLOT(slotChangeDisplayMail(Viewer::DisplayFormatMessage,bool)) );
     connect( d_ptr, SIGNAL(moveMessageToTrash()), SIGNAL(moveMessageToTrash()));
 
+    connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), d_ptr,  SLOT(slotGeneralFontChanged()) );
+
     setMessage( KMime::Message::Ptr(), Delayed );
 }
 

@@ -146,15 +146,22 @@ void FavoriteCollectionWidget::slotChangeMode(bool)
 
     switch(mode) {
     case MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::IconMode:
-        setViewMode(IconMode);
+        changeViewMode(IconMode);
         break;
     case MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::ListMode:
-        setViewMode(ListMode);
+        changeViewMode(ListMode);
         break;
     }
 
     MailCommon::MailCommonSettings::self()->setFavoriteCollectionViewMode(mode);
     MailCommon::MailCommonSettings::self()->save();
+}
+
+void FavoriteCollectionWidget::changeViewMode(QListView::ViewMode mode)
+{
+    setViewMode(mode);
+    setDragEnabled(true);
+    setAcceptDrops(true);
 }
 
 void FavoriteCollectionWidget::slotChangeIconSize(bool )
