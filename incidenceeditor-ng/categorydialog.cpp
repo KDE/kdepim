@@ -28,7 +28,6 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/categoryconfig.h>
 
-#include <KDebug>
 #include <QIcon>
 
 using namespace IncidenceEditorNG;

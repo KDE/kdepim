@@ -36,7 +36,7 @@
 #include <KPIMUtils/Email>
 #include <KIO/Job>
 #include <KIO/NetAccess>
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 
 #include <QFile>

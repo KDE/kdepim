@@ -386,7 +386,7 @@ void IncidenceDialogPrivate::storeTemplatesInConfig( const QStringList &template
   // I find this somewhat broken. templates() returns a reference, maybe it should
   // be changed by adding a setTemplates method.
   IncidenceEditorNG::EditorConfig::instance()->templates( mEditor->type() ) = templateNames;
-  IncidenceEditorNG::EditorConfig::instance()->config()->writeConfig();
+  IncidenceEditorNG::EditorConfig::instance()->config()->save();
 }
 
 void IncidenceDialogPrivate::updateAttachmentCount( int newCount )
