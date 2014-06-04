@@ -90,7 +90,7 @@ void CalPrintYear::loadConfig()
 
 void CalPrintYear::saveConfig()
 {
-  kDebug();
+  qDebug();
 
   readSettingsWidget();
   if ( mConfig ) {

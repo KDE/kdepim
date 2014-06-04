@@ -117,19 +117,19 @@ void CalendarUtilsPrivate::handleChangeFinish( int,
       Q_ASSERT( !mMultiChange.inProgress() );
 
       if ( success ) {
-        kDebug() << "MultiChange finished";
+        qDebug() << "MultiChange finished";
         emit q->actionFinished( parent );
       } else {
-        kDebug() << "MultiChange failed";
+        qDebug() << "MultiChange failed";
         emit q->actionFailed( parent, QString() );
       }
     }
   } else {
     if ( success ) {
-      kDebug() << "Change finished";
+      qDebug() << "Change finished";
       emit q->actionFinished( item );
     } else {
-      kDebug() << "Change failed";
+      qDebug() << "Change failed";
       emit q->actionFailed( Akonadi::Item(), errorString );
     }
   }

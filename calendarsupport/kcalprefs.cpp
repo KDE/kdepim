@@ -134,7 +134,7 @@ void KCalPrefs::setTimeZoneDefault()
 {
   KTimeZone zone = KSystemTimeZones::local();
   if ( !zone.isValid() ) {
-    kError() << "KSystemTimeZones::local() return 0";
+    qCritical() << "KSystemTimeZones::local() return 0";
     return;
   }
 

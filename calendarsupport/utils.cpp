@@ -399,7 +399,7 @@ Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,
   dlg->setCaption( i18n( "Select Calendar" ) );
   dlg->setDescription( i18n( "Select the calendar where this item will be stored." ) );
   dlg->changeCollectionDialogOptions( Akonadi::CollectionDialog::KeepTreeExpanded );
-  kDebug() << "selecting collections with mimeType in " << mimeTypes;
+  qDebug() << "selecting collections with mimeType in " << mimeTypes;
 
   dlg->setMimeTypeFilter( mimeTypes );
   dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
@@ -414,7 +414,7 @@ Akonadi::Collection CalendarSupport::selectCollection( QWidget *parent,
     collection = dlg->selectedCollection();
 
     if ( !collection.isValid() ) {
-      kWarning() << "An invalid collection was selected!";
+      qWarning() << "An invalid collection was selected!";
     }
   }
   delete dlg;
@@ -764,12 +764,12 @@ QStringList CalendarSupport::categories( const KCalCore::Incidence::List &incide
 bool CalendarSupport::mergeCalendar(const QString &srcFilename, const KCalCore::Calendar::Ptr &destCalendar)
 {
     if (srcFilename.isEmpty()) {
-        kError() << "Empty filename.";
+        qCritical() << "Empty filename.";
         return false;
     }
 
     if (!QFile::exists(srcFilename)) {
-        kError() << "File'" << srcFilename << "' doesn't exist.";
+        qCritical() << "File'" << srcFilename << "' doesn't exist.";
     }
 
     bool loadedSuccesfully = true;

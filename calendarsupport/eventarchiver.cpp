@@ -136,7 +136,7 @@ void EventArchiver::run( const Akonadi::ETMCalendar::Ptr &calendar,
 
   const KCalCore::Incidence::List incidences = calendar->mergeIncidenceList( events, todos, journals );
 
-  kDebug() << "archiving incidences before" << limitDate
+  qDebug() << "archiving incidences before" << limitDate
            << " ->" << incidences.count() <<" incidences found.";
   if ( incidences.isEmpty() ) {
     if ( withGUI && errorIfNone ) {
@@ -211,7 +211,7 @@ void EventArchiver::archiveIncidences( const Akonadi::ETMCalendar::Ptr &calendar
   // Save current calendar to disk
   storage.setFileName( tmpFileName );
   if ( !storage.save() ) {
-    kDebug() << "Can't save calendar to temp file";
+    qDebug() << "Can't save calendar to temp file";
     return;
   }
 
@@ -224,7 +224,7 @@ void EventArchiver::archiveIncidences( const Akonadi::ETMCalendar::Ptr &calendar
   ICalFormat *format = new ICalFormat();
   archiveStore.setSaveFormat( format );
   if ( !archiveStore.load() ) {
-    kDebug() << "Can't load calendar from temp file";
+    qDebug() << "Can't load calendar from temp file";
     QFile::remove( tmpFileName );
     return;
   }
@@ -249,14 +249,14 @@ void EventArchiver::archiveIncidences( const Akonadi::ETMCalendar::Ptr &calendar
   // There is no KIO::NetAccess availabe for Windows CE
   if ( KIO::NetAccess::exists( archiveURL, KIO::NetAccess::SourceSide, widget ) ) {
     if( !KIO::NetAccess::download( archiveURL, archiveFile, widget ) ) {
-      kDebug() << "Can't download archive file";
+      qDebug() << "Can't download archive file";
       QFile::remove( tmpFileName );
       return;
     }
     // Merge with events to be archived.
     archiveStore.setFileName( archiveFile );
     if ( !archiveStore.load() ) {
-      kDebug() << "Can't merge with archive file";
+      qDebug() << "Can't merge with archive file";
       QFile::remove( tmpFileName );
       return;
     }
@@ -318,7 +318,7 @@ bool EventArchiver::isSubTreeComplete( const Akonadi::ETMCalendar::Ptr &calendar
   // This QList is only to prevent infinit recursion
   if ( checkedUids.contains( todo->uid() ) ) {
     // Probably will never happen, calendar.cpp checks for this
-    kWarning() << "To-do hierarchy loop detected!";
+    qWarning() << "To-do hierarchy loop detected!";
     return false;
   }
 

@@ -183,7 +183,7 @@ void CalPrintPluginBase::doLoadConfig()
     mPrintFooter = group.readEntry( "PrintFooter", true );
     loadConfig();
   } else {
-    kDebug() << "No config available in loadConfig!!!!";
+    qDebug() << "No config available in loadConfig!!!!";
   }
 }
 
@@ -201,7 +201,7 @@ void CalPrintPluginBase::doSaveConfig()
     group.writeEntry( "PrintFooter", mPrintFooter );
     mConfig->sync();
   } else {
-    kDebug() << "No config available in saveConfig!!!!";
+    qDebug() << "No config available in saveConfig!!!!";
   }
 }
 
@@ -1253,7 +1253,7 @@ void CalPrintPluginBase::drawIncidence( QPainter &p, const QRect &dayBox,
                                         bool includeDescription,
                                         bool richDescription )
 {
-  kDebug() << "summary =" << summary << ", singleLineLimit=" << singleLineLimit;
+  qDebug() << "summary =" << summary << ", singleLineLimit=" << singleLineLimit;
 
   int flags = Qt::AlignLeft | Qt::OpaqueMode;
   QFontMetrics fm = p.fontMetrics();

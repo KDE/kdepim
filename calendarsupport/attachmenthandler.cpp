@@ -291,10 +291,10 @@ void AttachmentHandler::slotFinishSaveAs( KJob *job )
       Incidence::Ptr incidence = CalendarSupport::incidence( items.first() );
       success = incidence && saveAs( info.attachmentName, incidence );
     } else {
-      kWarning() << Q_FUNC_INFO << "No item found";
+      qWarning() << Q_FUNC_INFO << "No item found";
     }
   } else {
-    kWarning() << Q_FUNC_INFO << "Job error:" << job->errorString();
+    qWarning() << Q_FUNC_INFO << "Job error:" << job->errorString();
   }
 
   emit saveAsFinished( info.uid, info.attachmentName, success );
@@ -313,10 +313,10 @@ void AttachmentHandler::slotFinishView( KJob *job )
       Incidence::Ptr incidence = CalendarSupport::incidence( items.first() );
       success = incidence && view( info.attachmentName, incidence );
     } else {
-      kWarning() << Q_FUNC_INFO << "No item found";
+      qWarning() << Q_FUNC_INFO << "No item found";
     }
   } else {
-    kWarning() << Q_FUNC_INFO << "Job error:" << job->errorString();
+    qWarning() << Q_FUNC_INFO << "Job error:" << job->errorString();
   }
 
   emit viewFinished( info.uid, info.attachmentName, success );
