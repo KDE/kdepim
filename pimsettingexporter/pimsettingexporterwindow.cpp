@@ -309,6 +309,8 @@ void PimSettingExporterWindow::backupNextStep()
                 executeJob();
             }
             break;
+        case Utils::Unknown:
+            break;
         }
     } else {
         backupFinished();
@@ -441,6 +443,8 @@ void PimSettingExporterWindow::restoreNextStep()
                 executeJob();
             }
             break;
+        case Utils::Unknown:
+	    break;
         }
     } else {
         restoreFinished();

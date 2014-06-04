@@ -52,7 +52,8 @@ enum StoredType {
 Q_DECLARE_FLAGS(StoredTypes, StoredType)
 
 enum AppsType {
-    KMail = 0,
+    Unknown = 0,
+    KMail,
     KAddressBook,
     KAlarm,
     KOrganizer,
