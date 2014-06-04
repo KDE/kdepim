@@ -183,7 +183,7 @@ bool SystemTrayIcon::eventFilter( QObject * o, QEvent * e ) {
 void SystemTrayIcon::setAttentionWanted( bool on ) {
     if ( d->attentionWanted() == on )
         return;
-    kDebug() << d->attentionWanted() << "->" << on;
+    qDebug() << d->attentionWanted() << "->" << on;
     d->setAttentionWantedImpl( on );
 }
 

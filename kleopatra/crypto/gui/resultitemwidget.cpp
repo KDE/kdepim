@@ -183,7 +183,7 @@ void ResultItemWidget::Private::slotLinkActivated( const QString & link )
         if ( split.size() == 3 || m_result->nonce() != split.value( 1 ) )
             emit q->linkActivated( QLatin1String("key://") + split.value( 2 ) );
         else
-            kWarning() << "key link invalid, or nonce not matching! link=" << link << " nonce" << m_result->nonce();
+            qWarning() << "key link invalid, or nonce not matching! link=" << link << " nonce" << m_result->nonce();
         return;
     }
 
@@ -197,7 +197,7 @@ void ResultItemWidget::Private::slotLinkActivated( const QString & link )
         q->showAuditLog();
         return;
     }
-    kWarning() << "Unexpected link scheme: " << link;
+    qWarning() << "Unexpected link scheme: " << link;
 }
 
 void ResultItemWidget::showAuditLog() {

@@ -109,7 +109,7 @@ void FileSystemWatcher::Private::onFileChanged( const QString& path )
         return;
     if ( !is_whitelisted( fi.fileName(), m_whitelist ) )
         return;
-    kDebug() << path;
+    qDebug() << path;
     m_seenPaths.insert( path );
     m_cachedFiles.insert( path );
     handleTimer();
@@ -149,14 +149,14 @@ void FileSystemWatcher::Private::onDirectoryChanged( const QString& path )
     if ( !is_whitelisted( fi.fileName(), m_whitelist ) )
         return;
 
-    kDebug() << path;
+    qDebug() << path;
 
     const QStringList newFiles = find_new_files( list_dir_absolute( path, m_blacklist, m_whitelist ), m_seenPaths );
 
     if ( newFiles.empty() )
         return;
 
-    kDebug() << "newFiles" << newFiles;
+    qDebug() << "newFiles" << newFiles;
 
     m_cachedFiles.insert( newFiles.begin(), newFiles.end() );
     q->addPaths( newFiles );

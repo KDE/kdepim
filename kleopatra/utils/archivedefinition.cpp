@@ -70,7 +70,7 @@ QString ArchiveDefinition::installPath() {
         if ( QCoreApplication::instance() )
             *ip = QCoreApplication::applicationDirPath();
         else
-            kWarning() << "called before QCoreApplication was constructed";
+            qWarning() << "called before QCoreApplication was constructed";
     return *ip;
 }
 void ArchiveDefinition::setInstallPath( const QString & ip ) {
@@ -158,7 +158,7 @@ static void parse_command( QString cmdline, const QString & id, const QString & 
         throw ArchiveDefinitionError( id, i18n("Quoting error in '%1' entry", whichCommand) );
     if ( errors == KShell::FoundMeta )
         throw ArchiveDefinitionError( id, i18n("'%1' too complex (would need shell)", whichCommand) );
-    kDebug() << "ArchiveDefinition[" << id << ']' << l;
+    qDebug() << "ArchiveDefinition[" << id << ']' << l;
     if ( l.empty() )
         throw ArchiveDefinitionError( id, i18n("'%1' entry is empty/missing", whichCommand) );
     const QFileInfo fi1( l.front() );
@@ -182,13 +182,13 @@ static void parse_command( QString cmdline, const QString & id, const QString & 
     }
     switch ( *method ) {
     case ArchiveDefinition::CommandLine:
-        kDebug() << "ArchiveDefinition[" << id << ']' << *command << *prefix << FILE_PLACEHOLDER << *suffix;
+        qDebug() << "ArchiveDefinition[" << id << ']' << *command << *prefix << FILE_PLACEHOLDER << *suffix;
         break;
     case ArchiveDefinition::NewlineSeparatedInputFile:
-        kDebug() << "ArchiveDefinition[" << id << ']' << "find | " << *command << *prefix;
+        qDebug() << "ArchiveDefinition[" << id << ']' << "find | " << *command << *prefix;
         break;
     case ArchiveDefinition::NullSeparatedInputFile:
-        kDebug() << "ArchiveDefinition[" << id << ']' << "find -print0 | " << *command << *prefix;
+        qDebug() << "ArchiveDefinition[" << id << ']' << "find -print0 | " << *command << *prefix;
         break;
     case ArchiveDefinition::NumArgumentPassingMethods:
         assert( !"Should not happen" );
@@ -316,9 +316,9 @@ shared_ptr<Input> ArchiveDefinition::createInputFromPackCommand( GpgME::Protocol
     const QString base = heuristicBaseDirectory( files );
     if ( base.isEmpty() )
         throw Kleo::Exception( GPG_ERR_CONFLICT, i18n("Cannot find common base directory for these files:\n%1", files.join( QLatin1String("\n") ) ) );
-    kDebug() << "heuristicBaseDirectory(" << files << ") ->" << base;
+    qDebug() << "heuristicBaseDirectory(" << files << ") ->" << base;
     const QStringList relative = makeRelativeTo( base, files );
-    kDebug() << "relative" << relative;
+    qDebug() << "relative" << relative;
     switch ( m_packCommandMethod[p] ) {
     case CommandLine:
         return Input::createFromProcessStdOut( doGetPackCommand( p ),
@@ -365,7 +365,7 @@ std::vector< shared_ptr<ArchiveDefinition> > ArchiveDefinition::getArchiveDefini
                 const shared_ptr<ArchiveDefinition> ad( new KConfigBasedArchiveDefinition( KConfigGroup( config, group ) ) );
                 result.push_back( ad );
             } catch ( const std::exception & e ) {
-                kDebug() << e.what();
+                qDebug() << e.what();
                 errors.push_back( QString::fromLocal8Bit( e.what() ) );
             } catch ( ... ) {
                 errors.push_back( i18n("Caught unknown exception in group %1", group ) );

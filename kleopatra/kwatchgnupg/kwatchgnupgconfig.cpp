@@ -40,7 +40,7 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <kglobal.h>
-#include <knuminput.h>
+#include <KPluralHandlingSpinBox>
 
 #include <QVBoxLayout>
 #include <QLabel>
@@ -140,7 +140,7 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent )
   row = -1;
 
   ++row;
-  mLoglenSB = new KIntSpinBox( group );
+  mLoglenSB = new KPluralHandlingSpinBox( group );
   mLoglenSB->setRange( 0, 1000000 );
   mLoglenSB->setSingleStep( 100 );
   mLoglenSB->setSuffix( ki18ncp("history size spinbox suffix", " line", " lines") );

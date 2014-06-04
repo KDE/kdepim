@@ -1003,7 +1003,7 @@ NewSignEncryptFilesWizard::NewSignEncryptFilesWizard( QWidget * parent, Qt::Wind
 
 }
 
-NewSignEncryptFilesWizard::~NewSignEncryptFilesWizard() { kDebug(); }
+NewSignEncryptFilesWizard::~NewSignEncryptFilesWizard() { qDebug(); }
 
 void NewSignEncryptFilesWizard::setPresetProtocol( Protocol proto ) {
     d->operationPage->setPresetProtocol( proto );

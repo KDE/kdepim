@@ -148,7 +148,7 @@ Wizard::Private::Private( Wizard * qq )
     q->connect( q, SIGNAL(rejected()), q, SIGNAL(canceled()) ); 
 }
 
-Wizard::Private::~Private() { kDebug(); }
+Wizard::Private::~Private() { qDebug(); }
 
 
 
@@ -200,7 +200,7 @@ Wizard::Wizard( QWidget * parent, Qt::WindowFlags f )
     
 }
 
-Wizard::~Wizard() { kDebug(); }
+Wizard::~Wizard() { qDebug(); }
 
 void Wizard::setPage( int id, WizardPage* widget )
 {
