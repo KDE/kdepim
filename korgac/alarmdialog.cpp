@@ -48,7 +48,7 @@
 #include <MailTransport/TransportManager>
 
 #include <KComboBox>
-#include <KDebug>
+#include <QDebug>
 #include <KHBox>
 #include <KLocale>
 #include <KMessageBox>

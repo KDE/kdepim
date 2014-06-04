@@ -27,7 +27,7 @@
 #include <CollectionModifyJob>
 
 #include <KDialog>
-#include <KIntSpinBox>
+#include <KPluralHandlingSpinBox>
 #include <KLocale>
 #include <KMessageBox>
 #include <QDebug>
@@ -71,7 +71,7 @@ void CollectionExpiryPage::init()
              this, SLOT(slotUpdateControls()) );
     daysBox->addWidget( expireReadMailCB, 0, 0, Qt::AlignLeft );
 
-    expireReadMailSB = new KIntSpinBox;
+    expireReadMailSB = new KPluralHandlingSpinBox;
     expireReadMailSB->setMaximum( 999999 );
     expireReadMailSB->setValue( 30 );
     expireReadMailSB->setSuffix( ki18ncp("Expire messages after %1", " day", " days" ) );
@@ -84,7 +84,7 @@ void CollectionExpiryPage::init()
              this, SLOT(slotUpdateControls()) );
     daysBox->addWidget( expireUnreadMailCB, 1, 0, Qt::AlignLeft );
 
-    expireUnreadMailSB = new KIntSpinBox;
+    expireUnreadMailSB = new KPluralHandlingSpinBox;
     expireUnreadMailSB->setMaximum( 99999 );
     expireUnreadMailSB->setValue( 30 );
     expireUnreadMailSB->setSuffix( ki18ncp("Expire messages after %1", " day", " days" ) );

@@ -53,7 +53,7 @@
 #include <KFontDialog>
 #include <KMenu>
 #include <KIconLoader>
-#include <KNumInput>
+#include <KPluralHandlingSpinBox>
 #include <KTextEdit>
 
 #include <time.h> // for time_t
@@ -1208,9 +1208,9 @@ void ThemePreviewWidget::slotHeaderContextMenuRequested( const QPoint &pos )
     if ( !mSelectedThemeColumn )
         return;
 
-    KMenu menu;
+    QMenu menu;
 
-    menu.addTitle( mSelectedThemeColumn->label() );
+    menu.setTitle( mSelectedThemeColumn->label() );
 
     QAction * act;
 
@@ -1525,7 +1525,7 @@ ThemeEditor::ThemeEditor( QWidget *parent )
     l = new QLabel( i18n( "Icon size:" ), tab );
     tabg->addWidget( l, 1, 0 );
 
-    mIconSizeSpinBox = new KIntSpinBox( tab );
+    mIconSizeSpinBox = new KPluralHandlingSpinBox( tab );
     mIconSizeSpinBox->setMinimum( 8 );
     mIconSizeSpinBox->setMaximum( 64 );
     mIconSizeSpinBox->setSuffix( ki18ncp( "suffix in a spinbox", " pixel", " pixels" ) );
