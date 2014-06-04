@@ -19,7 +19,7 @@
 #define FOLLOWUPREMINDERINFODIALOG_H
 
 #include <KDialog>
-class KAboutData;
+class K4AboutData;
 
 
 class FollowUpReminderInfoWidget : public QWidget
@@ -40,7 +40,7 @@ public:
 private:
     void readConfig();
     void writeConfig();
-    KAboutData *mAboutData;
+    K4AboutData *mAboutData;
 };
 
 #endif // FOLLOWUPREMINDERINFODIALOG_H

@@ -20,10 +20,11 @@
 #include "kdepim-version.h"
 
 #include <KLocalizedString>
-#include <KAboutData>
+#include <K4AboutData>
 #include <KHelpMenu>
 #include <KMenu>
-
+#include <KIcon>
+#include <KGlobal>
 #include <QHBoxLayout>
 
 FollowUpReminderInfoDialog::FollowUpReminderInfoDialog(QWidget *parent)
@@ -40,13 +41,13 @@ FollowUpReminderInfoDialog::FollowUpReminderInfoDialog(QWidget *parent)
     connect(this, SIGNAL(okClicked()), SLOT(slotSave()));
 
     readConfig();
-    mAboutData = new KAboutData(
+    mAboutData = new K4AboutData(
                 QByteArray( "followupreminderagent" ),
                 QByteArray(),
                 ki18n( "Follow Up Reminder Agent" ),
                 QByteArray( KDEPIM_VERSION ),
                 ki18n( "Follow Up Mail." ),
-                KAboutData::License_GPL_V2,
+                K4AboutData::License_GPL_V2,
                 ki18n( "Copyright (C) 2014 Laurent Montel" ) );
 
     mAboutData->addAuthor( ki18n( "Laurent Montel" ),
@@ -56,12 +57,13 @@ FollowUpReminderInfoDialog::FollowUpReminderInfoDialog(QWidget *parent)
     mAboutData->setTranslator( ki18nc( "NAME OF TRANSLATORS", "Your names" ),
                              ki18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
 
-
+#if 0 //QT5
     KHelpMenu *helpMenu = new KHelpMenu(this, mAboutData, true);
     //Initialize menu
     KMenu *menu = helpMenu->menu();
     helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(KIcon(QLatin1String("kmail")));
     setButtonMenu( Help, menu );
+#endif
 }
 
 FollowUpReminderInfoDialog::~FollowUpReminderInfoDialog()
