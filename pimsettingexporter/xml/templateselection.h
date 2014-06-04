@@ -32,9 +32,9 @@ public:
 
     QDomDocument document() const;
 
-    QHash<Utils::AppsType, Utils::importExportParameters> loadTemplate(const QDomDocument &doc = QDomDocument());
+    QHash<Utils::AppsType, Utils::StoredTypes> loadTemplate(const QDomDocument &doc = QDomDocument());
 private:
-    Utils::importExportParameters loadStoredTypes(const QDomElement &element);
+    Utils::StoredTypes loadStoredTypes(const QDomElement &element);
     void saveParameters(Utils::StoredTypes type, QDomElement &elem);
     QDomDocument mDocument;
 };

@@ -45,15 +45,36 @@ TemplateSelection::~TemplateSelection()
 
 }
 
-Utils::importExportParameters TemplateSelection::loadStoredTypes(const QDomElement &element)
+Utils::StoredTypes TemplateSelection::loadStoredTypes(const QDomElement &element)
 {
-    Utils::importExportParameters types;
+    Utils::StoredTypes types = Utils::None;
+    QDomNode n = element.firstChild();
+    while(!n.isNull())  {
+        QDomElement e = n.toElement();
+        if(!e.isNull())  {
+            const QString tagName(e.tagName());
+            if (tagName == QLatin1String("mailtransport")) {
+                types |= Utils::MailTransport;
+            } else if (tagName == QLatin1String("mail")) {
+                types |= Utils::Mails;
+            } else if (tagName == QLatin1String("resources")) {
+                types |= Utils::Resources;
+            } else if (tagName == QLatin1String("identity")) {
+                types |= Utils::Identity;
+            } else if (tagName == QLatin1String("config")) {
+                types |= Utils::Config;
+            } else if (tagName == QLatin1String("akonadidb")) {
+                types |= Utils::AkonadiDb;
+            }
+        }
+        n = n.nextSibling();
+    }
     return types;
 }
 
-QHash<Utils::AppsType, Utils::importExportParameters> TemplateSelection::loadTemplate(const QDomDocument &doc)
+QHash<Utils::AppsType, Utils::StoredTypes> TemplateSelection::loadTemplate(const QDomDocument &doc)
 {
-    QHash<Utils::AppsType, Utils::importExportParameters> value;
+    QHash<Utils::AppsType, Utils::StoredTypes> value;
     if (!doc.isNull()) {
         mDocument = doc;
     }
@@ -84,8 +105,9 @@ QHash<Utils::AppsType, Utils::importExportParameters> TemplateSelection::loadTem
             else if (tagName == QLatin1String("knode"))
                 type = Utils::KNode;
             if (type != Utils::Unknown) {
-                Utils::importExportParameters storedType = loadStoredTypes(e);
-                value.insert(type, storedType);
+                Utils::StoredTypes storedType = loadStoredTypes(e);
+                if (storedType != Utils::None)
+                    value.insert(type, storedType);
             }
         }
         n = n.nextSibling();
