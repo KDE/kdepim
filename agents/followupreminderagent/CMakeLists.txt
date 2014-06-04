@@ -28,6 +28,7 @@ target_link_libraries(akonadi_followupreminder_agent
   KF5::AkonadiCore
   KF5::AkonadiMime
   KF5::AkonadiAgentBase
+  KF5::Mime
 )
 
 if (Q_WS_MAC)
