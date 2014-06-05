@@ -272,17 +272,27 @@ void SelectionTypeTreeWidget::slotItemChanged(QTreeWidgetItem *item, int column)
     }
 }
 
-void SelectionTypeTreeWidget::loadTemplate()
+void SelectionTypeTreeWidget::loadFileName(const QString &fileName)
 {
-    QPointer<KFileDialog> dlg = new KFileDialog(KUrl(), QLatin1String("*.xml"), this);
-    dlg->setMode(KFile::File);
-    if (dlg->exec()) {
-        const QString file = dlg->selectedFile();
-        TemplateSelection templateSelection(file);
-        const QHash<Utils::AppsType, Utils::importExportParameters> params = templateSelection.loadTemplate();
-    }
-    delete dlg;
+    unSelectAllItems();
+    TemplateSelection templateSelection(fileName);
+    const QHash<Utils::AppsType, Utils::StoredTypes> params = templateSelection.loadTemplate();
+    setParameters(params);
+}
 
+void SelectionTypeTreeWidget::loadTemplate(const QString &fileName)
+{
+    if (fileName.isEmpty()) {
+        QPointer<KFileDialog> dlg = new KFileDialog(KUrl(), QLatin1String("*.xml"), this);
+        dlg->setMode(KFile::File);
+        if (dlg->exec()) {
+            const QString file = dlg->selectedFile();
+            loadFileName(file);
+        }
+        delete dlg;
+    } else {
+        loadFileName(fileName);
+    }
 }
 
 void SelectionTypeTreeWidget::saveAsTemplate()
@@ -294,38 +304,59 @@ void SelectionTypeTreeWidget::saveAsTemplate()
     PimCommon::Util::saveTextAs(templateStr, filter, this);
 }
 
-void SelectionTypeTreeWidget::setParameters(const QHash<Utils::AppsType, Utils::importExportParameters> &params)
+void SelectionTypeTreeWidget::initializeSubItem(QTreeWidgetItem *item, Utils::StoredTypes types)
 {
-    QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = params.constBegin();
+    for (int i=0; i < item->childCount(); ++i) {
+        QTreeWidgetItem *child = item->child(i);
+        if (types & static_cast<Utils::StoredType>(child->data(0, action).toInt())) {
+            child->setCheckState(0, Qt::Checked);
+        } else {
+            child->setCheckState(0, Qt::Unchecked);
+        }
+    }
+}
+
+void SelectionTypeTreeWidget::setParameters(const QHash<Utils::AppsType, Utils::StoredTypes> &params)
+{
+    QHash<Utils::AppsType, Utils::StoredTypes>::const_iterator i = params.constBegin();
     while (i != params.constEnd())  {
         switch(i.key()) {
         case Utils::KMail: {
+            initializeSubItem(mKmailItem, i.value());
             break;
         }
         case Utils::KAddressBook: {
+            initializeSubItem(mKaddressbookItem, i.value());
             break;
         }
         case Utils::KAlarm: {
+            initializeSubItem(mKalarmItem, i.value());
             break;
         }
         case Utils::KOrganizer: {
+            initializeSubItem(mKorganizerItem, i.value());
             break;
         }
         case Utils::KJots: {
+            initializeSubItem(mKjotsItem, i.value());
             break;
         }
         case Utils::KNotes: {
+            initializeSubItem(mKNotesItem, i.value());
             break;
         }
         case Utils::Akregator: {
+            initializeSubItem(mAkregatorItem, i.value());
             break;
         }
         case Utils::Blogilo: {
+            initializeSubItem(mBlogiloItem, i.value());
+            break;
+        }
+        case Utils::Unknown: {
             break;
         }
         }
         ++i;
     }
-
-    //TODO
 }

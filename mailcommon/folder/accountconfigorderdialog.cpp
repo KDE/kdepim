@@ -16,10 +16,9 @@
 */
 
 #include "accountconfigorderdialog.h"
-#include "kmkernel.h"
+#include "mailcommon/mailcommonsettings_base.h"
 
 #include "mailcommon/util/mailutil.h"
-#include "settings/globalsettings.h"
 
 #include <KLocalizedString>
 #include <QPushButton>
@@ -33,8 +32,9 @@
 
 #include <QListWidget>
 #include <QHBoxLayout>
+#include <QCheckBox>
 
-using namespace KMail;
+using namespace MailCommon;
 
 struct InstanceStruct {
     QString name;
@@ -51,7 +51,17 @@ AccountConfigOrderDialog::AccountConfigOrderDialog(QWidget *parent)
 
     QWidget *page = new QWidget( this );
     setMainWidget( page );
-    QHBoxLayout * vlay = new QHBoxLayout( page );
+
+    QVBoxLayout *vbox = new QVBoxLayout;
+    page->setLayout(vbox);
+
+    mEnableAccountOrder = new QCheckBox(i18n("Use custom order"));
+    connect(mEnableAccountOrder, SIGNAL(clicked(bool)), this, SLOT(slotEnableAccountOrder(bool)));
+    vbox->addWidget(mEnableAccountOrder);
+
+    QHBoxLayout * vlay = new QHBoxLayout;
+    vbox->addLayout(vlay);
+
     mListAccount = new QListWidget(this);
     mListAccount->setDragDropMode( QAbstractItemView::InternalMove );
     vlay->addWidget(mListAccount);
@@ -89,6 +99,15 @@ AccountConfigOrderDialog::AccountConfigOrderDialog(QWidget *parent)
 AccountConfigOrderDialog::~AccountConfigOrderDialog()
 {
     writeConfig();
+}
+
+void AccountConfigOrderDialog::slotEnableAccountOrder(bool state)
+{
+    mListAccount->setEnabled(state);
+    mUpButton->setEnabled(state);
+    mDownButton->setEnabled(state);
+    if (state)
+        slotEnableControls();
 }
 
 void AccountConfigOrderDialog::slotMoveUp()
@@ -130,7 +149,7 @@ void AccountConfigOrderDialog::slotEnableControls()
 
 void AccountConfigOrderDialog::init()
 {
-    const QStringList listOrderAccount = GlobalSettings::self()->order();
+    const QStringList listOrderAccount = MailCommon::MailCommonSettings::self()->order();
     QStringList instanceList;
 
     QMap<QString, InstanceStruct> mapInstance;
@@ -179,6 +198,8 @@ void AccountConfigOrderDialog::init()
             mListAccount->addItem( item );
         }
     }
+    mEnableAccountOrder->setChecked(MailCommon::MailCommonSettings::self()->enableAccountOrder());
+    slotEnableAccountOrder(MailCommon::MailCommonSettings::self()->enableAccountOrder());
 }
 
 void AccountConfigOrderDialog::slotOk()
@@ -189,16 +210,15 @@ void AccountConfigOrderDialog::slotOk()
         order << mListAccount->item(i)->data(AccountConfigOrderDialog::IdentifierAccount).toString();
     }
 
-    GlobalSettings::self()->setOrder(order);
-    GlobalSettings::self()->save();
+    MailCommon::MailCommonSettings::self()->setOrder(order);
+    MailCommon::MailCommonSettings::self()->setEnableAccountOrder(mEnableAccountOrder->isChecked());
+    MailCommon::MailCommonSettings::self()->save();
     KDialog::accept();
 }
 
 void AccountConfigOrderDialog::readConfig()
 {
-    if (!KMKernel::self())
-        return;
-    KConfigGroup accountConfigDialog( KMKernel::self()->config(), "AccountConfigOrderDialog" );
+    KConfigGroup accountConfigDialog( MailCommon::MailCommonSettings::self()->config(), "AccountConfigOrderDialog" );
     const QSize size = accountConfigDialog.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
@@ -207,9 +227,7 @@ void AccountConfigOrderDialog::readConfig()
 
 void AccountConfigOrderDialog::writeConfig()
 {
-    if (!KMKernel::self())
-        return;
-    KConfigGroup accountConfigDialog( KMKernel::self()->config(), "AccountConfigOrderDialog" );
+    KConfigGroup accountConfigDialog( MailCommon::MailCommonSettings::self()->config(), "AccountConfigOrderDialog" );
     accountConfigDialog.writeEntry( "Size", size() );
     accountConfigDialog.sync();
 }

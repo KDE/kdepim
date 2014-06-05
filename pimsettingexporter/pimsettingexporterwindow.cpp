@@ -115,13 +115,17 @@ PimSettingExporterWindow::~PimSettingExporterWindow()
 void PimSettingExporterWindow::handleCommandLine()
 {
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    QString templateFile;
+    if (args->isSet("template")) {
+        templateFile = args->getOption("template");
+    }
     if ( args->isSet( "import" ) ) {
         if (args->count() > 0) {
-            loadData(args->url(0).path());
+            loadData(args->url(0).path(), templateFile);
         }
     } else if (args->isSet( "export" )) {
         if (args->count() > 0) {
-            backupData(args->url(0).path());
+            backupData(args->url(0).path(), templateFile);
         }
     }
     args->clear();
@@ -209,9 +213,10 @@ void PimSettingExporterWindow::slotBackupData()
     backupData(filename);
 }
 
-void PimSettingExporterWindow::backupData(const QString &filename)
+void PimSettingExporterWindow::backupData(const QString &filename, const QString &templateFile)
 {
     QPointer<SelectionTypeDialog> dialog = new SelectionTypeDialog(this);
+    dialog->loadTemplate(templateFile);
     if (dialog->exec()) {
         mStored = dialog->storedType();
 
@@ -300,6 +305,8 @@ void PimSettingExporterWindow::backupNextStep()
                 executeJob();
             }
             break;
+        case Utils::Unknown:
+            break;
         }
     } else {
         backupFinished();
@@ -347,11 +354,12 @@ void PimSettingExporterWindow::slotRestoreData()
     loadData(filename);
 }
 
-void PimSettingExporterWindow::loadData(const QString &filename)
+void PimSettingExporterWindow::loadData(const QString &filename, const QString &templateFile)
 {
     if (KMessageBox::warningYesNo(this,i18n("Before to restore data, close all kdepim applications. Do you want to continue?"),i18n("Backup"))== KMessageBox::No)
         return;
     QPointer<SelectionTypeDialog> dialog = new SelectionTypeDialog(this);
+    dialog->loadTemplate(templateFile);
     if (dialog->exec()) {
         mLogWidget->clear();
         mStored = dialog->storedType();
@@ -426,6 +434,8 @@ void PimSettingExporterWindow::restoreNextStep()
                 executeJob();
             }
             break;
+        case Utils::Unknown:
+	    break;
         }
     } else {
         restoreFinished();

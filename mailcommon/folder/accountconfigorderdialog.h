@@ -19,13 +19,14 @@
 #define ACCOUNTCONFIGORDERDIALOG_H
 
 #include <KDialog>
+#include "mailcommon_export.h"
 
 class QListWidget;
 class QPushButton;
+class QCheckBox;
+namespace MailCommon {
 
-namespace KMail {
-
-class AccountConfigOrderDialog : public KDialog
+class MAILCOMMON_EXPORT AccountConfigOrderDialog : public KDialog
 {
     Q_OBJECT
 public:
@@ -36,8 +37,8 @@ private Q_SLOTS:
     void slotOk();
     void slotMoveUp();
     void slotMoveDown();
-    void slotEnableControls();
-
+    void slotEnableControls();    
+    void slotEnableAccountOrder(bool state);
 private:
     enum Type {
         IdentifierAccount = Qt::UserRole+1
@@ -49,6 +50,7 @@ private:
     QListWidget *mListAccount;
     QPushButton *mUpButton;
     QPushButton *mDownButton;
+    QCheckBox *mEnableAccountOrder;
 };
 }
 

@@ -61,8 +61,8 @@ private:
     void backupStart();
     void restoreFinished();
     void restoreStart();
-    void backupData(const QString &filename);
-    void loadData(const QString &filename);
+    void backupData(const QString &filename, const QString &templateFile = QString());
+    void loadData(const QString &filename, const QString &templateFile = QString());
     void executeJob();
     bool canZip() const;
     void setupActions(bool canZipFile);

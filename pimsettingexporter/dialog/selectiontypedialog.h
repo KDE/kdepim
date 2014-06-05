@@ -32,6 +32,8 @@ public:
 
     QHash<Utils::AppsType, Utils::importExportParameters> storedType() const;
 
+    void loadTemplate(const QString &fileName);
+
 private Q_SLOTS:
     void slotSelectAll();
     void slotUnselectAll();

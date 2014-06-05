@@ -103,6 +103,7 @@ set(libmailcommon_folder_SRCS
   folder/foldertreewidget.cpp
   folder/foldertreewidgetproxymodel.cpp
   folder/entitycollectionorderproxymodel.cpp
+  folder/accountconfigorderdialog.cpp
 )
 
 set(libmailcommon_job_SRCS
