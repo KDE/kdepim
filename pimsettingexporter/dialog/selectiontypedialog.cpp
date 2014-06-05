@@ -85,6 +85,12 @@ QHash<Utils::AppsType, Utils::importExportParameters> SelectionTypeDialog::store
     return mSelectionTreeWidget->storedType();
 }
 
+void SelectionTypeDialog::loadTemplate(const QString &fileName)
+{
+    if (!fileName.isEmpty())
+        mSelectionTreeWidget->loadTemplate(fileName);
+}
+
 void SelectionTypeDialog::slotSelectAll()
 {
     mSelectionTreeWidget->selectAllItems();

@@ -282,18 +282,26 @@ void SelectionTypeTreeWidget::slotItemChanged(QTreeWidgetItem *item, int column)
     }
 }
 
-void SelectionTypeTreeWidget::loadTemplate()
+void SelectionTypeTreeWidget::loadFileName(const QString &fileName)
 {
-    QPointer<KFileDialog> dlg = new KFileDialog(KUrl(), QLatin1String("*.xml"), this);
-    dlg->setMode(KFile::File);
-    if (dlg->exec()) {
-        const QString file = dlg->selectedFile();
-        TemplateSelection templateSelection(file);
-        const QHash<Utils::AppsType, Utils::StoredTypes> params = templateSelection.loadTemplate();
-        setParameters(params);
-    }
-    delete dlg;
+    TemplateSelection templateSelection(fileName);
+    const QHash<Utils::AppsType, Utils::StoredTypes> params = templateSelection.loadTemplate();
+    setParameters(params);
+}
 
+void SelectionTypeTreeWidget::loadTemplate(const QString &fileName)
+{
+    if (fileName.isEmpty()) {
+        QPointer<KFileDialog> dlg = new KFileDialog(KUrl(), QLatin1String("*.xml"), this);
+        dlg->setMode(KFile::File);
+        if (dlg->exec()) {
+            const QString file = dlg->selectedFile();
+            loadFileName(file);
+        }
+        delete dlg;
+    } else {
+        loadFileName(fileName);
+    }
 }
 
 void SelectionTypeTreeWidget::saveAsTemplate()
