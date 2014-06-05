@@ -290,7 +290,10 @@ void FolderTreeWidget::readConfig()
     d->readableproxy->readConfig();
 
     KConfigGroup readerConfig( KernelIf->config(), "AccountOrder" );
-    const QStringList listOrder = readerConfig.readEntry( "order", QStringList() );
+    QStringList listOrder;
+    if (readerConfig.readEntry("EnableAccountOrder", true)) {
+         listOrder = readerConfig.readEntry( "order", QStringList() );
+    }
     d->entityOrderProxy->setTopLevelOrder(listOrder);
 
     readQuotaConfig();
