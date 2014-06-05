@@ -28,7 +28,7 @@
 
 #include <KCalendarSystem>
 
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 #include <KLocale>
 

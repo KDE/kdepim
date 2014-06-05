@@ -27,7 +27,7 @@
 
 #include "kxface.h"
 
-#include <KDebug>
+#include <QDebug>
 
 #include <QBuffer>
 #include <QImage>

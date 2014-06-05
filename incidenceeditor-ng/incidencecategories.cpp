@@ -30,7 +30,7 @@
 
 #include <libkdepim/widgets/tagwidgets.h>
 #include <KConfigSkeleton>
-#include <KDebug>
+#include <QDebug>
 
 #include <TagCreateJob>
 

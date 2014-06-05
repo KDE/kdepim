@@ -28,7 +28,7 @@
 #include <kdgantt2/kdganttabstractrowcontroller.h>
 
 #include <KComboBox>
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 
 #include <QHeaderView>

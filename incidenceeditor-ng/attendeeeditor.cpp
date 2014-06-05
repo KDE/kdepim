@@ -20,7 +20,7 @@
 
 #include "attendeeeditor.h"
 
-#include <KDebug>
+#include <QDebug>
 
 using namespace IncidenceEditorNG;
 

@@ -52,7 +52,7 @@
 #include <KGlobal>
 #include <KIconLoader>
 #include <QIcon>
-#include <KDebug>
+#include <QDebug>
 
 #include <QCloseEvent>
 #include <KSharedConfig>

@@ -25,7 +25,7 @@
 #include "ui_dialogdesktop.h"
 #endif
 
-#include <KDebug>
+#include <QDebug>
 #include <KActionCollection>
 #include <KToolBar>
 #include <KLocalizedString>

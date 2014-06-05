@@ -29,7 +29,6 @@
 #include <KGlobalSettings>
 #include <KSystemTimeZone>
 #include <QDebug>
-#include <KDebug>
 
 using namespace EventViews;
 
@@ -254,7 +253,7 @@ void BaseConfig::setTimeZoneDefault()
     return;
   }
 
-  kDebug () << "----- time zone:" << zone.name();
+  qDebug () << "----- time zone:" << zone.name();
 
   mTimeSpec = zone;
 }
@@ -540,17 +539,17 @@ Prefs::~Prefs()
 
 void Prefs::readConfig()
 {
-  d->mBaseConfig.readConfig();
+  d->mBaseConfig.load();
   if ( d->mAppConfig ) {
-    d->mAppConfig->readConfig();
+    d->mAppConfig->load();
   }
 }
 
 void Prefs::writeConfig()
 {
-  d->mBaseConfig.writeConfig();
+  d->mBaseConfig.save();
   if ( d->mAppConfig ) {
-    d->mAppConfig->writeConfig();
+    d->mAppConfig->save();
   }
 }
 

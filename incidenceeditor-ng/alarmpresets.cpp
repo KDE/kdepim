@@ -26,7 +26,7 @@
 
 #include <KLocalizedString>
 #include <KGlobal>
-#include <KDebug>
+#include <QDebug>
 
 using namespace CalendarSupport;
 using namespace KCalCore;

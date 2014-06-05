@@ -22,7 +22,7 @@
 
 #include <Akonadi/Calendar/FreeBusyManager>
 
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 #include <KLocalizedString>
 #include <KLocale>

@@ -40,7 +40,7 @@
 #include "header/entrepriseheaderstyle.h"
 #include "header/fancyheaderstyle.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 #include <KLocalizedString>
 

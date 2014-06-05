@@ -30,7 +30,7 @@
 
 #include <calendarsupport/kcalprefs.h>
 
-#include <KDebug>
+#include <QDebug>
 
 using namespace IncidenceEditorNG;
 using namespace CalendarSupport;

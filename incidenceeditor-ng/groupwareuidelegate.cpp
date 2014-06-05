@@ -23,7 +23,7 @@
 #include <calendarsupport/utils.h>
 
 #include <Item>
-#include <KDebug>
+#include <QDebug>
 using namespace IncidenceEditorNG;
 
 void GroupwareUiDelegate::requestIncidenceEditor(const Akonadi::Item &item)

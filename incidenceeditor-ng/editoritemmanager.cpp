@@ -33,7 +33,7 @@
 
 #include <KJob>
 #include <KLocalizedString>
-#include <KDebug>
+#include <QDebug>
 
 #include <QMessageBox>
 #include <QPointer>

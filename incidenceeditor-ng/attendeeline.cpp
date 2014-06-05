@@ -26,7 +26,7 @@
 #include <KPIMUtils/Email>
 
 #include <KCompletionBox>
-#include <KDebug>
+#include <QDebug>
 #include <KDialog>
 #include <KLocalizedString>
 #include <KIconLoader>

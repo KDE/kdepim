@@ -28,7 +28,7 @@
 #include <KLocalizedString>
 
 #include <QBoxLayout>
-#include <KDebug>
+#include <QDebug>
 #include <QFrame>
 #include <QLabel>
 

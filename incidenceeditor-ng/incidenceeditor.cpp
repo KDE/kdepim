@@ -20,7 +20,7 @@
 
 #include "incidenceeditor-ng.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KGlobal>
 
 using namespace IncidenceEditorNG;

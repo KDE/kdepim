@@ -26,7 +26,7 @@
 #include "ui_dialogdesktop.h"
 #endif
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 
 using namespace IncidenceEditorNG;

@@ -37,7 +37,7 @@
 #include <KCalCore/ICalTimeZones>
 #include <KCalUtils/IncidenceFormatter>
 
-#include <KDebug>
+#include <QDebug>
 #include <KSystemTimeZone>
 
 using namespace IncidenceEditorNG;

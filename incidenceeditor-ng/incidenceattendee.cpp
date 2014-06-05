@@ -41,7 +41,6 @@
 
 #include <KPIMUtils/Email>
 
-#include <KDebug>
 #include <QDebug>
 #include <KMessageBox>
 #include <KLocalizedString>
@@ -428,7 +427,7 @@ void IncidenceEditorNG::IncidenceAttendee::slotSolveConflictPressed()
   dialog->slotUpdateIncidenceStartEnd( mDateTime->currentStartDateTime(),
                                        mDateTime->currentEndDateTime() );
   if ( dialog->exec() == KDialog::Accepted ) {
-    kDebug () << dialog->selectedStartDate() << dialog->selectedStartTime();
+    qDebug () << dialog->selectedStartDate() << dialog->selectedStartTime();
     mDateTime->setStartDate( dialog->selectedStartDate() );
     mDateTime->setStartTime( dialog->selectedStartTime() );
   }
