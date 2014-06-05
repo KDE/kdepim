@@ -4,7 +4,6 @@
 #define SETTINGS_H
 
 #include <kconfigskeleton.h>
-#include <kdebug.h>
 
 class Settings : public KConfigSkeleton
 {

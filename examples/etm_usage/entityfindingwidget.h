@@ -28,10 +28,7 @@
 
 class QListView;
 
-class EntityTreeWidget;
-
 #include "entitytreewidget.h"
-#include "kdebug.h"
 
 class FindingETW : public EntityTreeWidget
 {
