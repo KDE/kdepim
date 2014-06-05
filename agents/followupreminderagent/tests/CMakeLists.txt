@@ -9,7 +9,7 @@ macro( followupreminder_agent _source )
   set( _test ${_source} ../followupreminderinfo.cpp )
   get_filename_component( _name ${_source} NAME_WE )
   kde4_add_unit_test( ${_name} TESTNAME followupreminder-${_name} ${_test} )
-  target_link_libraries( ${_name} ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${KDE4_KDEUI_LIBS})
+  target_link_libraries( ${_name} Qt5::Test  )
 endmacro()
 
 followupreminder_agent(followupreminderinfotest.cpp)

@@ -9,20 +9,14 @@ set(mail_SRCS
 INCLUDE_DIRECTORIES(
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}
-    ${KDE4_INCLUDES}
 )
-
-qt4_automoc( ${mail_SRCS})
 
 add_library(mailplugin SHARED ${mail_SRCS})
 
 target_link_libraries(mailplugin
-
-    
     Qt5::Declarative
     KF5::AkonadiCore
     KF5::Mime
-
 )
 
 install(TARGETS mailplugin DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/pim/mail)

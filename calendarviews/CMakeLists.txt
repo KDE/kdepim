@@ -6,7 +6,7 @@
 #                screen real estate? But there are a config options for that.
 
 project(calendarView)
-
+kde_enable_exceptions()
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
@@ -94,10 +94,7 @@ ki18n_wrap_ui(eventviews_LIB_SRCS
 
 add_library(eventviews ${LIBRARY_TYPE} ${eventviews_LIB_SRCS})
 
-kde_enable_exceptions()
-
 target_link_libraries(eventviews
-  ${QT_QTUITOOLS_LIBRARY}
   KF5::Mime
   KF5::KCMUtils
   ${ZLIB_LIBRARIES}
