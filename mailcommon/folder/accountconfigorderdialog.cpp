@@ -16,10 +16,9 @@
 */
 
 #include "accountconfigorderdialog.h"
-#include "kmkernel.h"
+#include "mailcommon/mailcommonsettings_base.h"
 
 #include "mailcommon/util/mailutil.h"
-#include "settings/globalsettings.h"
 
 #include <KLocalizedString>
 #include <KPushButton>
@@ -34,7 +33,7 @@
 #include <QHBoxLayout>
 #include <QCheckBox>
 
-using namespace KMail;
+using namespace MailCommon;
 
 struct InstanceStruct {
     QString name;
@@ -149,7 +148,7 @@ void AccountConfigOrderDialog::slotEnableControls()
 
 void AccountConfigOrderDialog::init()
 {
-    const QStringList listOrderAccount = GlobalSettings::self()->order();
+    const QStringList listOrderAccount = MailCommon::MailCommonSettings::self()->order();
     QStringList instanceList;
 
     QMap<QString, InstanceStruct> mapInstance;
@@ -198,8 +197,8 @@ void AccountConfigOrderDialog::init()
             mListAccount->addItem( item );
         }
     }
-    mEnableAccountOrder->setChecked(GlobalSettings::self()->enableAccountOrder());
-    slotEnableAccountOrder(GlobalSettings::self()->enableAccountOrder());
+    mEnableAccountOrder->setChecked(MailCommon::MailCommonSettings::self()->enableAccountOrder());
+    slotEnableAccountOrder(MailCommon::MailCommonSettings::self()->enableAccountOrder());
 }
 
 void AccountConfigOrderDialog::slotOk()
@@ -210,17 +209,15 @@ void AccountConfigOrderDialog::slotOk()
         order << mListAccount->item(i)->data(AccountConfigOrderDialog::IdentifierAccount).toString();
     }
 
-    GlobalSettings::self()->setOrder(order);
-    GlobalSettings::self()->setEnableAccountOrder(mEnableAccountOrder->isChecked());
-    GlobalSettings::self()->writeConfig();
+    MailCommon::MailCommonSettings::self()->setOrder(order);
+    MailCommon::MailCommonSettings::self()->setEnableAccountOrder(mEnableAccountOrder->isChecked());
+    MailCommon::MailCommonSettings::self()->writeConfig();
     KDialog::accept();
 }
 
 void AccountConfigOrderDialog::readConfig()
 {
-    if (!KMKernel::self())
-        return;
-    KConfigGroup accountConfigDialog( KMKernel::self()->config(), "AccountConfigOrderDialog" );
+    KConfigGroup accountConfigDialog( MailCommon::MailCommonSettings::self()->config(), "AccountConfigOrderDialog" );
     const QSize size = accountConfigDialog.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
@@ -229,9 +226,7 @@ void AccountConfigOrderDialog::readConfig()
 
 void AccountConfigOrderDialog::writeConfig()
 {
-    if (!KMKernel::self())
-        return;
-    KConfigGroup accountConfigDialog( KMKernel::self()->config(), "AccountConfigOrderDialog" );
+    KConfigGroup accountConfigDialog( MailCommon::MailCommonSettings::self()->config(), "AccountConfigOrderDialog" );
     accountConfigDialog.writeEntry( "Size", size() );
     accountConfigDialog.sync();
 }

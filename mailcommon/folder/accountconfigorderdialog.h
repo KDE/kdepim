@@ -19,13 +19,14 @@
 #define ACCOUNTCONFIGORDERDIALOG_H
 
 #include <KDialog>
+#include "mailcommon_export.h"
 
 class QListWidget;
 class KPushButton;
 class QCheckBox;
-namespace KMail {
+namespace MailCommon {
 
-class AccountConfigOrderDialog : public KDialog
+class MAILCOMMON_EXPORT AccountConfigOrderDialog : public KDialog
 {
     Q_OBJECT
 public:
