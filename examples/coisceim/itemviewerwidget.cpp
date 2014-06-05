@@ -32,7 +32,7 @@
 
 #include <KCalCore/Todo>
 
-#include "Akonadi/Contact/contactviewer.h"
+#include "Akonadi/Contact/ContactViewer"
 #include "messageviewer/viewer/viewer.h"
 #include <calendarsupport/next/incidenceviewer.h>
 

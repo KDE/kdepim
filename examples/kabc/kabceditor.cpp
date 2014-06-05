@@ -26,7 +26,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 
-#include <Akonadi/Contact/contacteditor.h>
+#include <Akonadi/Contact/ContactEditor>
 #include <AkonadiCore/item.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
@@ -75,7 +75,7 @@ void Dialog::load()
 
 void Dialog::save()
 {
-  mEditor->saveContact();
+  mEditor->saveContactInAddressBook();
 }
 
 int main( int argc, char **argv )

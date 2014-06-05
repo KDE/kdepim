@@ -27,7 +27,7 @@
 #include <kcmdlineargs.h>
 #include <klocale.h>
 
-#include <Akonadi/Contact/contactviewer.h>
+#include <Akonadi/Contact/ContactViewer>
 
 Dialog::Dialog( QWidget *parent )
   : KDialog( parent )
