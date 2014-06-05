@@ -284,6 +284,7 @@ void SelectionTypeTreeWidget::slotItemChanged(QTreeWidgetItem *item, int column)
 
 void SelectionTypeTreeWidget::loadFileName(const QString &fileName)
 {
+    unSelectAllItems();
     TemplateSelection templateSelection(fileName);
     const QHash<Utils::AppsType, Utils::StoredTypes> params = templateSelection.loadTemplate();
     setParameters(params);
