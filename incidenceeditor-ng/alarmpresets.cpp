@@ -63,7 +63,8 @@ int configuredReminderTimeInMinutes()
 void initPresets( AlarmPresets::When when )
 {
   QList<int> hardcodedPresets;
-  hardcodedPresets << 5           // 5 minutes
+  hardcodedPresets << 0           // at start/due
+                   << 5           // 5 minutes
                    << 10
                    << 15
                    << 30
@@ -99,15 +100,21 @@ void initPresets( AlarmPresets::When when )
       const int minutes = hardcodedPresets[i];
       alarm->setStartOffset( -minutes * 60 );
       alarm->setEnabled( true );
-      if ( minutes < 60 ) {
+      if ( minutes == 0 ) {
         sBeforeStartPresetNames->append( i18nc( "@item:inlistbox",
-                                                "%1 minutes before start", minutes ) );
+                                                "At start" ) );
+      } else if ( minutes < 60 ) {
+        sBeforeStartPresetNames->append( i18ncp( "@item:inlistbox",
+                                                 "%1 minute before start",
+                                                 "%1 minutes before start", minutes ) );
       } else if ( minutes < 24 * 60 ) {
-        sBeforeStartPresetNames->append( i18nc( "@item:inlistbox",
-                                                "%1 hours before start", minutes / 60 ) );
+        sBeforeStartPresetNames->append( i18ncp( "@item:inlistbox",
+                                                 "%1 hour before start",
+                                                 "%1 hours before start", minutes / 60 ) );
       } else {
-        sBeforeStartPresetNames->append( i18nc( "@item:inlistbox",
-                                                "%1 days before start", minutes / ( 24 * 60 ) ) );
+        sBeforeStartPresetNames->append( i18ncp( "@item:inlistbox",
+                                                 "%1 day before start",
+                                                 "%1 days before start", minutes / ( 24 * 60 ) ) );
       }
       sBeforeStartPresets->append( alarm );
     }
@@ -120,15 +127,20 @@ void initPresets( AlarmPresets::When when )
       const int minutes = hardcodedPresets[i];
       alarm->setEndOffset( -minutes * 60 );
       alarm->setEnabled( true );
-      if ( minutes < 60 ) {
-        sBeforeEndPresetNames->append( i18nc( "@item:inlistbox", "%1 minutes before due",
-                                              minutes ) );
+      if ( minutes == 0 ) {
+        sBeforeEndPresetNames->append( i18nc( "@item:inlistbox", "When due" ) );
+      } else if ( minutes < 60 ) {
+        sBeforeEndPresetNames->append( i18ncp( "@item:inlistbox",
+                                               "%1 minute before due",
+                                               "%1 minutes before due", minutes ) );
       } else if ( minutes < 24 * 60 ) {
-        sBeforeEndPresetNames->append( i18nc( "@item:inlistbox",
-                                              "%1 hours before due", minutes / 60 ) );
+        sBeforeEndPresetNames->append( i18ncp( "@item:inlistbox",
+                                               "%1 hour before due",
+                                               "%1 hours before due", minutes / 60 ) );
       } else {
-        sBeforeEndPresetNames->append( i18nc( "@item:inlistbox",
-                                              "%1 days before due", minutes / ( 24 * 60 ) ) );
+        sBeforeEndPresetNames->append( i18ncp( "@item:inlistbox",
+                                               "%1 day before due",
+                                               "%1 days before due", minutes / ( 24 * 60 ) ) );
       }
       sBeforeEndPresets->append( alarm );
     }

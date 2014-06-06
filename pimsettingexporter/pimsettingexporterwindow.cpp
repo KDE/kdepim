@@ -199,8 +199,6 @@ void PimSettingExporterWindow::slotSaveLog()
     PimCommon::Util::saveTextAs(log, filter, this);
 }
 
-
-
 void PimSettingExporterWindow::slotBackupData()
 {
     if (KMessageBox::warningYesNo(this,i18n("Before to backup data, close all kdepim applications. Do you want to continue?"),i18n("Backup"))== KMessageBox::No)
