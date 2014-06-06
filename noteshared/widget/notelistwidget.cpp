@@ -78,13 +78,13 @@ void NoteListWidget::createItem(const Akonadi::Item &note)
     item->setData(AkonadiId, note.id());
 }
 
-QStringList NoteListWidget::selectedNotes() const
+Akonadi::Item::List NoteListWidget::selectedNotes()
 {
-    QStringList lst;
+    Akonadi::Item::List lst;
     Q_FOREACH (QListWidgetItem *item, selectedItems()) {
         Akonadi::Item::Id akonadiId = item->data(AkonadiId).toLongLong();
         if (akonadiId != -1) {
-            lst.append(QString::number(akonadiId));
+            lst.append(Akonadi::Item(akonadiId));
         }
     }
     return lst;
