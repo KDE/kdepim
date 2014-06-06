@@ -232,7 +232,7 @@ QString Utils::storeResources(KZip *archive, const QString &identifier, const QS
         if (group.hasKey(targetCollection)) {
             group.writeEntry(targetCollection,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(targetCollection).toLongLong())));
         }
-    } else if (identifier.contains(IMAP_RESOURCE_IDENTIFIER)) {
+    } else if (identifier.contains(IMAP_RESOURCE_IDENTIFIER) || identifier.contains(KOLAB_RESOURCE_IDENTIFIER)) {
         const QString trash = QLatin1String("TrashCollection");
         KConfigGroup group = config->group("cache");
         if (group.hasKey(trash)) {
