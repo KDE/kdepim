@@ -9,6 +9,7 @@ macro(add_storageservice_unittest _source)
   kde4_add_unit_test(${_name} TESTNAME storageservicemanager-${_name} ${_test} )
   target_link_libraries( ${_name}
     Qt5::Test
+    Qt5::Gui
   )
 endmacro ()
 
