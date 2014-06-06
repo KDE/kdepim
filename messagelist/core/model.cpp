@@ -65,7 +65,7 @@
 #include <KLocalizedString>
 #include <KCalendarSystem>
 #include <KGlobal>
-#include <KIcon>
+#include <QIcon>
 #include <QDebug>
 #include <KLocale>
 
@@ -515,7 +515,7 @@ QVariant Model::headerData(int section, Qt::Orientation, int role) const
     else if ( ( role == Qt::ToolTipRole ) && !columnPixmapEmpty )
         return QVariant( column->label() );
     else if ( ( role == Qt::DecorationRole ) && !columnPixmapEmpty )
-        return QVariant( KIcon( column->pixmapName() ) );
+        return QVariant( QIcon::fromTheme( column->pixmapName() ) );
 
     return QVariant();
 }

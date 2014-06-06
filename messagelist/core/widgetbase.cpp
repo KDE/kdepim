@@ -47,7 +47,7 @@
 #include <KComboBox>
 #include <KConfig>
 #include <QDebug>
-#include <KIcon>
+#include <QIcon>
 #include <KIconLoader>
 #include <KLineEdit>
 #include <KLocale>

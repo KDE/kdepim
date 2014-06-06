@@ -51,7 +51,7 @@
 #include <KLocalizedString>
 #include <QDebug>
 #include <KGlobalSettings>
-#include <KIcon>
+#include <QIcon>
 #include <KLineEdit>
 
 using namespace MessageList::Core;

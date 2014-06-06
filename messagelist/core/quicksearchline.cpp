@@ -26,9 +26,9 @@
 #include <KLineEdit>
 #include <KComboBox>
 #include <KStandardDirs>
-#include <KIcon>
+#include <QIcon>
 #include <KIconLoader>
-#include <KPushButton>
+#include <QPushButton>
 
 #include <QToolButton>
 #include <QHBoxLayout>
@@ -93,7 +93,7 @@ QuickSearchLine::QuickSearchLine(QWidget *parent)
 
     hbox->addWidget( mSearchEdit );
 
-    mMoreOptions = new KPushButton(KIcon(QLatin1String("arrow-down-double")), i18n("More..."), this);
+    mMoreOptions = new QPushButton(QIcon::fromTheme(QLatin1String("arrow-down-double")), i18n("More..."), this);
     mMoreOptions->setObjectName(QLatin1String("moreoptions"));
     mMoreOptions->setFlat(true);
     mMoreOptions->setCheckable(true);
@@ -207,9 +207,9 @@ void QuickSearchLine::slotMoreOptionClicked(bool b)
 {
     mQuickSearchFilterWidget->setVisible(b);
     if (b) {
-        mMoreOptions->setIcon(KIcon(QLatin1String("arrow-up-double")));
+        mMoreOptions->setIcon(QIcon::fromTheme(QLatin1String("arrow-up-double")));
     } else {
-        mMoreOptions->setIcon(KIcon(QLatin1String("arrow-down-double")));
+        mMoreOptions->setIcon(QIcon::fromTheme(QLatin1String("arrow-down-double")));
     }
 }
 
@@ -288,10 +288,10 @@ QToolButton *QuickSearchLine::lockSearch() const
 void QuickSearchLine::slotLockSearchClicked( bool locked )
 {
     if ( locked ) {
-        mLockSearch->setIcon( KIcon( QLatin1String( "object-locked" ) ) );
+        mLockSearch->setIcon( QIcon::fromTheme( QLatin1String( "object-locked" ) ) );
         mLockSearch->setToolTip( i18nc( "@info:tooltip", "Clear the quick search field when changing folders" ) );
     } else {
-        mLockSearch->setIcon( KIcon( QLatin1String( "object-unlocked" ) ) );
+        mLockSearch->setIcon( QIcon::fromTheme( QLatin1String( "object-unlocked" ) ) );
         mLockSearch->setToolTip( i18nc( "@info:tooltip",
                                         "Prevent the quick search field from being cleared when changing folders" ) );
     }

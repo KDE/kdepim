@@ -28,9 +28,9 @@
 #include <KActionMenu>
 #include <KStandardDirs>
 #include <QDebug>
-#include <KAction>
+#include <QAction>
 #include <KGlobal>
-#include <KIcon>
+#include <QIcon>
 
 #include <QDir>
 #include <QAction>
@@ -52,8 +52,8 @@ public:
     {
         watch = new KDirWatch( q );
         initThemesDirectories(relativePath);
-        downloadThemesAction = new KAction(i18n("Download New Themes..."), q);
-        downloadThemesAction->setIcon(KIcon(QLatin1String("get-hot-new-stuff")));
+        downloadThemesAction = new QAction(i18n("Download New Themes..."), q);
+        downloadThemesAction->setIcon(QIcon::fromTheme(QLatin1String("get-hot-new-stuff")));
         if (actionCollection)
             actionCollection->addAction( QLatin1String("download_header_themes"), downloadThemesAction );
         separatorAction = new QAction(q);
@@ -240,7 +240,7 @@ public:
     KActionCollection *actionCollection;
     QAction *separatorAction;
 
-    KAction *downloadThemesAction;
+    QAction *downloadThemesAction;
     QWeakPointer<KNS3::DownloadDialog> downloadThemesDialog;
     GrantleeThemeManager *q;
 };
