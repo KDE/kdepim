@@ -24,6 +24,7 @@
 #include <KHelpMenu>
 #include <KMenu>
 
+#include <QTreeWidget>
 #include <QHBoxLayout>
 
 FollowUpReminderInfoDialog::FollowUpReminderInfoDialog(QWidget *parent)
@@ -90,7 +91,10 @@ void FollowUpReminderInfoDialog::writeConfig()
 FollowUpReminderInfoWidget::FollowUpReminderInfoWidget(QWidget *parent)
     : QWidget(parent)
 {
-
+    QHBoxLayout *hbox = new QHBoxLayout;
+    mTreeWidget = new QTreeWidget;
+    hbox->addWidget(mTreeWidget);
+    setLayout(hbox);
 }
 
 FollowUpReminderInfoWidget::~FollowUpReminderInfoWidget()

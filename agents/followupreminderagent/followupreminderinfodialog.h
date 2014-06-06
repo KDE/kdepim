@@ -20,7 +20,7 @@
 
 #include <KDialog>
 class KAboutData;
-
+class QTreeWidget;
 
 class FollowUpReminderInfoWidget : public QWidget
 {
@@ -28,6 +28,13 @@ class FollowUpReminderInfoWidget : public QWidget
 public:
     explicit FollowUpReminderInfoWidget(QWidget *parent=0);
     ~FollowUpReminderInfoWidget();
+
+private:
+    enum FollowUpReminderColumn {
+        date = 0,
+        Subject
+    };
+    QTreeWidget *mTreeWidget;
 };
 
 class FollowUpReminderInfoDialog : public KDialog
