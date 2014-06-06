@@ -22,7 +22,7 @@
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="KIntSpinBox" name="spinCount">
+    <widget class="QSpinBox" name="spinCount">
      <property name="minimum">
       <number>1</number>
      </property>
@@ -43,13 +43,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KIntSpinBox</class>
-   <extends>QSpinBox</extends>
-   <header>knuminput.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

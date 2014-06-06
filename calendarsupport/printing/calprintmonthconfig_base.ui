@@ -68,7 +68,7 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item>
-       <widget class="KIntSpinBox" name="mFromYear">
+       <widget class="QSpinBox" name="mFromYear">
         <property name="toolTip">
          <string>Starting year for printing</string>
         </property>
@@ -107,7 +107,7 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item>
-       <widget class="KIntSpinBox" name="mToYear">
+       <widget class="QSpinBox" name="mToYear">
         <property name="toolTip">
          <string>Ending year for the print</string>
         </property>
@@ -334,11 +334,6 @@ p, li { white-space: pre-wrap; }
    <class>KComboBox</class>
    <extends>QComboBox</extends>
    <header>kcombobox.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KIntSpinBox</class>
-   <extends>QSpinBox</extends>
-   <header>knuminput.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
