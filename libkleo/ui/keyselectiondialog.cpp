@@ -58,7 +58,7 @@
 #include <kmessagebox.h>
 #include <kpushbutton.h>
 #include <kconfiggroup.h>
-#include <kmenu.h>
+#include <qmenu.h>
 #include <klineedit.h>
 #include <kurl.h>
 
@@ -778,7 +778,7 @@ void Kleo::KeySelectionDialog::slotRMB( Kleo::KeyListViewItem * item, const QPoi
 
   mCurrentContextMenuItem = item;
 
-  KMenu menu;
+  QMenu menu;
   menu.addAction( i18n( "Recheck Key" ), this, SLOT(slotRecheckKey()) );
   menu.exec( p );
 }

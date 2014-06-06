@@ -20,7 +20,7 @@
 
 #include <KLocalizedString>
 #include <KTreeWidgetSearchLine>
-#include <KMenu>
+#include <QMenu>
 #include <KGlobal>
 
 #include <QVBoxLayout>

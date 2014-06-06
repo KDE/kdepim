@@ -23,7 +23,7 @@
 
 #include <KLocalizedString>
 #include <KTreeWidgetSearchLine>
-#include <KMenu>
+#include <QMenu>
 #include <KConfigGroup>
 #include <KStandardDirs>
 #include <KUrl>
@@ -217,7 +217,7 @@ void AdBlockBlockableItemsWidget::customContextMenuRequested(const QPoint &)
     if (!item)
         return;
 
-    KMenu menu;
+    QMenu menu;
     menu.addAction(i18n("Copy url"),this,SLOT(slotCopyItem()));
     if (!item->text(FilterValue).isEmpty())
         menu.addAction(i18n("Copy filter"),this,SLOT(slotCopyFilterItem()));
