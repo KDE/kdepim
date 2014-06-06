@@ -95,6 +95,7 @@ set(pimsettingexporter_SRCS
   akonadidatabase.cpp
   archivestorage.cpp
   synchronizeresourcejob.cpp
+  pimsettingsbackuprestore.cpp
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
