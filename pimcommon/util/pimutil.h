@@ -45,6 +45,7 @@ class OrgKdeAkonadiImapSettingsInterface;
 class QWidget;
 
 #define IMAP_RESOURCE_IDENTIFIER QLatin1String("akonadi_imap_resource")
+#define KOLAB_RESOURCE_IDENTIFIER QLatin1String("akonadi_kolab_resource")
 
 namespace PimCommon {
 
