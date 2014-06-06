@@ -36,9 +36,9 @@
 #include <KMessageBox>
 #include <KStandardDirs>
 #include <QDebug>
-#include <KMenu>
+#include <QMenu>
 #include <KToolBar>
-#include <KIcon>
+#include <QIcon>
 
 #include <QAction>
 #include <QFileInfo>
@@ -199,7 +199,7 @@ void ComposerView::contextMenuEvent(QContextMenuEvent *event)
 
     qDebug()<<" elm.tagName().toLower() "<<elm.tagName().toLower();
 
-    KMenu *menu = new KMenu;
+    QMenu *menu = new QMenu;
     const QString selectedText = page()->mainFrame()->toPlainText().simplified();
     const bool emptyDocument = selectedText.isEmpty();
 
@@ -250,7 +250,7 @@ void ComposerView::contextMenuEvent(QContextMenuEvent *event)
     connect( autoSpellCheckingAction, SIGNAL(triggered(bool)), this, SLOT(_k_changeAutoSpellChecking(bool)) );
 #endif
     QAction *speakAction = menu->addAction(i18n("Speak Text"));
-    speakAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
+    speakAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
     speakAction->setEnabled(!emptyDocument );
     connect( speakAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotSpeakText()) );
     addExtraAction(menu);

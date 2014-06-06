@@ -42,7 +42,7 @@
 #include <KIcon>
 #include <KIconLoader>
 #include <KLocale>
-#include <KMenu>
+#include <QMenu>
 #include <KToggleAction>
 #include <KXMLGUIClient>
 #include <KXMLGUIFactory>
@@ -346,7 +346,7 @@ void Widget::viewGroupHeaderContextPopupRequest( MessageList::Core::GroupHeaderI
 {
     Q_UNUSED( ghi );
 
-    KMenu menu( this );
+    QMenu menu( this );
 
     QAction *act;
 
@@ -432,7 +432,7 @@ void Widget::viewDropEvent( QDropEvent *e )
             action = DragMove;
 
         } else {
-            KMenu menu;
+            QMenu menu;
             QAction *moveAction = menu.addAction( KIcon( QLatin1String( "go-jump" )), i18n( "&Move Here" ) );
             QAction *copyAction = menu.addAction( KIcon( QLatin1String( "edit-copy" ) ), i18n( "&Copy Here" ) );
             menu.addSeparator();

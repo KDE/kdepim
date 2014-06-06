@@ -34,7 +34,7 @@
 #include <kabc/vcardconverter.h>
 
 #include <kio/netaccess.h>
-#include <kmenu.h>
+#include <qmenu.h>
 #include <kurl.h>
 #include <kmessagebox.h>
 #include <kcompletionbox.h>
@@ -95,7 +95,7 @@ void ComposerLineEdit::insertEmails( const QStringList & emails )
         return;
     }
     //multiple emails, let the user choose one
-    KMenu menu( this );
+    QMenu menu( this );
     menu.setObjectName( QLatin1String("Addresschooser") );
     for ( QStringList::const_iterator it = emails.constBegin(), end = emails.constEnd() ; it != end; ++it )
         menu.addAction( *it );
