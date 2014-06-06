@@ -22,7 +22,7 @@
 #include <KSharedConfig>
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <KMenu>
+#include <QMenu>
 #include <KFileDialog>
 #include <KNS3/DownloadDialog>
 #include <KIcon>

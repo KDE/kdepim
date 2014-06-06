@@ -56,7 +56,7 @@
 #include <QWebView>
 #include <QWebPage>
 #include <QWebFrame>
-#include <KMenu>
+#include <QMenu>
 #include <KMessageBox>
 #include <KMimeType>
 #include <KMimeTypeChooser>
@@ -519,7 +519,7 @@ bool ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
     return true;
 }
 
-void ViewerPrivate::createOpenWithMenu( KMenu *topMenu, const QString &contentTypeStr, bool fromCurrentContent )
+void ViewerPrivate::createOpenWithMenu( QMenu *topMenu, const QString &contentTypeStr, bool fromCurrentContent )
 {
     const KService::List offers = KFileItemActions::associatedApplications(QStringList()<<contentTypeStr, QString() );
     if (!offers.isEmpty()) {
@@ -612,7 +612,7 @@ void ViewerPrivate::slotOpenWithAction(QAction *act)
 void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & name, const QPoint & globalPos )
 {
     prepareHandleAttachment( node, name );
-    KMenu *menu = new KMenu();
+    QMenu *menu = new QMenu();
     QAction *action;
     bool deletedAttachment = false;
     if(node->contentType(false)) {
@@ -1869,7 +1869,7 @@ void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos 
     const bool isRoot = ( content == mMessage.get() );
     const KMime::Content::List contents = Util::extractAttachments( mMessage.get() );
 
-    KMenu popup;
+    QMenu popup;
 
     if ( !isRoot ) {
         popup.addAction( SmallIcon( QLatin1String("document-save-as") ), i18n( "Save &As..." ),

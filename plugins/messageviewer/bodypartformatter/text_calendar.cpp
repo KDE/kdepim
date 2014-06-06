@@ -64,7 +64,7 @@ using namespace KCalCore;
 #include <QDebug>
 #include <KFileDialog>
 #include <KInputDialog>
-#include <KMenu>
+#include <QMenu>
 #include <KMessageBox>
 #include <KMimeType>
 #include <KRun>

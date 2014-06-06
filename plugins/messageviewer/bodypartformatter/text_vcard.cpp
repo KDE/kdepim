@@ -55,7 +55,7 @@ using MessageViewer::Interface::BodyPart;
 #include <KGlobal>
 #include <KIcon>
 #include <KLocalizedString>
-#include <KMenu>
+#include <QMenu>
 #include <KMessageBox>
 #include <KTemporaryFile>
 #include <KIO/NetAccess>

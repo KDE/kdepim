@@ -56,7 +56,7 @@
 #include <KPIMUtils/Email>
 #include <KPIMUtils/KFileIO>
 
-#include <KMenu>
+#include <QMenu>
 #include <KMimeType>
 #include <KRun>
 #include <KStandardDirs>
@@ -718,7 +718,7 @@ bool ContactUidURLHandler::handleContextMenuRequest( const KUrl &url, const QPoi
         return false;
     }
 
-    KMenu *menu = new KMenu();
+    QMenu *menu = new QMenu();
     QAction *open =
             menu->addAction( KIcon( QLatin1String("view-pim-contacts") ), i18n( "&Open in Address Book" ) );
 #ifndef QT_NO_CLIPBOARD

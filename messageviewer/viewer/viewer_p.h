@@ -53,7 +53,7 @@ class KActionCollection;
 class KSelectAction;
 class KToggleAction;
 class KHBox;
-class KMenu;
+class QMenu;
 
 class QPoint;
 class QSplitter;
@@ -285,7 +285,7 @@ public:
 private:
     /** HTML initialization. */
     void initHtmlWidget();
-    void createOpenWithMenu( KMenu *topMenu, const QString &contentTypeStr, bool fromCurrentContent );
+    void createOpenWithMenu( QMenu *topMenu, const QString &contentTypeStr, bool fromCurrentContent );
 public:
     /** Event filter */
     bool eventFilter( QObject *obj, QEvent *ev );
