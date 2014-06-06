@@ -78,7 +78,7 @@ void FilterEvolution_v3::processDirectory( const QString &path)
         if(!(*filename == QLatin1String( "." ) || *filename == QLatin1String( ".." ))) {
             filterInfo()->setCurrent(0);
             importDirContents(dir.filePath(*filename));
-            filterInfo()->setOverall((int) ((float) mImportDirDone / mTotalDir * 100));
+            filterInfo()->setOverall( (mTotalDir > 0 ) ?  (int) ((float) mImportDirDone / mTotalDir * 100) : 0);
             filterInfo()->setCurrent(100);
         }
     }
