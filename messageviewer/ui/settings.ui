@@ -100,7 +100,7 @@
         </widget>
        </item>
        <item>
-        <widget class="KIntSpinBox" name="kcfg_CollapseQuoteLevelSpin">
+        <widget class="QSpinBox" name="kcfg_CollapseQuoteLevelSpin">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -213,7 +213,7 @@
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="KIntSpinBox" name="kcfg_MinimumFontSize">
+      <widget class="QSpinBox" name="kcfg_MinimumFontSize">
        <property name="minimum">
         <number>2</number>
        </property>
@@ -284,11 +284,6 @@
    <class>KComboBox</class>
    <extends>QComboBox</extends>
    <header>kcombobox.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KIntSpinBox</class>
-   <extends>QSpinBox</extends>
-   <header>knuminput.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
