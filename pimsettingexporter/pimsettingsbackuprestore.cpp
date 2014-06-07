@@ -42,9 +42,6 @@
 #include "blogilo/exportblogilojob.h"
 #include "blogilo/importblogilojob.h"
 
-#include "knode/exportknodejob.h"
-#include "knode/importknodejob.h"
-
 #include <KLocalizedString>
 #include <KLocale>
 #include <KGlobal>
@@ -154,12 +151,6 @@ void PimSettingsBackupRestore::backupNextStep()
                 executeJob();
             }
             break;
-        case Utils::KNode:
-            if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ExportKnodeJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
-                executeJob();
-            }
-            break;
         case Utils::Unknown:
             break;
         }
@@ -232,12 +223,6 @@ void PimSettingsBackupRestore::restoreNextStep()
         case Utils::Blogilo:
             if (mStoreIterator.value().numberSteps != 0) {
                 mImportExportData = new ImportBlogiloJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
-                executeJob();
-            }
-            break;
-        case Utils::KNode:
-            if (mStoreIterator.value().numberSteps != 0) {
-                mImportExportData = new ImportKnodeJob(mParentWidget, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
                 executeJob();
             }
             break;
