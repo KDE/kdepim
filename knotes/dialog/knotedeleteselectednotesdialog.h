@@ -15,39 +15,31 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLLOWUPREMINDERINFODIALOG_H
-#define FOLLOWUPREMINDERINFODIALOG_H
+
+#ifndef KNOTEDELETESELECTEDNOTESDIALOG_H
+#define KNOTEDELETESELECTEDNOTESDIALOG_H
 
 #include <KDialog>
-class K4AboutData;
-class QTreeWidget;
+#include <Akonadi/Item>
+namespace NoteShared {
+class NoteListWidget;
+}
 
-class FollowUpReminderInfoWidget : public QWidget
+class KNoteDeleteSelectedNotesDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit FollowUpReminderInfoWidget(QWidget *parent=0);
-    ~FollowUpReminderInfoWidget();
+    explicit KNoteDeleteSelectedNotesDialog(QWidget *parent=0);
+    ~KNoteDeleteSelectedNotesDialog();
 
-private:
-    enum FollowUpReminderColumn {
-        date = 0,
-        Subject
-    };
-    QTreeWidget *mTreeWidget;
-};
+    void setNotes(const Akonadi::Item::List &notes);
 
-class FollowUpReminderInfoDialog : public KDialog
-{
-    Q_OBJECT
-public:
-    explicit FollowUpReminderInfoDialog(QWidget *parent=0);
-    ~FollowUpReminderInfoDialog();
+    Akonadi::Item::List selectedNotes() const;
 
 private:
     void readConfig();
     void writeConfig();
-    K4AboutData *mAboutData;
+    NoteShared::NoteListWidget *mNoteList;
 };
 
-#endif // FOLLOWUPREMINDERINFODIALOG_H
+#endif // KNOTEDELETESELECTEDNOTESDIALOG_H

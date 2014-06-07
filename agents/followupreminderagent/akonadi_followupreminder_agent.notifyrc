@@ -26,3 +26,7 @@ Comment[uk]=Агент стеження за нагадуваннями
 Comment[x-test]=xxFollowup reminder agentxx
 Comment[zh_TW]=回覆提醒代理程式
 
+[Event/mailreceived]
+Name=Mail Follow Up Received
+Action=Popup
+

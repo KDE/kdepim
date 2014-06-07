@@ -18,6 +18,7 @@
 #include "utils.h"
 
 #include "mailcommon/util/mailutil.h"
+#include "pimcommon/util/pimutil.h"
 
 #include <akonadi/private/xdgbasedirs_p.h>
 
@@ -225,13 +226,13 @@ QString Utils::storeResources(KZip *archive, const QString &identifier, const QS
     tmp.open();
     KConfig * config = resourceConfig->copyTo( tmp.fileName() );
 
-    if (identifier.contains(QLatin1String("akonadi_pop3_resource"))) {
+    if (identifier.contains(POP3_RESOURCE_IDENTIFIER)) {
         const QString targetCollection = QLatin1String("targetCollection");
         KConfigGroup group = config->group("General");
         if (group.hasKey(targetCollection)) {
             group.writeEntry(targetCollection,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(targetCollection).toLongLong())));
         }
-    } else if (identifier.contains(QLatin1String("akonadi_imap_resource"))) {
+    } else if (identifier.contains(IMAP_RESOURCE_IDENTIFIER) || identifier.contains(KOLAB_RESOURCE_IDENTIFIER)) {
         const QString trash = QLatin1String("TrashCollection");
         KConfigGroup group = config->group("cache");
         if (group.hasKey(trash)) {

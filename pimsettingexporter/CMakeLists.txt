@@ -89,6 +89,7 @@ set(pimsettingexporter_SRCS
   akonadidatabase.cpp
   archivestorage.cpp
   synchronizeresourcejob.cpp
+  pimsettingsbackuprestore.cpp
 )
 
 kde_enable_exceptions()

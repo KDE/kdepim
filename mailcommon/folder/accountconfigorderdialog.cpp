@@ -17,7 +17,7 @@
 
 #include "accountconfigorderdialog.h"
 #include "mailcommon/mailcommonsettings_base.h"
-
+#include "pimcommon/util/pimutil.h"
 #include "mailcommon/util/mailutil.h"
 
 #include <KLocalizedString>
@@ -165,7 +165,7 @@ void AccountConfigOrderDialog::init()
                     instanceList<<instance.identifier();
                     InstanceStruct instanceStruct;
                     instanceStruct.name = instance.name();
-                    if (identifier.startsWith(QLatin1String("akonadi_imap_resource"))) {
+                    if (identifier.startsWith(IMAP_RESOURCE_IDENTIFIER) || identifier.startsWith(KOLAB_RESOURCE_IDENTIFIER)) {
                         instanceStruct.name += QLatin1String(" (IMAP)");
                     } else if (identifier.startsWith(QLatin1String("akonadi_maildir_resource"))) {
                         instanceStruct.name += QLatin1String(" (Maildir)");

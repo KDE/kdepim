@@ -28,11 +28,11 @@ class PimSettingsBackupRestore : public QObject
 {
     Q_OBJECT
 public:
-    explicit PimSettingsBackupRestore(QObject *parent=0);
+    explicit PimSettingsBackupRestore(QWidget *parentWidget, QObject *parent=0);
     ~PimSettingsBackupRestore();
 
-    void backupStart();
-    void restoreStart();
+    void backupStart(const QString &filename);
+    void restoreStart(const QString &filename);
 
     void setStoredParameters(const QHash<Utils::AppsType, Utils::importExportParameters> &stored);
 
@@ -66,6 +66,7 @@ private:
     Action mAction;
     AbstractImportExportJob *mImportExportData;
     ArchiveStorage *mArchiveStorage;
+    QWidget *mParentWidget;
 };
 
 #endif // PIMSETTINGSBACKUPRESTORE_H
