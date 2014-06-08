@@ -50,7 +50,7 @@
 #include <Tag>
 
 #include <KCalCore/CalFormat>
-#include <KIcon>
+#include <QIcon>
 #include <KIconLoader>
 #include <KGlobal>
 #include <KComponentData>
@@ -1067,9 +1067,9 @@ void TodoView::setFullView( bool fullView )
 
   mFullViewButton->setChecked( fullView );
   if ( fullView ) {
-    mFullViewButton->setIcon( KIcon( QLatin1String("view-restore") ) );
+    mFullViewButton->setIcon( QIcon::fromTheme( QLatin1String("view-restore") ) );
   } else {
-    mFullViewButton->setIcon( KIcon( QLatin1String("view-fullscreen") ) );
+    mFullViewButton->setIcon( QIcon::fromTheme( QLatin1String("view-fullscreen") ) );
   }
 
   mFullViewButton->blockSignals( true );
@@ -1087,9 +1087,9 @@ void TodoView::setFullView( bool fullView )
 void TodoView::setFlatView( bool flatView, bool notifyOtherViews )
 {
   if ( flatView ) {
-    mFlatViewButton->setIcon( KIcon( QLatin1String("view-list-tree") ) );
+    mFlatViewButton->setIcon( QIcon::fromTheme( QLatin1String("view-list-tree") ) );
   } else {
-    mFlatViewButton->setIcon( KIcon( QLatin1String("view-list-details") ) );
+    mFlatViewButton->setIcon( QIcon::fromTheme( QLatin1String("view-list-details") ) );
   }
 
   if ( notifyOtherViews ) {

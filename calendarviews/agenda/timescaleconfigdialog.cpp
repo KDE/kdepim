@@ -24,7 +24,7 @@
 
 #include <KSystemTimeZone>
 #include <KLocalizedString>
-#include <KIcon>
+#include <QIcon>
 
 using namespace EventViews;
 
@@ -106,10 +106,10 @@ TimeScaleConfigDialog::TimeScaleConfigDialog( const PrefsPtr &preferences, QWidg
   zoneCombo->addItems( availList );
   zoneCombo->setCurrentIndex( 0 );
 
-  addButton->setIcon( KIcon( QLatin1String("list-add") ) );
-  removeButton->setIcon( KIcon( QLatin1String("list-remove") ) );
-  upButton->setIcon( KIcon( QLatin1String("go-up") ) );
-  downButton->setIcon( KIcon( QLatin1String("go-down") ) );
+  addButton->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
+  removeButton->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
+  upButton->setIcon( QIcon::fromTheme( QLatin1String("go-up") ) );
+  downButton->setIcon( QIcon::fromTheme( QLatin1String("go-down") ) );
 
   connect( addButton, SIGNAL(clicked()), SLOT(add()) );
   connect( removeButton, SIGNAL(clicked()), SLOT(remove()) );

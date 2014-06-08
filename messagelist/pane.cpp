@@ -20,7 +20,7 @@
 
 #include <KActionCollection>
 #include <KActionMenu>
-#include <KIcon>
+#include <QIcon>
 #include <KLocale>
 #include <KMenu>
 #include <KXMLGUIClient>
@@ -143,7 +143,7 @@ Pane::Pane( bool restoreSession, QAbstractItemModel *model, QItemSelectionModel 
     } // Proxy stack done
 
     d->mNewTabButton = new QToolButton( this );
-    d->mNewTabButton->setIcon( KIcon( QLatin1String( "tab-new" ) ) );
+    d->mNewTabButton->setIcon( QIcon::fromTheme( QLatin1String( "tab-new" ) ) );
     d->mNewTabButton->adjustSize();
     d->mNewTabButton->setToolTip( i18nc("@info:tooltip", "Open a new tab"));
 #ifndef QT_NO_ACCESSIBILITY
@@ -154,7 +154,7 @@ Pane::Pane( bool restoreSession, QAbstractItemModel *model, QItemSelectionModel 
              SLOT(onNewTabClicked()) );
 
     d->mCloseTabButton = new QToolButton( this );
-    d->mCloseTabButton->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
+    d->mCloseTabButton->setIcon( QIcon::fromTheme( QLatin1String( "tab-close" ) ) );
     d->mCloseTabButton->adjustSize();
     d->mCloseTabButton->setToolTip( i18nc("@info:tooltip", "Close the current tab"));
 #ifndef QT_NO_ACCESSIBILITY
@@ -230,7 +230,7 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
         if ( d->mActionMenu ) {
             d->mXmlGuiClient->actionCollection()->removeAction( d->mActionMenu );
         }
-        d->mActionMenu = new KActionMenu( KIcon(), i18n( "Message List" ), this );
+        d->mActionMenu = new KActionMenu( QIcon(), i18n( "Message List" ), this );
         d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "view_message_list" ), d->mActionMenu );
         MessageList::Util::fillViewMenu( d->mActionMenu->menu(), this );
 
@@ -486,7 +486,7 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
             idx = idx.parent();
         }
     } else {
-        icon = KIcon( QLatin1String( "folder" ) );
+        icon = QIcon::fromTheme( QLatin1String( "folder" ) );
     }
 
     const int index = q->indexOf( w );
@@ -653,10 +653,10 @@ void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
 
 
     QAction *closeTabAction = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
-    closeTabAction->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
+    closeTabAction->setIcon( QIcon::fromTheme( QLatin1String( "tab-close" ) ) );
 
     QAction *allOther = menu.addAction( i18nc("@action:inmenu", "Close All Other Tabs" ) );
-    allOther->setIcon( KIcon( QLatin1String( "tab-close-other" ) ) );
+    allOther->setIcon( QIcon::fromTheme( QLatin1String( "tab-close-other" ) ) );
 
     QAction *action = menu.exec( q->mapToGlobal( pos ) );
 

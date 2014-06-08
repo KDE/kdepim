@@ -39,7 +39,7 @@
 #include <KActionCollection>
 #include <KComboBox>
 #include <QDebug>
-#include <KIcon>
+#include <QIcon>
 #include <KIconLoader>
 #include <KLocale>
 #include <QMenu>
@@ -433,10 +433,10 @@ void Widget::viewDropEvent( QDropEvent *e )
 
         } else {
             QMenu menu;
-            QAction *moveAction = menu.addAction( KIcon( QLatin1String( "go-jump" )), i18n( "&Move Here" ) );
-            QAction *copyAction = menu.addAction( KIcon( QLatin1String( "edit-copy" ) ), i18n( "&Copy Here" ) );
+            QAction *moveAction = menu.addAction( QIcon::fromTheme( QLatin1String( "go-jump" )), i18n( "&Move Here" ) );
+            QAction *copyAction = menu.addAction( QIcon::fromTheme( QLatin1String( "edit-copy" ) ), i18n( "&Copy Here" ) );
             menu.addSeparator();
-            menu.addAction( KIcon( QLatin1String( "dialog-cancel" ) ), i18n( "C&ancel" ) );
+            menu.addAction( QIcon::fromTheme( QLatin1String( "dialog-cancel" ) ), i18n( "C&ancel" ) );
 
             QAction *menuChoice = menu.exec( QCursor::pos() );
             if ( menuChoice == moveAction ) {

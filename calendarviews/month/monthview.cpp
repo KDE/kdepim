@@ -35,7 +35,7 @@
 
 #include <KCalCore/OccurrenceIterator>
 #include <KCheckableProxyModel>
-#include <KIcon>
+#include <QIcon>
 #include <QDebug>
 #include <KGlobal>
 
@@ -175,7 +175,7 @@ MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
     rightLayout->addStretch( 1 );
 
     d->fullView = new QToolButton( this );
-    d->fullView->setIcon( KIcon( QLatin1String("view-fullscreen") ) );
+    d->fullView->setIcon( QIcon::fromTheme( QLatin1String("view-fullscreen") ) );
     d->fullView->setAutoRaise( true );
     d->fullView->setCheckable( true );
     d->fullView->setChecked( preferences()->fullViewMonth() );
@@ -192,7 +192,7 @@ MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
              this, SLOT(changeFullView()) );
 
     QToolButton *minusMonth = new QToolButton( this );
-    minusMonth->setIcon( KIcon( QLatin1String("arrow-up-double") ) );
+    minusMonth->setIcon( QIcon::fromTheme( QLatin1String("arrow-up-double") ) );
     minusMonth->setAutoRaise( true );
     minusMonth->setToolTip( i18nc( "@info:tooltip", "Go back one month" ) );
     minusMonth->setWhatsThis(
@@ -202,7 +202,7 @@ MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
             this, SLOT(moveBackMonth()) );
 
     QToolButton *minusWeek = new QToolButton( this );
-    minusWeek->setIcon( KIcon( QLatin1String("arrow-up") ) );
+    minusWeek->setIcon( QIcon::fromTheme( QLatin1String("arrow-up") ) );
     minusWeek->setAutoRaise( true );
     minusWeek->setToolTip( i18nc( "@info:tooltip", "Go back one week" ) );
     minusWeek->setWhatsThis(
@@ -212,7 +212,7 @@ MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
             this, SLOT(moveBackWeek()) );
 
     QToolButton *plusWeek = new QToolButton( this );
-    plusWeek->setIcon( KIcon( QLatin1String("arrow-down") ) );
+    plusWeek->setIcon( QIcon::fromTheme( QLatin1String("arrow-down") ) );
     plusWeek->setAutoRaise( true );
     plusWeek->setToolTip( i18nc( "@info:tooltip", "Go forward one week" ) );
     plusWeek->setWhatsThis(
@@ -222,7 +222,7 @@ MonthView::MonthView( NavButtonsVisibility visibility, QWidget *parent )
             this, SLOT(moveFwdWeek()) );
 
     QToolButton *plusMonth = new QToolButton( this );
-    plusMonth->setIcon( KIcon( QLatin1String("arrow-down-double") ) );
+    plusMonth->setIcon( QIcon::fromTheme( QLatin1String("arrow-down-double") ) );
     plusMonth->setAutoRaise( true );
     plusMonth->setToolTip( i18nc( "@info:tooltip", "Go forward one month" ) );
     plusMonth->setWhatsThis(
@@ -405,11 +405,11 @@ void MonthView::changeFullView()
   bool fullView = d->fullView->isChecked();
 
   if( fullView ) {
-    d->fullView->setIcon( KIcon( QLatin1String("view-restore") ) );
+    d->fullView->setIcon( QIcon::fromTheme( QLatin1String("view-restore") ) );
     d->fullView->setToolTip( i18nc( "@info:tooltip",
                                     "Display calendar in a normal size" ) );
   } else {
-    d->fullView->setIcon( KIcon( QLatin1String("view-fullscreen") ) );
+    d->fullView->setIcon( QIcon::fromTheme( QLatin1String("view-fullscreen") ) );
     d->fullView->setToolTip( i18nc( "@info:tooltip",
                                     "Display calendar in a full window" ) );
   }

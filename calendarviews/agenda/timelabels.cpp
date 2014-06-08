@@ -27,7 +27,7 @@
 #include "timelabelszone.h"
 #include "timescaleconfigdialog.h"
 
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
 #include <KGlobal>
 #include <KTimeZone>
@@ -303,9 +303,9 @@ void TimeLabels::contextMenuEvent( QContextMenuEvent *event )
 
   QMenu popup( this );
   QAction *editTimeZones =
-    popup.addAction( KIcon( QLatin1String("document-properties") ), i18n( "&Add Timezones..." ) );
+    popup.addAction( QIcon::fromTheme( QLatin1String("document-properties") ), i18n( "&Add Timezones..." ) );
   QAction *removeTimeZone =
-    popup.addAction( KIcon( QLatin1String("edit-delete") ),
+    popup.addAction( QIcon::fromTheme( QLatin1String("edit-delete") ),
                      i18n( "&Remove Timezone %1", i18n( mSpec.timeZone().name().toUtf8() ) ) );
   if ( !mSpec.isValid() ||
        !mTimeLabelsZone->preferences()->timeScaleTimezones().count() ||
