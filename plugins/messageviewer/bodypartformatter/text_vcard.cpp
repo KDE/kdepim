@@ -53,7 +53,7 @@ using MessageViewer::Interface::BodyPart;
 #include <kdemacros.h>
 #include <KFileDialog>
 #include <KGlobal>
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
 #include <QMenu>
 #include <KMessageBox>
@@ -247,9 +247,9 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 
       QMenu *menu = new QMenu();
       QAction *open =
-        menu->addAction( KIcon( QLatin1String("document-open") ), i18n( "View Business Card" ) );
+        menu->addAction( QIcon::fromTheme( QLatin1String("document-open") ), i18n( "View Business Card" ) );
       QAction *saveas =
-        menu->addAction( KIcon( QLatin1String("document-save-as") ), i18n( "Save Business Card As..." ) );
+        menu->addAction( QIcon::fromTheme( QLatin1String("document-save-as") ), i18n( "Save Business Card As..." ) );
 
       QAction *action = menu->exec( point, 0 );
       if ( action == open ) {

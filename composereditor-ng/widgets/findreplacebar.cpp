@@ -20,7 +20,7 @@
 
 #include "findreplacebar.h"
 
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
 #include <KColorScheme>
 #include <KMessageBox>
@@ -223,7 +223,7 @@ FindReplaceBar::FindReplaceBar(KWebView *parent)
     lay->setMargin( 2 );
 
     QToolButton * closeBtn = new QToolButton( this );
-    closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );
+    closeBtn->setIcon( QIcon::fromTheme( QLatin1String("dialog-close") ) );
     closeBtn->setIconSize( QSize( 16, 16 ) );
     closeBtn->setToolTip( i18n( "Close" ) );
 
@@ -243,12 +243,12 @@ FindReplaceBar::FindReplaceBar(KWebView *parent)
     label->setBuddy( d->search );
     lay->addWidget( d->search );
 
-    d->findNextButton = new QPushButton( KIcon( QLatin1String("go-down-search") ), i18nc( "Find and go to the next search match", "Next" ), this );
+    d->findNextButton = new QPushButton( QIcon::fromTheme( QLatin1String("go-down-search") ), i18nc( "Find and go to the next search match", "Next" ), this );
     d->findNextButton->setToolTip( i18n( "Jump to next match" ) );
     lay->addWidget( d->findNextButton );
     d->findNextButton->setEnabled( false );
 
-    d->findPreviousButton = new QPushButton( KIcon( QLatin1String("go-up-search") ), i18nc( "Find and go to the previous search match", "Previous" ), this );
+    d->findPreviousButton = new QPushButton( QIcon::fromTheme( QLatin1String("go-up-search") ), i18nc( "Find and go to the previous search match", "Previous" ), this );
     d->findPreviousButton->setToolTip( i18n( "Jump to previous match" ) );
     lay->addWidget( d->findPreviousButton );
     d->findPreviousButton->setEnabled( false );

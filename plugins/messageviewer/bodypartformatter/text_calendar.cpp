@@ -72,7 +72,7 @@ using namespace KCalCore;
 #include <KTemporaryFile>
 #include <KToolInvocation>
 #include <KIO/NetAccess>
-#include <KIcon>
+#include <QIcon>
 #include <KLocale>
 
 using namespace MailTransport;
@@ -1388,9 +1388,9 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
       QMenu *menu = new QMenu();
       QAction *open =
-        menu->addAction( KIcon( QLatin1String("document-open") ), i18n( "Open Attachment" ) );
+        menu->addAction( QIcon::fromTheme( QLatin1String("document-open") ), i18n( "Open Attachment" ) );
       QAction *saveas =
-        menu->addAction( KIcon( QLatin1String("document-save-as") ), i18n( "Save Attachment As..." ) );
+        menu->addAction( QIcon::fromTheme( QLatin1String("document-save-as") ), i18n( "Save Attachment As..." ) );
 
       QAction *a = menu->exec( point, 0 );
       if ( a == open ) {
