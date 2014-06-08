@@ -35,7 +35,7 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
       mDelay(0),
       mInfo(info)
 {
-    setCaption( i18n("Send Later") );
+    setCaption( i18nc("@title:window", "Send Later") );
     setWindowIcon( KIcon( QLatin1String("kmail") ) );
 
     QWidget *sendLaterWidget = new QWidget;
