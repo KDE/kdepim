@@ -28,16 +28,16 @@
 #include <qdebug.h>
 #include <kdbusservicestarter.h>
 #include <kmessagebox.h>
-#include <kurl.h>
+#include <QUrl>
 
 #include "kmailinterface.h"
 
-static KUrl makeAbsoluteUrl( const QString& str )
+static QUrl makeAbsoluteUrl( const QString& str )
 {
-    KUrl url( str );
-    if ( url.protocol().isEmpty() ) {
+    QUrl url( str );
+    if ( url.scheme().isEmpty() ) {
       const QString newUrl = KCmdLineArgs::cwd() + QLatin1Char('/') + url.fileName();
-      return KUrl( newUrl );
+      return QUrl( newUrl );
     }
     else {
       return url;
@@ -108,7 +108,7 @@ void MailerService::processArgs( KCmdLineArgs *args )
 {
     QString to, cc, bcc, subj, body;
     QStringList customHeaders;
-    KUrl messageFile;
+    QUrl messageFile;
     QStringList attachURLs;
     bool mailto = false;
     bool calledWithSession = false; // for ignoring '-session foo'
@@ -184,8 +184,8 @@ void MailerService::processArgs( KCmdLineArgs *args )
                 to += args->url(i).path() + QLatin1String(", ");
             } else {
                 const QString tmpArg = args->arg(i);
-                KUrl url( tmpArg );
-                if (url.isValid() && !url.protocol().isEmpty())
+                QUrl url( tmpArg );
+                if (url.isValid() && !url.scheme().isEmpty())
                     attachURLs.append( url.url() );
                 else
                     to += tmpArg + QLatin1String(", ");
