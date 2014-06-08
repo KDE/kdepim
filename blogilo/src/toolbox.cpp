@@ -394,9 +394,9 @@ void Toolbox::slotEntriesCopyUrl()
     }
     BilboPost post = DBMan::self()->getPostInfo( lstEntriesList->currentItem()->data( BlogEntryID ).toInt() );
     if ( !post.permaLink().isEmpty() )
-        QApplication::clipboard()->setText( post.permaLink().prettyUrl() );
+        QApplication::clipboard()->setText( post.permaLink().toDisplayString() );
     else if ( !post.link().isEmpty() )
-        QApplication::clipboard()->setText( post.link().prettyUrl() );
+        QApplication::clipboard()->setText( post.link().toDisplayString() );
     else
         KMessageBox::sorry(this, i18n( "No link field is available in the database for this entry." ) );
 }
@@ -513,9 +513,9 @@ void Toolbox::openPostInBrowser()
     BilboPost post = DBMan::self()->getPostInfo( lstEntriesList->currentItem()->data( BlogEntryID ).toInt() );
     QString url;
     if ( !post.permaLink().isEmpty() )
-        url = post.permaLink().pathOrUrl();
+        url = post.permaLink().toDisplayString(QUrl::PreferLocalFile);
     else if ( !post.link().isEmpty() )
-        url = post.link().pathOrUrl();
+        url = post.link().toDisplayString(QUrl::PreferLocalFile);
     else
         url = DBMan::self()->blogList().value( d->mCurrentBlogId )->blogUrl();
     KToolInvocation::invokeBrowser ( url );
