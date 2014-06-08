@@ -20,6 +20,10 @@ Comment[pt]=Agente de recordação de seguimentos
 Comment[pt_BR]=Acompanhamento do agente de lembretes
 Comment[ru]=Агент напоминания о продолжении
 Comment[sk]=Agent pripomienky sledovania
+Comment[sr]=Агент подсетника на одговор
+Comment[sr@ijekavian]=Агент подсетника на одговор
+Comment[sr@ijekavianlatin]=Agent podsetnika na odgovor
+Comment[sr@latin]=Agent podsetnika na odgovor
 Comment[sv]=Påminnelseuppföljningsmodul
 Comment[tr]=Takip hatırlatma aracı
 Comment[uk]=Агент стеження за нагадуваннями
@@ -28,5 +32,6 @@ Comment[zh_TW]=回覆提醒代理程式
 
 [Event/mailreceived]
 Name=Mail Follow Up Received
+Name[uk]=Отримано відповідь на повідомлення
 Action=Popup
 
