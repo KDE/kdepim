@@ -21,7 +21,7 @@
 
 #include <KLocalizedString>
 #include <QLineEdit>
-#include <KIcon>
+#include <QIcon>
 #include <KDateTimeEdit>
 #include <QDateTime>
 #include <QDebug>
@@ -123,7 +123,7 @@ EventEdit::EventEdit(QWidget *parent)
 
     hbox->addStretch(1);
 
-    mSaveButton = new KPushButton(KIcon(QLatin1String("appointment-new")), i18n("&Save"));
+    mSaveButton = new KPushButton(QIcon::fromTheme(QLatin1String("appointment-new")), i18n("&Save"));
     mSaveButton->setObjectName(QLatin1String("save-button"));
     mSaveButton->setEnabled(false);
 #ifndef QT_NO_ACCESSIBILITY

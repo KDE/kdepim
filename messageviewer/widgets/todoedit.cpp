@@ -20,7 +20,7 @@
 
 #include <KLocalizedString>
 #include <QLineEdit>
-#include <KIcon>
+#include <QIcon>
 #include <QDebug>
 #include <KMessageWidget>
 #include <KPushButton>
@@ -94,7 +94,7 @@ TodoEdit::TodoEdit(QWidget *parent)
     vbox->addLayout(hbox);
 
     hbox->addStretch(1);
-    mSaveButton = new KPushButton(KIcon(QLatin1String("task-new")), i18n("&Save"));
+    mSaveButton = new KPushButton(QIcon::fromTheme(QLatin1String("task-new")), i18n("&Save"));
     mSaveButton->setObjectName(QLatin1String("save-button"));
     mSaveButton->setEnabled(false);
 #ifndef QT_NO_ACCESSIBILITY

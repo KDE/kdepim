@@ -45,7 +45,7 @@
 #include <KFileDialog>
 #include <KMessageBox>
 #include <QAction>
-#include <KIcon>
+#include <QIcon>
 #include <KIconTheme>
 #include <KLocalizedString>
 
@@ -123,7 +123,7 @@ void MailSourceViewTextBrowser::contextMenuEvent( QContextMenuEvent *event )
                                                            : KIconTheme::TextEditor,
                                               popup->actions() );
         popup->addSeparator();
-        popup->addAction( KIcon(QLatin1String("preferences-desktop-text-to-speech")),i18n("Speak Text"),this,SLOT(slotSpeakText()));
+        popup->addAction( QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")),i18n("Speak Text"),this,SLOT(slotSpeakText()));
 
         popup->addSeparator();
         popup->addAction(KStandardAction::saveAs(this, SLOT(slotSaveAs()), this));

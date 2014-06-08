@@ -71,7 +71,7 @@
 #include <KToggleAction>
 #include <KPrintPreview>
 #include <kdeprintdialog.h>
-#include <KIcon>
+#include <QIcon>
 #include <QDebug>
 #include <kfileitemactions.h>
 #include <KFileItemListProperties>
@@ -1647,7 +1647,7 @@ void ViewerPrivate::createActions()
     attachmentMenu->addAction( mHeaderOnlyAttachmentsAction );
 
     // Set Encoding submenu
-    mSelectEncodingAction  = new KSelectAction(KIcon(QLatin1String("character-set")), i18n("&Set Encoding"), this);
+    mSelectEncodingAction  = new KSelectAction(QIcon::fromTheme(QLatin1String("character-set")), i18n("&Set Encoding"), this);
     mSelectEncodingAction->setToolBarMode( KSelectAction::MenuMode );
     ac->addAction(QLatin1String("encoding"), mSelectEncodingAction );
     connect(mSelectEncodingAction,SIGNAL(triggered(int)),
@@ -1676,13 +1676,13 @@ void ViewerPrivate::createActions()
     mSelectAllAction->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_A ) );
 
     // copy Email address to clipboard
-    mCopyURLAction = new QAction( KIcon( QLatin1String("edit-copy" )),
+    mCopyURLAction = new QAction( QIcon::fromTheme( QLatin1String("edit-copy" )),
                                   i18n( "Copy Link Address" ), this );
     ac->addAction( QLatin1String("copy_url"), mCopyURLAction );
     connect( mCopyURLAction, SIGNAL(triggered(bool)), SLOT(slotUrlCopy()) );
 
     // open URL
-    mUrlOpenAction = new QAction( KIcon(QLatin1String( "document-open" )), i18n( "Open URL" ), this );
+    mUrlOpenAction = new QAction( QIcon::fromTheme(QLatin1String( "document-open" )), i18n( "Open URL" ), this );
     ac->addAction( QLatin1String("open_url"), mUrlOpenAction );
     connect( mUrlOpenAction, SIGNAL(triggered(bool)), this, SLOT(slotUrlOpen()) );
 
@@ -1697,12 +1697,12 @@ void ViewerPrivate::createActions()
     mZoomTextOnlyAction = new KToggleAction( i18n( "Zoom Text Only" ), this );
     ac->addAction( QLatin1String("toggle_zoomtextonly"), mZoomTextOnlyAction );
     connect( mZoomTextOnlyAction, SIGNAL(triggered(bool)), SLOT(slotZoomTextOnly()) );
-    mZoomInAction = new QAction( KIcon(QLatin1String("zoom-in")), i18n("&Zoom In"), this);
+    mZoomInAction = new QAction( QIcon::fromTheme(QLatin1String("zoom-in")), i18n("&Zoom In"), this);
     ac->addAction(QLatin1String("zoom_in"), mZoomInAction);
     connect(mZoomInAction, SIGNAL(triggered(bool)), SLOT(slotZoomIn()));
     mZoomInAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Plus));
 
-    mZoomOutAction = new QAction( KIcon(QLatin1String("zoom-out")), i18n("Zoom &Out"), this);
+    mZoomOutAction = new QAction( QIcon::fromTheme(QLatin1String("zoom-out")), i18n("Zoom &Out"), this);
     ac->addAction(QLatin1String("zoom_out"), mZoomOutAction);
     connect(mZoomOutAction, SIGNAL(triggered(bool)), SLOT(slotZoomOut()));
     mZoomOutAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Minus));
@@ -1724,7 +1724,7 @@ void ViewerPrivate::createActions()
     connect(mViewSourceAction, SIGNAL(triggered(bool)), SLOT(slotShowMessageSource()));
     mViewSourceAction->setShortcut(QKeySequence(Qt::Key_V));
 
-    mSaveMessageAction = new QAction(KIcon(QLatin1String("document-save-as")), i18n("&Save message..."), this);
+    mSaveMessageAction = new QAction(QIcon::fromTheme(QLatin1String("document-save-as")), i18n("&Save message..."), this);
     ac->addAction(QLatin1String("save_message"), mSaveMessageAction);
     connect(mSaveMessageAction, SIGNAL(triggered(bool)), SLOT(slotSaveMessage()));
     //Laurent: conflict with kmail shortcut
@@ -1787,13 +1787,13 @@ void ViewerPrivate::createActions()
 
 
     mSpeakTextAction = new QAction(i18n("Speak Text"),this);
-    mSpeakTextAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
+    mSpeakTextAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
     ac->addAction( QLatin1String("speak_text"), mSpeakTextAction );
     connect( mSpeakTextAction, SIGNAL(triggered(bool)),
              this, SLOT(slotSpeakText()) );
 
     mCopyImageLocation = new QAction(i18n("Copy Image Location"),this);
-    mCopyImageLocation->setIcon(KIcon(QLatin1String("view-media-visualization")));
+    mCopyImageLocation->setIcon(QIcon::fromTheme(QLatin1String("view-media-visualization")));
     ac->addAction(QLatin1String("copy_image_location"), mCopyImageLocation);
     //QT5 mCopyImageLocation->setShortcutConfigurable( false );
     connect( mCopyImageLocation, SIGNAL(triggered(bool)),
@@ -1801,12 +1801,12 @@ void ViewerPrivate::createActions()
 
     mTranslateAction = new QAction(i18n("Translate..."),this);
     mTranslateAction->setShortcut(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_T));
-    mTranslateAction->setIcon(KIcon(QLatin1String("preferences-desktop-locale")));
+    mTranslateAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-locale")));
     ac->addAction(QLatin1String("translate_text"), mTranslateAction);
     connect( mTranslateAction, SIGNAL(triggered(bool)),
              SLOT(slotTranslate()) );
 
-    mFindInMessageAction = new QAction(KIcon(QLatin1String("edit-find")), i18n("&Find in Message..."), this);
+    mFindInMessageAction = new QAction(QIcon::fromTheme(QLatin1String("edit-find")), i18n("&Find in Message..."), this);
     ac->addAction(QLatin1String("find_in_messages"), mFindInMessageAction );
     connect(mFindInMessageAction, SIGNAL(triggered(bool)), SLOT(slotFind()));
     mFindInMessageAction->setShortcut(KStandardShortcut::find().first());
@@ -1835,7 +1835,7 @@ void ViewerPrivate::createActions()
     //QT5 mExpandUrlAction->setShortcutConfigurable( false );
     connect( mExpandUrlAction, SIGNAL(triggered(bool)), SLOT(slotExpandShortUrl()) );
 
-    mCreateTodoAction = new QAction(KIcon( QLatin1String("task-new") ),i18n("Create Todo"), this);
+    mCreateTodoAction = new QAction(QIcon::fromTheme( QLatin1String("task-new") ),i18n("Create Todo"), this);
     mCreateTodoAction->setIconText( i18n( "Create To-do" ) );
     //QT5 mCreateTodoAction->setHelpText( i18n( "Allows you to create a calendar to-do or reminder from this message" ) );
     mCreateTodoAction->setWhatsThis( i18n( "This option starts the KOrganizer to-do editor with initial values taken from the currently selected message. Then you can edit the to-do to your liking before saving it to your calendar." ) );
@@ -1843,7 +1843,7 @@ void ViewerPrivate::createActions()
     mCreateTodoAction->setShortcut(Qt::CTRL + Qt::Key_T);
     connect( mCreateTodoAction, SIGNAL(triggered(bool)), SLOT(slotShowCreateTodoWidget()) );
 
-    mCreateEventAction = new QAction(KIcon( QLatin1String("appointment-new") ),i18n("Create Event"), this);
+    mCreateEventAction = new QAction(QIcon::fromTheme( QLatin1String("appointment-new") ),i18n("Create Event"), this);
     mCreateEventAction->setIconText( i18n( "Create Event" ) );
     //QT5 mCreateEventAction->setHelpText( i18n( "Allows you to create a calendar Event" ) );
     ac->addAction(QLatin1String("create_event"), mCreateEventAction);
