@@ -24,7 +24,7 @@
 #include "storageservicemanagerglobalconfig.h"
 #include "storageservice/storageserviceprogressmanager.h"
 
-#include <KMenu>
+#include <QMenu>
 #include <KInputDialog>
 #include <KLocalizedString>
 #include <KFileDialog>
@@ -92,7 +92,7 @@ void StorageServiceTreeWidget::setIsInitialized()
     }
 }
 
-void StorageServiceTreeWidget::createMenuActions(KMenu *menu)
+void StorageServiceTreeWidget::createMenuActions(QMenu *menu)
 {
     if (mInitialized) {
         createUpAction(menu);

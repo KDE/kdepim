@@ -27,7 +27,7 @@
 #include <KSharedConfig>
 #include <KMessageBox>
 #include <KFileDialog>
-#include <KMenu>
+#include <QMenu>
 #include <KUrl>
 
 #include <QGridLayout>
@@ -46,7 +46,7 @@ StorageServiceDownloadTreeWidget::StorageServiceDownloadTreeWidget(PimCommon::St
 {
 }
 
-void StorageServiceDownloadTreeWidget::createMenuActions(KMenu *menu)
+void StorageServiceDownloadTreeWidget::createMenuActions(QMenu *menu)
 {
     createUpAction(menu);
     menu->addSeparator();

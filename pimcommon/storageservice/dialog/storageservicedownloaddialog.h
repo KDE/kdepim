@@ -77,7 +77,7 @@ Q_SIGNALS:
     void downloadFile();
 
 protected:
-    virtual void createMenuActions(KMenu *menu);
+    virtual void createMenuActions(QMenu *menu);
 };
 
 

@@ -23,7 +23,7 @@
 
 #include <QTreeWidget>
 #include "pimcommon_export.h"
-class KMenu;
+class QMenu;
 class KDateTime;
 namespace PimCommon {
 class StorageServiceTreeWidget;
@@ -84,8 +84,8 @@ public:
 
     QVariantMap itemInformationSelected() const;
 
-    void createUpAction(KMenu *menu);
-    void createPropertiesAction(KMenu *menu);
+    void createUpAction(QMenu *menu);
+    void createPropertiesAction(QMenu *menu);
 Q_SIGNALS:
     void fileDoubleClicked();
     void changeFolder(const QString &currentFolder, const QString &parentFolder);
@@ -99,7 +99,7 @@ protected:
     QString mCurrentFolder;
     QString mParentFolder;
     PimCommon::StorageServiceAbstract *mStorageService;    
-    virtual void createMenuActions(KMenu *menu);
+    virtual void createMenuActions(QMenu *menu);
 
 private Q_SLOTS:
     void slotItemDoubleClicked(QTreeWidgetItem *item, int column);

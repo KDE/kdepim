@@ -27,7 +27,7 @@
 #include <KSharedConfig>
 #include <KMessageBox>
 #include <KFileDialog>
-#include <KMenu>
+#include <QMenu>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -50,7 +50,7 @@ StorageServiceDeleteDialog::DeleteType StorageServiceDeleteTreeWidget::deleteTyp
     return mDeleteType;
 }
 
-void StorageServiceDeleteTreeWidget::createMenuActions(KMenu *menu)
+void StorageServiceDeleteTreeWidget::createMenuActions(QMenu *menu)
 {
     StorageServiceTreeWidget::createMenuActions(menu);
     const PimCommon::StorageServiceTreeWidget::ItemType type = StorageServiceTreeWidget::itemTypeSelected();

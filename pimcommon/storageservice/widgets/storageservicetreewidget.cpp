@@ -27,7 +27,7 @@
 #include <KGlobal>
 #include <KLocale>
 #include <KMimeType>
-#include <KMenu>
+#include <QMenu>
 #include <KDateTime>
 
 #include <QTreeWidgetItem>
@@ -66,17 +66,17 @@ void StorageServiceTreeWidget::slotMoveUp()
     QTimer::singleShot(0, this, SLOT(refreshList()));
 }
 
-void StorageServiceTreeWidget::createUpAction(KMenu *menu)
+void StorageServiceTreeWidget::createUpAction(QMenu *menu)
 {
     menu->addAction( KIcon(QLatin1String("go-up")),  i18n("Up"), this, SLOT(slotMoveUp()));
 }
 
-void StorageServiceTreeWidget::createPropertiesAction(KMenu *menu)
+void StorageServiceTreeWidget::createPropertiesAction(QMenu *menu)
 {
     menu->addAction(KIcon(QLatin1String("document-properties")), i18n("Properties"), this, SLOT(slotProperties()));
 }
 
-void StorageServiceTreeWidget::createMenuActions(KMenu *menu)
+void StorageServiceTreeWidget::createMenuActions(QMenu *menu)
 {
     createUpAction(menu);
     const PimCommon::StorageServiceTreeWidget::ItemType type = StorageServiceTreeWidget::itemTypeSelected();
@@ -88,7 +88,7 @@ void StorageServiceTreeWidget::createMenuActions(KMenu *menu)
 
 void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
 {
-    KMenu *menu = new KMenu( this );
+    QMenu *menu = new QMenu( this );
     createMenuActions(menu);
     menu->exec( mapToGlobal( pos ) );
     delete menu;

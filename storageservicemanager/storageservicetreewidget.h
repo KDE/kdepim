@@ -55,7 +55,7 @@ public Q_SLOTS:
 
 protected:
     void paintEvent(QPaintEvent *event);
-    void createMenuActions(KMenu *menu);
+    void createMenuActions(QMenu *menu);
 
 private Q_SLOTS:
 
