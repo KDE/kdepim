@@ -24,7 +24,7 @@
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <KMimeType>
-#include <KIcon>
+#include <QIcon>
 
 #include <QPixmap>
 #include <QTimer>
@@ -59,7 +59,7 @@ Attachment::Attachment( QTreeWidget *parent, KTNEFAttach *attach )
   if ( !pix.isNull() ) {
     setIcon( 0, pix );
   } else {
-    setIcon( 0, KIcon( mimeType->iconName() ) );
+    setIcon( 0, QIcon::fromTheme( mimeType->iconName() ) );
   }
 }
 

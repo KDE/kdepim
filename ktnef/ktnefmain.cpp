@@ -45,7 +45,7 @@
 #include <KTemporaryFile>
 #include <KRecentFilesAction>
 #include <KUrl>
-#include <KIcon>
+#include <QIcon>
 #include <KMimeType>
 
 #include <QContextMenuEvent>
@@ -112,7 +112,7 @@ void KTNEFMain::setupActions()
   // Action menu
   QAction *openAction = actionCollection()->addAction( QLatin1String("view_file") );
   openAction->setText( i18nc( "@action:inmenu", "View" ) );
-  openAction->setIcon( KIcon( QLatin1String("document-open") ) );
+  openAction->setIcon( QIcon::fromTheme( QLatin1String("document-open") ) );
   connect( openAction, SIGNAL(triggered()), this, SLOT(viewFile()) );
 
   QAction *openAsAction = actionCollection()->addAction( QLatin1String("view_file_as") );
@@ -125,17 +125,17 @@ void KTNEFMain::setupActions()
 
   QAction *extractToAction = actionCollection()->addAction( QLatin1String("extract_file_to") );
   extractToAction->setText( i18nc( "@action:inmenu", "Extract To..." ) );
-  extractToAction->setIcon( KIcon( QLatin1String("archive-extract") ) );
+  extractToAction->setIcon( QIcon::fromTheme( QLatin1String("archive-extract") ) );
   connect( extractToAction, SIGNAL(triggered()), this, SLOT(extractFileTo()) );
 
   QAction *extractAllToAction = actionCollection()->addAction( QLatin1String("extract_all_files") );
   extractAllToAction->setText( i18nc( "@action:inmenu", "Extract All To..." ) );
-  extractAllToAction->setIcon( KIcon( QLatin1String("archive-extract") ) );
+  extractAllToAction->setIcon( QIcon::fromTheme( QLatin1String("archive-extract") ) );
   connect( extractAllToAction, SIGNAL(triggered()), this, SLOT(extractAllFiles()) );
 
   QAction *filePropsAction = actionCollection()->addAction( QLatin1String("properties_file") );
   filePropsAction->setText( i18nc( "@action:inmenu", "Properties" ) );
-  filePropsAction->setIcon( KIcon( QLatin1String("document-properties") ) );
+  filePropsAction->setIcon( QIcon::fromTheme( QLatin1String("document-properties") ) );
   connect( filePropsAction, SIGNAL(triggered()), this, SLOT(propertiesFile()));
 
   QAction *messPropsAction = actionCollection()->addAction( QLatin1String("msg_properties") );
@@ -144,12 +144,12 @@ void KTNEFMain::setupActions()
 
   QAction *messShowAction = actionCollection()->addAction( QLatin1String("msg_text") );
   messShowAction->setText( i18nc( "@action:inmenu", "Show Message Text" ) );
-  messShowAction->setIcon( KIcon( QLatin1String("document-preview-archive") ) );
+  messShowAction->setIcon( QIcon::fromTheme( QLatin1String("document-preview-archive") ) );
   connect( messShowAction, SIGNAL(triggered()), this, SLOT(slotShowMessageText()) );
 
   QAction *messSaveAction = actionCollection()->addAction( QLatin1String("msg_save") );
   messSaveAction->setText( i18nc( "@action:inmenu", "Save Message Text As..." ) );
-  messSaveAction->setIcon( KIcon( QLatin1String("document-save") ) );
+  messSaveAction->setIcon( QIcon::fromTheme( QLatin1String("document-save") ) );
   connect( messSaveAction, SIGNAL(triggered()), this, SLOT(slotSaveMessageText()) );
 
   actionCollection()->action( QLatin1String("view_file") )->setEnabled( false );
@@ -162,7 +162,7 @@ void KTNEFMain::setupActions()
   // Options menu
   QAction *defFolderAction = actionCollection()->addAction( QLatin1String("options_default_dir") );
   defFolderAction->setText( i18nc( "@action:inmenu", "Default Folder..." ) );
-  defFolderAction->setIcon( KIcon( QLatin1String("folder-open") ) );
+  defFolderAction->setIcon( QIcon::fromTheme( QLatin1String("folder-open") ) );
   connect( defFolderAction, SIGNAL(triggered()), this, SLOT(optionDefaultDir()) );
 
 }
@@ -435,17 +435,17 @@ void KTNEFMain::contextMenuEvent( QContextMenuEvent *event )
   QAction *prop = 0;
   QMenu *menu = new QMenu();
   if ( list.count() == 1 ) {
-    view = menu->addAction( KIcon( QLatin1String("document-open") ),
+    view = menu->addAction( QIcon::fromTheme( QLatin1String("document-open") ),
                             i18nc( "@action:inmenu", "View" ) );
     viewWith = menu->addAction( i18nc( "@action:inmenu", "View With..." ) );
     menu->addSeparator();
   }
   QAction *extract = menu->addAction( i18nc( "@action:inmenu", "Extract" ) );
-  QAction *extractTo = menu->addAction( KIcon( QLatin1String("archive-extract") ),
+  QAction *extractTo = menu->addAction( QIcon::fromTheme( QLatin1String("archive-extract") ),
                                         i18nc( "@action:inmenu", "Extract To..." ) );
   if ( list.count() == 1 ) {
     menu->addSeparator();
-   prop = menu->addAction( KIcon( QLatin1String("document-properties") ),
+   prop = menu->addAction( QIcon::fromTheme( QLatin1String("document-properties") ),
                            i18nc( "@action:inmenu", "Properties" ) );
   }
 

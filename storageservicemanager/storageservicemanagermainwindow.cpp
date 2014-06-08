@@ -167,7 +167,7 @@ void StorageServiceManagerMainWindow::setupActions()
 
     mCreateFolder = ac->addAction(QLatin1String("create_folder"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotCreateFolder()));
     mCreateFolder->setText(i18n("Create Folder..."));
-    mCreateFolder->setIcon(KIcon(QLatin1String("folder-new")));
+    mCreateFolder->setIcon(QIcon::fromTheme(QLatin1String("folder-new")));
 
     mRefreshList = ac->addAction(QLatin1String("refresh_list"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotRefreshList()));
     mRefreshList->setText(i18n("Refresh List"));
@@ -182,11 +182,11 @@ void StorageServiceManagerMainWindow::setupActions()
     mDelete = ac->addAction(QLatin1String("delete"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotDelete()));
     mDelete->setShortcut(QKeySequence(Qt::Key_Delete));
     mDelete->setText(i18n("Delete..."));
-    mDelete->setIcon(KIcon(QLatin1String("edit-delete")));
+    mDelete->setIcon(QIcon::fromTheme(QLatin1String("edit-delete")));
 
     mDownloadFile = ac->addAction(QLatin1String("download_file"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotDownloadFile()));
     mDownloadFile->setText(i18n("Download File..."));
-    mDownloadFile->setIcon(KIcon(QLatin1String("download")));
+    mDownloadFile->setIcon(QIcon::fromTheme(QLatin1String("download")));
 
     mShowLog = ac->addAction(QLatin1String("show_log"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotShowLog()));
     mShowLog->setText(i18n("Show Log..."));

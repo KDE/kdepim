@@ -34,7 +34,7 @@
 
 #include <AkonadiCore/itemfetchjob.h>
 #include <kio/jobuidelegate.h>
-#include <KIcon>
+#include <QIcon>
 
 #include <QMenu>
 #include <QPointer>
@@ -429,14 +429,14 @@ void AttachmentControllerBase::createActions()
     d->attachMyPublicKeyAction = new KAction( i18n( "Attach &My Public Key" ), this );
     connect( d->attachMyPublicKeyAction, SIGNAL(triggered(bool)), this, SLOT(attachMyPublicKey()) );
 
-    d->attachmentMenu = new KActionMenu( KIcon( QLatin1String( "mail-attachment" ) ), i18n( "Attach" ), this );
+    d->attachmentMenu = new KActionMenu( QIcon::fromTheme( QLatin1String( "mail-attachment" ) ), i18n( "Attach" ), this );
     connect( d->attachmentMenu, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
 
     d->attachmentMenu->setDelayed(true);
 
-    d->addAction = new KAction( KIcon( QLatin1String( "mail-attachment" ) ), i18n( "&Attach File..." ), this );
+    d->addAction = new KAction( QIcon::fromTheme( QLatin1String( "mail-attachment" ) ), i18n( "&Attach File..." ), this );
     d->addAction->setIconText( i18n( "Attach" ) );
-    d->addContextAction = new KAction( KIcon( QLatin1String( "mail-attachment" ) ),
+    d->addContextAction = new KAction( QIcon::fromTheme( QLatin1String( "mail-attachment" ) ),
                                        i18n( "Add Attachment..." ), this );
     connect( d->addAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
     connect( d->addContextAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
@@ -450,8 +450,8 @@ void AttachmentControllerBase::createActions()
     d->attachmentMenu->addSeparator();
     d->attachmentMenu->addAction(d->addOwnVcardAction);
 
-    d->removeAction = new KAction( KIcon(QLatin1String("edit-delete")), i18n( "&Remove Attachment" ), this );
-    d->removeContextAction = new KAction( KIcon(QLatin1String("edit-delete")), i18n( "Remove" ), this ); // FIXME need two texts. is there a better way?
+    d->removeAction = new KAction( QIcon::fromTheme(QLatin1String("edit-delete")), i18n( "&Remove Attachment" ), this );
+    d->removeContextAction = new KAction( QIcon::fromTheme(QLatin1String("edit-delete")), i18n( "Remove" ), this ); // FIXME need two texts. is there a better way?
     connect( d->removeAction, SIGNAL(triggered(bool)), this, SLOT(removeSelectedAttachments()) );
     connect( d->removeContextAction, SIGNAL(triggered(bool)), this, SLOT(removeSelectedAttachments()) );
 
@@ -467,9 +467,9 @@ void AttachmentControllerBase::createActions()
     d->editWithContextAction = new KAction( i18n( "Edit With..." ), this );
     connect( d->editWithContextAction, SIGNAL(triggered(bool)), this, SLOT(editSelectedAttachmentWith()) );
 
-    d->saveAsAction = new KAction( KIcon( QLatin1String( "document-save-as" ) ),
+    d->saveAsAction = new KAction( QIcon::fromTheme( QLatin1String( "document-save-as" ) ),
                                    i18n( "&Save Attachment As..." ), this );
-    d->saveAsContextAction = new KAction( KIcon( QLatin1String( "document-save-as" ) ),
+    d->saveAsContextAction = new KAction( QIcon::fromTheme( QLatin1String( "document-save-as" ) ),
                                           i18n( "Save As..." ), this );
     connect( d->saveAsAction, SIGNAL(triggered(bool)),
              this, SLOT(saveSelectedAttachmentAs()) );

@@ -18,7 +18,7 @@
 #include "sievehelpbutton.h"
 
 #include <KLocalizedString>
-#include <KIcon>
+#include <QIcon>
 #include <KRun>
 #include <QWhatsThisClickedEvent>
 #include <QDebug>
@@ -29,7 +29,7 @@ SieveHelpButton::SieveHelpButton(QWidget *parent)
     : QToolButton(parent)
 {
     setToolTip(i18n("Help"));
-    setIcon( KIcon( QLatin1String("help-hint") ) );
+    setIcon( QIcon::fromTheme( QLatin1String("help-hint") ) );
 }
 
 SieveHelpButton::~SieveHelpButton()

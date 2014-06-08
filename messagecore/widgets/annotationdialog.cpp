@@ -31,7 +31,7 @@
 
 #include <KComboBox>
 #include <KGlobal>
-#include <KIcon>
+#include <QIcon>
 
 #include <QLabel>
 #include <QGridLayout>
@@ -64,7 +64,7 @@ AnnotationEditDialog::AnnotationEditDialog( const Akonadi::Item &item, QWidget *
         setCaption( i18n( "Edit Note" ) );
         setButtons( Ok | Cancel | User1 );
         setButtonText( User1, i18n( "Delete Note" ) );
-        setButtonIcon( User1, KIcon( QLatin1String("edit-delete") ) );
+        setButtonIcon( User1, QIcon::fromTheme( QLatin1String("edit-delete") ) );
     } else {
         setCaption( i18n( "Add Note" ) );
         setButtons( Ok | Cancel );

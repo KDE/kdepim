@@ -25,7 +25,7 @@
 #include <KGlobalSettings>
 #include <KLocalizedString>
 #include <QAction>
-#include <KIcon>
+#include <QIcon>
 
 #include <QAbstractItemView>
 #include <QCompleter>
@@ -260,7 +260,7 @@ void SieveTextEdit::addExtraMenuEntry(QMenu *menu, const QPoint &pos)
 
             QAction *searchAction = new QAction(i18n("Help about: \'%1\'",word), menu);
             searchAction->setShortcut(Qt::Key_F1);
-            searchAction->setIcon(KIcon(QLatin1String("help-hint")));
+            searchAction->setIcon(QIcon::fromTheme(QLatin1String("help-hint")));
             searchAction->setData(word);
             connect(searchAction, SIGNAL(triggered()), SLOT(slotHelp()));
             menu->insertAction(menu->actions().at(0), searchAction);

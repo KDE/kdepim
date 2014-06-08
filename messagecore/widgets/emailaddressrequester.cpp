@@ -22,7 +22,7 @@
 #include <kiconloader.h>
 #include <klineedit.h>
 #include <klocale.h>
-#include <KIcon>
+#include <QIcon>
 
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -82,7 +82,7 @@ EmailAddressRequester::EmailAddressRequester( QWidget *parent )
 
 
     QPushButton *button = new QPushButton( this );
-    button->setIcon( KIcon( QLatin1String("help-contents") ) );
+    button->setIcon( QIcon::fromTheme( QLatin1String("help-contents") ) );
     button->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     button->setFixedHeight( d->mLineEdit->sizeHint().height() );
     button->setToolTip( i18n( "Open Address Book" ) );

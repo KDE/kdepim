@@ -24,7 +24,7 @@
 
 #include <KLocalizedString>
 #include <QLineEdit>
-#include <KIcon>
+#include <QIcon>
 
 #include <QHBoxLayout>
 #include <QLabel>

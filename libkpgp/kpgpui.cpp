@@ -59,7 +59,7 @@
 #include <kglobalsettings.h>
 #include <klineedit.h>
 #include <KGlobal>
-#include <KIcon>
+#include <QIcon>
 
 #include <assert.h>
 #include <string.h> // for memcpy(3)
@@ -1203,7 +1203,7 @@ KeyRequester::KeyRequester( QWidget * parent, bool multipleKeys,
   mEraseButton->setAutoDefault( false );
   mEraseButton->setSizePolicy( QSizePolicy( QSizePolicy::Minimum,
                                             QSizePolicy::Minimum ) );
-  mEraseButton->setIcon( KIcon( QLatin1String("edit-clear-locationbar-rtl") ) );
+  mEraseButton->setIcon( QIcon::fromTheme( QLatin1String("edit-clear-locationbar-rtl") ) );
   mEraseButton->setToolTip( i18n("Clear") );
 
   // the button to call the KeySelectionDialog:

@@ -20,7 +20,7 @@
 
 #include <QMenu>
 #include <KLocalizedString>
-#include <KIcon>
+#include <QIcon>
 
 #include <QTabBar>
 
@@ -55,7 +55,7 @@ void SieveScriptTabWidget::slotTabContextMenuRequest( const QPoint &pos )
     if ((page->pageType() == SieveWidgetPageAbstract::BlockElsIf) || page->pageType() == SieveWidgetPageAbstract::BlockElse) {
         QMenu menu( this );
         QAction *closeTab = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
-        closeTab->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
+        closeTab->setIcon( QIcon::fromTheme( QLatin1String( "tab-close" ) ) );
 
         QAction *action = menu.exec( mapToGlobal( pos ) );
 

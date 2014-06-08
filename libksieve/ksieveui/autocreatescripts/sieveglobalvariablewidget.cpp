@@ -24,7 +24,7 @@
 #include <QPushButton>
 #include <KLocalizedString>
 #include <QLineEdit>
-#include <KIcon>
+#include <QIcon>
 
 #include <QGridLayout>
 #include <QCheckBox>
@@ -87,11 +87,11 @@ void SieveGlobalVariableActionWidget::initWidget()
     connect(mSetValueTo, SIGNAL(clicked(bool)), mVariableValue, SLOT(setEnabled(bool)));
 
     mAdd = new QPushButton( this );
-    mAdd->setIcon( KIcon( QLatin1String("list-add") ) );
+    mAdd->setIcon( QIcon::fromTheme( QLatin1String("list-add") ) );
     mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
 
     mRemove = new QPushButton( this );
-    mRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
+    mRemove->setIcon( QIcon::fromTheme( QLatin1String("list-remove") ) );
     mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
     mLayout->addWidget( mAdd, 1, 4 );
     mLayout->addWidget( mRemove, 1, 5 );
