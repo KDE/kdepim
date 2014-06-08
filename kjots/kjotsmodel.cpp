@@ -23,7 +23,7 @@
 
 #include <QTextDocument>
 
-#include <KIcon>
+#include <QIcon>
 
 #include <AkonadiCore/changerecorder.h>
 #include <AkonadiCore/entitydisplayattribute.h>
@@ -267,11 +267,11 @@ QVariant KJotsModel::data( const QModelIndex &index, int role ) const
   {
     const Item item = index.data( ItemRole ).value<Item>();
     if ( item.isValid() && item.hasAttribute<NoteShared::NoteLockAttribute>() ) {
-        return KIcon( QLatin1String("emblem-locked") );
+        return QIcon::fromTheme( QLatin1String("emblem-locked") );
     } else {
       const Collection col = index.data( CollectionRole ).value<Collection>();
       if ( col.isValid() && col.hasAttribute<NoteShared::NoteLockAttribute>() ) {
-        return KIcon(QLatin1String( "emblem-locked") );
+        return QIcon::fromTheme(QLatin1String( "emblem-locked") );
       }
     }
   }

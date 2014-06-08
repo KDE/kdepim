@@ -66,7 +66,7 @@
 #include <KTemporaryFile>
 #include <ktoolinvocation.h>
 #include <KAction>
-#include <KIcon>
+#include <QIcon>
 
 #include <QTextCodec>
 #include <QWidget>
@@ -559,7 +559,7 @@ KAction* Util::createAppAction(const KService::Ptr& service, bool singleOffer, Q
     }
 
     KAction *act = new KAction(parent);
-    act->setIcon(KIcon(service->icon()));
+    act->setIcon(QIcon::fromTheme(service->icon()));
     act->setText(actionName);
     actionGroup->addAction( act );
     act->setData(QVariant::fromValue(service));

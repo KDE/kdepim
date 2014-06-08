@@ -37,7 +37,7 @@
 #include <kpluginfactory.h>
 #include <klocale.h>
 #include <kstatusbar.h>
-#include <KIcon>
+#include <QIcon>
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 #include <QTimer>
@@ -79,7 +79,7 @@ KJotsPart::~KJotsPart()
 
 void KJotsPart::initAction()
 {
-  QAction *action = new QAction( KIcon( QLatin1String("configure") ), i18n( "&Configure KJots..." ), this );
+  QAction *action = new QAction( QIcon::fromTheme( QLatin1String("configure") ), i18n( "&Configure KJots..." ), this );
   actionCollection()->addAction( QLatin1String("kjots_configure"), action );
   connect( action, SIGNAL(triggered(bool)), mComponent,
            SLOT(configure()) );

@@ -84,7 +84,7 @@
 #include <KGlobal>
 #include <KActionMenu>
 #include <KAction>
-#include <KIcon>
+#include <QIcon>
 // KMime
 #include <KMime/KMimeMessage>
 
@@ -206,28 +206,28 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
   action = actionCollection->addAction( QLatin1String("go_next_book") );
   action->setText( i18n( "Next Book" ) );
-  action->setIcon( KIcon( QLatin1String("go-down") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("go-down") ) );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_D ) );
   connect( action, SIGNAL(triggered()), SLOT(nextBook()) );
   connect( this, SIGNAL(canGoNextBookChanged(bool)), action, SLOT(setEnabled(bool)) );
 
   action = actionCollection->addAction( QLatin1String("go_prev_book") );
   action->setText( i18n( "Previous Book" ) );
-  action->setIcon( KIcon( QLatin1String("go-up") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("go-up") ) );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_D ) );
   connect( action, SIGNAL(triggered()), SLOT(prevBook()) );
   connect( this, SIGNAL(canGoPreviousBookChanged(bool)), action, SLOT(setEnabled(bool)) );
 
   action = actionCollection->addAction( QLatin1String("go_next_page") );
   action->setText( i18n( "Next Page" ) );
-  action->setIcon( KIcon( QLatin1String("go-next") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("go-next") ) );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_PageDown ) );
   connect( action, SIGNAL(triggered()), SLOT(nextPage()));
   connect( this, SIGNAL(canGoNextPageChanged(bool)), action, SLOT(setEnabled(bool)) );
 
   action = actionCollection->addAction( QLatin1String("go_prev_page") );
   action->setText( i18n( "Previous Page" ) );
-  action->setIcon( KIcon( QLatin1String("go-previous") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("go-previous") ) );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_PageUp ) );
   connect( action, SIGNAL(triggered()), SLOT(prevPage()) );
   connect( this, SIGNAL(canGoPreviousPageChanged(bool)), action, SLOT(setEnabled(bool)) );
@@ -235,68 +235,68 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   action = actionCollection->addAction( QLatin1String("new_page") );
   action->setText( i18n( "&New Page" ) );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
-  action->setIcon( KIcon( QLatin1String("document-new") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("document-new") ) );
   connect( action, SIGNAL(triggered()), SLOT(newPage()) );
 
   action = actionCollection->addAction(QLatin1String("new_book"));
   action->setText( i18n( "New &Book..." ) );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_N ) );
-  action->setIcon( KIcon( QLatin1String("address-book-new") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("address-book-new") ) );
   connect( action, SIGNAL(triggered()), SLOT(newBook()) );
 
   action = actionCollection->addAction( QLatin1String("del_page") );
   action->setText( i18n( "&Delete Page" ) );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_Delete ) );
-  action->setIcon( KIcon( QLatin1String("edit-delete-page") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("edit-delete-page") ) );
   connect( action, SIGNAL(triggered()), SLOT(deletePage()) );
 
   action = actionCollection->addAction( QLatin1String("del_folder") );
   action->setText( i18n( "Delete Boo&k" ) );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_Delete ) );
-  action->setIcon( KIcon( QLatin1String("edit-delete") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("edit-delete") ) );
   connect( action, SIGNAL(triggered()), SLOT(deleteBook()) );
 
   action = actionCollection->addAction( QLatin1String("del_mult") );
   action->setText( i18n( "Delete Selected" ) );
-  action->setIcon( KIcon( QLatin1String("edit-delete") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("edit-delete") ) );
   connect( action, SIGNAL(triggered()), SLOT(deleteMultiple()) );
 
   action = actionCollection->addAction( QLatin1String("manual_save") );
   action->setText( i18n( "Manual Save" ) );
-  action->setIcon( KIcon( QLatin1String("document-save") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("document-save") ) );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_S ) );
 
   action = actionCollection->addAction( QLatin1String("auto_bullet") );
   action->setText( i18n( "Auto Bullets" ) );
-  action->setIcon( KIcon( QLatin1String("format-list-unordered") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("format-list-unordered") ) );
   action->setCheckable( true );
 
   action = actionCollection->addAction( QLatin1String("auto_decimal") );
   action->setText( i18n( "Auto Decimal List" ) );
-  action->setIcon( KIcon( QLatin1String("format-list-ordered") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("format-list-ordered") ) );
   action->setCheckable( true );
 
   action = actionCollection->addAction( QLatin1String("manage_link") );
   action->setText( i18n( "Link" ) );
-  action->setIcon( KIcon( QLatin1String("insert-link") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("insert-link") ) );
 
   action = actionCollection->addAction( QLatin1String("insert_checkmark") );
   action->setText( i18n( "Insert Checkmark" ) );
-  action->setIcon( KIcon( QLatin1String("checkmark") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("checkmark") ) );
   action->setEnabled( false );
 
   action = actionCollection->addAction( QLatin1String("rename_entry") );
   action->setText( i18n( "Rename..." ) );
-  action->setIcon( KIcon( QLatin1String("edit-rename") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("edit-rename") ) );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_M ) );
 
   action = actionCollection->addAction( QLatin1String("insert_date") );
   action->setText( i18n( "Insert Date" ) );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_I ) );
-  action->setIcon( KIcon( QLatin1String("view-calendar-time-spent") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("view-calendar-time-spent") ) );
 
   action = actionCollection->addAction( QLatin1String("change_color") );
-  action->setIcon( KIcon( QLatin1String("format-fill-color") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("format-fill-color") ) );
   action->setText( i18n( "Change Color..." ) );
 
   action = actionCollection->addAction( QLatin1String("copy_link_address") );
@@ -304,12 +304,12 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
   action = actionCollection->addAction( QLatin1String("lock") );
   action->setText(i18n( "Lock Selected" ) );
-  action->setIcon( KIcon( QLatin1String("emblem-locked") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("emblem-locked") ) );
   connect( action, SIGNAL(triggered()), SLOT(actionLock()) );
 
   action = actionCollection->addAction( QLatin1String("unlock") );
   action->setText( i18n( "Unlock Selected" ) );
-  action->setIcon( KIcon( QLatin1String("emblem-unlocked") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("emblem-unlocked") ) );
   connect( action, SIGNAL(triggered()), SLOT(actionUnlock()) );
 
   action = actionCollection->addAction( QLatin1String("sort_children_alpha") );
@@ -338,7 +338,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   action = actionCollection->addAction( QLatin1String("copyIntoTitle") );
   action->setText( i18n( "Copy &into Page Title" ) );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_T ) );
-  action->setIcon( KIcon( QLatin1String("edit-copy") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("edit-copy") ) );
   connect( action, SIGNAL(triggered()), SLOT(copySelectionToTitle()) );
   connect( editor, SIGNAL(copyAvailable(bool)), action, SLOT(setEnabled(bool)) );
   action->setEnabled( false );
@@ -369,28 +369,28 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
   action = actionCollection->addAction( QLatin1String("save_to") );
   action->setText( i18n( "Rename..." ) );
-  action->setIcon( KIcon( QLatin1String("edit-rename") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("edit-rename") ) );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_M ) );
 
   KActionMenu *exportMenu = actionCollection->add<KActionMenu>( QLatin1String("save_to") );
   exportMenu->setText( i18n( "Export" ) );
-  exportMenu->setIcon( KIcon( QLatin1String("document-export") ) );
+  exportMenu->setIcon( QIcon::fromTheme( QLatin1String("document-export") ) );
 
   action = actionCollection->addAction( QLatin1String("save_to_ascii") );
   action->setText( i18n( "To Text File..." ) );
-  action->setIcon( KIcon( QLatin1String("text-plain") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("text-plain") ) );
   connect( action, SIGNAL(triggered()), SLOT(exportSelectionToPlainText()) );
   exportMenu->menu()->addAction( action );
 
   action = actionCollection->addAction( QLatin1String("save_to_html") );
   action->setText( i18n( "To HTML File..." ) );
-  action->setIcon( KIcon( QLatin1String("text-html") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("text-html") ) );
   connect( action, SIGNAL(triggered()), SLOT(exportSelectionToHtml()) );
   exportMenu->menu()->addAction( action );
 
   action = actionCollection->addAction( QLatin1String("save_to_book") );
   action->setText( i18n( "To Book File..." ) );
-  action->setIcon( KIcon( QLatin1String("x-office-address-book") ) );
+  action->setIcon( QIcon::fromTheme( QLatin1String("x-office-address-book") ) );
   connect( action, SIGNAL(triggered()), SLOT(exportSelectionToXml()) );
   exportMenu->menu()->addAction( action );
 

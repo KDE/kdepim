@@ -40,7 +40,7 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 // KDE Includes
 #include <KSharedConfig>
 #include <KStandardDirs>
-#include <KIcon>
+#include <QIcon>
 #include <QDebug>
 #include <KMessageBox>
 #include <KLocalizedString>
@@ -66,10 +66,10 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
 
     searchLine->setListWidget(manualFiltersListWidget);
 
-    insertButton->setIcon(KIcon(QLatin1String("list-add")));
+    insertButton->setIcon(QIcon::fromTheme(QLatin1String("list-add")));
     connect(insertButton, SIGNAL(clicked()), this, SLOT(insertRule()));
 
-    removeButton->setIcon(KIcon(QLatin1String("list-remove")));
+    removeButton->setIcon(QIcon::fromTheme(QLatin1String("list-remove")));
     connect(removeButton, SIGNAL(clicked()), this, SLOT(removeRule()));
     connect(removeSubscription, SIGNAL(clicked()), SLOT(slotRemoveSubscription()));
     connect(manualFiltersListWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), this, SLOT(slotUpdateManualButtons()));
