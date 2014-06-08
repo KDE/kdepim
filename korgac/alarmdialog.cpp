@@ -117,7 +117,7 @@ class ReminderTreeItem : public QTreeWidgetItem
 
 struct ConfItem {
   QString uid;
-  KUrl akonadiUrl;
+  QUrl akonadiUrl;
   QDateTime remindAt;
 };
 

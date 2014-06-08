@@ -78,7 +78,7 @@ void SieveEditorPageWidget::setIsNewScript(bool isNewScript)
     mIsNewScript = isNewScript;
 }
 
-void SieveEditorPageWidget::loadScript(const KUrl &url, const QStringList &capabilities)
+void SieveEditorPageWidget::loadScript(const QUrl &url, const QStringList &capabilities)
 {
     mCurrentURL = url;
     mSieveEditorWidget->setSieveCapabilities(capabilities);
@@ -87,7 +87,7 @@ void SieveEditorPageWidget::loadScript(const KUrl &url, const QStringList &capab
              this, SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)) );
 }
 
-KUrl SieveEditorPageWidget::currentUrl() const
+QUrl SieveEditorPageWidget::currentUrl() const
 {
     return mCurrentURL;
 }

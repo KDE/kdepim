@@ -76,7 +76,7 @@ void XXPortManager::setDefaultAddressBook( const Akonadi::Collection &addressBoo
     mDefaultAddressBook = addressBook;
 }
 
-void XXPortManager::importFile( const KUrl &url)
+void XXPortManager::importFile( const QUrl &url)
 {
     QString identifier;
     if (url.path().endsWith(QLatin1String("vcf"))) {

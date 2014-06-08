@@ -22,7 +22,7 @@
 #define SIEVEEDITORSCRIPTMANAGERWIDGET_H
 
 #include <QWidget>
-#include <KUrl>
+#include <QUrl>
 
 class SieveEditorManageSieveWidget;
 class QTreeWidgetItem;
@@ -39,9 +39,9 @@ public:
     void refreshList();
 
 Q_SIGNALS:
-    void createScriptPage(const KUrl &url, const QStringList &capabilities, bool isNewScript);
+    void createScriptPage(const QUrl &url, const QStringList &capabilities, bool isNewScript);
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
-    void scriptDeleted(const KUrl &url);
+    void scriptDeleted(const QUrl &url);
     void serverSieveFound(bool hasServerSieve);
 
 public Q_SLOTS:
@@ -50,8 +50,8 @@ public Q_SLOTS:
     void slotRefreshList();
 
 private Q_SLOTS:
-    void slotNewScript(const KUrl &url, const QStringList &capabilities);
-    void slotEditScript(const KUrl &url, const QStringList &capabilities);
+    void slotNewScript(const QUrl &url, const QStringList &capabilities);
+    void slotEditScript(const QUrl &url, const QStringList &capabilities);
     void slotUpdateButtons(QTreeWidgetItem *item);
 
 private:

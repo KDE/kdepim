@@ -22,7 +22,7 @@
 #define SIEVEEDITORUTIL_H
 
 #include <QString>
-#include <KUrl>
+#include <QUrl>
 #include <MailTransport/mailtransport/transport.h>
 
 namespace SieveEditorUtil {
@@ -34,7 +34,7 @@ struct SieveServerConfig {
 
     }
 
-    KUrl url() const;
+    QUrl url() const;
 
     QString userName;
     QString password;

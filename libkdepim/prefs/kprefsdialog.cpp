@@ -36,7 +36,7 @@
 #include <KPageWidget>
 #include <KTimeComboBox>
 #include <KUrlRequester>
-#include <KUrl>
+#include <QUrl>
 
 #include <QFont>
 #include <QFrame>
@@ -597,7 +597,7 @@ KPrefsWidPath::~KPrefsWidPath()
 
 void KPrefsWidPath::readConfig()
 {
-    mURLRequester->setUrl( KUrl( mItem->value() ) );
+    mURLRequester->setUrl( QUrl( mItem->value() ) );
 }
 
 void KPrefsWidPath::writeConfig()

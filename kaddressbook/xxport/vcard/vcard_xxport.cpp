@@ -38,7 +38,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KTemporaryFile>
-#include <KUrl>
+#include <QUrl>
 #include <KStandardGuiItem>
 #include <KIO/NetAccess>
 #include <KSharedConfig>
@@ -109,7 +109,7 @@ VCardXXPort::VCardXXPort( QWidget *parent )
 bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
 {
     KABC::VCardConverter converter;
-    KUrl url;
+    QUrl url;
 
     const KABC::Addressee::List list = filterContacts( contacts );
     if ( list.isEmpty() ) { // no contact selected
@@ -294,9 +294,9 @@ KABC::Addressee::List VCardXXPort::parseVCard( const QByteArray &data ) const
   return converter.parseVCards( data );
 }
 
-bool VCardXXPort::doExport( const KUrl &url, const QByteArray &data ) const
+bool VCardXXPort::doExport( const QUrl &url, const QByteArray &data ) const
 {   
-    KUrl newUrl(url);
+    QUrl newUrl(url);
     if ( newUrl.isLocalFile() && QFileInfo( newUrl.toLocalFile() ).exists() ) {
         PimCommon::RenameFileDialog *dialog = new PimCommon::RenameFileDialog(newUrl, false, parentWidget());
         PimCommon::RenameFileDialog::RenameFileDialogResult result = static_cast<PimCommon::RenameFileDialog::RenameFileDialogResult>(dialog->exec());

@@ -1011,8 +1011,8 @@ void MainWidget::slotSendMail()
 void MainWidget::slotSendMails(const QStringList &emails)
 {
     if (!emails.isEmpty()) {
-        KUrl url;
-        url.setProtocol( QLatin1String( "mailto" ) );
+        QUrl url;
+        url.setScheme( QLatin1String( "mailto" ) );
         url.setPath( emails.join(QLatin1String(";")) );
         KToolInvocation::invokeMailer( url );
     }

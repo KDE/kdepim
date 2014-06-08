@@ -27,7 +27,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KTemporaryFile>
-#include <KUrl>
+#include <QUrl>
 #include <KIO/NetAccess>
 
 #include <QtCore/QPointer>
@@ -41,7 +41,7 @@ CsvXXPort::CsvXXPort( QWidget *parent )
 
 bool CsvXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
 {
-    KUrl url = KFileDialog::getSaveUrl( KUrl( QLatin1String("addressbook.csv") ) );
+    QUrl url = KFileDialog::getSaveUrl( KUrl( QLatin1String("addressbook.csv") ) );
     if ( url.isEmpty() ) {
         return true;
     }

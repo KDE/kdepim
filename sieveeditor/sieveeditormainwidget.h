@@ -22,7 +22,7 @@
 #define SIEVEEDITORMAINWIDGET_H
 
 #include <QSplitter>
-#include <KUrl>
+#include <QUrl>
 #include "ksieveui/editor/sieveeditorwidget.h"
 class QTabWidget;
 class SieveEditorTabWidget;
@@ -57,14 +57,14 @@ Q_SIGNALS:
     void serverSieveFound(bool);
 
 private slots:
-    void slotCreateScriptPage(const KUrl &url, const QStringList &capabilities, bool isNewScript);
-    void slotScriptDeleted(const KUrl &url);
+    void slotCreateScriptPage(const QUrl &url, const QStringList &capabilities, bool isNewScript);
+    void slotScriptDeleted(const QUrl &url);
     void slotScriptModified(bool modified, SieveEditorPageWidget *page);
     void slotGeneralPaletteChanged();
     void slotTabCloseRequested(int index);
     void slotTabRemoveAllExclude(int index);
 private:
-    QWidget *hasExistingPage(const KUrl &url);
+    QWidget *hasExistingPage(const QUrl &url);
     QColor mModifiedScriptColor;
     QColor mScriptColor;
     SieveEditorTabWidget *mTabWidget;

@@ -125,7 +125,7 @@ void EvolutionSettings::readLdap(const QString &ldapStr)
             ldapStruct ldap;
             const QString relative_uri = e.attribute( QLatin1String( "relative_uri" ) );
             const QString uri = e.attribute( QLatin1String( "uri" ) );
-            KUrl url(uri);
+            QUrl url(uri);
             ldap.port = url.port();
             ldap.ldapUrl = url;
             qDebug()<<" relative_uri"<<relative_uri;

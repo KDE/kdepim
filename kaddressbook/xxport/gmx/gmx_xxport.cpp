@@ -86,7 +86,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KTemporaryFile>
-#include <KUrl>
+#include <QUrl>
 
 #include <QtCore/QFile>
 #include <QtCore/QMap>
@@ -343,7 +343,7 @@ KABC::Addressee::List GMXXXPort::importContacts() const
 
 bool GMXXXPort::exportContacts( const KABC::AddresseeList &list ) const
 {
-  KUrl url = KFileDialog::getSaveUrl(
+  QUrl url = KFileDialog::getSaveUrl(
     KUrl( QDir::homePath() + QLatin1String("/addressbook.gmx") ), GMX_FILESELECTION_STRING );
   if ( url.isEmpty() ) {
     return true;

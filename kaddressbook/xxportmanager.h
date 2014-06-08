@@ -77,7 +77,7 @@ public:
      */
     void setSelectionModel( QItemSelectionModel *model );
 
-    void importFile( const KUrl &url);
+    void importFile( const QUrl &url);
 
 
 public Q_SLOTS:

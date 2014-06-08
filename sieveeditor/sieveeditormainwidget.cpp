@@ -44,9 +44,9 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     connect(mTabWidget, SIGNAL(tabRemoveAllExclude(int)), this, SLOT(slotTabRemoveAllExclude(int)));
     addWidget(mTabWidget);
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
-    connect(mScriptManagerWidget, SIGNAL(createScriptPage(KUrl,QStringList,bool)), this, SLOT(slotCreateScriptPage(KUrl,QStringList,bool)));
+    connect(mScriptManagerWidget, SIGNAL(createScriptPage(QUrl,QStringList,bool)), this, SLOT(slotCreateScriptPage(QUrl,QStringList,bool)));
     connect(mScriptManagerWidget, SIGNAL(updateButtons(bool,bool,bool,bool)), SIGNAL(updateButtons(bool,bool,bool,bool)));
-    connect(mScriptManagerWidget, SIGNAL(scriptDeleted(KUrl)), this, SLOT(slotScriptDeleted(KUrl)));
+    connect(mScriptManagerWidget, SIGNAL(scriptDeleted(QUrl)), this, SLOT(slotScriptDeleted(QUrl)));
     connect(mScriptManagerWidget, SIGNAL(serverSieveFound(bool)), this, SIGNAL(serverSieveFound(bool)));
     connect(this, SIGNAL(updateScriptList()), mScriptManagerWidget, SLOT(slotRefreshList()));
     addWidget(mScriptManagerWidget);
@@ -65,7 +65,7 @@ SieveEditorMainWidget::~SieveEditorMainWidget()
     myGroup.sync();
 }
 
-QWidget *SieveEditorMainWidget::hasExistingPage(const KUrl &url)
+QWidget *SieveEditorMainWidget::hasExistingPage(const QUrl &url)
 {
     for (int i=0; i < mTabWidget->count(); ++i) {
         SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(mTabWidget->widget(i));
@@ -78,7 +78,7 @@ QWidget *SieveEditorMainWidget::hasExistingPage(const KUrl &url)
     return 0;
 }
 
-void SieveEditorMainWidget::slotScriptDeleted(const KUrl &url)
+void SieveEditorMainWidget::slotScriptDeleted(const QUrl &url)
 {
     QWidget *page = hasExistingPage(url);
     if (page) {
@@ -87,7 +87,7 @@ void SieveEditorMainWidget::slotScriptDeleted(const KUrl &url)
     }
 }
 
-void SieveEditorMainWidget::slotCreateScriptPage(const KUrl &url, const QStringList &capabilities, bool isNewScript)
+void SieveEditorMainWidget::slotCreateScriptPage(const QUrl &url, const QStringList &capabilities, bool isNewScript)
 {
     QWidget *page = hasExistingPage(url);
     if (page) {

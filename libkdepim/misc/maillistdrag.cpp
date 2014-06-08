@@ -27,7 +27,7 @@
 #include <KDateTime>
 #include <KLocale>
 #include <KProgressDialog>
-#include <KUrl>
+#include <QUrl>
 
 #include <QBuffer>
 #include <QDataStream>
@@ -138,7 +138,7 @@ void MailSummary::set( quint32 serialNumber, const QString &messageId,
 }
 
 #ifdef Q_CC_MSVC
-MailSummary::operator KUrl() const { return KUrl(); }
+MailSummary::operator KUrl() const { return QUrl(); }
 #endif
 
 QString MailList::mimeDataType()

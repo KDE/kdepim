@@ -52,7 +52,7 @@ bool SieveEditorManageSieveWidget::refreshList()
         last->setText( 0, conf.serverName );
         last->setIcon( 0, SmallIcon( QLatin1String("network-server") ) );
 
-        const KUrl u = conf.url();
+        const QUrl u = conf.url();
         if ( u.isEmpty() ) {
             QTreeWidgetItem *item = new QTreeWidgetItem( last );
             item->setText( 0, i18n( "No Sieve URL configured" ) );

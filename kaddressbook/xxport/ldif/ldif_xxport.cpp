@@ -43,7 +43,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KTemporaryFile>
-#include <KUrl>
+#include <QUrl>
 #include <KIO/NetAccess>
 
 #include <QtCore/QFile>

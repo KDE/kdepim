@@ -33,8 +33,8 @@
 #include <KSharedConfig>
 
 
-KUrl SieveEditorUtil::SieveServerConfig::url() const {
-    KUrl u;
+QUrl SieveEditorUtil::SieveServerConfig::url() const {
+    QUrl u;
     u.setHost(serverName);
     u.setUserName(userName);
     u.setPassword(password);

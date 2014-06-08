@@ -92,7 +92,7 @@ public:
 LdapClientSearch::LdapClientSearch( QObject *parent )
     : QObject( parent ), d( new Private( this ) )
 {
-    if ( !KProtocolInfo::isKnownProtocol( KUrl( "ldap://localhost" ) ) ) {
+    if ( !KProtocolInfo::isKnownProtocol( QUrl(QLatin1String("ldap://localhost")) ) ) {
         d->mNoLDAPLookup = true;
         return;
     }

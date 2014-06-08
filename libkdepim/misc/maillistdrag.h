@@ -32,7 +32,7 @@
 
 #include <time.h>
 
-class KUrl;
+class QUrl;
 
 namespace KPIM {
 

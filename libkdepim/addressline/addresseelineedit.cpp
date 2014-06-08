@@ -54,7 +54,7 @@
 #include <KLocale>
 #include <KStandardDirs>
 #include <KStandardShortcut>
-#include <KUrl>
+#include <QUrl>
 #include <KGlobal>
 #include <KGlobalSettings>
 
@@ -1184,8 +1184,8 @@ void AddresseeLineEdit::dropEvent( QDropEvent *event )
             }
             bool mailtoURL = false;
             // append the mailto URLs
-            foreach ( const KUrl &url, uriList ) {
-                if ( url.protocol() == QLatin1String( "mailto" ) ) {
+            foreach ( const QUrl &url, uriList ) {
+                if ( url.scheme() == QLatin1String( "mailto" ) ) {
                     mailtoURL = true;
                     QString address;
                     address = KUrl::fromPercentEncoding( url.path().toLatin1() );
