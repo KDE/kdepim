@@ -28,7 +28,7 @@
 #include <QMenu>
 #include <k4aboutdata.h>
 #include <KMessageBox>
-#include <KIcon>
+#include <QIcon>
 #include <KGlobal>
 
 #include <QPointer>
@@ -40,7 +40,7 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n("Configure") );
-    setWindowIcon( KIcon( QLatin1String("kmail") ) );
+    setWindowIcon( QIcon::fromTheme( QLatin1String("kmail") ) );
     setButtons( Help|Ok|Cancel );
 
     QWidget *mainWidget = new QWidget( this );
@@ -75,7 +75,7 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     KHelpMenu *helpMenu = new KHelpMenu(this, mAboutData, true);
     //Initialize menu
     QMenu *menu = helpMenu->menu();
-    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(KIcon(QLatin1String("kmail")));
+    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QLatin1String("kmail")));
     setButtonMenu( Help, menu );
 #endif
 }
@@ -185,7 +185,7 @@ void SendLaterWidget::customContextMenuRequested(const QPoint &)
             menu.addAction(i18n("Send now"), this, SLOT(slotSendNow()));
         }
         menu.addSeparator();
-        menu.addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
+        menu.addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
         menu.exec(QCursor::pos());
     }
 }

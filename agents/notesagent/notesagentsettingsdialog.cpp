@@ -23,7 +23,7 @@
 #include <QMenu>
 #include <KHelpMenu>
 #include <KLocalizedString>
-#include <KIcon>
+#include <QIcon>
 #include <K4AboutData>
 #include <KNotifyConfigWidget>
 
@@ -36,7 +36,7 @@ NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Configure Notes Agent" ) );
-    setWindowIcon( KIcon( QLatin1String("knotes") ) );
+    setWindowIcon( QIcon::fromTheme( QLatin1String("knotes") ) );
     setButtons( Help | Ok|Cancel );
     setDefaultButton( Ok );
     connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
@@ -81,7 +81,7 @@ NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
     KHelpMenu *helpMenu = new KHelpMenu(this, mAboutData, true);
     //Initialize menu
     QMenu *menu = helpMenu->menu();
-    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(KIcon(QLatin1String("knotes")));
+    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QLatin1String("knotes")));
     setButtonMenu( Help, menu );
 #endif
 }

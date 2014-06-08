@@ -38,7 +38,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kvbox.h>
-#include <KIcon>
+#include <QIcon>
 #include <KGlobal>
 #include <KUrl>
 
@@ -61,7 +61,7 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
     //QT5 KLocale::global()->insertCatalog(QLatin1String("akonadi_mailfilter_agent"));
     setCaption( i18n( "Filter Log Viewer" ) );
     setButtons( User1|User2|Close );
-    setWindowIcon( KIcon( QLatin1String("view-filter") ) );
+    setWindowIcon( QIcon::fromTheme( QLatin1String("view-filter") ) );
     setModal( false );
     setDefaultButton( Close );
     setButtonGuiItem( User1, KStandardGuiItem::clear() );

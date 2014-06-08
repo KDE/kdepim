@@ -23,7 +23,7 @@
 #include <KLocale>
 #include <KPushButton>
 #include <KSeparator>
-#include <KIcon>
+#include <QIcon>
 
 #include <QVBoxLayout>
 #include <QCheckBox>
@@ -37,7 +37,7 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
       mInfo(info)
 {
     setCaption( i18n("Send Later") );
-    setWindowIcon( KIcon( QLatin1String("kmail") ) );
+    setWindowIcon( QIcon::fromTheme( QLatin1String("kmail") ) );
 
     QWidget *sendLaterWidget = new QWidget;
     mSendLaterWidget = new Ui::SendLaterWidget;

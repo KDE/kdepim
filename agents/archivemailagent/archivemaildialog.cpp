@@ -30,7 +30,7 @@
 #include <KRun>
 #include <KHelpMenu>
 #include <k4aboutdata.h>
-#include <KIcon>
+#include <QIcon>
 
 #include <QHBoxLayout>
 #include <KSharedConfig>
@@ -42,7 +42,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Configure Archive Mail Agent" ) );
-    setWindowIcon( KIcon( QLatin1String("kmail") ) );
+    setWindowIcon( QIcon::fromTheme( QLatin1String("kmail") ) );
     setButtons( Help | Ok|Cancel );
     setDefaultButton( Ok );
     setModal( true );
@@ -77,7 +77,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     KHelpMenu *helpMenu = new KHelpMenu(this, mAboutData, true);
     //Initialize menu
     QMenu *menu = helpMenu->menu();
-    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(KIcon(QLatin1String("kmail")));
+    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QLatin1String("kmail")));
     setButtonMenu( Help, menu );
 #endif
 }
@@ -186,7 +186,7 @@ void ArchiveMailWidget::customContextMenuRequested(const QPoint &)
             menu.addAction(i18n("Archive now"), this, SLOT(slotArchiveNow()));
         }
         menu.addSeparator();
-        menu.addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
+        menu.addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
     }
     menu.exec(QCursor::pos());
 }

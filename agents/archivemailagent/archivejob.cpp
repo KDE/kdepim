@@ -26,7 +26,7 @@
 #include <KNotification>
 #include <KLocale>
 #include <KGlobal>
-#include <KIcon>
+#include <QIcon>
 #include <KIconLoader>
 #include <KComponentData>
 
@@ -72,7 +72,7 @@ void ArchiveJob::execute()
         backupJob->setDisplayMessageBox(false);
         backupJob->setRealPath(realPath);
         const QString summary = i18n("Start to archive %1",realPath );
-        const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+        const QPixmap pixmap = QIcon::fromTheme( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
         KNotification::event( QLatin1String("archivemailstarted"),
                               summary,
                               pixmap,
@@ -87,7 +87,7 @@ void ArchiveJob::execute()
 
 void ArchiveJob::slotError(const QString &error)
 {
-    const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+    const QPixmap pixmap = QIcon::fromTheme( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
     KNotification::event( QLatin1String("archivemailerror"),
                           error,
                           pixmap,
@@ -100,7 +100,7 @@ void ArchiveJob::slotError(const QString &error)
 
 void ArchiveJob::slotBackupDone(const QString &info)
 {
-    const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+    const QPixmap pixmap = QIcon::fromTheme( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
     KNotification::event( QLatin1String("archivemailfinished"),
                           info,
                           pixmap,

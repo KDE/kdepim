@@ -37,7 +37,7 @@
 #include <KNotification>
 #include <KIconLoader>
 #include <KLocalizedString>
-#include <KIcon>
+#include <QIcon>
 #include <KGlobal>
 
 #include <QTcpServer>
@@ -171,7 +171,7 @@ void NotesManager::slotAcceptConnection()
 
 void NotesManager::slotNewNote(const QString &name, const QString &text)
 {
-    const QPixmap pixmap = KIcon( QLatin1String("knotes") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+    const QPixmap pixmap = QIcon::fromTheme( QLatin1String("knotes") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
     KNotification::event( QLatin1String("receivednotes"),
                           i18n("Note Received"),
                           pixmap,

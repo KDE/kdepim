@@ -34,7 +34,7 @@
 #include <QMenu>
 #include <QAction>
 #include <KMessageBox>
-#include <KIcon>
+#include <QIcon>
 
 #include <QListWidget>
 #include <QLabel>
@@ -46,7 +46,7 @@ NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Alarm" ) );
-    setWindowIcon( KIcon( QLatin1String("knotes") ) );
+    setWindowIcon( QIcon::fromTheme( QLatin1String("knotes") ) );
     setButtons( Close );
     setAttribute(Qt::WA_DeleteOnClose);
     setDefaultButton( Close );
@@ -90,7 +90,7 @@ void NotesAgentAlarmDialog::slotCustomContextMenuRequested(const QPoint &pos)
         return;
     Q_UNUSED(pos);
     QMenu *entriesContextMenu = new QMenu;
-    QAction *removeAlarm = new QAction(KIcon(QLatin1String("edit-delete")), i18n("Remove Alarm"), entriesContextMenu);
+    QAction *removeAlarm = new QAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Remove Alarm"), entriesContextMenu);
     connect(removeAlarm, SIGNAL(triggered()), this, SLOT(slotRemoveAlarm()));
     QAction *showNote = new QAction(i18n("Show Note..."), entriesContextMenu);
     connect(showNote, SIGNAL(triggered()), this, SLOT(slotShowNote()));

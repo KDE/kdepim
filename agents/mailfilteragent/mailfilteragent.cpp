@@ -37,7 +37,7 @@
 #include <mailcommon/kernel/mailkernel.h>
 #include <KLocalizedString>
 #include <KGlobal>
-#include <KIcon>
+#include <QIcon>
 #include <QDebug>
 #include <KIconLoader>
 #include <KMime/Message>
@@ -101,7 +101,7 @@ MailFilterAgent::MailFilterAgent( const QString &id )
         if ( group.hasKey( "Enabled" ) ) {
             if ( group.readEntry( "Enabled", false ) ) {
                 m_filterLogDialog = new FilterLogDialog( 0 );
-                const QPixmap pixmap = KIcon( QLatin1String("view-filter") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+                const QPixmap pixmap = QIcon::fromTheme( QLatin1String("view-filter") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
                 KNotification *notify = new KNotification( QLatin1String("mailfilterlogenabled") );
                 notify->setComponentName( componentData().componentName() );
                 notify->setPixmap( pixmap );

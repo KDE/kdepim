@@ -36,7 +36,7 @@
 #include <KNotification>
 #include <KLocale>
 #include <KGlobal>
-#include <KIcon>
+#include <QIcon>
 #include <KIconLoader>
 #include <QDebug>
 
@@ -139,7 +139,7 @@ void SendLaterJob::slotDeleteItem( KJob *job )
 
 void SendLaterJob::sendDone()
 {
-    const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+    const QPixmap pixmap = QIcon::fromTheme( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
 
     KNotification::event( QLatin1String("mailsend"),
                           i18n("Message sent"),
@@ -153,7 +153,7 @@ void SendLaterJob::sendDone()
 
 void SendLaterJob::sendError(const QString &error, SendLaterManager::ErrorType type)
 {
-    const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+    const QPixmap pixmap = QIcon::fromTheme( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
     KNotification::event( QLatin1String("mailsendfailed"),
                           error,
                           pixmap,

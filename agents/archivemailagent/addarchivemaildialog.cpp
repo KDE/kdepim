@@ -24,7 +24,7 @@
 #include <KUrlRequester>
 #include <QSpinBox>
 #include <KSeparator>
-#include <KIcon>
+#include <QIcon>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -42,7 +42,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent
     setButtons( Ok|Cancel );
     setDefaultButton( Ok );
     setModal( true );
-    setWindowIcon( KIcon( QLatin1String("kmail") ) );
+    setWindowIcon( QIcon::fromTheme( QLatin1String("kmail") ) );
     QWidget *mainWidget = new QWidget( this );
     QGridLayout *mainLayout = new QGridLayout( mainWidget );
     mainLayout->setSpacing( KDialog::spacingHint() );

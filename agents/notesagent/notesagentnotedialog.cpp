@@ -29,7 +29,7 @@
 
 #include <KMime/KMimeMessage>
 
-#include <KIcon>
+#include <QIcon>
 #include <KGlobal>
 
 #include <QLineEdit>
@@ -42,7 +42,7 @@ NotesAgentNoteDialog::NotesAgentNoteDialog(QWidget *parent)
 {
     setButtons(Close);
     setAttribute(Qt::WA_DeleteOnClose);
-    setWindowIcon( KIcon( QLatin1String("knotes") ) );
+    setWindowIcon( QIcon::fromTheme( QLatin1String("knotes") ) );
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
     w->setLayout(vbox);
