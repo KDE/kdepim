@@ -50,6 +50,7 @@
 #include <QPrinter>
 #include <QDirIterator>
 #include <KSharedConfig>
+#include <QStandardPaths>
 
 using namespace KABPrinting;
 
@@ -124,7 +125,7 @@ void PrintingWizard::loadGrantleeStyle()
     QStringList themesDirectories = KGlobal::dirs()->findDirs("data", relativePath);
     if (themesDirectories.count() < 2) {
         //Make sure to add local directory
-        const QString localDirectory = KStandardDirs::locateLocal("data", relativePath);
+        const QString localDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + relativePath;
         if (!themesDirectories.contains(localDirectory)) {
             themesDirectories.append(localDirectory);
         }

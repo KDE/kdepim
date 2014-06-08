@@ -36,6 +36,7 @@
 #include <QAction>
 #include <QDirIterator>
 #include <QActionGroup>
+#include <QStandardPaths>
 
 using namespace GrantleeTheme;
 
@@ -221,7 +222,7 @@ public:
             themesDirectories = KGlobal::dirs()->findDirs("data", themesRelativePath);
             if (themesDirectories.count() < 2) {
                 //Make sure to add local directory
-                const QString localDirectory = KStandardDirs::locateLocal("data", themesRelativePath);
+                const QString localDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + themesRelativePath;
                 if (!themesDirectories.contains(localDirectory)) {
                     themesDirectories.append(localDirectory);
                 }
@@ -313,7 +314,7 @@ QString GrantleeThemeManager::pathFromThemes(const QString &themesRelativePath, 
         themesDirectories = KGlobal::dirs()->findDirs("data", themesRelativePath);
         if (themesDirectories.count() < 2) {
             //Make sure to add local directory
-            const QString localDirectory = KStandardDirs::locateLocal("data", themesRelativePath);
+            const QString localDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + themesRelativePath;
             if (!themesDirectories.contains(localDirectory)) {
                 themesDirectories.append(localDirectory);
             }

@@ -29,6 +29,7 @@
 #include <QStringList>
 #include <QFile>
 #include <QDebug>
+#include <QStandardPaths>
 
 ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard *parent )
     :AbstractSettings( parent )
@@ -847,7 +848,7 @@ void ThunderbirdSettings::readIdentity( const QString& account )
         KABC::VCardConverter converter;
         KABC::Addressee addr = converter.parseVCard( vcard );
 
-        const QString filename = KStandardDirs::locateLocal("appdata",newIdentity->identityName() + QLatin1String(".vcf"));
+        const QString filename = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + newIdentity->identityName() + QLatin1String("/.vcf");
         QFile file(filename);
         if ( file.open( QIODevice::WriteOnly |QIODevice::Text ) ) {
             const QByteArray data = converter.exportVCard( addr, KABC::VCardConverter::v3_0 );

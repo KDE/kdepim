@@ -77,6 +77,7 @@
 #include <QTimer>
 #include <QUuid>
 #include <QtCore/QTextCodec>
+#include <QStandardPaths>
 
 static QStringList encodeIdn( const QStringList &emails )
 {
@@ -896,7 +897,7 @@ void MessageComposer::ComposerViewBase::initAutoSave()
     qDebug() << "initalising autosave";
 
     // Ensure that the autosave directory exists.
-    QDir dataDirectory( KStandardDirs::locateLocal( "data", QLatin1String( "kmail2/" ) ) );
+    QDir dataDirectory( QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "kmail2/" ) ) ;
     if( !dataDirectory.exists( QLatin1String( "autosave" ) ) ) {
         qDebug() << "Creating autosave directory.";
         dataDirectory.mkdir( QLatin1String( "autosave" ) );
@@ -938,7 +939,7 @@ void MessageComposer::ComposerViewBase::cleanupAutoSave()
         qDebug() << "deleting autosave files" << m_autoSaveUUID;
 
         // Delete the autosave files
-        QDir autoSaveDir( KStandardDirs::locateLocal( "data", QLatin1String( "kmail2/" ) ) + QLatin1String( "autosave" ) );
+        QDir autoSaveDir( QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "kmail2/autosave") );
 
         // Filter out only this composer window's autosave files
         QStringList autoSaveFilter;
@@ -1020,7 +1021,7 @@ void MessageComposer::ComposerViewBase::slotAutoSaveComposeResult( KJob *job )
 
 void MessageComposer::ComposerViewBase::writeAutoSaveToDisk( const KMime::Message::Ptr& message )
 {
-    const QString filename = KStandardDirs::locateLocal( "data", QLatin1String( "kmail2/" ) ) + QLatin1String( "autosave/" ) +
+    const QString filename = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "kmail2/autosave/" )  +
             m_autoSaveUUID;
     KSaveFile file( filename );
     QString errorMessage;

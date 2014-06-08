@@ -31,6 +31,7 @@
 #include <QPushButton>
 #include <QPixmap>
 #include <QWidget>
+#include <QStandardPaths>
 
 using namespace KABPrinting;
 
@@ -59,7 +60,7 @@ bool PrintStyle::setPreview( const QString &fileName )
 {
     QPixmap preview;
 
-    const QString path = KStandardDirs::locate( "data", QLatin1String("kaddressbook/printing/") + fileName );
+    const QString path = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kaddressbook/printing/") + fileName );
     if ( path.isEmpty() ) {
         qDebug() << "cannot locate preview image " << fileName << " in appdata";
         return false;

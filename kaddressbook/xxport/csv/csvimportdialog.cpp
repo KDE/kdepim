@@ -671,9 +671,9 @@ void CSVImportDialog::saveTemplate()
   }
 
   const QString fileName =
-    KStandardDirs::locateLocal( "data", QLatin1String( "kaddressbook/csv-templates/") +
+    QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "kaddressbook/csv-templates/") +
                                                  QUuid::createUuid().toString() +
-                                                 QLatin1String(".desktop" ));
+                                                 QLatin1String(".desktop" );
 
   KConfig config( fileName );
   KConfigGroup generalGroup( &config, "General" );
@@ -771,3 +771,4 @@ void CSVImportDialog::modelFinishedLoading()
 }
 
 #include <csvimportdialog.moc>
+#include <QStandardPaths>
