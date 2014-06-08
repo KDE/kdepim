@@ -28,6 +28,7 @@
 
 #include <QTreeWidget>
 #include <QHBoxLayout>
+#include <KSharedConfig>
 
 FollowUpReminderInfoDialog::FollowUpReminderInfoDialog(QWidget *parent)
     : KDialog(parent)
@@ -75,7 +76,7 @@ FollowUpReminderInfoDialog::~FollowUpReminderInfoDialog()
 
 void FollowUpReminderInfoDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "FollowUpReminderInfoDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "FollowUpReminderInfoDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
@@ -85,7 +86,7 @@ void FollowUpReminderInfoDialog::readConfig()
 
 void FollowUpReminderInfoDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "SendLaterConfigureDialog" );
+    KConfigGroup group( KSharedConfig::openConfig(), "SendLaterConfigureDialog" );
     group.writeEntry( "Size", size() );
     //mWidget->saveTreeWidgetHeader(group);
 }

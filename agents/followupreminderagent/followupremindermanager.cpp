@@ -21,11 +21,12 @@
 #include <KGlobal>
 #include <KConfigGroup>
 #include <KConfig>
+#include <KSharedConfig>
 
 FollowUpReminderManager::FollowUpReminderManager(QObject *parent)
     : QObject(parent)
 {
-    mConfig = KGlobal::config();
+    mConfig = KSharedConfig::openConfig();
 }
 
 FollowUpReminderManager::~FollowUpReminderManager()
