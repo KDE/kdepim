@@ -23,7 +23,7 @@
 
 #include <KontactInterface/Core>
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KCmdLineArgs>
 #include <KIcon>
@@ -37,12 +37,12 @@ CoisceimPlugin::CoisceimPlugin( KontactInterface::Core *core, const QVariantList
 {
   setComponentData( KontactPluginFactory::componentData() );
 
-  KAction *action =
-    new KAction( KIcon( "byobu" ),
+  QAction *action =
+    new QAction( KIcon( "byobu" ),
                  i18nc( "@action:inmenu", "New Trip" ), this );
   actionCollection()->addAction( "new_trip", action );
-  action->setHelpText(
-    i18nc( "@info:status", "Create a new trip" ) );
+  //action->setHelpText(
+  //  i18nc( "@info:status", "Create a new trip" ) );
   connect( action, SIGNAL(triggered(bool)), SLOT(createTrip()) );
   insertNewAction( action );
 

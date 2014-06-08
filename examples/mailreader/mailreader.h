@@ -16,7 +16,7 @@ class mailreaderView;
 class KToggleAction;
 class KUrl;
 class KComboBox;
-class KAction;
+class QAction;
 class KJob;
 
 namespace MessageList
@@ -61,8 +61,8 @@ private:
     mailreaderView *m_view;
     MessageList::Pane *m_messagePane;
 
-    KAction *m_nextMessage;
-    KAction *m_previousMessage;
+    QAction *m_nextMessage;
+    QAction *m_previousMessage;
 };
 
 #endif // _MAILREADER_H_

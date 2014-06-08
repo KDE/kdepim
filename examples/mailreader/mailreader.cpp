@@ -15,7 +15,7 @@
 #include <AkonadiCore/statisticsproxymodel.h>
 #include <Akonadi/KMime/MessageParts>
 
-#include <KAction>
+#include <QAction>
 #include <KConfigDialog>
 #include <KActionCollection>
 #include <KLocale>
@@ -136,7 +136,7 @@ void mailreader::setupActions()
     KStandardAction::quit(qApp, SLOT(closeAllWindows()), actionCollection());
     KStandardAction::preferences(m_view, SLOT(slotConfigure()), actionCollection());
 
-    KAction *createTab = new KAction(KIcon(QLatin1String("tab-new")),
+    QAction *createTab = new QAction(KIcon(QLatin1String("tab-new")),
                                       i18n("Open a new tab"),
                                       this);
     actionCollection()->addAction(QLatin1String("new_tab"), createTab);
@@ -144,10 +144,10 @@ void mailreader::setupActions()
             m_messagePane, SLOT(createNewTab()));
 
 
-    m_previousMessage = new KAction(i18n("Previous Message"), this);
+    m_previousMessage = new QAction(i18n("Previous Message"), this);
     actionCollection()->addAction(QLatin1String("previous_message"), m_previousMessage);
     connect(m_previousMessage, SIGNAL(triggered(bool)), SLOT(slotPreviousMessage()));
-    m_nextMessage = new KAction(i18n("Next Message"), this);
+    m_nextMessage = new QAction(i18n("Next Message"), this);
     actionCollection()->addAction(QLatin1String("next_message"), m_nextMessage);
     connect(m_nextMessage, SIGNAL(triggered(bool)), SLOT(slotNextMessage()));
 }
