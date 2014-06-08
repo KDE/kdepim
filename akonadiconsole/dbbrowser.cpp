@@ -22,7 +22,7 @@
 
 #include <QSqlTableModel>
 
-#include <KIcon>
+#include <QIcon>
 
 DbBrowser::DbBrowser(QWidget* parent) :
   QWidget( parent ),
@@ -33,7 +33,7 @@ DbBrowser::DbBrowser(QWidget* parent) :
   if ( DbAccess::database().isOpen() )
     ui.tableBox->addItems( DbAccess::database().tables(QSql::AllTables) );
 
-  ui.refreshButton->setIcon( KIcon( "view-refresh" ) );
+  ui.refreshButton->setIcon( QIcon::fromTheme( "view-refresh" ) );
   connect( ui.refreshButton, SIGNAL(clicked()), SLOT(refreshClicked()) );
 }
 

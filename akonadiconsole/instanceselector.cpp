@@ -23,7 +23,7 @@
 #include "ui_instanceselector.h"
 
 #include <QDebug>
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
 #include <akonadi/private/protocol_p.h>
 
@@ -41,7 +41,7 @@ InstanceSelector::InstanceSelector( const QString& remoteHost, QWidget* parent, 
   ui->setupUi(mainWidget());
 
   setButtons(Ok|Close);
-  setButtonIcon(Ok, KIcon("network-connect"));
+  setButtonIcon(Ok, QIcon::fromTheme("network-connect"));
   setButtonText(Ok, i18n("Connect"));
 
   const QStringList insts = instances();

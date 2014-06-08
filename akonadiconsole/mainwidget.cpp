@@ -39,7 +39,7 @@
 #include <AkonadiCore/searchcreatejob.h>
 #include <AkonadiCore/servermanager.h>
 
-#include <KIcon>
+#include <QIcon>
 #include <QAction>
 #include <KActionCollection>
 #include <KCMultiDialog>
@@ -97,7 +97,7 @@ MainWidget::MainWidget( KXmlGuiWindow *parent )
 
   action = parent->actionCollection()->addAction( "akonadiserver_configure" );
   action->setText( "Configure Server..." );
-  action->setIcon( KIcon("configure") );
+  action->setIcon( QIcon::fromTheme("configure") );
   connect( action, SIGNAL(triggered()), SLOT(configureServer()) );
 }
 

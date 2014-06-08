@@ -36,7 +36,7 @@
 #include <KStandardGuiItem>
 #include <KTextEdit>
 #include <QLineEdit>
-#include <KIcon>
+#include <QIcon>
 
 #include <QtCore/QFile>
 #include <QtCore/QPointer>
@@ -105,14 +105,14 @@ AgentWidget::AgentWidget( QWidget *parent )
   mSyncMenu = new QMenu( i18n("Synchronize"), this );
   mSyncMenu->addAction( i18n("Synchronize All"), this, SLOT(synchronizeAgent()) );
   mSyncMenu->addAction( i18n("Synchronize Collection Tree"), this, SLOT(synchronizeTree()) );
-  mSyncMenu->setIcon( KIcon("view-refresh" ) );
+  mSyncMenu->setIcon( QIcon::fromTheme("view-refresh" ) );
   ui.syncButton->setMenu( mSyncMenu );
-  ui.syncButton->setIcon( KIcon( "view-refresh" ) );
+  ui.syncButton->setIcon( QIcon::fromTheme( "view-refresh" ) );
   connect( ui.syncButton, SIGNAL(clicked()), this, SLOT(synchronizeAgent()) );
 
-  ui.abortButton->setIcon( KIcon("dialog-cancel") );
+  ui.abortButton->setIcon( QIcon::fromTheme("dialog-cancel") );
   connect( ui.abortButton, SIGNAL(clicked()), this, SLOT(abortAgent()) );
-  ui.restartButton->setIcon( KIcon( "system-reboot" ) ); //FIXME: Is using system-reboot icon here a good idea?
+  ui.restartButton->setIcon( QIcon::fromTheme( "system-reboot" ) ); //FIXME: Is using system-reboot icon here a good idea?
   connect( ui.restartButton, SIGNAL(clicked()), SLOT(restartAgent()) );
 
   ui.mFilterAccount->setProxy( ui.instanceWidget->agentFilterProxyModel() );
@@ -405,17 +405,17 @@ void AgentWidget::currentChanged()
 void AgentWidget::showContextMenu(const QPoint& pos)
 {
   QMenu menu( this );
-  menu.addAction( KIcon("list-add"), i18n("Add Agent..."), this, SLOT(addAgent()) );
-  menu.addAction( KIcon("edit-copy"), i18n("Clone Agent"), this, SLOT(cloneAgent()) );
+  menu.addAction( QIcon::fromTheme("list-add"), i18n("Add Agent..."), this, SLOT(addAgent()) );
+  menu.addAction( QIcon::fromTheme("edit-copy"), i18n("Clone Agent"), this, SLOT(cloneAgent()) );
   menu.addSeparator();
   menu.addMenu( mSyncMenu );
-  menu.addAction( KIcon("dialog-cancel"), i18n("Abort Activity"), this, SLOT(abortAgent()) );
-  menu.addAction( KIcon("system-reboot"), i18n("Restart Agent"), this, SLOT(restartAgent()) );  //FIXME: Is using system-reboot icon here a good idea?
-  menu.addAction( KIcon("network-disconnect"), i18n("Toggle Online/Offline"), this, SLOT(toggleOnline()) );
-  menu.addAction( KIcon(""), i18n("Show task list"), this, SLOT(showTaskList()) );
-  menu.addAction( KIcon(""), i18n("Show change-notification log"), this, SLOT(showChangeNotifications()) );
+  menu.addAction( QIcon::fromTheme("dialog-cancel"), i18n("Abort Activity"), this, SLOT(abortAgent()) );
+  menu.addAction( QIcon::fromTheme("system-reboot"), i18n("Restart Agent"), this, SLOT(restartAgent()) );  //FIXME: Is using system-reboot icon here a good idea?
+  menu.addAction( QIcon::fromTheme("network-disconnect"), i18n("Toggle Online/Offline"), this, SLOT(toggleOnline()) );
+  menu.addAction( QIcon::fromTheme(""), i18n("Show task list"), this, SLOT(showTaskList()) );
+  menu.addAction( QIcon::fromTheme(""), i18n("Show change-notification log"), this, SLOT(showChangeNotifications()) );
   menu.addMenu( mConfigMenu );
-  menu.addAction( KIcon("list-remove"), i18n("Remove Agent"), this, SLOT(removeAgent()) );
+  menu.addAction( QIcon::fromTheme("list-remove"), i18n("Remove Agent"), this, SLOT(removeAgent()) );
   menu.exec( ui.instanceWidget->mapToGlobal( pos ) );
 }
 

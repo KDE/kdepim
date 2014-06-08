@@ -24,7 +24,7 @@
 
 #include <KDebug>
 #include <KGlobalSettings>
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
 
 #include <QFile>
@@ -38,7 +38,7 @@ RawSocketConsole::RawSocketConsole(QWidget* parent) :
   mSocket( new QLocalSocket( this ) )
 {
   ui.setupUi( this );
-  ui.execButton->setIcon( KIcon( "application-x-executable" ) );
+  ui.execButton->setIcon( QIcon::fromTheme( "application-x-executable" ) );
   connect( ui.execButton, SIGNAL(clicked()), SLOT(execClicked()) );
   connect( ui.commandEdit, SIGNAL(returnPressed()), SLOT(execClicked()) );
   connect( ui.connectButton, SIGNAL(clicked()), SLOT(connectClicked()) );

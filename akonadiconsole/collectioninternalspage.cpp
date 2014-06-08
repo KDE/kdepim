@@ -20,7 +20,7 @@
 #include "collectioninternalspage.h"
 
 #include <AkonadiCore/collection.h>
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
 using namespace Akonadi;
 

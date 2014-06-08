@@ -24,7 +24,7 @@
 #include <KDebug>
 #include <KGlobalSettings>
 #include <KStandardAction>
-#include <KIcon>
+#include <QIcon>
 
 #include <QApplication>
 #include <QClipboard>
@@ -40,7 +40,7 @@ DbConsole::DbConsole(QWidget* parent) :
   QAction *copyAction = KStandardAction::copy( this, SLOT(copyCell()), this );
   ui.resultView->addAction( copyAction );
 
-  ui.execButton->setIcon( KIcon( "application-x-executable" ) );
+  ui.execButton->setIcon( QIcon::fromTheme( "application-x-executable" ) );
   connect( ui.execButton, SIGNAL(clicked()), SLOT(execClicked()) );
 
   ui.queryEdit->setFont( KGlobalSettings::fixedFont() );
