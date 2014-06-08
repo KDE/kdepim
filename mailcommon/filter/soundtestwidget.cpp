@@ -24,7 +24,7 @@
 #include <KUrlRequester>
 #include <KLineEdit>
 #include <KStandardDirs>
-#include <KIcon>
+#include <QIcon>
 #include <KGlobal>
 #include <KUrl>
 
@@ -42,7 +42,7 @@ SoundTestWidget::SoundTestWidget( QWidget *parent )
     layout->setMargin( 0 );
 
     m_playButton = new QPushButton( this );
-    m_playButton->setIcon( KIcon( QLatin1String("arrow-right") ) );
+    m_playButton->setIcon( QIcon::fromTheme( QLatin1String("arrow-right") ) );
     m_playButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     m_playButton->setToolTip(i18n("Play"));
     layout->addWidget( m_playButton );

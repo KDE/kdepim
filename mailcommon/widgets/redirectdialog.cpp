@@ -50,7 +50,7 @@
 #include <KLocale>
 #include <KMessageBox>
 #include <KVBox>
-#include <KIcon>
+#include <QIcon>
 
 #include <QFrame>
 #include <QLabel>
@@ -77,7 +77,7 @@ RedirectWidget::RedirectWidget(QWidget *parent)
     hbox->addWidget(mEdit);
 
     QPushButton *BtnTo = new QPushButton( QString() );
-    BtnTo->setIcon( KIcon( QLatin1String("help-contents") ) );
+    BtnTo->setIcon( QIcon::fromTheme( QLatin1String("help-contents") ) );
     BtnTo->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     BtnTo->setMinimumSize( BtnTo->sizeHint() * 1.2 );
     BtnTo->setToolTip( i18n( "Use the Address-Selection Dialog" ) );

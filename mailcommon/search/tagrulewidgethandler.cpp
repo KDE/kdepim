@@ -23,7 +23,7 @@ using MailCommon::RegExpLineEdit;
 #include <pimcommon/widgets/minimumcombobox.h>
 
 #include <QDebug>
-#include <KIcon>
+#include <QIcon>
 #include <KLocale>
 #include <KJob>
 
@@ -94,7 +94,7 @@ void FillTagComboJob::onTagsFetched(KJob *job)
                 iconName = attr->iconName();
             }
         }
-        mComboBox->addItem( KIcon( iconName ), tag.name(), tag.url().url() );
+        mComboBox->addItem( QIcon::fromTheme( iconName ), tag.name(), tag.url().url() );
     }
     emitResult();
 }

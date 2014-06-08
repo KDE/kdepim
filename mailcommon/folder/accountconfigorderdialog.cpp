@@ -23,7 +23,7 @@
 #include <KLocalizedString>
 #include <QPushButton>
 #include <KVBox>
-#include <KIcon>
+#include <QIcon>
 
 #include <AkonadiCore/AgentInstance>
 #include <AkonadiCore/AgentManager>
@@ -68,14 +68,14 @@ AccountConfigOrderDialog::AccountConfigOrderDialog(QWidget *parent)
 
     KVBox* upDownBox = new KVBox( page );
     mUpButton = new QPushButton( upDownBox );
-    mUpButton->setIcon( KIcon(QLatin1String("go-up")) );
+    mUpButton->setIcon( QIcon::fromTheme(QLatin1String("go-up")) );
     mUpButton->setToolTip( i18nc( "Move selected account up.", "Up" ) );
     mUpButton->setEnabled( false ); // b/c no item is selected yet
     mUpButton->setFocusPolicy( Qt::StrongFocus );
     mUpButton->setAutoRepeat(true);
 
     mDownButton = new QPushButton( upDownBox );
-    mDownButton->setIcon( KIcon(QLatin1String("go-down")) );
+    mDownButton->setIcon( QIcon::fromTheme(QLatin1String("go-down")) );
     mDownButton->setToolTip( i18nc( "Move selected account down.", "Down" ) );
     mDownButton->setEnabled( false ); // b/c no item is selected yet
     mDownButton->setFocusPolicy( Qt::StrongFocus );

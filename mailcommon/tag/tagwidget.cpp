@@ -29,7 +29,7 @@
 #include <KActionCollection>
 #include <QLineEdit>
 #include <KLocale>
-#include <KIcon>
+#include <QIcon>
 using namespace MailCommon;
 
 TagWidget::TagWidget(const QList<KActionCollection*>& actionCollections, QWidget *parent)
@@ -110,7 +110,7 @@ TagWidget::TagWidget(const QList<KActionCollection*>& actionCollections, QWidget
     mIconButton = new KIconButton( this );
     mIconButton->setIconSize( 16 );
     mIconButton->setIconType( KIconLoader::NoGroup, KIconLoader::Action );
-    mIconButton->setIcon(KIcon(QLatin1String("mail-tagged")));
+    mIconButton->setIcon(QIcon::fromTheme(QLatin1String("mail-tagged")));
     settings->addWidget( mIconButton, 5, 1 );
     connect( mIconButton, SIGNAL(iconChanged(QString)),
              SIGNAL(iconNameChanged(QString)) );
