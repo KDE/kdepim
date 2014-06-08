@@ -54,7 +54,7 @@
 #include <KPrintPreview>
 #include <kdeprintdialog.h>
 #include <KRun>
-#include <KUrl>
+#include <QUrl>
 #include <QIcon>
 #include <KShortcut>
 
@@ -699,7 +699,7 @@ void ComposerViewPrivate::_k_slotOpenLink()
 {
     const QString href = contextMenuResult.linkElement().attribute(QLatin1String("href"));
     if (!href.isEmpty()) {
-        new KRun( KUrl(href), 0 );
+        new KRun( QUrl(href), 0 );
     }
 }
 
@@ -986,7 +986,7 @@ QMap<QString, QString> ComposerViewPrivate::localImages() const
     QWebElementCollection images = q->page()->mainFrame()->findAllElements(QLatin1String("img"));
     Q_FOREACH (const QWebElement& elm, images){
         if (elm.attribute(QLatin1String("src")).startsWith(QLatin1String("file://"))) {
-            KUrl url (elm.attribute(QLatin1String("src")));
+            QUrl url (elm.attribute(QLatin1String("src")));
             lst.insert(url.fileName(), url.path());
         }
     }

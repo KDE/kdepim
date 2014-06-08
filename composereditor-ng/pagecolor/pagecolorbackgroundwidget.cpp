@@ -23,7 +23,7 @@
 
 #include <KImageIO>
 #include <KFileDialog>
-#include <KUrl>
+#include <QUrl>
 
 using namespace ComposerEditorNG;
 
@@ -78,12 +78,12 @@ bool PageColorBackgroundWidget::useDefaultColor() const
     return ui->defaultColor->isChecked();
 }
 
-KUrl PageColorBackgroundWidget::backgroundImageUrl() const
+QUrl PageColorBackgroundWidget::backgroundImageUrl() const
 {
     return ui->backgroundImage->url();
 }
 
-void PageColorBackgroundWidget::setBackgroundImageUrl(const KUrl& url)
+void PageColorBackgroundWidget::setBackgroundImageUrl(const QUrl &url)
 {
     ui->backgroundImage->setUrl(url);
 }
