@@ -32,6 +32,12 @@ Comment[zh_TW]=回覆提醒代理程式
 
 [Event/mailreceived]
 Name=Mail Follow Up Received
+Name[nl]=Ontvangen e-mailbericht van vervolgactie
+Name[pl]=Otrzymano powiadamiającą pocztę
+Name[pt]=Mensagem de Seguimento Recebida
+Name[pt_BR]=Mensagem de acompanhamento recebida
+Name[sk]=Prijaté sledovanie mailu
 Name[uk]=Отримано відповідь на повідомлення
+Name[x-test]=xxMail Follow Up Receivedxx
 Action=Popup
 
