@@ -22,7 +22,7 @@
 #define INCIDENCEEDITOR_INCIDENCEATTACHMENT_H
 
 #include "incidenceeditor-ng.h"
-
+class KUrl;
 namespace Ui {
   class EventOrTodoDesktop;
   class EventOrTodoMore;

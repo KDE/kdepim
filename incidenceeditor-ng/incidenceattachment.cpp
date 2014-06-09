@@ -44,6 +44,7 @@
 #include <KIO/NetAccess>
 #include <KLocalizedString>
 #include <QIcon>
+#include <KUrl>
 
 #include <QClipboard>
 #include <QMimeData>
