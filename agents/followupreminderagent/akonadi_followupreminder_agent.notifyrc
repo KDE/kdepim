@@ -7,6 +7,7 @@ Comment[ca@valencia]=Agent per a recordatoris de seguiment
 Comment[da]=Agent til opfølgningspåmindelse
 Comment[de]=Agent zur Erinnerung an Folgenachrichten
 Comment[el]=Πράκτορας υπενθύμισης συνέχισης επικοινωνίας
+Comment[es]=Seguimiento de agente de recordatorio
 Comment[fi]=Vastaamisesta muistuttaja
 Comment[fr]=Agent de rappel des messages suivis
 Comment[gl]=Axente de lembranzas de seguimento
@@ -32,6 +33,7 @@ Comment[zh_TW]=回覆提醒代理程式
 
 [Event/mailreceived]
 Name=Mail Follow Up Received
+Name[es]=Recibido seguimiento de correo
 Name[nl]=Ontvangen e-mailbericht van vervolgactie
 Name[pl]=Otrzymano powiadamiającą pocztę
 Name[pt]=Mensagem de Seguimento Recebida
