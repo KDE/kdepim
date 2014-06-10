@@ -76,6 +76,10 @@ private:
 
 CategorySelectWidgetPrivate::CategorySelectWidgetPrivate(CategorySelectWidget *parent)
     : QObject(),
+      tagModel(0),
+      rowOffset(0),
+      updateTimer(0),
+      checkCombo(0),
       q_ptr(parent)
 {
 }

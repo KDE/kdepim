@@ -67,3 +67,4 @@ Icon=kmail
 X-Akonadi-MimeTypes=message/rfc822
 X-Akonadi-Capabilities=Unique,Autostart
 X-Akonadi-Identifier=akonadi_followupreminder_agent
+X-DocPath=akonadi_followupreminder_agent/index.html

@@ -173,6 +173,8 @@ void AccountConfigOrderDialog::init()
                         instanceStruct.name += QLatin1String(" (Mailbox)");
                     } else if (identifier.startsWith(QLatin1String("akonadi_mixedmaildir_resource"))) {
                         instanceStruct.name += QLatin1String(" (Mixedmaildir)");
+                    } else {
+                        qDebug()<<" Unknown resource type "<<identifier;
                     }
                     instanceStruct.icon = instance.type().icon();
                     mapInstance.insert(instance.identifier(),instanceStruct);

@@ -7,6 +7,7 @@ Comment[ca@valencia]=Agent per a recordatoris de seguiment
 Comment[da]=Agent til opfølgningspåmindelse
 Comment[de]=Agent zur Erinnerung an Folgenachrichten
 Comment[el]=Πράκτορας υπενθύμισης συνέχισης επικοινωνίας
+Comment[es]=Seguimiento de agente de recordatorio
 Comment[fi]=Vastaamisesta muistuttaja
 Comment[fr]=Agent de rappel des messages suivis
 Comment[gl]=Axente de lembranzas de seguimento
@@ -20,6 +21,10 @@ Comment[pt]=Agente de recordação de seguimentos
 Comment[pt_BR]=Acompanhamento do agente de lembretes
 Comment[ru]=Агент напоминания о продолжении
 Comment[sk]=Agent pripomienky sledovania
+Comment[sr]=Агент подсетника на одговор
+Comment[sr@ijekavian]=Агент подсетника на одговор
+Comment[sr@ijekavianlatin]=Agent podsetnika na odgovor
+Comment[sr@latin]=Agent podsetnika na odgovor
 Comment[sv]=Påminnelseuppföljningsmodul
 Comment[tr]=Takip hatırlatma aracı
 Comment[uk]=Агент стеження за нагадуваннями
@@ -28,5 +33,13 @@ Comment[zh_TW]=回覆提醒代理程式
 
 [Event/mailreceived]
 Name=Mail Follow Up Received
+Name[es]=Recibido seguimiento de correo
+Name[nl]=Ontvangen e-mailbericht van vervolgactie
+Name[pl]=Otrzymano powiadamiającą pocztę
+Name[pt]=Mensagem de Seguimento Recebida
+Name[pt_BR]=Mensagem de acompanhamento recebida
+Name[sk]=Prijaté sledovanie mailu
+Name[uk]=Отримано відповідь на повідомлення
+Name[x-test]=xxMail Follow Up Receivedxx
 Action=Popup
 

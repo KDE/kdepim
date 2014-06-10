@@ -46,6 +46,8 @@ class QWidget;
 
 #define IMAP_RESOURCE_IDENTIFIER QLatin1String("akonadi_imap_resource")
 #define KOLAB_RESOURCE_IDENTIFIER QLatin1String("akonadi_kolab_resource")
+#define POP3_RESOURCE_IDENTIFIER QLatin1String("akonadi_pop3_resource")
+#define MBOX_RESOURCE_IDENTIFIER QLatin1String("akonadi_mbox_resource")
 
 namespace PimCommon {
 
