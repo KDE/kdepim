@@ -1678,7 +1678,7 @@ public:
     QString mGeneralFontKey;
 };
 
-K_GLOBAL_STATIC(ThemeDelegateStaticData, s_static)
+Q_GLOBAL_STATIC(ThemeDelegateStaticData, s_static)
 
 QString ThemeDelegate::itemFontKey( const Theme::ContentItem *ci, const Item *item )
 {

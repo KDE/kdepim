@@ -64,7 +64,7 @@ struct ModuleStatic {
   Module* kpgpObject;
 };
 
-K_GLOBAL_STATIC( ModuleStatic, s_module )
+Q_GLOBAL_STATIC( ModuleStatic, s_module )
 
 Module::Module()
   : mPublicKeys(),

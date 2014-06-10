@@ -44,7 +44,7 @@ public:
     StorageServiceJobConfig *storageServiceJobConfig;
 };
 
-K_GLOBAL_STATIC( StorageServiceJobConfigPrivate, sInstance )
+Q_GLOBAL_STATIC( StorageServiceJobConfigPrivate, sInstance )
 
 
 StorageServiceJobConfig::StorageServiceJobConfig(QObject *parent)

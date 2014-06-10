@@ -72,7 +72,7 @@ class DbAccessPrivate
     QSqlDatabase database;
 };
 
-K_GLOBAL_STATIC( DbAccessPrivate, sInstance )
+Q_GLOBAL_STATIC( DbAccessPrivate, sInstance )
 QSqlDatabase DbAccess::database()
 {
   // hack to detect database gone away error

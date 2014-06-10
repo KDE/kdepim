@@ -41,7 +41,7 @@ public:
     SieveServerSettings *sieveServerSettings;
 };
 
-K_GLOBAL_STATIC( SieveServerSettingsPrivate, sInstance )
+Q_GLOBAL_STATIC( SieveServerSettingsPrivate, sInstance )
 
 
 SieveServerSettings::SieveServerSettings(QObject *parent)

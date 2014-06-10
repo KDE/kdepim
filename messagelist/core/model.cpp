@@ -75,7 +75,7 @@ namespace MessageList
 namespace Core
 {
 
-K_GLOBAL_STATIC( QTimer, _k_heartBeatTimer )
+Q_GLOBAL_STATIC( QTimer, _k_heartBeatTimer )
 
 /**
  * A job in a "View Fill" or "View Cleanup" or "View Update" task.

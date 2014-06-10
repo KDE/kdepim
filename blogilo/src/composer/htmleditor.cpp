@@ -43,7 +43,7 @@ public:
     HtmlEditor instance;
 };
 
-K_GLOBAL_STATIC( HtmlEditorPrivate, instancePrivate )
+Q_GLOBAL_STATIC( HtmlEditorPrivate, instancePrivate )
 
 HtmlEditor* HtmlEditor::self()
 {

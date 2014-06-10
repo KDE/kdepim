@@ -30,7 +30,7 @@
 
 #include <QtCore/QTimer>
 using namespace MessageViewer;
-K_GLOBAL_STATIC( Akonadi::Item::List, sListItem )
+Q_GLOBAL_STATIC( Akonadi::Item::List, sListItem )
 
 class MarkMessageReadHandler::Private
 {

@@ -41,7 +41,7 @@ public:
     StorageServiceSettings *storageServiceSettings;
 };
 
-K_GLOBAL_STATIC( StorageServiceSettingsPrivate, sInstance )
+Q_GLOBAL_STATIC( StorageServiceSettingsPrivate, sInstance )
 
 
 StorageServiceSettings::StorageServiceSettings(QObject *parent)

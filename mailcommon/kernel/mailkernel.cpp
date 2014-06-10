@@ -54,7 +54,7 @@ public:
     Kernel *kernel;
 };
 
-K_GLOBAL_STATIC( KernelPrivate, sInstance )
+Q_GLOBAL_STATIC( KernelPrivate, sInstance )
 
 Kernel::Kernel( QObject *parent ) : QObject( parent )
 {

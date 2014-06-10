@@ -180,7 +180,7 @@ CalendarManager::~CalendarManager()
 
 KCal::CalendarResources * CalendarManager::calendar()
 {
-  K_GLOBAL_STATIC( CalendarManager, _self )
+  Q_GLOBAL_STATIC( CalendarManager, _self )
   return _self->mCalendar;
 }
 #endif

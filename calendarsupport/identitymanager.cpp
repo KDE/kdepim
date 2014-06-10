@@ -35,7 +35,7 @@ void IdentityManager::createDefaultIdentity( QString &fullName, QString &emailAd
   emailAddress = KCalPrefs::instance()->email();
 }
 
-K_GLOBAL_STATIC( CalendarSupport::IdentityManager, globalIdentityManager )
+Q_GLOBAL_STATIC( CalendarSupport::IdentityManager, globalIdentityManager )
 
 KPIMIdentities::IdentityManager *CalendarSupport::identityManager()
 {

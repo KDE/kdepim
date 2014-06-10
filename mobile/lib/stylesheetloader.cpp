@@ -44,7 +44,7 @@ class StyleSheetLoaderPrivate
     bool appliedGlobally;
 };
 
-K_GLOBAL_STATIC( StyleSheetLoaderPrivate, s_styleSheetLoader )
+Q_GLOBAL_STATIC( StyleSheetLoaderPrivate, s_styleSheetLoader )
 
 void StyleSheetLoader::applyStyle(QWidget* widget)
 {

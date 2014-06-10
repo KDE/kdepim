@@ -36,7 +36,7 @@
 #include <QDebug>
 using namespace MessageList::Core;
 
-K_GLOBAL_STATIC( TagCache, s_tagCache )
+Q_GLOBAL_STATIC( TagCache, s_tagCache )
 
 class MessageItem::Tag::Private
 {
@@ -140,7 +140,7 @@ public:
     QString mFontToDoMessageKey;
 };
 
-K_GLOBAL_STATIC(MessageItemPrivateSettings, s_settings)
+Q_GLOBAL_STATIC(MessageItemPrivateSettings, s_settings)
 
 MessageItemPrivate::MessageItemPrivate( MessageItem* qq )
     : ItemPrivate( qq ),

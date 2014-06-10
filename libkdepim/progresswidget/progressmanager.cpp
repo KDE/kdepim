@@ -183,7 +183,7 @@ struct ProgressManagerPrivate {
     ProgressManager instance;
 };
 
-K_GLOBAL_STATIC( ProgressManagerPrivate, progressManagerPrivate )
+Q_GLOBAL_STATIC( ProgressManagerPrivate, progressManagerPrivate )
 
 ProgressManager::ProgressManager()
     : QObject()

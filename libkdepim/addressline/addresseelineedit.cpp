@@ -175,7 +175,7 @@ public:
     int balooCompletionSource;
 };
 
-K_GLOBAL_STATIC( AddresseeLineEditStatic, s_static )
+Q_GLOBAL_STATIC( AddresseeLineEditStatic, s_static )
 
 // needs to be unique, but the actual name doesn't matter much
 static QString newLineEditObjectName()

@@ -38,7 +38,7 @@ public:
     StorageServiceProgressManager *storageServiceProgressManager;
 };
 
-K_GLOBAL_STATIC( StorageServiceProgressManagerPrivate, sInstance )
+Q_GLOBAL_STATIC( StorageServiceProgressManagerPrivate, sInstance )
 
 StorageServiceProgressManager::StorageServiceProgressManager(QObject *parent)
     : QObject(parent)
