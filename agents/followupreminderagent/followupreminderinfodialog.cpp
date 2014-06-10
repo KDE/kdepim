@@ -43,6 +43,9 @@ FollowUpReminderInfoDialog::FollowUpReminderInfoDialog(QWidget *parent)
     mainLayout->setMargin( KDialog::marginHint() );
     connect(this, SIGNAL(okClicked()), SLOT(slotSave()));
 
+    mWidget = new FollowUpReminderInfoWidget;
+    mainLayout->addWidget(mWidget);
+
     readConfig();
     mAboutData = new K4AboutData(
                 QByteArray( "followupreminderagent" ),
@@ -81,14 +84,14 @@ void FollowUpReminderInfoDialog::readConfig()
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
     }
-    //mWidget->restoreTreeWidgetHeader(group.readEntry("HeaderState",QByteArray()));
+    mWidget->restoreTreeWidgetHeader(group.readEntry("HeaderState",QByteArray()));
 }
 
 void FollowUpReminderInfoDialog::writeConfig()
 {
     KConfigGroup group( KSharedConfig::openConfig(), "SendLaterConfigureDialog" );
     group.writeEntry( "Size", size() );
-    //mWidget->saveTreeWidgetHeader(group);
+    mWidget->saveTreeWidgetHeader(group);
 }
 
 
@@ -97,11 +100,41 @@ FollowUpReminderInfoWidget::FollowUpReminderInfoWidget(QWidget *parent)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
     mTreeWidget = new QTreeWidget;
+    //TODO
+    QStringList headers;
+    headers << i18n("To")
+            << i18n("Subject")
+            << i18n("Message Id");
+
+    mTreeWidget->setHeaderLabels(headers);
+    mTreeWidget->setSortingEnabled(true);
+    mTreeWidget->setRootIsDecorated(false);
+    mTreeWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    mTreeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(mTreeWidget, SIGNAL(customContextMenuRequested(QPoint)),
+            this, SLOT(customContextMenuRequested(QPoint)));
+
     hbox->addWidget(mTreeWidget);
     setLayout(hbox);
 }
 
 FollowUpReminderInfoWidget::~FollowUpReminderInfoWidget()
 {
-
 }
+
+void FollowUpReminderInfoWidget::customContextMenuRequested(const QPoint &pos)
+{
+    //TODO
+}
+
+void FollowUpReminderInfoWidget::restoreTreeWidgetHeader(const QByteArray &data)
+{
+    mTreeWidget->header()->restoreState(data);
+}
+
+void FollowUpReminderInfoWidget::saveTreeWidgetHeader(KConfigGroup &group)
+{
+    group.writeEntry( "HeaderState", mTreeWidget->header()->saveState() );
+}
+

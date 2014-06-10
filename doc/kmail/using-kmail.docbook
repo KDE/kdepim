@@ -394,7 +394,7 @@ send &HTML; messages to a mailing list unless &HTML; messages are explicitly
 allowed.</para>
 
 <para>In order to be able to create &HTML; messages you first have to enable
-the markup tools. To do this enable <guimenuitem>Formatting (&HTML;)</guimenuitem> in the <menuchoice><guimenu>Options</guimenu></menuchoice> menu.
+the markup tools. To do this enable <guimenuitem>Rich text editing</guimenuitem> in the <menuchoice><guimenu>Options</guimenu></menuchoice> menu.
 A toolbar with several tools to
 format the message will appear. Via the drop down box you can select between
 standard text and six different types of lists (three bulleted lists with 
@@ -510,7 +510,7 @@ snippetDelimiter=$
     <menuchoice><guimenu>View</guimenu><guimenuitem>Translator</guimenuitem></menuchoice> from the
       menubar. A new panel will appear at the bottom of the composer.</para>
       <para> To translate a section of text, first select the text you would like translated to the
-	box with the <guilabel>Drag text...</guilabel>. Select the language it currently is, in the <guilabel>From:</guilabel> drop down box.
+	box with the <guilabel>Drag text that you want to translate.</guilabel>. Select the language it currently is, in the <guilabel>From:</guilabel> drop down box.
           Select the language you would like to translate to in the <guilabel>To:</guilabel> drop down box, and click the <guibutton>Translate</guibutton> button.
           Your translated text will appear in the next box. If you need to translate
             in the other direction you can just click the <guibutton>Invert</guibutton> button.
@@ -1925,27 +1925,6 @@ version.)</para>
 </listitem>
 </varlistentry>
 -->
-<varlistentry>
-<term><guilabel>Automatically sign messages</guilabel></term>
-<listitem><para>This lets you toggle whether to automatically sign your messages
-by default; of course, it is still possible to send unsigned messages by deselecting
-the icon in the composer window.</para> 
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Keep passphrase in memory</guilabel></term>
-<listitem>
-<para>When this option is off, &kmail; will ask for your passphrase each
-time you sign a message (before sending) or select an encrypted message;
-if you turn this option on, &kmail; will remember your passphrase from
-after your first successful input until you finish your &kmail; session. The
-passphrase is stored in memory and not written to the hard disk.
-If you use one of the Crypto-Plugins or if you use <application>GnuPG</application>
-with the gpg-agent then an external program will ask for your passphrase and
-optionally remember it for some time.</para>
-</listitem>
-</varlistentry>
 
 <varlistentry>
 <term><guilabel>When encrypting emails, always also encrypt to the certificate of my own identity</guilabel></term>
@@ -1954,15 +1933,6 @@ optionally remember it for some time.</para>
 then you cannot read this message any longer after you have composed and
 encrypted it. Turn this option on to keep sent encrypted messages readable for
 you too.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Show signed/encrypted text after composing</guilabel></term>
-<listitem>
-<para>This will show you the result of encrypting and signing before the message
-gets sent; this way, you can still cancel sending if encrypting failed. It is
-strongly recommended to use this option.</para> 
 </listitem>
 </varlistentry>
 

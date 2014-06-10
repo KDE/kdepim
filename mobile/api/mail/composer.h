@@ -20,8 +20,6 @@ Copyright 2014  Abhijeet Nikam connect08nikam@gmail.com
 #ifndef COMPOSER_H
 #define COMPOSER_H
 
-#include <messagecomposer/sender/messagesender.h>
-#include <messagecomposer/composer/composerviewbase.h>
 #include <KMime/Message>
 #include <QObject>
 

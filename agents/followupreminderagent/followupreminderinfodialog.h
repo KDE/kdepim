@@ -29,6 +29,11 @@ public:
     explicit FollowUpReminderInfoWidget(QWidget *parent=0);
     ~FollowUpReminderInfoWidget();
 
+    void restoreTreeWidgetHeader(const QByteArray &data);
+    void saveTreeWidgetHeader(KConfigGroup &group);
+
+private slots:
+    void customContextMenuRequested(const QPoint &pos);
 private:
     enum FollowUpReminderColumn {
         date = 0,
@@ -48,6 +53,7 @@ private:
     void readConfig();
     void writeConfig();
     K4AboutData *mAboutData;
+    FollowUpReminderInfoWidget *mWidget;
 };
 
 #endif // FOLLOWUPREMINDERINFODIALOG_H

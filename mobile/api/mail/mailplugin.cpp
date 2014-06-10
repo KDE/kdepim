@@ -24,14 +24,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <qdeclarative.h>
 #include <folderlist.h>
 #include <message.h>
-
-#include <QLatin1String>
+#include <composer.h>
 
 void MailPlugin::registerTypes(const char *uri)
 {
     Q_ASSERT(uri == "org.kde.pim.mail");
     qmlRegisterType<FolderList>(uri, 0, 1, "FolderList");
     qmlRegisterType<Message>(uri, 0, 1, "Message");
+    qmlRegisterType<Composer>(uri, 0, 1, "Composer");
 }
 
 //QT5 Q_EXPORT_PLUGIN2(mailplugin, MailPlugin)

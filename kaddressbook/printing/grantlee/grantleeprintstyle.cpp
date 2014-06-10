@@ -73,6 +73,7 @@ QString GrantleePrintStyle::contactsToHtml( const KABC::Addressee::List &contact
     GrantleeContactUtils::insertVariableToQVariantHash( contactI18n, QLatin1String( "longitudei18n" ));
     GrantleeContactUtils::insertVariableToQVariantHash( contactI18n, QLatin1String( "organizationi18n" ));
     GrantleeContactUtils::insertVariableToQVariantHash( contactI18n, QLatin1String( "titlei18n" ));
+    GrantleeContactUtils::insertVariableToQVariantHash( contactI18n, QLatin1String( "nextcontacti18n" ));
     mapping.insert( QLatin1String("contacti18n"), contactI18n );
 
     Grantlee::Context context( mapping );

@@ -18,7 +18,6 @@ Copyright 2014  Abhijeet Nikam connect08nikam@gmail.com
 */
 
 #include <composer.h>
-#include <KMime/Message>
 
 
 QString Composer::from() const

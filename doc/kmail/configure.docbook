@@ -2236,7 +2236,7 @@ starts.</para>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Empty trash on program exit</guilabel></term>
+<term><guilabel>Empty the local trash folder on program exit</guilabel></term>
 <listitem>
 <para>The trash folder is cleared of messages when you quit &kmail; if this
 option is selected.</para>
