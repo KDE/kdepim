@@ -29,7 +29,11 @@
 <div class=whole_page>
 {% if contacts %}
 {% for contact in contacts %}
+{% if contact.name %}
 <div class=name>{{ contact.name }}</div>
+{% else %}
+<div class=name>{{ contacti18n.nextcontacti18n }}</div>
+{% endif %}
 <div class=last_extra_name>{{ contact.realName|safe }}</div>
 
 <table cellpadding=0>
