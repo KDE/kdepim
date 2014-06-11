@@ -25,7 +25,7 @@
 #include <KCalCore/Todo>
 #include <KCalUtils/IncidenceFormatter>
 
-#include <KGlobal>
+
 #include <KLocale>
 #include <KSystemTimeZones>
 

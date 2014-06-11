@@ -32,7 +32,7 @@ using KPIMUtils::LinkLocator;
 
 #include <qdebug.h>
 #include <klocale.h>
-#include <kglobal.h>
+
 #include <kcodecs.h>
 #include <KColorScheme>
 

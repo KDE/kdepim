@@ -19,7 +19,7 @@
 
 #include "agendaviewitem.h"
 
-#include <KGlobal>
+
 #include <KGlobalSettings>
 
 #include <calendarviews/agenda/agendaview.h>

@@ -20,7 +20,7 @@
 #include <kdeclarativeapplication.h>
 #include <k4aboutdata.h>
 #include <kcmdlineargs.h>
-#include <KGlobal>
+
 
 #include <incidenceeditor-ng/korganizereditorconfig.h>
 

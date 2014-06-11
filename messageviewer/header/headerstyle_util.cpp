@@ -27,7 +27,7 @@
 
 
 #include <KLocalizedString>
-#include <KGlobal>
+
 #include <QDebug>
 
 #include <QBuffer>

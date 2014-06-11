@@ -41,7 +41,7 @@
 #include "header/fancyheaderstyle.h"
 
 #include <QDebug>
-#include <KGlobal>
+
 #include <KLocalizedString>
 
 #include "messagecore/settings/globalsettings.h"

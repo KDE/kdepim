@@ -28,7 +28,7 @@
 #include <KHolidays/kholidays/holidays.h>
 #include <qplatformdefs.h>
 
-#include <KGlobal>
+
 #include <KLocale>
 
 using namespace CalendarSupport;

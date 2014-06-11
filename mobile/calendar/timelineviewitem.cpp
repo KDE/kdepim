@@ -20,7 +20,7 @@
 #include "timelineviewitem.h"
 #include "stylesheetloader.h"
 
-#include <KGlobal>
+
 #include <KGlobalSettings>
 #include <QDebug>
 

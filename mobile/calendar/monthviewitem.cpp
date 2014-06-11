@@ -23,7 +23,7 @@
 #include <Akonadi/Calendar/ETMCalendar>
 #include <calendarviews/month/monthview.h>
 
-#include <KGlobal>
+
 #include <QDebug>
 #include <KGlobalSettings>
 #include <KSharedConfig>
