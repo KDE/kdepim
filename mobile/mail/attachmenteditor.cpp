@@ -23,7 +23,6 @@
 
 #include <kactioncollection.h>
 #include <kfiledialog.h>
-#include <kicon.h>
 #include <klocale.h>
 #include <messagecomposer/attachment/attachmentcontrollerbase.h>
 #include <messagecomposer/attachment/attachmentmodel.h>

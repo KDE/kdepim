@@ -21,7 +21,7 @@
 
 #include <libkdepim/addressline/addresseelineedit.h>
 
-#include <kicon.h>
+#include <qicon.h>
 
 #include <QHBoxLayout>
 #include <QLineEdit>

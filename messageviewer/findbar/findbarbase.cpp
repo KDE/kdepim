@@ -19,7 +19,7 @@
 
 #include "findbarbase.h"
 
-#include <kicon.h>
+#include <qicon.h>
 #include <klocale.h>
 #include <kpushbutton.h>
 #include <klineedit.h>
