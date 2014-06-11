@@ -29,7 +29,7 @@
 #include <KCalendarSystem>
 
 #include <QDebug>
-#include <KGlobal>
+
 #include <KLocale>
 
 using namespace IncidenceEditorNG;

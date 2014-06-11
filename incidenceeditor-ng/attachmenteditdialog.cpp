@@ -28,7 +28,7 @@
 #include "attachmenticonview.h"
 #include "ui_attachmenteditdialog.h"
 #include <KLocalizedString>
-#include <KGlobal>
+
 
 #include <KMimeType>
 #include <KIO/NetAccess>

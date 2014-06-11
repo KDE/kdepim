@@ -26,7 +26,7 @@
 #include <kcmdlineargs.h>
 #include <QDebug>
 #include <KUniqueApplication>
-#include <KGlobal>
+
 #include <KLocalizedString>
 
 int main( int argc, char **argv )

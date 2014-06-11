@@ -41,7 +41,6 @@
 
 #include <KCalUtils/RecurrenceActions>
 
-#include <KGlobal>
 #include <KMessageBox>
 #include <KLocale>
 #include <QDebug>

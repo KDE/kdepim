@@ -21,7 +21,6 @@
 
 #include <KLocalizedString>
 #include <QLineEdit>
-#include <KGlobal>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>

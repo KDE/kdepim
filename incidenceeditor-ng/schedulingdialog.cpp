@@ -27,7 +27,7 @@
 #include <KCalUtils/Stringify>
 
 #include <KCalendarSystem>
-#include <KGlobal>
+
 #include <KIconLoader>
 #include <KLocale>
 using namespace IncidenceEditorNG;

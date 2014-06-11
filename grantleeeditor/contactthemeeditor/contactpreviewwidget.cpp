@@ -27,7 +27,7 @@
 #include <Akonadi/Contact/ContactViewer>
 #include <AkonadiCore/Item>
 #include <KLocalizedString>
-#include <KGlobal>
+
 #include <KConfigGroup>
 #include <KSharedConfig>
 

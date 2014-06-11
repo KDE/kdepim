@@ -23,7 +23,7 @@
 #include <KCalCore/Period>
 
 #include <KCalendarSystem>
-#include <KGlobal>
+
 #include <KSystemTimeZones>
 
 #include <QSet>

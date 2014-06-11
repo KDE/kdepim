@@ -27,7 +27,7 @@
 #include "sieveeditorglobalconfig.h"
 
 #include <KSharedConfig>
-#include <KGlobal>
+
 #include <KLocalizedString>
 #include <KConfigGroup>
 #include <KStandardAction>

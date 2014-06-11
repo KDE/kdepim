@@ -24,7 +24,7 @@
 #include <QPushButton>
 #include <KLocale>
 #include <KConfigGroup>
-#include <KGlobal>
+
 
 #include <QVBoxLayout>
 #include <KSharedConfig>

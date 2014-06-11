@@ -25,7 +25,7 @@
 #include <qapplication.h>
 #include <kaboutdata.h>
 #include <KLocalizedString>
-#include <KGlobal>
+
 #include <KDBusService>
 
 int main( int argc, char **argv )

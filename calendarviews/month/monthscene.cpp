@@ -30,7 +30,6 @@
 
 #include <KCalendarSystem>
 #include <KIconLoader>
-#include <KGlobal>
 
 #include <QGraphicsSceneMouseEvent>
 #include <QResizeEvent>

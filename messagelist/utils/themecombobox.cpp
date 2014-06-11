@@ -25,7 +25,7 @@
 #include "messagelist/core/theme.h"
 #include "messagelist/core/settings.h"
 
-#include <KGlobal>
+
 
 using namespace MessageList::Core;
 using namespace MessageList::Utils;

@@ -24,7 +24,7 @@
 
 #include <KLocale>
 #include <KConfig>
-#include <KGlobal>
+
 #include <KConfigGroup>
 #include <KTextEdit>
 

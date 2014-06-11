@@ -25,7 +25,7 @@
 #include <kwallet.h>
 
 #include <KConfig>
-#include <KGlobal>
+
 #include <KLocale>
 #include <KConfigGroup>
 

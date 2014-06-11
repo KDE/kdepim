@@ -25,7 +25,7 @@
 
 #include <KDebug>
 #include <KLocale>
-#include <KGlobal>
+
 
 #include <AkonadiCore/ServerManager>
 

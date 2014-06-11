@@ -21,7 +21,7 @@
 
 #include <KCalCore/ICalTimeZones>
 
-#include <KGlobal>
+
 #include <KLocale>
 #include <KLocalizedString>
 #include <KSystemTimeZone>

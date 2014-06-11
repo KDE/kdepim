@@ -21,7 +21,6 @@
 #include <KLocalizedString>
 #include <KConfigGroup>
 #include <KSharedConfig>
-#include <KGlobal>
 
 using namespace PimCommon;
 

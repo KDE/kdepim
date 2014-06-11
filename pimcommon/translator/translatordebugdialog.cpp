@@ -21,7 +21,6 @@
 
 #include <KLocalizedString>
 #include <KConfigGroup>
-#include <KGlobal>
 #include <KSharedConfig>
 
 TranslatorDebugDialog::TranslatorDebugDialog(QWidget *parent)

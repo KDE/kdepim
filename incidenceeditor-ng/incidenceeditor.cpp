@@ -21,7 +21,7 @@
 #include "incidenceeditor-ng.h"
 
 #include <QDebug>
-#include <KGlobal>
+
 
 using namespace IncidenceEditorNG;
 

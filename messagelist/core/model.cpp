@@ -64,7 +64,7 @@
 
 #include <KLocalizedString>
 #include <KCalendarSystem>
-#include <KGlobal>
+
 #include <QIcon>
 #include <QDebug>
 #include <KLocale>

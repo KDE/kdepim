@@ -25,7 +25,7 @@
 
 #include <KCalendarSystem>
 #include <QDebug>
-#include <KGlobal>
+
 #include <KLocale>
 
 static const int DEFAULT_RESOLUTION_SECONDS = 15 * 60; // 15 minutes, 1 slot = 15 minutes

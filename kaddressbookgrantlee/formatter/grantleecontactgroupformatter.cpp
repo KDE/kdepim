@@ -34,7 +34,7 @@
 #include <KABC/ContactGroup>
 
 #include <KColorScheme>
-#include <KGlobal>
+
 #include <KLocale>
 #include <KStringHandler>
 

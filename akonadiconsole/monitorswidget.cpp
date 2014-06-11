@@ -25,7 +25,7 @@
 
 #include <AkonadiCore/control.h>
 
-#include <KGlobal>
+
 #include <KSharedConfig>
 #include <KConfigGroup>
 

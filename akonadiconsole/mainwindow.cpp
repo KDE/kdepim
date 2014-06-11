@@ -28,7 +28,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KStandardAction>
-#include <KGlobal>
+
 #include <QApplication>
 #include <KSharedConfig>
 

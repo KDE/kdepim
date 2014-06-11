@@ -41,7 +41,6 @@
 #include <KMessageBox>
 #include <KWordWrap>
 #include <KIconLoader>
-#include <KGlobal>
 
 #include <QDragEnterEvent>
 #include <QPainter>

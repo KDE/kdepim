@@ -23,7 +23,7 @@
 #include <KMessageBox>
 #include <KTempDir>
 #include <KSharedConfig>
-#include <KGlobal>
+
 
 #include <QLabel>
 #include <QListWidget>

@@ -60,7 +60,7 @@
 #include <kxmlguiwindow.h>
 #include <KToggleAction>
 #include <KActionCollection>
-#include <KGlobal>
+
 #include <KLocalizedString>
 
 #include <QSplitter>

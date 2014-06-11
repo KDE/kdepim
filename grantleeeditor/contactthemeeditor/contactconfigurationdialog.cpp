@@ -28,7 +28,7 @@
 
 #include <KLocalizedString>
 #include <KConfig>
-#include <KGlobal>
+
 #include <KConfigGroup>
 
 #include <QVBoxLayout>

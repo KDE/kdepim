@@ -23,7 +23,7 @@
 #include "jobtrackermodel.h"
 #include "jobtracker.h"
 
-#include <KGlobal>
+
 #include <KLocale>
 #include <QtCore/QStringList>
 #include <QtCore/QModelIndex>

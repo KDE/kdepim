@@ -22,7 +22,7 @@
 
 #include <kwallet.h>
 
-#include <KGlobal>
+
 
 
 class SieveServerSettingsPrivate

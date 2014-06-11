@@ -25,7 +25,7 @@
 #include <KCalCore/Alarm>
 
 #include <KLocalizedString>
-#include <KGlobal>
+
 #include <QDebug>
 
 using namespace CalendarSupport;

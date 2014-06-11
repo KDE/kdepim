@@ -49,7 +49,7 @@
 #include <KMessageBox>
 #include <KStandardDirs>
 #include <KSystemTimeZones>
-#include <KGlobal>
+
 #include <KIconLoader>
 #include <QIcon>
 #include <QDebug>

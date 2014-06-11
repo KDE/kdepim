@@ -23,7 +23,7 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
 #include <KLocalizedString>
-#include <KGlobal>
+
 #include <KSharedConfig>
 #include <KConfigGroup>
 

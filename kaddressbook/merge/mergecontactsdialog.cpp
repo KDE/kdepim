@@ -29,7 +29,7 @@
 #include <KSharedConfig>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KGlobal>
+
 
 #include <QItemSelectionModel>
 #include <QLabel>

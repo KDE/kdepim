@@ -34,7 +34,7 @@
 #include <QLinearGradient>
 #include <KColorScheme>
 #include <KGlobalSettings>
-#include <KGlobal>
+
 
 using namespace MessageList::Core;
 

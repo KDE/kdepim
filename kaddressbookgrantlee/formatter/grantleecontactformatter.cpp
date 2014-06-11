@@ -32,7 +32,7 @@
 #include <KABC/Addressee>
 
 #include <KColorScheme>
-#include <KGlobal>
+
 #include <KIconLoader>
 #include <KLocale>
 #include <KStringHandler>

@@ -37,7 +37,6 @@
 #include <KCheckableProxyModel>
 #include <QIcon>
 #include <QDebug>
-#include <KGlobal>
 
 #include <QHBoxLayout>
 #include <QTimer>

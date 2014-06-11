@@ -29,7 +29,7 @@
 
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KGlobal>
+
 
 using namespace Akonadi;
 
