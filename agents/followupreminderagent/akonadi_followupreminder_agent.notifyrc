@@ -34,6 +34,7 @@ Comment[zh_TW]=回覆提醒代理程式
 [Event/mailreceived]
 Name=Mail Follow Up Received
 Name[es]=Recibido seguimiento de correo
+Name[nds]=Antwoortnaricht kregen
 Name[nl]=Ontvangen e-mailbericht van vervolgactie
 Name[pl]=Otrzymano powiadamiającą pocztę
 Name[pt]=Mensagem de Seguimento Recebida
