@@ -128,7 +128,7 @@ void CategoryFilterProxyModel::setFilterCategories(const QList<Akonadi::Tag::Id>
     Q_D(CategoryFilterProxyModel);
 
     if (idList!=d->filterIdList) {
-        qDebug() << idList;
+        //qDebug() << idList;
         d->filterIdList = idList;
         invalidateFilter();
     }
@@ -140,7 +140,7 @@ void CategoryFilterProxyModel::setFilterEnabled(bool enable)
     Q_D(CategoryFilterProxyModel);
 
     if (enable!=d->filterEnabled) {
-        qDebug() << enable;
+        //qDebug() << enable;
         d->filterEnabled = enable;
         invalidateFilter();
     }

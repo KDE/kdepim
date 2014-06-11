@@ -84,6 +84,7 @@
 #include <KXMLGUIClient>
 #include <KToolInvocation>
 #include <KIconLoader>
+#include <KMessageBox>
 
 #include <QAction>
 #include <QActionGroup>
@@ -1005,6 +1006,8 @@ void MainWidget::slotSendMail()
         KABMailSender::MailSenderJob *mailSender = new KABMailSender::MailSenderJob(lst, this);
         connect(mailSender, SIGNAL(sendMails(QStringList)), this, SLOT(slotSendMails(QStringList)));
         mailSender->start();
+    } else {
+        KMessageBox::sorry( this, i18n( "You have not selected any contacts." ) );
     }
 }
 
