@@ -44,6 +44,7 @@ struct LdapResult
    */
     typedef QList<LdapResult> List;
 
+    LdapDN dn;
     QString name;         ///< The full name of the contact.
     QStringList email;    ///< The list of emails of the contact.
     int clientNumber;     ///< The client the contact comes from (used for sorting in a ldap-only lookup).

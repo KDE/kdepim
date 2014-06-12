@@ -101,9 +101,12 @@ public Q_SLOTS:
 
 protected:
     /**
-     * Adds a new @p contact to the completion with a given @p weight and @p source index.
+     * Adds a new @p contact to the completion with a given
+     * @p weight
+     * @p source index
+     * @p append  is added to completion string, but removed, when mail is selected.
      */
-    void addContact( const KABC::Addressee &contact, int weight, int source = -1 );
+    void addContact( const KABC::Addressee &contact, int weight, int source = -1, QString append = QString() );
 
     /**
      * Same as the above, but this time with contact groups.
@@ -183,6 +186,7 @@ private:
     Q_PRIVATE_SLOT( d, void slotStartLDAPLookup() )
     Q_PRIVATE_SLOT( d, void slotLDAPSearchData( const KLDAP::LdapResult::List & ) )
     Q_PRIVATE_SLOT( d, void slotEditCompletionOrder() )
+    Q_PRIVATE_SLOT( d, void slotShowOUChanged( bool ) )
     Q_PRIVATE_SLOT( d, void slotUserCancelled( const QString & ) )
     Q_PRIVATE_SLOT( d, void slotAkonadiHandleItems( const Akonadi::Item::List & ) )
     Q_PRIVATE_SLOT( d, void slotAkonadiSearchResult( KJob * ) )
