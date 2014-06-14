@@ -103,6 +103,10 @@ void AttendeeComboBox::keyPressEvent( QKeyEvent *ev )
     emit leftPressed();
   } else if ( ev->key() == Qt::Key_Right ) {
     emit rightPressed();
+  } else if ( !mMenu->isVisible() && (
+                  ev->key() == Qt::Key_Down ||
+                  ev->key() == Qt::Key_Space ) )  {
+    showMenu();
   } else {
     QToolButton::keyPressEvent( ev );
   }
