@@ -31,19 +31,21 @@
 namespace IncidenceEditorNG
 {
 
-/* TableView for the Resource Tab
- * 0 = role
- * 1 = name
- * 2 = available
- * 3 = status
- * 4 = cutype
- */
-
 class AttendeeTableModel : public QAbstractTableModel
 {
     Q_OBJECT
 
 public:
+
+    enum Columns {
+      CuType,
+      Role,
+      Name,
+      Available,
+      Status,
+      Response
+    };
+
     AttendeeTableModel(const KCalCore::Attendee::List &resources, QObject *parent = 0);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;

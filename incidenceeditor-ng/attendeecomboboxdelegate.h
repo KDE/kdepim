@@ -33,7 +33,7 @@ namespace IncidenceEditorNG
 
   /**
    * class to show a Icon and Text for an Attendee
-   * you have to set the Items via adItem to have a list to choose from.
+   * you have to set the Items via addItem to have a list to choose from.
    * saves the option as int in the model
    */
 class AttendeeComboBoxDelegate : public QStyledItemDelegate
@@ -48,21 +48,27 @@ public:
     void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
+    bool eventFilter ( QObject * editor, QEvent * event );
+
     void addItem(const QIcon&, const QString&);
 
     /** choose this index, if the item in the model is unknown
      */
     void setStandardIndex(int);
 
+private slots:
+  void doCloseEditor(QWidget *editor);
+  void rightPressed();
+  void leftPressed();
+
 private:
     /** all entries to choose from */
     QList<QPair<QIcon, QString> > entries;
     /**fallback index */
     int standardIndex;
-
 };
 
-/** show a KPIM::AddressLineEdit as editor */
+/** show a AttendeeLineEdit as editor */
 class AttendeeLineEditDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
@@ -73,6 +79,10 @@ public:
     void setEditorData(QWidget *editor, const QModelIndex &index) const;
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
     void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+
+private slots:
+  void rightPressed();
+  void leftPressed();
 };
 
 }

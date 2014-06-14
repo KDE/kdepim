@@ -50,6 +50,7 @@ IncidenceResource::IncidenceResource(Ui::EventOrTodoDesktop *ui)
     setObjectName("IncidenceResource");
 
     AttendeeComboBoxDelegate* roleDelegate(new AttendeeComboBoxDelegate(this));
+    AttendeeComboBoxDelegate* responseDelegate(new AttendeeComboBoxDelegate(this));
 #ifdef KDEPIM_MOBILE_UI
     roleDelegate->addItem(DesktopIcon("meeting-participant", 48),
                           KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::ReqParticipant));
@@ -60,6 +61,11 @@ IncidenceResource::IncidenceResource(Ui::EventOrTodoDesktop *ui)
     roleDelegate->addItem(DesktopIcon("meeting-chair", 48),
                           KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::Chair));
 
+    responseDelegate->addItem( DesktopIcon( "meeting-participant-request-response", 48 ),
+                             i18nc( "@item:inlistbox", "Request Response" ) );
+    responseDelegate->addItem( DesktopIcon( "meeting-participant-no-response", 48 ),
+                             i18nc( "@item:inlistbox", "Request No Response" ) );
+
 #else
     roleDelegate->addItem(SmallIcon("meeting-participant"),
                           KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::ReqParticipant));
@@ -69,6 +75,12 @@ IncidenceResource::IncidenceResource(Ui::EventOrTodoDesktop *ui)
                           KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::NonParticipant));
     roleDelegate->addItem(SmallIcon("meeting-chair"),
                           KCalUtils::Stringify::attendeeRole(KCalCore::Attendee::Chair));
+
+    responseDelegate->addItem( SmallIcon( "meeting-participant-request-response" ),
+                             i18nc( "@item:inlistbox", "Request Response" ) );
+    responseDelegate->addItem( SmallIcon( "meeting-participant-no-response" ),
+                             i18nc( "@item:inlistbox", "Request No Response" ) );
+
 #endif
 
     AttendeeComboBoxDelegate *stateDelegate(new AttendeeComboBoxDelegate(this));
@@ -119,20 +131,25 @@ IncidenceResource::IncidenceResource(Ui::EventOrTodoDesktop *ui)
     filterProxyModel->setDynamicSortFilter(true);
     filterProxyModel->setSourceModel(dataModel);
 
+    QHeaderView* headerView = mUi->mResourcesTable->horizontalHeader();
+    headerView->setResizeMode(QHeaderView::ResizeToContents);
+
     mUi->mResourcesTable->setModel(filterProxyModel);
-    mUi->mResourcesTable->setColumnHidden(4, true);
-    mUi->mResourcesTable->setItemDelegateForColumn(0, roleDelegate);
-    mUi->mResourcesTable->setItemDelegateForColumn(1, attendeeDelegate);
-    mUi->mResourcesTable->setItemDelegateForColumn(3, stateDelegate);
+    mUi->mResourcesTable->setColumnHidden(AttendeeTableModel::CuType, true);
+    mUi->mResourcesTable->setItemDelegateForColumn(AttendeeTableModel::Role, roleDelegate);
+    mUi->mResourcesTable->setItemDelegateForColumn(AttendeeTableModel::Name, attendeeDelegate);
+    mUi->mResourcesTable->setItemDelegateForColumn(AttendeeTableModel::Status, stateDelegate);
+    mUi->mResourcesTable->setItemDelegateForColumn(AttendeeTableModel::Response, responseDelegate);
 
 
     AttendeeFilterProxyModel *attendeeProxyModel = new AttendeeFilterProxyModel(this);
     attendeeProxyModel->setDynamicSortFilter(true);
     attendeeProxyModel->setSourceModel(dataModel);
     mUi->mAttendeeTable->setModel(attendeeProxyModel);
-    mUi->mAttendeeTable->setItemDelegateForColumn(0, roleDelegate);
-    mUi->mAttendeeTable->setItemDelegateForColumn(1, attendeeDelegate);
-    mUi->mAttendeeTable->setItemDelegateForColumn(3, stateDelegate);
+    mUi->mAttendeeTable->setItemDelegateForColumn(AttendeeTableModel::Role, roleDelegate);
+    mUi->mAttendeeTable->setItemDelegateForColumn(AttendeeTableModel::Name, attendeeDelegate);
+    mUi->mAttendeeTable->setItemDelegateForColumn(AttendeeTableModel::Status, stateDelegate);
+    mUi->mAttendeeTable->setItemDelegateForColumn(AttendeeTableModel::Response, responseDelegate);
 
     connect(mUi->mFindResourcesButton, SIGNAL(clicked()), SLOT(findResources()));
     connect(mUi->mBookResourceButton, SIGNAL(clicked()), SLOT(bookResource()));
