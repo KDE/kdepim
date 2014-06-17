@@ -10,8 +10,9 @@ using namespace IncidenceEditorNG;
 AttendeeTableModel::AttendeeTableModel(const KCalCore::Attendee::List &attendees, QObject *parent)
     : QAbstractTableModel(parent)
     , attendeeList(attendees)
+    , mKeepEmpty(false)
 {
-    insertRows(0,1);
+
 }
 
 int AttendeeTableModel::rowCount(const QModelIndex &/*parent*/) const
@@ -21,7 +22,7 @@ int AttendeeTableModel::rowCount(const QModelIndex &/*parent*/) const
 
 int AttendeeTableModel::columnCount(const QModelIndex &/*parent*/) const
 {
-    return 6;
+    return 8;
 }
 
 Qt::ItemFlags AttendeeTableModel::flags(const QModelIndex &index) const
@@ -29,10 +30,10 @@ Qt::ItemFlags AttendeeTableModel::flags(const QModelIndex &index) const
     if (!index.isValid()) {
         return Qt::ItemIsEnabled;
     }
-    if (index.column() == Available) {          //Available is read only
-      return QAbstractTableModel::flags(index);
+    if (index.column() == Available || index.column() == Name || index.column() == Email) {          //Available is read only
+        return QAbstractTableModel::flags(index);
     } else {
-      return QAbstractTableModel::flags(index) | Qt::ItemIsEditable;
+        return QAbstractTableModel::flags(index) | Qt::ItemIsEditable;
     }
 }
 
@@ -50,7 +51,7 @@ QVariant AttendeeTableModel::data(const QModelIndex &index, int role) const
         switch (index.column()) {
         case Role:
             return attendeeList[index.row()]->role();
-        case Name:
+        case FullName:
             return attendeeList[index.row()]->fullName();
         case Available:
             return 0;//attendeeList.at(index.row()).available;
@@ -60,6 +61,10 @@ QVariant AttendeeTableModel::data(const QModelIndex &index, int role) const
             return attendeeList[index.row()]->cuType();
         case Response:
             return attendeeList[index.row()]->RSVP();
+        case Name:
+            return attendeeList[index.row()]->name();
+        case Email:
+            return attendeeList[index.row()]->email();
         }
 
     }
@@ -74,10 +79,12 @@ bool AttendeeTableModel::setData(const QModelIndex& index, const QVariant& value
         case Role:
             attendeeList[index.row()]->setRole(static_cast<KCalCore::Attendee::Role>(value.toInt()));
             break;
-        case Name:
+        case FullName:
             KPIMUtils::extractEmailAddressAndName(value.toString(), email, name);
             attendeeList[index.row()]->setName(name);
             attendeeList[index.row()]->setEmail(email);
+
+            addEmptyAttendee(true);
             break;
         case Available:
             //attendeeList[index.row()].available = value.toBool();
@@ -111,8 +118,8 @@ QVariant AttendeeTableModel::headerData(int section, Qt::Orientation orientation
         switch (section) {
         case Role:
             return QString("role");
-        case Name:
-            return QString("name");
+        case FullName:
+            return QString("fullname");
         case Available:
             return QString("available");
         case Status:
@@ -121,6 +128,10 @@ QVariant AttendeeTableModel::headerData(int section, Qt::Orientation orientation
             return QString("cuType");
         case Response:
             return QString("response");
+        case Name:
+            return QString("name");
+        case Email:
+            return QString("email");
         }
     }
 
@@ -169,6 +180,8 @@ void AttendeeTableModel::setAttendees(const KCalCore::Attendee::List attendees)
 
     attendeeList = attendees;
 
+    addEmptyAttendee(false);
+
     emit layoutChanged();
 }
 
@@ -177,6 +190,46 @@ KCalCore::Attendee::List AttendeeTableModel::attendees() const
 {
     return attendeeList;
 }
+
+void AttendeeTableModel::addEmptyAttendee(bool layoutChange)
+{
+    if (mKeepEmpty) {
+        bool create=true;
+        foreach(KCalCore::Attendee::Ptr attendee, attendeeList) {
+            if (attendee->fullName().isEmpty()) {
+                create=false;
+                break;
+            }
+        }
+
+        if (create) {
+            if (layoutChange) {
+                emit layoutAboutToBeChanged();
+            }
+
+            insertRows(rowCount(),1);
+
+            if (layoutChange) {
+                emit layoutChanged();
+            }
+        }
+    }
+}
+
+
+bool AttendeeTableModel::keepEmpty()
+{
+    return mKeepEmpty;
+}
+
+void AttendeeTableModel::setKeepEmpty(bool keepEmpty)
+{
+    if (keepEmpty != mKeepEmpty) {
+        mKeepEmpty = keepEmpty;
+        addEmptyAttendee(true);
+    }
+}
+
 
 ResourceFilterProxyModel::ResourceFilterProxyModel(QObject *parent)
     : QSortFilterProxyModel(parent)

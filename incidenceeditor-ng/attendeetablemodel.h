@@ -40,7 +40,9 @@ public:
     enum Columns {
       CuType,
       Role,
+      FullName,
       Name,
+      Email,
       Available,
       Status,
       Response
@@ -66,8 +68,13 @@ public:
     void setAttendees(const KCalCore::Attendee::List resources);
     KCalCore::Attendee::List attendees() const;
 
+    void setKeepEmpty(bool keepEmpty);
+    bool keepEmpty();
 private:
+    void addEmptyAttendee(bool layoutChange);
+
     KCalCore::Attendee::List attendeeList;
+    bool mKeepEmpty;
 };
 
 class ResourceFilterProxyModel : public QSortFilterProxyModel
