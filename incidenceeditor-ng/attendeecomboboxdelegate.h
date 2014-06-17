@@ -22,6 +22,8 @@
 #ifndef INCIDENCEEDITOR_ATTENDEECOMBOBOXDELEGATE_H
 #define INCIDENCEEDITOR_ATTENDEECOMBOBOXDELEGATE_H
 
+#include <kglobalsettings.h>
+
 #include <QStyledItemDelegate>
 #include <QModelIndex>
 #include <QIcon>
@@ -51,10 +53,17 @@ public:
     bool eventFilter ( QObject * editor, QEvent * event );
 
     void addItem(const QIcon&, const QString&);
+    void clear();
+
+    void setToolTip(const QString&);
+    void setWhatsThis(const QString&);
 
     /** choose this index, if the item in the model is unknown
      */
     void setStandardIndex(int);
+
+public slots:
+    bool helpEvent( QHelpEvent* event, QAbstractItemView* view, const QStyleOptionViewItem& option, const QModelIndex& index );
 
 private slots:
   void doCloseEditor(QWidget *editor);
@@ -66,6 +75,8 @@ private:
     QList<QPair<QIcon, QString> > entries;
     /**fallback index */
     int standardIndex;
+    QString toolTip;
+    QString whatsThis;
 };
 
 /** show a AttendeeLineEdit as editor */
@@ -80,9 +91,19 @@ public:
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
     void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
+    void setCompletionMode( KGlobalSettings::Completion mode);
+
+public slots:
+    bool helpEvent( QHelpEvent* event, QAbstractItemView* view, const QStyleOptionViewItem& option, const QModelIndex& index );
+
 private slots:
-  void rightPressed();
-  void leftPressed();
+    void rightPressed();
+    void leftPressed();
+
+private:
+    QString toolTip;
+    QString whatsThis;
+    KGlobalSettings::Completion completionMode;
 };
 
 }

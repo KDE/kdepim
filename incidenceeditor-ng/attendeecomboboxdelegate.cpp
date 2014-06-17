@@ -2,8 +2,15 @@
 
 #include "attendeeline.h"
 
+#include <QAbstractItemView>
 #include <QApplication>
 #include <QMenu>
+#include <QHelpEvent>
+#include <QToolTip>
+#include <QWhatsThis>
+
+#include <KDebug>
+#include <KLocalizedString>
 
 using namespace IncidenceEditorNG;
 
@@ -20,6 +27,22 @@ void AttendeeComboBoxDelegate::addItem(const QIcon &icon, const QString &text)
     pair.first = icon;
     pair.second = text;
     entries << pair;
+}
+
+void AttendeeComboBoxDelegate::clear()
+{
+    entries.clear();
+}
+
+
+void AttendeeComboBoxDelegate::setToolTip(const QString& tT)
+{
+    toolTip = tT;
+}
+
+void AttendeeComboBoxDelegate::setWhatsThis(const QString& wT)
+{
+    whatsThis = wT;
 }
 
 void AttendeeComboBoxDelegate::setStandardIndex(int index)
@@ -40,6 +63,8 @@ QWidget *AttendeeComboBoxDelegate::createEditor(QWidget *parent, const QStyleOpt
     connect(editor,SIGNAL(rightPressed()),SLOT(rightPressed()));
 
     editor->setPopupMode( QToolButton::MenuButtonPopup);
+    editor->setToolTip(toolTip);
+    editor->setWhatsThis(whatsThis);
     return editor;
 }
 
@@ -67,7 +92,7 @@ void AttendeeComboBoxDelegate::updateEditorGeometry(QWidget *editor, const QStyl
 
 void AttendeeComboBoxDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    QStyleOptionToolButton myOption;
+    QStyleOptionButton myOption;;
 
     int value = index.model()->data(index).toUInt();
     if (value >= entries.count()) {
@@ -77,15 +102,12 @@ void AttendeeComboBoxDelegate::paint(QPainter *painter, const QStyleOptionViewIt
     myOption.rect = option.rect;
     myOption.state = option.state;
     myOption.icon = entries[value].first;
-    myOption.iconSize = QSize(48,48);
-    //myOption.features |= QStyleOptionToolButton::MenuButtonPopup;
 
-    QApplication::style()->drawComplexControl(QStyle::CC_ToolButton, &myOption, painter);
+    QApplication::style()->drawControl(QStyle::CE_PushButton, &myOption, painter);
 }
 
 bool AttendeeComboBoxDelegate::eventFilter ( QObject * editor, QEvent * event )
 {
-
   if (event->type() == QEvent::Enter) {
     AttendeeComboBox *comboBox = static_cast<AttendeeComboBox*>(editor);
     comboBox->showMenu();
@@ -111,10 +133,45 @@ void AttendeeComboBoxDelegate::rightPressed()
     emit closeEditor(static_cast<QWidget*>(QObject::sender()),QAbstractItemDelegate::EditNextItem);
 }
 
+
+bool AttendeeComboBoxDelegate::helpEvent( QHelpEvent* event, QAbstractItemView* view,
+    const QStyleOptionViewItem& option, const QModelIndex& index )
+{
+    if (!event || !view) {
+        return false;
+    }
+    switch (event->type()) {
+#ifndef QT_NO_TOOLTIP
+    case QEvent::ToolTip: {
+        QHelpEvent *he = static_cast<QHelpEvent*>(event);
+          QToolTip::showText(he->globalPos(), toolTip, view);
+        return true;
+        break;}
+#endif
+#ifndef QT_NO_WHATSTHIS
+    case QEvent::QueryWhatsThis:
+        return true;
+        break;
+    case QEvent::WhatsThis: {
+        QHelpEvent *he = static_cast<QHelpEvent*>(event);
+          QWhatsThis::showText(he->globalPos(), whatsThis, view);
+        return true;
+        break ; }
+#endif
+    default:
+        break;
+    }
+    return QStyledItemDelegate::helpEvent( event, view, option, index );
+}
+
 AttendeeLineEditDelegate::AttendeeLineEditDelegate(QObject* parent)
     : QStyledItemDelegate(parent)
 {
-
+    toolTip = i18nc( "@info:tooltip",
+                     "Enter the name or email address of the attendee." );
+    whatsThis = i18nc( "@info:whatsthis",
+                       "The email address or name of the attendee. An invitation "
+                       "can be sent to the user if an email address is provided." );
 }
 
 QWidget *AttendeeLineEditDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &/* option */, const QModelIndex &/* index */) const
@@ -122,6 +179,11 @@ QWidget *AttendeeLineEditDelegate::createEditor(QWidget *parent, const QStyleOpt
     AttendeeLineEdit* editor = new AttendeeLineEdit(parent);
     connect(editor,SIGNAL(leftPressed()),SLOT(leftPressed()));
     connect(editor,SIGNAL(rightPressed()),SLOT(rightPressed()));
+    editor->setToolTip(toolTip);
+    editor->setWhatsThis(whatsThis);
+    editor->setCompletionMode(completionMode);
+    editor->setClearButtonShown( true );
+
     return editor;
 }
 
@@ -150,4 +212,39 @@ void AttendeeLineEditDelegate::leftPressed()
 void AttendeeLineEditDelegate::rightPressed()
 {
     emit closeEditor(static_cast<QWidget*>(QObject::sender()),QAbstractItemDelegate::EditNextItem);
+}
+
+void AttendeeLineEditDelegate::setCompletionMode(KGlobalSettings::Completion mode)
+{
+    completionMode = mode;
+}
+
+bool AttendeeLineEditDelegate::helpEvent( QHelpEvent* event, QAbstractItemView* view,
+    const QStyleOptionViewItem& option, const QModelIndex& index )
+{
+    if (!event || !view) {
+        return false;
+    }
+    switch (event->type()) {
+#ifndef QT_NO_TOOLTIP
+    case QEvent::ToolTip: {
+        QHelpEvent *he = static_cast<QHelpEvent*>(event);
+          QToolTip::showText(he->globalPos(), toolTip, view);
+        return true;
+        break;}
+#endif
+#ifndef QT_NO_WHATSTHIS
+    case QEvent::QueryWhatsThis:
+        return true;
+        break;
+    case QEvent::WhatsThis: {
+        QHelpEvent *he = static_cast<QHelpEvent*>(event);
+          QWhatsThis::showText(he->globalPos(), whatsThis, view);
+        return true;
+        break ; }
+#endif
+    default:
+        break;
+    }
+    return QStyledItemDelegate::helpEvent( event, view, option, index );
 }
