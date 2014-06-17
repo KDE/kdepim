@@ -166,15 +166,15 @@ IncidenceDialogPrivate::IncidenceDialogPrivate( Akonadi::IncidenceChanger *chang
   mIeRecurrence = new IncidenceRecurrence( mIeDateTime, mUi );
   mEditor->combine( mIeRecurrence );
 
-  mIeResource = new IncidenceResource( mUi );
-  mEditor->combine( mIeResource );
-
   IncidenceSecrecy *ieSecrecy = new IncidenceSecrecy( mUi );
   mEditor->combine( ieSecrecy );
 
   mIeAttendee = new IncidenceAttendee( qq, mIeDateTime, mUi );
   mIeAttendee->setParent(qq);
   mEditor->combine( mIeAttendee );
+
+  mIeResource = new IncidenceResource( mIeAttendee, mUi );
+  mEditor->combine( mIeResource );
 
   q->connect( mEditor, SIGNAL(showMessage(QString,KMessageWidget::MessageType)),
               SLOT(showMessage(QString,KMessageWidget::MessageType)) );
@@ -584,7 +584,8 @@ void IncidenceDialogPrivate::load( const Akonadi::Item &item )
 
   // Initialize tab's titles
   updateAttachmentCount( incidence->attachments().size() );
-  updateResourceCount( mIeResource->resourcesCount() );
+  updateResourceCount( mIeResource->resourceCount() );
+  updateAttendeeCount( mIeAttendee->attendeeCount() );
   handleRecurrenceChange( mIeRecurrence->currentRecurrenceType() );
   handleAlarmCountChange( incidence->alarms().count() );
 

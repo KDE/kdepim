@@ -21,6 +21,7 @@
 #define INCIDENCEEDITOR_INCIDENCERESOURCE_H
 
 #include "incidenceeditor-ng.h"
+#include "incidenceattendee.h"
 #include "attendeetablemodel.h"
 
 #include <QModelIndex>
@@ -40,9 +41,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceResource : public IncidenceEditor
     Q_OBJECT
 public:
 #ifdef KDEPIM_MOBILE_UI
-    explicit IncidenceResource(Ui::EventOrTodoMore *ui);
+    explicit IncidenceResource(IncidenceAttendee* mIeAttendee, Ui::EventOrTodoMore *ui);
 #else
-    explicit IncidenceResource(Ui::EventOrTodoDesktop *ui);
+    explicit IncidenceResource(IncidenceAttendee* mIeAttendee,  Ui::EventOrTodoDesktop *ui);
 #endif
 
     void load(const KCalCore::Incidence::Ptr &incidence);
@@ -50,7 +51,7 @@ public:
     bool isDirty() const;
 
     /** resturn the count of resources */
-    int resourcesCount() const;
+    int resourceCount() const;
 
 signals:
     /** is emitted it the count of the resources is changed.
@@ -62,6 +63,7 @@ private slots:
     void findResources();
     void bookResource();
     void layoutChanged();
+    void updateCount();
 
 private:
 #ifdef KDEPIM_MOBILE_UI
