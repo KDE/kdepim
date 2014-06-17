@@ -22,6 +22,8 @@
 #define INCIDENCEEDITOR_INCIDENCEATTENDEE_H
 
 #include "incidenceeditor-ng.h"
+#include "attendeetablemodel.h"
+
 
 namespace Ui {
   class EventOrTodoDesktop;
@@ -41,6 +43,7 @@ class KJob;
 namespace IncidenceEditorNG {
 
 class AttendeeEditor;
+class AttendeeComboBoxDelegate;
 class ConflictResolver;
 class IncidenceDateTime;
 
@@ -59,6 +62,13 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
     virtual void save( const KCalCore::Incidence::Ptr &incidence );
     virtual bool isDirty() const;
     virtual void printDebugInfo() const;
+
+    AttendeeTableModel * dataModel();
+    AttendeeComboBoxDelegate *stateDelegate();
+    AttendeeComboBoxDelegate *roleDelegate();
+    AttendeeComboBoxDelegate *responseDelegate();
+
+    int attendeeCount() const;
 
   signals:
     void attendeeCountChanged( int );
@@ -83,6 +93,10 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
     // wrapper for the conflict resolver
     void slotEventDurationChanged();
 
+    void layoutChanged();
+    void updateCount();
+
+
   private:
     void changeStatusForMe( KCalCore::Attendee::PartStat );
 
@@ -97,6 +111,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
      */
     void insertAttendeeFromAddressee( const KABC::Addressee &a );
     void fillOrganizerCombo();
+    void setActions( KCalCore::Incidence::IncidenceType actions );
 
 #ifdef KDEPIM_MOBILE_UI
     Ui::EventOrTodoMore *mUi;
@@ -109,6 +124,13 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
     QMap<KJob *,QWeakPointer<KPIM::MultiplyingLine> > mMightBeGroupLines;
     IncidenceDateTime *mDateTime;
     QString mOrganizer;
+
+    /** used dataModel to rely on*/
+    AttendeeTableModel *mDataModel;
+    AttendeeComboBoxDelegate *mStateDelegate;
+    AttendeeComboBoxDelegate *mRoleDelegate;
+    AttendeeComboBoxDelegate *mResponseDelegate;
+
 };
 
 }
