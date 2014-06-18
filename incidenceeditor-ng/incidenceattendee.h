@@ -86,15 +86,18 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
     void slotSelectAddresses();
     void slotSolveConflictPressed();
     void slotUpdateConflictLabel( int );
-    void slotAttendeeChanged( const KCalCore::Attendee::Ptr &oldAttendee,
-                              const KCalCore::Attendee::Ptr &newAttendee );
     void slotOrganizerChanged( const QString &organizer );
 
     // wrapper for the conflict resolver
     void slotEventDurationChanged();
 
-    void layoutChanged();
+    void filterLayoutChanged();
     void updateCount();
+
+    void slotAttendeeAdded(const QModelIndex &index, int first, int last);
+    void slotAttendeeRemoved(const QModelIndex &index, int first, int last);
+    void slotAttendeeChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void slotAttendeeLayoutChanged();
 
 
   private:

@@ -36,6 +36,9 @@ class AttendeeTableModel : public QAbstractTableModel
     Q_OBJECT
 
 public:
+    enum Roles {
+        AttendeeRole = Qt::UserRole
+    };
 
     enum Columns {
       CuType,
@@ -52,7 +55,7 @@ public:
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    QVariant data(const QModelIndex &index, int role) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const;
 
@@ -70,11 +73,15 @@ public:
 
     void setKeepEmpty(bool keepEmpty);
     bool keepEmpty();
+
+    void setRemoveEmptyLines(bool removeEmptyLines);
+    bool removeEmptyLines();
 private:
-    void addEmptyAttendee(bool layoutChange);
+    void addEmptyAttendee(bool emitDataChanged);
 
     KCalCore::Attendee::List attendeeList;
     bool mKeepEmpty;
+    bool mRemoveEmptyLines;
 };
 
 class ResourceFilterProxyModel : public QSortFilterProxyModel
