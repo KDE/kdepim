@@ -80,9 +80,12 @@ IncidenceResource::IncidenceResource(IncidenceAttendee* ieAttendee, Ui::EventOrT
 
     connect(mUi->mFindResourcesButton, SIGNAL(clicked()), SLOT(findResources()));
     connect(mUi->mBookResourceButton, SIGNAL(clicked()), SLOT(bookResource()));
-    connect(dataModel, SIGNAL(layoutChanged()), SLOT(layoutChanged()));
-    connect(dataModel, SIGNAL(rowsInserted(const QModelIndex&, int , int)), SLOT(updateCount()));
-    connect(dataModel, SIGNAL(rowsRemoved(const QModelIndex&, int , int)), SLOT(updateCount()));
+    connect(filterProxyModel, SIGNAL(layoutChanged()), SLOT(layoutChanged()));
+    connect(filterProxyModel, SIGNAL(layoutChanged()), SLOT(updateCount()));
+    connect(filterProxyModel, SIGNAL(rowsInserted(const QModelIndex&, int , int)), SLOT(updateCount()));
+    connect(filterProxyModel, SIGNAL(rowsRemoved(const QModelIndex&, int , int)), SLOT(updateCount()));
+    // only update when FullName is changed
+    connect(filterProxyModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), SLOT(updateCount()));
 #endif
 }
 
@@ -122,14 +125,11 @@ void IncidenceResource::findResources()
 
 void IncidenceResource::layoutChanged()
 {
-
 #ifndef KDEPIM_MOBILE_UI
     mUi->mResourcesTable->setColumnHidden(AttendeeTableModel::CuType, true);
     mUi->mResourcesTable->setColumnHidden(AttendeeTableModel::Name, true);
     mUi->mResourcesTable->setColumnHidden(AttendeeTableModel::Email, true);
 #endif
-
-    updateCount();
 }
 
 
@@ -141,7 +141,20 @@ void IncidenceResource::updateCount()
 int IncidenceResource::resourceCount() const
 {
 #ifndef KDEPIM_MOBILE_UI
-    return mUi->mResourcesTable->model()->rowCount(QModelIndex());
+    int c=0;
+    QModelIndex index;
+    QAbstractItemModel *model = mUi->mResourcesTable->model();
+    if (!model ) {
+        return 0;
+      }
+    for(int i=0;i< model->rowCount(QModelIndex());i++) {
+        index = model->index(i,AttendeeTableModel::FullName);
+        if (!model->data(index).toString().isEmpty()) {
+            c++;
+          }
+      }
+    return c;
+
 #endif
     return 0;
 }

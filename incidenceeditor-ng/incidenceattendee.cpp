@@ -90,6 +90,7 @@ IncidenceAttendee::IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTi
   attendees.append(attendee);
   mDataModel = new AttendeeTableModel(attendees, this);
   mDataModel->setKeepEmpty(true);
+  mDataModel->setRemoveEmptyLines(true);
 
   #ifdef KDEPIM_MOBILE_UI
   mRoleDelegate->addItem(DesktopIcon("meeting-participant", 48),
@@ -197,17 +198,22 @@ IncidenceAttendee::IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTi
 
   connect( mAttendeeEditor, SIGNAL(editingFinished(KPIM::MultiplyingLine*)),
            SLOT(checkIfExpansionIsNeeded(KPIM::MultiplyingLine*)) );
-  connect( mAttendeeEditor, SIGNAL(changed(KCalCore::Attendee::Ptr,KCalCore::Attendee::Ptr)),
-           SLOT(slotAttendeeChanged(KCalCore::Attendee::Ptr,KCalCore::Attendee::Ptr)) );
 
-  connect(mDataModel, SIGNAL(layoutChanged()), SLOT(layoutChanged()));
-  connect(mDataModel, SIGNAL(rowsInserted(const QModelIndex&, int , int)), SLOT(updateCount()));
-  connect(mDataModel, SIGNAL(rowsRemoved(const QModelIndex&, int , int)), SLOT(updateCount()));
+  connect(mDataModel, SIGNAL(layoutChanged()), SLOT(slotAttendeeLayoutChanged()));
+  connect(mDataModel, SIGNAL(rowsAboutToBeRemoved(const QModelIndex&, int , int)), SLOT(slotAttendeeRemoved(const QModelIndex&,int,int)));
+  connect(mDataModel, SIGNAL(rowsInserted(const QModelIndex&, int , int)), SLOT(slotAttendeeAdded(const QModelIndex&,int,int)));
+  connect(mDataModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), SLOT(slotAttendeeChanged(const QModelIndex&, const QModelIndex&)));
+
+  connect(filterProxyModel, SIGNAL(rowsInserted(const QModelIndex&, int , int)), SLOT(updateCount()));
+  connect(filterProxyModel, SIGNAL(rowsRemoved(const QModelIndex&, int , int)), SLOT(updateCount()));
+  // only update when FullName is changed
+  connect(filterProxyModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), SLOT(updateCount()));
+  connect(filterProxyModel, SIGNAL(layoutChanged()), SLOT(updateCount()));
+  connect(filterProxyModel, SIGNAL(layoutChanged()), SLOT(filterLayoutChanged()));
 }
 
 IncidenceAttendee::~IncidenceAttendee()
 {
-  delete mDataModel;
 }
 
 void IncidenceAttendee::load( const KCalCore::Incidence::Ptr &incidence )
@@ -242,6 +248,7 @@ void IncidenceAttendee::load( const KCalCore::Incidence::Ptr &incidence )
   }
 
   mDataModel->setAttendees(incidence->attendees());
+  slotUpdateConflictLabel(0);
 
   setActions( incidence->type() );
 
@@ -343,7 +350,6 @@ void IncidenceAttendee::changeStatusForMe( KCalCore::Attendee::PartStat stat )
   const IncidenceEditorNG::EditorConfig *config = IncidenceEditorNG::EditorConfig::instance();
   Q_ASSERT( config );
 
-  KCalCore::Attendee::List attendees = mDataModel->attendees();
   for (int i=0;i<mDataModel->rowCount();i++) {
     QModelIndex index = mDataModel->index(i, AttendeeTableModel::Email);
     if ( config->thatIsMe( mDataModel->data(index, Qt::DisplayRole).toString() ) ) {
@@ -492,21 +498,65 @@ void IncidenceEditorNG::IncidenceAttendee::slotSolveConflictPressed()
   }
 }
 
-void IncidenceAttendee::slotAttendeeChanged( const KCalCore::Attendee::Ptr &oldAttendee,
-                                             const KCalCore::Attendee::Ptr &newAttendee )
+void IncidenceAttendee::slotAttendeeChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
-  // if newAttendee's email is empty, we are probably removing an attendee
-  if ( mConflictResolver->containsAttendee( oldAttendee ) ) {
-    mConflictResolver->removeAttendee( oldAttendee );
-  }
-  if ( !mConflictResolver->containsAttendee( newAttendee ) && !newAttendee->email().isEmpty() ) {
-    mConflictResolver->insertAttendee( newAttendee );
+#ifndef KDEPIM_MOBILE_UI
+  if (AttendeeTableModel::FullName <= bottomRight.column() && AttendeeTableModel::FullName >= topLeft.column()) {
+       for (int i = topLeft.row(); i <= bottomRight.row(); i++) {
+           kDebug() <<  i;
+           QModelIndex index = dataModel()->index(i, AttendeeTableModel::Email);
+           KCalCore::Attendee::Ptr attendee = dataModel()->data(index,  AttendeeTableModel::AttendeeRole).value<KCalCore::Attendee::Ptr>();
+           if (mConflictResolver->containsAttendee(attendee)) {
+               mConflictResolver->removeAttendee(attendee);
+           }
+           if (!dataModel()->data(index).toString().isEmpty()) {
+               mConflictResolver->insertAttendee( attendee );
+           }
+       }
   }
   checkDirtyStatus();
+#endif
 }
+
+void IncidenceAttendee::slotAttendeeAdded(const QModelIndex &index, int first, int last)
+{
+    for (int i = first; i <= last; i++) {
+        QModelIndex email = dataModel()->index(i, AttendeeTableModel::Email, index);
+        if (!dataModel()->data(email).toString().isEmpty()) {
+            mConflictResolver->insertAttendee( dataModel()->data(email, AttendeeTableModel::AttendeeRole).value<KCalCore::Attendee::Ptr>() );
+        }
+    }
+    checkDirtyStatus();
+}
+
+void IncidenceAttendee::slotAttendeeRemoved(const QModelIndex &index, int first, int last)
+{
+    for (int i = first; i <= last; i++) {
+        kDebug() <<  i;
+        QModelIndex email = dataModel()->index(i, AttendeeTableModel::Email, index);
+        if (!dataModel()->data(email).toString().isEmpty()) {
+            mConflictResolver->removeAttendee( dataModel()->data(email, AttendeeTableModel::AttendeeRole).value<KCalCore::Attendee::Ptr>() );
+        }
+    }
+    checkDirtyStatus();
+}
+
+void IncidenceAttendee::slotAttendeeLayoutChanged()
+{
+    KCalCore::Attendee::List attendees = mDataModel->attendees();
+    mConflictResolver->clearAttendees();
+    foreach(KCalCore::Attendee::Ptr attendee, attendees) {
+        if (! attendee->email().isEmpty()) {
+            mConflictResolver->insertAttendee(attendee);
+        }
+    }
+    checkDirtyStatus();
+}
+
 
 void IncidenceAttendee::slotUpdateConflictLabel( int count )
 {
+  kDebug() <<  "slotUpdateConflictLabel";
   if ( attendeeCount() > 0 ) {
     mUi->mSolveButton->setEnabled( true );
     if ( count > 0 ) {
@@ -650,7 +700,7 @@ AttendeeComboBoxDelegate* IncidenceAttendee::stateDelegate()
   return mStateDelegate;
 }
 
-void IncidenceAttendee::layoutChanged()
+void IncidenceAttendee::filterLayoutChanged()
 {
 #ifndef KDEPIM_MOBILE_UI
   mUi->mAttendeeTable->setColumnHidden(AttendeeTableModel::CuType, true);
@@ -658,8 +708,6 @@ void IncidenceAttendee::layoutChanged()
   mUi->mAttendeeTable->setColumnHidden(AttendeeTableModel::Email, true);
   mUi->mAttendeeTable->setColumnHidden(AttendeeTableModel::Available, true);
 #endif
-
-  updateCount();
 }
 
 

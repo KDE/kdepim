@@ -3,8 +3,6 @@
 #include <KCalCore/Attendee>
 #include <KPIMUtils/Email>
 
-#include <KDebug>
-
 using namespace IncidenceEditorNG;
 
 AttendeeTableModel::AttendeeTableModel(const KCalCore::Attendee::List &attendees, QObject *parent)
@@ -68,6 +66,9 @@ QVariant AttendeeTableModel::data(const QModelIndex &index, int role) const
         }
 
     }
+    if (role ==  AttendeeRole) {
+        return QVariant::fromValue(attendeeList[index.row()]);
+    }
     return QVariant();
 }
 
@@ -80,6 +81,13 @@ bool AttendeeTableModel::setData(const QModelIndex& index, const QVariant& value
             attendeeList[index.row()]->setRole(static_cast<KCalCore::Attendee::Role>(value.toInt()));
             break;
         case FullName:
+            if (mRemoveEmptyLines && value.toString().trimmed().isEmpty()) {
+                // Do not remove last empty line if mKeepEmpty==true (only works if initaly there is only one empty line)
+                if (!mKeepEmpty || !(attendeeList[index.row()]->name().isEmpty() && attendeeList[index.row()]->email().isEmpty())) {
+                    removeRows(index.row(), 1);
+                    return true;
+                }
+            }
             KPIMUtils::extractEmailAddressAndName(value.toString(), email, name);
             attendeeList[index.row()]->setName(name);
             attendeeList[index.row()]->setEmail(email);
@@ -140,7 +148,7 @@ QVariant AttendeeTableModel::headerData(int section, Qt::Orientation orientation
 
 bool AttendeeTableModel::insertRows(int position, int rows, const QModelIndex &parent)
 {
-    beginInsertRows(QModelIndex(), position, position + rows);
+    beginInsertRows(parent, position, position + rows-1);
 
     for (int row = 0; row < rows; ++row) {
         KCalCore::Attendee::Ptr attendee(new KCalCore::Attendee("", ""));
@@ -153,7 +161,7 @@ bool AttendeeTableModel::insertRows(int position, int rows, const QModelIndex &p
 
 bool AttendeeTableModel::removeRows(int position, int rows, const QModelIndex &parent)
 {
-    beginRemoveRows(QModelIndex(), position, position + rows);
+    beginRemoveRows(parent, position, position + rows-1);
 
     for (int row = 0; row < rows; ++row) {
         attendeeList.remove(position);
@@ -170,6 +178,12 @@ bool AttendeeTableModel::insertAttendee(int position, const KCalCore::Attendee::
     attendeeList.insert(position, attendee);
 
     endInsertRows();
+
+    QModelIndex topLeft = index(position, 0);
+    QModelIndex bottomRight = index(position, columnCount()-1);
+    emit dataChanged(topLeft, bottomRight);
+
+    addEmptyAttendee(true);
 
     return true;
 }
@@ -191,7 +205,7 @@ KCalCore::Attendee::List AttendeeTableModel::attendees() const
     return attendeeList;
 }
 
-void AttendeeTableModel::addEmptyAttendee(bool layoutChange)
+void AttendeeTableModel::addEmptyAttendee(bool emitDataChanged)
 {
     if (mKeepEmpty) {
         bool create=true;
@@ -203,14 +217,11 @@ void AttendeeTableModel::addEmptyAttendee(bool layoutChange)
         }
 
         if (create) {
-            if (layoutChange) {
-                emit layoutAboutToBeChanged();
-            }
-
             insertRows(rowCount(),1);
-
-            if (layoutChange) {
-                emit layoutChanged();
+            if (emitDataChanged) {
+                QModelIndex topLeft = index(rowCount()-1, 0);
+                QModelIndex bottomRight = index(rowCount()-1, columnCount()-1);
+                emit dataChanged(topLeft, bottomRight);
             }
         }
     }
@@ -228,6 +239,16 @@ void AttendeeTableModel::setKeepEmpty(bool keepEmpty)
         mKeepEmpty = keepEmpty;
         addEmptyAttendee(true);
     }
+}
+
+bool AttendeeTableModel::removeEmptyLines()
+{
+    return mRemoveEmptyLines;
+}
+
+void AttendeeTableModel::setRemoveEmptyLines(bool removeEmptyLines)
+{
+    mRemoveEmptyLines = removeEmptyLines;
 }
 
 
