@@ -95,6 +95,9 @@ void FollowUpReminderAgent::configure( WId windowId )
 
 void FollowUpReminderAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
+    if (!enabledAgent())
+        return;
+
     if ( item.mimeType() != KMime::Message::mimeType() ) {
         kDebug() << "MailFilterAgent::itemAdded called for a non-message item!";
         return;
