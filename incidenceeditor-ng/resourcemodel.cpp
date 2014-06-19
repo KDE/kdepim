@@ -20,6 +20,9 @@
  */
 #include "resourcemodel.h"
 
+#include <KPIMUtils/Email>
+#include <KDebug>
+
 
 using namespace IncidenceEditorNG;
 
@@ -30,7 +33,8 @@ ResourceModel::ResourceModel(const QStringList &headers,
 {
 
     this->headers = headers;
-    rootItem = new ResourceItem(KLDAP::LdapDN(), headers, KLDAP::LdapClient(0), 0);
+    rootItem = ResourceItem::Ptr(new ResourceItem(KLDAP::LdapDN(), headers, KLDAP::LdapClient(0)));
+    rootItem->me = rootItem;
 
     ldapSearchCollections.setFilter(QString::fromLatin1("&(objectClass=kolabGroupOfUniqueNames)(mail=*)"
                                     "(|(cn=%1)(givenName=%1)(sn=%1))"));
@@ -51,7 +55,6 @@ ResourceModel::ResourceModel(const QStringList &headers,
 
 ResourceModel::~ResourceModel()
 {
-    delete rootItem;
 }
 
 int ResourceModel::columnCount(const QModelIndex & /* parent */) const
@@ -91,7 +94,7 @@ ResourceItem *ResourceModel::getItem(const QModelIndex &index) const
             return item;
         }
     }
-    return rootItem;
+    return rootItem.data();
 }
 
 QVariant ResourceModel::headerData(int section, Qt::Orientation orientation,
@@ -106,14 +109,11 @@ QVariant ResourceModel::headerData(int section, Qt::Orientation orientation,
 
 QModelIndex ResourceModel::index(int row, int column, const QModelIndex &parent) const
 {
-    if (parent.isValid() && parent.column() != 0) {
-        return QModelIndex();
-    }
     ResourceItem *parentItem = getItem(parent);
 
-    ResourceItem *childItem = parentItem->child(row);
-    if (childItem) {
-        return createIndex(row, column, childItem);
+    ResourceItem::Ptr childItem = parentItem->child(row);
+    if (row < parentItem->childCount() && childItem) {
+        return createIndex(row, column, childItem.data());
     } else {
         return QModelIndex();
     }
@@ -125,14 +125,14 @@ QModelIndex ResourceModel::parent(const QModelIndex &index) const
     if (!index.isValid()) {
         return QModelIndex();
     }
-    ResourceItem *childItem = getItem(index);
-    ResourceItem *parentItem = childItem->parent();
+    ResourceItem* childItem = getItem(index);
+    ResourceItem::Ptr parentItem = childItem->parent();
 
     if (parentItem == rootItem) {
         return QModelIndex();
     }
 
-    return createIndex(parentItem->childNumber(), 0, parentItem);
+    return createIndex(parentItem->childNumber(), index.column(), parentItem.data());
 }
 
 
@@ -193,7 +193,7 @@ void ResourceModel::slotLDAPCollectionData(const QList<KLDAP::LdapResultObject> 
     emit layoutAboutToBeChanged();
 
     foreach(const KLDAP::LdapResultObject & result, results) {
-        ResourceItem *item = new ResourceItem(result.object.dn(), headers, *result.client, rootItem);
+        ResourceItem::Ptr item(new ResourceItem(result.object.dn(), headers, *result.client, rootItem));
         item->setLdapObject(result.object);
         rootItem->insertChild(rootItem->childCount(), item);
         ldapCollections.insert(item);
@@ -215,13 +215,13 @@ void ResourceModel::slotLDAPSearchData(const QList<KLDAP::LdapResultObject> &res
 
     foreach(const KLDAP::LdapResultObject & result, results) {
         //Add the found items to all collections, where it is member
-        QList<ResourceItem*> parents = ldapCollectionsMap.values(result.object.dn().toString());
+        QList<ResourceItem::Ptr> parents = ldapCollectionsMap.values(result.object.dn().toString());
         if (parents.count() == 0) {
             parents << rootItem;
         }
 
-        foreach(ResourceItem * parent, parents) {
-            ResourceItem *item = new ResourceItem(result.object.dn(), headers, *result.client, parent);
+        foreach(ResourceItem::Ptr parent, parents) {
+            ResourceItem::Ptr item(new ResourceItem(result.object.dn(), headers, *result.client, parent));
             item->setLdapObject(result.object);
             parent->insertChild(parent->childCount(), item);
         }

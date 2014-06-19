@@ -64,7 +64,7 @@ public:
     ResourceItem *getItem(const QModelIndex &index) const;
 
 private:
-    ResourceItem *rootItem;
+    ResourceItem::Ptr rootItem;
 
 
 public:
@@ -94,12 +94,12 @@ private:
      * A Resource can be part of different collection, so a QMuliMap is needed
      *
      */
-    QMultiMap<QString, ResourceItem*> ldapCollectionsMap;
+    QMultiMap<QString, ResourceItem::Ptr> ldapCollectionsMap;
 
     /* A Set of all collection ResourceItems
      *
      */
-    QSet <ResourceItem*> ldapCollections;
+    QSet <ResourceItem::Ptr> ldapCollections;
 
     /* Cached searchString (setted by startSearch(QString))
      *

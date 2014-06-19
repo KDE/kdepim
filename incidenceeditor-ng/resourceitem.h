@@ -22,8 +22,10 @@
 #ifndef RESOURCEITEM_H
 #define RESOURCEITEM_H
 
-#include <QObject>
 #include <QList>
+#include <QMetaType>
+#include <QSharedPointer>
+#include <QObject>
 #include <QStringList>
 #include <QVariant>
 #include <QVector>
@@ -41,22 +43,28 @@ public:
     /* Copied from http://qt-project.org/doc/qt-4.8/itemviews-editabletreemodel.html:
      * QT 4.8: Editable Tree Model Example
      */
-    ResourceItem(const KLDAP::LdapDN &dn, QStringList attrs, const KLDAP::LdapClient &ldapClient, ResourceItem *parent = 0);
+
+    /**
+      A shared pointer to an ResourceItem object.
+    */
+    typedef QSharedPointer<ResourceItem> Ptr;
+
+    ResourceItem(const KLDAP::LdapDN &dn, QStringList attrs, const KLDAP::LdapClient &ldapClient, ResourceItem::Ptr parent = ResourceItem::Ptr());
     ~ResourceItem();
 
-    ResourceItem *child(int number);
+    ResourceItem::Ptr child(int number);
     int childCount() const;
     int columnCount() const;
     QVariant data(int column) const;
-    bool insertChild(int position, ResourceItem *item);
-    ResourceItem *parent();
+    bool insertChild(int position, ResourceItem::Ptr item);
+    ResourceItem::Ptr parent();
     bool removeChildren(int position, int count);
     int childNumber() const;
 
 private:
-    QList<ResourceItem*> childItems;
+    QList<ResourceItem::Ptr> childItems;
     QVector<QVariant> itemData;
-    ResourceItem *parentItem;
+    ResourceItem::Ptr parentItem;
 
 public:
     /* Returns the attributes of the requested ldapObject.
@@ -85,6 +93,8 @@ public:
      *
      */
     void startSearch();
+
+    Ptr me;
 
 private:
     /* data source
@@ -116,4 +126,9 @@ private slots:
 
 };
 }
+
+//@cond PRIVATE
+  Q_DECLARE_TYPEINFO(IncidenceEditorNG::ResourceItem::Ptr, Q_MOVABLE_TYPE);
+  Q_DECLARE_METATYPE(IncidenceEditorNG::ResourceItem::Ptr)
+//@endcond
 #endif // RESOURCEITEM_H
