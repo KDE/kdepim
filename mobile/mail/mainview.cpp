@@ -553,9 +553,9 @@ void MainView::doDelayedInit()
   if ( !workOffline() ) {
     const Akonadi::AgentInstance::List lst = MailCommon::Util::agentInstances();
     foreach ( Akonadi::AgentInstance type, lst ) {
-      if ( type.identifier().contains( IMAP_RESOURCE_IDENTIFIER ) ||
-           type.identifier().contains( KOLAB_RESOURCE_IDENTIFIER ) ||
-          type.identifier().contains( POP3_RESOURCE_IDENTIFIER ) ) {
+        const QString identifier = type.identifier();
+      if ( PimCommon::Util::isImapResource(identifier) ||
+          identifier.contains( POP3_RESOURCE_IDENTIFIER ) ) {
         type.setIsOnline( true );
       }
     }

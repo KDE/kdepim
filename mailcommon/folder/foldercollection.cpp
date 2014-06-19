@@ -225,7 +225,7 @@ void FolderCollection::writeConfig() const
     if ( !mUseDefaultIdentity ) {
         uint defaultIdentityId = -1;
 
-        if ( mCollection.resource().contains( IMAP_RESOURCE_IDENTIFIER ) || mCollection.resource().contains( KOLAB_RESOURCE_IDENTIFIER ) ) {
+        if ( PimCommon::Util::isImapResource(mCollection.resource()) ) {
             OrgKdeAkonadiImapSettingsInterface *imapSettingsInterface =
                     PimCommon::Util::createImapSettingsInterface( mCollection.resource() );
 
