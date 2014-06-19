@@ -40,13 +40,12 @@ FollowUpReminderAgent::FollowUpReminderAgent(const QString &id)
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/FollowUpReminder" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.FollowUpReminder" ) );
     mManager = new FollowUpReminderManager(this);
-    if (FollowUpReminderAgentSettings::enabled()) {
-        mManager->load();
-    }
     changeRecorder()->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
     changeRecorder()->itemFetchScope().setCacheOnly(true);
     changeRecorder()->fetchCollection( true );
-    changeRecorder()->setChangeRecordingEnabled( false );
+    if (FollowUpReminderAgentSettings::enabled()) {
+        mManager->load();
+    }
 }
 
 FollowUpReminderAgent::~FollowUpReminderAgent()
