@@ -37,6 +37,25 @@
 #include <QCompleter>
 using namespace IncidenceEditorNG;
 
+class SwitchRoleProxy:public QSortFilterProxyModel {
+
+public:
+    SwitchRoleProxy(QObject *parent = 0)
+        : QSortFilterProxyModel(parent) {
+
+    }
+
+    virtual QVariant data(const QModelIndex& index, int role) const {
+        QVariant d;
+        if (role == Qt::DisplayRole || role == Qt::EditRole) {
+            d = QSortFilterProxyModel::data(index, ResourceModel::FullName);
+            return d;
+        }
+        d = QSortFilterProxyModel::data(index, role);
+        return d;
+    }
+};
+
 #ifdef KDEPIM_MOBILE_UI
 IncidenceResource::IncidenceResource(IncidenceAttendee* ieAttendee, Ui::EventOrTodoMore *ui)
 #else
@@ -58,8 +77,11 @@ IncidenceResource::IncidenceResource(IncidenceAttendee* ieAttendee, Ui::EventOrT
 
     KDescendantsProxyModel *proxyModel = new KDescendantsProxyModel( this );
     proxyModel->setSourceModel( model );
+    SwitchRoleProxy *proxyModel2 = new SwitchRoleProxy(this);
+    proxyModel2->setSourceModel(proxyModel);
 
-    completer->setModel(proxyModel);
+    completer->setModel(proxyModel2);
+    completer->setCompletionRole(ResourceModel::FullName);
     completer->setWrapAround(false);
     mUi->mNewResource->setCompleter(completer);
 

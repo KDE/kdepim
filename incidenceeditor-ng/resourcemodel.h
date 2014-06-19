@@ -41,6 +41,11 @@ public:
     /* Copied from http://qt-project.org/doc/qt-4.8/itemviews-editabletreemodel.html:
      * QT 4.8: Editable Tree Model Example
      */
+    enum Roles {
+        Resource = Qt::UserRole,
+        FullName
+    };
+
     ResourceModel(const QStringList &headers,
                   QObject *parent = 0);
     ~ResourceModel();
@@ -60,10 +65,9 @@ public:
 
     bool removeRows(int position, int rows,
                     const QModelIndex &parent = QModelIndex());
-
-    ResourceItem *getItem(const QModelIndex &index) const;
-
 private:
+    ResourceItem* getItem(const QModelIndex &index) const;
+
     ResourceItem::Ptr rootItem;
 
 
