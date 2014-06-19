@@ -43,7 +43,8 @@
 
 
 #include <KLocalizedString>
-#include <kdebug.h>
+#include <qdebug.h>
+#include <KDebug>
 
 #include <QDBusConnection>
 
@@ -201,7 +202,7 @@ struct SMIMECryptoConfigEntries {
 };
 
 void SMimeValidationConfigurationWidget::defaults() {
-    kDebug() << "not implemented";
+    qDebug() << "not implemented";
 }
 
 void SMimeValidationConfigurationWidget::load() {

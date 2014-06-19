@@ -71,9 +71,10 @@
 #include <KShortcutsDialog>
 #include <KEditToolBar>
 #include <KAboutApplicationDialog>
-#include <kdebug.h>
+#include <qdebug.h>
 #include <KLineEdit>
 #include <KGlobal>
+#include <KDebug>
 
 #include <QAbstractItemView>
 #include <QApplication>
@@ -211,7 +212,7 @@ public:
         if ( QMenu * const menu = qobject_cast<QMenu*>( q->factory()->container( QLatin1String("listview_popup"), q ) ) )
             menu->exec( p );
         else
-            kDebug() << "no \"listview_popup\" <Menu> in kleopatra's ui.rc file";
+            qDebug() << "no \"listview_popup\" <Menu> in kleopatra's ui.rc file";
     }
 
     void aboutGpg4Win() {
@@ -399,7 +400,7 @@ void MainWindow::Private::slotConfigCommitted() {
 void MainWindow::closeEvent( QCloseEvent * e ) {
     // KMainWindow::closeEvent() insists on quitting the application,
     // so do not let it touch the event...
-    kDebug();
+    qDebug();
     if ( d->controller.hasRunningCommands() ) {
         if ( d->controller.shutdownWarningRequired() ) {
             const int ret = KMessageBox::warningContinueCancel( this, i18n("There are still some background operations ongoing. "
@@ -484,14 +485,14 @@ static bool can_decode_local_files( const QMimeData * data ) {
 }
 
 void MainWindow::dragEnterEvent( QDragEnterEvent * e ) {
-    kDebug();
+    qDebug();
 
     if ( can_decode_local_files( e->mimeData() ) )
         e->acceptProposedAction();
 }
 
 void MainWindow::dropEvent( QDropEvent * e ) {
-    kDebug();
+    qDebug();
 
     if ( !can_decode_local_files( e->mimeData() ) )
         return;
@@ -538,7 +539,7 @@ void MainWindow::dropEvent( QDropEvent * e ) {
 
 void MainWindow::readProperties( const KConfigGroup & cg )
 {
-    kDebug();
+    qDebug();
     KXmlGuiWindow::readProperties(cg);
     savedGeometry = cg.readEntry("savedGeometry", QByteArray() );
     if ( !savedGeometry.isEmpty() ) {
@@ -551,7 +552,7 @@ void MainWindow::readProperties( const KConfigGroup & cg )
 
 void MainWindow::saveProperties( KConfigGroup & cg )
 {
-    kDebug();
+    qDebug();
     KXmlGuiWindow::saveProperties( cg );
     cg.writeEntry( "hidden", isHidden() );
     if ( isHidden() ) {
