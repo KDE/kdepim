@@ -24,19 +24,129 @@
 #include "resourcemodel.h"
 #include "freebusyitem.h"
 
-//#include "korganizer/korganizer_part.h"
-#include "visualfreebusywidget.h"
+#include "freebusyganttproxymodel.h"
+
+#include <kdgantt2/kdganttgraphicsview.h>
+#include <kdgantt2/kdganttview.h>
+#include <kdgantt2/kdganttdatetimegrid.h>
+#include <kdgantt2/kdganttabstractrowcontroller.h>
 
 #include <akonadi/calendar/freebusymanager.h>
 #include <kldap/ldapobject.h>
 
+#include <QPointer>
+#include <QSplitter>
 #include <QStringList>
 #include <QLabel>
+
 
 #include <KDebug>
 
 
 using namespace IncidenceEditorNG;
+
+class RowController : public KDGantt::AbstractRowController
+{
+  private:
+    static const int ROW_HEIGHT ;
+    QPointer<QAbstractItemModel> m_model;
+
+  public:
+    RowController()
+    {
+      mRowHeight = 20;
+    }
+
+    void setModel( QAbstractItemModel *model )
+    {
+      m_model = model;
+    }
+
+    /*reimp*/
+    int headerHeight() const
+    {
+      return mRowHeight + 10;
+    }
+
+    /*reimp*/
+    bool isRowVisible( const QModelIndex & ) const
+    {
+      return true;
+    }
+
+    /*reimp*/
+    bool isRowExpanded( const QModelIndex & ) const
+    {
+      return false;
+    }
+
+    /*reimp*/
+    KDGantt::Span rowGeometry( const QModelIndex &idx ) const
+    {
+      return KDGantt::Span( idx.row() * mRowHeight, mRowHeight );
+    }
+
+    /*reimp*/
+    int maximumItemHeight() const
+    {
+      return mRowHeight*6/8;
+    }
+
+    /*reimp*/
+    int totalHeight() const
+    {
+      return m_model->rowCount() * mRowHeight;
+    }
+
+    /*reimp*/
+    QModelIndex indexAt( int height ) const
+    {
+      return m_model->index( height / mRowHeight, 0 );
+    }
+
+    /*reimp*/
+    QModelIndex indexBelow( const QModelIndex &idx ) const
+    {
+      if ( !idx.isValid() ) {
+        return QModelIndex();
+      }
+      return idx.model()->index( idx.row() + 1, idx.column(), idx.parent() );
+    }
+
+    /*reimp*/
+    QModelIndex indexAbove( const QModelIndex &idx ) const
+    {
+      if ( !idx.isValid() ) {
+        return QModelIndex();
+      }
+      return idx.model()->index( idx.row() - 1, idx.column(), idx.parent() );
+    }
+
+    void setRowHeight( int height )
+    {
+      mRowHeight = height;
+    }
+
+  private:
+    int mRowHeight;
+
+};
+
+class GanttHeaderView : public QHeaderView
+{
+public:
+    explicit GanttHeaderView( QWidget *parent = 0 ) : QHeaderView( Qt::Horizontal, parent )
+    {
+    }
+
+        QSize sizeHint() const
+            {
+                QSize s = QHeaderView::sizeHint();
+                s.rheight() *= 2;
+                return s;
+            }
+};
+
 
 ResourceManagement::ResourceManagement()
 {
@@ -54,15 +164,40 @@ ResourceManagement::ResourceManagement()
     //resourceCalender = view->topLevelWidget();
     mModel = new FreeBusyItemModel;
 #ifndef KDEPIM_MOBILE_UI
-    VisualFreeBusyWidget *mVisualWidget = new VisualFreeBusyWidget( mModel, 8, this );
-    mUi->resourceCalender->addWidget( mVisualWidget );
+
+    KDGantt::GraphicsView *mGanttGraphicsView = new KDGantt::GraphicsView( this );
+    mGanttGraphicsView->setObjectName( "mGanttGraphicsView" );
+    mGanttGraphicsView->setToolTip(
+        i18nc( "@info:tooltip",
+            "Shows the Free/Busy status of a resource.") );
+    mGanttGraphicsView->setWhatsThis(
+        i18nc( "@info:whatsthis",
+            "Shows the Free/Busy status of a resource.") );
+    FreeBusyGanttProxyModel *model = new FreeBusyGanttProxyModel( this );
+    model->setSourceModel( mModel );
+
+    RowController *mRowController = new RowController;
+    mRowController->setRowHeight( fontMetrics().height()*4 );   //TODO: detect
+
+    mRowController->setModel( model );
+    mGanttGraphicsView->setRowController( mRowController );
+
+    KDGantt::DateTimeGrid *mGanttGrid = new KDGantt::DateTimeGrid;
+    mGanttGrid->setScale( KDGantt::DateTimeGrid::ScaleDay );
+    mGanttGrid->setDayWidth( 300 );
+    mGanttGrid->setRowSeparators( true );
+    mGanttGraphicsView->setGrid( mGanttGrid );
+    mGanttGraphicsView->setModel( model );
+    mGanttGraphicsView->viewport()->setFixedWidth( 300 * 30 );
+
+    mUi->resourceCalender->addWidget( mGanttGraphicsView );
 #endif
 
     QStringList attrs;
     attrs << QLatin1String("cn") << QLatin1String("mail") << QLatin1String("givenname") << QLatin1String("sn");
 
-    ResourceModel *model = new ResourceModel(attrs);
-    mUi->treeResults->setModel(model);
+    ResourceModel *resourcemodel = new ResourceModel(attrs);
+    mUi->treeResults->setModel(resourcemodel);
 
     // This doesn't work till now :( -> that's why i use the clieck signal
     mUi->treeResults->setSelectionMode(QAbstractItemView::SingleSelection);
