@@ -95,8 +95,6 @@ public:
      */
     void startSearch();
 
-    Ptr me;
-
 private:
     /* data source
      *

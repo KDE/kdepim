@@ -68,7 +68,13 @@ int ResourceItem::childCount() const
 int ResourceItem::childNumber() const
 {
     if (parentItem) {
-        return parentItem->childItems.indexOf(me);
+        int i = 0;
+        foreach (ResourceItem::Ptr child, parentItem->childItems){
+            if (child == this) {
+                return i;
+            }
+            i++;
+        }
     }
 
     return 0;
@@ -98,7 +104,6 @@ bool ResourceItem::insertChild(int position, ResourceItem::Ptr item)
         return false;
     }
 
-    item->me = item;
     childItems.insert(position, item);
 
     return true;
