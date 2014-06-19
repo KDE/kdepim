@@ -34,7 +34,6 @@ ResourceModel::ResourceModel(const QStringList &headers,
 
     this->headers = headers;
     rootItem = ResourceItem::Ptr(new ResourceItem(KLDAP::LdapDN(), headers, KLDAP::LdapClient(0)));
-    rootItem->me = rootItem;
 
     ldapSearchCollections.setFilter(QString::fromLatin1("&(objectClass=kolabGroupOfUniqueNames)(mail=*)"
                                     "(|(cn=%1)(givenName=%1)(sn=%1))"));
