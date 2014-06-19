@@ -92,7 +92,7 @@ bool AttendeeTableModel::setData(const QModelIndex& index, const QVariant& value
             attendeeList[index.row()]->setName(name);
             attendeeList[index.row()]->setEmail(email);
 
-            addEmptyAttendee(true);
+            addEmptyAttendee();
             break;
         case Available:
             //attendeeList[index.row()].available = value.toBool();
@@ -179,11 +179,7 @@ bool AttendeeTableModel::insertAttendee(int position, const KCalCore::Attendee::
 
     endInsertRows();
 
-    QModelIndex topLeft = index(position, 0);
-    QModelIndex bottomRight = index(position, columnCount()-1);
-    emit dataChanged(topLeft, bottomRight);
-
-    addEmptyAttendee(true);
+    addEmptyAttendee();
 
     return true;
 }
@@ -194,7 +190,7 @@ void AttendeeTableModel::setAttendees(const KCalCore::Attendee::List attendees)
 
     attendeeList = attendees;
 
-    addEmptyAttendee(false);
+    addEmptyAttendee();
 
     emit layoutChanged();
 }
@@ -205,7 +201,7 @@ KCalCore::Attendee::List AttendeeTableModel::attendees() const
     return attendeeList;
 }
 
-void AttendeeTableModel::addEmptyAttendee(bool emitDataChanged)
+void AttendeeTableModel::addEmptyAttendee()
 {
     if (mKeepEmpty) {
         bool create=true;
@@ -218,11 +214,6 @@ void AttendeeTableModel::addEmptyAttendee(bool emitDataChanged)
 
         if (create) {
             insertRows(rowCount(),1);
-            if (emitDataChanged) {
-                QModelIndex topLeft = index(rowCount()-1, 0);
-                QModelIndex bottomRight = index(rowCount()-1, columnCount()-1);
-                emit dataChanged(topLeft, bottomRight);
-            }
         }
     }
 }
@@ -237,7 +228,7 @@ void AttendeeTableModel::setKeepEmpty(bool keepEmpty)
 {
     if (keepEmpty != mKeepEmpty) {
         mKeepEmpty = keepEmpty;
-        addEmptyAttendee(true);
+        addEmptyAttendee();
     }
 }
 

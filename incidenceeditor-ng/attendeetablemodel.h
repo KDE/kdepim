@@ -77,7 +77,7 @@ public:
     void setRemoveEmptyLines(bool removeEmptyLines);
     bool removeEmptyLines();
 private:
-    void addEmptyAttendee(bool emitDataChanged);
+    void addEmptyAttendee();
 
     KCalCore::Attendee::List attendeeList;
     bool mKeepEmpty;
