@@ -56,6 +56,7 @@ public:
     int childCount() const;
     int columnCount() const;
     QVariant data(int column) const;
+    QVariant data(const QString &column) const;
     bool insertChild(int position, ResourceItem::Ptr item);
     ResourceItem::Ptr parent();
     bool removeChildren(int position, int count);

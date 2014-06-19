@@ -28,10 +28,8 @@ ResourceItem::ResourceItem(const KLDAP::LdapDN &dn, QStringList attrs, const KLD
     : dn(dn)
     , attrs(attrs)
     , mLdapClient(0, this)
+    , parentItem(parent)
 {
-    parentItem = parent;
-
-
     if (!dn.isEmpty()) {
         KLDAP::LdapServer server = ldapClient.server();
 
@@ -84,6 +82,14 @@ int ResourceItem::columnCount() const
 QVariant ResourceItem::data(int column) const
 {
     return itemData.value(column);
+}
+
+QVariant ResourceItem::data(const QString &column) const
+{
+    if (mLdapObject.attributes()[column].count() > 0) {
+        return QString::fromUtf8(mLdapObject.attributes()[column][0]);
+    }
+    return QVariant();
 }
 
 bool ResourceItem::insertChild(int position, ResourceItem::Ptr item)

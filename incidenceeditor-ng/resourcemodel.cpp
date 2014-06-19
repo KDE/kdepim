@@ -59,7 +59,7 @@ ResourceModel::~ResourceModel()
 
 int ResourceModel::columnCount(const QModelIndex & /* parent */) const
 {
-    return 1;
+    return rootItem->columnCount();
 }
 
 QVariant ResourceModel::data(const QModelIndex &index, int role) const
@@ -68,13 +68,18 @@ QVariant ResourceModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    if (role != Qt::DisplayRole && role != Qt::EditRole) {
-        return QVariant();
+    if ( role == Qt::EditRole ||  role ==  Qt::DisplayRole ) {
+        return getItem(index)->data(index.column());
+    } else if (role == Resource) {
+        ResourceItem *p = getItem(parent(index));
+        return QVariant::fromValue(p->child(index.row()));
+    } else if (role == FullName ) {
+        ResourceItem *item = getItem(index);
+        return KPIMUtils::normalizedAddress(item->data("cn").toString(), item->data("mail").toString());
+
     }
 
-    ResourceItem *item = getItem(index);
-
-    return item->data(index.column());
+    return QVariant();
 }
 
 Qt::ItemFlags ResourceModel::flags(const QModelIndex &index) const
@@ -166,16 +171,19 @@ void ResourceModel::startSearch(const QString &query)
 
 void ResourceModel::startSearch()
 {
-    emit layoutAboutToBeChanged();
     // Delete all resources -> only collection elements are shown
     for (int i = 0; i < rootItem->childCount(); i++) {
         if (ldapCollections.contains(rootItem->child(i))) {
+            QModelIndex parentIndex = index(i, 0, QModelIndex());
+            beginRemoveRows(parentIndex, 0, rootItem->child(i)->childCount()-1);
             rootItem->child(i)->removeChildren(0, rootItem->child(i)->childCount());
+            endRemoveRows();
         } else {
+            beginRemoveRows(QModelIndex(), i, i);
             rootItem->removeChildren(i, 1);
+            endRemoveRows();
         }
     }
-    emit layoutChanged();
 
     if (searchString.count() > 0) {
         ldapSearch.startSearch("*" + searchString + "*");
@@ -186,15 +194,18 @@ void ResourceModel::startSearch()
 
 void ResourceModel::slotLDAPCollectionData(const QList<KLDAP::LdapResultObject> &results)
 {
+    emit layoutAboutToBeChanged();
+
     foundCollection = true;
     ldapCollectionsMap.clear();
     ldapCollections.clear();
 
-    emit layoutAboutToBeChanged();
+    kDebug() <<  "Found ldapCollections";
 
     foreach(const KLDAP::LdapResultObject & result, results) {
         ResourceItem::Ptr item(new ResourceItem(result.object.dn(), headers, *result.client, rootItem));
         item->setLdapObject(result.object);
+
         rootItem->insertChild(rootItem->childCount(), item);
         ldapCollections.insert(item);
 
@@ -211,8 +222,6 @@ void ResourceModel::slotLDAPCollectionData(const QList<KLDAP::LdapResultObject> 
 
 void ResourceModel::slotLDAPSearchData(const QList<KLDAP::LdapResultObject> &results)
 {
-    emit layoutAboutToBeChanged();
-
     foreach(const KLDAP::LdapResultObject & result, results) {
         //Add the found items to all collections, where it is member
         QList<ResourceItem::Ptr> parents = ldapCollectionsMap.values(result.object.dn().toString());
@@ -223,9 +232,14 @@ void ResourceModel::slotLDAPSearchData(const QList<KLDAP::LdapResultObject> &res
         foreach(ResourceItem::Ptr parent, parents) {
             ResourceItem::Ptr item(new ResourceItem(result.object.dn(), headers, *result.client, parent));
             item->setLdapObject(result.object);
+
+            QModelIndex parentIndex;
+            if (parent !=  rootItem) {
+                parentIndex = index(parent->childNumber(), 0, parentIndex);
+            }
+            beginInsertRows(parentIndex, parent->childCount(), parent->childCount());
             parent->insertChild(parent->childCount(), item);
+            endInsertRows();
         }
     }
-
-    emit layoutChanged();
 }
