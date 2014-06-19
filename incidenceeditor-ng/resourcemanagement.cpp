@@ -22,45 +22,71 @@
 #include "resourcemanagement.h"
 #include "ui_resourcemanagement.h"
 #include "resourcemodel.h"
+#include "freebusyitem.h"
 
+//#include "korganizer/korganizer_part.h"
+#include "visualfreebusywidget.h"
+
+#include <akonadi/calendar/freebusymanager.h>
 #include <kldap/ldapobject.h>
 
 #include <QStringList>
 #include <QLabel>
 
+#include <KDebug>
+
+
 using namespace IncidenceEditorNG;
 
 ResourceManagement::ResourceManagement()
 {
-    ui = new Ui::ResourceManagement;
-    ui->setupUi(this);
+
+    mUi = new Ui_resourceManagement;
+
+    QWidget *w = new QWidget( this );
+    mUi->setupUi( w );
+    setMainWidget( w );
+
+    QVariantList list;
+    //QGridLayout *layout = new QGridLayout( resourceCalender );
+    //layout->setSpacing( 0 );
+    //KOrganizerPart *view = new KOrganizerPart(resourceCalender,  this,  list);
+    //resourceCalender = view->topLevelWidget();
+    mModel = new FreeBusyItemModel;
+#ifndef KDEPIM_MOBILE_UI
+    VisualFreeBusyWidget *mVisualWidget = new VisualFreeBusyWidget( mModel, 8, this );
+    mUi->resourceCalender->addWidget( mVisualWidget );
+#endif
 
     QStringList attrs;
     attrs << QLatin1String("cn") << QLatin1String("mail") << QLatin1String("givenname") << QLatin1String("sn");
 
     ResourceModel *model = new ResourceModel(attrs);
-    ui->treeResults->setModel(model);
+    mUi->treeResults->setModel(model);
 
     // This doesn't work till now :( -> that's why i use the clieck signal
-    ui->treeResults->setSelectionMode(QAbstractItemView::SingleSelection);
-    selectionModel = ui->treeResults->selectionModel();
+    mUi->treeResults->setSelectionMode(QAbstractItemView::SingleSelection);
+    selectionModel = mUi->treeResults->selectionModel();
 
-    connect(ui->resourceSearch, SIGNAL(textChanged(const QString&)),
+    connect(mUi->resourceSearch, SIGNAL(textChanged(const QString&)),
             SLOT(slotStartSearch(const QString&)));
 
-    connect(ui->treeResults, SIGNAL(clicked(const QModelIndex &)),
+    connect(mUi->treeResults, SIGNAL(clicked(const QModelIndex &)),
             SLOT(slotShowDetails(const QModelIndex &)));
 
+    Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
+    connect( m, SIGNAL(freeBusyRetrieved(KCalCore::FreeBusy::Ptr,QString)),
+        SLOT(slotInsertFreeBusy(KCalCore::FreeBusy::Ptr,QString)) );
 }
 
 void ResourceManagement::slotStartSearch(const QString &text)
 {
-    ((ResourceModel*)ui->treeResults->model())->startSearch(text);
+    ((ResourceModel*)mUi->treeResults->model())->startSearch(text);
 }
 
 void ResourceManagement::slotShowDetails(const QModelIndex & current)
 {
-    ResourceItem *item = ((ResourceModel*)current.model())->getItem(current);
+    ResourceItem::Ptr item = current.model()->data(current, ResourceModel::Resource).value<ResourceItem::Ptr>();
     showDetails(item->ldapObject());
 }
 
@@ -69,7 +95,7 @@ void ResourceManagement::showDetails(const KLDAP::LdapObject &obj)
 {
     // Clean up formDetails
     QLayoutItem *child;
-    while ((child = ui->formDetails->takeAt(0)) != 0) {
+    while ((child = mUi->formDetails->takeAt(0)) != 0) {
         delete child->widget();
         delete child;
     }
@@ -80,21 +106,24 @@ void ResourceManagement::showDetails(const KLDAP::LdapObject &obj)
         foreach(const QByteArray & value, obj.attributes().value(key)) {
             list << QString::fromUtf8(value);
         }
-        ui->formDetails->addRow(key, new QLabel(list.join("\n")));
+        kDebug() << key <<  list;
+        mUi->formDetails->addRow(key, new QLabel(list.join("\n")));
     }
 
-    /*
-     * TODO: Has to be needed and tested : )
-    KUrl httpUrl;
-    httpUrl.setUser(  userName );
-    httpUrl.setPassword(  password );
-    httpUrl.setHost(  host );
-    httpUrl.setProtocol(  QLatin1String(  "https" ) );
-    httpUrl.setPath(  QLatin1String( "/freebusy/" ) + user + QLatin1String( ".ifb" ) );
+    QString name = QString::fromUtf8(obj.attributes().value("cn")[0]);
+    QString email = QString::fromUtf8(obj.attributes().value("mail")[0]);
+    kDebug() <<  name <<  email;
+    KCalCore::Attendee::Ptr attendee(new KCalCore::Attendee(name,  email));
+    FreeBusyItem::Ptr freebusy( new FreeBusyItem( attendee, this ));
+    mModel->clear();
+    mModel->addItem(freebusy);
+}
 
-    KIO::Job *job = KIO::get(  url, KIO::NoReload, KIO::HideProgressInfo );
-    */
+void ResourceManagement::slotInsertFreeBusy(const KCalCore::FreeBusy::Ptr &fb, const QString &email)
+{
+    kDebug() <<  fb <<  email;
 
 }
+
 
 #include "resourcemanagement.moc"

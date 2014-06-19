@@ -27,15 +27,15 @@
 #include <ldap/ldapclient.h>
 #include <ldap/ldapclientsearch.h>
 
+#include "freebusyitemmodel.h"
+
+# include <KCalCore/FreeBusy>
 #include <KDialog>
 
 #include <QStringList>
 #include <QStringListModel>
 
-namespace Ui
-{
-class ResourceManagement;
-}
+class  Ui_resourceManagement;
 
 namespace IncidenceEditorNG
 {
@@ -54,8 +54,6 @@ private:
      */
     void showDetails(const KLDAP::LdapObject&);
 
-    Ui::ResourceManagement* ui;
-
     QItemSelectionModel *selectionModel;
 
 private slots:
@@ -68,6 +66,12 @@ private slots:
      *
      */
     void slotShowDetails(const QModelIndex & current);
+
+    void slotInsertFreeBusy( const KCalCore::FreeBusy::Ptr &fb, const QString &email );
+
+private:
+    FreeBusyItemModel *mModel;
+    Ui_resourceManagement *mUi;
 };
 
 }

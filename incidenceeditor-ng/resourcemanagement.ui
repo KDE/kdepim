@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ResourceManagement</class>
+ <class>resourceManagement</class>
  <widget class="QWidget" name="resourceManagement">
   <property name="geometry">
    <rect>
@@ -15,7 +15,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <property name="spacing">
-    <number>-1</number>
+    <number>6</number>
    </property>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
@@ -27,6 +27,12 @@
      </item>
      <item>
       <widget class="QTreeView" name="treeResults">
+       <property name="minimumSize">
+        <size>
+         <width>200</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="alternatingRowColors">
         <bool>true</bool>
        </property>
@@ -67,14 +73,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QWidget" name="resourceCalender" native="true">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="resourceCalender"/>
      </item>
     </layout>
    </item>
