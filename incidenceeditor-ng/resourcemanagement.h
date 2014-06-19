@@ -69,6 +69,8 @@ private slots:
 
     void slotInsertFreeBusy( const KCalCore::FreeBusy::Ptr &fb, const QString &email );
 
+    void slotLayoutChanged();
+
 private:
     FreeBusyItemModel *mModel;
     Ui_resourceManagement *mUi;

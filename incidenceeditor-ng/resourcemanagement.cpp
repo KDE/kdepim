@@ -212,6 +212,8 @@ ResourceManagement::ResourceManagement()
     Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
     connect( m, SIGNAL(freeBusyRetrieved(KCalCore::FreeBusy::Ptr,QString)),
         SLOT(slotInsertFreeBusy(KCalCore::FreeBusy::Ptr,QString)) );
+
+    connect(resourcemodel,SIGNAL(layoutChanged()),SLOT(slotLayoutChanged()));
 }
 
 void ResourceManagement::slotStartSearch(const QString &text)
@@ -260,5 +262,11 @@ void ResourceManagement::slotInsertFreeBusy(const KCalCore::FreeBusy::Ptr &fb, c
 
 }
 
+void ResourceManagement::slotLayoutChanged()
+{
+    for(int i = 1; i < mUi->treeResults->model()->columnCount(QModelIndex());i++) {
+        mUi->treeResults->setColumnHidden(i, true);
+    }
+}
 
 #include "resourcemanagement.moc"
