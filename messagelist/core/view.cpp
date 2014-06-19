@@ -2773,7 +2773,7 @@ void View::setExpandItem(const QModelIndex& index)
 
 void View::setQuickSearchClickMessage(const QString &msg)
 {
-    d->mWidget->quickSearch()->setClickMessage(msg);
+    d->mWidget->quickSearch()->setPlaceholderText(msg);
 }
 
 

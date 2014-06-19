@@ -26,7 +26,7 @@
 #include <KLocalizedString>
 #include <KComboBox>
 #include <KLineEdit>
-#include <KPushButton>
+#include <QPushButton>
 #include <QDebug>
 
 #include <QWebElement>

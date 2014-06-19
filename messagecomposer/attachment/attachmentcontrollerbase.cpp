@@ -422,11 +422,11 @@ AttachmentControllerBase::~AttachmentControllerBase()
 void AttachmentControllerBase::createActions()
 {
     // Create the actions.
-    d->attachPublicKeyAction = new KAction( i18n( "Attach &Public Key..." ), this );
+    d->attachPublicKeyAction = new QAction( i18n( "Attach &Public Key..." ), this );
     connect( d->attachPublicKeyAction, SIGNAL(triggered(bool)),
              this, SLOT(showAttachPublicKeyDialog()) );
 
-    d->attachMyPublicKeyAction = new KAction( i18n( "Attach &My Public Key" ), this );
+    d->attachMyPublicKeyAction = new QAction( i18n( "Attach &My Public Key" ), this );
     connect( d->attachMyPublicKeyAction, SIGNAL(triggered(bool)), this, SLOT(attachMyPublicKey()) );
 
     d->attachmentMenu = new KActionMenu( QIcon::fromTheme( QLatin1String( "mail-attachment" ) ), i18n( "Attach" ), this );
@@ -434,7 +434,7 @@ void AttachmentControllerBase::createActions()
 
     d->attachmentMenu->setDelayed(true);
 
-    d->addAction = new KAction( QIcon::fromTheme( QLatin1String( "mail-attachment" ) ), i18n( "&Attach File..." ), this );
+    d->addAction = new QAction( QIcon::fromTheme( QLatin1String( "mail-attachment" ) ), i18n( "&Attach File..." ), this );
     d->addAction->setIconText( i18n( "Attach" ) );
     d->addContextAction = new KAction( QIcon::fromTheme( QLatin1String( "mail-attachment" ) ),
                                        i18n( "Add Attachment..." ), this );
@@ -450,40 +450,40 @@ void AttachmentControllerBase::createActions()
     d->attachmentMenu->addSeparator();
     d->attachmentMenu->addAction(d->addOwnVcardAction);
 
-    d->removeAction = new KAction( QIcon::fromTheme(QLatin1String("edit-delete")), i18n( "&Remove Attachment" ), this );
-    d->removeContextAction = new KAction( QIcon::fromTheme(QLatin1String("edit-delete")), i18n( "Remove" ), this ); // FIXME need two texts. is there a better way?
+    d->removeAction = new QAction( QIcon::fromTheme(QLatin1String("edit-delete")), i18n( "&Remove Attachment" ), this );
+    d->removeContextAction = new QAction( QIcon::fromTheme(QLatin1String("edit-delete")), i18n( "Remove" ), this ); // FIXME need two texts. is there a better way?
     connect( d->removeAction, SIGNAL(triggered(bool)), this, SLOT(removeSelectedAttachments()) );
     connect( d->removeContextAction, SIGNAL(triggered(bool)), this, SLOT(removeSelectedAttachments()) );
 
-    d->openContextAction = new KAction( i18nc( "to open", "Open" ), this );
+    d->openContextAction = new QAction( i18nc( "to open", "Open" ), this );
     connect( d->openContextAction, SIGNAL(triggered(bool)), this, SLOT(openSelectedAttachments()) );
 
-    d->viewContextAction = new KAction( i18nc( "to view", "View" ), this );
+    d->viewContextAction = new QAction( i18nc( "to view", "View" ), this );
     connect( d->viewContextAction, SIGNAL(triggered(bool)), this, SLOT(viewSelectedAttachments()) );
 
-    d->editContextAction = new KAction( i18nc( "to edit", "Edit" ), this );
+    d->editContextAction = new QAction( i18nc( "to edit", "Edit" ), this );
     connect( d->editContextAction, SIGNAL(triggered(bool)), this, SLOT(editSelectedAttachment()) );
 
-    d->editWithContextAction = new KAction( i18n( "Edit With..." ), this );
+    d->editWithContextAction = new QAction( i18n( "Edit With..." ), this );
     connect( d->editWithContextAction, SIGNAL(triggered(bool)), this, SLOT(editSelectedAttachmentWith()) );
 
-    d->saveAsAction = new KAction( QIcon::fromTheme( QLatin1String( "document-save-as" ) ),
+    d->saveAsAction = new QAction( QIcon::fromTheme( QLatin1String( "document-save-as" ) ),
                                    i18n( "&Save Attachment As..." ), this );
-    d->saveAsContextAction = new KAction( QIcon::fromTheme( QLatin1String( "document-save-as" ) ),
+    d->saveAsContextAction = new QAction( QIcon::fromTheme( QLatin1String( "document-save-as" ) ),
                                           i18n( "Save As..." ), this );
     connect( d->saveAsAction, SIGNAL(triggered(bool)),
              this, SLOT(saveSelectedAttachmentAs()) );
     connect( d->saveAsContextAction, SIGNAL(triggered(bool)),
              this, SLOT(saveSelectedAttachmentAs()) );
 
-    d->propertiesAction = new KAction( i18n( "Attachment Pr&operties..." ), this );
-    d->propertiesContextAction = new KAction( i18n( "Properties" ), this );
+    d->propertiesAction = new QAction( i18n( "Attachment Pr&operties..." ), this );
+    d->propertiesContextAction = new QAction( i18n( "Properties" ), this );
     connect( d->propertiesAction, SIGNAL(triggered(bool)),
              this, SLOT(selectedAttachmentProperties()) );
     connect( d->propertiesContextAction, SIGNAL(triggered(bool)),
              this, SLOT(selectedAttachmentProperties()) );
 
-    d->selectAllAction = new KAction( i18n("Select All"), this);
+    d->selectAllAction = new QAction( i18n("Select All"), this);
     connect( d->selectAllAction, SIGNAL(triggered(bool)),
              this, SIGNAL(selectedAllAttachment()) );
 

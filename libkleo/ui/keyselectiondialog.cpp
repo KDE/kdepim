@@ -56,7 +56,7 @@
 #include <kwindowsystem.h>
 #include <kconfig.h>
 #include <kmessagebox.h>
-#include <kpushbutton.h>
+#include <qpushbutton.h>
 #include <kconfiggroup.h>
 #include <qmenu.h>
 #include <klineedit.h>
@@ -181,10 +181,10 @@ namespace {
 
     QString text( const GpgME::Key & key, int col ) const;
     QString toolTip( const GpgME::Key & key, int col ) const;
-    KIcon icon( const GpgME::Key & key, int col ) const;
+    QIcon icon( const GpgME::Key & key, int col ) const;
 
   private:
-    const KIcon mKeyGoodPix, mKeyBadPix, mKeyUnknownPix, mKeyValidPix;
+    const QIcon mKeyGoodPix, mKeyBadPix, mKeyUnknownPix, mKeyValidPix;
     const unsigned int mKeyUsage;
   };
 
@@ -269,9 +269,9 @@ namespace {
               issuer ? Kleo::DN( issuer ).prettyDN() : i18n("unknown") );
   }
 
-  KIcon ColumnStrategy::icon( const GpgME::Key & key, int col ) const {
+  QIcon ColumnStrategy::icon( const GpgME::Key & key, int col ) const {
     if ( col != 0 )
-      return KIcon();
+      return QIcon();
     // this key did not undergo a validating keylisting yet:
     if ( !( key.keyListMode() & GpgME::Validate ) )
       return mKeyUnknownPix;

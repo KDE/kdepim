@@ -143,9 +143,10 @@ ArchiveDialog::ArchiveDialog( const Akonadi::ETMCalendar::Ptr &cal,
            "need to use this dialog box again, except to change the settings." ) );
   radioBG->addButton( mAutoArchiveRB );
 
-  mExpiryTimeNumInput = new KIntNumInput( autoArchiveHBox );
-  mExpiryTimeNumInput->setRange( 1, 500, 1 );
-  mExpiryTimeNumInput->setSliderEnabled( false );
+  mExpiryTimeNumInput = new QSpinBox( autoArchiveHBox );
+  mExpiryTimeNumInput->setRange( 1, 500 );
+  mExpiryTimeNumInput->setSingleStep( 1 );
+
   mExpiryTimeNumInput->setEnabled( false );
   mExpiryTimeNumInput->setValue( 7 );
   mExpiryTimeNumInput->setToolTip(

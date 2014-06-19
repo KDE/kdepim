@@ -109,7 +109,7 @@ void StorageServiceProgressWidget::setBusyIndicator(bool busy)
 
 void StorageServiceProgressWidget::setProgressValue(qint64 done, qint64 total)
 {
-    mProgressInfo->setText(i18n("%1 on %2", KLocale::global()->formatByteSize(done), KGlobal::locale()->formatByteSize(total)));
+    mProgressInfo->setText(i18n("%1 on %2", KLocale::global()->formatByteSize(done), KLocale::global()->formatByteSize(total)));
     if (total > 0)
        mProgressBar->setValue((100*done)/total);
     else

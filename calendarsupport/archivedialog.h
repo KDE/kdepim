@@ -30,7 +30,7 @@
 
 class KComboBox;
 class KDateComboBox;
-class KIntNumInput;
+class QSpinBox;
 class KUrlRequester;
 
 class QCheckBox;
@@ -72,7 +72,7 @@ class CALENDARSUPPORT_EXPORT ArchiveDialog : public KDialog
     QCheckBox *mDeleteCb;
     QRadioButton *mArchiveOnceRB;
     QRadioButton *mAutoArchiveRB;
-    KIntNumInput *mExpiryTimeNumInput;
+    QSpinBox *mExpiryTimeNumInput;
     KComboBox *mExpiryUnitsComboBox;
     QCheckBox *mEvents;
     QCheckBox *mTodos;

@@ -91,7 +91,7 @@ void PimSettingsBackupRestore::backupStart(const QString &filename)
     mAction = Backup;
     mStoreIterator = mStored.constBegin();
     const QDateTime now = QDateTime::currentDateTime();
-    Q_EMIT addInfo(QLatin1Char('[') + KGlobal::locale()->formatDateTime( now ) + QLatin1Char(']'));
+    Q_EMIT addInfo(QLatin1Char('[') + KLocale::global()->formatDateTime( now ) + QLatin1Char(']'));
     Q_EMIT addInfo(i18n("Start to backup data in \'%1\'", mArchiveStorage->filename()));
     Q_EMIT addEndLine();
     //Add version
@@ -253,7 +253,7 @@ void PimSettingsBackupRestore::restoreStart(const QString &filename)
     AbstractImportExportJob::setArchiveVersion(version);
 
     const QDateTime now = QDateTime::currentDateTime();
-    Q_EMIT addInfo(QLatin1Char('[') + KGlobal::locale()->formatDateTime( now ) + QLatin1Char(']'));
+    Q_EMIT addInfo(QLatin1Char('[') + KLocale::global()->formatDateTime( now ) + QLatin1Char(']'));
 
     Q_EMIT addInfo(i18n("Start to restore data from \'%1\'", mArchiveStorage->filename()));
     Q_EMIT addEndLine();

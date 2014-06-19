@@ -1,4 +1,5 @@
 project(importwizard)
+kde_enable_exceptions()
 
 add_subdirectory(icons)
 
@@ -65,8 +66,6 @@ include_directories(${CMAKE_SOURCE_DIR}/mailimporter
                     ${CMAKE_SOURCE_DIR}/messageviewer/
 		    ${CMAKE_SOURCE_DIR}/libkdepim/
 )
-
-kde_enable_exceptions()
 
 ki18n_wrap_ui(importwizard_SRCS 
                   ui/selectprogrampage.ui

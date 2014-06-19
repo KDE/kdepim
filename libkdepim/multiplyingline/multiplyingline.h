@@ -27,7 +27,6 @@
 
 #include "kdepim_export.h"
 
-#include <KGlobalSettings>
 #include <KCompletion>
 #include <QWidget>
 #include <QSharedPointer>

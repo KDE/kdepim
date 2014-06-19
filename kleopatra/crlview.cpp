@@ -66,7 +66,7 @@ CRLView::CRLView( QWidget* parent )
   QHBoxLayout* hbLayout = new QHBoxLayout();
   topLayout->addItem( hbLayout );
 
-  _updateButton = new KPushButton( i18n("&Update"), this );
+  _updateButton = new QPushButton( i18n("&Update"), this );
   _closeButton = new KPushButton( KStandardGuiItem::close(), this );
 
   hbLayout->addWidget( _updateButton );

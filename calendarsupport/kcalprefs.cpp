@@ -200,7 +200,7 @@ bool KCalPrefs::usrWriteConfig()
   KConfigGroup defaultCalendarConfig( config(), "Calendar" );
   defaultCalendarConfig.writeEntry( "Default Calendar", defaultCalendarId() );
 
-  return KConfigSkeleton::usrWriteConfig();
+  return KConfigSkeleton::usrSave();
 }
 
 QString KCalPrefs::fullName()

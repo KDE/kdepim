@@ -64,7 +64,7 @@
 #include <kdialog.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
-#include <kpushbutton.h>
+#include <qpushbutton.h>
 #include <KIcon>
 
 // Qt
@@ -116,11 +116,11 @@ void Kleo::KeyRequester::init()
   mLabel->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
 
   // the button to unset any key:
-  mEraseButton = new KPushButton( this );
+  mEraseButton = new QPushButton( this );
   mEraseButton->setAutoDefault( false );
   mEraseButton->setSizePolicy( QSizePolicy( QSizePolicy::Minimum,
                                             QSizePolicy::Minimum ) );
-  mEraseButton->setIcon( KIcon( QApplication::isRightToLeft() ? QLatin1String("edit-clear-locationbar-ltr") : QLatin1String("edit-clear-locationbar-rtl") ) );
+  mEraseButton->setIcon( QIcon::fromTheme( QApplication::isRightToLeft() ? QLatin1String("edit-clear-locationbar-ltr") : QLatin1String("edit-clear-locationbar-rtl") ) );
   mEraseButton->setToolTip( i18n("Clear") );
 
   // the button to call the KeySelectionDialog:

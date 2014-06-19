@@ -369,7 +369,7 @@ bool StorageServiceTreeWidget::uploadFileToService()
         qDebug()<<" maximumLimit"<<maximumLimit;
         QFileInfo info(filename);
         if (maximumLimit > 0 && (info.size() > maximumLimit)) {
-            KMessageBox::error(this, i18n("File size (%1) is larger than limit (%2)", KLocale::global()->formatByteSize(info.size(),1), KGlobal::locale()->formatByteSize(maximumLimit,1)));
+            KMessageBox::error(this, i18n("File size (%1) is larger than limit (%2)", KLocale::global()->formatByteSize(info.size(),1), KLocale::global()->formatByteSize(maximumLimit,1)));
             return false;
         }
         if (filename == QLatin1String(".") || filename == QLatin1String("..")) {

@@ -26,7 +26,7 @@
 
 class KMessageWidget;
 class QLineEdit;
-class KPushButton;
+class QPushButton;
 namespace Akonadi {
 class CollectionComboBox;
 }
@@ -72,8 +72,8 @@ private:
     QLineEdit *mNoteEdit;
     Akonadi::CollectionComboBox *mCollectionCombobox;
     KMessageWidget *mMsgWidget;
-    KPushButton *mSaveButton;
-    KPushButton *mOpenEditorButton;
+    QPushButton *mSaveButton;
+    QPushButton *mOpenEditorButton;
 };
 }
 #endif // TODOEDIT_H

@@ -774,7 +774,7 @@ void KPrefsWidManager::writeWidConfig()
         (*it)->writeConfig();
     }
 
-    mPrefs->writeConfig();
+    mPrefs->save();
 }
 
 KPrefsDialog::KPrefsDialog( KConfigSkeleton *prefs, QWidget *parent, bool modal )

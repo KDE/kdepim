@@ -23,8 +23,8 @@
 #include <QIcon>
 #include <QDebug>
 #include <KMessageWidget>
+#include <QPushButton>
 #include <KPushButton>
-
 #include <QHBoxLayout>
 #include <QEvent>
 #include <QKeyEvent>
@@ -94,7 +94,7 @@ TodoEdit::TodoEdit(QWidget *parent)
     vbox->addLayout(hbox);
 
     hbox->addStretch(1);
-    mSaveButton = new KPushButton(QIcon::fromTheme(QLatin1String("task-new")), i18n("&Save"));
+    mSaveButton = new QPushButton(QIcon::fromTheme(QLatin1String("task-new")), i18n("&Save"));
     mSaveButton->setObjectName(QLatin1String("save-button"));
     mSaveButton->setEnabled(false);
 #ifndef QT_NO_ACCESSIBILITY
@@ -103,7 +103,7 @@ TodoEdit::TodoEdit(QWidget *parent)
     connect(mSaveButton, SIGNAL(clicked(bool)), this, SLOT(slotReturnPressed()));
     hbox->addWidget(mSaveButton);
 
-    mOpenEditorButton = new KPushButton(i18n("Open &editor..."));
+    mOpenEditorButton = new QPushButton(i18n("Open &editor..."));
     mOpenEditorButton->setObjectName(QLatin1String("open-editor-button"));
 #ifndef QT_NO_ACCESSIBILITY
     mOpenEditorButton->setAccessibleDescription(i18n("Open todo editor, where more details can be changed."));

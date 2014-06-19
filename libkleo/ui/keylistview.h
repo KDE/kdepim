@@ -40,7 +40,7 @@
 #include <QtCore/QByteArray>
 #include <QTreeWidget>
 #include <QHeaderView>
-#include <KIcon>
+#include <QIcon>
 
 class QPainter;
 class QColorGroup;
@@ -112,7 +112,7 @@ namespace Kleo {
 
       virtual QString text( const GpgME::Key & key, int column ) const = 0;
       virtual QString toolTip( const GpgME::Key & key, int column ) const;
-      virtual KIcon icon( const GpgME::Key &, int ) const { return KIcon(); }
+      virtual QIcon icon( const GpgME::Key &, int ) const { return QIcon(); }
       virtual int compare( const GpgME::Key & key1, const GpgME::Key & key2, const int column ) const;
     };
 

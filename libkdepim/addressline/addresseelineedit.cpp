@@ -984,7 +984,7 @@ AddresseeLineEdit::AddresseeLineEdit( QWidget *parent, bool enableCompletion )
     : KLineEdit( parent ), d( new Private( this, enableCompletion ) )
 {
     setObjectName( newLineEditObjectName() );
-    setClickMessage( QString() );
+    setPlaceholderText( QString() );
 
     d->init();
 }

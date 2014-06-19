@@ -242,7 +242,7 @@ bool BaseConfig::usrWriteConfig()
   agendaViewConfig.writeEntry<QByteArray>( "agendaViewItemIcons", agendaIconArray );
   monthViewConfig.writeEntry<QByteArray>( "monthViewItemIcons", monthIconArray );
 
-  return KConfigSkeleton::usrWriteConfig();
+  return KConfigSkeleton::usrSave();
 }
 
 void BaseConfig::setTimeZoneDefault()
