@@ -24,7 +24,7 @@
 
 using namespace IncidenceEditorNG;
 
-ResourceItem::ResourceItem(const KLDAP::LdapDN &dn, QStringList attrs, const KLDAP::LdapClient &ldapClient, ResourceItem *parent)
+ResourceItem::ResourceItem(const KLDAP::LdapDN &dn, QStringList attrs, const KLDAP::LdapClient &ldapClient, ResourceItem::Ptr parent)
     : dn(dn)
     , attrs(attrs)
     , mLdapClient(0, this)
@@ -53,11 +53,10 @@ ResourceItem::ResourceItem(const KLDAP::LdapDN &dn, QStringList attrs, const KLD
 
 ResourceItem::~ResourceItem()
 {
-    qDeleteAll(childItems);
 }
 
 
-ResourceItem *ResourceItem::child(int number)
+ResourceItem::Ptr ResourceItem::child(int number)
 {
     return childItems.value(number);
 }
@@ -71,7 +70,7 @@ int ResourceItem::childCount() const
 int ResourceItem::childNumber() const
 {
     if (parentItem) {
-        return parentItem->childItems.indexOf(const_cast<ResourceItem*>(this));
+        return parentItem->childItems.indexOf(me);
     }
 
     return 0;
@@ -87,18 +86,19 @@ QVariant ResourceItem::data(int column) const
     return itemData.value(column);
 }
 
-bool ResourceItem::insertChild(int position, ResourceItem *item)
+bool ResourceItem::insertChild(int position, ResourceItem::Ptr item)
 {
     if (position < 0 || position > childItems.size()) {
         return false;
     }
 
+    item->me = item;
     childItems.insert(position, item);
 
     return true;
 }
 
-ResourceItem *ResourceItem::parent()
+ResourceItem::Ptr ResourceItem::parent()
 {
     return parentItem;
 }
@@ -110,7 +110,7 @@ bool ResourceItem::removeChildren(int position, int count)
     }
 
     for (int row = 0; row < count; ++row) {
-        delete childItems.takeAt(position);
+        childItems.removeAt(position);
     }
 
     return true;
