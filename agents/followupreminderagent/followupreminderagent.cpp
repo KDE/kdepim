@@ -52,9 +52,19 @@ FollowUpReminderAgent::~FollowUpReminderAgent()
 {
 }
 
-void FollowUpReminderAgent::setEnableAgent(bool b)
+void FollowUpReminderAgent::setEnableAgent(bool enabled)
 {
-    FollowUpReminderAgentSettings::self()->setEnabled(b);
+    if (FollowUpReminderAgentSettings::self()->enabled() == enabled)
+        return;
+
+    FollowUpReminderAgentSettings::self()->setEnabled(enabled);
+    FollowUpReminderAgentSettings::self()->writeConfig();
+    if (enabled) {
+        mManager->load();
+    } else {
+        //TODO
+        //mManager->stopAll();
+    }
 }
 
 bool FollowUpReminderAgent::enabledAgent() const
