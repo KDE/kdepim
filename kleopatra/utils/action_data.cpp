@@ -36,7 +36,7 @@
 
 #include <KToggleAction>
 #include <KActionCollection>
-#include <KAction>
+#include <QAction>
 #include <KIcon>
 #include <KShortcut>
 QAction * Kleo::make_action_from_data( const action_data & ad, QObject * parent ) {

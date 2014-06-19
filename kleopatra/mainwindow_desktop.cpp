@@ -64,7 +64,7 @@
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <KStandardAction>
-#include <KAction>
+#include <QAction>
 #include <K4AboutData>
 #include <KMessageBox>
 #include <KStandardGuiItem>
@@ -238,7 +238,7 @@ private:
         SearchBar * searchBar;
         explicit UI( MainWindow * q );
     } ui;
-    KAction *focusToClickSearchAction;
+    QAction *focusToClickSearchAction;
 };
 
 MainWindow::Private::UI::UI(MainWindow *q)
@@ -355,7 +355,7 @@ void MainWindow::Private::setupActions() {
     KStandardAction::keyBindings( q, SLOT(editKeybindings()), coll );
     KStandardAction::preferences( qApp, SLOT(openOrRaiseConfigDialog()), coll );
 
-    focusToClickSearchAction = new KAction(i18n("Set Focus to Quick Search"), q);
+    focusToClickSearchAction = new QAction(i18n("Set Focus to Quick Search"), q);
     focusToClickSearchAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Q ) );
     coll->addAction( QLatin1String("focus_to_quickseach"), focusToClickSearchAction );
     connect( focusToClickSearchAction, SIGNAL(triggered(bool)), q, SLOT(slotFocusQuickSearch()) );

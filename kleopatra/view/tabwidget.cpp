@@ -50,7 +50,7 @@
 #include <KTabWidget>
 #include <KConfigGroup>
 #include <KConfig>
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KInputDialog>
 
