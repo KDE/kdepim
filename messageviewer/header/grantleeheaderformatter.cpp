@@ -149,11 +149,11 @@ QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::T
 
     if ( GlobalSettings::self()->showUserAgent() ) {
         if ( message->headerByType("User-Agent") ) {
-            headerObject.insert( QLatin1String( "useragent" ), MessageViewer::HeaderStyleUtil::strToHtml( QLatin1String(message->headerByType("User-Agent")->as7BitString() )) );
+            headerObject.insert( QLatin1String( "useragent" ), MessageViewer::HeaderStyleUtil::strToHtml( message->headerByType("User-Agent")->asUnicodeString() ) );
         }
 
         if ( message->headerByType("X-Mailer") ) {
-            headerObject.insert( QLatin1String( "xmailer" ), MessageViewer::HeaderStyleUtil::strToHtml( QLatin1String(message->headerByType("X-Mailer")->as7BitString() )) );
+            headerObject.insert( QLatin1String( "xmailer" ), MessageViewer::HeaderStyleUtil::strToHtml( message->headerByType("X-Mailer")->asUnicodeString() ) );
         }
     }
 

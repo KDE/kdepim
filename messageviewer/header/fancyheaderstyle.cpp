@@ -186,7 +186,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
                 headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
                                                      "<td>%2</td></tr>\n")
                                  .arg(i18n("User-Agent: "))
-                                 .arg( MessageViewer::HeaderStyleUtil::strToHtml( QLatin1String(message->headerByType("User-Agent")->as7BitString() )) ) );
+                                 .arg( MessageViewer::HeaderStyleUtil::strToHtml( message->headerByType("User-Agent")->asUnicodeString() ) ) );
             }
         }
 
@@ -195,7 +195,7 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
                 headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
                                                      "<td>%2</td></tr>\n")
                                  .arg(i18n("X-Mailer: "))
-                                 .arg( MessageViewer::HeaderStyleUtil::strToHtml( QLatin1String(message->headerByType("X-Mailer")->as7BitString() ) ) ) );
+                                 .arg( MessageViewer::HeaderStyleUtil::strToHtml( message->headerByType("X-Mailer")->asUnicodeString() ) ) );
             }
         }
     }
