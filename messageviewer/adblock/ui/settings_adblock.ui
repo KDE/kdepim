@@ -88,15 +88,12 @@
           </widget>
          </item>
          <item>
-          <widget class="KIntSpinBox" name="spinBox">
+          <widget class="KPluralHandlingSpinBox" name="spinBox">
            <property name="minimumSize">
             <size>
              <width>120</width>
              <height>0</height>
             </size>
-           </property>
-           <property name="suffix">
-            <string/>
            </property>
            <property name="minimum">
             <number>1</number>
@@ -138,7 +135,7 @@
        <item row="7" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
-          <widget class="KLineEdit" name="addFilterLineEdit"/>
+          <widget class="QLineEdit" name="addFilterLineEdit"/>
          </item>
          <item>
           <widget class="QToolButton" name="insertButton">
@@ -238,14 +235,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KIntSpinBox</class>
+   <class>KPluralHandlingSpinBox</class>
    <extends>QSpinBox</extends>
-   <header>knuminput.h</header>
+   <header>KPluralHandlingSpinBox</header>
   </customwidget>
   <customwidget>
    <class>KListWidget</class>
