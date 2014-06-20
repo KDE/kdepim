@@ -20,7 +20,7 @@
 #define __MESSAGELIST_UTILS_AGGREGATIONCONFIGBUTTON_H__
 
 #include <messagelist/messagelist_export.h>
-#include <KPushButton>
+#include <QPushButton>
 
 namespace MessageList
 {
@@ -35,7 +35,7 @@ class AggregationConfigButtonPrivate;
  * A specialized KPushButton that displays the aggregation
  * configure dialog when pressed.
  */
-class MESSAGELIST_EXPORT AggregationConfigButton : public KPushButton
+class MESSAGELIST_EXPORT AggregationConfigButton : public QPushButton
 {
     Q_OBJECT
 
