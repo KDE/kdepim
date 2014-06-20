@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,34 +16,20 @@
 */
 
 
-#ifndef STORAGEAUTHVIEWWIDGET_H
-#define STORAGEAUTHVIEWWIDGET_H
+#ifndef STORAGEAUTHWEBVIEW_H
+#define STORAGEAUTHWEBVIEW_H
 
-#include <QWidget>
-#include <QUrl>
-class QProgressBar;
+#include <QWebView>
 namespace PimCommon {
-class StorageAuthWebView;
-class StorageAuthViewWidget : public QWidget
+class StorageAuthWebView : public QWebView
 {
     Q_OBJECT
 public:
-    explicit StorageAuthViewWidget(QWidget *parent=0);
-    ~StorageAuthViewWidget();
+    explicit StorageAuthWebView(QWidget *parent=0);
+    ~StorageAuthWebView();
 
-    void setUrl(const QUrl &url);
-
-Q_SIGNALS:
-    void urlChanged(const QUrl &);
-
-private slots:
-    void slotLoadStarted();
-    void slotLoadFinished(bool success);
-
-private:
-    StorageAuthWebView *mWebView;
-    QProgressBar *mProgressBar;
+protected:
+    void contextMenuEvent( QContextMenuEvent *);
 };
 }
-
-#endif // STORAGEAUTHVIEWWIDGET_H
+#endif // STORAGEAUTHWEBVIEW_H

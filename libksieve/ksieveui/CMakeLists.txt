@@ -51,6 +51,7 @@ set(ksieveui_editor_LIB_SRCS
   editor/sieveeditortabwidget.cpp
   editor/sieveeditorutil.cpp
   editor/sieveeditorloadprogressindicator.cpp
+  editor/sieveeditorwebview.cpp
 )
 
 set(ksieveui_autocreatescripts_LIB_SRCS
