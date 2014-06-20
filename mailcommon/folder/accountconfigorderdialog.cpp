@@ -165,7 +165,7 @@ void AccountConfigOrderDialog::init()
                     instanceList<<instance.identifier();
                     InstanceStruct instanceStruct;
                     instanceStruct.name = instance.name();
-                    if (identifier.startsWith(IMAP_RESOURCE_IDENTIFIER) || identifier.startsWith(KOLAB_RESOURCE_IDENTIFIER)) {
+                    if (PimCommon::Util::isImapResource(identifier)) {
                         instanceStruct.name += QLatin1String(" (IMAP)");
                     } else if (identifier.startsWith(QLatin1String("akonadi_maildir_resource"))) {
                         instanceStruct.name += QLatin1String(" (Maildir)");

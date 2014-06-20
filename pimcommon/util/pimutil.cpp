@@ -118,3 +118,7 @@ QString PimCommon::Util::loadToFile(const QString &filter, QWidget *parent, cons
     return result;
 }
 
+bool PimCommon::Util::isImapResource(const QString &identifier)
+{
+    return (identifier.contains(KOLAB_RESOURCE_IDENTIFIER) || identifier.contains(IMAP_RESOURCE_IDENTIFIER));
+}

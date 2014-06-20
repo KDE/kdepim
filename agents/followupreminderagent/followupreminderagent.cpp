@@ -40,22 +40,31 @@ FollowUpReminderAgent::FollowUpReminderAgent(const QString &id)
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/FollowUpReminder" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.FollowUpReminder" ) );
     mManager = new FollowUpReminderManager(this);
-    if (FollowUpReminderAgentSettings::enabled()) {
-        mManager->load();
-    }
     changeRecorder()->itemFetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
     changeRecorder()->itemFetchScope().setCacheOnly(true);
     changeRecorder()->fetchCollection( true );
-    changeRecorder()->setChangeRecordingEnabled( false );
+    if (FollowUpReminderAgentSettings::enabled()) {
+        mManager->load();
+    }
 }
 
 FollowUpReminderAgent::~FollowUpReminderAgent()
 {
 }
 
-void FollowUpReminderAgent::setEnableAgent(bool b)
+void FollowUpReminderAgent::setEnableAgent(bool enabled)
 {
-    FollowUpReminderAgentSettings::self()->setEnabled(b);
+    if (FollowUpReminderAgentSettings::self()->enabled() == enabled)
+        return;
+
+    FollowUpReminderAgentSettings::self()->setEnabled(enabled);
+    FollowUpReminderAgentSettings::self()->writeConfig();
+    if (enabled) {
+        mManager->load();
+    } else {
+        //TODO
+        //mManager->stopAll();
+    }
 }
 
 bool FollowUpReminderAgent::enabledAgent() const
@@ -86,6 +95,9 @@ void FollowUpReminderAgent::configure( WId windowId )
 
 void FollowUpReminderAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
+    if (!enabledAgent())
+        return;
+
     if ( item.mimeType() != KMime::Message::mimeType() ) {
         qDebug() << "MailFilterAgent::itemAdded called for a non-message item!";
         return;

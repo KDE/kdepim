@@ -368,7 +368,7 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
 
     // Only do make this settable, if the IMAP resource is enabled
     // and it's not the personal folders (those must not be changed)
-    if ( collection.resource().contains( IMAP_RESOURCE_IDENTIFIER ) || collection.resource().contains( KOLAB_RESOURCE_IDENTIFIER ) ) {
+    if ( PimCommon::Util::isImapResource(collection.resource()) ) {
         ++row;
         label = new QLabel( i18n( "&Folder contents:" ), this );
         gl->addWidget( label, row, 0 );
@@ -433,7 +433,7 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
         mIncidencesForComboBox = 0;
     }
 
-    if ( collection.resource().contains( IMAP_RESOURCE_IDENTIFIER ) || collection.resource().contains( KOLAB_RESOURCE_IDENTIFIER ) ) {
+    if ( PimCommon::Util::isImapResource(collection.resource()) ) {
         mSharedSeenFlagsCheckBox = new QCheckBox( this );
         mSharedSeenFlagsCheckBox->setText( i18n( "Share unread state with all users" ) );
         mSharedSeenFlagsCheckBox->setChecked( sharedSeen );
@@ -502,7 +502,7 @@ void CollectionGeneralPage::save( Collection &collection )
                                       nameFolder.contains( QLatin1Char( '/' ) ) ||
                                       nameFolder.isEmpty());
 
-            if ( mIsResourceFolder && (collection.resource().contains( IMAP_RESOURCE_IDENTIFIER ) || collection.resource().contains( KOLAB_RESOURCE_IDENTIFIER ) )) {
+            if ( mIsResourceFolder && (PimCommon::Util::isImapResource(collection.resource()))) {
                 collection.setName( nameFolder );
                 Akonadi::AgentInstance instance =
                         Akonadi::AgentManager::self()->instance( collection.resource() );
