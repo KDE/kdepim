@@ -50,6 +50,7 @@ set(libpimcommon_storageservice_SRCS
   storageservice/authdialog/storageauthviewwidget.cpp
   storageservice/authdialog/storageauthviewdialog.cpp
   storageservice/authdialog/logindialog.cpp
+  storageservice/authdialog/storageauthwebview.cpp
 
   storageservice/hubic/hubicstorageservice.cpp
   storageservice/hubic/hubicjob.cpp

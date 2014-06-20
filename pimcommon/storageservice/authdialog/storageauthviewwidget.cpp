@@ -17,6 +17,7 @@
 
 
 #include "storageauthviewwidget.h"
+#include "storageauthwebview.h"
 
 #include <QWebView>
 #include <QVBoxLayout>
@@ -30,7 +31,7 @@ StorageAuthViewWidget::StorageAuthViewWidget(QWidget *parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     lay->setMargin(0);
-    mWebView = new QWebView;
+    mWebView = new StorageAuthWebView;
     mProgressBar = new QProgressBar;
     mProgressBar->hide();
     connect(mWebView, SIGNAL(urlChanged(QUrl)), this, SIGNAL(urlChanged(QUrl)));
