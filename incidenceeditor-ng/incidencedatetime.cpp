@@ -112,9 +112,8 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   lineEdits << mUi->mStartDateEdit->lineEdit() << mUi->mEndDateEdit->lineEdit()
             << mUi->mStartTimeEdit->lineEdit() << mUi->mEndTimeEdit->lineEdit();
   foreach ( QLineEdit *lineEdit, lineEdits ) {
-    KLineEdit *klineEdit = qobject_cast<KLineEdit*>( lineEdit );
-    if ( klineEdit ) {
-      klineEdit->setClearButtonShown( false );
+    if ( lineEdit ) {
+      lineEdit->setClearButtonEnabled( false );
     }
   }
 

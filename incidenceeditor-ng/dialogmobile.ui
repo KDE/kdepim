@@ -92,7 +92,7 @@
     </widget>
    </item>
    <item row="1" column="1" colspan="3">
-    <widget class="KLineEdit" name="mSummaryEdit">
+    <widget class="QLineEdit" name="mSummaryEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -133,7 +133,7 @@
     </widget>
    </item>
    <item row="2" column="1" colspan="3">
-    <widget class="KLineEdit" name="mLocationEdit">
+    <widget class="QLineEdit" name="mLocationEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -535,11 +535,6 @@
    <class>KDateComboBox</class>
    <extends>QComboBox</extends>
    <header>kdatecombobox.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
   </customwidget>
   <customwidget>
    <class>KComboBox</class>

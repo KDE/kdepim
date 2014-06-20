@@ -95,9 +95,8 @@ IncidenceRecurrence::IncidenceRecurrence( IncidenceDateTime *dateTime, Ui::Event
   QList<QLineEdit*> lineEdits;
   lineEdits << mUi->mExceptionDateEdit->lineEdit() << mUi->mRecurrenceEndDate->lineEdit();
   foreach( QLineEdit *lineEdit, lineEdits ) {
-    KLineEdit *klineEdit = qobject_cast<KLineEdit*>( lineEdit );
-    if ( klineEdit )
-        klineEdit->setClearButtonShown( false );
+    if ( lineEdit )
+        lineEdit->setClearButtonEnabled( false );
   }
 #endif
 

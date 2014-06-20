@@ -116,7 +116,7 @@ private:
 
             saveAsPB->hide(); // ### not yet implemented in LookupCertificatesCommand
 
-            findED->setClearButtonShown( true );
+            findED->setClearButtonEnabled( true );
 
             importPB()->setText( i18n("Import") );
             importPB()->setEnabled( false );

@@ -127,7 +127,7 @@ You can set more options in the Advanced tab.</string>
      </widget>
     </item>
     <item row="7" column="1" colspan="2">
-     <widget class="KLineEdit" name="txtUser"/>
+     <widget class="QLineEdit" name="txtUser"/>
     </item>
     <item row="8" column="0">
      <widget class="QLabel" name="label_3">
@@ -201,7 +201,7 @@ You can set more options in the Advanced tab.</string>
      <widget class="KSeparator" name="kseparator_4"/>
     </item>
     <item row="4" column="1" colspan="2">
-     <widget class="KLineEdit" name="txtTitle"/>
+     <widget class="QLineEdit" name="txtTitle"/>
     </item>
    </layout>
   </widget>
