@@ -35,7 +35,6 @@
 #include <akonadi/collectionpropertiespage.h>
 #include "pimcommon_export.h"
 
-class KPushButton;
 class KHBox;
 
 namespace PimCommon {
@@ -64,10 +63,6 @@ private:
     PimCommon::AclManager *mAclManager;
     // The widget containing the ACL widgets (listview and buttons)
     KHBox* mACLWidget;
-
-    KPushButton* mAddACL;
-    KPushButton* mEditACL;
-    KPushButton* mRemoveACL;
 };
 AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY( CollectionAclPageFactory, CollectionAclPage )
 }
