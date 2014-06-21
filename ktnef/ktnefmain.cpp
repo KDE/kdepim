@@ -107,7 +107,7 @@ void KTNEFMain::setupActions()
   // File menu
   KStandardAction::open( this, SLOT(openFile()), actionCollection() );
 
-  mOpenRecentFileAction = KStandardAction::openRecent(this, SLOT(openRecentFile(KUrl)), actionCollection());
+  mOpenRecentFileAction = KStandardAction::openRecent(this, SLOT(openRecentFile(QUrl)), actionCollection());
 
   // Action menu
   QAction *openAction = actionCollection()->addAction( QLatin1String("view_file") );
@@ -237,7 +237,7 @@ void KTNEFMain::openFile()
   }
 }
 
-void KTNEFMain::openRecentFile(const KUrl &url)
+void KTNEFMain::openRecentFile(const QUrl &url)
 {
     loadFile(url.path());
 }

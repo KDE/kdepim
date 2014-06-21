@@ -65,7 +65,7 @@ class KTNEFMain : public KXmlGuiWindow
     void viewDoubleClicked( QTreeWidgetItem * );
     void viewDragRequested( const QList<KTNEFAttach *> &list );
     void slotConfigureKeys();
-    void openRecentFile(const KUrl&);
+    void openRecentFile(const QUrl&);
 
 //  protected:
 //    void closeEvent( QCloseEvent *e );
