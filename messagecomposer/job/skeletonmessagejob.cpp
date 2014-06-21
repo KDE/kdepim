@@ -135,6 +135,18 @@ void SkeletonMessageJobPrivate::doStart()
         message->setHeader( date );
     }
 
+    // Fcc:
+    if (!infoPart->fcc().isEmpty()) {
+        KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Fcc", message, infoPart->fcc(), "utf-8" );
+        message->setHeader( header );
+    }
+
+    //Transport:
+    if (infoPart->transportId() > -1) {
+        KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Transport", message, QString::number( infoPart->transportId() ), "utf-8" );
+        message->setHeader( header );
+    }
+
     // Message-ID
     {
         KMime::Headers::MessageID *messageId = new KMime::Headers::MessageID();

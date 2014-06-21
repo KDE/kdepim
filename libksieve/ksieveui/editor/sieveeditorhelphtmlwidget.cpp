@@ -17,7 +17,7 @@
 
 #include "sieveeditorhelphtmlwidget.h"
 #include "sieveeditorloadprogressindicator.h"
-#include <QWebView>
+#include "sieveeditorwebview.h"
 #include <QVBoxLayout>
 
 using namespace KSieveUi;
@@ -28,7 +28,7 @@ SieveEditorHelpHtmlWidget::SieveEditorHelpHtmlWidget(QWidget *parent)
     mProgressIndicator = new SieveEditorLoadProgressIndicator(this);
     connect(mProgressIndicator, SIGNAL(pixmapChanged(QPixmap)), this, SLOT(slotPixmapChanged(QPixmap)));
     connect(mProgressIndicator, SIGNAL(loadFinished(bool)), this, SLOT(slotLoadFinished(bool)));
-    mWebView = new QWebView;
+    mWebView = new SieveEditorWebView;
     connect(mWebView, SIGNAL(titleChanged(QString)), this, SLOT(slotTitleChanged(QString)));
     connect(mWebView, SIGNAL(loadStarted()), this, SLOT(slotLoadStarted()));
     connect(mWebView, SIGNAL(loadFinished(bool)), this, SLOT(slotFinished(bool)));

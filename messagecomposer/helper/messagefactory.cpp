@@ -319,7 +319,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
     }
 
     if ( m_origMsg->hasHeader( "X-KMail-EncryptActionEnabled" ) &&
-         m_origMsg->headerByType( "X-KMail-EncryptActionEnabled" )->as7BitString() == "true" ) {
+         m_origMsg->headerByType( "X-KMail-EncryptActionEnabled" )->as7BitString().contains( "true" ) ) {
         msg->setHeader( new KMime::Headers::Generic( "X-KMail-EncryptActionEnabled", msg.get(), QLatin1String( "true" ), "utf-8" ) );
     }
     msg->assemble();

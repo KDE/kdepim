@@ -19,9 +19,9 @@
 #define SIEVEEDITORHELPHTMLWIDGET_H
 
 #include <QWidget>
-class QWebView;
 
 namespace KSieveUi {
+class SieveEditorWebView;
 class SieveEditorLoadProgressIndicator;
 class SieveEditorHelpHtmlWidget : public QWidget
 {
@@ -46,7 +46,7 @@ private slots:
     void slotLoadFinished(bool success);
 private:
     QString mVariableName;
-    QWebView *mWebView;
+    SieveEditorWebView *mWebView;
     SieveEditorLoadProgressIndicator *mProgressIndicator;
 };
 }
