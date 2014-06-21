@@ -154,7 +154,7 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
 
 
     KStandardAction::quit( this, SLOT(close()), ac );
-    mRecentFilesAction = KStandardAction::openRecent(this, SLOT(slotRestoreFile(KUrl)), ac);
+    mRecentFilesAction = KStandardAction::openRecent(this, SLOT(slotRestoreFile(QUrl)), ac);
 
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup groupConfig = config->group( QLatin1String("Recent File") );
@@ -170,7 +170,7 @@ void PimSettingExporterWindow::updateActions(bool inAction)
     mShowArchiveInformationsAction->setEnabled(!inAction);
 }
 
-void PimSettingExporterWindow::slotRestoreFile(const KUrl &url)
+void PimSettingExporterWindow::slotRestoreFile(const QUrl &url)
 {
     if (!url.isEmpty()) {
         loadData(url.path());

@@ -45,7 +45,7 @@ private Q_SLOTS:
     void slotAddEndLine();
     void slotSaveLog();
     void slotShowStructureInfos();
-    void slotRestoreFile(const KUrl &url);
+    void slotRestoreFile(const QUrl &url);
     void slotShowArchiveInformations();
 
 private:
