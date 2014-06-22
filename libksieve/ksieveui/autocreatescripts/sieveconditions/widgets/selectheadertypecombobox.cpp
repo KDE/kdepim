@@ -137,7 +137,8 @@ void SelectHeadersWidget::addNewHeader(const QString &header)
 
     QListWidgetItem *item = new QListWidgetItem(header, this);
     item->setData(HeaderId, header);
-    item->setCheckState(Qt::Unchecked);
+    item->setCheckState(Qt::Checked);
+    scrollToItem(item);
 }
 
 void SelectHeadersWidget::setListHeaders(const QMap<QString, QString> &lst, const QStringList &selectedHeaders)
@@ -261,14 +262,21 @@ QString SelectHeaderTypeComboBox::code() const
 void SelectHeaderTypeComboBox::setCode(const QString &code)
 {
     QMapIterator<QString, QString> i(mHeaderMap);
+    bool foundHeaders = false;
     while (i.hasNext()) {
         i.next();
         if (i.key() == code) {
             const int index = findData(i.key());
             setCurrentIndex(index);
             lineEdit()->setText(i.value());
+            foundHeaders = true;
             break;
         }
+    }
+    //If not found select last combobox item
+    if (!foundHeaders) {
+        setCurrentIndex(count()-1);
+        lineEdit()->setText(code);
     }
     mCode = code;
 }
