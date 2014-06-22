@@ -137,7 +137,8 @@ void SelectHeadersWidget::addNewHeader(const QString &header)
 
     QListWidgetItem *item = new QListWidgetItem(header, this);
     item->setData(HeaderId, header);
-    item->setCheckState(Qt::Unchecked);
+    item->setCheckState(Qt::Checked);
+    scrollToItem(item);
 }
 
 void SelectHeadersWidget::setListHeaders(const QMap<QString, QString> &lst, const QStringList &selectedHeaders)
