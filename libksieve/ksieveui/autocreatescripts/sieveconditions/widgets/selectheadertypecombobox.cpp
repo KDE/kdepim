@@ -261,14 +261,21 @@ QString SelectHeaderTypeComboBox::code() const
 void SelectHeaderTypeComboBox::setCode(const QString &code)
 {
     QMapIterator<QString, QString> i(mHeaderMap);
+    bool foundHeaders = false;
     while (i.hasNext()) {
         i.next();
         if (i.key() == code) {
             const int index = findData(i.key());
             setCurrentIndex(index);
             lineEdit()->setText(i.value());
+            foundHeaders = true;
             break;
         }
+    }
+    //If not found select last combobox item
+    if (!foundHeaders) {
+        setCurrentIndex(count()-1);
+        lineEdit()->setText(code);
     }
     mCode = code;
 }
