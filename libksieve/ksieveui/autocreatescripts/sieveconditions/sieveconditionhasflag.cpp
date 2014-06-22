@@ -58,22 +58,24 @@ QWidget *SieveConditionHasFlag::createParamWidget( QWidget *parent ) const
     grid->setMargin(0);
     lay->addLayout(grid);
 
-    QLabel *lab = new QLabel(i18n("Variable name\n (if empty it uses internal variable):"));
-    grid->addWidget(lab, 0, 0);
-
+    int row = 0;
     if (hasVariableSupport) {
+        QLabel *lab = new QLabel(i18n("Variable name\n (if empty it uses internal variable):"));
+        grid->addWidget(lab, row, 0);
+
         QLineEdit *variableName = new QLineEdit;
         variableName->setObjectName(QLatin1String("variablename"));
         connect(variableName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
-        grid->addWidget(variableName, 0, 1);
+        grid->addWidget(variableName, row, 1);
+        ++row;
     }
-    lab = new QLabel(i18n("Value:"));
-    grid->addWidget(lab, 1, 0);
+    QLabel *lab = new QLabel(i18n("Value:"));
+    grid->addWidget(lab, row, 0);
 
     QLineEdit *value = new QLineEdit;
     connect(value, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     value->setObjectName(QLatin1String("value"));
-    grid->addWidget(value, 1, 1);
+    grid->addWidget(value, row, 1);
 
     return w;
 }
