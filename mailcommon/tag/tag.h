@@ -73,7 +73,7 @@ public:
     QColor backgroundColor;
     QFont textFont;
     QString iconName;
-    KShortcut shortcut;
+    QKeySequence shortcut;
     bool inToolbar;
     bool isImmutable;
     // Priority, i.e. sort order of the tag. Only used when loading the tag, when saving

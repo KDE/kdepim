@@ -1795,7 +1795,7 @@ void ViewerPrivate::createActions()
     mCopyImageLocation = new QAction(i18n("Copy Image Location"),this);
     mCopyImageLocation->setIcon(QIcon::fromTheme(QLatin1String("view-media-visualization")));
     ac->addAction(QLatin1String("copy_image_location"), mCopyImageLocation);
-    //QT5 mCopyImageLocation->setShortcutConfigurable( false );
+    ac->setShortcutsConfigurable(mCopyImageLocation, false);
     connect( mCopyImageLocation, SIGNAL(triggered(bool)),
              SLOT(slotCopyImageLocation()) );
 
@@ -1822,7 +1822,7 @@ void ViewerPrivate::createActions()
 #endif
     mBlockImage = new QAction(i18n("Block image"), this);
     ac->addAction(QLatin1String("adblock_image"), mBlockImage);
-    //QT5 mBlockImage->setShortcutConfigurable( false );
+    ac->setShortcutsConfigurable( mBlockImage, false );
     connect( mBlockImage, SIGNAL(triggered(bool)), SLOT(slotBlockImage()) );
 
     mBlockableItems = new QAction(i18n("Open Blockable Items..."), this);
@@ -1832,7 +1832,7 @@ void ViewerPrivate::createActions()
 
     mExpandUrlAction = new QAction(i18n("Expand Short URL"), this);
     ac->addAction(QLatin1String("expand_short_url"), mExpandUrlAction);
-    //QT5 mExpandUrlAction->setShortcutConfigurable( false );
+    ac->setShortcutsConfigurable(mExpandUrlAction,false);
     connect( mExpandUrlAction, SIGNAL(triggered(bool)), SLOT(slotExpandShortUrl()) );
 
     mCreateTodoAction = new QAction(QIcon::fromTheme( QLatin1String("task-new") ),i18n("Create Todo"), this);

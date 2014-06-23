@@ -217,7 +217,7 @@ void TagWidget::recordTagSettings( MailCommon::Tag::Ptr tag)
     tag->iconName = iconButton()->icon();
     if (mKeySequenceWidget->isEnabled()) {
         mKeySequenceWidget->applyStealShortcut();
-        tag->shortcut = KShortcut( mKeySequenceWidget->keySequence() );
+        tag->shortcut = QKeySequence( mKeySequenceWidget->keySequence() );
     }
 
     tag->inToolbar = mInToolbarCheck->isChecked();
