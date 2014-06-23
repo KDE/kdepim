@@ -139,7 +139,7 @@ void AdBlockManager::loadSettings()
     }
 
     // load local rules
-    const QString localRulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_local"));
+    const QString localRulesFilePath = KStandardDirs::locateLocal("data" , QLatin1String("kmail2/adblockrules_local"));
     loadRules(localRulesFilePath);
 }
 
@@ -148,7 +148,7 @@ void AdBlockManager::loadRules(const QString &rulesFilePath)
 {
     QFile ruleFile(rulesFilePath);
     if (!ruleFile.open(QFile::ReadOnly | QFile::Text)) {
-        kDebug() << "Unable to open rule file" << rulesFilePath;
+        qDebug() << "Unable to open rule file" << rulesFilePath;
         return;
     }
 
@@ -320,14 +320,14 @@ bool AdBlockManager::subscriptionFileExists(int i)
 {
     const QString n = QString::number(i + 1);
 
-    QString rulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_") + n);
+    const QString rulesFilePath = KStandardDirs::locateLocal("data" , QLatin1String("kmail2/adblockrules_") + n);
     return QFile::exists(rulesFilePath);
 }
 
 void AdBlockManager::addCustomRule(const QString &stringRule, bool reloadPage)
 {
     // save rule in local filters
-    const QString localRulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_local"));
+    const QString localRulesFilePath = KStandardDirs::locateLocal("data" , QLatin1String("kmail2/adblockrules_local"));
 
     QFile ruleFile(localRulesFilePath);
     if (!ruleFile.open(QFile::ReadOnly)) {
