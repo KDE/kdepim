@@ -43,6 +43,7 @@ KABC::Addressee MergeContacts::mergedContact()
                 newContact.setName(address.name());
                 newContact.setFamilyName(address.familyName());
                 newContact.setFormattedName(address.formattedName());
+                newContact.setEmails(address.emails());
             }
         }
     }
