@@ -17,6 +17,8 @@
 
 #include "adblockutil.h"
 
+#include <KStandardDirs>
+
 QMap<QString, QString> MessageViewer::AdBlockUtil::listSubscriptions()
 {
     QMap<QString, QString> lst;
@@ -61,4 +63,10 @@ QMap<QString, QString> MessageViewer::AdBlockUtil::listSubscriptions()
     lst.insert(QString::fromUtf8("Rickroll Blacklist"), QLatin1String("http://rickrolldb.com/ricklist.txt"));
     lst.insert(QString::fromUtf8("Corset+EasyList"), QLatin1String("https://easylist-downloads.adblockplus.org/corset+easylist.txt"));
     return lst;
+}
+
+
+QString MessageViewer::AdBlockUtil::localFilterPath()
+{
+    return KStandardDirs::locateLocal("data" , QLatin1String("kmail2/adblockrules_local"));
 }

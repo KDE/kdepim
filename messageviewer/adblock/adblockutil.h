@@ -24,6 +24,9 @@
 namespace MessageViewer {
 namespace AdBlockUtil {
 QMap<QString, QString> listSubscriptions();
+
+QString localFilterPath();
+
 }
 }
 
