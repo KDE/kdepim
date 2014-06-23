@@ -41,6 +41,17 @@ void SieveEditorWebView::contextMenuEvent(QContextMenuEvent *ev)
     act = pageAction(QWebPage::Forward);
     if (act->isEnabled())
         menu.addAction(act);
+
+    if (menu.actions().count() > 0) {
+        QAction *separator = new QAction(&menu);
+        separator->setSeparator(true);
+        menu.addAction(separator);
+    }
+
+    act = pageAction(QWebPage::CopyLinkToClipboard);
+    if (act->isEnabled())
+        menu.addAction(act);
+
     if (menu.actions().count() > 0) {
         QAction *separator = new QAction(&menu);
         separator->setSeparator(true);
