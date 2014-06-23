@@ -22,7 +22,7 @@
 #include <KLocalizedString>
 #include <K4AboutData>
 #include <KHelpMenu>
-#include <KMenu>
+#include <QMenu>
 #include <QIcon>
 #include <KGlobal>
 
@@ -128,8 +128,8 @@ void FollowUpReminderInfoWidget::customContextMenuRequested(const QPoint &pos)
 {
     const QList<QTreeWidgetItem *> listItems = mTreeWidget->selectedItems();
     if ( !listItems.isEmpty() ) {
-        KMenu menu;
-        menu.addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
+        QMenu menu;
+        menu.addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
         menu.exec(QCursor::pos());
     }
 }

@@ -58,7 +58,7 @@ void FollowUpReminderAgent::setEnableAgent(bool enabled)
         return;
 
     FollowUpReminderAgentSettings::self()->setEnabled(enabled);
-    FollowUpReminderAgentSettings::self()->writeConfig();
+    FollowUpReminderAgentSettings::self()->save();
     if (enabled) {
         mManager->load();
     }
