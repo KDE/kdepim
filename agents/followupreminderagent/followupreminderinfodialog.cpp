@@ -36,6 +36,7 @@ FollowUpReminderInfoDialog::FollowUpReminderInfoDialog(QWidget *parent)
     setButtons( Help|Ok|Cancel );
 
     QWidget *mainWidget = new QWidget( this );
+    setMainWidget(mainWidget);
     QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
     mainLayout->setSpacing( KDialog::spacingHint() );
     mainLayout->setMargin( KDialog::marginHint() );
