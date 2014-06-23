@@ -21,10 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "mailplugin.h"
 
+#include "folderlist.h"
+#include "message.h"
+#include "composer.h"
+#include "error.h"
+
 #include <qdeclarative.h>
-#include <folderlist.h>
-#include <message.h>
-#include <composer.h>
 
 void MailPlugin::registerTypes(const char *uri)
 {
@@ -32,6 +34,7 @@ void MailPlugin::registerTypes(const char *uri)
     qmlRegisterType<FolderList>(uri, 0, 1, "FolderList");
     qmlRegisterType<Message>(uri, 0, 1, "Message");
     qmlRegisterType<Composer>(uri, 0, 1, "Composer");
+    qmlRegisterType<Error>(uri, 0, 1, "Error");
 }
 
 Q_EXPORT_PLUGIN2(mailplugin, MailPlugin)

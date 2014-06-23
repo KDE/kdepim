@@ -29,7 +29,7 @@ class FolderList : public QObject
     Q_OBJECT
 
 public:
-    explicit FolderList( QObject *parten = 0 );
+    explicit FolderList( QObject *parent = 0 );
 };
 
 
