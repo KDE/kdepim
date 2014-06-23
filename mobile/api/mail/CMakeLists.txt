@@ -5,6 +5,7 @@ set(mail_SRCS
     folderlist.cpp
     message.cpp
     composer.cpp
+    error.cpp
 )
 
 INCLUDE_DIRECTORIES(

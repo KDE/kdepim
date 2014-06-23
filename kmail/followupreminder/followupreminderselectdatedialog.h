@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,19 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ADBLOCKUTIL_H
-#define ADBLOCKUTIL_H
+#ifndef FOLLOWUPREMINDERSELECTDATEDIALOG_H
+#define FOLLOWUPREMINDERSELECTDATEDIALOG_H
 
-#include <QString>
-#include <QMap>
+#include <KDialog>
+class KDatePicker;
+class FollowUpReminderSelectDateDialog : public KDialog
+{
+    Q_OBJECT
+public:
+    explicit FollowUpReminderSelectDateDialog(QWidget *parent=0);
+    ~FollowUpReminderSelectDateDialog();
 
-namespace MessageViewer {
-namespace AdBlockUtil {
-QMap<QString, QString> listSubscriptions();
+    QDate selectedDate() const;
 
-QString localFilterPath();
+private:
+    void readConfig();
+    void writeConfig();
+    KDatePicker *mDatePicker;
+};
 
-}
-}
-
-#endif // ADBLOCKUTIL_H
+#endif // FOLLOWUPREMINDERSELECTDATEDIALOG_H

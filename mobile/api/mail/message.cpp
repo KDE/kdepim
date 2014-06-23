@@ -27,7 +27,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KMimeType>
 #include <KUrl>
 
-Message::Message(QObject* parent): QObject(parent)
+Message::Message(QObject *parent) : QObject(parent), m_error(new Error())
+{
+
+}
+
+Message::~Message()
 {
 
 }
@@ -45,6 +50,11 @@ QString Message::from() const
 QString Message::textContent() const
 {
     return m_textContent;
+}
+
+Error *Message::error() const
+{
+    return m_error.data();
 }
 
 void Message::loadMessage(const QString &id)

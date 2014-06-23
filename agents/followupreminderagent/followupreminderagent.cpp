@@ -61,9 +61,6 @@ void FollowUpReminderAgent::setEnableAgent(bool enabled)
     FollowUpReminderAgentSettings::self()->writeConfig();
     if (enabled) {
         mManager->load();
-    } else {
-        //TODO
-        //mManager->stopAll();
     }
 }
 
@@ -84,6 +81,7 @@ void FollowUpReminderAgent::showConfigureDialog(qlonglong windowId)
     }
     if (dialog->exec()) {
         //TODO
+        //TODO save result
     }
     delete dialog;
 }
