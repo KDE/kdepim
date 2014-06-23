@@ -31,10 +31,10 @@
       <Separator/>
       <Action name="file_print"/>
       <Action name="file_print_preview"/>
-      <Separator/>
+      <!-- <Separator/>
       <Action name="merge_contacts"/>
       <Action name="search_duplicate_contacts"/>
-      <Separator/>
+      <Separator/> -->
       <Action name="file_quit"/>
     </Menu>
 
