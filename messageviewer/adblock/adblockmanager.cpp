@@ -29,6 +29,7 @@
 #include "adblockmanager.h"
 
 #include "settings/globalsettings.h"
+#include "adblock/adblockutil.h"
 
 #include "webpage.h"
 
@@ -139,7 +140,7 @@ void AdBlockManager::loadSettings()
     }
 
     // load local rules
-    const QString localRulesFilePath = KStandardDirs::locateLocal("data" , QLatin1String("kmail2/adblockrules_local"));
+    const QString localRulesFilePath = MessageViewer::AdBlockUtil::localFilterPath();
     loadRules(localRulesFilePath);
 }
 
@@ -327,7 +328,7 @@ bool AdBlockManager::subscriptionFileExists(int i)
 void AdBlockManager::addCustomRule(const QString &stringRule, bool reloadPage)
 {
     // save rule in local filters
-    const QString localRulesFilePath = KStandardDirs::locateLocal("data" , QLatin1String("kmail2/adblockrules_local"));
+    const QString localRulesFilePath = MessageViewer::AdBlockUtil::localFilterPath();
 
     QFile ruleFile(localRulesFilePath);
     if (!ruleFile.open(QFile::ReadOnly)) {

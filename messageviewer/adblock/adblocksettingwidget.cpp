@@ -32,6 +32,7 @@
 #include "adblockaddsubscriptiondialog.h"
 #include "adblockmanager.h"
 #include "adblockshowlistdialog.h"
+#include "adblock/adblockutil.h"
 #include "pimcommon/widgets/configureimmutablewidgetutils.h"
 using namespace PimCommon::ConfigureImmutableWidgetUtils;
 
@@ -226,7 +227,7 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
     // ------------------------------------------------------------------------------
 
     // local filters
-    const QString localRulesFilePath = KStandardDirs::locateLocal("data" , QLatin1String("kmail2/adblockrules_local"));
+    const QString localRulesFilePath = MessageViewer::AdBlockUtil::localFilterPath();
 
     QFile ruleFile(localRulesFilePath);
     if (!ruleFile.open(QFile::ReadOnly | QFile::Text)) {
@@ -277,7 +278,7 @@ void AdBlockSettingWidget::save()
 
     config.sync();
     // local filters
-    const QString localRulesFilePath = KStandardDirs::locateLocal("data" , QLatin1String("kmail2/adblockrules_local"));
+    const QString localRulesFilePath = MessageViewer::AdBlockUtil::localFilterPath();
 
     QFile ruleFile(localRulesFilePath);
     if (!ruleFile.open(QFile::WriteOnly | QFile::Text)) {
