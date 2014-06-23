@@ -122,6 +122,16 @@ FollowUpReminderInfoWidget::~FollowUpReminderInfoWidget()
 
 void FollowUpReminderInfoWidget::customContextMenuRequested(const QPoint &pos)
 {
+    const QList<QTreeWidgetItem *> listItems = mTreeWidget->selectedItems();
+    if ( !listItems.isEmpty() ) {
+        KMenu menu;
+        menu.addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
+        menu.exec(QCursor::pos());
+    }
+}
+
+void FollowUpReminderInfoWidget::slotRemoveItem()
+{
     //TODO
 }
 

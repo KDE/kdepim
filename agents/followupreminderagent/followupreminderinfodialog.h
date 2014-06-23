@@ -34,6 +34,8 @@ public:
 
 private slots:
     void customContextMenuRequested(const QPoint &pos);
+    void slotRemoveItem();
+
 private:
     enum FollowUpReminderColumn {
         date = 0,
