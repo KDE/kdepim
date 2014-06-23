@@ -227,7 +227,7 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
     // ------------------------------------------------------------------------------
 
     // local filters
-    const QString localRulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_local"));
+    const QString localRulesFilePath = KStandardDirs::locateLocal("data" , QLatin1String("kmail2/adblockrules_local"));
 
     QFile ruleFile(localRulesFilePath);
     if (!ruleFile.open(QFile::ReadOnly | QFile::Text)) {
@@ -271,14 +271,14 @@ void AdBlockSettingWidget::save()
            grp.writeEntry(QLatin1String("lastUpdate"), subItem->data(LastUpdateList).toDateTime());
         QString path = subItem->data(PathList).toString();
         if (path.isEmpty()) {
-            path = KStandardDirs::locateLocal("appdata", QString::fromLatin1("adblockrules-%1").arg(i));
+            path = KStandardDirs::locateLocal("data", QString::fromLatin1("kmail2/adblockrules-%1").arg(i));
         }
         grp.writeEntry(QLatin1String("path"), path);
     }
 
     config.sync();
     // local filters
-    const QString localRulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_local"));
+    const QString localRulesFilePath = KStandardDirs::locateLocal("data" , QLatin1String("kmail2/adblockrules_local"));
 
     QFile ruleFile(localRulesFilePath);
     if (!ruleFile.open(QFile::WriteOnly | QFile::Text)) {

@@ -23,7 +23,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>422</width>
+    <width>457</width>
     <height>415</height>
    </rect>
   </property>
@@ -262,6 +262,13 @@
        </property>
       </widget>
      </item>
+     <item row="6" column="1">
+      <widget class="QCheckBox" name="kcfg_ShowUserAgent">
+       <property name="text">
+        <string>Show user agent in fancy headers</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -298,6 +305,7 @@
   <tabstop>kcfg_MinimumFontSize</tabstop>
   <tabstop>configureCustomHeadersButton</tabstop>
   <tabstop>kcfg_showSpamStatus</tabstop>
+  <tabstop>kcfg_ShowUserAgent</tabstop>
  </tabstops>
  <resources/>
  <connections>

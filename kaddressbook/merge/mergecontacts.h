@@ -35,6 +35,7 @@ public:
     bool needManualSelectInformations();
 
 private:
+    void mergeToContact(KABC::Addressee &newAddress, const KABC::Addressee &fromContact);
     Akonadi::Item::List mListItem;
 };
 }

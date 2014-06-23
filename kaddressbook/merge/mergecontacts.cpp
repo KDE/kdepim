@@ -40,15 +40,25 @@ KABC::Addressee MergeContacts::mergedContact()
             KABC::Addressee address = item.payload<KABC::Addressee>();
             if (firstAddress) {
                 firstAddress = false;
-                newContact.setName(address.name());
-                newContact.setFamilyName(address.familyName());
-                newContact.setFormattedName(address.formattedName());
+                newContact = address;
+            } else {
+                mergeToContact(newContact, address);
             }
         }
     }
     return newContact;
 }
 
+void MergeContacts::mergeToContact(KABC::Addressee &newContact, const KABC::Addressee &fromContact)
+{
+#if 0
+    //TODO
+    newContact.setName(fromContact.name());
+    newContact.setFamilyName(fromContact.familyName());
+    newContact.setFormattedName(fromContact.formattedName());
+    newContact.setEmails(fromContact.emails());
+#endif
+}
 
 bool MergeContacts::needManualSelectInformations()
 {

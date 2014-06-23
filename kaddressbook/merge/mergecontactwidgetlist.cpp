@@ -16,7 +16,6 @@
 */
 
 #include "mergecontactwidgetlist.h"
-#include <KABC/Addressee>
 
 using namespace KABMergeContacts;
 MergeContactWidgetList::MergeContactWidgetList(QWidget *parent)
@@ -29,13 +28,27 @@ MergeContactWidgetList::~MergeContactWidgetList()
 
 }
 
+QString MergeContactWidgetList::itemName(const KABC::Addressee &address) const
+{
+   const QString realName = address.realName();
+   if (!realName.isEmpty()) {
+       return realName;
+   }
+   const QString name = address.name();
+   if (!name.isEmpty()) {
+       return name;
+   }
+   return address.fullEmail();
+}
+
 void MergeContactWidgetList::fillListContact(const Akonadi::Item::List &items)
 {
     Q_FOREACH(const Akonadi::Item &item, items) {
         if (item.hasPayload<KABC::Addressee>()) {
             MergeContactWidgetListItem *widgetItem = new MergeContactWidgetListItem(item, this);
             KABC::Addressee address = item.payload<KABC::Addressee>();
-            widgetItem->setText(address.realName());
+
+            widgetItem->setText(itemName(address));
         }
     }
 }

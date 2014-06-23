@@ -145,8 +145,9 @@ public:
             return;
         QString themeActivated;
         Q_FOREACH ( KToggleAction *action, themesActionList ) {
-            if (action->isChecked())
+            if (action->isChecked()) {
                 themeActivated = action->data().toString();
+            }
             actionGroup->removeAction(action);
             if (actionCollection)
                 actionCollection->removeAction( action );
@@ -158,6 +159,7 @@ public:
         themesActionList.clear();
 
 
+        bool themeActivatedFound = false;
         QMapIterator<QString, GrantleeTheme::Theme> i(themes);
         while (i.hasNext()) {
             i.next();
@@ -165,32 +167,47 @@ public:
             KToggleAction *act = new KToggleAction(theme.name(),q);
             act->setToolTip(theme.description());
             act->setData(theme.dirName());
-            if (theme.dirName() == themeActivated)
+            if (theme.dirName() == themeActivated) {
                 act->setChecked(true);
+                themeActivatedFound = true;
+            }
             themesActionList.append(act);
             actionGroup->addAction(act);
             menu->addAction(act);
             q->connect(act, SIGNAL(triggered(bool)), q, SLOT(slotThemeSelected()));
         }
+        if (!themeActivatedFound) {
+            if (!themesActionList.isEmpty()) {
+                //Activate first item if we removed theme.
+                KToggleAction *act = themesActionList.at(0);
+                act->setChecked(true);
+                selectTheme(act);
+            }
+        }
         menu->addAction(separatorAction);
         menu->addAction(downloadThemesAction);
+    }
+
+    void selectTheme(KToggleAction *act)
+    {
+        if (act) {
+            switch(applicationType) {
+            case GrantleeThemeManager::Mail:
+                GrantleeSettings::self()->setGrantleeMailThemeName( act->data().toString() );
+                break;
+            case GrantleeThemeManager::Addressbook:
+                GrantleeSettings::self()->setGrantleeAddressBookThemeName( act->data().toString() );
+                break;
+            }
+            GrantleeSettings::self()->save();
+        }
     }
 
     void slotThemeSelected()
     {
         if (q->sender() ) {
             KToggleAction *act = dynamic_cast<KToggleAction *>(q->sender());
-            if (act) {
-                switch(applicationType) {
-                case GrantleeThemeManager::Mail:
-                    GrantleeSettings::self()->setGrantleeMailThemeName( act->data().toString() );
-                    break;
-                case GrantleeThemeManager::Addressbook:
-                    GrantleeSettings::self()->setGrantleeAddressBookThemeName( act->data().toString() );
-                    break;
-                }
-                GrantleeSettings::self()->save();
-            }
+            selectTheme(act);
             Q_EMIT q->grantleeThemeSelected();
         }
     }
