@@ -34,6 +34,7 @@
 #include <QHeaderView>
 #include <QDebug>
 #include <QTimer>
+#include <KFormat>
 
 using namespace PimCommon;
 
@@ -272,7 +273,7 @@ bool StorageServiceTreeWidgetItem::operator<(const QTreeWidgetItem &other) const
 
 void StorageServiceTreeWidgetItem::setSize(qulonglong size)
 {
-    setText(StorageServiceTreeWidget::ColumnSize, KLocale::global()->formatByteSize(size));
+    setText(StorageServiceTreeWidget::ColumnSize, KFormat().formatByteSize(size));
 }
 
 void StorageServiceTreeWidgetItem::setDateCreated(const KDateTime &date)

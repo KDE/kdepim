@@ -33,6 +33,7 @@
 #include <KMessageBox>
 
 #include <QDebug>
+#include <KFormat>
 
 
 using namespace PimCommon;
@@ -530,7 +531,7 @@ QMap<QString, QString> DropBoxStorageService::itemInformation(const QVariantMap 
     if (variantMap.contains(QLatin1String("bytes"))) {
         const qulonglong size = variantMap.value(QLatin1String("bytes")).toULongLong();
         if (!(isDir && size == 0)) {
-            information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KLocale::global()->formatByteSize(size));
+            information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KFormat().formatByteSize(size));
         }
     }
     if (variantMap.contains(QLatin1String("client_mtime"))) {

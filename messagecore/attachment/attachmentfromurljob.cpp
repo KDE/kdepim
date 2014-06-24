@@ -32,6 +32,7 @@
 #include <QtCore/QFileInfo>
 
 #include <boost/shared_ptr.hpp>
+#include <KFormat>
 
 using namespace MessageCore;
 
@@ -145,7 +146,7 @@ void AttachmentFromUrlJob::doStart()
         if ( size > maximumAllowedSize() ) {
             setError( KJob::UserDefinedError );
             setErrorText( i18n( "You may not attach files bigger than %1. Share it with storage service.",
-                                KLocale::global()->formatByteSize( maximumAllowedSize() ) ) );
+                                KFormat().formatByteSize( maximumAllowedSize() ) ) );
             emitResult();
             return;
         }

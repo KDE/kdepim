@@ -33,6 +33,7 @@
 
 
 #include <QDebug>
+#include <KFormat>
 
 using namespace PimCommon;
 
@@ -441,7 +442,7 @@ QMap<QString, QString> YouSendItStorageService::itemInformation(const QVariantMa
         information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), KLocale::global()->formatDateTime(YouSendItUtil::convertToDateTime(t)));
     }
     if (!folder && variantMap.contains(QLatin1String("size"))) {
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KLocale::global()->formatByteSize(variantMap.value(QLatin1String("size")).toULongLong()));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KFormat().formatByteSize(variantMap.value(QLatin1String("size")).toULongLong()));
     }
     if (variantMap.contains(QLatin1String("writeable"))) {
         information.insert(i18n("writable:"), (variantMap.value(QLatin1String("writeable")).toString() == QLatin1String("true")) ? i18n("Yes") : i18n("No"));

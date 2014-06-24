@@ -33,6 +33,7 @@
 #include <KMimeType>
 #include <KGlobal>
 #include <KLocale>
+#include <KFormat>
 Q_DECLARE_METATYPE(KMime::Content*)
 Q_DECLARE_METATYPE(KMime::ContentIndex)
 
@@ -96,7 +97,7 @@ public:
     {
         if ( content->body().isEmpty() )
             return QString();
-        return KLocale::global()->formatByteSize( content->body().size() );
+        return KFormat().formatByteSize( content->body().size() );
     }
 
     KIcon iconForContent( KMime::Content *content )

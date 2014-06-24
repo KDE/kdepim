@@ -36,6 +36,7 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QDir>
+#include <KFormat>
 
 using namespace PimCommon;
 
@@ -383,7 +384,7 @@ QMap<QString, QString> WebDavStorageService::itemInformation(const QVariantMap &
         information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Type), variantMap.value(QLatin1String("isDir")).toBool() ? i18n("Directory") : i18n("File"));
     }
     if (variantMap.contains(QLatin1String("getcontentlength"))) {
-        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KLocale::global()->formatByteSize(variantMap.value(QLatin1String("getcontentlength")).toString().toLongLong() ));
+        information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Size), KFormat().formatByteSize(variantMap.value(QLatin1String("getcontentlength")).toString().toLongLong() ));
     }
     if (variantMap.contains(QLatin1String("lastmodified"))) {
         information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::LastModified), KLocale::global()->formatDateTime(QDateTime::fromString(variantMap.value(QLatin1String("lastmodified")).toString())));

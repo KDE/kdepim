@@ -27,6 +27,7 @@
 #include <KCalendarSystem>
 #include <KLocale>
 #include <KGlobal>
+#include <KFormat>
 
 inline uint qHash( const QDate &date )
 {
@@ -80,7 +81,7 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
       }
       case SizeRole:
       {
-        return KLocale::global()->formatByteSize( qMax( 0LL, item.size() ) );
+        return KFormat().formatByteSize( qMax( 0LL, item.size() ) );
       }
       case IsUnreadRole:
         return !messageStatus.isRead();

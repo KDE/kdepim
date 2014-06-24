@@ -35,6 +35,7 @@
 #include <AkonadiCore/item.h>
 
 #include <KPIMUtils/kpimutils/kfileio.h>
+#include <KFormat>
 
 using namespace MessageComposer;
 using namespace MessageCore;
@@ -280,7 +281,7 @@ QVariant AttachmentModel::data( const QModelIndex &index, int role ) const
         case NameColumn:
             return QVariant::fromValue( part->name().isEmpty() ? part->fileName() : part->name() );
         case SizeColumn:
-            return QVariant::fromValue( KLocale::global()->formatByteSize( part->size() ) );
+            return QVariant::fromValue( KFormat().formatByteSize( part->size() ) );
         case EncodingColumn:
             return QVariant::fromValue( KMime::nameForEncoding( part->encoding() ) );
         case MimeTypeColumn:
@@ -311,7 +312,7 @@ QVariant AttachmentModel::data( const QModelIndex &index, int role ) const
     } else if ( role == NameRole ) {
         return QVariant::fromValue( part->fileName().isEmpty() ? part->name() : part->fileName() );
     } else if ( role == SizeRole ) {
-        return QVariant::fromValue( KLocale::global()->formatByteSize( part->size() ) );
+        return QVariant::fromValue( KFormat().formatByteSize( part->size() ) );
     } else if ( role == EncodingRole ) {
         return QVariant::fromValue( KMime::nameForEncoding( part->encoding() ) );
     } else if ( role == MimeTypeRole ) {
