@@ -60,8 +60,8 @@ bool CustomManageSieveWidget::refreshList()
         if ( type.status() == Akonadi::AgentInstance::Broken )
             continue;
 
+        QString serverName = type.name();
         last = new SieveTreeWidgetItem( treeView(), last );
-        last->setText( 0, type.name() );
         last->setIcon( 0, SmallIcon( QLatin1String("network-server") ) );
 
         const KUrl u = KSieveUi::Util::findSieveUrlForAccount( type.identifier() );
@@ -71,6 +71,7 @@ bool CustomManageSieveWidget::refreshList()
             item->setFlags( item->flags() & ~Qt::ItemIsEnabled );
             treeView()->expandItem( last );
         } else {
+            serverName += QString::fromLatin1(" (%1)").arg(u.userName());
             KManageSieve::SieveJob * job = KManageSieve::SieveJob::list( u );
             connect( job, SIGNAL(gotList(KManageSieve::SieveJob*,bool,QStringList,QString)),
                      this, SLOT(slotGotList(KManageSieve::SieveJob*,bool,QStringList,QString)) );
@@ -78,6 +79,7 @@ bool CustomManageSieveWidget::refreshList()
             mUrls.insert( last, u );
             last->startAnimation();
         }
+        last->setText( 0, serverName );
         noImapFound = false;
     }
     return noImapFound;
