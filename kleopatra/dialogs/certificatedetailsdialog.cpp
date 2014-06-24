@@ -72,6 +72,7 @@
 #include <algorithm>
 #include <cassert>
 #include <KSharedConfig>
+#include <QFontDatabase>
 
 using namespace Kleo;
 using namespace Kleo::Dialogs;
@@ -448,7 +449,7 @@ private:
             qq->setHelp(QString(), QLatin1String("kleopatra"));
             chainTW->header()->setResizeMode( 0, QHeaderView::Stretch );
 
-            dumpLTW->setFont( KGlobalSettings::fixedFont() );
+            dumpLTW->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
             dumpLTW->setMinimumVisibleLines( 15 );
             dumpLTW->setMinimumVisibleColumns( 40 );
 

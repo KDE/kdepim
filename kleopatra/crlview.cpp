@@ -48,6 +48,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QCloseEvent>
+#include <QFontDatabase>
 
 CRLView::CRLView( QWidget* parent )
   : QDialog( parent ), _process(0)
@@ -59,7 +60,7 @@ CRLView::CRLView( QWidget* parent )
   topLayout->addWidget( new QLabel( i18n("CRL cache dump:"), this ) );
 
   _textView = new QTextEdit( this );
-  _textView->setFont( KGlobalSettings::fixedFont() );
+  _textView->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
   _textView->setReadOnly(true);
   topLayout->addWidget( _textView );
 

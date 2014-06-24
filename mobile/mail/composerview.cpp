@@ -64,6 +64,7 @@
 #include <qdeclarativecontext.h>
 #include <qdeclarativeengine.h>
 #include <qplatformdefs.h>
+#include <QFontDatabase>
 
 class DeclarativeEditor : public DeclarativeWidgetBase<MessageComposer::KMeditor, ComposerView, &ComposerView::setEditor>
 {
@@ -597,7 +598,7 @@ void ComposerView::encryptEmail( bool encrypt )
 
 void ComposerView::toggleUseFixedFont( bool use )
 {
-  m_composerBase->editor()->setFontForWholeText( use ? KGlobalSettings::fixedFont() : KGlobalSettings::generalFont() );
+  m_composerBase->editor()->setFontForWholeText( use ? QFontDatabase::systemFont(QFontDatabase::FixedFont) : QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
 }
 
 void ComposerView::toggleAutomaticWordWrap( bool use )

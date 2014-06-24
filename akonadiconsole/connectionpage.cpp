@@ -25,6 +25,7 @@
 #include <KTextEdit>
 
 #include <QVBoxLayout>
+#include <QFontDatabase>
 
 #include "tracernotificationinterface.h"
 
@@ -35,7 +36,7 @@ ConnectionPage::ConnectionPage( const QString &identifier, QWidget *parent )
 
   mDataView = new KTextEdit( this );
   mDataView->setReadOnly( true );
-  mDataView->setFont( KGlobalSettings::fixedFont() );
+  mDataView->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
 
   layout->addWidget( mDataView );
 

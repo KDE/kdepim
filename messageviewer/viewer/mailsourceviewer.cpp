@@ -57,6 +57,7 @@
 #include <QContextMenuEvent>
 #include <QDebug>
 #include <QMenu>
+#include <QFontDatabase>
 
 namespace MessageViewer {
 
@@ -99,7 +100,7 @@ void MailSourceViewTextBrowserWidget::setPlainText( const QString& text )
 
 void MailSourceViewTextBrowserWidget::setFixedFont()
 {
-    mTextBrowser->setFont( KGlobalSettings::fixedFont() );
+    mTextBrowser->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
 }
 
 MessageViewer::MailSourceViewTextBrowser *MailSourceViewTextBrowserWidget::textBrowser() const

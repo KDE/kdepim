@@ -30,6 +30,7 @@
 #include <QFile>
 #include <QLocalSocket>
 #include <QSettings>
+#include <QFontDatabase>
 
 using namespace Akonadi;
 
@@ -43,7 +44,7 @@ RawSocketConsole::RawSocketConsole(QWidget* parent) :
   connect( ui.commandEdit, SIGNAL(returnPressed()), SLOT(execClicked()) );
   connect( ui.connectButton, SIGNAL(clicked()), SLOT(connectClicked()) );
   connect( ui.clearButton, SIGNAL(clicked()), ui.protocolView, SLOT(clear()) );
-  ui.protocolView->setFont( KGlobalSettings::fixedFont() );
+  ui.protocolView->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
 
   connect( mSocket, SIGNAL(readyRead()), SLOT(dataReceived()) );
   connect( mSocket, SIGNAL(connected()), SLOT(connected()) );

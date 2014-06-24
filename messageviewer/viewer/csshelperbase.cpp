@@ -39,6 +39,7 @@
 
 #include <QApplication>
 #include <QPaintDevice>
+#include <QFontDatabase>
 
 namespace MessageViewer {
 
@@ -97,8 +98,8 @@ CSSHelperBase::CSSHelperBase( const QPaintDevice *pd ) :
     }
     mRecycleQuoteColors = false;
 
-    QFont defaultFont = KGlobalSettings::generalFont();
-    QFont defaultFixedFont = KGlobalSettings::fixedFont();
+    QFont defaultFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
+    QFont defaultFixedFont = QFontDatabase::systemFont(QFontDatabase::FixedFont);
     mBodyFont = MessageCore::GlobalSettings::self()->useDefaultFonts() ? defaultFont: MessageCore::GlobalSettings::self()->bodyFont();
     mPrintFont = MessageCore::GlobalSettings::self()->useDefaultFonts() ? defaultFont : MessageCore::GlobalSettings::self()->printFont();
     mFixedFont = mFixedPrintFont = defaultFixedFont;

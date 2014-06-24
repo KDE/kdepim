@@ -30,6 +30,7 @@
 #include <QClipboard>
 #include <QSqlQueryModel>
 #include <QSqlError>
+#include <QFontDatabase>
 
 DbConsole::DbConsole(QWidget* parent) :
   QWidget( parent ),
@@ -43,8 +44,8 @@ DbConsole::DbConsole(QWidget* parent) :
   ui.execButton->setIcon( QIcon::fromTheme( "application-x-executable" ) );
   connect( ui.execButton, SIGNAL(clicked()), SLOT(execClicked()) );
 
-  ui.queryEdit->setFont( KGlobalSettings::fixedFont() );
-  ui.errorView->setFont( KGlobalSettings::fixedFont() );
+  ui.queryEdit->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
+  ui.errorView->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
 }
 
 void DbConsole::execClicked()

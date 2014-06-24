@@ -26,6 +26,7 @@
 #include <QScrollBar>
 #include <QStringListModel>
 #include <QAbstractItemView>
+#include <QFontDatabase>
 
 using namespace TemplateParser;
 
@@ -33,7 +34,7 @@ TemplatesTextEditor::TemplatesTextEditor(QWidget *parent)
     : PimCommon::RichTextEditor(parent)
 {
     setFocus();
-    const QFont f = KGlobalSettings::fixedFont();
+    const QFont f = QFontDatabase::systemFont(QFontDatabase::FixedFont);
     setFont( f );
 
     setWordWrapMode ( QTextOption::NoWrap );

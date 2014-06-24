@@ -36,6 +36,7 @@
 #include <KGlobalSettings>
 #include <KLocalizedString>
 #include <KDebug>
+#include <QFontDatabase>
 
 Q_DECLARE_METATYPE(QList< QList<QVariant> >)
 
@@ -65,7 +66,7 @@ QueryDebugger::QueryDebugger( QWidget* parent ):
   mView = new KTextEdit( this );
   mView->setReadOnly( true );
   mView->setContextMenuPolicy( Qt::CustomContextMenu );
-  mView->setFont( KGlobalSettings::fixedFont() );
+  mView->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
   layout->addWidget( mView );
 
   connect( mView, SIGNAL(customContextMenuRequested(QPoint)), SLOT(contextMenu(QPoint)) );

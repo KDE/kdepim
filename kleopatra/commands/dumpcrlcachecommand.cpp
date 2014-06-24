@@ -54,6 +54,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <KSharedConfig>
+#include <QFontDatabase>
 
 static const int PROCESS_TERMINATE_TIMEOUT = 5000; // milliseconds
 
@@ -118,7 +119,7 @@ namespace {
                 KDAB_SET_OBJECT_NAME( vlay );
                 KDAB_SET_OBJECT_NAME( hlay );
 
-                logTextWidget.setFont( KGlobalSettings::fixedFont() );
+                logTextWidget.setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
                 logTextWidget.setMinimumVisibleLines( 25 );
                 logTextWidget.setMinimumVisibleColumns( 80 );
 

@@ -36,6 +36,7 @@
 #include <QDebug>
 #include <QAction>
 #include <QMenu>
+#include <QFontDatabase>
 
 using namespace KSieveUi;
 
@@ -44,7 +45,7 @@ SieveTextEdit::SieveTextEdit( QWidget *parent )
       mShowHelpMenu(true)
 {
     setWordWrapMode ( QTextOption::NoWrap );
-    setFont( KGlobalSettings::fixedFont() );
+    setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
     m_syntaxHighlighter = new PimCommon::SieveSyntaxHighlighter( document() );
     m_sieveLineNumberArea = new SieveLineNumberArea(this);
 
