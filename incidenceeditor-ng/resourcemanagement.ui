@@ -23,7 +23,14 @@
       <number>2</number>
      </property>
      <item>
-      <widget class="QLineEdit" name="resourceSearch"/>
+      <widget class="KLineEdit" name="resourceSearch">
+       <property name="maximumSize">
+        <size>
+         <width>400</width>
+         <height>16777215</height>
+        </size>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QTreeView" name="treeResults">
@@ -31,6 +38,12 @@
         <size>
          <width>200</width>
          <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>400</width>
+         <height>16777215</height>
         </size>
        </property>
        <property name="alternatingRowColors">
@@ -79,6 +92,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
