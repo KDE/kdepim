@@ -44,6 +44,7 @@ namespace IncidenceEditorNG {
 
 class AttendeeEditor;
 class AttendeeComboBoxDelegate;
+class AttendeeLineEditDelegate;
 class ConflictResolver;
 class IncidenceDateTime;
 
@@ -67,6 +68,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
     AttendeeComboBoxDelegate *stateDelegate();
     AttendeeComboBoxDelegate *roleDelegate();
     AttendeeComboBoxDelegate *responseDelegate();
+    AttendeeLineEditDelegate *attendeeDelegate();
 
     int attendeeCount() const;
 
@@ -130,6 +132,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttendee : public IncidenceEditor
 
     /** used dataModel to rely on*/
     AttendeeTableModel *mDataModel;
+    AttendeeLineEditDelegate *mAttendeeDelegate;
     AttendeeComboBoxDelegate *mStateDelegate;
     AttendeeComboBoxDelegate *mRoleDelegate;
     AttendeeComboBoxDelegate *mResponseDelegate;
