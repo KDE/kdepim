@@ -258,6 +258,7 @@ public:
     void slotAkonadiCollectionsReceived( const Akonadi::Collection::List & );
     void searchInBaloo();
     void slotTriggerDelayedQueries();
+    void slotShowOUChanged( bool );
     static KCompletion::CompOrder completionOrder();
 
     AddresseeLineEdit *q;
@@ -270,6 +271,7 @@ public:
     bool m_lastSearchMode;
     bool m_searchExtended; //has \" been added?
     bool m_useSemicolonAsSeparator;
+    bool m_showOU;
     QTimer m_delayedQueryTimer;
     QColor m_alternateColor;
 };
@@ -327,6 +329,10 @@ void AddresseeLineEdit::Private::init()
 
             m_completionInitialized = true;
         }
+
+        KConfigGroup group( KGlobal::config(), "AddressLineEdit" );
+        m_showOU = group.readEntry( "ShowOU", false );
+
     }
 }
 
@@ -806,7 +812,11 @@ void AddresseeLineEdit::Private::slotCompletion()
 
 void AddresseeLineEdit::Private::slotPopupCompletion( const QString &completion )
 {
-    q->setText( m_previousAddresses + completion.trimmed() );
+    QString c = completion.trimmed();
+    if ( c.endsWith( QLatin1Char( ')' ) ) ) {
+        c = completion.mid( 0, completion.lastIndexOf( QLatin1String( " (" )) ).trimmed();
+    }
+    q->setText( m_previousAddresses + c );
     q->cursorAtEnd();
     updateSearchString();
     q->emitTextCompleted();
@@ -850,13 +860,25 @@ void AddresseeLineEdit::Private::slotLDAPSearchData( const KLDAP::LdapResult::Li
         KABC::Addressee contact;
         contact.setNameFromString( result.name );
         contact.setEmails( result.email );
+        QString ou;
+
+        if ( m_showOU ) {
+            const int depth = result.dn.depth();
+            for ( int i = 0; i < depth; ++i ) {
+                const QString rdnStr = result.dn.rdnString( i );
+                if ( rdnStr.startsWith( QLatin1String( "ou=" ), Qt::CaseInsensitive ) ) {
+                    ou = rdnStr.mid( 3 );
+                    break;
+                }
+            }
+        }
 
         if ( !s_static->ldapClientToCompletionSourceMap.contains( result.clientNumber ) ) {
             s_static->updateLDAPWeights(); // we got results from a new source, so update the completion sources
         }
 
         q->addContact( contact, result.completionWeight,
-                       s_static->ldapClientToCompletionSourceMap[ result.clientNumber ] );
+                       s_static->ldapClientToCompletionSourceMap[ result.clientNumber ], ou );
     }
 
     if ( ( q->hasFocus() || q->completionBox()->hasFocus() ) &&
@@ -974,6 +996,15 @@ KCompletion::CompOrder AddresseeLineEdit::Private::completionOrder()
         return KCompletion::Weighted;
     } else {
         return KCompletion::Sorted;
+    }
+}
+
+void AddresseeLineEdit::Private::slotShowOUChanged(bool checked)
+{
+    if ( checked != m_showOU ) {
+        KConfigGroup group( KGlobal::config(), "AddressLineEdit" );
+        group.writeEntry( "ShowOU", checked );
+        m_showOU = checked;
     }
 }
 
@@ -1247,7 +1278,7 @@ void AddresseeLineEdit::addContactGroup( const KABC::ContactGroup &group, int we
     d->addCompletionItem( group.name(), weight, source );
 }
 
-void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int source )
+void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int source, QString append )
 {
     const QStringList emails = addr.emails();
     QStringList::ConstIterator it;
@@ -1260,6 +1291,15 @@ void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int
         const QString familyName= addr.familyName();
         const QString nickName  = addr.nickName();
         QString fullEmail       = addr.fullEmail( email );
+
+        QString appendix;
+
+        if ( !append.isEmpty() ) {
+            appendix = QLatin1String( " (%1)" );
+            append = append.replace( QLatin1String("("), QLatin1String("[") );
+            append = append.replace( QLatin1String(")"), QLatin1String("]") );
+            appendix = appendix.arg( append );
+        }
 
         // Prepare "givenName" + ' ' + "familyName"
         QString fullName = givenName;
@@ -1275,7 +1315,7 @@ void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int
             if (fullEmail != address) {
                 // This happens when fullEmail contains a middle name, while our own fullName+email only has "first last".
                 // Let's offer both, the fullEmail with 3 parts, looks a tad formal.
-                d->addCompletionItem(address, weight + isPrefEmail, source);
+                d->addCompletionItem(address + appendix, weight + isPrefEmail, source);
             }
         }
 
@@ -1284,7 +1324,7 @@ void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int
             keyWords.append(nickName);
         }
 
-        d->addCompletionItem( fullEmail, weight + isPrefEmail, source, &keyWords );
+        d->addCompletionItem( fullEmail + appendix, weight + isPrefEmail, source, &keyWords );
 
         isPrefEmail = 0;
     }
@@ -1314,6 +1354,13 @@ QMenu *AddresseeLineEdit::createStandardContextMenu()
     if ( d->m_useCompletion ) {
         menu->addAction( i18n( "Configure Completion Order..." ),
                          this, SLOT(slotEditCompletionOrder()) );
+
+        QAction *showOU = new QAction(i18n( "Show Organication Unit for LDAP results" ),menu);
+        showOU->setCheckable(true);
+
+        showOU->setChecked( d->m_showOU );
+        connect(showOU, SIGNAL(triggered(bool)), this, SLOT(slotShowOUChanged(bool)));
+        menu->addAction(showOU);
     }
     return menu;
 }

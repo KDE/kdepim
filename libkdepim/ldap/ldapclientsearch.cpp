@@ -405,6 +405,7 @@ void LdapClientSearch::Private::makeSearchData( QStringList &ret, LdapResult::Li
         }
 
         LdapResult sr;
+        sr.dn = (*it1).object.dn();
         sr.clientNumber = (*it1).client->clientNumber();
         sr.completionWeight = (*it1).client->completionWeight();
         sr.name = name;
