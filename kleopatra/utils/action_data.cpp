@@ -38,7 +38,7 @@
 #include <KActionCollection>
 #include <QAction>
 #include <KIcon>
-#include <KShortcut>
+#include <QKeySequence>
 QAction * Kleo::make_action_from_data( const action_data & ad, QObject * parent ) {
 
     QAction * const a = ad.toggle ? new KToggleAction( parent ) : new QAction( parent ) ;
@@ -55,7 +55,7 @@ QAction * Kleo::make_action_from_data( const action_data & ad, QObject * parent 
             QObject::connect( a, SIGNAL(triggered()), ad.receiver, ad.slot );
     }
     if ( !ad.shortcut.isEmpty() )
-        a->setShortcuts( KShortcut( ad.shortcut ) );
+        a->setShortcut( QKeySequence( ad.shortcut ) );
     a->setEnabled( ad.enabled );
     return a;
 }
