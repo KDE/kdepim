@@ -28,6 +28,7 @@
 
 #include <QSet>
 #include <KLocale>
+#include <KFormat>
 
 using namespace IncidenceEditorNG;
 
@@ -202,7 +203,7 @@ QString FreePeriodModel::tooltipify( int index ) const
   toolTip += KLocale::global()->formatDateTime( period.end().toTimeSpec( timeSpec ).dateTime() );
   toolTip += "<br>";
   toolTip += "<i>" + i18nc( "@info:tooltip period duration", "Duration:" ) + "</i>" + "&nbsp;";
-  toolTip += KLocale::global()->prettyFormatDuration( duration );
+  toolTip += KFormat().formatSpelloutDuration( duration );
   toolTip += "</qt>";
   return toolTip;
 }
