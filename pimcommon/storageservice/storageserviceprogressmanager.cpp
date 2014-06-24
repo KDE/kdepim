@@ -19,7 +19,6 @@
 #include "libkdepim/progresswidget/progressmanager.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 
-#include <KGlobal>
 
 namespace PimCommon {
 class StorageServiceProgressManagerPrivate

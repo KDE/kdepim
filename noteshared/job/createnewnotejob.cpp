@@ -34,7 +34,6 @@
 #include <KMessageBox>
 #include <KLocale>
 #include <KLocalizedString>
-#include <KGlobal>
 
 #include <QPointer>
 

@@ -26,7 +26,6 @@
 
 #include <KConfigGroup>
 #include <KSharedConfig>
-#include <KGlobal>
 #include <QDebug>
 
 #include <QDate>

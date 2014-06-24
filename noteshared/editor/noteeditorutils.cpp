@@ -18,7 +18,6 @@
 
 #include "noteeditorutils.h"
 
-#include <KGlobal>
 #include <KLocale>
 
 #include <QChar>

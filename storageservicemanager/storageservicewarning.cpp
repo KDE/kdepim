@@ -24,7 +24,6 @@
 #include <KLocalizedString>
 #include <KDateTime>
 #include <KLocale>
-#include <KGlobal>
 
 #include <QPointer>
 

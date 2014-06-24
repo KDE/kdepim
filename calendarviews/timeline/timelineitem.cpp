@@ -29,7 +29,6 @@
 #include <KCalCore/Incidence>
 #include <KCalUtils/IncidenceFormatter>
 
-#include <QDebug>
 
 using namespace KCalCore;
 using namespace KCalUtils;

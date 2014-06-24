@@ -29,7 +29,6 @@
 #include <k4aboutdata.h>
 #include <KMessageBox>
 #include <QIcon>
-#include <KGlobal>
 
 #include <QPointer>
 #include <KSharedConfig>

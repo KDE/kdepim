@@ -28,8 +28,6 @@
 #define QWEBSPELLCHECKER_H
 
 
-#include <QtGlobal>
-#include <QtPlugin>
 #include <sonnet/speller.h>
 #include "qwebkitplatformplugin.h"
 

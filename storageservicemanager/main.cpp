@@ -25,7 +25,6 @@
 #include <kcmdlineargs.h>
 #include <QDebug>
 #include <KUniqueApplication>
-#include <KGlobal>
 
 int main( int argc, char **argv )
 {

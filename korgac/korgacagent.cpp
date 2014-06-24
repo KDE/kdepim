@@ -24,7 +24,6 @@
 
 #include <AkonadiAgentBase/AgentFactory>
 
-#include <KLocale>
 
 using namespace Akonadi;
 

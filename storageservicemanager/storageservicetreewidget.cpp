@@ -36,7 +36,6 @@
 
 #include <QPainter>
 #include <QHeaderView>
-#include <QTimer>
 #include <QPointer>
 #include <KSharedConfig>
 #include <KFormat>

@@ -22,7 +22,6 @@
 #include <KLocalizedString>
 
 #include <QTabBar>
-#include <QDebug>
 
 using namespace KSieveUi;
 SieveEditorTabWidget::SieveEditorTabWidget(QWidget *parent)

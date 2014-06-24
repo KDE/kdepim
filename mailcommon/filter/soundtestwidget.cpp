@@ -18,7 +18,6 @@
 
 #include "soundtestwidget.h"
 
-#include <KFileDialog>
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <KUrlRequester>

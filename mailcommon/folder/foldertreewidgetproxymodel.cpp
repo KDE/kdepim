@@ -31,10 +31,8 @@
 #include <MimeTypeChecker>
 
 #include <KColorScheme>
-#include <QDebug>
 #include <KLocale>
 
-#include <QApplication>
 #include <QPalette>
 
 namespace MailCommon {

@@ -21,7 +21,6 @@
 #include <QIcon>
 #include <KRun>
 #include <QWhatsThisClickedEvent>
-#include <QDebug>
 #include <QWhatsThis>
 
 using namespace KSieveUi;

@@ -22,7 +22,6 @@
 #include <Tag>
 #include <TagSelectionDialog>
 #include <QWidget>
-#include <KDialog>
 #include <KComboBox>
 #include "kcheckcombobox.h"
 

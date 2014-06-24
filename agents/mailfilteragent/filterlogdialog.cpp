@@ -39,7 +39,6 @@
 #include <kmessagebox.h>
 #include <kvbox.h>
 #include <QIcon>
-#include <KGlobal>
 #include <KUrl>
 
 #include <QCheckBox>

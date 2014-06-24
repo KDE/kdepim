@@ -22,7 +22,6 @@
 #include <Tag>
 #include <TagAttribute>
 
-#include <QDebug>
 
 using namespace MailCommon;
 

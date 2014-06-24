@@ -23,8 +23,6 @@
 
 #include <KLocalizedString>
 #include <QVBoxLayout>
-#include <QLineEdit>
-#include <QSpinBox>
 
 ServerSieveSettingsDialog::ServerSieveSettingsDialog(QWidget *parent)
     : KDialog(parent)

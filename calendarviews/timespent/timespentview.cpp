@@ -30,7 +30,6 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include <KGlobal>
 
 #include <QBoxLayout>
 #include <QPainter>

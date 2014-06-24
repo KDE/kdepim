@@ -22,7 +22,6 @@
 #include <kmime/kmime_header_parsing.h>
 #include <kwindowsystem.h>
 #include <KSeparator>
-#include <KGlobal>
 
 #include <QApplication>
 #include <QVBoxLayout>

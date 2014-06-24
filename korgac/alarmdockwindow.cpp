@@ -34,11 +34,11 @@
 #include <KIconLoader>
 #include <KLocale>
 #include <KMessageBox>
-#include <QMenu>
 #include <KStandardAction>
 #include <KToolInvocation>
-#include <KGlobal>
 #include <KSharedConfig>
+
+#include <QMenu>
 
 AlarmDockWindow::AlarmDockWindow()
   : KStatusNotifierItem( 0 )

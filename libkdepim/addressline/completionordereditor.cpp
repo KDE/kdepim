@@ -44,7 +44,6 @@
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
 #include <kldap/ldapserver.h>
-#include <KGlobal>
 
 
 #include <KConfigGroup>
@@ -55,7 +54,6 @@
 #include <KVBox>
 
 #include <QtDBus/QDBusConnection>
-#include <QToolButton>
 #include <QTreeWidget>
 #include <KSharedConfig>
 

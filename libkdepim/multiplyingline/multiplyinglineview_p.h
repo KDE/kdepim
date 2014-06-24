@@ -28,7 +28,6 @@
 #include "multiplyingline.h"
 #include "multiplyinglineeditor.h"
 
-#include <KGlobalSettings>
 
 #include <QPointer>
 #include <QScrollArea>

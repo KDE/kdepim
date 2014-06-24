@@ -31,11 +31,8 @@
 #include <kldap/ldif.h>
 
 #include <KConfig>
-#include <KConfigGroup>
 #include <KDebug>
 #include <KDirWatch>
-#include <KProtocolInfo>
-#include <KStandardDirs>
 #include <kio/job.h>
 
 #include <QtCore/QPointer>

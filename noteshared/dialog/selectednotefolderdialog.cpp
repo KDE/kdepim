@@ -20,7 +20,6 @@
 #include "akonadi_next/note.h"
 
 #include <KLocalizedString>
-#include <KGlobal>
 #include <KConfigGroup>
 #include <KSharedConfig>
 

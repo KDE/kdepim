@@ -17,7 +17,6 @@
 
 #include "yousenditutil.h"
 #include <QVariant>
-#include <QDebug>
 #include <QDateTime>
 
 QStringList PimCommon::YouSendItUtil::getListFolder(const QString &data)

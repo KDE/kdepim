@@ -19,10 +19,8 @@
 #include "filterselectiondialog.h"
 #include "mailfilter.h"
 
-#include <QDebug>
 #include <KListWidgetSearchLine>
 #include <QPushButton>
-#include <KGlobal>
 
 #include <QListWidget>
 #include <QVBoxLayout>

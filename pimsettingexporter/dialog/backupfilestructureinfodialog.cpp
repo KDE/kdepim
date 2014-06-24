@@ -24,7 +24,6 @@
 #include <KSharedConfig>
 #include <KStandardDirs>
 #include <KMessageBox>
-#include <KGlobal>
 
 #include <QFile>
 #include <QLabel>

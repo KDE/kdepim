@@ -22,18 +22,14 @@
 #include "extendattributeswidget.h"
 #include "extendattributesutils_p.h"
 
-#include <KSeparator>
 #include <KLocalizedString>
-#include <KComboBox>
-#include <KLineEdit>
 #include <QPushButton>
 #include <QDebug>
 
 #include <QWebElement>
 #include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QTreeWidget>
 #include <QLabel>
+#include <QTabWidget>
 
 namespace ComposerEditorNG {
 

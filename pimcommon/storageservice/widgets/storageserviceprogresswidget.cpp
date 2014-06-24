@@ -21,7 +21,6 @@
 
 #include <KLocalizedString>
 #include <KLocale>
-#include <KGlobal>
 #include <KIcon>
 
 #include <QProgressBar>

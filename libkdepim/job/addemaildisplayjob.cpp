@@ -43,7 +43,6 @@
 #include <KMessageBox>
 
 #include <QPointer>
-#include <QTextDocument>
 
 using namespace KPIM;
 

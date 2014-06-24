@@ -59,7 +59,6 @@
 #include <AkonadiCore/Control>
 
 #include <KStandardAction>
-#include <QAction>
 #include <KActionCollection>
 #include <KFileDialog>
 #include <KMessageBox>
@@ -68,7 +67,6 @@
 #include <KStatusBar>
 #include <KRecentFilesAction>
 #include <KCmdLineArgs>
-#include <KGlobal>
 #include <QPointer>
 #include <KSharedConfig>
 #include <KLocale>

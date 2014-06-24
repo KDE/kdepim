@@ -40,7 +40,6 @@
 #include <KDateTime>
 #include <KConfigGroup>
 #include <KSystemTimeZones>
-#include <KGlobal>
 
 #include <QDateTime>
 #include <QPainter>

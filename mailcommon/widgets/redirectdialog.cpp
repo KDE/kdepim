@@ -49,10 +49,8 @@
 #include <KIconLoader>
 #include <KLocale>
 #include <KMessageBox>
-#include <KVBox>
 #include <QIcon>
 
-#include <QFrame>
 #include <QLabel>
 #include <QPushButton>
 #include <QTreeView>

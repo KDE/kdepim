@@ -20,7 +20,6 @@
 
 #include <pimcommon/widgets/minimumcombobox.h>
 
-#include <QDebug>
 #include <KDateComboBox>
 #include <KLocale>
 

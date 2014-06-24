@@ -44,10 +44,8 @@
 #include <KToggleAction>
 #include <QAction>
 #include <KSelectAction>
-#include <KActionCollection>
 #include <KColorDialog>
 #include <KMessageBox>
-#include <KStandardDirs>
 #include <QDebug>
 #include <KFontAction>
 #include <KFileDialog>
@@ -57,13 +55,13 @@
 #include <QUrl>
 #include <QIcon>
 #include <KShortcut>
+#include <KStandardShortcut>
 
 #include <QAction>
 #include <QDBusInterface>
 #include <QDBusConnectionInterface>
 #include <QWebFrame>
 #include <QWebElement>
-#include <QContextMenuEvent>
 #include <QDebug>
 #include <QPointer>
 #include <QPrinter>

@@ -17,7 +17,6 @@
 
 #include "tagwidgets.h"
 #include <KJob>
-#include <QLayout>
 #include <QItemSelectionModel>
 
 #include <Tag>
@@ -28,8 +27,8 @@
 #include <TagModel>
 #include <Monitor>
 #include <KCheckableProxyModel>
-#include <KLineEdit>
 #include <QDebug>
+#include <QHBoxLayout>
 
 using namespace KPIM;
 

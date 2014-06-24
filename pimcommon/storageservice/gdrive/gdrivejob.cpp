@@ -35,11 +35,9 @@
 #include <libkgapi2/drive/filecopyjob.h>
 #include <LibKGAPI2/Drive/ParentReference>
 
-#include <KLocalizedString>
 
 #include <qjson/parser.h>
 
-#include <QNetworkAccessManager>
 #include <QDebug>
 #include <QNetworkReply>
 #include <QPointer>
@@ -47,7 +45,6 @@
 #include <QDebug>
 #include <QFile>
 #include <QPointer>
-#include <QDateTime>
 
 using namespace PimCommon;
 

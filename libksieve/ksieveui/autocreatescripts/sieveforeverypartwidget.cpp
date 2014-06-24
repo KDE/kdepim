@@ -24,12 +24,10 @@
 
 #include <KLocalizedString>
 #include <QLineEdit>
-#include <QIcon>
 
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QCheckBox>
-#include <QToolButton>
 #include <QWhatsThis>
 #include <QDomNode>
 #include <QDebug>

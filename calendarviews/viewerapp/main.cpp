@@ -26,7 +26,6 @@
 static const char description[] = I18N_NOOP( "A test app for embedding calendarviews" );
 
 static const char version[] = "0.1";
-#include <QDebug>
 int main( int argc, char **argv )
 {
     K4AboutData about( "viewerapp", 0, ki18n( "ViewerApp" ), version, ki18n( description ),

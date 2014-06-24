@@ -36,7 +36,6 @@
 #include <AkonadiCore/session.h>
 #include <mailcommon/kernel/mailkernel.h>
 #include <KLocalizedString>
-#include <KGlobal>
 #include <QIcon>
 #include <QDebug>
 #include <KIconLoader>

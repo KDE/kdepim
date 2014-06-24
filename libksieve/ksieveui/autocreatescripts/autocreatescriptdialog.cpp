@@ -23,7 +23,6 @@
 
 #include <KLocalizedString>
 #include <KSharedConfig>
-#include <KGlobal>
 #include <QKeyEvent>
 
 using namespace KSieveUi;

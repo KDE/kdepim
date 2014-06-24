@@ -19,8 +19,6 @@
 
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KToolInvocation>
-#include <KAction>
 #include <KStandardAction>
 #include <KGlobalSettings>
 #include <KCursor>

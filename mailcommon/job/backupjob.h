@@ -29,7 +29,6 @@
 
 #include <KUrl>
 
-#include <QList>
 #include <QObject>
 #include <QPointer>
 #include <QDateTime>

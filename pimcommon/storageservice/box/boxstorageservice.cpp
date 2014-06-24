@@ -30,9 +30,7 @@
 
 #include <KLocalizedString>
 #include <KLocale>
-#include <KGlobal>
 
-#include <QPointer>
 #include <QDebug>
 #include <KFormat>
 

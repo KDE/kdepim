@@ -25,7 +25,6 @@
 #include <Akonadi/KMime/MessageStatus>
 
 #include <KLocale>
-#include <KUrl>
 
 #include <QList>
 #include <QString>

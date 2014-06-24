@@ -26,7 +26,6 @@
 #include <QColor>
 #include <QFont>
 #include <QSharedPointer>
-#include <QUrl>
 #include <AkonadiCore/tag.h>
 
 namespace MailCommon {

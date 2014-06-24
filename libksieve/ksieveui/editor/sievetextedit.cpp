@@ -22,7 +22,6 @@
 #include "sievesyntaxhighlighter.h"
 
 
-#include <KGlobalSettings>
 #include <KLocalizedString>
 #include <QAction>
 #include <QIcon>
@@ -33,7 +32,6 @@
 #include <QKeyEvent>
 #include <QPainter>
 #include <QScrollBar>
-#include <QDebug>
 #include <QAction>
 #include <QMenu>
 #include <QFontDatabase>

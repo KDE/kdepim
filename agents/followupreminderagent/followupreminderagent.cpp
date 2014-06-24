@@ -22,8 +22,6 @@
 #include "followupreminderinfodialog.h"
 #include "followupreminderagentsettings.h"
 #include <KWindowSystem>
-#include <KLocale>
-#include <KGlobal>
 #include <KMime/Message>
 
 #include <AkonadiCore/ChangeRecorder>

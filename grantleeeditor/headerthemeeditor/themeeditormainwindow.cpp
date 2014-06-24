@@ -29,7 +29,6 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KFileDialog>
-#include <QDebug>
 #include <KStandardDirs>
 #include <KRecentFilesAction>
 #include <KNS3/KNewStuffAction>

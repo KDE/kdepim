@@ -57,7 +57,6 @@
 #include <KSystemTimeZone>
 #include <KToolInvocation>
 #include <KWindowSystem>
-#include <KGlobal>
 #include <KIconLoader>
 #include <QIcon>
 #include <phonon/mediaobject.h>

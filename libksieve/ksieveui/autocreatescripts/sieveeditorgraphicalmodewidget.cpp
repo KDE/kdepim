@@ -24,7 +24,6 @@
 #include "sievescriptpage.h"
 
 #include <KLocalizedString>
-#include <KGlobal>
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KMessageBox>

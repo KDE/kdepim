@@ -24,17 +24,14 @@
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
-#include <KLocalizedString>
 #include <KSharedConfig>
 
 #include <KMime/KMimeMessage>
 
 #include <QIcon>
-#include <KGlobal>
 
 #include <QLineEdit>
 #include <QVBoxLayout>
-#include <QTextEdit>
 
 
 NotesAgentNoteDialog::NotesAgentNoteDialog(QWidget *parent)

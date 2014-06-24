@@ -28,8 +28,6 @@
 #include "pimcommon/storageservice/widgets/storageserviceprogressindicator.h"
 
 #include <KLocalizedString>
-#include <KFileDialog>
-#include <KInputDialog>
 #include <KMessageBox>
 #include <knotification.h>
 
@@ -39,7 +37,6 @@
 #include <QDebug>
 #include <QPointer>
 #include <QTimer>
-#include <QProgressBar>
 
 
 StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::StorageServiceAbstract *storageService, QWidget *parent)

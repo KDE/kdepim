@@ -28,9 +28,8 @@
 #include <QTabWidget>
 #include <KIconLoader>
 #include <KUrl>
-#include <KGlobal>
-#include <QTabBar>
 
+#include <QTabBar>
 #include <QApplication>
 #include <QStackedWidget>
 #include <QVBoxLayout>

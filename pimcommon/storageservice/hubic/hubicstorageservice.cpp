@@ -28,7 +28,6 @@
 
 
 #include <KLocalizedString>
-#include <KGlobal>
 
 
 using namespace PimCommon;

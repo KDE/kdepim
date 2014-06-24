@@ -21,7 +21,6 @@
 #include <kmessagebox.h>
 #include <kmanagesieve/sievejob.h>
 #include <ksieveui/util/util.h>
-#include <KGlobal>
 
 #include <QtCore/QTimer>
 #include <KSharedConfig>

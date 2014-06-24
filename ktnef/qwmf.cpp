@@ -22,15 +22,12 @@
 #include <math.h>
 #include <assert.h>
 
-#include <QFileInfo>
 #include <QImage>
 #include <QPainter>
 #include <QPainterPath>
 #include <QDataStream>
-#include <QApplication>
 #include <QBuffer>
-
-//#include <Q3CString>
+#include <QFile>
 #include <QPolygon>
 
 #include <qdebug.h>

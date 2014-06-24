@@ -35,19 +35,17 @@
 #include <KLineEdit>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KNumInput>
 #include <KUrl>
 #include <KUrlRequester>
-#include <KVBox>
+#include <KHBox>
 
+#include <QSpinBox>
 #include <QButtonGroup>
 #include <QCheckBox>
-#include <QDateTime>
 #include <QFrame>
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QLayout>
 #include <QRadioButton>
 #include <QVBoxLayout>
 #include <QWhatsThis>

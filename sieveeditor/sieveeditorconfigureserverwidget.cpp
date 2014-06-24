@@ -25,7 +25,6 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 
-#include <QPointer>
 
 SieveEditorConfigureServerWidget::SieveEditorConfigureServerWidget(QWidget *parent) :
     QWidget(parent),

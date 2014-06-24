@@ -32,25 +32,19 @@
 #include "progressdialog.h"
 #include "ssllabel.h"
 
-#include <QDebug>
 #include <KHBox>
 #include <KLocale>
-#include <KStandardGuiItem>
-#include <QIcon>
 #include <KIconLoader>
 
-#include <QApplication>
 #include <QCloseEvent>
-#include <QEvent>
 #include <QFrame>
 #include <QLabel>
-#include <QLayout>
 #include <QObject>
 #include <QProgressBar>
 #include <QPushButton>
 #include <QScrollBar>
 #include <QTimer>
-#include <QToolButton>
+#include <QLayout>
 
 namespace KPIM {
 

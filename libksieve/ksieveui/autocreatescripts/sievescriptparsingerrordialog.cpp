@@ -21,7 +21,6 @@
 
 #include <KLocalizedString>
 #include <KSharedConfig>
-#include <KGlobal>
 
 #include <errno.h>
 

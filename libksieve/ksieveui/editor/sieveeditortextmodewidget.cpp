@@ -39,8 +39,6 @@
 
 #include <KLocalizedString>
 #include <KSharedConfig>
-#include <QTabWidget>
-#include <KGlobal>
 
 #include <QSplitter>
 #include <QShortcut>

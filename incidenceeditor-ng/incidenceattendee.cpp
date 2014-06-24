@@ -42,11 +42,10 @@
 #include <KPIMUtils/Email>
 
 #include <QDebug>
+#include <QTreeView>
 #include <KMessageBox>
 #include <KLocalizedString>
 
-#include <QTreeView>
-#include <QDateTime>
 
 using namespace IncidenceEditorNG;
 

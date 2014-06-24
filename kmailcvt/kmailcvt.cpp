@@ -30,8 +30,6 @@
 #include <klocale.h>
 #include <qdebug.h>
 #include <KHelpMenu>
-#include <QMenu>
-#include <KComponentData>
 #include <KConfigGroup>
 
 // Qt includes

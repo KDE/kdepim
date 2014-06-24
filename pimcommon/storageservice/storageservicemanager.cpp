@@ -36,11 +36,9 @@
 #endif
 #include <KLocalizedString>
 #include <KFileDialog>
-#include <KInputDialog>
 #include <KActionMenu>
 #include <KMessageBox>
 
-#include <QMenu>
 #include <QDBusConnection>
 
 using namespace PimCommon;

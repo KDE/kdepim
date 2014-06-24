@@ -23,7 +23,6 @@
 
 #include <KLocalizedString>
 #include <KLocale>
-#include <KGlobal>
 #include <QDate>
 
 using KMime::Types::AddrSpecList;

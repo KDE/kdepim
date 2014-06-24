@@ -26,9 +26,7 @@
 #include <KLocalizedString>
 #include <KConfigGroup>
 #include <KSharedConfig>
-#include <KGlobal>
 
-#include <QHBoxLayout>
 
 StorageServiceLogDialog::StorageServiceLogDialog(QWidget *parent)
     : KDialog(parent)

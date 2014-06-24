@@ -33,7 +33,6 @@
 
 #include <KIconLoader>
 #include <KTemporaryFile>
-#include <QDebug>
 
 #include <QDrag>
 #include <QKeyEvent>

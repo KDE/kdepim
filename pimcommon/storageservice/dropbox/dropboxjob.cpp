@@ -26,10 +26,8 @@
 #include <KUrl>
 
 #include <QFile>
-#include <QFileInfo>
 
 #include <QNetworkRequest>
-#include <QNetworkAccessManager>
 #include <QDateTime>
 #include <QStringList>
 #include <QDebug>

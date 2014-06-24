@@ -25,8 +25,6 @@
 #include "printingwizard.h"
 
 #include <QDebug>
-#include <KStandardDirs>
-#include <KDialog>
 
 #include <QPushButton>
 #include <QPixmap>

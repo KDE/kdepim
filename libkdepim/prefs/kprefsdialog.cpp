@@ -33,7 +33,6 @@
 #include <KLineEdit>
 #include <KLocale>
 #include <KMessageBox>
-#include <KPageWidget>
 #include <KTimeComboBox>
 #include <KUrlRequester>
 #include <QUrl>
@@ -43,7 +42,6 @@
 #include <QCheckBox>
 #include <QGridLayout>
 #include <QLabel>
-#include <QLayout>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QSpinBox>

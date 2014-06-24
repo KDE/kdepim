@@ -29,7 +29,6 @@
 #endif
 
 #include <libkdepim/widgets/tagwidgets.h>
-#include <KConfigSkeleton>
 #include <QDebug>
 
 #include <TagCreateJob>

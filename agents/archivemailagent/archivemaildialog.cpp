@@ -23,7 +23,6 @@
 
 #include <mailcommon/util/mailutil.h>
 
-#include <KGlobal>
 #include <KLocale>
 #include <KMessageBox>
 #include <QMenu>

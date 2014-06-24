@@ -31,10 +31,8 @@
 #include <KMessageBox>
 
 
-#include <QItemSelectionModel>
 #include <QLabel>
 #include <QSplitter>
-#include <QHBoxLayout>
 #include <QPointer>
 
 using namespace KABMergeContacts;

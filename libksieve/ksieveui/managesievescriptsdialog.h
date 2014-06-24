@@ -24,7 +24,6 @@
 #include <qdialog.h>
 #include <kurl.h>
 
-#include <QMap>
 
 class QTreeWidgetItem;
 class QPushButton;

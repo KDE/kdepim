@@ -21,12 +21,9 @@
 #include "sieveeditorwidget.h"
 
 #include <klocale.h>
-#include <KStandardGuiItem>
-#include <KGlobal>
 
 #include <QPushButton>
 #include <QKeyEvent>
-#include <QDebug>
 #include <KSharedConfig>
 
 using namespace KSieveUi;

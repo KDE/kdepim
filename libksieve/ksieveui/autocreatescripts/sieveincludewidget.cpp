@@ -30,7 +30,6 @@
 #include <QGridLayout>
 #include <QCheckBox>
 #include <QLabel>
-#include <QToolButton>
 #include <QWhatsThis>
 #include <QDomNode>
 #include <QDebug>

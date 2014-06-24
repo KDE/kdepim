@@ -22,7 +22,6 @@
 
 #include "identitymanager.h"
 #include "kcalprefs.h"
-#include <KGlobal>
 
 using namespace CalendarSupport;
 

@@ -35,7 +35,6 @@
 #include <QDebug>
 #include <KLocale>
 #include <KMessageBox>
-#include <KGlobal>
 
 namespace MailCommon {
 

@@ -32,7 +32,6 @@
 #include <KLocale>
 #include <KMessageBox>
 #include <KTextBrowser>
-#include <KGlobal>
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -40,7 +39,6 @@
 #include <QListWidget>
 #include <QPushButton>
 #include <QPointer>
-#include <QDebug>
 #include <QStackedWidget>
 #include <KFormat>
 

@@ -30,8 +30,6 @@
 
 #include <QTabWidget>
 #include <QVBoxLayout>
-#include <QListWidget>
-#include <QLabel>
 #include <QCheckBox>
 
 SieveEditorConfigureDialog::SieveEditorConfigureDialog(QWidget *parent)

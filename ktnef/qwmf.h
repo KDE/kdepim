@@ -22,7 +22,6 @@
 #include <QString>
 #include <QPainter>
 #include <QMatrix>
-#include <QPen>
 #include <QColor>
 #include <QImage>
 #include <QRect>

@@ -22,9 +22,7 @@
 #include <KIconTheme>
 #include <KStandardGuiItem>
 #include <KMessageBox>
-#include <KToolInvocation>
 #include <KStandardAction>
-#include <KAction>
 #include <KCursor>
 #include <KIcon>
 #include <KDialog>
@@ -41,7 +39,6 @@
 #include <QScrollBar>
 #include <QApplication>
 #include <QClipboard>
-#include <QDebug>
 
 using namespace PimCommon;
 

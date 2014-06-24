@@ -31,7 +31,6 @@
 
 #include <QTimer>
 #include <QPointer>
-#include <KLocale>
 
 //#define DEBUG_ARCHIVEMAILAGENT 1
 

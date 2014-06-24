@@ -22,7 +22,6 @@
 #include "interface/storageserviceinterface.h"
 
 
-#include <KGlobal>
 
 #include <QDebug>
 

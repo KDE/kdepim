@@ -22,10 +22,8 @@
 #include "widgets/regexplineedit.h"
 using MailCommon::RegExpLineEdit;
 
-#include <QDebug>
 #include <KLocale>
 
-#include <QLineEdit>
 #include <QStackedWidget>
 #include <QLabel>
 

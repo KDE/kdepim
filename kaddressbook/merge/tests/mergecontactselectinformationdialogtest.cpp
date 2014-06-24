@@ -20,7 +20,6 @@
 #include "mergecontactshowresulttabwidget.h"
 #include <qtest_kde.h>
 
-#include <QTabWidget>
 
 using namespace KABMergeContacts;
 

@@ -23,7 +23,6 @@
 
 #include <KLocalizedString>
 #include <KLocale>
-#include <KGlobal>
 
 #include <QVBoxLayout>
 #include <QGroupBox>

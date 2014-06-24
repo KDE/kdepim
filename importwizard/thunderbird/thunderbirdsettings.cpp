@@ -22,7 +22,6 @@
 
 #include <KPIMIdentities/kpimidentities/identity.h>
 #include <KPIMIdentities/kpimidentities/signature.h>
-#include <KStandardDirs>
 
 #include <KABC/VCardConverter>
 #include <QTextStream>

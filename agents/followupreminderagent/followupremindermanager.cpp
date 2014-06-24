@@ -18,7 +18,6 @@
 #include "followupremindermanager.h"
 #include "followupreminderinfo.h"
 
-#include <KGlobal>
 #include <KConfigGroup>
 #include <KConfig>
 #include <KSharedConfig>

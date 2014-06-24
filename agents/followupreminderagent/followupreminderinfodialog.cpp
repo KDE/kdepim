@@ -24,7 +24,6 @@
 #include <KHelpMenu>
 #include <QMenu>
 #include <QIcon>
-#include <KGlobal>
 
 #include <QTreeWidget>
 #include <QHBoxLayout>

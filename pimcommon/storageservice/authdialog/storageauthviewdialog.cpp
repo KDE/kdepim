@@ -19,7 +19,6 @@
 
 #include <KLocalizedString>
 #include <KSharedConfig>
-#include <KGlobal>
 using namespace PimCommon;
 
 StorageAuthViewDialog::StorageAuthViewDialog(QWidget *parent)

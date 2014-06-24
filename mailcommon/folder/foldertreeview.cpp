@@ -24,7 +24,6 @@
 #include <EntityTreeModel>
 
 #include <KConfigGroup>
-#include <QDebug>
 #include <KGuiItem>
 #include <KLocale>
 #include <KMenu>

@@ -25,7 +25,7 @@
 #include "messagewidget.h"
 
 #include <QApplication>
-#include <QMouseEvent>
+#include <QKeyEvent>
 
 using namespace CalendarSupport;
 

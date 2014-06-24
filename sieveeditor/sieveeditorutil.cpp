@@ -26,7 +26,6 @@
 
 #include <KConfig>
 
-#include <KLocale>
 #include <KConfigGroup>
 
 #include <QRegExp>

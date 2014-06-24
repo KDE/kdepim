@@ -25,13 +25,11 @@
 
 #include <KApplication>
 #include <KComboBox>
-#include <QDebug>
 #include <KInputDialog>
 #include <QLineEdit>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KProgressDialog>
-#include <KStandardDirs>
 #include <KUrlRequester>
 #include <KLineEdit>
 

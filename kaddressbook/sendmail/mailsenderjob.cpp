@@ -30,10 +30,8 @@
 
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
-#include <KToolInvocation>
 
 #include <QDebug>
-#include <QItemSelectionModel>
 using namespace KABMailSender;
 
 MailSenderJob::MailSenderJob(const Akonadi::Item::List &listItem, QObject *parent)

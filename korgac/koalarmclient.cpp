@@ -49,11 +49,9 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <KDebug>
-#include <KGlobal>
 #include <KStandardDirs>
 
 #ifdef Q_WS_MAEMO_5
-#include <QtMaemo5/QMaemo5InformationBox>
 #include <KSharedConfig>
 #endif
 

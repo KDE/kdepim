@@ -26,14 +26,12 @@
 #include <QPushButton>
 #include <KLocalizedString>
 #include <kio/job.h>
-#include <QDebug>
 #include <KConfigGroup>
 #include <KSeparator>
 #include <KMessageBox>
 #include <KToggleAction>
 #include <KPIMUtils/kpimutils/progressindicatorwidget.h>
 #include <KIcon>
-#include <KGlobal>
 #include <QMimeData> 
 
 #include <QHBoxLayout>

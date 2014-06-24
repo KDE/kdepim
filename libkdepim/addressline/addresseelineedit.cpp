@@ -52,16 +52,13 @@
 #include <KCompletionBox>
 #include <QDebug>
 #include <KLocale>
-#include <KStandardDirs>
 #include <KStandardShortcut>
 #include <QUrl>
 #include <KGlobal>
-#include <KGlobalSettings>
 
 #include <solid/networking.h>
 
 #include <QApplication>
-#include <QCursor>
 #include <QObject>
 #include <QRegExp>
 #include <QEvent>

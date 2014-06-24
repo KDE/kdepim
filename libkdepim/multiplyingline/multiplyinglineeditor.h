@@ -30,7 +30,6 @@
 #include "multiplyingline.h"
 
 #include <KCompletion>
-#include <KGlobalSettings>
 #include <QWidget>
 #include <QObject>
 

@@ -76,9 +76,6 @@
 #include <KColorScheme>
 #include <KDBusServiceStarter>
 #include <KJob>
-#include <KLocale>
-#include <KMessageBox>
-#include <KTemporaryFile>
 #include <KIO/JobUiDelegate>
 
 

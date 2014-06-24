@@ -27,14 +27,12 @@
 #include <QPushButton>
 #include <KPushButton>
 #include <kmessagebox.h>
-#include <KGlobal>
 
 #include <agentinstance.h>
 #include <kmanagesieve/sievejob.h>
 #include <ksieveui/util/util.h>
 
 #include <QApplication>
-#include <QMenu>
 #include <QTreeWidget>
 #include <QVBoxLayout>
 

@@ -24,9 +24,7 @@
 #include <QIcon>
 #include <KStandardShortcut>
 
-#include <QHBoxLayout>
 #include <QAction>
-#include <QWidgetAction>
 
 StorageServiceNavigationButtons::StorageServiceNavigationButtons(QWidget *parent)
     : QToolBar(parent)

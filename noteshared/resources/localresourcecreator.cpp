@@ -26,10 +26,7 @@
 #include "akonadi_next/note.h"
 
 #include <QDebug>
-#include <KGlobal>
 #include <KLocalizedString>
-#include <KRandom>
-#include <KStandardDirs>
 #include <AkonadiCore/resourcesynchronizationjob.h>
 
 using namespace NoteShared;

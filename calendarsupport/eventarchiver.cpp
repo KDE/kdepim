@@ -36,7 +36,6 @@
 #include <KCalUtils/Stringify>
 
 #include <KDebug>
-#include <KGlobal>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KTemporaryFile>

@@ -26,7 +26,6 @@
 #include <KLocalizedString>
 #include <QLineEdit>
 #include <KSeparator>
-#include <QUrl>
 #include <KUrl>
 
 #include <QVBoxLayout>

@@ -31,7 +31,6 @@
 #include <QMap>
 #include <QHash>
 #include <QWeakPointer>
-#include <QPointer>
 namespace Akonadi {
 class AgentInstance;
 }

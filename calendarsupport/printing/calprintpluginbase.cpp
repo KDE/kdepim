@@ -35,18 +35,17 @@
 #include <KDebug>
 #include <KSystemTimeZones>
 #include <KWordWrap>
-#include <KGlobal>
 #include <KConfig>
 
 #include <QAbstractTextDocumentLayout>
 #include <QFrame>
 #include <QLabel>
-#include <QLayout>
 #include <QPainter>
 #include <QTextCursor>
 #include <QTextDocument>
 #include <QTextDocumentFragment>
 #include <qmath.h> // qCeil krazy:exclude=camelcase since no QMath
+#include <QVBoxLayout>
 #include <KLocale>
 
 using namespace CalendarSupport;

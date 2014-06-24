@@ -35,8 +35,6 @@
 
 #include <KColorScheme>
 
-#include <KLocale>
-#include <KStringHandler>
 
 using namespace KAddressBookGrantlee;
 

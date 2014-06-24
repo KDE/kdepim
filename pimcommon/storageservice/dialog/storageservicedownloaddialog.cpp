@@ -23,18 +23,15 @@
 #include "storageservice/storageserviceprogressmanager.h"
 
 #include <KLocalizedString>
-#include <KGlobal>
 #include <KSharedConfig>
 #include <KMessageBox>
 #include <KFileDialog>
 #include <QMenu>
 #include <KUrl>
-
-#include <QGridLayout>
+#include <QVBoxLayout>
 #include <QLabel>
 #include <QTreeWidget>
 #include <QFileInfo>
-#include <QDebug>
 #include <QHeaderView>
 #include <QCloseEvent>
 

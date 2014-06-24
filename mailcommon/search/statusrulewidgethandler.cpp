@@ -19,7 +19,6 @@
 
 #include <pimcommon/widgets/minimumcombobox.h>
 
-#include <QDebug>
 #include <KIconLoader>
 
 #include <QStackedWidget>

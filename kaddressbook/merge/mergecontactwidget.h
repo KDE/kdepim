@@ -19,7 +19,6 @@
 #define MERGECONTACTWIDGET_H
 
 #include <QWidget>
-#include <QListWidgetItem>
 #include <AkonadiCore/Item>
 #include "kaddressbook_export.h"
 

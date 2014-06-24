@@ -37,8 +37,6 @@
 #include <QDebug>
 
 #include <QStandardItemModel>
-#include <QResizeEvent>
-#include <QSplitter>
 #include <QTreeWidget>
 
 using namespace KCalCore;

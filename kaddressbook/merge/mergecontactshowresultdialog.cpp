@@ -25,7 +25,6 @@
 #include <KSharedConfig>
 
 
-#include <QTabBar>
 
 using namespace KABMergeContacts;
 

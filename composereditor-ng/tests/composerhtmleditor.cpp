@@ -27,7 +27,6 @@
 #include <klocale.h>
 #include <qdebug.h>
 
-#include <QVBoxLayout>
 #include <QSplitter>
 
 ComposerHtmlEditor::ComposerHtmlEditor()

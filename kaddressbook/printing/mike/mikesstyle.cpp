@@ -31,7 +31,6 @@
 
 #include <KABC/Addressee>
 
-#include <QDebug>
 #include <KLocalizedString>
 
 #include <QPrinter>

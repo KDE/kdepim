@@ -28,7 +28,6 @@
 #include "ui_rbs_appearance.h"
 
 #include <KConfig>
-#include <KGlobal>
 #include <KLocalizedString>
 #include <KConfigGroup>
 

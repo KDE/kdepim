@@ -21,7 +21,6 @@
 #include "storageservicenavigationbuttontest.h"
 #include "../storageservicenavigationbuttons.h"
 
-#include <QAction>
 #include <qtest_kde.h>
 #include <qtestmouse.h>
 #include <qtestkeyboard.h>

@@ -25,12 +25,7 @@
 #include <KLocalizedString>
 #include <KConfigGroup>
 #include <KSharedConfig>
-#include <KUrlRequester>
-#include <KGlobal>
 
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QLabel>
 
 using namespace PimCommon;
 

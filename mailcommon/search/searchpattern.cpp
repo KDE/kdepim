@@ -39,7 +39,6 @@ using MailCommon::FilterLog;
 
 #include <QDataStream>
 #include <QRegExp>
-#include <QXmlStreamWriter>
 
 #include <algorithm>
 #include <boost/bind.hpp>

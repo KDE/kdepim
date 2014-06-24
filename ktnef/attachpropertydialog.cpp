@@ -28,11 +28,9 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KMimeType>
-#include <KGlobal>
 
 #include <QBuffer>
 #include <QDataStream>
-#include <QLabel>
 #include <QTreeWidget>
 #include <KSharedConfig>
 

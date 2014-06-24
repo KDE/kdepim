@@ -35,7 +35,6 @@
 #include <KEMailSettings>
 #include <KSystemTimeZone>
 
-#include <KGlobal>
 #include <KDebug>
 
 using namespace CalendarSupport;

@@ -32,7 +32,6 @@
 
 #include "kwidgetlister.h"
 
-#include <QDebug>
 #include <KDialog>
 #include <KLocale>
 #include <KGuiItem>

@@ -31,6 +31,7 @@
 #include <KIconLoader>
 #include <KLocalizedString>
 
+
 #include <QPixmap>
 
 using namespace CalendarSupport;

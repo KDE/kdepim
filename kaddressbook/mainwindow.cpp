@@ -22,16 +22,14 @@
 #include "mainwidget.h"
 #include "xxportmanager.h"
 
-#include <KGlobal>
 #include <KConfigGroup>
-
+#include <KToolBar>
 #include <QAction>
 #include <KActionCollection>
 #include <KEditToolBar>
 #include <KShortcutsDialog>
 #include <KStandardAction>
 #include <KLocalizedString>
-#include <KToolBar>
 #include <KSharedConfig>
 
 MainWindow::MainWindow()

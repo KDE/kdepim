@@ -28,10 +28,8 @@
 
 #include <QVBoxLayout>
 #include <QWebElement>
-#include <QComboBox>
 #include <QLabel>
 #include <QSpinBox>
-#include <QDebug>
 
 namespace ComposerEditorNG
 {

@@ -18,7 +18,6 @@
 #include <qdebug.h>
 #include <kcmdlineargs.h>
 #include <kapplication.h>
-#include <QDebug>
 
 #include "../sendlaterdialog.h"
 

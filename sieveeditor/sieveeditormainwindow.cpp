@@ -31,11 +31,9 @@
 #include <KLocalizedString>
 #include <KConfigGroup>
 #include <KStandardAction>
-#include <KApplication>
 #include <KActionCollection>
 #include <QAction>
 #include <KStatusBar>
-#include <QTabWidget>
 #include <QIcon>
 
 #include <QPointer>

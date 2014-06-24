@@ -23,8 +23,6 @@
 
 #include <QMouseEvent>
 #include <QPainter>
-#include <QDebug>
-#include <QToolTip>
 
 namespace ComposerEditorNG
 {

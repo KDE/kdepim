@@ -25,9 +25,7 @@
 
 #include <QSpinBox>
 #include <QHBoxLayout>
-#include <QVBoxLayout>
 #include <QCheckBox>
-#include <QGridLayout>
 
 namespace ComposerEditorNG
 {

@@ -37,20 +37,17 @@
 #include <KStandardAction>
 #include <KLocalizedString>
 #include <KActionCollection>
-#include <KApplication>
 #include <KConfigGroup>
-#include <QAction>
 #include <KStatusBar>
 #include <KMessageBox>
 #include <knotifyconfigwidget.h>
-#include <KGlobal>
 
 #include <QPointer>
 #include <QCloseEvent>
 #include <QLabel>
 #include <QDebug>
 #include <KSharedConfig>
-
+#include <QAction>
 
 
 StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()

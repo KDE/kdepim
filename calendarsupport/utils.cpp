@@ -52,14 +52,13 @@
 
 #include <MailTransport/TransportManager>
 
-#include <KIconLoader>
 #include <KUrl>
+#include <KIconLoader>
 
 #include <QAbstractItemModel>
 #include <QDrag>
 #include <QMimeData>
 #include <QModelIndex>
-#include <QPixmap>
 #include <QPointer>
 
 #include <boost/bind.hpp>

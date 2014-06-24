@@ -16,8 +16,6 @@
 */
 
 #include "autocorrectionlanguage.h"
-#include <KLocalizedString>
-#include <KGlobal>
 #include <KLocale>
 using namespace PimCommon;
 

@@ -30,12 +30,9 @@
 #include <KLocalizedString>
 #include <KLocale>
 #include <KDateTime>
-#include <KGlobal>
 
-#include <QPointer>
 #include <QDebug>
 #include <QFileInfo>
-#include <QDir>
 #include <KFormat>
 
 using namespace PimCommon;

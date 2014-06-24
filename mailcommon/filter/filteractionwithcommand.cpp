@@ -23,7 +23,6 @@
 #include <KProcess>
 #include <KShell>
 #include <KTemporaryFile>
-#include <KUrl>
 #include <QDebug>
 
 using namespace MailCommon;

@@ -18,7 +18,6 @@
 
 #include "kaddressbookgrantlee/widget/grantleecontactviewer.h"
 
-#include <KLocalizedString>
 
 #include <AkonadiCore/Item>
 

@@ -23,9 +23,9 @@
 #include <KLocalizedString>
 
 #include <QLabel>
-#include <QHBoxLayout>
 #include <QDebug>
 #include <QDomNode>
+#include <QGridLayout>
 
 using namespace KSieveUi;
 SieveActionConvert::SieveActionConvert(QObject *parent)

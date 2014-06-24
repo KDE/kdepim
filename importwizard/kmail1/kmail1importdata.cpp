@@ -20,7 +20,6 @@
 #include "importfilterinfogui.h"
 #include "importwizard.h"
 
-#include <KStandardDirs>
 #include <QStandardPaths>
 
 

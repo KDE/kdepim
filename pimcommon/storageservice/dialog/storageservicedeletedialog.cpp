@@ -23,19 +23,14 @@
 #include "storageservice/storageserviceabstract.h"
 
 #include <KLocalizedString>
-#include <KGlobal>
 #include <KSharedConfig>
-#include <KMessageBox>
-#include <KFileDialog>
 #include <QMenu>
 
-#include <QGridLayout>
 #include <QLabel>
 #include <QTreeWidget>
-#include <QFileInfo>
-#include <QDebug>
 #include <QTimer>
 #include <QHeaderView>
+#include <QVBoxLayout>
 
 using namespace PimCommon;
 

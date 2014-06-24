@@ -26,33 +26,27 @@
 
 #include <QAction>
 #include <KActionCollection>
-#include <KApplication>
 #include <QDebug>
-#include <KDialog>
 #include <KEditToolBar>
 #include <KFileDialog>
 #include <KGlobal>
-#include <KIconLoader>
 #include <KLocalizedString>
 #include <QMenu>
 #include <KMessageBox>
-#include <KProcess>
 #include <KRun>
 #include <KShortcutsDialog>
 #include <KStandardAction>
 #include <KStandardDirs>
-#include <KStatusBar>
 #include <KTemporaryFile>
-#include <KRecentFilesAction>
 #include <KUrl>
 #include <QIcon>
 #include <KMimeType>
+#include <KRecentFilesAction>
 
 #include <QContextMenuEvent>
 #include <QDir>
 #include <QDrag>
 #include <QMimeData>
-#include <QPixmap>
 #include <KSharedConfig>
 
 KTNEFMain::KTNEFMain( QWidget *parent )

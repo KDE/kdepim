@@ -23,11 +23,9 @@
 #include <KLocalizedString>
 
 
-#include <QNetworkAccessManager>
 #include <QDebug>
 #include <QNetworkReply>
 #include <QPointer>
-#include <QFile>
 
 using namespace PimCommon;
 

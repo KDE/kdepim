@@ -24,7 +24,6 @@
 
 #include <KIcon>
 #include <KLocalizedString>
-#include <KGlobal>
 #include <KLocale>
 #include <KMimeType>
 #include <QMenu>
@@ -32,7 +31,6 @@
 
 #include <QTreeWidgetItem>
 #include <QHeaderView>
-#include <QDebug>
 #include <QTimer>
 #include <KFormat>
 

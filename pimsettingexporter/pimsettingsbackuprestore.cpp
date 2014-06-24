@@ -44,7 +44,6 @@
 
 #include <KLocalizedString>
 #include <KLocale>
-#include <KGlobal>
 #include <KMessageBox>
 
 #include <QDebug>

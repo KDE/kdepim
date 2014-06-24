@@ -19,7 +19,6 @@
 #ifndef CALENDARSUPPORT_PLUGIN_H
 #define CALENDARSUPPORT_PLUGIN_H
 
-#include <KLocalizedString>
 #include <KPluginFactory>
 
 namespace CalendarSupport {

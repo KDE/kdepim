@@ -25,7 +25,6 @@
 
 #include <QDebug>
 #include <KLocale>
-#include <KGlobal>
 
 namespace KPIM {
 

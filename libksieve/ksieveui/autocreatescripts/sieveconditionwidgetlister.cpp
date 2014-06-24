@@ -30,7 +30,6 @@
 
 #include <QGridLayout>
 #include <QLabel>
-#include <QToolButton>
 #include <QWhatsThis>
 #include <QDebug>
 #include <QDomElement>

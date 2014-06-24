@@ -21,7 +21,6 @@
 
 #include <AgentManager>
 
-#include <QDebug>
 
 #include <QWeakPointer>
 

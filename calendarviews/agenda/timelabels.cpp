@@ -29,7 +29,6 @@
 
 #include <QIcon>
 #include <KLocalizedString>
-#include <KGlobal>
 #include <KTimeZone>
 
 #include <QFrame>

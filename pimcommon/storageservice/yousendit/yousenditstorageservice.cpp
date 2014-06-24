@@ -28,7 +28,6 @@
 #include <kwallet.h>
 
 #include <KLocalizedString>
-#include <KGlobal>
 #include <KLocale>
 
 

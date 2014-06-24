@@ -19,7 +19,6 @@
 #include "filtermanager.h"
 #include "mailfilter.h"
 
-#include <KConfig>
 
 #include <QDebug>
 

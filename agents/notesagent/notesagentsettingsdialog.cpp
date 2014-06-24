@@ -27,7 +27,6 @@
 #include <K4AboutData>
 #include <KNotifyConfigWidget>
 
-#include <KGlobal>
 #include <QHBoxLayout>
 #include <QTabWidget>
 #include <KSharedConfig>

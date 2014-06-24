@@ -24,12 +24,9 @@
 
 #include <KABC/Address>
 #include <KABC/PhoneNumber>
-#include <KLocalizedString>
-#include <KGlobal>
 #include <KLocale>
 
 #include <QBuffer>
-#include <QDebug>
 
 #include <grantlee/metatype.h>
 

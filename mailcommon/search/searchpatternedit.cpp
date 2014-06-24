@@ -22,7 +22,6 @@
 using MailCommon::RuleWidgetHandlerManager;
 
 #include <pimcommon/widgets/minimumcombobox.h>
-#include <KComboBox>
 #include <QDebug>
 #include <KDialog>
 #include <KLocale>
@@ -34,7 +33,6 @@ using MailCommon::RuleWidgetHandlerManager;
 #include <QByteArray>
 #include <QHBoxLayout>
 #include <QRadioButton>
-#include <QResizeEvent>
 #include <QStackedWidget>
 
 // Definition of special rule field strings

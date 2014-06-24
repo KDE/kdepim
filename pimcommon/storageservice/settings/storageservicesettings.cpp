@@ -22,7 +22,6 @@
 
 #include <kwallet.h>
 
-#include <KGlobal>
 
 namespace PimCommon {
 class StorageServiceSettingsPrivate

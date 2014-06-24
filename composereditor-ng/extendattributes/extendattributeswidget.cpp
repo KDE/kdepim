@@ -31,7 +31,6 @@
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <QWebElement>
-#include <QDebug>
 
 namespace ComposerEditorNG {
 

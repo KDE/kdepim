@@ -54,7 +54,6 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <KPushButton>
-#include <KGlobal>
 
 #include <KPIMUtils/ProgressIndicatorLabel>
 #include <KLocale>

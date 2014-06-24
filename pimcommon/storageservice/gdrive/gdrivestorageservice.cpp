@@ -31,9 +31,7 @@
 #include <libkgapi2/drive/file.h>
 
 #include <KLocalizedString>
-#include <KGlobal>
 
-#include <QPointer>
 #include <QDebug>
 #include <KFormat>
 

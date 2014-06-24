@@ -24,7 +24,6 @@
 #include "pimcommon/util/pimutil.h"
 
 #include <KLocale>
-#include <KGlobal>
 
 #include <QHBoxLayout>
 

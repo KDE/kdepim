@@ -24,11 +24,10 @@
 #include "storageservicemanagerglobalconfig.h"
 
 #include <KLocalizedString>
-#include <KConfigGroup>
 #include <KSharedConfig>
 
-#include <QHBoxLayout>
 #include <QCheckBox>
+#include <QLayout>
 
 StorageServiceConfigureDialog::StorageServiceConfigureDialog(QWidget *parent)
     : PimCommon::StorageServiceConfigureDialog(parent)

@@ -24,7 +24,6 @@
 #include <QColor>
 #include <QString>
 #include <QUrl>
-#include <QWebElement>
 
 namespace ComposerEditorNG
 {

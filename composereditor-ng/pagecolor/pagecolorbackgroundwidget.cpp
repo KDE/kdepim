@@ -22,7 +22,6 @@
 #include "ui_pagecolorbackgroundwidget.h"
 
 #include <KImageIO>
-#include <KFileDialog>
 #include <QUrl>
 
 using namespace ComposerEditorNG;

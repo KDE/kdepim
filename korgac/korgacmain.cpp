@@ -32,7 +32,6 @@
 #include <stdlib.h>
 
 #ifdef SERIALIZER_PLUGIN_STATIC
-#include <QtPlugin>
 
 Q_IMPORT_PLUGIN(akonadi_serializer_kcalcore)
 #endif

@@ -19,8 +19,6 @@
 #include "mergecontactshowresultdialog.h"
 #include "mergecontactshowresulttabwidget.h"
 #include <qtest_kde.h>
-#include <QTabWidget>
-#include <QTabBar>
 #include <AkonadiCore/Item>
 #include <KABC/Addressee>
 

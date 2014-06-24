@@ -26,7 +26,6 @@
 #include <QListWidget>
 #include <QVBoxLayout>
 #include <QPushButton>
-#include <QDebug>
 #include <QLabel>
 
 namespace KABMergeContacts {

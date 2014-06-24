@@ -34,8 +34,8 @@
 #include <KMessageBox>
 #include <QMenu>
 
-#include <QKeyEvent>
 #include <QVBoxLayout>
+#include <QShowEvent>
 
 namespace MailCommon {
 

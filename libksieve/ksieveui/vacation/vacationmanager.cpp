@@ -20,8 +20,6 @@
 #include "ksieveui/vacation/multiimapvacationdialog.h"
 #include "ksieveui/vacation/vacationcreatescriptjob.h"
 
-#include <KMessageBox>
-#include <KLocale>
 
 #include <QWidget>
 
