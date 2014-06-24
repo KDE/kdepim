@@ -19,13 +19,14 @@
 #include <KGlobalSettings>
 
 #include <QByteArray>
+#include <QFontDatabase>
 
 using namespace NoteShared;
 
 NoteDisplayAttribute::NoteDisplayAttribute()
     : Akonadi::Attribute(),
-      mFont(KGlobalSettings::generalFont()),
-      mTitleFont(KGlobalSettings::windowTitleFont()),
+      mFont(QFontDatabase::systemFont(QFontDatabase::GeneralFont)),
+      mTitleFont(QFontDatabase::systemFont(QFontDatabase::TitleFont)),
       mBackgroundColor(Qt::yellow),
       mForegroundgroundColor(Qt::black),
       mSize(300,300),

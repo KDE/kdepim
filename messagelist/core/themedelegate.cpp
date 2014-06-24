@@ -34,6 +34,7 @@
 #include <QLinearGradient>
 #include <KColorScheme>
 #include <KGlobalSettings>
+#include <QFontDatabase>
 
 
 using namespace MessageList::Core;
@@ -1667,14 +1668,14 @@ QFont ThemeDelegate::itemFont( const Theme::ContentItem *ci, const Item *item )
     if ( item && ( item->type() == Item::Message ) )
         return static_cast< const MessageItem * >( item )->font();
 
-    return KGlobalSettings::generalFont();
+    return QFontDatabase::systemFont(QFontDatabase::GeneralFont);
 }
 
 class ThemeDelegateStaticData
 {
 public:
     ThemeDelegateStaticData()
-        : mGeneralFontKey(KGlobalSettings::generalFont().key()) {}
+        : mGeneralFontKey(QFontDatabase::systemFont(QFontDatabase::GeneralFont).key()) {}
     QString mGeneralFontKey;
 };
 
@@ -1694,7 +1695,7 @@ QString ThemeDelegate::itemFontKey( const Theme::ContentItem *ci, const Item *it
 // Store the new fontKey when the generalFont changes.
 void ThemeDelegate::slotGeneralFontChanged()
 {
-    s_static->mGeneralFontKey = KGlobalSettings::generalFont().key();
+    s_static->mGeneralFontKey = QFontDatabase::systemFont(QFontDatabase::GeneralFont).key();
 }
 
 

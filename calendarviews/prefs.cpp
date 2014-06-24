@@ -29,6 +29,7 @@
 #include <KGlobalSettings>
 #include <KSystemTimeZone>
 #include <QDebug>
+#include <QFontDatabase>
 
 using namespace EventViews;
 
@@ -123,12 +124,12 @@ BaseConfig::BaseConfig() : PrefsBase()
 {
   mDefaultResourceColor = QColor(); //Default is a color invalid
 
-  mDefaultAgendaTimeLabelsFont = KGlobalSettings::generalFont();
+  mDefaultAgendaTimeLabelsFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
   // make a large default time bar font, at least 16 points.
   mDefaultAgendaTimeLabelsFont.setPointSize(
     qMax( mDefaultAgendaTimeLabelsFont.pointSize() + 4, 16 ) );
 
-  mDefaultMonthViewFont = KGlobalSettings::generalFont();
+  mDefaultMonthViewFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
   // make it a bit smaller
   mDefaultMonthViewFont.setPointSize(
     qMax( mDefaultMonthViewFont.pointSize() - 2, 6 ) );

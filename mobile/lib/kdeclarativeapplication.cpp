@@ -27,6 +27,7 @@
 #include <KCmdLineArgs>
 #include <QThread>
 #include <qplatformdefs.h>
+#include <QFontDatabase>
 
 #ifdef KDELIBS_STATIC_LIBS
 int staticInitKConfigGroupGui();
@@ -66,7 +67,7 @@ void KDeclarativeApplicationBase::postApplicationSetup()
 
   run = true;
 
-  setFont(KGlobalSettings::generalFont());
+  setFont(QFontDatabase::systemFont(QFontDatabase::GeneralFont));
 
 }
 

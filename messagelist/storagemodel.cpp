@@ -45,6 +45,7 @@
 #include <QItemSelectionModel>
 #include <QtCore/QMimeData>
 #include <QtCore/QCryptographicHash>
+#include <QFontDatabase>
 
 namespace MessageList
 {
@@ -434,10 +435,10 @@ void StorageModel::Private::loadSettings()
     }
 
     if ( MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
-        Core::MessageItem::setGeneralFont( KGlobalSettings::generalFont() );
-        Core::MessageItem::setUnreadMessageFont( KGlobalSettings::generalFont() );
-        Core::MessageItem::setImportantMessageFont( KGlobalSettings::generalFont() );
-        Core::MessageItem::setToDoMessageFont( KGlobalSettings::generalFont() );
+        Core::MessageItem::setGeneralFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
+        Core::MessageItem::setUnreadMessageFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
+        Core::MessageItem::setImportantMessageFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
+        Core::MessageItem::setToDoMessageFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
     } else {
         Core::MessageItem::setGeneralFont( settings->messageListFont() );
         Core::MessageItem::setUnreadMessageFont( settings->unreadMessageFont() );

@@ -20,6 +20,7 @@
 #include <KGlobalSettings>
 
 #include <QPainter>
+#include <QFontDatabase>
 
 using namespace PimCommon;
 
@@ -68,7 +69,7 @@ void CustomTreeView::slotGeneralPaletteChanged()
 
 void CustomTreeView::slotGeneralFontChanged()
 {
-    setFont( KGlobalSettings::generalFont() );
+    setFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
 }
 
 void CustomTreeView::paintEvent( QPaintEvent *event )

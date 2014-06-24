@@ -45,6 +45,7 @@
 #include <QEvent>
 #include <QHBoxLayout>
 #include <QPushButton>
+#include <QFontDatabase>
 
 using namespace EventViews;
 
@@ -281,7 +282,7 @@ void JournalFrame::printJournal()
 
 void JournalFrame::readJournal( const Akonadi::Item &j )
 {
-  int baseFontSize = KGlobalSettings::generalFont().pointSize();
+  int baseFontSize = QFontDatabase::systemFont(QFontDatabase::GeneralFont).pointSize();
   mJournal = j;
   const KCalCore::Journal::Ptr journal = CalendarSupport::journal( j );
   mBrowser->clear();

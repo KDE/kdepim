@@ -29,6 +29,7 @@
 #include <KActionCollection>
 
 #include <QPainter>
+#include <QFontDatabase>
 
 using namespace MailCommon;
 
@@ -200,7 +201,7 @@ void FavoriteCollectionWidget::slotGeneralFontChanged()
 {
     // Custom/System font support
     if ( MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
-        setFont( KGlobalSettings::generalFont() );
+        setFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
     }
 }
 
@@ -209,9 +210,9 @@ void FavoriteCollectionWidget::readConfig()
     // Custom/System font support
     if (!MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
         KConfigGroup fontConfig( KernelIf->config(), "Fonts" );
-        setFont( fontConfig.readEntry( "folder-font", KGlobalSettings::generalFont() ) );
+        setFont( fontConfig.readEntry( "folder-font", QFontDatabase::systemFont(QFontDatabase::GeneralFont) ) );
     } else {
-        setFont( KGlobalSettings::generalFont() );
+        setFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
     }
 
     int iIconSize = MailCommon::MailCommonSettings::self()->iconSize();

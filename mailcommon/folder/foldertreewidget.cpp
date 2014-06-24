@@ -48,6 +48,7 @@
 
 #include <QKeyEvent>
 #include <QLabel>
+#include <QFontDatabase>
 
 namespace MailCommon {
 
@@ -266,7 +267,7 @@ void FolderTreeWidget::slotGeneralFontChanged()
 {
     // Custom/System font support
     if ( MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
-        setFont( KGlobalSettings::generalFont() );
+        setFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
     }
 }
 
@@ -281,9 +282,9 @@ void FolderTreeWidget::readConfig()
     // Custom/System font support
     if ( !MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
         KConfigGroup fontConfig( KernelIf->config(), "Fonts" );
-        setFont( fontConfig.readEntry( "folder-font", KGlobalSettings::generalFont() ) );
+        setFont( fontConfig.readEntry( "folder-font", QFontDatabase::systemFont(QFontDatabase::GeneralFont) ) );
     } else {
-        setFont( KGlobalSettings::generalFont() );
+        setFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
     }
 
     d->folderTreeView->readConfig();

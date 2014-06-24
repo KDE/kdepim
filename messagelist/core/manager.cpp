@@ -49,6 +49,7 @@
 #include <KApplication>
 #include <KLocalizedString>
 #include <KStandardDirs>
+#include <QFontDatabase>
 
 using namespace MessageList::Core;
 
@@ -609,7 +610,7 @@ static Theme::Column * add_theme_simple_text_column( Theme * s, const QString &n
     Theme::Row * r = new Theme::Row();
 
     Theme::ContentItem * i = new Theme::ContentItem( type );
-    i->setFont( KGlobalSettings::generalFont() );
+    i->setFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
 
     if ( alignRight )
         r->addRightItem( i );
@@ -623,7 +624,7 @@ static Theme::Column * add_theme_simple_text_column( Theme * s, const QString &n
         Theme::Row * r = new Theme::Row();
 
         Theme::ContentItem * i = new Theme::ContentItem( type );
-        i->setFont( KGlobalSettings::generalFont() );
+        i->setFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
 
         if ( alignRight )
             r->addRightItem( i );
@@ -684,7 +685,7 @@ void Manager::createDefaultThemes()
     i = new Theme::ContentItem( Theme::ContentItem::ExpandedStateIcon );
     r->addLeftItem( i );
     i = new Theme::ContentItem( Theme::ContentItem::GroupHeaderLabel );
-    QFont bigFont = KGlobalSettings::generalFont();
+    QFont bigFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
     bigFont.setBold( true );
     i->setFont( bigFont );
     i->setUseCustomFont( true );
@@ -751,7 +752,7 @@ void Manager::createDefaultThemes()
     i = new Theme::ContentItem( Theme::ContentItem::ExpandedStateIcon );
     r->addLeftItem( i );
     i = new Theme::ContentItem( Theme::ContentItem::GroupHeaderLabel );
-    QFont aBigFont = KGlobalSettings::generalFont();
+    QFont aBigFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
     aBigFont.setBold( true );
     i->setFont( aBigFont );
     i->setUseCustomFont( true );
@@ -791,7 +792,7 @@ void Manager::createDefaultThemes()
     r = new Theme::Row();
     i = new Theme::ContentItem( Theme::ContentItem::SenderOrReceiver );
     i->setSoftenByBlending( true );
-    QFont aItalicFont = KGlobalSettings::generalFont();
+    QFont aItalicFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
     aItalicFont.setItalic( true );
     i->setFont( aItalicFont );
     i->setUseCustomFont( true );

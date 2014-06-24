@@ -39,6 +39,7 @@
 #include <QPointer>
 #include <KSharedConfig>
 #include <KFormat>
+#include <QFontDatabase>
 
 StorageServiceTreeWidget::StorageServiceTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
     : PimCommon::StorageServiceTreeWidget(storageService, parent),
@@ -81,7 +82,7 @@ void StorageServiceTreeWidget::slotGeneralPaletteChanged()
 
 void StorageServiceTreeWidget::slotGeneralFontChanged()
 {
-    setFont( KGlobalSettings::generalFont() );
+    setFont( QFontDatabase::systemFont(QFontDatabase::GeneralFont) );
 }
 
 void StorageServiceTreeWidget::setIsInitialized()
