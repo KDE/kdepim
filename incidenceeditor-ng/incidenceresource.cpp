@@ -86,6 +86,7 @@ IncidenceResource::IncidenceResource(IncidenceAttendee* ieAttendee, Ui::EventOrT
     mUi->mNewResource->setCompleter(completer);
 
     AttendeeLineEditDelegate *attendeeDelegate = new AttendeeLineEditDelegate(this);
+    attendeeDelegate->setCompletionMode( KGlobalSettings::self()->completionMode() );
 
     ResourceFilterProxyModel *filterProxyModel = new ResourceFilterProxyModel(this);
     filterProxyModel->setDynamicSortFilter(true);

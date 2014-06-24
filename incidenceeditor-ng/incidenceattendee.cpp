@@ -147,14 +147,14 @@ IncidenceAttendee::IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTi
 #else
   mUi->mAttendeeTable->setModel(filterProxyModel);
 
-  AttendeeLineEditDelegate *attendeeDelegate = new AttendeeLineEditDelegate(this);
-  attendeeDelegate->setCompletionMode( KGlobalSettings::self()->completionMode() );
+  mAttendeeDelegate = new AttendeeLineEditDelegate(this);
+  mAttendeeDelegate->setCompletionMode( KGlobalSettings::self()->completionMode() );
 
   QHeaderView* headerView = mUi->mAttendeeTable->horizontalHeader();
   headerView->setResizeMode(QHeaderView::ResizeToContents);
 
   mUi->mAttendeeTable->setItemDelegateForColumn(AttendeeTableModel::Role, roleDelegate());
-  mUi->mAttendeeTable->setItemDelegateForColumn(AttendeeTableModel::FullName, attendeeDelegate);
+  mUi->mAttendeeTable->setItemDelegateForColumn(AttendeeTableModel::FullName, attendeeDelegate());
   mUi->mAttendeeTable->setItemDelegateForColumn(AttendeeTableModel::Status, stateDelegate());
   mUi->mAttendeeTable->setItemDelegateForColumn(AttendeeTableModel::Response, responseDelegate());
 #endif
@@ -699,6 +699,12 @@ AttendeeComboBoxDelegate* IncidenceAttendee::stateDelegate()
 {
   return mStateDelegate;
 }
+
+AttendeeLineEditDelegate *IncidenceAttendee::attendeeDelegate()
+{
+  return mAttendeeDelegate;
+}
+
 
 void IncidenceAttendee::filterLayoutChanged()
 {
