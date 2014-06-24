@@ -35,8 +35,6 @@
 #include <QDebug>
 #include <KIconLoader>
 
-#include <QCompleter>
-#include <QSortFilterProxyModel>
 
 class Recipient
 {

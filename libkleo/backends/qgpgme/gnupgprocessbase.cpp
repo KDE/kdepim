@@ -36,7 +36,6 @@
 #include <kurl.h>
 
 #include <QSocketNotifier>
-#include <QTextCodec>
 #include <QStringList>
 #include <QByteArray>
 #include <QList>

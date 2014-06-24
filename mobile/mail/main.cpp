@@ -24,7 +24,6 @@
 
 #include <k4aboutdata.h>
 #include <kdeclarativeapplication.h>
-#include <KGlobal>
 
 #include <QtCore/QDateTime>
 

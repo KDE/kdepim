@@ -25,7 +25,6 @@
 
 
 #include <QDebug>
-#include <KGlobalSettings>
 #include <KSharedConfig>
 #include <KColorScheme>
 

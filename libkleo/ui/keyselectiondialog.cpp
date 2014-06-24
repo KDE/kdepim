@@ -64,12 +64,8 @@
 
 // Qt
 #include <QCheckBox>
-#include <QToolButton>
 #include <QLabel>
-#include <QPixmap>
 #include <QTimer>
-#include <QLayout>
-#include <QLineEdit>
 #include <QDateTime>
 #include <QProcess>
 

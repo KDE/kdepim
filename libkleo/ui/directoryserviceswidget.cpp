@@ -34,7 +34,6 @@
 
 #include "ui_directoryserviceswidget.h"
 
-#include <KIcon>
 #include <KDebug>
 #include <KLocalizedString>
 

@@ -44,10 +44,6 @@
 #include <kmessagebox.h>
 #include <kdebug.h>
 
-#include <QMessageBox>
-#include <QStringList>
-#include <QTimer>
-#include <QLayout>
 #include <QLineEdit>
 #include <QLabel>
 #include <QGridLayout>

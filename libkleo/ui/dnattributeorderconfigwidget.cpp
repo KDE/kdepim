@@ -43,7 +43,6 @@
 
 #include <QToolButton>
 #include <QGridLayout>
-#include <QLayout>
 #include <QLabel>
 
 #include <QTreeWidget>

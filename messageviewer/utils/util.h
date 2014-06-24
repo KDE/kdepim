@@ -47,7 +47,7 @@
 class KUrl;
 class QWidget;
 class QActionGroup;
-class KAction;
+class QAction;
 
 namespace KMime {
 class Content;
@@ -125,7 +125,7 @@ bool MESSAGEVIEWER_EXPORT saveMessageInMbox( const QList<Akonadi::Item>& retriev
 bool MESSAGEVIEWER_EXPORT saveAttachments( const KMime::Content::List& contents, QWidget *parent, KUrl &currentFolder );
 
 bool MESSAGEVIEWER_EXPORT speakSelectedText( const QString& text, QWidget *parent);
-MESSAGEVIEWER_EXPORT KAction* createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup, QObject *parent );
+MESSAGEVIEWER_EXPORT QAction* createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup, QObject *parent );
 
 /**
      * Search mimetype from filename when mimetype is empty or application/octet-stream

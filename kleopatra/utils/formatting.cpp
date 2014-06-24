@@ -44,7 +44,6 @@
 #include <gpgme++/importresult.h>
 
 #include <KLocalizedString>
-#include <KGlobal>
 #include <KLocale>
 
 #include <QString>

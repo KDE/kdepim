@@ -24,12 +24,9 @@
 #include <AkonadiCore/agentinstancemodel.h>
 #include <AkonadiWidgets/etmviewstatesaver.h>
 
-#include <KCmdLineArgs>
 #include <KConfigGroup>
-#include <KGlobal>
 #include <KLineEdit>
 #include <KSharedConfig>
-#include <KProcess>
 
 #include <QtDBus/QDBusInterface>
 #include <qplatformdefs.h>

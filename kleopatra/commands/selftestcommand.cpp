@@ -52,7 +52,6 @@
 #include <kleo/stl_util.h>
 
 #include <KLocalizedString>
-#include <KGlobal>
 #include <KConfigGroup>
 #include <KSplashScreen>
 #include <KSharedConfig>

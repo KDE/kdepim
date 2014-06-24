@@ -27,7 +27,6 @@
 
 
 #include <KLocale>
-#include <KSystemTimeZones>
 
 #include <QItemSelection>
 

@@ -64,7 +64,6 @@
 #include <gpgme.h>
 
 #include <KConfigGroup>
-#include <KGlobal>
 #include <KLocalizedString>
 #include <KDebug>
 #include <KTempDir>

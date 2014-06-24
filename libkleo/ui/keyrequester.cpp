@@ -65,16 +65,13 @@
 #include <kdebug.h>
 #include <kmessagebox.h>
 #include <qpushbutton.h>
-#include <KIcon>
 
 // Qt
 #include <QApplication>
-#include <QLayout>
 
 #include <QString>
 #include <QStringList>
 #include <QLabel>
-#include <QRegExp>
 
 #include <QHBoxLayout>
 

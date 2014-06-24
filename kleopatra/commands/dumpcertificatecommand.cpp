@@ -46,7 +46,6 @@
 #include <KLocalizedString>
 #include <KPushButton>
 #include <KStandardGuiItem>
-#include <KGlobalSettings>
 
 #include <QString>
 #include <QByteArray>

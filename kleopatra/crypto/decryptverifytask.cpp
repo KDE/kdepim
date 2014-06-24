@@ -66,7 +66,6 @@
 
 #include <KLocalizedString>
 #include <KLocale>
-#include <KGlobal>
 #include <KLocalizedString>
 #include <KDebug>
 

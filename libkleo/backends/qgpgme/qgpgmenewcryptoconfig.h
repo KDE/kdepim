@@ -38,9 +38,7 @@
 
 #include <QHash>
 #include <QStringList>
-#include <QObject>
 #include <QVariant>
-#include <QPointer>
 
 #include <gpgme++/configuration.h>
 

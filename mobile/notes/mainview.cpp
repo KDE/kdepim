@@ -37,18 +37,14 @@
 
 #include <QAction>
 #include <KActionCollection>
-#include <QDebug>
-#include <KGlobal>
 #include <KLocale>
 #include <KMessageBox>
 #include <KMime/KMimeMessage>
-#include <KStandardDirs>
 
 #include <QDeclarativeContext>
 #include <QDeclarativeEngine>
-#include <QDeclarativeItem>
-
 #include <QGraphicsObject>
+#include <QDeclarativeItem>
 
 #ifdef KDEQMLPLUGIN_STATIC
 #include "runtime/qml/kde/kdeintegration.h"

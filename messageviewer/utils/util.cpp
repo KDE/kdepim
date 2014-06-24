@@ -549,7 +549,7 @@ bool Util::speakSelectedText( const QString& text, QWidget *parent)
     return true;
 }
 
-KAction* Util::createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup, QObject *parent )
+QAction* Util::createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup, QObject *parent )
 {
     QString actionName(service->name().replace(QLatin1Char('&'), QLatin1String("&&")));
     if (singleOffer) {
@@ -558,7 +558,7 @@ KAction* Util::createAppAction(const KService::Ptr& service, bool singleOffer, Q
         actionName = i18nc("@item:inmenu Open With, %1 is application name", "%1", actionName);
     }
 
-    KAction *act = new KAction(parent);
+    QAction *act = new KAction(parent);
     act->setIcon(QIcon::fromTheme(service->icon()));
     act->setText(actionName);
     actionGroup->addAction( act );

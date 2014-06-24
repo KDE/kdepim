@@ -22,7 +22,6 @@
 #include <math.h>
 
 #include <QtCore/QAbstractItemModel>
-#include <QApplication>
 #include <QGraphicsProxyWidget>
 #include <QGraphicsSceneMouseEvent>
 
@@ -35,7 +34,6 @@
 #include <messageviewer/viewer/viewer.h>
 #include <messageviewer/viewer/viewer_p.h>
 #include "attachmentproxymodel.h"
-#include <QAction>
 
 using namespace MessageViewer;
 

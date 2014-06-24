@@ -31,7 +31,6 @@
 #include "qmllistselectionmodel.h"
 
 #include <QtCore/QAbstractItemModel>
-#include <QDeclarativeContext>
 
 class KBreadcrumbNavigationFactoryPrivate
 {

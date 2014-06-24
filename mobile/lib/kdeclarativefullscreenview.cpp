@@ -23,8 +23,8 @@
 #include <AkonadiCore/control.h>
 #include <AkonadiCore/servermanager.h>
 
+#include <QDeclarativeEngine>
 #include <QDebug>
-#include <KGlobalSettings>
 #include <KStandardDirs>
 #include <KMessageBox>
 #include <klocalizedstring.h>
@@ -41,7 +41,6 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMessage>
 #include <QDeclarativeContext>
-#include <QDeclarativeEngine>
 #include <QDeclarativeError>
 #include <qplatformdefs.h>
 

@@ -41,7 +41,6 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include <QFile>
 
 #include <QByteArray>
 

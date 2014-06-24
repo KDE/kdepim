@@ -57,7 +57,6 @@
 #include <commands/lookupcertificatescommand.h>
 #include <commands/detailscommand.h>
 
-#include <KGlobal>
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <KCmdLineOptions>

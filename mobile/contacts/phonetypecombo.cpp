@@ -20,7 +20,6 @@
 
 #include "phonetypecombo.h"
 
-#include <KLocale>
 
 class PhoneTypeCombo::Private
 {

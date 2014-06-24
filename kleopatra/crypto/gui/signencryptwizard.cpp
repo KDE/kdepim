@@ -50,7 +50,6 @@
 #include <gpgme++/key.h>
 
 #include <KConfig>
-#include <KGlobal>
 
 #include <QFileInfo>
 #include <QTimer>

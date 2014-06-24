@@ -27,10 +27,8 @@
 
 #include "mainview.h"
 
-#include <KGlobal>
 
 #ifdef KCALCORE_SERIALIZER_PLUGIN_STATIC
-#include <QtPlugin>
 
 Q_IMPORT_PLUGIN(akonadi_serializer_mail)
 Q_IMPORT_PLUGIN(akonadi_serializer_addressee)

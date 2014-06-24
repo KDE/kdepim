@@ -76,7 +76,6 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
 
-#include <KGlobal>
 #include <KSharedConfig>
 
 using namespace GpgME;

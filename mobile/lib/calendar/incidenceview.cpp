@@ -27,11 +27,8 @@
 #include <calendarsupport/kcalprefs.h>
 
 #include <QMessageBox>
-#include <QDateEdit>
-#include <QTimeEdit>
 
 #include <QDebug>
-#include <KDialog>
 #include <KLocalizedString>
 #include <AkonadiCore/Item>
 #include <AkonadiCore/ItemCreateJob>

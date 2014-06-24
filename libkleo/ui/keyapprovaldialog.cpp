@@ -46,7 +46,6 @@
 #include <kseparator.h>
 
 #include <QStringList>
-#include <QLayout>
 #include <QLabel>
 #include <QComboBox>
 #include <QScrollArea>

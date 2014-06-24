@@ -20,7 +20,6 @@
 #include "agendaviewitem.h"
 
 
-#include <KGlobalSettings>
 
 #include <calendarviews/agenda/agendaview.h>
 #include <Akonadi/Calendar/ETMCalendar>

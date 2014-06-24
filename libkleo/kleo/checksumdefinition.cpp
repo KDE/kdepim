@@ -37,7 +37,6 @@
 
 #include <KConfigGroup>
 #include <KLocalizedString>
-#include <KGlobal>
 #include <KConfig>
 #include <KShell>
 #include <KStandardDirs>

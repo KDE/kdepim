@@ -51,7 +51,6 @@
 #include <kguiitem.h>
 #include <kdebug.h>
 #include <ktextedit.h>
-#include <KGlobal>
 
 #include <qtextstream.h>
 

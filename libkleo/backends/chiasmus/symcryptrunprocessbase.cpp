@@ -36,8 +36,6 @@
 #include <kdebug.h>
 #include <kshell.h>
 
-#include <QTimer>
-#include <QFile>
 #include <QStringList>
 
 #include <cstring>

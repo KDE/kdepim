@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <AkonadiCore/ItemFetchScope>
 #include <KMime/Message>
 
-#include <KMimeType>
 #include <KUrl>
 
 Message::Message(QObject *parent) : QObject(parent), m_error(new Error())

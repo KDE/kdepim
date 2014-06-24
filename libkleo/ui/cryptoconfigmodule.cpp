@@ -55,7 +55,6 @@
 #include <QLayout>
 #include <QPushButton>
 #include <QRegExp>
-#include <QPixmap>
 #include <QVBoxLayout>
 #include <QList>
 #include <QHBoxLayout>

@@ -320,7 +320,7 @@ void AttachmentControllerBase::Private::createOpenWithMenu( QMenu *topMenu, Atta
         KService::List::ConstIterator it = offers.constBegin();
         KService::List::ConstIterator end = offers.constEnd();
         for(; it != end; ++it) {
-            KAction* act = MessageViewer::Util::createAppAction(*it,
+            QAction* act = MessageViewer::Util::createAppAction(*it,
                                                                 // no submenu -> prefix single offer
                                                                 menu == topMenu, actionGroup,menu);
             menu->addAction(act);

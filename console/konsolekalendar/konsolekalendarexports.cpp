@@ -35,7 +35,6 @@
 
 #include <qdebug.h>
 #include <klocale.h>
-#include <KGlobal>
 
 #include <KCalCore/Event>
 

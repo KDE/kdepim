@@ -45,7 +45,6 @@
 #include <KDebug>
 #include <KConfigGroup>
 #include <KSharedConfig>
-#include <KGlobal>
 
 #include <QLabel>
 #include <QDialogButtonBox>

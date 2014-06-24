@@ -47,7 +47,6 @@
 #include <KSaveFile>
 #include <KConfigGroup>
 #include <KSharedConfig>
-#include <KGlobal>
 
 #include <QDialog>
 #include <QDialogButtonBox>

@@ -56,7 +56,6 @@
 #include <KLocalizedString>
 #include <KDebug>
 
-#include <QFile>
 #include <QPointer>
 #include <QTextDocument> // for Qt::escape
 

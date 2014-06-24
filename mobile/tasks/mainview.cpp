@@ -59,15 +59,11 @@
 #include <kactioncollection.h>
 #include <KCalCore/Todo>
 #include <QDebug>
-#include <KGlobal>
 #include <klocale.h>
-#include <KStandardDirs>
-#include <KSystemTimeZones>
 #include <KMessageBox>
 #include <libkdepimdbusinterfaces/reminderclient.h>
 
 #include <QtCore/QPointer>
-#include <QDeclarativeEngine>
 
 using namespace Akonadi;
 

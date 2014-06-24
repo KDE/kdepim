@@ -40,7 +40,6 @@
 #include <KLocalizedString>
 #include <KLineEdit>
 
-#include <QLabel>
 #include <QComboBox>
 #include <QHBoxLayout>
 

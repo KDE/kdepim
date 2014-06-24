@@ -26,7 +26,6 @@
 
 #include <AkonadiCore/EntityTreeModel>
 
-#include <QItemSelectionModel>
 #include <QSortFilterProxyModel>
 
 class ThreadGrouperModelPrivate;

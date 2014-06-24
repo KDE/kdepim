@@ -32,15 +32,12 @@
 
 #include "filenamerequester.h"
 
-#include <KLocalizedString>
 #include <KLineEdit>
 
-#include <QLayout>
+#include <QHBoxLayout>
 #include <QToolButton>
-#include <QLineEdit>
 #include <QCompleter>
 #include <QDirModel>
-#include <QVariant>
 #include <QString>
 #include <QFileDialog>
 

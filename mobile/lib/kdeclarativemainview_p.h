@@ -35,7 +35,6 @@
 #include <klineedit.h>
 
 #include <QItemSelectionModel>
-#include <QStringListModel>
 #include <QPointer>
 
 class AgentStatusMonitor;

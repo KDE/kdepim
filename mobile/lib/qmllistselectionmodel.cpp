@@ -21,7 +21,6 @@
 
 #include "qmllistselectionmodel.h"
 
-#include <QDebug>
 #include <AkonadiCore/EntityTreeModel>
 
 QMLListSelectionModel::QMLListSelectionModel(QItemSelectionModel *selectionModel, QObject* parent)

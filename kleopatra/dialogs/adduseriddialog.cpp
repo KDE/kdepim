@@ -46,7 +46,6 @@
 #include <QValidator>
 
 #include <KConfigGroup>
-#include <KGlobal>
 #include <KLocalizedString>
 #include <KDebug>
 

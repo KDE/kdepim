@@ -22,7 +22,6 @@
 #define MAX_DAYS_ON_WIDGET 42
 #define MAX_WEEKS_ON_WIDGET 6
 
-#include <QDebug>
 #include <QVariant>
 
 

@@ -34,16 +34,15 @@
 #include <config-kleopatra.h>
 
 #include "configuredialog.h"
-#include <QIcon>
 #include <kwindowsystem.h>
 #include <kconfig.h>
 #include <kiconloader.h>
 #include <kcmultidialog.h>
 #include <klocale.h>
 #include <kconfiggroup.h>
-#include <KGlobal>
 #include <QApplication>
 #include <KSharedConfig>
+#include <QIcon>
 
 #ifdef KLEO_STATIC_KCMODULES
 # include <KDesktopFile>

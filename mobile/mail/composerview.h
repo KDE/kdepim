@@ -23,7 +23,6 @@
 #include "kdeclarativefullscreenview.h"
 #include <messagecomposer/sender/messagesender.h>
 #include <messagecomposer/composer/composerviewbase.h>
-#include <KActionCollection>
 #include <KMime/Message>
 
 

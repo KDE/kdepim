@@ -38,7 +38,6 @@
 #include <QFont>
 #include <QString>
 #include <QColor>
-#include <QIcon>
 
 #include <gpgme++/key.h>
 

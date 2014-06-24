@@ -37,9 +37,7 @@
 
 #include <QFontMetrics>
 #include <QToolTip>
-#include <QRect>
 #include <QPoint>
-#include <QPainter>
 #include <QFont>
 #include <QColor>
 #include <QTimer>

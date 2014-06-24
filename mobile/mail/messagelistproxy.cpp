@@ -26,7 +26,6 @@
 
 #include <KCalendarSystem>
 #include <KLocale>
-#include <KGlobal>
 #include <KFormat>
 
 inline uint qHash( const QDate &date )

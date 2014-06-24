@@ -27,8 +27,6 @@
 #include <AkonadiCore/EntityTreeModel>
 
 #include <QtCore/QAbstractItemModel>
-#include <QItemSelectionModel>
-#include <QSortFilterProxyModel>
 
 class ThreadModelPrivate;
 

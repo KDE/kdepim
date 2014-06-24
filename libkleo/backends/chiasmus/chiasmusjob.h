@@ -36,7 +36,6 @@
 
 #include "kleo/specialjob.h"
 
-#include <QStringList>
 
 #include <gpgme++/context.h>
 

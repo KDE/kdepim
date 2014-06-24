@@ -32,7 +32,6 @@
 #include "libkleo/ui/keyselectiondialog.h"
 #include <gpgme++/key.h>
 #include <KApplication>
-#include <KComponentData>
 #include <kcmdlineargs.h>
 #include <K4AboutData>
 #include <kglobal.h>

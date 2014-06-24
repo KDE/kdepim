@@ -53,7 +53,6 @@
 #include <KDebug>
 
 #include <QByteArray>
-#include <QFile>
 #include <QString>
 #include <QWidget>
 #include <QTreeView>

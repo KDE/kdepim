@@ -21,13 +21,12 @@
 #include "stylesheetloader.h"
 
 
-#include <KGlobalSettings>
 #include <QDebug>
+#include <QLayout>
 
 #include <Akonadi/Calendar/ETMCalendar>
 #include <calendarviews/timeline/timelineview.h>
 #include <KLocale>
-#include <QLayout>
 #include <KSharedConfig>
 #include <KColorScheme>
 

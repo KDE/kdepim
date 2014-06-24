@@ -30,7 +30,6 @@
 
 #include <k4aboutdata.h>
 #include <kcmdlineargs.h>
-#include <KGlobal>
 
 static const char description[] =
     I18N_NOOP( "A KDE Blogging Client" );
