@@ -383,7 +383,7 @@ void ManageSieveWidget::slotGotList(KManageSieve::SieveJob *job, bool success, c
     qDebug()<<" LOAD";
     const bool hasIncludeCapability = job->sieveCapabilities().contains(QLatin1String("include"));
     const bool hasUserActiveScript = (activeScript.toLower() == QLatin1String("USER"));
-    QStringList mUserActiveScriptList;
+    //QStringList mUserActiveScriptList;
     if (hasUserActiveScript && hasIncludeCapability) {
         //TODO parse file.
     }
