@@ -26,7 +26,7 @@
 #include <knewstuff3/uploaddialog.h>
 
 #include <KLocale>
-#include <KInputDialog>
+#include <QInputDialog>
 #include <KZip>
 #include <KTempDir>
 #include <QDebug>
@@ -231,7 +231,7 @@ void ThemeEditorPage::createZip(const QString &themeName, KZip *zip)
 
 void ThemeEditorPage::addExtraPage()
 {
-    QString filename = KInputDialog::getText(i18n("Filename of extra page"), i18n("Filename:"));
+    QString filename = QInputDialog::getText(this, i18n("Filename of extra page"), i18n("Filename:"));
     if (!filename.isEmpty()) {
         if (!filename.endsWith(QLatin1String(".html")) && !filename.endsWith(QLatin1String(".css")) && !filename.endsWith(QLatin1String(".js"))) {
             filename += QLatin1String(".html");

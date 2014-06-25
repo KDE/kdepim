@@ -59,7 +59,7 @@
 #include <QDebug>
 #include <KFileDialog>
 #include <KGlobal>
-#include <KInputDialog>
+#include <QInputDialog>
 #include <KLineEdit>
 #include <KLocale>
 #include <KMessageBox>
@@ -543,9 +543,9 @@ void KDeclarativeMainView::saveFavorite()
   }
 
   bool ok;
-  const QString name = KInputDialog::getText( i18n( "Select name for favorite" ),
-                                              i18n( "Favorite name" ),
-                                              collectionName, &ok, this );
+  const QString name = QInputDialog::getText( this, i18n( "Select name for favorite" ),
+                                              i18n( "Favorite name" ), QLineEdit::Normal,
+                                              collectionName, &ok);
 
   if ( !ok || name.isEmpty() )
     return;

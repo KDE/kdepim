@@ -63,7 +63,7 @@ using namespace KCalCore;
 #include <KDBusServiceStarter>
 #include <QDebug>
 #include <KFileDialog>
-#include <KInputDialog>
+#include <QInputDialog>
 #include <QMenu>
 #include <KMessageBox>
 #include <KMimeType>
@@ -502,8 +502,8 @@ class UrlHandler : public Interface::BodyPartURLHandler
         const QString defaultAddr = im->defaultIdentity().primaryEmailAddress();
         const int defaultIndex = qMax( 0, possibleAddrs.indexOf( defaultAddr ) );
 
-        receiver = KInputDialog::getItem(
-          i18n( "Select Address" ), selectMessage, possibleAddrs, defaultIndex, false, &ok, 0 );
+        receiver = QInputDialog::getItem( 0, 
+          i18n( "Select Address" ), selectMessage, possibleAddrs, defaultIndex, false, &ok);
 
         if ( !ok ) {
           receiver.clear();
@@ -924,7 +924,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       // get comment for tentative acceptance
       if ( askForComment( status ) ) {
         bool ok = false;
-        const QString comment = KInputDialog::getMultiLineText(
+        const QString comment = QInputDialog::getMultiLineText( 0,
           i18n( "Reaction to Invitation" ), i18n( "Comment:" ), QString(), &ok );
         if ( !ok ) {
           return true;
@@ -1179,7 +1179,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       if ( askForComment( Attendee::Declined ) ) {
         bool ok = false;
         const QString comment(
-          KInputDialog::getMultiLineText(
+          QInputDialog::getMultiLineText(0,
             i18n( "Decline Counter Proposal" ), i18n( "Comment:" ), QString(), &ok ) );
         if ( !ok ) {
           return true;

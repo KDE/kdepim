@@ -24,7 +24,7 @@
 #include <KHBox>
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <KInputDialog>
+#include <QInputDialog>
 #include <QPushButton>
 #include <KIconLoader>
 #include <QIcon>
@@ -205,7 +205,7 @@ SieveScriptPage *SieveScriptListBox::createNewScript(const QString &newName, con
 
 void SieveScriptListBox::slotNew()
 {
-    const QString newName = KInputDialog::getText(i18n("New Script"), i18n("Add new name:"));
+    const QString newName = QInputDialog::getText(this, i18n("New Script"), i18n("Add new name:"));
     if (!newName.isEmpty()) {
         createNewScript(newName);
         Q_EMIT valueChanged();
@@ -231,7 +231,7 @@ void SieveScriptListBox::slotRename()
 {
     QListWidgetItem *item = mSieveListScript->currentItem();
     if (item) {
-        const QString newName = KInputDialog::getText(i18n("Rename"), i18n("Add new name:"), item->text());
+        const QString newName = QInputDialog::getText(this, i18n("Rename"), i18n("Add new name:"), QLineEdit::Normal, item->text());
         if (!newName.isEmpty()) {
             item->setText(newName);
             Q_EMIT valueChanged();

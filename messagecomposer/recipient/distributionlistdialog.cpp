@@ -32,8 +32,7 @@
 #include <QDebug>
 #include <QLineEdit>
 #include <KMessageBox>
-#include <KInputDialog>
-#include <KGlobal>
+#include <QInputDialog>
 
 #include <QLabel>
 #include <QTreeWidget>
@@ -254,8 +253,8 @@ void DistributionListDialog::slotUser1()
 
     if ( name.isEmpty() ) {
         bool ok = false;
-        name = KInputDialog::getText( i18nc("@title:window","New Distribution List"),
-                                      i18nc("@label:textbox","Please enter name:"), QString(), &ok, this );
+        name = QInputDialog::getText( this, i18nc("@title:window","New Distribution List"),
+                                      i18nc("@label:textbox","Please enter name:"), QLineEdit::Normal, QString(), &ok );
         if ( !ok || name.isEmpty() )
             return;
     }

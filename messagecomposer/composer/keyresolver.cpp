@@ -58,7 +58,7 @@
 #include <klocale.h>
 #include <qdebug.h>
 #include <kdebug.h>
-#include <kinputdialog.h>
+#include <qinputdialog.h>
 #include <kmessagebox.h>
 
 #include <QStringList>

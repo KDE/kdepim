@@ -25,7 +25,7 @@
 
 #include <KApplication>
 #include <KComboBox>
-#include <KInputDialog>
+#include <QInputDialog>
 #include <QLineEdit>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -661,7 +661,7 @@ void CSVImportDialog::finalizeApplyTemplate()
 void CSVImportDialog::saveTemplate()
 {
   const QString name =
-    KInputDialog::getText( i18nc( "@title:window", "Template Name" ),
+    QInputDialog::getText( this, i18nc( "@title:window", "Template Name" ),
                            i18nc( "@info", "Please enter a name for the template:" ) );
 
   if ( name.isEmpty() ) {

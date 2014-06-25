@@ -25,7 +25,7 @@
 #include "storageservice/storageserviceprogressmanager.h"
 
 #include <QMenu>
-#include <KInputDialog>
+#include <QInputDialog>
 #include <KLocalizedString>
 #include <KFileDialog>
 #include <KGlobalSettings>
@@ -223,7 +223,7 @@ void StorageServiceTreeWidget::slotRenameFolder()
 {
     const QString oldFolderName = itemIdentifierSelected();
     const QString name = currentItem()->text(0);
-    const QString folder = KInputDialog::getText(i18n("Rename Folder Name"), i18n("Folder:"), name);
+    const QString folder = QInputDialog::getText(this, i18n("Rename Folder Name"), i18n("Folder:"), QLineEdit::Normal, name);
     if (!folder.isEmpty()) {
         if (name != folder) {
             if (!checkName(folder)) {
@@ -238,7 +238,7 @@ void StorageServiceTreeWidget::slotRenameFile()
 {
     const QString oldFileName = itemIdentifierSelected();
     const QString name = currentItem()->text(0);
-    const QString filename = KInputDialog::getText(i18n("Rename Filename"), i18n("Filename:"), name);
+    const QString filename = QInputDialog::getText(this, i18n("Rename Filename"), i18n("Filename:"), QLineEdit::Normal, name);
     if (!filename.isEmpty()) {
         if (name != filename) {
             if (!checkName(filename)) {
@@ -267,7 +267,7 @@ bool StorageServiceTreeWidget::checkName(const QString &name)
 
 void StorageServiceTreeWidget::slotCreateFolder()
 {
-    const QString folder = KInputDialog::getText(i18n("Folder Name"), i18n("Folder:"));
+    const QString folder = QInputDialog::getText(this, i18n("Folder Name"), i18n("Folder:"));
     if (!folder.isEmpty()) {
         if (!checkName(folder))
             return;

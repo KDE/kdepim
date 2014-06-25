@@ -22,7 +22,7 @@
 
 #include <kmanagesieve/sievejob.h>
 
-#include <KInputDialog>
+#include <QInputDialog>
 #include <KStandardGuiItem>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -168,9 +168,9 @@ void ManageSieveWidget::slotNewScript()
         return;
 
     bool ok = false;
-    const QString name = KInputDialog::getText( i18n( "New Sieve Script" ),
-                                                i18n( "Please enter a name for the new Sieve script:" ),
-                                                i18n( "unnamed" ), &ok, this );
+    const QString name = QInputDialog::getText( this, i18n( "New Sieve Script" ),
+                                                i18n( "Please enter a name for the new Sieve script:" ), QLineEdit::Normal,
+                                                i18n( "unnamed" ), &ok);
     if ( !ok || name.isEmpty() )
         return;
 

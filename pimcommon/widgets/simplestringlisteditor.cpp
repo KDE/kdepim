@@ -33,7 +33,7 @@
 
 #include "simplestringlisteditor.h"
 
-#include <kinputdialog.h>
+#include <qinputdialog.h>
 #include <kiconloader.h>
 #include <KIcon>
 #include <klocale.h>
@@ -231,9 +231,9 @@ void SimpleStringListEditor::setButtonText( ButtonCode button, const QString & t
 void SimpleStringListEditor::addNewEntry()
 {
     bool ok = false;
-    QString newEntry = KInputDialog::getText( i18n("New Value"),
-                                              mAddDialogLabel, QString(),
-                                              &ok, this );
+    QString newEntry = QInputDialog::getText( this, i18n("New Value"),
+                                              mAddDialogLabel, QLineEdit::Normal, QString(),
+                                              &ok );
     if (ok)
         insertNewEntry(newEntry);
 }
@@ -270,9 +270,9 @@ void SimpleStringListEditor::slotRemove()
 QString SimpleStringListEditor::modifyEntry(const QString &text)
 {
     bool ok = false;
-    QString newText = KInputDialog::getText( i18n("Change Value"),
-                                             mAddDialogLabel, text,
-                                             &ok, this );
+    QString newText = QInputDialog::getText( this, i18n("Change Value"),
+                                             mAddDialogLabel, QLineEdit::Normal, text,
+                                             &ok );
     emit aboutToAdd( newText );
 
     if ( !ok || newText.isEmpty() || newText == text )

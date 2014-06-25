@@ -69,6 +69,7 @@
 #include <QMenu>
 #include <QTimer>
 #include <QtDBus/QDBusConnection>
+#include <KSharedConfig>
 
 using namespace KPIM;
 
@@ -330,7 +331,7 @@ void AddresseeLineEdit::Private::init()
             m_completionInitialized = true;
         }
 
-        KConfigGroup group( KGlobal::config(), "AddressLineEdit" );
+        KConfigGroup group( KSharedConfig::openConfig(), "AddressLineEdit" );
         m_showOU = group.readEntry( "ShowOU", false );
 
     }
@@ -1002,7 +1003,7 @@ KCompletion::CompOrder AddresseeLineEdit::Private::completionOrder()
 void AddresseeLineEdit::Private::slotShowOUChanged(bool checked)
 {
     if ( checked != m_showOU ) {
-        KConfigGroup group( KGlobal::config(), "AddressLineEdit" );
+        KConfigGroup group( KSharedConfig::openConfig(), "AddressLineEdit" );
         group.writeEntry( "ShowOU", checked );
         m_showOU = checked;
     }

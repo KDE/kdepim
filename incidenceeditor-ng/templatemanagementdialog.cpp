@@ -39,7 +39,7 @@
 
 #include "templatemanagementdialog.h"
 
-#include <KInputDialog>
+#include <QInputDialog>
 #include <KMessageBox>
 #include <KLocalizedString>
 
@@ -92,9 +92,9 @@ void TemplateManagementDialog::slotAddTemplate()
   bool ok;
   bool duplicate = false;
   QString m_type_translated = i18n( qPrintable( m_type ) );
-  const QString newTemplate = KInputDialog::getText(
+  const QString newTemplate = QInputDialog::getText( this,
     i18n( "Template Name" ),
-    i18n( "Please enter a name for the new template:" ),
+    i18n( "Please enter a name for the new template:" ), QLineEdit::Normal,
     i18n( "New %1 Template", m_type_translated ), &ok );
   if ( newTemplate.isEmpty() || !ok ) {
     return;

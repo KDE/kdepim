@@ -29,7 +29,7 @@
 #include <EntityMimeTypeFilterModel>
 #include <EntityTreeModel>
 
-#include <KInputDialog>
+#include <QInputDialog>
 #include <KLocale>
 #include <KMessageBox>
 #include <QMenu>
@@ -196,10 +196,9 @@ void FolderSelectionDialog::slotAddChildFolder()
 {
     Akonadi::Collection parentCol;
     if ( canCreateCollection( parentCol ) ) {
-        const QString name = KInputDialog::getText(
+        const QString name = QInputDialog::getText( this,
                     i18nc( "@title:window", "New Folder" ),
-                    i18nc( "@label:textbox, name of a thing", "Name" ),
-                    QString(), 0, this );
+                    i18nc( "@label:textbox, name of a thing", "Name" ));
 
         if ( name.isEmpty() ) {
             return;
