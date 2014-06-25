@@ -12,8 +12,6 @@ kde_enable_exceptions()
 
 add_definitions(-DTRANSLATION_DOMAIN=\"calendarsupport\")
 
-find_package(KF5PimIdentities ${KF5_VERSION} CONFIG REQUIRED)
-
 ########### next target ###############
 
 set(calendarsupport_LIB_SRCS

@@ -5,17 +5,6 @@ add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5300)
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
-find_package(KF5KCMUtils ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5Ldap ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5Abc ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5PimUtils ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5AkonadiContact ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5PimTextEdit ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5Mime ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5PimIdentities ${KF5_VERSION} CONFIG REQUIRED)
-find_package(Baloo ${KF5_VERSION} CONFIG REQUIRED)
-
 add_subdirectory(tests)
 add_subdirectory(pics)
 

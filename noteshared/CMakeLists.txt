@@ -1,14 +1,8 @@
 project(noteshared)
+kde_enable_exceptions()
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
-
-kde_enable_exceptions()
-
-set(KF5_VERSION "4.100.0")
-set(QT_REQUIRED_VERSION "5.2.0")
-
-find_package(KF5DNSSD ${KF5_VERSION} CONFIG REQUIRED)
 
 add_definitions(-DTRANSLATION_DOMAIN=\"libnoteshared\")
 

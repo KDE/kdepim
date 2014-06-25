@@ -5,9 +5,6 @@ add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 
-find_package(KF5AkonadiContact ${KF5_VERSION} CONFIG REQUIRED)
-
-
 ########### next target ###############
 
 set(kdepimdbusinterfaces_LIB_SRCS

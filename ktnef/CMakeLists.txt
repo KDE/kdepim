@@ -9,8 +9,6 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 add_subdirectory(pics)
 
-find_package(KF5Tnef ${KF5_VERSION} CONFIG REQUIRED)
-
 set(ktnef_SRCS
   attachpropertydialog.cpp
   ktnefmain.cpp

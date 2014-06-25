@@ -13,8 +13,6 @@ add_definitions(-DQT_STATICPLUGIN)
 qt5_wrap_cpp(wk_HEADERS_MOC spellplugin/qwebkitplatformplugin.h)
 
 #generate_export_header(COMPOSEREDITORNG BASE_NAME composereditor)
-find_package(KF5WebKit ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5Sonnet ${KF5_VERSION} CONFIG REQUIRED)
 
 set(libcomposereditor_ng_SRCS 
     composereditor.cpp

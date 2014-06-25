@@ -4,9 +4,6 @@ kde_enable_exceptions()
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
-find_package(KF5Mime ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5Abc ${KF5_VERSION} CONFIG REQUIRED)
-
 add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_next\")
 
 set(akonadi_next_SRCS
