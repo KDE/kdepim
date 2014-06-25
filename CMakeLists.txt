@@ -10,11 +10,9 @@ include(ECMInstallIcons)
 include(ECMSetupVersion)
 include(ECMAddTests)
 include(ECMMarkNonGuiExecutable)
-include(ECMGenerateHeaders)
 
 include(CMakePackageConfigHelpers)
 include(FeatureSummary)
-include(WriteBasicConfigVersionFile)
 include(CheckFunctionExists)
 
 include(KDEInstallDirs)
