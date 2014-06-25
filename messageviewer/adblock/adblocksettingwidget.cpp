@@ -365,9 +365,25 @@ void AdBlockSettingWidget::showAutomaticFilterList(QListWidgetItem *item)
 {
     if (item) {
         QPointer<AdBlockShowListDialog> dlg = new AdBlockShowListDialog(this);
+        dlg->setListName(item->text());
         dlg->setAdBlockListPath(item->data(PathList).toString(), item->data(UrlList).toString());
+        connect(dlg, SIGNAL(deleteList(QString)), SLOT(slotDeleteList(QString)));
         dlg->exec();
         delete dlg;
+    }
+}
+
+void AdBlockSettingWidget::slotDeleteList(const QString &listName)
+{
+    QListWidgetItem *item = automaticFiltersListWidget->currentItem();
+    if (item && item->text() == listName) {
+        const QString path = item->data(PathList).toString();
+        if (!path.isEmpty()) {
+            if (!QFile(path).remove())
+                qDebug()<<" we can not remove file:"<<path;
+        }
+        delete item;
+        hasChanged();
     }
 }
 

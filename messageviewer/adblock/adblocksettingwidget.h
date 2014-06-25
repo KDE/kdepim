@@ -67,6 +67,7 @@ private Q_SLOTS:
     void slotEditFilter();
     void slotManualFilterLineEditTextChanged(const QString &);
     void slotAutomaticFilterDouble(QListWidgetItem *item);
+    void slotDeleteList(const QString &listName);
 private:
     void addManualFilter(const QString &text);
     void showAutomaticFilterList(QListWidgetItem *item);
