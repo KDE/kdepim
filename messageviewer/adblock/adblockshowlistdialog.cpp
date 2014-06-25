@@ -115,16 +115,12 @@ void AdBlockShowListDialog::slotFinished(KJob *job)
 {
     mProgress->stop();
     if (job->error()) {
-        mTemporaryFile->close();
-        delete mTemporaryFile;
-        mTemporaryFile = 0;
         mTextEdit->editor()->setPlainText(i18n("An error occurs during download list: \"%1\"", job->errorString()));
-        return;
-    }
-
-    QFile f(mTemporaryFile->fileName());
-    if (f.open(QIODevice::ReadOnly|QIODevice::Text)) {
-        mTextEdit->editor()->setPlainText(QString::fromUtf8(f.readAll()));
+    } else {
+        QFile f(mTemporaryFile->fileName());
+        if (f.open(QIODevice::ReadOnly|QIODevice::Text)) {
+            mTextEdit->editor()->setPlainText(QString::fromUtf8(f.readAll()));
+        }
     }
     mTemporaryFile->close();
     delete mTemporaryFile;
