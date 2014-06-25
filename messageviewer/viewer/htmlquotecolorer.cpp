@@ -19,6 +19,7 @@
 */
 
 #include "htmlquotecolorer.h"
+#include "settings/globalsettings.h"
 
 #include <KDebug>
 
@@ -129,10 +130,11 @@ QString HTMLQuoteColorer::process( const QString &htmlSource, QString&extraHead 
             "  return 0;\n"
             "}\n"));
 
-    page.settings()->setAttribute( QWebSettings::JavascriptEnabled, true );
-    frame->evaluateJavaScript( script );
-    page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
-
+    if (GlobalSettings::self()->htmlQuoteColorerEnabled()) {
+        page.settings()->setAttribute( QWebSettings::JavascriptEnabled, true );
+        frame->evaluateJavaScript( script );
+        page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
+    }
     const QWebElement body = frame->documentElement().findFirst(QLatin1String("body"));
     const QWebElement header = frame->documentElement().findFirst(QLatin1String("head"));
 
