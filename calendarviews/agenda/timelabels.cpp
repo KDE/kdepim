@@ -37,8 +37,6 @@
 #include <QPointer>
 #include <KLocale>
 
-//QT5 static const KCatalogLoader loader( QLatin1String("timezones4") );
-
 using namespace EventViews;
 
 TimeLabels::TimeLabels( const KDateTime::Spec &spec, int rows,

@@ -75,7 +75,6 @@ void KTimeZoneComboBox::Private::fillComboBox()
 KTimeZoneComboBox::KTimeZoneComboBox( QWidget *parent )
   : KComboBox( parent ), d( new KTimeZoneComboBox::Private( this ) )
 {
-  //QT5 KLocale::global()->insertCatalog( "timezones4" ); // for translated timezones
   d->fillComboBox();
 }
 
@@ -83,7 +82,6 @@ KTimeZoneComboBox::KTimeZoneComboBox( const KCalCore::ICalTimeZones *zones, QWid
   : KComboBox( parent ), d( new KTimeZoneComboBox::Private( this ) )
 {
   d->mAdditionalZones = zones;
-  //QT5 KLocale::global()->insertCatalog( "timezones4" ); // for translated timezones
   d->fillComboBox();
 }
 
