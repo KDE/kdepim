@@ -54,7 +54,7 @@
 #include <kedittoolbar.h>
 #include <kshortcutsdialog.h>
 #include <kglobal.h>
-#include <kicon.h>
+#include <QIcon>
 
 #include <QEventLoop>
 #include <QTextStream>
@@ -103,7 +103,7 @@ void KWatchGnuPGMainWindow::slotClear()
 void KWatchGnuPGMainWindow::createActions()
 {
   QAction *action = actionCollection()->addAction( QLatin1String("clear_log") );
-  action->setIcon( KIcon(QLatin1String("edit-clear-history")) );
+  action->setIcon( QIcon::fromTheme(QLatin1String("edit-clear-history")) );
   action->setText( i18n("C&lear History") );
   connect(action, SIGNAL(triggered()), SLOT(slotClear()));
   action->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_L));

@@ -19,7 +19,6 @@
 
 #include "categoryselectwidget.h"
 
-#include <kicon.h>
 #include <klocale.h>
 #include <qdebug.h>
 #include <kdialog.h>

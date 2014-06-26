@@ -26,8 +26,6 @@
 #include "KJotsMain.h"
 
 
-#include <kicon.h>
-
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <qdebug.h>

@@ -17,7 +17,6 @@
 
 #include "textfindreplacewidget.h"
 
-#include <kicon.h>
 #include <klocale.h>
 #include <qpushbutton.h>
 #include <klineedit.h>
@@ -82,12 +81,12 @@ TextFindWidget::TextFindWidget(QWidget *parent)
     label->setBuddy( mSearch );
     lay->addWidget( mSearch );
 
-    mFindNextBtn = new QPushButton( KIcon( QLatin1String("go-down-search") ), i18nc( "Find and go to the next search match", "Next" ), this );
+    mFindNextBtn = new QPushButton( QIcon::fromTheme( QLatin1String("go-down-search") ), i18nc( "Find and go to the next search match", "Next" ), this );
     mFindNextBtn->setToolTip( i18n( "Jump to next match" ) );
     lay->addWidget( mFindNextBtn );
     mFindNextBtn->setEnabled( false );
 
-    mFindPrevBtn = new QPushButton( KIcon( QLatin1String("go-up-search") ), i18nc( "Find and go to the previous search match", "Previous" ), this );
+    mFindPrevBtn = new QPushButton( QIcon::fromTheme( QLatin1String("go-up-search") ), i18nc( "Find and go to the previous search match", "Previous" ), this );
     mFindPrevBtn->setToolTip( i18n( "Jump to previous match" ) );
     lay->addWidget( mFindPrevBtn );
     mFindPrevBtn->setEnabled( false );

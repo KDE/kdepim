@@ -18,7 +18,6 @@
 #include "richtexteditfindbar.h"
 #include "pimcommon/texteditor/commonwidget/textfindreplacewidget.h"
 
-#include <kicon.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <klineedit.h>

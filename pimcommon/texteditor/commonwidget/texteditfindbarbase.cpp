@@ -18,7 +18,7 @@
 #include "texteditfindbarbase.h"
 #include "pimcommon/texteditor/commonwidget/textfindreplacewidget.h"
 
-#include <kicon.h>
+#include <QIcon>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <klineedit.h>
@@ -44,7 +44,7 @@ TextEditFindBarBase::TextEditFindBarBase(QWidget * parent )
     topLayout->addLayout(lay);
 
     QToolButton * closeBtn = new QToolButton( this );
-    closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );
+    closeBtn->setIcon( QIcon::fromTheme( QLatin1String("dialog-close") ) );
     closeBtn->setIconSize( QSize( 16, 16 ) );
     closeBtn->setToolTip( i18n( "Close" ) );
 
