@@ -30,7 +30,7 @@ public:
     ~FollowUpReminderManager();
 
     void load();
-    void checkFollowUp(const Akonadi::Item &item);
+    void checkFollowUp(const Akonadi::Item &item, const Akonadi::Collection &col);
 private:
     KSharedConfig::Ptr mConfig;
     QList<FollowUpReminderInfo*> mFollowUpReminderInfoList;
