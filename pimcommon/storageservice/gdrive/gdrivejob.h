@@ -20,7 +20,7 @@
 
 #include <QObject>
 #include "storageservice/job/storageserviceabstractjob.h"
-#include <libkgapi2/account.h>
+#include <kgapi/account.h>
 
 namespace KGAPI2 {
 class Job;

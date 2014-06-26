@@ -23,12 +23,10 @@
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 #include "pimcommon/storageservice/utils/storageserviceutils.h"
 
-#include <qjson/parser.h>
-
 #include <kwallet.h>
 #include <KLocale>
 
-#include <libkgapi2/drive/file.h>
+#include <kgapi/drive/file.h>
 
 #include <KLocalizedString>
 
@@ -601,6 +599,7 @@ void GDriveStorageService::storageServicecreateServiceFolder()
 
 QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QVariant &data, const QString &currentFolder)
 {
+#if 0 //QT5 port to QJSonDocument
     listWidget->clear();
     listWidget->createMoveUpItem();
     const QStringList lst = data.toStringList();
@@ -628,6 +627,7 @@ QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
             }
         }
     }
+#endif
     return QString(); //TODO
 }
 

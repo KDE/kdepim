@@ -7,7 +7,7 @@ include_directories(
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
-kde_enable_exceptions()
+
 
 add_definitions(-DTRANSLATION_DOMAIN=\"libpimcommon\")
 
@@ -23,7 +23,7 @@ set(libpimcommon_shorturl_SRCS
   shorturl/engine/triopabshorturl.cpp
 )
 
-if( LibKGAPI2_FOUND )
+if( KF5GAPI_FOUND )
   include_directories(${LibKGAPI2_INCLUDE_DIR})
   set(libpimcommon_storageservice_gdrive 
     storageservice/gdrive/gdrivestorageservice.cpp
@@ -202,9 +202,9 @@ kconfig_add_kcfg_files(libpimcommon_SRCS
 
 add_library(pimcommon ${LIBRARY_TYPE} ${libpimcommon_SRCS})
 
-if( LibKGAPI2_FOUND )
+if( KF5GAPI_FOUND )
   target_link_libraries(pimcommon
-    ${LibKGAPI2_LIBRARY}
+    KF5::GAPIDrive
   )
 endif()
 
