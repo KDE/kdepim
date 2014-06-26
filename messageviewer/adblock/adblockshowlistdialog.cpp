@@ -37,7 +37,10 @@ AdBlockShowListDialog::AdBlockShowListDialog(QWidget *parent)
       mTemporaryFile(0)
 {
     setCaption( i18n("Show adblock list") );
-    setButtons( Close );
+    setButtons( User1|Close );
+    setButtonText(User1, i18n("Delete list"));
+    enableButton(User1, false);
+    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotDeleteBrokenList()));
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
     mTextEdit = new PimCommon::PlainTextEditorWidget;
@@ -116,20 +119,26 @@ void AdBlockShowListDialog::slotFinished(KJob *job)
 {
     mProgress->stop();
     if (job->error()) {
-        mTemporaryFile->close();
-        delete mTemporaryFile;
-        mTemporaryFile = 0;
         mTextEdit->editor()->setPlainText(i18n("An error occurs during download list: \"%1\"", job->errorString()));
-        return;
-    }
-
-    QFile f(mTemporaryFile->fileName());
-    if (f.open(QIODevice::ReadOnly|QIODevice::Text)) {
-        mTextEdit->editor()->setPlainText(QString::fromUtf8(f.readAll()));
+        enableButton(User1, true);
+    } else {
+        QFile f(mTemporaryFile->fileName());
+        if (f.open(QIODevice::ReadOnly|QIODevice::Text)) {
+            mTextEdit->editor()->setPlainText(QString::fromUtf8(f.readAll()));
+        }
     }
     mTemporaryFile->close();
     delete mTemporaryFile;
     mTemporaryFile = 0;
 }
 
+void AdBlockShowListDialog::slotDeleteBrokenList()
+{
+    Q_EMIT deleteList(mListName);
+    accept();
+}
 
+void AdBlockShowListDialog::setListName(const QString &listName)
+{
+    mListName = listName;
+}

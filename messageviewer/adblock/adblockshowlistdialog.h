@@ -41,14 +41,20 @@ public:
 
     void setAdBlockListPath(const QString &localPath, const QString &url);
 
+    void setListName(const QString &listName);
 private Q_SLOTS:
-    void slotFinished(KJob *job);
+    void slotFinished(KJob *job);    
+    void slotDeleteBrokenList();
+
+Q_SIGNALS:
+    void deleteList(const QString &name);
 
 private:
     void readConfig();
     void writeConfig();
     void downLoadList(const QString &url);
 
+    QString mListName;
     PimCommon::PlainTextEditorWidget *mTextEdit;
     KTemporaryFile *mTemporaryFile;
     KPIMUtils::ProgressIndicatorLabel *mProgress;
