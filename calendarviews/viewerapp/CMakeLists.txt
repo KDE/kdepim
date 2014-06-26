@@ -1,5 +1,5 @@
 project(calendarviewsapp)
-kde_enable_exceptions()
+
 include_directories(
   ${Boost_INCLUDE_DIR}
   ${calendarView_SOURCE_DIR}/

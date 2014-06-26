@@ -23,7 +23,7 @@ add_definitions(-DTRANSLATION_DOMAIN=\"libmailcommon\")
 #add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 
-kde_enable_exceptions()
+
 
 set(libmailcommon_filter_SRCS
   filter/filterselectiondialog.cpp

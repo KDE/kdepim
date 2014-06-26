@@ -26,7 +26,7 @@ kconfig_add_kcfg_files(archivemailagent_SRCS
 
 qt5_add_dbus_adaptor(archivemailagent_SRCS org.freedesktop.Akonadi.ArchiveMailAgent.xml archivemailagent.h ArchiveMailAgent)
 
-kde_enable_exceptions()
+
 
 ki18n_wrap_ui(archivemailagent_SRCS ui/archivemailwidget.ui )
 

@@ -10,7 +10,7 @@ add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 # enable exception handling
-kde_enable_exceptions()
+
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/calendarsupport

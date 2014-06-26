@@ -1,4 +1,4 @@
-kde_enable_exceptions()
+
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5300)
 add_definitions( -DQT_NO_CAST_FROM_ASCII )

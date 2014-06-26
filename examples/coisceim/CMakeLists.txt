@@ -1,6 +1,6 @@
 project(coisceim)
 
-kde_enable_exceptions()
+
 
 include_directories( ${Boost_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/messageviewer )
 

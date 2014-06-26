@@ -1,6 +1,6 @@
 project(kmail-mobile)
 
-kde_enable_exceptions()
+
 
 add_subdirectory(docs)
 add_subdirectory(tests)

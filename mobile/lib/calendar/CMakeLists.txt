@@ -16,7 +16,7 @@ set(mobileui_calendar_SRCS
     kcalitembrowseritem.cpp
 )
 
-kde_enable_exceptions()
+
 
 ki18n_wrap_ui(mobileui_calendar_SRCS
   ${CMAKE_SOURCE_DIR}/incidenceeditor-ng/dialogmobile.ui

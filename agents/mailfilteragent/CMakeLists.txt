@@ -9,7 +9,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/pimcommon
 )
 
-kde_enable_exceptions()
+
 
 set(akonadi_mailfilter_agent_SRCS
   dummykernel.cpp

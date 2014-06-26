@@ -45,7 +45,7 @@ if (KDEQMLPLUGIN_STATIC)
   add_definitions(-DKDEQMLPLUGIN_STATIC)
 endif ()
 
-kde_enable_exceptions()
+
 
 add_library(kdepimmobileui ${LIBRARY_TYPE} ${mobileui_SRCS})
 set_target_properties(kdepimmobileui PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION})

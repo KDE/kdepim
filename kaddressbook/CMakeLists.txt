@@ -1,5 +1,5 @@
 project(kaddressbook)
-kde_enable_exceptions()
+
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/xxport/shared

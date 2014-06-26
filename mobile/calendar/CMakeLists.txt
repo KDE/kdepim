@@ -10,7 +10,7 @@ include_directories(
   ${Boost_INCLUDE_DIR}
 )
 
-kde_enable_exceptions()
+
 
 set(korganizer_mobile_SRCS
   agendaviewitem.cpp

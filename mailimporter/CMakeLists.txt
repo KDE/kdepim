@@ -1,6 +1,6 @@
 project(mailimporter)
 
-kde_enable_exceptions()
+
 
 add_definitions(-DTRANSLATION_DOMAIN=\"libmailimporter\")
 

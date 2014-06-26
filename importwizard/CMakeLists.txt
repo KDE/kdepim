@@ -1,5 +1,5 @@
 project(importwizard)
-kde_enable_exceptions()
+
 
 add_subdirectory(icons)
 

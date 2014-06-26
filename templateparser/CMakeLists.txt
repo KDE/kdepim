@@ -2,7 +2,7 @@ project(templateparser)
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
-kde_enable_exceptions()
+
 
 add_definitions(-DTRANSLATION_DOMAIN=\"libtemplateparser\")
 

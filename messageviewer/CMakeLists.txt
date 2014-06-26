@@ -1,4 +1,4 @@
-kde_enable_exceptions()
+
 
 include_directories(${Grantlee_INCLUDE_DIRS})
 

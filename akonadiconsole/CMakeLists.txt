@@ -9,7 +9,7 @@ include_directories(
 
 include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
 
-kde_enable_exceptions()
+
 
 set(akonadiconsole_bin_SRCS
   agentwidget.cpp

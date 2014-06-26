@@ -7,7 +7,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/calendarviews
 )
 
-kde_enable_exceptions()
+
 
 set(mobile_tasks_SRCS
   configwidget.cpp

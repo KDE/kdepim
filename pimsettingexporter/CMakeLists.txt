@@ -92,7 +92,7 @@ set(pimsettingexporter_SRCS
   pimsettingsbackuprestore.cpp
 )
 
-kde_enable_exceptions()
+
 
 add_executable(pimsettingexporter ${pimsettingexporter_SRCS})
 
