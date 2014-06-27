@@ -20,7 +20,7 @@
 #ifndef QUERYDEBUGGER_H
 #define QUERYDEBUGGER_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 #include <QtCore/QMap>
 #include <QtCore/QVariant>
 

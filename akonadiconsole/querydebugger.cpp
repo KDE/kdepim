@@ -19,9 +19,9 @@
 
 #include "querydebugger.h"
 
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QCheckBox>
-#include <QtGui/QMenu>
+#include <QVBoxLayout>
+#include <QCheckBox>
+#include <QMenu>
 
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusArgument>

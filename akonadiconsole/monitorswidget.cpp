@@ -20,8 +20,8 @@
 #include "monitorswidget.h"
 #include "monitorsmodel.h"
 
-#include <QtGui/QVBoxLayout>
-#include <QtGui/qheaderview.h>
+#include <QVBoxLayout>
+#include <qheaderview.h>
 
 #include <AkonadiCore/control.h>
 
