@@ -15,34 +15,20 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLLOWUPREMINDERAGENT_H
-#define FOLLOWUPREMINDERAGENT_H
+#ifndef FOLLOWUPREMINDERNOANSWERDIALOG_H
+#define FOLLOWUPREMINDERNOANSWERDIALOG_H
 
-#include <akonadi/agentbase.h>
-class FollowUpReminderManager;
-class FollowUpReminderAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV3
+#include <KDialog>
+class QListWidget;
+class FollowUpReminderNoAnswerDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit FollowUpReminderAgent(const QString &id);
-    ~FollowUpReminderAgent();
-
-    void setEnableAgent(bool b);
-    bool enabledAgent() const;
-
-    void showConfigureDialog(qlonglong windowId = 0);
-
-    void itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection);
-
-public Q_SLOTS:
-    void configure( WId windowId );
-
-private slots:
-    void reload();
+    explicit FollowUpReminderNoAnswerDialog(QWidget *parent);
+    ~FollowUpReminderNoAnswerDialog();
 
 private:
-    FollowUpReminderManager *mManager;
-    QTimer *mTimer;
+    QListWidget *mListWidget;
 };
 
-#endif // FOLLOWUPREMINDERAGENT_H
+#endif // FOLLOWUPREMINDERNOANSWERDIALOG_H

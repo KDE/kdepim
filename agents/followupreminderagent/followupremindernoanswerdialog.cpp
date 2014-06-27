@@ -15,28 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLLOWUPREMINDERMANAGER_H
-#define FOLLOWUPREMINDERMANAGER_H
+#include "followupremindernoanswerdialog.h"
+#include <QListWidget>
+#include <KLocalizedString>
 
-#include <QObject>
-#include <KSharedConfig>
-#include <Akonadi/Item>
-#include <QPointer>
-class FollowUpReminderInfo;
-class FollowUpReminderNoAnswerDialog;
-class FollowUpReminderManager : public QObject
+FollowUpReminderNoAnswerDialog::FollowUpReminderNoAnswerDialog(QWidget *parent)
+    : KDialog(parent)
 {
-    Q_OBJECT
-public:
-    explicit FollowUpReminderManager(QObject *parent = 0);
-    ~FollowUpReminderManager();
+    setCaption( i18n("Follow Up Mail") );
+    setWindowIcon( KIcon( QLatin1String("kmail") ) );
+    setButtons( Ok|Cancel );
+    //TODO
+    mListWidget = new QListWidget;
+    setMainWidget(mListWidget);
+}
 
-    void load();
-    void checkFollowUp(const Akonadi::Item &item, const Akonadi::Collection &col);
-private:
-    KSharedConfig::Ptr mConfig;
-    QList<FollowUpReminderInfo*> mFollowUpReminderInfoList;
-    QPointer<FollowUpReminderNoAnswerDialog> mNoAnswerDialog;
-};
+FollowUpReminderNoAnswerDialog::~FollowUpReminderNoAnswerDialog()
+{
 
-#endif // FOLLOWUPREMINDERMANAGER_H
+}
