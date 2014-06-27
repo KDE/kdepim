@@ -26,9 +26,7 @@ Copyright 2014  Abhijeet Nikam connect08nikam@gmail.com
 #include <QTextCodec>
 #include <QTextEncoder>
 
-
 #include "sender/akonadisender.h"
-#include "receivermodel.h"
 
 class Composer : public QObject
 {
