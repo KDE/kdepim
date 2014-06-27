@@ -50,6 +50,9 @@ public:
     void setEmail( const QString & email );
     QString email() const;
 
+    void setName ( const QString &name );
+    QString name() const;
+
     virtual bool isEmpty() const;
     virtual void clear();
 
@@ -62,6 +65,7 @@ public:
 
 private:
     QString mEmail;
+    QString mName;
     Type mType;
 };
 

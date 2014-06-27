@@ -12,9 +12,12 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}
     ${KDE4_INCLUDES}
+    ${CMAKE_SOURCE_DIR}/messagecomposer
+    ${CMAKE_BINARY_DIR}/messagecomposer
+    ${CMAKE_SOURCE_DIR}/libkdepim/
 )
 
-qt4_automoc( ${mail_SRCS})
+qt4_automoc(${mail_SRCS})
 
 kde4_add_library(mailplugin SHARED ${mail_SRCS})
 
@@ -24,6 +27,7 @@ target_link_libraries(mailplugin
     ${QT_QTDECLARATIVE_LIBRARY}
     ${KDEPIMLIBS_AKONADI_LIBS}
     ${KDEPIMLIBS_KMIME_LIBS}
+    messagecomposer
 
 )
 

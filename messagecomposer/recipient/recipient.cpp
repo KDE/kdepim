@@ -55,6 +55,16 @@ QString Recipient::email() const
     return mEmail;
 }
 
+void Recipient::setName( const QString &name )
+{
+    mName = name;
+}
+
+QString Recipient::name() const
+{
+    return mName;
+}
+
 bool Recipient::isEmpty() const
 {
     return mEmail.isEmpty();
