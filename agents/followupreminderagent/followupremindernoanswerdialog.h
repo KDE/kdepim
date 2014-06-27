@@ -19,7 +19,32 @@
 #define FOLLOWUPREMINDERNOANSWERDIALOG_H
 
 #include <KDialog>
-class QListWidget;
+
+class FollowUpReminderInfo;
+class QTreeWidget;
+class FollowUpReminderNoAnswerWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit FollowUpReminderNoAnswerWidget(QWidget *parent=0);
+    ~FollowUpReminderNoAnswerWidget();
+
+    void restoreTreeWidgetHeader(const QByteArray &data);
+    void saveTreeWidgetHeader(KConfigGroup &group);
+
+    void setInfo(const QList<FollowUpReminderInfo *> &info);
+private slots:
+    void customContextMenuRequested(const QPoint &pos);
+    void slotRemoveItem();
+
+private:
+    enum FollowUpReminderColumn {
+        date = 0,
+        Subject
+    };
+    QTreeWidget *mTreeWidget;
+};
+
 class FollowUpReminderNoAnswerDialog : public KDialog
 {
     Q_OBJECT
@@ -27,8 +52,12 @@ public:
     explicit FollowUpReminderNoAnswerDialog(QWidget *parent);
     ~FollowUpReminderNoAnswerDialog();
 
+    void setInfo(const QList<FollowUpReminderInfo *> &info);
+
 private:
-    QListWidget *mListWidget;
+    void readConfig();
+    void writeConfig();
+    FollowUpReminderNoAnswerWidget *mWidget;
 };
 
 #endif // FOLLOWUPREMINDERNOANSWERDIALOG_H
