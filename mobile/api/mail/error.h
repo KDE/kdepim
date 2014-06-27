@@ -29,8 +29,13 @@ class Error : public QObject
     Q_OBJECT
     Q_PROPERTY (int code READ code NOTIFY errorChanged)
     Q_PROPERTY (QString text READ text NOTIFY errorChanged)
+    Q_ENUMS (ErrorCode)
 
 public:
+    enum ErrorCode {
+        OK // everything is alright
+    };
+
     explicit Error( QObject *parent = 0 );
 
     int code() const;
@@ -41,10 +46,10 @@ signals:
 
 public slots:
     void clear();
-    void setError( int code, const QString &text );
+    void setError( ErrorCode code, const QString &text );
 
 private:
-    int m_code;
+    ErrorCode m_code;
     QString m_text;
 };
 
