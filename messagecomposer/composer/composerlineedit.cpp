@@ -49,6 +49,7 @@
 #include <Akonadi/Contact/ContactGroupExpandJob>
 #include <QtCore/QBuffer>
 #include <KLocale>
+#include <KLocalizedString>
 
 using namespace MessageComposer;
 
@@ -102,8 +103,7 @@ void ComposerLineEdit::insertEmails( const QStringList & emails )
     const QAction *result = menu.exec( QCursor::pos() );
     if ( !result )
         return;
-    //QT5 setText( contents + KLocale::global()->removeAcceleratorMarker( result->text() ) );
-    setText( contents + result->text());
+    setText( contents + KLocalizedString::removeAcceleratorMarker( result->text() ) );
 }
 
 #ifndef QT_NO_DRAGANDDROP
