@@ -132,7 +132,7 @@ find_package(Akonadi ${AkonadiServer_MIN_VERSION} CONFIG REQUIRED)
 find_package(Xsltproc)
 set_package_properties(Xsltproc PROPERTIES DESCRIPTION "XSLT processor from libxslt" TYPE REQUIRED PURPOSE "Required to generate D-Bus interfaces for all Akonadi resources.")
 
-find_package(Baloo "5.0.0" CONFIG REQUIRED)
+find_package(Baloo "4.97.0" CONFIG REQUIRED)
 set_package_properties(Baloo PROPERTIES DESCRIPTION "The Baloo libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Baloo provides search capabilities in KMail and Akonadi")
 
 
