@@ -8,6 +8,7 @@ set(mail_SRCS
     message.cpp
     composer.cpp
     error.cpp
+    receivermodel.cpp
 )
 
 INCLUDE_DIRECTORIES(
