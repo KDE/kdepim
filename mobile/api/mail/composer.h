@@ -20,8 +20,8 @@ Copyright 2014  Abhijeet Nikam connect08nikam@gmail.com
 #ifndef COMPOSER_H
 #define COMPOSER_H
 
-#include <KDE/KDateTime>
-#include <KDE/KMime/Message>
+#include <KDateTime>
+#include <KMime/Message>
 #include <QObject>
 #include <QTextCodec>
 #include <QTextEncoder>

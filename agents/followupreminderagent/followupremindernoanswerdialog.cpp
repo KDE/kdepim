@@ -19,8 +19,9 @@
 #include "followupreminderinfo.h"
 
 #include <KLocalizedString>
-#include <KMenu>
+#include <QMenu>
 #include <KSharedConfig>
+#include <KGlobal>
 
 #include <QHBoxLayout>
 #include <QTreeWidget>
@@ -31,7 +32,7 @@ FollowUpReminderNoAnswerDialog::FollowUpReminderNoAnswerDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n("Follow Up Mail") );
-    setWindowIcon( KIcon( QLatin1String("kmail") ) );
+    setWindowIcon( QIcon::fromTheme( QLatin1String("kmail") ) );
     setButtons( Ok|Cancel );
     //TODO
     mWidget = new FollowUpReminderNoAnswerWidget;
@@ -100,8 +101,8 @@ void FollowUpReminderNoAnswerWidget::customContextMenuRequested(const QPoint &po
 {
     const QList<QTreeWidgetItem *> listItems = mTreeWidget->selectedItems();
     if ( !listItems.isEmpty() ) {
-        KMenu menu;
-        menu.addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
+        QMenu menu;
+        menu.addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
         menu.exec(QCursor::pos());
     }
 }
