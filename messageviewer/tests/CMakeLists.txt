@@ -31,7 +31,7 @@ macro(add_messageviewer_unittest _source)
   )
 endmacro ()
 
-add_messageviewer_unittest( htmlquotecolorertest.cpp )
+#add_messageviewer_unittest( htmlquotecolorertest.cpp )
 add_messageviewer_unittest( objecttreeparsertest.cpp )
 kde4_handle_crypto_rpath_for_executable( objecttreeparsertest )
 add_messageviewer_unittest( rendertest.cpp )
