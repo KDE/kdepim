@@ -1,5 +1,7 @@
 project(mail)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+
 set(mail_SRCS
     mailplugin.cpp
     folderlist.cpp
@@ -11,6 +13,9 @@ set(mail_SRCS
 INCLUDE_DIRECTORIES(
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}
+    ${CMAKE_SOURCE_DIR}/messagecomposer
+    ${CMAKE_BINARY_DIR}/messagecomposer
+    ${CMAKE_SOURCE_DIR}/libkdepim/
 )
 
 add_library(mailplugin SHARED ${mail_SRCS})
@@ -19,6 +24,7 @@ target_link_libraries(mailplugin
     Qt5::Declarative
     KF5::AkonadiCore
     KF5::Mime
+    messagecomposer
 )
 
 install(TARGETS mailplugin DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/pim/mail)

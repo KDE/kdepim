@@ -37,8 +37,12 @@ public:
 public Q_SLOTS:
     void configure( WId windowId );
 
+private slots:
+    void reload();
+
 private:
     FollowUpReminderManager *mManager;
+    QTimer *mTimer;
 };
 
 #endif // FOLLOWUPREMINDERAGENT_H

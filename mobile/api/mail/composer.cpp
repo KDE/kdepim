@@ -17,7 +17,7 @@ Copyright 2014  Abhijeet Nikam connect08nikam@gmail.com
     02110-1301, USA.
 */
 
-#include <composer.h>
+#include "composer.h"
 
 
 QString Composer::from() const
@@ -25,19 +25,19 @@ QString Composer::from() const
     return m_from;
 }
 
-QStringList Composer::cc() const
+QString Composer::cc() const
 {
     return m_cc;
 }
 
 
-QStringList Composer::bcc() const
+QString Composer::bcc() const
 {
     return m_bcc;
 }
 
 
-QStringList Composer::to() const
+QString Composer::to() const
 {
     return m_to;
 }
@@ -63,7 +63,7 @@ void Composer::setFrom(const QString &from)
 }
 
 
-void Composer::setTo(const QStringList &to)
+void Composer::setTo(const QString &to)
 {
     if ( to != m_to ) {
         m_to = to;
@@ -72,7 +72,7 @@ void Composer::setTo(const QStringList &to)
 }
 
 
-void Composer::setCC(const QStringList &cc)
+void Composer::setCC(const QString &cc)
 {
     if ( cc != m_cc ) {
         m_cc = cc;
@@ -81,7 +81,7 @@ void Composer::setCC(const QStringList &cc)
 }
 
 
-void Composer::setBCC(const QStringList &bcc)
+void Composer::setBCC(const QString &bcc)
 {
     if ( bcc != m_bcc ) {
         m_bcc = bcc;
@@ -105,8 +105,46 @@ void Composer::setBody(const QString &body)
     }
 }
 
+QByteArray Composer::convert (const QString &body)
+{
+
+    QTextCodec *codec = QTextCodec::codecForName("UTF-16");
+    QTextEncoder *encoderWithoutBom = codec->makeEncoder( QTextCodec::IgnoreHeader );
+    QByteArray bytes  = encoderWithoutBom ->fromUnicode( body );
+
+    return bytes;
+
+}
+
 void Composer::send()
 {
+
+    KMime::Message::Ptr m_msg (new KMime::Message);
+    KMime::Headers::ContentType *ct = m_msg->contentType();
+
+    ct->setMimeType( "multipart/mixed" );
+    ct->setBoundary( KMime::multiPartBoundary() );
+    ct->setCategory( KMime::Headers::CCcontainer );
+    m_msg->contentTransferEncoding()->clear();
+
+    // Set the headers.
+    m_msg->from()->fromUnicodeString( m_from , "utf-8" );
+    m_msg->to()->fromUnicodeString( m_to, "utf-8" );
+    m_msg->cc()->fromUnicodeString( m_cc, "utf-8" );
+    m_msg->date()->setDateTime( KDateTime::currentLocalDateTime() );
+    m_msg->subject()->fromUnicodeString( m_subject, "utf-8" );
+
+    // Set the first multipart, the body message.
+    KMime::Content *b = new KMime::Content;
+    b->contentType()->setMimeType( "text/plain" );
+    b->setBody( convert (m_body) );
+
+    // Add the multipart and assemble
+    m_msg->addContent( b );
+    m_msg->assemble();
+
+    MessageComposer::AkonadiSender *mSender = new MessageComposer::AkonadiSender (this);
+    mSender->send(m_msg, MessageComposer::MessageSender::SendImmediate);
 
 }
 

@@ -733,16 +733,14 @@ void MainWidget::print()
     QPrinter printer;
     printer.setDocName( i18n( "Address Book" ) );
     printer.setOutputFileName( Settings::self()->defaultFileName() );
-    printer.setOutputFormat( QPrinter::PdfFormat );
     printer.setCollateCopies( true );
 
-    QPrintDialog printDialog(KdePrint::createPrintDialog(&printer));
+    QPrintDialog printDialog(KdePrint::createPrintDialog(&printer, this));
 
     printDialog.setWindowTitle( i18n( "Print Contacts" ) );
     if ( !printDialog.exec() ) { //krazy:exclude=crashy
         return;
     }
-
     KABPrinting::PrintingWizard wizard( &printer, mItemView->selectionModel(), this );
     wizard.setDefaultAddressBook( currentAddressBook() );
 

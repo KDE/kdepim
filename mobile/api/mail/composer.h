@@ -20,8 +20,13 @@ Copyright 2014  Abhijeet Nikam connect08nikam@gmail.com
 #ifndef COMPOSER_H
 #define COMPOSER_H
 
-#include <KMime/Message>
+#include <KDE/KDateTime>
+#include <KDE/KMime/Message>
 #include <QObject>
+#include <QTextCodec>
+#include <QTextEncoder>
+
+#include "sender/akonadisender.h"
 
 class Composer : public QObject
 {
@@ -30,26 +35,28 @@ Q_OBJECT
 
     Q_PROPERTY (QString subject READ subject WRITE setSubject NOTIFY subjectChanged)
     Q_PROPERTY (QString body READ body WRITE setBody NOTIFY bodyChanged)
-    Q_PROPERTY (QStringList cc READ cc WRITE setCC NOTIFY ccChanged)
-    Q_PROPERTY (QStringList to READ to WRITE setTo NOTIFY toChanged)
-    Q_PROPERTY (QStringList bcc READ bcc WRITE setBCC NOTIFY bccChanged)
+    Q_PROPERTY (QString cc READ cc WRITE setCC NOTIFY ccChanged)
+    Q_PROPERTY (QString to READ to WRITE setTo NOTIFY toChanged)
+    Q_PROPERTY (QString bcc READ bcc WRITE setBCC NOTIFY bccChanged)
     Q_PROPERTY (QString from READ from WRITE setFrom NOTIFY fromChanged)
 
 public:
 
-    QStringList cc() const;
-    QStringList bcc() const;
+    QString cc() const;
+    QString bcc() const;
     QString from() const;
-    QStringList to() const;
+    QString to() const;
     QString subject() const;
     QString body() const;
 
     void setFrom( const QString &from );
-    void setTo( const QStringList &replyTo );
-    void setCC( const QStringList &cc );
-    void setBCC( const QStringList &bcc );
+    void setTo( const QString &replyTo );
+    void setCC( const QString &cc );
+    void setBCC( const QString &bcc );
     void setSubject( const QString &subject );
     void setBody ( const QString &body );
+
+    QByteArray convert ( const QString &body );
 
 signals:
 
@@ -66,18 +73,14 @@ public slots:
     void saveDraft();
     void sendLater();
 
-private slots:
-
-
 private:
 
     QString m_subject;
     QString m_from;
     QString m_body;
-    QStringList m_cc;
-    QStringList m_to;
-    QStringList m_bcc;
-
+    QString m_cc;
+    QString m_to;
+    QString m_bcc;
 
 };
 

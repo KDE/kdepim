@@ -30,6 +30,7 @@
 
 #include <QPointer>
 #include <QDebug>
+#include <QTimer>
 
 FollowUpReminderAgent::FollowUpReminderAgent(const QString &id)
     : Akonadi::AgentBase( id )
@@ -44,6 +45,10 @@ FollowUpReminderAgent::FollowUpReminderAgent(const QString &id)
     if (FollowUpReminderAgentSettings::enabled()) {
         mManager->load();
     }
+    mTimer = new QTimer(this);
+    connect(mTimer, SIGNAL(timeout()), this, SLOT(reload()));
+    //Reload all each 24hours
+    mTimer->start(24*60*60*1000);
 }
 
 FollowUpReminderAgent::~FollowUpReminderAgent()
@@ -95,11 +100,20 @@ void FollowUpReminderAgent::itemAdded( const Akonadi::Item &item, const Akonadi:
         return;
 
     if ( item.mimeType() != KMime::Message::mimeType() ) {
-        qDebug() << "MailFilterAgent::itemAdded called for a non-message item!";
+        qDebug() << "FollowUpReminderAgent::itemAdded called for a non-message item!";
         return;
     }
-    mManager->checkFollowUp(item);
+    mManager->checkFollowUp(item, collection);
 }
+
+void FollowUpReminderAgent::reload()
+{
+    if (enabledAgent()) {
+        mManager->load();
+        mTimer->start();
+    }
+}
+
 
 
 AKONADI_AGENT_MAIN( FollowUpReminderAgent )

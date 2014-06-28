@@ -174,7 +174,7 @@ public:
             }
             if (lstSelectedItems.count() == 1 && !defaultTemplate) {
                 menu->addSeparator();
-                menu->addAction( i18n("Remove"), q, SLOT(slotRemove()));
+                menu->addAction( KIcon(QLatin1String("edit-delete")), i18n("Remove"), q, SLOT(slotRemove()));
             }
         }
         menu->addSeparator();

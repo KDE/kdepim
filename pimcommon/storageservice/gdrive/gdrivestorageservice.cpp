@@ -394,7 +394,7 @@ void GDriveStorageService::storageServiceCopyFolder(const QString &source, const
 QMap<QString, QString> GDriveStorageService::itemInformation(const QVariantMap &variantMap)
 {
     QMap<QString, QString> information;
-    qDebug()<<" variantMap"<<variantMap;
+    //qDebug()<<" variantMap"<<variantMap;
     KGAPI2::Drive::FilePtr file = KGAPI2::Drive::File::fromJSON(variantMap);
     if (file) {
         information.insert(PimCommon::StorageServiceUtils::propertyNameToI18n(PimCommon::StorageServiceUtils::Type), file->isFolder() ? i18n("Folder") : i18n("File"));

@@ -21,7 +21,9 @@
 #include <QObject>
 #include <KSharedConfig>
 #include <AkonadiCore/Item>
+#include <QPointer>
 class FollowUpReminderInfo;
+class FollowUpReminderNoAnswerDialog;
 class FollowUpReminderManager : public QObject
 {
     Q_OBJECT
@@ -30,10 +32,11 @@ public:
     ~FollowUpReminderManager();
 
     void load();
-    void checkFollowUp(const Akonadi::Item &item);
+    void checkFollowUp(const Akonadi::Item &item, const Akonadi::Collection &col);
 private:
     KSharedConfig::Ptr mConfig;
     QList<FollowUpReminderInfo*> mFollowUpReminderInfoList;
+    QPointer<FollowUpReminderNoAnswerDialog> mNoAnswerDialog;
 };
 
 #endif // FOLLOWUPREMINDERMANAGER_H
