@@ -20,7 +20,7 @@
 #ifndef __AKONADITABBAR_H__
 #define __AKONADITABBAR_H__
 
-#include <KTabBar>
+#include <QTabBar>
 #include <AkonadiCore/collection.h>
 
 /**
@@ -45,7 +45,7 @@
     @author Tom Albers
     @since 4.3
 */
-class AkonadiTabBar : public KTabBar
+class AkonadiTabBar : public QTabBar
 {
     Q_OBJECT
 
