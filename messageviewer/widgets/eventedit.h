@@ -28,7 +28,7 @@
 
 class QLineEdit;
 class KDateTimeEdit;
-class KPushButton;
+class QPushButton;
 namespace Akonadi {
 class CollectionComboBox;
 }
@@ -75,8 +75,8 @@ private:
     Akonadi::CollectionComboBox *mCollectionCombobox;
     KDateTimeEdit *mStartDateTimeEdit;
     KDateTimeEdit *mEndDateTimeEdit;
-    KPushButton *mSaveButton;
-    KPushButton *mOpenEditorButton;
+    QPushButton *mSaveButton;
+    QPushButton *mOpenEditorButton;
 };
 }
 

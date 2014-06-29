@@ -24,7 +24,7 @@
 #include <QDebug>
 #include <KMessageWidget>
 #include <QPushButton>
-#include <KPushButton>
+#include <QPushButton>
 #include <QHBoxLayout>
 #include <QEvent>
 #include <QKeyEvent>
@@ -34,6 +34,8 @@
 
 #include <incidenceeditor-ng/incidencedialog.h>
 #include <incidenceeditor-ng/incidencedialogfactory.h>
+#include <KGuiItem>
+#include <KStandardGuiItem>
 
 
 namespace MessageViewer {
@@ -112,7 +114,8 @@ TodoEdit::TodoEdit(QWidget *parent)
     connect(mOpenEditorButton, SIGNAL(clicked(bool)), this, SLOT(slotOpenEditor()));
     hbox->addWidget(mOpenEditorButton);
 
-    KPushButton *btn = new KPushButton(KStandardGuiItem::cancel());
+    QPushButton *btn = new QPushButton;
+    KGuiItem::assign(btn,KStandardGuiItem::cancel());
     btn->setObjectName(QLatin1String("close-button"));
 #ifndef QT_NO_ACCESSIBILITY
     btn->setAccessibleDescription(i18n("Close the widget for creating new todos."));

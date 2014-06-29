@@ -25,7 +25,7 @@
 #include <kiconloader.h>
 #include <kwindowsystem.h>
 #include <QPushButton>
-#include <KPushButton>
+#include <QPushButton>
 #include <kmessagebox.h>
 
 #include <agentinstance.h>
@@ -38,6 +38,8 @@
 
 #include <errno.h>
 #include <KSharedConfig>
+#include <KGuiItem>
+#include <KStandardGuiItem>
 
 using namespace KSieveUi;
 
@@ -130,7 +132,8 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent )
     connect( mDeactivateScript, SIGNAL(clicked()), mTreeView, SLOT(slotDeactivateScript()) );
     buttonLayout->addWidget( mDeactivateScript );
 
-    KPushButton *close = new KPushButton( KStandardGuiItem::close() );
+    QPushButton *close = new QPushButton;
+    KGuiItem::assign(close, KStandardGuiItem::close() );
     connect( close, SIGNAL(clicked()), this, SLOT(accept()) );
     buttonLayout->addWidget( close );
 

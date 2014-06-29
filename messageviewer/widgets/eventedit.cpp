@@ -32,10 +32,12 @@
 #include <QLabel>
 
 #include <AkonadiWidgets/CollectionComboBox>
-#include <KPushButton>
+#include <QPushButton>
 
 #include <incidenceeditor-ng/incidencedialogfactory.h>
 #include <incidenceeditor-ng/incidencedialog.h>
+#include <KGuiItem>
+#include <KStandardGuiItem>
 
 
 namespace MessageViewer {
@@ -123,7 +125,7 @@ EventEdit::EventEdit(QWidget *parent)
 
     hbox->addStretch(1);
 
-    mSaveButton = new KPushButton(QIcon::fromTheme(QLatin1String("appointment-new")), i18n("&Save"));
+    mSaveButton = new QPushButton(QIcon::fromTheme(QLatin1String("appointment-new")), i18n("&Save"));
     mSaveButton->setObjectName(QLatin1String("save-button"));
     mSaveButton->setEnabled(false);
 #ifndef QT_NO_ACCESSIBILITY
@@ -132,7 +134,7 @@ EventEdit::EventEdit(QWidget *parent)
     connect(mSaveButton, SIGNAL(clicked(bool)), this, SLOT(slotReturnPressed()));
     hbox->addWidget(mSaveButton);
 
-    mOpenEditorButton = new KPushButton(i18n("Open &editor..."));
+    mOpenEditorButton = new QPushButton(i18n("Open &editor..."));
 #ifndef QT_NO_ACCESSIBILITY
     mOpenEditorButton->setAccessibleDescription(i18n("Open event editor, where more details can be changed."));
 #endif
@@ -141,7 +143,8 @@ EventEdit::EventEdit(QWidget *parent)
     connect(mOpenEditorButton, SIGNAL(clicked(bool)), this, SLOT(slotOpenEditor()));
     hbox->addWidget(mOpenEditorButton);
 
-    KPushButton *btn = new KPushButton(KStandardGuiItem::cancel());
+    QPushButton *btn = new QPushButton;
+    KGuiItem::assign(btn,KStandardGuiItem::cancel());
     btn->setObjectName(QLatin1String("close-button"));
 #ifndef QT_NO_ACCESSIBILITY
     btn->setAccessibleDescription(i18n("Close the widget for creating new events."));
