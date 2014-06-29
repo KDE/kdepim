@@ -24,7 +24,7 @@
 #include <KMessageBox>
 #include <KStandardAction>
 #include <KCursor>
-#include <KIcon>
+#include <QIcon>
 #include <KDialog>
 
 #include <sonnet/backgroundchecker.h>
@@ -114,14 +114,14 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
         }
 
         if( !isReadOnly() && d->hasSpellCheckingSupport) {
-            QAction *spellCheckAction = popup->addAction( KIcon( QLatin1String("tools-check-spelling") ), i18n( "Check Spelling..." ), this, SLOT(slotCheckSpelling()) );
+            QAction *spellCheckAction = popup->addAction( QIcon::fromTheme( QLatin1String("tools-check-spelling") ), i18n( "Check Spelling..." ), this, SLOT(slotCheckSpelling()) );
             if (emptyDocument)
                 spellCheckAction->setEnabled(false);
             popup->addSeparator();
         }
 
         QAction *speakAction = popup->addAction(i18n("Speak Text"));
-        speakAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
+        speakAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
         speakAction->setEnabled(!emptyDocument );
         connect( speakAction, SIGNAL(triggered(bool)), this, SLOT(slotSpeakText()) );
         addExtraMenuEntry(popup, event->pos());

@@ -24,7 +24,7 @@
 #include <KCursor>
 #include <KConfigGroup>
 #include <KDialog>
-#include <KIcon>
+#include <QIcon>
 #include <KIconTheme>
 
 #include <sonnet/backgroundchecker.h>
@@ -129,7 +129,7 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
         }
 
         if( !isReadOnly() && d->hasSpellCheckingSupport) {
-            QAction *spellCheckAction = popup->addAction( KIcon( QLatin1String("tools-check-spelling") ), i18n( "Check Spelling..." ), this, SLOT(slotCheckSpelling()) );
+            QAction *spellCheckAction = popup->addAction( QIcon::fromTheme( QLatin1String("tools-check-spelling") ), i18n( "Check Spelling..." ), this, SLOT(slotCheckSpelling()) );
             if (emptyDocument)
                 spellCheckAction->setEnabled(false);
             popup->addSeparator();
@@ -164,7 +164,7 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
         }
 
         QAction *speakAction = popup->addAction(i18n("Speak Text"));
-        speakAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
+        speakAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-text-to-speech")));
         speakAction->setEnabled(!emptyDocument );
         connect( speakAction, SIGNAL(triggered(bool)), this, SLOT(slotSpeakText()) );
         addExtraMenuEntry(popup, pos);

@@ -26,7 +26,7 @@
 #include <KMessageBox>
 #include <KToggleAction>
 #include <KRun>
-#include <KIcon>
+#include <QIcon>
 
 #include <QLabel>
 #include <QGridLayout>
@@ -51,7 +51,7 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     setLayout(grid);
 
     QToolButton *closeBtn = new QToolButton( this );
-    closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );
+    closeBtn->setIcon( QIcon::fromTheme( QLatin1String("dialog-close") ) );
     closeBtn->setIconSize( QSize( 16, 16 ) );
     closeBtn->setToolTip( i18n( "Close" ) );
 #ifndef QT_NO_ACCESSIBILITY

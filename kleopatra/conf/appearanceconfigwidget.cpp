@@ -49,7 +49,7 @@
 #else
 # include <kicondialog.h>
 #endif
-#include <KIcon>
+#include <QIcon>
 
 #include <kconfig.h>
 #include <klocale.h>
@@ -175,7 +175,7 @@ static void apply_config( const KConfigGroup & group, QListWidgetItem * item ) {
     item->setData( MayChangeStrikeOutRole, !group.isEntryImmutable( "font-strikeout" ) );
 
     const QString iconName = group.readEntry( "icon" );
-    item->setData( Qt::DecorationRole, iconName.isEmpty() ? QVariant() : KIcon( iconName ) );
+    item->setData( Qt::DecorationRole, iconName.isEmpty() ? QVariant() : QIcon::fromTheme( iconName ) );
     item->setData( IconNameRole, iconName.isEmpty() ? QVariant() : iconName );
     item->setData( MayChangeIconRole, !group.isEntryImmutable( "icon" ) );
 }
@@ -453,7 +453,7 @@ void AppearanceConfigWidget::save() {
     prefs.setShowValidity( d->tooltipValidityCheckBox->isChecked() );
     prefs.setShowOwnerInformation( d->tooltipOwnerCheckBox->isChecked() );
     prefs.setShowCertificateDetails( d->tooltipDetailsCheckBox->isChecked() );
-    prefs.writeConfig();
+    prefs.save();
 
     KConfig * const config = CryptoBackendFactory::instance()->configObject();
     if ( !config )
@@ -492,7 +492,7 @@ void AppearanceConfigWidget::Private::slotIconClicked() {
     if ( iconName.isEmpty() )
         return;
 
-    item->setIcon( KIcon( iconName ) );
+    item->setIcon( QIcon::fromTheme( iconName ) );
     item->setData( IconNameRole, iconName );
     emit q->changed();
 }

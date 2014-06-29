@@ -50,7 +50,7 @@
 #include <commands/setinitialpincommand.h>
 #include <commands/learncardkeyscommand.h>
 
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
 #include <KAboutApplicationDialog>
 #include <k4aboutdata.h>
@@ -190,8 +190,8 @@ SysTrayIcon::Private::Private( SysTrayIcon * qq )
       learnCertificatesAction( i18n("Learn NetKey v3 Card Certificates"), q ),
       aboutDialog()
 {
-    q->setNormalIcon( KIcon( QLatin1String("kleopatra") ) );
-    q->setAttentionIcon( KIcon( QLatin1String("secure-card") ) );
+    q->setNormalIcon( QIcon::fromTheme( QLatin1String("kleopatra") ) );
+    q->setAttentionIcon( QIcon::fromTheme( QLatin1String("secure-card") ) );
 
     KDAB_SET_OBJECT_NAME( menu );
     KDAB_SET_OBJECT_NAME( openCertificateManagerAction );

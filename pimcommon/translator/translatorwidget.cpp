@@ -31,7 +31,7 @@
 #include <KMessageBox>
 #include <KToggleAction>
 #include <KPIMUtils/kpimutils/progressindicatorwidget.h>
-#include <KIcon>
+#include <QIcon>
 #include <QMimeData> 
 
 #include <QHBoxLayout>
@@ -222,7 +222,7 @@ void TranslatorWidget::init()
     QHBoxLayout *hboxLayout = new QHBoxLayout;
     QToolButton * closeBtn = new QToolButton( this );
     closeBtn->setObjectName(QLatin1String("close-button"));
-    closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );
+    closeBtn->setIcon( QIcon::fromTheme( QLatin1String("dialog-close") ) );
     closeBtn->setIconSize( QSize( 16, 16 ) );
     closeBtn->setToolTip( i18n( "Close" ) );
 

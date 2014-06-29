@@ -53,15 +53,15 @@ void StorageServiceDeleteTreeWidget::createMenuActions(QMenu *menu)
     switch(mDeleteType) {
     case PimCommon::StorageServiceDeleteDialog::DeleteAll:
         if (type != StorageServiceTreeWidget::UnKnown)
-            menu->addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete"), this, SIGNAL(deleteFileFolder()));
+            menu->addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete"), this, SIGNAL(deleteFileFolder()));
         break;
     case PimCommon::StorageServiceDeleteDialog::DeleteFiles:
         if (type == StorageServiceTreeWidget::File)
-            menu->addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete File"), this, SIGNAL(deleteFileFolder()));
+            menu->addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete File"), this, SIGNAL(deleteFileFolder()));
         break;
     case PimCommon::StorageServiceDeleteDialog::DeleteFolders:
         if (type != StorageServiceTreeWidget::Folder)
-            menu->addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete Folder"), this, SIGNAL(deleteFileFolder()));
+            menu->addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete Folder"), this, SIGNAL(deleteFileFolder()));
         break;
     }
 }

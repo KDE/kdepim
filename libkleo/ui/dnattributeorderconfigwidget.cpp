@@ -39,7 +39,7 @@
 #include <kdialog.h>
 #include <kiconloader.h>
 #include <kconfig.h>
-#include <KIcon>
+#include <QIcon>
 
 #include <QToolButton>
 #include <QGridLayout>
@@ -141,7 +141,7 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMap
 
   for ( unsigned int i = 0 ; i < sizeof navButtons / sizeof *navButtons ; ++i ) {
     QToolButton * tb = d->navTB[i] = new QToolButton( this );
-    tb->setIcon( KIcon( QLatin1String(navButtons[i].icon) ) );
+    tb->setIcon( QIcon::fromTheme( QLatin1String(navButtons[i].icon) ) );
     tb->setEnabled( false );
     tb->setToolTip( i18n( navButtons[i].tooltip ) );
     xlay->addWidget( tb, navButtons[i].row, navButtons[i].col );

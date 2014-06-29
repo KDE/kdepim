@@ -21,7 +21,7 @@
 #include <KLocale>
 #include <KStandardAction>
 #include <KStatusBar>
-#include <KIcon>
+#include <QIcon>
 
 #include <QDockWidget>
 #include <QSortFilterProxyModel>
@@ -136,7 +136,7 @@ void mailreader::setupActions()
     KStandardAction::quit(qApp, SLOT(closeAllWindows()), actionCollection());
     KStandardAction::preferences(m_view, SLOT(slotConfigure()), actionCollection());
 
-    QAction *createTab = new QAction(KIcon(QLatin1String("tab-new")),
+    QAction *createTab = new QAction(QIcon::fromTheme(QLatin1String("tab-new")),
                                       i18n("Open a new tab"),
                                       this);
     actionCollection()->addAction(QLatin1String("new_tab"), createTab);
