@@ -23,7 +23,7 @@
 #include "themesession.h"
 #include "themeeditortabwidget.h"
 
-#include <knewstuff3/uploaddialog.h>
+#include <kns3/uploaddialog.h>
 
 #include <KLocalizedString>
 #include <QInputDialog>

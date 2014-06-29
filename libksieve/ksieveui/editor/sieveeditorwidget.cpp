@@ -26,7 +26,7 @@
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 #include "autocreatescripts/sievescriptparsingerrordialog.h"
 
-#include <knewstuff3/uploaddialog.h>
+#include <kns3/uploaddialog.h>
 #include <klocale.h>
 #include <KStandardGuiItem>
 #include <ktempdir.h>
