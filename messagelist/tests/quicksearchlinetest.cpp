@@ -27,7 +27,7 @@
 #include <KLineEdit>
 #include <QToolButton>
 #include <QPushButton>
-#include <KPushButton>
+#include <QPushButton>
 #include <KComboBox>
 
 
@@ -44,7 +44,7 @@ void QuickSearchLineTest::shouldHaveDefaultValueOnCreation()
     QWidget *widget = qFindChild<QWidget *>(&searchLine, QLatin1String("extraoptions"));
     QVERIFY(widget);
     QVERIFY(widget->isHidden());
-    KPushButton *moreButton = qFindChild<KPushButton *>(&searchLine, QLatin1String("moreoptions"));
+    QPushButton *moreButton = qFindChild<QPushButton *>(&searchLine, QLatin1String("moreoptions"));
     QVERIFY(moreButton);
     QCOMPARE(moreButton->icon().name(), QLatin1String("arrow-down-double"));
     QWidget *quickSearchFilterWidget = qFindChild<QWidget *>(&searchLine, QLatin1String("quicksearchfilterwidget"));
@@ -194,7 +194,7 @@ void QuickSearchLineTest::shouldShowMoreOptionWhenClickOnMoreButton()
     QuickSearchLine searchLine;
     searchLine.show();
     QTest::qWaitForWindowShown(&searchLine);
-    KPushButton *moreButton = qFindChild<KPushButton *>(&searchLine, QLatin1String("moreoptions"));
+    QPushButton *moreButton = qFindChild<QPushButton *>(&searchLine, QLatin1String("moreoptions"));
     QTest::mouseClick(moreButton, Qt::LeftButton);
     QWidget *quickSearchFilterWidget = qFindChild<QWidget *>(&searchLine, QLatin1String("quicksearchfilterwidget"));
     QVERIFY(quickSearchFilterWidget->isVisible());
@@ -238,7 +238,7 @@ void QuickSearchLineTest::shouldHideShowWidgetWhenWeChangeVisibility()
 
     QWidget *widget = qFindChild<QWidget *>(&searchLine, QLatin1String("extraoptions"));
 
-    KPushButton *moreButton = qFindChild<KPushButton *>(&searchLine, QLatin1String("moreoptions"));
+    QPushButton *moreButton = qFindChild<QPushButton *>(&searchLine, QLatin1String("moreoptions"));
     QWidget *quickSearchFilterWidget = qFindChild<QWidget *>(&searchLine, QLatin1String("quicksearchfilterwidget"));
     searchLine.changeQuicksearchVisibility(false);
     QCOMPARE(quickSearchFilterWidget->isVisible(), false);
