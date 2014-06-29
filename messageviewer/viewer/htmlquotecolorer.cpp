@@ -32,7 +32,13 @@
 using namespace MessageViewer;
 
 HTMLQuoteColorer::HTMLQuoteColorer()
+    : mEnableHtmlQuoteColorer(true)
 {
+}
+
+void HTMLQuoteColorer::setEnableHtmlQuoteColorer(bool enabled)
+{
+    mEnableHtmlQuoteColorer = enabled;
 }
 
 QString HTMLQuoteColorer::process( const QString &htmlSource, QString&extraHead )
@@ -130,7 +136,7 @@ QString HTMLQuoteColorer::process( const QString &htmlSource, QString&extraHead 
             "  return 0;\n"
             "}\n"));
 
-    if (GlobalSettings::self()->htmlQuoteColorerEnabled()) {
+    if (mEnableHtmlQuoteColorer) {
         page.settings()->setAttribute( QWebSettings::JavascriptEnabled, true );
         frame->evaluateJavaScript( script );
         page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );

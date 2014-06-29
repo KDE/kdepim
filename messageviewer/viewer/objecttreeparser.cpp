@@ -1224,6 +1224,7 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
         if ( mSource->htmlMail() ) {
 
             HTMLQuoteColorer colorer;
+            colorer.setEnableHtmlQuoteColorer(GlobalSettings::self()->htmlQuoteColorerEnabled());
             QString extraHead;
             for ( int i = 0; i < 3; ++i )
                 colorer.setQuoteColor( i, cssHelper()->quoteColor( i ) );
