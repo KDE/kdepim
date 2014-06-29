@@ -90,6 +90,7 @@ KOAlarmClient::KOAlarmClient( QObject *parent )
 
   checkAlarms();
   mCheckTimer.start( 1000 * interval );  // interval in seconds
+  connect(qApp, SIGNAL(commitDataRequest(QSessionManager)), SLOT(slotCommitData(QSessionManager)));
 }
 
 KOAlarmClient::~KOAlarmClient()
@@ -284,11 +285,10 @@ void KOAlarmClient::quit()
 #endif
 }
 
-bool KOAlarmClient::commitData( QSessionManager & )
+void KOAlarmClient::slotCommitData( QSessionManager & )
 {
   emit saveAllSignal();
   saveLastCheckTime();
-  return true;
 }
 
 void KOAlarmClient::forceAlarmCheck()

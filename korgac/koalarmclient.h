@@ -26,11 +26,10 @@
 
 #include <Akonadi/Calendar/ETMCalendar>
 
-#include <KSessionManager>
 
 #include <QTimer>
 #include <QDateTime>
-
+#include <QSessionManager>
 class AlarmDialog;
 class AlarmDockWindow;
 
@@ -39,14 +38,12 @@ namespace Akonadi {
   class EntityTreeModel;
 }
 
-class KOAlarmClient : public QObject, public KSessionManager
+class KOAlarmClient : public QObject
 {
   Q_OBJECT
   public:
     explicit KOAlarmClient( QObject *parent = 0 );
     ~KOAlarmClient();
-
-    bool commitData( QSessionManager & );
 
     // DBUS interface
     void quit();
@@ -64,6 +61,9 @@ class KOAlarmClient : public QObject, public KSessionManager
   protected slots:
     void deferredInit();
     void checkAlarms();
+  private slots:
+    void slotCommitData( QSessionManager & );
+
 
   signals:
     void reminderCount( int );
