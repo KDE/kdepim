@@ -51,8 +51,10 @@ public:
      */
     QString process(const QString &htmlSource , QString &extraHead);
 
+    void setEnableHtmlQuoteColorer(bool enabled);
 private:
     QColor mQuoteColors[3];
+    bool mEnableHtmlQuoteColorer;
 };
 
 }
