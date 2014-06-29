@@ -32,6 +32,7 @@ void HTMLQuoteColorerTester::test_QuoteColor()
   QFETCH( QString, expectedCode );
 
   HTMLQuoteColorer colorer;
+  colorer.setEnableHtmlQuoteColorer(true);
   colorer.setQuoteColor( 0, QColor( "#FF0000" ) );
   colorer.setQuoteColor( 1, QColor( "#00FF00" ) );
   colorer.setQuoteColor( 2, QColor( "#0000FF" ) );
