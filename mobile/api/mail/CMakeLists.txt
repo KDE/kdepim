@@ -9,6 +9,7 @@ set(mail_SRCS
     composer.cpp
     error.cpp
     receivermodel.cpp
+    messagelist.cpp
 )
 
 INCLUDE_DIRECTORIES(
