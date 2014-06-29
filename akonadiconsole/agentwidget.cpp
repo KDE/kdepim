@@ -47,6 +47,7 @@
 #include <QDBusReply>
 #include <QMetaMethod>
 #include <QResizeEvent>
+#include <KGuiItem>
 
 class TextDialog : public KDialog
 {
@@ -88,17 +89,17 @@ AgentWidget::AgentWidget( QWidget *parent )
 
   currentChanged();
 
-  ui.addButton->setGuiItem( KStandardGuiItem::add() );
+  KGuiItem::assign(ui.addButton, KStandardGuiItem::add() );
   connect( ui.addButton, SIGNAL(clicked()), this, SLOT(addAgent()) );
 
-  ui.removeButton->setGuiItem( KStandardGuiItem::remove() );
+  KGuiItem::assign(ui.removeButton, KStandardGuiItem::remove() );
   connect( ui.removeButton, SIGNAL(clicked()), this, SLOT(removeAgent()) );
 
   mConfigMenu = new QMenu( i18n("Configure"), this );
   mConfigMenu->addAction( i18n("Configure Natively..."), this, SLOT(configureAgent()) );
   mConfigMenu->addAction( i18n("Configure Remotely..."), this, SLOT(configureAgentRemote()) );
   mConfigMenu->setIcon( KStandardGuiItem::configure().icon() );
-  ui.configButton->setGuiItem( KStandardGuiItem::configure() );
+  KGuiItem::assign(ui.configButton, KStandardGuiItem::configure() );
   ui.configButton->setMenu( mConfigMenu );
   connect( ui.configButton, SIGNAL(clicked()), this, SLOT(configureAgent()) );
 

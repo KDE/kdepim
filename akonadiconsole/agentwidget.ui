@@ -203,42 +203,42 @@
     </spacer>
    </item>
    <item row="3" column="1">
-    <widget class="KPushButton" name="addButton">
+    <widget class="QPushButton" name="addButton">
      <property name="text">
       <string>Add...</string>
      </property>
     </widget>
    </item>
    <item row="3" column="2">
-    <widget class="KPushButton" name="removeButton">
+    <widget class="QPushButton" name="removeButton">
      <property name="text">
       <string>Remove</string>
      </property>
     </widget>
    </item>
    <item row="3" column="3">
-    <widget class="KPushButton" name="configButton">
+    <widget class="QPushButton" name="configButton">
      <property name="text">
       <string>Configure...</string>
      </property>
     </widget>
    </item>
    <item row="3" column="4">
-    <widget class="KPushButton" name="abortButton">
+    <widget class="QPushButton" name="abortButton">
      <property name="text">
       <string>Abort</string>
      </property>
     </widget>
    </item>
    <item row="3" column="5">
-    <widget class="KPushButton" name="syncButton">
+    <widget class="QPushButton" name="syncButton">
      <property name="text">
       <string>Synchronize</string>
      </property>
     </widget>
    </item>
    <item row="3" column="6">
-    <widget class="KPushButton" name="restartButton">
+    <widget class="QPushButton" name="restartButton">
      <property name="text">
       <string comment="restart the agent">Restart</string>
      </property>
@@ -247,11 +247,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
-  </customwidget>
   <customwidget>
    <class>Akonadi::AgentInstanceWidget</class>
    <extends>QWidget</extends>
