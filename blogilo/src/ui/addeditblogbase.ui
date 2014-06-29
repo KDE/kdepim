@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>AddEditBlogBase</class>
- <widget class="KTabWidget" name="AddEditBlogBase">
+ <widget class="QTabWidget" name="AddEditBlogBase">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -519,12 +519,6 @@ You can set more options in the Advanced tab.</string>
    <class>KSeparator</class>
    <extends>QFrame</extends>
    <header>kseparator.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KTabWidget</class>
-   <extends>QTabWidget</extends>
-   <header>ktabwidget.h</header>
-   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>

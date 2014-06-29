@@ -57,7 +57,7 @@ public:
           wait(0)
     {}
     Ui::AddEditBlogBase ui;
-    KTabWidget *mainW;
+    QTabWidget *mainW;
     bool isNewBlog;
     BilboBlog *bBlog;
     KBlog::Blog *mBlog;
@@ -72,7 +72,7 @@ AddEditBlog::AddEditBlog( int blog_id, QWidget *parent, Qt::WindowFlags flags )
     : KDialog( parent, flags ), d(new Private)
 {
     qDebug();
-    d->mainW = new KTabWidget( this );
+    d->mainW = new QTabWidget( this );
     d->ui.setupUi( d->mainW );
     setMainWidget( d->mainW );
 

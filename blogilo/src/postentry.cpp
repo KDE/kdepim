@@ -49,7 +49,7 @@
 #include <ktexteditor/view.h>
 #include <ktexteditor/document.h>
 #include <kio/job.h>
-#include <KTabWidget>
+#include <QTabWidget>
 
 #include <QProgressBar>
 #include <QLabel>
@@ -78,7 +78,7 @@ public:
     bool isPostContentModified;
 
 
-    KTabWidget *tabWidget;
+    QTabWidget *tabWidget;
     QWidget *tabVisual;
     QWidget *tabHtml;
     QWidget *tabPreview;
@@ -125,7 +125,7 @@ void PostEntry::settingsChanged()
 
 void PostEntry::createUi()
 {
-    d->tabWidget = new KTabWidget(this);
+    d->tabWidget = new QTabWidget(this);
     d->tabVisual = new QWidget( d->tabWidget );
     d->tabHtml = new QWidget( d->tabWidget );
     d->tabPreview = new QWidget( d->tabWidget );
