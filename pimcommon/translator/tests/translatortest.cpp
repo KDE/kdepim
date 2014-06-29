@@ -19,7 +19,7 @@
 #include "translator/translatorwidget.h"
 #include "texteditor/plaintexteditor/plaintexteditorwidget.h"
 
-#include <KPushButton>
+#include <QPushButton>
 
 #include <qtest_kde.h>
 #include <qtestkeyboard.h>
@@ -39,9 +39,9 @@ void TranslatorTest::shouldHaveDefaultValuesOnCreation()
     QComboBox *to = qFindChild<QComboBox *>(&edit, QLatin1String("to"));
     PimCommon::TranslatorTextEdit *inputtext = qFindChild<PimCommon::TranslatorTextEdit *>(&edit, QLatin1String("inputtext"));
     PimCommon::PlainTextEditorWidget *translatedText = qFindChild<PimCommon::PlainTextEditorWidget *>(&edit, QLatin1String("translatedtext"));
-    KPushButton *translate = qFindChild<KPushButton *>(&edit, QLatin1String("translate-button"));
-    KPushButton *clear = qFindChild<KPushButton *>(&edit, QLatin1String("clear-button"));
-    KPushButton *invert = qFindChild<KPushButton *>(&edit, QLatin1String("invert-button"));
+    QPushButton *translate = qFindChild<QPushButton *>(&edit, QLatin1String("translate-button"));
+    QPushButton *clear = qFindChild<QPushButton *>(&edit, QLatin1String("clear-button"));
+    QPushButton *invert = qFindChild<QPushButton *>(&edit, QLatin1String("invert-button"));
     QVERIFY(invert);
     QVERIFY(clear);
     QVERIFY(translate);
@@ -61,7 +61,7 @@ void TranslatorTest::shouldEnableTranslateButtonWhenTextToTranslateIsNotEmpty()
 {
     PimCommon::TranslatorWidget edit;
     PimCommon::TranslatorTextEdit *inputtext = qFindChild<PimCommon::TranslatorTextEdit *>(&edit, QLatin1String("inputtext"));
-    KPushButton *translate = qFindChild<KPushButton *>(&edit, QLatin1String("translate-button"));
+    QPushButton *translate = qFindChild<QPushButton *>(&edit, QLatin1String("translate-button"));
     inputtext->setPlainText(QString::fromLatin1("Foo"));
     QCOMPARE(translate->isEnabled(), true);
 }
@@ -70,10 +70,10 @@ void TranslatorTest::shouldDisableTranslateButtonAndClearTextWhenClickOnClearBut
 {
     PimCommon::TranslatorWidget edit;
     PimCommon::TranslatorTextEdit *inputtext = qFindChild<PimCommon::TranslatorTextEdit *>(&edit, QLatin1String("inputtext"));
-    KPushButton *translate = qFindChild<KPushButton *>(&edit, QLatin1String("translate-button"));
+    QPushButton *translate = qFindChild<QPushButton *>(&edit, QLatin1String("translate-button"));
     PimCommon::PlainTextEditorWidget *translatedText = qFindChild<PimCommon::PlainTextEditorWidget *>(&edit, QLatin1String("translatedtext"));
     inputtext->setPlainText(QString::fromLatin1("Foo"));
-    KPushButton *clear = qFindChild<KPushButton *>(&edit, QLatin1String("clear-button"));
+    QPushButton *clear = qFindChild<QPushButton *>(&edit, QLatin1String("clear-button"));
     QTest::mouseClick(clear, Qt::LeftButton);
     QCOMPARE(inputtext->toPlainText(), QString());
     QCOMPARE(translatedText->toPlainText(), QString());
@@ -90,7 +90,7 @@ void TranslatorTest::shouldInvertLanguageWhenClickOnInvertButton()
     const int toIndex = 7;
     from->setCurrentIndex(fromIndex);
     to->setCurrentIndex(toIndex);
-    KPushButton *invert = qFindChild<KPushButton *>(&edit, QLatin1String("invert-button"));
+    QPushButton *invert = qFindChild<QPushButton *>(&edit, QLatin1String("invert-button"));
     QCOMPARE(fromIndex != toIndex, true);
     QTest::mouseClick(invert, Qt::LeftButton);
     const int newFromIndex = from->currentIndex();

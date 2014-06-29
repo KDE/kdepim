@@ -7,7 +7,7 @@
 
 #include <QLabel>
 #include <QVBoxLayout>
-#include <KPushButton>
+#include <QPushButton>
 
 using namespace MessageViewer;
 

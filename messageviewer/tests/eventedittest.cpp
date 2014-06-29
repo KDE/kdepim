@@ -26,7 +26,7 @@
 #include <QStandardItemModel>
 #include <KCalCore/Event>
 #include <KDateTimeEdit>
-#include <KPushButton>
+#include <QPushButton>
 
 #include <qtest_kde.h>
 #include <qtestkeyboard.h>
@@ -77,8 +77,8 @@ void EventEditTest::shouldHaveDefaultValuesOnCreation()
     QVERIFY(noteedit);
     QCOMPARE(noteedit->text(), QString());
 
-    KPushButton *openEditor = qFindChild<KPushButton *>(&edit, QLatin1String("open-editor-button"));
-    KPushButton *save = qFindChild<KPushButton *>(&edit, QLatin1String("save-button"));
+    QPushButton *openEditor = qFindChild<QPushButton *>(&edit, QLatin1String("open-editor-button"));
+    QPushButton *save = qFindChild<QPushButton *>(&edit, QLatin1String("save-button"));
     QVERIFY(openEditor);
     QVERIFY(save);
     QCOMPARE(openEditor->isEnabled(), false);
@@ -186,7 +186,7 @@ void EventEditTest::shouldHideWidgetWhenSaveClicked()
     KMime::Message::Ptr msg(new KMime::Message);
     msg->subject(true)->fromUnicodeString(QLatin1String("Test Note"), "us-ascii");
     edit.setMessage(msg);
-    KPushButton *save = qFindChild<KPushButton*>(&edit, QLatin1String("save-button"));
+    QPushButton *save = qFindChild<QPushButton*>(&edit, QLatin1String("save-button"));
     QTest::mouseClick(save, Qt::LeftButton);
     QCOMPARE(edit.isVisible(), false);
 }
@@ -198,7 +198,7 @@ void EventEditTest::shouldSaveCollectionSettings()
     Akonadi::CollectionComboBox *akonadicombobox = qFindChild<Akonadi::CollectionComboBox *>(&edit, QLatin1String("akonadicombobox"));
     akonadicombobox->setCurrentIndex(3);
     const Akonadi::Collection::Id id = akonadicombobox->currentCollection().id();
-    KPushButton *close = qFindChild<KPushButton *>(&edit, QLatin1String("close-button"));
+    QPushButton *close = qFindChild<QPushButton *>(&edit, QLatin1String("close-button"));
     QTest::mouseClick(close, Qt::LeftButton);
     QCOMPARE(MessageViewer::GlobalSettingsBase::self()->lastEventSelectedFolder(), id);
 }
@@ -339,8 +339,8 @@ void EventEditTest::shouldShouldEnabledSaveOpenEditorButton()
     edit.setMessage(msg);
 
     QLineEdit *noteedit = qFindChild<QLineEdit *>(&edit, QLatin1String("noteedit"));
-    KPushButton *openEditor = qFindChild<KPushButton *>(&edit, QLatin1String("open-editor-button"));
-    KPushButton *save = qFindChild<KPushButton *>(&edit, QLatin1String("save-button"));
+    QPushButton *openEditor = qFindChild<QPushButton *>(&edit, QLatin1String("open-editor-button"));
+    QPushButton *save = qFindChild<QPushButton *>(&edit, QLatin1String("save-button"));
     QCOMPARE(openEditor->isEnabled(), true);
     QCOMPARE(save->isEnabled(), true);
     noteedit->clear();
