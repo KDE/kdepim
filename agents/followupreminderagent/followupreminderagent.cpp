@@ -83,8 +83,7 @@ void FollowUpReminderAgent::showConfigureDialog(qlonglong windowId)
 #endif
     }
     if (dialog->exec()) {
-        //TODO
-        //TODO save result
+        mManager->load();
     }
     delete dialog;
 }
@@ -113,8 +112,6 @@ void FollowUpReminderAgent::reload()
         mTimer->start();
     }
 }
-
-
 
 AKONADI_AGENT_MAIN( FollowUpReminderAgent )
 

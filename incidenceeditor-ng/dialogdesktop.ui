@@ -13,7 +13,16 @@
   <layout class="QVBoxLayout" name="mainVerticalLayout">
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <property name="margin">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
       <number>0</number>
      </property>
      <item row="0" column="0">
@@ -41,7 +50,16 @@
      <item row="1" column="1">
       <widget class="QWidget" name="mInvitationBar" native="true">
        <layout class="QHBoxLayout" name="horizontalLayout_10">
-        <property name="margin">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
          <number>0</number>
         </property>
         <item>
@@ -195,7 +213,16 @@
      <item row="5" column="1">
       <widget class="QWidget" name="mCompletionPriorityWidget" native="true">
        <layout class="QHBoxLayout" name="horizontalLayout_8">
-        <property name="margin">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
          <number>0</number>
         </property>
         <item>
@@ -782,7 +809,16 @@
            </property>
            <widget class="QWidget" name="page">
             <layout class="QGridLayout" name="gridLayout_2">
-             <property name="margin">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
               <number>0</number>
              </property>
              <item row="0" column="0">
@@ -805,7 +841,16 @@
            </widget>
            <widget class="QWidget" name="page_2">
             <layout class="QGridLayout" name="gridLayout_3">
-             <property name="margin">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
               <number>0</number>
              </property>
              <item row="0" column="0">
@@ -1070,14 +1115,32 @@
            <widget class="QWidget" name="never_page"/>
            <widget class="QWidget" name="daily_page">
             <layout class="QGridLayout" name="gridLayout_11">
-             <property name="margin">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
               <number>0</number>
              </property>
             </layout>
            </widget>
            <widget class="QWidget" name="weekly_page">
             <layout class="QGridLayout" name="gridLayout_4">
-             <property name="margin">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
               <number>0</number>
              </property>
              <item row="0" column="0">
@@ -1097,7 +1160,16 @@
            </widget>
            <widget class="QWidget" name="Monthly">
             <layout class="QGridLayout" name="gridLayout_6">
-             <property name="margin">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
               <number>0</number>
              </property>
              <item row="0" column="0">
@@ -1130,7 +1202,16 @@
            </widget>
            <widget class="QWidget" name="yearly_page">
             <layout class="QGridLayout" name="gridLayout_7">
-             <property name="margin">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
               <number>0</number>
              </property>
              <item row="0" column="0">
@@ -1222,14 +1303,32 @@
              </property>
              <widget class="QWidget" name="no_end">
               <layout class="QGridLayout" name="gridLayout_16">
-               <property name="margin">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
                 <number>0</number>
                </property>
               </layout>
              </widget>
              <widget class="QWidget" name="end_on">
               <layout class="QGridLayout" name="gridLayout_14">
-               <property name="margin">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
                 <number>0</number>
                </property>
                <item row="0" column="0">
@@ -1262,10 +1361,19 @@
              </widget>
              <widget class="QWidget" name="end_after">
               <layout class="QGridLayout" name="gridLayout_10">
-               <property name="horizontalSpacing">
+               <property name="leftMargin">
                 <number>0</number>
                </property>
-               <property name="margin">
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <property name="horizontalSpacing">
                 <number>0</number>
                </property>
                <item row="0" column="0">
@@ -1491,26 +1599,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KPIM::KCheckComboBox</class>
-   <extends>KComboBox</extends>
-   <header>libkdepim/widgets/kcheckcombobox.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KRichTextEdit</class>
-   <extends>KTextEdit</extends>
-   <header>krichtextedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KTimeComboBox</class>
-   <extends>KComboBox</extends>
-   <header>ktimecombobox.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KDateComboBox</class>
-   <extends>KComboBox</extends>
-   <header>kdatecombobox.h</header>
-  </customwidget>
-  <customwidget>
    <class>KComboBox</class>
    <extends>QComboBox</extends>
    <header>kcombobox.h</header>
@@ -1519,6 +1607,7 @@
    <class>KSeparator</class>
    <extends>QFrame</extends>
    <header>kseparator.h</header>
+   <container>1</container>
   </customwidget>
   <customwidget>
    <class>KTextEdit</class>
@@ -1551,7 +1640,85 @@
    <header>libkdepim/widgets/tagwidgets.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>KPIM::KCheckComboBox</class>
+   <extends>KComboBox</extends>
+   <header>libkdepim/widgets/kcheckcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KRichTextEdit</class>
+   <extends>KTextEdit</extends>
+   <header>krichtextedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KTimeComboBox</class>
+   <extends>KComboBox</extends>
+   <header>ktimecombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KDateComboBox</class>
+   <extends>KComboBox</extends>
+   <header>kdatecombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KRichTextWidget</class>
+   <extends>KRichTextEdit</extends>
+   <header>krichtextwidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KPIM::KWeekdayCheckCombo</class>
+   <extends>KPIM::KCheckComboBox</extends>
+   <header>libkdepim/widgets/kweekdaycheckcombo.h</header>
+  </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>mCalSelectorPlaceHolder</tabstop>
+  <tabstop>mAcceptInvitationButton</tabstop>
+  <tabstop>mDeclineInvitationButton</tabstop>
+  <tabstop>mSummaryEdit</tabstop>
+  <tabstop>mLocationEdit</tabstop>
+  <tabstop>mCompletionSlider</tabstop>
+  <tabstop>mPriorityCombo</tabstop>
+  <tabstop>mWholeDayCheck</tabstop>
+  <tabstop>mFreeBusyCheck</tabstop>
+  <tabstop>mStartCheck</tabstop>
+  <tabstop>mStartDateEdit</tabstop>
+  <tabstop>mStartTimeEdit</tabstop>
+  <tabstop>mTimeZoneComboStart</tabstop>
+  <tabstop>mEndCheck</tabstop>
+  <tabstop>mEndDateEdit</tabstop>
+  <tabstop>mEndTimeEdit</tabstop>
+  <tabstop>mTimeZoneComboEnd</tabstop>
+  <tabstop>mTabWidget</tabstop>
+  <tabstop>mDescriptionEdit</tabstop>
+  <tabstop>mTagWidget</tabstop>
+  <tabstop>mSecrecyCombo</tabstop>
+  <tabstop>mSolveButton</tabstop>
+  <tabstop>mSelectButton</tabstop>
+  <tabstop>mOrganizerCombo</tabstop>
+  <tabstop>mAlarmPresetCombo</tabstop>
+  <tabstop>mAlarmAddPresetButton</tabstop>
+  <tabstop>mAlarmList</tabstop>
+  <tabstop>mAlarmNewButton</tabstop>
+  <tabstop>mAlarmConfigureButton</tabstop>
+  <tabstop>mAlarmToggleButton</tabstop>
+  <tabstop>mAlarmRemoveButton</tabstop>
+  <tabstop>mRecurrenceTypeCombo</tabstop>
+  <tabstop>mFrequencyEdit</tabstop>
+  <tabstop>mThisAndFutureCheck</tabstop>
+  <tabstop>mWeekDayCombo</tabstop>
+  <tabstop>mMonthlyCombo</tabstop>
+  <tabstop>mYearlyCombo</tabstop>
+  <tabstop>mRecurrenceEndCombo</tabstop>
+  <tabstop>mRecurrenceEndDate</tabstop>
+  <tabstop>mEndDurationEdit</tabstop>
+  <tabstop>mExceptionDateEdit</tabstop>
+  <tabstop>mExceptionAddButton</tabstop>
+  <tabstop>mExceptionList</tabstop>
+  <tabstop>mExceptionRemoveButton</tabstop>
+  <tabstop>mAddButton</tabstop>
+  <tabstop>mRemoveButton</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
