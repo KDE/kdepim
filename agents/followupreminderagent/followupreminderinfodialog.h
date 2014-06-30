@@ -21,30 +21,7 @@
 #include <KDialog>
 class KAboutData;
 class QTreeWidget;
-
-class FollowUpReminderInfoWidget : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit FollowUpReminderInfoWidget(QWidget *parent=0);
-    ~FollowUpReminderInfoWidget();
-
-    void restoreTreeWidgetHeader(const QByteArray &data);
-    void saveTreeWidgetHeader(KConfigGroup &group);
-
-private slots:
-    void customContextMenuRequested(const QPoint &pos);
-    void slotRemoveItem();
-
-private:
-    enum FollowUpReminderColumn {
-        To = 0,
-        Subject,
-        MessageId
-    };
-    QTreeWidget *mTreeWidget;
-};
-
+class FollowUpReminderInfoWidget;
 class FollowUpReminderInfoDialog : public KDialog
 {
     Q_OBJECT

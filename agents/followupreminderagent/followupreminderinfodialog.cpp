@@ -16,6 +16,7 @@
 */
 
 #include "followupreminderinfodialog.h"
+#include "followupreminderinfowidget.h"
 
 #include "kdepim-version.h"
 
@@ -91,58 +92,3 @@ void FollowUpReminderInfoDialog::writeConfig()
     group.writeEntry( "Size", size() );
     mWidget->saveTreeWidgetHeader(group);
 }
-
-
-FollowUpReminderInfoWidget::FollowUpReminderInfoWidget(QWidget *parent)
-    : QWidget(parent)
-{
-    QHBoxLayout *hbox = new QHBoxLayout;
-    mTreeWidget = new QTreeWidget;
-    //TODO
-    QStringList headers;
-    headers << i18n("To")
-            << i18n("Subject")
-            << i18n("Message Id");
-
-    mTreeWidget->setHeaderLabels(headers);
-    mTreeWidget->setSortingEnabled(true);
-    mTreeWidget->setRootIsDecorated(false);
-    mTreeWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    mTreeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-
-    connect(mTreeWidget, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(customContextMenuRequested(QPoint)));
-
-    hbox->addWidget(mTreeWidget);
-    setLayout(hbox);
-}
-
-FollowUpReminderInfoWidget::~FollowUpReminderInfoWidget()
-{
-}
-
-void FollowUpReminderInfoWidget::customContextMenuRequested(const QPoint &pos)
-{
-    const QList<QTreeWidgetItem *> listItems = mTreeWidget->selectedItems();
-    if ( !listItems.isEmpty() ) {
-        KMenu menu;
-        menu.addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
-        menu.exec(QCursor::pos());
-    }
-}
-
-void FollowUpReminderInfoWidget::slotRemoveItem()
-{
-    //TODO
-}
-
-void FollowUpReminderInfoWidget::restoreTreeWidgetHeader(const QByteArray &data)
-{
-    mTreeWidget->header()->restoreState(data);
-}
-
-void FollowUpReminderInfoWidget::saveTreeWidgetHeader(KConfigGroup &group)
-{
-    group.writeEntry( "HeaderState", mTreeWidget->header()->saveState() );
-}
-
