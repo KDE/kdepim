@@ -76,7 +76,7 @@
 #include <kdescendantsproxymodel.h> //krazy:exclude=camelcase TODO wait for kdelibs4.9
 #include <KLocalizedString>
 #include <KSelectionProxyModel>
-#include <KTextBrowser>
+#include <QTextBrowser>
 #include <KToggleAction>
 #include <KCMultiDialog>
 #include <kdeprintdialog.h>
@@ -529,7 +529,7 @@ void MainWidget::setupGui()
   mDetailsViewStack->addWidget( mContactGroupDetails );
 
   // the details widget for empty items
-  mEmptyDetails = new KTextBrowser( mDetailsViewStack );
+  mEmptyDetails = new QTextBrowser( mDetailsViewStack );
   mDetailsViewStack->addWidget( mEmptyDetails );
 
   // the contact switcher for the simple gui mode
