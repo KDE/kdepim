@@ -150,3 +150,4 @@ QString ReceiverModel::recipientString( MessageComposer::Recipient::Type type ) 
 {
     return recipientStringList( type ).join( QLatin1String(", ") );
 }
+
