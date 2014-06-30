@@ -32,7 +32,7 @@ class ThemeComboBox;
 class ThemeConfigButtonPrivate;
 
 /**
- * A specialized KPushButton that displays the theme
+ * A specialized QPushButton that displays the theme
  * configure dialog when pressed.
  */
 class MESSAGELIST_EXPORT ThemeConfigButton : public QPushButton

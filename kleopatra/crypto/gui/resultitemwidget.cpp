@@ -40,7 +40,7 @@
 
 #include <KDebug>
 #include <KLocalizedString>
-#include <KPushButton>
+#include <QPushButton>
 #include <KStandardGuiItem>
 #include <KUrl>
 
@@ -49,6 +49,7 @@
 #include <QStringList>
 #include <QUrl>
 #include <QVBoxLayout>
+#include <KGuiItem>
 
 using namespace Kleo;
 using namespace Kleo::Crypto;
@@ -84,7 +85,7 @@ public:
     const shared_ptr<const Task::Result> m_result;
     QLabel * m_detailsLabel;
     QLabel * m_showDetailsLabel;
-    KPushButton * m_closeButton;
+    QPushButton * m_closeButton;
 };
 
 static KUrl auditlog_url_template() {
@@ -146,8 +147,8 @@ ResultItemWidget::ResultItemWidget( const shared_ptr<const Task::Result> & resul
 
     d->m_detailsLabel->setVisible( false );
 
-    d->m_closeButton = new KPushButton;
-    d->m_closeButton->setGuiItem( KStandardGuiItem::close() );
+    d->m_closeButton = new QPushButton;
+    KGuiItem::assign(d->m_closeButton, KStandardGuiItem::close() );
     d->m_closeButton->setFixedSize( d->m_closeButton->sizeHint() );
     connect( d->m_closeButton, SIGNAL(clicked()), this, SIGNAL(closeButtonClicked()) );
     layout->addWidget( d->m_closeButton, 0, Qt::AlignRight );

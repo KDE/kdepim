@@ -42,7 +42,7 @@
 #include <KProcess>
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <KPushButton>
+#include <QPushButton>
 #include <KStandardGuiItem>
 #include <KConfigGroup>
 
@@ -100,17 +100,18 @@ namespace {
 
         struct Ui {
             KDLogTextWidget logTextWidget;
-            KPushButton     updateButton, closeButton;
+            QPushButton     updateButton, closeButton;
             QVBoxLayout vlay;
             QHBoxLayout  hlay;
 
             explicit Ui( DumpCrlCacheDialog * q )
                 : logTextWidget( q ),
                   updateButton( i18nc("@action:button Update the log text widget", "&Update"), q ),
-                  closeButton( KStandardGuiItem::close(), q ),
+                  closeButton( q ),
                   vlay( q ),
                   hlay()
             {
+                KGuiItem::assign(&closeButton, KStandardGuiItem::close() );
                 KDAB_SET_OBJECT_NAME( logTextWidget );
                 KDAB_SET_OBJECT_NAME( updateButton );
                 KDAB_SET_OBJECT_NAME( closeButton );

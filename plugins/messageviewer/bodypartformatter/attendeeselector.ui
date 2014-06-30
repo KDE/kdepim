@@ -69,8 +69,6 @@
   </customwidget>
  </customwidgets>
  <includes>
-  <include location="local">kpushbutton.h</include>
-  <include location="local">kpushbutton.h</include>
   <include location="local">libkdepim/addressline/addresseelineedit.h</include>
  </includes>
  <resources/>

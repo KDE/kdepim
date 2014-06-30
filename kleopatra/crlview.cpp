@@ -37,7 +37,7 @@
 #include <klocale.h>
 #include <kprocess.h>
 #include <kmessagebox.h>
-#include <kpushbutton.h>
+#include <QPushButton>
 #include <KStandardGuiItem>
 #include <kglobalsettings.h>
 
@@ -49,6 +49,7 @@
 #include <QHBoxLayout>
 #include <QCloseEvent>
 #include <QFontDatabase>
+#include <KGuiItem>
 
 CRLView::CRLView( QWidget* parent )
   : QDialog( parent ), _process(0)
@@ -68,7 +69,8 @@ CRLView::CRLView( QWidget* parent )
   topLayout->addItem( hbLayout );
 
   _updateButton = new QPushButton( i18n("&Update"), this );
-  _closeButton = new KPushButton( KStandardGuiItem::close(), this );
+  _closeButton = new QPushButton(this );
+  KGuiItem::assign(_closeButton, KStandardGuiItem::close());
 
   hbLayout->addWidget( _updateButton );
   hbLayout->addStretch();

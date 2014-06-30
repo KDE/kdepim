@@ -38,10 +38,10 @@
 
 #include <KGuiItem>
 #include <KLocalizedString>
-#include <KPushButton>
 
 #include <QFormLayout>
 #include <QLabel>
+#include <QPushButton>
 
 using namespace Kleo;
 using namespace Kleo::Dialogs;

@@ -32,7 +32,7 @@ class AggregationComboBox;
 class AggregationConfigButtonPrivate;
 
 /**
- * A specialized KPushButton that displays the aggregation
+ * A specialized QPushButton that displays the aggregation
  * configure dialog when pressed.
  */
 class MESSAGELIST_EXPORT AggregationConfigButton : public QPushButton
