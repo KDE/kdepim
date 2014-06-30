@@ -61,6 +61,7 @@ MailFilterAgent::MailFilterAgent( const QString &id )
     : Akonadi::AgentBase( id ),
       m_filterLogDialog( 0 )
 {
+    KGlobal::locale()->insertCatalog(QLatin1String("libmailcommon"));
     Akonadi::AttributeFactory::registerAttribute<Pop3ResourceAttribute>();
     DummyKernel *kernel = new DummyKernel( this );
     CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes

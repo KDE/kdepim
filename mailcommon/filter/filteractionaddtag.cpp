@@ -138,11 +138,7 @@ void FilterActionAddTag::argsFromString( const QString &argsStr )
 
 QString FilterActionAddTag::argsAsString() const
 {
-    if (!mList.contains(mParameter)) {
-        return QString();
-    }
-
-    return mList.value(mParameter);
+    return mParameter;
 }
 
 QString FilterActionAddTag::displayString() const
