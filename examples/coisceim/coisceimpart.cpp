@@ -45,7 +45,7 @@ const K4AboutData &createAboutData()
   return aboutData;
 }
 
-//QT5 K_PLUGIN_FACTORY(CoisceimPartFactory, registerPlugin<CoisceimPart>();)
+K_PLUGIN_FACTORY(CoisceimPartFactory, registerPlugin<CoisceimPart>();)
 K_EXPORT_PLUGIN(CoisceimPartFactory(createAboutData()))
 
 CoisceimPart::CoisceimPart( QWidget *parentWidget, QObject *parent, const QVariantList & /*args*/ )
@@ -62,3 +62,4 @@ CoisceimPart::CoisceimPart( QWidget *parentWidget, QObject *parent, const QVaria
 CoisceimPart::~CoisceimPart()
 {
 }
+#include "coisceimpart.moc"

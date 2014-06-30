@@ -33,7 +33,7 @@
 
 #include <QVBoxLayout>
 
-//QT5 K_PLUGIN_FACTORY( KAddressBookFactory, registerPlugin<KAddressBookPart>(); )
+K_PLUGIN_FACTORY( KAddressBookFactory, registerPlugin<KAddressBookPart>(); )
 K_EXPORT_PLUGIN( KAddressBookFactory( AboutData() ) )
 
 KAddressBookPart::KAddressBookPart( QWidget *parentWidget, QObject *parent,
@@ -95,3 +95,4 @@ void KAddressBookPart::guiActivateEvent( KParts::GUIActivateEvent *e )
    KParts::ReadOnlyPart::guiActivateEvent( e );
 }
 
+#include "kaddressbookpart.moc"

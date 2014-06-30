@@ -47,7 +47,7 @@
 
 #include <kdialog.h>
 #include <klocale.h>
-#include <ksavefile.h>
+#include <QSaveFile>
 #include <kguiitem.h>
 #include <kdebug.h>
 #include <ktextedit.h>
@@ -141,9 +141,9 @@ void AuditLogViewer::slotUser1() {
     if ( fileName.isEmpty() )
         return;
 
-    KSaveFile file( fileName );
+    QSaveFile file( fileName );
 
-    if ( file.open() ) {
+    if ( file.open(QIODevice::ReadWrite) ) {
         QTextStream s( &file );
         s << "<html><head>";
         if ( !windowTitle().isEmpty() ) {
@@ -155,7 +155,7 @@ void AuditLogViewer::slotUser1() {
           << m_log
           << "\n</body></html>" << endl;
         s.flush();
-        file.finalize();
+        file.commit();
     }
 
     if ( const int err = file.error() )

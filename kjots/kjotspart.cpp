@@ -49,7 +49,7 @@ const K4AboutData &createAboutData()
     return aboutData;
 }
 
-//QT5 K_PLUGIN_FACTORY(KJotsPartFactory, registerPlugin<KJotsPart>();)
+K_PLUGIN_FACTORY(KJotsPartFactory, registerPlugin<KJotsPart>();)
 K_EXPORT_PLUGIN(KJotsPartFactory(createAboutData()))
 
 KJotsPart::KJotsPart( QWidget *parentWidget, QObject *parent, const QVariantList & /*args*/ )
@@ -111,3 +111,4 @@ void KJotsPart::activeAnchorChanged(const QString &anchorTarget, const QString &
 // {
 //     return false;
 // }
+#include "kjotspart.moc"
