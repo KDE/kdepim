@@ -17,6 +17,8 @@
 
 #include "followupremindermanager.h"
 #include "followupreminderinfo.h"
+#include "followupremindernoanswerdialog.h"
+#include "followupreminderjob.h"
 
 #include <KGlobal>
 #include <KConfigGroup>
@@ -52,14 +54,17 @@ void FollowUpReminderManager::load()
             delete info;
         }
     }
-    //if (!mNoAnswerDialog.data()) {
-
-    //}
+    if (!mNoAnswerDialog.data()) {
+        mNoAnswerDialog = new FollowUpReminderNoAnswerDialog;
+        mNoAnswerDialog->show();
+    }
 }
 
 void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Akonadi::Collection &col)
 {
     //TODO
+    FollowUpReminderJob *job = new FollowUpReminderJob(this);
+
 }
 
 #include "followupremindermanager.moc"
