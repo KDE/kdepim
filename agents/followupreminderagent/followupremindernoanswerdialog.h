@@ -39,8 +39,10 @@ private slots:
 
 private:
     enum FollowUpReminderColumn {
-        date = 0,
-        Subject
+        To = 0,
+        Subject,
+        MessageId,
+        Date
     };
     QTreeWidget *mTreeWidget;
 };

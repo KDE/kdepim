@@ -25,6 +25,7 @@
 #include <QHBoxLayout>
 #include <QTreeWidget>
 #include <QHeaderView>
+#include <QLabel>
 
 
 FollowUpReminderNoAnswerDialog::FollowUpReminderNoAnswerDialog(QWidget *parent)
@@ -33,7 +34,6 @@ FollowUpReminderNoAnswerDialog::FollowUpReminderNoAnswerDialog(QWidget *parent)
     setCaption( i18n("Follow Up Mail") );
     setWindowIcon( KIcon( QLatin1String("kmail") ) );
     setButtons( Ok|Cancel );
-    //TODO
     mWidget = new FollowUpReminderNoAnswerWidget;
     setMainWidget(mWidget);
     readConfig();
@@ -71,13 +71,16 @@ void FollowUpReminderNoAnswerDialog::writeConfig()
 FollowUpReminderNoAnswerWidget::FollowUpReminderNoAnswerWidget(QWidget *parent)
     : QWidget(parent)
 {
-    QHBoxLayout *hbox = new QHBoxLayout;
+    QVBoxLayout *vbox = new QVBoxLayout;
+    QLabel *lab = new QLabel(i18n("You still wait an answer about this mail:"));
+    vbox->addWidget(lab);
     mTreeWidget = new QTreeWidget;
     //TODO
     QStringList headers;
     headers << i18n("To")
             << i18n("Subject")
-            << i18n("Message Id");
+            << i18n("Message Id")
+            << i18n("Date");
 
     mTreeWidget->setHeaderLabels(headers);
     mTreeWidget->setSortingEnabled(true);
@@ -88,8 +91,8 @@ FollowUpReminderNoAnswerWidget::FollowUpReminderNoAnswerWidget(QWidget *parent)
     connect(mTreeWidget, SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(customContextMenuRequested(QPoint)));
 
-    hbox->addWidget(mTreeWidget);
-    setLayout(hbox);
+    vbox->addWidget(mTreeWidget);
+    setLayout(vbox);
 }
 
 FollowUpReminderNoAnswerWidget::~FollowUpReminderNoAnswerWidget()
