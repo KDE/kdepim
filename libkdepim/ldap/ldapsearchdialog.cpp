@@ -53,7 +53,7 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <KPushButton>
+#include <QPushButton>
 
 #include <KPIMUtils/ProgressIndicatorLabel>
 #include <KLocale>
@@ -511,7 +511,7 @@ public:
 
     QCheckBox *mRecursiveCheckbox;
     QTableView *mResultView;
-    KPushButton *mSearchButton;
+    QPushButton *mSearchButton;
     ContactListModel *mModel;
     KPIMUtils::ProgressIndicatorLabel *progressIndication;
     QSortFilterProxyModel *sortproxy;
@@ -561,8 +561,8 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
     d->stopSearchGuiItem = KStandardGuiItem::stop();
 
     QSize buttonSize;
-    d->mSearchButton = new KPushButton( groupBox );
-    d->mSearchButton->setGuiItem(d->startSearchGuiItem);
+    d->mSearchButton = new QPushButton( groupBox );
+    KGuiItem::assign(d->mSearchButton, d->startSearchGuiItem);
 
     buttonSize = d->mSearchButton->sizeHint();
     if ( buttonSize.width() < d->mSearchButton->sizeHint().width() ) {
@@ -807,7 +807,7 @@ void LdapSearchDialog::Private::slotStartSearch()
 #ifndef QT_NO_CURSOR
     QApplication::setOverrideCursor( Qt::WaitCursor );
 #endif
-    mSearchButton->setGuiItem(stopSearchGuiItem);
+    KGuiItem::assign(mSearchButton,stopSearchGuiItem);
     progressIndication->start();
 
     q->disconnect( mSearchButton, SIGNAL(clicked()),
@@ -849,7 +849,7 @@ void LdapSearchDialog::Private::slotSearchDone()
     q->connect( mSearchButton, SIGNAL(clicked()),
                 q, SLOT(slotStartSearch()) );
 
-    mSearchButton->setGuiItem(startSearchGuiItem);
+    KGuiItem::assign(mSearchButton, startSearchGuiItem);
     progressIndication->stop();
 #ifndef QT_NO_CURSOR
     QApplication::restoreOverrideCursor();

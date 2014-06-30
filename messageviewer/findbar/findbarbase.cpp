@@ -21,11 +21,11 @@
 
 #include <qicon.h>
 #include <klocale.h>
-#include <kpushbutton.h>
 #include <klineedit.h>
 #include <kmessagebox.h>
 #include <KColorScheme>
 
+#include <QPushButton>
 #include <QtCore/QTimer>
 #include <QLabel>
 #include <QLayout>

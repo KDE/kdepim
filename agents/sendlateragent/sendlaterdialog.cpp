@@ -21,7 +21,6 @@
 #include "ui_sendlaterwidget.h"
 
 #include <KLocale>
-#include <KPushButton>
 #include <KSeparator>
 #include <QIcon>
 

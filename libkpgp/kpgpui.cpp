@@ -55,7 +55,6 @@
 #include <kconfig.h>
 #include <kprogressdialog.h>
 #include <kwindowsystem.h>
-#include <kpushbutton.h>
 #include <kglobalsettings.h>
 #include <klineedit.h>
 #include <KGlobal>

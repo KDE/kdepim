@@ -36,12 +36,12 @@
 #include <KLocale>
 #include <KGuiItem>
 #include <KHBox>
-#include <KPushButton>
 
 #include <QPushButton>
 #include <QVBoxLayout>
 
 #include <assert.h>
+#include <KStandardGuiItem>
 
 using namespace KPIM;
 
@@ -124,18 +124,21 @@ void KWidgetLister::init( bool fewerMoreButton )
 
     if ( fewerMoreButton )
     {
-        d->mBtnMore = new KPushButton( KGuiItem( i18nc( "more widgets", "More" ),
-                                                 QLatin1String("list-add") ), d->mButtonBox );
+        d->mBtnMore = new QPushButton( d->mButtonBox );
+        KGuiItem::assign(d->mBtnMore, KGuiItem(i18nc( "more widgets", "More" ),
+                                                 QLatin1String("list-add") ));
         d->mButtonBox->setStretchFactor( d->mBtnMore, 0 );
 
-        d->mBtnFewer = new KPushButton( KGuiItem( i18nc( "fewer widgets", "Fewer" ),
-                                                  QLatin1String("list-remove") ), d->mButtonBox );
+        d->mBtnFewer = new QPushButton( d->mButtonBox );
+        KGuiItem::assign( d->mBtnFewer, KGuiItem( i18nc( "fewer widgets", "Fewer" ),
+                                                  QLatin1String("list-remove") ) );
         d->mButtonBox->setStretchFactor( d->mBtnFewer, 0 );
     }
     QWidget *spacer = new QWidget( d->mButtonBox );
     d->mButtonBox->setStretchFactor( spacer, 1 );
 
-    d->mBtnClear = new KPushButton( KStandardGuiItem::clear(), d->mButtonBox );
+    d->mBtnClear = new QPushButton(d->mButtonBox );
+    KGuiItem::assign(d->mBtnClear, KStandardGuiItem::clear());
     // FIXME a useful whats this. KStandardGuiItem::clear() returns a text with an edit box
     d->mBtnClear->setWhatsThis( QString() );
     d->mButtonBox->setStretchFactor( d->mBtnClear, 0 );
