@@ -21,7 +21,7 @@
 #include <QWidget>
 #include <KConfigGroup>
 class QTreeWidget;
-
+class FollowUpReminderInfo;
 class FollowUpReminderInfoWidget : public QWidget
 {
     Q_OBJECT
@@ -32,8 +32,7 @@ public:
     void restoreTreeWidgetHeader(const QByteArray &data);
     void saveTreeWidgetHeader(KConfigGroup &group);
 
-    void load();
-
+    void setInfo(const QList<FollowUpReminderInfo *> &info);
 private slots:
     void customContextMenuRequested(const QPoint &pos);
     void slotRemoveItem();

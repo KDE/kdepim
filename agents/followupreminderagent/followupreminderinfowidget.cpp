@@ -15,6 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include "followupreminderinfowidget.h"
+#include "followupreminderinfo.h"
 
 #include <QTreeWidget>
 #include <QHBoxLayout>
@@ -52,9 +53,9 @@ FollowUpReminderInfoWidget::~FollowUpReminderInfoWidget()
 {
 }
 
-void FollowUpReminderInfoWidget::load()
+void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminderInfo *> &info)
 {
-
+    //TODO
 }
 
 void FollowUpReminderInfoWidget::customContextMenuRequested(const QPoint &pos)
