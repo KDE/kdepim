@@ -53,7 +53,7 @@
 
 #include <KLocalizedString>
 #include <KConfigGroup>
-#include <KSplashScreen>
+#include <QSplashScreen>
 #include <KSharedConfig>
 
 #include <boost/shared_ptr.hpp>
@@ -184,7 +184,7 @@ private:
 
 private:
 #ifndef QT_NO_SPLASHSCREEN
-    QPointer<KSplashScreen> splash;
+    QPointer<QSplashScreen> splash;
 #endif // QT_NO_SPLASHSCREEN
     QPointer<SelfTestDialog> dialog;
     bool canceled;
@@ -237,7 +237,7 @@ void SelfTestCommand::setAutomaticMode( bool on ) {
         d->dialog->setAutomaticMode( on );
 }
 
-void SelfTestCommand::setSplashScreen( KSplashScreen * splash ) {
+void SelfTestCommand::setSplashScreen( QSplashScreen * splash ) {
 #ifndef QT_NO_SPLASHSCREEN
     d->splash = splash;
 #else

@@ -35,7 +35,7 @@
 
 #include <commands/command.h>
 
-class KSplashScreen;
+class QSplashScreen;
 
 namespace Kleo {
 namespace Commands {
@@ -48,7 +48,7 @@ namespace Commands {
         ~SelfTestCommand();
 
         void setAutomaticMode( bool automatic );
-        void setSplashScreen( KSplashScreen * splash );
+        void setSplashScreen( QSplashScreen * splash );
 
         bool isCanceled() const;
 

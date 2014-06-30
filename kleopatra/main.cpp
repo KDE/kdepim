@@ -76,7 +76,7 @@ namespace Kleo {
 #include <kcmdlineargs.h>
 #include <klocale.h>
 #include <kiconloader.h>
-#include <ksplashscreen.h>
+#include <QSplashScreen>
 #include <kmessagebox.h>
 
 #include <QTextDocument> // for Qt::escape
@@ -115,11 +115,11 @@ static QPixmap UserIcon_nocached( const char * name ) {
 }
 
 #ifndef QT_NO_SPLASHSCREEN
-class SplashScreen : public KSplashScreen {
+class SplashScreen : public QSplashScreen {
     QBasicTimer m_timer;
 public:
     SplashScreen()
-        : KSplashScreen( UserIcon_nocached( "kleopatra_splashscreen" ), Qt::WindowStaysOnTopHint ),
+        : QSplashScreen( UserIcon_nocached( "kleopatra_splashscreen" ), Qt::WindowStaysOnTopHint ),
           m_timer()
     {
         m_timer.start( SPLASHSCREEN_TIMEOUT, this );
@@ -131,7 +131,7 @@ protected:
             m_timer.stop();
             hide();
         } else {
-            KSplashScreen::timerEvent( ev );
+            QSplashScreen::timerEvent( ev );
         }
     }
 
