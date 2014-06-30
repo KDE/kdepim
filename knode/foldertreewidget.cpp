@@ -54,7 +54,7 @@ public:
     : QStyledItemDelegate( parent ), mFolderTreeWidget( parent ) {}
 
   ~FolderTreeWidgetItemLabelColumnDelegate()
-  {};
+  {}
 
   virtual QSize sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const
   {
