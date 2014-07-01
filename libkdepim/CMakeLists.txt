@@ -106,7 +106,7 @@ target_link_libraries(kdepim
   KF5::SonnetCore
   KF5::KCMUtils
   KF5::Wallet
-  baloopim
+  KF5::BalooPim
 )
 
 

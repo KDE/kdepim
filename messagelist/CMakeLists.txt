@@ -96,7 +96,7 @@ target_link_libraries(messagelist
   KF5::AkonadiCore
   KF5::AkonadiMime
   KF5::Mime
-  baloopim
+  KF5::BalooPim
   messagecore
 )
 
