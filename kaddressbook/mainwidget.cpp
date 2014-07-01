@@ -697,10 +697,11 @@ void MainWidget::print()
     printer.setOutputFileName( Settings::self()->defaultFileName() );
     printer.setCollateCopies( true );
 
-    QPrintDialog printDialog(KdePrint::createPrintDialog(&printer, this));
+    QPointer<QPrintDialog> printDialog = KdePrint::createPrintDialog(&printer, this);
 
-    printDialog.setWindowTitle( i18n( "Print Contacts" ) );
-    if ( !printDialog.exec() ) { //krazy:exclude=crashy
+    printDialog->setWindowTitle( i18n( "Print Contacts" ) );
+    if ( !printDialog->exec() || !printDialog ) {
+        delete printDialog;
         return;
     }
     KABPrinting::PrintingWizard wizard( &printer, mItemView->selectionModel(), this );
