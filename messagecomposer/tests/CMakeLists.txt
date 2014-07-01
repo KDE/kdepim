@@ -16,8 +16,8 @@ macro( add_messagecomposer_test _source )
   set( _test ${_source} )
   get_filename_component( _name ${_source} NAME_WE )
   kde4_add_unit_test( ${_name} TESTNAME messagecomposer-${_name} ${_test} )
-  target_link_libraries( ${_name} ${KDEPIMLIBS_KMIME_LIBS} messagecomposer messageviewer messagecore templateparser ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
+  target_link_libraries( ${_name} KF5::Mime messagecomposer messageviewer messagecore templateparser KF5::PimTextEdit Qt5::Test    KF5::PimIdentities
+  KF5::AkonadiCore
 )
 endmacro()
 
@@ -28,17 +28,14 @@ macro( add_messagecomposer_cryptotest _source )
   kde4_handle_crypto_rpath_for_executable( ${_name} )
   target_link_libraries( 
       ${_name}
-      ${KDEPIMLIBS_KMIME_LIBS}
+      KF5::Mime
       messagecomposer
       messageviewer
       messagecore
       kleo
-      ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
-      ${KDEPIMLIBS_AKONADI_LIBS}
-      ${QT_QTTEST_LIBRARY}
-      ${QT_QTGUI_LIBRARY}
-      ${QT_QTCORE_LIBRARY}
-      ${KDE4_KDEUI_LIBS}
+      KF5::PimTextEdit
+      KF5::AkonadiCore
+      Qt5::Test
       ${QGPGME_LIBRARIES}
       )
 endmacro()
@@ -72,21 +69,21 @@ add_messagecomposer_cryptotest( signencrypttest.cpp )
 
 set(testkmeditor_SRCS testkmeditor.cpp )
 
-kde4_add_executable(testkmeditor TEST ${testkmeditor_SRCS})
+add_executable(testkmeditor TEST ${testkmeditor_SRCS})
 
-target_link_libraries(testkmeditor messagecomposer ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} )
+target_link_libraries(testkmeditor messagecomposer  KF5::PimTextEdit )
 
 ########### next target ###############
 
 set(testkmeditorwin_SRCS testkmeditorwin.cpp )
 
-kde4_add_executable(testkmeditorwin TEST ${testkmeditorwin_SRCS})
+add_executable(testkmeditorwin TEST ${testkmeditorwin_SRCS})
 
-target_link_libraries(testkmeditorwin messagecomposer ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} )
+target_link_libraries(testkmeditorwin messagecomposer  KF5::PimTextEdit )
 
 
 ########### recipientseditor test ###############
 
 set(recipienteditortest_SRCS recipientseditortest.cpp)
-kde4_add_executable(recipienteditortest TEST ${recipienteditortest_SRCS})
-target_link_libraries(recipienteditortest ${KDE4_KIO_LIBS} ${KDEPIMLIBS_AKONADI_CONTACT_LIBS} messagecomposer kdepim)
+add_executable(recipienteditortest TEST ${recipienteditortest_SRCS})
+target_link_libraries(recipienteditortest KF5::KIOCore KF5::AkonadiContact messagecomposer kdepim)

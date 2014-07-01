@@ -171,7 +171,7 @@ install(FILES kaddressbookui.rc DESTINATION ${DATA_INSTALL_DIR}/kaddressbook)
 
 set(kaddressbook_PART_SRCS kaddressbookpart.cpp)
 add_library(kaddressbookpart MODULE ${kaddressbook_PART_SRCS})
-target_link_libraries(kaddressbookpart ${KDE4_KPARTS_LIBS} kaddressbookprivate)
+target_link_libraries(kaddressbookpart  kaddressbookprivate)
 install(TARGETS kaddressbookpart DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES data/kaddressbookpart.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 

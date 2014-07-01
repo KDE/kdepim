@@ -52,10 +52,9 @@ set_target_properties(kdepimmobileui PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SO
 
 target_link_libraries(kdepimmobileui
   Qt5::Declarative
-  ${QT_QTOPENGL_LIBRARY}
   Qt5::Declarative
+  Qt5::OpenGL
   KF5::AkonadiMime
-  ${KDE4_SOLID_LIBRARY}
   akonadi_next
   kdepim
   calendarsupport

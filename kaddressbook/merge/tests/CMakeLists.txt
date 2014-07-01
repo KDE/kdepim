@@ -7,7 +7,7 @@ macro( kaddressbook_merge _source )
   set( _test ${_source}  )
   get_filename_component( _name ${_source} NAME_WE )
   kde4_add_unit_test( ${_name} TESTNAME kaddressbookmerge-${_name} ${_test} )
-  target_link_libraries( ${_name} kaddressbookprivate ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_KABC_LIBS} )
+  target_link_libraries( ${_name} kaddressbookprivate Qt5::Test  KF5::AkonadiCore KF5::Abc )
 endmacro()
 
 kaddressbook_merge(mergecontactwidgettest.cpp)

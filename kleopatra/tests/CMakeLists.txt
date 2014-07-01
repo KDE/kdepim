@@ -23,9 +23,9 @@ if(PORT_ME_AWAY_FROM_EVENT_LOOPS)
     )
   endif()
 
-  kde4_add_executable(test_keylistmodels TEST ${test_keylistmodels_SRCS})
+  add_executable(test_keylistmodels TEST ${test_keylistmodels_SRCS})
 
-  target_link_libraries(test_keylistmodels kleo ${KDE4_KDECORE_LIBS})
+  target_link_libraries(test_keylistmodels kleo )
 
 ########### next target ###############
 
@@ -41,9 +41,9 @@ if(PORT_ME_AWAY_FROM_EVENT_LOOPS)
     )
   endif()
 
-  kde4_add_executable(test_useridlistmodels TEST ${test_useridlistmodels_SRCS})
+  add_executable(test_useridlistmodels TEST ${test_useridlistmodels_SRCS})
 
-  target_link_libraries(test_useridlistmodels kleo ${KDE4_KDECORE_LIBS})
+  target_link_libraries(test_useridlistmodels kleo )
 
 endif()
 
@@ -58,10 +58,10 @@ kde4_add_unit_test(test_verify TESTNAME kleo-verifytest ${test_verify_SRCS})
 
 target_link_libraries(test_verify
   kleo
-  ${QT_QTTEST_LIBRARY}
-  ${QT_QTCORE_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
-  ${KDE4_KDECORE_LIBS}
+  Qt5::Test
+  
+  
+  
   ${QGPGME_LIBRARIES}
 )
 
@@ -78,21 +78,21 @@ if(USABLE_ASSUAN_FOUND)
 #FIXME: omitting TEST makes test_uiserver print output again on a Win32 console;
 # find a better fix for this issue
   if(WIN32)
-    kde4_add_executable(test_uiserver ${test_uiserver_SRCS})
+    add_executable(test_uiserver ${test_uiserver_SRCS})
   else()
-    kde4_add_executable(test_uiserver TEST ${test_uiserver_SRCS})
+    add_executable(test_uiserver TEST ${test_uiserver_SRCS})
   endif()
 
   if(ASSUAN2_FOUND)
     target_link_libraries(test_uiserver
       kleo
-      ${KDE4_KDECORE_LIBS}
+      
       ${ASSUAN2_LIBRARIES}
     )
   else()
     target_link_libraries(test_uiserver
       kleo
-      ${KDE4_KDECORE_LIBS}
+      
       ${ASSUAN_LIBRARIES}
     )
   endif()

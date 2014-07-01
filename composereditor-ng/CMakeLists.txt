@@ -56,7 +56,7 @@ ki18n_wrap_ui(libcomposereditor_ng_SRCS ui/pagecolorbackgroundwidget.ui )
 add_library(composereditorng ${LIBRARY_TYPE} ${libcomposereditor_ng_SRCS})
 
 target_link_libraries(composereditorng 
-   ${KDE4_KDEWEBKIT_LIBRARY} KF5::WebKit ${QT_QTWEBKIT_LIBRARY} KF5::PimTextEdit ${KDE4_KPRINTUTILS_LIBS} KF5::KDELibs4Support KF5::SonnetCore
+   KF5::WebKit KF5::WebKit Qt5::WebKitWidgets KF5::PimTextEdit KF5::KDELibs4Support KF5::SonnetCore
 )
 
 
