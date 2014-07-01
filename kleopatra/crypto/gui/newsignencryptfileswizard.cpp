@@ -54,7 +54,7 @@
 #include <ui/filenamerequester.h>
 
 #include <KLocalizedString>
-#include <KIcon>
+#include <QIcon>
 #include <KDebug>
 #include <KMessageBox>
 
@@ -630,8 +630,8 @@ namespace {
             KDAB_SET_OBJECT_NAME( m_unselectPB );
             KDAB_SET_OBJECT_NAME( m_selectedKTV );
 
-            m_selectPB.setIcon( KIcon( QLatin1String("arrow-down") ) );
-            m_unselectPB.setIcon( KIcon( QLatin1String("arrow-up") ) );
+            m_selectPB.setIcon( QIcon::fromTheme( QLatin1String("arrow-down") ) );
+            m_unselectPB.setIcon( QIcon::fromTheme( QLatin1String("arrow-up") ) );
 
             m_selectPB.setEnabled( false );
             m_unselectPB.setEnabled( false );

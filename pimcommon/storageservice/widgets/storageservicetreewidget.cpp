@@ -22,7 +22,7 @@
 #include "storageservice/storageserviceabstract.h"
 #include "storageservice/dialog/storageservicepropertiesdialog.h"
 
-#include <KIcon>
+#include <QIcon>
 #include <KLocalizedString>
 #include <KLocale>
 #include <KMimeType>
@@ -67,12 +67,12 @@ void StorageServiceTreeWidget::slotMoveUp()
 
 void StorageServiceTreeWidget::createUpAction(QMenu *menu)
 {
-    menu->addAction( KIcon(QLatin1String("go-up")),  i18n("Up"), this, SLOT(slotMoveUp()));
+    menu->addAction( QIcon::fromTheme(QLatin1String("go-up")),  i18n("Up"), this, SLOT(slotMoveUp()));
 }
 
 void StorageServiceTreeWidget::createPropertiesAction(QMenu *menu)
 {
-    menu->addAction(KIcon(QLatin1String("document-properties")), i18n("Properties"), this, SLOT(slotProperties()));
+    menu->addAction(QIcon::fromTheme(QLatin1String("document-properties")), i18n("Properties"), this, SLOT(slotProperties()));
 }
 
 void StorageServiceTreeWidget::createMenuActions(QMenu *menu)
@@ -98,7 +98,7 @@ void StorageServiceTreeWidget::createMoveUpItem()
     StorageServiceTreeWidgetItem *item = new StorageServiceTreeWidgetItem(this);
     item->setText(ColumnName, QLatin1String(".."));
     item->setData(ColumnName, ElementType, MoveUpType);
-    item->setIcon(ColumnName, KIcon(QLatin1String("go-up")));
+    item->setIcon(ColumnName, QIcon::fromTheme(QLatin1String("go-up")));
 }
 
 StorageServiceTreeWidgetItem *StorageServiceTreeWidget::addFolder(const QString &name, const QString &ident)
@@ -107,7 +107,7 @@ StorageServiceTreeWidgetItem *StorageServiceTreeWidget::addFolder(const QString 
     item->setText(ColumnName, name);
     item->setData(ColumnName, Ident, ident);
     item->setData(ColumnName, ElementType, Folder);
-    item->setIcon(ColumnName, KIcon(QLatin1String("folder")));
+    item->setIcon(ColumnName, QIcon::fromTheme(QLatin1String("folder")));
     return item;
 }
 
@@ -120,7 +120,7 @@ StorageServiceTreeWidgetItem *StorageServiceTreeWidget::addFile(const QString &n
     if (!mimetype.isEmpty()) {
         KMimeType::Ptr mime = KMimeType::mimeType( mimetype, KMimeType::ResolveAliases );
         if (mime)
-            item->setIcon(ColumnName, KIcon(mime->iconName()));
+            item->setIcon(ColumnName, QIcon::fromTheme(mime->iconName()));
     }
     return item;
 }
