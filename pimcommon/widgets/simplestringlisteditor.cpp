@@ -35,7 +35,7 @@
 
 #include <qinputdialog.h>
 #include <kiconloader.h>
-#include <KIcon>
+#include <QIcon>
 #include <klocale.h>
 #include <qdebug.h>
 #include <QPushButton>
@@ -127,7 +127,7 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
                         "without a Down button??";
         }
         mUpButton = new QPushButton( QString(), this );
-        mUpButton->setIcon( KIcon( QLatin1String("go-up") ) );
+        mUpButton->setIcon( QIcon::fromTheme( QLatin1String("go-up") ) );
         mUpButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
         mUpButton->setAutoDefault( false );
         mUpButton->setEnabled( false ); // no selection yet
@@ -142,7 +142,7 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
                         "without an Up button??";
         }
         mDownButton = new QPushButton( QString(), this );
-        mDownButton->setIcon( KIcon( QLatin1String("go-down") ) );
+        mDownButton->setIcon( QIcon::fromTheme( QLatin1String("go-down") ) );
         mDownButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
         mDownButton->setAutoDefault( false );
         mDownButton->setEnabled( false ); // no selection yet

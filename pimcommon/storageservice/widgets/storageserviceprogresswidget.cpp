@@ -21,7 +21,7 @@
 
 #include <KLocalizedString>
 #include <KLocale>
-#include <KIcon>
+#include <QIcon>
 
 #include <QProgressBar>
 #include <QHBoxLayout>
@@ -50,7 +50,7 @@ StorageServiceProgressWidget::StorageServiceProgressWidget(PimCommon::StorageSer
     box->addWidget(mProgressBar);
 
     mCancel = new QToolButton;
-    mCancel->setIcon(KIcon(QLatin1String("dialog-cancel")));
+    mCancel->setIcon(QIcon::fromTheme(QLatin1String("dialog-cancel")));
     connect(mCancel, SIGNAL(clicked()), this, SLOT(slotCancelTask()));
     box->addWidget(mCancel);
 

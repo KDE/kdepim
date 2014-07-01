@@ -49,7 +49,7 @@ void StorageServiceDownloadTreeWidget::createMenuActions(QMenu *menu)
     menu->addSeparator();
     const PimCommon::StorageServiceTreeWidget::ItemType type = StorageServiceTreeWidget::itemTypeSelected();
     if (type == StorageServiceTreeWidget::File)
-        menu->addAction(KIcon(QLatin1String("download")), i18n("Download File"), this, SIGNAL(downloadFile()));
+        menu->addAction(QIcon::fromTheme(QLatin1String("download")), i18n("Download File"), this, SIGNAL(downloadFile()));
     if ((type == StorageServiceTreeWidget::File) || (type == StorageServiceTreeWidget::Folder)) {
         menu->addSeparator();
         createPropertiesAction(menu);

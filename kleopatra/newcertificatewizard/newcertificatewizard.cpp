@@ -68,7 +68,7 @@
 #include <KDebug>
 #include <KTempDir>
 #include <KMessageBox>
-#include <KIcon>
+#include <QIcon>
 
 #include <QRegExpValidator>
 #include <QLineEdit>
@@ -625,7 +625,7 @@ namespace {
               ui()
         {
             ui.setupUi( this );
-            ui.dragQueen->setPixmap( KIcon( QLatin1String("kleopatra") ).pixmap( 64, 64 ) );
+            ui.dragQueen->setPixmap( QIcon::fromTheme( QLatin1String("kleopatra") ).pixmap( 64, 64 ) );
             registerField( QLatin1String("error"),  ui.errorTB,   "plainText" );
             registerField( QLatin1String("result"), ui.resultTB,  "plainText" );
             registerField( QLatin1String("url"),    ui.dragQueen, "url" );
