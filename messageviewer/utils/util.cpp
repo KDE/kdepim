@@ -65,7 +65,7 @@
 #include <KMimeType>
 #include <KTemporaryFile>
 #include <ktoolinvocation.h>
-#include <KAction>
+#include <QAction>
 #include <QIcon>
 
 #include <QTextCodec>
@@ -558,7 +558,7 @@ QAction* Util::createAppAction(const KService::Ptr& service, bool singleOffer, Q
         actionName = i18nc("@item:inmenu Open With, %1 is application name", "%1", actionName);
     }
 
-    QAction *act = new KAction(parent);
+    QAction *act = new QAction(parent);
     act->setIcon(QIcon::fromTheme(service->icon()));
     act->setText(actionName);
     actionGroup->addAction( act );

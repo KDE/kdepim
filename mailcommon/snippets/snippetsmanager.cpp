@@ -24,7 +24,7 @@
 #include "snippetsmodel_p.h"
 #include "snippetvariabledialog_p.h"
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <QDebug>
 #include <KLocale>

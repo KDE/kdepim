@@ -39,7 +39,7 @@
 #include <QMenu>
 #include <QPointer>
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <QDebug>
 #include <KEncodingFileDialog>
@@ -333,13 +333,13 @@ void AttachmentControllerBase::Private::createOpenWithMenu( QMenu *topMenu, Atta
         } else {
             openWithActionName = i18nc("@title:menu", "&Open With...");
         }
-        KAction *openWithAct = new KAction(menu);
+        QAction *openWithAct = new QAction(menu);
         openWithAct->setText(openWithActionName);
         QObject::connect(openWithAct, SIGNAL(triggered()), q, SLOT(slotOpenWithDialog()));
         menu->addAction(openWithAct);
     }
     else { // no app offers -> Open With...
-        KAction *act = new KAction(topMenu);
+        QAction *act = new QAction(topMenu);
         act->setText(i18nc("@title:menu", "&Open With..."));
         QObject::connect(act, SIGNAL(triggered()), q, SLOT(slotOpenWithDialog()));
         topMenu->addAction(act);
@@ -436,12 +436,12 @@ void AttachmentControllerBase::createActions()
 
     d->addAction = new QAction( QIcon::fromTheme( QLatin1String( "mail-attachment" ) ), i18n( "&Attach File..." ), this );
     d->addAction->setIconText( i18n( "Attach" ) );
-    d->addContextAction = new KAction( QIcon::fromTheme( QLatin1String( "mail-attachment" ) ),
+    d->addContextAction = new QAction( QIcon::fromTheme( QLatin1String( "mail-attachment" ) ),
                                        i18n( "Add Attachment..." ), this );
     connect( d->addAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
     connect( d->addContextAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
 
-    d->addOwnVcardAction = new KAction( i18n("Attach Own Vcard"),this );
+    d->addOwnVcardAction = new QAction( i18n("Attach Own Vcard"),this );
     d->addOwnVcardAction->setIconText( i18n( "Own Vcard" ) );
     d->addOwnVcardAction->setCheckable(true);
     connect(d->addOwnVcardAction, SIGNAL(triggered(bool)), this, SIGNAL(addOwnVcard(bool)));

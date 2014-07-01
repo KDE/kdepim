@@ -83,7 +83,7 @@
 #include <KPrintPreview>
 #include <KGlobal>
 #include <KActionMenu>
-#include <KAction>
+#include <QAction>
 #include <QIcon>
 // KMime
 #include <KMime/KMimeMessage>
@@ -358,7 +358,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
   // "Add bookmark" and "make text bold" actions have conflicting shortcuts (ctrl + b)
   // Make add_bookmark use ctrl+shift+b to resolve that.
-  QAction *bm_action = qobject_cast<KAction *>(actionCollection->action(QLatin1String("add_bookmark")));
+  QAction *bm_action = qobject_cast<QAction *>(actionCollection->action(QLatin1String("add_bookmark")));
   Q_ASSERT(bm_action);
   bm_action->setShortcut( Qt::CTRL + Qt::SHIFT + Qt::Key_B );
 

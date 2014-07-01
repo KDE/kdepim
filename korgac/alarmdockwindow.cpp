@@ -26,7 +26,7 @@
 
 #include "alarmdockwindow.h"
 
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KConfigGroup>
 #include <KDebug>

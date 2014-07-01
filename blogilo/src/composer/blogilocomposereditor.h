@@ -25,7 +25,7 @@
 #include <composereditor-ng/composereditor.h>
 
 class BilboMedia;
-class KAction;
+class QAction;
 class BlogiloComposerEditor : public ComposerEditorNG::ComposerEditor
 {
     Q_OBJECT
@@ -49,8 +49,8 @@ private:
     void execCommand( const QString &cmd, const QString &arg );
     void execCommand ( const QString &cmd );
     bool readOnly;
-    KAction *mActSplitPost;
-    KAction *mActCode;
+    QAction *mActSplitPost;
+    QAction *mActCode;
 };
 
 #endif // BLOGILOCOMPOSEREDITOR_H
