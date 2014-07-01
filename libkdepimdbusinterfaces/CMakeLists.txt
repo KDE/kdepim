@@ -33,6 +33,6 @@ target_link_libraries(kdepimdbusinterfaces
     KF5::KIOCore
 )
 
-set_target_properties(kdepimdbusinterfaces PROPERTIES VERSION ${KF5_VERSION} SOVERSION ${KF5_VERSION})
+set_target_properties(kdepimdbusinterfaces PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_VERSION})
 install(TARGETS kdepimdbusinterfaces ${INSTALL_TARGETS_DEFAULT_ARGS})
 
