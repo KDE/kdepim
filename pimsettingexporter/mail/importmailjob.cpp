@@ -332,7 +332,7 @@ void ImportMailJob::restoreResources()
                         mHashResources.insert(filename,newResource);
                         infoAboutNewResource(newResource);
                     }
-                } else if (filename.contains(QLatin1String("imap")) || filename.contains(QLatin1String("kolab_"))) {
+                } else if (filename.contains(QLatin1String("imap")) || filename.contains(QLatin1String("kolab_")) || filename.contains(QLatin1String("gmail_")) ) {
                     KConfigGroup network = resourceConfig->group(QLatin1String("network"));
                     if (network.hasKey(QLatin1String("Authentication"))) {
                         settings.insert(QLatin1String("Authentication"),network.readEntry("Authentication",1));
@@ -420,6 +420,8 @@ void ImportMailJob::restoreResources()
                     QString newResource;
                     if (filename.contains(QLatin1String("kolab_"))) {
                         newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_kolab_resource"), filename, settings );
+                    } else if (filename.contains(QLatin1String("gmail_"))) {
+                        newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_gmail_resource"), filename, settings );
                     } else {
                         newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_imap_resource"), filename, settings );
                     }

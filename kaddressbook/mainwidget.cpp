@@ -243,8 +243,8 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mCategoryFilterModel->setFilterCategories( mCategorySelectWidget->filterTags() );
   mCategoryFilterModel->setFilterEnabled( true );
 
-  connect(mCategorySelectWidget, SIGNAL(filterChanged(const QList<Akonadi::Tag::Id> &)),
-          mCategoryFilterModel, SLOT(setFilterCategories(const QList<Akonadi::Tag::Id> &)));
+  connect(mCategorySelectWidget, SIGNAL(filterChanged(QList<Akonadi::Tag::Id>)),
+          mCategoryFilterModel, SLOT(setFilterCategories(QList<Akonadi::Tag::Id>)));
 
   mContactsFilterModel = new Akonadi::ContactsFilterProxyModel( this );
   mContactsFilterModel->setSourceModel( mCategoryFilterModel );

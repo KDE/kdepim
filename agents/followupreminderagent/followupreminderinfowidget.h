@@ -15,25 +15,35 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLLOWUPREMINDERINFODIALOG_H
-#define FOLLOWUPREMINDERINFODIALOG_H
+#ifndef FOLLOWUPREMINDERINFOWIDGET_H
+#define FOLLOWUPREMINDERINFOWIDGET_H
 
-#include <KDialog>
-class K4AboutData;
+#include <QWidget>
+#include <KConfigGroup>
 class QTreeWidget;
-class FollowUpReminderInfoWidget;
-class FollowUpReminderInfoDialog : public KDialog
+class FollowUpReminderInfo;
+class FollowUpReminderInfoWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit FollowUpReminderInfoDialog(QWidget *parent=0);
-    ~FollowUpReminderInfoDialog();
+    explicit FollowUpReminderInfoWidget(QWidget *parent=0);
+    ~FollowUpReminderInfoWidget();
+
+    void restoreTreeWidgetHeader(const QByteArray &data);
+    void saveTreeWidgetHeader(KConfigGroup &group);
+
+    void setInfo(const QList<FollowUpReminderInfo *> &info);
+private slots:
+    void customContextMenuRequested(const QPoint &pos);
+    void slotRemoveItem();
 
 private:
-    void readConfig();
-    void writeConfig();
-    K4AboutData *mAboutData;
-    FollowUpReminderInfoWidget *mWidget;
+    enum FollowUpReminderColumn {
+        To = 0,
+        Subject,
+        MessageId
+    };
+    QTreeWidget *mTreeWidget;
 };
 
-#endif // FOLLOWUPREMINDERINFODIALOG_H
+#endif // FOLLOWUPREMINDERINFOWIDGET_H

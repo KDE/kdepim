@@ -47,3 +47,4 @@ void Error::clear()
 {
     setError(0, QString());
 }
+

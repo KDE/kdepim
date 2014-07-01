@@ -102,12 +102,12 @@ void CategorySelectWidgetPrivate::init()
     monitor->setTypeMonitored(Monitor::Tags);
     tagModel = new Akonadi::TagModel(monitor, this);
 
-    connect(tagModel, SIGNAL(rowsInserted(const QModelIndex &,int,int)),
-            SLOT(slotTagsInserted(const QModelIndex &,int,int)));
-    connect(tagModel, SIGNAL(rowsRemoved(const QModelIndex &,int,int)),
-            SLOT(slotTagsRemoved(const QModelIndex &,int,int)));
-    connect(tagModel, SIGNAL(dataChanged(const QModelIndex &,const QModelIndex &)),
-            SLOT(slotTagsChanged(const QModelIndex &,const QModelIndex &)));
+    connect(tagModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+            SLOT(slotTagsInserted(QModelIndex,int,int)));
+    connect(tagModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+            SLOT(slotTagsRemoved(QModelIndex,int,int)));
+    connect(tagModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+            SLOT(slotTagsChanged(QModelIndex,QModelIndex)));
 
     updateTimer = new QTimer(this);
     updateTimer->setSingleShot(true);

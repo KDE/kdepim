@@ -25,3 +25,4 @@ FolderList::FolderList(QObject *parent) : QObject(parent)
 {
 
 }
+

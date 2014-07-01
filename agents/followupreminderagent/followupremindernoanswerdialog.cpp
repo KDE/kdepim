@@ -17,6 +17,7 @@
 
 #include "followupremindernoanswerdialog.h"
 #include "followupreminderinfo.h"
+#include "followupreminderinfowidget.h"
 
 #include <KLocalizedString>
 #include <QMenu>
@@ -26,6 +27,7 @@
 #include <QHBoxLayout>
 #include <QTreeWidget>
 #include <QHeaderView>
+#include <QLabel>
 
 
 FollowUpReminderNoAnswerDialog::FollowUpReminderNoAnswerDialog(QWidget *parent)
@@ -34,9 +36,16 @@ FollowUpReminderNoAnswerDialog::FollowUpReminderNoAnswerDialog(QWidget *parent)
     setCaption( i18n("Follow Up Mail") );
     setWindowIcon( QIcon::fromTheme( QLatin1String("kmail") ) );
     setButtons( Ok|Cancel );
-    //TODO
-    mWidget = new FollowUpReminderNoAnswerWidget;
-    setMainWidget(mWidget);
+    setAttribute(Qt::WA_DeleteOnClose);
+    QWidget *w = new QWidget;
+    QVBoxLayout *vbox = new QVBoxLayout;
+    w->setLayout(vbox);
+    QLabel *lab = new QLabel(i18n("You still wait an answer about this mail:"));
+    vbox->addWidget(lab);
+
+    mWidget = new FollowUpReminderInfoWidget;
+    vbox->addWidget(mWidget);
+    setMainWidget(w);
     readConfig();
 }
 
@@ -47,7 +56,7 @@ FollowUpReminderNoAnswerDialog::~FollowUpReminderNoAnswerDialog()
 
 void FollowUpReminderNoAnswerDialog::setInfo(const QList<FollowUpReminderInfo *> &info)
 {
-    mWidget->setInfo(info);
+    //mWidget->setInfo(info);
 }
 
 void FollowUpReminderNoAnswerDialog::readConfig()
@@ -65,66 +74,5 @@ void FollowUpReminderNoAnswerDialog::writeConfig()
     KConfigGroup group( KGlobal::config(), "FollowUpReminderNoAnswerDialog" );
     group.writeEntry( "Size", size() );
     mWidget->saveTreeWidgetHeader(group);
-}
-
-
-
-FollowUpReminderNoAnswerWidget::FollowUpReminderNoAnswerWidget(QWidget *parent)
-    : QWidget(parent)
-{
-    QHBoxLayout *hbox = new QHBoxLayout;
-    mTreeWidget = new QTreeWidget;
-    //TODO
-    QStringList headers;
-    headers << i18n("To")
-            << i18n("Subject")
-            << i18n("Message Id");
-
-    mTreeWidget->setHeaderLabels(headers);
-    mTreeWidget->setSortingEnabled(true);
-    mTreeWidget->setRootIsDecorated(false);
-    mTreeWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    mTreeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-
-    connect(mTreeWidget, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(customContextMenuRequested(QPoint)));
-
-    hbox->addWidget(mTreeWidget);
-    setLayout(hbox);
-}
-
-FollowUpReminderNoAnswerWidget::~FollowUpReminderNoAnswerWidget()
-{
-}
-
-void FollowUpReminderNoAnswerWidget::customContextMenuRequested(const QPoint &pos)
-{
-    const QList<QTreeWidgetItem *> listItems = mTreeWidget->selectedItems();
-    if ( !listItems.isEmpty() ) {
-        QMenu menu;
-        menu.addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
-        menu.exec(QCursor::pos());
-    }
-}
-
-void FollowUpReminderNoAnswerWidget::setInfo(const QList<FollowUpReminderInfo *> &info)
-{
-    //TODO
-}
-
-
-void FollowUpReminderNoAnswerWidget::slotRemoveItem()
-{
-    //TODO
-}
-
-void FollowUpReminderNoAnswerWidget::restoreTreeWidgetHeader(const QByteArray &data)
-{
-    mTreeWidget->header()->restoreState(data);
-}
-
-void FollowUpReminderNoAnswerWidget::saveTreeWidgetHeader(KConfigGroup &group)
-{
-    group.writeEntry( "HeaderState", mTreeWidget->header()->saveState() );
 }
 
