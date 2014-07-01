@@ -472,9 +472,10 @@ void Widget::viewStartDragRequest()
     if ( collections.isEmpty() )
         return; // no folder here
 
-    QList<Item> items = d->selectionAsItems();
-    if ( items.isEmpty() )
+    QList<Core::MessageItem *> selection = view()->selectionAsMessageItemList();
+    if ( selection.isEmpty() ) {
         return;
+    }
 
     bool readOnly = false;
 
@@ -488,8 +489,11 @@ void Widget::viewStartDragRequest()
     }
 
     KUrl::List urls;
-    foreach ( const Item &i, items ) {
-        urls << i.url( Item::UrlWithMimeType );
+    Q_FOREACH ( Core::MessageItem *mi, selection ) {
+        const Item i = d->itemForRow( mi->currentModelIndexRow() );
+        KUrl url = i.url( Item::Item::Item::UrlWithMimeType );
+        url.addQueryItem(QLatin1String("parent"), QString::number( mi->parentCollectionId() ) );
+        urls << url;
     }
 
     QMimeData *mimeData = new QMimeData;
@@ -500,7 +504,7 @@ void Widget::viewStartDragRequest()
 
     // Set pixmap
     QPixmap pixmap;
-    if( items.size() == 1 ) {
+    if( selection.size() == 1 ) {
         pixmap = QPixmap( DesktopIcon(QLatin1String( "mail-message" ), KIconLoader::SizeSmall) );
     } else {
         pixmap = QPixmap( DesktopIcon(QLatin1String( "document-multiple" ), KIconLoader::SizeSmall) );

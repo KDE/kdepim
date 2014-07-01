@@ -81,6 +81,7 @@ public:
     virtual void prepareForScan();
 
     Akonadi::Item itemForRow( int row ) const;
+    Akonadi::Collection parentCollectionForRow( int row ) const;
     KMime::Message::Ptr messageForRow( int row ) const;
 
     void resetModelStorage();

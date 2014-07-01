@@ -58,6 +58,7 @@ public:
     StorageModel * const q;
 
     QAbstractItemModel *mModel;
+    QAbstractItemModel *mChildrenFilterModel;
     QItemSelectionModel *mSelectionModel;
 
     Private( StorageModel *owner )
@@ -98,6 +99,7 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
     Akonadi::SelectionProxyModel *childrenFilter = new Akonadi::SelectionProxyModel( d->mSelectionModel, this );
     childrenFilter->setSourceModel( model );
     childrenFilter->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
+    d->mChildrenFilterModel = childrenFilter;
 
     EntityMimeTypeFilterModel *itemFilter = new EntityMimeTypeFilterModel( this );
     itemFilter->setSourceModel( childrenFilter );
@@ -223,6 +225,8 @@ bool StorageModel::initializeMessageItem( MessageList::Core::MessageItem *mi,
         return false;
     }
 
+    const Collection parentCol = parentCollectionForRow( row );
+
     QString sender;
     if ( mail->from() ) {
         sender = mail->from()->asUnicodeString();
@@ -248,6 +252,7 @@ bool StorageModel::initializeMessageItem( MessageList::Core::MessageItem *mi,
                       sender, receiver,
                       bUseReceiver );
     mi->setItemId( item.id() );
+    mi->setParentCollectionId( parentCol.id() );
 
     QString subject = mail->subject()->asUnicodeString();
     if ( subject.isEmpty() ) {
@@ -451,6 +456,26 @@ Item StorageModel::itemForRow( int row ) const
 KMime::Message::Ptr StorageModel::messageForRow( int row ) const
 {
     return messageForItem( itemForRow( row ) );
+}
+
+Collection StorageModel::parentCollectionForRow(int row) const
+{
+    QAbstractProxyModel *mimeProxy = static_cast<QAbstractProxyModel*>( d->mModel );
+    // This is index mapped to Akonadi::SelectionProxyModel
+    const QModelIndex childrenFilterIndex = mimeProxy->mapToSource( d->mModel->index( row, 0 ) );
+    Q_ASSERT( childrenFilterIndex.isValid() );
+
+    QAbstractProxyModel *childrenProxy = static_cast<QAbstractProxyModel*>( d->mChildrenFilterModel );
+    // This is index mapped to ETM
+    const QModelIndex etmIndex = childrenProxy->mapToSource( childrenFilterIndex );
+    Q_ASSERT( etmIndex.isValid() );
+    // We cannot possibly refer to top-level collection
+    Q_ASSERT( etmIndex.parent().isValid() );
+
+    const Collection col = etmIndex.parent().data( EntityTreeModel::CollectionRole ).value<Collection>();
+    Q_ASSERT( col.isValid() );
+
+    return col;
 }
 
 void StorageModel::resetModelStorage()
