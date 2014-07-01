@@ -52,5 +52,5 @@ int main( int argc, char **argv )
 
     ContactEditorMainWindow *mw = new ContactEditorMainWindow();
     mw->show();
-    app.exec();
+    return app.exec();
 }
