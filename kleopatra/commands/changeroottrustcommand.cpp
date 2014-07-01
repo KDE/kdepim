@@ -41,7 +41,7 @@
 
 #include <KDebug>
 #include <KLocalizedString>
-#include <KSaveFile>
+#include <QSaveFile>
 
 #include <QRegExp>
 #include <QThread>
@@ -231,12 +231,12 @@ static QString add_colons( const QString & fpr ) {
 namespace {
 
     // fix stupid default-finalize behaviour...
-    class KFixedSaveFile : public KSaveFile {
+    class KFixedSaveFile : public QSaveFile {
     public:
         explicit KFixedSaveFile( const QString & fileName )
-            : KSaveFile( fileName ) {}
+            : QSaveFile( fileName ) {}
         ~KFixedSaveFile() {
-            abort();
+            cancelWriting();
         }
 
     };
@@ -261,13 +261,13 @@ QString change_trust_file( const QString & trustListFile, const QString & key, K
 
 
     KFixedSaveFile out( trustListFile );
-    if ( !out.open() )
+    if ( !out.open(QIODevice::ReadWrite) )
         return i18n("Cannot open file \"%1\" for reading and writing: %2",
-                    out.QFile::fileName() /*sic!*/, out.errorString() );
+                    out.fileName() /*sic!*/, out.errorString() );
 
     if ( !out.setPermissions( QFile::ReadOwner|QFile::WriteOwner ) )
         return i18n("Cannot set restrictive permissions on file %1: %2",
-                    out.QFile::fileName() /*sic!*/, out.errorString() );
+                    out.fileName() /*sic!*/, out.errorString() );
 
     const QString keyColon = add_colons( key );
 
@@ -317,9 +317,9 @@ QString change_trust_file( const QString & trustListFile, const QString & key, K
         else if ( trust == Key::Never )
             out.write( '!' + keyColon.toLatin1() + ' ' + 'S' + '\n' );
 
-    if ( !out.finalize() )
+    if ( !out.commit() )
         return i18n( "Failed to move file %1 to its final destination, %2: %3",
-                     out.QFile::fileName(), trustListFile, out.errorString() );
+                     out.fileName(), trustListFile, out.errorString() );
 
     return QString();
 

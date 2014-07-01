@@ -66,7 +66,7 @@
 #include <KPIMIdentities/kpimidentities/identitymanager.h>
 #include <KPIMUtils/kpimutils/email.h>
 
-#include <KSaveFile>
+#include <QSaveFile>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <krichtextwidget.h>
@@ -1023,11 +1023,11 @@ void MessageComposer::ComposerViewBase::writeAutoSaveToDisk( const KMime::Messag
 {
     const QString filename = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "kmail2/autosave/" )  +
             m_autoSaveUUID;
-    KSaveFile file( filename );
+    QSaveFile file( filename );
     QString errorMessage;
     qDebug() << "Writing message to disk as" << filename;
 
-    if( file.open() ) {
+    if( file.open(QIODevice::ReadWrite) ) {
         file.setPermissions( QFile::ReadUser | QFile::WriteUser );
 
         if( file.write( message->encodedContent() ) !=
@@ -1035,7 +1035,7 @@ void MessageComposer::ComposerViewBase::writeAutoSaveToDisk( const KMime::Messag
             errorMessage = i18n( "Could not write all data to file." );
         }
         else {
-            if( !file.finalize() ) {
+            if( !file.commit() ) {
                 errorMessage = i18n( "Could not finalize the file." );
             }
         }

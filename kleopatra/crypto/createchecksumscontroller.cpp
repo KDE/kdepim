@@ -44,7 +44,7 @@
 
 #include <KLocalizedString>
 #include <qdebug.h>
-#include <KSaveFile>
+#include <QSaveFile>
 #include <KConfigGroup>
 #include <KSharedConfig>
 
@@ -554,21 +554,21 @@ static std::vector<Dir> find_dirs_by_input_files( const QStringList & files, con
 
 static QString process( const Dir & dir, bool * fatal ) {
     const QString absFilePath = dir.dir.absoluteFilePath( dir.sumFile );
-    KSaveFile file( absFilePath );
-    if ( !file.open() )
+    QSaveFile file( absFilePath );
+    if ( !file.open(QIODevice::ReadWrite) )
         return i18n( "Failed to open file \"%1\" for reading and writing: %2",
                      dir.dir.absoluteFilePath( file.fileName() ),
                      file.errorString() );
     QProcess p;
     p.setWorkingDirectory( dir.dir.absolutePath() );
-    p.setStandardOutputFile( dir.dir.absoluteFilePath( file.QFile::fileName() /*!sic*/ ) );
+    p.setStandardOutputFile( dir.dir.absoluteFilePath( file.fileName() /*!sic*/ ) );
     const QString program = dir.checksumDefinition->createCommand();
     dir.checksumDefinition->startCreateCommand( &p, dir.inputFiles );
     p.waitForFinished();
     qDebug() << "[" << &p << "] Exit code " << p.exitCode();
 
     if ( p.exitStatus() != QProcess::NormalExit || p.exitCode() != 0 ) {
-        file.abort();
+        file.cancelWriting();
         if ( fatal && p.error() == QProcess::FailedToStart )
             *fatal = true;
         if ( p.error() == QProcess::UnknownError )
@@ -578,7 +578,7 @@ static QString process( const Dir & dir, bool * fatal ) {
             return i18n( "Failed to execute %1: %2", program, p.errorString() );
     }
 
-    if ( !file.finalize() )
+    if ( !file.commit() )
         return i18n( "Failed to move file %1 to its final destination, %2: %3",
                      file.fileName(), dir.sumFile, file.errorString() );
 
