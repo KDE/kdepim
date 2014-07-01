@@ -37,7 +37,7 @@
 #include <KToggleAction>
 #include <KActionCollection>
 #include <QAction>
-#include <KIcon>
+#include <QIcon>
 #include <QKeySequence>
 QAction * Kleo::make_action_from_data( const action_data & ad, QObject * parent ) {
 
@@ -47,7 +47,7 @@ QAction * Kleo::make_action_from_data( const action_data & ad, QObject * parent 
     if ( !ad.tooltip.isEmpty() )
         a->setToolTip( ad.tooltip );
     if ( ad.icon )
-        a->setIcon( KIcon( QLatin1String(ad.icon) ) );
+        a->setIcon( QIcon::fromTheme( QLatin1String(ad.icon) ) );
     if ( ad.receiver && ad.slot ) {
         if ( ad.toggle )
             QObject::connect( a, SIGNAL(toggled(bool)), ad.receiver, ad.slot );
