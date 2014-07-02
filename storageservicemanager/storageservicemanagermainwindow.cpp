@@ -62,7 +62,7 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     connect(mStorageManager, SIGNAL(servicesChanged()), this, SLOT(slotServicesChanged()));
     mStorageServiceMainWidget = new StorageServiceManagerMainWidget;
     connect(mStorageServiceMainWidget, SIGNAL(configureClicked()), SLOT(slotConfigure()));
-    connect(mStorageServiceMainWidget->storageServiceTabWidget(), SIGNAL(currentChanged(QWidget*)), this, SLOT(slotUpdateActions()));
+    connect(mStorageServiceMainWidget->storageServiceTabWidget(), SIGNAL(currentChanged(int)), this, SLOT(slotUpdateActions()));
     connect(mStorageServiceMainWidget->storageServiceTabWidget(), SIGNAL(updateStatusBarMessage(QString)), this, SLOT(slotSetStatusBarMessage(QString)));
     connect(mStorageServiceMainWidget->storageServiceTabWidget(), SIGNAL(listFileWasInitialized()), this, SLOT(slotUpdateActions()));
     connect(mStorageServiceMainWidget->storageServiceTabWidget(), SIGNAL(selectionChanged()), this, SLOT(slotUpdateActions()));
