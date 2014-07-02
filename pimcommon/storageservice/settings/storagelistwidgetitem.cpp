@@ -28,7 +28,8 @@ StorageListWidgetItemProgress::StorageListWidgetItemProgress(StorageListWidgetIt
       mProgressCount(0),
       mItem(item)
 {
-    mProgressPix = KPixmapSequence(QLatin1String("process-working"), KIconLoader::SizeSmallMedium);
+    KIconLoader loader;
+    mProgressPix = loader.loadPixmapSequence(QLatin1String("process-working"), KIconLoader::SizeSmallMedium);
     mProgressTimer = new QTimer(this);
     connect(mProgressTimer, SIGNAL(timeout()), this, SLOT(slotTimerDone()));
 }
