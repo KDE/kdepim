@@ -501,6 +501,16 @@ qint64 MessageList::Core::Item::itemId() const
     return d_ptr->mItemId;
 }
 
+void Item::setParentCollectionId(qint64 id)
+{
+    d_ptr->mParentCollectionId = id;
+}
+
+qint64 Item::parentCollectionId() const
+{
+    return d_ptr->mParentCollectionId;
+}
+
 void MessageList::Core::Item::setSubjectAndStatus(const QString &subject,
                                                   const Akonadi::MessageStatus &status)
 {

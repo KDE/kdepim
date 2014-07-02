@@ -363,6 +363,9 @@ public:
     void setItemId(qint64 id);
     qint64 itemId() const;
 
+    void setParentCollectionId(qint64 id);
+    qint64 parentCollectionId() const;
+
     /**
    * This is meant to be called right after the constructor for MessageItem objects.
    * It sets up several items at once (so even if not inlined it's still a single call).
