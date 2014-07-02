@@ -108,8 +108,8 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent )
     vlay->setMargin( 0 );
 
     mTreeView = new CustomManageSieveWidget( frame);
-    connect(mTreeView, SIGNAL(editScript(KUrl,QStringList)), SLOT(slotEditScript(KUrl,QStringList)));
-    connect(mTreeView, SIGNAL(newScript(KUrl,QStringList)), SLOT(slotNewScript(KUrl,QStringList)));
+    connect(mTreeView, SIGNAL(editScript(QUrl,QStringList)), SLOT(slotEditScript(QUrl,QStringList)));
+    connect(mTreeView, SIGNAL(newScript(QUrl,QStringList)), SLOT(slotNewScript(QUrl,QStringList)));
     connect(mTreeView, SIGNAL(updateButtons(QTreeWidgetItem*)), SLOT(slotUpdateButtons(QTreeWidgetItem*)));
     vlay->addWidget( mTreeView );
 
@@ -170,7 +170,7 @@ void ManageSieveScriptsDialog::slotUpdateButtons(QTreeWidgetItem *item)
 }
 
 
-void ManageSieveScriptsDialog::slotEditScript(const KUrl &url, const QStringList &capabilities)
+void ManageSieveScriptsDialog::slotEditScript(const QUrl &url, const QStringList &capabilities)
 {
     mCurrentURL = url;
     mCurrentCapabilities = capabilities;
@@ -180,7 +180,7 @@ void ManageSieveScriptsDialog::slotEditScript(const KUrl &url, const QStringList
              this, SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)) );
 }
 
-void ManageSieveScriptsDialog::slotNewScript(const KUrl &url, const QStringList &capabilities)
+void ManageSieveScriptsDialog::slotNewScript(const QUrl &url, const QStringList &capabilities)
 {
     mCurrentCapabilities = capabilities;
     mCurrentURL = url;

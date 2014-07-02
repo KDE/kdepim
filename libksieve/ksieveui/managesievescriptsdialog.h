@@ -62,8 +62,8 @@ private slots:
     void slotSieveEditorCancelClicked();
     void slotSieveEditorCheckSyntaxClicked();
     void slotUpdateButtons(QTreeWidgetItem *item);
-    void slotEditScript(const KUrl &u, const QStringList &capabilities);
-    void slotNewScript(const KUrl &u, const QStringList &capabilities);
+    void slotEditScript(const QUrl &u, const QStringList &capabilities);
+    void slotNewScript(const QUrl &u, const QStringList &capabilities);
 
 private:
     void changeActiveScript( QTreeWidgetItem *, bool activate = true );
