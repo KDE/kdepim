@@ -23,6 +23,8 @@
 #include <KGlobal>
 #include <KConfigGroup>
 #include <KConfig>
+#include <knotification.h>
+#include <KLocalizedString>
 
 FollowUpReminderManager::FollowUpReminderManager(QObject *parent)
     : QObject(parent)
@@ -75,7 +77,25 @@ void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Ako
 
 void FollowUpReminderManager::slotCheckFollowUpFinished(const QString &messageId)
 {
+    Q_FOREACH(FollowUpReminderInfo* info, mFollowUpReminderInfoList) {
+        if (info->messageId() == messageId) {
+            answerReceived(info->to());
+            //TODO inform that we have a response!
+        }
+    }
     //TODO
+}
+
+void FollowUpReminderManager::answerReceived(const QString &from)
+{
+    const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+    KNotification::event( QLatin1String("mailreceived"),
+                          i18n("Answer from %1 received", from),
+                          pixmap,
+                          0,
+                          KNotification::CloseOnTimeout,
+                          KGlobal::mainComponent());
+
 }
 
 #include "followupremindermanager.moc"

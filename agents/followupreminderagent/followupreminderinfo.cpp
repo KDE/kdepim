@@ -63,7 +63,7 @@ void FollowUpReminderInfo::setId(Akonadi::Item::Id value)
 
 bool FollowUpReminderInfo::isValid() const
 {
-    return (mId != -1 && !mMessageId.isEmpty() && mFollowUpReminderDate.isValid());
+    return (mId != -1 && !mMessageId.isEmpty() && mFollowUpReminderDate.isValid() && !mTo.isEmpty());
 }
 
 QString FollowUpReminderInfo::messageId() const
@@ -74,6 +74,16 @@ QString FollowUpReminderInfo::messageId() const
 void FollowUpReminderInfo::setMessageId(const QString &messageId)
 {
     mMessageId = messageId;
+}
+
+void FollowUpReminderInfo::setTo(const QString &to)
+{
+    mTo = to;
+}
+
+QString FollowUpReminderInfo::to() const
+{
+    return mTo;
 }
 
 QDateTime FollowUpReminderInfo::followUpReminderDate() const

@@ -38,6 +38,7 @@ private slots:
     void slotCheckFollowUpFinished(const QString &messageId);
 
 private:
+    void answerReceived(const QString &from);
     KSharedConfig::Ptr mConfig;
     QList<FollowUpReminderInfo*> mFollowUpReminderInfoList;
     QPointer<FollowUpReminderNoAnswerDialog> mNoAnswerDialog;
