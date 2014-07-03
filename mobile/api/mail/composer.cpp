@@ -19,6 +19,15 @@ Copyright 2014  Abhijeet Nikam connect08nikam@gmail.com
 
 #include "composer.h"
 
+#include <qdebug.h>
+
+
+Composer::Composer( QObject *parent )
+    : QObject( parent )
+    , m_receiverModel ( new ReceiverModel (this) )
+{
+
+}
 
 QString Composer::from() const
 {
@@ -105,6 +114,14 @@ void Composer::setBody(const QString &body)
     }
 }
 
+ReceiverModel *Composer::receiverModel() const
+{
+
+    return m_receiverModel;
+
+}
+
+
 QByteArray Composer::convert (const QString &body)
 {
 
@@ -129,8 +146,8 @@ void Composer::send()
 
     // Set the headers.
     m_msg->from()->fromUnicodeString( m_from , "utf-8" );
-    m_msg->to()->fromUnicodeString( m_to, "utf-8" );
-    m_msg->cc()->fromUnicodeString( m_cc, "utf-8" );
+    m_msg->to()->fromUnicodeString( m_receiverModel->recipientString(MessageComposer::Recipient::To), "utf-8" );
+    m_msg->cc()->fromUnicodeString( m_receiverModel->recipientString(MessageComposer::Recipient::Cc), "utf-8" );
     m_msg->date()->setDateTime( KDateTime::currentLocalDateTime() );
     m_msg->subject()->fromUnicodeString( m_subject, "utf-8" );
 
@@ -158,3 +175,11 @@ void Composer::saveDraft()
 
 }
 
+
+void Composer::addRecipient( const QString &email , int type )
+{
+    MessageComposer::Recipient::Ptr rec (new MessageComposer::Recipient);
+    rec->setEmail ( email );
+    rec->setType (  MessageComposer::Recipient::idToType(type) );
+    m_receiverModel->addRecipient ( rec );
+}

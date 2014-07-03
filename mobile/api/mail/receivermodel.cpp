@@ -28,6 +28,8 @@ ReceiverModel::ReceiverModel(QObject *parent) : QAbstractListModel(parent)
     roles[Email] = "email";
     roles[Type] = "type";
 
+    setRoleNames (roles);
+
 }
 
 
@@ -51,9 +53,9 @@ QVariant ReceiverModel::data( const QModelIndex &index, int role ) const
         return QVariant();
     }
 
-        int row = index.row();
+    int row = index.row();
 
-        switch(role) {
+    switch(role) {
 
         case Name:
             return mRecipients[row]->name();
@@ -61,7 +63,7 @@ QVariant ReceiverModel::data( const QModelIndex &index, int role ) const
             return mRecipients[row]->email();
         case Type:
             return mRecipients[row]->type();
-        }
+    }
 
     return QVariant();
 }
@@ -119,7 +121,7 @@ bool ReceiverModel::addRecipient( const MessageComposer::Recipient::Ptr &recipie
 }
 
 
-bool ReceiverModel:: removeRecipient( const MessageComposer::Recipient::Ptr &recipient )
+bool ReceiverModel::removeRecipient( const MessageComposer::Recipient::Ptr &recipient )
 {
    int index = mRecipients.indexOf( recipient );
 
