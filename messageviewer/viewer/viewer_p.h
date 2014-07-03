@@ -634,6 +634,7 @@ private:
     QString recipientsQuickListLinkHtml( bool, const QString & ) const;
     void initGrantleeThemeName();
 
+    void addHelpTextAction(QAction *act, const QString &text);
 public:
     NodeHelper* mNodeHelper;
     bool mHtmlMailGlobalSetting, mHtmlLoadExternalGlobalSetting, mHtmlLoadExtOverride;

@@ -1549,55 +1549,55 @@ void ViewerPrivate::createActions()
     // header style
     KActionMenu *headerMenu  = new KActionMenu(i18nc("View->", "&Headers"), this);
     ac->addAction(QLatin1String("view_headers"), headerMenu );
-    //QT5 headerMenu->setHelpText( i18n("Choose display style of message headers") );
+    addHelpTextAction(headerMenu, i18n("Choose display style of message headers") );
 
     QActionGroup *group = new QActionGroup( this );
     raction = new KToggleAction( i18nc("View->headers->", "&Enterprise Headers"), this);
     ac->addAction( QLatin1String("view_headers_enterprise"), raction );
     connect( raction, SIGNAL(triggered(bool)), SLOT(slotEnterpriseHeaders()) );
-    //QT5 raction->setHelpText( i18n("Show the list of headers in Enterprise style") );
+    addHelpTextAction(raction, i18n("Show the list of headers in Enterprise style") );
     group->addAction( raction );
     headerMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->headers->", "&Fancy Headers"), this);
     ac->addAction(QLatin1String("view_headers_fancy"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotFancyHeaders()));
-    //QT5 raction->setHelpText( i18n("Show the list of headers in a fancy format") );
+    addHelpTextAction(raction, i18n("Show the list of headers in a fancy format") );
     group->addAction( raction );
     headerMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->headers->", "&Brief Headers"), this);
     ac->addAction(QLatin1String("view_headers_brief"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotBriefHeaders()));
-    //QT5 raction->setHelpText( i18n("Show brief list of message headers") );
+    addHelpTextAction(raction, i18n("Show brief list of message headers") );
     group->addAction( raction );
     headerMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->headers->", "&Standard Headers"), this);
     ac->addAction(QLatin1String("view_headers_standard"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotStandardHeaders()));
-    //QT5 raction->setHelpText( i18n("Show standard list of message headers") );
+    addHelpTextAction(raction, i18n("Show standard list of message headers") );
     group->addAction( raction );
     headerMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->headers->", "&Long Headers"), this);
     ac->addAction(QLatin1String("view_headers_long"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotLongHeaders()));
-    //QT5 raction->setHelpText( i18n("Show long list of message headers") );
+    addHelpTextAction(raction, i18n("Show long list of message headers") );
     group->addAction( raction );
     headerMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->headers->", "&All Headers"), this);
     ac->addAction(QLatin1String("view_headers_all"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotAllHeaders()));
-    //QT5 raction->setHelpText( i18n("Show all message headers") );
+    addHelpTextAction(raction, i18n("Show all message headers") );
     group->addAction( raction );
     headerMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->headers->", "&Custom Headers"), this);
     ac->addAction(QLatin1String("view_custom_headers"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotCustomHeaders()));
-    //QT5 raction->setHelpText( i18n("Show custom headers") );
+    addHelpTextAction(raction, i18n("Show custom headers") );
     group->addAction( raction );
     headerMenu->addAction( raction );
     //Same action group
@@ -1607,34 +1607,34 @@ void ViewerPrivate::createActions()
     // attachment style
     KActionMenu *attachmentMenu  = new KActionMenu(i18nc("View->", "&Attachments"), this);
     ac->addAction(QLatin1String("view_attachments"), attachmentMenu );
-    //QT5 attachmentMenu->setHelpText( i18n("Choose display style of attachments") );
+    addHelpTextAction(attachmentMenu, i18n("Choose display style of attachments") );
 
     group = new QActionGroup( this );
     raction  = new KToggleAction(i18nc("View->attachments->", "&As Icons"), this);
     ac->addAction(QLatin1String("view_attachments_as_icons"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotIconicAttachments()));
-    //QT5 raction->setHelpText( i18n("Show all attachments as icons. Click to see them.") );
+    addHelpTextAction(raction, i18n("Show all attachments as icons. Click to see them.") );
     group->addAction( raction );
     attachmentMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->attachments->", "&Smart"), this);
     ac->addAction(QLatin1String("view_attachments_smart"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotSmartAttachments()));
-    //QT5 raction->setHelpText( i18n("Show attachments as suggested by sender.") );
+    addHelpTextAction(raction, i18n("Show attachments as suggested by sender.") );
     group->addAction( raction );
     attachmentMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->attachments->", "&Inline"), this);
     ac->addAction(QLatin1String("view_attachments_inline"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotInlineAttachments()));
-    //QT5 raction->setHelpText( i18n("Show all attachments inline (if possible)") );
+    addHelpTextAction(raction, i18n("Show all attachments inline (if possible)") );
     group->addAction( raction );
     attachmentMenu->addAction( raction );
 
     raction  = new KToggleAction(i18nc("View->attachments->", "&Hide"), this);
     ac->addAction(QLatin1String("view_attachments_hide"), raction );
     connect(raction, SIGNAL(triggered(bool)), SLOT(slotHideAttachments()));
-    //QT5 raction->setHelpText( i18n("Do not show attachments in the message viewer") );
+    addHelpTextAction(raction, i18n("Do not show attachments in the message viewer") );
     group->addAction( raction );
     attachmentMenu->addAction( raction );
 
@@ -1642,7 +1642,7 @@ void ViewerPrivate::createActions()
     ac->addAction( QLatin1String("view_attachments_headeronly"), mHeaderOnlyAttachmentsAction );
     connect( mHeaderOnlyAttachmentsAction, SIGNAL(triggered(bool)),
              SLOT(slotHeaderOnlyAttachments()) );
-    //QT5 mHeaderOnlyAttachmentsAction->setHelpText( i18n( "Show Attachments only in the header of the mail" ) );
+    addHelpTextAction(mHeaderOnlyAttachmentsAction, i18n( "Show Attachments only in the header of the mail" ) );
     group->addAction( mHeaderOnlyAttachmentsAction );
     attachmentMenu->addAction( mHeaderOnlyAttachmentsAction );
 
@@ -1775,7 +1775,7 @@ void ViewerPrivate::createActions()
     mToggleDisplayModeAction->setShortcut(QKeySequence(Qt::SHIFT + Qt::Key_H));
     connect( mToggleDisplayModeAction, SIGNAL(triggered(bool)),
              SLOT(slotToggleHtmlMode()) );
-    //QT5 mToggleDisplayModeAction->setHelpText( i18n( "Toggle display mode between HTML and plain text" ) );
+    addHelpTextAction(mToggleDisplayModeAction, i18n( "Toggle display mode between HTML and plain text" ) );
 
     // Load external reference
     QAction *loadExternalReferenceAction = new QAction( i18n( "Load external references" ), this );
@@ -1783,7 +1783,7 @@ void ViewerPrivate::createActions()
     loadExternalReferenceAction->setShortcut(QKeySequence(Qt::SHIFT + Qt::CTRL + Qt::Key_R));
     connect( loadExternalReferenceAction, SIGNAL(triggered(bool)),
              SLOT(slotLoadExternalReference()) );
-    //QT5 loadExternalReferenceAction->setHelpText( i18n( "Load external references from the Internet for this message." ) );
+    addHelpTextAction(loadExternalReferenceAction, i18n( "Load external references from the Internet for this message." ) );
 
 
     mSpeakTextAction = new QAction(i18n("Speak Text"),this);
@@ -1837,7 +1837,7 @@ void ViewerPrivate::createActions()
 
     mCreateTodoAction = new QAction(QIcon::fromTheme( QLatin1String("task-new") ),i18n("Create Todo"), this);
     mCreateTodoAction->setIconText( i18n( "Create To-do" ) );
-    //QT5 mCreateTodoAction->setHelpText( i18n( "Allows you to create a calendar to-do or reminder from this message" ) );
+    addHelpTextAction(mCreateTodoAction, i18n( "Allows you to create a calendar to-do or reminder from this message" ) );
     mCreateTodoAction->setWhatsThis( i18n( "This option starts the KOrganizer to-do editor with initial values taken from the currently selected message. Then you can edit the to-do to your liking before saving it to your calendar." ) );
     ac->addAction(QLatin1String("create_todo"), mCreateTodoAction);
     mCreateTodoAction->setShortcut(Qt::CTRL + Qt::Key_T);
@@ -1845,7 +1845,7 @@ void ViewerPrivate::createActions()
 
     mCreateEventAction = new QAction(QIcon::fromTheme( QLatin1String("appointment-new") ),i18n("Create Event"), this);
     mCreateEventAction->setIconText( i18n( "Create Event" ) );
-    //QT5 mCreateEventAction->setHelpText( i18n( "Allows you to create a calendar Event" ) );
+    addHelpTextAction(mCreateEventAction, i18n( "Allows you to create a calendar Event" ) );
     ac->addAction(QLatin1String("create_event"), mCreateEventAction);
     mCreateEventAction->setShortcut(Qt::CTRL + Qt::Key_E);
     connect( mCreateEventAction, SIGNAL(triggered(bool)), SLOT(slotShowCreateEventWidget()) );
@@ -3400,4 +3400,9 @@ void ViewerPrivate::slotCreateEvent(const KCalCore::Event::Ptr &eventPtr, const 
 {
     CreateEventJob *createJob = new CreateEventJob(eventPtr, collection, mMessageItem, this);
     createJob->start();
+}
+
+void ViewerPrivate::addHelpTextAction(QAction *act, const QString &text)
+{
+
 }
