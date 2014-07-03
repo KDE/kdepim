@@ -38,5 +38,4 @@ KorgacAgent::~KorgacAgent()
   delete m_alarmClient;
 }
 
-AKONADI_AGENT_FACTORY( KorgacAgent, korgac )
 

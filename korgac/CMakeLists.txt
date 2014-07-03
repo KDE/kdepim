@@ -27,7 +27,7 @@ set(korgac_SRCS
 )
 
 if(KORGAC_AKONADI_AGENT)
-  set(korgac_SRCS ${korgac_SRCS} korgacagent.cpp)
+  set(korgac_SRCS ${korgac_SRCS} korgacagent.cpp korgacresourcefactory.cpp)
 else()
   set(korgac_SRCS ${korgac_SRCS} korgacmain.cpp)
 endif()
