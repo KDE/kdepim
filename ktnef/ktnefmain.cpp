@@ -491,7 +491,7 @@ void KTNEFMain::slotEditToolbars()
   saveMainWindowSettings( grp );
 
   KEditToolBar dlg( factory() );
-  connect( &dlg, SIGNAL(newToolBarConfig()), this, SLOT(newToolbarConfig()) );
+  connect( &dlg, SIGNAL(newToolBarConfig()), this, SLOT(slotNewToolbarConfig()) );
   dlg.exec();
 }
 

@@ -28,6 +28,8 @@ Copyright 2014  Abhijeet Nikam connect08nikam@gmail.com
 
 #include "sender/akonadisender.h"
 
+#include "receivermodel.h"
+
 class Composer : public QObject
 {
 
@@ -39,8 +41,11 @@ Q_OBJECT
     Q_PROPERTY (QString to READ to WRITE setTo NOTIFY toChanged)
     Q_PROPERTY (QString bcc READ bcc WRITE setBCC NOTIFY bccChanged)
     Q_PROPERTY (QString from READ from WRITE setFrom NOTIFY fromChanged)
+    Q_PROPERTY (ReceiverModel* receiverModel READ receiverModel CONSTANT)
 
 public:
+
+    explicit Composer( QObject *parent = 0 );
 
     QString cc() const;
     QString bcc() const;
@@ -48,6 +53,7 @@ public:
     QString to() const;
     QString subject() const;
     QString body() const;
+    ReceiverModel *receiverModel() const;
 
     void setFrom( const QString &from );
     void setTo( const QString &replyTo );
@@ -72,6 +78,7 @@ public slots:
     void send();
     void saveDraft();
     void sendLater();
+    void addRecipient( const QString &email , int type );
 
 private:
 
@@ -81,7 +88,7 @@ private:
     QString m_cc;
     QString m_to;
     QString m_bcc;
-
+    ReceiverModel *m_receiverModel;
 };
 
 
