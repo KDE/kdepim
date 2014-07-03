@@ -41,6 +41,7 @@ void FollowUpReminderManager::load()
     const QStringList itemList = mConfig->groupList().filter( QRegExp( QLatin1String("FollowupReminderItem \\d+") ) );
     const int numberOfItems = itemList.count();
     const QDate currentDate = QDate::currentDate();
+    bool noAnswerInfoFound = false;
     for (int i = 0 ; i < numberOfItems; ++i) {
         KConfigGroup group = mConfig->group(itemList.at(i));
 
@@ -48,14 +49,17 @@ void FollowUpReminderManager::load()
         if (info->isValid()) {
             mFollowUpReminderInfoList.append(info);
             if( info->followUpReminderDate().date() > currentDate) {
+                noAnswerInfoFound = true;
                 //TODO
             }
         } else {
             delete info;
         }
     }
-    if (!mNoAnswerDialog.data()) {
-        mNoAnswerDialog = new FollowUpReminderNoAnswerDialog;
+    if (noAnswerInfoFound) {
+        if (!mNoAnswerDialog.data()) {
+            mNoAnswerDialog = new FollowUpReminderNoAnswerDialog;
+        }
         mNoAnswerDialog->show();
     }
 }
