@@ -66,12 +66,12 @@ void ScamCheckShortUrl::expandedUrl(const KUrl &url)
 
 void ScamCheckShortUrl::slotExpandFinished(QNetworkReply *reply)
 {
-#if 0 //QT5
     KUrl shortUrl;
     if (!reply->property("shortUrl").isNull()) {
         shortUrl.setUrl(reply->property("shortUrl").toString());
     }
     reply->deleteLater();
+#if 0 //QT5
     const QString jsonData = QString::fromUtf8(reply->readAll());
 
     //qDebug() << jsonData;
@@ -110,15 +110,15 @@ bool ScamCheckShortUrl::isShortUrl(const KUrl &url)
 
 void ScamCheckShortUrl::loadLongUrlServices()
 {
-#if 0 //QT5
     QFile servicesFile(KGlobal::dirs()->findResource("data", QLatin1String("messageviewer/longurlServices.json")));
     if (servicesFile.open(QIODevice::ReadOnly)) {
+#if 0 //QT5
         const QVariantMap response = QJson::Parser().parse(&servicesFile).toMap();
         sSupportedServices = response.uniqueKeys();
+#endif
     } else {
         qDebug()<<" json file \'longurlServices.json\' not found";
     }
-#endif
 }
 
 void ScamCheckShortUrl::slotSystemNetworkStatusChanged( Solid::Networking::Status status )

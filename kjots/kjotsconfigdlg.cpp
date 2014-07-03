@@ -22,10 +22,8 @@ KJotsConfigDlg::KJotsConfigDlg( const QString & title, QWidget *parent )
 {
     setWindowTitle( title );
     setFaceType( KPageDialog::List );
-    //QT5 setButtons( Default | Ok | Cancel );
-    //QT5 setDefaultButton( Ok );
-
-    //QT5 showButtonSeparator( true );
+    setStandardButtons(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults);
+    button(QDialogButtonBox::Ok)->setDefault(true);
 
     addModule( QLatin1String("kjots_config_misc") );
     connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
