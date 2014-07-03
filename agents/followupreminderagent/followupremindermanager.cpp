@@ -68,7 +68,14 @@ void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Ako
 {
     //TODO
     FollowUpReminderJob *job = new FollowUpReminderJob(this);
+    connect(job, SIGNAL(finished(QString)), SLOT(slotCheckFollowUpFinished(QString)));
+    job->setItem(item);
+    job->start();
+}
 
+void FollowUpReminderManager::slotCheckFollowUpFinished(const QString &messageId)
+{
+    //TODO
 }
 
 #include "followupremindermanager.moc"

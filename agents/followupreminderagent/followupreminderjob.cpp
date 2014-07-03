@@ -26,3 +26,13 @@ FollowUpReminderJob::~FollowUpReminderJob()
 {
 
 }
+
+void FollowUpReminderJob::start()
+{
+
+}
+
+void FollowUpReminderJob::setItem(const Akonadi::Item &item)
+{
+    mItem = item;
+}
