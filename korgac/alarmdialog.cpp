@@ -24,6 +24,7 @@
   without including the source code for Qt in the source distribution.
 */
 
+#include "config-kdepim.h"
 #include "alarmdialog.h"
 #include "korganizer_interface.h"
 #include "mailclient.h"
@@ -959,7 +960,7 @@ bool AlarmDialog::openIncidenceEditorThroughKOrganizer( const Incidence::Ptr &in
     QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String("org.kde.kontact") ) ?
     QLatin1String("kontact/MainWindow_1") : QLatin1String("korganizer/MainWindow_1");
   QDBusInterface korganizerObj( QLatin1String("org.kde.korganizer"), QLatin1Char('/') + object );
-#ifdef Q_WS_X11
+#if KDEPIM_HAVE_X11
   QDBusReply<int> reply = korganizerObj.call( QLatin1String("winId") );
   if ( reply.isValid() ) {
     int window = reply;

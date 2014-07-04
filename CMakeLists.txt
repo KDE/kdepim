@@ -65,6 +65,7 @@ option(KDEPIM_NO_WEBKIT "Do not use WebKit in the kdepim applications" FALSE)
 
 
 find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql Concurrent UiTools Declarative)
+find_package(Qt5X11Extras NO_MODULE)
 #Need to use volatile_qt5_port branch from grantlee
 find_package(Grantlee "1.0" CONFIG REQUIRED)
 
@@ -115,6 +116,13 @@ find_package(KF5KontactInterface ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5AlarmCalendar ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5Mime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
 find_package(KF5Blog ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
+
+if (NOT APPLE)
+    find_package(X11)
+endif()
+
+set(KDEPIM_HAVE_X11 ${X11_FOUND})
+configure_file(config-kdepim.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kdepim.h )
 
 
 # Extra package
