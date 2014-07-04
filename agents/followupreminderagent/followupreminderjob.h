@@ -20,12 +20,27 @@
 
 #include <QObject>
 
+#include <Akonadi/Item>
+
 class FollowUpReminderJob : public QObject
 {
     Q_OBJECT
 public:
     explicit FollowUpReminderJob(QObject *parent=0);
     ~FollowUpReminderJob();
+
+    void setItem(const Akonadi::Item &item);
+
+    void start();
+
+Q_SIGNALS:
+    void finished(const QString &messageId);
+
+private slots:
+    void slotItemFetchJobDone(KJob *job);
+
+private:
+    Akonadi::Item mItem;
 };
 
 #endif // FOLLOWUPREMINDERJOB_H

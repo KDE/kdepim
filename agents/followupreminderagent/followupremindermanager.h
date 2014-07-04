@@ -33,7 +33,12 @@ public:
 
     void load();
     void checkFollowUp(const Akonadi::Item &item, const Akonadi::Collection &col);
+
+private slots:
+    void slotCheckFollowUpFinished(const QString &messageId);
+
 private:
+    void answerReceived(const QString &from);
     KSharedConfig::Ptr mConfig;
     QList<FollowUpReminderInfo*> mFollowUpReminderInfoList;
     QPointer<FollowUpReminderNoAnswerDialog> mNoAnswerDialog;

@@ -23,6 +23,10 @@
 #include <KConfigGroup>
 #include <KConfig>
 #include <KSharedConfig>
+#include <knotification.h>
+#include <KLocalizedString>
+#include <KIconLoader>
+#include <KGlobal>
 
 FollowUpReminderManager::FollowUpReminderManager(QObject *parent)
     : QObject(parent)
@@ -41,6 +45,7 @@ void FollowUpReminderManager::load()
     const QStringList itemList = mConfig->groupList().filter( QRegExp( QLatin1String("FollowupReminderItem \\d+") ) );
     const int numberOfItems = itemList.count();
     const QDate currentDate = QDate::currentDate();
+    bool noAnswerInfoFound = false;
     for (int i = 0 ; i < numberOfItems; ++i) {
         KConfigGroup group = mConfig->group(itemList.at(i));
 
@@ -48,14 +53,17 @@ void FollowUpReminderManager::load()
         if (info->isValid()) {
             mFollowUpReminderInfoList.append(info);
             if( info->followUpReminderDate().date() > currentDate) {
+                noAnswerInfoFound = true;
                 //TODO
             }
         } else {
             delete info;
         }
     }
-    if (!mNoAnswerDialog.data()) {
-        mNoAnswerDialog = new FollowUpReminderNoAnswerDialog;
+    if (noAnswerInfoFound) {
+        if (!mNoAnswerDialog.data()) {
+            mNoAnswerDialog = new FollowUpReminderNoAnswerDialog;
+        }
         mNoAnswerDialog->show();
     }
 }
@@ -64,7 +72,34 @@ void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Ako
 {
     //TODO
     FollowUpReminderJob *job = new FollowUpReminderJob(this);
+    connect(job, SIGNAL(finished(QString)), SLOT(slotCheckFollowUpFinished(QString)));
+    job->setItem(item);
+    job->start();
+}
 
+void FollowUpReminderManager::slotCheckFollowUpFinished(const QString &messageId)
+{
+    Q_FOREACH(FollowUpReminderInfo* info, mFollowUpReminderInfoList) {
+        if (info->messageId() == messageId) {
+            answerReceived(info->to());
+            //TODO inform that we have a response!
+        }
+    }
+    //TODO
+}
+
+void FollowUpReminderManager::answerReceived(const QString &from)
+{
+    const QPixmap pixmap = QIcon::fromTheme( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+#if 0 //QT5
+    KNotification::event( QLatin1String("mailreceived"),
+                          i18n("Answer from %1 received", from),
+                          pixmap,
+                          0,
+                          KNotification::CloseOnTimeout,
+                          KGlobal::mainComponent());
+
+#endif
 }
 
 #include "followupremindermanager.moc"

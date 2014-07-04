@@ -35,6 +35,9 @@ public:
     QString messageId() const;
     void setMessageId(const QString &messageId);
 
+    void setTo(const QString &to);
+    QString to() const;
+
     QDateTime followUpReminderDate() const;
     void setFollowUpReminderDate(const QDateTime &followUpReminderDate);
 
@@ -45,6 +48,7 @@ private:
     Akonadi::Item::Id mId;
     QString mMessageId;
     QDateTime mFollowUpReminderDate;
+    QString mTo;
 };
 
 #endif // FOLLOWUPREMINDERINFO_H
