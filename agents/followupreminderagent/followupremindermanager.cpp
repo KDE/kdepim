@@ -68,7 +68,6 @@ void FollowUpReminderManager::load()
 
 void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Akonadi::Collection &col)
 {
-    //TODO
     FollowUpReminderJob *job = new FollowUpReminderJob(this);
     connect(job, SIGNAL(finished(QString)), SLOT(slotCheckFollowUpFinished(QString)));
     job->setItem(item);
@@ -80,10 +79,10 @@ void FollowUpReminderManager::slotCheckFollowUpFinished(const QString &messageId
     Q_FOREACH(FollowUpReminderInfo* info, mFollowUpReminderInfoList) {
         if (info->messageId() == messageId) {
             answerReceived(info->to());
-            //TODO inform that we have a response!
+            //Remove info in list and settings
+            break;
         }
     }
-    //TODO
 }
 
 void FollowUpReminderManager::answerReceived(const QString &from)
