@@ -17,6 +17,8 @@
 */
 
 #include "kjotsconfigdlg.h"
+#include <QPushButton>
+
 KJotsConfigDlg::KJotsConfigDlg( const QString & title, QWidget *parent )
   : KCMultiDialog( parent )
 {
