@@ -38,6 +38,7 @@
 #include <KConfigGroup>
 #include <QIcon>
 #include <KConfig>
+#include <QFileDialog>
 
 namespace MessageList
 {
@@ -419,7 +420,7 @@ void ConfigureThemesDialog::Private::deleteThemeButtonClicked()
 
 void ConfigureThemesDialog::Private::importThemeButtonClicked()
 {
-    const QString filename = KFileDialog::getOpenFileName(QString(),QString::fromLatin1("*"),q,i18n("Import Theme"));
+    const QString filename = QFileDialog::getOpenFileName(q, i18n("Import Theme"), QString(), QString::fromLatin1("*"));
     if(!filename.isEmpty()) {
         KConfig config(filename);
 

@@ -31,6 +31,7 @@
 #include <QWebView>
 #include <QWebPage>
 #include <QPushButton>
+#include <QFileDialog>
 
 ScamDetectionTestWidget::ScamDetectionTestWidget(const QString &filename, QWidget *parent)
     : QWidget(parent)
@@ -74,7 +75,7 @@ void ScamDetectionTestWidget::slotLoadFinished()
 
 void ScamDetectionTestWidget::slotOpenHtml()
 {
-    const QString fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*.html"));
+    const QString fileName = QFileDialog::getOpenFileName(0, QString(), QString(), QLatin1String("*.html"));
     if (!fileName.isEmpty()) {
         mScamWarningWidget->setVisible(false);
         mWebView->load(QUrl(fileName));
@@ -99,7 +100,7 @@ int main (int argc, char **argv)
     if (args->count()) {
         fileName = args->url(0).path();
     } else {
-        fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*.html"));
+        fileName = QFileDialog::getOpenFileName(0, QString(), QString(), QLatin1String("*.html"));
     }
     if (fileName.isEmpty()) {
         return 0;

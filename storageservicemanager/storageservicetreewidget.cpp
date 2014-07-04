@@ -40,6 +40,7 @@
 #include <KSharedConfig>
 #include <KFormat>
 #include <QFontDatabase>
+#include <QFileDialog>
 
 StorageServiceTreeWidget::StorageServiceTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
     : PimCommon::StorageServiceTreeWidget(storageService, parent),
@@ -363,7 +364,7 @@ void StorageServiceTreeWidget::slotDownloadFile()
 
 bool StorageServiceTreeWidget::uploadFileToService()
 {
-    const QString filename = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*"), this);
+    const QString filename = QFileDialog::getOpenFileName(this, QString(), QString(), QLatin1String("*"));
     if (!filename.isEmpty()) {
         const QRegExp disallowedSymbols = mStorageService->disallowedSymbols();
         const qlonglong maximumLimit =  mStorageService->maximumUploadFileSize();

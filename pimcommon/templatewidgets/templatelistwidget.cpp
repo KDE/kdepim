@@ -31,6 +31,7 @@
 #include <QPointer>
 #include <QMimeData>
 #include <QDropEvent>
+#include <QFileDialog>
 
 namespace PimCommon {
 
@@ -137,7 +138,7 @@ public:
 
     void slotImportTemplates()
     {
-        const QString templateFile = KFileDialog::getOpenFileName();
+        const QString templateFile = QFileDialog::getOpenFileName(); 
         if (!templateFile.isEmpty()) {
             KConfig conf(templateFile);
             loadTemplates(&conf);

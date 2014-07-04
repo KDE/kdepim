@@ -67,6 +67,7 @@
 #include <KIO/Job>
 
 #include <KMime/Content>
+#include <QFileDialog>
 
 using namespace MessageComposer;
 using namespace MessageCore;
@@ -797,7 +798,7 @@ void AttachmentControllerBase::showAddAttachmentDialog()
 #endif
 #else
     // use native dialog, while being much simpler, it actually fits on the screen much better than our own monster dialog
-    const QString fileName = KFileDialog::getOpenFileName( KUrl(), QString(), d->wParent, i18n("Attach File" ) );
+    const QString fileName = QFileDialog::getOpenFileName(d->wParent, i18n("Attach File" ) ,  KUrl(), QString());
     if ( !fileName.isEmpty() ) {
         addAttachment( KUrl::fromLocalFile( fileName ) );
     }

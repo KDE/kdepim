@@ -37,6 +37,7 @@
 #include <KFileDialog>
 #include <QIcon>
 #include <KConfig>
+#include <QFileDialog>
 
 namespace MessageList
 {
@@ -402,7 +403,7 @@ void ConfigureAggregationsDialog::Private::deleteAggregationButtonClicked()
 
 void ConfigureAggregationsDialog::Private::importAggregationButtonClicked()
 {
-    const QString filename = KFileDialog::getOpenFileName(QString(),QString::fromLatin1("*"),q,i18n("Import Aggregation"));
+    const QString filename = QFileDialog::getOpenFileName(q, i18n("Import Aggregation"), QString(), QString::fromLatin1("*"));
     if(!filename.isEmpty()) {
         KConfig config(filename);
 

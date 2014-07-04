@@ -31,6 +31,7 @@ using KSieve::Parser;
 
 #include <ksieve/error.h>
 #include <ksieve/scriptbuilder.h>
+#include <QFileDialog>
 
 
 #include "libksieve/ksieveui/autocreatescripts/autocreatescriptdialog.h"
@@ -56,7 +57,7 @@ int main (int argc, char **argv)
     if (args->count()) {
         fileName = args->url(0).path();
     } else {
-        fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*.siv"));
+        fileName = QFileDialog::getOpenFileName(0, QString(), QString(), QLatin1String("*.siv"));
     }
     if (!fileName.isEmpty()) {
         QFile file(fileName);

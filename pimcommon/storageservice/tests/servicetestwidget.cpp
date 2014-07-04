@@ -32,6 +32,7 @@
 #include <QAction>
 #include <QPointer>
 #include <QDir>
+#include <QFileDialog>
 
 
 ServiceTestWidget::ServiceTestWidget(QWidget *parent)
@@ -190,7 +191,7 @@ void ServiceTestWidget::slotListFolder()
 
 void ServiceTestWidget::slotUploadFile()
 {
-    const QString filename = KFileDialog::getOpenFileName();
+    const QString filename = QFileDialog::getOpenFileName(0, QString(), QString());
     if (!filename.isEmpty()) {
         mStorageService->uploadFile(filename, QString(), QString()); //TODO
     }

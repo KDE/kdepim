@@ -23,6 +23,7 @@
 #include "mboxmainwindow.h"
 
 #include <KLocalizedString>
+#include <QFileDialog>
 #include "kdepim-version.h"
 
 int main(int argc, char *argv[])
@@ -46,7 +47,7 @@ int main(int argc, char *argv[])
         fileName = args->url(0).path();
         args->clear();
     } else {
-        fileName = KFileDialog::getOpenFileName();
+        fileName = QFileDialog::getOpenFileName(); 
     }
     if (fileName.isEmpty()) {
         return 0;

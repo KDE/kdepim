@@ -38,6 +38,7 @@
 #include <QDir>
 #include <QPointer>
 #include <QDebug>
+#include <QFileDialog>
 
 ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &themeName, QWidget *parent)
     : QWidget(parent),
@@ -118,7 +119,7 @@ void ContactEditorPage::insertFile()
         return;
     GrantleeThemeEditor::EditorPage * page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(w);
     if (page) {
-        const QString fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*"), this);
+        const QString fileName = QFileDialog::getOpenFileName(this, QString(), QString(), QLatin1String("*"));
         if (!fileName.isEmpty()) {
             page->insertFile(fileName);
         }

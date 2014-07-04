@@ -40,6 +40,7 @@
 #include <KMessageBox>
 
 #include <QDBusConnection>
+#include <QFileDialog>
 
 using namespace PimCommon;
 
@@ -217,7 +218,7 @@ void StorageServiceManager::slotShareFile()
             if (service->hasUploadOrDownloadInProgress()) {
                 KMessageBox::information(0, i18n("There is still an upload in progress."));
             } else {
-                const QString fileName = KFileDialog::getOpenFileName( QString(), QString(), 0, i18n("File to upload") );
+                const QString fileName = QFileDialog::getOpenFileName(0, i18n("File to upload") ,  QString(), QString());
                 if (!fileName.isEmpty()) {
                     QFileInfo info(fileName);
                     const QRegExp disallowedSymbols = service->disallowedSymbols();

@@ -34,6 +34,7 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 
 #include <QTreeWidgetItem>
 #include <QMenu>
+#include <QFileDialog>
 
 using namespace PimCommon;
 
@@ -539,7 +540,7 @@ void AutoCorrectionWidget::slotImportAutoCorrection(QAction* act)
             filter = QLatin1String("*.xml");
             break;
         }
-        const QString fileName = KFileDialog::getOpenFileName( QString(), filter, this, title );
+        const QString fileName = QFileDialog::getOpenFileName(this, title ,  QString(), filter);
         if ( !fileName.isEmpty() ) {
             PimCommon::ImportAbstractAutocorrection *importAutoCorrection = 0;
             switch(type) {

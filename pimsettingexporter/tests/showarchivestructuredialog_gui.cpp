@@ -23,6 +23,7 @@
 #include <KLocalizedString>
 #include <KFileDialog>
 #include <KUrl>
+#include <QFileDialog>
 
 int main (int argc, char **argv)
 {
@@ -40,7 +41,7 @@ int main (int argc, char **argv)
     if (args->count()) {
         fileName = args->url(0).path();
     } else {
-        fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*.zip"));
+        fileName = QFileDialog::getOpenFileName(0, QString(), QString(), QLatin1String("*.zip"));
     }
     if (fileName.isEmpty())
         return 0;
