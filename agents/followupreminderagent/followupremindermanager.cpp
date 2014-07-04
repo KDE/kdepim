@@ -19,6 +19,7 @@
 #include "followupreminderinfo.h"
 #include "followupremindernoanswerdialog.h"
 #include "followupreminderjob.h"
+#include "followupreminderfinishtaskjob.h"
 
 #include <KGlobal>
 #include <KConfigGroup>
@@ -80,6 +81,10 @@ void FollowUpReminderManager::slotCheckFollowUpFinished(const QString &messageId
         if (info->messageId() == messageId) {
             answerReceived(info->to());
             //Remove info in list and settings
+            //Close task
+            FollowUpReminderFinishTaskJob *job = new FollowUpReminderFinishTaskJob(this);
+            //TODO
+            job->start();
             break;
         }
     }
@@ -96,7 +101,5 @@ void FollowUpReminderManager::answerReceived(const QString &from)
                           KGlobal::mainComponent());
 
 }
-
-#include "followupremindermanager.moc"
 
 
