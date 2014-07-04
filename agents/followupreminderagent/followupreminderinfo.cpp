@@ -38,6 +38,7 @@ void FollowUpReminderInfo::readConfig(const KConfigGroup &config)
     }
     mId = config.readEntry("itemId", -1);
     mMessageId = config.readEntry("messageId", QString());
+    mTo = config.readEntry("to", QString());
 }
 
 void FollowUpReminderInfo::writeConfig(KConfigGroup &config )
@@ -47,6 +48,7 @@ void FollowUpReminderInfo::writeConfig(KConfigGroup &config )
     }
     config.writeEntry("messageId", mMessageId);
     config.writeEntry("itemId", mId);
+    config.writeEntry("to", mTo);
     config.sync();
 }
 
