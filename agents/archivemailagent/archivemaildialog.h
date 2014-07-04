@@ -24,7 +24,6 @@
 #include <KDialog>
 
 class QTreeWidget;
-class K4AboutData;
 class ArchiveMailItem : public QTreeWidgetItem
 {
 public:
@@ -102,7 +101,6 @@ private:
     void writeConfig();
     void readConfig();
     ArchiveMailWidget *mWidget;
-    K4AboutData *mAboutData;
 };
 
 

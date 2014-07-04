@@ -192,7 +192,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   KActionCollection *actionCollection = xmlGuiClient->actionCollection();
 
   editor = new KJotsEdit( treeview->selectionModel(), stackedWidget );
-  //QT5 editor->createActions( actionCollection );
+  actionCollection->addActions(editor->createActions());
   stackedWidget->addWidget( editor );
 
   layout->addWidget( m_splitter );
@@ -1580,7 +1580,7 @@ void KJotsWidget::onRepeatReplace()
       QRegExp regExp ( searchPattern, ( replaceOptions & Qt::CaseSensitive ) ?
                                         Qt::CaseSensitive : Qt::CaseInsensitive, QRegExp::RegExp2 );
       regExp.indexIn(cursor.selectedText());
-      int capCount = 0; //QT5 regExp.numCaptures();
+      int capCount = regExp.captureCount();
       for ( int i=0; i <= capCount; ++i ) {
         QString c = QString::fromLatin1( "\\%1" ).arg( i );
         replacementText.replace( c, regExp.cap( i ) );

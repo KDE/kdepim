@@ -28,7 +28,7 @@
 #include <QMenu>
 #include <KRun>
 #include <KHelpMenu>
-#include <k4aboutdata.h>
+#include <kaboutdata.h>
 #include <QIcon>
 
 #include <QHBoxLayout>
@@ -56,35 +56,31 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     connect(this, SIGNAL(okClicked()), SLOT(slotSave()));
     readConfig();
 
-    mAboutData = new K4AboutData(
-                QByteArray( "archivemailagent" ),
-                QByteArray(),
-                ki18n( "Archive Mail Agent" ),
-                QByteArray( KDEPIM_VERSION ),
-                ki18n( "Archive emails automatically." ),
-                K4AboutData::License_GPL_V2,
-                ki18n( "Copyright (C) 2012, 2013, 2014 Laurent Montel" ) );
+    KAboutData aboutData = KAboutData(
+                QLatin1String( "archivemailagent" ),
+                i18n( "Archive Mail Agent" ),
+                QLatin1String( KDEPIM_VERSION ),
+                i18n( "Archive emails automatically." ),
+                KAboutLicense::GPL_V2,
+                i18n( "Copyright (C) 2012, 2013, 2014 Laurent Montel" ) );
 
-    mAboutData->addAuthor( ki18n( "Laurent Montel" ),
-                         ki18n( "Maintainer" ), "montel@kde.org" );
+    aboutData.addAuthor( i18n( "Laurent Montel" ),
+                         i18n( "Maintainer" ), QLatin1String("montel@kde.org") );
 
-    mAboutData->setProgramIconName( QLatin1String("kmail") );
-    mAboutData->setTranslator( ki18nc( "NAME OF TRANSLATORS", "Your names" ),
-                             ki18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
+    aboutData.setProgramIconName( QLatin1String("kmail") );
+    aboutData.setTranslator( i18nc( "NAME OF TRANSLATORS", "Your names" ),
+                             i18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
 
-#if 0 //QT5
-    KHelpMenu *helpMenu = new KHelpMenu(this, mAboutData, true);
+    KHelpMenu *helpMenu = new KHelpMenu(this, aboutData, true);
     //Initialize menu
     QMenu *menu = helpMenu->menu();
     helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QLatin1String("kmail")));
     setButtonMenu( Help, menu );
-#endif
 }
 
 ArchiveMailDialog::~ArchiveMailDialog()
 {
     writeConfig();
-    delete mAboutData;
 }
 
 void ArchiveMailDialog::slotNeedReloadConfig()

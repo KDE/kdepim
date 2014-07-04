@@ -20,7 +20,6 @@
 
 #include <KDialog>
 
-class K4AboutData;
 class KNotifyConfigWidget;
 namespace NoteShared {
 class NoteNetworkConfigWidget;
@@ -38,7 +37,6 @@ private slots:
 private:
     void writeConfig();
     void readConfig();
-    K4AboutData *mAboutData;
     KNotifyConfigWidget *mNotify;
     NoteShared::NoteNetworkConfigWidget *mNetworkConfig;
 };

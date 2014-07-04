@@ -26,7 +26,7 @@
 #include <KLocale>
 #include <KHelpMenu>
 #include <QMenu>
-#include <k4aboutdata.h>
+#include <kaboutdata.h>
 #include <KMessageBox>
 #include <QIcon>
 
@@ -53,36 +53,32 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
     connect(this, SIGNAL(okClicked()), SLOT(slotSave()));
 
     readConfig();
-    mAboutData = new K4AboutData(
-                QByteArray( "sendlateragent" ),
-                QByteArray(),
-                ki18n( "Send Later Agent" ),
-                QByteArray( KDEPIM_VERSION ),
-                ki18n( "Send emails later agent." ),
-                K4AboutData::License_GPL_V2,
-                ki18n( "Copyright (C) 2013, 2014 Laurent Montel" ) );
 
-    mAboutData->addAuthor( ki18n( "Laurent Montel" ),
-                         ki18n( "Maintainer" ), "montel@kde.org" );
+    KAboutData aboutData = KAboutData(
+                QLatin1String( "sendlateragent" ),
+                i18n( "Send Later Agent" ),
+                QLatin1String( KDEPIM_VERSION ),
+                i18n( "Send emails later agent." ),
+                KAboutLicense::GPL_V2,
+                i18n( "Copyright (C) 2013, 2014 Laurent Montel" ) );
 
-    mAboutData->setProgramIconName( QLatin1String("kmail") );
-    mAboutData->setTranslator( ki18nc( "NAME OF TRANSLATORS", "Your names" ),
-                             ki18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
+    aboutData.addAuthor( i18n( "Laurent Montel" ),
+                         i18n( "Maintainer" ), QLatin1String("montel@kde.org") );
 
-//QT5
-#if 0
-    KHelpMenu *helpMenu = new KHelpMenu(this, mAboutData, true);
+    aboutData.setProgramIconName( QLatin1String("kmail") );
+    aboutData.setTranslator( i18nc( "NAME OF TRANSLATORS", "Your names" ),
+                             i18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
+
+    KHelpMenu *helpMenu = new KHelpMenu(this, aboutData, true);
     //Initialize menu
     QMenu *menu = helpMenu->menu();
     helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QLatin1String("kmail")));
     setButtonMenu( Help, menu );
-#endif
 }
 
 SendLaterConfigureDialog::~SendLaterConfigureDialog()
 {
     writeConfig();
-    delete mAboutData;
 }
 
 QList<Akonadi::Item::Id> SendLaterConfigureDialog::messagesToRemove() const

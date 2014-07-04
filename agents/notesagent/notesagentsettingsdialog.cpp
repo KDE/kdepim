@@ -24,7 +24,7 @@
 #include <KHelpMenu>
 #include <KLocalizedString>
 #include <QIcon>
-#include <K4AboutData>
+#include <KAboutData>
 #include <KNotifyConfigWidget>
 
 #include <QHBoxLayout>
@@ -60,35 +60,32 @@ NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
 
     setMainWidget(mainWidget);
     readConfig();
-    mAboutData = new K4AboutData(
-                QByteArray( "notesagent" ),
-                QByteArray(),
-                ki18n( "Notes Agent" ),
-                QByteArray( KDEPIM_VERSION ),
-                ki18n( "Notes Agent." ),
-                K4AboutData::License_GPL_V2,
-                ki18n( "Copyright (C) 2013, 2014 Laurent Montel" ) );
 
-    mAboutData->addAuthor( ki18n( "Laurent Montel" ),
-                         ki18n( "Maintainer" ), "montel@kde.org" );
+    KAboutData aboutData = KAboutData(
+                QLatin1String( "notesagent" ),
+                i18n( "Notes Agent" ),
+                QLatin1String( KDEPIM_VERSION ),
+                i18n( "Notes Agent." ),
+                KAboutLicense::GPL_V2,
+                i18n( "Copyright (C) 2013, 2014 Laurent Montel" ) );
 
-    mAboutData->setProgramIconName( QLatin1String("knotes") );
-    mAboutData->setTranslator( ki18nc( "NAME OF TRANSLATORS", "Your names" ),
-                             ki18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
+    aboutData.addAuthor( i18n( "Laurent Montel" ),
+                         i18n( "Maintainer" ), QLatin1String("montel@kde.org") );
 
-#if 0 //QT5
-    KHelpMenu *helpMenu = new KHelpMenu(this, mAboutData, true);
+    aboutData.setProgramIconName( QLatin1String("knotes") );
+    aboutData.setTranslator( i18nc( "NAME OF TRANSLATORS", "Your names" ),
+                             i18nc( "EMAIL OF TRANSLATORS", "Your emails" ) );
+
+    KHelpMenu *helpMenu = new KHelpMenu(this, aboutData, true);
     //Initialize menu
     QMenu *menu = helpMenu->menu();
     helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QLatin1String("knotes")));
     setButtonMenu( Help, menu );
-#endif
 }
 
 NotesAgentSettingsDialog::~NotesAgentSettingsDialog()
 {
     writeConfig();
-    delete mAboutData;
 }
 
 static const char *myConfigGroupName = "NotesAgentSettingsDialog";

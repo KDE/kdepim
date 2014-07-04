@@ -26,7 +26,6 @@
 
 #include <QTreeWidgetItem>
 
-class K4AboutData;
 namespace SendLater {
 class SendLaterInfo;
 }
@@ -106,7 +105,6 @@ Q_SIGNALS:
 private:
     void readConfig();
     void writeConfig();
-    K4AboutData *mAboutData;
     SendLaterWidget *mWidget;
 };
 
