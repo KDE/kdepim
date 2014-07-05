@@ -306,7 +306,7 @@ void SMimeValidationConfigurationWidget::save() const {
     {
         SMimeValidationPreferences preferences;
         preferences.setRefreshInterval( d->ui.intervalRefreshCB->isChecked() ? d->ui.intervalRefreshSB->value() : 0 );
-        preferences.writeConfig();
+        preferences.save();
     }
 
     // Create config entries

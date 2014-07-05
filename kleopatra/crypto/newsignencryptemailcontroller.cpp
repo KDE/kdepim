@@ -339,7 +339,7 @@ static void save_dialog_quick_mode( bool on ) {
     EMailOperationsPreferences prefs;
     prefs.setQuickSignEMail( on );
     prefs.setQuickEncryptEMail( on );
-    prefs.writeConfig();
+    prefs.save();
 }
 
 void NewSignEncryptEMailController::startResolveCertificates( const std::vector<Mailbox> & r, const std::vector<Mailbox> & s ) {
