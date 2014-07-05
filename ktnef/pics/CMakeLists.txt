@@ -1,1 +1,1 @@
-kde4_install_icons(${ICON_INSTALL_DIR})
+ecm_install_icons( ICONS hi22-actions-ktnef_extract_all_to.png  hi22-actions-ktnef_extract_to.png  hi48-apps-ktnef.png  lo16-actions-ktnef_extract_all_to.png  lo16-actions-ktnef_extract_to.png  lo16-apps-ktnef.png  lo32-apps-ktnef.png  DESTINATION ${ICON_INSTALL_DIR} )
