@@ -97,4 +97,4 @@ install(FILES
   ContactListView.qml
   DESTINATION ${DATA_INSTALL_DIR}/kaddressbook-mobile
 )
-ecm_install_icons( ${ICON_INSTALL_DIR} )
+ecm_install_icons(ICONS  hi48-apps-kaddressbook-mobile.png  hi64-apps-kaddressbook-mobile.png  hi80-apps-kaddressbook-mobile-harmattan.png DESTINATION  ${ICON_INSTALL_DIR} )

@@ -136,5 +136,5 @@ install(FILES
   DESTINATION ${DATA_INSTALL_DIR}/kmail-mobile
 )
 
-ecm_install_icons(${ICON_INSTALL_DIR})
+ecm_install_icons(ICONS hi48-apps-kmail-mobile.png  hi64-apps-kmail-mobile.png  hi80-apps-kmail-mobile-harmattan.png DESTINATION ${ICON_INSTALL_DIR})
 

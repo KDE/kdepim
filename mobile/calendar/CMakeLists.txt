@@ -76,4 +76,5 @@ install(FILES
   TimelineView.qml
   DESTINATION ${DATA_INSTALL_DIR}/korganizer-mobile
 )
-ecm_install_icons( ${ICON_INSTALL_DIR} )
+ecm_install_icons( ICONS hi48-apps-korganizer-mobile.png  hi64-apps-korganizer-mobile.png  hi80-apps-korganizer-mobile-harmattan.png DESTINATION ${ICON_INSTALL_DIR} )
+

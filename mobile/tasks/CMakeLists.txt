@@ -58,4 +58,4 @@ install(FILES
   TaskListView.qml
   DESTINATION ${DATA_INSTALL_DIR}/tasks-mobile
 )
-ecm_install_icons( ${ICON_INSTALL_DIR} )
+ecm_install_icons(ICONS hi48-apps-tasks-mobile.png  hi64-apps-tasks-mobile.png  hi80-apps-tasks-mobile-harmattan.png DESTINATION ${ICON_INSTALL_DIR} )
