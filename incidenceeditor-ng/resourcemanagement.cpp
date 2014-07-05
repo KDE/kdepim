@@ -19,6 +19,8 @@
  *
  */
 
+//http://stackoverflow.com/questions/18831242/qt-start-editing-of-cell-after-one-click
+
 #include "resourcemanagement.h"
 #include "ui_resourcemanagement.h"
 #include "resourcemodel.h"
