@@ -162,6 +162,7 @@
 #include <boost/bind.hpp>
 #include <KJobWidgets/KJobWidgets>
 #include <QApplication>
+#include <QStandardPaths>
 
 using namespace boost;
 using namespace MailTransport;
@@ -804,14 +805,14 @@ void ViewerPrivate::displaySplashPage( const QString &info )
     adjustLayout();
 
 #ifdef KDEPIM_MOBILE_UI
-    const QString location = KStandardDirs::locate( "data", QLatin1String("messageviewer/about/main_mobile.html") );
+    const QString location = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("messageviewer/about/main_mobile.html") );
     QString content = QLatin1String( KPIMUtils::kFileToByteArray( location ) );
     content = content.arg( QLatin1String( "" ) ); // infopage stylesheet
     content = content.arg( QLatin1String( "" ) ); // rtl infopage stylesheet
 #else
-    const QString location = KStandardDirs::locate( "data", QLatin1String("kmail2/about/main.html") ); //FIXME(Andras) copy to $KDEDIR/share/apps/messageviewer
+    const QString location = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kmail2/about/main.html") ); //FIXME(Andras) copy to $KDEDIR/share/apps/messageviewer
     QString content = QLatin1String(KPIMUtils::kFileToByteArray( location ));
-    content = content.arg( KStandardDirs::locate( "data", QLatin1String("kdeui/about/kde_infopage.css") ) );
+    content = content.arg( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kdeui/about/kde_infopage.css") ) );
     if ( QApplication::isRightToLeft() )
         content = content.arg( QLatin1String("@import \"") + KStandardDirs::locate( "data",
                                                                                     QLatin1String("kdeui/about/kde_infopage_rtl.css") ) +  QLatin1String("\";"));
@@ -2475,7 +2476,7 @@ void ViewerPrivate::slotSetEncoding()
 
 QString ViewerPrivate::attachmentInjectionHtml() const
 {
-    QString imgpath( KStandardDirs::locate("data",QLatin1String("libmessageviewer/pics/")) );
+    QString imgpath( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("libmessageviewer/pics/")) );
     QString urlHandle;
     QString imgSrc;
     if( !mShowAttachmentQuicklist ) {
@@ -3077,7 +3078,7 @@ void ViewerPrivate::toggleFullAddressList()
 
 QString ViewerPrivate::recipientsQuickListLinkHtml( bool doShow, const QString & field ) const
 {
-    QString imgpath( KStandardDirs::locate( "data",QLatin1String("libmessageviewer/pics/") ) );
+    QString imgpath( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("libmessageviewer/pics/") ) );
     QString urlHandle;
     QString imgSrc;
     QString altText;

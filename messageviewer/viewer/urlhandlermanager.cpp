@@ -435,6 +435,7 @@ QString URLHandlerManager::statusBarMessage( const KUrl & url, ViewerPrivate * w
 
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <QStandardPaths>
 
 namespace {
 bool KMailProtocolURLHandler::handleClick( const KUrl & url, ViewerPrivate * w ) const {
@@ -921,7 +922,7 @@ bool InternalImageURLHandler::willHandleDrag( const KUrl &url, ViewerPrivate *wi
     if ( url.protocol() == QLatin1String( "data" ) && url.path().startsWith( QLatin1String("image") ) )
         return true;
 
-    const QString imagePath = KStandardDirs::locate( "data", QLatin1String("libmessageviewer/pics/") );
+    const QString imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("libmessageviewer/pics/") );
     return url.path().contains( imagePath );
 }
 }

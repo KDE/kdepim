@@ -35,7 +35,7 @@
 #include <calendarsupport/kcalprefs.h>
 
 #include <qdebug.h>
-#include <kstandarddirs.h>
+
 #include <ksystemtimezone.h>
 #include <klocale.h>
 
@@ -50,6 +50,7 @@
 
 #include <stdlib.h>
 #include <iostream>
+#include <QStandardPaths>
 
 using namespace KCalCore;
 using namespace std;
@@ -144,7 +145,7 @@ bool KonsoleKalendarAdd::addImportedCalendar()
  * TODO_SERGIO
   QString fileName;
   if ( m_variables->getCalendarFile().isEmpty() ) {
-    fileName = KStandardDirs::locateLocal( "data", "korganizer/std.ics" );
+    fileName = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + "korganizer/std.ics" ;
   } else {
     fileName = m_variables->getCalendarFile();
   }

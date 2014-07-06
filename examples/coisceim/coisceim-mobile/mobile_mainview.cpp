@@ -36,6 +36,7 @@
 #include <mobile/lib/calendar/kcalitembrowseritem.h>
 #include <itemselection.h>
 #include <messageviewitem.h>
+#include <QStandardPaths>
 
 using namespace Akonadi;
 
@@ -59,7 +60,7 @@ MobileMainview::MobileMainview(QWidget* parent, Qt::WindowFlags f)
 
   context->setContextProperty(QLatin1String("_tripModel"), tripModel);
 
-  view->setSource(QUrl(KStandardDirs::locate( "appdata", QLatin1String("main.qml") )));
+  view->setSource(QUrl(QStandardPaths::locate(QStandardPaths::DataLocation, QLatin1String("main.qml") )));
 
   layout->addWidget(view);
 }

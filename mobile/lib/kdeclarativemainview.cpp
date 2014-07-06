@@ -84,6 +84,7 @@
 #include <QDeclarativeItem>
 
 #include <sys/utsname.h>
+#include <QStandardPaths>
 
 #define VIEW(model) {                        \
   QTreeView *view = new QTreeView( this );   \
@@ -665,7 +666,7 @@ static QString lookupDocumentation( const QString &fileName )
   // assemble the local search paths
   // all files on /usr/share/doc are deleted instantly on maemo5 by docpurge
   // therefore manual must be installed in data dir
-  const QStringList localDirectories = KGlobal::dirs()->resourceDirs( "data" );
+  const QStringList localDirectories = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation) /* WARNING: no more trailing slashes */;
 
   QStringList languages = KLocale::global()->languageList();
   languages.append( QLatin1String("en") );
@@ -728,7 +729,7 @@ void KDeclarativeMainView::openDocumentation( const QString &relativePath )
 
 void KDeclarativeMainView::openLicenses()
 {
-  KDeclarativeMainView::openAttachment( KGlobal::dirs()->findResource( "data", QLatin1String("kontact-touch/licenses.pdf") ),
+  KDeclarativeMainView::openAttachment( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kontact-touch/licenses.pdf") ),
                                         QLatin1String( "application/pdf" ) );
 }
 

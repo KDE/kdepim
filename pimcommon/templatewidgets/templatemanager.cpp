@@ -25,6 +25,7 @@
 #include <KGlobal>
 
 #include <QDirIterator>
+#include <QStandardPaths>
 
 using namespace PimCommon;
 
@@ -55,7 +56,7 @@ void TemplateManager::initTemplatesDirectories(const QString &templatesRelativeP
         mTemplatesDirectories = KGlobal::dirs()->findDirs("data", templatesRelativePath);
         if (mTemplatesDirectories.count() < 2) {
             //Make sure to add local directory
-            const QString localDirectory = KStandardDirs::locateLocal("data", templatesRelativePath);
+            const QString localDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + templatesRelativePath;
             if (!mTemplatesDirectories.contains(localDirectory)) {
                 mTemplatesDirectories.append(localDirectory);
             }

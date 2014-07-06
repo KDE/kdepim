@@ -32,6 +32,7 @@
 #include <KLocalizedString>
 
 #include <qdebug.h>
+#include <QStandardPaths>
 
 KnowItImporter::KnowItImporter()
 {
@@ -50,7 +51,7 @@ void KnowItImporter::importFromUrl( const KUrl& url )
 
 
   KTemporaryFile file;
-  file.setPrefix( KStandardDirs::locateLocal( "data", "kjots/" ) );
+  file.setPrefix( QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + "kjots/" ) ;
   file.setSuffix( ".book" );
   file.setAutoRemove( false );
 

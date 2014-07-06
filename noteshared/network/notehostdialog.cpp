@@ -38,7 +38,7 @@
 #include <kglobal.h>
 #include <khistorycombobox.h>
 #include <klocale.h>
-#include <kstandarddirs.h>
+
 #include <kvbox.h>
 #include <dnssd/servicemodel.h>
 #include <dnssd/servicebrowser.h>

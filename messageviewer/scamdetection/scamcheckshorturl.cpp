@@ -30,6 +30,7 @@
 #include <QDebug>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
+#include <QStandardPaths>
 
 using namespace MessageViewer;
 QStringList ScamCheckShortUrl::sSupportedServices = QStringList();
@@ -110,7 +111,7 @@ bool ScamCheckShortUrl::isShortUrl(const KUrl &url)
 
 void ScamCheckShortUrl::loadLongUrlServices()
 {
-    QFile servicesFile(KGlobal::dirs()->findResource("data", QLatin1String("messageviewer/longurlServices.json")));
+    QFile servicesFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("messageviewer/longurlServices.json")));
     if (servicesFile.open(QIODevice::ReadOnly)) {
 #if 0 //QT5
         const QVariantMap response = QJson::Parser().parse(&servicesFile).toMap();

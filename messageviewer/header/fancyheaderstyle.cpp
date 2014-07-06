@@ -44,7 +44,7 @@ using KPIMUtils::LinkLocator;
 #include <QRegExp>
 #include <QFontMetrics>
 
-#include <kstandarddirs.h>
+
 #include <KApplication>
 
 #include <kmime/kmime_message.h>

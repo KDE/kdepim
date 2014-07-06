@@ -37,6 +37,7 @@
 #include <QLabel>
 #include <QKeyEvent>
 #include <QSignalMapper>
+#include <QStandardPaths>
 
 
 using namespace MessageList::Core;
@@ -373,11 +374,11 @@ void QuickSearchLine::initializeStatusSearchButton(QLayout *quickSearchButtonLay
                                  i18nc( "@action:inmenu Status of a message", "Action Item" ),
                                  Akonadi::MessageStatus::statusToAct().toQInt32(), quickSearchButtonLayout );
 
-    createQuickSearchButton( QIcon( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-thread-watch.png" ) ) ),
+    createQuickSearchButton( QIcon( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String( "messagelist/pics/mail-thread-watch.png" ) ) ),
                                  i18nc( "@action:inmenu Status of a message", "Watched" ),
                                  Akonadi::MessageStatus::statusWatched().toQInt32(), quickSearchButtonLayout );
 
-    createQuickSearchButton( QIcon( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-thread-ignored.png" ) ) ),
+    createQuickSearchButton( QIcon( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String( "messagelist/pics/mail-thread-ignored.png" ) ) ),
                                  i18nc( "@action:inmenu Status of a message", "Ignored" ),
                                  Akonadi::MessageStatus::statusIgnored().toQInt32(), quickSearchButtonLayout );
 

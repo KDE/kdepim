@@ -26,7 +26,7 @@
 #include <kcomponentdata.h>
 #include <kfiledialog.h>
 #include <kstandardaction.h>
-#include <kstandarddirs.h>
+
 #include <kpluginfactory.h>
 #include <klocale.h>
 #include <K4AboutData>

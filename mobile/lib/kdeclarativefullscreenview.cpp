@@ -51,6 +51,7 @@
 #ifdef KDEQMLPLUGIN_STATIC
 #include "runtime/qml/kde/kdeintegration.h"
 #include <QDeclarativeContext>
+#include <QStandardPaths>
 #endif
 
 KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileName, QWidget* parent) :
@@ -93,7 +94,7 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
 
   m_splashScreen = new QLabel( this );
   QPixmap splashBackground;
-  splashBackground.load( KStandardDirs::locate( "data", QLatin1String( "mobileui" ) + QDir::separator() + QLatin1String( "splashscreenstatic.png" ) ) );
+  splashBackground.load( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String( "mobileui" ) + QDir::separator() + QLatin1String( "splashscreenstatic.png" ) ) );
   m_splashScreen->setPixmap( splashBackground );
 
   QMetaObject::invokeMethod( this, "delayedInit", Qt::QueuedConnection );
@@ -114,14 +115,14 @@ void KDeclarativeFullScreenView::delayedInit()
   }
   foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", QLatin1String("imports") ) )
     engine()->addImportPath( importPath );
-  QString qmlPath = KStandardDirs::locate( "appdata", m_qmlFileName + QLatin1String(".qml") );
+  QString qmlPath = QStandardPaths::locate(QStandardPaths::DataLocation, m_qmlFileName + QLatin1String(".qml") );
 
   if ( debugTiming ) {
     qWarning() << "Adding QML import paths done" << t.elapsed() << &t;
   }
 
   if ( qmlPath.isEmpty() ) // Try harder
-    qmlPath = KStandardDirs::locate( "data", QLatin1String( "mobileui" ) + QDir::separator() + m_qmlFileName + QLatin1String(".qml") );
+    qmlPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String( "mobileui" ) + QDir::separator() + m_qmlFileName + QLatin1String(".qml") );
 
   // TODO: Get this from a KXMLGUIClient?
   mActionCollection = new KActionCollection( this );

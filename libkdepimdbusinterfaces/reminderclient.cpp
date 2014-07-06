@@ -29,6 +29,7 @@
 
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusInterface>
+#include <QStandardPaths>
 
 using namespace KPIM;
 
@@ -40,7 +41,7 @@ void ReminderClient::startDaemon()
         return;
     }
 
-    const QString desktopFile = KStandardDirs::locate( "autostart", QLatin1String("korgac.desktop") );
+    const QString desktopFile = QStandardPaths::locate(QStandardPaths::ConfigLocation, QLatin1String("autostart/") + QLatin1String("korgac.desktop") );
     if ( desktopFile.isEmpty() ) {
         qWarning() << "Couldn't find autostart/korgac.desktop!";
     } else {

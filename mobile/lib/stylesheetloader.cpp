@@ -24,13 +24,14 @@
 #include <QFile>
 #include <QWidget>
 #include <QApplication>
+#include <QStandardPaths>
 
 class StyleSheetLoaderPrivate
 {
   public:
     StyleSheetLoaderPrivate() : appliedGlobally(false)
     {
-      QFile f( KStandardDirs::locate( "data", QLatin1String("mobileui/stylesheet.css") ) );
+      QFile f( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("mobileui/stylesheet.css") ) );
       if ( f.open( QFile::ReadOnly ) ) {
         styleSheet = QString::fromUtf8( f.readAll() );
         qDebug() << "loaded stylesheet" << f.fileName();

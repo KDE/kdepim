@@ -40,6 +40,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QDir>
+#include <QStandardPaths>
 
 ExportMailJob::ExportMailJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
     : AbstractImportExportJob(parent,archiveStorage,typeSelected,numberOfStep),
@@ -53,7 +54,7 @@ ExportMailJob::~ExportMailJob()
 
 bool ExportMailJob::checkProgram()
 {
-    if (KStandardDirs::findExe(QLatin1String("mysqldump")).isEmpty()) {
+    if (QStandardPaths::findExecutable(QLatin1String("mysqldump")).isEmpty()) {
         Q_EMIT error(i18n("mysqldump not found. Export data aborted"));
         return false;
     }
@@ -127,7 +128,7 @@ void ExportMailJob::backupTransports()
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
 
     const QString mailtransportsStr(QLatin1String("mailtransports"));
-    const QString maitransportsrc = KStandardDirs::locateLocal( "config",  mailtransportsStr);
+    const QString maitransportsrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + mailtransportsStr;
     if (!QFile(maitransportsrc).exists()) {
         Q_EMIT info(i18n("Transports backup done."));
     } else {
@@ -218,7 +219,7 @@ void ExportMailJob::backupConfig()
 
 
     const QString archiveMailAgentConfigurationStr(QLatin1String("akonadi_archivemail_agentrc"));
-    const QString archiveMailAgentconfigurationrc = KStandardDirs::locateLocal( "config", archiveMailAgentConfigurationStr );
+    const QString archiveMailAgentconfigurationrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + archiveMailAgentConfigurationStr ;
     if (QFile(archiveMailAgentconfigurationrc).exists()) {
         KSharedConfigPtr archivemailrc = KSharedConfig::openConfig(archiveMailAgentConfigurationStr);
 
@@ -251,7 +252,7 @@ void ExportMailJob::backupConfig()
     }
 
     const QString templatesconfigurationrcStr(QLatin1String("templatesconfigurationrc"));
-    const QString templatesconfigurationrc = KStandardDirs::locateLocal( "config",  templatesconfigurationrcStr);
+    const QString templatesconfigurationrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + templatesconfigurationrcStr;
     if (QFile(templatesconfigurationrc).exists()) {
         KSharedConfigPtr templaterc = KSharedConfig::openConfig(templatesconfigurationrcStr);
 
@@ -280,7 +281,7 @@ void ExportMailJob::backupConfig()
         delete templateConfig;
     }
 
-    const QDir themeDirectory( KStandardDirs::locateLocal( "data", QLatin1String( "messageviewer/themes/" ) ) );
+    const QDir themeDirectory( QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "messageviewer/themes/" ) ) ;
     if (themeDirectory.exists()) {
         const bool themeDirAdded = archive()->addLocalDirectory(themeDirectory.path(), Utils::dataPath() + QLatin1String( "messageviewer/themes/" ));
         if (!themeDirAdded) {
@@ -288,7 +289,7 @@ void ExportMailJob::backupConfig()
         }
     }
 
-    const QDir autocorrectDirectory( KStandardDirs::locateLocal( "data", QLatin1String( "autocorrect/" ) ) );
+    const QDir autocorrectDirectory( QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "autocorrect/" ) ) ;
     if (autocorrectDirectory.exists()) {
         const QFileInfoList listFileInfo = autocorrectDirectory.entryInfoList(QStringList()<< QLatin1String("*.xml"), QDir::Files);
         const int listSize(listFileInfo.size());
@@ -296,13 +297,13 @@ void ExportMailJob::backupConfig()
             backupFile(listFileInfo.at(i).absoluteFilePath(), Utils::dataPath() + QLatin1String( "autocorrect/" ) , listFileInfo.at(i).fileName());
         }
     }
-    const QString adblockFilePath = KStandardDirs::locateLocal( "data", QLatin1String( "kmail2/adblockrules_local" ) );
+    const QString adblockFilePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "kmail2/adblockrules_local" ) ;
     if (!adblockFilePath.isEmpty()) {
         backupFile(adblockFilePath, Utils::dataPath() + QLatin1String( "kmail2/" ) , QLatin1String("adblockrules_local"));
     }
 
     const QString kmailStr(QLatin1String("kmail2rc"));
-    const QString kmail2rc = KStandardDirs::locateLocal( "config",  kmailStr);
+    const QString kmail2rc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + kmailStr;
     if (QFile(kmail2rc).exists()) {
         KSharedConfigPtr kmailrc = KSharedConfig::openConfig(kmail2rc);
 
@@ -403,7 +404,7 @@ void ExportMailJob::backupIdentity()
     showInfo(i18n("Backing up identity..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
     const QString emailidentitiesStr(QLatin1String("emailidentities"));
-    const QString emailidentitiesrc = KStandardDirs::locateLocal( "config",  emailidentitiesStr);
+    const QString emailidentitiesrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + emailidentitiesStr;
     if (QFile(emailidentitiesrc).exists()) {
 
 

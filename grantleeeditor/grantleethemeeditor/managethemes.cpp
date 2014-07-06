@@ -30,13 +30,14 @@
 #include <QVBoxLayout>
 #include <QDir>
 #include <QDirIterator>
+#include <QStandardPaths>
 
 using namespace GrantleeThemeEditor;
 
 ManageThemes::ManageThemes(const QString &relativeThemePath, QWidget *parent)
     : KDialog(parent)
 {
-    mLocalDirectory = KStandardDirs::locateLocal("data", relativeThemePath);
+    mLocalDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + relativeThemePath;
     setCaption( i18n( "Manage Theme" ) );
     setButtons( Close );
     QWidget *w = new QWidget;

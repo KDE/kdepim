@@ -41,7 +41,7 @@
 #include <kiconloader.h>
 #include <qdebug.h>
 #include <kmessagebox.h>
-#include <kstandarddirs.h>
+
 #include <kapplication.h>
 #include <kdemacros.h>
 

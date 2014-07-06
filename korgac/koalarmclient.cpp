@@ -53,6 +53,7 @@
 
 #ifdef Q_WS_MAEMO_5
 #include <KSharedConfig>
+#include <QStandardPaths>
 #endif
 
 using namespace KCalCore;
@@ -160,7 +161,7 @@ void KOAlarmClient::deferredInit()
 
 bool KOAlarmClient::dockerEnabled()
 {
-  KConfig korgConfig( KStandardDirs::locate( "config", QLatin1String("korganizerrc") ) );
+  KConfig korgConfig( QStandardPaths::locate(QStandardPaths::ConfigLocation, QLatin1String("korganizerrc") ) );
   KConfigGroup generalGroup( &korgConfig, "System Tray" );
   return generalGroup.readEntry( "ShowReminderDaemon", true );
 }

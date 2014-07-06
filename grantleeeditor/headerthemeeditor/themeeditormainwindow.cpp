@@ -39,6 +39,7 @@
 #include <QCloseEvent>
 #include <QActionGroup>
 #include <KSharedConfig>
+#include <QStandardPaths>
 
 ThemeEditorMainWindow::ThemeEditorMainWindow()
     : KXmlGuiWindow(),
@@ -182,7 +183,7 @@ void ThemeEditorMainWindow::slotInstallTheme()
 {
     //Save before installing :)
     if (slotSaveTheme()) {
-        const QString localThemePath = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
+        const QString localThemePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/messageviewer/themes/");
         mThemeEditor->installTheme(localThemePath);
     }
 }

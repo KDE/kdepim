@@ -30,6 +30,7 @@
 #include <QFile>
 #include <QDir>
 #include <QWidget>
+#include <QStandardPaths>
 
 
 ExportCalendarJob::ExportCalendarJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
@@ -115,7 +116,7 @@ void ExportCalendarJob::backupConfig()
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
 
     const QString korganizerStr(QLatin1String("korganizerrc"));
-    const QString korganizerrc = KStandardDirs::locateLocal( "config", korganizerStr);
+    const QString korganizerrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + korganizerStr;
     if (QFile(korganizerrc).exists()) {
         KSharedConfigPtr korganizer = KSharedConfig::openConfig(korganizerrc);
 
@@ -141,12 +142,12 @@ void ExportCalendarJob::backupConfig()
     backupConfigFile(QLatin1String("korgacrc"));
 
     const QString freebusyurlsStr(QLatin1String("korganizer/freebusyurls"));
-    const QString freebusyurls = KStandardDirs::locateLocal( "data", freebusyurlsStr );
+    const QString freebusyurls = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + freebusyurlsStr ;
     if (QFile(freebusyurls).exists()) {
         backupFile(freebusyurls, Utils::dataPath(), freebusyurlsStr);
     }
 
-    const QString templateDir = KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/templates/" ) );
+    const QString templateDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "korganizer/templates/" ) ;
     QDir templateDirectory( templateDir );
     if (templateDirectory.exists()) {
         const bool templateDirAdded = archive()->addLocalDirectory(templateDir, Utils::dataPath() +  QLatin1String( "/korganizer/templates/" ));

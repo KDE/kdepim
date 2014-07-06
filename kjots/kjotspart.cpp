@@ -33,7 +33,7 @@
 #include <kcomponentdata.h>
 #include <kfiledialog.h>
 #include <kstandardaction.h>
-#include <kstandarddirs.h>
+
 #include <kpluginfactory.h>
 #include <klocale.h>
 #include <kstatusbar.h>
@@ -41,6 +41,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 #include <QTimer>
+#include <QStandardPaths>
 #include "kjotswidget.h"
 
 const K4AboutData &createAboutData()
@@ -67,7 +68,7 @@ KJotsPart::KJotsPart( QWidget *parentWidget, QObject *parent, const QVariantList
     initAction();
 
     // set our XML-UI resource file
-    setXMLFile(KStandardDirs::locate("data", QLatin1String("kjots/kjotspartui.rc")));
+    setXMLFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kjots/kjotspartui.rc")));
 
     QTimer::singleShot(0, this, SLOT(delayedInitialization()));
 }

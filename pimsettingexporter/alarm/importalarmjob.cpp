@@ -29,6 +29,7 @@
 
 #include <QDir>
 #include <QFile>
+#include <QStandardPaths>
 
 static const QString storeAlarm = QLatin1String("backupalarm/");
 
@@ -184,7 +185,7 @@ void ImportAlarmJob::restoreConfig()
     const KArchiveEntry* kalarmrcentry  = mArchiveDirectory->entry(Utils::configsPath() + kalarmStr);
     if (kalarmrcentry && kalarmrcentry->isFile()) {
         const KArchiveFile* kalarmrcFile = static_cast<const KArchiveFile*>(kalarmrcentry);
-        const QString kalarmrc = KStandardDirs::locateLocal( "config",  kalarmStr);
+        const QString kalarmrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + kalarmStr;
         if (QFile(kalarmrc).exists()) {
             if (overwriteConfigMessageBox(kalarmStr)) {
                 importkalarmConfig(kalarmrcFile, kalarmrc, kalarmStr, Utils::configsPath());

@@ -52,6 +52,7 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 #include <QFile>
 #include <QPointer>
 #include <QTextStream>
+#include <QStandardPaths>
 
 using namespace MessageViewer;
 AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
@@ -272,7 +273,7 @@ void AdBlockSettingWidget::save()
            grp.writeEntry(QLatin1String("lastUpdate"), subItem->data(LastUpdateList).toDateTime());
         QString path = subItem->data(PathList).toString();
         if (path.isEmpty()) {
-            path = KStandardDirs::locateLocal("data", QString::fromLatin1("kmail2/adblockrules-%1").arg(i));
+            path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QString::fromLatin1("kmail2/adblockrules-%1").arg(i);
         }
         grp.writeEntry(QLatin1String("path"), path);
     }

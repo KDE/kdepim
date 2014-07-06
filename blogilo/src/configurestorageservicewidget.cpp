@@ -30,6 +30,7 @@
 #include <QVBoxLayout>
 #include <QProcess>
 #include <QPushButton>
+#include <QStandardPaths>
 
 StorageServiceConfigureWidget::StorageServiceConfigureWidget(QWidget *parent)
     : PimCommon::StorageServiceConfigureWidget(parent)
@@ -67,7 +68,7 @@ ConfigureStorageServiceWidget::ConfigureStorageServiceWidget(PimCommon::StorageS
     hbox->addWidget(mManageStorageService);
     hbox->addStretch();
     lay->addLayout(hbox);
-    if (KStandardDirs::findExe(QLatin1String("storageservicemanager")).isEmpty()) {
+    if (QStandardPaths::findExecutable(QLatin1String("storageservicemanager")).isEmpty()) {
         mManageStorageService->setEnabled(false);
     } else {
         connect(mManageStorageService, SIGNAL(clicked(bool)), this, SLOT(slotManageStorageService()));

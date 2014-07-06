@@ -30,6 +30,7 @@
 #include <QWidget>
 #include <QFile>
 #include <QDir>
+#include <QStandardPaths>
 
 ExportAlarmJob::ExportAlarmJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -108,7 +109,7 @@ void ExportAlarmJob::backupConfig()
     showInfo(i18n("Backing up config..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
     const QString kalarmStr(QLatin1String("kalarmrc"));
-    const QString kalarmrc = KStandardDirs::locateLocal( "config", kalarmStr);
+    const QString kalarmrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + kalarmStr;
     if (QFile(kalarmrc).exists()) {
         KSharedConfigPtr kalarm = KSharedConfig::openConfig(kalarmrc);
 

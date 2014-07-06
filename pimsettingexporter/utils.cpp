@@ -30,6 +30,7 @@
 #include <KZip>
 
 #include <QDir>
+#include <QStandardPaths>
 
 int Utils::currentArchiveVersion()
 {
@@ -208,7 +209,7 @@ void Utils::convertCollectionToRealPath(KConfigGroup &group, const QString &curr
 KUrl Utils::resourcePath(const Akonadi::AgentInstance &agent, const QString &defaultPath)
 {
     const QString agentFileName = agent.identifier() + QLatin1String("rc");
-    const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
+    const QString configFileName = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + agentFileName ;
 
     KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
     KUrl url = Utils::resourcePath(resourceConfig, defaultPath);
@@ -218,7 +219,7 @@ KUrl Utils::resourcePath(const Akonadi::AgentInstance &agent, const QString &def
 QString Utils::storeResources(KZip *archive, const QString &identifier, const QString &path)
 {
     const QString agentFileName = identifier + QLatin1String("rc");
-    const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
+    const QString configFileName = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + agentFileName ;
     qDebug()<<"configFileName "<<configFileName<<"agentFileName "<<configFileName;
 
     KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );

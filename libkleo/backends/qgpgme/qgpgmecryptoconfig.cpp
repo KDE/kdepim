@@ -50,6 +50,7 @@
 #include <QFile>
 #include <cstdlib>
 #include <iterator>
+#include <QStandardPaths>
 
 // Just for the Q_ASSERT in the dtor. Not thread-safe, but who would
 // have 2 threads talking to gpgconf anyway? :)
@@ -68,7 +69,7 @@ static const int GPGCONF_FLAG_NO_CHANGE = 128; // readonly
 QString QGpgMECryptoConfig::gpgConfPath()
 {
     const GpgME::EngineInfo info = GpgME::engineInfo( GpgME::GpgConfEngine );
-    return info.fileName() ? QFile::decodeName( info.fileName() ) : KStandardDirs::findExe( QLatin1String("gpgconf") );
+    return info.fileName() ? QFile::decodeName( info.fileName() ) : QStandardPaths::findExecutable( QLatin1String("gpgconf") );
 }
 
 QGpgMECryptoConfig::QGpgMECryptoConfig()

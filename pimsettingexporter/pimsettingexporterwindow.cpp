@@ -70,6 +70,7 @@
 #include <QPointer>
 #include <KSharedConfig>
 #include <KLocale>
+#include <QStandardPaths>
 
 PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
     : KXmlGuiWindow(parent),
@@ -499,7 +500,7 @@ void PimSettingExporterWindow::slotJobFinished()
 
 bool PimSettingExporterWindow::canZip() const
 {
-    const QString zip = KStandardDirs::findExe( QLatin1String("zip") );
+    const QString zip = QStandardPaths::findExecutable( QLatin1String("zip") );
     if (zip.isEmpty()) {
         return false;
     }

@@ -62,7 +62,7 @@
 #include <gpgme++/engineinfo.h>
 
 #include <klocale.h>
-#include <kstandarddirs.h>
+
 
 #include <QFile>
 #include <QString>

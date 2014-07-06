@@ -50,6 +50,7 @@
 #include <KLocalizedString>
 #include <KStandardDirs>
 #include <QFontDatabase>
+#include <QStandardPaths>
 
 using namespace MessageList::Core;
 
@@ -73,8 +74,8 @@ Manager::Manager()
     mPixmapMessageSent = new QPixmap( SmallIcon( QLatin1String( "mail-sent" ) ) );
     mPixmapMessageForwarded = new QPixmap( SmallIcon( QLatin1String( "mail-forwarded" ) ) );
     mPixmapMessageImportant = new QPixmap( SmallIcon( QLatin1String( "emblem-important" ) ) ); // "flag"
-    mPixmapMessageWatched = new QPixmap( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-thread-watch.png" ) ) );
-    mPixmapMessageIgnored = new QPixmap( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-thread-ignored.png" ) ) );
+    mPixmapMessageWatched = new QPixmap( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String( "messagelist/pics/mail-thread-watch.png" ) ) );
+    mPixmapMessageIgnored = new QPixmap( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String( "messagelist/pics/mail-thread-ignored.png" ) ) );
     mPixmapMessageSpam = new QPixmap( SmallIcon( QLatin1String( "mail-mark-junk" ) ) );
     mPixmapMessageHam = new QPixmap( SmallIcon( QLatin1String( "mail-mark-notjunk" ) ) );
     mPixmapMessageFullySigned = new QPixmap( SmallIcon( QLatin1String( "mail-signed-verified" ) ) );
@@ -93,8 +94,8 @@ Manager::Manager()
     else
         mPixmapShowMore = new QPixmap( SmallIcon( QLatin1String( "arrow-right" ) ) );
     mPixmapShowLess = new QPixmap( SmallIcon( QLatin1String( "arrow-down" ) ) );
-    mPixmapVerticalLine = new QPixmap( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-vertical-separator-line.png" ) ) );
-    mPixmapHorizontalSpacer = new QPixmap( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-horizontal-space.png" ) ) );
+    mPixmapVerticalLine = new QPixmap( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String( "messagelist/pics/mail-vertical-separator-line.png" ) ) );
+    mPixmapHorizontalSpacer = new QPixmap( QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String( "messagelist/pics/mail-horizontal-space.png" ) ) );
 
     mCachedLocalizedUnknownText = i18nc( "Unknown date", "Unknown" ) ;
 

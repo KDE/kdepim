@@ -36,7 +36,7 @@
 #include <qdebug.h>
 #include <kglobal.h>
 #include <kconfig.h>
-#include <kstandarddirs.h>
+
 
 #include <QtCore/QDateTime>
 #include <QtCore/QString>

@@ -35,6 +35,7 @@
 #include <QProgressDialog>
 #include <QFile>
 #include <QDir>
+#include <QStandardPaths>
 
 int AbstractImportExportJob::sArchiveVersion = -1;
 
@@ -109,7 +110,7 @@ KZip *AbstractImportExportJob::archive()
 void AbstractImportExportJob::backupConfigFile(const QString &configFileName)
 {
     const QString configrcStr(configFileName);
-    const QString configrc = KStandardDirs::locateLocal( "config", configrcStr);
+    const QString configrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + configrcStr;
     if (QFile(configrc).exists()) {
         backupFile(configrc, Utils::configsPath(), configrcStr);
     }
@@ -462,7 +463,7 @@ void AbstractImportExportJob::restoreConfigFile(const QString &configNameStr)
     const KArchiveEntry* configNameentry  = mArchiveDirectory->entry(Utils::configsPath() + configNameStr);
     if ( configNameentry &&  configNameentry->isFile()) {
         const KArchiveFile* configNameconfiguration = static_cast<const KArchiveFile*>(configNameentry);
-        const QString configNamerc = KStandardDirs::locateLocal( "config",  configNameStr);
+        const QString configNamerc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + configNameStr;
         if (QFile(configNamerc).exists()) {
             //TODO 4.12 allow to merge config.
             if (overwriteConfigMessageBox(configNameStr)) {

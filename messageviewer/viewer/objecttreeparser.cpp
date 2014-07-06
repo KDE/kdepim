@@ -87,7 +87,7 @@
 #include <kmimetype.h>
 #include <kglobal.h>
 #include <ktemporaryfile.h>
-#include <kstandarddirs.h>
+
 #include <kiconloader.h>
 #include <kcodecs.h>
 #include <kconfiggroup.h>

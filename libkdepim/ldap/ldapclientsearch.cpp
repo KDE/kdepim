@@ -45,6 +45,7 @@
 
 #include <QtCore/QPointer>
 #include <QtCore/QTimer>
+#include <QStandardPaths>
 
 
 using namespace KLDAP;
@@ -202,7 +203,7 @@ void LdapClientSearch::Private::readConfig()
 
         q->connect( &mDataTimer, SIGNAL(timeout()), SLOT(slotDataTimer()) );
     }
-    mConfigFile = KStandardDirs::locateLocal( "config", QLatin1String("kabldaprc") );
+    mConfigFile = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1String("/kabldaprc") ;
     KDirWatch::self()->addFile( mConfigFile );
 }
 

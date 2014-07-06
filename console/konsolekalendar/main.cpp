@@ -43,7 +43,7 @@
 #include <klocale.h>
 #include <kglobal.h>
 #include <kconfig.h>
-#include <kstandarddirs.h>
+
 #include <kurl.h>
 #include <qdebug.h>
 #include <KApplication>

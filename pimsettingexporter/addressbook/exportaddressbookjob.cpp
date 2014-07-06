@@ -28,6 +28,7 @@
 
 #include <QWidget>
 #include <QDir>
+#include <QStandardPaths>
 
 
 ExportAddressbookJob::ExportAddressbookJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
@@ -108,7 +109,7 @@ void ExportAddressbookJob::backupConfig()
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
 
     const QString kaddressbookStr(QLatin1String("kaddressbookrc"));
-    const QString kaddressbookrc = KStandardDirs::locateLocal( "config", kaddressbookStr);
+    const QString kaddressbookrc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + kaddressbookStr;
     if (QFile(kaddressbookrc).exists()) {
         KSharedConfigPtr kaddressbook = KSharedConfig::openConfig(kaddressbookrc);
 

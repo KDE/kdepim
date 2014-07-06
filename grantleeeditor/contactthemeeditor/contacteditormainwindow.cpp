@@ -41,6 +41,7 @@
 #include <QPointer>
 #include <QCloseEvent>
 #include <KSharedConfig>
+#include <QStandardPaths>
 
 ContactEditorMainWindow::ContactEditorMainWindow()
     : KXmlGuiWindow(),
@@ -158,7 +159,7 @@ void ContactEditorMainWindow::slotInstallTheme()
 {
     //Save before installing :)
     if (slotSaveTheme()) {
-        const QString localThemePath = KStandardDirs::locateLocal("data",QLatin1String("kaddressbook/viewertemplates/"));
+        const QString localThemePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kaddressbook/viewertemplates/");
         mContactEditor->installTheme(localThemePath);
     }
 }
