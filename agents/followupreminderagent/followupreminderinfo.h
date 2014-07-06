@@ -26,6 +26,8 @@ class FollowUpReminderInfo
 public:
     FollowUpReminderInfo();
     FollowUpReminderInfo(const KConfigGroup &config);
+    FollowUpReminderInfo(const FollowUpReminderInfo &info);
+
 
     Akonadi::Item::Id id() const;
     void setId(Akonadi::Item::Id value);

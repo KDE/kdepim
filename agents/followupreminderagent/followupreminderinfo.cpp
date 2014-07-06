@@ -31,6 +31,14 @@ FollowUpReminderInfo::FollowUpReminderInfo(const KConfigGroup &config)
     readConfig(config);
 }
 
+FollowUpReminderInfo::FollowUpReminderInfo(const FollowUpReminderInfo &info)
+{
+    mFollowUpReminderDate = info.followUpReminderDate();
+    mId = info.id();
+    mMessageId = info.messageId();
+    mTo = info.to();
+}
+
 void FollowUpReminderInfo::readConfig(const KConfigGroup &config)
 {
     if (config.hasKey(QLatin1String("followUpReminderDate"))) {
