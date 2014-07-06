@@ -57,10 +57,9 @@ Error *Message::error() const
     return m_error.data();
 }
 
-void Message::loadMessage(const QString &id)
+void Message::loadMessage(const QUrl &url)
 {
-    m_akonadiId = id;
-    Akonadi::ItemFetchJob *fetchJob = new Akonadi::ItemFetchJob(Akonadi::Item::fromUrl(KUrl(m_akonadiId)));
+    Akonadi::ItemFetchJob *fetchJob = new Akonadi::ItemFetchJob(Akonadi::Item::fromUrl(url));
     fetchJob->fetchScope().fetchFullPayload();
 
     connect(fetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)), this, SLOT(slotItemReceived(Akonadi::Item::List)));
