@@ -30,11 +30,11 @@ FollowUpReminderInfoWidget::FollowUpReminderInfoWidget(QWidget *parent)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
     mTreeWidget = new QTreeWidget;
-    //TODO
     QStringList headers;
     headers << i18n("To")
             << i18n("Subject")
-            << i18n("Message Id");
+            << i18n("Message Id")
+            << i18n("Dead Line");
 
     mTreeWidget->setHeaderLabels(headers);
     mTreeWidget->setSortingEnabled(true);

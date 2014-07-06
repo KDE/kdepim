@@ -19,6 +19,7 @@
 #include "followupreminderinfo.h"
 #include "followupremindernoanswerdialog.h"
 #include "followupreminderjob.h"
+#include "followupreminderfinishtaskjob.h"
 
 #include <KConfigGroup>
 #include <KConfig>
@@ -70,7 +71,6 @@ void FollowUpReminderManager::load()
 
 void FollowUpReminderManager::checkFollowUp(const Akonadi::Item &item, const Akonadi::Collection &col)
 {
-    //TODO
     FollowUpReminderJob *job = new FollowUpReminderJob(this);
     connect(job, SIGNAL(finished(QString)), SLOT(slotCheckFollowUpFinished(QString)));
     job->setItem(item);
@@ -82,10 +82,14 @@ void FollowUpReminderManager::slotCheckFollowUpFinished(const QString &messageId
     Q_FOREACH(FollowUpReminderInfo* info, mFollowUpReminderInfoList) {
         if (info->messageId() == messageId) {
             answerReceived(info->to());
-            //TODO inform that we have a response!
+            //Remove info in list and settings
+            //Close task
+            FollowUpReminderFinishTaskJob *job = new FollowUpReminderFinishTaskJob(this);
+            //TODO
+            job->start();
+            break;
         }
     }
-    //TODO
 }
 
 void FollowUpReminderManager::answerReceived(const QString &from)
@@ -101,7 +105,5 @@ void FollowUpReminderManager::answerReceived(const QString &from)
 
 #endif
 }
-
-#include "followupremindermanager.moc"
 
 

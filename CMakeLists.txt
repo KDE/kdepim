@@ -37,7 +37,7 @@ include(KDECompilerSettings)
 # 3.0, 3.0.1, 3.1 alpha1, 3.1 beta1, 3.1 beta2, 3.1 rc1, 3.1, 3.1.1, 3.2 pre, 3.2 alpha1
 
 # Do NOT add quote
-set(KDEPIM_DEV_VERSION pre)
+set(KDEPIM_DEV_VERSION beta1)
 
 # add an extra space
 if(DEFINED KDEPIM_DEV_VERSION)
@@ -154,7 +154,6 @@ set_package_properties(Prison PROPERTIES DESCRIPTION "The Prison library" URL "h
 if( KF5GAPI_FOUND )
   add_definitions( -DKDEPIM_STORAGESERVICE_GDRIVE )
 endif()
-
 
 
 if(KDEPIM_ENTERPRISE_BUILD)

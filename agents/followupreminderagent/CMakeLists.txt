@@ -16,6 +16,7 @@ set(followupreminderagent_SRCS
     followupreminderjob.cpp
     followupremindernoanswerdialog.cpp
     followupreminderinfowidget.cpp
+    followupreminderfinishtaskjob.cpp
 )
 
 qt5_add_dbus_adaptor(followupreminderagent_SRCS org.freedesktop.Akonadi.FollowUpReminder.xml followupreminderagent.h FollowUpReminderAgent)
