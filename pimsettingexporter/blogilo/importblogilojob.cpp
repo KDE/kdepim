@@ -25,6 +25,7 @@
 #include <KGlobal>
 #include <KStandardDirs>
 #include <KZip>
+#include <QStandardPaths>
 
 ImportBlogiloJob::ImportBlogiloJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -58,7 +59,7 @@ void ImportBlogiloJob::restoreData()
 {
     const KArchiveEntry *blogiloEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "blogilo/" ) );
     if (blogiloEntry && blogiloEntry->isDirectory()) {
-        const QString blogiloPath = KGlobal::dirs()->saveLocation("data", QLatin1String("blogilo/"));
+        const QString blogiloPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("blogilo/");
         overwriteDirectory(blogiloPath, blogiloEntry);
     }
     Q_EMIT info(i18n("Data restored."));

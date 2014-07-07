@@ -28,6 +28,7 @@
 #include <KConfigGroup>
 
 #include <QFile>
+#include <QStandardPaths>
 
 ImportNotesJob::ImportNotesJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
@@ -62,7 +63,7 @@ void ImportNotesJob::restoreConfig()
         const KArchiveEntry* globalNotecentry  = mArchiveDirectory->entry(Utils::configsPath() + globalNoteStr);
         if (globalNotecentry && globalNotecentry->isFile()) {
             const KArchiveFile* globalNotecentryrc = static_cast<const KArchiveFile*>(globalNotecentry);
-            const QString globalNoterc = KStandardDirs::locateLocal( "config", globalNoteStr);
+            const QString globalNoterc = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + globalNoteStr;
             if (QFile(globalNoterc).exists()) {
                 if (overwriteConfigMessageBox(globalNoteStr)) {
                     importKNoteGlobalSettings(globalNotecentryrc,globalNoterc,globalNoteStr,Utils::configsPath());
@@ -83,7 +84,7 @@ void ImportNotesJob::restoreData()
         //Knote < knote-akonadi
         const KArchiveEntry *notesEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "knotes/" ) );
         if (notesEntry && notesEntry->isDirectory()) {
-            const QString notesPath = KGlobal::dirs()->saveLocation("data", QLatin1String("knotes/"));
+            const QString notesPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + QLatin1String("knotes/");
             overwriteDirectory(notesPath, notesEntry);
         }
     }
