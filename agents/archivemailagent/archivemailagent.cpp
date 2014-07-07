@@ -74,10 +74,15 @@ ArchiveMailAgent::~ArchiveMailAgent()
 
 void ArchiveMailAgent::setEnableAgent(bool enabled)
 {
-    ArchiveMailAgentSettings::setEnabled(enabled);
-    ArchiveMailAgentSettings::self()->writeConfig();
-    if (!enabled) {
-        pause();
+    if (enabled != ArchiveMailAgentSettings::enabled()) {
+        ArchiveMailAgentSettings::setEnabled(enabled);
+        ArchiveMailAgentSettings::self()->writeConfig();
+        if (!enabled) {
+            mTimer->stop();
+            pause();
+        } else {
+            mTimer->start();
+        }
     }
 }
 
