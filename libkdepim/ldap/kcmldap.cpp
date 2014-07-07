@@ -36,7 +36,7 @@
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <kdemacros.h>
-#include <kdialogbuttonbox.h>
+#include <qdialogbuttonbox.h>
 #include <kgenericfactory.h>
 #include <khbox.h>
 #include <kiconloader.h>
@@ -343,14 +343,17 @@ void KCMLdap::initGUI()
 
     layout->addWidget( groupBox );
 
-    KDialogButtonBox *buttons = new KDialogButtonBox( this );
-    buttons->addButton( i18n( "&Add Host..." ),
-                        QDialogButtonBox::ActionRole, this, SLOT(slotAddHost()) );
+    QDialogButtonBox *buttons = new QDialogButtonBox( this );
+    QPushButton *add = buttons->addButton( i18n( "&Add Host..." ),
+                        QDialogButtonBox::ActionRole);
+    connect(add, SIGNAL(clicked()), this, SLOT(slotAddHost()) );
     mEditButton = buttons->addButton( i18n( "&Edit Host..." ),
-                                      QDialogButtonBox::ActionRole, this, SLOT(slotEditHost()) );
+                                      QDialogButtonBox::ActionRole);
+    connect(mEditButton, SIGNAL(clicked()), this, SLOT(slotEditHost()) );
     mEditButton->setEnabled( false );
     mRemoveButton = buttons->addButton( i18n( "&Remove Host" ),
-                                        QDialogButtonBox::ActionRole, this, SLOT(slotRemoveHost()) );
+                                        QDialogButtonBox::ActionRole);
+    connect(mRemoveButton, SIGNAL(clicked()), this, SLOT(slotRemoveHost()) );
     mRemoveButton->setEnabled( false );
     buttons->layout();
 

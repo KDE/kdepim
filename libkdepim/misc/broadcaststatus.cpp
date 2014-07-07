@@ -26,7 +26,7 @@
 #include "progresswidget/progressmanager.h"
 
 #include <KLocale>
-#include <KGlobal>
+
 
 #include <QCoreApplication>
 #include <QTime>

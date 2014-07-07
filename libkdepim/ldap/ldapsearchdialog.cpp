@@ -47,7 +47,7 @@
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <kcmultidialog.h>
-#include <kdialogbuttonbox.h>
+#include <qdialogbuttonbox.h>
 #include <kldap/ldapobject.h>
 #include <kldap/ldapserver.h>
 #include <klineedit.h>
@@ -626,11 +626,13 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
     d->progressIndication = new KPIMUtils::ProgressIndicatorLabel(i18n("Searching..."));
     buttonLayout->addWidget(d->progressIndication);
 
-    KDialogButtonBox *buttons = new KDialogButtonBox( page, Qt::Horizontal );
-    buttons->addButton( i18n( "Select All" ),
-                        QDialogButtonBox::ActionRole, this, SLOT(slotSelectAll()) );
-    buttons->addButton( i18n( "Unselect All" ),
-                        QDialogButtonBox::ActionRole, this, SLOT(slotUnselectAll()) );
+    QDialogButtonBox *buttons = new QDialogButtonBox( page );
+    QPushButton *button = buttons->addButton( i18n( "Select All" ),
+                        QDialogButtonBox::ActionRole);
+    connect(button, SIGNAL(clicked()), this, SLOT(slotSelectAll()) );
+    button = buttons->addButton( i18n( "Unselect All" ),
+                        QDialogButtonBox::ActionRole);
+    connect(button, SIGNAL(clicked()), this, SLOT(slotUnselectAll()) );
 
     buttonLayout->addWidget( buttons );
 
