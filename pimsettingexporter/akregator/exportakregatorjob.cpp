@@ -77,7 +77,7 @@ void ExportAkregatorJob::backupData()
 {
     showInfo(i18n("Backing up data..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-    const QString akregatorDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "akregator" ) ;
+    const QString akregatorDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "/akregator" ) ;
     QDir akregatorDirectory( akregatorDir );
     if (akregatorDirectory.exists()) {
         const bool akregatorDirAdded = archive()->addLocalDirectory(akregatorDir, Utils::dataPath() +  QLatin1String( "/akregator" ));

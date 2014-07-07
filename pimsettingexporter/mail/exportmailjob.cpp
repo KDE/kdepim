@@ -281,7 +281,7 @@ void ExportMailJob::backupConfig()
         delete templateConfig;
     }
 
-    const QDir themeDirectory( QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "messageviewer/themes/" ) ) ;
+    const QDir themeDirectory( QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "/messageviewer/themes/" ) ) ;
     if (themeDirectory.exists()) {
         const bool themeDirAdded = archive()->addLocalDirectory(themeDirectory.path(), Utils::dataPath() + QLatin1String( "messageviewer/themes/" ));
         if (!themeDirAdded) {
@@ -289,7 +289,7 @@ void ExportMailJob::backupConfig()
         }
     }
 
-    const QDir autocorrectDirectory( QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "autocorrect/" ) ) ;
+    const QDir autocorrectDirectory( QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "/autocorrect/" ) ) ;
     if (autocorrectDirectory.exists()) {
         const QFileInfoList listFileInfo = autocorrectDirectory.entryInfoList(QStringList()<< QLatin1String("*.xml"), QDir::Files);
         const int listSize(listFileInfo.size());

@@ -106,12 +106,12 @@ void ExportNotesJob::backupData()
 
 #if 0  //Code for knote <knote-akonadi
     const QString icsfileStr = QLatin1String( "notes.ics" );
-    const QString icsfile = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "knotes/" ) + icsfileStr ;
+    const QString icsfile = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "/knotes/" ) + icsfileStr ;
 
     backupFile(icsfile, Utils::dataPath() +  QLatin1String( "/knotes/" ), icsfileStr);
 
 
-    const QString notesDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "knotes/notes/" ) ;
+    const QString notesDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "/knotes/notes/" ) ;
     QDir notesDirectory( notesDir );
     if (notesDirectory.exists()) {
         const bool notesDirAdded = archive()->addLocalDirectory(notesDir, Utils::dataPath() +  QLatin1String( "/knotes/notes/" ));
@@ -120,7 +120,7 @@ void ExportNotesJob::backupData()
         }
     }
 #endif
-    const QString notesThemeDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "knotes/print/" ) ;
+    const QString notesThemeDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "/knotes/print/" ) ;
     QDir notesThemeDirectory( notesThemeDir );
     if (notesThemeDirectory.exists()) {
         const bool notesDirAdded = archive()->addLocalDirectory(notesThemeDir, Utils::dataPath() +  QLatin1String( "/knotes/print" ));

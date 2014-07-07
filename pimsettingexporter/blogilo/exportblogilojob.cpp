@@ -78,7 +78,7 @@ void ExportBlogiloJob::backupData()
     showInfo(i18n("Backing up data..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
     const QString dbfileStr = QLatin1String( "blogilo.db" );
-    const QString dbfile = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "blogilo/" ) + dbfileStr ;
+    const QString dbfile = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "/blogilo/" ) + dbfileStr ;
 
     backupFile(dbfile, Utils::dataPath() +  QLatin1String( "/blogilo/" ), dbfileStr);
 

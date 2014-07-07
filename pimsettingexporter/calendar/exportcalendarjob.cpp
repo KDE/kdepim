@@ -147,7 +147,7 @@ void ExportCalendarJob::backupConfig()
         backupFile(freebusyurls, Utils::dataPath(), freebusyurlsStr);
     }
 
-    const QString templateDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "korganizer/templates/" ) ;
+    const QString templateDir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "/korganizer/templates/" ) ;
     QDir templateDirectory( templateDir );
     if (templateDirectory.exists()) {
         const bool templateDirAdded = archive()->addLocalDirectory(templateDir, Utils::dataPath() +  QLatin1String( "/korganizer/templates/" ));
