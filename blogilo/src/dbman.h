@@ -138,6 +138,12 @@ public:
     bool removeLocalEntry( int local_id );
     bool removeTempEntry( const BilboPost &post );
     bool clearTempEntries();
+
+    ///Auth Data:
+    QMap<QString,QString> getAuthData( int blog_id );
+    bool saveAuthData( const QMap<QString, QString>& authData, int blog_id );
+    bool clearAuthData( int blog_id );
+
     ///END
 
 private:
@@ -146,6 +152,7 @@ private:
     QList<BilboBlog*> listBlogs();
     bool createDB();
     bool connectDB();
+    bool updateDB();
     void reloadBlogList();
 
     static DBMan* mSelf;
