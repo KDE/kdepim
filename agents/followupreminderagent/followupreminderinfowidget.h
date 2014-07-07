@@ -20,10 +20,26 @@
 
 #include <QWidget>
 #include <KConfigGroup>
+#include <QTreeWidgetItem>
 class QTreeWidget;
 namespace FollowUpReminder {
 class FollowUpReminderInfo;
 }
+
+class FollowUpReminderInfoItem : public QTreeWidgetItem
+{
+public:
+    explicit FollowUpReminderInfoItem(QTreeWidget *parent = 0);
+    ~FollowUpReminderInfoItem();
+
+    void setInfo(FollowUpReminder::FollowUpReminderInfo *info);
+    FollowUpReminder::FollowUpReminderInfo *info() const;
+
+private:
+    FollowUpReminder::FollowUpReminderInfo *mInfo;
+};
+
+
 class FollowUpReminderInfoWidget : public QWidget
 {
     Q_OBJECT
