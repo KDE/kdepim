@@ -27,6 +27,9 @@ public:
     explicit FollowUpReminderFinishTaskJob(QObject *parent = 0);
     ~FollowUpReminderFinishTaskJob();
     void start();
+
+Q_SIGNALS:
+    void finishTaskDone();
 };
 
 #endif // FOLLOWUPREMINDERFINISHTASKJOB_H
