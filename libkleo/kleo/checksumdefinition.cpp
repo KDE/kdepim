@@ -165,7 +165,7 @@ static void parse_command( QString cmdline, const QString & id, const QString & 
     if ( fi1.isAbsolute() )
         *command = try_extensions( l.front() );
     else
-        *command = KStandardDirs::findExe( fi1.fileName() );
+        *command = QStandardPaths::findExecutable( fi1.fileName() );
     if ( command->isEmpty() )
         throw ChecksumDefinitionError( id, i18n("'%1' empty or not found", whichCommand) );
     const int idx1 = l.indexOf( FILE_PLACEHOLDER );

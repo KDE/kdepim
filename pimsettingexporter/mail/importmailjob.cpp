@@ -969,7 +969,7 @@ void ImportMailJob::restoreAkonadiDb()
                 return;
             }
 
-            const QString dbRestoreApp = KStandardDirs::findExe( dbRestoreAppName );
+            const QString dbRestoreApp = QStandardPaths::findExecutable( dbRestoreAppName );
 
             if (dbRestoreApp.isEmpty()) {
                 Q_EMIT error(i18n("Could not find \"%1\" necessary to restore database.",dbRestoreAppName));
@@ -977,7 +977,7 @@ void ImportMailJob::restoreAkonadiDb()
                 return;
             }
             KProcess *proc = new KProcess( this );
-            proc->setProgram( KStandardDirs::findExe( dbRestoreApp ), params );
+            proc->setProgram( QStandardPaths::findExecutable( dbRestoreApp ), params );
             proc->setStandardInputFile(tmp.fileName());
             const int result = proc->execute();
             delete proc;

@@ -574,7 +574,7 @@ void KJotsWidget::migrateNoteData( const QString &migrator, const QString &type 
     if ( !type.isEmpty() )
       args << QLatin1String("--type") << type;
 
-    const QString path = KStandardDirs::findExe( migrator );
+    const QString path = QStandardPaths::findExecutable( migrator );
     proc.setProgram( path, args );
     proc.start();
     bool result = proc.waitForStarted();

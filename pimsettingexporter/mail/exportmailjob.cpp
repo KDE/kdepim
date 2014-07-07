@@ -552,7 +552,7 @@ void ExportMailJob::backupAkonadiDb()
         Q_EMIT error(i18n("Database driver \"%1\" not supported.",dbDriver));
         return;
     }
-    const QString dbDumpApp = KStandardDirs::findExe( dbDumpAppName );
+    const QString dbDumpApp = QStandardPaths::findExecutable( dbDumpAppName );
     if (dbDumpApp.isEmpty()) {
         Q_EMIT error(i18n("Could not find \"%1\" necessary to dump database.",dbDumpAppName));
         return;

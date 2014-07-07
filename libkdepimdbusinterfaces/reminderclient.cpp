@@ -49,7 +49,7 @@ void ReminderClient::startDaemon()
         if ( KToolInvocation::startServiceByDesktopPath( desktopFile, QStringList(), &error ) != 0 ) {
             qWarning() << "Failure starting korgac:" << error;
             // try harder...
-            const QString korgacExe = KStandardDirs::findExe( QLatin1String( "korgac" ) );
+            const QString korgacExe = QStandardPaths::findExecutable( QLatin1String( "korgac" ) );
             QProcess::startDetached( korgacExe );
         }
     }

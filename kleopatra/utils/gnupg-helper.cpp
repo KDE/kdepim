@@ -46,7 +46,7 @@
 #include <QString>
 #include <QProcess>
 #include <QByteArray>
-
+#include <QStandardPaths>
 #include <gpg-error.h>
 
 #ifdef Q_OS_WIN
@@ -72,7 +72,7 @@ int Kleo::makeGnuPGError( int code ) {
 
 static QString findGpgExe( GpgME::Engine engine, const QString & exe ) {
     const GpgME::EngineInfo info = GpgME::engineInfo( engine );
-    return info.fileName() ? QFile::decodeName( info.fileName() ) : KStandardDirs::findExe( exe ) ;
+    return info.fileName() ? QFile::decodeName( info.fileName() ) : QStandardPaths::findExecutable( exe ) ;
 }
 
 QString Kleo::gpgConfPath() {
