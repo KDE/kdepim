@@ -25,7 +25,7 @@ FollowUpReminderInfoTest::FollowUpReminderInfoTest()
 
 void FollowUpReminderInfoTest::shouldHaveDefaultValue()
 {
-    FollowUpReminderInfo info;
+    FollowUpReminder::FollowUpReminderInfo info;
     QCOMPARE(info.id(), Akonadi::Item::Id(-1));
     QCOMPARE(info.messageId(), QString());
     QCOMPARE(info.isValid(), false);
@@ -34,7 +34,7 @@ void FollowUpReminderInfoTest::shouldHaveDefaultValue()
 
 void FollowUpReminderInfoTest::shoudBeNotValid()
 {
-    FollowUpReminderInfo info;
+    FollowUpReminder::FollowUpReminderInfo info;
     //We need a Akonadi::Id valid and a messageId not empty and a valid date and a "To" not empty
     info.setMessageId(QLatin1String("foo"));
     QCOMPARE(info.isValid(), false);

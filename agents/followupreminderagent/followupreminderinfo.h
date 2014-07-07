@@ -20,8 +20,10 @@
 
 #include <Akonadi/Item>
 #include <QDateTime>
+#include "followupreminder_export.h"
 class KConfigGroup;
-class FollowUpReminderInfo
+namespace FollowUpReminder {
+class FOLLOWUPREMINDER_EXPORT FollowUpReminderInfo
 {
 public:
     FollowUpReminderInfo();
@@ -52,5 +54,5 @@ private:
     QDateTime mFollowUpReminderDate;
     QString mTo;
 };
-
+}
 #endif // FOLLOWUPREMINDERINFO_H

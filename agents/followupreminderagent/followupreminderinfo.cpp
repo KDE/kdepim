@@ -18,7 +18,7 @@
 #include "followupreminderinfo.h"
 
 #include <KConfigGroup>
-
+using namespace FollowUpReminder;
 
 FollowUpReminderInfo::FollowUpReminderInfo()
     : mId(-1)

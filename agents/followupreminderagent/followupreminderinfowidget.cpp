@@ -53,7 +53,7 @@ FollowUpReminderInfoWidget::~FollowUpReminderInfoWidget()
 {
 }
 
-void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminderInfo *> &info)
+void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminder::FollowUpReminderInfo *> &info)
 {
     //TODO
 }

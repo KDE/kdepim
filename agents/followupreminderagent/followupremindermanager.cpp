@@ -26,6 +26,7 @@
 #include <KConfig>
 #include <knotification.h>
 #include <KLocalizedString>
+using namespace FollowUpReminder;
 
 FollowUpReminderManager::FollowUpReminderManager(QObject *parent)
     : QObject(parent)

@@ -19,8 +19,9 @@
 #define FOLLOWUPREMINDERNOANSWERDIALOG_H
 
 #include <KDialog>
-
+namespace FollowUpReminder {
 class FollowUpReminderInfo;
+}
 class FollowUpReminderInfoWidget;
 class FollowUpReminderNoAnswerDialog : public KDialog
 {
@@ -29,7 +30,7 @@ public:
     explicit FollowUpReminderNoAnswerDialog(QWidget *parent = 0);
     ~FollowUpReminderNoAnswerDialog();
 
-    void setInfo(const QList<FollowUpReminderInfo *> &info);
+    void setInfo(const QList<FollowUpReminder::FollowUpReminderInfo *> &info);
 
 private:
     void readConfig();
