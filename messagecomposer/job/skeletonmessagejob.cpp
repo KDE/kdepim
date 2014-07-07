@@ -32,7 +32,7 @@
 
 #include <KCharsets>
 #include <QDebug>
-#include <KGlobal>
+
 #include <KProtocolManager>
 
 #include <kmime/kmime_message.h>

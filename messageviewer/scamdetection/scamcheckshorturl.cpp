@@ -20,7 +20,7 @@
 
 #include <libkdepim/misc/broadcaststatus.h>
 
-#include <KGlobal>
+
 #include <KStandardDirs>
 #include <KLocalizedString>
 

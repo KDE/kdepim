@@ -23,7 +23,7 @@
 
 #include <KCalCore/Todo>
 
-#include <KGlobal>
+
 #include <KLocale>
 #include <KWordWrap>
 

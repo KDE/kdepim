@@ -25,7 +25,6 @@
 #include <QUrl>
 
 #include <QDebug>
-#include <KGlobal>
 #include <KLocalizedString>
 #include <KLocale>
 #include <KTempDir>

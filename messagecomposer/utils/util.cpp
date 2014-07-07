@@ -33,7 +33,7 @@
 #include <QDebug>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KGlobal>
+
 
 #include <kmime/kmime_charfreq.h>
 #include <kmime/kmime_content.h>

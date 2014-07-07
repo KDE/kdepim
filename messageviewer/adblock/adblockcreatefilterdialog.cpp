@@ -19,7 +19,7 @@
 #include "ui_adblockcreatefilterwidget.h"
 
 #include <KLocalizedString>
-#include <KGlobal>
+
 #include <QDebug>
 #include <KSharedConfig>
 

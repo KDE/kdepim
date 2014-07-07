@@ -27,7 +27,7 @@
 #include <KArchiveEntry>
 #include <KArchive>
 #include <KZip>
-#include <KGlobal>
+
 #include <QDebug>
 
 #include <QFile>
