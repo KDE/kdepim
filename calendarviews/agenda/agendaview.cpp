@@ -1992,7 +1992,7 @@ void AgendaView::startDrag( const Akonadi::Item &incidence )
 
 void AgendaView::readSettings()
 {
-  readSettings( KGlobal::activeComponent().config().data() );
+  readSettings( KComponentData::activeComponent().config().data() );
 }
 
 void AgendaView::readSettings( const KConfig *config )

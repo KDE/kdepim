@@ -66,7 +66,7 @@ KTNEFMain::KTNEFMain( QWidget *parent )
   mLastDir = mDefaultDir;
 
   // create personal temp extract dir
-  KStandardDirs::makeDir( KGlobal::dirs()->localkdedir() + QLatin1String("/share/apps/ktnef/tmp") );
+  QDir().mkpath( KGlobal::dirs()->localkdedir() + QLatin1String("/share/apps/ktnef/tmp") );
 
   resize( 430, 350 );
 

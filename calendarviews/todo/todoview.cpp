@@ -1218,7 +1218,7 @@ void TodoView::restoreViewState()
   //timer.start();
   delete mTreeStateRestorer;
   mTreeStateRestorer = new Akonadi::ETMViewStateSaver();
-  KConfigGroup group( KGlobal::activeComponent().config().data(), stateSaverGroup() );
+  KConfigGroup group( KComponentData::activeComponent().config().data(), stateSaverGroup() );
   mTreeStateRestorer->setView( mView );
   mTreeStateRestorer->restoreState( group );
   //qDebug() << "Took " << timer.elapsed();
