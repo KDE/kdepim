@@ -23,8 +23,9 @@
 */
 
 #include "bilboblog.h"
+#include "dbman.h"
 #include <kblog/wordpressbuggy.h>
-#include <kblog/gdata.h>
+#include <kblog/blogger.h>
 #include <KDebug>
 
 #include <QApplication>
@@ -50,6 +51,7 @@ public:
     bool mError;
     QHash<QString, bool> mSupportedFeatures;
     KBlog::Blog *kblog;
+    QMap<QString, QString> mAuthData;
 };
 
 BilboBlog::BilboBlog( QObject *parent )
@@ -87,9 +89,6 @@ KBlog::Blog* BilboBlog::blogBackend()
         case BilboBlog::BLOGGER1_API:
             d->kblog = new KBlog::Blogger1( url(), this );
             break;
-        case BilboBlog::GDATA_API:
-            d->kblog = new KBlog::GData( url(), this );
-            break;
         case BilboBlog::METAWEBLOG_API:
             d->kblog = new KBlog::MetaWeblog( url(), this );
             break;
@@ -98,6 +97,11 @@ KBlog::Blog* BilboBlog::blogBackend()
             break;
         case BilboBlog::WORDPRESSBUGGY_API:
             d->kblog = new KBlog::WordpressBuggy( url(), this );
+            break;
+        case BilboBlog::BLOGGER_API:
+            d->kblog = new KBlog::Blogger( url(), this );
+            qobject_cast<KBlog::Blogger*>(d->kblog)->setApiKey( QLatin1String("508396175529-icqp62q8t6st41gjv1du100fol6renq4.apps.googleusercontent.com") );
+            qobject_cast<KBlog::Blogger*>(d->kblog)->setSecretKey( QLatin1String("JFPDXYmGIuM601vhgVGv0Dlx") );
             break;
         }
         d->kblog->setUserAgent( QLatin1String(APPNAME), QLatin1String(VERSION) );
@@ -197,7 +201,7 @@ void BilboBlog::setApi( const ApiType api )
             d->mSupportedFeatures[QLatin1String("category")] = true;
             d->mSupportedFeatures[QLatin1String("tag")] = true;
             break;
-        case GDATA_API:
+        case BLOGGER_API:
             d->mSupportedFeatures[QLatin1String("uploadMedia")] = false;
             d->mSupportedFeatures[QLatin1String("category")] = false;
             d->mSupportedFeatures[QLatin1String("tag")] = true;
@@ -266,5 +270,15 @@ bool BilboBlog::supportCategory() const
 bool BilboBlog::supportTag() const
 {
     return d->mSupportedFeatures[QLatin1String("tag")];
+}
+
+void BilboBlog::setAuthData( const QMap<QString, QString>& authData )
+{
+    d->mAuthData = authData;
+}
+
+QMap<QString, QString> BilboBlog::authData() const
+{
+    return d->mAuthData;
 }
 

@@ -40,6 +40,7 @@
 #include <QFile>
 #include <QSqlDatabase>
 
+
 class DBMan::Private
 {
 public:
@@ -53,6 +54,8 @@ public:
     bool useWallet;
     QMap<int, BilboBlog*> mBlogList;
     QSqlDatabase db;
+
+    static const int DatabaseSchemaVersion = 1;
 };
 
 DBMan::DBMan()
@@ -78,8 +81,15 @@ DBMan::DBMan()
             kDebug() << "Cannot create database, SQL error: " << d->db.lastError().text() << endl;
             exit ( 1 );
         }
-    } else if ( !connectDB() )
+    } else if ( !connectDB() ) {
+        kDebug() << d->mLastErrorText;
         exit( 1 );
+    }
+
+    if ( !updateDB() ) {
+        kDebug() << d->mLastErrorText;
+        exit( 1 );
+    }
 
     reloadBlogList();
 }
@@ -245,6 +255,27 @@ bool DBMan::createDB()
         d->mLastErrorText = q.lastError().text();
     }
 
+    ///Auth data
+    if ( !q.exec( QLatin1String("CREATE TABLE auth_data (blog_id INT, key TEXT NOT NULL, values TEXT NOT NULL, UNIQUE(blog_id,key))") ) ) {
+        ret = false;
+        d->mLastErrorText = q.lastError().text();
+    }
+
+    if ( !q.exec( QLatin1String("CREATE TABLE schema_version (version INT);") ) ) {
+        ret = false;
+        d->mLastErrorText = q.lastError().text();
+    }
+
+    {
+        QSqlQuery vq;
+        vq.prepare( QLatin1String("INSERT INTO schema_version (version) VALUES (?);") );
+        vq.addBindValue( DBMan::Private::DatabaseSchemaVersion );
+        if ( !vq.exec() ) {
+            ret = false;
+            d->mLastErrorText = q.lastError().text();
+        }
+    }
+
     ///delete related information on DB, On removing a post or a blog
     q.exec( QLatin1String("CREATE TRIGGER delete_post AFTER DELETE ON post\
     BEGIN\
@@ -258,6 +289,7 @@ bool DBMan::createDB()
     DELETE FROM file WHERE file.blog_id=OLD.id;\
     DELETE FROM post WHERE post.blog_id=OLD.id;\
     DELETE FROM comment WHERE comment.blog_id=OLD.id;\
+    DELETE FROM auth_data WHERE auth_data.blog_id=OLD.id;\
     END" ) );
     q.exec( QLatin1String("CREATE TRIGGER delete_temp_post AFTER DELETE ON temp_post \
     BEGIN\
@@ -269,6 +301,73 @@ bool DBMan::createDB()
     END" ));
 
     return ret;
+}
+
+bool DBMan::updateDB()
+{
+    uint dbVersion = 0;
+
+    /// Check whether schema_version exists
+    if ( !d->db.tables(QSql::Tables).contains( QLatin1String("schema_version") ) ) {
+        QSqlQuery q;
+        if ( !q.exec( QLatin1String("CREATE TABLE schema_version (version INT);") ) ) {
+            d->mLastErrorText = q.lastError().text();
+            return false;
+        }
+        if ( !q.exec( QLatin1String("INSERT INTO schema_version (version) VALUES (0);") ) ) {
+            d->mLastErrorText = q.lastError().text();
+            return false;
+        }
+    }
+
+    QSqlQuery q;
+    if ( !q.exec( QLatin1String("SELECT version FROM schema_version;") ) ) {
+        d->mLastErrorText = q.lastError().text();
+        return false;
+    }
+    q.next();
+    dbVersion = q.value(0).toUInt();
+
+    if ( dbVersion < 1 ) {
+        QSqlQuery q;
+        if ( !q.exec( QLatin1String("CREATE TABLE auth_data (blog_id INT, key TEXT NOT NULL, value TEXT NOT NULL, UNIQUE(blog_id, key));") ) ) {
+            d->mLastErrorText = q.lastError().text();
+            return false;
+        }
+
+        if ( !q.exec( QLatin1String("DROP TRIGGER delete_blog") ) ) {
+            d->mLastErrorText = q.lastError().text();
+            return false;
+        }
+
+        if ( !q.exec( QLatin1String("CREATE TRIGGER delete_blog AFTER DELETE ON blog \
+              BEGIN\
+              DELETE FROM category WHERE category.blog_id=OLD.id;\
+              DELETE FROM file WHERE file.blog_id=OLD.id;\
+              DELETE FROM post WHERE post.blog_id=OLD.id;\
+              DELETE FROM comment WHERE comment.blog_id=OLD.id;\
+              DELETE FROM auth_data WHERE auth_data.blog_id=OLD.id;\
+              END" ) ) ) {
+            d->mLastErrorText = q.lastError().text();
+            return false;
+        }
+
+        dbVersion = 1;
+    }
+
+
+    /// Update schema_version table
+    {
+        QSqlQuery q;
+        q.prepare( QLatin1String("UPDATE schema_version SET version = ?") );
+        q.addBindValue( dbVersion );
+        if ( !q.exec() ) {
+            d->mLastErrorText = q.lastError().text();
+            return false;
+        }
+    }
+
+    return true;
 }
 
 int DBMan::addBlog( const BilboBlog & blog )
@@ -343,7 +442,8 @@ bool DBMan::removeBlog( int blog_id )
 {
     BilboBlog *tmp = d->mBlogList[ blog_id ];
     if( d->useWallet ) {
-        if ( d->mWallet && d->mWallet->removeEntry( tmp->url().url() + QLatin1Char('_') + tmp->username() ) == 0 )
+        if ( d->mWallet && d->mWallet->removeEntry( tmp->url().url() + QLatin1Char('_') + tmp->username() ) == 0
+                        && d->mWallet->removeEntry( QString::number( blog_id ) ) == 0 )
             kDebug() << "Password removed to kde wallet";
     }
     QSqlQuery q;
@@ -847,6 +947,66 @@ bool DBMan::clearTempEntries()
     }
     return res;
 }
+
+QMap<QString, QString> DBMan::getAuthData(int blog_id)
+{
+    kDebug() << blog_id;
+    QSqlQuery q;
+    q.prepare( QLatin1String("SELECT key, value FROM auth_data WHERE blog_id = ?") );
+    q.addBindValue( blog_id );
+    if ( !q.exec() ) {
+        d->mLastErrorText = q.lastError().text();
+        kDebug() << q.lastError().text();
+        return QMap<QString, QString>();
+    }
+
+    QMap<QString, QString> result;
+    while ( q.next() ) {
+        result[q.value(0).toString() ] = q.value(1).toString();
+    }
+
+    kDebug() << blog_id << result;
+    return result;
+}
+
+bool DBMan::saveAuthData( const QMap<QString, QString> &authData, int blog_id )
+{
+    kDebug() << blog_id;
+    QSqlQuery q;
+    q.prepare( QLatin1String("INSERT OR REPLACE INTO auth_data (blog_id, key, value) VALUES (?, ?, ?)") );
+    QMap<QString, QString>::ConstIterator iter, end = authData.constEnd();
+    QList<QVariant> ids, keys, values;
+    for ( iter = authData.constBegin(); iter != end; ++iter ) {
+        ids << blog_id;
+        keys << iter.key();
+        values << iter.value();
+    }
+    q.addBindValue( ids );
+    q.addBindValue( keys );
+    q.addBindValue( values );
+    const bool res = q.execBatch();
+    if ( !res ) {
+        d->mLastErrorText = q.lastError().text();
+        kDebug() << q.lastError().text();
+    }
+    return res;
+}
+
+bool DBMan::clearAuthData( int blog_id )
+{
+    kDebug() << blog_id;
+    QSqlQuery q;
+    q.prepare( QLatin1String("DELETE FROM auth_data WHERE blog_id = ?") );
+    q.addBindValue( blog_id );
+    const bool res = q.exec();
+    if ( !res ) {
+        d->mLastErrorText = q.lastError().text();
+        kDebug() << q.lastError().text();
+    }
+    return res;
+}
+
+
 
 BilboBlog *DBMan::blog(int blog_id)
 {

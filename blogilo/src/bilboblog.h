@@ -42,7 +42,7 @@ class BilboBlog : public QObject
     Q_OBJECT
 public:
     enum ApiType {
-        BLOGGER1_API = 0, METAWEBLOG_API, MOVABLETYPE_API, WORDPRESSBUGGY_API, GDATA_API
+        BLOGGER1_API = 0, METAWEBLOG_API, MOVABLETYPE_API, WORDPRESSBUGGY_API, BLOGGER_API
     };
 
     explicit BilboBlog( QObject *parent = 0 );
@@ -67,6 +67,8 @@ public:
     void setPassword( const QString& );
     QString title() const;
     void setTitle( const QString& );
+    void setAuthData( const QMap<QString, QString> &authData );
+    QMap<QString, QString> authData() const;
 //     QString stylePath() const;
 //     void setStylePath( const QString& );
     ApiType api() const;

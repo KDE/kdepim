@@ -60,7 +60,6 @@ protected Q_SLOTS:
     void fetchBlogId();
 
     void fetchedBlogId( const QList<QMap<QString, QString> >& list );
-    void fetchedProfileId( const QString& );
 
     void handleFetchIDTimeout();
     void handleFetchAPITimeout();
@@ -72,6 +71,8 @@ protected Q_SLOTS:
 
     void gotHtml( KJob * );
     void gotXmlRpcTest( KJob *job );
+
+    void bloggerAuthenticated( const QMap<QString, QString>& authData );
 Q_SIGNALS:
     void sigBlogAdded( const BilboBlog& );
     void sigBlogEdited( const BilboBlog& );

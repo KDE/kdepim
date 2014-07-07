@@ -27,11 +27,11 @@
 #include "bilboblog.h"
 #include "dbman.h"
 
-#include <kblog/gdata.h>
 #include <kblog/blogger1.h>
 #include <kblog/metaweblog.h>
 #include <kblog/movabletype.h>
 #include <kblog/wordpressbuggy.h>
+#include <kblog/blogger.h>
 #include <kurl.h>
 #include <kmessagebox.h>
 #include <kdebug.h>
@@ -290,17 +290,15 @@ void AddEditBlog::fetchBlogId()
     }
     case 4:
     {
-        KBlog::GData* blog = new KBlog::GData( d->ui.txtUrl->text() , this );
+        KBlog::Blogger *blog = new KBlog::Blogger( KUrl( d->ui.txtUrl->text() ), this );
         d->mBlog = blog;
         blog->setUsername( d->ui.txtUser->text() );
         blog->setPassword( d->ui.txtPass->text() );
-        connect( blog, SIGNAL(fetchedProfileId(QString)),
-                 this, SLOT(fetchedProfileId(QString)) );
-        blog->fetchProfileId();
-        d->mFetchProfileIdTimer = new QTimer( this );
-        d->mFetchProfileIdTimer->setSingleShot( true );
-        connect( d->mFetchProfileIdTimer, SIGNAL(timeout()), this, SLOT(handleFetchIDTimeout()) );
-        d->mFetchProfileIdTimer->start( TIMEOUT );
+        blog->setApiKey( QLatin1String("500754804903-g6n1rfjjcmhct64p3qgj6ma3oo8l8s6a.apps.googleusercontent.com") );
+        blog->setSecretKey( QLatin1String("jzSzkrD7ert2z0v5VEq6CcSs") );
+        connect( blog, SIGNAL(authenticated(QMap<QString,QString>)),
+                 this, SLOT(bloggerAuthenticated(QMap<QString,QString>)) );
+        blog->authenticate();
         break;
     }
     default:
@@ -440,24 +438,6 @@ void AddEditBlog::fetchedBlogId( const QList< QMap < QString , QString > > & lis
     d->bBlog->setTitle( blogName );
 }
 
-void AddEditBlog::fetchedProfileId( const QString &id )
-{
-    kDebug();
-    Q_UNUSED(id);
-    d->mFetchProfileIdTimer->deleteLater();
-    d->mFetchProfileIdTimer = 0;
-    KBlog::GData* blog = static_cast<KBlog::GData*>( d->mBlog );
-    connect( blog, SIGNAL(listedBlogs(QList<QMap<QString,QString> >)),
-             this, SLOT(fetchedBlogId(QList<QMap<QString,QString> >)) );
-    connect( blog, SIGNAL(error(KBlog::Blog::ErrorType,QString)),
-             this, SLOT(handleFetchError(KBlog::Blog::ErrorType,QString)) );
-    d->mFetchBlogIdTimer = new QTimer( this );
-    d->mFetchBlogIdTimer->setSingleShot( true );
-    connect( d->mFetchBlogIdTimer, SIGNAL(timeout()), this, SLOT(handleFetchIDTimeout()) );
-    d->mFetchBlogIdTimer->start( TIMEOUT );
-    blog->listBlogs();
-}
-
 void AddEditBlog::enableOkButton( const QString & txt )
 {
     const bool check = !txt.isEmpty();
@@ -549,7 +529,7 @@ void AddEditBlog::setSupportedFeatures( BilboBlog::ApiType api )
         d->ui.featureTags->setText( yesText );
         d->ui.featureTags->setStyleSheet( yesStyle );
         break;
-    case BilboBlog::GDATA_API:
+    case BilboBlog::BLOGGER_API:
         d->ui.featureUploadMedia->setText( noText );
         d->ui.featureUploadMedia->setStyleSheet( noStyle );
         d->ui.featureCategories->setText( noText );
@@ -634,3 +614,15 @@ void AddEditBlog::hideWaitWidget()
     d->wait = 0;
 }
 
+void AddEditBlog::bloggerAuthenticated(const QMap< QString, QString > &authData)
+{
+    d->bBlog->setAuthData(authData);
+    KBlog::Blogger *blogger = qobject_cast<KBlog::Blogger*>(d->mBlog);
+    connect( blogger, SIGNAL(listedBlogs(QList<QMap<QString,QString> >)),
+             this, SLOT(fetchedBlogId(QList<QMap<QString,QString> >)) );
+    d->mFetchBlogIdTimer = new QTimer( this );
+    d->mFetchBlogIdTimer->setSingleShot( true );
+    connect( d->mFetchBlogIdTimer, SIGNAL(timeout()), this, SLOT(handleFetchIDTimeout()) );
+    d->mFetchBlogIdTimer->start( TIMEOUT );
+    blogger->listBlogs();
+}
