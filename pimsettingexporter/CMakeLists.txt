@@ -115,7 +115,7 @@ install(TARGETS pimsettingexporter ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install(FILES
     pimsettingexporter.rc
-    DESTINATION ${DATA_INSTALL_DIR}/pimsettingexporter
+    DESTINATION ${KXMLGUI_INSTALL_DIR}/pimsettingexporter
 )
 
 install(FILES backup-structure.txt DESTINATION ${DATA_INSTALL_DIR}/pimsettingexporter)

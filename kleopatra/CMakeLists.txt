@@ -378,7 +378,7 @@ install(
   DESTINATION ${SERVICES_INSTALL_DIR}
 )
 
-install(FILES kleopatra.rc DESTINATION ${DATA_INSTALL_DIR}/kleopatra)
+install(FILES kleopatra.rc DESTINATION ${KXMLGUI_INSTALL_DIR}/kleopatra)
 
 if(KDEPIM_MOBILE_UI)
   install(
