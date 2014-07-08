@@ -29,6 +29,8 @@ public:
     explicit FollowUpReminderInfoDialog(QWidget *parent=0);
     ~FollowUpReminderInfoDialog();
 
+private slots:
+    void slotSave();
 private:
     void readConfig();
     void writeConfig();

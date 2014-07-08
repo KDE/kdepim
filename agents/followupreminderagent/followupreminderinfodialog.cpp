@@ -92,3 +92,8 @@ void FollowUpReminderInfoDialog::writeConfig()
     group.writeEntry( "Size", size() );
     mWidget->saveTreeWidgetHeader(group);
 }
+
+void FollowUpReminderInfoDialog::slotSave()
+{
+    //TODO
+}
