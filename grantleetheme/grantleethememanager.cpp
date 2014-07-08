@@ -236,7 +236,7 @@ public:
     void initThemesDirectories(const QString &themesRelativePath)
     {
         if (!themesRelativePath.isEmpty()) {
-            themesDirectories = KGlobal::dirs()->findDirs("data", themesRelativePath);
+            themesDirectories = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, themesRelativePath);
             if (themesDirectories.count() < 2) {
                 //Make sure to add local directory
                 const QString localDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + themesRelativePath;
@@ -328,7 +328,7 @@ QString GrantleeThemeManager::pathFromThemes(const QString &themesRelativePath, 
 {
     QStringList themesDirectories;
     if (!themesRelativePath.isEmpty()) {
-        themesDirectories = KGlobal::dirs()->findDirs("data", themesRelativePath);
+        themesDirectories = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, themesRelativePath);
         if (themesDirectories.count() < 2) {
             //Make sure to add local directory
             const QString localDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + themesRelativePath;

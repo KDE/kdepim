@@ -56,6 +56,7 @@
 #include <QCoreApplication>
 
 #include <boost/shared_ptr.hpp>
+#include <QStandardPaths>
 
 using namespace GpgME;
 using namespace Kleo;

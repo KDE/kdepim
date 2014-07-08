@@ -52,6 +52,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <KSharedConfig>
+#include <QStandardPaths>
 
 #ifdef stdin
 # undef stdin // pah..

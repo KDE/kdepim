@@ -95,7 +95,7 @@
 #include <KPIMIdentities/kpimidentities/identity.h>
 #include <KPIMIdentities/kpimidentities/identitymanager.h>
 #include <kselectionproxymodel.h>
-#include <kstandarddirs.h>
+
 #include <mailcommon/filter/filteraction.h>
 #include <mailcommon/folder/foldercollection.h>
 #include <mailcommon/util/mailutil.h>
@@ -114,6 +114,7 @@
 #include <QLabel>
 #include <QItemSelectionModel>
 #include <QTreeView>
+#include <QStandardPaths>
 
 #ifdef KDEQMLPLUGIN_STATIC
 #include "runtime/qml/kde/kdeintegration.h"
@@ -597,7 +598,7 @@ void MainView::slotDeleteMessage( const Akonadi::Item &item )
 void MainView::recoverAutoSavedMessages()
 {
   qDebug() << "Any message to recover?";
-  QDir autoSaveDir( KStandardDirs::locateLocal( "data", QLatin1String( "kmail2/" ) ) + QLatin1String( "autosave" ) );
+  QDir autoSaveDir( QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kmail2/" ) + QLatin1String( "autosave" ) );
   //### move directory creation to here
 
   const QFileInfoList savedMessages = autoSaveDir.entryInfoList( QDir::Files );
