@@ -14,5 +14,5 @@ TARGET_LINK_LIBRARIES(composerhtmleditor Qt5::WebKitWidgets  KF5::KIOCore compos
 install(TARGETS composerhtmleditor ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
   composerhtmleditorui.rc
-  DESTINATION  ${DATA_INSTALL_DIR}/composerhtmleditor)
+  DESTINATION  ${KXMLGUI_INSTALL_DIR}/composerhtmleditor)
 

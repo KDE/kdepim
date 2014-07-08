@@ -34,6 +34,6 @@ TARGET_LINK_LIBRARIES(headerthemeeditor KF5::Mime  KF5::PimTextEdit KF5::KIOCore
 install(TARGETS headerthemeeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
   headerthemeeditorui.rc
-  DESTINATION  ${DATA_INSTALL_DIR}/headerthemeeditor)
+  DESTINATION  ${KXMLGUI_INSTALL_DIR}/headerthemeeditor)
 
 install(PROGRAMS headerthemeeditor.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})

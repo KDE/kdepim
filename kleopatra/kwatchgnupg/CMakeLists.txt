@@ -29,4 +29,4 @@ install(TARGETS kwatchgnupg ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES kwatchgnupg.png kwatchgnupg2.png DESTINATION ${DATA_INSTALL_DIR}/kwatchgnupg/pics)
 
-install(FILES kwatchgnupgui.rc DESTINATION ${DATA_INSTALL_DIR}/kwatchgnupg)
+install(FILES kwatchgnupgui.rc DESTINATION ${KXMLGUI_INSTALL_DIR}/kwatchgnupg)

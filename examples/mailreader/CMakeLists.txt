@@ -35,4 +35,4 @@ install(TARGETS akonadimailreader ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(PROGRAMS mailreader.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES mailreader.kcfg DESTINATION ${KCFG_INSTALL_DIR})
-install(FILES mailreaderui.rc DESTINATION ${DATA_INSTALL_DIR}/mailreader)
+install(FILES mailreaderui.rc DESTINATION ${KXMLGUI_INSTALL_DIR}/mailreader)

@@ -90,7 +90,7 @@ install(TARGETS kjots  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install( PROGRAMS Kjots.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
 install( FILES kjots.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
-install( FILES kjotsui.rc  DESTINATION ${DATA_INSTALL_DIR}/kjots)
+install( FILES kjotsui.rc  DESTINATION ${KXMLGUI_INSTALL_DIR}/kjots)
 
 install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/kjots PATTERN *.svn EXCLUDE )
 
@@ -118,7 +118,7 @@ target_link_libraries(kjotspart
 )
 
 install( FILES kjotspart.desktop  DESTINATION ${SERVICES_INSTALL_DIR} )
-install( FILES kjotspartui.rc  DESTINATION ${DATA_INSTALL_DIR}/kjots)
+install( FILES kjotspartui.rc  DESTINATION ${KXMLGUI_INSTALL_DIR}/kjots)
 
 install(TARGETS kjotspart  DESTINATION ${PLUGIN_INSTALL_DIR} )
 

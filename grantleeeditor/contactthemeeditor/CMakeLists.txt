@@ -46,6 +46,6 @@ install(TARGETS contactthemeeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
   contactthemeeditorui.rc
-  DESTINATION  ${DATA_INSTALL_DIR}/contactthemeeditor)
+  DESTINATION  ${KXMLGUI_INSTALL_DIR}/contactthemeeditor)
 
 install(PROGRAMS contactthemeeditor.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})

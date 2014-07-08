@@ -167,7 +167,7 @@ endif()
 
 install(TARGETS kaddressbook ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(PROGRAMS data/kaddressbook.desktop data/kaddressbook-importer.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
-install(FILES kaddressbookui.rc DESTINATION ${DATA_INSTALL_DIR}/kaddressbook)
+install(FILES kaddressbookui.rc DESTINATION ${KXMLGUI_INSTALL_DIR}/kaddressbook)
 
 set(kaddressbook_PART_SRCS kaddressbookpart.cpp)
 add_library(kaddressbookpart MODULE ${kaddressbook_PART_SRCS})
