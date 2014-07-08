@@ -60,7 +60,7 @@ private:
         To = 0,
         Subject,
         MessageId,
-        Date
+        DeadLine
     };
     QTreeWidget *mTreeWidget;
 };

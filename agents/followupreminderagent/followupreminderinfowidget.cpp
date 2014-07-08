@@ -82,7 +82,7 @@ void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminder::FollowUpR
         item->setText(To, info->to());
         item->setText(MessageId, info->messageId());
         //TODO customize it.
-        item->setText(Date, info->followUpReminderDate().toString());
+        item->setText(DeadLine, info->followUpReminderDate().toString());
     }
 }
 
