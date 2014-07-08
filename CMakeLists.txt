@@ -296,10 +296,8 @@ else()
     macro_optional_add_subdirectory(pimsettingexporter)
     macro_optional_add_subdirectory(kalarm)
 
-    if(KDEPIMLIBS_KCAL_LIBRARY)
-      if (LibKGAPI2_FOUND)
-         macro_optional_add_subdirectory(blogilo)
-      endif()
+    if (LibKGAPI2_FOUND)
+       macro_optional_add_subdirectory(blogilo)
     endif()
 
     macro_optional_add_subdirectory(kjots)
