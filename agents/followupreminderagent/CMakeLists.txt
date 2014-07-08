@@ -8,11 +8,23 @@ include_directories(
    ${CMAKE_SOURCE_DIR}/messagecomposer/
 )
 
+set(followupreminderlib_SRCS 
+    followupreminderinfo.cpp
+)
+
+add_library( followupreminder ${LIBRARY_TYPE} ${followupreminderlib_SRCS} )
+target_link_libraries( followupreminder  )
+
+set_target_properties( followupreminder PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+
+install( TARGETS followupreminder ${INSTALL_TARGETS_DEFAULT_ARGS} )
+
+
+
 set(followupreminderagent_SRCS
     followupreminderagent.cpp
     followupremindermanager.cpp
     followupreminderinfodialog.cpp
-    followupreminderinfo.cpp
     followupreminderjob.cpp
     followupremindernoanswerdialog.cpp
     followupreminderinfowidget.cpp
@@ -32,6 +44,7 @@ target_link_libraries(akonadi_followupreminder_agent
   KF5::AkonadiMime
   KF5::AkonadiAgentBase
   KF5::Mime
+  followupreminder
 )
 
 if (Q_WS_MAC)

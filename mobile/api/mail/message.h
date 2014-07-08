@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QObject>
 #include <QString>
-#include <AkonadiCore/ItemFetchJob>
+#include <QUrl>
 #include <QScopedPointer>
 
 #include "error.h"
@@ -50,13 +50,12 @@ signals:
     void messageChanged();
 
 public slots:
-    void loadMessage(const QString &id);
+    void loadMessage(const QUrl &url);
 
 private slots:
     void slotItemReceived(const Akonadi::Item::List &itemList);
 
 private:
-    QString m_akonadiId;
     QString m_subject;
     QString m_from;
     QString m_textContent;

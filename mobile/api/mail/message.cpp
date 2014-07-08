@@ -19,12 +19,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#include <message.h>
+#include "message.h"
 
 #include <AkonadiCore/ItemFetchScope>
 #include <KMime/Message>
 
 #include <KUrl>
+#include <KMimeType>
 
 Message::Message(QObject *parent) : QObject(parent), m_error(new Error())
 {
@@ -56,10 +57,9 @@ Error *Message::error() const
     return m_error.data();
 }
 
-void Message::loadMessage(const QString &id)
+void Message::loadMessage(const QUrl &url)
 {
-    m_akonadiId = id;
-    Akonadi::ItemFetchJob *fetchJob = new Akonadi::ItemFetchJob(Akonadi::Item::fromUrl(KUrl(m_akonadiId)));
+    Akonadi::ItemFetchJob *fetchJob = new Akonadi::ItemFetchJob(Akonadi::Item::fromUrl(url));
     fetchJob->fetchScope().fetchFullPayload();
 
     connect(fetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)), this, SLOT(slotItemReceived(Akonadi::Item::List)));

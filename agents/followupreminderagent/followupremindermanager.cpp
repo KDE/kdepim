@@ -28,6 +28,7 @@
 #include <KLocalizedString>
 #include <KIconLoader>
 #include <KGlobal>
+using namespace FollowUpReminder;
 
 FollowUpReminderManager::FollowUpReminderManager(QObject *parent)
     : QObject(parent)

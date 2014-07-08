@@ -64,6 +64,9 @@ void FollowUpReminderAgent::setEnableAgent(bool enabled)
     FollowUpReminderAgentSettings::self()->save();
     if (enabled) {
         mManager->load();
+        mTimer->start();
+    } else {
+        mTimer->stop();
     }
 }
 
@@ -115,4 +118,3 @@ void FollowUpReminderAgent::reload()
 
 AKONADI_AGENT_MAIN( FollowUpReminderAgent )
 
-#include "followupreminderagent.moc"

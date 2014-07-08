@@ -116,6 +116,8 @@ protected Q_SLOTS:
      */
     void savePostInDbAndEmitResult( KBlog::BlogPost *post );
 
+    void bloggerAuthenticated( const QMap<QString,QString>& authData );
+
 Q_SIGNALS:
     /**
      * emit when a categoriesListed() Done and Categories added to DB

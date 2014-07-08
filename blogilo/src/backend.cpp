@@ -31,11 +31,11 @@
 
 #include <kurl.h>
 #include <kblog/blogger1.h>
-#include <kblog/gdata.h>
 #include <kblog/metaweblog.h>
 #include <kblog/movabletype.h>
 #include <kblog/wordpressbuggy.h>
 #include <kblog/blogmedia.h>
+#include <kblog/blogger.h>
 #include <qdebug.h>
 #include <KLocale>
 
@@ -65,6 +65,12 @@ Backend::Backend( int blog_id, QObject* parent )
     qDebug() << "with blog id: " << blog_id;
     d->bBlog = DBMan::self()->blog( blog_id );
     d->kBlog = d->bBlog->blogBackend();
+    if ( d->bBlog->api() == BilboBlog::BLOGGER_API ) {
+        KBlog::Blogger *blogger = qobject_cast<KBlog::Blogger*>( d->kBlog );
+        connect( blogger, SIGNAL(authenticated(QMap<QString,QString>)),
+                 this, SLOT(bloggerAuthenticated(QMap<QString,QString>)) );
+        blogger->authenticate( DBMan::self()->getAuthData( blog_id ) );
+    }
 
     connect( d->kBlog, SIGNAL(error(KBlog::Blog::ErrorType,QString)),
              this, SLOT(error(KBlog::Blog::ErrorType,QString)) );
@@ -176,11 +182,6 @@ void Backend::postPublished( KBlog::BlogPost *post )
         return;
     }
     qDebug()<<"isPrivate: "<<post->isPrivate();
-    if(post->isPrivate() && d->bBlog->api() == BilboBlog::GDATA_API){
-        //GData do not support fetching drafts!
-        savePostInDbAndEmitResult(post);
-        return;
-    }
     d->mSubmitPostStatusMap[ post ] = post->status();
     connect( d->kBlog, SIGNAL(fetchedPost(KBlog::BlogPost*)),
              this, SLOT(savePostInDbAndEmitResult(KBlog::BlogPost*)) );
@@ -193,8 +194,8 @@ void Backend::uploadMedia( BilboMedia * media )
     QString tmp;
     switch ( d->bBlog->api() ) {
         case BilboBlog::BLOGGER1_API:
-        case BilboBlog::GDATA_API:
-            qDebug() << "The Blogger1 and GData API type doesn't support uploading Media files.";
+        case BilboBlog::BLOGGER_API:
+            qDebug() << "The Blogger1 and Blogspot API type doesn't support uploading Media files.";
             tmp = i18n( "Uploading media failed: Your Blog API does not support uploading media objects.");
             qDebug() << "Emitting sigError...";
             Q_EMIT sigMediaError( tmp, media );
@@ -482,3 +483,8 @@ KBlog::BlogPost* Backend::preparePost( KBlog::BlogPost* post )
     return post;//.toKBlogPost();
 }
 
+void Backend::bloggerAuthenticated(const QMap< QString, QString > &authData)
+{
+    d->bBlog->setAuthData( authData );
+    DBMan::self()->saveAuthData( authData, d->bBlog->id() );
+}

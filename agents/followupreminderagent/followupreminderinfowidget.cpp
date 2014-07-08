@@ -25,6 +25,28 @@
 #include <QMenu>
 #include <KLocalizedString>
 
+FollowUpReminderInfoItem::FollowUpReminderInfoItem(QTreeWidget *parent)
+    : QTreeWidgetItem(parent),
+      mInfo(0)
+{
+}
+
+FollowUpReminderInfoItem::~FollowUpReminderInfoItem()
+{
+    delete mInfo;
+}
+
+void FollowUpReminderInfoItem::setInfo(FollowUpReminder::FollowUpReminderInfo *info)
+{
+    mInfo = info;
+}
+
+FollowUpReminder::FollowUpReminderInfo* FollowUpReminderInfoItem::info() const
+{
+    return mInfo;
+}
+
+
 FollowUpReminderInfoWidget::FollowUpReminderInfoWidget(QWidget *parent)
     : QWidget(parent)
 {
@@ -53,7 +75,7 @@ FollowUpReminderInfoWidget::~FollowUpReminderInfoWidget()
 {
 }
 
-void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminderInfo *> &info)
+void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminder::FollowUpReminderInfo *> &info)
 {
     //TODO
 }

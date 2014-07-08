@@ -54,7 +54,7 @@ FollowUpReminderNoAnswerDialog::~FollowUpReminderNoAnswerDialog()
     writeConfig();
 }
 
-void FollowUpReminderNoAnswerDialog::setInfo(const QList<FollowUpReminderInfo *> &info)
+void FollowUpReminderNoAnswerDialog::setInfo(const QList<FollowUpReminder::FollowUpReminderInfo *> &info)
 {
     //mWidget->setInfo(info);
 }

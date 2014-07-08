@@ -2,12 +2,10 @@ project(mail)
 
 set(mail_SRCS
     mailplugin.cpp
-    folderlist.cpp
     message.cpp
     composer.cpp
     error.cpp
     receivermodel.cpp
-    messagelist.cpp
 )
 
 INCLUDE_DIRECTORIES(

@@ -20,8 +20,26 @@
 
 #include <QWidget>
 #include <KConfigGroup>
+#include <QTreeWidgetItem>
 class QTreeWidget;
+namespace FollowUpReminder {
 class FollowUpReminderInfo;
+}
+
+class FollowUpReminderInfoItem : public QTreeWidgetItem
+{
+public:
+    explicit FollowUpReminderInfoItem(QTreeWidget *parent = 0);
+    ~FollowUpReminderInfoItem();
+
+    void setInfo(FollowUpReminder::FollowUpReminderInfo *info);
+    FollowUpReminder::FollowUpReminderInfo *info() const;
+
+private:
+    FollowUpReminder::FollowUpReminderInfo *mInfo;
+};
+
+
 class FollowUpReminderInfoWidget : public QWidget
 {
     Q_OBJECT
@@ -32,7 +50,7 @@ public:
     void restoreTreeWidgetHeader(const QByteArray &data);
     void saveTreeWidgetHeader(KConfigGroup &group);
 
-    void setInfo(const QList<FollowUpReminderInfo *> &info);
+    void setInfo(const QList<FollowUpReminder::FollowUpReminderInfo *> &info);
 private slots:
     void customContextMenuRequested(const QPoint &pos);
     void slotRemoveItem();

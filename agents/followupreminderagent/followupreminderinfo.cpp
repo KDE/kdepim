@@ -18,7 +18,7 @@
 #include "followupreminderinfo.h"
 
 #include <KConfigGroup>
-
+using namespace FollowUpReminder;
 
 FollowUpReminderInfo::FollowUpReminderInfo()
     : mId(-1)
@@ -29,6 +29,14 @@ FollowUpReminderInfo::FollowUpReminderInfo(const KConfigGroup &config)
     : mId(-1)
 {
     readConfig(config);
+}
+
+FollowUpReminderInfo::FollowUpReminderInfo(const FollowUpReminderInfo &info)
+{
+    mFollowUpReminderDate = info.followUpReminderDate();
+    mId = info.id();
+    mMessageId = info.messageId();
+    mTo = info.to();
 }
 
 void FollowUpReminderInfo::readConfig(const KConfigGroup &config)

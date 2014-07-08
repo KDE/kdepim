@@ -6,10 +6,10 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${CMAKE_CURRENT_SOURCE_DIR}/
 
 # Convenience macro to add unit tests.
 macro( followupreminder_agent _source )
-  set( _test ${_source} ../followupreminderinfo.cpp )
+  set( _test ${_source} )
   get_filename_component( _name ${_source} NAME_WE )
   kde4_add_unit_test( ${_name} TESTNAME followupreminder-${_name} ${_test} )
-  target_link_libraries( ${_name} Qt5::Test KF5::AkonadiCore )
+  target_link_libraries( ${_name} Qt5::Test KF5::AkonadiCore followupreminder)
 endmacro()
 
 followupreminder_agent(followupreminderinfotest.cpp)
