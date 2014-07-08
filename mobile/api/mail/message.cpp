@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "message.h"
 
 #include <AkonadiCore/ItemFetchScope>
+#include <AkonadiCore/ItemFetchJob>
 #include <KMime/Message>
 
 #include <KUrl>

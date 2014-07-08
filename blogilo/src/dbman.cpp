@@ -83,12 +83,12 @@ DBMan::DBMan()
             exit ( 1 );
         }
     } else if ( !connectDB() ) {
-        kDebug() << d->mLastErrorText;
+        qDebug() << d->mLastErrorText;
         exit( 1 );
     }
 
     if ( !updateDB() ) {
-        kDebug() << d->mLastErrorText;
+        qDebug() << d->mLastErrorText;
         exit( 1 );
     }
 
@@ -951,13 +951,13 @@ bool DBMan::clearTempEntries()
 
 QMap<QString, QString> DBMan::getAuthData(int blog_id)
 {
-    kDebug() << blog_id;
+    qDebug() << blog_id;
     QSqlQuery q;
     q.prepare( QLatin1String("SELECT key, value FROM auth_data WHERE blog_id = ?") );
     q.addBindValue( blog_id );
     if ( !q.exec() ) {
         d->mLastErrorText = q.lastError().text();
-        kDebug() << q.lastError().text();
+        qDebug() << q.lastError().text();
         return QMap<QString, QString>();
     }
 
@@ -966,13 +966,13 @@ QMap<QString, QString> DBMan::getAuthData(int blog_id)
         result[q.value(0).toString() ] = q.value(1).toString();
     }
 
-    kDebug() << blog_id << result;
+    qDebug() << blog_id << result;
     return result;
 }
 
 bool DBMan::saveAuthData( const QMap<QString, QString> &authData, int blog_id )
 {
-    kDebug() << blog_id;
+    qDebug() << blog_id;
     QSqlQuery q;
     q.prepare( QLatin1String("INSERT OR REPLACE INTO auth_data (blog_id, key, value) VALUES (?, ?, ?)") );
     QMap<QString, QString>::ConstIterator iter, end = authData.constEnd();
@@ -988,21 +988,21 @@ bool DBMan::saveAuthData( const QMap<QString, QString> &authData, int blog_id )
     const bool res = q.execBatch();
     if ( !res ) {
         d->mLastErrorText = q.lastError().text();
-        kDebug() << q.lastError().text();
+        qDebug() << q.lastError().text();
     }
     return res;
 }
 
 bool DBMan::clearAuthData( int blog_id )
 {
-    kDebug() << blog_id;
+    qDebug() << blog_id;
     QSqlQuery q;
     q.prepare( QLatin1String("DELETE FROM auth_data WHERE blog_id = ?") );
     q.addBindValue( blog_id );
     const bool res = q.exec();
     if ( !res ) {
         d->mLastErrorText = q.lastError().text();
-        kDebug() << q.lastError().text();
+        qDebug() << q.lastError().text();
     }
     return res;
 }
