@@ -17,6 +17,7 @@
 
 #include "yousenditstorageservice.h"
 #include "storageservice/widgets/storageservicetreewidget.h"
+#include "storageservice/widgets/storageservicetreewidgetitem.h"
 #include "storageservice/storageservicemanager.h"
 #include "storageservice/settings/storageservicesettings.h"
 #include "pimcommon/storageservice/storageservicejobconfig.h"

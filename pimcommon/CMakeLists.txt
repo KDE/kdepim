@@ -85,6 +85,7 @@ set(libpimcommon_storageservice_SRCS
   storageservice/widgets/storageservicetreewidget.cpp
   storageservice/widgets/storageserviceprogresswidget.cpp
   storageservice/widgets/storageserviceprogressindicator.cpp
+  storageservice/widgets/storageservicetreewidgetitem.cpp
  
   storageservice/settings/storageservicesettings.cpp 
  

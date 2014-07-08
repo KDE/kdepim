@@ -17,6 +17,7 @@
 
 #include "boxstorageservice.h"
 #include "storageservice/widgets/storageservicetreewidget.h"
+#include "storageservice/widgets/storageservicetreewidgetitem.h"
 #include "storageservice/storageservicemanager.h"
 #include "boxutil.h"
 #include "boxjob.h"

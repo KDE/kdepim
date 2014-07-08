@@ -19,6 +19,7 @@
 #include "pimcommon/storageservice/utils/storageserviceutils.h"
 
 #include "storageservice/widgets/storageservicetreewidget.h"
+#include "storageservice/widgets/storageservicetreewidgetitem.h"
 #include "storageservice/storageservicemanager.h"
 #include "storageservice/settings/storageservicesettings.h"
 #include "storageservice/webdav/protocol/webdav_url_info.h"

@@ -26,30 +26,8 @@
 #include "pimcommon_export.h"
 class KMenu;
 namespace PimCommon {
-class StorageServiceTreeWidget;
 class StorageServiceAbstract;
-class PIMCOMMON_EXPORT StorageServiceTreeWidgetItem : public QTreeWidgetItem
-{
-public:
-    StorageServiceTreeWidgetItem(StorageServiceTreeWidget *parent);
-    bool operator<(const QTreeWidgetItem &other) const;
-    void setSize(qulonglong size);
-    void setDateCreated(const KDateTime &date);
-    void setLastModification(const KDateTime &date);
-    void setStoreInfo(const QVariantMap &data);
-    QVariantMap storeInfo() const;
-
-
-    KDateTime lastModificationDate() const;
-    KDateTime createDate() const;
-    qulonglong size() const;
-private:
-    KDateTime mCreateDate;
-    KDateTime mLastModificationDate;
-    qulonglong mSize;
-
-};
-
+class StorageServiceTreeWidgetItem;
 class PIMCOMMON_EXPORT StorageServiceTreeWidget : public QTreeWidget
 {
     Q_OBJECT

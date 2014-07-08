@@ -17,6 +17,8 @@
 
 #include "storageservicedownloaddialog.h"
 #include "storageservice/widgets/storageservicetreewidget.h"
+#include "storageservice/widgets/storageservicetreewidgetitem.h"
+
 #include "storageservice/widgets/storageserviceprogresswidget.h"
 #include "storageservice/widgets/storageserviceprogressindicator.h"
 #include "storageservice/storageserviceabstract.h"
