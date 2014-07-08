@@ -21,15 +21,14 @@
 
 #include "quicksearchlinetest.h"
 #include "messagelist/core/quicksearchline.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <qtestkeyboard.h>
 #include <qtestmouse.h>
 #include <KLineEdit>
 #include <QToolButton>
 #include <QPushButton>
-#include <QPushButton>
 #include <KComboBox>
-
+#include <QSignalSpy>
 
 using namespace MessageList::Core;
 QuickSearchLineTest::QuickSearchLineTest()
@@ -280,4 +279,4 @@ void QuickSearchLineTest::shouldNotShowComboboxWhenWeAddNewItemWhenWeHiddedQuick
 }
 
 
-QTEST_KDEMAIN( QuickSearchLineTest, GUI )
+QTEST_MAIN( QuickSearchLineTest )

@@ -20,7 +20,6 @@ macro(add_templateparser_unittest _source)
     messageviewer
     ${QGPGME_LIBRARIES}
     Qt5::Test
-    
     Qt5::WebKitWidgets
     KF5::KIOCore
     KF5::Mime

@@ -19,7 +19,7 @@
 
 #include "../core/messageitem_p.h"
 
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <QObject>
 
 using namespace MessageList::Core;
@@ -42,6 +42,6 @@ class ItemSizeTest : public QObject
     }
 };
 
-QTEST_KDEMAIN( ItemSizeTest, GUI )
+QTEST_MAIN( ItemSizeTest )
 
 #include "itemsizetest.moc"

@@ -17,7 +17,7 @@
 
 #include "followupreminderinfotest.h"
 #include "../followupreminderinfo.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 FollowUpReminderInfoTest::FollowUpReminderInfoTest()
 {
@@ -51,4 +51,4 @@ void FollowUpReminderInfoTest::shoudBeNotValid()
     QCOMPARE(info.isValid(), true);
 }
 
-QTEST_KDEMAIN(FollowUpReminderInfoTest, NoGUI)
+QTEST_MAIN(FollowUpReminderInfoTest)

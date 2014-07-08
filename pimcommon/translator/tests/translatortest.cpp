@@ -21,11 +21,11 @@
 
 #include <QPushButton>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <qtestkeyboard.h>
 #include <qtestmouse.h>
 #include <QComboBox>
-
+#include <QSignalSpy>
 
 TranslatorTest::TranslatorTest()
 {
@@ -118,4 +118,4 @@ void TranslatorTest::shouldEmitTranslatorWasClosedSignalWhenCloseIt()
     QCOMPARE(spy.count(), 1);
 }
 
-QTEST_KDEMAIN( TranslatorTest, GUI )
+QTEST_MAIN( TranslatorTest )

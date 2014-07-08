@@ -18,7 +18,8 @@
 
 #include "textgotolinewidgettest.h"
 #include "pimcommon/texteditor/commonwidget/textgotolinewidget.h"
-#include <qtest_kde.h>
+#include <qtest.h>
+#include <QSignalSpy>
 #include <qtestmouse.h>
 #include <qtestkeyboard.h>
 #include <QSpinBox>
@@ -130,4 +131,4 @@ void TextGoToLineWidgetTest::shouldSetFocusWhenWeRecallGotToLine()
 }
 
 
-QTEST_KDEMAIN( TextGoToLineWidgetTest, GUI )
+QTEST_MAIN( TextGoToLineWidgetTest )
