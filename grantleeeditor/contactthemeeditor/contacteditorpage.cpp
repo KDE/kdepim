@@ -47,7 +47,7 @@ ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &t
 {
     QHBoxLayout *lay = new QHBoxLayout;
     mTabWidget = new GrantleeThemeEditor::ThemeEditorTabWidget;
-    connect(mTabWidget, SIGNAL(currentChanged(QWidget*)), this, SLOT(slotCurrentWidgetChanged(QWidget*)));
+    connect(mTabWidget, SIGNAL(currentChanged(int)), this, SLOT(slotCurrentWidgetChanged(int)));
     lay->addWidget(mTabWidget);
     mEditorPage = new EditorPage(EditorPage::MainPage, projectDir);
     mEditorPage->setPageFileName(QLatin1String("contact.html"));
@@ -326,9 +326,12 @@ QString ContactEditorPage::projectDirectory() const
     return mThemeSession->projectDirectory();
 }
 
-void ContactEditorPage::slotCurrentWidgetChanged(QWidget *w)
+void ContactEditorPage::slotCurrentWidgetChanged(int index)
 {
-    GrantleeThemeEditor::EditorPage *page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(w);
+    if (index < 0)
+       return;
+    
+    GrantleeThemeEditor::EditorPage *page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(mTabWidget->widget(index));
     Q_EMIT canInsertFile(page);
 }
 

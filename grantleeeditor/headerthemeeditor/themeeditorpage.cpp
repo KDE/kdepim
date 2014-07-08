@@ -47,7 +47,7 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
 {
     QHBoxLayout *lay = new QHBoxLayout;
     mTabWidget = new GrantleeThemeEditor::ThemeEditorTabWidget;
-    connect(mTabWidget, SIGNAL(currentChanged(QWidget*)), this, SLOT(slotCurrentWidgetChanged(QWidget*)));
+    connect(mTabWidget, SIGNAL(currentChanged(int)), this, SLOT(slotCurrentWidgetChanged(int)));
     lay->addWidget(mTabWidget);
     mEditorPage = new EditorPage(EditorPage::MainPage, projectDir);
     connect(mEditorPage, SIGNAL(needUpdateViewer()), this, SLOT(slotUpdateViewer()));
@@ -78,9 +78,11 @@ ThemeEditorPage::~ThemeEditorPage()
     delete mThemeSession;
 }
 
-void ThemeEditorPage::slotCurrentWidgetChanged(QWidget *w)
+void ThemeEditorPage::slotCurrentWidgetChanged(int index)
 {
-    GrantleeThemeEditor::EditorPage *page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(w);
+    if (index < 0)
+       return;
+    GrantleeThemeEditor::EditorPage *page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(mTabWidget->widget(index));
     Q_EMIT canInsertFile(page);
 }
 
