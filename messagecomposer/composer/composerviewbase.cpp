@@ -1021,8 +1021,9 @@ void MessageComposer::ComposerViewBase::slotAutoSaveComposeResult( KJob *job )
 
 void MessageComposer::ComposerViewBase::writeAutoSaveToDisk( const KMime::Message::Ptr& message )
 {
-    const QString filename = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "/kmail2/autosave/" )  +
-            m_autoSaveUUID;
+    const QString autosavePath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String( "/kmail2/autosave/" );
+    QDir().mkpath(autosavePath);
+    const QString filename = autosavePath + m_autoSaveUUID;
     QSaveFile file( filename );
     QString errorMessage;
     qDebug() << "Writing message to disk as" << filename;
@@ -1063,6 +1064,7 @@ void MessageComposer::ComposerViewBase::writeAutoSaveToDisk( const KMime::Messag
         // No error occurred, the next error should be shown again
         m_autoSaveErrorShown = false;
     }
+    file.commit();
 }
 
 void MessageComposer::ComposerViewBase::saveMessage( KMime::Message::Ptr message, MessageComposer::MessageSender::SaveIn saveIn )
