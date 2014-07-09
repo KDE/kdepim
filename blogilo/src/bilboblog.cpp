@@ -25,7 +25,7 @@
 #include "bilboblog.h"
 #include "dbman.h"
 #include <kblog/wordpressbuggy.h>
-#include <kblog/blogger.h>
+#include "blogger.h"
 #include <KDebug>
 
 #include <QApplication>

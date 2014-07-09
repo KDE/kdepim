@@ -311,3 +311,48 @@ void AkonadiBrowserModel::setItemDisplayMode( AkonadiBrowserModel::ItemDisplayMo
   }
   emit layoutChanged();
 }
+
+AkonadiBrowserSortModel::AkonadiBrowserSortModel( AkonadiBrowserModel *model, QObject *parent )
+  : QSortFilterProxyModel( parent )
+  , mBrowserModel( model )
+{
+}
+
+AkonadiBrowserSortModel::~AkonadiBrowserSortModel()
+{
+}
+
+bool AkonadiBrowserSortModel::lessThan( const QModelIndex &left, const QModelIndex &right ) const
+{
+  if ( mBrowserModel->itemDisplayMode() == AkonadiBrowserModel::CalendarMode ) {
+    if ( left.column() == 1 || left.column() == 2 ) {
+      const Item leftItem = left.data( EntityTreeModel::ItemRole ).value<Item>();
+      const Item rightItem = right.data( EntityTreeModel::ItemRole ).value<Item>();
+      if ( !leftItem.hasPayload<IncidencePtr>() || !rightItem.hasPayload<IncidencePtr>() ) {
+        return false;
+      }
+      const IncidencePtr leftInc = leftItem.payload<IncidencePtr>();
+      const IncidencePtr rightInc = rightItem.payload<IncidencePtr>();
+
+      if ( left.column() == 1 ) {
+        return leftInc->dtStart() < rightInc->dtStart();
+      } else if ( left.column() == 2 ) {
+        return leftInc->dateTime( KCalCore::IncidenceBase::RoleEnd ) < rightInc->dateTime( KCalCore::IncidenceBase::RoleEnd );
+      }
+    }
+  } else if ( mBrowserModel->itemDisplayMode() == AkonadiBrowserModel::MailMode ) {
+    if ( left.column() == 2 ) {
+      const Item leftItem = left.data( EntityTreeModel::ItemRole ).value<Item>();
+      const Item rightItem = right.data( EntityTreeModel::ItemRole ).value<Item>();
+      if ( !leftItem.hasPayload<MessagePtr>() || !rightItem.hasPayload<MessagePtr>() ) {
+        return false;
+      }
+      const MessagePtr leftMail = leftItem.payload<MessagePtr>();
+      const MessagePtr rightMail = rightItem.payload<MessagePtr>();
+
+      return leftMail->date(false)->dateTime() < rightMail->date(false)->dateTime();
+    }
+  }
+
+  return QSortFilterProxyModel::lessThan( left, right );
+}

@@ -32,6 +32,7 @@ class DbBrowser : public QWidget
 
   private slots:
     void refreshClicked();
+    void onSortIndicatorChanged( int column, Qt::SortOrder order );
 
   private:
     Ui::DbBrowser ui;

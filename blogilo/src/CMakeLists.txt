@@ -2,7 +2,8 @@
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR} 
                      ${CMAKE_CURRENT_BINARY_DIR}  
                      ${CMAKE_SOURCE_DIR}/libkdepim
-                     ${CMAKE_SOURCE_DIR}/pimcommon)
+                     ${CMAKE_SOURCE_DIR}/pimcommon
+                     ${LibKGAPI2_INCLUDE_DIR} )
 
 set(blogilo_SRCS
  main.cpp
@@ -34,6 +35,11 @@ set(blogilo_SRCS
  composer/blogilocomposerwidget.cpp
  storageservice/storageservicemanagersettingsjob.cpp
  configurestorageservicewidget.cpp
+
+ # Blogger API implementation imported from KBlog due to circular deps between
+ # kdepimlibs and libkgapi
+ # TODO: Move back to KBlog in KF5
+ blogger.cpp
 )
 
 
@@ -55,7 +61,7 @@ kde4_add_kcfg_files( blogilo_SRCS settings.kcfgc)
 kde4_add_app_icon(blogilo_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/../icons/hi*-app-blogilo.png")
 kde4_add_executable( blogilo ${blogilo_SRCS})
 
-target_link_libraries( blogilo kdepim ${KDE4_KDEUI_LIBS} ${QT_QTSQL_LIBRARY} ${KDE4_KTEXTEDITOR_LIBS} ${QT_QTWEBKIT_LIBRARY} ${KDE4_KDEWEBKIT_LIBRARY} ${KDEPIMLIBS_KBLOG_LIBS} composereditorng  pimcommon)
+target_link_libraries( blogilo kdepim ${KDE4_KDEUI_LIBS} ${QT_QTSQL_LIBRARY} ${KDE4_KTEXTEDITOR_LIBS} ${QT_QTWEBKIT_LIBRARY} ${KDE4_KDEWEBKIT_LIBRARY} ${KDEPIMLIBS_KBLOG_LIBS} ${LibKGAPI2_LIBRARY} composereditorng  pimcommon)
 
 
 install( TARGETS blogilo ${INSTALL_TARGETS_DEFAULT_ARGS} )
