@@ -257,6 +257,7 @@ bool DBMan::createDB()
 
     ///Auth data
     if ( !q.exec( QLatin1String("CREATE TABLE auth_data (blog_id INT, key TEXT NOT NULL, value TEXT NOT NULL, UNIQUE(blog_id,key))") ) ) {
+        ret = false;
         d->mLastErrorText = q.lastError().text();
     }
 
