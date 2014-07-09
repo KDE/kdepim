@@ -156,9 +156,14 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   itemFilter->addMimeTypeExclusionFilter( Collection::mimeType() );
   itemFilter->setHeaderGroup( EntityTreeModel::ItemListHeaders );
 
+  AkonadiBrowserSortModel *sortModel = new AkonadiBrowserSortModel( mBrowserModel, this );
+  sortModel->setDynamicSortFilter( true );
+  sortModel->setSourceModel( itemFilter );
+
   const KConfigGroup group = KGlobal::config()->group( "FavoriteCollectionsModel" );
   FavoriteCollectionsModel *favoritesModel = new FavoriteCollectionsModel( mBrowserModel, group, this );
   favoritesView->setModel( favoritesModel );
+
 
   QSplitter *splitter3 = new QSplitter( Qt::Vertical, this );
   splitter3->setObjectName( "itemSplitter" );
@@ -175,7 +180,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   QTimer::singleShot( 0, this, SLOT(modelChanged()) );
 
   itemUi.itemView->setXmlGuiClient( xmlGuiWindow );
-  itemUi.itemView->setModel( itemFilter );
+  itemUi.itemView->setModel( sortModel );
   itemUi.itemView->setSelectionMode( QAbstractItemView::ExtendedSelection );
   connect( itemUi.itemView, SIGNAL(activated(QModelIndex)), SLOT(itemActivated(QModelIndex)) );
   connect( itemUi.itemView, SIGNAL(clicked(QModelIndex)), SLOT(itemActivated(QModelIndex)) );
