@@ -37,7 +37,7 @@ include(KDECompilerSettings)
 # 3.0, 3.0.1, 3.1 alpha1, 3.1 beta1, 3.1 beta2, 3.1 rc1, 3.1, 3.1.1, 3.2 pre, 3.2 alpha1
 
 # Do NOT add quote
-set(KDEPIM_DEV_VERSION beta1)
+set(KDEPIM_DEV_VERSION pre)
 
 # add an extra space
 if(DEFINED KDEPIM_DEV_VERSION)
@@ -62,7 +62,6 @@ option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will build only libkl
 option(KDEPIM_BUILD_STATIC "Build KDEPIM static." FALSE)
 option(KDEPIM_BUILD_DESKTOP "Build Desktop Applications. Can be deactivated for mobile" TRUE)
 option(KDEPIM_NO_WEBKIT "Do not use WebKit in the kdepim applications" FALSE)
-
 
 find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Widgets Test WebKitWidgets Sql Concurrent UiTools Declarative)
 find_package(Qt5X11Extras NO_MODULE)

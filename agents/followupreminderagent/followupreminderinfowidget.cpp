@@ -75,9 +75,15 @@ FollowUpReminderInfoWidget::~FollowUpReminderInfoWidget()
 {
 }
 
-void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminder::FollowUpReminderInfo *> &info)
+void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminder::FollowUpReminderInfo *> &infoList)
 {
-    //TODO
+    Q_FOREACH(FollowUpReminder::FollowUpReminderInfo *info, infoList) {
+        FollowUpReminderInfoItem *item = new FollowUpReminderInfoItem(mTreeWidget);
+        item->setText(To, info->to());
+        item->setText(MessageId, info->messageId());
+        //TODO customize it.
+        item->setText(DeadLine, info->followUpReminderDate().toString());
+    }
 }
 
 void FollowUpReminderInfoWidget::customContextMenuRequested(const QPoint &pos)
@@ -92,7 +98,9 @@ void FollowUpReminderInfoWidget::customContextMenuRequested(const QPoint &pos)
 
 void FollowUpReminderInfoWidget::slotRemoveItem()
 {
-    //TODO
+    if (mTreeWidget->currentItem()) {
+        delete mTreeWidget->currentItem();
+    }
 }
 
 void FollowUpReminderInfoWidget::restoreTreeWidgetHeader(const QByteArray &data)

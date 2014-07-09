@@ -34,6 +34,8 @@ public:
 
     void itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection);
 
+    QString printDebugInfo();
+
 public Q_SLOTS:
     void configure( WId windowId );
 

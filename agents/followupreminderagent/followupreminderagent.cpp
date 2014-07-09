@@ -116,5 +116,10 @@ void FollowUpReminderAgent::reload()
     }
 }
 
+QString FollowUpReminderAgent::printDebugInfo()
+{
+    return mManager->printDebugInfo();
+}
+
 AKONADI_AGENT_MAIN( FollowUpReminderAgent )
 

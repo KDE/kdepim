@@ -50,7 +50,7 @@ public:
     void restoreTreeWidgetHeader(const QByteArray &data);
     void saveTreeWidgetHeader(KConfigGroup &group);
 
-    void setInfo(const QList<FollowUpReminder::FollowUpReminderInfo *> &info);
+    void setInfo(const QList<FollowUpReminder::FollowUpReminderInfo *> &infoList);
 private slots:
     void customContextMenuRequested(const QPoint &pos);
     void slotRemoveItem();
@@ -60,7 +60,7 @@ private:
         To = 0,
         Subject,
         MessageId,
-        Date
+        DeadLine
     };
     QTreeWidget *mTreeWidget;
 };

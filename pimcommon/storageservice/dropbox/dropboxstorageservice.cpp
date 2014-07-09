@@ -17,6 +17,7 @@
 
 #include "dropboxstorageservice.h"
 #include "storageservice/widgets/storageservicetreewidget.h"
+#include "storageservice/widgets/storageservicetreewidgetitem.h"
 #include "storageservice/storageservicemanager.h"
 #include "dropboxutil.h"
 #include "dropboxjob.h"

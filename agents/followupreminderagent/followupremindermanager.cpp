@@ -107,4 +107,21 @@ void FollowUpReminderManager::answerReceived(const QString &from)
 #endif
 }
 
+QString FollowUpReminderManager::printDebugInfo()
+{
+    QString infoStr;
+    Q_FOREACH (FollowUpReminder::FollowUpReminderInfo *info, mFollowUpReminderInfoList) {
+        if (!infoStr.isEmpty())
+            infoStr += QLatin1Char('\n');
+        infoStr += infoToStr(info);
+    }
+    return infoStr;
+}
+
+QString FollowUpReminderManager::infoToStr(FollowUpReminder::FollowUpReminderInfo *info)
+{
+    QString infoStr;
+    //TODO
+    return infoStr;
+}
 
