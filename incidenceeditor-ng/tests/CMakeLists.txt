@@ -7,14 +7,14 @@ include_directories(
 MACRO(IE_UNIT_TESTS)
   FOREACH(_testname ${ARGN})
     kde4_add_unit_test(${_testname} NOGUI ${_testname}.cpp modeltest.cpp)
-    target_link_libraries(${_testname} ${QT_QTTEST_LIBRARY}   KF5::AkonadiCore  kdgantt2 KF5::CalendarUtils KF5::CalendarCore incidenceeditorsng kdepimdbusinterfaces)
+    target_link_libraries(${_testname} Qt5::Test   KF5::AkonadiCore  kdgantt2 KF5::CalendarUtils KF5::CalendarCore incidenceeditorsng kdepimdbusinterfaces)
   ENDFOREACH(_testname)
 ENDMACRO(IE_UNIT_TESTS)
 
 MACRO(IE_EXECUTABLE_TESTS)
   FOREACH(_testname ${ARGN})
     add_executable(${_testname} NOGUI TEST ${_testname}.cpp modeltest.cpp)
-    target_link_libraries(${_testname} KF5::CalendarCore ${QT_QTTEST_LIBRARY}   incidenceeditorsng)
+    target_link_libraries(${_testname} KF5::CalendarCore Qt5::Test   incidenceeditorsng)
   ENDFOREACH(_testname)
 ENDMACRO(IE_EXECUTABLE_TESTS)
 

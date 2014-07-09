@@ -25,9 +25,9 @@
 
 #include <KCalCore/Attendee>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
-QTEST_KDEMAIN( FreeBusyItemModelTest, NoGUI )
+QTEST_MAIN( FreeBusyItemModelTest )
 using namespace IncidenceEditorNG;
 
 void FreeBusyItemModelTest::testModelValidity()

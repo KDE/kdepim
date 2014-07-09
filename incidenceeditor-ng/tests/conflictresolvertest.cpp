@@ -32,7 +32,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/concept_check.hpp>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
 using namespace IncidenceEditorNG;
 
@@ -340,5 +340,5 @@ void ConflictResolverTest::testPeriodEndsAtSametimeAsTimeframe()
   QCOMPARE( resolver->availableSlots().size(), 0 );
 }
 
-QTEST_KDEMAIN( ConflictResolverTest, GUI )
+QTEST_MAIN( ConflictResolverTest )
 

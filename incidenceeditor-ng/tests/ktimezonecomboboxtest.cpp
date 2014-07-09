@@ -21,9 +21,9 @@
 #include "../ktimezonecombobox.h"
 
 
-#include "qtest_kde.h"
+#include "qtest.h"
 
-QTEST_KDEMAIN( KTimeZoneComboBoxTest, GUI )
+QTEST_MAIN( KTimeZoneComboBoxTest )
 
 void KTimeZoneComboBoxTest::test_timeSpec()
 {

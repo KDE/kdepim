@@ -28,9 +28,9 @@
 
 #include <KCalCore/Attendee>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
-QTEST_KDEMAIN( FreeBusyGanttProxyModelTest, NoGUI )
+QTEST_MAIN( FreeBusyGanttProxyModelTest )
 using namespace IncidenceEditorNG;
 
 void FreeBusyGanttProxyModelTest::testModelValidity()

@@ -16,10 +16,10 @@
 */
 #include "parseuserjobtest.h"
 #include "ksieveui/managescriptsjob/parseuserscriptjob.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 
-QTEST_KDEMAIN( ParseUserTest, NoGUI )
+QTEST_MAIN( ParseUserTest )
 
 void ParseUserTest::testParseEmptyUserJob()
 {

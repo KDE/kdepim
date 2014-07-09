@@ -1,7 +1,7 @@
 
 #include "../contactfields.h"
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <QtCore/QObject>
 
@@ -17,7 +17,7 @@ class ContactFieldsTest : public QObject
     KABC::Addressee mContact;
 };
 
-QTEST_KDEMAIN( ContactFieldsTest, NoGUI )
+QTEST_MAIN( ContactFieldsTest )
 
 static const QString s_formattedName( QLatin1String("User, Joe") );
 static const QString s_prefix( QLatin1String("Mr.") );

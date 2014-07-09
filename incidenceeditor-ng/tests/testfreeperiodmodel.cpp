@@ -27,9 +27,9 @@
 
 #include <KDebug>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
-QTEST_KDEMAIN( FreePeriodModelTest, NoGUI )
+QTEST_MAIN( FreePeriodModelTest )
 using namespace IncidenceEditorNG;
 
 void FreePeriodModelTest::testModelValidity()
