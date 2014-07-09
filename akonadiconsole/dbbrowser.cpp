@@ -28,8 +28,14 @@ DbBrowser::DbBrowser(QWidget* parent) :
 {
   ui.setupUi( this );
 
-  if ( DbAccess::database().isOpen() )
-    ui.tableBox->addItems( DbAccess::database().tables(QSql::AllTables) );
+  if ( DbAccess::database().isOpen() ) {
+    QStringList userTables = DbAccess::database().tables(QSql::Tables);
+    userTables.sort();
+    QStringList systemTables = DbAccess::database().tables(QSql::SystemTables);
+    systemTables.sort();
+
+    ui.tableBox->addItems( QStringList() << userTables << systemTables );
+  }
 
   ui.refreshButton->setIcon( KIcon( "view-refresh" ) );
   connect( ui.refreshButton, SIGNAL(clicked()), SLOT(refreshClicked()) );
@@ -46,5 +52,12 @@ void DbBrowser::refreshClicked()
   mTableModel->setEditStrategy( QSqlTableModel::OnRowChange );
   mTableModel->select();
   ui.tableView->setModel( mTableModel );
+  connect( ui.tableView->horizontalHeader(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)),
+          this, SLOT(onSortIndicatorChanged(int,Qt::SortOrder)) );
+}
+
+void DbBrowser::onSortIndicatorChanged( int column, Qt::SortOrder order )
+{
+  mTableModel->sort( column, order );
 }
 
