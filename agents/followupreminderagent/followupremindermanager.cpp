@@ -117,7 +117,13 @@ QString FollowUpReminderManager::printDebugInfo()
 QString FollowUpReminderManager::infoToStr(FollowUpReminder::FollowUpReminderInfo *info)
 {
     QString infoStr;
-    //TODO
+    infoStr = QLatin1String("****************************************");
+    infoStr += QString::fromLatin1("Akonadi Item id :%1\n").arg(info->id());
+    infoStr += QString::fromLatin1("MessageId :%1\n").arg(info->messageId());
+    infoStr += QString::fromLatin1("Subject :%1\n").arg(info->subject());
+    infoStr += QString::fromLatin1("To :%1\n").arg(info->to());
+    infoStr += QString::fromLatin1("Dead Line :%1\n").arg(info->followUpReminderDate().toString());
+    infoStr += QLatin1String("****************************************\n");
     return infoStr;
 }
 

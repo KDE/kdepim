@@ -22,6 +22,8 @@
 #include <QHeaderView>
 
 #include <kicon.h>
+#include <KGlobal>
+#include <KLocale>
 #include <kmenu.h>
 #include <KLocalizedString>
 
@@ -81,8 +83,9 @@ void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminder::FollowUpR
         FollowUpReminderInfoItem *item = new FollowUpReminderInfoItem(mTreeWidget);
         item->setText(To, info->to());
         item->setText(MessageId, info->messageId());
-        //TODO customize it.
-        item->setText(DeadLine, info->followUpReminderDate().toString());
+        item->setText(Subject, info->subject());
+        const QString date = KGlobal::locale()->formatDateTime( info->followUpReminderDate(), KLocale::LongDate );
+        item->setText(DeadLine, date);
     }
 }
 
