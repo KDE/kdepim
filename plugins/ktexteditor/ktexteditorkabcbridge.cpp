@@ -23,7 +23,7 @@
 #include <kmessagebox.h>
 #include <KPIMIdentities/kpimidentities/identity.h>
 #include <KPIMIdentities/kpimidentities/identitymanager.h>
-
+#include <kdemacros.h>
 #include <QWidget>
 #include <KLocale>
 
