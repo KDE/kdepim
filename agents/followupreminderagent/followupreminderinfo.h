@@ -47,12 +47,16 @@ public:
 
     void writeConfig(KConfigGroup &config);
 
+    QString subject() const;
+    void setSubject(const QString &subject);
+
 private:
     void readConfig(const KConfigGroup &config);
     Akonadi::Item::Id mId;
     QString mMessageId;
     QDateTime mFollowUpReminderDate;
     QString mTo;
+    QString mSubject;
 };
 }
 #endif // FOLLOWUPREMINDERINFO_H

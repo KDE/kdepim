@@ -30,6 +30,7 @@ void FollowUpReminderInfoTest::shouldHaveDefaultValue()
     QCOMPARE(info.messageId(), QString());
     QCOMPARE(info.isValid(), false);
     QCOMPARE(info.to(), QString());
+    QCOMPARE(info.subject(), QString());
 }
 
 void FollowUpReminderInfoTest::shoudBeNotValid()
@@ -50,5 +51,20 @@ void FollowUpReminderInfoTest::shoudBeNotValid()
     info.setId(Akonadi::Item::Id(42));
     QCOMPARE(info.isValid(), true);
 }
+
+void FollowUpReminderInfoTest::shoudBeValidEvenIfSubjectIsEmpty()
+{
+    FollowUpReminder::FollowUpReminderInfo info;
+    //We need a Akonadi::Id valid and a messageId not empty and a valid date and a "To" not empty
+    info.setMessageId(QLatin1String("foo"));
+    const QDate date(2014,1,1);
+    info.setFollowUpReminderDate(QDateTime(date));
+    const QString to = QLatin1String("kde.org");
+    info.setTo(to);
+    info.setId(Akonadi::Item::Id(42));
+    QCOMPARE(info.isValid(), true);
+}
+
+
 
 QTEST_KDEMAIN(FollowUpReminderInfoTest, NoGUI)
