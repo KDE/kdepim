@@ -109,7 +109,6 @@ TextFindWidget::TextFindWidget(QWidget *parent)
     connect( mCaseSensitiveAct, SIGNAL(toggled(bool)), this, SIGNAL(updateSearchOptions()) );
     connect( mWholeWordAct, SIGNAL(toggled(bool)), this, SIGNAL(updateSearchOptions()) );
     connect( mSearch, SIGNAL(textChanged(QString)), this, SLOT(slotAutoSearch(QString)) );
-    connect( mSearch, SIGNAL(clearButtonClicked()), this, SIGNAL(clearSearch()) );
     setLayout(lay);
 }
 
@@ -159,6 +158,9 @@ void TextFindWidget::slotAutoSearch(const QString &str)
     mFindNextBtn->setEnabled( isNotEmpty );
     Q_EMIT searchStringEmpty( !isNotEmpty );
     Q_EMIT autoSearch(str);
+    if (str.isEmpty()) {
+       Q_EMIT clearSearch();
+    }
 }
 
 QLineEdit *TextFindWidget::search() const

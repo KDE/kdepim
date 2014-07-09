@@ -56,7 +56,6 @@ public:
     void _k_closeBar();
     void _k_slotHighlightAllChanged(bool highLight);
     void _k_slotCaseSensitivityChanged(bool sensitivity);
-    void _k_slotClearSearch();
     void _k_slotAutoSearch(const QString&);
     void _k_slotSearchText(bool backward = false, bool isAutoSearch = true);
     void _k_slotFindNext();
@@ -108,10 +107,6 @@ void FindReplaceBarPrivate::_k_closeBar()
     q->hide();
 }
 
-void FindReplaceBarPrivate::_k_slotClearSearch()
-{
-    clearSelections();
-}
 
 void FindReplaceBarPrivate::clearSelections()
 {
@@ -269,7 +264,6 @@ FindReplaceBar::FindReplaceBar(KWebView *parent)
 
     connect( closeBtn, SIGNAL(clicked()), this, SLOT(_k_closeBar()) );
     connect( d->caseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(_k_slotCaseSensitivityChanged(bool)) );
-    connect( d->search, SIGNAL(clearButtonClicked()), this, SLOT(_k_slotClearSearch()) );
     connect( d->search, SIGNAL(textChanged(QString)), this, SLOT(_k_slotAutoSearch(QString)) );
     connect( d->findNextButton, SIGNAL(clicked()), this, SLOT(_k_slotFindNext()) );
     connect( d->findPreviousButton, SIGNAL(clicked()), this, SLOT(_k_slotFindPrevious()) );
