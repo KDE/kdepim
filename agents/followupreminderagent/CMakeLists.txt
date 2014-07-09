@@ -18,15 +18,18 @@ set_target_properties( followupreminder PROPERTIES VERSION ${GENERIC_LIB_VERSION
 install( TARGETS followupreminder ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 
+set(followupreminderagent_job_SRCS
+    jobs/followupreminderjob.cpp
+    jobs/followupreminderfinishtaskjob.cpp
+)
 
 set(followupreminderagent_SRCS
     followupreminderagent.cpp
     followupremindermanager.cpp
     followupreminderinfodialog.cpp
-    followupreminderjob.cpp
     followupremindernoanswerdialog.cpp
     followupreminderinfowidget.cpp
-    followupreminderfinishtaskjob.cpp
+    ${followupreminderagent_job_SRCS}
 )
 
 qt4_add_dbus_adaptor(followupreminderagent_SRCS org.freedesktop.Akonadi.FollowUpReminder.xml followupreminderagent.h FollowUpReminderAgent)

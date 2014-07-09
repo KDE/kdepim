@@ -18,8 +18,8 @@
 #include "followupremindermanager.h"
 #include "followupreminderinfo.h"
 #include "followupremindernoanswerdialog.h"
-#include "followupreminderjob.h"
-#include "followupreminderfinishtaskjob.h"
+#include "jobs/followupreminderjob.h"
+#include "jobs/followupreminderfinishtaskjob.h"
 
 #include <KGlobal>
 #include <KConfigGroup>
