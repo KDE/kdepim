@@ -30,6 +30,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kpixmapregionselectordialog.h>
+#include <KUrl>
 
 #include <QtCore/QMimeData>
 #include <QDrag>

@@ -38,6 +38,7 @@
 #include <KIO/NetAccess>
 #include <QDebug>
 #include <KLocalizedString>
+#include <KUrl>
 
 #include <QFile>
 

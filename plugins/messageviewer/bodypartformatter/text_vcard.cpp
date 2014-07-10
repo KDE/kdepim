@@ -53,6 +53,7 @@ using MessageViewer::Interface::BodyPart;
 #include <kdemacros.h>
 #include <KFileDialog>
 #include <KGlobal>
+#include <KUrl>
 #include <QIcon>
 #include <KLocalizedString>
 #include <QMenu>

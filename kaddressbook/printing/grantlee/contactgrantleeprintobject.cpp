@@ -25,6 +25,7 @@
 #include <KABC/Address>
 #include <KABC/PhoneNumber>
 #include <KLocale>
+#include <KUrl>
 
 #include <QBuffer>
 

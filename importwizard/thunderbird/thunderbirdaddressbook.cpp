@@ -19,7 +19,7 @@
 #include "addressbook/MorkParser.h"
 
 #include <KABC/Addressee>
-
+#include <KUrl>
 #include <QDebug>
 
 ThunderBirdAddressBook::ThunderBirdAddressBook(const QDir& dir, ImportWizard *parent)

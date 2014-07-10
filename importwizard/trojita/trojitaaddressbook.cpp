@@ -18,6 +18,7 @@
 #include "trojitaaddressbook.h"
 #include <KABC/Addressee>
 
+#include <KUrl>
 
 #include <QSettings>
 

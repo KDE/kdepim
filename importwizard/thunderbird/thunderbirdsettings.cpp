@@ -23,6 +23,7 @@
 #include <KPIMIdentities/kpimidentities/identity.h>
 #include <KPIMIdentities/kpimidentities/signature.h>
 
+#include <KUrl>
 #include <KABC/VCardConverter>
 #include <QTextStream>
 #include <QStringList>

@@ -21,6 +21,7 @@
 #include "contactfields.h"
 
 #include <KLocalizedString>
+#include <KUrl>
 
 QString ContactFields::label( Field field )
 {

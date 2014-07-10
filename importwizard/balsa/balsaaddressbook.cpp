@@ -24,6 +24,7 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>
+#include <KUrl>
 
 #include <QDebug>
 #include <QFile>
