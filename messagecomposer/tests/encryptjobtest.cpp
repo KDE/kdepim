@@ -21,7 +21,7 @@
 #include "encryptjobtest.h"
 
 #include <QDebug>
-#include <qtest_kde.h>
+#include <qtest.h>
 #include "qtest_messagecomposer.h"
 #include "cryptofunctions.h"
 
@@ -46,7 +46,7 @@
 #include <stdlib.h>
 #include <KCharsets>
 
-QTEST_KDEMAIN( EncryptJobTest, GUI )
+QTEST_MAIN( EncryptJobTest )
 
 void EncryptJobTest::initTestCase()
 {

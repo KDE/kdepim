@@ -27,7 +27,7 @@
 #include "testcsshelper.h"
 
 #include <QDebug>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <kleo/enum.h>
 
@@ -51,7 +51,7 @@ using MessageCore::AttachmentPart;
 
 #include <gpgme++/key.h>
 
-QTEST_KDEMAIN( CryptoComposerTest, GUI )
+QTEST_MAIN( CryptoComposerTest )
 
 void CryptoComposerTest::initTestCase()
 {

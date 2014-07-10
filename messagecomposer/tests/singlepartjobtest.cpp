@@ -20,7 +20,7 @@
 #include "singlepartjobtest.h"
 
 #include <QDebug>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <kmime/kmime_content.h>
 using namespace KMime;
@@ -30,7 +30,7 @@ using namespace KMime;
 #include <messagecomposer/job/singlepartjob.h>
 using namespace MessageComposer;
 
-QTEST_KDEMAIN( SinglepartJobTest, NoGUI )
+QTEST_MAIN( SinglepartJobTest )
 
 void SinglepartJobTest::testContent()
 {

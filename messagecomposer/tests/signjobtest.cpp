@@ -21,7 +21,7 @@
 #include "signjobtest.h"
 
 #include <QDebug>
-#include <qtest_kde.h>
+#include <qtest.h>
 #include "qtest_messagecomposer.h"
 #include "cryptofunctions.h"
 
@@ -41,7 +41,7 @@
 
 #include <stdlib.h>
 
-QTEST_KDEMAIN( SignJobTest, GUI )
+QTEST_MAIN( SignJobTest )
 
 void SignJobTest::initTestCase()
 {

@@ -23,7 +23,7 @@
 
 #include <QDebug>
 #include <KIconLoader>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <kmime/kmime_content.h>
 using namespace KMime;
@@ -36,7 +36,7 @@ using namespace MessageComposer;
 
 #include <kpimtextedit/textedit.h>
 
-QTEST_KDEMAIN( MainTextJobTest, GUI )
+QTEST_MAIN( MainTextJobTest )
 
 void MainTextJobTest::testPlainText()
 {

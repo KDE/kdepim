@@ -21,7 +21,7 @@
 #include "signencrypttest.h"
 
 #include <QDebug>
-#include <qtest_kde.h>
+#include <qtest.h>
 #include "qtest_messagecomposer.h"
 #include "cryptofunctions.h"
 
@@ -46,7 +46,7 @@
 
 #include <messagecore/helpers/nodehelper.h>
 
-QTEST_KDEMAIN( SignEncryptTest, GUI )
+QTEST_MAIN( SignEncryptTest )
 
 void SignEncryptTest::initTestCase()
 {

@@ -23,7 +23,7 @@
 #include "qtest_messagecomposer.h"
 
 #include <QDebug>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <kmime/kmime_headers.h>
 using namespace KMime;
@@ -38,7 +38,7 @@ using namespace MessageComposer;
 #include <boost/shared_ptr.hpp>
 using MessageCore::AttachmentPart;
 
-QTEST_KDEMAIN( ComposerTest, GUI )
+QTEST_MAIN( ComposerTest )
 
 void ComposerTest::testAttachments()
 {

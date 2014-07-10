@@ -45,7 +45,7 @@
 
 #include <KPIMIdentities/kpimidentities/identitymanager.h>
 #include <KPIMIdentities/kpimidentities/identity.h>
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <QDateTime>
 #include <KCharsets>
 #include <QtCore/QDir>
@@ -111,7 +111,7 @@ namespace {
 
 
 
-QTEST_KDEMAIN( MessageFactoryTest, GUI )
+QTEST_MAIN( MessageFactoryTest )
 
 void MessageFactoryTest::testCreateReply()
 {

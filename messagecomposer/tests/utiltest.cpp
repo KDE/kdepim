@@ -19,12 +19,12 @@
 
 #include "utiltest.h"
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <messagecomposer/utils/util.h>
 using namespace MessageComposer;
 
-QTEST_KDEMAIN( UtilTest, NoGUI )
+QTEST_MAIN( UtilTest )
 
 void UtilTest::testSelectCharset()
 {

@@ -20,7 +20,7 @@
 #include "multipartjobtest.h"
 
 #include <QDebug>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <kmime/kmime_content.h>
 using namespace KMime;
@@ -31,7 +31,7 @@ using namespace KMime;
 #include <messagecomposer/job/multipartjob.h>
 using namespace MessageComposer;
 
-QTEST_KDEMAIN( MultipartJobTest, NoGUI )
+QTEST_MAIN( MultipartJobTest )
 
 void MultipartJobTest::testMultipartMixed()
 {

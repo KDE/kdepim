@@ -20,7 +20,7 @@
 #include "skeletonmessagejobtest.h"
 
 #include <QDebug>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <kmime/kmime_message.h>
 
@@ -30,7 +30,7 @@
 #include <messagecomposer/job/skeletonmessagejob.h>
 using namespace MessageComposer;
 
-QTEST_KDEMAIN( SkeletonMessageJobTest, NoGUI )
+QTEST_MAIN( SkeletonMessageJobTest )
 
 void SkeletonMessageJobTest::testSubject_data()
 {

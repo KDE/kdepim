@@ -21,7 +21,7 @@
 #include "qtest_messagecomposer.h"
 
 #include <QDebug>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_headers.h>
@@ -39,7 +39,7 @@ using namespace MessageCore;
 
 #define PATH_ATTACHMENTS QLatin1String( KDESRCDIR "/attachments/" )
 
-QTEST_KDEMAIN( AttachmentJobTest, NoGUI )
+QTEST_MAIN( AttachmentJobTest )
 
 void AttachmentJobTest::testAttachment()
 {
