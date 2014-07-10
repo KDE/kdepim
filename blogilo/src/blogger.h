@@ -23,7 +23,7 @@
 #include <kblog/blog.h>
 
 #include <QMap>
-
+#include <KUrl>
 namespace KGAPI2
 {
     class Job;
