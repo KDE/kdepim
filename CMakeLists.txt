@@ -92,6 +92,7 @@ find_package(Phonon4Qt5 CONFIG REQUIRED)
 find_package(KF5DNSSD ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5TextEditor ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Sonnet ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5GlobalAccel ${KF5_VERSION} CONFIG REQUIRED)
 
 # Find KdepimLibs Package
 find_package(KF5Akonadi CONFIG REQUIRED)
