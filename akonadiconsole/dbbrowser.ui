@@ -32,7 +32,11 @@
     </layout>
    </item>
    <item>
-    <widget class="QTableView" name="tableView" />
+    <widget class="QTableView" name="tableView">
+     <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+      <bool>true</bool>
+     </attribute>
+    </widget>
    </item>
   </layout>
  </widget>

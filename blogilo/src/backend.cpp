@@ -35,7 +35,7 @@
 #include <kblog/movabletype.h>
 #include <kblog/wordpressbuggy.h>
 #include <kblog/blogmedia.h>
-#include <kblog/blogger.h>
+#include "blogger.h"
 #include <qdebug.h>
 #include <KLocale>
 

@@ -48,6 +48,15 @@ void FollowUpReminderInfo::readConfig(const KConfigGroup &config)
     mMessageId = config.readEntry("messageId", QString());
     mTo = config.readEntry("to", QString());
 }
+QString FollowUpReminderInfo::subject() const
+{
+    return mSubject;
+}
+
+void FollowUpReminderInfo::setSubject(const QString &subject)
+{
+    mSubject = subject;
+}
 
 void FollowUpReminderInfo::writeConfig(KConfigGroup &config )
 {
@@ -59,7 +68,6 @@ void FollowUpReminderInfo::writeConfig(KConfigGroup &config )
     config.writeEntry("to", mTo);
     config.sync();
 }
-
 
 Akonadi::Item::Id FollowUpReminderInfo::id() const
 {

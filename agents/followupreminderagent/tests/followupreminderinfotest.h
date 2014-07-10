@@ -29,6 +29,8 @@ public:
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shoudBeNotValid();
+    void shoudBeValidEvenIfSubjectIsEmpty();
+
 };
 
 #endif // FOLLOWUPREMINDERINFOTEST_H

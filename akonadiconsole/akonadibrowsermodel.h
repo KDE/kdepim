@@ -23,6 +23,8 @@
 #include <AkonadiCore/entitytreemodel.h>
 #include <AkonadiCore/changerecorder.h>
 
+#include <QSortFilterProxyModel>
+
 using namespace Akonadi;
 
 class AkonadiBrowserModel : public EntityTreeModel
@@ -60,7 +62,21 @@ private:
   State *m_calendarState;
 
   ItemDisplayMode m_itemDisplayMode;
+};
 
+class AkonadiBrowserSortModel : public QSortFilterProxyModel
+{
+  Q_OBJECT
+public:
+  explicit AkonadiBrowserSortModel( AkonadiBrowserModel *browserModel, QObject *parent = 0 );
+  ~AkonadiBrowserSortModel();
+
+protected:
+  bool lessThan( const QModelIndex &left, const QModelIndex &right ) const;
+
+private:
+  AkonadiBrowserModel *mBrowserModel;
 };
 
 #endif
+

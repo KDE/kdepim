@@ -31,7 +31,7 @@
 #include <kblog/metaweblog.h>
 #include <kblog/movabletype.h>
 #include <kblog/wordpressbuggy.h>
-#include <kblog/blogger.h>
+#include "blogger.h"
 #include <kurl.h>
 #include <kmessagebox.h>
 #include <qdebug.h>
