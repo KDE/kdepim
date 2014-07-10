@@ -13,5 +13,6 @@
     <method name="printDebugInfo" >
        <arg type="s" direction="out"/>
     </method>
+    <method name="reload" />
   </interface>
 </node>
