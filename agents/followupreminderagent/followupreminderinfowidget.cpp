@@ -27,6 +27,9 @@
 #include <kmenu.h>
 #include <KLocalizedString>
 
+static QString followUpItemPattern = QLatin1String("FollowupReminderItem \\d+");
+
+
 FollowUpReminderInfoItem::FollowUpReminderInfoItem(QTreeWidget *parent)
     : QTreeWidgetItem(parent),
       mInfo(0)
@@ -48,9 +51,9 @@ FollowUpReminder::FollowUpReminderInfo* FollowUpReminderInfoItem::info() const
     return mInfo;
 }
 
-
 FollowUpReminderInfoWidget::FollowUpReminderInfoWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mChanged(false)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
     mTreeWidget = new QTreeWidget;
@@ -89,6 +92,31 @@ void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminder::FollowUpR
     }
 }
 
+void FollowUpReminderInfoWidget::save()
+{
+    if (!mChanged)
+        return;
+    KSharedConfig::Ptr config = KGlobal::config();
+
+    // first, delete all filter groups:
+    const QStringList filterGroups =config->groupList().filter( QRegExp( followUpItemPattern ) );
+
+    foreach ( const QString &group, filterGroups ) {
+        config->deleteGroup( group );
+    }
+
+    const int numberOfItem(mTreeWidget->topLevelItemCount());
+    for (int i = 0; i < numberOfItem; ++i) {
+        FollowUpReminderInfoItem *mailItem = static_cast<FollowUpReminderInfoItem *>(mTreeWidget->topLevelItem(i));
+        if (mailItem->info()) {
+            KConfigGroup group = config->group(QString::fromLatin1("FollowupReminderItem %1").arg(mailItem->info()->id()));
+            mailItem->info()->writeConfig(group);
+        }
+    }
+    config->sync();
+    config->reparseConfiguration();
+}
+
 void FollowUpReminderInfoWidget::customContextMenuRequested(const QPoint &pos)
 {
     const QList<QTreeWidgetItem *> listItems = mTreeWidget->selectedItems();
@@ -103,6 +131,7 @@ void FollowUpReminderInfoWidget::slotRemoveItem()
 {
     if (mTreeWidget->currentItem()) {
         delete mTreeWidget->currentItem();
+        mChanged = true;
     }
 }
 

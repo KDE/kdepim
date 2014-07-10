@@ -51,6 +51,9 @@ public:
     void saveTreeWidgetHeader(KConfigGroup &group);
 
     void setInfo(const QList<FollowUpReminder::FollowUpReminderInfo *> &infoList);
+
+    void save();
+
 private slots:
     void customContextMenuRequested(const QPoint &pos);
     void slotRemoveItem();
@@ -63,6 +66,7 @@ private:
         DeadLine
     };
     QTreeWidget *mTreeWidget;
+    bool mChanged;
 };
 
 #endif // FOLLOWUPREMINDERINFOWIDGET_H

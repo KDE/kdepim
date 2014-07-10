@@ -95,5 +95,5 @@ void FollowUpReminderInfoDialog::writeConfig()
 
 void FollowUpReminderInfoDialog::slotSave()
 {
-    //TODO
+    mWidget->save();
 }
