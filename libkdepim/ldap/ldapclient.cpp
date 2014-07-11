@@ -146,7 +146,7 @@ void LdapClient::startQuery( const QString &filter )
     url.setScope( d->mScope == QLatin1String("one") ? KLDAP::LdapUrl::One : KLDAP::LdapUrl::Sub );
     url.setFilter( QLatin1Char('(') + filter + QLatin1Char(')') );
 
-    kDebug(5300) <<"LdapClient: Doing query:" << url.prettyUrl();
+    kDebug(5300) <<"LdapClient: Doing query:" << url.toDisplayString();
 
     d->startParseLDIF();
     d->mActive = true;
