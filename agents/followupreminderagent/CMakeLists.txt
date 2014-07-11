@@ -14,7 +14,7 @@ set(followupreminderlib_SRCS
 )
 
 kconfig_add_kcfg_files(followupreminderlib_SRCS
-    followupreminderagentsettings.kcfgc
+    settings/followupreminderagentsettings.kcfgc
 )
 
 
