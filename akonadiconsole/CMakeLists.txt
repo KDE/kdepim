@@ -41,6 +41,7 @@ set(akonadiconsole_bin_SRCS
   jobtracker.cpp
   jobtrackerwidget.cpp
   jobtrackermodel.cpp
+  tagpropertiesdialog.cpp
 )
 
 qt4_generate_dbus_interface(jobtracker.h org.freedesktop.Akonadi.JobTracker.xml)
@@ -89,6 +90,7 @@ kde4_add_ui_files(akonadiconsole_bin_SRCS
   rawsocketconsole.ui
   browserwidget_contentview.ui
   collectioninternalspage.ui
+  tagpropertiesdialog.ui
 )
 
 kde4_add_app_icon(akonadiconsole_bin_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-app-akonadiconsole.png")

@@ -46,6 +46,7 @@ class EntityTreeView;
 class Job;
 class StandardActionManager;
 class Monitor;
+class TagModel;
 }
 namespace KPIM {
 class StatisticsProxyModel;
@@ -76,6 +77,16 @@ class BrowserWidget: public QWidget
     void clear();
     void updateItemFetchScope();
 
+    void tagViewContextMenuRequested( const QPoint &pos );
+    void tagViewDoubleClicked ( const QModelIndex &index );
+    void addSubTagRequested();
+    void addTagRequested();
+    void editTagRequested();
+    void removeTagRequested();
+    void createTag();
+    void modifyTag();
+
+
   private:
     Akonadi::Collection currentCollection() const;
 
@@ -91,6 +102,8 @@ class BrowserWidget: public QWidget
     Akonadi::Monitor *mMonitor;
     KViewStateMaintainer<Akonadi::ETMViewStateSaver> *m_stateMaintainer;
     KToggleAction *mCacheOnlyAction;
+    QTreeView *mTagView;
+    Akonadi::TagModel *mTagModel;
 };
 
 #endif
