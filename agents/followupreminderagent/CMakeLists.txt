@@ -12,7 +12,7 @@ set(followupreminderlib_SRCS
 )
 
 kde4_add_kcfg_files(followupreminderlib_SRCS
-    followupreminderagentsettings.kcfgc
+    settings/followupreminderagentsettings.kcfgc
 )
 
 
