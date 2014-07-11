@@ -20,11 +20,11 @@
 
 #include "../utils/stringutil.h"
 
-#include "qtest_kde.h"
+#include "qtest.h"
 
 using namespace MessageCore;
 
-QTEST_KDEMAIN( StringUtilTest, GUI )
+QTEST_MAIN( StringUtilTest )
 #define lineLength 40
 
 void StringUtilTest::test_SmartQuote()

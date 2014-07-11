@@ -22,14 +22,15 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <QBuffer>
 #include <QDebug>
 #include <KZip>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <messagecore/attachment/attachmentcompressjob.h>
 using namespace MessageCore;
 
-QTEST_KDEMAIN( AttachmentCompressJobTest, NoGUI )
+QTEST_MAIN( AttachmentCompressJobTest )
 
 void AttachmentCompressJobTest::testCompress()
 {

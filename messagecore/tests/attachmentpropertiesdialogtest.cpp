@@ -27,7 +27,7 @@
 #include <QDebug>
 #include <KComboBox>
 #include <KLineEdit>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <kmime/kmime_content.h>
 using namespace KMime;
@@ -36,7 +36,7 @@ using namespace KMime;
 #include <messagecore/attachment/attachmentpropertiesdialog.h>
 using namespace MessageCore;
 
-QTEST_KDEMAIN( AttachmentPropertiesDialogTest, GUI )
+QTEST_MAIN( AttachmentPropertiesDialogTest )
 
 void AttachmentPropertiesDialogTest::testAttachmentPartReadWrite()
 {

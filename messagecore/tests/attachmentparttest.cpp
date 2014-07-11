@@ -23,13 +23,13 @@
 #include <QHash>
 
 #include <QDebug>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <messagecore/attachment/attachmentpart.h>
 #include <boost/shared_ptr.hpp>
 using namespace MessageCore;
 
-QTEST_KDEMAIN( AttachmentPartTest, NoGUI )
+QTEST_MAIN( AttachmentPartTest )
 
 void AttachmentPartTest::testApi()
 {

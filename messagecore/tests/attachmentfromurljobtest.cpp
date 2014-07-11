@@ -22,12 +22,12 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <messagecore/attachment/attachmentfromurljob.h>
 using namespace MessageCore;
 
-QTEST_KDEMAIN( AttachmentFromUrlJobTest, NoGUI )
+QTEST_MAIN( AttachmentFromUrlJobTest )
 
 #define PATH_ATTACHMENTS QLatin1String( KDESRCDIR "/attachments/" )
 

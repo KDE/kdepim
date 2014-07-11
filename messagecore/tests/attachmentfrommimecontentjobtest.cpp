@@ -23,7 +23,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include <QDebug>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_headers.h>
@@ -32,7 +32,7 @@ using namespace KMime;
 #include <messagecore/attachment/attachmentfrommimecontentjob.h>
 using namespace MessageCore;
 
-QTEST_KDEMAIN( AttachmentFromMimeContentJobTest, NoGUI )
+QTEST_MAIN( AttachmentFromMimeContentJobTest )
 
 void AttachmentFromMimeContentJobTest::testAttachment()
 {
