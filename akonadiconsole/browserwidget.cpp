@@ -206,6 +206,9 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
 
   connect( contentUi.attrAddButton, SIGNAL(clicked()), SLOT(addAttribute()) );
   connect( contentUi.attrDeleteButton, SIGNAL(clicked()), SLOT(delAttribute()) );
+  connect( contentUi.flags, SIGNAL(changed()), SLOT(contentViewChanged()) );
+  connect( contentUi.tags, SIGNAL(changed()), SLOT(contentViewChanged()) );
+  connect( contentUi.remoteId, SIGNAL(textChanged(QString)), SLOT(contentViewChanged()) );
 
   CollectionPropertiesDialog::registerPage( new CollectionAclPageFactory() );
   CollectionPropertiesDialog::registerPage( new CollectionAttributePageFactory() );
@@ -279,6 +282,11 @@ void BrowserWidget::itemFetchDone(KJob * job)
   }
 }
 
+void BrowserWidget::contentViewChanged()
+{
+  contentUi.saveButton->setEnabled(true);
+}
+
 void BrowserWidget::setItem( const Akonadi::Item &item )
 {
   mCurrentItem = item;
@@ -302,6 +310,8 @@ void BrowserWidget::setItem( const Akonadi::Item &item )
     contentUi.stack->setCurrentWidget( contentUi.unsupportedTypePage );
   }
 
+  contentUi.saveButton->setEnabled(false);
+
   QByteArray data = item.payloadData();
   contentUi.dataView->setPlainText( data );
 
@@ -318,7 +328,7 @@ void BrowserWidget::setItem( const Akonadi::Item &item )
 
   QStringList tags;
   foreach ( const Tag &tag, item.tags() )
-    tags << tag.url().url();
+    tags << QString::fromLatin1( tag.gid() );
   contentUi.tags->setItems( tags );
 
   Attribute::List list = item.attributes();
@@ -378,8 +388,11 @@ void BrowserWidget::save()
     item.setFlag( s.toUtf8() );
   foreach ( const Tag &tag, mCurrentItem.tags() )
     item.clearTag( tag );
-  foreach ( const QString &s, contentUi.tags->items() )
-    item.setTag( Tag::fromUrl( s ) );
+  foreach ( const QString &s, contentUi.tags->items() ) {
+    Tag tag;
+    tag.setGid( s.toLatin1() );
+    item.setTag( tag );
+  }
   item.setPayloadFromData( data );
 
   item.clearAttributes();
@@ -402,6 +415,8 @@ void BrowserWidget::saveResult(KJob * job)
 {
   if ( job->error() ) {
     KMessageBox::error( this, i18n( "Failed to save changes: %1", job->errorString() ) );
+  } else {
+    contentUi.saveButton->setEnabled( false );
   }
 }
 

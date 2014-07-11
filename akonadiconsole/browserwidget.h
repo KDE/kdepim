@@ -77,6 +77,8 @@ class BrowserWidget: public QWidget
     void clear();
     void updateItemFetchScope();
 
+    void contentViewChanged();
+
     void tagViewContextMenuRequested( const QPoint &pos );
     void tagViewDoubleClicked ( const QModelIndex &index );
     void addSubTagRequested();
