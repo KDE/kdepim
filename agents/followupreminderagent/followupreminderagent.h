@@ -38,8 +38,6 @@ public:
 
 public Q_SLOTS:
     void configure( WId windowId );
-
-private slots:
     void reload();
 
 private:

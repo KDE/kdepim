@@ -3,3 +3,6 @@ File=followupreminderagentsettings.kcfg
 ClassName=FollowUpReminderAgentSettings
 Singleton=true
 Mutators=true
+Visibility=FOLLOWUPREMINDER_EXPORT
+IncludeFiles=followupreminder_export.h
+
