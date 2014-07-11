@@ -100,8 +100,8 @@ EventEdit::EventEdit(QWidget *parent)
 #ifndef QT_NO_ACCESSIBILITY
     mStartDateTimeEdit->setAccessibleDescription( i18n("Select start time for event.") );
 #endif
-    connect(mStartDateTimeEdit, SIGNAL(dateTimeChanged(KDateTime)),
-            this, SLOT(slotStartDateTimeChanged(KDateTime)));
+    connect(mStartDateTimeEdit, SIGNAL(dateTimeChanged(QDateTime)),
+            this, SLOT(slotStartDateTimeChanged(QDateTime)));
     hbox->addWidget(mStartDateTimeEdit);
 
     hbox->addSpacing(5);
@@ -297,7 +297,7 @@ bool EventEdit::eventFilter(QObject *object, QEvent *e)
     return QWidget::eventFilter(object,e);
 }
 
-void EventEdit::slotStartDateTimeChanged(const KDateTime &newDateTime)
+void EventEdit::slotStartDateTimeChanged(const QDateTime &newDateTime)
 {
     if (!newDateTime.isValid()) {
       return;
@@ -310,7 +310,7 @@ void EventEdit::slotStartDateTimeChanged(const KDateTime &newDateTime)
         mEndDateTimeEdit->setDate(newDateTime.date());
     }
 
-    //QT5 mEndDateTimeEdit->setMinimumDateTime(newDateTime);
+    mEndDateTimeEdit->setMinimumDateTime(newDateTime);
 }
 
 

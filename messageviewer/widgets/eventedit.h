@@ -57,7 +57,7 @@ private Q_SLOTS:
     void slotReturnPressed();
     void slotCollectionChanged(int);
     void slotOpenEditor();
-    void slotStartDateTimeChanged(const KDateTime &newDateTime);
+    void slotStartDateTimeChanged(const QDateTime &newDateTime);
     void slotUpdateButtons(const QString &subject);
 
 Q_SIGNALS:
