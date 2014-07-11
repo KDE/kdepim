@@ -19,7 +19,6 @@ include_directories(
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
-#REACTIVATE
 add_subdirectory( tests )
 include_directories(${Grantlee_INCLUDE_DIRS})
 
