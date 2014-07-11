@@ -19,7 +19,7 @@
 #include "mergecontactinfowidgettest.h"
 
 #include "../mergecontactinfowidget.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <QStackedWidget>
 using namespace KABMergeContacts;
 
@@ -55,4 +55,4 @@ void MergeContactInfoWidgetTest::shouldHaveActivateNoWidgetWhenSelectNoContact()
     QCOMPARE(stackedWidget->currentWidget()->objectName(), QLatin1String("nocontact"));
 }
 
-QTEST_KDEMAIN(MergeContactInfoWidgetTest, GUI )
+QTEST_MAIN(MergeContactInfoWidgetTest )

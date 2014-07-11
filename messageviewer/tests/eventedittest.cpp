@@ -28,10 +28,11 @@
 #include <KDateTimeEdit>
 #include <QPushButton>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <qtestkeyboard.h>
 #include <qtestmouse.h>
 
+#include <QSignalSpy>
 #include <QLineEdit>
 #include <QHBoxLayout>
 #include <QShortcut>
@@ -350,4 +351,4 @@ void EventEditTest::shouldShouldEnabledSaveOpenEditorButton()
 }
 
 
-QTEST_KDEMAIN( EventEditTest, GUI )
+QTEST_MAIN( EventEditTest )

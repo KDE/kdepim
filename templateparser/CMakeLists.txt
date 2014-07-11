@@ -68,5 +68,4 @@ install(FILES
   DESTINATION ${KCFG_INSTALL_DIR}
 )
 
-#REACTIVATE
-#add_subdirectory(tests)
+add_subdirectory(tests)

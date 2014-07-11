@@ -6,10 +6,15 @@ include_directories(
 macro(add_storageservice_unittest _source)
   set(_test ${_source} ../storageservicenavigationbuttons.cpp ../storageservicemanagerutil.cpp)
   get_filename_component(_name ${_source} NAME_WE)
-  kde4_add_unit_test(${_name} TESTNAME storageservicemanager-${_name} ${_test} )
+  add_executable( ${_name} ${_test} )
+  add_test( ${_name} ${_name} )
+  ecm_mark_as_test(storageservicemanager-${_name})
   target_link_libraries( ${_name}
     Qt5::Test
     Qt5::Gui
+    Qt5::Widgets
+    KF5::I18n
+    KF5::ConfigGui
   )
 endmacro ()
 

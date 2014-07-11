@@ -45,7 +45,7 @@ macro (KDE4_HANDLE_CRYPTO_RPATH_FOR_EXECUTABLE _target_NAME)
             )
       endif ()
 
-      macro_additional_clean_files(${_executable}.shell)
+      # REACTIVATE IT macro_additional_clean_files(${_executable}.shell)
 
       # under UNIX, set the property WRAPPER_SCRIPT to the name of the generated shell script
       # so it can be queried and used later on easily

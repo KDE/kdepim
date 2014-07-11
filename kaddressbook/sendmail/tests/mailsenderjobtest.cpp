@@ -20,7 +20,7 @@
 
 #include <KABC/Addressee>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
 
 MailSenderJobTest::MailSenderJobTest()
@@ -154,4 +154,4 @@ void MailSenderJobTest::shouldEmitSignalIfThereIsAValidEmail()
 
 //TODO Create unittest for ContactGroup too
 
-QTEST_KDEMAIN(MailSenderJobTest, NoGUI)
+QTEST_MAIN(MailSenderJobTest)

@@ -21,7 +21,7 @@
 #include <Akonadi/Item>
 #include <kabc/addressee.h>
 #include <QList>
-#include <qtest_kde.h>
+#include <qtest.h>
 
 using namespace KABMergeContacts;
 SearchPotentialDuplicateContactJobTest::SearchPotentialDuplicateContactJobTest()
@@ -72,4 +72,4 @@ void SearchPotentialDuplicateContactJobTest::shouldReturnListWhenTwoItemsAreDupl
     QCOMPARE(lstResult.count(), 1);
 }
 
-QTEST_KDEMAIN(SearchPotentialDuplicateContactJobTest, NoGUI)
+QTEST_MAIN(SearchPotentialDuplicateContactJobTest)

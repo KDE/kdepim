@@ -27,8 +27,9 @@
 #include <KPIMIdentities/kpimidentities/identity.h>
 #include "qwebpage.h"
 #include "qwebframe.h"
-#include "qtest_kde.h"
+#include "qtest.h"
 #include "qdebug.h"
+#include <QDir>
 
 using namespace MessageViewer;
 
@@ -212,5 +213,5 @@ void TemplateParserTester::test_processWithTemplatesForContent()
     QCOMPARE( QString::fromLatin1( msg->encodedBody() ), expected );
 }
 
-QTEST_KDEMAIN( TemplateParserTester, GUI )
+QTEST_MAIN( TemplateParserTester )
 

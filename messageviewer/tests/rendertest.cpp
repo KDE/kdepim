@@ -23,9 +23,10 @@
 #include "messagecore/tests/util.h"
 
 #include <KMime/Message>
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <QDir>
 #include <QObject>
+#include <QProcess>
 
 using namespace MessageViewer;
 
@@ -127,6 +128,6 @@ class RenderTest : public QObject
     }
 };
 
-QTEST_KDEMAIN( RenderTest, GUI )
+QTEST_MAIN( RenderTest )
 
 #include "rendertest.moc"

@@ -21,11 +21,12 @@
 #include <KABC/Addressee>
 #include <AkonadiCore/EntityTreeModel>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <qtestmouse.h>
 #include <QListWidget>
 #include <QPushButton>
 #include <QStandardItemModel>
+#include <QSignalSpy>
 using namespace KABMergeContacts;
 
 namespace KABMergeContacts {
@@ -160,4 +161,4 @@ void MergeContactWidgetTest::shouldEmitSignalsWhenSelectContact()
 }
 
 
-QTEST_KDEMAIN(MergeContactWidgetTest , GUI )
+QTEST_MAIN(MergeContactWidgetTest  )

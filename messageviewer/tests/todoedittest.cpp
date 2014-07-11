@@ -24,7 +24,7 @@
 #include <QStandardItemModel>
 #include <QPushButton>
 #include <KMessageWidget>
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <qtestkeyboard.h>
 #include <qtestmouse.h>
 
@@ -506,4 +506,4 @@ void TodoEditTest::shouldShouldEnabledSaveOpenEditorButton()
 
 
 
-QTEST_KDEMAIN( TodoEditTest, GUI )
+QTEST_MAIN( TodoEditTest )

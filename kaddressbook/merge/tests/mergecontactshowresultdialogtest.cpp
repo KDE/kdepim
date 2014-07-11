@@ -18,7 +18,7 @@
 #include "mergecontactshowresultdialogtest.h"
 #include "mergecontactshowresultdialog.h"
 #include "mergecontactshowresulttabwidget.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 #include <AkonadiCore/Item>
 #include <KABC/Addressee>
 
@@ -71,4 +71,4 @@ void MergeContactShowResultDialogTest::shouldShowTabBarWhenWeHaveMoreThanOneCont
     QCOMPARE(tabWidget->count(), 2);
 }
 
-QTEST_KDEMAIN(MergeContactShowResultDialogTest, GUI )
+QTEST_MAIN(MergeContactShowResultDialogTest )

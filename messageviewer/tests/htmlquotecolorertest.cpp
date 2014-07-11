@@ -20,11 +20,11 @@
 
 #include "viewer/htmlquotecolorer.cpp"
 
-#include "qtest_kde.h"
+#include "qtest.h"
 
 using namespace MessageViewer;
 
-QTEST_KDEMAIN( HTMLQuoteColorerTester, GUI )
+QTEST_MAIN( HTMLQuoteColorerTester )
 
 void HTMLQuoteColorerTester::test_QuoteColor()
 {

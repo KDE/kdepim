@@ -26,12 +26,12 @@
 
 #include <AkonadiCore/item.h>
 
-#include "qtest_kde.h"
+#include "qtest.h"
 #include <messagecore/tests/util.h>
 
 using namespace MessageViewer;
 
-QTEST_KDEMAIN( ObjectTreeParserTester, GUI )
+QTEST_MAIN( ObjectTreeParserTester )
 
 void ObjectTreeParserTester::initTestCase()
 {

@@ -18,7 +18,7 @@
 
 #include "mergecontacttest.h"
 #include "../mergecontacts.h"
-#include <qtest_kde.h>
+#include <qtest.h>
 
 using namespace KABMergeContacts;
 
@@ -68,4 +68,4 @@ void MergeContactTest::noNneedManualSelectionCheckWhenOneItem()
 }
 
 
-QTEST_KDEMAIN(MergeContactTest, NoGUI)
+QTEST_MAIN(MergeContactTest)

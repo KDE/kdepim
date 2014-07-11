@@ -19,7 +19,7 @@
 
 #include "../mergecontactduplicatecontactdialog.h"
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
 #include <QStackedWidget>
 using namespace KABMergeContacts;
@@ -50,4 +50,4 @@ void MergeContactDuplicateContactDialogTest::shouldShowNoEnoughPageWhenSelectOne
 }
 
 
-QTEST_KDEMAIN(MergeContactDuplicateContactDialogTest, GUI)
+QTEST_MAIN(MergeContactDuplicateContactDialogTest)

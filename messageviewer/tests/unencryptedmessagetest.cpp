@@ -23,7 +23,7 @@
 
 #include <messagecore/tests/util.h>
 
-#include <qtest_kde.h>
+#include <qtest.h>
 
 using namespace MessageViewer;
 
@@ -42,7 +42,7 @@ class UnencryptedMessageTest : public QObject
     void testInlinePGPEncryptedNotDecrypted();
 };
 
-QTEST_KDEMAIN( UnencryptedMessageTest, GUI )
+QTEST_MAIN( UnencryptedMessageTest )
 
 void UnencryptedMessageTest::initTestCase()
 {
