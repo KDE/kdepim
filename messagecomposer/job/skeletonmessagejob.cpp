@@ -131,7 +131,7 @@ void SkeletonMessageJobPrivate::doStart()
     // Date:
     {
         KMime::Headers::Date *date = new KMime::Headers::Date( message );
-        date->setDateTime( KDateTime::currentLocalDateTime() );
+        date->setDateTime( QDateTime::currentDateTime() );
         message->setHeader( date );
     }
 

@@ -45,7 +45,7 @@ void initHeader( const KMime::Message::Ptr &message, const KPIMIdentities::Ident
     applyIdentity( message, identMan, id );
     message->to()->clear();
     message->subject()->clear();
-    message->date()->setDateTime( KDateTime::currentLocalDateTime() );
+    message->date()->setDateTime( QDateTime::currentDateTime() );
 
     // user agent, e.g. KMail/1.9.50 (Windows/5.0; KDE/3.97.1; i686; svn-762186; 2008-01-15)
     QStringList extraInfo;

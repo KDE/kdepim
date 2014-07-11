@@ -144,7 +144,7 @@ void ExpireJob::itemFetchResult( KJob *job )
             continue;
         }
 
-        if ( mb->date()->dateTime().dateTime().toTime_t() < maxTime ) {
+        if ( mb->date()->dateTime().toTime_t() < maxTime ) {
             mRemovedMsgs.append( item );
         }
     }

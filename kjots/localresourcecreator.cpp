@@ -151,7 +151,7 @@ void LocalResourceCreator::createFinished(KJob* job)
 
   note->subject( true )->fromUnicodeString( title, encoding );
   note->contentType( true )->setMimeType( "text/plain" );
-  note->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
+  note->date( true )->setDateTime( QDateTime::currentDateTime() );
   note->from( true )->fromUnicodeString( QLatin1String("Kjots@kde4"), encoding );
   // Need a non-empty body part so that the serializer regards this as a valid message.
   note->mainBodyPart()->fromUnicodeString( QLatin1String(" ") );

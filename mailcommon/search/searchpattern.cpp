@@ -1009,7 +1009,7 @@ bool SearchRuleNumerical::matches( const Akonadi::Item &item ) const
         numericalValue = contents().toLongLong();
         msgContents.setNum( numericalMsgContents );
     } else if ( qstricmp( field(), "<age in days>" ) == 0 ) {
-        QDateTime msgDateTime = msg->date()->dateTime().dateTime();
+        QDateTime msgDateTime = msg->date()->dateTime();
         numericalMsgContents = msgDateTime.daysTo( QDateTime::currentDateTime() );
         numericalValue = contents().toInt();
         msgContents.setNum( numericalMsgContents );

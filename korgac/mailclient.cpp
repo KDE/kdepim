@@ -270,7 +270,7 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
   if( bccMe ) {
     message->bcc()->fromUnicodeString( from, "utf-8" ); //from==me, right?
   }
-  message->date()->setDateTime( KDateTime::currentLocalDateTime() );
+  message->date()->setDateTime( QDateTime::currentDateTime() );
   message->subject()->fromUnicodeString( subject, "utf-8" );
 
   if ( outlookConformInvitation ) {

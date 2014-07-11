@@ -256,7 +256,7 @@ bool FilterManager::Private::beginFiltering( const Akonadi::Item &item ) const
         KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
         const QString subject = msg->subject()->asUnicodeString();
         const QString from = msg->from()->asUnicodeString();
-        const KDateTime dateTime = msg->date()->dateTime();
+        const QDateTime dateTime = msg->date()->dateTime();
         const QString date = KLocale::global()->formatDateTime( dateTime, KLocale::LongDate );
         const QString logText( i18n( "<b>Begin filtering on message \"%1\" from \"%2\" at \"%3\" :</b>",
                                      subject, from, date ) );

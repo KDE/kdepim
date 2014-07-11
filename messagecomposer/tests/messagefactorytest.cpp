@@ -125,7 +125,7 @@ void MessageFactoryTest::testCreateReply()
   QVERIFY( reply.replyAll = true );
   qDebug() << reply.msg->body();
 
-  QDateTime date = msg->date()->dateTime().dateTime();
+  QDateTime date = msg->date()->dateTime();
   QString datetime = KLocale::global()->formatDate( date.date(), KLocale::LongDate );
   datetime += QLatin1String( " " ) + KLocale::global()->formatTime( date.time(), true );
   QString replyStr = QString::fromLatin1( QByteArray(QByteArray("On ") + datetime.toLatin1() + QByteArray(" you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n\n")) );
@@ -148,7 +148,7 @@ void MessageFactoryTest::testCreateReplyHtml()
   QVERIFY( reply.replyAll = true );
   qDebug() << "html reply" << reply.msg->encodedContent();
 
-  QDateTime date = msg->date()->dateTime().dateTime();
+  QDateTime date = msg->date()->dateTime();
   QString datetime = KLocale::global()->formatDate( date.date(), KLocale::LongDate );
   datetime += QLatin1String( " " ) + KLocale::global()->formatTime( date.time(), true );
   QString replyStr = QString::fromLatin1( QByteArray(QByteArray("On ") + datetime.toLatin1() + QByteArray(" you wrote:\n> encoded?\n")) );
@@ -173,7 +173,7 @@ void MessageFactoryTest::testCreateReplyUTF16Base64()
   QVERIFY( reply.replyAll = true );
 //   qDebug() << "html reply" << reply.msg->encodedContent();
 
-  QDateTime date = msg->date()->dateTime().dateTime();
+  QDateTime date = msg->date()->dateTime();
   QString datetime = KLocale::global()->formatDate( date.date(), KLocale::LongDate );
   datetime += QLatin1String( " " ) + KLocale::global()->formatTime( date.time(), true );
   QString replyStr = QString::fromLatin1( QByteArray(QByteArray("On ") + datetime.toLatin1() + QByteArray(" you wrote:\n> quote me please.\n")) );
@@ -198,7 +198,7 @@ void MessageFactoryTest::testCreateForward()
 
   KMime::Message::Ptr fw =  factory.createForward();
 
-  QDateTime date = msg->date()->dateTime().dateTime();
+  QDateTime date = msg->date()->dateTime();
   QString datetime = KLocale::global()->formatDate( date.date(), KLocale::LongDate );
   datetime += QLatin1String( ", " ) + KLocale::global()->formatTime( date.time(), true );
 
@@ -248,7 +248,7 @@ void MessageFactoryTest::testCreateRedirect()
   QString redirectTo = QLatin1String("redir@redir.com");
   KMime::Message::Ptr rdir =  factory.createRedirect( redirectTo );
 
-  QDateTime date = rdir->date()->dateTime().dateTime();
+  QDateTime date = rdir->date()->dateTime();
   QString datetime = KLocale::global()->formatDate( date.date(), KLocale::LongDate );
   datetime = rdir->date()->asUnicodeString();
 
@@ -305,7 +305,7 @@ void MessageFactoryTest::testCreateResend()
 
   KMime::Message::Ptr rdir =  factory.createResend();
 
-  QDateTime date = rdir->date()->dateTime().dateTime();
+  QDateTime date = rdir->date()->dateTime();
   QString datetime = KLocale::global()->formatDate( date.date(), KLocale::LongDate );
   datetime = rdir->date()->asUnicodeString();
 
@@ -371,7 +371,7 @@ void MessageFactoryTest::testCreateMDN()
 
   QString mdnContent = QString::fromLatin1( "The message sent on %1 to %2 with subject \"%3\" has been displayed. "
                                 "This is no guarantee that the message has been read or understood." );
-  mdnContent = mdnContent.arg( KMime::DateFormatter::formatDate( KMime::DateFormatter::Localized, msg->date()->dateTime().dateTime().toTime_t() ) )
+  mdnContent = mdnContent.arg( KMime::DateFormatter::formatDate( KMime::DateFormatter::Localized, msg->date()->dateTime().toTime_t() ) )
                          .arg( msg->to()->asUnicodeString() ).arg( msg->subject()->asUnicodeString() );
 
   qDebug() << "comparing with:" << mdnContent;

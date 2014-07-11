@@ -148,7 +148,7 @@ void Composer::send()
     m_msg->from()->fromUnicodeString( m_from , "utf-8" );
     m_msg->to()->fromUnicodeString( m_receiverModel->recipientString(MessageComposer::Recipient::To), "utf-8" );
     m_msg->cc()->fromUnicodeString( m_receiverModel->recipientString(MessageComposer::Recipient::Cc), "utf-8" );
-    m_msg->date()->setDateTime( KDateTime::currentLocalDateTime() );
+    m_msg->date()->setDateTime( QDateTime::currentDateTime() );
     m_msg->subject()->fromUnicodeString( m_subject, "utf-8" );
 
     // Set the first multipart, the body message.

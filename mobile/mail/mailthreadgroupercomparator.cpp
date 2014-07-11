@@ -83,8 +83,8 @@ bool MailThreadGrouperComparator::lessThan( const Akonadi::Item &leftItem, const
     switch ( mSortingOption ) {
       case SortByDateTime:
         {
-          const KDateTime leftThreadRootDateTime = leftThreadRootMessage->date()->dateTime();
-          const KDateTime rightThreadRootDateTime = rightThreadRootMessage->date()->dateTime();
+          const QDateTime leftThreadRootDateTime = leftThreadRootMessage->date()->dateTime();
+          const QDateTime rightThreadRootDateTime = rightThreadRootMessage->date()->dateTime();
           if ( leftThreadRootDateTime != rightThreadRootDateTime ) {
             return leftThreadRootDateTime > rightThreadRootDateTime;
           }
@@ -92,8 +92,8 @@ bool MailThreadGrouperComparator::lessThan( const Akonadi::Item &leftItem, const
         break;
       case SortByDateTimeMostRecent:
         {
-          const KDateTime leftNewest = mostRecentDateTimeInThread( leftThreadRootMessage, leftThreadRootItem.id() );
-          const KDateTime rightNewest = mostRecentDateTimeInThread( rightThreadRootMessage, rightThreadRootItem.id() );
+          const QDateTime leftNewest = mostRecentDateTimeInThread( leftThreadRootMessage, leftThreadRootItem.id() );
+          const QDateTime rightNewest = mostRecentDateTimeInThread( rightThreadRootMessage, rightThreadRootItem.id() );
 
           if ( leftNewest != rightNewest ) {
             return leftNewest > rightNewest;
@@ -160,8 +160,8 @@ bool MailThreadGrouperComparator::lessThan( const Akonadi::Item &leftItem, const
       const KMime::Message::Ptr leftMessage = messageForItem( leftItem );
       const KMime::Message::Ptr rightMessage = messageForItem( rightItem );
 
-      const KDateTime leftDateTime = leftMessage->date()->dateTime();
-      const KDateTime rightDateTime = rightMessage->date()->dateTime();
+      const QDateTime leftDateTime = leftMessage->date()->dateTime();
+      const QDateTime rightDateTime = rightMessage->date()->dateTime();
 
       // Messages in the same thread are ordered most recent last.
       if ( leftDateTime != rightDateTime ) {
@@ -221,7 +221,7 @@ QString MailThreadGrouperComparator::grouperString( const Akonadi::Item &item ) 
 
   if ( mGroupingOption == GroupByDate ) {
     // simplified version taken from libmessagelist
-    const KDateTime& dt = msg->date()->dateTime();
+    const QDateTime& dt = msg->date()->dateTime();
     const QDate dDate = dt.date();
     const KCalendarSystem *calendar = KLocale::global()->calendar();
     int daysAgo = -1;
@@ -288,7 +288,7 @@ QByteArray MailThreadGrouperComparator::identifierForMessage( const KMime::Messa
   return identifier;
 }
 
-KDateTime MailThreadGrouperComparator::mostRecentDateTimeInThread( const KMime::Message::Ptr &threadRoot, Akonadi::Item::Id itemId ) const
+QDateTime MailThreadGrouperComparator::mostRecentDateTimeInThread( const KMime::Message::Ptr &threadRoot, Akonadi::Item::Id itemId ) const
 {
   const QHash<Akonadi::Item::Id, MostRecentEntry>::const_iterator it = mMostRecentCache.constFind( itemId );
   if ( it != mMostRecentCache.constEnd() )
@@ -296,7 +296,7 @@ KDateTime MailThreadGrouperComparator::mostRecentDateTimeInThread( const KMime::
 
   const QSet<QByteArray> messageIds = threadDescendants( identifierForMessage( threadRoot, itemId ) );
 
-  KDateTime newest = threadRoot->date()->dateTime();
+  QDateTime newest = threadRoot->date()->dateTime();
   Akonadi::Item::Id newestId = itemId;
 
   if ( messageIds.isEmpty() ) {
@@ -313,7 +313,7 @@ KDateTime MailThreadGrouperComparator::mostRecentDateTimeInThread( const KMime::
     Q_ASSERT( item.hasPayload<KMime::Message::Ptr>() );
 
     const KMime::Message::Ptr message = messageForItem( item );
-    const KDateTime messageDateTime = message->date()->dateTime();
+    const QDateTime messageDateTime = message->date()->dateTime();
     if ( messageDateTime > newest ) {
       newest = messageDateTime;
       newestId = item.id();
@@ -336,7 +336,7 @@ Akonadi::Item::Id MailThreadGrouperComparator::mostRecentIdInThread( const KMime
 
   const QSet<QByteArray> messageIds = threadDescendants( identifierForMessage( threadRoot, itemId ) );
 
-  KDateTime newest = threadRoot->date()->dateTime();
+  QDateTime newest = threadRoot->date()->dateTime();
   Akonadi::Item::Id newestId = itemId;
 
   if ( messageIds.isEmpty() ) {
@@ -353,7 +353,7 @@ Akonadi::Item::Id MailThreadGrouperComparator::mostRecentIdInThread( const KMime
     Q_ASSERT( item.hasPayload<KMime::Message::Ptr>() );
 
     const KMime::Message::Ptr message = messageForItem( item );
-    const KDateTime messageDateTime = message->date()->dateTime();
+    const QDateTime messageDateTime = message->date()->dateTime();
     if ( messageDateTime > newest )
       newest = messageDateTime;
       newestId = item.id();

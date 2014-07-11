@@ -96,7 +96,7 @@ namespace {
         void accept() {
             EMailOperationsPreferences prefs;
             prefs.setDecryptVerifyPopupGeometry( geometry() );
-            prefs.writeConfig();
+            prefs.save();
             QWizard::accept();
         }
 

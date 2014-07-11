@@ -917,10 +917,10 @@ QString MessageFactory::replaceHeadersInString( const KMime::Message::Ptr &msg, 
     QRegExp rxDate( QString::fromLatin1("\\$\\{date\\}") );
     Q_ASSERT( rxDate.isValid() );
 
-    qDebug() << "creating mdn date:" << msg->date()->dateTime().dateTime().toTime_t() << KMime::DateFormatter::formatDate(
-                    KMime::DateFormatter::Localized, msg->date()->dateTime().dateTime().toTime_t() );
+    qDebug() << "creating mdn date:" << msg->date()->dateTime().toTime_t() << KMime::DateFormatter::formatDate(
+                    KMime::DateFormatter::Localized, msg->date()->dateTime().toTime_t() );
     QString sDate = KMime::DateFormatter::formatDate(
-                KMime::DateFormatter::Localized, msg->date()->dateTime().dateTime().toTime_t() );
+                KMime::DateFormatter::Localized, msg->date()->dateTime().toTime_t() );
 
     int idx = 0;
     if( ( idx = rxDate.indexIn( result, idx ) ) != -1  ) {

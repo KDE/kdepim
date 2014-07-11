@@ -1071,7 +1071,7 @@ void MessageComposer::ComposerViewBase::saveMessage( KMime::Message::Ptr message
 {
     Akonadi::Collection target;
     const KPIMIdentities::Identity identity = identityManager()->identityForUoid( m_identityCombo->currentIdentity() );
-    message->date()->setDateTime( KDateTime::currentLocalDateTime() );
+    message->date()->setDateTime( QDateTime::currentDateTime() );
     message->assemble();
 
     Akonadi::Item item;

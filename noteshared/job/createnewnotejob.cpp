@@ -128,7 +128,7 @@ void CreateNewNoteJob::slotFetchCollection(KJob* job)
         newPage->contentType( true )->setMimeType( mRichText ? "text/html" : "text/plain" );
         newPage->contentType()->setCharset("utf-8");
         newPage->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
-        newPage->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
+        newPage->date( true )->setDateTime( QDateTime::currentDateTime() );
         newPage->from( true )->fromUnicodeString( QString::fromLatin1( "knotes@kde4" ), encoding );
         // Need a non-empty body part so that the serializer regards this as a valid message.
         newPage->mainBodyPart()->fromUnicodeString( mText.isEmpty() ? QString::fromLatin1( " " ) : mText);

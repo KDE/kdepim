@@ -122,7 +122,7 @@ class MailThreadGrouperComparator : public ThreadGrouperComparator
 
   private:
     QByteArray identifierForMessage( const KMime::Message::Ptr&, Akonadi::Item::Id ) const;
-    KDateTime mostRecentDateTimeInThread( const KMime::Message::Ptr&, Akonadi::Item::Id ) const;
+    QDateTime mostRecentDateTimeInThread( const KMime::Message::Ptr&, Akonadi::Item::Id ) const;
     Akonadi::Item::Id mostRecentIdInThread( const KMime::Message::Ptr&, Akonadi::Item::Id ) const;
     KMime::Message::Ptr messageForItem( const Akonadi::Item &item ) const;
 
@@ -134,7 +134,7 @@ class MailThreadGrouperComparator : public ThreadGrouperComparator
     struct MostRecentEntry
     {
       Akonadi::Item::Id id;
-      KDateTime dateTime;
+      QDateTime dateTime;
     };
 
     mutable QHash<Akonadi::Item::Id, MostRecentEntry> mMostRecentCache;

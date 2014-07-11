@@ -63,7 +63,8 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
       {
         static QHash<QDate, QString> dateNameHash;
 
-        const KDateTime &dateTime = msg->date()->dateTime().toLocalZone();
+        //Port to QDateTime qt5
+        const QDateTime &dateTime = msg->date()->dateTime()/*.toLocalZone()*/;
         const QDate date = dateTime.date();
         if ( date == QDate::currentDate() ) {
           return KLocale::global()->formatTime( dateTime.time() );
@@ -101,7 +102,7 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
       case DateGroupRole:
       {
         // simplified version taken from libmessagelist
-        const KDateTime& dt = msg->date()->dateTime();
+        const QDateTime& dt = msg->date()->dateTime();
         const QDate dDate = dt.date();
         const KCalendarSystem *calendar = KLocale::global()->calendar();
         int daysAgo = -1;

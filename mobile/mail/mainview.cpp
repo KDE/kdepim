@@ -217,7 +217,7 @@ int MainView::openComposer( const QString &to, const QString &cc, const QString 
   message->to()->fromUnicodeString( to, "utf-8" );
   message->cc()->fromUnicodeString( cc, "utf-8" );
   message->bcc()->fromUnicodeString( bcc, "utf-8" );
-  message->date()->setDateTime( KDateTime::currentLocalDateTime() );
+  message->date()->setDateTime( QDateTime::currentDateTime() );
   message->subject()->fromUnicodeString( subject, "utf-8" );
 
   KMime::Content *bodyMessage = message->mainBodyPart();
@@ -253,7 +253,7 @@ int MainView::openComposerAndAttach( const QString &to, const QString &cc, const
   message->to()->fromUnicodeString( to, "utf-8" );
   message->cc()->fromUnicodeString( cc, "utf-8" );
   message->bcc()->fromUnicodeString( bcc, "utf-8" );
-  message->date()->setDateTime( KDateTime::currentLocalDateTime() );
+  message->date()->setDateTime( QDateTime::currentDateTime() );
   message->subject()->fromUnicodeString( subject, "utf-8" );
 
   // Set the first multipart, the body message.

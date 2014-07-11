@@ -54,7 +54,7 @@ QString strToHtml( const QString &str, int flags ) {
 
 // Prepare the date string (when printing always use the localized date)
 QString dateString( KMime::Message *message, bool printing, bool shortDate ) {
-    const KDateTime dateTime = message->date()->dateTime();
+    const QDateTime dateTime = message->date()->dateTime();
     if ( !dateTime.isValid() )
         return i18nc( "Unknown date", "Unknown" );
     if( printing ) {
@@ -209,7 +209,7 @@ QString imgToDataUrl( const QImage &image )
     return QString::fromLatin1("data:image/%1;base64,%2").arg( QString::fromLatin1( "PNG" ), QString::fromLatin1( ba.toBase64() ) );
 }
 
-QString dateStr(const KDateTime &dateTime)
+QString dateStr(const QDateTime &dateTime)
 {
     const time_t unixTime = dateTime.toTime_t();
     return KMime::DateFormatter::formatDate(
@@ -218,7 +218,7 @@ QString dateStr(const KDateTime &dateTime)
                 unixTime, MessageCore::GlobalSettings::self()->customDateFormat() );
 }
 
-QString dateShortStr(const KDateTime &dateTime)
+QString dateShortStr(const QDateTime &dateTime)
 {
     return KLocale::global()->formatDateTime( dateTime, KLocale::FancyShortDate );
 }
