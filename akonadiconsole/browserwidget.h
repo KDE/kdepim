@@ -47,8 +47,6 @@ class Job;
 class StandardActionManager;
 class Monitor;
 class TagModel;
-}
-namespace KPIM {
 class StatisticsProxyModel;
 }
 

@@ -20,7 +20,7 @@
 #include "tagpropertiesdialog.h"
 #include "dbaccess.h"
 
-#include <Akonadi/AttributeFactory>
+#include <AkonadiCore/AttributeFactory>
 #include <QSqlQuery>
 #include <QSqlError>
 
@@ -127,8 +127,8 @@ void TagPropertiesDialog::setupUi()
                     mRemoteIdsModel->appendRow(items);
                 }
             } else {
-                kError() << query.executedQuery();
-                kError() << query.lastError().text();
+                qCritical() << query.executedQuery();
+                qCritical() << query.lastError().text();
             }
         }
     } else {
@@ -290,8 +290,8 @@ void TagPropertiesDialog::accept()
             query.addBindValue(removedRid);
         }
         if (!query.exec()) {
-            kError() << query.executedQuery();
-            kError() << query.lastError().text();
+            qCritical() << query.executedQuery();
+            qCritical() << query.lastError().text();
             queryOK = false;
         }
     }
@@ -311,8 +311,8 @@ void TagPropertiesDialog::accept()
                 query.addBindValue(res);
             }
             if (!query.exec()) {
-                kError() << query.executedQuery();
-                kError() << query.lastError().text();
+                qCritical() << query.executedQuery();
+                qCritical() << query.lastError().text();
                 queryOK = false;
             }
 
@@ -327,8 +327,8 @@ void TagPropertiesDialog::accept()
             query.prepare(QLatin1String("SELECT resourceId FROM TagRemoteIdResourceRelationTable WHERE tagId = ?"));
             query.addBindValue(mTag.id());
             if (!query.exec()) {
-                kError() << query.executedQuery();
-                kError() << query.lastError().text();
+                qCritical() << query.executedQuery();
+                qCritical() << query.lastError().text();
                 queryOK = false;
             }
 
@@ -359,8 +359,8 @@ void TagPropertiesDialog::accept()
                 query.addBindValue(valueIndex.data().toString());
             }
             if (!query.exec()) {
-                kError() << query.executedQuery();
-                kError() << query.lastError().text();
+                qCritical() << query.executedQuery();
+                qCritical() << query.lastError().text();
                 queryOK = false;
                 break;
             }
