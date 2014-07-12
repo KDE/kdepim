@@ -24,6 +24,7 @@
 #include "collectionaclpage.h"
 #include "dbaccess.h"
 #include "akonadibrowsermodel.h"
+#include "tagpropertiesdialog.h"
 
 #include <AkonadiCore/attributefactory.h>
 #include <AkonadiCore/changerecorder.h>
@@ -46,6 +47,7 @@
 #include <akonadi_next/quotacolorproxymodel.h>
 #include <AkonadiCore/tagmodel.h>
 #include <AkonadiCore/statisticsproxymodel.h>
+#include <libkdepim/misc/statisticsproxymodel.h>
 #include <kviewstatemaintainer.h>
 
 #include <kabc/addressee.h>
@@ -60,6 +62,8 @@
 #include <kxmlguiwindow.h>
 #include <KToggleAction>
 #include <KActionCollection>
+#include <akonadi/tagmodifyjob.h>
+#include <akonadi/tagcreatejob.h>
 
 #include <KLocalizedString>
 
@@ -70,6 +74,7 @@
 #include <QTimer>
 #include <QSqlError>
 #include <KSharedConfig>
+#include <QMenu>
 
 using namespace Akonadi;
 
@@ -110,10 +115,16 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   ChangeRecorder *tagRecorder = new ChangeRecorder( this );
   tagRecorder->setTypeMonitored( Monitor::Tags );
   tagRecorder->setChangeRecordingEnabled( false );
-  QTreeView *tagView = new QTreeView( this );
-  TagModel *tagModel = new Akonadi::TagModel( tagRecorder, this );
-  tagView->setModel( tagModel );
-  splitter2->addWidget( tagView );
+  mTagView = new QTreeView( this );
+  mTagModel = new Akonadi::TagModel( tagRecorder, this );
+  mTagView->setModel( mTagModel );
+  splitter2->addWidget( mTagView );
+
+  mTagView->setContextMenuPolicy(Qt::CustomContextMenu);
+  connect( mTagView, SIGNAL(customContextMenuRequested(QPoint)),
+           this, SLOT(tagViewContextMenuRequested(QPoint)) );
+  connect( mTagView, SIGNAL(doubleClicked(QModelIndex)),
+           this, SLOT(tagViewDoubleClicked(QModelIndex)) );
 
   Session *session = new Session( "AkonadiConsole Browser Widget", this );
 
@@ -197,6 +208,9 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
 
   connect( contentUi.attrAddButton, SIGNAL(clicked()), SLOT(addAttribute()) );
   connect( contentUi.attrDeleteButton, SIGNAL(clicked()), SLOT(delAttribute()) );
+  connect( contentUi.flags, SIGNAL(changed()), SLOT(contentViewChanged()) );
+  connect( contentUi.tags, SIGNAL(changed()), SLOT(contentViewChanged()) );
+  connect( contentUi.remoteId, SIGNAL(textChanged(QString)), SLOT(contentViewChanged()) );
 
   CollectionPropertiesDialog::registerPage( new CollectionAclPageFactory() );
   CollectionPropertiesDialog::registerPage( new CollectionAttributePageFactory() );
@@ -270,6 +284,11 @@ void BrowserWidget::itemFetchDone(KJob * job)
   }
 }
 
+void BrowserWidget::contentViewChanged()
+{
+  contentUi.saveButton->setEnabled(true);
+}
+
 void BrowserWidget::setItem( const Akonadi::Item &item )
 {
   mCurrentItem = item;
@@ -293,6 +312,8 @@ void BrowserWidget::setItem( const Akonadi::Item &item )
     contentUi.stack->setCurrentWidget( contentUi.unsupportedTypePage );
   }
 
+  contentUi.saveButton->setEnabled(false);
+
   QByteArray data = item.payloadData();
   contentUi.dataView->setPlainText( data );
 
@@ -309,7 +330,7 @@ void BrowserWidget::setItem( const Akonadi::Item &item )
 
   QStringList tags;
   foreach ( const Tag &tag, item.tags() )
-    tags << tag.url().url();
+    tags << QString::fromLatin1( tag.gid() );
   contentUi.tags->setItems( tags );
 
   Attribute::List list = item.attributes();
@@ -369,8 +390,11 @@ void BrowserWidget::save()
     item.setFlag( s.toUtf8() );
   foreach ( const Tag &tag, mCurrentItem.tags() )
     item.clearTag( tag );
-  foreach ( const QString &s, contentUi.tags->items() )
-    item.setTag( Tag::fromUrl( s ) );
+  foreach ( const QString &s, contentUi.tags->items() ) {
+    Tag tag;
+    tag.setGid( s.toLatin1() );
+    item.setTag( tag );
+  }
   item.setPayloadFromData( data );
 
   item.clearAttributes();
@@ -393,6 +417,8 @@ void BrowserWidget::saveResult(KJob * job)
 {
   if ( job->error() ) {
     KMessageBox::error( this, i18n( "Failed to save changes: %1", job->errorString() ) );
+  } else {
+    contentUi.saveButton->setEnabled( false );
   }
 }
 
@@ -468,3 +494,100 @@ void BrowserWidget::updateItemFetchScope()
   mBrowserMonitor->itemFetchScope().setCacheOnly( mCacheOnlyAction->isChecked() );
 }
 
+void BrowserWidget::tagViewContextMenuRequested(const QPoint &pos)
+{
+  const QModelIndex index = mTagView->indexAt(pos);
+  QMenu *menu = new QMenu( this );
+  connect(menu, SIGNAL(aboutToHide()), menu, SLOT(deleteLater()));
+  menu->addAction(KIcon(QLatin1String("list-add")), i18n("&Add tag..."), this, SLOT(addTagRequested()));
+  if (index.isValid()) {
+      menu->addAction(i18n("Add &subtag..."), this, SLOT(addSubTagRequested()));
+      menu->addAction(KIcon(QLatin1String("document-edit")), i18n("&Edit tag..."), this, SLOT(editTagRequested()), QKeySequence(Qt::Key_Return));
+      menu->addAction(KIcon(QLatin1String("edit-delete")), i18n("&Delete tag..."), this, SLOT(removeTagRequested()), QKeySequence::Delete);
+      menu->setProperty("Tag", index.data(TagModel::TagRole));
+  }
+
+  menu->popup(mTagView->mapToGlobal(pos));
+}
+
+void BrowserWidget::addTagRequested()
+{
+  TagPropertiesDialog *dlg = new TagPropertiesDialog(this);
+  connect(dlg, SIGNAL(accepted()), this, SLOT(createTag()));
+  connect(dlg, SIGNAL(rejected()), dlg, SLOT(deleteLater()));
+  dlg->show();
+}
+
+void BrowserWidget::addSubTagRequested()
+{
+  QAction *action = qobject_cast<QAction*>(sender());
+  const Akonadi::Tag parentTag = action->parent()->property("Tag").value<Akonadi::Tag>();
+
+  Akonadi::Tag tag;
+  tag.setParent(parentTag);
+
+  TagPropertiesDialog *dlg = new TagPropertiesDialog(tag, this);
+  connect(dlg, SIGNAL(accepted()), this, SLOT(createTag()));
+  connect(dlg, SIGNAL(rejected()), dlg, SLOT(deleteLater()));
+  dlg->show();
+}
+
+void BrowserWidget::editTagRequested()
+{
+  QAction *action = qobject_cast<QAction*>(sender());
+  const Akonadi::Tag tag = action->parent()->property("Tag").value<Akonadi::Tag>();
+  TagPropertiesDialog *dlg = new TagPropertiesDialog(tag, this);
+  connect(dlg, SIGNAL(accepted()), this, SLOT(modifyTag()));
+  connect(dlg, SIGNAL(rejected()), dlg, SLOT(deleteLater()));
+  dlg->show();
+}
+
+void BrowserWidget::tagViewDoubleClicked(const QModelIndex &index)
+{
+  if (!index.isValid()) {
+      addTagRequested();
+      return;
+  }
+
+  const Akonadi::Tag tag = mTagModel->data(index, TagModel::TagRole).value<Akonadi::Tag>();
+  Q_ASSERT(tag.isValid());
+
+  TagPropertiesDialog *dlg = new TagPropertiesDialog(tag, this);
+  connect(dlg, SIGNAL(accepted()), this, SLOT(modifyTag()));
+  connect(dlg, SIGNAL(rejected()), dlg, SLOT(deleteLater()));
+  dlg->show();
+}
+
+
+void BrowserWidget::removeTagRequested()
+{
+    if (KMessageBox::questionYesNo(this, i18n("Do you really want to remove selected tag?"),
+                                   i18n("Delete tag?"), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
+                                   QString(), KMessageBox::Dangerous) == KDialog::No) {
+        return;
+    }
+
+    QAction *action = qobject_cast<QAction*>(sender());
+    const Akonadi::Tag tag = action->parent()->property("Tag").value<Akonadi::Tag>();
+    new Akonadi::TagDeleteJob(tag, this);
+}
+
+void BrowserWidget::createTag()
+{
+    TagPropertiesDialog *dlg = qobject_cast<TagPropertiesDialog*>(sender());
+    Q_ASSERT(dlg);
+
+    if (dlg->changed()) {
+        new TagCreateJob(dlg->tag(), this);
+    }
+}
+
+void BrowserWidget::modifyTag()
+{
+    TagPropertiesDialog *dlg = qobject_cast<TagPropertiesDialog*>(sender());
+    Q_ASSERT(dlg);
+
+    if (dlg->changed()) {
+        new TagModifyJob(dlg->tag(), this);
+    }
+}
