@@ -307,7 +307,7 @@
               <property name="whatsThis">
                <string>This line allows to define several pattern. Separate them with ';'.</string>
               </property>
-              <property name="clickMessage">
+              <property name="placeholderText">
                <string>Specify patterns separate with ';'</string>
               </property>
               <property name="showClearButton" stdset="0">
@@ -415,7 +415,7 @@
        </item>
        <item>
         <widget class="KLineEdit" name="resizeEmailsPattern">
-         <property name="clickMessage">
+         <property name="placeholderText">
           <string>Specify patterns separate with ';'</string>
          </property>
          <property name="showClearButton" stdset="0">
@@ -439,7 +439,7 @@
        </item>
        <item>
         <widget class="KLineEdit" name="doNotResizePattern">
-         <property name="clickMessage">
+         <property name="placeholderText">
           <string>Specify patterns separate with ';'</string>
          </property>
          <property name="showClearButton" stdset="0">

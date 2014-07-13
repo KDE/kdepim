@@ -60,7 +60,7 @@ void TodoViewQuickAddLine::resizeEvent ( QResizeEvent * event )
 {
   KLineEdit::resizeEvent( event );
 
-  setClickMessage( fontMetrics().elidedText(
+  setPlaceholderText( fontMetrics().elidedText(
                      mClickMessage,
                      Qt::ElideRight,
                      width() - clearButtonUsedSize().width() ) );

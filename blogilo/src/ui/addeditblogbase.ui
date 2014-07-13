@@ -91,7 +91,7 @@ You can set more options in the Advanced tab.</string>
       <property name="text">
        <string>http://</string>
       </property>
-      <property name="clickMessage">
+      <property name="placeholderText">
        <string>http://YourHomePage.com</string>
       </property>
       <property name="showClearButton" stdset="0">

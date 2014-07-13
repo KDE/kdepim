@@ -696,7 +696,7 @@ void MainWidget::setupActions( KActionCollection *collection )
   connect( action, SIGNAL(triggered(bool)), this, SLOT(slotSearchDuplicateContacts()) );
 
   mQuickSearchAction = new QAction( i18n("Set Focus to Quick Search"), this );
-  //If change shortcut change in quicksearchwidget->lineedit->setClickMessage
+  //If change shortcut change in quicksearchwidget->lineedit->setPlaceholderText
   mQuickSearchAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Q ) );
   collection->addAction( QLatin1String("focus_to_quickseach"), mQuickSearchAction );
   connect( mQuickSearchAction, SIGNAL(triggered(bool)), mQuickSearchWidget, SLOT(slotFocusQuickSearch()) );

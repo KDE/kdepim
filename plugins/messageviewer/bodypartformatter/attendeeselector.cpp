@@ -41,7 +41,7 @@ AttendeeSelector::AttendeeSelector(QWidget * parent)
   KGuiItem::assign(ui.removeButton, KStandardGuiItem::remove() );
   connect( ui.removeButton, SIGNAL(clicked()), SLOT(removeClicked()) );
 
-  ui.attendeeEdit->setClickMessage( i18n("Click to add a new attendee") );
+  ui.attendeeEdit->setPlaceholderText( i18n("Click to add a new attendee") );
   connect( ui.attendeeEdit, SIGNAL(textChanged(QString)), SLOT(textChanged(QString)) );
   connect( ui.attendeeEdit, SIGNAL(returnPressed(QString)), SLOT(addClicked()) );
 
