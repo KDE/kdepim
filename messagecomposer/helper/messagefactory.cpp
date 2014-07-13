@@ -43,6 +43,7 @@
 #include <kcharsets.h>
 #include <QTextCodec>
 #include <KCharsets>
+#include <KDateTime>
 
 using namespace MessageComposer;
 
