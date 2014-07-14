@@ -755,7 +755,7 @@ void KMFilterDialog::slotFilterSelected( MailFilter *aFilter )
     const bool configureShortcut = aFilter->configureShortcut();
     const bool configureToolbar = aFilter->configureToolbar();
     const QString icon = aFilter->icon();
-    const KShortcut shortcut( aFilter->shortcut() );
+    const QKeySequence shortcut( aFilter->shortcut() );
 
     mApplyOnIn->setChecked( applyOnIn );
     mApplyOnForAll->setEnabled( applyOnIn );
@@ -771,7 +771,7 @@ void KMFilterDialog::slotFilterSelected( MailFilter *aFilter )
     mApplyOnCtrlJ->setChecked( applyOnExplicit );
     mStopProcessingHere->setChecked( stopHere );
     mConfigureShortcut->setChecked( configureShortcut );
-    mKeySeqWidget->setKeySequence( shortcut.primary(),
+    mKeySeqWidget->setKeySequence( shortcut,
                                    KKeySequenceWidget::NoValidate );
     mConfigureToolbar->setChecked( configureToolbar );
     mFilterActionIconButton->setIcon( icon );
@@ -874,7 +874,7 @@ void KMFilterDialog::slotShortcutChanged( const QKeySequence &newSeq )
 {
     if ( mFilter ) {
         mKeySeqWidget->applyStealShortcut();
-        mFilter->setShortcut( KShortcut( newSeq ) );
+        mFilter->setShortcut( newSeq );
 
         // Enable the apply button
         slotDialogUpdated();
@@ -1272,7 +1272,7 @@ void KMFilterListBox::slotCopy()
 
     // inserts a copy of the current filter.
     MailFilter *copyFilter = new MailFilter( *filter );
-    copyFilter->setShortcut( KShortcut() );
+    copyFilter->setShortcut( QKeySequence() );
 
     insertFilter( copyFilter );
     enableControls();
