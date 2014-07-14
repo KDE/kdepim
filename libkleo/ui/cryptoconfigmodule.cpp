@@ -44,7 +44,7 @@
 #include <kiconloader.h>
 #include <kglobal.h>
 #include <kcomponentdata.h>
-#include <kicon.h>
+#include <qicon.h>
 #include <KDialog>
 #ifndef KDEPIM_ONLY_KLEO
 # include <kurlrequester.h>
@@ -83,9 +83,9 @@ public:
 };
 
 }
-inline KIcon loadIcon( const QString &s ) {
+inline QIcon loadIcon( const QString &s ) {
   QString ss = s;
-  return KIcon( ss.replace( QRegExp( QLatin1String("[^a-zA-Z0-9_]") ), QLatin1String("-") ) );
+  return QIcon::fromTheme( ss.replace( QRegExp( QLatin1String("[^a-zA-Z0-9_]") ), QLatin1String("-") ) );
 }
 
 static unsigned int num_components_with_options( const Kleo::CryptoConfig * config ) {
