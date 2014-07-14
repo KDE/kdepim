@@ -54,7 +54,6 @@
 #include <KRun>
 #include <QUrl>
 #include <QIcon>
-#include <KShortcut>
 #include <KStandardShortcut>
 
 #include <QAction>

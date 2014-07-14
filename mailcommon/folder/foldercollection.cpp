@@ -203,7 +203,7 @@ void FolderCollection::readConfig()
 
     const QString shortcut( configGroup.readEntry( "Shortcut" ) );
     if ( !shortcut.isEmpty() ) {
-        KShortcut sc( shortcut );
+        QKeySequence sc( shortcut );
         setShortcut( sc );
     }
 }
@@ -262,7 +262,7 @@ void FolderCollection::writeConfig() const
     }
 }
 
-void FolderCollection::setShortcut( const KShortcut &sc )
+void FolderCollection::setShortcut( const QKeySequence &sc )
 {
     if ( mShortcut != sc ) {
         mShortcut = sc;
