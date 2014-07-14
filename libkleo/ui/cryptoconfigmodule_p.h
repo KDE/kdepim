@@ -39,7 +39,7 @@
 #include <kurl.h>
 
 class KLineEdit;
-class KIntNumInput;
+class QSpinBox;
 class KUrlRequester;
 
 class QPushButton;
@@ -260,7 +260,7 @@ namespace Kleo {
     /* reimp */ void doLoad();
   private:
     enum { Int, UInt, ListOfNone } mKind;
-    KIntNumInput* mNumInput;
+    QSpinBox* mNumInput;
   };
 
   /**

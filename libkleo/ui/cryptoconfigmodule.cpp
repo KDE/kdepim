@@ -766,7 +766,7 @@ Kleo::CryptoConfigEntrySpinBox::CryptoConfigEntrySpinBox(
   }
 
   const int row = glay->rowCount();
-  mNumInput = new KIntNumInput( widget );
+  mNumInput = new QSpinBox( widget );
   QLabel *label = new QLabel( description(), widget );
   label->setBuddy( mNumInput );
   glay->addWidget( label, row, 1 );
