@@ -57,7 +57,6 @@
 // from libkdepim
 #include "progresswidget/statusbarprogresswidget.h"
 #include "progresswidget/progressdialog.h"
-#include <KShortcut>
 #include <KStatusBar>
 #include <KXMLGUIFactory>
 #include <KApplication>

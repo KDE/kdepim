@@ -21,7 +21,7 @@
 
 #include "mailcommon_export.h"
 
-#include <KShortcut>
+#include <QKeySequence>
 
 #include <QColor>
 #include <QFont>
