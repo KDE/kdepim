@@ -22,10 +22,10 @@
 #define PIMCOMMON_STORAGESERVICETREEWIDGET_H
 
 #include <QTreeWidget>
-#include <KDateTime>
+#include <QDateTime>
 #include "pimcommon_export.h"
 class QMenu;
-class KDateTime;
+class QDateTime;
 namespace PimCommon {
 class StorageServiceAbstract;
 class StorageServiceTreeWidgetItem;

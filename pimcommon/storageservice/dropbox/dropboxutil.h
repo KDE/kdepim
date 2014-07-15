@@ -19,12 +19,12 @@
 #define DROPBOXUTIL_H
 
 #include <QStringList>
-#include <KDateTime>
+#include <QDateTime>
 namespace PimCommon {
 namespace DropBoxUtil
 {
 QStringList getListFolder(const QString &data);
-KDateTime convertToDateTime(QString dateTime);
+QDateTime convertToDateTime(QString dateTime);
 }
 }
 

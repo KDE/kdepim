@@ -30,7 +30,7 @@
 
 #include <KLocalizedString>
 #include <KLocale>
-#include <KDateTime>
+#include <QDateTime>
 
 #include <QDebug>
 #include <QFileInfo>
@@ -340,10 +340,10 @@ QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
         }
         QDateTime t = info.createdAt();
         if (t.isValid())
-            item->setDateCreated(KDateTime(t));
+            item->setDateCreated(QDateTime(t));
         t = info.lastModified();
         if (t.isValid())
-            item->setLastModification(KDateTime(t));
+            item->setLastModification(QDateTime(t));
         const qint64 size = info.size();
         if (size>=0)
             item->setSize(size);

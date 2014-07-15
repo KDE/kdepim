@@ -46,10 +46,10 @@ QStringList listFolder;
     return listFolder;
 }
 
-KDateTime PimCommon::DropBoxUtil::convertToDateTime(QString dateTime)
+QDateTime PimCommon::DropBoxUtil::convertToDateTime(QString dateTime)
 {
     dateTime.chop(6);     // chop() removes the time zone
     QLocale locale(QLocale::C);
-    const KDateTime t = KDateTime(locale.toDateTime(dateTime, QLatin1String("ddd, dd MMM yyyy hh:mm:ss")));
+    const QDateTime t = QDateTime(locale.toDateTime(dateTime, QLatin1String("ddd, dd MMM yyyy hh:mm:ss")));
     return t;
 }

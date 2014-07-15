@@ -105,7 +105,7 @@ void StorageServiceTreeWidgetItem::setSize(qulonglong size)
     }
 }
 
-void StorageServiceTreeWidgetItem::setDateCreated(const KDateTime &date)
+void StorageServiceTreeWidgetItem::setDateCreated(const QDateTime &date)
 {
     if (date != mCreateDate) {
         mCreateDate = date;
@@ -113,7 +113,7 @@ void StorageServiceTreeWidgetItem::setDateCreated(const KDateTime &date)
     }
 }
 
-void StorageServiceTreeWidgetItem::setLastModification(const KDateTime &date)
+void StorageServiceTreeWidgetItem::setLastModification(const QDateTime &date)
 {
     if (date != mLastModificationDate) {
         mLastModificationDate = date;
@@ -131,12 +131,12 @@ QVariantMap StorageServiceTreeWidgetItem::storeInfo() const
     return data(StorageServiceTreeWidget::ColumnName, StorageServiceTreeWidget::Info).value<QVariantMap>();
 }
 
-KDateTime StorageServiceTreeWidgetItem::lastModificationDate() const
+QDateTime StorageServiceTreeWidgetItem::lastModificationDate() const
 {
     return mLastModificationDate;
 }
 
-KDateTime StorageServiceTreeWidgetItem::createDate() const
+QDateTime StorageServiceTreeWidgetItem::createDate() const
 {
     return mCreateDate;
 }

@@ -28,7 +28,7 @@
 #include <KLocale>
 #include <KMimeType>
 #include <QMenu>
-#include <KDateTime>
+#include <QDateTime>
 
 #include <QTreeWidgetItem>
 #include <QHeaderView>
