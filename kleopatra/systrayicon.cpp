@@ -42,6 +42,7 @@
 #include <smartcard/readerstatus.h>
 
 #include <utils/kdsignalblocker.h>
+#include <utils/clipboardmenu.h>
 
 #include <commands/importcertificatefromclipboardcommand.h>
 #include <commands/encryptclipboardcommand.h>
@@ -54,6 +55,8 @@
 #include <KLocalizedString>
 #include <KAboutApplicationDialog>
 #include <KAboutData>
+#include <KActionMenu>
+#include <KMenu>
 
 #include <QMenu>
 #include <QAction>
@@ -96,41 +99,10 @@ private:
         //triggering slotEnableDisableActions again
         const KDSignalBlocker blocker( QApplication::clipboard() );
         openCertificateManagerAction.setEnabled( !q->mainWindow() || !q->mainWindow()->isVisible() );
-        importClipboardAction.setEnabled( ImportCertificateFromClipboardCommand::canImportCurrentClipboard() );
-        encryptClipboardAction.setEnabled( EncryptClipboardCommand::canEncryptCurrentClipboard() );
-        openPGPSignClipboardAction.setEnabled( SignClipboardCommand::canSignCurrentClipboard() );
-        smimeSignClipboardAction.setEnabled( SignClipboardCommand::canSignCurrentClipboard() );
-        decryptVerifyClipboardAction.setEnabled( DecryptVerifyClipboardCommand::canDecryptVerifyCurrentClipboard() );
         setInitialPinAction.setEnabled( anyCardHasNullPin );
         learnCertificatesAction.setEnabled( anyCardCanLearnKeys );
 
         q->setAttentionWanted( ( anyCardHasNullPin || anyCardCanLearnKeys ) && !q->attentionWindow() );
-    }
-
-    void startCommand( Command * cmd ) {
-        assert( cmd );
-        cmd->setParent( q->mainWindow() );
-        cmd->start();
-    }
-
-    void slotImportClipboard() {
-        startCommand( new ImportCertificateFromClipboardCommand( 0 ) );
-    }
-
-    void slotEncryptClipboard() {
-        startCommand( new EncryptClipboardCommand( 0 ) );
-    }
-
-    void slotOpenPGPSignClipboard() {
-        startCommand( new SignClipboardCommand( GpgME::OpenPGP, 0 ) );
-    }
-
-    void slotSMIMESignClipboard() {
-        startCommand( new SignClipboardCommand( GpgME::CMS, 0 ) );
-    }
-
-    void slotDecryptVerifyClipboard() {
-        startCommand( new DecryptVerifyClipboardCommand( 0 ) );
     }
 
     void slotSetInitialPin() {
@@ -144,6 +116,11 @@ private:
         q->setAttentionWindow( cmd->dialog() );
         startCommand( cmd );
     }
+    void startCommand( Command * cmd ) {
+        assert( cmd );
+        cmd->setParent( q->mainWindow() );
+        cmd->start();
+    }
 
 private:
     bool anyCardHasNullPin;
@@ -154,12 +131,9 @@ private:
     QAction configureAction;
     QAction aboutAction;
     QAction quitAction;
-    QMenu clipboardMenu;
-    QAction importClipboardAction;
-    QAction encryptClipboardAction;
-    QAction smimeSignClipboardAction;
-    QAction openPGPSignClipboardAction;
-    QAction decryptVerifyClipboardAction;
+
+    ClipboardMenu clipboardMenu;
+
     QMenu cardMenu;
     QAction updateCardStatusAction;
     QAction setInitialPinAction;
@@ -177,12 +151,7 @@ SysTrayIcon::Private::Private( SysTrayIcon * qq )
       configureAction( i18n("&Configure %1...", KGlobal::mainComponent().aboutData()->programName() ), q ),
       aboutAction( i18n("&About %1...", KGlobal::mainComponent().aboutData()->programName() ), q ),
       quitAction( i18n("&Shutdown Kleopatra"), q ),
-      clipboardMenu( i18n("Clipboard" ) ),
-      importClipboardAction( i18n("Certificate Import"), q ),
-      encryptClipboardAction( i18n("Encrypt..."), q ),
-      smimeSignClipboardAction( i18n("S/MIME-Sign..."), q ),
-      openPGPSignClipboardAction( i18n("OpenPGP-Sign..."), q ),
-      decryptVerifyClipboardAction( i18n("Decrypt/Verify..."), q ),
+      clipboardMenu( q ),
       cardMenu( i18n("SmartCard") ),
       updateCardStatusAction( i18n("Update Card Status"), q ),
       setInitialPinAction( i18n("Set NetKey v3 Initial PIN..."), q ),
@@ -198,11 +167,6 @@ SysTrayIcon::Private::Private( SysTrayIcon * qq )
     KDAB_SET_OBJECT_NAME( aboutAction );
     KDAB_SET_OBJECT_NAME( quitAction );
     KDAB_SET_OBJECT_NAME( clipboardMenu );
-    KDAB_SET_OBJECT_NAME( importClipboardAction );
-    KDAB_SET_OBJECT_NAME( encryptClipboardAction );
-    KDAB_SET_OBJECT_NAME( smimeSignClipboardAction );
-    KDAB_SET_OBJECT_NAME( openPGPSignClipboardAction );
-    KDAB_SET_OBJECT_NAME( decryptVerifyClipboardAction );
     KDAB_SET_OBJECT_NAME( cardMenu );
     KDAB_SET_OBJECT_NAME( setInitialPinAction );
     KDAB_SET_OBJECT_NAME( learnCertificatesAction );
@@ -211,11 +175,6 @@ SysTrayIcon::Private::Private( SysTrayIcon * qq )
     connect( &configureAction, SIGNAL(triggered()), qApp, SLOT(openOrRaiseConfigDialog()) );
     connect( &aboutAction, SIGNAL(triggered()), q, SLOT(slotAbout()) );
     connect( &quitAction, SIGNAL(triggered()), QCoreApplication::instance(), SLOT(quit()) );
-    connect( &importClipboardAction, SIGNAL(triggered()), q, SLOT(slotImportClipboard()) );
-    connect( &encryptClipboardAction, SIGNAL(triggered()), q, SLOT(slotEncryptClipboard()) );
-    connect( &smimeSignClipboardAction, SIGNAL(triggered()), q, SLOT(slotSMIMESignClipboard()) );
-    connect( &openPGPSignClipboardAction, SIGNAL(triggered()), q, SLOT(slotOpenPGPSignClipboard()) );
-    connect( &decryptVerifyClipboardAction, SIGNAL(triggered()), q, SLOT(slotDecryptVerifyClipboard()) );
     connect( &updateCardStatusAction, SIGNAL(triggered()), ReaderStatus::instance(), SLOT(updateStatus()) );
     connect( &setInitialPinAction, SIGNAL(triggered()), q, SLOT(slotSetInitialPin()) );
     connect( &learnCertificatesAction, SIGNAL(triggered()), q, SLOT(slotLearnCertificates()) );
@@ -227,12 +186,7 @@ SysTrayIcon::Private::Private( SysTrayIcon * qq )
     menu.addAction( &configureAction );
     menu.addAction( &aboutAction );
     menu.addSeparator();
-    menu.addMenu( &clipboardMenu );
-    clipboardMenu.addAction( &importClipboardAction );
-    clipboardMenu.addAction( &encryptClipboardAction );
-    clipboardMenu.addAction( &smimeSignClipboardAction );
-    clipboardMenu.addAction( &openPGPSignClipboardAction );
-    clipboardMenu.addAction( &decryptVerifyClipboardAction );
+    menu.addMenu( clipboardMenu.clipboardMenu()->menu() );
     menu.addSeparator();
     menu.addMenu( &cardMenu );
     cardMenu.addAction( &updateCardStatusAction );
@@ -242,6 +196,7 @@ SysTrayIcon::Private::Private( SysTrayIcon * qq )
     menu.addAction( &quitAction );
 
     q->setContextMenu( &menu );
+    clipboardMenu.setMainWindow(q->mainWindow());
 }
 
 SysTrayIcon::Private::~Private() {}
