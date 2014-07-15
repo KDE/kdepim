@@ -24,7 +24,7 @@
 
 #include "maillistdrag.h"
 
-#include <KDateTime>
+#include <QDateTime>
 #include <KLocale>
 #include <KProgressDialog>
 #include <QUrl>
@@ -44,9 +44,9 @@ QDataStream& operator<< ( QDataStream &s, const MailSummary &d )
     s << d.subject();
     s << d.from();
     s << d.to();
-    KDateTime tempTime;
+    QDateTime tempTime;
     tempTime.setTime_t( d.date() );
-    s << tempTime.dateTime();
+    s << tempTime;
     return s;
 }
 
@@ -62,7 +62,7 @@ QDataStream& operator>> ( QDataStream &s, MailSummary &d )
     s >> to;
     QDateTime tempTime;
     s >> tempTime;
-    date = KDateTime( tempTime ).toTime_t();
+    date = QDateTime( tempTime ).toTime_t();
     d.set( serialNumber, messageId, subject, from, to, date );
     return s;
 }
