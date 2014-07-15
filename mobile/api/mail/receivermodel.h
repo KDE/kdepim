@@ -25,6 +25,14 @@ Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 
 #include "recipient/recipient.h"
 
+#include <KMime/Headers>
+
+namespace KMime {
+namespace Types {
+class Mailbox;
+}
+}
+
 class ReceiverModel : public QAbstractListModel
 {
 
@@ -44,6 +52,8 @@ public:
     Qt::ItemFlags flags( const QModelIndex &index ) const;
     bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
 
+    void setRecipientString( const QList<KMime::Types::Mailbox> &mailboxes, MessageComposer::Recipient::Type );
+    void addRecipient( const QString &email , MessageComposer::Recipient::Type type );
     bool addRecipient( const MessageComposer::Recipient::Ptr &recipient );
     bool removeRecipient( const MessageComposer::Recipient::Ptr &recipient );
     QStringList recipientStringList( MessageComposer::Recipient::Type ) const;

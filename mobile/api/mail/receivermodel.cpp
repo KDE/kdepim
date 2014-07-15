@@ -153,3 +153,20 @@ QString ReceiverModel::recipientString( MessageComposer::Recipient::Type type ) 
     return recipientStringList( type ).join( QLatin1String(", ") );
 }
 
+void ReceiverModel::setRecipientString( const QList< KMime::Types::Mailbox >& mailboxes, MessageComposer::Recipient::Type type )
+{
+    foreach ( const KMime::Types::Mailbox &mailbox, mailboxes ) {
+
+        addRecipient( mailbox.prettyAddress( KMime::Types::Mailbox::QuoteWhenNecessary ), type );
+
+    }
+
+}
+
+void ReceiverModel::addRecipient( const QString &email , MessageComposer::Recipient::Type type )
+{
+    MessageComposer::Recipient::Ptr rec (new MessageComposer::Recipient);
+    rec->setEmail ( email );
+    rec->setType ( MessageComposer::Recipient::idToType(type) );
+    addRecipient ( rec );
+}

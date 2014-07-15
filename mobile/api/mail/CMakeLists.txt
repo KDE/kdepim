@@ -16,6 +16,7 @@ INCLUDE_DIRECTORIES(
     ${KDE4_INCLUDES}
     ${CMAKE_SOURCE_DIR}/messagecomposer
     ${CMAKE_BINARY_DIR}/messagecomposer
+    ${CMAKE_SOURCE_DIR}/messagecore
     ${CMAKE_SOURCE_DIR}/libkdepim/
 )
 
@@ -30,7 +31,7 @@ target_link_libraries(mailplugin
     ${KDEPIMLIBS_AKONADI_LIBS}
     ${KDEPIMLIBS_KMIME_LIBS}
     messagecomposer
-
+    kdepim
 )
 
 install(TARGETS mailplugin DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/pim/mail)
