@@ -53,6 +53,7 @@
 #include "utils/action_data.h"
 #include "utils/classify.h"
 #include "utils/filedialog.h"
+#include "utils/clipboardmenu.h"
 
 // from libkdepim
 #include "progresswidget/statusbarprogresswidget.h"
@@ -73,6 +74,7 @@
 #include <KAboutApplicationDialog>
 #include <kdebug.h>
 #include <KLineEdit>
+#include <KActionMenu>
 
 #include <QAbstractItemView>
 #include <QApplication>
@@ -235,6 +237,7 @@ private:
         explicit UI( MainWindow * q );
     } ui;
     KAction *focusToClickSearchAction;
+    ClipboardMenu *clipboadMenu;
 };
 
 MainWindow::Private::UI::UI(MainWindow *q)
@@ -355,6 +358,11 @@ void MainWindow::Private::setupActions() {
     focusToClickSearchAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Q ) );
     coll->addAction( QLatin1String("focus_to_quickseach"), focusToClickSearchAction );
     connect( focusToClickSearchAction, SIGNAL(triggered(bool)), q, SLOT(slotFocusQuickSearch()) );
+    clipboadMenu = new ClipboardMenu(q);
+    clipboadMenu->setMainWindow(q);
+    clipboadMenu->clipboardMenu()->setIcon(KIcon(QLatin1String("edit-paste")));
+    clipboadMenu->clipboardMenu()->setDelayed(false);
+    coll->addAction( QLatin1String("clipboard_menu"), clipboadMenu->clipboardMenu());
 
     q->createStandardStatusBarAction();
     q->setStandardToolBarMenuEnabled( true );

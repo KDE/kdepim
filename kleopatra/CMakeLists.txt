@@ -164,6 +164,7 @@ set(_kleopatra_SRCS
   utils/types.cpp
   utils/archivedefinition.cpp
   utils/auditlog.cpp
+  utils/clipboardmenu.cpp
 
   selftest/selftest.cpp
   selftest/enginecheck.cpp
