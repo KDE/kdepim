@@ -54,7 +54,8 @@ if(BUILD_ktnef)
   add_subdirectory(ktnef)
 endif()
 
-if(BUILD_headerthemeeditor)
+if(BUILD_grantleeeditor)
+  add_subdirectory(contactthemeeditor)
   add_subdirectory(headerthemeeditor)
 endif()
 
@@ -81,6 +82,3 @@ if(BUILD_sieveeditor)
   add_subdirectory(sieveeditor)
 endif()
 
-if(BUILD_contactthemeeditor)
-  add_subdirectory(contactthemeeditor)
-endif()
