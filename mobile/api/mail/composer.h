@@ -29,7 +29,7 @@ Copyright 2014  Abhijeet Nikam connect08nikam@gmail.com
 #include "sender/akonadisender.h"
 #include "messagecomposer/helper/messagefactory.h"
 
-#include <Akonadi/ItemFetchJob>
+#include <AkonadiCore/ItemFetchJob>
 #include <kpimidentities/identitymanager.h>
 
 #include "receivermodel.h"

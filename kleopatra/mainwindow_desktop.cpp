@@ -75,6 +75,7 @@
 #include <KLineEdit>
 #include <KGlobal>
 #include <KDebug>
+#include <KActionMenu>
 
 #include <QAbstractItemView>
 #include <QApplication>
@@ -238,12 +239,8 @@ private:
         SearchBar * searchBar;
         explicit UI( MainWindow * q );
     } ui;
-<<<<<<< HEAD
     QAction *focusToClickSearchAction;
-=======
-    KAction *focusToClickSearchAction;
     ClipboardMenu *clipboadMenu;
->>>>>>> origin/master
 };
 
 MainWindow::Private::UI::UI(MainWindow *q)
@@ -366,7 +363,7 @@ void MainWindow::Private::setupActions() {
     connect( focusToClickSearchAction, SIGNAL(triggered(bool)), q, SLOT(slotFocusQuickSearch()) );
     clipboadMenu = new ClipboardMenu(q);
     clipboadMenu->setMainWindow(q);
-    clipboadMenu->clipboardMenu()->setIcon(KIcon(QLatin1String("edit-paste")));
+    clipboadMenu->clipboardMenu()->setIcon(QIcon::fromTheme(QLatin1String("edit-paste")));
     clipboadMenu->clipboardMenu()->setDelayed(false);
     coll->addAction( QLatin1String("clipboard_menu"), clipboadMenu->clipboardMenu());
 

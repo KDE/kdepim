@@ -19,7 +19,7 @@ Copyright 2014  Abhijeet Nikam connect08nikam@gmail.com
 
 #include "composer.h"
 
-#include <Akonadi/ItemFetchScope>
+#include <AkonadiCore/ItemFetchScope>
 
 Composer::Composer( QObject *parent )
     : QObject( parent )
