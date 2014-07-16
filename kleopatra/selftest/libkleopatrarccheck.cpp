@@ -73,7 +73,7 @@ namespace {
             m_error = i18n("Errors found");
 
             m_explaination
-                = i18nc( "@info",
+                = xi18nc( "@info",
                          "<para>Kleopatra detected the following errors in the libkleopatrarc configuration:</para>"
                          "%1", QLatin1String("<ol><li>") + errors.join( QLatin1String("</li><li>") ) + QLatin1String("</li></ol>") );
         }

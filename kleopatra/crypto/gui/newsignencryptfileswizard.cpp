@@ -520,7 +520,7 @@ namespace {
         /* reimp */ bool validatePage() {
             if ( isSignOnlySelected() && isArchiveRequested() )
                 return KMessageBox::warningContinueCancel( this,
-                                                           i18nc("@info",
+                                                           xi18nc("@info",
                                                                  "<para>Archiving in combination with sign-only currently requires what are known as opaque signatures - "
                                                                  "unlike detached ones, these embed the content in the signature.</para>"
                                                                  "<para>This format is rather unusual. You might want to archive the files separately, "
@@ -715,7 +715,7 @@ namespace {
             const std::vector<Key> & r = keys();
             if ( _detail::none_of_secret( r ) ) {
                 if ( KMessageBox::warningContinueCancel( this,
-                                                         i18nc("@info",
+                                                         xi18nc("@info",
                                                                "<para>None of the recipients you are encrypting to seems to be your own.</para>"
                                                                "<para>This means that you will not be able to decrypt the data anymore, once encrypted.</para>"
                                                                "<para>Do you want to continue, or cancel to change the recipient selection?</para>"),
@@ -727,7 +727,7 @@ namespace {
                     return false;
                 else if ( isRemoveUnencryptedFilesEnabled() )
                     if ( KMessageBox::warningContinueCancel( this,
-                                                             i18nc("@info",
+                                                             xi18nc("@info",
                                                                    "<para>You have requested the unencrypted data to be removed after encryption.</para>"
                                                                    "<para>Are you really sure you do not need to access the data anymore in decrypted form?</para>"),
                                                              i18nc("@title:window","Encrypt-To-Self Warning"),

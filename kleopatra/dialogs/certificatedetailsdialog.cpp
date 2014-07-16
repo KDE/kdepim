@@ -262,7 +262,7 @@ private:
         enableDisableWidgets();
     }
     void showSignatureListingErrorDialog( const Error & err ) {
-        KMessageBox::information( q, i18nc("@info",
+        KMessageBox::information( q, xi18nc("@info",
                                            "<para>An error occurred while loading the certifications: "
                                            "<message>%1</message></para>",
                                            QString::fromLocal8Bit( err.asString() ) ),

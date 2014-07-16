@@ -214,7 +214,7 @@ void AddUserIDCommand::Private::createJob() {
 }
 
 void AddUserIDCommand::Private::showErrorDialog( const Error & err ) {
-    error( i18nc("@info",
+    error( xi18nc("@info",
                  "<para>An error occurred while trying to add the user-id: "
                  "<message>%1</message></para>",
                  QString::fromLocal8Bit( err.asString() ) ),

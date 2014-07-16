@@ -80,7 +80,7 @@ void CalPrintMonth::print(QPainter &p)
 
     QDate curMonth = fromMonth;
     do {
-        QString title(i18nc("monthname year", "%1 <numid>%2</numid>",
+        QString title(xi18nc("monthname year", "%1 <numid>%2</numid>",
                             calendarSystem()->monthName(curMonth),
                             curMonth.year()));
         QDate tmp(fromMonth);

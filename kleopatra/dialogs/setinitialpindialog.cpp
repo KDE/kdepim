@@ -87,14 +87,14 @@ static void update_widget( State state, bool delay, QLabel * resultLB, QLabel * 
     lb->setEnabled( ( state == NotSet || state == Failed ) && !delay );
     pb->setEnabled( ( state == NotSet || state == Failed ) && !delay );
     if ( state == AlreadySet )
-        statusLB->setText( i18nc("@info","No NullPin found. <warning>If this PIN was not set by you personally, the card might have been tampered with.</warning>") );
+        statusLB->setText( xi18nc("@info","No NullPin found. <warning>If this PIN was not set by you personally, the card might have been tampered with.</warning>") );
 }
 
 static QString format_error( const Error & err ) {
     if ( err.isCanceled() )
         return i18nc("@info","Canceled setting PIN.");
     if ( err )
-        return i18nc("@info",
+        return xi18nc("@info",
                      "There was an error setting the PIN: <message>%1</message>.",
                      Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
     else

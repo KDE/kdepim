@@ -126,7 +126,7 @@ RenameFileDialog::RenameFileDialog(const KUrl& url, bool multiFiles, QWidget * p
     setWindowTitle(i18n( "File Already Exists" ));
     QVBoxLayout* pLayout = new QVBoxLayout(this);
 
-    QLabel *label = new QLabel(i18n( "A file named <filename>%1</filename> already exists. Do you want to overwrite it?", url.fileName()),this);
+    QLabel *label = new QLabel(xi18n( "A file named <filename>%1</filename> already exists. Do you want to overwrite it?", url.fileName()),this);
     pLayout->addWidget(label);
 
     QHBoxLayout* renameLayout = new QHBoxLayout();

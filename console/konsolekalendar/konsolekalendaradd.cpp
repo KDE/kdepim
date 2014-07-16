@@ -75,12 +75,12 @@ bool KonsoleKalendarAdd::addEvent()
   qDebug() << "konsolekalendaradd.cpp::addEvent()";
 
   if ( m_variables->isDryRun() ) {
-    cout << i18n( "Insert Event &lt;Dry Run&gt;:" ).toLocal8Bit().data()
+    cout << i18n( "Insert Event <Dry Run>:" ).toLocal8Bit().data()
          << endl;
     printSpecs();
   } else {
     if ( m_variables->isVerbose() ) {
-      cout << i18n( "Insert Event &lt;Verbose&gt;:" ).toLocal8Bit().data()
+      cout << i18n( "Insert Event <Verbose>:" ).toLocal8Bit().data()
            << endl;
       printSpecs();
     }

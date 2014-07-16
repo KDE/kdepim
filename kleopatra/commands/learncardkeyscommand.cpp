@@ -79,7 +79,7 @@ QString LearnCardKeysCommand::successCaption() const {
 }
 
 QString LearnCardKeysCommand::crashExitMessage( const QStringList & args ) const {
-    return i18nc("@info",
+    return xi18nc("@info",
                  "<para>The GPG or GpgSM process that tried to learn the smart card "
                  "ended prematurely because of an unexpected error.</para>"
                  "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join( QLatin1String(" ") ) ) ;

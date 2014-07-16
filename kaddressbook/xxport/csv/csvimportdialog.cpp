@@ -394,7 +394,7 @@ void CSVImportDialog::initGUI()
   mDatePatternEdit = new QLineEdit( page );
   mDatePatternEdit->setText( QLatin1String("Y-M-D") ); // ISO 8601 date format as default
   mDatePatternEdit->setToolTip(
-    i18nc( "@info:tooltip",
+    xi18nc( "@info:tooltip",
            "<para><list><item>y: year with 2 digits</item>"
            "<item>Y: year with 4 digits</item>"
            "<item>m: month with 1 or 2 digits</item>"
@@ -406,7 +406,7 @@ void CSVImportDialog::initGUI()
            "<item>S: seconds with 2 digits</item>"
            "</list></para>" ) );
   mDatePatternEdit->setWhatsThis(
-    i18nc( "@info:whatsthis",
+    xi18nc( "@info:whatsthis",
            "<para>Specify a format to use for dates included in your csv data. "
            "Use the following sequences to help you define the format:</para>"
            "<para><list><item>y: year with 2 digits</item>"

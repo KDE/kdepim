@@ -228,7 +228,7 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
 
   mDetailView = new CalendarSupport::IncidenceViewer( mCalendar.data(), topBox );
   QString s;
-  s = i18nc( "@info default incidence details string",
+  s = xi18nc( "@info default incidence details string",
              "<emphasis>Select an event or to-do from the list above "
              "to view its details here.</emphasis>" );
   mDetailView->setDefaultMessage( s );

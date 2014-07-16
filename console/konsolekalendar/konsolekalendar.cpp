@@ -140,7 +140,7 @@ bool KonsoleKalendar::createCalendar()
   const QString filename = m_variables->getCalendarFile();
 
   if ( m_variables->isDryRun() ) {
-    cout << i18n( "Create Calendar &lt;Dry Run&gt;: %1", filename ).toLocal8Bit().data()
+    cout << i18n( "Create Calendar <Dry Run>: %1", filename ).toLocal8Bit().data()
          << endl;
   } else {
     qDebug() << "konsolekalendar.cpp::createCalendar() |"
@@ -148,7 +148,7 @@ bool KonsoleKalendar::createCalendar()
              << filename.toLocal8Bit().data();
 
     if ( m_variables->isVerbose() ) {
-      cout << i18n( "Create Calendar &lt;Verbose&gt;: %1", filename ).toLocal8Bit().data()
+      cout << i18n( "Create Calendar <Verbose>: %1", filename ).toLocal8Bit().data()
            << endl;
     }
 
@@ -168,7 +168,7 @@ bool KonsoleKalendar::showInstance()
   Akonadi::CalendarBase::Ptr calendar = m_variables->getCalendar();
 
   if ( m_variables->isDryRun() ) {
-    cout << i18n( "View Events &lt;Dry Run&gt;:" ).toLocal8Bit().data()
+    cout << i18n( "View Events <Dry Run>:" ).toLocal8Bit().data()
          << endl;
     printSpecs();
   } else {
@@ -192,7 +192,7 @@ bool KonsoleKalendar::showInstance()
                << "opened successful";
 
       if ( m_variables->isVerbose() ) {
-        cout << i18n( "View Event &lt;Verbose&gt;:" ).toLocal8Bit().data()
+        cout << i18n( "View Event <Verbose>:" ).toLocal8Bit().data()
              << endl;
         printSpecs();
       }

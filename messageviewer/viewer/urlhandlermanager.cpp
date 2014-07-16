@@ -947,7 +947,7 @@ bool KRunURLHandler::handleClick( const KUrl & url, ViewerPrivate * w ) const
                 mime->name() == QLatin1String("application/x-ms-dos-executable") ||
                 mime->name() == QLatin1String("application/x-shellscript") )
         {
-            if ( KMessageBox::warningYesNo( 0, i18nc( "@info", "Do you really want to execute <filename>%1</filename>?",
+            if ( KMessageBox::warningYesNo( 0, xi18nc( "@info", "Do you really want to execute <filename>%1</filename>?",
                                                       url.pathOrUrl() ), QString(), KGuiItem(i18n("Execute")), KStandardGuiItem::cancel() ) != KMessageBox::Yes)
                 return true;
         }

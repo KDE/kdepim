@@ -1387,7 +1387,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     new QLabel( i18n("Your keys:"), hbox );
     QLabel* keyidsL = new QLabel( hbox );
     if( keyIDs[0].isEmpty() ) {
-      keyidsL->setText( i18nc( "@info", "<placeholder>none</placeholder> means 'no key'" ) );
+      keyidsL->setText( xi18nc( "@info", "<placeholder>none</placeholder> means 'no key'" ) );
     }
     else {
       keyidsL->setText( QLatin1String("0x") + keyIDs[0].toStringList().join( QLatin1String("\n0x") ) );
@@ -1444,7 +1444,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     new QLabel( i18n("Encryption keys:"), hbox );
     QLabel* keyidsL = new QLabel( hbox );
     if( (*kit).isEmpty() ) {
-      keyidsL->setText( i18nc( "@info", "<placeholder>none</placeholder> means 'no key'" ) );
+      keyidsL->setText( xi18nc( "@info", "<placeholder>none</placeholder> means 'no key'" ) );
     }
     else {
       keyidsL->setText( QLatin1String("0x") + (*kit).toStringList().join( QLatin1String("\n0x") ) );
@@ -1472,7 +1472,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     hbox = new KHBox( bigvbox );
     new QLabel( i18n("Encryption preference:"), hbox );
     QComboBox *encrPrefCombo = new QComboBox( hbox );
-    encrPrefCombo->addItem( i18nc( "@item:inlistbox", "<placeholder>none</placeholder>") );
+    encrPrefCombo->addItem( xi18nc( "@item:inlistbox", "<placeholder>none</placeholder>") );
     encrPrefCombo->addItem( i18nc( "@item:inlistbox", "Never Encrypt with This Key") );
     encrPrefCombo->addItem( i18nc( "@item:inlistbox", "Always Encrypt with This Key") );
     encrPrefCombo->addItem( i18nc( "@item:inlistbox", "Encrypt Whenever Encryption is Possible") );

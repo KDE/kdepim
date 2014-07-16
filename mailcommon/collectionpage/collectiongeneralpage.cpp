@@ -313,7 +313,7 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
     mHideInSelectionDialogCheckBox =
             new QCheckBox( i18n( "Hide this folder in the folder selection dialog" ), this );
     mHideInSelectionDialogCheckBox->setWhatsThis(
-                i18nc( "@info:whatsthis",
+                xi18nc( "@info:whatsthis",
                        "Check this option if you do not want this folder "
                        "to be shown in folder selection dialogs, such as the <interface>"
                        "Jump to Folder</interface> dialog." ) );

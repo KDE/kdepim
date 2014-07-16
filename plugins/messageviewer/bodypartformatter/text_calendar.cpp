@@ -1105,7 +1105,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
            ( QFile( saveAsFile ).exists() &&
              ( KMessageBox::warningContinueCancel(
                  0,
-                 i18nc( "@info",
+                 xi18nc( "@info",
                         "File <filename>%1</filename> exists.<nl/> Do you want to replace it?",
                         saveAsFile ) ) != KMessageBox::Continue ) ) ) {
         return false;

@@ -82,7 +82,7 @@ public:
         const KABC::Addressee::List contacts = searchJob->contacts();
         if ( !contacts.isEmpty() ) {
             const QString text =
-                    i18nc( "@info",
+                    xi18nc( "@info",
                            "A contact with the email address <email>%1</email> "
                            "is already in your address book.", Qt::escape(mCompleteAddress) );
 
@@ -221,7 +221,7 @@ public:
         mItem = createJob->item();
 
         const QString text =
-                i18nc( "@info",
+                xi18nc( "@info",
                        "<para>A contact for <email>%1</email> was successfully added "
                        "to your address book.</para>"
                        "<para>Do you want to edit this new contact now?</para>",

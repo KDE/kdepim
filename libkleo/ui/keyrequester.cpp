@@ -214,7 +214,7 @@ void Kleo::KeyRequester::updateKeys() {
       else
         toolTipText += Kleo::DN( uid ).prettyDN();
     else
-      toolTipText += i18n("<placeholder>unknown</placeholder>");
+      toolTipText += xi18n("<placeholder>unknown</placeholder>");
     toolTipText += QLatin1Char('\n');
   }
 

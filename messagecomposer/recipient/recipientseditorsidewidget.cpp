@@ -138,12 +138,12 @@ void RecipientsEditorSideWidget::updateTotalToolTip()
         }
     }
 
-    text += i18nc("@info:tooltip %1 list of emails", "<interface>To:</interface><nl/>%1", to);
+    text += xi18nc("@info:tooltip %1 list of emails", "<interface>To:</interface><nl/>%1", to);
     if ( !cc.isEmpty() ) {
-        text += i18nc("@info:tooltip %1 list of emails", "<interface>CC:</interface><nl/>%1", cc);
+        text += xi18nc("@info:tooltip %1 list of emails", "<interface>CC:</interface><nl/>%1", cc);
     }
     if ( !bcc.isEmpty() ) {
-        text += i18nc("@info:tooltip %1 list of emails", "<interface>BCC:</interface><nl/>%1", bcc);
+        text += xi18nc("@info:tooltip %1 list of emails", "<interface>BCC:</interface><nl/>%1", bcc);
     }
 
     text.append( QLatin1String("</qt>") );

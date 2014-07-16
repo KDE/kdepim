@@ -1540,7 +1540,7 @@ QString TemplateParser::pipe( const QString &cmd, const QString &buf )
     if ( !success && mDebug ) {
         KMessageBox::error(
                     0,
-                    i18nc( "@info",
+                    xi18nc( "@info",
                            "Pipe command <command>%1</command> failed.", cmd ) );
     }
 

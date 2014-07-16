@@ -381,7 +381,7 @@ bool Util::saveContent( QWidget *parent, KMime::Content* content, const KUrl& ur
         if ( !file.open( QIODevice::WriteOnly ) )
         {
             KMessageBox::error( parent,
-                                i18nc( "1 = file name, 2 = error string",
+                                xi18nc( "1 = file name, 2 = error string",
                                        "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
                                        file.fileName(),
                                        file.errorString() ),
@@ -405,7 +405,7 @@ bool Util::saveContent( QWidget *parent, KMime::Content* content, const KUrl& ur
     if ( bytesWritten != data.size() ) {
         QFile *f = static_cast<QFile *>( ds.device() );
         KMessageBox::error( parent,
-                            i18nc( "1 = file name, 2 = error string",
+                            xi18nc( "1 = file name, 2 = error string",
                                    "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
                                    f->fileName(),
                                    f->errorString() ),
@@ -423,7 +423,7 @@ bool Util::saveContent( QWidget *parent, KMime::Content* content, const KUrl& ur
         if ( !KIO::NetAccess::upload( tfName, url, parent ) )
         {
             KMessageBox::error( parent,
-                                i18nc( "1 = file name, 2 = error string",
+                                xi18nc( "1 = file name, 2 = error string",
                                        "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
                                        url.prettyUrl(),
                                        KIO::NetAccess::lastErrorString() ),

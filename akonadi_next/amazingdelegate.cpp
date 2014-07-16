@@ -76,7 +76,7 @@ void AmazingContactItemDelegate::paint(QPainter* painter, const QStyleOptionView
   QString email = addressee.preferredEmail();
   if (email.isEmpty())
     email =
-      i18nc( "An email address is not known for a contact. This is the default text provided",
+      xi18nc( "An email address is not known for a contact. This is the default text provided",
              "<placeholder>no email</placeholder>" );
 
   painter->drawText(50, 0, name);

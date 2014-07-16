@@ -94,41 +94,41 @@ namespace {
             if ( m_passed )
                 return;
 
-            m_explaination = i18nc("@info",
+            m_explaination = xi18nc("@info",
                                    "<para>A problem was detected with the <application>%1</application> backend.</para>",
                                    engine_name( eng ) );
 
             const EngineInfo ei = engineInfo( eng );
             if ( ei.isNull() ) {
                 m_error = i18n("not supported");
-                m_explaination += i18nc("@info",
+                m_explaination += xi18nc("@info",
                                         "<para>It seems that the <icode>gpgme</icode> library was compiled without "
                                         "support for this backend.</para>");
-                m_proposedFix += i18nc("@info",
+                m_proposedFix += xi18nc("@info",
                                        "<para>Replace the <icode>gpgme</icode> library with a version compiled "
                                        "with <application>%1</application> support.</para>",
                                        engine_name( eng ) );
             } else if ( ei.fileName() && !ei.version() ) {
                 m_error = i18n("not properly installed");
-                m_explaination += i18nc("@info",
+                m_explaination += xi18nc("@info",
                                         "<para>Backend <command>%1</command> is not installed properly.</para>", QFile::decodeName( ei.fileName() ) );
-                m_proposedFix += i18nc( "@info",
+                m_proposedFix += xi18nc( "@info",
                                         "<para>Please check the output of <command>%1 --version</command> manually.</para>",
                                         QFile::decodeName( ei.fileName() ) );
             } else if ( ei.fileName() && ei.version() && ei.requiredVersion() ) {
                 m_error = i18n("too old");
-                m_explaination += i18nc("@info",
+                m_explaination += xi18nc("@info",
                                         "<para>Backend <command>%1</command> is installed in version %2, "
                                         "but at least version %3 is required.</para>",
                                         QFile::decodeName( ei.fileName() ),
                                         QString::fromUtf8( ei.version() ),
                                         QString::fromUtf8( ei.requiredVersion() ) );
-                m_proposedFix += i18nc( "@info",
+                m_proposedFix += xi18nc( "@info",
                                         "<para>Install <application>%1</application> version %2 or higher.</para>",
                                         engine_name( eng ), QString::fromUtf8( ei.requiredVersion() ) );
             } else {
                 m_error = m_explaination = i18n("unknown problem");
-                m_proposedFix += i18nc( "@info",
+                m_proposedFix += xi18nc( "@info",
                                         "<para>Make sure <application>%1</application> is installed and "
                                         "in <envar>PATH</envar>.</para>",
                                         engine_name( eng ) );
@@ -196,19 +196,19 @@ bool SelfTestImplementation::ensureEngineVersion( GpgME::Engine engine, int majo
 
     if ( !err && ei.version() ) {
         // properly installed, but too old
-        m_explaination = i18nc( "@info",
+        m_explaination = xi18nc( "@info",
                                 "<para><application>%1</application> v%2.%3.%4 is required for this test, but only %5 is installed.</para>",
                                 engine_name( engine ), major, minor, patch, QString::fromUtf8( ei.version() ) );
-        m_proposedFix += i18nc( "@info",
+        m_proposedFix += xi18nc( "@info",
                                 "<para>Install <application>%1</application> version %2 or higher.</para>",
                                 engine_name( engine ), QString::fromLatin1( "%1.%2.%3" ).arg( major ).arg( minor ).arg( patch ) );
     } else {
         // not properly installed
-        m_explaination = i18nc( "@info",
+        m_explaination = xi18nc( "@info",
                                 "<para><application>%1</application> is required for this test, but does not seem available.</para>"
                                 "<para>See tests further up for more information.</para>",
                                 engine_name( engine ) );
-        m_proposedFix = i18nc( "@info %1: test name",
+        m_proposedFix = xi18nc( "@info %1: test name",
                                "<para>See \"%1\" above.</para>", test_name( engine ) );
     }
 

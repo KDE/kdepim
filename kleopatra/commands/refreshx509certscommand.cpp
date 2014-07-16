@@ -58,7 +58,7 @@ RefreshX509CertsCommand::~RefreshX509CertsCommand() {}
 
 bool RefreshX509CertsCommand::preStartHook( QWidget * parent ) const {
     return KMessageBox::warningContinueCancel( parent,
-                                               i18nc("@info",
+                                               xi18nc("@info",
                                                      "<para>Refreshing X.509 certificates implies downloading CRLs for all certificates, "
                                                      "even if they might otherwise still be valid.</para>"
                                                      "<para>This can put a severe strain on your own as well as other people's network "
@@ -84,14 +84,14 @@ QString RefreshX509CertsCommand::successCaption() const {
 }
 
 QString RefreshX509CertsCommand::crashExitMessage( const QStringList & args ) const {
-    return i18nc( "@info",
+    return xi18nc( "@info",
                   "<para>The GpgSM process that tried to refresh X.509 certificates "
                   "ended prematurely because of an unexpected error.</para>"
                   "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join( QLatin1String(" ") ) ) ;
 }
 
 QString RefreshX509CertsCommand::errorExitMessage( const QStringList & args ) const {
-    return i18nc( "@info",
+    return xi18nc( "@info",
                   "<para>An error occurred while trying to refresh X.509 certificates.</para>"
                   "<para>The output from <command>%1</command> was: <message>%2</message></para>",
                  args[0], errorString() );

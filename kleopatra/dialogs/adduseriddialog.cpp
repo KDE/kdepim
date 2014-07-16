@@ -277,24 +277,24 @@ static bool requirementsAreMet( const QVector<Line> & list, QString & error ) {
     if ( le->text().trimmed().isEmpty() ) {
         if ( key.endsWith(QLatin1Char('!')) ) {
             if ( line.regex.isEmpty() )
-                error = i18nc("@info","<interface>%1</interface> is required, but empty.", line.label );
+                error = xi18nc("@info","<interface>%1</interface> is required, but empty.", line.label );
             else
-                error = i18nc("@info","<interface>%1</interface> is required, but empty.<nl/>"
+                error = xi18nc("@info","<interface>%1</interface> is required, but empty.<nl/>"
                               "Local Admin rule: <icode>%2</icode>", line.label, line.regex );
             return false;
         }
     } else if ( has_intermediate_input( le ) ) {
         if ( line.regex.isEmpty() )
-            error = i18nc("@info","<interface>%1</interface> is incomplete.", line.label );
+            error = xi18nc("@info","<interface>%1</interface> is incomplete.", line.label );
         else
-            error = i18nc("@info","<interface>%1</interface> is incomplete.<nl/>"
+            error = xi18nc("@info","<interface>%1</interface> is incomplete.<nl/>"
                           "Local Admin rule: <icode>%2</icode>", line.label, line.regex );
         return false;
     } else if ( !le->hasAcceptableInput() ) {
         if ( line.regex.isEmpty() )
-            error = i18nc("@info","<interface>%1</interface> is invalid.", line.label );
+            error = xi18nc("@info","<interface>%1</interface> is invalid.", line.label );
         else
-            error = i18nc("@info","<interface>%1</interface> is invalid.<nl/>"
+            error = xi18nc("@info","<interface>%1</interface> is invalid.<nl/>"
                           "Local Admin rule: <icode>%2</icode>", line.label, line.regex );
         return false;
     }

@@ -177,7 +177,7 @@ void ImportCrlCommand::Private::slotProcessFinished( int code, QProcess::ExitSta
         if ( status == QProcess::CrashExit )
             error( i18n( "The GpgSM process that tried to import the CRL file "
                          "ended prematurely because of an unexpected error. "
-                         "Please check the output of gpgsm --call-dirmngr loadcrl &lt;filename&gt; for details." ),
+                         "Please check the output of gpgsm --call-dirmngr loadcrl <filename> for details." ),
                    i18n( "Import CRL Error" ) );
         else if ( code )
             error( i18n( "An error occurred while trying to import the CRL file. "

@@ -226,7 +226,7 @@ int main( int argc, char** argv )
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
   if ( gpgmeInitError ) {
-      KMessageBox::sorry( 0, i18nc("@info",
+      KMessageBox::sorry( 0, xi18nc("@info",
                                    "<para>The version of the <application>GpgME</application> library you are running against "
                                    "is older than the one that the <application>GpgME++</application> library was built against.</para>"
                                    "<para><application>Kleopatra</application> will not function in this setting.</para>"

@@ -713,14 +713,14 @@ namespace {
             QFile src( QUrl( url() ).toLocalFile() );
             if ( !src.copy( fileName ) )
                 KMessageBox::error( this,
-                                    i18nc("@info",
+                                    xi18nc("@info",
                                           "Could not copy temporary file <filename>%1</filename> "
                                           "to file <filename>%2</filename>: <message>%3</message>",
                                           src.fileName(), fileName, src.errorString() ),
                                     i18nc("@title", "Error Saving Request") );
             else
                 KMessageBox::information( this,
-                                          i18nc("@info",
+                                          xi18nc("@info",
                                                 "<para>Successfully wrote request to <filename>%1</filename>.</para>"
                                                 "<para>You should now send the request to the Certification Authority (CA).</para>",
                                                 fileName ),
@@ -788,7 +788,7 @@ namespace {
             qDebug() << "openUrl" << QUrl::fromEncoded( encoded );
             QDesktopServices::openUrl( QUrl::fromEncoded( encoded ) );
             KMessageBox::information( this,
-                                      i18nc("@info",
+                                      xi18nc("@info",
                                             "<para><application>Kleopatra</application> tried to send a mail via your default mail client.</para>"
                                             "<para>Some mail clients are known not to support attachments when invoked this way.</para>"
                                             "<para>If your mail client does not have an attachment, then drag the <application>Kleopatra</application> icon and drop it on the message compose window of your mail client.</para>"
@@ -1187,24 +1187,24 @@ static bool requirementsAreMet( const QVector<Line> & list, QString & error ) {
     if ( le->text().trimmed().isEmpty() ) {
         if ( key.endsWith(QLatin1Char('!')) ) {
             if ( line.regex.isEmpty() )
-                error = i18nc("@info","<interface>%1</interface> is required, but empty.", line.label );
+                error = xi18nc("@info","<interface>%1</interface> is required, but empty.", line.label );
             else
-                error = i18nc("@info","<interface>%1</interface> is required, but empty.<nl/>"
+                error = xi18nc("@info","<interface>%1</interface> is required, but empty.<nl/>"
                               "Local Admin rule: <icode>%2</icode>", line.label, line.regex );
             return false;
         }
     } else if ( has_intermediate_input( le ) ) {
         if ( line.regex.isEmpty() )
-            error = i18nc("@info","<interface>%1</interface> is incomplete.", line.label );
+            error = xi18nc("@info","<interface>%1</interface> is incomplete.", line.label );
         else
-            error = i18nc("@info","<interface>%1</interface> is incomplete.<nl/>"
+            error = xi18nc("@info","<interface>%1</interface> is incomplete.<nl/>"
                           "Local Admin rule: <icode>%2</icode>", line.label, line.regex );
         return false;
     } else if ( !le->hasAcceptableInput() ) {
         if ( line.regex.isEmpty() )
-            error = i18nc("@info","<interface>%1</interface> is invalid.", line.label );
+            error = xi18nc("@info","<interface>%1</interface> is invalid.", line.label );
         else
-            error = i18nc("@info","<interface>%1</interface> is invalid.<nl/>"
+            error = xi18nc("@info","<interface>%1</interface> is invalid.<nl/>"
                           "Local Admin rule: <icode>%2</icode>", line.label, line.regex );
         return false;
     }

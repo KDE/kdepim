@@ -73,7 +73,7 @@ ArchiveDialog::ArchiveDialog( const Akonadi::ETMCalendar::Ptr &cal,
 #ifndef KDEPIM_MOBILE_UI
   QLabel *descLabel = new QLabel( topFrame );
   descLabel->setText(
-    i18nc( "@info:whatsthis",
+    xi18nc( "@info:whatsthis",
            "Archiving saves old items into the given file and "
            "then deletes them in the current calendar. If the archive file "
            "already exists they will be added. "

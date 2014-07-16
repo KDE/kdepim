@@ -65,11 +65,11 @@ bool KonsoleKalendarChange::changeEvent()
   Event::Ptr event = m_variables->getCalendar()->event( m_variables->getUID() );
   if ( event ) {
     if ( m_variables->isDryRun() ) {
-      cout << i18n( "Change Event &lt;Dry Run&gt;:" ).toLocal8Bit().data()
+      cout << i18n( "Change Event <Dry Run>:" ).toLocal8Bit().data()
            << endl;
       printSpecs( event );
 
-      cout << i18n( "To Event &lt;Dry Run&gt;:" ).toLocal8Bit().data()
+      cout << i18n( "To Event <Dry Run>:" ).toLocal8Bit().data()
            << endl;
       printSpecs();
     } else {
@@ -77,11 +77,11 @@ bool KonsoleKalendarChange::changeEvent()
                << m_variables->getUID().toLocal8Bit().data();
 
       if ( m_variables->isVerbose() ) {
-        cout << i18n( "Change Event &lt;Verbose&gt;:" ).toLocal8Bit().data()
+        cout << i18n( "Change Event <Verbose>:" ).toLocal8Bit().data()
              << endl;
         printSpecs( event );
 
-        cout << i18n( "To Event &lt;Dry Run&gt;:" ).toLocal8Bit().data()
+        cout << i18n( "To Event <Dry Run>:" ).toLocal8Bit().data()
              << endl;
         printSpecs();
       }

@@ -77,7 +77,7 @@ Akonadi::Item::List TasksImportHandler::createItems( const QStringList &fileName
       tasks << calendar->todos();
     } else {
       const QString caption( i18n( "iCal Import Failed" ) );
-      const QString msg = i18nc( "@info",
+      const QString msg = xi18nc( "@info",
                                  "<para>Error when trying to read the iCal <filename>%1</filename>:</para>",
                                  fileName );
       KMessageBox::error( 0, msg, caption );

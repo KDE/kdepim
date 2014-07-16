@@ -765,7 +765,7 @@ void KDeclarativeMainView::saveAttachment( const QString &url, const QString &de
 
   if ( QFile::exists( targetFile ) ) {
     if ( KMessageBox::warningContinueCancel( this,
-            i18n( "A file named <br><filename>%1</filename><br>already exists.<br><br>Do you want to overwrite it?",
+            xi18n( "A file named <br><filename>%1</filename><br>already exists.<br><br>Do you want to overwrite it?",
                   targetFile ),
             i18n( "File Already Exists" ), KGuiItem(i18n("&Overwrite")) ) == KMessageBox::Cancel) {
         return;
@@ -781,7 +781,7 @@ void KDeclarativeMainView::saveAttachment( const QString &url, const QString &de
 
   if ( !success ) {
     KMessageBox::error( this,
-                        i18nc( "1 = file name, 2 = error string",
+                        xi18nc( "1 = file name, 2 = error string",
                                "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
                                targetFile,
                                file.errorString() ),

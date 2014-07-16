@@ -166,7 +166,7 @@ VisualFreeBusyWidget::VisualFreeBusyWidget( FreeBusyItemModel *model, int spacin
   mScaleCombo->setToolTip(
     i18nc( "@info:tooltip", "Set the Gantt chart zoom level" ) );
   mScaleCombo->setWhatsThis(
-    i18nc( "@info:whatsthis",
+    xi18nc( "@info:whatsthis",
            "Select the Gantt chart zoom level from one of the following:<nl/>"
            "'Hour' shows a range of several hours,<nl/>"
            "'Day' shows a range of a few days,<nl/>"

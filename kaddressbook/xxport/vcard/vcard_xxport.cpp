@@ -242,7 +242,7 @@ KABC::Addressee::List VCardXXPort::importContacts() const
 
           KIO::NetAccess::removeTempFile( fileName );
         } else {
-          const QString msg = i18nc(
+          const QString msg = xi18nc(
             "@info",
             "<para>When trying to read the vCard, "
             "there was an error opening the file <filename>%1</filename>:</para>"
@@ -253,7 +253,7 @@ KABC::Addressee::List VCardXXPort::importContacts() const
           anyFailures = true;
         }
       } else {
-        const QString msg = i18nc(
+        const QString msg = xi18nc(
           "@info",
           "<para>Unable to access vCard:</para><para>%1</para>",
           KIO::NetAccess::lastErrorString() );

@@ -553,7 +553,7 @@ void CalPrintIncidence::print( QPainter &p, int width, int height )
                                   "Status: %1\n",
                                    statusString );
           subitemString += KCalUtils::IncidenceFormatter::recurrenceString( todo ) + QLatin1Char('\n');
-          subitemString += i18nc( "subitem Priority: N",
+          subitemString += xi18nc( "subitem Priority: N",
                                   "Priority: <numid>%1</numid>\n",
                                   todo->priority() );
           subitemString += i18nc( "subitem Secrecy: secrecyString",
@@ -1344,7 +1344,7 @@ void CalPrintMonth::print( QPainter &p, int width, int height )
   monthBox.setTop( headerBox.bottom() + padding() );
 
   do {
-    QString title( i18nc( "monthname year", "%1 <numid>%2</numid>",
+    QString title( xi18nc( "monthname year", "%1 <numid>%2</numid>",
                           calSys->monthName( curMonth ),
                           curMonth.year() ) );
     QDate tmp( fromMonth );

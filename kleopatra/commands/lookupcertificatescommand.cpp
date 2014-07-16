@@ -346,7 +346,7 @@ void LookupCertificatesCommand::Private::showError( QWidget * parent, const KeyL
 void LookupCertificatesCommand::Private::showResult( QWidget * parent, const KeyListResult & result ) {
     if ( result.isTruncated() )
         KMessageBox::information( parent,
-                                  i18nc("@info",
+                                  xi18nc("@info",
                                         "<para>The query result has been truncated.</para>"
                                         "<para>Either the local or a remote limit on "
                                         "the maximum number of returned hits has "
@@ -383,7 +383,7 @@ static bool haveX509DirectoryServerConfigured() {
 bool LookupCertificatesCommand::Private::checkConfig() const {
     const bool ok = haveOpenPGPKeyserverConfigured() || haveX509DirectoryServerConfigured();
     if ( !ok )
-        information( i18nc("@info",
+        information( xi18nc("@info",
                            "<para>You do not have any directory servers configured.</para>"
                            "<para>You need to configure at least one directory server to "
                            "search on one.</para>"

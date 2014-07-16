@@ -70,7 +70,7 @@ RefreshOpenPGPCertsCommand::~RefreshOpenPGPCertsCommand() {}
 bool RefreshOpenPGPCertsCommand::preStartHook( QWidget * parent ) const {
     if ( !haveKeyserverConfigured() )
         if ( KMessageBox::warningContinueCancel( parent,
-                                                 i18nc("@info",
+                                                 xi18nc("@info",
                                                        "<para>No OpenPGP directory services have been configured.</para>"
                                                        "<para>If not all of the certificates carry the name of their preferred "
                                                        "certificate server (few do), a fallback server is needed to fetch from.</para>"
@@ -86,7 +86,7 @@ bool RefreshOpenPGPCertsCommand::preStartHook( QWidget * parent ) const {
              != KMessageBox::Continue )
             return false;
     return KMessageBox::warningContinueCancel( parent,
-                                               i18nc("@info",
+                                               xi18nc("@info",
                                                     "<para>Refreshing OpenPGP certificates implies downloading all certificates anew, "
                                                     "to check if any of them have been revoked in the meantime.</para>"
                                                     "<para>This can put a severe strain on your own as well as other people's network "
@@ -117,14 +117,14 @@ QString RefreshOpenPGPCertsCommand::successCaption() const {
 }
 
 QString RefreshOpenPGPCertsCommand::crashExitMessage( const QStringList & args ) const {
-    return i18nc("@info",
+    return xi18nc("@info",
                  "<para>The GPG process that tried to refresh OpenPGP certificates "
                  "ended prematurely because of an unexpected error.</para>"
                  "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join( QLatin1String(" ") ) ) ;
 }
 
 QString RefreshOpenPGPCertsCommand::errorExitMessage( const QStringList & args ) const {
-    return i18nc("@info",
+    return xi18nc("@info",
                  "<para>An error occurred while trying to refresh OpenPGP certificates.</para> "
                  "<para>The output from <command>%1</command> was: <message>%2</message></para>",
                  args[0], errorString() );

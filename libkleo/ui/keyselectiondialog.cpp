@@ -222,7 +222,7 @@ namespace {
         if ( key.shortKeyID() )
           return QString::fromUtf8( key.shortKeyID() );
         else
-          return i18n("<placeholder>unknown</placeholder>");
+          return xi18n("<placeholder>unknown</placeholder>");
       }
       break;
     case 1:

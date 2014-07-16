@@ -272,7 +272,7 @@ void DistributionListDialog::slotDelayedUser1( KJob *job )
 
     if ( !searchJob->contactGroups().isEmpty() ) {
         KMessageBox::information( this,
-                                  i18nc( "@info", "<para>Distribution list with the given name <resource>%1</resource> "
+                                  xi18nc( "@info", "<para>Distribution list with the given name <resource>%1</resource> "
                                          "already exists. Please select a different name.</para>", name ) );
         return;
     }
