@@ -292,7 +292,14 @@ int KleopatraApplication::newInstance() {
         // Check for Parent Window id
         WId parentId = 0;
         if ( args->isSet( "parent-windowid" ) ) {
+#ifdef Q_OS_WIN
+            // WId is not a portable type as it is a pointer type on Windows.
+            // casting it from an integer is ok though as the values are guranteed to
+            // be compatible in the documentation.
+            parentId = reinterpret_cast<WId>( args->getOption( "parent-windowid" ).toUInt() );
+#else
             parentId = args->getOption( "parent-windowid" ).toUInt();
+#endif
         }
 
         // Search for local keys
