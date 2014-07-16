@@ -206,12 +206,6 @@ QString ProgressManager::getUniqueID()
     return QString::number( ++uID );
 }
 
-ProgressItem *ProgressManager::createProgressItem(ProgressItem *parent, const Akonadi::AgentInstance &agent, const QString &id, const QString &label, const QString &status, bool canBeCanceled, ProgressItem::CryptoStatus cryptoStatus)
-{
-    return instance()->createProgressItemForAgent( parent, agent, id, label,
-                                                   status, canBeCanceled, cryptoStatus );
-}
-
 bool ProgressManager::isEmpty() const
 {
     return mTransactions.isEmpty();

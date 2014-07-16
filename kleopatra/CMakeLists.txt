@@ -338,11 +338,11 @@ kde4_add_kcfg_files(_kleopatra_SRCS
 if(KDEPIM_ONLY_KLEO)
   add_definitions(-DKDEPIM_ONLY_KLEO -DKDEPIM_EXPORT=)
   set(_kleopatra_libkdepim_SRCS
-    ../libkdepim/progressmanager.cpp
-    ../libkdepim/progressdialog.cpp
-    ../libkdepim/overlaywidget.cpp
-    ../libkdepim/ssllabel.cpp
-    ../libkdepim/statusbarprogresswidget.cpp
+    ${CMAKE_SOURCE_DIR}/libkdepim/progresswidget/progressmanager.cpp
+    ${CMAKE_SOURCE_DIR}/libkdepim/progresswidget/progressdialog.cpp
+    ${CMAKE_SOURCE_DIR}/libkdepim/progresswidget/ssllabel.cpp
+    ${CMAKE_SOURCE_DIR}/libkdepim/progresswidget/statusbarprogresswidget.cpp
+    ${CMAKE_SOURCE_DIR}/libkdepim/widgets/overlaywidget.cpp
   )
   set(_kleopatra_libkdepim_LIBS)
 else()
