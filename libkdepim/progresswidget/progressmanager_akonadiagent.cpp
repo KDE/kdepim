@@ -55,3 +55,8 @@ ProgressItem *ProgressManager::createProgressItemForAgent(ProgressItem *parent,
     return t;
 }
 
+ProgressItem *ProgressManager::createProgressItem(ProgressItem *parent, const Akonadi::AgentInstance &agent, const QString &id, const QString &label, const QString &status, bool canBeCanceled, ProgressItem::CryptoStatus cryptoStatus)
+{
+    return instance()->createProgressItemForAgent( parent, agent, id, label,
+                                                   status, canBeCanceled, cryptoStatus );
+}
