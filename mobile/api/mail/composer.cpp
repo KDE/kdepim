@@ -19,12 +19,12 @@ Copyright 2014  Abhijeet Nikam connect08nikam@gmail.com
 
 #include "composer.h"
 
-#include <qdebug.h>
-
+#include <Akonadi/ItemFetchScope>
 
 Composer::Composer( QObject *parent )
     : QObject( parent )
     , m_receiverModel ( new ReceiverModel (this) )
+    , m_IdentityManager ( new KPIMIdentities::IdentityManager( false, this ) )
 {
 
 }
@@ -144,10 +144,11 @@ void Composer::send()
     ct->setCategory( KMime::Headers::CCcontainer );
     m_msg->contentTransferEncoding()->clear();
 
-    // Set the headers.
+
     m_msg->from()->fromUnicodeString( m_from , "utf-8" );
     m_msg->to()->fromUnicodeString( m_receiverModel->recipientString(MessageComposer::Recipient::To), "utf-8" );
     m_msg->cc()->fromUnicodeString( m_receiverModel->recipientString(MessageComposer::Recipient::Cc), "utf-8" );
+    m_msg->bcc()->fromUnicodeString( m_receiverModel->recipientString(MessageComposer::Recipient::Bcc), "utf-8" );
     m_msg->date()->setDateTime( QDateTime::currentDateTime() );
     m_msg->subject()->fromUnicodeString( m_subject, "utf-8" );
 
@@ -183,3 +184,111 @@ void Composer::addRecipient( const QString &email , int type )
     rec->setType (  MessageComposer::Recipient::idToType(type) );
     m_receiverModel->addRecipient ( rec );
 }
+
+
+void Composer::replyToAll( const QUrl &url )
+{
+
+    reply ( url, MessageComposer::ReplyAll );
+
+}
+
+void Composer::replyToAuthor( const QUrl &url )
+{
+
+    reply ( url, MessageComposer::ReplyAuthor );
+
+}
+
+void Composer::replyToMailingList( const QUrl &url )
+{
+
+    reply ( url , MessageComposer::ReplyList );
+
+}
+
+void Composer::replyToMessage( const QUrl &url )
+{
+
+    reply ( url, MessageComposer::ReplySmart );
+
+}
+
+void Composer::forwardMessage(const QUrl &url)
+{
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(Akonadi::Item::fromUrl(url));
+    job->fetchScope().fetchFullPayload();
+
+    connect( job, SIGNAL(result(KJob*)), SLOT(forwardFetchResult(KJob*)) );
+}
+
+
+void Composer::forwardFetchResult(KJob *job)
+{
+    const Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
+    if ( job->error() || fetchJob->items().isEmpty() )
+        return;
+
+    const Akonadi::Item item = fetchJob->items().first();
+    if ( !item.hasPayload<KMime::Message::Ptr>() )
+        return;
+
+    MessageComposer::MessageFactory factory( item.payload<KMime::Message::Ptr>(), item.id() );
+    factory.setIdentityManager( m_IdentityManager );
+
+    KMime::Message::Ptr fw =  factory.createForward();
+
+    setMessage( fw );
+}
+
+
+void Composer::reply(const QUrl &url, MessageComposer::ReplyStrategy replyStrategy, bool quoteOriginal)
+{
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(Akonadi::Item::fromUrl(url));
+    job->fetchScope().fetchFullPayload();
+
+    job->setProperty( "replyStrategy", QVariant::fromValue( replyStrategy ) );
+    job->setProperty( "quoteOriginal", QVariant::fromValue( quoteOriginal ) );
+
+    connect( job, SIGNAL(result(KJob*)), SLOT(replyFetchResult(KJob*)) );
+
+}
+
+
+void Composer::replyFetchResult(KJob *job)
+{
+
+    const Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
+    if ( job->error() || fetchJob->items().isEmpty() )
+        return;
+
+    const Akonadi::Item item = fetchJob->items().first();
+    if ( !item.hasPayload<KMime::Message::Ptr>() )
+        return;
+
+
+    MessageComposer::MessageFactory factory( item.payload<KMime::Message::Ptr>(), item.id() );
+    factory.setReplyStrategy( fetchJob->property( "replyStrategy" ).value<MessageComposer::ReplyStrategy>() );
+    factory.setIdentityManager( m_IdentityManager );
+    factory.setQuote( fetchJob->property( "quoteOriginal" ).toBool() );
+
+    MessageComposer::MessageFactory::MessageReply reply =  factory.createReply();
+
+    setMessage( reply.msg );
+
+}
+
+
+void Composer::setMessage ( const KMime::Message::Ptr &message )
+{
+
+    m_subject = message->subject()->asUnicodeString();
+
+    m_receiverModel->setRecipientString( message->to()->mailboxes(), MessageComposer::Recipient::To );
+    m_receiverModel->setRecipientString( message->cc()->mailboxes(), MessageComposer::Recipient::Cc );
+    m_receiverModel->setRecipientString( message->bcc()->mailboxes(), MessageComposer::Recipient::Bcc );
+
+    m_body = QLatin1String(message->body());
+
+}
+

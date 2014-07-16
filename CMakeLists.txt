@@ -156,7 +156,6 @@ if( KF5GAPI_FOUND )
   add_definitions( -DKDEPIM_STORAGESERVICE_GDRIVE )
 endif()
 
-
 if(KDEPIM_ENTERPRISE_BUILD)
   message(STATUS "Enterprise build is enabled.")
 endif()

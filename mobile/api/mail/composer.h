@@ -27,8 +27,16 @@ Copyright 2014  Abhijeet Nikam connect08nikam@gmail.com
 #include <QTextEncoder>
 
 #include "sender/akonadisender.h"
+#include "messagecomposer/helper/messagefactory.h"
+
+#include <Akonadi/ItemFetchJob>
+#include <kpimidentities/identitymanager.h>
 
 #include "receivermodel.h"
+
+namespace KPIMIdentities {
+class IdentityManager;
+}
 
 class Composer : public QObject
 {
@@ -45,7 +53,7 @@ Q_OBJECT
 
 public:
 
-    explicit Composer( QObject *parent = 0 );
+    explicit Composer ( QObject *parent = 0 );
 
     QString cc() const;
     QString bcc() const;
@@ -61,6 +69,8 @@ public:
     void setBCC( const QString &bcc );
     void setSubject( const QString &subject );
     void setBody ( const QString &body );
+
+    void setMessage ( const KMime::Message::Ptr &message );
 
     QByteArray convert ( const QString &body );
 
@@ -80,7 +90,20 @@ public slots:
     void sendLater();
     void addRecipient( const QString &email , int type );
 
+    void forwardMessage (const QUrl &url);
+    void replyToMessage(const QUrl &url);
+    void replyToAll(const QUrl &url);
+    void replyToAuthor(const QUrl &url);
+    void replyToMailingList(const QUrl &url);
+
+private slots:
+
+    void replyFetchResult(KJob *job);
+    void forwardFetchResult (KJob *job);
+
 private:
+
+    void reply(const QUrl &url, MessageComposer::ReplyStrategy replyStrategy, bool quoteOriginal = true);
 
     QString m_subject;
     QString m_from;
@@ -89,6 +112,9 @@ private:
     QString m_to;
     QString m_bcc;
     ReceiverModel *m_receiverModel;
+
+    KPIMIdentities::IdentityManager *m_IdentityManager;
+
 };
 
 
