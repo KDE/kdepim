@@ -1,5 +1,7 @@
 
 add_subdirectory( pics )
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 INCLUDE(CheckIncludeFiles)
 check_include_files(sys/poll.h HAVE_SYS_POLL_H)
@@ -30,6 +32,6 @@ add_subdirectory( tests )
 
 ########### install files ###############
 
-install(FILES kpgp.upd  DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
-install(PROGRAMS kpgp-3.1-upgrade-address-data.pl DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
+install(FILES kconf_update/kpgp.upd  DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
+install(PROGRAMS kconf_update/kpgp-3.1-upgrade-address-data.pl DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
 

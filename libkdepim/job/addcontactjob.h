@@ -42,9 +42,9 @@ namespace KPIM {
  */
 class KDEPIM_EXPORT AddContactJob : public KJob
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new add contact job.
      *
@@ -78,7 +78,7 @@ class KDEPIM_EXPORT AddContactJob : public KJob
 
     void showMessageBox(bool b);
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private* const d;

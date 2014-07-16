@@ -19,7 +19,7 @@
 
 #include "aclutils_p.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace PimCommon;
 

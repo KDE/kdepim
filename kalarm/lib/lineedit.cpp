@@ -19,7 +19,7 @@
  */
 
 #include "kalarm.h"
-#include "lineedit.moc"
+#include "lineedit.h"
 
 #include <libkdepim/misc/maillistdrag.h>
 #include <kabc/vcarddrag.h>
@@ -189,7 +189,7 @@ void LineEdit::dropEvent(QDropEvent* e)
         {
             // Remove newlines from a list of email addresses, and allow an eventual mailto: protocol
             QString mailto = QLatin1String("mailto:");
-            newEmails = txt.split(QRegExp("[\r\n]+"), QString::SkipEmptyParts);
+            newEmails = txt.split(QRegExp(QLatin1String("[\r\n]+")), QString::SkipEmptyParts);
             for (QStringList::Iterator it = newEmails.begin();  it != newEmails.end();  ++it)
             {
                 if ((*it).startsWith(mailto))
@@ -208,15 +208,15 @@ void LineEdit::dropEvent(QDropEvent* e)
 
     if (newEmails.count())
     {
-        newText = newEmails.join(",");
+        newText = newEmails.join(QLatin1String(","));
         int c = cursorPosition();
         if (c > 0)
-            newText.prepend(",");
+            newText.prepend(QLatin1String(","));
         if (c < static_cast<int>(text().length()))
-            newText.append(",");
+            newText.append(QLatin1String(","));
     }
     if (!newText.isEmpty())
         insert(newText);
 }
-
+#include "moc_lineedit.cpp"
 // vim: et sw=4:

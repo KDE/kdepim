@@ -40,8 +40,6 @@ public:
     ~ContactDisplayMessageMemento();
     void processAddress( const KABC::Addressee& addressee );
     bool allowToRemoteContent() const;
-    bool forceToHtml() const;
-    bool forceToText() const;
     KABC::Picture photo() const;
 
     bool finished() const;
@@ -57,6 +55,7 @@ private Q_SLOTS:
     void slotSearchJobFinished( KJob *job );
 
 private:
+    void searchPhoto(const KABC::AddresseeList &list);
     bool mFinished;
     bool mMailAllowToRemoteContent;
     Viewer::ForceDisplayTo mForceDisplayTo;

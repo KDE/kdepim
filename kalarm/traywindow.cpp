@@ -19,7 +19,7 @@
  */
 
 #include "kalarm.h"   //krazy:exclude=includes (kalarm.h must be first)
-#include "traywindow.moc"
+#include "traywindow.h"
 
 #include "alarmcalendar.h"
 #include "alarmlistview.h"
@@ -49,8 +49,6 @@
 #include <kconfig.h>
 #include <kdebug.h>
 
-#include <QToolTip>
-#include <QMouseEvent>
 #include <QList>
 #include <QTimer>
 
@@ -81,12 +79,12 @@ TrayWindow::TrayWindow(MainWindow* parent)
       mHaveDisabledAlarms(false)
 {
     kDebug();
-    setToolTipIconByName("kalarm");
+    setToolTipIconByName(QLatin1String("kalarm"));
     setToolTipTitle(KGlobal::mainComponent().aboutData()->programName());
-    setIconByName("kalarm");
+    setIconByName(QLatin1String("kalarm"));
     // Load the disabled icon for use by setIconByPixmap()
     // - setIconByName() doesn't work for this one!
-    mIconDisabled.addPixmap(KIconLoader::global()->loadIcon("kalarm-disabled", KIconLoader::Panel));
+    mIconDisabled.addPixmap(KIconLoader::global()->loadIcon(QLatin1String("kalarm-disabled"), KIconLoader::Panel));
     setStatus(KStatusNotifierItem::Active);
 
     // Set up the context menu
@@ -118,7 +116,7 @@ TrayWindow::TrayWindow(MainWindow* parent)
 
     // Replace the default handler for the Quit context menu item
     const char* quitName = KStandardAction::name(KStandardAction::Quit);
-    QAction* qa = actions->action(quitName);
+    QAction* qa = actions->action(QLatin1String(quitName));
     disconnect(qa, SIGNAL(triggered(bool)), 0, 0);
     connect(qa, SIGNAL(triggered(bool)), SLOT(slotQuit()));
 
@@ -334,7 +332,7 @@ void TrayWindow::updateToolTip()
     else if (mHaveDisabledAlarms)
     {
         if (!subTitle.isEmpty())
-            subTitle += "<br/>";
+            subTitle += QLatin1String("<br/>");
         subTitle += i18nc("@info:tooltip Brief: some alarms are disabled", "(Some alarms disabled)");
     }
     setToolTipSubTitle(subTitle);
@@ -346,7 +344,7 @@ void TrayWindow::updateToolTip()
 void TrayWindow::updateIcon()
 {
     if (theApp()->alarmsEnabled())
-        setIconByName(mHaveDisabledAlarms ? "kalarm-partdisabled" : "kalarm");
+        setIconByName(mHaveDisabledAlarms ? QLatin1String("kalarm-partdisabled") : QLatin1String("kalarm"));
     else
         setIconByPixmap(mIconDisabled);
 }
@@ -405,9 +403,9 @@ QString TrayWindow::tooltipAlarmText() const
                 minutes[0] = static_cast<char>((mins%60) / 10 + '0');
                 minutes[1] = static_cast<char>((mins%60) % 10 + '0');
                 if (Preferences::showTooltipAlarmTime())
-                    item.text += i18nc("@info/plain prefix + hours:minutes", "(%1%2:%3)", prefix, mins/60, minutes);
+                    item.text += i18nc("@info/plain prefix + hours:minutes", "(%1%2:%3)", prefix, mins/60, QLatin1String(minutes));
                 else
-                    item.text += i18nc("@info/plain prefix + hours:minutes", "%1%2:%3", prefix, mins/60, minutes);
+                    item.text += i18nc("@info/plain prefix + hours:minutes", "%1%2:%3", prefix, mins/60, QLatin1String(minutes));
                 item.text += QLatin1Char(' ');
             }
             item.text += AlarmText::summary(*event);
@@ -429,7 +427,7 @@ QString TrayWindow::tooltipAlarmText() const
     {
         kDebug() << "--" << (count+1) << ")" << items[i].text;
         if (i > 0)
-            text += "<br />";
+            text += QLatin1String("<br />");
         text += items[i].text;
         if (++count == maxCount)
             break;
@@ -445,5 +443,5 @@ void TrayWindow::removeWindow(MainWindow* win)
     if (win == mAssocMainWindow)
         mAssocMainWindow = 0;
 }
-
+#include "moc_traywindow.cpp"
 // vim: et sw=4:

@@ -25,17 +25,19 @@
 
 class KArchiveDirectory;
 class KArchiveFile;
-class KTempDir;
 class ArchiveStorage;
 
 class ImportMailJob : public AbstractImportExportJob
 {
+    Q_OBJECT
 public:
     explicit ImportMailJob(QWidget *widget, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ImportMailJob();
 
     void start();
-    QString componentName() const;
+
+protected:
+    void nextStep();
 
 private:
     void restoreTransports();
@@ -44,11 +46,11 @@ private:
     void restoreConfig();
     void restoreIdentity();
     void restoreAkonadiDb();
-    void restoreNepomuk();
 
     void importTemplatesConfig(const KArchiveFile* templatesconfiguration, const QString& templatesconfigurationrc, const QString &filename, const QString &prefix);
     void importKmailConfig(const KArchiveFile* kmailsnippet, const QString& kmail2rc, const QString &filename, const QString &prefix);
     void importArchiveConfig(const KArchiveFile* archiveconfiguration, const QString& archiveconfigurationrc, const QString&filename,const QString& prefix);
+    void importFolderArchiveConfig(const KArchiveFile* archiveconfiguration, const QString& archiveconfigurationrc, const QString&filename,const QString& prefix);
     QString createResource( const QString &resources, const QString &name, const QMap<QString, QVariant> &settings );
     void searchAllFiles(const KArchiveDirectory *dir,const QString &prefix);
     void storeMailArchiveResource(const KArchiveDirectory*dir, const QString &prefix);
@@ -60,7 +62,6 @@ private:
     void mergeSieveTemplate(const KArchiveFile *archivefile, const QString &filename, const QString &prefix);
     QString uniqueIdentityName(const QString &name);
 
-    QHash<QString, QString> mHashMailArchive;
     QHash<uint, uint> mHashIdentity;
     QHash<int, int> mHashTransport;
     QHash<QString, QString> mHashResources;

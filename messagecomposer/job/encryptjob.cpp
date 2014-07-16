@@ -42,10 +42,10 @@ using namespace MessageComposer;
 
 class MessageComposer::EncryptJobPrivate : public ContentJobBasePrivate
 {
-  public:
+public:
     EncryptJobPrivate( EncryptJob *qq )
-      : ContentJobBasePrivate( qq )
-      , content( 0 )
+        : ContentJobBasePrivate( qq )
+        , content( 0 )
     {
     }
 
@@ -57,30 +57,30 @@ class MessageComposer::EncryptJobPrivate : public ContentJobBasePrivate
     // copied from messagecomposer.cpp
     bool binaryHint( Kleo::CryptoMessageFormat f )
     {
-      switch ( f ) {
-      case Kleo::SMIMEFormat:
-      case Kleo::SMIMEOpaqueFormat:
-        return true;
-      default:
-      case Kleo::OpenPGPMIMEFormat:
-      case Kleo::InlineOpenPGPFormat:
-        return false;
-      }
+        switch ( f ) {
+        case Kleo::SMIMEFormat:
+        case Kleo::SMIMEOpaqueFormat:
+            return true;
+        default:
+        case Kleo::OpenPGPMIMEFormat:
+        case Kleo::InlineOpenPGPFormat:
+            return false;
+        }
     }
 
 
     GpgME::SignatureMode signingMode( Kleo::CryptoMessageFormat f )
     {
-      switch ( f ) {
-      case Kleo::SMIMEOpaqueFormat:
-        return GpgME::NormalSignatureMode;
-      case Kleo::InlineOpenPGPFormat:
-        return GpgME::Clearsigned;
-      default:
-      case Kleo::SMIMEFormat:
-      case Kleo::OpenPGPMIMEFormat:
-        return GpgME::Detached;
-      }
+        switch ( f ) {
+        case Kleo::SMIMEOpaqueFormat:
+            return GpgME::NormalSignatureMode;
+        case Kleo::InlineOpenPGPFormat:
+            return GpgME::Clearsigned;
+        default:
+        case Kleo::SMIMEFormat:
+        case Kleo::OpenPGPMIMEFormat:
+            return GpgME::Detached;
+        }
     }
 
 
@@ -88,7 +88,7 @@ class MessageComposer::EncryptJobPrivate : public ContentJobBasePrivate
 };
 
 EncryptJob::EncryptJob( QObject *parent )
-  : ContentJobBase( *new EncryptJobPrivate( this ), parent )
+    : ContentJobBase( *new EncryptJobPrivate( this ), parent )
 {
 }
 
@@ -99,105 +99,107 @@ EncryptJob::~EncryptJob()
 
 void EncryptJob::setContent( KMime::Content* content )
 {
-  Q_D( EncryptJob );
+    Q_D( EncryptJob );
 
-  d->content = content;
-  d->content->assemble();
+    d->content = content;
+    d->content->assemble();
 }
 
 void EncryptJob::setCryptoMessageFormat( Kleo::CryptoMessageFormat format)
 {
-  Q_D( EncryptJob );
+    Q_D( EncryptJob );
 
-  d->format = format;
+    d->format = format;
 }
 
 void EncryptJob::setEncryptionKeys( const std::vector<GpgME::Key>& keys )
 {
-  Q_D( EncryptJob );
+    Q_D( EncryptJob );
 
-  d->keys = keys;
+    d->keys = keys;
 }
 
 void EncryptJob::setRecipients( const QStringList& recipients ) {
-  Q_D( EncryptJob );
+    Q_D( EncryptJob );
 
-  d->recipients = recipients;
+    d->recipients = recipients;
 }
 
 QStringList EncryptJob::recipients() const {
-  Q_D( const EncryptJob );
+    Q_D( const EncryptJob );
 
-  return d->recipients;
+    return d->recipients;
 }
 
 std::vector<GpgME::Key> EncryptJob::encryptionKeys() const {
-  Q_D( const EncryptJob );
+    Q_D( const EncryptJob );
 
-  return d->keys;
+    return d->keys;
 }
 
 void EncryptJob::process()
 {
-  Q_D( EncryptJob );
-  Q_ASSERT( d->resultContent == 0 ); // Not processed before.
+    Q_D( EncryptJob );
+    Q_ASSERT( d->resultContent == 0 ); // Not processed before.
 
-  if( d->keys.size() == 0 ) { // should not happen---resolver should have dealt with it earlier
-    kDebug() << "HELP! Encrypt job but have no keys to encrypt with.";
+    if( d->keys.size() == 0 ) { // should not happen---resolver should have dealt with it earlier
+        kDebug() << "HELP! Encrypt job but have no keys to encrypt with.";
+        return;
+    }
+
+    // if setContent hasn't been called, we assume that a subjob was added
+    // and we want to use that
+    if( !d->content || !d->content->hasContent() ) {
+        Q_ASSERT( d->subjobContents.size() == 1 );
+        d->content = d->subjobContents.first();
+    }
+
+    //d->resultContent = new KMime::Content;
+
+    const Kleo::CryptoBackend::Protocol *proto = 0;
+    if( d->format & Kleo::AnyOpenPGP ) {
+        proto = Kleo::CryptoBackendFactory::instance()->openpgp();
+    } else if( d->format & Kleo::AnySMIME ) {
+        proto = Kleo::CryptoBackendFactory::instance()->smime();
+    } else {
+        kDebug() << "HELP! Encrypt job but have protocol to encrypt with.";
+        return;
+    }
+
+    Q_ASSERT( proto );
+
+    kDebug() << "got backend, starting job";
+    Kleo::EncryptJob* seJob = proto->encryptJob( !d->binaryHint( d->format ), d->format == Kleo::InlineOpenPGPFormat );
+
+    // for now just do the main recipients
+    QByteArray encryptedBody;
+    QByteArray content;
+    d->content->assemble();
+    if( d->format & Kleo::InlineOpenPGPFormat ) {
+        content = d->content->body();
+    } else {
+        content = d->content->encodedContent();
+    }
+
+    // FIXME: Make async!
+    const GpgME::EncryptionResult res = seJob->exec( d->keys,
+                                                     content,
+                                                     true, // 'alwaysTrust' provided keys
+                                                     encryptedBody );
+
+    // exec'ed jobs don't delete themselves
+    seJob->deleteLater();
+
+    if ( res.error() ) {
+        setError( res.error().code() );
+        setErrorText( QString::fromLocal8Bit( res.error().asString() ) );
+        emitResult();
+        return;
+    }
+    d->resultContent = MessageComposer::Util::composeHeadersAndBody( d->content, encryptedBody, d->format, false );
+
+    emitResult();
     return;
-  }
-  
-  // if setContent hasn't been called, we assume that a subjob was added
-  // and we want to use that
-  if( !d->content || !d->content->hasContent() ) {
-    Q_ASSERT( d->subjobContents.size() == 1 );
-    d->content = d->subjobContents.first();
-  }
-
-  //d->resultContent = new KMime::Content;
-
-  const Kleo::CryptoBackend::Protocol *proto = 0;
-  if( d->format & Kleo::AnyOpenPGP ) {
-    proto = Kleo::CryptoBackendFactory::instance()->openpgp();
-  } else if( d->format & Kleo::AnySMIME ) {
-    proto = Kleo::CryptoBackendFactory::instance()->smime();
-  } else {
-    kDebug() << "HELP! Encrypt job but have protocol to encrypt with.";
-    return;
-  }
-
-  Q_ASSERT( proto );
-
-  kDebug() << "got backend, starting job";
-  Kleo::EncryptJob* seJob = proto->encryptJob( !d->binaryHint( d->format ), d->format == Kleo::InlineOpenPGPFormat );
-
-  // for now just do the main recipients
-  QByteArray encryptedBody;
-  QByteArray content;
-  if( d->format & Kleo::InlineOpenPGPFormat ) {
-    content = d->content->body();
-  } else {
-    content = d->content->encodedContent();
-  }
-
-  // FIXME: Make async!
-  const GpgME::EncryptionResult res = seJob->exec( d->keys,
-                                                   content,
-                                                   true, // 'alwaysTrust' provided keys
-                                                   encryptedBody );
-
-  if ( res.error() ) {
-    setError( res.error().code() );
-    setErrorText( QString::fromLocal8Bit( res.error().asString() ) );
-  }
-  d->resultContent = MessageComposer::Util::composeHeadersAndBody( d->content, encryptedBody, d->format, false );
-
-  // exec'ed jobs don't delete themselves
-  seJob->deleteLater();
-  
-  emitResult();
-  return;
 
 }
 
-#include "encryptjob.moc"

@@ -284,7 +284,7 @@ void FileSystemWatcher::addPaths( const QStringList& paths )
     if ( paths.empty() )
         return;
     const QStringList newPaths = paths + resolve( paths, d->m_blacklist, d->m_whitelist );
-    kDebug( !newPaths.empty() ) << "adding\n " << newPaths.join( "\n " ) << "\n/end";
+    kDebug( !newPaths.empty() ) << "adding\n " << newPaths.join( QLatin1String("\n ") ) << "\n/end";
     d->m_paths += newPaths;
     d->m_seenPaths.insert( newPaths.begin(), newPaths.end() );
     if ( d->m_watcher && !newPaths.empty() )
@@ -311,4 +311,4 @@ void FileSystemWatcher::removePath( const QString& path )
     removePaths( QStringList( path ) );
 }
 
-#include "filesystemwatcher.moc"
+#include "moc_filesystemwatcher.cpp"

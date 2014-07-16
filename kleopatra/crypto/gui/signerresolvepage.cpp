@@ -53,7 +53,7 @@
 #include <gpgme++/key.h>
 
 #include <KDialog>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QButtonGroup>
 #include <QCheckBox>
@@ -63,7 +63,6 @@
 #include <QPointer>
 #include <QPushButton>
 #include <QRadioButton>
-#include <QStackedLayout>
 #include <QVBoxLayout>
 #include <QVector>
 

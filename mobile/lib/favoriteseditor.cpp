@@ -34,9 +34,9 @@ FavoritesEditor::FavoritesEditor( KActionCollection *actionCollection, const KSh
 {
   mFavoritesController = new FavoritesController( config, this );
 
-  actionCollection->addAction( "favoriteseditor_moveup", mFavoritesController->moveUpAction() );
-  actionCollection->addAction( "favoriteseditor_movedown", mFavoritesController->moveDownAction() );
-  actionCollection->addAction( "favoriteseditor_remove", mFavoritesController->removeAction() );
+  actionCollection->addAction( QLatin1String("favoriteseditor_moveup"), mFavoritesController->moveUpAction() );
+  actionCollection->addAction( QLatin1String("favoriteseditor_movedown"), mFavoritesController->moveDownAction() );
+  actionCollection->addAction( QLatin1String("favoriteseditor_remove"), mFavoritesController->removeAction() );
 }
 
 QAbstractItemModel* FavoritesEditor::model() const
@@ -69,4 +69,3 @@ void FavoritesEditor::setRowSelected( int row )
   selectionModel->select( model->index( row, 0, QModelIndex() ), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows );
 }
 
-#include "favoriteseditor.moc"

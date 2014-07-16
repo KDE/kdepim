@@ -120,6 +120,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     void setDateTimes( const KDateTime &start, const KDateTime &end );
     void setTimes( const KDateTime &start, const KDateTime &end );
     void setTimeZoneLabelEnabled( bool enable );
+    bool timeZonesAreLocal( const KDateTime &start, const KDateTime &end );
 
   private:
     KCalCore::ICalTimeZones *mTimeZones;
@@ -141,7 +142,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     KDateTime mCurrentStartDateTime;
 
     /// Remembers state when switching between takes whole day and timed event/to-do.
-    bool mTimezoneCombosWhereVisibile;
+    bool mTimezoneCombosWereVisibile;
 };
 
 }

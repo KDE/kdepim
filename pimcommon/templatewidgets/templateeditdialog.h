@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -21,8 +21,8 @@
 #include <KDialog>
 
 class KLineEdit;
-class KTextEdit;
 namespace PimCommon {
+class RichTextEditorWidget;
 class TemplateEditDialog : public KDialog
 {
     Q_OBJECT
@@ -37,12 +37,12 @@ public:
     QString script() const;
 
 private Q_SLOTS:
-    void slotTemplateNameChanged(const QString &);
+    void slotTemplateChanged();
 
 private:
     void readConfig();
     void writeConfig();
-    KTextEdit *mTextEdit;
+    PimCommon::RichTextEditorWidget *mTextEdit;
     KLineEdit *mTemplateNameEdit;
 };
 }

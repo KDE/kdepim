@@ -23,6 +23,7 @@
 
 #include <KGlobal>
 #include <KLocale>
+#include <KLocalizedString>
 #include <KSystemTimeZone>
 
 using namespace IncidenceEditorNG;

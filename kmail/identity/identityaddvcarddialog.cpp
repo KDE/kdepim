@@ -20,7 +20,7 @@
 #include <kpimidentities/identitymanager.h>
 
 #include <KComboBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSeparator>
 
 #include <QButtonGroup>
@@ -96,4 +96,3 @@ QString IdentityAddVcardDialog::duplicateVcardFromIdentity() const
     return mComboBox->currentText();
 }
 
-#include "identityaddvcarddialog.moc"

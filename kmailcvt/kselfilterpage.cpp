@@ -33,6 +33,7 @@
 #include <filter_sylpheed.h>
 #include <filter_thebat.h>
 #include <filter_lnotes.h>
+#include <filter_mailmangzip.h>
 
 #include <filters.h>
 
@@ -57,7 +58,7 @@ KSelFilterPage::KSelFilterPage(QWidget *parent )
 {
     mWidget = new Ui::KSelFilterPageDlg;
     mWidget->setupUi( this );
-    mWidget->mIntroSidebar->setPixmap(KStandardDirs::locate("data", "kmailcvt/pics/step1.png"));
+    mWidget->mIntroSidebar->setPixmap(KStandardDirs::locate("data", QLatin1String("kmailcvt/pics/step1.png")));
     connect(mWidget->mFilterCombo, SIGNAL(activated(int)), SLOT(filterSelected(int)));
 
     // Add new filters below. If this annoys you, please rewrite the stuff to use a factory.
@@ -80,6 +81,7 @@ KSelFilterPage::KSelFilterPage(QWidget *parent )
     addFilter(new MailImporter::FilterPMail);
     addFilter(new MailImporter::FilterLNotes);
     addFilter(new MailImporter::FilterPlain);
+    addFilter(new MailImporter::FilterMailmanGzip);
 
     // Ensure we return the correct type of Akonadi collection.
     mWidget->mCollectionRequestor->setMustBeReadWrite(true);
@@ -123,5 +125,4 @@ Ui::KSelFilterPageDlg *KSelFilterPage::widget()
     return mWidget;
 }
 
-#include "kselfilterpage.moc"
 

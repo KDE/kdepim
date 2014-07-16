@@ -19,9 +19,9 @@
 #include "kmkernel.h"
 
 #include "mailcommon/util/mailutil.h"
+#include "settings/globalsettings.h"
 
-
-#include <KLocale>
+#include <KLocalizedString>
 #include <KPushButton>
 #include <KVBox>
 
@@ -32,7 +32,6 @@
 
 #include <QListWidget>
 #include <QHBoxLayout>
-#include <QDebug>
 
 using namespace KMail;
 
@@ -58,16 +57,18 @@ AccountConfigOrderDialog::AccountConfigOrderDialog(QWidget *parent)
 
     KVBox* upDownBox = new KVBox( page );
     mUpButton = new KPushButton( upDownBox );
-    mUpButton->setIcon( KIcon("go-up") );
+    mUpButton->setIcon( KIcon(QLatin1String("go-up")) );
     mUpButton->setToolTip( i18nc( "Move selected account up.", "Up" ) );
     mUpButton->setEnabled( false ); // b/c no item is selected yet
     mUpButton->setFocusPolicy( Qt::StrongFocus );
+    mUpButton->setAutoRepeat(true);
 
     mDownButton = new KPushButton( upDownBox );
-    mDownButton->setIcon( KIcon("go-down") );
+    mDownButton->setIcon( KIcon(QLatin1String("go-down")) );
     mDownButton->setToolTip( i18nc( "Move selected account down.", "Down" ) );
     mDownButton->setEnabled( false ); // b/c no item is selected yet
     mDownButton->setFocusPolicy( Qt::StrongFocus );
+    mDownButton->setAutoRepeat(true);
 
     QWidget* spacer = new QWidget( upDownBox );
     upDownBox->setStretchFactor( spacer, 100 );
@@ -128,17 +129,16 @@ void AccountConfigOrderDialog::slotEnableControls()
 
 void AccountConfigOrderDialog::init()
 {
-    KConfigGroup group( KMKernel::self()->config(), "AccountOrder" );
-    const QStringList listOrderAccount = group.readEntry("order",QStringList());
+    const QStringList listOrderAccount = GlobalSettings::self()->order();
     QStringList instanceList;
 
     QMap<QString, InstanceStruct> mapInstance;
     foreach ( const Akonadi::AgentInstance &instance, Akonadi::AgentManager::self()->instances() ) {
         const QStringList capabilities( instance.type().capabilities() );
         if ( instance.type().mimeTypes().contains( KMime::Message::mimeType() ) ) {
-            if ( capabilities.contains( "Resource" ) &&
-                 !capabilities.contains( "Virtual" ) &&
-                 !capabilities.contains( "MailTransport" ) )
+            if ( capabilities.contains( QLatin1String("Resource") ) &&
+                 !capabilities.contains( QLatin1String("Virtual") ) &&
+                 !capabilities.contains( QLatin1String("MailTransport") ) )
             {
                 const QString identifier = instance.identifier();
                 if (!identifier.contains(POP3_RESOURCE_IDENTIFIER)) {
@@ -182,33 +182,32 @@ void AccountConfigOrderDialog::init()
 
 void AccountConfigOrderDialog::slotOk()
 {
-    KConfigGroup group( KMKernel::self()->config(), "AccountOrder" );
-
     QStringList order;
     const int numberOfItems(mListAccount->count());
     for (int i = 0; i<numberOfItems; ++i) {
         order << mListAccount->item(i)->data(AccountConfigOrderDialog::IdentifierAccount).toString();
     }
 
-    group.writeEntry("order",order);
-    group.sync();
-
+    GlobalSettings::self()->setOrder(order);
+    GlobalSettings::self()->writeConfig();
     KDialog::accept();
 }
 
 void AccountConfigOrderDialog::readConfig()
 {
+    if (!KMKernel::self())
+        return;
     KConfigGroup accountConfigDialog( KMKernel::self()->config(), "AccountConfigOrderDialog" );
-    const QSize size = accountConfigDialog.readEntry( "Size", QSize() );
+    const QSize size = accountConfigDialog.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
-    } else {
-        resize( 600, 400 );
     }
 }
 
 void AccountConfigOrderDialog::writeConfig()
 {
+    if (!KMKernel::self())
+        return;
     KConfigGroup accountConfigDialog( KMKernel::self()->config(), "AccountConfigOrderDialog" );
     accountConfigDialog.writeEntry( "Size", size() );
     accountConfigDialog.sync();
@@ -216,4 +215,3 @@ void AccountConfigOrderDialog::writeConfig()
 
 
 
-#include "accountconfigorderdialog.moc"

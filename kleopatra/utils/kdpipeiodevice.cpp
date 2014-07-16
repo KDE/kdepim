@@ -969,5 +969,4 @@ KDAB_DEFINE_CHECKS( KDPipeIODevice ) {
 }
 #endif // KDAB_DEFINE_CHECKS
 
-#include "moc_kdpipeiodevice.cpp"
 #include "kdpipeiodevice.moc"

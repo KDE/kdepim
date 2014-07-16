@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -25,6 +25,7 @@ class KPushButton;
 
 class QGridLayout;
 class QToolButton;
+class QDomElement;
 
 namespace PimCommon {
 class MinimumComboBox;
@@ -32,6 +33,7 @@ class MinimumComboBox;
 
 namespace KSieveUi {
 class SieveAction;
+class SieveHelpButton;
 class SieveActionWidget : public QWidget
 {
     Q_OBJECT
@@ -40,17 +42,22 @@ public:
     ~SieveActionWidget();
 
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
-    void generatedScript(QString &script, QStringList &requires);
+    void generatedScript(QString &script, QStringList &requires, bool onlyActions);
+    bool setAction(const QString &actionName, const QDomElement &element, const QString &comment, QString &error);
+    bool isConfigurated() const;
 
 private Q_SLOTS:
     void slotAddWidget();
     void slotRemoveWidget();
     void slotActionChanged(int index);
     void slotHelp();
+    void slotAddComment();
 
 Q_SIGNALS:
     void addWidget(QWidget *w);
     void removeWidget(QWidget *w);
+    void actionModified();
+    void valueChanged();
 
 private:
     void setFilterAction( QWidget *widget );
@@ -60,7 +67,8 @@ private:
     KPushButton *mRemove;
     PimCommon::MinimumComboBox *mComboBox;
     QGridLayout *mLayout;
-    QToolButton *mHelpButton;
+    SieveHelpButton *mHelpButton;
+    QToolButton *mCommentButton;
 };
 
 
@@ -71,11 +79,17 @@ public:
     explicit SieveActionWidgetLister(QWidget *parent = 0);
     ~SieveActionWidgetLister();
 
-    void generatedScript(QString &script, QStringList &requires);
+    void generatedScript(QString &script, QStringList &requires, bool onlyActions);
+    void loadScript(const QDomElement &element, bool onlyActions, QString &error);
+
     int actionNumber() const;
+
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );
     void slotRemoveWidget( QWidget *w );
+
+Q_SIGNALS:
+    void valueChanged();
 
 protected:
     void clearWidget( QWidget *aWidget );

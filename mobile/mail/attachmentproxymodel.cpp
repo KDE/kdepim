@@ -89,4 +89,3 @@ void AttachmentProxyModel::slotModelReset()
   emit rowCountChanged();
 }
 
-#include "attachmentproxymodel.moc"

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="blogilo" version="10">
+<kpartgui name="blogilo" version="11">
 <MenuBar>
   <Menu name="blog"><text>Blog</text>
     <Action name="add_blog" />
@@ -10,6 +10,10 @@
     <Action name="new_post" />
     <Action name="save_locally" />
     <Action name="publish_post" />
+  </Menu>
+  <Menu name="storageservice"><text>Import Export File</text>
+    <Action name="upload_file" />
+    <Action name="download_file" />
   </Menu>
   <Menu name="settings"><text>Settings</text>
     <Action name="toggle_toolbox" />

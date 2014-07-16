@@ -42,8 +42,7 @@
 
 #include <kleo/stl_util.h>
 
-#include <KLocale>
-#include <KMessageBox>
+#include <KLocalizedString>
 #include <kdebug.h>
 
 #include <QStringList>
@@ -164,7 +163,7 @@ void ChecksumCreateFilesCommand::doCancel() {
 }
 
 QStringList ChecksumCreateFilesCommand::Private::selectFiles() const {
-    return FileDialog::getOpenFileNames( parentWidgetOrView(), i18n( "Select One or More Files to Create Checksums For" ), "chk" );
+    return FileDialog::getOpenFileNames( parentWidgetOrView(), i18n( "Select One or More Files to Create Checksums For" ), QLatin1String("chk") );
 }
 
 #undef d

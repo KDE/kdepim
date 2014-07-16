@@ -84,6 +84,7 @@ public:
     /** Sets the text of button @p button to @p text */
     void setButtonText( ButtonCode button, const QString & text );
 
+    void setUpDownAutoRepeat(bool b);
     QSize sizeHint() const;
 
 signals:

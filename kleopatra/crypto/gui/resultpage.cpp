@@ -44,8 +44,6 @@
 
 #include <QCheckBox>
 #include <QHash>
-#include <QHBoxLayout>
-#include <QIcon>
 #include <QLabel>
 #include <QProgressBar>
 #include <QVBoxLayout>
@@ -180,7 +178,7 @@ void ResultPage::setTaskCollection( const shared_ptr<TaskCollection> & coll )
 
     Q_FOREACH ( const shared_ptr<Task> & i, d->m_tasks->tasks() ) { // create labels for all tags in collection
         assert( i && d->labelForTag( i->tag() ) );
-	Q_UNUSED( i );
+        Q_UNUSED( i );
     }
     emit completeChanged();
 }
@@ -202,4 +200,4 @@ bool ResultPage::isComplete() const
 }
 
 
-#include "resultpage.moc"
+#include "moc_resultpage.cpp"

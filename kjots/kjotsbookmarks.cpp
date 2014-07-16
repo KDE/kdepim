@@ -65,8 +65,7 @@ QString KJotsBookmarks::currentUrl() const
 
 QString KJotsBookmarks::currentTitle() const
 {
-  return m_treeView->captionForSelection( ": " );
+  return m_treeView->captionForSelection( QLatin1String(": ") );
 }
 
-#include "kjotsbookmarks.moc"
 /* kate: tab-indents off; replace-tabs on; tab-width 4; remove-trailing-space on; encoding utf-8;*/

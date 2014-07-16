@@ -79,8 +79,6 @@
 #include <KLocalizedString>
 
 #include <QAbstractItemView>
-#include <QTreeView>
-#include <QTableView>
 #include <QPointer>
 #include <QItemSelectionModel>
 #include <QAction>
@@ -127,7 +125,7 @@ public:
     void slotDestroyed( QObject * o ) {
         kDebug() << ( void* )o;
         views.erase( std::remove( views.begin(), views.end(), o ), views.end() );
-	commands.erase( std::remove( commands.begin(), commands.end(), o ), commands.end() );
+        commands.erase( std::remove( commands.begin(), commands.end(), o ), commands.end() );
     }
     void slotDoubleClicked( const QModelIndex & idx );
     void slotActivated( const QModelIndex & idx );
@@ -332,17 +330,17 @@ void KeyListController::createActions( KActionCollection * coll ) {
     const action_data action_data[] = {
         // File menu
         { "file_new_certificate", i18n("New Certificate..."), QString(),
-          "view-certificate-add", 0, 0, "Ctrl+N", false, true },
+          "view-certificate-add", 0, 0, QLatin1String("Ctrl+N"), false, true },
         { "file_export_certificates", i18n("Export Certificates..."), QString(),
-          "view-certificate-export", 0, 0, "Ctrl+E", false, true },
+          "view-certificate-export", 0, 0, QLatin1String("Ctrl+E"), false, true },
         { "file_export_certificates_to_server", i18n("Export Certificates to Server..."), QString(),
-          "view-certificate-export-server", 0, 0, "Ctrl+Shift+E", false, true },
+          "view-certificate-export-server", 0, 0, QLatin1String("Ctrl+Shift+E"), false, true },
         { "file_export_secret_keys", i18n("Export Secret Keys..."), QString(),
           "view-certificate-export-secret", 0, 0, QString(), false, true },
         { "file_lookup_certificates", i18n("Lookup Certificates on Server..."), QString(),
-          "edit-find", 0, 0, "Shift+Ctrl+I", false, true },
+          "edit-find", 0, 0, QLatin1String("Shift+Ctrl+I"), false, true },
         { "file_import_certificates", i18n("Import Certificates..."), QString(),
-          "view-certificate-import", 0, 0, "Ctrl+I", false, true },
+          "view-certificate-import", 0, 0, QLatin1String("Ctrl+I"), false, true },
         { "file_decrypt_verify_files", i18n("Decrypt/Verify Files..."), QString(),
           "document-edit-decrypt-verify", 0, 0, QString(), false, true },
         { "file_sign_encrypt_files", i18n("Sign/Encrypt Files..."), QString(),
@@ -353,14 +351,14 @@ void KeyListController::createActions( KActionCollection * coll ) {
           0/*"document-checksum-verify"*/, 0, 0, QString(), false, true },
         // View menu
         { "view_redisplay", i18n("Redisplay"), QString(),
-          "view-refresh", 0, 0, "F5", false, true },
+          "view-refresh", 0, 0, QLatin1String("F5"), false, true },
         { "view_stop_operations", i18n( "Stop Operation" ), QString(),
-          "process-stop", this, SLOT(cancelCommands()), "Escape", false, false },
+          "process-stop", this, SLOT(cancelCommands()), QLatin1String("Escape"), false, false },
         { "view_certificate_details", i18n( "Certificate Details" ), QString(),
           "dialog-information", 0, 0, QString(), false, true },
         // Certificate menu
         { "certificates_delete", i18n("Delete" ), QString()/*i18n("Delete selected certificates")*/,
-          "edit-delete", 0, 0, "Delete", false, true },
+          "edit-delete", 0, 0, QLatin1String("Delete"), false, true },
         { "certificates_certify_certificate", i18n("Certify Certificate..."), QString(),
           "view-certificate-sign", 0, 0, QString(), false, true },
         { "certificates_change_expiry", i18n("Change Expiry Date..."), QString(),
@@ -399,51 +397,49 @@ void KeyListController::createActions( KActionCollection * coll ) {
 
     make_actions_from_data( action_data, coll );
 
-    if ( QAction * action = coll->action( "view_stop_operations" ) )
+    if ( QAction * action = coll->action( QLatin1String("view_stop_operations") ) )
         connect( this, SIGNAL(commandsExecuting(bool)), action, SLOT(setEnabled(bool)) );
 
     // ### somehow make this better...
-    registerActionForCommand<NewCertificateCommand>(     coll->action( "file_new_certificate" ) );
+    registerActionForCommand<NewCertificateCommand>(     coll->action( QLatin1String("file_new_certificate") ) );
     //---
-    registerActionForCommand<LookupCertificatesCommand>( coll->action( "file_lookup_certificates" ) );
-    registerActionForCommand<ImportCertificateFromFileCommand>( coll->action( "file_import_certificates" ) );
+    registerActionForCommand<LookupCertificatesCommand>( coll->action( QLatin1String("file_lookup_certificates") ) );
+    registerActionForCommand<ImportCertificateFromFileCommand>( coll->action( QLatin1String("file_import_certificates") ) );
     //---
-    registerActionForCommand<ExportCertificateCommand>(  coll->action( "file_export_certificates" ) );
-    registerActionForCommand<ExportSecretKeyCommand>(    coll->action( "file_export_secret_keys" ) );
-    registerActionForCommand<ExportOpenPGPCertsToServerCommand>( coll->action( "file_export_certificates_to_server" ) );
+    registerActionForCommand<ExportCertificateCommand>(  coll->action( QLatin1String("file_export_certificates") ) );
+    registerActionForCommand<ExportSecretKeyCommand>(    coll->action( QLatin1String("file_export_secret_keys") ) );
+    registerActionForCommand<ExportOpenPGPCertsToServerCommand>( coll->action( QLatin1String("file_export_certificates_to_server") ) );
     //---
-    registerActionForCommand<DecryptVerifyFilesCommand>( coll->action( "file_decrypt_verify_files" ) );
-    registerActionForCommand<SignEncryptFilesCommand>(   coll->action( "file_sign_encrypt_files" ) );
+    registerActionForCommand<DecryptVerifyFilesCommand>( coll->action(QLatin1String( "file_decrypt_verify_files") ) );
+    registerActionForCommand<SignEncryptFilesCommand>(   coll->action( QLatin1String("file_sign_encrypt_files") ) );
     //---
-#ifndef _WIN32_WCE
-    registerActionForCommand<ChecksumCreateFilesCommand>(coll->action( "file_checksum_create_files" ) );
-    registerActionForCommand<ChecksumVerifyFilesCommand>(coll->action( "file_checksum_verify_files" ) );
-#endif
+    registerActionForCommand<ChecksumCreateFilesCommand>(coll->action( QLatin1String("file_checksum_create_files") ) );
+    registerActionForCommand<ChecksumVerifyFilesCommand>(coll->action( QLatin1String("file_checksum_verify_files") ) );
 
-    registerActionForCommand<ReloadKeysCommand>(         coll->action( "view_redisplay" ) );
+    registerActionForCommand<ReloadKeysCommand>(         coll->action( QLatin1String("view_redisplay") ) );
     //coll->action( "view_stop_operations" ) <-- already dealt with in make_actions_from_data()
-    registerActionForCommand<DetailsCommand>(            coll->action( "view_certificate_details" ) );
+    registerActionForCommand<DetailsCommand>(            coll->action( QLatin1String("view_certificate_details") ) );
 
-    registerActionForCommand<ChangeOwnerTrustCommand>(   coll->action( "certificates_change_owner_trust" ) );
-    registerActionForCommand<TrustRootCommand>(          coll->action( "certificates_trust_root" ) );
-    registerActionForCommand<DistrustRootCommand>(       coll->action( "certificates_distrust_root" ) );
+    registerActionForCommand<ChangeOwnerTrustCommand>(   coll->action( QLatin1String("certificates_change_owner_trust") ) );
+    registerActionForCommand<TrustRootCommand>(          coll->action( QLatin1String("certificates_trust_root") ) );
+    registerActionForCommand<DistrustRootCommand>(       coll->action( QLatin1String("certificates_distrust_root") ) );
     //---
-    registerActionForCommand<CertifyCertificateCommand>( coll->action( "certificates_certify_certificate" ) );
-    registerActionForCommand<ChangeExpiryCommand>(       coll->action( "certificates_change_expiry" ) );
-    registerActionForCommand<ChangePassphraseCommand>(   coll->action( "certificates_change_passphrase" ) );
-    registerActionForCommand<AddUserIDCommand>(          coll->action( "certificates_add_userid" ) );
+    registerActionForCommand<CertifyCertificateCommand>( coll->action( QLatin1String("certificates_certify_certificate") ) );
+    registerActionForCommand<ChangeExpiryCommand>(       coll->action( QLatin1String("certificates_change_expiry") ) );
+    registerActionForCommand<ChangePassphraseCommand>(   coll->action( QLatin1String("certificates_change_passphrase") ) );
+    registerActionForCommand<AddUserIDCommand>(          coll->action( QLatin1String("certificates_add_userid") ) );
     //---
-    registerActionForCommand<DeleteCertificatesCommand>( coll->action( "certificates_delete" ) );
+    registerActionForCommand<DeleteCertificatesCommand>( coll->action( QLatin1String("certificates_delete") ) );
     //---
-    registerActionForCommand<DumpCertificateCommand>(    coll->action( "certificates_dump_certificate" ) );
+    registerActionForCommand<DumpCertificateCommand>(    coll->action( QLatin1String("certificates_dump_certificate") ) );
 
-    registerActionForCommand<RefreshX509CertsCommand>(   coll->action( "tools_refresh_x509_certificates" ) );
-    registerActionForCommand<RefreshOpenPGPCertsCommand>(coll->action( "tools_refresh_openpgp_certificates" ) );
+    registerActionForCommand<RefreshX509CertsCommand>(   coll->action( QLatin1String("tools_refresh_x509_certificates") ) );
+    registerActionForCommand<RefreshOpenPGPCertsCommand>(coll->action( QLatin1String("tools_refresh_openpgp_certificates") ) );
     //---
-    registerActionForCommand<ImportCrlCommand>(          coll->action( "crl_import_crl" ) );
+    registerActionForCommand<ImportCrlCommand>(          coll->action( QLatin1String("crl_import_crl") ) );
     //---
-    registerActionForCommand<ClearCrlCacheCommand>(      coll->action( "crl_clear_crl_cache" ) );
-    registerActionForCommand<DumpCrlCacheCommand>(       coll->action( "crl_dump_crl_cache" ) );
+    registerActionForCommand<ClearCrlCacheCommand>(      coll->action( QLatin1String("crl_clear_crl_cache") ) );
+    registerActionForCommand<DumpCrlCacheCommand>(       coll->action( QLatin1String("crl_dump_crl_cache") ) );
 
     enableDisableActions( 0 );
 }
@@ -512,7 +508,7 @@ void KeyListController::Private::connectCommand( Command * cmd ) {
 void KeyListController::Private::slotDoubleClicked( const QModelIndex & idx ) {
     QAbstractItemView * const view = qobject_cast<QAbstractItemView*>( q->sender() );
     if ( !view || !kdtools::binary_search( views, view ) )
-	return;
+        return;
 
     DetailsCommand * const c = new DetailsCommand( view, q );
     if ( parentWidget )
@@ -527,7 +523,7 @@ void KeyListController::Private::slotActivated( const QModelIndex & idx )
     Q_UNUSED( idx );
     QAbstractItemView * const view = qobject_cast<QAbstractItemView*>( q->sender() );
     if ( !view || !kdtools::binary_search( views, view ) )
-	return;
+        return;
 
 }
 
@@ -538,7 +534,7 @@ void KeyListController::Private::slotSelectionChanged( const QItemSelection & ol
 
     const QItemSelectionModel * const sm = qobject_cast<QItemSelectionModel*>( q->sender() );
     if ( !sm )
-	return;
+        return;
     q->enableDisableActions( sm );
 }
 
@@ -627,14 +623,12 @@ Command::Restrictions KeyListController::Private::calculateRestrictionsMask( con
 
     result |= find_root_restrictions( keys );
 
-#ifndef _WIN32_WCE
     if ( const ReaderStatus * rs = ReaderStatus::instance() ) {
         if ( rs->anyCardHasNullPin() )
             result |= Command::AnyCardHasNullPin;
         if ( rs->anyCardCanLearnKeys() )
             result |= Command::AnyCardCanLearnKeys;
     }
-#endif
 
     return result;
 }

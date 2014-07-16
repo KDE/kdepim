@@ -19,8 +19,8 @@
  */
 
 #include "kalarm.h"
-#include "editdlg.moc"
-#include "editdlg_p.moc"
+#include "editdlg.h"
+#include "editdlg_p.h"
 #include "editdlgtypes.h"
 
 #include "alarmcalendar.h"
@@ -65,17 +65,13 @@
 #include <kdebug.h>
 
 #include <QLabel>
-#include <QDir>
-#include <QStyle>
 #include <QGroupBox>
 #include <QPushButton>
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
-#include <QDragEnterEvent>
 #include <QResizeEvent>
 #include <QShowEvent>
-#include <QStackedWidget>
 #include <QScrollBar>
 #include <QTimer>
 
@@ -233,7 +229,7 @@ void EditAlarmDlg::init(const KAEvent* event, GetResourceType getResource)
 
 void EditAlarmDlg::init(const KAEvent* event)
 {
-    setObjectName(mTemplate ? "TemplEditDlg" : "EditDlg");    // used by LikeBack
+    setObjectName(mTemplate ? QLatin1String("TemplEditDlg") : QLatin1String("EditDlg"));    // used by LikeBack
     QString caption;
     if (mReadOnly)
         caption = mTemplate ? i18nc("@title:window", "Alarm Template [read-only]")
@@ -1295,7 +1291,7 @@ void EditAlarmDlg::slotEditDeferral()
     // deletion of EditAlarmDlg, and on return from this function).
     AutoQPointer<DeferAlarmDlg> deferDlg = new DeferAlarmDlg((deferred ? mDeferDateTime : DateTime(now.addSecs(60).toTimeSpec(start.timeSpec()))),
                                                              start.isDateOnly(), deferred, this);
-    deferDlg->setObjectName("EditDeferDlg");    // used by LikeBack
+    deferDlg->setObjectName(QLatin1String("EditDeferDlg"));    // used by LikeBack
     if (limit)
     {
         // Don't allow deferral past the next recurrence
@@ -1463,5 +1459,7 @@ void EditAlarmDlg::showMainPage()
 {
     mTabs->setCurrentIndex(mMainPageIndex);
 }
+#include "moc_editdlg.cpp"
+#include "moc_editdlg_p.cpp"
 
 // vim: et sw=4:

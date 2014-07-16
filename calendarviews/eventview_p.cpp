@@ -36,9 +36,8 @@
 
 using namespace EventViews;
 
-EventViewPrivate::EventViewPrivate( EventView *qq )
-  : q( qq ),
-    calendar( 0 ),
+EventViewPrivate::EventViewPrivate()
+  : calendar( 0 ),
     customCollectionSelection( 0 ),
     collectionSelectionModel( 0 ),
     mReturnPressed( false ),
@@ -74,20 +73,6 @@ void EventViewPrivate::setUpModels()
   delete customCollectionSelection;
   customCollectionSelection = 0;
   if ( collectionSelectionModel ) {
-    customCollectionSelection =
-      new CalendarSupport::CollectionSelection( collectionSelectionModel->selectionModel() );
-  }
-
-  reconnectCollectionSelection();
-}
-
-void EventViewPrivate::reconnectCollectionSelection()
-{
-  if ( q->globalCollectionSelection() ) {
-    q->globalCollectionSelection()->disconnect( q );
-  }
-
-  if ( customCollectionSelection ) {
-    customCollectionSelection->disconnect( q );
+    customCollectionSelection = new CalendarSupport::CollectionSelection( collectionSelectionModel->selectionModel() );
   }
 }

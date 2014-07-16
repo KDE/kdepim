@@ -27,33 +27,32 @@
 using namespace MessageComposer;
 
 JobBase::JobBase( QObject *parent )
-  : KCompositeJob( parent )
-  , d_ptr( new JobBasePrivate( this ) )
+    : KCompositeJob( parent )
+    , d_ptr( new JobBasePrivate( this ) )
 {
 }
 
 JobBase::JobBase( JobBasePrivate &dd, QObject *parent )
-  : KCompositeJob( parent )
-  , d_ptr( &dd )
+    : KCompositeJob( parent )
+    , d_ptr( &dd )
 {
 }
 
 JobBase::~JobBase()
 {
-  delete d_ptr;
+    delete d_ptr;
 }
 
 GlobalPart *JobBase::globalPart()
 {
-  for( QObject *obj = this; obj != 0; obj = obj->parent() ) {
-    Composer *composer = qobject_cast<Composer*>( obj );
-    if( composer ) {
-      return composer->globalPart();
+    for( QObject *obj = this; obj != 0; obj = obj->parent() ) {
+        Composer *composer = qobject_cast<Composer*>( obj );
+        if( composer ) {
+            return composer->globalPart();
+        }
     }
-  }
 
-  kFatal() << "Job is not part of a Composer.";
-  return 0;
+    kFatal() << "Job is not part of a Composer.";
+    return 0;
 }
 
-#include "jobbase.moc"

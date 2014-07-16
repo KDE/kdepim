@@ -23,7 +23,7 @@
 
 #include "kpimtextedit/insertimagewidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 #include <KSeparator>
 
@@ -244,4 +244,4 @@ QString ComposerImageDialog::html() const
 
 }
 
-#include "composerimagedialog.moc"
+#include "moc_composerimagedialog.cpp"

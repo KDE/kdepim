@@ -70,7 +70,7 @@ Base6::decrypt( Block& block, const char *passphrase )
       // Find out the key for which the phrase is needed
       index  = error.indexOf(':', index) + 2;
       index2 = error.indexOf('\n', index);
-      block.setRequiredUserId( error.mid(index, index2 - index) );
+      block.setRequiredUserId( QLatin1String(error.mid(index, index2 - index)) );
       //kDebug( 5326 ) <<"Base: key needed is \"" << block.requiredUserId() <<"\"!";
 
       // Test output length to find out, if the passphrase is
@@ -79,8 +79,8 @@ Base6::decrypt( Block& block, const char *passphrase )
       ///     by adding an additional '+verbose=2' to the command line
       if (!passphrase || !output.length())
       {
-	errMsg = i18n("Bad passphrase; could not decrypt.");
-	//kDebug( 5326 ) <<"Base: passphrase is bad";
+        errMsg = i18n("Bad passphrase; could not decrypt.");
+        //kDebug( 5326 ) <<"Base: passphrase is bad";
         status |= BADPHRASE;
         status |= ERROR;
       }
@@ -148,7 +148,7 @@ Base6::decrypt( Block& block, const char *passphrase )
       // get signer
       index = error.indexOf('"',index)+1;
       index2 = error.indexOf('"', index);
-      block.setSignatureUserId( error.mid(index, index2-index) );
+      block.setSignatureUserId( QLatin1String(error.mid(index, index2-index)) );
 
       // get key ID of signer
       index = error.indexOf("KeyID:",index2);
@@ -186,8 +186,8 @@ Base6::readPublicKey( const KeyID& keyID,
                       Key* key /* = 0 */ )
 {
   status = 0;
-  int exitStatus = run( PGP6 " +batchmode -compatible +verbose=0 +language=C -kvvc "
-                    "0x" + keyID, 0, true );
+  int exitStatus = run( QByteArray(QByteArray(PGP6 " +batchmode -compatible +verbose=0 +language=C -kvvc "
+                    "0x") + keyID), 0, true );
 
   if(exitStatus != 0) {
     status = ERROR;
@@ -203,8 +203,8 @@ Base6::readPublicKey( const KeyID& keyID,
 
   if( readTrust )
   {
-    exitStatus = run( PGP6 " +batchmode -compatible +verbose=0 +language=C -kc "
-                      "0x" + keyID, 0, true );
+    exitStatus = run( QByteArray(QByteArray(PGP6 " +batchmode -compatible +verbose=0 +language=C -kc "
+                      "0x") + keyID), 0, true );
 
     if(exitStatus != 0) {
       status = ERROR;
@@ -289,13 +289,13 @@ Base6::pubKeys()
 
       if( (index3 >index2) || (index3 == -1) )
       {
-	// second address for the same key
-	line = error.mid(index+1,index2-index-1);
-	line = line.trimmed();
+        // second address for the same key
+        line = error.mid(index+1,index2-index-1);
+        line = line.trimmed();
       } else {
-	// line with new key
-	int index4 = error.indexOf(QRegExp("/\\d{2}/\\d{2} "), index);
-	line = error.mid(index4+7,index2-index4-7);
+        // line with new key
+        int index4 = error.indexOf(QRegExp("/\\d{2}/\\d{2} "), index);
+        line = error.mid(index4+7,index2-index4-7);
       }
       //kDebug( 5326 ) <<"Base: found key for" << (const char *)line;
 
@@ -529,7 +529,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
         else
         {
           QByteArray uid = output.mid( pos, eol-pos );
-          key->addUserID( uid );
+          key->addUserID( QLatin1String(uid) );
           pos = eol;
           //kDebug( 5326 ) <<"User ID:"<<uid;
         }
@@ -620,7 +620,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
         else
         {
           QByteArray uid = output.mid( pos, eol-pos );
-          key->addUserID( uid );
+          key->addUserID( QLatin1String(uid) );
           pos = eol;
           //kDebug( 5326 ) <<"User ID:"<<uid;
         }
@@ -653,8 +653,8 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
         pos += 18;
         QByteArray fingerprint = output.mid( pos, eol-pos );
         // remove white space from the fingerprint
-	for ( int idx = 0 ; (idx = fingerprint.indexOf(' ', idx)) != -1; )
-	  fingerprint.replace( idx, 1, "" );
+        for ( int idx = 0 ; (idx = fingerprint.indexOf(' ', idx)) != -1; )
+          fingerprint.replace( idx, 1, "" );
 
         //kDebug( 5326 )<<"Fingerprint:"<<fingerprint;
         assert( subkey != 0 );
@@ -666,7 +666,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
         //                               Test key (2nd user ID) <abc@xyz>
 
         //kDebug( 5326 )<<"User ID:"<<output.mid( pos, eol-pos );
-        key->addUserID( output.mid( pos, eol-pos ) );
+        key->addUserID( QLatin1String(output.mid( pos, eol-pos )) );
       }
     }
     else if( !strncmp( output.data() + offset, "sig", 3 ) )
@@ -811,7 +811,7 @@ Base6::parseTrustDataForKey( Key* key, const QByteArray& str )
 
       // determine the user ID
       int pos = offset + 33;
-      QString uid = str.mid( pos, eol-pos );
+      QString uid = QLatin1String(str.mid( pos, eol-pos ));
 
       // set the validity of the corresponding user ID
       for( UserIDList::Iterator it = userIDs.begin(); it != userIDs.end(); ++it )

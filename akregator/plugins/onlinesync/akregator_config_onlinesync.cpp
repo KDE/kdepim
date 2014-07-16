@@ -27,8 +27,6 @@
 #include "ui/configurationwidget.h"
 
 #include <KAboutData>
-#include <KConfigDialogManager>
-#include <KGenericFactory>
 #include <KLocalizedString>
 #include <kdemacros.h>
 
@@ -62,4 +60,3 @@ KCMAkregatorOnlineSyncConfig::~KCMAkregatorOnlineSyncConfig()
 }
 
 
-#include "akregator_config_onlinesync.moc"

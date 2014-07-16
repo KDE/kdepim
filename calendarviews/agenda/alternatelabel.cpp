@@ -58,7 +58,7 @@ void AlternateLabel::useExtensiveText()
 {
   mTextTypeFixed = true;
   QLabel::setText( mExtensiveText );
-  this->setToolTip( "" );
+  this->setToolTip( QString() );
 }
 
 void AlternateLabel::useDefaultText()
@@ -79,7 +79,7 @@ void AlternateLabel::squeezeTextToLabel()
   int longTextWidth = fm.width( mExtensiveText );
   if ( longTextWidth <= labelWidth ) {
     QLabel::setText( mExtensiveText );
-    this->setToolTip( "" );
+    this->setToolTip( QString() );
   } else if ( textWidth <= labelWidth ) {
     QLabel::setText( mLongText );
     this->setToolTip( mExtensiveText );
@@ -131,4 +131,3 @@ void AlternateLabel::setFixedType( TextType type )
   }
 }
 
-#include "alternatelabel.moc"

@@ -24,7 +24,6 @@
 #include <KLocale>
 
 #include <QDir>
-#include <QWidget>
 
 
 TheBatImportData::TheBatImportData(ImportWizard*parent)

@@ -75,7 +75,7 @@ KDateNavigator::KDateNavigator( QWidget *parent )
   }
 
   mDayMatrix = new KODayMatrix( this );
-  mDayMatrix->setObjectName( "KDateNavigator::dayMatrix" );
+  mDayMatrix->setObjectName( QLatin1String("KDateNavigator::dayMatrix") );
 
   connect( mDayMatrix, SIGNAL(selected(KCalCore::DateList)),
            SIGNAL(datesSelected(KCalCore::DateList)) );
@@ -247,10 +247,9 @@ void KDateNavigator::updateView()
 
 void KDateNavigator::updateConfig()
 {
-  int day;
   int weekstart = KGlobal::locale()->weekStartDay();
   for ( int i=0; i < 7; ++i ) {
-    day = weekstart + i <= 7 ? weekstart + i : ( weekstart + i ) % 7;
+    const int day = weekstart + i <= 7 ? weekstart + i : ( weekstart + i ) % 7;
     QString dayName =
       KOGlobals::self()->calendarSystem()->weekDayName( day, KCalendarSystem::ShortDayName );
     QString longDayName =
@@ -347,4 +346,3 @@ bool KDateNavigator::eventFilter ( QObject *o, QEvent *e )
   }
 }
 
-#include "kdatenavigator.moc"

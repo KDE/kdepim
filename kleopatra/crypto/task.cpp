@@ -46,9 +46,8 @@
 
 #include <KIcon>
 #include <KIconLoader>
-#include <KLocale>
+#include <KLocalizedString>
 
-#include <QIcon>
 #include <QString>
 
 #include <boost/bind.hpp>
@@ -202,7 +201,7 @@ Task::Result::Result() : m_nonce( makeNonce() ), d( new Private() ) {}
 Task::Result::~Result() {}
 
 QString Task::Result::formatKeyLink( const char * fpr, const QString & content ) const {
-    return "<a href=\"key:" + m_nonce + ':' + fpr + "\">" + content + "</a>";
+    return QLatin1String("<a href=\"key:") + m_nonce + QLatin1Char(':') + QLatin1String(fpr) + QLatin1String("\">") + content + QLatin1String("</a>");
 }
 
 bool Task::Result::hasError() const
@@ -212,12 +211,12 @@ bool Task::Result::hasError() const
 
 static QString image( const char* img ) {
     // ### escape?
-    return KIconLoader::global()->iconPath( img, KIconLoader::Small );
+    return KIconLoader::global()->iconPath( QLatin1String(img), KIconLoader::Small );
 }
 
 QString Task::Result::makeOverview( const QString& msg )
 {
-    return "<b>" + msg + "</b>";
+    return QLatin1String("<b>") + msg + QLatin1String("</b>");
 }
 
 QString Task::Result::iconPath( VisualCode code )
@@ -240,5 +239,4 @@ QString Task::Result::iconPath( VisualCode code )
 QString Task::Result::icon() const { return iconPath( code() ); }
 
 
-#include "task_p.moc"
-#include "moc_task.cpp"
+#include "moc_task_p.cpp"

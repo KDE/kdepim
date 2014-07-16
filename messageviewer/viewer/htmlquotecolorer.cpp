@@ -19,6 +19,7 @@
 */
 
 #include "htmlquotecolorer.h"
+#include "settings/globalsettings.h"
 
 #include <KDebug>
 
@@ -31,7 +32,13 @@
 using namespace MessageViewer;
 
 HTMLQuoteColorer::HTMLQuoteColorer()
+    : mEnableHtmlQuoteColorer(true)
 {
+}
+
+void HTMLQuoteColorer::setEnableHtmlQuoteColorer(bool enabled)
+{
+    mEnableHtmlQuoteColorer = enabled;
 }
 
 QString HTMLQuoteColorer::process( const QString &htmlSource, QString&extraHead )
@@ -48,13 +55,13 @@ QString HTMLQuoteColorer::process( const QString &htmlSource, QString&extraHead 
     QWebFrame *frame = page.mainFrame();
     frame->setHtml( htmlSource );
 
-    QString script(
+    QString script(QLatin1String(
                 "mIsQuotedLine = false;\n"
                 "mIsFirstTextNodeInLine = true;\n"
                 "mQuoteColors = new Array();\n"
-                "mQuoteColors[0] = \"" + mQuoteColors[0].name() + "\";\n"
-            "mQuoteColors[1] = \"" + mQuoteColors[1].name() + "\";\n"
-            "mQuoteColors[2] = \"" + mQuoteColors[2].name() + "\";\n"
+                "mQuoteColors[0] = \"") + mQuoteColors[0].name() + QLatin1String("\";\n"
+            "mQuoteColors[1] = \"") + mQuoteColors[1].name() + QLatin1String("\";\n"
+            "mQuoteColors[2] = \"") + mQuoteColors[2].name() + QLatin1String("\";\n"
 
             "processNode( document.documentElement );\n"
 
@@ -127,14 +134,15 @@ QString HTMLQuoteColorer::process( const QString &htmlSource, QString&extraHead 
             "  if ( line.substr( 0, 2 ) == \">>\" ) return 2;\n"
             "  if ( line.substr( 0, 1 ) == '>' ) return 1;\n"
             "  return 0;\n"
-            "}\n");
+            "}\n"));
 
-    page.settings()->setAttribute( QWebSettings::JavascriptEnabled, true );
-    frame->evaluateJavaScript( script );
-    page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
-
-    const QWebElement body = frame->documentElement().findFirst("body");
-    const QWebElement header = frame->documentElement().findFirst("head");
+    if (mEnableHtmlQuoteColorer) {
+        page.settings()->setAttribute( QWebSettings::JavascriptEnabled, true );
+        frame->evaluateJavaScript( script );
+        page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
+    }
+    const QWebElement body = frame->documentElement().findFirst(QLatin1String("body"));
+    const QWebElement header = frame->documentElement().findFirst(QLatin1String("head"));
 
     extraHead = header.toInnerXml();
     return body.toInnerXml();

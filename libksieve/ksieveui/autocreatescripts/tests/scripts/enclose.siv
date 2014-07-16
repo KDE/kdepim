@@ -1,0 +1,12 @@
+require "ihave";
+require "enclose";
+ 
+#Script name: enclose
+
+if ihave "enclosz"
+{
+    enclose :subject "subject" :headers "headers" text:
+ text
+.
+;
+}

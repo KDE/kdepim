@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -23,7 +23,6 @@
 
 #include <QToolButton>
 #include <QTabBar>
-#include <QDebug>
 
 PostsTabWidget::PostsTabWidget(QWidget *parent)
     : KTabWidget(parent)
@@ -91,4 +90,3 @@ void PostsTabWidget::slotTabContextMenuRequest( const QPoint &pos )
 }
 
 
-#include "poststabwidget.moc"

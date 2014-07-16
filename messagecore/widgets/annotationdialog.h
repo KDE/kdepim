@@ -24,6 +24,10 @@
 
 #include <KDialog>
 
+namespace Akonadi {
+class Item;
+}
+
 namespace MessageCore {
 
 /**
@@ -33,29 +37,29 @@ namespace MessageCore {
  */
 class MESSAGECORE_EXPORT AnnotationEditDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new annotation edit dialog.
      *
-     * @param uri The Nepomuk resource uri of the email.
+     * @param item The item.
      * @param parent The parent widget.
      */
-    explicit AnnotationEditDialog( const QUrl &uri, QWidget *parent = 0 );
+    explicit AnnotationEditDialog( const Akonadi::Item &item, QWidget *parent = 0 );
 
     /**
      * Destroys the annotation edit dialog.
      */
     ~AnnotationEditDialog();
 
-  protected:
+protected:
     /// Reimplemented to handle button clicks
     void slotButtonClicked( int button );
     void readConfig();
     void writeConfig();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private* const d;

@@ -25,10 +25,26 @@
 
 using namespace MailCommon;
 
-FilterImporterThunderbird::FilterImporterThunderbird( QFile *file )
-    :FilterImporterAbstract()
+FilterImporterThunderbird::FilterImporterThunderbird(QFile *file , bool interactive)
+    : FilterImporterAbstract(interactive)
 {
     QTextStream stream(file);
+    readStream(stream);
+}
+
+FilterImporterThunderbird::FilterImporterThunderbird(QString string , bool interactive)
+    : FilterImporterAbstract(interactive)
+{
+    QTextStream stream(&string);
+    readStream(stream);
+}
+
+FilterImporterThunderbird::~FilterImporterThunderbird()
+{
+}
+
+void FilterImporterThunderbird::readStream(QTextStream &stream)
+{
     MailFilter *filter = 0;
     while ( !stream.atEnd() ) {
         QString line = stream.readLine();
@@ -36,10 +52,6 @@ FilterImporterThunderbird::FilterImporterThunderbird( QFile *file )
         filter = parseLine( stream, line, filter );
     }
     appendFilter(filter);
-}
-
-FilterImporterThunderbird::~FilterImporterThunderbird()
-{
 }
 
 QString FilterImporterThunderbird::defaultFiltersSettingsPath()
@@ -153,7 +165,7 @@ void FilterImporterThunderbird::extractConditions( const QString &line,
                 splitConditions( conditionsList.at( i ), filter );
             }
         }
-    } else if ( line.startsWith( QLatin1String( "ALL ALL" ) ) ){
+    } else if ( line.startsWith( QLatin1String( "ALL" ) ) ){
         filter->pattern()->setOp( SearchPattern::OpAll );
     } else {
         kDebug() << " missing extract condition" << line;
@@ -191,7 +203,7 @@ bool FilterImporterThunderbird::splitConditions( const QString &cond,
   */
 
     QString str = cond.trimmed();
-    str.remove( '(' );
+    str.remove( QLatin1Char('(') );
     str.remove( str.length() - 1, 1 ); //remove last )
 
     const QStringList listOfCond = str.split( QLatin1Char( ',' ) );

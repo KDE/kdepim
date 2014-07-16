@@ -220,4 +220,3 @@ void KNode::RangeFilterWidget::slotEnabled( bool e )
 
 // -----------------------------------------------------------------------------
 
-#include "knrangefilter.moc"

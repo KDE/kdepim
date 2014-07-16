@@ -27,92 +27,92 @@ namespace TemplateParser {
 
 class TemplatesInsertCommand : public QPushButton
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit TemplatesInsertCommand( QWidget *parent, const char *name = 0 );
+public:
+    explicit TemplatesInsertCommand(QWidget *parent, const QString &name = QString() );
     ~TemplatesInsertCommand();
 
-  public:
+public:
     //TODO: apidox for all these enums
     enum Command {
-      CDnl = 1,
-      CRem,
-      CInsert,
-      CSystem,
-      CQuotePipe,
-      CQuote,
-      CQHeaders,
-      CHeaders,
-      CTextPipe,
-      CMsgPipe,
-      CBodyPipe,
-      CClearPipe,
-      CText,
-      CToAddr,
-      CToName,
-      CFromAddr,
-      CFromName,
-      CFullSubject,
-      CMsgId,
-      COHeader,
-      CHeader,
-      COToAddr,
-      COToName,
-      COFromAddr,
-      COFromName,
-      COFullSubject,
-      COMsgId,
-      CDateEn,
-      CDateShort,
-      CDate,
-      CDow,
-      CTimeLongEn,
-      CTimeLong,
-      CTime,
-      CODateEn,
-      CODateShort,
-      CODate,
-      CODow,
-      COTimeLongEn,
-      COTimeLong,
-      COTime,
-      CBlank,
-      CNop,
-      CClear,
-      CDebug,
-      CDebugOff,
-      CToFName,
-      CToLName,
-      CFromFName,
-      CFromLName,
-      COToFName,
-      COToLName,
-      COFromFName,
-      COFromLName,
-      CCursor,
-      CCCAddr,
-      CCCName,
-      CCCFName,
-      CCCLName,
-      COCCAddr,
-      COCCName,
-      COCCFName,
-      COCCLName,
-      COAddresseesAddr,
-      CSignature,
-      CQuotePlain,
-      CQuoteHtml
+        CDnl = 1,
+        CRem,
+        CInsert,
+        CSystem,
+        CQuotePipe,
+        CQuote,
+        CQHeaders,
+        CHeaders,
+        CTextPipe,
+        CMsgPipe,
+        CBodyPipe,
+        CClearPipe,
+        CText,
+        CToAddr,
+        CToName,
+        CFromAddr,
+        CFromName,
+        CFullSubject,
+        CMsgId,
+        COHeader,
+        CHeader,
+        COToAddr,
+        COToName,
+        COFromAddr,
+        COFromName,
+        COFullSubject,
+        COMsgId,
+        CDateEn,
+        CDateShort,
+        CDate,
+        CDow,
+        CTimeLongEn,
+        CTimeLong,
+        CTime,
+        CODateEn,
+        CODateShort,
+        CODate,
+        CODow,
+        COTimeLongEn,
+        COTimeLong,
+        COTime,
+        CBlank,
+        CNop,
+        CClear,
+        CDebug,
+        CDebugOff,
+        CToFName,
+        CToLName,
+        CFromFName,
+        CFromLName,
+        COToFName,
+        COToLName,
+        COFromFName,
+        COFromLName,
+        CCursor,
+        CCCAddr,
+        CCCName,
+        CCCFName,
+        CCCLName,
+        COCCAddr,
+        COCCName,
+        COCCFName,
+        COCCLName,
+        COAddresseesAddr,
+        CSignature,
+        CQuotePlain,
+        CQuoteHtml
     };
 
-  signals:
+signals:
     void insertCommand( TemplatesInsertCommand::Command cmd );
     void insertCommand( const QString &cmd, int adjustCursor = 0 );
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotMapped( int cmd );
 
-  protected:
+protected:
     KActionMenu *mMenu;
 };
 

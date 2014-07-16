@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,11 +16,10 @@
 */
 
 #include "sievescriptdescriptiondialog.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
-#include <KTextEdit>
-#include <KLocale>
-
-#include <QHBoxLayout>
+#include <KLocalizedString>
+#include <KSharedConfig>
 
 using namespace KSieveUi;
 
@@ -29,7 +28,7 @@ SieveScriptDescriptionDialog::SieveScriptDescriptionDialog(QWidget *parent)
 {
     setCaption( i18n( "Description" ) );
     setButtons( Ok|Cancel );
-    mEdit = new KTextEdit;
+    mEdit = new PimCommon::RichTextEditorWidget;
     mEdit->setAcceptRichText(false);
     setMainWidget(mEdit);
     readConfig();
@@ -54,11 +53,9 @@ QString SieveScriptDescriptionDialog::description() const
 void SieveScriptDescriptionDialog::readConfig()
 {
     KConfigGroup group( KGlobal::config(), "SieveScriptDescriptionDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
-    } else {
-        resize( 800,600);
     }
 }
 
@@ -69,4 +66,3 @@ void SieveScriptDescriptionDialog::writeConfig()
 }
 
 
-#include "sievescriptdescriptiondialog.moc"

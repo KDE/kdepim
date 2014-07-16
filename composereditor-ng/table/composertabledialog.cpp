@@ -22,7 +22,7 @@
 
 #include <KPIMTextEdit/InsertTableWidget>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSeparator>
 
 #include <QWebElement>
@@ -113,4 +113,4 @@ QString ComposerTableDialog::html() const
 
 }
 
-#include "composertabledialog.moc"
+#include "moc_composertabledialog.cpp"

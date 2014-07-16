@@ -75,7 +75,7 @@ void mailreaderView::displayAboutPage()
            "<h2 style='margin-top: 0px;'>Welcome to Mailreader %1</h2>"
            "<p>Mailread is a proof of concept reader for the Akonadi/KMime framework.</p>\n"
            "<p style='margin-bottom: 0px'>&nbsp; &nbsp; <a href='http://pim.kde.org/akonadi'>The Akonadi Team</a></p>")
-    .subs( "0.1" ); // Akonadi Mail Reader version
+    .subs( QLatin1String("0.1") ); // Akonadi Mail Reader version
 
    m_readerWin->displaySplashPage( info.toString() );
 }
@@ -89,11 +89,11 @@ void mailreaderView::urlClicked( const Akonadi::Item & item , const KUrl& url )
 
 void mailreaderView::slotConfigure()
 {
-  if(KConfigDialog::showDialog("mailviewersettings"))
+  if(KConfigDialog::showDialog(QLatin1String("mailviewersettings")))
      return;
-  KConfigDialog *dialog = new KConfigDialog( this, "mailviewersettings", MessageViewer::GlobalSettings::self() );
+  KConfigDialog *dialog = new KConfigDialog( this, QLatin1String("mailviewersettings"), MessageViewer::GlobalSettings::self() );
   QWidget* widget = m_readerWin->configWidget();
-  dialog->addPage( widget, i18n("Viewer"), "kmail");
+  dialog->addPage( widget, i18n("Viewer"), QLatin1String("kmail"));
 
   QWidget *messageListConfig = new QWidget(dialog);
   Ui::MessageListConfig ui;
@@ -101,10 +101,9 @@ void mailreaderView::slotConfigure()
   dialog->addPage(messageListConfig,
                   MessageList::Core::Settings::self(),
                   i18n("Message List"),
-                  "kmail");
+                  QLatin1String("kmail"));
 
   dialog->setAttribute( Qt::WA_DeleteOnClose );
   dialog->show();
 }
 
-#include "mailreaderview.moc"

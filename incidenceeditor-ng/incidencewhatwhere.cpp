@@ -97,4 +97,3 @@ void IncidenceWhatWhere::validate()
   }
 }
 
-#include "moc_incidencewhatwhere.cpp"

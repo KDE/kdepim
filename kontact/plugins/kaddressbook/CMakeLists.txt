@@ -1,7 +1,12 @@
 
+include_directories(${CMAKE_SOURCE_DIR}/kaddressbook)
+
 set(kontact_kaddressbookplugin_PART_SRCS
   kaddressbook_plugin.cpp
 )
+
+qt4_add_dbus_interfaces(kontact_kaddressbookplugin_PART_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/org.kde.kaddressbook.xml)
+
 
 kde4_add_plugin(kontact_kaddressbookplugin ${kontact_kaddressbookplugin_PART_SRCS})
 

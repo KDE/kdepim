@@ -201,10 +201,7 @@ QString MailWebView::htmlSource() const
 void MailWebView::setAllowExternalContent( bool allow )
 {
 #ifdef TEMPORARILY_REMOVED
-  // FIXME on WinCE we use a simple QWebView, check if there's an alternative API for it
-#ifndef Q_OS_WINCE
     SuperClass::setAllowExternalContent( allow );
-#endif
 #endif
 }
 
@@ -304,12 +301,12 @@ void MailWebView::clearFindSelection()
   // not supported
 }
 
-void MailWebView::keyReleaseEvent(QKeyEvent*)
+void MailWebView::keyReleaseEvent(QKeyEvent* e)
 {
   QTextBrowser::keyReleaseEvent(e);
 }
 
-void MailWebView::keyPressEvent(QKeyEvent*)
+void MailWebView::keyPressEvent(QKeyEvent* e)
 {
   QTextBrowser::keyPressEvent(e);
 }
@@ -327,4 +324,15 @@ void MailWebView::slotShowDetails()
 {
 }
 
-#include "mailwebview.moc"
+void MailWebView::expandUrl(const KUrl &url)
+{
+    Q_UNUSED(url)
+}
+
+bool MailWebView::isAShortUrl(const KUrl &url) const
+{
+    Q_UNUSED(url)
+    return false;
+}
+
+#include "moc_mailwebview.cpp"

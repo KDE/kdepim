@@ -28,7 +28,7 @@ namespace MessageViewer {
 
 EmptySource::EmptySource() : ObjectTreeSourceIf()
 {
-  mAllowDecryption = false;
+    mAllowDecryption = false;
 }
 
 EmptySource::~EmptySource()
@@ -37,68 +37,68 @@ EmptySource::~EmptySource()
 
 bool EmptySource::htmlMail()
 {
-  return true;
+    return true;
 }
 
 bool EmptySource::decryptMessage()
 {
-  return mAllowDecryption;
+    return mAllowDecryption;
 }
 
 bool EmptySource::htmlLoadExternal()
 {
-  return false;
+    return false;
 }
 
 bool EmptySource::showSignatureDetails()
 {
-  return false;
+    return false;
 }
 
 void EmptySource::setHtmlMode( Util::HtmlMode mode )
 {
-  Q_UNUSED( mode );
+    Q_UNUSED( mode );
 }
 
 void EmptySource::setAllowDecryption( bool allowDecryption )
 {
-  mAllowDecryption = allowDecryption;
+    mAllowDecryption = allowDecryption;
 }
 
 int EmptySource::levelQuote()
 {
-  return 1;
+    return 1;
 }
 
 const QTextCodec * EmptySource::overrideCodec()
 {
-  return 0;
+    return 0;
 }
 
 QString EmptySource::createMessageHeader( KMime::Message *message )
 {
-  Q_UNUSED( message );
-  return QString(); //do nothing
+    Q_UNUSED( message );
+    return QString(); //do nothing
 }
 
 QObject *EmptySource::sourceObject()
 {
-  return 0;
+    return 0;
 }
 
 const AttachmentStrategy * EmptySource::attachmentStrategy()
 {
-  return AttachmentStrategy::smart();
+    return AttachmentStrategy::smart();
 }
 
 HtmlWriter * EmptySource::htmlWriter()
 {
-  return 0;
+    return 0;
 }
 
 CSSHelper* EmptySource::cssHelper()
 {
-  return 0;
+    return 0;
 }
 
 }

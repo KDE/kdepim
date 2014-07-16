@@ -28,16 +28,15 @@
 #include "timescaleconfigdialog.h"
 
 #include <KIcon>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobal>
 
 #include <QFrame>
 #include <QMenu>
 #include <QPainter>
 #include <QPointer>
-#include <QScrollArea>
 
-static const KCatalogLoader loader( "timezones4" );
+static const KCatalogLoader loader( QLatin1String("timezones4") );
 
 using namespace EventViews;
 
@@ -126,15 +125,15 @@ void TimeLabels::updateConfig()
 {
   setFont( mTimeLabelsZone->preferences()->agendaTimeLabelsFont() );
 
-  QString test = "20";
+  QString test = QLatin1String("20");
   if ( KGlobal::locale()->use12Clock() ) {
-    test = "12";
+    test = QLatin1String("12");
   }
   mMiniWidth = fontMetrics().width( test );
   if ( KGlobal::locale()->use12Clock() ) {
-    test = "pm";
+    test = QLatin1String("pm");
   } else {
-    test = "00";
+    test = QLatin1String("00");
   }
   QFont sFont = font();
   sFont.setPointSize( sFont.pointSize() / 2 );
@@ -212,11 +211,11 @@ void TimeLabels::paintEvent( QPaintEvent * )
   // in some locale's
   QString suffix;
   if ( !KGlobal::locale()->use12Clock() ) {
-    suffix = "00";
+    suffix = QLatin1String("00");
   } else {
-    suffix = "am";
+    suffix = QLatin1String("am");
     if ( cell > 11 ) {
-      suffix = "pm";
+      suffix = QLatin1String("pm");
     }
   }
 
@@ -265,7 +264,7 @@ void TimeLabels::paintEvent( QPaintEvent * )
     // handle 24h and am/pm time formats
     if ( KGlobal::locale()->use12Clock() ) {
       if ( cell == 12 ) {
-        suffix = "pm";
+        suffix =QLatin1String( "pm");
       }
       if ( cell == 0 ) {
         hour.setNum( 12 );
@@ -302,9 +301,9 @@ void TimeLabels::contextMenuEvent( QContextMenuEvent *event )
 
   QMenu popup( this );
   QAction *editTimeZones =
-    popup.addAction( KIcon( "document-properties" ), i18n( "&Add Timezones..." ) );
+    popup.addAction( KIcon( QLatin1String("document-properties") ), i18n( "&Add Timezones..." ) );
   QAction *removeTimeZone =
-    popup.addAction( KIcon( "edit-delete" ),
+    popup.addAction( KIcon( QLatin1String("edit-delete") ),
                      i18n( "&Remove Timezone %1", i18n( mSpec.timeZone().name().toUtf8() ) ) );
   if ( !mSpec.isValid() ||
        !mTimeLabelsZone->preferences()->timeScaleTimezones().count() ||
@@ -346,30 +345,29 @@ QString TimeLabels::headerToolTip() const
   KTimeZone tz = mSpec.timeZone();
 
   QString toolTip;
-  toolTip += "<qt>";
+  toolTip += QLatin1String("<qt>");
   toolTip += i18n( "<b>%1</b>", i18n( tz.name().toUtf8() ) );
-  toolTip += "<hr>";
+  toolTip += QLatin1String("<hr>");
   //TODO: Once string freeze is lifted, add UTC offset here
   if ( !tz.countryCode().isEmpty() ) {
     toolTip += i18n( "<i>Country Code:</i> %1", tz.countryCode() );
-    toolTip += "<br/>";
+    toolTip += QLatin1String("<br/>");
   }
   if ( !tz.abbreviations().isEmpty() ) {
-    toolTip += i18n( "<i>Abbreviations:</i>" ) + "</i>";
-    toolTip += "&nbsp;";
+    toolTip += i18n( "<i>Abbreviations:</i>" ) + QLatin1String("</i>");
+    toolTip += QLatin1String("&nbsp;");
     foreach ( const QByteArray &a, tz.abbreviations() ) {
       toolTip += QString::fromLocal8Bit( a );
-      toolTip += ",&nbsp;";
+      toolTip += QLatin1String(",&nbsp;");
     }
     toolTip.chop( 7 );
-    toolTip += "<br/>";
+    toolTip += QLatin1String("<br/>");
   }
   if ( !tz.comment().isEmpty() ) {
     toolTip += i18n( "<i>Comment:</i> %1", tz.comment() );
   }
-  toolTip += "</qt>";
+  toolTip += QLatin1String("</qt>");
 
   return toolTip;
 }
 
-#include "timelabels.moc"

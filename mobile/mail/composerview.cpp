@@ -65,12 +65,6 @@
 #include <qdeclarativeengine.h>
 #include <qplatformdefs.h>
 
-#ifdef _WIN32_WCE
-#include <identitypage.h>
-#include <kcomponentdata.h>
-#include <mailtransport/transportmanagementwidget.h>
-#endif
-
 class DeclarativeEditor : public DeclarativeWidgetBase<MessageComposer::KMeditor, ComposerView, &ComposerView::setEditor>
 {
    Q_OBJECT
@@ -111,12 +105,12 @@ void ComposerView::doDelayedInit()
   qmlRegisterType<DeclarativeIdentityComboBox>( "org.kde.kpimidentities", 4, 5, "IdentityComboBox" );
   qmlRegisterType<DeclarativeRecipientsEditor>( "org.kde.messagecomposer", 4, 5, "RecipientsEditor" );
 
-  engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
+  engine()->rootContext()->setContextProperty( QLatin1String("application"), QVariant::fromValue( static_cast<QObject*>( this ) ) );
   connect( this, SIGNAL(statusChanged(QDeclarativeView::Status)), SLOT(qmlLoaded(QDeclarativeView::Status)) );
 
   m_snippetsEditor = new SnippetsEditor( actionCollection(), this );
-  engine()->rootContext()->setContextProperty( "snippetsEditor", m_snippetsEditor );
-  engine()->rootContext()->setContextProperty( "snippetsModel", m_snippetsEditor->model() );
+  engine()->rootContext()->setContextProperty( QLatin1String("snippetsEditor"), m_snippetsEditor );
+  engine()->rootContext()->setContextProperty( QLatin1String("snippetsModel"), m_snippetsEditor->model() );
 
   // ### TODO: make this happens later to show the composer as fast as possible
   m_composerBase = new MessageComposer::ComposerViewBase( this );
@@ -146,99 +140,99 @@ void ComposerView::doDelayedInit()
   connect( m_composerBase, SIGNAL(sentSuccessfully()), this, SLOT(success()) );
 
   MessageComposer::AttachmentModel* attachmentModel = new MessageComposer::AttachmentModel(this);
-  engine()->rootContext()->setContextProperty( "attachmentModel", QVariant::fromValue( static_cast<QObject*>( attachmentModel ) ) );
+  engine()->rootContext()->setContextProperty( QLatin1String("attachmentModel"), QVariant::fromValue( static_cast<QObject*>( attachmentModel ) ) );
   MessageComposer::AttachmentControllerBase* attachmentController = new MessageComposer::AttachmentControllerBase(attachmentModel, this, actionCollection());
   attachmentController->createActions();
   m_composerBase->setAttachmentModel( attachmentModel );
   m_composerBase->setAttachmentController( attachmentController );
 
   AttachmentEditor *attachmentEditor = new AttachmentEditor( actionCollection(), attachmentModel, attachmentController, this );
-  engine()->rootContext()->setContextProperty( "attachmentEditor", attachmentEditor );
+  engine()->rootContext()->setContextProperty( QLatin1String("attachmentEditor"), attachmentEditor );
 
-  KAction *action = actionCollection()->addAction("sign_email");
+  KAction *action = actionCollection()->addAction(QLatin1String("sign_email"));
   action->setText( i18n( "Sign" ) );
-  action->setIcon( KIcon( "document-sign" ) );
+  action->setIcon( KIcon( QLatin1String("document-sign") ) );
   action->setCheckable(true);
   connect(action, SIGNAL(triggered(bool)), SLOT(signEmail(bool)));
 
-  action = actionCollection()->addAction("encrypt_email");
+  action = actionCollection()->addAction(QLatin1String("encrypt_email"));
   action->setText( i18n( "Encrypt" ) );
-  action->setIcon( KIcon( "mail-encrypt" ) );
+  action->setIcon( KIcon( QLatin1String("mail-encrypt") ) );
   action->setCheckable(true);
   connect(action, SIGNAL(triggered(bool)), SLOT(encryptEmail(bool)));
 
-  action = actionCollection()->addAction( "send_later" );
+  action = actionCollection()->addAction( QLatin1String("send_later") );
   action->setText( i18n( "Send Later" ) );
   connect( action, SIGNAL(triggered(Qt::MouseButtons,Qt::KeyboardModifiers)), SLOT(sendLater()) );
 
-  action = actionCollection()->addAction("save_in_drafts");
+  action = actionCollection()->addAction(QLatin1String("save_in_drafts"));
   action->setText( i18n( "Save As Draft" ) );
-  action->setIcon( KIcon( "document-save" ) );
+  action->setIcon( KIcon( QLatin1String("document-save" )) );
   connect(action, SIGNAL(triggered(Qt::MouseButtons,Qt::KeyboardModifiers)), SLOT(saveDraft()));
 
-  action = actionCollection()->addAction("save_as_template");
+  action = actionCollection()->addAction(QLatin1String("save_as_template"));
   action->setText( i18n( "Save As Template" ) );
   connect(action, SIGNAL(triggered(Qt::MouseButtons,Qt::KeyboardModifiers)), SLOT(saveAsTemplate()));
 
-  action = actionCollection()->addAction("composer_clean_spaces");
+  action = actionCollection()->addAction(QLatin1String("composer_clean_spaces"));
   action->setText( i18n( "Clean Spaces" ) );
 
-  action = actionCollection()->addAction( "composer_add_quote_char" );
+  action = actionCollection()->addAction( QLatin1String("composer_add_quote_char") );
   action->setText( i18n( "Add Quote Characters" ) );
 
-  action = actionCollection()->addAction( "composer_remove_quote_char" );
+  action = actionCollection()->addAction( QLatin1String("composer_remove_quote_char") );
   action->setText( i18n( "Remove Quote Characters" ) );
 
-  action = actionCollection()->addAction( "composer_spell_check" );
+  action = actionCollection()->addAction( QLatin1String("composer_spell_check") );
   action->setText( i18n( "Check Spelling" ) );
 
-  action = actionCollection()->addAction( "composer_search" );
+  action = actionCollection()->addAction( QLatin1String("composer_search") );
   action->setText( i18n( "Search in Email" ) );
 
-  action = actionCollection()->addAction( "composer_search_next" );
+  action = actionCollection()->addAction( QLatin1String("composer_search_next") );
   action->setText( i18n( "Continue Search" ) );
 
-  action = actionCollection()->addAction( "composer_replace" );
+  action = actionCollection()->addAction( QLatin1String("composer_replace") );
   action->setText( i18n( "Replace" ) );
 
-  action = actionCollection()->addAction( "composer_append_signature" );
+  action = actionCollection()->addAction( QLatin1String("composer_append_signature") );
   action->setText( i18n( "Append Signature" ) );
 
-  action = actionCollection()->addAction( "composer_prepend_signature" );
+  action = actionCollection()->addAction( QLatin1String("composer_prepend_signature") );
   action->setText( i18n( "Prepend Signature" ) );
 
-  action = actionCollection()->addAction( "composer_insert_signature" );
+  action = actionCollection()->addAction( QLatin1String("composer_insert_signature") );
   action->setText( i18n( "Insert Signature at Cursor Position" ) );
 
-  action = actionCollection()->addAction( "options_mark_as_urgent" );
+  action = actionCollection()->addAction( QLatin1String("options_mark_as_urgent") );
   action->setText( i18n( "Urgent" ) );
   action->setCheckable( true );
   connect( action, SIGNAL(triggered(bool)), SLOT(urgentEmail(bool)) );
 
-  action = actionCollection()->addAction( "options_request_mdn" );
+  action = actionCollection()->addAction( QLatin1String("options_request_mdn") );
   action->setText( i18n( "Request Notification" ) );
   action->setCheckable( true );
   action->setChecked( m_mdnRequested );
   connect( action, SIGNAL(triggered(bool)), SLOT(requestMdn(bool)) );
 
-  action = actionCollection()->addAction( "options_wordwrap" );
+  action = actionCollection()->addAction( QLatin1String("options_wordwrap") );
   action->setText( i18n( "Wordwrap" ) );
   action->setCheckable( true );
   action->setChecked( MessageComposer::MessageComposerSettings::self()->wordWrap() );
   connect( action, SIGNAL(triggered(bool)), SLOT(toggleAutomaticWordWrap(bool)) );
 
-  action = actionCollection()->addAction( "options_fixedfont" );
+  action = actionCollection()->addAction( QLatin1String("options_fixedfont") );
   action->setText( i18n( "Use Fixed Font" ) );
   action->setCheckable( true );
   action->setChecked( MessageViewer::GlobalSettings::self()->useFixedFont() );
   connect( action, SIGNAL(triggered(bool)), SLOT(toggleUseFixedFont(bool)) );
 
-  action = actionCollection()->addAction( "options_set_cryptoformat" );
+  action = actionCollection()->addAction( QLatin1String("options_set_cryptoformat"));
   action->setText( i18n( "Crypto Message Format" ) );
   connect( action, SIGNAL(triggered(bool)), SLOT(setCryptoFormat()) );
 
-  actionCollection()->action( "attach_public_key" )->setText( i18n( "Attach Public Key" ) );
-  actionCollection()->action( "composer_insert_signature" )->setText( i18n( "Insert Signature at Cursor Position" ) );
+  actionCollection()->action( QLatin1String("attach_public_key") )->setText( i18n( "Attach Public Key" ) );
+  actionCollection()->action( QLatin1String("composer_insert_signature") )->setText( i18n( "Insert Signature at Cursor Position" ) );
 }
 
 void ComposerView::setIdentityCombo( KPIMIdentities::IdentityCombo* combo )
@@ -285,17 +279,14 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
     }
   }
 
-  connect( actionCollection()->action( "composer_clean_spaces" ), SIGNAL(triggered(bool)), signatureController, SLOT(cleanSpace()) );
-  connect( actionCollection()->action( "composer_append_signature" ), SIGNAL(triggered(bool)), signatureController, SLOT(appendSignature()) );
-  connect( actionCollection()->action( "composer_prepend_signature" ), SIGNAL(triggered(bool)), signatureController, SLOT(prependSignature()) );
-  connect( actionCollection()->action( "composer_insert_signature" ), SIGNAL(triggered(bool)), signatureController, SLOT(insertSignatureAtCursor()) );
+  connect( actionCollection()->action( QLatin1String("composer_clean_spaces") ), SIGNAL(triggered(bool)), signatureController, SLOT(cleanSpace()) );
+  connect( actionCollection()->action( QLatin1String("composer_append_signature") ), SIGNAL(triggered(bool)), signatureController, SLOT(appendSignature()) );
+  connect( actionCollection()->action( QLatin1String("composer_prepend_signature") ), SIGNAL(triggered(bool)), signatureController, SLOT(prependSignature()) );
+  connect( actionCollection()->action( QLatin1String("composer_insert_signature") ), SIGNAL(triggered(bool)), signatureController, SLOT(insertSignatureAtCursor()) );
 
-  toggleAutomaticWordWrap( actionCollection()->action( "options_wordwrap" )->isChecked() );
-  toggleUseFixedFont( actionCollection()->action( "options_fixedfont" )->isChecked() );
+  toggleAutomaticWordWrap( actionCollection()->action( QLatin1String("options_wordwrap") )->isChecked() );
+  toggleUseFixedFont( actionCollection()->action( QLatin1String("options_fixedfont") )->isChecked() );
 
-#if defined(Q_WS_MAEMO_5) || defined(MEEGO_EDITION_HARMATTAN)
-  m_composerBase->recipientsEditor()->setCompletionMode( KGlobalSettings::CompletionAuto );
-#endif
   m_composerBase->recipientsEditor()->setAutoResizeView( true );
 
   connect( m_composerBase->recipientsEditor(), SIGNAL(lineAdded(KPIM::MultiplyingLine*)),
@@ -387,14 +378,10 @@ QString ComposerView::subject() const
 void ComposerView::setSubject ( const QString& subject )
 {
   m_subject = subject;
-#ifndef Q_OS_WINCE
-// Changing the Window Title makes not much sense
-// on systems without a decent Window Manager and complicates
-// to bring the Window back to front correctly
+
   if ( !subject.isEmpty() )
     setWindowTitle( subject );
   else
-#endif
     setWindowTitle( i18n( "New mail" ) );
 }
 
@@ -420,24 +407,11 @@ QObject* ComposerView::getAction( const QString &name ) const
 
 void ComposerView::configureIdentity()
 {
-#ifdef _WIN32_WCE
-  KComponentData instance( "kcmkmail_config_identity" ); // keep in sync with kmail for now to reuse kmail translations until after the string freeze
-  KMail::IdentityPage *page = new KMail::IdentityPage( instance, this );
-  page->setObjectName( "kcm_kpimidentities" );
-
-  KDialog dialog( this );
-  dialog.setMainWidget( page );
-  dialog.setButtons( KDialog::Ok | KDialog::Cancel );
-  dialog.setWindowState( Qt::WindowFullScreen );
-  connect( &dialog, SIGNAL(okClicked()), page, SLOT(save()) );
-  dialog.exec();
-#else
   KCMultiDialog dlg;
-  dlg.addModule( "kcm_kpimidentities" );
+  dlg.addModule( QLatin1String("kcm_kpimidentities") );
   dlg.currentPage()->setHeader( QLatin1String( "" ) ); // hide header to save space
   dlg.setButtons( KDialog::Ok | KDialog::Cancel );
   dlg.exec();
-#endif
 }
 
 void ComposerView::sendSuccessful()
@@ -449,22 +423,11 @@ void ComposerView::sendSuccessful()
 
 void ComposerView::configureTransport()
 {
-#ifdef _WIN32_WCE
-  MailTransport::TransportManagementWidget *tmw = new MailTransport::TransportManagementWidget( this );
-
-  KDialog dialog( this );
-  dialog.setMainWidget( tmw );
-  dialog.setButtons( KDialog::Ok | KDialog::Cancel );
-  dialog.setWindowState( Qt::WindowFullScreen );
-  //connect( &dialog, SIGNAL(okClicked()), page, SLOT(save()) );
-  dialog.exec();
-#else
   KCMultiDialog dlg;
-  dlg.addModule( "kcm_mailtransport" );
+  dlg.addModule( QLatin1String("kcm_mailtransport") );
   dlg.currentPage()->setHeader( QLatin1String( "" ) ); // hide header to save space
   dlg.setButtons( KDialog::Ok | KDialog::Cancel );
   dlg.exec();
-#endif
 }
 
 void ComposerView::addAttachment(KMime::Content* part)
@@ -484,8 +447,8 @@ void ComposerView::success()
 
 void ComposerView::failed( const QString &errorMessage )
 {
-  QPixmap pix = KIcon("kmail-mobile").pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
-  KNotification *notify = new KNotification("sendfailed");
+  QPixmap pix = KIcon(QLatin1String("kmail-mobile")).pixmap(KIconLoader::SizeSmall, KIconLoader::SizeSmall);
+  KNotification *notify = new KNotification(QLatin1String("sendfailed"));
   notify->setComponentData(KComponentData("kmail-mobile"));
   notify->setPixmap(pix);
   notify->setText(i18nc("Notification when there was an error while trying to send an email",
@@ -520,12 +483,12 @@ void ComposerView::setEditor( MessageComposer::KMeditor* editor )
     m_composerBase->setEditor( editor );
     m_composerBase->editor()->createActions( actionCollection() );
     m_composerBase->editor()->setAutocorrection(MobileKernel::self()->composerAutoCorrection());
-    connect( actionCollection()->action( "composer_add_quote_char" ), SIGNAL(triggered(bool)), m_composerBase->editor(), SLOT(slotAddQuotes()) );
-    connect( actionCollection()->action( "composer_remove_quote_char" ), SIGNAL(triggered(bool)), m_composerBase->editor(), SLOT(slotRemoveQuotes()) );
-    connect( actionCollection()->action( "composer_spell_check" ), SIGNAL(triggered(bool)), m_composerBase->editor(), SLOT(checkSpelling()) );
-    connect( actionCollection()->action( "composer_search" ), SIGNAL(triggered(bool)), m_composerBase->editor(), SLOT(slotFind()) );
-    connect( actionCollection()->action( "composer_search_next" ), SIGNAL(triggered(bool)), m_composerBase->editor(), SLOT(slotFindNext()) );
-    connect( actionCollection()->action( "composer_replace" ), SIGNAL(triggered(bool)), m_composerBase->editor(), SLOT(slotReplace()) );
+    connect( actionCollection()->action( QLatin1String("composer_add_quote_char") ), SIGNAL(triggered(bool)), m_composerBase->editor(), SLOT(slotAddQuotes()) );
+    connect( actionCollection()->action( QLatin1String("composer_remove_quote_char") ), SIGNAL(triggered(bool)), m_composerBase->editor(), SLOT(slotRemoveQuotes()) );
+    connect( actionCollection()->action( QLatin1String("composer_spell_check") ), SIGNAL(triggered(bool)), m_composerBase->editor(), SLOT(checkSpelling()) );
+    connect( actionCollection()->action( QLatin1String("composer_search") ), SIGNAL(triggered(bool)), m_composerBase->editor(), SLOT(slotFind()) );
+    connect( actionCollection()->action( QLatin1String("composer_search_next") ), SIGNAL(triggered(bool)), m_composerBase->editor(), SLOT(slotFindNext()) );
+    connect( actionCollection()->action( QLatin1String("composer_replace") ), SIGNAL(triggered(bool)), m_composerBase->editor(), SLOT(slotReplace()) );
 }
 
 void ComposerView::setRecipientsEditor( MessageComposer::RecipientsEditor *editor )
@@ -542,7 +505,7 @@ void ComposerView::closeEvent( QCloseEvent * event )
     const int rc = KMessageBox::warningYesNoCancel( this,
                                                     i18n("Do you want to save the message for later or discard it?"),
                                                     i18n("Close Composer"),
-                                                    KGuiItem(saveButton, "document-save", QString(), saveText),
+                                                    KGuiItem(saveButton, QLatin1String("document-save"), QString(), saveText),
                                                     KStandardGuiItem::discard(),
                                                     KStandardGuiItem::cancel() );
 
@@ -668,7 +631,7 @@ void ComposerView::disableHtml( MessageComposer::ComposerViewBase::Confirmation 
     int choice = KMessageBox::warningContinueCancel( this, i18n( "Turning HTML mode off "
         "will cause the text to lose the formatting. Are you sure?" ),
         i18n( "Lose the formatting?" ), KGuiItem( i18n( "Lose Formatting" ) ), KStandardGuiItem::cancel(),
-              "LoseFormattingWarning" );
+              QLatin1String("LoseFormattingWarning") );
     if ( choice != KMessageBox::Continue ) {
       enableHtml();
       return;
@@ -689,5 +652,4 @@ void ComposerView::setAutoSaveFileName(const QString &fileName)
 
 
 #include "composerview.moc"
-#include "moc_composerview.cpp"
 

@@ -220,4 +220,4 @@ void EditorLocation::saveContact( KABC::Addressee &contact, Akonadi::ContactMeta
     contact.insertAddress( newAddress );
 }
 
-#include "editorlocation.moc"
+#include "moc_editorlocation.cpp"

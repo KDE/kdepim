@@ -34,9 +34,7 @@
 #include "calendarinterface.h"
 #include "delegateselector.h"
 #include "memorycalendarmemento.h"
-
-#include <akonadi/calendar/itiphandler.h>
-#include <incidenceeditor-ng/groupwareintegration.h>
+#include "syncitiphandler.h"
 
 #include <messageviewer/settings/globalsettings.h>
 #include <messageviewer/viewer/viewer.h>
@@ -83,7 +81,7 @@ static bool hasMyWritableEventsFolders( const QString &family )
 {
   QString myfamily = family;
   if ( family.isEmpty() ) {
-    myfamily = "calendar";
+    myfamily = QLatin1String("calendar");
   }
 
 #if 0 // TODO port to Akonadi
@@ -185,6 +183,26 @@ KCal::CalendarResources * CalendarManager::calendar()
 }
 #endif
 #endif
+
+static bool occurredAlready( const Incidence::Ptr &incidence )
+{
+  Q_ASSERT( incidence );
+  const KDateTime now = KDateTime::currentLocalDateTime();
+  const QDate today = now.date();
+
+  if ( incidence->recurs() ) {
+    const KDateTime nextDate = incidence->recurrence()->getNextDateTime( now );
+
+    return !nextDate.isValid();
+  } else {
+    const KDateTime incidenceDate = incidence->dateTime( Incidence::RoleDisplayEnd );
+    if ( incidenceDate.isValid() ) {
+      return incidence->allDay() ? ( incidenceDate.date() < today ) : ( incidenceDate < now );
+    }
+  }
+
+  return false;
+}
 
 class KMInvitationFormatterHelper : public KCalUtils::InvitationFormatterHelper
 {
@@ -436,10 +454,10 @@ class UrlHandler : public Interface::BodyPartURLHandler
       QList< KMime::Types::Mailbox >::const_iterator end = addrs.constEnd();
       for ( QList< KMime::Types::Mailbox >::const_iterator it = addrs.constBegin();
             it != end; ++it ) {
-        if ( im->identityForAddress( (*it).address() ) != KPIMIdentities::Identity::null() ) {
+        if ( im->identityForAddress( QLatin1String((*it).address()) ) != KPIMIdentities::Identity::null() ) {
           // Ok, this could be us
           ++found;
-          receiver = (*it).address();
+          receiver = QLatin1String((*it).address());
         }
       }
 
@@ -450,10 +468,10 @@ class UrlHandler : public Interface::BodyPartURLHandler
       end = ccaddrs.constEnd();
       for ( QList< KMime::Types::Mailbox >::const_iterator it = ccaddrs.constBegin();
             it != end; ++it ) {
-        if ( im->identityForAddress( (*it).address() ) != KPIMIdentities::Identity::null() ) {
+        if ( im->identityForAddress( QLatin1String((*it).address()) ) != KPIMIdentities::Identity::null() ) {
           // Ok, this could be us
           ++found;
-          receiver = (*it).address();
+          receiver = QLatin1String((*it).address());
         }
       }
       if ( found != 1 ) {
@@ -471,10 +489,10 @@ class UrlHandler : public Interface::BodyPartURLHandler
             i18n( "<qt>Several of your identities match the receiver of this message,<br/>"
                   "please choose which of the following addresses is yours:</qt>" );
           foreach ( const KMime::Types::Mailbox &mbx, addrs ) {
-            possibleAddrs.append( mbx.address() );
+            possibleAddrs.append( QLatin1String(mbx.address()) );
           }
           foreach ( const KMime::Types::Mailbox &mbx, ccaddrs ) {
-            possibleAddrs.append( mbx.address() );
+            possibleAddrs.append( QLatin1String(mbx.address()) );
           }
         }
 
@@ -738,19 +756,21 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
     bool saveFile( const QString &receiver, const QString &iCal, const QString &type ) const
     {
-      if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
-        IncidenceEditorNG::GroupwareIntegration::activate();
+      // This will block. There's no way to make it async without refactoring the memento mechanism
+      SyncItipHandler *itipHandler = new SyncItipHandler( receiver, iCal, type );
+
+      // If result is ResultCancelled, then we don't show the message box and return false so kmail
+      // doesn't delete the e-mail.
+      kDebug() << "ITIPHandler result was " << itipHandler->result();
+      if ( itipHandler->result() == Akonadi::ITIPHandler::ResultError ) {
+        const QString errorMessage = itipHandler->errorMessage();
+        if ( !errorMessage.isEmpty() ) {
+          kError() << "Error while processing invitation: " << errorMessage;
+          KMessageBox::error( 0, errorMessage );
+        }
       }
 
-      Akonadi::ITIPHandler *handler = new Akonadi::ITIPHandler();
-
-      // We don't have a parent here, so schedule a deleteLater()
-      QObject::connect( handler, SIGNAL(iTipMessageProcessed(Akonadi::ITIPHandler::Result,QString)),
-                        handler, SLOT(deleteLater()) );
-
-      handler->processiTIPMessage( receiver, iCal, type );
-      // TODO: catch signal, and do error handling
-      return true;
+      return itipHandler->result() == Akonadi::ITIPHandler::ResultSuccess;
     }
 
     bool cancelPastInvites( const Incidence::Ptr incidence, const QString &path ) const
@@ -759,17 +779,18 @@ class UrlHandler : public Interface::BodyPartURLHandler
       KDateTime now = KDateTime::currentLocalDateTime();
       QDate today = now.date();
       Incidence::IncidenceType type = Incidence::TypeUnknown;
+      const bool occurred = occurredAlready( incidence );
       if ( incidence->type() == Incidence::TypeEvent ) {
         type = Incidence::TypeEvent;
         Event::Ptr event = incidence.staticCast<Event>();
         if ( !event->allDay() ) {
-          if ( event->dtEnd() < now ) {
+          if ( occurred ) {
             warnStr = i18n( "\"%1\" occurred already.", event->summary() );
           } else if ( event->dtStart() <= now && now <= event->dtEnd() ) {
             warnStr = i18n( "\"%1\" is currently in-progress.", event->summary() );
           }
         } else {
-          if ( event->dtEnd().date() < today ) {
+          if ( occurred ) {
             warnStr = i18n( "\"%1\" occurred already.", event->summary() );
           } else if ( event->dtStart().date() <= today && today <= event->dtEnd().date() ) {
             warnStr = i18n( "\"%1\", happening all day today, is currently in-progress.",
@@ -927,7 +948,9 @@ class UrlHandler : public Interface::BodyPartURLHandler
       }
       if ( status != Attendee::Delegated ) {
         // we do that below for delegated incidences
-        saveFile( receiver, iCal, dir );
+        if ( !saveFile( receiver, iCal, dir ) ) {
+          return false;
+        }
       }
 
       QString delegateString;
@@ -1026,7 +1049,9 @@ class UrlHandler : public Interface::BodyPartURLHandler
         ICalFormat format;
         format.setTimeSpec( KSystemTimeZones::local() );
         const QString iCal = format.createScheduleMessage( incidence, iTIPRequest );
-        saveFile( receiver, iCal, dir );
+        if ( !saveFile( receiver, iCal, dir ) ) {
+          return false;
+        }
 
         ok = mail( viewerInstance, incidence, dir, iTIPRequest, receiver, delegateString, Delegation );
       }
@@ -1048,7 +1073,8 @@ class UrlHandler : public Interface::BodyPartURLHandler
         file->setAutoRemove( false );
         QStringList patterns = KMimeType::mimeType( attachment->mimeType() )->patterns();
         if ( !patterns.empty() ) {
-          file->setSuffix( QString( patterns.first() ).remove( '*' ) );
+            QString pattern = patterns.first();
+          file->setSuffix( pattern.remove( QLatin1Char('*') ) );
         }
         file->open();
         file->setPermissions( QFile::ReadUser );
@@ -1093,7 +1119,8 @@ class UrlHandler : public Interface::BodyPartURLHandler
         file->setAutoRemove( false );
         QStringList patterns = KMimeType::mimeType( a->mimeType() )->patterns();
         if ( !patterns.empty() ) {
-          file->setSuffix( QString( patterns.first() ).remove( '*' ) );
+            QString pattern = patterns.first();
+          file->setSuffix( pattern.remove( QLatin1Char('*') ) );
         }
         file->open();
         file->setPermissions( QFile::ReadUser );
@@ -1109,26 +1136,27 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
     void showCalendar( const QDate &date ) const
     {
-      MailCommon::Util::ensureKorganizerRunning( true );
-      QDBusInterface *kontact =
-        new QDBusInterface( "org.kde.kontact", "/KontactInterface",
-                            "org.kde.kontact.KontactInterface", QDBusConnection::sessionBus() );
-      if ( kontact->isValid() ) {
-        kontact->call( "selectPlugin", "kontact_korganizerplugin" );
-      }
-      delete kontact;
+      if (MailCommon::Util::ensureKorganizerRunning( true )) {
+          QDBusInterface *kontact =
+                  new QDBusInterface( QLatin1String("org.kde.kontact"), QLatin1String("/KontactInterface"),
+                                      QLatin1String("org.kde.kontact.KontactInterface"), QDBusConnection::sessionBus() );
+          if ( kontact->isValid() ) {
+              kontact->call( QLatin1String("selectPlugin"), QLatin1String("kontact_korganizerplugin") );
+          }
+          delete kontact;
 
-      OrgKdeKorganizerCalendarInterface *iface =
-        new OrgKdeKorganizerCalendarInterface( "org.kde.korganizer", "/Calendar",
-                                               QDBusConnection::sessionBus(), 0 );
-      if ( !iface->isValid() ) {
-        kDebug() << "Calendar interface is not valid! " << iface->lastError().message();
-        delete iface;
-        return;
+          OrgKdeKorganizerCalendarInterface *iface =
+                  new OrgKdeKorganizerCalendarInterface( QLatin1String("org.kde.korganizer"), QLatin1String("/Calendar"),
+                                                         QDBusConnection::sessionBus(), 0 );
+          if ( !iface->isValid() ) {
+              kDebug() << "Calendar interface is not valid! " << iface->lastError().message();
+              delete iface;
+              return;
+          }
+          iface->showEventView();
+          iface->showDate( date );
+          delete iface;
       }
-      iface->showEventView();
-      iface->showDate( date );
-      delete iface;
     }
 
     bool handleIgnore( Viewer *viewerInstance ) const
@@ -1169,7 +1197,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
           }
         }
       }
-      return mail( viewerInstance, incidence, "declinecounter", KCalCore::iTIPDeclineCounter,
+      return mail( viewerInstance, incidence, QLatin1String("declinecounter"), KCalCore::iTIPDeclineCounter,
                    receiver, QString(), DeclineCounter );
     }
 
@@ -1179,10 +1207,10 @@ class UrlHandler : public Interface::BodyPartURLHandler
       if ( receiver.isEmpty() ) {
         return true;
       }
-      saveFile( receiver, iCal, "counter" );
+
       // Don't delete the invitation here in any case, if the counter proposal
       // is declined you might need it again.
-      return true;
+      return saveFile( receiver, iCal, QLatin1String("counter") );
     }
 
     bool handleClick( Viewer *viewerInstance,
@@ -1191,11 +1219,11 @@ class UrlHandler : public Interface::BodyPartURLHandler
     {
       // filter out known paths that don't belong to this type of urlmanager.
       // kolab/issue4054 msg27201
-      if ( path.contains( "addToAddressBook:" ) || path.contains(QLatin1String("updateToAddressBook")) ) {
+      if ( path.contains( QLatin1String("addToAddressBook:") ) || path.contains(QLatin1String("updateToAddressBook")) ) {
         return false;
       }
 
-      if ( !hasMyWritableEventsFolders( "calendar" ) ) {
+      if ( !hasMyWritableEventsFolders( QLatin1String("calendar") ) ) {
         KMessageBox::error(
           0,
           i18n( "You have no writable calendar folders for invitations, "
@@ -1255,12 +1283,12 @@ class UrlHandler : public Interface::BodyPartURLHandler
         if ( dlg.exec() == QDialog::Rejected ) {
           return true;
         }
-        QString fwdTo = dlg.attendees().join( ", " );
+        QString fwdTo = dlg.attendees().join( QLatin1String(", ") );
         if ( fwdTo.isEmpty() ) {
           return true;
         }
         const QString receiver = findReceiver( part->content() );
-        result = mail( viewerInstance, incidence, "forward", iTIPRequest, receiver, fwdTo, Forward );
+        result = mail( viewerInstance, incidence, QLatin1String("forward"), iTIPRequest, receiver, fwdTo, Forward );
       }
       else if ( path == QLatin1String( "check_calendar" ) ) {
         incidence = stringToIncidence( iCal );
@@ -1269,8 +1297,8 @@ class UrlHandler : public Interface::BodyPartURLHandler
       }
       else if ( path == QLatin1String( "reply" ) || path == QLatin1String( "cancel" ) || path == QLatin1String( "accept_counter" ) ) {
         // These should just be saved with their type as the dir
-        const QString p = ( path == QLatin1String( "accept_counter" ) ? QString( "reply" ) : path );
-        if ( saveFile( "Receiver Not Searched", iCal, p ) ) {
+        const QString p = ( path == QLatin1String( "accept_counter" ) ? QLatin1String( "reply" ) : path );
+        if ( saveFile( QLatin1String("Receiver Not Searched"), iCal, p ) ) {
           if ( GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() ) {
             viewerInstance->deleteMessage();
           }
@@ -1304,7 +1332,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
           KToolInvocation::invokeMailer( incidence->organizer()->email(), summary );
           //fall through
         case KMessageBox::Yes: // means "do not send"
-          if ( saveFile( "Receiver Not Searched", iCal, QString( "reply" ) ) ) {
+          if ( saveFile( QLatin1String("Receiver Not Searched"), iCal, QLatin1String( "reply" ) ) ) {
             if ( GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() ) {
               viewerInstance->deleteMessage();
               result = true;
@@ -1358,9 +1386,9 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
       KMenu *menu = new KMenu();
       QAction *open =
-        menu->addAction( KIcon( "document-open" ), i18n( "Open Attachment" ) );
+        menu->addAction( KIcon( QLatin1String("document-open") ), i18n( "Open Attachment" ) );
       QAction *saveas =
-        menu->addAction( KIcon( "document-save-as" ), i18n( "Save Attachment As..." ) );
+        menu->addAction( KIcon( QLatin1String("document-save-as") ), i18n( "Save Attachment As..." ) );
 
       QAction *a = menu->exec( point, 0 );
       if ( a == open ) {
@@ -1489,6 +1517,6 @@ extern "C"
 KDE_EXPORT Interface::BodyPartFormatterPlugin *
 messageviewer_bodypartformatter_text_calendar_create_bodypart_formatter_plugin()
 {
-  KGlobal::locale()->insertCatalog( "messageviewer_text_calendar_plugin" );
+  KGlobal::locale()->insertCatalog( QLatin1String("messageviewer_text_calendar_plugin") );
   return new Plugin();
 }

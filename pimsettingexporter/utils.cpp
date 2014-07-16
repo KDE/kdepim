@@ -25,11 +25,16 @@
 #include <KStandardDirs>
 #include <KSharedConfig>
 #include <KTemporaryFile>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KZip>
 
 #include <QDir>
 
+int Utils::currentArchiveVersion()
+{
+    //Increase it when we add major feature!
+    return 2;
+}
 
 QString Utils::transportsPath()
 {
@@ -91,6 +96,11 @@ QString Utils::prefixAkonadiConfigFile()
     return QLatin1String("agent_config_");
 }
 
+QString Utils::infoPath()
+{
+    return QLatin1String("information/");
+}
+
 KUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData)
 {
     const KUrl url = Utils::resourcePath(resourceConfig);
@@ -98,14 +108,18 @@ KUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &st
     if (!url.path().contains(QDir::homePath())) {
         //qDebug()<<" url "<<url.path();
         newUrl.setPath(QDir::homePath() + QLatin1Char('/') + storedData + url.fileName());
+        if (!QDir(QDir::homePath() + QLatin1Char('/') + storedData).exists()) {
+            QDir dir(QDir::homePath());
+            dir.mkdir(storedData);
+        }
     }
     if (QFile(newUrl.path()).exists()) {
         QString newFileName = newUrl.path();
         for (int i = 0;; ++i) {
-            newFileName = newUrl.directory() + QLatin1Char('/') + QString::fromLatin1("%1").arg(i) + QLatin1Char('/') + newUrl.fileName();
+            newFileName = newUrl.directory() + QLatin1Char('/') + QString::number(i) + QLatin1Char('/') + newUrl.fileName();
             if (!QFile(newFileName).exists()) {
                 QDir dir(newUrl.directory());
-                dir.mkdir(QString::fromLatin1("%1").arg(i));
+                dir.mkdir(QString::number(i));
                 break;
             }
         }
@@ -114,11 +128,13 @@ KUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &st
     return newUrl;
 }
 
-KUrl Utils::resourcePath(KSharedConfigPtr resourceConfig)
+KUrl Utils::resourcePath(KSharedConfigPtr resourceConfig, const QString &defaultPath)
 {
     KConfigGroup group = resourceConfig->group(QLatin1String("General"));
-    QString url = group.readEntry(QLatin1String("Path"),QString());
-    url.replace(QLatin1String("$HOME"), QDir::homePath());
+    QString url = group.readEntry(QLatin1String("Path"), defaultPath);
+    if (!url.isEmpty()) {
+        url.replace(QLatin1String("$HOME"), QDir::homePath());
+    }
     return KUrl(url);
 }
 
@@ -188,13 +204,13 @@ void Utils::convertCollectionToRealPath(KConfigGroup &group, const QString &curr
     }
 }
 
-KUrl Utils::resourcePath(const Akonadi::AgentInstance &agent)
+KUrl Utils::resourcePath(const Akonadi::AgentInstance &agent, const QString &defaultPath)
 {
     const QString agentFileName = agent.identifier() + QLatin1String("rc");
     const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
 
     KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
-    KUrl url = Utils::resourcePath(resourceConfig);
+    KUrl url = Utils::resourcePath(resourceConfig, defaultPath);
     return url;
 }
 
@@ -202,6 +218,7 @@ QString Utils::storeResources(KZip *archive, const QString &identifier, const QS
 {
     const QString agentFileName = identifier + QLatin1String("rc");
     const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
+    qDebug()<<"configFileName "<<configFileName<<"agentFileName "<<configFileName;
 
     KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
     KTemporaryFile tmp;
@@ -256,4 +273,79 @@ KZip *Utils::openZip(const QString &filename, QString &errorMsg)
         return 0;
     }
     return zip;
+}
+
+void Utils::addVersion(KZip *archive)
+{
+    KTemporaryFile tmp;
+    tmp.open();
+    const bool fileAdded  = archive->addLocalFile(tmp.fileName(), Utils::infoPath() + QString::fromLatin1("VERSION_%1").arg(currentArchiveVersion()));
+    if (!fileAdded) {
+        //TODO add i18n ?
+        qDebug()<<"version file can not add to archive";
+    }
+}
+
+int Utils::archiveVersion(KZip *archive)
+{
+    const KArchiveEntry *informationFile = archive->directory()->entry(Utils::infoPath() + QLatin1String( "VERSION_1" ) );
+    if (informationFile && informationFile->isFile()) {
+        return 1;
+    }
+    informationFile = archive->directory()->entry(Utils::infoPath() + QLatin1String( "VERSION_2" ) );
+    if (informationFile && informationFile->isFile()) {
+        return 2;
+    }
+    //TODO add more version when new version
+    return 0;
+}
+
+QString Utils::appTypeToI18n(AppsType type)
+{
+    switch(type) {
+    case KMail:
+        return i18n("KMail");
+    case KAddressBook:
+        return i18n("KAddressBook");
+    case KAlarm:
+        return i18n("KAlarm");
+    case KOrganizer:
+        return i18n("KOrganizer");
+    case KJots:
+        return i18n("KJots");
+    case KNotes:
+        return i18n("KNotes");
+    case Akregator:
+        return i18n("Akregator");
+    case Blogilo:
+        return i18n("Blogilo");
+    case KNode:
+        return i18n("KNode");
+    }
+    qDebug()<<" type unknown "<<type;
+    return QString();
+}
+
+QString Utils::storedTypeToI18n(StoredType type)
+{
+    switch(type) {
+    case None:
+        return QString();
+    case Identity:
+        return i18n("Identity");
+    case Mails:
+        return i18n("Mails");
+    case MailTransport:
+        return i18n("Mail Transport");
+    case Resources:
+        return i18n("Resources");
+    case Config:
+        return i18n("Config");
+    case AkonadiDb:
+        return i18n("Akonadi Database");
+    case Data:
+        return i18n("Data");
+    }
+    qDebug()<<" type unknown "<<type;
+    return QString();
 }

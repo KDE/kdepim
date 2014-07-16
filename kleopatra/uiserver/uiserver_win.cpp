@@ -38,9 +38,6 @@
 
 #include <KLocalizedString>
 
-#include <QFile>
-#include <QDir>
-#include <QTextStream>
 #include <qendian.h>
 
 #include <stdexcept>
@@ -58,11 +55,7 @@ using namespace boost;
 
 
 QString UiServer::Private::systemErrorString() {
-#ifndef _WIN32_WCE
     return QString::fromLocal8Bit( strerror(errno) );
-#else
-    return QString();
-#endif
 }
 
 void UiServer::Private::doMakeListeningSocket( const QByteArray & encodedFileName ) {

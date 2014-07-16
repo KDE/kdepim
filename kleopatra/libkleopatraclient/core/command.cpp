@@ -580,7 +580,7 @@ void Command::Private::run() {
 
     qDebug() << "Server PID =" << out.serverPid;
 
-#if defined(Q_OS_WIN) && !defined(_WIN32_WCE) 
+#if defined(Q_OS_WIN)
     if ( !AllowSetForegroundWindow( (pid_t)out.serverPid ) )
         qDebug() << "AllowSetForegroundWindow(" << out.serverPid << ") failed: " << GetLastError();
 #endif
@@ -589,7 +589,7 @@ void Command::Private::run() {
         goto leave;
 
     if ( in.parentWId ) {
-#if defined(Q_OS_WIN32) || defined(_WIN32_WCE)
+#if defined(Q_OS_WIN32)
         err = send_option( ctx, "window-id", QString().sprintf( "%lx", reinterpret_cast<quintptr>( in.parentWId ) ) );
 #else
         err = send_option( ctx, "window-id", QString().sprintf( "%lx", static_cast<unsigned long>( in.parentWId ) ) );
@@ -650,6 +650,3 @@ void Command::Private::run() {
     // copy outputs to where Command can see them:
     outputs = out;
 }
-
-#include "moc_command_p.cpp"
-#include "moc_command.cpp"

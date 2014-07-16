@@ -119,4 +119,3 @@ void ImportHandlerBase::slotImportJobDone( KJob* )
   }
 }
 
-#include "importhandlerbase.moc"

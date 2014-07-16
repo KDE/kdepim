@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -17,9 +17,12 @@
 
 #include "sieveglobalvariablewidget.h"
 #include "sievescriptblockwidget.h"
+#include "autocreatescriptutil_p.h"
+#include "commonwidgets/sievehelpbutton.h"
+#include "editor/sieveeditorutil.h"
 
 #include <KPushButton>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QGridLayout>
@@ -27,6 +30,8 @@
 #include <QLabel>
 #include <QToolButton>
 #include <QWhatsThis>
+#include <QDebug>
+#include <QDomNode>
 
 
 namespace KSieveUi {
@@ -51,7 +56,7 @@ void SieveGlobalVariableActionWidget::generatedScript(QString &script)
         return;
     script += QLatin1String("global ");
     script += QString::fromLatin1("\"%1\";\n").arg(variableName);
-    if (mSetValueTo->isChecked()) {
+    if (mSetValueTo->isChecked() && !mVariableValue->text().isEmpty()) {
         script += QString::fromLatin1("set \"%1\" \"%2\";\n").arg(variableName).arg(mVariableValue->text());
     }
 }
@@ -65,13 +70,16 @@ void SieveGlobalVariableActionWidget::initWidget()
     mLayout->addWidget( lab, 1, 0 );
 
     mVariableName = new KLineEdit;
+    connect(mVariableName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     mLayout->addWidget( mVariableName, 1, 1 );
 
     mSetValueTo = new QCheckBox(i18n("Set value to:"));
+    connect(mSetValueTo, SIGNAL(toggled(bool)), this, SIGNAL(valueChanged()));
     mLayout->addWidget( mSetValueTo, 1, 2 );
     mSetValueTo->setChecked(false);
 
     mVariableValue = new KLineEdit;
+    connect(mVariableValue, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     mVariableValue->setEnabled(false);
     mLayout->addWidget( mVariableValue, 1, 3 );
 
@@ -93,14 +101,51 @@ void SieveGlobalVariableActionWidget::initWidget()
              this, SLOT(slotRemoveWidget()) );
 }
 
+bool SieveGlobalVariableActionWidget::isInitialized() const
+{
+    return !mVariableName->text().isEmpty();
+}
+
+QString SieveGlobalVariableActionWidget::variableName() const
+{
+    return mVariableName->text();
+}
+
+void SieveGlobalVariableActionWidget::setVariableValue(const QString &name)
+{
+    mSetValueTo->setChecked(true);
+    mVariableValue->setText(name);
+    mVariableValue->setEnabled(true);
+}
+
+void SieveGlobalVariableActionWidget::loadScript(const QDomElement &element, QString &error)
+{
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                mVariableName->setText(e.text());
+            } else {
+                error += i18n("Unknown tag \"%1\" during loading of variables.");
+                qDebug()<<" SieveGlobalVariableActionWidget::loadScript unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+}
+
 void SieveGlobalVariableActionWidget::slotAddWidget()
 {
     emit addWidget( this );
+    Q_EMIT valueChanged();
 }
 
 void SieveGlobalVariableActionWidget::slotRemoveWidget()
 {
     emit removeWidget( this );
+    Q_EMIT valueChanged();
 }
 
 void SieveGlobalVariableActionWidget::updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled )
@@ -113,13 +158,12 @@ SieveGlobalVariableWidget::SieveGlobalVariableWidget(QWidget *parent)
     : SieveWidgetPageAbstract(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
-    QToolButton *helpButton = new QToolButton;
-    helpButton->setToolTip(i18n("Help"));
-    lay->addWidget( helpButton );
-    helpButton->setIcon( KIcon( QLatin1String("help-hint") ) );
-    connect(helpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
+    mHelpButton = new SieveHelpButton;
+    lay->addWidget( mHelpButton );
+    connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
     mIncludeLister = new SieveGlobalVariableLister;
+    connect(mIncludeLister, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     lay->addWidget(mIncludeLister,0, Qt::AlignTop);
     setPageType(KSieveUi::SieveScriptBlockWidget::GlobalVariable);
     setLayout(lay);
@@ -132,7 +176,9 @@ SieveGlobalVariableWidget::~SieveGlobalVariableWidget()
 void SieveGlobalVariableWidget::slotHelp()
 {
     const QString help = i18n("A variable has global scope in all scripts that have declared it with the \"global\" command.  If a script uses that variable name without declaring it global, the name specifies a separate, non-global variable within that script.");
-    QWhatsThis::showText( QCursor::pos(), help );
+    const QString href = KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::GlobalVariable);
+    const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help,href);
+    QWhatsThis::showText( QCursor::pos(), fullWhatsThis, mHelpButton );
 }
 
 void SieveGlobalVariableWidget::generatedScript(QString &script, QStringList &requires)
@@ -144,6 +190,16 @@ void SieveGlobalVariableWidget::generatedScript(QString &script, QStringList &re
         script += result;
         requires << lst;
     }
+}
+
+void SieveGlobalVariableWidget::loadScript(const QDomElement &element, QString &error)
+{
+    mIncludeLister->loadScript(element, error);
+}
+
+void SieveGlobalVariableWidget::loadSetVariable(const QDomElement &element, QString &error)
+{
+    mIncludeLister->loadSetVariable(element, error);
 }
 
 SieveGlobalVariableLister::SieveGlobalVariableLister(QWidget *parent)
@@ -213,11 +269,15 @@ void SieveGlobalVariableLister::reconnectWidget(SieveGlobalVariableActionWidget 
              this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection );
     connect( w, SIGNAL(removeWidget(QWidget*)),
              this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection );
+    connect( w, SIGNAL(valueChanged()),
+             this, SIGNAL(valueChanged()), Qt::UniqueConnection );
 }
 
 void SieveGlobalVariableLister::clearWidget( QWidget *aWidget )
 {
+    Q_UNUSED(aWidget);
     //TODO
+    Q_EMIT valueChanged();
 }
 
 QWidget *SieveGlobalVariableLister::createWidget( QWidget *parent )
@@ -227,6 +287,49 @@ QWidget *SieveGlobalVariableLister::createWidget( QWidget *parent )
     return w;
 }
 
+void SieveGlobalVariableLister::loadScript(const QDomElement &element, QString &error)
+{
+    SieveGlobalVariableActionWidget *w = static_cast<SieveGlobalVariableActionWidget *>(widgets().last());
+    if (w->isInitialized()) {
+        addWidgetAfterThisWidget(widgets().last());
+        w = static_cast<SieveGlobalVariableActionWidget *>(widgets().last());
+    }
+    w->loadScript(element, error);
 }
 
-#include "sieveglobalvariablewidget.moc"
+void SieveGlobalVariableLister::loadSetVariable(const QDomElement &element, QString &error)
+{
+    QString variableName;
+    QString variableValue;
+    int index = 0;
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                if (index == 0) {
+                    variableName = e.text();
+                } else if (index == 1) {
+                    variableValue = e.text();
+                } else {
+                    qDebug()<<" SieveGlobalVariableLister::loadSetVariable too many argument:"<<index;
+                }
+                ++index;
+            } else {
+                qDebug()<<" SieveGlobalVariableLister::loadSetVariable unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+
+    Q_FOREACH (QWidget *widget, widgets()) {
+        SieveGlobalVariableActionWidget *w = static_cast<SieveGlobalVariableActionWidget *>(widget);
+        if (w->variableName() == variableName) {
+            w->setVariableValue(variableValue);
+        }
+    }
+}
+
+}
+

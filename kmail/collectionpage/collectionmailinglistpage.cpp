@@ -32,15 +32,15 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QCheckBox>
-#include <QGroupBox>
 #include <QPushButton>
 #include <QSpacerItem>
 #include <QVBoxLayout>
 
 #include <KComboBox>
 #include <KDialog>
+#include <KLineEdit>
 #include <KEditListWidget>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KSqueezedTextLabel>
 
@@ -48,7 +48,7 @@ using namespace MailCommon;
 
 
 CollectionMailingListPage::CollectionMailingListPage(QWidget * parent) :
-    CollectionPropertiesPage( parent ), mLastItem(0), changed(false)
+    CollectionPropertiesPage( parent ), mLastItem(0), mGroupWidget(0), changed(false)
 {
     setObjectName( QLatin1String( "KMail::CollectionMailingListPage" ) );
     setPageTitle( i18nc( "@title:tab Mailing list settings for a folder.", "Mailing List" ) );
@@ -67,7 +67,8 @@ bool CollectionMailingListPage::canHandle( const Akonadi::Collection &col ) cons
 {
     QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( col, false );
     return ( !CommonKernel->isSystemFolderCollection( col ) &&
-             !fd->isStructural() );
+             !fd->isStructural() &&
+             !MailCommon::Util::isVirtualCollection( col ) );
 }
 
 void CollectionMailingListPage::init(const Akonadi::Collection & col)
@@ -97,7 +98,7 @@ void CollectionMailingListPage::init(const Akonadi::Collection & col)
 
     QLabel *label = new QLabel( i18n("Mailing list description:"), mGroupWidget );
     groupLayout->addWidget( label, 4, 0 );
-    mMLId = new KSqueezedTextLabel( "", mGroupWidget );
+    mMLId = new KSqueezedTextLabel( QString(), mGroupWidget );
     mMLId->setTextElideMode( Qt::ElideRight );
     groupLayout->addWidget( mMLId, 4, 1, 1, 2 );
 
@@ -132,6 +133,7 @@ void CollectionMailingListPage::init(const Akonadi::Collection & col)
     groupLayout->addWidget( handleButton, 6, 2 );
 
     mEditList = new KEditListWidget( mGroupWidget );
+    mEditList->lineEdit()->setClearButtonShown(true);
     connect(mEditList, SIGNAL(changed()),SLOT(slotConfigChanged()));
     groupLayout->addWidget( mEditList, 7, 0, 1, 4 );
 
@@ -279,7 +281,7 @@ void CollectionMailingListPage::fillMLFromWidgets()
         if ( !(*it).startsWith(QLatin1String("http:")) && !(*it).startsWith(QLatin1String("https:")) &&
              !(*it).startsWith(QLatin1String("mailto:")) && ( (*it).contains(QLatin1Char('@')) ) ) {
             listChanged = true;
-            newList << "mailto:" + *it;
+            newList << QLatin1String("mailto:") + *it;
         }
         else {
             newList << *it;
@@ -360,4 +362,3 @@ void CollectionMailingListPage::slotInvokeHandler()
     }
 }
 
-#include "collectionmailinglistpage.moc"

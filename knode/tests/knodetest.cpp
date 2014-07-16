@@ -118,4 +118,3 @@ void KNodeTest::testUtilitiesLocale()
 
 QTEST_KDEMAIN( KNodeTest, NoGUI )
 
-#include "knodetest.moc"

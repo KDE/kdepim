@@ -1,2 +1,4 @@
 #! /bin/sh
-$XGETTEXT `find . -name '*.h' -o -name '*.cpp'` -o $podir/libpimcommon.pot
+$EXTRACTRC `find . -name '*.ui'` >> rc.cpp || exit 11
+$XGETTEXT `find . -name '*.h' -o -name '*.cpp' | grep -v '/tests/'` -o $podir/libpimcommon.pot
+rm -f rc.cpp

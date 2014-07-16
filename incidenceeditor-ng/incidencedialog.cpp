@@ -705,9 +705,8 @@ void IncidenceDialog::selectCollection( const Akonadi::Collection &collection )
 
 void IncidenceDialog::setIsCounterProposal( bool isCounterProposal )
 {
-  //Q_D( IncidenceDialog );
-  //if (d->mInvitationDispatcher)
-      //d->mInvitationDispatcher->setIsCounterProposal( isCounterProposal ); TODO_SERGIO
+  Q_D( IncidenceDialog );
+  d->mItemManager->setIsCounterProposal( isCounterProposal );
 }
 
 QObject *IncidenceDialog::typeAheadReceiver() const
@@ -775,16 +774,25 @@ void IncidenceDialog::closeEvent( QCloseEvent *event )
       i18nc( "@info", "Do you really want to cancel?" ),
       i18nc( "@title:window", "KOrganizer Confirmation" ) ) == KMessageBox::Yes ) {
     KDialog::reject(); // Discard current changes
+    KDialog::closeEvent( event );
   } else if ( !d->isDirty() ) {
     KDialog::reject(); // No pending changes, just close the dialog.
+    KDialog::closeEvent( event );
+  } else {
+    event->ignore();
   }
-  event->ignore();
 }
 
 void IncidenceDialog::setInitiallyDirty( bool initiallyDirty )
 {
   Q_D( IncidenceDialog );
   d->mInitiallyDirty = initiallyDirty;
+}
+
+Akonadi::Item IncidenceDialog::item() const
+{
+  Q_D( const IncidenceDialog );
+  return d->mItemManager->item();
 }
 
 void IncidenceDialog::handleSelectedCollectionChange( const Akonadi::Collection &collection )
@@ -795,4 +803,4 @@ void IncidenceDialog::handleSelectedCollectionChange( const Akonadi::Collection 
   }
 }
 
-#include "incidencedialog.moc"
+#include "moc_incidencedialog.cpp"

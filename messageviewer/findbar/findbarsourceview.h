@@ -32,7 +32,7 @@ class FindBarSourceView : public FindBarBase
 
 public:
     explicit FindBarSourceView( QPlainTextEdit * view, QWidget * parent = 0 );
-    virtual ~FindBarSourceView();
+    ~FindBarSourceView();
 
 private:
     explicit FindBarSourceView( QWidget *parent) { Q_UNUSED(parent); }

@@ -32,7 +32,7 @@ MainWindow::MainWindow( QWidget* parent )
     : QMainWindow( parent )
 {
     QToolBar *toolBar = new QToolBar( QLatin1String( "Main toolbar" ), this );
-    toolBar->addAction( "Configure ...", this, SLOT(configure()) );
+    toolBar->addAction( QLatin1String("Configure ..."), this, SLOT(configure()) );
     addToolBar( toolBar );
 
     setCentralWidget( new MainWidget( this ) );
@@ -43,8 +43,8 @@ void MainWindow::configure()
 {
     QDialog *configDialog = new QDialog( this );
     QGridLayout *layout = new QGridLayout();
-    QWidget *kcmWidget = KCModuleLoader::loadModule(  "kcm_akonadi_resources",
-                                                    KCModuleLoader::Inline, configDialog, QStringList( "text/calendar" ) );
+    QWidget *kcmWidget = KCModuleLoader::loadModule(  QLatin1String("kcm_akonadi_resources"),
+                                                    KCModuleLoader::Inline, configDialog, QStringList()<< QLatin1String("text/calendar" ) );
     layout->addWidget( kcmWidget );
     configDialog->setLayout( layout );
     configDialog->show();

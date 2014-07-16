@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -22,7 +22,7 @@
 #include "extendattributes/extendattributesbutton.h"
 #include "helper/listhelper_p.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSeparator>
 #include <KComboBox>
 
@@ -242,4 +242,4 @@ ComposerListDialog::~ComposerListDialog()
 
 }
 
-#include "composerlistdialog.moc"
+#include "moc_composerlistdialog.cpp"

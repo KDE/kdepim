@@ -473,14 +473,14 @@ private:
   }
   void write( const QByteArray & key, const QString & value ) {
     if ( value.isEmpty() ) {
-      write( "<" + key + "/>" );
+      write( QByteArray(QByteArray("<") + key + QByteArray("/>")) );
       return;
     }
-    write( "<" + key + ">" );
+    write( QByteArray(QByteArray("<") + key + QByteArray(">")) );
     ++indent;
     write( value.toUtf8().data() );
     --indent;
-    write( "</" + key + ">" );
+    write( QByteArray(QByteArray("</") + key + QByteArray(">")) );
   }
 };
 
@@ -595,7 +595,7 @@ private:
   void checkIs( BuilderMethod m ) {
     if ( currentResponse().method != m ) {
       cerr << " expected method " << (int)currentResponse().method
-	   << ", got " << (int)m;
+           << ", got " << (int)m;
       mOk = false;
     }
   }
@@ -603,15 +603,15 @@ private:
   void checkEquals( const QString & s ) {
     if ( s != QString::fromUtf8( currentResponse().string ) ) {
       cerr << " expected string arg \""
-	   << ( currentResponse().string ? currentResponse().string : "<null>" )
-	   << "\", got \"" << ( s.isNull() ? "<null>" : s.toUtf8().data() ) << "\"";
+           << ( currentResponse().string ? currentResponse().string : "<null>" )
+           << "\", got \"" << ( s.isNull() ? "<null>" : s.toUtf8().data() ) << "\"";
       mOk = false;
     }
   }
   void checkEquals( bool b ) {
     if ( b != currentResponse().boolean ) {
       cerr << " expected boolean arg <" << currentResponse().boolean
-	   << ">, got <" << b << ">";
+           << ">, got <" << b << ">";
       mOk = false;
     }
   }
@@ -648,12 +648,12 @@ int main( int argc, char * argv[]  ) {
       p.setScriptBuilder( &v );
       const bool ok = p.parse();
       if ( v.ok() )
-	if ( ok )
-	  cerr << " ok";
-	else
-	  cerr << " xfail";
+        if ( ok )
+          cerr << " ok";
+        else
+          cerr << " xfail";
       else
-	success = false;
+        success = false;
       cerr << endl;
     }
     if ( !success )

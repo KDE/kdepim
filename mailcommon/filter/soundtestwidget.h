@@ -20,9 +20,8 @@
 #ifndef MAILCOMMON_SOUNDTESTWIDGET_H
 #define MAILCOMMON_SOUNDTESTWIDGET_H
 
-#include <KLineEdit>
 
-#include <QString>
+#include <QWidget>
 
 class QPushButton;
 class KUrlRequester;
@@ -34,9 +33,9 @@ namespace MailCommon {
  */
 class SoundTestWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new sound test widget.
      *
@@ -64,7 +63,7 @@ class SoundTestWidget : public QWidget
      */
     void clear();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted when the user clicked
      * the Play button.
@@ -77,12 +76,12 @@ class SoundTestWidget : public QWidget
      */
     void textChanged( const QString& );
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void playSound();
     void openSoundDialog( KUrlRequester* );
     void slotUrlChanged( const QString& );
 
-  private:
+private:
     KUrlRequester *m_urlRequester;
     QPushButton *m_playButton;
 };

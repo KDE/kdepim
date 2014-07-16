@@ -25,7 +25,7 @@
 
 #include "todoviewview.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMenu>
 
 #include <QAction>
@@ -41,6 +41,7 @@ TodoViewView::TodoViewView( QWidget *parent )
   setAlternatingRowColors( true );
   connect( &mExpandTimer, SIGNAL(timeout()), SLOT(expandParent()) );
   mExpandTimer.setInterval( 1000 );
+  header()->setStretchLastSection( false );
 }
 
 bool TodoViewView::isEditing( const QModelIndex &index ) const
@@ -87,14 +88,11 @@ void TodoViewView::toggleColumnHidden( QAction *action )
 {
   if ( action->isChecked() ) {
     showColumn( action->data().toInt() );
-    if ( columnWidth( action->data().toInt() == 0 ) ) {
-      // the column width can be 0 if it was hidden, stored in the config as 0
-      // (width of hidden columns), and then restored from config
-      resizeColumnToContents( action->data().toInt() );
-    }
   } else {
     hideColumn( action->data().toInt() );
   }
+
+  emit visibleColumnCountChanged();
 }
 
 QModelIndex TodoViewView::moveCursor( CursorAction cursorAction,
@@ -238,4 +236,3 @@ void TodoViewView::expandParent()
   }
 }
 
-#include "todoviewview.moc"

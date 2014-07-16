@@ -20,76 +20,82 @@
 
 #include "mainwindow.h"
 #include "mainwidget.h"
+#include "xxportmanager.h"
 
 #include <KAction>
 #include <KActionCollection>
 #include <KEditToolBar>
 #include <KShortcutsDialog>
 #include <KStandardAction>
+#include <KLocalizedString>
 #include <KToolBar>
-#include <KLocale>
 
 MainWindow::MainWindow()
-  : KXmlGuiWindow( 0 )
+    : KXmlGuiWindow( 0 )
 {
-  mMainWidget = new MainWidget( this, this );
+    mMainWidget = new MainWidget( this, this );
 
-  setCentralWidget( mMainWidget );
+    setCentralWidget( mMainWidget );
 
-  initActions();
+    initActions();
 
-  setStandardToolBarMenuEnabled( true );
+    setStandardToolBarMenuEnabled( true );
 
-  toolBar()->setToolButtonStyle( Qt::ToolButtonTextUnderIcon );
+    toolBar()->setToolButtonStyle( Qt::ToolButtonTextUnderIcon );
 
-  setupGUI( Keys | Save | Create, "kaddressbookui.rc" );
+    setupGUI( Save | Create, QLatin1String("kaddressbookui.rc") );
 
-  setAutoSaveSettings();
+    setAutoSaveSettings();
 }
 
 MainWindow::~MainWindow()
 {
 }
 
+MainWidget *MainWindow::mainWidget() const
+{
+    return mMainWidget;
+}
+
 void MainWindow::initActions()
 {
-  KStandardAction::quit( this, SLOT(close()), actionCollection() );
+    KStandardAction::quit( this, SLOT(close()), actionCollection() );
 
-  KAction *action =
-    KStandardAction::keyBindings( this, SLOT(configureKeyBindings()), actionCollection() );
-  action->setWhatsThis(
-    i18nc( "@info:whatsthis",
-           "You will be presented with a dialog where you can configure "
-           "the application-wide shortcuts." ) );
-
-  KStandardAction::configureToolbars( this, SLOT(configureToolbars()), actionCollection() );
-  KStandardAction::preferences( this, SLOT(configure()), actionCollection() );
+    KAction *action =
+            KStandardAction::keyBindings( this, SLOT(configureKeyBindings()), actionCollection() );
+    action->setWhatsThis(
+                i18nc( "@info:whatsthis",
+                       "You will be presented with a dialog where you can configure "
+                       "the application-wide shortcuts." ) );
+    KStandardAction::configureToolbars( this, SLOT(configureToolbars()), actionCollection() );
+    KStandardAction::preferences( this, SLOT(configure()), actionCollection() );
 }
 
 void MainWindow::configure()
 {
-  mMainWidget->configure();
+    mMainWidget->configure();
 }
 
 void MainWindow::configureKeyBindings()
 {
-  KShortcutsDialog::configure( actionCollection(), KShortcutsEditor::LetterShortcutsAllowed, this );
+    if (KShortcutsDialog::configure( actionCollection(), KShortcutsEditor::LetterShortcutsAllowed, this )) {
+        mMainWidget->updateQuickSearchText();
+    }
 }
 
 void MainWindow::configureToolbars()
 {
-  saveMainWindowSettings( KGlobal::config()->group( "MainWindow" ) );
+    saveMainWindowSettings( KGlobal::config()->group( "MainWindow" ) );
 
-  KEditToolBar dlg( factory() );
-  connect( &dlg, SIGNAL(newToolBarConfig()), this, SLOT(newToolbarConfig()) );
-  dlg.exec();
+    KEditToolBar dlg( factory() );
+    connect( &dlg, SIGNAL(newToolBarConfig()), this, SLOT(newToolbarConfig()) );
+    dlg.exec();
 }
 
 void MainWindow::newToolbarConfig()
 {
-  createGUI( "kaddressbookui.rc" );
+    createGUI( QLatin1String("kaddressbookui.rc") );
 
-  applyMainWindowSettings( KGlobal::config()->group( "MainWindow" ) );
+    applyMainWindowSettings( KGlobal::config()->group( "MainWindow" ) );
 }
 
-#include "mainwindow.moc"

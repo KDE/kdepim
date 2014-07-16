@@ -35,7 +35,7 @@ class MESSAGECORE_EXPORT AttachmentFromFolderJob : public AttachmentFromUrlBaseJ
 
     Q_OBJECT
 
-  public:
+public:
 
     /**
     * Creates a new job.
@@ -63,10 +63,10 @@ class MESSAGECORE_EXPORT AttachmentFromFolderJob : public AttachmentFromUrlBaseJ
     KZip::Compression compression() const;
 
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     void doStart();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

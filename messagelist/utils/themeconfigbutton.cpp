@@ -32,49 +32,50 @@ using namespace MessageList::Utils;
 class MessageList::Utils::ThemeConfigButtonPrivate
 {
 public:
-  ThemeConfigButtonPrivate( ThemeConfigButton *owner )
-    : q( owner ), mThemeComboBox( 0 )  { }
+    ThemeConfigButtonPrivate( ThemeConfigButton *owner )
+        : q( owner ), mThemeComboBox( 0 )  { }
 
-  ThemeConfigButton * const q;
+    ThemeConfigButton * const q;
 
-  const ThemeComboBox * mThemeComboBox;
+    const ThemeComboBox * mThemeComboBox;
 
-  void slotConfigureThemes();
+    void slotConfigureThemes();
 };
 
 void ThemeConfigButtonPrivate::slotConfigureThemes()
 {
-  QString currentThemeID;
-  if ( mThemeComboBox != 0 )
-    currentThemeID = mThemeComboBox->currentTheme();
+    QString currentThemeID;
+    if ( mThemeComboBox != 0 )
+        currentThemeID = mThemeComboBox->currentTheme();
 
-  ConfigureThemesDialog *dialog = new ConfigureThemesDialog( q->window() );
-  dialog->selectTheme( currentThemeID );
+    ConfigureThemesDialog *dialog = new ConfigureThemesDialog( q->window() );
+    dialog->selectTheme( currentThemeID );
 
-  QObject::connect( dialog, SIGNAL(okClicked()),
-                    q, SIGNAL(configureDialogCompleted()) );
+    QObject::connect( dialog, SIGNAL(okClicked()),
+                      q, SIGNAL(configureDialogCompleted()) );
 
-  dialog->show();
+    dialog->show();
 }
 
 
 ThemeConfigButton::ThemeConfigButton( QWidget * parent, const ThemeComboBox * themeComboBox )
-: KPushButton( i18n( "Configure..." ), parent ), d( new ThemeConfigButtonPrivate( this ) )
+    : KPushButton( i18n( "Configure..." ), parent ), d( new ThemeConfigButtonPrivate( this ) )
 {
-  d->mThemeComboBox = themeComboBox;
-  connect( this, SIGNAL(pressed()),
-           this, SLOT(slotConfigureThemes()) );
+    d->mThemeComboBox = themeComboBox;
+    connect( this, SIGNAL(pressed()),
+             this, SLOT(slotConfigureThemes()) );
 
-  //Keep theme combo up-to-date with any changes made in the configure dialog.
-  if ( d->mThemeComboBox != 0 )
-    connect( this, SIGNAL(configureDialogCompleted()),
-             d->mThemeComboBox, SLOT(slotLoadThemes()) );
+    //Keep theme combo up-to-date with any changes made in the configure dialog.
+    if ( d->mThemeComboBox != 0 )
+        connect( this, SIGNAL(configureDialogCompleted()),
+                 d->mThemeComboBox, SLOT(slotLoadThemes()) );
+    setEnabled(Manager::instance());
 }
 
 ThemeConfigButton::~ThemeConfigButton()
 {
-  delete d;
+    delete d;
 }
 
 
-#include "themeconfigbutton.moc"
+#include "moc_themeconfigbutton.cpp"

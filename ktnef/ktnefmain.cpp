@@ -33,7 +33,7 @@
 #include <KFileDialog>
 #include <KGlobal>
 #include <KIconLoader>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMenu>
 #include <KMessageBox>
 #include <KProcess>
@@ -43,6 +43,7 @@
 #include <KStandardDirs>
 #include <KStatusBar>
 #include <KTemporaryFile>
+#include <KRecentFilesAction>
 
 #include <QContextMenuEvent>
 #include <QDir>
@@ -60,9 +61,13 @@ KTNEFMain::KTNEFMain( QWidget *parent )
 
   KConfigGroup config( KGlobal::config(), "Settings" );
   mDefaultDir = config.readPathEntry( "defaultdir", QLatin1String("/tmp/") );
+
+  config = KConfigGroup( KGlobal::config(), "Recent Files" );
+  mOpenRecentFileAction->loadEntries(config);
+
   mLastDir = mDefaultDir;
 
-  // create personale temo extract dir
+  // create personal temp extract dir
   KStandardDirs::makeDir( KGlobal::dirs()->localkdedir() + QLatin1String("/share/apps/ktnef/tmp") );
 
   resize( 430, 350 );
@@ -97,6 +102,8 @@ void KTNEFMain::setupActions()
 
   // File menu
   KStandardAction::open( this, SLOT(openFile()), actionCollection() );
+
+  mOpenRecentFileAction = KStandardAction::openRecent(this, SLOT(openRecentFile(KUrl)), actionCollection());
 
   // Action menu
   KAction *openAction = actionCollection()->addAction( QLatin1String("view_file") );
@@ -197,6 +204,7 @@ void KTNEFMain::loadFile( const QString &filename )
     mView->setAttachments( QList<KTNEFAttach *>() );
     enableExtractAll( false );
   } else {
+    addRecentFile(KUrl(filename));
     QList<KTNEFAttach *> list = mParser->message()->attachmentList();
     QString msg;
     msg = i18ncp( "@info:status",
@@ -219,6 +227,19 @@ void KTNEFMain::openFile()
   if ( !filename.isEmpty() ) {
     loadFile( filename );
   }
+}
+
+void KTNEFMain::openRecentFile(const KUrl &url)
+{
+    loadFile(url.path());
+}
+
+void KTNEFMain::addRecentFile(const KUrl &url)
+{
+    mOpenRecentFileAction->addUrl(url);
+    KConfigGroup config( KGlobal::config(), "Recent Files" );
+    mOpenRecentFileAction->saveEntries(config);
+    config.sync();
 }
 
 void KTNEFMain::viewFile()
@@ -346,7 +367,6 @@ void KTNEFMain::enableExtractAll( bool on )
   }
 
   actionCollection()->action( QLatin1String("extract_all_files") )->setEnabled( on );
-
 }
 
 void KTNEFMain::enableSingleAction( bool on )
@@ -362,8 +382,9 @@ void KTNEFMain::cleanup()
 {
   QDir d( KGlobal::dirs()->localkdedir() + QLatin1String("/share/apps/ktnef/tmp/") );
   QFileInfoList list = d.entryInfoList( QDir::Files | QDir::Hidden, QDir::Unsorted );
-  QFileInfoList::iterator it;
-  for ( it = list.begin(); it != list.end(); ++it ) {
+  QFileInfoList::const_iterator it;
+  QFileInfoList::const_iterator end(list.constEnd());
+  for ( it = list.constBegin(); it != end; ++it ) {
     d.remove( it->absoluteFilePath() );
   }
 }
@@ -467,7 +488,7 @@ void KTNEFMain::slotEditToolbars()
   saveMainWindowSettings( KGlobal::config()->group( "MainWindow" ) );
 
   KEditToolBar dlg( factory() );
-  connect( &dlg, SIGNAL(newToolBarConfig()), this, SLOT(newToolbarConfig()) );
+  connect( &dlg, SIGNAL(newToolBarConfig()), this, SLOT(slotNewToolbarConfig()) );
   dlg.exec();
 }
 
@@ -531,4 +552,3 @@ void KTNEFMain::slotSaveMessageText()
   }
 }
 
-#include "ktnefmain.moc"

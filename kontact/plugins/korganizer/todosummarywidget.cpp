@@ -33,14 +33,16 @@
 #include <Akonadi/Collection>
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/Calendar/IncidenceChanger>
+#include <Akonadi/Calendar/ETMCalendar>
 
 #include <KCalUtils/IncidenceFormatter>
 
 #include <KontactInterface/Core>
 
+#include <KLocale>
 #include <KConfigGroup>
 #include <KIconLoader>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMenu>
 #include <KSystemTimeZones>
 #include <KUrlLabel>
@@ -70,7 +72,7 @@ TodoSummaryWidget::TodoSummaryWidget( TodoPlugin *plugin, QWidget *parent )
 
   mChanger = new Akonadi::IncidenceChanger( parent );
 
-  connect( mCalendar.data(), SIGNAL(calendarChanged()), SLOT(updateView()) );
+  connect( mCalendar, SIGNAL(calendarChanged()), SLOT(updateView()) );
   connect( mPlugin->core(), SIGNAL(dayChanged(QDate)), SLOT(updateView()) );
 
   updateView();
@@ -272,13 +274,17 @@ TODO: calhelper is deprecated, remove this?
       connect( urlLabel, SIGNAL(rightClickedUrl(QString)),
                this, SLOT(popupMenu(QString)) );
 
-      // where did the toolTipStr signature that takes a calendar went?
-      QString tipText( IncidenceFormatter::toolTipStr(
-                         IncidenceFormatter::resourceString( mCalendar, todo ),
+      /*
+         Commented out because a ETMCalendar doesn't have any name, it's a group of selected
+         calendars, not an individual one.
+
+       QString tipText( IncidenceFormatter::toolTipStr(
+                           IncidenceFormatter::resourceString( mCalendar, todo ),
                          todo, currDate, true, KSystemTimeZones::local() ) );
+      // FIXME: IncidenceFormatter::resourceString() isn't implemented
       if ( !tipText.isEmpty() ) {
         urlLabel->setToolTip( tipText );
-      }
+      }*/
 
       // State text label
       str = stateStr( todo );
@@ -378,7 +384,7 @@ bool TodoSummaryWidget::eventFilter( QObject *obj, QEvent *e )
       emit message( i18n( "Edit To-do: \"%1\"", label->text() ) );
     }
     if ( e->type() == QEvent::Leave ) {
-      emit message( QString::null );	//krazy:exclude=nullstrassign for old broken gcc
+      emit message( QString::null );        //krazy:exclude=nullstrassign for old broken gcc
     }
   }
   return KontactInterface::Summary::eventFilter( obj, e );
@@ -425,4 +431,3 @@ const QString TodoSummaryWidget::stateStr( const KCalCore::Todo::Ptr &todo )
   return str1 + str2;
 }
 
-#include "todosummarywidget.moc"

@@ -35,22 +35,22 @@ namespace MailCommon {
 
 class MAILCOMMON_EXPORT SnippetsManager : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  Q_PROPERTY( QAbstractItemModel *model READ model )
-  Q_PROPERTY( QItemSelectionModel *selectionModel READ selectionModel )
-  Q_PROPERTY( QAction *addSnippetAction READ addSnippetAction )
-  Q_PROPERTY( QAction *editSnippetAction READ editSnippetAction )
-  Q_PROPERTY( QAction *deleteSnippetAction READ deleteSnippetAction )
-  Q_PROPERTY( QAction *addSnippetGroupAction READ addSnippetGroupAction )
-  Q_PROPERTY( QAction *editSnippetGroupAction READ editSnippetGroupAction )
-  Q_PROPERTY( QAction *deleteSnippetGroupAction READ deleteSnippetGroupAction )
-  Q_PROPERTY( QAction *insertSnippetAction READ insertSnippetAction )
+    Q_PROPERTY( QAbstractItemModel *model READ model )
+    Q_PROPERTY( QItemSelectionModel *selectionModel READ selectionModel )
+    Q_PROPERTY( QAction *addSnippetAction READ addSnippetAction )
+    Q_PROPERTY( QAction *editSnippetAction READ editSnippetAction )
+    Q_PROPERTY( QAction *deleteSnippetAction READ deleteSnippetAction )
+    Q_PROPERTY( QAction *addSnippetGroupAction READ addSnippetGroupAction )
+    Q_PROPERTY( QAction *editSnippetGroupAction READ editSnippetGroupAction )
+    Q_PROPERTY( QAction *deleteSnippetGroupAction READ deleteSnippetGroupAction )
+    Q_PROPERTY( QAction *insertSnippetAction READ insertSnippetAction )
 
-  Q_PROPERTY( bool snippetGroupSelected READ snippetGroupSelected )
-  Q_PROPERTY( QString selectedName READ selectedName )
+    Q_PROPERTY( bool snippetGroupSelected READ snippetGroupSelected )
+    Q_PROPERTY( QString selectedName READ selectedName )
 
-  public:
+public:
     /**
      * Creates a new snippets manager.
      *
@@ -144,7 +144,7 @@ class MAILCOMMON_EXPORT SnippetsManager : public QObject
      */
     QString selectedName() const;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

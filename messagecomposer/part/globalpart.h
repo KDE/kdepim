@@ -29,9 +29,9 @@ namespace MessageComposer {
 
 class MESSAGECOMPOSER_EXPORT GlobalPart : public MessageComposer::MessagePart
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit GlobalPart( QObject *parent = 0 );
     virtual ~GlobalPart();
 
@@ -53,7 +53,7 @@ class MESSAGECOMPOSER_EXPORT GlobalPart : public MessageComposer::MessagePart
     bool MDNRequested() const;
     void setMDNRequested( bool requestMDN );
 
-  private:
+private:
     class Private;
     Private *const d;
 };

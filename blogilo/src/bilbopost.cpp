@@ -109,17 +109,17 @@ QString BilboPost::toString() const
     //  if(!title().isEmpty())
     //   qDebug("BilboPost::toString: title is %s", this->title());
     QString ret;
-    ret = "\n******* Post Info **********";
-    ret += QString( "\nID: " ) + postId();
-    ret += QString( "\nTitle: " ) + title();
-    ret += QString( "\nContent: " ) + content();
-    ret += "\nAdditionalContent: " + additionalContent();
-    ret += "\nTags: " + tags().join( "," );
-    ret += "\nCategories: " + categories().join( "," );
-    ret += "\nCreation Date Time: " + creationDateTime().toString();
-    ret += "\nStatus: " + QString::number(status());
-    ret += "\nIsPrivate: " + QVariant(isPrivate()).toString();
-    ret += "\n******* End Post Info ********\n";
+    ret = QLatin1String("\n******* Post Info **********");
+    ret += QLatin1String( "\nID: " ) + postId();
+    ret += QLatin1String( "\nTitle: " ) + title();
+    ret += QLatin1String( "\nContent: " ) + content();
+    ret += QLatin1String("\nAdditionalContent: ") + additionalContent();
+    ret += QLatin1String("\nTags: ") + tags().join( QLatin1String(","));
+    ret += QLatin1String("\nCategories: ") + categories().join( QLatin1String(",") );
+    ret += QLatin1String("\nCreation Date Time: ") + creationDateTime().toString();
+    ret += QLatin1String("\nStatus: ") + QString::number(status());
+    ret += QLatin1String("\nIsPrivate: ") + QVariant(isPrivate()).toString();
+    ret += QLatin1String("\n******* End Post Info ********\n");
     return ret;
 }
 

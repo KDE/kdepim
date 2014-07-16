@@ -27,9 +27,8 @@
 
 #include <QApplication>
 #include <QClipboard>
-#include <QSqlDatabase>
-#include <QSqlError>
 #include <QSqlQueryModel>
+#include <QSqlError>
 
 DbConsole::DbConsole(QWidget* parent) :
   QWidget( parent ),
@@ -76,4 +75,3 @@ void DbConsole::copyCell()
   QApplication::clipboard()->setText( text );
 }
 
-#include "dbconsole.moc"

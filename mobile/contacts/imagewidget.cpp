@@ -87,9 +87,8 @@ QImage ImageLoader::loadImage( const KUrl &url, bool *ok )
 
   QPixmap pixmap = QPixmap::fromImage( image );
 
-#ifndef Q_OS_WINCE
   image = KPixmapRegionSelectorDialog::getSelectedImage( pixmap, 100, 140, mParent );
-#endif
+
   if ( image.isNull() ) {
     (*ok) = false;
     return image;
@@ -323,4 +322,3 @@ ImageLoader* ImageWidget::imageLoader()
   return mImageLoader;
 }
 
-#include "imagewidget.moc"

@@ -25,7 +25,7 @@
 
 #include <KActionCollection>
 #include <KConfigGroup>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KStandardAction>
 #include <QApplication>

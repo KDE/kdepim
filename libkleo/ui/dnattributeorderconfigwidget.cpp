@@ -113,7 +113,7 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMap
            SLOT(slotCurrentOrderSelectionChanged(QTreeWidgetItem*)) );
 
   d->placeHolderItem = new QTreeWidgetItem( d->availableLV );
-  d->placeHolderItem->setText( 0, "_X_" );
+  d->placeHolderItem->setText( 0, QLatin1String("_X_") );
   d->placeHolderItem->setText( 1, i18n("All others") );
 #endif
 
@@ -121,7 +121,7 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMap
 
   QGridLayout * xlay = new QGridLayout();
   xlay->setSpacing( 0 );
-  xlay->setObjectName( "xlay" );
+  xlay->setObjectName( QLatin1String("xlay") );
   xlay->setAlignment( Qt::AlignCenter );
 
   static const struct {
@@ -129,21 +129,23 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMap
     int row, col;
     const char * tooltip;
     const char * slot;
+    bool autorepeat;
   } navButtons[] = {
-    { "go-top",    0, 1, I18N_NOOP( "Move to top" ),    SLOT(slotDoubleUpButtonClicked()) },
-    { "go-up",    1, 1, I18N_NOOP( "Move one up" ),    SLOT(slotUpButtonClicked()) },
-    { "go-previous",  2, 0, I18N_NOOP( "Remove from current attribute order" ), SLOT(slotLeftButtonClicked()) },
-    { "go-next", 2, 2, I18N_NOOP( "Add to current attribute order" ), SLOT(slotRightButtonClicked()) },
-    { "go-down",  3, 1, I18N_NOOP( "Move one down" ),  SLOT(slotDownButtonClicked()) },
-    { "go-bottom",  4, 1, I18N_NOOP( "Move to bottom" ), SLOT(slotDoubleDownButtonClicked()) }
+    { "go-top",    0, 1, I18N_NOOP( "Move to top" ),    SLOT(slotDoubleUpButtonClicked()), false },
+    { "go-up",    1, 1, I18N_NOOP( "Move one up" ),    SLOT(slotUpButtonClicked()), true },
+    { "go-previous",  2, 0, I18N_NOOP( "Remove from current attribute order" ), SLOT(slotLeftButtonClicked()), false },
+    { "go-next", 2, 2, I18N_NOOP( "Add to current attribute order" ), SLOT(slotRightButtonClicked()), false },
+    { "go-down",  3, 1, I18N_NOOP( "Move one down" ),  SLOT(slotDownButtonClicked()), true },
+    { "go-bottom",  4, 1, I18N_NOOP( "Move to bottom" ), SLOT(slotDoubleDownButtonClicked()), false }
   };
 
   for ( unsigned int i = 0 ; i < sizeof navButtons / sizeof *navButtons ; ++i ) {
     QToolButton * tb = d->navTB[i] = new QToolButton( this );
-    tb->setIcon( KIcon( navButtons[i].icon ) );
+    tb->setIcon( KIcon( QLatin1String(navButtons[i].icon) ) );
     tb->setEnabled( false );
     tb->setToolTip( i18n( navButtons[i].tooltip ) );
     xlay->addWidget( tb, navButtons[i].row, navButtons[i].col );
+    tb->setAutoRepeat(navButtons[i].autorepeat);
     connect( tb, SIGNAL(clicked()), navButtons[i].slot );
   }
 
@@ -168,7 +170,7 @@ void Kleo::DNAttributeOrderConfigWidget::load() {
   QTreeWidgetItem* last = 0;
   for ( QStringList::const_iterator it = order.begin() ; it != order.end() ; ++it ) {
     const QString attr = (*it).toUpper();
-    if ( attr == "_X_" ) {
+    if ( attr == QLatin1String("_X_") ) {
       takePlaceHolderItem();
       d->currentLV->insertTopLevelItem( d->currentLV->topLevelItemCount(), d->placeHolderItem );
       last = d->placeHolderItem;
@@ -351,4 +353,3 @@ void Kleo::DNAttributeOrderConfigWidget::slotRightButtonClicked() {
 
 void Kleo::DNAttributeOrderConfigWidget::virtual_hook( int, void* ) {}
 
-#include "dnattributeorderconfigwidget.moc"

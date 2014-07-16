@@ -30,7 +30,7 @@
 #include <KActionCollection>
 #include <KCmdLineArgs>
 #include <KIcon>
-#include <KLocale>
+#include <KLocalizedString>
 
 EXPORT_KONTACT_PLUGIN( KJotsPlugin, kjots )
 
@@ -145,4 +145,3 @@ int KJotsUniqueAppHandler::newInstance()
 }
 
 
-#include "kjots_plugin.moc"

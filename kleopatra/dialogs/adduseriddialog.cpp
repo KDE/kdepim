@@ -65,11 +65,11 @@ namespace {
 }
 
 static QString pgpLabel( const QString & attr ) {
-    if ( attr == "NAME" )
+    if ( attr == QLatin1String("NAME") )
         return i18n("Name");
-    if ( attr == "COMMENT" )
+    if ( attr == QLatin1String("COMMENT") )
         return i18n("Comment");
-    if ( attr == "EMAIL" )
+    if ( attr == QLatin1String("EMAIL") )
         return i18n("EMail");
     return QString();
 }
@@ -89,7 +89,7 @@ static QString attributeLabel( const QString & attr, bool pgp ) {
 }
 
 static QString attributeFromKey( QString key ) {
-  return key.remove( '!' );
+  return key.remove( QLatin1Char('!') );
 }
 
 static int row_index_of( QWidget * w, QGridLayout * l ) {
@@ -175,13 +175,13 @@ private:
             commentRequiredLB->hide();
 
             // set errorLB to have a fixed height of two lines:
-            errorLB->setText( "2<br>1" );
+            errorLB->setText( QLatin1String("2<br>1") );
             errorLB->setFixedHeight( errorLB->minimumSizeHint().height() );
             errorLB->clear();
 
             const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
             const QStringList attrOrder = config.readEntry( "OpenPGPAttributeOrder",
-                                                            QStringList() << "NAME!" << "EMAIL!" << "COMMENT" );
+                                                            QStringList() << QLatin1String("NAME!") << QLatin1String("EMAIL!") << QLatin1String("COMMENT") );
 
             QMap<int,Line> lines;
 
@@ -193,19 +193,19 @@ private:
                 const QString preset = config.readEntry( attr );
                 const bool required = key.endsWith( QLatin1Char('!') );
                 const bool readonly = config.isEntryImmutable( attr );
-                const QString label = config.readEntry( attr + "_label",
+                const QString label = config.readEntry( attr + QLatin1String("_label"),
                                                         attributeLabel( attr, true ) );
-                const QString regex = config.readEntry( attr + "_regex" );
+                const QString regex = config.readEntry( attr + QLatin1String("_regex") );
 
                 int row;
                 QValidator * validator = 0;
-                if ( attr == "EMAIL" ) {
+                if ( attr == QLatin1String("EMAIL") ) {
                     validator = regex.isEmpty() ? Validation::email() : Validation::email( QRegExp( regex ) ) ;
                     row = row_index_of( emailLE, gridLayout );
-                } else if ( attr == "NAME" ) {
+                } else if ( attr == QLatin1String("NAME") ) {
                     validator = regex.isEmpty() ? Validation::pgpName() : Validation::pgpName( QRegExp( regex ) ) ;
                     row = row_index_of( nameLE, gridLayout );
-                } else if ( attr == "COMMENT" ) {
+                } else if ( attr == QLatin1String("COMMENT") ) {
                     validator = regex.isEmpty() ? Validation::pgpComment() : Validation::pgpComment( QRegExp( regex ) ) ;
                     row = row_index_of( commentLE, gridLayout );
                 } else {
@@ -275,7 +275,7 @@ static bool requirementsAreMet( const QVector<Line> & list, QString & error ) {
     const QString key = line.attr;
     kDebug() << "requirementsAreMet(): checking \"" << key << "\" against \"" << le->text() << "\":";
     if ( le->text().trimmed().isEmpty() ) {
-        if ( key.endsWith('!') ) {
+        if ( key.endsWith(QLatin1Char('!')) ) {
             if ( line.regex.isEmpty() )
                 error = i18nc("@info","<interface>%1</interface> is required, but empty.", line.label );
             else

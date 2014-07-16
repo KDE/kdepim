@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -33,7 +33,10 @@ public:
     QString code(QWidget *) const;
     QString serverNeedsCapability() const;
     bool needCheckIfServerHasCapability() const;
+    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error );
     QString help() const;
+    QStringList needRequires(QWidget *) const;
+    QString href() const;
 };
 }
 

@@ -16,7 +16,7 @@
 */
 
 #include "attachmentmissingwarning.h"
-#include <KLocale>
+#include <KLocalizedString>
 #include <KAction>
 #include <KIcon>
 
@@ -60,4 +60,3 @@ void AttachmentMissingWarning::explicitlyClosed()
     Q_EMIT explicitClosedMissingAttachment();
 }
 
-#include "attachmentmissingwarning.moc"

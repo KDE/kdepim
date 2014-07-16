@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -21,6 +21,7 @@
 #include <QWidget>
 #include "sievescriptblockwidget.h"
 
+
 namespace KSieveUi {
 class SieveScriptBlockWidget;
 class SieveScriptTabWidget;
@@ -37,19 +38,29 @@ public:
 
     void generatedScript(QString &script, QStringList &requires);
 
+    SieveIncludeWidget *includeWidget() const;
+    SieveForEveryPartWidget *forEveryPartWidget() const;
+    SieveGlobalVariableWidget *globalVariableWidget() const;
+    SieveScriptBlockWidget *blockIfWidget() const;
+    SieveScriptBlockWidget *addScriptBlock(KSieveUi::SieveWidgetPageAbstract::PageType type);
+
+Q_SIGNALS:
+    void valueChanged();
 
 private Q_SLOTS:
     void slotAddNewBlock(QWidget* widget,KSieveUi::SieveWidgetPageAbstract::PageType type);
     void slotCloseTab(int);
 
 private:
+    SieveScriptBlockWidget *createScriptBlock(KSieveUi::SieveWidgetPageAbstract::PageType type);
     bool hasAnElseBlock() const;
     QString blockName(SieveWidgetPageAbstract::PageType type) const;
-    SieveScriptBlockWidget *createScriptBlock(KSieveUi::SieveWidgetPageAbstract::PageType type);
+
     SieveScriptTabWidget *mTabWidget;
     SieveIncludeWidget *mIncludeWidget;
     SieveForEveryPartWidget *mForEveryPartWidget;
     SieveGlobalVariableWidget *mGlobalVariableWidget;
+    SieveScriptBlockWidget *mBlockIfWidget;
 };
 }
 

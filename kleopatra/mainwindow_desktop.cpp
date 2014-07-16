@@ -58,32 +58,28 @@
 #include "progresswidget/statusbarprogresswidget.h"
 #include "progresswidget/progressdialog.h"
 
-#include <KActionCollection>
-#include <KLocale>
-#include <KTabWidget>
 #include <KStatusBar>
+#include <KXMLGUIFactory>
+#include <KApplication>
+#include <KActionCollection>
+#include <KLocalizedString>
 #include <KStandardAction>
 #include <KAction>
 #include <KAboutData>
 #include <KMessageBox>
 #include <KStandardGuiItem>
-#include <KStandardDirs>
 #include <KShortcutsDialog>
-#include <KXMLGUIFactory>
 #include <KEditToolBar>
 #include <KAboutApplicationDialog>
 #include <kdebug.h>
 
 #include <QAbstractItemView>
-#include <QFile>
-#include <QToolBar>
-#include <QWidgetAction>
 #include <QApplication>
 #include <QCloseEvent>
 #include <QMenu>
 #include <QTimer>
 #include <QProcess>
-#include <QPointer>
+#include <QVBoxLayout>
 
 #include <kleo/cryptobackendfactory.h>
 #include <ui/cryptoconfigdialog.h>
@@ -128,6 +124,8 @@ static KGuiItem KStandardGuiItem_close() {
     return item;
 }
 
+static bool isQuitting = false;
+
 class MainWindow::Private {
     friend class ::MainWindow;
     MainWindow * const q;
@@ -159,9 +157,10 @@ public:
                                                          i18n("%1 may be used by other applications as a service.\n"
                                                               "You may instead want to close this window without exiting %1.", app ),
                                                          i18n("Really Quit?"), KStandardGuiItem_close(), KStandardGuiItem_quit(), KStandardGuiItem::cancel(),
-                                                         "really-quit-" + app.toLower() );
+                                                         QLatin1String("really-quit-") + app.toLower() );
         if ( rc == KMessageBox::Cancel )
             return;
+        isQuitting = true;
         if ( !q->close() )
             return;
         // WARNING: 'this' might be deleted at this point!
@@ -184,14 +183,14 @@ public:
     void showHandbook();
 
     void gnupgLogViewer() {
-        if( !QProcess::startDetached("kwatchgnupg" ) )
+        if( !QProcess::startDetached(QLatin1String("kwatchgnupg") ) )
             KMessageBox::error( q, i18n( "Could not start the GnuPG Log Viewer (kwatchgnupg). "
                                          "Please check your installation." ),
                                 i18n( "Error Starting KWatchGnuPG" ) );
     }
 
     void gnupgAdministrativeConsole() {
-        if( !QProcess::startDetached("kgpgconf" ) )
+        if( !QProcess::startDetached(QLatin1String("kgpgconf") ) )
             KMessageBox::error( q, i18n( "Could not start the GnuPG Administrative Console (kgpgconf). "
                                          "Please check your installation." ),
                                 i18n( "Error Starting KGpgConf" ) );
@@ -199,7 +198,7 @@ public:
 
     void slotConfigCommitted();
     void slotContextMenuRequested( QAbstractItemView *, const QPoint & p ) {
-        if ( QMenu * const menu = qobject_cast<QMenu*>( q->factory()->container( "listview_popup", q ) ) )
+        if ( QMenu * const menu = qobject_cast<QMenu*>( q->factory()->container( QLatin1String("listview_popup"), q ) ) )
             menu->exec( p );
         else
             kDebug() << "no \"listview_popup\" <Menu> in kleopatra's ui.rc file";
@@ -224,23 +223,35 @@ private:
 
         TabWidget tabWidget;
 
-	explicit UI( MainWindow * q )
-	    : tabWidget( q )
-	{
-	    KDAB_SET_OBJECT_NAME( tabWidget );
-
-	    q->setCentralWidget(&tabWidget);
-	    KPIM::ProgressDialog * progressDialog = new KPIM::ProgressDialog( q->statusBar(), q );
-	    KDAB_SET_OBJECT_NAME( progressDialog );
-	    progressDialog->hide();
-	    KPIM::StatusbarProgressWidget * statusBarProgressWidget 
-		    = new KPIM::StatusbarProgressWidget( progressDialog, q->statusBar() );
-	    KDAB_SET_OBJECT_NAME( statusBarProgressWidget );
-	    q->statusBar()->addPermanentWidget( statusBarProgressWidget, 0 );
-	    statusBarProgressWidget->show();
-	}
+        explicit UI( MainWindow * q );
     } ui;
 };
+
+MainWindow::Private::UI::UI(MainWindow *q)
+    : tabWidget( q )
+{
+    KDAB_SET_OBJECT_NAME( tabWidget );
+
+    QWidget *mainWidget = new QWidget;
+    QVBoxLayout *vbox = new QVBoxLayout;
+    vbox->setSpacing(0);
+    mainWidget->setLayout(vbox);
+    SearchBar * const searchBar = new SearchBar;
+    vbox->addWidget(searchBar);
+    tabWidget.connectSearchBar( searchBar );
+    vbox->addWidget(&tabWidget);
+
+    q->setCentralWidget(mainWidget);
+    KPIM::ProgressDialog * progressDialog = new KPIM::ProgressDialog( q->statusBar(), q );
+    KDAB_SET_OBJECT_NAME( progressDialog );
+    progressDialog->hide();
+    KPIM::StatusbarProgressWidget * statusBarProgressWidget
+            = new KPIM::StatusbarProgressWidget( progressDialog, q->statusBar() );
+    KDAB_SET_OBJECT_NAME( statusBarProgressWidget );
+    q->statusBar()->addPermanentWidget( statusBarProgressWidget, 0 );
+    statusBarProgressWidget->show();
+}
+
 
 MainWindow::Private::Private( MainWindow * qq )
     : q( qq ),
@@ -270,7 +281,7 @@ MainWindow::Private::Private( MainWindow * qq )
     connect( &controller, SIGNAL(contextMenuRequested(QAbstractItemView*,QPoint)),
              q, SLOT(slotContextMenuRequested(QAbstractItemView*,QPoint)) );
 
-    q->createGUI( "kleopatra.rc" );
+    q->createGUI( QLatin1String("kleopatra.rc") );
 
     q->setAcceptDrops( true );
 
@@ -290,14 +301,6 @@ MainWindow::~MainWindow() {}
 void MainWindow::Private::setupActions() {
 
     KActionCollection * const coll = q->actionCollection();
-
-    QWidgetAction * const searchBarAction = new QWidgetAction( q );
-    SearchBar * const searchBar = new SearchBar( q );
-
-    ui.tabWidget.connectSearchBar( searchBar );
-
-    searchBarAction->setDefaultWidget( searchBar );
-    coll->addAction( "key_search_bar", searchBarAction );
 
     const action_data action_data[] = {
         // most have been MOVED TO keylistcontroller.cpp
@@ -328,7 +331,7 @@ void MainWindow::Private::setupActions() {
 
     make_actions_from_data( action_data, /*sizeof action_data / sizeof *action_data,*/ coll );
 
-    if ( QAction * action = coll->action( "configure_backend" ) )
+    if ( QAction * action = coll->action( QLatin1String("configure_backend") ) )
         action->setMenuRole( QAction::NoRole ); //prevent Qt OS X heuristics for config* actions
 
     KStandardAction::close( q, SLOT(close()), coll );
@@ -348,8 +351,8 @@ void MainWindow::Private::setupActions() {
 void MainWindow::Private::configureBackend() {
     Kleo::CryptoConfig * const config = Kleo::CryptoBackendFactory::instance()->config();
     if ( !config ) {
-    	KMessageBox::error( q, i18n( "Could not configure the cryptography backend (gpgconf tool not found)" ), i18n( "Configuration Error" ) );
-    	return;
+        KMessageBox::error( q, i18n( "Could not configure the cryptography backend (gpgconf tool not found)" ), i18n( "Configuration Error" ) );
+        return;
     }
 
     Kleo::CryptoConfigDialog dlg( config );
@@ -402,9 +405,14 @@ void MainWindow::closeEvent( QCloseEvent * e ) {
             setEnabled( true );
         }
     }
-    d->ui.tabWidget.saveViews( KGlobal::config().data() );
-    saveMainWindowSettings( KConfigGroup( KGlobal::config(), autoSaveGroup() ) );
-    e->accept();
+    if ( isQuitting || kapp->sessionSaving() ) {
+        d->ui.tabWidget.saveViews( KGlobal::config().data() );
+        saveMainWindowSettings( KConfigGroup( KGlobal::config(), autoSaveGroup() ) );
+        e->accept();
+    } else {
+        e->ignore();
+        hide();
+    }
 }
 
 void MainWindow::showEvent( QShowEvent * e ) {
@@ -413,7 +421,19 @@ void MainWindow::showEvent( QShowEvent * e ) {
         d->ui.tabWidget.loadViews( KGlobal::config().data() );
         d->firstShow = false;
     }
+
+    if ( !savedGeometry.isEmpty() ) {
+        restoreGeometry( savedGeometry );
+    }
+
 }
+
+void MainWindow::hideEvent( QHideEvent * e )
+{
+    savedGeometry = saveGeometry();
+    KXmlGuiWindow::hideEvent( e );
+}
+
 
 void MainWindow::importCertificatesFromFile( const QStringList & files ) {
     if ( !files.empty() )
@@ -494,6 +514,31 @@ void MainWindow::dropEvent( QDropEvent * e ) {
         d->createAndStart<ImportCrlCommand>( files );
 
     e->accept();
+}
+
+void MainWindow::readProperties( const KConfigGroup & cg )
+{
+    kDebug();
+    KXmlGuiWindow::readProperties(cg);
+    savedGeometry = cg.readEntry("savedGeometry", QByteArray() );
+    if ( !savedGeometry.isEmpty() ) {
+        restoreGeometry( savedGeometry );
+    }
+
+    if (! cg.readEntry<bool>("hidden", false))
+        show();
+}
+
+void MainWindow::saveProperties( KConfigGroup & cg )
+{
+    kDebug();
+    KXmlGuiWindow::saveProperties( cg );
+    cg.writeEntry( "hidden", isHidden() );
+    if ( isHidden() ) {
+        cg.writeEntry( "savedGeometry", savedGeometry );
+    } else {
+        cg.writeEntry( "savedGeometry", saveGeometry() );
+    }
 }
 
 #include "moc_mainwindow_desktop.cpp"

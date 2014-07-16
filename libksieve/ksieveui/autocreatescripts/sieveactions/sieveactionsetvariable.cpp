@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,18 +16,25 @@
 */
 
 #include "sieveactionsetvariable.h"
+#include "editor/sieveeditorutil.h"
 #include "widgets/selectvariablemodifiercombobox.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
+#include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
-#include <QHBoxLayout>
+#include <QCheckBox>
 #include <QLabel>
+#include <QDomNode>
+#include <QDebug>
+#include <QGridLayout>
 
 using namespace KSieveUi;
 SieveActionSetVariable::SieveActionSetVariable(QObject *parent)
-    : SieveAction(QLatin1String("variable"), i18n("Variable"), parent)
+    : SieveAction(QLatin1String("set"), i18n("Variable"), parent)
 {
+    mHasRegexCapability = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("regex"));
 }
 
 SieveAction* SieveActionSetVariable::newAction()
@@ -38,30 +45,93 @@ SieveAction* SieveActionSetVariable::newAction()
 QWidget *SieveActionSetVariable::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
-    QHBoxLayout *lay = new QHBoxLayout;
-    lay->setMargin(0);
-    w->setLayout(lay);
-
+    QGridLayout *grid = new QGridLayout;
+    grid->setMargin(0);
+    w->setLayout(grid);
 
     SelectVariableModifierComboBox *modifier = new SelectVariableModifierComboBox;
     modifier->setObjectName(QLatin1String("modifier"));
-    lay->addWidget(modifier);
+    connect(modifier, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
+    grid->addWidget(modifier, 0, 0);
+
+    if (mHasRegexCapability) {
+        QCheckBox *protectAgainstUseRegexp = new QCheckBox(i18n("Protect special character"));
+        connect(protectAgainstUseRegexp, SIGNAL(clicked(bool)), this, SIGNAL(valueChanged()));
+        protectAgainstUseRegexp->setObjectName(QLatin1String("regexprotect"));
+        grid->addWidget(protectAgainstUseRegexp, 0, 1);
+    }
 
     QLabel *lab = new QLabel(i18n("Value:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 1, 0);
 
     KLineEdit *value = new KLineEdit;
     value->setObjectName(QLatin1String("value"));
-    lay->addWidget(value);
+    connect(value, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    grid->addWidget(value, 1, 1);
 
     lab = new QLabel(i18n("In variable:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 2, 0);
 
     KLineEdit *variable = new KLineEdit;
     variable->setObjectName(QLatin1String("variable"));
-    lay->addWidget(variable);
+    connect(variable, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    grid->addWidget(variable, 2, 1);
 
     return w;
+}
+
+QString SieveActionSetVariable::href() const
+{
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
+}
+
+bool SieveActionSetVariable::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
+{
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                const QString tagValue = e.text();
+                KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
+                value->setText(tagValue);
+                node = node.nextSibling();
+                QDomElement variableElement = node.toElement();
+                if (!variableElement.isNull()) {
+                    const QString variableTagName = variableElement.tagName();
+                    if (variableTagName == QLatin1String("str")) {
+                        KLineEdit *variable = w->findChild<KLineEdit*>(QLatin1String("variable"));
+                        variable->setText(variableElement.text());
+                    }
+                } else {
+                    return false;
+                }
+            } else if (tagName == QLatin1String("tag")) {
+                const QString tagValue = e.text();
+                if (tagValue == QLatin1String("quoteregex")) {
+                    if (mHasRegexCapability) {
+                        QCheckBox *protectAgainstUseRegexp = w->findChild<QCheckBox*>(QLatin1String("regexprotect"));
+                        protectAgainstUseRegexp->setChecked(true);
+                    } else {
+                        error += QLatin1Char('\n') + i18n("Script needs regex support, but server does not have it.");
+                    }
+                } else {
+                    SelectVariableModifierComboBox *modifier = w->findChild<SelectVariableModifierComboBox*>(QLatin1String("modifier"));
+                    modifier->setCode(AutoCreateScriptUtil::tagValue(tagValue), name(), error);
+                }
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
+            } else {
+                unknownTag(tagName, error);
+                qDebug()<<" SieveActionSetVariable::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+    return true;
 }
 
 QString SieveActionSetVariable::code(QWidget *w) const
@@ -72,6 +142,14 @@ QString SieveActionSetVariable::code(QWidget *w) const
     if (!modifierStr.isEmpty()) {
         result += modifierStr + QLatin1Char(' ');
     }
+
+    if (mHasRegexCapability) {
+        const QCheckBox *protectAgainstUseRegexp = w->findChild<QCheckBox*>(QLatin1String("regexprotect"));
+        if (protectAgainstUseRegexp->isChecked()) {
+            result += QLatin1String(":quoteregex ");
+        }
+    }
+
     const KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
     const QString valueStr = value->text();
     result += QString::fromLatin1("\"%1\" ").arg(valueStr);
@@ -101,7 +179,11 @@ QString SieveActionSetVariable::serverNeedsCapability() const
 
 QString SieveActionSetVariable::help() const
 {
-    return i18n("The \"set\" action stores the specified value in the variable identified by name.");
+    QString helpStr = i18n("The \"set\" action stores the specified value in the variable identified by name.");
+    if (mHasRegexCapability) {
+        helpStr += QLatin1Char('\n') + i18n("This modifier adds the necessary quoting to ensure that the expanded text will only match a literal occurrence if used as a parameter "
+                                            "to :regex.  Every character with special meaning (. , *, ? , etc.) is prefixed with \\ in the expansion");
+    }
+    return helpStr;
 }
 
-#include "sieveactionsetvariable.moc"

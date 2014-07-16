@@ -48,16 +48,14 @@
 #include <kleo/stl_util.h>
 #include "libkleo/ui/filenamerequester.h"
 
-#include <KLocale>
+#include <KLocalizedString>
+#include <KGuiItem>
 
+#include <QBoxLayout>
 #include <QCheckBox>
-#include <QLayout>
 #include <QLabel>
-#include <QEventLoop>
-#include <QPointer>
-#include <QAbstractButton>
-#include <QScrollBar>
 #include <QTimer>
+#include <QTreeView>
 
 #include <boost/bind.hpp>
 
@@ -268,4 +266,3 @@ void OperationsWidget::ensureIndexAvailable( unsigned int idx ) {
 }
 
 #include "decryptverifyfileswizard.moc"
-#include "moc_decryptverifyfileswizard.cpp"

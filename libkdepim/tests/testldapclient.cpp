@@ -42,6 +42,11 @@ int main( int argc, char *argv[] )
   return 0;
 }
 
+TestLDAPClient::TestLDAPClient()
+  : mClient(0)
+{
+}
+
 void TestLDAPClient::setup()
 {
 }
@@ -93,10 +98,10 @@ void TestLDAPClient::testIntevation()
 
   // Same list as in kaddressbook's ldapsearchdialog
   QStringList attrs;
-  attrs << "l" << "Company" << "co" << "department" << "description" << "mail"
-        << "facsimileTelephoneNumber" << "cn" << "homePhone" << "mobile" << "o"
-        << "pager" << "postalAddress" << "st" << "street"
-        << "title" << "uid" << "telephoneNumber" << "postalCode" << "objectClass";
+  attrs << QLatin1String("l") << QLatin1String("Company") << QLatin1String("co") << QLatin1String("department") << QLatin1String("description" )<< QLatin1String("mail")
+        << QLatin1String("facsimileTelephoneNumber") << QLatin1String("cn") << QLatin1String("homePhone") << QLatin1String("mobile") << QLatin1String("o")
+        << QLatin1String("pager") << QLatin1String("postalAddress") << QLatin1String("st") << QLatin1String("street")
+        << QLatin1String("title") << QLatin1String("uid") << QLatin1String("telephoneNumber") << QLatin1String("postalCode") << QLatin1String("objectClass");
   // the list from ldapclient.cpp
   //attrs << "cn" << "mail" << "givenname" << "sn" << "objectClass";
   mClient->setAttributes( attrs );
@@ -111,8 +116,8 @@ void TestLDAPClient::testIntevation()
 
   // For some reason a fromUtf8 broke the search for me (no results).
   // But this certainly looks fishy, it might break on non-utf8 systems.
-  QString filter = "&(|(objectclass=person)(objectclass=groupofnames)(mail=*))"
-                   "(|(cn=*Ägypten MDK*)(sn=*Ägypten MDK*))";
+  QString filter = QLatin1String("&(|(objectclass=person)(objectclass=groupofnames)(mail=*))"
+                   "(|(cn=*Ägypten MDK*)(sn=*Ägypten MDK*))");
 
   connect( mClient, SIGNAL(result(KLDAP::LdapClient,KLDAP::LdapObject)),
            this, SLOT(slotLDAPResult(KLDAP::LdapClient,KLDAP::LdapObject)) );
@@ -166,12 +171,12 @@ static QString join( const KLDAP::LdapAttrValue &lst, const QString &sep )
 
 void TestLDAPClient::slotLDAPResult( const KLDAP::LdapClient&, const KLDAP::LdapObject &obj )
 {
-  QString cn = join( obj.attributes()[ "cn" ], ", " );
+  QString cn = join( obj.attributes()[ QLatin1String("cn") ], QLatin1String(", ") );
   kDebug() <<" cn:" << cn;
-  assert( !obj.attributes()[ "mail" ].isEmpty() );
-  QString mail = join( obj.attributes()[ "mail" ], ", " );
+  assert( !obj.attributes()[ QLatin1String("mail") ].isEmpty() );
+  QString mail = join( obj.attributes()[ QLatin1String("mail") ], QLatin1String(", ") );
   kDebug() <<" mail:" << mail;
-  assert( mail.contains( '@' ) );
+  assert( mail.contains( QLatin1Char('@') ) );
 }
 
 void TestLDAPClient::slotLDAPError( const QString& err )
@@ -186,4 +191,3 @@ void TestLDAPClient::slotLDAPDone()
   emit leaveModality();
 }
 
-#include "testldapclient.moc"

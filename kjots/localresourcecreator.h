@@ -24,25 +24,24 @@
 
 #include <QObject>
 
+#include "noteshared/resources/localresourcecreator.h"
+
 class KJob;
 
 /**
  * @brief Creates a notes resource, a book and a page if one does not already exist.
  */
-class LocalResourceCreator : public QObject
+class LocalResourceCreator : public NoteShared::LocalResourceCreator
 {
   Q_OBJECT
 public:
   explicit LocalResourceCreator(QObject* parent = 0);
 
-  void createIfMissing();
 
-private:
-  void createInstance();
+protected:
+    virtual void finishCreateResource();
 
 private slots:
-  void instanceCreated( KJob *job );
-  void syncDone( KJob *job );
   void rootFetchFinished( KJob *job );
   void topLevelFetchFinished( KJob *job );
   void createFinished( KJob *job );

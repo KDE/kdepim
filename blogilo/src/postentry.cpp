@@ -37,6 +37,7 @@
 #include "composer/blogilocomposerview.h"
 #include "composer/bilbobrowser.h"
 #include "composer/htmleditor.h"
+#include "composer/blogilocomposerwidget.h"
 
 #include <libkdepim/widgets/spellchecklineedit.h>
 
@@ -82,7 +83,7 @@ public:
     QWidget *tabHtml;
     QWidget *tabPreview;
 
-    BlogiloComposerEditor *wysiwygEditor;
+    BlogiloComposerWidget *wysiwygEditor;
     KTextEditor::View *htmlEditor;
     BilboBrowser *previewer;
 
@@ -93,7 +94,7 @@ PostEntry::PostEntry( QWidget *parent )
     : QFrame( parent ), d(new Private)
 {
     createUi();
-    connect( d->wysiwygEditor, SIGNAL(textChanged()), this, SIGNAL(textChanged()) );
+    connect( d->wysiwygEditor->editor(), SIGNAL(textChanged()), this, SIGNAL(textChanged()) );
     connect( d->htmlEditor->document(), SIGNAL(textChanged(KTextEditor::Document*)),
              this, SIGNAL(textChanged()) );
     layout()->addWidget( d->tabWidget );
@@ -136,7 +137,7 @@ void PostEntry::createUi()
 
     /// WYSIWYG Editor:
     BlogiloComposerView *view = new BlogiloComposerView(this);
-    d->wysiwygEditor = new BlogiloComposerEditor(view,d->tabVisual);
+    d->wysiwygEditor = new BlogiloComposerWidget(view/*,d->tabVisual*/);
     QVBoxLayout *vLayout = new QVBoxLayout( d->tabVisual );
     vLayout->addWidget( d->wysiwygEditor );
 
@@ -178,7 +179,7 @@ void PostEntry::slotFocusEditor()
 {
     switch(d->tabWidget->currentIndex()) {
     case 0:
-        d->wysiwygEditor->startEditing();
+        d->wysiwygEditor->editor()->startEditing();
         break;
     case 1:
         d->htmlEditor->setFocus();
@@ -194,22 +195,22 @@ void PostEntry::slotSyncEditors(int index)
             d->prev_index = index;
             return;
         }//An else clause can do the job of goto, No? -Mehrdad :D
-        d->wysiwygEditor->setHtmlContent(d->htmlEditor->document()->text());
-        d->wysiwygEditor->setFocus();
-        d->wysiwygEditor->startEditing();
+        d->wysiwygEditor->editor()->setHtmlContent(d->htmlEditor->document()->text());
+        d->wysiwygEditor->editor()->setFocus();
+        d->wysiwygEditor->editor()->startEditing();
     } else if ( index == 1 ) {
         if ( d->prev_index == 2 ) {
             d->previewer->stop();
             d->prev_index = index;
             return;
         }
-        d->htmlEditor->document()->setText( d->wysiwygEditor->htmlContent() );
+        d->htmlEditor->document()->setText( d->wysiwygEditor->editor()->htmlContent() );
         d->htmlEditor->setFocus();
     } else {
         if ( d->prev_index == 1 ) {
-            d->wysiwygEditor->setHtmlContent(d->htmlEditor->document()->text());
+            d->wysiwygEditor->editor()->setHtmlContent(d->htmlEditor->document()->text());
         } else {
-            d->htmlEditor->document()->setText( d->wysiwygEditor->htmlContent() );
+            d->htmlEditor->document()->setText( d->wysiwygEditor->editor()->htmlContent() );
         }
         d->previewer->setHtml( d->txtTitle->toPlainText(), d->htmlEditor->document()->text() );
     }
@@ -226,21 +227,21 @@ void PostEntry::slotSetPostPreview()
 QString PostEntry::htmlContent() const
 {
     if ( d->tabWidget->currentIndex() == 1 ) {
-        d->wysiwygEditor->setHtmlContent( d->htmlEditor->document()->text() );
+        d->wysiwygEditor->editor()->setHtmlContent( d->htmlEditor->document()->text() );
     } else {
-        d->htmlEditor->document()->setText( d->wysiwygEditor->htmlContent() );
+        d->htmlEditor->document()->setText( d->wysiwygEditor->editor()->htmlContent() );
     }
     return d->htmlEditor->document()->text();
 }
 
 QString PostEntry::plainTextContent() const
 {
-    return d->wysiwygEditor->plainTextContent();
+    return d->wysiwygEditor->editor()->plainTextContent();
 }
 
 void PostEntry::setHtmlContent(const QString& content)
 {
-    d->wysiwygEditor->setHtmlContent(content);
+    d->wysiwygEditor->editor()->setHtmlContent(content);
     d->htmlEditor->document()->setText( content );
 }
 
@@ -268,7 +269,7 @@ void PostEntry::setPostBody( const QString & content, const QString &additionalC
     if (additionalContent.isEmpty()) {
         body = content;
     } else {
-        body = content + "<hr/><!--split-->" + additionalContent;
+        body = content + QLatin1String("<hr/><!--split-->") + additionalContent;
         d->mCurrentPost.setAdditionalContent(QString());
     }
     //     if (body.isEmpty()){
@@ -333,12 +334,12 @@ void PostEntry::setDefaultLayoutDirection( Qt::LayoutDirection direction )
 
 QList< BilboMedia* > PostEntry::localImages() const
 {
-    return d->wysiwygEditor->getLocalImages();
+    return d->wysiwygEditor->editor()->getLocalImages();
 }
 
 void PostEntry::replaceImageSrc(const QString& src, const QString& dest)
 {
-    d->wysiwygEditor->replaceImageSrc(src, dest);
+    d->wysiwygEditor->editor()->replaceImageSrc(src, dest);
 }
 
 bool PostEntry::uploadMediaFiles( Backend *backend )
@@ -518,4 +519,3 @@ void PostEntry::slotPostModified()
     d->isPostContentModified = true;
 }
 
-#include "postentry.moc"

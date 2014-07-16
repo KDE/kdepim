@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -22,36 +22,31 @@
 
 #include <KDialog>
 
-class QStackedWidget;
-class QSplitter;
+class QDomDocument;
 
 namespace KSieveUi {
-class SieveScriptListBox;
+class SieveEditorGraphicalModeWidget;
 class KSIEVEUI_EXPORT AutoCreateScriptDialog : public KDialog
 {
     Q_OBJECT
 public:
     explicit AutoCreateScriptDialog(QWidget *parent = 0);
     ~AutoCreateScriptDialog();
+
     QString script(QString &requires) const;
+    void setSieveCapabilities(const QStringList &capabilities);
 
-    static void setSieveCapabilities( const QStringList &capabilities );
-    static QStringList sieveCapabilities();
+    void loadScript(const QDomDocument &doc, QString &error);
 
-private Q_SLOTS:
-    void slotAddScriptPage(QWidget *page);
-    void slotRemoveScriptPage(QWidget *page);
-    void slotActivateScriptPage(QWidget *page);
+protected:
+    bool event(QEvent *e);
 
 private:
     void readConfig();
     void writeConfig();
 
 private:
-    static QStringList sCapabilities;
-    SieveScriptListBox *mSieveScript;
-    QStackedWidget *mStackWidget;
-    QSplitter *mSplitter;
+    SieveEditorGraphicalModeWidget *mEditor;
 };
 }
 

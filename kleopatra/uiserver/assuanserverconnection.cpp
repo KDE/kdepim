@@ -65,7 +65,6 @@
 #include <KDebug>
 #include <KLocalizedString>
 #include <KWindowSystem>
-#include <KMessageBox>
 
 #include <QSocketNotifier>
 #include <QTimer>
@@ -73,16 +72,14 @@
 #include <QPointer>
 #include <QFileInfo>
 #include <QStringList>
-#include <QDialog>
 #include <QRegExp>
+#include <QWidget>
 
 #include <kleo-assuan.h>
 
 #ifndef Q_MOC_RUN // QTBUG-22829
 #include <boost/type_traits/remove_pointer.hpp>
-#ifndef _WIN32_WCE
 #include <boost/lexical_cast.hpp>
-#endif
 #include <boost/bind.hpp>
 #include <boost/mem_fn.hpp>
 #include <boost/mpl/if.hpp>
@@ -96,7 +93,7 @@
 
 #include <errno.h>
 
-#ifdef __GNUC__
+#ifdef __GLIBCXX__
 # include <ext/algorithm> // for is_sorted
 #endif
 
@@ -214,7 +211,7 @@ static std::map<std::string,std::string> parse_commandline( const char * line ) 
 
 static WId wid_from_string( const QString & winIdStr, bool * ok=0 ) {
     return
-#if defined(Q_OS_WIN32) || defined(_WIN32_WCE)
+#if defined(Q_OS_WIN32)
         reinterpret_cast<WId>
 #else
         static_cast<WId>
@@ -299,15 +296,13 @@ private:
     void topHalfDeletion() {
         if ( currentCommand )
             currentCommand->canceled();
-	if ( fd != ASSUAN_INVALID_FD ) {
-#ifdef _WIN32_WCE
-            CloseHandle( (HANDLE)fd );
-#elif defined(Q_OS_WIN32)
+        if ( fd != ASSUAN_INVALID_FD ) {
+#if defined(Q_OS_WIN32)
             CloseHandle( fd );
 #else
             ::close( fd );
 #endif
-	}
+        }
         notifiers.clear();
         closed = true;
     }
@@ -516,9 +511,7 @@ private:
                     if ( const gpg_error_t err = assuan_receivefd( conn.ctx.get(), &fd ) )
                         throw err;
                 } else {
-#ifdef _WIN32_WCE
-                    fd = (assuan_fd_t)atoi( fdstr.c_str() );
-#elif defined(Q_OS_WIN32)
+#if defined(Q_OS_WIN32)
                     fd = (assuan_fd_t)lexical_cast<intptr_t>( fdstr );
 #else
                     fd = lexical_cast<assuan_fd_t>( fdstr );
@@ -842,7 +835,7 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
       sessionId( 0 ),
       factories( factories_ )
 {
-#ifdef __GNUC__
+#ifdef __GLIBCXX__
     assert( __gnu_cxx::is_sorted( factories_.begin(), factories_.end(), _detail::ByName<std::less>() ) );
 #endif
 
@@ -1257,17 +1250,17 @@ void AssuanCommand::sendStatusEncoded( const char * keyword, const std::string &
     if ( d->nohup )
         return;
     if ( const int err = assuan_write_status( d->ctx.get(), keyword, text.c_str() ) )
-        throw Exception( err, i18n( "Can not send \"%1\" status", QString::fromLatin1( keyword ) ) );
+        throw Exception( err, i18n( "Cannot send \"%1\" status", QString::fromLatin1( keyword ) ) );
 }
 
 void  AssuanCommand::sendData( const QByteArray & data, bool moreToCome ) {
     if ( d->nohup )
         return;
     if ( const gpg_error_t err = assuan_send_data( d->ctx.get(), data.constData(), data.size() ) )
-        throw Exception( err, i18n( "Can not send data" ) );
+        throw Exception( err, i18n( "Cannot send data" ) );
     if ( !moreToCome )
         if ( const gpg_error_t err = assuan_send_data( d->ctx.get(), 0, 0 ) ) // flush
-            throw Exception( err, i18n( "Can not flush data" ) );
+            throw Exception( err, i18n( "Cannot flush data" ) );
 }
 
 int AssuanCommand::inquire( const char * keyword, QObject * receiver, const char * slot, unsigned int maxSize ) {
@@ -1296,7 +1289,7 @@ int AssuanCommand::inquire( const char * keyword, QObject * receiver, const char
 
 void AssuanCommand::done( const GpgME::Error& err, const QString & details ) {
     if ( d->ctx && !d->done && !details.isEmpty() ) {
-	kDebug() << "Error: " << details;
+        kDebug() << "Error: " << details;
         d->utf8ErrorKeepAlive = details.toUtf8();
         if ( !d->nohup )
             assuan_set_error( d->ctx.get(), err.encodedError(), d->utf8ErrorKeepAlive.constData() );
@@ -1561,4 +1554,3 @@ WId AssuanCommand::parentWId() const {
 }
 
 #include "assuanserverconnection.moc"
-#include "moc_assuanserverconnection.cpp"

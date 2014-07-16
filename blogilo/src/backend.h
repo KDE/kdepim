@@ -34,7 +34,6 @@
 #include <QMap>
 
 
-class BilboBlog;
 class BilboMedia;
 /**
 Engine of application.

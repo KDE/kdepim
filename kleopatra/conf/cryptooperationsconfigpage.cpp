@@ -79,9 +79,8 @@ extern "C"
   {
     CryptoOperationsConfigurationPage *page =
       new CryptoOperationsConfigurationPage( KComponentData( "kleopatra" ), parent, args );
-    page->setObjectName( "kleopatra_config_cryptooperations" );
+    page->setObjectName( QLatin1String("kleopatra_config_cryptooperations") );
     return page;
   }
 }
 
-#include "cryptooperationsconfigpage.moc"

@@ -35,7 +35,6 @@
 #include "alarmresources.h"
 #endif
 
-#include <QModelIndex>
 #include <QFrame>
 #include <QSize>
 #ifdef USE_AKONADI
@@ -53,9 +52,7 @@ class KComboBox;
 class KMenu;
 class ResourceView;
 #ifdef USE_AKONADI
-class AkonadiModel;
 class AkonadiResourceCreator;
-class CollectionFilterCheckListModel;
 namespace Akonadi {
     class Collection;
 }

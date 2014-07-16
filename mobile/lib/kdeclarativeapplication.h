@@ -24,10 +24,6 @@
 #include <kuniqueapplication.h>
 #include <kdebug.h>
 
-#ifdef Q_OS_WINCE
-#include <windows.h>
-#endif
-
 class KCmdLineOptions;
 
 class MOBILEUI_EXPORT KDeclarativeApplicationBase : public KUniqueApplication
@@ -76,9 +72,7 @@ class KDeclarativeApplication : public KDeclarativeApplicationBase
       kDebug();
       if ( !m_mainView ) {
         m_mainView = new T;
-#ifndef Q_OS_WINCE
         m_mainView->show();
-#endif
       } else {
         m_mainView->raise();
       }

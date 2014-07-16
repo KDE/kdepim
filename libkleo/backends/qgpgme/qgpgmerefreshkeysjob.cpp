@@ -65,9 +65,9 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::start( const QStringList & patterns ) {
 
   mPatternsToDo = patterns;
   if ( mPatternsToDo.empty() )
-    mPatternsToDo.push_back( " " ); // empty list means all -> mae
-				    // sure to fail the first
-				    // startAProcess() guard clause
+    mPatternsToDo.push_back( QLatin1String(" ") ); // empty list means all -> mae
+                                    // sure to fail the first
+                                    // startAProcess() guard clause
 
   return startAProcess();
 }
@@ -81,11 +81,11 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess() {
     return GpgME::Error();
   // create and start gpgsm process:
   mProcess = new GnuPGProcessBase( this );
-  mProcess->setObjectName( "gpgsm -k --with-validation --force-crl-refresh --enable-crl-checks" );
+  mProcess->setObjectName( QLatin1String("gpgsm -k --with-validation --force-crl-refresh --enable-crl-checks") );
 
   // FIXME: obbtain the path to gpgsm from gpgme, so we use the same instance.
-  *mProcess << "gpgsm" << "-k" << "--with-validation" << "--force-crl-refresh"
-	    << "--enable-crl-checks";
+  *mProcess << QLatin1String("gpgsm") << QLatin1String("-k") << QLatin1String("--with-validation") << QLatin1String("--force-crl-refresh")
+            << QLatin1String("--enable-crl-checks");
   unsigned int commandLineLength = MAX_CMD_LENGTH;
   commandLineLength -=
     strlen("gpgsm") + 1 + strlen("-k") + 1 +
@@ -99,21 +99,21 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess() {
     mPatternsToDo.pop_front();
     if ( pat.isEmpty() )
       continue;
-    *mProcess << pat;
+    *mProcess << QLatin1String(pat);
     commandLineLength -= patLength + 1;
   }
 
   mProcess->setUseStatusFD( true );
 
   connect( mProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
-	   SLOT(slotProcessExited(int,QProcess::ExitStatus)) );
+           SLOT(slotProcessExited(int,QProcess::ExitStatus)) );
   connect( mProcess, SIGNAL(readyReadStandardOutput()),
-	   SLOT(slotStdout()) );
+           SLOT(slotStdout()) );
   connect( mProcess, SIGNAL(readyReadStandardError()),
-	   SLOT(slotStderr()) );
+           SLOT(slotStderr()) );
 
   connect( mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,QString,QStringList)),
-	   SLOT(slotStatus(Kleo::GnuPGProcessBase*,QString,QStringList)) );
+           SLOT(slotStatus(Kleo::GnuPGProcessBase*,QString,QStringList)) );
 
   mProcess->setOutputChannelMode( KProcess::SeparateChannels );
   mProcess->start();
@@ -138,7 +138,7 @@ void Kleo::QGpgMERefreshKeysJob::slotStatus( GnuPGProcessBase * proc, const QStr
   QStringList::const_iterator it = args.begin();
   bool ok = false;
 
-  if ( type == "ERROR" ) {
+  if ( type == QLatin1String("ERROR") ) {
 
 
     if ( args.size() < 2 ) {
@@ -159,7 +159,7 @@ void Kleo::QGpgMERefreshKeysJob::slotStatus( GnuPGProcessBase * proc, const QStr
     mError = GpgME::Error::fromCode( code, source );
 
 
-  } else if ( type == "PROGRESS" ) {
+  } else if ( type == QLatin1String("PROGRESS") ) {
 
 
     if ( args.size() < 4 ) {
@@ -211,4 +211,3 @@ void Kleo::QGpgMERefreshKeysJob::slotProcessExited(int exitCode, QProcess::ExitS
   deleteLater();
 }
 
-#include "qgpgmerefreshkeysjob.moc"

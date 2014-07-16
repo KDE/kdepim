@@ -20,7 +20,7 @@
 
 #include <Akonadi/AgentManager>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KStandardDirs>
 #include <KTemporaryFile>
 #include <KConfigGroup>
@@ -42,11 +42,13 @@ ExportAddressbookJob::~ExportAddressbookJob()
 
 void ExportAddressbookJob::start()
 {
+    Q_EMIT title(i18n("Start export KAddressBook settings..."));
     mArchiveDirectory = archive()->directory();
     if (mTypeSelected & Utils::Resources) {
         backupResources();
         increaseProgressDialog();
         if (wasCanceled()) {
+            Q_EMIT jobFinished();
             return;
         }
     }
@@ -54,9 +56,11 @@ void ExportAddressbookJob::start()
         backupConfig();
         increaseProgressDialog();
         if (wasCanceled()) {
+            Q_EMIT jobFinished();
             return;
         }
     }
+    Q_EMIT jobFinished();
 }
 
 void ExportAddressbookJob::backupResources()
@@ -67,24 +71,27 @@ void ExportAddressbookJob::backupResources()
     const Akonadi::AgentInstance::List list = manager->instances();
     foreach( const Akonadi::AgentInstance &agent, list ) {
         const QString identifier = agent.identifier();
-        if (identifier.contains(QLatin1String("akonadi_vcarddir_resource_"))) {
+        if (identifier.contains(QLatin1String("akonadi_vcarddir_resource_")) || identifier.contains(QLatin1String("akonadi_contacts_resource_")) ) {
             const QString archivePath = Utils::addressbookPath() + identifier + QDir::separator();
 
-            KUrl url = Utils::resourcePath(agent);
-            if (!url.isEmpty()) {
-                const bool fileAdded = backupFullDirectory(url, archivePath, QLatin1String("addressbook.zip"));
-                if (fileAdded) {
-                    const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
-                    if (!errorStr.isEmpty())
-                        Q_EMIT error(errorStr);
-                    url = Utils::akonadiAgentConfigPath(identifier);
-                    if (!url.isEmpty()) {
-                        const QString filename = url.fileName();
-                        const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
-                        if (fileAdded)
-                            Q_EMIT info(i18n("\"%1\" was backuped.",filename));
-                        else
-                            Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
+            KUrl url = Utils::resourcePath(agent, QLatin1String("$HOME/.local/share/contacts/"));
+            if (!mAgentPaths.contains(url.path())) {
+                mAgentPaths << url.path();
+                if (!url.isEmpty()) {
+                    const bool fileAdded = backupFullDirectory(url, archivePath, QLatin1String("addressbook.zip"));
+                    if (fileAdded) {
+                        const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
+                        if (!errorStr.isEmpty())
+                            Q_EMIT error(errorStr);
+                        url = Utils::akonadiAgentConfigPath(identifier);
+                        if (!url.isEmpty()) {
+                            const QString filename = url.fileName();
+                            const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                            if (fileAdded)
+                                Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+                            else
+                                Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
+                        }
                     }
                 }
             }
@@ -136,4 +143,3 @@ void ExportAddressbookJob::backupConfig()
     Q_EMIT info(i18n("Config backup done."));
 }
 
-#include "exportaddressbookjob.moc"

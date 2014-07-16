@@ -67,74 +67,73 @@ class SnippetWidget;
 class SelectSpecialChar;
 class AttachmentMissingWarning;
 class ExternalEditorWarning;
+class KActionMenu;
+
 
 namespace boost {
-  template <typename T> class shared_ptr;
+template <typename T> class shared_ptr;
 }
 
 namespace Sonnet {
-  class DictionaryComboBox;
+class DictionaryComboBox;
 }
 
 namespace KPIMIdentities {
-  class Identity;
+class Identity;
 }
 
 namespace KPIMTextEdit {
-  class SelectSpecialChar;
+class SelectSpecialChar;
 }
 
 namespace KIO {
-  class Job;
+class Job;
 }
 
 namespace MessageComposer {
-  class Composer;
+class ComposerLineEdit;
+class Composer;
 }
 
-namespace KPIM {
-  class SpellCheckLineEdit;
-}
-
-namespace MessageComposer {
-  class ComposerLineEdit;
-}
 namespace MailCommon {
-  class FolderRequester;
+class FolderRequester;
 }
- 
+
 namespace PimCommon {
-  class TranslatorWidget;
+class CustomToolsWidget;
+class LineEditWithAutoCorrection;
+class StorageServiceAbstract;
+class StorageServiceManager;
 }
 
 //-----------------------------------------------------------------------------
 class KMComposeWin : public KMail::Composer
 {
-  Q_OBJECT
-  Q_CLASSINFO("D-Bus Interface", "org.kde.kmail.mailcomposer")
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.kmail.mailcomposer")
 
-  friend class ::KMComposerEditor;
+    friend class ::KMComposerEditor;
 
-  private: // mailserviceimpl, kmkernel, kmcommands, callback, kmmainwidget
+private: // mailserviceimpl, kmkernel, kmcommands, callback, kmmainwidget
     explicit KMComposeWin(const KMime::Message::Ptr &msg, bool lastSignState, bool lastEncryptState, TemplateContext context = NoTemplate,
-                           uint identity = 0, const QString & textSelection = QString(),
-                           const QString & customTemplate = QString() );
+                          uint identity = 0, const QString & textSelection = QString(),
+                          const QString & customTemplate = QString() );
     ~KMComposeWin();
 
-  public:
+public:
     static Composer *create( const KMime::Message::Ptr &msg, bool lastSignState, bool lastEncryptState, TemplateContext context = NoTemplate,
                              uint identity = 0, const QString & textSelection = QString(),
                              const QString & customTemplate = QString() );
 
-  QString dbusObjectPath() const;
-  QString smartQuote( const QString & msg );
+    QString dbusObjectPath() const;
+    QString smartQuote( const QString & msg );
 
-  /**
+    /**
    * Start of D-Bus callable stuff. The D-Bus methods need to be public slots,
    * otherwise they can't be accessed.
    */
-  // TODO clean-up dbus stuff; make the adaptor a friend; etc.
-  public slots:
+    // TODO clean-up dbus stuff; make the adaptor a friend; etc.
+public slots:
 
     Q_SCRIPTABLE void send( int how );
 
@@ -151,21 +150,21 @@ class KMComposeWin : public KMail::Composer
                                      const QByteArray & data,
                                      const QByteArray & mimeType );
 
-  /**
+    /**
    * End of D-Bus callable stuff
    */
 
-  signals:
+signals:
     void identityChanged( const KPIMIdentities::Identity &identity );
 
 
-  public: // kmkernel, kmcommands, callback
+public: // kmkernel, kmcommands, callback
     /**
      * Set the message the composer shall work with. This discards
      * previous messages without calling applyChanges() on them before.
      */
     void setMessage( const KMime::Message::Ptr &newMsg, bool lastSignState = false, bool lastEncryptState = false,
-                 bool mayAutoSign=true, bool allowDecryption=false, bool isModified=false );
+                     bool mayAutoSign=true, bool allowDecryption=false, bool isModified=false );
 
     void setCurrentTransport( int transportId );
 
@@ -176,41 +175,41 @@ class KMComposeWin : public KMail::Composer
      */
     void setFcc( const QString &idString );
 
-     /**
+    /**
       * Disables word wrap completely. No wrapping at all will occur, not even
       * at the right end of the editor.
       * This is useful when sending invitations.
       */
-     void disableWordWrap();
+    void disableWordWrap();
 
-     /**
+    /**
       * Disables HTML completely. It disables HTML at the point of calling this and disables it
       * again when sending the message, to be sure. Useful when sending invitations.
       * This will <b>not</b> remove the actions for activating HTML mode again, it is only
       * meant for automatic invitation sending.
       * Also calls @sa disableHtml() internally.
       */
-     void forceDisableHtml();
+    void forceDisableHtml();
 
-     /**
+    /**
       * Returns @c true while the message composing is in progress.
       */
-     bool isComposing() const { return mComposerBase && mComposerBase->isComposing(); }
+    bool isComposing() const { return mComposerBase && mComposerBase->isComposing(); }
 
-     /**
+    /**
       * Set the text selection the message is a response to.
       */
-     void setTextSelection( const QString& selection );
+    void setTextSelection( const QString& selection );
 
-     /**
+    /**
       * Set custom template to be used for the message.
       */
-     void setCustomTemplate( const QString& customTemplate );
+    void setCustomTemplate( const QString& customTemplate );
 
     /** Disabled signing and encryption completely for this composer window. */
     void setSigningAndEncryptionDisabled( bool v )
     {
-      mSigningAndEncryptionExplicitlyDisabled = v;
+        mSigningAndEncryptionExplicitlyDisabled = v;
     }
     /**
      * If this folder is set, the original message is inserted back after
@@ -220,26 +219,30 @@ class KMComposeWin : public KMail::Composer
     /**
      * Sets the focus to the edit-widget.
      */
-     void setReplyFocus( bool hasMessage = true );
+    void setFocusToEditor();
 
     /**
      * Sets the focus to the subject line edit. For use when creating a
      * message to a known recipient.
      */
-     void setFocusToSubject();
+    void setFocusToSubject();
 
-  bool insertFromMimeData( const QMimeData *source, bool forceAttachment = false );
+    bool insertFromMimeData( const QMimeData *source, bool forceAttachment = false );
 
-     void setCurrentReplyTo(const QString&);
-     void setCollectionForNewMessage( const Akonadi::Collection& folder);
+    void setCurrentReplyTo(const QString&);
+    void setCollectionForNewMessage( const Akonadi::Collection& folder);
 
-     void addExtraCustomHeaders( const QMap<QByteArray, QString> &header);
+    void addExtraCustomHeaders( const QMap<QByteArray, QString> &header);
 
-  private:
-  /**
+    KToggleAction *translateAction() const { return mTranslateAction; }
+    KActionMenu *changeCaseMenu() const { return mChangeCaseMenu; }
+    KToggleAction *generateShortenUrlAction() const { return mGenerateShortenUrl; }
+
+private:
+    /**
    * Write settings to app's config file.
    */
-  void writeConfig( void );
+    void writeConfig( void );
 
 
     /**
@@ -255,21 +258,21 @@ class KMComposeWin : public KMail::Composer
     void changeModifiedState( bool modified );
 
 
-  
+
     /**
      * determines whether inline signing/encryption is selected
      */
-     bool inlineSigningEncryptionSelected();
+    bool inlineSigningEncryptionSelected();
 
 
-     /**
+    /**
       * Tries to find the given mimetype @p type in the KDE Mimetype registry.
       * If found, returns its localized description, otherwise the @p type
       * in lowercase.
       */
-     static QString prettyMimeType( const QString &type );
+    static QString prettyMimeType( const QString &type );
 
-  public slots: // kmkernel, callback
+public slots: // kmkernel, callback
     void slotSendNow();
     /**
      * Switch wordWrap on/off
@@ -287,12 +290,12 @@ class KMComposeWin : public KMail::Composer
     void setModified( bool modified );
     void slotFetchJob(KJob*);
 
-  private slots:
-     /**
+private slots:
+    /**
       * Disables the HTML mode, by hiding the HTML toolbar and unchecking the
       * "Formatting" action. Also, removes all rich-text formatting.
       */
-     void disableHtml( MessageComposer::ComposerViewBase::Confirmation confirmation );
+    void disableHtml( MessageComposer::ComposerViewBase::Confirmation confirmation );
     /**
      * Enables HTML mode, by showing the HTML toolbar and checking the
      * "Formatting" action
@@ -329,8 +332,6 @@ class KMComposeWin : public KMail::Composer
     void slotPaste();
     void slotPasteAsAttachment();
     void slotMarkAll();
-    void slotTranslatorWasClosed();
-
     void slotFolderRemoved( const Akonadi::Collection& );
     void slotLanguageChanged( const QString &language );
     void slotFccFolderChanged(const Akonadi::Collection&);
@@ -405,7 +406,7 @@ class KMComposeWin : public KMail::Composer
     void slotSpellCheckingStatus( const QString & status );
 
     void slotDelayedApplyTemplate( KJob* );
-  
+
     void recipientEditorSizeHintChanged();
     void setMaximumHeaderSize();
     void slotDoDelayedSend( KJob* );
@@ -450,11 +451,21 @@ class KMComposeWin : public KMail::Composer
     void slotExternalEditorStarted();
     void slotExternalEditorClosed();
 
+    void slotInsertShortUrl(const QString &url);
 
-  public: // kmcommand
+    void slotUploadFileDone(const QString &serviceName, const QString &fileName);
+
+    void slotUploadFileFailed(const QString &serviceName, const QString &fileName);
+    void slotShareLinkDone(const QString &serviceName, const QString &fileName);
+
+    void slotUploadFileStart(PimCommon::StorageServiceAbstract *service);
+
+    void slotActionFailed(const QString &serviceName, const QString &error);
+    void slotTransportChanged();
+public: // kmcommand
     // FIXME we need to remove these, but they're pure virtual in Composer.
     void addAttach( KMime::Content *msgPart );
-  
+
     const KPIMIdentities::Identity &identity() const;
 
     /** Don't check for forgotten attachments for a mail, eg. when sending out invitations. */
@@ -471,7 +482,7 @@ class KMComposeWin : public KMail::Composer
     */
     void ignoreStickyFields();
 
-  private:
+private:
     void updateSignature(uint uoid, uint uOldId);
     Kleo::CryptoMessageFormat cryptoMessageFormat() const;
     QString overwriteModeStr() const;
@@ -582,7 +593,7 @@ class KMComposeWin : public KMail::Composer
     MessageComposer::Composer* createSimpleComposer();
 
     bool canSignEncryptAttachments() const {
-      return cryptoMessageFormat() != Kleo::InlineOpenPGPFormat;
+        return cryptoMessageFormat() != Kleo::InlineOpenPGPFormat;
     }
 
     QString addQuotesToText( const QString &inputText ) const;
@@ -597,11 +608,11 @@ class KMComposeWin : public KMail::Composer
 
     inline bool encryptToSelf();
 
-  private:
+private:
     QWidget   *mMainWidget;
     Sonnet::DictionaryComboBox *mDictionaryCombo;
     MessageComposer::ComposerLineEdit *mEdtFrom, *mEdtReplyTo;
-    KPIM::SpellCheckLineEdit *mEdtSubject;
+    PimCommon::LineEditWithAutoCorrection *mEdtSubject;
     QLabel    *mLblIdentity, *mLblTransport, *mLblFcc;
     QLabel    *mLblFrom, *mLblReplyTo;
     QLabel    *mLblSubject;
@@ -618,13 +629,12 @@ class KMComposeWin : public KMail::Composer
     Akonadi::Collection mFolder;
     long mShowHeaders;
     bool mForceDisableHtml;     // Completely disable any HTML. Useful when sending invitations in the
-                                // mail body.
+    // mail body.
     int mNumHeaders;
     QFont mBodyFont, mFixedFont;
     uint mId;
     TemplateContext mContext;
 
-    KAction *mCleanSpace;
     KRecentFilesAction *mRecentAction;
 
     KToggleAction *mSignAction, *mEncryptAction, *mRequestMDNAction;
@@ -634,6 +644,10 @@ class KMComposeWin : public KMail::Composer
     KToggleAction *mIdentityAction, *mTransportAction, *mFccAction;
     KToggleAction *mWordWrapAction, *mFixedFontAction, *mAutoSpellCheckingAction;
     KToggleAction *mDictionaryAction, *mSnippetAction, *mTranslateAction;
+    KAction *mAppendSignature;
+    KAction *mPrependSignature;
+    KAction *mInsertSignatureAtCursorPosition;
+    KToggleAction *mGenerateShortenUrl;
 
     KToggleAction *markupAction;
 
@@ -641,7 +655,7 @@ class KMComposeWin : public KMail::Composer
     KSelectAction *mCryptoModuleAction;
 
     KAction *mFindText, *mFindNextText, *mReplaceText, *mSelectAll;
-  
+
     QSplitter *mHeadersToEditorSplitter;
     QWidget* mHeadersArea;
     QSplitter *mSplitter;
@@ -658,6 +672,7 @@ class KMComposeWin : public KMail::Composer
 
     QMenu *mActNowMenu;
     QMenu *mActLaterMenu;
+    KActionMenu *mChangeCaseMenu;
 
     QString mdbusObjectPath;
     static int s_composerNumber;
@@ -666,7 +681,7 @@ class KMComposeWin : public KMail::Composer
 
 
     SnippetWidget *mSnippetWidget;
-    PimCommon::TranslatorWidget *mTranslatorWidget;
+    PimCommon::CustomToolsWidget *mCustomToolsWidget;
     QPointer<KPIMTextEdit::SelectSpecialChar> mSelectSpecialChar;
     AttachmentMissingWarning *mAttachmentMissing;
     ExternalEditorWarning *mExternalEditorWarning;
@@ -680,6 +695,8 @@ class KMComposeWin : public KMail::Composer
     bool mWasModified;
     Akonadi::Collection mCollectionForNewMessage;
     QMap<QByteArray, QString> mExtraHeaders;
+    int mNumProgressUploadFile;
+    PimCommon::StorageServiceManager *mStorageManager;
 };
 
 #endif

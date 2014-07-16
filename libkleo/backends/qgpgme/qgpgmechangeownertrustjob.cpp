@@ -73,4 +73,3 @@ Error QGpgMEChangeOwnerTrustJob::start( const Key & key, Key::OwnerTrust trust )
   return Error();
 }
 
-#include "qgpgmechangeownertrustjob.moc"

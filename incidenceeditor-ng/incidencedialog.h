@@ -78,6 +78,8 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDialog : public KDialog
     */
     void setInitiallyDirty( bool initiallyDirty );
 
+    Akonadi::Item item() const;
+
   Q_SIGNALS:
     /**
      * This signal is emitted when an incidence is created.

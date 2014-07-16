@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,16 +16,17 @@
 */
 
 #include "sieveconditionvirustest.h"
-
+#include "autocreatescripts/autocreatescriptutil_p.h"
+#include "editor/sieveeditorutil.h"
 #include "widgets/selectrelationalmatchtype.h"
 #include "widgets/selectcomparatorcombobox.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
-#include <QHBoxLayout>
-#include <QLabel>
 #include <QSpinBox>
 #include <QDebug>
+#include <QDomNode>
+#include <QVBoxLayout>
 
 using namespace KSieveUi;
 
@@ -42,15 +43,17 @@ SieveCondition *SieveConditionVirusTest::newAction()
 QWidget *SieveConditionVirusTest::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
-    QHBoxLayout *lay = new QHBoxLayout;
+    QVBoxLayout *lay = new QVBoxLayout;
     lay->setMargin(0);
     w->setLayout(lay);
 
     SelectRelationalMatchType *relation = new SelectRelationalMatchType;
+    connect(relation, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     relation->setObjectName(QLatin1String("relation"));
     lay->addWidget(relation);
 
     SelectComparatorComboBox *comparator = new SelectComparatorComboBox;
+    connect(comparator, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     comparator->setObjectName(QLatin1String("comparator"));
     lay->addWidget(comparator);
 
@@ -58,6 +61,7 @@ QWidget *SieveConditionVirusTest::createParamWidget( QWidget *parent ) const
     spinbox->setMaximum(5);
     spinbox->setMinimum(0);
     spinbox->setObjectName(QLatin1String("value"));
+    connect(spinbox, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged()));
     lay->addWidget(spinbox);
     return w;
 }
@@ -97,5 +101,61 @@ QString SieveConditionVirusTest::help() const
     return i18n("Sieve implementations that implement the \"virustest\" test have an identifier of \"virustest\" for use with the capability mechanism.");
 }
 
-#include "sieveconditionvirustest.moc"
+bool SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/ , QString &error)
+{
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("tag")) {
+                const QString tagValue = e.text();
+                if (tagValue == QLatin1String("count") || tagValue == QLatin1String("value")) {
+                    node = node.nextSibling();
+                    if (!node.isNull()) {
+                        QDomElement relationalElement = node.toElement();
+                        if (!relationalElement.isNull()) {
+                            if (relationalElement.tagName() == QLatin1String("str")) {
+                                SelectRelationalMatchType *relation = w->findChild<SelectRelationalMatchType*>( QLatin1String("relation") );
+                                relation->setCode(AutoCreateScriptUtil::tagValue(tagValue), relationalElement.text(), name(), error);
+                            }
+                        }
+                    }
+                } else if (tagValue == QLatin1String("comparator")) {
+                    node = node.nextSibling();
+                    if (!node.isNull()) {
+                        QDomElement comparatorElement = node.toElement();
+                        if (!comparatorElement.isNull()) {
+                            if (comparatorElement.tagName() == QLatin1String("str")) {
+                                SelectComparatorComboBox *comparator = w->findChild<SelectComparatorComboBox*>( QLatin1String("comparator") );
+                                comparator->setCode(comparatorElement.text(), name(), error);
+                            }
+                        }
+                    }
+                } else {
+                    unknowTagValue(tagValue, error);
+                    qDebug()<<" SieveConditionVirusTest::setParamWidgetValue unknow tagValue "<<tagValue;
+                }
+            } else if (tagName == QLatin1String("str")) {
+                QSpinBox *spinbox = w->findChild<QSpinBox*>( QLatin1String("value") );
+                spinbox->setValue(e.text().toInt());
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
+            } else {
+                unknownTag(tagName, error);
+                qDebug()<<" SieveConditionVirusTest::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+    return true;
+}
+
+QString SieveConditionVirusTest::href() const
+{
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
+}
+
 

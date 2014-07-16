@@ -1,7 +1,13 @@
-2013-07-04:
+2014-2-20:
 -----------
+
+2014-2-20: New VERSION for archive => VERSION_2 => knote-akonadi
+
 Zip structure is :
 Root
+|-----information
+|       |---------VERSION_<number>
+|
 |-----transports
 |       |---------mailtransports
 |
@@ -51,7 +57,7 @@ Root
 |       |---------templatesconfigurationrc
 |       |---------kalarmrc
 |       |---------korganizerrc
-|       |---------korganizer_printing.rc 
+|       |---------calendar_printing.rc 
 |       |---------korgacrc
 |       |---------kaddressbookrc
 |       |---------akonadi_mailfilter_agent.notifyrc
@@ -60,15 +66,29 @@ Root
 |       |---------kmail2.notifyrc
 |       |---------akonadi_maildispatcher_agent.notifyrc
 |       |---------akonadi_newmailnotifier_agent.notifyrc
+|       |---------akonadi_followupreminder_agent.notifyrc
+|       |---------messagevieweradblockrc
+|       |---------knotesrc
+|       |---------akregatorrc
+|       |---------blogilorc
+|       |---------messageviewer.notifyrc
+|       |---------kontactrc
+|       |---------kontact_summaryrc
+|       |---------knoderc
+|       |---------globalnotesettings
+|       |---------akonadi_mailfilter_agent.notifyrc
+|       |---------storageservicerc
 |
 |-----akonadi
 |       |---------<archive akonadi>
-|
-|-----nepomuk
-|       |---------<archive nepomuk>
 |
 |-----data
 |       |---------autocorrect/<autocorrection xml file>
 |       |---------korganizer/freebusyurls
 |       |---------korganizer/templates/*
 |       |---------messageviewer/themes/*
+|       |---------kmail2/adblockrules_local
+|       |---------knotes/print/*
+|       |---------akregator/*
+|       |---------blogilo/blogilo.db
+|       |---------knode/*

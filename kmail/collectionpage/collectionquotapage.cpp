@@ -36,7 +36,7 @@
 #include <akonadi/collection.h>
 
 #include <qlayout.h>
-#include <KLocale>
+#include <KLocalizedString>
 #include <assert.h>
 
 
@@ -82,4 +82,3 @@ void CollectionQuotaPage::save( Akonadi::Collection & )
 }
 
 
-#include "collectionquotapage.moc"

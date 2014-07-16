@@ -24,8 +24,7 @@
 
 #include <Akonadi/Contact/EmailAddressSelectionDialog>
 
-#include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QButtonGroup>
 #include <QGridLayout>
@@ -185,4 +184,4 @@ KIMAP::Acl::Rights AclEntryDialog::permissions() const
                 static_cast<KIMAP::Acl::Rights>( d->mButtonGroup->id( button ) ) );
 }
 
-#include "aclentrydialog_p.moc"
+#include "moc_aclentrydialog_p.cpp"

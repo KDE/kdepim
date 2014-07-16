@@ -20,12 +20,14 @@
 #define TRANSLATORWIDGET_H
 
 #include "pimcommon_export.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 #include <kio/job.h>
 #include <KTextEdit>
-
+#include <Solid/Networking>
+class KToggleAction;
 namespace PimCommon {
 
-class TranslatorResultTextEdit : public KTextEdit
+class TranslatorResultTextEdit : public PimCommon::PlainTextEditor
 {
     Q_OBJECT
 public:
@@ -40,11 +42,15 @@ private:
     bool mResultFailed;
 };
 
-class TranslatorTextEdit : public KTextEdit
+class PIMCOMMON_EXPORT TranslatorTextEdit : public KTextEdit
 {
     Q_OBJECT
 public:
     explicit TranslatorTextEdit(QWidget *parent = 0);
+
+Q_SIGNALS:
+    void translateText();
+
 protected:
     void dropEvent( QDropEvent * );
 };
@@ -56,35 +62,40 @@ public:
     explicit TranslatorWidget( QWidget* parent = 0 );
     explicit TranslatorWidget( const QString& text, QWidget* parent = 0 );
     ~TranslatorWidget();
+
     void setTextToTranslate( const QString& );
     void writeConfig();
     void readConfig();
+    void setStandalone(bool b);
 
+    KToggleAction *toggleAction();
 
 public Q_SLOTS:
     void slotTranslate();
     void slotCloseWidget();
 
 private Q_SLOTS:
-    void slotFromLanguageChanged( int );
+    void slotFromLanguageChanged( int, bool initialize = false );
     void slotTextChanged();
     void slotInvertLanguage();
     void slotClear();
     void slotTranslateDone();
-    void slotTranslateFailed(bool result);
+    void slotTranslateFailed(bool result, const QString &message);
     void slotDebug();
+    void slotConfigChanged();
+    void slotSystemNetworkStatusChanged(Solid::Networking::Status);
 
 protected:
     bool event(QEvent* e);
 
 Q_SIGNALS:
     void translatorWasClosed();
+
 private:
     void init();
     void initLanguage();
     class TranslatorWidgetPrivate;
     TranslatorWidgetPrivate *const d;
-
 };
 }
 

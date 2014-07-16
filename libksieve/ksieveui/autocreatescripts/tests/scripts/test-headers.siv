@@ -1,0 +1,10 @@
+ 
+#Script name: test-headers
+
+if allof (header :contains "Content-Type" "value"
+, not header :is "Date" "125"
+, not header :contains "Subject" "sdfsdf"
+)
+{
+    keep;
+} 

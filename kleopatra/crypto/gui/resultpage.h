@@ -38,8 +38,6 @@
 
 #include <utils/pimpl_ptr.h>
 
-#include <QAbstractItemDelegate>
-#include <QAbstractItemModel>
 
 #include <boost/shared_ptr.hpp>
 

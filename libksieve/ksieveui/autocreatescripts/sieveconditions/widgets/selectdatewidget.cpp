@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -17,7 +17,7 @@
 
 #include "selectdatewidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KComboBox>
 #include <KLineEdit>
 #include <KDateComboBox>
@@ -27,7 +27,6 @@
 #include <QLabel>
 #include <QStackedWidget>
 #include <QSpinBox>
-#include <QDateEdit>
 #include <QDebug>
 
 Q_DECLARE_METATYPE(KSieveUi::SelectDateWidget::DateType)
@@ -74,15 +73,19 @@ void SelectDateWidget::initialize()
 
     mDateLineEdit = new KLineEdit;
     mStackWidget->addWidget(mDateLineEdit);
+    connect(mDateLineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
 
     mDateValue = new QSpinBox;
     mStackWidget->addWidget(mDateValue);
+    connect(mDateValue, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged()));
 
     mDateEdit = new KDateComboBox;
     mStackWidget->addWidget(mDateEdit);
+    connect(mDateEdit, SIGNAL(dateChanged(QDate)), this, SIGNAL(valueChanged()));
 
     mTimeEdit = new KTimeComboBox;
     mStackWidget->addWidget(mTimeEdit);
+    connect(mTimeEdit, SIGNAL(timeChanged(QTime)), this, SIGNAL(valueChanged()));
 
     mStackWidget->setCurrentWidget(mDateValue);
 
@@ -147,6 +150,7 @@ void SelectDateWidget::slotDateTypeActivated(int index)
         mStackWidget->setCurrentWidget(mDateLineEdit);
         break;
     }
+    Q_EMIT valueChanged();
 }
 
 QString SelectDateWidget::dateValue(SelectDateWidget::DateType type) const
@@ -157,7 +161,7 @@ QString SelectDateWidget::dateValue(SelectDateWidget::DateType type) const
         str = QString::fromLatin1("%1").arg(mDateValue->value(),4, 10, QLatin1Char('0'));
         break;
     case Month:
-        str = QString::fromLatin1("%1").arg(mDateValue->value(),2,  10,QLatin1Char('0'));
+        str = QString::fromLatin1("%1").arg(mDateValue->value(),2, 10,QLatin1Char('0'));
         break;
     case Day:
         str = QString::fromLatin1("%1").arg(mDateValue->value(),2, 10, QLatin1Char('0'));
@@ -195,6 +199,40 @@ QString SelectDateWidget::dateValue(SelectDateWidget::DateType type) const
         break;
     }
     return str;
+}
+
+SelectDateWidget::DateType SelectDateWidget::dateTypeFromString(const QString &str)
+{
+    if (str == QLatin1String("year")) {
+        return Year;
+    } else if (str == QLatin1String("month")) {
+        return Month;
+    } else if (str == QLatin1String("day")) {
+        return Day;
+    } else if (str == QLatin1String("date")) {
+        return Date;
+    } else if (str == QLatin1String("julian")) {
+        return Julian;
+    } else if (str == QLatin1String("hour")) {
+        return Hour;
+    } else if (str == QLatin1String("minute")) {
+        return Minute;
+    } else if (str == QLatin1String("second")) {
+        return Second;
+    } else if (str == QLatin1String("time")) {
+        return Time;
+    } else if (str == QLatin1String("iso8601")) {
+        return Iso8601;
+    } else if (str == QLatin1String("std11")) {
+        return Std11;
+    } else if (str == QLatin1String("zone")) {
+        return Zone;
+    } else if (str == QLatin1String("weekday")) {
+        return Weekday;
+    } else {
+        qDebug()<<" date type unknown :"<<str;
+    }
+    return Year;
 }
 
 QString SelectDateWidget::dateType(SelectDateWidget::DateType type) const
@@ -250,4 +288,45 @@ QString SelectDateWidget::code() const
     return QString::fromLatin1("\"%1\" \"%2\"").arg(dateType(type)).arg(dateValue(type));
 }
 
-#include "selectdatewidget.moc"
+void SelectDateWidget::setCode(const QString &type, const QString &value)
+{
+    const int index = dateTypeFromString(type);
+    if (index != -1) {
+        mDateType->setCurrentIndex(index);
+    } else {
+        mDateType->setCurrentIndex(0);
+    }
+    const DateType dateType = mDateType->itemData(index).value<KSieveUi::SelectDateWidget::DateType>();
+    switch(dateType) {
+    case Month:
+    case Day:
+    case Hour:
+    case Minute:
+    case Second:
+    case Weekday:
+    case Year:
+        mStackWidget->setCurrentWidget(mDateValue);
+        mDateValue->setValue(value.toInt());
+        break;
+    case Date:
+        mStackWidget->setCurrentWidget(mDateEdit);
+        mDateEdit->setDate(QDate::fromString(value));
+        break;
+    case Julian:
+        mStackWidget->setCurrentWidget(mDateLineEdit);
+        mDateLineEdit->setText(value);
+        break;
+    case Time:
+        mStackWidget->setCurrentWidget(mTimeEdit);
+        mTimeEdit->setTime(QTime::fromString(value));
+        break;
+    case Iso8601:
+    case Std11:
+    case Zone:
+        mStackWidget->setCurrentWidget(mDateLineEdit);
+        mDateLineEdit->setText(value);
+        break;
+    }
+
+}
+

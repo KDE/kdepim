@@ -7,6 +7,10 @@
 
 project(calendarView)
 
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
+
+
 if(KDEPIM_BUILD_EXAMPLES)
   add_subdirectory(viewerapp)
 endif()
@@ -45,7 +49,6 @@ set(eventviews_LIB_SRCS
   agenda/agendaview.cpp
   agenda/alternatelabel.cpp
   agenda/calendardecoration.cpp
-  agenda/cellitem.cpp
   agenda/decorationlabel.cpp
   agenda/timelabels.cpp
   agenda/timelabelszone.cpp

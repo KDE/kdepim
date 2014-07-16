@@ -20,6 +20,7 @@
 #include <QString>
 #include <KUrl>
 #include <KSharedConfig>
+#include <QDebug>
 class KZip;
 namespace Akonadi {
 class AgentInstance;
@@ -31,6 +32,9 @@ struct resourceFiles
     QString akonadiConfigFile;
     QString akonadiResources;
     QString akonadiAgentConfigFile;
+    void debug() const {
+        qDebug() <<" akonadiconfigfile :"<<akonadiConfigFile<<" akonadiResources:"<<akonadiResources<<" akonadiAgentConfigFile:"<<akonadiAgentConfigFile;
+    }
 };
 
 namespace Utils {
@@ -42,12 +46,40 @@ enum StoredType {
     Resources = 8,
     Config = 16,
     AkonadiDb = 32,
-    Nepomuk = 64
+    Data = 64
     //TODO add more type to import/export
 };
 Q_DECLARE_FLAGS(StoredTypes, StoredType)
 
-KUrl resourcePath(KSharedConfigPtr resourceConfig);
+enum AppsType {
+    KMail = 0,
+    KAddressBook,
+    KAlarm,
+    KOrganizer,
+    KJots,
+    KNotes,
+    Akregator,
+    Blogilo,
+    KNode
+};
+
+struct importExportParameters
+{
+    importExportParameters()
+        : numberSteps(0),
+          types(None)
+    {
+
+    }
+    bool isEmpty() const {
+        return (types == None);
+    }
+    int numberSteps;
+    Utils::StoredTypes types;
+};
+
+
+KUrl resourcePath(KSharedConfigPtr resourceConfig, const QString &defaultPath = QString());
 QString transportsPath();
 QString resourcesPath();
 QString identitiesPath();
@@ -59,6 +91,7 @@ QString calendarPath();
 QString addressbookPath();
 QString alarmPath();
 QString jotPath();
+QString infoPath();
 QString prefixAkonadiConfigFile();
 QString akonadiAgentName(KSharedConfig::Ptr config);
 
@@ -67,10 +100,17 @@ void convertCollectionToRealPath(KConfigGroup &group, const QString &currentKey)
 
 void convertCollectionIdsToRealPath(KConfigGroup &group, const QString &currentKey);
 
-KUrl resourcePath(const Akonadi::AgentInstance &agent);
+KUrl resourcePath(const Akonadi::AgentInstance &agent, const QString &defaultPath = QString());
 KUrl adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData);
 QString storeResources(KZip *archive, const QString &identifier, const QString &path);
 KUrl akonadiAgentConfigPath(const QString &identifier);
 KZip *openZip(const QString &filename, QString &errorMsg);
+
+void addVersion(KZip *archive);
+int archiveVersion(KZip *archive);
+
+int currentArchiveVersion();
+QString appTypeToI18n(AppsType type);
+QString storedTypeToI18n(StoredType type);
 }
 #endif // UTILS_H

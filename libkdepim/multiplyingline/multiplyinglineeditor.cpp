@@ -31,135 +31,138 @@
 #include <QHBoxLayout>
 using namespace KPIM;
 MultiplyingLineEditor::MultiplyingLineEditor( MultiplyingLineFactory* factory, QWidget *parent )
-  : QWidget( parent ), mModified( false ), mMultiplyingLineFactory( factory )
+    : QWidget( parent ), mModified( false ), mMultiplyingLineFactory( factory )
 {
-  QBoxLayout *topLayout = new QHBoxLayout();
-  topLayout->setSpacing( KDialog::spacingHint() );
-  topLayout->setMargin( 0 );
-  setLayout( topLayout );
+    QBoxLayout *topLayout = new QHBoxLayout();
+    topLayout->setSpacing( KDialog::spacingHint() );
+    topLayout->setMargin( 0 );
+    setLayout( topLayout );
 
-  mView = new MultiplyingLineView( mMultiplyingLineFactory, this );
-  topLayout->addWidget( mView );
-  connect( mView, SIGNAL(focusUp()), SIGNAL(focusUp()) );
-  connect( mView, SIGNAL(focusDown()), SIGNAL(focusDown()) );
-  connect( mView, SIGNAL(completionModeChanged(KGlobalSettings::Completion)),
-    SIGNAL(completionModeChanged(KGlobalSettings::Completion)) );
-  connect( mView, SIGNAL(lineDeleted(int)), SIGNAL(lineDeleted(int)) );
-  connect( mView, SIGNAL(lineAdded(KPIM::MultiplyingLine*)), SIGNAL(lineAdded(KPIM::MultiplyingLine*)) );
-  connect( mView, SIGNAL(sizeHintChanged()),
-           SIGNAL(sizeHintChanged()) );
+    mView = new MultiplyingLineView( mMultiplyingLineFactory, this );
+    topLayout->addWidget( mView );
+    connect( mView, SIGNAL(focusUp()), SIGNAL(focusUp()) );
+    connect( mView, SIGNAL(focusDown()), SIGNAL(focusDown()) );
+    connect( mView, SIGNAL(completionModeChanged(KGlobalSettings::Completion)),
+             SIGNAL(completionModeChanged(KGlobalSettings::Completion)) );
+    connect( mView, SIGNAL(lineDeleted(int)), SIGNAL(lineDeleted(int)) );
+    connect( mView, SIGNAL(lineAdded(KPIM::MultiplyingLine*)), SIGNAL(lineAdded(KPIM::MultiplyingLine*)) );
+    connect( mView, SIGNAL(sizeHintChanged()),
+             SIGNAL(sizeHintChanged()) );
 }
 
 MultiplyingLineEditor::~MultiplyingLineEditor()
 {
-  delete mMultiplyingLineFactory;
+    delete mMultiplyingLineFactory;
 }
 
-void MultiplyingLineEditor::addData( const MultiplyingLineData::Ptr &data )
+bool MultiplyingLineEditor::addData( const MultiplyingLineData::Ptr &data )
 {
-  MultiplyingLine* line = mView->emptyLine();
-  if( !line )
-    line = mView->addLine();
-  if( data )
-    line->setData( data );
+    MultiplyingLine* line = mView->emptyLine();
+    bool tooManyAddress = false;
+    if( !line )
+        line = mView->addLine();
+    if (!line)
+        tooManyAddress = true;
+    if( line && data )
+        line->setData( data );
+    return tooManyAddress;
 }
 
 void MultiplyingLineEditor::removeData( const MultiplyingLineData::Ptr &data )
 {
-  mView->removeData( data );
+    mView->removeData( data );
 }
 
 void MultiplyingLineEditor::clear()
 {
-  foreach ( MultiplyingLine *line, mView->lines() )
-    line->slotPropagateDeletion();
+    foreach ( MultiplyingLine *line, mView->lines() )
+        line->slotPropagateDeletion();
 }
 
 bool MultiplyingLineEditor::isModified()
 {
-  return mModified || mView->isModified();
+    return mModified || mView->isModified();
 }
 
 void MultiplyingLineEditor::clearModified()
 {
-  mModified = false;
-  mView->clearModified();
+    mModified = false;
+    mView->clearModified();
 }
 
 void MultiplyingLineEditor::setFocus()
 {
-  mView->setFocus();
+    mView->setFocus();
 }
 
 void MultiplyingLineEditor::setFocusTop()
 {
-  mView->setFocusTop();
+    mView->setFocusTop();
 }
 
 void MultiplyingLineEditor::setFocusBottom()
 {
-  mView->setFocusBottom();
+    mView->setFocusBottom();
 }
 
 int MultiplyingLineEditor::setFirstColumnWidth( int w )
 {
-  return mView->setFirstColumnWidth( w );
+    return mView->setFirstColumnWidth( w );
 }
 
 void MultiplyingLineEditor::setCompletionMode( KGlobalSettings::Completion mode )
 {
-  mView->setCompletionMode( mode );
+    mView->setCompletionMode( mode );
 }
 
 MultiplyingLineFactory* MultiplyingLineEditor::factory() const
 {
-  return mMultiplyingLineFactory;
+    return mMultiplyingLineFactory;
 }
 
 QList< MultiplyingLineData::Ptr > MultiplyingLineEditor::allData() const
 {
-  return mView->allData();
+    return mView->allData();
 }
 
 MultiplyingLineData::Ptr MultiplyingLineEditor::activeData() const
 {
-  return mView->activeLine()->data();
+    return mView->activeLine()->data();
 }
 
 
 QList< MultiplyingLine* > MultiplyingLineEditor::lines() const
 {
-  return mView->lines();
+    return mView->lines();
 }
 
 MultiplyingLine* MultiplyingLineEditor::activeLine() const
 {
-  return mView->activeLine();
+    return mView->activeLine();
 }
 
 void MultiplyingLineEditor::setFrameStyle( int shape )
 {
-  mView->setFrameStyle( shape );
+    mView->setFrameStyle( shape );
 }
 
 void MultiplyingLineEditor::setAutoResizeView( bool resize )
 {
-  mView->setAutoResize( resize );
+    mView->setAutoResize( resize );
 }
 
 bool MultiplyingLineEditor::autoResizeView()
 {
-  return mView->autoResize();
+    return mView->autoResize();
 }
 
 void MultiplyingLineEditor::setDynamicSizeHint( bool dynamic )
 {
-  mView->setDynamicSizeHint( dynamic );
+    mView->setDynamicSizeHint( dynamic );
 }
 
 bool MultiplyingLineEditor::dynamicSizeHint() const
 {
-  return mView->dynamicSizeHint();
+    return mView->dynamicSizeHint();
 }
 
-#include "multiplyinglineeditor.moc"

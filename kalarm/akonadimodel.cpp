@@ -93,7 +93,8 @@ AkonadiModel* AkonadiModel::instance()
 AkonadiModel::AkonadiModel(ChangeRecorder* monitor, QObject* parent)
     : EntityTreeModel(monitor, parent),
       mMonitor(monitor),
-      mResourcesChecked(false)
+      mResourcesChecked(false),
+      mMigrating(false)
 {
     // Set lazy population to enable the contents of unselected collections to be ignored
     setItemPopulationStrategy(LazyPopulation);
@@ -114,11 +115,11 @@ AkonadiModel::AkonadiModel(ChangeRecorder* monitor, QObject* parent)
 
     if (!mTextIcon)
     {
-        mTextIcon    = new QPixmap(SmallIcon("dialog-information"));
-        mFileIcon    = new QPixmap(SmallIcon("document-open"));
-        mCommandIcon = new QPixmap(SmallIcon("system-run"));
-        mEmailIcon   = new QPixmap(SmallIcon("mail-message-unread"));
-        mAudioIcon   = new QPixmap(SmallIcon("audio-x-generic"));
+        mTextIcon    = new QPixmap(SmallIcon(QLatin1String("dialog-information")));
+        mFileIcon    = new QPixmap(SmallIcon(QLatin1String("document-open")));
+        mCommandIcon = new QPixmap(SmallIcon(QLatin1String("system-run")));
+        mEmailIcon   = new QPixmap(SmallIcon(QLatin1String("mail-message-unread")));
+        mAudioIcon   = new QPixmap(SmallIcon(QLatin1String("audio-x-generic")));
         mIconSize = mTextIcon->size().expandedTo(mFileIcon->size()).expandedTo(mCommandIcon->size()).expandedTo(mEmailIcon->size()).expandedTo(mAudioIcon->size());
     }
 
@@ -127,7 +128,9 @@ AkonadiModel::AkonadiModel(ChangeRecorder* monitor, QObject* parent)
 #endif
     connect(monitor, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)), SLOT(slotCollectionChanged(Akonadi::Collection,QSet<QByteArray>)));
     connect(monitor, SIGNAL(collectionRemoved(Akonadi::Collection)), SLOT(slotCollectionRemoved(Akonadi::Collection)));
-    connect(CalendarMigrator::instance(), SIGNAL(creating(QString,bool)), SLOT(slotCollectionBeingCreated(QString,bool)));
+    connect(CalendarMigrator::instance(), SIGNAL(creating(QString,Akonadi::Collection::Id,bool)),
+                                          SLOT(slotCollectionBeingCreated(QString,Akonadi::Collection::Id,bool)));
+    connect(CalendarMigrator::instance(), SIGNAL(destroyed(QObject*)), SLOT(slotMigrationCompleted()));
     MinuteTimer::connect(this, SLOT(slotUpdateTimeTo()));
     Preferences::connect(SIGNAL(archivedColourChanged(QColor)), this, SLOT(slotUpdateArchivedColour(QColor)));
     Preferences::connect(SIGNAL(disabledColourChanged(QColor)), this, SLOT(slotUpdateDisabledColour(QColor)));
@@ -143,6 +146,12 @@ AkonadiModel::AkonadiModel(ChangeRecorder* monitor, QObject* parent)
     checkResources(ServerManager::state());
 }
 
+AkonadiModel::~AkonadiModel()
+{
+    if (mInstance == this)
+        mInstance = 0;
+}
+
 /******************************************************************************
 * Called when the server manager is running, i.e. the agent manager knows about
 * all existing resources.
@@ -155,8 +164,17 @@ void AkonadiModel::checkResources(ServerManager::State state)
     if (!mResourcesChecked  &&  state == ServerManager::Running)
     {
         mResourcesChecked = true;
+        mMigrating = true;
         CalendarMigrator::execute();
     }
+}
+
+/******************************************************************************
+* Return whether calendar migration has completed.
+*/
+bool AkonadiModel::isMigrationCompleted() const
+{
+    return mResourcesChecked && !mMigrating;
 }
 
 /******************************************************************************
@@ -370,7 +388,7 @@ QVariant AkonadiModel::data(const QModelIndex& index, int role) const
                         {
                             unsigned i = (event.actionTypes() == KAEvent::ACT_DISPLAY)
                                          ? event.bgColour().rgb() : 0;
-                            return QString("%1").arg(i, 6, 10, QLatin1Char('0'));
+                            return QString::fromLatin1("%1").arg(i, 6, 10, QLatin1Char('0'));
                         }
                         default:
                             break;
@@ -394,13 +412,13 @@ QVariant AkonadiModel::data(const QModelIndex& index, int role) const
                             return mIconSize;
                         case Qt::AccessibleTextRole:
 #ifdef __GNUC__
-#warning Implement this
+#warning Implement accessibility
 #endif
                             return QString();
                         case ValueRole:
                             return static_cast<int>(event.actionSubType());
                         case SortRole:
-                            return QString("%1").arg(event.actionSubType(), 2, 10, QLatin1Char('0'));
+                            return QString::fromLatin1("%1").arg(event.actionSubType(), 2, 10, QLatin1Char('0'));
                     }
                     break;
                 case TextColumn:
@@ -881,9 +899,9 @@ QString AkonadiModel::storageType(const Akonadi::Collection& collection) const
 */
 QString AkonadiModel::tooltip(const Collection& collection, CalEvent::Types types) const
 {
-    QString name = '@' + collection.displayName();   // insert markers for stripping out name
+    QString name = QLatin1Char('@') + collection.displayName();   // insert markers for stripping out name
     KUrl url = collection.remoteId();
-    QString type = '@' + storageType(collection);   // file/directory/URL etc.
+    QString type = QLatin1Char('@') + storageType(collection);   // file/directory/URL etc.
     QString locn = url.pathOrUrl();
     bool inactive = !collection.hasAttribute<CollectionAttribute>()
                  || !(collection.attribute<CollectionAttribute>()->enabled() & types);
@@ -975,7 +993,7 @@ QString AkonadiModel::repeatOrder(const KAEvent& event) const
                 break;
         }
     }
-    return QString("%1%2").arg(static_cast<char>('0' + repeatOrder)).arg(repeatInterval, 8, 10, QLatin1Char('0'));
+    return QString::fromLatin1("%1%2").arg(static_cast<char>('0' + repeatOrder)).arg(repeatInterval, 8, 10, QLatin1Char('0'));
 }
 
 /******************************************************************************
@@ -1142,6 +1160,33 @@ void AkonadiModel::modifyCollectionJobDone(KJob* j)
 QModelIndex AkonadiModel::eventIndex(const KAEvent& event)
 {
     return itemIndex(event.itemId());
+}
+
+/******************************************************************************
+* Search for an event's item ID. This method ignores any itemId() value
+* contained in the KAEvent. The collectionId() is used if available.
+*/
+Item::Id AkonadiModel::findItemId(const KAEvent& event)
+{
+    Collection::Id colId = event.collectionId();
+    QModelIndex start = (colId < 0) ? index(0, 0) : collectionIndex(Collection(colId));
+    Qt::MatchFlags flags = (colId < 0) ? Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchCaseSensitive | Qt::MatchWrap
+                                       : Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchCaseSensitive;
+    const QModelIndexList indexes = match(start, RemoteIdRole, event.id(), -1, flags);
+    foreach (const QModelIndex& ix, indexes)
+    {
+        if (ix.isValid())
+        {
+            Item::Id id = ix.data(ItemIdRole).toLongLong();
+            if (id >= 0)
+            {
+                if (colId < 0
+                ||  ix.data(ParentCollectionRole).value<Collection>().id() == colId)
+                    return id;
+            }
+        }
+    }
+    return -1;
 }
 
 #if 0
@@ -1630,6 +1675,18 @@ void AkonadiModel::setCollectionChanged(const Collection& collection, const QSet
         refresh(col);
         CalendarMigrator::updateToCurrentFormat(col, false, MainWindow::mainMainWindow());
     }
+
+    if (mMigrating)
+    {
+        mCollectionIdsBeingCreated.removeAll(collection.id());
+        if (mCollectionsBeingCreated.isEmpty() && mCollectionIdsBeingCreated.isEmpty()
+        &&  CalendarMigrator::completed())
+        {
+            kDebug() << "Migration completed";
+            mMigrating = false;
+            emit migrationCompleted();
+        }
+    }
 }
 
 /******************************************************************************
@@ -1649,12 +1706,28 @@ void AkonadiModel::slotCollectionRemoved(const Collection& collection)
 /******************************************************************************
 * Called when a collection creation is about to start, or has completed.
 */
-void AkonadiModel::slotCollectionBeingCreated(const QString& path, bool finished)
+void AkonadiModel::slotCollectionBeingCreated(const QString& path, Akonadi::Collection::Id id, bool finished)
 {
     if (finished)
+    {
         mCollectionsBeingCreated.removeAll(path);
+        mCollectionIdsBeingCreated << id;
+    }
     else
         mCollectionsBeingCreated << path;
+}
+
+/******************************************************************************
+* Called when calendar migration has completed.
+*/
+void AkonadiModel::slotMigrationCompleted()
+{
+    if (mCollectionsBeingCreated.isEmpty() && mCollectionIdsBeingCreated.isEmpty())
+    {
+        kDebug() << "Migration completed";
+        mMigrating = false;
+        emit migrationCompleted();
+    }
 }
 
 /******************************************************************************

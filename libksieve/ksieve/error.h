@@ -107,8 +107,8 @@ namespace KSieve {
     static const char * typeToString( Type type );
 
     Error( Type type=None,
-	   const QString & s1=QString(), const QString & s2=QString(),
-	   int line=-1, int col=-1 )
+           const QString & s1=QString(), const QString & s2=QString(),
+           int line=-1, int col=-1 )
       : mType( type ), mLine( line ), mCol( col ),
         mStringOne( s1 ), mStringTwo( s2 ) {}
     Error( Type type, int line, int col )

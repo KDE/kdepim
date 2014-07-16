@@ -127,5 +127,4 @@ bool AbstractGrid::isSatisfiedConstraint( const Constraint& c ) const
  * \param widget -- the widget used by the view -- may be 0.
  */
 
-#include "moc_kdganttabstractgrid.cpp"
 

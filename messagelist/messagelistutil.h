@@ -22,31 +22,33 @@
 #include <messagelist/messagelist_export.h>
 #include <QString>
 #include <QColor>
-#include <KUrl>
+
+namespace Akonadi {
+class Item;
+}
 class KMenu;
 
 namespace MessageList
 {
 namespace Util {
-  MESSAGELIST_EXPORT QString messageSortingConfigName();
-  MESSAGELIST_EXPORT QString messageSortDirectionConfigName();
-  MESSAGELIST_EXPORT QString groupSortingConfigName();
-  MESSAGELIST_EXPORT QString groupSortDirectionConfigName();
-  MESSAGELIST_EXPORT QString messageUniqueIdConfigName();
-  MESSAGELIST_EXPORT QString storageModelSortOrderGroup();
-  MESSAGELIST_EXPORT QString storageModelThemesGroup();
-  MESSAGELIST_EXPORT QString storageModelAggregationsGroup();
-  MESSAGELIST_EXPORT QString setForStorageModelConfigName();
-  MESSAGELIST_EXPORT QString storageModelSelectedMessageGroup();
-  MESSAGELIST_EXPORT void deleteConfig( const QString& collectionId );
-  MESSAGELIST_EXPORT QColor unreadDefaultMessageColor();
-  MESSAGELIST_EXPORT QColor importantDefaultMessageColor();
-  MESSAGELIST_EXPORT QColor todoDefaultMessageColor();
-  MESSAGELIST_EXPORT void fillViewMenu( KMenu * menu, QObject *receiver );
+MESSAGELIST_EXPORT QString messageSortingConfigName();
+MESSAGELIST_EXPORT QString messageSortDirectionConfigName();
+MESSAGELIST_EXPORT QString groupSortingConfigName();
+MESSAGELIST_EXPORT QString groupSortDirectionConfigName();
+MESSAGELIST_EXPORT QString messageUniqueIdConfigName();
+MESSAGELIST_EXPORT QString storageModelSortOrderGroup();
+MESSAGELIST_EXPORT QString storageModelThemesGroup();
+MESSAGELIST_EXPORT QString storageModelAggregationsGroup();
+MESSAGELIST_EXPORT QString setForStorageModelConfigName();
+MESSAGELIST_EXPORT QString storageModelSelectedMessageGroup();
+MESSAGELIST_EXPORT void deleteConfig( const QString& collectionId );
+MESSAGELIST_EXPORT QColor unreadDefaultMessageColor();
+MESSAGELIST_EXPORT QColor importantDefaultMessageColor();
+MESSAGELIST_EXPORT QColor todoDefaultMessageColor();
+MESSAGELIST_EXPORT void fillViewMenu( KMenu * menu, QObject *receiver );
 
-  /// Returns the first few lines of the actual email text
-  /// This data is taken from Nepomuk, if available.
-  MESSAGELIST_EXPORT QString contentSummary( const KUrl& url );
+/// Returns the first few lines of the actual email text if available.
+MESSAGELIST_EXPORT QString contentSummary( const Akonadi::Item &item );
 }
 }
 

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -22,15 +22,26 @@
 #define AUTOCREATESCRIPTUTIL_H
 
 #include <QString>
+#include <QStringList>
+#include <QDomNode>
 
 namespace AutoCreateScriptUtil
 {
 QString createMultiLine(const QString &str);
-QString createList(const QString &str, const QChar &separator);
-QString createList(const QStringList &lst);
+QString createList(const QString &str, const QChar &separator, bool addEndSemiColon = true);
+QString createList(const QStringList &lst, bool addSemiColon = true, bool protectSlash = false);
 QStringList createListFromString(QString str);
-QString createAddressList(const QString &str);
+QString createAddressList(const QString &str, bool addSemiColon = true);
 QString negativeString(bool isNegative);
+QString tagValueWithCondition(const QString &tag, bool notCondition);
+QString tagValue(const QString &tag);
+QString strValue(QDomNode &node);
+QStringList listValue(const QDomElement &element);
+QString listValueToStr(const QDomElement &element);
+QString fixListValue(QString valueStr);
+QString quoteStr(QString str);
+void comboboxItemNotFound(const QString &searchItem, const QString &name, QString &error);
+QString createFullWhatsThis(const QString &help, const QString &href);
 }
 
 #endif // AUTOCREATESCRIPTUTIL_H

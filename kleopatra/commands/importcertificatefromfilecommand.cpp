@@ -44,16 +44,16 @@
 #include <gpgme++/global.h>
 #include <gpgme++/importresult.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfigGroup>
 
-#include <QByteArray>
 #include <QFile>
-#include <QFileDialog>
-#include <QPointer>
 #include <QString>
 #include <QWidget>
 #include <QFileInfo>
+#include <QDir>
+
+#include <KSharedConfig>
 
 #include <memory>
 #include <cassert>
@@ -151,14 +151,14 @@ void ImportCertificateFromFileCommand::doStart()
 }
 
 static QStringList get_file_name( QWidget * parent ) {
-    const QString certificateFilter = i18n("Certificates") + " (*.asc *.cer *.cert *.crt *.der *.pem *.gpg *.p7c *.p12 *.pfx *.pgp)";
-    const QString anyFilesFilter = i18n("Any files") + " (*)";
+    const QString certificateFilter = i18n("Certificates") + QLatin1String(" (*.asc *.cer *.cert *.crt *.der *.pem *.gpg *.p7c *.p12 *.pfx *.pgp)");
+    const QString anyFilesFilter = i18n("Any files") + QLatin1String(" (*)");
     QString previousDir;
     if ( const KSharedConfig::Ptr config = KGlobal::config() ) {
         const KConfigGroup group( config, "Import Certificate" );
         previousDir = group.readPathEntry( "last-open-file-directory", QDir::homePath() );
     }
-    const QStringList files = Kleo::FileDialog::getOpenFileNames( parent, i18n( "Select Certificate File" ), previousDir, certificateFilter + ";;" + anyFilesFilter );
+    const QStringList files = Kleo::FileDialog::getOpenFileNames( parent, i18n( "Select Certificate File" ), previousDir, certificateFilter + QLatin1String(";;") + anyFilesFilter );
     if ( !files.empty() )
         if ( const KSharedConfig::Ptr config = KGlobal::config() ) {
             KConfigGroup group( config, "Import Certificate" );
@@ -177,6 +177,5 @@ bool ImportCertificateFromFileCommand::Private::ensureHaveFile()
 #undef d
 #undef q
 
-#include "moc_importcertificatefromfilecommand.cpp"
 
 

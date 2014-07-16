@@ -41,10 +41,8 @@
 #include <KStandardGuiItem>
 #include <kglobalsettings.h>
 
-#include <QLayout>
 #include <QLabel>
 #include <qtextedit.h>
-#include <QFontMetrics>
 #include <QTimer>
 
 #include <QVBoxLayout>
@@ -77,12 +75,12 @@ CRLView::CRLView( QWidget* parent )
 
   // connections:
   connect( _updateButton, SIGNAL(clicked()),
-	   this, SLOT(slotUpdateView()) );
+           this, SLOT(slotUpdateView()) );
   connect( _closeButton, SIGNAL(clicked()),
-	   this, SLOT(close()) );
+           this, SLOT(close()) );
 
   resize( _textView->fontMetrics().width( 'M' ) * 80,
-	  _textView->fontMetrics().lineSpacing() * 25 );
+          _textView->fontMetrics().lineSpacing() * 25 );
 
   _timer = new QTimer( this );
   connect( _timer, SIGNAL(timeout()), SLOT(slotAppendBuffer()) );
@@ -146,4 +144,3 @@ void CRLView::slotProcessExited(int, QProcess::ExitStatus _status)
   }
 }
 
-#include "crlview.moc"

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,7 +16,8 @@
 */
 
 #include "sieveactiondiscard.h"
-#include <KLocale>
+#include "editor/sieveeditorutil.h"
+#include <KLocalizedString>
 
 using namespace KSieveUi;
 SieveActionDiscard::SieveActionDiscard(QObject *parent)
@@ -39,4 +40,7 @@ QString SieveActionDiscard::help() const
     return i18n("Discard is used to silently throw away the message.");
 }
 
-#include "sieveactiondiscard.moc"
+QString SieveActionDiscard::href() const
+{
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
+}

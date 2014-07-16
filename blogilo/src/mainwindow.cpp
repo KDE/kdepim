@@ -36,27 +36,37 @@
 #include "blogsettings.h"
 #include "poststabwidget.h"
 #include "uploadmediadialog.h"
+#include "configuredialog.h"
+#include "storageservice/storageservicemanagersettingsjob.h"
 
 #include "ui_advancedsettingsbase.h"
 #include "ui_settingsbase.h"
 #include "ui_editorsettingsbase.h"
+
+#include "pimcommon/storageservice/storageservicemanager.h"
+#include "pimcommon/storageservice/storageservicejobconfig.h"
+#include "pimcommon/storageservice/storageserviceabstract.h"
+#include "pimcommon/storageservice/storageserviceprogressmanager.h"
+
+#include "libkdepim/progresswidget/progressdialog.h"
+#include "libkdepim/progresswidget/statusbarprogresswidget.h"
+#include "libkdepim/progresswidget/progressstatusbarwidget.h"
 
 #include <ktabwidget.h>
 #include <KStatusNotifierItem>
 #include <kstatusbar.h>
 #include <KToggleAction>
 #include <kactioncollection.h>
+#include <KActionMenu>
 #include <kconfigdialog.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
-#include <KDE/KLocale>
+#include <KLocale>
 #include <KSelectAction>
 #include <kimagefilepreview.h>
 #include <KToolInvocation>
 #include <KMenu>
 
-
-#include <QDir>
 #include <QDockWidget>
 #include <QProgressBar>
 #include <QTimer>
@@ -74,6 +84,7 @@ MainWindow::MainWindow()
       mCurrentBlogId(__currentBlogId)
 {
     setWindowTitle( i18n("Blogilo") );
+    initStorageService();
 
     tabPosts = new PostsTabWidget(this);
     setCentralWidget( tabPosts );
@@ -95,9 +106,7 @@ MainWindow::MainWindow()
 
     // then, setup our actions
     setupActions();
-
-    // add a status bar
-    statusBar()->show();
+    setupStatusBar();
 
     // a call to KXmlGuiWindow::setupGUI() populates the GUI
     // with actions, using KXMLGUI.
@@ -130,6 +139,44 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow()
 {
+}
+
+void MainWindow::setupStatusBar()
+{
+    KPIM::ProgressStatusBarWidget * progressStatusBarWidget = new KPIM::ProgressStatusBarWidget(statusBar(), this, PimCommon::StorageServiceProgressManager::progressTypeValue());
+    statusBar()->addPermanentWidget( progressStatusBarWidget->littleProgress(), 0);
+    statusBar()->show();
+}
+
+void MainWindow::initStorageService()
+{
+    StorageServiceManagerSettingsJob *settingsJob = new StorageServiceManagerSettingsJob(this);
+    PimCommon::StorageServiceJobConfig *configJob = PimCommon::StorageServiceJobConfig::self();
+    configJob->registerConfigIf(settingsJob);
+
+    mStorageManager = new PimCommon::StorageServiceManager(this);
+    connect(mStorageManager, SIGNAL(uploadFileDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
+    connect(mStorageManager, SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
+    connect(mStorageManager, SIGNAL(uploadFileFailed(QString,QString)), this, SLOT(slotUploadFileFailed(QString,QString)));
+    connect(mStorageManager, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
+}
+
+void MainWindow::slotUploadFileDone(const QString &serviceName, const QString &link)
+{
+    Q_UNUSED(serviceName);
+    KMessageBox::information(this, i18n("File uploaded. You can access to it at this url %1", link), i18n("Upload File"));
+}
+
+void MainWindow::slotUploadFileFailed(const QString &serviceName, const QString &filename)
+{
+    Q_UNUSED(serviceName);
+    Q_UNUSED(filename);
+    KMessageBox::error(this, i18n("Error during upload."), i18n("Upload File"));
+}
+
+void MainWindow::slotActionFailed(const QString &serviceName, const QString &error)
+{
+    KMessageBox::error(this, i18n("%1 return an error '%2'", serviceName, error), i18n("Error"));
 }
 
 void MainWindow::slotCloseTabClicked()
@@ -200,6 +247,10 @@ void MainWindow::setupActions()
     actionCollection()->addAction( QLatin1String("open_blog_in_browser"), actOpenBlog);
     actOpenBlog->setToolTip(i18n("Open current blog in browser"));
     connect( actOpenBlog, SIGNAL(triggered(bool)), this, SLOT(slotOpenCurrentBlogInBrowser()) );
+
+    actionCollection()->addAction( QLatin1String("upload_file"), mStorageManager->menuUploadServices(this) );
+    actionCollection()->addAction( QLatin1String("download_file"), mStorageManager->menuDownloadServices(this) );
+    mStorageManager->setDefaultUploadFolder(Settings::self()->downloadDirectory());
 }
 
 void MainWindow::loadTempPosts()
@@ -289,42 +340,23 @@ void MainWindow::optionsPreferences()
     if ( KConfigDialog::showDialog( QLatin1String("settings") ) )  {
         return;
     }
-    KConfigDialog *dialog = new KConfigDialog( this, QLatin1String("settings"), Settings::self() );
-    QWidget *generalSettingsDlg = new QWidget;
-    generalSettingsDlg->setAttribute( Qt::WA_DeleteOnClose );
-    Ui::SettingsBase ui_prefs_base;
-    Ui::EditorSettingsBase ui_editorsettings_base;
-    ui_prefs_base.setupUi( generalSettingsDlg );
-    BlogSettings *blogSettingsDlg = new BlogSettings;
-    blogSettingsDlg->setAttribute( Qt::WA_DeleteOnClose );
-    connect( blogSettingsDlg, SIGNAL(blogAdded(BilboBlog)),
+    ConfigureDialog *dialog = new ConfigureDialog( mStorageManager, this, QLatin1String("settings"), Settings::self() );
+    connect( dialog, SIGNAL(blogAdded(BilboBlog)),
              this, SLOT(slotBlogAdded(BilboBlog)) );
-    connect( blogSettingsDlg, SIGNAL(blogEdited(BilboBlog)),
+    connect( dialog, SIGNAL(blogEdited(BilboBlog)),
              this, SLOT(slotBlogEdited(BilboBlog)) );
-    connect( blogSettingsDlg, SIGNAL(blogRemoved(int)), this, SLOT(slotBlogRemoved(int)) );
-    QWidget *editorSettingsDlg = new QWidget;
-    editorSettingsDlg->setAttribute( Qt::WA_DeleteOnClose );
-    ui_editorsettings_base.setupUi( editorSettingsDlg );
-    QWidget *advancedSettingsDlg = new QWidget;
-    advancedSettingsDlg->setAttribute( Qt::WA_DeleteOnClose );
-    Ui::AdvancedSettingsBase ui_advancedsettings_base;
-    ui_advancedsettings_base.setupUi( advancedSettingsDlg );
-
-    dialog->addPage( generalSettingsDlg, i18nc( "Configure Page", "General" ), QLatin1String("configure") );
-    dialog->addPage( blogSettingsDlg, i18nc( "Configure Page", "Blogs" ), QLatin1String("document-properties"));
-    dialog->addPage( editorSettingsDlg, i18nc( "Configure Page", "Editor" ), QLatin1String("accessories-text-editor"));
-    dialog->addPage( advancedSettingsDlg, i18nc( "Configure Page", "Advanced" ), QLatin1String("applications-utilities"));
+    connect( dialog, SIGNAL(blogRemoved(int)), this, SLOT(slotBlogRemoved(int)) );
     connect( dialog, SIGNAL(settingsChanged(QString)), this, SIGNAL(settingsChanged()) );
     connect( dialog, SIGNAL(settingsChanged(QString)), this, SLOT(slotSettingsChanged()) );
-    connect( dialog, SIGNAL(destroyed(QObject*)), this, SLOT(slotDialogDestroyed(QObject*)));
-    dialog->setAttribute( Qt::WA_DeleteOnClose );
-    dialog->resize( Settings::configWindowSize() );
+    connect( dialog, SIGNAL(dialogDestroyed(QObject*)), this, SLOT(slotDialogDestroyed(QObject*)));
+    connect( dialog, SIGNAL(settingsChanged()), this, SLOT(slotSettingsChanged()));
     dialog->show();
 }
 
 void MainWindow::slotSettingsChanged()
 {
     setupSystemTray();
+    mStorageManager->setDefaultUploadFolder(Settings::self()->downloadDirectory());
 }
 
 void MainWindow::slotDialogDestroyed( QObject *win )
@@ -671,4 +703,3 @@ void MainWindow::slotOpenCurrentBlogInBrowser()
     ///else show a message to the user saying that a blog should be selected before.
 }
 
-#include "mainwindow.moc"

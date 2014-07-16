@@ -144,7 +144,7 @@ class TimeSpentWidget : public QWidget
 
       QMapIterator<QString, int> i( secondsSpent );
       QFontMetrics fm = p.fontMetrics();
-      int lineHeight = fm.boundingRect( "No category" ).height();
+      int lineHeight = fm.boundingRect( QLatin1String("No category") ).height();
       int totalLineHeight = lineHeight + 2; // vertical margin included
 
       while ( i.hasNext() ) {
@@ -177,7 +177,7 @@ class TimeSpentWidget : public QWidget
           perHr = 0;
         }
         p.drawText( QRect( margin + 2, y + 2, width() - 2 * margin, lineHeight ),
-                    i.key() + ": " +
+                    i.key() +QLatin1String( ": " )+
                     i18ncp( "number of hours spent", "%1 hour", "%1 hours", totHr ) +
                     i18nc( "percent of hours spent", " (%1%)", perHr ) );
         y += totalLineHeight;
@@ -257,4 +257,3 @@ void TimeSpentView::updateView()
   mView->repaint();
 }
 
-#include "timespentview.moc"

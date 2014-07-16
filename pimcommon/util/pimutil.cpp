@@ -38,12 +38,81 @@
 
 #include "pimutil.h"
 
-#include "imapsettings.h"
+#include "imapresourcesettings.h"
+
+#include <KFileDialog>
+#include <KMessageBox>
+#include <KLocalizedString>
+
+#include <QTextStream>
+#include <QWidget>
+#include <QPointer>
+
+#include <errno.h>
 
 OrgKdeAkonadiImapSettingsInterface *PimCommon::Util::createImapSettingsInterface( const QString &ident )
 {
     return
             new OrgKdeAkonadiImapSettingsInterface(
-                "org.freedesktop.Akonadi.Resource." + ident, "/Settings", QDBusConnection::sessionBus() );
+                QLatin1String("org.freedesktop.Akonadi.Resource.") + ident, QLatin1String("/Settings"), QDBusConnection::sessionBus() );
+}
+
+void PimCommon::Util::saveTextAs( const QString &text, const QString &filter, QWidget *parent, const KUrl &url )
+{
+    QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, parent) );
+
+    fdlg->setMode( KFile::File );
+    fdlg->setOperationMode( KFileDialog::Saving );
+    fdlg->setConfirmOverwrite(true);
+    if ( fdlg->exec() == QDialog::Accepted && fdlg ) {
+        const QString fileName = fdlg->selectedFile();
+        if ( !saveToFile( fileName, text ) ) {
+            KMessageBox::error( parent,
+                                i18n( "Could not write the file %1:\n"
+                                      "\"%2\" is the detailed error description.",
+                                      fileName,
+                                      QString::fromLocal8Bit( strerror( errno ) ) ),
+                                i18n( "Save File Error" ) );
+        }
+    }
+    delete fdlg;
+}
+
+bool PimCommon::Util::saveToFile( const QString &filename, const QString &text )
+{
+    QFile file( filename );
+    if ( !file.open( QIODevice::WriteOnly|QIODevice::Text ) )
+        return false;
+    QTextStream out(&file);
+    out.setCodec("UTF-8");
+    out << text;
+    file.close();
+    return true;
+}
+
+QString PimCommon::Util::loadToFile(const QString &filter, QWidget *parent, const KUrl &url)
+{
+    QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, parent) );
+
+    fdlg->setMode( KFile::File );
+    fdlg->setOperationMode( KFileDialog::Opening );
+    QString result;
+    if ( fdlg->exec() == QDialog::Accepted && fdlg ) {
+        const QString fileName = fdlg->selectedFile();
+        QFile file( fileName );
+        if (!file.open( QIODevice::ReadOnly|QIODevice::Text ) ) {
+            KMessageBox::error( parent,
+                                i18n( "Could not read the file %1:\n"
+                                      "\"%2\" is the detailed error description.",
+                                      fileName,
+                                      QString::fromLocal8Bit( strerror( errno ) ) ),
+                                i18n( "Load File Error" ) );
+        } else {
+            result = QString::fromUtf8(file.readAll());
+            file.close();
+        }
+    }
+    delete fdlg;
+    return result;
 }
 

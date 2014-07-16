@@ -47,69 +47,69 @@
 namespace MessageViewer {
 
 CSSHelper::CSSHelper( const QPaintDevice *pd ) :
-  CSSHelperBase( pd )
+    CSSHelperBase( pd )
 {
-  KConfig *config = GlobalSettings::self()->config();
+    KConfig *config = GlobalSettings::self()->config();
 
-  KConfigGroup reader( config, "Reader" );
-  KConfigGroup fonts( config, "Fonts" );
-  KConfigGroup pixmaps( config, "Pixmaps" );
+    KConfigGroup reader( config, "Reader" );
+    KConfigGroup fonts( config, "Fonts" );
+    KConfigGroup pixmaps( config, "Pixmaps" );
 
-  mRecycleQuoteColors = reader.readEntry( "RecycleQuoteColors", false );
+    mRecycleQuoteColors = reader.readEntry( "RecycleQuoteColors", false );
 
-  mForegroundColor = KColorScheme( QPalette::Active ).foreground().color();
-  if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
-    mLinkColor =
-      reader.readEntry( "LinkColor", mLinkColor );
-    mVisitedLinkColor =
-      reader.readEntry( "FollowedColor", mVisitedLinkColor );
-    cPgpEncrH =
-      reader.readEntry( "PGPMessageEncr", cPgpEncrH );
-    cPgpOk1H  =
-      reader.readEntry( "PGPMessageOkKeyOk", cPgpOk1H );
-    cPgpOk0H  =
-      reader.readEntry( "PGPMessageOkKeyBad", cPgpOk0H );
-    cPgpWarnH =
-      reader.readEntry( "PGPMessageWarn", cPgpWarnH );
-    cPgpErrH  =
-      reader.readEntry( "PGPMessageErr", cPgpErrH );
-    cHtmlWarning =
-      reader.readEntry( "HTMLWarningColor", cHtmlWarning );
-    for ( int i = 0 ; i < 3 ; ++i ) {
-      const QString key = QLatin1String("QuotedText") + QString::number( i+1 );
-      mQuoteColor[i] = reader.readEntry( key, mQuoteColor[i] );
+    mForegroundColor = KColorScheme( QPalette::Active ).foreground().color();
+    if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
+        mLinkColor =
+                reader.readEntry( "LinkColor", mLinkColor );
+        mVisitedLinkColor =
+                reader.readEntry( "FollowedColor", mVisitedLinkColor );
+        cPgpEncrH =
+                reader.readEntry( "PGPMessageEncr", cPgpEncrH );
+        cPgpOk1H  =
+                reader.readEntry( "PGPMessageOkKeyOk", cPgpOk1H );
+        cPgpOk0H  =
+                reader.readEntry( "PGPMessageOkKeyBad", cPgpOk0H );
+        cPgpWarnH =
+                reader.readEntry( "PGPMessageWarn", cPgpWarnH );
+        cPgpErrH  =
+                reader.readEntry( "PGPMessageErr", cPgpErrH );
+        cHtmlWarning =
+                reader.readEntry( "HTMLWarningColor", cHtmlWarning );
+        for ( int i = 0 ; i < 3 ; ++i ) {
+            const QString key = QLatin1String("QuotedText") + QString::number( i+1 );
+            mQuoteColor[i] = reader.readEntry( key, mQuoteColor[i] );
+        }
+        mBackgroundColor = reader.readEntry( "BackgroundColor", mBackgroundColor );
     }
-    mBackgroundColor = reader.readEntry( "BackgroundColor", mBackgroundColor );
-  }
 
-  if ( !MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
-    mBodyFont = fonts.readEntry(  "body-font",  mBodyFont );
-    mPrintFont = fonts.readEntry( "print-font", mPrintFont );
-    mFixedFont = fonts.readEntry( "fixed-font", mFixedFont );
-    mFixedPrintFont = mFixedFont; // FIXME when we have a separate fixed print font
-    QFont defaultFont = mBodyFont;
-    defaultFont.setItalic( true );
-    for ( int i = 0 ; i < 3 ; ++i ) {
-      const QString key = QString::fromLatin1( "quote%1-font" ).arg( i+1 );
-      mQuoteFont[i] = fonts.readEntry( key, defaultFont );
+    if ( !MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
+        mBodyFont = fonts.readEntry(  "body-font",  mBodyFont );
+        mPrintFont = fonts.readEntry( "print-font", mPrintFont );
+        mFixedFont = fonts.readEntry( "fixed-font", mFixedFont );
+        mFixedPrintFont = mFixedFont; // FIXME when we have a separate fixed print font
+        QFont defaultFont = mBodyFont;
+        defaultFont.setItalic( true );
+        for ( int i = 0 ; i < 3 ; ++i ) {
+            const QString key = QString::fromLatin1( "quote%1-font" ).arg( i+1 );
+            mQuoteFont[i] = fonts.readEntry( key, defaultFont );
+        }
     }
-  }
 
-  mShrinkQuotes = GlobalSettings::self()->shrinkQuotes();
+    mShrinkQuotes = GlobalSettings::self()->shrinkQuotes();
 
-  mBackingPixmapStr = pixmaps.readPathEntry("Readerwin", QString());
-  mBackingPixmapOn = !mBackingPixmapStr.isEmpty();
+    mBackingPixmapStr = pixmaps.readPathEntry("Readerwin", QString());
+    mBackingPixmapOn = !mBackingPixmapStr.isEmpty();
 
-  recalculatePGPColors();
+    recalculatePGPColors();
 }
 
 QString CSSHelper::htmlHead( bool fixed ) const {
-  return
-  QLatin1String("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n"
-  "<html><head><title></title><style>\n")
-  + cssDefinitions( fixed ) +
-  QLatin1String("</style></head>\n"
-  "<body>\n");
+    return
+            QLatin1String("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n"
+                          "<html><head><title></title><style>\n")
+            + cssDefinitions( fixed ) +
+            QLatin1String("</style></head>\n"
+                          "<body>\n");
 }
 
 }

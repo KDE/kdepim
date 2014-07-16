@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -17,17 +17,19 @@
 
 
 #include "sieveconditionmailboxexists.h"
-
-#include <KLocale>
+#include "autocreatescripts/autocreatescriptutil_p.h"
+#include "editor/sieveeditorutil.h"
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QWidget>
 #include <QHBoxLayout>
 #include <QDebug>
+#include <QDomNode>
 
 using namespace KSieveUi;
 SieveConditionMailboxExists::SieveConditionMailboxExists(QObject *parent)
-    : SieveCondition(QLatin1String("mailboxexist"), i18n("Mailbox exist"), parent)
+    : SieveCondition(QLatin1String("mailboxexists"), i18n("Mailbox exists"), parent)
 {
 }
 
@@ -44,6 +46,7 @@ QWidget *SieveConditionMailboxExists::createParamWidget( QWidget *parent ) const
     w->setLayout(lay);
 
     KLineEdit *edit = new KLineEdit;
+    connect(edit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     edit->setClearButtonShown(true);
     lay->addWidget(edit);
     edit->setObjectName(QLatin1String("edit"));
@@ -53,7 +56,7 @@ QWidget *SieveConditionMailboxExists::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionMailboxExists::code(QWidget *w) const
 {
-    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
+    const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
     const QString editValue = edit->text();
     return QString::fromLatin1("mailboxexists \"%1\"").arg(editValue);
 }
@@ -78,4 +81,33 @@ QString SieveConditionMailboxExists::help() const
     return i18n("The \"mailboxexists\" test is true if all mailboxes listed in the \"mailbox-names\" argument exist in the mailstore, and each allows the user in whose context the Sieve script runs to \"deliver\" messages into it.");
 }
 
-#include "sieveconditionmailboxexists.moc"
+bool SieveConditionMailboxExists::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/, QString &error)
+{
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                const QString tagValue = e.text();
+                KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
+                edit->setText(AutoCreateScriptUtil::quoteStr(tagValue));
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
+            } else {
+                unknownTag(tagName, error);
+                qDebug()<<" SieveConditionMailboxExists::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+    return true;
+}
+
+QString SieveConditionMailboxExists::href() const
+{
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
+}
+

@@ -20,12 +20,13 @@
 #include <QWidget>
 
 class KJob;
-class KTextEdit;
 class KUrl;
 
 class QCheckBox;
 class QLabel;
-
+namespace PimCommon {
+class PlainTextEditor;
+}
 namespace KMail {
 
 class XFaceConfigurator : public QWidget {
@@ -52,7 +53,7 @@ private slots:
 
 private:
     QCheckBox     * mEnableCheck;
-    KTextEdit     * mTextEdit;
+    PimCommon::PlainTextEditor     * mTextEdit;
     QLabel        * mXFaceLabel;
 };
 } // namespace KMail

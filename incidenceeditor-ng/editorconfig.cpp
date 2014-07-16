@@ -21,6 +21,7 @@
 */
 
 #include "editorconfig.h"
+#include "korganizereditorconfig.h"
 
 #include <QtCore/QCoreApplication>
 
@@ -53,6 +54,11 @@ EditorConfig::~EditorConfig()
 
 EditorConfig *EditorConfig::instance()
 {
+  if ( !Private::config ) {
+    // No one called setEditorConfig(), so we default to a KorganizerEditorConfig.
+    EditorConfig::setEditorConfig( new IncidenceEditorNG::KOrganizerEditorConfig );
+  }
+
   return Private::config;
 }
 

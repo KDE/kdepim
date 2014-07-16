@@ -36,33 +36,32 @@ namespace MailCommon {
 
 //----------------------------------------------------------------------------
 FolderJob::FolderJob() :
-  mErrorCode( 0 ), mStarted( false ), mCancellable( false )
+    mErrorCode( 0 ), mStarted( false ), mCancellable( false )
 {
 }
 
 //----------------------------------------------------------------------------
 FolderJob::~FolderJob()
 {
-  emit result( this );
-  emit finished();
+    emit result( this );
+    emit finished();
 }
 
 //----------------------------------------------------------------------------
 void FolderJob::start()
 {
-  if ( !mStarted ) {
-    mStarted = true;
-    execute();
-  }
+    if ( !mStarted ) {
+        mStarted = true;
+        execute();
+    }
 }
 
 //----------------------------------------------------------------------------
 void FolderJob::kill()
 {
-  mErrorCode = KIO::ERR_USER_CANCELED;
-  delete this;
+    mErrorCode = KIO::ERR_USER_CANCELED;
+    delete this;
 }
 
 }
 
-#include "folderjob.moc"

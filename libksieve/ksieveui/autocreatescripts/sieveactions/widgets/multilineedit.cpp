@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,17 +16,18 @@
 */
 
 #include "multilineedit.h"
-
 #include <QStyleOptionFrameV2>
 #include <QApplication>
 
 using namespace KSieveUi;
 
 MultiLineEdit::MultiLineEdit(QWidget *parent)
-    : KTextEdit(parent)
+    : PimCommon::RichTextEditor(parent)
 {
     setAcceptRichText(false);
+    setSearchSupport(false);
     setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Fixed));
+    connect(this, SIGNAL(textChanged()), this, SIGNAL(valueChanged()));
 }
 
 MultiLineEdit::~MultiLineEdit()
@@ -57,4 +58,3 @@ QSize MultiLineEdit::minimumSizeHint() const
     return sizeHint();
 }
 
-#include "multilineedit.moc"

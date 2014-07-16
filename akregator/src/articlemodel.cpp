@@ -34,8 +34,9 @@
 #include <QString>
 #include <QVector>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobal>
+#include <KLocale>
 
 #include <memory>
 
@@ -63,7 +64,7 @@ public:
 static QString stripHtml( const QString& html ) {
     QString str(html);
     //TODO: preserve some formatting, such as line breaks
-    str.remove(QRegExp("<[^>]*>")); // remove tags
+    str.remove(QRegExp(QLatin1String("<[^>]*>"))); // remove tags
     str = Syndication::resolveEntities(str);
     return str.simplified();
 }
@@ -298,4 +299,3 @@ Qt::ItemFlags ArticleModel::flags( const QModelIndex& idx ) const
     return f | Qt::ItemIsDragEnabled;
 }
 
-#include "articlemodel.moc"

@@ -33,8 +33,8 @@
 
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2013-07-23</date>
-<releaseinfo>&kde; 4.11</releaseinfo>
+<date>2013-12-11</date>
+<releaseinfo>&kde; 4.12</releaseinfo>
 </chapterinfo>
 
 
@@ -47,18 +47,35 @@ start working with it right away. For more in-depth information see the
 appendix</link>.</para>
 
 <sect1 id="account-wizard">
-  <title>Account Wizard</title>
-  <para>The first time you run &kmail; you will be greeted with the Account Wizard.</para>
-    <note><para>If at anytime you need to run the account wizard again, you can find it under
-        <menuchoice><guimenu>Tools</guimenu><guimenuitem>Account Wizard</guimenuitem></menuchoice>.</para></note>
-    <para>The wizard will take you through the process of creating your email accounts. Your screens will vary depending
+<title>Account Wizard</title>
+
+<screenshot>
+<screeninfo>Account Wizard</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="accountwizard.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Account Wizard</phrase>
+    </textobject>
+    <caption>
+      <para>Account Wizard</para>
+    </caption>
+  </mediaobject>
+</screenshot>
+
+<para>The first time you run &kmail; you will be greeted with the Account Wizard.</para>
+<note><para>If at anytime you need to run the account wizard again, you can find it under
+<menuchoice><guimenu>Tools</guimenu><guimenuitem>Account Wizard</guimenuitem></menuchoice>.</para></note>
+<para>The wizard will take you through the process of creating your email accounts. Your screens will vary depending
     on how much the wizard can determine on its own. Below is an outline of the screens you may encounter while using this wizard.</para>
 <itemizedlist>
   <listitem>
-    <para><guilabel>Provide personal data</guilabel> is the first screen of the wizard. It will prompt you for your basic account information: name, email, and password.
-      It is highly suggested to leave the <guilabel>Find provider settings on the Internet</guilabel> option checked, the wizard will attempt to retrieve the necessary
-      information from the server. If you are an expert user, and need to set up advanced configuration, uncheck it.
-      Click the <guibutton>Next</guibutton> button once finished.
+    <para><guilabel>Provide personal data</guilabel> is the first screen of the wizard. It will prompt you for your basic account information: <guilabel>Full name:</guilabel>, <guilabel>E-mail address</guilabel>, and <guilabel>Password:</guilabel>.
+      By default, the <guilabel>Find provider settings on the Internet</guilabel> option is checked, the wizard will attempt to retrieve the necessary
+      information from the server. Uncheck this option if you are an expert user and you need to set up advanced configuration.  Click the <guibutton>Next</guibutton> button once finished.
+     <note><para>If you use GMail 2-step verification you will need to generate an application-specific password within gmail security settings and enter that password
+     in the password text box.</para></note>
     </para>
   </listitem>
   <listitem>
@@ -66,7 +83,8 @@ appendix</link>.</para>
       list (if you do not know, you will need to contact your email provider). If your account type is not listed, click the <guibutton>Check for more on Internet</guibutton> button.
       Once your account type has been selected, click the <guibutton>Next</guibutton> button, and you will be presented with the <guilabel>Personal Settings</guilabel> screen.
     </para>
-    <para>The <guilabel>Provide personal data</guilabel> screen will show if the wizard was successful at determining the account type.
+    <para>The <guilabel>Provide personal data</guilabel> screen will show again with the server details it found if the wizard was successful at determining the account type.
+
       Click the <guibutton>Create Account</guibutton> button, and it will set up the account. Click the <guibutton>Finish</guibutton> to complete the wizard and close the window.
     </para>
   </listitem>
@@ -170,8 +188,8 @@ section.</para>
 <para>The way of sending messages configured here will be used for
 your default identity and for all other identities that do not have their own
 way of sending messages. You can use different ways of sending
-messages for different identities by selecting the <guilabel>Special
-transport</guilabel> check box in the <guilabel>Advanced</guilabel>
+messages for different identities by selecting the <guilabel>Outgoing
+Account</guilabel> check box in the <guilabel>Advanced</guilabel>
 tab of the <guilabel>Identities</guilabel> page.</para>
 
 <para>A description of the other options can be found

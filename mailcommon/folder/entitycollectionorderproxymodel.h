@@ -25,8 +25,8 @@ namespace MailCommon {
 
 class EntityCollectionOrderProxyModel : public Akonadi::EntityOrderProxyModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit EntityCollectionOrderProxyModel( QObject *parent = 0 );
 
     virtual ~EntityCollectionOrderProxyModel();
@@ -39,10 +39,10 @@ class EntityCollectionOrderProxyModel : public Akonadi::EntityOrderProxyModel
     void clearRanks();
     void setTopLevelOrder(const QStringList& list);
 
-  public slots:
+public slots:
     void slotSpecialCollectionsChanged();
 
-  private:
+private:
     class EntityCollectionOrderProxyModelPrivate;
     EntityCollectionOrderProxyModelPrivate *const d;
 };

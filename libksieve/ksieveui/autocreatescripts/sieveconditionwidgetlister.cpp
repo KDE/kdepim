@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -17,20 +17,22 @@
 
 #include "sieveconditionwidgetlister.h"
 #include "autocreatescriptdialog.h"
+#include "autocreatescriptutil_p.h"
+#include "commonwidgets/sievehelpbutton.h"
+#include "sieveeditorgraphicalmodewidget.h"
 #include "sieveconditions/sieveconditionlist.h"
 #include "sieveconditions/sievecondition.h"
 #include "pimcommon/widgets/minimumcombobox.h"
 
 #include <KPushButton>
-#include <KDialog>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QGridLayout>
 #include <QLabel>
-#include <QStackedWidget>
 #include <QToolButton>
 #include <QWhatsThis>
 #include <QDebug>
+#include <QDomElement>
 
 using namespace KSieveUi;
 
@@ -92,10 +94,10 @@ void SieveConditionWidget::initWidget()
     int index = 0;
     for ( index = 0, it = list.constBegin(); it != end; ++it, ++index ) {        
         if ((*it)->needCheckIfServerHasCapability()) {
-            if (AutoCreateScriptDialog::sieveCapabilities().contains((*it)->serverNeedsCapability())) {
+            if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains((*it)->serverNeedsCapability())) {
                 // append to the list of actions:
                 mConditionList.append( *it );
-
+                connect(*it, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
                 // add (i18n-ized) name to combo box
                 mComboBox->addItem( (*it)->label(),(*it)->name() );
             } else {
@@ -104,17 +106,15 @@ void SieveConditionWidget::initWidget()
         } else {
             // append to the list of actions:
             mConditionList.append( *it );
-
+            connect(*it, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
             // add (i18n-ized) name to combo box
             mComboBox->addItem( (*it)->label(),(*it)->name() );
         }
     }
 
-    mHelpButton = new QToolButton;
-    mHelpButton->setToolTip(i18n("Help"));
+    mHelpButton = new SieveHelpButton;
     mHelpButton->setEnabled(false);
     mLayout->addWidget( mHelpButton, 1, 0 );
-    mHelpButton->setIcon( KIcon( QLatin1String("help-hint") ) );
     connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
     mComboBox->addItem(QLatin1String(""));
@@ -155,7 +155,9 @@ void SieveConditionWidget::slotHelp()
     if (index < mConditionList.count()) {
         KSieveUi::SieveCondition* condition = mConditionList.at( index );
         const QString help = condition->help();
-        QWhatsThis::showText( QCursor::pos(), help );
+        const QString href = condition->href();
+        const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help,href);
+        QWhatsThis::showText( QCursor::pos(), fullWhatsThis, mHelpButton );
     }
 }
 
@@ -169,16 +171,19 @@ void SieveConditionWidget::slotConditionChanged(int index)
         setFilterCondition( 0 );
         mHelpButton->setEnabled(false);
     }
+    Q_EMIT valueChanged();
 }
 
 void SieveConditionWidget::slotAddWidget()
 {
     emit addWidget( this );
+    Q_EMIT valueChanged();
 }
 
 void SieveConditionWidget::slotRemoveWidget()
 {
     emit removeWidget( this );
+    Q_EMIT valueChanged();
 }
 
 void SieveConditionWidget::reset()
@@ -190,6 +195,17 @@ void SieveConditionWidget::updateAddRemoveButton( bool addButtonEnabled, bool re
 {
     mAdd->setEnabled(addButtonEnabled);
     mRemove->setEnabled(removeButtonEnabled);
+}
+
+void SieveConditionWidget::setCondition(const QString &conditionName, const QDomElement &element, bool notCondition, QString &error)
+{
+    const int index = mComboBox->findData(conditionName);
+    if (index != -1) {
+        mComboBox->setCurrentIndex(index);
+        slotConditionChanged(index);
+        KSieveUi::SieveCondition* condition = mConditionList.at( index );
+        condition->setParamWidgetValue(element, this, notCondition, error);
+    }
 }
 
 SieveConditionWidgetLister::SieveConditionWidgetLister(QWidget *parent)
@@ -247,11 +263,15 @@ void SieveConditionWidgetLister::reconnectWidget( SieveConditionWidget *w )
              this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection );
     connect( w, SIGNAL(removeWidget(QWidget*)),
              this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection );
+    connect( w, SIGNAL(valueChanged()),
+             this, SIGNAL(valueChanged()), Qt::UniqueConnection );
 }
 
 void SieveConditionWidgetLister::clearWidget( QWidget *aWidget )
 {
     //TODO
+    Q_UNUSED(aWidget);
+    Q_EMIT valueChanged();
 }
 
 QWidget *SieveConditionWidgetLister::createWidget( QWidget *parent )
@@ -287,4 +307,80 @@ int SieveConditionWidgetLister::conditionNumber() const
     return widgets().count();
 }
 
-#include "sieveconditionwidgetlister.moc"
+void SieveConditionWidgetLister::loadTest(const QDomElement &element, bool notCondition, QString &error)
+{
+    QDomElement testElement = element;
+    if (notCondition) {
+        QDomNode node = element.firstChild();
+        if (!node.isNull()) {
+            testElement = node.toElement();
+        }
+    }
+    if (testElement.hasAttribute(QLatin1String("name"))) {
+        const QString conditionName = testElement.attribute(QLatin1String("name"));
+        SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( widgets().last() );
+        w->setCondition(conditionName, testElement, notCondition, error);
+    }
+}
+
+void SieveConditionWidgetLister::loadScript(const QDomElement &e, bool uniqTest, bool notCondition, QString &error)
+{
+    if (uniqTest) {
+        loadTest(e, notCondition, error);
+    } else {
+        bool firstCondition = true;
+        QDomElement element = e;
+        if (notCondition) {
+            QDomNode node = e.firstChild();
+            if (!node.isNull()) {
+                element = node.toElement();
+            }
+        }
+        QDomNode node = element.firstChild();
+        while (!node.isNull()) {
+            QDomElement e = node.toElement();
+            if (!e.isNull()) {
+                const QString tagName = e.tagName();
+                if (tagName == QLatin1String("testlist")) {
+                    QDomNode testNode = e.firstChild();
+                    while (!testNode.isNull()) {
+                        QDomElement testElement = testNode.toElement();
+                        if (!testElement.isNull()) {
+                            const QString testTagName = testElement.tagName();
+                            if (testTagName == QLatin1String("test")) {
+                                if (testElement.hasAttribute(QLatin1String("name"))) {
+                                    QString conditionName = testElement.attribute(QLatin1String("name"));
+                                    if (firstCondition) {
+                                        firstCondition = false;
+                                    } else {
+                                        addWidgetAfterThisWidget(widgets().last());
+                                    }
+                                    SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( widgets().last() );
+                                    if (conditionName == QLatin1String("not")) {
+                                        notCondition = true;
+                                        QDomNode notNode = testElement.firstChild();
+                                        QDomElement notElement = notNode.toElement();
+                                        if (notElement.hasAttribute(QLatin1String("name"))) {
+                                            conditionName = notElement.attribute(QLatin1String("name"));
+                                        }
+                                        w->setCondition(conditionName, notElement, notCondition, error);
+                                    } else {
+                                        notCondition = false;
+                                        w->setCondition(conditionName, testElement, notCondition, error);
+                                    }
+                                }
+                            } else if (testTagName == QLatin1String("crlf")) {
+                                //nothing
+                            } else {
+                                qDebug()<<" SieveConditionWidgetLister::loadScript unknown condition tag: "<<testTagName;
+                            }
+                        }
+                        testNode = testNode.nextSibling();
+                    }
+                }
+            }
+            node = node.nextSibling();
+        }
+    }
+}
+

@@ -25,7 +25,6 @@
 
 #include "KJotsMain.h"
 
-#include <Akonadi/AttributeFactory>
 
 #include <kicon.h>
 
@@ -42,7 +41,6 @@
 #include "kjotsedit.h"
 #include "kjotsbrowser.h"
 #include "kjotswidget.h"
-#include "kjotslockattribute.h"
 
 #include <QApplication>
 
@@ -69,8 +67,6 @@ KJotsMain::KJotsMain()
     setupGUI();
     connect(component, SIGNAL(captionChanged(QString)), SLOT(updateCaption(QString)));
 
-    Akonadi::AttributeFactory::registerAttribute<KJotsLockAttribute>();
-
 }
 
 /*!
@@ -85,7 +81,7 @@ void KJotsMain::activeAnchorChanged(const QString &anchorTarget, const QString &
 {
     if (!anchorTarget.isEmpty())
     {
-        statusBar()->changeItem(anchorText + " -> " + anchorTarget, 0);
+        statusBar()->changeItem(anchorText + QLatin1String(" -> ") + anchorTarget, 0);
     } else {
         statusBar()->changeItem(QString(), 0);
     }
@@ -104,4 +100,3 @@ void KJotsMain::onQuit()
 }
 
 
-#include "KJotsMain.moc"

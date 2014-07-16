@@ -20,7 +20,7 @@
 #include <KAboutData>
 #include <KApplication>
 #include <KCmdLineArgs>
-#include <KLocale>
+#include <KLocalizedString>
 
 int main( int argc, char *argv[] )
 {

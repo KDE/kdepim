@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -21,8 +21,10 @@
 #include "sievewidgetpageabstract.h"
 class QCheckBox;
 class KLineEdit;
+class QDomElement;
 
 namespace KSieveUi {
+class SieveHelpButton;
 class SieveForEveryPartWidget : public SieveWidgetPageAbstract
 {
     Q_OBJECT
@@ -31,6 +33,7 @@ public:
     ~SieveForEveryPartWidget();
 
     void generatedScript(QString &script, QStringList &requires);
+    void loadScript(const QDomElement &element, QString &error);
 
 private Q_SLOTS:
     void slotHelp();
@@ -38,6 +41,7 @@ private Q_SLOTS:
 private:
     QCheckBox *mForLoop;
     KLineEdit *mName;
+    SieveHelpButton *mHelpButton;
 };
 }
 

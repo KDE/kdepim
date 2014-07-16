@@ -27,10 +27,13 @@
 
 #include "kotodoview.h"
 #include "koprefs.h"
-#include "kocorehelper.h"
+
+#include <calendarsupport/printing/calprinter.h>
 
 #include <calendarviews/todo/todoview.h>
+
 #include <Akonadi/EntityTreeModel>
+
 #include <QVBoxLayout>
 
 KOTodoView::KOTodoView( bool sidebarView, QWidget *parent )
@@ -42,6 +45,7 @@ KOTodoView::KOTodoView( bool sidebarView, QWidget *parent )
   layout->addWidget( mView );
   connect( mView, SIGNAL(printTodo()), SLOT(printTodo()) );
   connect( mView, SIGNAL(printPreviewTodo()), SLOT(printPreviewTodo()) );
+  connect( mView, SIGNAL(purgeCompletedSignal()), SIGNAL(purgeCompletedSignal()) );
 
   connect( mView, SIGNAL(incidenceSelected(Akonadi::Item,QDate)),
            SIGNAL(incidenceSelected(Akonadi::Item,QDate)) );
@@ -145,11 +149,6 @@ void KOTodoView::updateView()
   // View is always updated, it's connected to ETM.
 }
 
-void KOTodoView::updateCategories()
-{
-  mView->updateCategories();
-}
-
 void KOTodoView::changeIncidenceDisplay( const Akonadi::Item &, Akonadi::IncidenceChanger::ChangeType )
 {
   // Don't do anything, model is connected to ETM, it's up to date
@@ -186,8 +185,7 @@ void KOTodoView::printTodo( bool preview )
   KCalCore::Todo::Ptr todo = CalendarSupport::todo( todoItem );
   Q_ASSERT( todo );
 
-  KOCoreHelper helper;
-  CalPrinter printer( this, calendar(), &helper, true );
+  CalendarSupport::CalPrinter printer( this, calendar(), true );
   connect( this, SIGNAL(configChanged()), &printer, SLOT(updateConfig()) );
 
   KCalCore::Incidence::List selectedIncidences;
@@ -200,7 +198,7 @@ void KOTodoView::printTodo( bool preview )
     todoDate = todo->dtDue();
   }
 
-  printer.print( KOrg::CalPrinterBase::Incidence,
+  printer.print( CalendarSupport::CalPrinterBase::Incidence,
                  todoDate.date(), todoDate.date(), selectedIncidences, preview );
 
 }
@@ -239,9 +237,8 @@ bool KOTodoView::usesFullWindow()
   return mView->usesFullWindow();
 }
 
-KOrg::CalPrinterBase::PrintType KOTodoView::printType() const
+CalendarSupport::CalPrinterBase::PrintType KOTodoView::printType() const
 {
-  return KOrg::CalPrinterBase::Todolist;
+  return CalendarSupport::CalPrinterBase::Todolist;
 }
 
-#include "kotodoview.moc"

@@ -102,4 +102,3 @@ void MonthViewItem::updateConfig()
   mView->updateConfig();
 }
 
-#include "monthviewitem.moc"

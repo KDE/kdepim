@@ -1,0 +1,10 @@
+require "ihave";
+require "imapflags";
+ 
+#Script name: remove flags
+
+if ihave "reject"
+{
+    removeflag [ "\\Answered", "\\Flagged", "\\Seen" ];
+    removeflag [ "\\Draft" ];
+} 

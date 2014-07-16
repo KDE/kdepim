@@ -1,0 +1,8 @@
+require "include";
+ 
+#Script name: test-includes
+
+include :personal "simple";
+include :personal :optional "optional";
+include :personal :once "once";
+include :global "global";

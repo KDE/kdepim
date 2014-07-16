@@ -22,7 +22,7 @@
 
 #include <QLabel>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 KJotsReplaceNextDialog::KJotsReplaceNextDialog(QWidget *parent) :
     KDialog(parent), m_answer(Close)
@@ -67,4 +67,3 @@ void KJotsReplaceNextDialog::onHandleReplace()
     accept();
 }
 
-#include "kjotsreplacenextdialog.moc"

@@ -27,7 +27,7 @@
 #include "newidentitydialog.h"
 #ifndef KCM_KPIMIDENTITIES_STANDALONE
 #include "kmkernel.h"
-#include "globalsettings.h"
+#include "settings/globalsettings.h"
 #endif
 
 #include <mailcommon/kernel/mailkernel.h>
@@ -139,7 +139,7 @@ void IdentityPage::slotNewIdentity()
 
     MessageViewer::AutoQPointer<NewIdentityDialog> dialog( new NewIdentityDialog(
                                                                mIdentityManager, this ) );
-    dialog->setObjectName( "new" );
+    dialog->setObjectName( QLatin1String("new") );
 
     if ( dialog->exec() == QDialog::Accepted && dialog ) {
         QString identityName = dialog->identityName().trimmed();
@@ -235,7 +235,7 @@ void IdentityPage::slotRemoveIdentity()
                         "<b>%1</b>?</qt>", item->identity().identityName() );
     if( KMessageBox::warningContinueCancel( this, msg, i18n("Remove Identity"),
                                             KGuiItem(i18n("&Remove"),
-                                                     "edit-delete") )
+                                                     QLatin1String("edit-delete")) )
             == KMessageBox::Continue ) {
         if ( mIdentityManager->removeIdentity( item->identity().identityName() ) ) {
             delete item;
@@ -344,4 +344,3 @@ void IdentityPage::updateButtons()
     mIPage.mSetAsDefaultButton->setEnabled( item && !item->identity().isDefault() );
 }
 
-#include "identitypage.moc"

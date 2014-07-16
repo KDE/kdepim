@@ -19,7 +19,7 @@
  */
 
 #include "kalarm.h"
-#include "wakedlg.moc"
+#include "wakedlg.h"
 #include "ui_wakedlg.h"
 
 #include "alarmcalendar.h"

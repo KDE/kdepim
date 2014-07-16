@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,17 +16,19 @@
 */
 
 #include "selectaddresspartcombobox.h"
-#include "autocreatescripts/autocreatescriptdialog.h"
+#include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace KSieveUi;
 
 SelectAddressPartComboBox::SelectAddressPartComboBox(QWidget *parent)
     : KComboBox(parent)
 {
-    mHasSubaddressCapability = AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("subaddress"));
+    mHasSubaddressCapability = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("subaddress"));
     initialize();
+    connect(this, SIGNAL(activated(int)), this, SIGNAL(valueChanged()));
 }
 
 SelectAddressPartComboBox::~SelectAddressPartComboBox()
@@ -57,4 +59,15 @@ QString SelectAddressPartComboBox::extraRequire() const
     return QString();
 }
 
-#include "selectaddresspartcombobox.moc"
+void SelectAddressPartComboBox::setCode(const QString &code, const QString &name, QString &error)
+{
+    const int index = findData(code);
+    if (index != -1) {
+        setCurrentIndex(index);
+    } else {
+        AutoCreateScriptUtil::comboboxItemNotFound(code, name, error);
+        setCurrentIndex(0);
+    }
+}
+
+

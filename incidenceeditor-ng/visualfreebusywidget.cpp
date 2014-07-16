@@ -29,7 +29,7 @@
 
 #include <KComboBox>
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QHeaderView>
 #include <QLabel>
@@ -433,4 +433,3 @@ void VisualFreeBusyWidget::splitterMoved()
 //  mLeftView->setColumnWidth( 0, mLeftView->width() );
 }
 
-#include "visualfreebusywidget.moc"

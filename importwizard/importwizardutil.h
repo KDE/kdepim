@@ -63,7 +63,7 @@ enum ResourceType {
 };
 
 void mergeLdap(const ldapStruct &ldap);
-void addNepomukTag(const QList<tagStruct> &tagList);
+void addAkonadiTag(const QList<tagStruct> &tagList);
 void storeInKWallet(const QString &name, ImportWizardUtil::ResourceType type, const QString &password);
 }
 

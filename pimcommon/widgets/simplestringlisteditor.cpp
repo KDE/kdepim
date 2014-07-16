@@ -126,7 +126,7 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
                         "without a Down button??";
         }
         mUpButton = new KPushButton( QString(), this );
-        mUpButton->setIcon( KIcon( "go-up" ) );
+        mUpButton->setIcon( KIcon( QLatin1String("go-up") ) );
         mUpButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
         mUpButton->setAutoDefault( false );
         mUpButton->setEnabled( false ); // no selection yet
@@ -141,7 +141,7 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
                         "without an Up button??";
         }
         mDownButton = new KPushButton( QString(), this );
-        mDownButton->setIcon( KIcon( "go-down" ) );
+        mDownButton->setIcon( KIcon( QLatin1String("go-down") ) );
         mDownButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
         mDownButton->setAutoDefault( false );
         mDownButton->setEnabled( false ); // no selection yet
@@ -156,6 +156,14 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
              this, SLOT(slotSelectionChanged()) );
     connect( mListBox, SIGNAL(itemSelectionChanged()),
              this, SLOT(slotSelectionChanged()) );
+}
+
+void SimpleStringListEditor::setUpDownAutoRepeat(bool b)
+{
+    if (mUpButton)
+        mUpButton->setAutoRepeat(b);
+    if (mDownButton)
+        mDownButton->setAutoRepeat(b);
 }
 
 void SimpleStringListEditor::setStringList( const QStringList & strings ) {
@@ -363,7 +371,7 @@ void SimpleStringListEditor::slotSelectionChanged() {
     }
 }
 
-void SimpleStringListEditor::slotContextMenu(const QPoint&pos)
+void SimpleStringListEditor::slotContextMenu(const QPoint &pos)
 {
     QList<QListWidgetItem *> lstSelectedItems = mListBox->selectedItems();
     const bool hasItemsSelected = !lstSelectedItems.isEmpty();
@@ -375,6 +383,7 @@ void SimpleStringListEditor::slotContextMenu(const QPoint&pos)
         menu->addAction( mModifyButton->text(), this, SLOT(slotModify()));
     }
     if (mRemoveButton && hasItemsSelected) {
+        menu->addSeparator();
         menu->addAction( mRemoveButton->text(), this, SLOT(slotRemove()));
     }
     menu->exec( mListBox->mapToGlobal( pos ) );
@@ -394,4 +403,3 @@ QSize SimpleStringListEditor::sizeHint() const
 }
 
 
-#include "simplestringlisteditor.moc"

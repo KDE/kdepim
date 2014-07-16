@@ -57,7 +57,6 @@
 #include <KDebug>
 
 #include <QFile>
-#include <QFileInfo>
 #include <QPointer>
 #include <QTextDocument> // for Qt::escape
 
@@ -72,8 +71,8 @@ namespace {
 
     QString formatInputOutputLabel( const QString & input, const QString & output, bool inputDeleted, bool outputDeleted ) {
         return i18nc( "Input file --> Output file (rarr is arrow", "%1 &rarr; %2",
-                      inputDeleted ? QString("<s>%1</s>").arg( Qt::escape( input ) ) : Qt::escape( input ),
-                      outputDeleted ? QString("<s>%1</s>").arg( Qt::escape( output ) ) : Qt::escape( output ) );
+                      inputDeleted ? QString::fromLatin1("<s>%1</s>").arg( Qt::escape( input ) ) : Qt::escape( input ),
+                      outputDeleted ? QString::fromLatin1("<s>%1</s>").arg( Qt::escape( output ) ) : Qt::escape( output ) );
     }
 
     class ErrorResult : public Task::Result {
@@ -574,7 +573,7 @@ void SignEncryptFilesTask::Private::slotResult( const EncryptionResult & result 
 
 QString SignEncryptFilesResult::overview() const {
     const QString files = formatInputOutputLabel( m_inputLabel, m_outputLabel, m_inputRemoved, !m_outputCreated );
-    return files + ": " + makeOverview( makeResultOverview( m_sresult, m_eresult ) );
+    return files + QLatin1String(": ") + makeOverview( makeResultOverview( m_sresult, m_eresult ) );
 }
 
 QString SignEncryptFilesResult::details() const {

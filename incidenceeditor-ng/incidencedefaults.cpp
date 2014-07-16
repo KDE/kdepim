@@ -38,7 +38,6 @@
 #include <KIO/NetAccess>
 #include <KDebug>
 #include <KLocalizedString>
-#include <KSystemTimeZones>
 
 #include <QFile>
 
@@ -52,8 +51,9 @@ enum {
   UNSPECIFED_PRIORITY = 0
 };
 
-struct IncidenceDefaultsPrivate
+class IncidenceDefaultsPrivate
 {
+public:
   /// Members
   KCalCore::Attachment::List       mAttachments;
   QVector<KCalCore::Attendee::Ptr> mAttendees;

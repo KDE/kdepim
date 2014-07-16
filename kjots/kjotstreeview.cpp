@@ -30,7 +30,7 @@
 #include <KXMLGUIClient>
 #include <KColorDialog>
 #include <KInputDialog>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <KMime/KMimeMessage>
 
@@ -55,37 +55,37 @@ void KJotsTreeView::contextMenuEvent(QContextMenuEvent* event)
     const bool singleselection = rows.size() == 1;
     const bool multiselection = rows.size() > 1;
 
-    popup->addAction(m_xmlGuiClient->actionCollection()->action("new_book"));
+    popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("new_book")));
     if ( singleselection )
     {
-      popup->addAction(m_xmlGuiClient->actionCollection()->action("new_page"));
-      popup->addAction(m_xmlGuiClient->actionCollection()->action("rename_entry"));
+      popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("new_page")));
+      popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("rename_entry")));
 
-      popup->addAction(m_xmlGuiClient->actionCollection()->action("copy_link_address"));
-      popup->addAction(m_xmlGuiClient->actionCollection()->action("change_color"));
+      popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("copy_link_address")));
+      popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("change_color")));
 
-      popup->addAction(m_xmlGuiClient->actionCollection()->action("sort_children_alpha"));
-      popup->addAction(m_xmlGuiClient->actionCollection()->action("sort_children_by_date"));
+      popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("sort_children_alpha")));
+      popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("sort_children_by_date")));
     }
     if ( !noselection )
-      popup->addAction(m_xmlGuiClient->actionCollection()->action("save_to"));
+      popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("save_to")));
     popup->addSeparator();
 
-    popup->addAction(m_xmlGuiClient->actionCollection()->action("lock"));
-    popup->addAction(m_xmlGuiClient->actionCollection()->action("unlock"));
+    popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("lock")));
+    popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("unlock")));
 
     if ( singleselection )
     {
       Item item = rows.at( 0 ).data( KJotsModel::ItemRole ).value<Item>();
       if ( item.isValid() ) {
-        popup->addAction(m_xmlGuiClient->actionCollection()->action("del_page"));
+        popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("del_page")));
       } else {
-        popup->addAction(m_xmlGuiClient->actionCollection()->action("del_folder"));
+        popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("del_folder")));
       }
     }
 
     if ( multiselection )
-      popup->addAction(m_xmlGuiClient->actionCollection()->action("del_mult"));
+      popup->addAction(m_xmlGuiClient->actionCollection()->action(QLatin1String("del_mult")));
 
     popup->exec( event->globalPos() );
 
@@ -94,11 +94,11 @@ void KJotsTreeView::contextMenuEvent(QContextMenuEvent* event)
 
 void KJotsTreeView::delayedInitialization()
 {
-  connect(m_xmlGuiClient->actionCollection()->action("rename_entry"), SIGNAL(triggered()),
+  connect(m_xmlGuiClient->actionCollection()->action(QLatin1String("rename_entry")), SIGNAL(triggered()),
       this, SLOT(renameEntry()));
-  connect(m_xmlGuiClient->actionCollection()->action("copy_link_address"), SIGNAL(triggered()),
+  connect(m_xmlGuiClient->actionCollection()->action(QLatin1String("copy_link_address")), SIGNAL(triggered()),
       this, SLOT(copyLinkAddress()));
-  connect(m_xmlGuiClient->actionCollection()->action("change_color"), SIGNAL(triggered()),
+  connect(m_xmlGuiClient->actionCollection()->action(QLatin1String("change_color")), SIGNAL(triggered()),
       this, SLOT(changeColor()));
 }
 
@@ -189,7 +189,7 @@ void KJotsTreeView::copyLinkAddress()
     if ( !item.hasPayload<KMime::Message::Ptr>() )
       return;
 
-    link = QString( "<a href=\"%1\">%2</a>" ).arg( item.url().url() ).arg( title );
+    link = QString::fromLatin1( "<a href=\"%1\">%2</a>" ).arg( item.url().url() ).arg( title );
   } else {
     Collection col = idx.data( KJotsModel::CollectionRole ).value<Collection>();
 
@@ -197,10 +197,10 @@ void KJotsTreeView::copyLinkAddress()
     if (!col.isValid())
       return;
 
-    link = QString( "<a href=\"%1\">%2</a>" ).arg( col.url().url() ).arg( title );
+    link = QString::fromLatin1( "<a href=\"%1\">%2</a>" ).arg( col.url().url() ).arg( title );
   }
 
-  mimeData->setData( "kjots/internal_link", link.toUtf8() );
+  mimeData->setData( QLatin1String("kjots/internal_link"), link.toUtf8() );
   mimeData->setText( title );
   QApplication::clipboard()->setMimeData( mimeData );
 }
@@ -221,4 +221,3 @@ void KJotsTreeView::changeColor()
   }
 }
 
-#include "kjotstreeview.moc"

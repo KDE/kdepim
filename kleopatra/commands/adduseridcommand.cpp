@@ -46,8 +46,7 @@
 
 #include <gpgme++/key.h>
 
-#include <KLocale>
-#include <KMessageBox>
+#include <KLocalizedString>
 #include <kdebug.h>
 
 #include <cassert>

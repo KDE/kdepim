@@ -30,31 +30,31 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionAddToAddressBook: public FilterActionWithStringList
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit FilterActionAddToAddressBook( QObject *parent = 0 );
-    virtual ReturnCode process( ItemContext &context ) const;
+    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
     static FilterAction* newAction();
 
-    virtual SearchRule::RequiredPart requiredPart() const;
+    SearchRule::RequiredPart requiredPart() const;
 
-    virtual bool isEmpty() const;
+    bool isEmpty() const;
 
-    virtual QWidget* createParamWidget( QWidget *parent ) const;
-    virtual void setParamWidgetValue( QWidget *paramWidget ) const;
-    virtual void applyParamWidgetValue( QWidget *paramWidget );
-    virtual void clearParamWidget( QWidget *paramWidget ) const;
+    QWidget* createParamWidget( QWidget *parent ) const;
+    void setParamWidgetValue( QWidget *paramWidget ) const;
+    void applyParamWidgetValue( QWidget *paramWidget );
+    void clearParamWidget( QWidget *paramWidget ) const;
 
-    virtual QString argsAsString() const;
-    virtual void argsFromString( const QString &argsStr );
+    QString argsAsString() const;
+    void argsFromString( const QString &argsStr );
 
-  private:
+private:
     enum HeaderType
     {
-      FromHeader,
-      ToHeader,
-      CcHeader,
-      BccHeader
+        FromHeader,
+        ToHeader,
+        CcHeader,
+        BccHeader
     };
 
     const QString mFromStr, mToStr, mCCStr, mBCCStr;

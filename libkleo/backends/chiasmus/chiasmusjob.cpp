@@ -71,11 +71,11 @@ GpgME::Error Kleo::ChiasmusJob::setup() {
     return mError = Error::fromCode( GPG_ERR_INV_VALUE );
 
   const Kleo::CryptoConfigEntry * class_
-    = ChiasmusBackend::instance()->config()->entry( "Chiasmus", "General", "symcryptrun-class" );
+    = ChiasmusBackend::instance()->config()->entry( QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("symcryptrun-class") );
   const Kleo::CryptoConfigEntry * chiasmus
-    = ChiasmusBackend::instance()->config()->entry( "Chiasmus", "General", "path" );
+    = ChiasmusBackend::instance()->config()->entry( QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("path") );
   const Kleo::CryptoConfigEntry * timeoutEntry
-    = ChiasmusBackend::instance()->config()->entry( "Chiasmus", "General", "timeout" );
+    = ChiasmusBackend::instance()->config()->entry( QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("timeout") );
   if ( !class_ || !chiasmus || !timeoutEntry )
     return mError = Error::fromCode( GPG_ERR_INTERNAL );
 
@@ -86,7 +86,7 @@ GpgME::Error Kleo::ChiasmusJob::setup() {
                                              ? SymCryptRunProcessBase::Encrypt
                                              : SymCryptRunProcessBase::Decrypt,
                                              this );
-  mSymCryptRun->setObjectName( "symcryptrun" );
+  mSymCryptRun->setObjectName( QLatin1String("symcryptrun") );
   QTimer::singleShot( timeoutEntry->uintValue() * 1000, this,
                       SLOT(slotTimeout()) );
   return GpgME::Error();
@@ -147,7 +147,7 @@ GpgME::Error Kleo::ChiasmusJob::finished() {
     }
 
   const Kleo::CryptoConfigEntry * showOutput
-    = ChiasmusBackend::instance()->config()->entry( "Chiasmus", "General", "show-output" );
+    = ChiasmusBackend::instance()->config()->entry( QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("show-output") );
   if ( showOutput && showOutput->boolValue() ) {
     showChiasmusOutput();
   }
@@ -215,4 +215,3 @@ void Kleo::ChiasmusJob::showErrorDialog( QWidget * parent, const QString & capti
   }
 }
 
-#include "chiasmusjob.moc"

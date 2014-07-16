@@ -1,45 +1,41 @@
+project(templateparser)
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 set(templateparser_LIB_SRCS
   templateparser.cpp
   defaulttemplates.cpp
   templatesutil.cpp
+  customtemplates.cpp
+  customtemplatesmenu.cpp
+  templatesconfiguration.cpp
+  templatesinsertcommand.cpp
+  templatessyntaxhighlighter.cpp
+  templatestextedit.cpp
+  templatestexteditor.cpp
 )
-
-if(NOT WINCE)
-  set(templateparser_LIB_SRCS
-    ${templateparser_LIB_SRCS}
-    # All disabled due to QTreeWidget and QToolbox in the UI
-    customtemplates.cpp
-    customtemplatesmenu.cpp
-    templatesconfiguration.cpp
-    templatesinsertcommand.cpp
-    templatessyntaxhighlighter.cpp
-    templatestextedit.cpp
-  )
-endif()
 
 include_directories(
   ${Boost_INCLUDE_DIR}
-  ${SOPRANO_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/libkleo
   ${CMAKE_SOURCE_DIR}/messagecore
   ${CMAKE_SOURCE_DIR}/messageviewer
+  ${CMAKE_SOURCE_DIR}/pimcommon
 )
 
-kde4_add_kcfg_files(templateparser_LIB_SRCS templatesconfiguration_kfg.kcfgc)
+kde4_add_kcfg_files(templateparser_LIB_SRCS settings/templatesconfiguration_kfg.kcfgc)
 
 kde4_add_kcfg_files(templateparser_LIB_SRCS
-  customtemplates_kfg.kcfgc
-  globalsettings_base.kcfgc
+  settings/customtemplates_kfg.kcfgc
+  settings/globalsettings_base.kcfgc
 )
 
-if(NOT WINCE)
-  kde4_add_ui_files(templateparser_LIB_SRCS
-    ui/templatesconfiguration_base.ui
-    ui/customtemplates_base.ui
-  )
-endif()
+kde4_add_ui_files(templateparser_LIB_SRCS
+  ui/templatesconfiguration_base.ui
+  ui/customtemplates_base.ui
+)
 
 kde4_add_library(templateparser ${LIBRARY_TYPE} ${templateparser_LIB_SRCS})
 target_link_libraries(templateparser
@@ -52,6 +48,7 @@ target_link_libraries(templateparser
   messagecore
   kleo
   kpgp
+  pimcommon
   ${QGPGME_LIBRARIES}
   ${QT_QTWEBKIT_LIBRARY}
 )
@@ -63,8 +60,8 @@ set_target_properties(templateparser PROPERTIES
 install(TARGETS templateparser ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
-  customtemplates_kfg.kcfg
-  templatesconfiguration_kfg.kcfg
+  settings/customtemplates_kfg.kcfg
+  settings/templatesconfiguration_kfg.kcfg
   DESTINATION ${KCFG_INSTALL_DIR}
 )
 

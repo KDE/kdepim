@@ -19,7 +19,7 @@
  */
 
 #include "kalarm.h"
-#include "eventlistview.moc"
+#include "eventlistview.h"
 
 #include "find.h"
 #ifndef USE_AKONADI
@@ -31,7 +31,6 @@
 #include <klocale.h>
 #include <kdebug.h>
 
-#include <QHeaderView>
 #include <QMouseEvent>
 #include <QToolTip>
 #include <QApplication>
@@ -213,7 +212,7 @@ bool EventListView::viewportEvent(QEvent* e)
         if (qVariantCanConvert<QString>(value))
         {
             QString toolTip = value.toString();
-            int i = toolTip.indexOf('\n');
+            int i = toolTip.indexOf(QLatin1Char('\n'));
             if (i < 0)
             {
 #ifdef USE_AKONADI
@@ -300,5 +299,5 @@ bool EventListDelegate::editorEvent(QEvent* e, QAbstractItemModel* model, const 
     }
     return false;   // indicate that the event has not been handled
 }    
-
+#include "moc_eventlistview.cpp"
 // vim: et sw=4:

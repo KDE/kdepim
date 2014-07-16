@@ -85,4 +85,4 @@ KABC::PhoneNumber::Type PhoneTypeCombo::type() const
   return d->mType;
 }
 
-#include "phonetypecombo.moc"
+#include "moc_phonetypecombo.cpp"

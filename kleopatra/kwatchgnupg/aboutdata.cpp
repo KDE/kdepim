@@ -59,17 +59,17 @@ static const about_data credits[] = {
 
 AboutData::AboutData()
   : KAboutData( "kwatchgnupg", 0, ki18n("KWatchGnuPG"),
-		kwatchgnupg_version, ki18n(description), License_GPL,
-		ki18n("(c) 2004 Klar\xC3\xA4lvdalens Datakonsult AB\n") )
+                kwatchgnupg_version, ki18n(description), License_GPL,
+                ki18n("(c) 2004 Klar\xC3\xA4lvdalens Datakonsult AB\n") )
 {
   using ::authors;
   //using ::credits;
   for ( unsigned int i = 0 ; i < sizeof authors / sizeof *authors ; ++i )
     addAuthor( ki18n(authors[i].name), ki18n(authors[i].desc),
-	       authors[i].email, authors[i].web );
+               authors[i].email, authors[i].web );
 #if 0
   for ( unsigned int i = 0 ; i < sizeof credits / sizeof *credits ; ++i )
     addCredit( ki18n(credits[i].name), ki18n(credits[i].desc),
-	       credits[i].email, credits[i].web );
+               credits[i].email, credits[i].web );
 #endif
 }

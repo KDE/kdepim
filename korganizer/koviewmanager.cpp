@@ -156,7 +156,7 @@ void KOViewManager::writeSettings( KConfig *config )
     mListView->writeSettings( config );
   }
   if ( mTodoView ) {
-    mTodoView->saveLayout( config, "Todo View" );
+    mTodoView->saveLayout( config, QLatin1String("Todo View") );
   }
 
   // write out custom view configuration
@@ -194,21 +194,21 @@ void KOViewManager::showView( KOrg::BaseView *view )
   if ( w ) {
     KActionCollection *ac = w->getActionCollection();
     if ( ac ) {
-      if ( QAction *action = ac->action( "configure_view" ) ) {
+      if ( QAction *action = ac->action( QLatin1String("configure_view") ) ) {
         action->setEnabled( view->hasConfigurationDialog() );
       }
 
       QStringList zoomActions;
       QStringList rangeActions;
 
-      zoomActions << "zoom_in_horizontally"
-                  << "zoom_out_horizontally"
-                  << "zoom_in_vertically"
-                  << "zoom_out_vertically";
-      rangeActions << "select_workweek"
-                   << "select_week"
-                   << "select_day"
-                   << "select_nextx";
+      zoomActions << QLatin1String("zoom_in_horizontally")
+                  << QLatin1String("zoom_out_horizontally")
+                  << QLatin1String("zoom_in_vertically")
+                  << QLatin1String("zoom_out_vertically");
+      rangeActions << QLatin1String("select_workweek")
+                   << QLatin1String("select_week")
+                   << QLatin1String("select_day")
+                   << QLatin1String("select_nextx");
 
       for ( int i = 0; i < zoomActions.size(); ++i ) {
         if ( QAction *action = ac->action( zoomActions[i] ) ) {
@@ -232,15 +232,15 @@ void KOViewManager::goMenu( bool enable )
     KActionCollection *ac = w->getActionCollection();
     if ( ac ) {
       QAction *action;
-      action = ac->action( "go_today" );
+      action = ac->action( QLatin1String("go_today") );
       if ( action ) {
         action->setEnabled( enable );
       }
-      action = ac->action( "go_previous" );
+      action = ac->action( QLatin1String("go_previous") );
       if ( action ) {
         action->setEnabled( enable );
       }
-      action = ac->action( "go_next" );
+      action = ac->action( QLatin1String("go_next") );
       if ( action ) {
         action->setEnabled( enable );
       }
@@ -366,8 +366,6 @@ void KOViewManager::connectTodoView( KOTodoView *todoView )
            mMainView, SLOT(todo_unsub()) );
   connect( todoView, SIGNAL(unAllSubTodoSignal()),
            mMainView, SLOT(makeSubTodosIndependent()) );
-  connect( mMainView, SIGNAL(categoryConfigChanged()),
-           todoView, SLOT(updateCategories()) );
 
   connect( todoView, SIGNAL(fullViewChanged(bool)),
            mMainView, SLOT(changeFullView(bool)) );
@@ -508,8 +506,8 @@ void KOViewManager::showAgendaView()
   if ( showSideBySide ) {
     if ( !mAgendaSideBySideView ) {
       mAgendaSideBySideView = new MultiAgendaView( parent );
-      mAgendaSideBySideView->setCalendar( mMainView->calendar() );
       mAgendaSideBySideView->setIdentifier( "DefaultAgendaSideBySideView" );
+      mAgendaSideBySideView->setCalendar( mMainView->calendar() );
       addView( mAgendaSideBySideView, showBoth );
 
 /*
@@ -581,7 +579,7 @@ void KOViewManager::showTodoView()
     connectTodoView( mTodoView );
 
     KConfig *config = KOGlobals::self()->config();
-    mTodoView->restoreLayout( config, "Todo View", false );
+    mTodoView->restoreLayout( config, QLatin1String("Todo View"), false );
   }
   goMenu( false );
   showView( mTodoView );
@@ -639,7 +637,7 @@ QDate KOViewManager::currentSelectionDate()
 {
   QDate qd;
   if ( mCurrentView ) {
-    DateList qvl = mCurrentView->selectedIncidenceDates();
+    KCalCore::DateList qvl = mCurrentView->selectedIncidenceDates();
     if ( !qvl.isEmpty() ) {
       qd = qvl.first();
     }
@@ -699,5 +697,4 @@ bool KOViewManager::agendaIsSelected() const
         ( mAgendaViewTabs && mCurrentView == mAgendaViewTabs->currentWidget() );
 }
 
-#include "koviewmanager.moc"
 

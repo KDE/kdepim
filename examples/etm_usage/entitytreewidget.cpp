@@ -36,20 +36,20 @@ using namespace Akonadi;
 
 static const QString predefinedMimeTypes[] =
 {
-  "",
-  "message/rfc822",
-  "text/directory",
-  "text/calendar",
-  "message/rfc822,text/directory"
+  QLatin1String(""),
+  QLatin1String("message/rfc822"),
+  QLatin1String("text/directory"),
+  QLatin1String("text/calendar"),
+  QLatin1String("message/rfc822,text/directory")
 };
 
 static const QString predefinedUserVisibleMimeTypes[] =
 {
-  "All",
-  "Email",
-  "Addressees",
-  "Events",
-  "Email and Addressees"
+  QLatin1String("All"),
+  QLatin1String("Email"),
+  QLatin1String("Addressees"),
+  QLatin1String("Events"),
+  QLatin1String("Email and Addressees")
 };
 
 EntityTreeWidget::EntityTreeWidget( QWidget* parent )
@@ -92,7 +92,7 @@ void EntityTreeWidget::mimeTypesChoiceChanged( int index )
 
 void EntityTreeWidget::mimeTypesChanged( const QString& mimetypeList )
 {
-  QStringList list = mimetypeList.isEmpty() ? QStringList() : mimetypeList.split(",");
+  QStringList list = mimetypeList.isEmpty() ? QStringList() : mimetypeList.split(QLatin1String(","));
 
   foreach ( const QString mimetype, m_changeRecorder->mimeTypesMonitored() )
     if ( !list.contains( mimetype ) )
@@ -148,12 +148,12 @@ QString EntityTreeWidget::dumpLevel(const QModelIndex& parent, int level)
   for (int row = 0; row < rowCount; ++row)
   {
     QString line;
-    line.append("\"");
+    line.append(QLatin1String("\""));
     for (int l = 0; l < level; ++l)
-      line.append("- ");
+      line.append(QLatin1String("- "));
     line.append(QString::number(num++));
-    line.append("\"");
-    line.append("\n");
+    line.append(QLatin1String("\""));
+    line.append(QLatin1String("\n"));
     lines.append(line);
 //     qDebug() << line;
     static const int column = 0;

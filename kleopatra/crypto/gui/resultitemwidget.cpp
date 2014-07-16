@@ -89,8 +89,8 @@ public:
 
 static KUrl auditlog_url_template() {
     KUrl url;
-    url.setScheme( "kleoresultitem" );
-    url.setHost( "showauditlog" );
+    url.setScheme( QLatin1String("kleoresultitem") );
+    url.setHost( QLatin1String("showauditlog") );
     return url;
 }
 
@@ -101,18 +101,18 @@ void ResultItemWidget::Private::updateShowDetailsLabel()
 
     const bool detailsVisible = m_detailsLabel->isVisible();
     const QString auditLogLink = m_result->auditLog().formatLink( auditlog_url_template() );
-    m_showDetailsLabel->setText( QString( "<a href=\"kleoresultitem://toggledetails/\">%1</a><br/>%2" ).arg( detailsVisible ? i18n( "Hide Details" ) : i18n( "Show Details" ), auditLogLink ) );
+    m_showDetailsLabel->setText( QString::fromLatin1( "<a href=\"kleoresultitem://toggledetails/\">%1</a><br/>%2" ).arg( detailsVisible ? i18n( "Hide Details" ) : i18n( "Show Details" ), auditLogLink ) );
 }
 
 ResultItemWidget::ResultItemWidget( const shared_ptr<const Task::Result> & result, QWidget * parent, Qt::WindowFlags flags ) : QWidget( parent, flags ), d( new Private( result, this ) )
 {
     const QColor color = colorForVisualCode( d->m_result->code() );
-    setStyleSheet( QString( "* { background-color: %1; margin: 0px; } QFrame#resultFrame{ border-color: %2; border-style: solid; border-radius: 3px; border-width: 2px } QLabel { padding: 5px; border-radius: 3px }" ).arg( color.lighter( 150 ).name(), color.name() ) );
+    setStyleSheet( QString::fromLatin1( "* { background-color: %1; margin: 0px; } QFrame#resultFrame{ border-color: %2; border-style: solid; border-radius: 3px; border-width: 2px } QLabel { padding: 5px; border-radius: 3px }" ).arg( color.lighter( 150 ).name(), color.name() ) );
     QVBoxLayout* topLayout = new QVBoxLayout( this );
     topLayout->setMargin( 0 );
     topLayout->setSpacing( 0 );
     QFrame* frame = new QFrame;
-    frame->setObjectName( "resultFrame" );
+    frame->setObjectName( QLatin1String("resultFrame") );
     topLayout->addWidget( frame );
     QVBoxLayout* layout = new QVBoxLayout( frame );
     layout->setMargin( 0 );
@@ -179,21 +179,21 @@ void ResultItemWidget::Private::slotLinkActivated( const QString & link )
 {
     assert( m_result );
     if ( link.startsWith( QLatin1String( "key:" ) ) ) {
-        const QStringList split = link.split( ':' );
+        const QStringList split = link.split( QLatin1Char(':') );
         if ( split.size() == 3 || m_result->nonce() != split.value( 1 ) )
-            emit q->linkActivated( "key://" + split.value( 2 ) );
+            emit q->linkActivated( QLatin1String("key://") + split.value( 2 ) );
         else
             kWarning() << "key link invalid, or nonce not matching! link=" << link << " nonce" << m_result->nonce();
         return;
     }
 
     const QUrl url( link );
-    if ( url.host() == "toggledetails" ) {
+    if ( url.host() == QLatin1String("toggledetails") ) {
         q->showDetails( !q->detailsVisible() );
         return;
     }
 
-    if ( url.host() == "showauditlog" ) {
+    if ( url.host() == QLatin1String("showauditlog") ) {
         q->showAuditLog();
         return;
     }
@@ -213,4 +213,4 @@ void ResultItemWidget::showDetails( bool show )
     emit detailsToggled( show );
 }
 
-#include "resultitemwidget.moc"
+#include "moc_resultitemwidget.cpp"

@@ -37,7 +37,7 @@ class FindBarMailWebView : public FindBarBase
 
 public:
     explicit FindBarMailWebView( MailWebView * view, QWidget * parent = 0 );
-    virtual ~FindBarMailWebView();
+    ~FindBarMailWebView();
 
 private:
     explicit FindBarMailWebView( QWidget *parent) { Q_UNUSED(parent); }

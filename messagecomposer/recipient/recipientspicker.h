@@ -50,7 +50,7 @@ public:
     void setDefaultType( Recipient::Type );
 
 Q_SIGNALS:
-    void pickedRecipient( const Recipient & );
+    void pickedRecipient( const Recipient &, bool & );
 
 protected:
     void readConfig();

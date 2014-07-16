@@ -40,9 +40,9 @@ namespace MailCommon {
  */
 class FilterActionWithFolder : public FilterAction
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * @copydoc FilterAction::FilterAction
      */
@@ -98,7 +98,7 @@ class FilterActionWithFolder : public FilterAction
     virtual bool folderRemoved( const Akonadi::Collection &aFolder,
                                 const Akonadi::Collection &aNewFolder );
 
-  protected:
+protected:
     Akonadi::Collection mFolder;
 };
 

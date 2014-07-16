@@ -27,7 +27,7 @@ using namespace IncidenceEditorNG;
 /// public methods
 
 CombinedIncidenceEditor::CombinedIncidenceEditor( QWidget *parent )
-  : IncidenceEditor( parent ), mDirtyEditorCount( 0 ), mParent( parent )
+  : IncidenceEditor( parent ), mDirtyEditorCount( 0 )
 {
 }
 
@@ -100,7 +100,7 @@ void CombinedIncidenceEditor::load( const KCalCore::Incidence::Ptr &incidence )
     if ( editor->isDirty() ) {
       // We are going to crash due to assert. Print some useful info before crashing.
       kWarning() << "Faulty editor was " << editor->objectName();
-      kWarning() << "Incidence " << incidence;
+      kWarning() << "Incidence " << ( incidence ? incidence->uid() : "null" );
 
       editor->printDebugInfo();
 
@@ -120,4 +120,3 @@ void CombinedIncidenceEditor::save( const KCalCore::Incidence::Ptr &incidence )
   }
 }
 
-#include "moc_combinedincidenceeditor.cpp"

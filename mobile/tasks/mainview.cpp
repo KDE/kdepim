@@ -37,7 +37,6 @@
 
 #include <incidenceeditor-ng/categoryeditdialog.h>
 #include <incidenceeditor-ng/editorconfig.h>
-#include <incidenceeditor-ng/groupwareintegration.h>
 #include <incidenceeditor-ng/incidencedefaults.h>
 #include <calendarsupport/archivedialog.h>
 #include <calendarsupport/calendarutils.h>
@@ -77,7 +76,7 @@ QML_DECLARE_TYPE( DeclarativeConfigWidget )
 QML_DECLARE_TYPE( DeclarativeSearchWidget )
 
 MainView::MainView( QWidget *parent )
-  : KDeclarativeMainView( "tasks", new TaskListProxy, parent )
+  : KDeclarativeMainView( QLatin1String("tasks"), new TaskListProxy, parent )
   , mCalendarUtils( 0 )
   , mTasksActionManager( 0 )
   , mCalendarPrefs( new EventViews::Prefs )
@@ -115,10 +114,6 @@ void MainView::doDelayedInit()
   mChanger = new Akonadi::IncidenceChanger( this );
 
   Akonadi::FreeBusyManager::self()->setCalendar( mCalendar );
-
-  if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
-    IncidenceEditorNG::GroupwareIntegration::activate( mCalendar );
-  }
 
   mCalendarUtils = new CalendarSupport::CalendarUtils( mCalendar, this );
   mCalendar->setParent( mCalendarUtils );
@@ -349,7 +344,7 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   mStandardActionManager->action( Akonadi::StandardCalendarActionManager::CreateSubTodo )->setText( i18n( "New Sub Task" ) );
   mStandardActionManager->action( Akonadi::StandardCalendarActionManager::EditIncidence )->setText( i18n( "Edit task" ) );
 
-  actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize All Tasks" ) );
+  actionCollection()->action( QLatin1String("synchronize_all_items") )->setText( i18n( "Synchronize All Tasks" ) );
 }
 
 void MainView::updateActionTexts()
@@ -362,23 +357,23 @@ void MainView::updateActionTexts()
   const Akonadi::Item item = items.first();
   const QString mimeType = item.mimeType();
   if ( mimeType == KCalCore::Event::eventMimeType() ) {
-    actionCollection()->action( "akonadi_item_copy" )->setText( ki18np( "Copy Event", "Copy %1 Events" ).subs( itemCount ).toString() );
-    actionCollection()->action( "akonadi_item_copy_to_dialog" )->setText( i18n( "Copy Event To" ) );
-    actionCollection()->action( "akonadi_item_delete" )->setText( ki18np( "Delete Event", "Delete %1 Events" ).subs( itemCount ).toString() );
-    actionCollection()->action( "akonadi_item_move_to_dialog" )->setText( i18n( "Move Event To" ) );
-    actionCollection()->action( "akonadi_incidence_edit" )->setText( i18n( "Edit Event" ) );
+    actionCollection()->action( QLatin1String("akonadi_item_copy") )->setText( ki18np( "Copy Event", "Copy %1 Events" ).subs( itemCount ).toString() );
+    actionCollection()->action( QLatin1String("akonadi_item_copy_to_dialog") )->setText( i18n( "Copy Event To" ) );
+    actionCollection()->action( QLatin1String("akonadi_item_delete") )->setText( ki18np( "Delete Event", "Delete %1 Events" ).subs( itemCount ).toString() );
+    actionCollection()->action( QLatin1String("akonadi_item_move_to_dialog") )->setText( i18n( "Move Event To" ) );
+    actionCollection()->action( QLatin1String("akonadi_incidence_edit") )->setText( i18n( "Edit Event" ) );
   } else if ( mimeType == KCalCore::Todo::todoMimeType() ) {
-    actionCollection()->action( "akonadi_item_copy" )->setText( ki18np( "Copy Task", "Copy %1 Tasks" ).subs( itemCount ).toString() );
-    actionCollection()->action( "akonadi_item_copy_to_dialog" )->setText( i18n( "Copy Task To" ) );
-    actionCollection()->action( "akonadi_item_delete" )->setText( ki18np( "Delete Task", "Delete %1 Tasks" ).subs( itemCount ).toString() );
-    actionCollection()->action( "akonadi_item_move_to_dialog" )->setText( i18n( "Move Task To" ) );
-    actionCollection()->action( "akonadi_incidence_edit" )->setText( i18n( "Edit Task" ) );
+    actionCollection()->action( QLatin1String("akonadi_item_copy") )->setText( ki18np( "Copy Task", "Copy %1 Tasks" ).subs( itemCount ).toString() );
+    actionCollection()->action( QLatin1String("akonadi_item_copy_to_dialog") )->setText( i18n( "Copy Task To" ) );
+    actionCollection()->action( QLatin1String("akonadi_item_delete") )->setText( ki18np( "Delete Task", "Delete %1 Tasks" ).subs( itemCount ).toString() );
+    actionCollection()->action( QLatin1String("akonadi_item_move_to_dialog") )->setText( i18n( "Move Task To" ) );
+    actionCollection()->action( QLatin1String("akonadi_incidence_edit") )->setText( i18n( "Edit Task" ) );
   } else if ( mimeType == KCalCore::Journal::journalMimeType() ) {
-    actionCollection()->action( "akonadi_item_copy" )->setText( ki18np( "Copy Journal", "Copy %1 Journals" ).subs( itemCount ).toString() );
-    actionCollection()->action( "akonadi_item_copy_to_dialog" )->setText( i18n( "Copy Journal To" ) );
-    actionCollection()->action( "akonadi_item_delete" )->setText( ki18np( "Delete Journal", "Delete %1 Journals" ).subs( itemCount ).toString() );
-    actionCollection()->action( "akonadi_item_move_to_dialog" )->setText( i18n( "Move Journal To" ) );
-    actionCollection()->action( "akonadi_incidence_edit" )->setText( i18n( "Edit Journal" ) );
+    actionCollection()->action( QLatin1String("akonadi_item_copy") )->setText( ki18np( "Copy Journal", "Copy %1 Journals" ).subs( itemCount ).toString() );
+    actionCollection()->action( QLatin1String("akonadi_item_copy_to_dialog") )->setText( i18n( "Copy Journal To" ) );
+    actionCollection()->action( QLatin1String("akonadi_item_delete") )->setText( ki18np( "Delete Journal", "Delete %1 Journals" ).subs( itemCount ).toString() );
+    actionCollection()->action( QLatin1String("akonadi_item_move_to_dialog") )->setText( i18n( "Move Journal To" ) );
+    actionCollection()->action( QLatin1String("akonadi_incidence_edit") )->setText( i18n( "Edit Journal" ) );
   }
 }
 
@@ -461,37 +456,7 @@ void MainView::fetchForSaveAllAttachmentsDone( KJob* job )
   }
 
   const Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
-#ifndef Q_OS_WINCE
   CalendarSupport::saveAttachments( item, this );
-#else
-  // CalendarSupport is not completely ported for Windows CE so we use the
-  // attachment handling code from KDeclarativeMainView
-  KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
-
-  if ( !incidence ) {
-    KMessageBox::sorry(
-      this,
-      i18n( "No item selected." ),
-      "SaveAttachments" );
-    return;
-  }
-
-  KCalCore::Attachment::List attachments = incidence->attachments();
-
-  if ( attachments.empty() )
-    return;
-
-  Q_FOREACH( KCalCore::Attachment::Ptr attachment, attachments ) {
-    QString fileName = attachment->label();
-    QString sourceUrl;
-    if ( attachment->isUri() ) {
-      sourceUrl = attachment->uri();
-    } else {
-      sourceUrl = incidence->writeAttachmentToTempFile( attachment );
-    }
-      saveAttachment( sourceUrl, fileName );
-  }
-#endif //Q_OS_WINCE
 }
 
 void MainView::archiveOldEntries()

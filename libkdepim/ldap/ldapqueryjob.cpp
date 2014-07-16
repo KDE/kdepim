@@ -23,7 +23,6 @@
 #include <kldap/ldif.h>
 #include <kldap/ldapcontrol.h>
 #include <kldap/ldapdefs.h>
-#include <kldap/ldapcontrol.h>
 #include <kldap/ldapconnection.h>
 #include <kldap/ldapdn.h>
 
@@ -111,4 +110,3 @@ void LdapQueryJob::start()
 }
 
 
-#include "ldapqueryjob.moc"

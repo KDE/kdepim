@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -21,6 +21,9 @@
 #define BLOGILOCOMPOSERVIEW_H
 
 #include <composereditor-ng/composerview.h>
+namespace PimCommon {
+class CustomToolsWidget;
+}
 
 class BlogiloComposerView : public ComposerEditorNG::ComposerView
 {
@@ -30,8 +33,15 @@ public:
     ~BlogiloComposerView();
 
     void startEditing();
+    virtual void addExtraAction(QMenu *menu);
+
+    void setCustomTools(PimCommon::CustomToolsWidget *customTool);
+
 private Q_SLOTS:
     void slotSendMouseReleaseEvent();
+
+private:
+    PimCommon::CustomToolsWidget *mCustomTools;
 };
 
 #endif // BLOGILOCOMPOSERVIEW_H

@@ -1,7 +1,7 @@
 /**
  * composer/kmeditor.h
  *
- * Copyright (C)  2007  Laurent Montel <montel@kde.org>
+ * Copyright (C)  2007-2013  Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,6 @@
 #define KMCOMPOSEREDITOR_H
 
 #include <messagecomposer/composer/kmeditor.h>
-#include <KJob>
 
 class KAction;
 class KMComposeWin;
@@ -76,9 +75,11 @@ private:
     KMComposeWin *mComposerWin;
 
 protected:
-
     bool canInsertFromMimeData( const QMimeData *source ) const;
     void insertFromMimeData( const QMimeData *source );
+
+protected slots:
+    void mousePopupMenuImplementation(const QPoint& pos);
 
 signals:
     void insertSnippet();

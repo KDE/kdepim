@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,12 +16,10 @@
 */
 
 #include "sieveactionreturn.h"
+#include "editor/sieveeditorutil.h"
 
-#include <KLocale>
-#include <KLineEdit>
+#include <KLocalizedString>
 
-#include <QHBoxLayout>
-#include <QLabel>
 
 using namespace KSieveUi;
 SieveActionReturn::SieveActionReturn(QObject *parent)
@@ -37,6 +35,11 @@ SieveAction* SieveActionReturn::newAction()
 QString SieveActionReturn::code(QWidget *) const
 {
     return QLatin1String("return;");
+}
+
+QString SieveActionReturn::href() const
+{
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 
 QString SieveActionReturn::help() const
@@ -60,4 +63,3 @@ QString SieveActionReturn::serverNeedsCapability() const
 }
 
 
-#include "sieveactionreturn.moc"

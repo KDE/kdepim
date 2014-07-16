@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -17,13 +17,14 @@
 
 
 #include "sieveactionsetflags.h"
+#include "editor/sieveeditorutil.h"
 #include "pimcommon/widgets/minimumcombobox.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace KSieveUi;
 SieveActionSetFlags::SieveActionSetFlags(QObject *parent)
-    : SieveActionAbstractFlags(QLatin1String("setflags"), i18n("Set Flags"), parent)
+    : SieveActionAbstractFlags(QLatin1String("setflag"), i18n("Set Flags"), parent)
 {
 }
 
@@ -42,4 +43,8 @@ QString SieveActionSetFlags::help() const
     return i18n("Setflag is used for setting [IMAP] system flags or keywords. Setflag replaces any previously set flags.");
 }
 
-#include "sieveactionsetflags.moc"
+QString SieveActionSetFlags::href() const
+{
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
+}
+

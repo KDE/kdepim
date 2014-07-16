@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,13 +16,15 @@
 */
 
 #include "sieveconditionmetadataexists.h"
-
-#include <KLocale>
+#include "autocreatescripts/autocreatescriptutil_p.h"
+#include "editor/sieveeditorutil.h"
+#include <KLocalizedString>
 #include <KLineEdit>
 
-#include <QHBoxLayout>
 #include <QLabel>
 #include <QDebug>
+#include <QDomNode>
+#include <QGridLayout>
 
 using namespace KSieveUi;
 SieveConditionMetaDataExists::SieveConditionMetaDataExists(QObject *parent)
@@ -38,23 +40,25 @@ SieveCondition *SieveConditionMetaDataExists::newAction()
 QWidget *SieveConditionMetaDataExists::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
-    QHBoxLayout *lay = new QHBoxLayout;
-    lay->setMargin(0);
-    w->setLayout(lay);
+    QGridLayout *grid = new QGridLayout;
+    grid->setMargin(0);
+    w->setLayout(grid);
 
     QLabel *lab = new QLabel(i18n("Mailbox:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 0, 0);
 
     KLineEdit *mailbox = new KLineEdit;
+    connect(mailbox, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     mailbox->setObjectName(QLatin1String("mailbox"));
-    lay->addWidget(mailbox);
+    grid->addWidget(mailbox, 0, 1);
 
     lab = new QLabel(i18n("Annotation:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 1, 0);
 
     KLineEdit *value = new KLineEdit;
+    connect(value, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     value->setObjectName(QLatin1String("value"));
-    lay->addWidget(value);
+    grid->addWidget(value, 1, 1);
 
     return w;
 }
@@ -89,4 +93,42 @@ QString SieveConditionMetaDataExists::help() const
     return i18n("The \"metadataexists\" test is true if all of the annotations listed in the \"annotation-names\" argument exist for the specified mailbox.");
 }
 
-#include "sieveconditionmetadataexists.moc"
+bool SieveConditionMetaDataExists::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/, QString &error )
+{
+    int index = 0;
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                const QString tagValue = e.text();
+                if (index == 0) {
+                    KLineEdit *mailbox = w->findChild<KLineEdit*>( QLatin1String("mailbox") );
+                    mailbox->setText(tagValue);
+                } else if (index == 1) {
+                    KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
+                    value->setText(AutoCreateScriptUtil::quoteStr(tagValue));
+                } else {
+                    tooManyArgument(tagName, index, 2, error);
+                    qDebug()<<" SieveConditionServerMetaDataExists::setParamWidgetValue to many attribute "<<index;
+                }
+                ++index;
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
+            } else {
+                unknownTag(tagName, error);
+                qDebug()<<" SieveConditionServerMetaDataExists::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+    return true;
+}
+
+QString SieveConditionMetaDataExists::href() const
+{
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
+}

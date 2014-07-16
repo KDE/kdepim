@@ -167,4 +167,3 @@ void KNode::StringFilterWidget::setStartFocus()
 
 // -----------------------------------------------------------------------------+
 
-#include "knstringfilter.moc"

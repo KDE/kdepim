@@ -65,7 +65,7 @@ QML_DECLARE_TYPE( DeclarativeConfigWidget )
 QML_DECLARE_TYPE( DeclarativeSearchWidget )
 
 MainView::MainView( QWidget *parent )
-  : KDeclarativeMainView( "kaddressbook-mobile", new ContactListProxy, parent ),
+  : KDeclarativeMainView( QLatin1String("kaddressbook-mobile"), new ContactListProxy, parent ),
   mLdapSearchDialog( 0 )
 {
 }
@@ -182,23 +182,23 @@ void MainView::sendMailTo()
   }
 
   // try to open the email composer in kmail-mobile
-  QDBusInterface *interface = new QDBusInterface( "org.kde.kmailmobile.composer", "/composer" );
+  QDBusInterface *interface = new QDBusInterface( QLatin1String("org.kde.kmailmobile.composer"), QLatin1String("/composer") );
   if ( !interface->isValid() ) {
     delete interface;
 
-    QDBusServiceWatcher *watcher = new QDBusServiceWatcher( "org.kde.kmailmobile.composer", QDBusConnection::sessionBus(),
+    QDBusServiceWatcher *watcher = new QDBusServiceWatcher( QLatin1String("org.kde.kmailmobile.composer"), QDBusConnection::sessionBus(),
                                                             QDBusServiceWatcher::WatchForRegistration, this );
     QEventLoop loop;
     connect( watcher, SIGNAL(serviceRegistered(QString)), &loop, SLOT(quit()) );
-    QProcess::startDetached( "kmail-mobile" );
+    QProcess::startDetached( QLatin1String("kmail-mobile") );
     loop.exec();
 
     delete watcher;
 
-    interface = new QDBusInterface( "org.kde.kmailmobile.composer", "/composer" );
+    interface = new QDBusInterface( QLatin1String("org.kde.kmailmobile.composer"),QLatin1String( "/composer") );
   }
 
-  interface->call( "openComposer", emailAddresses.join( ", " ), QString(), QString(), QString(), QString() );
+  interface->call( QLatin1String("openComposer"), emailAddresses.join( QLatin1String(", ") ), QString(), QString(), QString(), QString() );
 
   delete interface;
 }
@@ -322,7 +322,7 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   mActionManager->action( Akonadi::StandardActionManager::MoveItemToDialog )->setText( i18n( "Move Contact To" ) );
   mActionManager->action( Akonadi::StandardActionManager::CopyItemToDialog )->setText( i18n( "Copy Contact To" ) );
 
-  actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize All Accounts" ) );
+  actionCollection()->action( QLatin1String("synchronize_all_items") )->setText( i18n( "Synchronize All Accounts" ) );
 }
 
 void MainView::updateActionTexts()
@@ -335,17 +335,17 @@ void MainView::updateActionTexts()
   const Akonadi::Item item = items.first();
   const QString mimeType = item.mimeType();
   if ( mimeType == KABC::Addressee::mimeType() ) {
-    actionCollection()->action( "akonadi_item_copy" )->setText( ki18np( "Copy Contact", "Copy %1 Contacts" ).subs( itemCount ).toString() );
-    actionCollection()->action( "akonadi_item_copy_to_dialog" )->setText( i18n( "Copy Contact To" ) );
-    actionCollection()->action( "akonadi_item_delete" )->setText( ki18np( "Delete Contact", "Delete %1 Contacts" ).subs( itemCount ).toString() );
-    actionCollection()->action( "akonadi_item_move_to_dialog" )->setText( i18n( "Move Contact To" ) );
-    actionCollection()->action( "akonadi_contact_item_edit" )->setText( i18n( "Edit Contact" ) );
+    actionCollection()->action( QLatin1String("akonadi_item_copy") )->setText( ki18np( "Copy Contact", "Copy %1 Contacts" ).subs( itemCount ).toString() );
+    actionCollection()->action( QLatin1String("akonadi_item_copy_to_dialog") )->setText( i18n( "Copy Contact To" ) );
+    actionCollection()->action( QLatin1String("akonadi_item_delete") )->setText( ki18np( "Delete Contact", "Delete %1 Contacts" ).subs( itemCount ).toString() );
+    actionCollection()->action( QLatin1String("akonadi_item_move_to_dialog") )->setText( i18n( "Move Contact To" ) );
+    actionCollection()->action( QLatin1String("akonadi_contact_item_edit") )->setText( i18n( "Edit Contact" ) );
   } else if ( mimeType == KABC::ContactGroup::mimeType() ) {
-    actionCollection()->action( "akonadi_item_copy" )->setText( ki18np( "Copy Group Of Contacts", "Copy %1 Groups Of Contacts" ).subs( itemCount ).toString() );
-    actionCollection()->action( "akonadi_item_copy_to_dialog" )->setText( i18n( "Copy Group Of Contacts To" ) );
-    actionCollection()->action( "akonadi_item_delete" )->setText( ki18np( "Delete Group Of Contacts", "Delete %1 Groups Of Contacts" ).subs( itemCount ).toString() );
-    actionCollection()->action( "akonadi_item_move_to_dialog" )->setText( i18n( "Move Group Of Contacts To" ) );
-    actionCollection()->action( "akonadi_contact_item_edit" )->setText( i18n( "Edit Group Of Contacts" ) );
+    actionCollection()->action( QLatin1String("akonadi_item_copy") )->setText( ki18np( "Copy Group Of Contacts", "Copy %1 Groups Of Contacts" ).subs( itemCount ).toString() );
+    actionCollection()->action( QLatin1String("akonadi_item_copy_to_dialog") )->setText( i18n( "Copy Group Of Contacts To" ) );
+    actionCollection()->action( QLatin1String("akonadi_item_delete") )->setText( ki18np( "Delete Group Of Contacts", "Delete %1 Groups Of Contacts" ).subs( itemCount ).toString() );
+    actionCollection()->action( QLatin1String("akonadi_item_move_to_dialog") )->setText( i18n( "Move Group Of Contacts To" ) );
+    actionCollection()->action( QLatin1String("akonadi_contact_item_edit") )->setText( i18n( "Edit Group Of Contacts" ) );
   }
 }
 
@@ -444,4 +444,3 @@ void MainView::configureCategories()
     config.writeConfig();
 }
 
-#include "mainview.moc"

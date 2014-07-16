@@ -23,7 +23,7 @@ using namespace MessageComposer;
 
 class InfoPart::Private
 {
-  public:
+public:
     QString from;
     QStringList to;
     QStringList cc;
@@ -40,147 +40,146 @@ class InfoPart::Private
 };
 
 InfoPart::InfoPart( QObject *parent )
-  : MessagePart( parent )
-  , d( new Private )
+    : MessagePart( parent )
+    , d( new Private )
 {
-  d->transportId = 0;
-  d->urgent = false;
+    d->transportId = 0;
+    d->urgent = false;
 }
 
 InfoPart::~InfoPart()
 {
-  delete d;
+    delete d;
 }
 
 QString InfoPart::from() const
 {
-  return d->from;
+    return d->from;
 }
 
 void InfoPart::setFrom( const QString &from )
 {
-  d->from = from;
+    d->from = from;
 }
 
 QStringList InfoPart::to() const
 {
-  return d->to;
+    return d->to;
 }
 
 void InfoPart::setTo( const QStringList &to )
 {
-  d->to = to;
+    d->to = to;
 }
 
 QStringList InfoPart::cc() const
 {
-  return d->cc;
+    return d->cc;
 }
 
 void InfoPart::setCc( const QStringList &cc )
 {
-  d->cc = cc;
+    d->cc = cc;
 }
 
 QStringList InfoPart::bcc() const
 {
-  return d->bcc;
+    return d->bcc;
 }
 
 void InfoPart::setBcc( const QStringList &bcc )
 {
-  d->bcc = bcc;
+    d->bcc = bcc;
 }
 
 QString InfoPart::subject() const
 {
-  return d->subject;
+    return d->subject;
 }
 
 void InfoPart::setSubject( const QString &subject )
 {
-  d->subject = subject;
+    d->subject = subject;
 }
 
 QString InfoPart::replyTo() const
 {
-  return d->replyTo;
+    return d->replyTo;
 }
 
 void InfoPart::setReplyTo(const QString& replyTo)
 {
-  d->replyTo = replyTo;
+    d->replyTo = replyTo;
 }
 
 
 int InfoPart::transportId() const
 {
-  return d->transportId;
+    return d->transportId;
 }
 
 void InfoPart::setTransportId( int tid )
 {
-  d->transportId = tid;
+    d->transportId = tid;
 }
 
 void InfoPart::setFcc( const QString &fcc )
 {
-  d->fcc = fcc;
+    d->fcc = fcc;
 }
 
 QString InfoPart::fcc() const
 {
-  return d->fcc;
+    return d->fcc;
 }
 
 bool InfoPart::urgent() const
 {
-  return d->urgent;
+    return d->urgent;
 }
 
 void InfoPart::setUrgent( bool urgent )
 {
-  d->urgent = urgent;
+    d->urgent = urgent;
 }
 
 QString InfoPart::inReplyTo() const
 {
-  return d->inReplyTo;
+    return d->inReplyTo;
 }
 
 void InfoPart::setInReplyTo( const QString& inReplyTo )
 {
-  d->inReplyTo = inReplyTo;
+    d->inReplyTo = inReplyTo;
 }
 
 QString InfoPart::references() const
 {
-  return d->references;
+    return d->references;
 }
 
 void InfoPart::setReferences( const QString& references )
 {
-  d->references = references;
+    d->references = references;
 }
 
 void InfoPart::setExtraHeaders( KMime::Headers::Base::List headers )
 {
-  d->extraHeaders = headers;
+    d->extraHeaders = headers;
 }
 
 KMime::Headers::Base::List InfoPart::extraHeaders() const
 {
-  return d->extraHeaders;
+    return d->extraHeaders;
 }
-    
+
 QString InfoPart::userAgent() const
 {
-  return d->userAgent;
+    return d->userAgent;
 }
 
 void InfoPart::setUserAgent ( const QString& userAgent )
 {
-  d->userAgent = userAgent;
+    d->userAgent = userAgent;
 }
 
-#include "infopart.moc"

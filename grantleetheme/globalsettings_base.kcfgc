@@ -1,0 +1,9 @@
+File=grantleetheme.kcfg
+ClassName=GrantleeSettings
+NameSpace=GrantleeTheme
+Visibility=GRANTLEETHEME_EXPORT
+Mutators=true
+Singleton=true
+ItemAccessors=true
+SetUserTexts=true
+IncludeFiles=grantleetheme_export.h

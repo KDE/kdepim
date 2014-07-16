@@ -25,7 +25,7 @@
 #include <kactioncollection.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <ksieveui/util.h>
+#include <ksieveui/util/util.h>
 #include <ksieveui/vacation/vacation.h>
 
 #include <QtCore/QTimer>
@@ -41,7 +41,7 @@ VacationManager::VacationManager( KActionCollection *actionCollection, QObject *
 
   if ( KSieveUi::Util::allowOutOfOfficeSettings() ) {
     mEditAction = new KAction( i18n( "Edit \"Out of Office\" Replies" ), this );
-    actionCollection->addAction( "tools_edit_vacation", mEditAction );
+    actionCollection->addAction( QLatin1String("tools_edit_vacation"), mEditAction );
     connect( mEditAction, SIGNAL(triggered(bool)), SLOT(editVacation()) );
   }
 }
@@ -55,8 +55,9 @@ bool VacationManager::activeVacationScriptAvailable() const
   return mVacationScriptIsActive;
 }
 
-void VacationManager::updateVacationScriptActivity( bool active )
+void VacationManager::updateVacationScriptActivity( bool active, const QString &serverName )
 {
+  Q_UNUSED(serverName);
   mVacationScriptIsActive = active;
   emit vacationScriptActivityChanged();
 }
@@ -69,7 +70,7 @@ void VacationManager::checkVacation()
     return;
   
   KSieveUi::Vacation *vacation = new KSieveUi::Vacation( this, true /* check only */ );
-  connect( vacation, SIGNAL(scriptActive(bool)), SLOT(updateVacationScriptActivity(bool)) );
+  connect( vacation, SIGNAL(scriptActive(bool,QString)), SLOT(updateVacationScriptActivity(bool,QString)) );
   connect( vacation, SIGNAL(requestEditVacation()), SLOT(editVacation()) );
 }
 
@@ -82,7 +83,7 @@ void VacationManager::editVacation()
     return;
 
   mVacation = new KSieveUi::Vacation( this );
-  connect( mVacation, SIGNAL(scriptActive(bool)), SLOT(updateVacationScriptActivity(bool)) );
+  connect( mVacation, SIGNAL(scriptActive(bool,QString)), SLOT(updateVacationScriptActivity(bool,QString)) );
   connect( mVacation, SIGNAL(requestEditVacation()), SLOT(editVacation()) );
   if ( mVacation->isUsable() ) {
     connect( mVacation, SIGNAL(result(bool)), mVacation, SLOT(deleteLater()) );
@@ -108,4 +109,3 @@ bool VacationManager::askToGoOnline() const
   return result;
 }
 
-#include "vacationmanager.moc"

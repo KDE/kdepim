@@ -53,61 +53,61 @@
 
 namespace KSieve {
 
-  //
-  //
-  // Lexer Bridge implementation
-  //
-  //
+//
+//
+// Lexer Bridge implementation
+//
+//
 
-  Lexer::Lexer( const char * scursor, const char * send, int options )
+Lexer::Lexer( const char * scursor, const char * send, int options )
     : i( 0 )
-  {
+{
     i = new Impl( scursor, send, options );
-  }
+}
 
-  Lexer::~Lexer() {
+Lexer::~Lexer() {
     delete i; i = 0;
-  }
+}
 
-  bool Lexer::ignoreComments() const {
+bool Lexer::ignoreComments() const {
     assert( i );
     return i->ignoreComments();
-  }
+}
 
-  const Error & Lexer::error() const {
+const Error & Lexer::error() const {
     assert( i );
     return i->error();
-  }
+}
 
-  bool Lexer::atEnd() const {
+bool Lexer::atEnd() const {
     assert( i );
     return i->atEnd();
-  }
+}
 
-  int Lexer::column() const {
+int Lexer::column() const {
     assert( i );
     return i->column();
-  }
+}
 
-  int Lexer::line() const {
+int Lexer::line() const {
     assert( i );
     return i->line();
-  }
+}
 
-  void Lexer::save() {
+void Lexer::save() {
     assert( i );
     i->save();
-  }
+}
 
-  void Lexer::restore() {
+void Lexer::restore() {
     assert( i );
     i->restore();
-  }
+}
 
-  Lexer::Token Lexer::nextToken( QString & result ) {
+Lexer::Token Lexer::nextToken( QString & result ) {
     assert( i );
     return i->nextToken( result );
-  }
+}
 
 } // namespace KSieve
 
@@ -160,12 +160,12 @@ static inline bool is8Bit( signed char ch ) {
 }
 #endif
 static QString removeCRLF( const QString & s ) {
-  const bool CRLF = s.endsWith( QLatin1String("\r\n") );
-  const bool LF = !CRLF && s.endsWith( '\n' );
+    const bool CRLF = s.endsWith( QLatin1String("\r\n") );
+    const bool LF = !CRLF && s.endsWith( '\n' );
 
-  const int e = CRLF ? 2 : LF ? 1 : 0 ;  // what to chop off at the end
+    const int e = CRLF ? 2 : LF ? 1 : 0 ;  // what to chop off at the end
 
-  return s.left( s.length() - e );
+    return s.left( s.length() - e );
 }
 
 static QString removeDotStuff( const QString & s ) {
@@ -174,23 +174,23 @@ static QString removeDotStuff( const QString & s ) {
 
 namespace KSieve {
 
-  //
-  //
-  // Lexer Implementation
-  //
-  //
+//
+//
+// Lexer Implementation
+//
+//
 
-  Lexer::Impl::Impl( const char * scursor, const char * send, int options )
+Lexer::Impl::Impl( const char * scursor, const char * send, int options )
     : mState( scursor ? scursor : send ),
       mEnd( send ? send : scursor ),
       mIgnoreComments( options & IgnoreComments ),
       mIgnoreLF( options & IgnoreLineFeeds )
-  {
+{
     if ( !scursor || !send )
-      assert( atEnd() );
-  }
+        assert( atEnd() );
+}
 
-  Lexer::Token Lexer::Impl::nextToken( QString & result ) {
+Lexer::Token Lexer::Impl::nextToken( QString & result ) {
     assert( !atEnd() );
     result.clear();
     //clearErrors();
@@ -200,53 +200,53 @@ namespace KSieve {
     const bool eatingWSSucceeded = ignoreComments() ? eatCWS() : eatWS() ;
 
     if ( !ignoreLineFeeds() && oldLine != line() ) {
-      result.setNum( line() - oldLine ); // return number of linefeeds encountered
-      return LineFeeds;
+        result.setNum( line() - oldLine ); // return number of linefeeds encountered
+        return LineFeeds;
     }
 
     if ( !eatingWSSucceeded )
-      return None;
+        return None;
 
     if ( atEnd() )
-      return None;
+        return None;
 
     switch ( *mState.cursor ) {
     case '#': // HashComment
-      assert( !ignoreComments() );
-      ++mState.cursor;
-      if ( !atEnd() )
-	parseHashComment( result, true );
-      return HashComment;
+        assert( !ignoreComments() );
+        ++mState.cursor;
+        if ( !atEnd() )
+            parseHashComment( result, true );
+        return HashComment;
     case '/': // BracketComment
-      assert( !ignoreComments() );
-      ++mState.cursor; // eat slash
-      if ( atEnd() || *mState.cursor != '*' ) {
-	makeError( Error::SlashWithoutAsterisk );
-	return BracketComment;
-      }
-      ++mState.cursor; // eat asterisk
-      if ( atEnd() ) {
-	makeError( Error::UnfinishedBracketComment );
-	return BracketComment;
-      }
-      parseBracketComment( result, true );
-      return BracketComment;
+        assert( !ignoreComments() );
+        ++mState.cursor; // eat slash
+        if ( atEnd() || *mState.cursor != '*' ) {
+            makeError( Error::SlashWithoutAsterisk );
+            return BracketComment;
+        }
+        ++mState.cursor; // eat asterisk
+        if ( atEnd() ) {
+            makeError( Error::UnfinishedBracketComment );
+            return BracketComment;
+        }
+        parseBracketComment( result, true );
+        return BracketComment;
     case ':': // Tag
-      ++mState.cursor;
-      if ( atEnd() ) {
-	makeError( Error::UnexpectedCharacter, line(), column() - 1 );
-	return Tag;
-      }
-      if ( !isIText( *mState.cursor ) ) {
-	makeIllegalCharError( *mState.cursor );
-	return Tag;
-      }
-      parseTag( result );
-      return Tag;
+        ++mState.cursor;
+        if ( atEnd() ) {
+            makeError( Error::UnexpectedCharacter, line(), column() - 1 );
+            return Tag;
+        }
+        if ( !isIText( *mState.cursor ) ) {
+            makeIllegalCharError( *mState.cursor );
+            return Tag;
+        }
+        parseTag( result );
+        return Tag;
     case '"': // QuotedString
-      ++mState.cursor;
-      parseQuotedString( result );
-      return QuotedString;
+        ++mState.cursor;
+        parseQuotedString( result );
+        return QuotedString;
     case '{':
     case '}':
     case '[':
@@ -255,8 +255,8 @@ namespace KSieve {
     case ')':
     case ';':
     case ',': // Special
-      result = *mState.cursor++;
-      return Special;
+        result = *mState.cursor++;
+        return Special;
     case '0':
     case '1':
     case '2':
@@ -267,72 +267,72 @@ namespace KSieve {
     case '7':
     case '8':
     case '9': // Number
-      parseNumber( result );
-      return Number;
+        parseNumber( result );
+        return Number;
     case 't': // maybe MultiLineString, else Identifier
-      if ( _strnicmp( mState.cursor, "text:", STR_DIM("text:") ) == 0 ) {
-	// MultiLineString
-	mState.cursor += STR_DIM("text:");
-	parseMultiLine( result );
-	// ### FIXME: There can be a hash-comment between "text:"
-	// and CRLF! That should be preserved somehow...
-	return MultiLineString;
-      }
-      // else fall through:
+        if ( _strnicmp( mState.cursor, "text:", STR_DIM("text:") ) == 0 ) {
+            // MultiLineString
+            mState.cursor += STR_DIM("text:");
+            parseMultiLine( result );
+            // ### FIXME: There can be a hash-comment between "text:"
+            // and CRLF! That should be preserved somehow...
+            return MultiLineString;
+        }
+        // else fall through:
     default: // Identifier (first must not be 0-9, and can't (caught by Number above))
-      if ( !isIText( *mState.cursor ) ) {
-	makeError( Error::IllegalCharacter );
-	return None;
-      }
-      parseIdentifier( result );
-      return Identifier;
+        if ( !isIText( *mState.cursor ) ) {
+            makeError( Error::IllegalCharacter );
+            return None;
+        }
+        parseIdentifier( result );
+        return Identifier;
     }
-  }
+}
 
-  bool Lexer::Impl::eatWS() {
+bool Lexer::Impl::eatWS() {
     while ( !atEnd() )
-      switch ( *mState.cursor ) {
-      case '\r':
-      case '\n':
-	if ( !eatCRLF() )
-	  return false;
-	break;
-      case ' ':
-      case '\t':
-	++mState.cursor;
-	break;
-      default:
-	return true;
-      }
+        switch ( *mState.cursor ) {
+        case '\r':
+        case '\n':
+            if ( !eatCRLF() )
+                return false;
+            break;
+        case ' ':
+        case '\t':
+            ++mState.cursor;
+            break;
+        default:
+            return true;
+        }
 
     // at end:
     return true;
-  }
+}
 
-  bool Lexer::Impl::eatCRLF() {
+bool Lexer::Impl::eatCRLF() {
     assert( !atEnd() );
     assert( *mState.cursor == '\n' || *mState.cursor == '\r' );
 
     if ( *mState.cursor == '\r' ) {
-      ++mState.cursor;
-      if ( atEnd() || *mState.cursor != '\n' ) {
-	// CR w/o LF -> error
-	makeError( Error::CRWithoutLF );
-	return false;
-      } else {
-	// good CRLF
-	newLine();
-	return true;
-      }
+        ++mState.cursor;
+        if ( atEnd() || *mState.cursor != '\n' ) {
+            // CR w/o LF -> error
+            makeError( Error::CRWithoutLF );
+            return false;
+        } else {
+            // good CRLF
+            newLine();
+            return true;
+        }
     } else /* *mState.cursor == '\n' */ {
-      // good, LF only
-      newLine();
-      return true;
+        // good, LF only
+        newLine();
+        return true;
     }
-  }
-      
+}
 
-  bool Lexer::Impl::parseHashComment( QString & result, bool reallySave ) {
+
+bool Lexer::Impl::parseHashComment( QString & result, bool reallySave ) {
     // hash-comment := "#" *CHAR-NOT-CRLF CRLF
 
     // check that the caller plays by the rules:
@@ -342,8 +342,8 @@ namespace KSieve {
 
     // find next CRLF:
     while ( !atEnd() ) {
-      if ( *mState.cursor == '\n' || *mState.cursor == '\r' ) break;
-      ++mState.cursor;
+        if ( *mState.cursor == '\n' || *mState.cursor == '\r' ) break;
+        ++mState.cursor;
     }
 
     const char * const commentEnd = mState.cursor - 1;
@@ -351,22 +351,22 @@ namespace KSieve {
     if ( commentEnd == commentStart ) return true; // # was last char in script...
 
     if ( atEnd() || eatCRLF() ) {
-      const int commentLength = commentEnd - commentStart + 1;
-      if ( commentLength > 0 ) {
-	if ( !isValidUtf8( commentStart, commentLength ) ) {
-	  makeError( Error::InvalidUTF8 );
-	  return false;
-	}
-	if ( reallySave )
-	  result += QString::fromUtf8( commentStart, commentLength );
-      }
-      return true;
+        const int commentLength = commentEnd - commentStart + 1;
+        if ( commentLength > 0 ) {
+            if ( !isValidUtf8( commentStart, commentLength ) ) {
+                makeError( Error::InvalidUTF8 );
+                return false;
+            }
+            if ( reallySave )
+                result += QString::fromUtf8( commentStart, commentLength );
+        }
+        return true;
     }
 
     return false;
-  }
+}
 
-  bool Lexer::Impl::parseBracketComment( QString & result, bool reallySave ) {
+bool Lexer::Impl::parseBracketComment( QString & result, bool reallySave ) {
     // bracket-comment := "/*" *(CHAR-NOT-STAR / ("*" CHAR-NOT-SLASH )) "*/"
 
     // check that caller plays by the rules:
@@ -379,86 +379,86 @@ namespace KSieve {
 
     // find next asterisk:
     do {
-      if ( !skipTo( '*' ) ) {
-	if ( !error() )
-	  makeError( Error::UnfinishedBracketComment, commentLine, commentCol );
-	return false;
-      }
+        if ( !skipTo( '*' ) ) {
+            if ( !error() )
+                makeError( Error::UnfinishedBracketComment, commentLine, commentCol );
+            return false;
+        }
     } while ( !atEnd() && *++mState.cursor != '/' );
 
     if ( atEnd() ) {
-      makeError( Error::UnfinishedBracketComment, commentLine, commentCol );
-      return false;
+        makeError( Error::UnfinishedBracketComment, commentLine, commentCol );
+        return false;
     }
 
     assert( *mState.cursor == '/' );
 
     const int commentLength = mState.cursor - commentStart - 1;
     if ( commentLength > 0 ) {
-      if ( !isValidUtf8( commentStart, commentLength ) ) {
-	makeError( Error::InvalidUTF8 );
-	return false;
-      }
-      if ( reallySave ) {
-	QString tmp = QString::fromUtf8( commentStart, commentLength );
-	result += tmp.remove( '\r' ); // get rid of CR in CRLF pairs
-      }
+        if ( !isValidUtf8( commentStart, commentLength ) ) {
+            makeError( Error::InvalidUTF8 );
+            return false;
+        }
+        if ( reallySave ) {
+            QString tmp = QString::fromUtf8( commentStart, commentLength );
+            result += tmp.remove( '\r' ); // get rid of CR in CRLF pairs
+        }
     }
 
     ++mState.cursor; // eat '/'
     return true;
-  }
+}
 
-  bool Lexer::Impl::parseComment( QString & result, bool reallySave ) {
+bool Lexer::Impl::parseComment( QString & result, bool reallySave ) {
     // comment := hash-comment / bracket-comment
 
     switch( *mState.cursor ) {
     case '#':
-      ++mState.cursor;
-      return parseHashComment( result, reallySave );
+        ++mState.cursor;
+        return parseHashComment( result, reallySave );
     case '/':
-      if ( charsLeft() < 2 || mState.cursor[1] != '*' ) {
-	makeError( Error::IllegalCharacter );
-	return false;
-      } else {
-	mState.cursor += 2; // eat "/*"
-	return parseBracketComment( result, reallySave );
-      }
+        if ( charsLeft() < 2 || mState.cursor[1] != '*' ) {
+            makeError( Error::IllegalCharacter );
+            return false;
+        } else {
+            mState.cursor += 2; // eat "/*"
+            return parseBracketComment( result, reallySave );
+        }
     default:
-      return false; // don't set an error here - there was no comment
+        return false; // don't set an error here - there was no comment
     }
-  }
+}
 
-  bool Lexer::Impl::eatCWS() {
+bool Lexer::Impl::eatCWS() {
     // white-space := 1*(SP / CRLF / HTAB / comment )
 
     while ( !atEnd() ) {
-      switch( *mState.cursor ) {
-      case ' ':
-      case '\t': // SP / HTAB
-	++mState.cursor;
-	break;;
-      case '\n':
-      case '\r': // CRLF
-	if ( !eatCRLF() )
-	  return false;
-	break;
-      case '#':
-      case '/': // comments
-	{
-	  QString dummy;
-	  if ( !parseComment( dummy ) )
-	    return false;
-	}
-	break;
-      default:
-	return true;
-      }
+        switch( *mState.cursor ) {
+        case ' ':
+        case '\t': // SP / HTAB
+            ++mState.cursor;
+            break;;
+        case '\n':
+        case '\r': // CRLF
+            if ( !eatCRLF() )
+                return false;
+            break;
+        case '#':
+        case '/': // comments
+        {
+            QString dummy;
+            if ( !parseComment( dummy ) )
+                return false;
+        }
+            break;
+        default:
+            return true;
+        }
     }
     return true;
-  }
+}
 
-  bool Lexer::Impl::parseIdentifier( QString & result ) {
+bool Lexer::Impl::parseIdentifier( QString & result ) {
     // identifier := (ALPHA / "_") *(ALPHA DIGIT "_")
 
     assert( isIText( *mState.cursor ) );
@@ -467,8 +467,8 @@ namespace KSieve {
 
     // first char:
     if ( isdigit( *mState.cursor ) ) { // no digits for the first
-      makeError( Error::NoLeadingDigits );
-      return false;
+        makeError( Error::NoLeadingDigits );
+        return false;
     }
 
     // rest of identifier chars ( now digits are allowed ):
@@ -481,13 +481,13 @@ namespace KSieve {
     result += QString::fromLatin1( identifierStart, identifierLength );
 
     if ( atEnd() || isDelim( *mState.cursor ) )
-      return true;
+        return true;
 
     makeIllegalCharError( *mState.cursor );
     return false;
-  }
+}
 
-  bool Lexer::Impl::parseTag( QString & result ) {
+bool Lexer::Impl::parseTag( QString & result ) {
     // tag := ":" identifier
 
     // check that the caller plays by the rules:
@@ -496,19 +496,19 @@ namespace KSieve {
     assert( isIText( *mState.cursor ) );
 
     return parseIdentifier( result );
-  }
+}
 
-  bool Lexer::Impl::parseNumber( QString & result ) {
+bool Lexer::Impl::parseNumber( QString & result ) {
     // number     := 1*DIGIT [QUANTIFIER]
     // QUANTIFIER := "K" / "M" / "G"
 
     assert( isdigit( *mState.cursor ) );
 
     while ( !atEnd() && isdigit( *mState.cursor ) )
-      result += *mState.cursor++;
+        result += *mState.cursor++;
 
     if ( atEnd() || isDelim( *mState.cursor ) )
-      return true;
+        return true;
 
     switch ( *mState.cursor ) {
     case 'G':
@@ -517,21 +517,21 @@ namespace KSieve {
     case 'm':
     case 'K':
     case 'k':
-      result += *mState.cursor++;
-      break;
+        result += *mState.cursor++;
+        break;
     default:
-      makeIllegalCharError();
-      return false;
+        makeIllegalCharError();
+        return false;
     }
 
     // quantifier found. Check for delimiter:
     if ( atEnd() || isDelim( *mState.cursor ) )
-      return true;
+        return true;
     makeIllegalCharError();
     return false;
-  }
+}
 
-  bool Lexer::Impl::parseMultiLine( QString & result ) {
+bool Lexer::Impl::parseMultiLine( QString & result ) {
     // multi-line          := "text:" *(SP / HTAB) (hash-comment / CRLF)
     //                        *(multi-line-literal / multi-line-dotstuff)
     //                        "." CRLF
@@ -546,68 +546,68 @@ namespace KSieve {
     const int mlBeginCol = column() - 5;
 
     while ( !atEnd() ) {
-      switch ( *mState.cursor ) {
-      case ' ':
-      case '\t':
-	++mState.cursor;
-	break;
-      case '#':
-	{
-	  ++mState.cursor;
-	  QString dummy;
-	  if ( !parseHashComment( dummy ) )
-	    return false;
-	  goto MultiLineStart; // break from switch _and_ while
-	}
-      case '\n':
-      case '\r':
-	if ( !eatCRLF() ) return false;
-	goto MultiLineStart; // break from switch _and_ while
-      default:
-	makeError( Error::NonCWSAfterTextColon );
-	return false;
-      }
+        switch ( *mState.cursor ) {
+        case ' ':
+        case '\t':
+            ++mState.cursor;
+            break;
+        case '#':
+        {
+            ++mState.cursor;
+            QString dummy;
+            if ( !parseHashComment( dummy ) )
+                return false;
+            goto MultiLineStart; // break from switch _and_ while
+        }
+        case '\n':
+        case '\r':
+            if ( !eatCRLF() ) return false;
+            goto MultiLineStart; // break from switch _and_ while
+        default:
+            makeError( Error::NonCWSAfterTextColon );
+            return false;
+        }
     }
 
-  MultiLineStart:
+MultiLineStart:
     if ( atEnd() ) {
-      makeError( Error::PrematureEndOfMultiLine, mlBeginLine, mlBeginCol );
-      return false;
+        makeError( Error::PrematureEndOfMultiLine, mlBeginLine, mlBeginCol );
+        return false;
     }
 
     // Now, collect the single lines until one with only a single dot is found:
     QStringList lines;
     while ( !atEnd() ) {
-      const char * const oldBeginOfLine = beginOfLine();
-      if ( !skipToCRLF() )
-	return false;
-      const int lineLength = mState.cursor - oldBeginOfLine;
-      if ( lineLength > 0 ) {
-	if ( !isValidUtf8( oldBeginOfLine, lineLength ) ) {
-	  makeError( Error::InvalidUTF8 );
-	  return false;
-	}
-	const QString line = removeCRLF( QString::fromUtf8( oldBeginOfLine, lineLength ) );
-	lines.push_back( removeDotStuff( line ) );
-	if ( line == "." )
-	  break;
-      } else {
-	lines.push_back( QString() );
-      }
+        const char * const oldBeginOfLine = beginOfLine();
+        if ( !skipToCRLF() )
+            return false;
+        const int lineLength = mState.cursor - oldBeginOfLine;
+        if ( lineLength > 0 ) {
+            if ( !isValidUtf8( oldBeginOfLine, lineLength ) ) {
+                makeError( Error::InvalidUTF8 );
+                return false;
+            }
+            const QString line = removeCRLF( QString::fromUtf8( oldBeginOfLine, lineLength ) );
+            lines.push_back( removeDotStuff( line ) );
+            if ( line == "." )
+                break;
+        } else {
+            lines.push_back( QString() );
+        }
     }
 
     if ( lines.back() != "." ) {
-      makeError( Error::PrematureEndOfMultiLine, mlBeginLine, mlBeginCol );
-      return false;
+        makeError( Error::PrematureEndOfMultiLine, mlBeginLine, mlBeginCol );
+        return false;
     }
 
     assert( !lines.empty() );
     lines.erase( --lines.end() ); // don't include the lone dot.
     result = lines.join("\n");
     return true;
-  }
+}
 
-  bool Lexer::Impl::parseQuotedString( QString & result ) {
+bool Lexer::Impl::parseQuotedString( QString & result ) {
     // quoted-string := DQUOTE *CHAR DQUOTE
 
     // check that caller plays by the rules:
@@ -622,45 +622,45 @@ namespace KSieve {
     assert( dec.get() );
 
     while ( !atEnd() )
-      switch ( *mState.cursor ) {
-      case '"':
-	++mState.cursor;
-	return true;
-      case '\r':
-      case '\n':
-	if ( !eatCRLF() )
-	  return false;
-	result += '\n';
-	break;
-      case '\\':
-	++mState.cursor;
-	if ( atEnd() )
-	  break;
-	// else fall through:
-      default:
-	if ( !is8Bit( *mState.cursor ) )
-	  result += *mState.cursor++;
-	else { // probably UTF-8
-	  const char * const eightBitBegin = mState.cursor;
-	  skipTo8BitEnd();
-	  const int eightBitLen = mState.cursor - eightBitBegin;
-	  assert( eightBitLen > 0 );
-	  if ( isValidUtf8( eightBitBegin, eightBitLen ) )
-	    result += dec->toUnicode( eightBitBegin, eightBitLen );
-	  else {
-	    assert( column() >= eightBitLen );
-	    makeError( Error::InvalidUTF8, line(), column() - eightBitLen );
-	    return false;
-	  }
-	}
-      }
+        switch ( *mState.cursor ) {
+        case '"':
+            ++mState.cursor;
+            return true;
+        case '\r':
+        case '\n':
+            if ( !eatCRLF() )
+                return false;
+            result += '\n';
+            break;
+        case '\\':
+            ++mState.cursor;
+            if ( atEnd() )
+                break;
+            // else fall through:
+        default:
+            if ( !is8Bit( *mState.cursor ) )
+                result += *mState.cursor++;
+            else { // probably UTF-8
+                const char * const eightBitBegin = mState.cursor;
+                skipTo8BitEnd();
+                const int eightBitLen = mState.cursor - eightBitBegin;
+                assert( eightBitLen > 0 );
+                if ( isValidUtf8( eightBitBegin, eightBitLen ) )
+                    result += dec->toUnicode( eightBitBegin, eightBitLen );
+                else {
+                    assert( column() >= eightBitLen );
+                    makeError( Error::InvalidUTF8, line(), column() - eightBitLen );
+                    return false;
+                }
+            }
+        }
 
     makeError( Error::PrematureEndOfQuotedString, qsBeginLine, qsBeginCol );
     return false;
-  }
+}
 
-  void Lexer::Impl::makeIllegalCharError( char ch ) {
+void Lexer::Impl::makeIllegalCharError( char ch ) {
     makeError( isIllegal( ch ) ? Error::IllegalCharacter : Error::UnexpectedCharacter );
-  }
+}
 
 } // namespace KSieve

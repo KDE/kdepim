@@ -1,8 +1,0 @@
-4.12:
------
-- Add missing i18n (years etc.)
-- Add error info when we can't send message. When sendmaileragent offline look at it to reactivate it
-- Remove mail when we remove item ?
-- Add specific folder or not ? (for the moment we use templates)
-- Allow to specify a message as send later (even if we already stored)
-

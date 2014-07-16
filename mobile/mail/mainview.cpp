@@ -34,7 +34,6 @@
 #include "filtereditor.h"
 #include "emailsexporthandler.h"
 #include "emailsfilterproxymodel.h"
-#include "emailsguistatemanager.h"
 #include "emailsimporthandler.h"
 #include "mailactionmanager.h"
 #include "mailcommon/collectionpage/collectiongeneralpage.h"
@@ -82,7 +81,6 @@
 #include <akonadi/kmime/standardmailactionmanager.h>
 #include <akonadi_next/quotacolorproxymodel.h>
 #include <akonadibreadcrumbnavigationfactory.h>
-#include <incidenceeditor-ng/groupwareintegration.h>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kcmdlineargs.h>
@@ -117,17 +115,11 @@
 #include <QItemSelectionModel>
 #include <QTreeView>
 
-#ifdef _WIN32_WCE
-#include <identitypage.h>
-#include <kcomponentdata.h>
-#endif
-
 #ifdef KDEQMLPLUGIN_STATIC
 #include "runtime/qml/kde/kdeintegration.h"
 #endif
 
 Q_DECLARE_METATYPE( KMime::Content* )
-QML_DECLARE_TYPE( EmailsGuiStateManager )
 QML_DECLARE_TYPE( MessageViewer::MessageViewItem )
 QML_DECLARE_TYPE( DeclarativeConfigWidget )
 QML_DECLARE_TYPE( DeclarativeSearchWidget )
@@ -147,15 +139,14 @@ MainView::MainView(QWidget* parent)
     mAskingToGoOnline( false ),
     mTransportDialog( 0 ),
     m_grouperComparator( 0 ),
-    mQuotaColorProxyModel( new QuotaColorProxyModel( this ) ),
-    mNetworkAccessHelper( 0 )
+    mQuotaColorProxyModel( new QuotaColorProxyModel( this ) )
 {
   qRegisterMetaType<KMime::Content*>();
 
   updateConfig();
 
-  QDBusConnection::sessionBus().registerService( "org.kde.kmailmobile.composer" );
-  QDBusConnection::sessionBus().registerObject( "/composer", this, QDBusConnection::ExportScriptableSlots );
+  QDBusConnection::sessionBus().registerService( QLatin1String("org.kde.kmailmobile.composer") );
+  QDBusConnection::sessionBus().registerObject( QLatin1String("/composer"), this, QDBusConnection::ExportScriptableSlots );
 
   Akonadi::CollectionPropertiesDialog::registerPage( new MailCommon::CollectionGeneralPageFactory );
   Akonadi::CollectionPropertiesDialog::registerPage( new MailCommon::CollectionExpiryPageFactory );
@@ -311,7 +302,7 @@ KMime::Content *MainView::createAttachment( const KUrl &url ) const
   QByteArray coded = KCodecs::base64Encode( contents, true );
   KMime::Headers::ContentDisposition *d = new KMime::Headers::ContentDisposition;
   d->setDisposition( KMime::Headers::CDattachment );
-  d->setFilename( fileName.section('/', -1) );
+  d->setFilename( fileName.section(QLatin1Char('/'), -1) );
   d->setDisposition( KMime::Headers::CDattachment );
 
   KMime::Content *a = new KMime::Content();
@@ -373,42 +364,42 @@ QAbstractItemModel* MainView::createItemModelContext(QDeclarativeContext* contex
   setItemNaigationAndActionSelectionModels(itemNavigationSelectionModel, itemActionSelectionModel);
 
   if ( _listProxy ) {
-    context->setContextProperty( "itemModel", _listProxy );
+    context->setContextProperty( QLatin1String("itemModel"), _listProxy );
 
     QMLListSelectionModel *qmlItemNavigationSelectionModel = new QMLListSelectionModel( itemNavigationSelectionModel, this );
     QMLListSelectionModel *qmlItemActionSelectionModel = new QMLListSelectionModel( itemActionSelectionModel, this );
 
-    context->setContextProperty( "_itemNavigationModel", QVariant::fromValue( static_cast<QObject*>( qmlItemNavigationSelectionModel ) ) );
-    context->setContextProperty( "_itemActionModel", QVariant::fromValue( static_cast<QObject*>( qmlItemActionSelectionModel ) ) );
+    context->setContextProperty( QLatin1String("_itemNavigationModel"), QVariant::fromValue( static_cast<QObject*>( qmlItemNavigationSelectionModel ) ) );
+    context->setContextProperty( QLatin1String("_itemActionModel"), QVariant::fromValue( static_cast<QObject*>( qmlItemActionSelectionModel ) ) );
 
     Akonadi::BreadcrumbNavigationFactory *bulkActionBnf = new Akonadi::BreadcrumbNavigationFactory( this );
     bulkActionBnf->createCheckableBreadcrumbContext( entityTreeModel(), this );
-    context->setContextProperty( "_bulkActionBnf", QVariant::fromValue( static_cast<QObject*>( bulkActionBnf ) ) );
+    context->setContextProperty( QLatin1String("_bulkActionBnf"), QVariant::fromValue( static_cast<QObject*>( bulkActionBnf ) ) );
   }
 
   m_threadsModel = new ThreadModel(_listProxy, this);
 
-  context->setContextProperty( "_threads", m_threadsModel );
+  context->setContextProperty(QLatin1String( "_threads"), m_threadsModel );
 
   QItemSelectionModel *itemThreadModel = new QItemSelectionModel( model, this );
 
   m_threadContentsModel = new KSelectionProxyModel(itemThreadModel, this);
   m_threadContentsModel->setSourceModel(_listProxy);
-  m_threadContentsModel->setObjectName("threadContentsModel");
+  m_threadContentsModel->setObjectName(QLatin1String("threadContentsModel"));
 
-  context->setContextProperty( "_threadContents", m_threadContentsModel );
+  context->setContextProperty( QLatin1String("_threadContents"), m_threadContentsModel );
 
   ThreadSelectionModel *threadSelector = new ThreadSelectionModel(m_threadsModel, itemThreadModel, itemNavigationModel, this);
 
   QMLListSelectionModel *qmlThreadSelector = new QMLListSelectionModel(threadSelector, this);
 
-  context->setContextProperty("_threadSelector", qmlThreadSelector );
+  context->setContextProperty(QLatin1String("_threadSelector"), qmlThreadSelector );
 
   KLinkItemSelectionModel *threadMailSelector = new KLinkItemSelectionModel(m_threadContentsModel, itemNavigationModel, this);
 
   QMLListSelectionModel *qmlThreadMailSelector = new QMLListSelectionModel(threadMailSelector, this);
 
-  context->setContextProperty("_threadMailSelector", qmlThreadMailSelector );
+  context->setContextProperty(QLatin1String("_threadMailSelector"), qmlThreadMailSelector );
 
   connect( this, SIGNAL(collectionSelectionChanged()),
            this, SLOT(slotCollectionSelectionChanged()) );
@@ -435,10 +426,6 @@ bool MainView::doNotUseFilterLineEditInCurrentState() const
 
 void MainView::doDelayedInit()
 {
-  if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
-    IncidenceEditorNG::GroupwareIntegration::setGlobalUiDelegate( new ::GroupwareUiDelegate );
-  }
-
   static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet( "timeit" );
   MobileKernel::self()->setFolderCollectionMonitor( monitor() );
 
@@ -456,23 +443,23 @@ void MainView::doDelayedInit()
   mEmailTemplateModel = new TemplateEmailModel( mTemplateSelectionModel, this );
   mEmailTemplateModel->setSourceModel( entityTreeModel() );
   mEmailTemplateModel->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
-  rootContext()->setContextProperty( "_emailTemplateModel", mEmailTemplateModel );
+  rootContext()->setContextProperty( QLatin1String("_emailTemplateModel"), mEmailTemplateModel );
 
   FilterEditor *filterEditor = new FilterEditor( actionCollection(), this );
-  rootContext()->setContextProperty( "filterEditor", filterEditor );
-  rootContext()->setContextProperty( "filterModel", filterEditor->model() );
+  rootContext()->setContextProperty( QLatin1String("filterEditor"), filterEditor );
+  rootContext()->setContextProperty( QLatin1String("filterModel"), filterEditor->model() );
 
   mAclEditor = new AclEditor( actionCollection(), this );
-  rootContext()->setContextProperty( "aclEditor", mAclEditor );
-  rootContext()->setContextProperty( "aclModel", mAclEditor->model() );
+  rootContext()->setContextProperty( QLatin1String("aclEditor"), mAclEditor );
+  rootContext()->setContextProperty( QLatin1String("aclModel"), mAclEditor->model() );
 
   VacationManager *vacationManager = new VacationManager( actionCollection(), this, this );
-  rootContext()->setContextProperty( "vacationManager", vacationManager );
+  rootContext()->setContextProperty( QLatin1String("vacationManager"), vacationManager );
 
   mMessageListSettingsController = new MessageListSettingsController( this );
-  actionCollection()->addAction( "messagelist_change_settings", mMessageListSettingsController->editAction() );
-  actionCollection()->action( "messagelist_change_settings" )->setText( i18n( "Messagelist Display Format" ) );
-  rootContext()->setContextProperty( "messageListSettings", mMessageListSettingsController );
+  actionCollection()->addAction( QLatin1String("messagelist_change_settings"), mMessageListSettingsController->editAction() );
+  actionCollection()->action( QLatin1String("messagelist_change_settings") )->setText( i18n( "Messagelist Display Format" ) );
+  rootContext()->setContextProperty( QLatin1String("messageListSettings"), mMessageListSettingsController );
   connect( mMessageListSettingsController, SIGNAL(settingsChanged(MessageListSettings)),
            this, SLOT(messageListSettingsChanged(MessageListSettings)) );
 
@@ -485,7 +472,6 @@ void MainView::doDelayedInit()
   qmlRegisterType<MessageViewer::MessageViewItem>( "org.kde.messageviewer", 4, 5, "MessageView" );
   qmlRegisterType<DeclarativeConfigWidget>( "org.kde.akonadi.mail", 4, 5, "ConfigWidget" );
   qmlRegisterType<DeclarativeSearchWidget>( "org.kde.akonadi.mail", 4, 5, "SearchWidget" );
-  qmlRegisterUncreatableType<EmailsGuiStateManager>( "org.kde.akonadi.mail", 4, 5, "EmailsGuiStateManager", QLatin1String( "This type is only exported for its enums" ) );
 #ifdef KDEQMLPLUGIN_STATIC
   rootContext()->setContextProperty( QLatin1String( "KDE" ), new KDEIntegration( this ) );
 #endif
@@ -498,38 +484,35 @@ void MainView::doDelayedInit()
   mailActionManager->setItemSelectionModel( itemSelectionModel() );
   mailActionManager->setItemActionSelectionModel( itemActionModel() );
 
-  connect( actionCollection()->action( "mark_message_important" ), SIGNAL(triggered(bool)), SLOT(markImportant(bool)) );
-  connect( actionCollection()->action( "mark_message_action_item" ), SIGNAL(triggered(bool)), SLOT(markMailTask(bool)) );
-  connect( actionCollection()->action( "send_queued_emails" ), SIGNAL(triggered(bool)), SLOT(sendQueued()) );
-  connect( actionCollection()->action( "send_queued_emails_via" ), SIGNAL(triggered(bool)), SLOT(sendQueuedVia()) );
-  connect( actionCollection()->action( "message_reply" ), SIGNAL(triggered(bool)), SLOT(replyToMessage()) );
-  connect( actionCollection()->action( "message_reply_to_all" ), SIGNAL(triggered(bool)), SLOT(replyToAll()) );
-  connect( actionCollection()->action( "message_reply_to_author" ), SIGNAL(triggered(bool)), SLOT(replyToAuthor()) );
-  connect( actionCollection()->action( "message_reply_to_list" ), SIGNAL(triggered(bool)), SLOT(replyToMailingList()) );
-  connect( actionCollection()->action( "message_reply_without_quoting" ), SIGNAL(triggered(bool)), SLOT(replyWithoutQuoting()) );
-  connect( actionCollection()->action( "message_forward" ), SIGNAL(triggered(bool)), SLOT(forwardMessage()) );
-  connect( actionCollection()->action( "message_forward_as_attachment" ), SIGNAL(triggered(bool)), SLOT(forwardAsAttachment()) );
-  connect( actionCollection()->action( "message_redirect" ), SIGNAL(triggered(bool)), SLOT(redirect()) );
-  connect( actionCollection()->action( "message_send_again" ), SIGNAL(triggered(bool)), SLOT(sendAgain()) );
-  connect( actionCollection()->action( "message_edit" ), SIGNAL(triggered(bool)), SLOT(sendAgain()) ); //do the same under a different name
-  connect( actionCollection()->action( "message_find_in" ), SIGNAL(triggered(bool)), SLOT(findInMessage()) );
-  connect( actionCollection()->action( "message_save_as" ), SIGNAL(triggered(bool)), SLOT(saveMessage()) );
-  connect( actionCollection()->action( "message_fixed_font" ), SIGNAL(triggered(bool)), SLOT(useFixedFont()) );
-  connect( actionCollection()->action( "save_favorite" ), SIGNAL(triggered(bool)), SLOT(saveFavorite()) );
-  connect( actionCollection()->action( "prefer_html_to_plain" ), SIGNAL(triggered(bool)), SLOT(preferHTML(bool)) );
-  connect( actionCollection()->action( "prefer_html_to_plain_viewer" ), SIGNAL(triggered(bool)), SLOT(preferHtmlViewer(bool)) );
-  connect( actionCollection()->action( "load_external_ref" ), SIGNAL(triggered(bool)), SLOT(loadExternalReferences(bool)) );
-  connect( actionCollection()->action( "move_all_to_trash" ), SIGNAL(triggered(bool)), SLOT(moveToOrEmptyTrash()) );
-  connect( actionCollection()->action( "create_todo_reminder" ), SIGNAL(triggered(bool)), SLOT(createToDo()) );
-  connect( actionCollection()->action( "create_event" ), SIGNAL(triggered(bool)), SLOT(createEvent()) );
-  connect( actionCollection()->action( "apply_filters" ), SIGNAL(triggered(bool)), SLOT(applyFilters()) );
-  connect( actionCollection()->action( "apply_filters_bulk_action" ), SIGNAL(triggered(bool)), SLOT(applyFiltersBulkAction()) );
+  connect( actionCollection()->action( QLatin1String("mark_message_important") ), SIGNAL(triggered(bool)), SLOT(markImportant(bool)) );
+  connect( actionCollection()->action( QLatin1String("mark_message_action_item") ), SIGNAL(triggered(bool)), SLOT(markMailTask(bool)) );
+  connect( actionCollection()->action( QLatin1String("send_queued_emails") ), SIGNAL(triggered(bool)), SLOT(sendQueued()) );
+  connect( actionCollection()->action( QLatin1String("send_queued_emails_via") ), SIGNAL(triggered(bool)), SLOT(sendQueuedVia()) );
+  connect( actionCollection()->action( QLatin1String("message_reply") ), SIGNAL(triggered(bool)), SLOT(replyToMessage()) );
+  connect( actionCollection()->action( QLatin1String("message_reply_to_list") ), SIGNAL(triggered(bool)), SLOT(replyToMailingList()) );
+  connect( actionCollection()->action( QLatin1String("message_reply_without_quoting") ), SIGNAL(triggered(bool)), SLOT(replyWithoutQuoting()) );
+  connect( actionCollection()->action( QLatin1String("message_forward_as_attachment") ), SIGNAL(triggered(bool)), SLOT(forwardAsAttachment()) );
+  connect( actionCollection()->action( QLatin1String("message_redirect") ), SIGNAL(triggered(bool)), SLOT(redirect()) );
+  connect( actionCollection()->action( QLatin1String("message_send_again" )), SIGNAL(triggered(bool)), SLOT(sendAgain()) );
+  connect( actionCollection()->action( QLatin1String("message_edit") ), SIGNAL(triggered(bool)), SLOT(sendAgain()) ); //do the same under a different name
+  connect( actionCollection()->action( QLatin1String("message_find_in") ), SIGNAL(triggered(bool)), SLOT(findInMessage()) );
+  connect( actionCollection()->action( QLatin1String("message_save_as") ), SIGNAL(triggered(bool)), SLOT(saveMessage()) );
+  connect( actionCollection()->action( QLatin1String("message_fixed_font") ), SIGNAL(triggered(bool)), SLOT(useFixedFont()) );
+  connect( actionCollection()->action( QLatin1String("save_favorite") ), SIGNAL(triggered(bool)), SLOT(saveFavorite()) );
+  connect( actionCollection()->action( QLatin1String("prefer_html_to_plain") ), SIGNAL(triggered(bool)), SLOT(preferHTML(bool)) );
+  connect( actionCollection()->action( QLatin1String("prefer_html_to_plain_viewer") ), SIGNAL(triggered(bool)), SLOT(preferHtmlViewer(bool)) );
+  connect( actionCollection()->action( QLatin1String("load_external_ref") ), SIGNAL(triggered(bool)), SLOT(loadExternalReferences(bool)) );
+  connect( actionCollection()->action( QLatin1String("move_all_to_trash") ), SIGNAL(triggered(bool)), SLOT(moveToOrEmptyTrash()) );
+  connect( actionCollection()->action( QLatin1String("create_todo_reminder") ), SIGNAL(triggered(bool)), SLOT(createToDo()) );
+  connect( actionCollection()->action( QLatin1String("create_event") ), SIGNAL(triggered(bool)), SLOT(createEvent()) );
+  connect( actionCollection()->action( QLatin1String("apply_filters") ), SIGNAL(triggered(bool)), SLOT(applyFilters()) );
+  connect( actionCollection()->action( QLatin1String("apply_filters_bulk_action") ), SIGNAL(triggered(bool)), SLOT(applyFiltersBulkAction()) );
 
   connect( itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()) );
 
   KAction *action = new KAction( i18n( "New Email" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(startComposer()) );
-  actionCollection()->addAction( "add_new_mail", action );
+  actionCollection()->addAction( QLatin1String("add_new_mail"), action );
 
   action = new KAction( i18n( "Import Emails" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(importItems()) );
@@ -593,9 +576,9 @@ void MainView::qmlInitialized(QDeclarativeView::Status status)
 
     const bool fixedFont = MessageViewer::GlobalSettings::self()->useFixedFont();
     item->viewer()->setUseFixedFont( fixedFont );
-    actionCollection()->action( "message_fixed_font" )->setChecked( fixedFont );
+    actionCollection()->action( QLatin1String("message_fixed_font") )->setChecked( fixedFont );
 
-    actionCollection()->action( "show_extended_headers" )->setChecked( true );
+    actionCollection()->action( QLatin1String("show_extended_headers") )->setChecked( true );
     toggleShowExtendedHeaders( true );
 
     connect( item->viewer(), SIGNAL(deleteMessage(Akonadi::Item)),
@@ -790,11 +773,6 @@ bool MainView::askToGoOnline()
       QAction *workOffLineAction = mMailActionManager->action( StandardActionManager::ToggleWorkOffline );
       workOffLineAction->setChecked( true );
       workOffLineAction->trigger();
-
-      if ( !mNetworkAccessHelper )
-        mNetworkAccessHelper = new KPIMUtils::NetworkAccessHelper( this );
-
-      mNetworkAccessHelper->establishConnection();
     }
   }
 
@@ -1123,30 +1101,17 @@ void MainView::dataChanged()
   MessageStatus status;
   status.setStatusFromFlags( item.flags() );
 
-  actionCollection()->action( "mark_message_important" )->setChecked( status.isImportant() );
-  actionCollection()->action( "mark_message_action_item" )->setChecked( status.isToAct() );
+  actionCollection()->action( QLatin1String("mark_message_important") )->setChecked( status.isImportant() );
+  actionCollection()->action( QLatin1String("mark_message_action_item") )->setChecked( status.isToAct() );
 }
 
 void MainView::configureIdentity()
 {
-#ifdef _WIN32_WCE
-  KComponentData instance( "kcmkmail_config_identity" ); // keep in sync with kmail for now to reuse kmail translations until after the string freeze
-  KMail::IdentityPage *page = new KMail::IdentityPage( instance, this );
-  page->setObjectName( "kcm_kpimidentities" );
-
-  KDialog dialog( this );
-  dialog.setMainWidget( page );
-  dialog.setButtons( KDialog::Ok | KDialog::Cancel );
-  dialog.setWindowState( Qt::WindowFullScreen );
-  connect( &dialog, SIGNAL(okClicked()), page, SLOT(save()) );
-  dialog.exec();
-#else
   KCMultiDialog dlg;
-  dlg.addModule( "kcm_kpimidentities" );
+  dlg.addModule( QLatin1String("kcm_kpimidentities") );
   dlg.currentPage()->setHeader( QLatin1String( "" ) ); // hide header to save space
   dlg.setButtons( KDialog::Ok | KDialog::Cancel );
   dlg.exec();
-#endif
 }
 
 bool MainView::isDraftThreadContent( int row )
@@ -1396,7 +1361,7 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
 
   connect(mMailActionManager, SIGNAL(actionStateUpdated()), this, SLOT(mailActionStateUpdated()) );
 
-  actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize All Accounts" ) );
+  actionCollection()->action( QLatin1String("synchronize_all_items") )->setText( i18n( "Synchronize All Accounts" ) );
 
   connect( collectionSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(folderChanged()) );
 }
@@ -1485,11 +1450,6 @@ ExportHandlerBase* MainView::exportHandler() const
   return new EmailsExportHandler();
 }
 
-GuiStateManager* MainView::createGuiStateManager() const
-{
-  return new EmailsGuiStateManager();
-}
-
 void MainView::saveMessage()
 {
   const Item item = currentItem();
@@ -1511,7 +1471,7 @@ QString MainView::itemStorageCollectionAsPath( const Akonadi::Item &item ) const
     path.prepend( index.data().toString() );
     index = index.parent();
     if ( index.isValid() )
-      path.prepend( " / " );
+      path.prepend( QLatin1String(" / ") );
   }
 
   return path;
@@ -1591,8 +1551,8 @@ void MainView::preferHTML(bool useHtml)
       const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
       Q_ASSERT( collection.isValid() );
 
-      KSharedConfigPtr config = KSharedConfig::openConfig( "kmail-mobilerc" );
-      KConfigGroup group( config, QString( "c%1" ).arg( collection.id() ) );
+      KSharedConfigPtr config = KSharedConfig::openConfig( QLatin1String("kmail-mobilerc") );
+      KConfigGroup group( config, QString::fromLatin1( "c%1" ).arg( collection.id() ) );
       group.writeEntry( "htmlMailOverride", useHtml );
     }
 
@@ -1601,7 +1561,7 @@ void MainView::preferHTML(bool useHtml)
   }
 
   // update the viewer specific state according to the folder wide state
-  QAction *action = actionCollection()->action( "prefer_html_to_plain_viewer" );
+  QAction *action = actionCollection()->action( QLatin1String("prefer_html_to_plain_viewer") );
   disconnect( action, SIGNAL(triggered(bool)), this, SLOT(preferHtmlViewer(bool)) );
   action->setChecked( useHtml );
   connect( action, SIGNAL(triggered(bool)), this, SLOT(preferHtmlViewer(bool)) );
@@ -1633,8 +1593,8 @@ void MainView::loadExternalReferences(bool load)
       const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
       Q_ASSERT( collection.isValid() );
 
-      KSharedConfigPtr config = KSharedConfig::openConfig( "kmail-mobilerc" );
-      KConfigGroup group( config, QString( "c%1" ).arg( collection.id() ) );
+      KSharedConfigPtr config = KSharedConfig::openConfig( QLatin1String("kmail-mobilerc") );
+      KConfigGroup group( config, QString::fromLatin1("c%1" ).arg( collection.id() ) );
       group.writeEntry( "htmlLoadExternalOverride", load );
     }
 
@@ -1655,34 +1615,34 @@ void MainView::folderChanged()
   bool htmlMailOverrideInAll = true;
   bool htmlLoadExternalOverrideInAll = true;
 
-  KSharedConfigPtr config = KSharedConfig::openConfig( "kmail-mobilerc" );
+  KSharedConfigPtr config = KSharedConfig::openConfig( QLatin1String("kmail-mobilerc") );
   Q_FOREACH( const QModelIndex &index, collectionSelectionModel->selectedRows() ) {
     Q_ASSERT( index.isValid() );
 
     const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
     Q_ASSERT( collection.isValid() );
 
-    KConfigGroup group( config, QString( "c%1" ).arg( collection.id() ) );
+    KConfigGroup group( config, QString::fromLatin1( "c%1" ).arg( collection.id() ) );
     if ( group.readEntry( "htmlMailOverride", false ) == false )
       htmlMailOverrideInAll = false;
 
     if ( group.readEntry( "htmlLoadExternalOverride", false ) == false )
       htmlLoadExternalOverrideInAll = false;
   }
-  actionCollection()->action( "prefer_html_to_plain" )->setChecked( htmlMailOverrideInAll );
-  actionCollection()->action( "prefer_html_to_plain_viewer" )->setChecked( htmlMailOverrideInAll );
+  actionCollection()->action( QLatin1String("prefer_html_to_plain") )->setChecked( htmlMailOverrideInAll );
+  actionCollection()->action( QLatin1String("prefer_html_to_plain_viewer") )->setChecked( htmlMailOverrideInAll );
   preferHTML( htmlMailOverrideInAll );
-  actionCollection()->action( "load_external_ref" )->setChecked( htmlLoadExternalOverrideInAll );
+  actionCollection()->action( QLatin1String("load_external_ref") )->setChecked( htmlLoadExternalOverrideInAll );
   loadExternalReferences( htmlLoadExternalOverrideInAll );
 
-  actionCollection()->action( "move_all_to_trash" )->setText( i18n( "Move Displayed Emails To Trash" ) );
+  actionCollection()->action( QLatin1String("move_all_to_trash") )->setText( i18n( "Move Displayed Emails To Trash" ) );
   if ( indexes.count() == 1 ) {
     const QModelIndex index = collectionSelectionModel->selection().indexes().first();
     const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
     Q_ASSERT( collection.isValid() );
 
     if ( CommonKernel->folderIsTrash( collection ) )
-      actionCollection()->action( "move_all_to_trash" )->setText( i18n( "Empty Trash" ) );
+      actionCollection()->action( QLatin1String("move_all_to_trash") )->setText( i18n( "Empty Trash" ) );
   }
 }
 
@@ -1981,4 +1941,3 @@ void MainView::messageListSettingsChanged( const MessageListSettings &settings )
 
 // #############################################################
 
-#include "mainview.moc"

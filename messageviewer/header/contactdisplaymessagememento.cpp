@@ -1,4 +1,4 @@
-/* Copyright (C) 2012,2013 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2012,2013,2014 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -30,7 +30,7 @@ ContactDisplayMessageMemento::ContactDisplayMessageMemento( const QString &email
 {
     if( !emailAddress.isEmpty() ) {
         Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob();
-        searchJob->setQuery( Akonadi::ContactSearchJob::Email, emailAddress );
+        searchJob->setQuery( Akonadi::ContactSearchJob::Email, emailAddress.toLower(), Akonadi::ContactSearchJob::ExactMatch );
         connect( searchJob, SIGNAL(result(KJob*)),
                  this, SLOT(slotSearchJobFinished(KJob*)) );
     } else {
@@ -54,6 +54,7 @@ void ContactDisplayMessageMemento::slotSearchJobFinished( KJob *job )
 
     const int contactSize( searchJob->contacts().size() );
     if ( contactSize >= 1 ) {
+        searchPhoto(searchJob->contacts());
         KABC::Addressee addressee = searchJob->contacts().first();
         processAddress( addressee );
         emit update( Viewer::Delayed );
@@ -78,19 +79,18 @@ bool ContactDisplayMessageMemento::allowToRemoteContent() const
     return mMailAllowToRemoteContent;
 }
 
-bool ContactDisplayMessageMemento::forceToHtml() const
+void ContactDisplayMessageMemento::searchPhoto(const KABC::AddresseeList &list)
 {
-    return ( mForceDisplayTo == Viewer::Html );
-}
-
-bool ContactDisplayMessageMemento::forceToText() const
-{
-    return ( mForceDisplayTo == Viewer::Text );
+    Q_FOREACH (const KABC::Addressee &addressee, list) {
+        if (!addressee.photo().isEmpty()) {
+            mPhoto = addressee.photo();
+            break;
+        }
+    }
 }
 
 void ContactDisplayMessageMemento::processAddress( const KABC::Addressee& addressee )
 {
-    mPhoto = addressee.photo();
     const QStringList customs = addressee.customs();
     Q_FOREACH ( const QString& custom, customs ) {
         if ( custom.contains(QLatin1String( "MailPreferedFormatting")) ) {
@@ -116,4 +116,3 @@ KABC::Picture ContactDisplayMessageMemento::photo() const
 }
 
 
-#include "contactdisplaymessagememento.moc"

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -60,6 +60,8 @@ private Q_SLOTS:
     void slotAddNewHeader();
 
 private:
+    void readConfig();
+    void writeConfig();
     SelectHeadersWidget *mListWidget;
     KLineEdit *mNewHeader;
     KPushButton *mAddNewHeader;
@@ -74,6 +76,10 @@ public:
     ~SelectHeaderTypeComboBox();
 
     QString code() const;
+    void setCode(const QString &code);
+
+Q_SIGNALS:
+    void valueChanged();
 
 private Q_SLOTS:
     void slotSelectItem(const QString &str);

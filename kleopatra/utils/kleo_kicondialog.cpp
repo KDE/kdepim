@@ -22,7 +22,6 @@
 #include <kstandarddirs.h>
 #include <kiconloader.h>
 
-#include <QLayout>
 #include <QLabel>
 #include <QComboBox>
 #include <QtCore/QTimer>
@@ -128,7 +127,7 @@ void KIconCanvas::KIconCanvasPrivate::_k_slotLoadFiles()
     QStringList::ConstIterator end(mFiles.end());
     for (it=mFiles.begin(), i=0; it!=end; ++it, i++)
     {
-	if ( emitProgress >= 10 ) {
+        if ( emitProgress >= 10 ) {
             emit q->progress(i);
             emitProgress = 0;
         }
@@ -138,16 +137,16 @@ void KIconCanvas::KIconCanvasPrivate::_k_slotLoadFiles()
         if (!m_bLoading) { // user clicked on a button that will load another set of icons
             break;
         }
-	QImage img;
+        QImage img;
 
-	// Use the extension as the format. Works for XPM and PNG, but not for SVG
-	QString path= *it;
-	QString ext = path.right(3).toUpper();
+        // Use the extension as the format. Works for XPM and PNG, but not for SVG
+        QString path= *it;
+        QString ext = path.right(3).toUpper();
 
-	if (ext != "SVG" && ext != "VGZ")
-	    img.load(*it);
+        if (ext != "SVG" && ext != "VGZ")
+            img.load(*it);
 #ifndef QT_NO_SVGRENDERER
-	else {
+        else {
             // Special stuff for SVG icons
             img = QImage(60, 60, QImage::Format_ARGB32_Premultiplied);
             img.fill(0);
@@ -159,24 +158,24 @@ void KIconCanvas::KIconCanvasPrivate::_k_slotLoadFiles()
         }
 #endif // QT_NO_SVGRENDERER
 
-	if (img.isNull())
-	    continue;
-	if (img.width() > 60 || img.height() > 60)
-	{
-	    if (img.width() > img.height())
-	    {
-		int height = (int) ((60.0 / img.width()) * img.height());
-		img = img.scaled(60, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-	    } else
-	    {
-		int width = (int) ((60.0 / img.height()) * img.width());
-		img = img.scaled(width, 60, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-	    }
-	}
-	QPixmap pm = QPixmap::fromImage(img);
-	QFileInfo fi(*it);
+        if (img.isNull())
+            continue;
+        if (img.width() > 60 || img.height() > 60)
+        {
+            if (img.width() > img.height())
+            {
+                int height = (int) ((60.0 / img.width()) * img.height());
+                img = img.scaled(60, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+            } else
+            {
+                int width = (int) ((60.0 / img.height()) * img.width());
+                img = img.scaled(width, 60, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+            }
+        }
+        QPixmap pm = QPixmap::fromImage(img);
+        QFileInfo fi(*it);
         QListWidgetItem *item = new QListWidgetItem(pm, fi.completeBaseName(), q);
-	item->setData(Qt::UserRole, *it);
+        item->setData(Qt::UserRole, *it);
         item->setToolTip(fi.completeBaseName());
     }
 
@@ -194,7 +193,7 @@ void KIconCanvas::KIconCanvasPrivate::_k_slotLoadFiles()
 QString KIconCanvas::getCurrent() const
 {
     if (!currentItem())
-	return QString();
+        return QString();
     return currentItem()->data(Qt::UserRole).toString();
 }
 
@@ -214,9 +213,9 @@ class KIconDialog::KIconDialogPrivate
     KIconDialogPrivate(KIconDialog *qq) {
         q = qq;
         m_bStrictIconSize = true;
-	m_bLockUser = false;
-	m_bLockCustomDir = false;
-	searchLine = 0;
+        m_bLockUser = false;
+        m_bLockCustomDir = false;
+        searchLine = 0;
         mNumOfSteps = 1;
     }
     ~KIconDialogPrivate() {}
@@ -440,7 +439,7 @@ void KIconDialog::KIconDialogPrivate::showIcons()
         filelist = mpLoader->queryIconsByDir(customLocation);
     }
     else
-	filelist=mFileList;
+        filelist=mFileList;
 
     QList<IconPath> iconlist;
     QStringList::Iterator it;
@@ -621,7 +620,7 @@ void KIconDialog::KIconDialogPrivate::_k_slotContext(int id)
 void KIconDialog::KIconDialogPrivate::_k_slotStartLoading(int steps)
 {
     if (steps < 10)
-	mpProgress->hide();
+        mpProgress->hide();
     else
     {
         mNumOfSteps = steps;
@@ -793,4 +792,4 @@ void KIconButton::KIconButtonPrivate::_k_newIconName(const QString& name)
     emit q->iconChanged(name);
 }
 
-#include "kleo_kicondialog.moc"
+#include "moc_kleo_kicondialog.cpp"

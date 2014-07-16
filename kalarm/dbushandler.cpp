@@ -27,7 +27,7 @@
 #include "kamail.h"
 #include "mainwindow.h"
 #include "preferences.h"
-#include "dbushandler.moc"
+#include "dbushandler.h"
 #include <kalarmadaptor.h>
 
 #include <kalarmcal/identities.h>
@@ -58,7 +58,7 @@ DBusHandler::DBusHandler()
 {
     kDebug();
     new KalarmAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(REQUEST_DBUS_OBJECT, this);
+    QDBusConnection::sessionBus().registerObject(QLatin1String(REQUEST_DBUS_OBJECT), this);
 }
 
 
@@ -423,7 +423,7 @@ bool DBusHandler::scheduleAudio(const QString& audioUrl, int volumePercent,
 */
 KDateTime DBusHandler::convertDateTime(const QString& dateTime, const KDateTime& defaultDt)
 {
-    int i = dateTime.indexOf(QChar(' '));
+    int i = dateTime.indexOf(QLatin1Char(' '));
     QString dtString = dateTime.left(i);
     QString zone = dateTime.mid(i);
     QDate date;
@@ -442,7 +442,7 @@ KDateTime DBusHandler::convertDateTime(const QString& dateTime, const KDateTime&
     {
         // Check whether a time is specified
         QString t;
-        if (dtString[0] == QChar('T'))
+        if (dtString[0] == QLatin1Char('T'))
             t = dtString.mid(1);     // it's a time: remove the leading 'T'
         else if (!dtString[2].isDigit())
             t = dtString;            // it's a time with no leading 'T'
@@ -579,5 +579,5 @@ bool DBusHandler::convertRecurrence(KARecurrence& recurrence, const KDateTime& s
     recurrence.set(type, recurInterval, recurCount, start, end);
     return true;
 }
-
+#include "moc_dbushandler.cpp"
 // vim: et sw=4:

@@ -1073,7 +1073,7 @@ void ArticleWidget::processJob( KNJobData * job )
             job->errorString() ) );
       else {
         KNRemoteArticle::Ptr a = boost::static_pointer_cast<KNRemoteArticle>( job->data() );
-        new KNSourceViewWindow( a->head() + '\n' + a->body() );
+        new KNSourceViewWindow( a->head() + QLatin1Char('\n') + a->body() );
       }
     }
   }
@@ -1496,4 +1496,3 @@ void ArticleWidget::slotSaveAttachment()
   knGlobals.articleManager()->saveContentToFile( c, this );
 }
 
-#include "articlewidget.moc"

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -17,13 +17,16 @@
 
 
 #include "sieveactionextracttext.h"
+#include "editor/sieveeditorutil.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QLabel>
-#include <QHBoxLayout>
 #include <QSpinBox>
+#include <QDomNode>
+#include <QDebug>
+#include <QGridLayout>
 
 using namespace KSieveUi;
 SieveActionExtractText::SieveActionExtractText(QObject *parent)
@@ -39,27 +42,58 @@ SieveAction* SieveActionExtractText::newAction()
 QWidget *SieveActionExtractText::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
-    QHBoxLayout *lay = new QHBoxLayout;
-    lay->setMargin(0);
-    w->setLayout(lay);
+    QGridLayout *grid = new QGridLayout;
+    grid->setMargin(0);
+    w->setLayout(grid);
 
     QLabel *lab = new QLabel(i18n("Number of characters:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 0, 0);
 
     QSpinBox *nbCharacters = new QSpinBox;
     nbCharacters->setMinimum(1);
     nbCharacters->setMaximum(99999);
     nbCharacters->setObjectName(QLatin1String("numberOfCharacters"));
-    lay->addWidget(nbCharacters);
+    grid->addWidget(nbCharacters, 0, 1);
+    connect(nbCharacters, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged()));
 
     lab = new QLabel(i18n("Stored in variable name:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 1, 0);
 
     KLineEdit *variableName = new KLineEdit;
+    connect(variableName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     variableName->setObjectName(QLatin1String("variablename"));
-    lay->addWidget(variableName);
+    grid->addWidget(variableName, 1, 1);
 
     return w;
+}
+
+bool SieveActionExtractText::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
+{
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("tag")) {
+                //TODO ?
+            } else if (tagName == QLatin1String("num")) {
+                QSpinBox *numberOfCharacters = w->findChild<QSpinBox*>(QLatin1String("numberOfCharacters"));
+                numberOfCharacters->setValue(e.text().toInt());
+            } else if (tagName == QLatin1String("str")) {
+                KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
+                variableName->setText(e.text());
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
+            } else {
+                unknownTag(tagName, error);
+                qDebug()<<" SieveActionExtractText::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+    return true;
 }
 
 QString SieveActionExtractText::code(QWidget *w) const
@@ -95,4 +129,8 @@ QString SieveActionExtractText::help() const
     return i18n("The \"extracttext\" action may be used within the context of a \"foreverypart\" loop and is used to store text into a variable");
 }
 
-#include "sieveactionextracttext.moc"
+QString SieveActionExtractText::href() const
+{
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
+}
+

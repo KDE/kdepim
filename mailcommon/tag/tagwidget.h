@@ -36,56 +36,56 @@ namespace MailCommon {
 
 class MAILCOMMON_EXPORT TagWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit TagWidget(const QList<KActionCollection *> &actionCollections, QWidget *parent = 0);
-  ~TagWidget();
+    explicit TagWidget(const QList<KActionCollection *> &actionCollections, QWidget *parent = 0);
+    ~TagWidget();
 
-  MailCommon::Tag::SaveFlags saveFlags() const;
-  void recordTagSettings( MailCommon::Tag::Ptr tag);
+    MailCommon::Tag::SaveFlags saveFlags() const;
+    void recordTagSettings( MailCommon::Tag::Ptr tag);
 
 
-  KLineEdit *tagNameLineEdit() { return mTagNameLineEdit; }
-  QCheckBox *textColorCheck() { return mTextColorCheck; }
-  QCheckBox *textFontCheck() { return mTextFontCheck; }
-  QCheckBox *backgroundColorCheck() { return mBackgroundColorCheck; }
-  QCheckBox *inToolBarCheck() { return mInToolbarCheck; }
+    KLineEdit *tagNameLineEdit() { return mTagNameLineEdit; }
+    QCheckBox *textColorCheck() { return mTextColorCheck; }
+    QCheckBox *textFontCheck() { return mTextFontCheck; }
+    QCheckBox *backgroundColorCheck() { return mBackgroundColorCheck; }
+    QCheckBox *inToolBarCheck() { return mInToolbarCheck; }
 
-  KColorCombo *textColorCombo() { return mTextColorCombo; }
-  KColorCombo *backgroundColorCombo() { return mBackgroundColorCombo; }
+    KColorCombo *textColorCombo() { return mTextColorCombo; }
+    KColorCombo *backgroundColorCombo() { return mBackgroundColorCombo; }
 
-  KFontRequester *fontRequester() { return mFontRequester; }
+    KFontRequester *fontRequester() { return mFontRequester; }
 
-  KIconButton *iconButton() { return mIconButton; }
+    KIconButton *iconButton() { return mIconButton; }
 
-  KKeySequenceWidget *keySequenceWidget() { return mKeySequenceWidget; }
+    KKeySequenceWidget *keySequenceWidget() { return mKeySequenceWidget; }
 
-  void setTagTextColor(const QColor& color);
-  void setTagBackgroundColor(const QColor& color);
-  void setTagTextFont(const QFont& font);
+    void setTagTextColor(const QColor& color);
+    void setTagBackgroundColor(const QColor& color);
+    void setTagTextFont(const QFont& font);
 
 Q_SIGNALS:
-  void changed();
-  void iconNameChanged(const QString&);
+    void changed();
+    void iconNameChanged(const QString&);
 
 private Q_SLOTS:
-  void slotEmitChangeCheck();
+    void slotEmitChangeCheck();
 
 
 
 private:
-  KLineEdit *mTagNameLineEdit;
+    KLineEdit *mTagNameLineEdit;
 
-  QCheckBox *mTextColorCheck, *mBackgroundColorCheck,
-            *mTextFontCheck, *mInToolbarCheck;
+    QCheckBox *mTextColorCheck, *mBackgroundColorCheck,
+    *mTextFontCheck, *mInToolbarCheck;
 
-  KColorCombo *mTextColorCombo, *mBackgroundColorCombo;
+    KColorCombo *mTextColorCombo, *mBackgroundColorCombo;
 
-  KFontRequester *mFontRequester;
+    KFontRequester *mFontRequester;
 
-  KIconButton *mIconButton;
+    KIconButton *mIconButton;
 
-  KKeySequenceWidget *mKeySequenceWidget;
+    KKeySequenceWidget *mKeySequenceWidget;
 };
 }
 

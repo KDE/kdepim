@@ -21,7 +21,7 @@
 
 #include <Akonadi/AgentManager>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KStandardDirs>
 #include <KTemporaryFile>
 #include <KConfigGroup>
@@ -43,11 +43,13 @@ ExportAlarmJob::~ExportAlarmJob()
 
 void ExportAlarmJob::start()
 {
+    Q_EMIT title(i18n("Start export KAlarm settings..."));
     mArchiveDirectory = archive()->directory();
     if (mTypeSelected & Utils::Resources) {
         backupResources();
         increaseProgressDialog();
         if (wasCanceled()) {
+            Q_EMIT jobFinished();
             return;
         }
     }
@@ -55,9 +57,11 @@ void ExportAlarmJob::start()
         backupConfig();
         increaseProgressDialog();
         if (wasCanceled()) {
+            Q_EMIT jobFinished();
             return;
         }
     }
+    Q_EMIT jobFinished();
 }
 
 
@@ -68,10 +72,31 @@ void ExportAlarmJob::backupResources()
 
     Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
     const Akonadi::AgentInstance::List list = manager->instances();
-    foreach( const Akonadi::AgentInstance &agent, list ) {
+    Q_FOREACH ( const Akonadi::AgentInstance &agent, list ) {
         const QString identifier = agent.identifier();
         if (identifier.contains(QLatin1String("akonadi_kalarm_resource_"))) {
             backupResourceFile(agent, Utils::alarmPath());
+        } else if (identifier.contains(QLatin1String("akonadi_kalarm_dir_resource_"))) {
+            const QString archivePath = Utils::alarmPath() + identifier + QDir::separator();
+
+            KUrl url = Utils::resourcePath(agent);
+            if (!url.isEmpty()) {
+                const bool fileAdded = backupFullDirectory(url, archivePath, QLatin1String("alarm.zip"));
+                if (fileAdded) {
+                    const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
+                    if (!errorStr.isEmpty())
+                        Q_EMIT error(errorStr);
+                    url = Utils::akonadiAgentConfigPath(identifier);
+                    if (!url.isEmpty()) {
+                        const QString filename = url.fileName();
+                        const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                        if (fileAdded)
+                            Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+                        else
+                            Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
+                    }
+                }
+            }
         }
     }
 
@@ -109,4 +134,3 @@ void ExportAlarmJob::backupConfig()
 
 }
 
-#include "exportalarmjob.moc"

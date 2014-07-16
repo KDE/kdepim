@@ -34,7 +34,6 @@
 
 #include "controller.h"
 
-#include <QDialog>
 
 using namespace Kleo;
 using namespace Kleo::Crypto;
@@ -101,4 +100,3 @@ void Controller::emitDoneOrError() {
         emit done();
 }
 
-#include "controller.moc"

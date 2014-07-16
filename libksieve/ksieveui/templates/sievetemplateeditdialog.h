@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -22,9 +22,13 @@
 
 class KLineEdit;
 
+namespace PimCommon {
+class PlainTextEditFindBar;
+}
+
+
 namespace KSieveUi {
 class SieveTextEdit;
-class SieveFindBar;
 class SieveTemplateEditDialog : public KDialog
 {
     Q_OBJECT
@@ -39,14 +43,14 @@ public:
     QString script() const;
 
 private Q_SLOTS:
-    void slotTemplateNameChanged(const QString &);
+    void slotTemplateChanged();
     void slotFind();
 
 private:
     void readConfig();
     void writeConfig();
     SieveTextEdit *mTextEdit;
-    SieveFindBar *mFindBar;
+    PimCommon::PlainTextEditFindBar *mFindBar;
     KLineEdit *mTemplateNameEdit;
 };
 }

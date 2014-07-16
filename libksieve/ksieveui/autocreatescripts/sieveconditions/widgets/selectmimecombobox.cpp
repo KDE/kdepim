@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,8 +16,9 @@
 */
 
 #include "selectmimecombobox.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace KSieveUi;
 
@@ -25,6 +26,7 @@ SelectMimeComboBox::SelectMimeComboBox(QWidget *parent)
     : KComboBox(parent)
 {
     initialize();
+    connect(this, SIGNAL(activated(int)), this, SIGNAL(valueChanged()));
 }
 
 SelectMimeComboBox::~SelectMimeComboBox()
@@ -49,4 +51,14 @@ QString SelectMimeComboBox::require() const
     return QLatin1String("mime");
 }
 
-#include "selectmimecombobox.moc"
+void SelectMimeComboBox::setCode(const QString &code, const QString &name, QString &error)
+{
+    const int index = findData(code);
+    if (index != -1) {
+        setCurrentIndex(index);
+    } else {
+        AutoCreateScriptUtil::comboboxItemNotFound(code, name, error);
+        setCurrentIndex(0);
+    }
+}
+

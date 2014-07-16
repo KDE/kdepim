@@ -23,8 +23,6 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/pimcommon/
   ${CMAKE_SOURCE_DIR}/libkdepim/
   ${Boost_INCLUDE_DIR}
-  ${SOPRANO_INCLUDE_DIR}
-  ${NEPOMUK_CORE_INCLUDE_DIR}
 )
 
 set(kmail_mobile_srcs
@@ -38,7 +36,6 @@ set(kmail_mobile_srcs
   cryptoformatselectiondialog.cpp
   declarativeidentitycombobox.cpp
   emailsexporthandler.cpp
-  emailsguistatemanager.cpp
   emailsfilterproxymodel.cpp
   emailsimporthandler.cpp
   filtereditor.cpp
@@ -76,9 +73,6 @@ endif()
 kde4_add_app_icon(kmail_mobile_srcs "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-kmail-mobile.png")
 
 kde4_add_executable(kmail-mobile ${kmail_mobile_srcs})
-if(WINCE)
-  set_target_properties(kmail-mobile PROPERTIES LINK_FLAGS " /FIXED:NO")
-endif()
 
 target_link_libraries(kmail-mobile
   ${QT_QTDECLARATIVE_LIBRARY}
@@ -112,42 +106,30 @@ if(RUNTIME_PLUGINS_STATIC)
   )
 endif()
 
-if(WINCE)
-  target_link_libraries(kmail-mobile
-    kcm_kpimidentities
-    messageviewer_bodypartformatter_text_calendar
-    incidenceeditorsngmobile
-  )
-endif()
-
 install(TARGETS kmail-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(PROGRAMS kmail-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   AboutPage.qml
   AccountSettingsPage.qml
+  AccountsPage.qml
   AclEditor.qml
   AttachmentEditor.qml
-  BulkActionComponent.qml
   ConfigDialog.qml
   FilterEditor.qml
-  ForwardOptionsPage.qml
-  HeaderView.qml
-  MarkAsPage.qml
-  NewMailPage.qml
-  ReplyOptionsPage.qml
+  FolderPage.qml
+  MailListPage.qml
+  MailViewPage.qml
   EditorView.qml
   FavoriteManagerPage.qml
   kmail-composer.qml
   kmail-mobile.qml
-  KMailActions.qml
   KMailComposerActions.qml
   kmail-mobile.notifyrc
   SettingsPage.qml
   SnippetsEditor.qml
   SnippetsList.qml
-  StartPage.qml
-  VacationScriptIndicator.qml
   add-attachment-button.png
+  dummy-avatar.png
   remove-attachment-button.png
   toggle-signature-button.png
   toggle-encryption-button.png

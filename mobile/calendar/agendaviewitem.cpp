@@ -185,4 +185,3 @@ void AgendaViewItem::updateConfig()
 }
 
 
-#include "agendaviewitem.moc"

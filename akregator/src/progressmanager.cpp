@@ -27,7 +27,6 @@
 #include "treenode.h"
 
 #include <QHash>
-#include <QList>
 
 #include <klocale.h>
 
@@ -202,4 +201,3 @@ void ProgressItemHandler::slotFetchAborted()
 
 } // namespace Akregator
 
-#include "progressmanager.moc"

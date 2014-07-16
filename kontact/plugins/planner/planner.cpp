@@ -42,7 +42,7 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <KIconLoader>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMenu>
 #include <KSystemTimeZones>
 #include <KUrlLabel>
@@ -1032,4 +1032,3 @@ bool Planner::notStarted( Todo *todo )
 
   return true;
 }
-#include "planner.moc"

@@ -8,7 +8,6 @@ set(akonotes_note_plasmoid_SRCS
 
 set(akonotes_noteslist_plasmoid_SRCS
     akonotes_noteslistapplet.cpp
-    ../kjotslockattribute.cpp
     ../kjotsmodel.cpp
     plasmatreeview.cpp
 )
@@ -31,6 +30,7 @@ target_link_libraries(plasma_applet_akonotes_note
                       ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
                       ${KDEPIMLIBS_KMIME_LIBS}
                       akonadi_next
+                      noteshared
 )
 
 target_link_libraries(plasma_applet_akonotes_list
@@ -42,6 +42,7 @@ target_link_libraries(plasma_applet_akonotes_list
                       ${Grantlee_GUI_LIBRARIES}
                       ${KDEPIMLIBS_KMIME_LIBS}
                       akonadi_next
+                      noteshared
 )
 
 install(TARGETS plasma_applet_akonotes_note

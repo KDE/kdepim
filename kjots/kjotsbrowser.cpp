@@ -24,8 +24,6 @@
 //Own Header
 #include "kjotsbrowser.h"
 
-#include <QTextDocument>
-#include <QStackedWidget>
 #include <QItemSelectionModel>
 
 #include <krun.h>
@@ -58,21 +56,21 @@ void KJotsBrowser::linkClicked(const QUrl& link)
 
     QString anchor = link.fragment();
 
-    if ( link.toString().startsWith("#") && (anchor.startsWith( QLatin1String( "book_" ) )
+    if ( link.toString().startsWith(QLatin1String("#")) && (anchor.startsWith( QLatin1String( "book_" ) )
             || anchor.startsWith( QLatin1String( "page_" ) ) ) ) {
         scrollToAnchor(anchor);
         return;
     }
 
-    if ( link.scheme() == "kjots" ) {
+    if ( link.scheme() == QLatin1String("kjots") ) {
         const quint64 targetId = link.path().mid(1).toULongLong();
-        if (link.host().endsWith("book")) {
+        if (link.host().endsWith(QLatin1String("book"))) {
           const QModelIndex colIndex = Akonadi::EntityTreeModel::modelIndexForCollection(m_itemSelectionModel->model(), Akonadi::Collection(targetId));
           if (!colIndex.isValid())
             return;
           m_itemSelectionModel->select(colIndex, QItemSelectionModel::ClearAndSelect);
         } else {
-          Q_ASSERT(link.host().endsWith("page"));
+          Q_ASSERT(link.host().endsWith(QLatin1String("page")));
           const QModelIndexList itemIndexes = Akonadi::EntityTreeModel::modelIndexesForItem(m_itemSelectionModel->model(), Akonadi::Item(targetId));
           if (itemIndexes.size() != 1)
             return;
@@ -83,6 +81,5 @@ void KJotsBrowser::linkClicked(const QUrl& link)
     }
 }
 
-#include "kjotsbrowser.moc"
 /* ex: set tabstop=4 softtabstop=4 shiftwidth=4 expandtab: */
 /* kate: tab-indents off; replace-tabs on; tab-width 4; remove-trailing-space on; encoding utf-8;*/

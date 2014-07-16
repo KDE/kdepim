@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -20,7 +20,7 @@
 
 #include "extendattributesbutton.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QPointer>
 #include <QWebElement>
@@ -65,4 +65,4 @@ ExtendAttributesButton::~ExtendAttributesButton()
 }
 }
 
-#include "extendattributesbutton.moc"
+#include "moc_extendattributesbutton.cpp"

@@ -63,4 +63,3 @@ void KNode::MailSendJob::slotResult( KJob * job )
   emitFinished();
 }
 
-#include "mailsendjob.moc"

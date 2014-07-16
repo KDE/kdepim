@@ -31,7 +31,6 @@
 #include <sonnet/speller.h>
 
 #include <QKeyEvent>
-#include <QContextMenuEvent>
 #include <QStyle>
 #include <QApplication>
 #include <QMenu>
@@ -67,9 +66,7 @@ SpellCheckLineEdit::SpellCheckLineEdit(QWidget* parent, const QString& configFil
     d->configFile = configFile;
 
     enableFindReplace(false);
-#ifdef HAVE_SHOWTABACTION
     showTabAction(false);
-#endif
     setAcceptRichText(false);
     setTabChangesFocus( true );
     // widget may not be resized vertically
@@ -178,7 +175,7 @@ void SpellCheckLineEdit::insertFromMimeData(const QMimeData * source)
 
         // does the text contain at least one newline character?
         if(pasteText.contains(QLatin1Char( '\n' )))
-            pasteText.remove(QLatin1Char( '\n' ));
+            pasteText.replace(QLatin1Char( '\n' ), QLatin1Char(' '));
         
         insertPlainText(pasteText);
         ensureCursorVisible();
@@ -188,10 +185,13 @@ void SpellCheckLineEdit::insertFromMimeData(const QMimeData * source)
     }
 }
 
-static inline QString i18n_kdelibs4(const char *str) { return ki18n(str).toString("kdelibs4"); }
+static inline QString i18n_kdelibs4(const char *str) { return ki18n(str).toString(QLatin1String("kdelibs4")); }
 
 void SpellCheckLineEdit::insertLanguageMenu(QMenu* contextMenu)
 {
+    if (!checkSpellingEnabled())
+        return;
+
     if (!d->activateLanguageMenu)
         return;
 
@@ -242,4 +242,3 @@ void SpellCheckLineEdit::languageSelected()
 }
 
 
-#include "spellchecklineedit.moc"

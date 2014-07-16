@@ -1466,4 +1466,4 @@ Qt::DropActions KReparentingProxyModel::supportedDropActions() const
 }
 
 
-#include "kreparentingproxymodel.moc"
+#include "moc_kreparentingproxymodel.cpp"

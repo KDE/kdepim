@@ -114,4 +114,3 @@ void ExportHandlerBase::exec()
   deleteLater();
 }
 
-#include "exporthandlerbase.moc"

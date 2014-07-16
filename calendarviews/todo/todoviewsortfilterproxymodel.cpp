@@ -28,7 +28,7 @@
 
 #include <calendarsupport/utils.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 TodoViewSortFilterProxyModel::TodoViewSortFilterProxyModel( const EventViews::PrefsPtr &prefs,
                                                             QObject *parent )
@@ -117,6 +117,8 @@ bool TodoViewSortFilterProxyModel::lessThan( const QModelIndex &left,
       }
     }
 
+  } else if ( right.column() == TodoModel::StartDateColumn ) {
+    return compareStartDates( left, right ) == -1;
   } else if ( right.column() == TodoModel::PriorityColumn ) {
     const int comparison = comparePriorities( left, right );
 
@@ -181,6 +183,43 @@ void TodoViewSortFilterProxyModel::setPriorityFilter( const QStringList &priorit
     }
   }
   invalidateFilter();
+}
+
+int TodoViewSortFilterProxyModel::compareStartDates(const QModelIndex &left,
+                                                    const QModelIndex &right) const
+{
+    Q_ASSERT( left.column() == TodoModel::StartDateColumn );
+    Q_ASSERT( right.column() == TodoModel::StartDateColumn );
+
+    // The due date column is a QString so fetch the akonadi item
+    // We can't compare QStrings because it won't work if the format is MM/DD/YYYY
+    const KCalCore::Todo::Ptr leftTodo =
+      CalendarSupport::todo( left.data( TodoModel::TodoRole ).value<Akonadi::Item>() );
+    const KCalCore::Todo::Ptr rightTodo =
+      CalendarSupport::todo( right.data( TodoModel::TodoRole ). value<Akonadi::Item>() );
+
+    if ( !leftTodo || !rightTodo ) {
+      return false;
+    }
+
+    const bool leftIsEmpty  = !leftTodo->hasStartDate();
+    const bool rightIsEmpty = !rightTodo->hasStartDate();
+
+    if ( leftIsEmpty != rightIsEmpty ) { // One of them doesn't have a start date
+      // For sorting, no date is considered a very big date
+      return rightIsEmpty ? -1 : 1;
+    } else if ( !leftIsEmpty ) { // Both have start dates
+      const KDateTime leftDateTime = leftTodo->dtStart();
+      const KDateTime rightDateTime = rightTodo->dtStart();
+
+      if ( leftDateTime == rightDateTime ) {
+        return 0;
+      } else {
+        return leftDateTime < rightDateTime ? -1 : 1;
+      }
+    } else { // Neither has a start date
+      return 0;
+    }
 }
 
 void TodoViewSortFilterProxyModel::setCategoryFilter( const QStringList &categories )
@@ -292,4 +331,3 @@ int TodoViewSortFilterProxyModel::comparePriorities( const QModelIndex &left,
     }
   }
 }
-#include "todoviewsortfilterproxymodel.moc"

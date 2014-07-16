@@ -23,7 +23,7 @@
 #include "functions.h"
 #include "kamail.h"
 #include "messagebox.h"
-#include "preferences.moc"
+#include "preferences.h"
 
 #include <kalarmcal/identities.h>
 
@@ -37,7 +37,6 @@
 #include <ksystemtimezone.h>
 #include <kdebug.h>
 
-#include <QByteArray>
 
 #include <time.h>
 #include <unistd.h>
@@ -56,10 +55,10 @@ static const QString FROM_SYS_SETTINGS = QLatin1String("@SystemSettings");
 static const QString FROM_KMAIL        = QLatin1String("@KMail");
 
 // Config file entry names for notification messages
-const char* Preferences::QUIT_WARN              = "QuitWarn";
-const char* Preferences::ASK_AUTO_START         = "AskAutoStart";
-const char* Preferences::CONFIRM_ALARM_DELETION = "ConfirmAlarmDeletion";
-const char* Preferences::EMAIL_QUEUED_NOTIFY    = "EmailQueuedNotify";
+const QLatin1String Preferences::QUIT_WARN("QuitWarn");
+const QLatin1String Preferences::ASK_AUTO_START("AskAutoStart");
+const QLatin1String Preferences::CONFIRM_ALARM_DELETION("ConfirmAlarmDeletion");
+const QLatin1String Preferences::EMAIL_QUEUED_NOTIFY("EmailQueuedNotify");
 const bool  default_quitWarn             = true;
 const bool  default_emailQueuedNotify    = false;
 const bool  default_confirmAlarmDeletion = true;
@@ -106,7 +105,7 @@ Preferences::Preferences()
     // Update the KAlarm version in the config file, but don't call
     // writeConfig() here - leave it to be written only if the config file
     // is updated with other data.
-    setVersion(KALARM_VERSION);
+    setVersion(QLatin1String(KALARM_VERSION));
 }
 
 void Preferences::setAskAutoStart(bool yes)
@@ -377,5 +376,5 @@ QString translateXTermPath(const QString& cmdline, bool write)
     else
         return cmd + params;
 }
-
+#include "moc_preferences.cpp"
 // vim: et sw=4:

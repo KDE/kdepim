@@ -78,4 +78,3 @@ Error QGpgMEAddUserIDJob::start( const Key & key, const QString & name, const QS
   return Error();
 }
 
-#include "qgpgmeadduseridjob.moc"

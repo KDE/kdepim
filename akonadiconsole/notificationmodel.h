@@ -20,16 +20,20 @@
 #ifndef AKONADICONSOLE_NOTIFICATIONMODEL_H
 #define AKONADICONSOLE_NOTIFICATIONMODEL_H
 
-#include <akonadi/private/notificationmessage_p.h>
+#include <akonadi/private/notificationmessagev3_p.h>
 
-#include <QAbstractItemModel>
-#include <QDateTime>
+#include <QtCore/QAbstractItemModel>
+#include <QtCore/QDateTime>
+
+#include "notificationsourceinterface.h"
+#include "notificationmanagerinterface.h"
 
 class NotificationModel : public QAbstractItemModel
 {
   Q_OBJECT
   public:
     explicit NotificationModel( QObject *parent );
+    ~NotificationModel();
 
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
@@ -38,23 +42,25 @@ class NotificationModel : public QAbstractItemModel
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
-    bool isEnabled() const { return m_enabled; }
+    bool isEnabled() const { return m_source != 0; }
 
   public slots:
     void clear();
-    void setEnabled( bool enable ) { m_enabled = enable; }
+    void setEnabled( bool enable );
 
   private slots:
-    void slotNotify( const Akonadi::NotificationMessage::List &msgs );
+    void slotNotify( const Akonadi::NotificationMessageV3::List &msgs );
 
   private:
-    struct NotificationBlock {
-      NotificationBlock( const Akonadi::NotificationMessage::List &msgs );
-      Akonadi::NotificationMessage::List msgs;
-      QDateTime timestamp;
-    };
-    QList<NotificationBlock> m_data;
-    bool m_enabled;
+    class Item;
+    class NotificationBlock;
+    class NotificationNode;
+    class NotificationEntity;
+
+    QList<NotificationBlock*> m_data;
+
+    org::freedesktop::Akonadi::NotificationManager *m_manager;
+    org::freedesktop::Akonadi::NotificationSource *m_source;
 };
 
 #endif

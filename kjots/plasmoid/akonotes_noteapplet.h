@@ -32,7 +32,6 @@ class KJob;
 namespace Plasma
 {
 class FrameSvg;
-class Label;
 class LineEdit;
 class TextEdit;
 }

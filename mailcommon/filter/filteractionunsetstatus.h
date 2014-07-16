@@ -24,13 +24,15 @@ namespace MailCommon {
 
 class FilterActionUnsetStatus: public FilterActionStatus
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit FilterActionUnsetStatus( QObject *parent = 0 );
-    virtual ReturnCode process( ItemContext &context ) const;
-    virtual SearchRule::RequiredPart requiredPart() const;
+    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
+    SearchRule::RequiredPart requiredPart() const;
     
     static FilterAction* newAction();
+    QString sieveCode() const;
+    QStringList sieveRequires() const;
 };
 }
 

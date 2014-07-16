@@ -309,8 +309,8 @@ IncidenceMonthItem::IncidenceMonthItem( MonthScene *monthScene,
   mIsTodo = CalendarSupport::hasTodo( aitem );
 
   KCalCore::Incidence::Ptr inc = mIncidence;
-  if ( inc->customProperty( "KABC", "BIRTHDAY" ) == "YES" ||
-       inc->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
+  if ( inc->customProperty( "KABC", "BIRTHDAY" ) == QLatin1String("YES") ||
+       inc->customProperty( "KABC", "ANNIVERSARY" ) == QLatin1String("YES") ) {
     const int years = EventViews::yearDiff( inc->dtStart().date(), recurStartDate );
     if ( years > 0 ) {
       inc = KCalCore::Incidence::Ptr( inc->clone() );
@@ -326,7 +326,8 @@ IncidenceMonthItem::IncidenceMonthItem( MonthScene *monthScene,
 
   // first set to 0, because it's used in startDate()
   mRecurDayOffset = 0;
-  if ( startDate().isValid() && recurStartDate.isValid() ) {
+  if ( ( mIncidence->recurs() || mIncidence->recurrenceId().isValid() ) &&
+       startDate().isValid() && recurStartDate.isValid() ) {
     mRecurDayOffset = startDate().daysTo( recurStartDate );
   }
 }
@@ -497,9 +498,9 @@ QString IncidenceMonthItem::text( bool end ) const
     }
     if ( !timeStr.isEmpty() ) {
       if ( !end ) {
-        ret = timeStr + ' ' + ret;
+        ret = timeStr + QLatin1Char(' ') + ret;
       } else {
-        ret = ret + ' ' + timeStr;
+        ret = ret + QLatin1Char(' ') + timeStr;
       }
     }
   }
@@ -532,17 +533,17 @@ QList<QPixmap> IncidenceMonthItem::icons() const
   QString customIconName;
   if ( icons.contains( EventViews::EventView::CalendarCustomIcon ) ) {
     const QString iconName = monthScene()->monthView()->iconForItem( item );
-    if ( !iconName.isEmpty() && iconName != "view-calendar" && iconName != "office-calendar" ) {
+    if ( !iconName.isEmpty() && iconName != QLatin1String("view-calendar") && iconName != QLatin1String("office-calendar") ) {
       customIconName = iconName;
       ret << QPixmap( cachedSmallIcon( iconName ) );
     }
   }
 
   if ( mIsEvent ) {
-    if ( mIncidence->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
+    if ( mIncidence->customProperty( "KABC", "ANNIVERSARY" ) == QLatin1String("YES") ) {
       specialEvent = true;
       ret << monthScene()->anniversaryPixmap();
-    } else if ( mIncidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
+    } else if ( mIncidence->customProperty( "KABC", "BIRTHDAY" ) == QLatin1String("YES") ) {
       specialEvent = true;
        // Disabling birthday icon because it's the birthday agent's icon
        // and we allow to display the agent's icon now.
@@ -691,8 +692,32 @@ void IncidenceMonthItem::setNewDates( const KCalCore::Incidence::Ptr &incidence,
                                       int startOffset, int endOffset )
 {
   if ( mIsTodo ) {
+
+    // For to-dos endOffset is ignored because it will always be == to startOffset because we only
+    // support moving to-dos, not resizing them. There are no multi-day to-dos.
+    // Lets just call it offset to reduce confusion.
+    const int offset = startOffset;
+
     KCalCore::Todo::Ptr todo = incidence.staticCast<Todo>();
-    todo->setDtDue( todo->dtDue().addDays( startOffset ) );
+    KDateTime due   = todo->dtDue();
+    KDateTime start = todo->dtStart();
+    if ( due.isValid() ) { // Due has priority over start.
+      // We will only move the due date, unlike events where we move both.
+      due = due.addDays( offset );
+      todo->setDtDue( due );
+
+      if ( start.isValid() && start > due ) {
+        // Start can't be bigger than due.
+        todo->setDtStart( due );
+      }
+    } else if ( start.isValid() ) {
+      // So we're displaying a to-do that doesn't have due date, only start...
+      start = start.addDays( offset );
+      todo->setDtStart( start );
+    } else {
+      // This never happens
+      kWarning() << "Move what? uid:" << todo->uid() << "; summary=" << todo->summary();
+    }
   } else {
     incidence->setDtStart( incidence->dtStart().addDays( startOffset ) );
     if ( mIsEvent ) {
@@ -759,4 +784,3 @@ QColor HolidayMonthItem::frameColor() const
   return Qt::black;
 }
 
-#include "monthitem.moc"

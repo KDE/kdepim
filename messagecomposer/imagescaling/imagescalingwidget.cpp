@@ -20,7 +20,7 @@
 #include "settings/messagecomposersettings.h"
 
 #include <KComboBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 #include <QImageWriter>
@@ -329,4 +329,3 @@ void ImageScalingWidget::resetToDefault()
     MessageComposer::MessageComposerSettings::self()->useDefaults( bUseDefaults );
 }
 
-#include "imagescalingwidget.moc"

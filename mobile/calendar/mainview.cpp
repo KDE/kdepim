@@ -68,14 +68,11 @@
 #include <kcalcore/event.h>
 #include <kcalcore/todo.h>
 #include <kcolorcombo.h>
-#ifndef _WIN32_WCE
 #include <kcolordialog.h>
-#endif
 #include <kmessagebox.h>
 #include <ksystemtimezone.h>
 #include <incidenceeditor-ng/categoryeditdialog.h>
 #include <incidenceeditor-ng/editorconfig.h>
-#include <incidenceeditor-ng/groupwareintegration.h>
 #include <incidenceeditor-ng/incidencedefaults.h>
 #include <libkdepimdbusinterfaces/reminderclient.h>
 
@@ -84,51 +81,6 @@
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
 #include <QGraphicsItem>
-
-#ifdef Q_OS_WINCE
-class WinCEColorDialog : public KDialog
-{
-  public:
-    WinCEColorDialog( QWidget *parent = 0 )
-      : KDialog( parent )
-    {
-      QHBoxLayout *layout = new QHBoxLayout( mainWidget() );
-
-      QLabel *label = new QLabel( i18n( "Color:" ) );
-      mComboBox = new KPIM::KColorCombo;
-
-      layout->addWidget( label );
-      layout->addWidget( mComboBox );
-      layout->setStretch( 1, 1 );
-    }
-
-    void setColor( const QColor &color )
-    {
-      mComboBox->setColor( color );
-    }
-
-    QColor color() const
-    {
-      return mComboBox->color();
-    }
-
-    static int getColor( QColor &color )
-    {
-      WinCEColorDialog dialog;
-      dialog.setColor( color );
-
-      const int status = dialog.exec();
-
-      if ( status == KDialog::Accepted )
-        color = dialog.color();
-
-      return status;
-    }
-
-  private:
-    KPIM::KColorCombo *mComboBox;
-};
-#endif
 
 Q_DECLARE_METATYPE(KCalCore::iTIPMethod)
 
@@ -147,7 +99,7 @@ QML_DECLARE_TYPE( EventViews::TimelineViewItem )
 EventViews::PrefsPtr MainView::m_calendarPrefs;
 
 MainView::MainView( QWidget* parent )
-  : KDeclarativeMainView( "korganizer-mobile", new EventListProxy, parent ),
+  : KDeclarativeMainView( QLatin1String("korganizer-mobile"), new EventListProxy, parent ),
     m_identityManager( 0 ),
     m_changer( 0 ),
     mActionManager( 0 )
@@ -191,14 +143,10 @@ void MainView::doDelayedInit()
 
   m_calendar = Akonadi::ETMCalendar::Ptr( new Akonadi::ETMCalendar() );
   m_calendar->setWeakPointer( m_calendar );
-  engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar.data() ) ) );
+  engine()->rootContext()->setContextProperty( QLatin1String("calendarModel"), QVariant::fromValue( static_cast<QObject*>( m_calendar.data() ) ) );
   Akonadi::FreeBusyManager::self()->setCalendar( m_calendar );
 
-  if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
-    // TODO_SERGIO
-    //IncidenceEditorNG::GroupwareIntegration::setGlobalUiDelegate( new GroupwareUiDelegate );
-    IncidenceEditorNG::GroupwareIntegration::activate( m_calendar );
-  }
+  // TODO: set a groupware delegate to handle counter proposals
 
   m_changer = new Akonadi::IncidenceChanger( this );
 
@@ -210,7 +158,7 @@ void MainView::doDelayedInit()
   collectionselection = new CalendarSupport::CollectionSelection( regularSelectionModel(), this );
   EventViews::EventView::setGlobalCollectionSelection( collectionselection );
 
-  QDBusConnection::sessionBus().registerService( "org.kde.korganizer" ); //register also as the real korganizer, so kmail can communicate with it
+  QDBusConnection::sessionBus().registerService( QLatin1String("org.kde.korganizer") ); //register also as the real korganizer, so kmail can communicate with it
 
   KAction *action = new KAction( i18n( "Import Events" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(importItems()) );
@@ -282,7 +230,7 @@ void MainView::doDelayedInit()
   //register DBUS interface
   m_calendarIface = new CalendarInterface( this );
   new CalendarAdaptor( m_calendarIface );
-  QDBusConnection::sessionBus().registerObject( "/Calendar", m_calendarIface );
+  QDBusConnection::sessionBus().registerObject( QLatin1String("/Calendar"), m_calendarIface );
 
   KPIM::ReminderClient::startDaemon();
 }
@@ -524,7 +472,7 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   mActionManager->action( StandardActionManager::MoveCollectionToDialog )->setText( i18n( "Move Calendar To" ) );
   mActionManager->action( StandardActionManager::CopyCollectionToDialog )->setText( i18n( "Copy Calendar To" ) );
 
-  actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize All Accounts" ) );
+  actionCollection()->action( QLatin1String("synchronize_all_items") )->setText( i18n( "Synchronize All Accounts" ) );
 
   const QStringList pages = QStringList() << QLatin1String( "CalendarSupport::CollectionGeneralPage" )
                                           << QLatin1String( "Akonadi::CachePolicyPage" );
@@ -542,23 +490,23 @@ void MainView::updateActionTexts()
   const Akonadi::Item item = items.first();
   const QString mimeType = item.mimeType();
   if ( mimeType == KCalCore::Event::eventMimeType() ) {
-    actionCollection()->action( "akonadi_item_copy" )->setText( ki18np( "Copy Event", "Copy %1 Events" ).subs( itemCount ).toString() );
-    actionCollection()->action( "akonadi_item_copy_to_dialog" )->setText( i18n( "Copy Event To" ) );
-    actionCollection()->action( "akonadi_item_delete" )->setText( ki18np( "Delete Event", "Delete %1 Events" ).subs( itemCount ).toString() );
-    actionCollection()->action( "akonadi_item_move_to_dialog" )->setText( i18n( "Move Event To" ) );
-    actionCollection()->action( "akonadi_incidence_edit" )->setText( i18n( "Edit Event" ) );
+    actionCollection()->action( QLatin1String("akonadi_item_copy") )->setText( ki18np( "Copy Event", "Copy %1 Events" ).subs( itemCount ).toString() );
+    actionCollection()->action( QLatin1String("akonadi_item_copy_to_dialog") )->setText( i18n( "Copy Event To" ) );
+    actionCollection()->action( QLatin1String("akonadi_item_delete") )->setText( ki18np( "Delete Event", "Delete %1 Events" ).subs( itemCount ).toString() );
+    actionCollection()->action( QLatin1String("akonadi_item_move_to_dialog") )->setText( i18n( "Move Event To" ) );
+    actionCollection()->action( QLatin1String("akonadi_incidence_edit") )->setText( i18n( "Edit Event" ) );
   } else if ( mimeType == KCalCore::Todo::todoMimeType() ) {
-    actionCollection()->action( "akonadi_item_copy" )->setText( ki18np( "Copy Task", "Copy %1 Tasks" ).subs( itemCount ).toString() );
-    actionCollection()->action( "akonadi_item_copy_to_dialog" )->setText( i18n( "Copy Task To" ) );
-    actionCollection()->action( "akonadi_item_delete" )->setText( ki18np( "Delete Task", "Delete %1 Tasks" ).subs( itemCount ).toString() );
-    actionCollection()->action( "akonadi_item_move_to_dialog" )->setText( i18n( "Move Task To" ) );
-    actionCollection()->action( "akonadi_incidence_edit" )->setText( i18n( "Edit Task" ) );
+    actionCollection()->action( QLatin1String("akonadi_item_copy") )->setText( ki18np( "Copy Task", "Copy %1 Tasks" ).subs( itemCount ).toString() );
+    actionCollection()->action(QLatin1String( "akonadi_item_copy_to_dialog") )->setText( i18n( "Copy Task To" ) );
+    actionCollection()->action( QLatin1String("akonadi_item_delete") )->setText( ki18np( "Delete Task", "Delete %1 Tasks" ).subs( itemCount ).toString() );
+    actionCollection()->action( QLatin1String("akonadi_item_move_to_dialog") )->setText( i18n( "Move Task To" ) );
+    actionCollection()->action( QLatin1String("akonadi_incidence_edit") )->setText( i18n( "Edit Task" ) );
   } else if ( mimeType == KCalCore::Journal::journalMimeType() ) {
-    actionCollection()->action( "akonadi_item_copy" )->setText( ki18np( "Copy Journal", "Copy %1 Journals" ).subs( itemCount ).toString() );
-    actionCollection()->action( "akonadi_item_copy_to_dialog" )->setText( i18n( "Copy Journal To" ) );
-    actionCollection()->action( "akonadi_item_delete" )->setText( ki18np( "Delete Journal", "Delete %1 Journals" ).subs( itemCount ).toString() );
-    actionCollection()->action( "akonadi_item_move_to_dialog" )->setText( i18n( "Move Journal To" ) );
-    actionCollection()->action( "akonadi_incidence_edit" )->setText( i18n( "Edit Journal" ) );
+    actionCollection()->action( QLatin1String("akonadi_item_copy") )->setText( ki18np( "Copy Journal", "Copy %1 Journals" ).subs( itemCount ).toString() );
+    actionCollection()->action( QLatin1String("akonadi_item_copy_to_dialog") )->setText( i18n( "Copy Journal To" ) );
+    actionCollection()->action( QLatin1String("akonadi_item_delete") )->setText( ki18np( "Delete Journal", "Delete %1 Journals" ).subs( itemCount ).toString() );
+    actionCollection()->action( QLatin1String("akonadi_item_move_to_dialog" ))->setText( i18n( "Move Journal To" ) );
+    actionCollection()->action( QLatin1String("akonadi_incidence_edit") )->setText( i18n( "Edit Journal" ) );
   }
 }
 
@@ -768,37 +716,7 @@ void MainView::fetchForSaveAllAttachmentsDone( KJob *job )
   }
 
   const Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
-#ifndef Q_OS_WINCE
   CalendarSupport::saveAttachments( item, this );
-#else
-  // CalendarSupport is not completely ported for Windows CE so we use the
-  // attachment handling code from KDeclarativeMainView
-  KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
-
-  if ( !incidence ) {
-    KMessageBox::sorry(
-      this,
-      i18n( "No item selected." ),
-      "SaveAttachments" );
-    return;
-  }
-
-  KCalCore::Attachment::List attachments = incidence->attachments();
-
-  if ( attachments.empty() )
-    return;
-
-  Q_FOREACH( KCalCore::Attachment::Ptr attachment, attachments ) {
-    QString fileName = attachment->label();
-    QString sourceUrl;
-    if ( attachment->isUri() ) {
-      sourceUrl = attachment->uri();
-    } else {
-      sourceUrl = incidence->writeAttachmentToTempFile( attachment );
-    }
-      saveAttachment( sourceUrl, fileName );
-  }
-#endif //Q_OS_WINCE
 }
 
 void MainView::archiveOldEntries()
@@ -824,11 +742,8 @@ void MainView::changeCalendarColor()
   QColor calendarColor = agendaItem->preferences()->resourceColor( id );
   QColor myColor;
 
-#ifdef Q_OS_WINCE
-  const int result = WinCEColorDialog::getColor( myColor );
-#else
   const int result = KColorDialog::getColor( myColor, calendarColor );
-#endif
+
   if ( result == KDialog::Accepted && myColor != calendarColor ) {
     agendaItem->preferences()->setResourceColor( id, myColor );
     agendaItem->updateConfig();
@@ -845,4 +760,3 @@ void MainView::changeCalendarColor()
 
 
 
-#include "mainview.moc"

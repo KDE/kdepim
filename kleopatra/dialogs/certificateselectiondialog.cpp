@@ -46,7 +46,7 @@
 
 #include <gpgme++/key.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <KDebug>
@@ -54,10 +54,10 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QDialogButtonBox>
-#include <QLayout>
 #include <QItemSelectionModel>
 #include <QAbstractItemView>
 #include <QPointer>
+#include <QVBoxLayout>
 
 #include <boost/bind.hpp>
 
@@ -183,7 +183,7 @@ CertificateSelectionDialog::Private::Private( CertificateSelectionDialog * qq )
 CertificateSelectionDialog::CertificateSelectionDialog( QWidget * parent, Qt::WindowFlags f )
     : QDialog( parent, f ), d( new Private( this ) )
 {
-    const KSharedConfig::Ptr config = KSharedConfig::openConfig( "kleopatracertificateselectiondialogrc" );
+    const KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kleopatracertificateselectiondialogrc") );
     d->ui.tabWidget.loadViews( config.data() );
     const KConfigGroup geometry( config, "Geometry" );
     resize( geometry.readEntry( "size", size() ) );
@@ -260,7 +260,7 @@ Key CertificateSelectionDialog::selectedCertificate() const {
 }
 
 void CertificateSelectionDialog::hideEvent( QHideEvent * e ) {
-    KSharedConfig::Ptr config = KSharedConfig::openConfig( "kleopatracertificateselectiondialogrc" );
+    KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kleopatracertificateselectiondialogrc") );
     d->ui.tabWidget.saveViews( config.data() );
     KConfigGroup geometry( config, "Geometry" );
     geometry.writeEntry( "size", size() );

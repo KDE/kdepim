@@ -31,3 +31,28 @@ endmacro()
 
 add_templateparser_unittest(templateparsertest.cpp)
 kde4_handle_crypto_rpath_for_executable( templateparsertest )
+
+
+set(templateeditor_gui_SRCS templateeditor_gui.cpp)
+kde4_add_executable(templateeditor_gui TEST ${templateeditor_gui_SRCS})
+target_link_libraries(templateeditor_gui
+  ${QT_QTTEST_LIBRARY}
+  ${QT_QTCORE_LIBRARY}
+  ${QT_QTGUI_LIBRARY}
+  ${KDE4_KDEUI_LIBS}
+  ${QT_QTWEBKIT_LIBRARY}
+  ${KDE4_KIO_LIBS}
+  templateparser
+)
+
+set(templateconfigurewidget_gui_SRCS templateconfigurewidget_gui.cpp)
+kde4_add_executable(templateconfigurewidget_gui TEST ${templateconfigurewidget_gui_SRCS})
+target_link_libraries(templateconfigurewidget_gui
+  ${QT_QTTEST_LIBRARY}
+  ${QT_QTCORE_LIBRARY}
+  ${QT_QTGUI_LIBRARY}
+  ${KDE4_KDEUI_LIBS}
+  ${QT_QTWEBKIT_LIBRARY}
+  ${KDE4_KIO_LIBS}
+  templateparser
+)

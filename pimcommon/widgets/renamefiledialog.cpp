@@ -30,8 +30,10 @@
 #include <kseparator.h>
 #include <KLineEdit>
 #include <KPushButton>
-#include <KLocale>
+#include <KLocalizedString>
 #include <kio/global.h>
+#include <kio/netaccess.h>
+#include <KMessageBox>
 
 #include <QHBoxLayout>
 #include <QCheckBox>
@@ -70,7 +72,7 @@ QString PimCommon::RenameFileDialog::RenameFileDialogPrivate::suggestName(const 
 {
     QString dotSuffix, suggestedName;
     QString basename = oldName;
-    const QChar spacer(' ');
+    const QChar spacer(QLatin1Char(' '));
 
     //ignore dots at the beginning, that way "..aFile.tar.gz" will become "..aFile 1.tar.gz" instead of " 1..aFile.tar.gz"
     int index = basename.indexOf(QLatin1Char('.'));
@@ -193,6 +195,11 @@ void RenameFileDialog::slotRenamePressed()
 {
     if (d->nameEdit->text().isEmpty())
         return;
+    const QString name = newName().path();
+    if ( KIO::NetAccess::exists( name, KIO::NetAccess::DestinationSide, this ) ) {
+        KMessageBox::error(this, i18n("This filename \"%1\" already exists.",name), i18n("File already exists"));
+        return;
+    }
     done(RENAMEFILE_RENAME);
 }
 
@@ -226,5 +233,4 @@ KUrl RenameFileDialog::newName() const
 }
 
 
-#include "renamefiledialog.moc"
 

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -39,6 +39,7 @@ void AddressLineEdit::slotTextChanged()
     if (mIncorrectEmail) {
         verifyAddress();
     }
+    Q_EMIT valueChanged();
 }
 
 void AddressLineEdit::verifyAddress()
@@ -65,4 +66,3 @@ void AddressLineEdit::focusOutEvent(QFocusEvent *ev)
     KLineEdit::focusOutEvent(ev);
 }
 
-#include "addresslineedit.moc"

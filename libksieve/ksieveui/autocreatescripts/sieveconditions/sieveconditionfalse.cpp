@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,8 +16,9 @@
 */
 
 #include "sieveconditionfalse.h"
+#include "editor/sieveeditorutil.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -56,4 +57,14 @@ QString SieveConditionFalse::help() const
     return i18n("The \"false\" test always evaluates to false.");
 }
 
-#include "sieveconditionfalse.moc"
+bool SieveConditionFalse::setParamWidgetValue(const QDomElement &, QWidget *, bool, QString &)
+{
+    //Nothing
+    return true;
+}
+
+QString SieveConditionFalse::href() const
+{
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
+}
+

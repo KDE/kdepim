@@ -8,8 +8,6 @@
   <!ENTITY kmail-configure SYSTEM "configure.docbook">
   <!ENTITY kmail-menus SYSTEM "menus.docbook">
   <!ENTITY kmail-faq SYSTEM "faq.docbook">
-  <!ENTITY kmail-importing SYSTEM "importing.docbook">
-  <!ENTITY kmail-exporting SYSTEM "exporting.docbook">
   <!ENTITY kmail-troubleshooting SYSTEM "troubleshooting.docbook">
   <!ENTITY kmail-credits-and-licenses SYSTEM "credits-and-licenses.docbook">
   <!ENTITY % addindex "IGNORE">
@@ -124,7 +122,7 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 <date>2013-06-26</date>
-<releaseinfo>4.10.8 (&kde; 4.11)</releaseinfo>
+<releaseinfo>(&kde; 4.12)</releaseinfo>
 
 <abstract>
 
@@ -152,8 +150,6 @@
 &kmail-configure;  <!-- 4.11 -->
 &kmail-menus;  <!-- 4.7 except missing menu items and Mark Message table-->
 &kmail-faq;  <!-- updated by Yuri with topics from userbase -->
-&kmail-importing; <!-- not reviewed -->
-&kmail-exporting; <!-- 4.11 -->
 &kmail-troubleshooting; <!-- exported from UserBase -->
 &kmail-credits-and-licenses;
 

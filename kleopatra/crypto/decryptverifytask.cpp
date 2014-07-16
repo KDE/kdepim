@@ -64,13 +64,13 @@
 
 #include <gpg-error.h>
 
-#include <KIconLoader>
+#include <KLocalizedString>
 #include <KLocale>
+#include <KGlobal>
 #include <KLocalizedString>
 #include <KDebug>
 
 #include <QByteArray>
-#include <QColor>
 #include <QDateTime>
 #include <QStringList>
 #include <QTextDocument> // Qt::escape
@@ -127,7 +127,7 @@ static std::string email( const UserID & uid ) {
         if ( *id == '<' )
             return stripAngleBrackets( id );
         else
-            return DN( id )["EMAIL"].trimmed().toUtf8().constData();
+            return DN( id )[QLatin1String("EMAIL")].trimmed().toUtf8().constData();
     else
         return std::string();
 }
@@ -226,7 +226,7 @@ static QString formatValidSignatureWithTrustLevel( const UserID & id ) {
 static QString renderFingerprint( const char * fpr ) {
     if ( !fpr )
         return QString();
-    return QString( "0x%1" ).arg( QString::fromLatin1( fpr ).toUpper() );
+    return QString::fromLatin1( "0x%1" ).arg( QString::fromLatin1( fpr ).toUpper() );
 }
 
 static QString renderKeyLink( const QString & fpr, const QString & text ) {
@@ -236,7 +236,7 @@ static QString renderKeyLink( const QString & fpr, const QString & text ) {
 static QString renderKey( const Key & key ) {
     if ( key.isNull() )
         return i18n( "Unknown certificate" );
-    return renderKeyLink( key.primaryFingerprint(), Formatting::prettyName( key ) );
+    return renderKeyLink( QLatin1String(key.primaryFingerprint()), Formatting::prettyName( key ) );
 }
 
 static QString renderKeyEMailOnlyNameAsFallback( const Key & key ) {
@@ -244,7 +244,7 @@ static QString renderKeyEMailOnlyNameAsFallback( const Key & key ) {
         return i18n( "Unknown certificate" );
     const QString email = Formatting::prettyEMail( key );
     const QString user = !email.isEmpty() ? email : Formatting::prettyName( key );
-    return renderKeyLink( key.primaryFingerprint(), user );
+    return renderKeyLink( QLatin1String(key.primaryFingerprint()), user );
 }
 
 static QString formatDate( const QDateTime & dt ) {
@@ -281,7 +281,7 @@ static QString formatSigningInformation( const Signature & sig, const Key & key 
 }
 
 static QString strikeOut( const QString & str, bool strike ) {
-    return QString( strike ? "<s>%1</s>" : "%1" ).arg( Qt::escape( str ) );
+    return QString( strike ? QLatin1String("<s>%1</s>") : QLatin1String("%1") ).arg( Qt::escape( str ) );
 }
 
 static QString formatInputOutputLabel( const QString & input, const QString & output, bool inputDeleted, bool outputDeleted ) {
@@ -384,7 +384,7 @@ static QString formatVerificationResultOverview( const VerificationResult & res,
         text = i18n( "<b>Signed by %1</b>", renderKeyEMailOnlyNameAsFallback( key ) );
         if ( info.conflicts() )
             text += i18n( "<br/><b>Warning:</b> The sender's mail address is not stored in the %1 used for signing.",
-                          renderKeyLink( key.primaryFingerprint(), i18n( "certificate" ) ) );
+                          renderKeyLink( QLatin1String(key.primaryFingerprint()), i18n( "certificate" ) ) );
     }
     else {
         text = i18np("<b>Valid signature.</b>", "<b>%1 valid signatures.</b>", sigs.size() );
@@ -412,7 +412,7 @@ static QString formatSignature( const Signature & sig, const Key & key, const De
     if ( sig.isNull() )
         return QString();
 
-    const QString text = formatSigningInformation( sig, key ) + "<br/>";
+    const QString text = formatSigningInformation( sig, key ) + QLatin1String("<br/>");
 
     const bool red = sig.summary() & Signature::Red;
     if ( sig.summary() & Signature::Valid ) {
@@ -441,9 +441,9 @@ static QString formatVerificationResultDetails( const VerificationResult & res, 
     const std::vector<Key> signers = KeyCache::instance()->findSigners( res );
     QString details;
     Q_FOREACH ( const Signature & sig, sigs )
-        details += formatSignature( sig, DecryptVerifyResult::keyForSignature( sig, signers ), info ) + '\n';
+        details += formatSignature( sig, DecryptVerifyResult::keyForSignature( sig, signers ), info ) + QLatin1Char('\n');
     details = details.trimmed();
-    details.replace( '\n', "<br/>" );
+    details.replace( QLatin1Char('\n'), QLatin1String("<br/>") );
     if ( info.conflicts() )
         details += i18n( "<p>The sender's address %1 is not stored in the certificate. Stored: %2</p>", info.informativeSender.prettyAddress(), format( info.signerMailboxes() ).join( i18nc("separator for a list of e-mail addresses", ", " ) ) );
     return details;
@@ -458,7 +458,7 @@ static QString formatDecryptionResultDetails( const DecryptionResult & res, cons
         return QString();
 
     if ( recipients.empty() && res.numRecipients() > 0 )
-        return QString( "<i>" + i18np( "One unknown recipient.", "%1 unknown recipients.", res.numRecipients() ) + "</i>" );
+        return QLatin1String( "<i>") + i18np( "One unknown recipient.", "%1 unknown recipients.", res.numRecipients() ) + QLatin1String("</i>");
 
     QString details;
     if ( !recipients.empty() ) {
@@ -466,14 +466,14 @@ static QString formatDecryptionResultDetails( const DecryptionResult & res, cons
         if ( res.numRecipients() == 1 )
             return details + renderKey( recipients.front() );
 
-        details += "<ul>";
+        details += QLatin1String("<ul>");
         Q_FOREACH( const Key & key, recipients )
-            details += "<li>" + renderKey( key ) + "</li>";
+            details += QLatin1String("<li>") + renderKey( key ) + QLatin1String("</li>");
         if ( recipients.size() < res.numRecipients() )
-            details += "<li><i>" + i18np( "One unknown recipient", "%1 unknown recipients",
-                                       res.numRecipients() - recipients.size() ) + "</i></li>";
+            details += QLatin1String("<li><i>") + i18np( "One unknown recipient", "%1 unknown recipients",
+                                       res.numRecipients() - recipients.size() ) + QLatin1String("</i></li>");
 
-        details += "</ul>";
+        details += QLatin1String("</ul>");
     }
 
     return details;
@@ -495,7 +495,7 @@ static QString formatDecryptVerifyResultDetails( const DecryptionResult & dr,
     const QString drDetails = formatDecryptionResultDetails( dr, recipients, errorString );
     if ( IsErrorOrCanceled( dr ) || !relevantInDecryptVerifyContext( vr ) )
         return drDetails;
-    return drDetails + ( drDetails.isEmpty() ? "" : "<br/>" ) + formatVerificationResultDetails( vr, info, errorString );
+    return drDetails + ( drDetails.isEmpty() ? QString() : QLatin1String("<br/>") ) + formatVerificationResultDetails( vr, info, errorString );
 }
 
 } // anon namespace
@@ -1349,4 +1349,4 @@ void VerifyDetachedTask::doStart()
     }
 }
 
-#include "decryptverifytask.moc"
+#include "moc_decryptverifytask.cpp"

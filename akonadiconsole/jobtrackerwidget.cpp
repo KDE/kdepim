@@ -26,12 +26,15 @@
 
 #include <akonadi/control.h>
 
-#include <KLocale>
+#include <KLocalizedString>
+#include <KFileDialog>
 
 #include <QTreeView>
 #include <QHeaderView>
 #include <QVBoxLayout>
 #include <QMenu>
+#include <QPushButton>
+#include <QFile>
 
 
 class JobTrackerWidget::Private
@@ -65,6 +68,15 @@ JobTrackerWidget::JobTrackerWidget( const char *name, QWidget *parent, const QSt
   layout->addWidget( tv );
   d->model->setEnabled( false ); // since it can be slow, default to off
 
+
+  QHBoxLayout *layout2 = new QHBoxLayout( this );
+  QPushButton *button = new QPushButton( QLatin1String( "Save to file..." ), this );
+  connect( button, SIGNAL(clicked(bool)),
+           this, SLOT(slotSaveToFile()) );
+  layout2->addWidget( button );
+  layout2->addStretch( 1 );
+  layout->addLayout( layout2 );
+
   Akonadi::Control::widgetNeedsAkonadi( this );
 }
 
@@ -80,5 +92,44 @@ void JobTrackerWidget::contextMenu( const QPoint &pos )
   menu.exec( mapToGlobal( pos ) );
 }
 
+void JobTrackerWidget::slotSaveToFile()
+{
+  const QString fileName = KFileDialog::getSaveFileName( KUrl(), QString(), 0, QString(), KFileDialog::ConfirmOverwrite );
+  if ( fileName.isEmpty() ) {
+    return;
+  }
 
-#include "jobtrackerwidget.moc"
+  QFile file( fileName );
+  if ( !file.open( QIODevice::WriteOnly | QIODevice::Truncate ) ) {
+    return;
+  }
+
+  file.write("Job ID\t\tCreated\t\tWait Time\tJob Duration\tJob Type\t\tState\tInfo\n");
+
+  writeRows( QModelIndex(), file, 0 );
+
+  file.close();
+}
+
+void JobTrackerWidget::writeRows( const QModelIndex &parent, QFile &file, int indentLevel )
+{
+  for ( int row = 0; row < d->model->rowCount( parent ); ++row ) {
+    QByteArray data;
+    for ( int tabs = 0; tabs < indentLevel; ++tabs ) {
+      data += '\t';
+    }
+    const int columnCount = d->model->columnCount( parent );
+    for ( int column = 0; column < columnCount; ++column ) {
+      const QModelIndex index = d->model->index( row, column, parent );
+      data += index.data().toByteArray();
+      if ( column < columnCount - 1 ) {
+        data += '\t';
+      }
+    }
+    data += '\n';
+    file.write( data );
+
+    const QModelIndex index = d->model->index( row, 0, parent );
+    writeRows( index, file, indentLevel + 1 );
+  }
+}

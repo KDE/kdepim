@@ -39,9 +39,9 @@ AttachmentEditor::AttachmentEditor( KActionCollection *actionCollection, Message
     mSelectionModel( new QItemSelectionModel( mModel ) ),
     mAttachmentController( controller )
 {
-  mAddAction = actionCollection->action( "attach" );
+  mAddAction = actionCollection->action( QLatin1String("attach") );
   mAddAction->setText( i18n( "Add Attachment" ) );
-  mDeleteAction = actionCollection->action( "remove" );
+  mDeleteAction = actionCollection->action( QLatin1String("remove") );
   mDeleteAction->setText( i18n( "Remove Attachment" ) );
 
   mSignAction = new QAction( this );
@@ -54,8 +54,8 @@ AttachmentEditor::AttachmentEditor( KActionCollection *actionCollection, Message
   mEncryptAction->setCheckable( true );
   connect( mEncryptAction, SIGNAL(triggered(bool)), SLOT(encryptAttachment(bool)) );
 
-  actionCollection->addAction( "toggle_attachment_signed", mSignAction );
-  actionCollection->addAction( "toggle_attachment_encrypted", mEncryptAction );
+  actionCollection->addAction( QLatin1String("toggle_attachment_signed"), mSignAction );
+  actionCollection->addAction( QLatin1String("toggle_attachment_encrypted"), mEncryptAction );
 
   connect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
            this, SLOT(selectionChanged()) );
@@ -118,4 +118,3 @@ void AttachmentEditor::encryptAttachment( bool value )
   mModel->setData( index, value, Qt::CheckStateRole );
 }
 
-#include "attachmenteditor.moc"

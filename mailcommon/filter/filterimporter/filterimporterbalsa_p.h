@@ -20,7 +20,6 @@
 
 #include "filter/filterimporter/filterimporterabstract_p.h"
 
-#include <QDomElement>
 
 class QFile;
 class KConfigGroup;

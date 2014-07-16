@@ -25,16 +25,26 @@
 
 #include <QWidget>
 
+namespace GrantleeTheme {
+class GrantleeThemeManager;
+}
+class KAction;
 namespace Akonadi {
-  class Collection;
-  class ContactGroupViewer;
-  class ContactViewer;
-  class ContactsFilterProxyModel;
-  class EntityMimeTypeFilterModel;
-  class EntityTreeView;
-  class Item;
-  class ItemView;
-  class StandardContactActionManager;
+class Collection;
+class ContactGroupViewer;
+class ContactViewer;
+class ContactsFilterProxyModel;
+class EntityMimeTypeFilterModel;
+class EntityTreeView;
+class Item;
+class ItemView;
+class StandardContactActionManager;
+class EntityTreeModel;
+}
+
+namespace KAddressBookGrantlee {
+class GrantleeContactFormatter;
+class GrantleeContactGroupFormatter;
 }
 
 class ContactSwitcher;
@@ -52,20 +62,27 @@ class QActionGroup;
 
 class KADDRESSBOOK_EXPORT MainWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit MainWidget( KXMLGUIClient *guiClient, QWidget *parent = 0 );
     ~MainWidget();
 
-  public Q_SLOTS:
+    XXPortManager *importManager() const;
+    void updateQuickSearchText();
+
+public Q_SLOTS:
     void newContact();
     void newGroup();
     void print();
     void printPreview();
     void configure();
+    void mergeContacts();
+    void slotSearchDuplicateContacts();
 
-  private Q_SLOTS:
+    bool handleCommandLine();
+
+private Q_SLOTS:
     void delayedInit();
 
     void itemSelected( const Akonadi::Item &item );
@@ -78,7 +95,12 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     void restoreState();
     void saveState();
 
-  private:
+    void slotGrantleeThemeSelected();
+    void slotGrantleeThemesUpdated();  
+    void slotCheckNewCalendar(const QModelIndex &parent, int begin, int end);
+
+private:
+    void initGrantleeThemeName();
     void setupGui();
     void setupActions( KActionCollection * );
     bool showQRCodes();
@@ -120,6 +142,11 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     XXPortManager *mXXPortManager;
     ModelColumnManager *mModelColumnManager;
     KXMLGUIClient *mXmlGuiClient;
+    KAddressBookGrantlee::GrantleeContactFormatter *mFormatter;
+    KAddressBookGrantlee::GrantleeContactGroupFormatter *mGroupFormatter;
+    GrantleeTheme::GrantleeThemeManager *mGrantleeThemeManager;
+    Akonadi::EntityTreeModel *entityTreeModel() const;
+    KAction *mQuickSearchAction;
 };
 
 #endif

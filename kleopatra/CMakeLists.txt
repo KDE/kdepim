@@ -1,6 +1,10 @@
 kde4_no_enable_final(kleopatra)
 project(kleopatra)
 
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
+
+
 option(KLEO_STATIC_KCMODULES "Build Kleopatra's KCMs into Kleopatra; don't install plugins" WINCE)
 
 include(MacroOptionalAddSubdirectory)
@@ -46,11 +50,8 @@ if(USABLE_ASSUAN_FOUND)
 endif()
 
 add_definitions(-D_ASSUAN_ONLY_GPG_ERRORS)
-
-if(NOT WINCE)
-  add_definitions(-DQT_STL)
-  remove_definitions(-DQT_NO_STL)
-endif()
+add_definitions(-DQT_STL)
+remove_definitions(-DQT_NO_STL)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 if(GCC_IS_NEWER_THAN_4_3)
@@ -68,18 +69,13 @@ if(USABLE_ASSUAN_FOUND AND BUILD_libkleopatraclient)
   add_subdirectory(libkleopatraclient)
 endif()
 
-if(NOT WINCE)
-  add_subdirectory(kgpgconf)
-  add_subdirectory(kwatchgnupg)
-  add_subdirectory(tests)
-endif()
+add_subdirectory(kgpgconf)
+add_subdirectory(kwatchgnupg)
+add_subdirectory(tests)
 
 if(WIN32)
   set(_kleopatra_extra_uiserver_SRCS uiserver/uiserver_win.cpp)
-  set(_kleopatra_extra_SRCS utils/gnupg-registry.c)
-  if(NOT WINCE)
-    set(_kleopatra_extra_SRCS ${_kleopatra_extra_SRCS} selftest/registrycheck.cpp)
-  endif()
+  set(_kleopatra_extra_SRCS utils/gnupg-registry.c selftest/registrycheck.cpp)
 else()
   set(_kleopatra_extra_uiserver_SRCS uiserver/uiserver_unix.cpp)
   set(_kleopatra_extra_SRCS)
@@ -107,6 +103,15 @@ if(USABLE_ASSUAN_FOUND)
 
     libkleopatraclient/core/command.cpp
     selftest/uiservercheck.cpp
+  )
+  set_source_files_properties(libkleopatraclient/core/command.cpp PROPERTIES SKIP_AUTOMOC TRUE)
+
+  qt4_generate_moc(libkleopatraclient/core/command_p.h "${CMAKE_CURRENT_BINARY_DIR}/libkleopatraclient/core/moc_command_p.cpp")
+  qt4_generate_moc(libkleopatraclient/core/command.h "${CMAKE_CURRENT_BINARY_DIR}/libkleopatraclient/core/moc_command.cpp")
+
+  list(APPEND _kleopatra_uiserver_SRCS
+    "${CMAKE_CURRENT_BINARY_DIR}/libkleopatraclient/core/moc_command_p.cpp"
+    "${CMAKE_CURRENT_BINARY_DIR}/libkleopatraclient/core/moc_command.cpp"
   )
 
   if(ASSUAN2_FOUND)
@@ -270,6 +275,10 @@ set(_kleopatra_SRCS
   commands/exportopenpgpcertstoservercommand.cpp
   commands/adduseridcommand.cpp
   commands/newcertificatecommand.cpp
+  commands/setinitialpincommand.cpp
+  commands/learncardkeyscommand.cpp
+  commands/checksumcreatefilescommand.cpp
+  commands/checksumverifyfilescommand.cpp
 
   ${_kleopatra_uiserver_files}
 
@@ -278,30 +287,13 @@ set(_kleopatra_SRCS
   newcertificatewizard/listwidget.cpp
   newcertificatewizard/newcertificatewizard.cpp
 
+  smartcard/readerstatus.cpp
+
   aboutdata.cpp
   systrayicon.cpp
   kleopatraapplication.cpp
   main.cpp
 )
-
-if(NOT WINCE)
-  set(_kleopatra_SRCS
-    ${_kleopatra_SRCS}
-    smartcard/readerstatus.cpp
-
-    commands/setinitialpincommand.cpp
-    commands/learncardkeyscommand.cpp
-    commands/checksumcreatefilescommand.cpp
-    commands/checksumverifyfilescommand.cpp
-  )
-endif()
-
-if(WINCE)
-  set(_kleopatra_SRCS
-    ${_kleopatra_SRCS}
-    utils/qwizard.cpp
-  )
-endif()
 
 if(KLEO_STATIC_KCMODULES)
   add_definitions(-DKLEO_STATIC_KCMODULES)

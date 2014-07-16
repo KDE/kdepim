@@ -21,11 +21,10 @@
 **
 ****************************************************************************/
 
+#include "modeltest.h"
+
 #include <config-kleopatra.h>
 
-#include <QtGui>
-
-#include "modeltest.h"
 
 Q_DECLARE_METATYPE(QModelIndex)
 

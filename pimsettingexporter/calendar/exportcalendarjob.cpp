@@ -1,15 +1,15 @@
 /*
   Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
-  
+
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
-  
+
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License along
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -21,7 +21,7 @@
 
 #include <Akonadi/AgentManager>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KStandardDirs>
 #include <KTemporaryFile>
 #include <KConfigGroup>
@@ -44,6 +44,7 @@ ExportCalendarJob::~ExportCalendarJob()
 
 void ExportCalendarJob::start()
 {
+    Q_EMIT title(i18n("Start export KOrganizer settings..."));
     mArchiveDirectory = archive()->directory();
     createProgressDialog();
 
@@ -51,6 +52,7 @@ void ExportCalendarJob::start()
         backupResources();
         increaseProgressDialog();
         if (wasCanceled()) {
+            Q_EMIT jobFinished();
             return;
         }
     }
@@ -58,9 +60,11 @@ void ExportCalendarJob::start()
         backupConfig();
         increaseProgressDialog();
         if (wasCanceled()) {
+            Q_EMIT jobFinished();
             return;
         }
     }
+    Q_EMIT jobFinished();
 }
 
 
@@ -73,8 +77,31 @@ void ExportCalendarJob::backupResources()
     const Akonadi::AgentInstance::List list = manager->instances();
     foreach( const Akonadi::AgentInstance &agent, list ) {
         const QString identifier = agent.identifier();
-        //TODO look at if we have other resources
-        if (identifier.contains(QLatin1String("akonadi_ical_resource_"))) {
+        if (identifier.contains(QLatin1String("akonadi_icaldir_resource_"))) {
+            const QString archivePath = Utils::calendarPath() + identifier + QDir::separator();
+
+            KUrl url = Utils::resourcePath(agent);
+            if (!mAgentPaths.contains(url.path())) {
+                if (!url.isEmpty()) {
+                    mAgentPaths << url.path();
+                    const bool fileAdded = backupFullDirectory(url, archivePath, QLatin1String("calendar.zip"));
+                    if (fileAdded) {
+                        const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
+                        if (!errorStr.isEmpty())
+                            Q_EMIT error(errorStr);
+                        url = Utils::akonadiAgentConfigPath(identifier);
+                        if (!url.isEmpty()) {
+                            const QString filename = url.fileName();
+                            const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                            if (fileAdded)
+                                Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+                            else
+                                Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
+                        }
+                    }
+                }
+            }
+        } else if (identifier.contains(QLatin1String("akonadi_ical_resource_"))) {
             backupResourceFile(agent, Utils::calendarPath());
         }
     }
@@ -110,7 +137,7 @@ void ExportCalendarJob::backupConfig()
         delete korganizerConfig;
     }
 
-    backupConfigFile(QLatin1String("korganizer_printing.rc"));
+    backupConfigFile(QLatin1String("calendar_printing.rc"));
     backupConfigFile(QLatin1String("korgacrc"));
 
     const QString freebusyurlsStr(QLatin1String("korganizer/freebusyurls"));
@@ -124,14 +151,11 @@ void ExportCalendarJob::backupConfig()
     if (templateDirectory.exists()) {
         const bool templateDirAdded = archive()->addLocalDirectory(templateDir, Utils::dataPath() +  QLatin1String( "/korganizer/templates/" ));
         if (!templateDirAdded) {
-            //TODO fix i18n
-            Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", templateDir));
+            Q_EMIT error(i18n("\"%1\" directory cannot be added to backup file.", templateDir));
         }
-
     }
 
 
     Q_EMIT info(i18n("Config backup done."));
 }
 
-#include "exportcalendarjob.moc"

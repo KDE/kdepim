@@ -1,25 +1,20 @@
+project(messagecore)
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5300)
 
 add_subdirectory(tests)
 
 include_directories( ${Boost_INCLUDE_DIR} 
-                     ${SOPRANO_INCLUDE_DIR}
-		     ${NEPOMUK_CORE_INCLUDE_DIR}
+                     ${CMAKE_SOURCE_DIR}/pimcommon
                    )
 
 ########### next target ###############
 
-configure_file(ontology/messagetag.ontology.in ${CMAKE_CURRENT_BINARY_DIR}/messagetag.ontology)
-
-install(FILES  ontology/messagetag.trig ${CMAKE_CURRENT_BINARY_DIR}/messagetag.ontology DESTINATION ${CMAKE_INSTALL_PREFIX}/share/ontology/kde)
-
-
-
 set(messagecore_LIB_SRCS
 
-   nepomukutil/asyncnepomukresourceretriever.cpp
    misc/imagecollector.cpp
    attachment/attachmentcollector.cpp
    attachment/attachmentcompressjob.cpp
@@ -37,22 +32,16 @@ set(messagecore_LIB_SRCS
    helpers/messagehelpers.cpp
    helpers/nodehelper.cpp
    utils/stringutil.cpp
+   widgets/annotationdialog.cpp
 )
-
-if (NOT WINCE)
-  set(messagecore_LIB_SRCS
-     ${messagecore_LIB_SRCS}
-     widgets/annotationdialog.cpp
-  )
-endif ()
 
 kde4_add_kcfg_files(messagecore_LIB_SRCS
   settings/globalsettings_base.kcfgc
 )
 
 kde4_add_ui_files(messagecore_LIB_SRCS
-  attachment/attachmentpropertiesdialog.ui
-  attachment/attachmentpropertiesdialog_readonly.ui
+  attachment/ui/attachmentpropertiesdialog.ui
+  attachment/ui/attachmentpropertiesdialog_readonly.ui
 )
 
 kde4_add_library(messagecore ${LIBRARY_TYPE} ${messagecore_LIB_SRCS})
@@ -67,7 +56,7 @@ target_link_libraries(messagecore
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  ${NEPOMUK_CORE_LIBRARY}
+  pimcommon
 )
 
 target_link_libraries(messagecore LINK_INTERFACE_LIBRARIES

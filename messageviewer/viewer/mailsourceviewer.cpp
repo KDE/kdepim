@@ -33,17 +33,18 @@
 
 #include "mailsourceviewer.h"
 #include "utils/util.h"
-#include "errno.h"
 #include "findbar/findbarsourceview.h"
 #include "kpimtextedit/htmlhighlighter.h"
+#include "pimcommon/util/pimutil.h"
 #include <kiconloader.h>
 #include <KLocalizedString>
-#include <kstandardguiitem.h>
+#include <KStandardAction>
 #include <kwindowsystem.h>
 #include <kglobalsettings.h>
 #include <KTabWidget>
 #include <KFileDialog>
 #include <KMessageBox>
+#include <KAction>
 
 #include <QtCore/QRegExp>
 #include <QApplication>
@@ -113,16 +114,16 @@ void MailSourceViewTextBrowser::contextMenuEvent( QContextMenuEvent *event )
     QMenu *popup = createStandardContextMenu();
     if (popup) {
         popup->addSeparator();
-        popup->addAction( KStandardGuiItem::find().text(),this,SIGNAL(findText()) , Qt::Key_F+Qt::CTRL);
+        popup->addAction(KStandardAction::find(this, SIGNAL(findText()), this));
         //Code from KTextBrowser
         KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
                                                            : KIconTheme::TextEditor,
                                               popup->actions() );
         popup->addSeparator();
-        popup->addAction( KIcon("preferences-desktop-text-to-speech"),i18n("Speak Text"),this,SLOT(slotSpeakText()));
+        popup->addAction( KIcon(QLatin1String("preferences-desktop-text-to-speech")),i18n("Speak Text"),this,SLOT(slotSpeakText()));
 
         popup->addSeparator();
-        popup->addAction( KIcon("document-save"),i18n("Save As..."),this,SLOT(slotSaveAs()));
+        popup->addAction(KStandardAction::saveAs(this, SLOT(slotSaveAs()), this));
 
         popup->exec( event->globalPos() );
         delete popup;
@@ -131,37 +132,7 @@ void MailSourceViewTextBrowser::contextMenuEvent( QContextMenuEvent *event )
 
 void MailSourceViewTextBrowser::slotSaveAs()
 {
-    KUrl url;
-    QPointer<KFileDialog> fdlg( new KFileDialog( url, QString(), this) );
-    fdlg->setMode( KFile::File );
-    fdlg->setOperationMode( KFileDialog::Saving );
-    fdlg->setConfirmOverwrite(true);
-    if ( fdlg->exec() == QDialog::Accepted && fdlg )
-    {
-        const QString fileName = fdlg->selectedFile();
-        if ( !saveToFile( fileName ) )
-        {
-            KMessageBox::error( this,
-                                i18n( "Could not write the file %1:\n"
-                                      "\"%2\" is the detailed error description.",
-                                      fileName,
-                                      QString::fromLocal8Bit( strerror( errno ) ) ),
-                                i18n( "View Source Error" ) );
-        }
-    }
-    delete fdlg;
-
-}
-
-bool MailSourceViewTextBrowser::saveToFile( const QString &filename )
-{
-    QFile file( filename );
-    if ( !file.open( QIODevice::WriteOnly|QIODevice::Text ) )
-        return false;
-    QTextStream out(&file);
-    out.setCodec("UTF-8");
-    out << toPlainText();
-    return true;
+    PimCommon::Util::saveTextAs( toPlainText(), QString(), this );
 }
 
 void MailSourceViewTextBrowser::slotSpeakText()
@@ -177,7 +148,7 @@ void MailSourceViewTextBrowser::slotSpeakText()
 
 void MailSourceHighlighter::highlightBlock ( const QString & text ) {
     // all visible ascii except space and :
-    const QRegExp regexp( "^([\\x21-9;-\\x7E]+:\\s)" );
+    const QRegExp regexp( QLatin1String("^([\\x21-9;-\\x7E]+:\\s)") );
 
     // keep the previous state
     setCurrentBlockState( previousBlockState() );
@@ -209,7 +180,7 @@ void MailSourceHighlighter::highlightBlock ( const QString & text ) {
 
 const QString HTMLPrettyFormatter::reformat( const QString &src )
 {
-    const QRegExp cleanLeadingWhitespace( "(?:\\n)+\\w*" );
+    const QRegExp cleanLeadingWhitespace( QLatin1String("(?:\\n)+\\w*") );
     QStringList tmpSource;
     QString source( src );
     int pos = 0;
@@ -218,15 +189,15 @@ const QString HTMLPrettyFormatter::reformat( const QString &src )
     //First make sure that each tag is surrounded by newlines
     while( (pos = htmlTagRegExp.indexIn( source, pos ) ) != -1 )
     {
-        source.insert(pos, '\n');
+        source.insert(pos, QLatin1Char('\n'));
         pos += htmlTagRegExp.matchedLength() + 1;
-        source.insert(pos, '\n');
+        source.insert(pos, QLatin1Char('\n'));
         pos++;
     }
 
     // Then split the source on newlines skiping empty parts.
     // Now a line is either a tag or pure data.
-    tmpSource = source.split('\n', QString::SkipEmptyParts );
+    tmpSource = source.split(QLatin1Char('\n'), QString::SkipEmptyParts );
 
     // Then clean any leading whitespace
     for( int i = 0; i != tmpSource.length(); ++i )
@@ -252,7 +223,7 @@ const QString HTMLPrettyFormatter::reformat( const QString &src )
             }
             // start tag
             tmpSource[i].prepend( indent );
-            indent.append( "  " );
+            indent.append( QLatin1String("  ") );
             continue;
         }
         // Data
@@ -260,7 +231,7 @@ const QString HTMLPrettyFormatter::reformat( const QString &src )
     }
 
     // Finally reassemble and return :)
-    return tmpSource.join( "\n" );
+    return tmpSource.join( QLatin1String("\n") );
 }
 
 MailSourceViewer::MailSourceViewer( QWidget *parent )
@@ -335,5 +306,4 @@ void MailSourceViewer::setFixedFont()
 #endif
 }
 
-#include "mailsourceviewer.moc"
 }

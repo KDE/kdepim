@@ -28,13 +28,6 @@
 
 #include <QObject>
 
-namespace Nepomuk2 {
-class Resource;
-namespace Query {
-class Result;
-}
-}
-
 namespace MailCommon {
 
 class FilterActionDict;
@@ -46,19 +39,19 @@ class FilterActionDict;
  */
 class MAILCOMMON_EXPORT FilterManager : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Describes the list of filters.
      */
     enum FilterSet {
-      NoSet = 0x0,
-      Inbound = 0x1,
-      Outbound = 0x2,
-      Explicit = 0x4,
-      BeforeOutbound = 0x8,
-      All = Inbound|BeforeOutbound|Outbound|Explicit
+        NoSet = 0x0,
+        Inbound = 0x1,
+        Outbound = 0x2,
+        Explicit = 0x4,
+        BeforeOutbound = 0x8,
+        All = Inbound|BeforeOutbound|Outbound|Explicit
     };
 
     /**
@@ -162,18 +155,19 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
 
     QMap<QUrl, QString> tagList() const;
 
-  private Q_SLOTS:
+    bool initialized() const;
+
+private Q_SLOTS:
     void slotServerStateChanged(Akonadi::ServerManager::State);
-    void slotFinishedTagListing();
-    void slotNewTagEntries(const QList<Nepomuk2::Query::Result>&);
+    void slotFinishedTagListing(KJob *);
     void slotReadConfig();
     void updateTagList();
 
-    void resourceCreated(const Nepomuk2::Resource&,const QList<QUrl>&);
-    void resourceRemoved(const QUrl&,const QList<QUrl>&);
-    void propertyChanged(const Nepomuk2::Resource&);
+    void slotTagAdded(const Akonadi::Tag &);
+    void slotTagChanged(const Akonadi::Tag &);
+    void slotTagRemoved(const Akonadi::Tag &);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the filter list has been updated.
      */
@@ -181,7 +175,9 @@ class MAILCOMMON_EXPORT FilterManager : public QObject
 
     void tagListingFinished();
 
-  private:
+    void loadingFiltersDone();
+
+private:
     FilterManager();
 
     class Private;

@@ -22,6 +22,7 @@
 #include "configdialog.h"
 
 #include <KConfig>
+#include <KLocalizedString>
 #include <KLocale>
 
 #include <QCheckBox>
@@ -66,7 +67,7 @@ ConfigDialog::~ConfigDialog()
 
 void ConfigDialog::load()
 {
-  KConfig config( "korganizerrc" );
+  KConfig config( QLatin1String("korganizerrc") );
 
   KConfigGroup group( &config, "Hebrew Calendar Plugin" );
   mIsraelBox->setChecked(
@@ -79,7 +80,7 @@ void ConfigDialog::load()
 
 void ConfigDialog::save()
 {
-  KConfig config( "korganizerrc" );
+  KConfig config( QLatin1String("korganizerrc" ));
   KConfigGroup group( &config, "Hebrew Calendar Plugin" );
   group.writeEntry( "UseIsraelSettings", mIsraelBox->isChecked() );
   group.writeEntry( "ShowParsha", mParshaBox->isChecked() );
@@ -94,4 +95,3 @@ void ConfigDialog::slotOk()
   accept();
 }
 
-#include "configdialog.moc"

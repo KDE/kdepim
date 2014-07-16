@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -18,13 +18,15 @@
 
 #include "sieveconditionihave.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
+#include "editor/sieveeditorutil.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QWidget>
 #include <QHBoxLayout>
 #include <QDebug>
+#include <QDomNode>
 
 using namespace KSieveUi;
 SieveConditionIhave::SieveConditionIhave(QObject *parent)
@@ -45,6 +47,7 @@ QWidget *SieveConditionIhave::createParamWidget( QWidget *parent ) const
     w->setLayout(lay);
 
     KLineEdit *edit = new KLineEdit;
+    connect(edit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     edit->setClickMessage(i18n("Use \",\" to separate capabilities"));
     edit->setClearButtonShown(true);
     lay->addWidget(edit);
@@ -55,7 +58,7 @@ QWidget *SieveConditionIhave::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionIhave::code(QWidget *w) const
 {
-    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
+    const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
     const QString editValue = edit->text();
     return QString::fromLatin1("ihave %1").arg(AutoCreateScriptUtil::createList(editValue, QLatin1Char(',')));
 }
@@ -80,4 +83,33 @@ QString SieveConditionIhave::help() const
     return i18n("The \"ihave\" test provides a means for Sieve scripts to test for the existence of a given extension prior to actually using it.");
 }
 
-#include "sieveconditionihave.moc"
+bool SieveConditionIhave::setParamWidgetValue(const QDomElement &element, QWidget *w, bool, QString &error)
+{
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                const QString tagValue = e.text();
+                KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
+                edit->setText(tagValue);
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
+            } else {
+                unknownTag(tagName, error);
+                qDebug()<<" SieveConditionIhave::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+    return true;
+}
+
+QString SieveConditionIhave::href() const
+{
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
+}
+

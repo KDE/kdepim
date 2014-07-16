@@ -40,8 +40,7 @@
 
 #include <KDebug>
 #include <KProcess>
-#include <KMessageBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KWindowSystem>
 
 #include <QString>
@@ -246,7 +245,7 @@ void GnuPGProcessCommand::doStart() {
         d->finished();
     } else {
         d->ensureDialogVisible();
-        d->message( i18n("Starting %1...", d->arguments.join(" ") ) );
+        d->message( i18n("Starting %1...", d->arguments.join(QLatin1String(" ")) ) );
     }
 }
 

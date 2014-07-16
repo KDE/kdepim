@@ -41,8 +41,8 @@ namespace MailCommon {
 
 class MAILCOMMON_EXPORT Kernel : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
 
     virtual ~Kernel();
 
@@ -55,18 +55,18 @@ class MAILCOMMON_EXPORT Kernel : public QObject
      */
     void registerKernelIf( IKernel *kernelIf )
     {
-      mKernelIf = kernelIf;
+        mKernelIf = kernelIf;
     }
 
     bool kernelIsRegistered() const
     {
-      return mKernelIf != 0;
+        return mKernelIf != 0;
     }
 
     IKernel *kernelIf() const
     {
-      Q_ASSERT( mKernelIf );
-      return mKernelIf;
+        Q_ASSERT( mKernelIf );
+        return mKernelIf;
     }
 
     /**
@@ -76,13 +76,13 @@ class MAILCOMMON_EXPORT Kernel : public QObject
      */
     void registerSettingsIf( ISettings *settingsIf )
     {
-      mSettingsIf = settingsIf;
+        mSettingsIf = settingsIf;
     }
 
     ISettings *settingsIf() const
     {
-      Q_ASSERT( mSettingsIf );
-      return mSettingsIf;
+        Q_ASSERT( mSettingsIf );
+        return mSettingsIf;
     }
 
     /**
@@ -92,13 +92,13 @@ class MAILCOMMON_EXPORT Kernel : public QObject
      */
     void registerFilterIf( IFilter *filterIf )
     {
-      mFilterIf = filterIf;
+        mFilterIf = filterIf;
     }
 
     IFilter *filterIf() const
     {
-      Q_ASSERT( mFilterIf );
-      return mFilterIf;
+        Q_ASSERT( mFilterIf );
+        return mFilterIf;
     }
 
     /**
@@ -161,18 +161,18 @@ class MAILCOMMON_EXPORT Kernel : public QObject
 
     void emergencyExit( const QString &reason );
 
-  private:
+private:
     void findCreateDefaultCollection( Akonadi::SpecialMailCollections::Type );
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void createDefaultCollectionDone( KJob *job );
     void slotDefaultCollectionsChanged();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void requestConfigSync();
     void requestSystemTrayUpdate();
 
-  private:
+private:
     Kernel( QObject *parent = 0 );
     friend class KernelPrivate;
 

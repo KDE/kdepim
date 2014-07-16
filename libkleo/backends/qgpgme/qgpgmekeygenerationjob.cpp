@@ -67,4 +67,3 @@ Error QGpgMEKeyGenerationJob::start( const QString & parameters ) {
   return Error();
 }
 
-#include "qgpgmekeygenerationjob.moc"

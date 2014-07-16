@@ -27,7 +27,6 @@
 #include <KLocale>
 
 #include <QDir>
-#include <QWidget>
 
 
 BalsaImportData::BalsaImportData(ImportWizard*parent)

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -20,11 +20,12 @@
 #include "sieveincludewidget.h"
 #include "sieveforeverypartwidget.h"
 #include "sieveglobalvariablewidget.h"
+#include "sieveeditorgraphicalmodewidget.h"
 
 #include "sievewidgetpageabstract.h"
 #include "autocreatescripts/autocreatescriptdialog.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 #include <QVBoxLayout>
@@ -34,29 +35,33 @@ SieveScriptPage::SieveScriptPage(QWidget *parent)
     : QWidget(parent),
       mIncludeWidget(0),
       mForEveryPartWidget(0),
-      mGlobalVariableWidget(0)
+      mGlobalVariableWidget(0),
+      mBlockIfWidget(0)
 {
     QVBoxLayout *topLayout = new QVBoxLayout;
     mTabWidget = new SieveScriptTabWidget;
     connect(mTabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(slotCloseTab(int)));
 
-    if (AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("include"))) {
+    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("include"))) {
         mIncludeWidget = new SieveIncludeWidget;
+        connect(mIncludeWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
         mTabWidget->addTab(mIncludeWidget, i18n("Includes"));
 
         mGlobalVariableWidget = new SieveGlobalVariableWidget;
+        connect(mGlobalVariableWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
         mTabWidget->addTab(mGlobalVariableWidget, i18n("Global Variable"));
     }
 
-    if (AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("foreverypart"))) {
+    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("foreverypart"))) {
         mForEveryPartWidget = new SieveForEveryPartWidget;
+        connect(mForEveryPartWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
         mTabWidget->addTab(mForEveryPartWidget, i18n("ForEveryPart"));
     }
 
-    SieveScriptBlockWidget *blockWidget = createScriptBlock(SieveScriptBlockWidget::BlockIf);
-    mTabWidget->addTab(blockWidget, blockName(KSieveUi::SieveScriptBlockWidget::BlockIf));
+    mBlockIfWidget = createScriptBlock(SieveScriptBlockWidget::BlockIf);
+    mTabWidget->addTab(mBlockIfWidget, blockName(KSieveUi::SieveScriptBlockWidget::BlockIf));
     topLayout->addWidget(mTabWidget);
-    mTabWidget->setCurrentWidget(blockWidget);
+    mTabWidget->setCurrentWidget(mBlockIfWidget);
     setLayout(topLayout);
 }
 
@@ -64,10 +69,20 @@ SieveScriptPage::~SieveScriptPage()
 {
 }
 
+SieveScriptBlockWidget *SieveScriptPage::addScriptBlock(KSieveUi::SieveWidgetPageAbstract::PageType type)
+{
+    SieveScriptBlockWidget *blockWidget = createScriptBlock(type);
+    mTabWidget->insertTab(mTabWidget->count(), blockWidget, blockName(type));
+    mTabWidget->setCurrentWidget(blockWidget);
+    return blockWidget;
+}
+
+
 SieveScriptBlockWidget *SieveScriptPage::createScriptBlock(KSieveUi::SieveWidgetPageAbstract::PageType type)
 {
     SieveScriptBlockWidget *blockWidget = new SieveScriptBlockWidget;
     connect(blockWidget, SIGNAL(addNewBlock(QWidget*,KSieveUi::SieveWidgetPageAbstract::PageType)), SLOT(slotAddNewBlock(QWidget*,KSieveUi::SieveWidgetPageAbstract::PageType)));
+    connect(blockWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     blockWidget->setPageType(type);
     return blockWidget;
 }
@@ -137,8 +152,28 @@ void SieveScriptPage::generatedScript(QString &script, QStringList &requires)
 void SieveScriptPage::slotCloseTab(int index)
 {
     mTabWidget->removeTab(index);
+    Q_EMIT valueChanged();
+}
+
+SieveIncludeWidget *SieveScriptPage::includeWidget() const
+{
+    return mIncludeWidget;
+}
+
+SieveForEveryPartWidget *SieveScriptPage::forEveryPartWidget() const
+{
+    return mForEveryPartWidget;
+}
+
+SieveGlobalVariableWidget *SieveScriptPage::globalVariableWidget() const
+{
+    return mGlobalVariableWidget;
+}
+
+SieveScriptBlockWidget *SieveScriptPage::blockIfWidget() const
+{
+    return mBlockIfWidget;
 }
 
 }
 
-#include "sievescriptpage.moc"

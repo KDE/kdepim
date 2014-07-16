@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -18,8 +18,9 @@
 #include "scamdetectiondetailsdialog.h"
 #include "settings/globalsettings.h"
 #include "utils/autoqpointer.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <KTextEdit>
 #include <KFileDialog>
@@ -37,9 +38,8 @@ ScamDetectionDetailsDialog::ScamDetectionDetailsDialog(QWidget *parent)
     setButtons( User1|Close );
     setButtonGuiItem( User1, KStandardGuiItem::saveAs() );
     setModal( false );
-    mDetails = new KTextEdit;
+    mDetails = new PimCommon::RichTextEditorWidget;
     mDetails->setReadOnly(true);
-    mDetails->setAcceptRichText(true);
     setMainWidget(mDetails);
     connect(this, SIGNAL(user1Clicked()), SLOT(slotSaveAs()));
     readConfig();
@@ -56,7 +56,7 @@ void ScamDetectionDetailsDialog::slotSaveAs()
     MessageViewer::AutoQPointer<KFileDialog> fdlg( new KFileDialog( url, QString(), this) );
 
     fdlg->setMode( KFile::File );
-    fdlg->setSelection( "scam-detection.html" );
+    fdlg->setSelection( QLatin1String("scam-detection.html") );
     fdlg->setOperationMode( KFileDialog::Saving );
     fdlg->setConfirmOverwrite(true);
     if ( fdlg->exec() == QDialog::Accepted ) {
@@ -69,7 +69,9 @@ void ScamDetectionDetailsDialog::slotSaveAs()
             }
             QTextStream ts( &file );
             ts.setCodec("UTF-8");
-            ts << mDetails->toHtml();
+            QString htmlStr = mDetails->toHtml();
+            htmlStr.replace(QLatin1String("meta name=\"qrichtext\" content=\"1\""), QLatin1String("meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\""));
+            ts <<  htmlStr;
             file.close();
         }
     }
@@ -83,11 +85,9 @@ void ScamDetectionDetailsDialog::setDetails(const QString &details)
 void ScamDetectionDetailsDialog::readConfig()
 {
     KConfigGroup group( MessageViewer::GlobalSettings::self()->config(), "ScamDetectionDetailsDialog" );
-    const QSize size = group.readEntry( "Size", QSize() );
+    const QSize size = group.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
-    } else {
-        resize( 600, 400 );
     }
 }
 
@@ -98,4 +98,3 @@ void ScamDetectionDetailsDialog::writeConfig()
     group.sync();
 }
 
-#include "scamdetectiondetailsdialog.moc"

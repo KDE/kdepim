@@ -59,6 +59,8 @@ class KCalPrefs::Private
     CategoryConfig *mCategoryConfig;
     QHash<QString,QColor> mCategoryColors;
     QColor mDefaultCategoryColor;
+    QDateTime mDayBegins;
+
   private:
     KCalPrefs *q;
 };
@@ -327,4 +329,14 @@ QColor KCalPrefs::categoryColor( const QString &cat ) const
 bool KCalPrefs::hasCategoryColor( const QString &cat ) const
 {
   return d->mCategoryColors[ cat ].isValid();
+}
+
+void KCalPrefs::setDayBegins( const QDateTime &dateTime )
+{
+  d->mDayBegins = dateTime;
+}
+
+QDateTime KCalPrefs::dayBegins() const
+{
+  return d->mDayBegins;
 }

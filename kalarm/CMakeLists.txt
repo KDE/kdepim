@@ -3,6 +3,11 @@ project(kalarm)
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5950)
 add_definitions(-DQT_STRICT_ITERATORS)
 
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
+
+set(CMAKE_AUTOMOC_RELAXED_MODE ON)
+
 option(KALARM_USE_AKONADI "Build to use Akonadi" ON)
 
 # Kalarm from kdepim master needs kdepimlibs 4.7
@@ -20,11 +25,25 @@ endif()
 
 if(KALARM_USE_AKONADI)
     add_definitions(-DUSE_AKONADI)
+    if (NOT CMAKE_VERSION VERSION_LESS 2.8.12 AND (CMAKE_VERSION VERSION_LESS 2.8.12.1
+            OR CMAKE_VERSION VERSION_LESS 2.8.13 # Temporary measure because build.kde.org uses a datestamped CMake version
+            ))
+        # http://public.kitware.com/Bug/view.php?id=14535
+        set(CMAKE_AUTOMOC_MOC_OPTIONS -DUSE_AKONADI)
+    endif()
 else()
     add_definitions(-DUSE_KRESOURCES)
-    add_definitions(-DWANT_DEPRECATED_KCAL_API)
-    add_definitions(-DWANT_DEPRECATED_KABC_API)
-    add_definitions(-DWANT_DEPRECATED_KRESOURCE_API)
+    add_definitions(
+        -DKRESOURCES_DEPRECATED=
+        -DKABC_DEPRECATED=
+        -DKCAL_DEPRECATED=
+    )
+    # This one won't be needed when CMake 2.8.13 is depended on.
+    add_definitions(
+        -DKRESOURCES_DEPRECATED_EXPORT=KRESOURCES_EXPORT
+        -DKABC_DEPRECATED_EXPORT=KABC_EXPORT
+        -DKCAL_DEPRECATED_EXPORT=KCAL_EXPORT
+    )
 endif()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
@@ -139,6 +158,7 @@ set(kalarm_bin_SRCS ${kalarm_bin_SRCS}
     akonadimodel.cpp
     akonadiresourcecreator.cpp
     collectionmodel.cpp
+    collectionsearch.cpp
     itemlistmodel.cpp
     calendarmigrator.cpp
     eventid.cpp

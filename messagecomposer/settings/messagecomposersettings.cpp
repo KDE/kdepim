@@ -31,34 +31,33 @@ MessageComposerSettings *MessageComposerSettings::mSelf = 0;
 
 MessageComposerSettings *MessageComposerSettings::self()
 {
-  if ( !mSelf ) {
-    mSelf = new MessageComposerSettings();
-    mSelf->readConfig();
-  }
+    if ( !mSelf ) {
+        mSelf = new MessageComposerSettings();
+        mSelf->readConfig();
+    }
 
-  return mSelf;
+    return mSelf;
 }
 
 MessageComposerSettings::MessageComposerSettings()
 {
-  mConfigSyncTimer = new QTimer( this );
-  mConfigSyncTimer->setSingleShot( true );
-  connect( mConfigSyncTimer, SIGNAL(timeout()), this, SLOT(slotSyncNow()) );
+    mConfigSyncTimer = new QTimer( this );
+    mConfigSyncTimer->setSingleShot( true );
+    connect( mConfigSyncTimer, SIGNAL(timeout()), this, SLOT(slotSyncNow()) );
 }
 
 void MessageComposerSettings::requestSync()
 {
- if ( !mConfigSyncTimer->isActive() )
-   mConfigSyncTimer->start( 0 );
+    if ( !mConfigSyncTimer->isActive() )
+        mConfigSyncTimer->start( 0 );
 }
 
 void MessageComposerSettings::slotSyncNow()
 {
-  config()->sync();
+    config()->sync();
 }
 
 MessageComposerSettings::~MessageComposerSettings()
 {
 }
 
-#include "messagecomposersettings.moc"

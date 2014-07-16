@@ -30,7 +30,6 @@
 
 class Backend;
 class BilboMedia;
-class QEventLoop;
 /**
 Synchronous uploader.
 This class has just one function, that will upload a media object in synchronous way. (KBlog upload media asynchronous)

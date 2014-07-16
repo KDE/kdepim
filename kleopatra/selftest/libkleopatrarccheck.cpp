@@ -40,10 +40,8 @@
 
 #include <kleo/checksumdefinition.h>
 
-#include <KLocale>
-#include <KMessageBox>
+#include <KLocalizedString>
 
-#include <QSettings>
 
 #include <boost/shared_ptr.hpp>
 
@@ -77,7 +75,7 @@ namespace {
             m_explaination
                 = i18nc( "@info",
                          "<para>Kleopatra detected the following errors in the libkleopatrarc configuration:</para>"
-                         "%1", "<ol><li>" + errors.join( "</li><li>" ) + "</li></ol>" );
+                         "%1", QLatin1String("<ol><li>") + errors.join( QLatin1String("</li><li>") ) + QLatin1String("</li></ol>") );
         }
 
         ///* reimp */ bool canFixAutomatically() const { return false; }

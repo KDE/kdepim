@@ -32,67 +32,67 @@ using namespace MailCommon;
 SnippetVariableDialog::SnippetVariableDialog( const QString &variableName,
                                               QMap<QString, QString> *variables,
                                               QWidget *parent )
-  : KDialog( parent ), mVariableName( variableName ), mVariables( variables )
+    : KDialog( parent ), mVariableName( variableName ), mVariables( variables )
 {
-  setWindowTitle( i18n( "Enter Values for Variables" ) );
-  setButtons( Ok | Cancel );
+    setWindowTitle( i18n( "Enter Values for Variables" ) );
+    setButtons( Ok | Cancel );
 
-  QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
+    QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
 
-  QLabel *label = new QLabel;
-  label->setText( i18n( "Enter the replacement values for '%1':", variableName ) );
-  layout->addWidget( label );
+    QLabel *label = new QLabel;
+    label->setText( i18n( "Enter the replacement values for '%1':", variableName ) );
+    layout->addWidget( label );
 
-  mVariableValueText = new KTextEdit;
-  mVariableValueText->setAcceptRichText(false);
-  layout->addWidget( mVariableValueText );
+    mVariableValueText = new KTextEdit;
+    mVariableValueText->setAcceptRichText(false);
+    layout->addWidget( mVariableValueText );
 
-  mSaveVariable = new QCheckBox;
-  mSaveVariable->setChecked( false );
-  mSaveVariable->setText( i18n( "Make value &default" ) );
-  mSaveVariable->setToolTip(
-    i18nc( "@info:tooltip",
-           "Enable this to save the value entered to the right "
-           "as the default value for this variable" ) );
-  mSaveVariable->setWhatsThis(
-    i18nc( "@info:whatsthis",
-           "If you enable this option, the value entered to the right will be saved. "
-           "If you use the same variable later, even in another snippet, the value entered "
-           "to the right will be the default value for that variable." ) );
-  layout->addWidget( mSaveVariable );
+    mSaveVariable = new QCheckBox;
+    mSaveVariable->setChecked( false );
+    mSaveVariable->setText( i18n( "Make value &default" ) );
+    mSaveVariable->setToolTip(
+                i18nc( "@info:tooltip",
+                       "Enable this to save the value entered to the right "
+                       "as the default value for this variable" ) );
+    mSaveVariable->setWhatsThis(
+                i18nc( "@info:whatsthis",
+                       "If you enable this option, the value entered to the right will be saved. "
+                       "If you use the same variable later, even in another snippet, the value entered "
+                       "to the right will be the default value for that variable." ) );
+    layout->addWidget( mSaveVariable );
 
-  if ( mVariables->contains( variableName ) ) {
-    mSaveVariable->setChecked( true );
-    mVariableValueText->setText( mVariables->value( variableName ) );
-  }
+    if ( mVariables->contains( variableName ) ) {
+        mSaveVariable->setChecked( true );
+        mVariableValueText->setText( mVariables->value( variableName ) );
+    }
 
-  mVariableValueText->setFocus();
+    mVariableValueText->setFocus();
 }
 
 QString SnippetVariableDialog::variableValue() const
 {
-  return mVariableValueText->toPlainText();
+    return mVariableValueText->toPlainText();
 }
 
 bool SnippetVariableDialog::saveVariableIsChecked() const
 {
-  return mSaveVariable->isChecked();
+    return mSaveVariable->isChecked();
 }
 
 void SnippetVariableDialog::slotButtonClicked( int button )
 {
-  if ( button == KDialog::Ok ) {
-    if ( mSaveVariable->isChecked() ) {
-      mVariables->insert( mVariableName, mVariableValueText->toPlainText() );
-    } else {
-      mVariables->remove( mVariableName );
+    if ( button == KDialog::Ok ) {
+        if ( mSaveVariable->isChecked() ) {
+            mVariables->insert( mVariableName, mVariableValueText->toPlainText() );
+        } else {
+            mVariables->remove( mVariableName );
+        }
+
+        accept();
+        return;
     }
 
-    accept();
-    return;
-  }
-
-  KDialog::slotButtonClicked( button );
+    KDialog::slotButtonClicked( button );
 }
 
-#include "snippetvariabledialog_p.moc"
+#include "moc_snippetvariabledialog_p.cpp"

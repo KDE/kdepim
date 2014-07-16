@@ -93,4 +93,4 @@ QWidget* KWidgetLister::widget( int index ) const
   return d->mWidgets.at( index );
 }
 
-#include "kwidgetlister.moc"
+#include "moc_kwidgetlister.cpp"

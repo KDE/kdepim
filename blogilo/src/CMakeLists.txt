@@ -1,5 +1,8 @@
 
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_SOURCE_DIR}/libkdepim)
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR} 
+                     ${CMAKE_CURRENT_BINARY_DIR}  
+                     ${CMAKE_SOURCE_DIR}/libkdepim
+                     ${CMAKE_SOURCE_DIR}/pimcommon)
 
 set(blogilo_SRCS
  main.cpp
@@ -21,12 +24,16 @@ set(blogilo_SRCS
  uploadmediadialog.cpp
  syncuploader.cpp
  poststabwidget.cpp
+ configuredialog.cpp
  composer/htmleditor.cpp
  composer/stylegetter.cpp
 
  composer/blogilocomposerview.cpp
  composer/blogilocomposereditor.cpp
  composer/bilbobrowser.cpp
+ composer/blogilocomposerwidget.cpp
+ storageservice/storageservicemanagersettingsjob.cpp
+ configurestorageservicewidget.cpp
 )
 
 
@@ -48,7 +55,7 @@ kde4_add_kcfg_files( blogilo_SRCS settings.kcfgc)
 kde4_add_app_icon(blogilo_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/../icons/hi*-app-blogilo.png")
 kde4_add_executable( blogilo ${blogilo_SRCS})
 
-target_link_libraries( blogilo kdepim ${KDE4_KDEUI_LIBS} ${QT_QTSQL_LIBRARY} ${KDE4_KTEXTEDITOR_LIBS} ${QT_QTWEBKIT_LIBRARY} ${KDE4_KDEWEBKIT_LIBRARY} ${KDEPIMLIBS_KBLOG_LIBS} composereditorng )
+target_link_libraries( blogilo kdepim ${KDE4_KDEUI_LIBS} ${QT_QTSQL_LIBRARY} ${KDE4_KTEXTEDITOR_LIBS} ${QT_QTWEBKIT_LIBRARY} ${KDE4_KDEWEBKIT_LIBRARY} ${KDEPIMLIBS_KBLOG_LIBS} composereditorng  pimcommon)
 
 
 install( TARGETS blogilo ${INSTALL_TARGETS_DEFAULT_ARGS} )

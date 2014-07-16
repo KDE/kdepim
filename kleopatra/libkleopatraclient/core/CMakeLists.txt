@@ -15,6 +15,9 @@ else()
   set(_kleopatraclientcore_extra_SRCS)
 endif()
 
+set_source_files_properties(command.cpp PROPERTIES SKIP_AUTOMOC TRUE)
+qt4_generate_moc(command_p.h "${CMAKE_CURRENT_BINARY_DIR}/moc_command_p.cpp")
+qt4_generate_moc(command.h "${CMAKE_CURRENT_BINARY_DIR}/moc_command.cpp")
 kde4_add_library(kleopatraclientcore ${LIBRARY_TYPE}
   ${_kleopatraclientcore_extra_SRCS}
   initialization.cpp
@@ -22,6 +25,8 @@ kde4_add_library(kleopatraclientcore ${LIBRARY_TYPE}
   selectcertificatecommand.cpp
   signencryptfilescommand.cpp
   decryptverifyfilescommand.cpp
+  "${CMAKE_CURRENT_BINARY_DIR}/moc_command_p.cpp"
+  "${CMAKE_CURRENT_BINARY_DIR}/moc_command.cpp"
 )
 
 set_target_properties(kleopatraclientcore PROPERTIES
@@ -29,7 +34,7 @@ set_target_properties(kleopatraclientcore PROPERTIES
   SOVERSION ${libkleopatraclient_soversion}
 )
 
-if(WIN32 AND NOT WINCE)
+if(WIN32)
   if(ASSUAN2_FOUND)
     target_link_libraries(kleopatraclientcore
       ${QT_QTCORE_LIBRARY}
@@ -41,20 +46,6 @@ if(WIN32 AND NOT WINCE)
       ${QT_QTCORE_LIBRARY}
       ${ASSUAN_VANILLA_LIBRARIES}
       ws2_32
-    )
-  endif()
-elseif(WINCE)
-  if(ASSUAN2_FOUND)
-    target_link_libraries(kleopatraclientcore
-      ${QT_QTCORE_LIBRARY}
-      ${ASSUAN2_LIBRARIES}
-      ws2
-    )
-  else()
-    target_link_libraries(kleopatraclientcore
-      ${QT_QTCORE_LIBRARY}
-      ${ASSUAN_VANILLA_LIBRARIES}
-      ws2
     )
   endif()
 else()

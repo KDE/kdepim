@@ -29,11 +29,7 @@
 #include "category.h"
 #include "ui_toolboxbase.h"
 
-class KStatusBar;
-class QButtonGroup;
 class BilboPost;
-class BilboBlog;
-class CatCheckBox;
 /**
  @author Mehrdad Momeny <mehrdad.momeny@gmail.com>
  @author Golnaz Nilieh <g382nilieh@gmail.com>
@@ -86,6 +82,11 @@ private:
     enum LocalEntryType {
         LocalEntryID = QTreeWidgetItem::UserType +1
     };
+
+    enum BlogEntryType {
+        BlogEntryID = QListWidgetItem::UserType +1
+    };
+
 
     QStringList selectedCategoriesTitle() const;
     QList<Category> selectedCategories() const;

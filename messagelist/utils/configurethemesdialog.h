@@ -44,27 +44,27 @@ namespace Utils
 
 class MESSAGELIST_EXPORT ConfigureThemesDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  explicit ConfigureThemesDialog( QWidget *parent = 0 );
-  ~ConfigureThemesDialog();
+    explicit ConfigureThemesDialog( QWidget *parent = 0 );
+    ~ConfigureThemesDialog();
 
-  void selectTheme( const QString &themeId );
+    void selectTheme( const QString &themeId );
 
 private:
-  Q_PRIVATE_SLOT(d, void themeListItemClicked(QListWidgetItem*))
-  Q_PRIVATE_SLOT(d, void newThemeButtonClicked())
-  Q_PRIVATE_SLOT(d, void cloneThemeButtonClicked())
-  Q_PRIVATE_SLOT(d, void deleteThemeButtonClicked())
-  Q_PRIVATE_SLOT(d, void editedThemeNameChanged())
-  Q_PRIVATE_SLOT(d, void okButtonClicked())
-  Q_PRIVATE_SLOT(d, void importThemeButtonClicked())
-  Q_PRIVATE_SLOT(d, void exportThemeButtonClicked())
+    Q_PRIVATE_SLOT(d, void themeListItemClicked(QListWidgetItem*))
+    Q_PRIVATE_SLOT(d, void newThemeButtonClicked())
+    Q_PRIVATE_SLOT(d, void cloneThemeButtonClicked())
+    Q_PRIVATE_SLOT(d, void deleteThemeButtonClicked())
+    Q_PRIVATE_SLOT(d, void editedThemeNameChanged())
+    Q_PRIVATE_SLOT(d, void okButtonClicked())
+    Q_PRIVATE_SLOT(d, void importThemeButtonClicked())
+    Q_PRIVATE_SLOT(d, void exportThemeButtonClicked())
 
 
-  class Private;
-  Private * const d;
+    class Private;
+    Private * const d;
 };
 
 } // namespace Utils

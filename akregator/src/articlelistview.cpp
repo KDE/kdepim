@@ -35,16 +35,15 @@
 #include <KDateTime>
 #include <KGlobal>
 #include <KIcon>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KUrl>
 #include <KMenu>
 #include <KColorScheme>
+#include <KLocale>
 
 #include <QApplication>
 #include <QContextMenuEvent>
 #include <QHeaderView>
-#include <QKeyEvent>
-#include <QList>
 #include <QMenu>
 #include <QPaintEvent>
 #include <QPalette>
@@ -373,7 +372,7 @@ ArticleListView::ArticleListView( QWidget* parent )
     setMinimumSize( 250, 150 );
     setWhatsThis( i18n("<h2>Article list</h2>"
         "Here you can browse articles from the currently selected feed. "
-        "You can also manage articles, as marking them as persistent (\"Keep Article\") or delete them, using the right mouse button menu."
+        "You can also manage articles, as marking them as persistent (\"Mark as Important\") or delete them, using the right mouse button menu. "
         "To view the web page of the article, you can open the article internally in a tab or in an external browser window."));
 
     //connect exactly once
@@ -598,4 +597,3 @@ void ArticleListView::setFilters( const std::vector<shared_ptr<const Filters::Ab
         m_proxy->setFilters( matchers );
 }
 
-#include "articlelistview.moc"

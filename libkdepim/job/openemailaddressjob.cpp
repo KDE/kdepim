@@ -34,57 +34,57 @@ using namespace KPIM;
 
 class OpenEmailAddressJob::Private
 {
-  public:
+public:
     Private( OpenEmailAddressJob *qq, const QString &emailString, QWidget *parentWidget )
-      : q( qq ), mCompleteAddress( emailString ), mParentWidget( parentWidget )
+        : q( qq ), mCompleteAddress( emailString ), mParentWidget( parentWidget )
     {
-      KABC::Addressee::parseEmailAddress( emailString, mName, mEmail );
+        KABC::Addressee::parseEmailAddress( emailString, mName, mEmail );
     }
 
     void slotSearchDone( KJob *job )
     {
-      if ( job->error() ) {
-        q->setError( job->error() );
-        q->setErrorText( job->errorText() );
-        q->emitResult();
-        return;
-      }
+        if ( job->error() ) {
+            q->setError( job->error() );
+            q->setErrorText( job->errorText() );
+            q->emitResult();
+            return;
+        }
 
-      const Akonadi::ContactSearchJob *searchJob = qobject_cast<Akonadi::ContactSearchJob*>( job );
+        const Akonadi::ContactSearchJob *searchJob = qobject_cast<Akonadi::ContactSearchJob*>( job );
 
-      const Akonadi::Item::List contacts = searchJob->items();
-      if ( !contacts.isEmpty() ) {
-        // open the editor with the matching item
-        Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::EditMode, mParentWidget );
-        dlg.setContact( contacts.first() );
-        dlg.exec();
+        const Akonadi::Item::List contacts = searchJob->items();
+        if ( !contacts.isEmpty() ) {
+            // open the editor with the matching item
+            Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::EditMode, mParentWidget );
+            dlg.setContact( contacts.first() );
+            dlg.exec();
 
-        q->emitResult();
-        return;
-      }
+            q->emitResult();
+            return;
+        }
 
-      AddEmailAddressJob *createJob = new AddEmailAddressJob( mCompleteAddress, mParentWidget, q );
-      q->connect( createJob, SIGNAL(result(KJob*)), SLOT(slotAddContactDone(KJob*)) );
-      createJob->start();
+        AddEmailAddressJob *createJob = new AddEmailAddressJob( mCompleteAddress, mParentWidget, q );
+        q->connect( createJob, SIGNAL(result(KJob*)), SLOT(slotAddContactDone(KJob*)) );
+        createJob->start();
     }
 
     void slotAddContactDone( KJob *job )
     {
-      if ( job->error() ) {
-        q->setError( job->error() );
-        q->setErrorText( job->errorText() );
+        if ( job->error() ) {
+            q->setError( job->error() );
+            q->setErrorText( job->errorText() );
+            q->emitResult();
+            return;
+        }
+
+        const AddEmailAddressJob *createJob = qobject_cast<AddEmailAddressJob*>( job );
+
+        // open the editor with the matching item
+        Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::EditMode, mParentWidget );
+        dlg.setContact( createJob->contact() );
+        dlg.exec();
+
         q->emitResult();
-        return;
-      }
-
-      const AddEmailAddressJob *createJob = qobject_cast<AddEmailAddressJob*>( job );
-
-      // open the editor with the matching item
-      Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::EditMode, mParentWidget );
-      dlg.setContact( createJob->contact() );
-      dlg.exec();
-
-      q->emitResult();
     }
 
     OpenEmailAddressJob *q;
@@ -95,23 +95,23 @@ class OpenEmailAddressJob::Private
 };
 
 OpenEmailAddressJob::OpenEmailAddressJob( const QString &email, QWidget *parentWidget, QObject *parent )
-  : KJob( parent ), d( new Private( this, email, parentWidget ) )
+    : KJob( parent ), d( new Private( this, email, parentWidget ) )
 {
 }
 
 OpenEmailAddressJob::~OpenEmailAddressJob()
 {
-  delete d;
+    delete d;
 }
 
 void OpenEmailAddressJob::start()
 {
-  // first check whether a contact with the same email exists already
-  Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob( this );
-  searchJob->setLimit( 1 );
-  searchJob->setQuery( Akonadi::ContactSearchJob::Email, d->mEmail,
-                       Akonadi::ContactSearchJob::ExactMatch );
-  connect( searchJob, SIGNAL(result(KJob*)), SLOT(slotSearchDone(KJob*)) );
+    // first check whether a contact with the same email exists already
+    Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob( this );
+    searchJob->setLimit( 1 );
+    searchJob->setQuery( Akonadi::ContactSearchJob::Email, d->mEmail.toLower(),
+                         Akonadi::ContactSearchJob::ExactMatch );
+    connect( searchJob, SIGNAL(result(KJob*)), SLOT(slotSearchDone(KJob*)) );
 }
 
-#include "openemailaddressjob.moc"
+#include "moc_openemailaddressjob.cpp"

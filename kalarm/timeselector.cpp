@@ -22,14 +22,13 @@
 
 #include "checkbox.h"
 #include "combobox.h"
-#include "timeselector.moc"
+#include "timeselector.h"
 
 #include <klocale.h>
 #include <kdialog.h>
 #include <khbox.h>
 #include <kdebug.h>
 
-#include <QVBoxLayout>
 #include <QHBoxLayout>
 
 #ifdef USE_AKONADI

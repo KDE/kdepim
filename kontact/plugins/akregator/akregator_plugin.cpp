@@ -31,7 +31,7 @@
 
 #include <KAction>
 #include <KActionCollection>
-#include <KLocale>
+#include <KLocalizedString>
 
 EXPORT_KONTACT_PLUGIN( AkregatorPlugin, akregator )
 
@@ -157,4 +157,3 @@ int AkregatorUniqueAppHandler::newInstance()
   return KontactInterface::UniqueAppHandler::newInstance();
 }
 
-#include "akregator_plugin.moc"

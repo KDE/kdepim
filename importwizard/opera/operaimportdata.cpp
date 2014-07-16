@@ -26,7 +26,6 @@
 #include <KLocale>
 
 #include <QDir>
-#include <QWidget>
 
 
 OperaImportData::OperaImportData(ImportWizard*parent)

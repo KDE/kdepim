@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -24,9 +24,9 @@ SieveActionAbstractEditHeader::SieveActionAbstractEditHeader(const QString &name
 {
 }
 
-QStringList SieveActionAbstractEditHeader::needRequires(QWidget *parent) const
+QStringList SieveActionAbstractEditHeader::needRequires(QWidget *) const
 {
-    return QStringList() <<QLatin1String("editheader");
+    return QStringList() << QLatin1String("editheader");
 }
 
 bool SieveActionAbstractEditHeader::needCheckIfServerHasCapability() const
@@ -39,4 +39,3 @@ QString SieveActionAbstractEditHeader::serverNeedsCapability() const
     return QLatin1String("editheader");
 }
 
-#include "sieveactionabstracteditheader.moc"

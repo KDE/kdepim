@@ -22,7 +22,6 @@
 
 #include "knode.h"
 #include "knmainwidget.h"
-#include "knapplication.moc"
 
 
 int KNApplication::newInstance()

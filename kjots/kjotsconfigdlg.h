@@ -25,7 +25,9 @@
 
 class confPageMisc : public QWidget, public Ui::confPageMisc
 {
-public:
+  Q_OBJECT
+
+  public:
     explicit confPageMisc( QWidget *parent ) : QWidget( parent ) {
         setupUi( this );
     }

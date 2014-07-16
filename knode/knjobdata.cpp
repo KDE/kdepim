@@ -158,9 +158,9 @@ void KNJobData::createProgressItem()
     if ( acc )
       msg = acc->name();
   }
-  bool encr = false;
+  KPIM::ProgressItem::CryptoStatus encr = KPIM::ProgressItem::Unencrypted;
   if ( acc && acc->encryption() != KNServerInfo::None )
-    encr = true;
+    encr = KPIM::ProgressItem::Encrypted;
   mProgressItem = KPIM::ProgressManager::createProgressItem( 0,
       KPIM::ProgressManager::getUniqueID(), msg, i18n( "Waiting..." ), true, encr );
 }
@@ -192,7 +192,7 @@ KUrl KNJobData::baseUrl() const
   url.setHost( account()->server() );
   url.setPort( account()->port() );
   if ( account()->needsLogon() ) {
-    url.setUser( account()->user() );
+    url.setUserName( account()->user() );
     url.setPass( account()->pass() );
   }
   return url;
@@ -204,4 +204,3 @@ void KNJobData::setError( int err, const QString & errMsg )
   mErrorString = errMsg;
 }
 
-#include "knjobdata.moc"

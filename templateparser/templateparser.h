@@ -31,16 +31,16 @@
 #include <QObject>
 
 namespace MessageViewer {
-  class ObjectTreeParser;
+class ObjectTreeParser;
 }
 
 namespace KPIMIdentities {
-  class IdentityManager;
+class IdentityManager;
 }
 
 namespace MessageCore {
-  class AttachmentCollector;
-  class ImageCollector;
+class AttachmentCollector;
+class ImageCollector;
 }
 
 namespace TemplateParser {
@@ -146,28 +146,28 @@ namespace TemplateParser {
  */
 class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     enum Mode {
-      NewMessage,
-      Reply,
-      ReplyAll,
-      Forward
+        NewMessage,
+        Reply,
+        ReplyAll,
+        Forward
     };
 
     enum AllowSelection {
-      SelectionAllowed,
-      NoSelectionAllowed
+        SelectionAllowed,
+        NoSelectionAllowed
     };
 
     enum Quotes {
-      ReplyAsOriginalMessage,
-      ReplyAsPlain,
-      ReplyAsHtml
+        ReplyAsOriginalMessage,
+        ReplyAsPlain,
+        ReplyAsHtml
     };
 
-  public:
+public:
     explicit TemplateParser( const KMime::Message::Ptr &amsg, const Mode amode );
     ~TemplateParser();
 
@@ -211,7 +211,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     virtual void process( const KMime::Message::Ptr &aorig_msg,
                           const Akonadi::Collection &afolder = Akonadi::Collection() );
     virtual void process( const QString &tmplName, const KMime::Message::Ptr &aorig_msg,
-                         const Akonadi::Collection &afolder = Akonadi::Collection() );
+                          const Akonadi::Collection &afolder = Akonadi::Collection() );
     virtual void processWithIdentity( uint uoid, const KMime::Message::Ptr &aorig_msg,
                                       const Akonadi::Collection &afolder = Akonadi::Collection() );
 
@@ -233,7 +233,8 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     virtual QString getFName( const QString &str );
     virtual QString getLName( const QString &str );
 
-  protected:
+    bool cursorPositionWasSet() const;
+protected:
     Mode mMode;
     Akonadi::Collection mFolder;          //Used to find a template
     uint mIdentity;
@@ -253,6 +254,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     MessageViewer::EmptySource *mEmptySource;
     QString mHeadElement;
     Quotes mQuotes;
+    bool mForceCursorPosition;
 
     /**
      * Called by processWithTemplate(). This adds the completely processed body to
@@ -277,7 +279,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
 
     int parseQuotes( const QString &prefix, const QString &str, QString &quote ) const;
 
-  private:
+private:
     /**
      * Return the text signature used the by current identity.
      */
@@ -391,7 +393,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     /**
      * Make a HTML content valid by adding missing html/head/body tag.
      */
-    QString makeValidHtml( QString &body );
+    void makeValidHtml( QString &body );
 };
 
 }

@@ -80,13 +80,11 @@ QML.Rectangle {
 
         QML.MouseArea {
           anchors.fill: parent
-          onClicked: { snippetDelegate.QML.ListView.view.currentIndex = model.index; }
+          onClicked: snippetDelegate.QML.ListView.view.currentIndex = model.index
         }
       }
 
-      onCurrentIndexChanged : {
-        snippetsEditor.setRowSelected( currentIndex )
-      }
+      onCurrentIndexChanged: snippetsEditor.setRowSelected( currentIndex )
     }
   }
 

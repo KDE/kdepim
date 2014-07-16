@@ -26,46 +26,43 @@
 #define KMail_PART_H
 
 #include "kmail_export.h"
-#include <kparts/browserextension.h>
-#include <kparts/event.h>
 #include <kparts/part.h>
 #include <akonadi/collection.h>
 
 #include <QWidget>
 #include <QPixmap>
 
-class KMailStatusBarExtension;
 class KMMainWidget;
-namespace KPIM { class StatusbarProgressWidget; }
-using KPIM::StatusbarProgressWidget;
 
 class KMailPart: public KParts::ReadOnlyPart
 {
-  Q_OBJECT
-  Q_CLASSINFO("D-Bus Interface", "org.kde.kmail.kmailpart")
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.kmail.kmailpart")
 
-  public:
+public:
     KMailPart(QWidget *parentWidget, QObject *parent, const QVariantList &);
     virtual ~KMailPart();
 
     QWidget* parentWidget() const;
 
-  public slots:
+public Q_SLOTS:
     Q_SCRIPTABLE void save() { /*TODO*/ }
     Q_SCRIPTABLE void exit();
     void updateEditMenu() {}
     void slotCollectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &attributeNames );
 
-  void slotFolderChanged( const Akonadi::Collection& );
-  signals:
+    void slotFolderChanged( const Akonadi::Collection& );
+
+    void updateQuickSearchText();
+signals:
     void textChanged( const QString& );
     void iconChanged( const QPixmap& );
 
-  protected:
+protected:
     virtual bool openFile();
     virtual void guiActivateEvent(KParts::GUIActivateEvent *e);
 
-  private:
+private:
     KMMainWidget *mainWidget;
     QWidget *mParentWidget;
 };

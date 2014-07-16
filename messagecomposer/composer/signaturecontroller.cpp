@@ -33,136 +33,135 @@
 using namespace MessageComposer;
 
 SignatureController::SignatureController ( QObject* parent ) :
-  QObject ( parent ),
-  m_editor( 0 ),
-  m_identityCombo( 0 ),
-  m_currentIdentityId( 0 )
+    QObject ( parent ),
+    m_editor( 0 ),
+    m_identityCombo( 0 ),
+    m_currentIdentityId( 0 )
 {
 }
 
 void SignatureController::setEditor ( MessageComposer::KMeditor* editor )
 {
-  m_editor = editor;
+    m_editor = editor;
 }
 
 void SignatureController::setIdentityCombo ( KPIMIdentities::IdentityCombo* combo )
 {
-  m_identityCombo = combo;
-  m_currentIdentityId = combo->currentIdentity();
-  resume();
+    m_identityCombo = combo;
+    m_currentIdentityId = combo->currentIdentity();
+    resume();
 }
 
 void SignatureController::identityChanged ( uint id )
 {
-  Q_ASSERT( m_identityCombo );
-  const KPIMIdentities::Identity &newIdentity = m_identityCombo->identityManager()->identityForUoid( id );
-  if ( newIdentity.isNull() || !m_editor )
-    return;
+    Q_ASSERT( m_identityCombo );
+    const KPIMIdentities::Identity &newIdentity = m_identityCombo->identityManager()->identityForUoid( id );
+    if ( newIdentity.isNull() || !m_editor )
+        return;
 
-  const KPIMIdentities::Identity &oldIdentity = m_identityCombo->identityManager()->identityForUoidOrDefault( m_currentIdentityId );
+    const KPIMIdentities::Identity &oldIdentity = m_identityCombo->identityManager()->identityForUoidOrDefault( m_currentIdentityId );
 
-  const KPIMIdentities::Signature oldSig = const_cast<KPIMIdentities::Identity&>( oldIdentity ).signature();
-  const KPIMIdentities::Signature newSig = const_cast<KPIMIdentities::Identity&>( newIdentity ).signature();
+    const KPIMIdentities::Signature oldSig = const_cast<KPIMIdentities::Identity&>( oldIdentity ).signature();
+    const KPIMIdentities::Signature newSig = const_cast<KPIMIdentities::Identity&>( newIdentity ).signature();
 
-  const bool replaced = m_editor->replaceSignature( oldSig, newSig );
+    const bool replaced = m_editor->replaceSignature( oldSig, newSig );
 
-  // Just append the signature if there was no old signature
-  if ( !replaced && oldSig.rawText().isEmpty() )
-    applySignature( newSig );
+    // Just append the signature if there was no old signature
+    if ( !replaced && oldSig.rawText().isEmpty() )
+        applySignature( newSig );
 
-  m_currentIdentityId = id;
+    m_currentIdentityId = id;
 }
 
 void SignatureController::suspend()
 {
-  if ( m_identityCombo )
-    disconnect( m_identityCombo, SIGNAL(identityChanged(uint)), this, SLOT(identityChanged(uint)) );
+    if ( m_identityCombo )
+        disconnect( m_identityCombo, SIGNAL(identityChanged(uint)), this, SLOT(identityChanged(uint)) );
 }
 
 void SignatureController::resume()
 {
-  if ( m_identityCombo )
-    connect( m_identityCombo, SIGNAL(identityChanged(uint)), this, SLOT(identityChanged(uint)) );
+    if ( m_identityCombo )
+        connect( m_identityCombo, SIGNAL(identityChanged(uint)), this, SLOT(identityChanged(uint)) );
 }
 
 void SignatureController::appendSignature()
 {
-  insertSignatureHelper( KPIMIdentities::Signature::End );
+    insertSignatureHelper( KPIMIdentities::Signature::End );
 }
 
 void SignatureController::prependSignature()
 {
-  insertSignatureHelper( KPIMIdentities::Signature::Start );
+    insertSignatureHelper( KPIMIdentities::Signature::Start );
 }
 
 void SignatureController::insertSignatureAtCursor()
 {
-  insertSignatureHelper( KPIMIdentities::Signature::AtCursor );
+    insertSignatureHelper( KPIMIdentities::Signature::AtCursor );
 }
 
 void SignatureController::cleanSpace()
 {
-  if ( !m_editor || !m_identityCombo )
-    return;
-  const KPIMIdentities::Identity &ident = m_identityCombo->identityManager()->identityForUoidOrDefault( m_identityCombo->currentIdentity() );
-  const KPIMIdentities::Signature signature = const_cast<KPIMIdentities::Identity&>( ident ).signature();
-  m_editor->cleanWhitespace( signature );
+    if ( !m_editor || !m_identityCombo )
+        return;
+    const KPIMIdentities::Identity &ident = m_identityCombo->identityManager()->identityForUoidOrDefault( m_identityCombo->currentIdentity() );
+    const KPIMIdentities::Signature signature = const_cast<KPIMIdentities::Identity&>( ident ).signature();
+    m_editor->cleanWhitespace( signature );
 }
 
 void SignatureController::insertSignatureHelper ( KPIMIdentities::Signature::Placement placement )
 {
-  if ( !m_identityCombo || !m_editor )
-    return;
+    if ( !m_identityCombo || !m_editor )
+        return;
 
-  // Identity::signature() is not const, although it should be, therefore the
-  // const_cast.
-  KPIMIdentities::Identity &ident = const_cast<KPIMIdentities::Identity&>(
-      m_identityCombo->identityManager()->identityForUoidOrDefault(
-                                m_identityCombo->currentIdentity() ) );
-  const KPIMIdentities::Signature signature = ident.signature();
+    // Identity::signature() is not const, although it should be, therefore the
+    // const_cast.
+    KPIMIdentities::Identity &ident = const_cast<KPIMIdentities::Identity&>(
+                m_identityCombo->identityManager()->identityForUoidOrDefault(
+                    m_identityCombo->currentIdentity() ) );
+    const KPIMIdentities::Signature signature = ident.signature();
 
-  if ( signature.isInlinedHtml() &&
-       signature.type() == KPIMIdentities::Signature::Inlined ) {
-    emit enableHtml();
-  }
+    if ( signature.isInlinedHtml() &&
+         signature.type() == KPIMIdentities::Signature::Inlined ) {
+        emit enableHtml();
+    }
 
-  KPIMIdentities::Signature::AddedText addedText = KPIMIdentities::Signature::AddNewLines;
-  if ( MessageComposer::MessageComposerSettings::self()->dashDashSignature() )
-    addedText |= KPIMIdentities::Signature::AddSeparator;
-  signature.insertIntoTextEdit( placement, addedText, m_editor );
-  if ((placement == KPIMIdentities::Signature::Start) || (placement == KPIMIdentities::Signature::End)) {
-    emit signatureAdded();
-  }
+    KPIMIdentities::Signature::AddedText addedText = KPIMIdentities::Signature::AddNewLines;
+    if ( MessageComposer::MessageComposerSettings::self()->dashDashSignature() )
+        addedText |= KPIMIdentities::Signature::AddSeparator;
+    signature.insertIntoTextEdit( placement, addedText, m_editor );
+    if ((placement == KPIMIdentities::Signature::Start) || (placement == KPIMIdentities::Signature::End)) {
+        emit signatureAdded();
+    }
 }
 
 void SignatureController::applySignature( const KPIMIdentities::Signature &signature )
 {
-  if ( !m_editor )
-    return;
+    if ( !m_editor )
+        return;
 
-  if ( MessageComposer::MessageComposerSettings::self()->autoTextSignature() == QLatin1String("auto") ) {
-    KPIMIdentities::Signature::AddedText addedText = KPIMIdentities::Signature::AddNewLines;
-    if ( MessageComposer::MessageComposerSettings::self()->dashDashSignature() )
-      addedText |= KPIMIdentities::Signature::AddSeparator;
-    if ( MessageComposer::MessageComposerSettings::self()->prependSignature() )
-      signature.insertIntoTextEdit( KPIMIdentities::Signature::Start,
-                                  addedText, m_editor );
-    else
-      signature.insertIntoTextEdit( KPIMIdentities::Signature::End,
-                                  addedText, m_editor );
-  }
+    if ( MessageComposer::MessageComposerSettings::self()->autoTextSignature() == QLatin1String("auto") ) {
+        KPIMIdentities::Signature::AddedText addedText = KPIMIdentities::Signature::AddNewLines;
+        if ( MessageComposer::MessageComposerSettings::self()->dashDashSignature() )
+            addedText |= KPIMIdentities::Signature::AddSeparator;
+        if ( MessageComposer::MessageComposerSettings::self()->prependSignature() )
+            signature.insertIntoTextEdit( KPIMIdentities::Signature::Start,
+                                          addedText, m_editor );
+        else
+            signature.insertIntoTextEdit( KPIMIdentities::Signature::End,
+                                          addedText, m_editor );
+    }
 }
 
 void SignatureController::applyCurrentSignature()
 {
-  if ( !m_identityCombo )
-    return;
-  KPIMIdentities::Identity &ident = const_cast<KPIMIdentities::Identity&>(
-      m_identityCombo->identityManager()->identityForUoidOrDefault(
-                                m_identityCombo->currentIdentity() ) );
-  applySignature( ident.signature() );
+    if ( !m_identityCombo )
+        return;
+    KPIMIdentities::Identity &ident = const_cast<KPIMIdentities::Identity&>(
+                m_identityCombo->identityManager()->identityForUoidOrDefault(
+                    m_identityCombo->currentIdentity() ) );
+    applySignature( ident.signature() );
 }
 
 
 
-#include "signaturecontroller.moc"

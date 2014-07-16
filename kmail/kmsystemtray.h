@@ -23,14 +23,8 @@
 #include <kstatusnotifieritem.h>
 
 #include <QAction>
-#include <QMap>
-#include <QPointer>
-#include <QVector>
 #include <QAbstractItemModel>
 
-#include <time.h>
-
-class QPoint;
 class QMenu;
 
 /**
@@ -43,11 +37,19 @@ class KMSystemTray : public KStatusNotifierItem
     Q_OBJECT
 public:
     /** construtor */
-    explicit KMSystemTray(QObject* parent=0);
+    explicit KMSystemTray(QObject *parent=0);
     /** destructor */
     ~KMSystemTray();
 
-    void setShowUnread(bool showUnread);
+    void setShowUnreadCount(bool showUnreadCount);
+
+    /**
+     * Use this method to disable any systray icon changing.
+     * By default this is enabled and you'll see the "new e-mail" icon whenever there's
+     * new e-mail.
+     */
+    void setSystrayIconNotificationsEnabled(bool enable);
+
     void setMode(int mode);
     int mode() const;
 
@@ -59,9 +61,11 @@ public:
 private slots:
     void slotActivated();
     void slotContextMenuAboutToShow();
-    void slotSelectCollection(QAction*act);
+    void slotSelectCollection(QAction *act);
     void initListOfCollection();
-    void slotCollectionStatisticsChanged( Akonadi::Collection::Id,const Akonadi::CollectionStatistics& );
+    void slotCollectionStatisticsChanged( Akonadi::Collection::Id ,const Akonadi::CollectionStatistics &);
+    void slotGeneralPaletteChanged();
+    void slotGeneralFontChanged();
 
 private:
     bool mainWindowIsOnCurrentDesktop();
@@ -69,18 +73,20 @@ private:
     void updateCount();
     void fillFoldersMenu( QMenu *menu, const QAbstractItemModel *model, const QString& parentName = QString(), const QModelIndex& parentIndex = QModelIndex() );
     void unreadMail( const QAbstractItemModel *model, const QModelIndex& parentIndex = QModelIndex() );
-    bool excludeFolder( const Akonadi::Collection& collection ) const;
+    bool excludeFolder( const Akonadi::Collection &collection ) const;
     bool ignoreNewMailInFolder(const Akonadi::Collection &collection);
 
 private:
-
+    QColor mTextColor;
     KIcon mIcon;
     int mDesktopOfMainWin;
 
     int mMode;
     int mCount;
 
-    bool mShowUnreadMail;
+    bool mShowUnreadMailCount;
+    bool mIconNotificationsEnabled;
+
     QMenu *mNewMessagesPopup;
     QAction *mSendQueued;
 };

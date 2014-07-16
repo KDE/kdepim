@@ -283,7 +283,7 @@ optional a <guilabel>Comment</guilabel>.</para>
 <varlistentry>
 <term><guilabel>Create a personal X.509 key pair and certification request</guilabel></term>
 <listitem>
-<para>X.509 key pairs are created locally, but certified centrally by a
+<para>&x509; key pairs are created locally, but certified centrally by a
 certification authority (&ca;). &ca;s can certify other &ca;s, creating a central,
 hierarchical chain of trust.</para>
 <para>The next step in the wizard is to type in your personal data
@@ -343,6 +343,8 @@ external storage device like an USB stick or print it out.</para>
 but you can do that with the &kde; application &kgpg; by choosing <menuchoice><guimenu>Keys</guimenu>
 <guimenuitem>Revoke key</guimenuitem></menuchoice> and optionally importing the revocation signature
 to your keyring immediately.</para>
+
+<para>An alternative way of generating a revocation certificate is to use &gpg; directly from the command line: <userinput>gpg --output <replaceable>revocation_certificate</replaceable>.asc --gen-revoke <replaceable>your_key</replaceable></userinput>. The argument <replaceable>your_key</replaceable> must be a key specifier, either the key ID of your primary keypair or any part of a user ID that identifies your keypair.</para>
 
 </sect2>
 
@@ -680,7 +682,7 @@ Verify Checksum Files...
             </para>
             <para>
               Using this function is usually not necessary, as
-              &kleopatra; monitors the filesystem for changes and
+              &kleopatra; monitors the file system for changes and
               automatically refreshes the certificate list when
               needed.
             </para>
@@ -714,7 +716,7 @@ Verify Checksum Files...
                 In such cases, the only way to restore order is to
                 kill &scdaemon;, &dirmngr;, &gpgsm; and &gpg;
                 processes, in that order, via the operating system
-                tools (<command>top</command>, Windows Task-Manager,
+                tools (<command>top</command>, Task-Manager,
                 &etc;), until the operation get unblocked.
               </para>
             </note>
@@ -990,13 +992,13 @@ even though they would normally not be fetched when using the
 key.</para>
 
 <para>This function only has an effect on certificates which define a
-CRL distribution point. Depending on the backend used, certificates
-configured to perform checks using OCSP will not be updated.</para>
+&crl; distribution point. Depending on the backend used, certificates
+configured to perform checks using &ocsp; will not be updated.</para>
 
 <para>You may use this &eg; if you have sideband knowledge that a key
 has been revoked, and you want the backend to reflect this
 <emphasis>now</emphasis> instead of relying on this to automatically
-happen at the next scheduled CRL update.</para>
+happen at the next scheduled &crl; update.</para>
 
 <warning><para>Excessive use of this function might put a high load on
 your provider's or company's network, since CRLs of large
@@ -1208,7 +1210,7 @@ varlistentry id="certificates-download">
               looking at the log.
             </para>
             <para>
-              This function is not available on Windows, since the
+              This function is not available on &Windows;, since the
               underlying mechanisms are not implemented in the backend
               on that platform.
             </para>
@@ -1312,9 +1314,9 @@ that is wrong
 <term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Clear CRL Cache</guimenuitem></menuchoice></term>
 
 <listitem>
-<para><action>Clears the &gpgsm; CRL cache.</action></para>
+<para><action>Clears the &gpgsm; &crl; cache.</action></para>
 
-<para>You probably never need this. You can force a refresh of the CRL
+<para>You probably never need this. You can force a refresh of the &crl;
 cache by selecting all certificates and using <xref linkend="certificates-refresh-x509"/> instead.</para>
 </listitem>
 </varlistentry>
@@ -1323,7 +1325,7 @@ cache by selecting all certificates and using <xref linkend="certificates-refres
 <term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Dump CRL Cache</guimenuitem></menuchoice></term>
 
 <listitem>
-<para><action>Shows the detailed contents of the &gpgsm; CRL
+<para><action>Shows the detailed contents of the &gpgsm; &crl;
 cache.</action></para>
 </listitem>
 </varlistentry>
@@ -1430,7 +1432,7 @@ by issuing the command <userinput><command>kleopatra
 <varlistentry>
 <term><option>-c</option> <option>--cms</option></term>
 <listitem>
-<para>Use CMS (X.509, S/MIME) for the following operation</para>
+<para>Use CMS (&x509;, S/&MIME;) for the following operation</para>
 </listitem>
 </varlistentry>
 
@@ -2044,7 +2046,7 @@ button.</para>
     <sect1 id="configuration-smime-validation">
     <!-- keep in sync with section configure-security-smime-validation from kmail configure.docbook
     both apps have the same page in settings-->
-      <title>Configuring aspects of S/MIME Validation</title>
+      <title>Configuring aspects of S/&MIME; Validation</title>
 
       <para>
         On this page, you can configure certain aspects of the
@@ -2308,8 +2310,8 @@ button.</para>
                 location here.
               </para>
               <para>
-                It will be used for all HTTP requests relating to
-                S/MIME.
+                It will be used for all &HTTP; requests relating to
+                S/&MIME;.
               </para>
               <para>
                 The syntax is
@@ -2387,7 +2389,7 @@ button.</para>
     <sect1 id="configuration-gnupg-system">
     <!-- kleopatra + kmail have the this page in settings-->
 
-      <title>Configuring the GnuPG System</title>
+      <title>Configuring the &gnupg; System</title>
 
       <para>
         This part of the dialog is auto-generated from the output of
@@ -2513,7 +2515,7 @@ the KIOSK framework.</para>
 
 <sect1 id="admin-certificate-request-wizard"><title>Customization of the Certificate-Creation Wizard</title>
 
-<sect2 id="admin-certificate-request-wizard-dn"><title>Customizing the DN fields</title>
+<sect2 id="admin-certificate-request-wizard-dn"><title>Customizing the &dn; fields</title>
 
 <para>&kleopatra; allows you to customize the fields that the user is
 allowed to enter in order to create their certificate.</para>
@@ -3151,7 +3153,7 @@ is-at-least-ownertrust=marginal
       <note id="backslashes-in-config-keys">
         <para>
           Since backslash (<literal>\</literal>) is an escape
-          character in KDE config files, you need to double them when
+          character in &kde; config files, you need to double them when
           they appear in path names:
           <programlisting>pack-command=C:\\Programs\\GNU\\tar\\gtar.exe&nbsp;...</programlisting>
 
@@ -3160,7 +3162,7 @@ is-at-least-ownertrust=marginal
           (<literal>/</literal>) as path separators on all platforms:
           <programlisting>pack-command=C:/Programs/GNU/tar/gtar.exe&nbsp;...</programlisting>
 
-          This is not supported in arguments, as most Windows programs
+          This is not supported in arguments, as most &Windows; programs
           use the forward slash for options. For example, the
           following will not work, since
           <literal>C:/myarchivescript.bat</literal> is an argument to
@@ -3211,7 +3213,7 @@ is-at-least-ownertrust=marginal
         <listitem>
           <para>Via standard-in, separated by newlines: prepend <literal>|</literal>.</para>
             <para>
-              Example (GNU-tar):
+              Example (&GNU;-tar):
               <programlisting>pack-command=|gtar cf - -T-</programlisting>
               Example (ZIP):
               <programlisting>pack-command=|zip -@ -</programlisting>
@@ -3235,7 +3237,7 @@ is-at-least-ownertrust=marginal
         <listitem>
           <para>Via standard-in, separated by NUL-bytes: prepend <literal>0|</literal>.</para>
             <para>
-              Example (GNU-tar):
+              Example (&GNU;-tar):
               <programlisting>pack-command=0|gtar cf - -T- --null</programlisting>
               This is the same as above, except that NUL bytes are
               used to separate filenames. Since NUL bytes are
@@ -3266,7 +3268,7 @@ is-at-least-ownertrust=marginal
           To be usable by &kleopatra;, output of checksum programs
           (both the written checksum file, as well as the output on
           <acronym>stdout</acronym> when verifying checksums) needs to
-          be compatible with <acronym>GNU</acronym>
+          be compatible with &GNU;
           <command>md5sum</command> and
           <command>sha1sum</command>.
         </para>
@@ -3324,7 +3326,7 @@ is-at-least-ownertrust=marginal
               A list of regular expressions that describe which files
               should be considered checksum files for this checksum
               program. The syntax is the one used for string lists in
-              KDE config files.
+              &kde; config files.
               <note>
                 <para>
                   Since regular expressions usually contain

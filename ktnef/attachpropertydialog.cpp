@@ -25,7 +25,7 @@
 #include <KApplication>
 #include <KDebug>
 #include <KFileDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KMimeType>
 
@@ -35,17 +35,42 @@
 #include <QTreeWidget>
 
 AttachPropertyDialog::AttachPropertyDialog( QWidget *parent )
-  : QDialog( parent ), mAttach(0)
+  : KDialog( parent ),
+    mAttach(0)
 {
-  mUI.setupUi( this );
+  setButtons( User1|Close );
+  setDefaultButton( Close );
+  setButtonText(User1, i18n("Save..."));
+  setModal( true );
+  QWidget *mainWidget = new QWidget( this );
+  mUI.setupUi( mainWidget );
   mUI.mProperties->setHeaderHidden( true );
-
-  connect( mUI.mSave, SIGNAL(clicked()), this, SLOT(accept()) );
+  setMainWidget( mainWidget );
+  connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSave()));
+  readConfig();
 }
 
 AttachPropertyDialog::~AttachPropertyDialog()
 {
+  writeConfig();
 }
+
+void AttachPropertyDialog::readConfig()
+{
+  KConfigGroup group( KGlobal::config(), "AttachPropertyDialog" );
+  const QSize size = group.readEntry( "Size", QSize(500, 400) );
+  if ( size.isValid() ) {
+    resize( size );
+  }
+}
+
+void AttachPropertyDialog::writeConfig()
+{
+  KConfigGroup group( KGlobal::config(), "AttachPropertyDialog" );
+  group.writeEntry( "Size", size() );
+  group.sync();
+}
+
 
 void AttachPropertyDialog::setAttachment( KTNEFAttach *attach )
 {
@@ -74,12 +99,13 @@ void AttachPropertyDialog::setAttachment( KTNEFAttach *attach )
   mAttach = attach;
 }
 
-void AttachPropertyDialog::accept()
+void AttachPropertyDialog::slotSave()
 {
   saveProperty( mUI.mProperties, mAttach, this );
+  accept();
 }
 
-void formatProperties( const QMap<int,KTNEFProperty*>& props, QTreeWidget *lv,
+void AttachPropertyDialog::formatProperties( const QMap<int,KTNEFProperty*>& props, QTreeWidget *lv,
                        QTreeWidgetItem *item, const QString &prefix )
 {
   for ( QMap<int,KTNEFProperty*>::ConstIterator it = props.begin(); it != props.end(); ++it ) {
@@ -116,7 +142,7 @@ void formatProperties( const QMap<int,KTNEFProperty*>& props, QTreeWidget *lv,
   }
 }
 
-void formatPropertySet( KTNEFPropertySet *pSet, QTreeWidget *lv )
+void AttachPropertyDialog::formatPropertySet( KTNEFPropertySet *pSet, QTreeWidget *lv )
 {
   formatProperties( pSet->properties(), lv, 0, QLatin1String("prop") );
   QTreeWidgetItem *item =
@@ -126,7 +152,7 @@ void formatPropertySet( KTNEFPropertySet *pSet, QTreeWidget *lv )
   formatProperties( pSet->attributes(), 0, item, QLatin1String("attr") );
 }
 
-void saveProperty( QTreeWidget *lv, KTNEFPropertySet *pSet, QWidget *parent )
+void AttachPropertyDialog::saveProperty( QTreeWidget *lv, KTNEFPropertySet *pSet, QWidget *parent )
 {
   QList<QTreeWidgetItem *> list = lv->selectedItems();
   if ( list.isEmpty() || !list.first() ) {
@@ -175,7 +201,7 @@ void saveProperty( QTreeWidget *lv, KTNEFPropertySet *pSet, QWidget *parent )
   }
 }
 
-QPixmap loadRenderingPixmap( KTNEFPropertySet *pSet, const QColor &bgColor )
+QPixmap AttachPropertyDialog::loadRenderingPixmap( KTNEFPropertySet *pSet, const QColor &bgColor )
 {
   QPixmap pix;
   QVariant rendData = pSet->attribute( attATTACHRENDDATA );
@@ -209,3 +235,5 @@ QPixmap loadRenderingPixmap( KTNEFPropertySet *pSet, const QColor &bgColor )
   }
   return pix;
 }
+
+

@@ -128,7 +128,7 @@ static QGpgMEListAllKeysJob::result_type list_keys( Context * ctx, bool mergeKey
       merge_keys( merged, pub, sec );
   else
       merged.swap( pub );
-  return make_tuple( r, merged, sec, QString(), Error() );
+  return boost::make_tuple( r, merged, sec, QString(), Error() );
 }
 
 Error QGpgMEListAllKeysJob::start( bool mergeKeys ) {
@@ -152,10 +152,9 @@ void QGpgMEListAllKeysJob::showErrorDialog( QWidget * parent, const QString & ca
   if ( !mResult.error() || mResult.error().isCanceled() )
     return;
   const QString msg = i18n( "<qt><p>An error occurred while fetching "
-			    "the keys from the backend:</p>"
-			    "<p><b>%1</b></p></qt>" ,
+                            "the keys from the backend:</p>"
+                            "<p><b>%1</b></p></qt>" ,
       QString::fromLocal8Bit( mResult.error().asString() ) );
   KMessageBox::error( parent, msg, caption );
 }
 
-#include "qgpgmelistallkeysjob.moc"

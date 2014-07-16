@@ -41,12 +41,10 @@
 
 #include <QFrame>
 
-class QBoxLayout;
 class QEvent;
 class QProgressBar;
 class QPushButton;
 class QStackedWidget;
-class QBoxLayout;
 class QLabel;
 class QTimer;
 
@@ -63,10 +61,10 @@ public:
 
     StatusbarProgressWidget( ProgressDialog* progressDialog, QWidget* parent, bool button = true );
 
+    void setShowTypeProgressItem(unsigned int type);
 public Q_SLOTS:
 
     void slotClean();
-    void slotSetSSL( bool );
 
     void slotProgressItemAdded( KPIM::ProgressItem *i );
     void slotProgressItemCompleted( KPIM::ProgressItem *i );
@@ -76,7 +74,7 @@ protected Q_SLOTS:
     void slotProgressDialogVisible( bool );
     void slotShowItemDelayed();
     void slotBusyIndicator();
-    void updateBusyMode();
+    void updateBusyMode(KPIM::ProgressItem *);
 
 protected:
     void setMode();
@@ -86,17 +84,17 @@ protected:
     virtual bool eventFilter( QObject *, QEvent * );
 
 private:
+    unsigned int mShowTypeProgressItem;
     QProgressBar* m_pProgressBar;
     QLabel* m_pLabel;
     SSLLabel* m_sslLabel;
     QPushButton* m_pButton;
 
-    enum Mode { None, /*Label,*/ Progress };
+    enum Mode { None, Progress };
 
     uint mode;
     bool m_bShowButton;
 
-    QBoxLayout *box;
     QStackedWidget *stack;
     ProgressItem *mCurrentItem;
     ProgressDialog* mProgressDialog;

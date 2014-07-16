@@ -51,24 +51,24 @@ namespace MailCommon {
  */
 class MAILCOMMON_EXPORT FilterAction : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
 
     /**
      * Describes the possible return codes of filter processing:
      */
     enum ReturnCode {
-      ErrorNeedComplete = 0x1, ///< Could not process because a complete message is needed.
-      GoOn = 0x2,              ///< Go on with applying filter actions.
-      ErrorButGoOn = 0x4,      ///< A non-critical error occurred
-                               ///  (e.g. an invalid address in the 'forward' action),
-                               ///   but processing should continue.
-      CriticalError = 0x8      ///< A critical error occurred during processing
-                               ///  (e.g. "disk full").
+        ErrorNeedComplete = 0x1, ///< Could not process because a complete message is needed.
+        GoOn = 0x2,              ///< Go on with applying filter actions.
+        ErrorButGoOn = 0x4,      ///< A non-critical error occurred
+        ///  (e.g. an invalid address in the 'forward' action),
+        ///   but processing should continue.
+        CriticalError = 0x8      ///< A critical error occurred during processing
+        ///  (e.g. "disk full").
     };
 
 
-  /**
+    /**
      * Creates a new filter action.
      *
      * The action is initialized with an identifier @p name and
@@ -93,6 +93,10 @@ class MAILCOMMON_EXPORT FilterAction : public QObject
      */
     QString name() const;
 
+    virtual QStringList sieveRequires() const;
+
+    virtual QString sieveCode() const;
+
     /**
      * Execute action on given message (inside the item context).
      * Returns @p CriticalError if a
@@ -102,7 +106,7 @@ class MAILCOMMON_EXPORT FilterAction : public QObject
      * is required, @p GoOn if the message shall be processed by
      * further filters and @p Ok otherwise.
      */
-    virtual ReturnCode process( ItemContext &context ) const = 0;
+    virtual ReturnCode process( ItemContext &context, bool applyOnOutbound ) const = 0;
 
     /**
      * Returns the required part from the item that is needed for the action to
@@ -184,16 +188,16 @@ class MAILCOMMON_EXPORT FilterAction : public QObject
     static void sendMDN( const Akonadi::Item &item,
                          KMime::MDN::DispositionType d,
                          const QList<KMime::MDN::DispositionModifier> &m =
-                           QList<KMime::MDN::DispositionModifier>() );
+            QList<KMime::MDN::DispositionModifier>() );
 
-  signals:
+signals:
     /**
      * Called to notify that the current FilterAction has had some
      * value modification
      */
     void filterActionModified();
 
-  private:
+private:
     QString mName;
     QString mLabel;
 };

@@ -27,7 +27,6 @@
 #define KJOTSWIDGET_H
 
 #include <QWidget>
-#include <QModelIndexList>
 #include <QItemSelection>
 #include <QAbstractItemDelegate>
 #include <akonadi/item.h>
@@ -35,20 +34,17 @@
 #include <grantlee/templateloader.h>
 
 class QCheckBox;
-class QTextCursor;
 class QTextEdit;
 class QTextCharFormat;
 class QSplitter;
 class QStackedWidget;
 class QModelIndex;
 
-class KActionCollection;
 class KActionMenu;
 class KFindDialog;
 class KJob;
 class KReplaceDialog;
 class KSelectionProxyModel;
-class KTextEdit;
 class KJotsBrowser;
 class KXMLGUIClient;
 
@@ -56,7 +52,6 @@ namespace Akonadi
 {
 class EntityTreeModel;
 class EntityOrderProxyModel;
-class Session;
 }
 
 namespace Grantlee
@@ -131,6 +126,7 @@ protected slots:
   void exportSelectionToPlainText();
   void exportSelectionToXml();
   void printSelection();
+  void printPreviewSelection();
 
   void deletePage();
   void deleteBook();
@@ -175,6 +171,7 @@ private slots:
   void updateConfiguration();
 
 private:
+  void print(QPrinter &printer);
   KXMLGUIClient  *m_xmlGuiClient;
   KJotsEdit      *editor;
   KJotsBrowser   *browser;
@@ -185,7 +182,6 @@ private:
   KJotsSortProxyModel *m_sortProxyModel;
   Akonadi::EntityOrderProxyModel *m_orderProxy;
   KJotsTreeView *treeview;
-  Akonadi::Session *m_session;
   QSplitter *m_splitter;
   QTimer *m_autosaveTimer;
 

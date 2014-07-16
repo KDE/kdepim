@@ -43,4 +43,3 @@ void FollowuptoCombobox::focusInEvent( QFocusEvent *event )
 } // namespace Composer
 } // namespace KNode
 
-#include "followupto_combobox.moc"

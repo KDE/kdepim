@@ -31,7 +31,7 @@
 #include <KDebug>
 #include <KCalendarSystem>
 #include <KGlobal>
-#include <KLocale>
+#include <KLocalizedString>
 
 DateNavigator::DateNavigator( QObject *parent ) : QObject( parent )
 {
@@ -312,4 +312,3 @@ void DateNavigator::emitSelected( const QDate &preferredMonth )
   emit datesSelected( mSelectedDates, preferredMonth );
 }
 
-#include "datenavigator.moc"

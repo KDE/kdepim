@@ -63,8 +63,8 @@ namespace Kleo {
 
     /*! \reimp from SignEncryptJob */
     GpgME::Error start( const std::vector<GpgME::Key> & signers,
-			const std::vector<GpgME::Key> & recipients,
-			const QByteArray & plainText, bool alwaysTrust );
+                        const std::vector<GpgME::Key> & recipients,
+                        const QByteArray & plainText, bool alwaysTrust );
 
     /*! \reimp from SignEncryptJob */
     void start( const std::vector<GpgME::Key> & signers,
@@ -75,9 +75,9 @@ namespace Kleo {
 
     std::pair<GpgME::SigningResult,GpgME::EncryptionResult>
       exec( const std::vector<GpgME::Key> & signers,
-	    const std::vector<GpgME::Key> & recipients,
-	    const QByteArray & plainText, bool alwaysTrust,
-	    QByteArray & cipherText );
+            const std::vector<GpgME::Key> & recipients,
+            const QByteArray & plainText, bool alwaysTrust,
+            QByteArray & cipherText );
 
     /*! \reimp from Job */
     void showErrorDialog( QWidget * parent, const QString & caption ) const;

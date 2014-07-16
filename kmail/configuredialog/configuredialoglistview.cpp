@@ -4,7 +4,7 @@
 
 #include "configuredialoglistview.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMenu>
 
 ListView::ListView( QWidget *parent )
@@ -60,4 +60,3 @@ void ListView::slotContextMenu(const QPoint& pos)
     delete menu;
 }
 
-#include "configuredialoglistview.moc"

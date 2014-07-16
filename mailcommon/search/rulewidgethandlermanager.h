@@ -37,7 +37,6 @@
 #include <QVector>
 
 class QObject;
-class QByteArray;
 class QString;
 class QStackedWidget;
 
@@ -50,30 +49,32 @@ class RuleWidgetHandler;
  */
 class RuleWidgetHandlerManager
 {
-  static RuleWidgetHandlerManager * self;
+    static RuleWidgetHandlerManager * self;
 
-  RuleWidgetHandlerManager();
+    RuleWidgetHandlerManager();
 
-  public:
+public:
     ~RuleWidgetHandlerManager();
 
     static RuleWidgetHandlerManager *instance()
     {
-      if ( !self ) {
-        self = new RuleWidgetHandlerManager();
-      }
-      return self;
+        if ( !self ) {
+            self = new RuleWidgetHandlerManager();
+        }
+        return self;
     }
+
+    void setIsBalooSearch(bool isBalooSearch);
 
     void registerHandler( const RuleWidgetHandler *handler );
     void unregisterHandler( const RuleWidgetHandler *handler );
 
-    void createWidgets( QStackedWidget *functionStack,
+    void createWidgets(QStackedWidget *functionStack,
                         QStackedWidget *valueStack,
-                        const QObject *receiver ) const;
+                        const QObject *receiver) const;
 
     MailCommon::SearchRule::Function function( const QByteArray & field,
-                                     const QStackedWidget *functionStack ) const;
+                                               const QStackedWidget *functionStack ) const;
 
     QString value( const QByteArray &field,
                    const QStackedWidget *functionStack,
@@ -90,7 +91,7 @@ class RuleWidgetHandlerManager
     void reset( QStackedWidget *functionStack,
                 QStackedWidget *valueStack ) const;
 
-    void setRule( QStackedWidget *functionStack,
+    void setRule(QStackedWidget *functionStack,
                   QStackedWidget *valueStack,
                   const MailCommon::SearchRule::Ptr rule ) const;
 
@@ -98,11 +99,12 @@ class RuleWidgetHandlerManager
                  QStackedWidget *functionStack,
                  QStackedWidget *valueStack ) const;
 
-  private:
+private:
     typedef QVector<const RuleWidgetHandler*>::const_iterator const_iterator;
     typedef QVector<const RuleWidgetHandler*>::iterator iterator;
 
     QVector<const RuleWidgetHandler*> mHandlers;
+    bool mIsBalooSearch;
 };
 
 } // namespace MailCommon

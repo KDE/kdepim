@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -21,6 +21,7 @@
 #include <KPixmapSequence>
 #include <QTreeWidgetItem>
 
+#include "ksieveui_export.h"
 
 class QTimer;
 class QTreeWidget;
@@ -28,7 +29,7 @@ class QTreeWidgetItem;
 
 namespace KSieveUi {
 class SieveTreeWidgetProgress;
-class SieveTreeWidgetItem : public QTreeWidgetItem
+class KSIEVEUI_EXPORT SieveTreeWidgetItem : public QTreeWidgetItem
 {
 public:
     SieveTreeWidgetItem(QTreeWidget *treeWidget, QTreeWidgetItem *item);

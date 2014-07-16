@@ -30,7 +30,7 @@ namespace MessageViewer {
  */
 class HTMLQuoteColorer
 {
-  public:
+public:
 
     explicit HTMLQuoteColorer();
 
@@ -51,8 +51,10 @@ class HTMLQuoteColorer
      */
     QString process(const QString &htmlSource , QString &extraHead);
 
-  private:
+    void setEnableHtmlQuoteColorer(bool enabled);
+private:
     QColor mQuoteColors[3];
+    bool mEnableHtmlQuoteColorer;
 };
 
 }

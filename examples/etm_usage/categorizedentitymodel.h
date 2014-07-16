@@ -43,12 +43,12 @@ public:
     if (role == KCategorizedSortFilterProxyModel::CategoryDisplayRole)
     {
       QString mimetype = index.data(MimeTypeRole).toString();
-      if (mimetype == "message/rfc822")
-        return "Email";
-      if (mimetype == "text/directory")
-        return "Addressee";
-      if (mimetype == "text/x-vnd.akonadi.note")
-        return "Note";
+      if (mimetype == QLatin1String("message/rfc822"))
+        return QLatin1String("Email");
+      if (mimetype == QLatin1String("text/directory"))
+        return QLatin1String("Addressee");
+      if (mimetype == QLatin1String("text/x-vnd.akonadi.note"))
+        return QLatin1String("Note");
 
     }
     return Akonadi::EntityTreeModel::data(index, role);

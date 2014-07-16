@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,10 +16,11 @@
 */
 
 #include "sievetemplateeditdialog.h"
-#include "editor/sievefindbar.h"
 #include "editor/sievetextedit.h"
 
-#include <KLocale>
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditfindbar.h"
+
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QVBoxLayout>
@@ -50,15 +51,17 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
     mTemplateNameEdit = new KLineEdit;
     mTemplateNameEdit->setEnabled(!defaultTemplate);
     mTemplateNameEdit->setTrapReturnKey(true);
+    mTemplateNameEdit->setClearButtonShown(true);
     hbox->addWidget(mTemplateNameEdit);
 
     vbox->addLayout(hbox);
 
     mTextEdit = new KSieveUi::SieveTextEdit;
+    mTextEdit->setShowHelpMenu(false);
     mTextEdit->setReadOnly(defaultTemplate);
     vbox->addWidget(mTextEdit);
 
-    mFindBar = new SieveFindBar( mTextEdit, this );
+    mFindBar = new PimCommon::PlainTextEditFindBar( mTextEdit, this );
     vbox->addWidget(mFindBar);
 
     QShortcut *shortcut = new QShortcut( this );
@@ -70,7 +73,8 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
     setMainWidget(w);
     if (!defaultTemplate) {
         enableButtonOk(false);
-        connect(mTemplateNameEdit, SIGNAL(textChanged(QString)),SLOT(slotTemplateNameChanged(QString)));
+        connect(mTemplateNameEdit, SIGNAL(textChanged(QString)),SLOT(slotTemplateChanged()));
+        connect(mTextEdit, SIGNAL(textChanged()),SLOT(slotTemplateChanged()));
         mTemplateNameEdit->setFocus();
     }
     readConfig();
@@ -100,17 +104,15 @@ void SieveTemplateEditDialog::writeConfig()
 void SieveTemplateEditDialog::readConfig()
 {
     KConfigGroup group( KGlobal::config(), "SieveTemplateEditDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
-    } else {
-        resize(600,400);
     }
 }
 
-void SieveTemplateEditDialog::slotTemplateNameChanged(const QString &text)
+void SieveTemplateEditDialog::slotTemplateChanged()
 {
-    enableButtonOk(!text.trimmed().isEmpty());
+    enableButtonOk(!mTemplateNameEdit->text().trimmed().isEmpty() && !mTextEdit->toPlainText().trimmed().isEmpty());
 }
 
 void SieveTemplateEditDialog::setScript(const QString &text)
@@ -133,4 +135,3 @@ QString SieveTemplateEditDialog::templateName() const
     return mTemplateNameEdit->text();
 }
 
-#include "sievetemplateeditdialog.moc"

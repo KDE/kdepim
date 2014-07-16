@@ -58,13 +58,13 @@ QPixmap ContactImageProvider::requestPixmap( const QString &id, QSize *size, con
   if ( contactItem.hasPayload<KABC::Addressee>() ) {
     const KABC::Addressee addressee = contactItem.payload<KABC::Addressee>();
     if ( addressee.photo().isEmpty() ) {
-      const QIcon icon = KIconLoader::global()->loadIcon( "user-identity", KIconLoader::Dialog, KIconLoader::SizeHuge );
+      const QIcon icon = KIconLoader::global()->loadIcon( QLatin1String("user-identity"), KIconLoader::Dialog, KIconLoader::SizeHuge );
       return icon.pixmap( width, height );
     }
 
     return QPixmap::fromImage( addressee.photo().data().scaled( width, height, Qt::KeepAspectRatio, Qt::SmoothTransformation ) );
   } else if ( contactItem.hasPayload<KABC::ContactGroup>() ) {
-    const QIcon icon = KIconLoader::global()->loadIcon( "x-mail-distribution-list", KIconLoader::Dialog, KIconLoader::SizeHuge );
+    const QIcon icon = KIconLoader::global()->loadIcon( QLatin1String("x-mail-distribution-list"), KIconLoader::Dialog, KIconLoader::SizeHuge );
     return icon.pixmap( width, height );
   }
 
@@ -150,4 +150,3 @@ QString ContactListProxy::typeForIndex(int row) const
   return index( row, 0 ).data( TypeRole ).toString();
 }
 
-#include "contactlistproxy.moc"

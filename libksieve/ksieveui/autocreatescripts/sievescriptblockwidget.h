@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -25,6 +25,7 @@ class QGroupBox;
 class QAbstractButton;
 class KComboBox;
 class KPushButton;
+class QDomElement;
 
 namespace KSieveUi {
 class SieveConditionWidgetLister;
@@ -49,6 +50,8 @@ public:
 
     MatchCondition matchCondition() const;
 
+    void loadScript(const QDomElement &element, bool onlyActions, QString &error);
+
 Q_SIGNALS:
     void addNewBlock(QWidget *widget, KSieveUi::SieveWidgetPageAbstract::PageType type);
 
@@ -57,6 +60,8 @@ private Q_SLOTS:
     void slotAddBlock();
 
 private:
+    void updateWidget();
+    void updateCondition();
     MatchCondition mMatchCondition;
     QGroupBox *mConditions;
     SieveConditionWidgetLister *mScriptConditionLister;

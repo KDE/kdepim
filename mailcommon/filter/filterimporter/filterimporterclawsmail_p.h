@@ -20,10 +20,8 @@
 
 #include "filterimporter/filterimporterabstract_p.h"
 #include "mailcommon_export.h"
-#include <QDomElement>
 
 class QFile;
-class KConfigGroup;
 
 namespace MailCommon {
 
@@ -34,7 +32,7 @@ class MAILCOMMON_EXPORT FilterImporterClawsMails : public FilterImporterAbstract
 public:
     explicit FilterImporterClawsMails( QFile *file );
     //Use for unittests
-    FilterImporterClawsMails();
+    FilterImporterClawsMails(bool interactive = false);
     ~FilterImporterClawsMails();
     static QString defaultFiltersSettingsPath();
 

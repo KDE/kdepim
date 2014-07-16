@@ -35,9 +35,9 @@ namespace TemplateParser {
 
 class TEMPLATEPARSER_EXPORT CustomTemplatesMenu : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     CustomTemplatesMenu( QWidget *parent, KActionCollection *ac );
     ~CustomTemplatesMenu();
 
@@ -45,20 +45,20 @@ class TEMPLATEPARSER_EXPORT CustomTemplatesMenu : public QObject
     KActionMenu *replyAllActionMenu() const { return mCustomReplyAllActionMenu; }
     KActionMenu *forwardActionMenu() const { return mCustomForwardActionMenu; }
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void update();
 
-  signals:
+signals:
     void replyTemplateSelected( const QString &tmpl );
     void replyAllTemplateSelected( const QString &tmpl );
     void forwardTemplateSelected( const QString &tmpl );
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotReplySelected( int idx );
     void slotReplyAllSelected( int idx );
     void slotForwardSelected( int idx );
 
-  private:
+private:
     void clear();
 
     KActionCollection *mOwnerActionCollection;

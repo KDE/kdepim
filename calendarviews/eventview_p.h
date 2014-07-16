@@ -29,7 +29,6 @@
 #include "eventview.h"
 
 #include <KDateTime>
-#include <KRandom>
 
 class KCheckableProxyModel;
 
@@ -37,10 +36,8 @@ namespace EventViews {
 
 class EventViewPrivate
 {
-  EventView *const q;
-
   public: /// Methods
-    explicit EventViewPrivate( EventView *qq );
+    EventViewPrivate();
     ~EventViewPrivate();
 
     /**
@@ -48,7 +45,6 @@ class EventViewPrivate
       all events in mTypeAheadEvents to the receiver.
      */
     void finishTypeAhead();
-    void reconnectCollectionSelection();
 
   public: // virtual functions
     void setUpModels();

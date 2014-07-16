@@ -58,7 +58,7 @@ QVariant TaskListProxy::data( const QModelIndex &index, int role ) const
       case IsSubTaskRole:
         return !incidence->relatedTo( KCalCore::Todo::RelTypeParent ).isEmpty();
       case SingleLineDescriptionRole:
-        return incidence->description().replace( '\n', ' ' );
+        return incidence->description().replace( QLatin1Char('\n'), QLatin1Char(' ') );
       case HasDescriptionRole:
         return !incidence->description().isEmpty();
     }

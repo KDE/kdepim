@@ -34,6 +34,7 @@
 #include <calendarsupport/categoryconfig.h>
 
 #include <incidenceeditor-ng/globalsettings.h>
+#include <widgets/tagwidgets.h>
 
 #include <Akonadi/AgentFilterProxyModel>
 #include <Akonadi/AgentInstanceCreateJob>
@@ -84,7 +85,7 @@ KOPrefsDialogMain::KOPrefsDialogMain( const KComponentData &inst, QWidget *paren
   // Personal Settings
   QWidget *personalFrame = new QWidget( this );
   QVBoxLayout *personalLayout = new QVBoxLayout( personalFrame );
-  tabWidget->addTab( personalFrame, KIcon( "preferences-desktop-personal" ),
+  tabWidget->addTab( personalFrame, KIcon( QLatin1String("preferences-desktop-personal") ),
                      i18nc( "@title:tab personal settings", "Personal" ) );
 
   KPIM::KPrefsWidBool *emailControlCenter =
@@ -112,7 +113,7 @@ KOPrefsDialogMain::KOPrefsDialogMain( const KComponentData &inst, QWidget *paren
 
   // Save Settings
   QFrame *saveFrame = new QFrame( this );
-  tabWidget->addTab( saveFrame, KIcon( "document-save" ),
+  tabWidget->addTab( saveFrame, KIcon( QLatin1String("document-save") ),
                      i18nc( "@title:tab", "Save" ) );
   QVBoxLayout *saveLayout = new QVBoxLayout( saveFrame );
 
@@ -150,7 +151,7 @@ KOPrefsDialogMain::KOPrefsDialogMain( const KComponentData &inst, QWidget *paren
   // System Tray Settings
   QFrame *systrayFrame = new QFrame( this );
   QVBoxLayout *systrayLayout = new QVBoxLayout( systrayFrame );
-  tabWidget->addTab( systrayFrame, KIcon( "preferences-other" ),
+  tabWidget->addTab( systrayFrame, KIcon( QLatin1String("preferences-other") ),
                      i18nc( "@title:tab systray settings", "System Tray" ) );
 
   QGroupBox *systrayGroupBox =
@@ -176,7 +177,7 @@ KOPrefsDialogMain::KOPrefsDialogMain( const KComponentData &inst, QWidget *paren
 
   //Calendar Account
   QFrame *calendarFrame = new QFrame( this );
-  tabWidget->addTab( calendarFrame, KIcon( "office-calendar" ),
+  tabWidget->addTab( calendarFrame, KIcon( QLatin1String("office-calendar") ),
                      i18nc( "@title:tab calendar account settings", "Calendars" ) );
 
   mAccountsCalendar.setupUi( calendarFrame );
@@ -185,9 +186,9 @@ KOPrefsDialogMain::KOPrefsDialogMain( const KComponentData &inst, QWidget *paren
   mAccountsCalendar.vlay->setMargin( KDialog::marginHint() );
 
   mAccountsCalendar.mAccountList->agentFilterProxyModel()->
-    addMimeTypeFilter( "text/calendar" );
+    addMimeTypeFilter( QLatin1String("text/calendar") );
   mAccountsCalendar.mAccountList->agentFilterProxyModel()->
-    addCapabilityFilter( "Resource" ); // show only resources, no agents
+    addCapabilityFilter( QLatin1String("Resource") ); // show only resources, no agents
   mAccountsCalendar.mFilterAccount->
     setProxy( mAccountsCalendar.mAccountList->agentFilterProxyModel() );
 
@@ -236,8 +237,8 @@ void KOPrefsDialogMain::slotAddAccount()
   //TODO verify this dialog box. We can see note etc...
   Akonadi::AgentTypeDialog dlg( this );
   Akonadi::AgentFilterProxyModel *filter = dlg.agentFilterProxyModel();
-  filter->addMimeTypeFilter( "text/calendar" );
-  filter->addCapabilityFilter( "Resource" );
+  filter->addMimeTypeFilter( QLatin1String("text/calendar") );
+  filter->addCapabilityFilter( QLatin1String("Resource") );
   if ( dlg.exec() ) {
     const Akonadi::AgentType agentType = dlg.agentType();
 
@@ -304,7 +305,7 @@ class KOPrefsDialogTime : public KPIM::KPrefsModule
       layout->addWidget( tabWidget );
 
       QFrame *regionalPage = new QFrame( parent );
-      tabWidget->addTab( regionalPage, KIcon( "flag" ),
+      tabWidget->addTab( regionalPage, KIcon( QLatin1String("flag") ),
                          i18nc( "@title:tab", "Regional" ) );
 
       QGridLayout *regionalLayout = new QGridLayout( regionalPage );
@@ -427,7 +428,7 @@ class KOPrefsDialogTime : public KPIM::KPrefsModule
       regionalLayout->setRowStretch( 4, 1 );
 
       QFrame *defaultPage = new QFrame( parent );
-      tabWidget->addTab( defaultPage, KIcon( "draw-eraser" ),
+      tabWidget->addTab( defaultPage, KIcon( QLatin1String("draw-eraser") ),
                          i18nc( "@title:tab", "Default Values" ) );
       QGridLayout *defaultLayout = new QGridLayout( defaultPage );
       defaultLayout->setSpacing( KDialog::spacingHint() );
@@ -445,7 +446,7 @@ class KOPrefsDialogTime : public KPIM::KPrefsModule
 
       KPIM::KPrefsWidDuration *defaultDuration =
         addWidDuration( CalendarSupport::KCalPrefs::instance()->defaultDurationItem(),
-                        "hh:mm", defaultPage );
+                        QLatin1String("hh:mm"), defaultPage );
 
       timesLayout->addWidget( defaultDuration->label(), 1, 0 );
       timesLayout->addWidget( defaultDuration->timeEdit(), 1, 1 );
@@ -489,9 +490,9 @@ class KOPrefsDialogTime : public KPIM::KPrefsModule
       cb->setText( QString() );
 
       if ( CalendarSupport::KCalPrefs::instance()->audioFilePathItem()->value().isEmpty() ) {
-        QString defAudioFile = KGlobal::dirs()->findResourceDir( "sound", "KDE-Sys-Warning.ogg" );
+        QString defAudioFile = KGlobal::dirs()->findResourceDir( "sound", QLatin1String("KDE-Sys-Warning.ogg") );
         CalendarSupport::KCalPrefs::instance()->audioFilePathItem()->setValue(
-          defAudioFile + "KDE-Sys-Warning.ogg" );
+          defAudioFile + QLatin1String("KDE-Sys-Warning.ogg") );
       }
       QString filter =
         i18n( "*.ogg *.wav *.mp3 *.wma *.flac *.aiff *.raw *.au *.ra|"
@@ -579,7 +580,7 @@ extern "C"
 {
   KDE_EXPORT KCModule *create_korganizerconfigtime( QWidget *parent, const char * )
   {
-    KGlobal::locale()->insertCatalog( "timezones4" );
+    KGlobal::locale()->insertCatalog( QLatin1String("timezones4") );
     return new KOPrefsDialogTime( KOGlobals::self()->componentData(), parent );
   }
 }
@@ -606,7 +607,7 @@ class KOPrefsDialogViews : public KPIM::KPrefsModule
 
       // Tab: Views->General
       QFrame *generalFrame = new QFrame( this );
-      tabWidget->addTab( generalFrame, KIcon( "view-choose" ),
+      tabWidget->addTab( generalFrame, KIcon( QLatin1String("view-choose") ),
                          i18nc( "@title:tab general settings", "General" ) );
 
       QBoxLayout *generalLayout = new QVBoxLayout( generalFrame );
@@ -653,7 +654,7 @@ class KOPrefsDialogViews : public KPIM::KPrefsModule
 
       // Tab: Views->Agenda View
       QFrame *agendaFrame = new QFrame( this );
-      tabWidget->addTab( agendaFrame, KIcon( "view-calendar-workweek" ),
+      tabWidget->addTab( agendaFrame, KIcon( QLatin1String("view-calendar-workweek") ),
                          i18nc( "@title:tab", "Agenda View" ) );
 
       QBoxLayout *agendaLayout = new QVBoxLayout( agendaFrame );
@@ -711,7 +712,7 @@ class KOPrefsDialogViews : public KPIM::KPrefsModule
 
       // Tab: Views->Month View
       QFrame *monthFrame = new QFrame( this );
-      tabWidget->addTab( monthFrame, KIcon( "view-calendar-month" ),
+      tabWidget->addTab( monthFrame, KIcon( QLatin1String("view-calendar-month") ),
                          i18nc( "@title:tab", "Month View" ) );
 
       QBoxLayout *monthLayout = new QVBoxLayout( monthFrame );
@@ -747,7 +748,7 @@ class KOPrefsDialogViews : public KPIM::KPrefsModule
 
       // Tab: Views->Todo View
       QFrame *todoFrame = new QFrame( this );
-      tabWidget->addTab( todoFrame, KIcon( "view-calendar-tasks" ),
+      tabWidget->addTab( todoFrame, KIcon( QLatin1String("view-calendar-tasks") ),
                          i18nc( "@title:tab", "Todo View" ) );
 
       QBoxLayout *todoLayout = new QVBoxLayout( todoFrame );
@@ -807,7 +808,7 @@ KOPrefsDialogColorsAndFonts::KOPrefsDialogColorsAndFonts( const KComponentData &
   topTopLayout->addWidget( colorFrame );
   QGridLayout *colorLayout = new QGridLayout(colorFrame);
   colorLayout->setSpacing( KDialog::spacingHint() );
-  tabWidget->addTab( colorFrame, KIcon( "preferences-desktop-color" ),
+  tabWidget->addTab( colorFrame, KIcon( QLatin1String("preferences-desktop-color") ),
                      i18nc( "@title:tab", "Colors" ) );
 
   // Holiday Color
@@ -867,9 +868,7 @@ KOPrefsDialogColorsAndFonts::KOPrefsDialogColorsAndFonts( const KComponentData &
   unsetCategoryColor->label()->setWhatsThis( unsetCategoryColor->button()->whatsThis() );
   unsetCategoryColor->label()->setToolTip( unsetCategoryColor->button()->toolTip() );
 
-  mCategoryCombo = new KComboBox( categoryGroup );
-  mCategoryCombo->addItems(
-    CalendarSupport::CategoryConfig( KOPrefs::instance() ).customCategories() );
+  mCategoryCombo = new KPIM::TagCombo( categoryGroup );
   mCategoryCombo->setWhatsThis(
     i18nc( "@info:whatsthis",
            "Select here the event category you want to modify. "
@@ -922,7 +921,7 @@ KOPrefsDialogColorsAndFonts::KOPrefsDialogColorsAndFonts( const KComponentData &
   colorLayout->setRowStretch( 11, 1 );
 
   QWidget *fontFrame = new QWidget( this );
-  tabWidget->addTab( fontFrame, KIcon( "preferences-desktop-font" ),
+  tabWidget->addTab( fontFrame, KIcon( QLatin1String("preferences-desktop-font") ),
                      i18nc( "@title:tab", "Fonts" ) );
 
   QGridLayout *fontLayout = new QGridLayout( fontFrame );
@@ -937,7 +936,7 @@ KOPrefsDialogColorsAndFonts::KOPrefsDialogColorsAndFonts( const KComponentData &
 
   KPIM::KPrefsWidFont *monthViewFont =
     addWidFont( KOPrefs::instance()->monthViewFontItem(), fontFrame,
-                KGlobal::locale()->formatTime( QTime( 12, 34 ) ) + ' ' +
+                KGlobal::locale()->formatTime( QTime( 12, 34 ) ) + QLatin1Char(' ') +
                 i18nc( "@label", "Event text" ) );
 
   fontLayout->addWidget( monthViewFont->label(), 1, 0 );
@@ -990,9 +989,6 @@ void KOPrefsDialogColorsAndFonts::usrReadConfig()
 
 void KOPrefsDialogColorsAndFonts::updateCategories()
 {
-  mCategoryCombo->clear();
-  mCategoryCombo->addItems(
-    CalendarSupport::CategoryConfig( KOPrefs::instance() ).customCategories() );
   updateCategoryColor();
 }
 
@@ -1007,6 +1003,7 @@ void KOPrefsDialogColorsAndFonts::updateCategoryColor()
   const QString cat = mCategoryCombo->currentText();
   QColor color = mCategoryDict.value( cat );
   if ( !color.isValid() ) {
+    //TODO get this from the tag
     color = CalendarSupport::KCalPrefs::instance()->categoryColor( cat );
   }
   if ( color.isValid() ) {
@@ -1123,12 +1120,12 @@ KOPrefsDialogGroupwareScheduling::KOPrefsDialogGroupwareScheduling( const KCompo
 {
   mGroupwarePage = new Ui::KOGroupwarePrefsPage();
   QWidget *widget = new QWidget( this );
-  widget->setObjectName( "KOGrouparePrefsPage" );
+  widget->setObjectName( QLatin1String("KOGrouparePrefsPage") );
 
   mGroupwarePage->setupUi( widget );
 
-  mGroupwarePage->groupwareTab->setTabIcon( 0, KIcon( "go-up" ) );
-  mGroupwarePage->groupwareTab->setTabIcon( 1, KIcon( "go-down" ) );
+  mGroupwarePage->groupwareTab->setTabIcon( 0, KIcon( QLatin1String("go-up") ) );
+  mGroupwarePage->groupwareTab->setTabIcon( 1, KIcon( QLatin1String("go-down") ) );
 
   // signals and slots connections
 
@@ -1230,9 +1227,12 @@ void KOPrefsDialogGroupwareScheduling::usrWriteConfig()
     mGroupwarePage->retrieveSavePassword->isChecked());
 
   // clear the url cache for our user
-  const QString configFile = KStandardDirs::locateLocal( "data", "korganizer/freebusyurls" );
+  const QString configFile = KStandardDirs::locateLocal( "data", QLatin1String("korganizer/freebusyurls") );
   KConfig cfg( configFile );
   cfg.deleteGroup( CalendarSupport::KCalPrefs::instance()->email() );
+
+
+  Akonadi::CalendarSettings::self()->writeConfig();
 }
 
 extern "C"
@@ -1298,7 +1298,7 @@ KOPrefsDialogPlugins::KOPrefsDialogPlugins( const KComponentData &inst, QWidget 
   QBoxLayout *buttonRowLayout = new QHBoxLayout( buttonRow );
   mConfigureButton = new KPushButton(
     KGuiItem( i18nc( "@action:button", "Configure &Plugin..." ),
-              "configure", QString(),
+              QLatin1String("configure"), QString(),
               i18nc( "@info:whatsthis",
                      "This button allows you to configure"
                      " the plugin that you have selected in the list above" ) ),
@@ -1349,22 +1349,20 @@ void KOPrefsDialogPlugins::usrReadConfig()
   QTreeWidgetItem *decorations =
     new QTreeWidgetItem( mTreeWidget, QStringList(
                            i18nc( "@title:group", "Calendar Decorations" ) ) );
-  QTreeWidgetItem *printPlugins =
-    new QTreeWidgetItem( mTreeWidget, QStringList(
-                           i18nc( "@title:group", "Print Plugins" ) ) );
   QTreeWidgetItem *others =
     new QTreeWidgetItem( mTreeWidget, QStringList(
                            i18nc( "@title:group", "Other Plugins" ) ) );
 
   KService::List::ConstIterator it;
   for ( it = plugins.constBegin(); it != plugins.constEnd(); ++it ) {
-    QTreeWidgetItem *item;
+    QTreeWidgetItem *item = 0;
     if ( (*it)->hasServiceType( EventViews::CalendarDecoration::Decoration::serviceType() ) ) {
       item = new PluginItem( decorations, *it );
-    } else if ( (*it)->hasServiceType( KOrg::PrintPlugin::serviceType() ) ){
-      item = new PluginItem( printPlugins, *it );
-    } else {
+    } else if ( !(*it)->hasServiceType( QLatin1String( "KOrganizer/PrintPlugin"  ) ) ) {
+      // we specifically skip print plugins since we no longer support them
       item = new PluginItem( others, *it );
+    } else {
+      continue;
     }
     if ( selectedPlugins.contains( (*it)->desktopEntryName() ) ) {
       item->setCheckState( 0, Qt::Checked );
@@ -1374,7 +1372,6 @@ void KOPrefsDialogPlugins::usrReadConfig()
   }
 
   decorations->setExpanded( true );
-  printPlugins->setExpanded( true );
   others->setExpanded( true );
 
   mDecorationsAtMonthViewTop = KOPrefs::instance()->decorationsAtMonthViewTop().toSet();
@@ -1424,7 +1421,7 @@ void KOPrefsDialogPlugins::configure()
   } else {
     KMessageBox::sorry( this,
                         i18nc( "@info", "Unable to configure this plugin" ),
-                        "PluginConfigUnable" );
+                        QLatin1String("PluginConfigUnable") );
   }
 }
 
@@ -1488,7 +1485,7 @@ void KOPrefsDialogPlugins::selectionChanged()
     return;
   }
 
-  QVariant variant = item->service()->property( "X-KDE-KOrganizer-HasSettings" );
+  QVariant variant = item->service()->property( QLatin1String("X-KDE-KOrganizer-HasSettings") );
 
   bool hasSettings = true;
   if ( variant.isValid() ) {
@@ -1558,13 +1555,13 @@ KOPrefsDesignerFields::KOPrefsDesignerFields( const KComponentData &inst, QWidge
 
 QString KOPrefsDesignerFields::localUiDir()
 {
-  QString dir = KStandardDirs::locateLocal( "data", "korganizer/designer/event/" );
+  const QString dir = KStandardDirs::locateLocal( "data", QLatin1String("korganizer/designer/event/") );
   return dir;
 }
 
 QString KOPrefsDesignerFields::uiPath()
 {
-  return "korganizer/designer/event/";
+  return QLatin1String("korganizer/designer/event/");
 }
 
 void KOPrefsDesignerFields::writeActivePages( const QStringList &activePages )
@@ -1580,7 +1577,6 @@ QStringList KOPrefsDesignerFields::readActivePages()
 
 QString KOPrefsDesignerFields::applicationName()
 {
-  return "KORGANIZER";
+  return QLatin1String("KORGANIZER");
 }
 
-#include "koprefsdialog.moc"

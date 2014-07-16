@@ -91,8 +91,8 @@ public:
 #endif
 
     KDE_DUMMY_COMPARISON_OPERATOR(MailSummary)
-private:
-    quint32 mSerialNumber;
+    private:
+        quint32 mSerialNumber;
     QString mMessageId, mSubject, mFrom, mTo;
     time_t mDate;
 };
@@ -104,7 +104,7 @@ KDE_DUMMY_QHASH_FUNCTION(MailSummary)
   Object for the drag object to call-back for message fulltext.
 */
 class KDEPIM_EXPORT MailTextSource {
-public:
+    public:
     MailTextSource() {}
     virtual ~MailTextSource() {}
 
@@ -116,7 +116,7 @@ public:
 */
 class KDEPIM_EXPORT MailList : public QList<MailSummary>
 {
-  public:
+public:
     static QString mimeDataType();
     static bool canDecode( const QMimeData*md );
     static MailList fromMimeData( const QMimeData*md );
@@ -141,7 +141,7 @@ class KDEPIM_EXPORT MailList : public QList<MailSummary>
  */
 class KDEPIM_EXPORT MailListMimeData : public QMimeData
 {
-  public:
+public:
 
     /**
      * @param src The callback class for getting the full text of the mail.
@@ -153,7 +153,7 @@ class KDEPIM_EXPORT MailListMimeData : public QMimeData
 
     ~MailListMimeData();
 
-  protected:
+protected:
 
     /**
      * Reimplemented so that the message/rfc822 mimetype data can be retrieved
@@ -166,7 +166,7 @@ class KDEPIM_EXPORT MailListMimeData : public QMimeData
 
     virtual QStringList formats () const;
 
-  private:
+private:
 
     MailTextSource *mMailTextSource;
 

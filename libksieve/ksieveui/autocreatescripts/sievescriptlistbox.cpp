@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,18 +16,24 @@
 */
 #include "sievescriptlistbox.h"
 #include "sievescriptdescriptiondialog.h"
+#include "sieveglobalvariablewidget.h"
+#include "sieveforeverypartwidget.h"
 #include "sievescriptpage.h"
+#include "sieveincludewidget.h"
 
 #include <KHBox>
 #include <KMessageBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KInputDialog>
 #include <KPushButton>
 
 #include <QVBoxLayout>
 #include <QListWidget>
 #include <QPointer>
+#include <QDomElement>
+#include <QDebug>
 
+static QString defaultScriptName = QLatin1String("SCRIPTNAME: ");
 
 using namespace KSieveUi;
 
@@ -65,7 +71,7 @@ QString SieveScriptListItem::generatedScript(QStringList &requires) const
 {
     QString script;
     if (!mDescription.isEmpty()) {
-        script = QLatin1Char('#') + i18n("Description:") + QLatin1Char('\n') + mDescription;
+        script = QLatin1Char('#') + mDescription;
         script.replace(QLatin1Char('\n'), QLatin1String("\n#"));
         script += QLatin1Char('\n');
     }
@@ -76,7 +82,8 @@ QString SieveScriptListItem::generatedScript(QStringList &requires) const
 }
 
 SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
-    : QGroupBox(title, parent)
+    : QGroupBox(title, parent),
+      mScriptNumber(0)
 {
     QVBoxLayout *layout = new QVBoxLayout();
     mSieveListScript = new QListWidget;
@@ -181,16 +188,25 @@ void SieveScriptListBox::updateButtons()
     mBtnUp->setEnabled(!lst.isEmpty() && !theFirst);
 }
 
+SieveScriptPage *SieveScriptListBox::createNewScript(const QString &newName, const QString &description)
+{
+    SieveScriptListItem *item = new SieveScriptListItem(newName, mSieveListScript);
+    item->setDescription(description);
+    SieveScriptPage *page = new SieveScriptPage;
+    item->setScriptPage(page);
+    Q_EMIT addNewPage(page);
+    Q_EMIT enableButtonOk(true);
+    mSieveListScript->setCurrentItem(item);
+    updateButtons();
+    return page;
+}
+
 void SieveScriptListBox::slotNew()
 {
     const QString newName = KInputDialog::getText(i18n("New Script"), i18n("Add new name:"));
     if (!newName.isEmpty()) {
-        SieveScriptListItem *item = new SieveScriptListItem(newName, mSieveListScript);
-        SieveScriptPage *page = new SieveScriptPage;
-        item->setScriptPage(page);
-        Q_EMIT addNewPage(page);
-        mSieveListScript->setCurrentItem(item);
-        updateButtons();
+        createNewScript(newName);
+        Q_EMIT valueChanged();
     }
 }
 
@@ -202,7 +218,9 @@ void SieveScriptListBox::slotDelete()
             SieveScriptListItem *itemScript = static_cast<SieveScriptListItem*>(item);
             Q_EMIT removePage(itemScript->scriptPage());
             delete item;
+            Q_EMIT enableButtonOk(mSieveListScript->count()>0);
             updateButtons();
+            Q_EMIT valueChanged();
         }
     }
 }
@@ -214,6 +232,7 @@ void SieveScriptListBox::slotRename()
         const QString newName = KInputDialog::getText(i18n("Rename"), i18n("Add new name:"), item->text());
         if (!newName.isEmpty()) {
             item->setText(newName);
+            Q_EMIT valueChanged();
         }
     }
 }
@@ -227,6 +246,7 @@ void SieveScriptListBox::slotEditDescription()
         dlg->setDescription(sieveItem->description());
         if (dlg->exec()) {
             sieveItem->setDescription(dlg->description());
+            Q_EMIT valueChanged();
         }
         delete dlg;
     }
@@ -241,6 +261,7 @@ void SieveScriptListBox::slotTop()
             item = mSieveListScript->takeItem( currentIndex );
             mSieveListScript->insertItem( 0, item );
             mSieveListScript->setCurrentItem(item);
+            Q_EMIT valueChanged();
         }
     }
 }
@@ -254,6 +275,7 @@ void SieveScriptListBox::slotBottom()
             item = mSieveListScript->takeItem( currentIndex );
             mSieveListScript->insertItem( mSieveListScript->count() , item );
             mSieveListScript->setCurrentItem(item);
+            Q_EMIT valueChanged();
         }
     }
 }
@@ -267,6 +289,7 @@ void SieveScriptListBox::slotDown()
             item = mSieveListScript->takeItem( currentIndex );
             mSieveListScript->insertItem( currentIndex + 1, item );
             mSieveListScript->setCurrentItem(item);
+            Q_EMIT valueChanged();
         }
     }
 }
@@ -280,10 +303,10 @@ void SieveScriptListBox::slotUp()
             item = mSieveListScript->takeItem( currentIndex );
             mSieveListScript->insertItem( currentIndex - 1, item );
             mSieveListScript->setCurrentItem(item);
+            Q_EMIT valueChanged();
         }
     }
 }
-
 
 QString SieveScriptListBox::generatedScript(QString &requires) const
 {
@@ -294,7 +317,7 @@ QString SieveScriptListBox::generatedScript(QString &requires) const
         SieveScriptListItem* item = static_cast<SieveScriptListItem*>(mSieveListScript->item(i));
         if (i != 0)
             resultScript += QLatin1String("\n\n");
-        resultScript += QLatin1Char('#') + i18n("Script name: %1",item->text()) + QLatin1String("\n\n");
+        resultScript += QLatin1Char('#') + defaultScriptName + item->text() + QLatin1Char('\n');
         resultScript += item->generatedScript(lstRequires);
     }
 
@@ -309,4 +332,154 @@ QString SieveScriptListBox::generatedScript(QString &requires) const
     return resultScript;
 }
 
-#include "sievescriptlistbox.moc"
+void SieveScriptListBox::clear()
+{
+    mScriptNumber = 0;
+    Q_EMIT enableButtonOk(false);
+    //Clear tabpage
+    mSieveListScript->clear();
+    updateButtons();
+}
+
+void SieveScriptListBox::loadScript(const QDomDocument &doc, QString &error)
+{
+    clear();
+    QDomElement docElem = doc.documentElement();
+    QDomNode n = docElem.firstChild();
+    SieveScriptPage *currentPage = 0;
+    ParseSieveScriptTypeBlock typeBlock = TypeUnknown;
+    loadBlock(n, currentPage, typeBlock, error);
+}
+
+void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, ParseSieveScriptTypeBlock typeBlock, QString &error)
+{
+    QString scriptName;
+    QString comment;
+    bool hasCreatedAIfBlock = false;
+    while (!n.isNull()) {
+        QDomElement e = n.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            //qDebug()<<" tagName "<<tagName;
+            if (tagName == QLatin1String("control")) {
+                //Create a new page when before it was "onlyactions"
+                if (typeBlock == TypeBlockAction)
+                    currentPage = 0;
+                if (e.hasAttribute(QLatin1String("name"))) {
+                    const QString controlType = e.attribute(QLatin1String("name"));
+                    //qDebug()<<" controlType"<<controlType;
+                    if (controlType == QLatin1String("if")) {
+                        typeBlock = TypeBlockIf;
+                        if (!currentPage || hasCreatedAIfBlock)
+                            currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
+                        hasCreatedAIfBlock = true;
+                        comment.clear();
+                        currentPage->blockIfWidget()->loadScript(e, false, error);
+                    } else if (controlType == QLatin1String("elsif")) {
+                        typeBlock = TypeBlockElsif;
+                        if (!currentPage) {
+                            qDebug() <<" script is not correct missing if block";
+                            currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
+                        }
+                        SieveScriptBlockWidget *blockWidget = currentPage->addScriptBlock(KSieveUi::SieveWidgetPageAbstract::BlockElsIf);
+                        if (blockWidget) {
+                            blockWidget->loadScript(e, false, error);
+                        }
+                    } else if (controlType == QLatin1String("else")) {
+                        typeBlock = TypeBlockElse;
+                        if (!currentPage) {
+                            currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
+                            qDebug() <<" script is not correct missing if block";
+                        }
+                        SieveScriptBlockWidget *blockWidget = currentPage->addScriptBlock(KSieveUi::SieveWidgetPageAbstract::BlockElse);
+                        if (blockWidget) {
+                            blockWidget->loadScript(e, false, error);
+                        }
+                        //We are sure that we can't have another elsif
+                        currentPage = 0;
+                    } else if (controlType == QLatin1String("foreverypart")) {
+                        typeBlock = TypeBlockForeachBlock;
+                        if (!currentPage) {
+                            currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
+                            comment.clear();
+                        }
+                        if (currentPage->forEveryPartWidget())
+                            currentPage->forEveryPartWidget()->loadScript(e, error);
+                        else 
+                            qDebug()<<" forEveryPart feature not supported";
+                        //TODO verify it.
+                        QDomNode block = e.firstChildElement(QLatin1String("block")).firstChild();
+                        loadBlock(block, currentPage, typeBlock, error);
+                    } else if (controlType == QLatin1String("require")) {
+                        //Nothing. autogenerated
+                    } else {
+                        qDebug()<<" unknown controlType :"<<controlType;
+                    }
+                }
+            } else if (tagName == QLatin1String("comment")) {
+                QString str(e.text());
+                if (str.contains(defaultScriptName)) {
+                    scriptName = str.remove(defaultScriptName);
+                } else {
+                    if (!comment.isEmpty())
+                        comment += QLatin1Char('\n');
+                    comment += e.text();
+                }
+            } else if (tagName == QLatin1String("action")) {
+                if (e.hasAttribute(QLatin1String("name"))) {
+                    const QString actionName = e.attribute(QLatin1String("name"));
+                    if (actionName == QLatin1String("include")) {
+                        if (!currentPage || (typeBlock == TypeBlockIf) || (typeBlock == TypeBlockElse) || (typeBlock == TypeBlockElsif)) {
+                            currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
+                            comment.clear();
+                        }
+                        typeBlock = TypeBlockInclude;
+                        if (currentPage->includeWidget()) {
+                            currentPage->includeWidget()->loadScript(e, error);
+                        } else {
+                            qDebug()<<" include not supported";
+                        }
+                    } else if (actionName == QLatin1String("global")) {
+                        if (!currentPage || (typeBlock == TypeBlockIf) || (typeBlock == TypeBlockElse) || (typeBlock == TypeBlockElsif)) {
+                            currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
+                            comment.clear();
+                        }
+                        typeBlock = TypeBlockGlobal;
+                        if (currentPage->globalVariableWidget()) {
+                            currentPage->globalVariableWidget()->loadScript(e, error);
+                        } else {
+                            qDebug()<<" globalVariable not supported";
+                        }
+                    } else if (actionName == QLatin1String("set") && (typeBlock == TypeBlockGlobal)) {
+                        if (currentPage->globalVariableWidget()) {
+                            currentPage->globalVariableWidget()->loadSetVariable(e, error);
+                        } else {
+                            qDebug()<<" globalVariable not supported";
+                        }
+                    } else {
+                        if (!currentPage || (typeBlock == TypeBlockIf) || (typeBlock == TypeBlockElse) || (typeBlock == TypeBlockElsif)) {
+                            currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
+                        }
+                        typeBlock = TypeBlockAction;
+                        comment.clear();
+                        currentPage->blockIfWidget()->loadScript(e, true, error);
+                        //qDebug()<<" unknown action name: "<<actionName;
+                    }
+                }
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
+            } else {
+                qDebug()<<" unknown tagname"<<tagName;
+            }
+        }
+        n = n.nextSibling();
+    }
+}
+
+QString SieveScriptListBox::createUniqName()
+{
+    const QString pattern = i18n("Script part %1", mScriptNumber);
+    ++mScriptNumber;
+    return pattern;
+}
+

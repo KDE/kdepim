@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -21,16 +21,16 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <KMessageBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMenu>
 #include <KFileDialog>
+#include <KNS3/DownloadDialog>
 
 
 #include <QListWidgetItem>
 #include <QPointer>
 #include <QMimeData>
 #include <QDropEvent>
-#include <QDebug>
 
 namespace PimCommon {
 
@@ -113,6 +113,28 @@ public:
         }
     }
 
+    void slotDuplicate()
+    {
+        QListWidgetItem *item = q->currentItem();
+        if (item) {
+            QStringList name;
+            for ( int i = 0; i < q->count(); ++i ) {
+                name.append(q->item(i)->text());
+            }
+            QString templateName = item->text() + QString::fromLatin1(" (%1)");
+            QString newName;
+            int i = 1;
+            do {
+                newName = templateName.arg(i);
+                i++;
+            } while(name.contains(newName));
+
+            const QString templateScript = item->data(TemplateListWidget::Text).toString();
+            createListWidgetItem(newName, templateScript, false);
+            dirty = true;
+        }
+    }
+
     void slotImportTemplates()
     {
         const QString templateFile = KFileDialog::getOpenFileName();
@@ -148,15 +170,23 @@ public:
             const bool defaultTemplate = lstSelectedItems.first()->data(TemplateListWidget::DefaultTemplate).toBool();
             if (lstSelectedItems.count() == 1) {
                 menu->addAction( defaultTemplate ? i18n("Show...") : i18n("Modify..."), q, SLOT(slotModify()));
+                menu->addAction( i18n("Duplicate"), q, SLOT(slotDuplicate()));
             }
             if (lstSelectedItems.count() == 1 && !defaultTemplate) {
-                menu->addAction( i18n("Remove"), q, SLOT(slotRemove()));
+                menu->addSeparator();
+                menu->addAction( KIcon(QLatin1String("edit-delete")), i18n("Remove"), q, SLOT(slotRemove()));
             }
         }
         menu->addSeparator();
         if (q->count()>0)
             menu->addAction( i18n("Export..."), q, SLOT(slotExportTemplates()));
         menu->addAction( i18n("Import..."), q, SLOT(slotImportTemplates()));
+
+        if (!knewstuffConfigName.isEmpty()) {
+            menu->addSeparator();
+            QAction *act = menu->addAction( i18n("Download new Templates..."), q, SLOT(slotDownloadTemplates()));
+            act->setIcon(KIcon(QLatin1String("get-hot-new-stuff")));
+        }
 
         menu->exec( q->mapToGlobal( pos ) );
         delete menu;
@@ -210,6 +240,13 @@ public:
         configFile->sync();
     }
 
+    void slotDownloadTemplates()
+    {
+        QPointer<KNS3::DownloadDialog> downloadThemesDialog = new KNS3::DownloadDialog(knewstuffConfigName);
+        downloadThemesDialog->exec();
+        delete downloadThemesDialog;
+    }
+
     void save()
     {
         if (!dirty)
@@ -218,6 +255,7 @@ public:
         saveTemplates(&(*config));
         dirty = false;
     }
+    QString knewstuffConfigName;
     bool dirty;
     KSharedConfig::Ptr config;
     TemplateListWidget *q;
@@ -272,14 +310,14 @@ QMimeData *TemplateListWidget::mimeData ( const QList<QListWidgetItem *> items )
 bool TemplateListWidget::addNewTemplate(QString &templateName, QString &templateScript)
 {
     QPointer<TemplateEditDialog> dlg = new TemplateEditDialog(this);
+    bool result = false;
     if (dlg->exec()) {
         templateName = dlg->templateName();
         templateScript = dlg->script();
-        delete dlg;
-        return true;
+        result = true;
     }
     delete dlg;
-    return false;
+    return result;
 }
 
 bool TemplateListWidget::modifyTemplate(QString &templateName, QString &templateScript, bool defaultTemplate)
@@ -287,19 +325,19 @@ bool TemplateListWidget::modifyTemplate(QString &templateName, QString &template
     QPointer<TemplateEditDialog> dlg = new TemplateEditDialog(this, defaultTemplate);
     dlg->setTemplateName(templateName);
     dlg->setScript(templateScript);
+    bool result = false;
     if (dlg->exec()) {
         if (!defaultTemplate) {
             templateName = dlg->templateName();
             templateScript = dlg->script();
         }
-        delete dlg;
-        return true;
+        result = true;
     }
     delete dlg;
-    return false;
+    return result;
 }
 
-void TemplateListWidget::dropEvent ( QDropEvent * event )
+void TemplateListWidget::dropEvent( QDropEvent * event )
 {
     if ( event->source() == this ) {
         event->ignore();
@@ -313,5 +351,15 @@ void TemplateListWidget::dropEvent ( QDropEvent * event )
     QListWidget::dropEvent( event );
 }
 
+void TemplateListWidget::setKNewStuffConfigFile(const QString &configName)
+{
+    d->knewstuffConfigName = configName;
 }
-#include "templatelistwidget.moc"
+
+void TemplateListWidget::addDefaultTemplate(const QString &templateName, const QString &templateScript)
+{
+    d->createListWidgetItem(templateName, templateScript, true);
+}
+
+}
+#include "moc_templatelistwidget.cpp"

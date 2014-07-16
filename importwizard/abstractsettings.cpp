@@ -30,8 +30,6 @@
 #include <akonadi/agentmanager.h>
 #include <akonadi/agentinstancecreatejob.h>
 
-#include <QDBusReply>
-#include <QDBusInterface>
 #include <QMetaMethod>
 
 using namespace Akonadi;

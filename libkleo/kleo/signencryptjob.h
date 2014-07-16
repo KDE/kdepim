@@ -107,9 +107,9 @@ namespace Kleo {
 
     virtual std::pair<GpgME::SigningResult,GpgME::EncryptionResult>
       exec( const std::vector<GpgME::Key> & signers,
-	    const std::vector<GpgME::Key> & recipients,
-	    const QByteArray & plainText,
-	    bool alwaysTrust, QByteArray & cipherText ) = 0;
+            const std::vector<GpgME::Key> & recipients,
+            const QByteArray & plainText,
+            bool alwaysTrust, QByteArray & cipherText ) = 0;
 
     /*!
       This is a hack to request BASE64 output (instead of whatever
@@ -119,8 +119,8 @@ namespace Kleo {
 
   Q_SIGNALS:
     void result( const GpgME::SigningResult & signingresult,
-		 const GpgME::EncryptionResult & encryptionresult,
-		 const QByteArray & cipherText, const QString & auditLogAsHtml=QString(),
+                 const GpgME::EncryptionResult & encryptionresult,
+                 const QByteArray & cipherText, const QString & auditLogAsHtml=QString(),
                  const GpgME::Error & auditLogError=GpgME::Error() );
   };
 

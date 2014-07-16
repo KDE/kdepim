@@ -50,14 +50,15 @@ struct MultiChange {
       success( true )
   {}
 
-  bool inProgress() {
+  bool inProgress() const
+  {
     return parent.isValid() && !children.isEmpty();
   }
 };
 
 namespace CalendarSupport {
 
-struct CalendarUtilsPrivate
+class CalendarUtilsPrivate
 {
   public:
     /// Methods
@@ -261,8 +262,8 @@ void CalendarUtils::purgeCompletedTodos()
       i18nc( "@info",
              "Unable to purge to-dos with uncompleted children." ),
       i18nc( "@title:window", "Delete To-do" ),
-      "UncompletedChildrenPurgeTodos" );
+      QLatin1String("UncompletedChildrenPurgeTodos") );
   }
 }
 
-#include "calendarutils.moc"
+#include "moc_calendarutils.cpp"

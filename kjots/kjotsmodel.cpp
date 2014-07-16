@@ -21,7 +21,6 @@
 
 #include "kjotsmodel.h"
 
-#include <QColor>
 #include <QTextDocument>
 
 #include <KIcon>
@@ -39,7 +38,7 @@
 #include <grantlee/markupdirector.h>
 #include <grantlee/texthtmlbuilder.h>
 #include <grantlee/plaintextmarkupbuilder.h>
-#include "kjotslockattribute.h"
+#include "noteshared/attributes/notelockattribute.h"
 
 Q_DECLARE_METATYPE(QTextDocument*)
 KJotsEntity::KJotsEntity(const QModelIndex &index, QObject *parent)
@@ -267,12 +266,12 @@ QVariant KJotsModel::data( const QModelIndex &index, int role ) const
   if ( role == Qt::DecorationRole )
   {
     const Item item = index.data( ItemRole ).value<Item>();
-    if ( item.isValid() && item.hasAttribute<KJotsLockAttribute>() ) {
-        return KIcon( "emblem-locked" );
+    if ( item.isValid() && item.hasAttribute<NoteShared::NoteLockAttribute>() ) {
+        return KIcon( QLatin1String("emblem-locked") );
     } else {
       const Collection col = index.data( CollectionRole ).value<Collection>();
-      if ( col.isValid() && col.hasAttribute<KJotsLockAttribute>() ) {
-        return KIcon( "emblem-locked" );
+      if ( col.isValid() && col.hasAttribute<NoteShared::NoteLockAttribute>() ) {
+        return KIcon(QLatin1String( "emblem-locked") );
       }
     }
   }
@@ -290,4 +289,3 @@ QVariant KJotsModel::entityData( const Akonadi::Item& item, int column, int role
   return EntityTreeModel::entityData( item, column, role );
 }
 
-#include "kjotsmodel.moc"

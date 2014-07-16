@@ -26,7 +26,7 @@
 
 #include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KCalCore/Todo>
 #include <KCalCore/Event>
 #include <KCalCore/Attachment>
@@ -67,7 +67,7 @@ static bool isDueToday( const KCalCore::Todo::Ptr &todo )
 }
 
 TodoModel::Private::Private( const EventViews::PrefsPtr &preferences,
-                             TodoModel *qq ) : QObject()
+                             TodoModel *qq ) : QObject(), m_changer(0)
                                              , m_preferences( preferences )
                                              , q( qq )
 {
@@ -217,7 +217,7 @@ void TodoModel::Private::onLayoutChanged()
 TodoModel::TodoModel( const EventViews::PrefsPtr &preferences, QObject *parent )
   : QAbstractProxyModel( parent ), d( new Private( preferences, this ) )
 {
-  setObjectName( "TodoModel" );
+  setObjectName( QLatin1String("TodoModel") );
 }
 
 TodoModel::~TodoModel()
@@ -278,12 +278,12 @@ QVariant TodoModel::data( const QModelIndex &index, int role ) const
       return QVariant( todo->priority() );
     case PercentColumn:
       return QVariant( todo->percentComplete() );
+    case StartDateColumn:
+      return todo->hasStartDate() ? QVariant( KCalUtils::IncidenceFormatter::dateToString( todo->dtStart() ) )
+                                  : QVariant( QString() );
     case DueDateColumn:
-      if ( todo->hasDueDate() && todo->dtDue().date().isValid() ) {
-        return QVariant( KCalUtils::IncidenceFormatter::dateToString( todo->dtDue() ) );
-      } else {
-        return QVariant( QString() );
-      }
+      return todo->hasDueDate() ? QVariant( KCalUtils::IncidenceFormatter::dateToString( todo->dtDue() ) )
+                                : QVariant( QString() );
     case CategoriesColumn:
     {
       QString categories = todo->categories().join(
@@ -308,6 +308,8 @@ QVariant TodoModel::data( const QModelIndex &index, int role ) const
       return QVariant( todo->priority() );
     case PercentColumn:
       return QVariant( todo->percentComplete() );
+    case StartDateColumn:
+      return QVariant( todo->dtStart().date() );
     case DueDateColumn:
       return QVariant( todo->dtDue().date() );
     case CategoriesColumn:
@@ -362,7 +364,7 @@ QVariant TodoModel::data( const QModelIndex &index, int role ) const
   // the checkbox ( which increments the next occurrence date ).
   if ( role == Qt::DecorationRole && index.column() == SummaryColumn ) {
     if ( todo->recurs() ) {
-      return QVariant( QIcon( SmallIcon( "task-recurring" ) ) );
+      return QVariant( QIcon( SmallIcon( QLatin1String("task-recurring") ) ) );
     }
   }
 
@@ -398,7 +400,10 @@ QVariant TodoModel::data( const QModelIndex &index, int role ) const
       case RecurColumn:
       case PriorityColumn:
       case PercentColumn:
+      case StartDateColumn:
       case DueDateColumn:
+      case CategoriesColumn:
+      case CalendarColumn:
         return QVariant( Qt::AlignHCenter | Qt::AlignVCenter );
     }
     return QVariant( Qt::AlignLeft | Qt::AlignVCenter );
@@ -438,7 +443,11 @@ bool TodoModel::setData( const QModelIndex &index, const QVariant &value, int ro
   if ( d->m_calendar->hasRight( item, Akonadi::Collection::CanChangeItem ) ) {
     KCalCore::Todo::Ptr oldTodo( todo->clone() );
     if ( role == Qt::CheckStateRole && index.column() == 0 ) {
-      todo->setCompleted( static_cast<Qt::CheckState>( value.toInt() ) == Qt::Checked );
+      const bool checked = static_cast<Qt::CheckState>( value.toInt() ) == Qt::Checked;
+      if ( checked )
+        todo->setCompleted( KDateTime::currentLocalDateTime() );  // Because it calls Todo::recurTodo()
+      else
+        todo->setCompleted( false );
     }
 
     if ( role == Qt::EditRole ) {
@@ -453,6 +462,13 @@ bool TodoModel::setData( const QModelIndex &index, const QVariant &value, int ro
           break;
         case PercentColumn:
           todo->setPercentComplete( value.toInt() );
+          break;
+          case StartDateColumn:
+          {
+            KDateTime tmp = todo->dtStart();
+            tmp.setDate( value.toDate() );
+            todo->setDtStart( tmp );
+          }
           break;
         case DueDateColumn:
           {
@@ -613,8 +629,10 @@ QVariant TodoModel::headerData( int column, Qt::Orientation orientation, int rol
       return QVariant( i18n( "Priority" ) );
     case PercentColumn:
       return QVariant( i18nc( "@title:column percent complete", "Complete" ) );
+    case StartDateColumn:
+      return QVariant( i18n( "Start Date" ) );
     case DueDateColumn:
-      return QVariant( i18n( "Due Date/Time" ) );
+      return QVariant( i18n( "Due Date" ) );
     case CategoriesColumn:
       return QVariant( i18n( "Categories" ) );
     case DescriptionColumn:
@@ -630,7 +648,10 @@ QVariant TodoModel::headerData( int column, Qt::Orientation orientation, int rol
       case RecurColumn:
       case PriorityColumn:
       case PercentColumn:
+      case StartDateColumn:
       case DueDateColumn:
+      case CategoriesColumn:
+      case CalendarColumn:
         return QVariant( Qt::AlignHCenter );
     }
     return QVariant();
@@ -708,14 +729,14 @@ bool TodoModel::dropMimeData( const QMimeData *data, Qt::DropAction action,
           KMessageBox::information(
             0,
             i18n( "Cannot move to-do to itself or a child of itself." ),
-            i18n( "Drop To-do" ), "NoDropTodoOntoItself" );
+            i18n( "Drop To-do" ), QLatin1String("NoDropTodoOntoItself") );
           return false;
         }
         const QString parentUid = tmp->relatedTo();
         tmp = CalendarSupport::incidence( d->m_calendar->item( parentUid ) );
       }
 
-      if (!destTodo->hasRecurrenceId()) {
+      if (!destTodo || !destTodo->hasRecurrenceId()) {
         KCalCore::Todo::Ptr oldTodo = KCalCore::Todo::Ptr( todo->clone() );
         // destTodo is empty when we drag a to-do out of a relationship
         todo->setRelatedTo( destTodo ? destTodo->uid() : QString() );
@@ -797,6 +818,7 @@ Qt::ItemFlags TodoModel::flags( const QModelIndex &index ) const
     case SummaryColumn:
     case PriorityColumn:
     case PercentColumn:
+    case StartDateColumn:
     case DueDateColumn:
     case CategoriesColumn:
       ret |= Qt::ItemIsEditable;

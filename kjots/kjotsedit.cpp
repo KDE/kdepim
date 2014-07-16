@@ -30,16 +30,14 @@
 #include <QStackedWidget>
 #include <QUrl>
 #include <QMenu>
-#include <QContextMenuEvent>
-#include <QClipboard>
 #include <QItemSelectionModel>
 #include <QPointer>
+#include <QClipboard>
 
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <krun.h>
 #include <KApplication>
-#include <KLocale>
 
 #include "kjotslinkdialog.h"
 
@@ -50,8 +48,8 @@
 
 #include <kdebug.h>
 #include "kjotsmodel.h"
-#include "kjotslockattribute.h"
-
+#include "noteshared/attributes/notelockattribute.h"
+#include "noteshared/editor/noteeditorutils.h"
 
 #ifndef KDE_USE_FINAL
 Q_DECLARE_METATYPE(QTextDocument*)
@@ -85,45 +83,20 @@ KJotsEdit::~KJotsEdit()
 {
 }
 
-#ifndef HAVE_MOUSEPOPUPMENUIMPLEMENTATION
-void KJotsEdit::contextMenuEvent( QContextMenuEvent *event )
-{
-    QMenu *popup = createStandardContextMenu();
-    connect( popup, SIGNAL(triggered(QAction*)),
-             this, SLOT(menuActivated(QAction*)) );
-
-    popup->addSeparator();
-    QAction * act = actionCollection->action("copyIntoTitle");
-    popup->addAction(act);
-    act = actionCollection->action("insert_checkmark");
-    act->setEnabled( !isReadOnly() );
-    popup->addAction(act);
-
-    if (!KApplication::kApplication()->clipboard()->text().isEmpty())
-    {
-      act = actionCollection->action("paste_plain_text");
-      act->setEnabled( !isReadOnly() );
-      popup->addAction( act );
-    }
-    popup->exec( event->globalPos() );
-    delete popup;
-}
-#endif
-
 void KJotsEdit::mousePopupMenuImplementation(const QPoint& pos)
 {
    QMenu *popup = mousePopupMenu();
    if ( popup ) {
         popup->addSeparator();
-    QAction * act = actionCollection->action("copyIntoTitle");
+    QAction * act = actionCollection->action(QLatin1String("copyIntoTitle"));
     popup->addAction(act);
-    act = actionCollection->action("insert_checkmark");
+    act = actionCollection->action(QLatin1String("insert_checkmark"));
     act->setEnabled( !isReadOnly() );
     popup->addAction(act);
 
     if (!KApplication::kApplication()->clipboard()->text().isEmpty())
     {
-      act = actionCollection->action("paste_plain_text");
+      act = actionCollection->action(QLatin1String("paste_plain_text"));
       act->setEnabled( !isReadOnly() );
       popup->addAction( act );
     }
@@ -138,17 +111,17 @@ void KJotsEdit::delayedInitialization ( KActionCollection *collection )
 {
     actionCollection = collection;
 
-    connect(actionCollection->action("auto_bullet"), SIGNAL(triggered()), SLOT(onAutoBullet()));
-    connect(actionCollection->action("auto_decimal"), SIGNAL(triggered()), SLOT(onAutoDecimal())); //auto decimal list
-    connect(actionCollection->action("manage_link"), SIGNAL(triggered()), SLOT(onLinkify()));
-    connect(actionCollection->action("insert_checkmark"), SIGNAL(triggered()), SLOT(addCheckmark()));
-    connect(actionCollection->action("manual_save"), SIGNAL(triggered()), SLOT(savePage()));
-    connect(actionCollection->action("insert_date"), SIGNAL(triggered()), SLOT(insertDate()));
+    connect(actionCollection->action(QLatin1String("auto_bullet")), SIGNAL(triggered()), SLOT(onAutoBullet()));
+    connect(actionCollection->action(QLatin1String("auto_decimal")), SIGNAL(triggered()), SLOT(onAutoDecimal())); //auto decimal list
+    connect(actionCollection->action(QLatin1String("manage_link")), SIGNAL(triggered()), SLOT(onLinkify()));
+    connect(actionCollection->action(QLatin1String("insert_checkmark")), SIGNAL(triggered()), SLOT(addCheckmark()));
+    connect(actionCollection->action(QLatin1String("manual_save")), SIGNAL(triggered()), SLOT(savePage()));
+    connect(actionCollection->action(QLatin1String("insert_date")), SIGNAL(triggered()), SLOT(insertDate()));
 }
 
 void KJotsEdit::insertDate()
 {
-  insertPlainText(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime(), KLocale::ShortDate) + ' ');
+    NoteShared::NoteEditorUtils::insertDate(this);
 }
 
 void KJotsEdit::selectionChanged( const QItemSelection& selected, const QItemSelection& deselected )
@@ -172,7 +145,7 @@ void KJotsEdit::tryDisableEditing()
   if ( !item.isValid() )
     return setReadOnly(true);
 
-  if ( item.hasAttribute<KJotsLockAttribute>() )
+  if ( item.hasAttribute<NoteShared::NoteLockAttribute>() )
     return setReadOnly(true);
 
   setReadOnly(false);
@@ -232,10 +205,10 @@ void KJotsEdit::onAutoBullet ( void )
 
     if ( currentFormatting == KTextEdit::AutoBulletList ) {
         setAutoFormatting(KTextEdit::AutoNone);
-        actionCollection->action("auto_bullet")->setChecked( false );
+        actionCollection->action(QLatin1String("auto_bullet"))->setChecked( false );
     } else {
         setAutoFormatting(KTextEdit::AutoBulletList);
-        actionCollection->action("auto_bullet")->setChecked( true );
+        actionCollection->action(QLatin1String("auto_bullet"))->setChecked( true );
     }
 }
 
@@ -269,7 +242,7 @@ void KJotsEdit::DecimalList( void )
 
   QString blockText = cursor.block().text();
 
-  if (blockText.length() == 2 && blockText == "1.")
+  if (blockText.length() == 2 && blockText == QLatin1String("1."))
   {
       cursor.movePosition(QTextCursor::StartOfLine, QTextCursor::KeepAnchor);
       cursor.removeSelectedText();
@@ -282,11 +255,11 @@ void KJotsEdit::onAutoDecimal( void )
     if (allowAutoDecimal == true ) {
         allowAutoDecimal = false;
         disconnect(this, SIGNAL(textChanged()), this, SLOT(DecimalList()));
-        actionCollection->action("auto_decimal")->setChecked( false );
+        actionCollection->action(QLatin1String("auto_decimal"))->setChecked( false );
     } else {
         allowAutoDecimal = true;
         connect(this, SIGNAL(textChanged()), this, SLOT(DecimalList()));
-        actionCollection->action("auto_decimal")->setChecked( true );
+        actionCollection->action(QLatin1String("auto_decimal"))->setChecked( true );
     }
 }
 
@@ -308,14 +281,12 @@ void KJotsEdit::onLinkify ( void )
 void KJotsEdit::addCheckmark( void )
 {
     QTextCursor cursor = textCursor();
-    static const QChar unicode[] = {0x2713};
-    int size = sizeof(unicode) / sizeof(QChar);
-    cursor.insertText( QString::fromRawData(unicode, size) );
+    NoteShared::NoteEditorUtils::addCheckmark(cursor);
 }
 
 bool KJotsEdit::canInsertFromMimeData ( const QMimeData *source ) const
 {
-    if ( source->formats().contains("kjots/internal_link") ) {
+    if ( source->formats().contains(QLatin1String("kjots/internal_link")) ) {
         return true;
     } else if ( source->hasUrls() ) {
         return true;
@@ -326,12 +297,12 @@ bool KJotsEdit::canInsertFromMimeData ( const QMimeData *source ) const
 
 void KJotsEdit::insertFromMimeData ( const QMimeData *source )
 {
-    if ( source->formats().contains("kjots/internal_link") ) {
-        insertHtml(source->data("kjots/internal_link"));
+    if ( source->formats().contains(QLatin1String("kjots/internal_link")) ) {
+        insertHtml(QLatin1String(source->data(QLatin1String("kjots/internal_link"))));
     } else if ( source->hasUrls() ) {
         foreach ( const QUrl &url, source->urls() ) {
             if ( url.isValid() ) {
-                QString html = QString ( "<a href='%1'>%2</a> " )
+                QString html = QString::fromLatin1( "<a href='%1'>%2</a> " )
                     .arg(QString::fromUtf8(url.toEncoded()))
                     .arg(url.toString(QUrl::RemovePassword));
                 insertHtml(html);
@@ -343,14 +314,14 @@ void KJotsEdit::insertFromMimeData ( const QMimeData *source )
 //         kDebug() << source->html();
         QString str = source->html();
         int styleBegin = 0;
-        while ((styleBegin = str.indexOf("style=\"", styleBegin, Qt::CaseInsensitive) + 7) != (-1 + 7)) {
-            int styleEnd = str.indexOf('"', styleBegin);
+        while ((styleBegin = str.indexOf(QLatin1String("style=\""), styleBegin, Qt::CaseInsensitive) + 7) != (-1 + 7)) {
+            int styleEnd = str.indexOf(QLatin1Char('"'), styleBegin);
             int styleFragmentStart = styleBegin;
             int styleFragmentEnd = styleBegin;
-            while ((styleFragmentEnd = str.indexOf(";", styleFragmentEnd) + 1) != (-1 + 1)) {
+            while ((styleFragmentEnd = str.indexOf(QLatin1String(";"), styleFragmentEnd) + 1) != (-1 + 1)) {
               if (styleFragmentEnd > styleEnd) break;
               int fragmentLength = styleFragmentEnd-styleFragmentStart;
-              if (str.mid(styleFragmentStart, fragmentLength).contains("margin", Qt::CaseInsensitive))
+              if (str.mid(styleFragmentStart, fragmentLength).contains(QLatin1String("margin"), Qt::CaseInsensitive))
               {
                 str.remove(styleFragmentStart, fragmentLength);
                 styleEnd -= fragmentLength;
@@ -445,6 +416,5 @@ void KJotsEdit::savePage()
 
 
 
-#include "kjotsedit.moc"
 /* ex: set tabstop=4 softtabstop=4 shiftwidth=4 expandtab: */
 /* kate: tab-indents off; replace-tabs on; tab-width 4; remove-trailing-space on; encoding utf-8;*/

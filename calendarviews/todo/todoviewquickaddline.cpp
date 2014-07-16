@@ -25,7 +25,7 @@
 
 #include "todoviewquickaddline.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QKeyEvent>
 
@@ -66,4 +66,3 @@ void TodoViewQuickAddLine::resizeEvent ( QResizeEvent * event )
                      width() - clearButtonUsedSize().width() ) );
 }
 
-#include "todoviewquickaddline.moc"

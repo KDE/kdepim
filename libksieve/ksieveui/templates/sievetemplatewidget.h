@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -20,6 +20,10 @@
 
 #include "pimcommon/templatewidgets/templatelistwidget.h"
 
+namespace PimCommon {
+class TemplateManager;
+}
+
 namespace KSieveUi {
 class SieveTemplateListWidget : public PimCommon::TemplateListWidget
 {
@@ -31,6 +35,9 @@ public:
     QList<PimCommon::defaultTemplate> defaultTemplates();
     bool addNewTemplate(QString &templateName, QString &templateScript);
     bool modifyTemplate(QString &templateName, QString &templateScript, bool defaultTemplate);
+
+private:
+    PimCommon::TemplateManager *mTemplateManager;
 };
 
 class SieveTemplateWidget : public QWidget

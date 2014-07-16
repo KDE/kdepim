@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -18,7 +18,7 @@
 #include "selectfileintowidget.h"
 
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QPushButton>
 #include <QHBoxLayout>
@@ -52,6 +52,7 @@ SelectFileIntoWidget::SelectFileIntoWidget(QWidget *parent)
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
     mLineEdit = new KLineEdit;
+    connect(mLineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     lay->addWidget(mLineEdit);
     QPushButton *selectFileInfo = new QPushButton(i18n("..."));
     connect(selectFileInfo, SIGNAL(clicked(bool)), SLOT(slotSelectFolder()));
@@ -78,4 +79,3 @@ QString SelectFileIntoWidget::selectedFolder() const
     return mLineEdit->text();
 }
 
-#include "selectfileintowidget.moc"

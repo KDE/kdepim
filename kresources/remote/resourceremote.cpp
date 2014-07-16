@@ -341,4 +341,3 @@ bool ResourceRemote::setValue( const QString &key, const QString &value )
     return ResourceCached::setValue( key, value );
 }
 
-#include "resourceremote.moc"

@@ -26,56 +26,55 @@
 using namespace MailCommon;
 
 FilterActionWithString::FilterActionWithString( const QString &name, const QString &label, QObject *parent )
-  : FilterAction( name, label, parent )
+    : FilterAction( name, label, parent )
 {
 }
 
 bool FilterActionWithString::isEmpty() const
 {
-  return mParameter.trimmed().isEmpty();
+    return mParameter.trimmed().isEmpty();
 }
 
 QWidget* FilterActionWithString::createParamWidget( QWidget *parent ) const
 {
-  KLineEdit *lineEdit = new KLineEdit( parent );
-  lineEdit->setClearButtonShown( true );
-  lineEdit->setTrapReturnKey(true);
-  lineEdit->setText( mParameter );
+    KLineEdit *lineEdit = new KLineEdit( parent );
+    lineEdit->setClearButtonShown( true );
+    lineEdit->setTrapReturnKey(true);
+    lineEdit->setText( mParameter );
 
-  connect( lineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(filterActionModified()) );
+    connect( lineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(filterActionModified()) );
 
-  return lineEdit;
+    return lineEdit;
 }
 
 void FilterActionWithString::applyParamWidgetValue( QWidget *paramWidget )
 {
-  mParameter = static_cast<KLineEdit*>( paramWidget )->text();
+    mParameter = static_cast<KLineEdit*>( paramWidget )->text();
 }
 
 void FilterActionWithString::setParamWidgetValue( QWidget *paramWidget ) const
 {
-  static_cast<KLineEdit*>( paramWidget )->setText( mParameter );
+    static_cast<KLineEdit*>( paramWidget )->setText( mParameter );
 }
 
 void FilterActionWithString::clearParamWidget( QWidget *paramWidget ) const
 {
-  static_cast<KLineEdit*>( paramWidget )->clear();
+    static_cast<KLineEdit*>( paramWidget )->clear();
 }
 
 void FilterActionWithString::argsFromString( const QString &argsStr )
 {
-  mParameter = argsStr;
+    mParameter = argsStr;
 }
 
 QString FilterActionWithString::argsAsString() const
 {
-  return mParameter;
+    return mParameter;
 }
 
 QString FilterActionWithString::displayString() const
 {
-  return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
+    return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
 }
 
 
-#include "filteractionwithstring.moc"

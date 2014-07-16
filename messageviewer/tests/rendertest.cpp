@@ -19,22 +19,13 @@
 
 #include "htmlwriter/filehtmlwriter.h"
 #include "viewer/objecttreeparser.h"
-#include "viewer/csshelper.h"
+#include "tests/testcsshelper.h"
 #include "messagecore/tests/util.h"
 
 #include <KMime/Message>
 #include <qtest_kde.h>
 #include <QDir>
 #include <QObject>
-
-// This is used to override the default message output handler. In unit tests, the special message
-// output handler can write messages to stdout delayed, i.e. after the actual kDebug() call. This
-// interfers with KPGP, since KPGP reads output from stdout, which needs to be kept clean.
-void nullMessageOutput( QtMsgType type, const char *msg )
-{
-  Q_UNUSED( type );
-  Q_UNUSED( msg );
-}
 
 using namespace MessageViewer;
 
@@ -54,11 +45,11 @@ class RenderTest : public QObject
       QTest::addColumn<QString>( "referenceFileName" );
       QTest::addColumn<QString>( "outFileName" );
 
-      QDir dir( MAIL_DATA_DIR );
-      foreach ( const QString &file, dir.entryList( QStringList("*.mbox"), QDir::Files | QDir::Readable | QDir::NoSymLinks  ) ) {
-        if ( !QFile::exists(dir.path() + '/' + file + ".html") )
+      QDir dir( QLatin1String(MAIL_DATA_DIR) );
+      foreach ( const QString &file, dir.entryList( QStringList(QLatin1String("*.mbox")), QDir::Files | QDir::Readable | QDir::NoSymLinks  ) ) {
+        if ( !QFile::exists(dir.path() + QLatin1Char('/') + file + QLatin1String(".html")) )
           continue;
-        QTest::newRow( file.toLatin1() ) << QString(dir.path() + '/' +  file) << QString(dir.path() + '/' + file + ".html") << QString(file + ".out");
+        QTest::newRow( file.toLatin1() ) << QString(dir.path() + QLatin1Char('/') +  file) << QString(dir.path() + QLatin1Char('/') + file + QLatin1String(".html")) << QString(file + QLatin1String(".out"));
       }
     }
 
@@ -68,7 +59,7 @@ class RenderTest : public QObject
       QFETCH( QString, referenceFileName );
       QFETCH( QString, outFileName );
 
-      const QString htmlFileName = outFileName + ".html";
+      const QString htmlFileName = outFileName + QLatin1String(".html");
 
       // load input mail
       QFile mailFile( mailFileName );
@@ -82,7 +73,7 @@ class RenderTest : public QObject
       // render the mail
       FileHtmlWriter fileWriter( outFileName );
       QImage paintDevice;
-      CSSHelper cssHelper( &paintDevice );
+      TestCSSHelper cssHelper( &paintDevice );
       NodeHelper nodeHelper;
       MessageCore::Test::TestObjectTreeSource testSource( &fileWriter, &cssHelper );
       testSource.setAllowDecryption( true );
@@ -91,11 +82,9 @@ class RenderTest : public QObject
       fileWriter.begin( QString() );
       fileWriter.queue( cssHelper.htmlHead( false ) );
 
-      qInstallMsgHandler( nullMessageOutput );
       otp.parseObjectTree( msg.get() );
-      qInstallMsgHandler( 0 );
 
-      fileWriter.queue("</body></html>");
+      fileWriter.queue(QLatin1String("</body></html>"));
       fileWriter.flush();
       fileWriter.end();
 
@@ -104,11 +93,13 @@ class RenderTest : public QObject
       // validate xml and pretty-print for comparisson
       // TODO add proper cmake check for xmllint and diff
       QStringList args = QStringList()
-        << "--format"
-        << "--output"
+        << QLatin1String("--format")
+        << QLatin1String("--encode")
+        << QLatin1String("UTF8")
+        << QLatin1String("--output")
         << htmlFileName
         << outFileName;
-      QCOMPARE( QProcess::execute( "xmllint", args ),  0 );
+      QCOMPARE( QProcess::execute( QLatin1String("xmllint"), args ),  0 );
 
       // get rid of system dependent or random paths
       {
@@ -116,7 +107,7 @@ class RenderTest : public QObject
         QVERIFY( f.open( QIODevice::ReadOnly ) );
         QString content = QString::fromUtf8( f.readAll() );
         f.close();
-        content.replace( QRegExp( "\"file:[^\"]*[/(?:%2F)]([^\"/(?:%2F)]*)\"" ), "\"file:\\1\"" );
+        content.replace( QRegExp( QLatin1String("\"file:[^\"]*[/(?:%2F)]([^\"/(?:%2F)]*)\"") ), QLatin1String("\"file:\\1\"") );
         QVERIFY( f.open( QIODevice::WriteOnly | QIODevice::Truncate ) );
         f.write( content.toUtf8() );
         f.close();
@@ -124,24 +115,14 @@ class RenderTest : public QObject
 
       // compare to reference file
       args = QStringList()
-        << "-u"
+        << QLatin1String("-u")
         << referenceFileName
         << htmlFileName;
       QProcess proc;
       proc.setProcessChannelMode( QProcess::ForwardedChannels );
-      proc.start( "diff", args );
+      proc.start( QLatin1String("diff"), args );
       QVERIFY( proc.waitForFinished() );
 
-      QEXPECT_FAIL( "forward-openpgp-signed-encrypted.mbox", "Signature verification is currently broken in the testsetup", Continue );
-      QEXPECT_FAIL( "openpgp-signed-encrypted.mbox", "Signature verification is currently broken in the testsetup", Continue );
-      QEXPECT_FAIL( "signed-forward-openpgp-signed-encrypted.mbox", "Signature verification is currently broken in the testsetup", Continue );
-      QEXPECT_FAIL( "smime-signed-encrypted.mbox", "Signature verification is currently broken in the testsetup", Continue );
-      QEXPECT_FAIL( "smime-encrypted.mbox", "Signature verification is currently broken in the testsetup", Continue );
-      QEXPECT_FAIL( "smime-encrypted-octet-stream.mbox", "Signature verification is currently broken in the testsetup", Continue );
-      QEXPECT_FAIL( "openpgp-signed-mailinglist.mbox", "Signature verification is currently broken in the testsetup", Continue );
-      QEXPECT_FAIL( "openpgp-encrypted.mbox", "Signature verification is currently broken in the testsetup", Continue );
-
-      QSKIP("This test has been failing for a long time, please someone fix it", SkipSingle);
       QCOMPARE( proc.exitCode(), 0 );
     }
 };

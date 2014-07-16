@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -81,11 +81,11 @@ BlogiloComposerEditor::BlogiloComposerEditor(BlogiloComposerView *view, QWidget 
     KToolBar *mainToolBar = createToolBar(toolBarActions);
 
 
-    mActSplitPost = new KAction( KIcon( "insert-more-mark" ), i18n( "Split text" ), this );
+    mActSplitPost = new KAction( KIcon( QLatin1String("insert-more-mark") ), i18n( "Split text" ), this );
     connect( mActSplitPost, SIGNAL(triggered(bool)), this, SLOT(slotAddPostSplitter()) );
     addActionInToolBar(mActSplitPost, mainToolBar);
 
-    mActCode = new KAction( KIcon( "format-text-code" ), i18nc( "Sets text font to code style",
+    mActCode = new KAction( KIcon( QLatin1String("format-text-code") ), i18nc( "Sets text font to code style",
                            "Code" ), this );
     connect( mActCode, SIGNAL(triggered(bool)), this, SLOT(slotToggleCode(bool)) );
     addActionInToolBar(mActCode, mainToolBar);
@@ -110,12 +110,12 @@ QList< BilboMedia* > BlogiloComposerEditor::getLocalImages()
 {
     kDebug();
     QList< BilboMedia* > list;
-    QWebElementCollection images = view()->page()->mainFrame()->findAllElements("img");
+    QWebElementCollection images = view()->page()->mainFrame()->findAllElements(QLatin1String("img"));
     Q_FOREACH (const QWebElement& elm, images){
-        if (elm.attribute("src").startsWith("file://")){
+        if (elm.attribute(QLatin1String("src")).startsWith(QLatin1String("file://"))){
             //             kDebug()<<elm.toOuterXml();
             BilboMedia* media = new BilboMedia(this);
-            KUrl mediaUrl (elm.attribute("src"));
+            KUrl mediaUrl (elm.attribute(QLatin1String("src")));
             media->setLocalUrl( mediaUrl );
             media->setMimeType( KMimeType::findByUrl( mediaUrl, 0, true )->name() );
             media->setName(mediaUrl.fileName());
@@ -143,7 +143,7 @@ void BlogiloComposerEditor::slotToggleCode(bool )
     if(selection.isEmpty())
         return;
     const QString html = QString::fromLatin1( "<code>%1</code>" ).arg ( selection );
-    execCommand("insertHtml", html);
+    execCommand(QLatin1String("insertHtml"), html);
 }
 
 #if 0
@@ -174,7 +174,11 @@ void BlogiloComposerEditor::execCommand( const QString &cmd, const QString &arg 
     frame->evaluateJavaScript ( js );
 }
 
+void BlogiloComposerEditor::insertShortUrl(const QString &url)
+{
+    QString html = QString::fromLatin1( "<a href=\'%1\'>%1</a>").arg(url);
+    execCommand(QLatin1String("insertHtml"), html);
+}
 
 
 
-#include "blogilocomposereditor.moc"

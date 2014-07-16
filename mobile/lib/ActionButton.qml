@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-import QtQuick 1.1 as QML
+import QtQuick 1.1
 import org.kde.pim.mobileui 4.5 as KPIM
 
 /**
@@ -38,7 +38,7 @@ KPIM.Button {
 
   onClicked : { action.trigger() }
 
-  QML.Connections {
+  Connections {
     target : action
     onChanged : {
       border.width = action.checked ? 2 : 0

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -17,7 +17,7 @@
 
 #include "externaleditorwarning.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 ExternalEditorWarning::ExternalEditorWarning(QWidget *parent)
     : KMessageWidget(parent)
@@ -33,4 +33,3 @@ ExternalEditorWarning::~ExternalEditorWarning()
 {
 }
 
-#include "externaleditorwarning.moc"

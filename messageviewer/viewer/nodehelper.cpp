@@ -52,8 +52,8 @@
 
 namespace MessageViewer {
 
-QStringList replySubjPrefixes(QStringList() << "Re\\s*:" << "Re\\[\\d+\\]:" << "Re\\d+:");
-QStringList forwardSubjPrefixes( QStringList() << "Fwd:" << "FW:");
+QStringList replySubjPrefixes(QStringList() << QLatin1String("Re\\s*:") << QLatin1String("Re\\[\\d+\\]:") << QLatin1String("Re\\d+:"));
+QStringList forwardSubjPrefixes( QStringList() << QLatin1String("Fwd:") << QLatin1String("FW:"));
 
 NodeHelper::NodeHelper() :
     mAttachmentFilesDir(new AttachmentTemporaryFilesDirs())
@@ -223,21 +223,20 @@ QString NodeHelper::writeNodeToTempFile(KMime::Content* node)
     return existingFileName.toLocalFile();
   }
 
-  QString fname = createTempDir( node->index().toString() );
+  QString fname = createTempDir( persistentIndex( node ) );
   if ( fname.isEmpty() )
     return QString();
 
   QString fileName = NodeHelper::fileName( node );
   // strip off a leading path
-  int slashPos = fileName.lastIndexOf( '/' );
+  int slashPos = fileName.lastIndexOf( QLatin1Char('/') );
   if( -1 != slashPos )
     fileName = fileName.mid( slashPos + 1 );
   if( fileName.isEmpty() )
-    fileName = "unnamed";
-  fname += '/' + fileName;
+    fileName = QLatin1String("unnamed");
+  fname += QLatin1Char('/') + fileName;
 
   //kDebug() << "Create temp file: " << fname;
-
   QByteArray data = node->decodedContent();
   if ( node->contentType()->isText() && data.size() > 0 ) {
     // convert CRLF to LF before writing text attachments to disk
@@ -260,11 +259,11 @@ KUrl NodeHelper::tempFileUrlFromNode( const KMime::Content *node )
   if (!node)
     return KUrl();
 
-  const QString index = node->index().toString();
+  const QString index = persistentIndex( node );
 
   foreach ( const QString &path, mAttachmentFilesDir->temporaryFiles() ) {
-    int right = path.lastIndexOf( '/' );
-    int left = path.lastIndexOf( ".index.", right );
+    const int right = path.lastIndexOf( QLatin1Char('/') );
+    int left = path.lastIndexOf( QLatin1String(".index."), right );
     if ( left != -1 )
         left += 7;
 
@@ -279,7 +278,7 @@ KUrl NodeHelper::tempFileUrlFromNode( const KMime::Content *node )
 QString NodeHelper::createTempDir( const QString &param )
 {
   KTemporaryFile *tempFile = new KTemporaryFile();
-  tempFile->setSuffix( ".index." + param );
+  tempFile->setSuffix( QLatin1String(".index.") + param );
   tempFile->open();
   QString fname = tempFile->fileName();
   delete tempFile;
@@ -478,7 +477,7 @@ QString NodeHelper::iconName( KMime::Content *node, int size )
       mimeType = mime.toLatin1();
   }
   kAsciiToLower( mimeType.data() );
-  return Util::fileNameForMimetype( mimeType, size, node->contentDisposition()->filename(),
+  return Util::fileNameForMimetype( QLatin1String(mimeType), size, node->contentDisposition()->filename(),
                                     node->contentType()->name() );
 }
 
@@ -502,7 +501,7 @@ QString NodeHelper::replacePrefixes( const QString& str,
   // 1. is anchored to the beginning of str (sans whitespace)
   // 2. matches at least one of the part regexps in prefixRegExps
   QString bigRegExp = QString::fromLatin1("^(?:\\s+|(?:%1))+\\s*")
-                      .arg( prefixRegExps.join(")|(?:") );
+                      .arg( prefixRegExps.join(QLatin1String(")|(?:")) );
   QRegExp rx( bigRegExp, Qt::CaseInsensitive );
   if ( !rx.isValid() ) {
     kWarning() << "bigRegExp = \""
@@ -515,11 +514,11 @@ QString NodeHelper::replacePrefixes( const QString& str,
     if ( rx.indexIn( tmp ) == 0 ) {
       recognized = true;
       if ( replace )
-        return tmp.replace( 0, rx.matchedLength(), newPrefix + ' ' );
+        return tmp.replace( 0, rx.matchedLength(), newPrefix + QLatin1Char(' ') );
     }
   }
   if ( !recognized )
-    return newPrefix + ' ' + str;
+    return newPrefix + QLatin1Char(' ') + str;
   else
     return str;
 }
@@ -581,7 +580,7 @@ const QTextCodec* NodeHelper::codecForName(const QByteArray& _str)
     return 0;
   QByteArray codec = _str;
   kAsciiToLower(codec.data());
-  return KGlobal::charsets()->codecForName(codec);
+  return KGlobal::charsets()->codecForName(QLatin1String(codec));
 }
 
 QString NodeHelper::fileName( const KMime::Content *node )
@@ -691,9 +690,9 @@ QString NodeHelper::fixEncoding( const QString &encoding )
   QString returnEncoding = encoding;
   // According to http://www.iana.org/assignments/character-sets, uppercase is
   // preferred in MIME headers
-  if ( returnEncoding.toUpper().contains( "ISO " ) ) {
+  if ( returnEncoding.toUpper().contains( QLatin1String("ISO ") ) ) {
     returnEncoding = returnEncoding.toUpper();
-    returnEncoding.replace( "ISO ", "ISO-" );
+    returnEncoding.replace( QLatin1String("ISO "), QLatin1String("ISO-") );
   }
   return returnEncoding;
 }
@@ -716,7 +715,7 @@ QStringList NodeHelper::supportedEncodings(bool usAscii)
     it != constEnd; ++it)
   {
     QTextCodec *codec = KGlobal::charsets()->codecForName(*it);
-    QString mimeName = (codec) ? QString(codec->name()).toLower() : (*it);
+    QString mimeName = (codec) ? QString::fromLatin1(codec->name()).toLower() : (*it);
     if (!mimeNames.contains(mimeName) )
     {
       encodings.append( KGlobal::charsets()->descriptionForEncoding(*it) );
@@ -725,7 +724,7 @@ QStringList NodeHelper::supportedEncodings(bool usAscii)
   }
   encodings.sort();
   if (usAscii)
-    encodings.prepend(KGlobal::charsets()->descriptionForEncoding("us-ascii") );
+    encodings.prepend(KGlobal::charsets()->descriptionForEncoding(QLatin1String("us-ascii")) );
   return encodings;
 }
 
@@ -909,8 +908,8 @@ NodeHelper::AttachmentDisplayInfo NodeHelper::attachmentDisplayInfo( KMime::Cont
 
   bool typeBlacklisted = node->contentType()->mediaType().toLower() == "multipart";
   if ( !typeBlacklisted ) {
-    typeBlacklisted = MessageCore::StringUtil::isCryptoPart( node->contentType()->mediaType(),
-                                                             node->contentType()->subType(),
+    typeBlacklisted = MessageCore::StringUtil::isCryptoPart( QLatin1String(node->contentType()->mediaType()),
+                                                             QLatin1String(node->contentType()->subType()),
                                                              node->contentDisposition()->filename() );
   }
   typeBlacklisted = typeBlacklisted || node == node->topLevel();

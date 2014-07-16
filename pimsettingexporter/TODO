@@ -1,30 +1,13 @@
-Import/Export config:
---------------------
-- templatesconfigurationrc (Need to merge in existing config file)
-- sievetemplaterc (DONE)
-- akonadi_archivemail_agentrc (Need to merge in existing config file)
-- kmailsnippetrc (Need to merge in existing config file)
-- filters (DONE)
-- kabldaprc (DONE)
-- kmail2rc (DONE)
-- emailidentities (DONE)
-- autocorrection file (DONE)
-
-
-
-TODO 4.11:
-----------
-- Allow to merge ldap config (DONE)
-- Allow to merge KMail Snippet config
-
-- Import/Export KAddressBook config/resources (DONE)
-- Import/Export KOrganizer config/resources (DONE)
-- Import/Export KAlarm config/resources (In progress)
-- Import/Export KJots config/resources (In progress)
-
-TODO 4.12:
+TODO 4.13:
 ---------
+
+- templatesconfigurationrc (Need to merge in existing config file)
+- akonadi_archivemail_agentrc (Need to merge in existing config file)
+- Allow to merge KMail Snippet config
 - Add export mode 
-- Allow to write a report.
-- Allow to save other kontact settings ?
+- Allow to save other kontact settings (In progress)
 - Add global default settings (as overwrite all settings etc.)
+- Add support for store kaddressbook printing theme.
+- Add support for import/export other akonadi resources (facebook ? google ? etc.)
+
+- Add support for knotes-akonadi => increase archive number

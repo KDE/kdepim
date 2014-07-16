@@ -34,7 +34,7 @@
 
 // KDE Includes
 #include <KUrl>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDebug>
 #include <KMessageBox>
 

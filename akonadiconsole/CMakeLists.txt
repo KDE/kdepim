@@ -3,9 +3,6 @@ project(akonadiconsole)
 include_directories(
   ${AKONADI_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
-  ${SOPRANO_INCLUDE_DIR}
-  ${NEPOMUK_CORE_INCLUDE_DIR}
-  ${NEPOMUK_WIDGETS_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/libkdepim/
   ${CMAKE_SOURCE_DIR}/messageviewer/
 )
@@ -32,11 +29,15 @@ set(akonadiconsole_bin_SRCS
   main.cpp
   mainwidget.cpp
   mainwindow.cpp
+  monitorswidget.cpp
+  monitorsmodel.cpp
+  monitoritem.cpp
   notificationmodel.cpp
   notificationmonitor.cpp
   rawsocketconsole.cpp
   searchdialog.cpp
   searchwidget.cpp
+  querydebugger.cpp
   jobtracker.cpp
   jobtrackerwidget.cpp
   jobtrackermodel.cpp
@@ -58,9 +59,22 @@ qt4_add_dbus_interface(akonadiconsole_bin_SRCS
 set_source_files_properties(${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml
   PROPERTIES INCLUDE "akonadi/private/notificationmessage_p.h")
 
+set_source_files_properties(${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml
+  PROPERTIES INCLUDE "akonadi/private/notificationmessagev3_p.h")
+
 qt4_add_dbus_interface(akonadiconsole_bin_SRCS
   ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml
   notificationmanagerinterface
+)
+
+qt4_add_dbus_interface(akonadiconsole_bin_SRCS
+  ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml
+  notificationsourceinterface
+)
+
+qt4_add_dbus_interface(akonadiconsole_bin_SRCS
+  ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.StorageDebugger.xml
+  storagedebuggerinterface
 )
 
 kde4_add_ui_files(akonadiconsole_bin_SRCS
@@ -73,25 +87,9 @@ kde4_add_ui_files(akonadiconsole_bin_SRCS
   dbconsole.ui
   instanceselector.ui
   rawsocketconsole.ui
+  browserwidget_contentview.ui
+  collectioninternalspage.ui
 )
-
-if(${KDE_VERSION} VERSION_GREATER "4.5.74")
-  set(KDE_IS_AT_LEAST_4_5_74 TRUE)
-endif()
-
-if(KDE_IS_AT_LEAST_4_5_74)
-  kde4_add_ui_files(akonadiconsole_bin_SRCS
-    browserwidget_contentview.ui
-    collectioninternalspage.ui
-  )
-else()
-  kde4_add_ui_files(akonadiconsole_bin_SRCS
-    browserwidget_contentview-45.ui
-    collectioninternalspage-45.ui
-  )
-endif()
-
-kde4_add_kcfg_files(akonadiconsole_bin_SRCS settings.kcfgc)
 
 kde4_add_app_icon(akonadiconsole_bin_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-app-akonadiconsole.png")
 
@@ -112,8 +110,6 @@ target_link_libraries(akonadiconsole_bin
   ${QT_QTSQL_LIBRARY}
   ${QT_QTNETWORK_LIBRARY}
   ${AKONADI_COMMON_LIBRARIES}
-  ${NEPOMUK_CORE_LIBRARY}
-  ${NEPOMUK_WIDGETS_LIBRARY}
 )
 
 install(TARGETS akonadiconsole_bin ${INSTALL_TARGETS_DEFAULT_ARGS})

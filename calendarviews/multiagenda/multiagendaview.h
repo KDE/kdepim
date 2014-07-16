@@ -97,6 +97,7 @@ class EVENTVIEWS_EXPORT MultiAgendaView : public EventView
     void zoomView( const int delta, const QPoint &pos, const Qt::Orientation ori );
     void slotResizeScrollView();
     void recreateViews();
+    void forceRecreateViews();
 
   private:
     class Private;

@@ -21,7 +21,7 @@
 #include "findreplacebar.h"
 
 #include <KIcon>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KColorScheme>
 #include <KMessageBox>
 
@@ -185,7 +185,7 @@ void FindReplaceBarPrivate::searchText( bool backward, bool isAutoSearch )
     if ( !isAutoSearch && !lastSearchStr.contains( searchWord, Qt::CaseSensitive ) )
         clearSelections();
 
-    webView->findText(QString(), QWebPage::HighlightAllOccurrences); //Clear an existing highligh
+    webView->findText(QString(), QWebPage::HighlightAllOccurrences); //Clear an existing highlight
 
     lastSearchStr = searchWord;
     const bool found = webView->findText( lastSearchStr, searchOptions );
@@ -325,4 +325,4 @@ void FindReplaceBar::showAndFocus()
 }
 
 }
-#include "findreplacebar.moc"
+#include "moc_findreplacebar.cpp"

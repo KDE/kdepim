@@ -39,10 +39,10 @@ KOrganizerIfaceImpl::KOrganizerIfaceImpl( ActionManager *actionManager,
                                           QObject *parent, const char *name )
   : QObject( parent ), mActionManager( actionManager )
 {
-  setObjectName( name );
+  setObjectName( QLatin1String(name) );
   new KorganizerAdaptor( this );
   QDBusConnection::sessionBus().registerObject(
-    "/Korganizer", this, QDBusConnection::ExportAdaptors );
+    QLatin1String("/Korganizer"), this, QDBusConnection::ExportAdaptors );
 }
 
 KOrganizerIfaceImpl::~KOrganizerIfaceImpl()
@@ -57,11 +57,6 @@ bool KOrganizerIfaceImpl::openURL( const QString &url )
 bool KOrganizerIfaceImpl::mergeURL( const QString &url )
 {
   return mActionManager->mergeURL( url );
-}
-
-void KOrganizerIfaceImpl::closeUrl()
-{
-  return mActionManager->closeUrl();
 }
 
 bool KOrganizerIfaceImpl::saveURL()
@@ -139,4 +134,3 @@ bool KOrganizerIfaceImpl::handleCommandLine()
   return mActionManager->handleCommandLine();
 }
 
-#include "korganizerifaceimpl.moc"

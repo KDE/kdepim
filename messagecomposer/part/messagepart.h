@@ -34,13 +34,13 @@ class MessagePartPrivate;
 */
 class MESSAGECOMPOSER_EXPORT MessagePart : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit MessagePart( QObject *parent = 0 );
     virtual ~MessagePart();
 
-  private:
+private:
     class Private;
     Private *const d;
 };

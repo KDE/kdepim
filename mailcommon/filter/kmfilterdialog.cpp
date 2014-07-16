@@ -25,21 +25,21 @@
 #include "filteractiondict.h"
 #include "filteractionwidget.h"
 #include "filterimporterexporter.h"
+#include "filterselectiondialog.h"
 using MailCommon::FilterImporterExporter;
 #include "filtermanager.h"
 #include "folderrequester.h"
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
 #include "search/searchpatternedit.h"
+#include "filterconverter/filterconverttosieve.h"
 
 #include <Akonadi/AgentInstance>
 #include <Akonadi/AgentType>
 #include <Akonadi/ItemFetchJob>
 
-#include <KComboBox>
 #include <KConfigGroup>
 #include <KDebug>
-#include <KIconDialog>
 #include <KIconLoader>
 #include <KInputDialog>
 #include <KJob>
@@ -50,6 +50,7 @@ using MailCommon::FilterImporterExporter;
 #include <KPushButton>
 #include <KTabWidget>
 #include <KWindowSystem>
+#include <KIconButton>
 
 #include <QApplication>
 #include <QHeaderView>
@@ -64,6 +65,8 @@ using MailCommon::FilterImporterExporter;
 #include <QVBoxLayout>
 #include <QShortcut>
 #include <QSplitter>
+#include <QPointer>
+#include <QKeyEvent>
 
 Q_DECLARE_METATYPE(MailCommon::FilterImporterExporter::FilterType)
 using namespace MailCommon;
@@ -301,7 +304,7 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
       mIgnoreFilterUpdates( true )
 {
     setCaption( i18n( "Filter Rules" ) );
-    setButtons( Help|Ok|Apply|Cancel|User1|User2 );
+    setButtons( Help|Ok|Apply|Cancel|User1|User2|User3);
     setModal( false );
     setButtonFocus( Ok );
     KWindowSystem::setIcons( winId(),
@@ -309,9 +312,10 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
                                                         IconSize( KIconLoader::Desktop ) ),
                              qApp->windowIcon().pixmap( IconSize( KIconLoader::Small ),
                                                         IconSize( KIconLoader::Small ) ) );
-    setHelp( "filters", "kmail" );
+    setHelp( QLatin1String("filters"), QLatin1String("kmail") );
     setButtonText( User1, i18n( "Import..." ) );
     setButtonText( User2, i18n( "Export..." ) );
+    setButtonText( User3, i18n( "Convert to..." ) );
     QMenu *menu = new QMenu();
 
     QAction *act = new QAction( i18n( "KMail filters" ), this );
@@ -345,6 +349,14 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
     connect( menu, SIGNAL(triggered(QAction*)), SLOT(slotImportFilter(QAction*)) );
 
     button( KDialog::User1 )->setMenu( menu );
+
+    menu = new QMenu();
+
+    act = new QAction( i18n( "Sieve script" ), this );
+    connect(act, SIGNAL(triggered(bool)), SLOT(slotExportAsSieveScript()));
+    menu->addAction( act );
+    button( KDialog::User3 )->setMenu( menu );
+
 
     connect( this, SIGNAL(user2Clicked()),
              this, SLOT(slotExportFilters()) );
@@ -467,7 +479,7 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
         gl->addWidget( keyButtonLabel, 8, 2, 1, 1 );
 
         mKeySeqWidget = new KKeySequenceWidget( mAdvOptsGroup );
-        mKeySeqWidget->setObjectName( "FilterShortcutSelector" );
+        mKeySeqWidget->setObjectName( QLatin1String("FilterShortcutSelector") );
         gl->addWidget( mKeySeqWidget, 8, 3, 1, 1 );
         mKeySeqWidget->setEnabled( false );
         mKeySeqWidget->setModifierlessAllowed( true );
@@ -486,7 +498,7 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
         mFilterActionLabel->setBuddy( mFilterActionIconButton );
         mFilterActionIconButton->setIconType( KIconLoader::NoGroup, KIconLoader::Action, false );
         mFilterActionIconButton->setIconSize( 16 );
-        mFilterActionIconButton->setIcon( "system-run" );
+        mFilterActionIconButton->setIcon( QLatin1String("system-run") );
         mFilterActionIconButton->setEnabled( false );
 
         gl->addWidget( hbox, 10, 0, 1, 4 );
@@ -614,6 +626,24 @@ void KMFilterDialog::accept()
         slotFinished();
     }
 }
+
+bool KMFilterDialog::event(QEvent* e)
+{
+    // Close the bar when pressing Escape.
+    // Not using a QShortcut for this because it could conflict with
+    // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
+    // With a shortcut override we can catch this before it gets to kactions.
+    const bool shortCutOverride = (e->type() == QEvent::ShortcutOverride);
+    if (shortCutOverride || e->type() == QEvent::KeyPress ) {
+        QKeyEvent* kev = static_cast<QKeyEvent* >(e);
+        if (kev->key() == Qt::Key_Escape) {
+            e->ignore();
+            return true;
+        }
+    }
+    return KDialog::event(e);
+}
+
 
 void KMFilterDialog::slotApply()
 {
@@ -908,23 +938,23 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
     hb->setSpacing( 4 );
 
     mBtnTop = new KPushButton( QString(), hb );
-    mBtnTop->setIcon( KIcon( "go-top" ) );
+    mBtnTop->setIcon( KIcon( QLatin1String("go-top") ) );
     mBtnTop->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnTop->setMinimumSize( mBtnTop->sizeHint() * 1.2 );
 
     mBtnUp = new KPushButton( QString(), hb );
     mBtnUp->setAutoRepeat( true );
-    mBtnUp->setIcon( KIcon( "go-up" ) );
+    mBtnUp->setIcon( KIcon( QLatin1String("go-up") ) );
     mBtnUp->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnUp->setMinimumSize( mBtnUp->sizeHint() * 1.2 );
     mBtnDown = new KPushButton( QString(), hb );
     mBtnDown->setAutoRepeat( true );
-    mBtnDown->setIcon( KIcon( "go-down" ) );
+    mBtnDown->setIcon( KIcon( QLatin1String("go-down") ) );
     mBtnDown->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnDown->setMinimumSize( mBtnDown->sizeHint() * 1.2 );
 
     mBtnBottom = new KPushButton( QString(), hb );
-    mBtnBottom->setIcon( KIcon( "go-bottom" ) );
+    mBtnBottom->setIcon( KIcon( QLatin1String("go-bottom") ) );
     mBtnBottom->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnBottom->setMinimumSize( mBtnBottom->sizeHint() * 1.2 );
 
@@ -943,15 +973,15 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
     hb = new KHBox( this );
     hb->setSpacing( 4 );
     mBtnNew = new QPushButton( QString(), hb );
-    mBtnNew->setIcon( KIcon( "document-new" ) );
+    mBtnNew->setIcon( KIcon( QLatin1String("document-new") ) );
     mBtnNew->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnNew->setMinimumSize( mBtnNew->sizeHint() * 1.2 );
     mBtnCopy = new QPushButton( QString(), hb );
-    mBtnCopy->setIcon( KIcon( "edit-copy" ) );
+    mBtnCopy->setIcon( KIcon( QLatin1String("edit-copy") ) );
     mBtnCopy->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnCopy->setMinimumSize( mBtnCopy->sizeHint() * 1.2 );
     mBtnDelete = new QPushButton( QString(), hb );
-    mBtnDelete->setIcon( KIcon( "edit-delete" ) );
+    mBtnDelete->setIcon( KIcon( QLatin1String("edit-delete") ) );
     mBtnDelete->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnDelete->setMinimumSize( mBtnDelete->sizeHint() * 1.2 );
     mBtnRename = new QPushButton( i18n( "Rename..." ), hb );
@@ -1054,7 +1084,7 @@ void KMFilterListBox::createFilter( const QByteArray &field, const QString &valu
                                    arg( QString::fromLatin1( field ) ).
                                    arg( value ) );
 
-    FilterActionDesc *desc = MailCommon::FilterManager::filterActionDict()->value( "transfer" );
+    FilterActionDesc *desc = MailCommon::FilterManager::filterActionDict()->value( QLatin1String("transfer") );
     if ( desc ) {
         newFilter->actions()->append( desc->create() );
     }
@@ -1092,7 +1122,7 @@ void KMFilterListBox::slotUpdateFilterName()
                     arg( QString::fromLatin1( p->first()->field() ) ).
                     arg( p->first()->contents() );
         } else {
-            shouldBeName = '<' + i18n( "unnamed" ) + '>';
+            shouldBeName = QLatin1Char('<') + i18n( "unnamed" ) + QLatin1Char('>');
         }
         p->setName( shouldBeName );
     }
@@ -1167,7 +1197,7 @@ QList<MailFilter *> KMFilterListBox::filtersForSaving( bool closeAfterSaving ) c
                         QString(),
                         KGuiItem( i18n( "Discard" ) ),
                         KStandardGuiItem::cancel(),
-                        "ShowInvalidFilterWarning" );
+                        QLatin1String("ShowInvalidFilterWarning") );
             if ( response == KMessageBox::Cancel ) {
                 emit abortClosing();
             }
@@ -1179,7 +1209,7 @@ QList<MailFilter *> KMFilterListBox::filtersForSaving( bool closeAfterSaving ) c
                               "(e.g. containing no actions or no search rules)." ),
                         emptyFilters,
                         QString(),
-                        "ShowInvalidFilterWarning" );
+                        QLatin1String("ShowInvalidFilterWarning") );
         }
     }
     return filters;
@@ -1481,7 +1511,7 @@ void KMFilterListBox::slotRename()
     Q_ASSERT( filter );
 
     // allow empty names - those will turn auto-naming on again
-    QValidator *validator = new QRegExpValidator( QRegExp( ".*" ), 0 );
+    QValidator *validator = new QRegExpValidator( QRegExp( QLatin1String(".*") ), 0 );
     QString newName =
             KInputDialog::getText (
                 i18n( "Rename Filter" ),
@@ -1500,7 +1530,7 @@ void KMFilterListBox::slotRename()
     if ( newName.isEmpty() ) {
         // bait for slotUpdateFilterName to
         // use automatic naming again.
-        filter->pattern()->setName( "<>" );
+        filter->pattern()->setName( QLatin1String("<>") );
         filter->setAutoNaming( true );
     } else {
         filter->pattern()->setName( newName );
@@ -1683,6 +1713,31 @@ void KMFilterDialog::slotDialogUpdated()
     }
 }
 
+void KMFilterDialog::slotExportAsSieveScript()
+{
+    if ( isButtonEnabled( KDialog::Apply ) ) {
+        KMessageBox::information(
+                    this,
+                    i18nc( "@info",
+                           "Some filters were changed and not saved yet. "
+                           "You must save your filters before they can be exported." ),
+                    i18n( "Filters changed." ) );
+        return;
+    }
+    KMessageBox::information(this, i18n("We cannot convert all KMail filters to sieve scripts but we can try :)"), i18n("Convert KMail filters to sieve scripts"));
+    QList<MailFilter *> filters = mFilterList->filtersForSaving( false );
+    QPointer<FilterSelectionDialog> dlg = new FilterSelectionDialog( this );
+    dlg->setFilters( filters );
+    if ( dlg->exec() == QDialog::Accepted ) {
+        QList<MailFilter*> lst = dlg->selectedFilters();
+        if (!lst.isEmpty()) {
+            FilterConvertToSieve convert(lst);
+            convert.convert();
+            qDeleteAll(lst);
+        }
+    }
+    delete dlg;
 }
 
-#include "kmfilterdialog.moc"
+}
+

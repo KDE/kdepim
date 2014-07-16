@@ -1,7 +1,7 @@
 /**
  * kmcomposereditor.cpp
  *
- * Copyright (C)  2007, 2008, 2012 Laurent Montel <montel@kde.org>
+ * Copyright (C)  2007-2013 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -36,10 +36,11 @@
 
 #include <KAction>
 #include <KActionCollection>
-#include <KLocale>
-#include <KMenu>
+#include <KLocalizedString>
 #include <KPushButton>
-#include <KInputDialog>
+#include <KMenu>
+#include <KActionMenu>
+#include <KToggleAction>
 
 #include <Sonnet/ConfigDialog>
 
@@ -52,7 +53,7 @@
 using namespace MailCommon;
 
 KMComposerEditor::KMComposerEditor( KMComposeWin *win,QWidget *parent)
-    : MessageComposer::KMeditor(parent, "kmail2rc" ),mComposerWin(win)
+    : MessageComposer::KMeditor(parent, QLatin1String("kmail2rc") ),mComposerWin(win)
 {
     setAutocorrection(KMKernel::self()->composerAutoCorrection());
 }
@@ -66,20 +67,20 @@ void KMComposerEditor::createActions( KActionCollection *actionCollection )
     KMeditor::createActions( actionCollection );
 
     KAction *pasteQuotation = new KAction( i18n("Pa&ste as Quotation"), this );
-    actionCollection->addAction("paste_quoted", pasteQuotation );
+    actionCollection->addAction(QLatin1String("paste_quoted"), pasteQuotation );
     pasteQuotation->setShortcut(QKeySequence(Qt::CTRL+Qt::SHIFT+Qt::Key_O));
     connect( pasteQuotation, SIGNAL(triggered(bool)), this, SLOT(slotPasteAsQuotation()) );
 
     KAction *addQuoteChars = new KAction( i18n("Add &Quote Characters"), this );
-    actionCollection->addAction( "tools_quote", addQuoteChars );
+    actionCollection->addAction( QLatin1String("tools_quote"), addQuoteChars );
     connect( addQuoteChars, SIGNAL(triggered(bool)), this, SLOT(slotAddQuotes()) );
 
     KAction *remQuoteChars = new KAction( i18n("Re&move Quote Characters"), this );
-    actionCollection->addAction( "tools_unquote", remQuoteChars );
+    actionCollection->addAction( QLatin1String("tools_unquote"), remQuoteChars );
     connect (remQuoteChars, SIGNAL(triggered(bool)), this, SLOT(slotRemoveQuotes()) );
 
     KAction *pasteWithoutFormatting = new KAction( i18n("Paste Without Formatting"), this );
-    actionCollection->addAction( "paste_without_formatting", pasteWithoutFormatting );
+    actionCollection->addAction( QLatin1String("paste_without_formatting"), pasteWithoutFormatting );
     pasteWithoutFormatting->setShortcut(QKeySequence(Qt::CTRL+Qt::SHIFT+Qt::Key_V));
     connect (pasteWithoutFormatting, SIGNAL(triggered(bool)), this, SLOT(slotPasteWithoutFormatting()) );
 }
@@ -125,9 +126,9 @@ void KMComposerEditor::replaceUnknownChars( const QTextCodec *codec )
 
 bool KMComposerEditor::canInsertFromMimeData( const QMimeData *source ) const
 {
-    if ( source->hasImage() && source->hasFormat( "image/png" ) )
+    if ( source->hasImage() && source->hasFormat( QLatin1String("image/png") ) )
         return true;
-    if ( source->hasFormat( "text/x-kmail-textsnippet" ) )
+    if ( source->hasFormat( QLatin1String("text/x-kmail-textsnippet") ) )
         return true;
     if ( source->hasUrls() )
         return true;
@@ -137,7 +138,7 @@ bool KMComposerEditor::canInsertFromMimeData( const QMimeData *source ) const
 
 void KMComposerEditor::insertFromMimeData( const QMimeData *source )
 {
-    if ( source->hasFormat( "text/x-kmail-textsnippet" ) ) {
+    if ( source->hasFormat( QLatin1String("text/x-kmail-textsnippet") ) ) {
         emit insertSnippet();
         return;
     }
@@ -148,23 +149,40 @@ void KMComposerEditor::insertFromMimeData( const QMimeData *source )
 
 void KMComposerEditor::showSpellConfigDialog( const QString & configFileName )
 {
-  KConfig config( configFileName );
-  Sonnet::ConfigDialog dialog( &config, this );
-  if ( !spellCheckingLanguage().isEmpty() ) {
-      dialog.setLanguage( spellCheckingLanguage() );
-  }
-  // Hackish way to hide the "Enable spell check by default" checkbox
-  // Our highlighter ignores this setting, so we should not expose its UI
-  QCheckBox *enabledByDefaultCB = dialog.findChild<QCheckBox *>( "m_checkerEnabledByDefaultCB" );
-  if ( enabledByDefaultCB ) {
-      enabledByDefaultCB->hide();
-  } else {
-      kWarning() << "Could not find any checkbox named 'm_checkerEnabledByDefaultCB'. Sonnet::ConfigDialog must have changed!";
-  }
-  if ( dialog.exec() ) {
-      setSpellCheckingLanguage( dialog.language() );
-  }
+    KConfig config( configFileName );
+    Sonnet::ConfigDialog dialog( &config, this );
+    if ( !spellCheckingLanguage().isEmpty() ) {
+        dialog.setLanguage( spellCheckingLanguage() );
+    }
+    // Hackish way to hide the "Enable spell check by default" checkbox
+    // Our highlighter ignores this setting, so we should not expose its UI
+    QCheckBox *enabledByDefaultCB = dialog.findChild<QCheckBox *>( QLatin1String("m_checkerEnabledByDefaultCB") );
+    if ( enabledByDefaultCB ) {
+        enabledByDefaultCB->hide();
+    } else {
+        kWarning() << "Could not find any checkbox named 'm_checkerEnabledByDefaultCB'. Sonnet::ConfigDialog must have changed!";
+    }
+    if ( dialog.exec() ) {
+        setSpellCheckingLanguage( dialog.language() );
+    }
+}
+
+void KMComposerEditor::mousePopupMenuImplementation(const QPoint& pos)
+{
+    QMenu *popup = mousePopupMenu();
+    if ( popup ) {
+        QTextCursor cursor = textCursor();
+        if (cursor.hasSelection()) {
+            popup->addSeparator();
+            popup->addAction(mComposerWin->changeCaseMenu());
+        }
+        popup->addSeparator();
+        popup->addAction(mComposerWin->translateAction());
+        popup->addAction(mComposerWin->generateShortenUrlAction());
+        aboutToShowContextMenu(popup);
+        popup->exec( pos );
+        delete popup;
+    }
 }
 
 
-#include "kmcomposereditor.moc"

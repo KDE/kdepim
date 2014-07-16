@@ -33,13 +33,8 @@
 #ifndef __KLEOPATRA_NEWCERTIFICATEWIZARD_NEWCERTIFICATEWIZARD_H__
 #define __KLEOPATRA_NEWCERTIFICATEWIZARD_NEWCERTIFICATEWIZARD_H__
 
-#include <QDialog>
 
-#ifndef QT_NO_WIZARD
 #include <QWizard>
-#else
-#include <utils/qwizard.h>
-#endif
 
 #include <utils/pimpl_ptr.h>
 

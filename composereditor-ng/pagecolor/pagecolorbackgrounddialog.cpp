@@ -22,7 +22,7 @@
 #include "pagecolorbackgroundwidget.h"
 #include "extendattributes/extendattributesbutton.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSeparator>
 
 #include <QVBoxLayout>
@@ -154,4 +154,4 @@ PageColorBackgroundDialog::~PageColorBackgroundDialog()
 
 }
 
-#include "pagecolorbackgrounddialog.moc"
+#include "moc_pagecolorbackgrounddialog.cpp"

@@ -32,6 +32,9 @@ public:
 
     void start();
 
+protected:
+    void nextStep();
+
 private:
     void searchAllFiles(const KArchiveDirectory *dir,const QString &prefix);
     void storeCalendarArchiveResource(const KArchiveDirectory *dir, const QString &prefix);

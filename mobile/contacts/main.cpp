@@ -21,11 +21,6 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 
-#ifdef Q_OS_WINCE
-# include <windows.h>
-# include <winuser.h>
-#endif
-
 #include <incidenceeditor-ng/korganizereditorconfig.h>
 
 #include "mainview.h"
@@ -39,9 +34,6 @@ Q_IMPORT_PLUGIN(akonadi_serializer_contactgroup)
 
 int main( int argc, char **argv )
 {
-#ifdef Q_OS_WINCE
-  SetCursor( LoadCursor( NULL, IDC_WAIT ) );
-#endif
   const QByteArray& ba = QByteArray( "kaddressbook-mobile" );
   const KLocalizedString name = ki18n( "Kontact Touch Contacts" );
 
@@ -53,15 +45,11 @@ int main( int argc, char **argv )
   KCmdLineArgs::init( argc, argv, &aboutData );
   KDeclarativeApplication<MainView> app;
 
-  KGlobal::locale()->insertCatalog( "kabc" );
-  KGlobal::locale()->insertCatalog( "akonadicontact" );
-  KGlobal::locale()->insertCatalog( "libkdepim" );
-  KGlobal::locale()->insertCatalog( "libkldap" ); // for ldap server dialog
-  KGlobal::locale()->insertCatalog( "calendarsupport" ); // for categories
-
-#ifdef Q_OS_WINCE
-  SetCursor( LoadCursor( NULL, NULL ) );
-#endif
+  KGlobal::locale()->insertCatalog( QLatin1String("kabc") );
+  KGlobal::locale()->insertCatalog( QLatin1String("akonadicontact") );
+  KGlobal::locale()->insertCatalog( QLatin1String("libkdepim") );
+  KGlobal::locale()->insertCatalog( QLatin1String("libkldap") ); // for ldap server dialog
+  KGlobal::locale()->insertCatalog( QLatin1String("calendarsupport") ); // for categories
 
   return app.exec();
 }

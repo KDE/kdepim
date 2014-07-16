@@ -23,7 +23,7 @@
 #include "utils/composereditorutils_p.h"
 
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSeparator>
 #include <KComboBox>
 
@@ -201,4 +201,4 @@ QString ComposerLinkDialog::html() const
 
 }
 
-#include "composerlinkdialog.moc"
+#include "moc_composerlinkdialog.cpp"

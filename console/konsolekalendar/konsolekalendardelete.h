@@ -30,6 +30,8 @@
 
 #include "konsolekalendarvariables.h"
 
+#include <KCalCore/Event>
+
 /**
  * @file konsolekalendardelete.h
  * Provides the KonsoleKalendarDelete class definition.
@@ -70,7 +72,7 @@ class KonsoleKalendarDelete
      *
      * @param event is a pointer to an Event that is to be printed.
      */
-    void printSpecs( Event *event );
+    void printSpecs( const KCalCore::Event::Ptr &event );
 
     //@cond PRIVATE
     KonsoleKalendarVariables *m_variables;

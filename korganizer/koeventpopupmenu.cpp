@@ -25,12 +25,13 @@
 
 #include "koeventpopupmenu.h"
 #include "actionmanager.h"
-#include "calprinter.h"
 #include "kocorehelper.h"
 #include "koglobals.h"
 
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
+#include <calendarsupport/printing/calprinter.h>
+#include <calendarsupport/printing/calprintdefaultplugins.h>
 
 #include <KCalCore/Incidence>
 
@@ -42,40 +43,40 @@ KOEventPopupMenu::KOEventPopupMenu( Akonadi::ETMCalendar * calendar, QWidget *pa
 {
   mHasAdditionalItems = false;
 
-  addAction( KOGlobals::self()->smallIcon( "document-preview" ), i18n( "&Show" ),
+  addAction( KOGlobals::self()->smallIcon( QLatin1String("document-preview") ), i18n( "&Show" ),
              this, SLOT(popupShow()) );
   mEditOnlyItems.append(
-    addAction( KOGlobals::self()->smallIcon( "document-edit" ), i18n( "&Edit..." ),
+    addAction( KOGlobals::self()->smallIcon( QLatin1String("document-edit") ), i18n( "&Edit..." ),
                this, SLOT(popupEdit()) ) );
   mEditOnlyItems.append( addSeparator() );
-  addAction( KOGlobals::self()->smallIcon( "document-print" ), i18n( "&Print..." ),
+  addAction( KOGlobals::self()->smallIcon( QLatin1String("document-print") ), i18n( "&Print..." ),
              this, SLOT(print()) );
-  QAction *preview = addAction( KOGlobals::self()->smallIcon( "document-print-preview" ),
+  QAction *preview = addAction( KOGlobals::self()->smallIcon( QLatin1String("document-print-preview") ),
                                 i18n( "Print Previe&w..." ),
                                 this, SLOT(printPreview()) );
-  preview->setEnabled( !KMimeTypeTrader::self()->query( "application/pdf",
-                                                        "KParts/ReadOnlyPart" ).isEmpty() );
+  preview->setEnabled( !KMimeTypeTrader::self()->query(QLatin1String( "application/pdf"),
+                                                        QLatin1String("KParts/ReadOnlyPart") ).isEmpty() );
   //------------------------------------------------------------------------
   mEditOnlyItems.append( addSeparator() );
-  mEditOnlyItems.append( addAction( KOGlobals::self()->smallIcon( "edit-cut" ),
+  mEditOnlyItems.append( addAction( KOGlobals::self()->smallIcon( QLatin1String("edit-cut") ),
                                     i18nc( "cut this event", "C&ut" ),
                                     this, SLOT(popupCut()) ) );
-  mEditOnlyItems.append( addAction( KOGlobals::self()->smallIcon( "edit-copy" ),
+  mEditOnlyItems.append( addAction( KOGlobals::self()->smallIcon( QLatin1String("edit-copy") ),
                                     i18nc( "copy this event", "&Copy" ),
                                     this, SLOT(popupCopy()) ) );
   // paste is always possible
-  mEditOnlyItems.append( addAction( KOGlobals::self()->smallIcon( "edit-paste" ),
+  mEditOnlyItems.append( addAction( KOGlobals::self()->smallIcon( QLatin1String("edit-paste") ),
                                     i18n( "&Paste" ),
                                     this, SLOT(popupPaste()) ) );
-  mEditOnlyItems.append( addAction( KOGlobals::self()->smallIcon( "edit-delete" ),
+  mEditOnlyItems.append( addAction( KOGlobals::self()->smallIcon( QLatin1String("edit-delete") ),
                                     i18nc( "delete this incidence", "&Delete" ),
                                     this, SLOT(popupDelete()) ) );
   //------------------------------------------------------------------------
   mEditOnlyItems.append( addSeparator() );
-  mTodoOnlyItems.append( addAction( KOGlobals::self()->smallIcon( "task-complete" ),
+  mTodoOnlyItems.append( addAction( KOGlobals::self()->smallIcon( QLatin1String("task-complete") ),
                                     i18n( "Togg&le To-do Completed" ),
                                     this, SLOT(toggleTodoCompleted()) ) );
-  mToggleReminder =  addAction( QIcon( KOGlobals::self()->smallIcon( "appointment-reminder" ) ),
+  mToggleReminder =  addAction( QIcon( KOGlobals::self()->smallIcon( QLatin1String("appointment-reminder") ) ),
                                     i18n( "&Toggle Reminder" ), this, SLOT(toggleAlarm()));
   mEditOnlyItems.append( mToggleReminder );
   //------------------------------------------------------------------------
@@ -85,7 +86,7 @@ KOEventPopupMenu::KOEventPopupMenu( Akonadi::ETMCalendar * calendar, QWidget *pa
   mRecurrenceItems.append( mDissociateOccurrences );
 
   addSeparator();
-  addAction( KOGlobals::self()->smallIcon( "mail-forward" ),
+  addAction( KOGlobals::self()->smallIcon( QLatin1String("mail-forward") ),
              i18n( "Send as iCalendar..." ),
              this, SLOT(forward()) );
 }
@@ -158,7 +159,7 @@ void KOEventPopupMenu::print()
 void KOEventPopupMenu::print( bool preview )
 {
   KOCoreHelper helper;
-  CalPrinter printer( this, mCalendar, &helper, true );
+  CalendarSupport::CalPrinter printer( this, mCalendar, true );
   connect( this, SIGNAL(configChanged()), &printer, SLOT(updateConfig()) );
 
   //Item::List selectedIncidences;
@@ -166,7 +167,7 @@ void KOEventPopupMenu::print( bool preview )
   Q_ASSERT( mCurrentIncidence.hasPayload<KCalCore::Incidence::Ptr>() );
   selectedIncidences.append( mCurrentIncidence.payload<KCalCore::Incidence::Ptr>() );
 
-  printer.print( KOrg::CalPrinterBase::Incidence,
+  printer.print( CalendarSupport::CalPrinterBase::Incidence,
                  mCurrentDate, mCurrentDate, selectedIncidences, preview );
 }
 
@@ -223,7 +224,7 @@ void KOEventPopupMenu::forward()
   }
 
   KActionCollection *ac = w->getActionCollection();
-  QAction *action = ac->action( "schedule_forward" );
+  QAction *action = ac->action( QLatin1String("schedule_forward") );
   if ( action ) {
     action->trigger();
   } else {
@@ -243,4 +244,3 @@ void KOEventPopupMenu::setCalendar( const Akonadi::ETMCalendar::Ptr &calendar )
   mCalendar = calendar;
 }
 
-#include "koeventpopupmenu.moc"

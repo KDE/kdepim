@@ -42,7 +42,7 @@
 
 #include <kleo/exception.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <kdebug.h>
 
@@ -55,7 +55,6 @@
 #include <QPointer>
 #include <QWidget>
 #include <QDir>
-#include <QFileInfo>
 #include <QProcess>
 #include <QTimer>
 
@@ -114,7 +113,7 @@ namespace {
         bool openNonInheritable() {
             if ( !QTemporaryFile::open() )
                 return false;
-#if defined(Q_OS_WIN) && !defined(_WIN32_WCE)
+#if defined(Q_OS_WIN)
             //QTemporaryFile (tested with 4.3.3) creates the file handle as inheritable.
             //The handle is then inherited by gpgsm, which prevents deletion of the temp file
             //in FileOutput::doFinalize()
@@ -462,7 +461,7 @@ QString ProcessStdInOutput::label() const {
     if ( !m_proc )
         return OutputImplBase::label();
     // output max. 3 arguments
-    const QString cmdline = ( QStringList( m_command ) + m_arguments.mid(0,3) ).join( " " );
+    const QString cmdline = ( QStringList( m_command ) + m_arguments.mid(0,3) ).join( QLatin1String(" ") );
     if ( m_arguments.size() > 3 )
         return i18nc( "e.g. \"Input to tar xf - file1 ...\"", "Input to %1 ...", cmdline );
     else

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,15 +16,18 @@
 */
 
 #include "sieveconditionservermetadata.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 #include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
+#include "editor/sieveeditorutil.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QWidget>
 #include <QHBoxLayout>
 #include <QDebug>
 #include <QLabel>
+#include <QDomNode>
 
 using namespace KSieveUi;
 SieveConditionServerMetaData::SieveConditionServerMetaData(QObject *parent)
@@ -46,28 +49,36 @@ QWidget *SieveConditionServerMetaData::createParamWidget( QWidget *parent ) cons
 
     SelectMatchTypeComboBox *selectType = new SelectMatchTypeComboBox;
     selectType->setObjectName(QLatin1String("selecttype"));
+    connect(selectType, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     lay->addWidget(selectType);
 
+    QGridLayout *grid = new QGridLayout;
+    grid->setMargin(0);
+    lay->addLayout(grid);
+
     QLabel *lab = new QLabel(i18n("Mailbox:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 0, 0);
 
     KLineEdit *mailbox = new KLineEdit;
     mailbox->setObjectName(QLatin1String("mailbox"));
-    lay->addWidget(mailbox);
+    connect(mailbox, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    grid->addWidget(mailbox, 0, 1);
 
     lab = new QLabel(i18n("Annotations:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 1, 0);
 
     KLineEdit *annotation = new KLineEdit;
+    connect(annotation, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     annotation->setObjectName(QLatin1String("annotation"));
-    lay->addWidget(annotation);
+    grid->addWidget(annotation, 1, 1);
 
     lab = new QLabel(i18n("Value:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 2, 0);
 
     KLineEdit *value = new KLineEdit;
+    connect(value, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     value->setObjectName(QLatin1String("value"));
-    lay->addWidget(value);
+    grid->addWidget(value, 2, 1);
 
     return w;
 }
@@ -118,4 +129,57 @@ QString SieveConditionServerMetaData::help() const
     return i18n("This test retrieves the value of the server annotation \"annotation-name\".  The retrieved value is compared to the \"key-list\". The test returns true if the annotation exists and its value matches any of the keys.");
 }
 
-#include "sieveconditionservermetadata.moc"
+bool SieveConditionServerMetaData::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition, QString &error )
+{
+    int index = 0;
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                const QString tagValue = e.text();
+                switch(index) {
+                case 0: {
+                    KLineEdit *mailbox = w->findChild<KLineEdit*>( QLatin1String("mailbox"));
+                    mailbox->setText(tagValue);
+                    break;
+                }
+                case 1: {
+                    KLineEdit *annotation = w->findChild<KLineEdit*>( QLatin1String("annotation"));
+                    annotation->setText(tagValue);
+                    break;
+                }
+                case 2: {
+                    KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value"));
+                    value->setText(tagValue);
+                    break;
+                }
+                default: {
+                    tooManyArgument(tagName, index, 3, error);
+                    qDebug()<<" SieveConditionServerMetaData::setParamWidgetValue too many argument "<<index;
+                    break;
+                }
+                }
+                ++index;
+            } else if (tagName == QLatin1String("tag")) {
+                SelectMatchTypeComboBox *selectType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("selecttype"));
+                selectType->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition), name(), error);
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
+            } else {
+                unknownTag(tagName, error);
+                qDebug()<<" SieveConditionServerMetaData::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+    return true;
+}
+
+QString SieveConditionServerMetaData::href() const
+{
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
+}

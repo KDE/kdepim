@@ -113,15 +113,15 @@ void EditorCrypto::saveContact( KABC::Addressee &contact, Akonadi::ContactMetaDa
 
   const Kleo::SigningPreference signPref = static_cast<Kleo::SigningPreference>( d->mUi.signComboBox->currentIndex() );
   if ( signPref != Kleo::UnknownSigningPreference )
-    contact.insertCustom( "KADDRESSBOOK", "CRYPTOSIGNPREF", Kleo::signingPreferenceToString( signPref ) );
+    contact.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOSIGNPREF"), QLatin1String(Kleo::signingPreferenceToString( signPref )) );
   else
-    contact.removeCustom( "KADDRESSBOOK", "CRYPTOSIGNPREF" );
+    contact.removeCustom(QLatin1String( "KADDRESSBOOK"), QLatin1String("CRYPTOSIGNPREF") );
 
   const Kleo::EncryptionPreference encryptPref = static_cast<Kleo::EncryptionPreference>( d->mUi.encryptComboBox->currentIndex() );
   if ( encryptPref != Kleo::UnknownPreference )
-    contact.insertCustom( "KADDRESSBOOK", "CRYPTOENCRYPTPREF", Kleo::encryptionPreferenceToString( encryptPref ) );
+    contact.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOENCRYPTPREF"), QLatin1String(Kleo::encryptionPreferenceToString( encryptPref )) );
   else
-    contact.removeCustom( "KADDRESSBOOK", "CRYPTOENCRYPTPREF" );
+    contact.removeCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOENCRYPTPREF") );
 
   const QStringList pfp = d->mUi.openPGPKeyRequester->fingerprints();
   storeCustom( contact, QLatin1String( "OPENPGPFP" ), pfp.join( QLatin1String( "," ) ) );
@@ -130,4 +130,3 @@ void EditorCrypto::saveContact( KABC::Addressee &contact, Akonadi::ContactMetaDa
   storeCustom( contact, QLatin1String( "SMIMEFP" ), sfp.join( QLatin1String( "," ) ) );
 }
 
-#include "editorcrypto.moc"

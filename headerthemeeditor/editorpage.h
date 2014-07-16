@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -19,51 +19,27 @@
 #ifndef EDITORPAGE_H
 #define EDITORPAGE_H
 
-#include <QWidget>
+#include "grantleethemeeditor/editorpage.h"
+
 
 class ThemeTemplateWidget;
 class EditorWidget;
-class KZip;
 class QSplitter;
+namespace GrantleeThemeEditor {
+class EditorWidget;
 class PreviewWidget;
+}
 
-class EditorPage : public QWidget
+class EditorPage : public GrantleeThemeEditor::EditorPage
 {
     Q_OBJECT
 public:
-    enum PageType {
-        MainPage = 0,
-        ExtraPage = 1
-    };
-
-    explicit EditorPage(PageType type, const QString &projectDirectory, QWidget *parent = 0);
+    explicit EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QString &projectDirectory, QWidget *parent = 0);
     ~EditorPage();
 
-    void saveTheme(const QString &path);
-    void loadTheme(const QString &path);
-
-    void setPageFileName(const QString &filename);
-    QString pageFileName() const;
-
-    PageType pageType() const;
-
-    void createZip(const QString &themeName, KZip *zip);
-    void saveAsFilename(const QString &filename);
-    void installTheme(const QString &themePath);
-    void insertFile(const QString &filename);
-
-    PreviewWidget *preview() const;
-    EditorWidget *editor() const;
-
-Q_SIGNALS:
-    void needUpdateViewer();
-    void changed();
+    GrantleeThemeEditor::PreviewWidget *preview() const;
 
 private:
-    PageType mType;
-    QString mPageFileName;
-    EditorWidget *mEditor;
-    PreviewWidget *mPreview;
     ThemeTemplateWidget *mThemeTemplate;
     QSplitter *mMainSplitter;
     QSplitter *mWidgetSplitter;

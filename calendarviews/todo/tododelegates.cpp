@@ -32,6 +32,7 @@
 #include <calendarsupport/categoryhierarchyreader.h>
 
 #include <libkdepim/widgets/kcheckcombobox.h>
+#include <libkdepim/widgets/tagwidgets.h>
 
 #include <KCalCore/CalFilter>
 
@@ -305,41 +306,7 @@ QWidget *TodoCategoriesDelegate::createEditor( QWidget *parent,
   Q_UNUSED( option );
   Q_UNUSED( index );
 
-  KPIM::KCheckComboBox *combo = new KPIM::KCheckComboBox( parent );
-  QStringList categories;
-
-  if ( mCalendar ) {
-    KCalCore::CalFilter *filter = mCalendar->filter();
-    if ( filter->criteria() & KCalCore::CalFilter::ShowCategories ) {
-      categories = filter->categoryList();
-      categories.sort();
-    } else {
-      CalendarSupport::CategoryConfig cc( CalendarSupport::KCalPrefs::instance() );
-      categories = cc.customCategories();
-      QStringList filterCategories = filter->categoryList();
-      categories.sort();
-      filterCategories.sort();
-
-      QStringList::Iterator it = categories.begin();
-      QStringList::Iterator jt = filterCategories.begin();
-      while ( it != categories.end() && jt != filterCategories.end() ) {
-        if ( *it == *jt ) {
-          it = categories.erase( it );
-          jt++;
-        } else if ( *it < *jt ) {
-          it++;
-        } else if ( *it > *jt ) {
-          jt++;
-        }
-      }
-    }
-  }
-
-  CalendarSupport::CategoryHierarchyReaderQComboBox( combo ).read( categories );
-  // TODO test again with newer version of Qt, if it manages then to move
-  // the popup together with the combobox.
-  //combo->showPopup();
-  return combo;
+  return new KPIM::TagSelectionCombo( parent );
 }
 
 void TodoCategoriesDelegate::setEditorData( QWidget *editor,
@@ -456,7 +423,9 @@ QSize TodoRichTextDelegate::sizeHint( const QStyleOptionViewItem &option,
   if ( ret.height() > option.fontMetrics.height() * 2 ) {
     ret.setHeight( option.fontMetrics.height() * 2 );
   }
-  return ret;
+
+  // This row might not have a checkbox, so give it more height so it appears the same size as other rows.
+  const int checkboxHeight = QApplication::style()->sizeFromContents( QStyle::CT_CheckBox, &option, QSize() ).height();
+  return QSize( ret.width(), qMax( ret.height(), checkboxHeight ) );
 }
 
-#include "tododelegates.moc"

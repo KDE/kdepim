@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,10 +16,11 @@
 */
 
 #include "templateeditdialog.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
-#include <KTextEdit>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -51,7 +52,8 @@ TemplateEditDialog::TemplateEditDialog(QWidget *parent, bool defaultTemplate)
 
     vbox->addLayout(hbox);
 
-    mTextEdit = new KTextEdit;
+    mTextEdit = new PimCommon::RichTextEditorWidget;
+    mTextEdit->setAcceptRichText(false);
     mTextEdit->setReadOnly(defaultTemplate);
     vbox->addWidget(mTextEdit);
 
@@ -59,7 +61,8 @@ TemplateEditDialog::TemplateEditDialog(QWidget *parent, bool defaultTemplate)
     setMainWidget(w);
     if (!defaultTemplate) {
         enableButtonOk(false);
-        connect(mTemplateNameEdit, SIGNAL(textChanged(QString)),SLOT(slotTemplateNameChanged(QString)));
+        connect(mTemplateNameEdit, SIGNAL(textChanged(QString)),SLOT(slotTemplateChanged()));
+        connect(mTextEdit->editor(), SIGNAL(textChanged()),SLOT(slotTemplateChanged()));
         mTemplateNameEdit->setFocus();
     }
     readConfig();
@@ -80,17 +83,16 @@ void TemplateEditDialog::writeConfig()
 void TemplateEditDialog::readConfig()
 {
     KConfigGroup group( KGlobal::config(), "TemplateEditDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
-    } else {
-        resize(600,400);
     }
 }
 
-void TemplateEditDialog::slotTemplateNameChanged(const QString &text)
+
+void TemplateEditDialog::slotTemplateChanged()
 {
-    enableButtonOk(!text.trimmed().isEmpty());
+    enableButtonOk(!mTemplateNameEdit->text().trimmed().isEmpty() && !mTextEdit->editor()->toPlainText().trimmed().isEmpty());
 }
 
 void TemplateEditDialog::setScript(const QString &text)
@@ -113,4 +115,3 @@ QString TemplateEditDialog::templateName() const
     return mTemplateNameEdit->text();
 }
 
-#include "templateeditdialog.moc"

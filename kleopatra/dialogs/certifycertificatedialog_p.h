@@ -41,11 +41,7 @@
 #include <gpgme++/key.h>
 
 #include <QStandardItemModel>
-#ifndef QT_NO_WIZARD
 #include <QWizardPage>
-#else
-#include <utils/qwizard.h>
-#endif
 
 class QListView;
 class QLabel;

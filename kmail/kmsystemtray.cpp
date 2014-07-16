@@ -21,7 +21,7 @@
 
 #include "kmsystemtray.h"
 #include "kmmainwidget.h"
-#include "globalsettings.h"
+#include "settings/globalsettings.h"
 #include "util/mailutil.h"
 #include "mailcommon/kernel/mailkernel.h"
 #include "mailcommon/folder/foldertreeview.h"
@@ -32,7 +32,7 @@
 #include <kwindowsystem.h>
 #include <kdebug.h>
 #include <KMenu>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KAction>
 #include <KActionMenu>
 #include <KActionCollection>
@@ -62,14 +62,15 @@ KMSystemTray::KMSystemTray(QObject *parent)
       mDesktopOfMainWin( 0 ),
       mMode( GlobalSettings::EnumSystemTrayPolicy::ShowOnUnread ),
       mCount( 0 ),
-      mShowUnreadMail( true ),
+      mShowUnreadMailCount( true ),
+      mIconNotificationsEnabled( true ),
       mNewMessagesPopup( 0 ),
       mSendQueued( 0 )
 {
     kDebug() << "Initting systray";
     setToolTipTitle( i18n("KMail") );
-    setToolTipIconByName( "kmail" );
-    setIconByName( "kmail" );
+    setToolTipIconByName( QLatin1String("kmail") );
+    setIconByName( QLatin1String("kmail") );
     mIcon = KIcon( QLatin1String("mail-unread-new") );
 
     KMMainWidget * mainWidget = kmkernel->getKMMainWidget();
@@ -81,6 +82,9 @@ KMSystemTray::KMSystemTray(QObject *parent)
         }
     }
 
+
+    connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), this, SLOT(slotGeneralPaletteChanged()));
+    connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), this,  SLOT(slotGeneralFontChanged()) );
 
     connect( this, SIGNAL(activateRequested(bool,QPoint)),
              this, SLOT(slotActivated()) );
@@ -113,9 +117,9 @@ bool KMSystemTray::buildPopupMenu()
 
     contextMenu()->addTitle(qApp->windowIcon(), i18n("KMail"));
     QAction * action;
-    if ( ( action = mainWidget->action("check_mail") ) )
+    if ( ( action = mainWidget->action(QLatin1String("check_mail")) ) )
         contextMenu()->addAction( action );
-    if ( ( action = mainWidget->action("check_mail_in") ) )
+    if ( ( action = mainWidget->action(QLatin1String("check_mail_in")) ) )
         contextMenu()->addAction( action );
 
     mSendQueued = mainWidget->sendQueuedAction();
@@ -123,16 +127,16 @@ bool KMSystemTray::buildPopupMenu()
     contextMenu()->addAction( mainWidget->sendQueueViaMenu() );
 
     contextMenu()->addSeparator();
-    if ( ( action = mainWidget->action("new_message") ) )
+    if ( ( action = mainWidget->action(QLatin1String("new_message")) ) )
         contextMenu()->addAction( action );
-    if ( ( action = mainWidget->action("kmail_configure_kmail") ) )
+    if ( ( action = mainWidget->action(QLatin1String("kmail_configure_kmail")) ) )
         contextMenu()->addAction( action );
     contextMenu()->addSeparator();
-    if ( (action = mainWidget->action("akonadi_work_offline") ) )
+    if ( (action = mainWidget->action(QLatin1String("akonadi_work_offline")) ) )
         contextMenu()->addAction( action );
     contextMenu()->addSeparator();
 
-    if ( ( action = actionCollection()->action("file_quit") ) )
+    if ( ( action = actionCollection()->action(QLatin1String("file_quit")) ) )
         contextMenu()->addAction( action );
 
     return true;
@@ -142,11 +146,11 @@ KMSystemTray::~KMSystemTray()
 {
 }
 
-void KMSystemTray::setShowUnread(bool showUnread)
+void KMSystemTray::setShowUnreadCount(bool showUnreadCount)
 {
-    if (mShowUnreadMail == showUnread)
+    if (mShowUnreadMailCount == showUnreadCount)
         return;
-    mShowUnreadMail = showUnread;
+    mShowUnreadMailCount = showUnreadCount;
     updateSystemTray();
 }
 
@@ -175,6 +179,19 @@ int KMSystemTray::mode() const
     return mMode;
 }
 
+void KMSystemTray::slotGeneralFontChanged()
+{
+    updateSystemTray();
+}
+
+void KMSystemTray::slotGeneralPaletteChanged()
+{
+    const KColorScheme scheme( QPalette::Active, KColorScheme::View );
+    mTextColor = scheme.foreground( KColorScheme::LinkText ).color();
+    updateSystemTray();
+}
+
+
 /**
  * Update the count of unread messages.  If there are unread messages,
  * overlay the count on top of a transparent version of the KMail icon.
@@ -182,11 +199,11 @@ int KMSystemTray::mode() const
  */
 void KMSystemTray::updateCount()
 {
-    if (mCount == 0) {
-        setIconByName( "kmail" );
+    if (mCount == 0 || !mIconNotificationsEnabled) {
+        setIconByName( QLatin1String("kmail") );
         return;
     }
-    if (mShowUnreadMail) {
+    if (mShowUnreadMailCount) {
         const int overlaySize = KIconLoader::SizeSmallMedium;
 
         const QString countString = QString::number( mCount );
@@ -209,10 +226,12 @@ void KMSystemTray::updateCount()
 
         QPainter p( &overlayPixmap );
         p.setFont( countFont );
-        KColorScheme scheme( QPalette::Active, KColorScheme::View );
+        if (!mTextColor.isValid()) {
+            slotGeneralPaletteChanged();
+        }
 
         p.setBrush( Qt::NoBrush );
-        p.setPen( scheme.foreground( KColorScheme::LinkText ).color() );
+        p.setPen( mTextColor );
         p.setOpacity( 1.0 );
         p.drawText( overlayPixmap.rect(),Qt::AlignCenter, countString );
         p.end();
@@ -225,10 +244,17 @@ void KMSystemTray::updateCount()
 
         setIconByPixmap( iconPixmap );
     } else {
-        setIconByName( "mail-unread-new" );
+        setIconByPixmap( mIcon );
     }
 }
 
+void KMSystemTray::setSystrayIconNotificationsEnabled( bool enabled )
+{
+    if ( enabled != mIconNotificationsEnabled ) {
+        mIconNotificationsEnabled = enabled;
+        updateSystemTray();
+    }
+}
 
 /**
  * On left mouse click, switch focus to the first KMMainWidget.  On right
@@ -290,7 +316,7 @@ void KMSystemTray::slotContextMenuAboutToShow()
     }
 }
 
-void KMSystemTray::fillFoldersMenu( QMenu *menu, const QAbstractItemModel *model, const QString& parentName, const QModelIndex& parentIndex )
+void KMSystemTray::fillFoldersMenu( QMenu *menu, const QAbstractItemModel *model, const QString &parentName, const QModelIndex &parentIndex )
 {
     const int rowCount = model->rowCount( parentIndex );
     for ( int row = 0; row < rowCount; ++row ) {
@@ -321,8 +347,6 @@ void KMSystemTray::fillFoldersMenu( QMenu *menu, const QAbstractItemModel *model
         }
     }
 }
-
-
 
 void KMSystemTray::hideKMail()
 {
@@ -396,7 +420,7 @@ bool KMSystemTray::hasUnreadMail() const
     return ( mCount != 0 );
 }
 
-void KMSystemTray::slotSelectCollection(QAction*act)
+void KMSystemTray::slotSelectCollection(QAction *act)
 {
     const Akonadi::Collection::Id id = act->data().value<Akonadi::Collection::Id>();
     kmkernel->selectCollectionFromId( id );
@@ -413,7 +437,7 @@ void KMSystemTray::updateSystemTray()
     initListOfCollection();
 }
 
-void KMSystemTray::slotCollectionStatisticsChanged( Akonadi::Collection::Id id,const Akonadi::CollectionStatistics& )
+void KMSystemTray::slotCollectionStatisticsChanged( Akonadi::Collection::Id id, const Akonadi::CollectionStatistics & )
 {
     //Exclude sent mail folder
 
@@ -459,4 +483,3 @@ bool KMSystemTray::ignoreNewMailInFolder(const Akonadi::Collection &collection)
 }
 
 }
-#include "kmsystemtray.moc"

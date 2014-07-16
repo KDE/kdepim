@@ -25,21 +25,19 @@
 #include <Akonadi/AgentManager>
 #include <Akonadi/ChangeRecorder>
 
-#include <Soprano/Vocabulary/NAO>
-#include <Nepomuk2/Variant>
-#include <Nepomuk2/ResourceManager>
-#include <nepomuk2/datamanagement.h>
-
 #include <QDBusInterface>
 #include <QDBusConnectionInterface>
 
-#include <QLabel>
 #include <KDialog>
-#include <QGroupBox>
+#include <KLocalizedString>
 #include <KLocale>
 #include <KPushButton>
-#include <QFormLayout>
 #include <kio/global.h>
+#include <KLocale>
+
+#include <QGroupBox>
+#include <QLabel>
+#include <QFormLayout>
 #include <QCheckBox>
 #include <akonadi/indexpolicyattribute.h>
 
@@ -47,7 +45,10 @@ using namespace Akonadi;
 
 
 CollectionMaintenancePage::CollectionMaintenancePage(QWidget * parent) :
-    CollectionPropertiesPage( parent ), mIsNotAVirtualCollection( true ), mFolderSizeLabel(0), mCollectionCount(0)
+    CollectionPropertiesPage( parent ),
+    mIsNotAVirtualCollection( true ),
+    mFolderSizeLabel(0),
+    mCollectionCount(0)
 {
     setObjectName( QLatin1String( "KMail::CollectionMaintenancePage" ) );
     setPageTitle(  i18n("Maintenance") );
@@ -90,7 +91,6 @@ void CollectionMaintenancePage::init(const Akonadi::Collection & col)
     box->addRow( new QLabel( i18n("Unread messages:"), messagesGroup ), mCollectionUnread );
 
     topLayout->addWidget( messagesGroup );
-
     QGroupBox *indexingGroup = new QGroupBox( i18n( "Indexing" ), this );
     QVBoxLayout *indexingLayout = new QVBoxLayout( indexingGroup );
     mIndexingEnabled = new QCheckBox( i18n( "Enable Full Text Indexing" ) );
@@ -99,19 +99,12 @@ void CollectionMaintenancePage::init(const Akonadi::Collection & col)
     mLastIndexed = new QLabel( i18n( "Still not indexed." ) );
 
     indexingLayout->addWidget( mLastIndexed );
-
+#if 0
     KPushButton *forceReindex = new KPushButton(i18n("Force reindexing"));
     indexingLayout->addWidget( forceReindex );
-
-    if(!Nepomuk2::ResourceManager::instance()->initialized()) {
-        mLastIndexed->hide();
-        forceReindex->setEnabled(false);
-    } else {
-        connect(forceReindex,SIGNAL(clicked()),SLOT(slotReindexing()));
-    }
-
+    connect(forceReindex,SIGNAL(clicked()),SLOT(slotReindexing()));
+#endif
     topLayout->addWidget( indexingGroup );
-
     topLayout->addStretch( 100 );
 }
 
@@ -126,16 +119,20 @@ void CollectionMaintenancePage::load(const Collection & col)
         if(!indexingWasEnabled)
             mLastIndexed->hide();
         else {
-            KUrl url = col.url( Akonadi::Collection::UrlShort );
-            if(!url.isEmpty()) {
-                const Nepomuk2::Resource parentResource( url );
-                const QDateTime dt = parentResource.property( Soprano::Vocabulary::NAO::lastModified() ).toDateTime();
-                if(dt.isValid()) {
-                    mLastIndexed->setText(i18n("Folder was indexed: %1",KGlobal::locale()->formatDateTime(dt)));
+            QDBusInterface interfaceBalooIndexer( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_baloo_indexer"), QLatin1String("/") );
+            if(interfaceBalooIndexer.isValid()) {
+                if (!interfaceBalooIndexer.callWithCallback(QLatin1String("indexedItems"), QList<QVariant>() << (qlonglong)mCurrentCollection.id(), this, SLOT(onIndexedItemsReceived(qint64)))) {
+                    kWarning() << "Failed to request indexed items";
                 }
             }
         }
     }
+}
+
+void CollectionMaintenancePage::onIndexedItemsReceived(qint64 num)
+{
+    kDebug() << num;
+    mLastIndexed->setText(i18np("Indexed %1 item of this collection", "Indexed %1 items of this collection", num));
 }
 
 void CollectionMaintenancePage::updateLabel( qint64 nbMail, qint64 nbUnreadMail, qint64 size )
@@ -143,10 +140,9 @@ void CollectionMaintenancePage::updateLabel( qint64 nbMail, qint64 nbUnreadMail,
     mCollectionCount->setText( QString::number( qMax( 0LL, nbMail ) ) );
     mCollectionUnread->setText( QString::number( qMax( 0LL, nbUnreadMail ) ) );
     mFolderSizeLabel->setText( KGlobal::locale()->formatByteSize( qMax( 0LL, size ) ) );
-
 }
 
-void CollectionMaintenancePage::save(Collection &collection )
+void CollectionMaintenancePage::save(Collection &collection)
 {
     if ( !collection.hasAttribute<Akonadi::IndexPolicyAttribute>() && mIndexingEnabled->isChecked() )
         return;
@@ -155,7 +151,6 @@ void CollectionMaintenancePage::save(Collection &collection )
         attr->setIndexingEnabled( true );
     else {
         attr->setIndexingEnabled( false );
-        Nepomuk2::removeResources( QList <QUrl>() << collection.url() );
     }
 }
 
@@ -168,12 +163,8 @@ void CollectionMaintenancePage::updateCollectionStatistic(Akonadi::Collection::I
 
 void CollectionMaintenancePage::slotReindexing()
 {
-    //Be sure to remove collection resources before to reindex.
-    Nepomuk2::removeResources( QList <QUrl>() << mCurrentCollection.url() );
-    QDBusInterface interfaceNepomukFeeder( "org.freedesktop.Akonadi.Agent.akonadi_nepomuk_feeder", "/" );
-    if(interfaceNepomukFeeder.isValid()) {
-        interfaceNepomukFeeder.asyncCall(QLatin1String("forceReindexCollection"),(qlonglong)mCurrentCollection.id());
+    QDBusInterface interfaceBalooIndexer( QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_baloo_indexer"), QLatin1String("/") );
+    if(interfaceBalooIndexer.isValid()) {
+        interfaceBalooIndexer.asyncCall(QLatin1String("reindexCollection"),(qlonglong)mCurrentCollection.id());
     }
 }
-
-#include "collectionmaintenancepage.moc"

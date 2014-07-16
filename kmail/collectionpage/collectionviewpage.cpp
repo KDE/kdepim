@@ -31,7 +31,7 @@
 #include <QLabel>
 #include <QCheckBox>
 #include <QVBoxLayout>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDialog>
 
 
@@ -80,7 +80,7 @@ void CollectionViewPage::init(const Akonadi::Collection & col)
         mNormalIconButton->setStrictIconSize( true );
         mNormalIconButton->setFixedSize( 28, 28 );
         // Can't use iconset here.
-        mNormalIconButton->setIcon( "folder" );
+        mNormalIconButton->setIcon( QLatin1String("folder") );
         mNormalIconButton->setEnabled( false );
 
         mUnreadIconLabel = new QLabel( i18nc( "Icon used for folders which do have unread messages.", "&Unread:" ), this );
@@ -93,7 +93,7 @@ void CollectionViewPage::init(const Akonadi::Collection & col)
         mUnreadIconButton->setStrictIconSize( true );
         mUnreadIconButton->setFixedSize( 28, 28 );
         // Can't use iconset here.
-        mUnreadIconButton->setIcon( "folder-open" );
+        mUnreadIconButton->setIcon( QLatin1String("folder-open") );
         mUnreadIconButton->setEnabled( false );
 
         QHBoxLayout * iconHLayout = new QHBoxLayout();
@@ -301,4 +301,3 @@ void CollectionViewPage::save( Akonadi::Collection & col )
 }
 
 
-#include "collectionviewpage.moc"

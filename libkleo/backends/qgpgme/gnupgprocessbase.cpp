@@ -170,7 +170,7 @@ void Kleo::GnuPGProcessBase::parseStatusOutput() {
     // check status token
     if ( line.left( startTokenLen ) != startToken ) {
       kDebug( 5150 ) <<"Kleo::GnuPGProcessBase::childStatus: status-fd protocol error: line doesn't begin with \""
-		      << startToken << "\"";
+                     << startToken << "\"";
       continue;
     }
     // remove status token:
@@ -186,9 +186,9 @@ void Kleo::GnuPGProcessBase::parseStatusOutput() {
     for ( int tagEnd = command.indexOf( ' ' ) ; tagEnd >= 0 ; tagEnd = command.indexOf( ' ', tagStart = tagEnd+1 ) ) {
       const QByteArray tag = command.mid( tagStart, tagEnd - tagStart );
       if ( cmd.isNull() )
-	cmd = fromHexEscapedUtf8( tag );
+        cmd = fromHexEscapedUtf8( tag );
       else
-	args.push_back( fromHexEscapedUtf8( tag ) );
+        args.push_back( fromHexEscapedUtf8( tag ) );
     }
     emit status( this, cmd, args );
   }
@@ -196,4 +196,3 @@ void Kleo::GnuPGProcessBase::parseStatusOutput() {
 }
 #endif
 
-#include "gnupgprocessbase.moc"

@@ -37,9 +37,7 @@ NamePartsEditWidget::NamePartsEditWidget( QWidget *parent )
 
   mPrefixCombo = new KComboBox( this );
   mPrefixCombo->setDuplicatesEnabled( false );
-#if !defined(Q_WS_MAEMO_5) && !defined(MEEGO_EDITION_HARMATTAN)
   mPrefixCombo->setEditable( true );
-#endif
 
   mGivenNameEdit = new KLineEdit( this );
 
@@ -49,9 +47,7 @@ NamePartsEditWidget::NamePartsEditWidget( QWidget *parent )
 
   mSuffixCombo = new KComboBox( this );
   mSuffixCombo->setDuplicatesEnabled( false );
-#if !defined(Q_WS_MAEMO_5) && !defined(MEEGO_EDITION_HARMATTAN)
   mSuffixCombo->setEditable( true );
-#endif
 
   layout->addRow( i18n( "Honorific prefixes:" ), mPrefixCombo );
   layout->addRow( i18n( "Given name:" ), mGivenNameEdit );
@@ -80,10 +76,7 @@ NamePartsEditWidget::NamePartsEditWidget( QWidget *parent )
 
   mPrefixCombo->addItems( prefixList );
   mSuffixCombo->addItems( suffixList );
-
-#if !defined(Q_WS_MAEMO_5) && !defined(MEEGO_EDITION_HARMATTAN)
   mPrefixCombo->lineEdit()->setFocus();
-#endif
 
   connect( mSuffixCombo, SIGNAL(activated(int)), this, SLOT(inputChanged()) );
   connect( mSuffixCombo, SIGNAL(editTextChanged(QString)), this, SLOT(inputChanged()) );

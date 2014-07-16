@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -20,14 +20,15 @@
 
 #include <KDialog>
 
-class KTextEdit;
-
+namespace PimCommon {
+class RichTextEditorWidget;
+}
 namespace KSieveUi {
 class SieveScriptDescriptionDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit SieveScriptDescriptionDialog(QWidget *parent);
+    explicit SieveScriptDescriptionDialog(QWidget *parent=0);
     ~SieveScriptDescriptionDialog();
 
     void setDescription(const QString &desc);
@@ -38,7 +39,7 @@ private:
     void writeConfig();
 
 private:
-    KTextEdit *mEdit;
+    PimCommon::RichTextEditorWidget *mEdit;
 };
 }
 

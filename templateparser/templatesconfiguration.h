@@ -21,17 +21,16 @@
 
 #include "templateparser_export.h"
 #include "ui_templatesconfiguration_base.h"
-#include "templatesinsertcommand.h"
-
+class QTextEdit;
 namespace TemplateParser {
 
 class TEMPLATEPARSER_EXPORT TemplatesConfiguration : public QWidget, Ui::TemplatesConfigurationBase
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
 
-    explicit TemplatesConfiguration( QWidget *parent = 0, const char *name = 0 );
+    explicit TemplatesConfiguration( QWidget *parent = 0, const QString &name = QString() );
 
     void loadFromGlobal();
     void saveToGlobal();
@@ -48,21 +47,21 @@ class TEMPLATEPARSER_EXPORT TemplatesConfiguration : public QWidget, Ui::Templat
      */
     static QString configIdString( uint id );
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotInsertCommand( const QString &cmd, int adjustCursor = 0 );
     void slotTextChanged();
 
-  signals:
+signals:
     void changed();
 
-  protected:
+protected:
     QString strOrBlank( const QString &str );
     QString mHelpString;
 
-  private:
-    KTextEdit *currentTextEdit() const;
+private:
+    QTextEdit *currentTextEdit() const;
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotHelpLinkClicked( const QString & );
 };
 

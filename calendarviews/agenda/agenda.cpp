@@ -43,17 +43,20 @@
 
 #include <KGlobal>
 #include <KMessageBox>
+#include <KLocale>
 
 #include <QApplication>
 #include <QLabel>
-#include <KLocale>
+#include <KLocalizedString>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPointer>
 #include <QResizeEvent>
 #include <QScrollBar>
 #include <QTimer>
+#include <QHash>
 #include <QWheelEvent>
+#include <QMultiHash>
 
 #include <cmath> // for fabs()
 
@@ -62,12 +65,10 @@ using namespace EventViews;
 ///////////////////////////////////////////////////////////////////////////////
 class MarcusBains::Private
 {
-  MarcusBains *const q;
-
   public:
-    Private( MarcusBains *parent, EventView *eventView, Agenda *agenda )
-      : q( parent ), mEventView( eventView ), mAgenda( agenda ),
-        mTimer( 0 ), mTimeBox( 0 ), mOldTime( 0, 0 ), mOldTodayCol( -1 )
+    Private( EventView *eventView, Agenda *agenda )
+      : mEventView( eventView ), mAgenda( agenda ),
+        mTimer( 0 ), mTimeBox( 0 ), mOldTodayCol( -1 )
     {
     }
 
@@ -78,7 +79,7 @@ class MarcusBains::Private
     Agenda *mAgenda;
     QTimer *mTimer;
     QLabel *mTimeBox;  // Label showing the current time
-    QTime mOldTime;
+    KDateTime mOldDateTime;
     int mOldTodayCol;
 };
 
@@ -99,7 +100,7 @@ int MarcusBains::Private::todayColumn() const
 }
 
 MarcusBains::MarcusBains( EventView *eventView, Agenda *agenda )
-  : QFrame( agenda ), d( new Private( this, eventView, agenda ) )
+  : QFrame( agenda ), d( new Private( eventView, agenda ) )
 {
   d->mTimeBox = new QLabel( d->mAgenda );
   d->mTimeBox->setAlignment( Qt::AlignRight | Qt::AlignBottom );
@@ -125,10 +126,11 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
   const bool showSeconds = d->mEventView->preferences()->marcusBainsShowSeconds();
   const QColor color = d->mEventView->preferences()->agendaMarcusBainsLineLineColor();
 
-  const QTime time = QTime::currentTime();
-  if ( ( time.hour() == 0 ) && ( d->mOldTime.hour() == 23 ) ) {
-    // We are on a new day
-    recalculate = true;
+  const KDateTime now = KDateTime::currentLocalDateTime();
+  const QTime time = now.time();
+
+  if (now.date() != d->mOldDateTime.date()) {
+      recalculate = true; // New day
   }
   const int todayCol = recalculate ? d->todayColumn() : d->mOldTodayCol;
 
@@ -136,7 +138,7 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
   const int minutes = time.hour() * 60 + time.minute();
   const int minutesPerCell = 24 * 60 / d->mAgenda->rows();
 
-  d->mOldTime = time;
+  d->mOldDateTime = now;
   d->mOldTodayCol = todayCol;
 
   int y = int( minutes  *  d->mAgenda->gridSpacingY() / minutesPerCell );
@@ -200,12 +202,10 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
 
 class Agenda::Private
 {
-  Agenda *const q;
-
   public:
-    Private( Agenda *parent, AgendaView *agendaView, QScrollArea *scrollArea,
+    Private( AgendaView *agendaView, QScrollArea *scrollArea,
              int columns, int rows, int rowSize, bool isInteractive )
-      : q( parent ), mAgendaView( agendaView ), mScrollArea( scrollArea ), mAllDayMode( false ),
+      : mAgendaView( agendaView ), mScrollArea( scrollArea ), mAllDayMode( false ),
         mColumns( columns ), mRows( rows ), mGridSpacingX( 0.0 ), mGridSpacingY( rowSize ),
         mDesiredGridSpacingY( rowSize ), mCalendar( 0 ), mChanger( 0 ),
         mResizeBorderWidth( 0 ), mScrollBorderWidth( 0 ), mScrollDelay( 0 ), mScrollOffset( 0 ),
@@ -220,9 +220,20 @@ class Agenda::Private
     }
 
   public:
-    PrefsPtr preferences() const {
+    PrefsPtr preferences() const
+    {
       return mAgendaView->preferences();
     }
+
+    bool isQueuedForDeletion( Akonadi::Item::Id id ) const
+    {
+      // if mAgendaItemsById contains it it means that a createAgendaItem() was called
+      // before the previous agenda items were deleted.
+      return mItemsQueuedForDeletion.contains( id ) && !mAgendaItemsById.contains( id );
+    }
+
+    QMultiHash<Akonadi::Item::Id, AgendaItem::QPtr> mAgendaItemsById; // It's a QMultiHash because recurring incidences might have many agenda items
+    QSet<Akonadi::Item::Id> mItemsQueuedForDeletion;
 
     AgendaView *mAgendaView;
     QScrollArea *mScrollArea;
@@ -311,7 +322,7 @@ class Agenda::Private
 Agenda::Agenda( AgendaView *agendaView, QScrollArea *scrollArea,
                 int columns, int rows, int rowSize, bool isInteractive )
   : QWidget( scrollArea ),
-    d( new Private( this, agendaView, scrollArea, columns, rows, rowSize, isInteractive ) )
+    d( new Private( agendaView, scrollArea, columns, rows, rowSize, isInteractive ) )
 {
   setMouseTracking( true );
 
@@ -324,7 +335,7 @@ Agenda::Agenda( AgendaView *agendaView, QScrollArea *scrollArea,
 */
 Agenda::Agenda( AgendaView *agendaView, QScrollArea *scrollArea,
                 int columns, bool isInteractive )
-  : QWidget( scrollArea ), d( new Private( this, agendaView, scrollArea, columns, 1, 24,
+  : QWidget( scrollArea ), d( new Private( agendaView, scrollArea, columns, 1, 24,
                                            isInteractive ) )
 {
   d->mAllDayMode = true;
@@ -340,12 +351,12 @@ Agenda::~Agenda()
 
 Akonadi::Item Agenda::selectedIncidence() const
 {
-  return ( d->mSelectedItem ? d->mSelectedItem->incidence() : Akonadi::Item() );
+  return d->mSelectedItem ? d->mSelectedItem->incidence() : Akonadi::Item();
 }
 
 QDate Agenda::selectedIncidenceDate() const
 {
-  return ( d->mSelectedItem ? d->mSelectedItem->occurrenceDate() : QDate() );
+  return d->mSelectedItem ? d->mSelectedItem->occurrenceDate() : QDate();
 }
 
 Akonadi::Item::Id Agenda::lastSelectedItemId() const
@@ -429,6 +440,8 @@ void Agenda::clear()
   qDeleteAll( d->mItemsToDelete );
   d->mItems.clear();
   d->mItemsToDelete.clear();
+  d->mAgendaItemsById.clear();
+  d->mItemsQueuedForDeletion.clear();
 
   d->mSelectedItem = 0;
 
@@ -540,7 +553,7 @@ bool Agenda::eventFilter ( QObject *object, QEvent *event )
   }
 }
 
-bool Agenda::eventFilter_drag( QObject *, QDropEvent *de )
+bool Agenda::eventFilter_drag( QObject *obj, QDropEvent *de )
 {
 #ifndef QT_NO_DRAGANDDROP
   const QMimeData *md = de->mimeData();
@@ -576,7 +589,13 @@ bool Agenda::eventFilter_drag( QObject *, QDropEvent *de )
 
     de->setDropAction( Qt::MoveAction );
 
-    const QPoint gridPosition = contentsToGrid( de->pos() );
+    QWidget *dropTarget = qobject_cast<QWidget*>( obj );
+    QPoint dropPosition = de->pos();
+    if ( dropTarget && dropTarget != this ) {
+      dropPosition = dropTarget->mapTo( this, dropPosition );
+    }
+
+    const QPoint gridPosition = contentsToGrid( dropPosition );
     if ( !incidenceUrls.isEmpty() ) {
       emit droppedIncidences( incidenceUrls, gridPosition, d->mAllDayMode );
     } else {
@@ -821,8 +840,7 @@ void Agenda::performSelectAction( const QPoint &pos )
   const QPoint gpos = contentsToGrid( pos );
 
   // Scroll if cursor was moved to upper or lower end of agenda.
-  if ( pos.y() - contentsY() < d->mScrollBorderWidth &&
-       contentsY() > 0 ) {
+  if ( pos.y() - contentsY() < d->mScrollBorderWidth && contentsY() > 0 ) {
     d->mScrollUpTimer.start( d->mScrollDelay );
   } else if ( contentsY() + d->mScrollArea->viewport()->height() -
               d->mScrollBorderWidth < pos.y() ) {
@@ -963,7 +981,8 @@ void Agenda::performItemAction( const QPoint &pos )
   }
 
   // Scroll if item was moved to upper or lower end of agenda.
-  if ( pos.y() - contentsY() < d->mScrollBorderWidth ) {
+  const int distanceToTop = pos.y() - contentsY();
+  if ( distanceToTop < d->mScrollBorderWidth && distanceToTop > -d->mScrollBorderWidth ) {
     d->mScrollUpTimer.start( d->mScrollDelay );
   } else if ( contentsY() + d->mScrollArea->viewport()->height() -
               d->mScrollBorderWidth < pos.y() ) {
@@ -980,7 +999,7 @@ void Agenda::performItemAction( const QPoint &pos )
         KMessageBox::information( this,
                                   i18n( "Unable to lock item for modification. "
                                         "You cannot make any changes." ),
-                                  i18n( "Locking Failed" ), "AgendaLockingFailed" );
+                                  i18n( "Locking Failed" ), QLatin1String("AgendaLockingFailed") );
         d->mScrollUpTimer.stop();
         d->mScrollDownTimer.stop();
         d->mActionItem->resetMove();
@@ -1018,7 +1037,7 @@ void Agenda::performItemAction( const QPoint &pos )
         if ( moveItem == firstItem && !d->mAllDayMode ) { // is the first item
           int newY = deltapos.y() + moveItem->cellYTop();
           // If event start moved earlier than 0:00, it starts the previous day
-          if ( newY < 0 ) {
+          if ( newY < 0 && newY > d->mScrollBorderWidth ) {
             moveItem->expandTop( -moveItem->cellYTop() );
             // prepend a new item at ( x-1, rows()+newY to rows() )
             AgendaItem::QPtr newFirst = firstItem->prevMoveItem();
@@ -1389,18 +1408,18 @@ void Agenda::placeSubCells( AgendaItem::QPtr placeItem )
   kDebug() << "Agenda::placeSubCells()...";
 #endif
 
-  QList<CellItem*> cells;
-  foreach ( CellItem *item, d->mItems ) {
+  QList<CalendarSupport::CellItem*> cells;
+  foreach ( CalendarSupport::CellItem *item, d->mItems ) {
     if ( item ) {
       cells.append( item );
     }
   }
 
-  QList<CellItem*> items = CellItem::placeItem( cells, placeItem );
+  QList<CalendarSupport::CellItem*> items = CalendarSupport::CellItem::placeItem( cells, placeItem );
 
   placeItem->setConflictItems( QList<AgendaItem::QPtr>() );
   double newSubCellWidth = calcSubCellWidth( placeItem );
-  QList<CellItem*>::iterator it;
+  QList<CalendarSupport::CellItem*>::iterator it;
   for ( it = items.begin(); it != items.end(); ++it ) {
     if ( *it ) {
       AgendaItem::QPtr item = static_cast<AgendaItem *>( *it );
@@ -1689,13 +1708,10 @@ AgendaItem::QPtr Agenda::insertItem( const Akonadi::Item &incidence, const KDate
 
   d->mActionType = NOP;
 
-  AgendaItem::QPtr agendaItem = new AgendaItem( d->mAgendaView, d->mCalendar, incidence,
-                                                itemPos, itemCount, qd, isSelected, this );
-
-  connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem::QPtr)),
-           SLOT(removeAgendaItem(AgendaItem::QPtr)) );
-  connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem::QPtr)),
-           SLOT(showAgendaItem(AgendaItem::QPtr)) );
+  AgendaItem::QPtr agendaItem = createAgendaItem( incidence, itemPos, itemCount, qd, isSelected );
+  if ( !agendaItem ) {
+    return AgendaItem::QPtr();
+  }
 
   if ( YBottom <= YTop ) {
     kDebug() << "Text:" << agendaItem->text() << " YSize<0";
@@ -1738,12 +1754,10 @@ AgendaItem::QPtr Agenda::insertAllDayItem( const Akonadi::Item &incidence, const
 
   d->mActionType = NOP;
 
-  AgendaItem::QPtr agendaItem =
-    new AgendaItem( d->mAgendaView, d->mCalendar, incidence, 1, 1, occurrenceDateTime, isSelected, this );
-  connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem::QPtr)),
-           SLOT(removeAgendaItem(AgendaItem::QPtr)) );
-  connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem::QPtr)),
-           SLOT(showAgendaItem(AgendaItem::QPtr)) );
+  AgendaItem::QPtr agendaItem = createAgendaItem( incidence, 1, 1, occurrenceDateTime, isSelected );
+  if ( !agendaItem ) {
+    return AgendaItem::QPtr();
+  }
 
   agendaItem->setCellXY( XBegin, 0, 0 );
   agendaItem->setCellXRight( XEnd );
@@ -1763,6 +1777,25 @@ AgendaItem::QPtr Agenda::insertAllDayItem( const Akonadi::Item &incidence, const
   placeSubCells( agendaItem );
 
   agendaItem->show();
+
+  return agendaItem;
+}
+
+AgendaItem::QPtr Agenda::createAgendaItem( const Akonadi::Item &item, int itemPos,
+                                           int itemCount, const KDateTime &qd, bool isSelected )
+{
+  if ( !item.isValid() ) {
+    kWarning() << "Agenda::createAgendaItem() item is invalid.";
+    return AgendaItem::QPtr();
+  }
+
+  AgendaItem::QPtr agendaItem = new AgendaItem( d->mAgendaView, d->mCalendar, item,
+                                                itemPos, itemCount, qd, isSelected, this );
+
+  connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem::QPtr)), SLOT(removeAgendaItem(AgendaItem::QPtr)) );
+  connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem::QPtr)), SLOT(showAgendaItem(AgendaItem::QPtr)) );
+
+  d->mAgendaItemsById.insert( item.id(), agendaItem );
 
   return agendaItem;
 }
@@ -1799,10 +1832,11 @@ void Agenda::insertMultiItem( const Akonadi::Item &event, const KDateTime &occur
       } else {
         cellYBottom = rows() - 1;
       }
-      newtext = QString( "(%1/%2): " ).arg( count ).arg( width );
+      newtext = QString::fromLatin1( "(%1/%2): " ).arg( count ).arg( width );
       newtext.append( ev->summary() );
 
       current = insertItem( event, occurrenceDateTime, cellX, cellYTop, cellYBottom, count, width, isSelected );
+      Q_ASSERT( current );
       current->setText( newtext );
       multiItems.append( current );
     }
@@ -1832,31 +1866,42 @@ void Agenda::insertMultiItem( const Akonadi::Item &event, const KDateTime &occur
   marcus_bains();
 }
 
-QList<AgendaItem::QPtr> Agenda::agendaItems( const KCalCore::Incidence::Ptr &incidence ) const
-{
-  Q_ASSERT(incidence);
-  QList<AgendaItem::QPtr> agendaItems;
-  foreach ( const AgendaItem::QPtr &agendaItem, d->mItems ) {
-    if ( !agendaItem ) {
-      continue;
-    }
-    const KCalCore::Incidence::Ptr tmpInc = CalendarSupport::incidence( agendaItem->incidence() );
-    if ( tmpInc && ( tmpInc->instanceIdentifier() == incidence->instanceIdentifier() ) ) {
-      agendaItems.push_back( agendaItem );
-    }
-  }
-  return agendaItems;
-}
-
 void Agenda::removeIncidence( const KCalCore::Incidence::Ptr &incidence )
 {
-  // First find all items to be deleted and store them
-  // in its own list. Otherwise removeAgendaItem will reset
-  // the current position in the iterator-loop and mess the logic up.
-  const QList<AgendaItem::QPtr> agendaItemsToRemove = agendaItems( incidence );
+  if ( !incidence ) {
+    kWarning() << "Agenda::removeIncidence() incidence is invalid";
+    return;
+  }
 
-  foreach ( const AgendaItem::QPtr &agendaItem, agendaItemsToRemove ) {
-    removeAgendaItem( agendaItem );
+  // we get the id from the property, because the item might have been deleted from the etm/mCalendar
+  bool ok = false;
+  Akonadi::Item::Id id = incidence->customProperty( "VOLATILE", "AKONADI-ID" ).toLongLong( &ok );
+
+  if ( id == -1 || !ok ) {
+    id = d->mCalendar->item( incidence->instanceIdentifier() ).id();
+
+    if ( id == -1 ) {
+      // Ok, we really don't know the ID, give up.
+      kWarning() << "Agenda::removeIncidence() Item to remove is invalid. uid = "
+                 << incidence->instanceIdentifier();
+      return;
+    }
+  }
+
+  if ( d->isQueuedForDeletion( id ) ) {
+    return; // It's already queued for deletion
+  }
+
+  AgendaItem::List agendaItems = d->mAgendaItemsById.values( id );
+  if ( agendaItems.isEmpty() ) {
+    // We're not displaying such item
+    // kDebug() << "Ignoring";
+    return;
+  }
+  foreach ( const AgendaItem::QPtr &agendaItem, agendaItems ) {
+    if ( agendaItem && !removeAgendaItem( agendaItem ) ) {
+      kWarning() << "Agenda::removeIncidence() Failed to remove " << incidence->uid();
+    }
   }
 }
 
@@ -1879,15 +1924,16 @@ void Agenda::showAgendaItem( AgendaItem::QPtr agendaItem )
   agendaItem->show();
 }
 
-bool Agenda::removeAgendaItem( AgendaItem::QPtr item )
+bool Agenda::removeAgendaItem( AgendaItem::QPtr agendaItem )
 {
+  Q_ASSERT( agendaItem );
   // we found the item. Let's remove it and update the conflicts
   bool taken = false;
-  AgendaItem::QPtr thisItem = item;
-  QList<AgendaItem::QPtr> conflictItems = thisItem->conflictItems();
-//  removeChild( thisItem );
+  QList<AgendaItem::QPtr> conflictItems = agendaItem->conflictItems();
+  // removeChild( thisItem );
 
-  taken = ( d->mItems.removeAll( thisItem ) > 0 );
+  taken = d->mItems.removeAll( agendaItem ) > 0;
+  d->mAgendaItemsById.remove( agendaItem->incidence().id(), agendaItem );
 
   QList<AgendaItem::QPtr>::iterator it;
   for ( it = conflictItems.begin(); it != conflictItems.end(); ++it ) {
@@ -1898,11 +1944,13 @@ bool Agenda::removeAgendaItem( AgendaItem::QPtr item )
 
   for ( it = conflictItems.begin(); it != conflictItems.end(); ++it ) {
     // the item itself is also in its own conflictItems list!
-    if ( *it && *it != thisItem ) {
+    if ( *it && *it != agendaItem ) {
       placeSubCells( *it );
     }
   }
-  d->mItemsToDelete.append( thisItem );
+  d->mItemsToDelete.append( agendaItem );
+  d->mItemsQueuedForDeletion.insert( agendaItem->incidence().id() );
+  agendaItem->setVisible( false );
   QTimer::singleShot( 0, this, SLOT(deleteItemsToDelete()) );
   return taken;
 }
@@ -1911,6 +1959,7 @@ void Agenda::deleteItemsToDelete()
 {
   qDeleteAll( d->mItemsToDelete );
   d->mItemsToDelete.clear();
+  d->mItemsQueuedForDeletion.clear();
 }
 
 /*QSizePolicy Agenda::sizePolicy() const
@@ -2220,6 +2269,11 @@ QScrollArea *Agenda::scrollArea() const
   return d->mScrollArea;
 }
 
+AgendaItem::List Agenda::agendaItems( Akonadi::Item::Id id ) const
+{
+  return d->mAgendaItemsById.values( id );
+}
+
 AgendaScrollArea::AgendaScrollArea( bool isAllDay, AgendaView *agendaView,
                                     bool isInteractive, QWidget *parent )
   : QScrollArea( parent )
@@ -2252,6 +2306,5 @@ Agenda *AgendaScrollArea::agenda() const
   return mAgenda;
 }
 
-#include "agenda.moc"
 
 // kate: space-indent on; indent-width 2; replace-tabs on;

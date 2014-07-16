@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -24,20 +24,23 @@ namespace KMime {
 class Message;
 }
 
+namespace GrantleeTheme {
+class Theme;
+}
+
 namespace MessageViewer {
 class HeaderStyle;
-class GrantleeTheme;
 class GrantleeHeaderFormatter
 {
 public:
     explicit GrantleeHeaderFormatter();
     ~GrantleeHeaderFormatter();
 
-    QString toHtml(const MessageViewer::GrantleeTheme &theme, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const;
+    QString toHtml(const GrantleeTheme::Theme &theme, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const;
 
     QString toHtml(const QStringList &displayExtraHeaders, const QString &absolutPath, const QString &filename, const MessageViewer::HeaderStyle *style, KMime::Message *message, bool isPrinting) const;
 private:
-    QString format(Grantlee::Template headerTemplate, const QStringList &displayExtraHeaders, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const;
+    QString format(const QString &absolutePath, Grantlee::Template headerTemplate, const QStringList &displayExtraHeaders, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const;
     class Private;
     Private *const d;
 };

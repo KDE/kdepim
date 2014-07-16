@@ -48,8 +48,8 @@ using namespace Future;
 
 #include <KCheckableProxyModel>
 #include <KGuiItem>
-#include <KGlobal>
-#include <KLocale>
+#include <KLocalizedString>
+#include <KRandom>
 #include <KViewStateMaintainer>
 
 #include <QApplication>
@@ -60,7 +60,7 @@ using namespace KCalCore;
 using namespace EventViews;
 using namespace Akonadi;
 
-static const KCatalogLoader loaderCatalog( "libeventviews" );
+static const KCatalogLoader loaderCatalog( QLatin1String("libeventviews") );
 
 CalendarSupport::CollectionSelection *EventViewPrivate::sGlobalCollectionSelection = 0;
 
@@ -72,7 +72,7 @@ void EventView::setGlobalCollectionSelection( CalendarSupport::CollectionSelecti
 
 EventView::EventView( QWidget *parent )
   : QWidget( parent ),
-    d_ptr( new EventViewPrivate( this ) )
+    d_ptr( new EventViewPrivate() )
 {
   QByteArray cname = metaObject()->className();
   cname.replace( ':', '_' );
@@ -669,11 +669,11 @@ QString EventView::iconForItem( const Akonadi::Item &item )
 void EventView::onCollectionChanged(const Akonadi::Collection &collection,
                                     const QSet<QByteArray> &changedAttributes)
 {
+  Q_UNUSED(collection);
   if (changedAttributes.contains("AccessRights")) {
       setChanges(changes() | EventViews::EventView::ResourcesChanged);
       updateView();
   }
 }
 
-#include "eventview.moc"
 // kate: space-indent on; indent-width 2; replace-tabs on;

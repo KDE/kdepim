@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -18,14 +18,13 @@
 #include "selectheadertypecombobox.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 #include <KPushButton>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QDebug>
 
 using namespace KSieveUi;
 
@@ -50,6 +49,8 @@ SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
     QHBoxLayout *hbox = new QHBoxLayout;
 
     mNewHeader = new KLineEdit;
+    mNewHeader->setTrapReturnKey(true);
+    connect(mNewHeader,SIGNAL(returnPressed()), SLOT(slotAddNewHeader()));
     mNewHeader->setClearButtonShown(true);
     hbox->addWidget(mNewHeader);
 
@@ -65,12 +66,31 @@ SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
     lay->addLayout(hbox);
 
     setMainWidget(w);
-    resize(400,300);
+    readConfig();
 }
 
 SelectHeadersDialog::~SelectHeadersDialog()
 {
+    writeConfig();
 }
+
+void SelectHeadersDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SelectHeadersDialog" );
+    const QSize size = group.readEntry( "Size", QSize(400,300) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void SelectHeadersDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SelectHeadersDialog" );
+    group.writeEntry( "Size", size() );
+    group.sync();
+}
+
+
 
 void SelectHeadersDialog::slotNewHeaderTextChanged(const QString &text)
 {
@@ -80,8 +100,10 @@ void SelectHeadersDialog::slotNewHeaderTextChanged(const QString &text)
 void SelectHeadersDialog::slotAddNewHeader()
 {
     const QString headerText = mNewHeader->text().trimmed();
-    if (!headerText.isEmpty())
+    if (!headerText.isEmpty()) {
         mListWidget->addNewHeader(headerText);
+        mNewHeader->clear();
+    }
 }
 
 void SelectHeadersDialog::setListHeaders(const QMap<QString, QString> &lst, const QStringList &selectedHeaders)
@@ -105,9 +127,18 @@ SelectHeadersWidget::~SelectHeadersWidget()
 
 void SelectHeadersWidget::addNewHeader(const QString &header)
 {
+    const int numberOfItem = count();
+    for (int i = 0; i < numberOfItem; ++i) {
+        QListWidgetItem *it = item(i);
+        if (it->data(HeaderId).toString() == header) {
+            return;
+        }
+    }
+
     QListWidgetItem *item = new QListWidgetItem(header, this);
     item->setData(HeaderId, header);
-    item->setCheckState(Qt::Unchecked);
+    item->setCheckState(Qt::Checked);
+    scrollToItem(item);
 }
 
 void SelectHeadersWidget::setListHeaders(const QMap<QString, QString> &lst, const QStringList &selectedHeaders)
@@ -160,6 +191,8 @@ SelectHeaderTypeComboBox::SelectHeaderTypeComboBox(bool onlyEnvelopType, QWidget
     //TODO add completion
     initialize(onlyEnvelopType);
     connect(this, SIGNAL(activated(QString)), SLOT(slotSelectItem(QString)));
+    connect(this, SIGNAL(textChanged(QString)), SIGNAL(valueChanged()));
+    connect(this, SIGNAL(activated(int)), this, SIGNAL(valueChanged()));
 }
 
 SelectHeaderTypeComboBox::~SelectHeaderTypeComboBox()
@@ -174,6 +207,7 @@ void SelectHeaderTypeComboBox::slotSelectItem(const QString &str)
         if (dlg->exec()) {
             mCode = dlg->headers();
             lineEdit()->setText(dlg->headers());
+            Q_EMIT valueChanged();
         } else {
             lineEdit()->setText(mCode);
         }
@@ -187,13 +221,16 @@ void SelectHeaderTypeComboBox::headerMap(bool onlyEnvelopType)
 {
     mHeaderMap.insert(QLatin1String("from"), i18n("From"));
     mHeaderMap.insert(QLatin1String("to"), i18n("To"));
+    mHeaderMap.insert(QLatin1String("Reply-To"), i18n("Reply To"));
+    mHeaderMap.insert(QLatin1String("cc"), i18n("Cc"));
+    mHeaderMap.insert(QLatin1String("bcc"), i18n("Bcc"));
     if (!onlyEnvelopType) {
-        mHeaderMap.insert(QLatin1String("cc"), i18n("Cc"));
-        mHeaderMap.insert(QLatin1String("bcc"), i18n("Bcc"));
+        mHeaderMap.insert(QLatin1String("Subject"), i18n("Subject"));
         mHeaderMap.insert(QLatin1String("sender"), i18n("Sender"));
+        mHeaderMap.insert(QLatin1String("Date"), i18n("Date"));
+        mHeaderMap.insert(QLatin1String("Message-ID"), i18n("Message Id"));
+        mHeaderMap.insert(QLatin1String("Content-Type"), i18n("Content type"));
     }
-    //mHeaderMap.insert(QLatin1String("sender-from"), i18n("Sender-From"));
-    //mHeaderMap.insert(QLatin1String("sender-to"), i18n("Sender-To"));
 }
 
 void SelectHeaderTypeComboBox::initialize(bool onlyEnvelopType)
@@ -209,7 +246,7 @@ void SelectHeaderTypeComboBox::initialize(bool onlyEnvelopType)
 
 QString SelectHeaderTypeComboBox::code() const
 {
-    QString str = itemData(currentIndex()).toString();
+    QString str = (currentIndex()> -1) ? itemData(currentIndex()).toString() : QString();
     if (str.isEmpty()) {
         str = currentText();
         if (str == i18n(selectMultipleHeaders)) {
@@ -222,4 +259,25 @@ QString SelectHeaderTypeComboBox::code() const
     return str;
 }
 
-#include "selectheadertypecombobox.moc"
+void SelectHeaderTypeComboBox::setCode(const QString &code)
+{
+    QMapIterator<QString, QString> i(mHeaderMap);
+    bool foundHeaders = false;
+    while (i.hasNext()) {
+        i.next();
+        if (i.key() == code) {
+            const int index = findData(i.key());
+            setCurrentIndex(index);
+            lineEdit()->setText(i.value());
+            foundHeaders = true;
+            break;
+        }
+    }
+    //If not found select last combobox item
+    if (!foundHeaders) {
+        setCurrentIndex(count()-1);
+        lineEdit()->setText(code);
+    }
+    mCode = code;
+}
+

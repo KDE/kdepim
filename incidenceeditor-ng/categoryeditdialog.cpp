@@ -27,7 +27,7 @@
 #include <calendarsupport/categoryhierarchyreader.h>
 #include <calendarsupport/categoryconfig.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QHeaderView>
 #include <QList>
@@ -254,4 +254,3 @@ void CategoryEditDialog::expandIfToplevel( QTreeWidgetItem *item )
   }
 }
 
-#include "categoryeditdialog.moc"

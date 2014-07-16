@@ -74,7 +74,7 @@ class VacationManager : public QObject
     void vacationScriptActivityChanged();
 
   private Q_SLOTS:
-    void updateVacationScriptActivity( bool );
+    void updateVacationScriptActivity(bool , const QString &serverName=QString());
 
     void checkVacation();
 

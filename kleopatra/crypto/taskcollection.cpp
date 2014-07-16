@@ -190,5 +190,5 @@ void TaskCollection::setTasks( const std::vector<shared_ptr<Task> > & tasks )
     }
 }
 
-#include "taskcollection.moc"
+#include "moc_taskcollection.cpp"
 

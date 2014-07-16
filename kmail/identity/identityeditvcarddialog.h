@@ -28,7 +28,7 @@ class IdentityEditVcardDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit IdentityEditVcardDialog(QWidget *parent = 0);
+    explicit IdentityEditVcardDialog(const QString &fileName, QWidget *parent = 0);
     ~IdentityEditVcardDialog();
     /**
    * @brief loadVcard load vcard in a contact editor
@@ -40,7 +40,12 @@ public:
    * @return The file path for current vcard.
    */
     QString saveVcard() const;
+
+private Q_SLOTS:
+    void slotDeleteCurrentVCard();
+
 private:
+    void deleteCurrentVcard();
     QString mVcardFileName;
     Akonadi::ContactEditor *mContactEditor;
 };

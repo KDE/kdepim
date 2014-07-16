@@ -18,7 +18,6 @@
 #include "abstractbase.h"
 #include "pimcommon/util/createresource.h"
 
-#include <KLocale>
 #include <KDebug>
 #include <KSharedConfig>
 
@@ -26,8 +25,6 @@
 #include <akonadi/agentmanager.h>
 #include <akonadi/agentinstancecreatejob.h>
 
-#include <QDBusReply>
-#include <QDBusInterface>
 #include <QMetaMethod>
 
 using namespace Akonadi;
@@ -59,4 +56,3 @@ void AbstractBase::slotCreateResourceInfo(const QString& msg)
     addImportInfo(msg);
 }
 
-#include "abstractbase.moc"

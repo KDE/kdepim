@@ -1,4 +1,4 @@
-/* Copyright (C) 2011-2012-2013 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2011,2012,2013,2014 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -20,24 +20,14 @@
 #define KSIEVE_KSIEVEUI_SIEVEEDITOR_H
 
 #include "ksieveui_export.h"
-#include "sievetextedit.h"
 
 #include <kdialog.h>
 
-class QLineEdit;
-class KTextEdit;
-class QSplitter;
-
 namespace KSieveUi {
-
-class SieveFindBar;
-class SieveInfoWidget;
-
+class SieveEditorWidget;
 class KSIEVEUI_EXPORT SieveEditor : public KDialog
 {
     Q_OBJECT
-    Q_PROPERTY( QString script READ script WRITE setScript )
-
 public:
     explicit SieveEditor( QWidget * parent=0 );
     ~SieveEditor();
@@ -45,42 +35,29 @@ public:
     QString script() const;
     QString originalScript() const;
     void setScript( const QString &script );
-    void setDebugColor( const QColor &col );
     void setDebugScript( const QString &debug );
+    void addFailedMessage(const QString &err);
+    void addOkMessage(const QString &msg);
     void setScriptName( const QString &name );
 
     void resultDone();
 
     void setSieveCapabilities( const QStringList &capabilities );
 
+private Q_SLOTS:
+    void slotEnableButtonOk(bool b);
+
 Q_SIGNALS:
     void checkSyntax();
+    void valueChanged();
 
-private slots:
-    void slotTextChanged();
-    void slotImport();
-    void slotSaveAs();
-    void slotFind();
-    void slotAutoGenerateScripts();
-    void slotCheckSyntax();
+protected:
+    bool event(QEvent *e);
 
 private:
-    void readConfig();
     void writeConfig();
-    bool saveToFile( const QString &filename );
-    bool loadFromFile( const QString &filename );
-    QString mOriginalScript;
-    QStringList mSieveCapabilities;
-    SieveTextEdit * mTextEdit;
-    KTextEdit *mDebugTextEdit;
-    QLineEdit *mScriptName;
-    SieveFindBar *mFindBar;
-    KPushButton *mCheckSyntax;
-    QPushButton *mOkButton;
-    SieveInfoWidget *mSieveInfo;
-    QSplitter *mMainSplitter;
-    QSplitter *mExtraSplitter;
-    QSplitter *mTemplateSplitter;
+    void readConfig();
+    SieveEditorWidget *mSieveEditorWidget;
 };
 
 }

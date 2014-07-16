@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -75,10 +75,10 @@ QString CustomHeaderStyle::format( KMime::Message *message ) const {
          (headersToDisplay.isEmpty() && strategy->defaultPolicy() == HeaderStrategy::Display )) {
         // crude way to emulate "all" headers - Note: no strings have
         // i18n(), so direction should always be ltr.
-        headerStr= QString("<div class=\"header\" dir=\"ltr\">");
+        headerStr= QLatin1String("<div class=\"header\" dir=\"ltr\">");
         const QStringList headersToHide = strategy->headersToHide();
         headerStr += formatAllMessageHeaders( message, headersToHide );
-        return headerStr + "</div>";
+        return headerStr + QLatin1String("</div>");
     }
 
     headerStr = QString::fromLatin1("<div class=\"header\" dir=\"%1\">").arg(dir);
@@ -86,49 +86,48 @@ QString CustomHeaderStyle::format( KMime::Message *message ) const {
 
     Q_FOREACH (const QString &headerToDisplay, headersToDisplay) {
         if ( headerToDisplay.toLower() == QLatin1String("subject")) {
-            headerStr += QString("<div dir=\"%1\"><b style=\"font-size:130%\">" +
-                                 MessageViewer::HeaderStyleUtil::subjectString( message ) + "</b></div>\n")
-                    .arg(subjectDir);
+            headerStr += QString::fromLatin1("<div dir=\"%1\"><b style=\"font-size:130%\">").arg(subjectDir) +
+                                 MessageViewer::HeaderStyleUtil::subjectString( message ) + QLatin1String("</b></div>\n");
         } else if (headerToDisplay.toLower() == QLatin1String("date")) {
-            headerStr.append(i18n("Date: ") + MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString(message, isPrinting(), /* short = */ false ) ) + "<br/>\n" );
+            headerStr.append(i18n("Date: ") + MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString(message, isPrinting(), /* short = */ false ) ) + QLatin1String("<br/>\n") );
         } else if (headerToDisplay.toLower() == QLatin1String("from")) {
             headerStr.append( i18n("From: ") +
-                              StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayFullAddress, "", StringUtil::ShowLink ) );
+                              StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayFullAddress, QString(), StringUtil::ShowLink ) );
             if ( !vCardName().isEmpty() )
-                headerStr.append("&nbsp;&nbsp;<a href=\"" + vCardName() +
-                                 "\">" + i18n("[vCard]") + "</a>" );
+                headerStr.append(QLatin1String("&nbsp;&nbsp;<a href=\"") + vCardName() +
+                                 QLatin1String("\">") + i18n("[vCard]") + QLatin1String("</a>") );
 
-            if ( strategy->showHeader( "organization" )
+            if ( strategy->showHeader( QLatin1String("organization") )
                  && message->headerByType("Organization"))
-                headerStr.append("&nbsp;&nbsp;(" +
-                                 MessageViewer::HeaderStyleUtil::strToHtml(message->headerByType("Organization")->asUnicodeString()) + ')');
-            headerStr.append("<br/>\n");
+                headerStr.append(QLatin1String("&nbsp;&nbsp;(") +
+                                 MessageViewer::HeaderStyleUtil::strToHtml(message->headerByType("Organization")->asUnicodeString()) + QLatin1Char(')'));
+            headerStr.append(QLatin1String("<br/>\n"));
         } else if (headerToDisplay.toLower() == QLatin1String("to")) {
             headerStr.append( i18nc("To-field of the mailheader.", "To: ") +
-                              StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress ) + "<br/>\n" );
+                              StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress ) + QLatin1String("<br/>\n") );
         } else if (headerToDisplay.toLower() == QLatin1String("cc")) {
             if (message->cc( false )) {
                 headerStr.append( i18n("CC: ") +
-                                  StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress ) + "<br/>\n" );
+                                  StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress ) + QLatin1String("<br/>\n") );
             }
         } else if (headerToDisplay.toLower() == QLatin1String("bcc")) {
             if (message->bcc( false )) {
                 headerStr.append( i18n("BCC: ") +
-                                  StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress ) + "<br/>\n" );
+                                  StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress ) + QLatin1String("<br/>\n") );
             }
         } else if (headerToDisplay.toLower() == QLatin1String("reply-to")) {
             if (message->replyTo( false )) {
                 headerStr.append( i18n("Reply to: ") +
-                                  StringUtil::emailAddrAsAnchor( message->replyTo(), StringUtil::DisplayFullAddress ) + "<br/>\n" );
+                                  StringUtil::emailAddrAsAnchor( message->replyTo(), StringUtil::DisplayFullAddress ) + QLatin1String("<br/>\n") );
             }
         } else {
             const QByteArray header = headerToDisplay.toLatin1();
             if (message->headerByType(header)) {
-                headerStr.append( MessageViewer::HeaderStyleUtil::strToHtml(i18n("%1: ",headerToDisplay) + message->headerByType(header)->asUnicodeString()) + "<br/>\n" );
+                headerStr.append( MessageViewer::HeaderStyleUtil::strToHtml(i18n("%1: ",headerToDisplay) + message->headerByType(header)->asUnicodeString()) + QLatin1String("<br/>\n") );
             }
         }
     }
-    headerStr += "</div>\n";
+    headerStr += QLatin1String("</div>\n");
     return headerStr;
 }
 

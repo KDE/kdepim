@@ -283,4 +283,3 @@ KDAB_SCOPED_UNITTEST_SIMPLE( KDGantt, ConstraintModel, "test" )
 
 #endif /* KDAB_NO_UNIT_TESTS */
 
-#include "moc_kdganttconstraintmodel.cpp"

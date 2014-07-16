@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -20,10 +20,12 @@
 
 #include <QWidget>
 
+namespace GrantleeThemeEditor {
 class ThemeEditorTabWidget;
-class EditorPage;
-class DesktopFilePage;
 class ThemeSession;
+class DesktopFilePage;
+}
+class EditorPage;
 class KZip;
 
 class ThemeEditorPage : public QWidget
@@ -33,6 +35,7 @@ public:
     explicit ThemeEditorPage(const QString &projectDir, const QString &themeName, QWidget *parent = 0);
     ~ThemeEditorPage();
 
+    void saveThemeAs(const QString &directory);
     bool saveTheme(bool withConfirmation = true);
     void loadTheme(const QString &filename);
 
@@ -53,24 +56,26 @@ public:
 
 Q_SIGNALS:
     void changed(bool);
+    void canInsertFile(bool);
 
 private Q_SLOTS:
     void slotUpdateViewer();
     void slotCloseTab(int);
     void slotChanged();
     void slotExtraHeaderDisplayChanged(const QStringList &extraHeaders);
+    void slotCurrentWidgetChanged(QWidget*);
 
 private:
     void setChanged(bool b);
-    void storeTheme();
+    void storeTheme(const QString &directory = QString());
     QString projectDirectory() const;
     void createZip(const QString &themeName, KZip *zip);
     EditorPage *createExtraPage(const QString &filename);
     QList<EditorPage*> mExtraPage;
-    ThemeEditorTabWidget *mTabWidget;
+    GrantleeThemeEditor::ThemeEditorTabWidget *mTabWidget;
     EditorPage *mEditorPage;
-    DesktopFilePage *mDesktopPage;
-    ThemeSession *mThemeSession;
+    GrantleeThemeEditor::DesktopFilePage *mDesktopPage;
+    GrantleeThemeEditor::ThemeSession *mThemeSession;
     bool mChanged;
 };
 

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -56,6 +56,7 @@ QString dateStr(const KDateTime &dateTime);
 QString dateShortStr(const KDateTime &dateTime);
 
 QList<KMime::Types::Mailbox> resentFromList(KMime::Message *message);
+QList<KMime::Types::Mailbox> resentToList(KMime::Message *message);
 
 struct xfaceSettings {
     xfaceSettings()

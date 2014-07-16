@@ -47,7 +47,7 @@
 #include <gpgme++/signingresult.h>
 #include <gpgme++/key.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QPointer>
 #include <QTextDocument> // for Qt::escape
@@ -233,7 +233,7 @@ static QString collect_micalgs( const GpgME::SigningResult & result, GpgME::Prot
 #endif
     if ( proto == GpgME::OpenPGP )
         for ( QStringList::iterator it = micalgs.begin(), end = micalgs.end() ; it != end ; ++it )
-            it->prepend( "pgp-" );
+            it->prepend( QLatin1String("pgp-") );
     micalgs.sort();
     micalgs.erase( std::unique( micalgs.begin(), micalgs.end() ), micalgs.end() );
     return micalgs.join( QLatin1String(",") );

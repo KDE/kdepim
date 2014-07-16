@@ -28,7 +28,6 @@ class KConfigGroup;
 class KConfig;
 
 namespace KLDAP {
-class LdapObject;
 class LdapServer;
 class LdapClient;
 class KDEPIM_EXPORT LdapClientSearchConfig : public QObject
@@ -60,6 +59,9 @@ public:
      */
     void writeConfig( const KLDAP::LdapServer &server, KConfigGroup &group,
                       int clientNumber, bool active );
+private Q_SLOTS:
+    void slotWalletClosed();
+
 private:
     //@cond PRIVATE
     class Private;

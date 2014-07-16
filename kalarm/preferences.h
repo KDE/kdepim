@@ -81,10 +81,10 @@ class Preferences : public PreferencesBase
         static void             setDefaultSoundVolume(float v)   { self()->setBase_DefaultSoundVolume(v < 0 ? -1 : static_cast<int>(v * 100)); }
 
         // Config file entry names for notification messages
-        static const char*      QUIT_WARN;
-        static const char*      ASK_AUTO_START;
-        static const char*      CONFIRM_ALARM_DELETION;
-        static const char*      EMAIL_QUEUED_NOTIFY;
+        static const QLatin1String QUIT_WARN;
+        static const QLatin1String ASK_AUTO_START;
+        static const QLatin1String CONFIRM_ALARM_DELETION;
+        static const QLatin1String EMAIL_QUEUED_NOTIFY;
 
         virtual bool useDefaults(bool def)   { mUsingDefaults = def;  return PreferencesBase::useDefaults(def); }
 

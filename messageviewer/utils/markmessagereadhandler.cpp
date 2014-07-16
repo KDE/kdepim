@@ -32,9 +32,9 @@ K_GLOBAL_STATIC( Akonadi::Item::List, sListItem )
 
 class MarkMessageReadHandler::Private
 {
-  public:
+    public:
     Private( MarkMessageReadHandler *qq )
-      : q( qq )
+        : q( qq )
     {
     }
 
@@ -47,53 +47,53 @@ class MarkMessageReadHandler::Private
 
 void MarkMessageReadHandler::Private::handleMessages()
 {
-  Akonadi::Item item = mItemQueue;
+    Akonadi::Item item = mItemQueue;
 
-  // mark as read
-  item.setFlag( Akonadi::MessageFlags::Seen );
-  
-  Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( item, q );
-  modifyJob->disableRevisionCheck();
-  modifyJob->setIgnorePayload( true );
-  sListItem->removeAll(item);
+    // mark as read
+    item.setFlag( Akonadi::MessageFlags::Seen );
+
+    Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( item, q );
+    modifyJob->disableRevisionCheck();
+    modifyJob->setIgnorePayload( true );
+    sListItem->removeAll(item);
 }
 
 
 MarkMessageReadHandler::MarkMessageReadHandler( QObject *parent )
-  : QObject( parent ), d( new Private( this ) )
+    : QObject( parent ), d( new Private( this ) )
 {
-  d->mTimer.setSingleShot( true );
-  connect( &d->mTimer, SIGNAL(timeout()), this, SLOT(handleMessages()) );
+    d->mTimer.setSingleShot( true );
+    connect( &d->mTimer, SIGNAL(timeout()), this, SLOT(handleMessages()) );
 }
 
 MarkMessageReadHandler::~MarkMessageReadHandler()
 {
-  if( d->mTimer.isActive() )
-      d->mTimer.stop();
-  delete d;
+    if( d->mTimer.isActive() )
+        d->mTimer.stop();
+    delete d;
 }
 
 void MarkMessageReadHandler::setItem( const Akonadi::Item &item )
 {
-  if ( sListItem->contains(item) || d->mItemQueue == item || item.hasFlag(Akonadi::MessageFlags::Queued) )
-    return;
-  d->mTimer.stop();
+    if ( sListItem->contains(item) || d->mItemQueue == item || item.hasFlag(Akonadi::MessageFlags::Queued) )
+        return;
+    d->mTimer.stop();
 
-  sListItem->removeAll(d->mItemQueue);
-  d->mItemQueue = item;
-  sListItem->append(item);
-  if ( item.hasFlag( Akonadi::MessageFlags::Seen ) )
-    return;
+    sListItem->removeAll(d->mItemQueue);
+    d->mItemQueue = item;
+    sListItem->append(item);
+    if ( item.hasFlag( Akonadi::MessageFlags::Seen ) )
+        return;
 
-  if ( MessageViewer::GlobalSettings::self()->delayedMarkAsRead() ) {
-    const int delayedMarkTime = MessageViewer::GlobalSettings::self()->delayedMarkTime();
-    if ( delayedMarkTime != 0 ) {
-      d->mTimer.start( delayedMarkTime * 1000 );
+    if ( MessageViewer::GlobalSettings::self()->delayedMarkAsRead() ) {
+        const int delayedMarkTime = MessageViewer::GlobalSettings::self()->delayedMarkTime();
+        if ( delayedMarkTime != 0 ) {
+            d->mTimer.start( delayedMarkTime * 1000 );
+        }
+        else {
+            d->handleMessages();
+        }
     }
-    else {
-      d->handleMessages();
-    }
-  }
 }
 
-#include "markmessagereadhandler.moc"
+#include "moc_markmessagereadhandler.cpp"

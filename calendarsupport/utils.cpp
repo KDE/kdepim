@@ -496,16 +496,18 @@ Akonadi::Collection::List CalendarSupport::collectionsFromIndexes( const QModelI
 
 QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akonadi::Collection &c )
 {
-  QString cName = c.name();
-  if ( cName.isEmpty() && calendar ) {
-    Akonadi::Collection realCollection = calendar->collection( c.id() );
-    if ( realCollection.isValid() ) {
-      cName = realCollection.name();
-    }
+  Akonadi::Collection fullCollection;
+  if ( calendar && calendar->collection( c.id() ).isValid() ) {
+    fullCollection = calendar->collection( c.id() );
+  } else {
+    fullCollection = c;
   }
 
+  QString cName = fullCollection.name();
+  const QString resourceName = fullCollection.resource();
+
   // Kolab Groupware
-  if ( c.resource().contains( "kolabproxy" ) ) {
+  if ( resourceName.contains( QLatin1String( "kolabproxy" ) ) ) {
     QString typeStr = cName; // contents type: "Calendar", "Tasks", etc
     QString ownerStr;        // folder owner: "fred", "ethel", etc
     QString nameStr;         // folder name: "Public", "Test", etc
@@ -515,25 +517,25 @@ QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akon
         Akonadi::Collection tCol = calendar->collection( p.id() );
         const QString tName = tCol.name();
         if ( tName.toLower().startsWith( QLatin1String( "shared.cal" ) ) ) {
-          ownerStr = "Shared";
+          ownerStr = QLatin1String("Shared");
           nameStr = cName;
-          typeStr = "Calendar";
+          typeStr = QLatin1String("Calendar");
           break;
         } else if ( tName.toLower().startsWith( QLatin1String( "shared.tasks" ) ) ||
                     tName.toLower().startsWith( QLatin1String( "shared.todo" ) ) ) {
-          ownerStr = "Shared";
+          ownerStr = QLatin1String("Shared");
           nameStr = cName;
-          typeStr = "Tasks";
+          typeStr = QLatin1String("Tasks");
           break;
         } else if ( tName.toLower().startsWith( QLatin1String( "shared.journal" ) ) ) {
-          ownerStr = "Shared";
+          ownerStr = QLatin1String("Shared");
           nameStr = cName;
-          typeStr = "Journal";
+          typeStr = QLatin1String("Journal");
           break;
         } else if ( tName.toLower().startsWith( QLatin1String( "shared.notes" ) ) ) {
-          ownerStr = "Shared";
+          ownerStr = QLatin1String("Shared");
           nameStr = cName;
-          typeStr = "Notes";
+          typeStr = QLatin1String("Notes");
           break;
         } else if ( tName != i18n( "Calendar" ) &&
                     tName != i18n( "Tasks" ) &&
@@ -550,10 +552,10 @@ QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akon
     }
 
     if ( !ownerStr.isEmpty() ) {
-      if ( ownerStr.toUpper() == QString( "INBOX" ) ) {
+      if ( ownerStr.toUpper() == QLatin1String( "INBOX" ) ) {
         return i18nc( "%1 is folder contents",
                       "My Kolab %1", typeStr );
-      } else if ( ownerStr.toUpper() == QString( "SHARED" ) ) {
+      } else if ( ownerStr.toUpper() == QLatin1String( "SHARED" ) ) {
         return i18nc( "%1 is folder name, %2 is folder contents",
                       "Shared Kolab %1 %2", nameStr, typeStr );
       } else {
@@ -572,12 +574,12 @@ QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akon
   } //end kolab section
 
   // Dav Groupware
-  if ( c.resource().contains( "davgroupware" ) ) {
+  if ( resourceName.contains( QLatin1String( "davgroupware" ) ) ) {
     return i18nc( "%1 is the folder name", "%1 CalDav Calendar", cName );
   } //end caldav section
 
   // Google
-  if ( c.resource().contains( "google" ) ) {
+  if ( resourceName.contains( QLatin1String( "google" ) ) ) {
     QString ownerStr;        // folder owner: "user@gmail.com"
     if ( calendar ) {
       Akonadi::Collection p = c.parentCollection();
@@ -587,21 +589,21 @@ QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akon
     const QString nameStr = c.displayName(); // folder name: can be anything
 
     QString typeStr;
-    const QString mimeStr = c.contentMimeTypes().join( "," );
-    if ( mimeStr.contains( ".event" ) ) {
+    const QString mimeStr = c.contentMimeTypes().join( QLatin1String(",") );
+    if ( mimeStr.contains( QLatin1String(".event") ) ) {
       typeStr = i18n( "Calendar" );
-    } else if ( mimeStr.contains( ".todo" ) ) {
+    } else if ( mimeStr.contains( QLatin1String(".todo") ) ) {
       typeStr = i18n( "Tasks" );
-    } else if ( mimeStr.contains( ".journal" ) ) {
+    } else if ( mimeStr.contains( QLatin1String(".journal") ) ) {
       typeStr = i18n( "Journal" );
-    } else if ( mimeStr.contains( ".note" ) ) {
+    } else if ( mimeStr.contains( QLatin1String(".note") ) ) {
       typeStr = i18n( "Notes" );
     } else {
       typeStr = mimeStr;
     }
 
     if ( !ownerStr.isEmpty() ) {
-      const int atChar = ownerStr.lastIndexOf( '@' );
+      const int atChar = ownerStr.lastIndexOf( QLatin1Char('@') );
       ownerStr = ownerStr.left( atChar );
       if ( nameStr.isEmpty() ) {
         return i18nc( "%1 is folder owner name, %2 is folder contents",
@@ -617,10 +619,10 @@ QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akon
   } //end google section
 
   // Not groupware so the collection is "mine"
-  const QString dName = c.displayName();
+  const QString dName = fullCollection.displayName();
 
   if ( !dName.isEmpty() ) {
-    return i18n( "My %1", dName );
+    return fullCollection.name().startsWith( QLatin1String( "akonadi_" ) ) ? i18n( "My %1", dName ) : fullCollection.name();
   } else {
     return i18nc( "unknown resource", "Unknown" );
   }
@@ -705,8 +707,8 @@ void CalendarSupport::saveAttachments( const Akonadi::Item &item, QWidget *paren
     }
 
     // we may not get a slash-terminated url out of KFileDialog
-    if ( !targetDir.endsWith( '/' ) ) {
-      targetDir.append( '/' );
+    if ( !targetDir.endsWith( QLatin1Char('/') ) ) {
+      targetDir.append( QLatin1Char('/') );
     }
   } else {
     // only one item, get the desired filename
@@ -714,7 +716,7 @@ void CalendarSupport::saveAttachments( const Akonadi::Item &item, QWidget *paren
     if ( fileName.isEmpty() ) {
       fileName = i18nc( "filename for an unnamed attachment", "attachment.1" );
     }
-    targetFile = KFileDialog::getSaveFileName( KUrl( "kfiledialog:///saveAttachment/" + fileName ),
+    targetFile = KFileDialog::getSaveFileName( KUrl( QLatin1String("kfiledialog:///saveAttachment/") + fileName ),
                                    QString(),
                                    parentWidget,
                                    i18n( "Save Attachment" ) );
@@ -722,7 +724,7 @@ void CalendarSupport::saveAttachments( const Akonadi::Item &item, QWidget *paren
       return;
     }
 
-    targetDir = QFileInfo( targetFile ).absolutePath() + '/';
+    targetDir = QFileInfo( targetFile ).absolutePath() + QLatin1Char('/');
   }
 
   Q_FOREACH ( Attachment::Ptr attachment, attachments ) {

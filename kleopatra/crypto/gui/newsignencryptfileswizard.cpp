@@ -53,23 +53,22 @@
 #include <kleo/stl_util.h>
 #include <ui/filenamerequester.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KIcon>
 #include <KDebug>
 #include <KMessageBox>
 
+#include <QVBoxLayout>
 #include <QLabel>
 #include <QWizardPage>
 #include <QRadioButton>
 #include <QCheckBox>
 #include <QPushButton>
 #include <QDialogButtonBox>
-#include <QTreeView>
 #include <QListWidget>
-#include <QLayout>
 #include <QComboBox>
+#include <QTreeView>
 
-#include <QVariant>
 #include <QPointer>
 
 #include <gpgme++/key.h>
@@ -210,11 +209,11 @@ namespace {
         }
         QString makeText() const {
             if ( m_files.empty() )
-                return "<p>" + i18n("No files selected.") + "</p>";
-            QString html = "<p>" + i18np("Selected file:", "Selected files:", m_files.size() ) + "</p>"
-                + "<ul><li>" + join_max( m_files, MaxLinesShownInline, "</li><li>" ) + "</li></ul>" ;
+                return QLatin1String("<p>") + i18n("No files selected.") + QLatin1String("</p>");
+            QString html = QLatin1String("<p>") + i18np("Selected file:", "Selected files:", m_files.size() ) + QLatin1String("</p>")
+                + QLatin1String("<ul><li>") + join_max( m_files, MaxLinesShownInline, QLatin1String("</li><li>") ) + QLatin1String("</li></ul>") ;
             if ( m_files.size() > MaxLinesShownInline )
-                html += "<p><a href=\"link:/\">" + i18nc("@action","More...") + "</a></p>";
+                html += QLatin1String("<p><a href=\"link:/\">") + i18nc("@action","More...") + QLatin1String("</a></p>");
             return html;
         }
         void updateText() { setText( makeText() ); }
@@ -248,13 +247,13 @@ namespace {
                 fn.chop( oldExt.size() + 1 );
             m_archiveDefinition = ad;
             if ( ad )
-                fn += '.' + newExt;
+                fn += QLatin1Char('.') + newExt;
             FileNameRequester::setFileName( fn );
         }
         void setFileName( const QString & fn ) {
             const QString ext = m_archiveDefinition ? m_archiveDefinition->extensions( m_protocol ).front() : QString() ;
             if ( m_archiveDefinition && !fn.endsWith( ext ) )
-                FileNameRequester::setFileName( fn + '.' + ext );
+                FileNameRequester::setFileName( fn + QLatin1Char('.') + ext );
             else
                 FileNameRequester::setFileName( fn );
         }
@@ -276,27 +275,27 @@ namespace {
         }
 
         bool isArchiveRequested() const {
-            return field("archive").toBool();
+            return field(QLatin1String("archive")).toBool();
         }
 
         QString archiveName( Protocol p ) const {
-            return field( p == OpenPGP ? "archive-name-pgp" : "archive-name-cms" ).toString();
+            return field( p == OpenPGP ? QLatin1String("archive-name-pgp") : QLatin1String("archive-name-cms" )).toString();
         }
 
         bool isRemoveUnencryptedFilesEnabled() const {
-            return field("remove").toBool();
+            return field(QLatin1String("remove")).toBool();
         }
 
         bool isSignOnlySelected() const {
-            return field("sign").toBool();
+            return field(QLatin1String("sign")).toBool();
         }
 
         bool isEncryptOnlySelected() const {
-            return field("encrypt").toBool();
+            return field(QLatin1String("encrypt")).toBool();
         }
 
         bool isSignEncryptSelected() const {
-            return field("signencrypt").toBool() ;
+            return field(QLatin1String("signencrypt")).toBool() ;
         }
 
         bool isSigningSelected() const {
@@ -411,26 +410,26 @@ namespace {
             Q_FOREACH( const shared_ptr<ArchiveDefinition> & ad, m_archiveDefinitions )
                 m_archive.addItem( ad->label(), qVariantFromValue( ad ) );
 
-            registerField( "files", this, "files" );
+            registerField( QLatin1String("files"), this, "files" );
 
-            registerField( "signing-preset", this, "signingPreset" );
-            registerField( "encryption-preset", this, "encryptionPreset" );
+            registerField( QLatin1String("signing-preset"), this, "signingPreset" );
+            registerField( QLatin1String("encryption-preset"), this, "encryptionPreset" );
 
-            registerField( "signencrypt", &m_signencrypt );
-            registerField( "encrypt", &m_encrypt );
-            registerField( "sign", &m_sign );
+            registerField( QLatin1String("signencrypt"), &m_signencrypt );
+            registerField( QLatin1String("encrypt"), &m_encrypt );
+            registerField( QLatin1String("sign"), &m_sign );
 
-            registerField( "armor", &m_armor );
-            registerField( "remove", &m_removeSource );
+            registerField( QLatin1String("armor"), &m_armor );
+            registerField( QLatin1String("remove"), &m_removeSource );
 
-            registerField( "archive", &m_archiveCB );
-            registerField( "archive-id", &m_archive );
-            registerField( "archive-name-pgp", &m_archiveNamePgp, "fileName" );
-            registerField( "archive-name-cms", &m_archiveNameCms, "fileName" );
+            registerField( QLatin1String("archive"), &m_archiveCB );
+            registerField( QLatin1String("archive-id"), &m_archive );
+            registerField( QLatin1String("archive-name-pgp"), &m_archiveNamePgp, "fileName" );
+            registerField( QLatin1String("archive-name-cms"), &m_archiveNameCms, "fileName" );
 
-            registerField( "signing-user-mutable", this, "signingUserMutable" );
-            registerField( "encryption-user-mutable", this, "encryptionUserMutable" );
-            registerField( "archive-user-mutable", this, "archiveUserMutable" );
+            registerField( QLatin1String("signing-user-mutable"), this, "signingUserMutable" );
+            registerField( QLatin1String("encryption-user-mutable"), this, "encryptionUserMutable" );
+            registerField( QLatin1String("archive-user-mutable"), this, "archiveUserMutable" );
 
             connect( &m_archive, SIGNAL(currentIndexChanged(int)),
                      this, SLOT(slotArchiveDefinitionChanged()) );
@@ -527,7 +526,7 @@ namespace {
                                                                  "<para>Future versions of Kleopatra are expected to also support detached signatures in this case.</para>" ),                                                    
                                                            i18nc("@title:window", "Unusual Signature Warning"),
                                                            KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-                                                           "signencryptfileswizard-archive+sign-only-warning" )
+                                                           QLatin1String("signencryptfileswizard-archive+sign-only-warning") )
                     == KMessageBox::Continue ;
             else
                 return true;
@@ -629,8 +628,8 @@ namespace {
             KDAB_SET_OBJECT_NAME( m_unselectPB );
             KDAB_SET_OBJECT_NAME( m_selectedKTV );
 
-            m_selectPB.setIcon( KIcon( "arrow-down" ) );
-            m_unselectPB.setIcon( KIcon( "arrow-up" ) );
+            m_selectPB.setIcon( KIcon( QLatin1String("arrow-down") ) );
+            m_unselectPB.setIcon( KIcon( QLatin1String("arrow-up") ) );
 
             m_selectPB.setEnabled( false );
             m_unselectPB.setEnabled( false );
@@ -721,7 +720,7 @@ namespace {
                                                          i18nc("@title:window","Encrypt-To-Self Warning"),
                                                          KStandardGuiItem::cont(),
                                                          KStandardGuiItem::cancel(),
-                                                         "warn-encrypt-to-non-self", KMessageBox::Notify|KMessageBox::Dangerous )
+                                                         QLatin1String("warn-encrypt-to-non-self"), KMessageBox::Notify|KMessageBox::Dangerous )
                      == KMessageBox::Cancel )
                     return false;
                 else if ( isRemoveUnencryptedFilesEnabled() )
@@ -732,7 +731,7 @@ namespace {
                                                              i18nc("@title:window","Encrypt-To-Self Warning"),
                                                              KStandardGuiItem::cont(),
                                                              KStandardGuiItem::cancel(),
-                                                             "warn-encrypt-to-non-self-destructive", KMessageBox::Notify|KMessageBox::Dangerous )
+                                                             QLatin1String("warn-encrypt-to-non-self-destructive"), KMessageBox::Notify|KMessageBox::Dangerous )
                          == KMessageBox::Cancel )
                         return false;
             }
@@ -1013,7 +1012,7 @@ void NewSignEncryptFilesWizard::setCreateArchivePreset( bool preset ) {
     if ( preset == d->createArchivePreset && preset == isCreateArchiveSelected() )
         return;
     d->createArchivePreset = preset;
-    setField( "archive", preset );
+    setField( QLatin1String("archive"), preset );
     d->updateStartId();
 }
 
@@ -1021,7 +1020,7 @@ void NewSignEncryptFilesWizard::setCreateArchiveUserMutable( bool mut ) {
     if ( mut == d->createArchiveUserMutable )
         return;
     d->createArchiveUserMutable = mut;
-    setField( "archive-user-mutable", mut );
+    setField( QLatin1String("archive-user-mutable"), mut );
     d->updateStartId();
 }
 
@@ -1033,7 +1032,7 @@ void NewSignEncryptFilesWizard::setSigningPreset( bool preset ) {
     if ( preset == d->signingPreset )
         return;
     d->signingPreset = preset;
-    setField( "signing-preset", preset );
+    setField( QLatin1String("signing-preset"), preset );
     d->updateStartId();
 }
 
@@ -1041,7 +1040,7 @@ void NewSignEncryptFilesWizard::setSigningUserMutable( bool mut ) {
     if ( mut == d->signingUserMutable )
         return;
     d->signingUserMutable = mut;
-    setField( "signing-user-mutable", mut );
+    setField( QLatin1String("signing-user-mutable"), mut );
     d->updateStartId();
 }
     
@@ -1049,7 +1048,7 @@ void NewSignEncryptFilesWizard::setEncryptionPreset( bool preset ) {
     if ( preset == d->encryptionPreset )
         return;
     d->encryptionPreset = preset;
-    setField( "encryption-preset", preset );
+    setField( QLatin1String("encryption-preset"), preset );
     d->updateStartId();
 }
 
@@ -1057,33 +1056,33 @@ void NewSignEncryptFilesWizard::setEncryptionUserMutable( bool mut ) {
     if ( mut == d->encryptionUserMutable )
         return;
     d->encryptionUserMutable = mut;
-    setField( "encryption-user-mutable", mut );
+    setField( QLatin1String("encryption-user-mutable"), mut );
     d->updateStartId();
 }
 
 void NewSignEncryptFilesWizard::setFiles( const QStringList & files ) {
-    setField( "files", files );
+    setField( QLatin1String("files"), files );
 }
 
 
 bool NewSignEncryptFilesWizard::isSigningSelected() const {
-    return field("sign").toBool() || field("signencrypt").toBool() ;
+    return field(QLatin1String("sign")).toBool() || field(QLatin1String("signencrypt")).toBool() ;
 }
 
 bool NewSignEncryptFilesWizard::isEncryptionSelected() const {
-    return field("encrypt").toBool() || field("signencrypt").toBool() ;
+    return field(QLatin1String("encrypt")).toBool() || field(QLatin1String("signencrypt")).toBool() ;
 }
 
 bool NewSignEncryptFilesWizard::isAsciiArmorEnabled() const {
-    return field("armor").toBool();
+    return field(QLatin1String("armor")).toBool();
 }
 
 bool NewSignEncryptFilesWizard::isRemoveUnencryptedFilesEnabled() const {
-    return isEncryptionSelected() && field("remove").toBool();
+    return isEncryptionSelected() && field(QLatin1String("remove")).toBool();
 }
 
 bool NewSignEncryptFilesWizard::isCreateArchiveSelected() const {
-    return field("archive").toBool();
+    return field(QLatin1String("archive")).toBool();
 }
 
 shared_ptr<ArchiveDefinition> NewSignEncryptFilesWizard::selectedArchiveDefinition() const {

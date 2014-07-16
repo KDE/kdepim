@@ -57,4 +57,3 @@ void SelectProgramPage::disableSelectProgram()
     ui->listProgramFound->setEnabled( false );
 }
 
-#include "selectprogrampage.moc"

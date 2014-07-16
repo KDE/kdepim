@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -18,14 +18,15 @@
 #include "sieveconditionexists.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 #include "widgets/selectheadertypecombobox.h"
+#include "editor/sieveeditorutil.h"
 
-#include <KLocale>
-
-#include <KLineEdit>
+#include <KLocalizedString>
 
 #include <QHBoxLayout>
 #include <QComboBox>
 #include <QLabel>
+#include <QDomNode>
+#include <QDebug>
 
 using namespace KSieveUi;
 
@@ -51,11 +52,13 @@ QWidget *SieveConditionExists::createParamWidget( QWidget *parent ) const
     combo->addItem(i18n("exists"), QLatin1String("exists"));
     combo->addItem(i18n("not exists"), QLatin1String("not exists"));
     lay->addWidget(combo);
+    connect(combo, SIGNAL(activated(int)), this, SIGNAL(valueChanged()));
 
     QLabel *lab = new QLabel(i18n("headers:"));
     lay->addWidget(lab);
 
     SelectHeaderTypeComboBox *value = new SelectHeaderTypeComboBox;
+    connect(value, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     value->setObjectName(QLatin1String("headervalue"));
 
     lay->addWidget(value);
@@ -76,4 +79,39 @@ QString SieveConditionExists::help() const
     return i18n("The \"exists\" test is true if the headers listed in the header-names argument exist within the message.  All of the headers must exist or the test is false.");
 }
 
-#include "sieveconditionexists.moc"
+bool SieveConditionExists::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition, QString &error )
+{
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (notCondition) {
+                QComboBox *combo = w->findChild<QComboBox*>( QLatin1String("existscheck") );
+                combo->setCurrentIndex(1);
+            }
+            if (tagName == QLatin1String("str")) {
+                SelectHeaderTypeComboBox *value = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headervalue") );
+                value->setCode(e.text());
+            } else if (tagName == QLatin1String("list")) {
+                SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox*>(QLatin1String("headervalue"));
+                selectHeaderType->setCode(AutoCreateScriptUtil::listValueToStr(e));
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
+            } else {
+                unknownTag(tagName, error);
+                qDebug()<<" SieveConditionExists::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+    return true;
+}
+
+QString SieveConditionExists::href() const
+{
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
+}
+

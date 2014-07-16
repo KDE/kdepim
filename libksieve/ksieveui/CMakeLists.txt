@@ -1,8 +1,17 @@
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
+if(KDEPIM_ENTERPRISE_BUILD)
+  set(USE_GRAPHICAL_SIEVE_EDITOR true)
+else()
+  set(USE_GRAPHICAL_SIEVE_EDITOR false)
+endif()
+
+
+configure_file(settings/sieve-editor.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/sieve-editor.kcfg)
 
 include_directories(${CMAKE_SOURCE_DIR}/libksieve
 	${CMAKE_SOURCE_DIR}/pimcommon
+        ${CMAKE_SOURCE_DIR}/pimcommon/sievehighlighter/
 	${CMAKE_BINARY_DIR}/pimcommon
         ${CMAKE_SOURCE_DIR}/pimcommon/util/
         ${CMAKE_SOURCE_DIR}/libksieve/ksieveui
@@ -10,23 +19,44 @@ include_directories(${CMAKE_SOURCE_DIR}/libksieve
 	)
 
 add_subdirectory(tests)
-
-set(ksieveui_LIB_SRCS
-  managesievescriptsdialog.cpp
-  widgets/sievetreewidgetitem.cpp
-  debug/sievedebugdialog.cpp
-  util.cpp
+add_subdirectory(editor/tests)
+add_subdirectory(managescriptsjob/tests)
+set(ksieveui_vacation_LIB_SRCS
   vacation/vacation.cpp
   vacation/vacationdialog.cpp
-  editor/sievefindbar.cpp
-  editor/sievesyntaxhighlighter.cpp
+  vacation/vacationhelperjob.cpp
+  vacation/vacationeditwidget.cpp
+  vacation/multiimapvacationdialog.cpp
+  vacation/vacationpagewidget.cpp
+  vacation/vacationwarningwidget.cpp
+  vacation/vacationscriptextractor.cpp
+  vacation/vacationutils.cpp
+  vacation/vacationcreatescriptjob.cpp
+  vacation/vacationcheckjob.cpp
+  vacation/multiimapvacationmanager.cpp
+  vacation/vacationmanager.cpp
+)
+
+set(ksieveui_editor_LIB_SRCS
+  editor/sieveeditorwidget.cpp
   editor/sievetextedit.cpp
   editor/sieveeditor.cpp
   editor/sievelinenumberarea.cpp
   editor/sieveinfowidget.cpp
-  templates/sievetemplatewidget.cpp
-  templates/sievedefaulttemplate.cpp 
-  templates/sievetemplateeditdialog.cpp 
+  editor/sieveeditortextmodewidget.cpp
+  editor/sieveeditorabstractwidget.cpp
+  editor/sieveeditorwarning.cpp
+  editor/sieveeditorparsingmissingfeaturewarning.cpp
+  editor/sieveeditorhelphtmlwidget.cpp
+  editor/sieveeditortabwidget.cpp
+  editor/sieveeditorutil.cpp
+  editor/sieveeditorloadprogressindicator.cpp
+  editor/sieveeditorwebview.cpp
+)
+
+set(ksieveui_autocreatescripts_LIB_SRCS
+  autocreatescripts/sievescriptparsingerrordialog.cpp
+  autocreatescripts/sieveeditorgraphicalmodewidget.cpp 
   autocreatescripts/autocreatescriptdialog.cpp
   autocreatescripts/sieveconditionwidgetlister.cpp
   autocreatescripts/sievescriptlistbox.cpp
@@ -75,6 +105,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/commonwidgets/selectconvertparameterwidget.cpp
   autocreatescripts/commonwidgets/selectmatchtypecombobox.cpp
   autocreatescripts/commonwidgets/selectmimetypecombobox.cpp
+  autocreatescripts/commonwidgets/sievehelpbutton.cpp
   autocreatescripts/sieveconditions/sievecondition.cpp
   autocreatescripts/sieveconditions/sieveconditionheader.cpp
   autocreatescripts/sieveconditions/sieveconditionlist.cpp
@@ -88,7 +119,6 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveconditions/sieveconditioncurrentdate.cpp
   autocreatescripts/sieveconditions/sieveconditionmailboxexists.cpp
   autocreatescripts/sieveconditions/sieveconditionspamtest.cpp
-  autocreatescripts/sieveconditions/sieveconditionspamtestplus.cpp
   autocreatescripts/sieveconditions/sieveconditionvirustest.cpp
   autocreatescripts/sieveconditions/sieveconditionihave.cpp
   autocreatescripts/sieveconditions/sieveconditionfalse.cpp
@@ -106,9 +136,37 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveconditions/widgets/selectrelationalmatchtype.cpp
   autocreatescripts/sieveconditions/widgets/selectcomparatorcombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectmimecombobox.cpp
+  autocreatescripts/sieveconditions/widgets/selectsizetypecombobox.cpp
+  autocreatescripts/sieveconditions/widgets/selectsizewidget.cpp
 )
 
-kde4_add_kcfg_files(ksieveui_LIB_SRCS settings.kcfgc)
+set(ksieveui_scriptsparsing_LIB_SRCS
+  scriptsparsing/xmlprintingscriptbuilder.cpp
+  scriptsparsing/parsingresultdialog.cpp
+  scriptsparsing/xmlprintingsyntaxhighlighter.cpp
+  scriptsparsing/parsingutil.cpp
+)
+
+set(ksieveui_LIB_SRCS
+  managesievescriptsdialog.cpp
+  widgets/sievetreewidgetitem.cpp
+  widgets/managesievetreeview.cpp
+  widgets/managesievewidget.cpp
+  debug/sievedebugdialog.cpp
+  util/util.cpp
+  managescriptsjob/generateglobalscriptjob.cpp
+  managescriptsjob/parseuserscriptjob.cpp
+  templates/sievetemplatewidget.cpp
+  templates/sievedefaulttemplate.cpp 
+  templates/sievetemplateeditdialog.cpp
+  ${ksieveui_scriptsparsing_LIB_SRCS}
+  ${ksieveui_vacation_LIB_SRCS}
+  ${ksieveui_editor_LIB_SRCS}
+  ${ksieveui_autocreatescripts_LIB_SRCS}
+)
+
+
+kde4_add_kcfg_files(ksieveui_LIB_SRCS settings/sieve-vacation.kcfgc settings/sieve-editor.kcfgc)
 
 kde4_add_library(ksieveui ${LIBRARY_TYPE} ${ksieveui_LIB_SRCS})
 
@@ -122,6 +180,8 @@ target_link_libraries(ksieveui
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   ${KDE4_KIO_LIBS}
   ${KDE4_KDECORE_LIBS}
+  ${QT_QTWEBKIT_LIBRARY}
+  ${KDE4_SOLID_LIBS}
 )
 
 set_target_properties(
@@ -131,5 +191,10 @@ set_target_properties(
 )
 
 install(TARGETS ksieveui ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(FILES data/ksieve_script.knsrc DESTINATION ${CONFIG_INSTALL_DIR} )
+install(DIRECTORY data/scripts/ DESTINATION ${DATA_INSTALL_DIR}/sieve/scripts/ )
 
 add_subdirectory(autocreatescripts/tests)
+add_subdirectory(scriptsparsing/tests)
+add_subdirectory(vacation/tests)
+

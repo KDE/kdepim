@@ -2,21 +2,22 @@ project(kaddressbook)
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/xxport/shared
+  ${CMAKE_CURRENT_SOURCE_DIR}/printing/
   ${QT_QTDBUS_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
   ${Grantlee_INCLUDE_DIRS}
   ${CMAKE_SOURCE_DIR}/pimcommon/
-  ${CMAKE_SOURCE_DIR}/libkdepim/ 
+  ${CMAKE_SOURCE_DIR}/libkdepim/
+  ${CMAKE_SOURCE_DIR}/grantleetheme/
+  ${CMAKE_SOURCE_DIR}/kaddressbookgrantlee/
 )
 
-#add_definitions( -DQT_NO_CAST_FROM_ASCII )
-#add_definitions( -DQT_NO_CAST_TO_ASCII )
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
-find_package(Prison QUIET CONFIG)
-set_package_properties(Prison PROPERTIES DESCRIPTION "The Prison library" URL "http://projects.kde.org/prison" TYPE OPTIONAL PURPOSE "Needed to show mobile barcodes of your contacts")
 
 if(Prison_FOUND)
   add_definitions(-DHAVE_PRISON)
@@ -31,20 +32,26 @@ if(QGPGME_FOUND)
 endif()
 
 set(kaddressbook_printing_SRCS
-  printing/detailledstyle.cpp
-  printing/mikesstyle.cpp
+  printing/detailled/detailledstyle.cpp
+  printing/mike/mikesstyle.cpp
   printing/printingwizard.cpp
   printing/printprogress.cpp
   printing/printstyle.cpp
-  printing/ringbinderstyle.cpp
-  printing/compactstyle.cpp
+  printing/ringbinder/ringbinderstyle.cpp
+  printing/compact/compactstyle.cpp
+  printing/grantlee/grantleeprintstyle.cpp
+  printing/grantlee/contactgrantleeprintobject.cpp
+  printing/grantlee/contactgrantleeprintaddressobject.cpp
+  printing/grantlee/contactgrantleeprintphoneobject.cpp
+  printing/grantlee/contactgrantleeprintimobject.cpp
+  printing/grantlee/contactgrantleeprintgeoobject.cpp
   printing/stylepage.cpp
 )
 
 kde4_add_ui_files(kaddressbook_printing_SRCS
-  printing/rbs_appearance.ui
-  printing/ds_appearance.ui
-  printing/compactstyle.ui
+  printing/ringbinder/rbs_appearance.ui
+  printing/detailled/ds_appearance.ui
+  printing/compact/compactstyle.ui
 )
 
 set(kaddressbook_xxport_SRCS
@@ -62,6 +69,18 @@ set(kaddressbook_xxport_SRCS
   xxport/xxportfactory.cpp
 )
 
+set(kaddressbook_merge_SRCS
+   merge/matchcontact.cpp
+   merge/mergecontacts.cpp
+   merge/mergecontactsdialog.cpp
+   merge/searchduplicatecontactwizard.cpp
+   merge/potentialduplicatecontactswidget.cpp
+   merge/searchpotentialduplicatecontactjob.cpp 
+   merge/mergecontactwidget.cpp
+   merge/mergecontactutil.cpp
+   merge/mergecontactsjob.cpp
+)
+
 set(kaddressbook_LIB_SRCS
   startup.cpp
   aboutdata.cpp
@@ -75,26 +94,20 @@ set(kaddressbook_LIB_SRCS
   modelcolumnmanager.cpp
   quicksearchwidget.cpp
   xxportmanager.cpp
+  utils.cpp
+  ${kaddressbook_merge_SRCS}
   ${kaddressbook_printing_SRCS}
   ${kaddressbook_xxport_SRCS}
 )
 
-set(kaddressbook_LIB_SRCS
-  ${kaddressbook_LIB_SRCS}
-  grantleecontactformatter.cpp
-  grantleecontactgroupformatter.cpp
-  grantlee/theme.cpp
-  grantlee/themecombobox.cpp
-  grantlee/thememanager.cpp
-  grantlee/thememodel.cpp
-)
-add_subdirectory(grantlee)
+qt4_add_dbus_adaptor( kaddressbook_LIB_SRCS org.kde.kaddressbook.xml mainwidget.h MainWidget)
 
-kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings.kcfgc)
+kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings/settings.kcfgc)
 kde4_add_library(kaddressbookprivate ${LIBRARY_TYPE} ${kaddressbook_LIB_SRCS})
 target_link_libraries(kaddressbookprivate
   kdepim
   pimcommon
+  kaddressbookgrantlee
   ${KDE4_KDEUI_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_KABC_LIBS}
@@ -102,13 +115,13 @@ target_link_libraries(kaddressbookprivate
   ${KDEPIMLIBS_KLDAP_LIBS}
   ${KDE4_KCMUTILS_LIBS}
   ${KDE4_KPRINTUTILS_LIBS}
+  ${Grantlee_CORE_LIBRARIES}
+  grantleetheme
 )
 
 if(QGPGME_FOUND)
   target_link_libraries(kaddressbookprivate ${QGPGME_LIBRARIES})
 endif()
-
-target_link_libraries(kaddressbookprivate ${Grantlee_CORE_LIBRARIES})
 
 if(PRISON_FOUND)
   target_link_libraries(kaddressbookprivate ${PRISON_LIBRARIES})
@@ -135,7 +148,9 @@ target_link_libraries(kaddressbook
   ${KDE4_KCMUTILS_LIBS}
   ${KDE4_KIO_LIBS}
   ${KDE4_PHONON_LIBS}
+  ${KDEPIMLIBS_KONTACTINTERFACE_LIBS}
   kaddressbookprivate
+  grantleetheme
 )
 
 if(QGPGME_FOUND)
@@ -143,7 +158,7 @@ if(QGPGME_FOUND)
 endif()
 
 install(TARGETS kaddressbook ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(PROGRAMS kaddressbook.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(PROGRAMS kaddressbook.desktop kaddressbook-importer.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES kaddressbookui.rc DESTINATION ${DATA_INSTALL_DIR}/kaddressbook)
 
 set(kaddressbook_PART_SRCS kaddressbookpart.cpp)
@@ -160,5 +175,10 @@ install(FILES
   viewertemplates/contactgroup_embedded.html
   viewertemplates/contactgroup_additionalfieldrow.html
   viewertemplates/contactgroup_memberrow.html
+  viewertemplates/theme.desktop
   DESTINATION ${DATA_INSTALL_DIR}/kaddressbook/viewertemplates/default/
 )
+
+install(FILES data/kaddressbook_themes.knsrc DESTINATION ${CONFIG_INSTALL_DIR} )
+
+install(DIRECTORY printing/grantlee/themes/ DESTINATION ${DATA_INSTALL_DIR}/kaddressbook/printing/themes/ )

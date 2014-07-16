@@ -37,7 +37,6 @@
 
 #include <QKeyEvent>
 #include <QTreeView>
-#include <QLayout>
 #include <QVBoxLayout>
 
 using namespace MessageComposer;
@@ -158,12 +157,15 @@ void RecipientsPicker::pick( Recipient::Type type )
         return;
     }
 
+    bool tooManyAddress = false;
     foreach ( const Akonadi::EmailAddressSelection &selection, selections ) {
         Recipient recipient;
         recipient.setType( type );
         recipient.setEmail( selection.quotedEmail() );
 
-        emit pickedRecipient( recipient );
+        emit pickedRecipient( recipient, tooManyAddress );
+        if (tooManyAddress)
+            break;
     }
 }
 
@@ -208,8 +210,10 @@ void RecipientsPicker::ldapSearchResult()
 {
     const KABC::Addressee::List contacts = mLdapSearchDialog->selectedContacts();
     foreach ( const KABC::Addressee &contact, contacts ) {
-        emit pickedRecipient( Recipient( contact.fullEmail(), Recipient::Undefined ) );
+        bool tooManyAddress = false;
+        emit pickedRecipient( Recipient( contact.fullEmail(), Recipient::Undefined ), tooManyAddress );
+        if (tooManyAddress)
+            break;
     }
 }
 
-#include "recipientspicker.moc"

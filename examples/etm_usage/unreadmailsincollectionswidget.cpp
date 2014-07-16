@@ -83,7 +83,7 @@ UnreadMailsInCollectionsWidget::UnreadMailsInCollectionsWidget(QWidget* parent, 
   : QWidget(parent, f)
 {
   QVBoxLayout *layout = new QVBoxLayout(this);
-  QPushButton *configureButton = new QPushButton("Configure");
+  QPushButton *configureButton = new QPushButton(QLatin1String("Configure"));
   connect( configureButton, SIGNAL(clicked(bool)), SLOT(configure()));
   layout->addWidget(configureButton);
 

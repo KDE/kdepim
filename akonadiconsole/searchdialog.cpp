@@ -25,7 +25,7 @@
 #include <KTextEdit>
 
 #include <QLabel>
-#include <QLayout>
+#include <QGridLayout>
 
 SearchDialog::SearchDialog( QWidget *parent )
   : KDialog( parent )

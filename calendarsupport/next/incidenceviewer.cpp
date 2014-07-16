@@ -55,10 +55,10 @@ void TextBrowser::setSource( const QUrl &name )
   // this is a crude workaround
   if ( uri.startsWith( QLatin1String( "uid:" ) ) ||
        uri.startsWith( QLatin1String( "kmail:" ) ) ||
-       uri.startsWith( QString( "urn:x-ical" ).section( ':', 0, 0 ) ) ||
+       uri.startsWith( QString::fromLatin1( "urn:x-ical" ).section( QLatin1Char(':'), 0, 0 ) ) ||
        uri.startsWith( QLatin1String( "news:" ) ) ||
        uri.startsWith( QLatin1String( "mailto:" ) ) ) {
-    uri.replace( QRegExp( "^([^:]+:)/+" ), "\\1" );
+    uri.replace( QRegExp( QLatin1String("^([^:]+:)/+") ), QLatin1String("\\1") );
   }
 
   if ( uri.startsWith( QLatin1String( "ATTACH:" ) ) ) {
@@ -252,5 +252,5 @@ void IncidenceViewer::itemRemoved()
   d->mBrowser->clear();
 }
 
-#include "incidenceviewer.moc"
-#include "incidenceviewer_p.moc"
+#include "moc_incidenceviewer.cpp"
+#include "moc_incidenceviewer_p.cpp"

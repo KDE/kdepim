@@ -25,7 +25,6 @@
 
 #include <KCalCore/Incidence>
 
-#include <QWidget>
 
 namespace IncidenceEditorNG {
 

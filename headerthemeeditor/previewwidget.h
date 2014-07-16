@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -19,28 +19,24 @@
 #ifndef PREVIEWWIDGET_H
 #define PREVIEWWIDGET_H
 
-#include <QWidget>
+#include "grantleethemeeditor/previewwidget.h"
 namespace MessageViewer {
 class Viewer;
 class GrantleeHeaderTestStyle;
 }
 
-class PreviewWidget : public QWidget
+class PreviewWidget : public GrantleeThemeEditor::PreviewWidget
 {
     Q_OBJECT
 public:
     explicit PreviewWidget(const QString &projectDirectory, QWidget *parent = 0);
     ~PreviewWidget();
 
-    void createScreenShot(const QString &fileName);
+    void createScreenShot(const QStringList &fileList);
     void loadConfig();
     void setThemePath(const QString &projectDirectory, const QString &mainPageFileName);
     void updateViewer();
-    void setPrinting(bool printMode);
-    bool printing() const;
 
-Q_SIGNALS:
-    void needUpdateViewer();
 
 public Q_SLOTS:
     void slotMainFileNameChanged(const QString &);
@@ -48,7 +44,6 @@ public Q_SLOTS:
 
 private:
     QByteArray mDefaultEmail;
-    bool mPrinting;
     MessageViewer::Viewer *mViewer;
     MessageViewer::GrantleeHeaderTestStyle *mGrantleeHeaderStyle;
 };

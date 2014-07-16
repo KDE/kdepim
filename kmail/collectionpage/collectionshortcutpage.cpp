@@ -28,7 +28,7 @@
 
 #include <KDialog>
 #include <KHBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KKeySequenceWidget>
 
 using namespace MailCommon;
@@ -64,7 +64,7 @@ void CollectionShortcutPage::init(const Akonadi::Collection & col)
 
     new QWidget(hb);
     mKeySeqWidget = new KKeySequenceWidget( hb );
-    mKeySeqWidget->setObjectName( "FolderShortcutSelector" );
+    mKeySeqWidget->setObjectName( QLatin1String("FolderShortcutSelector") );
     connect( mKeySeqWidget, SIGNAL(keySequenceChanged(QKeySequence)),
              SLOT(slotShortcutChanged()) );
     new QWidget(hb);
@@ -104,4 +104,3 @@ void CollectionShortcutPage::slotShortcutChanged()
 
 
 
-#include "collectionshortcutpage.moc"

@@ -38,7 +38,7 @@
 #include <gpgme++/verificationresult.h>
 #include <gpgme++/data.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <cassert>
 
@@ -113,4 +113,3 @@ void Kleo::QGpgMEVerifyDetachedJob::resultHook( const result_type & tuple ) {
   mResult = get<0>( tuple );
 }
 
-#include "qgpgmeverifydetachedjob.moc"

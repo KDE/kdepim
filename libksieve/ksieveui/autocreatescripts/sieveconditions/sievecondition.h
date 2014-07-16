@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -19,6 +19,7 @@
 #define SIEVECONDITION_H
 
 #include <QObject>
+class QDomElement;
 namespace KSieveUi {
 class SieveCondition : public QObject
 {
@@ -46,6 +47,18 @@ public:
     virtual QString serverNeedsCapability() const;
 
     virtual QString help() const;
+    virtual QString href() const;
+
+    virtual bool setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition, QString &error );
+
+    void unknownTag(const QString &tag, QString &error);
+    void unknowTagValue(const QString &tagValue, QString &error);
+    void tooManyArgument(const QString &tagName, int index, int maxValue, QString &error);
+    void serverDoesNotSupportFeatures(const QString &feature, QString &error);
+
+Q_SIGNALS:
+    void valueChanged();
+
 private:
     QString mName;
     QString mLabel;

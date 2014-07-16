@@ -56,14 +56,11 @@
 #include <QMutex>
 #include <QWaitCondition>
 #include <QThread>
-#include <QTimer>
 #include <QPointer>
 
-#ifndef _WIN32_WCE
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
-#endif
 #include <boost/static_assert.hpp>
 #include <boost/range.hpp>
 #include <boost/bind.hpp>
@@ -193,15 +190,7 @@ BOOST_STATIC_ASSERT(( sizeof app_types / sizeof *app_types == ReaderStatus::NumA
 
 static ReaderStatus::AppType parse_app_type( const std::string & s ) {
     kDebug() << "parse_app_type(" << s.c_str() << ")";
-#ifndef _WIN32_WCE
     const char ** it = std::find( begin( app_types ), end( app_types ), to_lower_copy( s ) );
-#else
-    std::string lowerStr ;
-    for (std::string::const_iterator itr = s.begin();itr!=s.end();++itr) {
-      lowerStr+=tolower(*itr);
-    }
-    const char ** it = std::find( begin( app_types ), end( app_types ), lowerStr );
-#endif
     if ( it == end( app_types ) )
         return TRACE( ReaderStatus::UnknownApplication );
     return TRACE( static_cast<ReaderStatus::AppType>( it - begin( app_types ) ) );
@@ -350,13 +339,7 @@ static CardInfo get_card_status( const QString & fileName, unsigned int idx, sha
     // the following only works for NKS v3...
     std::vector<std::string> chvStatus;
     chvStatus.reserve( 4 ); // expected number of fields
-#ifdef _WIN32_WCE
-    for ( std::string::size_type b = 0, e = scd_getattr_status( gpg_agent, "CHV-STATUS", err ).find( ' \t', 0 ) ; e != std::string::npos ; b = e+1, e = scd_getattr_status( gpg_agent, "CHV-STATUS", err ).find( ' \t', b ) )
-        if ( e > b )
-            chvStatus.push_back( scd_getattr_status( gpg_agent, "CHV-STATUS", err ).substr( b, e-b ) );
-#else
     split( chvStatus, scd_getattr_status( gpg_agent, "CHV-STATUS", err ), is_any_of( " \t" ), token_compress_on );
-#endif
     if ( err.code() )
         return ci;
     std::transform( chvStatus.begin(), chvStatus.end(),
@@ -771,5 +754,4 @@ void ReaderStatus::updateStatus() {
     d->ping();
 }
 
-#include "moc_readerstatus.cpp"
 #include "readerstatus.moc"

@@ -20,6 +20,7 @@
 
 #include "utils.h"
 #include <Akonadi/Collection>
+#include <QStringList>
 
 class QWidget;
 class QProgressDialog;
@@ -50,11 +51,27 @@ public:
 
     bool wasCanceled() const;
 
+    static int archiveVersion();
+    static void setArchiveVersion(int version);
+
 Q_SIGNALS:
     void info(const QString &);
     void error(const QString &);
+    void title(const QString &);
+    void endLine();
+
+    void jobFinished();
+
+private Q_SLOTS:
+    void slotAllResourceSynchronized();
+    void slotSynchronizeInstanceDone(const QString &);
+    void slotSynchronizeInstanceFailed(const QString &instance);
 
 protected:
+    void initializeListStep();
+    void startSynchronizeResources(const QStringList &listResourceToSync);
+    virtual void nextStep();
+    void infoAboutNewResource(const QString &resourceName);
     void copyToDirectory(const KArchiveEntry *entry, const QString &dest);
     void extractZipFile(const KArchiveFile *file, const QString &source, const QString &destination);
 
@@ -63,14 +80,18 @@ protected:
     void copyToFile(const KArchiveFile * archivefile, const QString &dest, const QString &filename, const QString &prefix);
     void initializeImportJob();
     void backupFile(const QString &filename, const QString &path, const QString &storedName);
+    void backupResourceDirectory(const Akonadi::AgentInstance &agent, const QString &defaultPath);
     void backupConfigFile(const QString &configFileName);
     int mergeConfigMessageBox(const QString &configName) const;
     bool overwriteConfigMessageBox(const QString &configName) const;
     Akonadi::Collection::Id convertPathToId(const QString &path);
     void backupResourceFile(const Akonadi::AgentInstance &agent, const QString &defaultPath);
-    void restoreResourceFile(const QString &resourceName, const QString &defaultPath, const QString &storePath);
+    QStringList restoreResourceFile(const QString &resourceName, const QString &defaultPath, const QString &storePath, bool overwriteResources = false);
     bool backupFullDirectory(const KUrl &url, const QString &archivePath, const QString &archivename);
     virtual void addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings);
+    void restoreConfigFile(const QString &configNameStr);
+    bool overwriteDirectoryMessageBox(const QString &directory) const;
+    void overwriteDirectory(const QString &path, const KArchiveEntry *entry);
 
 
     KZip *archive();
@@ -94,6 +115,10 @@ protected:
     const KArchiveDirectory* mArchiveDirectory;
     int mNumberOfStep;
     PimCommon::CreateResource *mCreateResource;
+    QStringList mAgentPaths;
+    QList<Utils::StoredType> mListStep;
+    int mIndex;
+    static int sArchiveVersion;
 };
 
 #endif // ABSTRACTIMPORTEXPORTJOB_H

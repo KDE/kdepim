@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -17,8 +17,12 @@
 
 #include "sieveforeverypartwidget.h"
 #include "sievescriptblockwidget.h"
+#include "autocreatescriptutil_p.h"
+#include "commonwidgets/sievehelpbutton.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
+#include "editor/sieveeditorutil.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 #include <KIcon>
 
@@ -27,6 +31,8 @@
 #include <QCheckBox>
 #include <QToolButton>
 #include <QWhatsThis>
+#include <QDomNode>
+#include <QDebug>
 
 namespace KSieveUi {
 SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
@@ -39,13 +45,12 @@ SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
     lay->setMargin(0);
     w->setLayout(lay);
 
-    QToolButton *helpButton = new QToolButton;
-    helpButton->setToolTip(i18n("Help"));
-    topLayout->addWidget( helpButton );
-    helpButton->setIcon( KIcon( QLatin1String("help-hint") ) );
-    connect(helpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
+    mHelpButton = new SieveHelpButton;
+    topLayout->addWidget( mHelpButton );
+    connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
     mForLoop = new QCheckBox(i18n("Add ForEveryPart loop"));
+    connect(mForLoop, SIGNAL(toggled(bool)), this, SIGNAL(valueChanged()));
     topLayout->addWidget(mForLoop);
 
 
@@ -53,6 +58,7 @@ SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
     lay->addWidget(lab);
 
     mName = new KLineEdit;
+    connect(mName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     mName->setEnabled(false);
     lay->addWidget(mName);
 
@@ -70,7 +76,9 @@ SieveForEveryPartWidget::~SieveForEveryPartWidget()
 void SieveForEveryPartWidget::slotHelp()
 {
     const QString help = i18n("\"foreverypart\", which is an iterator that walks though every MIME part of a message, including nested parts, depth first, and applies the commands in the specified block to each of them.");
-    QWhatsThis::showText( QCursor::pos(), help );
+    const QString href = KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::ForEveryPart);
+    const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help,href);
+    QWhatsThis::showText( QCursor::pos(), fullWhatsThis, mHelpButton );
 }
 
 void SieveForEveryPartWidget::generatedScript(QString &script, QStringList &requires)
@@ -86,6 +94,27 @@ void SieveForEveryPartWidget::generatedScript(QString &script, QStringList &requ
     }
 }
 
+void SieveForEveryPartWidget::loadScript(const QDomElement &element, QString &error)
+{
+    QDomNode node = element.firstChild();
+    QDomElement e = node.toElement();
+    if (!e.isNull()) {
+        const QString tagName = e.tagName();
+        if (tagName == QLatin1String("tag")) {
+            const QString tagValue = e.text();
+            if (tagValue == QLatin1String("name")) {
+                mName->setText(AutoCreateScriptUtil::strValue(e));
+            } else {
+                error += i18n("Unknown tagValue \"%1\" during loading loop \"for\"", tagValue);
+                qDebug()<<" SieveForEveryPartWidget::loadScript unknown tagValue "<<tagValue;
+            }
+            mForLoop->setChecked(true);
+            mName->setEnabled(true);
+        } else {
+            error += i18n("Unknown tag \"%1\" during loading loop \"for\"", tagName);
+            qDebug()<<" SieveForEveryPartWidget::loadScript unknown tagName "<<tagName;
+        }
+    }
+}
 }
 
-#include "sieveforeverypartwidget.moc"

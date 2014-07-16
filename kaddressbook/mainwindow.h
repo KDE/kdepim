@@ -24,22 +24,21 @@
 #include <KXmlGuiWindow>
 
 class MainWidget;
-
 class MainWindow : public KXmlGuiWindow
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     MainWindow();
     ~MainWindow();
-
-  private Q_SLOTS:
+    MainWidget *mainWidget() const;
+private Q_SLOTS:
     void configure();
     void configureKeyBindings();
     void configureToolbars();
     void newToolbarConfig();
 
-  private:
+private:
     void initActions();
 
     MainWidget *mMainWidget;

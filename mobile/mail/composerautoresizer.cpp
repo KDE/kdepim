@@ -39,11 +39,11 @@ QDeclarativeItem *ComposerAutoResizer::findFlickable( QGraphicsItem *parent ) co
   // looks for a QML Flickable Item based on the name of the class
   // It's not optimal but it's the only way as
   // QDeclarativeFlickable is not public
-  const QString flickableClassName( "QDeclarativeFlickable" );
+  const QString flickableClassName( QLatin1String("QDeclarativeFlickable") );
   while ( parent ) {
     QDeclarativeItem *item = qobject_cast<QDeclarativeItem*>( parent );
     if ( item ) {
-      if ( !flickableClassName.compare( item->metaObject()->className() ) ) {
+      if ( !flickableClassName.compare( QLatin1String(item->metaObject()->className()) ) ) {
         return item;
       }
     }
@@ -84,4 +84,3 @@ void ComposerAutoResizer::textEditChanged()
   }
 }
 
-#include "composerautoresizer.moc"

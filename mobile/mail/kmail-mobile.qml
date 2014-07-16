@@ -20,6 +20,7 @@
 
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 import org.kde.pim.mobileui 4.5 as KPIM
 
 KPIM.MainView {
@@ -35,8 +36,8 @@ KPIM.MainView {
     }
   }
 
-  PlasmaComponents.PageStack {
-    id: pageStack
+  PlasmaExtras.PageRow {
+    id: pageRow
 
     anchors {
       top: toolBar.bottom
@@ -49,6 +50,6 @@ KPIM.MainView {
 
     toolBar: toolBar
 
-    initialPage: Qt.createComponent("StartPage.qml")
+    initialPage: Qt.resolvedUrl("FolderPage.qml")
   }
 }

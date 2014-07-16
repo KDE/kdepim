@@ -49,12 +49,12 @@ namespace Kleo {
     class KeyFilter;
 
     class AbstractKeyListSortFilterProxyModel : public QSortFilterProxyModel, public KeyListModelInterface {
-	Q_OBJECT
+        Q_OBJECT
     protected:
         AbstractKeyListSortFilterProxyModel( const AbstractKeyListSortFilterProxyModel & );
     public:
-	explicit AbstractKeyListSortFilterProxyModel( QObject * parent=0 );
-	~AbstractKeyListSortFilterProxyModel();
+        explicit AbstractKeyListSortFilterProxyModel( QObject * parent=0 );
+        ~AbstractKeyListSortFilterProxyModel();
 
         virtual AbstractKeyListSortFilterProxyModel * clone() const = 0;
 
@@ -70,24 +70,24 @@ namespace Kleo {
     };
 
     class KeyListSortFilterProxyModel : public AbstractKeyListSortFilterProxyModel {
-	Q_OBJECT
+        Q_OBJECT
     protected:
         KeyListSortFilterProxyModel( const KeyListSortFilterProxyModel & );
     public:
-	explicit KeyListSortFilterProxyModel( QObject * parent=0 );
-	~KeyListSortFilterProxyModel();
+        explicit KeyListSortFilterProxyModel( QObject * parent=0 );
+        ~KeyListSortFilterProxyModel();
 
-	boost::shared_ptr<const KeyFilter> keyFilter() const;
-	void setKeyFilter( const boost::shared_ptr<const KeyFilter> & kf );
+        boost::shared_ptr<const KeyFilter> keyFilter() const;
+        void setKeyFilter( const boost::shared_ptr<const KeyFilter> & kf );
 
         /* reimp */ KeyListSortFilterProxyModel * clone() const;
-	
+
     protected:
-	/* reimp */ bool filterAcceptsRow( int source_row, const QModelIndex & source_parent ) const;
+        /* reimp */ bool filterAcceptsRow( int source_row, const QModelIndex & source_parent ) const;
 
     private:
-	class Private;
-	kdtools::pimpl_ptr<Private> d;
+        class Private;
+        kdtools::pimpl_ptr<Private> d;
     };
 
 }

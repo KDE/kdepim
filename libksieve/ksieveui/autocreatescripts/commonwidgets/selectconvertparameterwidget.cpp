@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -17,11 +17,12 @@
 
 #include "selectconvertparameterwidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QSpinBox>
+#include <QDebug>
 
 namespace KSieveUi {
 SelectConvertParameterWidget::SelectConvertParameterWidget(QWidget *parent)
@@ -32,6 +33,30 @@ SelectConvertParameterWidget::SelectConvertParameterWidget(QWidget *parent)
 
 SelectConvertParameterWidget::~SelectConvertParameterWidget()
 {
+}
+
+void SelectConvertParameterWidget::setCode(const QStringList &code, QString &error)
+{
+    if (code.isEmpty())
+        return;
+
+    if (code.count() < 2) {
+        error += i18n("Not enough arguments for SelectConvertParameterWidget. Expected 2 arguments.");
+        qDebug()<<" SelectConvertParameterWidget::setCode parsing error ?";
+        return;
+    }
+    if (code.count() > 2) {
+        error += i18n("Too many arguments for SelectConvertParameterWidget, \"%1\"", code.count());
+        qDebug()<<" too many argument "<<code.count();
+    }
+
+    QString widthStr = code.at(0);
+    widthStr = widthStr.remove(QString::fromLatin1("pix-x="));
+
+    QString heightStr = code.at(1);
+    heightStr = heightStr.remove(QString::fromLatin1("pix-y="));
+    mWidth->setValue(widthStr.toInt());
+    mHeight->setValue(heightStr.toInt());
 }
 
 QString SelectConvertParameterWidget::code() const
@@ -49,8 +74,9 @@ void SelectConvertParameterWidget::initialize()
     mWidth->setMaximum(9999);
     mWidth->setValue(300);
     hbox->addWidget(mWidth);
+    connect(mWidth, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged()));
 
-    QLabel *lab = new QLabel(i18n("x"));
+    QLabel *lab = new QLabel(QLatin1String("x"));
     hbox->addWidget(lab);
 
     mHeight = new QSpinBox;
@@ -60,9 +86,9 @@ void SelectConvertParameterWidget::initialize()
     mHeight->setValue(200);
     hbox->addWidget(mHeight);
 
+    connect(mHeight, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged()));
     setLayout(hbox);
 }
 
 }
 
-#include "selectconvertparameterwidget.moc"

@@ -35,7 +35,7 @@ using namespace Akonadi;
 CalendarSupport::IncidenceFetchJob::IncidenceFetchJob( QObject *parent )
   : Job(parent), m_jobCount( 0 )
 {
-  m_mimeTypeChecker.addWantedMimeType( "text/calendar" );
+  m_mimeTypeChecker.addWantedMimeType( QLatin1String("text/calendar") );
 }
 
 Item::List CalendarSupport::IncidenceFetchJob::items() const
@@ -69,7 +69,7 @@ void CalendarSupport::IncidenceFetchJob::collectionFetchResult( KJob *job )
     emitResult();
   } else {
     foreach ( const Collection &col, fetch->collections() ) {
-      if ( !m_mimeTypeChecker.isWantedCollection( col ) ) {
+      if ( !m_mimeTypeChecker.isWantedCollection( col ) || col.isVirtual() ) {
         continue;
       }
       ItemFetchJob *itemFetch = new ItemFetchJob( col, this );
@@ -100,4 +100,3 @@ void CalendarSupport::IncidenceFetchJob::itemFetchResult( KJob *job )
   }
 }
 
-#include "incidencefetchjob.moc"

@@ -22,6 +22,7 @@
 #include <KDebug>
 
 #include <QFile>
+#include <QDir>
 
 using namespace MailCommon;
 
@@ -39,7 +40,7 @@ FilterImporterEvolution::FilterImporterEvolution( QFile *file )
         kDebug() << "No filters defined";
         return;
     }
-    filters = filters.firstChildElement( "ruleset" );
+    filters = filters.firstChildElement( QLatin1String("ruleset") );
     for ( QDomElement e = filters.firstChildElement(); !e.isNull(); e = e.nextSiblingElement() ) {
         const QString tag = e.tagName();
         if ( tag == QLatin1String( "rule" ) ) {
@@ -68,8 +69,8 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
           partFilter = partFilter.nextSiblingElement() ) {
         const QString nexttag = partFilter.tagName();
         if ( nexttag == QLatin1String( "part" ) ) {
-            if ( partFilter.hasAttribute( "name" ) ) {
-                const QString name = partFilter.attribute( "name" );
+            if ( partFilter.hasAttribute( QLatin1String("name") ) ) {
+                const QString name = partFilter.attribute( QLatin1String("name") );
                 kDebug() << " parsePartAction name attribute :" << name;
                 if ( type == FilterImporterEvolution::PartType ) {
                     QByteArray fieldName;
@@ -141,11 +142,11 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
 
                         if ( valueTag == QLatin1String( "value" ) ) {
 
-                            if ( valueFilter.hasAttribute( "name" ) ) {
-                                const QString name = valueFilter.attribute( "name" );
+                            if ( valueFilter.hasAttribute( QLatin1String("name") ) ) {
+                                const QString name = valueFilter.attribute( QLatin1String("name") );
                                 if (name==QLatin1String("flag")) {
 
-                                    const QString flag = valueFilter.attribute( "value" );
+                                    const QString flag = valueFilter.attribute( QLatin1String("value") );
                                     kDebug()<<" flag :"<<flag;
                                     if (flag==QLatin1String("Seen")) {
                                         contents = QLatin1String("Read");
@@ -163,8 +164,8 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                                 }
                                 kDebug() << " value filter name :" << name;
                             }
-                            if ( valueFilter.hasAttribute( "type" ) ) {
-                                const QString name = valueFilter.attribute( "type" );
+                            if ( valueFilter.hasAttribute( QLatin1String("type") ) ) {
+                                const QString name = valueFilter.attribute( QLatin1String("type") );
                                 if ( name == QLatin1String( "option" ) ){
                                     //Nothing we will look at value
                                 } else if ( name == QLatin1String( "string" ) ) {
@@ -172,8 +173,8 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                                     contents = string.text();
                                 } else if ( name == QLatin1String( "folder" ) ) {
                                     QDomElement folder = valueFilter.firstChildElement();
-                                    if ( folder.hasAttribute( "uri" ) ) {
-                                        contents = folder.attribute( "uri" );
+                                    if ( folder.hasAttribute( QLatin1String("uri") ) ) {
+                                        contents = folder.attribute( QLatin1String("uri") );
                                         if ( !contents.isEmpty() ) {
                                             contents.remove( QLatin1String( "folder://" ) );
                                         }
@@ -182,8 +183,8 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                                     QDomElement address = valueFilter.firstChildElement();
                                     contents = address.text();
                                 } else if ( name == QLatin1String( "integer" ) ) {
-                                    if ( valueFilter.hasAttribute( "integer" ) ) {
-                                        contents = valueFilter.attribute( "integer" );
+                                    if ( valueFilter.hasAttribute( QLatin1String("integer") ) ) {
+                                        contents = valueFilter.attribute( QLatin1String("integer") );
                                         int val = contents.toInt();
                                         val = val * 1024; //store in Ko
                                         contents = QString::number(val);
@@ -193,8 +194,8 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                                 }
 
                             }
-                            if ( valueFilter.hasAttribute( "value" ) ) {
-                                const QString value = valueFilter.attribute( "value" );
+                            if ( valueFilter.hasAttribute( QLatin1String("value") ) ) {
+                                const QString value = valueFilter.attribute( QLatin1String("value") );
                                 kDebug() << " value filter value :" << name;
                                 if ( value == QLatin1String( "contains" ) ) {
                                     functionName = SearchRule::FuncContains;
@@ -278,12 +279,12 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                           valueFilter = valueFilter.nextSiblingElement() ) {
                         const QString valueTag = valueFilter.tagName();
                         if ( valueTag == QLatin1String( "value" ) ) {
-                            if ( valueFilter.hasAttribute( "name" ) ) {
-                                const QString name = valueFilter.attribute( "name" );
+                            if ( valueFilter.hasAttribute( QLatin1String("name") ) ) {
+                                const QString name = valueFilter.attribute( QLatin1String("name") );
                                 kDebug() << " value filter name :" << name;
                             }
-                            if ( valueFilter.hasAttribute( "type" ) ) {
-                                const QString name = valueFilter.attribute( "type" );
+                            if ( valueFilter.hasAttribute( QLatin1String("type") ) ) {
+                                const QString name = valueFilter.attribute( QLatin1String("type" ));
                                 kDebug() << " value filter type :" << name;
                                 if ( name == QLatin1String( "option" ) ){
                                     //Nothing we will look at value
@@ -292,8 +293,8 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                                 } else if ( name == QLatin1String( "folder" ) ) {
                                     QDomElement folder = valueFilter.firstChildElement();
 
-                                    if ( folder.hasAttribute( "uri" ) ) {
-                                        value = folder.attribute( "uri" );
+                                    if ( folder.hasAttribute( QLatin1String("uri") ) ) {
+                                        value = folder.attribute( QLatin1String("uri") );
                                         if ( !value.isEmpty() ) {
                                             value.remove( QLatin1String( "folder://" ) );
                                         }
@@ -304,8 +305,8 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
                                 }
 
                             }
-                            if ( valueFilter.hasAttribute( "value" ) ) {
-                                const QString name = valueFilter.attribute( "value" );
+                            if ( valueFilter.hasAttribute( QLatin1String("value") ) ) {
+                                const QString name = valueFilter.attribute( QLatin1String("value") );
                                 kDebug() << " value filter value :" << name;
                                 if ( value == QLatin1String( "contains" ) ) {
                                     //TODO
@@ -323,15 +324,15 @@ void FilterImporterEvolution::parsePartAction( const QDomElement &ruleFilter,
 void FilterImporterEvolution::parseFilters( const QDomElement &e )
 {
     MailCommon::MailFilter *filter = new MailCommon::MailFilter();
-    if ( e.hasAttribute( "enabled" ) ) {
-        const QString attr = e.attribute( "enabled" );
+    if ( e.hasAttribute( QLatin1String("enabled") ) ) {
+        const QString attr = e.attribute( QLatin1String("enabled") );
         if ( attr == QLatin1String( "false" ) ) {
             filter->setEnabled( false );
         }
     }
 
-    if ( e.hasAttribute( "grouping" ) ) {
-        const QString attr = e.attribute( "grouping" );
+    if ( e.hasAttribute( QLatin1String("grouping") ) ) {
+        const QString attr = e.attribute( QLatin1String("grouping") );
         if ( attr == QLatin1String( "all" ) ) {
             filter->pattern()->setOp( SearchPattern::OpAnd );
         } else if ( attr == QLatin1String( "any" ) ) {
@@ -342,8 +343,8 @@ void FilterImporterEvolution::parseFilters( const QDomElement &e )
 
     }
 
-    if ( e.hasAttribute( "source" ) ) {
-        const QString attr = e.attribute( "source" );
+    if ( e.hasAttribute( QLatin1String("source") ) ) {
+        const QString attr = e.attribute( QLatin1String("source") );
         if ( attr == QLatin1String( "incoming" ) ) {
             filter->setApplyOnInbound( true );
         } else if ( attr == QLatin1String( "outgoing" ) ) {

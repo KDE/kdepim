@@ -41,16 +41,17 @@
 
 #include <KProcess>
 #include <KMessageBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KPushButton>
 #include <KStandardGuiItem>
 #include <KGlobalSettings>
+#include <KConfigGroup>
 
 #include <QString>
 #include <QByteArray>
 #include <QTimer>
-#include <QLayout>
-
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 
 static const int PROCESS_TERMINATE_TIMEOUT = 5000; // milliseconds
 
@@ -61,7 +62,11 @@ namespace {
         explicit DumpCrlCacheDialog( QWidget * parent=0 )
             : QDialog( parent ), ui( this )
         {
-
+            readConfig();
+        }
+        ~DumpCrlCacheDialog()
+        {
+            writeConfig();
         }
 
     Q_SIGNALS:
@@ -76,6 +81,22 @@ namespace {
         }
 
     private:
+        void readConfig()
+        {
+            KConfigGroup dialog( KGlobal::config(), "DumpCrlCacheDialog" );
+            const QSize size = dialog.readEntry( "Size", QSize(600, 400) );
+            if ( size.isValid() ) {
+                resize( size );
+            }
+        }
+
+        void writeConfig()
+        {
+            KConfigGroup dialog( KGlobal::config(), "DumpCrlCacheDialog" );
+            dialog.writeEntry( "Size", size() );
+            dialog.sync();
+        }
+
         struct Ui {
             KDLogTextWidget logTextWidget;
             KPushButton     updateButton, closeButton;
@@ -189,7 +210,7 @@ DumpCrlCacheCommand::Private::Private( DumpCrlCacheCommand * qq, KeyListControll
 {
     process.setOutputChannelMode( KProcess::SeparateChannels );
     process.setReadChannel( KProcess::StandardOutput );
-    process << gpgSmPath() << "--call-dirmngr" << "listcrls";
+    process << gpgSmPath() << QLatin1String("--call-dirmngr") << QLatin1String("listcrls");
 }
 
 DumpCrlCacheCommand::Private::~Private() {

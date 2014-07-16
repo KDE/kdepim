@@ -40,7 +40,7 @@
 #include <utils/hex.h>
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QProcess>
 #include <QDir>
@@ -59,17 +59,17 @@ namespace {
         QString m_component;
     public:
         explicit GpgConfCheck( const char * component )
-            : SelfTestImplementation( i18nc("@title", "%1 Configuration Check", component && *component ? component : "gpgconf" ) ),
-              m_component( component )
+            : SelfTestImplementation( i18nc("@title", "%1 Configuration Check", component && *component ? QLatin1String(component) : QLatin1String("gpgconf") ) ),
+              m_component( QLatin1String(component) )
         {
             runTest();
         }
 
         QStringList arguments() const {
             if ( m_component.isEmpty() )
-                return QStringList() << "--check-config" ;
+                return QStringList() << QLatin1String("--check-config");
             else
-                return QStringList() << "--check-options" << m_component ;
+                return QStringList() << QLatin1String("--check-options") << m_component ;
         }
 
         bool canRun() {
@@ -81,7 +81,7 @@ namespace {
 
             QProcess gpgconf;
             gpgconf.setReadChannel( QProcess::StandardOutput );
-            gpgconf.start( gpgConfPath(), QStringList() << "--list-dirs", QIODevice::ReadOnly );
+            gpgconf.start( gpgConfPath(), QStringList() << QLatin1String("--list-dirs"), QIODevice::ReadOnly );
             gpgconf.waitForFinished();
             if ( gpgconf.exitStatus() != QProcess::NormalExit || gpgconf.exitCode() != 0 ) {
                 kDebug() << "GpgConfCheck: \"gpgconf --list-dirs\" gives error, disabling";
@@ -91,7 +91,7 @@ namespace {
             Q_FOREACH( const QByteArray & line, lines )
                 if ( line.startsWith( "sysconfdir:" ) ) //krazy:exclude=strings
                     try {
-                        return QDir( QFile::decodeName( hexdecode( line.mid( strlen( "sysconfdir:" ) ) ) ) ).exists( "gpgconf.conf" );
+                        return QDir( QFile::decodeName( hexdecode( line.mid( strlen( "sysconfdir:" ) ) ) ) ).exists( QLatin1String("gpgconf.conf") );
                     } catch ( ... ) { return false; }
             kDebug() << "GpgConfCheck: \"gpgconf --list-dirs\" has no sysconfdir entry";
             return false;
@@ -123,9 +123,9 @@ namespace {
                     i18n( "There was an error executing the GnuPG configuration self-check for %2:\n"
                           "  %1\n"
                           "You might want to execute \"gpgconf %3\" on the command line.\n",
-                          message, m_component.isEmpty() ? "GnuPG" : m_component, arguments().join(" ") );
+                          message, m_component.isEmpty() ? QLatin1String("GnuPG") : m_component, arguments().join(QLatin1String(" ") ) );
                 if ( !output.trimmed().isEmpty() )
-                    m_explaination += '\n' + i18n("Diagnostics:") + '\n' + output ;
+                    m_explaination += QLatin1Char('\n') + i18n("Diagnostics:") + QLatin1Char('\n') + output ;
 
                 m_proposedFix.clear();
             } else if ( process.exitCode() ) {
@@ -136,7 +136,7 @@ namespace {
                             "The GnuPG configuration self-check failed.\n"
                             "\n"
                             "Error code: %1\n"
-                            "Diagnostics:", process.exitCode() ) + '\n' + output
+                            "Diagnostics:", process.exitCode() ) + QLatin1Char('\n') + output
                     : i18nc("self-check did not pass",
                             "The GnuPG configuration self-check failed with error code %1.\n"
                             "No output was received.", process.exitCode() );

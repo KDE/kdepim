@@ -41,44 +41,44 @@
 #include <QMap>
 
 namespace MessageViewer {
-  class MailWebView;
+class MailWebView;
 }
 
 namespace MessageViewer {
 
 class WebKitPartHtmlWriter : public QObject, public HtmlWriter {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit WebKitPartHtmlWriter( MailWebView * view, QObject * parent=0 );
-  ~WebKitPartHtmlWriter();
+    explicit WebKitPartHtmlWriter( MailWebView * view, QObject * parent=0 );
+    ~WebKitPartHtmlWriter();
 
-  void begin( const QString & cssDefs );
-  void end();
-  void reset();
-  void write( const QString & str );
-  void queue( const QString & str );
-  void flush();
-  void embedPart( const QByteArray & contentId, const QString & url );
-  void extraHead( const QString& str );
+    void begin( const QString & cssDefs );
+    void end();
+    void reset();
+    void write( const QString & str );
+    void queue( const QString & str );
+    void flush();
+    void embedPart( const QByteArray & contentId, const QString & url );
+    void extraHead( const QString& str );
 signals:
-  void finished();
+    void finished();
 
 private:
-  void resolveCidUrls();
-  void insertExtraHead();
+    void resolveCidUrls();
+    void insertExtraHead();
 
 private:
-  MailWebView * mHtmlView;
-  QString mHtml;
-  QString mExtraHead;
-  enum State {
-    Begun,
-    Queued,
-    Ended
-  } mState;
-  // Key is Content-Id, value is URL
-  typedef QMap<QString, QString> EmbeddedPartMap;
-  EmbeddedPartMap mEmbeddedPartMap;
+    MailWebView * mHtmlView;
+    QString mHtml;
+    QString mExtraHead;
+    enum State {
+        Begun,
+        Queued,
+        Ended
+    } mState;
+    // Key is Content-Id, value is URL
+    typedef QMap<QString, QString> EmbeddedPartMap;
+    EmbeddedPartMap mEmbeddedPartMap;
 };
 
 }

@@ -53,7 +53,7 @@ class RuleWidgetHandler
 
     virtual QWidget * createFunctionWidget( int number,
                                             QStackedWidget *functionStack,
-                                            const QObject *receiver ) const = 0;
+                                            const QObject *receiver, bool isBalooSearch ) const = 0;
     virtual QWidget * createValueWidget( int number,
                                          QStackedWidget *valueStack,
                                          const QObject *receiver ) const = 0;
@@ -70,7 +70,7 @@ class RuleWidgetHandler
                         QStackedWidget *valueStack ) const = 0;
     virtual bool setRule( QStackedWidget *functionStack,
                           QStackedWidget *valueStack,
-                          const MailCommon::SearchRule::Ptr rule ) const = 0;
+                          const MailCommon::SearchRule::Ptr rule, bool isBalooSearch ) const = 0;
     virtual bool update( const QByteArray & field,
                          QStackedWidget *functionStack,
                          QStackedWidget *valueStack ) const = 0;

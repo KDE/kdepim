@@ -23,7 +23,7 @@ using namespace MessageComposer;
 
 class GlobalPart::Private
 {
-  public:
+public:
     bool guiEnabled;
     QWidget *parentWidgetForGui;
     bool fallbackCharsetEnabled;
@@ -33,84 +33,83 @@ class GlobalPart::Private
 };
 
 GlobalPart::GlobalPart( QObject *parent )
-  : MessagePart( parent )
-  , d( new Private )
+    : MessagePart( parent )
+    , d( new Private )
 {
-  d->guiEnabled = true;
-  d->parentWidgetForGui = 0;
-  d->fallbackCharsetEnabled = false;
-  d->allow8Bit = false;
-  d->MDNRequested = false;
+    d->guiEnabled = true;
+    d->parentWidgetForGui = 0;
+    d->fallbackCharsetEnabled = false;
+    d->allow8Bit = false;
+    d->MDNRequested = false;
 }
 
 GlobalPart::~GlobalPart()
 {
-  delete d;
+    delete d;
 }
 
 bool GlobalPart::isGuiEnabled() const
 {
-  return d->guiEnabled;
+    return d->guiEnabled;
 }
 
 void GlobalPart::setGuiEnabled( bool enabled )
 {
-  d->guiEnabled = enabled;
+    d->guiEnabled = enabled;
 }
 
 QWidget* GlobalPart::parentWidgetForGui() const
 {
-  return d->parentWidgetForGui;
+    return d->parentWidgetForGui;
 }
 
 void GlobalPart::setParentWidgetForGui( QWidget *widget )
 {
-  d->parentWidgetForGui = widget;
+    d->parentWidgetForGui = widget;
 }
 
 bool GlobalPart::isFallbackCharsetEnabled() const
 {
-  return d->fallbackCharsetEnabled;
+    return d->fallbackCharsetEnabled;
 }
 
 void GlobalPart::setFallbackCharsetEnabled( bool enabled )
 {
-  d->fallbackCharsetEnabled = enabled;
+    d->fallbackCharsetEnabled = enabled;
 }
 
 QList<QByteArray> GlobalPart::charsets( bool forceFallback ) const
 {
-  QList<QByteArray> ret = d->charsets;
-  if( d->fallbackCharsetEnabled || forceFallback ) {
-    ret << "us-ascii";
-    ret << "utf-8";
-  }
-  return ret;
+    QList<QByteArray> ret = d->charsets;
+    if( d->fallbackCharsetEnabled || forceFallback ) {
+        ret << "us-ascii";
+        ret << "utf-8";
+    }
+    return ret;
 }
 
 void GlobalPart::setCharsets( const QList<QByteArray> &charsets )
 {
-  d->charsets = charsets;
+    d->charsets = charsets;
 }
 
 bool GlobalPart::is8BitAllowed() const
 {
-  return d->allow8Bit;
+    return d->allow8Bit;
 }
 
 void GlobalPart::set8BitAllowed( bool allowed )
 {
-  d->allow8Bit = allowed;
+    d->allow8Bit = allowed;
 }
 
 bool GlobalPart::MDNRequested() const
 {
-  return d->MDNRequested;
+    return d->MDNRequested;
 }
 
 void GlobalPart::setMDNRequested(bool requestMDN)
 {
-  d->MDNRequested = requestMDN;
+    d->MDNRequested = requestMDN;
 }
 
-#include "globalpart.moc"

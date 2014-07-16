@@ -294,7 +294,7 @@ static bool start_command( QProcess * p, const char * functionName,
         assert( !"Should not happen" );
 
     case ChecksumDefinition::CommandLine:
-        qDebug( "[%p] Starting %s %s", p, qPrintable( cmd ), qPrintable( args.join(" ") ) );
+        qDebug( "[%p] Starting %s %s", p, qPrintable( cmd ), qPrintable( args.join(QLatin1String(" ")) ) );
         p->start( cmd, args, QIODevice::ReadOnly );
         return true;
 

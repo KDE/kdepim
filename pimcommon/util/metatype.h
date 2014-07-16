@@ -20,10 +20,8 @@
 #ifndef MAILCOMMON_METATYPE_H
 #define MAILCOMMON_METATYPE_H
 
-#include <QObject>
 #include <QList>
 
-#include <QMetaType>
 
 Q_DECLARE_METATYPE( QList<int> )
 

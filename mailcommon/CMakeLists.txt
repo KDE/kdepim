@@ -9,15 +9,12 @@ include_directories(
   ${CMAKE_BINARY_DIR}/pimcommon
   ${CMAKE_SOURCE_DIR}/pimcommon
   ${CMAKE_SOURCE_DIR}/pimcommon/util/
-  ${CMAKE_CURRENT_BINARY_DIR}/../ontologies
   ${CMAKE_CURRENT_SOURCE_DIR}/filter
   ${CMAKE_CURRENT_SOURCE_DIR}/tag/
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/snippets
   ${CMAKE_CURRENT_SOURCE_DIR}/folder
   ${CMAKE_CURRENT_SOURCE_DIR}/util
-  ${SOPRANO_INCLUDE_DIR}
-  ${NEPOMUK_CORE_INCLUDE_DIR}
 )
 
 #add_definitions( -DQT_NO_CAST_FROM_ASCII )
@@ -26,16 +23,10 @@ include_directories(
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
-set(libmailcommon_SRCS
-  collectionpage/attributeregistrar.cpp
-  job/backupjob.cpp
-  collectionpage/collectionannotationsattribute.cpp
-  collectionpage/collectiongeneralpage.cpp
-  collectionpage/collectionexpirypage.cpp
-  collectionpage/expirecollectionattribute.cpp
-  collectionpage/newmailnotifierattribute.cpp
-  job/expirejob.cpp
-  widgets/favoritecollectionwidget.cpp
+set(libmailcommon_filter_SRCS
+  filter/filterselectiondialog.cpp
+  filter/filterconverter/filterconverttosieve.cpp
+  filter/filterconverter/filterconverttosieveresultdialog.cpp
   filter/filteraction.cpp
   filter/filteractionaddheader.cpp
   filter/filteractionaddtag.cpp
@@ -46,7 +37,7 @@ set(libmailcommon_SRCS
   filter/filteractiondict.cpp
   filter/filteractionexec.cpp
   filter/filteractionforward.cpp
-  filter/filteractionmissingargumentdialog.cpp
+  filter/dialog/filteractionmissingargumentdialog.cpp
   filter/filteractionmove.cpp
   filter/filteractionpipethrough.cpp
   filter/filteractionplaysound.cpp
@@ -87,55 +78,100 @@ set(libmailcommon_SRCS
   filter/itemcontext.cpp
   filter/kmfilterdialog.cpp
   filter/mailfilter.cpp
-  filter/selectthunderbirdfilterfilesdialog.cpp
-  filter/selectthunderbirdfilterfileswidget.cpp
+  filter/dialog/selectthunderbirdfilterfilesdialog.cpp
+  filter/dialog/selectthunderbirdfilterfileswidget.cpp
   filter/mdnadvicedialog.cpp
+)
+
+set(libmailcommon_collection_SRCS
+  collectionpage/attributeregistrar.cpp
+  collectionpage/collectionannotationsattribute.cpp
+  collectionpage/collectiongeneralpage.cpp
+  collectionpage/collectionexpirypage.cpp
+  collectionpage/expirecollectionattribute.cpp
+  collectionpage/newmailnotifierattribute.cpp
+)
+
+set(libmailcommon_folder_SRCS
   folder/foldercollection.cpp
   folder/foldercollectionmonitor.cpp
-  job/folderjob.cpp
   folder/folderrequester.cpp
   folder/folderselectiondialog.cpp
   folder/foldertreeview.cpp
   folder/foldertreewidget.cpp
   folder/foldertreewidgetproxymodel.cpp
   folder/entitycollectionorderproxymodel.cpp
+)
+
+set(libmailcommon_job_SRCS
   job/jobscheduler.cpp
-  kernel/mailkernel.cpp
-  util/mailutil.cpp
-  widgets/redirectdialog.cpp
-  widgets/regexplineedit.cpp
+  job/folderjob.cpp
+  job/expirejob.cpp
+  job/backupjob.cpp
+)
+
+set(libmailcommon_search_SRCS
   search/rulewidgethandlermanager.cpp
   search/searchpattern.cpp
   search/searchpatternedit.cpp
-  mdn/sendmdnhandler.cpp
+  search/textrulerwidgethandler.cpp
+  search/statusrulewidgethandler.cpp
+  search/messagerulewidgethandler.cpp
+  search/tagrulewidgethandler.cpp
+  search/numericrulewidgethandler.cpp
+  search/daterulewidgethandler.cpp
+  search/numericdoublerulewidgethandler.cpp
+  search/headersrulerwidgethandler.cpp
+)
+
+set(libmailcommon_snippets_SRCS
   snippets/snippetdialog.cpp
   snippets/snippetsmanager.cpp
   snippets/snippetsmodel.cpp
   snippets/snippetvariabledialog.cpp
+)
+
+set(libmailcommon_tag_SRCS
   tag/tagwidget.cpp
   tag/tag.cpp
   tag/addtagdialog.cpp
 )
 
-soprano_add_ontology(libmailcommon_SRCS
-  ${CMAKE_SOURCE_DIR}/messagecore/ontology/messagetag.trig
-  "MessageTag"
-  "Vocabulary"
-  "trig"
+set(libmailcommon_widget_SRCS
+  widgets/redirectdialog.cpp
+  widgets/regexplineedit.cpp
+  widgets/favoritecollectionwidget.cpp
+)
+
+set(libmailcommon_SRCS
+  kernel/mailkernel.cpp
+  util/mailutil.cpp
+  mdn/sendmdnhandler.cpp
+  ${libmailcommon_widget_SRCS}
+  ${libmailcommon_tag_SRCS}
+  ${libmailcommon_snippets_SRCS}
+  ${libmailcommon_search_SRCS}
+  ${libmailcommon_job_SRCS}
+  ${libmailcommon_collection_SRCS}
+  ${libmailcommon_folder_SRCS}   
+  ${libmailcommon_filter_SRCS}
+)
+
+kde4_add_kcfg_files(libmailcommon_SRCS
+    settings/mailcommonsettings_base.kcfgc
 )
 
 
-set_source_files_properties(${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml PROPERTIES INCLUDE "../mailfilteragent/dbusoperators.h")
+
+set_source_files_properties(${CMAKE_SOURCE_DIR}/agents/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml PROPERTIES INCLUDE "dbusoperators.h")
 
 qt4_add_dbus_interfaces(libmailcommon_SRCS
-  ${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml
+  ${CMAKE_SOURCE_DIR}/agents/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml
 )
 
 kde4_add_ui_files(libmailcommon_SRCS filter/ui/filterconfigwidget.ui snippets/ui/snippetdialog.ui filter/ui/selectthunderbirdfilterfileswidget.ui)
 
-if(NOT WINCE)
-  set(libmailcommon_SRCS ${libmailcommon_SRCS} filter/soundtestwidget.cpp)
-endif()
+set(libmailcommon_SRCS ${libmailcommon_SRCS} filter/soundtestwidget.cpp)
 
 macro(add_resource_iface _kcfgFile _ifaceName _className)
   kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/${_kcfgFile} ${_ifaceName})
@@ -166,20 +202,11 @@ target_link_libraries(mailcommon messageviewer messagecore messagecomposer maili
   ${KDEPIMLIBS_KIMAP_LIBS}
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${KDE4_KDEUI_LIBS}
-  ${NEPOMUK_CORE_LIBRARY}
 )
 
 target_link_libraries(mailcommon
-  ${NEPOMUK_QUERY_LIBRARIES}
-  ${SOPRANO_LIBRARIES}
-  niefast_apps
+  incidenceeditorsng
 )
-
-if(NOT WINCE)
-  target_link_libraries(mailcommon incidenceeditorsng)
-else()
-  target_link_libraries(mailcommon incidenceeditorsngmobile)
-endif()
 
 set_target_properties(mailcommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS mailcommon ${INSTALL_TARGETS_DEFAULT_ARGS})

@@ -26,7 +26,7 @@
 #include <QRadioButton>
 #include <QTreeView>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KComboBox>
 #include <KLineEdit>
 
@@ -170,14 +170,13 @@ QString KJotsLinkDialog::linkUrl() const
         const QModelIndex index = hrefCombo->view()->currentIndex();
         const Akonadi::Collection collection = index.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
         if (collection.isValid()) {
-          return "kjots://org.kjots.book/" + QString::number(collection.id());
+          return QLatin1String("kjots://org.kjots.book/") + QString::number(collection.id());
         }
         const Akonadi::Item item = index.data(Akonadi::EntityTreeModel::ItemRole).value<Akonadi::Item>();
         Q_ASSERT(item.isValid());
-        return "kjots://org.kjots.page/" + QString::number(item.id());
+        return QLatin1String("kjots://org.kjots.page/") + QString::number(item.id());
     } else {
         return linkUrlLineEdit->text();
     }
 }
 
-#include "kjotslinkdialog.moc"

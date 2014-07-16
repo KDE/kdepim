@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -26,7 +26,7 @@
 
 
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobal>
 
 #include <QBuffer>
@@ -68,17 +68,18 @@ QString dateString( KMime::Message *message, bool printing, bool shortDate ) {
 
 QString subjectString( KMime::Message *message, int flags )
 {
-    QString subject;
-    if ( message->subject(false) ) {
-        subject = message->subject()->asUnicodeString();
-        if ( subject.isEmpty() )
-            subject = i18n("No Subject");
+    QString subjectStr;
+    const KMime::Headers::Subject * const subject = message->subject(false);
+    if ( subject ) {
+        subjectStr = subject->asUnicodeString();
+        if ( subjectStr.isEmpty() )
+            subjectStr = i18n("No Subject");
         else
-            subject = strToHtml( subject, flags );
+            subjectStr = strToHtml( subjectStr, flags );
     } else {
-        subject = i18n("No Subject");
+        subjectStr = i18n("No Subject");
     }
-    return subject;
+    return subjectStr;
 }
 
 QString subjectDirectionString( KMime::Message *message )
@@ -98,7 +99,7 @@ QString spamStatus(KMime::Message *message)
         const SpamScores scores = SpamHeaderAnalyzer::getSpamScores( message );
 
         for ( SpamScores::const_iterator it = scores.constBegin(), end = scores.constEnd() ; it != end ; ++it )
-            spamHTML += (*it).agent() + ' ' +
+            spamHTML += (*it).agent() + QLatin1Char(' ') +
                     MessageViewer::HeaderStyleUtil::drawSpamMeter( (*it).error(), (*it).score(), (*it).confidence(), (*it).spamHeader(), (*it).confidenceHeader() );
     }
     return spamHTML;
@@ -154,12 +155,12 @@ QString drawSpamMeter( SpamError spamError, double percent, double confidence,
     QString confidenceString;
     if ( spamError == noError ) {
         if ( confidence >= 0 ) {
-            confidenceString = QString::number( confidence ) + "% &nbsp;";
+            confidenceString = QString::number( confidence ) + QLatin1String("% &nbsp;");
             titleText = i18n("%1% probability of being spam with confidence %3%.\n\n"
                              "Full report:\nProbability=%2\nConfidence=%4",
                              QString::number(percent,'f',2), filterHeader, confidence, confidenceHeader );
         } else { // do not show negative confidence
-            confidenceString = QString() + "&nbsp;";
+            confidenceString = QString() + QLatin1String("&nbsp;");
             titleText = i18n("%1% probability of being spam.\n\n"
                              "Full report:\nProbability=%2",
                              QString::number(percent,'f',2), filterHeader);
@@ -240,6 +241,25 @@ QList<KMime::Types::Mailbox> resentFromList(KMime::Message *message)
     return resentFrom;
 }
 
+QList<KMime::Types::Mailbox> resentToList(KMime::Message *message)
+{
+    // Get the resent-from header into a Mailbox
+    QList<KMime::Types::Mailbox> resentTo;
+    if ( message->headerByType( "Resent-To" ) ) {
+        const QByteArray data = message->headerByType( "Resent-To" )->as7BitString( false );
+        const char * start = data.data();
+        const char * end = start + data.length();
+        KMime::Types::AddressList addressList;
+        KMime::HeaderParsing::parseAddressList( start, end, addressList );
+        foreach ( const KMime::Types::Address &addr, addressList ) {
+            foreach ( const KMime::Types::Mailbox &mbox, addr.mailboxList ) {
+                resentTo.append( mbox );
+            }
+        }
+    }
+    return resentTo;
+}
+
 xfaceSettings xface(const MessageViewer::HeaderStyle *style, KMime::Message *message)
 {
 
@@ -254,7 +274,7 @@ xfaceSettings xface(const MessageViewer::HeaderStyle *style, KMime::Message *mes
         ContactDisplayMessageMemento *photoMemento =
                 dynamic_cast<ContactDisplayMessageMemento*>( style->nodeHelper()->bodyPartMemento( message, "contactphoto" ) );
         if ( !photoMemento ) {
-            const QString email = KPIMUtils::firstEmailAddress( message->from()->as7BitString(false) );
+            const QString email = QString::fromLatin1(KPIMUtils::firstEmailAddress( message->from()->as7BitString(false) ));
             photoMemento = new ContactDisplayMessageMemento( email );
             style->nodeHelper()->setBodyPartMemento( message, "contactphoto", photoMemento );
             QObject::connect( photoMemento, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
@@ -284,8 +304,8 @@ xfaceSettings xface(const MessageViewer::HeaderStyle *style, KMime::Message *mes
                 }
             } else {
                 settings.photoURL = photoMemento->photo().url();
-                if ( settings.photoURL.startsWith('/') )
-                    settings.photoURL.prepend( "file:" );
+                if ( settings.photoURL.startsWith(QLatin1Char('/')) )
+                    settings.photoURL.prepend( QLatin1String("file:") );
             }
         } else {
             // if the memento is not finished yet, use other photo sources instead

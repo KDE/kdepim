@@ -32,8 +32,6 @@
 #include "mainwidget.h"
 #include "subscriptionlistview.h"
 
-#include <KInputDialog>
-#include <KLocalizedString>
 #include <KUrl>
 
 #include <QPointer>
@@ -189,4 +187,4 @@ void CreateFeedCommand::doAbort()
 
 }
 
-#include "createfeedcommand.moc"
+#include "moc_createfeedcommand.cpp"

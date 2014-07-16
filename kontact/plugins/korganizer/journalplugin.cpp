@@ -30,7 +30,7 @@
 
 #include <KActionCollection>
 #include <KIconLoader>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDebug>
 #include <QtDBus/QtDBus>
 
@@ -161,4 +161,3 @@ bool JournalPlugin::isRunningStandalone() const
   return mUniqueAppWatcher->isRunningStandalone();
 }
 
-#include "journalplugin.moc"

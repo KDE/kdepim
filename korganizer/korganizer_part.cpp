@@ -49,16 +49,24 @@ K_PLUGIN_FACTORY( KOrganizerFactory, registerPlugin<KOrganizerPart>(); )
 K_EXPORT_PLUGIN( KOrganizerFactory( createAboutData() ) )
 
 KOrganizerPart::KOrganizerPart( QWidget *parentWidget, QObject *parent, const QVariantList & )
-  : KParts::ReadOnlyPart(parent), mTopLevelWidget( parentWidget->topLevelWidget() )
+  : KParts::ReadOnlyPart( parent )
 {
-  KGlobal::locale()->insertCatalog( "libkcalutils" );
-  KGlobal::locale()->insertCatalog( "calendarsupport" );
-  KGlobal::locale()->insertCatalog( "libkdepim" );
-  KGlobal::locale()->insertCatalog( "kdgantt2" );
-  KGlobal::locale()->insertCatalog( "libakonadi" );
-  KGlobal::locale()->insertCatalog( "libincidenceeditors" );
-  KGlobal::locale()->insertCatalog( "libkpimutils" );
-  KGlobal::locale()->insertCatalog( "libpimcommon" );
+  if ( parentWidget ) {
+    mTopLevelWidget = parentWidget->topLevelWidget();
+  } else if ( parent && parent->isWidgetType() ) {
+    mTopLevelWidget = (QWidget *)parent;
+  } else {
+    kError() << "Cannot initialize the part without a top level widget.";
+  }
+
+  KGlobal::locale()->insertCatalog( QLatin1String("libkcalutils") );
+  KGlobal::locale()->insertCatalog( QLatin1String("calendarsupport") );
+  KGlobal::locale()->insertCatalog( QLatin1String("libkdepim") );
+  KGlobal::locale()->insertCatalog( QLatin1String("kdgantt2") );
+  KGlobal::locale()->insertCatalog( QLatin1String("libakonadi") );
+  KGlobal::locale()->insertCatalog( QLatin1String("libincidenceeditors") );
+  KGlobal::locale()->insertCatalog( QLatin1String("libkpimutils") );
+  KGlobal::locale()->insertCatalog( QLatin1String("libpimcommon") );
 
   KOCore::self()->addXMLGUIClient( mTopLevelWidget, this );
 
@@ -73,7 +81,6 @@ KOrganizerPart::KOrganizerPart( QWidget *parentWidget, QObject *parent, const QV
 
   mActionManager->createCalendarAkonadi();
   setHasDocument( false );
-  mView->updateCategories();
 
   mStatusBarExtension = new KParts::StatusBarExtension( this );
 
@@ -89,7 +96,7 @@ KOrganizerPart::KOrganizerPart( QWidget *parentWidget, QObject *parent, const QV
   mActionManager->init();
   mActionManager->readSettings();
 
-  setXMLFile( "korganizer_part.rc", true );
+  setXMLFile( QLatin1String("korganizer_part.rc"), true );
   mActionManager->loadParts();
   setTitle();
 }
@@ -101,8 +108,6 @@ KOrganizerPart::~KOrganizerPart()
   delete mActionManager;
   mActionManager = 0;
 
-  closeUrl();
-
   KOCore::self()->removeXMLGUIClient( mTopLevelWidget );
 }
 
@@ -111,7 +116,7 @@ void KOrganizerPart::slotChangeInfo( const Akonadi::Item &item, const QDate &dat
   Q_UNUSED( date );
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
   if ( incidence ) {
-    emit textChanged( incidence->summary() + " / " +
+    emit textChanged( incidence->summary() + QLatin1String(" / ") +
                       KCalUtils::IncidenceFormatter::timeToString( incidence->dtStart() ) );
   } else {
     emit textChanged( QString() );
@@ -143,7 +148,7 @@ KOrg::CalendarViewBase *KOrganizerPart::view() const
 
 bool KOrganizerPart::openURL( const KUrl &url, bool merge )
 {
-  return mActionManager->openURL( url, merge );
+  return mActionManager->importURL( url, merge );
 }
 
 bool KOrganizerPart::saveURL()
@@ -163,8 +168,7 @@ KUrl KOrganizerPart::getCurrentURL() const
 
 bool KOrganizerPart::openFile()
 {
-  mView->openCalendar( localFilePath() );
-  mView->show();
+  mActionManager->importCalendar( localFilePath() );
   return true;
 }
 
@@ -199,4 +203,3 @@ void KOrganizerPart::setTitle()
   emit setWindowCaption( title );*/
 }
 
-#include "korganizer_part.moc"

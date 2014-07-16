@@ -42,8 +42,7 @@
 
 #include <gpgme++/key.h>
 
-#include <KLocale>
-#include <KMessageBox>
+#include <KLocalizedString>
 
 using namespace Kleo;
 using namespace Kleo::Commands;
@@ -100,24 +99,24 @@ QStringList ExportSecretKeyCommand::arguments() const {
     QStringList result;
 
     if ( key.protocol() == OpenPGP )
-        result << gpgPath() << "--batch";
+        result << gpgPath() << QLatin1String("--batch");
     else
         result << gpgSmPath();
 
-    result << "--output" << m_filename;
+    result << QLatin1String("--output") << m_filename;
 
     if ( m_armor )
-        result << "--armor";
+        result << QLatin1String("--armor");
 
     if ( key.protocol() == CMS && !m_charset.isEmpty() )
-        result << "--p12-charset" << m_charset;
+        result << QLatin1String("--p12-charset") << QLatin1String(m_charset);
 
     if ( key.protocol() == OpenPGP )
-        result << "--export-secret-key";
+        result << QLatin1String("--export-secret-key");
     else
-        result << "--export-secret-key-p12";
+        result << QLatin1String("--export-secret-key-p12");
 
-    result << key.primaryFingerprint();
+    result << QLatin1String(key.primaryFingerprint());
 
     return result;
 }
@@ -134,7 +133,7 @@ QString ExportSecretKeyCommand::crashExitMessage( const QStringList & args ) con
     return i18nc("@info",
                  "<para>The GPG or GpgSM process that tried to export the secret key "
                  "ended prematurely because of an unexpected error.</para>"
-                 "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join( " " ) ) ;
+                 "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join( QLatin1String(" ") ) ) ;
 }
 
 QString ExportSecretKeyCommand::errorExitMessage( const QStringList & args ) const {
@@ -148,4 +147,3 @@ QString ExportSecretKeyCommand::successMessage( const QStringList & ) const {
     return i18nc( "@info", "Secret key successfully exported." );
 }
 
-#include "moc_exportsecretkeycommand.cpp"

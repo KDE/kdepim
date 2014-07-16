@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -33,6 +33,7 @@ public:
 
     void setFlags(const QStringList& list);
     QStringList flags() const;
+
 private:
     enum Type {
         FlagsRealName = Qt::UserRole+1
@@ -65,11 +66,15 @@ public:
     ~SelectFlagsWidget();
 
     QString code() const;
+    void setFlags(const QStringList &flags);
+
+Q_SIGNALS:
+    void valueChanged();
 
 private Q_SLOTS:
     void slotSelectFlags();
+
 private:
-    QString mCode;
     KLineEdit *mEdit;
 };
 }

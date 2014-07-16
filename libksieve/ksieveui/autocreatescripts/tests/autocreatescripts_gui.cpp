@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -21,6 +21,7 @@
 #include <QDebug>
 
 #include "libksieve/ksieveui/autocreatescripts/autocreatescriptdialog.h"
+#include "pimcommon/sievehighlighter/sievesyntaxhighlighterutil.h"
 
 int main (int argc, char **argv)
 {
@@ -28,39 +29,8 @@ int main (int argc, char **argv)
                        "1.0", ki18n("Test for autocreate script dialog"));
     KApplication app;
     KSieveUi::AutoCreateScriptDialog *dialog = new KSieveUi::AutoCreateScriptDialog;
-    QStringList capabilities;
+    QStringList capabilities = PimCommon::SieveSyntaxHighlighterUtil::fullCapabilities();
     //Add all capabilities for testing
-    capabilities
-            <<QLatin1String("body")
-            <<QLatin1String("envelope")
-            <<QLatin1String("redirect")
-            <<QLatin1String("fileinto")
-            <<QLatin1String("editheader")
-            <<QLatin1String("reject")
-            <<QLatin1String("imapflags")
-            <<QLatin1String("enotify")
-            <<QLatin1String("date")
-            <<QLatin1String("copy")
-            <<QLatin1String("mailbox")
-            <<QLatin1String("spamtest")
-            <<QLatin1String("spamtestplus")
-            <<QLatin1String("virustest")
-            <<QLatin1String("vacation")
-            <<QLatin1String("vacation-seconds")
-            <<QLatin1String("ihave")
-            <<QLatin1String("subaddress")
-            <<QLatin1String("environment")
-            <<QLatin1String("imap4flags")
-            <<QLatin1String("enclose")
-            <<QLatin1String("replace")
-            <<QLatin1String("include")
-            <<QLatin1String("extracttext")
-            <<QLatin1String("metadata")
-            <<QLatin1String("convert")
-            <<QLatin1String("foreverypart")
-            <<QLatin1String("variables")
-            <<QLatin1String("servermetadata")
-            <<QLatin1String("comparator-i;ascii-numeric");
     dialog->setSieveCapabilities(capabilities);
     if (dialog->exec() ) {
         QString requires;

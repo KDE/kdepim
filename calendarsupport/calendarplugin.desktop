@@ -124,3 +124,6 @@ Comment[zh_TW]=行事曆外掛程式
 
 [PropertyDef::X-KDE-KOrganizer-HasSettings]
 Type=bool
+
+[PropertyDef::X-KDE-PluginInterfaceVersion]
+Type=int

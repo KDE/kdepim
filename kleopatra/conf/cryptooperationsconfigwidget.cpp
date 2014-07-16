@@ -146,4 +146,3 @@ void CryptoOperationsConfigWidget::save() {
 
 }
 
-#include "moc_cryptooperationsconfigwidget.cpp"

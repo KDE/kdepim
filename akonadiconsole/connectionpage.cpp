@@ -86,4 +86,3 @@ void ConnectionPage::clear()
   mDataView->clear();
 }
 
-#include "connectionpage.moc"

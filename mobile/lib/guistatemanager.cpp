@@ -166,4 +166,3 @@ void GuiStateManager::emitChangedSignal()
   emit guiStateChanged();
 }
 
-#include "guistatemanager.moc"

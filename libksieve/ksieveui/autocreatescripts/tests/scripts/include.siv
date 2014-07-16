@@ -1,0 +1,19 @@
+require "include";
+require "include";
+require "spamtest";
+require "relational";
+require "comparator-i;ascii-numeric";
+require "enclose";
+#Script name: include
+
+include :personal "toto.siv";
+global "global-variable";
+set "test-variable" "25";
+if virustest :value "gt" :comparator "i;ascii-numeric" "5"
+{
+    enclose :subject "toto" :headers "subject" text:
+ text to displaying
+.
+;
+
+}

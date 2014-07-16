@@ -25,37 +25,36 @@ using namespace MailCommon;
 
 FilterAction* FilterActionReplyTo::newAction()
 {
-  return new FilterActionReplyTo;
+    return new FilterActionReplyTo;
 }
 
 FilterActionReplyTo::FilterActionReplyTo( QObject *parent )
-  : FilterActionWithAddress( QLatin1String("set Reply-To"), i18n( "Set Reply-To To" ), parent )
+    : FilterActionWithAddress( QLatin1String("set Reply-To"), i18n( "Set Reply-To To" ), parent )
 {
-  mParameter.clear();
+    mParameter.clear();
 }
 
-FilterAction::ReturnCode FilterActionReplyTo::process( ItemContext &context ) const
+FilterAction::ReturnCode FilterActionReplyTo::process(ItemContext &context , bool) const
 {
-  const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
-  const QByteArray replyTo("Reply-To");
-  KMime::Headers::Base *header = KMime::Headers::createHeader( replyTo );
-  if ( !header ) {
-    header = new KMime::Headers::Generic( replyTo, msg.get(), mParameter, "utf-8" );
-  } else {
-    header->fromUnicodeString( mParameter, "utf-8" );
-  }
-  msg->setHeader( header );
-  msg->assemble();
+    const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
+    const QByteArray replyTo("Reply-To");
+    KMime::Headers::Base *header = KMime::Headers::createHeader( replyTo );
+    if ( !header ) {
+        header = new KMime::Headers::Generic( replyTo, msg.get(), mParameter, "utf-8" );
+    } else {
+        header->fromUnicodeString( mParameter, "utf-8" );
+    }
+    msg->setHeader( header );
+    msg->assemble();
 
-  context.setNeedsPayloadStore();
+    context.setNeedsPayloadStore();
 
-  return GoOn;
+    return GoOn;
 }
 
 SearchRule::RequiredPart FilterActionReplyTo::requiredPart() const
 {
-  return SearchRule::CompleteMessage;
+    return SearchRule::CompleteMessage;
 }
 
 
-#include "filteractionreplyto.moc"

@@ -66,4 +66,3 @@ void MemoryCalendarMemento::detach()
   disconnect( this, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), 0, 0 );
 }
 
-#include "memorycalendarmemento.moc"

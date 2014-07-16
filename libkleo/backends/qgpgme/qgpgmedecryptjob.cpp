@@ -118,4 +118,3 @@ void QGpgMEDecryptJob::resultHook( const result_type & tuple ) {
   mResult = get<0>( tuple );
 }
 
-#include "qgpgmedecryptjob.moc"

@@ -85,4 +85,3 @@ static bool emailMatchesFilter( const KMime::Message::Ptr &message, const QStrin
   return false;
 }
 
-#include "emailsfilterproxymodel.moc"

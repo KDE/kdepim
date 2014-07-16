@@ -33,7 +33,7 @@
 #include "configuration.h"
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QStringList>
 
@@ -51,17 +51,17 @@ static QString gpgconf_unescape( const QString& str )
 static QString gpgconf_escape( const QString& str )
 {
   // Escape special chars (including ':' and '%')
-  QString enc = KUrl::toPercentEncoding( str ); // and convert to utf8 first (to get %12%34 for one special char)
+  QString enc = QLatin1String(KUrl::toPercentEncoding( str )); // and convert to utf8 first (to get %12%34 for one special char)
   // Also encode commas, for lists.
-  enc.replace( ',', "%2c" );
+  enc.replace( QLatin1Char(','), QLatin1String("%2c") );
   return enc;
 }
 
 static QString urlpart_encode( const QString& str )
 {
   QString enc( str );
-  enc.replace( '%', "%25" ); // first!
-  enc.replace( ':', "%3a" );
+  enc.replace( QLatin1Char('%'), QLatin1String("%25") ); // first!
+  enc.replace( QLatin1Char(':'), QLatin1String("%3a") );
   //kDebug() <<"  urlpart_encode:" << str <<" ->" << enc;
   return enc;
 }
@@ -75,17 +75,17 @@ static KUrl parseUrl( ConfigEntry::ArgType argType, const QString& str )
 {
     if ( argType == ConfigEntry::LdapUrl ) {
         // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
-        QStringList items = str.split( ':' );
+        QStringList items = str.split( QLatin1Char(':') );
         if ( items.count() == 5 )
         {
             QStringList::const_iterator it = items.constBegin();
             KUrl url;
-            url.setProtocol( "ldap" );
+            url.setProtocol( QLatin1String("ldap") );
             url.setHost( urlpart_decode( *it++ ) );
             url.setPort( (*it++).toInt() );
-            url.setPath( "/" ); // workaround KUrl parsing bug
-            url.setUser( urlpart_decode( *it++ ) );
-            url.setPass( urlpart_decode( *it++ ) );
+            url.setPath( QLatin1String("/") ); // workaround KUrl parsing bug
+            url.setUserName( urlpart_decode( *it++ ) );
+            url.setPassword( urlpart_decode( *it++ ) );
             url.setQuery( urlpart_decode( *it ) );
             return url;
         }
@@ -102,11 +102,11 @@ static QString splitUrl( ConfigEntry::ArgType argType, const KUrl& url )
 {
     if ( argType == ConfigEntry::LdapUrl ) { // LDAP server
         // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
-        assert( url.protocol() == "ldap" );
-        return urlpart_encode( url.host() ) + ':' +
-            QString::number( url.port() ) + ':' +
-            urlpart_encode( url.user() ) + ':' +
-            urlpart_encode( url.pass() ) + ':' +
+        assert( url.protocol() == QLatin1String("ldap") );
+        return urlpart_encode( url.host() ) + QLatin1Char(':') +
+            QString::number( url.port() ) + QLatin1Char(':') +
+            urlpart_encode( url.userName() ) + QLatin1Char(':') +
+            urlpart_encode( url.password() ) + QLatin1Char(':') +
             // KUrl automatically encoded the query (e.g. for spaces inside it),
             // so decode it before writing it out to gpgconf (issue119)
             urlpart_encode( KUrl::fromPercentEncoding( url.query().mid(1).toLatin1() ) );
@@ -577,7 +577,7 @@ QVariant ConfigEntry::stringToValue( const QString& str, UnescapeMode mode ) con
   const bool unescape = mode & Unescape;
   if ( isList() ) {
     QList<QVariant> lst;
-    const QStringList items = str.split( ',', QString::SkipEmptyParts );
+    const QStringList items = str.split( QLatin1Char(','), QString::SkipEmptyParts );
     for( QStringList::const_iterator valit = items.constBegin(); valit != items.constEnd(); ++valit ) {
       QString val = *valit;
       if ( isString ) {
@@ -586,7 +586,7 @@ QVariant ConfigEntry::stringToValue( const QString& str, UnescapeMode mode ) con
           continue;
         }
         else if ( unescape ) {
-          if( val.startsWith( '"' ) )
+          if( val.startsWith( QLatin1Char('"') ) )
             val = val.mid( 1 );
           else  // see README.gpgconf
             kWarning() << "String value should start with '\"' :" << val;
@@ -601,7 +601,7 @@ QVariant ConfigEntry::stringToValue( const QString& str, UnescapeMode mode ) con
       if ( val.isEmpty() )
         return QVariant( QString() ); // not set  [ok with lists too?]
       else if ( unescape ) {
-        if( val.startsWith( '"' ) )
+        if( val.startsWith( QLatin1Char('"') ) )
           val = val.mid( 1 );
         else // see README.gpgconf
           kWarning() << "String value should start with '\"' :" << val;
@@ -630,11 +630,11 @@ QString ConfigEntry::toString( ConfigEntry::EscapeMode mode ) const
                   if ( escape )
                       *it = gpgconf_escape( *it );
                   if ( quote )
-                      *it = (*it).prepend( '\"' );
+                      *it = (*it).prepend( QLatin1Char('\"') );
               }
         }
       }
-      QString res = lst.join( "," );
+      QString res = lst.join( QLatin1String(",") );
       //kDebug(5150) <<"toString:" << res;
       return res;
     } else { // normal string
@@ -642,7 +642,7 @@ QString ConfigEntry::toString( ConfigEntry::EscapeMode mode ) const
       if ( escape )
           res = gpgconf_escape( res );
       if ( quote )
-          res = res.prepend( '\"' );
+          res = res.prepend( QLatin1Char('\"') );
       return res;
     }
   }
@@ -663,9 +663,10 @@ QString ConfigEntry::toString( ConfigEntry::EscapeMode mode ) const
   }
   QStringList ret;
   QList<QVariant> lst = m_value.toList();
-  for( QList<QVariant>::const_iterator it = lst.constBegin(); it != lst.constEnd(); ++it ) {
+  QList<QVariant>::const_iterator end(lst.constEnd());
+  for( QList<QVariant>::const_iterator it = lst.constBegin(); it != end; ++it ) {
       ret << (*it).toString(); // QVariant does the conversion
   }
-  return ret.join( "," );
+  return ret.join( QLatin1String(",") );
 }
 

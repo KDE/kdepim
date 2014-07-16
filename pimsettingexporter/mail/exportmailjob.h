@@ -20,12 +20,11 @@
 
 #include "abstractimportexportjob.h"
 #include <KSharedConfig>
+
+#include <time.h>
+
 class KUrl;
 class ArchiveStorage;
-
-namespace Akonadi {
-class AgentInstance;
-}
 
 class ExportMailJob : public AbstractImportExportJob
 {
@@ -34,7 +33,6 @@ public:
     ~ExportMailJob();
 
     void start();
-    QString componentName() const;
 
 private:
     KUrl subdirPath(const KUrl &url ) const;
@@ -45,9 +43,7 @@ private:
     void backupConfig();
     void backupIdentity();
     void backupAkonadiDb();
-    void backupNepomuk();
     void writeDirectory(const QString &path, const QString &relativePath, KZip *mailArchive);
-    bool backupMailData(const KUrl &url, const QString &archivePath);
     bool checkProgram();
     time_t mArchiveTime;
 };

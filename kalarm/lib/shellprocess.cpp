@@ -26,7 +26,7 @@
 #include <kdebug.h>
 #include <kauthorized.h>
 
-#include "shellprocess.moc"
+#include "shellprocess.h"
 
 
 QByteArray ShellProcess::mShellName;
@@ -58,8 +58,8 @@ bool ShellProcess::start(OpenMode openMode)
     connect(this, SIGNAL(readyReadStandardOutput()), SLOT(stdoutReady()));
     connect(this, SIGNAL(readyReadStandardError()), SLOT(stderrReady()));
     QStringList args;
-    args << "-c" << mCommand;
-    QProcess::start(shellName(), args, openMode);
+    args << QLatin1String("-c") << mCommand;
+    QProcess::start(QLatin1String(shellName()), args, openMode);
     if (!waitForStarted())
     {
         mStatus = START_FAIL;
@@ -216,10 +216,10 @@ bool ShellProcess::authorised()
 {
     if (!mInitialised)
     {
-        mAuthorised = KAuthorized::authorizeKAction("shell_access");
+        mAuthorised = KAuthorized::authorizeKAction(QLatin1String("shell_access"));
         mInitialised = true;
     }
     return mAuthorised;
 }
-
+#include "moc_shellprocess.cpp"
 // vim: et sw=4:

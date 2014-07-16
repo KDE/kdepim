@@ -29,7 +29,6 @@
 #include <KAction>
 #include <KActionMenu>
 #include <KActionCollection>
-#include <KGenericFactory>
 #include <KLocalizedString>
 #include <KConfigGroup>
 
@@ -145,4 +144,3 @@ void OnlineSyncPluginIface::removeGuiClients( KXMLGUIClient* parent ) {
     parent->removeChildClient( m_impl );
 }
 
-#include "onlinesyncplugin.moc"

@@ -135,14 +135,14 @@ static const struct {
 
 static Key::OwnerTrust map2OwnerTrust( const QString & s ) {
   for ( unsigned int i = 0 ; i < sizeof ownerTrustAndValidityMap / sizeof *ownerTrustAndValidityMap ; ++i )
-    if ( s.toLower() == ownerTrustAndValidityMap[i].name )
+    if ( s.toLower() == QLatin1String(ownerTrustAndValidityMap[i].name) )
       return ownerTrustAndValidityMap[i].trust;
   return ownerTrustAndValidityMap[0].trust;
 }
 
 static UserID::Validity map2Validity( const QString & s ) {
   for ( unsigned int i = 0 ; i < sizeof ownerTrustAndValidityMap / sizeof *ownerTrustAndValidityMap ; ++i )
-    if ( s.toLower() == ownerTrustAndValidityMap[i].name )
+    if ( s.toLower() == QLatin1String(ownerTrustAndValidityMap[i].name) )
       return ownerTrustAndValidityMap[i].validity;
   return ownerTrustAndValidityMap[0].validity;
 }
@@ -228,7 +228,7 @@ KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigGroup & config )
     { "is-at-most-", IsAtMost },
   };
   for ( unsigned int i = 0 ; i < sizeof prefixMap / sizeof *prefixMap ; ++i ) {
-    const QString key = QString( prefixMap[i].prefix ) + "ownertrust";
+    const QString key = QLatin1String( prefixMap[i].prefix ) + QLatin1String("ownertrust");
     if ( config.hasKey( key ) ) {
       mOwnerTrust = prefixMap[i].state;
       mOwnerTrustReferenceLevel = map2OwnerTrust( config.readEntry( key, QString() ) );
@@ -237,7 +237,7 @@ KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigGroup & config )
     }
   }
   for ( unsigned int i = 0 ; i < sizeof prefixMap / sizeof *prefixMap ; ++i ) {
-    const QString key = QString( prefixMap[i].prefix ) + "validity";
+    const QString key = QLatin1String( prefixMap[i].prefix ) + QLatin1String("validity");
     if ( config.hasKey( key ) ) {
       mValidity = prefixMap[i].state;
       mValidityReferenceLevel = map2Validity( config.readEntry( key, QString() ) );
@@ -253,16 +253,16 @@ KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigGroup & config )
       { "appearance", Appearance },
       { "filtering", Filtering },
   };
-  const QStringList contexts = config.readEntry( "match-contexts", "any" ).toLower().split( QRegExp( "[^a-zA-Z0-9_-!]+" ), QString::SkipEmptyParts );
+  const QStringList contexts = config.readEntry( "match-contexts", "any" ).toLower().split( QRegExp( QLatin1String("[^a-zA-Z0-9_-!]+") ), QString::SkipEmptyParts );
   mMatchContexts = NoMatchContext;
   Q_FOREACH( const QString & ctx, contexts ) {
       bool found = false;
       for ( unsigned int i = 0 ; i < sizeof matchMap / sizeof *matchMap ; ++i )
-          if ( ctx == matchMap[i].key ) {
+          if ( ctx == QLatin1String(matchMap[i].key) ) {
               mMatchContexts |= matchMap[i].context;
               found = true;
               break;
-          } else if ( ctx.startsWith( '!' ) && ctx.mid( 1 ) == matchMap[i].key ) {
+          } else if ( ctx.startsWith( QLatin1Char('!') ) && ctx.mid( 1 ) == QLatin1String(matchMap[i].key) ) {
               mMatchContexts &= ~matchMap[i].context;
               found = true;
               break;

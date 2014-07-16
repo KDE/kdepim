@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -21,18 +21,14 @@
 #include "messageviewer/header/headerstrategy.h"
 #include "messageviewer/header/grantleeheaderteststyle.h"
 
-#include <KMime/Message>
 #include <KPushButton>
 #include <KLocale>
 #include <KConfigGroup>
 
 #include <QVBoxLayout>
-#include <QDir>
-#include <QDebug>
 
 PreviewWidget::PreviewWidget(const QString &projectDirectory, QWidget *parent)
-    : QWidget(parent),
-      mPrinting(false)
+    : GrantleeThemeEditor::PreviewWidget(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     mViewer = new MessageViewer::Viewer(this);
@@ -53,19 +49,6 @@ PreviewWidget::PreviewWidget(const QString &projectDirectory, QWidget *parent)
 PreviewWidget::~PreviewWidget()
 {
     delete mGrantleeHeaderStyle;
-}
-
-void PreviewWidget::setPrinting(bool printMode)
-{
-    if (mPrinting != printMode) {
-        mPrinting = printMode;
-        updateViewer();
-    }
-}
-
-bool PreviewWidget::printing() const
-{
-    return mPrinting;
 }
 
 void PreviewWidget::slotExtraHeaderDisplayChanged(const QStringList &headers)
@@ -101,9 +84,9 @@ void PreviewWidget::updateViewer()
     mViewer->setMessage(KMime::Message::Ptr(msg));
 }
 
-void PreviewWidget::createScreenShot(const QString &fileName)
+void PreviewWidget::createScreenShot(const QStringList &fileList)
 {
-    mViewer->saveMainFrameScreenshotInFile(fileName);
+    mViewer->saveMainFrameScreenshotInFile(fileList.at(0));
 }
 
 void PreviewWidget::setThemePath(const QString &projectDirectory, const QString &mainPageFileName)
@@ -113,4 +96,3 @@ void PreviewWidget::setThemePath(const QString &projectDirectory, const QString 
     updateViewer();
 }
 
-#include "previewwidget.moc"

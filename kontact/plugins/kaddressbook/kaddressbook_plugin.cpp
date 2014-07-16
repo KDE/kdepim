@@ -19,6 +19,8 @@
 */
 
 #include "kaddressbook_plugin.h"
+#include "kaddressbook_options.h"
+#include "kaddressbookinterface.h"
 
 #include <KontactInterface/Core>
 
@@ -26,10 +28,11 @@
 #include <KActionCollection>
 #include <KCmdLineArgs>
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QDBusConnection>
 #include <QDBusMessage>
+#include <QDBusReply>
 
 EXPORT_KONTACT_PLUGIN( KAddressBookPlugin, kaddressbook )
 
@@ -157,6 +160,18 @@ QStringList KAddressBookPlugin::invisibleToolbarActions() const
   return actions;
 }
 
+void KAddressBookPlugin::shortcutChanged()
+{
+  KParts::ReadOnlyPart *localPart = part();
+  if ( localPart ) {
+    if ( localPart->metaObject()->indexOfMethod( "updateQuickSearchText()" ) == -1 ) {
+      kWarning() << "KAddressBook part is missing slot updateQuickSearchText()";
+      return;
+    }
+    QMetaObject::invokeMethod( localPart, "updateQuickSearchText" );
+  }
+}
+
 void KAddressBookPlugin::slotSyncContacts()
 {
 #if 0
@@ -173,7 +188,7 @@ void KAddressBookPlugin::slotSyncContacts()
 
 void KAddressBookUniqueAppHandler::loadCommandLineOptions()
 {
-  KCmdLineArgs::addCmdLineOptions( KCmdLineOptions() );
+  KCmdLineArgs::addCmdLineOptions( kaddressbook_options() );
 }
 
 int KAddressBookUniqueAppHandler::newInstance()
@@ -181,8 +196,9 @@ int KAddressBookUniqueAppHandler::newInstance()
     kDebug() ;
     // Ensure part is loaded
     (void)plugin()->part();
+    org::kde::kaddressbook kaddressbook( QLatin1String("org.kde.kaddressbook"), QLatin1String("/KAddressBook"), QDBusConnection::sessionBus() );
+    QDBusReply<bool> reply = kaddressbook.handleCommandLine();
     return KontactInterface::UniqueAppHandler::newInstance();
 }
 
 
-#include "kaddressbook_plugin.moc"

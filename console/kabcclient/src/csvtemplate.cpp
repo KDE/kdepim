@@ -64,7 +64,7 @@ CSVTemplate::CSVTemplate(KConfigBase* config) : m_columns(0)
     KConfigGroup general = config->group("General");
 
     m_datePattern = general.readEntry("DatePattern");
-    if (m_datePattern.isEmpty()) m_datePattern = "Y-M-D";
+    if (m_datePattern.isEmpty()) m_datePattern = QLatin1String("Y-M-D");
     createDateFormat();
 
     m_columns = general.readEntry("Columns", 0);
@@ -73,15 +73,15 @@ CSVTemplate::CSVTemplate(KConfigBase* config) : m_columns(0)
     switch (general.readEntry("DelimiterType", 0))
     {
         case 1:
-            m_delimiter = ";";
+            m_delimiter = QLatin1String(";");
             break;
 
         case 2:
-            m_delimiter = "\t";
+            m_delimiter = QLatin1String("\t");
             break;
 
         case 3:
-            m_delimiter = " ";
+            m_delimiter = QLatin1String(" ");
             break;
 
         case 4:
@@ -89,21 +89,21 @@ CSVTemplate::CSVTemplate(KConfigBase* config) : m_columns(0)
             break;
 
         default:
-            m_delimiter = ",";
+            m_delimiter = QLatin1String(",");
     }
-    if (m_delimiter.isEmpty()) m_delimiter = ",";
+    if (m_delimiter.isEmpty()) m_delimiter = QLatin1String(",");
 
     switch (general.readEntry("QuoteType", 0))
     {
         case 1:
-            m_quote = "'";
+            m_quote = QLatin1String("'");
             break;
 
         case 2:
             break;
 
         default:
-            m_quote = "\"";
+            m_quote = QLatin1String("\"");
             break;
     }
 }
@@ -268,7 +268,7 @@ void CSVTemplate::setFieldText(int column, KABC::Addressee& addressee, const QSt
         case  0: // "Formatted Name"
             addressee.setFormattedName(text);
             break;
-        case  1: // "Family Name"
+	case  1: // "Family Name"
             addressee.setFamilyName(text);
             break;
         case  2: // "Given Name"
@@ -430,10 +430,10 @@ CSVTemplate* CSVTemplate::defaultTemplate()
 {
     if (m_defaultTemplate == 0)
     {
-        m_defaultTemplate = new CSVTemplate("Y-M-D");
+        m_defaultTemplate = new CSVTemplate(QLatin1String("Y-M-D"));
 
-        m_defaultTemplate->m_quote     = "\"";
-        m_defaultTemplate->m_delimiter = ",";
+        m_defaultTemplate->m_quote     = QLatin1String("\"");
+        m_defaultTemplate->m_delimiter = QLatin1String(",");
 
         m_defaultTemplate->m_columns   = 42;
         for (int i = 0; i < m_defaultTemplate->m_columns; ++i)
@@ -447,7 +447,7 @@ CSVTemplate* CSVTemplate::defaultTemplate()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-CSVTemplate::CSVTemplate(const QString& datePattern)
+CSVTemplate::CSVTemplate(const QString& datePattern) : m_columns(0)
 {
     m_datePattern = datePattern;
     createDateFormat();
@@ -554,7 +554,7 @@ QDateTime CSVTemplate::parseDate(const QString& text) const
                 break;
 
             default:
-                ok = QChar(pattern[i]) == text[pos];
+                ok = QLatin1Char(pattern[i]) == text[pos];
                 pos++;
                 break;
         }
@@ -578,27 +578,27 @@ void CSVTemplate::createDateFormat()
         switch (datePattern[i])
         {
             case 'Y':
-                m_dateFormat.append("yyyy");
+                m_dateFormat.append(QLatin1String("yyyy"));
                 break;
 
             case 'y':
-                m_dateFormat.append("yy");
+                m_dateFormat.append(QLatin1String("yy"));
                 break;
 
             case 'M':
-                m_dateFormat.append("MM");
+                m_dateFormat.append(QLatin1String("MM"));
                 break;
 
             case 'm':
-                m_dateFormat.append("m");
+                m_dateFormat.append(QLatin1String("m"));
                 break;
 
             case 'D':
-                m_dateFormat.append("dd");
+                m_dateFormat.append(QLatin1String("dd"));
                 break;
 
             case 'd':
-                m_dateFormat.append("d");
+                m_dateFormat.append(QLatin1String("d"));
                 break;
 
             default:

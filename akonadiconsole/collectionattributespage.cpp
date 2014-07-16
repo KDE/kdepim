@@ -113,4 +113,3 @@ void CollectionAttributePage::attributeChanged( QStandardItem *item )
   mChanged.insert( attr );
 }
 
-#include "collectionattributespage.moc"

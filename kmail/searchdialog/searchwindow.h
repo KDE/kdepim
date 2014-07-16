@@ -32,31 +32,25 @@
 
 #include <QtCore/QTimer>
 
-class QCheckBox;
 class QCloseEvent;
 class QKeyEvent;
-class QLabel;
-class QRadioButton;
 class KActionMenu;
 class KJob;
-class KLineEdit;
 class KMMainWidget;
 class KMSearchMessageModel;
 class QAbstractItemModel;
 class QModelIndex;
+
+namespace PimCommon {
+class SelectMultiCollectionDialog;
+}
+
 namespace Akonadi {
-class EntityTreeView;
-class ItemModel;
 class StandardMailActionManager;
 }
 
 namespace KMime {
 class Message;
-}
-
-namespace MailCommon {
-class FolderRequester;
-class SearchPatternEdit;
 }
 
 namespace KMail {
@@ -67,7 +61,8 @@ namespace KMail {
    * results in a listview and allows triggering of operations such as printing
    * or moving on them.
    */
-class SearchWindow: public KDialog, virtual public KXMLGUIClient
+class SearchPatternWarning;
+class SearchWindow: public KDialog, public KXMLGUIClient
 {
     Q_OBJECT
 
@@ -108,11 +103,6 @@ public:
     Akonadi::Item selectedMessage() const;
 
     /**
-     * Loads a search pattern into the search window, replacing the current one.
-     */
-    void setSearchPattern( const MailCommon::SearchPattern &pattern );
-
-    /**
      * Loads a search pattern into the search window, appending its rules to the current one.
      */
     void addRulesToSearchPattern( const MailCommon::SearchPattern &pattern );
@@ -126,12 +116,8 @@ protected:
 
     void createSearchModel();
 
-    void childCollectionsFromSelectedCollection( const Akonadi::Collection& collection, KUrl::List &list );
-    void getChildren( const QAbstractItemModel *model, const QModelIndex &parentIndex, KUrl::List &list );
-
-
 private Q_SLOTS:
-    void updateCollectionStatistic(Akonadi::Collection::Id,Akonadi::CollectionStatistics);
+    void updateCollectionStatistic(Akonadi::Collection::Id, const Akonadi::CollectionStatistics &);
 
     void slotClose();
     void slotSearch();
@@ -139,9 +125,8 @@ private Q_SLOTS:
     void scheduleRename( const QString& );
     void renameSearchFolder();
     void openSearchFolder();
-    bool slotShowMsg( const Akonadi::Item& );
     void slotViewSelectedMsg();
-    bool slotViewMsg( const Akonadi::Item& );
+    void slotViewMsg( const Akonadi::Item& );
     void slotCurrentChanged( const Akonadi::Item& );
     void updateContextMenuActions();
     void slotFolderActivated();
@@ -163,8 +148,15 @@ private Q_SLOTS:
     void slotSearchFolderRenameDone( KJob* );
 
     void slotContextMenuRequested( const QPoint& );
+    void slotSelectMultipleFolders();
+
+    void slotSearchCollectionsFetched( KJob *job );
 
 private:
+    void doSearch();
+    QPointer<PimCommon::SelectMultiCollectionDialog> mSelectMultiCollectionDialog;
+    QList<Akonadi::Collection> mCollectionId;
+    Akonadi::SearchQuery mQuery;
     bool mCloseRequested;
     int mSortColumn;
     Qt::SortOrder mSortOrder;
@@ -186,6 +178,7 @@ private:
     // not owned by us
     KMMainWidget* mKMMainWidget;
     MailCommon::SearchPattern mSearchPattern;
+    SearchPatternWarning *mSearchPatternWidget;
 
     Akonadi::StandardMailActionManager *mAkonadiStandardAction;
 };

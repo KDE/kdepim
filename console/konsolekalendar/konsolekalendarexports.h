@@ -64,7 +64,7 @@ class KonsoleKalendarExports
      * @param event pointer to the Event to export.
      * @param date is the QDate to be exported for.
      */
-    bool exportAsTxt( QTextStream *ts, Event *event, const QDate &date );
+    bool exportAsTxt( QTextStream *ts, const KCalCore::Event::Ptr &event, const QDate &date );
 
     /**
      * Export the Event in Short Text Mode.
@@ -74,7 +74,7 @@ class KonsoleKalendarExports
      * @param sameday flags that this Event is on the same date as the
      * previously exported Event.
      */
-    bool exportAsTxtShort( QTextStream *ts, Event *event, const QDate &date,
+    bool exportAsTxtShort( QTextStream *ts, const KCalCore::Event::Ptr &event, const QDate &date,
                            bool sameday );
 
     /**
@@ -83,7 +83,7 @@ class KonsoleKalendarExports
      * @param event pointer to the Event to export.
      * @param date is the QDate to be exported for.
      */
-    bool exportAsCSV( QTextStream *ts, Event *event, const QDate &date );
+    bool exportAsCSV( QTextStream *ts, const KCalCore::Event::Ptr &event, const QDate &date );
 
   private:
     //@cond PRIVATE

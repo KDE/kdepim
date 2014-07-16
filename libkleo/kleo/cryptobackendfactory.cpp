@@ -71,7 +71,7 @@ Kleo::CryptoBackendFactory::CryptoBackendFactory()
     mConfigObject( 0 ),
     mAvailableProtocols( availableProtocols, availableProtocols + numAvailableProtocols )
 {
-  setObjectName("CryptoBackendFactory::instance()");
+  setObjectName(QLatin1String("CryptoBackendFactory::instance()"));
    mBackendList.push_back( new QGpgMEBackend() );
 #if 0 // disabled for kde-3.3
   mBackendList.push_back( new PGP2Backend() );
@@ -170,8 +170,8 @@ void Kleo::CryptoBackendFactory::scanForBackends( QStringList * reasons ) {
       if ( (*it)->supportsProtocol( protocol ) && !(*it)->checkForProtocol( protocol, &reason ) ) {
         if ( reasons ) {
           reasons->push_back( i18n("While scanning for %1 support in backend %2:",
-                                   protocol, (*it)->displayName() ) );
-          reasons->push_back( "  " + reason );
+                                   QLatin1String(protocol), (*it)->displayName() ) );
+          reasons->push_back( QLatin1String("  ") + reason );
         }
       }
     }
@@ -193,7 +193,7 @@ const Kleo::CryptoBackend * Kleo::CryptoBackendFactory::backendByName( const QSt
 KConfig* Kleo::CryptoBackendFactory::configObject() const {
   if ( !mConfigObject )
     // this is unsafe. We're a lib, used by concurrent apps.
-    mConfigObject = new KConfig( "libkleopatrarc" );
+    mConfigObject = new KConfig( QLatin1String("libkleopatrarc") );
   return mConfigObject;
 }
 
@@ -285,4 +285,3 @@ bool Kleo::CryptoBackendFactory::knowsAboutProtocol( const char * name ) const {
                     CaseInsensitiveString( name ) ) != mAvailableProtocols.end();
 }
 
-#include "cryptobackendfactory.moc"

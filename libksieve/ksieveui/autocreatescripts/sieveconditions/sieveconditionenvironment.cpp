@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,15 +16,18 @@
 */
 
 #include "sieveconditionenvironment.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
+#include "editor/sieveeditorutil.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QWidget>
-#include <QHBoxLayout>
 #include <QLabel>
 #include <QCompleter>
 #include <QDebug>
+#include <QDomNode>
+#include <QGridLayout>
 
 using namespace KSieveUi;
 SieveConditionEnvironment::SieveConditionEnvironment(QObject *parent)
@@ -40,11 +43,11 @@ SieveCondition *SieveConditionEnvironment::newAction()
 QWidget *SieveConditionEnvironment::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
-    QHBoxLayout *lay = new QHBoxLayout;
-    lay->setMargin(0);
-    w->setLayout(lay);
+    QGridLayout *grid = new QGridLayout;
+    grid->setMargin(0);
+    w->setLayout(grid);
     QLabel *lab = new QLabel(i18n("Item:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 0, 0);
 
     KLineEdit *item = new KLineEdit;
     QStringList itemList;
@@ -59,16 +62,18 @@ QWidget *SieveConditionEnvironment::createParamWidget( QWidget *parent ) const
     QCompleter *completer = new QCompleter(itemList, w);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     item->setCompleter(completer);
+    connect(item, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
 
     item->setObjectName(QLatin1String("item"));
-    lay->addWidget(item);
+    grid->addWidget(item, 0, 1);
 
     lab = new QLabel(i18n("Value:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 1, 0);
 
     KLineEdit *value = new KLineEdit;
+    connect(value, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     value->setObjectName(QLatin1String("value"));
-    lay->addWidget(value);
+    grid->addWidget(value, 1, 1);
 
     return w;
 }
@@ -104,4 +109,43 @@ QString SieveConditionEnvironment::help() const
     return i18n("The environment test retrieves the item of environment information specified by the name string and matches it to the values specified in the key-list argument.");
 }
 
-#include "sieveconditionenvironment.moc"
+bool SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/ , QString &error)
+{
+    QDomNode node = element.firstChild();
+    int index = 0;
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                if (index == 0) {
+                    KLineEdit *item =  w->findChild<KLineEdit*>( QLatin1String("item") );
+                    item->setText(AutoCreateScriptUtil::quoteStr(e.text()));
+                } else if (index == 1) {
+                    KLineEdit *value =  w->findChild<KLineEdit*>( QLatin1String("value") );
+                    value->setText(AutoCreateScriptUtil::quoteStr(e.text()));
+                } else {
+                    tooManyArgument(tagName, index, 2, error);
+                    qDebug()<<" SieveConditionEnvironment::setParamWidgetValue to many argument "<<index;
+                }
+                ++index;
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
+            } else {
+                unknownTag(tagName, error);
+                qDebug()<<" SieveActionSetVariable::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+    return true;
+}
+
+
+
+QString KSieveUi::SieveConditionEnvironment::href() const
+{
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
+}

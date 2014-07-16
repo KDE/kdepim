@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -21,8 +21,6 @@
 #include "themeconfiguredialog.h"
 #include "managethemes.h"
 
-#include <KTemporaryFile>
-#include <KTempDir>
 #include <KStandardAction>
 #include <KApplication>
 #include <KAction>
@@ -33,6 +31,7 @@
 #include <KFileDialog>
 #include <KDebug>
 #include <KStandardDirs>
+#include <KRecentFilesAction>
 #include <KNS3/KNewStuffAction>
 
 #include <QPointer>
@@ -46,7 +45,6 @@ ThemeEditorMainWindow::ThemeEditorMainWindow()
     setupActions();
     setupGUI();
     updateActions();
-    updateActions();
     readConfig();
 }
 
@@ -56,17 +54,16 @@ ThemeEditorMainWindow::~ThemeEditorMainWindow()
 
     KConfigGroup group = config->group( QLatin1String("ThemeEditorMainWindow") );
     group.writeEntry( "Size", size() );
+    mRecentFileAction->saveEntries(group);
 }
 
 void ThemeEditorMainWindow::readConfig()
 {
     KSharedConfig::Ptr config = KGlobal::config();
     KConfigGroup group = KConfigGroup( config, "ThemeEditorMainWindow" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
-    } else {
-        resize( 600,400);
     }
 }
 
@@ -82,10 +79,18 @@ void ThemeEditorMainWindow::updateActions()
     mPrintingMode->setEnabled(projectDirectoryIsEmpty);
     mNormalMode->setEnabled(projectDirectoryIsEmpty);
     mUpdateView->setEnabled(projectDirectoryIsEmpty);
+    mSaveAsAction->setEnabled(projectDirectoryIsEmpty);
 }
 
 void ThemeEditorMainWindow::setupActions()
 {
+    mRecentFileAction = new KRecentFilesAction(i18n("Load Recent Theme..."), this);
+    connect(mRecentFileAction, SIGNAL(urlSelected(KUrl)), this, SLOT(slotThemeSelected(KUrl)));
+    actionCollection()->addAction( QLatin1String( "load_recent_theme" ), mRecentFileAction );
+    KSharedConfig::Ptr config = KGlobal::config();
+    KConfigGroup groupConfig = config->group( QLatin1String("ThemeEditorMainWindow") );
+    mRecentFileAction->loadEntries(groupConfig);
+
     mAddExtraPage = new KAction(i18n("Add Extra Page..."), this);
     connect(mAddExtraPage, SIGNAL(triggered(bool)),SLOT(slotAddExtraPage()));
     actionCollection()->addAction( QLatin1String( "add_extra_page" ), mAddExtraPage );
@@ -99,6 +104,9 @@ void ThemeEditorMainWindow::setupActions()
     mOpenAction->setText(i18n("Open theme..."));
     mSaveAction = KStandardAction::save(this, SLOT(slotSaveTheme()), actionCollection());
     mSaveAction->setText(i18n("Save theme..."));
+
+    mSaveAsAction = KStandardAction::saveAs(this, SLOT(slotSaveAsTheme()), actionCollection());
+    mSaveAsAction->setText(i18n("Save theme as..."));
 
     mCloseAction = KStandardAction::close( this, SLOT(slotCloseTheme()), actionCollection());
     KStandardAction::quit(this, SLOT(slotQuitApp()), actionCollection() );
@@ -137,7 +145,7 @@ void ThemeEditorMainWindow::setupActions()
 
 void ThemeEditorMainWindow::slotManageTheme()
 {
-    QPointer<ManageThemes> dialog = new ManageThemes(this);
+    QPointer<GrantleeThemeEditor::ManageThemes> dialog = new GrantleeThemeEditor::ManageThemes(QLatin1String("messageviewer/themes/"), this);
     dialog->exec();
     delete dialog;
 }
@@ -187,36 +195,51 @@ void ThemeEditorMainWindow::slotUploadTheme()
 bool ThemeEditorMainWindow::slotSaveTheme()
 {
     bool result = false;
-    if (mThemeEditor)
+    if (mThemeEditor) {
         result = mThemeEditor->saveTheme(false);
+        mSaveAction->setEnabled(!result);
+    }
     return result;
 }
 
 void ThemeEditorMainWindow::slotCloseTheme()
 {
-    saveCurrentProject(false);
+    saveCurrentProject(SaveAndCloseTheme);
 }
 
 void ThemeEditorMainWindow::slotOpenTheme()
 {
-    if (!saveCurrentProject(false))
+    if (!saveCurrentProject(SaveOnly))
         return;
 
     const QString directory = KFileDialog::getExistingDirectory(KUrl( "kfiledialog:///OpenTheme" ), this, i18n("Select theme directory"));
+    if (directory.isEmpty()) {
+        return;
+    }
+    closeThemeEditor();
+    if (loadTheme(directory))
+        mRecentFileAction->addUrl(KUrl(directory));
+    mSaveAction->setEnabled(false);
+}
+
+bool ThemeEditorMainWindow::loadTheme(const QString &directory)
+{
     if (!directory.isEmpty()) {
         const QString filename = directory + QDir::separator() + QLatin1String("theme.themerc");
         QFile file(filename);
         if (!file.exists()) {
-            KMessageBox::error(this, i18n("Directory does not contain a theme file. We can not load theme."));
-            return;
+            KMessageBox::error(this, i18n("Directory does not contain a theme file. We cannot load theme."));
+            return false;
         }
 
         mThemeEditor = new ThemeEditorPage(QString(), QString());
         connect(mThemeEditor, SIGNAL(changed(bool)), mSaveAction, SLOT(setEnabled(bool)));
+        connect(mThemeEditor, SIGNAL(canInsertFile(bool)), this, SLOT(slotCanInsertFile(bool)));
         mThemeEditor->loadTheme(filename);
         setCentralWidget(mThemeEditor);
         updateActions();
     }
+    return true;
 }
 
 void ThemeEditorMainWindow::slotAddExtraPage()
@@ -225,16 +248,32 @@ void ThemeEditorMainWindow::slotAddExtraPage()
         mThemeEditor->addExtraPage();
 }
 
-bool ThemeEditorMainWindow::saveCurrentProject(bool createNewTheme)
+void ThemeEditorMainWindow::closeThemeEditor()
+{
+    delete mThemeEditor;
+    mThemeEditor = 0;
+    setCentralWidget(0);
+    updateActions();
+}
+
+bool ThemeEditorMainWindow::saveCurrentProject(ActionSaveTheme act)
 {
     if (mThemeEditor) {
-        if (!mThemeEditor->saveTheme())
+        if (!mThemeEditor->saveTheme()) {
             return false;
+        }
     }
-    if (createNewTheme) {
+    switch(act) {
+    case SaveOnly:
+        break;
+    case SaveAndCloseTheme: {
+        closeThemeEditor();
+        break;
+    }
+    case SaveAndCreateNewTheme: {
         delete mThemeEditor;
         mThemeEditor = 0;
-        QPointer<NewThemeDialog> dialog = new NewThemeDialog(this);
+        QPointer<GrantleeThemeEditor::NewThemeDialog> dialog = new GrantleeThemeEditor::NewThemeDialog(this);
         QString newTheme;
         QString projectDirectory;
         if (dialog->exec()) {
@@ -242,31 +281,31 @@ bool ThemeEditorMainWindow::saveCurrentProject(bool createNewTheme)
             projectDirectory = dialog->directory();
         }
         if (!projectDirectory.isEmpty()) {
+            mRecentFileAction->addUrl(KUrl(projectDirectory));
             mThemeEditor = new ThemeEditorPage(projectDirectory, newTheme);
             connect(mThemeEditor, SIGNAL(changed(bool)), mSaveAction, SLOT(setEnabled(bool)));
+            connect(mThemeEditor, SIGNAL(canInsertFile(bool)), this, SLOT(slotCanInsertFile(bool)));
             setCentralWidget(mThemeEditor);
         } else {
             setCentralWidget(0);
         }
         delete dialog;
         updateActions();
-    } else {
-        delete mThemeEditor;
-        mThemeEditor = 0;
-        setCentralWidget(0);
-        updateActions();
+        break;
     }
+    }
+
     return true;
 }
 
 void ThemeEditorMainWindow::slotNewTheme()
 {
-    saveCurrentProject(true);
+    saveCurrentProject(SaveAndCreateNewTheme);
 }
 
 void ThemeEditorMainWindow::closeEvent(QCloseEvent *e)
 {
-    if (!saveCurrentProject(false))
+    if (!saveCurrentProject(SaveAndCloseTheme))
         e->ignore();
     else
         e->accept();
@@ -274,7 +313,7 @@ void ThemeEditorMainWindow::closeEvent(QCloseEvent *e)
 
 void ThemeEditorMainWindow::slotQuitApp()
 {
-    if (saveCurrentProject(false))
+    if (saveCurrentProject(SaveAndCloseTheme))
         kapp->quit();
 }
 
@@ -286,4 +325,25 @@ void ThemeEditorMainWindow::slotUpdateView()
     }
 }
 
-#include "themeeditormainwindow.moc"
+void ThemeEditorMainWindow::slotCanInsertFile(bool b)
+{
+    mInsertFile->setEnabled(b);
+}
+
+void ThemeEditorMainWindow::slotThemeSelected(const KUrl &url)
+{
+    if (!saveCurrentProject(SaveAndCloseTheme))
+        return;
+    loadTheme(url.path());
+    mSaveAction->setEnabled(false);
+}
+
+void ThemeEditorMainWindow::slotSaveAsTheme()
+{
+    const QString directory = KFileDialog::getExistingDirectory(KUrl( "kfiledialog:///SaveTheme" ), this, i18n("Select theme directory"));
+    if (!directory.isEmpty()) {
+        if (mThemeEditor)
+            mThemeEditor->saveThemeAs(directory);
+    }
+}
+

@@ -500,4 +500,3 @@ void View::hideExternalNotification()
 } // namespace Composer
 } // namespace KNode
 
-#include "kncomposerview.moc"

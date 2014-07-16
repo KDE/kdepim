@@ -40,7 +40,7 @@
 #endif
 
 #include <KDebug>
-#include <KLocale> // i18n
+#include <KLocalizedString> // i18n
 #include <KIconLoader> // SmallIcon
 
 #include <QDrag>
@@ -197,7 +197,7 @@ void IdentityListView::startDrag ( Qt::DropActions /*supportedActions*/ )
     QMimeData *md = new QMimeData;
     drag->setMimeData( md );
     item->identity().populateMimeData( md );
-    drag->setPixmap( SmallIcon("user-identity") );
+    drag->setPixmap( SmallIcon(QLatin1String("user-identity")) );
     drag->start();
 }
 #endif
@@ -216,4 +216,3 @@ void IdentityListView::setIdentityManager(KPIMIdentities::IdentityManager* im)
 } // namespace KMail
 
 
-#include "identitylistview.moc"

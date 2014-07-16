@@ -33,14 +33,14 @@ namespace Backend {
 
 Storage* StorageFactoryMK4Impl::createStorage(const QStringList& params) const
 {
- 	Storage* storage = new StorageMK4Impl;
-	storage->initialize(params);
-	return storage;
+        Storage* storage = new StorageMK4Impl;
+        storage->initialize(params);
+        return storage;
 }
 
 QString StorageFactoryMK4Impl::key() const
 {
-    return "metakit";
+    return QLatin1String("metakit");
 }
 
 QString StorageFactoryMK4Impl::name() const

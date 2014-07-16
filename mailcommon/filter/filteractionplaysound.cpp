@@ -19,11 +19,9 @@
 
 #include "filteractionplaysound.h"
 
-#include "filteractionmissingargumentdialog.h"
+#include "dialog/filteractionmissingargumentdialog.h"
 
-#ifndef Q_OS_WINCE
 #include <phonon/mediaobject.h>
-#endif
 
 #include <KDE/KLocale>
 
@@ -33,39 +31,33 @@
 using namespace MailCommon;
 
 FilterActionPlaySound::FilterActionPlaySound( )
-  : FilterActionWithTest( QLatin1String("play sound"), i18n( "Play Sound" ) )
-#ifndef Q_OS_WINCE
-  , mPlayer( 0 )
-#endif
+    : FilterActionWithTest( QLatin1String("play sound"), i18n( "Play Sound" ) )
+    , mPlayer( 0 )
 {
 }
 
 FilterActionPlaySound::~FilterActionPlaySound()
 {
-#ifndef Q_OS_WINCE
-  delete mPlayer;
-#endif
+    delete mPlayer;
 }
 
 FilterAction* FilterActionPlaySound::newAction()
 {
-  return new FilterActionPlaySound();
+    return new FilterActionPlaySound();
 }
 
-FilterAction::ReturnCode FilterActionPlaySound::process( ItemContext& ) const
+FilterAction::ReturnCode FilterActionPlaySound::process(ItemContext& , bool) const
 {
-  if ( mParameter.isEmpty() )
-    return ErrorButGoOn;
+    if ( mParameter.isEmpty() )
+        return ErrorButGoOn;
 
-#ifndef Q_OS_WINCE
-  if ( !mPlayer )
-    mPlayer = Phonon::createPlayer( Phonon::NotificationCategory );
+    if ( !mPlayer )
+        mPlayer = Phonon::createPlayer( Phonon::NotificationCategory );
 
-  mPlayer->setCurrentSource( mParameter );
-  mPlayer->play();
-#endif
+    mPlayer->setCurrentSource( mParameter );
+    mPlayer->play();
 
-  return GoOn;
+    return GoOn;
 }
 
 SearchRule::RequiredPart FilterActionPlaySound::requiredPart() const
@@ -76,17 +68,16 @@ SearchRule::RequiredPart FilterActionPlaySound::requiredPart() const
 
 bool FilterActionPlaySound::argsFromStringInteractive( const QString &argsStr, const QString &filterName )
 {
-  bool needUpdate = false;
-  argsFromString( argsStr );
-  if (!QFile(mParameter).exists()){
-      QPointer<FilterActionMissingSoundUrlDialog> dlg = new FilterActionMissingSoundUrlDialog( filterName, argsStr );
-      if ( dlg->exec() ) {
-        mParameter = dlg->soundUrl();
-        needUpdate = true;
-      }
-      delete dlg;
-  }
-  return needUpdate;
+    bool needUpdate = false;
+    argsFromString( argsStr );
+    if (!QFile(mParameter).exists()){
+        QPointer<FilterActionMissingSoundUrlDialog> dlg = new FilterActionMissingSoundUrlDialog( filterName, argsStr );
+        if ( dlg->exec() ) {
+            mParameter = dlg->soundUrl();
+            needUpdate = true;
+        }
+        delete dlg;
+    }
+    return needUpdate;
 }
 
-#include "filteractionplaysound.moc"

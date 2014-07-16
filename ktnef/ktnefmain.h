@@ -15,12 +15,14 @@
 */
 
 #ifndef KTNEFMAIN_H
-#define	KTNEFMAIN_H
+#define KTNEFMAIN_H
 
 #include <KXmlGuiWindow>
 
 class QContextMenuEvent;
 class QTreeWidgetItem;
+class KRecentFilesAction;
+class KUrl;
 
 namespace KTnef {
   class KTNEFParser;
@@ -63,11 +65,13 @@ class KTNEFMain : public KXmlGuiWindow
     void viewDoubleClicked( QTreeWidgetItem * );
     void viewDragRequested( const QList<KTNEFAttach *> &list );
     void slotConfigureKeys();
+    void openRecentFile(const KUrl&);
 
 //  protected:
 //    void closeEvent( QCloseEvent *e );
 
   private:
+    void addRecentFile(const KUrl &url);
     void setupStatusbar();
     void setupActions();
     void setupTNEF();
@@ -84,6 +88,7 @@ class KTNEFMain : public KXmlGuiWindow
     QString mFilename;
     QString mDefaultDir;
     QString mLastDir;
+    KRecentFilesAction *mOpenRecentFileAction;
 };
 
 #endif

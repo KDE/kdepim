@@ -36,9 +36,7 @@
 
 #include <KABC/Addressee>
 
-#ifndef Q_OS_WINCE
 #include <phonon/mediaobject.h>
-#endif
 
 #include <QtCore/QBuffer>
 #include <QtCore/QSignalMapper>
@@ -129,7 +127,7 @@ class EditorMore::Private
       dlg.setSelected( mCategories );
       if ( dlg.exec() ) {
         mCategories = dlg.selectedCategories();
-        mCategoriesPage.categoriesEdit->setText( mCategories.join( ", " ) );
+        mCategoriesPage.categoriesEdit->setText( mCategories.join( QLatin1String(", ") ) );
       }
     }
 
@@ -138,8 +136,6 @@ class EditorMore::Private
       if ( mContact.sound().data().isEmpty() )
         return;
 
-    // No phonon on WinCE (yet)
-#ifndef Q_OS_WINCE
       Phonon::MediaObject* player = Phonon::createPlayer( Phonon::NotificationCategory );
       QBuffer* soundData = new QBuffer( player );
       soundData->setData( mContact.sound().data() );
@@ -147,7 +143,6 @@ class EditorMore::Private
       player->setParent( q );
       connect( player, SIGNAL(finished()), player, SLOT(deleteLater()) );
       player->play();
-#endif
     }
 
     void addCustomField()
@@ -260,7 +255,7 @@ void EditorMore::loadContact( const KABC::Addressee &contact, const Akonadi::Con
 
   // categories page
   d->mCategories = contact.categories();
-  d->mCategoriesPage.categoriesEdit->setText( d->mCategories.join( ", " ) );
+  d->mCategoriesPage.categoriesEdit->setText( d->mCategories.join( QLatin1String(", ") ) );
 }
 
 void EditorMore::loadCustomFields( const KABC::Addressee &contact, const Akonadi::ContactMetaData &metaData )
@@ -453,4 +448,4 @@ void EditorMore::updateName( const KABC::Addressee &contact )
   blockSignals( false );
 }
 
-#include "editormore.moc"
+#include "moc_editormore.cpp"

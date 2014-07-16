@@ -42,7 +42,7 @@
 #include "pimcommon/widgets/simplestringlisteditor.h"
 #include "folderrequester.h"
 #ifndef KCM_KPIMIDENTITIES_STANDALONE
-#include "globalsettings.h"
+#include "settings/globalsettings.h"
 #include "kmkernel.h"
 #endif
 
@@ -59,7 +59,7 @@
 #include <kpimidentities/identity.h>
 #include <kpimidentities/signatureconfigurator.h>
 
-#include "messagecomposer/autocorrection/composerautocorrectionlanguage.h"
+#include "pimcommon/autocorrection/autocorrectionlanguage.h"
 
 #include <libkdepim/addressline/addresseelineedit.h>
 // libkleopatra:
@@ -118,10 +118,6 @@ IdentityDialog::IdentityDialog( QWidget * parent )
 #endif
     setDefaultButton( Ok );
 
-#ifdef Q_OS_WINCE
-    setWindowState( Qt::WindowFullScreen );
-#endif
-
     // tmp. vars:
     QWidget * tab;
     QLabel  * label;
@@ -139,7 +135,7 @@ IdentityDialog::IdentityDialog( QWidget * parent )
     vlay->setSpacing( spacingHint() );
     vlay->setMargin( 0 );
     mTabWidget = new KTabWidget( page );
-    mTabWidget->setObjectName( "config-identity-tab" );
+    mTabWidget->setObjectName( QLatin1String("config-identity-tab") );
     vlay->addWidget( mTabWidget );
 
     tab = new QWidget( mTabWidget );
@@ -201,7 +197,7 @@ IdentityDialog::IdentityDialog( QWidget * parent )
     KPIMUtils::EmailValidator* emailValidator = new KPIMUtils::EmailValidator( this );
     mEmailEdit->setValidator( emailValidator );
 
-    // "Email Aliases" stsring text edit and label:
+    // "Email Aliases" string text edit and label:
     ++row;
     mAliasEdit = new PimCommon::SimpleStringListEditor( tab );
     glay->addWidget( mAliasEdit, row, 1 );
@@ -354,6 +350,11 @@ IdentityDialog::IdentityDialog( QWidget * parent )
     glay->addWidget( label, row, 0 );
     glay->addWidget( mPreferredCryptoMessageFormat, row, 1 );
 
+
+    ++row;
+    mAutoSign = new QCheckBox(i18n("Automatically sign messages"));
+    glay->addWidget( mAutoSign, row, 0 );
+
     ++row;
     glay->setRowStretch( row, 1 );
 
@@ -372,7 +373,8 @@ IdentityDialog::IdentityDialog( QWidget * parent )
     // "Reply-To Address" line edit and label:
     ++row;
     mReplyToEdit = new KPIM::AddresseeLineEdit( tab, true );
-    mReplyToEdit->setObjectName( "mReplyToEdit" );
+    mReplyToEdit->setClearButtonShown(true);
+    mReplyToEdit->setObjectName( QLatin1String("mReplyToEdit") );
     glay->addWidget( mReplyToEdit, row, 1 );
     label = new QLabel ( i18n("&Reply-To address:"), tab );
     label->setBuddy( mReplyToEdit );
@@ -395,7 +397,8 @@ IdentityDialog::IdentityDialog( QWidget * parent )
     // "CC addresses" line edit and label:
     ++row;
     mCcEdit = new KPIM::AddresseeLineEdit( tab, true );
-    mCcEdit->setObjectName( "mCcEdit" );
+    mCcEdit->setClearButtonShown(true);
+    mCcEdit->setObjectName( QLatin1String("mCcEdit") );
     glay->addWidget( mCcEdit, row, 1 );
     label = new QLabel( i18n("&CC addresses:"), tab );
     label->setBuddy( mCcEdit );
@@ -415,7 +418,8 @@ IdentityDialog::IdentityDialog( QWidget * parent )
     // "BCC addresses" line edit and label:
     ++row;
     mBccEdit = new KPIM::AddresseeLineEdit( tab, true );
-    mBccEdit->setObjectName( "mBccEdit" );
+    mBccEdit->setClearButtonShown(true);
+    mBccEdit->setObjectName( QLatin1String("mBccEdit") );
     glay->addWidget( mBccEdit, row, 1 );
     label = new QLabel( i18n("&BCC addresses:"), tab );
     label->setBuddy( mBccEdit );
@@ -486,7 +490,7 @@ IdentityDialog::IdentityDialog( QWidget * parent )
 
 
     ++row;
-    mAutoCorrectionLanguage = new MessageComposer::ComposerAutoCorrectionLanguage(tab);
+    mAutoCorrectionLanguage = new PimCommon::AutoCorrectionLanguage(tab);
     glay->addWidget( mAutoCorrectionLanguage, row, 1 );
     label = new QLabel( i18n("Autocorrection language:"), tab );
     label->setBuddy( mAutoCorrectionLanguage );
@@ -512,7 +516,7 @@ IdentityDialog::IdentityDialog( QWidget * parent )
     tlay->addWidget( mCustom, Qt::AlignLeft );
 
 #ifndef KDEPIM_MOBILE_UI
-    mWidget = new TemplateParser::TemplatesConfiguration( tab, "identity-templates" );
+    mWidget = new TemplateParser::TemplatesConfiguration( tab, QLatin1String("identity-templates") );
     mWidget->setEnabled( false );
 
     // Move the help label outside of the templates configuration widget,
@@ -567,7 +571,7 @@ IdentityDialog::IdentityDialog( QWidget * parent )
 
     connect( mTabWidget, SIGNAL(currentChanged(int)),
              SLOT(slotAboutToShow(int)) );
-    setHelp( "configure-identity", "kmail" );
+    setHelp( QLatin1String("configure-identity"), QLatin1String("kmail") );
 }
 
 IdentityDialog::~IdentityDialog() {
@@ -650,7 +654,7 @@ void IdentityDialog::slotButtonClicked( int button )
     // Validate email addresses
     const QString email = mEmailEdit->text().trimmed();
     if ( !KPIMUtils::isValidSimpleAddress( email ) ) {
-        QString errorMsg( KPIMUtils::simpleEmailAddressErrorMsg() );
+        const QString errorMsg( KPIMUtils::simpleEmailAddressErrorMsg() );
         KMessageBox::sorry( this, errorMsg, i18n("Invalid Email Address") );
         return;
     }
@@ -719,7 +723,7 @@ void IdentityDialog::slotDelayedButtonClicked( KJob *job )
                                                  i18n("Email Address Not Found in Key/Certificates"),
                                                  KStandardGuiItem::cont(),
                                                  KStandardGuiItem::cancel(),
-                                                 "warn_email_not_in_certificate" )
+                                                 QLatin1String("warn_email_not_in_certificate") )
              != KMessageBox::Continue) {
             return;
         }
@@ -762,13 +766,14 @@ void IdentityDialog::setIdentity( KPIMIdentities::Identity & ident ) {
     mAliasEdit->setStringList( ident.emailAliases() );
 
     // "Cryptography" tab:
-    mPGPSigningKeyRequester->setFingerprint( ident.pgpSigningKey() );
-    mPGPEncryptionKeyRequester->setFingerprint( ident.pgpEncryptionKey() );
-    mSMIMESigningKeyRequester->setFingerprint( ident.smimeSigningKey() );
-    mSMIMEEncryptionKeyRequester->setFingerprint( ident.smimeEncryptionKey() );
+    mPGPSigningKeyRequester->setFingerprint( QLatin1String(ident.pgpSigningKey()) );
+    mPGPEncryptionKeyRequester->setFingerprint( QLatin1String(ident.pgpEncryptionKey()) );
+    mSMIMESigningKeyRequester->setFingerprint( QLatin1String(ident.smimeSigningKey()) );
+    mSMIMEEncryptionKeyRequester->setFingerprint( QLatin1String(ident.smimeEncryptionKey()) );
 
     mPreferredCryptoMessageFormat->setCurrentIndex( format2cb(
                                                         Kleo::stringToCryptoMessageFormat( ident.preferredCryptoMessageFormat() ) ) );
+    mAutoSign->setChecked(ident.pgpAutoSign());
 
     // "Advanced" tab:
     mReplyToEdit->setText( ident.replyToAddr() );
@@ -859,7 +864,8 @@ void IdentityDialog::updateIdentity( KPIMIdentities::Identity & ident ) {
     ident.setSMIMESigningKey( mSMIMESigningKeyRequester->fingerprint().toLatin1() );
     ident.setSMIMEEncryptionKey( mSMIMEEncryptionKeyRequester->fingerprint().toLatin1() );
     ident.setPreferredCryptoMessageFormat(
-                Kleo::cryptoMessageFormatToString(cb2format( mPreferredCryptoMessageFormat->currentIndex() ) ) );
+                QLatin1String(Kleo::cryptoMessageFormatToString(cb2format( mPreferredCryptoMessageFormat->currentIndex() ) )) );
+    ident.setPgpAutoSign(mAutoSign->isChecked());
     // "Advanced" tab:
     ident.setReplyToAddr( mReplyToEdit->text() );
     ident.setBcc( mBccEdit->text() );
@@ -954,14 +960,13 @@ void IdentityDialog::slotEditVcard()
     }
 }
 
-void IdentityDialog::editVcard(const QString& filename)
+void IdentityDialog::editVcard(const QString &filename)
 {
-    IdentityEditVcardDialog dlg(this);
-    dlg.loadVcard(filename);
+    IdentityEditVcardDialog dlg(filename, this);
     if(dlg.exec()) {
         mVcardFilename = dlg.saveVcard();
-        updateVcardButton();
     }
+    updateVcardButton();
 }
 
 void IdentityDialog::updateVcardButton()
@@ -975,4 +980,3 @@ void IdentityDialog::updateVcardButton()
 
 }
 
-#include "identitydialog.moc"

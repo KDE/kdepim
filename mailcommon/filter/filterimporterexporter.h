@@ -52,12 +52,12 @@ class MailFilter;
  */
 class MAILCOMMON_EXPORT FilterImporterExporter
 {
-  public:
+public:
     enum FilterType {
         KMailFilter = 0,
         ThunderBirdFilter = 1,
         EvolutionFilter = 2,
-        SylpheedFilter = 3, 
+        SylpheedFilter = 3,
         ProcmailFilter = 4,
         BalsaFilter = 5,
         ClawsMailFilter = 6
@@ -87,26 +87,26 @@ class MAILCOMMON_EXPORT FilterImporterExporter
      * and which filters to import.
      */
     QList<MailFilter*> importFilters(
-      bool &canceled,
-      FilterImporterExporter::FilterType type =  FilterImporterExporter::KMailFilter, const QString& filename = QString() );
+            bool &canceled,
+            FilterImporterExporter::FilterType type =  FilterImporterExporter::KMailFilter, const QString& filename = QString() );
 
     /**
      * Writes the given list of @p filters to the given @p config file.
      */
     static void writeFiltersToConfig(
-      const QList<MailFilter*> &filters,
-      KSharedConfig::Ptr config,
-      bool exportFilter = false );
+            const QList<MailFilter*> &filters,
+            KSharedConfig::Ptr config,
+            bool exportFilter = false );
 
     /**
      * Reads a list of filters from the given @p config file.
      * Return list of empty filter
      */
     static QList<MailFilter*> readFiltersFromConfig(
-      const KSharedConfig::Ptr config,
-      QStringList &emptyFilter );
+            const KSharedConfig::Ptr config,
+            QStringList &emptyFilter );
 
-  private:
+private:
     //@cond PRIVATE
     Q_DISABLE_COPY( FilterImporterExporter )
 

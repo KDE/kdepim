@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -25,7 +25,10 @@ class KPushButton;
 class KLineEdit;
 class QGridLayout;
 class QCheckBox;
+class QDomElement;
+
 namespace KSieveUi {
+class SieveHelpButton;
 class SieveGlobalVariableWidget;
 
 class SieveGlobalVariableActionWidget : public QWidget
@@ -37,6 +40,10 @@ public:
 
     void generatedScript(QString &script);
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
+    bool isInitialized() const;
+    void loadScript(const QDomElement &element, QString &error);
+    void setVariableValue(const QString &name);
+    QString variableName() const;
 
 private Q_SLOTS:
     void slotAddWidget();
@@ -45,6 +52,7 @@ private Q_SLOTS:
 Q_SIGNALS:
     void addWidget(QWidget *w);
     void removeWidget(QWidget *w);
+    void valueChanged();
 
 private:
     void initWidget();
@@ -64,6 +72,12 @@ public:
     ~SieveGlobalVariableLister();
 
     void generatedScript(QString &script, QStringList &requires);
+    void loadScript(const QDomElement &element, QString &error);
+    void loadSetVariable(const QDomElement &element, QString &error);
+
+Q_SIGNALS:
+    void valueChanged();
+
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );
     void slotRemoveWidget( QWidget *w );
@@ -86,19 +100,16 @@ public:
 
     void generatedScript(QString &script, QStringList &requires);
 
+    void loadScript(const QDomElement &element, QString &error);
+    void loadSetVariable(const QDomElement &element, QString &error);
+
 private Q_SLOTS:
     void slotHelp();
 
 private:
     SieveGlobalVariableLister *mIncludeLister;
+    SieveHelpButton *mHelpButton;
 };
 }
-
-
-class SieveGlobalVariableWidget
-{
-public:
-    SieveGlobalVariableWidget();
-};
 
 #endif // SIEVEGLOBALVARIABLEWIDGET_H

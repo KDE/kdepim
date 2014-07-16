@@ -21,16 +21,20 @@
 
 #include "ksieveui_export.h"
 
-#include <QPlainTextEdit>
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
 class QCompleter;
+class QMenu;
+namespace PimCommon {
+class SieveSyntaxHighlighter;
+}
 
 namespace KSieveUi {
 
 class SieveLineNumberArea;
-class SieveSyntaxHighlighter;
 
-class KSIEVEUI_EXPORT SieveTextEdit : public QPlainTextEdit
+
+class KSIEVEUI_EXPORT SieveTextEdit : public PimCommon::PlainTextEditor
 {
     Q_OBJECT
 
@@ -43,30 +47,33 @@ public:
 
     void setSieveCapabilities( const QStringList &capabilities );
 
+    void setShowHelpMenu(bool b);
+
 private Q_SLOTS:
     void slotInsertCompletion( const QString& );
     void slotUpdateLineNumberAreaWidth(int newBlockCount);
     void slotUpdateLineNumberArea(const QRect &, int);
-    void slotUndoableClear();
-    void slotSpeakText();
+    void slotHelp();
 
 protected:
     QString wordUnderCursor() const;
     void initCompleter();
     void keyPressEvent(QKeyEvent* e);
-    void resizeEvent(QResizeEvent *event);
-    void contextMenuEvent( QContextMenuEvent *event );
+    void resizeEvent(QResizeEvent *event);    
+    void addExtraMenuEntry(QMenu *menu, const QPoint &pos);
 
 Q_SIGNALS:
-    void findText();
+    void openHelp(const QString &variableName, const QString &url);
 
 private:
     QStringList completerList() const;
     void setCompleterList(const QStringList &list);
+    QString selectedWord(const QPoint &pos = QPoint()) const;
 
     QCompleter *m_completer;
     SieveLineNumberArea *m_sieveLineNumberArea;
-    SieveSyntaxHighlighter *m_syntaxHighlighter;
+    PimCommon::SieveSyntaxHighlighter *m_syntaxHighlighter;
+    bool mShowHelpMenu;
 };
 
 }

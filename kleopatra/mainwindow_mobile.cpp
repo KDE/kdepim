@@ -59,43 +59,32 @@
 #include "utils/filedialog.h"
 
 // from libkdepim
-#include "statusbarprogresswidget.h"
-#include "progressdialog.h"
+#include "progresswidget/statusbarprogresswidget.h"
+#include "progresswidget/progressdialog.h"
 
 // from mobileui
 #include "declarativewidgetbase.h"
 
 #include <KActionCollection>
-#include <KLocale>
-#include <KTabWidget>
-#include <KStatusBar>
+#include <KLocalizedString>
 #include <KStandardAction>
 #include <KAction>
 #include <KAboutData>
 #include <KMessageBox>
 #include <KStandardGuiItem>
-#include <KStandardDirs>
 #include <KLineEdit>
 #if 0
 #include <KShortcutsDialog>
-#include <KEditToolBar>
 #endif
 #include <KAboutApplicationDialog>
 #include <kdebug.h>
 
 #include <QTreeView>
-#include <QFile>
-#include <QToolBar>
-#include <QWidgetAction>
 #include <QApplication>
 #include <QCloseEvent>
-#include <QMenu>
 #include <QTimer>
 #include <QProcess>
 #include <QPointer>
-#include <QDeclarativeItem>
-#include <QDeclarativeEngine>
-#include <QDeclarativeContext>
 #include <QVariant>
 #include <QHeaderView>
 
@@ -199,14 +188,14 @@ public:
     void showHandbook();
 
     void gnupgLogViewer() {
-        if( !QProcess::startDetached("kwatchgnupg" ) )
+        if( !QProcess::startDetached( QLatin1String( "kwatchgnupg" ) ) )
             KMessageBox::error( q, i18n( "Could not start the GnuPG Log Viewer (kwatchgnupg). "
                                          "Please check your installation." ),
                                 i18n( "Error Starting KWatchGnuPG" ) );
     }
 
     void gnupgAdministrativeConsole() {
-        if( !QProcess::startDetached("kgpgconf" ) )
+        if( !QProcess::startDetached( QLatin1String( "kgpgconf" ) ) )
             KMessageBox::error( q, i18n( "Could not start the GnuPG Administrative Console (kgpgconf). "
                                          "Please check your installation." ),
                                 i18n( "Error Starting KGpgConf" ) );
@@ -292,7 +281,7 @@ void MainWindow::doDelayedInit() {
     qmlRegisterType<KeyTreeViewItem>( "org.kde.kleopatra", 2, 1, "KeyTreeView" );
     qmlRegisterType<SearchBarItem>  ( "org.kde.kleopatra", 2, 1, "SearchBar"   );
     d->setupActions();
-    engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
+    engine()->rootContext()->setContextProperty( QLatin1String( "application" ), QVariant::fromValue( static_cast<QObject*>( this ) ) );
 }
 
 void MainWindow::registerKeyTreeView( KeyTreeView * view ) {

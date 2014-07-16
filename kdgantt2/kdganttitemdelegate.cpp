@@ -422,4 +422,3 @@ void ItemDelegate::paintConstraintItem( QPainter* painter, const QStyleOptionGra
     }
 }
 
-#include "moc_kdganttitemdelegate.cpp"

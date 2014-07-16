@@ -1,6 +1,8 @@
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5300)
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 add_definitions(${QT_QTDBUS_DEFINITIONS})
 
@@ -12,7 +14,7 @@ set(kdepimdbusinterfaces_LIB_SRCS
 )
 
 qt4_generate_dbus_interface(${CMAKE_SOURCE_DIR}/kmail/kmkernel.h org.kde.kmail.kmail.xml OPTIONS -a)
-qt4_add_dbus_interfaces( kdepimdbusinterfaces_LIB_SRCS ${CMAKE_SOURCE_DIR}/korganizer/korgac/org.kde.korganizer.KOrgac.xml)
+qt4_add_dbus_interfaces( kdepimdbusinterfaces_LIB_SRCS ${CMAKE_SOURCE_DIR}/korgac/org.kde.korganizer.KOrgac.xml)
 qt4_add_dbus_interfaces( kdepimdbusinterfaces_LIB_SRCS ${CMAKE_SOURCE_DIR}/korganizer/org.kde.korganizer.Korganizer.xml)
 qt4_add_dbus_interfaces( kdepimdbusinterfaces_LIB_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.kde.kmail.kmail.xml)
 qt4_add_dbus_interfaces( kdepimdbusinterfaces_LIB_SRCS ${CMAKE_SOURCE_DIR}/knode/org.kde.knode.xml)

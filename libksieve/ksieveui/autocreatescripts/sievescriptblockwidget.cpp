@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -19,15 +19,18 @@
 #include "sieveactionwidgetlister.h"
 #include "sieveconditionwidgetlister.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KComboBox>
 #include <KPushButton>
 
+#include <QDomElement>
 #include <QVBoxLayout>
 #include <QGroupBox>
 #include <QButtonGroup>
 #include <QRadioButton>
 #include <QLabel>
+#include <QDebug>
+
 
 namespace KSieveUi {
 SieveScriptBlockWidget::SieveScriptBlockWidget(QWidget *parent)
@@ -60,6 +63,7 @@ SieveScriptBlockWidget::SieveScriptBlockWidget(QWidget *parent)
     mConditions->setLayout(vbox);
 
     mScriptConditionLister = new SieveConditionWidgetLister;
+    connect(mScriptConditionLister, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     vbox->addWidget(mScriptConditionLister);
 
     topLayout->addWidget(mConditions,0, Qt::AlignTop);
@@ -68,6 +72,7 @@ SieveScriptBlockWidget::SieveScriptBlockWidget(QWidget *parent)
     vbox = new QVBoxLayout;
     actions->setLayout(vbox);
     mScriptActionLister = new SieveActionWidgetLister;
+    connect(mScriptActionLister, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     vbox->addWidget(mScriptActionLister,0, Qt::AlignTop);
     topLayout->addWidget(actions);
 
@@ -96,7 +101,7 @@ SieveScriptBlockWidget::~SieveScriptBlockWidget()
 
 void SieveScriptBlockWidget::slotAddBlock()
 {
-    KSieveUi::SieveWidgetPageAbstract::PageType type;
+    KSieveUi::SieveWidgetPageAbstract::PageType type = BlockElsIf;
     switch(mNewBlockType->currentIndex()) {
     case 0:
         type = BlockElsIf;
@@ -106,6 +111,7 @@ void SieveScriptBlockWidget::slotAddBlock()
         break;
     }
 
+    Q_EMIT valueChanged();
     Q_EMIT addNewBlock(this, type);
 }
 
@@ -154,13 +160,23 @@ void SieveScriptBlockWidget::slotRadioClicked(QAbstractButton* button)
     } else {
         mMatchCondition = AllCondition;
     }
+    Q_EMIT valueChanged();
+    updateWidget();
+}
+
+void SieveScriptBlockWidget::updateWidget()
+{
     mScriptConditionLister->setEnabled(mMatchCondition != AllCondition);
+    mNewBlockType->setEnabled(mMatchCondition != AllCondition);
+    mAddBlockType->setEnabled(mMatchCondition != AllCondition);
 }
 
 void SieveScriptBlockWidget::generatedScript(QString &script, QStringList &requires)
 {
+    bool onlyActions = false;
     if (mMatchCondition == AllCondition) {
-        script += QLatin1String("if true {\n");
+        onlyActions = true;
+        //Just actions type
     } else if (pageType() == BlockElse) {
         script += QLatin1String("else {\n");
     } else {
@@ -202,9 +218,70 @@ void SieveScriptBlockWidget::generatedScript(QString &script, QStringList &requi
         else
             script += QLatin1String(")\n{\n");
     }
-    mScriptActionLister->generatedScript(script, requires);
-    script += QLatin1String("} ");
-}
+    mScriptActionLister->generatedScript(script, requires, onlyActions);
+    if (!onlyActions) {
+        script += QLatin1String("} ");
+    }
 }
 
-#include "sievescriptblockwidget.moc"
+void SieveScriptBlockWidget::updateCondition()
+{
+    switch(mMatchCondition) {
+    case AndCondition:
+        mMatchAll->setChecked(true);
+        break;
+    case OrCondition:
+        mMatchAny->setChecked(true);
+        break;
+    case AllCondition:
+        mAllMessageRBtn->setChecked(true);
+        break;
+    }
+    updateWidget();
+}
+
+void SieveScriptBlockWidget::loadScript(const QDomElement &element, bool onlyActions, QString &error)
+{
+    if (onlyActions) {
+        mScriptActionLister->loadScript(element, true, error);
+        mMatchCondition = AllCondition;
+        updateCondition();
+    } else {
+        bool uniqueTest = false;
+        QDomNode node = element.firstChild();
+        while (!node.isNull()) {
+            QDomElement e = node.toElement();
+            if (!e.isNull()) {
+                const QString tagName = e.tagName();
+                if (tagName == QLatin1String("test")) {
+                    bool notCondition = false;
+                    if (e.hasAttribute(QLatin1String("name"))) {
+                        const QString typeCondition = e.attribute(QLatin1String("name"));
+                        if (typeCondition == QLatin1String("anyof")) {
+                            mMatchCondition = OrCondition;
+                        } else if (typeCondition == QLatin1String("allof")) {
+                            mMatchAll->setChecked(true);
+                        } else {
+                            if (typeCondition == QLatin1String("not")) {
+                                notCondition = true;
+                            }
+                            uniqueTest = true;
+                            mMatchCondition = OrCondition;
+                        }
+                        updateCondition();
+                    }
+                    mScriptConditionLister->loadScript(e, uniqueTest, notCondition, error);
+                } else if (tagName == QLatin1String("block")) {
+                    mScriptActionLister->loadScript(e, false, error);
+                } else {
+                    if (tagName != QLatin1String("crlf"))
+                        qDebug()<<" e.tag"<<tagName;
+                }
+            }
+            node = node.nextSibling();
+        }
+    }
+}
+
+}
+

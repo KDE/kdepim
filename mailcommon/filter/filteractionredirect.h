@@ -30,12 +30,13 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionRedirect: public FilterActionWithAddress
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit FilterActionRedirect( QObject *parent = 0 );
-    virtual ReturnCode process( ItemContext &context ) const;
-    virtual SearchRule::RequiredPart requiredPart() const;
+    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
+    SearchRule::RequiredPart requiredPart() const;
     static FilterAction* newAction();
+    QString sieveCode() const;
 };
 
 }

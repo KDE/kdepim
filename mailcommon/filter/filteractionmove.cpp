@@ -18,6 +18,7 @@
  */
 
 #include "filteractionmove.h"
+#include "mailcommon/util/mailutil.h"
 
 #include "kernel/mailkernel.h"
 
@@ -27,31 +28,31 @@ using namespace MailCommon;
 
 FilterAction* FilterActionMove::newAction()
 {
-  return new FilterActionMove;
+    return new FilterActionMove;
 }
 
 FilterActionMove::FilterActionMove( QObject *parent )
-  : FilterActionWithFolder( QLatin1String("transfer"), i18n( "Move Into Folder" ), parent )
+    : FilterActionWithFolder( QLatin1String("transfer"), i18n( "Move Into Folder" ), parent )
 {
 }
 
-FilterAction::ReturnCode FilterActionMove::process( ItemContext &context ) const
+FilterAction::ReturnCode FilterActionMove::process(ItemContext &context , bool) const
 {
-  if ( !mFolder.isValid() ) {
-    const Akonadi::Collection targetFolder = CommonKernel->collectionFromId( mFolder.id() );
-    if ( !targetFolder.isValid() )
-      return ErrorButGoOn;
+    if ( !mFolder.isValid() ) {
+        const Akonadi::Collection targetFolder = CommonKernel->collectionFromId( mFolder.id() );
+        if ( !targetFolder.isValid() )
+            return ErrorButGoOn;
 
-    context.setMoveTargetCollection( targetFolder );
+        context.setMoveTargetCollection( targetFolder );
+        return GoOn;
+    }
+    context.setMoveTargetCollection( mFolder );
     return GoOn;
-  }
-  context.setMoveTargetCollection( mFolder );
-  return GoOn;
 }
 
 bool FilterActionMove::requiresBody() const
 {
-  return false;
+    return false;
 }
 
 SearchRule::RequiredPart FilterActionMove::requiredPart() const
@@ -59,5 +60,19 @@ SearchRule::RequiredPart FilterActionMove::requiredPart() const
     return SearchRule::Envelope;
 }
 
+QString FilterActionMove::sieveCode() const
+{
+    QString path;
+    if ( KernelIf->collectionModel() )
+        path = MailCommon::Util::fullCollectionPath( mFolder );
+    else
+        path = QString::number(mFolder.id());
+    const QString result = QString::fromLatin1("fileinto \"%1\";").arg(path);
+    return result;
+}
 
-#include "filteractionmove.moc"
+QStringList FilterActionMove::sieveRequires() const
+{
+    return QStringList() << QLatin1String("fileinto");
+}
+

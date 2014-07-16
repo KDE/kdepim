@@ -27,12 +27,8 @@
 
 #include <KontactInterface/Core>
 
-namespace KPIM {
-  class StatusbarProgressWidget;
-}
-
 namespace KontactInterface {
-  class Plugin;
+class Plugin;
 }
 
 class KActionMenu;
@@ -54,10 +50,10 @@ class SidePaneBase;
 
 class KONTACT_EXPORT MainWindow : public KontactInterface::Core
 {
-  Q_OBJECT
-  Q_CLASSINFO( "D-Bus Interface", "org.kde.kontact.KontactInterface" )
+    Q_OBJECT
+    Q_CLASSINFO( "D-Bus Interface", "org.kde.kontact.KontactInterface" )
 
-  public:
+public:
     MainWindow();
     ~MainWindow();
 
@@ -68,14 +64,14 @@ class KONTACT_EXPORT MainWindow : public KontactInterface::Core
     static bool pluginWeightLessThan( const KontactInterface::Plugin *left,
                                       const KontactInterface::Plugin *right );
 
-  public slots:
+public slots:
     virtual void selectPlugin( KontactInterface::Plugin *plugin );
     Q_SCRIPTABLE virtual void selectPlugin( const QString &pluginName );
     void slotActionTriggered();
 
     void updateConfig();
 
-  protected slots:
+protected slots:
     void initObject();
     void initGUI();
     void slotActivePartChanged( KParts::Part *part );
@@ -93,7 +89,7 @@ class KONTACT_EXPORT MainWindow : public KontactInterface::Core
     void slotOpenUrl( const KUrl &url );
     void slotOpenUrl( const QUrl &url );
 
-  private:
+private:
     void initWidgets();
     void initAboutScreen();
     void loadSettings();
@@ -117,14 +113,14 @@ class KONTACT_EXPORT MainWindow : public KontactInterface::Core
     static QString introductionString();
     KToolBar *findToolBar( const char *name );
 
-  private slots:
+private slots:
     void pluginsChanged();
 
     void configureShortcuts();
     void configureToolbars();
     void slotShowHideSideBar();
 
-  private:
+private:
     QFrame *mTopWidget;
 
     QSplitter *mSplitter;
@@ -142,7 +138,6 @@ class KONTACT_EXPORT MainWindow : public KontactInterface::Core
     KWebView *mIntroPart;
 
     KSqueezedTextLabel *mStatusMsgLabel;
-    KPIM::StatusbarProgressWidget *mLittleProgress;
 
     QString mInitialActiveModule;
 

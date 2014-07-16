@@ -28,7 +28,6 @@
 
 class QAbstractItemModel;
 
-class KJob;
 
 namespace Akonadi
 {

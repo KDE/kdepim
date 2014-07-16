@@ -30,38 +30,37 @@
 using namespace MailCommon;
 
 FilterActionSendReceipt::FilterActionSendReceipt( QObject *parent )
-  : FilterActionWithNone( QLatin1String("confirm delivery"), i18n( "Confirm Delivery" ), parent )
+    : FilterActionWithNone( QLatin1String("confirm delivery"), i18n( "Confirm Delivery" ), parent )
 {
 }
 
-FilterAction::ReturnCode FilterActionSendReceipt::process( ItemContext &context ) const
+FilterAction::ReturnCode FilterActionSendReceipt::process(ItemContext &context , bool) const
 {
-  const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
+    const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
 
-  MessageComposer::MessageFactory factory( msg, context.item().id() );
-  factory.setFolderIdentity( Util::folderIdentity( context.item() ) );
-  factory.setIdentityManager( KernelIf->identityManager() );
+    MessageComposer::MessageFactory factory( msg, context.item().id() );
+    factory.setFolderIdentity( Util::folderIdentity( context.item() ) );
+    factory.setIdentityManager( KernelIf->identityManager() );
 
-  const KMime::Message::Ptr receipt = factory.createDeliveryReceipt();
-  if ( !receipt )
-    return ErrorButGoOn;
+    const KMime::Message::Ptr receipt = factory.createDeliveryReceipt();
+    if ( !receipt )
+        return ErrorButGoOn;
 
-  // Queue message. This is a) so that the user can check
-  // the receipt before sending and b) for speed reasons.
-  KernelIf->msgSender()->send( receipt, MessageComposer::MessageSender::SendLater );
+    // Queue message. This is a) so that the user can check
+    // the receipt before sending and b) for speed reasons.
+    KernelIf->msgSender()->send( receipt, MessageComposer::MessageSender::SendLater );
 
-  return GoOn;
+    return GoOn;
 }
 
 SearchRule::RequiredPart FilterActionSendReceipt::requiredPart() const
 {
-  return SearchRule::CompleteMessage;
+    return SearchRule::CompleteMessage;
 }
 
 
 FilterAction* FilterActionSendReceipt::newAction()
 {
-  return new FilterActionSendReceipt;
+    return new FilterActionSendReceipt;
 }
 
-#include "filteractionsendreceipt.moc"

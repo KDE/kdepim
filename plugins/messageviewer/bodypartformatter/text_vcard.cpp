@@ -48,11 +48,12 @@ using MessageViewer::Interface::BodyPart;
 #include <KABC/VCardConverter>
 #include <KABC/Addressee>
 
+#include <KLocale>
 #include <kdemacros.h>
 #include <KFileDialog>
 #include <KGlobal>
 #include <KIcon>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMenu>
 #include <KMessageBox>
 #include <KTemporaryFile>
@@ -107,13 +108,13 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
         return AsIcon;
       }
 
-      writer->queue( "<div align=\"center\"><h2>" +
+      writer->queue( QLatin1String("<div align=\"center\"><h2>") +
                      i18np( "Attached business card", "Attached business cards", count ) +
-                     "</h2></div>" );
+                     QLatin1String("</h2></div>") );
 
       count = 0;
-      static QString defaultPixmapPath = QLatin1String("file:///") + KIconLoader::global()->iconPath( "user-identity", KIconLoader::Desktop );
-      static QString defaultMapIconPath = QLatin1String("file:///") + KIconLoader::global()->iconPath( "document-open-remote", KIconLoader::Small );
+      static QString defaultPixmapPath = QLatin1String("file:///") + KIconLoader::global()->iconPath( QLatin1String("user-identity"), KIconLoader::Desktop );
+      static QString defaultMapIconPath = QLatin1String("file:///") + KIconLoader::global()->iconPath( QLatin1String("document-open-remote"), KIconLoader::Small );
 
 
       if ( !memento ) {
@@ -141,11 +142,11 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
           htmlStr.replace(QLatin1String("img src=\"contact_photo\""),QString::fromLatin1("img src=\"%1\"").arg(defaultPixmapPath));
         } else {
           QImage img = a.photo().data();
-          const QString dir = bodyPart->nodeHelper()->createTempDir( "vcard-" + a.uid() );
+          const QString dir = bodyPart->nodeHelper()->createTempDir( QLatin1String("vcard-") + a.uid() );
           const QString filename = dir + QDir::separator() + a.uid();
           img.save(filename,"PNG");
           bodyPart->nodeHelper()->addTempFile( filename );
-          const QString href = QLatin1String("file:") + KUrl::toPercentEncoding( filename );
+          const QString href = QLatin1String("file:") + QLatin1String(KUrl::toPercentEncoding( filename ));
           htmlStr.replace(QLatin1String("img src=\"contact_photo\""),QString::fromLatin1("img src=\"%1\"").arg(href));
         }
         writer->queue( htmlStr );
@@ -155,25 +156,25 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
                 (memento && memento->finished() && !memento->vcardExist(count)) ) {
           const QString addToLinkText = i18n( "[Add this contact to the address book]" );
           QString op = QString::fromLatin1( "addToAddressBook:%1" ).arg( count );
-          writer->queue( "<div align=\"center\"><a href=\"" +
+          writer->queue( QLatin1String("<div align=\"center\"><a href=\"") +
                          bodyPart->makeLink( op ) +
-                         "\">" +
+                         QLatin1String("\">") +
                          addToLinkText +
-                         "</a></div><br><br>" );
+                         QLatin1String("</a></div><br><br>") );
         } else {
             if(memento->address(count) != a) {
               const QString addToLinkText = i18n( "[Update this contact to the address book]" );
               QString op = QString::fromLatin1( "updateToAddressBook:%1" ).arg( count );
-              writer->queue( "<div align=\"center\"><a href=\"" +
+              writer->queue( QLatin1String("<div align=\"center\"><a href=\"") +
                              bodyPart->makeLink( op ) +
-                             "\">" +
+                             QLatin1String("\">") +
                              addToLinkText +
-                            "</a></div><br><br>" );
+                            QLatin1String("</a></div><br><br>") );
             } else {
                 const QString addToLinkText = i18n( "[This contact is already in addressbook]" );
-                writer->queue( "<div align=\"center\">" +
+                writer->queue( QLatin1String("<div align=\"center\">") +
                                addToLinkText +
-                              "</a></div><br><br>" );
+                              QLatin1String("</a></div><br><br>") );
             }
         }
         count++;
@@ -197,7 +198,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       }
       KABC::VCardConverter vcc;
       const KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
-      const int index = path.right( path.length() - path.lastIndexOf( ":" ) - 1 ).toInt();
+      const int index = path.right( path.length() - path.lastIndexOf( QLatin1Char(':') ) - 1 ).toInt();
       if ( index == -1 || index >= al.count() ) {
         return true;
       }
@@ -224,7 +225,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       if ( !vCard.isEmpty() ) {
         KABC::VCardConverter vcc;
         const KABC::Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
-        const int index = path.right( path.length() - path.lastIndexOf( ":" ) - 1 ).toInt();
+        const int index = path.right( path.length() - path.lastIndexOf( QLatin1Char(':') ) - 1 ).toInt();
         if ( index >= 0 && index < al.count() ) {
           return al.at(index);
         }
@@ -245,9 +246,9 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 
       KMenu *menu = new KMenu();
       QAction *open =
-        menu->addAction( KIcon( "document-open" ), i18n( "View Business Card" ) );
+        menu->addAction( KIcon( QLatin1String("document-open") ), i18n( "View Business Card" ) );
       QAction *saveas =
-        menu->addAction( KIcon( "document-save-as" ), i18n( "Save Business Card As..." ) );
+        menu->addAction( KIcon( QLatin1String("document-save-as") ), i18n( "Save Business Card As..." ) );
 
       QAction *action = menu->exec( point, 0 );
       if ( action == open ) {
@@ -358,7 +359,7 @@ extern "C"
 KDE_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
 messageviewer_bodypartformatter_text_vcard_create_bodypart_formatter_plugin()
 {
-  KGlobal::locale()->insertCatalog( "messageviewer_text_vcard_plugin" );
+  KGlobal::locale()->insertCatalog( QLatin1String("messageviewer_text_vcard_plugin") );
   return new Plugin();
 }
 

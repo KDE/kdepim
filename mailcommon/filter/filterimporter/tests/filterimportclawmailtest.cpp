@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -17,10 +17,20 @@
 #include "filterimportclawmailtest.h"
 #include "../filterimporterclawsmail_p.h"
 #include "mailfilter.h"
-#include <qtest_kde.h>
+#include <akonadi/qtest_akonadi.h>
+#include "filtertestkernel.h"
+#include <mailcommon/kernel/mailkernel.h>
 
+QTEST_AKONADIMAIN( FilterImportClawMailtest, NoGUI )
 
-QTEST_KDEMAIN( FilterImportClawMailtest, NoGUI )
+void FilterImportClawMailtest::initTestCase()
+{
+    AkonadiTest::checkTestIsIsolated();
+
+    FilterTestKernel *kernel = new FilterTestKernel( this );
+    CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
+    CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
+}
 
 void FilterImportClawMailtest::testImportFilters()
 {
@@ -32,4 +42,3 @@ void FilterImportClawMailtest::testImportFilters()
 }
 
 
-#include "filterimportclawmailtest.moc"

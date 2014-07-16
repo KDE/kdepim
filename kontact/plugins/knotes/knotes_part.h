@@ -25,51 +25,66 @@
 
 #include <KParts/ReadOnlyPart>
 #include <QListWidgetItem>
+#include <KViewStateMaintainer>
+#include <Akonadi/Item>
+#include <QPointer>
 
-class KNoteEditDlg;
+class KNoteFindDialog;
 class KNotesIconView;
+class KNotesWidget;
 class KNotesIconViewItem;
-class KNotesResourceManager;
-class KNoteTip;
+class KAction;
+class KToggleAction;
 
-namespace KCal {
-  class Journal;
+namespace DNSSD {
+class PublicService;
 }
-using namespace KCal;
+namespace Akonadi {
+class ChangeRecorder;
+class Collection;
+class EntityTreeModel;
+class ETMViewStateSaver;
+}
+namespace NoteShared {
+class NotesChangeRecorder;
+class NotesAkonadiTreeModel;
+}
+class KCheckableProxyModel;
 
 class KNotesPart : public KParts::ReadOnlyPart
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit KNotesPart( QObject *parent = 0 );
+public:
+    explicit KNotesPart(QObject *parent = 0 );
     ~KNotesPart();
 
     bool openFile();
 
-  public slots:
-    QString newNote( const QString &name = QString(),
+public slots:
+    void newNote( const QString &name = QString(),
                      const QString &text = QString() );
-    QString newNoteFromClipboard( const QString &name = QString() );
+    void newNoteFromClipboard( const QString &name = QString() );
+    QStringList notesList() const;
 
-  public:
-    void killNote( const QString &id );
-    void killNote( const QString &id, bool force );
 
-    QString name( const QString &id ) const;
-    QString text( const QString &id ) const;
+public:
+    void updateConfig();
+    void killNote( Akonadi::Item::Id id );
+    void killNote( Akonadi::Item::Id id, bool force );
 
-    void setName( const QString &id, const QString &newName );
-    void setText( const QString &id, const QString &newText );
+    QString name( Akonadi::Item::Id id ) const;
+    QString text(Akonadi::Entity::Id id ) const;
+
+    void setName( Akonadi::Item::Id id, const QString &newName );
+    void setText( Akonadi::Item::Id id, const QString &newText );
 
     QMap<QString, QString> notes() const;
     void popupRMB( QListWidgetItem *item, const QPoint &pos, const QPoint &globalPos );
-    void mouseMoveOnListWidget( const QPoint &pos );
+    void editNote(Akonadi::Entity::Id id);
 
-  private slots:
-    void createNote( KCal::Journal *journal );
-    void killNote( KCal::Journal *journal );
 
+private slots:
     void editNote( QListWidgetItem *item );
     void editNote();
 
@@ -79,18 +94,53 @@ class KNotesPart : public KParts::ReadOnlyPart
 
     void killSelectedNotes();
 
-    void printSelectedNotes();
-    void requestToolTip( const QModelIndex & );
+    void slotPrintSelectedNotes();
+    void slotPrintPreviewSelectedNotes();
 
-    void hideToolTip();
+    void slotNotePreferences();
+    void slotPreferences();
+    void slotMail();
+    void slotSendToNetwork();
+    void slotConfigUpdated();
+    void slotSetAlarm();
+    void slotNewNoteFromClipboard();
+    void slotSaveAs();
+    void slotUpdateReadOnly();
 
-  private:
-    KNotesIconView *mNotesView;
-    KNoteTip *mNoteTip;
-    KNoteEditDlg *mNoteEditDlg;
-
-    KNotesResourceManager *mManager;
-    QMultiHash<QString, KNotesIconViewItem*> mNoteList;
+    void slotNoteCreationFinished(KJob *job);
+    void slotRowInserted(const QModelIndex &parent, int start, int end);
+    void slotItemChanged(const Akonadi::Item &id, const QSet<QByteArray> &set);
+    void slotNoteSaved(KJob *);
+    void slotDeleteNotesFinished(KJob *job);
+    void slotItemRemoved(const Akonadi::Item &item);
+    void slotOpenFindDialog();
+    void slotSelectNote(Akonadi::Item::Id id);
+    void slotCollectionChanged(const Akonadi::Collection &col, const QSet<QByteArray> &set);
+    void slotItemFetchFinished(KJob *job);
+private:
+    void fetchNotesFromCollection(const Akonadi::Collection &col);
+    void updateNetworkListener();
+    void printSelectedNotes(bool preview);
+    KNotesWidget *mNotesWidget;
+    DNSSD::PublicService *mPublisher;
+    KAction *mNoteEdit;
+    KAction *mNoteRename;
+    KAction *mNoteDelete;
+    KAction *mNotePrint;
+    KAction *mNotePrintPreview;
+    KAction *mNoteConfigure;
+    KAction *mNoteSendMail;
+    KAction *mNoteSendNetwork;
+    KAction *mNoteSetAlarm;
+    KAction *mNewNote;
+    KAction *mSaveAs;
+    KToggleAction *mReadOnly;
+    NoteShared::NotesChangeRecorder *mNoteRecorder;
+    NoteShared::NotesAkonadiTreeModel *mNoteTreeModel;
+    QItemSelectionModel *mSelectionModel;
+    KCheckableProxyModel *mModelProxy;
+    KViewStateMaintainer<Akonadi::ETMViewStateSaver> *mModelState;
+    QPointer<KNoteFindDialog> mNoteFindDialog;
 };
 
 #endif

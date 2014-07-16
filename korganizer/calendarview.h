@@ -36,7 +36,8 @@
 
 #include <akonadi/calendar/itiphandler.h>
 
-class CalPrinter;
+#include <calendarsupport/messagewidget.h>
+
 class DateChecker;
 class DateNavigator;
 class DateNavigatorContainer;
@@ -51,8 +52,8 @@ namespace KOrg {
 }
 
 namespace CalendarSupport {
+  class CalPrinter;
   class IncidenceViewer;
-  class MessageWidget;
 }
 
 namespace IncidenceEditorNG {
@@ -63,6 +64,7 @@ namespace Akonadi {
   class History;
   class IncidenceChanger;
   class CalendarClipboard;
+  class TodoPurger;
 }
 
 class KVBox;
@@ -126,6 +128,8 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     void setCalendar( const Akonadi::ETMCalendar::Ptr & );
     Akonadi::ETMCalendar::Ptr calendar() const;
 
+    void showMessage(const QString &message, KMessageWidget::MessageType);
+
     Akonadi::History *history() const;
     void setCheckableProxyModel( KOCheckableProxyModel * );
 
@@ -188,18 +192,6 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
      *  for notification to update their settings. */
     void configChanged();
 
-    /** Emitted when the categories were updated, and thus the categories editor
-     *  dialog needs to reload the list of categories */
-    void categoriesChanged();
-
-    /** Emitted when the categories were edited by the user, and thus the views
-     *  need to reload the list of categories */
-    void categoryConfigChanged();
-
-    /** Emitted when the topwidget is closing down, so that any attached
-        child windows can also close. */
-    void closingDown();
-
     /** Emitted right before we die */
     void closed( QWidget * );
 
@@ -256,21 +248,7 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     void updateConfig();
     void updateConfig( const QByteArray & );
 
-    /** Calendar configuration was changed, so refresh categories list
-    */
-    void updateCategories();
     void handleIncidenceCreated(const Akonadi::Item &item);
-
-    /**
-      Load calendar from file \a filename. If \a merge is true, load
-      calendar into existing one, if it is false, clear calendar, before
-      loading. Return true, if calendar could be successfully loaded.
-        @param filename the file name to load the calendar from
-        @param merge If true, the items from the file are inserted into the
-                     current calendar (default resource or calendar file). If
-                     false, the file is added as a new calendar resource.
-    */
-    bool openCalendar( const QString &filename, bool merge=false );
 
     /**
       Save calendar data to file. Return true if calendar could be
@@ -278,12 +256,6 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
         @param filename The file name to save the calendar to
     */
     bool saveCalendar( const QString &filename );
-
-    /**
-      Close calendar. Clear calendar data and reset views to display an empty
-      calendar.
-    */
-    void closeCalendar();
 
     /** Archive old events of calendar */
     void archiveCalendar();
@@ -682,6 +654,7 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
   private Q_SLOTS:
     void onCheckableProxyAboutToToggle( bool newState );
     void onCheckableProxyToggled( bool newState );
+    void onTodosPurged(bool success, int numDeleted, int numIgnored);
 
   private:
     void init();
@@ -691,11 +664,6 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     void createPrinter();
 
     void dissociateOccurrence( const Akonadi::Item &incidence, const QDate & , bool futureOccurrences);
-
-    // Helper function for purgeCompleted that recursively purges a todo and
-    // its subitems. If it cannot delete a completed todo (because it has
-    // uncompleted subitems), notAllPurged is set to true.
-    bool purgeCompletedSubTodos( const Akonadi::Item &todo, bool &notAllPurged );
 
     /**
      * Returns the default collection.
@@ -713,7 +681,8 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     IncidenceEditorNG::IncidenceDialog *createIncidenceEditor(
       const Akonadi::Item &item, const Akonadi::Collection &collection = Akonadi::Collection() );
 
-    CalPrinter *mCalPrinter;
+    CalendarSupport::CalPrinter *mCalPrinter;
+    Akonadi::TodoPurger *mTodoPurger;
 
     QSplitter *mPanner;
     QSplitter *mLeftSplitter;

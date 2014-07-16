@@ -29,6 +29,7 @@
 #include <QtCore/QQueue>
 #include <QStringList>
 
+class QTimer;
 class KTcpSocket;
 
 namespace KManageSieve {
@@ -40,16 +41,16 @@ class SieveJob;
  */
 class Session : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit Session( QObject *parent = 0 );
     ~Session();
 
     void connectToHost( const KUrl &url );
     void disconnectFromHost( bool sendLogout = true );
 
-    void scheduleJob( SieveJob* job );
-    void killJob( SieveJob* job );
+    void scheduleJob( SieveJob *job );
+    void killJob( SieveJob *job );
     void sendData( const QByteArray &data );
     void feedBack( const QByteArray &data );
 
@@ -58,7 +59,7 @@ class Session : public QObject
 
     QStringList sieveExtensions() const;
 
-  private:
+private:
     bool requestCapabilitiesAfterStartTls() const;
     void startAuthentication();
     QStringList requestedSaslMethod() const;
@@ -67,13 +68,17 @@ class Session : public QObject
     bool saslClientStep( const QByteArray &challenge );
     void processResponse( const Response &response, const QByteArray &data );
 
-  private slots:
+private slots:
     void dataReceived();
     void socketError();
     void startSsl();
     void executeNextJob();
+    void slotSslTimeout();
+    void slotEncryptedDone();
 
-  private:
+private:
+    void sslResult(bool encrypted);
+
     KUrl m_url;
     KTcpSocket *m_socket;
     sasl_conn_t *m_sasl_conn;
@@ -84,12 +89,13 @@ class Session : public QObject
     QStringList m_saslMethods;
     QString m_implementation;
     enum State {
-      None,
-      PreTlsCapabilities,
-      PostTlsCapabilities,
-      StartTls,
-      Authenticating
+        None,
+        PreTlsCapabilities,
+        PostTlsCapabilities,
+        StartTls,
+        Authenticating
     };
+    QTimer *m_sslCheck;
     State m_state;
     Response m_lastResponse;
     QByteArray m_data;

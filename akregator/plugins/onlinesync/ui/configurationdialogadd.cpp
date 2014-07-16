@@ -25,8 +25,6 @@
 #include "configurationdialogadd.h"
 
 #include <kdebug.h>
-#include <QErrorMessage>
-#include <QTimer>
 
 
 using namespace feedsync;
@@ -139,4 +137,3 @@ void ConfigurationDialogAdd::slotUpdateUI()
     }
 }
 
-#include "configurationdialogadd.moc"

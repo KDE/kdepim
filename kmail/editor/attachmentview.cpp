@@ -39,8 +39,9 @@
 #include <KDebug>
 #include <KConfigGroup>
 #include <KIcon>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobal>
+#include <KLocale>
 
 #include <messagecore/attachment/attachmentpart.h>
 #include <boost/shared_ptr.hpp>
@@ -52,7 +53,7 @@ class KMail::AttachmentView::Private
 {
 public:
     Private(AttachmentView *qq)
-        : q(qq)
+        : model(0), q(qq)
     {
         widget = new QWidget();
         QHBoxLayout *lay = new QHBoxLayout;
@@ -228,4 +229,3 @@ void AttachmentView::slotShowHideAttchementList(bool show)
     }
 }
 
-#include "attachmentview.moc"

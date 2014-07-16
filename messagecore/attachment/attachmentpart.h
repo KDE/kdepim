@@ -38,7 +38,7 @@ namespace MessageCore {
  */
 class MESSAGECORE_EXPORT AttachmentPart
 {
-  public:
+public:
     /**
      * Defines a pointer to an attachment object.
      */
@@ -197,7 +197,7 @@ class MESSAGECORE_EXPORT AttachmentPart
      * (message/rfc822) or a collection of encapsulated messages (multipart/digest)
      */
     bool isMessageOrMessageCollection() const;
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

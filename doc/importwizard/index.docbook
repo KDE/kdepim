@@ -1,20 +1,16 @@
 <?xml version="1.0" ?>
-<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN"
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN"
 "dtd/kdex.dtd" [
-  <!-- Define an entity for your application if it is not part of KDE
-       CVS -->
-  <!ENTITY kapplication "<application>importwizard</application>">
-  <!ENTITY kappname "&kapplication;">
-  <!ENTITY package "kdepim">
+  <!ENTITY i18n-importwizard "<application>Import Wizard</application>">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE"> 
 ]>
 
-<book id="importwizard" lang="&language;">
+<article id="importwizard" lang="&language;">
 
-<bookinfo id="importwizardinfo">
+<articleinfo id="importwizardinfo">
 
-<title>The &kapplication; Handbook</title>
+<title>The &i18n-importwizard; Handbook</title>
 
 <authorgroup>
 <author>
@@ -32,41 +28,104 @@
 <holder>Laurent Montel</holder>
 </copyright>
 
-<legalnotice>&FDLNotice;</legalnotice>
+<date>2013-11-14</date>
+<releaseinfo>4.12 (&kde; 4.12)</releaseinfo>
 
-<date>2013-04-24</date>
-<releaseinfo>1.0</releaseinfo>
+</articleinfo>
 
-<abstract>
-<para>
-&kapplication; allows to import emails, settings and addressbook from other mailers.
-</para>
-</abstract>
-
-<keywordset>
-<keyword>KDE</keyword>
-<keyword>KMail</keyword>
-<keyword>Import</keyword>
-</keywordset>
-
-</bookinfo>
-<chapter id="introduction">
+<sect1 id="introduction">
 <title>Introduction</title>
 
-<para>&kapplication; allows to import emails, settings and addressbook from other mailers as Thunderbird, Evolution, Balsa &etc;</para>
-</chapter>
+<para>&i18n-importwizard; allows to import emails, settings, addressbook and calendar data in 
+your user account from the following mailers:</para>
+  <simplelist>
+    <member>Trojitá</member>
+    <member>Evolution 1.x - 3.x</member>
+    <member>OS X Mail</member>
+    <member>Opera</member>
+    <member>Sylpheed</member>
+    <member>Thunderbird/Mozilla</member>
+    <member>The Bat!</member>
+    <member>Outlook Express</member>
+    <member>Balsa</member>
+    <member>Pegasus-Mail</member>
+    <member>Claws Mail</member>
+  </simplelist>
 
-<chapter id="using-kapp">
-<title>Using &kapplication;</title>
-<para>using</para>
+<para>You can start &i18n-importwizard; can either from the application launcher or from &kmail; with  <menuchoice><guimenu>Tools</guimenu><guimenuitem>Import Wizard...</guimenuitem></menuchoice>
+</para>
 
-</chapter>
+<note>
+<para>Close &kmail; before importing data. Some plugins will modify &kmail;'s configuration file.</para>
+</note>
 
-<chapter id="credits">
+<para>For information about other utilities to import mails please read the 
+<ulink url="help:kmailcvt">KMailCVT Handbook</ulink> and the chapter 
+<ulink url="help:/pimsettingexporter">PIM Setting Exporter</ulink> in &kmail;'s handbook.</para>
+
+<sect2 id="using-kapp">
+<title>Using &i18n-importwizard;</title>
+
+<para>At startup the import wizard will detect all supported email applications,
+and list them for you in the window. Select the email application you want to import from,
+and click the <guibutton>Next</guibutton> button. The wizard will then ask if you want to import everything,
+or give you options to select which types of materials you want to import.</para>
+
+<screenshot>
+<screeninfo>Import Selection</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="import-selection.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Import Selection</phrase>
+    </textobject>
+    <caption>
+      <para>Import Selection</para>
+    </caption>
+  </mediaobject>
+</screenshot>
+
+<para>Depending on your selections in the materials to import screen,
+you will see one or more of the following screens:</para>
+
+<itemizedlist>
+
+<listitem><para>To <guilabel>Import mail messages</guilabel>, you need to 
+select the folder you want your email messages to import into. 
+Once selected, click the <guibutton>Import Mails</guibutton> button.
+Once the progress bar reaches 100%, click the <guibutton>Next</guibutton> button, 
+or the <guibutton>Finish</guibutton> button, if this was your last material 
+selection.</para></listitem>
+
+<listitem><para>To <guilabel>Import mail filters</guilabel>, click the <guibutton>Import 
+Filters</guibutton> button and it will import any filters it found, once finished click 
+the <guibutton>Next</guibutton> button, or the <guibutton>Finish</guibutton> button, 
+if this was your last material selection.</para></listitem>
+
+<listitem><para>To <guilabel>Import settings</guilabel>, click the <guibutton>Import 
+Settings</guibutton> button. The wizard will ask you some questions &eg; which folder 
+to use for account folders that do not exist. The wizard will also create your identity. 
+Once complete, click the <guibutton>Next</guibutton> button, or the <guibutton>Finish</guibutton> 
+button, if this was your last material selection.</para></listitem>
+
+<listitem><para>To <guilabel>Import address books</guilabel>, click the <guibutton>Import 
+address book</guibutton> button, and it will import all address books it finds. 
+Once complete, click the <guibutton>Next</guibutton> button.</para></listitem>
+
+</itemizedlist>
+
+<para>Click the <guibutton>Finish</guibutton> button to complete and exit the wizard. 
+If at any time you wish to end the wizard, you can click the <guibutton>Cancel</guibutton> 
+button.</para>
+
+</sect2>
+
+<sect2 id="credits">
 
 <title>Credits and License</title>
 
-<para>&kapplication;</para>
+<para>&i18n-importwizard;</para>
 <para>
 Program copyright 2013 Laurent Montel montel@kde.org 
 </para>
@@ -77,23 +136,12 @@ Documentation Copyright &copy; 2013 Laurent Montel montel@kde.org
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 
 &underFDL;               <!-- FDL: do not remove -->
-&underGPL;        	 <!-- GPL License -->
-</chapter>
-
-<appendix id="installation">
-<title>Installation</title>
-
-<sect1 id="compilation">
-<title>Compilation and Installation</title>
-
-&install.compile.documentation;
+&underGPL;           <!-- GPL License -->
+</sect2>
 
 </sect1>
 
-</appendix>
-
-&documentation.index;
-</book>
+</article>
 
 <!--
 Local Variables:

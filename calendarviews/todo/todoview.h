@@ -34,6 +34,7 @@
 #include <KConfig>
 #include <QPointer>
 
+class KJob;
 class TodoCategoriesDelegate;
 class TodoViewQuickAddLine;
 class TodoViewQuickSearch;
@@ -52,6 +53,7 @@ class QItemSelection;
 class QMenu;
 class QModelIndex;
 class QToolButton;
+class QTimer;
 
 namespace EventViews {
 
@@ -91,7 +93,6 @@ class EVENTVIEWS_EXPORT TodoView : public EventViews::EventView
                             const QDate &preferredMonth = QDate() );
     virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
     virtual void updateView();
-    void updateCategories();
     virtual void changeIncidenceDisplay( const Akonadi::Item &incidence, Akonadi::IncidenceChanger::ChangeType changeType );
     virtual void updateConfig();
     virtual void clearSelection();
@@ -100,6 +101,7 @@ class EVENTVIEWS_EXPORT TodoView : public EventViews::EventView
     void saveViewState();
 
   protected Q_SLOTS:
+    void resizeEvent( QResizeEvent * ) /*Q_DECL_OVERRIDE*/;
     void addQuickTodo( Qt::KeyboardModifiers modifier );
 
     void contextMenu( const QPoint &pos );
@@ -116,7 +118,8 @@ class EVENTVIEWS_EXPORT TodoView : public EventViews::EventView
     void copyTodoToDate( const QDate &date );
 
   private Q_SLOTS:
-    void resizeColumnsToContent();
+    void scheduleResizeColumns();
+    void resizeColumns();
     void itemDoubleClicked( const QModelIndex &index );
     void setNewDate( const QDate &date );
     void setNewPercentage( QAction *action );
@@ -125,6 +128,9 @@ class EVENTVIEWS_EXPORT TodoView : public EventViews::EventView
     void setFullView( bool fullView );
 
     void setFlatView( bool flatView, bool notifyOtherViews = true );
+
+    void onRowsInserted( const QModelIndex &parent, int start, int end );
+    void onTagsFetched(KJob*);
 
   Q_SIGNALS:
     void purgeCompletedSignal();
@@ -141,7 +147,7 @@ class EVENTVIEWS_EXPORT TodoView : public EventViews::EventView
 
     /** Creates a new todo with the given text as summary under the given parent */
     void addTodo( const QString &summary,
-                  const KCalCore::Todo::Ptr &parent = KCalCore::Todo::Ptr(),
+                  const Akonadi::Item &parentItem,
                   const QStringList &categories = QStringList() );
 
     TodoViewView *mView;
@@ -168,11 +174,12 @@ class EVENTVIEWS_EXPORT TodoView : public EventViews::EventView
 
     QMap<QAction *,int> mPercentage;
     QMap<QAction *,int> mPriority;
-    QMap<QAction *,QString> mCategory;
     bool mSidebarView;
+    bool mResizeColumnsScheduled;
+    QTimer *mResizeColumnsTimer;
 };
 
-  
+
 }
 
 #endif

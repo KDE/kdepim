@@ -20,22 +20,22 @@
 #include "widgets/minimumcombobox.h"
 #include "translatorutil.h"
 #include "googletranslator.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
+
 #include <KTextEdit>
-#include <KComboBox>
 #include <KPushButton>
-#include <KLocale>
+#include <KLocalizedString>
 #include <kio/job.h>
 #include <KDebug>
 #include <KConfigGroup>
 #include <KSeparator>
-
+#include <KMessageBox>
+#include <KToggleAction>
 #include <kpimutils/progressindicatorwidget.h>
 
-#include <QPair>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QLabel>
-#include <QRegExp>
 #include <QToolButton>
 #include <QKeyEvent>
 #include <QShortcut>
@@ -48,7 +48,11 @@ class TranslatorWidget::TranslatorWidgetPrivate
 {
 public:
     TranslatorWidgetPrivate()
-        : abstractTranslator(0)
+        : abstractTranslator(0),
+          action(0),
+          languageSettingsChanged(false),
+          networkUp(true),
+          standalone(true)
     {
 
     }
@@ -63,16 +67,22 @@ public:
     QMap<QString, QMap<QString, QString> > listLanguage;
     QByteArray data;
     TranslatorTextEdit *inputText;
-    TranslatorResultTextEdit *translatedText;
+    PimCommon::PlainTextEditorWidget *translatedText;
+    TranslatorResultTextEdit *translatorResultTextEdit;
     MinimumComboBox *from;
     MinimumComboBox *to;
     KPushButton *translate;
     PimCommon::AbstractTranslator *abstractTranslator;
     KPIMUtils::ProgressIndicatorWidget *progressIndictor;
+    KPushButton *invert;
     QSplitter *splitter;
+    KToggleAction *action;
+    bool languageSettingsChanged;
+    bool networkUp;
+    bool standalone;
 };
 
-void TranslatorWidget::TranslatorWidgetPrivate::fillToCombobox( const QString& lang )
+void TranslatorWidget::TranslatorWidgetPrivate::fillToCombobox( const QString &lang )
 {
     to->clear();
     const QMap<QString, QString> list = listLanguage.value( lang );
@@ -94,7 +104,7 @@ void TranslatorWidget::TranslatorWidgetPrivate::initLanguage()
 
 
 TranslatorResultTextEdit::TranslatorResultTextEdit(QWidget *parent)
-    : KTextEdit(parent),
+    : PimCommon::PlainTextEditor(parent),
       mResultFailed(false)
 {
     setReadOnly( true );
@@ -121,7 +131,7 @@ void TranslatorResultTextEdit::paintEvent( QPaintEvent *event )
 
         p.drawText( QRect( 0, 0, width(), height() ), Qt::AlignCenter, i18n( "Problem when connecting to the translator web site." ) );
     } else {
-        KTextEdit::paintEvent( event );
+        PimCommon::PlainTextEditor::paintEvent( event );
     }
 }
 
@@ -140,12 +150,12 @@ void TranslatorTextEdit::dropEvent( QDropEvent *event )
             cursor.endEditBlock();
             event->setDropAction(Qt::CopyAction);
             event->accept();
+            Q_EMIT translateText();
             return;
         }
     }
     QTextEdit::dropEvent(event);
 }
-
 
 TranslatorWidget::TranslatorWidget( QWidget* parent )
     : QWidget( parent ),
@@ -171,8 +181,10 @@ TranslatorWidget::~TranslatorWidget()
 void TranslatorWidget::writeConfig()
 {
     KConfigGroup myGroup( KGlobal::config(), "TranslatorWidget" );
-    myGroup.writeEntry( QLatin1String( "FromLanguage" ), d->from->itemData(d->from->currentIndex()).toString() );
-    myGroup.writeEntry( "ToLanguage", d->to->itemData(d->to->currentIndex()).toString() );
+    if (d->languageSettingsChanged) {
+        myGroup.writeEntry( QLatin1String( "FromLanguage" ), d->from->itemData(d->from->currentIndex()).toString() );
+        myGroup.writeEntry( "ToLanguage", d->to->itemData(d->to->currentIndex()).toString() );
+    }
     myGroup.writeEntry( "mainSplitter", d->splitter->sizes());
     myGroup.sync();
 }
@@ -199,15 +211,16 @@ void TranslatorWidget::readConfig()
 
 void TranslatorWidget::init()
 {
-    d->abstractTranslator = new /*BabelFishTranslator*/GoogleTranslator();
+    d->abstractTranslator = new GoogleTranslator();
     connect(d->abstractTranslator, SIGNAL(translateDone()), SLOT(slotTranslateDone()));
-    connect(d->abstractTranslator, SIGNAL(translateFailed(bool)), SLOT(slotTranslateFailed(bool)));
+    connect(d->abstractTranslator, SIGNAL(translateFailed(bool,QString)), SLOT(slotTranslateFailed(bool,QString)));
 
     QVBoxLayout *layout = new QVBoxLayout( this );
-    layout->setMargin( 0 );
+    layout->setMargin( 2 );
     QHBoxLayout *hboxLayout = new QHBoxLayout;
     QToolButton * closeBtn = new QToolButton( this );
-    closeBtn->setIcon( KIcon( "dialog-close" ) );
+    closeBtn->setObjectName(QLatin1String("close-button"));
+    closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );
     closeBtn->setIconSize( QSize( 16, 16 ) );
     closeBtn->setToolTip( i18n( "Close" ) );
 
@@ -221,24 +234,29 @@ void TranslatorWidget::init()
     QLabel *label = new QLabel( i18nc( "Translate from language", "From:" ) );
     hboxLayout->addWidget( label );
     d->from = new MinimumComboBox;
+    d->from->setObjectName(QLatin1String("from"));
     hboxLayout->addWidget( d->from );
 
     label = new QLabel( i18nc( "Translate to language", "To:" ) );
     hboxLayout->addWidget( label );
     d->to = new MinimumComboBox;
+    d->to->setObjectName(QLatin1String("to"));
     connect( d->to, SIGNAL(currentIndexChanged(int)), SLOT(slotTranslate()) );
+    connect( d->to, SIGNAL(currentIndexChanged(int)), SLOT(slotConfigChanged()));
     hboxLayout->addWidget( d->to );
 
     KSeparator *separator = new KSeparator;
     separator->setOrientation(Qt::Vertical);
     hboxLayout->addWidget( separator );
 
-    KPushButton *invert = new KPushButton(
+    d->invert = new KPushButton(
                 i18nc("Invert language choices so that from becomes to and to becomes from", "Invert"),this);
-    connect(invert, SIGNAL(clicked()), this, SLOT(slotInvertLanguage()));
-    hboxLayout->addWidget(invert);
+    d->invert->setObjectName(QLatin1String("invert-button"));
+    connect(d->invert, SIGNAL(clicked()), this, SLOT(slotInvertLanguage()));
+    hboxLayout->addWidget(d->invert);
 
     KPushButton *clear = new KPushButton(i18n("Clear"),this);
+    clear->setObjectName(QLatin1String("clear-button"));
 #ifndef QT_NO_ACCESSIBILITY
     clear->setAccessibleName( i18n("Clear") );
 #endif
@@ -246,6 +264,7 @@ void TranslatorWidget::init()
     hboxLayout->addWidget(clear);
 
     d->translate = new KPushButton( i18n( "Translate" ) );
+    d->translate->setObjectName(QLatin1String("translate-button"));
 #ifndef QT_NO_ACCESSIBILITY
     d->translate->setAccessibleName( i18n("Translate") );
 #endif
@@ -255,9 +274,9 @@ void TranslatorWidget::init()
     connect( d->translate, SIGNAL(clicked()), SLOT(slotTranslate()) );
 
 #if !defined(NDEBUG)
-    KPushButton *debug = new KPushButton(i18n("Debug"));
-    connect(debug,SIGNAL(clicked()),this,SLOT(slotDebug()));
-    hboxLayout->addWidget( debug );
+    QPushButton *debugButton = new QPushButton( i18n("Debug") );
+    hboxLayout->addWidget( debugButton );
+    connect( debugButton, SIGNAL(clicked()), SLOT(slotDebug()));
 #endif
 
     d->progressIndictor = new KPIMUtils::ProgressIndicatorWidget(this);
@@ -270,12 +289,17 @@ void TranslatorWidget::init()
     d->splitter = new QSplitter;
     d->splitter->setChildrenCollapsible( false );
     d->inputText = new TranslatorTextEdit;
+    d->inputText->setObjectName(QLatin1String("inputtext"));
+    d->inputText->enableFindReplace(false);
     d->inputText->setAcceptRichText(false);
     d->inputText->setClickMessage(i18n("Drag text that you want to translate."));
     connect( d->inputText, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
+    connect( d->inputText, SIGNAL(translateText()), SLOT(slotTranslate()));
 
     d->splitter->addWidget( d->inputText );
-    d->translatedText = new TranslatorResultTextEdit;
+    d->translatorResultTextEdit = new TranslatorResultTextEdit;
+    d->translatedText = new PimCommon::PlainTextEditorWidget(d->translatorResultTextEdit, this);
+    d->translatedText->setObjectName(QLatin1String("translatedtext"));
     d->translatedText->setReadOnly( true );
     d->splitter->addWidget( d->translatedText );
 
@@ -283,13 +307,40 @@ void TranslatorWidget::init()
 
     d->initLanguage();
     connect( d->from, SIGNAL(currentIndexChanged(int)), SLOT(slotFromLanguageChanged(int)) );
+    connect( d->from, SIGNAL(currentIndexChanged(int)), SLOT(slotConfigChanged()));
 
     d->from->setCurrentIndex( 0 ); //Fill "to" combobox
-    slotFromLanguageChanged( 0 );
+    slotFromLanguageChanged( 0, true );
     slotTextChanged();
     readConfig();
     hide();
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
+    d->languageSettingsChanged = false;
+
+    connect ( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
+              this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
+    Solid::Networking::Status networkStatus = Solid::Networking::status();
+    if ( ( networkStatus == Solid::Networking::Unconnected ) ||
+         ( networkStatus == Solid::Networking::Disconnecting ) ||
+         ( networkStatus == Solid::Networking::Connecting ))
+        d->networkUp = false;
+    else
+        d->networkUp = true;
+}
+
+KToggleAction *TranslatorWidget::toggleAction()
+{
+    if (!d->action) {
+        d->action = new KToggleAction( i18n("&Translator"), this );
+        d->action->setShortcut( QKeySequence( Qt::CTRL + Qt::ALT + Qt::Key_T ) );
+        d->action->setChecked(false);
+    }
+    return d->action;
+}
+
+void TranslatorWidget::slotConfigChanged()
+{
+    d->languageSettingsChanged = true;
 }
 
 void TranslatorWidget::slotTextChanged()
@@ -297,9 +348,10 @@ void TranslatorWidget::slotTextChanged()
     d->translate->setEnabled( !d->inputText->document()->isEmpty() );
 }
 
-void TranslatorWidget::slotFromLanguageChanged( int index )
+void TranslatorWidget::slotFromLanguageChanged(int index, bool initialize)
 {
     const QString lang = d->from->itemData(index).toString();
+    d->invert->setEnabled(lang != QLatin1String("auto"));
     const QString to = d->to->itemData(d->to->currentIndex()).toString();
     d->to->blockSignals(true);
     d->fillToCombobox( lang );
@@ -308,23 +360,28 @@ void TranslatorWidget::slotFromLanguageChanged( int index )
     if ( indexTo != -1 ) {
         d->to->setCurrentIndex( indexTo );
     }
-    slotTranslate();
+    if (!initialize)
+        slotTranslate();
 }
 
 void TranslatorWidget::setTextToTranslate( const QString& text)
 {
     d->inputText->setPlainText( text );
-    d->translatedText->clear();
+    d->translatorResultTextEdit->clear();
     slotTranslate();
 }
 
-
 void TranslatorWidget::slotTranslate()
 {
-    const QString textToTranslate = d->inputText->toPlainText();
-    if ( textToTranslate.isEmpty() )
+    if (!d->networkUp) {
+        KMessageBox::information(this, i18n("No network connection detected, we cannot translate text."), i18n("No network"));
         return;
-    d->translatedText->clear();
+    }
+    const QString textToTranslate = d->inputText->toPlainText();
+    if ( textToTranslate.trimmed().isEmpty() )
+        return;
+
+    d->translatorResultTextEdit->clear();
 
     const QString from = d->from->itemData(d->from->currentIndex()).toString();
     const QString to = d->to->itemData(d->to->currentIndex()).toString();
@@ -341,25 +398,29 @@ void TranslatorWidget::slotTranslateDone()
 {
     d->translate->setEnabled( true );
     d->progressIndictor->stop();
-    d->translatedText->setResultFailed(false);
-    d->translatedText->setPlainText(d->abstractTranslator->resultTranslate());
+    d->translatorResultTextEdit->setResultFailed(false);
+    d->translatorResultTextEdit->setPlainText(d->abstractTranslator->resultTranslate());
 }
 
-void TranslatorWidget::slotTranslateFailed(bool signalFailed)
+void TranslatorWidget::slotTranslateFailed(bool signalFailed, const QString &message)
 {
     d->translate->setEnabled( true );
     d->progressIndictor->stop();
-    d->translatedText->setResultFailed(signalFailed);
-    d->translatedText->clear();
+    d->translatorResultTextEdit->setResultFailed(signalFailed);
+    d->translatorResultTextEdit->clear();
+    if (!message.isEmpty()) {
+        KMessageBox::error(this, message, i18n("Translate error"));
+    }
 }
 
 void TranslatorWidget::slotInvertLanguage()
 {
-    const QString toLanguage = d->to->itemData(d->to->currentIndex()).toString();
     const QString fromLanguage = d->from->itemData(d->from->currentIndex()).toString();
+    // don't invert when fromLanguage == auto
+    if (fromLanguage == QLatin1String("auto"))
+        return;
 
-    d->from->blockSignals(true);
-    d->to->blockSignals(true);
+    const QString toLanguage = d->to->itemData(d->to->currentIndex()).toString();
     const int indexFrom = d->from->findData( toLanguage );
     if ( indexFrom != -1 ) {
         d->from->setCurrentIndex( indexFrom );
@@ -368,17 +429,23 @@ void TranslatorWidget::slotInvertLanguage()
     if ( indexTo != -1 ) {
         d->to->setCurrentIndex( indexTo );
     }
-    d->from->blockSignals(false);
-    d->to->blockSignals(false);
     slotTranslate();
+}
+
+void TranslatorWidget::setStandalone(bool b)
+{
+    d->standalone = b;
 }
 
 void TranslatorWidget::slotCloseWidget()
 {
+    if (isHidden())
+        return;
     d->inputText->clear();
-    d->translatedText->clear();
+    d->translatorResultTextEdit->clear();
     d->progressIndictor->stop();
-    hide();
+    if (d->standalone)
+        hide();
     Q_EMIT translatorWasClosed();
 }
 
@@ -402,16 +469,27 @@ bool TranslatorWidget::event(QEvent* e)
 void TranslatorWidget::slotClear()
 {
     d->inputText->clear();
-    d->translatedText->clear();
+    d->translatorResultTextEdit->clear();
     d->translate->setEnabled( false );
+    d->abstractTranslator->clear();
 }
 
 void TranslatorWidget::slotDebug()
 {
+#if !defined(NDEBUG)
     d->abstractTranslator->debug();
+#endif
 }
 
-#include "translatorwidget.moc"
+void TranslatorWidget::slotSystemNetworkStatusChanged( Solid::Networking::Status status )
+{
+    if ( status == Solid::Networking::Connected || status == Solid::Networking::Unknown) {
+        d->networkUp = true;
+    } else {
+        d->networkUp = false;
+    }
+}
+
 
 
 

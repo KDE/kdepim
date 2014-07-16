@@ -35,8 +35,10 @@
 #include "koglobals.h"
 #include "korganizerifaceimpl.h"
 
-#include <libkdepim/progresswidget/progressdialog.h>
-#include <libkdepim/progresswidget/statusbarprogresswidget.h>
+#include "libkdepim/progresswidget/progressstatusbarwidget.h"
+#include "libkdepim/progresswidget/statusbarprogresswidget.h"
+
+
 
 #include <KAction>
 #include <KActionCollection>
@@ -56,7 +58,7 @@ KOrganizer::KOrganizer() : KParts::MainWindow(), KOrg::MainWindow()
 //  setMinimumSize(600,400);  // make sure we don't get resized too small...
 
   mCalendarView = new CalendarView( this );
-  mCalendarView->setObjectName( "KOrganizer::CalendarView" );
+  mCalendarView->setObjectName( QLatin1String("KOrganizer::CalendarView") );
   setCentralWidget( mCalendarView );
 
   mActionManager = new ActionManager( this, mCalendarView, this, this, false, menuBar() );
@@ -91,17 +93,12 @@ void KOrganizer::init( bool document )
 
   KStatusBar *bar = statusBar();
 
-  bar->insertItem( "", ID_GENERAL, 10 );
+  bar->insertItem( QString(), ID_GENERAL, 10 );
   connect( bar, SIGNAL(pressed(int)), SLOT(statusBarPressed(int)) );
 
-  KPIM::ProgressDialog *progressDialog = new KPIM::ProgressDialog( bar, this );
-  progressDialog->hide();
+  KPIM::ProgressStatusBarWidget *progressBar = new KPIM::ProgressStatusBarWidget( statusBar(), this);
 
-  KPIM::StatusbarProgressWidget *progressWidget;
-  progressWidget = new KPIM::StatusbarProgressWidget( progressDialog, bar );
-  progressWidget->show();
-
-  bar->addPermanentWidget( progressWidget );
+  bar->addPermanentWidget( progressBar->littleProgress() );
 
   connect( mActionManager->view(), SIGNAL(statusMessage(QString)),
            SLOT(showStatusMessage(QString)) );
@@ -115,7 +112,7 @@ void KOrganizer::newMainWindow( const KUrl &url )
   KOrganizer *korg = new KOrganizer();
   if ( url.isValid() || url.isEmpty() ) {
     korg->init( true );
-    if ( korg->openURL( url ) || url.isEmpty() ) {
+    if ( mActionManager->importURL( url, false ) || url.isEmpty() ) {
       korg->show();
     } else {
       delete korg;
@@ -157,7 +154,7 @@ void KOrganizer::initActions()
   KStandardAction::configureToolbars( this, SLOT(configureToolbars()), actionCollection() );
   KStandardAction::quit( this, SLOT(close()), actionCollection() );
 
-  setXMLFile( "korganizerui.rc", true );
+  setXMLFile( QLatin1String("korganizerui.rc"), true );
   createGUI( 0 );
 
   setAutoSaveSettings();
@@ -204,7 +201,7 @@ void KOrganizer::showStatusMessage( const QString &message )
 
 bool KOrganizer::openURL( const KUrl &url, bool merge )
 {
-  return mActionManager->openURL( url, merge );
+  return mActionManager->importURL( url, merge );
 }
 
 bool KOrganizer::saveURL()
@@ -256,14 +253,13 @@ void KOrganizer::setTitle()
     }
 
     if ( mCalendarView->isReadOnly() ) {
-      title += " [" + i18nc( "the calendar is read-only", "read-only" ) + ']';
+      title += QLatin1String(" [") + i18nc( "the calendar is read-only", "read-only" ) + QLatin1Char(']');
     }
   }
   if ( mCalendarView->isFiltered() ) {
-    title += " - <" + mCalendarView->currentFilterName() + "> ";
+    title += QLatin1String(" - <") + mCalendarView->currentFilterName() + QLatin1String("> ");
   }
 
   setCaption( title, false );
 }
 
-#include "korganizer.moc"

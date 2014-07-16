@@ -48,4 +48,3 @@ void QmlDateEdit::setDisplayFormat( const QString &format )
 
 }
 
-#include "qmldateedit.moc"

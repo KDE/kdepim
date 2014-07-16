@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -21,6 +21,8 @@
 #include <QGroupBox>
 #include <QListWidgetItem>
 class QListWidget;
+class QDomDocument;
+class QDomNode;
 class KPushButton;
 
 namespace KSieveUi {
@@ -50,12 +52,16 @@ class SieveScriptListBox : public QGroupBox
 public:
     explicit SieveScriptListBox(const QString &title, QWidget *parent = 0);
     ~SieveScriptListBox();
+
     QString generatedScript(QString &requires) const;
+    void loadScript(const QDomDocument &doc, QString &error);
 
 Q_SIGNALS:
-    void addNewPage(QWidget *);
+    void addNewPage(KSieveUi::SieveScriptPage *);
     void removePage(QWidget *);
     void activatePage(QWidget *);
+    void enableButtonOk(bool);
+    void valueChanged();
 
 private Q_SLOTS:
     void slotNew();
@@ -68,7 +74,23 @@ private Q_SLOTS:
     void slotBottom();
     void slotDown();
     void slotUp();
+
 private:
+    enum ParseSieveScriptTypeBlock {
+        TypeUnknown = 0,
+        TypeBlockIf,
+        TypeBlockElsif,
+        TypeBlockElse,
+        TypeBlockInclude,
+        TypeBlockGlobal,
+        TypeBlockAction,
+        TypeBlockForeachBlock
+    };
+
+    void loadBlock(QDomNode &n, SieveScriptPage *currentPage, ParseSieveScriptTypeBlock typeBlock, QString &error);
+    void clear();
+    SieveScriptPage *createNewScript(const QString &newName, const QString &description = QString());
+    QString createUniqName();
     QListWidget *mSieveListScript;
     KPushButton *mBtnNew;
     KPushButton *mBtnDelete;
@@ -78,6 +100,7 @@ private:
     KPushButton *mBtnUp;
     KPushButton *mBtnDown;
     KPushButton *mBtnBottom;
+    int mScriptNumber;
 };
 }
 

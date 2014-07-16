@@ -41,9 +41,9 @@ namespace MailCommon {
  */
 class FilterActionWithAddress : public FilterActionWithString
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * @copydoc FilterAction::FilterAction
      */

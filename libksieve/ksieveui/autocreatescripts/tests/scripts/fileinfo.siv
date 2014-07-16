@@ -1,0 +1,10 @@
+require "fileinto";
+require "copy";
+require "mailbox";
+
+#Script name: scriptname
+
+if header :is "Content-Type" "png"
+{
+    fileinto :copy :create "INBOX";
+}

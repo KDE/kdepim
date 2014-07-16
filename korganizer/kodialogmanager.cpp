@@ -38,6 +38,7 @@
 #include <incidenceeditor-ng/incidencedialogfactory.h>
 
 #include <Akonadi/Item>
+#include <Akonadi/TagManagementDialog>
 
 #include <KCalCore/Visitor>
 
@@ -89,14 +90,14 @@ void KODialogManager::showOptionsDialog()
              mMainView, SLOT(updateConfig(QByteArray)) );
     QStringList modules;
 
-    modules.append( "korganizer_configmain.desktop" );
-    modules.append( "korganizer_configtime.desktop" );
-    modules.append( "korganizer_configviews.desktop" );
-    modules.append( "korganizer_configcolorsandfonts.desktop" );
-    modules.append( "korganizer_configgroupscheduling.desktop" );
-    modules.append( "korganizer_configfreebusy.desktop" );
-    modules.append( "korganizer_configplugins.desktop" );
-    modules.append( "korganizer_configdesignerfields.desktop" );
+    modules.append( QLatin1String("korganizer_configmain.desktop") );
+    modules.append( QLatin1String("korganizer_configtime.desktop") );
+    modules.append( QLatin1String("korganizer_configviews.desktop") );
+    modules.append( QLatin1String("korganizer_configcolorsandfonts.desktop") );
+    modules.append( QLatin1String("korganizer_configgroupscheduling.desktop") );
+    modules.append( QLatin1String("korganizer_configfreebusy.desktop") );
+    modules.append( QLatin1String("korganizer_configplugins.desktop") );
+    modules.append( QLatin1String("korganizer_configdesignerfields.desktop") );
 
     // add them all
     QStringList::iterator mit;
@@ -126,7 +127,6 @@ void KODialogManager::showSearchDialog()
              mMainView, SLOT(editIncidence(Akonadi::Item)) );
     connect( mSearchDialog, SIGNAL(deleteIncidenceSignal(Akonadi::Item)),
              mMainView, SLOT(deleteIncidence(Akonadi::Item)) );
-    connect( mMainView, SIGNAL(closingDown()),mSearchDialog,SLOT(reject()) );
   }
   // make sure the widget is on top again
   mSearchDialog->show();
@@ -195,13 +195,8 @@ void KODialogManager::connectEditor( IncidenceEditorNG::IncidenceDialog *editor 
   connect( editor, SIGNAL(deleteIncidenceSignal(Akonadi::Item)),
            mMainView, SLOT(deleteIncidence(Akonadi::Item)) );
 
-  connect( mCategoryEditDialog, SIGNAL(categoryConfigChanged()),
-           editor, SIGNAL(updateCategoryConfig()) );
-  connect( editor, SIGNAL(editCategories()),
-           mCategoryEditDialog, SLOT(show()) );
   connect( editor, SIGNAL(dialogClose(Akonadi::Item)),
            mMainView, SLOT(dialogClosing(Akonadi::Item)) );
-  connect( mMainView, SIGNAL(closingDown()), editor, SLOT(reject()) );
   connect( editor, SIGNAL(deleteAttendee(Akonadi::Item)),
            mMainView, SIGNAL(cancelAttendees(Akonadi::Item)) );
 }
@@ -216,20 +211,10 @@ void KODialogManager::updateSearchDialog()
 void KODialogManager::createCategoryEditor()
 {
   if ( mCategoryEditDialog == 0 ) {
-    CalendarSupport::CategoryConfig *cc =
-      new CalendarSupport::CategoryConfig( KOPrefs::instance(), this );
-
-    mCategoryEditDialog =
-      new IncidenceEditorNG::CategoryEditDialog( cc, mMainView );
+    mCategoryEditDialog = new Akonadi::TagManagementDialog(mMainView);
 
     mCategoryEditDialog->setModal( true );
-    mCategoryEditDialog->setHelp( "categories-view", "korganizer" );
-
-    connect( mMainView, SIGNAL(categoriesChanged()),
-             mCategoryEditDialog, SLOT(reload()) );
-    connect( mCategoryEditDialog, SIGNAL(categoryConfigChanged()),
-             mMainView, SIGNAL(categoryConfigChanged()) );
+    mCategoryEditDialog->setHelp( QLatin1String("categories-view"), QLatin1String("korganizer") );
   }
 }
 
-#include "kodialogmanager.moc"

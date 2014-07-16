@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -23,6 +23,7 @@ QStringList DefaultCompletion::defaultCompetion()
     QStringList lst;
     lst <<QLatin1String( "<div>" )
         <<QLatin1String( "class=\"fancy header\"" )
+        <<QLatin1String( "header.absoluteThemePath" )
         <<QLatin1String( "header.subjecti18n" )
         <<QLatin1String( "header.subject" )
         <<QLatin1String( "header.replyToi18n" )
@@ -60,7 +61,9 @@ QStringList DefaultCompletion::defaultCompetion()
         <<QLatin1String( "header.subjectDir" )
         <<QLatin1String( "header.photourl" )
         <<QLatin1String( "header.isprinting" )
-        <<QLatin1String( "header.vcardi18n" );
+        <<QLatin1String( "header.vcardi18n" )
+        <<QLatin1String( "header.resentto")
+        <<QLatin1String( "header.resenttoi18n");
     return lst;
 }
 

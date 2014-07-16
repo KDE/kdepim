@@ -38,9 +38,9 @@ class KLineEdit;
  */
 class QuickSearchWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates the quick search widget.
      *
@@ -58,7 +58,12 @@ class QuickSearchWidget : public QWidget
      */
     virtual QSize sizeHint() const;
 
-  Q_SIGNALS:
+    void updateQuickSearchText(const QString &text);
+
+public slots:
+    void slotFocusQuickSearch();
+
+Q_SIGNALS:
     /**
      * This signal is emitted whenever the user has changed
      * the filter string in the line edit.
@@ -75,14 +80,14 @@ class QuickSearchWidget : public QWidget
      */
     void arrowDownKeyPressed();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void resetTimer();
     void delayedTextChanged();
 
-  protected:
+protected:
     void keyPressEvent( QKeyEvent * );
 
-  private:
+private:
     KLineEdit *mEdit;
     QTimer *mTimer;
 };

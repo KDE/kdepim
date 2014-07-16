@@ -42,48 +42,52 @@
 
 using namespace IncidenceEditorNG;
 
-
 /**
  * Returns true if the incidence's dates are equal to the default ones specified in config.
  */
 static bool incidenceHasDefaultTimes( const KCalCore::Incidence::Ptr &incidence )
 {
-  if (!incidence || incidence->allDay())
+  if ( !incidence || incidence->allDay() ) {
     return false;
+  }
 
   QTime defaultDuration = CalendarSupport::KCalPrefs::instance()->defaultDuration().time();
-  if ( !defaultDuration.isValid() )
+  if ( !defaultDuration.isValid() ) {
     return false;
+  }
 
   QTime defaultStart = CalendarSupport::KCalPrefs::instance()->mStartTime.time();
-  if ( !defaultStart.isValid() )
+  if ( !defaultStart.isValid() ) {
     return false;
+  }
 
   if ( incidence->dtStart().time() == defaultStart ) {
-    if ( incidence->type() == KCalCore::Incidence::TypeJournal )
+    if ( incidence->type() == KCalCore::Incidence::TypeJournal ) {
       return true; // no duration to compare with
+    }
 
     const KDateTime start = incidence->dtStart();
     const KDateTime end   = incidence->dateTime( KCalCore::Incidence::RoleEnd );
-    if (!end.isValid() || !start.isValid())
+    if ( !end.isValid() || !start.isValid() ) {
       return false;
+    }
 
-    const int durationInSeconds = defaultDuration.hour()*3600 + defaultDuration.minute()*60;
-    return start.secsTo(end) == durationInSeconds;
+    const int durationInSeconds = defaultDuration.hour() * 3600 + defaultDuration.minute() * 60;
+    return start.secsTo( end ) == durationInSeconds;
   }
 
   return false;
 }
 
-
 IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor( 0 ), mTimeZones( new KCalCore::ICalTimeZones ), mUi( ui ),
-    mTimezoneCombosWhereVisibile( false )
+    mTimezoneCombosWereVisibile( false )
 {
   setTimeZonesVisibility( false );
   setObjectName( "IncidenceDateTime" );
 
 #ifdef KDEPIM_MOBILE_UI
+  Q_UNUSED(mTimezoneCombosWereVisibile);
   mUi->mTimeZoneComboStart->setVisible( false );
   mUi->mTimeZoneComboEnd->setVisible( false );
 
@@ -107,10 +111,11 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   QList<QLineEdit*> lineEdits;
   lineEdits << mUi->mStartDateEdit->lineEdit() << mUi->mEndDateEdit->lineEdit()
             << mUi->mStartTimeEdit->lineEdit() << mUi->mEndTimeEdit->lineEdit();
-  foreach( QLineEdit *lineEdit, lineEdits ) {
+  foreach ( QLineEdit *lineEdit, lineEdits ) {
     KLineEdit *klineEdit = qobject_cast<KLineEdit*>( lineEdit );
-    if ( klineEdit )
-        klineEdit->setClearButtonShown( false );
+    if ( klineEdit ) {
+      klineEdit->setClearButtonShown( false );
+    }
   }
 
   connect( mUi->mFreeBusyCheck, SIGNAL(toggled(bool)), SLOT(checkDirtyStatus()) );
@@ -158,7 +163,7 @@ bool IncidenceDateTime::eventFilter( QObject *obj, QEvent *event )
 
 void IncidenceDateTime::load( const KCalCore::Incidence::Ptr &incidence )
 {
-  if (mLoadedIncidence && *mLoadedIncidence == *incidence) {
+  if ( mLoadedIncidence && *mLoadedIncidence == *incidence ) {
     return;
   }
 
@@ -402,6 +407,18 @@ void IncidenceDateTime::enableEndEdit( bool enable )
   checkDirtyStatus();
 }
 
+bool IncidenceDateTime::timeZonesAreLocal( const KDateTime &start, const KDateTime &end )
+{
+  // Returns false if the incidence start or end timezone is not the local zone.
+
+  if ( ( start.isValid() && !start.timeSpec().isLocalZone() ) ||
+       ( end.isValid() && !end.timeSpec().isLocalZone() ) ) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 void IncidenceDateTime::enableTimeEdits()
 {
   // NOTE: assumes that the initial times are initialized.
@@ -435,8 +452,12 @@ void IncidenceDateTime::enableTimeEdits()
 
 #ifndef KDEPIM_MOBILE_UI
   const bool currentlyVisible = mUi->mTimeZoneLabel->text().contains( "&lt;&lt;" );
-  setTimeZonesVisibility( !wholeDayChecked && mTimezoneCombosWhereVisibile );
-  mTimezoneCombosWhereVisibile = currentlyVisible;
+  setTimeZonesVisibility( !wholeDayChecked && mTimezoneCombosWereVisibile );
+  mTimezoneCombosWereVisibile = currentlyVisible;
+  if ( !wholeDayChecked && !timeZonesAreLocal( currentStartDateTime(), currentEndDateTime() ) ) {
+    setTimeZonesVisibility( true );
+    mTimezoneCombosWereVisibile = true;
+  }
 #endif
 }
 
@@ -688,7 +709,7 @@ void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo, bool isTemplate, 
   if ( isTemplate ) {
     if ( templateOverridesTimes ) {
         // We only use the template times if the user didn't override them.
-        setTimes( todo->dtStart(), todo->dateTime(KCalCore::Incidence::RoleEnd) );
+        setTimes( todo->dtStart(), todo->dateTime( KCalCore::Incidence::RoleEnd ) );
     }
   } else {
     const KDateTime endDT   = todo->hasDueDate() ? todo->dtDue( true/** first */ ) : rightNow;
@@ -816,6 +837,9 @@ void IncidenceDateTime::setDateTimes( const KDateTime &start, const KDateTime &e
   emit startTimeChanged( start.time() );
   emit endDateChanged( end.date() );
   emit endTimeChanged( end.time() );
+
+  updateStartToolTips();
+  updateEndToolTips();
 }
 
 void IncidenceDateTime::updateStartToolTips()
@@ -938,9 +962,9 @@ bool IncidenceDateTime::isValid() const
   }
 }
 
-static QString timespecToString(const KDateTime::Spec &spec)
+static QString timespecToString( const KDateTime::Spec &spec )
 {
-  QString str = QLatin1String("type=") + QString::number(spec.type()) + QLatin1String("; timezone=") + spec.timeZone().name();
+  QString str = QLatin1String( "type=" ) + QString::number( spec.type() ) + QLatin1String( "; timezone=" ) + spec.timeZone().name();
   return str;
 }
 
@@ -949,7 +973,7 @@ void IncidenceDateTime::printDebugInfo() const
   qDebug() << "startDateTimeEnabled()          : " << startDateTimeEnabled();
   qDebug() << "endDateTimeEnabled()            : " << endDateTimeEnabled();
   qDebug() << "currentStartDateTime().isValid(): " << currentStartDateTime().isValid();
-  qDebug() << "currentEndDateTime().isValid()  : "  << currentEndDateTime().isValid();
+  qDebug() << "currentEndDateTime().isValid()  : " << currentEndDateTime().isValid();
   qDebug() << "currentStartDateTime()          : " << currentStartDateTime().toString();
   qDebug() << "currentEndDateTime()            : " << currentEndDateTime().toString();
   qDebug() << "Incidence type                  : " << mLoadedIncidence->type();
@@ -957,10 +981,10 @@ void IncidenceDateTime::printDebugInfo() const
   qDebug() << "mInitialStartDT                 : " << mInitialStartDT.toString();
   qDebug() << "mInitialEndDT                   : " << mInitialEndDT.toString();
 
-  qDebug() << "currentStartDateTime().timeSpec(): " << timespecToString(currentStartDateTime().timeSpec());
-  qDebug() << "currentEndDateTime().timeSpec()  : " << timespecToString(currentStartDateTime().timeSpec());
-  qDebug() << "mInitialStartDT.timeSpec()       : " << timespecToString(mInitialStartDT.timeSpec());
-  qDebug() << "mInitialEndDT.timeSpec()         : " << timespecToString(mInitialEndDT.timeSpec());
+  qDebug() << "currentStartDateTime().timeSpec(): " << timespecToString( currentStartDateTime().timeSpec() );
+  qDebug() << "currentEndDateTime().timeSpec()  : " << timespecToString( currentStartDateTime().timeSpec() );
+  qDebug() << "mInitialStartDT.timeSpec()       : " << timespecToString( mInitialStartDT.timeSpec() );
+  qDebug() << "mInitialEndDT.timeSpec()         : " << timespecToString( mInitialEndDT.timeSpec() );
 
   qDebug() << "dirty test1: " << ( mLoadedIncidence->allDay() != mUi->mWholeDayCheck->isChecked() );
   if ( mLoadedIncidence->type() == KCalCore::Incidence::TypeEvent ) {
@@ -972,10 +996,10 @@ void IncidenceDateTime::printDebugInfo() const
   if ( mLoadedIncidence->allDay() ) {
     qDebug() << "dirty test4: " << ( mUi->mStartDateEdit->date() != mInitialStartDT.date() || mUi->mEndDateEdit->date() != mInitialEndDT.date() );
   } else {
-    qDebug() << "dirty test4.1: " << (currentStartDateTime() != mInitialStartDT);
-    qDebug() << "dirty test4.2: " << (currentEndDateTime() != mInitialEndDT);
-    qDebug() << "dirty test4.3: " << (currentStartDateTime().timeSpec() != mInitialStartDT.timeSpec());
-    qDebug() << "dirty test4.4: " << (currentEndDateTime().timeSpec() != mInitialEndDT.timeSpec());
+    qDebug() << "dirty test4.1: " << ( currentStartDateTime() != mInitialStartDT );
+    qDebug() << "dirty test4.2: " << ( currentEndDateTime() != mInitialEndDT );
+    qDebug() << "dirty test4.3: " << ( currentStartDateTime().timeSpec() != mInitialStartDT.timeSpec() );
+    qDebug() << "dirty test4.4: " << ( currentEndDateTime().timeSpec() != mInitialEndDT.timeSpec() );
   }
 }
 
@@ -988,4 +1012,3 @@ void IncidenceDateTime::setTimeZoneLabelEnabled( bool enable )
 #endif
 }
 
-#include "moc_incidencedatetime.cpp"

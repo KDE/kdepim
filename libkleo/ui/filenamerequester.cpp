@@ -33,7 +33,8 @@
 #include "filenamerequester.h"
 
 #include <KIcon>
-#include <KLocale>
+#include <KLocalizedString>
+#include <KLineEdit>
 
 #include <QLayout>
 #include <QToolButton>
@@ -64,7 +65,7 @@ private:
     QDir::Filters filter;
 #endif
 
-    QLineEdit    lineedit;
+    KLineEdit    lineedit;
     QToolButton  button;
     QHBoxLayout hlay;
 
@@ -87,18 +88,18 @@ FileNameRequester::Private::Private( FileNameRequester * qq )
       existingOnly( true )
 {
 #ifndef QT_NO_DIRMODEL
-    dirmodel.setObjectName( "dirmodel" );
-    completer.setObjectName( "completer" );
+    dirmodel.setObjectName( QLatin1String("dirmodel") );
+    completer.setObjectName( QLatin1String("completer") );
 #endif
-    lineedit.setObjectName( "lineedit" );
-    button.setObjectName( "button" );
-    hlay.setObjectName( "hlay" );
+    lineedit.setObjectName( QLatin1String("lineedit") );
+    button.setObjectName( QLatin1String("button") );
+    hlay.setObjectName( QLatin1String("hlay") );
 
-    button.setIcon( KIcon("document-open") );
+    button.setIcon( KIcon(QLatin1String("document-open")) );
 #ifndef QT_NO_DIRMODEL
     lineedit.setCompleter( &completer );
 #endif
-
+    lineedit.setClearButtonShown(true);
     hlay.setMargin( 0 );
     hlay.addWidget( &lineedit );
     hlay.addWidget( &button );

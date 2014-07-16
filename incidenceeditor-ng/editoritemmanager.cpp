@@ -32,7 +32,7 @@
 #include <Akonadi/Session>
 
 #include <KJob>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QMessageBox>
 #include <QPointer>
@@ -354,6 +354,7 @@ void EditorItemManager::save()
     }
   } else { // An invalid item. Means we're creating.
     if ( d->mIsCounterProposal ) {
+      // We don't write back to akonadi, that will be done in ITipHandler.
       emit itemSaveFinished( EditorItemManager::Modify );
     } else {
       Q_ASSERT( d->mItemUi->selectedCollection().isValid() );
@@ -398,4 +399,4 @@ bool ItemEditorUi::isValid() const
 
 } // namespace
 
-#include "editoritemmanager.moc"
+#include "moc_editoritemmanager.cpp"

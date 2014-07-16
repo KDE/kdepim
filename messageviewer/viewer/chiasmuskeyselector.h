@@ -12,23 +12,23 @@ namespace MessageViewer {
 
 class MESSAGEVIEWER_EXPORT ChiasmusKeySelector : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  ChiasmusKeySelector( QWidget* parent, const QString& caption,
-                       const QStringList& keys, const QString& currentKey,
-                       const QString& lastOptions );
+    ChiasmusKeySelector( QWidget* parent, const QString& caption,
+                         const QStringList& keys, const QString& currentKey,
+                         const QString& lastOptions );
 
-  QString key() const;
-  QString options() const; 
+    QString key() const;
+    QString options() const;
 
 private Q_SLOTS:
-  void slotItemSelectionChanged();
+    void slotItemSelectionChanged();
 
 private:
-  QLabel* mLabel;
-  KListWidget* mListBox;
-  KLineEdit* mOptions;
+    QLabel* mLabel;
+    KListWidget* mListBox;
+    KLineEdit* mOptions;
 };
 
 }

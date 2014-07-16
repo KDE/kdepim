@@ -46,7 +46,7 @@
 #include <assert.h>
 
 Kleo::ProgressDialog::ProgressDialog( Job * job, const QString & baseText,
-				      QWidget * creator, Qt::WindowFlags f )
+                                      QWidget * creator, Qt::WindowFlags f )
   : QProgressDialog( creator, f ), mBaseText( baseText )
 {
   assert( job );
@@ -60,10 +60,10 @@ Kleo::ProgressDialog::ProgressDialog( Job * job, const QString & baseText,
   setRange( 0, 0 ); // activate busy indicator
 
   connect( job, SIGNAL(progress(QString,int,int)),
-	   SLOT(slotProgress(QString,int,int)) );
+           SLOT(slotProgress(QString,int,int)) );
   connect( job, SIGNAL(done()), SLOT(slotDone()) );
   connect( this, SIGNAL(canceled()),
-	   job, SLOT(slotCancel()) );
+           job, SLOT(slotCancel()) );
 
   QTimer::singleShot( minimumDuration(), this, SLOT(forceShow()) );
 }
@@ -80,7 +80,7 @@ void Kleo::ProgressDialog::setMinimumDuration( int ms ) {
 
 void Kleo::ProgressDialog::slotProgress( const QString & what, int current, int total ) {
   kDebug(5150) <<"Kleo::ProgressDialog::slotProgress( \"" << what <<"\","
-		<< current << "," << total << ")";
+                << current << "," << total << ")";
   if ( mBaseText.isEmpty() )
     setLabelText( what );
   else if ( what.isEmpty() )
@@ -97,6 +97,5 @@ void Kleo::ProgressDialog::slotDone() {
 }
 
 
-#include "progressdialog.moc"
 
 #endif // QT_NO_PROGRESSDIALOG

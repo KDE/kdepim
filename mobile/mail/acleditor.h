@@ -110,7 +110,6 @@ class AclEditor : public QObject
   private:
     PimCommon::AclManager *mAclManager;
     Akonadi::Collection mCollection;
-    QAction *mEditAction;
 };
 
 #endif

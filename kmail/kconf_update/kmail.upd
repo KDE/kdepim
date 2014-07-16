@@ -220,6 +220,20 @@ Key=UnreadMessage,UnreadMessageColor
 Key=FlagMessage,ImportantMessageColor
 Key=ToActMessage,TodoMessageColor
 
+Id=4.12
+File=kmail2rc
+Group=General,Print
+Key=PrintSelectedText,PrintSelectedText
+
+
+Id=4.13
+File=akonadi_folderarchive_agentrc,foldermailarchiverc
+AllGroups
+
+Id=4.13.2
+File=kmail2rc
+Group=GrantleeTheme
+Key=grantlee-theme-name,grantlee-mail-theme-name
 
 #
 # Important notice:

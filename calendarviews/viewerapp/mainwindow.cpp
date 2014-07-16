@@ -37,7 +37,6 @@
 #include <Akonadi/Control>
 
 #include <KCheckableProxyModel>
-#include <KSystemTimeZones>
 
 using namespace Akonadi;
 using namespace CalendarSupport;
@@ -127,6 +126,5 @@ void MainWindow::addViewTriggered( QAction *action )
   addView( viewName );
 }
 
-#include "mainwindow.moc"
 
 // kate: space-indent on; indent-width 2; replace-tabs on;

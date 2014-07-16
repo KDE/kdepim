@@ -24,13 +24,13 @@
 #include "messagecomposer_export.h"
 
 namespace KMime {
-  namespace Headers {
-    class ContentDescription;
-    class ContentDisposition;
-    class ContentID;
-    class ContentTransferEncoding;
-    class ContentType;
-  }
+namespace Headers {
+class ContentDescription;
+class ContentDisposition;
+class ContentID;
+class ContentTransferEncoding;
+class ContentType;
+}
 }
 
 namespace MessageComposer {
@@ -41,9 +41,9 @@ class SinglepartJobPrivate;
 */
 class MESSAGECOMPOSER_EXPORT SinglepartJob : public ContentJobBase
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit SinglepartJob( QObject *parent = 0 );
     virtual ~SinglepartJob();
 
@@ -57,10 +57,10 @@ class MESSAGECOMPOSER_EXPORT SinglepartJob : public ContentJobBase
     KMime::Headers::ContentTransferEncoding *contentTransferEncoding();
     KMime::Headers::ContentType *contentType();
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     virtual void process();
 
-  private:
+private:
     Q_DECLARE_PRIVATE( SinglepartJob )
 };
 

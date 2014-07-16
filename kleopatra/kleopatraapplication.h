@@ -64,7 +64,10 @@ public:
     SysTrayIcon * sysTrayIcon();
 
     void setIgnoreNewInstance( bool on );
+    void setFirstNewInstance( bool on );
     bool ignoreNewInstance() const;
+    void toggleMainWindowVisibility();
+    void restoreMainWindow();
 
 public Q_SLOTS:
     void openOrRaiseMainWindow();

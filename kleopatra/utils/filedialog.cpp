@@ -40,7 +40,8 @@
 #include <KUrl>
 #include <QTextStream>
 #endif
-
+#include <QFileDialog>
+#include <QDir>
 #include <QMap>
 
 using namespace Kleo;

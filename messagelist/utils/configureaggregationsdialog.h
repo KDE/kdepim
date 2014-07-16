@@ -50,26 +50,26 @@ namespace Utils
  */
 class MESSAGELIST_EXPORT ConfigureAggregationsDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  explicit ConfigureAggregationsDialog( QWidget *parent = 0 );
-  ~ConfigureAggregationsDialog();
+    explicit ConfigureAggregationsDialog( QWidget *parent = 0 );
+    ~ConfigureAggregationsDialog();
 
-  void selectAggregation( const QString &aggregationId );
+    void selectAggregation( const QString &aggregationId );
 
 private:
-  Q_PRIVATE_SLOT(d, void aggregationListItemClicked(QListWidgetItem* cur))
-  Q_PRIVATE_SLOT(d, void newAggregationButtonClicked())
-  Q_PRIVATE_SLOT(d, void cloneAggregationButtonClicked())
-  Q_PRIVATE_SLOT(d, void deleteAggregationButtonClicked())
-  Q_PRIVATE_SLOT(d, void editedAggregationNameChanged())
-  Q_PRIVATE_SLOT(d, void okButtonClicked())
-  Q_PRIVATE_SLOT(d, void importAggregationButtonClicked())
-  Q_PRIVATE_SLOT(d, void exportAggregationButtonClicked())
+    Q_PRIVATE_SLOT(d, void aggregationListItemClicked(QListWidgetItem* cur))
+    Q_PRIVATE_SLOT(d, void newAggregationButtonClicked())
+    Q_PRIVATE_SLOT(d, void cloneAggregationButtonClicked())
+    Q_PRIVATE_SLOT(d, void deleteAggregationButtonClicked())
+    Q_PRIVATE_SLOT(d, void editedAggregationNameChanged())
+    Q_PRIVATE_SLOT(d, void okButtonClicked())
+    Q_PRIVATE_SLOT(d, void importAggregationButtonClicked())
+    Q_PRIVATE_SLOT(d, void exportAggregationButtonClicked())
 
-  class Private;
-  Private * const d;
+    class Private;
+    Private * const d;
 };
 
 } // namespace Utils

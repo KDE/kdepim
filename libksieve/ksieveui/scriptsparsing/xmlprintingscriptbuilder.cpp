@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012, 2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,88 +16,200 @@
 */
 
 #include "xmlprintingscriptbuilder.h"
+#include <ksieve/parser.h>
+using KSieve::Parser;
 
+#include <ksieve/error.h>
+#include <KDebug>
+
+using namespace KSieveUi;
 XMLPrintingScriptBuilder::XMLPrintingScriptBuilder()
-  : KSieve::ScriptBuilder(), mIndent( 0 )
+    : KSieve::ScriptBuilder(),
+      mIsAction(false)
 {
+    write( QLatin1String("<?xml version='1.0'?>") );
+    write( QLatin1String("<script>") );
 }
 
 XMLPrintingScriptBuilder::~XMLPrintingScriptBuilder()
 {
 }
 
-void XMLPrintingScriptBuilder::taggedArgument( const QString & tag ) {
-  write( "tag", tag );
-}
-void XMLPrintingScriptBuilder::stringArgument( const QString & string, bool multiLine, const QString & /*fixme*/ ) {
-  write( multiLine ? "string type=\"multiline\"" : "string type=\"quoted\"", string );
-}
-void XMLPrintingScriptBuilder::numberArgument( unsigned long number, char quantifier ) {
-  const QString txt = "number" + ( quantifier ? QString(" quantifier=\"%1\"").arg( quantifier ) : QString() ) ;
-  write( txt.toLatin1(), QString::number( number ) );
-}
-void XMLPrintingScriptBuilder::commandStart( const QString & identifier ) {
-  write( "<command>" );
-  ++mIndent;
-  write( "identifier", identifier );
-}
-void XMLPrintingScriptBuilder::commandEnd() {
-  --mIndent;
-  write( "</command>" );
-}
-void XMLPrintingScriptBuilder::testStart( const QString & identifier ) {
-  write( "<test>" );
-  ++mIndent;
-  write( "identifier", identifier );
-}
-void XMLPrintingScriptBuilder::testEnd() {
-  --mIndent;
-  write( "</test>" );
-}
-void XMLPrintingScriptBuilder::testListStart() {
-  write( "<testlist>" );
-  ++mIndent;
+void XMLPrintingScriptBuilder::taggedArgument( const QString & tag )
+{
+    write( QLatin1String("tag"), tag );
 }
 
-void XMLPrintingScriptBuilder::testListEnd() {
-  --mIndent;
-  write( "</testlist>" );
-}
-void XMLPrintingScriptBuilder::blockStart() {
-  write( "<block>" );
-  ++mIndent;
-}
-void XMLPrintingScriptBuilder::blockEnd() {
-  --mIndent;
-  write( "</block>" );
-}
-void XMLPrintingScriptBuilder::stringListArgumentStart() {
-  write( "<stringlist>" );
-  ++mIndent;
-}
-void XMLPrintingScriptBuilder::stringListArgumentEnd() {
-  --mIndent;
-  write( "</stringlist>" );
-}
-void XMLPrintingScriptBuilder::stringListEntry( const QString & string, bool multiline, const QString & hashComment ) {
-  stringArgument( string, multiline, hashComment );
-}
-void XMLPrintingScriptBuilder::hashComment( const QString & comment ) {
-  write( "comment type=\"hash\"", comment );
-}
-void XMLPrintingScriptBuilder::bracketComment( const QString & comment ) {
-  write( "comment type=\"bracket\"", comment );
+void XMLPrintingScriptBuilder::stringArgument( const QString & string, bool multiLine, const QString & /*fixme*/ )
+{
+    write( QLatin1String("str") ,multiLine ? QLatin1String("type=\"multiline\"") : QLatin1String("type=\"quoted\""), string );
 }
 
-void XMLPrintingScriptBuilder::lineFeed() {
-  write( "<crlf/>" );
+void XMLPrintingScriptBuilder::numberArgument( unsigned long number, char quantifier )
+{
+    write( QLatin1String("num"), ( quantifier ? QString::fromLatin1("quantifier=\"%1\"").arg( quantifier ) : QString()) , QString::number( number ) );
 }
 
-void XMLPrintingScriptBuilder::error( const KSieve::Error & error ) {
-  mIndent = 0;
-  write( ("Error: " + error.asString()).toLatin1() );
+void XMLPrintingScriptBuilder::commandStart( const QString &identifier )
+{
+    if ( identifier == QLatin1String("else") ||
+         identifier == QLatin1String("break") ||
+         identifier == QLatin1String("require") ||
+         identifier == QLatin1String("foreverypart") ||
+         identifier == QLatin1String("if") ||
+         identifier == QLatin1String("elsif")) {
+        write( QString::fromLatin1( "<control name=\"%1\">").arg(identifier));
+        mIsAction = false;
+    } else {
+        write( QString::fromLatin1( "<action name=\"%1\">").arg(identifier));
+        mIsAction = true;
+    }
 }
-void XMLPrintingScriptBuilder::finished() {
-  --mIndent;
-  write( "</script>" );
+
+void XMLPrintingScriptBuilder::commandEnd()
+{
+    if (mIsAction) {
+        write( QLatin1String("</action>") );
+    } else {
+        write( QLatin1String("</control>") );
+    }
+    mIsAction = false;
+}
+
+void XMLPrintingScriptBuilder::testStart( const QString &identifier )
+{
+    write( QString::fromLatin1( "<test name=\"%1\">").arg(identifier));
+}
+
+void XMLPrintingScriptBuilder::testEnd()
+{
+    write( QLatin1String("</test>") );
+}
+
+void XMLPrintingScriptBuilder::testListStart()
+{
+    write( QLatin1String("<testlist>") );
+}
+
+void XMLPrintingScriptBuilder::testListEnd()
+{
+    write( QLatin1String("</testlist>") );
+}
+
+void XMLPrintingScriptBuilder::blockStart()
+{
+    write( QLatin1String("<block>") );
+}
+
+void XMLPrintingScriptBuilder::blockEnd()
+{
+    write( QLatin1String("</block>") );
+}
+
+void XMLPrintingScriptBuilder::stringListArgumentStart()
+{
+    write( QLatin1String("<list>") );
+}
+
+void XMLPrintingScriptBuilder::stringListArgumentEnd()
+{
+    write( QLatin1String("</list>") );
+}
+
+void XMLPrintingScriptBuilder::stringListEntry( const QString & string, bool multiline, const QString & hashComment )
+{
+    stringArgument( string, multiline, hashComment );
+}
+
+void XMLPrintingScriptBuilder::hashComment( const QString & comment )
+{
+    write( QLatin1String("comment"), QLatin1String("type=\"hash\""), comment );
+}
+
+void XMLPrintingScriptBuilder::bracketComment( const QString & comment )
+{
+    write( QLatin1String("comment"), QLatin1String("type=\"bracket\""), comment );
+}
+
+void XMLPrintingScriptBuilder::lineFeed()
+{
+    write( QLatin1String("<crlf/>") );
+}
+
+void XMLPrintingScriptBuilder::error( const KSieve::Error & error )
+{
+    mError = QLatin1String("Error: ") + error.asString();
+    write( mError );
+}
+
+void XMLPrintingScriptBuilder::finished()
+{
+    write( QLatin1String("</script>") );
+}
+
+void XMLPrintingScriptBuilder::write( const QString &msg )
+{
+    mResult += msg;
+}
+
+void XMLPrintingScriptBuilder::write( const QString & key, const QString & value )
+{
+    if ( value.isEmpty() ) {
+        write( QString::fromLatin1("<%1>").arg(key) );
+        return;
+    }
+    write( QString::fromLatin1("<%1>").arg(key) );
+    write( value );
+    write( QString::fromLatin1("</%1>").arg(key) );
+}
+
+void XMLPrintingScriptBuilder::write( const QString & key, const QString &attribute, const QString & value )
+{
+    if ( value.isEmpty() ) {
+        write( QString::fromLatin1("<%1/>").arg(key) );
+        return;
+    }
+
+    if (attribute.isEmpty())
+        write( QString::fromLatin1("<%1>").arg(key) );
+    else
+        write( QString::fromLatin1("<%1 %2>").arg(key).arg(attribute) );
+    write( value );
+    write( QString::fromLatin1("</%1>").arg(key) );
+}
+
+QString XMLPrintingScriptBuilder::result() const
+{
+    return mResult;
+}
+
+QString XMLPrintingScriptBuilder::error() const
+{
+    return mError;
+}
+
+bool XMLPrintingScriptBuilder::hasError() const
+{
+    return !mError.isEmpty();
+}
+
+void XMLPrintingScriptBuilder::clear()
+{
+    mResult.clear();
+    mError.clear();
+}
+
+QDomDocument XMLPrintingScriptBuilder::toDom() const
+{
+    QString errorMsg;
+    int errorRow;
+    int errorCol;
+    QDomDocument doc;
+    if ( !doc.setContent( mResult, &errorMsg, &errorRow, &errorCol ) ) {
+        kDebug() << "Unable to load document.Parse error in line " << errorRow
+                 << ", col " << errorCol << ": " << errorMsg;
+        kDebug()<<" mResult"<<mResult;
+
+    }
+    return doc;
 }

@@ -53,11 +53,10 @@
 #include <gpgme++/keylistresult.h>
 #include <gpgme++/importresult.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <kdebug.h>
 
-#include <QBuffer>
 #include <QRegExp>
 
 #include <boost/bind.hpp>
@@ -81,6 +80,7 @@ public:
     explicit Private( LookupCertificatesCommand * qq, KeyListController * c );
     ~Private();
 
+    QString fingerPrint;
     void init();
 
 private:
@@ -150,6 +150,13 @@ LookupCertificatesCommand::LookupCertificatesCommand( KeyListController * c )
     d->init();
 }
 
+LookupCertificatesCommand::LookupCertificatesCommand( const QString & fingerPrint, KeyListController * c )
+    : ImportCertificatesCommand( new Private( this, c ) )
+{
+    d->init();
+    d->fingerPrint = fingerPrint;
+}
+
 LookupCertificatesCommand::LookupCertificatesCommand( QAbstractItemView * v, KeyListController * c )
     : ImportCertificatesCommand( v, new Private( this, c ) )
 {
@@ -172,6 +179,16 @@ void LookupCertificatesCommand::doStart() {
 
     d->createDialog();
     assert( d->dialog );
+
+    // if have prespecified fingerPrint, load into find field
+    // and start search
+    if ( ! d->fingerPrint.isEmpty() ) {
+        if ( !d->fingerPrint.startsWith( QLatin1String("0x") ) )
+            d->fingerPrint = QLatin1String("0x") + d->fingerPrint;
+        d->dialog->setSearchText( d->fingerPrint );
+        // Start Search
+        d->slotSearchTextChanged( d->fingerPrint );
+    }
 
     d->dialog->setPassive( false );
     d->dialog->show();
@@ -207,11 +224,11 @@ void LookupCertificatesCommand::Private::slotSearchTextChanged( const QString & 
     const QRegExp rx( QLatin1String( "(?:0x|0X)?[0-9a-fA-F]{6,}" ) );
     if ( rx.exactMatch( str ) )
         information( str.startsWith( QLatin1String( "0x" ), Qt::CaseInsensitive )
-                     ? i18n("<p>You seem to be searching for a fingerprint or a key-id.</p>"
+                     ? i18n("<p>You seem to be searching for a fingerPrint or a key-id.</p>"
                             "<p>Different keyservers expect different ways to search for these. "
                             "Some require a \"0x\" prefix, while others require there be no such prefix.</p>"
                             "<p>If your search does not yield any results, try removing the 0x prefix from your search.</p>")
-                     : i18n("<p>You seem to be searching for a fingerprint or a key-id.</p>"
+                     : i18n("<p>You seem to be searching for a fingerPrint or a key-id.</p>"
                             "<p>Different keyservers expect different ways to search for these. "
                             "Some require a \"0x\" prefix, while others require there be no such prefix.</p>"
                             "<p>If your search does not yield any results, try adding the 0x prefix to your search.</p>"),
@@ -339,14 +356,14 @@ void LookupCertificatesCommand::Private::showResult( QWidget * parent, const Key
                                         "of the configured servers is the limiting "
                                         "factor, you have to refine your search.</para>"),
                                   i18nc("@title", "Result Truncated"),
-                                  "lookup-certificates-truncated-result" );
+                                  QLatin1String("lookup-certificates-truncated-result") );
 }
 
 static bool haveOpenPGPKeyserverConfigured() {
     const Kleo::CryptoConfig * const config = Kleo::CryptoBackendFactory::instance()->config();
     if ( !config )
         return false;
-    const Kleo::CryptoConfigEntry * const entry = config->entry( "gpg", "Keyserver", "keyserver" );
+    const Kleo::CryptoConfigEntry * const entry = config->entry( QLatin1String("gpg"), QLatin1String("Keyserver"), QLatin1String("keyserver") );
     return entry && !entry->stringValue().isEmpty();
 }
 
@@ -355,9 +372,9 @@ static bool haveX509DirectoryServerConfigured() {
     const Kleo::CryptoConfig * const config = Kleo::CryptoBackendFactory::instance()->config();
     if ( !config )
         return false;
-    const Kleo::CryptoConfigEntry * entry = config->entry( "dirmngr", "LDAP", "LDAP Server" );
+    const Kleo::CryptoConfigEntry * entry = config->entry( QLatin1String("dirmngr"), QLatin1String("LDAP"), QLatin1String("LDAP Server") );
     bool entriesExist = entry && !entry->urlValueList().empty();
-    entry = config->entry( "gpgsm", "Configuration", "keyserver" );
+    entry = config->entry( QLatin1String("gpgsm"), QLatin1String("Configuration"), QLatin1String("keyserver") );
     entriesExist |= entry && !entry->stringValueList().empty();
     return entriesExist;
 }

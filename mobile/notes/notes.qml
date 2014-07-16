@@ -278,13 +278,14 @@ KPIM.MainView {
                 aboutDialog.visible = true
               }
             },
-            KPIM.ScriptAction {
-              name : "search_note"
-              script : {
-                actionPanel.collapse();
-                guiStateManager.pushState( KPIM.GuiStateManager.SearchScreenState );
-              }
-            },
+//TODO enable when SearchWidget::query() is implemented
+//             KPIM.ScriptAction {
+//               name : "search_note"
+//               script : {
+//                 actionPanel.collapse();
+//                 guiStateManager.pushState( KPIM.GuiStateManager.SearchScreenState );
+//               }
+//             },
             KPIM.ScriptAction {
               name : "to_selection_screen"
               script : {

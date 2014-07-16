@@ -43,7 +43,7 @@
 #include <KDebug>
 #include <KIcon>
 #include <KIconLoader>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KStandardDirs>
 #include <KSystemTimeZone>
@@ -234,7 +234,7 @@ void KOrganizerPlugin::processDropEvent( QDropEvent *event )
   }
 
   if ( md->hasText() ) {
-    QString text = md->text();
+    const QString text = md->text();
     kDebug() << "DROP:" << text;
     interface()->openEventEditor( text );
     return;
@@ -268,4 +268,3 @@ void KOrganizerPlugin::processDropEvent( QDropEvent *event )
   kWarning() << QString::fromLatin1( "Cannot handle drop events of type '%1'." ).arg( QLatin1String(event->format()) );
 }
 
-#include "korganizerplugin.moc"

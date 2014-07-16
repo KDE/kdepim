@@ -88,14 +88,12 @@ private slots:
     void slotSaveAs();
 signals:
     void findText();
-private:
-    bool saveToFile( const QString &filename );
 };
 
 namespace HTMLPrettyFormatter
 {
 // Best to be really verbose about this one...
-const QRegExp htmlTagRegExp( "<"
+const QRegExp htmlTagRegExp( QLatin1String("<"
                              "(/)?"    //Captures the / if this is an end tag.
                              "(\\w+)"    //Captures TagName
                              "(?:"                //Groups tag contents
@@ -113,7 +111,7 @@ const QRegExp htmlTagRegExp( "<"
                              "|\\s*"            //Some white space.
                              ")"
                              "(/)?>" //Captures the "/" if this is a complete tag.
-                             );
+                             ));
 
 const QString reformat( const QString &src );
 }

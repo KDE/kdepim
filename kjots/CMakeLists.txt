@@ -2,11 +2,16 @@ project(kjots)
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
+
+
 include_directories(
   ${KDE4_INCLUDES}
   ${KDEPIMLIBS_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
   ${Grantlee_INCLUDE_DIRS}
+  ${CMAKE_SOURCE_DIR}/noteshared
 )
 
 set(kjotsLibs ${KDE4_KIO_LIBS} kdepim)
@@ -29,7 +34,6 @@ kde4_add_ui_files(kjots_config_SRCS confpagemisc.ui)
 
 set (kjots_common_SRCS
      aboutdata.cpp
-     kjotslockattribute.cpp
      kjotslockjob.cpp
      kjotsedit.cpp
      kjotstreeview.cpp
@@ -43,27 +47,6 @@ set (kjots_common_SRCS
      localresourcecreator.cpp
      kjotsbookshelfentryvalidator.cpp
      knowitimporter.cpp ${kjots_config_SRCS}
-)
-
-#########################################################################
-# Auto creation for local notes.
-#########################################################################
-
-macro(add_resource_iface _kcfgFile _ifaceName _className)
-  kcfg_generate_dbus_interface(${_kcfgFile} ${_ifaceName})
-  string(TOLOWER ${_className} _codeFile)
-  set_source_files_properties( ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml PROPERTIES INCLUDE "metatype.h")
-  qt4_add_dbus_interface(kjots_common_SRCS
-    ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml ${_codeFile} ${_className}
-  )
-endmacro()
-
-add_resource_iface( ${CMAKE_CURRENT_SOURCE_DIR}/maildirresource.kcfg
-                    org.kde.Akonadi.Maildir.Settings MaildirSettings )
-
-add_custom_target(kjots_settings_xml ALL
-  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Maildir.Settings.xml
-  SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/maildirresource.kcfg
 )
 
 #########################################################################
@@ -98,7 +81,9 @@ target_link_libraries(kjots
   ${Grantlee_GUI_LIBRARIES}
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
   ${KDEPIMLIBS_KONTACTINTERFACE_LIBS}
+   ${KDE4_KPRINTUTILS_LIBS}
   akonadi_next
+  noteshared
 )
 
 
@@ -136,7 +121,9 @@ install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/kjots PATTERN *.svn EXC
     ${Grantlee_CORE_LIBRARIES}
     ${Grantlee_GUI_LIBRARIES}
     ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
+    ${KDE4_KPRINTUTILS_LIBS}
     akonadi_next
+    noteshared
   )
 
   install( FILES kjotspart.desktop  DESTINATION ${SERVICES_INSTALL_DIR} )

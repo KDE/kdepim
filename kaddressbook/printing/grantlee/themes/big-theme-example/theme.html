@@ -1,0 +1,15 @@
+<html>
+
+<h1>KAddressBook</h1>
+{% if contacts %}
+{% for contact in contacts %}
+<h1>{{ contact.realName|safe }}</h1>
+<p>{{ contact.emails|safe }}</p>
+<p>{{ contact.note|safe }}</p>
+<br>
+<br>
+{% endfor %}
+{% endif %}
+
+</html>
+

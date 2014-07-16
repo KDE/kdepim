@@ -23,11 +23,7 @@
 #include "stylesheetloader.h"
 #include "ui_configwidget.h"
 
-#ifndef _WIN32_WCE
 #include <kcmoduleproxy.h>
-#else
-#include <libkdepim/ldap/kcmldap_p.h>
-#endif
 #include <kconfigdialogmanager.h>
 #include <klocale.h>
 
@@ -37,11 +33,7 @@ ConfigWidget::ConfigWidget( QWidget *parent )
   Ui_ConfigWidget ui;
   ui.setupUi( this );
 
-#ifndef _WIN32_WCE
   mLdapConfigWidget = new KCModuleProxy( QLatin1String( "kcmldap" ) );
-#else
-  mLdapConfigWidget = new KCMLdap( this, QVariantList() );
-#endif
 
   ui.ldapServerSettingsLayout->addWidget( mLdapConfigWidget, 1, 1 );
 
@@ -56,7 +48,7 @@ ConfigWidget::ConfigWidget( QWidget *parent )
 
 void ConfigWidget::load()
 {
-  KConfig config( "akonadi_contactrc" );
+  KConfig config( QLatin1String("akonadi_contactrc") );
   const KConfigGroup group( &config, "Show Address Settings" );
   const QString addressUrl = group.readEntry( "AddressUrl", QString::fromLatin1( "http://open.mapquestapi.com/nominatim/v1/search.php?q=%s,+%z+%l,+%c" ) );
 
@@ -72,7 +64,7 @@ void ConfigWidget::save()
 
   const QString addressUrl = mMapServiceBox->itemData( Settings::self()->mapService() ).toString();
 
-  KConfig config( "akonadi_contactrc" );
+  KConfig config( QLatin1String("akonadi_contactrc") );
   KConfigGroup group( &config, "Show Address Settings" );
   group.writeEntry( "AddressUrl", addressUrl );
   config.sync();
@@ -106,4 +98,3 @@ void DeclarativeConfigWidget::save()
   mConfigWidget->save();
 }
 
-#include "configwidget.moc"

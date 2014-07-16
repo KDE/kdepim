@@ -92,4 +92,4 @@ void ThreadSelectionModelPrivate::contentSelectionChanged(const QItemSelection& 
   }
 }
 
-#include "threadselectionmodel.moc"
+#include "moc_threadselectionmodel.cpp"

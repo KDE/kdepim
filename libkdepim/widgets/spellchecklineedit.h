@@ -32,7 +32,6 @@
 
 #include <KTextEdit>
 
-class QContextMenuEvent;
 class QMimeData;
 namespace KPIM {
 

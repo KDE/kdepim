@@ -1,10 +1,10 @@
 KDE4_NO_ENABLE_FINAL(messageviewer)
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-include_directories(${Grantlee_INCLUDE_DIRS})
+include_directories(${Grantlee_INCLUDE_DIRS} ${QJSON_INCLUDE_DIR})
 
-#add_definitions( -DQT_NO_CAST_FROM_ASCII )
-#add_definitions( -DQT_NO_CAST_TO_ASCII )
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 
 # KCFG files:
@@ -40,29 +40,70 @@ if(KDEPIM_NO_WEBKIT)
   set(_mailwebview_cpp viewer/mailwebview_textbrowser.cpp )
   set(_mailwebview_lib )
 else()
-  set(_mailwebview_cpp viewer/mailwebview_webkit.cpp )
-  if(NOT WINCE)
-    set(_mailwebview_lib ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY})
-    add_subdirectory(a11y)
-  endif()
+  set(_mailwebview_cpp viewer/mailwebview_webkit.cpp 
+                       adblock/networkaccessmanager.cpp 
+                       adblock/webpage.cpp
+                       adblock/adblockelementhiding.cpp
+                       adblock/adblockhostmatcher.cpp
+                       adblock/adblockmanager.cpp
+                       adblock/adblockrule.cpp
+                       adblock/adblockrulefallbackimpl.cpp
+                       adblock/adblockrulenullimpl.cpp
+                       adblock/adblockruletextmatchimpl.cpp
+                       adblock/adblocksettingwidget.cpp
+                       adblock/adblockutil.cpp
+                       adblock/adblockaddsubscriptiondialog.cpp
+                       adblock/adblocklistwidget.cpp
+                       adblock/adblocksyntaxhighlighter.cpp
+                       adblock/adblockshowlistdialog.cpp
+                       adblock/adblockblockableitemsdialog.cpp
+                       adblock/adblockcreatefilterdialog.cpp
+                       adblock/adblockblockableitemswidget.cpp
+                       )
+  set(_mailwebview_lib ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY})
+  add_subdirectory(a11y)
 endif()
 
-set(libmessageviewer_SRCS
-  widgets/attachmentdialog.cpp
+set(libmessageviewer_viewer_SRCS
   viewer/attachmentstrategy.cpp
   viewer/bodypartformatter.cpp
   viewer/bodypartformatterfactory.cpp
   viewer/chiasmuskeyselector.cpp
-  widgets/configurewidget.cpp
-  header/contactdisplaymessagememento.cpp
   viewer/csshelper.cpp
   viewer/csshelperbase.cpp
   viewer/editorwatcher.cpp
-  htmlwriter/filehtmlwriter.cpp
-  findbar/findbarbase.cpp
-  findbar/findbarmailwebview.cpp
-  findbar/findbarsourceview.cpp
-  settings/globalsettings.cpp
+  viewer/kleojobexecutor.cpp
+  viewer/mailsourceviewer.cpp
+  viewer/htmlquotecolorer.cpp
+  viewer/mimetreemodel.cpp
+  viewer/nodehelper.cpp
+  viewer/attachmenttemporaryfilesdirs.cpp
+  viewer/objecttreeemptysource.cpp
+  viewer/objecttreeparser.cpp
+  viewer/objecttreeparser_p.cpp
+  viewer/objecttreeviewersource.cpp
+  viewer/partnodebodypart.cpp
+  viewer/pluginloaderbase.cpp
+  viewer/viewer.cpp
+  viewer/viewer_p.cpp
+  viewer/messagedisplayformatattribute.cpp
+  viewer/urlhandlermanager.cpp
+)
+
+set(libmessageviewer_widgets_SRCS
+  widgets/customheadersettingdialog.cpp
+  widgets/attachmentdialog.cpp
+  
+  widgets/configurewidget.cpp
+  widgets/printingsettings.cpp
+  widgets/htmlstatusbar.cpp
+  widgets/vcardviewer.cpp
+  widgets/invitationsettings.cpp
+  widgets/todoedit.cpp
+)
+
+set(libmessageviewer_header_SRCS
+  header/contactdisplaymessagememento.cpp
   header/headerstrategy.cpp
   header/headerstrategy_p.cpp
   header/headerstyle.cpp
@@ -76,40 +117,56 @@ set(libmessageviewer_SRCS
   header/fancyheaderstyle.cpp
   header/customheadersettingwidget.cpp
   header/grantleeheaderformatter.cpp
-  header/grantleethememanager.cpp
-  header/grantleetheme.cpp
   header/grantleeheaderteststyle.cpp
   header/kxface.cpp
-  viewer/htmlquotecolorer.cpp
-  widgets/htmlstatusbar.cpp
-  widgets/vcardviewer.cpp
-  utils/iconnamecache.cpp
-  widgets/invitationsettings.cpp
-  viewer/kleojobexecutor.cpp
-  viewer/mailsourceviewer.cpp
-  utils/markmessagereadhandler.cpp
-  viewer/mimetreemodel.cpp
-  viewer/nodehelper.cpp
-  viewer/attachmenttemporaryfilesdirs.cpp
-  viewer/objecttreeemptysource.cpp
-  viewer/objecttreeparser.cpp
-  viewer/objecttreeparser_p.cpp
-  viewer/objecttreeviewersource.cpp
-  viewer/partnodebodypart.cpp
-  viewer/pluginloaderbase.cpp
-  htmlwriter/teehtmlwriter.cpp
-  viewer/urlhandlermanager.cpp
-  utils/util.cpp
-  viewer/viewer.cpp
-  viewer/viewer_p.cpp
-  htmlwriter/webkitparthtmlwriter.cpp
-  viewer/messagedisplayformatattribute.cpp
+)
+
+set(libmessageviewer_scamdetection_SRCS
   scamdetection/scamdetectionwarningwidget.cpp
   scamdetection/scamdetection.cpp
   scamdetection/scamdetectiondetailsdialog.cpp
   scamdetection/scamattribute.cpp
+  scamdetection/scamcheckshorturl.cpp
+)
+
+set(libmessageviewer_findbar_SRCS
+  findbar/findbarbase.cpp
+  findbar/findbarmailwebview.cpp
+  findbar/findbarsourceview.cpp
+)
+
+set(libmessageviewer_utils_SRCS
+  utils/iconnamecache.cpp
+  utils/markmessagereadhandler.cpp
+  utils/util.cpp
+)
+
+set(libmessageviewer_htmlwriter_SRCS
+  htmlwriter/filehtmlwriter.cpp
+  htmlwriter/teehtmlwriter.cpp
+  htmlwriter/webkitparthtmlwriter.cpp
+)
+
+set(libmessageviewer_antispam_SRCS
   antispam/spamheaderanalyzer.cpp
   antispam/antispamconfig.cpp
+)
+
+set(libmessageviewer_job_SRCS
+  job/createtodojob.cpp
+)
+
+set(libmessageviewer_SRCS
+  ${libmessageviewer_viewer_SRCS}
+  ${libmessageviewer_widgets_SRCS}
+  ${libmessageviewer_header_SRCS}
+  ${libmessageviewer_scamdetection_SRCS}
+  ${libmessageviewer_findbar_SRCS}
+  ${libmessageviewer_utils_SRCS}
+  ${libmessageviewer_htmlwriter_SRCS}
+  ${libmessageviewer_antispam_SRCS}
+  ${libmessageviewer_job_SRCS}
+  settings/globalsettings.cpp
   ${_mailwebview_cpp}
 )
 
@@ -120,7 +177,11 @@ kde4_add_kcfg_files(libmessageviewer_SRCS
 kde4_add_ui_files(libmessageviewer_SRCS
   ui/settings.ui
   ui/invitationsettings.ui
+  ui/printingsettings.ui
+  adblock/ui/settings_adblock.ui
+  adblock/ui/adblockcreatefilterwidget.ui
 )
+
 
 kde4_add_library(messageviewer ${LIBRARY_TYPE} ${libmessageviewer_SRCS})
 
@@ -138,14 +199,20 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   ${_mailwebview_lib}
   ${Grantlee_CORE_LIBRARIES} 
   ${KDE4_KNEWSTUFF3_LIBS}
+  ${QJSON_LIBRARIES}
+  ${KDE4_SOLID_LIBS}
   pimcommon
+  grantleetheme
+  kaddressbookgrantlee
 )
 
 include_directories(
+    ${CMAKE_SOURCE_DIR}/grantleetheme
     ${CMAKE_SOURCE_DIR}/messagecore
     ${CMAKE_SOURCE_DIR}/pimcommon
     ${CMAKE_SOURCE_DIR}/libkdepim
     ${CMAKE_SOURCE_DIR}/libkleo
+    ${CMAKE_SOURCE_DIR}/kaddressbookgrantlee
     ${Boost_INCLUDE_DIR}
     ${GPGME_INCLUDES}
 )
@@ -161,3 +228,7 @@ install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/messageviewer )
 install(FILES header/data/messageviewer_header_themes.knsrc DESTINATION ${CONFIG_INSTALL_DIR} )
 
 add_subdirectory(grantleefilters)
+add_subdirectory(scamdetection/tests)
+add_subdirectory(adblock/tests/)
+install(FILES notify/messageviewer.notifyrc DESTINATION ${DATA_INSTALL_DIR}/messageviewer )
+install(FILES scamdetection/data/longurlServices.json DESTINATION ${DATA_INSTALL_DIR}/messageviewer )

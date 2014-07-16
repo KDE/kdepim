@@ -82,26 +82,26 @@ namespace Kleo {
 
     const GpgME::Key & key() const;
     /** Preferred method to set a key for
-	non-multi-KeyRequesters. Doesn't start a backend
-	KeyListJob.
+        non-multi-KeyRequesters. Doesn't start a backend
+        KeyListJob.
     */
     void setKey( const GpgME::Key & key );
 
     const std::vector<GpgME::Key> & keys() const;
     /** Preferred method to set a key for multi-KeyRequesters. Doesn't
-	start a backend KeyListJob.
+        start a backend KeyListJob.
     */
     void setKeys( const std::vector<GpgME::Key> & keys );
 
     QString fingerprint() const;
     /** Set the key by fingerprint. Starts a background KeyListJob to
-	retrive the complete GpgME::Key object
+        retrive the complete GpgME::Key object
     */
     void setFingerprint( const QString & fingerprint );
 
     QStringList fingerprints() const;
     /** Set the keys by fingerprint. Starts a background KeyListJob to
-	retrive the complete GpgME::Key objects
+        retrive the complete GpgME::Key objects
     */
     void setFingerprints( const QStringList & fingerprints );
 

@@ -26,18 +26,14 @@
 
 #include <KDebug>
 #include <KIcon>
-#include <KGlobal>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KIconLoader>
 
 #include <QUrl>
-#include <QAbstractTextDocumentLayout>
 #include <QApplication>
-#include <QHBoxLayout>
-#include <QTableView>
 #include <QPainter>
 #include <QTextDocument>
-#include <QMenu>
+#include <QMouseEvent>
 
 using Akonadi::AgentInstanceModel;
 using Akonadi::AgentInstance;
@@ -50,7 +46,7 @@ struct Icons {
         , syncPixmap ( KIcon ( QLatin1String ( "network-connect" ) ).pixmap ( QSize ( 16, 16 ) ) )
         , errorPixmap ( KIcon ( QLatin1String ( "dialog-error" ) ).pixmap ( QSize ( 16, 16 ) ) )
         , offlinePixmap ( KIcon ( QLatin1String ( "network-disconnect" ) ).pixmap ( QSize ( 16, 16 ) ) )
-        , checkMailIcon ( KIcon ( "mail-receive" ) ) {
+        , checkMailIcon ( KIcon ( QLatin1String ("mail-receive") ) ) {
     }
     QPixmap readyPixmap, syncPixmap, errorPixmap, offlinePixmap;
     KIcon checkMailIcon;
@@ -243,4 +239,3 @@ QStyleOptionButton ConfigAgentDelegate::buttonOption ( const QStyleOptionViewIte
     return buttonOpt;
 }
 
-#include "configagentdelegate.moc"

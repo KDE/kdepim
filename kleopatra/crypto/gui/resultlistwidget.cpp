@@ -48,7 +48,6 @@
 #include <KStandardGuiItem>
 
 #include <QLabel>
-#include <QMoveEvent>
 #include <QVBoxLayout>
 
 #include <boost/bind.hpp>
@@ -233,4 +232,4 @@ void ResultListWidget::setStandaloneMode( bool standalone ) {
     d->m_progressLabel->setVisible( standalone );
 }
 
-#include "resultlistwidget.moc"
+#include "moc_resultlistwidget.cpp"

@@ -19,7 +19,7 @@
  */
 
 #include "kalarm.h"
-#include "sounddlg.moc"
+#include "sounddlg.h"
 
 #include "checkbox.h"
 #include "functions.h"
@@ -42,7 +42,6 @@
 #include <QLabel>
 #include <QDir>
 #include <QGroupBox>
-#include <QApplication>
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QShowEvent>
@@ -167,7 +166,7 @@ SoundWidget::SoundWidget(bool showPlay, bool showRepeat, QWidget* parent)
     {
         // File play button
         mFilePlay = new QPushButton(box);
-        mFilePlay->setIcon(SmallIcon("media-playback-start"));
+        mFilePlay->setIcon(SmallIcon(QLatin1String("media-playback-start")));
         connect(mFilePlay, SIGNAL(clicked()), SLOT(playSound()));
         mFilePlay->setToolTip(i18nc("@info:tooltip", "Test the sound"));
         mFilePlay->setWhatsThis(i18nc("@info:whatsthis", "Play the selected sound file."));
@@ -183,7 +182,7 @@ SoundWidget::SoundWidget(bool showPlay, bool showRepeat, QWidget* parent)
 
     // File browse button
     mFileBrowseButton = new PushButton(box);
-    mFileBrowseButton->setIcon(KIcon(SmallIcon("document-open")));
+    mFileBrowseButton->setIcon(KIcon(SmallIcon(QLatin1String("document-open"))));
     int size = mFileBrowseButton->sizeHint().height();
     mFileBrowseButton->setFixedSize(size, size);
     connect(mFileBrowseButton, SIGNAL(clicked()), SLOT(slotPickFile()));
@@ -438,7 +437,7 @@ void SoundWidget::playSound()
     Phonon::createPath(mPlayer, output);
 #endif
     connect(mPlayer, SIGNAL(finished()), SLOT(playFinished()));
-    mFilePlay->setIcon(SmallIcon("media-playback-stop"));   // change the play button to a stop button
+    mFilePlay->setIcon(SmallIcon(QLatin1String("media-playback-stop")));   // change the play button to a stop button
     mFilePlay->setToolTip(i18nc("@info:tooltip", "Stop sound"));
     mFilePlay->setWhatsThis(i18nc("@info:whatsthis", "Stop playing the sound"));
     mPlayer->play();
@@ -451,7 +450,7 @@ void SoundWidget::playFinished()
 {
     delete mPlayer;   // this stops playing if not already stopped
     mPlayer = 0;
-    mFilePlay->setIcon(SmallIcon("media-playback-start"));
+    mFilePlay->setIcon(SmallIcon(QLatin1String("media-playback-start")));
     mFilePlay->setToolTip(i18nc("@info:tooltip", "Test the sound"));
     mFilePlay->setWhatsThis(i18nc("@info:whatsthis", "Play the selected sound file."));
 }
@@ -545,5 +544,5 @@ void SoundWidget::slotFadeToggled(bool on)
     mFadeVolumeBox->setEnabled(on);
     emit changed();
 }
-
+#include "moc_sounddlg.cpp"
 // vim: et sw=4:

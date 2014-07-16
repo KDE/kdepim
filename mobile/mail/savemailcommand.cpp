@@ -42,7 +42,7 @@ KUrl subjectToUrl( const QString &subject )
   // avoid stripping off the last part of the subject after a "."
   // by KFileDialog, which thinks it's an extension
   if ( !fileName.endsWith( QLatin1String( ".mbox" ) ) )
-    fileName += ".mbox";
+    fileName += QLatin1String(".mbox");
 
   const QString filter = i18n( "*.mbox|email messages (*.mbox)\n*|all files (*)" );
   return KFileDialog::getSaveUrl( KUrl::fromPath( fileName ), filter );
@@ -295,4 +295,4 @@ void SaveMailCommand::slotSaveResult(KJob *job)
   }
 }
 
-#include "savemailcommand_p.moc"
+#include "moc_savemailcommand_p.cpp"

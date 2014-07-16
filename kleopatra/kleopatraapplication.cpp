@@ -36,7 +36,6 @@
 
 #include "mainwindow.h"
 #include "systrayicon.h"
-
 #include <smartcard/readerstatus.h>
 #include <conf/configuredialog.h>
 
@@ -46,6 +45,7 @@
 #include <utils/log.h>
 #include <utils/getpid.h>
 
+#include <gpgme++/key.h>
 #include <models/keycache.h>
 
 #ifdef HAVE_USABLE_ASSUAN
@@ -54,10 +54,12 @@
 
 #include <commands/signencryptfilescommand.h>
 #include <commands/decryptverifyfilescommand.h>
+#include <commands/lookupcertificatescommand.h>
+#include <commands/detailscommand.h>
 
 #include <KGlobal>
 #include <KIconLoader>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KCmdLineOptions>
 #include <KDebug>
 #include <KUrl>
@@ -79,10 +81,10 @@ using namespace Kleo::Commands;
 using namespace boost;
 
 static void add_resources() {
-  KGlobal::locale()->insertCatalog( "libkleopatra" );
-  KIconLoader::global()->addAppDir( "libkleopatra" );
-  KIconLoader::global()->addAppDir( "kwatchgnupg" );
-  KIconLoader::global()->addAppDir( "kdepim" );
+  KGlobal::locale()->insertCatalog( QLatin1String("libkleopatra") );
+  KIconLoader::global()->addAppDir( QLatin1String("libkleopatra") );
+  KIconLoader::global()->addAppDir( QLatin1String("kwatchgnupg") );
+  KIconLoader::global()->addAppDir( QLatin1String("kdepim") );
 }
 
 static const struct {
@@ -101,6 +103,8 @@ static const struct {
     { "decrypt",            I18N_NOOP("Decrypt file(s)"),                         "d" },
     { "verify",             I18N_NOOP("Verify file/signature"),                   "V" },
     { "decrypt-verify",     I18N_NOOP("Decrypt and/or verify file(s)"),          "D" },
+    { "query <fingerprint>",I18N_NOOP("Search for Certificate by fingerprint"),   "q" },
+    { "parent-windowid <windowId>",   I18N_NOOP("Parent Window Id for dialogs"),   "" },
     //{ "show-certificate",   I18N_NOOP("Show Certificate(s) by fingerprint(s)"),   ""  },
 };
 
@@ -137,11 +141,10 @@ class KleopatraApplication::Private {
 public:
     explicit Private( KleopatraApplication * qq )
         : q( qq ),
-          ignoreNewInstance( true )
+          ignoreNewInstance( true ),
+          firstNewInstance( true )
     {
-#ifndef _WIN32_WCE
         KDAB_SET_OBJECT_NAME( readerStatus );
-#endif
 #ifndef QT_NO_SYSTEMTRAYICON
         KDAB_SET_OBJECT_NAME( sysTray );
 
@@ -167,11 +170,10 @@ private:
 
 public:
     bool ignoreNewInstance;
+    bool firstNewInstance;
     QPointer<ConfigureDialog> configureDialog;
     QPointer<MainWindow> mainWindow;
-#ifndef _WIN32_WCE
     SmartCard::ReaderStatus readerStatus;
-#endif
 #ifndef QT_NO_SYSTEMTRAYICON
     SysTrayIcon sysTray;
 #endif
@@ -279,6 +281,42 @@ int KleopatraApplication::newInstance() {
         return 1;
     }
 
+    // Check for --query command
+    if ( args->isSet( "query" ) ) {
+        const QString fingerPrint = args->getOption( "query" );
+        if ( fingerPrint.isEmpty() ) {
+          kDebug() << "no fingerprint specified: --query";
+          return 1;
+        }
+
+        // Check for Parent Window id
+        WId parentId = 0;
+        if ( args->isSet( "parent-windowid" ) ) {
+            parentId = args->getOption( "parent-windowid" ).toUInt();
+        }
+
+        // Search for local keys
+        const GpgME::Key &key = Kleo::KeyCache::instance()->findByKeyIDOrFingerprint( fingerPrint.toLocal8Bit().data() );
+        if ( key.isNull() ) {
+            // Show external search dialog
+            LookupCertificatesCommand * const cmd = new LookupCertificatesCommand( fingerPrint, 0 );
+            if ( parentId != 0 ) {
+                cmd->setParentWId( parentId );
+            };
+            cmd->start();
+            return 0;
+        } else {
+            // show local detail
+            DetailsCommand * const cmd = new DetailsCommand( key, 0 );
+            if ( parentId != 0 ) {
+                cmd->setParentWId( parentId );
+            };
+            cmd->start();
+            return 0;
+        }
+
+    }
+
     static const _Funcs funcs[] = {
 #ifndef QT_NO_SYSTEMTRAYICON
         { "import-certificate", &KleopatraApplication::importCertificatesFromFile },
@@ -310,8 +348,10 @@ int KleopatraApplication::newInstance() {
         (this->*func)( files, openpgp ? GpgME::OpenPGP : cms ? GpgME::CMS : GpgME::UnknownProtocol );
     } else {
         if ( files.empty() ) {
-            kDebug() << "openOrRaiseMainWindow";
-            openOrRaiseMainWindow();
+            if ( ! ( d->firstNewInstance && isSessionRestored() ) ) {
+                kDebug() << "openOrRaiseMainWindow";
+                openOrRaiseMainWindow();
+            }
         } else {
             kDebug() << "files without command"; // possible?
             return 1;
@@ -362,6 +402,43 @@ static void open_or_raise( QWidget * w ) {
     } else {
         w->show();
     }
+}
+
+void KleopatraApplication::toggleMainWindowVisibility()
+{
+    if ( mainWindow() ) {
+        mainWindow()->setVisible( !mainWindow()->isVisible() );
+    } else {
+        openOrRaiseMainWindow();
+    }
+}
+
+void KleopatraApplication::restoreMainWindow() {
+    kDebug() << "restoring main window";
+
+    // Sanity checks
+    if ( !isSessionRestored() ) {
+        kDebug() << "Not in session restore";
+        return;
+    }
+
+    if ( mainWindow() ) {
+        kDebug() << "Already have main window";
+        return;
+    }
+
+
+    MainWindow * mw = new MainWindow;
+    if ( KMainWindow::canBeRestored( 1 ) ) {
+        // restore to hidden state, Mainwindow::readProperties() will
+        // restore saved visibility.
+        mw->restore( 1, false );
+    }
+
+    mw->setAttribute( Qt::WA_DeleteOnClose );
+    setMainWindow( mw );
+    d->connectConfigureDialog();
+
 }
 
 void KleopatraApplication::openOrRaiseMainWindow() {
@@ -442,8 +519,12 @@ void KleopatraApplication::setIgnoreNewInstance( bool ignore ) {
     d->ignoreNewInstance = ignore;
 }
 
+void KleopatraApplication::setFirstNewInstance( bool on ) {
+    d->firstNewInstance = on;
+}
+
+
 bool KleopatraApplication::ignoreNewInstance() const {
     return d->ignoreNewInstance;
 }
 
-#include "moc_kleopatraapplication.cpp"

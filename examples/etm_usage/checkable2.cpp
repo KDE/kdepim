@@ -80,7 +80,7 @@ Checkable2::Checkable2(QWidget* parent, Qt::WindowFlags f)
   allChildrenView->setModel(selectionProxy);
 
   Akonadi::EntityMimeTypeFilterModel *itemFilter = new Akonadi::EntityMimeTypeFilterModel(this);
-  itemFilter->setObjectName("itemFilter");
+  itemFilter->setObjectName(QLatin1String("itemFilter"));
   itemFilter->addMimeTypeExclusionFilter(Akonadi::Collection::mimeType());
   itemFilter->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
   itemFilter->setSourceModel(selectionProxy);

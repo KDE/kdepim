@@ -23,7 +23,7 @@
 #include "composertableformatdialog.h"
 #include "helper/tablehelper_p.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QWebElement>
 #include <QDebug>
@@ -312,4 +312,4 @@ ComposerTableActionMenu::~ComposerTableActionMenu()
 
 }
 
-#include "composertableactionmenu.moc"
+#include "moc_composertableactionmenu.cpp"

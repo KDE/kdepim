@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,13 +16,16 @@
 */
 
 #include "sieveactionreject.h"
+#include "editor/sieveeditorutil.h"
 #include "widgets/multilineedit.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QDomNode>
+#include <QDebug>
 
 using namespace KSieveUi;
 SieveActionReject::SieveActionReject(QObject *parent)
@@ -45,9 +48,35 @@ QWidget *SieveActionReject::createParamWidget( QWidget *parent ) const
     lay->addWidget(lab);
 
     MultiLineEdit *edit = new MultiLineEdit;
+    connect(edit, SIGNAL(textChanged()), this, SIGNAL(valueChanged()));
     edit->setObjectName( QLatin1String("rejectmessage") );
     lay->addWidget(edit);
     return w;
+}
+
+bool SieveActionReject::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
+{
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                const QString tagValue = e.text();
+                MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("rejectmessage") );
+                edit->setText(AutoCreateScriptUtil::quoteStr(tagValue));
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
+            } else {
+                unknownTag(tagName, error);
+                qDebug()<<" SieveActionReject::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+    return true;
 }
 
 QString SieveActionReject::code(QWidget *w) const
@@ -60,7 +89,7 @@ QString SieveActionReject::code(QWidget *w) const
 
 QStringList SieveActionReject::needRequires(QWidget *) const
 {
-    return QStringList() <<QLatin1String("reject");
+    return QStringList() << QLatin1String("reject");
 }
 
 QString SieveActionReject::serverNeedsCapability() const
@@ -78,4 +107,7 @@ QString SieveActionReject::help() const
     return i18n(" The \"reject\" action cancels the implicit keep and refuses delivery of a message.");
 }
 
-#include "sieveactionreject.moc"
+QString SieveActionReject::href() const
+{
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
+}

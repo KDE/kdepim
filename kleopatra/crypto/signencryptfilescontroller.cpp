@@ -51,7 +51,7 @@
 
 #include <kmime/kmime_header_parsing.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <kdebug.h>
 
 #include <QPointer>
@@ -316,7 +316,7 @@ createSignEncryptTaskForFileInfo( const QFileInfo & fi, bool pgp, bool sign, boo
     const char * const ext = extension( pgp, sign, encrypt, ascii, true );
     kleo_assert( ext );
 
-    const QString output = input + '.' + ext;
+    const QString output = input + QLatin1Char('.') + QLatin1String(ext);
     task->setOutputFileName( output );
 
     return task;
@@ -347,7 +347,7 @@ createArchiveSignEncryptTaskForFiles( const QStringList & files, const QString &
     kleo_assert( ext );
     kleo_assert( !ad->extensions( proto ).empty() );
 
-    task->setOutputFileName( outputFileBaseName + '.' + ext );
+    task->setOutputFileName( outputFileBaseName + QLatin1Char('.') + QLatin1String(ext) );
 
     return task;
 }

@@ -27,18 +27,16 @@
 
 #include "kojournalview.h"
 #include "koprefs.h"
-#include "kocorehelper.h"
-#include "printing/calprinter.h"
 
 #include <calendarviews/journal/journalview.h>
 
-#include <Akonadi/Calendar/ETMCalendar>
 #include <calendarsupport/utils.h>
+#include <calendarsupport/printing/calprinter.h>
+#include <calendarsupport/printing/calprintdefaultplugins.h>
 
-#include <KVBox>
+#include <Akonadi/Calendar/ETMCalendar>
 
-#include <QEvent>
-#include <QScrollArea>
+
 #include <QVBoxLayout>
 
 using namespace KOrg;
@@ -166,9 +164,9 @@ void KOJournalView::getHighlightMode( bool &highlightEvents,
   highlightEvents   = !highlightJournals;
 }
 
-CalPrinterBase::PrintType KOJournalView::printType() const
+CalendarSupport::CalPrinterBase::PrintType KOJournalView::printType() const
 {
-  return CalPrinterBase::Journallist;
+  return CalendarSupport::CalPrinterBase::Journallist;
 }
 
 void KOJournalView::setCalendar( const Akonadi::ETMCalendar::Ptr &calendar )
@@ -180,8 +178,7 @@ void KOJournalView::setCalendar( const Akonadi::ETMCalendar::Ptr &calendar )
 void KOJournalView::printJournal( const KCalCore::Journal::Ptr &journal )
 {
   if ( journal ) {
-    KOCoreHelper helper;
-    CalPrinter printer( this, calendar(), &helper, true );
+    CalendarSupport::CalPrinter printer( this, calendar(), true );
     KCalCore::Incidence::List selectedIncidences;
     selectedIncidences.append( journal );
 
@@ -191,10 +188,9 @@ void KOJournalView::printJournal( const KCalCore::Journal::Ptr &journal )
     //stylesheet is propagated to the child print dialog. see bug 303902
     const QString ss = styleSheet();
     setStyleSheet( QString() );
-    printer.print( KOrg::CalPrinterBase::Incidence,
+    printer.print( CalendarSupport::CalPrinterBase::Incidence,
                    dtStart, dtStart, selectedIncidences );
     setStyleSheet( ss );
   }
 }
 
-#include "kojournalview.moc"

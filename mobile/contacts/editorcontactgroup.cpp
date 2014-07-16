@@ -59,8 +59,8 @@ class EditorContactGroup::Private
       : q( parent )
     {
       mUi.setupUi( parent );
-      mUi.cancelButton->setIcon( SmallIcon( "dialog-cancel", 64 ) );
-      mUi.saveButton->setIcon( SmallIcon( "document-save", 64 ) );
+      mUi.cancelButton->setIcon( SmallIcon( QLatin1String("dialog-cancel"), 64 ) );
+      mUi.saveButton->setIcon( SmallIcon( QLatin1String("document-save"), 64 ) );
       mUi.saveButton->setEnabled( false );
 
       mInputs << new Recipient( mUi.recipient1, q );
@@ -319,4 +319,4 @@ void EditorContactGroup::setDefaultCollection( const Akonadi::Collection &collec
   d->mUi.collectionSelector->setDefaultCollection( collection );
 }
 
-#include "editorcontactgroup.moc"
+#include "moc_editorcontactgroup.cpp"

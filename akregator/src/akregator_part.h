@@ -39,7 +39,6 @@ class KConfigGroup;
 class KUrl;
 class KCMultiDialog;
 
-class QDomDocument;
 class QTimer;
 
 namespace Akregator {
@@ -82,7 +81,7 @@ class Part : public KParts::ReadOnlyPart
         /** Default constructor.*/
         Part(QWidget *parentWidget, QObject *parent, const QVariantList&);
 
-	   /** Destructor. */
+           /** Destructor. */
         ~Part();
 
         /**

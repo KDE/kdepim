@@ -37,27 +37,27 @@ class AggregationConfigButtonPrivate;
  */
 class MESSAGELIST_EXPORT AggregationConfigButton : public KPushButton
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /** Constructor.
+    /** Constructor.
    * @param parent The parent widget for the button.
    * @param aggregationComboBox Optional AggregationComboBox to be kept in sync
    * with changes made by the configure dialog.
    */
-  explicit AggregationConfigButton( QWidget * parent, const AggregationComboBox * aggregationComboBox = 0 );
-  ~AggregationConfigButton();
+    explicit AggregationConfigButton( QWidget * parent, const AggregationComboBox * aggregationComboBox = 0 );
+    ~AggregationConfigButton();
 
 signals:
-  /**
+    /**
    * A signal emitted when configure dialog has been successfully completed.
    */
-  void configureDialogCompleted();
+    void configureDialogCompleted();
 
 private:
-  Q_PRIVATE_SLOT(d, void slotConfigureAggregations())
+    Q_PRIVATE_SLOT(d, void slotConfigureAggregations())
 
-  AggregationConfigButtonPrivate * const d;
+    AggregationConfigButtonPrivate * const d;
 };
 
 } // namespace Utils

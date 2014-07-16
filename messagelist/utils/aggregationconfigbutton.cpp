@@ -31,48 +31,49 @@ using namespace MessageList::Utils;
 class MessageList::Utils::AggregationConfigButtonPrivate
 {
 public:
-  AggregationConfigButtonPrivate( AggregationConfigButton *owner )
-    : q( owner ), mAggregationComboBox( 0 )  { }
+    AggregationConfigButtonPrivate( AggregationConfigButton *owner )
+        : q( owner ), mAggregationComboBox( 0 )  { }
 
-  AggregationConfigButton * const q;
+    AggregationConfigButton * const q;
 
-  const AggregationComboBox * mAggregationComboBox;
+    const AggregationComboBox * mAggregationComboBox;
 
-  void slotConfigureAggregations();
+    void slotConfigureAggregations();
 };
 
 AggregationConfigButton::AggregationConfigButton( QWidget * parent, const AggregationComboBox * aggregationComboBox )
-: KPushButton( i18n( "Configure..." ), parent ), d( new AggregationConfigButtonPrivate( this ) )
+    : KPushButton( i18n( "Configure..." ), parent ), d( new AggregationConfigButtonPrivate( this ) )
 {
-  d->mAggregationComboBox = aggregationComboBox;
-  connect( this, SIGNAL(pressed()),
-           this, SLOT(slotConfigureAggregations()) );
+    d->mAggregationComboBox = aggregationComboBox;
+    connect( this, SIGNAL(pressed()),
+             this, SLOT(slotConfigureAggregations()) );
 
-  // Keep aggregation combo up-to-date with any changes made in the configure dialog.
-  if ( d->mAggregationComboBox != 0 )
-    connect( this, SIGNAL(configureDialogCompleted()),
-             d->mAggregationComboBox, SLOT(slotLoadAggregations()) );
+    // Keep aggregation combo up-to-date with any changes made in the configure dialog.
+    if ( d->mAggregationComboBox != 0 )
+        connect( this, SIGNAL(configureDialogCompleted()),
+                 d->mAggregationComboBox, SLOT(slotLoadAggregations()) );
+    setEnabled(Manager::instance());
 }
 
 AggregationConfigButton::~AggregationConfigButton()
 {
-  delete d;
+    delete d;
 }
 
 void AggregationConfigButtonPrivate::slotConfigureAggregations()
 {
-  QString currentAggregationID;
-  if ( mAggregationComboBox ) {
-    currentAggregationID = mAggregationComboBox->currentAggregation();
-  }
+    QString currentAggregationID;
+    if ( mAggregationComboBox ) {
+        currentAggregationID = mAggregationComboBox->currentAggregation();
+    }
 
-  ConfigureAggregationsDialog *dialog = new ConfigureAggregationsDialog( q->window() );
-  dialog->selectAggregation( currentAggregationID );
+    ConfigureAggregationsDialog *dialog = new ConfigureAggregationsDialog( q->window() );
+    dialog->selectAggregation( currentAggregationID );
 
-  QObject::connect( dialog, SIGNAL(okClicked()),
-                    q, SIGNAL(configureDialogCompleted()) );
+    QObject::connect( dialog, SIGNAL(okClicked()),
+                      q, SIGNAL(configureDialogCompleted()) );
 
-  dialog->show();
+    dialog->show();
 }
 
-#include "aggregationconfigbutton.moc"
+#include "moc_aggregationconfigbutton.cpp"

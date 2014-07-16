@@ -121,7 +121,7 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
       index = 0;
       num = 0;
       while((index = error.indexOf("Cannot find the public key",index))
-	    != -1)
+            != -1)
       {
         bad = true;
         index = error.indexOf('\'',index);
@@ -134,7 +134,7 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
       {
         badkeys.trimmed();
         if(num == recipients.count())
-	  errMsg = i18n("Could not find public keys matching the userid(s)\n"
+          errMsg = i18n("Could not find public keys matching the userid(s)\n"
                         "%1;\n"
                         "the message is not encrypted.",
                          badkeys.data() );
@@ -152,7 +152,7 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
       index = 0;
       num = 0;
       while((index = error.indexOf("skipping userid",index))
-	    != -1)
+            != -1)
       {
         bad = true;
         int index2 = error.indexOf('\n',index+16);
@@ -165,13 +165,13 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
       {
         badkeys.trimmed();
         if(num == recipients.count())
-	  errMsg = i18n("Public keys not certified with trusted signature "
+          errMsg = i18n("Public keys not certified with trusted signature "
                         "for userid(s)\n"
                         "%1.\n"
                         "The message is not encrypted.",
                          badkeys.data() );
         else
-	  errMsg = i18n("Public keys not certified with trusted signature "
+          errMsg = i18n("Public keys not certified with trusted signature "
                         "for userid(s)\n"
                         "%1;\n"
                         "these persons will not be able to read the message.",
@@ -289,7 +289,7 @@ Base2::decrypt( Block& block, const char *passphrase )
       // Find out the key for which the phrase is needed
       index  += 17;
       index2 = error.indexOf('\n', index);
-      block.setRequiredUserId( error.mid(index, index2 - index) );
+      block.setRequiredUserId( QLatin1String(error.mid(index, index2 - index)) );
       //kDebug( 5326 ) <<"Base: key needed is \"" << block.requiredUserId() <<"\"!";
 
       if((passphrase != 0) && (error.contains("Bad pass phrase") ))
@@ -321,10 +321,10 @@ Base2::decrypt( Block& block, const char *passphrase )
       mRecipients.clear();
       while( (index2 = error.indexOf('\n',index+1)) <= end )
       {
-	QByteArray item = error.mid(index+1,index2-index-1);
-	item.trimmed();
-	mRecipients.append(item);
-	index = index2;
+        QByteArray item = error.mid(index+1,index2-index-1);
+        item.trimmed();
+        mRecipients.append(item);
+        index = index2;
       }
     }
 #endif
@@ -427,7 +427,7 @@ Base2::decrypt( Block& block, const char *passphrase )
       // get signer
       index = error.indexOf('"',index2+19);
       index2 = error.indexOf('"', index+1);
-      block.setSignatureUserId( error.mid(index+1, index2-index-1) );
+      block.setSignatureUserId( QLatin1String(error.mid(index+1, index2-index-1)) );
     }
     else if( (index2 = error.indexOf("Bad signature from", index)) != -1 )
     {
@@ -435,7 +435,7 @@ Base2::decrypt( Block& block, const char *passphrase )
       // get signer
       index = error.indexOf('"',index2+19);
       index2 = error.indexOf('"', index+1);
-      block.setSignatureUserId( error.mid(index+1, index2-index-1) );
+      block.setSignatureUserId( QLatin1String(error.mid(index+1, index2-index-1)) );
     }
     else if( error.indexOf("Keyring file", index) != -1 )
     {
@@ -468,8 +468,8 @@ Base2::readPublicKey( const KeyID& keyID,
   int exitStatus = 0;
 
   status = 0;
-  exitStatus = run( PGP2 " +batchmode +language=en +verbose=0 -kvc -f 0x" +
-                    keyID, 0, true );
+  exitStatus = run( QByteArray(QByteArray(PGP2 " +batchmode +language=en +verbose=0 -kvc -f 0x") +
+                    keyID), 0, true );
 
   if(exitStatus != 0) {
     status = ERROR;
@@ -531,7 +531,7 @@ Base2::doGetPublicKeys( const QByteArray & cmd, const QStringList & patterns )
     QStringList::ConstIterator end( patterns.constEnd() );
     for ( QStringList::ConstIterator it = patterns.constBegin();
           it != end; ++it ) {
-      exitStatus = run( cmd + ' ' + KShell::quoteArg( *it ).toLocal8Bit(),
+      exitStatus = run( QByteArray(cmd + QByteArray(" ") + KShell::quoteArg( *it ).toLocal8Bit()),
                         0, true );
 
       if ( exitStatus != 0 ) {
@@ -597,7 +597,7 @@ QByteArray Base2::getAsciiPublicKey(const KeyID& keyID)
     return QByteArray();
 
   status = 0;
-  int exitStatus = run( PGP2 " +batchmode +force +language=en -kxaf 0x" + keyID,
+  int exitStatus = run( QByteArray(QByteArray(PGP2 " +batchmode +force +language=en -kxaf 0x") + keyID),
                     0, true );
 
   if(exitStatus != 0) {
@@ -726,7 +726,7 @@ Base2::parsePublicKeyData( const QByteArray& output, Key* key /* = 0 */ )
         pos++;
       QByteArray uid = output.mid( pos, index2-pos );
       if( uid != "*** KEY REVOKED ***" )
-        key->addUserID( uid );
+        key->addUserID( QLatin1String(uid) );
       else
       {
         subkey->setRevoked( true );
@@ -751,8 +751,8 @@ Base2::parsePublicKeyData( const QByteArray& output, Key* key /* = 0 */ )
 
         QByteArray fingerprint = output.mid( pos, index2-pos );
         // remove white space from the fingerprint
-	for ( int idx = 0 ; (idx = fingerprint.indexOf(' ', idx)) != -1 ; )
-	  fingerprint.replace( idx, 1, "" );
+        for ( int idx = 0 ; (idx = fingerprint.indexOf(' ', idx)) != -1 ; )
+          fingerprint.replace( idx, 1, "" );
 
         subkey->setFingerprint( fingerprint );
       }
@@ -802,7 +802,7 @@ Base2::parsePublicKeyData( const QByteArray& output, Key* key /* = 0 */ )
         // Example:
         //                               Test key (2nd user ID) <abc@xyz>
 
-        key->addUserID( output.mid( pos, index2-pos ) );
+        key->addUserID( QLatin1String(output.mid( pos, index2-pos )) );
       }
     }
     index = index2 + 1;
@@ -871,7 +871,7 @@ Base2::parseTrustDataForKey( Key* key, const QByteArray& str )
       int pos = index + 31;
       if( str[index+2] == ' ' )
         pos++; // additional user IDs start one column later
-      QString uid = str.mid( pos, index2-pos );
+      QString uid = QLatin1String(str.mid( pos, index2-pos ));
 
       // set the validity of the corresponding user ID
       for( UserIDList::Iterator it = userIDs.begin(); it != userIDs.end(); ++it )
@@ -937,7 +937,7 @@ Base2::parseKeyList( const QByteArray& output, bool secretKeys )
       int pos, pos2;
 
       if( key != 0 ) // store the previous key in the key list
-	keys.append( key );
+        keys.append( key );
 
       key = new Key();
       key->setSecret( secretKeys );
@@ -1006,7 +1006,7 @@ Base2::parseKeyList( const QByteArray& output, bool secretKeys )
         pos++;
       QByteArray uid = output.mid( pos, index2-pos );
       if( uid != "*** KEY REVOKED ***" )
-        key->addUserID( uid );
+        key->addUserID( QLatin1String(uid) );
       else
       {
         subkey->setRevoked( true );
@@ -1030,8 +1030,8 @@ Base2::parseKeyList( const QByteArray& output, bool secretKeys )
 
         QByteArray fingerprint = output.mid( pos, index2-pos );
         // remove white space from the fingerprint
-	for ( int idx = 0 ; (idx = fingerprint.indexOf(' ', idx)) != -1 ; )
-	  fingerprint.replace( idx, 1, "" );
+        for ( int idx = 0 ; (idx = fingerprint.indexOf(' ', idx)) != -1 ; )
+          fingerprint.replace( idx, 1, "" );
 
         subkey->setFingerprint( fingerprint );
       }
@@ -1081,7 +1081,7 @@ Base2::parseKeyList( const QByteArray& output, bool secretKeys )
         // Example:
         //                               Test key (2nd user ID) <abc@xyz>
 
-        key->addUserID( output.mid( pos, index2-pos ) );
+        key->addUserID( QLatin1String(output.mid( pos, index2-pos )) );
       }
     }
 

@@ -306,7 +306,7 @@ QVariant ThreadModel::data( const QModelIndex &index, int role ) const
 
     if ( role == Qt::DisplayRole ) {
       const QString displayString = firstMailIndex.data( role ).toString();
-      return QString('(' + QString::number( rangeSize ) + ')' + displayString);
+      return QString(QLatin1Char('(') + QString::number( rangeSize ) + QLatin1Char(')') + displayString);
     }
 
     return firstMailIndex.data( role );
@@ -322,4 +322,4 @@ int ThreadModel::rowCount( const QModelIndex& ) const
   return d->m_rangeManager.count();
 }
 
-#include "threadmodel.moc"
+#include "moc_threadmodel.cpp"

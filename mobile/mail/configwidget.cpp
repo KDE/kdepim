@@ -133,15 +133,6 @@ void ConfigWidget::loadFromExternalSettings()
   Settings::self()->setInvitationsAutomaticSending( MessageViewer::GlobalSettings::self()->automaticSending() );
   Settings::self()->setInvitationsDeleteAfterReply( MessageViewer::GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() );
 
-  // Message List
-  {
-    const MessageListSettings settings = MessageListSettings::fromDefaultConfig();
-    Settings::self()->setMessageListSortingOption( settings.sortingOption() );
-    Settings::self()->setMessageListSortingOrder( settings.sortingOrder() );
-    Settings::self()->setMessageListGroupingOption( settings.groupingOption() );
-    Settings::self()->setMessageListUseThreading( settings.useThreading() );
-  }
-
   // MDN
   Settings::self()->setMDNPolicy( MessageViewer::GlobalSettings::self()->defaultPolicy() );
   Settings::self()->setMDNQuoteType( MessageViewer::GlobalSettings::self()->quoteMessage() );
@@ -155,7 +146,7 @@ void ConfigWidget::saveToExternalSettings()
   MessageViewer::GlobalSettings::self()->setShrinkQuotes( Settings::self()->appearanceReduceQuotedFontSize() );
 
   // Composer
-  MessageComposerSettings::self()->setAutoTextSignature( Settings::self()->composerInsertSignature() ? "auto" : "manual" );
+  MessageComposerSettings::self()->setAutoTextSignature( Settings::self()->composerInsertSignature() ? QLatin1String("auto") : QLatin1String("manual") );
   MessageComposerSettings::self()->setPrependSignature( Settings::self()->composertInsertSignatureAboveQuote() );
   MessageComposerSettings::self()->setDashDashSignature( Settings::self()->composerPrependSeparator() );
   TemplateParser::GlobalSettings::self()->setSmartQuote( Settings::self()->composerUseSmartQuoting() );
@@ -178,18 +169,6 @@ void ConfigWidget::saveToExternalSettings()
   MessageViewer::GlobalSettings::self()->setOutlookCompatibleInvitationComparisons( Settings::self()->invitationsOutlookCompatible() );
   MessageViewer::GlobalSettings::self()->setAutomaticSending( Settings::self()->invitationsAutomaticSending() );
   MessageViewer::GlobalSettings::self()->setDeleteInvitationEmailsAfterSendingReply( Settings::self()->invitationsDeleteAfterReply() );
-
-  // Message List
-  {
-    MessageListSettings settings = MessageListSettings::fromDefaultConfig();
-
-    settings.setSortingOption( static_cast<MessageListSettings::SortingOption>( Settings::self()->messageListSortingOption() ) );
-    settings.setSortingOrder( static_cast<Qt::SortOrder>( Settings::self()->messageListSortingOrder() ) );
-    settings.setGroupingOption( static_cast<MessageListSettings::GroupingOption>( Settings::self()->messageListGroupingOption() ) );
-    settings.setUseThreading( Settings::self()->messageListUseThreading() );
-
-    MessageListSettings::toDefaultConfig( settings );
-  }
 
   // MDN
   MessageViewer::GlobalSettings::self()->setDefaultPolicy( Settings::self()->mDNPolicy() );
@@ -221,4 +200,3 @@ void DeclarativeConfigWidget::save()
   widget()->save();
 }
 
-#include "configwidget.moc"

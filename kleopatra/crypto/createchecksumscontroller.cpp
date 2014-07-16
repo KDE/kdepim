@@ -42,15 +42,17 @@
 #include <kleo/stl_util.h>
 #include <kleo/checksumdefinition.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <kdebug.h>
 #include <KSaveFile>
+#include <KConfigGroup>
+#include <KSharedConfig>
 
-#include <QLayout>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QLabel>
 #include <QListWidget>
+#include <QVBoxLayout>
 
 #include <QPointer>
 #include <QFileInfo>
@@ -119,6 +121,26 @@ namespace {
 
             connect( &buttonBox, SIGNAL(accepted()), this, SLOT(accept()) );
             connect( &buttonBox, SIGNAL(rejected()), this, SLOT(reject()) );
+            readConfig();
+        }
+        ~ResultDialog()
+        {
+            writeConfig();
+        }
+
+        void readConfig()
+        {
+            KConfigGroup dialog( KGlobal::config(), "ResultDialog" );
+            const QSize size = dialog.readEntry( "Size", QSize(600, 400) );
+            if ( size.isValid() ) {
+                resize( size );
+            }
+        }
+        void writeConfig()
+        {
+            KConfigGroup dialog( KGlobal::config(), "ResultDialog" );
+            dialog.writeEntry( "Size",size() );
+            dialog.sync();
         }
 
     private:
@@ -198,10 +220,11 @@ private:
         }
 #endif // QT_NO_PROGRESSDIALOG
         ResultDialog * const dlg = new ResultDialog( created, errors );
+        dlg->setAttribute(Qt::WA_DeleteOnClose);
         q->bringToForeground( dlg );
         if ( !errors.empty() )
             q->setLastError( gpg_error( GPG_ERR_GENERAL ),
-                             errors.join( "\n" ) );
+                             errors.join( QLatin1String("\n") ) );
         q->emitDoneOrError();
     }
     void slotProgress( int current, int total, const QString & what ) {
@@ -380,7 +403,7 @@ static std::vector<File> parse_sum_file( const QString & fileName ) {
     QFile f( fileName );
     if ( f.open( QIODevice::ReadOnly ) ) {
         QTextStream s( &f );
-        QRegExp rx( "(\\?)([a-f0-9A-F]+) ([ *])([^\n]+)\n*" );
+        QRegExp rx( QLatin1String("(\\?)([a-f0-9A-F]+) ([ *])([^\n]+)\n*") );
         while ( !s.atEnd() ) {
             const QString line = s.readLine();
             if ( rx.exactMatch( line ) ) {

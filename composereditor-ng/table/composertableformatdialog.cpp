@@ -23,7 +23,7 @@
 
 #include <KPIMTextEdit/InsertTableWidget>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KColorButton>
 #include <KSeparator>
 
@@ -180,4 +180,4 @@ ComposerTableFormatDialog::~ComposerTableFormatDialog()
 
 }
 
-#include "composertableformatdialog.moc"
+#include "moc_composertableformatdialog.cpp"

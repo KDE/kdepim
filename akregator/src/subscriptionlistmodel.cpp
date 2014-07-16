@@ -35,7 +35,6 @@
 
 #include <QByteArray>
 #include <QDataStream>
-#include <QFont>
 #include <QIcon>
 #include <QList>
 #include <QMimeData>
@@ -145,6 +144,7 @@ QVariant Akregator::SubscriptionListModel::data( const QModelIndex& index, int r
                 case TotalCountColumn:
                     return node->totalCount();
             }
+	    break;
         }
         case Qt::ToolTipRole:
         {
@@ -182,8 +182,8 @@ QVariant Akregator::SubscriptionListModel::data( const QModelIndex& index, int r
         }
         case LinkRole:
         {
-        	const Feed* const feed = qobject_cast<const Feed* const>( node );
-        	return feed ? feed->xmlUrl() : QVariant();
+                const Feed* const feed = qobject_cast<const Feed* const>( node );
+                return feed ? feed->xmlUrl() : QVariant();
         }
         case IsOpenRole:
         {
@@ -480,4 +480,3 @@ bool SubscriptionListModel::dropMimeData( const QMimeData* data,
     return true;
 }
 
-#include "subscriptionlistmodel.moc"

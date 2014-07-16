@@ -71,13 +71,11 @@ KPIM.ReorderListContainer {
     }
     MouseArea {
       anchors.fill: parent
-      onClicked: {
-        wrapper.ListView.view.currentIndex = model.index
-      }
+      onClicked: wrapper.ListView.view.currentIndex = model.index
     }
   }
 
-  onCurrentIndexChanged : { attachmentEditor.setRowSelected( index ) }
+  onCurrentIndexChanged: attachmentEditor.setRowSelected( index )
 
   KPIM.ActionButton {
     icon : KDE.locate( "data", "kmail-mobile/add-attachment-button.png" )

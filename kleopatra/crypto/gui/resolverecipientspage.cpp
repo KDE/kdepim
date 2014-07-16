@@ -58,7 +58,6 @@
 #include <QPushButton>
 #include <QRadioButton>
 #include <QToolButton>
-#include <QSignalMapper>
 #include <QStringList>
 #include <QVBoxLayout>
 
@@ -286,7 +285,7 @@ Mailbox ResolveRecipientsPage::ItemWidget::mailbox() const
 
 void ResolveRecipientsPage::ItemWidget::selectCertificateInComboBox( const Key& key )
 {
-    m_certCombo->setCurrentIndex( m_certCombo->findData( key.keyID() ) );
+    m_certCombo->setCurrentIndex( m_certCombo->findData( QLatin1String(key.keyID()) ) );
 }
 
 void ResolveRecipientsPage::ItemWidget::addCertificateToComboBox( const GpgME::Key& key )
@@ -606,7 +605,7 @@ namespace {
 static QString listKeysForInfo( const std::vector<Key> & keys ) {
     QStringList list;
     std::transform( keys.begin(), keys.end(), list.begin(), &Formatting::formatKeyLink );
-    return list.join( "<br/>" );
+    return list.join( QLatin1String("<br/>") );
 }
 
 void ResolveRecipientsPage::setAdditionalRecipientsInfo( const std::vector<Key> & recipients ) {
@@ -624,7 +623,7 @@ void ResolveRecipientsPage::setRecipients( const std::vector<Mailbox>& recipient
     uint pgpCount = 0;
     uint senders = 0;
     Q_FOREACH( const Mailbox & mb, encryptToSelfRecipients ) {
-        const QString id = "sender-" + QString::number( ++senders );
+        const QString id = QLatin1String("sender-") + QString::number( ++senders );
         d->m_listWidget->addEntry( id, i18n("Sender"), mb );
         const std::vector<Key> pgp = makeSuggestions( d->m_recipientPreferences, mb, OpenPGP );
         const std::vector<Key> cms = makeSuggestions( d->m_recipientPreferences, mb, CMS );

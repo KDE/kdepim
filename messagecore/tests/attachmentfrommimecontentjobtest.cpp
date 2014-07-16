@@ -77,4 +77,3 @@ void AttachmentFromMimeContentJobTest::testAttachment()
   QCOMPARE( part->data(), data );
 }
 
-#include "attachmentfrommimecontentjobtest.moc"

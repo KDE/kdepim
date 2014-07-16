@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -30,6 +30,7 @@ class SelectFileIntoDialog : public KDialog
 public:
     explicit SelectFileIntoDialog(QWidget *parent = 0);
     ~SelectFileIntoDialog();
+
     QString selectedFolder() const;
 };
 
@@ -42,8 +43,12 @@ public:
 
     QString selectedFolder() const;
 
+Q_SIGNALS:
+    void valueChanged();
+
 private Q_SLOTS:
     void slotSelectFolder();
+
 private:
     KLineEdit *mLineEdit;
 };

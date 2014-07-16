@@ -57,9 +57,9 @@ MobileMainview::MobileMainview(QWidget* parent, Qt::WindowFlags f)
 
   QDeclarativeContext *context = view->engine()->rootContext();
 
-  context->setContextProperty("_tripModel", tripModel);
+  context->setContextProperty(QLatin1String("_tripModel"), tripModel);
 
-  view->setSource(QUrl(KStandardDirs::locate( "appdata", "main.qml" )));
+  view->setSource(QUrl(KStandardDirs::locate( "appdata", QLatin1String("main.qml") )));
 
   layout->addWidget(view);
 }

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -26,7 +26,7 @@
 #include <messagecore/utils/stringutil.h>
 
 #include <kdebug.h>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KApplication>
 
 #include <kmime/kmime_message.h>
@@ -49,7 +49,7 @@ QString PlainHeaderStyle::format( KMime::Message *message ) const {
     // The direction of the header is determined according to the direction
     // of the application layout.
 
-    QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
+    QString dir = QApplication::isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr");
 
     // However, the direction of the message subject within the header is
     // determined according to the contents of the subject itself. Since
@@ -64,57 +64,56 @@ QString PlainHeaderStyle::format( KMime::Message *message ) const {
          && strategy->defaultPolicy() == HeaderStrategy::Display ) {
         // crude way to emulate "all" headers - Note: no strings have
         // i18n(), so direction should always be ltr.
-        headerStr= QString("<div class=\"header\" dir=\"ltr\">");
+        headerStr= QLatin1String("<div class=\"header\" dir=\"ltr\">");
         headerStr += formatAllMessageHeaders( message );
-        return headerStr + "</div>";
+        return headerStr + QLatin1String("</div>");
     }
 
-    headerStr = QString("<div class=\"header\" dir=\"%1\">").arg(dir);
+    headerStr = QString::fromLatin1("<div class=\"header\" dir=\"%1\">").arg(dir);
 
     //case HdrLong:
-    if ( strategy->showHeader( "subject" ) )
-        headerStr += QString("<div dir=\"%1\"><b style=\"font-size:130%\">" +
-                                         MessageViewer::HeaderStyleUtil::subjectString( message ) + "</b></div>\n")
-                .arg(subjectDir);
+    if ( strategy->showHeader( QLatin1String("subject") ) )
+        headerStr += QString::fromLatin1("<div dir=\"%1\"><b style=\"font-size:130%\">").arg(subjectDir) +
+                                         MessageViewer::HeaderStyleUtil::subjectString( message ) + QLatin1String("</b></div>\n");
 
-    if ( strategy->showHeader( "date" ) )
-        headerStr.append(i18n("Date: ") + MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString(message, isPrinting(), /* short = */ false ) ) + "<br/>\n" );
+    if ( strategy->showHeader( QLatin1String("date") ) )
+        headerStr.append(i18n("Date: ") + MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString(message, isPrinting(), /* short = */ false ) ) + QLatin1String("<br/>\n") );
 
-    if ( strategy->showHeader( "from" ) ) {
+    if ( strategy->showHeader( QLatin1String("from") ) ) {
         /*FIXME(Andras) review if it is still needed
     if ( fromStr.isEmpty() ) // no valid email in from, maybe just a name
       fromStr = message->fromStrip(); // let's use that
 */
         headerStr.append( i18n("From: ") +
-                          StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayFullAddress, "", StringUtil::ShowLink ) );
+                          StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayFullAddress, QString(), StringUtil::ShowLink ) );
         if ( !vCardName().isEmpty() )
-            headerStr.append("&nbsp;&nbsp;<a href=\"" + vCardName() +
-                             "\">" + i18n("[vCard]") + "</a>" );
+            headerStr.append(QLatin1String("&nbsp;&nbsp;<a href=\"") + vCardName() +
+                             QLatin1String("\">") + i18n("[vCard]") + QLatin1String("</a>") );
 
-        if ( strategy->showHeader( "organization" )
+        if ( strategy->showHeader( QLatin1String("organization") )
              && message->headerByType("Organization"))
-            headerStr.append("&nbsp;&nbsp;(" +
-                             MessageViewer::HeaderStyleUtil::strToHtml(message->headerByType("Organization")->asUnicodeString()) + ')');
-        headerStr.append("<br/>\n");
+            headerStr.append(QLatin1String("&nbsp;&nbsp;(") +
+                             MessageViewer::HeaderStyleUtil::strToHtml(message->headerByType("Organization")->asUnicodeString()) + QLatin1Char(')'));
+        headerStr.append(QLatin1String("<br/>\n"));
     }
 
-    if ( strategy->showHeader( "to" ) )
+    if ( strategy->showHeader( QLatin1String("to") ) )
         headerStr.append( i18nc("To-field of the mailheader.", "To: ") +
-                          StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress ) + "<br/>\n" );
+                          StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress ) + QLatin1String("<br/>\n") );
 
-    if ( strategy->showHeader( "cc" ) && message->cc( false ) )
+    if ( strategy->showHeader( QLatin1String("cc") ) && message->cc( false ) )
         headerStr.append( i18n("CC: ") +
-                          StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress ) + "<br/>\n" );
+                          StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress ) + QLatin1String("<br/>\n") );
 
-    if ( strategy->showHeader( "bcc" ) && message->bcc( false ) )
+    if ( strategy->showHeader( QLatin1String("bcc") ) && message->bcc( false ) )
         headerStr.append( i18n("BCC: ") +
-                          StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress ) + "<br/>\n" );
+                          StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress ) + QLatin1String("<br/>\n") );
 
-    if ( strategy->showHeader( "reply-to" ) && message->replyTo( false ) )
+    if ( strategy->showHeader( QLatin1String("reply-to" )) && message->replyTo( false ) )
         headerStr.append( i18n("Reply to: ") +
-                          StringUtil::emailAddrAsAnchor( message->replyTo(), StringUtil::DisplayFullAddress ) + "<br/>\n" );
+                          StringUtil::emailAddrAsAnchor( message->replyTo(), StringUtil::DisplayFullAddress ) + QLatin1String("<br/>\n") );
 
-    headerStr += "</div>\n";
+    headerStr += QLatin1String("</div>\n");
 
     return headerStr;
 }

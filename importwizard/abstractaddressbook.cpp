@@ -64,7 +64,6 @@ bool AbstractAddressBook::selectAddressBook()
 void AbstractAddressBook::createGroup(const KABC::ContactGroup& group)
 {
     if (selectAddressBook()) {
-
         Akonadi::Item item;
         item.setPayload<KABC::ContactGroup>( group );
         item.setMimeType( KABC::ContactGroup::mimeType() );
@@ -120,6 +119,5 @@ void AbstractAddressBook::cleanUp()
     mCollection = Akonadi::Collection();
 }
 
-#include "abstractaddressbook.moc"
 
 

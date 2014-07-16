@@ -85,12 +85,14 @@ public:
         Print,
         PrintPreview,
         PasteWithoutFormatting,
+        InsertAnchor,
 
         //Keep at end
         LastType
     };
 
     virtual void addCreatedActionsToActionCollection(KActionCollection *actionCollection);
+    virtual void addExtraAction(QMenu *menu);
 
     void createActions(const QList<ComposerViewAction> &);
 
@@ -148,6 +150,7 @@ private:
     Q_PRIVATE_SLOT( d, void _k_slotDeleteText() )
     Q_PRIVATE_SLOT( d, void _k_slotChangePageColorAndBackground() )
     Q_PRIVATE_SLOT( d, void _k_slotEditLink() )
+    Q_PRIVATE_SLOT( d, void _k_slotOpenLink() )
     Q_PRIVATE_SLOT( d, void _k_slotToggleBlockQuote() )
     Q_PRIVATE_SLOT( d, void _k_slotEditImage() )
     Q_PRIVATE_SLOT( d, void _k_slotSaveAs() )

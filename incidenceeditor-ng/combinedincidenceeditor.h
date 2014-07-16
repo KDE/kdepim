@@ -70,7 +70,6 @@ class INCIDENCEEDITORS_NG_EXPORT CombinedIncidenceEditor : public IncidenceEdito
   private:
     QVector<IncidenceEditor*> mCombinedEditors;
     int mDirtyEditorCount;
-    QWidget *mParent;
 };
 
 }

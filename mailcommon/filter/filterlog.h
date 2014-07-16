@@ -33,7 +33,6 @@
 
 #include <QObject>
 #include <QStringList>
-#include <QTextDocument>
 
 namespace MailCommon {
 
@@ -55,9 +54,9 @@ namespace MailCommon {
  */
 class MAILCOMMON_EXPORT FilterLog : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Destroys the filter log.
      */
@@ -72,11 +71,11 @@ class MAILCOMMON_EXPORT FilterLog : public QObject
      * Describes the type of content that will be logged.
      */
     enum ContentType {
-      Meta               = 1, ///< Log all meta data.
-      PatternDescription = 2, ///< Log all pattern description.
-      RuleResult         = 4, ///< Log all rule matching results.
-      PatternResult      = 8, ///< Log all pattern matching results.
-      AppliedAction      = 16 ///< Log all applied actions.
+        Meta               = 1, ///< Log all meta data.
+        PatternDescription = 2, ///< Log all pattern description.
+        RuleResult         = 4, ///< Log all rule matching results.
+        PatternResult      = 8, ///< Log all pattern matching results.
+        AppliedAction      = 16 ///< Log all applied actions.
     };
 
     /**
@@ -147,7 +146,7 @@ class MAILCOMMON_EXPORT FilterLog : public QObject
      */
     void dump();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted whenever a new @p entry has been added to the log.
      */
@@ -163,7 +162,7 @@ class MAILCOMMON_EXPORT FilterLog : public QObject
      */
     void logStateChanged();
 
-  private:
+private:
     //@cond PRIVATE
     FilterLog();
 

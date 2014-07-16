@@ -25,11 +25,13 @@ class KActionCollection;
 class QAbstractItemModel;
 class QModelIndex;
 
+namespace MailCommon {
+
 class SnippetDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit SnippetDialog( KActionCollection *actionCollection, bool inGroupMode, QWidget *parent = 0 );
     ~SnippetDialog();
 
@@ -47,16 +49,15 @@ class SnippetDialog : public KDialog
     void setGroupIndex( const QModelIndex &index );
     QModelIndex groupIndex() const;
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotTextChanged();
     void slotGroupChanged();
-    void slotReturnPressed();
 
-  private:
+private:
     bool snippetIsValid() const;
 
     KActionCollection *mActionCollection;
     Ui::SnippetDialog *mUi;
 };
-
+}
 #endif

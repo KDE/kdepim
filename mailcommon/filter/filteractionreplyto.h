@@ -30,11 +30,11 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionReplyTo: public FilterActionWithAddress
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit FilterActionReplyTo( QObject *parent = 0 );
-    virtual ReturnCode process( ItemContext &context ) const;
-    virtual SearchRule::RequiredPart requiredPart() const;
+    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
+    SearchRule::RequiredPart requiredPart() const;
     static FilterAction* newAction();
 };
 

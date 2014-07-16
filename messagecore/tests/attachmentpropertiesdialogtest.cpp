@@ -94,7 +94,7 @@ void AttachmentPropertiesDialogTest::testAttachmentPartReadWrite()
   // Make some changes in the dialog.
   nameEdit->setText( newName );
   descriptionEdit->setText( newDescription );
-  mimeTypeCombo->setCurrentItem( newMimeType, true );
+  mimeTypeCombo->setCurrentItem( QString::fromLatin1(newMimeType), true );
   encodingCombo->setCurrentIndex( int( newEncoding ) );
   autoDisplayCheck->setChecked( !autoDisplay );
   encryptCheck->setChecked( !encrypt );
@@ -177,4 +177,3 @@ void AttachmentPropertiesDialogTest::testMimeContentReadOnly()
   QCOMPARE( content->contentType()->name(), name ); // No change.
 }
 
-#include "attachmentpropertiesdialogtest.moc"

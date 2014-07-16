@@ -36,7 +36,9 @@ FilterKMail_maildir::FilterKMail_maildir() :
                   "in a continuous loop. </p>"
                   "<p>This filter does not import KMail mailfolders with mbox files.</p>"
                   "<p>Since it is possible to recreate the folder structure, the folders "
-                  "will be stored under: \"KMail-Import\" in your local folder.</p>" ) )
+                  "will be stored under: \"KMail-Import\" in your local folder.</p>" ) ),
+    mImportDirDone(0),
+    mTotalDir(0)
 {
 }
 
@@ -72,9 +74,9 @@ void FilterKMail_maildir::processDirectory( const QString &path)
         if(!(*filename == QLatin1String( "." ) || *filename == QLatin1String( ".." ))) {
             filterInfo()->setCurrent(0);
             importDirContents(dir.filePath(*filename));
-            filterInfo()->setOverall((int) ((float) mImportDirDone / mTotalDir * 100));
+            filterInfo()->setOverall( (mTotalDir > 0) ? (int) ((float) mImportDirDone / mTotalDir * 100) : 0);
             filterInfo()->setCurrent(100);
-            mImportDirDone++;
+            ++mImportDirDone;
         }
     }
 }

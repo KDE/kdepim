@@ -42,8 +42,7 @@
 
 #include <gpgme++/key.h>
 
-#include <KLocale>
-#include <KMessageBox>
+#include <KLocalizedString>
 
 using namespace Kleo;
 using namespace Kleo::Commands;
@@ -66,9 +65,9 @@ Protocol LearnCardKeysCommand::protocol() const {
 
 QStringList LearnCardKeysCommand::arguments() const {
     if ( protocol() == OpenPGP )
-        return QStringList() << gpgPath() << "--batch" << "--card-status" << "-v";
+        return QStringList() << gpgPath() << QLatin1String("--batch") << QLatin1String("--card-status") << QLatin1String("-v");
     else
-        return QStringList() << gpgSmPath() << "--learn-card" << "-v";
+        return QStringList() << gpgSmPath() << QLatin1String("--learn-card") << QLatin1String("-v");
 }
 
 QString LearnCardKeysCommand::errorCaption() const {
@@ -83,7 +82,7 @@ QString LearnCardKeysCommand::crashExitMessage( const QStringList & args ) const
     return i18nc("@info",
                  "<para>The GPG or GpgSM process that tried to learn the smart card "
                  "ended prematurely because of an unexpected error.</para>"
-                 "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join( " " ) ) ;
+                 "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join( QLatin1String(" ") ) ) ;
 }
 
 QString LearnCardKeysCommand::errorExitMessage( const QStringList & ) const {
@@ -96,4 +95,3 @@ QString LearnCardKeysCommand::successMessage( const QStringList & ) const {
     return QString();
 }
 
-#include "moc_learncardkeyscommand.cpp"

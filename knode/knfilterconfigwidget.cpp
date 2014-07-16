@@ -96,4 +96,3 @@ void KNFilterConfigWidget::setStartFocus()
 
 // -----------------------------------------------------------------------------
 
-#include "knfilterconfigwidget.moc"

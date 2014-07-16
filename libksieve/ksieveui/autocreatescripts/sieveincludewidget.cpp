@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -17,9 +17,13 @@
 
 #include "sieveincludewidget.h"
 #include "sievescriptblockwidget.h"
+#include "autocreatescriptutil_p.h"
+#include "commonwidgets/sievehelpbutton.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
+#include "editor/sieveeditorutil.h"
 
 #include <KPushButton>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QGridLayout>
@@ -27,16 +31,18 @@
 #include <QLabel>
 #include <QToolButton>
 #include <QWhatsThis>
-
+#include <QDomNode>
+#include <QDebug>
 
 namespace KSieveUi {
 static int MINIMUMINCLUDEACTION = 1;
-static int MAXIMUMINCLUDEACTION = 8;
+static int MAXIMUMINCLUDEACTION = 20;
 
 SieveIncludeLocation::SieveIncludeLocation(QWidget *parent)
     : KComboBox(parent)
 {
     initialize();
+    connect(this, SIGNAL(activated(int)), this, SIGNAL(valueChanged()));
 }
 
 SieveIncludeLocation::~SieveIncludeLocation()
@@ -54,6 +60,17 @@ QString SieveIncludeLocation::code() const
     return itemData(currentIndex()).toString();
 }
 
+void SieveIncludeLocation::setCode(const QString &code, QString &error)
+{
+    const int index = findData(code);
+    if (index != -1) {
+        setCurrentIndex(index);
+    } else {
+        error += i18n("Unknown location type \"%1\" during parsing includes", code);
+        setCurrentIndex(0);
+    }
+}
+
 SieveIncludeActionWidget::SieveIncludeActionWidget(QWidget *parent)
     : QWidget(parent)
 {
@@ -62,7 +79,35 @@ SieveIncludeActionWidget::SieveIncludeActionWidget(QWidget *parent)
 
 SieveIncludeActionWidget::~SieveIncludeActionWidget()
 {
+}
 
+void SieveIncludeActionWidget::loadScript(const QDomElement &element, QString &error)
+{
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("tag")) {
+                const QString tagValue = e.text();
+                if (tagValue == QLatin1String("personal") ||
+                        tagValue == QLatin1String("global")) {
+                    mLocation->setCode(AutoCreateScriptUtil::tagValue(tagValue), error);
+                } else if (tagValue == QLatin1String("optional")) {
+                    mOptional->setChecked(true);
+                } else if (tagValue == QLatin1String("once")) {
+                    mOnce->setChecked(true);
+                } else {
+                    qDebug()<<" SieveIncludeActionWidget::loadScript unknown tagValue "<<tagValue;
+                }
+            } else if (tagName == QLatin1String("str")) {
+                mIncludeName->setText(e.text());
+            } else {
+                qDebug()<<" SieveIncludeActionWidget::loadScript unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 void SieveIncludeActionWidget::generatedScript(QString &script)
@@ -89,18 +134,22 @@ void SieveIncludeActionWidget::initWidget()
     QLabel *lab = new QLabel(i18n("Include:"));
     mLayout->addWidget( lab, 1, 0 );
     mLocation = new SieveIncludeLocation;
+    connect(mLocation, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     mLayout->addWidget( mLocation, 1, 1 );
 
     lab = new QLabel(i18n("Name:"));
     mLayout->addWidget( lab, 1, 2 );
 
     mIncludeName = new KLineEdit;
+    connect(mIncludeName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     mLayout->addWidget( mIncludeName, 1, 3 );
 
     mOptional = new QCheckBox(i18n("Optional"));
+    connect(mOptional, SIGNAL(toggled(bool)), this, SIGNAL(valueChanged()));
     mLayout->addWidget( mOptional, 1, 4 );
 
     mOnce = new QCheckBox(i18n("Once"));
+    connect(mOnce, SIGNAL(toggled(bool)), this, SIGNAL(valueChanged()));
     mLayout->addWidget( mOnce, 1, 5 );
 
     mAdd = new KPushButton( this );
@@ -121,12 +170,19 @@ void SieveIncludeActionWidget::initWidget()
 
 void SieveIncludeActionWidget::slotAddWidget()
 {
-    emit addWidget( this );
+    Q_EMIT valueChanged();
+    Q_EMIT addWidget( this );
 }
 
 void SieveIncludeActionWidget::slotRemoveWidget()
 {
-    emit removeWidget( this );
+    Q_EMIT valueChanged();
+    Q_EMIT removeWidget( this );
+}
+
+bool SieveIncludeActionWidget::isInitialized() const
+{
+    return !mIncludeName->text().isEmpty();
 }
 
 void SieveIncludeActionWidget::updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled )
@@ -139,13 +195,12 @@ SieveIncludeWidget::SieveIncludeWidget(QWidget *parent)
     : SieveWidgetPageAbstract(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
-    QToolButton *helpButton = new QToolButton;
-    helpButton->setToolTip(i18n("Help"));
-    lay->addWidget( helpButton );
-    helpButton->setIcon( KIcon( QLatin1String("help-hint") ) );
-    connect(helpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
+    mHelpButton = new SieveHelpButton;
+    lay->addWidget( mHelpButton );
+    connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
     mIncludeLister = new SieveIncludeWidgetLister;
+    connect(mIncludeLister, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     lay->addWidget(mIncludeLister,0, Qt::AlignTop);
     setPageType(KSieveUi::SieveScriptBlockWidget::Include);
     setLayout(lay);
@@ -158,7 +213,9 @@ SieveIncludeWidget::~SieveIncludeWidget()
 void SieveIncludeWidget::slotHelp()
 {
     const QString help = i18n("The \"include\" command takes an optional \"location\" parameter, an optional \":once\" parameter, an optional \":optional\" parameter, and a single string argument representing the name of the script to include for processing at that point.");
-    QWhatsThis::showText( QCursor::pos(), help );
+    const QString href = QLatin1String("http://tools.ietf.org/html/rfc6609#page-4");
+    const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help,href);
+    QWhatsThis::showText( QCursor::pos(), fullWhatsThis, mHelpButton );
 }
 
 void SieveIncludeWidget::generatedScript(QString &script, QStringList &requires)
@@ -170,6 +227,11 @@ void SieveIncludeWidget::generatedScript(QString &script, QStringList &requires)
         script += result;
         requires << lst;
     }
+}
+
+void SieveIncludeWidget::loadScript(const QDomElement &element, QString &error)
+{
+    mIncludeLister->loadScript(element, error);
 }
 
 SieveIncludeWidgetLister::SieveIncludeWidgetLister(QWidget *parent)
@@ -195,7 +257,6 @@ void SieveIncludeWidgetLister::slotRemoveWidget( QWidget *w )
     removeWidget( w );
     updateAddRemoveButton();
 }
-
 
 void SieveIncludeWidgetLister::updateAddRemoveButton()
 {
@@ -239,11 +300,15 @@ void SieveIncludeWidgetLister::reconnectWidget(SieveIncludeActionWidget *w )
              this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection );
     connect( w, SIGNAL(removeWidget(QWidget*)),
              this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection );
+    connect( w, SIGNAL(valueChanged()),
+             this, SIGNAL(valueChanged()), Qt::UniqueConnection );
 }
 
 void SieveIncludeWidgetLister::clearWidget( QWidget *aWidget )
 {
     //TODO
+    Q_UNUSED(aWidget);
+    Q_EMIT valueChanged();
 }
 
 QWidget *SieveIncludeWidgetLister::createWidget( QWidget *parent )
@@ -253,6 +318,19 @@ QWidget *SieveIncludeWidgetLister::createWidget( QWidget *parent )
     return w;
 }
 
+void SieveIncludeWidgetLister::loadScript(const QDomElement &element, QString &error)
+{
+    if (widgets().count() == MAXIMUMINCLUDEACTION) {
+        error += QLatin1Char('\n') + i18n("We can not add more includes elements.") + QLatin1Char('\n');
+        return;
+    }
+    SieveIncludeActionWidget *w = static_cast<SieveIncludeActionWidget *>(widgets().last());
+    if (w->isInitialized()) {
+        addWidgetAfterThisWidget(widgets().last());
+        w = static_cast<SieveIncludeActionWidget *>(widgets().last());
+    }
+    w->loadScript(element, error);
 }
 
-#include "sieveincludewidget.moc"
+}
+

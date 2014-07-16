@@ -100,7 +100,7 @@ Tab7Widget::Tab7Widget(QWidget* parent, Qt::WindowFlags f)
   : QWidget(parent, f)
 {
   EntityTreeModelFactory *modelFactory = new CategorisedEntityModelFactory(this);
-  modelFactory->createFromRemoteId("nepomuktags");
+  modelFactory->createFromRemoteId(QLatin1String("nepomuktags"));
   connect(modelFactory, SIGNAL(modelCreated(Akonadi::EntityTreeModel*)), SLOT(initModel(Akonadi::EntityTreeModel*)));
 }
 

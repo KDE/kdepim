@@ -40,8 +40,8 @@
 
 KOrganizerApp::KOrganizerApp() : KontactInterface::PimUniqueApplication()
 {
-  QString prodId = "-//K Desktop Environment//NONSGML KOrganizer %1//EN";
-  KCalCore::CalFormat::setApplication( "KOrganizer", prodId.arg( korgVersion ) );
+  QString prodId = QLatin1String("-//K Desktop Environment//NONSGML KOrganizer %1//EN");
+  KCalCore::CalFormat::setApplication( QLatin1String("KOrganizer"), prodId.arg( QLatin1String(korgVersion) ) );
 
   // icons shared by the KDE PIM applications
   KGlobal::dirs()->addResourceType( "appicon", "data", "/kdepim/icons/" );
@@ -58,7 +58,6 @@ int KOrganizerApp::newInstance()
   if ( isSessionRestored() && first ) {
      KOrg::MainWindow *korg = ActionManager::findInstance( KUrl() );
      if ( korg ) {
-       korg->view()->updateCategories();
        korg->view()->updateView();
      }
      first = false;
@@ -77,35 +76,27 @@ int KOrganizerApp::newInstance()
   }
 
   // If filenames were given as arguments, load them as calendars, one per window.
-  if ( args->isSet( "open" ) ) {
-    for ( int i = 0; i < args->count(); ++i ) {
-      processCalendar( args->url( i ) );
-    }
-  } else {
-    // Import, merge, or ask => we need the resource calendar window anyway.
-    processCalendar( KUrl() );
-    KOrg::MainWindow *korg = ActionManager::findInstance( KUrl() );
-    if ( !korg ) {
+  // Import, merge, or ask => we need the resource calendar window anyway.
+  processCalendar( KUrl() );
+  KOrg::MainWindow *korg = ActionManager::findInstance( KUrl() );
+  if ( !korg ) {
       kError() << "Unable to find default calendar resources view.";
       return -1;
-    }
-    // Check for import, merge or ask
-    if ( args->isSet( "import" ) ) {
-      for ( int i = 0; i < args->count(); ++i ) {
-        korg->actionManager()->addResource( args->url( i ) );
-      }
-    } else if ( args->isSet( "merge" ) ) {
-      for ( int i = 0; i < args->count(); ++i ) {
-        korg->actionManager()->mergeURL( args->url( i ).url() );
-      }
-    } else {
-      for ( int i = 0; i < args->count(); ++i ) {
-        korg->actionManager()->importCalendar( args->url( i ) );
-      }
-    }
   }
-
-  kDebug() << "done";
+  // Check for import, merge or ask
+  if ( args->isSet( "import" ) ) {
+      for ( int i = 0; i < args->count(); ++i ) {
+          korg->actionManager()->importURL( args->url( i ), false );
+      }
+  } else if ( args->isSet( "merge" ) ) {
+      for ( int i = 0; i < args->count(); ++i ) {
+          korg->actionManager()->importURL( args->url( i ), true );
+      }
+  } else {
+      for ( int i = 0; i < args->count(); ++i ) {
+          korg->actionManager()->importCalendar( args->url( i ) );
+      }
+  }
 
   return 0;
 }
@@ -124,7 +115,6 @@ void KOrganizerApp::processCalendar( const KUrl &url )
     if ( hasDocument ) {
       korg->openURL( url );
     } else {
-      korg->view()->updateCategories();
       //      korg->view()->updateView();
     }
   } else {
@@ -137,4 +127,3 @@ void KOrganizerApp::processCalendar( const KUrl &url )
 #endif
 }
 
-#include "koapp.moc"

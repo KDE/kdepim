@@ -23,6 +23,11 @@
 // This must be first
 #include "configuredialog/configuredialog.h"
 #include "configuredialog/configuredialog_p.h"
+#include "configuredialog/configuremiscpage.h"
+#include "configuredialog/configuresecuritypage.h"
+#include "configuredialog/configurecomposerpage.h"
+#include "configuredialog/configureappearancepage.h"
+#include "configuredialog/configureaccountpage.h"
 #include "identity/identitypage.h"
 #include <kcmodule.h>
 #include <kcomponentdata.h>
@@ -32,67 +37,67 @@
 //----------------------------
 extern "C"
 {
-  KDE_EXPORT KCModule *create_kmail_config_misc( QWidget *parent, const char* )
-  {
+KDE_EXPORT KCModule *create_kmail_config_misc( QWidget *parent, const char* )
+{
     KComponentData instance( "kcmkmail_config_misc" );
     MiscPage *page = new MiscPage( instance, parent );
-    page->setObjectName( "kcmkmail_config_misc" );
+    page->setObjectName( QLatin1String("kcmkmail_config_misc") );
     return page;
-  }
+}
 }
 
 extern "C"
 {
-  KDE_EXPORT KCModule *create_kmail_config_appearance( QWidget *parent, const char* )
-  {
+KDE_EXPORT KCModule *create_kmail_config_appearance( QWidget *parent, const char* )
+{
     KComponentData instance( "kcmkmail_config_appearance" );
     AppearancePage *page =
-       new AppearancePage( instance, parent );
-    page->setObjectName( "kcmkmail_config_appearance" );
+            new AppearancePage( instance, parent );
+    page->setObjectName( QLatin1String("kcmkmail_config_appearance") );
     return page;
-  }
+}
 }
 
 extern "C"
 {
-  KDE_EXPORT KCModule *create_kmail_config_composer( QWidget *parent, const char* )
-  {
+KDE_EXPORT KCModule *create_kmail_config_composer( QWidget *parent, const char* )
+{
     KComponentData instance( "kcmkmail_config_composer" );
     ComposerPage *page = new ComposerPage( instance, parent );
-    page->setObjectName( "kcmkmail_config_composer" );
+    page->setObjectName( QLatin1String("kcmkmail_config_composer") );
     return page;
-  }
+}
 }
 
 extern "C"
 {
-  KDE_EXPORT KCModule *create_kmail_config_identity( QWidget *parent, const char* )
-  {
+KDE_EXPORT KCModule *create_kmail_config_identity( QWidget *parent, const char* )
+{
     KComponentData instance( "kcmkmail_config_identity" );
     KMail::IdentityPage *page = new KMail::IdentityPage( instance, parent );
-    page->setObjectName( "kcmkmail_config_identity" );
+    page->setObjectName( QLatin1String("kcmkmail_config_identity") );
     return page;
-  }
+}
 }
 
 extern "C"
 {
-  KDE_EXPORT KCModule *create_kmail_config_accounts( QWidget *parent, const char* )
-  {
+KDE_EXPORT KCModule *create_kmail_config_accounts( QWidget *parent, const char* )
+{
     KComponentData instance( "kcmkmail_config_accounts" );
     AccountsPage *page = new AccountsPage( instance, parent );
-    page->setObjectName( "kcmkmail_config_accounts" );
+    page->setObjectName( QLatin1String("kcmkmail_config_accounts") );
     return page;
-  }
+}
 }
 
 extern "C"
 {
-  KDE_EXPORT KCModule *create_kmail_config_security( QWidget *parent, const char* )
-  {
+KDE_EXPORT KCModule *create_kmail_config_security( QWidget *parent, const char* )
+{
     KComponentData instance( "kcmkmail_config_security" );
     SecurityPage *page = new SecurityPage( instance, parent );
-    page->setObjectName( "kcmkmail_config_security" );
+    page->setObjectName( QLatin1String("kcmkmail_config_security") );
     return page;
-  }
+}
 }

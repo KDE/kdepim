@@ -239,7 +239,7 @@ QString UiServer::Private::makeFileName( const QString & socket ) const {
     ensureDirectoryExists( gnupgHome );
     const QDir dir( gnupgHome );
     assert( dir.exists() );
-    return dir.absoluteFilePath( "S.uiserver" );
+    return dir.absoluteFilePath( QLatin1String("S.uiserver") );
 }
 
 void UiServer::Private::ensureDirectoryExists( const QString& path ) const {
@@ -273,4 +273,3 @@ void UiServer::Private::makeListeningSocket() {
 }
 
 #include "moc_uiserver_p.cpp"
-#include "moc_uiserver.cpp"

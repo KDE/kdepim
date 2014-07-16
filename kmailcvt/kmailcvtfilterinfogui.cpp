@@ -18,7 +18,6 @@
 #include "kmailcvtfilterinfogui.h"
 #include <KMessageBox>
 #include <KApplication>
-#include <QListWidgetItem>
 
 KMailCvtFilterInfoGui::KMailCvtFilterInfoGui(KImportPage *dlg, QWidget *parent)
     : MailImporter::FilterInfoGui(),

@@ -62,7 +62,7 @@ void ObjectTreeParserTester::test_parsePlainMessage()
   otp.parseObjectTree( msg.get() );
 
   // Check that the textual content and the charset have the expected values
-  QCOMPARE( otp.plainTextContent(), QString( "This is the message text." ) );
+  QCOMPARE( otp.plainTextContent(), QLatin1String( "This is the message text." ) );
   QCOMPARE( otp.convertedTextContent().toLatin1().data(), "This is the message text.\n" );
   QVERIFY( otp.htmlContent().isEmpty() );
   QCOMPARE( otp.plainTextContentCharset().toLower(), QByteArray( "iso-8859-15" ) );
@@ -89,7 +89,7 @@ void ObjectTreeParserTester::test_parsePlainMessage()
 
 void ObjectTreeParserTester::test_parseEncapsulatedMessage()
 {
-  KMime::Message::Ptr msg = readAndParseMail( "encapsulated-with-attachment.mbox" );
+  KMime::Message::Ptr msg = readAndParseMail( QLatin1String("encapsulated-with-attachment.mbox") );
   QCOMPARE( msg->subject()->as7BitString( false ).constData(), "Fwd: Test with attachment" );
   QCOMPARE( msg->contents().size(), 2 );
 
@@ -110,13 +110,13 @@ void ObjectTreeParserTester::test_parseEncapsulatedMessage()
   QCOMPARE( msg->contents().at( 1 )->contents().first()->contents().at( 1 )->contents().size(), 0 );
 
   // Check that the textual content and the charset have the expected values
-  QCOMPARE( otp.plainTextContent(), QString( "This is the encapsulating message." ) );
+  QCOMPARE( otp.plainTextContent(), QLatin1String( "This is the encapsulating message." ) );
   QCOMPARE( otp.plainTextContentCharset().toLower(), QByteArray( "iso-8859-15" ) );
   QVERIFY( otp.htmlContent().isEmpty() );
 
   // Check that the objecttreeparser did process the encapsulated message
   KMime::Message::Ptr encapsulated = msg->contents().at( 1 )->bodyAsMessage();
-  QVERIFY( encapsulated );
+  QVERIFY( encapsulated.get() );
   QVERIFY( nodeHelper.nodeProcessed( encapsulated.get() ) );
   QVERIFY( nodeHelper.nodeProcessed( encapsulated->contents().at( 0 ) ) );
   QVERIFY( nodeHelper.nodeProcessed( encapsulated->contents().at( 1 ) ) );
@@ -125,7 +125,7 @@ void ObjectTreeParserTester::test_parseEncapsulatedMessage()
 
 void ObjectTreeParserTester::test_missingContentTypeHeader()
 {
-  KMime::Message::Ptr msg = readAndParseMail( "no-content-type.mbox" );
+  KMime::Message::Ptr msg = readAndParseMail( QLatin1String("no-content-type.mbox") );
   QCOMPARE( msg->subject()->as7BitString( false ).constData(), "Simple Mail Without Content-Type Header" );
   QCOMPARE( msg->contents().size(), 0 );
 
@@ -140,18 +140,9 @@ void ObjectTreeParserTester::test_missingContentTypeHeader()
   QVERIFY( otp.htmlContent().isEmpty() );
 }
 
-// This is used to override the default message output handler. In unit tests, the special message
-// output handler can write messages to stdout delayed, i.e. after the actual kDebug() call. This
-// interfers with KPGP, since KPGP reads output from stdout, which needs to be kept clean.
-void nullMessageOutput(QtMsgType type, const char *msg)
-{
-  Q_UNUSED(type);
-  Q_UNUSED(msg);
-}
-
 void ObjectTreeParserTester::test_inlinePGPDecryption()
 {
-  KMime::Message::Ptr msg = readAndParseMail( "inlinepgpencrypted.mbox" );
+  KMime::Message::Ptr msg = readAndParseMail( QLatin1String("inlinepgpencrypted.mbox") );
 
   QCOMPARE( msg->subject()->as7BitString( false ).constData(), "inlinepgpencrypted" );
   QCOMPARE( msg->contents().size(), 0 );
@@ -162,9 +153,8 @@ void ObjectTreeParserTester::test_inlinePGPDecryption()
   MessageCore::Test::TestObjectTreeSource emptySource( &testWriter, &testCSSHelper );
   ObjectTreeParser otp( &emptySource, &nodeHelper );
 
-  qInstallMsgHandler(nullMessageOutput);
+  emptySource.setAllowDecryption( true );
   otp.parseObjectTree( msg.get() );
-  qInstallMsgHandler(0);
 
   QCOMPARE( otp.plainTextContent().toLatin1().data(), "some random text" );
   QCOMPARE( otp.convertedTextContent().toLatin1().data(), "some random text\n" );
@@ -173,7 +163,7 @@ void ObjectTreeParserTester::test_inlinePGPDecryption()
 
 void ObjectTreeParserTester::test_HTML()
 {
-  KMime::Message::Ptr msg = readAndParseMail( "html.mbox" );
+  KMime::Message::Ptr msg = readAndParseMail( QLatin1String("html.mbox") );
 
   QCOMPARE( msg->subject()->as7BitString( false ).constData(), "HTML test" );
   QCOMPARE( msg->contents().size(), 2 );
@@ -184,13 +174,13 @@ void ObjectTreeParserTester::test_HTML()
   otp.parseObjectTree( msg.get() );
 
   QCOMPARE( otp.plainTextContent().toLatin1().data(), "Some HTML text" );
-  QVERIFY( otp.htmlContent().contains( "Some <span style=\" font-weight:600;\">HTML</span> text" ) );
+  QVERIFY( otp.htmlContent().contains( QLatin1String("Some <span style=\" font-weight:600;\">HTML</span> text") ) );
   QCOMPARE( otp.htmlContentCharset().data(), "windows-1252" );
 }
 
 void ObjectTreeParserTester::test_HTMLOnly()
 {
-  KMime::Message::Ptr msg = readAndParseMail( "htmlonly.mbox" );
+  KMime::Message::Ptr msg = readAndParseMail( QLatin1String("htmlonly.mbox") );
 
   QCOMPARE( msg->subject()->as7BitString( false ).constData(), "HTML test" );
   QCOMPARE( msg->contents().size(), 0 );
@@ -201,7 +191,7 @@ void ObjectTreeParserTester::test_HTMLOnly()
   otp.parseObjectTree( msg.get() );
 
   QVERIFY( otp.plainTextContent().isEmpty() );
-  QVERIFY( otp.htmlContent().contains( "<b>SOME</b> HTML text." ) );
+  QVERIFY( otp.htmlContent().contains( QLatin1String("<b>SOME</b> HTML text.") ) );
   QCOMPARE( otp.convertedTextContent().toLatin1().data(), "SOME HTML text.\n" );
 }
 

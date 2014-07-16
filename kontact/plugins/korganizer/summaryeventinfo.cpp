@@ -34,11 +34,11 @@ using namespace KCalCore;
 using namespace KCalUtils;
 
 #include <KGlobal>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSystemTimeZones>
+#include <KLocale>
 
 #include <QDate>
-#include <QDebug>
 #include <QStringList>
 
 bool SummaryEventInfo::mShowBirthdays = true;
@@ -132,7 +132,7 @@ SummaryEventInfo::SummaryEventInfo()
 
 /**static*/
 SummaryEventInfo::List SummaryEventInfo::eventsForRange( const QDate &start, const QDate &end,
-                                                         const KCalCore::Calendar::Ptr &calendar )
+                                                         KCalCore::Calendar *calendar )
 {
   KCalCore::Event::List allEvents = calendar->events(); // calendar->rawEvents() isn't exactly what we want, doesn't handle recurrence right
   KCalCore::Event::List events;
@@ -267,12 +267,16 @@ SummaryEventInfo::List SummaryEventInfo::eventsForRange( const QDate &start, con
     }
     summaryEvent->summaryText = str;
     summaryEvent->summaryUrl = ev->uid();
-    QString tipText( KCalUtils::IncidenceFormatter::toolTipStr(
+    /*
+     Commented out because a ETMCalendar doesn't have any name, it's a group of selected
+     calendars, not an individual one.
+
+     QString tipText( KCalUtils::IncidenceFormatter::toolTipStr(
                        KCalUtils::IncidenceFormatter::resourceString(
                          calendar, ev ), ev, start, true, spec ) );
     if ( !tipText.isEmpty() ) {
       summaryEvent->summaryTooltip = tipText;
-    }
+    }*/
 
     // Time range label (only for non-floating events)
     str.clear();
@@ -314,7 +318,7 @@ SummaryEventInfo::List SummaryEventInfo::eventsForRange( const QDate &start, con
 }
 
 SummaryEventInfo::List SummaryEventInfo::eventsForDate( const QDate &date,
-                                                        const KCalCore::Calendar::Ptr &calendar )
+                                                        KCalCore::Calendar *calendar )
 {
   return eventsForRange(date, date, calendar);
 }

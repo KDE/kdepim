@@ -32,7 +32,7 @@
 Dialog::Dialog( QWidget *parent )
   : KDialog( parent )
 {
-  setCaption( "Contact Viewer" );
+  setCaption( i18n("Contact Viewer") );
   setButtons( Close );
   showButtonSeparator( true );
 
@@ -79,4 +79,3 @@ int main( int argc, char **argv )
   return 0;
 }
 
-#include "kabcviewer.moc"

@@ -30,7 +30,6 @@
 #include "utils/temporaryvalue.h"
 
 #include <QAction>
-#include <QGridLayout>
 #include <QList>
 #include <QPoint>
 #include <QPointer>
@@ -249,13 +248,13 @@ void BrowserFrame::slotPopupMenu(
         addSeparatorIfNotFirst();
         popup->addAction( createOpenLinkInNewTabAction( url, this, SLOT(slotOpenLinkInNewTab()), popup ) );
         popup->addAction( createOpenLinkInExternalBrowserAction( url, this, SLOT(slotOpenLinkInBrowser()), popup ) );
-        addActionsToMenu( popup, actionGroups.value( "linkactions" ), ShowSeparatorIfNotEmpty );
+        addActionsToMenu( popup, actionGroups.value( QLatin1String("linkactions") ), ShowSeparatorIfNotEmpty );
     }
 
     if (isSelection)
     {
         addSeparatorIfNotFirst();
-        addActionsToMenu( popup, actionGroups.value( "editactions" ), NoSeparator );
+        addActionsToMenu( popup, actionGroups.value( QLatin1String("editactions") ), NoSeparator );
     }
 
     if (hasZoom())
@@ -266,7 +265,7 @@ void BrowserFrame::slotPopupMenu(
     }
 
     addSeparatorIfNotFirst();
-    addActionsToMenu( popup, actionGroups.value( "part" ), NoSeparator );
+    addActionsToMenu( popup, actionGroups.value( QLatin1String("part") ), NoSeparator );
 
     popup->exec( global );
     delete popup;
@@ -452,4 +451,3 @@ void BrowserFrame::saveConfig( KConfigGroup& config, const QString& prefix)
     config.writeEntry( QString::fromLatin1( "zoom" ).prepend( prefix ), getZoomFactor() );
 }
 
-#include "browserframe.moc"

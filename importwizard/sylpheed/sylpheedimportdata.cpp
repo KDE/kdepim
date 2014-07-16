@@ -27,7 +27,6 @@
 #include <KLocale>
 
 #include <QDir>
-#include <QWidget>
 
 
 SylpheedImportData::SylpheedImportData(ImportWizard*parent)

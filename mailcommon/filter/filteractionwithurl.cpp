@@ -26,7 +26,7 @@
 using namespace MailCommon;
 
 FilterActionWithUrl::FilterActionWithUrl( const QString &name, const QString &label, QObject *parent )
-  : FilterAction( name, label, parent )
+    : FilterAction( name, label, parent )
 {
 }
 
@@ -36,51 +36,50 @@ FilterActionWithUrl::~FilterActionWithUrl()
 
 bool FilterActionWithUrl::isEmpty() const
 {
-  return mParameter.trimmed().isEmpty();
+    return mParameter.trimmed().isEmpty();
 }
 
 QWidget* FilterActionWithUrl::createParamWidget( QWidget *parent ) const
 {
-  KUrlRequester *requester = new KUrlRequester( parent );
-  requester->setUrl( KUrl( mParameter ) );
+    KUrlRequester *requester = new KUrlRequester( parent );
+    requester->setUrl( KUrl( mParameter ) );
 
-  connect( requester, SIGNAL(textChanged(QString)), this, SIGNAL(filterActionModified()) );
+    connect( requester, SIGNAL(textChanged(QString)), this, SIGNAL(filterActionModified()) );
 
-  return requester;
+    return requester;
 }
 
 
 void FilterActionWithUrl::applyParamWidgetValue( QWidget *paramWidget )
 {
-  const KUrl url = static_cast<KUrlRequester*>( paramWidget )->url();
+    const KUrl url = static_cast<KUrlRequester*>( paramWidget )->url();
 
-  mParameter = (url.isLocalFile() ? url.toLocalFile() : url.path());
+    mParameter = (url.isLocalFile() ? url.toLocalFile() : url.path());
 }
 
 void FilterActionWithUrl::setParamWidgetValue( QWidget *paramWidget ) const
 {
-  static_cast<KUrlRequester*>( paramWidget )->setUrl( KUrl( mParameter ) );
+    static_cast<KUrlRequester*>( paramWidget )->setUrl( KUrl( mParameter ) );
 }
 
 void FilterActionWithUrl::clearParamWidget( QWidget *paramWidget ) const
 {
-  static_cast<KUrlRequester*>( paramWidget )->clear();
+    static_cast<KUrlRequester*>( paramWidget )->clear();
 }
 
 void FilterActionWithUrl::argsFromString( const QString &argsStr )
 {
-  mParameter = argsStr;
+    mParameter = argsStr;
 }
 
 QString FilterActionWithUrl::argsAsString() const
 {
-  return mParameter;
+    return mParameter;
 }
 
 QString FilterActionWithUrl::displayString() const
 {
-  return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
+    return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
 }
 
 
-#include "filteractionwithurl.moc"

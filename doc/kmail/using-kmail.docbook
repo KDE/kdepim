@@ -10,16 +10,16 @@
 </address></affiliation>
 </author>
 <author>
-  <firstname>Scarlett</firstname>
-  <surname>Clark</surname>
-  <affiliation><address>
-    <email>scarlett@scarlettgatelyclark.com</email>
-  </address></affiliation>
+<firstname>Scarlett</firstname>
+<surname>Clark</surname>
+<affiliation><address>
+&Scarlett.Clark.mail;
+</address></affiliation>
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2013-06-14</date>
-<releaseinfo>4.10.60 (&kde; 4.11)</releaseinfo>
+<date>2013-12-14</date>
+<releaseinfo>(&kde; 4.12)</releaseinfo>
 </chapterinfo>
 
 <title>Using &kmail;</title>
@@ -34,6 +34,21 @@ when &kmail; is started. It is by default divided into three panes:</para>
 <varlistentry>
 <term>Folder list (on the left)</term>
 <listitem>
+  <screenshot>
+<screeninfo>Folder Pane</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="folder-example.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Folder Pane</phrase>
+    </textobject>
+    <caption>
+      <para>Folder Pane</para>
+    </caption>
+  </mediaobject>
+</screenshot>
+
 <para>This pane contains the list of your message folders (other email programs
 may call them mailboxes). To select a folder, simply click on
 it. The messages contained in the folder will now appear in the Headers
@@ -42,44 +57,88 @@ a small portion of the left side of the screen, and a long view, which takes up 
 entire left side of the screen but is able to show more mailboxes. You can toggle
 between these two views under <guilabel>Appearance</guilabel>/<guilabel>Layout</guilabel>
 in the <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
-&kmail;...</guimenuitem></menuchoice> dialog. Also see the <link
-linkend="folders">Folders Section</link> for more information about how to use
-folders.</para>
+&kmail;...</guimenuitem></menuchoice> dialog. The top section of the folder pane contains quick links
+to your favorite folders. Add folders here through the &RMB; context menu <guimenuitem>Add to Favorite Folders</guimenuitem>.
+Please see the <link linkend="folders">Folders Section</link> for detailed information about how to use folders.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term>Message list (in the upper right by default)</term>
 <listitem>
+<screenshot>
+<screeninfo>Message List with Message View</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="message.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Message List and Message View</phrase>
+    </textobject>
+    <caption>
+      <para>Message List and Message View</para>
+    </caption>
+  </mediaobject>
+</screenshot>
 <para>This pane lists header information (message Status Flags, Sender, Subject,
 Date, and other optional columns like Size, Attachment Flag, Important Flag, etc.)
 for the messages in the currently selected folder. Clicking on a header
 will select that message and display it in the Message pane; you can also select
 more than one message by holding down the &Ctrl; key when clicking on messages.
-You may sort the messages by clicking on the column that you wish to
-sort; if you click on the same column more than once, sort order will toggle
-between ascending/descending and some alternative sorting criteria will become
-available (like sorting by Status when you click on the header of the Subject column).
-Clicking the <mousebutton>right</mousebutton> mousebutton on the list header shows a popup menu,
-which allows you to show or hide several columns in the list.
+Change the view of your message list by selecting <menuchoice><guimenu>View</guimenu><guimenuitem>Message List</guimenuitem>
+<guimenuitem>Theme</guimenuitem></menuchoice>. You have several options here.
+</para>
+<itemizedlist>
+  <listitem><para><guilabel>Classic</guilabel> A simple, backward compatible, single row with clickable sort columns.</para></listitem>
+  <listitem><para><guilabel>Smart</guilabel> A smart multi-line, multi-item with status icons, no sort columns.</para></listitem>
+  <listitem><para><guilabel>Smart with clickable status</guilabel> A smart multi-line, multi-item, status icons and clickable sort icons.</para></listitem>
+  <listitem><para><guilabel>Configure...</guilabel> Allows you to customize your own Message List Theme &eg; add or remove columns from the clickable sort bar.</para></listitem>
+</itemizedlist>
+<para>
+If you have chosen a theme with a clickable status, you may sort the messages by clicking on the column that you wish to sort;
+if you click on the same column more than once, sort order will toggle between ascending/descending and some alternative sorting criteria will become
+available (like sorting by Status when you click on the header of the Subject column). Clicking the &RMB; on the list header shows a pop up menu,
+which allows you to show or hide several columns in the list. You can customize the columns visible on the sort bar, see <link linkend="customize-messagelist-theme">Configure Appearance Message List</link> for details.
 </para>
 </listitem>
 </varlistentry>
-  <varlistentry><term>Message preview pane (in the lower right by default)</term>
-    <listitem>
-       <para>This pane displays the currently selected message. There are several options to change the view of this pane.
-         There are many header views (the top of the message) to choose from. Go to <menuchoice><guimenu>View</guimenu><guisubmenu>Headers</guisubmenu></menuchoice> and try them out until you find one you like!
-	 Please see <link linkend="view-headers">View Headers</link> for detailed information on header types.</para>
-       <para>If you prefer to view your email in &HTML; format instead of plain text (Default) click on the bar located on the left hand side of the pane. The text on the bar will inform you which view you are in. If this bar is missing you can enable it in the settings dialog, from there you want
-         the <guilabel>Message Window</guilabel> tab, and select <guilabel>Show &HTML; status bar</guilabel>.</para>
-       <para>You may choose how attachments appear in your messages through <menuchoice><guimenu>View</guimenu><guisubmenu>Attachments</guisubmenu></menuchoice>.
-	 Please see <link linkend="view-attachments">View Attachments</link> in the menus help section for detailed information on attachments.</para>
-         <para>
-            For complex messages you can show the structure of the message of the message by selecting <menuchoice><guimenu>View</guimenu><guimenuitem>Show Message Structure</guimenuitem></menuchoice>,
-            this will show in the message structure viewer below the preview pane.</para>
-          <para>You can scroll through the message page-by-page using the <keycap>Page Up</keycap> and <keycap>Page Down</keycap> keys, or line-by-line using the
-            <keycap>Up arrow</keycap> and <keycap>Down arrow</keycap> keys; you can also use <link linkend="keyboard-shortcuts">keyboard shortcuts</link> to skip through your messages without having to use the mouse.</para>
-      </listitem>
-  </varlistentry>
+<varlistentry id="using-message-preview-pane">
+<term>Message preview pane (in the lower right by default)</term>
+<listitem><para>This pane displays the currently selected message. Below you will find options to adjust the reader window to your preference.</para>
+<para>The top of the reader window contains various header options. Go to <menuchoice><guimenu>View</guimenu><guisubmenu>Headers</guisubmenu></menuchoice>
+and try them out until you find one you like! Details for the various headers are as follows:</para>
+<itemizedlist id="using-header-options">
+  <listitem><para><guilabel>Enterprise Headers</guilabel> A minimal header with title, From, and To, with a graphical design.</para></listitem>
+  <listitem><para><guilabel>Fancy Headers</guilabel> Minimal header with a spam status notification.</para></listitem>
+  <listitem><para><guilabel>Brief Headers</guilabel> Title, and in parentheses you will find From and the date.</para></listitem>
+  <listitem><para><guilabel>Standard Headers</guilabel> Title, From, and To.</para></listitem>
+  <listitem><para><guilabel>Long Headers</guilabel> Title, Date, From, and To.</para></listitem>
+  <listitem><para><guilabel>All Headers</guilabel> List everything you ever wanted to know about the email, including every server it went through, virus/spam scanners it went through, &etc;</para></listitem>
+  <listitem><para><guilabel>Custom Headers</guilabel> See <link linkend="configure-appearance-message-window">Message Window configuration</link> <guilabel>Headers:</guilabel> to set up custom headers that can be selected here.</para></listitem>
+  <listitem><para><guilabel>Example</guilabel> An example header from the <guilabel>Download New Themes...</guilabel>.</para></listitem>
+  <listitem><para><guilabel>Example Fancy</guilabel> An example fancy header from the <guilabel>Download New Themes...</guilabel>.</para></listitem>
+  <listitem><para><guilabel>Download New Themes...</guilabel> Allows you to download custom themes created by other &kmail; users.</para></listitem>
+</itemizedlist>
+<para>If you prefer to view your email in &HTML; format instead of plain text (Default) click on the bar located on the left hand side of the pane.
+The text on the bar will inform you which view you are in. If this bar is missing you can enable it in the <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
+&kmail;...</guimenuitem></menuchoice> dialog, from there you want the <guilabel>Message Window</guilabel>
+tab, and select <guilabel>Show &HTML; status bar</guilabel>.</para>
+<para>If you would like to change how your attachments appear in your messages, go to <menuchoice><guimenu>View</guimenu><guisubmenu>Attachments</guisubmenu></menuchoice>.
+Your options are as follows:</para>
+<itemizedlist id="using-attachment-view-options">
+  <listitem><para><guimenuitem>As Icons</guimenuitem>, all attachments appear as icons at the bottom of the message.</para></listitem>
+  <listitem><para><guimenuitem>Smart</guimenuitem> will show attachments as icons, unless the message suggests that they should be displayed inline.
+  You can suggest that certain attachments should be shown inline in your own messages when you select <guilabel>Suggest automatic display</guilabel>
+  in the attachment's properties dialog.</para></listitem>
+  <listitem><para><guimenuitem>Inline</guimenuitem> shows the contents of the attachments at the bottom of the message.
+  Attachments that cannot be displayed, &eg; compressed files, will still be shown as an icon.</para></listitem>
+  <listitem><para><guimenuitem>Hide</guimenuitem> will not show attachments.</para></listitem>
+</itemizedlist>
+<para>For complex messages you can show the structure of the message by selecting
+<menuchoice><guimenu>View</guimenu><guimenuitem>Show Message Structure</guimenuitem></menuchoice>, this will show in the message structure viewer below the preview pane.</para>
+<para>You can scroll through the message page-by-page using the <keycap>Page Up</keycap> and <keycap>Page Down</keycap> keys, or line-by-line using the
+<keycap>Up arrow</keycap> and <keycap>Down arrow</keycap> keys; you can also use <link linkend="keyboard-shortcuts">keyboard shortcuts</link>
+to skip through your messages without having to use the mouse.</para></listitem>
+</varlistentry>
 </variablelist>
 
 </sect1>
@@ -143,16 +202,15 @@ at the bottom.</entry>
 <entry><keycombo action="simul">&Alt;<keycap>Down Arrow</keycap></keycombo></entry>
 <entry>Go to the previous folder in the folder list (if the folder list has focus.)</entry>
 </row>
-<!-- wrong in 4.7 lueck
 <row>
 <entry><keycombo action="simul">&Ctrl;<keycap>Left Arrow</keycap></keycombo></entry>
-<entry>Walk upwards in the list of folders. Use 
+<entry>Focus on previous folder. Use
 <keycombo action="simul">&Ctrl;<keycap>Space</keycap></keycombo> to actually
 enter the folder.</entry>
 </row>
 <row>
 <entry><keycombo action="simul">&Ctrl;<keycap>Right Arrow</keycap></keycombo></entry>
-<entry>Walk downwards in the list of folders. Use 
+<entry>Focus on next folder. Use
 <keycombo action="simul">&Ctrl;<keycap>Space</keycap></keycombo> to actually
 enter the folder.</entry>
 </row>
@@ -162,7 +220,6 @@ enter the folder.</entry>
 to using <keycombo action="simul">&Ctrl;<keycap>Left Arrow</keycap></keycombo> or
 <keycombo action="simul">&Ctrl;<keycap>Right Arrow</keycap></keycombo>.</entry>
 </row>
--->
 <row>
 <entry><keycombo action="simul">&Shift;<keycap>Left Arrow</keycap></keycombo> and
 <keycombo action="simul">&Shift;<keycap>Right Arrow</keycap></keycombo></entry>
@@ -203,7 +260,7 @@ Shortcuts...</guimenuitem></menuchoice> dialog.</para>
         to select which header fields are displayed. Some field options offer a
         <guibutton>Sticky</guibutton> checkbox, that if checked, your selection will remain as the default when you open a
         new composer window. The following list describes the various headers.</para>
-      <itemizedlist>
+      <itemizedlist id="composer-headers">
         <listitem>
           <para>The <guimenuitem>Identity</guimenuitem> drop down box allows you to select an identity to use.</para>
         </listitem>
@@ -257,9 +314,7 @@ If your message is not finished yet, select <menuchoice><guimenu>Message</guimen
   If you would like to print your message, select <menuchoice><guimenu>Message</guimenu><guimenuitem>Print Preview</guimenuitem></menuchoice> to preview the message, and
     <menuchoice><guimenu>Message</guimenu><guimenuitem>Print</guimenuitem></menuchoice> to print it.</para>
   <para id="send-later"><menuchoice><guimenu>Message</guimenu><guimenuitem>Send Later</guimenuitem></menuchoice>
-    allows you to schedule your emails to send at a specific date and time. You can configure it to repeat sending the message by checking <guilabel>Repeat every:</guilabel>
-    checkbox and selecting the desired intervals. This is useful if you need to send out reminders to someone on a consistent basis, &eg; employees. You can put the
-    message in your queued messages by selecting the <guibutton>Put in outbox</guibutton> button or select the <guibutton>Send Later</guibutton> button to schedule the message immediately.</para>
+    allows you to schedule your emails to send at a specific date and time. Please see <ulink url="help:/akonadi_sendlater_agent">Send Later Agent</ulink> for details.</para>
 </listitem>
 </varlistentry>
 <varlistentry id="new-compose-from-templates"><term><menuchoice><guimenu>File</guimenu><guisubmenu>New</guisubmenu><guisubmenu>Message From Template</guisubmenu>
@@ -465,24 +520,31 @@ snippetDelimiter=$
 
 <sect1 id="folders">
 <title>Message Folders</title>
-<!-- review and adapt to kmail2/akonadi lueck 31.05.2011-->
-<para>Message Folders are used to organize your email messages. <!-- By default,
-if you have no existing message folders, messages are stored in the folder
-<filename
-class="directory">$<envar>KDEHOME</envar>/share/apps/kmail/</filename>.  If
-you have existing message folders in <filename
-  class="directory">~/Mail</filename>, these will be used instead.-->  When you
-first start &kmail; the <guilabel>inbox</guilabel>,
+<screenshot>
+<screeninfo>Folder Setup Example</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="folder-example.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Folder Setup Example</phrase>
+    </textobject>
+    <caption>
+      <para>Folder Setup Example</para>
+    </caption>
+  </mediaobject>
+</screenshot>
+<para>Message Folders are used to organize your email messages. When you
+  first start &kmail; the <quote>Local Folders</quote> containing <guilabel>inbox</guilabel>,
 <guilabel>outbox</guilabel>, <guilabel>sent-mail</guilabel>,
 <guilabel>trash</guilabel>, <guilabel>drafts</guilabel> and <guilabel>templates</guilabel> 
 folders are created. These folders each have special functions:</para>
-
 <variablelist>
 <varlistentry>
 <term><guilabel>inbox:</guilabel></term>
 <listitem>
 <para>Where &kmail; by default puts your new messages when you ask it to check your
-mail. </para>
+  mail. </para><note><para>&imap; accounts will not use this inbox. The inbox is located on the &imap; server.</para></note>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -490,114 +552,143 @@ mail. </para>
 <listitem>
 <para>Where messages are put while they are waiting to be delivered. Note that
 you should not drag and drop messages here to send them, use the <guiicon>Send</guiicon>
-icon in the composer window instead.<!-- fixme 3.2: has this been 'fixed'? --></para>
-</listitem>
-</varlistentry>
+icon in the composer window instead.<!-- fixme 3.2: has this been 'fixed'? Still cannot drag and drop 12/4/2013 --></para>
+</listitem></varlistentry>
 <varlistentry>
 <term><guilabel>sent-mail:</guilabel></term>
 <listitem>
 <para>By default copies of all messages that you have sent are put into this folder.</para>
-</listitem>
-</varlistentry>
+</listitem></varlistentry>
 <varlistentry>
 <term><guilabel>trash:</guilabel></term>
 <listitem>
 <para>By default all messages that you have moved to trash are moved into this folder.</para>
-</listitem>
-</varlistentry>
+</listitem></varlistentry>
 <varlistentry>
 <term><guilabel>drafts:</guilabel></term>
 <listitem>
 <para>Contains messages you started to edit but then saved to this
-folder instead of sending them.</para>
-</listitem>
-</varlistentry>
-<varlistentry><term><guilabel>templates:</guilabel></term>
-  <listitem>
-    <para>This folder holds your templates created via <menuchoice><guimenu>Message</guimenu><guimenuitem>Save as Template</guimenuitem></menuchoice>
-      in the composer window. Please see <link linkend="new-compose-from-templates">New Composer Templates</link> for details.</para>
-  </listitem>
-</varlistentry>
+  folder through <menuchoice><guimenu>Message</guimenu><guimenuitem>Save as Draft</guimenuitem></menuchoice>.</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><guilabel>templates:</guilabel></term>
+<listitem>
+<para>This folder holds your templates created via <menuchoice><guimenu>Message</guimenu><guimenuitem>Save as Template</guimenuitem></menuchoice>
+in the composer window. Please see <link linkend="new-compose-from-templates">New Composer Templates</link> for details.</para>
+</listitem></varlistentry>
 </variablelist>
-<para>You may find that the standard folders are fine for your
-needs; eventually, though, you will probably need folders to help you organize
-your messages. To create a new folder, select
-<menuchoice><guimenu>Folder</guimenu><guimenuitem>Add Folder...</guimenuitem></menuchoice>. 
-The <link linkend="folders-properties-window">folder properties</link> dialog
-will then prompt you for the necessary information. If you ever need to change
-the settings for a folder, select the folder you wish to modify in the Folders pane and select
-<guimenuitem>Folder Properties</guimenuitem> from the context menu.</para>
+<sect2 id="folder-details">
+<title>Creating and Using Folders</title>
 
-<para>To move messages from one folder into another, select the message(s) you
-want to move and press the <keycap>M</keycap> key or select
-<menuchoice><guimenu>Message</guimenu><guimenuitem>Move Messages 
-To</guimenuitem></menuchoice>. A list of folders will appear; select the folder
-from the list that you want to move the messages to.  Messages can also be moved
-by dragging them from the Message list to a folder in the Folder list.</para>
+<para>Organize your emails, &eg; by mailing lists, bill receipts &etc;, by creating new folders. To create a new folder, select
+<menuchoice><guimenu>Folder</guimenu><guimenuitem>Add Folder...</guimenuitem></menuchoice> or <guimenuitem>Add Folder...</guimenuitem> from
+the &RMB; context menu. A dialog will pop up, enter the name of the new folder in the text box. You can fully customize each folder &eg; views, replies, &etc;
+in the properties for a folder by selecting the folder you wish to modify in the folders pane and select <guimenuitem>Folder Properties</guimenuitem> from the &RMB; context menu.
+See <link linkend="folders-properties-window">Properties of Folder</link> for details.</para>
 
-<para>If you want to clear all of the messages out of a folder choose
-<menuchoice><guimenu>Folder</guimenu><guimenuitem>Move All Messages to
-Trash</guimenuitem></menuchoice>. You can use 
-<menuchoice><guimenu>Folder</guimenu><guimenuitem>Delete Folder</guimenuitem></menuchoice>
-to remove a folder and all its messages and subfolders.</para>
+<para>To move messages from one folder into another, select the message(s) you want to move and press the <keycap>M</keycap> key or select
+<menuchoice><guimenu>Message</guimenu><guimenuitem>Move Messages To</guimenuitem></menuchoice>. A list of folders will appear; select the folder
+from the list that you want to move the messages to. Messages can also be moved by dragging them from the Message list to a folder in the Folder list.</para>
+
+<para>If you have folders that are frequently accessed, you can add them to your favorite folders pane in the upper left corner. Add them through the &RMB;
+context menu <guimenuitem>Add to Favorite Folders</guimenuitem>.</para>
+
+<para>You can create a virtual folder with search parameters by going to either <menuchoice><guimenu>Edit</guimenu><guimenuitem>Find Messages...</guimenuitem></menuchoice>, <menuchoice><guimenu>Tools</guimenu>
+<guimenuitem>Find Messages...</guimenuitem></menuchoice>, or Keyboard shortcut <keycap>S</keycap>. Enter your search parameters into the dialog. Name
+your search at the bottom <guilabel>Search folder name:</guilabel> textbox, &eg; <replaceable>emails with the word Blog</replaceable>. Click the <guibutton>Search</guibutton> button. Now select
+the <guibutton>Open Search Folder</guibutton>. Your results folder will be at the bottom of the Folder pane.</para>
+
+<para>Creating filters to automatically move messages to specified folders is a great way to organize messages by mailing list, sender, subject &etc;
+Please see <link linkend="filters">Filters</link> for details.</para>
+
+<para>In the case that you receive emails from a trusted source, &eg; a Blog you signed up for, that is formatted in &HTML; and you would like to enable &HTML; view for just those emails. You can achieve this
+by doing the following: Create a new folder, set up a <link linkend="filters">filter</link> to place those emails in the new folder,
+select the folder and select <menuchoice><guimenu>Folder</guimenu><guimenuitem>Prefer &HTML; to Plain Text</guimenuitem></menuchoice>.</para>
+
+<para>Some common folder actions are:</para>
+<variablelist>
+<varlistentry>
+<term><menuchoice><guimenu>Folder</guimenu><guimenuitem>Move All Messages to Trash</guimenuitem></menuchoice></term>
+<listitem>
+<para><action>Moves</action> all your messages in the selected folder to the trash folder.</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><menuchoice><guimenu>Folder</guimenu><guimenuitem>Archive Folder</guimenuitem></menuchoice></term>
+<listitem>
+<para><action>Create an archive</action> of the folder. See <link linkend="folder-archive">Archive Folder</link> for details.</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><menuchoice><guimenu>Folder</guimenu><guimenuitem>Delete Folder</guimenuitem></menuchoice></term>
+<listitem>
+<para><action>Remove a folder</action> with all its messages and sub-folders.</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><menuchoice><guimenu>Folder</guimenu><guimenuitem>Remove Duplicate Messages</guimenuitem></menuchoice></term>
+<listitem>
+<para>This will <action>search</action> the currently selected folder for duplicates and <action>delete</action> them.</para>
+</listitem></varlistentry>
+</variablelist>
+</sect2>
 
 <sect2 id="folders-properties-window">
 <title>Folder Properties</title>
-
-<para>The folder's <guilabel>Properties</guilabel> dialog lets you rename and move
-a folder and specify all of its properties. Note that most properties
-are only available for your own folders and not for default folder like
-<guilabel>inbox</guilabel> &etc; Default folders also cannot be moved
-or renamed.</para>
+<screenshot>
+<screeninfo>Folder Properties Example</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="folder-properties.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Folder Properties Example</phrase>
+    </textobject>
+    <caption>
+      <para>Folder Properties Example</para>
+    </caption>
+  </mediaobject>
+</screenshot>
+<para>The <guilabel>Properties of Folder</guilabel> dialog lets you rename and specify all of its properties. Note that most properties
+are only available for your own folders and not for default folder like <guilabel>inbox</guilabel> &etc; Default folders also cannot be renamed.</para>
 
 <sect3 id="folders-properties-general">
 <title>General</title>
-<para>Rename a folder by changing the entry in the <guilabel>Name:</guilabel> field.</para>
-<!-- not in kmail 2.0.96 lueck 31.05.2011
-<para>You can make a folder a subfolder of another folder by choosing a new parent
-folder using the <guilabel>Belongs to</guilabel> selection. </para>
-<para>See the <link linkend="folders-format">Folder Format</link> section
-for information about the <guilabel>Mailbox format.</guilabel></para>
--->
-<para>Check <guilabel>Act on new/unread mail in this folder</guilabel> if you 
-want to be informed about new mail that arrives in this folder. Setting this option is for
-example useful for the folder where you move all detected spam messages to.</para>
-<para>Check <guilabel>Keep replies in this folder</guilabel> if you want
-replies to messages in this folder to be filed also into this folder rather 
-than into a special sent-mail folder.</para>
-<para>Check <guilabel>Hide this folder in the folder selection dialog</guilabel> 
-if you do not want this folder to be shown in folder selection dialogs,
-such as the <guimenuitem>Jump to Folder</guimenuitem> dialog.</para>
-<para>With the <guilabel>Sender identity</guilabel> option you can set the default
-identity that should be used for new messages if this folder is selected.
-Replies to messages that were sent directly
-to you will still default to the message's <quote>To</quote> address if an
+<para>If you need to rename a folder change the entry in the <guilabel>Name:</guilabel> field.</para>
+
+<para><guilabel>Act on new/unread mail in this folder</guilabel> is enabled by default on new folders, it allows notifications about new mail that arrives in the folder. Uncheck this option on folders like SPAM and trash that you do not desire notifications.</para>
+<para>When replying to messages in this folder, check <guilabel>Keep replies in this folder</guilabel> if you want
+the replies to be stored in this folder rather than into the default configured sent-mail folder.</para>
+
+<para>Check <guilabel>Hide this folder in the folder selection dialog</guilabel> if you do not want this folder to be shown in folder selection dialogs,
+such as the <guimenuitem>Jump to Folder</guimenuitem> and <guimenuitem>Move Message to</guimenuitem> dialogs.</para>
+
+<para>By default new folders use the default identity. Uncheck <guilabel>Use default identity</guilabel> and select a new one
+from the <guilabel>Sender identity</guilabel> drop down menu. See <link linkend="configure-identity">Identities configuration</link> for
+information on Identities. Replies to messages that were sent directly to you will still default to the message's <quote>To</quote> address if an
 according identity is found.</para>
+
+<para>If you have groupware, you can change the contents &eg; calendar, notes, &etc; of the folder in the
+<guilabel>Folder contents:</guilabel> drop down box.</para>
+
+<para>If you share the folder with other users, you can <guilabel>Share unread state with all users</guilabel> which will show the same unread state for all users.</para>
+  <informalexample><para>For example, a ticket system that all emails must be read and multiple users are responsible for reading unread tickets.</para></informalexample>
 </sect3>
+
 <sect3 id="folders-properties-view">
 <title>View</title>
-<para>The <guilabel>Use custom icons</guilabel> option lets you choose
-icons that are different from the default ones in the folder list.</para>
-<para>With <guilabel>Show columns</guilabel> you can set the 
-visible columns in the header pane to <guilabel>Default</guilabel>,
-<guilabel>Sender</guilabel> or <guilabel>Receiver</guilabel>. This is useful 
+<para>The <guilabel>Use custom icons</guilabel> option lets you choose icons that are different from the default ones in the folder list.</para>
+<para>With <guilabel>Show column</guilabel> drop down you can set the visible columns in the header pane to Default, Sender, or Receiver. This is useful
 if you use a folder to save your own sent messages.</para>
-<para>In the <guilabel>Message List</guilabel> section you can select and
-configure an <guilabel>Aggregation</guilabel> and <guilabel>Theme</guilabel>
-for this folder different from the default configured in &kmail;s settings.
-For more details see the <link linkend="configure-appearance-message-list">
+<para>In the <guilabel>Message List</guilabel> section you can select and configure an <guilabel>Aggregation</guilabel> and <guilabel>Theme</guilabel>
+for this folder different from the default configured in &kmail;s settings. For more details see the <link linkend="configure-appearance-message-list">
 Message List</link> tab in the <guilabel>Appearance</guilabel> page.</para>
 </sect3>
 <sect3 id="folders-properties-retrieval">
 <title>Retrieval</title>
-<para>Deselect <guilabel>Use options from parent folder or account</guilabel> 
-to set folder-specific options for synchronizing and retrieval of messages.
-<!-- use case ??? where and how to set the defaults??? 
-missing:
-Synchronize when selecting this folder
-Automatically synchronize after
-Retrevial Options - Always retriew full messages, Retrieve nessage bodies on demand, Keep message bodies loacally for
---></para>
+<para>If you have an account that does not receive much mail and you don't want &kmail; to query the server as often, you can uncheck <guilabel>Use options from parent folder or account</guilabel> to set
+  a higher interval in <guilabel>Automatically synchronize after:</guilabel> spin box.</para>
+<para>In <guilabel>Retrieval Options</guilabel> you can change <guilabel>Always retrieve full messages</guilabel> option to <guilabel>Retrieve message
+bodies on demand</guilabel> if you have a slow connection. You can set how long the message will remain locally in the following spin box.
+</para>
+
 </sect3>
 <sect3 id="folders-properties-templates">
 <title>Templates</title>
@@ -606,110 +697,225 @@ For more details see the <link linkend="configure-composer-standard-templates">
 Standard Templates</link> tab in the <guilabel>Composer</guilabel> page
 </para>
 </sect3>
-<sect3 id="folders-properties-maintainance">
-<title>Maintenance</title>
-<para>This tab shows an overview about the folder type and its size, 
-the number of read and unread messages in the folder and allows you to enable
-text indexing.</para>
-</sect3>
-</sect2>
 
-<!-- in kmail 2.0.96  Expiry action in context menu of each folder-->
-<sect2 id="folders-properties-expiry">
-<title>Old Message Expiry</title>
-
-<para>From the context menu of a folder select <guimenuitem>Expire</guimenuitem> 
-to open the <guilabel>Mail Expiry Properties</guilabel> dialog. 
-Here you can select what should happen with old messages in this
-folder. If you enable to expire old read or unread messages in this folder 
-then &kmail; will regularly, depending on your choice, either delete old 
-messages or move old messages to another folder. 
-<!-- not in kmail 2.0.96  lueck 31.05.2011 You can also start
-expiration of old messages manually via <menuchoice><guimenu>Folder</guimenu><guisubmenu>Expire</guisubmenu></menuchoice> and via
-<menuchoice><guimenu>File</guimenu><guisubmenu>Expire
-  All Folders</guisubmenu></menuchoice> -->
+<sect3 id="folders-properties-expiry">
+<title>Expiry</title>
+<para>You can set automatic cleanup or deletion of emails in this tab. Check the box if you would like to automatically expire
+read or unread messages respectively. Set the amount of days in the spinbox. If you do not want to permanently delete the messages you can
+assign a folder to move them to in <guilabel>Move expired messages to:</guilabel> textbox or folder selection dialog. Once you have reviewed the messages and want to permanently
+delete them, you can go to the folder expiry options of the folder you chose to move them to and set the option <guilabel>Delete expired messages permanently</guilabel>, then click
+the <guibutton>Save Settings and Expire Now</guibutton>.
 </para>
-
-<warning><para>Messages that are deleted during expiration of old messages 
+<warning><para>Messages that are deleted during expiration of old messages
 cannot be restored, so be careful with this setting.</para></warning>
+</sect3>
 
-</sect2>
+<sect3 id="folders-properties-acl">
+<title>Access Control tab (&imap; only)</title>
+<para>Here you can manage the access control lists (&acl;s) of &imap; folders.</para>
+<note><para>The &imap; server must have user level &acl; configured and enabled for this tab to be visible.</para></note>
+<para>The currently active &acl; is shown in the list. It consists of pairs of <guilabel>User Id</guilabel>s and the
+ <guilabel>Permissions</guilabel> granted to users identified by that <guilabel>User Id</guilabel>.
+ <footnote>
+ <para>Note that a single <guilabel>User Id</guilabel> might refer to more than one user. Depending on the &imap;
+ server and its configuration, there may be User Ids that correspond to groups of users, anonymous users, or any user.
+ Consult the manual of your specific &imap; server implementation for more information.</para>
+ </footnote> &acl;s are settable per-folder.</para>
+ <note><para>As with everything else when using <emphasis>disconnected &imap;</emphasis>, you need to sync with the server for
+ the changes to be transferred to the server.</para></note>
+<para>&imap; &acl;s define a lot of fine-grained permissions that you can grant or deny other users. For the sake of clarity,
+ &kmail; will present them as the following five categories that you can choose from (see <xref linkend="table-acl-summary"/>
+ for the details if you already know &imap; &acl;s).</para>
+<variablelist>
+<varlistentry id="folders-properties-acl-none">
+<term><guilabel>None</guilabel></term>
+<listitem>
+<para>Grants the users identified by <guilabel>User Id</guilabel> no rights at all. This is also the
+ default for users not explicitly (or implicitly, as a group) listed in the &acl;. These users will not see this folder in the list of
+ &imap; folders presented to them by their mail clients.</para>
+</listitem></varlistentry>
+<varlistentry id="folders-properties-acl-read">
+<term><guilabel>Read</guilabel></term>
+<listitem>
+<para>Grants the users identified by <guilabel>User Id</guilabel> reading rights for this folder. This also
+ includes the ability for their mail clients to mark mails as read and store this information on the server.
+<footnote>
+<para>Every user has their own list of read mail, so none of your unread mails will suddenly be marked as
+ read just because someone else has already read them.</para>
+</footnote>
+</para>
+<para>These users will see this folder in the list of &imap; folders presented to them by their mail clients.</para>
+<para>Use this to create a shared folder that others can read, but not modify.</para>
+<informalexample>
+<para>If you were the editor of a company's news letter, you could create a folder for the purpose of
+ distributing the news letter, grant everyone reading rights, and save the letter to this folder instead
+ of sending it out by email to a catch-all address.</para>
+</informalexample>
+</listitem></varlistentry>
+<varlistentry id="folders-properties-acl-append">
+<term><guilabel>Append</guilabel></term>
+<listitem>
+<para>(also known as <guilabel>Post</guilabel>)</para>
+<para>Grants the users identified by <guilabel>User Id</guilabel> reading (see above) and posting rights for this folder.</para>
+<para>Use this to create a shared folder that others can read and post messages to, but cannot otherwise modify.</para>
+<informalexample>
+<para>If you wanted to create a company-wide discussion forum, instead of using a web-based form or a separate company-private usenet server,
+ you could create a bunch of folders (one per topic), and grant everyone reading and posting rights. Instead of posting to an &nntp;
+ server or writing their messages into a web form, people would just write emails and store them in the folder suiting the topic of the message.</para>
+</informalexample>
+</listitem></varlistentry>
+<varlistentry id="folders-properties-acl-write">
+<term><guilabel>Write</guilabel></term>
+<listitem>
+<para>Grants the users identified by <guilabel>User Id</guilabel> reading, posting (see above), and writing rights for this folder.</para>
+<para>The right to write to a folder includes deleting of messages, creating subfolders, and storing other attributes than
+ read/unread on the server (&eg; answered).</para>
+<para>Use this to create a shared folder that everyone has (almost, see <xref linkend="folders-properties-acl-all"/>) the same rights for.</para>
+<informalexample>
+<para>In the <xref linkend="folders-properties-acl-append"/> example, you could assign write rights to a group of people
+ acting as moderators, which would then be able to remove off-topic posts, and create sub-topic-folders for high-traffic folders.</para>
+</informalexample>
+</listitem></varlistentry>
+<varlistentry id="folders-properties-acl-all">
+<term><guilabel>All</guilabel></term>
+<listitem>
+<para>Grants the users identified by <guilabel>User Id</guilabel> reading, posting, writing (see above),
+ as well as administration rights, &ie; the right to modify the &acl; of this folder.</para>
+<para>This is the default set of rights for the owner of a folder.</para>
+</listitem></varlistentry>
+</variablelist>
+<para><xref linkend="table-acl-summary"/> summarizes the &imap; &acl; rights associated with each permission level.</para>
+<table id="table-acl-summary">
+<title>&acl; Rights Summary</title>
+          <tgroup cols="6">
+            <thead>
+              <row>
+                <entry>&acl; right</entry>
+                <entry><xref linkend="folders-properties-acl-none"/></entry>
+                <entry><xref linkend="folders-properties-acl-read"/></entry>
+                <entry><xref linkend="folders-properties-acl-append"/></entry>
+                <entry><xref linkend="folders-properties-acl-write"/></entry>
+                <entry><xref linkend="folders-properties-acl-all"/></entry>
+              </row>
+            </thead>
+            <!--tfoot/-->
+            <tbody>
+              <row>
+                <entry>Lookup</entry>
+                <entry></entry>
+                <entry>x</entry>
+                <entry>x</entry>
+                <entry>x</entry>
+                <entry>x</entry>
+              </row>
+              <row>
+                <entry>Read</entry>
+                <entry></entry>
+                <entry>x</entry>
+                <entry>x</entry>
+                <entry>x</entry>
+                <entry>x</entry>
+              </row>
+              <row>
+                <entry>Store Seen</entry>
+                <entry></entry>
+                <entry>x</entry>
+                <entry>x</entry>
+                <entry>x</entry>
+                <entry>x</entry>
+              </row>
+              <row>
+                <entry>Insert</entry>
+                <entry></entry>
+                <entry></entry>
+                <entry>x</entry>
+                <entry>x</entry>
+                <entry>x</entry>
+              </row>
+              <row>
+                <entry>Post</entry>
+                <entry></entry>
+                <entry></entry>
+                <entry>x</entry>
+                <entry>x</entry>
+                <entry>x</entry>
+              </row>
+              <row>
+                <entry>Write Flags</entry>
+                <entry></entry>
+                <entry></entry>
+                <entry></entry>
+                <entry>x</entry>
+                <entry>x</entry>
+              </row>
+              <row>
+                <entry>Create</entry>
+                <entry></entry>
+                <entry></entry>
+                <entry></entry>
+                <entry>x</entry>
+                <entry>x</entry>
+              </row>
+              <row>
+                <entry>Delete</entry>
+                <entry></entry>
+                <entry></entry>
+                <entry></entry>
+                <entry>x</entry>
+                <entry>x</entry>
+              </row>
+              <row>
+                <entry>Administer</entry>
+                <entry></entry>
+                <entry></entry>
+                <entry></entry>
+                <entry></entry>
+                <entry>x</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+</sect3>
 
-<sect2 id="folders-properties-mailinglist">
+<sect3 id="folders-properties-mailinglist">
 <title>Mailing List</title>
 
-<para>If you are going to use the folder for a mailing list open the 
-<guilabel>Mailinglist Folder Properties</guilabel> dialog with 
+<para>If you are going to use the folder for a mailing list open the
+<guilabel>Mailinglist Folder Properties</guilabel> dialog with
 <menuchoice><guimenu>Folder</guimenu> <guimenuitem>Mailing List Management</guimenuitem>
 </menuchoice> from the menu. Then you should
 check <guilabel>Folder holds a mailing list</guilabel> to associate this folder
-with the mailing list. Next you should
-click on <guilabel>Detect Automatically</guilabel>. &kmail; will then try
+with the mailing list. Next you should click on <guilabel>Detect Automatically</guilabel>. &kmail; will then try
 to guess some information about the mailing list from the currently selected
 message. If &kmail; could not determine some addresses then you can add
-the missing information manually. To do this first select the 
+the missing information manually. To do this first select the
 <guilabel>Address type</guilabel> for which you want to add an address.
 You can choose between:</para>
-
-	<variablelist>
-	  <varlistentry id="folders-properties-mailinglist-post">
-	    <term>
-	      <guilabel>Post to List</guilabel>
-	    </term>
-	    <listitem>
-	      <para>
-		This address is used for sending messages to the
-		mailing list. This is usually an email address.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry id="folders-properties-mailinglist-subscribe">
-	    <term>
-	      <guilabel>Subscribe to List</guilabel>
-	    </term>
-	    <listitem>
-	      <para>
-		This address is used for subscribing to the mailing
-		list. This can be an email address or the address of a
-		web page.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry id="folders-properties-mailinglist-unsubscribe">
-	    <term>
-	      <guilabel>Unsubscribe From List</guilabel>
-	    </term>
-	    <listitem>
-	      <para>
-		This address is used for unsubscribing from the
-		mailing list. This can be an email address or the
-		address of a web page.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry id="folders-properties-mailinglist-archive">
-	    <term>
-	      <guilabel>List Archives</guilabel>
-	    </term>
-	    <listitem>
-	      <para>
-		This is the address of the archive of the mailing
-		list. This is usually the address of a web page.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry id="folders-properties-mailinglist-help">
-	    <term>
-	      <guilabel>List Help</guilabel>
-	    </term>
-	    <listitem>
-	      <para>
-		This address is used for requesting help for this
-		mailing list. This is usually an email address.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+<variablelist>
+<varlistentry id="folders-properties-mailinglist-post">
+<term><guilabel>Post to List</guilabel></term>
+<listitem>
+<para>This address is used for sending messages to the mailing list. This is usually an email address.</para>
+</listitem></varlistentry>
+<varlistentry id="folders-properties-mailinglist-subscribe">
+<term><guilabel>Subscribe to List</guilabel></term>
+<listitem>
+<para>This address is used for subscribing to the mailing list. This can be an email address or the address of a web page.</para>
+</listitem></varlistentry>
+<varlistentry id="folders-properties-mailinglist-unsubscribe">
+<term><guilabel>Unsubscribe From List</guilabel></term>
+<listitem><para>This address is used for unsubscribing from the mailing list. This can be an email address or the address of a web page.</para>
+</listitem></varlistentry>
+<varlistentry id="folders-properties-mailinglist-archive">
+<term><guilabel>List Archives</guilabel></term>
+<listitem><para>This is the address of the archive of the mailing list. This is usually the address of a web page.</para>
+</listitem></varlistentry>
+<varlistentry id="folders-properties-mailinglist-help">
+<term><guilabel>List Help</guilabel></term>
+<listitem>
+<para>This address is used for requesting help for this mailing list. This is usually an email address.</para>
+</listitem></varlistentry>
+</variablelist>
 
 <para>After selecting the appropriate <guilabel>Address type</guilabel> you
 enter the email address or the address of the web page and then click on
@@ -717,327 +923,33 @@ enter the email address or the address of the web page and then click on
 addresses.</para>
 
 <para>If all addresses have been added then you can execute an action, &eg;
-go to the list archives, by selecting the appropriate 
+go to the list archives, by selecting the appropriate
 <guilabel>Address type</guilabel> and then clicking on
 <guilabel>Invoke Handler</guilabel>. If there is an email address and an
 address of a web page for the desired action then you will have to select
-the <guilabel>Preferred handler</guilabel> prior to clicking on 
+the <guilabel>Preferred handler</guilabel> prior to clicking on
 <guilabel>Invoke Handler</guilabel>. Select <guilabel>KMail</guilabel> if you
-want to send a message to the email address and select 
+want to send a message to the email address and select
 <guilabel>Browser</guilabel> if you want to go to the web page.</para>
 
-<para>Alternatively to invoking the handler for 
+<para>Alternatively to invoking the handler for
 <guilabel>Post to List</guilabel> you can send a new message to the
 mailing list via <menuchoice><guimenu>Message</guimenu><guimenuitem>New
 Message to Mailing-List...</guimenuitem></menuchoice></para>
+</sect3>
 
+<sect3 id="folders-properties-shortcut">
+<title>Shortcut</title>
+<para>You can define a keyboard shortcut to access the folder.</para>
+</sect3>
+
+<sect3 id="folders-properties-maintainance">
+<title>Maintenance</title>
+<para>This tab shows an overview about the folder type and its size, 
+the number of read and unread messages in the folder and allows you to enable
+text indexing.</para>
+</sect3>
 </sect2>
-
- <sect2 id="folders-properties-acl"><!-- valid for kmail 2.1.96?  lueck 31.05.2011-->
-	<title>Access Control tab (&imap; only)</title>
-
-	<para>
-	  Here you can manage the access control lists (&acl;s) of
-	  &imap; folders.
-	</para>
-
-	<para>
-	  The currently active &acl; is shown in the list. It consists
-	  of pairs of <guilabel>User Id</guilabel>s and the
-	  <guilabel>Permissions</guilabel> granted to users identified
-	  by that <guilabel>User Id</guilabel>.
-	  <footnote>
-	    <para>
-	      Note that a single <guilabel>User Id</guilabel> might
-	      refer to more than one user. Depending on the &imap;
-	      server and its configuration, there may be User Ids
-	      that correspond to groups of users, anonymous users, or
-	      any user. Consult the manual of your specific &imap;
-	      server implementation for more information.
-	    </para>
-	  </footnote>
-	  &acl;s are settable per-folder.
-	</para>
-
-	<note>
-	  <para>
-	    As with everything else when using <emphasis>disconnected
-	    &imap;</emphasis>, you need to sync with the server for
-	    the changes to be transferred to the server.
-	  </para>
-	</note>
-
-	<para>
-	  &imap; &acl;s define a lot of fine-grained permissions that
-	  you can grant or deny other users. For the sake of clarity,
-	  &kmail; will present them as the following five categories
-	  that you can choose from (see <xref
-	  linkend="table-acl-summary"/> for the details if you already
-	  know &imap; &acl;s).
-	</para>
-
-	<variablelist>
-
-	  <varlistentry id="folders-properties-acl-none">
-	    <term>
-	      <guilabel>None</guilabel>
-	      </term>
-	    <listitem>
-	      <para>
-		Grants the users identified by <guilabel>User
-		Id</guilabel> no rights at all. This is also the
-		default for users not explicitly (or implicitly, as a
-		group) listed in the &acl;. These users will not see
-		this folder in the list of &imap; folders presented to
-		them by their mail clients.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-
-	  <varlistentry id="folders-properties-acl-read">
-	    <term>
-	      <guilabel>Read</guilabel>
-	    </term>
-	    <listitem>
-	      <para>
-		Grants the users identified by <guilabel>User
-		Id</guilabel> reading rights for this folder. This
-		also includes the ability for their mail clients to
-		mark mails as read and store this information on the
-		server.<!-- --><footnote>
-		  <para>
-		    Every user has their own list of read mail, so none
-		    of your unread mails will suddenly be marked as
-		    read just because someone else has already read them.
-		  </para>
-		</footnote>
-	      </para>
-	      <para>
-		These users will see this folder in the list of &imap;
-		folders presented to them by their mail clients.
-	      </para>
-	      <para>
-		Use this to create a shared folder that others can
-		read, but not modify.
-	      </para>
-	      <informalexample>
-		<para>
-		  If you were the editor of a company's news letter,
-		  you could create a folder for the purpose of
-		  distributing the news letter, grant everyone reading
-		  rights, and save the letter to this folder instead
-		  of sending it out by email to a catch-all address.
-		</para>
-	      </informalexample>
-	    </listitem>
-	  </varlistentry>
-
-	  <varlistentry id="folders-properties-acl-append">
-	    <term>
-	      <guilabel>Append</guilabel>
-	    </term>
-	    <listitem>
-	      <para>
-		(also known as <guilabel>Post</guilabel>)
-	      </para>
-	      <para>
-		Grants the users identified by <guilabel>User
-		Id</guilabel> reading (see above) and posting rights
-		for this folder.
-	      </para>
-	      <para>
-		Use this to create a shared folder that others can
-		read and post messages to, but cannot otherwise
-		modify.
-	      </para>
-	      <informalexample>
-		<para>
-		  If you wanted to create a company-wide discussion
-		  forum, instead of using a web-based form or a
-		  separate company-private usenet server, you could
-		  create a bunch of folders (one per topic), and grant
-		  everyone reading and posting rights. Instead of
-		  posting to an &nntp; server or writing their
-		  messages into a web form, people would just write
-		  emails and store them in the folder suiting the
-		  topic of the message.
-		</para>
-	      </informalexample>
-	    </listitem>
-	  </varlistentry>
-
-	  <varlistentry id="folders-properties-acl-write">
-	    <term>
-	      <guilabel>Write</guilabel>
-	    </term>
-	    <listitem>
-	      <para>
-		Grants the users identified by <guilabel>User
-		Id</guilabel> reading, posting (see above), and
-		writing rights for this folder.
-	      </para>
-	      <para>
-		The right to write to a folder includes deleting of
-		messages, creating subfolders, and storing other
-		attributes than read/unread on the server (&eg;
-		answered).
-	      </para>
-	      <para>
-		Use this to create a shared folder that everyone has
-		(almost, see <xref linkend="folders-properties-acl-all"/>)
-		the same rights for.
-	      </para>
-	      <informalexample>
-		<para>
-		  In the <xref
-		  linkend="folders-properties-acl-append"/> example,
-		  you could assign write rights to a group of people
-		  acting as moderators, which would then be able to
-		  remove off-topic posts, and create sub-topic-folders
-		  for high-traffic folders.
-		</para>
-	      </informalexample>
-	    </listitem>
-	  </varlistentry>
-
-	  <varlistentry id="folders-properties-acl-all">
-	    <term>
-	      <guilabel>All</guilabel>
-	    </term>
-	    <listitem>
-	      <para>
-		Grants the users identified by <guilabel>User
-		Id</guilabel> reading, posting, writing (see above),
-		as well as administration rights, &ie; the right to
-		modify the &acl; of this folder.
-	      </para>
-	      <para>
-		This is the default set of rights for the owner of a
-		folder.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-
-	</variablelist>
-
-	<para>
-	  <xref linkend="table-acl-summary"/> summarizes the &imap;
-	  &acl; rights associated with each permission level.
-	</para>
-
-	<table id="table-acl-summary">
-	  <title>
-	    &acl; Rights Summary
-	  </title>
-	  <tgroup cols="6">
-	    <thead>
-	      <row>
-		<entry>&acl; right</entry>
-		<entry><xref linkend="folders-properties-acl-none"/></entry>
-		<entry><xref linkend="folders-properties-acl-read"/></entry>
-		<entry><xref linkend="folders-properties-acl-append"/></entry>
-		<entry><xref linkend="folders-properties-acl-write"/></entry>
-		<entry><xref linkend="folders-properties-acl-all"/></entry>
-	      </row>
-	    </thead>
-	    <!--tfoot/-->
-	    <tbody>
-	      <row>
-		<entry>Lookup</entry>
-		<entry></entry>
-		<entry>x</entry>
-		<entry>x</entry>
-		<entry>x</entry>
-		<entry>x</entry>
-	      </row>
-	      <row>
-		<entry>Read</entry>
-		<entry></entry>
-		<entry>x</entry>
-		<entry>x</entry>
-		<entry>x</entry>
-		<entry>x</entry>
-	      </row>
-	      <row>
-		<entry>Store Seen</entry>
-		<entry></entry>
-		<entry>x</entry>
-		<entry>x</entry>
-		<entry>x</entry>
-		<entry>x</entry>
-	      </row>
-	      <row>
-		<entry>Insert</entry>
-		<entry></entry>
-		<entry></entry>
-		<entry>x</entry>
-		<entry>x</entry>
-		<entry>x</entry>
-	      </row>
-	      <row>
-		<entry>Post</entry>
-		<entry></entry>
-		<entry></entry>
-		<entry>x</entry>
-		<entry>x</entry>
-		<entry>x</entry>
-	      </row>
-	      <row>
-		<entry>Write Flags</entry>
-		<entry></entry>
-		<entry></entry>
-		<entry></entry>
-		<entry>x</entry>
-		<entry>x</entry>
-	      </row>
-	      <row>
-		<entry>Create</entry>
-		<entry></entry>
-		<entry></entry>
-		<entry></entry>
-		<entry>x</entry>
-		<entry>x</entry>
-	      </row>
-	      <row>
-		<entry>Delete</entry>
-		<entry></entry>
-		<entry></entry>
-		<entry></entry>
-		<entry>x</entry>
-		<entry>x</entry>
-	      </row>
-	      <row>
-		<entry>Administer</entry>
-		<entry></entry>
-		<entry></entry>
-		<entry></entry>
-		<entry></entry>
-		<entry>x</entry>
-	      </row>
-	    </tbody>
-	  </tgroup>
-	</table>
-
-      </sect2>
-
-<!-- not valid for kmail 2.0.96, adapt to akonadi lueck 31.05.2011
-<sect2 id="folders-format">
-<title>Folder Format</title>
-
-<para>A message folder can be either in <guilabel>mbox</guilabel> or in <guilabel>maildir</guilabel>
-format. <guilabel>mbox</guilabel> saves all messages of a folder to one file,
-whereas <guilabel>maildir</guilabel> saves each message to its own file.
-<guilabel>maildir</guilabel>, which is the default format, can be considered more
-robust, but it can be slower on some file systems. If you are unsure,
-choose <guilabel>maildir</guilabel>.</para>
-
-<para>Note that there is currently no feature in &kmail; that allows you to convert
-between both formats automatically, but you can just move all messages from an old
-<guilabel>mbox</guilabel> folder to a new <guilabel>maildir</guilabel> folder or
-vice-versa.</para>
-
-</sect2>
--->
 </sect1>
 
 <sect1 id="filters">
@@ -1770,37 +1682,143 @@ you need to debug your filtering process.
 </sect1>
 
 <sect1 id="backups">
-  <title>Backing up &kmail;</title>
-  <para>This section describes various backup solutions within &kmail;.</para>
-  <sect2 id="archiving">
-    <title>Automatic Archiving</title>
-    <variablelist>
-    <varlistentry id="auto-archive"><term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Create Automatic Archiving...</guimenuitem></menuchoice></term>
-      <listitem>
-        <para>This is a powerful tool that can be used to assist in backing up your email. To use this, click
-          the <guibutton>Add...</guibutton> button, and the <guilabel>Add Archive Mail</guilabel> dialog will pop up.</para>
-          <itemizedlist>
-            <listitem><para>First select the folder you would like to archive.</para></listitem>
-            <listitem><para>Select the format you would like to save it in. &eg; <literal role="extension">.tar.bz2</literal> in the drop down list.</para></listitem>
-            <listitem><para>By default <guilabel>Archive all subfolders</guilabel> is enabled. Uncheck this if you only want the parent folder archived.</para></listitem>
-            <listitem><para>You can type in the location you would like to save your archive, or click the <guibutton>Open File Dialog</guibutton> button to select the folder.</para></listitem>
-            <listitem><para>Select how often you wish to backup through the dropdown menues next to <guilabel>Backup each:</guilabel>.</para></listitem>
-            <listitem><para>If you are limited on drive space you will want to set a limit on <guilabel>Maximum number of archive:</guilabel></para></listitem>
-          </itemizedlist>
-        </listitem>
-      </varlistentry>
-      <varlistentry id="archive-folder"><term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Folder Archive Agent...</guimenuitem></menuchoice></term>
-        <listitem>
-          <para>This dialog allows you to enable/disable the folder archive agent. It is enabled by default, to disable uncheck the <guilabel>Enable</guilabel>
-            checkbox. You can change the location of your Archive folder by clicking the folder icon next to
-            <guilabel>Archive folder:</guilabel> and selecting the folder you wish to use.</para>
-        </listitem>
-      </varlistentry>
-    </variablelist>
-  </sect2>
-  
-</sect1>
+<title>Backing up &kmail;</title>
+<para>This section describes various backup solutions within &kmail;.</para>
+<sect2 id="archiving">
+<title>Archiving</title>
+<variablelist>
+<varlistentry id="folder-archive">
+<term><menuchoice><guimenu>Folder</guimenu><guimenuitem>Archive Folder...</guimenuitem></menuchoice></term>
+<listitem>
+<para>This feature is also available through the context menu launched with a &RMB;, then select <guimenuitem>Archive Folder...</guimenuitem>. This will
+<action>open a dialog</action> that allows you to create a single archive of the currently selected folder.</para>
+<para>The <guilabel>Folder:</guilabel> shows the currently selected folder, if you wish to change the folder to be archived click the folder icon.
+ The <guilabel>Format:</guilabel> drop down menu allows you to choose a format (choices are: zip, tar, tar.bz2, and tar.gz).
+ If you would like to change the default name or location, click the folder at the end of <guilabel>Archive File</guilabel>.</para>
+ <para>Check the <guilabel>Delete folder and subfolders after completion</guilabel> if you would like everything you archived deleted.
+ By default all subfolders will be archived, uncheck <guilabel>Archive all subfolders</guilabel> if you only want to archive the parent folder.</para>
+</listitem></varlistentry>
+<varlistentry id="auto-archive">
+<term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Automatic Archiving...</guimenuitem></menuchoice></term>
+<listitem>
+<para>This is a powerful tool that can be used to assist in backing up your email. Please see <ulink url="help:/akonadi_archivemail_agent">Automatic Archiving</ulink> for details.</para>
+</listitem>
+</varlistentry>
+<varlistentry id="archive-folder">
+<term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Folder Archive Agent...</guimenuitem></menuchoice></term>
+<listitem>
+<para>This feature allows you to archive single emails to a specified folder.</para>
+<para>Folder Archive can be enabled on a per account basis to allow you to archive individual emails through the right click menu.</para>
+<screenshot>
+<screeninfo>Screenshot of Folder Archive</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="folderarchiveagent.png" format="PNG" />
+    </imageobject>
+  </mediaobject>
+</screenshot>
+<para>Folder Archive is used to archive single emails to a specified folder. For instance, you need to archive all of
+those pesky bill receipts in one place. Folder Archive can easily accommodate those needs. <action>Start by
+using <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Folder Archive Agent...</guimenuitem></menuchoice>
+in &kmail;'s reader window to open a dialog to set up the folder archive agent.</action>
+</para>
 
+<para>This dialog will have a tab for each of your configured accounts including Local Folders and you will need to configure all accounts that you wish to
+use this feature with. The first option allows you to enable/disable the folder archive agent. It is disabled by default, to enable check the <guilabel>Enable</guilabel>
+checkbox. You can set the location of your Archive folder by clicking the folder icon next to
+<guilabel>Folder:</guilabel> and selecting the folder you wish to use. For example, you could create
+a folder called <quote>bill receipts</quote> by clicking the <guibutton>New Subfolder...</guibutton> and typing <userinput>bill receipts</userinput> in
+the dialog. You may choose a folder location anywhere, &eg;.. a folder in your <quote>Local Folders</quote> or on your &imap; server.</para>
+<para>
+You have several choices on how the emails will be archived:
+</para>
+<variablelist id="archivefolder-options">
+  <varlistentry>
+  <term><guilabel>Unique folder</guilabel></term>
+  <listitem><para>Uses the selected folder sorted by date.</para></listitem>
+  </varlistentry>
+  <varlistentry>
+  <term><guilabel>Folder by months</guilabel></term>
+  <listitem><para>Creates new folders inside the selected folder by months.</para></listitem>
+  </varlistentry>
+  <varlistentry>
+  <term><guilabel>Folder by years</guilabel></term>
+  <listitem><para>Creates new folders inside the selected folder by years.</para></listitem>
+  </varlistentry>
+</variablelist>
+<para>
+Now when you receive a bill receipt, &RMB; the email and select <guimenuitem>Archive</guimenuitem> from the menu. The email will be archived
+into your configured archive folder for easy viewing later on.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="exporting">
+<title>Exporting</title>
+<variablelist>
+<varlistentry id="settingsexport">
+<term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Export &kmail; Data...</guimenuitem></menuchoice></term>
+<listitem>
+<para>This feature exports settings and local mail to a compressed file. Please see <ulink url="help:/pimsettingexporter">pimsettingexporter</ulink> for details.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect2>
+</sect1>
+<sect1 id="import-restore">
+<title>Restore and Import in &kmail;</title>
+<para>This section describes restoring backups and importing in &kmail;</para>
+<sect2 id="restore">
+<title>Restoring backed up email and settings</title>
+<variablelist>
+<varlistentry id="settingsimport">
+<term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Export &kmail; Data...</guimenuitem></menuchoice></term>
+<listitem>
+<para>If you used PIM Setting Exporter to backup local email and or settings, please use it again to import back into &kmail;. See <ulink url="help:/pimsettingexporter">pimsettingexporter</ulink> for details.</para>
+</listitem></varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="importing-options">
+<title>Importing options in &kmail;</title>
+<variablelist>
+<varlistentry id="importing-import-wizard">
+<term><menuchoice>
+<guimenu>Tools</guimenu>
+<guimenuitem>Import Wizard...</guimenuitem>
+</menuchoice></term>
+<listitem>
+<para>&kmail; has an import wizard to make the transition from another email application extremely easy. Please see <ulink url="help:/importwizard">Import Wizard</ulink> for details.</para>
+</listitem>
+</varlistentry>
+<varlistentry id="importing-import-kmailcvt">
+<term><menuchoice><guimenu>File</guimenu><guimenuitem>Import Messages...</guimenuitem></menuchoice></term>
+<listitem>
+<para>&kmail; can easily import several file formats from the following applications with the <application>KMailCVT</application> tool found in
+:</para>
+  <simplelist>
+    <member>&kmail; Archive</member>
+    <member>mbox(Unix, Evolution)</member>
+    <member>Evolution 1.x</member>
+    <member>Evolution 2.x</member>
+    <member>Evolution 3.x</member>
+    <member>&kmail;</member>
+    <member>OS X Mail</member>
+    <member>Opera</member>
+    <member>Sylpheed</member>
+    <member>Thunderbird/Mozilla</member>
+    <member>The Bat!</member>
+    <member>Outlook Express</member>
+    <member>Pegasus-Mail</member>
+    <member>Lotus Notes</member>
+    <member>Plain Text</member>
+  </simplelist>
+  <para>Please see the <application>KMailCVT</application> documentation at <ulink url="help:kmailcvt">KMailCVT</ulink>.</para></listitem>
+</varlistentry>
+</variablelist>
+</sect2>
+
+</sect1>
 <sect1 id="multiple-accounts">
 <title>Using Multiple Accounts</title>
 

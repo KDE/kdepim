@@ -95,4 +95,3 @@ void SyncUploader::slotMediaError( const QString &errorMessage, BilboMedia* medi
     }
 }
 
-#include "syncuploader.moc"

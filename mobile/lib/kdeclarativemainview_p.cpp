@@ -97,7 +97,7 @@ void KDeclarativeMainViewPrivate::bulkActionFilterLineEditChanged( const QString
 
 void KDeclarativeMainViewPrivate::searchStarted( const Akonadi::Collection &searchCollection )
 {
-  q->persistCurrentSelection( "SelectionBeforeSearchStarted" );
+  q->persistCurrentSelection( QLatin1String("SelectionBeforeSearchStarted") );
 
   const QStringList selection = QStringList() << QLatin1String( "c1" ) // the 'Search' collection
                                               << QString::fromLatin1( "c%1" ).arg( searchCollection.id() );
@@ -116,8 +116,8 @@ void KDeclarativeMainViewPrivate::searchStopped()
 {
   mGuiStateManager->popState();
 
-  q->restorePersistedSelection( "SelectionBeforeSearchStarted" );
-  q->clearPersistedSelection( "SelectionBeforeSearchStarted" );
+  q->restorePersistedSelection( QLatin1String("SelectionBeforeSearchStarted") );
+  q->clearPersistedSelection( QLatin1String("SelectionBeforeSearchStarted") );
 }
 
 void KDeclarativeMainViewPrivate::guiStateChanged( int oldState, int newState )
@@ -150,13 +150,7 @@ void KDeclarativeMainViewPrivate::guiStateChanged( int oldState, int newState )
 
 void KDeclarativeMainViewPrivate::openHtml( const QString &path )
 {
-#ifdef Q_WS_MAEMO_5
-  // opening the browser with a website via desktop file is defect on maemo5
-  // try to call the bowser directly
-  KProcess::startDetached( QLatin1String("/usr/bin/browser"), QStringList() << QLatin1String("--url") << path );
-#else
   q->openAttachment( path, QLatin1String( "text/html" ) );
-#endif
 }
 
 DeclarativeBulkActionFilterLineEdit::DeclarativeBulkActionFilterLineEdit( QGraphicsItem *parent )
@@ -178,18 +172,6 @@ void KDeclarativeMainViewPrivate::configureAgentInstance()
   if (mAgentInstanceSelectionModel->selectedRows().isEmpty())
     return;
   Akonadi::AgentInstance instance = mAgentInstanceSelectionModel->selectedRows().first().data( Akonadi::AgentInstanceModel::InstanceRole ).value<Akonadi::AgentInstance>();
-
-  // propagate our style sheet
-#ifndef MEEGO_EDITION_HARMATTAN
-  const bool propageStyleSheet = KCmdLineArgs::parsedArgs()->isSet( "emulate-maemo6" );
-#else
-  const bool propageStyleSheet = true;
-#endif
-
-  if ( propageStyleSheet ) {
-    QDBusInterface iface( QLatin1String( "org.freedesktop.Akonadi.Agent." ) + instance.identifier(), QLatin1String("/MainApplication"), QLatin1String("com.trolltech.Qt.QApplication") );
-    iface.setProperty( "styleSheet", StyleSheetLoader::styleSheet() );
-  }
 
   instance.configure( q );
 }

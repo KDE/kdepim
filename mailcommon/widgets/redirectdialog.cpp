@@ -59,9 +59,9 @@ using namespace MailCommon;
 
 class RedirectDialog::Private
 {
-  public:
+public:
     Private( RedirectDialog *qq, RedirectDialog::SendMode mode )
-      : q( qq ), mEditTo( 0 ), mSendMode( mode ), mComboboxIdentity( 0 ), mTransportCombobox( 0 )
+        : q( qq ), mEditTo( 0 ), mSendMode( mode ), mComboboxIdentity( 0 ), mTransportCombobox( 0 )
     {
     }
 
@@ -81,134 +81,134 @@ class RedirectDialog::Private
 
 void RedirectDialog::Private::slotUser1()
 {
-  mSendMode = RedirectDialog::SendNow;
-  q->accept();
+    mSendMode = RedirectDialog::SendNow;
+    q->accept();
 }
 
 void RedirectDialog::Private::slotUser2()
 {
-  mSendMode = RedirectDialog::SendLater;
-  q->accept();
+    mSendMode = RedirectDialog::SendLater;
+    q->accept();
 }
 
 void RedirectDialog::Private::slotAddressSelection()
 {
-  MessageViewer::AutoQPointer<Akonadi::EmailAddressSelectionDialog> dlg(
-    new Akonadi::EmailAddressSelectionDialog( q ) );
+    MessageViewer::AutoQPointer<Akonadi::EmailAddressSelectionDialog> dlg(
+                new Akonadi::EmailAddressSelectionDialog( q ) );
 
-  dlg->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
+    dlg->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
 
-  mResentTo = mEditTo->text();
+    mResentTo = mEditTo->text();
 
-  if ( dlg->exec() != KDialog::Rejected && dlg ) {
-    QStringList addresses;
-    foreach ( const Akonadi::EmailAddressSelection &selection, dlg->selectedAddresses() ) {
-      addresses << selection.quotedEmail();
+    if ( dlg->exec() != KDialog::Rejected && dlg ) {
+        QStringList addresses;
+        foreach ( const Akonadi::EmailAddressSelection &selection, dlg->selectedAddresses() ) {
+            addresses << selection.quotedEmail();
+        }
+
+        if ( !mResentTo.isEmpty() ) {
+            addresses.prepend( mResentTo );
+        }
+
+        mEditTo->setText( addresses.join( QLatin1String(", ") ) );
+        mEditTo->setModified( true );
     }
-
-    if ( !mResentTo.isEmpty() ) {
-      addresses.prepend( mResentTo );
-    }
-
-    mEditTo->setText( addresses.join( ", " ) );
-    mEditTo->setModified( true );
-  }
 }
 
 void RedirectDialog::Private::slotAddressChanged( const QString &text )
 {
-  q->enableButton( KDialog::User1, !text.isEmpty() );
-  q->enableButton( KDialog::User2, !text.isEmpty() );
+    q->enableButton( KDialog::User1, !text.isEmpty() );
+    q->enableButton( KDialog::User2, !text.isEmpty() );
 }
 
 RedirectDialog::RedirectDialog( SendMode mode, QWidget *parent )
-  : KDialog( parent ), d( new Private( this, mode ) )
+    : KDialog( parent ), d( new Private( this, mode ) )
 {
-  setCaption( i18n( "Redirect Message" ) );
-  setButtons( User1 | User2 | Cancel );
-  setDefaultButton( mode == SendNow ? User1 : User2 );
+    setCaption( i18n( "Redirect Message" ) );
+    setButtons( User1 | User2 | Cancel );
+    setDefaultButton( mode == SendNow ? User1 : User2 );
 
-  QFrame *vbox = new KVBox( this );
-  setMainWidget( vbox );
-  QLabel *LabelTo = new QLabel( i18n( "Select the recipient &addresses "
-                                  "to redirect to:" ), vbox );
+    QFrame *vbox = new KVBox( this );
+    setMainWidget( vbox );
+    QLabel *LabelTo = new QLabel( i18n( "Select the recipient &addresses "
+                                        "to redirect to:" ), vbox );
 
-  KHBox *hbox = new KHBox( vbox );
-  hbox->setSpacing( 4 );
-  d->mEditTo = new MessageComposer::ComposerLineEdit( true, hbox );
-  d->mEditTo->setRecentAddressConfig( KernelIf->config().data() );
-  d->mEditTo->setMinimumWidth( 300 );
-  d->mEditTo->setClearButtonShown( true );
+    KHBox *hbox = new KHBox( vbox );
+    hbox->setSpacing( 4 );
+    d->mEditTo = new MessageComposer::ComposerLineEdit( true, hbox );
+    d->mEditTo->setRecentAddressConfig( KernelIf->config().data() );
+    d->mEditTo->setMinimumWidth( 300 );
+    d->mEditTo->setClearButtonShown( true );
 
-  QPushButton *BtnTo = new QPushButton( QString(), hbox );
-  BtnTo->setIcon( KIcon( "help-contents" ) );
-  BtnTo->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-  BtnTo->setMinimumSize( BtnTo->sizeHint() * 1.2 );
-  BtnTo->setToolTip( i18n( "Use the Address-Selection Dialog" ) );
-  BtnTo->setWhatsThis( i18n( "This button opens a separate dialog "
-                                 "where you can select recipients out "
-                                 "of all available addresses." ) );
+    QPushButton *BtnTo = new QPushButton( QString(), hbox );
+    BtnTo->setIcon( KIcon( QLatin1String("help-contents") ) );
+    BtnTo->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
+    BtnTo->setMinimumSize( BtnTo->sizeHint() * 1.2 );
+    BtnTo->setToolTip( i18n( "Use the Address-Selection Dialog" ) );
+    BtnTo->setWhatsThis( i18n( "This button opens a separate dialog "
+                               "where you can select recipients out "
+                               "of all available addresses." ) );
 
-  connect( BtnTo, SIGNAL(clicked()), SLOT(slotAddressSelection()) );
+    connect( BtnTo, SIGNAL(clicked()), SLOT(slotAddressSelection()) );
 
-  connect( d->mEditTo, SIGNAL(textChanged(QString)), SLOT(slotAddressChanged(QString)) );
-  LabelTo->setBuddy( BtnTo );
-  d->mEditTo->setFocus();
+    connect( d->mEditTo, SIGNAL(textChanged(QString)), SLOT(slotAddressChanged(QString)) );
+    LabelTo->setBuddy( BtnTo );
+    d->mEditTo->setFocus();
 
-  hbox = new KHBox( vbox );
-  QLabel *lab = new QLabel(i18n("Identity:"),hbox);
-  d->mComboboxIdentity = new KPIMIdentities::IdentityCombo(KernelIf->identityManager(),hbox);
-  lab->setBuddy(d->mComboboxIdentity);
+    hbox = new KHBox( vbox );
+    QLabel *lab = new QLabel(i18n("Identity:"),hbox);
+    d->mComboboxIdentity = new KPIMIdentities::IdentityCombo(KernelIf->identityManager(),hbox);
+    lab->setBuddy(d->mComboboxIdentity);
 
-  hbox = new KHBox(vbox);
-  lab = new QLabel(i18n("Transport:"),hbox);
-  d->mTransportCombobox = new MailTransport::TransportComboBox( hbox );
-  lab->setBuddy(d->mTransportCombobox);
+    hbox = new KHBox(vbox);
+    lab = new QLabel(i18n("Transport:"),hbox);
+    d->mTransportCombobox = new MailTransport::TransportComboBox( hbox );
+    lab->setBuddy(d->mTransportCombobox);
 
-  setButtonGuiItem( User1, KGuiItem( i18n( "&Send Now" ), "mail-send" ) );
-  setButtonGuiItem( User2, KGuiItem( i18n( "Send &Later" ), "mail-queue" ) );
-  connect( this, SIGNAL(user1Clicked()), this, SLOT(slotUser1()) );
-  connect( this, SIGNAL(user2Clicked()), this, SLOT(slotUser2()) );
-  enableButton( User1, false );
-  enableButton( User2, false );
+    setButtonGuiItem( User1, KGuiItem( i18n( "&Send Now" ), QLatin1String("mail-send") ) );
+    setButtonGuiItem( User2, KGuiItem( i18n( "Send &Later" ), QLatin1String("mail-queue") ) );
+    connect( this, SIGNAL(user1Clicked()), this, SLOT(slotUser1()) );
+    connect( this, SIGNAL(user2Clicked()), this, SLOT(slotUser2()) );
+    enableButton( User1, false );
+    enableButton( User2, false );
 }
 
 RedirectDialog::~RedirectDialog()
 {
-  delete d;
+    delete d;
 }
 
 QString RedirectDialog::to() const
 {
-  return d->mResentTo;
+    return d->mResentTo;
 }
 
 RedirectDialog::SendMode RedirectDialog::sendMode() const
 {
-  return d->mSendMode;
+    return d->mSendMode;
 }
 
 int RedirectDialog::transportId() const
 {
-  return d->mTransportCombobox->currentTransportId();
+    return d->mTransportCombobox->currentTransportId();
 }
 
 int RedirectDialog::identity() const
 {
-  return d->mComboboxIdentity->currentIdentity();
+    return static_cast<int>(d->mComboboxIdentity->currentIdentity());
 }
 
 void RedirectDialog::accept()
 {
-  d->mResentTo = d->mEditTo->text();
-  if ( d->mResentTo.isEmpty() ) {
-    KMessageBox::sorry(
-      this,
-      i18n( "You cannot redirect the message without an address." ),
-      i18n( "Empty Redirection Address" ) );
-  } else {
-    done( Ok );
-  }
+    d->mResentTo = d->mEditTo->text();
+    if ( d->mResentTo.isEmpty() ) {
+        KMessageBox::sorry(
+                    this,
+                    i18n( "You cannot redirect the message without an address." ),
+                    i18n( "Empty Redirection Address" ) );
+    } else {
+        done( Ok );
+    }
 }
 
-#include "redirectdialog.moc"
+#include "moc_redirectdialog.cpp"

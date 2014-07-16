@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -38,6 +38,8 @@ public:
     void replaceImageSrc(const QString& src, const QString& dest);
 
     void startEditing();
+
+    void insertShortUrl(const QString &url);
 
 private Q_SLOTS:
     void slotAddPostSplitter();

@@ -60,4 +60,3 @@ void CatCheckBox::setCategory( const Category & category )
 
 
 
-#include "catcheckbox.moc"

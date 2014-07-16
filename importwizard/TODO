@@ -1,19 +1,19 @@
-4.12:
+4.13:
 -----
 Allow to select specific folder.
 
 -------------------------------------
-Test on Windows/MacOsX
+- Test on Windows/MacOsX
 
-Search info about how is stored config on AppleMail/Outlook etc.
+- Search info about how is stored config on AppleMail/Outlook etc.
 
-Look at more mailer.
+- Look at more mailer.
 
-Import data from *rss* when akregator2 will ported, same for KNode.
+- Import data from *rss* when akregator2 will ported, same for KNode. (not sure that it will port)
 
+- Add support for Lightning for mozilla (calendar mozilla)
 
-Add support for Lightning for mozilla (calendar mozilla)
-
+- Import note from TomBoy ?
 
 NEED TO FIX:
 - Import addressbook from Thunderbird.

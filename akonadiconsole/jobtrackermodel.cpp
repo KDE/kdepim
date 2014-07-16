@@ -150,10 +150,9 @@ QVariant JobTrackerModel::data(const QModelIndex & idx, int role) const
   {
     if ( role == Qt::DisplayRole )
     {
-      if( idx.column() == 0 )
-      {
-        assert(d->tracker.sessions().size() > idx.row());
-        return d->tracker.sessions().at(idx.row());
+      const QStringList sessions = d->tracker.sessions();
+      if( idx.column() == 0 && idx.row() <= sessions.size()) {
+        return sessions.at(idx.row());
       }
     }
   }
@@ -288,4 +287,3 @@ void JobTrackerModel::jobsUpdated( const QList< QPair< int, int > > & jobs )
 #undef PAIR
 }
 
-#include "jobtrackermodel.moc"

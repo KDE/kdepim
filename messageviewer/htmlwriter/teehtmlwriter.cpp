@@ -40,58 +40,58 @@
 
 namespace MessageViewer {
 
-  TeeHtmlWriter::TeeHtmlWriter( HtmlWriter * writer1, HtmlWriter * writer2 )
+TeeHtmlWriter::TeeHtmlWriter( HtmlWriter * writer1, HtmlWriter * writer2 )
     : HtmlWriter()
-  {
+{
     if ( writer1 )
-      mWriters.append( writer1 );
+        mWriters.append( writer1 );
     if ( writer2 )
-      mWriters.append( writer2 );
-  }
+        mWriters.append( writer2 );
+}
 
-  TeeHtmlWriter::~TeeHtmlWriter() {
+TeeHtmlWriter::~TeeHtmlWriter() {
     for ( QList<HtmlWriter*>::Iterator it = mWriters.begin(); it != mWriters.end(); ++it )
-      delete (*it);
-  }
+        delete (*it);
+}
 
-  void TeeHtmlWriter::addHtmlWriter( HtmlWriter * writer ) {
+void TeeHtmlWriter::addHtmlWriter( HtmlWriter * writer ) {
     if ( writer )
-      mWriters.append( writer );
-  }
+        mWriters.append( writer );
+}
 
-  void TeeHtmlWriter::begin( const QString & css ) {
+void TeeHtmlWriter::begin( const QString & css ) {
     for ( QList<HtmlWriter*>::Iterator it = mWriters.begin(); it != mWriters.end(); ++it )
-      (*it)->begin( css );
-  }
+        (*it)->begin( css );
+}
 
-  void TeeHtmlWriter::end() {
+void TeeHtmlWriter::end() {
     for ( QList<HtmlWriter*>::Iterator it = mWriters.begin(); it != mWriters.end(); ++it )
-      (*it)->end();
-  }
+        (*it)->end();
+}
 
-  void TeeHtmlWriter::reset() {
+void TeeHtmlWriter::reset() {
     for ( QList<HtmlWriter*>::Iterator it = mWriters.begin(); it != mWriters.end(); ++it )
-      (*it)->reset();
-  }
+        (*it)->reset();
+}
 
-  void TeeHtmlWriter::write( const QString & str ) {
+void TeeHtmlWriter::write( const QString & str ) {
     for ( QList<HtmlWriter*>::Iterator it = mWriters.begin(); it != mWriters.end(); ++it )
-      (*it)->write( str );
-  }
+        (*it)->write( str );
+}
 
-  void TeeHtmlWriter::queue( const QString & str ) {
-   for ( QList<HtmlWriter*>::Iterator it = mWriters.begin(); it != mWriters.end(); ++it )
-      (*it)->queue( str );
-  }
-
-  void TeeHtmlWriter::flush() {
+void TeeHtmlWriter::queue( const QString & str ) {
     for ( QList<HtmlWriter*>::Iterator it = mWriters.begin(); it != mWriters.end(); ++it )
-      (*it)->flush();
-  }
+        (*it)->queue( str );
+}
 
-  void TeeHtmlWriter::embedPart( const QByteArray & contentId, const QString & url ) {
+void TeeHtmlWriter::flush() {
     for ( QList<HtmlWriter*>::Iterator it = mWriters.begin(); it != mWriters.end(); ++it )
-      (*it)->embedPart( contentId, url );
-  }
-  void TeeHtmlWriter::extraHead( const QString& ) {}
+        (*it)->flush();
+}
+
+void TeeHtmlWriter::embedPart( const QByteArray & contentId, const QString & url ) {
+    for ( QList<HtmlWriter*>::Iterator it = mWriters.begin(); it != mWriters.end(); ++it )
+        (*it)->embedPart( contentId, url );
+}
+void TeeHtmlWriter::extraHead( const QString& ) {}
 } // 

@@ -167,4 +167,3 @@ QVariant AttachmentViewItem::data( int column, int role ) const
 } // namespace Composer
 } // namespace KNode
 
-#include "attachment_view.moc"

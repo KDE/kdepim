@@ -40,7 +40,6 @@
 
 #include <QTableWidget>
 #include <QTimer>
-#include <QTextDocument>
 static const int TIMEOUT = 45000;
 
 class AddEditBlog::Private
@@ -192,7 +191,7 @@ void AddEditBlog::gotHtml( KJob *job )
         KMessageBox::sorry(this, i18n("Auto configuration failed. You have to set Blog API on Advanced tab manually."));
         return;
     }
-    QString httpData( static_cast<KIO::StoredTransferJob*>( job )->data() );
+    QString httpData( QString::fromUtf8(static_cast<KIO::StoredTransferJob*>( job )->data() ) );
     job->deleteLater();
 
     QRegExp rxGData( QString::fromLatin1( "content='blogger' name='generator'" ) );
@@ -635,4 +634,3 @@ void AddEditBlog::hideWaitWidget()
     d->wait = 0;
 }
 
-#include "addeditblog.moc"

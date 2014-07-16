@@ -280,8 +280,8 @@ static QString gpgconf_escape( const QString& str )
 static QString urlpart_encode( const QString& str )
 {
   QString enc( str );
-  enc.replace( '%', "%25" ); // first!
-  enc.replace( ':', "%3a" );
+  enc.replace( QLatin1Char('%'), QLatin1String("%25") ); // first!
+  enc.replace( QLatin1Char(':'), QLatin1String("%3a") );
   //kDebug(5150) <<"  urlpart_encode:" << str <<" ->" << enc;
   return enc;
 }
@@ -466,11 +466,11 @@ static KUrl parseURL( int mRealArgType, const QString& str )
 {
   if ( mRealArgType == 33 ) { // LDAP server
     // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
-    QStringList items = str.split( ':' );
+    QStringList items = str.split( QLatin1Char(':') );
     if ( items.count() == 5 ) {
       QStringList::const_iterator it = items.constBegin();
       KUrl url;
-      url.setProtocol( "ldap" );
+      url.setProtocol( QLatin1String("ldap") );
       url.setHost( urlpart_decode( *it++ ) );
 
       bool ok;
@@ -480,9 +480,9 @@ static KUrl parseURL( int mRealArgType, const QString& str )
       else if ( !it->isEmpty() )
           kWarning(5150) <<"parseURL: malformed LDAP server port, ignoring: \"" << *it << "\"";
 
-      url.setPath( "/" ); // workaround KUrl parsing bug
-      url.setUser( urlpart_decode( *it++ ) );
-      url.setPass( urlpart_decode( *it++ ) );
+      url.setPath( QLatin1String("/") ); // workaround KUrl parsing bug
+      url.setUserName( urlpart_decode( *it++ ) );
+      url.setPassword( urlpart_decode( *it++ ) );
       url.setQuery( urlpart_decode( *it ) );
       return url;
     } else
@@ -497,11 +497,11 @@ static QString splitURL( int mRealArgType, const KUrl& url )
 {
   if ( mRealArgType == 33 ) { // LDAP server
     // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
-    Q_ASSERT( url.protocol() == "ldap" );
-    return urlpart_encode( url.host() ) + ':' +
-      ( url.port() != -1 ? QString::number( url.port() ) : QString() ) + ':' + // -1 is used for default ports, omit
-      urlpart_encode( url.user() ) + ':' +
-      urlpart_encode( url.pass() ) + ':' +
+    Q_ASSERT( url.protocol() == QLatin1String("ldap") );
+    return urlpart_encode( url.host() ) + QLatin1Char(':') +
+      ( url.port() != -1 ? QString::number( url.port() ) : QString() ) + QLatin1Char(':') + // -1 is used for default ports, omit
+      urlpart_encode( url.user() ) + QLatin1Char(':') +
+      urlpart_encode( url.pass() ) + QLatin1Char(':') +
       // KUrl automatically encoded the query (e.g. for spaces inside it),
       // so decode it before writing it out to gpgconf (issue119)
       urlpart_encode( KUrl::fromPercentEncoding( url.query().mid(1).toLatin1() ) );
@@ -756,4 +756,3 @@ void QGpgMENewCryptoConfigEntry::setDirty( bool b )
 }
 #endif
 
-#include "qgpgmenewcryptoconfig.moc"

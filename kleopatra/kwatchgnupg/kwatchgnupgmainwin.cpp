@@ -56,11 +56,7 @@
 #include <kglobal.h>
 #include <kicon.h>
 
-#include <QTextEdit>
-#include <QDir>
 #include <QEventLoop>
-#include <QTimer>
-#include <QTextCodec>
 #include <QTextStream>
 #include <QDateTime>
 #include <QFileDialog>
@@ -105,8 +101,8 @@ void KWatchGnuPGMainWindow::slotClear()
 
 void KWatchGnuPGMainWindow::createActions()
 {
-  KAction *action = actionCollection()->addAction( "clear_log" );
-  action->setIcon( KIcon("edit-clear-history") );
+  KAction *action = actionCollection()->addAction( QLatin1String("clear_log") );
+  action->setIcon( KIcon(QLatin1String("edit-clear-history")) );
   action->setText( i18n("C&lear History") );
   connect(action, SIGNAL(triggered()), SLOT(slotClear()));
   action->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_L));
@@ -134,18 +130,18 @@ void KWatchGnuPGMainWindow::startWatcher()
   disconnect( mWatcher, SIGNAL(finished(int,QProcess::ExitStatus)),
               this, SLOT(slotWatcherExited(int,QProcess::ExitStatus)) );
   if( mWatcher->state()== QProcess::Running ) {
-	mWatcher->kill();
-	while( mWatcher->state()== QProcess::Running ) {
-	  qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
-	}
-	mCentralWidget->message(i18n("[%1] Log stopped", QDateTime::currentDateTime().toString(Qt::ISODate)));
+        mWatcher->kill();
+        while( mWatcher->state()== QProcess::Running ) {
+          qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
+        }
+        mCentralWidget->message(i18n("[%1] Log stopped", QDateTime::currentDateTime().toString(Qt::ISODate)));
   }
   mWatcher->clearProgram();
 
   {
     const KConfigGroup config(KGlobal::config(), "WatchGnuPG");
     *mWatcher << config.readEntry("Executable", WATCHGNUPGBINARY);
-    *mWatcher << "--force";
+    *mWatcher << QLatin1String("--force");
     *mWatcher << config.readEntry("Socket", WATCHGNUPGSOCKET);
   }
 
@@ -153,9 +149,9 @@ void KWatchGnuPGMainWindow::startWatcher()
   mWatcher->start();
   const bool ok = mWatcher->waitForStarted();
   if( !ok) {
-	KMessageBox::sorry( this, i18n("The watchgnupg logging process could not be started.\nPlease install watchgnupg somewhere in your $PATH.\nThis log window is unable to display any useful information." ) );
+        KMessageBox::sorry( this, i18n("The watchgnupg logging process could not be started.\nPlease install watchgnupg somewhere in your $PATH.\nThis log window is unable to display any useful information." ) );
   } else {
-	mCentralWidget->message( i18n("[%1] Log started",QDateTime::currentDateTime().toString(Qt::ISODate) ) );
+        mCentralWidget->message( i18n("[%1] Log started",QDateTime::currentDateTime().toString(Qt::ISODate) ) );
   }
   connect( mWatcher, SIGNAL(finished(int,QProcess::ExitStatus)),
            this, SLOT(slotWatcherExited(int,QProcess::ExitStatus)) );
@@ -172,35 +168,35 @@ void KWatchGnuPGMainWindow::setGnuPGConfig()
   KConfigGroup config(KGlobal::config(), "WatchGnuPG");
   const QStringList comps = cconfig->componentList();
   for( QStringList::const_iterator it = comps.constBegin(); it != comps.constEnd(); ++it ) {
-	Kleo::CryptoConfigComponent* comp = cconfig->component( *it );
-	Q_ASSERT(comp);
-	// Look for log-file entry in Debug group
-	Kleo::CryptoConfigGroup* group = comp->group("Debug");
-	if( group ) {
-	  Kleo::CryptoConfigEntry* entry = group->entry("log-file");
-	  if( entry ) {
-		entry->setStringValue( QString("socket://")+ config.readEntry("Socket", WATCHGNUPGSOCKET ));
-		logclients << QString("%1 (%2)").arg(*it).arg(comp->description());
-	  }
-	  entry = group->entry("debug-level");
-	  if( entry ) {
-		entry->setStringValue( config.readEntry("LogLevel", "basic") );
-	  }
-	}
+        Kleo::CryptoConfigComponent* comp = cconfig->component( *it );
+        Q_ASSERT(comp);
+        // Look for log-file entry in Debug group
+        Kleo::CryptoConfigGroup* group = comp->group(QLatin1String("Debug"));
+        if( group ) {
+          Kleo::CryptoConfigEntry* entry = group->entry(QLatin1String("log-file"));
+          if( entry ) {
+            entry->setStringValue( QString::fromLatin1("socket://")+ config.readEntry("Socket", WATCHGNUPGSOCKET ));
+            logclients << QString::fromLatin1("%1 (%2)").arg(*it).arg(comp->description());
+          }
+          entry = group->entry(QLatin1String("debug-level"));
+          if( entry ) {
+            entry->setStringValue( config.readEntry("LogLevel", "basic") );
+          }
+        }
   }
   cconfig->sync(true);
   if( logclients.isEmpty() ) {
-	KMessageBox::sorry( 0, i18n("There are no components available that support logging." ) );
+    KMessageBox::sorry( 0, i18n("There are no components available that support logging." ) );
   }
 }
 
 void KWatchGnuPGMainWindow::slotWatcherExited(int, QProcess::ExitStatus)
 {
   if( KMessageBox::questionYesNo( this, i18n("The watchgnupg logging process died.\nDo you want to try to restart it?"), QString(), KGuiItem(i18n("Try Restart")), KGuiItem(i18n("Do Not Try")) ) == KMessageBox::Yes ) {
-	mCentralWidget->message( i18n("====== Restarting logging process =====") );
-	startWatcher();
+        mCentralWidget->message( i18n("====== Restarting logging process =====") );
+        startWatcher();
   } else {
-	KMessageBox::sorry( this, i18n("The watchgnupg logging process is not running.\nThis log window is unable to display any useful information." ) );
+        KMessageBox::sorry( this, i18n("The watchgnupg logging process is not running.\nThis log window is unable to display any useful information." ) );
   }
 }
 
@@ -210,16 +206,16 @@ void KWatchGnuPGMainWindow::slotReadStdout()
     return;
   while(mWatcher->canReadLine()){
         QString str = QString::fromUtf8( mWatcher->readLine() );
-	if ( str.endsWith( '\n' ) )
-	   str.chop( 1 );
-	if ( str.endsWith( '\r' ) )
-	   str.chop( 1 );
-	mCentralWidget->message(str);
-	if( !isVisible() ) {
-	    // Change tray icon to show something happened
-	    // PENDING(steffen)
+        if ( str.endsWith( QLatin1Char('\n') ) )
+           str.chop( 1 );
+        if ( str.endsWith( QLatin1Char('\r') ) )
+           str.chop( 1 );
+        mCentralWidget->message(str);
+        if( !isVisible() ) {
+            // Change tray icon to show something happened
+            // PENDING(steffen)
             mSysTray->setAttention(true);
-	}
+        }
   }
 }
 
@@ -262,7 +258,7 @@ void KWatchGnuPGMainWindow::slotConfigure()
 {
   if( !mConfig ) {
       mConfig = new KWatchGnuPGConfig( this );
-      mConfig->setObjectName( "config dialog" );
+      mConfig->setObjectName( QLatin1String("config dialog") );
       connect( mConfig, SIGNAL(reconfigure()),
                this, SLOT(slotReadConfig()) );
   }
@@ -288,4 +284,3 @@ bool KWatchGnuPGMainWindow::queryClose()
   return KMainWindow::queryClose();
 }
 
-#include "kwatchgnupgmainwin.moc"

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -33,7 +33,6 @@
 #include "sieveconditionmailboxexists.h"
 
 #include "sieveconditionspamtest.h"
-#include "sieveconditionspamtestplus.h"
 #include "sieveconditionvirustest.h"
 #include "sieveconditionihave.h"
 #include "sieveconditionenvironment.h"
@@ -60,7 +59,6 @@ QList<KSieveUi::SieveCondition *> KSieveUi::SieveConditionList::conditionList()
     list.append(new KSieveUi::SieveConditionCurrentDate);
     list.append(new KSieveUi::SieveConditionMailboxExists);
     list.append(new KSieveUi::SieveConditionSpamTest);
-    list.append(new KSieveUi::SieveConditionSpamTestPlus);
     list.append(new KSieveUi::SieveConditionVirusTest);
     list.append(new KSieveUi::SieveConditionIhave);
     list.append(new KSieveUi::SieveConditionEnvironment);

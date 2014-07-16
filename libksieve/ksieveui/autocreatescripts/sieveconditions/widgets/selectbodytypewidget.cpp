@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,13 +16,13 @@
 */
 
 #include "selectbodytypewidget.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KComboBox>
 #include <KLineEdit>
 
 #include <QHBoxLayout>
-#include <QDebug>
 
 using namespace KSieveUi;
 
@@ -50,6 +50,7 @@ void SelectBodyTypeWidget::initialize()
     connect(mBodyCombobox, SIGNAL(activated(int)), this, SLOT(slotBodyTypeChanged(int)));
 
     mBodyLineEdit = new KLineEdit;
+    connect(mBodyLineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     lay->addWidget(mBodyLineEdit);
     mBodyLineEdit->hide();
 }
@@ -71,6 +72,21 @@ void SelectBodyTypeWidget::slotBodyTypeChanged(int index)
     } else {
         mBodyLineEdit->hide();
     }
+    Q_EMIT valueChanged();
 }
 
-#include "selectbodytypewidget.moc"
+void SelectBodyTypeWidget::setCode(const QString &type, const QString &content, const QString &name, QString &error)
+{
+    const int index = mBodyCombobox->findData(type);
+    if (index != -1) {
+        mBodyCombobox->setCurrentIndex(index);
+    } else {
+        AutoCreateScriptUtil::comboboxItemNotFound(type, name, error);
+        mBodyCombobox->setCurrentIndex(0);
+    }
+    slotBodyTypeChanged(index);
+    mBodyLineEdit->setText(content);
+}
+
+
+

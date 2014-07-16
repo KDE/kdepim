@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,12 +16,16 @@
 */
 
 #include "sieveactionbreak.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
+#include "editor/sieveeditorutil.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QDomNode>
+#include <QDebug>
 
 using namespace KSieveUi;
 SieveActionBreak::SieveActionBreak(QObject *parent)
@@ -46,8 +50,46 @@ QWidget *SieveActionBreak::createParamWidget( QWidget *parent ) const
 
     KLineEdit *subject = new KLineEdit;
     subject->setObjectName(QLatin1String("name"));
+    connect(subject, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     lay->addWidget(subject);
     return w;
+}
+
+bool SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
+{
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("tag")) {
+                const QString tagValue = e.text();
+                if (tagValue == QLatin1String("name")) {
+                    KLineEdit *name = w->findChild<KLineEdit*>(QLatin1String("name"));
+                    name->setText(AutoCreateScriptUtil::strValue(e));
+                } else {
+                    unknowTagValue(tagValue, error);
+                    qDebug()<<" SieveActionBreak::setParamWidgetValue unknown tagValue "<<tagValue;
+                }
+            } else if (tagName == QLatin1String("str")) {
+                //Nothing
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
+            } else {
+                unknownTag(tagName, error);
+                qDebug()<<"SieveActionBreak::setParamWidgetValue unknown tag "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+    return true;
+}
+
+QString SieveActionBreak::href() const
+{
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 
 QString SieveActionBreak::code(QWidget *w) const
@@ -81,4 +123,3 @@ QString SieveActionBreak::serverNeedsCapability() const
 }
 
 
-#include "sieveactionbreak.moc"

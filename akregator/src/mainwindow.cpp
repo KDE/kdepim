@@ -28,7 +28,7 @@
 #include "trayicon.h"
 
 #include "libkdepim/misc/broadcaststatus.h"
-#include "libkdepim/progresswidget/progressdialog.h"
+#include "libkdepim/progresswidget/progressstatusbarwidget.h"
 #include "libkdepim/progresswidget/statusbarprogresswidget.h"
 
 #include <KAction>
@@ -36,24 +36,24 @@
 #include <KApplication>
 #include <KConfig>
 #include <KEditToolBar>
-#include <KLibLoader>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KMenuBar>
 #include <KSqueezedTextLabel>
-#include <KStatusBar>
 #include <KShortcutsDialog>
 #include <KStandardAction>
+#include <KStatusBar>
+#include <KPluginLoader>
+#include <KMenuBar>
+#include <KXMLGUIFactory>
 #include <KToolBar>
-#include <KStandardDirs>
-#include <KTemporaryFile>
+#include <KPluginFactory>
 
 using namespace Akregator;
 
 BrowserInterface::BrowserInterface( MainWindow *shell, const char *name )
     : KParts::BrowserInterface( shell )
 {
-    setObjectName(name);
+    setObjectName(QLatin1String(name));
     m_shell = shell;
 }
 
@@ -61,13 +61,12 @@ MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags f )
     : KParts::MainWindow( parent, f )
     , m_browserIface( new BrowserInterface( this, "browser_interface" ) )
     , m_part()
-    , m_progressBar( 0 )
     , m_statusLabel( new KSqueezedTextLabel( this ) )
 {
     setPluginLoadingMode( DoNotLoadPlugins );
 
     // set the shell's ui resource file
-    setXMLFile("akregator_shell.rc");
+    setXMLFile(QLatin1String("akregator_shell.rc"));
 
     KStandardAction::keyBindings(this, SLOT(optionsConfigureKeys()), actionCollection()); // options_configure_keybinding
     KStandardAction::configureToolbars(this, SLOT(optionsConfigureToolbars()), actionCollection()); // options_configure_toolbars
@@ -98,7 +97,7 @@ bool MainWindow::loadPart()
     // this routine will find and load our Part.  it finds the Part by
     // name which is a bad idea usually.. but it's alright in this
     // case since our Part is made for this Shell
-    KPluginLoader loader("akregatorpart");
+    KPluginLoader loader(QLatin1String("akregatorpart"));
     KPluginFactory* const factory = loader.factory();
     if (!factory) {
         KMessageBox::error(this, i18n("Could not find the Akregator part; please check your installation.\n%1", loader.errorString()) );
@@ -110,7 +109,7 @@ bool MainWindow::loadPart()
     if ( !m_part )
         return false;
 
-    m_part->setObjectName("akregator_part");
+    m_part->setObjectName(QLatin1String("akregator_part"));
     setCentralWidget(m_part->widget());
 
     connect(m_part, SIGNAL(setWindowCaption(QString)), this, SLOT(setCaption(QString)) );
@@ -123,12 +122,8 @@ bool MainWindow::loadPart()
 
 void MainWindow::setupProgressWidgets()
 {
-    KPIM::ProgressDialog *progressDialog = new KPIM::ProgressDialog( statusBar(), this );
-    progressDialog->raise();
-    progressDialog->hide();
-    m_progressBar = new KPIM::StatusbarProgressWidget( progressDialog, statusBar() );
-    m_progressBar->show();
-    statusBar()->addPermanentWidget( m_progressBar, 0 );
+    KPIM::ProgressStatusBarWidget * progressStatusBarWidget = new KPIM::ProgressStatusBarWidget(statusBar(), this);
+    statusBar()->addPermanentWidget( progressStatusBarWidget->littleProgress(), 0 );
 }
 
 MainWindow::~MainWindow()
@@ -218,4 +213,3 @@ void MainWindow::slotSetStatusBarText( const QString & text )
     m_statusLabel->setText(text);
 }
 
-#include "mainwindow.moc"

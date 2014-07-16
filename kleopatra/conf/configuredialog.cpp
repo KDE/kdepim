@@ -43,15 +43,14 @@
 #include <kconfiggroup.h>
 
 #include <QApplication>
-#include <QIcon>
 
 #ifdef KLEO_STATIC_KCMODULES
 # include <KDesktopFile>
 # define KCM_IMPORT_PLUGIN( x ) extern "C" KCModule * create_##x( QWidget * parent=0, const QVariantList & args=QVariantList() );
-# define addMyModule( x ) addModule( KCModuleInfo( KDesktopFile( "services", #x ".desktop" ) ), create_##x() )
+# define addMyModule( x ) addModule( KCModuleInfo( KDesktopFile( "services", QLatin1String(#x) + QLatin1String(".desktop") ) ), create_##x() )
 #else // KLEO_STATIC_KCMODULES
 # define KCM_IMPORT_PLUGIN( x )
-# define addMyModule( x ) addModule( #x )
+# define addMyModule( x ) addModule( QLatin1String(#x) )
 #endif // KLEO_STATIC_KCMODULES
 
 KCM_IMPORT_PLUGIN( kleopatra_config_dirserv )
@@ -76,9 +75,6 @@ ConfigureDialog::ConfigureDialog( QWidget * parent )
                   qApp->windowIcon().pixmap( IconSize( KIconLoader::Small ), IconSize( KIconLoader::Small ) ) );
 #endif
   showButton( User1, true );
-#ifdef _WIN32_WCE
-  showButton( Help , false );
-#endif
 
   addMyModule( kleopatra_config_dirserv );
 #ifndef KDEPIM_MOBILE_UI
@@ -102,9 +98,6 @@ ConfigureDialog::ConfigureDialog( QWidget * parent )
   if ( width != 0 && height != 0 ) {
      setMinimumSize( width, height );
   }
-#ifdef _WIN32_WCE
-  setWindowState( Qt::WindowFullScreen );
-#endif
 }
 
 void ConfigureDialog::hideEvent( QHideEvent * e ) {
@@ -121,4 +114,3 @@ ConfigureDialog::~ConfigureDialog() {
 #undef addMyModule
 #undef KCM_IMPORT_PLUGIN
 
-#include "configuredialog.moc"

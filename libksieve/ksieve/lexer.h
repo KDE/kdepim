@@ -54,19 +54,19 @@ namespace KSieve {
     ~Lexer();
 
     /** Return whether comments are returned by @ref
-	nextToken. Default is to not ignore comments. Ignoring them
-	can speed up script parsing a bit, and can be used when the
-	internal representation of the script won't be serialized into
-	string form again (or if you simply want to delete all
-	comments)
+        nextToken. Default is to not ignore comments. Ignoring them
+        can speed up script parsing a bit, and can be used when the
+        internal representation of the script won't be serialized into
+        string form again (or if you simply want to delete all
+        comments)
     **/
     bool ignoreComments() const;
 
     /** Return whether line feeds are returned by @ref
-	nextToken. Default is to not ignore line feeds. Ignoring them
-	can speed up script parsing a bit, and can be used when the
-	internal representation of the script won't be serialized into
-	string form again.
+        nextToken. Default is to not ignore line feeds. Ignoring them
+        can speed up script parsing a bit, and can be used when the
+        internal representation of the script won't be serialized into
+        string form again.
     **/
     bool ignoreLineFeeds() const;
 
@@ -90,7 +90,7 @@ namespace KSieve {
     };
 
     /** Parse the next token and return it's type. @p result will contain
-	the value of the token. */
+        the value of the token. */
     Token nextToken( QString & result );
 
     void save();

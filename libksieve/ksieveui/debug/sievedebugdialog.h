@@ -19,15 +19,14 @@
 #include <kdialog.h>
 #include <kurl.h>
 
-class KTextEdit;
-
-class QString;
 class QStringList;
 
 namespace KManageSieve {
-  class SieveJob;
+class SieveJob;
 }
-
+namespace PimCommon {
+class PlainTextEditorWidget;
+}
 namespace KSieveUi {
 
 /**
@@ -36,34 +35,29 @@ namespace KSieveUi {
  */
 class KSIEVEUI_EXPORT SieveDebugDialog : public KDialog
 {
-  Q_OBJECT
-
-  public:
+    Q_OBJECT    
+public:
     explicit SieveDebugDialog( QWidget *parent = 0 );
     ~SieveDebugDialog();
 
-  protected:
-    void handlePutResult( KManageSieve::SieveJob *job, bool success, bool );
 
-  signals:
+Q_SIGNALS:
     void result( bool success );
 
-  protected slots:
+private Q_SLOTS:
     void slotGetScript( KManageSieve::SieveJob *job, bool success, const QString &script, bool active );
     void slotGetScriptList( KManageSieve::SieveJob *job, bool success, const QStringList &scriptList, const QString &activeScript );
 
-    void slotDialogOk();
-    void slotPutActiveResult( KManageSieve::SieveJob*, bool );
-    void slotPutInactiveResult( KManageSieve::SieveJob*, bool );
     void slotDiagNextAccount();
     void slotDiagNextScript();
 
-  protected:
+private:
+    void writeConfig();
+    void readConfig();
     KManageSieve::SieveJob *mSieveJob;
     KUrl mUrl;
 
-    KTextEdit *mEdit;
-
+    PimCommon::PlainTextEditorWidget * mEdit;
     QStringList mResourceIdentifier;
     QStringList mScriptList;
 };

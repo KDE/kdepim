@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2011-2014 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -21,27 +21,15 @@
 
 #include "templateparser_export.h"
 
-#include <KTextEdit>
-class QCompleter;
+#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
 namespace TemplateParser {
-class TEMPLATEPARSER_EXPORT TemplatesTextEdit : public KTextEdit
+class TEMPLATEPARSER_EXPORT TemplatesTextEdit : public PimCommon::RichTextEditorWidget
 {
-  Q_OBJECT
-  public:
-    explicit TemplatesTextEdit( QWidget *parent );
-    virtual ~TemplatesTextEdit();
-
-  protected Q_SLOTS:
-    void slotInsertCompletion( const QString & );
-    QString wordUnderCursor();
-
-  protected:
-    void initCompleter();
-    void keyPressEvent( QKeyEvent *e );
-
-  private:
-    QCompleter *m_completer;
+    Q_OBJECT
+public:
+    explicit TemplatesTextEdit( QWidget *parent = 0 );
+    ~TemplatesTextEdit();
 };
 
 }

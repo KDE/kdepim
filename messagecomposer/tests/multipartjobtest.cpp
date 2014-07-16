@@ -102,4 +102,3 @@ void MultipartJobTest::test8BitPropagation()
   QCOMPARE( content->contentTransferEncoding()->encoding(), Headers::CE8Bit );
 }
 
-#include "multipartjobtest.moc"

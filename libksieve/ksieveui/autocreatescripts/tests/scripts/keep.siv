@@ -1,0 +1,9 @@
+require "date";
+require "imapflags";
+ 
+#SCRIPTNAME: xxx
+if date :is "" "year" "0000"
+{
+    keep :flags [ "\\Flagged", "\\Seen" ];
+    keep;
+} "

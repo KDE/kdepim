@@ -235,4 +235,3 @@ void Scheduler::updateStatus( )
 }
 
 
-#include "scheduler.moc"

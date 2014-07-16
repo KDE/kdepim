@@ -16,11 +16,6 @@
 
 #include <kdialog.h>
 
-class KIntSpinBox;
-class KLineEdit;
-class KTextEdit;
-
-class QCheckBox;
 template <typename T> class QList;
 
 namespace KMime {
@@ -31,7 +26,7 @@ typedef QList<AddrSpec> AddrSpecList;
 }
 
 namespace KSieveUi {
-
+class VacationEditWidget;
 class VacationDialog : public KDialog
 {
     Q_OBJECT
@@ -66,16 +61,13 @@ public:
     void setSendForSpam( bool enable );
 
 private slots:
-    void slotIntervalSpinChanged( int value );
+    void slotDialogDefaults();
 
-protected:
-    QCheckBox   * mActiveCheck;
-    KIntSpinBox * mIntervalSpin;
-    KLineEdit   * mMailAliasesEdit;
-    KTextEdit   * mTextEdit;
-    QCheckBox   * mSpamCheck;
-    QCheckBox   * mDomainCheck;
-    KLineEdit   * mDomainEdit;
+private:
+    void writeConfig();
+    void readConfig();
+
+    VacationEditWidget *mVacationEditWidget;
 };
 
 }

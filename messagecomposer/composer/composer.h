@@ -35,7 +35,7 @@
 #include <gpgme++/key.h>
 
 namespace boost {
-  template <typename T> class shared_ptr;
+template <typename T> class shared_ptr;
 }
 
 namespace MessageComposer {
@@ -50,9 +50,9 @@ class TextPart;
 */
 class MESSAGECOMPOSER_EXPORT Composer : public JobBase
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit Composer( QObject *parent = 0 );
     virtual ~Composer();
 
@@ -80,21 +80,18 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
 
     bool finished() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     virtual void start();
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     virtual void slotResult( KJob *job );
 
-  private:
+private:
     Q_DECLARE_PRIVATE( Composer )
 
     Q_PRIVATE_SLOT( d_func(), void doStart() )
     Q_PRIVATE_SLOT( d_func(), void skeletonJobFinished(KJob*) )
     Q_PRIVATE_SLOT( d_func(), void contentJobFinished(KJob*) )
-    Q_PRIVATE_SLOT( d_func(), void contentJobPreCryptFinished(KJob*) )
-    Q_PRIVATE_SLOT( d_func(), void contentJobPreInlineFinished(KJob*) )
-    Q_PRIVATE_SLOT( d_func(), void signBeforeEncryptJobFinished(KJob*) )
     Q_PRIVATE_SLOT( d_func(), void attachmentsFinished(KJob*) )
 };
 

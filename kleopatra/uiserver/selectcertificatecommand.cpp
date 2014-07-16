@@ -48,12 +48,9 @@
 #include <gpg-error.h>
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
-#include <QVariant>
 #include <QByteArray>
-#include <QIODevice>
-#include <QList>
 #include <QPointer>
 
 #include <string>

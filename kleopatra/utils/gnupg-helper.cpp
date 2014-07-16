@@ -62,7 +62,7 @@ QString Kleo::gnupgHomeDirectory()
     if ( !gnupgHome.isEmpty() )
         return QFile::decodeName( gnupgHome );
     else
-        return QDir::homePath() + "/.gnupg";
+        return QDir::homePath() + QLatin1String("/.gnupg");
 #endif
 }
 
@@ -70,67 +70,39 @@ int Kleo::makeGnuPGError( int code ) {
     return gpg_error( static_cast<gpg_err_code_t>( code ) );
 }
 
-static QString findGpgExe( GpgME::Engine engine, const char * exe ) {
+static QString findGpgExe( GpgME::Engine engine, const QString & exe ) {
     const GpgME::EngineInfo info = GpgME::engineInfo( engine );
     return info.fileName() ? QFile::decodeName( info.fileName() ) : KStandardDirs::findExe( exe ) ;
 }
 
 QString Kleo::gpgConfPath() {
-    return findGpgExe( GpgME::GpgConfEngine, "gpgconf" );
+    return findGpgExe( GpgME::GpgConfEngine, QLatin1String("gpgconf") );
 }
 
 QString Kleo::gpgSmPath() {
-    return findGpgExe( GpgME::GpgSMEngine, "gpgsm" );
+    return findGpgExe( GpgME::GpgSMEngine, QLatin1String("gpgsm") );
 }
 
 QString Kleo::gpgPath() {
-    return findGpgExe( GpgME::GpgEngine, "gpg" );
+    return findGpgExe( GpgME::GpgEngine, QLatin1String("gpg") );
 }
 
 QStringList Kleo::gnupgFileBlacklist() {
     return QStringList()
-        << "dirmngr-cache.d"
-        << "S.uiserver"
-        << "S.gpg-agent"
-        << "random_seed"
-        << "*~"
-        << "*.bak"
-        << "*.lock"
-        << "*.tmp"
-        << "reader_*.status"
+        << QLatin1String("dirmngr-cache.d")
+        << QLatin1String("S.uiserver")
+        << QLatin1String("S.gpg-agent")
+        << QLatin1String("random_seed")
+        << QLatin1String("*~")
+        << QLatin1String("*.bak")
+        << QLatin1String("*.lock")
+        << QLatin1String("*.tmp")
+        << QLatin1String("reader_*.status")
         ;
 }
 
 QString Kleo::gpg4winInstallPath() {
-#ifndef _WIN32_WCE
     return gpgConfListDir( "bindir" );
-#else
-    HKEY hKey;
-    TCHAR *lszValue;
-    DWORD dwType=REG_SZ;
-    DWORD dwSize;
-
-    if ( ERROR_SUCCESS!=RegOpenKeyExW ( HKEY_LOCAL_MACHINE, L"Software\\GNU\\GnuPG", 0, KEY_READ, &hKey ) ){
-      return QString();
-    }
-
-    if ( ERROR_SUCCESS!=RegQueryValueExW ( hKey, L"Install Directory", NULL, NULL, NULL, &dwSize ) ){
-      return QString();
-    }
-
-    lszValue = new TCHAR[dwSize];
-
-    if ( ERROR_SUCCESS!=RegQueryValueExW ( hKey,L"Install Directory", NULL, &dwType, ( LPBYTE ) lszValue, &dwSize ) ) {
-        delete [] lszValue;
-        return QString();
-    }
-    RegCloseKey ( hKey );
-
-    QString res = QString::fromUtf16 ( ( const ushort* ) lszValue );
-    delete [] lszValue;
-
-    return res;
-#endif
 }
 
 QString Kleo::gpgConfListDir( const char * which ) {

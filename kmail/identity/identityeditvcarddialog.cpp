@@ -18,18 +18,27 @@
 #include "identityeditvcarddialog.h"
 
 #include <KABC/VCardConverter>
-#include <KLocale>
+#include <KLocalizedString>
 #include <Akonadi/Contact/ContactEditor>
 #include <KDebug>
+#include <KMessageBox>
 
 #include <QHBoxLayout>
 #include <QFile>
 
-IdentityEditVcardDialog::IdentityEditVcardDialog(QWidget *parent)
+IdentityEditVcardDialog::IdentityEditVcardDialog(const QString &fileName, QWidget *parent)
     : KDialog(parent)
 {
-    setCaption( i18n( "Edit own vCard" ) );
-    setButtons( Ok|Cancel );
+    if (QFile(fileName).exists()) {
+        setCaption( i18n( "Edit own vCard" ) );
+        setButtons( User1|Ok|Cancel );
+        setButtonText(User1, i18n("Delete current vCard"));
+        connect(this, SIGNAL(user1Clicked()), this, SLOT(slotDeleteCurrentVCard()));
+    } else {
+        setCaption( i18n("Create own vCard") );
+        setButtons( Ok|Cancel );
+    }
+
     setDefaultButton( Ok );
     setModal( true );
     QWidget *mainWidget = new QWidget( this );
@@ -40,10 +49,31 @@ IdentityEditVcardDialog::IdentityEditVcardDialog(QWidget *parent)
 
     mContactEditor = new Akonadi::ContactEditor( Akonadi::ContactEditor::CreateMode, Akonadi::ContactEditor::VCardMode, this );
     mainLayout->addWidget(mContactEditor);
+    loadVcard(fileName);
 }
 
 IdentityEditVcardDialog::~IdentityEditVcardDialog()
 {
+}
+
+void IdentityEditVcardDialog::slotDeleteCurrentVCard()
+{
+    if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Are you sure to want to delete this vCard?"), i18n("Delete vCard"))) {
+        deleteCurrentVcard();
+        reject();
+    }
+}
+
+void IdentityEditVcardDialog::deleteCurrentVcard()
+{
+    if (!mVcardFileName.isEmpty()) {
+        QFile file(mVcardFileName);
+        if (file.exists()) {
+            if (!file.remove()) {
+                KMessageBox::error(this, i18n("We cannot delete vCard file."), i18n("Delete vCard"));
+            }
+        }
+    }
 }
 
 void IdentityEditVcardDialog::loadVcard( const QString &vcardFileName)
@@ -76,9 +106,8 @@ QString IdentityEditVcardDialog::saveVcard() const
         file.flush();
         file.close();
     } else {
-        kDebug()<<"We can not open file: "<<mVcardFileName;
+        kDebug()<<"We cannot open file: "<<mVcardFileName;
     }
     return mVcardFileName;
 }
 
-#include "identityeditvcarddialog.moc"

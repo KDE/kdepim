@@ -107,8 +107,8 @@ void FilterSylpheed::processDirectory( const QString &path)
         if(filterInfo()->shouldTerminate())
             break;
         importDirContents(dir.filePath(*filename));
-        filterInfo()->setOverall((int) ((float) mImportDirDone / mTotalDir * 100));
-        mImportDirDone++;
+        filterInfo()->setOverall( (mTotalDir > 0) ? (int) ((float) mImportDirDone / mTotalDir * 100) : 0);
+        ++mImportDirDone;
     }
 }
 

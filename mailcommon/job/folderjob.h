@@ -37,9 +37,9 @@ namespace MailCommon {
 
 class MAILCOMMON_EXPORT FolderJob : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     FolderJob();
 
     virtual ~FolderJob();
@@ -62,7 +62,7 @@ class MAILCOMMON_EXPORT FolderJob : public QObject
      */
     int error() const
     {
-      return mErrorCode;
+        return mErrorCode;
     }
 
     /**
@@ -70,7 +70,7 @@ class MAILCOMMON_EXPORT FolderJob : public QObject
      */
     bool isCancellable() const
     {
-      return mCancellable;
+        return mCancellable;
     }
 
     /**
@@ -81,10 +81,10 @@ class MAILCOMMON_EXPORT FolderJob : public QObject
      */
     void setCancellable( bool b )
     {
-      mCancellable = b;
+        mCancellable = b;
     }
 
-  signals:
+signals:
     /**
      * Emitted when the job finishes all processing.
      */
@@ -98,7 +98,7 @@ class MAILCOMMON_EXPORT FolderJob : public QObject
      */
     void result( FolderJob *job );
 
-  protected:
+protected:
     /**
      * Has to be reimplemented. It's called by the start() method. Should
      * start the processing of the specified job function.

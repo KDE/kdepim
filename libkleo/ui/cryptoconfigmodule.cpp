@@ -85,7 +85,7 @@ public:
 }
 inline KIcon loadIcon( const QString &s ) {
   QString ss = s;
-  return KIcon( ss.replace( QRegExp( "[^a-zA-Z0-9_]" ), "-" ) );
+  return KIcon( ss.replace( QRegExp( QLatin1String("[^a-zA-Z0-9_]") ), QLatin1String("-") ) );
 }
 
 static unsigned int num_components_with_options( const Kleo::CryptoConfig * config ) {
@@ -210,7 +210,7 @@ void Kleo::CryptoConfigModule::init( Layout layout ) {
                                "properly. It did not return any components. "
                                "Try running \"%1\" on the command line for more "
                                "information.",
-                               components.empty() ? "gpgconf --list-components" : "gpgconf --list-options gpg" );
+                               components.empty() ? QLatin1String("gpgconf --list-components") : QLatin1String("gpgconf --list-options gpg") );
       QLabel * label = new QLabel( msg, vbox );
       label->setWordWrap( true);
       label->setMinimumHeight( fontMetrics().lineSpacing() * 5 );
@@ -460,7 +460,7 @@ QString Kleo::CryptoConfigEntryGUI::description() const
 {
     QString descr = mEntry->description();
     if ( descr.isEmpty() ) // shouldn't happen
-        return QString( "<%1>" ).arg( mName );
+        return QString::fromLatin1( "<%1>" ).arg( mName );
     if ( i18nc( "Translate this to 'yes' or 'no' (use the English words!) "
                 "depending on whether your language uses "
                 "Sentence style capitalisation in GUI labels (yes) or not (no). "
@@ -601,7 +601,7 @@ Kleo::CryptoConfigEntryPath::CryptoConfigEntryPath(
         mFileNameRequester->setEnabled( false );
   } else {
 #ifndef KDEPIM_ONLY_KLEO
-	  if ( mUrlRequester )
+          if ( mUrlRequester )
           connect( mUrlRequester, SIGNAL(textChanged(QString)),
                    this, SLOT(slotChanged()) );
 #endif
@@ -957,7 +957,7 @@ Kleo::ParsedKeyserver Kleo::parseKeyserver( const QString & str ) {
         const QString key = kvpair.left( idx );
         const QString value = kvpair.mid( idx+1 );
         if ( value.isEmpty() )
-            result.options.push_back( qMakePair( key, QString("") ) ); // make sure it's not a null QString, only an empty one
+            result.options.push_back( qMakePair( key, QString::fromLatin1("") ) ); // make sure it's not a null QString, only an empty one
         else
             result.options.push_back( qMakePair( key, value ) );
     }
@@ -1018,5 +1018,4 @@ void Kleo::CryptoConfigEntryKeyserver::slotOpenDialog()
   }
 }
 
-#include "cryptoconfigmodule.moc"
-#include "cryptoconfigmodule_p.moc"
+#include "moc_cryptoconfigmodule_p.cpp"

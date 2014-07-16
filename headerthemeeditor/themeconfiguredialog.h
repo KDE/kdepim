@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -19,8 +19,14 @@
 #define THEMECONFIGUREDIALOG_H
 
 #include <KDialog>
-class KUrlRequester;
 class KTextEdit;
+
+namespace PimCommon {
+class RichTextEditorWidget;
+}
+namespace GrantleeThemeEditor {
+class ConfigureWidget;
+}
 
 class ThemeConfigureDialog : public KDialog
 {
@@ -37,8 +43,9 @@ private Q_SLOTS:
     void slotDefaultClicked();
 
 private:
-    KUrlRequester *mDefaultUrl;
-    KTextEdit *mDefaultEmail;
+    GrantleeThemeEditor::ConfigureWidget *mConfigureWidget;
+    PimCommon::RichTextEditorWidget *mDefaultTemplate;
+    PimCommon::RichTextEditorWidget *mDefaultEmail;
 };
 
 #endif // THEMECONFIGUREDIALOG_H

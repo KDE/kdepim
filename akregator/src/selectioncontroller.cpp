@@ -32,12 +32,10 @@
 #include "subscriptionlistmodel.h"
 #include "treenode.h"
 
-#include <KRandom>
 #include <KDebug>
 
 #include <QAbstractItemView>
 #include <QMenu>
-#include <QTimer>
 
 using namespace boost;
 using namespace Akregator;
@@ -312,4 +310,3 @@ void SelectionController::forceFilterUpdate()
     m_articleLister->forceFilterUpdate();
 }
 
-#include "selectioncontroller.moc"

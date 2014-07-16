@@ -41,11 +41,11 @@ const int FILTER_MAX_ACTIONS = 8;
 
 class MAILCOMMON_EXPORT MailFilter
 {
-  friend MAILCOMMON_EXPORT QDataStream& operator<<( QDataStream &stream, const MailFilter &filter );
-  friend MAILCOMMON_EXPORT QDataStream& operator>>( QDataStream &stream, MailFilter &filter );
+    friend MAILCOMMON_EXPORT QDataStream& operator<<( QDataStream &stream, const MailFilter &filter );
+    friend MAILCOMMON_EXPORT QDataStream& operator>>( QDataStream &stream, MailFilter &filter );
 
 public:
-  /** Result codes returned by process. They mean:
+    /** Result codes returned by process. They mean:
 
       @param GoOn Everything OK. You are still the owner of the
       message and you should continue applying filter actions to this
@@ -56,9 +56,9 @@ public:
       @param NoResult For internal use only!
 
   */
-  enum ReturnCode { NoResult, GoOn, CriticalError };
+    enum ReturnCode { NoResult, GoOn, CriticalError };
 
-  /** Account type codes used by setApplicability. They mean:
+    /** Account type codes used by setApplicability. They mean:
 
       @param All Apply to all accounts
 
@@ -67,31 +67,31 @@ public:
       @param Checked apply to all accounts specified by setApplyOnAccount
 
   */
-  enum AccountType { All, ButImap, Checked };
+    enum AccountType { All, ButImap, Checked };
 
-  /** Constructor that initializes basic settings. */
-  MailFilter();
+    /** Constructor that initializes basic settings. */
+    MailFilter();
 
-  /** Constructor that initializes from given config group.
+    /** Constructor that initializes from given config group.
     * Filters are stored one by one in config groups, i.e.
     * one filter, one group. */
-  explicit MailFilter( const KConfigGroup & aConfig, bool internal, bool & needUpdate );
+    explicit MailFilter( const KConfigGroup & aConfig, bool internal, bool & needUpdate );
 
-  /** Copy constructor. Constructs a deep copy of @p aFilter. */
-  MailFilter( const MailFilter & other );
+    /** Copy constructor. Constructs a deep copy of @p aFilter. */
+    MailFilter( const MailFilter & other );
 
-  /** Cleanup. */
-  ~MailFilter();
+    /** Cleanup. */
+    ~MailFilter();
 
-  /**
+    /**
    * Returns the unique identifier of this filter.
    */
-  QString identifier() const;
+    QString identifier() const;
 
-  /** Equivalent to @pattern()->name(). @return name of the filter */
-  QString name() const;
+    /** Equivalent to @pattern()->name(). @return name of the filter */
+    QString name() const;
 
-  /** Execute the filter action(s) on the given message.
+    /** Execute the filter action(s) on the given message.
       Returns:
       @li 2 if a critical error occurred,
       @li 1 if the caller is still
@@ -102,233 +102,234 @@ public:
       true if the caller may apply other filters and false if he shall
       stop the filtering of this message.
   */
-  ReturnCode execActions( ItemContext &context, bool& stopIt ) const ;
+    ReturnCode execActions(ItemContext &context, bool& stopIt , bool applyOnOutbound) const ;
 
-  /**
+    /**
     * Returns the required part from the item that is needed for the filter to
     * operate. See @ref SearchRule::RequiredPart */
-  SearchRule::RequiredPart requiredPart(const QString& id) const;
+    SearchRule::RequiredPart requiredPart(const QString& id) const;
 
-  /** Write contents to given config group. */
-  void writeConfig( KConfigGroup& config, bool exportFilter ) const;
+    /** Write contents to given config group. */
+    void writeConfig( KConfigGroup& config, bool exportFilter ) const;
 
-  /** Initialize from given config group. */
-  bool readConfig( const KConfigGroup& config, bool interactive = false );
+    /** Initialize from given config group. */
+    bool readConfig( const KConfigGroup& config, bool interactive = false );
 
-  /** Remove empty rules (and actions one day). */
-  void purify();
+    /** Remove empty rules (and actions one day). */
+    void purify();
 
-  /** Check for empty pattern and action list. */
-  bool isEmpty() const;
+    /** Check for empty pattern and action list. */
+    bool isEmpty() const;
 
-  /** Provides a reference to the internal action list. If your used
+    /** Provides a reference to the internal action list. If your used
       the @p setAction() and @p action() functions before, please
       convert to using myFilter->actions()->at() and friends now. */
-  QList<FilterAction*>* actions();
+    QList<FilterAction*>* actions();
 
-  /** Provides a reference to the internal action list. Const version. */
-  const QList<FilterAction*>* actions() const;
+    /** Provides a reference to the internal action list. Const version. */
+    const QList<FilterAction*>* actions() const;
 
-  /** Provides a reference to the internal pattern. If you used the
+    /** Provides a reference to the internal pattern. If you used the
       @p matches() function before, please convert to using
       myFilter->pattern()->matches() now. */
-  SearchPattern* pattern();
+    SearchPattern* pattern();
 
-  /** Provides a reference to the internal pattern. If you used the
+    /** Provides a reference to the internal pattern. If you used the
       @p matches() function before, please convert to using
       myFilter->pattern()->matches() now. */
-  const SearchPattern* pattern() const;
+    const SearchPattern* pattern() const;
 
-  /** Set whether this filter should be applied on
+    /** Set whether this filter should be applied on
       outbound messages (@p aApply == true) or not.
       See applyOnOutbound applyOnInbound setApplyOnInbound
   */
-  void setApplyOnOutbound( bool aApply = true );
+    void setApplyOnOutbound( bool aApply = true );
 
-  /** Set whether this filter should be applied on
+    /** Set whether this filter should be applied on
       outbound messages before sending (@p aApply == TRUE) or not.
       See applyOnOutbound applyOnInbound setApplyOnInbound
   */
-  void setApplyBeforeOutbound( bool aApply = true );
+    void setApplyBeforeOutbound( bool aApply = true );
 
-  /** @return true if this filter should be applied on
+    /** @return true if this filter should be applied on
       outbound messages, false otherwise.
       @see setApplyOnOutbound applyOnInbound setApplyOnInbound
   */
-  bool applyOnOutbound() const;
+    bool applyOnOutbound() const;
 
-  /** @return TRUE if this filter should be applied on
+    /** @return TRUE if this filter should be applied on
       outbound messages before they are sent, FALSE otherwise.
       @see setApplyOnOutbound applyOnInbound setApplyOnInbound
   */
-  bool applyBeforeOutbound() const;
+    bool applyBeforeOutbound() const;
 
-  /** Set whether this filter should be applied on
+    /** Set whether this filter should be applied on
       inbound messages (@p aApply == true) or not.
       @see setApplyOnOutbound applyOnInbound applyOnOutbound
   */
-  void setApplyOnInbound( bool aApply = true );
+    void setApplyOnInbound( bool aApply = true );
 
-  /** @return true if this filter should be applied on
+    /** @return true if this filter should be applied on
       inbound messages, false otherwise.
       @see setApplyOnOutbound applyOnOutbound setApplyOnInbound
   */
-  bool applyOnInbound() const;
+    bool applyOnInbound() const;
 
-  /** Set whether this filter should be applied on
+    /** Set whether this filter should be applied on
       explicit (CTRL-J) filtering (@p aApply == true) or not.
       @see setApplyOnOutbound applyOnInbound applyOnOutbound
   */
-  void setApplyOnExplicit( bool aApply = true );
+    void setApplyOnExplicit( bool aApply = true );
 
-  /** @return true if this filter should be applied on
+    /** @return true if this filter should be applied on
       explicit (CTRL-J) filtering, false otherwise.
       @see setApplyOnOutbound applyOnOutbound setApplyOnInbound
   */
-  bool applyOnExplicit() const;
+    bool applyOnExplicit() const;
 
-  /** Set whether this filter should be applied on
+    /** Set whether this filter should be applied on
       inbound messages for all accounts (@p aApply == All) or
       inbound messages for all but IMAP accounts (@p aApply == ButImap) or
       for a specified set of accounts only.
       Only applicable to filters that are applied on inbound messages.
       @see setApplyOnInbound setApplyOnAccount
   */
-  void setApplicability( AccountType aApply = All );
+    void setApplicability( AccountType aApply = All );
 
-  /** @return true if this filter should be applied on
+    /** @return true if this filter should be applied on
       inbound messages for all accounts, or false if this filter
       is to be applied on a specified set of accounts only.
       Only applicable to filters that are applied on inbound messages.
       @see setApplicability
   */
-  AccountType applicability() const;
+    AccountType applicability() const;
 
-  /** Set whether this filter should be applied on
+    /** Set whether this filter should be applied on
       inbound messages for the account with id (@p id).
       Only applicable to filters that are only applied to a specified
       set of accounts.
       @see setApplicability applyOnAccount
   */
-  void setApplyOnAccount( const QString& id, bool aApply = true );
+    void setApplyOnAccount( const QString& id, bool aApply = true );
 
-  /** @return true if this filter should be applied on
+    /** @return true if this filter should be applied on
       inbound messages from the account with id (@p id), false otherwise.
       @see setApplicability
   */
-  bool applyOnAccount( const QString& id ) const;
+    bool applyOnAccount( const QString& id ) const;
 
-  void setStopProcessingHere( bool aStop );
-  bool stopProcessingHere() const;
+    void setStopProcessingHere( bool aStop );
+    bool stopProcessingHere() const;
 
-  /** Set whether this filter should be plugged into the filter menu.
+    /** Set whether this filter should be plugged into the filter menu.
   */
-  void setConfigureShortcut( bool aShort );
+    void setConfigureShortcut( bool aShort );
 
-  /** @return true if this filter should be plugged into the filter menu,
+    /** @return true if this filter should be plugged into the filter menu,
       false otherwise.
       @see setConfigureShortcut
   */
-  bool configureShortcut() const;
+    bool configureShortcut() const;
 
-  /** Set whether this filter should be plugged into the toolbar.
+    /** Set whether this filter should be plugged into the toolbar.
       This can be done only if a shortcut is defined.
       @see setConfigureShortcut
   */
-  void setConfigureToolbar( bool aTool );
+    void setConfigureToolbar( bool aTool );
 
-  /** @return true if this filter should be plugged into the toolbar,
+    /** @return true if this filter should be plugged into the toolbar,
       false otherwise.
       @see setConfigureToolbar
   */
-  bool configureToolbar() const;
+    bool configureToolbar() const;
 
-  /** @return The toolbar name of this filter.
+    /** @return The toolbar name of this filter.
    *  @see setToolbarName
    */
-  QString toolbarName() const;
+    QString toolbarName() const;
 
-  /** This sets the toolbar name for this filter.
+    /** This sets the toolbar name for this filter.
    *  The toolbar name is the text to be displayed underneath the toolbar icon
    *  for this filter. This is usually the same as name(),  expect when
    *  explicitly set by this function.
    *  This is useful if the normal filter mame is too long for the toolbar.
    *  @see toolbarName, name
    */
-  void setToolbarName( const QString &toolbarName );
+    void setToolbarName( const QString &toolbarName );
 
-  /** Set the shortcut to be used if plugged into the filter menu
+    /** Set the shortcut to be used if plugged into the filter menu
       or toolbar. Default is no shortcut.
       @see setConfigureShortcut setConfigureToolbar
   */
-  void setShortcut( const KShortcut &shortcut );
+    void setShortcut( const KShortcut &shortcut );
 
-  /** @return The shortcut assigned to the filter.
+    /** @return The shortcut assigned to the filter.
       @see setShortcut
   */
-  const KShortcut & shortcut() const;
+    const KShortcut & shortcut() const;
 
-  /** Set the icon to be used if plugged into the filter menu
+    /** Set the icon to be used if plugged into the filter menu
       or toolbar. Default is the gear icon.
       @see setConfigureShortcut setConfigureToolbar
   */
-  void setIcon( const QString &icon );
+    void setIcon( const QString &icon );
 
-  /** @return The name of the icon to be used.
+    /** @return The name of the icon to be used.
       @see setIcon
   */
-  QString icon() const;
+    QString icon() const;
 
-  /**
+    /**
    * Called from the filter manager when a folder is moved.
    * Tests if the folder aFolder is used in any action. Changes it
    * to aNewFolder folder in this case.
    * @return true if a change in some action occurred,
    * false if no action was affected.
    */
-  bool folderRemoved( const Akonadi::Collection& aFolder, const Akonadi::Collection& aNewFolder );
+    bool folderRemoved( const Akonadi::Collection& aFolder, const Akonadi::Collection& aNewFolder );
 
-  /** Returns the filter in a human-readable form. useful for
+    /** Returns the filter in a human-readable form. useful for
       debugging but not much else. Don't use, as it may well go away
       in the future... */
 #ifndef NDEBUG
-  const QString asString() const;
+    const QString asString() const;
 #endif
 
-  /** Set the mode for using automatic naming for the filter.
+    /** Set the mode for using automatic naming for the filter.
       If the feature is enabled, the name is derived from the
       first filter rule.
   */
-  void setAutoNaming( bool useAutomaticNames );
+    void setAutoNaming( bool useAutomaticNames );
 
-  /** @return Tells, if an automatic name is used for the filter
+    /** @return Tells, if an automatic name is used for the filter
   */
-  bool isAutoNaming() const;
+    bool isAutoNaming() const;
 
-  /** Return if filter is enabled or not
+    /** Return if filter is enabled or not
    */
-  bool isEnabled() const;
-  void setEnabled( bool );
+    bool isEnabled() const;
+    void setEnabled( bool );
 
+    void generateSieveScript(QStringList &requires, QString &code);
 
 private:
-  QString mIdentifier;
-  SearchPattern mPattern;
-  QList<FilterAction*> mActions;
-  QStringList mAccounts;
-  QString mIcon;
-  QString mToolbarName;
-  KShortcut mShortcut;
-  bool bApplyOnInbound : 1;
-  bool bApplyBeforeOutbound : 1;
-  bool bApplyOnOutbound : 1;
-  bool bApplyOnExplicit : 1;
-  bool bStopProcessingHere : 1;
-  bool bConfigureShortcut : 1;
-  bool bConfigureToolbar : 1;
-  bool bAutoNaming : 1;
-  bool bEnabled : 1;
-  AccountType mApplicability;
+    QString mIdentifier;
+    SearchPattern mPattern;
+    QList<FilterAction*> mActions;
+    QStringList mAccounts;
+    QString mIcon;
+    QString mToolbarName;
+    KShortcut mShortcut;
+    bool bApplyOnInbound : 1;
+    bool bApplyBeforeOutbound : 1;
+    bool bApplyOnOutbound : 1;
+    bool bApplyOnExplicit : 1;
+    bool bStopProcessingHere : 1;
+    bool bConfigureShortcut : 1;
+    bool bConfigureToolbar : 1;
+    bool bAutoNaming : 1;
+    bool bEnabled : 1;
+    AccountType mApplicability;
 };
 
 MAILCOMMON_EXPORT QDataStream& operator<<( QDataStream &stream, const MailFilter &filter );

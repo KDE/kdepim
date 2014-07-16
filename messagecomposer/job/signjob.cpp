@@ -28,6 +28,7 @@
 #include "util.h"
 
 #include <kdebug.h>
+#include <kmime/kmime_headers.h>
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_util.h>
@@ -42,10 +43,10 @@ using namespace MessageComposer;
 
 class MessageComposer::SignJobPrivate : public ContentJobBasePrivate
 {
-  public:
+public:
     SignJobPrivate( SignJob *qq )
-      : ContentJobBasePrivate( qq )
-      , content( 0 )
+        : ContentJobBasePrivate( qq )
+        , content( 0 )
     {
     }
 
@@ -56,37 +57,37 @@ class MessageComposer::SignJobPrivate : public ContentJobBasePrivate
     // copied from messagecomposer.cpp
     bool binaryHint( Kleo::CryptoMessageFormat f )
     {
-      switch ( f ) {
-      case Kleo::SMIMEFormat:
-      case Kleo::SMIMEOpaqueFormat:
-        return true;
-      default:
-      case Kleo::OpenPGPMIMEFormat:
-      case Kleo::InlineOpenPGPFormat:
-        return false;
-      }
+        switch ( f ) {
+        case Kleo::SMIMEFormat:
+        case Kleo::SMIMEOpaqueFormat:
+            return true;
+        default:
+        case Kleo::OpenPGPMIMEFormat:
+        case Kleo::InlineOpenPGPFormat:
+            return false;
+        }
     }
 
 
     GpgME::SignatureMode signingMode( Kleo::CryptoMessageFormat f )
     {
-      switch ( f ) {
-      case Kleo::SMIMEOpaqueFormat:
-        return GpgME::NormalSignatureMode;
-      case Kleo::InlineOpenPGPFormat:
-        return GpgME::Clearsigned;
-      default:
-      case Kleo::SMIMEFormat:
-      case Kleo::OpenPGPMIMEFormat:
-        return GpgME::Detached;
-      }
+        switch ( f ) {
+        case Kleo::SMIMEOpaqueFormat:
+            return GpgME::NormalSignatureMode;
+        case Kleo::InlineOpenPGPFormat:
+            return GpgME::Clearsigned;
+        default:
+        case Kleo::SMIMEFormat:
+        case Kleo::OpenPGPMIMEFormat:
+            return GpgME::Detached;
+        }
     }
 
     Q_DECLARE_PUBLIC( SignJob )
 };
 
 SignJob::SignJob( QObject *parent )
-  : ContentJobBase( *new SignJobPrivate( this ), parent )
+    : ContentJobBase( *new SignJobPrivate( this ), parent )
 {
 }
 
@@ -96,100 +97,157 @@ SignJob::~SignJob()
 
 void SignJob::setContent( KMime::Content* content )
 {
-  Q_D( SignJob );
+    Q_D( SignJob );
 
-  d->content = content;
+    d->content = content;
 }
 
 void SignJob::setCryptoMessageFormat( Kleo::CryptoMessageFormat format)
 {
-  Q_D( SignJob );
+    Q_D( SignJob );
 
-  // There *must* be a concrete format set at this point.
-  Q_ASSERT( format == Kleo::OpenPGPMIMEFormat
-            || format == Kleo::InlineOpenPGPFormat
-            || format == Kleo::SMIMEFormat
-            || format == Kleo::SMIMEOpaqueFormat );
-  d->format = format;
+    // There *must* be a concrete format set at this point.
+    Q_ASSERT( format == Kleo::OpenPGPMIMEFormat
+              || format == Kleo::InlineOpenPGPFormat
+              || format == Kleo::SMIMEFormat
+              || format == Kleo::SMIMEOpaqueFormat );
+    d->format = format;
 }
 
 void SignJob::setSigningKeys( std::vector<GpgME::Key>& signers )
 {
-  Q_D( SignJob );
+    Q_D( SignJob );
 
-  d->signers = signers;
+    d->signers = signers;
 }
 
 KMime::Content* SignJob::origContent()
 {
-  Q_D( SignJob );
+    Q_D( SignJob );
 
-  return d->content;
+    return d->content;
 
 }
 
 void SignJob::process()
 {
-  Q_D( SignJob );
-  Q_ASSERT( d->resultContent == 0 ); // Not processed before.
+    Q_D( SignJob );
+    Q_ASSERT( d->resultContent == 0 ); // Not processed before.
 
-  // if setContent hasn't been called, we assume that a subjob was added
-  // and we want to use that
-  if( !d->content ) {
-    Q_ASSERT( d->subjobContents.size() == 1 );
-    d->content = d->subjobContents.first();
-  }
- 
-  //d->resultContent = new KMime::Content;
+    // if setContent hasn't been called, we assume that a subjob was added
+    // and we want to use that
+    if( !d->content ) {
+        Q_ASSERT( d->subjobContents.size() == 1 );
+        d->content = d->subjobContents.first();
+    }
 
-  const Kleo::CryptoBackend::Protocol *proto = 0;
-  if( d->format & Kleo::AnyOpenPGP ) {
-    proto = Kleo::CryptoBackendFactory::instance()->openpgp();
-  } else if( d->format & Kleo::AnySMIME ) {
-    proto = Kleo::CryptoBackendFactory::instance()->smime();
-  }
+    //d->resultContent = new KMime::Content;
 
-  Q_ASSERT( proto );
+    const Kleo::CryptoBackend::Protocol *proto = 0;
+    if( d->format & Kleo::AnyOpenPGP ) {
+        proto = Kleo::CryptoBackendFactory::instance()->openpgp();
+    } else if( d->format & Kleo::AnySMIME ) {
+        proto = Kleo::CryptoBackendFactory::instance()->smime();
+    }
+
+    Q_ASSERT( proto );
 
 
-  kDebug() << "creating signJob from:" << proto->name() << proto->displayName();
-  std::auto_ptr<Kleo::SignJob> job( proto->signJob( !d->binaryHint( d->format ), d->format == Kleo::InlineOpenPGPFormat ) );
-  // for now just do the main recipients
-  QByteArray signature;
+    kDebug() << "creating signJob from:" << proto->name() << proto->displayName();
+    std::auto_ptr<Kleo::SignJob> job( proto->signJob( !d->binaryHint( d->format ), d->format == Kleo::InlineOpenPGPFormat ) );
+    // for now just do the main recipients
+    QByteArray signature;
 
-  d->content->assemble();
+    d->content->assemble();
 
-  // replace simple LFs by CRLFs for all MIME supporting CryptPlugs
-  // according to RfC 2633, 3.1.1 Canonicalization
-  QByteArray content;
-  if( d->format & Kleo::InlineOpenPGPFormat ) {
-    content = d->content->body();
-  } else if( !( d->format & Kleo::SMIMEOpaqueFormat ) ) {
-    content = KMime::LFtoCRLF( d->content->encodedContent() );
-  } else {                    // SMimeOpaque doesn't need LFtoCRLF, else it gets munged
-    content = d->content->encodedContent();
-  }
+    // replace simple LFs by CRLFs for all MIME supporting CryptPlugs
+    // according to RfC 2633, 3.1.1 Canonicalization
+    QByteArray content;
+    if( d->format & Kleo::InlineOpenPGPFormat ) {
+        content = d->content->body();
+    } else if( !( d->format & Kleo::SMIMEOpaqueFormat ) ) {
 
-  // FIXME: Make this async
-  GpgME::SigningResult res = job->exec( d->signers,
-                                        content,
-                                        d->signingMode( d->format ),
-                                        signature );
+        // replace "From " and "--" at the beginning of lines
+        // with encoded versions according to RfC 3156, 3
+        // Note: If any line begins with the string "From ", it is strongly
+        //   suggested that either the Quoted-Printable or Base64 MIME encoding
+        //   be applied.
+        if (d->content->contentTransferEncoding()->encoding() == KMime::Headers::CEquPr ||
+                d->content->contentTransferEncoding()->encoding() == KMime::Headers::CE7Bit ) {
+            QByteArray body = d->content->encodedBody();
+            bool changed = false;
+            QList<QByteArray> search;
+            QList<QByteArray> replacements;
 
-  if ( res.error() ) {
-    kDebug() << "signing failed:" << res.error().asString();
-    //        job->showErrorDialog( globalPart()->parentWidgetForGui() );
-    setError( res.error().code() );
-    setErrorText( QString::fromLocal8Bit( res.error().asString() ) );
-  }
+            search       << "From "
+                         << "from "
+                         << "-";
+            replacements << "From=20"
+                         << "from=20"
+                         << "=2D";
 
-  // exec'ed jobs don't delete themselves
-  job->deleteLater();
+            if ( d->content->contentTransferEncoding()->encoding() == KMime::Headers::CE7Bit ) {
+                for ( int i = 0; i < search.size(); ++i ) {
+                    QByteArray start = "\n"  % search[i];
+                    if ( body.indexOf( start ) > -1 ||
+                         body.startsWith( search[i] ) ){
+                        changed = true;
+                        break;
+                    }
+                }
+                if ( changed ) {
+                    d->content->contentTransferEncoding()->setEncoding( KMime::Headers::CEquPr );
+                    d->content->assemble();
+                    body = d->content->encodedBody();
+                }
+            }
 
-  QByteArray signatureHashAlgo =  res.createdSignature( 0 ).hashAlgorithmAsString();
 
-  d->resultContent = MessageComposer::Util::composeHeadersAndBody( d->content, signature, d->format, true, signatureHashAlgo );
-  emitResult();
+            for ( int i = 0; i < search.size(); ++i ) {
+                QByteArray start = "\n"  % search[i];
+                QByteArray replace = "\n" % replacements[i];
+                if ( body.indexOf( start ) > -1 ){
+                    changed = true;
+                    body.replace( start, replace );
+                }
+
+                if ( body.startsWith( search[i] ) ) {
+                    changed = true;
+                    body.replace( 0, search[i].size(), replacements[i] );
+                }
+            }
+
+            if ( changed ) {
+                kDebug() << "Content changed";
+                d->content->setBody( body );
+                d->content->contentTransferEncoding()->setDecoded( false );
+            }
+        }
+
+        content = KMime::LFtoCRLF( d->content->encodedContent() );
+    } else {                    // SMimeOpaque doesn't need LFtoCRLF, else it gets munged
+        content = d->content->encodedContent();
+    }
+
+    // FIXME: Make this async
+    GpgME::SigningResult res = job->exec( d->signers,
+                                          content,
+                                          d->signingMode( d->format ),
+                                          signature );
+
+    // exec'ed jobs don't delete themselves
+    job->deleteLater();
+
+    if ( res.error() ) {
+        kDebug() << "signing failed:" << res.error().asString();
+        //        job->showErrorDialog( globalPart()->parentWidgetForGui() );
+        setError( res.error().code() );
+        setErrorText( QString::fromLocal8Bit( res.error().asString() ) );
+    } else {
+        QByteArray signatureHashAlgo =  res.createdSignature( 0 ).hashAlgorithmAsString();
+        d->resultContent = MessageComposer::Util::composeHeadersAndBody( d->content, signature, d->format, true, signatureHashAlgo );
+    }
+
+    emitResult();
 }
 
-#include "signjob.moc"

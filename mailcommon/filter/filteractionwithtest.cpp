@@ -19,16 +19,14 @@
 
 #include "filteractionwithtest.h"
 
-#ifndef Q_OS_WINCE
 #include "soundtestwidget.h"
-#endif
 
 #include <QTextDocument>
 
 using namespace MailCommon;
 
 FilterActionWithTest::FilterActionWithTest( const QString &name, const QString &label, QObject *parent )
-  : FilterAction( name, label, parent )
+    : FilterAction( name, label, parent )
 {
 }
 
@@ -38,48 +36,47 @@ FilterActionWithTest::~FilterActionWithTest()
 
 bool FilterActionWithTest::isEmpty() const
 {
-  return mParameter.trimmed().isEmpty();
+    return mParameter.trimmed().isEmpty();
 }
 
 QWidget* FilterActionWithTest::createParamWidget( QWidget *parent ) const
 {
-  SoundTestWidget *soundWidget = new SoundTestWidget( parent );
-  soundWidget->setUrl( mParameter );
+    SoundTestWidget *soundWidget = new SoundTestWidget( parent );
+    soundWidget->setUrl( mParameter );
 
-  connect( soundWidget, SIGNAL(textChanged(QString)),
-           this, SIGNAL(filterActionModified()) );
+    connect( soundWidget, SIGNAL(textChanged(QString)),
+             this, SIGNAL(filterActionModified()) );
 
-  return soundWidget;
+    return soundWidget;
 }
 
 void FilterActionWithTest::applyParamWidgetValue( QWidget *paramWidget )
 {
-  mParameter = static_cast<SoundTestWidget*>( paramWidget )->url();
+    mParameter = static_cast<SoundTestWidget*>( paramWidget )->url();
 }
 
 void FilterActionWithTest::setParamWidgetValue( QWidget *paramWidget ) const
 {
-  static_cast<SoundTestWidget*>( paramWidget )->setUrl( mParameter );
+    static_cast<SoundTestWidget*>( paramWidget )->setUrl( mParameter );
 }
 
 void FilterActionWithTest::clearParamWidget( QWidget *paramWidget ) const
 {
-  static_cast<SoundTestWidget*>( paramWidget )->clear();
+    static_cast<SoundTestWidget*>( paramWidget )->clear();
 }
 
 void FilterActionWithTest::argsFromString( const QString &argsStr )
 {
-  mParameter = argsStr;
+    mParameter = argsStr;
 }
 
 QString FilterActionWithTest::argsAsString() const
 {
-  return mParameter;
+    return mParameter;
 }
 
 QString FilterActionWithTest::displayString() const
 {
-  return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
+    return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
 }
 
-#include "filteractionwithtest.moc"

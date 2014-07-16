@@ -51,6 +51,7 @@ class INCIDENCEEDITORS_NG_EXPORT AttachmentEditDialog : public KDialog
     void accept();
 
   protected slots:
+    void inlineChanged( int state );
     void urlChanged( const KUrl &url );
     void urlChanged( const QString & url );
     virtual void slotApply();

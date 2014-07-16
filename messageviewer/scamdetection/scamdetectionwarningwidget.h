@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -18,15 +18,19 @@
 #ifndef SCAMDETECTIONWARNINGWIDGET_H
 #define SCAMDETECTIONWARNINGWIDGET_H
 
+#include "messageviewer/messageviewer_export.h"
+
 #include <KMessageWidget>
 
 namespace MessageViewer {
-class ScamDetectionWarningWidget : public KMessageWidget
+class MESSAGEVIEWER_EXPORT ScamDetectionWarningWidget : public KMessageWidget
 {
     Q_OBJECT
 public:
     explicit ScamDetectionWarningWidget(QWidget *parent = 0);
     ~ScamDetectionWarningWidget();
+
+    void setUseInTestApps(bool b);
 
 public Q_SLOTS:
     void slotShowWarning();
@@ -44,6 +48,9 @@ Q_SIGNALS:
 private Q_SLOTS:
     void slotDisableScamDetection();
     void slotMessageIsNotAScam();
+
+private:
+    bool mUseInTestApps;
 };
 }
 

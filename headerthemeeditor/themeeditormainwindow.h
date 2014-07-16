@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -23,6 +23,8 @@
 class ThemeEditorPage;
 class KAction;
 class KToggleAction;
+class KRecentFilesAction;
+class KUrl;
 
 class ThemeEditorMainWindow : public KXmlGuiWindow
 {
@@ -49,12 +51,23 @@ private Q_SLOTS:
     void slotNormalMode();
     void slotManageTheme();
     void slotUpdateView();
+    void slotCanInsertFile(bool b);
+    void slotThemeSelected(const KUrl &);
+    void slotSaveAsTheme();
 
 private:
+    enum ActionSaveTheme {
+        SaveOnly = 0,
+        SaveAndCloseTheme,
+        SaveAndCreateNewTheme
+    };
+
+    bool loadTheme(const QString &directory);
     void readConfig();
     void updateActions();
-    bool saveCurrentProject(bool createNewTheme);
+    bool saveCurrentProject(ActionSaveTheme act);
     void setupActions();
+    void closeThemeEditor();
     ThemeEditorPage *mThemeEditor;
     KAction *mNewThemeAction;
     KAction *mCloseThemeAction;
@@ -67,8 +80,10 @@ private:
     KAction *mInsertFile;
     KAction *mManageTheme;
     KAction *mUpdateView;
+    KAction *mSaveAsAction;
     KToggleAction *mPrintingMode;
     KToggleAction *mNormalMode;
+    KRecentFilesAction *mRecentFileAction;
 };
 
 #endif // THEMEEDITORMAINWINDOW_H

@@ -21,6 +21,7 @@
 #include "mailcommon_export.h"
 #include "tag.h"
 #include <KDialog>
+#include <akonadi/tag.h>
 class KActionCollection;
 
 namespace MailCommon {
@@ -28,23 +29,28 @@ class TagWidget;
 
 class MAILCOMMON_EXPORT AddTagDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit AddTagDialog(const QList<KActionCollection *>& actions, QWidget *parent = 0);
-  ~AddTagDialog();
+    explicit AddTagDialog(const QList<KActionCollection *>& actions, QWidget *parent = 0);
+    ~AddTagDialog();
 
-  void setTags(const QList<MailCommon::Tag::Ptr>& tags);
-  QString label() const;
-  QString nepomukUrl() const;
+    void setTags(const QList<MailCommon::Tag::Ptr>& tags);
+    QString label() const;
+    Akonadi::Tag tag() const;
+
+protected Q_SLOTS:
+    virtual void slotButtonClicked(int button);
+
 private Q_SLOTS:
-  void slotOk();
-  void slotTagNameChanged(const QString& text);
+    void slotTagNameChanged(const QString& text);
+    void onTagCreated(KJob *job);
 
 private:
-  QString mLabel;
-  QString mNepomukUrl;
-  MailCommon::TagWidget *mTagWidget;
-  QList<MailCommon::Tag::Ptr> mTags;
+    QString mLabel;
+    QString mGid;
+    MailCommon::TagWidget *mTagWidget;
+    QList<MailCommon::Tag::Ptr> mTags;
+    Akonadi::Tag mTag;
 };
 }
 #endif // ADDTAGDIALOG_H

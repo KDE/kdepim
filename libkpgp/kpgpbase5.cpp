@@ -140,24 +140,24 @@ Base5::encsign( Block& block, const KeyIDList& recipients,
       int index3 = error.indexOf("WARNING: The above key",index+1);
       if(index2 == -1 || (index2 > index3 && index3 != -1))
       {
-	// the key wasn't valid, no encryption to this person
-	// extract the person
-	index2 = error.indexOf('\n',index);
-	index3 = error.indexOf('\n',index2+1);
-	aStr += error.mid(index2+1, index3-index2-1);
-	aStr += ", ";
+        // the key wasn't valid, no encryption to this person
+        // extract the person
+        index2 = error.indexOf('\n',index);
+        index3 = error.indexOf('\n',index2+1);
+        aStr += error.mid(index2+1, index3-index2-1);
+        aStr += ", ";
       }
     }
     if(!aStr.isEmpty())
     {
       aStr.truncate(aStr.length()-2);
       if(error.contains("No valid keys found") )
-	errMsg = i18n("The key(s) you want to encrypt your message "
-		      "to are not trusted. No encryption done.");
+        errMsg = i18n("The key(s) you want to encrypt your message "
+                      "to are not trusted. No encryption done.");
       else
-	errMsg = i18n("The following key(s) are not trusted:\n%1\n"
+        errMsg = i18n("The following key(s) are not trusted:\n%1\n"
                       "Their owner(s) will not be able to decrypt the message.",
-		      QString::fromLocal8Bit( aStr ));
+                      QString::fromLocal8Bit( aStr ));
       status |= ERROR;
       status |= BADKEYS;
     }
@@ -221,10 +221,10 @@ Base5::decrypt( Block& block, const char *passphrase )
     {
       if(passphrase != 0)
       {
-	errMsg = i18n("Bad passphrase; could not decrypt.");
-	kDebug( 5326 ) <<"Base: passphrase is bad";
-	status |= BADPHRASE;
-	status |= ERROR;
+        errMsg = i18n("Bad passphrase; could not decrypt.");
+        kDebug( 5326 ) <<"Base: passphrase is bad";
+        status |= BADPHRASE;
+        status |= ERROR;
       }
     }
     else
@@ -249,10 +249,10 @@ Base5::decrypt( Block& block, const char *passphrase )
       int index2;
       while( (index2 = error.indexOf('\n',index+1)) <= end )
       {
-	QByteArray item = error.mid(index+1,index2-index-1);
-	item.trimmed();
-	mRecipients.append(item);
-	index = index2;
+        QByteArray item = error.mid(index+1,index2-index-1);
+        item.trimmed();
+        mRecipients.append(item);
+        index = index2;
       }
     }
 #endif
@@ -271,7 +271,7 @@ Base5::decrypt( Block& block, const char *passphrase )
     // get signer
     index = error.indexOf('"',index) + 1;
     int index2 = error.indexOf('"', index);
-    block.setSignatureUserId( error.mid(index, index2-index) );
+    block.setSignatureUserId( QLatin1String(error.mid(index, index2-index)) );
 
     /// ### FIXME get signature date
     block.setSignatureDate( "" );
@@ -290,7 +290,7 @@ Base5::decrypt( Block& block, const char *passphrase )
     // get signer
     index = error.indexOf('"',index) + 1;
     int index2 = error.indexOf('"', index);
-    block.setSignatureUserId( error.mid(index, index2-index) );
+    block.setSignatureUserId( QLatin1String(error.mid(index, index2-index)) );
 
     /// ### FIXME get signature date
     block.setSignatureDate( "" );
@@ -319,7 +319,7 @@ Key*
 Base5::readPublicKey( const KeyID& keyId, const bool readTrust, Key* key )
 {
   status = 0;
-  int exitStatus = run( "pgpk -ll 0x" + keyId, 0, true );
+  int exitStatus = run( QByteArray(QByteArray("pgpk -ll 0x") + keyId), 0, true );
 
   if(exitStatus != 0) {
     status = ERROR;
@@ -335,7 +335,7 @@ Base5::readPublicKey( const KeyID& keyId, const bool readTrust, Key* key )
 
   if( readTrust )
   {
-    exitStatus = run( "pgpk -c 0x" + keyId, 0, true );
+    exitStatus = run( QByteArray(QByteArray("pgpk -c 0x") + keyId), 0, true );
 
     if(exitStatus != 0) {
       status = ERROR;
@@ -416,7 +416,7 @@ QByteArray Base5::getAsciiPublicKey(const KeyID& keyID)
     return QByteArray();
 
   status = 0;
-  int exitStatus = run( "pgpk -xa 0x" + keyID, 0, true );
+  int exitStatus = run( QByteArray(QByteArray("pgpk -xa 0x") + keyID), 0, true );
 
   if(exitStatus != 0) {
     status = ERROR;
@@ -650,7 +650,7 @@ Base5::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
       QByteArray fingerprint = output.mid( pos, eol-pos );
       // remove white space from the fingerprint
       for ( int idx = 0 ; (idx = fingerprint.indexOf(' ', idx)) != -1 ; )
-	fingerprint.replace( idx, 1, "" );
+        fingerprint.replace( idx, 1, "" );
       assert( subkey != 0 );
       subkey->setFingerprint( fingerprint );
       //kDebug( 5326 )<<"Fingerprint:"<<fingerprint;
@@ -659,7 +659,7 @@ Base5::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
     { // line contains a uid
       int pos = offset+5;
       QByteArray uid = output.mid( pos, eol-pos );
-      key->addUserID( uid );
+      key->addUserID( QLatin1String(uid) );
       // displaying of uids which contain non-ASCII characters is broken in
       // PGP 5.0i; it shows these characters as \ooo and truncates the uid
       // because it doesn't take the 3 extra characters per non-ASCII char
@@ -801,7 +801,7 @@ Base5::parseTrustDataForKey( Key* key, const QByteArray& str )
 
       // determine the user ID
       int pos = offset + 33;
-      QString uid = str.mid( pos, eol-pos );
+      QString uid = QLatin1String(str.mid( pos, eol-pos ));
 
       // set the validity of the corresponding user ID
       for( UserIDList::Iterator it = userIDs.begin(); it != userIDs.end(); ++it )

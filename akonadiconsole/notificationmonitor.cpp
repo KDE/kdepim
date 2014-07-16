@@ -22,13 +22,15 @@
 
 #include <Akonadi/Control>
 
-#include <KLocale>
+#include <KLocalizedString>
+#include <KFileDialog>
 
 #include <QHeaderView>
 #include <QCheckBox>
 #include <QMenu>
 #include <QTreeView>
 #include <QVBoxLayout>
+#include <QPushButton>
 
 NotificationMonitor::NotificationMonitor(QWidget* parent) :
   QWidget( parent )
@@ -53,6 +55,14 @@ NotificationMonitor::NotificationMonitor(QWidget* parent) :
   connect( tv, SIGNAL(customContextMenuRequested(QPoint)), SLOT(contextMenu(QPoint)) );
   layout->addWidget( tv );
 
+  QHBoxLayout *layout2 = new QHBoxLayout( this );
+  QPushButton *button = new QPushButton( QLatin1String( "Save to file..." ), this );
+  connect( button, SIGNAL(clicked(bool)),
+           this, SLOT(slotSaveToFile()) );
+  layout2->addWidget( button );
+  layout2->addStretch( 1 );
+  layout->addLayout( layout2 );
+
   Akonadi::Control::widgetNeedsAkonadi( this );
 }
 
@@ -63,4 +73,44 @@ void NotificationMonitor::contextMenu(const QPoint& pos)
   menu.exec( mapToGlobal( pos ) );
 }
 
-#include "notificationmonitor.moc"
+void NotificationMonitor::slotSaveToFile()
+{
+  const QString fileName = KFileDialog::getSaveFileName( KUrl(), QString(), 0, QString(), KFileDialog::ConfirmOverwrite );
+  if ( fileName.isEmpty() ) {
+    return;
+  }
+
+  QFile file( fileName );
+  if ( !file.open( QIODevice::WriteOnly | QIODevice::Truncate ) ) {
+    return;
+  }
+
+  file.write("Operation/ID\tType/RID\tSession/REV\tResource/MimeType\tDestination Resource\tParent\tDestination\tParts\tAdded Flags\tRemoved Flags\n");
+
+  writeRows( QModelIndex(), file, 0 );
+
+  file.close();
+}
+
+void NotificationMonitor::writeRows( const QModelIndex &parent, QFile &file, int indentLevel )
+{
+  for ( int row = 0; row < m_model->rowCount( parent ); ++row ) {
+    QByteArray data;
+    for ( int tabs = 0; tabs < indentLevel; ++tabs ) {
+      data += '\t';
+    }
+    const int columnCount = m_model->columnCount( parent );
+    for ( int column = 0; column < columnCount; ++column ) {
+      const QModelIndex index = m_model->index( row, column, parent );
+      data += index.data().toByteArray();
+      if ( column < columnCount - 1 ) {
+        data += '\t';
+      }
+    }
+    data += '\n';
+    file.write( data );
+
+    const QModelIndex index = m_model->index( row, 0, parent );
+    writeRows( index, file, indentLevel + 1 );
+  }
+}

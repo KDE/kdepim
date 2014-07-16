@@ -10,15 +10,15 @@
     <height>637</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
     <widget class="QRadioButton" name="mChkbxAllFolders">
      <property name="text">
       <string>Search in &amp;all folders</string>
      </property>
     </widget>
    </item>
-   <item>
+   <item row="1" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QRadioButton" name="mChkbxSpecificFolders">
@@ -45,17 +45,48 @@
      </item>
     </layout>
    </item>
-   <item>
+   <item row="2" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QRadioButton" name="mChkMultiFolders">
+       <property name="text">
+        <string>Select specific folders:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="selectMultipleFolders">
+       <property name="text">
+        <string>Select folders...</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item row="3" column="0">
     <widget class="Line" name="line_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item>
-    <widget class="MailCommon::SearchPatternEdit" name="mPatternEdit" native="true"/>
+   <item row="4" column="0">
+    <widget class="KMail::KMailSearchPatternEdit" name="mPatternEdit" native="true"/>
    </item>
-   <item>
+   <item row="5" column="0">
     <widget class="Akonadi::EntityTreeView" name="mLbxMatches">
      <property name="contextMenuPolicy">
       <enum>Qt::CustomContextMenu</enum>
@@ -74,7 +105,7 @@
      </property>
     </widget>
    </item>
-   <item>
+   <item row="6" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="QLabel" name="mSearchFolderLbl">
@@ -115,15 +146,18 @@
      </item>
     </layout>
    </item>
-   <item>
+   <item row="7" column="0">
     <widget class="Line" name="line">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item>
+   <item row="8" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="KPIMUtils::ProgressIndicatorWidget" name="mProgressIndicator"/>
+     </item>
      <item>
       <widget class="QLabel" name="mStatusLbl">
        <property name="sizePolicy">
@@ -150,11 +184,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KDialogButtonBox</class>
-   <extends>QDialogButtonBox</extends>
-   <header>kdialogbuttonbox.h</header>
-  </customwidget>
-  <customwidget>
    <class>KLineEdit</class>
    <extends>QLineEdit</extends>
    <header>klineedit.h</header>
@@ -165,10 +194,14 @@
    <header>kpushbutton.h</header>
   </customwidget>
   <customwidget>
-   <class>MailCommon::SearchPatternEdit</class>
-   <extends>QWidget</extends>
-   <header location="global">mailcommon/search/searchpatternedit.h</header>
-   <container>1</container>
+   <class>Akonadi::EntityTreeView</class>
+   <extends>QTreeView</extends>
+   <header>akonadi/entitytreeview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KDialogButtonBox</class>
+   <extends>QDialogButtonBox</extends>
+   <header>kdialogbuttonbox.h</header>
   </customwidget>
   <customwidget>
    <class>MailCommon::FolderRequester</class>
@@ -177,11 +210,30 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>Akonadi::EntityTreeView</class>
-   <extends>QTreeView</extends>
-   <header location="global">Akonadi/EntityTreeView</header>
+   <class>KPIMUtils::ProgressIndicatorWidget</class>
+   <extends>QLabel</extends>
+   <header>kpimutils/progressindicatorwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KMail::KMailSearchPatternEdit</class>
+   <extends>QWidget</extends>
+   <header>searchdialog/kmailsearchpatternedit.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>mChkbxAllFolders</tabstop>
+  <tabstop>mChkbxSpecificFolders</tabstop>
+  <tabstop>mChkSubFolders</tabstop>
+  <tabstop>mChkMultiFolders</tabstop>
+  <tabstop>selectMultipleFolders</tabstop>
+  <tabstop>mLbxMatches</tabstop>
+  <tabstop>mSearchFolderEdt</tabstop>
+  <tabstop>mSearchFolderOpenBtn</tabstop>
+  <tabstop>mSearchResultOpenBtn</tabstop>
+  <tabstop>mButtonBox</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

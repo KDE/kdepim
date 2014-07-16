@@ -26,7 +26,7 @@
 #include <KCalUtils/Stringify>
 
 #include <KComboBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KPushButton>
 #include <KStandardGuiItem>
 
@@ -76,4 +76,3 @@ KCalCore::Attendee::PartStat StatusDialog::status()
   return KCalCore::Attendee::PartStat( mStatus->currentIndex() ) ;
 }
 
-#include "statusdialog.moc"

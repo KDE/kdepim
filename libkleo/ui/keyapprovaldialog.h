@@ -59,16 +59,16 @@ namespace Kleo {
     struct Item {
       Item() : pref( UnknownPreference ) {}
       Item( const QString & a, const std::vector<GpgME::Key> & k,
-	    EncryptionPreference p=UnknownPreference )
-	: address( a ), keys( k ), pref( p ) {}
+            EncryptionPreference p=UnknownPreference )
+        : address( a ), keys( k ), pref( p ) {}
       QString address;
       std::vector<GpgME::Key> keys;
       EncryptionPreference pref;
     };
 
     KeyApprovalDialog( const std::vector<Item> & recipients,
-		       const std::vector<GpgME::Key> & sender,
-		       QWidget * parent=0 );
+                       const std::vector<GpgME::Key> & sender,
+                       QWidget * parent=0 );
     ~KeyApprovalDialog();
 
     std::vector<Item> items() const;

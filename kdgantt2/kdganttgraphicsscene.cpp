@@ -789,5 +789,4 @@ void GraphicsScene::doPrint( QPainter* painter, const QRectF& targetRect,
 #endif
 }
 
-#include "moc_kdganttgraphicsscene.cpp"
 

@@ -1,79 +1,106 @@
 project(knotes)
 add_subdirectory( icons ) 
+add_subdirectory( tests )
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
+include_directories(
+  ${CMAKE_SOURCE_DIR}/pimcommon
+  ${Grantlee_INCLUDE_DIRS}
+  ${CMAKE_SOURCE_DIR}/noteshared
+  ${CMAKE_BINARY_DIR}/noteshared
+  ${BALOO_INCLUDE_DIR}
+)
 
 ########### next target ###############
 
+set(libknotesprivate_lib_SRCS
+    knoteedit.cpp
+    notes/knotedisplaysettings.cpp
+    configdialog/knotesimpleconfigdialog.cpp
+    configdialog/knoteconfigdialog.cpp
+    configdialog/knotedisplayconfigwidget.cpp
+    configdialog/knoteeditorconfigwidget.cpp
+    configdialog/knotecollectionconfigwidget.cpp
+    print/knoteprintselectthemedialog.cpp
+    print/knoteprintselectthemecombobox.cpp
+    print/knoteprinter.cpp
+    print/knoteprintobject.cpp
+    utils/knoteutils.cpp
+    notes/knoteinterface.cpp
+    finddialog/knotefinddialog.cpp
+)
 
-set(libknotesnetwork_SRCS knotesnetrecv.cpp knotesnetsend.cpp)
+configure_file(settings/knotesglobalconfig.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/knotesglobalconfig.kcfg )
+
+set( libknotesprivate_kcfg_lib_SRCS settings/knotesglobalconfig.kcfgc )
+
+kde4_add_kcfg_files(libknotesprivate_kcfg_lib_SRCS ${libknotesprivate_kcfg_lib_SRCS})
+
+kde4_add_library(knotesprivate ${LIBRARY_TYPE} ${libknotesprivate_lib_SRCS} ${libknotesprivate_kcfg_lib_SRCS} )
+
+target_link_libraries(knotesprivate kdepim ${KDE4_KIO_LIBS} pimcommon ${KDE4_KPRINTUTILS_LIBS} ${KDE4_KCMUTILS_LIBS} ${Grantlee_CORE_LIBRARIES} ${KDE4_KDNSSD_LIBS} ${KDE4_KNEWSTUFF3_LIBS} noteshared akonadi_next ${BALOO_LIBRARIES})
+
+set_target_properties(knotesprivate
+  PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION}
+)
+
+install(TARGETS knotesprivate ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 
 
-set(libknoteslegacy_SRCS  knoteslegacy.cpp )
-
-set(libknote_SRCS knoteconfigdlg.cpp knote.cpp knotebutton.cpp knotehostdlg.cpp knotealarmdlg.cpp knotesalarm.cpp knoteprinter.cpp )
-
-
-set(knotes_SRCS main.cpp application.cpp knotesapp.cpp ${libknoteseditor_SRCS} ${libknotesnetwork_SRCS}
-                ${libknotesresources_SRCS} ${libknoteslegacy_SRCS} ${libknote_SRCS})
-
-set( libknotesconfig_SRCS knoteconfig.kcfgc knotesglobalconfig.kcfgc )
-
-kde4_add_kcfg_files(knotes_SRCS ${libknotesconfig_SRCS})
+set(knotes_SRCS 
+                apps/main.cpp apps/application.cpp apps/knotesapp.cpp apps/knotesakonaditray.cpp
+                dialog/knoteskeydialog.cpp 
+                notes/knotebutton.cpp 
+                print/knoteprintselectednotesdialog.cpp
+                notes/knote.cpp
+                dialog/knoteselectednotesdialog.cpp
+)
 
 
-qt4_add_dbus_adaptor(knotes_SRCS org.kde.KNotes.xml knotesapp.h KNotesApp )
+qt4_add_dbus_adaptor(knotes_SRCS  apps/org.kde.KNotes.xml apps/knotesapp.h KNotesApp )
 
 kde4_add_app_icon(knotes_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-apps-knotes.png")
 
 kde4_add_executable(knotes ${knotes_SRCS})
 
-target_link_libraries(knotes ${KDEPIMLIBS_KCAL_LIBS} kdepim ${KDEPIMLIBS_KRESOURCES_LIBS} ${KDE4_KIO_LIBS}  ${KDE4_KDNSSD_LIBS}
-                             ${KDE4_KCMUTILS_LIBS} ${X11_X11_LIB} ${KDEPIMLIBS_KONTACTINTERFACE_LIBS})
-
+target_link_libraries(knotes knotesprivate pimcommon kdepim ${KDE4_KIO_LIBS}
+                             ${KDE4_KCMUTILS_LIBS} ${X11_X11_LIB} ${KDEPIMLIBS_KONTACTINTERFACE_LIBS} ${KDE4_KPRINTUTILS_LIBS} ${KDE4_KDNSSD_LIBS} noteshared
+  ${KDEPIMLIBS_AKONADI_LIBS}
+  ${KDEPIMLIBS_KMIME_LIBS}
+  akonadi_next)
 install(TARGETS knotes  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 
 ########### next target ###############
+set(kcm_knotes_PART_SRCS configdialog/knoteconfigdialog.cpp configdialog/knotedisplayconfigwidget.cpp configdialog/knoteeditorconfigwidget.cpp configdialog/knotecollectionconfigwidget.cpp)
 
-set(knotes_local_PART_SRCS resourcelocal_plugin.cpp ${libknotesresources_SRCS})
+kde4_add_plugin(kcm_knote ${kcm_knotes_PART_SRCS} )
 
-
-kde4_add_plugin(knotes_local ${knotes_local_PART_SRCS})
-
-
-
-target_link_libraries(knotes_local  ${KDE4_KIO_LIBS}  ${KDEPIMLIBS_KRESOURCES_LIBS} ${KDEPIMLIBS_KCAL_LIBS} )
-
-install(TARGETS knotes_local  DESTINATION ${PLUGIN_INSTALL_DIR})
-
-########### next target ###############
-set(kcm_knotes_PART_SRCS knoteconfigdlg.cpp )
-
-set( libknotesconfig_SRCS knoteconfig.kcfgc knotesglobalconfig.kcfgc )
-
-kde4_add_kcfg_files(libknotesconfig_SRCS ${libknotesconfig_SRCS})
-
-kde4_add_plugin(kcm_knote ${kcm_knotes_PART_SRCS} ${libknotesconfig_SRCS})
-
-target_link_libraries(kcm_knote  ${KDE4_KDEUI_LIBS} ${KDE4_KCMUTILS_LIBS})
+target_link_libraries(kcm_knote knotesprivate ${KDEPIMLIBS_AKONADI_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_KCMUTILS_LIBS} ${KDE4_KNEWSTUFF3_LIBS} noteshared akonadi_next)
 
 install(TARGETS kcm_knote DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 install(FILES 
-	knote_config_action.desktop
-	knote_config_display.desktop
-	knote_config_editor.desktop
-	knote_config_network.desktop
-	knote_config_style.desktop
+	data/knote_config_action.desktop
+	data/knote_config_display.desktop
+	data/knote_config_editor.desktop
+	data/knote_config_network.desktop
+        data/knote_config_print.desktop
+        data/knote_config_collection.desktop
+        data/knote_config_misc.desktop
 	DESTINATION ${SERVICES_INSTALL_DIR})
 
 ########### install files ###############
 
-install( PROGRAMS knotes.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
-install( FILES knoteconfig.kcfg knotesglobalconfig.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
-install( FILES local.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/knotes)
-install( FILES knotes_manager.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources)
-install( FILES knotesappui.rc knotesui.rc  DESTINATION ${DATA_INSTALL_DIR}/knotes)
-install( FILES org.kde.KNotes.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}) 
+install( PROGRAMS data/knotes.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
+install( FILES ${CMAKE_CURRENT_BINARY_DIR}/knotesglobalconfig.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
+install( FILES data/knotesappui.rc data/knotesui.rc  DESTINATION ${DATA_INSTALL_DIR}/knotes)
+install( FILES apps/org.kde.KNotes.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}) 
+install( FILES data/knotes_printing_theme.knsrc DESTINATION ${CONFIG_INSTALL_DIR} )
+
+install(DIRECTORY print/themes/ DESTINATION ${DATA_INSTALL_DIR}/knotes/print/themes )
+
 

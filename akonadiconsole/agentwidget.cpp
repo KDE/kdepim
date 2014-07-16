@@ -31,22 +31,19 @@
 #include <akonadi/private/notificationmessage_p.h>
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
-#include <KStandardDirs>
 #include <KStandardGuiItem>
 #include <KTextEdit>
 #include <KLineEdit>
 
 #include <QtCore/QFile>
 #include <QtCore/QPointer>
-#include <QGridLayout>
 #include <QMenu>
 #include <QPushButton>
 #include <QDBusInterface>
 #include <QDBusMessage>
 #include <QDBusReply>
-#include <QMetaObject>
 #include <QMetaMethod>
 #include <QResizeEvent>
 
@@ -228,7 +225,7 @@ void AgentWidget::showTaskList()
   if ( !agent.isValid() )
     return;
 
-  QDBusInterface iface( QString::fromLatin1(  "org.freedesktop.Akonadi.Resource.%1" ).arg( agent.identifier() ),
+  QDBusInterface iface( QString::fromLatin1(  "org.freedesktop.Akonadi.Agent.%1" ).arg( agent.identifier() ),
                         "/Debug", QString() );
 
   QDBusReply<QString> reply = iface.call("dumpToString");
@@ -252,7 +249,7 @@ void AgentWidget::showChangeNotifications()
   if ( !agent.isValid() )
     return;
 
-  QDBusInterface iface( QString::fromLatin1( "org.freedesktop.Akonadi.Resource.%1" ).arg( agent.identifier() ),
+  QDBusInterface iface( QString::fromLatin1( "org.freedesktop.Akonadi.Agent.%1" ).arg( agent.identifier() ),
                         "/Debug", QString() );
 
   QDBusReply<QString> reply = iface.call("dumpNotificationListToString");
@@ -351,7 +348,7 @@ void AgentWidget::cloneAgent( KJob* job )
       continue;
     const QString methodName = QString::fromLatin1( signature.left( signature.indexOf( '(' ) ) );
     const QDBusMessage reply = sourceIface.call( methodName );
-    if ( !reply.arguments().count() == 1 ) {
+    if ( reply.arguments().count() != 1 ) {
       kError() << "call to method" << signature << "failed: " << reply.arguments() << reply.errorMessage();
       continue;
     }
@@ -384,6 +381,9 @@ void AgentWidget::currentChanged()
       break;
     case AgentInstance::Broken: agentStatus =
         i18nc( "agent is broken somehow", "Broken" );
+      break;
+    case AgentInstance::NotConfigured: agentStatus =
+        i18nc( "agent is not yet configured", "Not Configured" );
       break;
     }
     ui.statusLabel->setText(
@@ -423,4 +423,3 @@ void AgentWidget::resizeEvent( QResizeEvent *event )
   ui.detailsBox->setVisible( event->size().height() > 400 );
 }
 
-#include "agentwidget.moc"

@@ -45,10 +45,10 @@
 
 using namespace Kleo;
 
-static const char email_rx[] = "[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?";
+static const QString email_rx = QLatin1String("[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?");
 // these are modeled after gnupg/g10/keygen.c:ask_user_id:
-static const char name_rx[] = "[^0-9<>][^<>@]{4,}";
-static const char comment_rx[] = "[^()]*";
+static const QString name_rx = QLatin1String("[^0-9<>][^<>@]{4,}");
+static const QString comment_rx = QLatin1String("[^()]*");
 
 namespace {
 
@@ -60,8 +60,8 @@ namespace {
         /* reimp */ void fixup( QString & ) const {}
 
         /* reimp */ State validate( QString & str, int & pos ) const {
-            const int atIdx = str.lastIndexOf( '@' );
-            if ( atIdx < 0 || str.endsWith( '@' ) )
+            const int atIdx = str.lastIndexOf( QLatin1Char('@') );
+            if ( atIdx < 0 || str.endsWith( QLatin1Char('@') ) )
                 return regexValidate( str, pos );
 
             // toAce/fromAce doesn't like intermediate domain names,
@@ -69,18 +69,18 @@ namespace {
             // along, and which we strip again afterwards
 
             QString domain = str.mid( atIdx + 1 ).toLower();
-            const int dotIndex = domain.lastIndexOf( '.' );
-            const bool needsOrgAdded = domain.endsWith( '.' );
+            const int dotIndex = domain.lastIndexOf( QLatin1Char('.') );
+            const bool needsOrgAdded = domain.endsWith( QLatin1Char('.') );
             // during typing, the domain might end with '-', which is okay
             // yeah, foo.s also disrupts fromAce, during typing this is okay
-            const bool needsDotOrgAdded = !needsOrgAdded && ( dotIndex < 0 || dotIndex == domain.size() - 2 || domain.endsWith( '-' ) );
+            const bool needsDotOrgAdded = !needsOrgAdded && ( dotIndex < 0 || dotIndex == domain.size() - 2 || domain.endsWith( QLatin1Char('-') ) );
             if ( needsOrgAdded )
-                domain += "org";
+                domain += QLatin1String("org");
             if ( needsDotOrgAdded )
-                domain += "tmp.org";
+                domain += QLatin1String("tmp.org");
             const QByteArray domainEncoded = QUrl::toAce( domain );
             const QString domainRestored = QUrl::fromAce( domainEncoded );
-            QString encoded = str.left( atIdx ) + '@' + QString::fromLatin1( domainEncoded );
+            QString encoded = str.left( atIdx ) + QLatin1Char('@') + QString::fromLatin1( domainEncoded );
             if ( needsDotOrgAdded ) {
                 assert( encoded.endsWith( QLatin1String( "tmp.org" ) ) );
                 encoded.chop( 7 );

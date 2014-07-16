@@ -1,0 +1,8 @@
+require "foreverypart";
+ 
+#Script name: break
+
+if true {
+    break :name "optional name";
+    break ;
+}

@@ -47,10 +47,15 @@ public Q_SLOTS:
     void importCertificatesFromFile( const QStringList & files );
 
 protected:
+    QByteArray savedGeometry;
+
     void closeEvent( QCloseEvent * e );
     void showEvent( QShowEvent * e );
+    void hideEvent( QHideEvent * e );
     void dragEnterEvent( QDragEnterEvent * );
     void dropEvent( QDropEvent * );
+    void readProperties( const KConfigGroup & cg );
+    void saveProperties( KConfigGroup & cg );
 
 private:
     class Private;

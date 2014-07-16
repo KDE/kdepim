@@ -17,6 +17,7 @@
 
 
 #include "pimsettingexporterwindow.h"
+#include "pimsettingexporter_options.h"
 
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
@@ -31,13 +32,12 @@ int main(int argc, char *argv[])
 
     KAboutData aboutData( "pimsettingexporter", 0, ki18n("PIM Setting Exporter"),
                           KDEPIM_VERSION, ki18n("PIM Setting Exporter"), KAboutData::License_GPL_V2,
-                          ki18n("Copyright © 2012-2013 pimsettingexporter authors"));
+                          ki18n("Copyright © 2012-2014 pimsettingexporter authors"));
     aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
     aboutData.setProgramIconName(QLatin1String("kontact"));
     KCmdLineArgs::init( argc, argv, &aboutData );
 
-    KCmdLineOptions options;
-    KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
+    KCmdLineArgs::addCmdLineOptions( pimsettingexporter_options() ); // Add our own options.
 
     KUniqueApplication::addCmdLineOptions();
 
@@ -50,6 +50,7 @@ int main(int argc, char *argv[])
     PimSettingExporterWindow *backupMailWin = new PimSettingExporterWindow();
     a.setTopWidget(backupMailWin);
     backupMailWin->show();
+    backupMailWin->handleCommandLine();
 
     return a.exec();
 }

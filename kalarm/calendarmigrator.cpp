@@ -1,7 +1,7 @@
 /*
  *  calendarmigrator.cpp  -  migrates or creates KAlarm Akonadi resources
  *  Program:  kalarm
- *  Copyright © 2011-2012 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2011-2014 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -62,6 +62,7 @@ class CalendarCreator : public QObject
         CalEvent::Type alarmType() const      { return mAlarmType; }
         bool           newCalendar() const    { return mNew; }
         QString        resourceName() const   { return mName; }
+        Collection::Id collectionId() const   { return mCollectionId; }
         QString        path() const           { return mPath; }
         QString        errorMessage() const   { return mErrorMessage; }
         void           createAgent(const QString& agentType, QObject* parent);
@@ -81,26 +82,27 @@ class CalendarCreator : public QObject
 
     private:
         void finish(bool cleanup);
-        bool migrateLocalFile();
-        bool migrateLocalDirectory();
-        bool migrateRemoteFile();
-        template <class Interface> Interface* migrateBasic();
+        bool writeLocalFileConfig();
+        bool writeLocalDirectoryConfig();
+        bool writeRemoteFileConfig();
+        template <class Interface> Interface* writeBasicConfig();
 
         enum ResourceType { LocalFile, LocalDir, RemoteFile };
 
-        Akonadi::AgentInstance mAgent;
-        CalEvent::Type         mAlarmType;
-        ResourceType           mResourceType;
-        QString                mPath;
-        QString                mName;
-        QColor                 mColour;
-        QString                mErrorMessage;
-        int                    mCollectionFetchRetryCount;
-        bool                   mReadOnly;
-        bool                   mEnabled;
-        bool                   mStandard;
-        const bool             mNew;
-        bool                   mFinished;
+        AgentInstance    mAgent;
+        CalEvent::Type   mAlarmType;
+        ResourceType     mResourceType;
+        QString          mPath;
+        QString          mName;
+        QColor           mColour;
+        QString          mErrorMessage;
+        Collection::Id   mCollectionId;
+        int              mCollectionFetchRetryCount;
+        bool             mReadOnly;
+        bool             mEnabled;
+        bool             mStandard;
+        const bool       mNew;     // true if creating default, false if converting
+        bool             mFinished;
 };
 
 // Updates the backend calendar format of a single alarm calendar
@@ -131,6 +133,7 @@ class CalendarUpdater : public QObject
 
 
 CalendarMigrator* CalendarMigrator::mInstance = 0;
+bool              CalendarMigrator::mCompleted = false;
 
 CalendarMigrator::CalendarMigrator(QObject* parent)
     : QObject(parent),
@@ -141,6 +144,7 @@ CalendarMigrator::CalendarMigrator(QObject* parent)
 CalendarMigrator::~CalendarMigrator()
 {
     kDebug();
+    mInstance = 0;
 }
 
 /******************************************************************************
@@ -148,7 +152,7 @@ CalendarMigrator::~CalendarMigrator()
 */
 CalendarMigrator* CalendarMigrator::instance()
 {
-    if (!mInstance)
+    if (!mInstance && !mCompleted)
         mInstance = new CalendarMigrator;
     return mInstance;
 }
@@ -299,7 +303,10 @@ void CalendarMigrator::createDefaultResources()
     }
 
     if (mCalendarsPending.isEmpty())
+    {
+        mCompleted = true;
         deleteLater();
+    }
 }
 
 /******************************************************************************
@@ -308,7 +315,7 @@ void CalendarMigrator::createDefaultResources()
 */
 void CalendarMigrator::creatingCalendar(const QString& path)
 {
-    emit creating(path, false);
+    emit creating(path, -1, false);
 }
 
 /******************************************************************************
@@ -321,7 +328,7 @@ void CalendarMigrator::calendarCreated(CalendarCreator* creator)
     if (i < 0)
         return;    // calendar already finished
 
-    emit creating(creator->path(), true);
+    emit creating(creator->path(), creator->collectionId(), true);
 
     if (!creator->errorMessage().isEmpty())
     {
@@ -341,7 +348,10 @@ void CalendarMigrator::calendarCreated(CalendarCreator* creator)
 
     mCalendarsPending.removeAt(i);    // remove it from the pending list
     if (mCalendarsPending.isEmpty())
+    {
+        mCompleted = true;
         deleteLater();
+    }
 }
 
 /******************************************************************************
@@ -499,8 +509,8 @@ template <class Interface> bool CalendarMigrator::updateStorageFormat(const Agen
 */
 template <class Interface> Interface* CalendarMigrator::getAgentInterface(const AgentInstance& agent, QString& errorMessage, QObject* parent)
 {
-    Interface* iface = new Interface("org.freedesktop.Akonadi.Resource." + agent.identifier(),
-              "/Settings", QDBusConnection::sessionBus(), parent);
+    Interface* iface = new Interface(QLatin1String("org.freedesktop.Akonadi.Resource.") + agent.identifier(),
+              QLatin1String("/Settings"), QDBusConnection::sessionBus(), parent);
     if (!iface->isValid())
     {
         errorMessage = iface->lastError().message();
@@ -542,7 +552,7 @@ CalendarCreator::CalendarCreator(const QString& resourceType, const KConfigGroup
         kError() << "Invalid resource type:" << resourceType;
         return;
     }
-    mPath = config.readPathEntry(pathKey, "");
+    mPath = config.readPathEntry(pathKey, QLatin1String(""));
     switch (config.readEntry("AlarmType", (int)0))
     {
         case 1:  mAlarmType = CalEvent::ACTIVE;  break;
@@ -613,13 +623,13 @@ void CalendarCreator::agentCreated(KJob* j)
     switch (mResourceType)
     {
         case LocalFile:
-            ok = migrateLocalFile();
+            ok = writeLocalFileConfig();
             break;
         case LocalDir:
-            ok = migrateLocalDirectory();
+            ok = writeLocalDirectoryConfig();
             break;
         case RemoteFile:
-            ok = migrateRemoteFile();
+            ok = writeRemoteFileConfig();
             break;
         default:
             kError() << "Invalid resource type";
@@ -665,9 +675,9 @@ void CalendarCreator::fetchCollection()
     job->start();
 }
 
-bool CalendarCreator::migrateLocalFile()
+bool CalendarCreator::writeLocalFileConfig()
 {
-    OrgKdeAkonadiKAlarmSettingsInterface* iface = migrateBasic<OrgKdeAkonadiKAlarmSettingsInterface>();
+    OrgKdeAkonadiKAlarmSettingsInterface* iface = writeBasicConfig<OrgKdeAkonadiKAlarmSettingsInterface>();
     if (!iface)
         return false;
     iface->setMonitorFile(true);
@@ -676,9 +686,9 @@ bool CalendarCreator::migrateLocalFile()
     return true;
 }
 
-bool CalendarCreator::migrateLocalDirectory()
+bool CalendarCreator::writeLocalDirectoryConfig()
 {
-    OrgKdeAkonadiKAlarmDirSettingsInterface* iface = migrateBasic<OrgKdeAkonadiKAlarmDirSettingsInterface>();
+    OrgKdeAkonadiKAlarmDirSettingsInterface* iface = writeBasicConfig<OrgKdeAkonadiKAlarmDirSettingsInterface>();
     if (!iface)
         return false;
     iface->setMonitorFiles(true);
@@ -687,9 +697,9 @@ bool CalendarCreator::migrateLocalDirectory()
     return true;
 }
 
-bool CalendarCreator::migrateRemoteFile()
+bool CalendarCreator::writeRemoteFileConfig()
 {
-    OrgKdeAkonadiKAlarmSettingsInterface* iface = migrateBasic<OrgKdeAkonadiKAlarmSettingsInterface>();
+    OrgKdeAkonadiKAlarmSettingsInterface* iface = writeBasicConfig<OrgKdeAkonadiKAlarmSettingsInterface>();
     if (!iface)
         return false;
     iface->setMonitorFile(true);
@@ -698,7 +708,7 @@ bool CalendarCreator::migrateRemoteFile()
     return true;
 }
 
-template <class Interface> Interface* CalendarCreator::migrateBasic()
+template <class Interface> Interface* CalendarCreator::writeBasicConfig()
 {
     Interface* iface = CalendarMigrator::getAgentInterface<Interface>(mAgent, mErrorMessage, this);
     if (iface)
@@ -753,9 +763,10 @@ void CalendarCreator::collectionFetchResult(KJob* j)
 
     // Set Akonadi Collection attributes
     Collection collection = collections[0];
+    mCollectionId = collection.id();
     collection.setContentMimeTypes(CalEvent::mimeTypes(mAlarmType));
     EntityDisplayAttribute* dattr = collection.attribute<EntityDisplayAttribute>(Collection::AddIfMissing);
-    dattr->setIconName("kalarm");
+    dattr->setIconName(QLatin1String("kalarm"));
     CollectionAttribute* attr = collection.attribute<CollectionAttribute>(Entity::AddIfMissing);
     attr->setEnabled(mEnabled ? mAlarmType : CalEvent::EMPTY);
     if (mStandard)
@@ -840,6 +851,5 @@ void CalendarCreator::finish(bool cleanup)
 }
 
 #include "calendarmigrator.moc"
-#include "moc_calendarmigrator.cpp"
 
 // vim: et sw=4:

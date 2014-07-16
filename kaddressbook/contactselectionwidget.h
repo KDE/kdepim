@@ -21,7 +21,7 @@
 #define CONTACTSELECTIONWIDGET_H
 
 #include <KABC/Addressee>
-
+#include <Akonadi/Item>
 #include <QWidget>
 
 class QCheckBox;
@@ -30,8 +30,8 @@ class QLabel;
 class QRadioButton;
 
 namespace Akonadi {
-  class Collection;
-  class CollectionComboBox;
+class Collection;
+class CollectionComboBox;
 }
 
 /**
@@ -41,9 +41,9 @@ namespace Akonadi {
  */
 class ContactSelectionWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new contact selection widget.
      *
@@ -67,12 +67,16 @@ class ContactSelectionWidget : public QWidget
      */
     KABC::Addressee::List selectedContacts() const;
 
-  private:
+    Akonadi::Item::List selectedContactsItem() const;
+private:
     void initGui();
 
     KABC::Addressee::List collectAllContacts() const;
     KABC::Addressee::List collectSelectedContacts() const;
     KABC::Addressee::List collectAddressBookContacts() const;
+    Akonadi::Item::List collectAllContactsItem() const;
+    Akonadi::Item::List collectSelectedContactsItem() const;
+    Akonadi::Item::List collectAddressBookContactsItem() const;
 
     QItemSelectionModel *mSelectionModel;
 

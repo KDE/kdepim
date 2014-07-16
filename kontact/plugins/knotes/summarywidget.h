@@ -2,6 +2,7 @@
   This file is part of Kontact.
 
   Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>
+  Copyright (c) 2014 Laurent Montel <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -25,50 +26,61 @@
 #ifndef SUMMARYWIDGET_H
 #define SUMMARYWIDGET_H
 
-#include <KCal/Journal>
 #include <KontactInterface/Summary>
-
-namespace KCal {
-  class CalendarLocal;
-}
-using namespace KCal;
-
-namespace KontactInterface {
-  class Plugin;
-}
-
+#include <KViewStateMaintainer>
+#include <Akonadi/Item>
 class QGridLayout;
+class QItemSelectionModel;
 class QLabel;
+namespace KontactInterface {
+class Plugin;
+}
+
+namespace Akonadi {
+class ChangeRecorder;
+class Collection;
+class EntityTreeModel;
+class ETMViewStateSaver;
+class Item;
+}
+namespace NoteShared {
+class NotesChangeRecorder;
+class NotesAkonadiTreeModel;
+}
+class KCheckableProxyModel;
 
 class KNotesSummaryWidget : public KontactInterface::Summary
 {
-  Q_OBJECT
-  public:
-    KNotesSummaryWidget( KontactInterface::Plugin *plugin, QWidget *parent );
+    Q_OBJECT
+public:
+    KNotesSummaryWidget(KontactInterface::Plugin *plugin, QWidget *parent );
+    ~KNotesSummaryWidget();
 
-    void updateSummary( bool force = false )
-    {
-      Q_UNUSED( force );
-      updateView();
-    }
+    void updateSummary( bool force = false );
+    QStringList configModules() const;
 
-  protected:
+protected:
     virtual bool eventFilter( QObject *obj, QEvent *e );
 
-  protected slots:
-    void urlClicked( const QString & );
-    void updateView();
-    void addNote( KCal::Journal * );
-    void removeNote( KCal::Journal * );
-
-  private:
-    CalendarLocal *mCalendar;
-    Journal::List mNotes;
-
+private slots:
+    void updateFolderList();
+    void slotSelectNote(const QString &note);
+    void slotPopupMenu(const QString &);
+private:
+    void deleteNote(const QString &note);
+    void displayNotes(const QModelIndex &parent, int &counter);
+    void createNote(const Akonadi::Item &item, int counter);
+    QPixmap mDefaultPixmap;
     QGridLayout *mLayout;
-
-    QList<QLabel *> mLabels;
     KontactInterface::Plugin *mPlugin;
+    QList<QLabel *> mLabels;
+    QPixmap mPixmap;
+    NoteShared::NotesChangeRecorder *mNoteRecorder;
+    NoteShared::NotesAkonadiTreeModel *mNoteTreeModel;
+    QItemSelectionModel *mSelectionModel;
+    KCheckableProxyModel *mModelProxy;
+    KViewStateMaintainer<Akonadi::ETMViewStateSaver> *mModelState;
+    bool mInProgress;
 };
 
 #endif

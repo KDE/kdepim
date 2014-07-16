@@ -55,15 +55,15 @@ using namespace boost;
 namespace {
 
     static inline bool is_userid_level( const QModelIndex & idx ) {
-	return idx.isValid() && idx.internalId() < 0 ;
+        return idx.isValid() && idx.internalId() < 0 ;
     }
 
     static inline int extract_uid_number( const QModelIndex & idx ) {
-	return idx.internalId();
+        return idx.internalId();
     }
 
     static inline bool is_signature_level( const QModelIndex & idx ) {
-	return idx.isValid() && idx.internalId() >= 0 ;
+        return idx.isValid() && idx.internalId() >= 0 ;
     }
 
 }
@@ -130,7 +130,7 @@ UserID UserIDListModel::userID( const QModelIndex & idx, bool strict ) const {
     if ( is_userid_level( idx ) )
         return d->key.userID( idx.row() );
     if ( !strict && is_signature_level( idx ) )
-	return d->key.userID( extract_uid_number( idx ) );
+        return d->key.userID( extract_uid_number( idx ) );
     return UserID();
 }
 
@@ -207,38 +207,38 @@ int UserIDListModel::columnCount( const QModelIndex & ) const {
 
 int UserIDListModel::rowCount( const QModelIndex & pidx ) const {
     if ( !pidx.isValid() )
-	return d->key.numUserIDs();
+        return d->key.numUserIDs();
     if ( is_userid_level( pidx ) )
-	return d->key.userID( pidx.row() ).numSignatures();
+        return d->key.userID( pidx.row() ).numSignatures();
     return 0;
 }
 
 QModelIndex UserIDListModel::index( int row, int col, const QModelIndex & pidx ) const {
     if ( row < 0 || col < 0 || col >= NumColumns )
-	return QModelIndex();
+        return QModelIndex();
 
     if ( !pidx.isValid() ) {
-	if ( static_cast<unsigned>( row ) < d->key.numUserIDs() )
-	    return createIndex( row, col, -1 );
-	else
-	    return QModelIndex();
+        if ( static_cast<unsigned>( row ) < d->key.numUserIDs() )
+            return createIndex( row, col, -1 );
+        else
+            return QModelIndex();
     }
 
     if ( !is_userid_level( pidx ) )
-	return QModelIndex();
+        return QModelIndex();
 
     const int numSigs = userID( pidx ).numSignatures();
     if ( row < numSigs )
-	return createIndex( row, col, pidx.row() );
+        return createIndex( row, col, pidx.row() );
 
     return QModelIndex();
 }
 
 QModelIndex UserIDListModel::parent( const QModelIndex & idx ) const {
     if ( is_signature_level( idx ) )
-	return createIndex( idx.internalId(), 0, -1 );
+        return createIndex( idx.internalId(), 0, -1 );
     else
-	return QModelIndex();
+        return QModelIndex();
 }
 
 QVariant UserIDListModel::headerData( int section, Qt::Orientation o, int role ) const {
@@ -246,8 +246,8 @@ QVariant UserIDListModel::headerData( int section, Qt::Orientation o, int role )
         if ( role == Qt::DisplayRole || role == Qt::EditRole || role == Qt::ToolTipRole )
             switch ( section ) {
             case ID:          return i18n( "ID" );
-	    case PrettyName:  return i18n( "Name" );
-	    case PrettyEMail: return i18n( "EMail" );
+            case PrettyName:  return i18n( "Name" );
+            case PrettyEMail: return i18n( "EMail" );
             case ValidFrom:   return i18n( "Valid From" );
             case ValidUntil:  return i18n( "Valid Until" );
             case Status:      return i18n( "Status" );
@@ -259,13 +259,13 @@ QVariant UserIDListModel::headerData( int section, Qt::Orientation o, int role )
 QVariant UserIDListModel::data( const QModelIndex & idx, int role ) const {
 
     if ( role != Qt::DisplayRole && role != Qt::EditRole && role != Qt::ToolTipRole )
-	return QVariant();
+        return QVariant();
 
     if ( is_userid_level( idx ) ) {
 
-	const UserID uid = this->userID( idx );
-	if ( uid.isNull() )
-	    return QVariant();
+        const UserID uid = this->userID( idx );
+        if ( uid.isNull() )
+            return QVariant();
 
         if ( idx.column() == 0 )
             // we assume that the top-level items are spanned
@@ -275,42 +275,42 @@ QVariant UserIDListModel::data( const QModelIndex & idx, int role ) const {
 
     } else if ( is_signature_level( idx ) ) {
 
-	const UserID::Signature signature = this->signature( idx );
-	if ( signature.isNull() )
-	    return QVariant();
+        const UserID::Signature signature = this->signature( idx );
+        if ( signature.isNull() )
+            return QVariant();
 
-	switch ( idx.column() ) {
+        switch ( idx.column() ) {
 
-	case ID:
-	    return QString::fromLatin1( signature.signerKeyID() );
+        case ID:
+            return QString::fromLatin1( signature.signerKeyID() );
         case PrettyName:
             return Formatting::prettyName( signature );
         case PrettyEMail:
             return Formatting::prettyEMail( signature );
-	case ValidFrom:
-	    if ( role == Qt::EditRole )
-		return Formatting::creationDate( signature );
-	    else
-		return Formatting::creationDateString( signature );
-	case ValidUntil:
-	    if ( role == Qt::EditRole )
-		return Formatting::expirationDate( signature );
-	    else
-		return Formatting::expirationDateString( signature );
-	case Status:
-	    return Formatting::validityShort( signature );
+        case ValidFrom:
+            if ( role == Qt::EditRole )
+                return Formatting::creationDate( signature );
+            else
+                return Formatting::creationDateString( signature );
+        case ValidUntil:
+            if ( role == Qt::EditRole )
+                return Formatting::expirationDate( signature );
+            else
+                return Formatting::expirationDateString( signature );
+        case Status:
+            return Formatting::validityShort( signature );
 #if 0
-	    if ( userID.isRevoked() )
-		return i18n("revoked");
-	    if ( userID.isExpired() )
-		return i18n("expired");
-	    if ( userID.isDisabled() )
-		return i18n("disabled");
-	    if ( userID.isInvalid() )
-		return i18n("invalid");
-	    return i18n("good");
+            if ( userID.isRevoked() )
+                return i18n("revoked");
+            if ( userID.isExpired() )
+                return i18n("expired");
+            if ( userID.isDisabled() )
+                return i18n("disabled");
+            if ( userID.isInvalid() )
+                return i18n("invalid");
+            return i18n("good");
 #endif
-	}
+        }
 
 
     }
@@ -318,4 +318,3 @@ QVariant UserIDListModel::data( const QModelIndex & idx, int role ) const {
     return QVariant();
 }
 
-#include "moc_useridlistmodel.cpp"

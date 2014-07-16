@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -17,9 +17,12 @@
 
 #include "themeconfiguredialog.h"
 #include "themeeditorutil.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
+
+#include "configurewidget.h"
 
 #include <KLocale>
-#include <KUrlRequester>
 #include <KConfig>
 #include <KGlobal>
 #include <KConfigGroup>
@@ -27,6 +30,7 @@
 
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QTabWidget>
 
 ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
     : KDialog(parent)
@@ -34,29 +38,30 @@ ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
     setCaption( i18n( "Configure" ) );
     setButtons( Default|Ok|Cancel );
     setButtonFocus( Ok );
+
+    QTabWidget *tab = new QTabWidget;
+
     QWidget *w = new QWidget;
 
     QVBoxLayout *lay = new QVBoxLayout;
     w->setLayout(lay);
 
-    QHBoxLayout *hbox = new QHBoxLayout;
-    lay->addLayout(hbox);
+    mConfigureWidget = new GrantleeThemeEditor::ConfigureWidget;
+    lay->addWidget(mConfigureWidget);
 
-    QLabel *lab = new QLabel(i18n("Default theme path:"));
-    hbox->addWidget(lab);
-
-    mDefaultUrl = new KUrlRequester;
-    mDefaultUrl->setMode(KFile::Directory);
-    hbox->addWidget(mDefaultUrl);
-
-    lab = new QLabel(i18n("Default email:"));
+    QLabel *lab = new QLabel(i18n("Default email:"));
     lay->addWidget(lab);
 
-    mDefaultEmail = new KTextEdit;
+    mDefaultEmail = new PimCommon::RichTextEditorWidget;
     mDefaultEmail->setAcceptRichText(false);
     lay->addWidget(mDefaultEmail);
+    tab->addTab(w, i18n("General"));
 
-    setMainWidget(w);
+    mDefaultTemplate = new PimCommon::RichTextEditorWidget;
+    mDefaultTemplate->setAcceptRichText(false);
+    tab->addTab(mDefaultTemplate, i18n("Default Template"));
+
+    setMainWidget(tab);
     connect(this, SIGNAL(defaultClicked()), this, SLOT(slotDefaultClicked()));
     connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
     readConfig();
@@ -72,9 +77,9 @@ ThemeConfigureDialog::~ThemeConfigureDialog()
 
 void ThemeConfigureDialog::slotDefaultClicked()
 {
-    mDefaultUrl->setUrl(KUrl());
-
+    mConfigureWidget->setDefault();
     mDefaultEmail->setPlainText(themeeditorutil::defaultMail());
+    mDefaultTemplate->editor()->clear();
 }
 
 void ThemeConfigureDialog::slotOkClicked()
@@ -87,18 +92,17 @@ void ThemeConfigureDialog::readConfig()
     KSharedConfig::Ptr config = KGlobal::config();
     if (config->hasGroup(QLatin1String("Global"))) {
         KConfigGroup group = config->group(QLatin1String("Global"));
-        mDefaultUrl->setUrl(group.readEntry("path", KUrl()));
+        mConfigureWidget->readConfig();
         mDefaultEmail->setPlainText(group.readEntry("defaultEmail",themeeditorutil::defaultMail()));
+        mDefaultTemplate->setPlainText(group.readEntry("defaultTemplate",QString()));
     } else {
         mDefaultEmail->setPlainText(themeeditorutil::defaultMail());
     }
 
     KConfigGroup group = KConfigGroup( config, "ThemeConfigureDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
-    } else {
-        resize( 600,400);
     }
 }
 
@@ -106,8 +110,8 @@ void ThemeConfigureDialog::writeConfig()
 {
     KSharedConfig::Ptr config = KGlobal::config();
     KConfigGroup group = config->group(QLatin1String("Global"));
-    group.writeEntry("path", mDefaultUrl->url());
     group.writeEntry("defaultEmail", mDefaultEmail->toPlainText());
+    group.writeEntry("defaultTemplate", mDefaultTemplate->toPlainText());
+    mConfigureWidget->writeConfig();
 }
 
-#include "themeconfiguredialog.moc"

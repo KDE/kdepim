@@ -37,7 +37,6 @@
 #include <QTreeWidget>
 
 class KActionCollection;
-class KComboBox;
 class KIconButton;
 class KKeySequenceWidget;
 
@@ -431,10 +430,15 @@ protected slots:
 
     void slotFolderChanged( const Akonadi::Collection & );
 
+private Q_SLOTS:
+    void slotExportAsSieveScript();
+
 private:
     void importFilters( MailCommon::FilterImporterExporter::FilterType type );
 
 protected:
+    bool event(QEvent *e);
+
     /** The widget that contains the ListBox showing the filters, and the
         controls to remove filters, add new ones and to change their order. */
     KMFilterListBox *mFilterList;

@@ -63,6 +63,9 @@ class CALENDARSUPPORT_EXPORT ArchiveDialog : public KDialog
     void slotEnableUser1();
     void slotActionChanged();
 
+  private slots:
+    void showWhatsThis();
+
   private:
     KUrlRequester *mArchiveFile;
     KDateComboBox *mDateEdit;

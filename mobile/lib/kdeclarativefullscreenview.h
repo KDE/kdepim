@@ -49,9 +49,6 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
     */
     KDeclarativeFullScreenView( const QString &qmlFileName, QWidget *parent = 0 );
     virtual ~KDeclarativeFullScreenView();
-#ifdef Q_OS_WINCE
-    virtual bool winEvent ( MSG * message, long * result );
-#endif
 
   public Q_SLOTS:
 
@@ -92,18 +89,11 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
     void closeAllFrontends( const QString &qmlFileName );
 
   private:
-#ifdef Q_OS_WINCE
-    bool RotateTo270Degrees();
-#endif
-#ifdef MEEGO_EDITION_HARMATTAN
-    /** Disable the swipe action for a part of the display
-    */
-    void blockSwipeRegion(const int x , const int y, const int w, const int h);
-#endif
+
     KActionCollection *mActionCollection;
-#ifndef Q_OS_WIN
+
     QGLWidget *m_glWidget;
-#endif
+
     QString m_qmlFileName;
     QLabel *m_splashScreen;
 };

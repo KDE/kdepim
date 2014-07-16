@@ -234,6 +234,6 @@ void MainWindow::saveToFile( const QString& fileName )
 
 void MainWindow::saveAs()
 {
-    saveToFile( QFileDialog::getSaveFileName( this, i18n( "Save As"), QString(), "*.conf" ) );
+    saveToFile( QFileDialog::getSaveFileName( this, i18n( "Save As"), QString(), QLatin1String("*.conf") ) );
 }
 

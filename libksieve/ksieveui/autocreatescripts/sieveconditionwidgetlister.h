@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -24,6 +24,7 @@
 class KPushButton;
 class QGridLayout;
 class QToolButton;
+class QDomElement;
 
 namespace PimCommon {
 class MinimumComboBox;
@@ -31,6 +32,7 @@ class MinimumComboBox;
 
 namespace KSieveUi {
 class SieveCondition;
+class SieveHelpButton;
 class SieveConditionWidget : public QWidget
 {
     Q_OBJECT
@@ -40,6 +42,7 @@ public:
 
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
     void generatedScript(QString &script, QStringList &requires);
+    void setCondition(const QString &conditionName, const QDomElement &element, bool notCondition, QString &error);
 
 private Q_SLOTS:
     void slotAddWidget();
@@ -50,6 +53,7 @@ private Q_SLOTS:
 Q_SIGNALS:
     void addWidget(QWidget *w);
     void removeWidget(QWidget *w);
+    void valueChanged();
 
 private:
     void initWidget();
@@ -60,7 +64,7 @@ private:
     KPushButton *mRemove;
     PimCommon::MinimumComboBox *mComboBox;
     QGridLayout *mLayout;
-    QToolButton *mHelpButton;
+    SieveHelpButton *mHelpButton;
 };
 
 class SieveConditionWidgetLister : public KPIM::KWidgetLister
@@ -72,6 +76,10 @@ public:
 
     void generatedScript(QString &script, int &numberOfCondition, QStringList &requires);
     int conditionNumber() const;
+    void loadScript(const QDomElement &element, bool uniqTest, bool notCondition, QString &error);
+
+Q_SIGNALS:
+    void valueChanged();
 
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );
@@ -82,6 +90,7 @@ protected:
     QWidget *createWidget( QWidget *parent );
 
 private:
+    void loadTest(const QDomElement &e, bool notCondition, QString &error);
     void reconnectWidget(SieveConditionWidget *w );
     void updateAddRemoveButton();
 };

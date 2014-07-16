@@ -160,4 +160,3 @@ void LdapSession::jobDone(KJob* job)
 }
 
 
-#include "ldapsession.moc"

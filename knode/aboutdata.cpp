@@ -47,7 +47,7 @@ namespace KNode
                   KNODE_VERSION,
                   ki18n("A newsreader for KDE"),
                   KAboutData::License_GPL,
-                  ki18n("Copyright © 1999–2010 KNode authors"),
+                  ki18n("Copyright © 1999–2014 KNode authors"),
                   KLocalizedString(),
                   "http://userbase.kde.org/KNode" )
   {

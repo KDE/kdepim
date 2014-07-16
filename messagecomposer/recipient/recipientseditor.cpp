@@ -29,14 +29,12 @@
 #include "recipientseditorsidewidget.h"
 
 #include "settings/messagecomposersettings.h"
-#ifndef Q_OS_WINCE
 #include <messagecomposer/recipient/distributionlistdialog.h>
-#endif
 #include "messageviewer/utils/autoqpointer.h"
 
 #include <KDebug>
 #include <KMime/Headers>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 #include <QLayout>
@@ -44,7 +42,25 @@
 using namespace MessageComposer;
 using namespace KPIM;
 
-RecipientsEditor::RecipientsEditor( QWidget* parent ): MultiplyingLineEditor( new RecipientLineFactory( 0 ), parent ), mRecentAddressConfig( 0 )
+
+RecipientLineFactory::RecipientLineFactory( QObject* parent )
+    : KPIM::MultiplyingLineFactory( parent )
+{
+
+}
+
+KPIM::MultiplyingLine* RecipientLineFactory::newLine(  QWidget *parent )
+{
+    return new RecipientLineNG( parent );
+}
+
+int RecipientLineFactory::maximumRecipients()
+{
+    return MessageComposer::MessageComposerSettings::self()->maximumRecipients();
+}
+
+RecipientsEditor::RecipientsEditor( QWidget* parent )
+    : MultiplyingLineEditor( new RecipientLineFactory( 0 ), parent ), mRecentAddressConfig( 0 )
 {
     factory()->setParent( this ); // HACK: can't use 'this' above since it's not yet constructed at that point
     mSideWidget = new RecipientsEditorSideWidget( this, this );
@@ -55,8 +71,8 @@ RecipientsEditor::RecipientsEditor( QWidget* parent ): MultiplyingLineEditor( ne
 
     layout()->addWidget( mSideWidget );
 
-    connect( mSideWidget, SIGNAL(pickedRecipient(Recipient)),
-             SLOT(slotPickedRecipient(Recipient)) );
+    connect( mSideWidget, SIGNAL(pickedRecipient(Recipient,bool&)),
+             SLOT(slotPickedRecipient(Recipient,bool&)) );
     connect( mSideWidget, SIGNAL(saveDistributionList()),
              SLOT(saveDistributionList()) );
 
@@ -73,9 +89,9 @@ RecipientsEditor::~RecipientsEditor()
 {
 }
 
-void RecipientsEditor::addRecipient( const QString& recipient, Recipient::Type type )
+bool RecipientsEditor::addRecipient( const QString& recipient, Recipient::Type type )
 {
-    addData( Recipient::Ptr(  new Recipient ( recipient, type ) ) );
+    return addData( Recipient::Ptr(  new Recipient ( recipient, type ) ) );
 }
 
 void RecipientsEditor::setRecipientString( const QList< KMime::Types::Mailbox >& mailboxes, Recipient::Type type )
@@ -152,12 +168,9 @@ void RecipientsEditor::removeRecipient(const QString& recipient, Recipient::Type
 
 void RecipientsEditor::saveDistributionList()
 {
-    // disabled due to no QTreeWidget
-#ifndef Q_OS_WINCE
     MessageViewer::AutoQPointer<MessageComposer::DistributionListDialog> dlg( new MessageComposer::DistributionListDialog( this ) );
     dlg->setRecipients( recipients() );
     dlg->exec();
-#endif
 }
 
 void RecipientsEditor::selectRecipients()
@@ -178,10 +191,10 @@ void MessageComposer::RecipientsEditor::setRecentAddressConfig(KConfig* config)
     }
 }
 
-void MessageComposer::RecipientsEditor::slotPickedRecipient( const Recipient& rec )
+void MessageComposer::RecipientsEditor::slotPickedRecipient( const Recipient& rec, bool &tooManyAddress )
 {
     Recipient::Type t = rec.type();
-    addRecipient( rec.email(), t == Recipient::Undefined ? Recipient::To : t );
+    tooManyAddress = addRecipient( rec.email(), t == Recipient::Undefined ? Recipient::To : t );
     mModified = true;
 }
 
@@ -280,4 +293,3 @@ RecipientLineNG* RecipientsEditor::activeLine() const
 
 
 
-#include "recipientseditor.moc"

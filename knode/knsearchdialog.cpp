@@ -103,4 +103,3 @@ void KNode::SearchDialog::closeEvent( QCloseEvent * )
 }
 
 
-#include "knsearchdialog.moc"

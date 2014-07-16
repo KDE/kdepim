@@ -41,18 +41,12 @@ class QMouseEvent;
 class QObject;
 
 namespace Akonadi {
-  class Item;
+class Item;
 }
 
 namespace KABC {
-  class Addressee;
-  class ContactGroup;
-}
-
-namespace Nepomuk2 {
-  namespace Query {
-    class Result;
-  }
+class Addressee;
+class ContactGroup;
 }
 
 namespace KPIM {
@@ -60,9 +54,9 @@ namespace KPIM {
 
 class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new addressee line edit.
      *
@@ -85,10 +79,10 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
      * Reimplemented for setting the @p font for line edit and completion box.
      */
     void setFont( const QFont &font );
-  Q_SIGNALS:
+Q_SIGNALS:
     void textCompleted();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * Moves the cursor at the end of the line edit.
      */
@@ -105,7 +99,7 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
      */
     virtual void setText( const QString &text );
 
-  protected:
+protected:
     /**
      * Adds a new @p contact to the completion with a given @p weight and @p source index.
      */
@@ -126,6 +120,8 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
      * If the source already exists, the weight will be updated.
      */
     int addCompletionSource( const QString &name, int weight );
+
+    void removeCompletionSource(const QString &source);
 
     /**
      * Reimplemented for smart insertion of email addresses.
@@ -173,7 +169,7 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     virtual void contextMenuEvent( QContextMenuEvent * );
 #endif
 
-  private:
+private:
     virtual bool eventFilter( QObject *, QEvent * );
     void emitTextCompleted();
 
@@ -188,11 +184,9 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     Q_PRIVATE_SLOT( d, void slotLDAPSearchData( const KLDAP::LdapResult::List & ) )
     Q_PRIVATE_SLOT( d, void slotEditCompletionOrder() )
     Q_PRIVATE_SLOT( d, void slotUserCancelled( const QString & ) )
+    Q_PRIVATE_SLOT( d, void slotAkonadiHandleItems( const Akonadi::Item::List & ) )
     Q_PRIVATE_SLOT( d, void slotAkonadiSearchResult( KJob * ) )
-    Q_PRIVATE_SLOT( d, void slotAkonadiSearchDbResult( KJob * ) )
     Q_PRIVATE_SLOT( d, void slotAkonadiCollectionsReceived( const Akonadi::Collection::List & ) )
-    Q_PRIVATE_SLOT( d, void slotNepomukHits( const QList<Nepomuk2::Query::Result>& ) )
-    Q_PRIVATE_SLOT( d, void slotNepomukSearchFinished() )
     Q_PRIVATE_SLOT( d, void slotTriggerDelayedQueries() )
     //@endcond
 };

@@ -1,0 +1,9 @@
+require "mailbox";
+require "include";
+ 
+#Script name: maiboxexist
+
+if mailboxexists "INBOX2"
+{
+    return;
+} 

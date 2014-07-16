@@ -25,7 +25,7 @@
 #include <KCalCore/FreeBusyUrlStore>
 
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QBoxLayout>
 #include <KDebug>
@@ -98,4 +98,3 @@ void FreeBusyUrlWidget::saveConfig()
   KCalCore::FreeBusyUrlStore::self()->sync();
 }
 
-#include "freebusyurldialog.moc"

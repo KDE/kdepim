@@ -28,12 +28,13 @@
 #include <KPIMTextEdit/TextEdit>
 
 namespace KPIMIdentities {
-  class Signature;
+class Signature;
 }
-
+namespace PimCommon {
+class AutoCorrection;
+}
 namespace MessageComposer {
 class TextPart;
-class ComposerAutoCorrection;
 class KMeditorPrivate;
 
 /**
@@ -48,9 +49,9 @@ class KMeditorPrivate;
  */
 class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
 
     /**
      * Constructs a KMeditor object
@@ -155,7 +156,7 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
      */
     void cleanWhitespace( const KPIMIdentities::Signature &sig );
 
-   /**
+    /**
      * Replaces all occurrences of the old signature with the new signature.
      * Text in quotes will be ignored.
      * For undo/redo, this is treated as one operation.
@@ -176,16 +177,19 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
      */
     void fillComposerTextPart( MessageComposer::TextPart* textPart ) const;
 
-    MessageComposer::ComposerAutoCorrection* autocorrection() const;
+    PimCommon::AutoCorrection *autocorrection() const;
 
-    void setAutocorrection(MessageComposer::ComposerAutoCorrection* autocorrect);
+    void setAutocorrection(PimCommon::AutoCorrection* autocorrect);
 
     void setAutocorrectionLanguage(const QString& lang);
 
     void forcePlainTextMarkup(bool force);
 
+    void insertLink(const QString &url);
 
-  public Q_SLOTS:
+    void insertShareLink(const QString &url);
+
+public Q_SLOTS:
     void startExternalEditor();
     void slotAddQuotes();
     void slotPasteAsQuotation();
@@ -193,7 +197,7 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
     void slotPasteWithoutFormatting();
     void slotChangeInsertMode();
     void insertPlainTextImplementation();
-  Q_SIGNALS:
+Q_SIGNALS:
 
     /**
      * Emitted whenever the foucs is lost or gained
@@ -212,14 +216,14 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
     void externalEditorStarted();
     void externalEditorClosed();
 
-  protected:
+protected:
 
     /**
      * Reimplemented to start the external editor and to emit focusUp().
      */
     virtual void keyPressEvent ( QKeyEvent * e );
 
-  private:
+private:
     KMeditorPrivate *const d;
     friend class KMeditorPrivate;
     Q_PRIVATE_SLOT( d, void ensureCursorVisibleDelayed() )

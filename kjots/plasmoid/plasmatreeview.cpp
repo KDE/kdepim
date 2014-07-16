@@ -19,8 +19,6 @@
 
 #include "plasmatreeview.h"
 
-#include <QHeaderView>
-#include <QScrollBar>
 
 #include <kiconloader.h>
 
@@ -84,5 +82,4 @@ Akonadi::EntityTreeView *PlasmaTreeView::nativeWidget() const
 
 }
 
-#include "plasmatreeview.moc"
 

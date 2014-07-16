@@ -30,12 +30,12 @@ namespace MailCommon {
 //=============================================================================
 class FilterActionSetIdentity: public FilterActionWithUOID
 {
-   Q_OBJECT
- public:
+    Q_OBJECT
+public:
     explicit FilterActionSetIdentity( QObject *parent = 0 );
-    virtual ReturnCode process( ItemContext &context ) const;
-    virtual SearchRule::RequiredPart requiredPart() const;
-    virtual bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
+    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
+    SearchRule::RequiredPart requiredPart() const;
+    bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
     static FilterAction* newAction();
 
     QWidget * createParamWidget( QWidget *parent ) const;

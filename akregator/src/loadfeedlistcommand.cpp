@@ -27,7 +27,7 @@
 #include "feedlist.h"
 #include "storage.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KRandom>
 
@@ -184,4 +184,4 @@ void LoadFeedListCommand::Private::doLoad() {
     handleDocument( doc );
 }
 
-#include "loadfeedlistcommand.moc"
+#include "moc_loadfeedlistcommand.cpp"

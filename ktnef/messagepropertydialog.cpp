@@ -19,7 +19,7 @@
 
 #include <KTNEF/KTNEFMessage>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KStandardGuiItem>
 
 #include <QTreeWidget>
@@ -41,12 +41,11 @@ MessagePropertyDialog::MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg
   mListView->setRootIsDecorated( false );
   setMainWidget( mListView );
   setButtonGuiItem(KDialog::User1,KStandardGuiItem::save());
-  formatPropertySet( mMessage, mListView );
+  AttachPropertyDialog::formatPropertySet( mMessage, mListView );
 }
 
 void MessagePropertyDialog::slotUser1()
 {
-  saveProperty( mListView, mMessage, this );
+  AttachPropertyDialog::saveProperty( mListView, mMessage, this );
 }
 
-#include "messagepropertydialog.moc"

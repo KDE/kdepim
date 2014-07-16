@@ -11,3 +11,4 @@ macro( add_messagelist_test _source )
 endmacro()
 
 add_messagelist_test(itemsizetest.cpp)
+add_messagelist_test(quicksearchlinetest.cpp)

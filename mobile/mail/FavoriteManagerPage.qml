@@ -25,12 +25,14 @@ import org.kde.pim.mobileui 4.5 as KPIM
 PlasmaComponents.Page {
   id: root
 
+  implicitWidth: pageRow.width * 2 /3
+
   //BEGIN: Tools
   tools: PlasmaComponents.ToolBarLayout {
     PlasmaComponents.ToolButton {
       anchors.left: parent.left
       iconSource: "go-previous"
-      onClicked: pageStack.pop()
+      onClicked: pageRow.pop()
     }
   }
   //END: Tools
@@ -56,6 +58,6 @@ PlasmaComponents.Page {
       actionName : "favoriteseditor_remove"
     }
 
-    onCurrentIndexChanged : { favoritesEditor.setRowSelected( index ) }
+    onCurrentIndexChanged: favoritesEditor.setRowSelected( index )
   }
 }

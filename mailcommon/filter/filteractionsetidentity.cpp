@@ -18,9 +18,10 @@
  */
 
 #include "filteractionsetidentity.h"
+#include "messagecore/utils/stringutil.h"
 
 #include "kernel/mailkernel.h"
-#include "filteractionmissingargumentdialog.h"
+#include "dialog/filteractionmissingargumentdialog.h"
 
 #include <KDE/KPIMIdentities/Identity>
 #include <KDE/KPIMIdentities/IdentityCombo>
@@ -33,88 +34,101 @@ using namespace MailCommon;
 
 FilterAction* FilterActionSetIdentity::newAction()
 {
-  return new FilterActionSetIdentity;
+    return new FilterActionSetIdentity;
 }
 
 FilterActionSetIdentity::FilterActionSetIdentity( QObject *parent )
-  : FilterActionWithUOID( QLatin1String("set identity"), i18n( "Set Identity To" ), parent )
+    : FilterActionWithUOID( QLatin1String("set identity"), i18n( "Set Identity To" ), parent )
 {
-  mParameter = KernelIf->identityManager()->defaultIdentity().uoid();
+    mParameter = KernelIf->identityManager()->defaultIdentity().uoid();
 }
 
 bool FilterActionSetIdentity::argsFromStringInteractive( const QString &argsStr, const QString &filterName )
 {
-  bool needUpdate = false;
-  argsFromString( argsStr );
-  if ( KernelIf->identityManager()->identityForUoid( mParameter ).isNull() )
-  {
-    QPointer<FilterActionMissingIdentityDialog> dlg = new FilterActionMissingIdentityDialog( filterName );
-    if ( dlg->exec() ) {
-      mParameter = dlg->selectedIdentity();
-      needUpdate = true;
+    bool needUpdate = false;
+    argsFromString( argsStr );
+    if ( KernelIf->identityManager()->identityForUoid( mParameter ).isNull() )
+    {
+        QPointer<FilterActionMissingIdentityDialog> dlg = new FilterActionMissingIdentityDialog( filterName );
+        if ( dlg->exec() ) {
+            mParameter = dlg->selectedIdentity();
+            needUpdate = true;
+        }
+        else
+            mParameter = -1;
+        delete dlg;
     }
-    else
-      mParameter = -1;
-    delete dlg;
-  }
-  return needUpdate;
+    return needUpdate;
 }
 
-FilterAction::ReturnCode FilterActionSetIdentity::process( ItemContext &context ) const
+FilterAction::ReturnCode FilterActionSetIdentity::process(ItemContext &context , bool applyOnOutbound) const
 {
-  if ( KernelIf->identityManager()->identityForUoid( mParameter ).isNull() )
-    return ErrorButGoOn;
+    const KPIMIdentities::Identity & ident =
+      KernelIf->identityManager()->identityForUoid( mParameter );
 
-  const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
-  KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Identity", msg.get(), QString::number( mParameter ), "utf-8" );
-  msg->setHeader( header );
-  msg->assemble();
+    if ( ident.isNull() )
+        return ErrorButGoOn;
 
-  context.setNeedsPayloadStore();
+    const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
+    const uint currentId = msg->headerByType( "X-KMail-Identity" ) ? msg->headerByType( "X-KMail-Identity" )->asUnicodeString().trimmed().toUInt() : 0;
+    if (currentId != mParameter) {
+        KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Identity", msg.get(), QString::number( mParameter ), "utf-8" );
+        if (applyOnOutbound) {
+            msg->from()->fromUnicodeString( ident.fullEmailAddr(), "utf-8" );
+            if (!ident.bcc().isEmpty()) {
+                const KMime::Types::Mailbox::List mailboxes = MessageCore::StringUtil::mailboxListFromUnicodeString( ident.bcc() );
+                foreach ( const KMime::Types::Mailbox &mailbox, mailboxes )
+                    msg->bcc()->addAddress( mailbox );
+            }
+        }
+        msg->setHeader( header );
+        msg->assemble();
 
-  return GoOn;
+        context.setNeedsPayloadStore();
+    }
+
+    return GoOn;
 }
 
 SearchRule::RequiredPart FilterActionSetIdentity::requiredPart() const
 {
-  return SearchRule::CompleteMessage;
+    return SearchRule::CompleteMessage;
 }
 
 
 QWidget* FilterActionSetIdentity::createParamWidget( QWidget *parent ) const
 {
-  KPIMIdentities::IdentityCombo *comboBox = new KPIMIdentities::IdentityCombo( KernelIf->identityManager(), parent );
-  comboBox->setCurrentIdentity( mParameter );
+    KPIMIdentities::IdentityCombo *comboBox = new KPIMIdentities::IdentityCombo( KernelIf->identityManager(), parent );
+    comboBox->setCurrentIdentity( mParameter );
 
-  connect( comboBox, SIGNAL(currentIndexChanged(int)), this, SIGNAL(filterActionModified()) );
+    connect( comboBox, SIGNAL(currentIndexChanged(int)), this, SIGNAL(filterActionModified()) );
 
-  return comboBox;
+    return comboBox;
 }
 
 void FilterActionSetIdentity::applyParamWidgetValue( QWidget *paramWidget )
 {
-  const KPIMIdentities::IdentityCombo *comboBox = dynamic_cast<KPIMIdentities::IdentityCombo*>( paramWidget );
-  Q_ASSERT( comboBox );
+    const KPIMIdentities::IdentityCombo *comboBox = dynamic_cast<KPIMIdentities::IdentityCombo*>( paramWidget );
+    Q_ASSERT( comboBox );
 
-  mParameter = comboBox->currentIdentity();
+    mParameter = comboBox->currentIdentity();
 }
 
 void FilterActionSetIdentity::clearParamWidget( QWidget *paramWidget ) const
 {
-  KPIMIdentities::IdentityCombo *comboBox = dynamic_cast<KPIMIdentities::IdentityCombo*>( paramWidget );
-  Q_ASSERT( comboBox );
+    KPIMIdentities::IdentityCombo *comboBox = dynamic_cast<KPIMIdentities::IdentityCombo*>( paramWidget );
+    Q_ASSERT( comboBox );
 
-  comboBox->setCurrentIndex( 0 );
+    comboBox->setCurrentIndex( 0 );
 }
 
 void FilterActionSetIdentity::setParamWidgetValue( QWidget *paramWidget ) const
 {
-  KPIMIdentities::IdentityCombo *comboBox = dynamic_cast<KPIMIdentities::IdentityCombo*>( paramWidget );
-  Q_ASSERT( comboBox );
+    KPIMIdentities::IdentityCombo *comboBox = dynamic_cast<KPIMIdentities::IdentityCombo*>( paramWidget );
+    Q_ASSERT( comboBox );
 
-  comboBox->setCurrentIdentity( mParameter );
+    comboBox->setCurrentIdentity( mParameter );
 }
 
 
 
-#include "filteractionsetidentity.moc"

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,13 +16,14 @@
 */
 
 #include "sieveconditionservermetadataexists.h"
-
-#include <KLocale>
+#include "editor/sieveeditorutil.h"
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QHBoxLayout>
 #include <QDebug>
 #include <QLabel>
+#include <QDomNode>
 
 using namespace KSieveUi;
 SieveConditionServerMetaDataExists::SieveConditionServerMetaDataExists(QObject *parent)
@@ -47,6 +48,7 @@ QWidget *SieveConditionServerMetaDataExists::createParamWidget( QWidget *parent 
 
     KLineEdit *value = new KLineEdit;
     value->setObjectName(QLatin1String("value"));
+    connect(value, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     lay->addWidget(value);
 
     return w;
@@ -79,4 +81,32 @@ QString SieveConditionServerMetaDataExists::help() const
     return i18n("The \"servermetadataexists\" test is true if all of the server annotations listed in the \"annotation-names\" argument exist.");
 }
 
-#include "sieveconditionservermetadataexists.moc"
+bool SieveConditionServerMetaDataExists::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/, QString &error)
+{
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                const QString tagValue = e.text();
+                KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
+                value->setText(tagValue);
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
+            } else {
+                unknownTag(tagName, error);
+                qDebug()<<" SieveConditionServerMetaDataExists::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+    return true;
+}
+
+QString SieveConditionServerMetaDataExists::href() const
+{
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
+}

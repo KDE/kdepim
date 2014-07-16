@@ -66,9 +66,9 @@ TripWidget::TripWidget(Trip *trip, QWidget *parent)
 
   vSplitter->addWidget(splitter);
 
-  FolderContentsWidget *mailWidget = createView("Mail", Trip::MailCollectionRole);
-  FolderContentsWidget *todoWidget = createView("Todos", Trip::TodoCollectionRole);
-  FolderContentsWidget *notesWidget = createView("Notes", Trip::NotesCollectionRole);
+  FolderContentsWidget *mailWidget = createView(QLatin1String("Mail"), Trip::MailCollectionRole);
+  FolderContentsWidget *todoWidget = createView(QLatin1String("Todos"), Trip::TodoCollectionRole);
+  FolderContentsWidget *notesWidget = createView(QLatin1String("Notes"), Trip::NotesCollectionRole);
 
   ItemSelection *itemSelection = new ItemSelection(mailWidget->selectionModel(),
                                                    todoWidget->selectionModel(),
@@ -81,7 +81,7 @@ TripWidget::TripWidget(Trip *trip, QWidget *parent)
   ItemViewerWidget *browser = new ItemViewerWidget(itemSelection, this);
   vSplitter->addWidget(browser);
 
-  QPushButton *deleteButton = new QPushButton("Delete");
+  QPushButton *deleteButton = new QPushButton(i18n("Delete"));
   connect(deleteButton, SIGNAL(clicked(bool)), SLOT(doDeleteThis()));
   layout->addWidget(deleteButton);
 }

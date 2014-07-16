@@ -28,7 +28,7 @@
 
 // KDE libs
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 class CodecAction::Private
 {
@@ -64,7 +64,7 @@ CodecAction::CodecAction( Mode mode, QObject *parent )
     }
 
     // Eye candy.
-    setIcon( KIcon( "accessories-character-map" ) );
+    setIcon( KIcon( QLatin1String("accessories-character-map") ) );
     setText( i18nc( "Menu item", "Encoding" ) );
 }
 
@@ -92,4 +92,3 @@ QList<QByteArray> CodecAction::mimeCharsets() const
     return ret;
 }
 
-#include "codecaction.moc"

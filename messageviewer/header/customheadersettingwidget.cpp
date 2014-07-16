@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -22,7 +22,7 @@
 #include <KConfig>
 #include <KConfigGroup>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -44,6 +44,8 @@ CustomHeaderSettingWidget::CustomHeaderSettingWidget(QWidget *parent)
     mHeaders = new PimCommon::SimpleStringListEditor( this, PimCommon::SimpleStringListEditor::All,
                                                            i18n("A&dd..."), i18n("Remo&ve"),
                                                            i18n("&Modify..."), i18n("Header:") );
+    mHeaders->setUpDownAutoRepeat(true);
+
     connect(mHeaders, SIGNAL(changed()), this, SIGNAL(changed()));
     topLayout->addWidget(mHeaders);
 
@@ -117,4 +119,3 @@ void CustomHeaderSettingWidget::resetToDefault()
 
 }
 
-#include "customheadersettingwidget.moc"

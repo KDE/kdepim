@@ -284,4 +284,3 @@ QDate Decoration::yearDate( const QDate &date )
   return QDate( date.year(), 1, 1 );
 }
 
-#include "calendardecoration.moc"

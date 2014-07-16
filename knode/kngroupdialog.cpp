@@ -340,4 +340,3 @@ void KNGroupDialog::slotDatePickerEnabled( bool b )
 
 //--------------------------------
 
-#include "kngroupdialog.moc"

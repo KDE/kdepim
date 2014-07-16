@@ -43,8 +43,8 @@ KMailCVT::KMailCVT(QWidget *parent)
     : KAssistantDialog(parent) {
     setModal(true);
     setWindowTitle( i18n( "KMailCVT Import Tool" ) );
-    KGlobal::locale()->insertCatalog( "libmailimporter" );
-    KGlobal::locale()->insertCatalog( "libmailcommon" );
+    KGlobal::locale()->insertCatalog( QLatin1String("libmailimporter") );
+    KGlobal::locale()->insertCatalog( QLatin1String("libmailcommon") );
     KMailCVTKernel *kernel = new KMailCVTKernel( this );
     CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
     CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
@@ -68,6 +68,7 @@ KMailCVT::KMailCVT(QWidget *parent)
     readConfig();
     KHelpMenu *helpMenu = new KHelpMenu(this, KGlobal::mainComponent().aboutData(), true);
     setButtonMenu( Help, helpMenu->menu() );
+    setHelp(QString(), QLatin1String("kmailcvt"));
 }
 
 KMailCVT::~KMailCVT()
@@ -144,5 +145,4 @@ void KMailCVT::collectionChanged( const Akonadi::Collection &selectedCollection 
     }
 }
 
-#include "kmailcvt.moc"
 

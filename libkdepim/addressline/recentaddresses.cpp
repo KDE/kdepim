@@ -148,8 +148,10 @@ void RecentAddresses::add( const QString &entry )
 
 void RecentAddresses::setMaxCount( int count )
 {
-    m_maxCount = count;
-    adjustSize();
+    if (count != m_maxCount) {
+        m_maxCount = count;
+        adjustSize();
+    }
 }
 
 void RecentAddresses::adjustSize()
@@ -252,13 +254,10 @@ void RecentAddressDialog::slotTypedSomething(const QString& text)
 
 void RecentAddressDialog::slotAddItem()
 {
-    QStringList lst = addresses();
     mListView->blockSignals(true);
-    QStringList newList;
-    newList << QString() << lst;
-    setAddresses(newList);
+    mListView->insertItem(0, QString());
     mListView->blockSignals(false);
-    mListView->setCurrentRow(0);
+    mListView->setCurrentRow(0, QItemSelectionModel::ClearAndSelect);
     mLineEdit->setFocus();
     updateButtonState();
 }
@@ -336,11 +335,9 @@ void RecentAddressDialog::addAddresses(KConfig *config)
 void RecentAddressDialog::readConfig()
 {
     KConfigGroup group( KGlobal::config(), "RecentAddressDialog" );
-    const QSize size = group.readEntry( "Size", QSize() );
+    const QSize size = group.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
-    } else {
-        resize( 600, 400 );
     }
 }
 
@@ -353,4 +350,3 @@ void RecentAddressDialog::writeConfig()
 
 
 
-#include "recentaddresses.moc"

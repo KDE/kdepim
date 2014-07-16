@@ -1,0 +1,13 @@
+require "date";
+ 
+#SCRIPTNAME: test-current-date
+#Script name: test-current-date
+
+if allof (currentdate :contains "day" "06"
+, not currentdate :contains "julian" "sam. janv. 1 2000"
+, not currentdate :matches "iso8601" "sam. janv. 1 2000"
+, currentdate :is "zone" "sam. janv. 1 2000"
+)
+{
+    keep;
+}

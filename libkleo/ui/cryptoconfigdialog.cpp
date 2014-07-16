@@ -41,7 +41,7 @@ Kleo::CryptoConfigDialog::CryptoConfigDialog( Kleo::CryptoConfig* config, QWidge
   setButtons( Default|Cancel|Apply|Ok|User1 );
   setDefaultButton( Ok );
   setModal( true );
-  setButtonGuiItem( User1,  KGuiItem( i18n( "&Reset" ), "edit-undo" ) );
+  setButtonGuiItem( User1,  KGuiItem( i18n( "&Reset" ), QLatin1String("edit-undo") ) );
 //add style :  Qt::WStyle_Customize | Qt::WStyle_DialogBorder | Qt::WStyle_Maximize | Qt::WStyle_Title | Qt::WStyle_SysMenu
 
   mMainWidget = new CryptoConfigModule( config, this );
@@ -99,4 +99,3 @@ void Kleo::CryptoConfigDialog::slotChanged()
   enableButton( Apply, true );
 }
 
-#include "cryptoconfigdialog.moc"

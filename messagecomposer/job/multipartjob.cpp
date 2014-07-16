@@ -28,9 +28,9 @@ using namespace MessageComposer;
 
 class MessageComposer::MultipartJobPrivate : public ContentJobBasePrivate
 {
-  public:
+public:
     MultipartJobPrivate( MultipartJob *qq )
-      : ContentJobBasePrivate( qq )
+        : ContentJobBasePrivate( qq )
     {
     }
 
@@ -39,7 +39,7 @@ class MessageComposer::MultipartJobPrivate : public ContentJobBasePrivate
 };
 
 MultipartJob::MultipartJob( QObject *parent )
-  : ContentJobBase( *new MultipartJobPrivate( this ), parent )
+    : ContentJobBase( *new MultipartJobPrivate( this ), parent )
 {
 }
 
@@ -49,36 +49,35 @@ MultipartJob::~MultipartJob()
 
 QByteArray MultipartJob::multipartSubtype() const
 {
-  Q_D( const MultipartJob );
-  return d->subtype;
+    Q_D( const MultipartJob );
+    return d->subtype;
 }
 
 void MultipartJob::setMultipartSubtype( const QByteArray &subtype )
 {
-  Q_D( MultipartJob );
-  d->subtype = subtype;
+    Q_D( MultipartJob );
+    d->subtype = subtype;
 }
 
 void MultipartJob::process()
 {
-  Q_D( MultipartJob );
-  Q_ASSERT( d->resultContent == 0 ); // Not processed before.
-  Q_ASSERT( !d->subtype.isEmpty() );
-  d->resultContent = new KMime::Content;
-  d->resultContent->contentType( true )->setMimeType( "multipart/" + d->subtype );
-  d->resultContent->contentType()->setBoundary( KMime::multiPartBoundary() );
-  d->resultContent->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit );
-  d->resultContent->setPreamble( "This is a multi-part message in MIME format.\n" );
-  foreach( KMime::Content *c, d->subjobContents ) {
-    d->resultContent->addContent( c );
-    if( c->contentTransferEncoding()->encoding() == KMime::Headers::CE8Bit ) {
-      d->resultContent->contentTransferEncoding()->setEncoding( KMime::Headers::CE8Bit );
-      break;
+    Q_D( MultipartJob );
+    Q_ASSERT( d->resultContent == 0 ); // Not processed before.
+    Q_ASSERT( !d->subtype.isEmpty() );
+    d->resultContent = new KMime::Content;
+    d->resultContent->contentType( true )->setMimeType( "multipart/" + d->subtype );
+    d->resultContent->contentType()->setBoundary( KMime::multiPartBoundary() );
+    d->resultContent->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit );
+    d->resultContent->setPreamble( "This is a multi-part message in MIME format.\n" );
+    foreach( KMime::Content *c, d->subjobContents ) {
+        d->resultContent->addContent( c );
+        if( c->contentTransferEncoding()->encoding() == KMime::Headers::CE8Bit ) {
+            d->resultContent->contentTransferEncoding()->setEncoding( KMime::Headers::CE8Bit );
+            break;
+        }
     }
-  }
-  kDebug() << "Created" << d->resultContent->contentType()->mimeType() << "content with"
-    << d->resultContent->contents().count() << "subjobContents.";
-  emitResult();
+    kDebug() << "Created" << d->resultContent->contentType()->mimeType() << "content with"
+             << d->resultContent->contents().count() << "subjobContents.";
+    emitResult();
 }
 
-#include "multipartjob.moc"

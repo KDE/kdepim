@@ -20,6 +20,7 @@
 #include "rawsocketconsole.h"
 
 #include <akonadi/private/xdgbasedirs_p.h>
+#include <akonadi/servermanager.h>
 
 #include <KDebug>
 #include <KGlobalSettings>
@@ -40,6 +41,7 @@ RawSocketConsole::RawSocketConsole(QWidget* parent) :
   connect( ui.execButton, SIGNAL(clicked()), SLOT(execClicked()) );
   connect( ui.commandEdit, SIGNAL(returnPressed()), SLOT(execClicked()) );
   connect( ui.connectButton, SIGNAL(clicked()), SLOT(connectClicked()) );
+  connect( ui.clearButton, SIGNAL(clicked()), ui.protocolView, SLOT(clear()) );
   ui.protocolView->setFont( KGlobalSettings::fixedFont() );
 
   connect( mSocket, SIGNAL(readyRead()), SLOT(dataReceived()) );
@@ -89,7 +91,16 @@ void RawSocketConsole::connectClicked()
   if ( mSocket->state() == QLocalSocket::ConnectedState ) {
     mSocket->close();
   } else {
-    const QString connectionConfigFile = XdgBaseDirs::akonadiConnectionConfigFile();
+    QString connectionConfigFile;
+    if ( Akonadi::ServerManager::self()->hasInstanceIdentifier() ) {
+      const QString akonadiPath = XdgBaseDirs::findResourceDir( "config", QLatin1String( "akonadi" ) );
+      connectionConfigFile = akonadiPath + QLatin1String( "/instance/" )
+                           + Akonadi::ServerManager::self()->instanceIdentifier()
+                           + QLatin1String( "/akonadiconnectionrc" );
+    } else {
+      connectionConfigFile = XdgBaseDirs::akonadiConnectionConfigFile();
+    }
+
     if ( !QFile::exists( connectionConfigFile ) ) {
       kWarning( 5250 ) << "Akonadi Client Session: connection config file '"
       << "akonadi/akonadiconnectionrc cannot be found in '"
@@ -108,4 +119,3 @@ void RawSocketConsole::connectClicked()
   }
 }
 
-#include "rawsocketconsole.moc"

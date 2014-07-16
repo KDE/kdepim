@@ -35,7 +35,7 @@ class QIODevice;
  */
 class QCsvBuilderInterface
 {
-  public:
+public:
     /**
      * This method is called on the destruction of the interface.
      */
@@ -90,13 +90,13 @@ class QCsvBuilderInterface
  */
 class QCsvReader : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  Q_PROPERTY( QChar textQuote READ textQuote WRITE setTextQuote )
-  Q_PROPERTY( QChar delimiter READ delimiter WRITE setDelimiter )
-  Q_PROPERTY( uint startRow READ startRow WRITE setStartRow )
+    Q_PROPERTY( QChar textQuote READ textQuote WRITE setTextQuote )
+    Q_PROPERTY( QChar delimiter READ delimiter WRITE setDelimiter )
+    Q_PROPERTY( uint startRow READ startRow WRITE setStartRow )
 
-  public:
+public:
     /**
      * Creates a new csv reader.
      *
@@ -170,7 +170,7 @@ class QCsvReader : public QObject
      */
     void terminate();
 
-  private:
+private:
     class Private;
     Private *const d;
 };
@@ -185,7 +185,7 @@ class QCsvReader : public QObject
  */
 class QCsvStandardBuilder : public QCsvBuilderInterface
 {
-  public:
+public:
     /**
      * Creates a new csv standard builder.
      */
@@ -227,7 +227,7 @@ class QCsvStandardBuilder : public QCsvBuilderInterface
     void end();
     void error( const QString &errorMsg );
 
-  private:
+private:
     class Private;
     Private *const d;
 

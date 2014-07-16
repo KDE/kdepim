@@ -51,7 +51,6 @@
 
 #include <KConfig>
 #include <KGlobal>
-#include <KLocale>
 
 #include <QFileInfo>
 #include <QTimer>
@@ -308,4 +307,3 @@ void SignEncryptWizard::setKeepResultPageOpenWhenDone( bool keep )
     d->resultPage->setKeepOpenWhenDone( keep );
 }
 
-#include "moc_signencryptwizard.cpp"

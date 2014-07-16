@@ -46,8 +46,26 @@ public:
     explicit CustomLogWidget( QWidget * parent = 0 );
     ~CustomLogWidget();
 
-    void addInfoLogEntry( const QString& log );
-    void addErrorLogEntry( const QString& log );
+    void addInfoLogEntry( const QString &log );
+    void addErrorLogEntry( const QString &log );
+    void addTitleLogEntry( const QString &log );
+    void addEndLineLogEntry();
+
+    QString toHtml() const;
+    QString toPlainText() const;
+    bool isEmpty() const;
+
+private:
+    enum ItemType {
+        ItemLogType = Qt::UserRole + 1
+    };
+
+    enum LogType {
+        Title=0,
+        Error,
+        Info,
+        EndLine
+    };
 };
 }
 

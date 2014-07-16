@@ -24,8 +24,8 @@
 #include <KConfig>
 #include <KConfigGroup>
 
-static const char * const sFavoritePrefix = "Favorite_";
-static const char * const sFavoriteOrder = "FavoriteOrder";
+static const QString sFavoritePrefix = QLatin1String("Favorite_");
+static const QString sFavoriteOrder = QLatin1String("FavoriteOrder");
 static const int sFavoritePrefixLength = 9;
 
 FavoritesListModel::FavoritesListModel( const KSharedConfigPtr &config, QObject *parent )

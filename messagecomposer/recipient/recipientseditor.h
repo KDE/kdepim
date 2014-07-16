@@ -41,11 +41,9 @@ class MESSAGECOMPOSER_EXPORT RecipientLineFactory : public KPIM::MultiplyingLine
 {
     Q_OBJECT
 public:
-    explicit RecipientLineFactory( QObject* parent ) : KPIM::MultiplyingLineFactory( parent ) {}
-    virtual KPIM::MultiplyingLine* newLine(  QWidget *parent )
-    {
-        return new RecipientLineNG( parent );
-    }
+    explicit RecipientLineFactory( QObject* parent );
+    virtual KPIM::MultiplyingLine* newLine(  QWidget *parent );
+    virtual int maximumRecipients();
 };
 
 
@@ -72,7 +70,7 @@ public:
         @param recipient The recipient(s) you want to add.
         @param type      The recipient type.
     */
-    void addRecipient( const QString & recipient, Recipient::Type type );
+    bool addRecipient( const QString & recipient, Recipient::Type type );
 
     /** Removes the recipient provided it can be found and has the given type.
         @param recipient The recipient(s) you want to remove.
@@ -90,7 +88,7 @@ public slots:
     void saveDistributionList();
 
 protected slots:
-    void slotPickedRecipient( const Recipient & );
+    void slotPickedRecipient(const Recipient & , bool &tooManyAddress);
     void slotLineAdded( KPIM::MultiplyingLine* );
     void slotLineDeleted( int pos );
     void slotCalculateTotal();

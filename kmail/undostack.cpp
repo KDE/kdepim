@@ -40,7 +40,6 @@ UndoStack::UndoStack(int size)
       mLastId(0),
       mCachedInfo(0)
 {
-    setObjectName( "undostack" );
 }
 
 UndoStack::~UndoStack()
@@ -106,7 +105,7 @@ void UndoStack::undo()
 void UndoStack::slotMoveResult( KJob *job )
 {
     if ( job->error() )
-        KMessageBox::sorry( kmkernel->mainWin(), i18n("Can not move message. %1", job->errorString() ) );
+        KMessageBox::sorry( kmkernel->mainWin(), i18n("Cannot move message. %1", job->errorString() ) );
 }
 
 void UndoStack::pushSingleAction(const Akonadi::Item &item, const Akonadi::Collection &folder, const Akonadi::Collection &destFolder)
@@ -151,4 +150,3 @@ UndoStack::folderDestroyed( const Akonadi::Collection &folder)
 
 }
 
-#include "undostack.moc"

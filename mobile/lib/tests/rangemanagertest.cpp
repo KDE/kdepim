@@ -158,4 +158,4 @@ class RangeManagerTest : public QObject
 
 QTEST_MAIN( RangeManagerTest )
 
-#include "main.moc"
+#include "rangemanagertest.moc"

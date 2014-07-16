@@ -32,7 +32,6 @@
 #include "attachmenticonview.h"
 
 #include <KIconLoader>
-#include <KLocale>
 #include <KTemporaryFile>
 #include <KDebug>
 
@@ -77,9 +76,15 @@ const QString AttachmentIconItem::uri() const
   return mAttachment->uri();
 }
 
+const QString AttachmentIconItem::savedUri() const
+{
+  return mSaveUri;
+}
+
 void AttachmentIconItem::setUri( const QString &uri )
 {
-  mAttachment->setUri( uri );
+  mSaveUri = uri;
+  mAttachment->setUri( mSaveUri );
   readAttachment();
 }
 

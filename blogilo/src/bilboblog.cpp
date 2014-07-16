@@ -100,7 +100,7 @@ KBlog::Blog* BilboBlog::blogBackend()
             d->kblog = new KBlog::WordpressBuggy( url(), this );
             break;
         }
-        d->kblog->setUserAgent( APPNAME, VERSION );
+        d->kblog->setUserAgent( QLatin1String(APPNAME), QLatin1String(VERSION) );
         d->kblog->setUsername( username() );
         d->kblog->setPassword( password() );
         d->kblog->setBlogId( blogid() );
@@ -178,34 +178,34 @@ void BilboBlog::setApi( const ApiType api )
     d->mApi = api;
     switch(api) {
         case BLOGGER1_API:
-            d->mSupportedFeatures["uploadMedia"] = false;
-            d->mSupportedFeatures["category"] = false;
-            d->mSupportedFeatures["tag"] = false;
+            d->mSupportedFeatures[QLatin1String("uploadMedia")] = false;
+            d->mSupportedFeatures[QLatin1String("category")] = false;
+            d->mSupportedFeatures[QLatin1String("tag")] = false;
             break;
         case METAWEBLOG_API:
-            d->mSupportedFeatures["uploadMedia"] = true;
-            d->mSupportedFeatures["category"] = true;
-            d->mSupportedFeatures["tag"] = false;
+            d->mSupportedFeatures[QLatin1String("uploadMedia")] = true;
+            d->mSupportedFeatures[QLatin1String("category")] = true;
+            d->mSupportedFeatures[QLatin1String("tag")] = false;
             break;
         case MOVABLETYPE_API:
-            d->mSupportedFeatures["uploadMedia"] = true;
-            d->mSupportedFeatures["category"] = true;
-            d->mSupportedFeatures["tag"] = true;
+            d->mSupportedFeatures[QLatin1String("uploadMedia")] = true;
+            d->mSupportedFeatures[QLatin1String("category")] = true;
+            d->mSupportedFeatures[QLatin1String("tag")] = true;
             break;
         case WORDPRESSBUGGY_API:
-            d->mSupportedFeatures["uploadMedia"] = true;
-            d->mSupportedFeatures["category"] = true;
-            d->mSupportedFeatures["tag"] = true;
+            d->mSupportedFeatures[QLatin1String("uploadMedia")] = true;
+            d->mSupportedFeatures[QLatin1String("category")] = true;
+            d->mSupportedFeatures[QLatin1String("tag")] = true;
             break;
         case GDATA_API:
-            d->mSupportedFeatures["uploadMedia"] = false;
-            d->mSupportedFeatures["category"] = false;
-            d->mSupportedFeatures["tag"] = true;
+            d->mSupportedFeatures[QLatin1String("uploadMedia")] = false;
+            d->mSupportedFeatures[QLatin1String("category")] = false;
+            d->mSupportedFeatures[QLatin1String("tag")] = true;
             break;
         default:
-            d->mSupportedFeatures["uploadMedia"] = false;
-            d->mSupportedFeatures["category"] = false;
-            d->mSupportedFeatures["tag"] = false;
+            d->mSupportedFeatures[QLatin1String("uploadMedia")] = false;
+            d->mSupportedFeatures[QLatin1String("category")] = false;
+            d->mSupportedFeatures[QLatin1String("tag")] = false;
             break;
     }
 }
@@ -255,17 +255,16 @@ void BilboBlog::setBlogUrl(const QString &blogUrl)
 
 bool BilboBlog::supportUploadMedia() const
 {
-    return d->mSupportedFeatures["uploadMedia"];
+    return d->mSupportedFeatures[QLatin1String("uploadMedia")];
 }
 
 bool BilboBlog::supportCategory() const
 {
-    return d->mSupportedFeatures["category"];
+    return d->mSupportedFeatures[QLatin1String("category")];
 }
 
 bool BilboBlog::supportTag() const
 {
-    return d->mSupportedFeatures["tag"];
+    return d->mSupportedFeatures[QLatin1String("tag")];
 }
 
-#include "bilboblog.moc"

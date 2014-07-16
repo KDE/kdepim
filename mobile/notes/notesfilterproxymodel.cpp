@@ -78,4 +78,3 @@ static bool noteMatchesFilter( const KMime::Message::Ptr &note, const QString &f
   return false;
 }
 
-#include "notesfilterproxymodel.moc"

@@ -239,4 +239,3 @@ void FreeBusyItemModelTest::testInsertFreeBusy()
   QCOMPARE( model->rowCount( i ), 4 );
 }
 
-#include "testfreebusyitemmodel.moc"

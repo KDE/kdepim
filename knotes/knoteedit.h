@@ -1,7 +1,7 @@
 /*******************************************************************
  KNotes -- Notes for the KDE project
 
- Copyright (c) 1997-2005, The KNotes Developers
+ Copyright (c) 1997-2013, The KNotes Developers
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -21,12 +21,11 @@
 #ifndef KNOTEEDIT_H
 #define KNOTEEDIT_H
 
-#include <QDragEnterEvent>
-#include <QDropEvent>
+#include "knotes_export.h"
 #include <QTextCharFormat>
 #include <QWidget>
 
-#include <ktextedit.h>
+#include "pimcommon/widgets/customtextedit.h"
 
 class QFont;
 
@@ -37,17 +36,15 @@ class KFontSizeAction;
 class KToggleAction;
 class KNote;
 
-class KNoteEdit
-  : public KTextEdit
+class KNOTES_EXPORT KNoteEdit : public PimCommon::CustomTextEdit
 {
-  Q_OBJECT
-  public:
-    explicit KNoteEdit( KActionCollection *actions, QWidget *parent = 0 );
+    Q_OBJECT
+public:
+    explicit KNoteEdit(const QString &configFile, KActionCollection *actions, QWidget *parent = 0 );
     ~KNoteEdit();
 
-    void setNote( KNote *_note ) {
-        m_note = _note;
-    }
+    void setNote( KNote *_note );
+
     void setText( const QString &text );
     QString text() const;
 
@@ -55,7 +52,8 @@ class KNoteEdit
     void setTabStop( int tabs );
     void setAutoIndentMode( bool newmode );
 
-  public slots:
+    void setColor(const QColor &fg, const QColor &bg);
+public slots:
     void setRichText( bool );
 
     void textBold( bool );
@@ -78,26 +76,30 @@ class KNoteEdit
     void setTextFontSize( int );
 
     void slotTextBackgroundColor();
+    void slotInsertDate();
 
-  protected:
-    virtual void dragEnterEvent( QDragEnterEvent * );
-    virtual void dropEvent( QDropEvent * );
-    virtual void keyPressEvent( QKeyEvent * );
-    virtual void focusInEvent( QFocusEvent * );
-    virtual void focusOutEvent( QFocusEvent * );
+protected:
+    void keyPressEvent( QKeyEvent * );
+    void focusInEvent( QFocusEvent * );
+    void focusOutEvent( QFocusEvent * );
 
-  private slots:
+protected slots:
+    void mousePopupMenuImplementation(const QPoint& pos);
+
+private slots:
     void slotCurrentCharFormatChanged( const QTextCharFormat & );
     void slotCursorPositionChanged();
-  private:
+    void slotUpperCase();
+    void slotLowerCase();
+
+private:
     void autoIndent();
 
-    void setTextFormat( const QTextCharFormat & );
+    void enableRichTextActions(bool enabled);
 
-    void enableRichTextActions();
-    void disableRichTextActions();
-
-  private:
+private:
+    QColor mDefaultBackgroundColor;
+    QColor mDefaultForegroundColor;
 
     KToggleAction *m_textBold;
     KToggleAction *m_textItalic;
@@ -120,6 +122,7 @@ class KNoteEdit
     KFontAction     *m_textFont;
     KFontSizeAction *m_textSize;
     KNote           *m_note;
+    KActionCollection *m_actions;
     bool m_autoIndentMode;
 };
 

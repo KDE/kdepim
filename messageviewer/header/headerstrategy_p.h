@@ -69,7 +69,7 @@ static const int numRichHeaders = sizeof richHeaders / sizeof *richHeaders;
 static QStringList stringList( const char * headers[], int numHeaders ) {
     QStringList sl;
     for ( int i = 0 ; i < numHeaders ; ++i )
-        sl.push_back( headers[i] );
+        sl.push_back( QLatin1String(headers[i]) );
     return sl;
 }
 

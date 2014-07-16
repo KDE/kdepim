@@ -22,8 +22,7 @@
 
 #include "vcardviewer.h"
 #include "settings/globalsettings.h"
-
-#include <akonadi/contact/contactviewer.h>
+#include "kaddressbookgrantlee/widget/grantleecontactviewer.h"
 
 #include <kabc/vcardconverter.h>
 using KABC::VCardConverter;
@@ -32,7 +31,6 @@ using KABC::Addressee;
 #include <klocale.h>
 
 #include <libkdepim/job/addcontactjob.h>
-
 
 #ifndef KABC_ADDRESSEE_METATYPE_DEFINED
 Q_DECLARE_METATYPE( KABC::Addressee )
@@ -50,7 +48,8 @@ VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
     setButtonGuiItem( User1, KGuiItem(i18n("&Import")) );
     setButtonGuiItem( User2, KGuiItem(i18n("&Next Card")) );
     setButtonGuiItem( User3, KGuiItem(i18n("&Previous Card")) );
-    mContactViewer = new Akonadi::ContactViewer(this);
+
+    mContactViewer = new KAddressBookGrantlee::GrantleeContactViewer( this );
     setMainWidget(mContactViewer);
 
     VCardConverter vcc;
@@ -85,11 +84,9 @@ VCardViewer::~VCardViewer()
 void VCardViewer::readConfig()
 {
     KConfigGroup group( MessageViewer::GlobalSettings::self()->config(), "VCardViewer" );
-    const QSize size = group.readEntry( "Size", QSize() );
+    const QSize size = group.readEntry( "Size", QSize(300, 400) );
     if ( size.isValid() ) {
         resize( size );
-    } else {
-        resize( 300, 400 );
     }
 }
 
@@ -127,4 +124,3 @@ void VCardViewer::slotUser3()
     enableButton(User2, true);
 }
 
-#include "vcardviewer.moc"

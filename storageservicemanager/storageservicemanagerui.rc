@@ -1,0 +1,25 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="storageservicemanager" version="1">
+ <MenuBar>
+  <Menu name="file" >
+    <Action name="show_log" />
+    <Separator/>
+    <Action name="refresh_all" />
+    <Action name="shutdown_all_services" />
+  </Menu>
+  <Menu name="edit" >
+   <text>&amp;Edit</text>
+   <Action name="authenticate"/>
+   <Separator/>
+   <Action name="create_folder"/>
+   <Action name="refresh_list"/>
+   <Action name="account_info"/>
+   <Action name="upload_file"/>
+   <Action name="delete"/>
+   <Action name="download_file"/>
+   <Separator/>
+   <Action name="logout"/>
+  </Menu>
+ </MenuBar>
+</kpartgui>
+

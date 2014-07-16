@@ -47,8 +47,6 @@
 
 #include <QCheckBox>
 #include <QHash>
-#include <QHBoxLayout>
-#include <QIcon>
 #include <QLabel>
 #include <QProgressBar>
 #include <QVBoxLayout>
@@ -238,4 +236,4 @@ bool NewResultPage::isComplete() const
 }
 
 
-#include "newresultpage.moc"
+#include "moc_newresultpage.cpp"

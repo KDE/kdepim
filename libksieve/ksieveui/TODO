@@ -1,0 +1,6 @@
+4.13:
+-----
+- add autocompletion in include tab for existing scripts
+- Allow to add script with include when possible
+- Fix check script when necessary. Perhaps check each seconds
+- Look at how to implement if "in if" not possible with actual design.

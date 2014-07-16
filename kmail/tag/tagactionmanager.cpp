@@ -20,30 +20,25 @@
 #include "tagactionmanager.h"
 
 #include "messageactions.h"
-#include "messagecore/nepomukutil/asyncnepomukresourceretriever.h"
 
 #include "mailcommon/tag/addtagdialog.h"
 
-#include <Nepomuk2/Tag>
-#include <Nepomuk2/ResourceManager>
-#include <Nepomuk2/Query/QueryServiceClient>
-#include <Nepomuk2/Query/Result>
-#include <Nepomuk2/Query/ResourceTypeTerm>
-
 #include <KAction>
 #include <KActionCollection>
-#include <KActionMenu>
-#include <KMenu>
 #include <KToggleAction>
 #include <KXMLGUIClient>
-#include <KMessageBox>
-#include <KDialog>
-#include <KLineEdit>
+#include <KActionMenu>
+#include <KMenu>
+#include <KLocalizedString>
+#include <KJob>
+#include <Akonadi/Monitor>
 
 #include <QSignalMapper>
 #include <QPointer>
-#include <soprano/nao.h>
-#include <nepomuk2/resourcewatcher.h>
+
+#include <Akonadi/TagFetchJob>
+#include <Akonadi/TagFetchScope>
+#include <Akonadi/TagAttribute>
 
 using namespace KMail;
 
@@ -51,36 +46,26 @@ static int s_numberMaxTag = 10;
 
 TagActionManager::TagActionManager( QObject *parent, KActionCollection *actionCollection,
                                     MessageActions *messageActions, KXMLGUIClient *guiClient )
-  : QObject( parent ),
-    mActionCollection( actionCollection ),
-    mMessageActions( messageActions ),
-    mMessageTagToggleMapper( 0 ),
-    mGUIClient( guiClient ),
-    mSeparatorMoreAction( 0 ),
-    mSeparatorNewTagAction( 0 ),
-    mMoreAction( 0 ),
-    mNewTagAction( 0 ),
-    mTagQueryClient( 0 )
+    : QObject( parent ),
+      mActionCollection( actionCollection ),
+      mMessageActions( messageActions ),
+      mMessageTagToggleMapper( 0 ),
+      mGUIClient( guiClient ),
+      mSeparatorMoreAction( 0 ),
+      mSeparatorNewTagAction( 0 ),
+      mMoreAction( 0 ),
+      mNewTagAction( 0 ),
+      mNewTagId(-1),
+      mTagFetchInProgress( false ),
+      mMonitor(new Akonadi::Monitor(this))
 {
-  mMessageActions->messageStatusMenu()->menu()->addSeparator();
-  connect( Nepomuk2::ResourceManager::instance(), SIGNAL(nepomukSystemStarted()),
-           SLOT(tagsChanged()) );
-  connect( Nepomuk2::ResourceManager::instance(), SIGNAL(nepomukSystemStopped()),
-           SLOT(tagsChanged()) );
+    mMessageActions->messageStatusMenu()->menu()->addSeparator();
 
-  Nepomuk2::ResourceWatcher* watcher = new Nepomuk2::ResourceWatcher(this);
-  watcher->addType(Soprano::Vocabulary::NAO::Tag());
-  connect(watcher, SIGNAL(resourceCreated(Nepomuk2::Resource,QList<QUrl>)), this, SLOT(resourceCreated(Nepomuk2::Resource,QList<QUrl>)));
-  connect(watcher, SIGNAL(resourceRemoved(QUrl,QList<QUrl>)),this, SLOT(resourceRemoved(QUrl,QList<QUrl>)));
-  connect(watcher, SIGNAL(propertyChanged(Nepomuk2::Resource,Nepomuk2::Types::Property,QVariantList,QVariantList)),this,SLOT(propertyChanged(Nepomuk2::Resource)));
-  watcher->start();
-
-  QVector<QUrl> properties;
-  properties << Soprano::Vocabulary::NAO::hasTag();
-
-  mAsyncNepomukRetriver = new MessageCore::AsyncNepomukResourceRetriever(properties, this);
-  connect(mAsyncNepomukRetriver, SIGNAL(resourceReceived(QUrl,Nepomuk2::Resource)),
-          this, SLOT(slotLoadedResourceForUpdateActionStates(QUrl,Nepomuk2::Resource)));
+    mMonitor->setTypeMonitored(Akonadi::Monitor::Tags);
+    mMonitor->tagFetchScope().fetchAttribute<Akonadi::TagAttribute>();
+    connect(mMonitor, SIGNAL(tagAdded(Akonadi::Tag)), this, SLOT(onTagAdded(Akonadi::Tag)));
+    connect(mMonitor, SIGNAL(tagRemoved(Akonadi::Tag)), this, SLOT(onTagRemoved(Akonadi::Tag)));
+    connect(mMonitor, SIGNAL(tagChanged(Akonadi::Tag)), this, SLOT(onTagChanged(Akonadi::Tag)));
 }
 
 TagActionManager::~TagActionManager()
@@ -89,269 +74,251 @@ TagActionManager::~TagActionManager()
 
 void TagActionManager::clearActions()
 {
-  //Remove the tag actions from the toolbar
-  if ( !mToolbarActions.isEmpty() ) {
-    if ( mGUIClient->factory() ) {
-      mGUIClient->unplugActionList( "toolbar_messagetag_actions" );
+    //Remove the tag actions from the toolbar
+    if ( !mToolbarActions.isEmpty() ) {
+        if ( mGUIClient->factory() ) {
+            mGUIClient->unplugActionList( QLatin1String("toolbar_messagetag_actions") );
+        }
+        mToolbarActions.clear();
     }
-    mToolbarActions.clear();
-  }
 
-  //Remove the tag actions from the status menu and the action collection,
-  //then delete them.
-  foreach( KAction *action, mTagActions ) {
-    mMessageActions->messageStatusMenu()->removeAction( action );
+    //Remove the tag actions from the status menu and the action collection,
+    //then delete them.
+    foreach( KAction *action, mTagActions ) {
+        mMessageActions->messageStatusMenu()->removeAction( action );
 
-    // This removes and deletes the action at the same time
-    mActionCollection->removeAction( action );
-  }
+        // This removes and deletes the action at the same time
+        mActionCollection->removeAction( action );
+    }
 
-  if ( mSeparatorMoreAction ) {
-    mMessageActions->messageStatusMenu()->removeAction( mSeparatorMoreAction );
-  }
+    if ( mSeparatorMoreAction ) {
+        mMessageActions->messageStatusMenu()->removeAction( mSeparatorMoreAction );
+    }
 
-  if ( mSeparatorNewTagAction ) {
-    mMessageActions->messageStatusMenu()->removeAction( mSeparatorNewTagAction );
-  }
+    if ( mSeparatorNewTagAction ) {
+        mMessageActions->messageStatusMenu()->removeAction( mSeparatorNewTagAction );
+    }
 
-  if ( mNewTagAction ) {
-    mMessageActions->messageStatusMenu()->removeAction( mNewTagAction );
-  }
+    if ( mNewTagAction ) {
+        mMessageActions->messageStatusMenu()->removeAction( mNewTagAction );
+    }
 
-  if ( mMoreAction ) {
-    mMessageActions->messageStatusMenu()->removeAction( mMoreAction );
-  }
+    if ( mMoreAction ) {
+        mMessageActions->messageStatusMenu()->removeAction( mMoreAction );
+    }
 
 
-  mTagActions.clear();
-  delete mMessageTagToggleMapper;
-  mMessageTagToggleMapper = 0;
+    mTagActions.clear();
+    delete mMessageTagToggleMapper;
+    mMessageTagToggleMapper = 0;
 }
 
 void TagActionManager::createTagAction( const MailCommon::Tag::Ptr &tag, bool addToMenu )
 {
-  QString cleanName( i18n("Message Tag %1", tag->tagName ) );
-  cleanName.replace('&',"&&");
-  KToggleAction * const tagAction = new KToggleAction( KIcon( tag->iconName ),
-                                                       cleanName, this );
-  tagAction->setShortcut( tag->shortcut );
-  tagAction->setIconText( tag->tagName );
-  tagAction->setChecked( tag->nepomukResourceUri == mNewTagUri );
+    QString cleanName( i18n("Message Tag %1", tag->tagName ) );
+    cleanName.replace(QLatin1Char('&'), QLatin1String("&&"));
+    KToggleAction * const tagAction = new KToggleAction( KIcon( tag->iconName ),
+                                                         cleanName, this );
+    tagAction->setShortcut( tag->shortcut );
+    tagAction->setIconText( tag->name() );
+    tagAction->setChecked( tag->id() == mNewTagId );
 
-  mActionCollection->addAction( tag->nepomukResourceUri.toString(), tagAction );
-  connect( tagAction, SIGNAL(triggered(bool)),
-           mMessageTagToggleMapper, SLOT(map()) );
+    mActionCollection->addAction( tag->name(), tagAction );
+    connect( tagAction, SIGNAL(triggered(bool)),
+             mMessageTagToggleMapper, SLOT(map()) );
 
-  // The shortcut configuration is done in the config dialog.
-  // The shortcut set in the shortcut dialog would not be saved back to
-  // the tag descriptions correctly.
-  tagAction->setShortcutConfigurable( false );
-  mMessageTagToggleMapper->setMapping( tagAction, tag->nepomukResourceUri.toString() );
+    // The shortcut configuration is done in the config dialog.
+    // The shortcut set in the shortcut dialog would not be saved back to
+    // the tag descriptions correctly.
+    tagAction->setShortcutConfigurable( false );
+    mMessageTagToggleMapper->setMapping( tagAction, QString::number(tag->tag().id()) );
 
-  mTagActions.insert( tag->nepomukResourceUri.toString(), tagAction );
-  if ( addToMenu )
-    mMessageActions->messageStatusMenu()->menu()->addAction( tagAction );
+    mTagActions.insert( tag->id(), tagAction );
+    if ( addToMenu )
+        mMessageActions->messageStatusMenu()->menu()->addAction( tagAction );
 
-  if ( tag->inToolbar ) {
-    mToolbarActions.append( tagAction );
-  }
+    if ( tag->inToolbar ) {
+        mToolbarActions.append( tagAction );
+    }
 }
 
 void TagActionManager::createActions()
 {
-  if( mTagQueryClient )
+    if ( mTagFetchInProgress )
       return;
-  clearActions();
 
-  if ( mTags.isEmpty() ) {
-      mTagQueryClient = new Nepomuk2::Query::QueryServiceClient(this);
-      connect( mTagQueryClient, SIGNAL(newEntries(QList<Nepomuk2::Query::Result>)),
-            this, SLOT(newTagEntries(QList<Nepomuk2::Query::Result>)) );
-      connect( mTagQueryClient, SIGNAL(finishedListing()),
-            this, SLOT(finishedTagListing()) );
-      Nepomuk2::Query::ResourceTypeTerm term( Soprano::Vocabulary::NAO::Tag() );
-      Nepomuk2::Query::Query query( term );
-      mTagQueryClient->query(query);
-  } else {
-    createTagActions();
-  }
-}
-
-void TagActionManager::createTagActions()
-{
-  //Use a mapper to understand which tag button is triggered
-  mMessageTagToggleMapper = new QSignalMapper( this );
-  connect( mMessageTagToggleMapper, SIGNAL(mapped(QString)),
-           this, SIGNAL(tagActionTriggered(QString)) );
-
-  // Create a action for each tag and plug it into various places
-  int i = 0;
-  bool needToAddMoreAction = false;
-  const int numberOfTag(mTags.count());
-  foreach( const MailCommon::Tag::Ptr &tag, mTags ) {
-    if(tag->tagStatus)
-      continue;
-    if ( tag->nepomukResourceUri.toString().isEmpty() )
-      continue;
-    if ( i< s_numberMaxTag )
-      createTagAction( tag,true );
-    else
-    {
-      if ( tag->inToolbar || !tag->shortcut.isEmpty() ) {
-        createTagAction( tag, false );
-      }
-
-      if ( i == s_numberMaxTag && i < numberOfTag )
-      {
-        needToAddMoreAction = true;
-      }
+    if ( mTags.isEmpty() ) {
+        mTagFetchInProgress = true;
+        Akonadi::TagFetchJob *fetchJob = new Akonadi::TagFetchJob(this);
+        fetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
+        connect(fetchJob, SIGNAL(result(KJob*)), this, SLOT(finishedTagListing(KJob*)));
+    } else {
+        mTagFetchInProgress = false;
+        createTagActions(mTags);
     }
-    ++i;
-  }
-
-
-  if(!mSeparatorNewTagAction) {
-    mSeparatorNewTagAction = new QAction( this );
-    mSeparatorNewTagAction->setSeparator( true );
-  }
-  mMessageActions->messageStatusMenu()->menu()->addAction( mSeparatorNewTagAction );
-
-  if (!mNewTagAction) {
-    mNewTagAction = new KAction( i18n( "Add new tag..." ), this );
-    connect( mNewTagAction, SIGNAL(triggered(bool)),
-             this, SLOT(newTagActionClicked()) );
-  }
-  mMessageActions->messageStatusMenu()->menu()->addAction( mNewTagAction );
-
-  if (needToAddMoreAction) {
-    if(!mSeparatorMoreAction) {
-      mSeparatorMoreAction = new QAction( this );
-      mSeparatorMoreAction->setSeparator( true );
-    }
-    mMessageActions->messageStatusMenu()->menu()->addAction( mSeparatorMoreAction );
-
-    if (!mMoreAction) {
-      mMoreAction = new KAction( i18n( "More..." ), this );
-      connect( mMoreAction, SIGNAL(triggered(bool)),
-               this, SIGNAL(tagMoreActionClicked()) );
-    }
-    mMessageActions->messageStatusMenu()->menu()->addAction( mMoreAction );
-  }
-
-  if ( !mToolbarActions.isEmpty() && mGUIClient->factory() ) {
-    mGUIClient->plugActionList( "toolbar_messagetag_actions", mToolbarActions );
-  }
 }
 
-void TagActionManager::newTagEntries (const QList<Nepomuk2::Query::Result> &results)
+void TagActionManager::finishedTagListing(KJob *job)
 {
-  foreach (const Nepomuk2::Query::Result &result, results) {
-    Nepomuk2::Resource resource = result.resource();
-    mTags.append( MailCommon::Tag::fromNepomuk( resource ) );
-  }
+    if (job->error()) {
+        kWarning() << job->errorString();
+    }
+    Akonadi::TagFetchJob *fetchJob = static_cast<Akonadi::TagFetchJob*>(job);
+    foreach (const Akonadi::Tag &result, fetchJob->tags()) {
+        mTags.append( MailCommon::Tag::fromAkonadi( result ) );
+    }
+    mTagFetchInProgress = false;
+    qSort( mTags.begin(), mTags.end(), MailCommon::Tag::compare );
+    createTagActions(mTags);
 }
 
-void TagActionManager::finishedTagListing()
+void TagActionManager::onSignalMapped(const QString& tag)
 {
-  mTagQueryClient->close();
-  mTagQueryClient->deleteLater();
-  mTagQueryClient = 0;
-  if ( mTags.isEmpty() )
-    return;
-  qSort( mTags.begin(), mTags.end(), MailCommon::Tag::compare );
-  createTagActions();
+    emit tagActionTriggered( Akonadi::Tag( tag.toLongLong() ) );
 }
 
+void TagActionManager::createTagActions(const QList<MailCommon::Tag::Ptr> &tags)
+{
+    clearActions();
+    //Use a mapper to understand which tag button is triggered
+    mMessageTagToggleMapper = new QSignalMapper( this );
+    connect( mMessageTagToggleMapper, SIGNAL(mapped(QString)),
+             this, SLOT(onSignalMapped(QString)) );
+
+    // Create a action for each tag and plug it into various places
+    int i = 0;
+    bool needToAddMoreAction = false;
+    const int numberOfTag(tags.size());
+    //It is assumed the tags are sorted
+    foreach( const MailCommon::Tag::Ptr &tag, tags ) {
+        if ( i< s_numberMaxTag )
+            createTagAction( tag,true );
+        else
+        {
+            if ( tag->inToolbar || !tag->shortcut.isEmpty() ) {
+                createTagAction( tag, false );
+            }
+
+            if ( i == s_numberMaxTag && i < numberOfTag )
+            {
+                needToAddMoreAction = true;
+            }
+        }
+        ++i;
+    }
+
+
+    if(!mSeparatorNewTagAction) {
+        mSeparatorNewTagAction = new QAction( this );
+        mSeparatorNewTagAction->setSeparator( true );
+    }
+    mMessageActions->messageStatusMenu()->menu()->addAction( mSeparatorNewTagAction );
+
+    if (!mNewTagAction) {
+        mNewTagAction = new KAction( i18n( "Add new tag..." ), this );
+        connect( mNewTagAction, SIGNAL(triggered(bool)),
+                 this, SLOT(newTagActionClicked()) );
+    }
+    mMessageActions->messageStatusMenu()->menu()->addAction( mNewTagAction );
+
+    if (needToAddMoreAction) {
+        if(!mSeparatorMoreAction) {
+            mSeparatorMoreAction = new QAction( this );
+            mSeparatorMoreAction->setSeparator( true );
+        }
+        mMessageActions->messageStatusMenu()->menu()->addAction( mSeparatorMoreAction );
+
+        if (!mMoreAction) {
+            mMoreAction = new KAction( i18n( "More..." ), this );
+            connect( mMoreAction, SIGNAL(triggered(bool)),
+                     this, SIGNAL(tagMoreActionClicked()) );
+        }
+        mMessageActions->messageStatusMenu()->menu()->addAction( mMoreAction );
+    }
+
+    if ( !mToolbarActions.isEmpty() && mGUIClient->factory() ) {
+        mGUIClient->plugActionList( QLatin1String("toolbar_messagetag_actions"), mToolbarActions );
+    }
+}
 
 void TagActionManager::updateActionStates( int numberOfSelectedMessages,
                                            const Akonadi::Item &selectedItem )
 {
-  mNewTagUri.clear();
-  QMap<QString,KToggleAction*>::const_iterator it = mTagActions.constBegin();
-  QMap<QString,KToggleAction*>::const_iterator end = mTagActions.constEnd();
-  if ( numberOfSelectedMessages == 1 )
-  {
-    Q_ASSERT( selectedItem.isValid() );
-    mAsyncNepomukRetriver->requestResource( selectedItem.url() );
-  }
-  else if ( numberOfSelectedMessages > 1 ) {
-    for ( ; it != end; ++it ) {
-      Nepomuk2::Tag tag( it.key() );
-      it.value()->setChecked( false );
-      it.value()->setEnabled( true );
-      it.value()->setText( i18n("Toggle Message Tag %1", tag.label() ) );
+    mNewTagId = -1;
+    QMap<qint64,KToggleAction*>::const_iterator it = mTagActions.constBegin();
+    QMap<qint64,KToggleAction*>::const_iterator end = mTagActions.constEnd();
+    if ( numberOfSelectedMessages >= 1 ) {
+        Q_ASSERT( selectedItem.isValid() );
+        for ( ; it != end; ++it ) {
+            //FIXME Not very performant tag label retrieval
+            QString label(QLatin1String("not found"));
+            foreach (const MailCommon::Tag::Ptr &tag, mTags) {
+                if (tag->id() == it.key()) {
+                    label = tag->name();
+                    break;
+                }
+            }
+
+            it.value()->setEnabled( true );
+            if (numberOfSelectedMessages == 1) {
+                const bool hasTag = selectedItem.hasTag(Akonadi::Tag(it.key()));
+                it.value()->setChecked( hasTag );
+                it.value()->setText( i18n("Message Tag %1", label ) );
+            } else {
+                it.value()->setChecked( false );
+                it.value()->setText( i18n("Toggle Message Tag %1", label ) );
+            }
+        }
+    } else {
+        for ( ; it != end; ++it ) {
+            it.value()->setEnabled( false );
+        }
     }
-  }
-  else {
-    for ( ; it != end; ++it ) {
-      it.value()->setEnabled( false );
-    }
-  }
 }
 
-void TagActionManager::slotLoadedResourceForUpdateActionStates(const QUrl& uri, const Nepomuk2::Resource& res)
+void TagActionManager::onTagAdded(const Akonadi::Tag &akonadiTag)
 {
-  QMap<QString,KToggleAction*>::const_iterator it = mTagActions.constBegin();
-  QMap<QString,KToggleAction*>::const_iterator end = mTagActions.constEnd();
-  for ( ; it != end; ++it ) {
-    const bool hasTag = res.tags().contains( Nepomuk2::Tag( it.key() ) );
-    it.value()->setChecked( hasTag );
-    it.value()->setEnabled( true );
-  }
-}
-
-
-void TagActionManager::tagsChanged()
-{
-  mTags.clear(); // re-read the tags
-  createActions();
-}
-
-void TagActionManager::resourceCreated(const Nepomuk2::Resource& res,const QList<QUrl>&)
-{
-    const QList<QUrl> checked = checkedTags();
+    const QList<qint64> checked = checkedTags();
 
     clearActions();
-    mTags.append( MailCommon::Tag::fromNepomuk( res ) );
+    mTags.append( MailCommon::Tag::fromAkonadi( akonadiTag ) );
     qSort( mTags.begin(), mTags.end(), MailCommon::Tag::compare );
-    createTagActions();
+    createTagActions(mTags);
 
     checkTags( checked );
 }
 
-void TagActionManager::resourceRemoved(const QUrl& url,const QList<QUrl>&)
+void TagActionManager::onTagRemoved(const Akonadi::Tag &akonadiTag)
 {
     foreach( const MailCommon::Tag::Ptr &tag, mTags ) {
-        if(tag->nepomukResourceUri == url) {
+        if(tag->id() == akonadiTag.id()) {
             mTags.removeAll(tag);
             break;
         }
     }
 
-    const QList<QUrl> checked = checkedTags();
-
-    clearActions();
-    qSort( mTags.begin(), mTags.end(), MailCommon::Tag::compare );
-    createTagActions();
-
-    checkTags( checked );
+    fillTagList();
 }
 
-void TagActionManager::propertyChanged(const Nepomuk2::Resource& res)
+void TagActionManager::onTagChanged(const Akonadi::Tag& akonadiTag)
 {
     foreach( const MailCommon::Tag::Ptr &tag, mTags ) {
-        if(tag->nepomukResourceUri == res.uri()) {
+        if(tag->id() == akonadiTag.id()) {
             mTags.removeAll(tag);
             break;
         }
     }
-    mTags.append( MailCommon::Tag::fromNepomuk( res ) );
+    mTags.append( MailCommon::Tag::fromAkonadi( akonadiTag ) );
+    fillTagList();
+}
 
-    QList<QUrl> checked = checkedTags();
+void TagActionManager::fillTagList()
+{
+    const QList<qint64> checked = checkedTags();
 
     clearActions();
     qSort( mTags.begin(), mTags.end(), MailCommon::Tag::compare );
-    createTagActions();
+    createTagActions( mTags );
 
     checkTags( checked );
 }
@@ -360,36 +327,32 @@ void TagActionManager::newTagActionClicked()
 {
     QPointer<MailCommon::AddTagDialog> dialog = new MailCommon::AddTagDialog(QList<KActionCollection*>() << mActionCollection, 0);
     dialog->setTags(mTags);
-    if ( dialog->exec() ) {
-      mNewTagUri = dialog->nepomukUrl();
-      // Assign tag to all selected items right away
-      emit tagActionTriggered( mNewTagUri );
+    if ( dialog->exec() == QDialog::Accepted ) {
+        mNewTagId = dialog->tag().id();
+        // Assign tag to all selected items right away
+        emit tagActionTriggered( dialog->tag() );
     }
     delete dialog;
 }
 
-void TagActionManager::checkTags(const QList< QUrl >& tags)
+void TagActionManager::checkTags(const QList<qint64>& tags)
 {
-    foreach( const QUrl &url, tags ) {
-      const QString str = url.toString();
-      if ( mTagActions.contains( str ) ) {
-        mTagActions[str]->setChecked( true );
-      }
+    foreach( const qint64 &id, tags ) {
+        if ( mTagActions.contains(id) ) {
+            mTagActions[id]->setChecked( true );
+        }
     }
 }
 
-QList< QUrl > TagActionManager::checkedTags() const
+QList<qint64> TagActionManager::checkedTags() const
 {
-    QMap<QString,KToggleAction*>::const_iterator it = mTagActions.constBegin();
-    QMap<QString,KToggleAction*>::const_iterator end = mTagActions.constEnd();
-    QList<QUrl> checked;
+    QMap<qint64,KToggleAction*>::const_iterator it = mTagActions.constBegin();
+    QMap<qint64,KToggleAction*>::const_iterator end = mTagActions.constEnd();
+    QList<qint64> checked;
     for ( ; it != end; ++it ) {
-      if ( it.value()->isChecked() ) {
-        checked << it.key();
-      }
+        if ( it.value()->isChecked() ) {
+            checked << it.key();
+        }
     }
-
     return checked;
 }
-
-#include "tagactionmanager.moc"

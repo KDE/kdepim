@@ -6,7 +6,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 ############### Build Options ###############
 
 option(KDEPIM_BUILD_EXAMPLES "Build the kdepim example applications." FALSE)
-option(KDEPIM_BUILD_MOBILE "Build the mobile applications. Note that you have to enable KDEPIM_MOBILE_UI if you want to run these applications on a mobile device." FALSE)
+option(KDEPIM_BUILD_MOBILE "Build the mobile applications. Note that you have to enable KDEPIM_MOBILE_UI if you want to run these applications on a mobile device." TRUE)
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
 option(KDEPIM_MOBILE_UI "Build UI for mobile devices instead of for desktops" FALSE)
 option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will build only libkleo and kleopatra" FALSE)
@@ -20,19 +20,9 @@ else()
   set(LIBRARY_TYPE SHARED)
 endif()
 
-add_definitions( -DDISABLE_NEPOMUK_LEGACY )
-add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
-
+add_definitions(-DQT_USE_QSTRINGBUILDER)
 if(KDEPIM_NO_WEBKIT)
   add_definitions(-DKDEPIM_NO_WEBKIT)
-endif()
-
-# cmake would not find kde for xcompile if that is not set
-if(WINCE)
-    set(KDE4_DATA_DIR "${CMAKE_PREFIX_PATH}/share/apps")
-    set(LIBRARY_TYPE STATIC)
-    add_definitions(-DKDELIBS_STATIC_LIBS)
-    add_definitions(-DKDEPIM_STATIC_LIBS)
 endif()
 
 if(KDEPIM_ENTERPRISE_BUILD)
@@ -99,21 +89,18 @@ if(DEFINED KDEPIM_DEV_VERSION)
   set(KDEPIM_DEV_VERSION " ${KDEPIM_DEV_VERSION}")
 endif()
 
-set(KDEPIM_VERSION "4.11${KDEPIM_DEV_VERSION}")
+set(KDEPIM_VERSION "4.13.3${KDEPIM_DEV_VERSION}")
 
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
 
+set(CMAKE_AUTOMOC ON)
+
 ############### search packages used by KDE ###############
 
-# It is needed otherwise it finds the kde4-config of the target platform
-if(WINCE)
-  find_program(KDE4_KDECONFIG_EXECUTABLE NAMES kde4-config PATHS ${HOST_BINDIR} NO_DEFAULT_PATH)
-endif()
-
-find_package(KDE4 4.10 REQUIRED)
+find_package(KDE4 4.12.0 REQUIRED)
 include(KDE4Defaults)
 
-find_package(KdepimLibs 4.11.0)
+find_package(KdepimLibs 4.13.3)
 set_package_properties(KdepimLibs PROPERTIES DESCRIPTION "The KDEPIM libraries" URL "http://www.kde.org" TYPE REQUIRED)
 
 ############### Load the CTest options ###############
@@ -166,7 +153,7 @@ if(KDEPIM_ONLY_KLEO)
   find_package(QGpgme)
   set_package_properties(QGpgme PROPERTIES DESCRIPTION "The QGpgME library" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "QGpgME is required to build Kleopatra.")
 
-  add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDEPIM_DEFINITIONS} -DQT3_SUPPORT_WARNINGS)
+  add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDEPIM_DEFINITIONS})
   include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIRS} ${QT_QTDBUS_INCLUDE_DIR})
   include(kleopatra/ConfigureChecks.cmake)
 
@@ -179,40 +166,40 @@ else()
 # Otherwise...
 ############### Find the stuff we need ###############
   # Akonadi
-  find_package(Akonadi 1.9.51 QUIET CONFIG)
+  find_package(Akonadi 1.12.1 QUIET CONFIG)
   set_package_properties(Akonadi PROPERTIES DESCRIPTION "Akonadi server libraries" URL "http://pim.kde.org/akonadi" TYPE REQUIRED PURPOSE "Akonadi is required to build KDEPIM")
 
   find_package(ZLIB)
   set_package_properties(ZLIB PROPERTIES DESCRIPTION "The Zlib compression library" URL "http://www.zlib.net" TYPE REQUIRED)
 
-  # Strigi is required only if AKONADI_USE_STRIGI_SEARCH is true in AkonadiConfig.cmake
-  if(AKONADI_USE_STRIGI_SEARCH)
-    find_package(Strigi)
-    set_package_properties(Strigi PROPERTIES URL "https://projects.kde.org/strigi" TYPE REQUIRED PURPOSE "Metadata indexing")
-  endif()
-
   find_package(QGpgme)
   set_package_properties(QGpgme PROPERTIES DESCRIPTION "The QGpgMe library" URL "http://www.kde.org" TYPE RECOMMENDED PURPOSE "QGpgME is required to build KMail, KOrganizer and Kleopatra")
 
-  find_package(SharedDesktopOntologies 0.11)
-  set_package_properties(SharedDesktopOntologies PROPERTIES DESCRIPTION "Shared Desktop Ontologies" URL "http://sourceforge.net/projects/oscaf/" TYPE REQUIRED PURPOSE "Ontologies necessary for the Nepomuk semantic desktop")
-
-  find_package(Soprano 2.9.0)
-  set_package_properties(Soprano PROPERTIES DESCRIPTION "C++/Qt4 framework for RDF data" URL "http://soprano.sourceforge.net" TYPE REQUIRED PURPOSE "Storage of semantic data")
-  include(SopranoAddOntology)
-
   find_package(Grantlee 0.3.0 QUIET CONFIG)
-  set_package_properties(Grantlee PROPERTIES DESCRIPTION "The Grantlee Template System" URL "http://www.gitorious.org/grantlee/pages/Home" TYPE REQUIRED PURPOSE "Grantlee is requires for kmail and templating, theming for KJots, KaddressBook and MessageViewer(KMail)." )
+  set_package_properties(Grantlee PROPERTIES DESCRIPTION "The Grantlee Template System" URL "http://www.gitorious.org/grantlee/pages/Home" TYPE REQUIRED PURPOSE "Grantlee is requires for kmail and templating, theming for KJots, KaddressBook, KNotes and MessageViewer(KMail)." )
 
-  find_package(NepomukCore QUIET CONFIG)
-  set_package_properties(NepomukCore PROPERTIES DESCRIPTION "The Nepomuk Core libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
-
-  find_package(NepomukWidgets QUIET CONFIG)
-  set_package_properties(NepomukWidgets PROPERTIES DESCRIPTION "The NepomukWidget libraries" URL "http://www.kde.org" TYPE RECOMMENDED PURPOSE "Nepomuk-widgets is needed for building Akonadiconsole")
+  find_package(Baloo 4.13.0 QUIET CONFIG)
+  set_package_properties(Baloo PROPERTIES DESCRIPTION "The Baloo libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Baloo provides search capabilities in KMail and Akonadi")
 
   # Xsltproc
   find_package(Xsltproc)
   set_package_properties(Xsltproc PROPERTIES DESCRIPTION "XSLT processor from libxslt" TYPE REQUIRED PURPOSE "Required to generate D-Bus interfaces.")
+
+  find_package(QJSON)
+  set_package_properties(QJSON PROPERTIES DESCRIPTION "QJSON" URL "http://qjson.sourceforge.net/" TYPE REQUIRED PURPOSE "Qt library for handling JSON data")
+
+  find_package(Prison QUIET CONFIG)
+  set_package_properties(Prison PROPERTIES DESCRIPTION "The Prison library" URL "http://projects.kde.org/prison" TYPE OPTIONAL PURPOSE "Needed to show mobile barcodes of your contacts")
+
+  # Libkgapi2
+  find_package(LibKGAPI2 2.1.0 QUIET CONFIG)
+  set_package_properties(LibKGAPI2 PROPERTIES DESCRIPTION "KDE-based library for accessing various Google services" URL "https://projects.kde.org/libkgapi" TYPE OPTIONAL PURPOSE "LibKGAPI is required to build Google Drive Storage Service")
+
+  if( LibKGAPI2_FOUND )
+    add_definitions( -DKDEPIM_STORAGESERVICE_GDRIVE )
+  endif()
+
+
 
 ############### Desktop vs. Mobile options ##############
 
@@ -238,21 +225,6 @@ else()
     add_definitions( -DKDEPIM_NO_KRESOURCES )
   endif()
 
-############### Code used in several places ###############
-# TODO Remove from the top CMakeLists.
-
-# used in knotes, kontact/plugins/knotes, wizard
-  set(libknotesresources_SRCS
-    ${CMAKE_SOURCE_DIR}/knotes/resourcemanager.cpp
-    ${CMAKE_SOURCE_DIR}/knotes/resourcenotes.cpp
-    ${CMAKE_SOURCE_DIR}/knotes/resourcelocal.cpp
-    ${CMAKE_SOURCE_DIR}/knotes/resourcelocalconfig.cpp
-  )
-
-# used in knotes, kontact/plugins/knotes
-  set(libknoteseditor_SRCS
-    ${CMAKE_SOURCE_DIR}/knotes/knoteedit.cpp
-  )
 
 ############### Now, we add the PIM components ###############
 
@@ -260,7 +232,7 @@ else()
 
   # These targets will always be built before anything else.
 
-  add_subdirectory(ontologies) # must be the first one.
+  add_subdirectory(noteshared)
   add_subdirectory(akonadi_next)
   add_subdirectory(libkdepim)
   add_subdirectory(calendarsupport)
@@ -273,17 +245,9 @@ else()
   add_subdirectory(kdgantt2)
   add_subdirectory(icons)
   add_subdirectory(composereditor-ng)
-  add_subdirectory(grammar)
   add_subdirectory(messagecore)
-  if(NOT WINCE)
-    add_subdirectory(messagelist)
-  else()
-    # We need to compile runtime in kdepim because of the static
-    # linking of korgac and the applications need to link against
-    # plugins like the serializer plugins. If the korgac would
-    # move to runtime this can be avoided
-    add_subdirectory(runtime)
-  endif()
+  add_subdirectory(grantleetheme)
+  add_subdirectory(messagelist)
   add_subdirectory(templateparser)
 
   if(QGPGME_FOUND)
@@ -293,14 +257,14 @@ else()
   endif()
 
   # The following components depend on QGpgME.
-  set(MESSAGEVIEWER_SUPPORTED TRUE)
   add_subdirectory(messageviewer)
   macro_optional_add_subdirectory(messagecomposer)
   add_subdirectory(pimcommon)
   add_subdirectory(mailcommon) # TODO: does this make sense?!?
-  add_subdirectory(mailfilteragent)
   macro_optional_add_subdirectory(kmail)
   macro_optional_add_subdirectory(headerthemeeditor)
+  macro_optional_add_subdirectory(contactthemeeditor)
+  add_subdirectory(grantleethemeeditor)
 
   if(KDEPIM_BUILD_MOBILE)
     add_subdirectory(mobile)
@@ -316,15 +280,18 @@ else()
     add_definitions(-DKMAIL_SUPPORTED)
   endif()
 
-  macro_optional_add_subdirectory(pimactivity)
   macro_optional_add_subdirectory(korganizer)
+  macro_optional_add_subdirectory(korgac)
+  macro_optional_add_subdirectory(sieveeditor)
+  macro_optional_add_subdirectory(storageservicemanager)
+  add_subdirectory(kaddressbookgrantlee)
   if(KDEPIM_BUILD_DESKTOP)
+    macro_optional_add_subdirectory(agents)
     macro_optional_add_subdirectory(akregator)
-    macro_optional_add_subdirectory(archivemailagent)
-    macro_optional_add_subdirectory(sendlateragent)
     macro_optional_add_subdirectory(importwizard)
     macro_optional_add_subdirectory(kaddressbook)
     macro_optional_add_subdirectory(kmailcvt)
+    macro_optional_add_subdirectory(mboximporter)
     macro_optional_add_subdirectory(knotes)
     macro_optional_add_subdirectory(ksendemail)
     macro_optional_add_subdirectory(ktnef)
@@ -351,13 +318,8 @@ else()
     macro_optional_add_subdirectory(kontact) # must be the last one.
   endif()
 
-  if(NepomukWidgets_FOUND)
-    macro_optional_add_subdirectory(akonadiconsole)
-  endif()
+  macro_optional_add_subdirectory(akonadiconsole)
   macro_optional_add_subdirectory(console)
-  if(Strigi_FOUND)
-    macro_optional_add_subdirectory(strigi-analyzer)
-  endif()
 
   # These targets depend on optional applications
   if(KDEPIMLIBS_KRESOURCES_LIBRARY)

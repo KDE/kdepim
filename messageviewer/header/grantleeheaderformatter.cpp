@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -28,7 +28,7 @@
 #include <kmime/kmime_dateformatter.h>
 
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KStandardDirs>
 
 #include <grantlee/templateloader.h>
@@ -44,7 +44,7 @@ public:
     Private()
     {
         engine = new Grantlee::Engine;
-        engine->setPluginPaths( QStringList() << GRANTLEE_PLUGIN_PATH << MESSAGEVIEWER_GRANTLEE_PLUGIN_PATH);
+        engine->setPluginPaths( QStringList() << QLatin1String(GRANTLEE_PLUGIN_PATH) << QLatin1String(MESSAGEVIEWER_GRANTLEE_PLUGIN_PATH));
         templateLoader = Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
         engine->addTemplateLoader( templateLoader );
     }
@@ -74,10 +74,10 @@ QString GrantleeHeaderFormatter::toHtml(const QStringList &displayExtraHeaders, 
     if ( headerTemplate->error() ) {
         return headerTemplate->errorString();
     }
-    return format(headerTemplate, displayExtraHeaders, isPrinting, style, message);
+    return format(absolutPath, headerTemplate, displayExtraHeaders, isPrinting, style, message);
 }
 
-QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme &theme, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const
+QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme::Theme &theme, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const
 {
     QString errorMessage;
     if (!theme.isValid()) {
@@ -90,10 +90,10 @@ QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme &theme, bool isPrint
         errorMessage = headerTemplate->errorString();
         return errorMessage;
     }
-    return format(headerTemplate, theme.displayExtraHeaders(), isPrinting, style, message);
+    return format(theme.absolutePath(), headerTemplate, theme.displayExtraVariables(), isPrinting, style, message);
 }
 
-QString GrantleeHeaderFormatter::format(Grantlee::Template headerTemplate, const QStringList &displayExtraHeaders, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const
+QString GrantleeHeaderFormatter::format(const QString &absolutePath, Grantlee::Template headerTemplate, const QStringList &displayExtraHeaders, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const
 {
     QVariantHash headerObject;
 
@@ -102,7 +102,8 @@ QString GrantleeHeaderFormatter::format(Grantlee::Template headerTemplate, const
     // the "Re:" and "Fwd:" prefixes would always cause the subject to be
     // considered left-to-right, they are ignored when determining its
     // direction.
-
+    const QString absoluteThemePath = QLatin1String("file://") + absolutePath + QLatin1Char('/');
+    headerObject.insert(QLatin1String("absoluteThemePath"), absoluteThemePath);
     headerObject.insert(QLatin1String("applicationDir"), QApplication::isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr"));
     headerObject.insert(QLatin1String("subjectDir"), MessageViewer::HeaderStyleUtil::subjectDirectionString( message ));
 
@@ -148,11 +149,11 @@ QString GrantleeHeaderFormatter::format(Grantlee::Template headerTemplate, const
 
     if ( GlobalSettings::self()->showUserAgent() ) {
         if ( message->headerByType("User-Agent") ) {
-            headerObject.insert( QLatin1String( "useragent" ), MessageViewer::HeaderStyleUtil::strToHtml( message->headerByType("User-Agent")->as7BitString() ) );
+            headerObject.insert( QLatin1String( "useragent" ), MessageViewer::HeaderStyleUtil::strToHtml( message->headerByType("User-Agent")->asUnicodeString() ) );
         }
 
         if ( message->headerByType("X-Mailer") ) {
-            headerObject.insert( QLatin1String( "xmailer" ), MessageViewer::HeaderStyleUtil::strToHtml( message->headerByType("X-Mailer")->as7BitString() ) );
+            headerObject.insert( QLatin1String( "xmailer" ), MessageViewer::HeaderStyleUtil::strToHtml( message->headerByType("X-Mailer")->asUnicodeString() ) );
         }
     }
 
@@ -160,6 +161,12 @@ QString GrantleeHeaderFormatter::format(Grantlee::Template headerTemplate, const
         headerObject.insert( QLatin1String( "resentfromi18n"), i18n("resent from"));
         const QList<KMime::Types::Mailbox> resentFrom = MessageViewer::HeaderStyleUtil::resentFromList(message);
         headerObject.insert( QLatin1String( "resentfrom" ), StringUtil::emailAddrAsAnchor( resentFrom, StringUtil::DisplayFullAddress ) );
+    }
+
+    if ( message->headerByType( "Resent-To" ) ) {
+        const QList<KMime::Types::Mailbox> resentTo = MessageViewer::HeaderStyleUtil::resentToList(message);
+        headerObject.insert( QLatin1String( "resenttoi18n"), i18np("receiver was", "receivers were", resentTo.count()));
+        headerObject.insert( QLatin1String( "resentto" ), StringUtil::emailAddrAsAnchor( resentTo, StringUtil::DisplayFullAddress ) );
     }
 
     if ( KMime::Headers::Base *organization = message->headerByType("Organization") )
@@ -213,7 +220,7 @@ QString GrantleeHeaderFormatter::format(Grantlee::Template headerTemplate, const
 
 
     QVariantHash mapping;
-    mapping.insert( "header", headerObject );
+    mapping.insert( QLatin1String("header"), headerObject );
     Grantlee::Context context( mapping );
 
     return headerTemplate->render(&context);

@@ -28,7 +28,7 @@
 #include "kwindowpositioner.h"
 
 #include <KDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KPushButton>
 
 #include <QLabel>
@@ -81,8 +81,8 @@ RecipientsPicker* RecipientsEditorSideWidget::picker() const
         // hacks to allow picker() to be const in the presence of lazy loading
         RecipientsEditorSideWidget *non_const_this = const_cast<RecipientsEditorSideWidget*>( this );
         mRecipientPicker = new RecipientsPicker( non_const_this );
-        connect( mRecipientPicker, SIGNAL(pickedRecipient(Recipient)),
-                 non_const_this, SIGNAL(pickedRecipient(Recipient)) );
+        connect( mRecipientPicker, SIGNAL(pickedRecipient(Recipient,bool&)),
+                 non_const_this, SIGNAL(pickedRecipient(Recipient,bool&)) );
         mPickerPositioner = new KWindowPositioner( mSelectButton, mRecipientPicker );
     }
     return mRecipientPicker;
@@ -162,4 +162,3 @@ void RecipientsEditorSideWidget::pickRecipient()
     }
 }
 
-#include "recipientseditorsidewidget.moc"

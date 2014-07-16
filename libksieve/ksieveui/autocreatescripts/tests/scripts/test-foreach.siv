@@ -1,0 +1,11 @@
+require "foreverypart";
+require "ihave";
+ 
+#Script name: test-foreach
+
+foreverypart :name "foreach1" {
+if ihave "value"
+{
+    stop;
+} 
+}

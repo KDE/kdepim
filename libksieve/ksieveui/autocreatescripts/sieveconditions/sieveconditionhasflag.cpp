@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -18,18 +18,23 @@
 #include "sieveconditionhasflag.h"
 #include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
-#include <KLocale>
+#include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
+#include "editor/sieveeditorutil.h"
+
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QWidget>
 #include <QHBoxLayout>
 #include <QDebug>
+#include <QDomNode>
 #include <QLabel>
 
 using namespace KSieveUi;
 SieveConditionHasFlag::SieveConditionHasFlag(QObject *parent)
     : SieveCondition(QLatin1String("hasflag"), i18n("Has Flag"), parent)
 {
+    hasVariableSupport = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("variables"));
 }
 
 SieveCondition *SieveConditionHasFlag::newAction()
@@ -45,21 +50,32 @@ QWidget *SieveConditionHasFlag::createParamWidget( QWidget *parent ) const
     w->setLayout(lay);
     SelectMatchTypeComboBox *selecttype = new SelectMatchTypeComboBox;
     selecttype->setObjectName(QLatin1String("matchtype"));
+    connect(selecttype, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     lay->addWidget(selecttype);
 
-    QLabel *lab = new QLabel(i18n("Variable name (if empty it uses internal variable):"));
-    lay->addWidget(lab);
 
-    KLineEdit *variableName = new KLineEdit;
-    variableName->setObjectName(QLatin1String("variablename"));
-    lay->addWidget(variableName);
+    QGridLayout *grid = new QGridLayout;
+    grid->setMargin(0);
+    lay->addLayout(grid);
 
-    lab = new QLabel(i18n("Value:"));
-    lay->addWidget(lab);
+    int row = 0;
+    if (hasVariableSupport) {
+        QLabel *lab = new QLabel(i18n("Variable name\n (if empty it uses internal variable):"));
+        grid->addWidget(lab, row, 0);
+
+        KLineEdit *variableName = new KLineEdit;
+        variableName->setObjectName(QLatin1String("variablename"));
+        connect(variableName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+        grid->addWidget(variableName, row, 1);
+        ++row;
+    }
+    QLabel *lab = new QLabel(i18n("Value:"));
+    grid->addWidget(lab, row, 0);
 
     KLineEdit *value = new KLineEdit;
+    connect(value, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     value->setObjectName(QLatin1String("value"));
-    lay->addWidget(value);
+    grid->addWidget(value, row, 1);
 
     return w;
 }
@@ -72,21 +88,30 @@ QString SieveConditionHasFlag::code(QWidget *w) const
 
     QString result = AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("hasflag %1").arg(matchString);
 
-    const KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
-    const QString variableNameStr = variableName->text();
-    if (!variableNameStr.isEmpty()) {
-        result += QLatin1String(" \"") + variableNameStr + QLatin1Char('"');
-    }
+    if (hasVariableSupport) {
+        const KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
+        const QString variableNameStr = variableName->text();
+        if (!variableNameStr.isEmpty()) {
+            result += QLatin1String(" \"") + variableNameStr + QLatin1Char('"');
+        }
 
-    const KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
-    const QString valueStr = value->text();
-    result += QLatin1String(" \"") + valueStr + QLatin1Char('"');
+        const KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
+        const QString valueStr = value->text();
+        result += QLatin1String(" \"") + valueStr + QLatin1Char('"');
+    }
     return result;
 }
 
 QStringList SieveConditionHasFlag::needRequires(QWidget *) const
 {
-    return QStringList() << QLatin1String("imap4flags");
+    QStringList lst;
+    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imap4flags")))
+        lst << QLatin1String("imap4flags");
+    else
+        lst << QLatin1String("imapflags");
+    if (hasVariableSupport)
+        lst << QLatin1String("variables");
+    return lst;
 }
 
 bool SieveConditionHasFlag::needCheckIfServerHasCapability() const
@@ -96,7 +121,10 @@ bool SieveConditionHasFlag::needCheckIfServerHasCapability() const
 
 QString SieveConditionHasFlag::serverNeedsCapability() const
 {
-    return QLatin1String("imap4flags");
+    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imap4flags")))
+        return QLatin1String("imap4flags");
+    else
+        return QLatin1String("imapflags");
 }
 
 QString SieveConditionHasFlag::help() const
@@ -104,5 +132,58 @@ QString SieveConditionHasFlag::help() const
     return i18n("The hasflag test evaluates to true if any of the variables matches any flag name.");
 }
 
-#include "sieveconditionhasflag.moc"
+bool SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition , QString &error)
+{
+    QStringList strList;
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("tag")) {
+                SelectMatchTypeComboBox *matchTypeCombo = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype") );
+                matchTypeCombo->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition), name(), error);
+            } else if (tagName == QLatin1String("str")) {
+                strList << e.text();
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
+            } else {
+                unknownTag(tagName, error);
+                qDebug()<<" SieveConditionExists::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+    switch (strList.count()) {
+    case 1: {
+        KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
+        value->setText(strList.at(0));
+        break;
+    }
+    case 2: {
+        if (hasVariableSupport) {
+            KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
+            variableName->setText(strList.at(0));
+            KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
+            value->setText(strList.at(1));
+        } else {
+            qDebug()<<" SieveConditionHasFlag has not variable support";
+        }
+        break;
+    }
+    default:
+        qDebug()<<" SieveConditionHasFlag::setParamWidgetValue str list count not correct :"<<strList.count();
+        break;
+    }
+    return true;
+}
+
+QString SieveConditionHasFlag::href() const
+{
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
+}
+
+
 

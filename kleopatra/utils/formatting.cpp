@@ -43,13 +43,13 @@
 #include <gpgme++/key.h>
 #include <gpgme++/importresult.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobal>
+#include <KLocale>
 
 #include <QString>
 #include <QStringList>
 #include <QDateTime>
-#include <QCoreApplication>
 #include <QTextDocument> // for Qt::escape
 
 using namespace GpgME;
@@ -64,21 +64,21 @@ using namespace KMime::HeaderParsing;
 QString Formatting::prettyName( int proto, const char * id, const char * name_, const char * comment_ ) {
 
     if ( proto == OpenPGP ) {
-	const QString name = QString::fromUtf8( name_ );
-	if ( name.isEmpty() )
-	    return QString();
-	const QString comment = QString::fromUtf8( comment_ );
-	if ( comment.isEmpty() )
-	    return name;
-	return QString::fromLatin1( "%1 (%2)" ).arg( name, comment );
+        const QString name = QString::fromUtf8( name_ );
+        if ( name.isEmpty() )
+            return QString();
+        const QString comment = QString::fromUtf8( comment_ );
+        if ( comment.isEmpty() )
+            return name;
+        return QString::fromLatin1( "%1 (%2)" ).arg( name, comment );
     }
 
     if ( proto == CMS ) {
-	const DN subject( id );
-	const QString cn = subject["CN"].trimmed();
-	if ( cn.isEmpty() )
-	    return subject.prettyDN();
-	return cn;
+        const DN subject( id );
+        const QString cn = subject[QLatin1String("CN")].trimmed();
+        if ( cn.isEmpty() )
+            return subject.prettyDN();
+        return cn;
     }
 
     return QString();
@@ -113,7 +113,7 @@ QString Formatting::prettyNameAndEMail( int proto, const QString & id, const QSt
 
     if ( proto == CMS ) {
         const DN subject( id );
-        const QString cn = subject["CN"].trimmed();
+        const QString cn = subject[QLatin1String("CN")].trimmed();
         if ( cn.isEmpty() )
             return subject.prettyDN();
         return cn;
@@ -137,7 +137,7 @@ QString Formatting::prettyUserID( const UserID & uid ) {
 QString Formatting::prettyKeyID( const char * id ) {
     if ( !id )
         return QString();
-    return "0x" + QString::fromLatin1( id ).toUpper();
+    return QLatin1String("0x") + QString::fromLatin1( id ).toUpper();
 }
 
 QString Formatting::prettyNameAndEMail( const UserID & uid ) {
@@ -166,9 +166,9 @@ QString Formatting::prettyName( const UserID::Signature & sig ) {
 
 QString Formatting::prettyEMail( const Key & key ) {
     for ( unsigned int i = 0, end = key.numUserIDs() ; i < end ; ++i ) {
-	const QString email = prettyEMail( key.userID( i ) );
-	if ( !email.isEmpty() )
-	    return email;
+        const QString email = prettyEMail( key.userID( i ) );
+        if ( !email.isEmpty() )
+            return email;
     }
     return QString();
 }
@@ -186,7 +186,7 @@ QString Formatting::prettyEMail( const char * email_, const char * id ) {
     if ( email_ && parseMailbox( email_, email_ + strlen( email_ ), mailBox ) )
         return mailBox.addrSpec().asPrettyString();
     else
-        return DN( id )["EMAIL"].trimmed();
+        return DN( id )[QLatin1String("EMAIL")].trimmed();
 }
 
 //
@@ -202,48 +202,48 @@ namespace {
 
     template <typename T_arg>
     QString format_row( const QString & field, const T_arg & arg ) {
-	return i18n( "<tr><th>%1:</th><td>%2</td></tr>", protect_whitespace( field ), arg );
+        return i18n( "<tr><th>%1:</th><td>%2</td></tr>", protect_whitespace( field ), arg );
     }
     QString format_row( const QString & field, const QString & arg ) {
         return i18n( "<tr><th>%1:</th><td>%2</td></tr>", protect_whitespace( field ), Qt::escape( arg )  );
     }
     QString format_row( const QString & field, const char * arg ) {
-	return format_row( field, QString::fromUtf8( arg ) );
+        return format_row( field, QString::fromUtf8( arg ) );
     }
 
     QString format_keytype( const Key & key ) {
-	const Subkey subkey = key.subkey( 0 );
-	if ( key.hasSecret() )
-	    return i18n( "%1-bit %2 (secret key available)", subkey.length(), subkey.publicKeyAlgorithmAsString() );
-	else
-	    return i18n( "%1-bit %2", subkey.length(), subkey.publicKeyAlgorithmAsString() );
+        const Subkey subkey = key.subkey( 0 );
+        if ( key.hasSecret() )
+            return i18n( "%1-bit %2 (secret key available)", subkey.length(), QLatin1String(subkey.publicKeyAlgorithmAsString()) );
+        else
+            return i18n( "%1-bit %2", subkey.length(), QLatin1String(subkey.publicKeyAlgorithmAsString()) );
     }
 
     QString format_keyusage( const Key & key ) {
-	QStringList capabilities;
-	if ( key.canReallySign() ) {
-	    if ( key.isQualified() )
-		capabilities.push_back( i18n( "Signing EMails and Files (Qualified)" ) );
-	    else
-		capabilities.push_back( i18n( "Signing EMails and Files" ) );
+        QStringList capabilities;
+        if ( key.canReallySign() ) {
+            if ( key.isQualified() )
+                capabilities.push_back( i18n( "Signing EMails and Files (Qualified)" ) );
+            else
+                capabilities.push_back( i18n( "Signing EMails and Files" ) );
     }
-	if ( key.canEncrypt() )
-	    capabilities.push_back( i18n( "Encrypting EMails and Files" ) );
-	if ( key.canCertify() )
-	    capabilities.push_back( i18n( "Certifying other Certificates" ) );
-	if ( key.canAuthenticate() )
-	    capabilities.push_back( i18n( "Authenticate against Servers" ) );
-	return capabilities.join( i18n(", ") );
+        if ( key.canEncrypt() )
+            capabilities.push_back( i18n( "Encrypting EMails and Files" ) );
+        if ( key.canCertify() )
+            capabilities.push_back( i18n( "Certifying other Certificates" ) );
+        if ( key.canAuthenticate() )
+            capabilities.push_back( i18n( "Authenticate against Servers" ) );
+        return capabilities.join( QLatin1String(", ") );
     }
 
     static QString time_t2string( time_t t ) {
-	QDateTime dt;
-	dt.setTime_t( t );
-	return KGlobal::locale()->formatDateTime( dt, KLocale::ShortDate );
+        QDateTime dt;
+        dt.setTime_t( t );
+        return KGlobal::locale()->formatDateTime( dt, KLocale::ShortDate );
     }
 
     static QString make_red( const QString & txt ) {
-	return QLatin1String( "<font color=\"red\">" ) + Qt::escape( txt ) + QLatin1String( "</font>" );
+        return QLatin1String( "<font color=\"red\">" ) + Qt::escape( txt ) + QLatin1String( "</font>" );
     }
 
 }
@@ -324,11 +324,11 @@ QString Formatting::toolTip( const Key & key, int flags ) {
 
 namespace {
     static QDate time_t2date( time_t t ) {
-	if ( !t )
-	    return QDate();
-	QDateTime dt;
-	dt.setTime_t( t );
-	return dt.date();
+        if ( !t )
+            return QDate();
+        QDateTime dt;
+        dt.setTime_t( t );
+        return dt.date();
     }
     static QString date2string( const QDate & date ) {
         return KGlobal::locale()->formatDate( date, KLocale::ShortDate );
@@ -336,15 +336,15 @@ namespace {
 
     template <typename T>
     QString expiration_date_string( const T & tee ) {
-	return tee.neverExpires() ? QString() : date2string( time_t2date( tee.expirationTime() ) ) ;
+        return tee.neverExpires() ? QString() : date2string( time_t2date( tee.expirationTime() ) ) ;
     }
     template <typename T>
     QDate creation_date( const T & tee ) {
-	return time_t2date( tee.creationTime() );
+        return time_t2date( tee.creationTime() );
     }
     template <typename T>
     QDate expiration_date( const T & tee ) {
-	return time_t2date( tee.expirationTime() );
+        return time_t2date( tee.expirationTime() );
     }
 }
 
@@ -442,21 +442,21 @@ QString Formatting::ownerTrustShort( Key::OwnerTrust trust ) {
 
 QString Formatting::validityShort( const Subkey & subkey ) {
     if ( subkey.isRevoked() )
-	return i18n("revoked");
+        return i18n("revoked");
     if ( subkey.isExpired() )
-	return i18n("expired");
+        return i18n("expired");
     if ( subkey.isDisabled() )
-	return i18n("disabled");
+        return i18n("disabled");
     if ( subkey.isInvalid() )
-	return i18n("invalid");
+        return i18n("invalid");
     return i18nc("as in good/valid signature", "good");
 }
 
 QString Formatting::validityShort( const UserID & uid ) {
     if ( uid.isRevoked() )
-	return i18n("revoked");
+        return i18n("revoked");
     if ( uid.isInvalid() )
-	return i18n("invalid");
+        return i18n("invalid");
     switch ( uid.validity() ) {
     case UserID::Unknown:   return i18nc("unknown trust level", "unknown");
     case UserID::Undefined: return i18nc("undefined trust", "undefined");
@@ -471,15 +471,15 @@ QString Formatting::validityShort( const UserID & uid ) {
 QString Formatting::validityShort( const UserID::Signature & sig ) {
     switch ( sig.status() ) {
     case UserID::Signature::NoError:
-	if ( !sig.isInvalid() ) {
-	    if ( sig.certClass() > 0 )
-		return i18n("class %1", sig.certClass() );
-	    else
-		return i18nc("good/valid signature", "good");
+        if ( !sig.isInvalid() ) {
+            if ( sig.certClass() > 0 )
+                return i18n("class %1", sig.certClass() );
+            else
+                return i18nc("good/valid signature", "good");
     }
-	// fall through:
+        // fall through:
     case UserID::Signature::GeneralError:
-	return i18n("invalid");
+        return i18n("invalid");
     case UserID::Signature::SigExpired:   return i18n("expired");
     case UserID::Signature::KeyExpired:   return i18n("certificate expired");
     case UserID::Signature::BadSignature: return i18nc("fake/invalid signature", "bad");
@@ -491,15 +491,15 @@ QString Formatting::validityShort( const UserID::Signature & sig ) {
 QString Formatting::formatKeyLink( const Key & key ) {
     if ( key.isNull() )
         return QString();
-    return QString::fromLatin1( "<a href=\"key:%1\">%2</a>" ).arg( key.primaryFingerprint(), Formatting::prettyName( key ) );
+    return QString::fromLatin1( "<a href=\"key:%1\">%2</a>" ).arg( QLatin1String(key.primaryFingerprint()), Formatting::prettyName( key ) );
 }
 
 QString Formatting::formatForComboBox( const GpgME::Key & key ) {
     const QString name = prettyName( key );
     QString mail = prettyEMail( key );
     if ( !mail.isEmpty() )
-        mail = '<' + mail + '>';
-    return i18nc( "name, email, key id", "%1 %2 (%3)", name, mail, key.shortKeyID() ).simplified();
+        mail = QLatin1Char('<') + mail + QLatin1Char('>');
+    return i18nc( "name, email, key id", "%1 %2 (%3)", name, mail, QLatin1String(key.shortKeyID()) ).simplified();
 }
 
 namespace {
@@ -575,9 +575,9 @@ QString Formatting::importMetaData( const Import & import, const QStringList & i
     if ( result.isEmpty() )
         return QString();
     else
-        return result + '\n' +
-            i18n("This certificate was imported from the following sources:") + '\n' +
-            ids.join("\n");
+        return result + QLatin1Char('\n') +
+            i18n("This certificate was imported from the following sources:") + QLatin1Char('\n') +
+            ids.join(QLatin1String("\n"));
 }
 
 QString Formatting::importMetaData( const Import & import ) {
@@ -607,7 +607,7 @@ QString Formatting::importMetaData( const Import & import ) {
 
     return results.empty()
         ? i18n( "The import contained no new data for this certificate. It is unchanged.")
-        : results.join( "\n" );
+        : results.join( QLatin1String("\n") );
 }
 
 

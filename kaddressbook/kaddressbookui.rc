@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="11">
+<kpartgui name="kaddressbook" version="18">
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
@@ -30,7 +30,10 @@
       <Separator/>
       <Action name="file_print"/>
       <Action name="file_print_preview"/>
-      <Separator/>
+      <!-- <Separator/>
+      <Action name="merge_contacts"/>
+      <Action name="search_duplicate_contacts"/>
+      <Separator/> -->
       <Action name="file_quit"/>
     </Menu>
 
@@ -46,6 +49,8 @@
     </Menu>
 
     <Menu name="view" noMerge="1"><text>&amp;View</text>
+      <Action name="theme_menu"/>
+      <Separator/>
       <Action name="view_mode_simple"/>
       <Action name="view_mode_2columns"/>
       <Action name="view_mode_3columns"/>
@@ -82,6 +87,9 @@
     <Action name="akonadi_item_cut"/>
     <Action name="akonadi_item_copy"/>
     <Action name="akonadi_paste"/>
+    <Separator/>
+      <Action name="file_print"/>
+      <Action name="file_print_preview"/>
     <Separator/>
     <Action name="akonadi_item_delete"/>
   </Menu>

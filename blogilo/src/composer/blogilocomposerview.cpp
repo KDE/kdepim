@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -19,14 +19,18 @@
 
 
 #include "blogilocomposerview.h"
+#include "pimcommon/widgets/customtoolswidget.h"
+
+#include <KToggleAction>
 
 #include <QApplication>
 #include <QTimer>
 #include <QMouseEvent>
-#include <QAction>
+#include <QMenu>
 
 BlogiloComposerView::BlogiloComposerView(QWidget * parent)
-    :ComposerEditorNG::ComposerView(parent)
+    : ComposerEditorNG::ComposerView(parent),
+      mCustomTools(0)
 {
     settings()->setFontSize ( QWebSettings::DefaultFontSize, 14 );
 }
@@ -34,6 +38,11 @@ BlogiloComposerView::BlogiloComposerView(QWidget * parent)
 BlogiloComposerView::~BlogiloComposerView()
 {
 
+}
+
+void BlogiloComposerView::setCustomTools(PimCommon::CustomToolsWidget *customTool)
+{
+    mCustomTools = customTool;
 }
 
 void BlogiloComposerView::startEditing()
@@ -53,5 +62,12 @@ void BlogiloComposerView::slotSendMouseReleaseEvent()
     pageAction( QWebPage::MoveToEndOfDocument )->trigger();
 }
 
+void BlogiloComposerView::addExtraAction(QMenu *menu)
+{
+    if (mCustomTools) {
+        menu->addSeparator();
+        menu->addAction(mCustomTools->action(PimCommon::CustomToolsWidget::TranslatorTool));
+        menu->addAction(mCustomTools->action(PimCommon::CustomToolsWidget::ShortUrlTool));
+    }
+}
 
-#include "blogilocomposerview.moc"

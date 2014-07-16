@@ -96,9 +96,9 @@ namespace Kleo {
                         GpgME::SignatureMode mode ) = 0;
 
     virtual GpgME::SigningResult exec( const std::vector<GpgME::Key> & signers,
-				       const QByteArray & plainText,
-				       GpgME::SignatureMode mode,
-				       QByteArray & signature ) = 0;
+                                       const QByteArray & plainText,
+                                       GpgME::SignatureMode mode,
+                                       QByteArray & signature ) = 0;
 
     /*!
       This is a hack to request BASE64 output (instead of whatever

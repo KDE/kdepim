@@ -80,4 +80,3 @@ EntityTreeModel* EntityTreeModelFactory::getModel(ChangeRecorder *changeRecorder
   return new EntityTreeModel(changeRecorder, parent);
 }
 
-#include "entitytreemodelfactory.moc"

@@ -105,4 +105,3 @@ void KNConfigDialog::slotConfigCommitted()
 
 
 //-----------------------------
-#include "knconfigmanager.moc"

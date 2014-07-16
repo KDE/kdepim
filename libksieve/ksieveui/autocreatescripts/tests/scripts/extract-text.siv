@@ -1,0 +1,8 @@
+require "extracttext";
+ 
+#Script name: extract-text
+
+if true
+{
+    extracttext :first 11 "voiture";
+}

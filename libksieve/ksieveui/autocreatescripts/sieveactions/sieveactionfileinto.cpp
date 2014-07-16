@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,20 +16,22 @@
 */
 
 #include "sieveactionfileinto.h"
-#include "autocreatescripts/autocreatescriptdialog.h"
-
-#include <KLocale>
+#include "editor/sieveeditorutil.h"
+#include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QCheckBox>
 #include <QHBoxLayout>
-
+#include <QDebug>
+#include <QDomNode>
+//Add support for adding flags
 using namespace KSieveUi;
 SieveActionFileInto::SieveActionFileInto(QObject *parent)
     : SieveAction(QLatin1String("fileinto"), i18n("File Into"), parent)
 {
-    mHasCopySupport = AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("copy"));
-    mHasMailBoxSupport = AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("mailbox"));
+    mHasCopySupport = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("copy"));
+    mHasMailBoxSupport = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("mailbox"));
 }
 
 SieveAction* SieveActionFileInto::newAction()
@@ -55,6 +57,50 @@ QString SieveActionFileInto::code(QWidget *w) const
     return result + QString::fromLatin1("\"%1\";").arg(text);
 }
 
+bool SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error )
+{
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("tag")) {
+                const QString tagValue = e.text();
+                if (tagValue == QLatin1String("copy")) {
+                    if (mHasCopySupport) {
+                        QCheckBox *copy = w->findChild<QCheckBox*>( QLatin1String("copy") );
+                        copy->setChecked(true);
+                    } else {
+                        error += i18n("Action \"fileinto\" has \"copy\" argument but current server does not support it") + QLatin1Char('\n');
+                        qDebug()<<"SieveActionFileInto::setParamWidgetValue has not copy support ";
+                    }
+                } else if (tagValue == QLatin1String("create")) {
+                    if (mHasMailBoxSupport) {
+                        QCheckBox *create = w->findChild<QCheckBox*>( QLatin1String("create") );
+                        create->setChecked(true);
+                    } else {
+                        serverDoesNotSupportFeatures(QLatin1String("fileinto"), error);
+                        qDebug()<<"SieveActionFileInto::setParamWidgetValue server has not create support ";
+                    }
+                }
+            } else if (tagName == QLatin1String("str")) {
+                const QString tagValue = e.text();
+                KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("fileintolineedit") );
+                edit->setText(tagValue);
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
+            } else {
+                unknownTag(tagName, error);
+                qDebug()<<" SieveActionFileInto::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+    return true;
+}
+
 QWidget *SieveActionFileInto::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
@@ -66,15 +112,19 @@ QWidget *SieveActionFileInto::createParamWidget( QWidget *parent ) const
         QCheckBox *copy = new QCheckBox(i18n("Keep a copy"));
         copy->setObjectName(QLatin1String("copy"));
         lay->addWidget(copy);
+        connect(copy, SIGNAL(clicked(bool)), this, SIGNAL(valueChanged()));
     }
     if (mHasMailBoxSupport) {
         QCheckBox *create = new QCheckBox(i18n("Create folder"));
         create->setObjectName(QLatin1String("create"));
+        connect(create, SIGNAL(clicked(bool)), this, SIGNAL(valueChanged()));
         lay->addWidget(create);
     }
 
     //TODO improve it.
+    //Use widgets/selectfileintowidget
     KLineEdit *edit = new KLineEdit;
+    connect(edit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     lay->addWidget(edit);
     edit->setObjectName(QLatin1String("fileintolineedit"));
     return w;
@@ -113,8 +163,15 @@ QString SieveActionFileInto::help() const
     if (mHasMailBoxSupport) {
         helpStr += QLatin1Char('\n') + i18n("If the optional \":create\" argument is specified, it instructs the Sieve interpreter to create the specified mailbox, if needed, before attempting to deliver the message into the specified mailbox.");
     }
-    //TODO add copy support
+    if (mHasCopySupport) {
+        helpStr += QLatin1Char('\n') + i18n("If the optional \":copy\" keyword is specified, the tagged command does not cancel the implicit \"keep\". Instead, it merely files or redirects a copy in addition to whatever else is happening to the message.");
+    }
     return helpStr;
 }
 
-#include "sieveactionfileinto.moc"
+
+
+QString KSieveUi::SieveActionFileInto::href() const
+{
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
+}

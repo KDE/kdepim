@@ -382,4 +382,3 @@ QString KBreadcrumbNavigationFactory::selectedDisplayText() const
   return d->m_selectedItemModel->index( 0, 0 ).data().toString();
 }
 
-#include "breadcrumbnavigationcontext.moc"

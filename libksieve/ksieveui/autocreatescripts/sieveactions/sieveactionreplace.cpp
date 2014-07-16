@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -17,14 +17,17 @@
 
 
 #include "sieveactionreplace.h"
+#include "editor/sieveeditorutil.h"
 #include "widgets/multilineedit.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QLabel>
-#include <QHBoxLayout>
+#include <QDomNode>
+#include <QDebug>
+#include <QGridLayout>
 
 using namespace KSieveUi;
 SieveActionReplace::SieveActionReplace(QObject *parent)
@@ -40,32 +43,77 @@ SieveAction* SieveActionReplace::newAction()
 QWidget *SieveActionReplace::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
-    QHBoxLayout *lay = new QHBoxLayout;
-    lay->setMargin(0);
-    w->setLayout(lay);
+    QGridLayout *grid = new QGridLayout;
+    grid->setMargin(0);
+    w->setLayout(grid);
 
     QLabel *lab = new QLabel(i18n("Subject:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab,0,0);
 
     KLineEdit *subject = new KLineEdit;
     subject->setObjectName(QLatin1String("subject"));
-    lay->addWidget(subject);
+    connect(subject, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    grid->addWidget(subject,0,1);
 
     lab = new QLabel(i18n("from:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab,1,0);
 
     KLineEdit *headers = new KLineEdit;
     headers->setObjectName(QLatin1String("from"));
-    lay->addWidget(headers);
+    connect(headers, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
+    grid->addWidget(headers,1,1);
 
     lab = new QLabel(i18n("text:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab,2,0);
 
     MultiLineEdit *text = new MultiLineEdit;
     text->setObjectName(QLatin1String("text"));
-    lay->addWidget(text);
+    connect(text, SIGNAL(textChanged()), this, SIGNAL(valueChanged()));
+    grid->addWidget(text,2,1);
 
     return w;
+}
+
+bool SieveActionReplace::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
+{
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("text") );
+                edit->setText(e.text());
+            } else if (tagName == QLatin1String("tag")) {
+                const QString tagValue = e.text();
+                if (tagValue == QLatin1String("subject")) {
+                    const QString strValue = AutoCreateScriptUtil::strValue(node);
+                    if (!strValue.isEmpty()) {
+                        KLineEdit *subject = w->findChild<KLineEdit*>(QLatin1String("subject"));
+                        subject->setText(strValue);
+                    }
+                } else if (tagValue == QLatin1String("from")) {
+                    const QString strValue = AutoCreateScriptUtil::strValue(node);
+                    if (!strValue.isEmpty()) {
+                        KLineEdit *headers = w->findChild<KLineEdit*>(QLatin1String("from"));
+                        headers->setText(strValue);
+                    }
+                } else {
+                    unknowTagValue(tagValue, error);
+                    qDebug()<<" SieveActionReplace::setParamWidgetValue unknown tagValue "<<tagValue;
+                }
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
+            } else {
+                unknownTag(tagName, error);
+                qDebug()<<" SieveActionReplace::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+    return true;
 }
 
 QString SieveActionReplace::code(QWidget *w) const
@@ -82,7 +130,6 @@ QString SieveActionReplace::code(QWidget *w) const
     if (!headersStr.isEmpty()) {
         result += QString::fromLatin1(":from \"%1\" ").arg(headersStr);
     }
-
 
     const MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("text") );
     const QString text = edit->toPlainText();
@@ -114,4 +161,8 @@ QString SieveActionReplace::help() const
     return i18n("The \"replace\" command is defined to allow a MIME part to be replaced with the text supplied in the command.");
 }
 
-#include "sieveactionreplace.moc"
+QString SieveActionReplace::href() const
+{
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
+}
+

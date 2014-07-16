@@ -53,9 +53,9 @@ namespace Kleo {
   public:
 #endif /* __cplusplus */
     /**
-       @li basic	This option should always be offered to the user.
-       @li advanced	This option may be offered to advanced users.
-       @li expert	This option should only be offered to expert users.
+       @li basic        This option should always be offered to the user.
+       @li advanced        This option may be offered to advanced users.
+       @li expert        This option should only be offered to expert users.
        */
     enum Level { Level_Basic = 0,
                  Level_Advanced = 1,
@@ -63,19 +63,19 @@ namespace Kleo {
 
     /**
        Type of the argument
-       @li ArgType_None	The option is set or not set, but no argument.
-       @li ArgType_String	An unformatted string.
-       @li ArgType_Int		A signed integer number.
-       @li ArgType_UInt	An unsigned integer number.
-       @li ArgType_Path	A string that describes the pathname of a file.
+       @li ArgType_None        The option is set or not set, but no argument.
+       @li ArgType_String        An unformatted string.
+       @li ArgType_Int                A signed integer number.
+       @li ArgType_UInt        An unsigned integer number.
+       @li ArgType_Path        A string that describes the pathname of a file.
        The file does not necessarily need to exist.
        Separated from string so that e.g. a KUrlRequester can be used.
-       @li ArgType_DirPath	A string that describes the pathname of a directory.
+       @li ArgType_DirPath        A string that describes the pathname of a directory.
        The directory does not necessarily need to exist.
        Separated from path so that e.g. a KUrlRequester can be used which only
        allows directories to be selected.
-       @li ArgType_URL		A URL
-       @li ArgType_LDAPURL	A LDAP URL
+       @li ArgType_URL                A URL
+       @li ArgType_LDAPURL        A LDAP URL
        Separated from URL so that a more specific widget can be shown, hiding the url syntax
     */
     enum ArgType { ArgType_None = 0,

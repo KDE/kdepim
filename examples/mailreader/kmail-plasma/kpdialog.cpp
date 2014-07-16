@@ -130,7 +130,7 @@ void KPDialog::setupPane()
       Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( m_folderListWidget );
       monitor->setCollectionMonitored( Akonadi::Collection::root() );
       monitor->fetchCollection( true );
-      monitor->setMimeTypeMonitored( "message/rfc822", true );
+      monitor->setMimeTypeMonitored( QLatin1String("message/rfc822"), true );
       monitor->itemFetchScope().fetchFullPayload(true);
 
       Akonadi::EntityTreeModel *entityModel = new Akonadi::EntityTreeModel( monitor, m_folderListWidget );
@@ -163,9 +163,8 @@ void KPDialog::setupPane()
       //entityModel->setRootCollection(Akonadi::Collection::root());
       
       // Now make the message list multi-tab pane
-      m_messagePane = new MessageList::Pane( entityModel, m_folderListView->selectionModel(), m_messageListWidget );
+      m_messagePane = new MessageList::Pane( true, entityModel, m_folderListView->selectionModel(), m_messageListWidget );
       //connect( m_messagePane, SIGNAL(messageSelected(Akonadi::Item)),
       //       this, SLOT(slotMessageSelected(Akonadi::Item)) );
 
 }
-#include "kpdialog.moc"

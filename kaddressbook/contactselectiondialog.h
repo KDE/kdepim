@@ -29,7 +29,7 @@ class QItemSelectionModel;
 
 namespace Akonadi
 {
-  class Collection;
+class Collection;
 }
 
 /**
@@ -39,9 +39,9 @@ namespace Akonadi
  */
 class ContactSelectionDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new contact selection dialog.
      *
@@ -65,7 +65,7 @@ class ContactSelectionDialog : public KDialog
      */
     KABC::Addressee::List selectedContacts() const;
 
-  private:
+private:
     ContactSelectionWidget *mSelectionWidget;
 };
 

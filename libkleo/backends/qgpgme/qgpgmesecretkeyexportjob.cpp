@@ -71,27 +71,27 @@ GpgME::Error Kleo::QGpgMESecretKeyExportJob::start( const QStringList & patterns
 
   // create and start gpgsm process:
   mProcess = new GnuPGProcessBase( this );
-  mProcess->setObjectName( "gpgsm --export-secret-key-p12" );
+  mProcess->setObjectName( QLatin1String("gpgsm --export-secret-key-p12") );
 
-  // FIXME: obbtain the path to gpgsm from gpgme, so we use the same instance.
-  *mProcess << "gpgsm" << "--export-secret-key-p12";
+  // FIXME: obtain the path to gpgsm from gpgme, so we use the same instance.
+  *mProcess << QLatin1String("gpgsm") << QLatin1String("--export-secret-key-p12");
   if ( mArmour )
-    *mProcess << "--armor";
+    *mProcess << QLatin1String("--armor");
   if ( !mCharset.isEmpty() )
-    *mProcess << "--p12-charset" << mCharset;
-  *mProcess << patterns.front().toUtf8();
+    *mProcess << QLatin1String("--p12-charset") << mCharset;
+  *mProcess << QLatin1String(patterns.front().toUtf8());
 
   mProcess->setUseStatusFD( true );
 
   connect( mProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
-	   SLOT(slotProcessExited(int,QProcess::ExitStatus)) );
+           SLOT(slotProcessExited(int,QProcess::ExitStatus)) );
   connect( mProcess, SIGNAL(readyReadStandardOutput()),
-	   SLOT(slotStdout()) );
+           SLOT(slotStdout()) );
   connect( mProcess, SIGNAL(readyReadStandardError()),
-	   SLOT(slotStderr()) );
+           SLOT(slotStderr()) );
 
   connect( mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,QString,QStringList)),
-	   SLOT(slotStatus(Kleo::GnuPGProcessBase*,QString,QStringList)) );
+           SLOT(slotStatus(Kleo::GnuPGProcessBase*,QString,QStringList)) );
 
   mProcess->setOutputChannelMode( KProcess::SeparateChannels );
   mProcess->start();
@@ -116,7 +116,7 @@ void Kleo::QGpgMESecretKeyExportJob::slotStatus( GnuPGProcessBase * proc, const 
   QStringList::const_iterator it = args.begin();
   bool ok = false;
 
-  if ( type == "ERROR" ) {
+  if ( type == QLatin1String("ERROR") ) {
 
 
     if ( args.size() < 2 ) {
@@ -137,7 +137,7 @@ void Kleo::QGpgMESecretKeyExportJob::slotStatus( GnuPGProcessBase * proc, const 
     mError = GpgME::Error::fromCode( code, source );
 
 
-  } else if ( type == "PROGRESS" ) {
+  } else if ( type == QLatin1String("PROGRESS") ) {
 
 
     if ( args.size() < 4 ) {
@@ -190,4 +190,3 @@ void Kleo::QGpgMESecretKeyExportJob::slotProcessExited(int exitCode, QProcess::E
   deleteLater();
 }
 
-#include "qgpgmesecretkeyexportjob.moc"

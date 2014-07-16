@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -21,6 +21,7 @@
 #include "composerview_p.h"
 #include "utils/composereditorutils_p.h"
 #include "link/composerlinkdialog.h"
+#include "link/composeranchordialog.h"
 #include "list/composerlistdialog.h"
 #include "image/composerimagedialog.h"
 #include "table/composertabledialog.h"
@@ -39,7 +40,7 @@
 
 
 #include <KToolInvocation>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KToggleAction>
 #include <KAction>
 #include <KSelectAction>
@@ -52,6 +53,7 @@
 #include <KFileDialog>
 #include <KPrintPreview>
 #include <kdeprintdialog.h>
+#include <KRun>
 
 #include <QAction>
 #include <QDBusInterface>
@@ -464,6 +466,15 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
         }
         break;
     }
+    case ComposerView::InsertAnchor:
+    {
+        if (!action_insert_anchor) {
+            action_insert_anchor = new KAction(i18n( "Insert Anchor..." ), q);
+            htmlEditorActionList.append(action_insert_anchor);
+            q->connect( action_insert_anchor, SIGNAL(triggered()), q, SLOT(_k_slotInsertAnchor()) );
+        }
+        break;
+    }
     case ComposerView::Separator:
         //nothing
         break;
@@ -681,6 +692,14 @@ void ComposerViewPrivate::_k_slotEditLink()
     dlg.exec();
 }
 
+void ComposerViewPrivate::_k_slotOpenLink()
+{
+    const QString href = contextMenuResult.linkElement().attribute(QLatin1String("href"));
+    if (!href.isEmpty()) {
+        new KRun( KUrl(href), 0 );
+    }
+}
+
 void ComposerViewPrivate::_k_setFontSize(int fontSize)
 {
     execCommand(QLatin1String("fontSize"), QString::number(fontSize+1)); //Verify
@@ -777,9 +796,10 @@ void ComposerViewPrivate::_k_slotReplace()
 void ComposerViewPrivate::_k_slotSaveAs()
 {
     QString fn = KFileDialog::getSaveFileName(QString(), i18n("HTML-Files (*.htm *.html);;All Files (*)") , q, i18n("Save as..."));
-    //TODO add KMessageBox
-    if (fn.isEmpty())
+    if (fn.isEmpty()) {
+        KMessageBox::error(q, i18n("Not file selected."), i18n("Save as"));
         return;
+    }
     if (!(fn.endsWith(QLatin1String(".htm"), Qt::CaseInsensitive) ||
           fn.endsWith(QLatin1String(".html"), Qt::CaseInsensitive))) {
         fn += QLatin1String(".htm");
@@ -946,6 +966,15 @@ void ComposerViewPrivate::_k_slotInsertSpecialChar()
     if (dlg.exec()) {
         execCommand(QLatin1String("insertHTML"), dlg.currentChar());
     }
+}
+
+void ComposerViewPrivate::_k_slotInsertAnchor()
+{
+    QPointer<ComposerAnchorDialog> dlg = new ComposerAnchorDialog( q );
+    if (dlg->exec() == KDialog::Accepted) {
+        execCommand(QLatin1String("insertHTML"), dlg->html());
+    }
+    delete dlg;
 }
 
 QMap<QString, QString> ComposerViewPrivate::localImages() const

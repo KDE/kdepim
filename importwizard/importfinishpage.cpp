@@ -40,4 +40,3 @@ void ImportFinishPage::addImportError( const QString& log )
     ui->logFinish->addErrorLogEntry( log );
 }
 
-#include "importfinishpage.moc"

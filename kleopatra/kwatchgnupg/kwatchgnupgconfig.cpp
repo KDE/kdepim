@@ -42,7 +42,7 @@
 #include <kglobal.h>
 #include <knuminput.h>
 
-#include <QLayout>
+#include <QVBoxLayout>
 #include <QLabel>
 #include <QCheckBox>
 #include <QComboBox>
@@ -53,19 +53,19 @@ static const char* log_levels[] = { "none", "basic", "advanced", "expert", "guru
 
 static int log_level_to_int( const QString& loglevel )
 {
-  if( loglevel == "none" ) {
-	return 0;
-  } else if( loglevel == "basic" ) {
-	return 1;
-  } else if( loglevel == "advanced" ) {
-	return 2;
-  } else if( loglevel == "expert" ) {
-	return 3;
-  } else if( loglevel == "guru" ) {
-	return 4;
+  if( loglevel == QLatin1String("none") ) {
+      return 0;
+  } else if( loglevel == QLatin1String("basic") ) {
+      return 1;
+  } else if( loglevel == QLatin1String("advanced") ) {
+      return 2;
+  } else if( loglevel == QLatin1String("expert") ) {
+      return 3;
+  } else if( loglevel == QLatin1String("guru") ) {
+      return 4;
   } else {
-	// default
-	return 1;
+      // default
+      return 1;
   }
 }
 
@@ -92,7 +92,6 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent )
 
   glay = new QGridLayout( group );
   glay->setSpacing( spacingHint() );
-  glay->setMargin( 0 );
   glay->setColumnStretch( 1, 1 );
 
   int row = -1;
@@ -217,4 +216,3 @@ void KWatchGnuPGConfig::slotSave()
   emit reconfigure();
 }
 
-#include "kwatchgnupgconfig.moc"

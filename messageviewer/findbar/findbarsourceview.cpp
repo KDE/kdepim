@@ -17,7 +17,7 @@
  */
 #include "findbarsourceview.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 #include <QPlainTextEdit>
 #include <QAction>
@@ -83,4 +83,3 @@ void FindBarSourceView::updateSensitivity(bool)
 }
 
 
-#include "findbarsourceview.moc"

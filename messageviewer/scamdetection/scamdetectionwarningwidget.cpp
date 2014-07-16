@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -18,13 +18,16 @@
 #include "scamdetectionwarningwidget.h"
 #include "settings/globalsettings.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KAction>
+
+#include <QDebug>
 
 using namespace MessageViewer;
 
 ScamDetectionWarningWidget::ScamDetectionWarningWidget(QWidget *parent)
-    : KMessageWidget(parent)
+    : KMessageWidget(parent),
+      mUseInTestApps(false)
 {
     setVisible(false);
     setCloseButtonVisible(true);
@@ -55,6 +58,11 @@ ScamDetectionWarningWidget::~ScamDetectionWarningWidget()
 {
 }
 
+void ScamDetectionWarningWidget::setUseInTestApps(bool b)
+{
+    mUseInTestApps = b;
+}
+
 void ScamDetectionWarningWidget::slotMessageIsNotAScam()
 {
     Q_EMIT messageIsNotAScam();
@@ -75,8 +83,10 @@ void ScamDetectionWarningWidget::slotShowWarning()
 
 void ScamDetectionWarningWidget::slotDisableScamDetection()
 {
-    MessageViewer::GlobalSettings::self()->setScamDetectionEnabled( false );
-    MessageViewer::GlobalSettings::self()->writeConfig();
+    if (!mUseInTestApps) {
+        MessageViewer::GlobalSettings::self()->setScamDetectionEnabled( false );
+        MessageViewer::GlobalSettings::self()->writeConfig();
+    }
     setVisible(false);
 }
 
@@ -86,4 +96,3 @@ void ScamDetectionWarningWidget::slotAddToWhiteList()
     Q_EMIT addToWhiteList();
 }
 
-#include "scamdetectionwarningwidget.moc"

@@ -42,8 +42,8 @@ class QString;
 
 namespace MessageViewer {
 
-  class MESSAGEVIEWER_EXPORT FileHtmlWriter : public HtmlWriter {
-  public:
+class MESSAGEVIEWER_EXPORT FileHtmlWriter : public HtmlWriter {
+public:
     explicit FileHtmlWriter( const QString & filename );
     virtual ~FileHtmlWriter();
 
@@ -55,13 +55,13 @@ namespace MessageViewer {
     void flush();
     void embedPart( const QByteArray & contentId, const QString & url );
     void extraHead( const QString& str );
-  private:
+private:
     void openOrWarn();
 
-  private:
+private:
     QFile mFile;
     QTextStream mStream;
-  };
+};
 
 } // namespace MessageViewer
 

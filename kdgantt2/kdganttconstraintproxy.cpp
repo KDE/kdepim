@@ -115,4 +115,3 @@ void ConstraintProxy::slotDestinationConstraintRemoved( const Constraint& c )
                                                             m_proxy->mapToSource( c.endIndex() ) ) );
 }
 
-#include "moc_kdganttconstraintproxy.cpp"

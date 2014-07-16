@@ -18,13 +18,15 @@
 */
 
 #include "annotationdialog.h"
-
-#include <Nepomuk2/Resource>
-#include <Soprano/Vocabulary/NAO>
+#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
 #include <KMessageBox>
-#include <KLocale>
-#include <KTextEdit>
+#include <KLocalizedString>
+#include <Akonadi/ItemModifyJob>
+#include <KSharedConfig>
+#include <akonadi/item.h>
+#include <akonadi/entityannotationsattribute.h>
+
 
 #include <QLabel>
 #include <QGridLayout>
@@ -33,101 +35,102 @@ using namespace MessageCore;
 
 class AnnotationEditDialog::Private
 {
-  public:
-    Private( const QUrl &uri )
-      : mNepomukResourceUri( uri ),
-        mTextEdit( 0 ),
-        mHasAnnotation( false )
+public:
+    Private()
+        : mTextEdit( 0 ),
+          mHasAnnotation( false )
     {
     }
 
-    QUrl mNepomukResourceUri;
-    KTextEdit *mTextEdit;
+    Akonadi::Item mItem;
+    PimCommon::RichTextEditorWidget *mTextEdit;
     bool mHasAnnotation;
 };
 
-AnnotationEditDialog::AnnotationEditDialog( const QUrl &uri, QWidget *parent )
-  : KDialog( parent ), d( new Private( uri ) )
+AnnotationEditDialog::AnnotationEditDialog( const Akonadi::Item &item, QWidget *parent )
+    : KDialog( parent ), d( new Private )
 {
-  Nepomuk2::Resource resource( d->mNepomukResourceUri );
+    d->mItem = item;
+    //check for correct key?
+    d->mHasAnnotation = item.hasAttribute<Akonadi::EntityAnnotationsAttribute>();
+    if ( d->mHasAnnotation ) {
+        setCaption( i18n( "Edit Note" ) );
+        setButtons( Ok | Cancel | User1 );
+        setButtonText( User1, i18n( "Delete Note" ) );
+        setButtonIcon( User1, KIcon( QLatin1String("edit-delete") ) );
+    } else {
+        setCaption( i18n( "Add Note" ) );
+        setButtons( Ok | Cancel );
+    }
 
-  d->mHasAnnotation = resource.hasProperty( QUrl( Soprano::Vocabulary::NAO::description().toString() ) );
-  if ( d->mHasAnnotation ) {
-    setCaption( i18n( "Edit Note" ) );
-    setButtons( Ok | Cancel | User1 );
-    setButtonText( User1, i18n( "Delete Note" ) );
-    setButtonIcon( User1, KIcon( "edit-delete" ) );
-  } else {
-    setCaption( i18n( "Add Note" ) );
-    setButtons( Ok | Cancel );
-  }
+    setDefaultButton( KDialog::Ok );
 
-  setDefaultButton( KDialog::Ok );
+    QLabel *label = new QLabel( i18n( "Enter the text that should be stored as a note to the mail:" ) );
+    QGridLayout *grid = new QGridLayout( mainWidget() );
+    d->mTextEdit = new PimCommon::RichTextEditorWidget( this );
+    d->mTextEdit->setAcceptRichText(false);
+    grid->addWidget( label );
+    grid->addWidget( d->mTextEdit );
+    d->mTextEdit->setFocus();
 
-  QLabel *label = new QLabel( i18n( "Enter the text that should be stored as a note to the mail:" ) );
-  QGridLayout *grid = new QGridLayout( mainWidget() );
-  d->mTextEdit = new KTextEdit( this );
-  grid->addWidget( label );
-  grid->addWidget( d->mTextEdit );
-  d->mTextEdit->setFocus();
-
-  if ( d->mHasAnnotation ) {
-    d->mTextEdit->setPlainText( resource.description() );
-  }
-  readConfig();
+    if ( d->mHasAnnotation && item.attribute<Akonadi::EntityAnnotationsAttribute>() ) {
+        //TODO shared/private annotations
+        d->mTextEdit->setPlainText( item.attribute<Akonadi::EntityAnnotationsAttribute>()->value("/private/comment") );
+    }
+    readConfig();
 }
 
 AnnotationEditDialog::~AnnotationEditDialog()
 {
-  writeConfig();
-  delete d;
+    writeConfig();
+    delete d;
 }
 
 void AnnotationEditDialog::slotButtonClicked( int button )
 {
-  if ( button == KDialog::Ok ) {
-    bool textIsEmpty = d->mTextEdit->toPlainText().isEmpty();
-    if ( !textIsEmpty ) {
-      Nepomuk2::Resource resource( d->mNepomukResourceUri );
-      resource.setDescription( d->mTextEdit->toPlainText() );
-    } else if ( d->mHasAnnotation && textIsEmpty ) {
-      Nepomuk2::Resource resource( d->mNepomukResourceUri );
+    if ( button == KDialog::Ok ) {
+        bool textIsEmpty = d->mTextEdit->toPlainText().isEmpty();
+        if ( !textIsEmpty ) {
+            d->mItem.removeAttribute<Akonadi::EntityAnnotationsAttribute>();
+            Akonadi::EntityAnnotationsAttribute *annotation = d->mItem.attribute<Akonadi::EntityAnnotationsAttribute>(Akonadi::Entity::AddIfMissing);
+            annotation->insert("/private/comment", d->mTextEdit->toPlainText());
+            d->mItem.addAttribute(annotation);
+        } else if ( d->mHasAnnotation && textIsEmpty ) {
+            d->mItem.removeAttribute<Akonadi::EntityAnnotationsAttribute>();
+        }
+        new Akonadi::ItemModifyJob(d->mItem);
 
-      resource.removeProperty( QUrl( Soprano::Vocabulary::NAO::description().toString() ) );
+        accept();
+    } else if ( button == KDialog::Cancel ) {
+        reject();
+    } else if ( button == KDialog::User1 ) {
+        const int answer = KMessageBox::warningContinueCancel( this,
+                                                               i18n( "Do you really want to delete this note?" ),
+                                                               i18n( "Delete Note?" ), KGuiItem( i18n( "Delete" ), QLatin1String("edit-delete") ) );
+        if ( answer == KMessageBox::Continue ) {
+            d->mItem.removeAttribute<Akonadi::EntityAnnotationsAttribute>();
+            new Akonadi::ItemModifyJob(d->mItem);
+            accept();
+        }
     }
-
-    accept();
-  } else if ( button == KDialog::Cancel ) {
-    reject();
-  } else if ( button == KDialog::User1 ) {
-    const int answer = KMessageBox::warningContinueCancel( this,
-                              i18n( "Do you really want to delete this note?" ),
-                              i18n( "Delete Note?" ), KGuiItem( i18n( "Delete" ), "edit-delete" ) );
-    if ( answer == KMessageBox::Continue ) {
-      Nepomuk2::Resource resource( d->mNepomukResourceUri );
-      resource.removeProperty( QUrl( Soprano::Vocabulary::NAO::description().toString() ) );
-      accept();
-    }
-  }
 }
 
 void AnnotationEditDialog::readConfig()
 {
-  KSharedConfig::Ptr cfg = KGlobal::config();
-  KConfigGroup group( cfg, "AnnotationEditDialog" );
-  QSize size = group.readEntry( "Size", QSize() );
-  if ( !size.isEmpty() ) {
-    resize( size );
-  }
+    KSharedConfig::Ptr cfg = KGlobal::config();
+    KConfigGroup group( cfg, "AnnotationEditDialog" );
+    QSize size = group.readEntry( "Size", QSize() );
+    if ( !size.isEmpty() ) {
+        resize( size );
+    }
 }
 
 void AnnotationEditDialog::writeConfig()
 {
-  KSharedConfig::Ptr cfg = KGlobal::config();
-  KConfigGroup group( cfg, "AnnotationEditDialog" );
-  group.writeEntry( "Size", size() );
+    KSharedConfig::Ptr cfg = KGlobal::config();
+    KConfigGroup group( cfg, "AnnotationEditDialog" );
+    group.writeEntry( "Size", size() );
 }
 
 
 
-#include "annotationdialog.moc"

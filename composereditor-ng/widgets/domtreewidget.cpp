@@ -20,7 +20,7 @@
 
 #include "domtreewidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QVBoxLayout>
 #include <QPushButton>
@@ -102,4 +102,4 @@ DomTreeWidget::~DomTreeWidget()
 
 }
 
-#include "domtreewidget.moc"
+#include "moc_domtreewidget.cpp"

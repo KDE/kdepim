@@ -22,9 +22,8 @@
 
 #include <kpimutils/email.h>
 #include <KDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KCompletionBox>
-#include <KMessageBox>
 #include <KDebug>
 
 #include <QKeyEvent>
@@ -256,4 +255,3 @@ Recipient::Ptr RecipientLineNG::recipient() const
 }
 
 
-#include "recipientline.moc"

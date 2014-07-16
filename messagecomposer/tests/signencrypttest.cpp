@@ -53,7 +53,8 @@ void SignEncryptTest::initTestCase()
   MessageCore::Test::setupEnv();
 }
 
-void SignEncryptTest::testContent() {
+void SignEncryptTest::testContent()
+{
 
   std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
 
@@ -65,7 +66,6 @@ void SignEncryptTest::testContent() {
   QVERIFY( sJob );
   QVERIFY( eJob );
 
-
   QList<QByteArray> charsets;
   charsets << "us-ascii";
   composer->globalPart()->setCharsets( charsets );
@@ -73,22 +73,20 @@ void SignEncryptTest::testContent() {
   part->setWordWrappingEnabled(false);
   part->setCleanPlainText( QString::fromLatin1("one flew over the cuckoo's nest"));
 
-
   MessageComposer::MainTextJob *mainTextJob = new MessageComposer::MainTextJob( part, composer );
 
   QVERIFY( composer );
   QVERIFY( mainTextJob );
 
+  VERIFYEXEC( mainTextJob );
 
-  mainTextJob->exec();
-  
   QStringList recipients;
   recipients << QString::fromLocal8Bit( "test@kolab.org" );
 
   sJob->setContent( mainTextJob->content() );
   sJob->setSigningKeys( keys );
   sJob->setCryptoMessageFormat( Kleo::OpenPGPMIMEFormat );
-  
+
   eJob->setCryptoMessageFormat( Kleo::OpenPGPMIMEFormat );
   eJob->setRecipients( recipients );
   eJob->setEncryptionKeys( keys );
@@ -102,12 +100,11 @@ void SignEncryptTest::testContent() {
   result->assemble();
 
   kDebug() << "result:" << result->encodedContent();
-  
-  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption(
-              result,
-              QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8(),
-              Kleo::OpenPGPMIMEFormat ) );
-  
+
+  ComposerTestUtil::verifySignatureAndEncryption(
+      result,
+      QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8(),
+      Kleo::OpenPGPMIMEFormat );
 }
 
 
@@ -156,4 +153,3 @@ void SignEncryptTest::testHeaders()
   QCOMPARE( result->contentTransferEncoding()->encoding(), KMime::Headers::CE7Bit );
 }
 
-#include "signencrypttest.moc"

@@ -26,67 +26,79 @@
 using namespace Akonadi;
 
 SearchDescriptionAttribute::SearchDescriptionAttribute()
-  : mRecursive(false)
+    : mRecursive(false)
 {
 }
 
 
 QByteArray SearchDescriptionAttribute::type() const
 {
-  return "kmailsearchdescription";
+    return "kmailsearchdescription";
 }
 
 Akonadi::Attribute* SearchDescriptionAttribute::clone() const
 {
-  return new SearchDescriptionAttribute( *this );
+    return new SearchDescriptionAttribute( *this );
 }
 
 QByteArray SearchDescriptionAttribute::serialized() const
 {
-  QByteArray ba;
-  QDataStream s( &ba, QIODevice::WriteOnly );
-  s << mBaseCollection.id();
-  s << mRecursive;
-  s << mDescription;
-  return ba;
+    QByteArray ba;
+    QDataStream s( &ba, QIODevice::WriteOnly );
+    s << mBaseCollection.id();
+    s << mRecursive;
+    s << mDescription;
+    s << mListCollection;
+    return ba;
 }
 
 void SearchDescriptionAttribute::deserialize( const QByteArray &data )
 {
-  QDataStream s( data );
-  Akonadi::Entity::Id id;
-  s >> id;
-  mBaseCollection = Akonadi::Collection( id );
-  s >> mRecursive;
-  s >> mDescription;
+    QDataStream s( data );
+    Akonadi::Entity::Id id;
+    s >> id;
+    mBaseCollection = Akonadi::Collection( id );
+    s >> mRecursive;
+    s >> mDescription;
+    s >> mListCollection;
 }
 
 QByteArray SearchDescriptionAttribute::description() const
 {
-  return mDescription;
+    return mDescription;
 }
 
 void SearchDescriptionAttribute::setDescription( const QByteArray& desc )
 {
-  mDescription = desc;
+    mDescription = desc;
 }
 
 Akonadi::Collection SearchDescriptionAttribute::baseCollection() const
 {
-  return mBaseCollection;
+    return mBaseCollection;
 }
 
 void SearchDescriptionAttribute::setBaseCollection( const Akonadi::Collection &col )
 {
-  mBaseCollection = col;
+    mBaseCollection = col;
 }
 
 bool SearchDescriptionAttribute::recursive() const
 {
-  return mRecursive;
+    return mRecursive;
 }
 
 void SearchDescriptionAttribute::setRecursive( bool r )
 {
-  mRecursive = r;
+    mRecursive = r;
+}
+
+void SearchDescriptionAttribute::setListCollection( const QList<Akonadi::Collection::Id> &col)
+{
+    mListCollection = col;
+}
+
+QList<Akonadi::Collection::Id> SearchDescriptionAttribute::listCollection() const
+{
+    return mListCollection;
 }

@@ -27,8 +27,6 @@
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
 
-class KConfig;
-class KConfigGroup;
 class KJob;
 
 namespace KLDAP {
@@ -47,9 +45,9 @@ class LdapServer;
  */
 class KDEPIM_EXPORT LdapClient : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a new ldap client.
      *
@@ -130,7 +128,7 @@ class KDEPIM_EXPORT LdapClient : public QObject
      */
     void cancelQuery();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted when the query has finished.
      */
@@ -149,7 +147,7 @@ class KDEPIM_EXPORT LdapClient : public QObject
      */
     void result( const KLDAP::LdapClient &client, const KLDAP::LdapObject& );
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private* const d;

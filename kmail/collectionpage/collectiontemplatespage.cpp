@@ -23,10 +23,9 @@
 #include "foldercollection.h"
 #include "templateparser/templatesconfiguration.h"
 #include "templateparser/templatesconfiguration_kfg.h"
-
 #include <akonadi/collection.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KPushButton>
 #include <QCheckBox>
 
@@ -47,7 +46,8 @@ CollectionTemplatesPage::~CollectionTemplatesPage()
 
 bool CollectionTemplatesPage::canHandle( const Collection &collection ) const
 {
-    return ( !CommonKernel->isSystemFolderCollection( collection ) || CommonKernel->isMainFolderCollection( collection ) );
+    return ( !CommonKernel->isSystemFolderCollection( collection ) ||
+                                                                     CommonKernel->isMainFolderCollection( collection ) );
 }
 
 void CollectionTemplatesPage::init()
@@ -63,7 +63,7 @@ void CollectionTemplatesPage::init()
     connect(mCustom, SIGNAL(clicked(bool)), this, SLOT(slotChanged()));
     topItems->addWidget( mCustom, Qt::AlignLeft );
 
-    mWidget = new TemplateParser::TemplatesConfiguration( this, "folder-templates" );
+    mWidget = new TemplateParser::TemplatesConfiguration( this, QLatin1String("folder-templates") );
     connect(mWidget, SIGNAL(changed()), this, SLOT(slotChanged()));
     mWidget->setEnabled( false );
 
@@ -134,4 +134,3 @@ void CollectionTemplatesPage::slotChanged()
     mChanged = true;
 }
 
-#include "collectiontemplatespage.moc"

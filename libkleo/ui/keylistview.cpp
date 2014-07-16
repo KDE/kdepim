@@ -109,8 +109,8 @@ Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const Dis
   for ( int i = 0 ; i < numSignalReplacements ; ++i )
     connect( this, signalReplacements[i].source, signalReplacements[i].target );
 
-  this->setToolTip("");
-  viewport()->setToolTip(""); // make double sure :)
+  this->setToolTip(QString());
+  viewport()->setToolTip(QString()); // make double sure :)
 }
 
 Kleo::KeyListView::~KeyListView() {
@@ -162,7 +162,7 @@ void Kleo::KeyListView::slotUpdateTimeout() {
   if ( wasUpdatesEnabled )
     viewport()->setUpdatesEnabled( false );
   kDebug( 5150 ) <<"Kleo::KeyListView::slotUpdateTimeout(): processing"
-		  << d->keyBuffer.size() << "items en block";
+                  << d->keyBuffer.size() << "items en block";
   if ( hierarchical() ) {
     for ( std::vector<GpgME::Key>::const_iterator it = d->keyBuffer.begin() ; it != d->keyBuffer.end() ; ++it )
       doHierarchicalInsert( *it );
@@ -513,4 +513,3 @@ void Kleo::KeyListView::keyPressEvent(QKeyEvent* event)
 }
 
 
-#include "keylistview.moc"

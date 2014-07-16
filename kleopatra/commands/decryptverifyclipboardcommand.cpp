@@ -48,8 +48,7 @@
 
 #include <kleo/stl_util.h>
 
-#include <KLocale>
-#include <KMessageBox>
+#include <KLocalizedString>
 #include <kdebug.h>
 
 #include <exception>

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -17,7 +17,7 @@
 
 #include "sieveinfowidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QHBoxLayout>
 #include <KTextEdit>
@@ -30,6 +30,7 @@ SieveInfoWidget::SieveInfoWidget(QWidget *parent)
     mInfo = new KTextEdit;
     mInfo->setReadOnly(true);
     mInfo->setAcceptRichText(true);
+    mInfo->enableFindReplace(false);
     lay->addWidget(mInfo);
     setLayout(lay);
 }
@@ -50,4 +51,3 @@ void SieveInfoWidget::setServerInfo(QStringList serverInfos)
     mInfo->setHtml(result);
 }
 
-#include "sieveinfowidget.moc"

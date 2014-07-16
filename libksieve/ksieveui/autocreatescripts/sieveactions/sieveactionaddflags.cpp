@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -17,12 +17,13 @@
 
 
 #include "sieveactionaddflags.h"
+#include "editor/sieveeditorutil.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace KSieveUi;
 SieveActionAddFlags::SieveActionAddFlags(QObject *parent)
-    : SieveActionAbstractFlags(QLatin1String("addflags"), i18n("Add Flags"), parent)
+    : SieveActionAbstractFlags(QLatin1String("addflag"), i18n("Add Flags"), parent)
 {
 }
 
@@ -41,4 +42,7 @@ QString SieveActionAddFlags::help() const
     return i18n("Addflag is used to add flags to a list of [IMAP] flags.  It doesn't replace any previously set flags.  This means that multiple occurrences of addflag are treated additively.");
 }
 
-#include "sieveactionaddflags.moc"
+QString SieveActionAddFlags::href() const
+{
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
+}

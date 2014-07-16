@@ -32,7 +32,7 @@
 using namespace MailCommon;
 
 TagWidget::TagWidget(const QList<KActionCollection*>& actionCollections, QWidget *parent)
- : QWidget(parent)
+    : QWidget(parent)
 {
     QGridLayout *settings = new QGridLayout;
     settings->setMargin( KDialog::marginHint() );
@@ -109,7 +109,7 @@ TagWidget::TagWidget(const QList<KActionCollection*>& actionCollections, QWidget
     mIconButton = new KIconButton( this );
     mIconButton->setIconSize( 16 );
     mIconButton->setIconType( KIconLoader::NoGroup, KIconLoader::Action );
-    mIconButton->setIcon(KIcon("mail-tagged"));
+    mIconButton->setIcon(KIcon(QLatin1String("mail-tagged")));
     settings->addWidget( mIconButton, 5, 1 );
     connect( mIconButton, SIGNAL(iconChanged(QString)),
              SIGNAL(iconNameChanged(QString)) );
@@ -131,12 +131,12 @@ TagWidget::TagWidget(const QList<KActionCollection*>& actionCollections, QWidget
     sclabel->setBuddy( mKeySequenceWidget );
     settings->addWidget( sclabel, 6, 0 );
     if ( !actionCollections.isEmpty() ) {
-      mKeySequenceWidget->setCheckActionCollections( actionCollections );
-      connect( mKeySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)),
-               this, SLOT(slotEmitChangeCheck()) );
+        mKeySequenceWidget->setCheckActionCollections( actionCollections );
+        connect( mKeySequenceWidget, SIGNAL(keySequenceChanged(QKeySequence)),
+                 this, SLOT(slotEmitChangeCheck()) );
     }
     else
-      mKeySequenceWidget->setEnabled(false);
+        mKeySequenceWidget->setEnabled(false);
 
 
     //Seventh for Toolbar checkbox
@@ -155,71 +155,70 @@ TagWidget::~TagWidget()
 
 void TagWidget::slotEmitChangeCheck()
 {
-  Q_EMIT changed();
+    Q_EMIT changed();
 }
 
 void TagWidget::setTagTextColor(const QColor& color)
 {
-  mTextColorCheck->setEnabled( true );
-  if ( color.isValid() ) {
-    mTextColorCheck->setChecked( true );
-    mTextColorCombo->setColor( color );
-  } else {
-    mTextColorCheck->setChecked( false );
-    mTextColorCombo->setColor( Qt::white );
-  }
-  mTextColorCombo->setEnabled(mTextColorCheck->isChecked());
+    mTextColorCheck->setEnabled( true );
+    if ( color.isValid() ) {
+        mTextColorCheck->setChecked( true );
+        mTextColorCombo->setColor( color );
+    } else {
+        mTextColorCheck->setChecked( false );
+        mTextColorCombo->setColor( Qt::white );
+    }
+    mTextColorCombo->setEnabled(mTextColorCheck->isChecked());
 }
 
 void TagWidget::setTagBackgroundColor(const QColor& color)
 {
-  mBackgroundColorCheck->setEnabled( true );
-  if ( color.isValid() ) {
-    mBackgroundColorCheck->setChecked( true );
-    mBackgroundColorCombo->setColor( color );
-  } else {
-    mBackgroundColorCheck->setChecked( false );
-    mBackgroundColorCombo->setColor( Qt::white );
-  }
-  mBackgroundColorCombo->setEnabled( mBackgroundColorCheck->isChecked() );
+    mBackgroundColorCheck->setEnabled( true );
+    if ( color.isValid() ) {
+        mBackgroundColorCheck->setChecked( true );
+        mBackgroundColorCombo->setColor( color );
+    } else {
+        mBackgroundColorCheck->setChecked( false );
+        mBackgroundColorCombo->setColor( Qt::white );
+    }
+    mBackgroundColorCombo->setEnabled( mBackgroundColorCheck->isChecked() );
 }
 
 void TagWidget::setTagTextFont(const QFont& font)
 {
-  mTextFontCheck->setEnabled( true );
-  mTextFontCheck->setChecked( ( font != QFont() ) );
-  mFontRequester->setFont( font );
-  mFontRequester->setEnabled( mTextFontCheck->isChecked() );
+    mTextFontCheck->setEnabled( true );
+    mTextFontCheck->setChecked( ( font != QFont() ) );
+    mFontRequester->setFont( font );
+    mFontRequester->setEnabled( mTextFontCheck->isChecked() );
 }
 
 MailCommon::Tag::SaveFlags TagWidget::saveFlags() const
 {
-  MailCommon::Tag::SaveFlags saveFlags = 0;
-  if ( mTextColorCheck->isChecked() )
-    saveFlags |= MailCommon::Tag::TextColor;
-  if ( mBackgroundColorCheck->isChecked() )
-    saveFlags |= MailCommon::Tag::BackgroundColor;
-  if ( mTextFontCheck->isChecked() )
-    saveFlags |= MailCommon::Tag::Font;
+    MailCommon::Tag::SaveFlags saveFlags = 0;
+    if ( mTextColorCheck->isChecked() )
+        saveFlags |= MailCommon::Tag::TextColor;
+    if ( mBackgroundColorCheck->isChecked() )
+        saveFlags |= MailCommon::Tag::BackgroundColor;
+    if ( mTextFontCheck->isChecked() )
+        saveFlags |= MailCommon::Tag::Font;
 
-  return saveFlags;
+    return saveFlags;
 }
 
 void TagWidget::recordTagSettings( MailCommon::Tag::Ptr tag)
 {
-  tag->textColor = mTextColorCheck->isChecked() ? mTextColorCombo->color() : QColor();
+    tag->textColor = mTextColorCheck->isChecked() ? mTextColorCombo->color() : QColor();
 
-  tag->backgroundColor = mBackgroundColorCheck->isChecked() ? mBackgroundColorCombo->color() : QColor();
+    tag->backgroundColor = mBackgroundColorCheck->isChecked() ? mBackgroundColorCombo->color() : QColor();
 
-  tag->textFont = mTextFontCheck->isChecked() ? mFontRequester->font() : QFont();
+    tag->textFont = mTextFontCheck->isChecked() ? mFontRequester->font() : QFont();
 
-  tag->iconName = iconButton()->icon();
-  if (mKeySequenceWidget->isEnabled()) {
-    mKeySequenceWidget->applyStealShortcut();
-    tag->shortcut = KShortcut( mKeySequenceWidget->keySequence() );
-  }
+    tag->iconName = iconButton()->icon();
+    if (mKeySequenceWidget->isEnabled()) {
+        mKeySequenceWidget->applyStealShortcut();
+        tag->shortcut = KShortcut( mKeySequenceWidget->keySequence() );
+    }
 
-  tag->inToolbar = mInToolbarCheck->isChecked();
+    tag->inToolbar = mInToolbarCheck->isChecked();
 }
 
-#include "tagwidget.moc"

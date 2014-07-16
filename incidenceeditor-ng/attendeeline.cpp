@@ -28,7 +28,7 @@
 #include <KCompletionBox>
 #include <KDebug>
 #include <KDialog>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QBoxLayout>
 #include <QKeyEvent>
@@ -478,5 +478,4 @@ void AttendeeLine::aboutToBeDeleted()
   emit changed( mData->attendee(), KCalCore::Attendee::Ptr( new KCalCore::Attendee( "", "" ) ) );
 }
 
-#include "attendeeline.moc"
 

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,8 +16,9 @@
 */
 
 #include "sieveactionstop.h"
+#include "editor/sieveeditorutil.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace KSieveUi;
 
@@ -41,4 +42,7 @@ QString SieveActionStop::help() const
     return i18n("The \"stop\" action ends all processing.  If the implicit keep has not been cancelled, then it is taken.");
 }
 
-#include "sieveactionstop.moc"
+QString SieveActionStop::href() const
+{
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
+}

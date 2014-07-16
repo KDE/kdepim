@@ -111,15 +111,15 @@ QString StyleGetter::styledHtml( const int blogid,
     QString url = QString::fromLatin1("blogilo/%1/" ).arg( blogid );
     url = KStandardDirs::locateLocal( "data", url , true );
     KUrl dest( url );
-    dest.addPath("style.html");
-    dest.setScheme("file");
+    dest.addPath(QLatin1String("style.html"));
+    dest.setScheme(QLatin1String("file"));
 
     if ( !dest.isValid() ) {
-        return "<html><body><h2 align='center'>" + title + "</h2><br>" + content + "</html>";
+        return QLatin1String("<html><body><h2 align='center'>") + title + QLatin1String("</h2><br>") + content + QLatin1String("</html>");
     }
     QFile file( dest.pathOrUrl() );
     if ( !file.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
-        return "<html><body><h2 align='center'>" + title + "</h2><br>" + content + "</html>";
+        return QLatin1String("<html><body><h2 align='center'>") + title + QLatin1String("</h2><br>") + content + QLatin1String("</html>");
     }
 
     QString buffer;
@@ -131,8 +131,8 @@ QString StyleGetter::styledHtml( const int blogid,
     QRegExp typeRx ( QLatin1String( "(TYPE[^>]+>)" ) );
     buffer.remove( typeRx );
 
-    QRegExp titleRx( QString::fromLatin1( "%1[\\d]*" ).arg( POST_TITLE ) );
-    QRegExp contentRx( QString::fromLatin1( "%1[\\d]*" ).arg( POST_CONTENT ) );
+    QRegExp titleRx( QString::fromLatin1( "%1[\\d]*" ).arg( QLatin1String(POST_TITLE) ) );
+    QRegExp contentRx( QString::fromLatin1( "%1[\\d]*" ).arg( QLatin1String(POST_CONTENT )) );
 
     buffer.replace( titleRx, title );
     buffer.replace( contentRx, content );
@@ -181,12 +181,12 @@ void StyleGetter::slotHtmlCopied( KJob *job )
     QByteArray httpData( qobject_cast<KIO::StoredTransferJob*>( job )->data() );
 
     QString href( mTempPost->permaLink().url() );
-    int filenameOffset = href.lastIndexOf( "/" );
+    int filenameOffset = href.lastIndexOf( QLatin1String("/") );
     href = href.remove( filenameOffset + 1, 255 );
-    QString base( "<base href=\""+href+"\"/>" );
+    QString base( QLatin1String("<base href=\"")+href+QLatin1String("\"/>") );
 
-    QRegExp rxBase( "(<base\\shref=[^>]+>)" );
-    if ( rxBase.indexIn( httpData ) != -1 ) {
+    QRegExp rxBase( QLatin1String("(<base\\shref=[^>]+>)") );
+    if ( rxBase.indexIn( QLatin1String(httpData) ) != -1 ) {
          httpData.replace( rxBase.cap( 1 ).toLatin1(), base.toLatin1() );
     }
     else {
@@ -194,7 +194,7 @@ void StyleGetter::slotHtmlCopied( KJob *job )
         httpData.insert( headOffset + 6, base.toLatin1() );
     }
 
-    QFile file( mCachePath + "style.html" );
+    QFile file( mCachePath + QLatin1String("style.html") );
 //     Q_ASSERT( dest.isValid() );
     if ( file.exists() ) {
         file.remove();
@@ -239,8 +239,8 @@ void StyleGetter::generateRandomPostStrings()
     kDebug();
     srand( time( 0 ) );
     int postRandomNumber = rand();
-    mPostTitle = QString::fromLatin1("%1%2" ).arg( POST_TITLE ).arg( postRandomNumber );
-    mPostContent = QString::fromLatin1( "%1%2" ).arg( POST_CONTENT ).arg( postRandomNumber );
+    mPostTitle = QString::fromLatin1("%1%2" ).arg( QLatin1String(POST_TITLE) ).arg( postRandomNumber );
+    mPostContent = QString::fromLatin1( "%1%2" ).arg( QLatin1String(POST_CONTENT) ).arg( postRandomNumber );
 }
 
 void StyleGetter::slotError( const QString & errMsg )
@@ -250,4 +250,3 @@ void StyleGetter::slotError( const QString & errMsg )
     b->deleteLater();
 }
 
-#include "composer/stylegetter.moc"

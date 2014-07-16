@@ -328,4 +328,3 @@ void ImportWizard::addFinishError( const QString& log )
     mImportFinishPage->addImportError( log );
 }
 
-#include "importwizard.moc"

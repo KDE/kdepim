@@ -1,20 +1,19 @@
 <?xml version="1.0" ?>
-<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN"
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN"
 "dtd/kdex.dtd" [
   <!-- Define an entity for your application if it is not part of KDE
        CVS -->
-  <!ENTITY kapplication "<application>pimsettingexporter</application>">
-  <!ENTITY kappname "&kapplication;">
-  <!ENTITY package "kdepim">
+  <!ENTITY i18n-pimsettingexporter "<application>pimsettingexporter</application>">
+  <!ENTITY knode "<application>Knode</application>">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE"> 
+  <!ENTITY imap "<acronym>IMAP</acronym>">
 ]>
 
-<book id="pimsettingexporter" lang="&language;">
+<article id="pimsettingexporter" lang="&language;">
 
-<bookinfo id="pimsettingexporterinfo">
-
-<title>The &kapplication; Handbook</title>
+<articleinfo id="pimsettingexporterinfo">
+<title>The &i18n-pimsettingexporter; Handbook</title>
 
 <authorgroup>
 <author>
@@ -22,63 +21,101 @@
 <firstname>Laurent</firstname>
 <surname>Montel</surname>
 </personname>
-<email>montel@kde.org</email>
+&Laurent.Montel.mail;
+</author>
+<author>
+<firstname>Scarlett</firstname>
+<surname>Clark</surname>
+<affiliation><address>
+&Scarlett.Clark.mail;
+</address></affiliation>
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
 <copyright>
 <year>2013</year>
-<holder>Laurent Montel</holder>
+<holder>&Laurent.Montel;</holder>
 </copyright>
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2013-04-30</date>
-<releaseinfo>1.0</releaseinfo>
+<date>2013-12-02</date>
+<releaseinfo>&kde; 4.12</releaseinfo>
 
-<abstract>
-<para>
-&kapplication; is an application which allows to export and import pim settings.
-</para>
-</abstract>
+</articleinfo>
 
-<keywordset>
-<keyword>KDE</keyword>
-<keyword>KMail</keyword>
-<keyword>Settings</keyword>
-</keywordset>
 
-</bookinfo>
-<chapter id="introduction">
+<sect1 id="introduction">
 <title>Introduction</title>
 
-<para>&kapplication; allows to export and import pim settings.</para>
-</chapter>
+<para>&i18n-pimsettingexporter; allows to export and import pim settings and local mail. You can backup and restore settings from the following programs:
+<simplelist>
+<member>&kmail;</member>
+<member>&knotes;</member>
+<member>&knode;</member>
+<member>&akregator;</member>
+<member>&kaddressbook;</member>
+<member>&kalarm;</member>
+<member>&kjots;</member>
+</simplelist>
+</para>
 
-<chapter id="using-kapp">
-<title>Using &kapplication;</title>
-<para>using</para>
+<sect2 id="using-kapp">
+<title>Using &i18n-pimsettingexporter;</title>
+<para>Backing up is an essential practice for all users. &i18n-pimsettingexporter;
+is a great tool for backing up or moving all of your settings and email to a new installation.
+You also use &i18n-pimsettingexporter; to import previous backups.</para>
+<para>You can use <menuchoice><guimenu>Tools</guimenu><guimenuitem>Export &kmail; Data...</guimenuitem></menuchoice>
+ through the message view window or &i18n-pimsettingexporter; can be run as a standalone application by running
+&i18n-pimsettingexporter; in the application launcher.</para>
+<screenshot>
+<screeninfo>&i18n-pimsettingexporter; Dialog</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pimsettingexporter.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>&i18n-pimsettingexporter; Dialog</phrase>
+    </textobject>
+    <caption>
+      <para>&i18n-pimsettingexporter; Dialog</para>
+    </caption>
+  </mediaobject>
+</screenshot>
+<para>To perform a backup, <action>select <menuchoice><guimenu>File</guimenu><guimenuitem>Back Up Data...</guimenuitem></menuchoice></action>,
+ it will prompt you to close all kdepim applications.
+<warning><para>Make sure you close all windows, data loss is possible if you don't.</para></warning>
+ Once you have closed them, click <guibutton>Yes</guibutton> to continue, or <guibutton>No</guibutton> to cancel.</para>
+<para>You will be prompted to create a backup name, enter the name into the <guilabel>File</guilabel> textbox, &eg; <replaceable>mymailsettings</replaceable>.
+ The default filetype it saves as is <filename role="extension">.zip</filename>, if you want a different type, uncheck <guilabel>Automatically select filename extension</guilabel>
+ and append the extension to the end of your filename.</para>
+<para>The next screen will allow you to select what you wish to backup, by default everything is selected.
+<note>
+<para>&kmail; Mails selection will only backup mails in your <quote>Local Folders</quote>, it will backup &imap; settings and download messages upon restore.
+If you have emails on a &imap; server you wish to be backed up, you should use  <ulink url="help:/akonadi_folderarchive_agent">Folder Archive Agent</ulink> to archive those emails to a local folder.</para>
+</note></para>
+<para>The final screen shows the log of the backup up process. You can close the window once you have reviewed the log and verified your backup was successful.</para>
+<para>To restore your backup, select <menuchoice><guimenu>File</guimenu><guimenuitem>Restore Data...</guimenuitem></menuchoice> within &i18n-pimsettingexporter;.</para>
+</sect2>
+</sect1>
 
-</chapter>
-
-<chapter id="credits">
+<sect1 id="credits">
 
 <title>Credits and License</title>
-
-<para>&kapplication;</para>
+<para>&i18n-pimsettingexporter;</para>
 <para>
-Program copyright 2013 Laurent Montel montel@kde.org 
+Program copyright 2013 &Laurent.Montel; &Laurent.Montel.mail;
 </para>
 <para>
-Documentation Copyright &copy; 2013 Laurent Montel montel@kde.org
+Documentation Copyright &copy; 2013 &Laurent.Montel; &Laurent.Montel.mail; &Scarlett.Clark; &Scarlett.Clark.mail;
 </para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 
 &underFDL;               <!-- FDL: do not remove -->
 &underGPL;        	 <!-- GPL License -->
-</chapter>
+</sect1>
 
 <appendix id="installation">
 <title>Installation</title>
@@ -93,7 +130,7 @@ Documentation Copyright &copy; 2013 Laurent Montel montel@kde.org
 </appendix>
 
 &documentation.index;
-</book>
+</article>
 
 <!--
 Local Variables:

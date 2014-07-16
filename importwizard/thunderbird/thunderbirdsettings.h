@@ -21,9 +21,7 @@
 #include "abstractsettings.h"
 #include "importwizardutil.h"
 #include <QHash>
-#include <QColor>
 #include <QStringList>
-#include <KUrl>
 
 class ImportWizard;
 
@@ -45,6 +43,8 @@ private:
     void insertIntoMap( const QString& line );
 
     void addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString &accountName );
+
+    void addNewMailNotifier(const QString &group, const QString &key, bool value);
 
     QHash<QString, QVariant> mHashConfig;
     QHash<QString, QString> mHashSmtp;

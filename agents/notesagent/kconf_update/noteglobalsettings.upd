@@ -1,0 +1,14 @@
+# Migrate knotes settings to noteagent settings
+Id=initial-noteagent-migration
+File=knotesrc,akonadi_notes_agentrc
+Group=Alarms,Alarms
+AllKeys
+Group=Network,Network
+AllKeys
+Group=Actions,Actions
+AllKeys
+
+Id=selectcollection-noteagent-migration
+File=knotesrc,akonadi_notes_agentrc
+Group=SelectNoteFolder,SelectNoteFolder
+AllKeys

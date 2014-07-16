@@ -7,6 +7,22 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
   <include>kcolorscheme.h</include>
   <kcfgfile name="mailviewerrc" />
 
+  <group name="Print">
+      <entry name="PrintSelectedText" type="Bool" key="print-selected-text">
+        <label>Only print selected text in viewer</label>
+        <default>false</default>
+      </entry>
+      <entry name="RespectExpandCollapseSettings" type="Bool" key="respect-expand-collapse">
+        <label>Respect expand collapse quote mark defined settings when printing</label>
+        <default>false</default>
+      </entry>
+      <entry name="PrintBackgroundColorImages" type="Bool" key="print-background-color-images">
+        <label>Specifies whether the background color and images are also drawn when the page is printed.</label>
+        <default>true</default>
+      </entry>
+  </group>
+
+
   <group name="Fonts">
     <entry name="FixedFont" type="Font" key="fixed-font">
       <default code="true">KGlobalSettings::fixedFont()</default>
@@ -119,10 +135,6 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <label>What style of headers should be displayed</label>
       <default>fancy</default>
     </entry>
-    <entry name="grantleeThemeName" type="String" key="grantlee-theme-name">
-      <label></label>
-      <default></default>
-    </entry>
     <entry name="headerSetDisplayed" type="String" key="header-set-displayed">
       <label>How much of headers should be displayed</label>
       <default>rich</default>
@@ -159,6 +171,25 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <label>List of emails in scam white list</label>
       <default></default>
     </entry>
+    <entry name="AdBlockEnabled" type="Bool">
+      <label>Enabled ad block</label>
+      <default>false</default>
+    </entry>
+    <entry name="HideAdsEnabled" type="Bool">
+      <label>Hide advertisement enabled</label>
+      <default>false</default>
+    </entry>
+    <entry name="AdBlockUpdateInterval" type="int">
+      <label>Update interval list of adblock</label>
+      <default>7</default>
+    </entry>
+    <entry name="whiteReferer" type="StringList">
+        <default></default>
+    </entry>
+    <entry name="HtmlQuoteColorerEnabled" type="Bool">
+        <default>false</default>
+    </entry>
+
   </group>
 
   <group name="TextIndex">
@@ -277,5 +308,13 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     <default>Display</default>
    </entry>
   </group>
+
+    <group name="Todo">
+      <entry name="LastSelectedFolder" type="LongLong">
+        <whatsthis>The most recent selected folder using for Todo.</whatsthis>
+        <default>-1</default>
+      </entry>
+    </group>
+
 </kcfg>
 

@@ -167,34 +167,33 @@ QVariant SubkeyListModel::headerData( int section, Qt::Orientation o, int role )
 QVariant SubkeyListModel::data( const QModelIndex & idx, int role ) const {
 
     if ( role != Qt::DisplayRole && role != Qt::EditRole && role != Qt::ToolTipRole )
-	return QVariant();
+        return QVariant();
 
     const Subkey subkey = this->subkey( idx );
     if ( subkey.isNull() )
-	return QVariant();
+        return QVariant();
 
     switch ( idx.column() ) {
     case ID:
-	return QString::fromLatin1( subkey.keyID() );
+        return QString::fromLatin1( subkey.keyID() );
     case Type:
-	return Formatting::type( subkey );
+        return Formatting::type( subkey );
     case ValidFrom:
-	if ( role == Qt::EditRole )
-	    return Formatting::creationDate( subkey );
-	else
-	    return Formatting::creationDateString( subkey );
+        if ( role == Qt::EditRole )
+            return Formatting::creationDate( subkey );
+        else
+            return Formatting::creationDateString( subkey );
     case ValidUntil:
-	if ( role == Qt::EditRole )
-	    return Formatting::expirationDate( subkey );
-	else
-	    return Formatting::expirationDateString( subkey );
+        if ( role == Qt::EditRole )
+            return Formatting::expirationDate( subkey );
+        else
+            return Formatting::expirationDateString( subkey );
     case Status:
-	return Formatting::validityShort( subkey );
+        return Formatting::validityShort( subkey );
     case Bits:
-	return subkey.length();
+        return subkey.length();
     }
 
     return QVariant();
 }
 
-#include "moc_subkeylistmodel.cpp"

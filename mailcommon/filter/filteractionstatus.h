@@ -25,14 +25,14 @@ namespace MailCommon {
 
 class FilterActionStatus : public FilterActionWithStringList
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
     FilterActionStatus(const QString &name, const QString &label, QObject *parent = 0);
-    virtual SearchRule::RequiredPart requiredPart() const;
-    virtual bool isEmpty() const;
-    virtual void argsFromString( const QString &argsStr );
-    virtual QString argsAsString() const;
-    virtual QString displayString() const;
+    SearchRule::RequiredPart requiredPart() const;
+    bool isEmpty() const;
+    void argsFromString( const QString &argsStr );
+    QString argsAsString() const;
+    QString displayString() const;
 
     static QString realStatusString( const QString &statusStr );
 

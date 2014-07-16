@@ -205,7 +205,3 @@ void Command::applyWindowID( QWidget * w ) const {
         else
             w->setParent( d->parentWidgetOrView(), w->windowFlags() );
 }
-
-//#include "moc_command.cpp"
-#include "command.moc" // the above clashes with libkleopatra/core/command.cpp, since CMake/Automoc4 is too stupid to handle that situation
-

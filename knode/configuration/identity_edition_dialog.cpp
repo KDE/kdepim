@@ -271,4 +271,3 @@ void IdentityEditionDialog::deleteCurrentIdentity()
 
 } // namespace KNode
 
-#include "identity_edition_dialog.moc"

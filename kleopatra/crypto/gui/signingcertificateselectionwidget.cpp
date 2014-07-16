@@ -42,7 +42,6 @@
 
 #include <kleo/stl_util.h>
 
-#include <KLocalizedString>
 #include <QByteArray>
 #include <QMap>
 
@@ -170,4 +169,3 @@ void SigningCertificateSelectionWidget::setAllowedProtocols( bool pgp, bool cms 
     d->ui.cmsCombo->setVisible( cms );
 }
 
-#include "moc_signingcertificateselectionwidget.cpp"

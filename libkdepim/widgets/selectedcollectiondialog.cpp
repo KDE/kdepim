@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Montel Laurent <montel@kde.org>
+ * Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -59,11 +59,9 @@ SelectedCollectionDialog::~SelectedCollectionDialog()
 void SelectedCollectionDialog::readConfig()
 {
     KConfigGroup group( KGlobal::config(), "SelectedCollectionDialog" );
-    const QSize size = group.readEntry( "Size", QSize() );
+    const QSize size = group.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
-    } else {
-        resize( 600, 400 );
     }
 }
 
@@ -74,4 +72,3 @@ void SelectedCollectionDialog::writeConfig()
     group.sync();
 }
 }
-#include "selectedcollectiondialog.moc"

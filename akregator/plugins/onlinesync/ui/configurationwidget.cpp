@@ -27,7 +27,6 @@
 
 #include <kdebug.h>
 #include <QPointer>
-#include <QTimer>
 
 using namespace feedsync;
 
@@ -147,4 +146,3 @@ void ConfigurationWidget::save() {
 }
 
 
-#include "configurationwidget.moc"

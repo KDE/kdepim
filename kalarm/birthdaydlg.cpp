@@ -18,7 +18,7 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#include "birthdaydlg.moc"
+#include "birthdaydlg.h"
 
 #include "kalarm.h"
 #include "alarmcalendar.h"
@@ -63,7 +63,7 @@ BirthdayDlg::BirthdayDlg(QWidget* parent)
     : KDialog(parent),
       mSpecialActionsButton(0)
 {
-    setObjectName("BirthdayDlg");    // used by LikeBack
+    setObjectName(QLatin1String("BirthdayDlg"));    // used by LikeBack
     setCaption(i18nc("@title:window", "Import Birthdays From KAddressBook"));
     setButtons(Ok | Cancel);
     setDefaultButton(Ok);
@@ -135,6 +135,7 @@ BirthdayDlg::BirthdayDlg(QWidget* parent)
     mBirthdaySortModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     mBirthdaySortModel->setPrefixSuffix(mPrefixText, mSuffixText);
     mListView = new QTreeView(group);
+    mListView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     mListView->setModel(mBirthdaySortModel);
     mListView->setRootIsDecorated(false);    // don't show expander icons
     mListView->setSortingEnabled(true);
@@ -369,5 +370,5 @@ void BirthdayDlg::slotTextLostFocus()
         mBirthdaySortModel->setPrefixSuffix(mPrefixText, mSuffixText);
     }
 }
-
+#include "moc_birthdaydlg.cpp"
 // vim: et sw=4:

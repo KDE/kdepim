@@ -17,7 +17,6 @@
 */
 
 #include "kjotsconfigdlg.h"
-#include <QDebug>
 KJotsConfigDlg::KJotsConfigDlg( const QString & title, QWidget *parent )
   : KCMultiDialog( parent )
 {
@@ -28,7 +27,7 @@ KJotsConfigDlg::KJotsConfigDlg( const QString & title, QWidget *parent )
 
     showButtonSeparator( true );
 
-    addModule( "kjots_config_misc" );
+    addModule( QLatin1String("kjots_config_misc") );
     connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
 }
 
@@ -58,7 +57,7 @@ void KJotsConfigMisc::modified()
 
 void KJotsConfigMisc::load()
 {
-    KConfig config( "kjotsrc" );
+    KConfig config( QLatin1String("kjotsrc") );
     KConfigGroup group = config.group( "kjots" );
     miscPage->autoSaveInterval->setValue( group.readEntry( "AutoSaveInterval", 5 ) );
     miscPage->autoSave->setChecked( group.readEntry( "AutoSave", true ) );
@@ -67,7 +66,7 @@ void KJotsConfigMisc::load()
 
 void KJotsConfigMisc::save()
 {
-    KConfig config( "kjotsrc" );
+    KConfig config( QLatin1String("kjotsrc") );
     KConfigGroup group = config.group( "kjots" );
     group.writeEntry( "AutoSaveInterval", miscPage->autoSaveInterval->value() );
     group.writeEntry( "AutoSave", miscPage->autoSave->isChecked() );
@@ -75,4 +74,4 @@ void KJotsConfigMisc::save()
     emit changed( false );
 }
 
-#include "kjotsconfigdlg.moc"
+#include "moc_kjotsconfigdlg.cpp"

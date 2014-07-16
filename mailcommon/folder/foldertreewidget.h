@@ -28,7 +28,7 @@
 #include <QWidget>
 
 namespace KPIM {
-  class StatisticsProxyModel;
+class StatisticsProxyModel;
 }
 
 class KLineEdit;
@@ -49,42 +49,42 @@ class FolderTreeView;
  */
 class MAILCOMMON_EXPORT FolderTreeWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     enum TreeViewOption {
-      None = 0,
-      ShowUnreadCount = 1,
-      UseLineEditForFiltering = 2,
-      UseDistinctSelectionModel = 4,
-      ShowCollectionStatisticAnimation = 8,
-      DontKeyFilter = 16
+        None = 0,
+        ShowUnreadCount = 1,
+        UseLineEditForFiltering = 2,
+        UseDistinctSelectionModel = 4,
+        ShowCollectionStatisticAnimation = 8,
+        DontKeyFilter = 16
     };
     Q_DECLARE_FLAGS( TreeViewOptions, TreeViewOption )
 
     explicit FolderTreeWidget(
-      QWidget *parent = 0,
-      KXMLGUIClient *xmlGuiClient = 0,
-      TreeViewOptions options = (TreeViewOptions)( ShowUnreadCount |
-                                                   ShowCollectionStatisticAnimation ),
-      FolderTreeWidgetProxyModel::FolderTreeWidgetProxyModelOptions optReadableProxy = FolderTreeWidgetProxyModel::None );
+            QWidget *parent = 0,
+            KXMLGUIClient *xmlGuiClient = 0,
+            TreeViewOptions options = (TreeViewOptions)( ShowUnreadCount |
+                                                         ShowCollectionStatisticAnimation ),
+            FolderTreeWidgetProxyModel::FolderTreeWidgetProxyModelOptions optReadableProxy = FolderTreeWidgetProxyModel::None );
     ~FolderTreeWidget();
 
     /**
      * The possible tooltip display policies.
      */
     enum ToolTipDisplayPolicy {
-      DisplayAlways,           ///< Always display a tooltip when hovering over an item
-      DisplayWhenTextElided,   ///< Display the tooltip if the item text is actually elided
-      DisplayNever             ///< Nevery display tooltips
+        DisplayAlways,           ///< Always display a tooltip when hovering over an item
+        DisplayWhenTextElided,   ///< Display the tooltip if the item text is actually elided
+        DisplayNever             ///< Nevery display tooltips
     };
 
     /**
      * The available sorting policies.
      */
     enum SortingPolicy {
-      SortByCurrentColumn,      ///< Columns are clickable, sorting is by the current column
-      SortByDragAndDropKey      ///< Columns are NOT clickable, sorting is done by drag and drop
+        SortByCurrentColumn,      ///< Columns are clickable, sorting is by the current column
+        SortByDragAndDropKey      ///< Columns are NOT clickable, sorting is done by drag and drop
     };
 
     void selectCollectionFolder( const Akonadi::Collection & col );
@@ -122,17 +122,17 @@ class MAILCOMMON_EXPORT FolderTreeWidget : public QWidget
 
     void restoreHeaderState( const QByteArray &data );
 
-  protected:
+protected:
     void changeToolTipsPolicyConfig( ToolTipDisplayPolicy );
 
-  protected slots:
+protected slots:
     void slotChangeTooltipsPolicy( FolderTreeWidget::ToolTipDisplayPolicy );
     void slotManualSortingChanged( bool );
     void slotFilterFixedString( const QString & );
     void slotGeneralFontChanged();
     void slotGeneralPaletteChanged();
 
-  private:
+private:
     virtual bool eventFilter( QObject *o, QEvent *e );
     class FolderTreeWidgetPrivate;
     FolderTreeWidgetPrivate *const d;
