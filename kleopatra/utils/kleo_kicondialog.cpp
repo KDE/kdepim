@@ -31,6 +31,8 @@
 #include <QPainter>
 #include <QFileDialog>
 #include <QtSvg/QSvgRenderer>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 using namespace Kleo::KioAvoidance;
 
@@ -60,7 +62,7 @@ protected:
 public:
  IconPath(const QString &ip) : QString (ip)
  {
-   int n = lastIndexOf('/');
+   int n = lastIndexOf(QLatin1Char('/'));
    m_iconName = (n==-1) ? static_cast<QString>(*this) : mid(n+1);
  }
 
@@ -143,7 +145,7 @@ void KIconCanvas::KIconCanvasPrivate::_k_slotLoadFiles()
         QString path= *it;
         QString ext = path.right(3).toUpper();
 
-        if (ext != "SVG" && ext != "VGZ")
+        if (ext != QLatin1String("SVG") && ext != QLatin1String("VGZ"))
             img.load(*it);
 #ifndef QT_NO_SVGRENDERER
         else {
