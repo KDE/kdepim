@@ -80,9 +80,9 @@ void CalPrintMonth::print(QPainter &p)
 
     QDate curMonth = fromMonth;
     do {
-        QString title(xi18nc("monthname year", "%1 <numid>%2</numid>",
+        QString title(i18nc("monthname year", "%1 %2",
                             calendarSystem()->monthName(curMonth),
-                            curMonth.year()));
+                            QString::number(curMonth.year())));
         QDate tmp(fromMonth);
         int weekdayCol = weekdayColumn(tmp.dayOfWeek());
         tmp = tmp.addDays(-weekdayCol);

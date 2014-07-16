@@ -19,7 +19,7 @@
 #define VACATIONEDITWIDGET_H
 
 #include <QWidget>
-class KIntSpinBox;
+class QSpinBox;
 class QLineEdit;
 
 namespace PimCommon {
@@ -75,7 +75,7 @@ private Q_SLOTS:
 
 protected:
     QCheckBox *mActiveCheck;
-    KIntSpinBox *mIntervalSpin;
+    QSpinBox *mIntervalSpin;
     QLineEdit *mMailAliasesEdit;
     PimCommon::RichTextEditorWidget *mTextEdit;
     QCheckBox *mSpamCheck;

@@ -1090,11 +1090,11 @@ void CalPrintPluginBase::drawDayBox( QPainter &p, const QDate &qd,
   }
 
   if ( fullDate && mCalSys ) {
-    dayNumStr = xi18nc( "weekday, shortmonthname daynumber",
-                       "%1, %2 <numid>%3</numid>",
+    dayNumStr = i18nc( "weekday, shortmonthname daynumber",
+                       "%1, %2 %3",
                        mCalSys->weekDayName( qd ),
                        mCalSys->monthName( qd, KCalendarSystem::ShortName ),
-                       qd.day() );
+                       QString::number(qd.day()) );
   } else {
     dayNumStr = QString::number( qd.day() );
   }

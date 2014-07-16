@@ -19,7 +19,7 @@
 #include "vacationutils.h"
 
 #include <KLocalizedString>
-#include <KIntSpinBox>
+#include <QSpinBox>
 #include <QLineEdit>
 
 #include <pimcommon/texteditor/richtexteditor/richtexteditorwidget.h>
@@ -71,7 +71,11 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     // "Resent only after" spinbox and label:
     ++row;
     int defDayInterval = 7; //default day interval
-    mIntervalSpin = new KIntSpinBox( 1, 356, 1, defDayInterval, this );
+    mIntervalSpin = new QSpinBox(this );
+    mIntervalSpin->setMaximum(356);
+    mIntervalSpin->setMinimum( 1);
+    mIntervalSpin->setSingleStep(1);
+    mIntervalSpin->setValue(defDayInterval);
     mIntervalSpin->setObjectName( QLatin1String("mIntervalSpin") );
     mIntervalSpin->setSuffix( i18np(" day", " days", defDayInterval) );
     connect(mIntervalSpin, SIGNAL(valueChanged(int)), SLOT(slotIntervalSpinChanged(int)) );
