@@ -31,7 +31,7 @@
 #include <KLocalizedString>
 #include <KLocale>
 #include <KMessageBox>
-#include <KTextBrowser>
+#include <QTextBrowser>
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -81,7 +81,7 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     mainLayout->addLayout(vlay);
 
     QVBoxLayout *vbox = new QVBoxLayout;
-    mDescription = new KTextBrowser;
+    mDescription = new QTextBrowser;
     mDescription->setReadOnly(true);
     vbox->addWidget(mDescription);
 

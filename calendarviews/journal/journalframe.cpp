@@ -36,7 +36,7 @@
 #include <Akonadi/Calendar/ETMCalendar>
 
 #include <KDialog>
-#include <KTextBrowser>
+#include <QTextBrowser>
 #include <KLocalizedString>
 #include <KIconLoader>
 #include <KGlobalSettings>
@@ -158,7 +158,7 @@ JournalFrame::JournalFrame( const Akonadi::Item &j,
   verticalLayout->setSpacing( KDialog::spacingHint() );
   verticalLayout->setMargin( KDialog::marginHint() );
 
-  mBrowser = new KTextBrowser( this );
+  mBrowser = new QTextBrowser( this );
   mBrowser->viewport()->installEventFilter( this );
   mBrowser->setFrameStyle( QFrame::NoFrame );
   verticalLayout->addWidget( mBrowser );
@@ -214,7 +214,7 @@ bool JournalFrame::eventFilter ( QObject *object, QEvent *event )
 {
   Q_UNUSED( object );
 
-  // object is our KTextBrowser
+  // object is our QTextBrowser
   if ( !mJournal.isValid() ) {
     return false;
   }

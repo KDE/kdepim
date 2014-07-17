@@ -28,7 +28,7 @@
 
 #include <KComboBox>
 #include <KMessageBox>
-#include <KTextBrowser>
+#include <QTextBrowser>
 #include <KTextEdit>
 
 #include <QGridLayout>
@@ -48,7 +48,7 @@ SearchWidget::SearchWidget( QWidget *parent )
   mQueryCombo = new KComboBox;
   mQueryWidget = new KTextEdit;
   mResultView = new QListView;
-  mItemView = new KTextBrowser;
+  mItemView = new QTextBrowser;
   QPushButton *button = new QPushButton( "Search" );
 
   layout->addWidget( new QLabel( "Query:" ), 0, 0 );

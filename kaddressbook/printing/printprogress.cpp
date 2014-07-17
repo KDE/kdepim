@@ -26,7 +26,7 @@
 #include <KApplication>
 #include <KDialog>
 #include <KLocalizedString>
-#include <KTextBrowser>
+#include <QTextBrowser>
 
 #include <QGridLayout>
 #include <QProgressBar>
@@ -43,7 +43,7 @@ PrintProgress::PrintProgress( QWidget *parent, const char *name )
     topLayout->setSpacing( KDialog::spacingHint() );
     topLayout->setMargin( KDialog::marginHint() );
 
-    mLogBrowser = new KTextBrowser( this );
+    mLogBrowser = new QTextBrowser( this );
     topLayout->addWidget( mLogBrowser, 0, 0 );
 
     mProgressBar = new QProgressBar( this );
