@@ -61,10 +61,25 @@ void ArchiveJob::execute()
             return;
         }
 
+        bool dirExit = true;
+        const KUrl archivePath = mInfo->realUrl(realPath, dirExit);
+        if (!dirExit) {
+            mManager->backupDone(mInfo);
+            const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+            KNotification::event( QLatin1String("archivemailfolderdoesntexist"),
+                                  i18n("Directory does not exist. Please verify settings. Archive postponed."),
+                                  pixmap,
+                                  0,
+                                  KNotification::CloseOnTimeout,
+                                  KGlobal::mainComponent());
+            deleteLater();
+            return;
+        }
+
         MailCommon::BackupJob *backupJob = new MailCommon::BackupJob();
         backupJob->setRootFolder( MailCommon::Util::updatedCollection(collection) );
 
-        backupJob->setSaveLocation( mInfo->realUrl(realPath) );
+        backupJob->setSaveLocation( archivePath );
         backupJob->setArchiveType( mInfo->archiveType() );
         backupJob->setDeleteFoldersAfterCompletion( false );
         backupJob->setRecursive( mInfo->saveSubCollection() );
