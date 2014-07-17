@@ -440,8 +440,8 @@ void AttachmentControllerBase::createActions()
     connect( d->addAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
     connect( d->addContextAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
 
-    d->addOwnVcardAction = new KAction( i18n("Attach Own Vcard"),this );
-    d->addOwnVcardAction->setIconText( i18n( "Own Vcard" ) );
+    d->addOwnVcardAction = new KAction( i18n("Attach Own vCard"),this );
+    d->addOwnVcardAction->setIconText( i18n( "Own vCard" ) );
     d->addOwnVcardAction->setCheckable(true);
     connect(d->addOwnVcardAction, SIGNAL(triggered(bool)), this, SIGNAL(addOwnVcard(bool)));
 

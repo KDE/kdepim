@@ -211,7 +211,7 @@ KABC::Addressee::List VCardXXPort::importContacts() const
         if ( !option( QLatin1String("importUrl") ).isEmpty() ) {
             urls.append( KUrl( option( QLatin1String("importUrl") ) ) );
         } else {
-            const QString filter = i18n( "*.vcf|Vcard (*.vcf)\n*|all files (*)" );
+            const QString filter = i18n( "*.vcf|vCard (*.vcf)\n*|all files (*)" );
             urls =
                     KFileDialog::getOpenUrls(
                         KUrl(),
