@@ -177,6 +177,10 @@ Name[zh_CN]=邮件归档开始
 Name[zh_TW]=歸檔郵件已開始
 Action=Popup
 
+[Event/archivemailfolderdoesntexist]
+Name=Directory does not exist
+Action=Popup
+
 [Event/archivemailerror]
 Name=Archive Mail Error
 Name[bs]=arhiva pogrešne pošte
