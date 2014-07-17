@@ -375,11 +375,6 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>KTextBrowser</class>
-   <extends>QTextBrowser</extends>
-   <header>ktextbrowser.h</header>
-  </customwidget>
-  <customwidget>
    <class>KTextEdit</class>
    <extends>QTextEdit</extends>
    <header>ktextedit.h</header>
@@ -391,7 +386,7 @@
   </customwidget>
   <customwidget>
    <class>MessageViewer::Viewer</class>
-   <extends>KTextBrowser</extends>
+   <extends>QTextBrowser</extends>
    <header location="global">messageviewer/viewer/viewer.h</header>
   </customwidget>
   <customwidget>

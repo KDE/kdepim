@@ -28,16 +28,16 @@
 
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <Akonadi/Calendar/ETMCalendar>
-#include <KTextBrowser>
+#include <QTextBrowser>
 
 namespace EventViews {
 
-class WhatsNextTextBrowser : public KTextBrowser
+class WhatsNextTextBrowser : public QTextBrowser
 {
   Q_OBJECT
   public:
-    explicit WhatsNextTextBrowser( QWidget *parent ) : KTextBrowser( parent ) {}
-    /** Reimplemented from KTextBrowser to handle links. */
+    explicit WhatsNextTextBrowser( QWidget *parent ) : QTextBrowser( parent ) {}
+    /** Reimplemented from QTextBrowser to handle links. */
     void setSource( const QUrl &name );
 
   Q_SIGNALS:
@@ -77,7 +77,7 @@ class EVENTVIEWS_EXPORT WhatsNextView : public EventViews::EventView
     void showIncidence( const QString & );
 
   private:
-    KTextBrowser *mView;
+    QTextBrowser *mView;
     QString mText;
     QDate mStartDate;
     QDate mEndDate;

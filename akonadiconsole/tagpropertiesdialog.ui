@@ -87,14 +87,14 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="KPushButton" name="addAttrButton">
+        <widget class="QPushButton" name="addAttrButton">
          <property name="text">
           <string>&amp;Add</string>
          </property>
         </widget>
        </item>
        <item row="1" column="2">
-        <widget class="KPushButton" name="deleteAttrButton">
+        <widget class="QPushButton" name="deleteAttrButton">
          <property name="text">
           <string>&amp;Remove</string>
          </property>
@@ -114,7 +114,7 @@
         <widget class="KLineEdit" name="newRIDEdit"/>
        </item>
        <item row="4" column="2">
-        <widget class="KPushButton" name="deleteRIDButton">
+        <widget class="QPushButton" name="deleteRIDButton">
          <property name="text">
           <string>&amp;Remove</string>
          </property>
@@ -124,7 +124,7 @@
         <widget class="QTreeView" name="ridsView"/>
        </item>
        <item row="4" column="1">
-        <widget class="KPushButton" name="addRIDButton">
+        <widget class="QPushButton" name="addRIDButton">
          <property name="text">
           <string>&amp;Add</string>
          </property>
@@ -245,11 +245,6 @@
    <class>KLineEdit</class>
    <extends>QLineEdit</extends>
    <header>klineedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
