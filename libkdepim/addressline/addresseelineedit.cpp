@@ -226,7 +226,9 @@ public:
           m_addressBookConnected( false ),
           m_lastSearchMode( false ),
           m_searchExtended( false ),
-          m_useSemicolonAsSeparator( false )
+          m_useSemicolonAsSeparator( false ),
+          m_showOU(false),
+          m_enableBalooSearch(true)
     {
         m_delayedQueryTimer.setSingleShot(true);
         connect( &m_delayedQueryTimer, SIGNAL(timeout()), q, SLOT(slotTriggerDelayedQueries()) );
@@ -273,6 +275,7 @@ public:
     bool m_searchExtended; //has \" been added?
     bool m_useSemicolonAsSeparator;
     bool m_showOU;
+    bool m_enableBalooSearch;
     QTimer m_delayedQueryTimer;
     QColor m_alternateColor;
 };
@@ -333,6 +336,7 @@ void AddresseeLineEdit::Private::init()
 
         KConfigGroup group( KSharedConfig::openConfig(), "AddressLineEdit" );
         m_showOU = group.readEntry( "ShowOU", false );
+        m_enableBalooSearch = group.readEntry( "EnabledBalooSearch", true );
 
     }
 }
@@ -615,8 +619,10 @@ void AddresseeLineEdit::Private::slotTriggerDelayedQueries()
 
 void AddresseeLineEdit::Private::startSearches()
 {
-    //No need to delay the baloo search
-    searchInBaloo();
+    if (m_enableBalooSearch) {
+       //No need to delay the baloo search
+       searchInBaloo();
+    }
 
     if (!m_delayedQueryTimer.isActive())
         m_delayedQueryTimer.start(50);
