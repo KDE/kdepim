@@ -37,7 +37,7 @@
 #include <kfiledialog.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kvbox.h>
+#include <QVBoxLayout>
 #include <QIcon>
 #include <KUrl>
 
@@ -51,6 +51,7 @@
 #include <errno.h>
 #include <KSharedConfig>
 #include <KLocale>
+#include <QHBoxLayout>
 
 using namespace MailCommon;
 
@@ -65,7 +66,9 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
     setDefaultButton( Close );
     setButtonGuiItem( User1, KStandardGuiItem::clear() );
     setButtonGuiItem( User2, KStandardGuiItem::saveAs() );
-    QFrame *page = new KVBox( this );
+    QFrame *page = new QFrame( this );
+    QVBoxLayout *pageVBoxLayout = new QVBoxLayout(page);
+    pageVBoxLayout->setMargin(0);
     setMainWidget( page );
 
     mTextEdit = new PimCommon::PlainTextEditorWidget( page );
@@ -79,6 +82,7 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
     }
 
     mLogActiveBox = new QCheckBox( i18n("&Log filter activities"), page );
+    pageVBoxLayout->addWidget(mLogActiveBox);
     mLogActiveBox->setChecked( FilterLog::instance()->isLogging() );
     connect( mLogActiveBox, SIGNAL(clicked()),
              this, SLOT(slotSwitchLogState()) );
@@ -88,6 +92,7 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
                       "is turned on. " ) );
 
     mLogDetailsBox = new QGroupBox(i18n( "Logging Details" ), page );
+    pageVBoxLayout->addWidget(mLogDetailsBox);
     QVBoxLayout *layout = new QVBoxLayout;
     mLogDetailsBox->setLayout( layout );
     mLogDetailsBox->setEnabled( mLogActiveBox->isChecked() );
@@ -138,9 +143,13 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
     //QWhatsThis::add( mLogFilterActionBox,
     //    i18n( "" ) );
 
-    KHBox * hbox = new KHBox( page );
+    QWidget * hbox = new QWidget( page );
+    QHBoxLayout *hboxHBoxLayout = new QHBoxLayout(hbox);
+    hboxHBoxLayout->setMargin(0);
+    pageVBoxLayout->addWidget(hbox);
     new QLabel( i18n("Log size limit:"), hbox );
     mLogMemLimitSpin = new QSpinBox( hbox );
+    hboxHBoxLayout->addWidget(mLogMemLimitSpin);
     mLogMemLimitSpin->setMinimum( 1 );
     mLogMemLimitSpin->setMaximum( 1024 * 256 ); // 256 MB
     // value in the QSpinBox is in KB while it's in Byte in the FilterLog

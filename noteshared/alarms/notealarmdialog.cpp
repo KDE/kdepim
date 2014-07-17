@@ -34,13 +34,14 @@
 #include <KDateComboBox>
 #include <KLocalizedString>
 #include <KTimeComboBox>
-#include <KVBox>
+#include <QVBoxLayout>
 #include <KDateTime>
 
 #include <QButtonGroup>
 #include <QGroupBox>
 #include <QRadioButton>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 
 using namespace NoteShared;
 NoteAlarmDialog::NoteAlarmDialog( const QString &caption, QWidget *parent )
@@ -48,11 +49,14 @@ NoteAlarmDialog::NoteAlarmDialog( const QString &caption, QWidget *parent )
 {
     setCaption( caption );
     setButtons( Ok | Cancel );
-    KVBox *page = new KVBox( this );
+    QWidget *page = new QWidget( this );
+    QVBoxLayout *pageVBoxLayout = new QVBoxLayout(page);
+    pageVBoxLayout->setMargin(0);
     setMainWidget( page );
 
     m_buttons = new QButtonGroup( this );
     QGroupBox *group = new QGroupBox( i18n( "Scheduled Alarm" ), page );
+    pageVBoxLayout->addWidget(group);
     QVBoxLayout *layout = new QVBoxLayout;
     QRadioButton *none = new QRadioButton( i18n( "&No alarm" ) );
     layout->addWidget( none );
@@ -60,14 +64,19 @@ NoteAlarmDialog::NoteAlarmDialog( const QString &caption, QWidget *parent )
 
     group->setLayout( layout );
 
-    KHBox *at = new KHBox;
+    QWidget *at = new QWidget;
+    QHBoxLayout *atHBoxLayout = new QHBoxLayout(at);
+    atHBoxLayout->setMargin(0);
     QRadioButton *label_at = new QRadioButton( i18n( "Alarm &at:" ), at );
+    atHBoxLayout->addWidget(label_at);
     m_atDate = new KDateComboBox( at );
+    atHBoxLayout->addWidget(m_atDate);
     m_atTime = new KTimeComboBox( at );
+    atHBoxLayout->addWidget(m_atTime);
     const QDateTime dateTime = QDateTime::currentDateTime();
     m_atDate->setMinimumDate(dateTime.date());
     m_atTime->setMinimumTime(dateTime.time());
-    at->setStretchFactor( m_atDate, 1 );
+    atHBoxLayout->setStretchFactor( m_atDate, 1 );
     layout->addWidget( at );
     m_buttons->addButton( label_at, 1 );
 

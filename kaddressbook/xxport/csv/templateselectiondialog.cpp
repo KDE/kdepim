@@ -23,7 +23,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KStandardDirs>
-#include <KVBox>
+#include <QVBoxLayout>
 #include <QIcon>
 #include <KGlobal>
 
@@ -206,12 +206,15 @@ TemplateSelectionDialog::TemplateSelectionDialog( QWidget *parent )
   setCaption( i18nc( "@title:window", "Template Selection" ) );
   setButtons( Ok | Cancel );
 
-  KVBox *wdg = new KVBox( this );
+  QWidget *wdg = new QWidget( this );
+  QVBoxLayout *wdgVBoxLayout = new QVBoxLayout(wdg);
+  wdgVBoxLayout->setMargin(0);
   setMainWidget( wdg );
 
   new QLabel( i18nc( "@info", "Please select a template, that matches the CSV file:" ), wdg );
 
   mView = new QListView( wdg );
+  wdgVBoxLayout->addWidget(mView);
 
   mView->setModel( new TemplatesModel( this ) );
   mView->setItemDelegate( new TemplateSelectionDelegate( this ) );

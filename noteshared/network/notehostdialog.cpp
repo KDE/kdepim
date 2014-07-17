@@ -39,7 +39,7 @@
 #include <khistorycombobox.h>
 #include <klocale.h>
 
-#include <kvbox.h>
+#include <QVBoxLayout>
 #include <dnssd/servicemodel.h>
 #include <dnssd/servicebrowser.h>
 
@@ -56,11 +56,14 @@ NoteHostDialog::NoteHostDialog( const QString &caption, QWidget *parent )
 {
     setCaption( caption );
     setButtons( Ok|Cancel );
-    KVBox *page = new KVBox( this );
+    QWidget *page = new QWidget( this );
+    QVBoxLayout *pageVBoxLayout = new QVBoxLayout(page);
+    pageVBoxLayout->setMargin(0);
     setMainWidget( page );
     ( void ) new QLabel( i18n("Select recipient:"), page );
 
     m_servicesView = new QTreeView( page );
+    pageVBoxLayout->addWidget(m_servicesView);
     m_servicesView->setRootIsDecorated(false);
     KDNSSD::ServiceModel* mdl = new KDNSSD::ServiceModel( new KDNSSD::ServiceBrowser( QLatin1String("_knotes._tcp"), true ), this );
     m_servicesView->setModel( mdl );
@@ -78,6 +81,7 @@ NoteHostDialog::NoteHostDialog( const QString &caption, QWidget *parent )
     ( void ) new QLabel( i18n("Hostname or IP address:"), page );
 
     m_hostCombo = new KHistoryComboBox( true, page );
+    pageVBoxLayout->addWidget(m_hostCombo);
     m_hostCombo->setMinimumWidth( fontMetrics().maxWidth() * 15 );
     m_hostCombo->setDuplicatesEnabled( false );
 

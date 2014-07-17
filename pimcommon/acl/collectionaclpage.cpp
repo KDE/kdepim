@@ -36,7 +36,7 @@
 #include <collection.h>
 #include <kdialog.h>
 #include <klocale.h>
-#include <kvbox.h>
+#include <QVBoxLayout>
 
 #include <QAction>
 #include <QActionEvent>
@@ -113,20 +113,26 @@ void CollectionAclPage::init()
     view->setModel( mAclManager->model() );
     view->setSelectionModel( mAclManager->selectionModel() );
 
-    KVBox *buttonBox = new KVBox;
-    buttonBox->setSpacing( KDialog::spacingHint() );
+    QWidget *buttonBox = new QWidget;
+    QVBoxLayout *buttonBoxVBoxLayout = new QVBoxLayout(buttonBox);
+    buttonBoxVBoxLayout->setMargin(0);
+    buttonBoxVBoxLayout->setSpacing( KDialog::spacingHint() );
     layout->addWidget( buttonBox );
 
     ActionButton *button = new ActionButton( buttonBox );
+    buttonBoxVBoxLayout->addWidget(button);
     button->setDefaultAction( mAclManager->addAction() );
 
     button = new ActionButton( buttonBox );
+    buttonBoxVBoxLayout->addWidget(button);
     button->setDefaultAction( mAclManager->editAction() );
 
     button = new ActionButton( buttonBox );
+    buttonBoxVBoxLayout->addWidget(button);
     button->setDefaultAction( mAclManager->deleteAction() );
 
     QWidget *spacer = new QWidget( buttonBox );
+    buttonBoxVBoxLayout->addWidget(spacer);
     spacer->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Expanding );
 }
 
