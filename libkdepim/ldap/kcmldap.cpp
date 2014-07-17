@@ -38,10 +38,10 @@
 #include <kdemacros.h>
 #include <qdialogbuttonbox.h>
 #include <kgenericfactory.h>
-#include <khbox.h>
+#include <QHBoxLayout>
 #include <kiconloader.h>
 #include <klocale.h>
-#include <kvbox.h>
+#include <QVBoxLayout>
 #include <KMessageBox>
 
 #include "ldapclientsearch.h"
@@ -319,27 +319,36 @@ void KCMLdap::initGUI()
     QLabel *label = new QLabel( i18n( "Check all servers that should be used:" ) );
     mainLayout->addWidget( label );
 
-    KHBox *hBox = new KHBox;
-    hBox->setSpacing( 6 );
+    QWidget *hBox = new QWidget;
+    QHBoxLayout *hBoxHBoxLayout = new QHBoxLayout(hBox);
+    hBoxHBoxLayout->setMargin(0);
+    hBoxHBoxLayout->setSpacing( 6 );
     mainLayout->addWidget(hBox);
     // Contents of the hbox: listview and up/down buttons on the right (vbox)
     mHostListView = new QListWidget( hBox );
+    hBoxHBoxLayout->addWidget(mHostListView);
     mHostListView->setSortingEnabled( false );
 
-    KVBox *upDownBox = new KVBox( hBox );
-    upDownBox->setSpacing( 6 );
+    QWidget *upDownBox = new QWidget( hBox );
+    QVBoxLayout *upDownBoxVBoxLayout = new QVBoxLayout(upDownBox);
+    upDownBoxVBoxLayout->setMargin(0);
+    hBoxHBoxLayout->addWidget(upDownBox);
+    upDownBoxVBoxLayout->setSpacing( 6 );
     mUpButton = new QToolButton( upDownBox );
+    upDownBoxVBoxLayout->addWidget(mUpButton);
     mUpButton->setIcon( QIcon::fromTheme( QLatin1String("go-up") ) );
     mUpButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mUpButton->setEnabled( false ); // b/c no item is selected yet
 
     mDownButton = new QToolButton( upDownBox );
+    upDownBoxVBoxLayout->addWidget(mDownButton);
     mDownButton->setIcon( QIcon::fromTheme( QLatin1String("go-down") ) );
     mDownButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mDownButton->setEnabled( false ); // b/c no item is selected yet
 
     QWidget *spacer = new QWidget( upDownBox );
-    upDownBox->setStretchFactor( spacer, 100 );
+    upDownBoxVBoxLayout->addWidget(spacer);
+    upDownBoxVBoxLayout->setStretchFactor( spacer, 100 );
 
     layout->addWidget( groupBox );
 
