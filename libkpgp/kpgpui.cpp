@@ -44,7 +44,7 @@
 #include <QScrollBar>
 #include <QAbstractTextDocumentLayout>
 
-#include <kvbox.h>
+#include <QVBoxLayout>
 #include <kconfiggroup.h>
 #include <klocale.h>
 #include <kpassworddialog.h>
@@ -137,10 +137,14 @@ Config::Config( QWidget *parent, bool encrypt )
   lay = new QVBoxLayout(group);
   lay->setSpacing( KDialog::spacingHint() );
 
-  KHBox * hbox = new KHBox( group );
+  QWidget * hbox = new QWidget( group );
+  QHBoxLayout *hboxHBoxLayout = new QHBoxLayout(hbox);
+  hboxHBoxLayout->setMargin(0);
   lay->addWidget( hbox );
   label = new QLabel( i18n("Select encryption tool to &use:"), hbox );
+  hboxHBoxLayout->addWidget(label);
   toolCombo = new QComboBox( hbox );
+  hboxHBoxLayout->addWidget(toolCombo);
   toolCombo->setEditable( false );
   toolCombo->addItems( QStringList()
                                << i18n("Autodetect")
@@ -150,7 +154,7 @@ Config::Config( QWidget *parent, bool encrypt )
                                << i18n("PGP Version 6.x")
                                << i18n("Do not use any encryption tool") );
   label->setBuddy( toolCombo );
-  hbox->setStretchFactor( toolCombo, 1 );
+  hboxHBoxLayout->setStretchFactor( toolCombo, 1 );
   connect( toolCombo, SIGNAL(activated(int)),
            this, SIGNAL(changed()) );
   // This is the place to add a KUrlRequester to be used for asking
@@ -1369,10 +1373,12 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   QScrollArea* sv = new QScrollArea( page );
   sv->setWidgetResizable( true );
   topLayout->addWidget( sv );
-  KVBox* bigvbox = new KVBox;
+  QWidget* bigvbox = new QWidget;
+  QVBoxLayout *bigvboxVBoxLayout = new QVBoxLayout(bigvbox);
+  bigvboxVBoxLayout->setMargin(0);
   sv->setWidget( bigvbox );
-  //bigvbox->setMargin( KDialog::marginHint() );
-  bigvbox->setSpacing( KDialog::spacingHint() );
+  //bigvboxVBoxLayout->setMargin( KDialog::marginHint() );
+  bigvboxVBoxLayout->setSpacing( KDialog::spacingHint() );
 
   QButtonGroup *mChangeButtonGroup = new QButtonGroup;
   mAddressLabels.resize( addresses.count() );
@@ -1383,9 +1389,13 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   // the sender's key
   if( pgp->encryptToSelf() ) {
     mEncryptToSelf = 1;
-    KHBox* hbox = new KHBox( bigvbox );
+    QWidget* hbox = new QWidget( bigvbox );
+    QHBoxLayout *hboxHBoxLayout = new QHBoxLayout(hbox);
+    hboxHBoxLayout->setMargin(0);
+    bigvboxVBoxLayout->addWidget(hbox);
     new QLabel( i18n("Your keys:"), hbox );
     QLabel* keyidsL = new QLabel( hbox );
+    hboxHBoxLayout->addWidget(keyidsL);
     if( keyIDs[0].isEmpty() ) {
       keyidsL->setText( xi18nc( "@info", "<placeholder>none</placeholder> means 'no key'" ) );
     }
@@ -1395,6 +1405,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     keyidsL->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
     /*
     QListBox* keyidLB = new QListBox( hbox );
+    hboxHBoxLayout->addWidget(keyidLB);
     if( keyIDs[0].isEmpty() ) {
       keyidLB->insertItem( i18n("<none>") );
     }
@@ -1405,11 +1416,12 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     keyidLB->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
     */
     QPushButton *button = new QPushButton( i18n("Change..."), hbox );
+    hboxHBoxLayout->addWidget(button);
     mChangeButtonGroup->addButton( button );
     button->setAutoDefault( false );
-    hbox->setStretchFactor( keyidsL, 10 );
+    hboxHBoxLayout->setStretchFactor( keyidsL, 10 );
     mKeyIdsLabels.insert( 0, keyidsL );
-    //hbox->setStretchFactor( keyidLB, 10 );
+    //hboxHBoxLayout->setStretchFactor( keyidLB, 10 );
     //mKeyIdListBoxes.insert( 0, keyidLB );
 
     new KSeparator( Qt::Horizontal, bigvbox );
@@ -1434,15 +1446,23 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
       new KSeparator( Qt::Horizontal, bigvbox );
     }
 
-    KHBox *hbox = new KHBox( bigvbox );
+    QWidget *hbox = new QWidget( bigvbox );
+    QHBoxLayout *hboxHBoxLayout = new QHBoxLayout(hbox);
+    hboxHBoxLayout->setMargin(0);
+    bigvboxVBoxLayout->addWidget(hbox);
     new QLabel( i18n("Recipient:"), hbox );
     QLabel *addressL = new QLabel( *ait, hbox );
-    hbox->setStretchFactor( addressL, 10 );
+    hboxHBoxLayout->addWidget(addressL);
+    hboxHBoxLayout->setStretchFactor( addressL, 10 );
     mAddressLabels.insert( i, addressL  );
 
-    hbox = new KHBox( bigvbox );
+    hbox = new QWidget( bigvbox );
+    hboxHBoxLayout = new QHBoxLayout(hbox);
+    hboxHBoxLayout->setMargin(0);
+    bigvboxVBoxLayout->addWidget(hbox);
     new QLabel( i18n("Encryption keys:"), hbox );
     QLabel* keyidsL = new QLabel( hbox );
+    hboxHBoxLayout->addWidget(keyidsL);
     if( (*kit).isEmpty() ) {
       keyidsL->setText( xi18nc( "@info", "<placeholder>none</placeholder> means 'no key'" ) );
     }
@@ -1452,6 +1472,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     keyidsL->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
     /*
     QListBox* keyidLB = new QListBox( hbox );
+    hboxHBoxLayout->addWidget(keyidLB);
     if( (*kit).isEmpty() ) {
       keyidLB->insertItem( i18n("<none>") );
     }
@@ -1462,16 +1483,21 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     keyidLB->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
     */
     QPushButton *button = new QPushButton( i18n("Change..."), hbox );
+    hboxHBoxLayout->addWidget(button);
     mChangeButtonGroup->addButton( button );
     button->setAutoDefault( false );
-    hbox->setStretchFactor( keyidsL, 10 );
+    hboxHBoxLayout->setStretchFactor( keyidsL, 10 );
     mKeyIdsLabels.insert( i + 1, keyidsL );
-    //hbox->setStretchFactor( keyidLB, 10 );
+    //hboxHBoxLayout->setStretchFactor( keyidLB, 10 );
     //mKeyIdListBoxes.insert( i + 1, keyidLB );
 
-    hbox = new KHBox( bigvbox );
+    hbox = new QWidget( bigvbox );
+    hboxHBoxLayout = new QHBoxLayout(hbox);
+    hboxHBoxLayout->setMargin(0);
+    bigvboxVBoxLayout->addWidget(hbox);
     new QLabel( i18n("Encryption preference:"), hbox );
     QComboBox *encrPrefCombo = new QComboBox( hbox );
+    hboxHBoxLayout->addWidget(encrPrefCombo);
     encrPrefCombo->addItem( xi18nc( "@item:inlistbox", "<placeholder>none</placeholder>") );
     encrPrefCombo->addItem( i18nc( "@item:inlistbox", "Never Encrypt with This Key") );
     encrPrefCombo->addItem( i18nc( "@item:inlistbox", "Always Encrypt with This Key") );

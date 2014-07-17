@@ -22,7 +22,7 @@
 
 #include <KLocalizedString>
 #include <QPushButton>
-#include <KVBox>
+#include <QVBoxLayout>
 #include <QIcon>
 
 #include <AkonadiCore/AgentInstance>
@@ -66,8 +66,11 @@ AccountConfigOrderDialog::AccountConfigOrderDialog(QWidget *parent)
     mListAccount->setDragDropMode( QAbstractItemView::InternalMove );
     vlay->addWidget(mListAccount);
 
-    KVBox* upDownBox = new KVBox( page );
+    QWidget* upDownBox = new QWidget( page );
+    QVBoxLayout *upDownBoxVBoxLayout = new QVBoxLayout(upDownBox);
+    upDownBoxVBoxLayout->setMargin(0);
     mUpButton = new QPushButton( upDownBox );
+    upDownBoxVBoxLayout->addWidget(mUpButton);
     mUpButton->setIcon( QIcon::fromTheme(QLatin1String("go-up")) );
     mUpButton->setToolTip( i18nc( "Move selected account up.", "Up" ) );
     mUpButton->setEnabled( false ); // b/c no item is selected yet
@@ -75,6 +78,7 @@ AccountConfigOrderDialog::AccountConfigOrderDialog(QWidget *parent)
     mUpButton->setAutoRepeat(true);
 
     mDownButton = new QPushButton( upDownBox );
+    upDownBoxVBoxLayout->addWidget(mDownButton);
     mDownButton->setIcon( QIcon::fromTheme(QLatin1String("go-down")) );
     mDownButton->setToolTip( i18nc( "Move selected account down.", "Down" ) );
     mDownButton->setEnabled( false ); // b/c no item is selected yet
@@ -82,7 +86,8 @@ AccountConfigOrderDialog::AccountConfigOrderDialog(QWidget *parent)
     mDownButton->setAutoRepeat(true);
 
     QWidget* spacer = new QWidget( upDownBox );
-    upDownBox->setStretchFactor( spacer, 100 );
+    upDownBoxVBoxLayout->addWidget(spacer);
+    upDownBoxVBoxLayout->setStretchFactor( spacer, 100 );
     vlay->addWidget( upDownBox );
 
 
