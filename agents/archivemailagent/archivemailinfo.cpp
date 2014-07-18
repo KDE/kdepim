@@ -84,23 +84,26 @@ QString normalizeFolderName(const QString &folderName)
     return adaptFolderName;
 }
 
-QString ArchiveMailInfo::dirArchive() const
+QString ArchiveMailInfo::dirArchive(bool &dirExit) const
 {
     const QDir dir(url().path());
     QString dirPath = url().path();
     if (!dir.exists()) {
+        dirExit = false;
         dirPath = QDir::homePath();
         qDebug()<<" Path doesn't exist"<<dir.path();
+    } else {
+        dirExit = true;
     }
     return dirPath;
 }
 
-KUrl ArchiveMailInfo::realUrl(const QString &folderName) const
+KUrl ArchiveMailInfo::realUrl(const QString &folderName, bool &dirExist) const
 {
     const int numExtensions = 4;
     // The extensions here are also sorted, like the enum order of BackupJob::ArchiveType
     const char *extensions[numExtensions] = { ".zip", ".tar", ".tar.bz2", ".tar.gz" };
-    const QString dirPath = dirArchive();
+    const QString dirPath = dirArchive(dirExist);
 
     const QString path = dirPath + QLatin1Char( '/' ) + i18nc( "Start of the filename for a mail archive file" , "Archive" )
             + QLatin1Char( '_' ) + normalizeFolderName(folderName) + QLatin1Char( '_' )
@@ -109,12 +112,12 @@ KUrl ArchiveMailInfo::realUrl(const QString &folderName) const
     return real;
 }
 
-QStringList ArchiveMailInfo::listOfArchive(const QString &folderName) const
+QStringList ArchiveMailInfo::listOfArchive(const QString &folderName, bool &dirExist) const
 {
     const int numExtensions = 4;
     // The extensions here are also sorted, like the enum order of BackupJob::ArchiveType
     const char *extensions[numExtensions] = { ".zip", ".tar", ".tar.bz2", ".tar.gz" };
-    const QString dirPath = dirArchive();
+    const QString dirPath = dirArchive(dirExist);
 
     QDir dir(dirPath);
 

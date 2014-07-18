@@ -121,15 +121,17 @@ void ArchiveMailManager::backupDone(ArchiveMailInfo *info)
     }
     Akonadi::Collection collection(info->saveCollectionId());
     const QString realPath = MailCommon::Util::fullCollectionPath(collection);
-    const QStringList lst = info->listOfArchive(realPath);
-
-    if (info->maximumArchiveCount() != 0) {
-        if (lst.count() > info->maximumArchiveCount()) {
-            const int diff = (lst.count() - info->maximumArchiveCount());
-            for (int i = 0; i < diff; ++i) {
-                const QString fileToRemove(info->url().path() + QDir::separator() + lst.at(i));
-                qDebug()<<" file to remove "<<fileToRemove;
-                QFile::remove(fileToRemove);
+    bool dirExist = true;
+    const QStringList lst = info->listOfArchive(realPath, dirExist);
+    if (dirExist) {
+        if (info->maximumArchiveCount() != 0) {
+            if (lst.count() > info->maximumArchiveCount()) {
+                const int diff = (lst.count() - info->maximumArchiveCount());
+                for (int i = 0; i < diff; ++i) {
+                    const QString fileToRemove(info->url().path() + QDir::separator() + lst.at(i));
+                    qDebug()<<" file to remove "<<fileToRemove;
+                    QFile::remove(fileToRemove);
+                }
             }
         }
     }

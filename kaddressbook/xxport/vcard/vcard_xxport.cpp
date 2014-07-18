@@ -209,14 +209,14 @@ KABC::Addressee::List VCardXXPort::importContacts() const
     if ( !option( QLatin1String("importUrl") ).isEmpty() ) {
       urls.append( KUrl( option( QLatin1String("importUrl") ) ) );
     } else {
-      const QString filter = i18n( "*.vcf|vCard (*.vcf)\n*|All Files" );
-      urls =
-        KFileDialog::getOpenUrls(
-          KUrl(),
-          filter,
-          parentWidget(),
-          i18nc( "@title:window", "Select vCard to Import" ) );
-    }
+      const QString filter = i18n( "*.vcf|vCard (*.vcf)\n*|all files (*)" );
+            urls =
+                    KFileDialog::getOpenUrls(
+                        KUrl(),
+                        filter,
+                        parentWidget(),
+                        i18nc( "@title:window", "Select vCard to Import" ) );
+        }
 
     if ( urls.isEmpty() ) {
       return addrList;

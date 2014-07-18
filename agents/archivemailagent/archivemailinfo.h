@@ -41,7 +41,7 @@ public:
         ArchiveYears
     };
 
-    KUrl realUrl(const QString &folderName) const;
+    KUrl realUrl(const QString &folderName, bool &dirExist) const;
 
     bool isValid() const;
 
@@ -72,13 +72,13 @@ public:
     int maximumArchiveCount() const;
     void setMaximumArchiveCount( int max );
 
-    QStringList listOfArchive(const QString &foldername) const;
+    QStringList listOfArchive(const QString &foldername, bool &dirExist) const;
 
     bool isEnabled() const;
     void setEnabled(bool b);
 
 private:
-    QString dirArchive() const;
+    QString dirArchive(bool &dirExit) const;
     QDate mLastDateSaved;
     int mArchiveAge;
     MailCommon::BackupJob::ArchiveType mArchiveType;
