@@ -50,7 +50,7 @@
 #include <KComboBox>
 #include <KLineEdit>
 #include <KLocalizedString>
-#include <KFontDialog>
+#include <QFontDialog>
 #include <KMenu>
 #include <KIconLoader>
 #include <KPluralHandlingSpinBox>
@@ -1107,8 +1107,8 @@ void ThemePreviewWidget::slotFontMenuTriggered( QAction * act )
         return;
     }
 
-    QFont f = mSelectedThemeContentItem->font();
-    if ( KFontDialog::getFont( f ) != KFontDialog::Accepted )
+    QFont f = QFontDialog::getFont( &ok, mSelectedThemeContentItem->font(), this );
+    if (!ok)
         return;
 
     mSelectedThemeContentItem->setFont( f );

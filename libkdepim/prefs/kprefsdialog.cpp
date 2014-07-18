@@ -29,7 +29,7 @@
 #include <KConfigSkeleton>
 #include <KDateComboBox>
 #include <QDebug>
-#include <KFontDialog>
+#include <QFontDialog>
 #include <KLineEdit>
 #include <KLocale>
 #include <KMessageBox>
@@ -288,9 +288,9 @@ QPushButton *KPrefsWidFont::button()
 void KPrefsWidFont::selectFont()
 {
 #ifndef QT_NO_FONTDIALOG
-    QFont myFont( mPreview->font() );
-    int result = KFontDialog::getFont( myFont );
-    if ( result == KFontDialog::Accepted ) {
+    bool ok;
+    QFont myFont = QFontDialog::getFont( &ok, mPreview->font() );
+    if ( ok ) {
         mPreview->setFont( myFont );
         emit changed();
     }
