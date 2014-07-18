@@ -36,6 +36,7 @@ TARGET_LINK_LIBRARIES(storageservicemanager
                        KF5::NotifyConfig
                        pimcommon
                        kdepim
+                       KF5::DBusAddons
 )
 
 install(TARGETS storageservicemanager ${INSTALL_TARGETS_DEFAULT_ARGS})

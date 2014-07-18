@@ -23,8 +23,9 @@
 #include "contacteditormainwindow.h"
 #include <qapplication.h>
 #include <kaboutdata.h>
-#include <kcmdlineargs.h>
 #include <KDBusService>
+#include <KLocalizedString>
+#include <QCommandLineParser>
 
 int main( int argc, char **argv )
 {
@@ -47,6 +48,13 @@ int main( int argc, char **argv )
     app.setApplicationDisplayName(aboutData.displayName());
     app.setOrganizationDomain(aboutData.organizationDomain());
     app.setApplicationVersion(aboutData.version());
+
+    QCommandLineParser parser;
+    parser.setApplicationDescription(QApplication::applicationDisplayName());
+    parser.addVersionOption();
+    parser.addHelpOption();
+
+    parser.process(app);
 
     KDBusService service();
 

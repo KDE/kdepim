@@ -21,30 +21,42 @@
 
 #include "kdepim-version.h"
 #include "storageservicemanagermainwindow.h"
-#include <k4aboutdata.h>
-#include <kcmdlineargs.h>
+#include <kaboutdata.h>
+
 #include <QDebug>
-#include <KUniqueApplication>
+#include <qcommandlineparser.h>
+#include <qcommandlineoption.h>
+#include <KDBusService>
+#include <KLocalizedString>
+#include <QApplication>
 
 int main( int argc, char **argv )
 {
-    K4AboutData aboutData( "storageservicemanager", 0, ki18n("Storage Service Manager"),
-      KDEPIM_VERSION, ki18n("Storage Service Manager"), K4AboutData::License_GPL_V2,
-      ki18n("Copyright © 2013, 2014 storageservicemanager authors"));
-    aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
+    QApplication app(argc, argv);
+
+    KAboutData aboutData(QStringLiteral("storageservicemanager"),
+                       i18n("Storage Service Manager"),
+                       QStringLiteral(KDEPIM_VERSION),
+                       i18n("Storage Service Manager"),
+                      KAboutLicense::GPL_V2,
+                       i18n("Copyright © 2013, 2014 storageservicemanager authors"));
+    aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer"), QLatin1String("montel@kde.org"));
+
     aboutData.setProgramIconName(QLatin1String("kmail"));
-    KCmdLineArgs::init( argc, argv, &aboutData );
+    KAboutData::setApplicationData(aboutData);
 
-    KCmdLineOptions options;
-    KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
+    app.setApplicationName(aboutData.componentName());
+    app.setApplicationDisplayName(aboutData.displayName());
+    app.setOrganizationDomain(aboutData.organizationDomain());
+    app.setApplicationVersion(aboutData.version());
 
-    KUniqueApplication::addCmdLineOptions();
-    if (!KUniqueApplication::start()) {
-        qDebug() << "storageservicemanager is already running!";
-        return (0);
-    }
-    KUniqueApplication a;
+    QCommandLineParser parser;
+    parser.addVersionOption();
+    parser.addHelpOption();    
+
+    KDBusService service();
+
     StorageServiceManagerMainWindow *mw = new StorageServiceManagerMainWindow();
     mw->show();
-    a.exec();
+    return app.exec();
 }

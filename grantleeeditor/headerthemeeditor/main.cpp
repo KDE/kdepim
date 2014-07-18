@@ -23,6 +23,7 @@
 #include "kdepim-version.h"
 
 #include <qapplication.h>
+#include <QCommandLineParser>
 #include <kaboutdata.h>
 #include <KLocalizedString>
 
@@ -49,6 +50,12 @@ int main( int argc, char **argv )
     app.setApplicationDisplayName(aboutData.displayName());
     app.setOrganizationDomain(aboutData.organizationDomain());
     app.setApplicationVersion(aboutData.version());
+    QCommandLineParser parser;
+    parser.setApplicationDescription(QApplication::applicationDisplayName());
+    parser.addVersionOption();
+    parser.addHelpOption();
+
+    parser.process(app);
 
     KDBusService service();
 
