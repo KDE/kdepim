@@ -21,7 +21,7 @@
 
 #include <mailcommon/job/jobscheduler.h>
 #include <Collection>
-
+#include <QPixmap>
 class ArchiveMailInfo;
 class ArchiveMailManager;
 
@@ -39,6 +39,7 @@ private Q_SLOTS:
     void slotBackupDone(const QString &info);
     void slotError(const QString &error);
 private:
+    QPixmap mPixmap;
     ArchiveMailInfo *mInfo;
     ArchiveMailManager *mManager;
 };
