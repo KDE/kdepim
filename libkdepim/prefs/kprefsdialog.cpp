@@ -48,7 +48,7 @@
 #include <QTimeEdit>
 #include <QButtonGroup>
 #include <QGroupBox>
-#include <KHBox>
+#include <QHBoxLayout>
 
 
 using namespace KPIM;
@@ -486,9 +486,12 @@ QList<QWidget *> KPrefsWidRadios::widgets() const
 KPrefsWidCombo::KPrefsWidCombo( KConfigSkeleton::ItemEnum *item, QWidget *parent )
     : mItem( item )
 {
-    KHBox *hbox = new KHBox( parent );
+    QWidget *hbox = new QWidget( parent );
+    QHBoxLayout *hboxHBoxLayout = new QHBoxLayout(hbox);
+    hboxHBoxLayout->setMargin(0);
     new QLabel( mItem->label(), hbox );
     mCombo = new KComboBox( hbox );
+    hboxHBoxLayout->addWidget(mCombo);
     connect( mCombo, SIGNAL(activated(int)), SIGNAL(changed()) );
 }
 
