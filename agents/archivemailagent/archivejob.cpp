@@ -66,13 +66,13 @@ void ArchiveJob::execute()
         const KUrl archivePath = mInfo->realUrl(realPath, dirExit);
         if (!dirExit) {
             mManager->backupDone(mInfo);
-            const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+            const QPixmap pixmap = QIcon::fromTheme( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
             KNotification::event( QLatin1String("archivemailfolderdoesntexist"),
                                   i18n("Directory does not exist. Please verify settings. Archive postponed."),
                                   pixmap,
                                   0,
                                   KNotification::CloseOnTimeout,
-                                  KGlobal::mainComponent());
+                                  KGlobal::mainComponent().componentName());
             deleteLater();
             return;
         }
