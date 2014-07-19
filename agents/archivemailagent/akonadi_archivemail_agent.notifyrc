@@ -179,6 +179,13 @@ Action=Popup
 
 [Event/archivemailfolderdoesntexist]
 Name=Directory does not exist
+Name[ca]=El directori no existeix
+Name[en_GB]=Directory does not exist
+Name[pt]=A pasta não existe
+Name[sk]=Adresár neexistuje
+Name[sv]=Katalog finns inte
+Name[uk]=Каталогу не існує
+Name[x-test]=xxDirectory does not existxx
 Action=Popup
 
 [Event/archivemailerror]
