@@ -105,17 +105,12 @@ void ManageThemes::initialize()
 {
     QDir dir(mLocalDirectory);
     if (dir.exists()) {
-        bool hasSubDir = false;
         QDirIterator dirIt( mLocalDirectory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot );
         while ( dirIt.hasNext() ) {
             dirIt.next();
             const QString dirName = dirIt.fileName();
             new QListWidgetItem(dirName, mListThemes);
-            hasSubDir = true;
         }
-        enableButtonOk(hasSubDir);
-    } else {
-        enableButtonOk(false);
     }
 }
 
