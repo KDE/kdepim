@@ -33,27 +33,38 @@
 
 #include <QHBoxLayout>
 #include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
 
 
 static QString archiveMailCollectionPattern = QLatin1String( "ArchiveMailCollection \\d+" );
 
 ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Configure Archive Mail Agent" ) );
+    setWindowTitle( i18n( "Configure Archive Mail Agent" ) );
     setWindowIcon( QIcon::fromTheme( QLatin1String("kmail") ) );
-    setButtons( Help | Ok|Cancel );
-    setDefaultButton( Ok );
     setModal( true );
     QWidget *mainWidget = new QWidget( this );
     QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
-    mainLayout->setSpacing( KDialog::spacingHint() );
-    mainLayout->setMargin( KDialog::marginHint() );
+//TODO PORT QT5     mainLayout->setSpacing( QDialog::spacingHint() );
+//TODO PORT QT5     mainLayout->setMargin( QDialog::marginHint() );
     mWidget = new ArchiveMailWidget(this);
     connect(mWidget, SIGNAL(archiveNow(ArchiveMailInfo*)), this, SIGNAL(archiveNow(ArchiveMailInfo*)));
     mainLayout->addWidget(mWidget);
-    setMainWidget( mainWidget );
-    connect(this, SIGNAL(okClicked()), SLOT(slotSave()));
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::Help);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), SLOT(slotSave()));
+
+    mainLayout->addWidget(buttonBox);
+    okButton->setDefault(true);
+
     readConfig();
 
     KAboutData aboutData = KAboutData(
@@ -75,7 +86,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     //Initialize menu
     QMenu *menu = helpMenu->menu();
     helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QLatin1String("kmail")));
-    setButtonMenu( Help, menu );
+    buttonBox->button(QDialogButtonBox::Help)->setMenu(menu);
 }
 
 ArchiveMailDialog::~ArchiveMailDialog()

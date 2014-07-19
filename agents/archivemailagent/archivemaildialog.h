@@ -21,7 +21,7 @@
 #include "ui_archivemailwidget.h"
 #include "archivemailinfo.h"
 #include <QTreeWidgetItem>
-#include <KDialog>
+#include <QDialog>
 
 class QTreeWidget;
 class ArchiveMailItem : public QTreeWidgetItem
@@ -80,7 +80,7 @@ private:
     Ui::ArchiveMailWidget *mWidget;
 };
 
-class ArchiveMailDialog : public KDialog
+class ArchiveMailDialog : public QDialog
 {
     Q_OBJECT
 public:
