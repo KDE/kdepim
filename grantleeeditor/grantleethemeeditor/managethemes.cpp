@@ -31,15 +31,16 @@
 #include <QDir>
 #include <QDirIterator>
 #include <QStandardPaths>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
 
 using namespace GrantleeThemeEditor;
 
 ManageThemes::ManageThemes(const QString &relativeThemePath, QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
     mLocalDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + relativeThemePath;
-    setCaption( i18n( "Manage Theme" ) );
-    setButtons( Close );
+    setWindowTitle( i18n( "Manage Theme" ) );
     QWidget *w = new QWidget;
 
     QVBoxLayout *lay = new QVBoxLayout;
@@ -61,7 +62,14 @@ ManageThemes::ManageThemes(const QString &relativeThemePath, QWidget *parent)
 
     initialize();
 
-    setMainWidget(w);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(w);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mainLayout->addWidget(buttonBox);
+
     readConfig();
 }
 

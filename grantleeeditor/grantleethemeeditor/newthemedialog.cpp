@@ -27,15 +27,15 @@
 
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
 
 using namespace GrantleeThemeEditor;
 NewThemeDialog::NewThemeDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "New Theme" ) );
-    setButtons( Ok|Cancel );
-    setDefaultButton(Ok);
-    setButtonFocus(Ok);
+    setWindowTitle( i18n( "New Theme" ) );
 
     QWidget *w = new QWidget;
 
@@ -58,8 +58,21 @@ NewThemeDialog::NewThemeDialog(QWidget *parent)
 
     w->setLayout(lay);
 
-    setMainWidget(w);
-    enableButtonOk(false);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(w);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mainLayout->addWidget(buttonBox);
+    mOkButton->setDefault(true);
+    mOkButton->setFocus();
+
+    mOkButton->setEnabled(false);
     resize(300,150);
     mThemeName->setFocus();
     readConfig();
@@ -86,6 +99,6 @@ QString NewThemeDialog::directory() const
 
 void NewThemeDialog::slotUpdateOkButton()
 {
-    enableButtonOk(!mUrlRequester->lineEdit()->text().isEmpty() && !mThemeName->text().isEmpty());
+    mOkButton->setEnabled(!mUrlRequester->lineEdit()->text().isEmpty() && !mThemeName->text().isEmpty());
 }
 
