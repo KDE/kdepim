@@ -33,7 +33,7 @@
 #include <KRecentFilesAction>
 #include <KNS3/KNewStuffAction>
 #include <KUrl>
-
+#include <KConfigGroup>
 
 #include <QPointer>
 #include <QCloseEvent>

@@ -18,7 +18,7 @@
 #ifndef THEMECONFIGUREDIALOG_H
 #define THEMECONFIGUREDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 class KTextEdit;
 
 namespace PimCommon {
@@ -28,7 +28,7 @@ namespace GrantleeThemeEditor {
 class ConfigureWidget;
 }
 
-class ThemeConfigureDialog : public KDialog
+class ThemeConfigureDialog : public QDialog
 {
     Q_OBJECT
 public:

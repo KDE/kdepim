@@ -31,14 +31,13 @@
 #include <QLabel>
 #include <QTabWidget>
 #include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Configure" ) );
-    setButtons( Default|Ok|Cancel );
-    setButtonFocus( Ok );
-
+    setWindowTitle( i18n( "Configure" ) );
     QTabWidget *tab = new QTabWidget;
 
     QWidget *w = new QWidget;
@@ -61,9 +60,21 @@ ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
     mDefaultTemplate->setAcceptRichText(false);
     tab->addTab(mDefaultTemplate, i18n("Default Template"));
 
-    setMainWidget(tab);
-    connect(this, SIGNAL(defaultClicked()), this, SLOT(slotDefaultClicked()));
-    connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(tab);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mainLayout->addWidget(buttonBox);
+    buttonBox->button(QDialogButtonBox::Ok)->setFocus();
+
+    connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), SIGNAL(defaultClicked()), this, SLOT(slotDefaultClicked()));
+    connect(buttonBox->button(QDialogButtonBox::Ok), SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
     readConfig();
 }
 

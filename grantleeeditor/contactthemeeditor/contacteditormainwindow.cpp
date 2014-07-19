@@ -34,7 +34,7 @@
 #include <KLocalizedString>
 #include <KLocale>
 #include <KUrl>
-
+#include <KConfigGroup>
 
 #include <KNS3/KNewStuffAction>
 
