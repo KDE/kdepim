@@ -21,10 +21,10 @@
 #ifndef SERVERSIEVESETTINGSDIALOG_H
 #define SERVERSIEVESETTINGSDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 #include "sieveeditorutil.h"
 class ServerSieveSettings;
-class ServerSieveSettingsDialog : public KDialog
+class ServerSieveSettingsDialog : public QDialog
 {
     Q_OBJECT
 public:

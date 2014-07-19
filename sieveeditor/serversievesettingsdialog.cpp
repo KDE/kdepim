@@ -23,12 +23,14 @@
 
 #include <KLocalizedString>
 #include <QVBoxLayout>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
 
 ServerSieveSettingsDialog::ServerSieveSettingsDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Add Server Sieve" ) );
-    setButtons( Cancel | Ok  );
+    setWindowTitle( i18n( "Add Server Sieve" ) );
 
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
@@ -37,9 +39,20 @@ ServerSieveSettingsDialog::ServerSieveSettingsDialog(QWidget *parent)
     lay->addWidget(mServerSieveSettings);
     lay->setMargin(0);
     w->setLayout(lay);
-    setMainWidget(w);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(w);
+    
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mainLayout->addWidget(buttonBox);
+
     resize(400,300);
-    enableButtonOk(false);
+    okButton->setEnabled(false);
 }
 
 ServerSieveSettingsDialog::~ServerSieveSettingsDialog()

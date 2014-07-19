@@ -69,7 +69,7 @@ void ServerSieveListWidget::modifyServerConfig()
     ServerSieveListWidgetItem *serverSieveListItem = static_cast<ServerSieveListWidgetItem *>(item);
 
     QPointer<ServerSieveSettingsDialog> dlg = new ServerSieveSettingsDialog(this);
-    dlg->setCaption(i18n("Modify Settings"));
+    dlg->setWindowTitle(i18n("Modify Settings"));
     dlg->setServerSieveConfig(serverSieveListItem->serverConfig());
     if (dlg->exec()) {
         serverSieveListItem->setServerConfig(dlg->serverSieveConfig());
