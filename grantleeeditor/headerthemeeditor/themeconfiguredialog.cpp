@@ -73,8 +73,8 @@ ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
     mainLayout->addWidget(buttonBox);
     buttonBox->button(QDialogButtonBox::Ok)->setFocus();
 
-    connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), SIGNAL(defaultClicked()), this, SLOT(slotDefaultClicked()));
-    connect(buttonBox->button(QDialogButtonBox::Ok), SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
+    connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()), this, SLOT(slotDefaultClicked()));
+    connect(buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(slotOkClicked()));
     readConfig();
 }
 
