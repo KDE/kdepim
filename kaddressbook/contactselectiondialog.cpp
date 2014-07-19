@@ -21,18 +21,32 @@
 #include "contactselectionwidget.h"
 
 #include <KLocalizedString>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 ContactSelectionDialog::ContactSelectionDialog( QItemSelectionModel *selectionModel,
                                                 QWidget *parent )
-    : KDialog( parent )
+    : QDialog( parent )
 {
-    setCaption( i18n( "Select Contacts" ) );
-    setButtons( Ok | Cancel );
+    setWindowTitle( i18n( "Select Contacts" ) );
+    //PORTING SCRIPT: Move QDialogButtonBox at the end of init of widget to add it in layout.
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mainLayout->addWidget(buttonBox);
 
     mSelectionWidget = new ContactSelectionWidget( selectionModel, this );
-    setMainWidget( mSelectionWidget );
 
-    setInitialSize( QSize( 450, 220 ) );
+    resize( QSize( 450, 220 ) );
 }
 
 void ContactSelectionDialog::setMessageText( const QString &message )
