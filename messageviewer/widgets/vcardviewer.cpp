@@ -31,6 +31,11 @@ using KABC::Addressee;
 #include <klocale.h>
 
 #include <libkdepim/job/addcontactjob.h>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <KGuiItem>
+#include <QVBoxLayout>
 
 #ifndef KABC_ADDRESSEE_METATYPE_DEFINED
 Q_DECLARE_METATYPE( KABC::Addressee )
@@ -39,19 +44,33 @@ Q_DECLARE_METATYPE( KABC::Addressee )
 using namespace MessageViewer;
 
 VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
-    : KDialog( parent )
+    : QDialog( parent )
 {
-    setCaption( i18n("vCard Viewer") );
-    setButtons( User1|User2|User3|Close );
+    setWindowTitle( i18n("vCard Viewer") );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *user1Button = new QPushButton;
+    buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+    mUser2Button = new QPushButton;
+    buttonBox->addButton(mUser2Button, QDialogButtonBox::ActionRole);
+    mUser3Button = new QPushButton;
+    buttonBox->addButton(mUser3Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     setModal( false );
-    setDefaultButton( Close );
-    setButtonGuiItem( User1, KGuiItem(i18n("&Import")) );
-    setButtonGuiItem( User2, KGuiItem(i18n("&Next Card")) );
-    setButtonGuiItem( User3, KGuiItem(i18n("&Previous Card")) );
+    buttonBox->button(QDialogButtonBox::Close)->setDefault(true);
+    
+    KGuiItem::assign(user1Button, KGuiItem(i18n("&Import")));
+    KGuiItem::assign(user1Button, KGuiItem(i18n("&NextCard")));
+    KGuiItem::assign(user1Button, KGuiItem(i18n("&PreviousCard")));
 
     mContactViewer = new KAddressBookGrantlee::GrantleeContactViewer( this );
     mContactViewer->setForceDisableQRCode(true);
-    setMainWidget(mContactViewer);
+    mainLayout->addWidget(mContactViewer);
+    mainLayout->addWidget(buttonBox);
 
     VCardConverter vcc;
     mAddresseeList = vcc.parseVCards( vCard );
@@ -59,19 +78,19 @@ VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
         itAddresseeList = mAddresseeList.constBegin();
         mContactViewer->setRawContact( *itAddresseeList );
         if ( mAddresseeList.size() <= 1 ) {
-            showButton(User2, false);
-            showButton(User3, false);
+            mUser2Button->setVisible(false);
+            mUser3Button->setVisible(false);
         }
         else
-            enableButton(User3, false);
-        connect( this, SIGNAL(user1Clicked()), SLOT(slotUser1()) );
-        connect( this, SIGNAL(user2Clicked()), SLOT(slotUser2()) );
-        connect( this, SIGNAL(user3Clicked()), SLOT(slotUser3()) );
+            mUser3Button->setEnabled(false);
+        connect(user1Button, SIGNAL(clicked()), SLOT(slotUser1()) );
+        connect(mUser2Button, SIGNAL(clicked()), SLOT(slotUser2()) );
+        connect(mUser3Button, SIGNAL(clicked()), SLOT(slotUser3()) );
     } else {
         mContactViewer->setRawContact(KABC::Addressee());
-        enableButton(User1, false);
-        showButton(User2, false);
-        showButton(User3, false);
+        user1Button->setEnabled(false);
+        mUser2Button->setVisible(false);
+        mUser3Button->setVisible(false);
     }
 
     readConfig();
@@ -112,8 +131,8 @@ void VCardViewer::slotUser2()
     // next vcard
     mContactViewer->setRawContact( *(++itAddresseeList) );
     if ( itAddresseeList == --(mAddresseeList.constEnd()) )
-        enableButton(User2, false);
-    enableButton(User3, true);
+        mUser2Button->setEnabled(false);
+    mUser3Button->setEnabled(true);
 }
 
 void VCardViewer::slotUser3()
@@ -121,7 +140,7 @@ void VCardViewer::slotUser3()
     // previous vcard
     mContactViewer->setRawContact( *(--itAddresseeList) );
     if ( itAddresseeList == mAddresseeList.constBegin() )
-        enableButton(User3, false);
-    enableButton(User2, true);
+        mUser3Button->setEnabled(false);
+    mUser2Button->setEnabled(true);
 }
 
