@@ -18,11 +18,11 @@
 #ifndef BACKUPFILESTRUCTUREINFODIALOG_H
 #define BACKUPFILESTRUCTUREINFODIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 namespace PimCommon {
 class PlainTextEditorWidget;
 }
-class BackupFileStructureInfoDialog : public KDialog
+class BackupFileStructureInfoDialog : public QDialog
 {
     Q_OBJECT
 public:

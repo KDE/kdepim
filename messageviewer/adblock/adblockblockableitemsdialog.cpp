@@ -27,17 +27,30 @@
 #include <QTreeWidget>
 #include <QWebFrame>
 #include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
 
 using namespace MessageViewer;
 AdBlockBlockableItemsDialog::AdBlockBlockableItemsDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n("Blockable Items") );
-    setButtons( Ok|Cancel );
+    setWindowTitle( i18n("Blockable Items") );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
     mBlockableItems = new AdBlockBlockableItemsWidget;
 
-    setMainWidget(mBlockableItems);
+    mainLayout->addWidget(mBlockableItems);
+    mainLayout->addWidget(buttonBox);
     readConfig();
 }
 

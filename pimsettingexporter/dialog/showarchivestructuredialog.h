@@ -18,14 +18,14 @@
 #ifndef SHOWARCHIVESTRUCTUREDIALOG_H
 #define SHOWARCHIVESTRUCTUREDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 
 class QTreeWidget;
 class QTreeWidgetItem;
 class KArchiveEntry;
 class KArchiveDirectory;
 
-class ShowArchiveStructureDialog : public KDialog
+class ShowArchiveStructureDialog : public QDialog
 {
     Q_OBJECT
 public:
