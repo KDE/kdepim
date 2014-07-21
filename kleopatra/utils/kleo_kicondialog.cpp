@@ -83,7 +83,7 @@ public:
  */
 
 KIconCanvas::KIconCanvas(QWidget *parent)
-    : KListWidget(parent), d(new KIconCanvasPrivate(this))
+    : QListWidget(parent), d(new KIconCanvasPrivate(this))
 {
     setViewMode(IconMode);
     setUniformItemSizes(true);

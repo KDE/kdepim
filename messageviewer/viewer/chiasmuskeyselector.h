@@ -4,7 +4,7 @@
 #include <kdialog.h>
 #include "messageviewer_export.h"
 
-class KListWidget;
+class QListWidget;
 class KLineEdit;
 class QLabel;
 
@@ -27,7 +27,7 @@ private Q_SLOTS:
 
 private:
     QLabel* mLabel;
-    KListWidget* mListBox;
+    QListWidget* mListBox;
     KLineEdit* mOptions;
 };
 

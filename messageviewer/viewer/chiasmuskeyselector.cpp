@@ -2,7 +2,7 @@
 #include "chiasmuskeyselector.h"
 
 #include <KLineEdit>
-#include <KListWidget>
+#include <QListWidget>
 #include <KLocalizedString>
 
 #include <QLabel>
@@ -27,7 +27,7 @@ ChiasmusKeySelector::ChiasmusKeySelector( QWidget* parent, const QString& captio
     mLabel = new QLabel( i18n( "Please select the Chiasmus key file to use:" ), page );
     layout->addWidget( mLabel );
 
-    mListBox = new KListWidget( page );
+    mListBox = new QListWidget( page );
     mListBox->addItems( keys );
     const int current = keys.indexOf( currentKey );
     mListBox->setCurrentRow( qMax( 0, current ) );
