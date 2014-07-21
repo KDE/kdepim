@@ -46,7 +46,7 @@
 #include <QStringList>
 #include <QMimeData>
 
-#include <KColorDialog>
+#include <QColorDialog>
 #include <KComboBox>
 #include <KLineEdit>
 #include <KLocalizedString>
@@ -1071,8 +1071,8 @@ void ThemePreviewWidget::slotForegroundColorMenuTriggered( QAction * act )
     }
 
     QColor clr;
-    const int result = KColorDialog::getColor( clr, mSelectedThemeContentItem->customColor(), this );
-    if ( result != KColorDialog::Accepted )
+    clr = QColorDialog::getColor(mSelectedThemeContentItem->customColor(), this );
+    if ( !clr.isValid() ) 
         return;
 
     mSelectedThemeContentItem->setCustomColor( clr );
@@ -1135,8 +1135,8 @@ void ThemePreviewWidget::slotGroupHeaderBackgroundModeMenuTriggered( QAction * a
     case Theme::CustomColor:
     {
         QColor clr;
-        int result = KColorDialog::getColor( clr, mTheme->groupHeaderBackgroundColor(), this );
-        if ( result != KColorDialog::Accepted )
+        clr = QColorDialog::getColor(mTheme->groupHeaderBackgroundColor(), this );
+        if ( clr.isValid() ) 
             return;
 
         mTheme->setGroupHeaderBackgroundMode( Theme::CustomColor );

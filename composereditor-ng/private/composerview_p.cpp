@@ -44,7 +44,7 @@
 #include <KToggleAction>
 #include <QAction>
 #include <KSelectAction>
-#include <KColorDialog>
+#include <QColorDialog>
 #include <KMessageBox>
 #include <QDebug>
 #include <KFontAction>
@@ -619,8 +619,8 @@ void ComposerViewPrivate::_k_slotInsertHtml()
 void ComposerViewPrivate::_k_setTextBackgroundColor()
 {
     QColor newColor = ComposerEditorNG::Utils::convertRgbToQColor(evaluateJavascript(QLatin1String("getTextBackgroundColor()")).toString());
-    const int result = KColorDialog::getColor(newColor, q);
-    if (result == QDialog::Accepted) {
+    newColor = QColorDialog::getColor(newColor, q);
+    if ( newColor.isValid() ) {
         execCommand(QLatin1String("hiliteColor"), newColor.name());
     }
 }
@@ -638,8 +638,8 @@ void ComposerViewPrivate::_k_slotDeleteText()
 void ComposerViewPrivate::_k_setTextForegroundColor()
 {
     QColor newColor = ComposerEditorNG::Utils::convertRgbToQColor(evaluateJavascript(QLatin1String("getTextForegroundColor()")).toString());
-    const int result = KColorDialog::getColor(newColor, q);
-    if (result == QDialog::Accepted) {
+    newColor = QColorDialog::getColor(newColor, q);
+    if ( newColor.isValid() ) {
         execCommand(QLatin1String("foreColor"), newColor.name());
     }
 }

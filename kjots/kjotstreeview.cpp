@@ -28,7 +28,7 @@
 #include <QMimeData>
 #include <KActionCollection>
 #include <KXMLGUIClient>
-#include <KColorDialog>
+#include <QColorDialog>
 #include <QInputDialog>
 #include <KLocalizedString>
 
@@ -208,16 +208,14 @@ void KJotsTreeView::copyLinkAddress()
 void KJotsTreeView::changeColor()
 {
   QColor myColor;
-  int result = KColorDialog::getColor( myColor );
+  myColor = QColorDialog::getColor();
+  if ( myColor.isValid() ) {
+    QModelIndexList rows = selectionModel()->selectedRows();
 
-  if ( result != KColorDialog::Accepted )
-    return;
-
-  QModelIndexList rows = selectionModel()->selectedRows();
-
-  foreach ( const QModelIndex &idx, rows )
-  {
-    model()->setData(idx, myColor, Qt::BackgroundRole );
+    foreach ( const QModelIndex &idx, rows )
+    {
+      model()->setData(idx, myColor, Qt::BackgroundRole );
+    }
   }
 }
 
