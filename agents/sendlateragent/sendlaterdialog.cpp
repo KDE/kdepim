@@ -75,7 +75,6 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
 
     lay->addWidget(new KSeparator);
 
-    w->setLayout(lay);
     setMainWidget(w);
     slotRecurrenceClicked(false);
     if (info)
