@@ -170,7 +170,7 @@
         </widget>
        </item>
        <item row="1" column="0" rowspan="5">
-        <widget class="KListWidget" name="manualFiltersListWidget">
+        <widget class="QListWidget" name="manualFiltersListWidget">
          <property name="dragEnabled">
           <bool>true</bool>
          </property>
@@ -238,11 +238,6 @@
    <class>KPluralHandlingSpinBox</class>
    <extends>QSpinBox</extends>
    <header>KPluralHandlingSpinBox</header>
-  </customwidget>
-  <customwidget>
-   <class>KListWidget</class>
-   <extends>QListWidget</extends>
-   <header>klistwidget.h</header>
   </customwidget>
   <customwidget>
    <class>MessageViewer::AdBlockListWidget</class>

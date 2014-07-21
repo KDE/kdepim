@@ -38,7 +38,7 @@
           <number>2</number>
          </property>
          <item>
-          <widget class="KListWidget" name="lstEntriesList">
+          <widget class="QListWidget" name="lstEntriesList">
            <property name="editTriggers">
             <set>QAbstractItemView::NoEditTriggers</set>
            </property>
@@ -622,11 +622,6 @@
    <class>KTextEdit</class>
    <extends>QTextEdit</extends>
    <header>ktextedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KListWidget</class>
-   <extends>QListWidget</extends>
-   <header>klistwidget.h</header>
   </customwidget>
   <customwidget>
    <class>PimCommon::CustomTextEdit</class>
