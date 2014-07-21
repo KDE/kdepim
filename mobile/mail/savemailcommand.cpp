@@ -46,7 +46,7 @@ KUrl subjectToUrl( const QString &subject )
     fileName += QLatin1String(".mbox");
 
   const QString filter = i18n( "*.mbox|email messages (*.mbox)\n*|all files (*)" );
-  return KFileDialog::getSaveUrl( KUrl::fromPath( fileName ), filter );
+  return KFileDialog::getSaveUrl( QUrl::fromLocalFile( fileName ), filter );
 }
 
 #define STRDIM(x) (sizeof(x)/sizeof(*x)-1)

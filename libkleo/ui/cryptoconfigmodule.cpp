@@ -614,7 +614,7 @@ Kleo::CryptoConfigEntryPath::CryptoConfigEntryPath(
 void Kleo::CryptoConfigEntryPath::doSave()
 {
 #ifdef KDEPIM_ONLY_KLEO
-  mEntry->setURLValue( KUrl::fromPath( mFileNameRequester->fileName() ) );
+  mEntry->setURLValue( QUrl::fromLocalFile( mFileNameRequester->fileName() ) );
 #else
   mEntry->setURLValue( mUrlRequester->url() );
 #endif
@@ -676,7 +676,7 @@ Kleo::CryptoConfigEntryDirPath::CryptoConfigEntryDirPath(
 void Kleo::CryptoConfigEntryDirPath::doSave()
 {
 #ifdef KDEPIM_ONLY_KLEO
-  mEntry->setURLValue( KUrl::fromPath( mFileNameRequester->fileName() ) );
+  mEntry->setURLValue( QUrl::fromLocalFile( mFileNameRequester->fileName() ) );
 #else
   mEntry->setURLValue( mUrlRequester->url() );
 #endif

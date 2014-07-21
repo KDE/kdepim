@@ -597,7 +597,7 @@ void AttachmentControllerBase::openWith(KService::Ptr offer)
         return;
     }
     KUrl::List lst;
-    KUrl url = KUrl::fromPath(tempFile->fileName());
+    KUrl url = QUrl::fromLocalFile(tempFile->fileName());
     lst.append( url );
     bool result = false;
     if(offer) {
@@ -625,7 +625,7 @@ void AttachmentControllerBase::openAttachment( AttachmentPart::Ptr part )
         return;
     }
 
-    bool success = KRun::runUrl( KUrl::fromPath( tempFile->fileName() ),
+    bool success = KRun::runUrl( QUrl::fromLocalFile( tempFile->fileName() ),
                                  QString::fromLatin1( part->mimeType() ),
                                  d->wParent,
                                  true /*tempFile*/,
@@ -681,7 +681,7 @@ void AttachmentControllerBase::editAttachment( AttachmentPart::Ptr part, bool op
     }
 
     MessageViewer::EditorWatcher *watcher = new MessageViewer::EditorWatcher(
-                KUrl::fromPath( tempFile->fileName() ),
+                QUrl::fromLocalFile( tempFile->fileName() ),
                 QString::fromLatin1( part->mimeType() ), openWith,
                 this, d->wParent );
     connect( watcher, SIGNAL(editDone(MessageViewer::EditorWatcher*)),

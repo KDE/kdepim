@@ -159,7 +159,7 @@ static QVariantHash imAddressHash( const QString &typeKey, const QString &imAddr
     setHashField( addressObject, QLatin1String( "type" ), dispLabel );
     setHashField( addressObject, QLatin1String( "imAddress" ), imAddress );
 
-    const QString iconUrl = KUrl::fromPath( KIconLoader::global()->iconPath( IMProtocols::self()->icon( typeKey ),
+    const QString iconUrl = QUrl::fromLocalFile( KIconLoader::global()->iconPath( IMProtocols::self()->icon( typeKey ),
                                                                              -KIconLoader::SizeSmall) ).url();
     const QString url = QString::fromLatin1( "<img src=\"%1\" align=\"top\"/>" ).arg( iconUrl );
     addressObject.insert( QLatin1String( "imIcon" ), url );

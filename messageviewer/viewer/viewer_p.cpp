@@ -824,7 +824,7 @@ void ViewerPrivate::displaySplashPage( const QString &info )
     const QString catchPhrase; //not enough space for a catch phrase at default window size i18n("Part of the Kontact Suite");
     const QString quickDescription = i18n( "The KDE email client." );
 
-    mViewer->setHtml( content.arg( fontSize ).arg( mAppName ).arg( catchPhrase ).arg( quickDescription ).arg( info ), KUrl::fromPath( location ) );
+    mViewer->setHtml( content.arg( fontSize ).arg( mAppName ).arg( catchPhrase ).arg( quickDescription ).arg( info ), QUrl::fromLocalFile( location ) );
     mViewer->show();
 }
 

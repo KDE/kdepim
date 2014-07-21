@@ -38,13 +38,13 @@ void AttachmentFromUrlJobTest::testAttachments_data()
   QTest::addColumn<QByteArray>( "mimetype" );
 
   // PATH_ATTACHMENTS is defined by CMake.
-  QTest::newRow( "png image" ) << KUrl::fromPath( PATH_ATTACHMENTS + QString::fromLatin1( "image.png" ) )
+  QTest::newRow( "png image" ) << QUrl::fromLocalFile( PATH_ATTACHMENTS + QString::fromLatin1( "image.png" ) )
                                << QString::fromLatin1( "image.png" )
                                << QByteArray( "image/png" );
-  QTest::newRow( "pdf doc" ) << KUrl::fromPath( PATH_ATTACHMENTS + QString::fromLatin1( "doc.pdf" ) )
+  QTest::newRow( "pdf doc" ) << QUrl::fromLocalFile( PATH_ATTACHMENTS + QString::fromLatin1( "doc.pdf" ) )
                              << QString::fromLatin1( "doc.pdf" )
                              << QByteArray( "application/pdf" );
-  QTest::newRow( "text file" ) << KUrl::fromPath( PATH_ATTACHMENTS + QString::fromLatin1( "file.txt" ) )
+  QTest::newRow( "text file" ) << QUrl::fromLocalFile( PATH_ATTACHMENTS + QString::fromLatin1( "file.txt" ) )
                                << QString::fromLatin1( "file.txt" )
                                << QByteArray( "text/plain" );
 }
@@ -75,7 +75,7 @@ void AttachmentFromUrlJobTest::testAttachments()
 
 void AttachmentFromUrlJobTest::testAttachmentTooBig()
 {
-  const KUrl url = KUrl::fromPath( PATH_ATTACHMENTS + QString::fromLatin1( "doc.pdf" ) );
+  const KUrl url = QUrl::fromLocalFile( PATH_ATTACHMENTS + QString::fromLatin1( "doc.pdf" ) );
   const QString name = QString::fromLatin1( "doc.pdf" );
   const QByteArray mimetype( "application/pdf" );
 
@@ -88,7 +88,7 @@ void AttachmentFromUrlJobTest::testAttachmentCharset()
 {
   const QByteArray charset( "iso-8859-2" );
   const QString filename = QString::fromLatin1( "file.txt" );
-  KUrl url = KUrl::fromPath( PATH_ATTACHMENTS + filename );
+  KUrl url = QUrl::fromLocalFile( PATH_ATTACHMENTS + filename );
   url.setFileEncoding( QString::fromLatin1(charset) );
 
   AttachmentFromUrlJob *ljob = new AttachmentFromUrlJob( url, this );

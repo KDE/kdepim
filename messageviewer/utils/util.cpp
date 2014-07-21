@@ -479,7 +479,7 @@ bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget
         fileName += QLatin1String(".mbox");
 
     const QString filter = i18n( "*.mbox|email messages (*.mbox)\n*|all files (*)" );
-    QPointer<KFileDialog> dlg = new KFileDialog(KUrl::fromPath( fileName ), filter, parent);
+    QPointer<KFileDialog> dlg = new KFileDialog(QUrl::fromLocalFile( fileName ), filter, parent);
     dlg->setWindowTitle(i18np("Save Message", "Save Messages", retrievedMsgs.count()));
     dlg->setMode(KFile::File|KFile::LocalOnly);
     dlg->setOperationMode(KFileDialog::Saving);

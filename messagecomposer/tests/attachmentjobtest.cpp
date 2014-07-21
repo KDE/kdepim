@@ -83,9 +83,9 @@ void AttachmentJobTest::testTextCharsetAutodetect_data()
   QTest::addColumn<QByteArray>( "charset" );
 
   // PATH_ATTACHMENTS is defined by CMake.
-  QTest::newRow( "ascii" ) << KUrl::fromPath( PATH_ATTACHMENTS + QString::fromLatin1( "ascii.txt" ) )
+  QTest::newRow( "ascii" ) << QUrl::fromLocalFile( PATH_ATTACHMENTS + QString::fromLatin1( "ascii.txt" ) )
                            << QByteArray( "us-ascii" );
-  QTest::newRow( "iso8859-2" ) << KUrl::fromPath( PATH_ATTACHMENTS + QString::fromLatin1( "iso8859-2.txt" ) )
+  QTest::newRow( "iso8859-2" ) << QUrl::fromLocalFile( PATH_ATTACHMENTS + QString::fromLatin1( "iso8859-2.txt" ) )
                                << QByteArray( "iso-8859-2" );
   // TODO not sure how to test utf-16.
 }
