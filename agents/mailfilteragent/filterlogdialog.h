@@ -29,12 +29,12 @@
 #ifndef FILTERLOGDIALOG_H
 #define FILTERLOGDIALOG_H
 
-#include <kdialog.h>
+#include <QDialog>
 
 class QCheckBox;
 class QSpinBox;
 class QGroupBox;
-
+class QPushButton;
 /**
   @short KMail Filter Log Collector.
   @author Andreas Gungl <a.gungl@gmx.de>
@@ -45,7 +45,7 @@ class QGroupBox;
 namespace PimCommon {
 class PlainTextEditorWidget;
 }
-class FilterLogDialog : public KDialog
+class FilterLogDialog : public QDialog
 {
     Q_OBJECT
 
@@ -78,6 +78,9 @@ protected:
     bool mIsInitialized;
 private slots:
     void slotTextChanged();
+private:
+    QPushButton *mUser1Button;
+    QPushButton *mUser2Button;
 };
 
 #endif

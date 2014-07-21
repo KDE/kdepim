@@ -26,16 +26,19 @@
 
 #include <QVBoxLayout>
 #include <QCheckBox>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
 
 using namespace SendLater;
 
 SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent)
-    : KDialog(parent),
+    : QDialog(parent),
       mAction(Unknown),
       mDelay(0),
       mInfo(info)
 {
-    setCaption( i18nc("@title:window", "Send Later") );
+    setWindowTitle( i18nc("@title:window", "Send Later") );
     setWindowIcon( QIcon::fromTheme( QLatin1String("kmail") ) );
 
     QWidget *sendLaterWidget = new QWidget;
@@ -46,10 +49,19 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     QVBoxLayout *lay = new QVBoxLayout;
     w->setLayout(lay);
 
-    setButtons( Ok|Cancel );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
     if (!info) {
-        setButtonText( Ok, i18n("Send Later"));
+        okButton->setText(i18n("SendLater"));
         mDelay = new QCheckBox(i18n("Delay"));
         mDelay->setChecked(false);
         slotDelay(false);
@@ -57,7 +69,7 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
         lay->addWidget(mDelay);
     }
 
-    connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
+    connect(okButton, SIGNAL(clicked()), this, SLOT(slotOkClicked()));
 
     lay->addWidget(sendLaterWidget);
 
@@ -75,7 +87,8 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
 
     lay->addWidget(new KSeparator);
 
-    setMainWidget(w);
+    mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
     slotRecurrenceClicked(false);
     if (info)
         load(info);

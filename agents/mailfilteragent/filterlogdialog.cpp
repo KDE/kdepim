@@ -52,24 +52,38 @@
 #include <KSharedConfig>
 #include <KLocale>
 #include <QHBoxLayout>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <KGuiItem>
 
 using namespace MailCommon;
 
 FilterLogDialog::FilterLogDialog( QWidget * parent )
-    : KDialog( parent ), mIsInitialized( false )
+    : QDialog( parent ), mIsInitialized( false )
 {
     //QT5 KLocale::global()->insertCatalog(QLatin1String("akonadi_mailfilter_agent"));
-    setCaption( i18n( "Filter Log Viewer" ) );
-    setButtons( User1|User2|Close );
+    setWindowTitle( i18n( "Filter Log Viewer" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    mUser1Button = new QPushButton;
+    buttonBox->addButton(mUser1Button, QDialogButtonBox::ActionRole);
+    mUser2Button = new QPushButton;
+    buttonBox->addButton(mUser2Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     setWindowIcon( QIcon::fromTheme( QLatin1String("view-filter") ) );
     setModal( false );
-    setDefaultButton( Close );
-    setButtonGuiItem( User1, KStandardGuiItem::clear() );
-    setButtonGuiItem( User2, KStandardGuiItem::saveAs() );
+    buttonBox->button(QDialogButtonBox::Close)->setDefault(true);
+    KGuiItem::assign(mUser1Button, KStandardGuiItem::clear());
+    KGuiItem::assign(mUser2Button, KStandardGuiItem::saveAs());
     QFrame *page = new QFrame( this );
     QVBoxLayout *pageVBoxLayout = new QVBoxLayout(page);
     pageVBoxLayout->setMargin(0);
-    setMainWidget( page );
+    mainLayout->addWidget(page);
 
     mTextEdit = new PimCommon::PlainTextEditorWidget( page );
     mTextEdit->setReadOnly( true );
@@ -173,9 +187,11 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
     connect(FilterLog::instance(), SIGNAL(logStateChanged()),
             this, SLOT(slotLogStateChanged()));
 
-    setInitialSize( QSize( 500, 500 ) );
-    connect( this, SIGNAL(user1Clicked()), SLOT(slotUser1()) );
-    connect( this, SIGNAL(user2Clicked()), SLOT(slotUser2()) );
+    mainLayout->addWidget(buttonBox);
+
+    resize( QSize( 500, 500 ) );
+    connect(mUser1Button, SIGNAL(clicked()), SLOT(slotUser1()) );
+    connect(mUser2Button, SIGNAL(clicked()), SLOT(slotUser2()) );
     connect(mTextEdit->editor(), SIGNAL(textChanged()), this, SLOT(slotTextChanged()));
     slotTextChanged();
     readConfig();
@@ -185,8 +201,8 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
 void FilterLogDialog::slotTextChanged()
 {
     const bool hasText = !mTextEdit->toPlainText().isEmpty();
-    enableButton(User2, hasText);
-    enableButton(User1, hasText);
+    mUser2Button->setEnabled(hasText);
+    mUser1Button->setEnabled(hasText);
 }
 
 void FilterLogDialog::readConfig()

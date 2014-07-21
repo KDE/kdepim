@@ -18,9 +18,9 @@
 #ifndef SENDLATERDIALOG_H
 #define SENDLATERDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 #include "sendlater_export.h"
-
+#include <QDateTime>
 class QCheckBox;
 
 namespace Ui {
@@ -29,7 +29,7 @@ class SendLaterWidget;
 
 namespace SendLater {
 class SendLaterInfo;
-class SENDLATER_EXPORT SendLaterDialog : public KDialog
+class SENDLATER_EXPORT SendLaterDialog : public QDialog
 {
     Q_OBJECT
 public:

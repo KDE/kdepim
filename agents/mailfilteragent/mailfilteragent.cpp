@@ -45,6 +45,7 @@
 #include <AgentManager>
 #include <ItemFetchJob>
 #include <AttributeFactory>
+#include <KConfigGroup>
 
 #include <QtCore/QVector>
 #include <QtCore/QTimer>
