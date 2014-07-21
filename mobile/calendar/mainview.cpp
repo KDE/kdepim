@@ -68,7 +68,7 @@
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
 #include <kcolorcombo.h>
-#include <kcolordialog.h>
+#include <QColorDialog>
 #include <kmessagebox.h>
 #include <ksystemtimezone.h>
 #include <incidenceeditor-ng/categoryeditdialog.h>
@@ -744,9 +744,8 @@ void MainView::changeCalendarColor()
   QColor calendarColor = agendaItem->preferences()->resourceColor( id );
   QColor myColor;
 
-  const int result = KColorDialog::getColor( myColor, calendarColor );
-
-  if ( result == KDialog::Accepted && myColor != calendarColor ) {
+  myColor = QColorDialog::getColor(calendarColor);
+  if ( myColor.isValid() && myColor != calendarColor) {
     agendaItem->preferences()->setResourceColor( id, myColor );
     agendaItem->updateConfig();
 
