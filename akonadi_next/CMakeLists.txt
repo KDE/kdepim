@@ -16,6 +16,7 @@ set(akonadi_next_SRCS
 )
 
 add_library(akonadi_next ${LIBRARY_TYPE} ${akonadi_next_SRCS})
+generate_export_header(akonadi_next BASE_NAME akonadi_next)
 
 target_link_libraries(akonadi_next
   ${AKONADI_COMMON_LIBRARIES}

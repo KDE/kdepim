@@ -94,7 +94,7 @@ void GnuPGSystemConfigurationPage::defaults()
   mWidget->defaults();
 }
 
-extern "C" KDE_EXPORT KCModule *create_kleopatra_config_gnupgsystem( QWidget * parent, const QVariantList & args ) {
+extern "C" Q_DECL_EXPORT KCModule *create_kleopatra_config_gnupgsystem( QWidget * parent, const QVariantList & args ) {
     GnuPGSystemConfigurationPage * page =
         new GnuPGSystemConfigurationPage( KComponentData( "kleopatra" ), parent, args );
     page->setObjectName( QLatin1String("kleopatra_config_gnupgsystem") );

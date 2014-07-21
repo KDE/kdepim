@@ -40,7 +40,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kcomponentdata.h>
-#include <kdemacros.h>
+
 
 using namespace Kleo::Config;
 
@@ -77,7 +77,7 @@ void SMimeValidationConfigurationPage::defaults()
   mWidget->defaults();
 }
 
-extern "C" KDE_EXPORT KCModule *create_kleopatra_config_smimevalidation( QWidget * parent, const QVariantList & args ) {
+extern "C" Q_DECL_EXPORT KCModule *create_kleopatra_config_smimevalidation( QWidget * parent, const QVariantList & args ) {
     SMimeValidationConfigurationPage * page =
         new SMimeValidationConfigurationPage( KComponentData( "kleopatra" ), parent, args );
     page->setObjectName( QLatin1String("kleopatra_config_smimevalidation") );

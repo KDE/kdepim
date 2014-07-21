@@ -20,7 +20,7 @@
 #ifndef MAILCOMMON_FILTERACTION_H
 #define MAILCOMMON_FILTERACTION_H
 
-#include "../mailcommon_export.h"
+#include "mailcommon_export.h"
 #include "../search/searchpattern.h"
 
 #include "itemcontext.h"

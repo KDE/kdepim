@@ -90,6 +90,7 @@ kconfig_add_kcfg_files(libmessagelist_SRCS USE_RELATIVE_PATH
 )
 
 add_library(messagelist ${LIBRARY_TYPE} ${libmessagelist_SRCS})
+generate_export_header(messagelist BASE_NAME messagelist)
 target_link_libraries(messagelist
   
   KF5::KIOCore

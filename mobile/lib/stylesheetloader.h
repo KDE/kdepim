@@ -21,7 +21,7 @@
 #define STYLESHEETLOADER_H
 
 #include "mobileui_export.h"
-
+#include <QString>
 class QApplication;
 class QWidget;
 

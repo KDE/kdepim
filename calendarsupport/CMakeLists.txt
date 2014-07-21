@@ -5,6 +5,7 @@
 include_directories(
   ${QT_QTDBUS_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
+   ${CMAKE_BINARY_DIR}/calendarviews
 )
 add_definitions(-DQT_NO_CAST_FROM_ASCII)
 add_definitions(-DQT_NO_CAST_TO_ASCII)
@@ -57,6 +58,7 @@ kconfig_add_kcfg_files(calendarsupport_LIB_SRCS kcalprefs_base.kcfgc)
 # qt5_add_dbus_interface(calendarsupport_LIB_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/org.freedesktop.Akonadi.CalendarSearchAgent.xml calendarsearchinterface)
 
 add_library(calendarsupport ${LIBRARY_TYPE} ${calendarsupport_LIB_SRCS})
+generate_export_header(calendarsupport BASE_NAME calendarsupport)
 
 target_link_libraries(
   calendarsupport
@@ -74,7 +76,6 @@ target_link_libraries(
   KF5::MailTransport
   KF5::AkonadiCalendar
   KF5::KIOCore
-  #KF5::Ldap
 )
 
 set_target_properties(calendarsupport

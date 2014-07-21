@@ -19,7 +19,7 @@
 #ifndef MAILCOMMON_FILTERACTIONMISSINGARGUMENTDIALOG_H
 #define MAILCOMMON_FILTERACTIONMISSINGARGUMENTDIALOG_H
 
-#include "../mailcommon_export.h"
+#include "mailcommon_export.h"
 
 #include <Collection>
 

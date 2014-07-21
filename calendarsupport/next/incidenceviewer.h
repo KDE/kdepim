@@ -22,7 +22,7 @@
 #ifndef CALENDARSUPPORT_INCIDENCEVIEWER_H
 #define CALENDARSUPPORT_INCIDENCEVIEWER_H
 
-#include "../calendarsupport_export.h"
+#include "calendarsupport_export.h"
 
 #include <ItemMonitor>
 

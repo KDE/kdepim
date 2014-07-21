@@ -36,6 +36,7 @@
 #include "messagecore_export.h"
 
 #include <vector>
+#include <QObject>
 
 namespace KMime {
 class Content;

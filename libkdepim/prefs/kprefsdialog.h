@@ -438,7 +438,7 @@ private:
   The setting is interpreted as an int value, corresponding to the index in
   the combo box.
 */
-class KDE_EXPORT KPrefsWidCombo : public KPrefsWid
+class KDEPIM_EXPORT KPrefsWidCombo : public KPrefsWid
 {
 public:
     /**

@@ -20,7 +20,7 @@
 #ifndef MAILCOMMON_ITEMCONTEXT_H
 #define MAILCOMMON_ITEMCONTEXT_H
 
-#include "../mailcommon_export.h"
+#include "mailcommon_export.h"
 #include "../search/searchpattern.h"
 
 #include <Collection>

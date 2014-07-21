@@ -187,6 +187,7 @@ ki18n_wrap_ui(libmessageviewer_SRCS
 
 
 add_library(messageviewer ${LIBRARY_TYPE} ${libmessageviewer_SRCS})
+generate_export_header(messageviewer BASE_NAME messageviewer)
 
 target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   KF5::Mime

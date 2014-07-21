@@ -62,6 +62,7 @@ ki18n_wrap_ui(messagecore_LIB_SRCS
 )
 
 add_library(messagecore ${LIBRARY_TYPE} ${messagecore_LIB_SRCS})
+generate_export_header(messagecore BASE_NAME messagecore)
 
 target_link_libraries(messagecore
   KF5::Mime

@@ -54,6 +54,7 @@ ki18n_wrap_ui(libcomposereditor_ng_SRCS ui/pagecolorbackgroundwidget.ui )
 
 
 add_library(composereditorng ${LIBRARY_TYPE} ${libcomposereditor_ng_SRCS})
+generate_export_header(composereditorng BASE_NAME composereditorng)
 
 target_link_libraries(composereditorng 
    KF5::WebKit KF5::WebKit Qt5::WebKitWidgets KF5::PimTextEdit KF5::KDELibs4Support KF5::SonnetCore
@@ -65,7 +66,7 @@ install(TARGETS composereditorng ${INSTALL_TARGETS_DEFAULT_ARGS} )
 install( FILES data/composereditorinitialhtml DESTINATION  ${DATA_INSTALL_DIR}/composereditor )
 
 #install( FILES
-#         composereditor_export.h
+#         composereditorng_export.h
 #         composereditor.h
 #         DESTINATION ${INCLUDE_INSTALL_DIR}/composereditorng COMPONENT Devel )
 

@@ -40,7 +40,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kcomponentdata.h>
-#include <kdemacros.h>
+
 
 #include <QVBoxLayout>
 
@@ -79,7 +79,7 @@ void AppearanceConfigurationPage::defaults()
 
 extern "C"
 {
-  KDE_EXPORT KCModule *create_kleopatra_config_appear( QWidget *parent=0, const QVariantList &args=QVariantList() )
+  Q_DECL_EXPORT KCModule *create_kleopatra_config_appear( QWidget *parent=0, const QVariantList &args=QVariantList() )
   {
     AppearanceConfigurationPage *page =
       new AppearanceConfigurationPage( KComponentData( "kleopatra" ), parent, args );

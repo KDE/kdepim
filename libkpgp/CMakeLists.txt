@@ -25,6 +25,7 @@ set(kpgp_LIB_SRCS
 
 
 add_library(kpgp ${LIBRARY_TYPE} ${kpgp_LIB_SRCS})
+generate_export_header(kpgp BASE_NAME libkpgp)
 
 target_link_libraries(kpgp  KF5::KDELibs4Support  )
 

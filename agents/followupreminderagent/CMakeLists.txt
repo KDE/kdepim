@@ -19,6 +19,7 @@ kconfig_add_kcfg_files(followupreminderlib_SRCS
 
 
 add_library( followupreminder ${LIBRARY_TYPE} ${followupreminderlib_SRCS} )
+generate_export_header(followupreminder BASE_NAME followupreminder)
 target_link_libraries( followupreminder KF5::AkonadiCore )
 
 set_target_properties( followupreminder PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )

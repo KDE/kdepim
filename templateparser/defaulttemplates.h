@@ -21,6 +21,7 @@
 #define TEMPLATEPARSER_DEFAULTTEMPLATES_H
 
 #include "templateparser_export.h"
+#include <QString>
 
 namespace TemplateParser {
 

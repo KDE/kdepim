@@ -33,7 +33,7 @@
 #ifndef KSIEVE_KSIEVE_LEXER_H
 #define KSIEVE_KSIEVE_LEXER_H
 
-#include "libksieve_export.h"
+#include "ksieve_export.h"
 
 class QString;
 

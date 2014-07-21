@@ -37,7 +37,7 @@
 #include "libkleo/ui/cryptoconfigmodule.h"
 #include "libkleo/kleo/cryptobackendfactory.h"
 
-#include <kdemacros.h>
+
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <kdebug.h>
@@ -361,7 +361,7 @@ void DirectoryServicesConfigurationPage::defaults()
 
 extern "C"
 {
-  KDE_EXPORT KCModule *create_kleopatra_config_dirserv( QWidget *parent=0, const QVariantList &args=QVariantList() )
+  Q_DECL_EXPORT KCModule *create_kleopatra_config_dirserv( QWidget *parent=0, const QVariantList &args=QVariantList() )
   {
     DirectoryServicesConfigurationPage *page =
       new DirectoryServicesConfigurationPage( KComponentData( "kleopatra" ), parent, args );

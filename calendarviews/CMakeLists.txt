@@ -23,6 +23,7 @@ if(EVENTVIEWS_NODECOS)
 endif()
 
 include_directories(
+  ${CMAKE_CURRENT_BINARY_DIR}
   ${Boost_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/akonadi_next
   ${CMAKE_SOURCE_DIR}/calendarsupport
@@ -93,6 +94,7 @@ ki18n_wrap_ui(eventviews_LIB_SRCS
 )
 
 add_library(eventviews ${LIBRARY_TYPE} ${eventviews_LIB_SRCS})
+generate_export_header(eventviews BASE_NAME eventviews)
 
 target_link_libraries(eventviews
   KF5::Mime

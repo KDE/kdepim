@@ -39,7 +39,7 @@
 #include <kcomponentdata.h>
 
 #include <QVBoxLayout>
-#include <kdemacros.h>
+
 using namespace Kleo;
 using namespace Kleo::Config;
 
@@ -75,7 +75,7 @@ void CryptoOperationsConfigurationPage::defaults()
 
 extern "C"
 {
-  KDE_EXPORT KCModule *create_kleopatra_config_cryptooperations( QWidget *parent=0, const QVariantList &args=QVariantList() )
+  Q_DECL_EXPORT KCModule *create_kleopatra_config_cryptooperations( QWidget *parent=0, const QVariantList &args=QVariantList() )
   {
     CryptoOperationsConfigurationPage *page =
       new CryptoOperationsConfigurationPage( KComponentData( "kleopatra" ), parent, args );

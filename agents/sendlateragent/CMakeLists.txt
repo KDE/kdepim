@@ -26,6 +26,7 @@ ki18n_wrap_ui(sendlaterlib_SRCS ui/sendlaterwidget.ui)
 
 
 add_library( sendlater ${LIBRARY_TYPE} ${sendlaterlib_SRCS} )
+generate_export_header(sendlater BASE_NAME sendlater)
 target_link_libraries( sendlater KF5::AkonadiCore )
 
 set_target_properties( sendlater PROPERTIES VERSION ${KDEPIM_LIB_VERSION} SOVERSION ${KDEPIM_LIB_SOVERSION} )

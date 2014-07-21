@@ -20,7 +20,7 @@
 #ifndef MAILCOMMON_FILTERACTIONDICT_H
 #define MAILCOMMON_FILTERACTIONDICT_H
 
-#include "../mailcommon_export.h"
+#include "mailcommon_export.h"
 
 #include <QtCore/QMultiHash>
 #include <QString>

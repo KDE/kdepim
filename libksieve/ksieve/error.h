@@ -33,7 +33,7 @@
 #ifndef KSIEVE_KSIEVE_ERROR_H
 #define KSIEVE_KSIEVE_ERROR_H
 
-#include "libksieve_export.h"
+#include "ksieve_export.h"
 
 #include <QtCore/QString>
 

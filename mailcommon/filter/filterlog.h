@@ -29,7 +29,7 @@
 #ifndef MAILCOMMON_FILTERLOG_H
 #define MAILCOMMON_FILTERLOG_H
 
-#include "../mailcommon_export.h"
+#include "mailcommon_export.h"
 
 #include <QObject>
 #include <QStringList>

@@ -91,7 +91,7 @@ MESSAGECORE_EXPORT QByteArray stripEmailAddr( const QByteArray &addresses );
 /**
    * Does the same as the above function. Shouldn't be used.
    */
-MESSAGECORE_EXPORT_DEPRECATED QString stripEmailAddr( const QString& emailAddr );
+MESSAGECORE_DEPRECATED_EXPORT QString stripEmailAddr( const QString& emailAddr );
 #endif
 
 /**

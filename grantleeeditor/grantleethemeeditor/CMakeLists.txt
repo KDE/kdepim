@@ -33,6 +33,7 @@ ki18n_wrap_ui(libgrantleethemeeditor_SRCS
 
 
 add_library(grantleethemeeditor ${LIBRARY_TYPE} ${libgrantleethemeeditor_SRCS})
+generate_export_header(grantleethemeeditor BASE_NAME grantleethemeeditor)
 
 target_link_libraries(grantleethemeeditor    KF5::KIOCore KF5::PimTextEdit pimcommon
 )

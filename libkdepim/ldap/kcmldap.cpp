@@ -35,7 +35,6 @@
 #include <kcomponentdata.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
-#include <kdemacros.h>
 #include <qdialogbuttonbox.h>
 #include <kgenericfactory.h>
 #include <QHBoxLayout>

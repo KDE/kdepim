@@ -21,7 +21,7 @@
 #ifndef MAILCOMMON_FILTERCONTROLLER_H
 #define MAILCOMMON_FILTERCONTROLLER_H
 
-#include "../mailcommon_export.h"
+#include "mailcommon_export.h"
 
 #include <QObject>
 

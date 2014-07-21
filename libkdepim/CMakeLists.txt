@@ -89,6 +89,7 @@ if (KDEPIM_INPROCESS_LDAP)
 endif ()
 
 add_library(kdepim ${LIBRARY_TYPE} ${kdepim_LIB_SRCS})
+generate_export_header(kdepim BASE_NAME kdepim)
 
 target_link_libraries(kdepim
   KF5::Abc

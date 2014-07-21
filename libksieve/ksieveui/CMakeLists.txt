@@ -169,6 +169,7 @@ set(ksieveui_LIB_SRCS
 kconfig_add_kcfg_files(ksieveui_LIB_SRCS settings/sieve-vacation.kcfgc settings/sieve-editor.kcfgc)
 
 add_library(ksieveui ${LIBRARY_TYPE} ${ksieveui_LIB_SRCS})
+generate_export_header(ksieveui BASE_NAME ksieveui)
 
 target_link_libraries(ksieveui
   kmanagesieve

@@ -59,6 +59,7 @@
 #include <QApplication>
 #include <QDir>
 #include <KLocale>
+#include <kdemacros.h>
 
 namespace {
 

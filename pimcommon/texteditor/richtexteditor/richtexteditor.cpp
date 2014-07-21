@@ -489,7 +489,7 @@ void RichTextEditor::contextMenuEvent(QContextMenuEvent *event)
     if (!wordIsMisspelled || selectedWordClicked) {
         defaultPopupMenu(event->globalPos());
     } else {
-        QMenu menu; //don't use KMenu here we don't want auto management accelerator
+        QMenu menu; 
 
         //Add the suggestions to the menu
         const QStringList reps = d->highLighter->suggestionsForWord(selectedWord);
