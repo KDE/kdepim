@@ -40,15 +40,25 @@
 #include <QVBoxLayout>
 #include <QPointer>
 #include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
 
 NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Alarm" ) );
+    setWindowTitle( i18n( "Alarm" ) );
     setWindowIcon( QIcon::fromTheme( QLatin1String("knotes") ) );
-    setButtons( Close );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     setAttribute(Qt::WA_DeleteOnClose);
-    setDefaultButton( Close );
+    buttonBox->button(QDialogButtonBox::Close)->setDefault(true);
+    
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
     w->setLayout(vbox);
@@ -66,7 +76,8 @@ NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
              this, SLOT(slotCustomContextMenuRequested(QPoint)) );
 
     vbox->addWidget(mListWidget);
-    setMainWidget(w);
+    mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
     readConfig();
 }
 

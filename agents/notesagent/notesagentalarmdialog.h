@@ -17,7 +17,7 @@
 
 #ifndef NOTESAGENTALARMDIALOG_H
 #define NOTESAGENTALARMDIALOG_H
-#include <KDialog>
+#include <QDialog>
 #include <Item>
 class QListWidget;
 class QLabel;
@@ -26,7 +26,7 @@ namespace NoteShared {
 class NoteListWidget;
 }
 class KJob;
-class NotesAgentAlarmDialog : public KDialog
+class NotesAgentAlarmDialog : public QDialog
 {
     Q_OBJECT
 public:

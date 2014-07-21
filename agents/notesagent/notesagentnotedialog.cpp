@@ -32,12 +32,19 @@
 
 #include <QLineEdit>
 #include <QVBoxLayout>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
 
 
 NotesAgentNoteDialog::NotesAgentNoteDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setButtons(Close);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowIcon( QIcon::fromTheme( QLatin1String("knotes") ) );
     QWidget *w = new QWidget;
@@ -51,7 +58,8 @@ NotesAgentNoteDialog::NotesAgentNoteDialog(QWidget *parent)
     mNote = new PimCommon::RichTextEditorWidget;
     mNote->setReadOnly(true);
     vbox->addWidget(mNote);
-    setMainWidget(w);
+    mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
     readConfig();
 }
 
