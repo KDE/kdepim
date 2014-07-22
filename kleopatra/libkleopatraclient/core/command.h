@@ -22,7 +22,7 @@
 #ifndef __LIBKLEOPATRACLIENT_CORE_COMMAND_H__
 #define __LIBKLEOPATRACLIENT_CORE_COMMAND_H__
 
-#include <libkleopatraclient/kleopatraclient_export.h>
+#include "kleopatraclientcore_export.h"
 
 #include <QtCore/QObject>
 #include <QWidget> // only for WId, doesn't prevent linking against QtCore-only

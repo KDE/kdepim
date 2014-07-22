@@ -29,6 +29,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-kleopatra.h.cmake ${CMAKE_CURR
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
+  ${CMAKE_CURRENT_BINARY_DIR}/libkleopatraclient/core/
   ${CMAKE_SOURCE_DIR}/libkleo
   ${CMAKE_SOURCE_DIR}/libkdepim
   ${CMAKE_SOURCE_DIR}/mobile/lib

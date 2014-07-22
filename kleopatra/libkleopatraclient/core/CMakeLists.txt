@@ -28,6 +28,7 @@ add_library(kleopatraclientcore ${LIBRARY_TYPE}
   "${CMAKE_CURRENT_BINARY_DIR}/moc_command_p.cpp"
   "${CMAKE_CURRENT_BINARY_DIR}/moc_command.cpp"
 )
+generate_export_header(kleopatraclientcore BASE_NAME kleopatraclientcore)
 
 set_target_properties(kleopatraclientcore PROPERTIES
   VERSION ${libkleopatraclient_version}

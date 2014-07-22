@@ -22,7 +22,7 @@
 #ifndef __LIBKLEOPATRACLIENT_GUI_CERTIFICATEREQUESTER_H__
 #define __LIBKLEOPATRACLIENT_GUI_CERTIFICATEREQUESTER_H__
 
-#include <libkleopatraclient/kleopatraclient_export.h>
+#include "kleopatraclientgui_export.h"
 
 #include <QWidget>
 

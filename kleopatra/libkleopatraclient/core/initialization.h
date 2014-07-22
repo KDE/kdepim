@@ -22,7 +22,7 @@
 #ifndef __LIBKLEOPATRACLIENT_CORE_INITIALIZATION_H__
 #define __LIBKLEOPATRACLIENT_CORE_INITIALIZATION_H__
 
-#include <libkleopatraclient/kleopatraclient_export.h>
+#include "kleopatraclientcore_export.h"
 
 namespace KleopatraClientCopy {
 
