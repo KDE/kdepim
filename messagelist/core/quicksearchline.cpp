@@ -265,8 +265,11 @@ QuickSearchLine::SearchOptions QuickSearchLine::searchOptions() const
     return searchOptions;
 }
 
-void QuickSearchLine::focusQuickSearch()
+void QuickSearchLine::focusQuickSearch(const QString &selectedText)
 {
+    if (!selectedText.isEmpty()) {
+        mSearchEdit->setText(selectedText);
+    }
     mSearchEdit->setFocus();
 }
 

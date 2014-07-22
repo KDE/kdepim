@@ -272,7 +272,7 @@ public:
     /**
    * Sets the focus on the quick search line of the currently active tab.
    */
-    void focusQuickSearch();
+    void focusQuickSearch(const QString &selectedText = QString());
 
     /**
    * Returns the Akonadi::MessageStatus in the current quicksearch field.
