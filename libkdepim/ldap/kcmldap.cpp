@@ -90,7 +90,7 @@ KCMLdap::KCMLdap( QWidget *parent, const QVariantList& )
                                       i18n("LDAP Server Settings"),
                                       KAboutLicense::LGPL,
                                       i18n("(c) 2009 - 2010 Tobias Koenig"));
-    about->addAuthor( ki18n( "Tobias Koenig" ).toString(), QString(), QStringLiteral("tokoe@kde.org") );
+    about->addAuthor( i18n( "Tobias Koenig" ), QString(), QStringLiteral("tokoe@kde.org") );
     setAboutData(about);
 
     mClientSearchConfig = new KLDAP::LdapClientSearchConfig;

@@ -50,7 +50,6 @@ int main( int argc, char **argv )
     app.setApplicationVersion(aboutData.version());
 
     QCommandLineParser parser;
-    parser.setApplicationDescription(QApplication::applicationDisplayName());
     parser.addVersionOption();
     parser.addHelpOption();
     aboutData.setupCommandLine(&parser);

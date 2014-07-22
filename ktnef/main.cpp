@@ -60,7 +60,9 @@ int main( int argc, char *argv[] )
     parser.addHelpOption();
     parser.addPositionalArgument(QStringLiteral("file"), i18n("An optional argument 'file' "), QStringLiteral("[file]"));
 
+    aboutData.setupCommandLine(&parser);
     parser.process(app);
+    aboutData.processCommandLine(&parser);
 
     KTNEFMain *tnef = new KTNEFMain();
     tnef->show();

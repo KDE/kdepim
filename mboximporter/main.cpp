@@ -56,9 +56,13 @@ int main(int argc, char *argv[])
     QCommandLineParser parser;
     parser.addVersionOption();
     parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+
     parser.addPositionalArgument(QStringLiteral("url"), i18n("URL of mbox to be imported"), QStringLiteral("[url]"));
 
     parser.process(app);
+    aboutData.processCommandLine(&parser);
+
     const QStringList &args = parser.positionalArguments();
     if (!args.isEmpty()) {
         fileName = args.first();

@@ -21,43 +21,45 @@
 
 #include <k4aboutdata.h>
 #include <kapplication.h>
-#include <kcmdlineargs.h>
+
 #include <kdebug.h>
 
 #include "instanceselector.h"
 
 #include <stdlib.h>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
 
 int main( int argc, char **argv )
 {
-  K4AboutData aboutData( "akonadiconsole", 0,
-                        ki18n( "Akonadi Console" ),
-                        "0.99",
-                        ki18n( "The Management and Debugging Console for Akonadi" ),
-                        K4AboutData::License_GPL,
-                        ki18n( "(c) 2006-2008 the Akonadi developer" ),
-                        KLocalizedString(),
-                        "http://pim.kde.org/akonadi/" );
+  QApplication app(argc, argv);
+  KAboutData aboutData( QStringLiteral("akonadiconsole"),
+                        i18n( "Akonadi Console" ),
+                        QStringLiteral("0.99"),
+                        i18n( "The Management and Debugging Console for Akonadi" ),
+                        KAboutLicense::GPL,
+                        i18n( "(c) 2006-2014 the Akonadi developer" ),
+                        QStringLiteral("http://pim.kde.org/akonadi/") );
   aboutData.setProgramIconName( "akonadi" );
-  aboutData.addAuthor( ki18n( "Tobias König" ), ki18n( "Author" ), "tokoe@kde.org" );
-  aboutData.addAuthor( ki18n( "Volker Krause" ),  ki18n( "Author" ), "vkrause@kde.org" );
+  aboutData.addAuthor( i18n( "Tobias König" ), i18n( "Author" ), QStringLiteral("tokoe@kde.org") );
+  aboutData.addAuthor( i18n( "Volker Krause" ),  i18n( "Author" ), QStringLiteral("vkrause@kde.org") );
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineOptions options;
-  options.add( "remote <server>", ki18n("Connect to an Akonadi remote debugging server"));
-  KCmdLineArgs::addCmdLineOptions( options );
+  QCommandLineParser parser;
+  parser.addVersionOption();
+  parser.addHelpOption();
+  aboutData.setupCommandLine(&parser);
+  parser.process(app);
+  aboutData.processCommandLine(&parser);
+  parser.addOption(QCommandLineOption(QStringList() << QLatin1String("remote"), i18n("Connect to an Akonadi remote debugging server"), "server"));
 
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-  if ( args->isSet( "remote" ) ) {
-    const QString akonadiAddr = QString::fromLatin1( "tcp:host=%1,port=31415" ).arg( args->getOption( "remote" ) );
-    const QString dbusAddr = QString::fromLatin1( "tcp:host=%1,port=31416" ).arg( args->getOption( "remote" ) );
+  if ( parser.isSet( "remote" ) ) {
+    const QString akonadiAddr = QString::fromLatin1( "tcp:host=%1,port=31415" ).arg( parser.value( "remote" ) );
+    const QString dbusAddr = QString::fromLatin1( "tcp:host=%1,port=31416" ).arg( parser.value( "remote" ) );
     setenv( "AKONADI_SERVER_ADDRESS", akonadiAddr.toLatin1(), 1 );
     setenv( "DBUS_SESSION_BUS_ADDRESS", dbusAddr.toLatin1(), 1 );
   }
 
-  KApplication app;
-
-  InstanceSelector instanceSelector( args->isSet( "remote" ) ? args->getOption( "remote" ) : QString() );
+  InstanceSelector instanceSelector( parser.isSet( "remote" ) ? parser.value( "remote" ) : QString() );
 
   return app.exec();
 }

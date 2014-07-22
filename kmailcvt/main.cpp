@@ -15,37 +15,49 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <kcmdlineargs.h>
-#include <k4aboutdata.h>
-#include <klocale.h>
-#include <KApplication>
 
+#include <kaboutdata.h>
+#include <klocale.h>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
+#include <QApplication>
 #include "kmailcvt.h"
 #include "kdepim-version.h"
 
 int main(int argc, char *argv[])
 {
+    QApplication app(argc, argv);
     KLocalizedString::setApplicationDomain("kmailcvt");
-    K4AboutData aboutData( "kmailcvt", 0, ki18n("KMailCVT"),
-                          KDEPIM_VERSION, ki18n("Mail Import Tool"), K4AboutData::License_GPL_V2,
-                          ki18n("Copyright © 2000–2014 KMailCVT authors"));
-    aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer & New filter & cleanups"), "montel@kde.org");
-    aboutData.addAuthor(ki18n("Hans Dijkema"),ki18n("Original author"), "kmailcvt@hum.org");
-    aboutData.addAuthor(ki18n("Danny Kukawka"), ki18n("Previous Maintainer & New filters"), "danny.kukawka@web.de");
-    aboutData.addAuthor(ki18n("Laurence Anderson"), ki18n("New GUI & cleanups"), "l.d.anderson@warwick.ac.uk");
-    aboutData.addCredit(ki18n("Daniel Molkentin"), ki18n("New GUI & cleanups"), "molkentin@kde.org");
-    aboutData.addCredit(ki18n("Matthew James Leach"), ki18n("Port to Akonadi"), "matthew@theleachfamily.co.uk");
 
-    KCmdLineArgs::init( argc, argv, &aboutData );
+    KAboutData aboutData( QStringLiteral("kmailcvt"), i18n("KMailCVT"),
+                          QStringLiteral(KDEPIM_VERSION), i18n("Mail Import Tool"), KAboutLicense::GPL_V2,
+                          i18n("Copyright © 2000–2014 KMailCVT authors"));
 
-    KCmdLineOptions options;
-    KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
+    aboutData.addAuthor(i18n("Laurent Montel"), i18n("Maintainer & New filter & cleanups"), QLatin1String("montel@kde.org"));
+    aboutData.addAuthor(i18n("Hans Dijkema"),i18n("Original author"), QLatin1String("kmailcvt@hum.org"));
+    aboutData.addAuthor(i18n("Danny Kukawka"), i18n("Previous Maintainer & New filters"), QLatin1String("danny.kukawka@web.de"));
+    aboutData.addAuthor(i18n("Laurence Anderson"), i18n("New GUI & cleanups"), QLatin1String("l.d.anderson@warwick.ac.uk"));
+    aboutData.addCredit(i18n("Daniel Molkentin"), i18n("New GUI & cleanups"), QLatin1String("molkentin@kde.org"));
+    aboutData.addCredit(i18n("Matthew James Leach"), i18n("Port to Akonadi"), QLatin1String("matthew@theleachfamily.co.uk"));
 
-    KApplication a;
+    KAboutData::setApplicationData(aboutData);
+
+    app.setApplicationName(aboutData.componentName());
+    app.setApplicationDisplayName(aboutData.displayName());
+    app.setOrganizationDomain(aboutData.organizationDomain());
+    app.setApplicationVersion(aboutData.version());
+
+
+    QCommandLineParser parser;
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
+
     KMailCVT *kmailcvt = new KMailCVT();
-    a.setTopWidget(kmailcvt);
     kmailcvt->show();
-    int ret = a.exec();
+    int ret = app.exec();
     delete kmailcvt;
     return ret;
 }

@@ -52,7 +52,11 @@ int main( int argc, char **argv )
 
     QCommandLineParser parser;
     parser.addVersionOption();
-    parser.addHelpOption();    
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
+ 
 
     KDBusService service();
 
