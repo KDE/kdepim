@@ -25,7 +25,6 @@
 #include "pluginloaderbase.h"
 #include <KLibrary>
 #include <KGlobal>
-#include <kdemacros.h>
 /**
  * @short A generic plugin loader for when KPart::Plugin is overkill
  * @author Marc Mutz <mutz@kde.org> based on KABC's FormatFactory
@@ -120,7 +119,7 @@ PluginLoader<T,T_config> * PluginLoader<T,T_config>::mSelf = 0;
 
 #define DEFINE_PLUGIN_LOADER( pl, t, mf, p ) \
   namespace { /* don't pollute namespaces */ \
-    struct KDE_EXPORT pl##Config { \
+    struct Q_DECL_EXPORT pl##Config { \
       static const char * const mainfunc; \
       static const char * const path; \
     }; \

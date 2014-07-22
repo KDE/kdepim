@@ -36,7 +36,6 @@
 #include "memorycalendarmemento.h"
 #include "syncitiphandler.h"
 
-#include <kdemacros.h>
 #include <messageviewer/settings/globalsettings.h>
 #include <messageviewer/viewer/viewer.h>
 #include <messageviewer/interfaces/bodypart.h>
@@ -1517,7 +1516,7 @@ class Plugin : public Interface::BodyPartFormatterPlugin
 }
 
 extern "C"
-KDE_EXPORT Interface::BodyPartFormatterPlugin *
+Q_DECL_EXPORT Interface::BodyPartFormatterPlugin *
 messageviewer_bodypartformatter_text_calendar_create_bodypart_formatter_plugin()
 {
   //QT5 KLocale::global()->insertCatalog( QLatin1String("messageviewer_text_calendar_plugin") );

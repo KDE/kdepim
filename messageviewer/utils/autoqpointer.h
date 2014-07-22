@@ -25,8 +25,6 @@
 #include <QPointer>
 #include <QObject>
 
-#include <kdemacros.h>
-
 namespace MessageViewer {
 
 /**
@@ -53,8 +51,6 @@ public:
 #if 0 // enable when all users of operator T*() have been converted to use .get()
     operator save_bool() const { return isNull() ? 0 : &SafeBool::func ; }
 #else
-    // unsafe - use explicit .get()
-    KDE_DEPRECATED operator T*() const { return get(); }
     // unsafe - only provided to prevent the above warning in bool contexts
     operator bool() const { return get(); }
 #endif

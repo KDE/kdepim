@@ -23,7 +23,6 @@
 #include <kmessagebox.h>
 #include <KPIMIdentities/kpimidentities/identity.h>
 #include <KPIMIdentities/kpimidentities/identitymanager.h>
-#include <kdemacros.h>
 #include <QWidget>
 #include <KLocale>
 
@@ -32,7 +31,7 @@ using namespace KPIMIdentities;
 // extern "C" is needed here because this function must be located using
 // QLibrary resolve() that only knows how to resolve C functions
 // This function is used by kate/kwrite
-extern "C" KDE_EXPORT QString ktexteditorkabcbridge( const QString &placeHolder, QWidget *widget, bool *ok )
+extern "C" Q_DECL_EXPORT QString ktexteditorkabcbridge( const QString &placeHolder, QWidget *widget, bool *ok )
 {
   //KLocale::global()->insertCatalog( QLatin1String("ktexteditorkabcbridge_plugin") );
 
