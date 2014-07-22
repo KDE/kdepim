@@ -51,7 +51,7 @@
 #include <KIconLoader>
 #include <KLineEdit>
 #include <KLocale>
-#include <KMenu>
+#include <QMenu>
 #include <KStandardDirs>
 #include <KUrl>
 
@@ -374,17 +374,17 @@ void Widget::themeMenuAboutToShow()
     if ( !d->mStorageModel )
         return;
 
-    KMenu * menu = dynamic_cast< KMenu * >( sender() );
+    QMenu * menu = dynamic_cast< QMenu * >( sender() );
     if ( !menu )
         return;
     themeMenuAboutToShow(menu);
 }
 
-void Widget::themeMenuAboutToShow(KMenu *menu)
+void Widget::themeMenuAboutToShow(QMenu *menu)
 {
     menu->clear();
 
-    menu->addTitle( i18n( "Theme" ) );
+    menu->addSection( i18n( "Theme" ) );
 
     QActionGroup * grp = new QActionGroup( menu );
 
@@ -465,17 +465,17 @@ void Widget::themeSelected( bool )
 
 void Widget::aggregationMenuAboutToShow()
 {
-    KMenu * menu = dynamic_cast< KMenu * >( sender() );
+    QMenu * menu = dynamic_cast< QMenu * >( sender() );
     if ( !menu )
         return;
     aggregationMenuAboutToShow(menu);
 }
 
-void Widget::aggregationMenuAboutToShow(KMenu *menu)
+void Widget::aggregationMenuAboutToShow(QMenu *menu)
 {
     menu->clear();
 
-    menu->addTitle( i18n( "Aggregation" ) );
+    menu->addSection( i18n( "Aggregation" ) );
 
     QActionGroup * grp = new QActionGroup( menu );
 
@@ -549,17 +549,17 @@ void Widget::sortOrderMenuAboutToShow()
     if ( !d->mAggregation )
         return;
 
-    KMenu * menu = dynamic_cast< KMenu * >( sender() );
+    QMenu * menu = dynamic_cast< QMenu * >( sender() );
     if ( !menu )
         return;
     sortOrderMenuAboutToShow(menu);
 }
 
-void Widget::sortOrderMenuAboutToShow(KMenu *menu)
+void Widget::sortOrderMenuAboutToShow(QMenu *menu)
 {
     menu->clear();
 
-    menu->addTitle( i18n( "Message Sort Order" ) );
+    menu->addSection( i18n( "Message Sort Order" ) );
 
     QActionGroup * grp;
     QAction * act;
@@ -584,7 +584,7 @@ void Widget::sortOrderMenuAboutToShow(KMenu *menu)
     options = SortOrder::enumerateMessageSortDirectionOptions( d->mSortOrder.messageSorting() );
 
     if ( options.size() >= 2 ) {
-        menu->addTitle( i18n( "Message Sort Direction" ) );
+        menu->addSection( i18n( "Message Sort Direction" ) );
 
         grp = new QActionGroup( menu );
         end = options.constEnd();
@@ -603,7 +603,7 @@ void Widget::sortOrderMenuAboutToShow(KMenu *menu)
     options = SortOrder::enumerateGroupSortingOptions( d->mAggregation->grouping() );
 
     if ( options.size() >= 2 ) {
-        menu->addTitle( i18n( "Group Sort Order" ) );
+        menu->addSection( i18n( "Group Sort Order" ) );
 
         grp = new QActionGroup( menu );
 
@@ -624,7 +624,7 @@ void Widget::sortOrderMenuAboutToShow(KMenu *menu)
                                                              d->mSortOrder.groupSorting() );
 
     if ( options.size() >= 2 ) {
-        menu->addTitle( i18n( "Group Sort Direction" ) );
+        menu->addSection( i18n( "Group Sort Direction" ) );
 
         grp = new QActionGroup( menu );
         end = options.constEnd();

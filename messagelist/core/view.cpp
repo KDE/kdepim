@@ -47,7 +47,7 @@
 #include <QScrollBar>
 #include <QSignalMapper>
 
-#include <KMenu>
+#include <QMenu>
 #include <KLocalizedString>
 #include <QDebug>
 #include <KGlobalSettings>
@@ -757,7 +757,7 @@ void View::slotHeaderContextMenuRequested( const QPoint &pnt )
         return; // bad theme
 
     // the menu for the columns
-    KMenu menu;
+    QMenu menu;
 
     QSignalMapper *showColumnSignalMapper = new QSignalMapper( &menu );
     int idx = 0;
@@ -2744,17 +2744,17 @@ void View::setRowHidden( int row, const QModelIndex & parent, bool hide )
     QTreeView::setRowHidden( row, parent, hide );
 }
 
-void View::sortOrderMenuAboutToShow(KMenu *menu)
+void View::sortOrderMenuAboutToShow(QMenu *menu)
 {
     d->mWidget->sortOrderMenuAboutToShow(menu);
 }
 
-void View::aggregationMenuAboutToShow(KMenu *menu)
+void View::aggregationMenuAboutToShow(QMenu *menu)
 {
     d->mWidget->aggregationMenuAboutToShow(menu);
 }
 
-void View::themeMenuAboutToShow(KMenu *menu)
+void View::themeMenuAboutToShow(QMenu *menu)
 {
     d->mWidget->themeMenuAboutToShow(menu);
 }

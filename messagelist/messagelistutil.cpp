@@ -20,7 +20,7 @@
 #include <QTextDocument>
 
 #include <KConfigGroup>
-#include <KMenu>
+#include <QMenu>
 #include <QIcon>
 #include <KLocalizedString>
 #include <KMime/Message>
@@ -121,19 +121,19 @@ QColor MessageList::Util::todoDefaultMessageColor()
 
 void MessageList::Util::fillViewMenu( QMenu * menu, QObject *receiver )
 {
-    KMenu* sortingMenu = new KMenu( i18n( "Sorting" ), menu );
+    QMenu* sortingMenu = new QMenu( i18n( "Sorting" ), menu );
     sortingMenu->setIcon( QIcon::fromTheme( QLatin1String( "view-sort-ascending" ) ) );
     menu->addMenu( sortingMenu );
     QObject::connect( sortingMenu, SIGNAL(aboutToShow()),
                       receiver, SLOT(sortOrderMenuAboutToShow()) );
 
-    KMenu* aggregationMenu = new KMenu( i18n( "Aggregation" ), menu );
+    QMenu* aggregationMenu = new QMenu( i18n( "Aggregation" ), menu );
     aggregationMenu->setIcon( QIcon::fromTheme( QLatin1String( "view-process-tree" ) ) );
     menu->addMenu( aggregationMenu );
     QObject::connect( aggregationMenu, SIGNAL(aboutToShow()),
                       receiver, SLOT(aggregationMenuAboutToShow()) );
 
-    KMenu* themeMenu = new KMenu( i18n( "Theme" ), menu );
+    QMenu* themeMenu = new QMenu( i18n( "Theme" ), menu );
     themeMenu->setIcon( QIcon::fromTheme( QLatin1String( "preferences-desktop-theme" ) ) );
     menu->addMenu( themeMenu );
     QObject::connect( themeMenu, SIGNAL(aboutToShow()),

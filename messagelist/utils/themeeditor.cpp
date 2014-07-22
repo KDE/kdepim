@@ -51,7 +51,7 @@
 #include <KLineEdit>
 #include <KLocalizedString>
 #include <QFontDialog>
-#include <KMenu>
+#include <QMenu>
 #include <KIconLoader>
 #include <KPluralHandlingSpinBox>
 #include <KTextEdit>
@@ -873,12 +873,12 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
 
     if ( e->button() == Qt::RightButton )
     {
-        KMenu menu;
+        QMenu menu;
 
         if ( mSelectedThemeContentItem )
         {
 
-            menu.addTitle( Theme::ContentItem::description( mSelectedThemeContentItem->type() ) );
+            menu.addSection( Theme::ContentItem::description( mSelectedThemeContentItem->type() ) );
 
             if ( mSelectedThemeContentItem->displaysText() )
             {
@@ -889,7 +889,7 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
                 connect( act, SIGNAL(triggered(bool)),
                          SLOT(slotSoftenActionTriggered(bool)) );
 
-                KMenu * childmenu = new KMenu( &menu );
+                QMenu * childmenu = new QMenu( &menu );
 
                 QActionGroup * grp = new QActionGroup( childmenu );
 
@@ -913,7 +913,7 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
 
             if ( mSelectedThemeContentItem->canUseCustomColor() )
             {
-                KMenu * childmenu = new KMenu( &menu );
+                QMenu * childmenu = new QMenu( &menu );
 
                 QActionGroup * grp = new QActionGroup( childmenu );
 
@@ -938,7 +938,7 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
 
             if ( mSelectedThemeContentItem->canBeDisabled() )
             {
-                KMenu * childmenu = new KMenu( &menu );
+                QMenu * childmenu = new QMenu( &menu );
 
                 QActionGroup * grp = new QActionGroup( childmenu );
 
@@ -971,10 +971,10 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
         {
             if ( mDelegate->hitItem()->type() == Item::GroupHeader )
             {
-                menu.addTitle( i18n( "Group Header" ) );
+                menu.addSection( i18n( "Group Header" ) );
 
                 // Background color (mode) submenu
-                KMenu * childmenu = new KMenu( &menu );
+                QMenu * childmenu = new QMenu( &menu );
 
                 QActionGroup * grp = new QActionGroup( childmenu );
 
@@ -1002,7 +1002,7 @@ void ThemePreviewWidget::mousePressEvent( QMouseEvent * e )
                 menu.addMenu( childmenu )->setText( i18n( "Background Color" ) );
 
                 // Background style submenu
-                childmenu = new KMenu( &menu );
+                childmenu = new QMenu( &menu );
 
                 grp = new QActionGroup( childmenu );
                 QList< QPair< QString, int > > styles = Theme::enumerateGroupHeaderBackgroundStyles();

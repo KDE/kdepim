@@ -22,7 +22,7 @@
 #include <KActionMenu>
 #include <QIcon>
 #include <KLocale>
-#include <KMenu>
+#include <QMenu>
 #include <KXMLGUIClient>
 #include <QAction>
 #include <KToggleAction>
@@ -649,7 +649,7 @@ void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
     Widget *w = qobject_cast<Widget *>( q->widget( indexBar ) );
     if ( !w ) return;
 
-    KMenu menu( q );
+    QMenu menu( q );
 
 
     QAction *closeTabAction = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
@@ -1100,7 +1100,7 @@ bool Pane::searchEditHasFocus() const
 
 void Pane::sortOrderMenuAboutToShow()
 {
-    KMenu * menu = dynamic_cast< KMenu * >( sender() );
+    QMenu * menu = dynamic_cast< QMenu * >( sender() );
     if ( !menu )
         return;
     const Widget * const w = static_cast<Widget*>( currentWidget() );
@@ -1109,7 +1109,7 @@ void Pane::sortOrderMenuAboutToShow()
 
 void Pane::aggregationMenuAboutToShow()
 {
-    KMenu * menu = dynamic_cast< KMenu * >( sender() );
+    QMenu * menu = dynamic_cast< QMenu * >( sender() );
     if ( !menu )
         return;
     const Widget * const w = static_cast<Widget*>( currentWidget() );
@@ -1118,7 +1118,7 @@ void Pane::aggregationMenuAboutToShow()
 
 void Pane::themeMenuAboutToShow()
 {
-    KMenu * menu = dynamic_cast< KMenu * >( sender() );
+    QMenu * menu = dynamic_cast< QMenu * >( sender() );
     if ( !menu )
         return;
     const Widget * const w = static_cast<Widget*>( currentWidget() );
