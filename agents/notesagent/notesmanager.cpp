@@ -177,7 +177,7 @@ void NotesManager::slotNewNote(const QString &name, const QString &text)
                           pixmap,
                           0,
                           KNotification::CloseOnTimeout,
-                          KGlobal::mainComponent().componentName());
+                          KComponentData::mainComponent().componentName());
     NoteShared::CreateNewNoteJob *job = new NoteShared::CreateNewNoteJob(this, 0);
     //For the moment it doesn't support richtext.
     job->setRichText(false);

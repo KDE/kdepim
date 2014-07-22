@@ -178,7 +178,7 @@ void KCalPrefs::usrReadConfig()
   }
 #endif
 
-  KConfigSkeleton::usrReadConfig();
+  KConfigSkeleton::usrRead();
   fillMailDefaults();
 }
 

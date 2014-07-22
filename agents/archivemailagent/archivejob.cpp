@@ -72,7 +72,7 @@ void ArchiveJob::execute()
                                   mPixmap,
                                   0,
                                   KNotification::CloseOnTimeout,
-                                  KGlobal::mainComponent().componentName());
+                                  KComponentData::mainComponent().componentName());
             deleteLater();
             return;
         }
@@ -92,7 +92,7 @@ void ArchiveJob::execute()
                               mPixmap,
                               0,
                               KNotification::CloseOnTimeout,
-                              KGlobal::mainComponent().componentName());
+                              KComponentData::mainComponent().componentName());
         connect(backupJob, SIGNAL(backupDone(QString)), this, SLOT(slotBackupDone(QString)));
         connect(backupJob, SIGNAL(error(QString)), this, SLOT(slotError(QString)));
         backupJob->start();
@@ -106,7 +106,7 @@ void ArchiveJob::slotError(const QString &error)
                           mPixmap,
                           0,
                           KNotification::CloseOnTimeout,
-                          KGlobal::mainComponent().componentName());
+                          KComponentData::mainComponent().componentName());
     mManager->backupDone(mInfo);
     deleteLater();
 }
@@ -118,7 +118,7 @@ void ArchiveJob::slotBackupDone(const QString &info)
                           mPixmap,
                           0,
                           KNotification::CloseOnTimeout,
-                          KGlobal::mainComponent().componentName());
+                          KComponentData::mainComponent().componentName());
     mManager->backupDone(mInfo);
     deleteLater();
 }

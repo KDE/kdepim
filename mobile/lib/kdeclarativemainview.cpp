@@ -890,7 +890,7 @@ QString KDeclarativeMainView::version() const
 
 QString KDeclarativeMainView::name() const
 {
-  const static QString app_name = QString( KGlobal::mainComponent().aboutData()->programName() );
+  const static QString app_name = QString( KComponentData::mainComponent().aboutData()->programName() );
   return app_name;
 }
 
@@ -966,8 +966,8 @@ void KDeclarativeMainView::reportBug()
     KUrl url = KUrl( QLatin1String("https://bugs.kde.org/wizard.cgi") );
     url.addQueryItem( QLatin1String("os"), os );
     url.addQueryItem( QLatin1String("kdeVersion"), kde_version );
-    url.addQueryItem( QLatin1String("appVersion"), KGlobal::mainComponent().aboutData()->version() );
-    url.addQueryItem( QLatin1String("package"),  KGlobal::mainComponent().aboutData()->productName() );
+    url.addQueryItem( QLatin1String("appVersion"), KComponentData::mainComponent().aboutData()->version() );
+    url.addQueryItem( QLatin1String("package"),  KComponentData::mainComponent().aboutData()->productName() );
     url.addQueryItem( QLatin1String("kbugreport"), QLatin1String("1") );
 
     KToolInvocation::invokeBrowser( url.url() );

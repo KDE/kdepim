@@ -208,7 +208,7 @@ void BaseConfig::usrReadConfig()
   mAgendaViewIcons = iconArrayToSet( agendaIconArray );
   mMonthViewIcons = iconArrayToSet( monthIconArray );
 
-  KConfigSkeleton::usrReadConfig();
+  KConfigSkeleton::usrRead();
 }
 
 bool BaseConfig::usrWriteConfig()

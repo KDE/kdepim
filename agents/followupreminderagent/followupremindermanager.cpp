@@ -28,6 +28,7 @@
 #include <KLocalizedString>
 #include <KIconLoader>
 #include <KGlobal>
+#include <KComponentData>
 using namespace FollowUpReminder;
 
 FollowUpReminderManager::FollowUpReminderManager(QObject *parent)
@@ -96,15 +97,13 @@ void FollowUpReminderManager::slotCheckFollowUpFinished(const QString &messageId
 void FollowUpReminderManager::answerReceived(const QString &from)
 {
     const QPixmap pixmap = QIcon::fromTheme( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
-#if 0 //QT5
     KNotification::event( QLatin1String("mailreceived"),
                           i18n("Answer from %1 received", from),
                           pixmap,
                           0,
                           KNotification::CloseOnTimeout,
-                          KGlobal::mainComponent());
+                          KComponentData::mainComponent().componentName());
 
-#endif
 }
 
 QString FollowUpReminderManager::printDebugInfo()

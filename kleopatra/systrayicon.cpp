@@ -84,7 +84,7 @@ public:
 private:
     void slotAbout() {
         if ( !aboutDialog ) {
-            //QT5 aboutDialog = new KAboutApplicationDialog( KGlobal::mainComponent().aboutData() );
+            //QT5 aboutDialog = new KAboutApplicationDialog( KComponentData::mainComponent().aboutData() );
             aboutDialog->setAttribute( Qt::WA_DeleteOnClose );
         }
 
@@ -148,8 +148,8 @@ SysTrayIcon::Private::Private( SysTrayIcon * qq )
       anyCardCanLearnKeys( false ),
       menu(),
       openCertificateManagerAction( i18n("&Open Certificate Manager..."), q ),
-      configureAction( i18n("&Configure %1...", KGlobal::mainComponent().aboutData()->programName() ), q ),
-      aboutAction( i18n("&About %1...", KGlobal::mainComponent().aboutData()->programName() ), q ),
+      configureAction( i18n("&Configure %1...", KComponentData::mainComponent().aboutData()->programName() ), q ),
+      aboutAction( i18n("&About %1...", KComponentData::mainComponent().aboutData()->programName() ), q ),
       quitAction( i18n("&Shutdown Kleopatra"), q ),
       clipboardMenu( q ),
       cardMenu( i18n("SmartCard") ),

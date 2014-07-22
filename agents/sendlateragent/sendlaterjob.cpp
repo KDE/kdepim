@@ -146,7 +146,7 @@ void SendLaterJob::sendDone()
                           pixmap,
                           0,
                           KNotification::CloseOnTimeout,
-                          KGlobal::mainComponent().componentName());
+                          KComponentData::mainComponent().componentName());
     mManager->sendDone(mInfo);
     deleteLater();
 }
@@ -159,7 +159,7 @@ void SendLaterJob::sendError(const QString &error, SendLaterManager::ErrorType t
                           pixmap,
                           0,
                           KNotification::CloseOnTimeout,
-                          KGlobal::mainComponent().componentName());
+                          KComponentData::mainComponent().componentName());
     mManager->sendError(mInfo, type);
     deleteLater();
 }

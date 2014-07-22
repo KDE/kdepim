@@ -135,7 +135,7 @@ public:
 };
 
 static KGuiItem KStandardGuiItem_quit() {
-    static const QString app = KGlobal::mainComponent().aboutData()->programName();
+    static const QString app = KComponentData::mainComponent().aboutData()->programName();
     KGuiItem item = KStandardGuiItem::quit();
     item.setText( i18nc( "Quit [ApplicationName]", "&Quit %1", app ) );
     return item;

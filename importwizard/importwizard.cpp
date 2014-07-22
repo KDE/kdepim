@@ -137,7 +137,7 @@ ImportWizard::ImportWizard(QWidget *parent)
 
     checkModules();
     KMessageBox::information(this,i18n("Close KMail before importing data. Some plugins will modify KMail config file."));
-    //QT5 KHelpMenu *helpMenu = new KHelpMenu(this, KGlobal::mainComponent().aboutData(), true);
+    //QT5 KHelpMenu *helpMenu = new KHelpMenu(this, KComponentData::mainComponent().aboutData(), true);
     //setButtonMenu( Help, helpMenu->menu() );
 }
 
