@@ -54,7 +54,7 @@ public:
 
     SearchOptions searchOptions() const;
 
-    void focusQuickSearch();
+    void focusQuickSearch(const QString &selectedText);
 
     KComboBox *tagFilterComboBox() const;
     KLineEdit *searchEdit() const;

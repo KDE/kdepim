@@ -196,9 +196,9 @@ void Widget::setAllGroupsExpanded( bool expand )
     view()->setAllGroupsExpanded(expand);
 }
 
-void Widget::focusQuickSearch()
+void Widget::focusQuickSearch(const QString &selectedText)
 {
-    view()->focusQuickSearch();
+    view()->focusQuickSearch(selectedText);
 }
 
 void Widget::setQuickSearchClickMessage(const QString &msg)

@@ -429,12 +429,12 @@ void Pane::setAllGroupsExpanded( bool expand )
     }
 }
 
-void Pane::focusQuickSearch()
+void Pane::focusQuickSearch(const QString &selectedText)
 {
     Widget *w = static_cast<Widget*>( currentWidget() );
 
     if ( w ) {
-        w->focusQuickSearch();
+        w->focusQuickSearch(selectedText);
     }
 }
 

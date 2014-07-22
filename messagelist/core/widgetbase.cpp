@@ -1058,9 +1058,9 @@ void Widget::viewMessageStatusChangeRequest( MessageItem *msg, const Akonadi::Me
     Q_UNUSED( clear );
 }
 
-void Widget::focusQuickSearch()
+void Widget::focusQuickSearch(const QString &selectedText)
 {
-    d->quickSearchLine->focusQuickSearch();
+    d->quickSearchLine->focusQuickSearch(selectedText);
 }
 
 bool Widget::isThreaded() const
