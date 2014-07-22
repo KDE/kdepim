@@ -15,6 +15,7 @@ set(pimprint_calendar_LIB_SRCS
 )
 
 add_library(pimprint_calendar ${LIBRARY_TYPE} ${pimprint_calendar_LIB_SRCS})
+generate_export_header(pimprint_calendar BASE_NAME pimprint_calendar)
 
 target_link_libraries(pimprint_calendar
   calendarsupport
