@@ -114,7 +114,7 @@ public:
     /**
    * Sets the focus on the quick search line of the currently active tab.
    */
-    void focusQuickSearch();
+    void focusQuickSearch(const QString &selectedText);
 
     /**
    * Returns true if the current Aggregation is threaded, false otherwise

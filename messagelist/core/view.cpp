@@ -2709,9 +2709,9 @@ void View::slotExpandCurrentItem()
     setCurrentThreadExpanded( true );
 }
 
-void View::focusQuickSearch()
+void View::focusQuickSearch(const QString &selectedText)
 {
-    d->mWidget->focusQuickSearch();
+    d->mWidget->focusQuickSearch(selectedText);
 }
 
 QList<Akonadi::MessageStatus> View::currentFilterStatus() const

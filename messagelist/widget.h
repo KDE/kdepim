@@ -202,7 +202,7 @@ public:
     /**
    * Sets the focus on the quick search line of the currently active tab.
    */
-    void focusQuickSearch();
+    void focusQuickSearch(const QString &selectedText);
 
     /**
    * Returns the currently selected KMime::Message::Ptr (bound to current StorageModel).
