@@ -26,7 +26,7 @@
 #include <KConfigGroup>
 #include <KGuiItem>
 #include <KLocale>
-#include <KMenu>
+#include <QMenu>
 #include <KMessageBox>
 
 #include <QHeaderView>
@@ -142,9 +142,9 @@ void FolderTreeView::slotHeaderContextMenuRequested( const QPoint &pnt )
     }
 
     // the menu for the columns
-    KMenu menu;
+    QMenu menu;
     QAction *act;
-    menu.addTitle( i18n( "View Columns" ) );
+    menu.addSection( i18n( "View Columns" ) );
     const int nbColumn = header()->count();
     for ( int i = 1; i <nbColumn; ++i ) {
         act = menu.addAction( model()->headerData( i, Qt::Horizontal ).toString() );
@@ -155,7 +155,7 @@ void FolderTreeView::slotHeaderContextMenuRequested( const QPoint &pnt )
                  SLOT(slotHeaderContextMenuChangeHeader(bool)) );
     }
 
-    menu.addTitle( i18n( "Icon Size" ) );
+    menu.addSection( i18n( "Icon Size" ) );
 
     static int icon_sizes[] = { 16, 22, 32 /*, 48, 64, 128 */ };
 
@@ -173,7 +173,7 @@ void FolderTreeView::slotHeaderContextMenuRequested( const QPoint &pnt )
         connect( act, SIGNAL(triggered(bool)),
                  SLOT(slotHeaderContextMenuChangeIconSize(bool)) );
     }
-    menu.addTitle( i18n( "Display Tooltips" ) );
+    menu.addSection( i18n( "Display Tooltips" ) );
 
     grp = new QActionGroup( &menu );
 
@@ -193,7 +193,7 @@ void FolderTreeView::slotHeaderContextMenuRequested( const QPoint &pnt )
     connect( act, SIGNAL(triggered(bool)),
              SLOT(slotHeaderContextMenuChangeToolTipDisplayPolicy(bool)) );
 
-    menu.addTitle( i18nc( "@action:inmenu", "Sort Items" ) );
+    menu.addSection( i18nc( "@action:inmenu", "Sort Items" ) );
 
     grp = new QActionGroup( &menu );
 

@@ -25,7 +25,7 @@
 
 class QTreeWidgetItem;
 class QLabel;
-class KMenu;
+class QMenu;
 namespace PimCommon {
 class StorageServiceAbstract;
 class StorageServiceProgressIndicator;
