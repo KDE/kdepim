@@ -19,7 +19,7 @@
     USA.
 */
 
-#include <k4aboutdata.h>
+#include <kaboutdata.h>
 #include <kapplication.h>
 
 #include <kdebug.h>
@@ -43,6 +43,13 @@ int main( int argc, char **argv )
   aboutData.setProgramIconName( "akonadi" );
   aboutData.addAuthor( i18n( "Tobias König" ), i18n( "Author" ), QStringLiteral("tokoe@kde.org") );
   aboutData.addAuthor( i18n( "Volker Krause" ),  i18n( "Author" ), QStringLiteral("vkrause@kde.org") );
+  KAboutData::setApplicationData(aboutData);
+
+  app.setApplicationName(aboutData.componentName());
+  app.setApplicationDisplayName(aboutData.displayName());
+  app.setOrganizationDomain(aboutData.organizationDomain());
+  app.setApplicationVersion(aboutData.version());
+
 
   QCommandLineParser parser;
   parser.addVersionOption();

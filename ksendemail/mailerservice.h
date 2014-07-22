@@ -26,7 +26,7 @@ class QEventLoop;
 
 #include <QObject>
 
-#include <kcmdlineargs.h>
+#include <QCommandLineParser>
 
 class MailerService : public QObject
 {
@@ -37,7 +37,7 @@ class MailerService : public QObject
     virtual ~MailerService();
 
     bool start();
-    void processArgs( KCmdLineArgs *args );
+    void processArgs( const QCommandLineParser &args );
 
   private slots :
     void serviceOwnerChanged( const QString&, const QString&, const QString& );

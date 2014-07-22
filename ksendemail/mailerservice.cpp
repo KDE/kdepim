@@ -29,15 +29,16 @@
 #include <kdbusservicestarter.h>
 #include <kmessagebox.h>
 #include <QUrl>
-
+#include <KLocalizedString>
 #include "kmailinterface.h"
+
 
 static QUrl makeAbsoluteUrl( const QString& str )
 {
     QUrl url( str );
     if ( url.scheme().isEmpty() ) {
-      const QString newUrl = KCmdLineArgs::cwd() + QLatin1Char('/') + url.fileName();
-      return QUrl( newUrl );
+      //PORT QT5 const QString newUrl = KCmdLineArgs::cwd() + QLatin1Char('/') + url.fileName();
+      return QUrl( /*newUrl*/url);
     }
     else {
       return url;
@@ -104,7 +105,7 @@ void MailerService::serviceOwnerChanged( const QString & name, const QString & o
   }
 }
 
-void MailerService::processArgs( KCmdLineArgs *args )
+void MailerService::processArgs( const QCommandLineParser &args )
 {
     QString to, cc, bcc, subj, body;
     QStringList customHeaders;
@@ -113,9 +114,9 @@ void MailerService::processArgs( KCmdLineArgs *args )
     bool mailto = false;
     bool calledWithSession = false; // for ignoring '-session foo'
 
-    if (args->isSet("subject"))
+    if (args.isSet(QLatin1String("subject")))
     {
-        subj = args->getOption("subject");
+        subj = args.value(QLatin1String("subject"));
      // if kmail is called with 'kmail -session abc' then this doesn't mean
      // that the user wants to send a message with subject "ession" but
      // (most likely) that the user clicked on KMail's system tray applet
@@ -131,32 +132,32 @@ void MailerService::processArgs( KCmdLineArgs *args )
             mailto = true;
     }
 
-    if (args->isSet("cc"))
+    if (args.isSet(QLatin1String("cc")))
     {
         mailto = true;
-        cc = args->getOption("cc");
+        cc = args.value(QLatin1String("cc"));
     }
 
-    if (args->isSet("bcc"))
+    if (args.isSet(QLatin1String("bcc")))
     {
         mailto = true;
-        bcc = args->getOption("bcc");
+        bcc = args.value(QLatin1String("bcc"));
     }
 
-    if (args->isSet("msg"))
+    if (args.isSet(QLatin1String("msg")))
     {
         mailto = true;
-        const QString file = args->getOption("msg");
+        const QString file = args.value(QLatin1String("msg"));
         messageFile = makeAbsoluteUrl(file);
     }
 
-    if (args->isSet("body"))
+    if (args.isSet(QLatin1String("body")))
     {
         mailto = true;
-        body = args->getOption("body");
+        body = args.value(QLatin1String("body"));
     }
 
-    const QStringList attachList = args->getOptionList("attach");
+    const QStringList attachList = args.values(QLatin1String("attach"));
     if (!attachList.isEmpty())
     {
         mailto = true;
@@ -169,21 +170,21 @@ void MailerService::processArgs( KCmdLineArgs *args )
         }
     }
 
-    customHeaders = args->getOptionList("header");
+    customHeaders = args.values(QLatin1String("header"));
 
-    if (args->isSet("composer"))
+    if (args.isSet(QLatin1String("composer")))
         mailto = true;
 
 
     if ( !calledWithSession ) {
     // only read additional command line arguments if kmail/kontact is
     // not called with "-session foo"
-        const int numberOfArgs(args->count());
+        const int numberOfArgs(args.positionalArguments().count());
         for(int i= 0; i < numberOfArgs; ++i) {
-            if (args->arg(i).startsWith(QLatin1String("mailto:"), Qt::CaseInsensitive)) {
-                to += args->url(i).path() + QLatin1String(", ");
+            if (args.positionalArguments().at(i).startsWith(QLatin1String("mailto:"), Qt::CaseInsensitive)) {
+                to += args.positionalArguments().at(i) + QLatin1String(", ");
             } else {
-                const QString tmpArg = args->arg(i);
+                const QString tmpArg = args.positionalArguments().at(i);
                 QUrl url( tmpArg );
                 if (url.isValid() && !url.scheme().isEmpty())
                     attachURLs.append( url.url() );
@@ -197,9 +198,6 @@ void MailerService::processArgs( KCmdLineArgs *args )
             to.truncate( to.length() - 2 );
         }
     }
-
-    if ( !calledWithSession )
-        args->clear();
 
     if( !mailto )
        return;

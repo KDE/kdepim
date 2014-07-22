@@ -65,7 +65,7 @@ KMailCVT::KMailCVT(QWidget *parent)
     Akonadi::Control::widgetNeedsAkonadi(this);
     readConfig();
 #if 0 //QT5
-    KHelpMenu *helpMenu = new KHelpMenu(this, KGlobal::mainComponent().aboutData(), true);
+    KHelpMenu *helpMenu = new KHelpMenu(this, KComponentData::mainComponent().aboutData(), true);
     setButtonMenu( Help, helpMenu->menu() );
     setHelp(QString(), QLatin1String("kmailcvt"));
 #endif
