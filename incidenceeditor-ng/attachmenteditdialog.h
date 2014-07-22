@@ -27,7 +27,7 @@
 #ifndef INCIDENCEEDITOR_ATTACHMENTEDITDIALOG_H
 #define INCIDENCEEDITOR_ATTACHMENTEDITDIALOG_H
 
-#include "incidenceeditors-ng_export.h"
+#include "incidenceeditors_ng_export.h"
 
 #include <KCalCore/Attachment>
 #include <QUrl>

@@ -25,6 +25,7 @@ ki18n_wrap_ui(mobileui_calendar_SRCS
 
 add_definitions( -DKDEPIMMOBILEUICALENDAR_STATIC_LIB )
 add_library(kdepimmobileuicalendar STATIC ${mobileui_calendar_SRCS})
+generate_export_header(kdepimmobileuicalendar BASE_NAME mobileuicalendar)
 
 target_link_libraries(kdepimmobileuicalendar
   KF5::AkonadiCore

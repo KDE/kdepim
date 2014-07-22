@@ -22,7 +22,7 @@
 #ifndef INCIDENCEEDITOR_GLOBALSETTINGS_H
 #define INCIDENCEEDITOR_GLOBALSETTINGS_H
 
-#include "incidenceeditors-ng_export.h"
+#include "incidenceeditors_ng_export.h"
 
 #include "incidenceeditor-ng/globalsettings_base.h"
 

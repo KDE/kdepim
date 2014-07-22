@@ -88,6 +88,7 @@ ki18n_wrap_ui(incidenceeditors_ng_desktop_LIB_SRCS
 )
 
 add_library(incidenceeditorsng ${LIBRARY_TYPE} ${incidenceeditors_ng_desktop_LIB_SRCS})
+generate_export_header(incidenceeditorsng BASE_NAME incidenceeditors_ng)
 
 target_link_libraries(incidenceeditorsng
   KF5::AkonadiCalendar

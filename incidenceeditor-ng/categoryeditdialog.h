@@ -21,7 +21,7 @@
 #ifndef INCIDENCEEDITOR_CATEGORYEDITDIALOG_H
 #define INCIDENCEEDITOR_CATEGORYEDITDIALOG_H
 
-#include "incidenceeditors-ng_export.h"
+#include "incidenceeditors_ng_export.h"
 
 #include <KDialog>
 

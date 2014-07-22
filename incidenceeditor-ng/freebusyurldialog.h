@@ -22,7 +22,7 @@
 #ifndef INCIDENCEEDITOR_FREEBUSYURLDIALOG_H
 #define INCIDENCEEDITOR_FREEBUSYURLDIALOG_H
 
-#include "incidenceeditors-ng_export.h"
+#include "incidenceeditors_ng_export.h"
 #include "attendeedata.h"
 
 #include <KDialog>

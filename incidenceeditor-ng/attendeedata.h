@@ -21,7 +21,7 @@
 #ifndef INCIDENCEEDITOR_ATTENDEEDATA_H
 #define INCIDENCEEDITOR_ATTENDEEDATA_H
 
-#include "incidenceeditors-ng_export.h"
+#include "incidenceeditors_ng_export.h"
 
 #include <libkdepim/multiplyingline/multiplyingline.h>
 

@@ -21,7 +21,7 @@
 #ifndef INCIDENCEEDITOR_INCIDENCEWHATWHERE_H
 #define INCIDENCEEDITOR_INCIDENCEWHATWHERE_H
 
-#include "incidenceeditors-ng_export.h"
+#include "incidenceeditors_ng_export.h"
 #include "incidenceeditor-ng.h"
 
 namespace Ui {

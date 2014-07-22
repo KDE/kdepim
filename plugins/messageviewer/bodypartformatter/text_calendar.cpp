@@ -36,6 +36,7 @@
 #include "memorycalendarmemento.h"
 #include "syncitiphandler.h"
 
+#include <kdemacros.h>
 #include <messageviewer/settings/globalsettings.h>
 #include <messageviewer/viewer/viewer.h>
 #include <messageviewer/interfaces/bodypart.h>

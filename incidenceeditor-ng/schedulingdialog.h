@@ -21,7 +21,7 @@
 #ifndef INCIDENCEEDITOR_SCHEDULINGDIALOG_H
 #define INCIDENCEEDITOR_SCHEDULINGDIALOG_H
 
-#include "incidenceeditors-ng_export.h"
+#include "incidenceeditors_ng_export.h"
 #ifdef KDEPIM_MOBILE_UI
 #include "ui_mobileschedulingdialog.h"
 #else

@@ -23,7 +23,7 @@
 #ifndef INCIDENCEEDITOR_FREEBUSYITEM_H
 #define INCIDENCEEDITOR_FREEBUSYITEM_H
 
-#include "incidenceeditors-ng_export.h"
+#include "incidenceeditors_ng_export.h"
 
 #include <KCalCore/FreeBusy>
 

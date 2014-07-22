@@ -38,7 +38,7 @@
 #ifndef INCIDENCEEDITOR_TEMPLATEMANAGEMENTDIALOG_H
 #define INCIDENCEEDITOR_TEMPLATEMANAGEMENTDIALOG_H
 
-#include "incidenceeditors-ng_export.h"
+#include "incidenceeditors_ng_export.h"
 #include "ui_template_management_dialog_base.h"
 
 #include <KCalCore/IncidenceBase>

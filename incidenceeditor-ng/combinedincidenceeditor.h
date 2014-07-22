@@ -21,7 +21,7 @@
 #ifndef COMBINEDINCIDENCEEDITOR_H
 #define COMBINEDINCIDENCEEDITOR_H
 
-#include "incidenceeditors-ng_export.h"
+#include "incidenceeditors_ng_export.h"
 #include "incidenceeditor-ng.h"
 
 #include <KMessageWidget>
