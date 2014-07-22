@@ -33,7 +33,7 @@
 #ifndef __KLEO_PROGRESSDIALOG_H__
 #define __KLEO_PROGRESSDIALOG_H__
 
-#include "kleo/kleo_export.h"
+#include "kleo_export.h"
 #include <QProgressDialog>
 
 #ifndef QT_NO_PROGRESSDIALOG

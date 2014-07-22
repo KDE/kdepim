@@ -33,7 +33,7 @@
 #ifndef __KLEO_GNUPGPROCESSBASE_H__
 #define __KLEO_GNUPGPROCESSBASE_H__
 
-#include "kleo/kleo_export.h"
+#include "kleo_export.h"
 #include <kprocess.h>
 
 namespace Kleo {

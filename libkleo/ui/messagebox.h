@@ -33,7 +33,7 @@
 #ifndef __KLEO_UI_MESSAGEBOX_H__
 #define __KLEO_UI_MESSAGEBOX_H__
 
-#include "kleo/kleo_export.h"
+#include "kleo_export.h"
 
 #include <kmessagebox.h>
 

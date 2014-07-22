@@ -33,7 +33,7 @@
 #ifndef __KLEO_CRYPTOBACKENDFACTORY_H__
 #define __KLEO_CRYPTOBACKENDFACTORY_H__
 
-#include "kleo/kleo_export.h"
+#include "kleo_export.h"
 #include "kleo/cryptobackend.h"
 
 #include <gpgme++/global.h>

@@ -33,7 +33,7 @@
 #ifndef KLEO_QGPGMECRYPTOCONFIG_H
 #define KLEO_QGPGMECRYPTOCONFIG_H
 
-#include "kleo/kleo_export.h"
+#include "kleo_export.h"
 #include "kleo/cryptoconfig.h"
 
 #include <QHash>

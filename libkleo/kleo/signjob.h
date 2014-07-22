@@ -77,7 +77,7 @@ namespace Kleo {
        Starts the signing operation. \a signers is the list of keys to
        sign \a plainText with. Empty (null) keys are ignored.
     */
-    virtual KDE_DEPRECATED GpgME::Error start( const std::vector<GpgME::Key> & signers,
+    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start( const std::vector<GpgME::Key> & signers,
                                                const QByteArray & plainText,
                                                GpgME::SignatureMode mode ) = 0;
 

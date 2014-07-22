@@ -41,7 +41,7 @@
 #ifndef __KDTOOLS__KDHORIZONTALLINE_H__
 #define __KDTOOLS__KDHORIZONTALLINE_H__
 
-#include "kleo/kleo_export.h"
+#include "kleo_export.h"
 
 #include <QFrame>
 

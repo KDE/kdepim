@@ -81,7 +81,7 @@ namespace Kleo {
        not be performed, but full validity assumed for all keys
        without further checks.
     */
-    virtual KDE_DEPRECATED GpgME::Error start( const std::vector<GpgME::Key> & recipients,
+    virtual KLEO_DEPRECATED_EXPORT GpgME::Error start( const std::vector<GpgME::Key> & recipients,
                                 const QByteArray & plainText, bool alwaysTrust=false ) = 0;
 
     /*!

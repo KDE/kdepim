@@ -33,7 +33,7 @@
 #ifndef __KLEO_DN_H__
 #define __KLEO_DN_H__
 
-#include "kleo/kleo_export.h"
+#include "kleo_export.h"
 
 #include <QtCore/QString>
 #include <QtCore/QVector>

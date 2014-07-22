@@ -33,7 +33,7 @@
 #ifndef __KLEO_KEYLISTVIEW_H__
 #define __KLEO_KEYLISTVIEW_H__
 
-#include "kleo/kleo_export.h"
+#include "kleo_export.h"
 
 #include <gpgme++/key.h>
 

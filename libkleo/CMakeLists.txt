@@ -106,6 +106,7 @@ if ( NOT KDEPIM_ONLY_KLEO )
 endif ()
 
 add_library(kleo ${LIBRARY_TYPE} ${kleo_LIB_SRCS})
+generate_export_header(kleo BASE_NAME kleo)
 if(WIN32)
 target_link_libraries(kleo ${kleo_LIB_LIBS}  ${GPGME_VANILLA_LIBRARIES} )
 else()
