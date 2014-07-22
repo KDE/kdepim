@@ -16,9 +16,9 @@
 */
 
 
-#include <k4aboutdata.h>
+#include <kaboutdata.h>
 #include <klocale.h>
-#include <KApplication>
+#include <QApplication>
 #include <KFileDialog>
 #include "mboxmainwindow.h"
 

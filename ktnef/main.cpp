@@ -18,10 +18,10 @@
 #include "kdepim-version.h"
 
 #include <kaboutdata.h>
-#include <KApplication>
 #include <KCmdLineArgs>
 #include <KLocalizedString>
 #include <QCommandLineParser>
+#include <QApplication>
 
 int main( int argc, char *argv[] )
 {
