@@ -28,7 +28,7 @@ KJotsConfigDlg::KJotsConfigDlg( const QString & title, QWidget *parent )
     button(QDialogButtonBox::Ok)->setDefault(true);
 
     addModule( QLatin1String("kjots_config_misc") );
-    connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
+    connect( button(QDialogButtonBox::Ok), SIGNAL(clicked()), SLOT(slotOk()) );
 }
 
 KJotsConfigDlg::~KJotsConfigDlg()
@@ -40,7 +40,7 @@ void KJotsConfigDlg::slotOk()
 }
 
 KJotsConfigMisc::KJotsConfigMisc( const KComponentData &inst, QWidget *parent )
-    :KCModule( /*inst,*/ parent )
+    :KCModule( parent )
 {
     QHBoxLayout *lay = new QHBoxLayout( this );
     miscPage = new confPageMisc( 0 );
