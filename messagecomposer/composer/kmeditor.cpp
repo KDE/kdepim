@@ -257,12 +257,24 @@ void KMeditor::keyPressEvent ( QKeyEvent *e )
                     d->mAutoCorrection->autocorrect(richText, *document(), position);
                     QTextCursor cur = textCursor();
                     cur.setPosition(position);
-                    const QChar insertChar = (e->key() == Qt::Key_Space) ? QLatin1Char(' ') : QLatin1Char('\n');
-                    if (richText && !isSpecial(initialTextFormat))
-                        cur.insertText(insertChar, initialTextFormat);
-                    else
-                        cur.insertText(insertChar);
-                    setTextCursor(cur);
+                    if (overwriteMode() && e->key() == Qt::Key_Space) {
+                        const QChar insertChar = QLatin1Char(' ');
+                        if (!cur.atBlockEnd()) {
+                            cur.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, 1);
+                        }
+                        if (richText && !isSpecial(initialTextFormat))
+                            cur.insertText(insertChar, initialTextFormat);
+                        else
+                            cur.insertText(insertChar);
+                        setTextCursor(cur);
+                    } else {
+                        const QChar insertChar = (e->key() == Qt::Key_Space) ? QLatin1Char(' ') : QLatin1Char('\n');
+                        if (richText && !isSpecial(initialTextFormat))
+                            cur.insertText(insertChar, initialTextFormat);
+                        else
+                            cur.insertText(insertChar);
+                        setTextCursor(cur);
+                    }
                     return;
                 }
             }
