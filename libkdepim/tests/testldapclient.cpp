@@ -18,21 +18,27 @@
 
 #include "testldapclient.h"
 
-#include <kapplication.h>
+
 #include <qdebug.h>
-#include <kcmdlineargs.h>
+
 #include <kldap/ldapobject.h>
 
 #include <QEventLoop>
 
 #include <assert.h>
 #include <stdlib.h>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
 
 int main( int argc, char *argv[] )
 {
-  // KApplication::disableAutoDcopRegistration();
-  KCmdLineArgs::init( argc, argv, "testldapclient", 0, KLocalizedString(), 0, KLocalizedString() );
-  KApplication app;
+  QApplication app(argc, argv);
+  QCommandLineParser parser;
+  parser.addVersionOption();
+  parser.addHelpOption();
+  parser.process(app);
 
   TestLDAPClient test;
   test.setup();

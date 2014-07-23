@@ -21,20 +21,33 @@
 #include <QWidget>
 #include <QVBoxLayout>
 
-#include <K4AboutData>
-#include <kapplication.h>
+#include <KAboutData>
+
 #include <qdebug.h>
 #include <klocale.h>
-#include <kcmdlineargs.h>
+
+#include <QApplication>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
 
 #include "../addressline/addresseelineedit.h"
 
 int main(int argc, char* argv[])
 {
-  K4AboutData aboutData("testaddresseelineedit", 0,ki18n("Test AddresseeLineEdit"),"0.1");
-  KCmdLineArgs::init(argc,argv,&aboutData);
+  KAboutData aboutData(QStringLiteral("testaddresseelineedit"),i18n("Test AddresseeLineEdit"),QStringLiteral("0.1"));
+  QApplication app(argc, argv);
+  QCommandLineParser parser;
+  KAboutData::setApplicationData(aboutData);
+  app.setApplicationName(aboutData.componentName());
+  app.setApplicationDisplayName(aboutData.displayName());
+  app.setOrganizationDomain(aboutData.organizationDomain());
+  app.setApplicationVersion(aboutData.version());
+  parser.addVersionOption();
+  parser.addHelpOption();
+  aboutData.setupCommandLine(&parser);
+  parser.process(app);
+  aboutData.processCommandLine(&parser);
 
-  KApplication app;
   QWidget *w = new QWidget;
   QVBoxLayout *vbox = new QVBoxLayout(w);
 

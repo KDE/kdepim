@@ -19,20 +19,32 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <K4AboutData>
-#include <kapplication.h>
+#include <KAboutData>
+
 #include <qdebug.h>
 #include <klocale.h>
-#include <kcmdlineargs.h>
+
+#include <QApplication>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
 
 #include "../widgets/kcheckcombobox.h"
 
 int main(int argc, char* argv[])
 {
-  K4AboutData aboutData("testcheckcombo", 0, ki18n("Test KCheckComboBox"), "0.1");
-  KCmdLineArgs::init(argc,argv,&aboutData);
-
-  KApplication app;
+  KAboutData aboutData(QStringLiteral("testcheckcombo"), i18n("Test KCheckComboBox"), QStringLiteral("0.1"));
+  QApplication app(argc, argv);
+  QCommandLineParser parser;
+  KAboutData::setApplicationData(aboutData);
+  app.setApplicationName(aboutData.componentName());
+  app.setApplicationDisplayName(aboutData.displayName());
+  app.setOrganizationDomain(aboutData.organizationDomain());
+  app.setApplicationVersion(aboutData.version());
+  parser.addVersionOption();
+  parser.addHelpOption();
+  aboutData.setupCommandLine(&parser);
+  parser.process(app);
+  aboutData.processCommandLine(&parser);
 
   KPIM::KCheckComboBox *combo = new KPIM::KCheckComboBox(0);
   combo->addItems(QStringList() << QLatin1String("KDE") << QLatin1String("Mac OSX") << QLatin1String("Windows") << QLatin1String("XFCE") << QLatin1String("FVWM") << QLatin1String("TWM"));
