@@ -92,8 +92,8 @@ MultiplyingLine* MultiplyingLineView::addLine()
     connect( line, SIGNAL(rightPressed()), SIGNAL(focusRight()) );
     connect( line, SIGNAL(deleteLine(KPIM::MultiplyingLine*)),
              SLOT(slotDecideLineDeletion(KPIM::MultiplyingLine*)) );
-    connect( line, SIGNAL(completionModeChanged(KCompletion::Completion)),
-             SLOT(setCompletionMode(KCompletion::Completion)) );
+    connect( line, SIGNAL(completionModeChanged(KCompletion::CompletionMode)),
+             SLOT(setCompletionMode(KCompletion::CompletionMode)) );
 
     if( !mLines.isEmpty() ) {
         line->fixTabOrder( mLines.last()->tabOut() );
