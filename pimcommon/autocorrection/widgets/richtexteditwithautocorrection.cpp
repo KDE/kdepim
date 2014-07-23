@@ -61,21 +61,23 @@ static bool isSpecial( const QTextCharFormat &charFormat )
 
 void RichTextEditWithAutoCorrection::keyPressEvent ( QKeyEvent *e )
 {
-    if ((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
-        if (!textCursor().hasSelection()) {
-            const QTextCharFormat initialTextFormat = textCursor().charFormat();
-            const bool richText = acceptRichText();
-            int position = textCursor().position();
-            mAutoCorrection->autocorrect(richText, *document(), position);
-            QTextCursor cur = textCursor();
-            cur.setPosition(position);
-            const QChar insertChar = (e->key() == Qt::Key_Space) ? QLatin1Char(' ') : QLatin1Char('\n');
-            if (richText && !isSpecial(initialTextFormat))
-                cur.insertText(insertChar, initialTextFormat);
-            else
-                cur.insertText(insertChar);
-            setTextCursor(cur);
-            return;
+    if (mAutoCorrection && mAutoCorrection->isEnabledAutoCorrection()) {
+        if ((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
+            if (!textCursor().hasSelection()) {
+                const QTextCharFormat initialTextFormat = textCursor().charFormat();
+                const bool richText = acceptRichText();
+                int position = textCursor().position();
+                mAutoCorrection->autocorrect(richText, *document(), position);
+                QTextCursor cur = textCursor();
+                cur.setPosition(position);
+                const QChar insertChar = (e->key() == Qt::Key_Space) ? QLatin1Char(' ') : QLatin1Char('\n');
+                if (richText && !isSpecial(initialTextFormat))
+                    cur.insertText(insertChar, initialTextFormat);
+                else
+                    cur.insertText(insertChar);
+                setTextCursor(cur);
+                return;
+            }
         }
     }
     PimCommon::RichTextEditor::keyPressEvent( e );

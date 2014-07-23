@@ -248,21 +248,23 @@ void KMeditor::keyPressEvent ( QKeyEvent *e )
         textCursor().clearSelection();
         emit focusUp();
     } else {
-        if((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
-            if(d->mAutoCorrection && !isLineQuoted(textCursor().block().text()) && !textCursor().hasSelection()) {
-                const QTextCharFormat initialTextFormat = textCursor().charFormat();
-                const bool richText = (textMode() == KRichTextEdit::Rich);
-                int position = textCursor().position();
-                d->mAutoCorrection->autocorrect(richText, *document(), position);
-                QTextCursor cur = textCursor();
-                cur.setPosition(position);
-                const QChar insertChar = (e->key() == Qt::Key_Space) ? QLatin1Char(' ') : QLatin1Char('\n');
-                if (richText && !isSpecial(initialTextFormat))
-                    cur.insertText(insertChar, initialTextFormat);
-                else
-                    cur.insertText(insertChar);
-                setTextCursor(cur);
-                return;
+        if(d->mAutoCorrection && d->mAutoCorrection->isEnabledAutoCorrection()) {
+            if((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
+                if(!isLineQuoted(textCursor().block().text()) && !textCursor().hasSelection()) {
+                    const QTextCharFormat initialTextFormat = textCursor().charFormat();
+                    const bool richText = (textMode() == KRichTextEdit::Rich);
+                    int position = textCursor().position();
+                    d->mAutoCorrection->autocorrect(richText, *document(), position);
+                    QTextCursor cur = textCursor();
+                    cur.setPosition(position);
+                    const QChar insertChar = (e->key() == Qt::Key_Space) ? QLatin1Char(' ') : QLatin1Char('\n');
+                    if (richText && !isSpecial(initialTextFormat))
+                        cur.insertText(insertChar, initialTextFormat);
+                    else
+                        cur.insertText(insertChar);
+                    setTextCursor(cur);
+                    return;
+                }
             }
         }
         TextEdit::keyPressEvent( e );
