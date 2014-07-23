@@ -21,7 +21,6 @@
 #include "notesharedglobalconfig.h"
 
 #include <QLineEdit>
-#include <KComponentData>
 #include <KLocalizedString>
 #include <KDialog>
 #include <KIntNumInput>
@@ -103,8 +102,8 @@ void NoteNetworkConfigWidget::load()
 }
 
 
-NoteNetworkConfig::NoteNetworkConfig(const KComponentData &inst, QWidget *parent )
-    :KCModule( /*inst,*/ parent )
+NoteNetworkConfig::NoteNetworkConfig( QWidget *parent )
+    :KCModule( parent )
 {
     QVBoxLayout *lay = new QVBoxLayout( this );
     lay->setMargin(0);

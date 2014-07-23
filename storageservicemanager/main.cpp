@@ -58,7 +58,7 @@ int main( int argc, char **argv )
     aboutData.processCommandLine(&parser);
  
 
-    KDBusService service();
+    KDBusService service(KDBusService::Unique);
 
     StorageServiceManagerMainWindow *mw = new StorageServiceManagerMainWindow();
     mw->show();

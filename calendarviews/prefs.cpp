@@ -114,8 +114,8 @@ class BaseConfig : public PrefsBase
 
   protected:
     void usrSetDefaults();
-    void usrReadConfig();
-    bool usrWriteConfig();
+    void usrRead();
+    bool usrSave();
 
     void setTimeZoneDefault();
 };
@@ -165,7 +165,7 @@ void BaseConfig::usrSetDefaults()
   PrefsBase::usrSetDefaults();
 }
 
-void BaseConfig::usrReadConfig()
+void BaseConfig::usrRead()
 {
   KConfigGroup generalConfig( config(), "General" );
 
@@ -211,7 +211,7 @@ void BaseConfig::usrReadConfig()
   KConfigSkeleton::usrRead();
 }
 
-bool BaseConfig::usrWriteConfig()
+bool BaseConfig::usrSave()
 {
   KConfigGroup generalConfig( config(), "General" );
 

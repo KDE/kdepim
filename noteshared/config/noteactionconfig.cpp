@@ -19,7 +19,6 @@
 #include "notesharedglobalconfig.h"
 
 #include <QLineEdit>
-#include <KComponentData>
 #include <KLocalizedString>
 #include <KDialog>
 
@@ -28,8 +27,8 @@
 #include <QWhatsThis>
 using namespace NoteShared;
 
-NoteActionConfig::NoteActionConfig(const KComponentData &inst, QWidget *parent )
-    :KCModule( /*inst,*/ parent )
+NoteActionConfig::NoteActionConfig( QWidget *parent )
+    :KCModule( parent )
 {
     QVBoxLayout *lay = new QVBoxLayout( this );
     QWidget * w =  new QWidget( this );

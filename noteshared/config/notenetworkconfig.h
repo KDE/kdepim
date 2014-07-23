@@ -22,7 +22,6 @@
 #include <KCModule>
 class QLineEdit;
 class QCheckBox;
-class KComponentData;
 class KIntNumInput;
 namespace NoteShared {
 
@@ -46,7 +45,7 @@ class NOTESHARED_EXPORT NoteNetworkConfig : public KCModule
 {
     Q_OBJECT
 public:
-    NoteNetworkConfig( const KComponentData &inst, QWidget *parent );
+    NoteNetworkConfig( QWidget *parent );
     /** Reimplemented from KCModule. */
     virtual void load();
     virtual void save();

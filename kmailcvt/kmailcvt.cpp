@@ -31,7 +31,7 @@
 #include <qdebug.h>
 #include <KHelpMenu>
 #include <KConfigGroup>
-
+#include <KAboutData>
 // Qt includes
 #include <QPushButton>
 
@@ -64,9 +64,14 @@ KMailCVT::KMailCVT(QWidget *parent)
              this, SLOT(collectionChanged(Akonadi::Collection)) );
     Akonadi::Control::widgetNeedsAkonadi(this);
     readConfig();
+
+    KHelpMenu *helpMenu = new KHelpMenu(this, KAboutData::applicationData(), true);
+    //Initialize menu
+    QMenu *menu = helpMenu->menu();
+    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(QLatin1String("kmail")));
+    button(QDialogButtonBox::Help)->setMenu(menu);
+
 #if 0 //QT5
-    KHelpMenu *helpMenu = new KHelpMenu(this, KComponentData::mainComponent().aboutData(), true);
-    setButtonMenu( Help, helpMenu->menu() );
     setHelp(QString(), QLatin1String("kmailcvt"));
 #endif
 }

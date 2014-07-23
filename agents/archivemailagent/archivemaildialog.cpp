@@ -47,6 +47,10 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     setWindowIcon( QIcon::fromTheme( QLatin1String("kmail") ) );
     setModal( true );
     QWidget *mainWidget = new QWidget( this );
+    QVBoxLayout *vlay = new QVBoxLayout;
+    vlay->addWidget(mainWidget);
+    setLayout(vlay);
+   
     QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
 //TODO PORT QT5     mainLayout->setSpacing( QDialog::spacingHint() );
 //TODO PORT QT5     mainLayout->setMargin( QDialog::marginHint() );
@@ -62,7 +66,7 @@ ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     connect(buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), SLOT(slotSave()));
 
-    mainLayout->addWidget(buttonBox);
+    vlay->addWidget(buttonBox);
     okButton->setDefault(true);
 
     readConfig();

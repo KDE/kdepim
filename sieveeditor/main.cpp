@@ -57,7 +57,7 @@ int main( int argc, char **argv )
     aboutData.processCommandLine(&parser);
 
 
-    KDBusService service();
+    KDBusService service(KDBusService::Unique);
 
 
     SieveEditorMainWindow *mw = new SieveEditorMainWindow();
