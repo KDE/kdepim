@@ -69,21 +69,13 @@ void RichTextEditWithAutoCorrection::keyPressEvent ( QKeyEvent *e )
             mAutoCorrection->autocorrect(richText, *document(), position);
             QTextCursor cur = textCursor();
             cur.setPosition(position);
-            if (e->key() == Qt::Key_Space) {
-                if (richText && !isSpecial(initialTextFormat))
-                    cur.insertText(QLatin1String(" "), initialTextFormat);
-                else
-                    cur.insertText(QLatin1String(" "));
-                setTextCursor(cur);
-                return;
-            } else {
-                if (richText && !isSpecial(initialTextFormat))
-                    cur.insertText(QLatin1String("\n"), initialTextFormat);
-                else
-                    cur.insertText(QLatin1String("\n"));
-                setTextCursor(cur);
-                return;
-            }
+            const QChar insertChar = (e->key() == Qt::Key_Space) ? QLatin1Char(' ') : QLatin1Char('\n');
+            if (richText && !isSpecial(initialTextFormat))
+                cur.insertText(insertChar, initialTextFormat);
+            else
+                cur.insertText(insertChar);
+            setTextCursor(cur);
+            return;
         }
     }
     PimCommon::RichTextEditor::keyPressEvent( e );
