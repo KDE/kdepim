@@ -80,15 +80,11 @@ void TextEditAutoCorrectionWidget::keyPressEvent ( QKeyEvent *e )
             mAutoCorrection->autocorrect(acceptRichText(), *document(), position);
             QTextCursor cur = textCursor();
             cur.setPosition(position);
-            if (e->key() == Qt::Key_Space) {
-                cur.insertText(QLatin1String(" "), initialTextFormat);
-                setTextCursor(cur);
-                return;
-            } else {
-                cur.insertText(QLatin1String("\n"), initialTextFormat);
-                setTextCursor(cur);
-                return;
-            }
+
+            const QChar insertChar = (e->key() == Qt::Key_Space) ? QLatin1Char(' ') : QLatin1Char('\n');
+            cur.insertText(insertChar, initialTextFormat);
+            setTextCursor(cur);
+            return;
         }
     }
     QTextEdit::keyPressEvent( e );

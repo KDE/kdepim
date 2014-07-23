@@ -250,27 +250,33 @@ void KMeditor::keyPressEvent ( QKeyEvent *e )
         textCursor().clearSelection();
         emit focusUp();
     } else {
-        if((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
-            if(d->mAutoCorrection && !isLineQuoted(textCursor().block().text()) && !textCursor().hasSelection()) {
-                const QTextCharFormat initialTextFormat = textCursor().charFormat();
-                const bool richText = (textMode() == KRichTextEdit::Rich);
-                int position = textCursor().position();
-                d->mAutoCorrection->autocorrect(richText, *document(), position);
-                QTextCursor cur = textCursor();
-                cur.setPosition(position);
-                if (e->key() == Qt::Key_Space) {
-                    if (richText && !isSpecial(initialTextFormat))
-                        cur.insertText(QLatin1String(" "), initialTextFormat);
-                    else
-                        cur.insertText(QLatin1String(" "));
-                    setTextCursor(cur);
-                    return;
-                } else {
-                    if (richText && !isSpecial(initialTextFormat))
-                        cur.insertText(QLatin1String("\n"), initialTextFormat);
-                    else
-                        cur.insertText(QLatin1String("\n"));
-                    setTextCursor(cur);
+        if(d->mAutoCorrection && d->mAutoCorrection->isEnabledAutoCorrection()) {
+            if((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
+                if(!isLineQuoted(textCursor().block().text()) && !textCursor().hasSelection()) {
+                    const QTextCharFormat initialTextFormat = textCursor().charFormat();
+                    const bool richText = (textMode() == KRichTextEdit::Rich);
+                    int position = textCursor().position();
+                    d->mAutoCorrection->autocorrect(richText, *document(), position);
+                    QTextCursor cur = textCursor();
+                    cur.setPosition(position);
+                    if (overwriteMode() && e->key() == Qt::Key_Space) {
+                        const QChar insertChar = QLatin1Char(' ');
+                        if (!cur.atBlockEnd()) {
+                            cur.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, 1);
+                        }
+                        if (richText && !isSpecial(initialTextFormat))
+                            cur.insertText(insertChar, initialTextFormat);
+                        else
+                            cur.insertText(insertChar);
+                        setTextCursor(cur);
+                    } else {
+                        const QChar insertChar = (e->key() == Qt::Key_Space) ? QLatin1Char(' ') : QLatin1Char('\n');
+                        if (richText && !isSpecial(initialTextFormat))
+                            cur.insertText(insertChar, initialTextFormat);
+                        else
+                            cur.insertText(insertChar);
+                        setTextCursor(cur);
+                    }
                     return;
                 }
             }
