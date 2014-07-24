@@ -280,7 +280,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
     // Emails
     QStringList emails;
     foreach ( const QString &email, rawContact.emails() ) {
-        const QString fullEmail = QString::fromLatin1( KUrl::toPercentEncoding( rawContact.fullEmail( email ) ) );
+        const QString fullEmail = QString::fromLatin1( QUrl::toPercentEncoding( rawContact.fullEmail( email ) ) );
 
         const QString url = QString::fromLatin1( "<a href=\"mailto:%1\">%2</a>" )
                 .arg( fullEmail, email );

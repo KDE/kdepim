@@ -76,7 +76,7 @@ void NotificationMonitor::contextMenu(const QPoint& pos)
 
 void NotificationMonitor::slotSaveToFile()
 {
-  const QString fileName = KFileDialog::getSaveFileName( KUrl(), QString(), 0, QString(), KFileDialog::ConfirmOverwrite );
+  const QString fileName = KFileDialog::getSaveFileName( QUrl(), QString(), 0, QString(), KFileDialog::ConfirmOverwrite );
   if ( fileName.isEmpty() ) {
     return;
   }

@@ -54,7 +54,7 @@ bool NotesExportHandler::exportItems( const Akonadi::Item::List &items )
       notes << item.payload<KMime::Message::Ptr>();
   }
 
-  const QString fileName = KFileDialog::getSaveFileName( KUrl( QLatin1String( "notes.mbox" ) ), QLatin1String( "*.mbox" ) );
+  const QString fileName = KFileDialog::getSaveFileName( QUrl( QLatin1String( "notes.mbox" ) ), QLatin1String( "*.mbox" ) );
   if ( fileName.isEmpty() ) // user canceled export
     return true;
 

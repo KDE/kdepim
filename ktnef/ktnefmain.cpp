@@ -205,7 +205,7 @@ void KTNEFMain::loadFile( const QString &filename )
     mView->setAttachments( QList<KTNEFAttach *>() );
     enableExtractAll( false );
   } else {
-    addRecentFile(KUrl(filename));
+    addRecentFile(QUrl(filename));
     QList<KTNEFAttach *> list = mParser->message()->attachmentList();
     QString msg;
     msg = i18ncp( "@info:status",
@@ -236,7 +236,7 @@ void KTNEFMain::openRecentFile(const QUrl &url)
     loadFile(url.path());
 }
 
-void KTNEFMain::addRecentFile(const KUrl &url)
+void KTNEFMain::addRecentFile(const QUrl &url)
 {
     mOpenRecentFileAction->addUrl(url);
     KConfigGroup config( KSharedConfig::openConfig(), "Recent Files" );
@@ -248,7 +248,7 @@ void KTNEFMain::viewFile()
 {
   if ( !mView->getSelection().isEmpty() ) {
     KTNEFAttach *attach = mView->getSelection().first();
-    KUrl url( QLatin1String("file:") + extractTemp( attach ) );
+    QUrl url( QLatin1String("file:") + extractTemp( attach ) );
     QString mimename( attach->mimeTag() );
 
     if ( mimename.isEmpty() || mimename == QLatin1String("application/octet-stream") ) {
@@ -523,7 +523,7 @@ void KTNEFMain::slotShowMessageText()
     tmpFile->write( rtf.toLocal8Bit() );
     tmpFile->close();
 
-    KRun::runUrl( KUrl( tmpFile->fileName() ), QLatin1String("text/rtf"), this, true );
+    KRun::runUrl( QUrl( tmpFile->fileName() ), QLatin1String("text/rtf"), this, true );
     delete tmpFile;
   } else {
       KMessageBox::error(

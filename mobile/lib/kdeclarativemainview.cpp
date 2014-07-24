@@ -737,7 +737,7 @@ void KDeclarativeMainView::openAttachment( const QString &url, const QString &mi
 {
   qDebug() << "opening attachment: " << url;
 
-  KRun::runUrl( KUrl( url ), mimeType, this );
+  KRun::runUrl( QUrl( url ), mimeType, this );
 }
 
 void KDeclarativeMainView::saveAttachment( const QString &url, const QString &defaultFileName )
@@ -755,7 +755,7 @@ void KDeclarativeMainView::saveAttachment( const QString &url, const QString &de
     filter += patterns.join( QLatin1String( "\n" ) );
     filter += i18n( "\n*|all files" );
   }
-  const QString targetFile = KFileDialog::getSaveFileName( KUrl( QLatin1String("kfiledialog:///saveAttachment/") + fileName ),
+  const QString targetFile = KFileDialog::getSaveFileName( QUrl( QLatin1String("kfiledialog:///saveAttachment/") + fileName ),
                                                            filter,
                                                            this,
                                                            i18n( "Save Attachment" ) );

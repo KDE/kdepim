@@ -419,7 +419,7 @@ void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
     probablyWeHaveUris = true;
     labels = metadata["labels"].split( ':', QString::SkipEmptyParts );
     for ( QStringList::Iterator it = labels.begin(); it != labels.end(); ++it ) {
-      *it = KUrl::fromPercentEncoding( (*it).toLatin1() );
+      *it = QUrl::fromPercentEncoding( (*it).toLatin1() );
     }
   } else if ( mimeData->hasText() ) {
     QString text = mimeData->text();

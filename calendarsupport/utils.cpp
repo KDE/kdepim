@@ -716,7 +716,7 @@ void CalendarSupport::saveAttachments( const Akonadi::Item &item, QWidget *paren
     if ( fileName.isEmpty() ) {
       fileName = i18nc( "filename for an unnamed attachment", "attachment.1" );
     }
-    targetFile = KFileDialog::getSaveFileName( KUrl( QLatin1String("kfiledialog:///saveAttachment/") + fileName ),
+    targetFile = KFileDialog::getSaveFileName( QUrl( QLatin1String("kfiledialog:///saveAttachment/") + fileName ),
                                    QString(),
                                    parentWidget,
                                    i18n( "Save Attachment" ) );

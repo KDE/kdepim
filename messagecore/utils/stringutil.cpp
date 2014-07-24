@@ -745,7 +745,7 @@ QString emailAddrAsAnchor( const KMime::Types::Mailbox::List &mailboxList,
 
             if( link == ShowLink ) {
                 result += QLatin1String("<a href=\"mailto:")
-                        + QString::fromLatin1(KUrl::toPercentEncoding( KPIMUtils::encodeMailtoUrl( mailbox.prettyAddress( KMime::Types::Mailbox::QuoteWhenNecessary ) ).path() ))
+                        + QString::fromLatin1(QUrl::toPercentEncoding( KPIMUtils::encodeMailtoUrl( mailbox.prettyAddress( KMime::Types::Mailbox::QuoteWhenNecessary ) ).path() ))
                         + QLatin1String("\" ")+cssStyle+QLatin1Char('>');
             }
             if ( display == DisplayNameOnly ) {

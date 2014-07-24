@@ -21,7 +21,7 @@
 #include "globalsettings_base.h"
 
 #include <KSharedConfig>
-#include <KUrl>
+#include <QUrl>
 
 using namespace GrantleeThemeEditor;
 ConfigureWidget::ConfigureWidget(QWidget *parent)
@@ -48,12 +48,12 @@ void ConfigureWidget::readConfig()
 {
     ui->authorEmail->setText(GrantleeThemeEditor::GrantleeThemeEditorSettings::authorEmail());
     ui->author->setText(GrantleeThemeEditor::GrantleeThemeEditorSettings::author());
-    ui->defaultPath->setUrl(KUrl(GrantleeThemeEditor::GrantleeThemeEditorSettings::path()));
+    ui->defaultPath->setUrl(QUrl(GrantleeThemeEditor::GrantleeThemeEditorSettings::path()));
 }
 
 void ConfigureWidget::setDefault()
 {
-    ui->defaultPath->setUrl(KUrl());
+    ui->defaultPath->setUrl(QUrl());
     ui->authorEmail->clear();
     ui->author->clear();
 }

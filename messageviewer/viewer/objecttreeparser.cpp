@@ -2695,7 +2695,7 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
                     else {
                         if( !blockAddrs.empty() ){
                             const KUrl address = KPIMUtils::encodeMailtoUrl( blockAddrs.first() );
-                            signer = QLatin1String("<a href=\"mailto:") + QLatin1String(KUrl::toPercentEncoding( address.path() )) +
+                            signer = QLatin1String("<a href=\"mailto:") + QLatin1String(QUrl::toPercentEncoding( address.path() )) +
                                     QLatin1String("\">") + signer + QLatin1String("</a>");
                         }
                     }

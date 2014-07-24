@@ -330,7 +330,7 @@ void Toolbox::setFieldsValue( BilboPost* post )
     }
     optionsTime->setTime( post->creationDateTime().time() );
     optionsDate->setDate( post->creationDateTime().date() );
-    txtSlug->setText( KUrl::fromPercentEncoding( post->slug().toLatin1() ) );
+    txtSlug->setText( QUrl::fromPercentEncoding( post->slug().toLatin1() ) );
     txtSummary->setPlainText( post->summary() );
 }
 

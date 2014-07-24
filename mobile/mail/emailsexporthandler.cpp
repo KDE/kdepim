@@ -54,7 +54,7 @@ bool EmailsExportHandler::exportItems( const Akonadi::Item::List &items )
       messages << item.payload<KMime::Message::Ptr>();
   }
 
-  const QString fileName = KFileDialog::getSaveFileName( KUrl( QLatin1String( "emails.mbox" ) ), QLatin1String( "*.mbox" ) );
+  const QString fileName = KFileDialog::getSaveFileName( QUrl( QLatin1String( "emails.mbox" ) ), QLatin1String( "*.mbox" ) );
   if ( fileName.isEmpty() ) // user canceled export
     return true;
 

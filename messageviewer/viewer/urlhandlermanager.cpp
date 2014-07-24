@@ -271,7 +271,7 @@ static KMime::Content * partNodeFromXKMailUrl( const KUrl & url, ViewerPrivate *
     if ( urlParts.size() != 3 )
         return 0;
     //KMime::ContentIndex index( urlParts[1] );
-    *path = KUrl::fromPercentEncoding( urlParts[2].toLatin1() );
+    *path = QUrl::fromPercentEncoding( urlParts[2].toLatin1() );
     return w->nodeFromUrl( urlParts[1] );
 }
 

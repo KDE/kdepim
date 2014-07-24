@@ -304,7 +304,7 @@ void ImageWidget::changeImage()
 
 void ImageWidget::saveImage()
 {
-  const QString fileName = KFileDialog::getSaveFileName( KUrl(), KImageIO::pattern(), 0 );
+  const QString fileName = KFileDialog::getSaveFileName( QUrl(), KImageIO::pattern(), 0 );
   if ( !fileName.isEmpty() )
     mImage.save( fileName );
 }

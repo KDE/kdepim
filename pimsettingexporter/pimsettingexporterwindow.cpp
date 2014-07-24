@@ -203,7 +203,7 @@ void PimSettingExporterWindow::slotBackupData()
     if (KMessageBox::warningYesNo(this,i18n("Before to backup data, close all kdepim applications. Do you want to continue?"),i18n("Backup"))== KMessageBox::No)
         return;
 
-    const QString filename = KFileDialog::getSaveFileName(KUrl("kfiledialog:///pimsettingexporter"),QLatin1String("*.zip"),this,i18n("Create backup"),KFileDialog::ConfirmOverwrite);
+    const QString filename = KFileDialog::getSaveFileName( QUrl(QLatin1String("kfiledialog:///pimsettingexporter")),QLatin1String("*.zip"),this,i18n("Create backup"),KFileDialog::ConfirmOverwrite);
     if (filename.isEmpty())
         return;
     mRecentFilesAction->addUrl(QUrl(filename));

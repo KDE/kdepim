@@ -74,7 +74,7 @@ bool UriHandler::process( const QString &uri, const Akonadi::Item& item )
         KToolInvocation::startServiceByDesktopPath( QLatin1String("korganizer") );
 
         // we must work around KUrl breakage (it doesn't know about URNs)
-        const QString uid = KUrl::fromPercentEncoding( uri.toLatin1() ).mid( 11 );
+        const QString uid = QUrl::fromPercentEncoding( uri.toLatin1() ).mid( 11 );
         OrgKdeKorganizerKorganizerInterface korganizerIface(
                     QLatin1String("org.kde.korganizer"), QLatin1String("/Korganizer"), QDBusConnection::sessionBus() );
 
@@ -92,7 +92,7 @@ bool UriHandler::process( const QString &uri, const Akonadi::Item& item )
             return true;
         }
     } else {  // no special URI, let KDE handle it
-        new KRun( KUrl( uri ), 0 );
+        new KRun( QUrl( uri ), 0 );
     }
 
     return false;

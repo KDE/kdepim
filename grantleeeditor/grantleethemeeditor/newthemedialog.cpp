@@ -22,7 +22,6 @@
 #include <QLineEdit>
 #include <KLocalizedString>
 #include <KUrlRequester>
-#include <KUrl>
 #include <KLineEdit>
 
 #include <QVBoxLayout>
@@ -84,7 +83,7 @@ NewThemeDialog::~NewThemeDialog()
 
 void NewThemeDialog::readConfig()
 {
-    mUrlRequester->setUrl(KUrl(GrantleeThemeEditor::GrantleeThemeEditorSettings::path()));
+    mUrlRequester->setUrl(QUrl(GrantleeThemeEditor::GrantleeThemeEditorSettings::path()));
 }
 
 QString NewThemeDialog::themeName() const

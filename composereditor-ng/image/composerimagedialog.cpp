@@ -26,7 +26,7 @@
 #include <KLocalizedString>
 #include <QLineEdit>
 #include <KSeparator>
-#include <KUrl>
+#include <QUrl>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -190,7 +190,7 @@ void ComposerImageDialogPrivate::updateSettings()
 
 QString ComposerImageDialogPrivate::html() const
 {
-    const KUrl url = imageWidget->imageUrl();
+    const QUrl url = imageWidget->imageUrl();
     int imageWidth = -1;
     int imageHeight = -1;
     if ( !imageWidget->keepOriginalSize() ) {

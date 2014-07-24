@@ -453,7 +453,7 @@ void BrowserWidget::dumpToXml()
   const Collection root = currentCollection();
   if ( !root.isValid() )
     return;
-  const QString fileName = KFileDialog::getSaveFileName( KUrl(), "*.xml", this, i18n( "Select XML file" ) );
+  const QString fileName = KFileDialog::getSaveFileName( QUrl(), "*.xml", this, i18n( "Select XML file" ) );
   if ( fileName.isEmpty() )
     return;
 #if 0 // TODO: port me, can't use XmlWriteJob here, it's in runtime, call the akonadi2xml cli tool instead

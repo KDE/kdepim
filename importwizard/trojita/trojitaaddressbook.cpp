@@ -18,7 +18,7 @@
 #include "trojitaaddressbook.h"
 #include <KABC/Addressee>
 
-#include <KUrl>
+#include <QUrl>
 
 #include <QSettings>
 
@@ -58,7 +58,7 @@ void TrojitaAddressBook::readAddressBook()
         contactABC.insertPhoneNumber( KABC::PhoneNumber( settings->value(QLatin1String("fax")).toString(), KABC::PhoneNumber::Fax ) );
         contactABC.insertPhoneNumber( KABC::PhoneNumber( settings->value(QLatin1String("mobile")).toString(), KABC::PhoneNumber::Cell ) );
         contactABC.setNickName(settings->value(QLatin1String("nick")).toString());
-        contactABC.setUrl(KUrl(settings->value(QLatin1String("url")).toString()));
+        contactABC.setUrl(QUrl(settings->value(QLatin1String("url")).toString()));
 
         const QDateTime birthDate( QDate::fromString(settings->value(QLatin1String("anniversary")).toString()));
         if (birthDate.isValid()) {

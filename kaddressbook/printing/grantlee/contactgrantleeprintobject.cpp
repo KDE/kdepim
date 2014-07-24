@@ -118,7 +118,7 @@ QStringList ContactGrantleePrintObject::emails() const
 {
     QStringList emails;
     Q_FOREACH ( const QString &email, mAddress.emails() ) {
-        const QString fullEmail = QString::fromLatin1( KUrl::toPercentEncoding( mAddress.fullEmail( email ) ) );
+        const QString fullEmail = QString::fromLatin1( QUrl::toPercentEncoding( mAddress.fullEmail( email ) ) );
 
         const QString url = QString::fromLatin1( "<a href=\"mailto:%1\">%2</a>" )
                 .arg( fullEmail, email );

@@ -147,7 +147,7 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
           const QString filename = dir + QDir::separator() + a.uid();
           img.save(filename,"PNG");
           bodyPart->nodeHelper()->addTempFile( filename );
-          const QString href = QLatin1String("file:") + QLatin1String(KUrl::toPercentEncoding( filename ));
+          const QString href = QLatin1String("file:") + QLatin1String(QUrl::toPercentEncoding( filename ));
           htmlStr.replace(QLatin1String("img src=\"contact_photo\""),QString::fromLatin1("img src=\"%1\"").arg(href));
         }
         writer->queue( htmlStr );

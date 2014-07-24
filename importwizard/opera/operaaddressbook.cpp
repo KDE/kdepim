@@ -18,7 +18,7 @@
 #include "operaaddressbook.h"
 
 #include <KABC/Addressee>
-#include <KUrl>
+#include <QUrl>
 #include <QDebug>
 #include <QFile>
 
@@ -53,7 +53,7 @@ OperaAddressBook::OperaAddressBook(const QString &filename, ImportWizard *parent
             } else if (line.startsWith(QLatin1String("NAME"))) {
                 contact->setName(line.remove(QLatin1String("NAME=")));
             } else if (line.startsWith(QLatin1String("URL"))) {
-                contact->setUrl(KUrl(line.remove(QLatin1String("URL="))));
+                contact->setUrl(QUrl(line.remove(QLatin1String("URL="))));
             } else if (line.startsWith(QLatin1String("DESCRIPTION"))) {
                 contact->setNote(line.remove(QLatin1String("DESCRIPTION=")));
             } else if (line.startsWith(QLatin1String("PHONE"))) {

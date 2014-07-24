@@ -153,7 +153,7 @@ namespace {
         const QString dir = bodyPart->nodeHelper()->createTempDir( QLatin1String("ktnef-") + QString::number( i ) );
         parser.extractFileTo( att->name(), dir );
         bodyPart->nodeHelper()->addTempFile( dir + QDir::separator() + att->name() );
-        const QString href = QLatin1String("file:") + QString::fromLatin1(KUrl::toPercentEncoding( dir + QDir::separator() + att->name() ));
+        const QString href = QLatin1String("file:") + QString::fromLatin1(QUrl::toPercentEncoding( dir + QDir::separator() + att->name() ));
 
         const QString iconName = MessageViewer::Util::fileNameForMimetype( att->mimeTag(),
                                                             KIconLoader::Desktop, att->name() );

@@ -19,7 +19,7 @@
 #include "addressbook/MorkParser.h"
 
 #include <KABC/Addressee>
-#include <KUrl>
+#include <QUrl>
 #include <QDebug>
 
 ThunderBirdAddressBook::ThunderBirdAddressBook(const QDir& dir, ImportWizard *parent)
@@ -208,7 +208,7 @@ void ThunderBirdAddressBook::readAddressBook( const QString &filename )
                                 } else if ( column == QLatin1String("FamilyName" ) ) {
                                     qDebug()<<" column "<<column<<" found but not imported. Need to look at how to import it";
                                 } else if ( column == QLatin1String("WebPage1" ) ) {
-                                    contact.setUrl(KUrl(value));
+                                    contact.setUrl(QUrl(value));
                                 } else if ( column == QLatin1String("WebPage2" ) ) {
                                     qDebug()<<" column "<<column<<" found but not imported. Need to look at how to import it";
                                 } else if ( column == QLatin1String("BirthYear" ) ) {

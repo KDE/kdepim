@@ -432,7 +432,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
                   "is inaccessible from this computer. Please ask the event "
                   "organizer to resend the invitation with this attachment "
                   "stored inline instead of a link.",
-                  KUrl::fromPercentEncoding( attachment->uri().toLatin1() ) ) );
+                  QUrl::fromPercentEncoding( attachment->uri().toLatin1() ) ) );
           return Attachment::Ptr();
         }
       }
@@ -1083,7 +1083,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
         file->write( QByteArray::fromBase64( attachment->data() ) );
         file->close();
 
-        bool stat = KRun::runUrl( KUrl( file->fileName() ), attachment->mimeType(), 0, true );
+        bool stat = KRun::runUrl( QUrl( file->fileName() ), attachment->mimeType(), 0, true );
         delete file;
         return stat;
       }

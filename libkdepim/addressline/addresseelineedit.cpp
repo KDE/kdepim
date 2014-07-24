@@ -1223,7 +1223,7 @@ void AddresseeLineEdit::dropEvent( QDropEvent *event )
                 if ( url.scheme() == QLatin1String( "mailto" ) ) {
                     mailtoURL = true;
                     QString address;
-                    address = KUrl::fromPercentEncoding( url.path().toLatin1() );
+                    address = QUrl::fromPercentEncoding( url.path().toLatin1() );
                     address = KMime::decodeRFC2047String( address.toLatin1() );
                     if ( !contents.isEmpty() ) {
                         contents.append( QLatin1String( ", " ) );

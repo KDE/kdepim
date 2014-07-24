@@ -112,7 +112,7 @@ Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
       KMessageBox::sorry(
         d->mParent,
         i18n( "The attachment \"%1\" is a web link that is inaccessible from this computer. ",
-              KUrl::fromPercentEncoding( a->uri().toLatin1() ) ) );
+              QUrl::fromPercentEncoding( a->uri().toLatin1() ) ) );
       return Attachment::Ptr();
     }
   }
