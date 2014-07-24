@@ -24,7 +24,7 @@ using MailCommon::RegExpLineEdit;
 
 #include <KLocale>
 
-#include <KDoubleNumInput>
+#include <QSpinBox>
 #include <QStackedWidget>
 
 
@@ -73,9 +73,8 @@ QWidget *NumericDoubleRuleWidgetHandler::createValueWidget( int number,
         return 0;
     }
 
-    KDoubleNumInput *numInput = new KDoubleNumInput( valueStack );
-    numInput->setSliderEnabled( false );
-    numInput->setObjectName( QLatin1String("KDoubleNumInput") );
+    QSpinBox *numInput = new QSpinBox( valueStack );
+    numInput->setObjectName( QLatin1String("QSpinBox") );
     QObject::connect( numInput, SIGNAL(valueChanged(double)),
                       receiver, SLOT(slotValueChanged()) );
     return numInput;
@@ -112,7 +111,7 @@ SearchRule::Function NumericDoubleRuleWidgetHandler::function( const QByteArray 
 
 QString NumericDoubleRuleWidgetHandler::currentValue( const QStackedWidget *valueStack ) const
 {
-    const KDoubleNumInput *numInput = valueStack->findChild<KDoubleNumInput*>( QLatin1String("KDoubleNumInput") );
+    const QSpinBox *numInput = valueStack->findChild<QSpinBox*>( QLatin1String("QSpinBox") );
 
     if ( numInput ) {
         return QString::number( int(numInput->value()*1024) );
@@ -170,7 +169,7 @@ void NumericDoubleRuleWidgetHandler::reset( QStackedWidget *functionStack,
     }
 
     // reset the value widget
-    KDoubleNumInput *numInput = valueStack->findChild<KDoubleNumInput*>( QLatin1String("KDoubleNumInput") );
+    QSpinBox *numInput = valueStack->findChild<QSpinBox*>( QLatin1String("QSpinBox") );
 
     if ( numInput ) {
         numInput->blockSignals( true );
@@ -181,13 +180,12 @@ void NumericDoubleRuleWidgetHandler::reset( QStackedWidget *functionStack,
 
 //---------------------------------------------------------------------------
 
-void initDoubleNumInput( KDoubleNumInput *numInput, const QByteArray &field )
+void initDoubleNumInput( QSpinBox *numInput, const QByteArray &field )
 {
     if ( field == "<size>" ) {
         numInput->setMinimum( 0 );
         numInput->setSingleStep(1);
         numInput->setSuffix( i18nc( "spinbox suffix: unit for kilobyte", " kB" ) );
-        numInput->setSliderEnabled( false );
     }
 }
 
@@ -232,7 +230,7 @@ bool NumericDoubleRuleWidgetHandler::setRule( QStackedWidget *functionStack,
         value = 0;
     }
 
-    KDoubleNumInput *numInput = valueStack->findChild<KDoubleNumInput*>( QLatin1String("KDoubleNumInput") );
+    QSpinBox *numInput = valueStack->findChild<QSpinBox*>( QLatin1String("QSpinBox") );
 
     if ( numInput ) {
         initDoubleNumInput( numInput, rule->field() );
@@ -258,7 +256,7 @@ bool NumericDoubleRuleWidgetHandler::update( const QByteArray &field,
     functionStack->setCurrentWidget( functionStack->findChild<QWidget*>( QLatin1String("numericDoubleRuleFuncCombo") ) );
 
     // raise the correct value widget
-    KDoubleNumInput *numInput = valueStack->findChild<KDoubleNumInput*>( QLatin1String("KDoubleNumInput") );
+    QSpinBox *numInput = valueStack->findChild<QSpinBox*>( QLatin1String("QSpinBox") );
 
     if ( numInput ) {
         initDoubleNumInput( numInput, field );
