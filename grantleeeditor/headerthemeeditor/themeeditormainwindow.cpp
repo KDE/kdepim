@@ -221,7 +221,7 @@ void ThemeEditorMainWindow::slotOpenTheme()
     }
     closeThemeEditor();
     if (loadTheme(directory))
-        mRecentFileAction->addUrl(KUrl(directory));
+        mRecentFileAction->addUrl(QUrl(directory));
     mSaveAction->setEnabled(false);
 }
 
@@ -284,7 +284,7 @@ bool ThemeEditorMainWindow::saveCurrentProject(ActionSaveTheme act)
             projectDirectory = dialog->directory();
         }
         if (!projectDirectory.isEmpty()) {
-            mRecentFileAction->addUrl(KUrl(projectDirectory));
+            mRecentFileAction->addUrl(QUrl(projectDirectory));
             mThemeEditor = new ThemeEditorPage(projectDirectory, newTheme);
             connect(mThemeEditor, SIGNAL(changed(bool)), mSaveAction, SLOT(setEnabled(bool)));
             connect(mThemeEditor, SIGNAL(canInsertFile(bool)), this, SLOT(slotCanInsertFile(bool)));

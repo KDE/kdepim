@@ -206,7 +206,7 @@ void PimSettingExporterWindow::slotBackupData()
     const QString filename = KFileDialog::getSaveFileName(KUrl("kfiledialog:///pimsettingexporter"),QLatin1String("*.zip"),this,i18n("Create backup"),KFileDialog::ConfirmOverwrite);
     if (filename.isEmpty())
         return;
-    mRecentFilesAction->addUrl(KUrl(filename));
+    mRecentFilesAction->addUrl(QUrl(filename));
     backupData(filename);
 }
 
