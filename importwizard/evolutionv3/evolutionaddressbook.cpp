@@ -36,7 +36,7 @@ void EvolutionAddressBook::exportEvolutionAddressBook()
 {
     KMessageBox::information(mImportWizard,i18n("Evolution address book will be exported as vCard. Import vCard in KAddressBook."),i18n("Export Evolution Address Book"));
 
-    const QString directory = KFileDialog::getExistingDirectory( KUrl(), mImportWizard, i18n("Select the directory where vCards will be stored."));
+    const QString directory = KFileDialog::getExistingDirectory(QUrl(), mImportWizard, i18n("Select the directory where vCards will be stored."));
     if (directory.isEmpty()) {
         return;
     }

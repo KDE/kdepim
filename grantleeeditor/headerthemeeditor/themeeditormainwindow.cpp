@@ -215,7 +215,7 @@ void ThemeEditorMainWindow::slotOpenTheme()
     if (!saveCurrentProject(SaveOnly))
         return;
 
-    const QString directory = KFileDialog::getExistingDirectory(KUrl( "kfiledialog:///OpenTheme" ), this, i18n("Select theme directory"));
+    const QString directory = KFileDialog::getExistingDirectory(QUrl( QLatin1String("kfiledialog:///OpenTheme") ), this, i18n("Select theme directory"));
     if (directory.isEmpty()) {
         return;
     }
@@ -343,7 +343,7 @@ void ThemeEditorMainWindow::slotThemeSelected(const QUrl &url)
 
 void ThemeEditorMainWindow::slotSaveAsTheme()
 {
-    const QString directory = KFileDialog::getExistingDirectory(KUrl( "kfiledialog:///SaveTheme" ), this, i18n("Select theme directory"));
+    const QString directory = KFileDialog::getExistingDirectory(QUrl( QLatin1String("kfiledialog:///SaveTheme") ), this, i18n("Select theme directory"));
     if (!directory.isEmpty()) {
         if (mThemeEditor)
             mThemeEditor->saveThemeAs(directory);

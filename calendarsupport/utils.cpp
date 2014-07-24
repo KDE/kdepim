@@ -699,7 +699,7 @@ void CalendarSupport::saveAttachments( const Akonadi::Item &item, QWidget *paren
   QString targetFile, targetDir;
   if ( attachments.count() > 1 ) {
     // get the dir
-    targetDir = KFileDialog::getExistingDirectory( KUrl( "kfiledialog:///saveAttachment" ),
+    targetDir = KFileDialog::getExistingDirectory(QUrl( QLatin1String("kfiledialog:///saveAttachment" )),
                                                    parentWidget,
                                                    i18n( "Save Attachments To" ) );
     if ( targetDir.isEmpty() ) {
