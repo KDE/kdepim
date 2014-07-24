@@ -183,7 +183,7 @@ void FilterPMail::importMailFolder(const QString &file)
         bool first_msg = true;
 
         while (!f.atEnd()) {
-            KTemporaryFile tempfile;
+            QTemporaryFile tempfile;
             tempfile.open();
             filterInfo()->setCurrent( (int) ( ( (float) f.pos() / f.size() ) * 100 ) );
 
@@ -258,7 +258,7 @@ void FilterPMail::importUnixMailFolder(const QString &file)
         filterInfo()->addInfoLogEntry(i18n("Importing %1", QLatin1String("../") + QString::fromLatin1(pmg_head.folder)));
         l = f.readLine( line.data(),MAX_LINE); // read the first line which is unneeded
         while ( ! f.atEnd() ) {
-            KTemporaryFile tempfile;
+            QTemporaryFile tempfile;
             tempfile.open();
 
             // we lost the last line, which is the first line of the new message in

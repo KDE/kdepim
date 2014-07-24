@@ -23,7 +23,7 @@
 
 #include <KLocalizedString>
 #include <KStandardDirs>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KConfigGroup>
 #include <KZip>
 
@@ -109,7 +109,7 @@ void ExportJotJob::backupConfig()
     if (QFile(kjotrc).exists()) {
         KSharedConfigPtr kjot = KSharedConfig::openConfig(kjotrc);
 
-        KTemporaryFile tmp;
+        QTemporaryFile tmp;
         tmp.open();
 
         KConfig *kjotConfig = kjot->copyTo( tmp.fileName() );

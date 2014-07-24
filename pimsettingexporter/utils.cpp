@@ -25,7 +25,7 @@
 #include <KConfigGroup>
 #include <KStandardDirs>
 #include <KSharedConfig>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KLocalizedString>
 #include <KZip>
 
@@ -223,7 +223,7 @@ QString Utils::storeResources(KZip *archive, const QString &identifier, const QS
     qDebug()<<"configFileName "<<configFileName<<"agentFileName "<<configFileName;
 
     KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
-    KTemporaryFile tmp;
+    QTemporaryFile tmp;
     tmp.open();
     KConfig * config = resourceConfig->copyTo( tmp.fileName() );
 
@@ -279,7 +279,7 @@ KZip *Utils::openZip(const QString &filename, QString &errorMsg)
 
 void Utils::addVersion(KZip *archive)
 {
-    KTemporaryFile tmp;
+    QTemporaryFile tmp;
     tmp.open();
     const bool fileAdded  = archive->addLocalFile(tmp.fileName(), Utils::infoPath() + QString::fromLatin1("VERSION_%1").arg(currentArchiveVersion()));
     if (!fileAdded) {

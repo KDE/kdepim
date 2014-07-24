@@ -90,7 +90,7 @@ void FilterMailApp::importMails( const QString  &maildir )
             long l = 0;
 
             while ( ! mbox.atEnd() ) {
-                KTemporaryFile tmp;
+                QTemporaryFile tmp;
                 tmp.open();
                 /* comment by Danny:
          * Don't use QTextStream to read from mbox, better use QDataStream. QTextStream only

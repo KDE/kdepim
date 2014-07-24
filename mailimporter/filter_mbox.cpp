@@ -79,7 +79,7 @@ void FilterMBox::importMails(const QStringList &filenames)
             long l = 0;
 
             while ( ! mbox.atEnd() ) {
-                KTemporaryFile tmp;
+                QTemporaryFile tmp;
                 tmp.open();
                 qint64 filepos = 0;
                 /* comment by Danny:

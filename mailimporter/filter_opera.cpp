@@ -96,7 +96,7 @@ void FilterOpera::importBox(const QDir &importDir, const QStringList &files, con
             bool first_msg = true;
 
             while ( !operaArchiv.atEnd() ) {
-                KTemporaryFile tmp;
+                QTemporaryFile tmp;
                 tmp.open();
                 /* comment by Danny:
          * Don't use QTextStream to read from mbox, better use QDataStream. QTextStream only

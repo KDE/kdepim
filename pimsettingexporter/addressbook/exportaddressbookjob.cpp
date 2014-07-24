@@ -22,7 +22,7 @@
 
 #include <KLocalizedString>
 #include <KStandardDirs>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KConfigGroup>
 #include <KZip>
 
@@ -113,7 +113,7 @@ void ExportAddressbookJob::backupConfig()
     if (QFile(kaddressbookrc).exists()) {
         KSharedConfigPtr kaddressbook = KSharedConfig::openConfig(kaddressbookrc);
 
-        KTemporaryFile tmp;
+        QTemporaryFile tmp;
         tmp.open();
 
         KConfig *kaddressBookConfig = kaddressbook->copyTo( tmp.fileName() );

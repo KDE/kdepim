@@ -100,7 +100,7 @@ void FilterLNotes::ImportLNotes(const QString &file) {
         char ch = 0;
         int state = 0;
         int n = 0;
-        KTemporaryFile *tempfile = 0;
+        QTemporaryFile *tempfile = 0;
 
         // Get folder name
         QFileInfo filenameInfo( file );
@@ -118,7 +118,7 @@ void FilterLNotes::ImportLNotes(const QString &file) {
                 if ( filterInfo()->shouldTerminate() )
                     return;
 
-                tempfile = new KTemporaryFile;
+                tempfile = new QTemporaryFile;
                 tempfile->setAutoRemove(false);
                 tempfile->open();
                 // fall through

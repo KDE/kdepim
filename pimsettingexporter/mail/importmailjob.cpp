@@ -34,7 +34,7 @@
 #include <KStandardDirs>
 #include <KLocalizedString>
 #include <KProcess>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KMessageBox>
@@ -939,7 +939,7 @@ void ImportMailJob::restoreAkonadiDb()
 
             const KArchiveFile *akonadiDataBaseFile = static_cast<const KArchiveFile*>(akonadiDataBaseEntry);
 
-            KTemporaryFile tmp;
+            QTemporaryFile tmp;
             tmp.open();
 
             akonadiDataBaseFile->copyTo(tmp.fileName());

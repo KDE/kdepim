@@ -23,7 +23,7 @@
 
 #include <KLocalizedString>
 #include <KStandardDirs>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KConfigGroup>
 #include <KZip>
 
@@ -113,7 +113,7 @@ void ExportAlarmJob::backupConfig()
     if (QFile(kalarmrc).exists()) {
         KSharedConfigPtr kalarm = KSharedConfig::openConfig(kalarmrc);
 
-        KTemporaryFile tmp;
+        QTemporaryFile tmp;
         tmp.open();
 
         KConfig *kalarmConfig = kalarm->copyTo( tmp.fileName() );

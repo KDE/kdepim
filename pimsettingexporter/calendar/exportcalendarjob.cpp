@@ -23,7 +23,7 @@
 
 #include <KLocalizedString>
 #include <KStandardDirs>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KConfigGroup>
 #include <KZip>
 
@@ -120,7 +120,7 @@ void ExportCalendarJob::backupConfig()
     if (QFile(korganizerrc).exists()) {
         KSharedConfigPtr korganizer = KSharedConfig::openConfig(korganizerrc);
 
-        KTemporaryFile tmp;
+        QTemporaryFile tmp;
         tmp.open();
 
         KConfig *korganizerConfig = korganizer->copyTo( tmp.fileName() );

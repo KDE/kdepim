@@ -32,7 +32,7 @@
 
 #include <KZip>
 #include <KLocalizedString>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KStandardDirs>
 #include <KProcess>
 #include <QDebug>
@@ -134,7 +134,7 @@ void ExportMailJob::backupTransports()
     } else {
         KSharedConfigPtr mailtransportsConfig = KSharedConfig::openConfig( mailtransportsStr );
 
-        KTemporaryFile tmp;
+        QTemporaryFile tmp;
         tmp.open();
         KConfig *config = mailtransportsConfig->copyTo( tmp.fileName() );
 
@@ -186,7 +186,7 @@ void ExportMailJob::backupConfig()
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
     QList<MailCommon::MailFilter*> lstFilter = MailCommon::FilterManager::instance()->filters();
     if (!lstFilter.isEmpty()) {
-        KTemporaryFile tmp;
+        QTemporaryFile tmp;
         tmp.open();
         KUrl url(tmp.fileName());
         MailCommon::FilterImporterExporter exportFilters;
@@ -223,7 +223,7 @@ void ExportMailJob::backupConfig()
     if (QFile(archiveMailAgentconfigurationrc).exists()) {
         KSharedConfigPtr archivemailrc = KSharedConfig::openConfig(archiveMailAgentConfigurationStr);
 
-        KTemporaryFile tmp;
+        QTemporaryFile tmp;
         tmp.open();
 
         KConfig *archiveConfig = archivemailrc->copyTo( tmp.fileName() );
@@ -256,7 +256,7 @@ void ExportMailJob::backupConfig()
     if (QFile(templatesconfigurationrc).exists()) {
         KSharedConfigPtr templaterc = KSharedConfig::openConfig(templatesconfigurationrcStr);
 
-        KTemporaryFile tmp;
+        QTemporaryFile tmp;
         tmp.open();
 
         KConfig *templateConfig = templaterc->copyTo( tmp.fileName() );
@@ -307,7 +307,7 @@ void ExportMailJob::backupConfig()
     if (QFile(kmail2rc).exists()) {
         KSharedConfigPtr kmailrc = KSharedConfig::openConfig(kmail2rc);
 
-        KTemporaryFile tmp;
+        QTemporaryFile tmp;
         tmp.open();
 
         KConfig *kmailConfig = kmailrc->copyTo( tmp.fileName() );
@@ -410,7 +410,7 @@ void ExportMailJob::backupIdentity()
 
         KSharedConfigPtr identity = KSharedConfig::openConfig( emailidentitiesrc );
 
-        KTemporaryFile tmp;
+        QTemporaryFile tmp;
         tmp.open();
 
         KConfig *identityConfig = identity->copyTo( tmp.fileName() );
@@ -527,7 +527,7 @@ void ExportMailJob::backupAkonadiDb()
     AkonadiDataBase akonadiDataBase;
     const QString dbDriver(akonadiDataBase.driver());
 
-    KTemporaryFile tmp;
+    QTemporaryFile tmp;
     tmp.open();
 
     QStringList params;

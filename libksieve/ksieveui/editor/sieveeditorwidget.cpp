@@ -153,7 +153,7 @@ void SieveEditorWidget::setModified(bool b)
 void SieveEditorWidget::slotUploadScripts()
 {
     KTempDir tmp;
-    KTemporaryFile tmpFile;
+    QTemporaryFile tmpFile;
     if (tmpFile.open()) {
         QTextStream out(&tmpFile);
         out.setCodec("UTF-8");

@@ -24,7 +24,7 @@
 #include <KLocalizedString>
 #include <KStandardDirs>
 #include <KZip>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KConfigGroup>
 
 
@@ -81,7 +81,7 @@ void ExportNotesJob::backupConfig()
     if (QFile(globalNoteSettingsrc).exists()) {
         KSharedConfigPtr globalnotesettingsrc = KSharedConfig::openConfig(globalNoteSettingsrc);
 
-        KTemporaryFile tmp;
+        QTemporaryFile tmp;
         tmp.open();
 
         KConfig *knoteConfig = globalnotesettingsrc->copyTo( tmp.fileName() );

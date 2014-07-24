@@ -189,7 +189,7 @@ void FilterOE::mbxImport( QDataStream &ds)
     while (!ds.atEnd()) {
 
         quint32 msgNumber, msgSize, msgTextSize;
-        KTemporaryFile tmp;
+        QTemporaryFile tmp;
         tmp.open();
         QDataStream dataStream(&tmp);
         dataStream.setByteOrder(QDataStream::LittleEndian);
@@ -346,7 +346,7 @@ void FilterOE::dbxReadEmail(QDataStream &ds, int filePos)
     quint32 self, nextAddressOffset, nextAddress=0;
     quint16 blockSize;
     quint8 intCount, unknown;
-    KTemporaryFile tmp;
+    QTemporaryFile tmp;
     tmp.open();
     bool _break = false;
     int wasAt = ds.device()->pos();

@@ -79,7 +79,7 @@ void FilterMailmanGzip::importMails(const QStringList &filenames)
         long l = 0;
 
         while ( ! device->atEnd() ) {
-            KTemporaryFile tmp;
+            QTemporaryFile tmp;
             tmp.open();
             qint64 filepos = 0;
             /* comment by Danny:

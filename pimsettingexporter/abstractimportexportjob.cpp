@@ -29,7 +29,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KStandardDirs>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 
 #include <QWidget>
 #include <QProgressDialog>
@@ -428,7 +428,7 @@ void AbstractImportExportJob::extractZipFile(const KArchiveFile *file, const QSt
 
 bool AbstractImportExportJob::backupFullDirectory(const KUrl &url, const QString &archivePath, const QString &archivename)
 {
-    KTemporaryFile tmp;
+    QTemporaryFile tmp;
     tmp.open();
     KZip *vcarddirArchive = new KZip(tmp.fileName());
     vcarddirArchive->setCompression(KZip::NoCompression);
