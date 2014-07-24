@@ -179,7 +179,7 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( const KC
   // Max number of items returned by queries
   ++row;
   mMaxItemsLabel = new QLabel( i18n( "&Maximum number of items returned by query:" ), this );
-  mMaxItems = new KIntNumInput( this );
+  mMaxItems = new QSpinBox( this );
   mMaxItems->setMinimum( 0 );
   mMaxItemsLabel->setBuddy( mMaxItems );
   connect( mMaxItems, SIGNAL(valueChanged(int)), this, SLOT(changed()) );

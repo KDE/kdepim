@@ -40,7 +40,7 @@
 class QCheckBox;
 class QLabel;
 class QTimeEdit;
-class KIntNumInput;
+class QSpinBox;
 class KComponentData;
 namespace Kleo {
   class CryptoConfig;
@@ -72,7 +72,7 @@ private:
 
   Kleo::DirectoryServicesWidget* mWidget;
   QTimeEdit* mTimeout;
-  KIntNumInput* mMaxItems;
+  QSpinBox* mMaxItems;
   QLabel* mMaxItemsLabel;
   QCheckBox* mAddNewServersCB;
 
