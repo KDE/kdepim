@@ -225,7 +225,7 @@ void ImportMailJob::restoreTransports()
                 }
 
                 mt->forceUniqueName();
-                mt->writeConfig();
+                mt->save();
                 MailTransport::TransportManager::self()->addTransport( mt );
                 if ( transportId == defaultTransport )
                     MailTransport::TransportManager::self()->setDefaultTransport( mt->id() );

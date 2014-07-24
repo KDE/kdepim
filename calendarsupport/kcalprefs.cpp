@@ -82,7 +82,7 @@ KCalPrefs *KCalPrefs::instance()
 
   if ( firstCall ) {
     firstCall = false;
-    globalPrefs->readConfig();
+    globalPrefs->load();
   }
 
   return globalPrefs;
