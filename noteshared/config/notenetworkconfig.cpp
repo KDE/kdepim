@@ -23,7 +23,7 @@
 #include <QLineEdit>
 #include <KLocalizedString>
 #include <KDialog>
-#include <KIntNumInput>
+#include <QSpinBox>
 
 #include <QLabel>
 #include <QCheckBox>
@@ -71,10 +71,9 @@ NoteNetworkConfigWidget::NoteNetworkConfigWidget(QWidget *parent)
 
     tmpLayout->addWidget( label_Port );
 
-    kcfg_Port = new KIntNumInput;
+    kcfg_Port = new QSpinBox;
     kcfg_Port->setObjectName( QLatin1String("kcfg_Port") );
     kcfg_Port->setRange( 0, 65535 );
-    kcfg_Port->setSliderEnabled( false );
     label_Port->setBuddy( kcfg_Port );
     tmpLayout->addWidget( kcfg_Port );
     layout->addLayout( tmpLayout );

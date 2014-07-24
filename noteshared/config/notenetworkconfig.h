@@ -22,7 +22,7 @@
 #include <KCModule>
 class QLineEdit;
 class QCheckBox;
-class KIntNumInput;
+class QSpinBox;
 namespace NoteShared {
 
 class NOTESHARED_EXPORT NoteNetworkConfigWidget : public QWidget
@@ -37,7 +37,7 @@ public:
 private:
     QCheckBox *mTmpChkB;
     QLineEdit *kcfg_SenderID;
-    KIntNumInput *kcfg_Port;
+    QSpinBox *kcfg_Port;
 };
 
 
