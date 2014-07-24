@@ -21,7 +21,7 @@
 #include <KZip>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 
 #include <QFile>
 #include <QTextStream>
@@ -108,7 +108,7 @@ void EditorPage::saveAsFilename(const QString &filename)
 
 void EditorPage::createZip(const QString &themeName, KZip *zip)
 {
-    KTemporaryFile tmp;
+    QTemporaryFile tmp;
     tmp.open();
     saveAsFilename(tmp.fileName());
     const bool fileAdded  = zip->addLocalFile(tmp.fileName(), themeName + QLatin1Char('/') + mPageFileName);

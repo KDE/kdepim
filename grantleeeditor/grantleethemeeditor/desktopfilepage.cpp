@@ -27,7 +27,7 @@
 #include <KLocalizedString>
 #include <KDesktopFile>
 #include <KZip>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KMessageBox>
 
 #include <QGridLayout>
@@ -134,7 +134,7 @@ void DesktopFilePage::slotFileNameChanged(const QString &filename)
 
 void DesktopFilePage::createZip(const QString &themeName, KZip *zip)
 {
-    KTemporaryFile tmp;
+    QTemporaryFile tmp;
     tmp.open();
     saveAsFilename(tmp.fileName());
     const bool fileAdded  = zip->addLocalFile(tmp.fileName(), themeName + QLatin1Char('/') + mDefaultDesktopName);
