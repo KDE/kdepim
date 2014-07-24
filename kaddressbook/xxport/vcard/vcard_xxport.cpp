@@ -37,7 +37,7 @@
 #include <KFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <QUrl>
 #include <KStandardGuiItem>
 #include <KIO/NetAccess>
@@ -309,7 +309,7 @@ bool VCardXXPort::doExport( const QUrl &url, const QByteArray &data ) const
         delete dialog;
     }
 
-    KTemporaryFile tmpFile;
+    QTemporaryFile tmpFile;
     tmpFile.open();
 
     tmpFile.write( data );

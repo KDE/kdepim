@@ -85,7 +85,7 @@
 #include <KIO/NetAccess>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <QUrl>
 
 #include <QtCore/QFile>
@@ -366,7 +366,7 @@ bool GMXXXPort::exportContacts( const KABC::AddresseeList &list ) const
   }
 
   if ( !url.isLocalFile() ) {
-    KTemporaryFile tmpFile;
+    QTemporaryFile tmpFile;
     if ( !tmpFile.open() ) {
       QString txt = i18n( "<qt>Unable to open file <b>%1</b></qt>", url.url() );
       KMessageBox::error( parentWidget(), txt );

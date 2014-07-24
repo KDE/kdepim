@@ -26,7 +26,7 @@
 #include <KFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <QUrl>
 #include <KIO/NetAccess>
 
@@ -62,7 +62,7 @@ bool CsvXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
     }
 
     if ( !url.isLocalFile() ) {
-        KTemporaryFile tmpFile;
+        QTemporaryFile tmpFile;
         if ( !tmpFile.open() ) {
             const QString msg = i18n( "<qt>Unable to open file <b>%1</b></qt>", url.url() );
             KMessageBox::error( parentWidget(), msg );
