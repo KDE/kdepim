@@ -53,7 +53,7 @@ void TemplateManager::slotDirectoryChanged()
 void TemplateManager::initTemplatesDirectories(const QString &templatesRelativePath)
 {
     if (!templatesRelativePath.isEmpty()) {
-        mTemplatesDirectories = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, templatesRelativePath);
+        mTemplatesDirectories = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, templatesRelativePath,QStandardPaths::LocateDirectory);
         if (mTemplatesDirectories.count() < 2) {
             //Make sure to add local directory
             const QString localDirectory = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + templatesRelativePath;
