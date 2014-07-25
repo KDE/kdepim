@@ -37,7 +37,7 @@
 #include <KShortcutsDialog>
 #include <KStandardAction>
 #include <KStandardDirs>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KUrl>
 #include <QIcon>
 #include <KMimeType>
@@ -515,9 +515,7 @@ void KTNEFMain::slotShowMessageText()
 
   QString rtf = mParser->message()->rtfString();
   if ( !rtf.isEmpty() ) {
-    KTemporaryFile *tmpFile = new KTemporaryFile();
-    tmpFile->setPrefix( KGlobal::dirs()->localkdedir() + QLatin1String("/share/apps/ktnef/tmp/") );
-    tmpFile->setSuffix( QLatin1String( ".rtf" ) );
+    QTemporaryFile *tmpFile = new QTemporaryFile(KGlobal::dirs()->localkdedir() + QLatin1String("/share/apps/ktnef/tmp/") + QLatin1String( "ktnef_XXXXXX.rtf" ) );
     tmpFile->open();
     tmpFile->setPermissions( QFile::ReadUser );
     tmpFile->write( rtf.toLocal8Bit() );

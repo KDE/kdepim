@@ -69,7 +69,7 @@ using namespace KCalCore;
 #include <KMimeType>
 #include <KRun>
 #include <KSystemTimeZone>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KToolInvocation>
 #include <KIO/NetAccess>
 #include <QIcon>
@@ -1071,13 +1071,15 @@ class UrlHandler : public Interface::BodyPartURLHandler
         KToolInvocation::invokeBrowser( attachment->uri() );
       } else {
         // put the attachment in a temporary file and launch it
-        KTemporaryFile *file = new KTemporaryFile();
-        file->setAutoRemove( false );
+        QTemporaryFile *file;
         QStringList patterns = KMimeType::mimeType( attachment->mimeType() )->patterns();
         if ( !patterns.empty() ) {
-            QString pattern = patterns.first();
-          file->setSuffix( pattern.remove( QLatin1Char('*') ) );
+            QString pattern = patterns.first(); 
+            file = new QTemporaryFile(QDir::tempPath() + QLatin1String("/messageviewer_XXXXXX") +pattern.remove( QLatin1Char('*') ));
+        } else {
+           file = new QTemporaryFile();
         }
+        file->setAutoRemove( false );
         file->open();
         file->setPermissions( QFile::ReadUser );
         file->write( QByteArray::fromBase64( attachment->data() ) );
@@ -1117,13 +1119,15 @@ class UrlHandler : public Interface::BodyPartURLHandler
         stat = KIO::NetAccess::file_copy( a->uri(), KUrl( saveAsFile ) );
       } else {
         // put the attachment in a temporary file and save it
-        KTemporaryFile *file = new KTemporaryFile();
-        file->setAutoRemove( false );
+        QTemporaryFile *file;
         QStringList patterns = KMimeType::mimeType( a->mimeType() )->patterns();
         if ( !patterns.empty() ) {
             QString pattern = patterns.first();
-          file->setSuffix( pattern.remove( QLatin1Char('*') ) );
+            file = new QTemporaryFile(QDir::tempPath() + QLatin1String("/messageviewer_XXXXXX") +pattern.remove( QLatin1Char('*') ));   
+        } else {
+            file = new QTemporaryFile();
         }
+        file->setAutoRemove( false );
         file->open();
         file->setPermissions( QFile::ReadUser );
         file->write( QByteArray::fromBase64( a->data() ) );

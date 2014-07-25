@@ -63,7 +63,7 @@
 #include <kio/netaccess.h>
 #include <qdebug.h>
 #include <KMimeType>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <ktoolinvocation.h>
 #include <QAction>
 #include <QIcon>
@@ -373,7 +373,7 @@ bool Util::saveContent( QWidget *parent, KMime::Content* content, const KUrl& ur
 #endif
     QDataStream ds;
     QFile file;
-    KTemporaryFile tf;
+    QTemporaryFile tf;
     if ( url.isLocalFile() )
     {
         // save directly

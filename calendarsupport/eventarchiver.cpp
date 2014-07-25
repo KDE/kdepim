@@ -38,7 +38,7 @@
 #include <KDebug>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KIO/NetAccess>
 #include <KLocale>
 
@@ -199,11 +199,11 @@ void EventArchiver::archiveIncidences( const Akonadi::ETMCalendar::Ptr &calendar
 
   QString tmpFileName;
   // KSaveFile cannot be called with an open File Handle on Windows.
-  // So we use KTemporaryFile only to generate a unique filename
+  // So we use QTemporaryFile only to generate a unique filename
   // and then close/delete the file again. This file must be deleted
   // here.
   {
-    KTemporaryFile tmpFile;
+    QTemporaryFile tmpFile;
     tmpFile.open();
     tmpFileName = tmpFile.fileName();
   }

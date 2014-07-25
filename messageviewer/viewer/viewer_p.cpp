@@ -67,7 +67,7 @@
 #include <KStandardDirs>
 #include <KStandardGuiItem>
 #include <KTempDir>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KToggleAction>
 #include <KPrintPreview>
 #include <kdeprintdialog.h>
@@ -75,7 +75,8 @@
 #include <QDebug>
 #include <kfileitemactions.h>
 #include <KFileItemListProperties>
-
+#include <KLocalizedString>
+#include <QMimeData>
 #include <KIO/NetAccess>
 #include <KABC/Addressee>
 #include <KABC/VCardConverter>
@@ -498,7 +499,7 @@ bool ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
         return false;
     }
 
-    KTemporaryFile file;
+    QTemporaryFile file;
     file.setAutoRemove( false );
     if ( !file.open() ) {
         qWarning() << "Edit Attachment: Unable to open temp file.";

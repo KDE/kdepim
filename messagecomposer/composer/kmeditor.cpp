@@ -38,7 +38,7 @@
 #include <KMessageBox>
 #include <KProcess>
 #include <QPushButton>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KColorScheme>
 #include <KFileDialog>
 
@@ -116,7 +116,7 @@ public:
     QString quotePrefix;
 
     KProcess *mExtEditorProcess;
-    KTemporaryFile *mExtEditorTempFile;
+    QTemporaryFile *mExtEditorTempFile;
     PimCommon::AutoCorrection *mAutoCorrection;
 };
 
@@ -139,7 +139,7 @@ void KMeditorPrivate::startExternalEditor()
         return;
     }
 
-    mExtEditorTempFile = new KTemporaryFile();
+    mExtEditorTempFile = new QTemporaryFile();
     if ( !mExtEditorTempFile->open() ) {
         delete mExtEditorTempFile;
         mExtEditorTempFile = 0;

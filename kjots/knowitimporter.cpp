@@ -28,7 +28,7 @@
 
 #include <KStandardDirs>
 #include <KUrl>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KLocalizedString>
 
 #include <qdebug.h>
@@ -50,9 +50,11 @@ void KnowItImporter::importFromUrl( const KUrl& url )
   buildDomDocument();
 
 
-  KTemporaryFile file;
-  file.setPrefix( QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + "kjots/" ) ;
-  file.setSuffix( ".book" );
+  QTemporaryFile file;
+//code was   file.setPrefix( QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + "kjots/" ) ;
+//Add to constructor and adapt if necessay:  QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1Char('/') + "kjots/" QLatin1String("/myapp_XXXXXX.txt") 
+//code was   file.setSuffix( ".book" );
+//Add to constructor and adapt if necessay: QDir::tempPath() + QLatin1String("/myapp_XXXXXX") + QLatin1String( ".book" ) 
   file.setAutoRemove( false );
 
   if ( file.open() ) {

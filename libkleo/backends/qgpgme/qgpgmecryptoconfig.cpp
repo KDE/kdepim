@@ -304,7 +304,7 @@ Kleo::CryptoConfigGroup* QGpgMECryptoConfigComponent::group(const QString& name 
 
 void QGpgMECryptoConfigComponent::sync( bool runtime )
 {
-  KTemporaryFile tmpFile;
+  QTemporaryFile tmpFile;
   tmpFile.open();
 
   QList<QGpgMECryptoConfigEntry *> dirtyEntries;

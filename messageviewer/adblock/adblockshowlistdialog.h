@@ -21,7 +21,7 @@
 #include <QDialog>
 
 class KJob;
-class KTemporaryFile;
+class QTemporaryFile;
 
 namespace KPIMUtils {
 class ProgressIndicatorLabel;
@@ -56,7 +56,7 @@ private:
 
     QString mListName;
     PimCommon::PlainTextEditorWidget *mTextEdit;
-    KTemporaryFile *mTemporaryFile;
+    QTemporaryFile *mTemporaryFile;
     KPIMUtils::ProgressIndicatorLabel *mProgress;
     QPushButton *mUser1Button;
 };

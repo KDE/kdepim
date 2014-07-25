@@ -37,7 +37,7 @@
 #include <KMessageBox>
 #include <KMimeType>
 #include <KRun>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KToolInvocation>
 #include <KIO/NetAccess>
 #include <KJob>
@@ -138,18 +138,19 @@ Attachment::Ptr AttachmentHandler::find( const QString &attachmentName,
   return find( attachmentName, incidence );
 }
 
-static KTemporaryFile *s_tempFile = 0;
+static QTemporaryFile *s_tempFile = 0;
 
 static KUrl tempFileForAttachment( const Attachment::Ptr &attachment )
 {
   KUrl url;
 
-  s_tempFile = new KTemporaryFile();
-  s_tempFile->setAutoRemove( false );
   QStringList patterns = KMimeType::mimeType( attachment->mimeType() )->patterns();
   if ( !patterns.empty() ) {
-    s_tempFile->setSuffix( QString( patterns.first() ).remove( QLatin1Char('*') ) );
+       s_tempFile = new QTemporaryFile(QDir::tempPath() + QLatin1String("/attachementview_XXXXXX") + patterns.first().remove( QLatin1Char('*')));
+  } else {
+     s_tempFile = new QTemporaryFile();
   }
+  s_tempFile->setAutoRemove( false );
   s_tempFile->open();
   s_tempFile->setPermissions( QFile::ReadUser );
   s_tempFile->write( QByteArray::fromBase64( attachment->data() ) );

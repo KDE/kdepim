@@ -57,7 +57,7 @@ using MessageViewer::Interface::BodyPart;
 #include <KLocalizedString>
 #include <QMenu>
 #include <KMessageBox>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KIO/NetAccess>
 #include <QDebug>
 
@@ -306,7 +306,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       }
 
       // put the attachment in a temporary file and save it
-      KTemporaryFile tmpFile;
+      QTemporaryFile tmpFile;
       tmpFile.open();
 
       QByteArray data = vCard.toUtf8();

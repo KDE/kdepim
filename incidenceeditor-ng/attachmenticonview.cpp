@@ -32,7 +32,8 @@
 #include "attachmenticonview.h"
 
 #include <KIconLoader>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
+#include <QDir>
 
 #include <QDrag>
 #include <QKeyEvent>
@@ -190,14 +191,17 @@ KUrl AttachmentIconView::tempFileForAttachment( const KCalCore::Attachment::Ptr 
   if ( mTempFiles.contains( attachment ) ) {
     return mTempFiles.value( attachment );
   }
-  KTemporaryFile *file = new KTemporaryFile();
-  file->setParent( const_cast<AttachmentIconView*>( this ) );
+  QTemporaryFile *file;
 
   QStringList patterns = KMimeType::mimeType( attachment->mimeType() )->patterns();
 
   if ( !patterns.empty() ) {
-    file->setSuffix( QString( patterns.first() ).remove( '*' ) );
+      file = new QTemporaryFile(QDir::tempPath() + QLatin1String("/attachementview_XXXXX") + patterns.first().remove('*')); 
+  } else {
+      file = new QTemporaryFile();
   }
+  file->setParent( const_cast<AttachmentIconView*>( this ) );
+
   file->setAutoRemove( true );
   file->open();
   // read-only not to give the idea that it could be written to

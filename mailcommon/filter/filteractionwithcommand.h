@@ -22,7 +22,7 @@
 
 #include "filteractionwithurl.h"
 
-class KTemporaryFile;
+class QTemporaryFile;
 
 namespace MailCommon {
 
@@ -64,7 +64,7 @@ public:
      * meaning the body of the message.
      */
     virtual QString substituteCommandLineArgsFor( const KMime::Message::Ptr &aMsg,
-                                                  QList<KTemporaryFile*> &aTempFileList ) const;
+                                                  QList<QTemporaryFile*> &aTempFileList ) const;
 
     virtual ReturnCode genericProcess( ItemContext &context, bool filtering ) const;
 };

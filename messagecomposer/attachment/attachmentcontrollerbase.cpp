@@ -49,7 +49,7 @@
 #include <KMimeTypeTrader>
 #include <QPushButton>
 #include <KRun>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KFileItemActions>
 #include <KActionMenu>
 
@@ -101,7 +101,7 @@ public:
     MessageComposer::AttachmentModel *model;
     QWidget *wParent;
     QHash<MessageViewer::EditorWatcher*,AttachmentPart::Ptr> editorPart;
-    QHash<MessageViewer::EditorWatcher*,KTemporaryFile*> editorTempFile;
+    QHash<MessageViewer::EditorWatcher*,QTemporaryFile*> editorTempFile;
 
     AttachmentPart::List selectedParts;
     KActionCollection *mActionCollection;
@@ -284,7 +284,7 @@ void AttachmentControllerBase::Private::editDone( MessageViewer::EditorWatcher *
 {
     AttachmentPart::Ptr part = editorPart.take( watcher );
     Q_ASSERT( part );
-    KTemporaryFile *tempFile = editorTempFile.take( watcher );
+    QTemporaryFile *tempFile = editorTempFile.take( watcher );
     Q_ASSERT( tempFile );
 
     if( watcher->fileChanged() ) {
@@ -379,9 +379,9 @@ void AttachmentControllerBase::Private::attachPublicKeyJobResult( KJob *job )
 }
 
 
-static KTemporaryFile *dumpAttachmentToTempFile( const AttachmentPart::Ptr part ) // local
+static QTemporaryFile *dumpAttachmentToTempFile( const AttachmentPart::Ptr part ) // local
 {
-    KTemporaryFile *file = new KTemporaryFile;
+    QTemporaryFile *file = new QTemporaryFile;
     if( !file->open() ) {
         qCritical() << "Could not open tempfile" << file->fileName();
         delete file;
@@ -589,7 +589,7 @@ void AttachmentControllerBase::slotOpenWithAction(QAction*act)
 
 void AttachmentControllerBase::openWith(KService::Ptr offer)
 {
-    KTemporaryFile *tempFile = dumpAttachmentToTempFile( d->selectedParts.first() );
+    QTemporaryFile *tempFile = dumpAttachmentToTempFile( d->selectedParts.first() );
     if( !tempFile ) {
         KMessageBox::sorry( d->wParent,
                             i18n( "KMail was unable to write the attachment to a temporary file." ),
@@ -617,7 +617,7 @@ void AttachmentControllerBase::openWith(KService::Ptr offer)
 
 void AttachmentControllerBase::openAttachment( AttachmentPart::Ptr part )
 {
-    KTemporaryFile *tempFile = dumpAttachmentToTempFile( part );
+    QTemporaryFile *tempFile = dumpAttachmentToTempFile( part );
     if( !tempFile ) {
         KMessageBox::sorry( d->wParent,
                             i18n( "KMail was unable to write the attachment to a temporary file." ),
@@ -672,7 +672,7 @@ void AttachmentControllerBase::Private::slotAttachmentContentCreated( KJob *job 
 
 void AttachmentControllerBase::editAttachment( AttachmentPart::Ptr part, bool openWith )
 {
-    KTemporaryFile *tempFile = dumpAttachmentToTempFile( part );
+    QTemporaryFile *tempFile = dumpAttachmentToTempFile( part );
     if( !tempFile ) {
         KMessageBox::sorry( d->wParent,
                             i18n( "KMail was unable to write the attachment to a temporary file." ),

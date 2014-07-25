@@ -22,7 +22,7 @@
 #include <KPIMUtils/KFileIO>
 #include <KProcess>
 #include <KShell>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <QDebug>
 
 using namespace MailCommon;
@@ -66,7 +66,7 @@ static KMime::Content* findMimeNodeForIndex( KMime::Content* node, int &index )
     return 0;
 }
 
-QString FilterActionWithCommand::substituteCommandLineArgsFor( const KMime::Message::Ptr &aMsg, QList<KTemporaryFile*> &aTempFileList ) const
+QString FilterActionWithCommand::substituteCommandLineArgsFor( const KMime::Message::Ptr &aMsg, QList<QTemporaryFile*> &aTempFileList ) const
 {
     QString result = mParameter;
     QList<int> argList;
@@ -94,7 +94,7 @@ QString FilterActionWithCommand::substituteCommandLineArgsFor( const KMime::Mess
     for ( QList<int>::ConstIterator it = argList.constBegin() ; it != end ; ++it ) {
         // setup temp files with check for duplicate %n's
         if ( (*it) != lastSeen ) {
-            KTemporaryFile *tempFile = new KTemporaryFile();
+            QTemporaryFile *tempFile = new QTemporaryFile();
             if ( !tempFile->open() ) {
                 delete tempFile;
                 qDebug() << "FilterActionWithCommand: Could not create temp file!";
@@ -180,13 +180,13 @@ FilterAction::ReturnCode FilterActionWithCommand::genericProcess( ItemContext &c
 
     // KProcess doesn't support a QProcess::launch() equivalent, so
     // we must use a temp file :-(
-    KTemporaryFile * inFile = new KTemporaryFile;
+    QTemporaryFile * inFile = new QTemporaryFile;
     if ( !inFile->open() ) {
         delete inFile;
         return ErrorButGoOn;
     }
 
-    QList<KTemporaryFile*> atmList;
+    QList<QTemporaryFile*> atmList;
     atmList.append( inFile );
 
     QString commandLine = substituteCommandLineArgsFor( aMsg, atmList );

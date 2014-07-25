@@ -24,7 +24,7 @@
 
 #include <KLocalizedString>
 #include <KIO/Job>
-#include <KTemporaryFile>
+#include <QTemporaryFile>
 #include <KSharedConfig>
 #include <KUrl>
 
@@ -106,7 +106,7 @@ void AdBlockShowListDialog::setAdBlockListPath(const QString &localPath, const Q
 void AdBlockShowListDialog::downLoadList(const QString &url)
 {
     delete mTemporaryFile;
-    mTemporaryFile = new KTemporaryFile;
+    mTemporaryFile = new QTemporaryFile;
     if (!mTemporaryFile->open()) {
         qDebug()<<"can not open temporary file";
         delete mTemporaryFile;

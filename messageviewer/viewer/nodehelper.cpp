@@ -280,8 +280,7 @@ KUrl NodeHelper::tempFileUrlFromNode( const KMime::Content *node )
 
 QString NodeHelper::createTempDir( const QString &param )
 {
-  KTemporaryFile *tempFile = new KTemporaryFile();
-  tempFile->setSuffix( QLatin1String(".index.") + param );
+  QTemporaryFile *tempFile = new QTemporaryFile(QDir::tempPath() + QLatin1String("/messageviewer_XXXXXX") + QLatin1String(".index.") + param);
   tempFile->open();
   QString fname = tempFile->fileName();
   delete tempFile;
