@@ -50,6 +50,25 @@ void QuickSearchLineTest::shouldHaveDefaultValueOnCreation()
     QVERIFY(quickSearchFilterWidget);
     QVERIFY(quickSearchFilterWidget->isHidden());
     QCOMPARE(searchLine.containsOutboundMessages(), false);
+    QPushButton *fullMessageButton = qFindChild<QPushButton *>(&searchLine, QLatin1String("full_message"));
+    QVERIFY(!fullMessageButton->isVisible());
+    QCOMPARE(fullMessageButton->isChecked(), true);
+
+    QPushButton *bodyButton = qFindChild<QPushButton *>(&searchLine, QLatin1String("body"));
+    QVERIFY(!bodyButton->isVisible());
+    QCOMPARE(bodyButton->isChecked(), false);
+
+    QPushButton *subjectButton = qFindChild<QPushButton *>(&searchLine, QLatin1String("subject"));
+    QVERIFY(!subjectButton->isVisible());
+    QCOMPARE(subjectButton->isChecked(), false);
+
+    QPushButton *fromOrToButton = qFindChild<QPushButton *>(&searchLine, QLatin1String("fromorto"));
+    QVERIFY(!fromOrToButton->isVisible());
+    QCOMPARE(fromOrToButton->isChecked(), false);
+
+    QPushButton *bccButton = qFindChild<QPushButton *>(&searchLine, QLatin1String("bcc"));
+    QVERIFY(!bccButton->isVisible());
+    QCOMPARE(bccButton->isChecked(), false);
 }
 
 void QuickSearchLineTest::shouldEmitTextChanged()
@@ -277,6 +296,53 @@ void QuickSearchLineTest::shouldNotShowComboboxWhenWeAddNewItemWhenWeHiddedQuick
     QCOMPARE(searchLine.tagFilterComboBox()->isVisible(), false);
 
 }
+
+void QuickSearchLineTest::shouldRestoreDefaultSearchOptionWhenTextIsEmpied()
+{
+    QuickSearchLine searchLine;
+    searchLine.show();
+
+    KPushButton *moreButton = qFindChild<KPushButton *>(&searchLine, QLatin1String("moreoptions"));
+    QCOMPARE(moreButton->isVisible(), true);
+    QTest::mouseClick(moreButton, Qt::LeftButton);
+
+    QPushButton *fullMessageButton = qFindChild<QPushButton *>(&searchLine, QLatin1String("full_message"));
+    QVERIFY(!fullMessageButton->isVisible());
+    QCOMPARE(fullMessageButton->isChecked(), true);
+
+    QPushButton *bodyButton = qFindChild<QPushButton *>(&searchLine, QLatin1String("body"));
+    QVERIFY(!bodyButton->isVisible());
+    QCOMPARE(bodyButton->isChecked(), false);
+
+    QPushButton *subjectButton = qFindChild<QPushButton *>(&searchLine, QLatin1String("subject"));
+    QVERIFY(!subjectButton->isVisible());
+    QCOMPARE(subjectButton->isChecked(), false);
+
+    QPushButton *fromOrToButton = qFindChild<QPushButton *>(&searchLine, QLatin1String("fromorto"));
+    QVERIFY(!fromOrToButton->isVisible());
+    QCOMPARE(fromOrToButton->isChecked(), false);
+
+    QPushButton *bccButton = qFindChild<QPushButton *>(&searchLine, QLatin1String("bcc"));
+    QVERIFY(!bccButton->isVisible());
+    QCOMPARE(bccButton->isChecked(), false);
+
+    QTest::mouseClick(bccButton, Qt::LeftButton);
+    QCOMPARE(fullMessageButton->isChecked(), false);
+    QCOMPARE(bodyButton->isChecked(), false);
+    QCOMPARE(subjectButton->isChecked(), false);
+    QCOMPARE(fromOrToButton->isChecked(), false);
+    QCOMPARE(bccButton->isChecked(), true);
+
+    searchLine.resetFilter();
+    QCOMPARE(fullMessageButton->isChecked(), true);
+    QCOMPARE(bodyButton->isChecked(), false);
+    QCOMPARE(subjectButton->isChecked(), false);
+    QCOMPARE(fromOrToButton->isChecked(), false);
+    QCOMPARE(bccButton->isChecked(), false);
+
+}
+
+
 
 
 QTEST_MAIN( QuickSearchLineTest )
