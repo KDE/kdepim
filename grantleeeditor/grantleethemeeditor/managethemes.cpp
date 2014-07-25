@@ -21,7 +21,7 @@
 #include <KStandardDirs>
 #include <QPushButton>
 #include <KMessageBox>
-#include <KTempDir>
+#include <QTemporaryDir>
 #include <KSharedConfig>
 
 
@@ -99,7 +99,7 @@ void ManageThemes::slotDeleteTheme()
     if (!selectItems.isEmpty()) {
         if (KMessageBox::questionYesNo(this, i18np("Do you want to remove selected theme?", "Do you want to remove %1 selected themes?", selectItems.count()), i18n("Remove theme")) == KMessageBox::Yes) {
             Q_FOREACH(QListWidgetItem *item, selectItems) {
-                if (KTempDir::removeDir(mLocalDirectory + QDir::separator() + item->text())) {
+                if (QDir((mLocalDirectory + QDir::separator() + item->text())).removeRecursively()) {
                     delete item;
                 } else {
                     KMessageBox::error(this, i18n("Theme \"%1\" cannot be deleted. Please contact your administrator.", item->text()), i18n("Delete theme failed"));

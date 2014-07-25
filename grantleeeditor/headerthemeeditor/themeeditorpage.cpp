@@ -28,7 +28,7 @@
 #include <KLocale>
 #include <QInputDialog>
 #include <KZip>
-#include <KTempDir>
+#include <QTemporaryDir>
 #include <QDebug>
 #include <KMessageBox>
 #include <KFileDialog>
@@ -186,12 +186,12 @@ void ThemeEditorPage::uploadTheme()
 {
     //force update for screenshot
     mEditorPage->preview()->updateViewer();
-    KTempDir tmp;
+    QTemporaryDir tmp;
     const QString themename = mDesktopPage->themeName();
-    const QString zipFileName = tmp.name() + QDir::separator() + themename + QLatin1String(".zip");
+    const QString zipFileName = tmp.path() + QDir::separator() + themename + QLatin1String(".zip");
     KZip *zip = new KZip(zipFileName);
     if (zip->open(QIODevice::WriteOnly)) {
-        const QString previewFileName = tmp.name() + QDir::separator() + themename + QLatin1String("_preview.png");
+        const QString previewFileName = tmp.path() + QDir::separator() + themename + QLatin1String("_preview.png");
         //qDebug()<<" previewFileName"<<previewFileName;
         QStringList lst;
         lst << previewFileName;

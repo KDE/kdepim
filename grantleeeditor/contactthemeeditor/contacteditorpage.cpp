@@ -28,7 +28,7 @@
 #include <KLocalizedString>
 #include <QInputDialog>
 #include <KZip>
-#include <KTempDir>
+#include <QTemporaryDir>
 #include <QDebug>
 #include <KMessageBox>
 #include <KFileDialog>
@@ -163,15 +163,15 @@ void ContactEditorPage::uploadTheme()
 {
     //force update for screenshot
     mEditorPage->preview()->updateViewer();
-    KTempDir tmp;
+    QTemporaryDir tmp;
     const QString themename = mDesktopPage->themeName();
-    const QString zipFileName = tmp.name() + QDir::separator() + themename + QLatin1String(".zip");
+    const QString zipFileName = tmp.path() + QDir::separator() + themename + QLatin1String(".zip");
     KZip *zip = new KZip(zipFileName);
     if (zip->open(QIODevice::WriteOnly)) {
 
         //TODO reactivate it when we will be able to create a preview
-        const QString previewContactFileName = tmp.name() + QDir::separator() + themename + QLatin1String("contact_preview.png");
-        const QString previewContactGroupFileName = tmp.name() + QDir::separator() + themename + QLatin1String("contactgroup_preview.png");
+        const QString previewContactFileName = tmp.path() + QDir::separator() + themename + QLatin1String("contact_preview.png");
+        const QString previewContactGroupFileName = tmp.path() + QDir::separator() + themename + QLatin1String("contactgroup_preview.png");
         QStringList lst;
         lst << previewContactFileName << previewContactGroupFileName;
 

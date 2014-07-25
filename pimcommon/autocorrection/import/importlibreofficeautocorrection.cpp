@@ -20,7 +20,7 @@
 #include <KZip>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KTempDir>
+#include <QTemporaryDir>
 #include <QDebug>
 #include <QDomDocument>
 #include <QDir>
@@ -71,7 +71,7 @@ bool ImportLibreOfficeAutocorrection::import(const QString& fileName, LoadAttrib
 
 void ImportLibreOfficeAutocorrection::importAutoCorrectionFile()
 {
-    mTempDir = new KTempDir();
+    mTempDir = new QTemporaryDir();
     const KArchiveDirectory* archiveDirectory = mArchive->directory();
     //Replace word
     importFile(DOCUMENT, archiveDirectory);
@@ -104,8 +104,8 @@ bool ImportLibreOfficeAutocorrection::importFile(Type type, const KArchiveDirect
     documentList = archiveDirectory->entry(archiveFileName);
     if (documentList && documentList->isFile()) {
         const KArchiveFile* archiveFile = static_cast<const KArchiveFile*>(documentList);
-        archiveFile->copyTo(mTempDir->name());
-        QFile file(mTempDir->name() + QDir::separator() + archiveFileName );
+        archiveFile->copyTo(mTempDir->path());
+        QFile file(mTempDir->path() + QDir::separator() + archiveFileName );
         QDomDocument doc;
         if (loadDomElement( doc, &file )) {
             QDomElement list = doc.documentElement();

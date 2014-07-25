@@ -26,7 +26,7 @@ class QWidget;
 class QProgressDialog;
 class ArchiveStorage;
 class KArchiveDirectory;
-class KTempDir;
+class QTemporaryDir;
 class KZip;
 class KArchiveFile;
 class KArchiveEntry;
@@ -110,7 +110,7 @@ protected:
     ArchiveStorage *mArchiveStorage;
     KPIMIdentities::IdentityManager *mIdentityManager;
     QWidget *mParent;
-    KTempDir *mTempDir;
+    QTemporaryDir *mTempDir;
     QProgressDialog *mProgressDialog;
     const KArchiveDirectory* mArchiveDirectory;
     int mNumberOfStep;

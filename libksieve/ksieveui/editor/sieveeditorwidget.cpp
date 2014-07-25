@@ -29,7 +29,7 @@
 #include <kns3/uploaddialog.h>
 #include <klocale.h>
 #include <KStandardGuiItem>
-#include <ktempdir.h>
+#include <QTemporaryDir>
 #include <kzip.h>
 #include <ktemporaryfile.h>
 #include <KIcon>
@@ -152,7 +152,7 @@ void SieveEditorWidget::setModified(bool b)
 
 void SieveEditorWidget::slotUploadScripts()
 {
-    KTempDir tmp;
+    QTemporaryDir tmp;
     QTemporaryFile tmpFile;
     if (tmpFile.open()) {
         QTextStream out(&tmpFile);
@@ -160,7 +160,7 @@ void SieveEditorWidget::slotUploadScripts()
         out << script();
         tmpFile.close();
         const QString sourceName = mScriptName->text();
-        const QString zipFileName = tmp.name() + QDir::separator() + sourceName + QLatin1String(".zip");
+        const QString zipFileName = tmp.path() + QDir::separator() + sourceName + QLatin1String(".zip");
         KZip *zip = new KZip(zipFileName);
         if (zip->open(QIODevice::WriteOnly)) {
             if (zip->addLocalFile(tmpFile.fileName(), sourceName + QLatin1String(".siv"))) {

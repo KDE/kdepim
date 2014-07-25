@@ -66,7 +66,7 @@
 #include <KSharedConfigPtr>
 #include <KStandardDirs>
 #include <KStandardGuiItem>
-#include <KTempDir>
+#include <QTemporaryDir>
 #include <QTemporaryFile>
 #include <KToggleAction>
 #include <KPrintPreview>
@@ -697,8 +697,10 @@ QString ViewerPrivate::createAtmFileLink( const QString& atmFileName ) const
     QFileInfo atmFileInfo( atmFileName );
 
     // tempfile name is /TMP/attachmentsRANDOM/atmFileInfo.fileName()"
-    KTempDir *linkDir = new KTempDir( QDir::tempPath() + QLatin1Char('/') +  QLatin1String("attachments") );
-    QString linkPath = linkDir->name() + atmFileInfo.fileName();
+    const QString tmpPath = QDir::tempPath() + QLatin1Char('/') +  QLatin1String("attachments");
+    QDir().mkpath(tmpPath);
+    QTemporaryDir *linkDir = new QTemporaryDir( tmpPath );
+    QString linkPath = linkDir->path() + atmFileInfo.fileName();
     QFile *linkFile = new QFile( linkPath );
     linkFile->open( QIODevice::ReadWrite );
     const QString linkName = linkFile->fileName();

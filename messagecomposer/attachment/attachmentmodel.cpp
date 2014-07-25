@@ -27,7 +27,7 @@
 #include <QDebug>
 #include <KLocalizedString>
 #include <KLocale>
-#include <KTempDir>
+#include <QTemporaryDir>
 
 #include <kmime/kmime_headers.h>
 #include <kmime/kmime_util.h>
@@ -62,7 +62,7 @@ public:
     bool encryptSelected;
     bool signSelected;
     bool autoDisplayEnabled;
-    QList<KTempDir*> tempDirs;
+    QList<QTemporaryDir*> tempDirs;
 };
 
 AttachmentModel::Private::Private( AttachmentModel *qq )
@@ -164,9 +164,9 @@ QMimeData *AttachmentModel::mimeData( const QModelIndexList &indexes ) const
             attachmentName = i18n( "unnamed attachment" );
         }
 
-        KTempDir *tempDir = new KTempDir; // Will remove the directory on destruction.
+        QTemporaryDir *tempDir = new QTemporaryDir; // Will remove the directory on destruction.
         d->tempDirs.append( tempDir );
-        const QString fileName = tempDir->name() + attachmentName;
+        const QString fileName = tempDir->path() + attachmentName;
         KPIMUtils::kByteArrayToFile( part->data(),
                                      fileName,
                                      false, false, false );

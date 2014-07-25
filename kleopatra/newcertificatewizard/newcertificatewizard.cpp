@@ -66,7 +66,7 @@
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KDebug>
-#include <KTempDir>
+#include <QTemporaryDir>
 #include <KMessageBox>
 #include <QIcon>
 
@@ -867,7 +867,7 @@ public:
     }
 
 private:
-    KTempDir tmp;
+    QTemporaryDir tmp;
     struct Ui {
         ChooseProtocolPage chooseProtocolPage;
         EnterDetailsPage enterDetailsPage;
@@ -968,7 +968,7 @@ static const char * oidForAttributeName( const QString & attr ) {
 }
 
 QDir WizardPage::tmpDir() const {
-    return wizard() ? QDir( wizard()->d->tmp.name() ) : QDir::home() ;
+    return wizard() ? QDir( wizard()->d->tmp.path() ) : QDir::home() ;
 }
 
 void EnterDetailsPage::registerDialogPropertiesAsFields() {

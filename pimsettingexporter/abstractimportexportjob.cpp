@@ -25,7 +25,7 @@
 
 #include <KPIMIdentities/kpimidentities/identitymanager.h>
 #include <KZip>
-#include <KTempDir>
+#include <QTemporaryDir>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KStandardDirs>
@@ -216,8 +216,8 @@ void AbstractImportExportJob::initializeImportJob()
     if (mTempDir) {
         qDebug()<<" initializeImportJob already called";
     } else {
-        mTempDir = new KTempDir();
-        mTempDirName = mTempDir->name();
+        mTempDir = new QTemporaryDir();
+        mTempDirName = mTempDir->path();
         mCreateResource = new PimCommon::CreateResource();
         connect(mCreateResource,SIGNAL(createResourceInfo(QString)),SIGNAL(info(QString)));
         connect(mCreateResource,SIGNAL(createResourceError(QString)),SIGNAL(error(QString)));

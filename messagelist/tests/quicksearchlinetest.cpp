@@ -302,7 +302,7 @@ void QuickSearchLineTest::shouldRestoreDefaultSearchOptionWhenTextIsEmpied()
     QuickSearchLine searchLine;
     searchLine.show();
 
-    KPushButton *moreButton = qFindChild<KPushButton *>(&searchLine, QLatin1String("moreoptions"));
+    QPushButton *moreButton = qFindChild<QPushButton *>(&searchLine, QLatin1String("moreoptions"));
     QCOMPARE(moreButton->isVisible(), true);
     QTest::mouseClick(moreButton, Qt::LeftButton);
 
