@@ -41,6 +41,7 @@
 #include <KArchiveFile>
 #include <KZip>
 #include <QDebug>
+#include <KGlobal>
 
 #include <AkonadiCore/agenttype.h>
 #include <AkonadiCore/agentmanager.h>
