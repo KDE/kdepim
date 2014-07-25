@@ -47,6 +47,7 @@ private Q_SLOTS:
     void shouldEmitSearchOptionChangedWhenUseTabPress();
     void shouldHideShowWidgetWhenWeChangeVisibility();
     void shouldNotShowComboboxWhenWeAddNewItemWhenWeHiddedQuickSearchBarWidget();
+    void shouldRestoreDefaultSearchOptionWhenTextIsEmpied();
 };
 
 #endif // QUICKSEARCHLINETEST_H

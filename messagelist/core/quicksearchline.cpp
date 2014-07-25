@@ -309,6 +309,11 @@ void QuickSearchLine::resetFilter()
         mTagFilterCombo->setCurrentIndex( 0 );
     mLockSearch->setChecked(false);
     mSearchEveryWhere->setChecked(true);
+    mSearchAgainstBody->setChecked(false);
+    mSearchAgainstSubject->setChecked(false);
+    mSearchAgainstFromOrTo->setChecked(false);
+    mSearchAgainstBcc->setChecked(false);
+
     mExtraOption->hide();
 }
 
