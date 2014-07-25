@@ -75,7 +75,7 @@ NodeHelper::NodeHelper() :
   // for Windows and Macintosh.
   if ( mLocalCodec ) {
     if ( mLocalCodec->name().toLower() == "eucjp"
-#if defined Q_WS_WIN || defined Q_WS_MACX
+#if defined Q_OS_WIN || defined Q_OS_MACX
         || mLocalCodec->name().toLower() == "shift-jis" // OK?
 #endif
        )

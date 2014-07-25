@@ -107,7 +107,7 @@ void ExecutionContextUser::bringToForeground( QWidget * wid ) {
         wid->raise();
     else
         wid->show();
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     SetForegroundWindow( wid->winId() );
 #endif
 }

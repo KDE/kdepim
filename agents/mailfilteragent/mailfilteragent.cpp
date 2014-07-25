@@ -290,7 +290,7 @@ void MailFilterAgent::showFilterLogDialog(qlonglong windowId)
     if ( !m_filterLogDialog ) {
         m_filterLogDialog = new FilterLogDialog( 0 );
     }
-#ifndef Q_WS_WIN
+#ifndef Q_OS_WIN
     KWindowSystem::setMainWindow(m_filterLogDialog,windowId);
 #else
     KWindowSystem::setMainWindow(m_filterLogDialog,(HWND)windowId);

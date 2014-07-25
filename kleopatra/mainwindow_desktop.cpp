@@ -339,7 +339,7 @@ void MainWindow::Private::setupActions() {
         { "settings_self_test", i18n("Perform Self-Test"), QString(),
           0, q, SLOT(selfTest()), QString(), false, true },
         // Help menu
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
         { "help_about_gpg4win", i18n("About Gpg4win"), QString(),
           "gpg4win-compact", q, SLOT(aboutGpg4Win()), QString(), false, true },
 #endif

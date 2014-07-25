@@ -51,7 +51,7 @@
 #include <KDebug>
 #include <KStandardDirs>
 
-#ifdef Q_WS_MAEMO_5
+#ifdef Q_OS_MAEMO_5
 #include <KSharedConfig>
 #include <QStandardPaths>
 #endif
@@ -230,7 +230,7 @@ void KOAlarmClient::createReminder( const Akonadi::ETMCalendar::Ptr &calendar,
     return;
   }
 
-#if !defined(Q_WS_MAEMO_5) && !defined(KORGAC_AKONADI_AGENT)
+#if !defined(Q_OS_MAEMO_5) && !defined(KORGAC_AKONADI_AGENT)
   if ( !mDialog ) {
     mDialog = new AlarmDialog( calendar );
     connect( this, SIGNAL(saveAllSignal()), mDialog, SLOT(slotSave()) );
@@ -252,7 +252,7 @@ void KOAlarmClient::createReminder( const Akonadi::ETMCalendar::Ptr &calendar,
   Q_UNUSED( remindAtDate );
   Q_UNUSED( displayText );
 
-#if defined(Q_WS_MAEMO_5)
+#if defined(Q_OS_MAEMO_5)
   QMaemo5InformationBox::information( 0, incidence->summary(), QMaemo5InformationBox::NoTimeout );
 #else
   KNotification *notify = new KNotification( QLatin1String("reminder"), 0, KNotification::Persistent );

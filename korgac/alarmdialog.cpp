@@ -972,7 +972,7 @@ bool AlarmDialog::openIncidenceEditorThroughKOrganizer( const Incidence::Ptr &in
     }
     KWindowSystem::activateWindow( KWindowSystem::transientFor( window ) );
   }
-#elif defined(Q_WS_WIN)
+#elif defined(Q_OS_WIN)
   // WId is a typedef to a void* on windows
   QDBusReply<qlonglong> reply = korganizerObj.call( QLatin1String("winId") );
   if ( reply.isValid() ) {

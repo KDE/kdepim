@@ -74,7 +74,7 @@ IncidenceCompletionPriority::IncidenceCompletionPriority( Ui::EventOrTodoDesktop
   d->mUi->mTaskSeparator->hide();
 #endif
 
-#ifdef Q_WS_MAEMO_5
+#ifdef Q_OS_MAEMO_5
   // The default looks really bad in the editor.
   QPalette palette = d->mUi->mCompletionSlider->palette();
   palette.setColor( QPalette::Window, Qt::white );
