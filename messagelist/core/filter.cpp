@@ -119,21 +119,31 @@ void Filter::setSearchString( const QString &search, QuickSearchLine::SearchOpti
     if (mSearchString.isEmpty()) {
         return;
     }
-    mSearchList = mSearchString.split(QLatin1Char(' '), QString::SkipEmptyParts);
+    bool needToSplitString = false;
+    QString newStr = mSearchString;
+    if (mSearchString.startsWith(QLatin1Char('"')) && mSearchString.startsWith(QLatin1Char('"'))) {
+        newStr = newStr.remove(0,1);
+        newStr = newStr.remove(newStr.length()-1,1);
+        mSearchList = QStringList()<<newStr;
+    } else {
+        mSearchList = mSearchString.split(QLatin1Char(' '), QString::SkipEmptyParts);
+        needToSplitString = true;
+    }
 
     Baloo::PIM::EmailQuery query;
     if (options & QuickSearchLine::SearchEveryWhere) {
-        query.matches(mSearchString);
+        query.matches(newStr);
+        query.setSplitSearchMatchString(needToSplitString);
     } else if (options & QuickSearchLine::SearchAgainstSubject) {
-        query.subjectMatches(mSearchString);
+        query.subjectMatches(newStr);
     } else if (options & QuickSearchLine::SearchAgainstBody) {
-        query.bodyMatches(mSearchString);
+        query.bodyMatches(newStr);
     } else if (options & QuickSearchLine::SearchAgainstFrom) {
-        query.setFrom(mSearchString);
+        query.setFrom(newStr);
     } else if (options & QuickSearchLine::SearchAgainstBcc) {
-        query.setBcc(QStringList() << mSearchString);
+        query.setBcc(QStringList() << newStr);
     } else if (options & QuickSearchLine::SearchAgainstTo) {
-        query.setTo(QStringList() << mSearchString);
+        query.setTo(QStringList() << newStr);
     }
 
 
@@ -146,7 +156,6 @@ void Filter::setSearchString( const QString &search, QuickSearchLine::SearchOpti
     while (it.next()) {
         mMatchingItemIds << it.id();
     }
-
     emit finished();
 }
 
