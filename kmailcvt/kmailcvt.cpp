@@ -46,7 +46,7 @@ KMailCVT::KMailCVT(QWidget *parent)
     KMailCVTKernel *kernel = new KMailCVTKernel( this );
     CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
     CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
-
+    setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Help);
 
     selfilterpage = new KSelFilterPage;
     page1 = new KPageWidgetItem( selfilterpage, i18n( "Step 1: Select Filter" ) );
