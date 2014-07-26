@@ -33,7 +33,7 @@ class Error : public QObject
 
 public:
     enum ErrorCode {
-        OK // everything is alright
+        NoError // everything is alright
     };
 
     explicit Error( QObject *parent = 0 );
