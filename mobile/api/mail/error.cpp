@@ -19,7 +19,7 @@
 
 #include "error.h"
 
-Error::Error(QObject *parent) : QObject(parent), m_code(0)
+Error::Error(QObject *parent) : QObject(parent), m_code(NoError)
 {
 
 }
@@ -34,7 +34,7 @@ QString Error::text() const
     return m_text;
 }
 
-void Error::setError(int code, const QString &text)
+void Error::setError(ErrorCode code, const QString &text)
 {
     if (code != m_code || text != m_text) {
         m_code = code;
@@ -45,6 +45,5 @@ void Error::setError(int code, const QString &text)
 
 void Error::clear()
 {
-    setError(0, QString());
+    setError(NoError , QString());
 }
-
