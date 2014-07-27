@@ -45,11 +45,6 @@ int main( int argc, char **argv )
     aboutData.setProgramIconName(QLatin1String("kmail"));
     KAboutData::setApplicationData(aboutData);
 
-    app.setApplicationName(aboutData.componentName());
-    app.setApplicationDisplayName(aboutData.displayName());
-    app.setOrganizationDomain(aboutData.organizationDomain());
-    app.setApplicationVersion(aboutData.version());
-
     QCommandLineParser parser;
     parser.addVersionOption();
     parser.addHelpOption();

@@ -45,12 +45,6 @@ int main( int argc, char **argv )
   aboutData.addAuthor( i18n( "Volker Krause" ),  i18n( "Author" ), QStringLiteral("vkrause@kde.org") );
   KAboutData::setApplicationData(aboutData);
 
-  app.setApplicationName(aboutData.componentName());
-  app.setApplicationDisplayName(aboutData.displayName());
-  app.setOrganizationDomain(aboutData.organizationDomain());
-  app.setApplicationVersion(aboutData.version());
-
-
   QCommandLineParser parser;
   parser.addVersionOption();
   parser.addHelpOption();

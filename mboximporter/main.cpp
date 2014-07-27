@@ -47,11 +47,6 @@ int main(int argc, char *argv[])
 
     KAboutData::setApplicationData(aboutData);
 
-    app.setApplicationName(aboutData.componentName());
-    app.setApplicationDisplayName(aboutData.displayName());
-    app.setOrganizationDomain(aboutData.organizationDomain());
-    app.setApplicationVersion(aboutData.version());
-
     QString fileName;
     QCommandLineParser parser;
     parser.addVersionOption();
