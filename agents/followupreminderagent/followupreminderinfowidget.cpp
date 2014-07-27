@@ -21,7 +21,7 @@
 #include <QHBoxLayout>
 #include <QHeaderView>
 
-#include <kicon.h>
+#include <QIcon>
 #include <QMenu>
 #include <KGlobal>
 #include <KLocale>
@@ -122,7 +122,7 @@ void FollowUpReminderInfoWidget::customContextMenuRequested(const QPoint &pos)
     const QList<QTreeWidgetItem *> listItems = mTreeWidget->selectedItems();
     if ( !listItems.isEmpty() ) {
         QMenu menu;
-        menu.addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
+        menu.addAction(QIcon::fromTheme(QLatin1String("edit-delete")), i18n("Delete"), this, SLOT(slotRemoveItem()));
         menu.exec(QCursor::pos());
     }
 }

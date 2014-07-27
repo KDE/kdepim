@@ -26,7 +26,7 @@
 #include <QAction>
 #include <KActionCollection>
 #include <KCmdLineArgs>
-#include <KIcon>
+#include <QIcon>
 #include <KLocale>
 #include <qdebug.h>
 
@@ -38,7 +38,7 @@ CoisceimPlugin::CoisceimPlugin( KontactInterface::Core *core, const QVariantList
   setComponentData( KontactPluginFactory::componentData() );
 
   QAction *action =
-    new QAction( KIcon( "byobu" ),
+    new QAction( QIcon::fromTheme( "byobu" ),
                  i18nc( "@action:inmenu", "New Trip" ), this );
   actionCollection()->addAction( "new_trip", action );
   //action->setHelpText(
