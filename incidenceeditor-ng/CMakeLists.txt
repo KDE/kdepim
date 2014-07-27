@@ -62,6 +62,11 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   categoryeditdialog.cpp
   categoryselectdialog.cpp
   categorydialog.cpp
+
+  # Individual mail
+  individualmailcomponentfactory.cpp
+  individualmaildialog.cpp
+  opencomposerjob.cpp
 )
 
 kconfig_add_kcfg_files(incidenceeditors_ng_shared_LIB_SRCS globalsettings_base.kcfgc)
@@ -92,8 +97,10 @@ generate_export_header(incidenceeditorsng BASE_NAME incidenceeditors_ng)
 
 target_link_libraries(incidenceeditorsng
   KF5::AkonadiCalendar
+  KF5::AkonadiMime
   KF5::CalendarCore
   KF5::CalendarUtils
+  KF5::MailTransport
   kdepim
   kdepimdbusinterfaces # For UriHandler
   calendarsupport      # For KCalPrefs
@@ -132,12 +139,14 @@ install(TARGETS incidenceeditorsng ${INSTALL_TARGETS_DEFAULT_ARGS})
 
   target_link_libraries(incidenceeditorsngmobile
     KF5::AkonadiCalendar
+    KF5::AkonadiMime
     kdepim               # For KPIM::K{Date|Time}Edit
     calendarsupport      # For KCalPrefs
     kdepimdbusinterfaces # For UriHandler
     kdgantt2
     KF5::CalendarUtils
     KF5::CalendarCore
+    KF5::MailTransport
   )
 
   set_target_properties(incidenceeditorsngmobile PROPERTIES

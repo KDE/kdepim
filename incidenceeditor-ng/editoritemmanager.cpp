@@ -19,6 +19,7 @@
 */
 
 #include "editoritemmanager.h"
+#include "individualmailcomponentfactory.h"
 
 #include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
@@ -81,7 +82,7 @@ ItemEditorPrivate::ItemEditorPrivate( Akonadi::IncidenceChanger *changer, Editor
   mFetchScope.fetchFullPayload();
   mFetchScope.setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 
-  mChanger = changer ? changer : new Akonadi::IncidenceChanger( qq );
+  mChanger = changer ? changer : new Akonadi::IncidenceChanger( new IndividualMailComponentFactory(qq), qq );
 
   qq->connect( mChanger,
               SIGNAL(modifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),

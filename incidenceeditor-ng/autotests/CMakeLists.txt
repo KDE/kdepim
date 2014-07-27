@@ -41,3 +41,8 @@ target_link_libraries(
   incidenceeditorsng
 )
 
+kde4_add_executable(testindividualmaildialog NOGUI TEST testindividualmaildialog.cpp ../individualmaildialog.cpp)
+target_link_libraries(testindividualmaildialog
+  KF5::CalendarCore
+  Qt5::Test
+)
