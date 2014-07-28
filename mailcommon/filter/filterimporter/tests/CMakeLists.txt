@@ -1,6 +1,5 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
-include(AkonadiMacros)
 set(KDEPIMLIBS_RUN_ISOLATED_TESTS TRUE)
 set(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS TRUE)
 
@@ -18,7 +17,8 @@ add_akonadi_isolated_test_advanced(filterimportsylpheedtest.cpp filtertestkernel
 #  set( _test ${_source} filtertestkernel.cpp)
 #  get_filename_component( _name ${_source} NAME_WE )
 #  kde4_add_unit_test( ${_name} TESTNAME filterimport-${_name} ${_test} )
-#  target_link_libraries( ${_name}  mailcommon messagecomposer ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${KDE4_KDEUI_LIBS} ${QT_QTXML_LIBRARY} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS})
+
+#  target_link_libraries( ${_name}  mailcommon messagecomposer Qt5::Test    Qt5::Xml KF5::AkonadiCore KF5::PimIdentities)
 #endmacro()
 
 #add_filterimport_test( filterimportclawmailtest.cpp )

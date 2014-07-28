@@ -38,7 +38,7 @@
 #include <Akonadi/KMime/MessageParts>
 #include <AkonadiCore/itemfetchjob.h>
 #include <AkonadiCore/itemfetchscope.h>
-
+#include <KUrl>
 
 #include <MailTransport/mailtransport/errorattribute.h>
 

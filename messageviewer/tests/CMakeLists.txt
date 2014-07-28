@@ -52,10 +52,8 @@ target_link_libraries(viewertest_gui
   messageviewer
 )
 
-#reactivate it
-#include(AkonadiMacros)
-#set(KDEPIMLIBS_RUN_ISOLATED_TESTS TRUE)
-#set(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS TRUE)
+set(KDEPIMLIBS_RUN_ISOLATED_TESTS TRUE)
+set(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS TRUE)
 
-#add_akonadi_isolated_test_advanced( viewertest.cpp "" "messageviewer")
+add_akonadi_isolated_test_advanced( viewertest.cpp "" "messageviewer")
 

@@ -21,7 +21,7 @@
 #include <KABC/Addressee>
 
 #include <qtest.h>
-
+#include <QSignalSpy>
 
 MailSenderJobTest::MailSenderJobTest()
 {

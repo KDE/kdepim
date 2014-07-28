@@ -127,8 +127,7 @@ target_link_libraries(kaddressbookprivate
   kleo
 )
 add_subdirectory(merge/tests)
-#REACTIVATE
-#add_subdirectory(sendmail/tests)
+add_subdirectory(sendmail/tests)
 
 if(QGPGME_FOUND)
   target_link_libraries(kaddressbookprivate ${QGPGME_LIBRARIES})

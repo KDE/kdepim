@@ -18,10 +18,11 @@
 #include "searchpotentialduplicatecontactjobtest.h"
 #include "../searchpotentialduplicatecontactjob.h"
 
-#include <Akonadi/Item>
+#include <AkonadiCore/item.h>
 #include <kabc/addressee.h>
 #include <QList>
 #include <qtest.h>
+#include <QSignalSpy>
 
 using namespace KABMergeContacts;
 SearchPotentialDuplicateContactJobTest::SearchPotentialDuplicateContactJobTest()

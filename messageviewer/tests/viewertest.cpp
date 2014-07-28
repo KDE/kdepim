@@ -22,6 +22,7 @@
 #include <KActionCollection>
 #include <KAction>
 #include <KToggleAction>
+#include <KUrl>
 
 ViewerTest::ViewerTest()
 {
