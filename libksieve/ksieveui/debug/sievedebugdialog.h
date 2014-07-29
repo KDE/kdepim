@@ -16,7 +16,7 @@
 
 #include "ksieveui_export.h"
 
-#include <kdialog.h>
+#include <QDialog>
 #include <kurl.h>
 
 class QStringList;
@@ -33,7 +33,7 @@ namespace KSieveUi {
  * Diagnostic info for Sieve. Only compiled when debug is enabled, it is
  * not useful enough for non-developers to have this in releases.
  */
-class KSIEVEUI_EXPORT SieveDebugDialog : public KDialog
+class KSIEVEUI_EXPORT SieveDebugDialog : public QDialog
 {
     Q_OBJECT    
 public:

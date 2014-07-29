@@ -17,13 +17,13 @@
 #ifndef PARSINGRESULTDIALOG_H
 #define PARSINGRESULTDIALOG_H
 #include "ksieveui_export.h"
-#include <KDialog>
+#include <QDialog>
 
 namespace PimCommon {
 class PlainTextEditorWidget;
 }
 namespace KSieveUi {
-class KSIEVEUI_EXPORT ParsingResultDialog : public KDialog
+class KSIEVEUI_EXPORT ParsingResultDialog : public QDialog
 {
     Q_OBJECT
 public:

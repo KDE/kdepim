@@ -23,13 +23,24 @@
 #include <QComboBox>
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace MessageViewer;
 AdBlockAddSubscriptionDialog::AdBlockAddSubscriptionDialog(const QStringList &excludeList, QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n("Add subscription") );
-    setButtons( Ok|Cancel );
+    setWindowTitle( i18n("Add subscription") );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     QWidget *w = new QWidget;
     QHBoxLayout *lay = new QHBoxLayout;
     QLabel *lab = new QLabel(i18n("Select List:"));
@@ -39,7 +50,8 @@ AdBlockAddSubscriptionDialog::AdBlockAddSubscriptionDialog(const QStringList &ex
     lay->addWidget(mListSubscription);
 
     w->setLayout(lay);
-    setMainWidget(w);
+    mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
     initializeList(excludeList);
 }
 

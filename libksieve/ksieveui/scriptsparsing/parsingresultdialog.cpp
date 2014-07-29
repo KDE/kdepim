@@ -23,21 +23,34 @@
 
 #include <KLocalizedString>
 #include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace KSieveUi;
 
 ParsingResultDialog::ParsingResultDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Sieve Parsing" ) );
-    setButtons( Close|User1 );
-    setButtonText(User1, i18n("Save As..."));
+    setWindowTitle( i18n( "Sieve Parsing" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *user1Button = new QPushButton;
+    buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    user1Button->setText(i18n("SaveAs..."));
 
     mTextEdit = new PimCommon::PlainTextEditorWidget( this );
     new XMLPrintingSyntaxHighLighter(mTextEdit->editor()->document());
     mTextEdit->setReadOnly( true );
-    setMainWidget( mTextEdit );
-    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSaveAs()));
+    mainLayout->addWidget(mTextEdit);
+    mainLayout->addWidget(buttonBox);
+
+    connect(user1Button, SIGNAL(clicked()), this, SLOT(slotSaveAs()));
     readConfig();
 }
 

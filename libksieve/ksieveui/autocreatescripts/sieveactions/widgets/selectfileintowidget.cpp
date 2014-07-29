@@ -23,15 +23,31 @@
 #include <QPushButton>
 #include <QHBoxLayout>
 #include <QPointer>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QVBoxLayout>
 
 using namespace KSieveUi;
 
 SelectFileIntoDialog::SelectFileIntoDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Select folder" ) );
-    setButtons( Ok|Cancel );
-    setButtonFocus( Ok );
+
+    setWindowTitle( i18n( "Select folder" ) );
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
+    mainLayout->addWidget(buttonBox);
+    okButton->setFocus();
 
     //TODO get list of folder for specific imap account.
 }

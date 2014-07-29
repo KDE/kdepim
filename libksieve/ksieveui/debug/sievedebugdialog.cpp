@@ -24,15 +24,23 @@
 
 #include <QtCore/QTimer>
 #include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace KSieveUi;
 
 SieveDebugDialog::SieveDebugDialog( QWidget *parent )
-    : KDialog( parent ),
+    : QDialog( parent ),
       mSieveJob( 0 )
 {
-    setCaption( i18n( "Sieve Diagnostics" ) );
-    setButtons( Close );
+    setWindowTitle( i18n( "Sieve Diagnostics" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
     // Collect all accounts
     const Akonadi::AgentInstance::List lst = KSieveUi::Util::imapAgentInstances();
@@ -42,7 +50,8 @@ SieveDebugDialog::SieveDebugDialog( QWidget *parent )
 
     mEdit = new PimCommon::PlainTextEditorWidget( this );
     mEdit->setReadOnly( true );
-    setMainWidget( mEdit );
+    mainLayout->addWidget(mEdit);
+    mainLayout->addWidget(buttonBox);
 
     mEdit->editor()->setPlainText( i18n( "Collecting diagnostic information about Sieve support...\n\n" ) );
 

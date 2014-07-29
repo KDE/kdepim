@@ -18,13 +18,13 @@
 #ifndef ADBLOCKADDSUBSCRIPTIONDIALOG_H
 #define ADBLOCKADDSUBSCRIPTIONDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 
 class QComboBox;
 
 namespace MessageViewer {
 
-class AdBlockAddSubscriptionDialog : public KDialog
+class AdBlockAddSubscriptionDialog : public QDialog
 {
     Q_OBJECT
 public:

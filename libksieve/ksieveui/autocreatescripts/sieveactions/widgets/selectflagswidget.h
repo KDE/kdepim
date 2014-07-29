@@ -18,7 +18,7 @@
 #ifndef SELECTFLAGSWIDGET_H
 #define SELECTFLAGSWIDGET_H
 
-#include <KDialog>
+#include <QDialog>
 #include <QListWidget>
 class QLineEdit;
 
@@ -42,7 +42,7 @@ private:
 };
 
 
-class SelectFlagsListDialog : public KDialog
+class SelectFlagsListDialog : public QDialog
 {
     Q_OBJECT
 public:
