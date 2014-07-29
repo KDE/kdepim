@@ -58,6 +58,7 @@ MultiImapVacationDialog::MultiImapVacationDialog(QWidget *parent)
                                   "account configuration."));
     vbox->addWidget(lab);
     vbox->addStretch();
+    lab->setWordWrap(true);
     mStackedWidget->addWidget(w);
     mStackedWidget->setCurrentIndex(0);
     init();
