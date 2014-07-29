@@ -46,7 +46,6 @@ const K4AboutData &createAboutData()
 }
 
 K_PLUGIN_FACTORY(CoisceimPartFactory, registerPlugin<CoisceimPart>();)
-K_EXPORT_PLUGIN(CoisceimPartFactory(createAboutData()))
 
 CoisceimPart::CoisceimPart( QWidget *parentWidget, QObject *parent, const QVariantList & /*args*/ )
     : KParts::ReadOnlyPart(parent)

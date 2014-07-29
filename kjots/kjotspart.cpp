@@ -51,7 +51,6 @@ const K4AboutData &createAboutData()
 }
 
 K_PLUGIN_FACTORY(KJotsPartFactory, registerPlugin<KJotsPart>();)
-K_EXPORT_PLUGIN(KJotsPartFactory(createAboutData()))
 
 KJotsPart::KJotsPart( QWidget *parentWidget, QObject *parent, const QVariantList & /*args*/ )
     : KParts::ReadOnlyPart(parent)

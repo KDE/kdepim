@@ -34,7 +34,6 @@
 #include <QVBoxLayout>
 
 K_PLUGIN_FACTORY( KAddressBookFactory, registerPlugin<KAddressBookPart>(); )
-K_EXPORT_PLUGIN( KAddressBookFactory( AboutData() ) )
 
 KAddressBookPart::KAddressBookPart( QWidget *parentWidget, QObject *parent,
                                     const QVariantList & )
