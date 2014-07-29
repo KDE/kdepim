@@ -29,21 +29,12 @@
 
 #include <kpluginfactory.h>
 #include <klocale.h>
-#include <K4AboutData>
 
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 #include <QTimer>
 #include <QTextEdit>
 #include <QLabel>
-
-const K4AboutData &createAboutData()
-{
-  const QByteArray& ba = QByteArray( "coisceim" );
-  const KLocalizedString name = ki18n( "Coisceim part" );
-  static K4AboutData aboutData( ba, ba, name, ba, name );
-  return aboutData;
-}
 
 K_PLUGIN_FACTORY(CoisceimPartFactory, registerPlugin<CoisceimPart>();)
 
