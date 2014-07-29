@@ -3,7 +3,7 @@
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
 
-  <include>kglobalsettings.h</include>
+  <include>QFontDatabase</include>
   <include>kcolorscheme.h</include>
   <kcfgfile name="mailviewerrc" />
 
@@ -25,7 +25,7 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
 
   <group name="Fonts">
     <entry name="FixedFont" type="Font" key="fixed-font">
-      <default code="true">KGlobalSettings::fixedFont()</default>
+      <default code="true">QFontDatabase::systemFont(QFontDatabase::FixedFont)</default>
     </entry>
     <entry name="MinimumFontSize" type="Int">
       <label>When we render html do not use font size inferior to minimum size.</label>

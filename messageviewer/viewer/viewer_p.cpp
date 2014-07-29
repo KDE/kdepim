@@ -65,6 +65,7 @@
 #include <KSelectAction>
 #include <KSharedConfigPtr>
 #include <KStandardDirs>
+#include <KGlobalSettings>
 #include <KStandardGuiItem>
 #include <QTemporaryDir>
 #include <QTemporaryFile>

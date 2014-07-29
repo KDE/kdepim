@@ -45,7 +45,7 @@
 
 #include <QLineEdit>
 #include <KLocalizedString>
-
+#include <KGlobalSettings>
 #include <QKeyEvent>
 #include <QLabel>
 #include <QFontDatabase>

@@ -47,6 +47,7 @@
 #include <QWebView>
 #include <QWebPage>
 #include <QWebFrame>
+#include <KGlobalSettings>
 
 namespace MessageViewer {
 
