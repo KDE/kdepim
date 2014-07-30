@@ -48,19 +48,31 @@
 #include <QMetaMethod>
 #include <QResizeEvent>
 #include <KGuiItem>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QVBoxLayout>
 
-class TextDialog : public KDialog
+class TextDialog : public QDialog
 {
   public:
     TextDialog( QWidget *parent = 0 )
-      : KDialog( parent )
+      : QDialog( parent )
     {
-      setButtons( Ok );
+      QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok);
+      QVBoxLayout *mainLayout = new QVBoxLayout;
+      setLayout(mainLayout);
+      QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+      okButton->setDefault(true);
+      okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+      connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+      connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+      mainLayout->addWidget(buttonBox);
 
       mText = new KTextEdit;
+      mainLayout->addWidget(mText);
+      mainLayout->addWidget(buttonBox);
       mText->setReadOnly(true);
-      setMainWidget( mText );
-      setInitialSize( QSize( 400, 600 ) );
+      resize( QSize( 400, 600 ) );
     }
 
     void setText( const QString &text )
@@ -239,7 +251,7 @@ void AgentWidget::showTaskList()
   }
 
   QPointer<TextDialog> dlg = new TextDialog( this );
-  dlg->setCaption( QLatin1String( "Resource Task List" ) );
+  dlg->setWindowTitle( QLatin1String( "Resource Task List" ) );
   dlg->setText( txt );
   dlg->exec();
   delete dlg;
@@ -263,7 +275,7 @@ void AgentWidget::showChangeNotifications()
   }
 
   QPointer<TextDialog> dlg = new TextDialog( this );
-  dlg->setCaption( QLatin1String( "Change Notification Log" ) );
+  dlg->setWindowTitle( QLatin1String( "Change Notification Log" ) );
   dlg->setText( txt );
 
   dlg->exec();
