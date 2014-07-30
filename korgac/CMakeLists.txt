@@ -24,6 +24,7 @@ add_subdirectory(tests)
 
 set(korgac_SRCS
   koalarmclient.cpp
+  koalarmclient_debug.cpp
 )
 
 if(KORGAC_AKONADI_AGENT)

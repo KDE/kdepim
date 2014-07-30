@@ -48,13 +48,14 @@
 #include <KCheckableProxyModel>
 #include <KConfig>
 #include <KConfigGroup>
-#include <KDebug>
-#include <KStandardDirs>
 
 #ifdef Q_OS_MAEMO_5
 #include <KSharedConfig>
 #include <QStandardPaths>
 #endif
+
+#include <QDebug> 
+#include "koalarmclient_debug.h"
 
 using namespace KCalCore;
 
@@ -121,7 +122,7 @@ void KOAlarmClient::deferredInit()
     return;
   }
 
-  kDebug(5891) << "Performing delayed initialization.";
+  qCDebug(KOALARMCLIENT_LOG) << "Performing delayed initialization.";
 
   // load reminders that were active when quitting
   KConfigGroup genGroup( KSharedConfig::openConfig(), "General" );
@@ -199,14 +200,14 @@ void KOAlarmClient::checkAlarms()
   // We do not want to miss any reminders, so don't perform check unless
   // the collections are available and populated.
   if ( !collectionsAvailable() ) {
-    kDebug(5891) << "Collections are not available; aborting check.";
+    qCDebug(KOALARMCLIENT_LOG) << "Collections are not available; aborting check.";
     return;
   }
 
   QDateTime from = mLastChecked.addSecs( 1 );
   mLastChecked = QDateTime::currentDateTime();
 
-  kDebug(5891) << "Check:" << from.toString() << " -" << mLastChecked.toString();
+  qCDebug(KOALARMCLIENT_LOG) << "Check:" << from.toString() << " -" << mLastChecked.toString();
 
   const Alarm::List alarms = mCalendar->alarms( KDateTime( from, KDateTime::LocalZone ),
                                                 KDateTime( mLastChecked, KDateTime::LocalZone ),

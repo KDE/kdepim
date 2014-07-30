@@ -29,7 +29,7 @@
 #include <QAction>
 #include <KActionCollection>
 #include <KConfigGroup>
-#include <KDebug>
+#include <QDebug>
 #include <KIconEffect>
 #include <KIconLoader>
 #include <KLocale>
