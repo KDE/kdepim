@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "error.h"
 #include <QDateTime>
 
-#include <Akonadi/ItemFetchJob>
+#include <AkonadiCore/ItemFetchJob>
 
 class Message : public QObject
 {
