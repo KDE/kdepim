@@ -52,7 +52,7 @@ void MonitorsModel::init()
   mManager = new org::freedesktop::Akonadi::NotificationManager( service,
     QLatin1String( "/notifications" ), QDBusConnection::sessionBus(), this );
   if ( !mManager ) {
-    kWarning() << "Failed to connect to org.freedesktop.Akonadi.NotificationManager";
+    qWarning() << "Failed to connect to org.freedesktop.Akonadi.NotificationManager";
     return;
   }
 

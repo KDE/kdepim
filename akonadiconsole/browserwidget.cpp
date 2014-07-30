@@ -54,7 +54,7 @@
 #include <kabc/contactgroup.h>
 #include <KCalCore/Incidence>
 
-#include <kdebug.h>
+#include <qdebug.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <kfiledialog.h>
@@ -275,9 +275,9 @@ void BrowserWidget::itemFetchDone(KJob * job)
 {
   ItemFetchJob *fetch = static_cast<ItemFetchJob*>( job );
   if ( job->error() ) {
-    kWarning( 5265 ) << "Item fetch failed: " << job->errorString();
+    qWarning() << "Item fetch failed: " << job->errorString();
   } else if ( fetch->items().isEmpty() ) {
-    kWarning( 5265 ) << "No item found!";
+    qWarning() << "No item found!";
   } else {
     const Item item = fetch->items().first();
     setItem( item );

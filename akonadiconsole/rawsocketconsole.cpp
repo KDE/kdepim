@@ -22,7 +22,10 @@
 #include <akonadi/private/xdgbasedirs_p.h>
 #include <AkonadiCore/servermanager.h>
 
-#include <KDebug>
+#include <QDebug>
+#include "akonadiconsole_debug.h"
+
+
 #include <KGlobalSettings>
 #include <QIcon>
 #include <KLocalizedString>
@@ -104,7 +107,7 @@ void RawSocketConsole::connectClicked()
     }
 
     if ( !QFile::exists( connectionConfigFile ) ) {
-      kWarning( 5250 ) << "Akonadi Client Session: connection config file '"
+      qCWarning(AKONADICONSOLE_LOG) << "Akonadi Client Session: connection config file '"
       << "akonadi/akonadiconnectionrc cannot be found in '"
       << XdgBaseDirs::homePath( "config" ) << "' nor in any of "
       << XdgBaseDirs::systemPathList( "config" );

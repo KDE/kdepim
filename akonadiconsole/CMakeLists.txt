@@ -12,6 +12,7 @@ include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
 
 
 set(akonadiconsole_bin_SRCS
+  akonadiconsole_debug.cpp
   agentwidget.cpp
   agentconfigdialog.cpp
   agentconfigmodel.cpp

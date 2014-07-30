@@ -44,12 +44,12 @@ MonitorItem::MonitorItem( const QString &identifier_, MonitorsModel* model):
       service, QLatin1String( "/subscriber/" ) + identifier,
       QDBusConnection::sessionBus(), this );
   if ( !mInterface ) {
-    kWarning() << "Failed to connect to org.freedesktop.Akonadi.NotificationSource of subscriber" << identifier_;
+    qWarning() << "Failed to connect to org.freedesktop.Akonadi.NotificationSource of subscriber" << identifier_;
     return;
   }
 
   if ( mInterface->lastError().isValid() ) {
-    kWarning() << mInterface->lastError().message();
+    qWarning() << mInterface->lastError().message();
     return;
   }
 

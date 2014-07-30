@@ -304,7 +304,7 @@ void AgentWidget::cloneAgent()
     connect( job, SIGNAL(result(KJob*)), SLOT(cloneAgent(KJob*)) );
     job->start();
   } else {
-    kWarning() << "WTF?";
+    qWarning() << "WTF?";
   }
 }
 
@@ -322,14 +322,14 @@ void AgentWidget::cloneAgent( KJob* job )
   QDBusInterface sourceIface( QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg( mCloneSource.identifier() ),
                               "/Settings" );
   if ( !sourceIface.isValid() ) {
-    kError() << "Unable to obtain KConfigXT D-Bus interface of source agent" << mCloneSource.identifier();
+    qCritical() << "Unable to obtain KConfigXT D-Bus interface of source agent" << mCloneSource.identifier();
     return;
   }
 
   QDBusInterface targetIface( QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg( cloneTarget.identifier() ),
                               "/Settings" );
   if ( !targetIface.isValid() ) {
-    kError() << "Unable to obtain KConfigXT D-Bus interface of target agent" << cloneTarget.identifier();
+    qCritical() << "Unable to obtain KConfigXT D-Bus interface of target agent" << cloneTarget.identifier();
     return;
   }
 
@@ -351,7 +351,7 @@ void AgentWidget::cloneAgent( KJob* job )
     const QString methodName = QString::fromLatin1( signature.left( signature.indexOf( '(' ) ) );
     const QDBusMessage reply = sourceIface.call( methodName );
     if ( reply.arguments().count() != 1 ) {
-      kError() << "call to method" << signature << "failed: " << reply.arguments() << reply.errorMessage();
+      qCritical() << "call to method" << signature << "failed: " << reply.arguments() << reply.errorMessage();
       continue;
     }
     const QString setterName = QLatin1String("set") + methodName.at( 0 ).toUpper() + methodName.mid( 1 );

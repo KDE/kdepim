@@ -26,7 +26,8 @@
 #include <KDebug>
 #include <KLocale>
 
-
+#include <QDebug> 
+#include "akonadiconsole_debug.h"
 #include <AkonadiCore/ServerManager>
 
 #include <akonadi/private/imapparser_p.h>
@@ -147,7 +148,7 @@ NotificationModel::NotificationModel( QObject* parent ) :
                                                           QLatin1String( "/notifications" ),
                                                           QDBusConnection::sessionBus(), this );
   if ( !m_manager ) {
-    kWarning( 5250 ) << "Unable to connect to notification manager";
+    qCWarning(AKONADICONSOLE_LOG) << "Unable to connect to notification manager";
     return;
   }
 }
@@ -364,7 +365,7 @@ void NotificationModel::setEnabled( bool enable )
                                                       QLatin1String( "/subscriber/" ) + identifier,
                                                       QDBusConnection::sessionBus(), this );
     if ( !m_source ) {
-      kWarning( 5250 ) << "Unable to connect to notification source";
+      qCWarning(AKONADICONSOLE_LOG) << "Unable to connect to notification source";
       return;
     }
 
