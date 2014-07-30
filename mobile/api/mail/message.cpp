@@ -48,9 +48,29 @@ QString Message::from() const
     return m_from;
 }
 
+QString Message::to() const
+{
+    return m_to;
+}
+
+QString Message::cc() const
+{
+    return m_cc;
+}
+
+QString Message::bcc() const
+{
+    return m_bcc;
+}
+
 QString Message::textContent() const
 {
     return m_textContent;
+}
+
+QDateTime Message::date() const
+{
+    return m_date;
 }
 
 Error *Message::error() const
@@ -82,7 +102,11 @@ void Message::slotItemReceived(const Akonadi::Item::List &itemList)
 
     m_subject = msg.subject()->asUnicodeString();
     m_from = msg.from()->asUnicodeString();
+    m_to = msg.to()->asUnicodeString();
+    m_cc = msg.cc()->asUnicodeString();
+    m_bcc = msg.bcc()->asUnicodeString();
     m_textContent = msg.textContent()->decodedText(true,true);
+    m_date = msg.date()->dateTime().dateTime();
     emit messageChanged();
 }
 
