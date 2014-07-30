@@ -41,10 +41,7 @@
 
 #include <KApplication>
 #include <QDebug>
-#include <KDialog>
-#include <KGlobal>
 #include <KLocalizedString>
-#include <KStandardDirs>
 
 #include <QPushButton>
 #include <QPrinter>

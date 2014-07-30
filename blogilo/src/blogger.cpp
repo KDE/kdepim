@@ -23,7 +23,7 @@
 #include <kblog/blogcomment.h>
 
 #include <KUrl>
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 
 #include <KGAPI/Blogger/Blog>
@@ -237,12 +237,12 @@ bool BloggerPrivate::handleError(KGAPI2::Job *job)
 Blogger::Blogger(const KUrl &server, QObject *parent)
     : Blog(server, *new BloggerPrivate(this), parent)
 {
-    kDebug();
+    qDebug();
 }
 
 Blogger::~Blogger()
 {
-    kDebug();
+    qDebug();
 }
 
 
@@ -268,7 +268,7 @@ void Blogger::authenticate(const QMap<QString, QString> &authData)
     Q_D(Blogger);
 
     KGAPI2::AccountPtr account;
-    kDebug() << authData;
+    qDebug() << authData;
     if (!authData.isEmpty()) {
         QList<QUrl> scopes;
         scopes << KGAPI2::Account::bloggerScopeUrl();

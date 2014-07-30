@@ -26,10 +26,8 @@
 #include <QMenu>
 #include <QIcon>
 
-#include <QTreeWidget>
 #include <QHBoxLayout>
 #include <KSharedConfig>
-#include <QHeaderView>
 
 FollowUpReminderInfoDialog::FollowUpReminderInfoDialog(QWidget *parent)
     : KDialog(parent)

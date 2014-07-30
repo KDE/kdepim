@@ -47,7 +47,7 @@
 
 #include <KConfigGroup>
 #include <KLocalizedString>
-#include <KDebug>
+#include <QDebug>
 
 #include <cassert>
 #include <KSharedConfig>
@@ -273,7 +273,7 @@ static bool requirementsAreMet( const QVector<Line> & list, QString & error ) {
     if ( !le )
       continue;
     const QString key = line.attr;
-    kDebug() << "requirementsAreMet(): checking \"" << key << "\" against \"" << le->text() << "\":";
+    qDebug() << "requirementsAreMet(): checking \"" << key << "\" against \"" << le->text() << "\":";
     if ( le->text().trimmed().isEmpty() ) {
         if ( key.endsWith(QLatin1Char('!')) ) {
             if ( line.regex.isEmpty() )
@@ -298,7 +298,7 @@ static bool requirementsAreMet( const QVector<Line> & list, QString & error ) {
                           "Local Admin rule: <icode>%2</icode>", line.label, line.regex );
         return false;
     }
-    kDebug() << "ok" << endl;
+    qDebug() << "ok" << endl;
   }
   return true;
 }

@@ -72,7 +72,7 @@ namespace Kleo {
 # include <kdeclarativeapplication.h>
 #endif
 
-#include <KDebug>
+#include <QDebug>
 #include <kcmdlineargs.h>
 #include <klocale.h>
 #include <kiconloader.h>
@@ -214,14 +214,14 @@ int main( int argc, char** argv )
   KCmdLineArgs::addCmdLineOptions( KleopatraApplication::commandLineOptions() );
 #endif
 
-  kDebug() << "Statup timing:" << timer.elapsed() << "ms elapsed: Command line args created";
+  qDebug() << "Statup timing:" << timer.elapsed() << "ms elapsed: Command line args created";
 
   KleopatraApplication app;
 #ifdef KDEPIM_MOBILE_UI
   KDeclarativeApplicationBase::postApplicationSetup();
 #endif
 
-  kDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: Application created";
+  qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: Application created";
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
@@ -246,7 +246,7 @@ int main( int argc, char** argv )
   try {
       Kleo::UiServer server( args->getOption("uiserver-socket") );
 
-      kDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: UiServer created";
+      qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: UiServer created";
 
       QObject::connect( &server, SIGNAL(startKeyManagerRequested()),
                         &app, SLOT(openOrRaiseMainWindow()) );
@@ -278,7 +278,7 @@ int main( int argc, char** argv )
 #undef REGISTER
 
       server.start();
-      kDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: UiServer started";
+      qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: UiServer started";
 #endif
 
       const bool daemon = args->isSet("daemon");
@@ -293,14 +293,14 @@ int main( int argc, char** argv )
 #endif
       if ( !selfCheck( splash ) )
           return 1;
-      kDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: SelfCheck completed";
+      qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: SelfCheck completed";
 
 #ifdef HAVE_USABLE_ASSUAN
       fillKeyCache( &splash, &server );
 #else
       fillKeyCache( &splash, 0 );
 #endif
-      kDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: KeyCache loaded";
+      qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: KeyCache loaded";
 
 #ifndef QT_NO_SYSTEMTRAYICON
       app.startMonitoringSmartCard();
@@ -311,7 +311,7 @@ int main( int argc, char** argv )
       if ( !daemon ) {
           app.newInstance();
           app.setFirstNewInstance( false );
-          kDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: new instance created";
+          qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: new instance created";
 #ifndef QT_NO_SPLASHSCREEN
           splash.finish( app.mainWindow() );
 #endif // QT_NO_SPLASHSCREEN

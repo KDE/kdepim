@@ -42,7 +42,7 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KStandardGuiItem>
-#include <KDebug>
+#include <QDebug>
 #include <KConfigGroup>
 #include <KSharedConfig>
 
@@ -77,7 +77,7 @@ public:
     }
 
     void slotWhatsThisRequested() {
-        kDebug();
+        qDebug();
         if ( QWidget * const widget = qobject_cast<QWidget*>( q->sender() ) )
             if ( !widget->whatsThis().isEmpty() )
                 QWhatsThis::showText( QCursor::pos(), widget->whatsThis() );

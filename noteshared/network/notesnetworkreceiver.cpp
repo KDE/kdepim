@@ -42,7 +42,7 @@
 #include <qdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
-#include <KDebug>
+#include <QDebug>
 #include <KLocale>
 
 // Maximum note size in chars we are going to accept,
@@ -146,6 +146,6 @@ void NotesNetworkReceiver::slotConnectionClosed()
 
 void NotesNetworkReceiver::slotError( QAbstractSocket::SocketError error )
 {
-    kWarning( 5500 ) <<"error type :"<< ( int ) error <<" error string : "<<m_sock->errorString();
+    qWarning() <<"error type :"<< ( int ) error <<" error string : "<<m_sock->errorString();
 }
 

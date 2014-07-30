@@ -25,7 +25,6 @@
 
 #include <KNotification>
 #include <KLocale>
-#include <KGlobal>
 #include <QIcon>
 #include <KIconLoader>
 #include <KComponentData>

@@ -40,15 +40,13 @@
 #include <klocale.h>
 
 #include <QVBoxLayout>
+#include <QLineEdit>
 #include <dnssd/servicemodel.h>
 #include <dnssd/servicebrowser.h>
 
 #include <QLabel>
 #include <QString>
-#include <QLineEdit>
 #include <QTreeView>
-#include <QSortFilterProxyModel>
-#include <QHeaderView>
 
 using namespace NoteShared;
 NoteHostDialog::NoteHostDialog( const QString &caption, QWidget *parent )

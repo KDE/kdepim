@@ -27,7 +27,6 @@
 #include <knotification.h>
 #include <KLocalizedString>
 #include <KIconLoader>
-#include <KGlobal>
 #include <KComponentData>
 using namespace FollowUpReminder;
 
