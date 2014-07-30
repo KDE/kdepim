@@ -63,8 +63,15 @@ void CreateNewNoteJob::setRichText(bool richText)
 
 void CreateNewNoteJob::start()
 {
+    createFetchCollectionJob(true);
+}
+
+void CreateNewNoteJob::createFetchCollectionJob(bool useSettings)
+{
     Akonadi::Collection col;
-    Akonadi::Collection::Id id = NoteShared::NoteSharedGlobalConfig::self()->defaultFolder();
+    Akonadi::Collection::Id id = -1;
+    if (useSettings)
+        id = NoteShared::NoteSharedGlobalConfig::self()->defaultFolder();
     if (id == -1) {
         QPointer<SelectedNotefolderDialog> dlg = new SelectedNotefolderDialog(mWidget);
         if (dlg->exec()) {
@@ -89,13 +96,21 @@ void CreateNewNoteJob::slotFetchCollection(KJob* job)
 {
     if (job->error()) {
         qDebug()<<" Error during fetch: "<<job->errorString();
-        deleteLater();
+        if (KMessageBox::Yes == KMessageBox::warningYesNo(0, i18n("An error occures during fetching. Do you want select an new default collection?"))) {
+            createFetchCollectionJob(false);
+        } else {
+            deleteLater();
+        }
         return;
     }
     Akonadi::CollectionFetchJob *fetchCollection = qobject_cast<Akonadi::CollectionFetchJob*>(job);
     if (fetchCollection->collections().isEmpty()) {
         qDebug()<<"No collection fetched";
-        deleteLater();
+        if (KMessageBox::Yes == KMessageBox::warningYesNo(0, i18n("An error occures during fetching. Do you want select a new default collection?"))) {
+            createFetchCollectionJob(false);
+        } else {
+            deleteLater();
+        }
         return;
     }
     Akonadi::Collection col = fetchCollection->collections().at(0);

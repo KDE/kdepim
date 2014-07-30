@@ -392,6 +392,9 @@ public:
     bool searchEditHasFocus() const;
 
     void setQuickSearchClickMessage(const QString &msg);
+
+    void populateStatusFilterCombo();
+
 public slots:
     /**
    * Selects all the items in the current folder.
