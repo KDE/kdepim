@@ -422,7 +422,7 @@ QList<Akonadi::MessageStatus> QuickSearchLine::status() const
 
 void QuickSearchLine::updateComboboxVisibility()
 {
-    mTagFilterCombo->setVisible(mSearchEdit->isVisible() && mTagFilterCombo->count());
+    mTagFilterCombo->setVisible(!mSearchEdit->isHidden() && mTagFilterCombo->count());
 }
 
 bool QuickSearchLine::eventFilter(QObject *object, QEvent *e)
