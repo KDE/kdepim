@@ -35,7 +35,7 @@
 #include <kcombobox.h>
 #include <qdebug.h>
 #include <kdialog.h>
-#include <khbox.h>
+#include <QHBoxLayout>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <KGlobal>
@@ -95,11 +95,15 @@ CryptoPagePlugin::CryptoPagePlugin()
   topLayout->addWidget( box, 3, 0, 1, 2 );
 
   // Send preferences/sign (see kleo/kleo/enum.h)
-  KHBox* hbox = new KHBox( box );
+  QWidget* hbox = new QWidget( box );
+  QHBoxLayout *hboxHBoxLayout = new QHBoxLayout(hbox);
+  hboxHBoxLayout->setMargin(0);
 
   l = new QLabel( i18n( "Sign:" ), hbox );
+  hboxHBoxLayout->addWidget(l);
 
   mSignPref = new KComboBox( hbox );
+  hboxHBoxLayout->addWidget(mSignPref);
   l->setBuddy( mSignPref );
   mSignPref->setEditable( false );
   for ( unsigned int i = Kleo::UnknownSigningPreference; i < Kleo::MaxSigningPreference ; ++i )
@@ -108,11 +112,15 @@ CryptoPagePlugin::CryptoPagePlugin()
   boxLayout->addWidget( hbox );
 
   // Send preferences/encrypt (see kleo/kleo/enum.h)
-  hbox = new KHBox( box );
+  hbox = new QWidget( box );
+  hboxHBoxLayout = new QHBoxLayout(hbox);
+  hboxHBoxLayout->setMargin(0);
 
   l = new QLabel( i18n( "Encrypt:" ), hbox );
+  hboxHBoxLayout->addWidget(l);
 
   mCryptPref = new KComboBox( hbox );
+  hboxHBoxLayout->addWidget(mCryptPref);
   l->setBuddy( mCryptPref );
   mCryptPref->setEditable( false );
   for ( unsigned int i = Kleo::UnknownPreference; i < Kleo::MaxEncryptionPreference ; ++i )

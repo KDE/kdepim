@@ -50,7 +50,7 @@
 
 #include <KComboBox>
 #include <QDebug>
-#include <KHBox>
+#include <QHBoxLayout>
 #include <KLocale>
 #include <KMessageBox>
 #include <KNotification>
@@ -236,13 +236,17 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
   mDetailView->hide();
   mLastItem = 0;
 
-  KHBox *suspendBox = new KHBox( topBox );
-  suspendBox->setSpacing( spacingHint() );
+  QWidget *suspendBox = new QWidget( topBox );
+  QHBoxLayout *suspendBoxHBoxLayout = new QHBoxLayout(suspendBox);
+  suspendBoxHBoxLayout->setMargin(0);
+  suspendBoxHBoxLayout->setSpacing( spacingHint() );
   mTopLayout->addWidget( suspendBox );
 
   QLabel *l = new QLabel( i18nc( "@label:spinbox", "Suspend &duration:" ), suspendBox );
+  suspendBoxHBoxLayout->addWidget(l);
 
   mSuspendSpin = new QSpinBox( suspendBox );
+  suspendBoxHBoxLayout->addWidget(mSuspendSpin);
   mSuspendSpin->setRange( 1, 9999 );
   mSuspendSpin->setValue( defSuspendVal );  // default suspend duration
   mSuspendSpin->setToolTip(
@@ -257,6 +261,7 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
   l->setBuddy( mSuspendSpin );
 
   mSuspendUnit = new KComboBox( suspendBox );
+  suspendBoxHBoxLayout->addWidget(mSuspendUnit);
   mSuspendUnit->addItem( i18nc( "@item:inlistbox suspend in terms of minutes", "minute(s)" ) );
   mSuspendUnit->addItem( i18nc( "@item:inlistbox suspend in terms of hours", "hour(s)" ) );
   mSuspendUnit->addItem( i18nc( "@item:inlistbox suspend in terms of days", "day(s)" ) );

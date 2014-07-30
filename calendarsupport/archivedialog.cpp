@@ -37,7 +37,7 @@
 #include <KMessageBox>
 #include <KUrl>
 #include <KUrlRequester>
-#include <KHBox>
+#include <QHBoxLayout>
 
 #include <QSpinBox>
 #include <QButtonGroup>
@@ -126,7 +126,9 @@ ArchiveDialog::ArchiveDialog( const Akonadi::ETMCalendar::Ptr &cal,
 
   // Checkbox, numinput and combo for auto-archiving (similar to kmail's
   // mExpireFolderCheckBox/mReadExpiryTimeNumInput in kmfolderdia.cpp)
-  KHBox *autoArchiveHBox = new KHBox( topFrame );
+  QWidget *autoArchiveHBox = new QWidget( topFrame );
+  QHBoxLayout *autoArchiveHBoxHBoxLayout = new QHBoxLayout(autoArchiveHBox);
+  autoArchiveHBoxHBoxLayout->setMargin(0);
   topLayout->addWidget( autoArchiveHBox );
   mAutoArchiveRB = new QRadioButton( i18nc( "@option:radio",
                                             "Automaticall&y archive items older than:" ),
@@ -142,6 +144,7 @@ ArchiveDialog::ArchiveDialog( const Akonadi::ETMCalendar::Ptr &cal,
   radioBG->addButton( mAutoArchiveRB );
 
   mExpiryTimeNumInput = new QSpinBox( autoArchiveHBox );
+  autoArchiveHBoxHBoxLayout->addWidget(mExpiryTimeNumInput);
   mExpiryTimeNumInput->setRange( 1, 500 );
   mExpiryTimeNumInput->setSingleStep( 1 );
 
@@ -156,6 +159,7 @@ ArchiveDialog::ArchiveDialog( const Akonadi::ETMCalendar::Ptr &cal,
            "will be saved and deleted, the newer will be kept." ) );
 
   mExpiryUnitsComboBox = new KComboBox( autoArchiveHBox );
+  autoArchiveHBoxHBoxLayout->addWidget(mExpiryUnitsComboBox);
   mExpiryUnitsComboBox->setToolTip(
     i18nc( "@info:tooltip",
            "Set the units for the automatic archive age" ) );

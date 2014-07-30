@@ -22,7 +22,7 @@
 
 #include <libkdepim/addressline/addresseelineedit.h>
 
-#include <khbox.h>
+#include <QHBoxLayout>
 #include <klocale.h>
 
 #include <qcheckbox.h>
@@ -38,7 +38,9 @@ DelegateSelector::DelegateSelector(QWidget * parent)
 
   QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
 
-  KHBox *delegateBox = new KHBox( mainWidget() );
+  QWidget *delegateBox = new QWidget( mainWidget() );
+  QHBoxLayout *delegateBoxHBoxLayout = new QHBoxLayout(delegateBox);
+  delegateBoxHBoxLayout->setMargin(0);
   new QLabel( i18n("Delegate:"), delegateBox );
   mDelegate = new KPIM::AddresseeLineEdit( delegateBox );
   connect( mDelegate, SIGNAL(textChanged(QString)), SLOT(slotTextChanged(QString)) );

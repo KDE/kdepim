@@ -44,8 +44,8 @@
 #include <unistd.h> // link()
 #include <errno.h>
 //KDE includes
-#include <KHBox>
-#include <KVBox>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QAction>
 #include <KActionCollection>
 #include <KActionMenu>
@@ -1504,24 +1504,37 @@ void ViewerPrivate::createWidgets() {
     connect(mMimePartTree, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slotMimeTreeContextMenuRequested(QPoint)) );
 #endif
 
-    mBox = new KHBox( mSplitter );
+    mBox = new QWidget( mSplitter );
+    QHBoxLayout *mBoxHBoxLayout = new QHBoxLayout(mBox);
+    mBoxHBoxLayout->setMargin(0);
 
 #ifndef KDEPIM_MOBILE_UI
     mColorBar = new HtmlStatusBar( mBox );
-    KVBox *readerBox = new KVBox( mBox );
+    mBoxHBoxLayout->addWidget(mColorBar);
+    QWidget *readerBox = new QWidget( mBox );
+    QVBoxLayout *readerBoxVBoxLayout = new QVBoxLayout(readerBox);
+    readerBoxVBoxLayout->setMargin(0);
+    mBoxHBoxLayout->addWidget(readerBox);
 #else // for mobile ui we position the HTML status bar on the right side
-    KVBox *readerBox = new KVBox( mBox );
+    QWidget *readerBox = new QWidget( mBox );
+    readerBoxVBoxLayout = new QVBoxLayout(readerBox);
+    readerBoxVBoxLayout->setMargin(0);
+    mBoxHBoxLayout->addWidget(readerBox);
     mColorBar = new HtmlStatusBar( mBox );
+    mBoxHBoxLayout->addWidget(mColorBar);
 #endif
 
     mColorBar->setObjectName( QLatin1String("mColorBar") );
     mColorBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Expanding );
 
     mScamDetectionWarning = new ScamDetectionWarningWidget(readerBox);
+    readerBoxVBoxLayout->addWidget(mScamDetectionWarning);
 
     mOpenAttachmentFolderWidget = new OpenAttachmentFolderWidget(readerBox);
+    readerBoxVBoxLayout->addWidget(mOpenAttachmentFolderWidget);
 
     mViewer = new MailWebView( mActionCollection, readerBox );
+    readerBoxVBoxLayout->addWidget(mViewer);
     mViewer->setObjectName( QLatin1String("mViewer") );
 
     mCreateTodo = new MessageViewer::TodoEdit(readerBox);
@@ -1535,6 +1548,7 @@ void ViewerPrivate::createWidgets() {
     mCreateEvent->hide();
 
     mFindBar = new FindBarMailWebView( mViewer, readerBox );
+    readerBoxVBoxLayout->addWidget(mFindBar);
     mTranslatorWidget = new PimCommon::TranslatorWidget(readerBox);
 #ifndef QT_NO_TREEVIEW
     mSplitter->setStretchFactor( mSplitter->indexOf(mMimePartTree), 0 );

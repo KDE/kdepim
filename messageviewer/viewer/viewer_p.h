@@ -52,7 +52,6 @@ class QAction;
 class KActionCollection;
 class KSelectAction;
 class KToggleAction;
-class KHBox;
 class QMenu;
 
 class QPoint;
@@ -642,7 +641,7 @@ public:
     Akonadi::Item mMessageItem; //the message item from Akonadi
     // widgets:
     QSplitter * mSplitter;
-    KHBox *mBox;
+    QWidget *mBox;
     HtmlStatusBar *mColorBar;
 #ifndef QT_NO_TREEVIEW
     MimePartTreeView* mMimePartTree;
