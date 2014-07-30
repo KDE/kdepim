@@ -21,7 +21,7 @@
 #include "sievescriptpage.h"
 #include "sieveincludewidget.h"
 
-#include <KHBox>
+#include <QHBoxLayout>
 #include <KMessageBox>
 #include <KLocalizedString>
 #include <QInputDialog>
@@ -92,26 +92,32 @@ SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
     layout->addWidget(mSieveListScript);
 
     //----------- the first row of buttons
-    KHBox *hb = new KHBox( this );
-    hb->setSpacing( 4 );
+    QWidget *hb = new QWidget( this );
+    QHBoxLayout *hbHBoxLayout = new QHBoxLayout(hb);
+    hbHBoxLayout->setMargin(0);
+    hbHBoxLayout->setSpacing( 4 );
 
     mBtnTop = new QPushButton( QString(), hb );
+    hbHBoxLayout->addWidget(mBtnTop);
     mBtnTop->setIcon( QIcon::fromTheme( QLatin1String("go-top") ) );
     mBtnTop->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnTop->setMinimumSize( mBtnTop->sizeHint() * 1.2 );
 
     mBtnUp = new QPushButton( QString(), hb );
+    hbHBoxLayout->addWidget(mBtnUp);
     mBtnUp->setAutoRepeat( true );
     mBtnUp->setIcon( QIcon::fromTheme( QLatin1String("go-up") ) );
     mBtnUp->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnUp->setMinimumSize( mBtnUp->sizeHint() * 1.2 );
     mBtnDown = new QPushButton( QString(), hb );
+    hbHBoxLayout->addWidget(mBtnDown);
     mBtnDown->setAutoRepeat( true );
     mBtnDown->setIcon( QIcon::fromTheme( QLatin1String("go-down") ) );
     mBtnDown->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnDown->setMinimumSize( mBtnDown->sizeHint() * 1.2 );
 
     mBtnBottom = new QPushButton( QString(), hb );
+    hbHBoxLayout->addWidget(mBtnBottom);
     mBtnBottom->setIcon( QIcon::fromTheme( QLatin1String("go-bottom") ) );
     mBtnBottom->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnBottom->setMinimumSize( mBtnBottom->sizeHint() * 1.2 );
@@ -123,22 +129,28 @@ SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
 
     layout->addWidget( hb );
 
-    hb = new KHBox( this );
-    hb->setSpacing( 4 );
+    hb = new QWidget( this );
+    hbHBoxLayout = new QHBoxLayout(hb);
+    hbHBoxLayout->setMargin(0);
+    hbHBoxLayout->setSpacing( 4 );
 
     mBtnNew = new QPushButton( QString(), hb );
+    hbHBoxLayout->addWidget(mBtnNew);
     mBtnNew->setIcon( QIcon::fromTheme( QLatin1String("document-new") ) );
     mBtnNew->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnNew->setMinimumSize( mBtnNew->sizeHint() * 1.2 );
 
     mBtnDelete = new QPushButton( QString(), hb );
+    hbHBoxLayout->addWidget(mBtnDelete);
     mBtnDelete->setIcon( QIcon::fromTheme( QLatin1String("edit-delete") ) );
     mBtnDelete->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnDelete->setMinimumSize( mBtnDelete->sizeHint() * 1.2 );
 
     mBtnRename = new QPushButton( i18n( "Rename..." ), hb );
+    hbHBoxLayout->addWidget(mBtnRename);
 
     mBtnDescription = new QPushButton( i18n( "Edit description..." ), hb );
+    hbHBoxLayout->addWidget(mBtnDescription);
 
 
     layout->addWidget( hb );
