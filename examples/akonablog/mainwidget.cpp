@@ -33,7 +33,7 @@
 #include <QListView>
 #include <QTreeView>
 
-#include <KVBox>
+#include <QVBoxLayout>
 #include <KTabBar>
 #include <QDebug>
 #include <KLocale>
@@ -64,14 +64,18 @@ MainWidget::MainWidget( MainWindow * parent ) :
     m_resourcesView->setModel( proxy );
 
     // Bottom part
-    KVBox* box = new KVBox( splitter );
+    QWidget* box = new QWidget( splitter );
+    QVBoxLayout *boxVBoxLayout = new QVBoxLayout(box);
+    boxVBoxLayout->setMargin(0);
 
     // Folders
     m_tabBar = new AkonadiTabBar( box );
+    boxVBoxLayout->addWidget(m_tabBar);
     connect( m_tabBar, SIGNAL(currentChanged(Akonadi::Collection)),
              SLOT(slotCurrentTabChanged(Akonadi::Collection)) );
 
     mMessageList = new QTreeView( box );
+    boxVBoxLayout->addWidget(mMessageList);
     mMessageList->setRootIsDecorated( false );
     mMessageList->setDragEnabled( false );
     mMessageList->setSelectionMode( QAbstractItemView::ExtendedSelection );

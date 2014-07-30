@@ -29,7 +29,7 @@
 #include <Akonadi/Calendar/IncidenceChanger>
 #include <KCalCore/Journal>
 
-class KVBox;
+
 class QScrollArea;
 
 /**
@@ -91,7 +91,7 @@ class EVENTVIEWS_EXPORT JournalView : public EventView
 
   private:
     QScrollArea *mSA;
-    KVBox *mVBox;
+    QWidget *mVBox;
     QMap<QDate, EventViews::JournalDateView*> mEntries;
     Akonadi::IncidenceChanger *mChanger;
 //    DateList mSelectedDates;  // List of dates to be displayed

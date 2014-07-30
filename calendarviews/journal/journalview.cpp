@@ -30,7 +30,7 @@
 
 #include <calendarsupport/utils.h>
 
-#include <KVBox>
+#include <QVBoxLayout>
 #include <QDebug>
 #include <QEvent>
 #include <QScrollArea>
@@ -43,7 +43,9 @@ JournalView::JournalView( QWidget *parent ) : EventView( parent ), mChanger( 0 )
   QVBoxLayout *topLayout = new QVBoxLayout( this );
   topLayout->setMargin( 0 );
   mSA = new QScrollArea( this );
-  mVBox = new KVBox( mSA->viewport() );
+  mVBox = new QWidget( mSA->viewport() );
+  QVBoxLayout *mVBoxVBoxLayout = new QVBoxLayout(mVBox);
+  mVBoxVBoxLayout->setMargin(0);
   mSA->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
   mSA->setWidgetResizable ( true );
   mSA->setWidget( mVBox );
@@ -63,6 +65,7 @@ void JournalView::appendJournal( const Akonadi::Item &journal, const QDate &dt )
     entry = mEntries[dt];
   } else {
     entry = new JournalDateView( calendar(), mVBox );
+    mVBox->layout()->addWidget(entry);
     entry->setDate( dt );
     entry->setIncidenceChanger( mChanger );
     entry->show();
