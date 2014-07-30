@@ -1125,5 +1125,12 @@ void Pane::themeMenuAboutToShow()
     w->view()->themeMenuAboutToShow(menu);
 }
 
+void Pane::populateStatusFilterCombo()
+{
+    for ( int i=0; i<count(); ++i ) {
+        Widget *w = qobject_cast<Widget *>( widget( i ) );
+        w->populateStatusFilterCombo();
+    }
+}
 
 #include "moc_pane.cpp"
