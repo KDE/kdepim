@@ -17,6 +17,7 @@
 
 #include "followupreminderinfotest.h"
 #include "../followupreminderinfo.h"
+#include <KConfigGroup>
 #include <qtest_kde.h>
 
 FollowUpReminderInfoTest::FollowUpReminderInfoTest()
@@ -63,6 +64,24 @@ void FollowUpReminderInfoTest::shoudBeValidEvenIfSubjectIsEmpty()
     info.setTo(to);
     info.setId(Akonadi::Item::Id(42));
     QCOMPARE(info.isValid(), true);
+}
+
+void FollowUpReminderInfoTest::shouldRestoreFromSettings()
+{
+    FollowUpReminder::FollowUpReminderInfo info;
+    info.setMessageId(QLatin1String("foo"));
+    const QDate date(2014,1,1);
+    info.setFollowUpReminderDate(QDateTime(date));
+    const QString to = QLatin1String("kde.org");
+    info.setTo(to);
+    info.setId(Akonadi::Item::Id(42));
+    info.setSubject(QLatin1String("Subject"));
+
+    KConfigGroup grp(KGlobal::config(), "testsettings");
+    info.writeConfig(grp);
+
+    FollowUpReminder::FollowUpReminderInfo restoreInfo(grp);
+    QCOMPARE(info, restoreInfo);
 }
 
 

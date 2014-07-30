@@ -30,7 +30,7 @@ private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shoudBeNotValid();
     void shoudBeValidEvenIfSubjectIsEmpty();
-
+    void shouldRestoreFromSettings();
 };
 
 #endif // FOLLOWUPREMINDERINFOTEST_H
