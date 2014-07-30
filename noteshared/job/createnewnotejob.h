@@ -44,6 +44,7 @@ private slots:
     void slotFetchCollection(KJob *job);
     void slotCollectionModifyFinished(KJob *job);
 private:
+    void createFetchCollectionJob(bool useSettings);
     QString mTitle;
     QString mText;
     bool mRichText;
