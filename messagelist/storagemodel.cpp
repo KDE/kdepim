@@ -372,11 +372,8 @@ int StorageModel::columnCount( const QModelIndex &parent ) const
 
 QModelIndex StorageModel::index( int row, int column, const QModelIndex &parent ) const
 {
-//QT5
-#if 0
     if ( !parent.isValid() )
-        return createIndex( row, column, 0 );
-#endif
+        return createIndex( row, column, (void*)0 );
     return QModelIndex(); // this model is flat.
 }
 
