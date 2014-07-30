@@ -15,7 +15,6 @@
 
 #include "kleo_kicondialog.h"
 
-#include <kbuttongroup.h>
 #include <klistwidgetsearchline.h>
 #include <kapplication.h>
 #include <klocale.h>
