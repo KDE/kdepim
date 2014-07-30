@@ -22,20 +22,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
+#include "error.h"
+
 #include <QObject>
 #include <QString>
 #include <QUrl>
 #include <QScopedPointer>
+#include <QDateTime>
 
 #include <Akonadi/ItemFetchJob>
 
-#include "error.h"
 
 class Message : public QObject
 {
     Q_OBJECT
     Q_PROPERTY (QString subject READ subject NOTIFY messageChanged)
     Q_PROPERTY (QString from READ from NOTIFY messageChanged)
+    Q_PROPERTY (QString to READ to NOTIFY messageChanged)
+    Q_PROPERTY (QString cc READ cc NOTIFY messageChanged)
+    Q_PROPERTY (QString bcc READ bcc NOTIFY messageChanged)
+    Q_PROPERTY (QDateTime date READ date NOTIFY messageChanged)
     Q_PROPERTY (QString textContent READ textContent NOTIFY messageChanged)
     Q_PROPERTY (Error* error READ error CONSTANT)
 
@@ -45,7 +51,11 @@ public:
 
     QString subject() const;
     QString from() const;
+    QString to() const;
+    QString cc() const;
+    QString bcc() const;
     QString textContent() const;
+    QDateTime date() const;
     Error *error() const;
 
 signals:
@@ -60,6 +70,10 @@ private slots:
 private:
     QString m_subject;
     QString m_from;
+    QString m_to;
+    QString m_cc;
+    QString m_bcc;
+    QDateTime m_date;
     QString m_textContent;
     QScopedPointer<Error> m_error;
 };
