@@ -50,6 +50,8 @@ public:
     QString subject() const;
     void setSubject(const QString &subject);
 
+    bool operator ==(const FollowUpReminderInfo &other) const;
+
 private:
     void readConfig(const KConfigGroup &config);
     Akonadi::Item::Id mId;
