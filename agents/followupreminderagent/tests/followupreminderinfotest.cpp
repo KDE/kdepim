@@ -19,6 +19,7 @@
 #include "../followupreminderinfo.h"
 #include <qtest.h>
 #include <KConfigGroup>
+#include <KSharedConfig>
 
 FollowUpReminderInfoTest::FollowUpReminderInfoTest()
 {
@@ -77,7 +78,7 @@ void FollowUpReminderInfoTest::shouldRestoreFromSettings()
     info.setId(Akonadi::Item::Id(42));
     info.setSubject(QLatin1String("Subject"));
 
-    KConfigGroup grp(KGlobal::config(), "testsettings");
+    KConfigGroup grp(KSharedConfig::openConfig(), "testsettings");
     info.writeConfig(grp);
 
     FollowUpReminder::FollowUpReminderInfo restoreInfo(grp);
