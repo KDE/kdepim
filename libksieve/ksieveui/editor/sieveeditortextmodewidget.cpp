@@ -39,6 +39,7 @@
 
 #include <KLocalizedString>
 #include <KSharedConfig>
+#include <KConfigGroup>
 
 #include <QSplitter>
 #include <QShortcut>

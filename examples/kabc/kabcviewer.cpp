@@ -28,22 +28,23 @@
 #include <klocale.h>
 
 #include <Akonadi/Contact/ContactViewer>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
 
 Dialog::Dialog( QWidget *parent )
-  : KDialog( parent )
+  : QDialog( parent )
 {
-  setCaption( i18n("Contact Viewer") );
-  setButtons( Close );
-  showButtonSeparator( true );
+  setWindowTitle( i18n("Contact Viewer") );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
-  QWidget *wdg = new QWidget( this );
-  QVBoxLayout *layout = new QVBoxLayout( wdg );
-
-  mBrowser = new Akonadi::ContactViewer( wdg );
-  layout->addWidget( mBrowser );
-
-  setMainWidget( wdg );
-
+  mBrowser = new Akonadi::ContactViewer( this );
+  mainLayout->addWidget(mBrowser);
+  mainLayout->addWidget(buttonBox);
   resize( 520, 580 );
 }
 

@@ -24,22 +24,29 @@
 #include <QListWidget>
 #include <QHBoxLayout>
 #include <QPointer>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QVBoxLayout>
 
 using namespace MessageComposer;
 
 ImageScalingSelectFormatDialog::ImageScalingSelectFormatDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    QWidget *w = new QWidget( this );
-    setMainWidget( w );
-    setCaption( i18nc("@title:window", "Select Image Format") );
-    setButtons( Ok | Cancel );
-    setDefaultButton( Ok );
-
-    QBoxLayout *topLayout = new QVBoxLayout( w );
-    topLayout->setSpacing( spacingHint() );
+    setWindowTitle( i18nc("@title:window", "Select Image Format") );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    okButton->setDefault(true);
     mListWidget = new QListWidget;
-    topLayout->addWidget(mListWidget);
+    mainLayout->addWidget(mListWidget);
+    mainLayout->addWidget(buttonBox);
+
     initialize();
 }
 

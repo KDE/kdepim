@@ -21,6 +21,8 @@
 #include "jobs/followupreminderjob.h"
 #include "jobs/followupreminderfinishtaskjob.h"
 
+#include <QIcon>
+
 #include <KConfigGroup>
 #include <KConfig>
 #include <KSharedConfig>
