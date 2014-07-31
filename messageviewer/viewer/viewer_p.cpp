@@ -34,6 +34,7 @@
 #include "adblock/adblockmanager.h"
 #include "widgets/todoedit.h"
 #include "widgets/eventedit.h"
+#include "widgets/noteedit.h"
 
 #ifdef MESSAGEVIEWER_READER_HTML_DEBUG
 #include "htmlwriter/filehtmlwriter.h"
@@ -138,6 +139,7 @@
 #include "pimcommon/translator/translatorwidget.h"
 #include "job/createtodojob.h"
 #include "job/createeventjob.h"
+#include "job/createnotejob.h"
 
 #include "interfaces/bodypart.h"
 #include "interfaces/htmlwriter.h"
@@ -1547,6 +1549,11 @@ void ViewerPrivate::createWidgets() {
     mCreateEvent->setObjectName(QLatin1String("createeventwidget"));
     mCreateEvent->hide();
 
+    mCreateNote = new MessageViewer::NoteEdit(readerBox);
+    connect(mCreateNote, SIGNAL(createNote(KMime::Message::Ptr,Akonadi::Collection)), this, SLOT(slotCreateNote(KMime::Message::Ptr,Akonadi::Collection)));
+    mCreateNote->setObjectName(QLatin1String("createnotewidget"));
+    mCreateNote->hide();
+
     mFindBar = new FindBarMailWebView( mViewer, readerBox );
     mTranslatorWidget = new PimCommon::TranslatorWidget(readerBox);
 #ifndef QT_NO_TREEVIEW
@@ -1877,6 +1884,13 @@ void ViewerPrivate::createActions()
     //TODO
     //mCreateEventAction->setShortcut(Qt::CTRL + Qt::Key_T);
     connect( mCreateEventAction, SIGNAL(triggered(bool)), SLOT(slotShowCreateEventWidget()) );
+
+    mCreateNoteAction = new KAction(KIcon( QLatin1String("view-pim-notes") ),i18nc("create a new note out of this message", "Create Note"), this);
+    mCreateNoteAction->setIconText( i18nc("create a new note out of this message", "Create Note") );
+    mCreateNoteAction->setHelpText( i18n("Allows you to create a note from this message") );
+    mCreateNoteAction->setWhatsThis( i18n( "This option starts a editor to create a note. Then you can edit the note to your liking before saving it." ) );
+    ac->addAction(QLatin1String("create_note"), mCreateNoteAction);
+    connect( mCreateNoteAction, SIGNAL(triggered(bool)), SLOT(slotShowCreateNoteWidget()) );
 }
 
 
@@ -3416,5 +3430,21 @@ void ViewerPrivate::slotShowCreateEventWidget()
 void ViewerPrivate::slotCreateEvent(const KCalCore::Event::Ptr &eventPtr, const Akonadi::Collection &collection)
 {
     CreateEventJob *createJob = new CreateEventJob(eventPtr, collection, mMessageItem, this);
+    createJob->start();
+}
+
+void ViewerPrivate::slotShowCreateNoteWidget()
+{
+    if (mMessage) {
+        mCreateNote->setMessage(mMessage);
+        mCreateNote->showNoteEdit();
+    } else {
+        qDebug()<<" There is not valid message";
+    }
+}
+
+void ViewerPrivate::slotCreateNote(const KMime::Message::Ptr &notePtr, const Akonadi::Collection &collection)
+{
+    CreateNoteJob *createJob = new CreateNoteJob(notePtr, collection, mMessageItem, this);
     createJob->start();
 }

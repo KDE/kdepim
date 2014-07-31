@@ -82,4 +82,24 @@ void ViewerTest::shouldShowCreateTodoWidgetWhenActivateItAndWeHaveAMessage()
     QCOMPARE(createtodowidget->isVisible(), true);
 }
 
+void ViewerTest::shouldShowCreateNoteWidgetWhenActivateItAndWeHaveAMessage()
+{
+  MessageViewer::Viewer viewer(0, 0, new KActionCollection(this));
+  viewer.show();
+  QTest::qWaitForWindowShown(&viewer);
+  QWidget *createnotewidget = qFindChild<QWidget *>(&viewer, QLatin1String("createnotewidget"));
+  QVERIFY(viewer.createNoteAction());
+
+  viewer.createNoteAction()->trigger();
+  //No message => we can show it.
+  QCOMPARE(createnotewidget->isVisible(), false);
+
+  KMime::Message::Ptr msg(new KMime::Message);
+  viewer.setMessage(msg);
+
+  viewer.createNoteAction()->trigger();
+  QCOMPARE(createnotewidget->isVisible(), true);
+}
+
+
 QTEST_KDEMAIN( ViewerTest, GUI )

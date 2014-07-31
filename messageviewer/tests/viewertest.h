@@ -27,6 +27,7 @@ public:
 private slots:
     void shouldHaveDefaultValuesOnCreation();
     void shouldShowCreateTodoWidgetWhenActivateItAndWeHaveAMessage();
+    void shouldShowCreateNoteWidgetWhenActivateItAndWeHaveAMessage();
 };
 
 #endif // VIEWERTEST_H

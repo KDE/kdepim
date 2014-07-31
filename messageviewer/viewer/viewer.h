@@ -285,6 +285,7 @@ public:
     KAction *expandShortUrlAction();
     KAction *createTodoAction();
     KAction *createEventAction();
+    KAction *createNoteAction();
 
     HeaderStrategy * headerStrategy() const;
 

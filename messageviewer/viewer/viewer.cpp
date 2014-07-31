@@ -701,6 +701,12 @@ KAction *Viewer::createEventAction()
     return d->mCreateEventAction;
 }
 
+KAction *Viewer::createNoteAction()
+{
+    Q_D( Viewer );
+    return d->mCreateNoteAction;
+}
+
 }
 
 
