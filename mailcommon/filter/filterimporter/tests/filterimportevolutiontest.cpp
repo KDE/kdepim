@@ -16,12 +16,12 @@
 */
 #include "filterimportevolutiontest.h"
 #include "mailfilter.h"
-#include <akonadi/qtest_akonadi.h>
+#include <AkonadiCore/qtest_akonadi.h>
 #include "filtertestkernel.h"
 #include <mailcommon/kernel/mailkernel.h>
 
 
-QTEST_AKONADIMAIN( FilterImportEvolutiontest, NoGUI )
+QTEST_AKONADIMAIN( FilterImportEvolutiontest )
 
 void FilterImportEvolutiontest::initTestCase()
 {

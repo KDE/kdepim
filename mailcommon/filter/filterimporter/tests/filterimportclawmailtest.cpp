@@ -17,11 +17,11 @@
 #include "filterimportclawmailtest.h"
 #include "../filterimporterclawsmail_p.h"
 #include "mailfilter.h"
-#include <akonadi/qtest_akonadi.h>
+#include <AkonadiCore/qtest_akonadi.h>
 #include "filtertestkernel.h"
 #include <mailcommon/kernel/mailkernel.h>
 
-QTEST_AKONADIMAIN( FilterImportClawMailtest, NoGUI )
+QTEST_AKONADIMAIN( FilterImportClawMailtest )
 
 void FilterImportClawMailtest::initTestCase()
 {

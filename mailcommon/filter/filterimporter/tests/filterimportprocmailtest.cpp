@@ -16,12 +16,12 @@
 */
 #include "filterimportprocmailtest.h"
 #include "mailfilter.h"
-#include <akonadi/qtest_akonadi.h>
+#include <AkonadiCore/qtest_akonadi.h>
 #include "filtertestkernel.h"
 #include <mailcommon/kernel/mailkernel.h>
 
 
-QTEST_AKONADIMAIN( FilterImportProcmailtest, NoGUI )
+QTEST_AKONADIMAIN( FilterImportProcmailtest )
 
 void FilterImportProcmailtest::initTestCase()
 {

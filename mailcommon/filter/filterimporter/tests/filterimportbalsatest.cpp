@@ -18,10 +18,10 @@
 #include "mailfilter.h"
 #include "filtertestkernel.h"
 #include <mailcommon/kernel/mailkernel.h>
-#include <akonadi/qtest_akonadi.h>
+#include <AkonadiCore/qtest_akonadi.h>
 
 
-QTEST_AKONADIMAIN( FilterImportBalsatest, NoGUI )
+QTEST_AKONADIMAIN( FilterImportBalsatest )
 
 void FilterImportBalsatest::initTestCase()
 {

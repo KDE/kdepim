@@ -16,12 +16,12 @@
 */
 #include "filterimportsylpheedtest.h"
 #include "mailfilter.h"
-#include <akonadi/qtest_akonadi.h>
+#include <AkonadiCore/qtest_akonadi.h>
 #include "filtertestkernel.h"
 #include <mailcommon/kernel/mailkernel.h>
 
 
-QTEST_AKONADIMAIN( FilterImportSylpheedtest, NoGUI )
+QTEST_AKONADIMAIN( FilterImportSylpheedtest )
 
 void FilterImportSylpheedtest::initTestCase()
 {

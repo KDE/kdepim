@@ -18,11 +18,11 @@
 #include "../filterimporterthunderbird_p.h"
 #include "filtertestkernel.h"
 #include "mailfilter.h"
-#include <akonadi/qtest_akonadi.h>
+#include <AkonadiCore/qtest_akonadi.h>
 #include <mailcommon/kernel/mailkernel.h>
 
 
-QTEST_AKONADIMAIN( FilterImportThunderbirdtest, NoGUI )
+QTEST_AKONADIMAIN( FilterImportThunderbirdtest )
 
 void FilterImportThunderbirdtest::initTestCase()
 {
