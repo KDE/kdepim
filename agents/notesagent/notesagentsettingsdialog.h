@@ -18,13 +18,13 @@
 #ifndef NOTESAGENTSETTINGSDIALOG_H
 #define NOTESAGENTSETTINGSDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 
 class KNotifyConfigWidget;
 namespace NoteShared {
 class NoteNetworkConfigWidget;
 }
-class NotesAgentSettingsDialog : public KDialog
+class NotesAgentSettingsDialog : public QDialog
 {
     Q_OBJECT
 public:

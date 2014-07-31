@@ -32,7 +32,7 @@
 
 #include "kdepim_export.h"
 #include <kabc/addressee.h>
-#include <KDialog>
+#include <QDialog>
 #include <QStringList>
 class KConfig;
 class QPushButton;
@@ -41,7 +41,7 @@ class KLineEdit;
 
 namespace KPIM {
 
-class KDEPIM_EXPORT RecentAddressDialog : public KDialog
+class KDEPIM_EXPORT RecentAddressDialog : public QDialog
 {
     Q_OBJECT
 public:

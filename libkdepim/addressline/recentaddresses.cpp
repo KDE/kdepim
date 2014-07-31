@@ -46,6 +46,7 @@
 #include <QListWidget>
 #include <QKeyEvent>
 #include <KSharedConfig>
+#include <QDialogButtonBox>
 
 using namespace KPIM;
 
@@ -182,17 +183,25 @@ QStringList RecentAddresses::addresses() const
 }
 
 RecentAddressDialog::RecentAddressDialog( QWidget *parent )
-    : KDialog( parent )
+    : QDialog( parent )
 {
-    setCaption( i18n( "Edit Recent Addresses" ) );
-    setButtons( Ok|Cancel );
-    setDefaultButton( Ok );
+    setWindowTitle( i18n( "Edit Recent Addresses" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    okButton->setDefault(true);
     setModal( true );
     QWidget *page = new QWidget( this );
-    setMainWidget( page );
 
     QVBoxLayout *layout = new QVBoxLayout( page );
-    layout->setSpacing( spacingHint() );
+    //PORT QT5 layout->setSpacing( spacingHint() );
     layout->setMargin( 0 );
 
     mLineEdit = new KLineEdit(this);
@@ -229,6 +238,10 @@ RecentAddressDialog::RecentAddressDialog( QWidget *parent )
             SLOT(slotSelectionChanged()));
     // maybe supplied lineedit has some text already
     slotTypedSomething( mLineEdit->text() );
+    mainLayout->addWidget(page);
+    mainLayout->addWidget(buttonBox);
+
+
     readConfig();
 }
 
