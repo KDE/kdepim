@@ -306,8 +306,7 @@ else()
       if(QT_QT3SUPPORT_FOUND)
         macro_optional_add_subdirectory(knode)
       endif()
-
-      if(Q_WS_X11)
+      if(NOT WIN32)
         macro_optional_add_subdirectory(ktimetracker)
       endif()
 

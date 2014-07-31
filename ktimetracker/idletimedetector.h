@@ -59,13 +59,14 @@ public:
      Returns true if it is possible to do idle detection.
      Idle detection relys on a feature in the X server, which might not
      always be present.
+     On OS X, it uses CGEventSourceSecondsSinceLastEventType() from ApplicationServices.framework
   **/
   bool isIdleDetectionPossible();
 
 Q_SIGNALS:
   /**
      Tells the listener to subtract time from current timing.
-     The time to subtract is due to the idle time since the dialog wass
+     The time to subtract is due to the idle time since the dialog was
      shown, and until the user answers the dialog.
      @param minutes Minutes to subtract.
   **/
@@ -104,12 +105,12 @@ public Q_SLOTS:
 
 
 protected:
-#if defined(HAVE_LIBXSS) && defined(Q_WS_X11)
+#if (defined(HAVE_LIBXSS) && defined(Q_WS_X11)) || defined(Q_OS_MAC)
   void informOverrun();
-#endif // HAVE_LIBXSS
+#endif // HAVE_LIBXSS || Q_OS_MAC
 
 protected Q_SLOTS:
-  void check();
+  void runOnce();
 
 private:
 #if defined(HAVE_LIBXSS) && defined(Q_WS_X11)

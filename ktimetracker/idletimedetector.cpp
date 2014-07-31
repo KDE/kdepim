@@ -39,6 +39,10 @@
 #include <QX11Info>
 #endif
 
+#ifdef Q_OS_MAC
+#    include <ApplicationServices/ApplicationServices.h>
+#endif
+
 IdleTimeDetector::IdleTimeDetector(int maxIdle)
 {
     _maxIdle = maxIdle;
@@ -47,11 +51,16 @@ IdleTimeDetector::IdleTimeDetector(int maxIdle)
     int event_base, error_base;
     if(XScreenSaverQueryExtension(QX11Info::display(), &event_base, &error_base)) _idleDetectionPossible = true;
     else _idleDetectionPossible = false;
-    _timer = new QTimer(this);
-    connect(_timer, SIGNAL(timeout()), this, SLOT(check()));
+#elif defined(Q_OS_MAC)
+    _idleDetectionPossible = true;
 #else
     _idleDetectionPossible = false;
 #endif // HAVE_LIBXSS
+    if( _idleDetectionPossible ){
+        _timer = new QTimer(this);
+        // the slot was renamed to runOnce() to avoid a macro defined through ApplicationServices.h on OS X
+        connect(_timer, SIGNAL(timeout()), this, SLOT(runOnce()));
+    }
 }
 
 bool IdleTimeDetector::isIdleDetectionPossible()
@@ -59,11 +68,11 @@ bool IdleTimeDetector::isIdleDetectionPossible()
     return _idleDetectionPossible;
 }
 
-void IdleTimeDetector::check()
+void IdleTimeDetector::runOnce()
 {
     kDebug(5970) << "Entering function";
 #if defined(HAVE_LIBXSS) && defined(Q_WS_X11)
-    kDebug(5970) << "kompiled for libxss and x11, idledetectionpossible is " << _idleDetectionPossible;
+    kDebug(5970) << "compiled for libxss and x11, idledetectionpossible is " << _idleDetectionPossible;
     if (_idleDetectionPossible)
     {
         _mit_info = XScreenSaverAllocInfo();
@@ -72,6 +81,12 @@ void IdleTimeDetector::check()
         kDebug(5970) << "The desktop has been idle for " << idleminutes << " minutes.";
         kDebug(5970) << "The idle time in miliseconds is " << _mit_info->idle;
         if (idleminutes >= _maxIdle)
+        informOverrun();
+    }
+#elif defined(Q_OS_MAC)
+    // see http://stackoverflow.com/a/22307622/1460868
+    idleminutes = (int) CGEventSourceSecondsSinceLastEventType( kCGEventSourceStateHIDSystemState, kCGAnyInputEventType ) / secsPerMinute;
+    if( idleminutes >= _maxIdle ){
         informOverrun();
     }
 #endif // HAVE_LIBXSS
@@ -92,7 +107,7 @@ void IdleTimeDetector::revert()
     emit(stopAllTimers(idlestart));
 }
 
-#if defined(HAVE_LIBXSS) && defined(Q_WS_X11)
+#if (defined(HAVE_LIBXSS) && defined(Q_WS_X11)) || defined(Q_OS_MAC)
 void IdleTimeDetector::informOverrun()
 {
     if (!_overAllIdleDetect)
@@ -126,20 +141,20 @@ void IdleTimeDetector::informOverrun()
         kDebug(5970) << "Setting WinId " << dialog->winId() << " to deskTop " << KWindowSystem::self()->currentDesktop();
         dialog->show();
 }
-#endif // HAVE_LIBXSS
+#endif // HAVE_LIBXSS || Q_OS_MAC
 
 void IdleTimeDetector::startIdleDetection()
 {
-#if defined(HAVE_LIBXSS) && defined(Q_WS_X11)
-    if (!_timer->isActive())
+#if (defined(HAVE_LIBXSS) && defined(Q_WS_X11)) || defined(Q_OS_MAC)
+  if (!_timer->isActive())
         _timer->start(testInterval);
 #endif //HAVE_LIBXSS
 }
 
 void IdleTimeDetector::stopIdleDetection()
 {
-#if defined(HAVE_LIBXSS) && defined(Q_WS_X11)
-    if (_timer->isActive())
+#if (defined(HAVE_LIBXSS) && defined(Q_WS_X11)) || defined(Q_OS_MAC)
+  if (_timer->isActive())
         _timer->stop();
 #endif // HAVE_LIBXSS
 }

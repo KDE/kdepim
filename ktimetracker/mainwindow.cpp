@@ -71,7 +71,15 @@ MainWindow::MainWindow( const QString &icsfile )
         // and another one in the plugin. The build system should be fixed.
         //m_part = factory->create<ktimetrackerpart>( this );
 
+#ifdef Q_OS_MAC
+	   // not sure if this is really required but this is the code that works for me with g++-mp-4.8
+	   static KParts::ReadWritePart *rwp = factory->create<KParts::ReadWritePart>( this );
+        static ktimetrackerpart *mp = dynamic_cast<ktimetrackerpart*>( rwp );
+        m_part = dynamic_cast<ktimetrackerpart*>( rwp );
+	   kError() << "this=" << this << "; rwp=" << rwp << "; mp=" << mp << "; m_part=" << m_part;
+#else
         m_part = dynamic_cast<ktimetrackerpart*>( factory->create<KParts::ReadWritePart>( this ) );
+#endif // Q_OS_MAC
 
         if (m_part)
         {
