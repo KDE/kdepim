@@ -52,7 +52,7 @@
 
 #include <gpgme++/key.h>
 
-#include <KDialog>
+#include <QDialog>
 #include <KLocalizedString>
 
 #include <QButtonGroup>
@@ -276,7 +276,7 @@ SignerResolvePage::Private::Private( SignerResolvePage * qq )
 
 {
     QVBoxLayout* layout = new QVBoxLayout( q );
-    layout->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     layout->setSpacing( QDialog::spacingHint() );
 
     signEncryptGroup = new QButtonGroup( q );
     q->connect( signEncryptGroup, SIGNAL(buttonClicked(int)), q, SLOT(operationButtonClicked(int)) );
