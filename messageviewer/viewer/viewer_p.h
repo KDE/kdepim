@@ -26,6 +26,7 @@
 
 #include <akonadi/item.h>
 #include <akonadi/monitor.h>
+#include <Akonadi/Notes/NoteUtils>
 #include <kio/job.h>
 #include <kmime/kmime_message.h>
 #include <kservice.h>
@@ -60,6 +61,7 @@ class QTreeView;
 namespace MessageViewer {
 class TodoEdit;
 class EventEdit;
+class NoteEdit;
 class EditorWatcher;
 class HtmlWriter;
 class CSSHelper;
@@ -502,6 +504,8 @@ private slots:
 
     void slotCreateEvent(const KCalCore::Event::Ptr &eventPtr, const Akonadi::Collection &collection);
 
+    void slotCreateNote(const  KMime::Message::Ptr &notePtr, const Akonadi::Collection &collection);
+
 public slots:
     /** An URL has been activate with a click. */
     void slotUrlOpen( const QUrl &url = QUrl());
@@ -615,6 +619,7 @@ public slots:
     void slotExpandShortUrl();
     void slotShowCreateTodoWidget();
     void slotShowCreateEventWidget();
+    void slotShowCreateNoteWidget();
 
 signals:
     void showStatusBarMessage( const QString &message );
@@ -692,6 +697,7 @@ public:
     KAction *mExpandUrlAction;
     KAction *mCreateTodoAction;
     KAction *mCreateEventAction;
+    KAction *mCreateNoteAction;
     KUrl mHoveredUrl;
     KUrl mClickedUrl;
     KUrl mImageUrl;
@@ -729,6 +735,7 @@ public:
     ScamDetectionWarningWidget *mScamDetectionWarning;
     MessageViewer::TodoEdit *mCreateTodo;
     MessageViewer::EventEdit *mCreateEvent;
+    MessageViewer::NoteEdit *mCreateNote;
     // zoom Factor
     static const qreal zoomBy;
     qreal mZoomFactor;

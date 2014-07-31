@@ -99,6 +99,7 @@ set(libmessageviewer_widgets_SRCS
   widgets/invitationsettings.cpp
   widgets/todoedit.cpp
   widgets/eventedit.cpp
+  widgets/noteedit.cpp
 )
 
 set(libmessageviewer_header_SRCS
@@ -154,6 +155,7 @@ set(libmessageviewer_antispam_SRCS
 set(libmessageviewer_job_SRCS
   job/createtodojob.cpp
   job/createeventjob.cpp
+  job/createnotejob.cpp
 )
 
 set(libmessageviewer_SRCS
@@ -189,6 +191,7 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_KMBOX_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
+  ${KDEPIMLIBS_AKONADI_NOTES_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
   ${KDEPIMLIBS_KABC_LIBS}

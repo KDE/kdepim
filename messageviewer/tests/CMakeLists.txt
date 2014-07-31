@@ -27,6 +27,7 @@ macro(add_messageviewer_unittest _source)
     ${KDE4_KIO_LIBS}
     ${KDEPIMLIBS_KMIME_LIBS}
     ${KDEPIMLIBS_AKONADI_LIBS}
+    ${KDEPIMLIBS_AKONADI_NOTES_LIBS}
     ${KDEPIMLIBS_KCALCORE_LIBS}
   )
 endmacro ()
@@ -40,6 +41,7 @@ add_messageviewer_unittest( unencryptedmessagetest.cpp )
 kde4_handle_crypto_rpath_for_executable( unencryptedmessagetest )
 add_messageviewer_unittest( todoedittest.cpp )
 add_messageviewer_unittest( eventedittest.cpp )
+add_messageviewer_unittest( noteedittest.cpp )
 ########### viewertest_gui ###############
 
 
