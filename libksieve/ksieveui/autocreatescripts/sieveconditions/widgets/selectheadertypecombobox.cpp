@@ -27,6 +27,8 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
 
 using namespace KSieveUi;
 
@@ -34,11 +36,20 @@ static const char selectMultipleHeaders[] = I18N_NOOP( "Select multiple headers.
 
 
 SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-    setCaption( i18n( "Headers" ) );
-    setButtons( Ok|Cancel );
-    setButtonFocus( Ok );
+    setWindowTitle( i18n( "Headers" ) );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    okButton->setFocus();
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
     w->setLayout(lay);
@@ -67,7 +78,9 @@ SelectHeadersDialog::SelectHeadersDialog(QWidget *parent)
 
     lay->addLayout(hbox);
 
-    setMainWidget(w);
+    mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
+
     readConfig();
 }
 

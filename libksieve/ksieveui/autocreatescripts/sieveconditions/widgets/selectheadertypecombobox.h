@@ -19,7 +19,7 @@
 #define SELECTHEADERTYPECOMBOBOX_H
 
 #include <KComboBox>
-#include <KDialog>
+#include <QDialog>
 
 #include <QListWidget>
 
@@ -45,7 +45,7 @@ private:
     void init();
 };
 
-class SelectHeadersDialog : public KDialog
+class SelectHeadersDialog : public QDialog
 {
     Q_OBJECT
 public:

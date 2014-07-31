@@ -169,13 +169,16 @@ void Vacation::slotDialogOk() {
                  SLOT(slotPutInactiveResult(KManageSieve::SieveJob*,bool)) );
 
     // destroy the dialog:
-    mDialog->delayedDestruct();
+    //mDialog->delayedDestruct();
+    mDialog->hide();
+    mDialog->deleteLater();
     mDialog = 0;
 }
 
 void Vacation::slotDialogCancel() {
     qDebug();
-    mDialog->delayedDestruct();
+    mDialog->hide();
+    mDialog->deleteLater();
     mDialog = 0;
     emit result( false );
 }

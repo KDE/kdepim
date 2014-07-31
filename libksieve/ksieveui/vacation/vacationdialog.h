@@ -14,7 +14,7 @@
 #ifndef KSIEVE_KSIEVEUI_VACATIONDIALOG_H
 #define KSIEVE_KSIEVEUI_VACATIONDIALOG_H
 
-#include <kdialog.h>
+#include <QDialog>
 
 template <typename T> class QList;
 
@@ -27,7 +27,7 @@ typedef QList<AddrSpec> AddrSpecList;
 
 namespace KSieveUi {
 class VacationEditWidget;
-class VacationDialog : public KDialog
+class VacationDialog : public QDialog
 {
     Q_OBJECT
 

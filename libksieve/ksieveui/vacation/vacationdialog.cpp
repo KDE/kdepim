@@ -26,17 +26,29 @@
 #include <QApplication>
 #include <QVBoxLayout>
 #include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
 using KMime::Types::AddrSpecList;
 
 using namespace KSieveUi;
 
 VacationDialog::VacationDialog( const QString &caption, QWidget * parent,
                                 bool modal )
-    : KDialog( parent )
+    : QDialog( parent )
 {
-    setCaption( caption );
-    setButtons( Ok|Cancel|Default );
-    setDefaultButton(  Ok );
+    setWindowTitle( caption );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults);
+    QWidget *mainWidget = new QWidget(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    okButton->setDefault(true);
     setModal( modal );
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
@@ -49,11 +61,12 @@ VacationDialog::VacationDialog( const QString &caption, QWidget * parent,
     KSeparator *separator = new KSeparator;
     vbox->addWidget(separator);
 
-    setMainWidget( w );
+    mainLayout->addWidget(w);
+    mainLayout->addWidget(buttonBox);
 
     KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop),IconSize(KIconLoader::Desktop)), qApp->windowIcon().pixmap(IconSize(KIconLoader::Small),IconSize(KIconLoader::Small)) );
     readConfig();
-    connect( this, SIGNAL(defaultClicked()), this, SLOT(slotDialogDefaults()) );
+    connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()), this, SLOT(slotDialogDefaults()) );
 }
 
 VacationDialog::~VacationDialog()
