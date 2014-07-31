@@ -5,7 +5,6 @@ set(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS TRUE)
 
 add_akonadi_isolated_test_advanced(filterimportclawmailtest.cpp filtertestkernel.cpp "mailcommon;messagecomposer")
 add_akonadi_isolated_test_advanced(filterimportthunderbirdtest.cpp filtertestkernel.cpp "mailcommon;messagecomposer")
-add_akonadi_isolated_test_advanced(filterimportthunderbirdtest.cpp filtertestkernel.cpp "mailcommon;messagecomposer")
 add_akonadi_isolated_test_advanced(filterimportbalsatest.cpp filtertestkernel.cpp "mailcommon;messagecomposer")
 add_akonadi_isolated_test_advanced(filterimportevolutiontest.cpp filtertestkernel.cpp "mailcommon;messagecomposer")
 add_akonadi_isolated_test_advanced(filterimportprocmailtest.cpp filtertestkernel.cpp "mailcommon;messagecomposer")
