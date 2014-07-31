@@ -10,9 +10,9 @@ set( bnf_selection_srcs
   mainwindow.cpp
 )
 
-kde4_add_executable(bnf_selection
-  ${bnf_selection_srcs}
-)
+add_executable( bnf_selection ${bnf_selection_srcs} )
+add_test( bnf_selection bnf_selection )
+ecm_mark_as_test(bnf_selection)
 
 target_link_libraries(bnf_selection
   kdepimmobileui
