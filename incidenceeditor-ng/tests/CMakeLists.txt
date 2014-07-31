@@ -6,7 +6,9 @@ include_directories(
 
 MACRO(IE_UNIT_TESTS)
   FOREACH(_testname ${ARGN})
-    kde4_add_unit_test(${_testname} NOGUI ${_testname}.cpp modeltest.cpp)
+    add_executable( ${_testname} ${_testname}.cpp modeltest.cpp )
+    add_test( ${_testname} ${_testname} )
+    ecm_mark_as_test(${_testname})
     target_link_libraries(${_testname} Qt5::Test   KF5::AkonadiCore  kdgantt2 KF5::CalendarUtils KF5::CalendarCore incidenceeditorsng kdepimdbusinterfaces)
   ENDFOREACH(_testname)
 ENDMACRO(IE_UNIT_TESTS)
@@ -28,7 +30,9 @@ IE_UNIT_TESTS(
 ########### KTimeZoneComboBox unit test #############
 set(ktimezonecomboboxtest_SRCS ktimezonecomboboxtest.cpp)
 
-kde4_add_unit_test(ktimezonecomboboxtest TESTNAME ktimezonecomboboxtest ${ktimezonecomboboxtest_SRCS})
+add_executable(ktimezonecomboboxtest ${ktimezonecomboboxtest_SRCS})
+add_test(ktimezonecomboboxtest ktimezonecomboboxtest)
+ecm_mark_as_test(ktimezonecomboboxtest)
 
 target_link_libraries(
   ktimezonecomboboxtest
