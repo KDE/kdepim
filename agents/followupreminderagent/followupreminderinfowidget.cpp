@@ -82,6 +82,7 @@ FollowUpReminderInfoWidget::~FollowUpReminderInfoWidget()
 
 void FollowUpReminderInfoWidget::setInfo(const QList<FollowUpReminder::FollowUpReminderInfo *> &infoList)
 {
+    mTreeWidget->clear();
     Q_FOREACH(FollowUpReminder::FollowUpReminderInfo *info, infoList) {
         FollowUpReminderInfoItem *item = new FollowUpReminderInfoItem(mTreeWidget);
         item->setText(To, info->to());

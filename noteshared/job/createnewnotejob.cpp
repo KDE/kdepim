@@ -70,8 +70,12 @@ void CreateNewNoteJob::createFetchCollectionJob(bool useSettings)
 {
     Akonadi::Collection col;
     Akonadi::Collection::Id id = -1;
-    if (useSettings)
+    if (useSettings) {
         id = NoteShared::NoteSharedGlobalConfig::self()->defaultFolder();
+    } else {
+        NoteShared::NoteSharedGlobalConfig::self()->setDefaultFolder(-1);
+        NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+    }
     if (id == -1) {
         QPointer<SelectedNotefolderDialog> dlg = new SelectedNotefolderDialog(mWidget);
         if (dlg->exec()) {
