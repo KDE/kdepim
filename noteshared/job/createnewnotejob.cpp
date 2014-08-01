@@ -44,10 +44,16 @@ CreateNewNoteJob::CreateNewNoteJob(QObject *parent, QWidget *widget)
       mRichText(false),
       mWidget(widget)
 {
+    connect(this, SIGNAL(selectNewCollection()), this, SLOT(slotSelectNewCollection()));
 }
 
 CreateNewNoteJob::~CreateNewNoteJob()
 {
+}
+
+void CreateNewNoteJob::slotSelectNewCollection()
+{
+    createFetchCollectionJob(false);
 }
 
 void CreateNewNoteJob::setNote(const QString &name, const QString &text)
@@ -73,7 +79,7 @@ void CreateNewNoteJob::createFetchCollectionJob(bool useSettings)
     if (useSettings) {
         id = NoteShared::NoteSharedGlobalConfig::self()->defaultFolder();
     } else {
-        NoteShared::NoteSharedGlobalConfig::self()->setDefaultFolder(-1);
+        NoteShared::NoteSharedGlobalConfig::self()->setDefaultFolder(id);
         NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
     }
     if (id == -1) {
@@ -101,7 +107,7 @@ void CreateNewNoteJob::slotFetchCollection(KJob* job)
     if (job->error()) {
         qDebug()<<" Error during fetch: "<<job->errorString();
         if (KMessageBox::Yes == KMessageBox::warningYesNo(0, i18n("An error occurred during fetching. Do you want select a new default collection?"))) {
-            createFetchCollectionJob(false);
+            Q_EMIT selectNewCollection();
         } else {
             deleteLater();
         }
@@ -111,7 +117,7 @@ void CreateNewNoteJob::slotFetchCollection(KJob* job)
     if (fetchCollection->collections().isEmpty()) {
         qDebug()<<"No collection fetched";
         if (KMessageBox::Yes == KMessageBox::warningYesNo(0, i18n("An error occurred during fetching. Do you want select a new default collection?"))) {
-            createFetchCollectionJob(false);
+            Q_EMIT selectNewCollection();
         } else {
             deleteLater();
         }
