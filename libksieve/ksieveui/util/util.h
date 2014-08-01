@@ -43,7 +43,7 @@
 
 #include <agentinstance.h>
 
-class KUrl;
+class QUrl;
 class QString;
 
 namespace KSieveUi
@@ -57,7 +57,7 @@ namespace Util {
     /**
      * Returns the sieve url for the account with the given @p identifier.
      */
-    KSIEVEUI_EXPORT KUrl findSieveUrlForAccount( const QString &identifier );
+    KSIEVEUI_EXPORT QUrl findSieveUrlForAccount( const QString &identifier );
 
     /**
      * Returns the list of configured IMAP agent instances.
