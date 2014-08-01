@@ -22,7 +22,7 @@
 #include "widgets/managesievewidget.h"
 
 #include <qdialog.h>
-#include <kurl.h>
+#include <QUrl>
 
 
 class QTreeWidgetItem;
@@ -76,7 +76,7 @@ private:
     CustomManageSieveWidget* mTreeView;
     SieveEditor * mSieveEditor;
 
-    KUrl mCurrentURL;
+    QUrl mCurrentURL;
     QStringList mCurrentCapabilities;
 
     QPushButton *mNewScript;

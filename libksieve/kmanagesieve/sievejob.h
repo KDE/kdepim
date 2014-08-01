@@ -20,7 +20,7 @@
 #include <QtCore/QStack>
 #include <QtCore/QStringList>
 
-#include <kurl.h>
+#include <QUrl>
 #include <kio/global.h>
 #include <kio/udsentry.h>
 
@@ -53,7 +53,7 @@ public:
      * @param makeActive If @c true, the script will be marked as active.
      * @param wasActive If @c true, the script will be marked as inactive.
      */
-    static SieveJob* put( const KUrl &destination, const QString &script,
+    static SieveJob* put( const QUrl &destination, const QString &script,
                           bool makeActive, bool wasActive );
 
     /**
@@ -61,27 +61,27 @@ public:
      *
      * @param source The sieve URL that describes the source.
      */
-    static SieveJob* get( const KUrl &source );
+    static SieveJob* get( const QUrl &source );
 
     /**
      * Lists all available scripts at the given sieve @p url.
      */
-    static SieveJob* list( const KUrl &url );
+    static SieveJob* list( const QUrl &url );
 
     /**
      * Deletes the script with the given sieve @p url.
      */
-    static SieveJob* del( const KUrl &url );
+    static SieveJob* del( const QUrl &url );
 
     /**
      * Activates the script with the given sieve @p url.
      */
-    static SieveJob* activate( const KUrl &url );
+    static SieveJob* activate( const QUrl &url );
 
     /**
      * Deactivates the script with the given sieve @p url.
      */
-    static SieveJob* deactivate( const KUrl &url );
+    static SieveJob* deactivate( const QUrl &url );
 
     /**
      * Kills the sieve job.

@@ -19,7 +19,7 @@
 #define MULTIIMAPVACATIONDIALOG_H
 
 #include <KDialog>
-#include <KUrl>
+#include <QUrl>
 #include "ksieveui_export.h"
 
 class QTabWidget;
@@ -42,7 +42,7 @@ private slots:
     void slotDefaultClicked();
 
 private:
-    void createPage(const QString &serverName, const KUrl &url);
+    void createPage(const QString &serverName, const QUrl &url);
     void init();
     void readConfig();
     void writeConfig();

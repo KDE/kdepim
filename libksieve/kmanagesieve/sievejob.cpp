@@ -17,18 +17,18 @@
 #include "session.h"
 
 #include <qdebug.h>
-#include <KUrl>
+#include <QUrl>
 #include <KMessageBox>
 #include <KLocalizedString>
 #include <QtCore/QPointer>
 
 using namespace KManageSieve;
 
-QHash<KUrl, QPointer<Session> > SieveJob::Private::m_sessionPool;
+QHash<QUrl, QPointer<Session> > SieveJob::Private::m_sessionPool;
 
-Session* SieveJob::Private::sessionForUrl(const KUrl &url)
+Session* SieveJob::Private::sessionForUrl(const QUrl &url)
 {
-    KUrl hostUrl( url );
+    QUrl hostUrl( url );
     hostUrl.setPath( QString() ); // remove parts not required to identify the server
     QPointer<Session> sessionPtr = m_sessionPool.value( hostUrl );
     if ( !sessionPtr ) {
@@ -61,13 +61,13 @@ void SieveJob::Private::run( Session *session )
     switch ( mCommands.top() ) {
     case Get:
     {
-        const QString filename = mUrl.fileName( KUrl::ObeyTrailingSlash );
+        const QString filename = mUrl.fileName( /*QUrl::ObeyTrailingSlash*/ );
         session->sendData( "GETSCRIPT \"" + filename.toUtf8() + "\"" );
         break;
     }
     case Put:
     {
-        const QString filename = mUrl.fileName( KUrl::ObeyTrailingSlash );
+        const QString filename = mUrl.fileName( /*QUrl::ObeyTrailingSlash*/ );
         QByteArray encodedData;
         append_lf2crlf( encodedData, mScript.toUtf8() );
         session->sendData( "PUTSCRIPT \"" + filename.toUtf8() + "\" {" + QByteArray::number( encodedData.size() ) + "+}" );
@@ -76,7 +76,7 @@ void SieveJob::Private::run( Session *session )
     }
     case Activate:
     {
-        const QString filename = mUrl.fileName( KUrl::ObeyTrailingSlash );
+        const QString filename = mUrl.fileName( /*QUrl::ObeyTrailingSlash*/ );
         session->sendData( "SETACTIVE \"" + filename.toUtf8() + "\"" );
         break;
     }
@@ -89,7 +89,7 @@ void SieveJob::Private::run( Session *session )
         break;
     case Delete:
     {
-        const QString filename = mUrl.fileName( KUrl::ObeyTrailingSlash );
+        const QString filename = mUrl.fileName( /*QUrl::ObeyTrailingSlash*/ );
         session->sendData( "DELETESCRIPT \"" + filename.toUtf8() + "\"" );
         break;
     }
@@ -262,7 +262,7 @@ bool SieveJob::fileExists() const
     return d->mFileExists;
 }
 
-SieveJob* SieveJob::put( const KUrl &destination, const QString &script,
+SieveJob* SieveJob::put( const QUrl &destination, const QString &script,
                          bool makeActive, bool wasActive )
 {
     QStack<Private::Command> commands;
@@ -283,7 +283,7 @@ SieveJob* SieveJob::put( const KUrl &destination, const QString &script,
     return job;
 }
 
-SieveJob* SieveJob::get( const KUrl &source )
+SieveJob* SieveJob::get( const QUrl &source )
 {
     QStack<Private::Command> commands;
     commands.push( Private::Get );
@@ -297,7 +297,7 @@ SieveJob* SieveJob::get( const KUrl &source )
     return job;
 }
 
-SieveJob* SieveJob::list( const KUrl &source )
+SieveJob* SieveJob::list( const QUrl &source )
 {
     QStack<Private::Command> commands;
     commands.push( Private::List );
@@ -310,7 +310,7 @@ SieveJob* SieveJob::list( const KUrl &source )
     return job;
 }
 
-SieveJob* SieveJob::del( const KUrl &url )
+SieveJob* SieveJob::del( const QUrl &url )
 {
     QStack<Private::Command> commands;
     commands.push( Private::Delete );
@@ -323,7 +323,7 @@ SieveJob* SieveJob::del( const KUrl &url )
     return job;
 }
 
-SieveJob* SieveJob::deactivate( const KUrl &url )
+SieveJob* SieveJob::deactivate( const QUrl &url )
 {
     QStack<Private::Command> commands;
     commands.push( Private::Deactivate );
@@ -336,7 +336,7 @@ SieveJob* SieveJob::deactivate( const KUrl &url )
     return job;
 }
 
-SieveJob* SieveJob::activate( const KUrl &url )
+SieveJob* SieveJob::activate( const QUrl &url )
 {
     QStack<Private::Command> commands;
     commands.push( Private::Activate );

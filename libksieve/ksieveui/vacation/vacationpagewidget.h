@@ -19,7 +19,7 @@
 #define VACATIONPAGEWIDGET_H
 
 #include <QWidget>
-#include <KUrl>
+#include <QUrl>
 class QStackedWidget;
 namespace KManageSieve {
 class SieveJob;
@@ -36,7 +36,7 @@ public:
     explicit VacationPageWidget(QWidget *parent=0);
     ~VacationPageWidget();
 
-    void setServerUrl(const KUrl &url);
+    void setServerUrl(const QUrl &url);
     void setServerName(const QString &serverName);
     KSieveUi::VacationCreateScriptJob *writeScript();
     void setDefault();
@@ -52,7 +52,7 @@ private:
 
     PageType mPageScript;
     QString mServerName;
-    KUrl mUrl;
+    QUrl mUrl;
     QStackedWidget *mStackWidget;
     VacationEditWidget *mVacationEditWidget;
     VacationWarningWidget *mVacationWarningWidget;

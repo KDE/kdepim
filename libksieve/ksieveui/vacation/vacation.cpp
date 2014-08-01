@@ -33,7 +33,7 @@
 
 using namespace KSieveUi;
 
-Vacation::Vacation(QObject * parent, bool checkOnly, const KUrl &url)
+Vacation::Vacation(QObject * parent, bool checkOnly, const QUrl &url)
     : QObject( parent ),
       mSieveJob( 0 ),
       mDialog( 0 ),
@@ -45,7 +45,7 @@ Vacation::Vacation(QObject * parent, bool checkOnly, const KUrl &url)
     } else {
         mUrl = url;
     }
-    qDebug() << "Vacation: found url \"" << mUrl.prettyUrl() <<"\"";
+    qDebug() << "Vacation: found url \"" << mUrl.toDisplayString() <<"\"";
     if ( mUrl.isEmpty() ) // nothing to do...
         return;
     mSieveJob = KManageSieve::SieveJob::get( mUrl );
@@ -66,21 +66,21 @@ Vacation::~Vacation() {
 }
 
 
-KUrl Vacation::findURL(QString &serverName) const
+QUrl Vacation::findURL(QString &serverName) const
 {
     const Akonadi::AgentInstance::List instances = Util::imapAgentInstances();
     foreach ( const Akonadi::AgentInstance &instance, instances ) {
         if ( instance.status() == Akonadi::AgentInstance::Broken )
             continue;
 
-        const KUrl url = Util::findSieveUrlForAccount( instance.identifier() );
+        const QUrl url = Util::findSieveUrlForAccount( instance.identifier() );
         if ( !url.isEmpty() ) {
             serverName = instance.name();
             return url;
         }
     }
 
-    return KUrl();
+    return QUrl();
 }
 
 void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
@@ -91,7 +91,7 @@ void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
              << script;
     mSieveJob = 0; // job deletes itself after returning from this slot!
 
-    if ( !mCheckOnly && mUrl.protocol() == QLatin1String("sieve") &&
+    if ( !mCheckOnly && mUrl.scheme() == QLatin1String("sieve") &&
          !job->sieveCapabilities().contains(QLatin1String("vacation")) ) {
         KMessageBox::sorry( 0, i18n( "Your server did not list \"vacation\" in "
                                      "its list of supported Sieve extensions;\n"

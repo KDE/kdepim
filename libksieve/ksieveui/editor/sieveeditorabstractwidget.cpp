@@ -62,7 +62,7 @@ void SieveEditorAbstractWidget::slotImport()
         if ( KMessageBox::warningYesNo(this, i18n( "You will overwrite script. Do you want to continue?" ), i18n( "Import Script" ) ) == KMessageBox::No )
             return;
     }
-    KUrl url;
+    QUrl url;
     const QString filter = i18n( "*.siv|sieve files (*.siv)\n*|all files (*)" );
     QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, this) );
     fdlg->setWindowTitle(i18n("Import Script Sieve"));

@@ -21,7 +21,7 @@
 #include <KFileDialog>
 #include <QDebug>
 #include <QPointer>
-#include <KUrl>
+#include <QUrl>
 #include "xmlprintingscriptbuilder.h"
 #include "parsingresultdialog.h"
 
@@ -40,8 +40,7 @@ using KSieve::Parser;
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "parsingscript_gui", 0, ki18n("ParsingScriptTest_Gui"),
-                       "1.0", ki18n("Test for parsing script dialog"));
+    KCmdLineArgs::init(argc, argv, "parsingscript_gui", 0, ki18n("ParsingScriptTest_Gui"), "1.0", ki18n("Test for parsing script dialog"));
 
     KCmdLineOptions option;
     option.add("+[url]", ki18n("URL of a sieve script to be opened"));

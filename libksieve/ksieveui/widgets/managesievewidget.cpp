@@ -163,7 +163,7 @@ void ManageSieveWidget::slotNewScript()
     if ( !mUrls.count( currentItem ) )
         return;
 
-    KUrl u = mUrls[currentItem];
+    QUrl u = mUrls[currentItem];
     if ( u.isEmpty() )
         return;
 
@@ -179,7 +179,8 @@ void ManageSieveWidget::slotNewScript()
         return;
     }
 
-    u.setFileName( name );
+    u = u.adjusted(QUrl::RemoveFilename);
+    u.setPath(u.path() +  name );
 
     QTreeWidgetItem * parentItem = currentItem;
     if (parentItem) {
@@ -214,10 +215,11 @@ void ManageSieveWidget::slotEditScript()
     QTreeWidgetItem* parent = currentItem->parent();
     if ( !mUrls.count( parent ) )
         return;
-    KUrl url = mUrls[parent];
+    QUrl url = mUrls[parent];
     if ( url.isEmpty() )
         return;
-    url.setFileName( currentItem->text(0) );
+    url = url.adjusted(QUrl::RemoveFilename);
+    url.setPath(url.path() +  currentItem->text(0) );
     const QStringList currentCapabilities = parent->data(0, SIEVE_SERVER_CAPABILITIES).toStringList();
     Q_EMIT editScript(url, currentCapabilities);
 }
@@ -242,13 +244,14 @@ void ManageSieveWidget::changeActiveScript( QTreeWidgetItem *item, bool activate
         return;
     if ( !mSelectedItems.count( item ) )
         return;
-    KUrl u = mUrls[item];
+    QUrl u = mUrls[item];
     if ( u.isEmpty() )
         return;
     QTreeWidgetItem* selected = mSelectedItems[item];
     if ( !selected )
         return;
-    u.setFileName( selected->text(0) );
+    u = u.adjusted(QUrl::RemoveFilename);
+    u.setPath(u.path() +  selected->text(0) );
 
     KManageSieve::SieveJob * job;
     if ( activate )
@@ -294,11 +297,12 @@ void ManageSieveWidget::slotDeleteScript()
     if ( !mUrls.count( parent ) )
         return;
 
-    KUrl u = mUrls[parent];
+    QUrl u = mUrls[parent];
     if ( u.isEmpty() )
         return;
 
-    u.setFileName( currentItem->text(0) );
+    u = u.adjusted(QUrl::RemoveFilename);
+    u.setPath(u.path() +  currentItem->text(0) );
 
     if ( KMessageBox::warningContinueCancel( this, i18n( "Really delete script \"%1\" from the server?", u.fileName() ),
                                              i18n( "Delete Sieve Script Confirmation" ),

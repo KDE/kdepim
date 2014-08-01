@@ -22,7 +22,7 @@
 
 #include "ksieveui_export.h"
 
-#include <KUrl>
+#include <QUrl>
 
 namespace KManageSieve {
 class SieveJob;
@@ -38,7 +38,7 @@ public:
 
     void start();
 
-    void setServerUrl(const KUrl &url);
+    void setServerUrl(const QUrl &url);
     void setScript(const QString &script);
     void setServerName(const QString &servername);
     void setStatus(bool activate, bool wasActive);
@@ -53,7 +53,7 @@ private slots:
 
 private:
     void handlePutResult(KManageSieve::SieveJob *, bool success, bool activated);
-    KUrl mUrl;
+    QUrl mUrl;
     QString mScript;
     QString mServerName;
     bool mActivate;

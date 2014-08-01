@@ -97,7 +97,7 @@ void SieveDebugDialog::slotDiagNextAccount()
     mEdit->editor()->appendPlainText( i18n( "------------------------------------------------------------\n" ) );
 
     // Detect URL for this IMAP account
-    const KUrl url = KSieveUi::Util::findSieveUrlForAccount( ident );
+    const QUrl url = KSieveUi::Util::findSieveUrlForAccount( ident );
     if ( !url.isValid() ) {
         mEdit->editor()->appendPlainText( i18n( "(Account does not support Sieve)\n\n" ) );
     } else {
@@ -134,7 +134,8 @@ void SieveDebugDialog::slotDiagNextScript()
 
     mUrl = KSieveUi::Util::findSieveUrlForAccount( mResourceIdentifier.first() );
 
-    mUrl.setFileName( scriptFile );
+    mUrl = mUrl.adjusted(QUrl::RemoveFilename);
+    mUrl.setPath(mUrl.path() + scriptFile);
 
     mSieveJob = KManageSieve::SieveJob::get( mUrl );
 

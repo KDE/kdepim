@@ -24,7 +24,7 @@
 #include "response.h"
 #include "sasl-common.h"
 
-#include <KUrl>
+#include <QUrl>
 #include <QtCore/QObject>
 #include <QtCore/QQueue>
 #include <QStringList>
@@ -46,7 +46,7 @@ public:
     explicit Session( QObject *parent = 0 );
     ~Session();
 
-    void connectToHost( const KUrl &url );
+    void connectToHost( const QUrl &url );
     void disconnectFromHost( bool sendLogout = true );
 
     void scheduleJob( SieveJob *job );
@@ -79,7 +79,7 @@ private slots:
 private:
     void sslResult(bool encrypted);
 
-    KUrl m_url;
+    QUrl m_url;
     KTcpSocket *m_socket;
     sasl_conn_t *m_sasl_conn;
     sasl_interact_t *m_sasl_client_interact;

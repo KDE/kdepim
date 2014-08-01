@@ -84,7 +84,7 @@ VacationPageWidget::~VacationPageWidget()
     mSieveJob = 0;
 }
 
-void VacationPageWidget::setServerUrl(const KUrl &url)
+void VacationPageWidget::setServerUrl(const QUrl &url)
 {
     mUrl = url;
     mVacationEditWidget->setEnabled(false);
@@ -106,7 +106,7 @@ void VacationPageWidget::slotGetResult( KManageSieve::SieveJob * job, bool succe
              << script;
     mSieveJob = 0; // job deletes itself after returning from this slot!
 
-    if ( mUrl.protocol() == QLatin1String("sieve") &&
+    if ( mUrl.scheme() == QLatin1String("sieve") &&
          !job->sieveCapabilities().contains(QLatin1String("vacation")) ) {
         mStackWidget->setCurrentIndex(ScriptNotSupported);
         return;

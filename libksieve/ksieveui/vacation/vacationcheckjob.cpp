@@ -20,7 +20,7 @@
 #include <kmanagesieve/sievejob.h>
 
 using namespace KSieveUi;
-VacationCheckJob::VacationCheckJob(const KUrl &url, const QString &serverName, QObject *parent)
+VacationCheckJob::VacationCheckJob(const QUrl &url, const QString &serverName, QObject *parent)
     : QObject(parent),
       mServerName(serverName),
       mUrl(url)

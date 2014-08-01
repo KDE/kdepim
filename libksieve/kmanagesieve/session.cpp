@@ -78,7 +78,7 @@ Session::~Session()
     delete m_sslCheck;
 }
 
-void Session::connectToHost( const KUrl &url )
+void Session::connectToHost( const QUrl &url )
 {
     qDebug() << url;
     if ( m_socket->state() == KTcpSocket::ConnectedState || m_socket->state() == KTcpSocket::ConnectingState )
@@ -431,7 +431,7 @@ void Session::startAuthentication()
 
 QStringList Session::requestedSaslMethod() const
 {
-    const QString m = m_url.queryItem( QLatin1String("x-mech") );
+    const QString m = QUrlQuery(m_url).queryItemValue(QLatin1String("x-mech"));
     if ( !m.isEmpty() )
         return QStringList( m );
     return m_saslMethods;
@@ -561,6 +561,6 @@ void Session::setErrorMessage(const QString& msg)
 
 bool Session::allowUnencrypted() const
 {
-    return m_url.queryItem(QLatin1String("x-allow-unencrypted")) == QLatin1String("true");
+    return QUrlQuery(m_url).queryItemValue(QLatin1String("x-allow-unencrypted")) == QLatin1String("true");
 }
 

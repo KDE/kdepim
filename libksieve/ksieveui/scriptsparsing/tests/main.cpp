@@ -28,15 +28,14 @@ using KSieve::Parser;
 #include <KFileDialog>
 #include <KCmdLineOptions>
 #include <KApplication>
-#include <KUrl>
+#include <QUrl>
 
 #include <QDebug>
 #include <QFileDialog>
 
 int main( int argc, char** argv )
 {
-    KCmdLineArgs::init(argc, argv, "scriptsieveparsing", 0, ki18n("ScriptSieveParsingTest_Gui"),
-                       "1.0", ki18n("Test for script sieve parsing"));
+    KCmdLineArgs::init(argc, argv, "scriptsieveparsing", 0, ki18n("ScriptSieveParsingTest_Gui"), "1.0", ki18n("Test for script sieve parsing"));
 
     KCmdLineOptions option;
     option.add("+[url]", ki18n("URL of a sieve script to be opened"));

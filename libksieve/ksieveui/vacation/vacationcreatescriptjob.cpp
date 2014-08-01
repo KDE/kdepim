@@ -65,7 +65,7 @@ void VacationCreateScriptJob::start()
                  SLOT(slotPutInactiveResult(KManageSieve::SieveJob*,bool)) );
 }
 
-void VacationCreateScriptJob::setServerUrl(const KUrl &url)
+void VacationCreateScriptJob::setServerUrl(const QUrl &url)
 {
     mUrl = url;
 }

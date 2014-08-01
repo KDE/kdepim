@@ -20,7 +20,7 @@
 #define MANAGESIEVEWIDGET_H
 #include "ksieveui_export.h"
 
-#include <KUrl>
+#include <QUrl>
 
 #include <Solid/Networking>
 
@@ -77,7 +77,7 @@ public Q_SLOTS:
 
 protected:
     QMap<KManageSieve::SieveJob*,QTreeWidgetItem*> mJobs;
-    QMap<QTreeWidgetItem*,KUrl> mUrls;
+    QMap<QTreeWidgetItem*,QUrl> mUrls;
 
 private:
     enum sieveServerStatus

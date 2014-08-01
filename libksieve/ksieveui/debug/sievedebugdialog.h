@@ -17,7 +17,7 @@
 #include "ksieveui_export.h"
 
 #include <QDialog>
-#include <kurl.h>
+#include <QUrl>
 
 class QStringList;
 
@@ -55,7 +55,7 @@ private:
     void writeConfig();
     void readConfig();
     KManageSieve::SieveJob *mSieveJob;
-    KUrl mUrl;
+    QUrl mUrl;
 
     PimCommon::PlainTextEditorWidget * mEdit;
     QStringList mResourceIdentifier;

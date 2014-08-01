@@ -27,7 +27,7 @@
 #include <kwindowsystem.h>
 #include <QTabWidget>
 #include <KIconLoader>
-#include <KUrl>
+#include <QUrl>
 
 #include <QTabBar>
 #include <QApplication>
@@ -95,7 +95,7 @@ void MultiImapVacationDialog::init()
         if ( instance.status() == Akonadi::AgentInstance::Broken )
             continue;
 
-        const KUrl url = KSieveUi::Util::findSieveUrlForAccount( instance.identifier() );
+        const QUrl url = KSieveUi::Util::findSieveUrlForAccount( instance.identifier() );
         if ( !url.isEmpty() ) {
             const QString serverName = instance.name();
             createPage(serverName, url);
@@ -113,7 +113,7 @@ void MultiImapVacationDialog::init()
         mTabWidget->tabBar()->hide();
 }
 
-void MultiImapVacationDialog::createPage(const QString &serverName, const KUrl &url)
+void MultiImapVacationDialog::createPage(const QString &serverName, const QUrl &url)
 {
     VacationPageWidget *page = new VacationPageWidget;
     page->setServerUrl(url);

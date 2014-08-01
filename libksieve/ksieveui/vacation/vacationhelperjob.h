@@ -20,7 +20,7 @@
 
 #include "ksieveui_export.h"
 
-#include <KUrl>
+#include <QUrl>
 
 #include <QObject>
 namespace KManageSieve {
@@ -32,7 +32,7 @@ class KSIEVEUI_EXPORT VacationHelperJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit VacationHelperJob(const KUrl &url, QObject *parent=0);
+    explicit VacationHelperJob(const QUrl &url, QObject *parent=0);
     ~VacationHelperJob();
 
     void searchActiveJob();
@@ -47,7 +47,7 @@ Q_SIGNALS:
 
 private:
     void killJob();
-    KUrl mUrl;
+    QUrl mUrl;
     KManageSieve::SieveJob *mSieveJob;
 };
 }

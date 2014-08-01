@@ -37,7 +37,7 @@ ParseUserScriptJob::~ParseUserScriptJob()
     mSieveJob = 0;
 }
 
-void ParseUserScriptJob::scriptUrl(const KUrl &url)
+void ParseUserScriptJob::scriptUrl(const QUrl &url)
 {
     mCurrentUrl = url;
 }

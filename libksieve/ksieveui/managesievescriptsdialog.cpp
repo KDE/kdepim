@@ -67,7 +67,7 @@ bool CustomManageSieveWidget::refreshList()
         last = new SieveTreeWidgetItem( treeView(), last );
         last->setIcon( 0, SmallIcon( QLatin1String("network-server") ) );
 
-        const KUrl u = KSieveUi::Util::findSieveUrlForAccount( type.identifier() );
+        const QUrl u = KSieveUi::Util::findSieveUrlForAccount( type.identifier() );
         if ( u.isEmpty() ) {
             QTreeWidgetItem *item = new QTreeWidgetItem( last );
             item->setText( 0, i18n( "No Sieve URL configured" ) );
@@ -233,7 +233,7 @@ void ManageSieveScriptsDialog::slotSieveEditorCancelClicked()
     disableManagerScriptsDialog(false);
     mSieveEditor->deleteLater();
     mSieveEditor = 0;
-    mCurrentURL = KUrl();
+    mCurrentURL = QUrl();
     if ( mIsNewScript ) {
         mTreeView->slotRefresh();
     }
@@ -262,7 +262,7 @@ void ManageSieveScriptsDialog::slotPutResult( KManageSieve::SieveJob *, bool suc
                                   i18n( "Sieve Script Upload" ) );
         mSieveEditor->deleteLater();
         mSieveEditor = 0;
-        mCurrentURL = KUrl();
+        mCurrentURL = QUrl();
     } else {
         mSieveEditor->show();
     }

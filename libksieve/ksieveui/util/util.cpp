@@ -113,9 +113,9 @@ QUrl KSieveUi::Util::findSieveUrlForAccount( const QString &identifier )
         u.setPath(u.path() + QString(interface->sieveVacationFilename()));
         return u;
     } else {
-        KUrl u( interface->sieveAlternateUrl() );
+        QUrl u( interface->sieveAlternateUrl() );
         const QString resultSafety = interface->safety();
-        if ( u.scheme().toLower() == QLatin1String("sieve") && ( resultSafety ==  QLatin1String("None") ) && u.queryItem(QLatin1String("x-allow-unencrypted")).isEmpty() )
+        if ( u.scheme().toLower() == QLatin1String("sieve") && ( resultSafety ==  QLatin1String("None") ) && QUrlQuery(u).queryItemValue(QLatin1String("x-allow-unencrypted")).isEmpty() )
             u.addQueryItem( QLatin1String("x-allow-unencrypted"), QLatin1String("true") );
 
         const QString resultCustomAuthentication = interface->sieveCustomAuthentification();
@@ -138,7 +138,8 @@ QUrl KSieveUi::Util::findSieveUrlForAccount( const QString &identifier )
             u.setPassword( pwd );
             u.setUserName( interface->sieveCustomUsername() );
         }
-        u.setFileName( interface->sieveVacationFilename() );
+        u = u.adjusted(QUrl::RemoveFilename);
+        u.setPath(u.path() + QString(interface->sieveVacationFilename()) );
         return u;
     }
 }

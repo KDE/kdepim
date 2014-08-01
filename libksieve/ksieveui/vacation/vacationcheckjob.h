@@ -19,7 +19,7 @@
 #define VACATIONCHECKJOB_H
 
 #include <QObject>
-#include <KUrl>
+#include <QUrl>
 
 namespace KManageSieve {
 class SieveJob;
@@ -30,7 +30,7 @@ class VacationCheckJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit VacationCheckJob(const KUrl &url, const QString &serverName, QObject *parent=0);
+    explicit VacationCheckJob(const QUrl &url, const QString &serverName, QObject *parent=0);
     ~VacationCheckJob();
 
 Q_SIGNALS:
@@ -41,7 +41,7 @@ private slots:
 
 private:
     QString mServerName;
-    KUrl mUrl;
+    QUrl mUrl;
     KManageSieve::SieveJob * mSieveJob;
 };
 }
