@@ -24,8 +24,7 @@
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "selectiontypedialog_gui", 0, ki18n("SelectionTypeTest_Gui"),
-                       "1.0", ki18n("Test for selectiontypedialog"));
+    KCmdLineArgs::init(argc, argv, "selectiontypedialog_gui", 0, ki18n("SelectionTypeTest_Gui"), "1.0", ki18n("Test for selectiontypedialog"));
 
     KApplication app;
     SelectionTypeDialog *dialog = new SelectionTypeDialog;

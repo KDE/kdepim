@@ -28,8 +28,12 @@
 
 #include <Akonadi/Contact/ContactEditor>
 #include <AkonadiCore/item.h>
-#include <kapplication.h>
-#include <kcmdlineargs.h>
+
+
+#include <QApplication>
+#include <KAboutData>
+#include <KLocalizedString>
+#include <QCommandLineParser>
 
 Dialog::Dialog( QWidget *parent )
   : KDialog( parent )
@@ -80,8 +84,16 @@ void Dialog::save()
 
 int main( int argc, char **argv )
 {
-  KCmdLineArgs::init( argc, argv, "kabceditor", 0, ki18n("KABC Editor"), "1.0" , ki18n("A contact editor for Akonadi"));
-  KApplication app;
+  KAboutData aboutData( QLatin1String("kabceditor"), i18n("KABC Editor"), QLatin1String("1.0" ));
+  aboutData.setShortDescription( i18n("A contact editor for Akonadi"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
   Dialog dlg;
   dlg.exec();

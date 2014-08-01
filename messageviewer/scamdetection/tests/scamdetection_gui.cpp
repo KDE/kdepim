@@ -84,8 +84,7 @@ void ScamDetectionTestWidget::slotOpenHtml()
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "scamdetection_gui", 0, ki18n("ScamDetectionTest_Gui"),
-                       "1.0", ki18n("Test for scamdetection widget"));
+    KCmdLineArgs::init(argc, argv, "scamdetection_gui", 0, ki18n("ScamDetectionTest_Gui"), "1.0", ki18n("Test for scamdetection widget"));
 
     KCmdLineOptions option;
     option.add("+[url]", ki18n("URL of an html file to be opened"));

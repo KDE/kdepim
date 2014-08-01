@@ -24,8 +24,7 @@
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "plaintexteditor_gui", 0, ki18n("PlainTextEditorTest_Gui"),
-                       "1.0", ki18n("Test for plaintexteditor widget"));
+    KCmdLineArgs::init(argc, argv, "plaintexteditor_gui", 0, ki18n("PlainTextEditorTest_Gui"), "1.0", ki18n("Test for plaintexteditor widget"));
 
     KApplication app;
 

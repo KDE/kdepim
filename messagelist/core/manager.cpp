@@ -89,7 +89,7 @@ Manager::Manager()
     mPixmapMessageAttachment = new QPixmap( SmallIcon( QLatin1String( "mail-attachment" ) ) );
     mPixmapMessageAnnotation = new QPixmap( SmallIcon( QLatin1String( "view-pim-notes" ) ) );
     mPixmapMessageInvitation = new QPixmap( SmallIcon( QLatin1String( "mail-invitation" ) ) );
-    if ( KApplication::isRightToLeft() )
+    if ( QApplication::isRightToLeft() )
         mPixmapShowMore = new QPixmap( SmallIcon( QLatin1String( "arrow-left" ) ) );
     else
         mPixmapShowMore = new QPixmap( SmallIcon( QLatin1String( "arrow-right" ) ) );

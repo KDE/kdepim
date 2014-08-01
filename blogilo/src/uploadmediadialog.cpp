@@ -182,7 +182,7 @@ void UploadMediaDialog::slotMediaObjectUploaded(KJob *job)
         }
         QString msg;
         if ( Settings::copyMediaUrl() ) {
-            KApplication::clipboard()->setText( destUrl );
+            QApplication::clipboard()->setText( destUrl );
             msg = i18n( "Media uploaded, and URL copied to clipboard.\nYou can find it here:\n%1",
                         destUrl );
         } else {
@@ -199,7 +199,7 @@ void UploadMediaDialog::slotMediaObjectUploaded(BilboMedia *media)
     QString msg;
     emit sigBusy(false);
     if ( Settings::copyMediaUrl() ) {
-        KApplication::clipboard()->setText( media->remoteUrl().prettyUrl() );
+        QApplication::clipboard()->setText( media->remoteUrl().prettyUrl() );
         msg = i18n( "Media uploaded, and URL copied to clipboard.\nYou can find it here:\n%1",
                     media->remoteUrl().prettyUrl() );
     } else {

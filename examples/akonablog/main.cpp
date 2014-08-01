@@ -19,15 +19,28 @@
     USA.
 */
 
-#include <kapplication.h>
-#include <kcmdlineargs.h>
+
+
+#include <QApplication>
+#include <KAboutData>
+#include <KLocalizedString>
+#include <QCommandLineParser>
 
 #include "mainwindow.h"
 
 int main( int argc, char **argv )
 {
-    KCmdLineArgs::init( argc, argv, "akonablog", 0, ki18n( "Akonablog" ), "1.0" , ki18n( "The blog client Proof-Of-Concept for Akonadi" ) );
-    KApplication app;
+    KAboutData aboutData( QLatin1String("akonablog"), i18n( "Akonablog" ), QLatin1String("1.0" ));
+    aboutData.setShortDescription( i18n( "The blog client Proof-Of-Concept for Akonadi" ) );
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    //PORTING SCRIPT: adapt aboutdata variable if necessary
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
     MainWindow window;
     window.show();
