@@ -20,7 +20,7 @@ include_directories(${CMAKE_SOURCE_DIR}/libksieve
 
 add_subdirectory(tests)
 add_subdirectory(editor/tests)
-add_subdirectory(managescriptsjob/tests)
+add_subdirectory(managescriptsjob/autotests)
 set(ksieveui_vacation_LIB_SRCS
   vacation/vacation.cpp
   vacation/vacationdialog.cpp
