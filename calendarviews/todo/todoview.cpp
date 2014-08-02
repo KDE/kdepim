@@ -396,6 +396,22 @@ TodoView::TodoView( const EventViews::PrefsPtr &prefs,
 
   mItemPopupMenu->addSeparator();
 
+  a = mItemPopupMenu->addAction( KIconLoader::global()->loadIcon( QLatin1String("appointment-new"), KIconLoader::NoGroup, KIconLoader::SizeSmall ),
+                      i18n( "Create Event" ),
+                      this, SLOT(createEvent()) );
+  a->setObjectName(QLatin1String("createevent"));
+  mItemPopupMenuReadWriteEntries << a;
+  mItemPopupMenuItemOnlyEntries << a;
+
+  a = mItemPopupMenu->addAction( KIconLoader::global()->loadIcon( QLatin1String("view-pim-notes"), KIconLoader::NoGroup, KIconLoader::SizeSmall ),
+                      i18n( "Create Note" ),
+                      this, SLOT(createNote()) );
+  a->setObjectName(QLatin1String("createnote"));
+  mItemPopupMenuReadWriteEntries << a;
+  mItemPopupMenuItemOnlyEntries << a;
+
+  mItemPopupMenu->addSeparator();
+
   mCopyPopupMenu =
     new KPIM::KDatePickerPopup( KPIM::KDatePickerPopup::NoDate |
                                 KPIM::KDatePickerPopup::DatePicker |
@@ -1247,3 +1263,26 @@ void TodoView::resizeEvent( QResizeEvent *event )
   scheduleResizeColumns();
 }
 
+void TodoView::createEvent()
+{
+    QModelIndexList selection = mView->selectionModel()->selectedRows();
+    if ( selection.size() != 1 ) {
+        return;
+    }
+
+    const Akonadi::Item todoItem = selection[0].data ( TodoModel::TodoRole ).value<Akonadi::Item>();
+
+    emit createEvent( todoItem );
+}
+
+void TodoView::createNote()
+{
+    QModelIndexList selection = mView->selectionModel()->selectedRows();
+    if ( selection.size() != 1 ) {
+        return;
+    }
+
+    const Akonadi::Item todoItem = selection[0].data ( TodoModel::TodoRole ).value<Akonadi::Item>();
+
+    emit createNote( todoItem );
+}
