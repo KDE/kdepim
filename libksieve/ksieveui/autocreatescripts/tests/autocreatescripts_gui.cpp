@@ -16,18 +16,30 @@
 */
 
 #include <qdebug.h>
-#include <kcmdlineargs.h>
-#include <kapplication.h>
+
+
 #include <QDebug>
+#include <QApplication>
+#include <KAboutData>
+#include <KLocalizedString>
+#include <QCommandLineParser>
 
 #include "libksieve/ksieveui/autocreatescripts/autocreatescriptdialog.h"
 #include "pimcommon/sievehighlighter/sievesyntaxhighlighterutil.h"
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "autocreatescripts_gui", 0, ki18n("AutoCreateScripttest_Gui"),
-                       "1.0", ki18n("Test for autocreate script dialog"));
-    KApplication app;
+    KAboutData aboutData( QLatin1String("autocreatescripts_gui"), i18n("AutoCreateScripttest_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for autocreate script dialog"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    //PORTING SCRIPT: adapt aboutdata variable if necessary
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
     KSieveUi::AutoCreateScriptDialog *dialog = new KSieveUi::AutoCreateScriptDialog;
     QStringList capabilities = PimCommon::SieveSyntaxHighlighterUtil::fullCapabilities();
     //Add all capabilities for testing

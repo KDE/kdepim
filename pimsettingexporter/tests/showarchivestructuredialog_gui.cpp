@@ -18,28 +18,35 @@
 #include "../dialog/showarchivestructuredialog.h"
 
 #include <qdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
+
+
 #include <KLocalizedString>
 #include <KFileDialog>
 #include <KUrl>
 #include <QFileDialog>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "showarchivestructuredialog_gui", 0, ki18n("showarchivestructuredialog_Gui"),
-                       "1.0", ki18n("Test for showarchivestructuredialog"));
+    KAboutData aboutData( QLatin1String("showarchivestructuredialog_gui"), i18n("showarchivestructuredialog_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for showarchivestructuredialog"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("+[url]"), i18n("URL of a archive to open")));
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-    KCmdLineOptions option;
-    option.add("+[url]", ki18n("URL of a archive to open"));
-    KCmdLineArgs::addCmdLineOptions(option);
-    KApplication app;
-
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
     QString fileName;
-    if (args->count()) {
-        fileName = args->url(0).path();
+    if (parser.positionalArguments().count()) {
+        fileName = parser.positionalArguments().at(0);
     } else {
         fileName = QFileDialog::getOpenFileName(0, QString(), QString(), QLatin1String("*.zip"));
     }

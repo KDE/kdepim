@@ -19,9 +19,9 @@
 #include "adblock/adblockblockableitemswidget.h"
 #include "KPIMUtils/ProgressIndicatorLabel"
 #include <qdebug.h>
-#include <kapplication.h>
+
 #include <KFileDialog>
-#include <KCmdLineArgs>
+
 #include <KLocalizedString>
 #include <KUrl>
 
@@ -33,6 +33,10 @@
 #include <QWebFrame>
 #include <QPushButton>
 #include <QFileDialog>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
 
 AdBlockBlockableItemTestDialog::AdBlockBlockableItemTestDialog(const QString &filename, QWidget *parent)
     : QWidget(parent)
@@ -78,21 +82,22 @@ void AdBlockBlockableItemTestDialog::slotOpenHtml()
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "adblockblockableitemtest_gui", 0, ki18n("adblockblockableitemtest_Gui"),
-                       "1.0", ki18n("Test for adblockblokabledialog"));
+    KAboutData aboutData( QLatin1String("adblockblockableitemtest_gui"), i18n("adblockblockableitemtest_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for adblockblokabledialog"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("+[url]"), i18n("URL of an html file to be opened")));
 
-    KCmdLineOptions option;
-    option.add("+[url]", ki18n("URL of an html file to be opened"));
-    KCmdLineArgs::addCmdLineOptions(option);
-
-
-    KApplication app;
-
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
     QString fileName;
-    if (args->count()) {
-        fileName = args->url(0).path();
+    if (parser.positionalArguments().count()) {
+        fileName = parser.positionalArguments().at(0);
     } else {
         fileName = QFileDialog::getOpenFileName(0, QString(), QString(), QLatin1String("*.html"));
     }

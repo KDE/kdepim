@@ -18,16 +18,27 @@
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
 #include <qdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
+
+
 #include <KLocalizedString>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "richtexteditor_gui", 0, ki18n("RichTextEditorTest_Gui"),
-                       "1.0", ki18n("Test for richtexteditor widget"));
+    KAboutData aboutData( QLatin1String("richtexteditor_gui"), i18n("RichTextEditorTest_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for richtexteditor widget"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    //PORTING SCRIPT: adapt aboutdata variable if necessary
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-    KApplication app;
 
     PimCommon::RichTextEditorWidget *w = new PimCommon::RichTextEditorWidget();
     w->resize(800, 600);

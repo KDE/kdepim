@@ -23,8 +23,8 @@
 #include <QWidget>
 
 #include <qdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
+
+
 #include <KLocalizedString>
 #include <KDialog>
 #include <KActionMenu>
@@ -34,6 +34,9 @@
 #include <QTextEdit>
 #include <QPointer>
 #include <QMenu>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
 
 StorageServiceSettingsDialog::StorageServiceSettingsDialog(QWidget *parent)
     : KDialog(parent)
@@ -138,10 +141,18 @@ void StorageServiceTestWidget::slotSettings()
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "storageservice_gui", 0, ki18n("storageservice_Gui"),
-                       "1.0", ki18n("Test for storageservice"));
+    KAboutData aboutData( QLatin1String("storageservice_gui"), i18n("storageservice_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for storageservice"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    //PORTING SCRIPT: adapt aboutdata variable if necessary
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-    KApplication app;
     StorageServiceTestWidget *w = new StorageServiceTestWidget;
     w->show();
     return app.exec();

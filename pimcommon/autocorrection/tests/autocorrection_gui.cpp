@@ -22,8 +22,8 @@
 #include "pimcommon/settings/pimcommonsettings.h"
 
 #include <qdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
+
+
 #include <KLocalizedString>
 #include <KSharedConfig>
 
@@ -33,6 +33,9 @@
 #include <QKeyEvent>
 #include <QToolBar>
 #include <QAction>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
 
 
 ConfigureTestDialog::ConfigureTestDialog(PimCommon::AutoCorrection *autoCorrection, QWidget *parent)
@@ -139,9 +142,17 @@ void AutocorrectionTestWidget::slotConfigure()
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "autocorrectiontest_gui", 0, ki18n("AutoCorrectionTest_Gui"),
-                       "1.0", ki18n("Test for autocorrection widget"));
-    KApplication app;
+    KAboutData aboutData( QLatin1String("autocorrectiontest_gui"), i18n("AutoCorrectionTest_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for autocorrection widget"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    //PORTING SCRIPT: adapt aboutdata variable if necessary
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
     AutocorrectionTestWidget *w = new AutocorrectionTestWidget();
     w->resize(800,600);

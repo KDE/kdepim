@@ -20,9 +20,12 @@
 #include <QWidget>
 
 #include <qdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
+
+
 #include <KLocalizedString>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
 
 HubicTestWidget::HubicTestWidget(QWidget *parent)
     : ServiceTestWidget(parent)
@@ -33,10 +36,18 @@ HubicTestWidget::HubicTestWidget(QWidget *parent)
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "hubic_gui", 0, ki18n("hubic_Gui"),
-                       "1.0", ki18n("Test for short hubic"));
+    KAboutData aboutData( QLatin1String("hubic_gui"), i18n("hubic_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for short hubic"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    //PORTING SCRIPT: adapt aboutdata variable if necessary
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-    KApplication app;
 
     HubicTestWidget *w = new HubicTestWidget;
     w->show();
