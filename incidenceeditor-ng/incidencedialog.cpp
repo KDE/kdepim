@@ -123,7 +123,7 @@ IncidenceDialogPrivate::IncidenceDialogPrivate( Akonadi::IncidenceChanger *chang
     mCalSelector( new Akonadi::CollectionComboBox ),
     mCloseOnSave( false ),
     mItemManager( new EditorItemManager( this, changer ) ),
-    mEditor( new CombinedIncidenceEditor ),
+    mEditor( new CombinedIncidenceEditor(qq) ),
     mInitiallyDirty( false )
 {
   Q_Q( IncidenceDialog );
@@ -166,6 +166,7 @@ IncidenceDialogPrivate::IncidenceDialogPrivate( Akonadi::IncidenceChanger *chang
   mEditor->combine( ieSecrecy );
 
   mIeAttendee = new IncidenceAttendee( qq, mIeDateTime, mUi );
+  mIeAttendee->setParent(qq);
   mEditor->combine( mIeAttendee );
 
   q->connect( mEditor, SIGNAL(showMessage(QString,KMessageWidget::MessageType)),
