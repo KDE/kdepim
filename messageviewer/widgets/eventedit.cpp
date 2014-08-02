@@ -60,7 +60,7 @@ EventEdit::EventEdit(QWidget *parent)
 
     mEventEdit = new KLineEdit;
     mEventEdit->setClearButtonShown(true);
-    mEventEdit->setObjectName(QLatin1String("noteedit"));
+    mEventEdit->setObjectName(QLatin1String("eventedit"));
     mEventEdit->setFocus();
     connect(mEventEdit, SIGNAL(returnPressed()), SLOT(slotReturnPressed()));
     connect(mEventEdit, SIGNAL(textChanged(QString)), SLOT(slotUpdateButtons(QString)));
