@@ -53,7 +53,7 @@ void CreateEventJob::start()
                 mItem = job->items().first();
             }
         } else {
-            qDebug()<<" createTodo Error during fetch: "<<job->errorString();
+            qDebug()<<" createEvent: Error during fetch: "<<job->errorString();
         }
     } else {
         createEvent();
@@ -97,7 +97,7 @@ void CreateEventJob::createEvent()
 void CreateEventJob::slotCreateNewEvent(KJob *job)
 {
     if ( job->error() ) {
-        qDebug() << "Error during create new Todo "<<job->errorString();
+        qDebug() << "Error during create new Event "<<job->errorString();
     }
     Q_EMIT emitResult();
 }
