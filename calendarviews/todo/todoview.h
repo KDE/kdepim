@@ -109,6 +109,9 @@ public Q_SLOTS:
     void restoreViewState();
     void saveViewState();
 
+    void createNote();
+    void createEvent();
+
 protected Q_SLOTS:
     void resizeEvent(QResizeEvent *) Q_DECL_OVERRIDE;
     void addQuickTodo(Qt::KeyboardModifiers modifier);
@@ -149,6 +152,9 @@ Q_SIGNALS:
     void fullViewChanged(bool enabled);
     void printPreviewTodo();
     void printTodo();
+
+    void createNote(const Akonadi::Item &item);
+    void createEvent(const Akonadi::Item &item);
 
 private:
     QMenu *createCategoryPopupMenu();

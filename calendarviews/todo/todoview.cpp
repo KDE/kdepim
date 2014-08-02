@@ -388,6 +388,22 @@ TodoView::TodoView(const EventViews::PrefsPtr &prefs,
 
     mItemPopupMenu->addSeparator();
 
+    a = mItemPopupMenu->addAction(KIconLoader::global()->loadIcon(QStringLiteral("appointment-new"), KIconLoader::NoGroup, KIconLoader::SizeSmall),
+                        i18n("Create Event"),
+                        this, SLOT(createEvent()));
+    a->setObjectName(QStringLiteral("createevent"));
+    mItemPopupMenuReadWriteEntries << a;
+    mItemPopupMenuItemOnlyEntries << a;
+
+    a = mItemPopupMenu->addAction(KIconLoader::global()->loadIcon(QStringLiteral("view-pim-notes"), KIconLoader::NoGroup, KIconLoader::SizeSmall),
+                      i18n("Create Note"),
+                      this, SLOT(createNote()));
+    a->setObjectName(QStringLiteral("createnote"));
+    mItemPopupMenuReadWriteEntries << a;
+    mItemPopupMenuItemOnlyEntries << a;
+
+    mItemPopupMenu->addSeparator();
+
     mCopyPopupMenu =
         new KPIM::KDatePickerPopup(KPIM::KDatePickerPopup::NoDate |
                                    KPIM::KDatePickerPopup::DatePicker |
@@ -1181,7 +1197,7 @@ void TodoView::resizeColumns()
     }
 
     if (remainingSize < requiredSize) {
-        // We have too little size ( that's what she...), so lets use an horizontal scrollbar and make these columns use whatever they need.
+        // We have too little size (that's what she...), so lets use an horizontal scrollbar and make these columns use whatever they need.
         mView->resizeColumnToContents(TodoModel::SummaryColumn);
         mView->resizeColumnToContents(TodoModel::DescriptionColumn);
     } else if (descriptionVisible) {
@@ -1236,3 +1252,26 @@ void TodoView::resizeEvent(QResizeEvent *event)
     scheduleResizeColumns();
 }
 
+void TodoView::createEvent()
+{
+    QModelIndexList selection = mView->selectionModel()->selectedRows();
+    if (selection.size() != 1) {
+        return;
+    }
+
+    const Akonadi::Item todoItem = selection[0].data (TodoModel::TodoRole).value<Akonadi::Item>();
+
+    emit createEvent(todoItem);
+}
+
+void TodoView::createNote()
+{
+    QModelIndexList selection = mView->selectionModel()->selectedRows();
+    if (selection.size() != 1) {
+        return;
+    }
+
+    const Akonadi::Item todoItem = selection[0].data (TodoModel::TodoRole).value<Akonadi::Item>();
+
+    emit createNote(todoItem);
+}
