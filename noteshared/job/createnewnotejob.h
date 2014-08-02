@@ -38,11 +38,15 @@ public:
 
     void setRichText(bool richText);
 
+Q_SIGNALS:
+    void selectNewCollection();
+
 private slots:
     void slotNoteCreationFinished(KJob *);
 
     void slotFetchCollection(KJob *job);
     void slotCollectionModifyFinished(KJob *job);
+    void slotSelectNewCollection();
 private:
     void createFetchCollectionJob(bool useSettings);
     QString mTitle;
