@@ -18,15 +18,26 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 
 #include <qdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
+
+
 #include <KLocalizedString>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "plaintexteditor_gui", 0, ki18n("PlainTextEditorTest_Gui"), "1.0", ki18n("Test for plaintexteditor widget"));
+    KAboutData aboutData( QLatin1String("plaintexteditor_gui"), i18n("PlainTextEditorTest_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for plaintexteditor widget"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-    KApplication app;
 
     PimCommon::PlainTextEditorWidget *w = new PimCommon::PlainTextEditorWidget();
     w->resize(800, 600);

@@ -16,8 +16,8 @@
 */
 
 #include <qdebug.h>
-#include <kcmdlineargs.h>
-#include <kapplication.h>
+
+
 #include <KFileDialog>
 #include <QDebug>
 #include <QPointer>
@@ -32,6 +32,11 @@ using KSieve::Parser;
 #include <ksieve/error.h>
 #include <ksieve/scriptbuilder.h>
 #include <QFileDialog>
+#include <QApplication>
+#include <KAboutData>
+#include <KLocalizedString>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
 
 
 #include "libksieve/ksieveui/autocreatescripts/autocreatescriptdialog.h"
@@ -40,21 +45,24 @@ using KSieve::Parser;
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "parsingscript_gui", 0, ki18n("ParsingScriptTest_Gui"), "1.0", ki18n("Test for parsing script dialog"));
+    KAboutData aboutData( QLatin1String("parsingscript_gui"), i18n("ParsingScriptTest_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for parsing script dialog"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("+[url]"), i18n("URL of a sieve script to be opened")));
 
-    KCmdLineOptions option;
-    option.add("+[url]", ki18n("URL of a sieve script to be opened"));
-    KCmdLineArgs::addCmdLineOptions(option);
-
-
-    KApplication app;
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
     QByteArray script;
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
     QString fileName;
-    if (args->count()) {
-        fileName = args->url(0).path();
+    if (parser.positionalArguments().count()) {
+        fileName = parser.positionalArguments().at(0);
     } else {
         fileName = QFileDialog::getOpenFileName(0, QString(), QString(), QLatin1String("*.siv"));
     }
@@ -68,11 +76,11 @@ int main (int argc, char **argv)
     }
     //qDebug() << "scriptUtf8 = \"" + script +"\"";
 
-    KSieve::Parser parser( script.begin(),
+    KSieve::Parser sieveParser( script.begin(),
                            script.begin() + script.length() );
     KSieveUi::XMLPrintingScriptBuilder psb;
-    parser.setScriptBuilder( &psb );
-    if ( parser.parse() )
+    sieveParser.setScriptBuilder( &psb );
+    if ( sieveParser.parse() )
         qDebug() << "ok";
     else
         qDebug() << "bad";

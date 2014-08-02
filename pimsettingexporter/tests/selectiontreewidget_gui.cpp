@@ -18,15 +18,26 @@
 #include "../dialog/selectiontypedialog.h"
 
 #include <qdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
+
+
 #include <KLocalizedString>
+#include <QApplication>
+#include <KAboutData>
+#include <QCommandLineParser>
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "selectiontypedialog_gui", 0, ki18n("SelectionTypeTest_Gui"), "1.0", ki18n("Test for selectiontypedialog"));
+    KAboutData aboutData( QLatin1String("selectiontypedialog_gui"), i18n("SelectionTypeTest_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for selectiontypedialog"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
-    KApplication app;
     SelectionTypeDialog *dialog = new SelectionTypeDialog;
     dialog->resize(800, 600);
     dialog->show();

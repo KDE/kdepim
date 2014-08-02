@@ -26,30 +26,40 @@ using KSieve::Parser;
 #include <ksieve/scriptbuilder.h>
 
 #include <KFileDialog>
-#include <KCmdLineOptions>
-#include <KApplication>
+
+
 #include <QUrl>
 
 #include <QDebug>
 #include <QFileDialog>
+#include <QApplication>
+#include <KAboutData>
+#include <KLocalizedString>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
 
 int main( int argc, char** argv )
 {
-    KCmdLineArgs::init(argc, argv, "scriptsieveparsing", 0, ki18n("ScriptSieveParsingTest_Gui"), "1.0", ki18n("Test for script sieve parsing"));
+    KAboutData aboutData( QLatin1String("scriptsieveparsing"), i18n("ScriptSieveParsingTest_Gui"), QLatin1String("1.0"));
+    aboutData.setShortDescription(i18n("Test for script sieve parsing"));
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("+[url]"), i18n("URL of a sieve script to be opened")));
 
-    KCmdLineOptions option;
-    option.add("+[url]", ki18n("URL of a sieve script to be opened"));
-    KCmdLineArgs::addCmdLineOptions(option);
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
 
-    KApplication app;
 
     QByteArray script;
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
     QString fileName;
-    if (args->count()) {
-        fileName = args->url(0).path();
+    if (parser.positionalArguments().count()) {
+        fileName = parser.positionalArguments().at(0);
     } else {
         fileName = QFileDialog::getOpenFileName(0, QString(), QString(), QLatin1String("*.siv"));
     }
@@ -63,11 +73,11 @@ int main( int argc, char** argv )
     }
     //qDebug() << "scriptUtf8 = \"" + script +"\"";
 
-    KSieve::Parser parser( script.begin(),
+    KSieve::Parser sieveParser( script.begin(),
                            script.begin() + script.length() );
     KSieveUi::XMLPrintingScriptBuilder psb;
-    parser.setScriptBuilder( &psb );
-    if ( parser.parse() )
+    sieveParser.setScriptBuilder( &psb );
+    if ( sieveParser.parse() )
         qDebug() << "ok";
     else
         qDebug() << "bad";
