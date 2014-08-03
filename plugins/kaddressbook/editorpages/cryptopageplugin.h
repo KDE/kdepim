@@ -39,7 +39,7 @@ class CryptoPagePlugin : public Akonadi::ContactEditorPagePlugin
 {
   Q_OBJECT
   Q_INTERFACES( Akonadi::ContactEditorPagePlugin )
-
+  Q_PLUGIN_METADATA(IID "org.kde.kaddressbook.CryptoPagePlugin");
   public:
     CryptoPagePlugin();
     ~CryptoPagePlugin();

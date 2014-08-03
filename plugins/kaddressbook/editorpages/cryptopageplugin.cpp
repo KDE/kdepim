@@ -211,5 +211,4 @@ void CryptoPagePlugin::setReadOnly( bool readOnly )
   mSmimeCert->setEnabled( !readOnly );
 }
 
-//QT5 Q_EXPORT_PLUGIN2( cryptopageplugin, CryptoPagePlugin )
 
