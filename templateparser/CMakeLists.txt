@@ -70,3 +70,4 @@ install(FILES
 )
 
 add_subdirectory(tests)
+add_subdirectory(autotests)
