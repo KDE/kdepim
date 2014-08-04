@@ -181,6 +181,7 @@ Action=Popup
 Name=Directory does not exist
 Name[ca]=El directori no existeix
 Name[cs]=Adresář neexistuje
+Name[de]=Der Ordner existiert nicht
 Name[en_GB]=Directory does not exist
 Name[es]=El directorio no existe
 Name[fi]=Kansiota ei ole olemassa
