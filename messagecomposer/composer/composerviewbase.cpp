@@ -1028,7 +1028,7 @@ void MessageComposer::ComposerViewBase::writeAutoSaveToDisk( const KMime::Messag
     QString errorMessage;
     qDebug() << "Writing message to disk as" << filename;
 
-    if( file.open(QIODevice::ReadWrite) ) {
+    if( file.open(QIODevice::WriteOnly) ) {
         file.setPermissions( QFile::ReadUser | QFile::WriteUser );
 
         if( file.write( message->encodedContent() ) !=
