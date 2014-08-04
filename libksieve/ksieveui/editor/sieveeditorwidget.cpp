@@ -32,7 +32,7 @@
 #include <QTemporaryDir>
 #include <kzip.h>
 #include <ktemporaryfile.h>
-#include <KIcon>
+#include <KIconEngine>
 
 #include <QPushButton>
 #include <QVBoxLayout>
@@ -78,7 +78,7 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
 
     QStringList overlays;
     overlays <<QLatin1String("list-add");
-    mUpload = new QAction(KIcon(QLatin1String("get-hot-new-stuff"), 0, overlays), i18n("Upload..."), this);
+    mUpload = new QAction(QIcon( new KIconEngine( QLatin1String( "get-hot-new-stuff" ), 0, overlays)), i18n("Upload..."), this);
     connect(mUpload, SIGNAL(triggered(bool)), SLOT(slotUploadScripts()));
     bar->addAction(mUpload);
 
