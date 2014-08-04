@@ -304,7 +304,7 @@ void ExportCertificateCommand::Private::exportResult( const GpgME::Error& err, c
     //TODO: use KIO
     const QString writeErrorMsg = i18n( "Could not write to file %1.",  outFile );
     const QString errorCaption = i18n( "Certificate Export Failed" );
-    if ( !savefile.open(QIODevice::ReadWrite) )
+    if ( !savefile.open(QIODevice::WriteOnly) )
     {
         error( writeErrorMsg, errorCaption );
         finishedIfLastJob();

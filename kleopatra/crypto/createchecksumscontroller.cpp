@@ -555,7 +555,7 @@ static std::vector<Dir> find_dirs_by_input_files( const QStringList & files, con
 static QString process( const Dir & dir, bool * fatal ) {
     const QString absFilePath = dir.dir.absoluteFilePath( dir.sumFile );
     QSaveFile file( absFilePath );
-    if ( !file.open(QIODevice::ReadWrite) )
+    if ( !file.open(QIODevice::WriteOnly) )
         return i18n( "Failed to open file \"%1\" for reading and writing: %2",
                      dir.dir.absoluteFilePath( file.fileName() ),
                      file.errorString() );

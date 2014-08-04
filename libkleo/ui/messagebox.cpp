@@ -143,7 +143,7 @@ void AuditLogViewer::slotUser1() {
 
     QSaveFile file( fileName );
 
-    if ( file.open(QIODevice::ReadWrite) ) {
+    if ( file.open(QIODevice::WriteOnly) ) {
         QTextStream s( &file );
         s << "<html><head>";
         if ( !windowTitle().isEmpty() ) {
