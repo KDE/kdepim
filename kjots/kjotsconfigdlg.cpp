@@ -18,6 +18,8 @@
 
 #include "kjotsconfigdlg.h"
 #include <QPushButton>
+#include <KConfig>
+#include <KConfigGroup>
 
 KJotsConfigDlg::KJotsConfigDlg( const QString & title, QWidget *parent )
   : KCMultiDialog( parent )
@@ -39,7 +41,7 @@ void KJotsConfigDlg::slotOk()
 {
 }
 
-KJotsConfigMisc::KJotsConfigMisc( const KComponentData &inst, QWidget *parent )
+KJotsConfigMisc::KJotsConfigMisc( QWidget *parent )
     :KCModule( parent )
 {
     QHBoxLayout *lay = new QHBoxLayout( this );

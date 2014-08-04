@@ -13,8 +13,9 @@ add_library(kmanagesieve ${LIBRARY_TYPE} ${kmanagesieve_LIB_SRCS})
 generate_export_header(kmanagesieve BASE_NAME kmanagesieve)
 
 target_link_libraries(kmanagesieve
-  KF5::KDELibs4Support  
+  KF5::I18n 
   KF5::KIOCore
+  KF5::KIOWidgets
   ${Sasl2_LIBRARIES}
 )
 

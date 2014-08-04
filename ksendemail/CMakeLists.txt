@@ -10,7 +10,7 @@ if(KMAIL_SUPPORTED)
 
   add_executable( ksendemail ${ksendemail_SRCS})
   add_dependencies( ksendemail kmail_xml )
-  target_link_libraries( ksendemail   KF5::KIOCore  KF5::KDELibs4Support)
+  target_link_libraries( ksendemail   KF5::KIOCore Qt5::Widgets KF5::I18n KF5::WidgetsAddons Qt5::DBus)
 
   install( TARGETS ksendemail ${INSTALL_TARGETS_DEFAULT_ARGS} )
 

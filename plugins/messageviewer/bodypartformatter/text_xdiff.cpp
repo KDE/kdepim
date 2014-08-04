@@ -34,22 +34,18 @@
 #include <messageviewer/interfaces/bodyparturlhandler.h>
 #include <messageviewer/htmlwriter/webkitparthtmlwriter.h>
 
-#include <kglobal.h>
-#include <klocale.h>
+//#include <kglobal.h>
+//#include <klocale.h>
 #include <kstringhandler.h>
-#include <kglobalsettings.h>
 #include <kiconloader.h>
 #include <qdebug.h>
 #include <kmessagebox.h>
-
-#include <kapplication.h>
 
 
 #include <QUrl>
 #include <QFile>
 #include <QDir>
 #include <QTextDocument>
-#include <KLocale>
 
 namespace {
 

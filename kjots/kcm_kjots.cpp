@@ -23,7 +23,6 @@ extern "C"
 {
   Q_DECL_EXPORT KCModule *create_kjots_config_misc( QWidget *parent )
   {
-      KComponentData instance( "kjots_config_misc" );
-      return new KJotsConfigMisc( instance, parent );
+      return new KJotsConfigMisc(parent );
   }
 }

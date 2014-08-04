@@ -18,13 +18,11 @@
 
 #include <kabc/addressee.h>
 #include <kcmultidialog.h>
-#include <kglobal.h>
-#include <klocale.h>
 #include <kmessagebox.h>
 #include <KPIMIdentities/kpimidentities/identity.h>
 #include <KPIMIdentities/kpimidentities/identitymanager.h>
 #include <QWidget>
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace KPIMIdentities;
 

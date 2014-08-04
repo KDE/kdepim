@@ -127,7 +127,7 @@ install(TARGETS kjotspart  DESTINATION ${PLUGIN_INSTALL_DIR} )
 set(kcm_kjots_PART_SRCS kcm_kjots.cpp ${kjots_config_SRCS} )
 add_library(kcm_kjots MODULE ${kcm_kjots_PART_SRCS})
 
-target_link_libraries(kcm_kjots   KF5::KCMUtils KF5::KDELibs4Support)
+target_link_libraries(kcm_kjots   KF5::KCMUtils KF5::I18n)
 
 install(TARGETS kcm_kjots DESTINATION ${PLUGIN_INSTALL_DIR})
 

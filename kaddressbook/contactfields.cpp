@@ -21,7 +21,7 @@
 #include "contactfields.h"
 
 #include <KLocalizedString>
-#include <KUrl>
+#include <QUrl>
 
 QString ContactFields::label( Field field )
 {
@@ -286,7 +286,7 @@ void ContactFields::setValue( Field field, const QString &value, KABC::Addressee
         contact.setMailer( value );
         break;
     case ContactFields::Homepage:
-        contact.setUrl( KUrl( value ) );
+        contact.setUrl( QUrl( value ) );
         break;
     case ContactFields::Organization:
         contact.setOrganization( value );

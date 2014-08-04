@@ -112,9 +112,6 @@
    </item>
   </layout>
  </widget>
- <includes>
-  <include location="local">kfontdialog.h</include>
- </includes>
  <resources/>
  <connections>
   <connection>

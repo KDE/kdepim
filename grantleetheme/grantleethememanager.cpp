@@ -26,10 +26,8 @@
 #include <KLocalizedString>
 #include <KNS3/DownloadDialog>
 #include <KActionMenu>
-#include <KStandardDirs>
 #include <QDebug>
 #include <QAction>
-#include <KGlobal>
 #include <QIcon>
 
 #include <QDir>
