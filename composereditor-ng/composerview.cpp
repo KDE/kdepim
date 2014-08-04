@@ -34,7 +34,6 @@
 #include <KSelectAction>
 #include <KActionCollection>
 #include <KMessageBox>
-#include <KStandardDirs>
 #include <QDebug>
 #include <QMenu>
 #include <KToolBar>
@@ -45,6 +44,7 @@
 #include <QWebElement>
 #include <QContextMenuEvent>
 #include <QDebug>
+#include <QStandardPaths>
 
 namespace ComposerEditorNG {
 
@@ -75,7 +75,7 @@ ComposerView::~ComposerView()
 
 QString ComposerView::initialHtml()
 {
-    return KStandardDirs::locate ( "data", QLatin1String("composereditor/composereditorinitialhtml") );
+    return QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("composereditor/composereditorinitialhtml") );
 }
 
 void ComposerView::createActions(const QList<ComposerViewAction>& lstActions)
