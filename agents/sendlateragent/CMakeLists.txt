@@ -9,6 +9,8 @@ include_directories(
 )
 
 
+add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_sendlater_agent\")
+
 add_subdirectory(tests)
 
 set(sendlaterlib_SRCS 

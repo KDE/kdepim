@@ -2,6 +2,8 @@ project(akonadi_mailfilter_agent)
 
 add_subdirectory( kconf_update )
 
+add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_mailfilter_agent\")
+
 include_directories(
   ${Boost_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/mailcommon
