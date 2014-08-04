@@ -19,22 +19,31 @@
     USA.
 */
 
-#include <K4AboutData>
-#include <kcmdlineargs.h>
-#include <KApplication>
+#include <KAboutData>
+
+#include <QApplication>
+#include <KLocalizedString>
+#include <QCommandLineParser>
+
 
 #include "mobile_mainview.h"
 
 int main( int argc, char **argv )
 {
-  const QByteArray& ba = QByteArray( "coisceim-mobile" );
-  const KLocalizedString name = ki18n( "Kontact Touch Trips" );
+  const QString ba( QLatin1String("coisceim-mobile") );
+  const QString name = i18n( "Kontact Touch Trips" );
 
-  K4AboutData aboutData( ba, ba, name, ba, name );
+  KAboutData aboutData( ba, name, name );
   aboutData.setProductName( "Coisceim Mobile" );
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KApplication app;
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
   MobileMainview view;
   view.show();

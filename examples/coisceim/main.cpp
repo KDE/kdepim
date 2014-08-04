@@ -19,19 +19,28 @@
     USA.
 */
 
-#include <KApplication>
-#include <K4AboutData>
-#include <KCmdLineArgs>
+
+#include <KAboutData>
+
+#include <QApplication>
+#include <KLocalizedString>
+#include <QCommandLineParser>
 
 #include "coisceimwidget.h"
 
 int main(int argc, char **argv)
 {
-  const QByteArray& ba = QByteArray( "coisceim" );
-  const KLocalizedString name = ki18n( "Coisceim application" );
-  K4AboutData aboutData( ba, ba, name, ba, name );
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KApplication app;
+  const QString ba( QLatin1String("coisceim") );
+  const QString name = i18n( "Coisceim application" );
+  KAboutData aboutData( ba, name, name );
+    QApplication app(argc, argv);
+    QCommandLineParser parser;
+    KAboutData::setApplicationData(aboutData);
+    parser.addVersionOption();
+    parser.addHelpOption();
+    aboutData.setupCommandLine(&parser);
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
   CoisceimWidget *mw = new CoisceimWidget;
   mw->show();
