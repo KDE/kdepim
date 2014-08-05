@@ -81,7 +81,7 @@ private:
 };
 
 KCMLdap::KCMLdap( QWidget *parent, const QVariantList& )
-    : KCModule( /*KCMLdapFactory::componentData(),*/ parent )
+    : KCModule( parent )
 {
     setButtons(KCModule::Apply);
     KAboutData *about = new KAboutData(QStringLiteral("kcmldap"),
