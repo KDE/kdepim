@@ -22,7 +22,7 @@
 
 #include <QLineEdit>
 #include <KLocalizedString>
-#include <KDialog>
+#include <QDialog>
 #include <QSpinBox>
 
 #include <QLabel>
@@ -40,7 +40,7 @@ NoteNetworkConfigWidget::NoteNetworkConfigWidget(QWidget *parent)
     QWidget * w =  new QWidget( this );
     lay->addWidget( w );
     QVBoxLayout *layout = new QVBoxLayout( w );
-    layout->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     layout->setSpacing( QDialog::spacingHint() );
     layout->setMargin( 0 );
 
     QGroupBox *incoming = new QGroupBox( i18n( "Incoming Notes" ) );

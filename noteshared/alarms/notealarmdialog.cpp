@@ -42,17 +42,27 @@
 #include <QRadioButton>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
 
 using namespace NoteShared;
 NoteAlarmDialog::NoteAlarmDialog( const QString &caption, QWidget *parent )
-    : KDialog( parent )
+    : QDialog( parent )
 {
-    setCaption( caption );
-    setButtons( Ok | Cancel );
+    setWindowTitle( caption );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    mainLayout->addWidget(buttonBox);
     QWidget *page = new QWidget( this );
     QVBoxLayout *pageVBoxLayout = new QVBoxLayout(page);
     pageVBoxLayout->setMargin(0);
-    setMainWidget( page );
 
     m_buttons = new QButtonGroup( this );
     QGroupBox *group = new QGroupBox( i18n( "Scheduled Alarm" ), page );
@@ -82,9 +92,11 @@ NoteAlarmDialog::NoteAlarmDialog( const QString &caption, QWidget *parent )
 
     connect( m_buttons, SIGNAL(buttonClicked(int)),
              SLOT(slotButtonChanged(int)) );
-    connect( this, SIGNAL(okClicked()), SLOT(accept()) );
+    connect(okButton, SIGNAL(clicked()), SLOT(accept()) );
     m_buttons->button( 0 )->setChecked( true );
     slotButtonChanged( m_buttons->checkedId() );
+    mainLayout->addWidget(page);
+    mainLayout->addWidget(buttonBox);
 }
 
 void NoteAlarmDialog::setAlarm(const KDateTime &dateTime)

@@ -32,14 +32,14 @@
 #ifndef NOTEALARMDIALOG_H
 #define NOTEALARMDIALOG_H
 
-#include <KDialog>
+#include <QDialog>
 #include "noteshared_export.h"
 class KDateComboBox;
 class KTimeComboBox;
 class QButtonGroup;
 class KDateTime;
 namespace NoteShared {
-class NOTESHARED_EXPORT NoteAlarmDialog : public KDialog
+class NOTESHARED_EXPORT NoteAlarmDialog : public QDialog
 {
     Q_OBJECT
 public:

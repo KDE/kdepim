@@ -20,7 +20,7 @@
 
 #include <QLineEdit>
 #include <KLocalizedString>
-#include <KDialog>
+#include <QDialog>
 
 #include <QLabel>
 #include <QVBoxLayout>
@@ -34,7 +34,7 @@ NoteActionConfig::NoteActionConfig( QWidget *parent )
     QWidget * w =  new QWidget( this );
     lay->addWidget( w );
     QGridLayout *layout = new QGridLayout( w );
-    layout->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5     layout->setSpacing( QDialog::spacingHint() );
     layout->setMargin( 0 );
 
     QLabel *label_MailAction = new QLabel( i18n( "&Mail action:" ), this );

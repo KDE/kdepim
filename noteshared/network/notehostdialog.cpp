@@ -47,17 +47,29 @@
 #include <QLabel>
 #include <QString>
 #include <QTreeView>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
 
 using namespace NoteShared;
 NoteHostDialog::NoteHostDialog( const QString &caption, QWidget *parent )
-    : KDialog( parent )
+    : QDialog( parent )
 {
-    setCaption( caption );
-    setButtons( Ok|Cancel );
+    setWindowTitle( caption );
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    setLayout(mainLayout);
+    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+    mOkButton->setDefault(true);
+    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     QWidget *page = new QWidget( this );
     QVBoxLayout *pageVBoxLayout = new QVBoxLayout(page);
     pageVBoxLayout->setMargin(0);
-    setMainWidget( page );
+    mainLayout->addWidget(page);
+    mainLayout->addWidget(buttonBox);
+
     ( void ) new QLabel( i18n("Select recipient:"), page );
 
     m_servicesView = new QTreeView( page );
@@ -114,7 +126,7 @@ void NoteHostDialog::readConfig()
 
 void NoteHostDialog::slotTextChanged( const QString &text )
 {
-    enableButton( Ok, !text.isEmpty() );
+    mOkButton->setEnabled(!text.isEmpty());
 }
 
 void NoteHostDialog::serviceSelected( const QModelIndex& idx )
