@@ -96,7 +96,7 @@ static QString format_error( const Error & err ) {
     if ( err )
         return xi18nc("@info",
                      "There was an error setting the PIN: <message>%1</message>.",
-                     Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
+                     QString::fromLocal8Bit( err.asString() ).toHtmlEscaped() );
     else
         return i18nc("@info","PIN set successfully.");
 }

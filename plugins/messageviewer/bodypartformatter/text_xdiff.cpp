@@ -87,7 +87,7 @@ namespace {
       const QStringList lines = diff.split( QLatin1Char('\n') );
       QStringList::ConstIterator end( lines.end() );
       for ( QStringList::ConstIterator it = lines.begin(); it != end; ++it ) {
-        const QString line( Qt::escape( *it ) );
+        const QString line( (*it).toHtmlEscaped() );
         QString style;
         if ( !line.isEmpty() ) {
           if ( line.startsWith( QLatin1String("+++") ) ) {

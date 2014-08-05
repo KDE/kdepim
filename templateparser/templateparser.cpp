@@ -1230,7 +1230,7 @@ QString TemplateParser::getHtmlSignature() const
             const_cast<KPIMIdentities::Identity &>( identity ).signature();
 
     if ( !signature.isInlinedHtml() ) {
-        Qt::escape( signature.rawText() );
+        signature.rawText().toHtmlEscaped();
         return signature.rawText().replace( QRegExp( QLatin1String("\n") ), QLatin1String("<br />") );
     }
     return signature.rawText();
@@ -1697,7 +1697,7 @@ bool TemplateParser::isHtmlSignature() const
 QString TemplateParser::plainToHtml( const QString &body ) const
 {
     QString str = body;
-    str = Qt::escape( str );
+    str = str.toHtmlEscaped();
     str.replace( QRegExp( QLatin1String("\n") ), QLatin1String("<br />\n") );
     return str;
 }

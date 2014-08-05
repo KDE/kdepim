@@ -334,7 +334,7 @@ int main( int argc, char** argv )
                                      "The error given was: <b>%1</b><br/>"
                                      "You can use Kleopatra as a certificate manager, but cryptographic plugins that "
                                      "rely on a GPG UI Server being present might not work correctly, or at all.</qt>",
-                                     Qt::escape( QString::fromUtf8( e.what() ) ) ));
+                                     QString::fromUtf8( e.what() ).toHtmlEscaped() ));
 #ifndef QT_NO_SYSTEMTRAYICON
       app.startMonitoringSmartCard();
 #endif

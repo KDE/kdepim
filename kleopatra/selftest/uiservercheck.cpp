@@ -79,7 +79,7 @@ namespace {
                 m_error = i18n("not reachable");
                 m_explaination = xi18nc("@info",
                                        "Could not connect to UiServer: <message>%1</message>",
-                                       Qt::escape( command.errorString() ) );
+                                       command.errorString().toHtmlEscaped() );
                 m_proposedFix = xi18nc("@info",
                                       "<para>Check that your firewall is not set to block local connections "
                                       "(allow connections to <resource>localhost</resource> or <resource>127.0.0.1</resource>).</para>");

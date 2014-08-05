@@ -45,6 +45,6 @@ QString FilterActionWithUOID::argsAsString() const
 
 QString FilterActionWithUOID::displayString() const
 {
-    return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
+    return label() + QLatin1String( " \"" ) + argsAsString().toHtmlEscaped() + QLatin1String( "\"" );
 }
 

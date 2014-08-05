@@ -117,7 +117,7 @@ QString NoteShared::NoteUtils::createToolTip(const Akonadi::Item &item)
                         "</div>" \
                         "</td>" \
                         "</tr>"
-                        ).arg( bckColorName ).arg( txtColorName ).arg( Qt::escape( realName ) ).arg( textDirection );
+                        ).arg( bckColorName ).arg( txtColorName ).arg( realName.toHtmlEscaped() ).arg( textDirection );
             const QString htmlCodeForStandardRow = QString::fromLatin1(
                         "<tr>" \
                         "<td bgcolor=\"%1\" align=\"left\" valign=\"top\">" \

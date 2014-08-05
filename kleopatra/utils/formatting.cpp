@@ -204,7 +204,7 @@ namespace {
         return i18n( "<tr><th>%1:</th><td>%2</td></tr>", protect_whitespace( field ), arg );
     }
     QString format_row( const QString & field, const QString & arg ) {
-        return i18n( "<tr><th>%1:</th><td>%2</td></tr>", protect_whitespace( field ), Qt::escape( arg )  );
+        return i18n( "<tr><th>%1:</th><td>%2</td></tr>", protect_whitespace( field ), arg.toHtmlEscaped()  );
     }
     QString format_row( const QString & field, const char * arg ) {
         return format_row( field, QString::fromUtf8( arg ) );
@@ -242,7 +242,7 @@ namespace {
     }
 
     static QString make_red( const QString & txt ) {
-        return QLatin1String( "<font color=\"red\">" ) + Qt::escape( txt ) + QLatin1String( "</font>" );
+        return QLatin1String( "<font color=\"red\">" ) + txt.toHtmlEscaped() + QLatin1String( "</font>" );
     }
 
 }

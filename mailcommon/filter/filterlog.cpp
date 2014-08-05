@@ -226,6 +226,6 @@ bool FilterLog::saveToFile( const QString &fileName ) const
 
 QString FilterLog::recode( const QString &plain )
 {
-    return Qt::escape( plain );
+    return plain.toHtmlEscaped();
 }
 

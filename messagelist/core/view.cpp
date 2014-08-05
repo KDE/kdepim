@@ -2376,7 +2376,7 @@ bool View::event( QEvent *e )
                     "</div>" \
                     "</td>" \
                     "</tr>"
-                    ).arg( txtColorName ).arg( bckColorName ).arg( Qt::escape( mi->subject() ) ).arg( textDirection );
+                    ).arg( txtColorName ).arg( bckColorName ).arg( mi->subject().toHtmlEscaped() ).arg( textDirection );
 
         tip += QString::fromLatin1(
                     "<tr>" \

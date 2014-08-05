@@ -280,7 +280,7 @@ static QString formatSigningInformation( const Signature & sig, const Key & key 
 }
 
 static QString strikeOut( const QString & str, bool strike ) {
-    return QString( strike ? QLatin1String("<s>%1</s>") : QLatin1String("%1") ).arg( Qt::escape( str ) );
+    return QString( strike ? QLatin1String("<s>%1</s>") : QLatin1String("%1") ).arg( str.toHtmlEscaped() );
 }
 
 static QString formatInputOutputLabel( const QString & input, const QString & output, bool inputDeleted, bool outputDeleted ) {
@@ -358,7 +358,7 @@ static QString formatVerificationResultOverview( const VerificationResult & res,
     if ( err.isCanceled() )
         return i18n("<b>Verification canceled.</b>");
     else if ( err )
-        return i18n( "<b>Verification failed: %1.</b>", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
+        return i18n( "<b>Verification failed: %1.</b>", QString::fromLocal8Bit( err.asString() ).toHtmlEscaped() );
 
     const std::vector<Signature> sigs = res.signatures();
     const std::vector<Key> signers = info.signers;
@@ -401,9 +401,9 @@ static QString formatDecryptionResultOverview( const DecryptionResult & result, 
     if ( err.isCanceled() )
         return i18n("<b>Decryption canceled.</b>");
     else if ( !errorString.isEmpty() )
-        return i18n( "<b>Decryption failed: %1.</b>", Qt::escape( errorString ) );
+        return i18n( "<b>Decryption failed: %1.</b>", errorString.toHtmlEscaped() );
     else if ( err )
-        return i18n( "<b>Decryption failed: %1.</b>", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
+        return i18n( "<b>Decryption failed: %1.</b>", QString::fromLocal8Bit( err.asString() ).toHtmlEscaped() );
     return i18n("<b>Decryption succeeded.</b>" );
 }
 

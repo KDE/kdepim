@@ -171,6 +171,6 @@ QString MessageList::Util::contentSummary( const Akonadi::Item &item )
                 break;
         }
     }
-    return Qt::escape(ret);
+    return ret.toHtmlEscaped();
 }
 

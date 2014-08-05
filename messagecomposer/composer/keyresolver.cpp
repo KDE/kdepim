@@ -1705,13 +1705,13 @@ std::vector<GpgME::Key> Kleo::KeyResolver::getEncryptionKeys( const QString & pe
                                                     "be used for this recipient. If there is no suitable certificate in the list "
                                                     "you can also search for external certificates by clicking the button: "
                                                     "search for external certificates.</qt>",
-                                                    Qt::escape( person ) )
+                                                    person.toHtmlEscaped() )
                                            : i18nc( "if in your language something like "
                                                     "'certificate(s)' is not possible please "
                                                     "use the plural in the translation",
                                                     "More than one certificate matches \"%1\".\n\n"
                                                     "Select the certificate(s) which should "
-                                                    "be used for this recipient.", Qt::escape( person ) ),
+                                                    "be used for this recipient.", person.toHtmlEscaped() ),
                                            matchingKeys ), address, canceled );
     // we can ignore 'canceled' here, since trustedOrConfirmed() returns
     // an empty vector when canceled == true, and we'd just do the same

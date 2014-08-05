@@ -77,6 +77,6 @@ QString FilterActionWithTest::argsAsString() const
 
 QString FilterActionWithTest::displayString() const
 {
-    return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
+    return label() + QLatin1String( " \"" ) + argsAsString().toHtmlEscaped() + QLatin1String( "\"" );
 }
 

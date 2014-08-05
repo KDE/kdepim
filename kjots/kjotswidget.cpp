@@ -207,52 +207,52 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   action = actionCollection->addAction( QLatin1String("go_next_book") );
   action->setText( i18n( "Next Book" ) );
   action->setIcon( QIcon::fromTheme( QLatin1String("go-down") ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_D ) );
+  actionCollection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::Key_D ) );
   connect( action, SIGNAL(triggered()), SLOT(nextBook()) );
   connect( this, SIGNAL(canGoNextBookChanged(bool)), action, SLOT(setEnabled(bool)) );
 
   action = actionCollection->addAction( QLatin1String("go_prev_book") );
   action->setText( i18n( "Previous Book" ) );
   action->setIcon( QIcon::fromTheme( QLatin1String("go-up") ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_D ) );
+  actionCollection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_D ) );
   connect( action, SIGNAL(triggered()), SLOT(prevBook()) );
   connect( this, SIGNAL(canGoPreviousBookChanged(bool)), action, SLOT(setEnabled(bool)) );
 
   action = actionCollection->addAction( QLatin1String("go_next_page") );
   action->setText( i18n( "Next Page" ) );
   action->setIcon( QIcon::fromTheme( QLatin1String("go-next") ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_PageDown ) );
+  actionCollection->setDefaultShortcut(action,QKeySequence( Qt::CTRL + Qt::Key_PageDown ) );
   connect( action, SIGNAL(triggered()), SLOT(nextPage()));
   connect( this, SIGNAL(canGoNextPageChanged(bool)), action, SLOT(setEnabled(bool)) );
 
   action = actionCollection->addAction( QLatin1String("go_prev_page") );
   action->setText( i18n( "Previous Page" ) );
   action->setIcon( QIcon::fromTheme( QLatin1String("go-previous") ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_PageUp ) );
+  actionCollection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::Key_PageUp ) );
   connect( action, SIGNAL(triggered()), SLOT(prevPage()) );
   connect( this, SIGNAL(canGoPreviousPageChanged(bool)), action, SLOT(setEnabled(bool)) );
 
   action = actionCollection->addAction( QLatin1String("new_page") );
   action->setText( i18n( "&New Page" ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
+  actionCollection->setDefaultShortcut(action,QKeySequence( Qt::CTRL + Qt::Key_N ) );
   action->setIcon( QIcon::fromTheme( QLatin1String("document-new") ) );
   connect( action, SIGNAL(triggered()), SLOT(newPage()) );
 
   action = actionCollection->addAction(QLatin1String("new_book"));
   action->setText( i18n( "New &Book..." ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_N ) );
+  actionCollection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_N ) );
   action->setIcon( QIcon::fromTheme( QLatin1String("address-book-new") ) );
   connect( action, SIGNAL(triggered()), SLOT(newBook()) );
 
   action = actionCollection->addAction( QLatin1String("del_page") );
   action->setText( i18n( "&Delete Page" ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_Delete ) );
+  actionCollection->setDefaultShortcut(action,QKeySequence( Qt::CTRL + Qt::Key_Delete ) );
   action->setIcon( QIcon::fromTheme( QLatin1String("edit-delete-page") ) );
   connect( action, SIGNAL(triggered()), SLOT(deletePage()) );
 
   action = actionCollection->addAction( QLatin1String("del_folder") );
   action->setText( i18n( "Delete Boo&k" ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_Delete ) );
+  actionCollection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_Delete ) );
   action->setIcon( QIcon::fromTheme( QLatin1String("edit-delete") ) );
   connect( action, SIGNAL(triggered()), SLOT(deleteBook()) );
 
@@ -264,7 +264,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   action = actionCollection->addAction( QLatin1String("manual_save") );
   action->setText( i18n( "Manual Save" ) );
   action->setIcon( QIcon::fromTheme( QLatin1String("document-save") ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_S ) );
+  actionCollection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::Key_S ) );
 
   action = actionCollection->addAction( QLatin1String("auto_bullet") );
   action->setText( i18n( "Auto Bullets" ) );
@@ -288,11 +288,11 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   action = actionCollection->addAction( QLatin1String("rename_entry") );
   action->setText( i18n( "Rename..." ) );
   action->setIcon( QIcon::fromTheme( QLatin1String("edit-rename") ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_M ) );
+  actionCollection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::Key_M ) );
 
   action = actionCollection->addAction( QLatin1String("insert_date") );
   action->setText( i18n( "Insert Date" ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_I ) );
+  actionCollection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_I ) );
   action->setIcon( QIcon::fromTheme( QLatin1String("view-calendar-time-spent") ) );
 
   action = actionCollection->addAction( QLatin1String("change_color") );
@@ -337,7 +337,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
   action = actionCollection->addAction( QLatin1String("copyIntoTitle") );
   action->setText( i18n( "Copy &into Page Title" ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_T ) );
+  actionCollection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::Key_T ) );
   action->setIcon( QIcon::fromTheme( QLatin1String("edit-copy") ) );
   connect( action, SIGNAL(triggered()), SLOT(copySelectionToTitle()) );
   connect( editor, SIGNAL(copyAvailable(bool)), action, SLOT(setEnabled(bool)) );
@@ -370,7 +370,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   action = actionCollection->addAction( QLatin1String("save_to") );
   action->setText( i18n( "Rename..." ) );
   action->setIcon( QIcon::fromTheme( QLatin1String("edit-rename") ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_M ) );
+  actionCollection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::Key_M ) );
 
   KActionMenu *exportMenu = actionCollection->add<KActionMenu>( QLatin1String("save_to") );
   exportMenu->setText( i18n( "Export" ) );

@@ -148,7 +148,7 @@ void AuditLogViewer::slotUser1() {
         s << "<html><head>";
         if ( !windowTitle().isEmpty() ) {
           s << "\n<title>"
-            << Qt::escape( windowTitle() )
+            << windowTitle().toHtmlEscaped()
             << "</title>\n";
         }
         s << "</head><body>\n"

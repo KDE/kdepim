@@ -201,8 +201,8 @@ void Pane::Private::addActivateTabAction(int i)
     QString actionname;
     actionname.sprintf("activate_tab_%02d", i);
     QAction *action = new QAction( i18n("Activate Tab %1", i), q);
-    action->setShortcut( QKeySequence( QString::fromLatin1( "Alt+%1" ).arg( i ) ) );
     mXmlGuiClient->actionCollection()->addAction( actionname, action );
+    mXmlGuiClient->actionCollection()->setDefaultShortcut(action, QKeySequence( QString::fromLatin1( "Alt+%1" ).arg( i ) ) );
     connect( action, SIGNAL(triggered(bool)),q, SLOT(activateTab()) );
 }
 
@@ -237,8 +237,8 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
         d->mActionMenu->addSeparator();
 
         QAction *action = new QAction( i18n("Create New Tab"), this );
-        action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_O ) );
         d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "create_new_tab" ), action );
+        d->mXmlGuiClient->actionCollection()->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_O ) );
         connect( action, SIGNAL(triggered(bool)), SLOT(onNewTabClicked()) );
         d->mActionMenu->addAction( action );
 
@@ -249,8 +249,8 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
 
 
         d->mCloseTabAction = new QAction( i18n("Close Tab"), this );
-        d->mCloseTabAction->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_W ) );
         d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "close_current_tab" ), d->mCloseTabAction );
+        d->mXmlGuiClient->actionCollection()->setDefaultShortcut(d->mCloseTabAction, QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_W ) );
         connect( d->mCloseTabAction, SIGNAL(triggered(bool)), SLOT(onCloseTabClicked()) );
         d->mActionMenu->addAction( d->mCloseTabAction );
         d->mCloseTabAction->setEnabled( false );

@@ -3529,7 +3529,7 @@ QString ObjectTreeParser::convertedHtmlContent() const
 {
     QString htmlContent = mHtmlContent;
     if( htmlContent.isEmpty() ) {
-        QString convertedHtml = Qt::escape( mPlainTextContent );
+        QString convertedHtml = mPlainTextContent.toHtmlEscaped();
         convertedHtml.append(QLatin1String("</body></html>"));
         convertedHtml.prepend(QLatin1String("<html><head></head><body>"));
         htmlContent = convertedHtml.replace( QRegExp( QLatin1String("\n" )), QLatin1String("<br />") );

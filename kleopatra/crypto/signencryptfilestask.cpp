@@ -70,8 +70,8 @@ namespace {
 
     QString formatInputOutputLabel( const QString & input, const QString & output, bool inputDeleted, bool outputDeleted ) {
         return i18nc( "Input file --> Output file (rarr is arrow", "%1 &rarr; %2",
-                      inputDeleted ? QString::fromLatin1("<s>%1</s>").arg( Qt::escape( input ) ) : Qt::escape( input ),
-                      outputDeleted ? QString::fromLatin1("<s>%1</s>").arg( Qt::escape( output ) ) : Qt::escape( output ) );
+                      inputDeleted ? QString::fromLatin1("<s>%1</s>").arg( input.toHtmlEscaped() ) : Qt::escape( input ),
+                      outputDeleted ? QString::fromLatin1("<s>%1</s>").arg( output.toHtmlEscaped() ) : Qt::escape( output ) );
     }
 
     class ErrorResult : public Task::Result {
@@ -209,7 +209,7 @@ namespace {
     }
 
     static QString escape( QString s ) {
-        s = Qt::escape( s );
+        s = s.toHtmlEscaped();
         s.replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) );
         return s;
     }
@@ -222,7 +222,7 @@ namespace {
             else if ( !outputError.isEmpty() )
                 return i18n( "Output error: %1", escape( outputError ) );
         if ( err )
-            return Qt::escape( QString::fromLocal8Bit( err.asString() ) );
+            return QString::fromLocal8Bit( err.asString() ).toHtmlEscaped();
         return QString();
     }
 
@@ -234,7 +234,7 @@ namespace {
             else if ( !outputError.isEmpty() )
                 return i18n( "Output error: %1", escape( outputError ) );
         if ( err )
-            return Qt::escape( QString::fromLocal8Bit( err.asString() ) );
+            return QString::fromLocal8Bit( err.asString() ).toHtmlEscaped();
         return i18n(" Encryption succeeded." );
     }
 
