@@ -47,10 +47,10 @@ class CALENDARSUPPORT_EXPORT KCalPrefs : public KCalPrefsBase
     void usrSetDefaults();
 
     /** Read preferences from config file */
-    void usrReadConfig();
+    void usrRead();
 
     /** Write preferences to config file */
-    bool usrWriteConfig();
+    bool usrSave();
 
   protected:
     void setTimeZoneDefault();

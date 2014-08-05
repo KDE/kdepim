@@ -157,7 +157,7 @@ void KCalPrefs::fillMailDefaults()
   }
 }
 
-void KCalPrefs::usrReadConfig()
+void KCalPrefs::usrRead()
 {
   KConfigGroup generalConfig( config(), "General" );
 
@@ -182,7 +182,7 @@ void KCalPrefs::usrReadConfig()
   fillMailDefaults();
 }
 
-bool KCalPrefs::usrWriteConfig()
+bool KCalPrefs::usrSave()
 {
   KConfigGroup generalConfig( config(), "General" );
   d->mCategoryConfig->setColors( d->mCategoryColors );
