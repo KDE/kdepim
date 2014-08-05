@@ -591,7 +591,7 @@ void MainWidget::setupActions( KActionCollection *collection )
 
   action = collection->addAction( QLatin1String("select_all") );
   action->setText( i18n( "Select All" ) );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_A ) );
+  collection->setDefaultShortcut(action, QKeySequence( Qt::CTRL + Qt::Key_A ) );
   action->setWhatsThis( i18n( "Select all contacts in the current address book view." ) );
   connect( action, SIGNAL(triggered(bool)), mItemView, SLOT(selectAll()) );
 
@@ -608,20 +608,20 @@ void MainWidget::setupActions( KActionCollection *collection )
   QAction *act = new QAction( i18nc( "@action:inmenu", "Simple (one column)" ), mViewModeGroup );
   act->setCheckable( true );
   act->setData( 1 );
-  act->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_1 ) );
+  collection->setDefaultShortcut(act, QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_1 ) );
   act->setWhatsThis( i18n( "Show a simple mode of the address book view." ) );
   collection->addAction( QLatin1String("view_mode_simple"), act );
 
   act = new QAction( i18nc( "@action:inmenu", "Two Columns" ), mViewModeGroup );
   act->setCheckable( true );
   act->setData( 2 );
-  act->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_2 ) );
   collection->addAction( QLatin1String("view_mode_2columns"), act );
+  collection->setDefaultShortcut(act,  QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_2 ) );
 
   act = new QAction( i18nc( "@action:inmenu", "Three Columns" ), mViewModeGroup );
   act->setCheckable( true );
   act->setData( 3 );
-  act->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_3 ) );
+  collection->setDefaultShortcut( act, QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_3 ) );
   collection->addAction( QLatin1String("view_mode_3columns"), act );
 
   connect( mViewModeGroup, SIGNAL(triggered(QAction*)), SLOT(setViewMode(QAction*)) );
@@ -697,9 +697,9 @@ void MainWidget::setupActions( KActionCollection *collection )
 
   mQuickSearchAction = new QAction( i18n("Set Focus to Quick Search"), this );
   //If change shortcut change in quicksearchwidget->lineedit->setPlaceholderText
-  mQuickSearchAction->setShortcut( QKeySequence( Qt::ALT + Qt::Key_Q ) );
   collection->addAction( QLatin1String("focus_to_quickseach"), mQuickSearchAction );
   connect( mQuickSearchAction, SIGNAL(triggered(bool)), mQuickSearchWidget, SLOT(slotFocusQuickSearch()) );
+  collection->setDefaultShortcut( mQuickSearchAction, QKeySequence( Qt::ALT + Qt::Key_Q ) );
 
   action = collection->addAction( QLatin1String("send_mail") );
   action->setText( i18n( "Send an email...") );

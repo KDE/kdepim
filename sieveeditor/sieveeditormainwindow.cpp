@@ -122,11 +122,11 @@ void SieveEditorMainWindow::setupActions()
 
     mDeleteScript = ac->addAction(QLatin1String("delete_script"), this, SLOT(slotDeleteScript()));
     mDeleteScript->setText(i18n("Delete Script"));
-    mDeleteScript->setShortcut(QKeySequence( Qt::Key_Delete ));
+    ac->setDefaultShortcut(mDeleteScript, QKeySequence( Qt::Key_Delete ));
     mDeleteScript->setEnabled(false);
 
     mNewScript = ac->addAction(QLatin1String("create_new_script"), this, SLOT(slotCreateNewScript()));
-    mNewScript->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_N ));
+    ac->setDefaultShortcut(mNewScript,QKeySequence( Qt::CTRL + Qt::Key_N ));
     mNewScript->setText(i18n("Create New Script..."));
     mNewScript->setEnabled(false);
 
@@ -141,12 +141,12 @@ void SieveEditorMainWindow::setupActions()
     mRefreshList = ac->addAction(QLatin1String("refresh_list"), this, SLOT(slotRefreshList()));
     mRefreshList->setText(i18n("Refresh List"));
     mRefreshList->setIcon(QIcon::fromTheme(QLatin1String("view-refresh")));
-    mRefreshList->setShortcut(QKeySequence( Qt::Key_F5 ));
+    ac->setDefaultShortcut(mRefreshList,QKeySequence( Qt::Key_F5 ));
 
     mGoToLine = ac->addAction(QLatin1String("gotoline"), mMainWidget->sieveEditorMainWidget(), SLOT(slotGoToLine()));
     mGoToLine->setText(i18n("Go to Line"));
     mGoToLine->setIcon(QIcon::fromTheme(QLatin1String("go-jump")));
-    mGoToLine->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_G ));
+    ac->setDefaultShortcut(mGoToLine,QKeySequence( Qt::CTRL + Qt::Key_G ));
     mGoToLine->setEnabled(false);
 }
 

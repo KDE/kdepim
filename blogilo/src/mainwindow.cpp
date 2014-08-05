@@ -213,7 +213,7 @@ void MainWindow::setupActions()
     // custom menu and menu item
     QAction *actNewPost = new QAction( QIcon::fromTheme( QLatin1String("document-new") ), i18n( "New Post" ), this );
     actionCollection()->addAction( QLatin1String( "new_post" ), actNewPost );
-    actNewPost->setShortcut( Qt::CTRL + Qt::Key_N );
+    actionCollection()->setDefaultShortcut(actNewPost, QKeySequence( Qt::CTRL + Qt::Key_N ));
     connect( actNewPost, SIGNAL(triggered(bool)), this, SLOT(slotCreateNewPost()) );
 
     QAction *actAddBlog = new QAction( QIcon::fromTheme( QLatin1String("list-add") ), i18n( "Add Blog..." ), this );
@@ -230,12 +230,12 @@ void MainWindow::setupActions()
 
     QAction *actSaveLocally = new QAction( QIcon::fromTheme( QLatin1String("document-save") ), i18n( "Save Locally" ), this );
     actionCollection()->addAction( QLatin1String( "save_locally" ), actSaveLocally );
-    actSaveLocally->setShortcut( Qt::CTRL + Qt::Key_S );
+    actionCollection()->setDefaultShortcut(actSaveLocally, QKeySequence( Qt::CTRL + Qt::Key_S ));
     connect( actSaveLocally, SIGNAL(triggered(bool)), this, SLOT(slotSavePostLocally()) );
 
     KToggleAction *actToggleToolboxVisible = new KToggleAction( i18n( "Show Toolbox" ), this );
     actionCollection()->addAction( QLatin1String( "toggle_toolbox" ), actToggleToolboxVisible );
-    actToggleToolboxVisible->setShortcut( Qt::CTRL + Qt::Key_T );
+    actionCollection()->setDefaultShortcut(actToggleToolboxVisible, QKeySequence( Qt::CTRL + Qt::Key_T ));
     connect( actToggleToolboxVisible, SIGNAL(toggled(bool)),
              this, SLOT(slotToggleToolboxVisible(bool)) );
     connect( toolboxDock, SIGNAL(visibilityChanged(bool)),

@@ -168,7 +168,7 @@ void StorageServiceManagerMainWindow::setupActions()
 
     mRefreshList = ac->addAction(QLatin1String("refresh_list"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotRefreshList()));
     mRefreshList->setText(i18n("Refresh List"));
-    mRefreshList->setShortcut(QKeySequence( Qt::Key_F5 ));
+    ac->setDefaultShortcut(mRefreshList, QKeySequence( Qt::Key_F5 ));
 
     mAccountInfo = ac->addAction(QLatin1String("account_info"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotAccountInfo()));
     mAccountInfo->setText(i18n("Account Info..."));
@@ -177,7 +177,7 @@ void StorageServiceManagerMainWindow::setupActions()
     mUploadFile->setText(i18n("Upload File..."));
 
     mDelete = ac->addAction(QLatin1String("delete"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotDelete()));
-    mDelete->setShortcut(QKeySequence(Qt::Key_Delete));
+    ac->setDefaultShortcut(mDelete, QKeySequence(Qt::Key_Delete));
     mDelete->setText(i18n("Delete..."));
     mDelete->setIcon(QIcon::fromTheme(QLatin1String("edit-delete")));
 
@@ -196,11 +196,11 @@ void StorageServiceManagerMainWindow::setupActions()
 
     mRefreshAll = ac->addAction(QLatin1String("refresh_all"), this, SLOT(slotRefreshAll()));
     mRefreshAll->setText(i18n("Refresh All"));
-    mRefreshAll->setShortcut(QKeySequence( Qt::CTRL + Qt::Key_F5 ));
+    ac->setDefaultShortcut(mRefreshAll,QKeySequence( Qt::CTRL + Qt::Key_F5 ));
 
     mRenameItem = ac->addAction(QLatin1String("rename"), mStorageServiceMainWidget->storageServiceTabWidget(), SLOT(slotRename()));
     mRenameItem->setText(i18n("Rename..."));
-    mRenameItem->setShortcut(QKeySequence( Qt::Key_F2 ));
+    ac->setDefaultShortcut(mRenameItem,QKeySequence( Qt::Key_F2 ));
 
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
     KStandardAction::configureNotifications(this, SLOT(slotShowNotificationOptions()), ac); // options_configure_notifications
