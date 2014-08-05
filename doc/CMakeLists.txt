@@ -1,6 +1,5 @@
 add_subdirectory(akregator)
 add_subdirectory(blogilo)
-add_subdirectory(kabcclient)
 add_subdirectory(konsolekalendar)
 add_subdirectory(kalarm)
 add_subdirectory(kioslave)
