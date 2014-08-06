@@ -224,7 +224,7 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
            SLOT(update()) );
   connect( mIncidenceTree, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
            SLOT(edit()) );
-  connect( mIncidenceTree, SIGNAL(customContextMenuRequested(QPoint)), SLOT(popupItemMenu(QPoint)) );
+  connect(mIncidenceTree, &ReminderTree::customContextMenuRequested, this, &AlarmDialog::popupItemMenu);
 
   mDetailView = new CalendarSupport::IncidenceViewer( mCalendar.data(), topBox );
   QString s;
@@ -279,10 +279,10 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
 
   connect( &mSuspendTimer, SIGNAL(timeout()), SLOT(wakeUp()) );
 
-  connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()) );
-  connect( this, SIGNAL(user1Clicked()), this, SLOT(slotUser1()) );
-  connect( this, SIGNAL(user2Clicked()), this, SLOT(slotUser2()) );
-  connect( this, SIGNAL(user3Clicked()), this, SLOT(slotUser3()) );
+  connect(this, &AlarmDialog::okClicked, this, &AlarmDialog::slotOk);
+  connect(this, &AlarmDialog::user1Clicked, this, &AlarmDialog::slotUser1);
+  connect(this, &AlarmDialog::user2Clicked, this, &AlarmDialog::slotUser2);
+  connect(this, &AlarmDialog::user3Clicked, this, &AlarmDialog::slotUser3);
 
   mIdentityManager = new CalendarSupport::IdentityManager;
 }

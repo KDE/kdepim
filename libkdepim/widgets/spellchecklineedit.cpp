@@ -80,7 +80,7 @@ SpellCheckLineEdit::SpellCheckLineEdit(QWidget* parent, const QString& configFil
 
     document()->setDocumentMargin(2);
 
-    connect(this, SIGNAL(aboutToShowContextMenu(QMenu*)), this, SLOT(insertLanguageMenu(QMenu*)));
+    connect(this, &SpellCheckLineEdit::aboutToShowContextMenu, this, &SpellCheckLineEdit::insertLanguageMenu);
 }
 
 SpellCheckLineEdit::~SpellCheckLineEdit()

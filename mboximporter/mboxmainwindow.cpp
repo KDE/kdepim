@@ -39,8 +39,8 @@ MBoxMainWindow::MBoxMainWindow(const QString &filename, QWidget *parent)
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &MBoxMainWindow::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &MBoxMainWindow::reject);
 
     buttonBox->button(QDialogButtonBox::Close)->setDefault(true);
 
@@ -52,7 +52,7 @@ MBoxMainWindow::MBoxMainWindow(const QString &filename, QWidget *parent)
     mainLayout->addWidget(mImportWidget);
     mainLayout->addWidget(buttonBox);
 
-    connect(mImportWidget, SIGNAL(importMailsClicked()), this, SLOT(slotImportMBox()));
+    connect(mImportWidget, &MBoxImportWidget::importMailsClicked, this, &MBoxMainWindow::slotImportMBox);
     resize( 800, 600 );
 }
 

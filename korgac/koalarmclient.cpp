@@ -69,8 +69,8 @@ KOAlarmClient::KOAlarmClient( QObject *parent )
 #if !defined(KORGAC_AKONADI_AGENT)
   if ( dockerEnabled() ) {
     mDocker = new AlarmDockWindow;
-    connect( this, SIGNAL(reminderCount(int)), mDocker, SLOT(slotUpdate(int)) );
-    connect( mDocker, SIGNAL(quitSignal()), SLOT(slotQuit()) );
+    connect(this, &KOAlarmClient::reminderCount, mDocker, &AlarmDockWindow::slotUpdate);
+    connect(mDocker, &AlarmDockWindow::quitSignal, this, &KOAlarmClient::slotQuit);
   }
 #endif
   QStringList mimeTypes;
@@ -234,7 +234,7 @@ void KOAlarmClient::createReminder( const Akonadi::ETMCalendar::Ptr &calendar,
 #if !defined(Q_OS_MAEMO_5) && !defined(KORGAC_AKONADI_AGENT)
   if ( !mDialog ) {
     mDialog = new AlarmDialog( calendar );
-    connect( this, SIGNAL(saveAllSignal()), mDialog, SLOT(slotSave()) );
+    connect(this, &KOAlarmClient::saveAllSignal, mDialog, &AlarmDialog::slotSave);
     if ( mDocker ) {
       connect( mDialog, SIGNAL(reminderCount(int)),
                mDocker, SLOT(slotUpdate(int)) );
@@ -345,8 +345,8 @@ void KOAlarmClient::show()
   if ( !mDocker ) {
     if ( dockerEnabled() ) {
       mDocker = new AlarmDockWindow;
-      connect( this, SIGNAL(reminderCount(int)), mDocker, SLOT(slotUpdate(int)) );
-      connect( mDocker, SIGNAL(quitSignal()), SLOT(slotQuit()) );
+      connect(this, &KOAlarmClient::reminderCount, mDocker, &AlarmDockWindow::slotUpdate);
+      connect(mDocker, &AlarmDockWindow::quitSignal, this, &KOAlarmClient::slotQuit);
     }
 
     if ( mDialog ) {

@@ -246,9 +246,9 @@ CompletionOrderEditor::CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearc
              SLOT(slotSelectionChanged()) );
     connect( mListView, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
              SLOT(slotSelectionChanged()) );
-    connect( mUpButton, SIGNAL(clicked()), this, SLOT(slotMoveUp()) );
-    connect( mDownButton, SIGNAL(clicked()), this, SLOT(slotMoveDown()) );
-    connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()));
+    connect(mUpButton, &QPushButton::clicked, this, &CompletionOrderEditor::slotMoveUp);
+    connect(mDownButton, &QPushButton::clicked, this, &CompletionOrderEditor::slotMoveDown);
+    connect(this, &CompletionOrderEditor::okClicked, this, &CompletionOrderEditor::slotOk);
 
     loadCompletionItems();
     readConfig();

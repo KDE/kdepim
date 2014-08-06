@@ -46,7 +46,7 @@ AttachPropertyDialog::AttachPropertyDialog( QWidget *parent )
   mUI.setupUi( mainWidget );
   mUI.mProperties->setHeaderHidden( true );
   setMainWidget( mainWidget );
-  connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSave()));
+  connect(this, &AttachPropertyDialog::user1Clicked, this, &AttachPropertyDialog::slotSave);
   readConfig();
 }
 

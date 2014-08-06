@@ -194,8 +194,8 @@ RecentAddressDialog::RecentAddressDialog( QWidget *parent )
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &RecentAddressDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &RecentAddressDialog::reject);
     okButton->setDefault(true);
     setModal( true );
     QWidget *page = new QWidget( this );
@@ -210,8 +210,8 @@ RecentAddressDialog::RecentAddressDialog( QWidget *parent )
     mLineEdit->setTrapReturnKey(true);
     mLineEdit->installEventFilter(this);
 
-    connect(mLineEdit,SIGNAL(textChanged(QString)),SLOT(slotTypedSomething(QString)));
-    connect(mLineEdit,SIGNAL(returnPressed()),SLOT(slotAddItem()));
+    connect(mLineEdit, &KLineEdit::textChanged, this, &RecentAddressDialog::slotTypedSomething);
+    connect(mLineEdit, &KLineEdit::returnPressed, this, &RecentAddressDialog::slotAddItem);
 
 
     QHBoxLayout* hboxLayout = new QHBoxLayout;
@@ -219,12 +219,12 @@ RecentAddressDialog::RecentAddressDialog( QWidget *parent )
     QVBoxLayout* btnsLayout = new QVBoxLayout;
     btnsLayout->addStretch();
     mNewButton = new QPushButton(QIcon::fromTheme(QLatin1String("list-add")), i18n("&Add"), this);
-    connect(mNewButton, SIGNAL(clicked()), SLOT(slotAddItem()));
+    connect(mNewButton, &QPushButton::clicked, this, &RecentAddressDialog::slotAddItem);
     btnsLayout->insertWidget(0 ,mNewButton);
 
     mRemoveButton = new QPushButton(QIcon::fromTheme(QLatin1String("list-remove")), i18n("&Remove"), this);
     mRemoveButton->setEnabled(false);
-    connect(mRemoveButton, SIGNAL(clicked()), SLOT(slotRemoveItem()));
+    connect(mRemoveButton, &QPushButton::clicked, this, &RecentAddressDialog::slotRemoveItem);
     btnsLayout->insertWidget(1, mRemoveButton);
 
 

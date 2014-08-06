@@ -84,12 +84,12 @@ AlarmDockWindow::AlarmDockWindow()
   contextMenu()->addSeparator();
   mAlarmsEnabled =
     contextMenu()->addAction( i18nc( "@action:inmenu", "Enable Reminders" ) );
-  connect( mAlarmsEnabled, SIGNAL(toggled(bool)), SLOT(toggleAlarmsEnabled(bool)) );
+  connect(mAlarmsEnabled, &QAction::toggled, this, &AlarmDockWindow::toggleAlarmsEnabled);
   mAlarmsEnabled->setCheckable( true );
 
   mAutostart =
     contextMenu()->addAction( i18nc( "@action:inmenu", "Start Reminder Daemon at Login" ) );
-  connect( mAutostart, SIGNAL(toggled(bool)), SLOT(toggleAutostart(bool)) );
+  connect(mAutostart, &QAction::toggled, this, &AlarmDockWindow::toggleAutostart);
   mAutostart->setCheckable( true );
 
   mAlarmsEnabled->setChecked( alarmsEnabled );
