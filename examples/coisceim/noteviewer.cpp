@@ -137,7 +137,7 @@ bool NoteViewer::eventFilter(QObject* watched, QEvent* event)
     item.setPayload( msg );
 
     ItemModifyJob *modifyJob = new ItemModifyJob(item, this);
-    connect(modifyJob, SIGNAL(result(KJob*)), SLOT(modifyDone(KJob*)) );
+    connect(modifyJob, &ItemModifyJob::result, this, &NoteViewer::modifyDone);
 
     m_contentEdit->document()->setModified( false );
     m_titleEdit->setModified( false );

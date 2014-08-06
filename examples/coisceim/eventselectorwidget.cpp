@@ -70,7 +70,7 @@ EventSelectorWidget::EventSelectorWidget(QWidget* parent, Qt::WindowFlags f)
   QHBoxLayout *hLayout = new QHBoxLayout;
 
   QPushButton *change = new QPushButton(i18n("Select trip"));
-  connect(change, SIGNAL(clicked(bool)), SLOT(selectTrip()));
+  connect(change, &QPushButton::clicked, this, &EventSelectorWidget::selectTrip);
 
   hLayout->addWidget(change);
 

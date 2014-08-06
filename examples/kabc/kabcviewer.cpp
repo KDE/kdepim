@@ -44,8 +44,8 @@ Dialog::Dialog( QWidget *parent )
   QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
   QVBoxLayout *mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &Dialog::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, this, &Dialog::reject);
 
   mBrowser = new Akonadi::ContactViewer( this );
   mainLayout->addWidget(mBrowser);

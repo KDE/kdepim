@@ -67,15 +67,15 @@ EntityFindingWidget::EntityFindingWidget(QWidget* parent, Qt::WindowFlags f)
   collectionIdLabel->setBuddy( m_collectionIdInput );
   itemIdLabel->setBuddy( m_itemIdInput );
 
-  connect( m_collectionIdInput, SIGNAL(returnPressed()), SLOT(findCollection()) );
-  connect( m_itemIdInput, SIGNAL(returnPressed()), SLOT(findItem()) );
+  connect(m_collectionIdInput, &QLineEdit::returnPressed, this, &EntityFindingWidget::findCollection);
+  connect(m_itemIdInput, &QLineEdit::returnPressed, this, &EntityFindingWidget::findItem);
 
   QSplitter *splitter = new QSplitter;
   m_etw = new FindingETW();
 
   m_etw->init();
 
-  connect( m_etw, SIGNAL(initialized()), SLOT(initWidget()) );
+  connect(m_etw, &FindingETW::initialized, this, &EntityFindingWidget::initWidget);
 
   m_selectionView = new QListView;
 

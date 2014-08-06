@@ -44,7 +44,7 @@ void EntityTreeModelFactory::createFromRemoteId(const QString& remoteId)
   Session *session = new Session("TEST", this);
   CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::FirstLevel, session);
   job->setProperty(WANTED_REMOTE_ID, remoteId);
-  connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(collectionsFetched(Akonadi::Collection::List)));
+  connect(job, &CollectionFetchJob::collectionsReceived, this, &EntityTreeModelFactory::collectionsFetched);
 }
 
 void EntityTreeModelFactory::collectionsFetched(const Akonadi::Collection::List& list)

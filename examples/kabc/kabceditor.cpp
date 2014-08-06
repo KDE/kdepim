@@ -58,12 +58,12 @@ Dialog::Dialog( QWidget *parent )
   QPushButton *button = new QPushButton( i18n("Load"), wdg );
   layout->addWidget( button, 1, 2 );
 
-  connect( button, SIGNAL(clicked()), SLOT(load()) );
+  connect(button, &QPushButton::clicked, this, &Dialog::load);
 
   button = new QPushButton( i18n("Save"), wdg );
   layout->addWidget( button, 2, 2 );
 
-  connect( button, SIGNAL(clicked()), SLOT(save()) );
+  connect(button, &QPushButton::clicked, this, &Dialog::save);
 
   setMainWidget( wdg );
 }

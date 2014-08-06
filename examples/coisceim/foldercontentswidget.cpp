@@ -48,7 +48,7 @@ FolderContentsWidget::FolderContentsWidget(Trip *trip, int role, const QString &
 
   QPushButton *confButton = new QPushButton(type);
   layout->addWidget(confButton);
-  connect(confButton, SIGNAL(clicked()), SLOT(configure()));
+  connect(confButton, &QPushButton::clicked, this, &FolderContentsWidget::configure);
 
   m_view = new EntityTreeView;
   layout->addWidget(m_view);

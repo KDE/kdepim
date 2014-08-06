@@ -146,10 +146,10 @@ void mailreader::setupActions()
 
     m_previousMessage = new QAction(i18n("Previous Message"), this);
     actionCollection()->addAction(QLatin1String("previous_message"), m_previousMessage);
-    connect(m_previousMessage, SIGNAL(triggered(bool)), SLOT(slotPreviousMessage()));
+    connect(m_previousMessage, &QAction::triggered, this, &mailreader::slotPreviousMessage);
     m_nextMessage = new QAction(i18n("Next Message"), this);
     actionCollection()->addAction(QLatin1String("next_message"), m_nextMessage);
-    connect(m_nextMessage, SIGNAL(triggered(bool)), SLOT(slotNextMessage()));
+    connect(m_nextMessage, &QAction::triggered, this, &mailreader::slotNextMessage);
 }
 
 void mailreader::slotMessageSelected( const Akonadi::Item &item )
@@ -159,8 +159,8 @@ void mailreader::slotMessageSelected( const Akonadi::Item &item )
   Akonadi::ItemFetchJob *itemFetchJob = new Akonadi::ItemFetchJob( item, this );
   itemFetchJob->fetchScope().fetchFullPayload( true );
 
-  connect( itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(itemsReceived(Akonadi::Item::List)) );
-  connect( itemFetchJob, SIGNAL(result(KJob*)), SLOT(itemFetchDone(KJob*)) );
+  connect(itemFetchJob, &Akonadi::ItemFetchJob::itemsReceived, this, &mailreader::itemsReceived);
+  connect(itemFetchJob, &Akonadi::ItemFetchJob::result, this, &mailreader::itemFetchDone);
 
   m_view->showItem( item );
 }
