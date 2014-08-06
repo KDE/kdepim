@@ -1,5 +1,7 @@
 #include "attendeetablemodel.h"
 
+#include <klocalizedstring.h>
+
 #include <KCalCore/Attendee>
 #include <KPIMUtils/Email>
 
@@ -125,21 +127,21 @@ QVariant AttendeeTableModel::headerData(int section, Qt::Orientation orientation
     if (orientation == Qt::Horizontal) {
         switch (section) {
         case Role:
-            return QString("role");
+            return i18nc("vcard attendee role", "Role");
         case FullName:
-            return QString("fullname");
+            return i18nc("attendees  (name+emailaddress)",  "Fullname");
         case Available:
-            return QString("available");
+            return i18nc("is attendee available for incidence", "Available");
         case Status:
-            return QString("status");
+          return i18nc("Status of attendee in an incidence (accepted, declined, delegated, ...)", "Status");
         case CuType:
-            return QString("cuType");
+            return i18nc("Type of resource (vCard attribute)", "cuType");
         case Response:
-            return QString("response");
+            return i18nc("has attendee to respond to the invitation", "Response");
         case Name:
-            return QString("name");
+            return i18nc("attendee name", "name");
         case Email:
-            return QString("email");
+            return i18nc("attendee email",  "email");
         }
     }
 

@@ -28,6 +28,7 @@
 #include <ldap/ldapclientsearch.h>
 
 #include "freebusyitemmodel.h"
+#include "resourceitem.h"
 
 # include <KCalCore/FreeBusy>
 #include <KDialog>
@@ -52,7 +53,7 @@ private:
     /* Shows the details of a resource
      *
      */
-    void showDetails(const KLDAP::LdapObject&);
+    void showDetails(const KLDAP::LdapObject&, const KLDAP::LdapClient &client);
 
     QItemSelectionModel *selectionModel;
 
@@ -66,6 +67,11 @@ private slots:
      *
      */
     void slotShowDetails(const QModelIndex & current);
+    
+    /**
+     * The Owner search is done
+     */
+    void slotOwnerSearchFinished();
 
     void slotInsertFreeBusy( const KCalCore::FreeBusy::Ptr &fb, const QString &email );
 
@@ -73,6 +79,7 @@ private slots:
 
 private:
     FreeBusyItemModel *mModel;
+    ResourceItem::Ptr mOwnerItem;
     Ui_resourceManagement *mUi;
 };
 

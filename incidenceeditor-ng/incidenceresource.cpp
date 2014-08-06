@@ -70,7 +70,7 @@ IncidenceResource::IncidenceResource(IncidenceAttendee* ieAttendee, Ui::EventOrT
 
 #ifndef KDEPIM_MOBILE_UI
     QStringList attrs;
-    attrs << QLatin1String("cn");
+    attrs << QLatin1String("cn") <<  QLatin1String("mail");
 
     completer = new QCompleter(this);
     ResourceModel *model = new ResourceModel(attrs, this);

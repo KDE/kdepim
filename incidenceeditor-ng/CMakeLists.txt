@@ -70,6 +70,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   resourcemanagement.cpp
   resourceitem.cpp
   resourcemodel.cpp
+  ldaputils.cpp
   attendeetablemodel.cpp
   attendeecomboboxdelegate.cpp
 )
@@ -105,6 +106,7 @@ target_link_libraries(incidenceeditorsng
   akonadi-kmime
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY}
+  ${QJSON_LIBRARIES}
   ${KDE4_KDEUI_LIBS}
   ${KDEPIMLIBS_KCALCORE_LIBS}
   ${KDEPIMLIBS_KCALUTILS_LIBS}
@@ -158,6 +160,7 @@ install(TARGETS incidenceeditorsng ${INSTALL_TARGETS_DEFAULT_ARGS})
     ${KDEPIMLIBS_KCALUTILS_LIBS}
     ${KDEPIMLIBS_KCALCORE_LIBS}
     ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
+    ${QJSON_LIBRARIES}
   )
 
   set_target_properties(incidenceeditorsngmobile PROPERTIES

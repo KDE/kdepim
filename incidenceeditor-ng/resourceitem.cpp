@@ -163,4 +163,5 @@ void ResourceItem::slotLDAPResult(const KLDAP::LdapClient &/*client*/,
             itemData << "";
         }
     }
+    emit searchFinished();
 }
