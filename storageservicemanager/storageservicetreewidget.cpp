@@ -49,7 +49,7 @@ StorageServiceTreeWidget::StorageServiceTreeWidget(PimCommon::StorageServiceAbst
     mCapabilities = mStorageService->capabilities();
     //Single selection for the moment
     setSelectionMode(QAbstractItemView::SingleSelection);
-    connect(this, SIGNAL(fileDoubleClicked()), this, SLOT(slotFileDoubleClicked()));
+    connect(this, &StorageServiceTreeWidget::fileDoubleClicked, this, &StorageServiceTreeWidget::slotFileDoubleClicked);
     connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), this, SLOT(slotGeneralFontChanged()));
     connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), this, SLOT(slotGeneralPaletteChanged()));
     readConfig();

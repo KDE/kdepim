@@ -40,8 +40,8 @@ StorageServiceLogDialog::StorageServiceLogDialog(QWidget *parent)
     mLog->setReadOnly(true);
     readConfig();
     setMainWidget(mLog);
-    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotClearLog()));
-    connect(this, SIGNAL(user2Clicked()), this, SLOT(slotSaveAs()));
+    connect(this, &StorageServiceLogDialog::user1Clicked, this, &StorageServiceLogDialog::slotClearLog);
+    connect(this, &StorageServiceLogDialog::user2Clicked, this, &StorageServiceLogDialog::slotSaveAs);
     connect(mLog->editor(), SIGNAL(textChanged()), this, SLOT(slotTextChanged()));
 }
 

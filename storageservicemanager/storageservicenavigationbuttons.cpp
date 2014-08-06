@@ -33,13 +33,13 @@ StorageServiceNavigationButtons::StorageServiceNavigationButtons(QWidget *parent
 
     mGoBack = new QAction(QIcon::fromTheme(QLatin1String("go-previous")),i18n("Back"), this);
     addAction(mGoBack);
-    connect(mGoBack, SIGNAL(triggered()), SLOT(slotGoBackClicked()));
+    connect(mGoBack, &QAction::triggered, this, &StorageServiceNavigationButtons::slotGoBackClicked);
     mGoBack->setShortcuts( KStandardShortcut::shortcut(KStandardShortcut::Back) );
     mGoBack->setEnabled(false);
 
     mGoForward = new QAction(QIcon::fromTheme(QLatin1String("go-next")),i18n("Forward"), this);
     mGoForward->setShortcuts( KStandardShortcut::shortcut(KStandardShortcut::Forward) );
-    connect(mGoForward, SIGNAL(triggered()), SLOT(slotGoForwardClicked()));
+    connect(mGoForward, &QAction::triggered, this, &StorageServiceNavigationButtons::slotGoForwardClicked);
     addAction(mGoForward);
     mGoForward->setEnabled(false);
 }
