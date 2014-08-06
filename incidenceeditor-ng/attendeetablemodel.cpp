@@ -54,7 +54,11 @@ QVariant AttendeeTableModel::data(const QModelIndex &index, int role) const
         case FullName:
             return attendeeList[index.row()]->fullName();
         case Available:
-            return 0;//attendeeList.at(index.row()).available;
+            if (role == Qt::DisplayRole) {
+                return i18n("Unknown");
+            } else {
+                return 0;  //attendeeList.at(index.row()).available;
+            }
         case Status:
             return attendeeList[index.row()]->status();
         case CuType:
