@@ -19,6 +19,7 @@
  *
  */
 #include "resourcemodel.h"
+#include "ldaputils.h"
 
 #include <KPIMUtils/Email>
 #include <KDebug>
@@ -43,6 +44,7 @@ ResourceModel::ResourceModel(const QStringList &headers,
     QStringList attrs = ldapSearchCollections.attributes();
     attrs << QLatin1String("uniqueMember");
     ldapSearchCollections.setAttributes(attrs);
+    ldapSearch.setAttributes(headers);
 
     connect(&ldapSearchCollections, SIGNAL(searchData(const QList<KLDAP::LdapResultObject> &)),
             SLOT(slotLDAPCollectionData(const QList<KLDAP::LdapResultObject> &)));
@@ -105,7 +107,7 @@ QVariant ResourceModel::headerData(int section, Qt::Orientation orientation,
                                    int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-        return rootItem->data(section);
+        return translateLDAPAttributeForDisplay(rootItem->data(section).toString());
     }
 
     return QVariant();

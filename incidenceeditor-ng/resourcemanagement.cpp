@@ -25,6 +25,7 @@
 #include "ui_resourcemanagement.h"
 #include "resourcemodel.h"
 #include "freebusyitem.h"
+#include "ldaputils.h"
 
 #include "freebusyganttproxymodel.h"
 
@@ -35,6 +36,8 @@
 
 #include <akonadi/calendar/freebusymanager.h>
 #include <kldap/ldapobject.h>
+
+#include <qjson/parser.h>
 
 #include <QPointer>
 #include <QSplitter>
@@ -141,12 +144,12 @@ public:
     {
     }
 
-        QSize sizeHint() const
-            {
-                QSize s = QHeaderView::sizeHint();
-                s.rheight() *= 2;
-                return s;
-            }
+    QSize sizeHint() const
+    {
+        QSize s = QHeaderView::sizeHint();
+        s.rheight() *= 2;
+        return s;
+    }
 };
 
 
@@ -160,10 +163,6 @@ ResourceManagement::ResourceManagement()
     setMainWidget( w );
 
     QVariantList list;
-    //QGridLayout *layout = new QGridLayout( resourceCalender );
-    //layout->setSpacing( 0 );
-    //KOrganizerPart *view = new KOrganizerPart(resourceCalender,  this,  list);
-    //resourceCalender = view->topLevelWidget();
     mModel = new FreeBusyItemModel;
 #ifndef KDEPIM_MOBILE_UI
 
@@ -196,8 +195,9 @@ ResourceManagement::ResourceManagement()
 #endif
 
     QStringList attrs;
-    attrs << QLatin1String("cn") << QLatin1String("mail") << QLatin1String("givenname") << QLatin1String("sn");
-
+    attrs << QLatin1String("cn") << QLatin1String("mail")
+          << QLatin1String("owner") << QLatin1String("givenname") << QLatin1String("sn")
+          << QLatin1String("kolabDescAttribute") << QLatin1String("description");
     ResourceModel *resourcemodel = new ResourceModel(attrs);
     mUi->treeResults->setModel(resourcemodel);
 
@@ -226,11 +226,11 @@ void ResourceManagement::slotStartSearch(const QString &text)
 void ResourceManagement::slotShowDetails(const QModelIndex & current)
 {
     ResourceItem::Ptr item = current.model()->data(current, ResourceModel::Resource).value<ResourceItem::Ptr>();
-    showDetails(item->ldapObject());
+    showDetails(item->ldapObject(), item->ldapClient());
 }
 
 
-void ResourceManagement::showDetails(const KLDAP::LdapObject &obj)
+void ResourceManagement::showDetails(const KLDAP::LdapObject &obj, const KLDAP::LdapClient &client)
 {
     // Clean up formDetails
     QLayoutItem *child;
@@ -238,20 +238,49 @@ void ResourceManagement::showDetails(const KLDAP::LdapObject &obj)
         delete child->widget();
         delete child;
     }
+    mUi->groupOwner->setHidden(true);
 
     // Fill formDetails with data
     foreach(const QString & key, obj.attributes().keys()) {
+        if (key ==  QLatin1String("objectClass")) {
+            continue;
+        } else if (key ==  QLatin1String("owner")) {
+            QStringList attrs;
+            attrs << QLatin1String("cn") << QLatin1String("mail")
+                  << QLatin1String("mobile") <<  QLatin1String("telephoneNumber")
+                  << QLatin1String("kolabDescAttribute") << QLatin1String("description");
+            mOwnerItem = ResourceItem::Ptr(new ResourceItem(KLDAP::LdapDN(QString::fromUtf8(obj.attributes().value(key).at(0))),
+                                                    attrs,  client));
+            connect(mOwnerItem.data(),  SIGNAL(searchFinished()), SLOT(slotOwnerSearchFinished()));
+            mOwnerItem->startSearch();
+            continue;
+        }
         QStringList list;
         foreach(const QByteArray & value, obj.attributes().value(key)) {
             list << QString::fromUtf8(value);
         }
-        kDebug() << key <<  list;
-        mUi->formDetails->addRow(key, new QLabel(list.join("\n")));
+        if (key ==  QLatin1String("kolabDescAttribute")) {
+            QJson::Parser parser;
+            foreach(const QString &attr,  list) {
+                bool ok;
+                QMap <QString, QVariant > map = parser.parse(attr.toUtf8(), &ok).toMap();
+                foreach(const QString &pKey, map.keys()) {
+                    QString value;
+                    if (map.value(pKey).type() ==  QVariant::Bool) {
+                        value = map.value(pKey).toBool()  ?  i18n("yes") : i18n("no");
+                    } else {
+                        value = map.value(pKey).toString();
+                    }
+                    mUi->formDetails->addRow(translateKolabLDAPAttributeForDisplay(pKey), new QLabel(value));
+                 }
+            }
+        } else {
+            mUi->formDetails->addRow(translateLDAPAttributeForDisplay(key), new QLabel(list.join("\n")));
+        }
     }
 
     QString name = QString::fromUtf8(obj.attributes().value("cn")[0]);
     QString email = QString::fromUtf8(obj.attributes().value("mail")[0]);
-    kDebug() <<  name <<  email;
     KCalCore::Attendee::Ptr attendee(new KCalCore::Attendee(name,  email));
     FreeBusyItem::Ptr freebusy( new FreeBusyItem( attendee, this ));
     mModel->clear();
@@ -270,5 +299,50 @@ void ResourceManagement::slotLayoutChanged()
         mUi->treeResults->setColumnHidden(i, true);
     }
 }
+
+void ResourceManagement::slotOwnerSearchFinished()
+{
+    // Clean up formDetails
+    QLayoutItem *child;
+    while ((child = mUi->formOwner->takeAt(0)) != 0) {
+        delete child->widget();
+        delete child;
+    }
+    mUi->groupOwner->setHidden(false);
+
+    const KLDAP::LdapObject &obj = mOwnerItem->ldapObject();
+    foreach(const QString & key, obj.attributes().keys()) {
+        if (key ==  QLatin1String("objectClass")
+            || key ==  QLatin1String("owner")
+            || key ==  QLatin1String("givenname")
+            || key ==  QLatin1String("sn")) {
+            continue;
+        }
+        QStringList list;
+        foreach(const QByteArray & value, obj.attributes().value(key)) {
+            list << QString::fromUtf8(value);
+          }
+        if (key ==  QLatin1String("kolabDescAttribute")) {
+            QJson::Parser parser;
+            foreach(const QString &attr,  list) {
+                bool ok;
+                QMap <QString, QVariant > map = parser.parse(attr.toUtf8(), &ok).toMap();
+                foreach(const QString &pKey, map.keys()) {
+                    QString value;
+                    if (map.value(pKey).type() ==  QVariant::Bool) {
+                        value = map.value(pKey).toBool()  ?  i18n("yes") : i18n("no");
+                      } else {
+                          value = map.value(pKey).toString();
+                        }
+                    mUi->formOwner->addRow(translateKolabLDAPAttributeForDisplay(pKey), new QLabel(value));
+                  }
+              }
+          } else {
+              mUi->formOwner->addRow(translateLDAPAttributeForDisplay(key), new QLabel(list.join("\n")));
+            }
+      }
+
+}
+
 
 #include "resourcemanagement.moc"

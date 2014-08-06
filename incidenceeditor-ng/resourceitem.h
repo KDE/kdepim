@@ -67,6 +67,9 @@ private:
     QVector<QVariant> itemData;
     ResourceItem::Ptr parentItem;
 
+signals:
+    void searchFinished();
+
 public:
     /* Returns the attributes of the requested ldapObject.
      *
