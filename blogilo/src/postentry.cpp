@@ -105,7 +105,7 @@ PostEntry::PostEntry( QWidget *parent )
     d->mCurrentPostBlogId = -1;
     d->mNumOfFilesToBeUploaded = 0;
     d->isPostContentModified = false;
-    connect( this, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
+    connect(this, &PostEntry::textChanged, this, &PostEntry::slotPostModified);
 }
 
 PostEntry::~PostEntry()
@@ -278,7 +278,7 @@ void PostEntry::setPostBody( const QString & content, const QString &additionalC
     d->mCurrentPost.setContent( body );
     setHtmlContent( body );
     d->isPostContentModified = false;
-    connect( this, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
+    connect(this, &PostEntry::textChanged, this, &PostEntry::slotPostModified);
     //     connect( txtTitle, SIGNAL(textChanged(QString)), this, SLOT(slotPostModified()) );
 }
 
@@ -302,7 +302,7 @@ void PostEntry::setCurrentPostFromEditor()
         const QString& str = htmlContent();
         d->mCurrentPost.setContent( str );
         d->isPostContentModified = false;
-        connect( this, SIGNAL(textChanged()), this, SLOT(slotPostModified()) );
+        connect(this, &PostEntry::textChanged, this, &PostEntry::slotPostModified);
     }
 }
 
@@ -424,7 +424,7 @@ void PostEntry::submitPost( int blogId, const BilboPost &postData )
 
         emit showStatusMessage(statusMsg, true);
         Backend *b = new Backend(d->mCurrentPostBlogId, this);
-        connect( b, SIGNAL(sigError(QString)), this, SLOT(slotError(QString)) );
+        connect(b, &Backend::sigError, this, &PostEntry::slotError);
         if ( uploadMediaFiles(b) ) {
             qDebug()<<"Uploading";
             showProgressBar();

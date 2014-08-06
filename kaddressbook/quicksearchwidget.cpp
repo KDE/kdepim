@@ -50,8 +50,8 @@ QuickSearchWidget::QuickSearchWidget( QWidget *parent )
 
   mTimer = new QTimer( this );
 
-  connect( mEdit, SIGNAL(textChanged(QString)), SLOT(resetTimer()) );
-  connect( mTimer, SIGNAL(timeout()), SLOT(delayedTextChanged()) );
+  connect(mEdit, &QLineEdit::textChanged, this, &QuickSearchWidget::resetTimer);
+  connect(mTimer, &QTimer::timeout, this, &QuickSearchWidget::delayedTextChanged);
 }
 
 QuickSearchWidget::~QuickSearchWidget()

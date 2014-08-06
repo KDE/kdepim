@@ -128,7 +128,7 @@ void UploadMediaDialog::slotButtonClicked(int button)
             Backend *b = new Backend( mCurrentBlog->id(), this);
             connect( b, SIGNAL(sigMediaUploaded(BilboMedia*)),
                      this, SLOT(slotMediaObjectUploaded(BilboMedia*)) );
-            connect( b, SIGNAL(sigError(QString)), this, SLOT(slotError(QString)));
+            connect(b, &Backend::sigError, this, &UploadMediaDialog::slotError);
             connect( b, SIGNAL(sigMediaError(QString,BilboMedia*)), this, SLOT(slotError(QString)) );
             b->uploadMedia( media );
             this->hide();

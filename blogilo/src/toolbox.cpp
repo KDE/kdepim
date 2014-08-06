@@ -120,7 +120,7 @@ void Toolbox::slotReloadCategoryList()
     }
 
     Backend *b = new Backend( d->mCurrentBlogId );
-    connect( b, SIGNAL(sigCategoryListFetched(int)), this, SLOT(slotLoadCategoryListFromDB(int)) );
+    connect(b, &Backend::sigCategoryListFetched, this, &Toolbox::slotLoadCategoryListFromDB);
     connect( b, SIGNAL(sigError(QString)), this, SIGNAL(sigError(QString)) );
     emit sigBusy( true );
     d->statusbar->showMessage( i18n( "Requesting list of categories..." ) );
@@ -147,7 +147,7 @@ void Toolbox::slotUpdateEntries(int count)
     }
     Backend *entryB = new Backend( d->mCurrentBlogId, this);
     entryB->getEntriesListFromServer( count );
-    connect( entryB, SIGNAL(sigEntriesListFetched(int)), this, SLOT(slotLoadEntriesFromDB(int)) );
+    connect(entryB, &Backend::sigEntriesListFetched, this, &Toolbox::slotLoadEntriesFromDB);
     connect( entryB, SIGNAL(sigError(QString)), this, SIGNAL(sigError(QString)) );
     d->statusbar->showMessage( i18n( "Requesting list of entries..." ) );
     setCursor( Qt::BusyCursor );
@@ -211,7 +211,7 @@ void Toolbox::slotRemoveSelectedEntryFromServer()
                                                                      data(BlogEntryID).toInt() ) );
         Backend *b = new Backend( d->mCurrentBlogId, this);
         connect(b, SIGNAL(sigPostRemoved(int,BilboPost)), this, SLOT(slotPostRemoved(int,BilboPost)) );
-        connect(b, SIGNAL(sigError(QString)), this, SLOT(slotError(QString)));
+        connect(b, &Backend::sigError, this, &Toolbox::slotError);
         b->removePost(post);
         d->statusbar->showMessage( i18n( "Removing post..." ) );
     }
@@ -492,13 +492,13 @@ void Toolbox::requestEntriesListContextMenu( const QPoint & pos )
     QMenu *entriesContextMenu = new QMenu;
     QAction *actEntriesOpenInBrowser = new QAction( QIcon::fromTheme(QLatin1String("applications-internet")),
                                                     i18n("Open in browser"), entriesContextMenu );
-    connect( actEntriesOpenInBrowser, SIGNAL(triggered()), this, SLOT(openPostInBrowser()) );
+    connect(actEntriesOpenInBrowser, &QAction::triggered, this, &Toolbox::openPostInBrowser);
     QAction *actEntriesCopyUrl = new QAction( QIcon::fromTheme(QLatin1String("edit-copy")),
                                               i18n("Copy URL"), entriesContextMenu );
-    connect( actEntriesCopyUrl, SIGNAL(triggered(bool)), this, SLOT(slotEntriesCopyUrl()) );
+    connect(actEntriesCopyUrl, &QAction::triggered, this, &Toolbox::slotEntriesCopyUrl);
     QAction *actEntriesCopyTitle = new QAction( QIcon::fromTheme(QLatin1String("edit-copy")),
                                                 i18n("Copy title"), entriesContextMenu );
-    connect( actEntriesCopyTitle, SIGNAL(triggered(bool)), this, SLOT(copyPostTitle()) );
+    connect(actEntriesCopyTitle, &QAction::triggered, this, &Toolbox::copyPostTitle);
     entriesContextMenu->addAction( actEntriesOpenInBrowser );
     entriesContextMenu->addAction( actEntriesCopyUrl );
     entriesContextMenu->addAction( actEntriesCopyTitle );

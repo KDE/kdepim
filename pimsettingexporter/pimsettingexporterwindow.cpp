@@ -474,11 +474,11 @@ void PimSettingExporterWindow::restoreFinished()
 
 void PimSettingExporterWindow::executeJob()
 {
-    connect(mImportExportData, SIGNAL(info(QString)), SLOT(slotAddInfo(QString)));
-    connect(mImportExportData, SIGNAL(error(QString)), SLOT(slotAddError(QString)));
-    connect(mImportExportData, SIGNAL(title(QString)), SLOT(slotAddTitle(QString)));
-    connect(mImportExportData, SIGNAL(endLine()), SLOT(slotAddEndLine()));
-    connect(mImportExportData, SIGNAL(jobFinished()), SLOT(slotJobFinished()));
+    connect(mImportExportData, &ImportBlogiloJob::info, this, &PimSettingExporterWindow::slotAddInfo);
+    connect(mImportExportData, &ImportBlogiloJob::error, this, &PimSettingExporterWindow::slotAddError);
+    connect(mImportExportData, &ImportBlogiloJob::title, this, &PimSettingExporterWindow::slotAddTitle);
+    connect(mImportExportData, &ImportBlogiloJob::endLine, this, &PimSettingExporterWindow::slotAddEndLine);
+    connect(mImportExportData, &ImportBlogiloJob::jobFinished, this, &PimSettingExporterWindow::slotJobFinished);
     mImportExportData->start();
 }
 

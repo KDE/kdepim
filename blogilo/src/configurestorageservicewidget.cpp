@@ -71,7 +71,7 @@ ConfigureStorageServiceWidget::ConfigureStorageServiceWidget(PimCommon::StorageS
     if (QStandardPaths::findExecutable(QLatin1String("storageservicemanager")).isEmpty()) {
         mManageStorageService->setEnabled(false);
     } else {
-        connect(mManageStorageService, SIGNAL(clicked(bool)), this, SLOT(slotManageStorageService()));
+        connect(mManageStorageService, &QPushButton::clicked, this, &ConfigureStorageServiceWidget::slotManageStorageService);
     }
     setLayout(lay);
     //TODO need to implement save/load from KDialogConfig
