@@ -258,7 +258,7 @@ void KJotsEdit::onAutoDecimal( void )
         actionCollection->action(QLatin1String("auto_decimal"))->setChecked( false );
     } else {
         allowAutoDecimal = true;
-        connect(this, SIGNAL(textChanged()), this, SLOT(DecimalList()));
+        connect(this, &KJotsEdit::textChanged, this, &KJotsEdit::DecimalList);
         actionCollection->action(QLatin1String("auto_decimal"))->setChecked( true );
     }
 }

@@ -62,7 +62,7 @@ KJotsMain::KJotsMain()
             SLOT(activeAnchorChanged(QString,QString)));
 
     setupGUI();
-    connect(component, SIGNAL(captionChanged(QString)), SLOT(updateCaption(QString)));
+    connect(component, &KJotsWidget::captionChanged, this, &KJotsMain::updateCaption);
 
 }
 
