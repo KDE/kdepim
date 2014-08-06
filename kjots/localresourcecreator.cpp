@@ -44,7 +44,7 @@ LocalResourceCreator::LocalResourceCreator(QObject* parent)
 void LocalResourceCreator::finishCreateResource()
 {
     Akonadi::CollectionFetchJob *collectionFetchJob = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::FirstLevel, this );
-    connect( collectionFetchJob, SIGNAL(result(KJob*)), SLOT(rootFetchFinished(KJob*)) );
+    connect(collectionFetchJob, &Akonadi::CollectionFetchJob::result, this, &LocalResourceCreator::rootFetchFinished);
 }
 
 void LocalResourceCreator::rootFetchFinished(KJob* job)
@@ -77,7 +77,7 @@ void LocalResourceCreator::rootFetchFinished(KJob* job)
     {
       Akonadi::CollectionFetchJob *collectionFetchJob = new Akonadi::CollectionFetchJob( col, Akonadi::CollectionFetchJob::FirstLevel, this );
       collectionFetchJob->setProperty("FetchedCollection", col.id());
-      connect( collectionFetchJob, SIGNAL(result(KJob*)), SLOT(topLevelFetchFinished(KJob*)) );
+      connect(collectionFetchJob, &Akonadi::CollectionFetchJob::result, this, &LocalResourceCreator::topLevelFetchFinished);
       return;
     }
   }
@@ -121,7 +121,7 @@ void LocalResourceCreator::topLevelFetchFinished(KJob* job)
   collection.addAttribute(eda);
 
   Akonadi::CollectionCreateJob *createJob = new Akonadi::CollectionCreateJob( collection, this );
-  connect( createJob, SIGNAL(result(KJob*)), this, SLOT(createFinished(KJob*)) );
+  connect(createJob, &Akonadi::CollectionCreateJob::result, this, &LocalResourceCreator::createFinished);
 
 }
 
@@ -164,7 +164,7 @@ void LocalResourceCreator::createFinished(KJob* job)
   item.addAttribute(eda);
 
   Akonadi::ItemCreateJob *itemCreateJob = new Akonadi::ItemCreateJob( item,  collectionCreateJob->collection(), this);
-  connect( itemCreateJob, SIGNAL(result(KJob*)), SLOT(itemCreateFinished(KJob*)) );
+  connect(itemCreateJob, &Akonadi::ItemCreateJob::result, this, &LocalResourceCreator::itemCreateFinished);
 }
 
 void LocalResourceCreator::itemCreateFinished(KJob* job)

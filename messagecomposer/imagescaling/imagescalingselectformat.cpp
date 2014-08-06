@@ -40,8 +40,8 @@ ImageScalingSelectFormatDialog::ImageScalingSelectFormatDialog(QWidget *parent)
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     okButton->setDefault(true);
     mListWidget = new QListWidget;
     mainLayout->addWidget(mListWidget);
@@ -107,7 +107,7 @@ ImageScalingSelectFormat::ImageScalingSelectFormat(QWidget *parent)
     mFormat->setReadOnly(true);
     lay->addWidget(mFormat);
     mSelectFormat = new QPushButton(i18n("Select Format..."));
-    connect(mSelectFormat, SIGNAL(clicked(bool)), this, SLOT(slotSelectFormat()));
+    connect(mSelectFormat, &QPushButton::clicked, this, &ImageScalingSelectFormat::slotSelectFormat);
     lay->addWidget(mSelectFormat);
 }
 

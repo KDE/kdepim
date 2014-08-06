@@ -49,9 +49,9 @@ RawSocketConsole::RawSocketConsole(QWidget* parent) :
   connect( ui.clearButton, SIGNAL(clicked()), ui.protocolView, SLOT(clear()) );
   ui.protocolView->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
 
-  connect( mSocket, SIGNAL(readyRead()), SLOT(dataReceived()) );
-  connect( mSocket, SIGNAL(connected()), SLOT(connected()) );
-  connect( mSocket, SIGNAL(disconnected()), SLOT(disconnected()) );
+  connect(mSocket, &QLocalSocket::readyRead, this, &RawSocketConsole::dataReceived);
+  connect(mSocket, &QLocalSocket::connected, this, &RawSocketConsole::connected);
+  connect(mSocket, &QLocalSocket::disconnected, this, &RawSocketConsole::disconnected);
 
   disconnected();
   connectClicked();

@@ -56,7 +56,7 @@ MergeContactsDialog::MergeContactsDialog(const Akonadi::Item::List &lst, QWidget
             mainWidget->addWidget(mContactWidget);
             MergeContactInfoWidget *contactInfo = new MergeContactInfoWidget;
             mainWidget->addWidget(contactInfo);
-            connect(mContactWidget, SIGNAL(contactSelected(Akonadi::Item)), contactInfo, SLOT(setContact(Akonadi::Item)));
+            connect(mContactWidget, &MergeContactWidget::contactSelected, contactInfo, &MergeContactInfoWidget::setContact);
             connect(mContactWidget, SIGNAL(mergeContact(Akonadi::Item::List,Akonadi::Collection)), this, SLOT(slotMergeContact(Akonadi::Item::List,Akonadi::Collection)));
             setMainWidget(mainWidget);
         }
@@ -75,7 +75,7 @@ void MergeContactsDialog::slotMergeContact(const Akonadi::Item::List &lst, const
     }
     enableButton(Close, false);
     MergeContactsJob *job = new MergeContactsJob(this);
-    connect(job,SIGNAL(finished(Akonadi::Item)), this, SLOT(slotMergeContactFinished(Akonadi::Item)));
+    connect(job, &MergeContactsJob::finished, this, &MergeContactsDialog::slotMergeContactFinished);
     job->setDestination(col);
     job->setListItem(lst);
     job->start();

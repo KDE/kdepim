@@ -44,7 +44,7 @@ NotificationMonitor::NotificationMonitor(QWidget* parent) :
   QCheckBox* enableCB = new QCheckBox( this );
   enableCB->setText(i18n("Enable notification monitor"));
   enableCB->setChecked(m_model->isEnabled());
-  connect( enableCB, SIGNAL(toggled(bool)), m_model, SLOT(setEnabled(bool)) );
+  connect(enableCB, &QCheckBox::toggled, m_model, &NotificationModel::setEnabled);
   layout->addWidget(enableCB);
 
   QTreeView *tv = new QTreeView( this );
@@ -53,7 +53,7 @@ NotificationMonitor::NotificationMonitor(QWidget* parent) :
   tv->setAlternatingRowColors( true );
   tv->setContextMenuPolicy( Qt::CustomContextMenu );
   tv->header()->setResizeMode( QHeaderView::ResizeToContents );
-  connect( tv, SIGNAL(customContextMenuRequested(QPoint)), SLOT(contextMenu(QPoint)) );
+  connect(tv, &QTreeView::customContextMenuRequested, this, &NotificationMonitor::contextMenu);
   layout->addWidget( tv );
 
   QHBoxLayout *layout2 = new QHBoxLayout( this );

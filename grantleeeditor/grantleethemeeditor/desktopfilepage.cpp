@@ -75,7 +75,7 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
         lab = new QLabel(i18n("Filename:"));
         mFilename = new QLineEdit;
         mFilename->setText(defaultFileName);
-        connect(mFilename, SIGNAL(textChanged(QString)), this, SLOT(slotFileNameChanged(QString)));
+        connect(mFilename, &QLineEdit::textChanged, this, &DesktopFilePage::slotFileNameChanged);
         lay->addWidget(lab, row,0);
         lay->addWidget(mFilename, row,1);
     }
@@ -101,7 +101,7 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
         ++row;
         mExtraDisplayHeaders = new PimCommon::SimpleStringListEditor;
         lay->addWidget(mExtraDisplayHeaders, row, 0, 1, 2);
-        connect(mExtraDisplayHeaders, SIGNAL(changed()), this, SLOT(slotExtraDisplayHeadersChanged()));
+        connect(mExtraDisplayHeaders, &PimCommon::SimpleStringListEditor::changed, this, &DesktopFilePage::slotExtraDisplayHeadersChanged);
     } else {
         lay->setRowStretch(row,1);
     }

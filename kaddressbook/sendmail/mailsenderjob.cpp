@@ -106,7 +106,7 @@ void MailSenderJob::fetchItem(const Akonadi::Item &item)
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
     job->fetchScope().fetchFullPayload();
 
-    connect( job, SIGNAL(result(KJob*)), SLOT(fetchJobFinished(KJob*)) );
+    connect(job, &Akonadi::ItemFetchJob::result, this, &MailSenderJob::fetchJobFinished);
 }
 
 void MailSenderJob::fetchJobFinished(KJob *job)

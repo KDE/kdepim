@@ -83,7 +83,7 @@ void MergeContactsJob::createMergedContact(const KABC::Addressee &addressee)
     item.setPayload<KABC::Addressee>( addressee );
 
     Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob(item, mCollection, this);
-    connect(job, SIGNAL(result(KJob*)), SLOT(slotCreateMergedContactFinished(KJob*)) );
+    connect(job, &Akonadi::ItemCreateJob::result, this, &MergeContactsJob::slotCreateMergedContactFinished);
 }
 
 void MergeContactsJob::slotCreateMergedContactFinished(KJob *job)
@@ -98,7 +98,7 @@ void MergeContactsJob::slotCreateMergedContactFinished(KJob *job)
     mCreatedContact = createdJob->item();
 
     Akonadi::ItemDeleteJob *deleteJob = new Akonadi::ItemDeleteJob(mListItem, this);
-    connect(deleteJob, SIGNAL(result(KJob*)), SLOT(slotDeleteContactsFinished(KJob*)) );
+    connect(deleteJob, &Akonadi::ItemDeleteJob::result, this, &MergeContactsJob::slotDeleteContactsFinished);
 }
 
 void MergeContactsJob::slotDeleteContactsFinished(KJob *job)

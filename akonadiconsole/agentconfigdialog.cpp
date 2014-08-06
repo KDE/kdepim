@@ -37,8 +37,8 @@ AgentConfigDialog::AgentConfigDialog(QWidget* parent) :
   setCaption( i18n( "Agent Configuration" ) );
 
   connect( this, SIGNAL(applyClicked()), SLOT(reconfigure()) );
-  connect( this, SIGNAL(user1Clicked()), m_model, SLOT(writeConfig()) );
-  connect( this, SIGNAL(user2Clicked()), m_model, SLOT(reload()) );
+  connect(this, &AgentConfigDialog::user1Clicked, m_model, &AgentConfigModel::writeConfig);
+  connect(this, &AgentConfigDialog::user2Clicked, m_model, &AgentConfigModel::reload);
 }
 
 void AgentConfigDialog::setAgentInstance(const Akonadi::AgentInstance& instance)

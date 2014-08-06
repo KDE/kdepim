@@ -269,7 +269,7 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
         hl->addWidget( label );
 
         mNameEdit = new QLineEdit( this );
-        connect( mNameEdit, SIGNAL(textChanged(QString)), SLOT(slotNameChanged(QString)) );
+        connect(mNameEdit, &QLineEdit::textChanged, this, &CollectionGeneralPage::slotNameChanged);
         label->setBuddy( mNameEdit );
         hl->addWidget( mNameEdit );
     }

@@ -228,7 +228,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   mCacheOnlyAction = new KToggleAction( i18n("Cache only retrieval"), xmlGuiWindow );
   mCacheOnlyAction->setChecked( true );
   xmlGuiWindow->actionCollection()->addAction( "akonadiconsole_cacheonly", mCacheOnlyAction );
-  connect( mCacheOnlyAction, SIGNAL(toggled(bool)), SLOT(updateItemFetchScope()) );
+  connect(mCacheOnlyAction, &KToggleAction::toggled, this, &BrowserWidget::updateItemFetchScope);
 
   m_stateMaintainer = new KViewStateMaintainer<ETMViewStateSaver>( KSharedConfig::openConfig()->group("CollectionViewState"), this );
   m_stateMaintainer->setView( mCollectionView );
@@ -268,7 +268,7 @@ void BrowserWidget::itemActivated(const QModelIndex & index)
   job->fetchScope().fetchFullPayload();
   job->fetchScope().fetchAllAttributes();
   job->fetchScope().setFetchTags( true );
-  connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchDone(KJob*)), Qt::QueuedConnection );
+  connect(job, &ItemFetchJob::result, this, &BrowserWidget::itemFetchDone);
 }
 
 void BrowserWidget::itemFetchDone(KJob * job)
@@ -410,7 +410,7 @@ void BrowserWidget::save()
   }
 
   ItemModifyJob *store = new ItemModifyJob( item, this );
-  connect( store, SIGNAL(result(KJob*)), SLOT(saveResult(KJob*)) );
+  connect(store, &ItemModifyJob::result, this, &BrowserWidget::saveResult);
 }
 
 void BrowserWidget::saveResult(KJob * job)
@@ -458,7 +458,7 @@ void BrowserWidget::dumpToXml()
     return;
 #if 0 // TODO: port me, can't use XmlWriteJob here, it's in runtime, call the akonadi2xml cli tool instead
   XmlWriteJob *job = new XmlWriteJob( root, fileName, this );
-  connect( job, SIGNAL(result(KJob*)), SLOT(dumpToXmlResult(KJob*)) );
+  connect(job, &XmlWriteJob::result, this, &BrowserWidget::dumpToXmlResult);
 #endif
 }
 
@@ -498,7 +498,7 @@ void BrowserWidget::tagViewContextMenuRequested(const QPoint &pos)
 {
   const QModelIndex index = mTagView->indexAt(pos);
   QMenu *menu = new QMenu( this );
-  connect(menu, SIGNAL(aboutToHide()), menu, SLOT(deleteLater()));
+  connect(menu, &QMenu::aboutToHide, menu, &QMenu::deleteLater);
   menu->addAction(QIcon::fromTheme(QLatin1String("list-add")), i18n("&Add tag..."), this, SLOT(addTagRequested()));
   if (index.isValid()) {
       menu->addAction(i18n("Add &subtag..."), this, SLOT(addSubTagRequested()));
@@ -513,8 +513,8 @@ void BrowserWidget::tagViewContextMenuRequested(const QPoint &pos)
 void BrowserWidget::addTagRequested()
 {
   TagPropertiesDialog *dlg = new TagPropertiesDialog(this);
-  connect(dlg, SIGNAL(accepted()), this, SLOT(createTag()));
-  connect(dlg, SIGNAL(rejected()), dlg, SLOT(deleteLater()));
+  connect(dlg, &TagPropertiesDialog::accepted, this, &BrowserWidget::createTag);
+  connect(dlg, &TagPropertiesDialog::rejected, dlg, &TagPropertiesDialog::deleteLater);
   dlg->show();
 }
 
@@ -527,8 +527,8 @@ void BrowserWidget::addSubTagRequested()
   tag.setParent(parentTag);
 
   TagPropertiesDialog *dlg = new TagPropertiesDialog(tag, this);
-  connect(dlg, SIGNAL(accepted()), this, SLOT(createTag()));
-  connect(dlg, SIGNAL(rejected()), dlg, SLOT(deleteLater()));
+  connect(dlg, &TagPropertiesDialog::accepted, this, &BrowserWidget::createTag);
+  connect(dlg, &TagPropertiesDialog::rejected, dlg, &TagPropertiesDialog::deleteLater);
   dlg->show();
 }
 
@@ -537,8 +537,8 @@ void BrowserWidget::editTagRequested()
   QAction *action = qobject_cast<QAction*>(sender());
   const Akonadi::Tag tag = action->parent()->property("Tag").value<Akonadi::Tag>();
   TagPropertiesDialog *dlg = new TagPropertiesDialog(tag, this);
-  connect(dlg, SIGNAL(accepted()), this, SLOT(modifyTag()));
-  connect(dlg, SIGNAL(rejected()), dlg, SLOT(deleteLater()));
+  connect(dlg, &TagPropertiesDialog::accepted, this, &BrowserWidget::modifyTag);
+  connect(dlg, &TagPropertiesDialog::rejected, dlg, &TagPropertiesDialog::deleteLater);
   dlg->show();
 }
 
@@ -553,8 +553,8 @@ void BrowserWidget::tagViewDoubleClicked(const QModelIndex &index)
   Q_ASSERT(tag.isValid());
 
   TagPropertiesDialog *dlg = new TagPropertiesDialog(tag, this);
-  connect(dlg, SIGNAL(accepted()), this, SLOT(modifyTag()));
-  connect(dlg, SIGNAL(rejected()), dlg, SLOT(deleteLater()));
+  connect(dlg, &TagPropertiesDialog::accepted, this, &BrowserWidget::modifyTag);
+  connect(dlg, &TagPropertiesDialog::rejected, dlg, &TagPropertiesDialog::deleteLater);
   dlg->show();
 }
 

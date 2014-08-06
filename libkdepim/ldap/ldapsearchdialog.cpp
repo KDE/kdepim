@@ -650,9 +650,9 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
     setTabOrder( d->mFilterCombo, d->mSearchButton );
     d->mSearchEdit->setFocus();
 
-    connect( this, SIGNAL(user1Clicked()), this, SLOT(slotUser1()) );
-    connect( this, SIGNAL(user2Clicked()), this, SLOT(slotUser2()) );
-    connect( this, SIGNAL(cancelClicked()), this, SLOT(slotCancelClicked()));
+    connect(this, &LdapSearchDialog::user1Clicked, this, &LdapSearchDialog::slotUser1);
+    connect(this, &LdapSearchDialog::user2Clicked, this, &LdapSearchDialog::slotUser2);
+    connect(this, &LdapSearchDialog::cancelClicked, this, &LdapSearchDialog::slotCancelClicked);
     d->slotSelectionChanged();
     d->restoreSettings();
 }

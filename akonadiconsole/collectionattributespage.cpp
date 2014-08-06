@@ -59,7 +59,7 @@ void CollectionAttributePage::load(const Collection & col)
     mModel->itemFromIndex( index )->setFlags( Qt::ItemIsEditable | mModel->flags( index ) );
   }
   ui.attrView->setModel( mModel );
-  connect( mModel, SIGNAL(itemChanged(QStandardItem*)), SLOT(attributeChanged(QStandardItem*)) );
+  connect(mModel, &QStandardItemModel::itemChanged, this, &CollectionAttributePage::attributeChanged);
 }
 
 void CollectionAttributePage::save(Collection & col)

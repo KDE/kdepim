@@ -76,7 +76,7 @@ void MergeContactDuplicateContactDialog::searchPotentialDuplicateContacts(const 
         mStackedWidget->setCurrentWidget(mNoEnoughContactSelected);
     } else {
         SearchPotentialDuplicateContactJob *job = new SearchPotentialDuplicateContactJob(list, this);
-        connect(job,SIGNAL(finished(QList<Akonadi::Item::List>)), this, SLOT(slotDuplicateFound(QList<Akonadi::Item::List>)));
+        connect(job, &SearchPotentialDuplicateContactJob::finished, this, &MergeContactDuplicateContactDialog::slotDuplicateFound);
         job->start();
     }
 }

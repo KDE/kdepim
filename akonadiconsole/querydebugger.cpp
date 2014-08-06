@@ -60,7 +60,7 @@ QueryDebugger::QueryDebugger( QWidget* parent ):
   QCheckBox* enableCB = new QCheckBox( this );
   enableCB->setText( "Enable query debugger (slows down server!)");
   enableCB->setChecked( mDebugger->isSQLDebuggingEnabled() );
-  connect( enableCB, SIGNAL(toggled(bool)), mDebugger, SLOT(enableSQLDebugging(bool)) );
+  connect(enableCB, &QCheckBox::toggled, mDebugger, &org::freedesktop::Akonadi::StorageDebugger::enableSQLDebugging);
   layout->addWidget(enableCB);
 
   mView = new KTextEdit( this );
@@ -69,7 +69,7 @@ QueryDebugger::QueryDebugger( QWidget* parent ):
   mView->setFont( QFontDatabase::systemFont(QFontDatabase::FixedFont) );
   layout->addWidget( mView );
 
-  connect( mView, SIGNAL(customContextMenuRequested(QPoint)), SLOT(contextMenu(QPoint)) );
+  connect(mView, &KTextEdit::customContextMenuRequested, this, &QueryDebugger::contextMenu);
 
   Akonadi::Control::widgetNeedsAkonadi( this );
 }
