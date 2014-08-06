@@ -22,6 +22,7 @@
 #include "sieveeditormanagesievewidget.h"
 
 #include <QHBoxLayout>
+#include <QTreeWidget>
 
 SieveEditorScriptManagerWidget::SieveEditorScriptManagerWidget(QWidget *parent)
     : QWidget(parent)
@@ -31,7 +32,7 @@ SieveEditorScriptManagerWidget::SieveEditorScriptManagerWidget(QWidget *parent)
     mTreeView = new SieveEditorManageSieveWidget;
     connect(mTreeView, SIGNAL(newScript(QUrl,QStringList)), this, SLOT(slotNewScript(QUrl,QStringList)));
     connect(mTreeView, SIGNAL(editScript(QUrl,QStringList)), this, SLOT(slotEditScript(QUrl,QStringList)));
-    connect(mTreeView, SIGNAL(updateButtons(QTreeWidgetItem*)), this, SLOT(slotUpdateButtons(QTreeWidgetItem*)));
+    connect(mTreeView, &SieveEditorManageSieveWidget::updateButtons, this, &SieveEditorScriptManagerWidget::slotUpdateButtons);
     connect(mTreeView, SIGNAL(scriptDeleted(QUrl)), this, SIGNAL(scriptDeleted(QUrl)));
     connect(mTreeView, SIGNAL(serverSieveFound(bool)), this, SIGNAL(serverSieveFound(bool)));
     hbox->addWidget(mTreeView);

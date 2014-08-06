@@ -40,15 +40,15 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     : QSplitter(parent)
 {
     mTabWidget = new SieveEditorTabWidget;
-    connect(mTabWidget, SIGNAL(tabCloseRequestedIndex(int)), this, SLOT(slotTabCloseRequested(int)));
-    connect(mTabWidget, SIGNAL(tabRemoveAllExclude(int)), this, SLOT(slotTabRemoveAllExclude(int)));
+    connect(mTabWidget, &SieveEditorTabWidget::tabCloseRequestedIndex, this, &SieveEditorMainWidget::slotTabCloseRequested);
+    connect(mTabWidget, &SieveEditorTabWidget::tabRemoveAllExclude, this, &SieveEditorMainWidget::slotTabRemoveAllExclude);
     addWidget(mTabWidget);
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
     connect(mScriptManagerWidget, SIGNAL(createScriptPage(QUrl,QStringList,bool)), this, SLOT(slotCreateScriptPage(QUrl,QStringList,bool)));
     connect(mScriptManagerWidget, SIGNAL(updateButtons(bool,bool,bool,bool)), SIGNAL(updateButtons(bool,bool,bool,bool)));
-    connect(mScriptManagerWidget, SIGNAL(scriptDeleted(QUrl)), this, SLOT(slotScriptDeleted(QUrl)));
+    connect(mScriptManagerWidget, &SieveEditorScriptManagerWidget::scriptDeleted, this, &SieveEditorMainWidget::slotScriptDeleted);
     connect(mScriptManagerWidget, SIGNAL(serverSieveFound(bool)), this, SIGNAL(serverSieveFound(bool)));
-    connect(this, SIGNAL(updateScriptList()), mScriptManagerWidget, SLOT(slotRefreshList()));
+    connect(this, &SieveEditorMainWidget::updateScriptList, mScriptManagerWidget, &SieveEditorScriptManagerWidget::slotRefreshList);
     addWidget(mScriptManagerWidget);
     setChildrenCollapsible(false);
     QList<int> splitterSizes;

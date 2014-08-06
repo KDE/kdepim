@@ -65,7 +65,7 @@ KWallet::Wallet *SieveServerSettings::wallet()
     if (!mWallet) {
         mWallet = KWallet::Wallet::openWallet( KWallet::Wallet::LocalWallet(), 0 );
         if (mWallet) {
-            connect(mWallet, SIGNAL(walletClosed()), this, SLOT(slotWalletClosed()));
+            connect(mWallet, &KWallet::Wallet::walletClosed, this, &SieveServerSettings::slotWalletClosed);
         }
     }
     return mWallet;

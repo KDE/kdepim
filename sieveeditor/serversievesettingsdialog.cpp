@@ -35,7 +35,7 @@ ServerSieveSettingsDialog::ServerSieveSettingsDialog(QWidget *parent)
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
     mServerSieveSettings = new ServerSieveSettings;
-    connect(mServerSieveSettings, SIGNAL(enableOkButton(bool)), this, SLOT(slotEnableButtonOk(bool)));
+    connect(mServerSieveSettings, &ServerSieveSettings::enableOkButton, this, &ServerSieveSettingsDialog::slotEnableButtonOk);
     lay->addWidget(mServerSieveSettings);
     lay->setMargin(0);
     w->setLayout(lay);
@@ -47,8 +47,8 @@ ServerSieveSettingsDialog::ServerSieveSettingsDialog(QWidget *parent)
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
     mOkButton->setDefault(true);
     mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &ServerSieveSettingsDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &ServerSieveSettingsDialog::reject);
     mainLayout->addWidget(buttonBox);
 
     resize(400,300);
