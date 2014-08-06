@@ -92,8 +92,6 @@ IncidenceResource::IncidenceResource(IncidenceAttendee* ieAttendee, Ui::EventOrT
     filterProxyModel->setDynamicSortFilter(true);
     filterProxyModel->setSourceModel(dataModel);
 
-    QHeaderView* headerView = mUi->mResourcesTable->horizontalHeader();
-    headerView->setResizeMode(QHeaderView::ResizeToContents);
 
     mUi->mResourcesTable->setModel(filterProxyModel);
     mUi->mResourcesTable->setItemDelegateForColumn(AttendeeTableModel::Role, ieAttendee->roleDelegate());
@@ -149,9 +147,15 @@ void IncidenceResource::findResources()
 void IncidenceResource::layoutChanged()
 {
 #ifndef KDEPIM_MOBILE_UI
-    mUi->mResourcesTable->setColumnHidden(AttendeeTableModel::CuType, true);
-    mUi->mResourcesTable->setColumnHidden(AttendeeTableModel::Name, true);
-    mUi->mResourcesTable->setColumnHidden(AttendeeTableModel::Email, true);
+    QHeaderView* headerView = mUi->mResourcesTable->horizontalHeader();
+    headerView->setSectionHidden(AttendeeTableModel::CuType, true);
+    headerView->setSectionHidden(AttendeeTableModel::Name, true);
+    headerView->setSectionHidden(AttendeeTableModel::Email, true);
+    headerView->setResizeMode(AttendeeTableModel::Role,  QHeaderView::ResizeToContents);
+    headerView->setResizeMode(AttendeeTableModel::FullName, QHeaderView::Stretch);
+    headerView->setResizeMode(AttendeeTableModel::Available,  QHeaderView::ResizeToContents);
+    headerView->setResizeMode(AttendeeTableModel::Status,  QHeaderView::ResizeToContents);
+    headerView->setResizeMode(AttendeeTableModel::Response,  QHeaderView::ResizeToContents);
 #endif
 }
 
