@@ -47,11 +47,11 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
 {
     QHBoxLayout *lay = new QHBoxLayout;
     mTabWidget = new GrantleeThemeEditor::ThemeEditorTabWidget;
-    connect(mTabWidget, SIGNAL(currentChanged(int)), this, SLOT(slotCurrentWidgetChanged(int)));
+    connect(mTabWidget, &GrantleeThemeEditor::ThemeEditorTabWidget::currentChanged, this, &ThemeEditorPage::slotCurrentWidgetChanged);
     lay->addWidget(mTabWidget);
     mEditorPage = new EditorPage(EditorPage::MainPage, projectDir);
-    connect(mEditorPage, SIGNAL(needUpdateViewer()), this, SLOT(slotUpdateViewer()));
-    connect(mEditorPage, SIGNAL(changed()), SLOT(slotChanged()));
+    connect(mEditorPage, &EditorPage::needUpdateViewer, this, &ThemeEditorPage::slotUpdateViewer);
+    connect(mEditorPage, &EditorPage::changed, this, &ThemeEditorPage::slotChanged);
     mTabWidget->addTab(mEditorPage, i18n("Editor") + QLatin1String(" (header.html)"));
 
     GrantleeThemeEditor::DesktopFilePage::DesktopFileOptions opt;
@@ -64,10 +64,10 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
 
     connect(mDesktopPage, SIGNAL(mainFileNameChanged(QString)), mEditorPage->preview(), SLOT(slotMainFileNameChanged(QString)));
-    connect(mDesktopPage, SIGNAL(mainFileNameChanged(QString)), mTabWidget, SLOT(slotMainFileNameChanged(QString)));
-    connect(mDesktopPage, SIGNAL(extraDisplayHeaderChanged(QStringList)), this, SLOT(slotExtraHeaderDisplayChanged(QStringList)));
-    connect(mDesktopPage, SIGNAL(changed()), SLOT(slotChanged()));
-    connect(mTabWidget, SIGNAL(tabCloseRequested(int)), SLOT(slotCloseTab(int)));
+    connect(mDesktopPage, &GrantleeThemeEditor::DesktopFilePage::mainFileNameChanged, mTabWidget, &GrantleeThemeEditor::ThemeEditorTabWidget::slotMainFileNameChanged);
+    connect(mDesktopPage, &GrantleeThemeEditor::DesktopFilePage::extraDisplayHeaderChanged, this, &ThemeEditorPage::slotExtraHeaderDisplayChanged);
+    connect(mDesktopPage, &GrantleeThemeEditor::DesktopFilePage::changed, this, &ThemeEditorPage::slotChanged);
+    connect(mTabWidget, &GrantleeThemeEditor::ThemeEditorTabWidget::tabCloseRequested, this, &ThemeEditorPage::slotCloseTab);
     setLayout(lay);
 }
 
@@ -248,7 +248,7 @@ void ThemeEditorPage::addExtraPage()
 EditorPage *ThemeEditorPage::createExtraPage(const QString &filename)
 {
     EditorPage *extraPage = new EditorPage(EditorPage::ExtraPage, QString());
-    connect(extraPage, SIGNAL(changed()), SLOT(slotChanged()));
+    connect(extraPage, &EditorPage::changed, this, &ThemeEditorPage::slotChanged);
     extraPage->setPageFileName(filename);
     mTabWidget->addTab(extraPage, filename);
     mTabWidget->setCurrentWidget(extraPage);

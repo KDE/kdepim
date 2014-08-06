@@ -204,7 +204,7 @@ void AttachmentHandler::view( const QString &attachmentName, const QString &uid 
   Item item;
   item.setGid(uid);
   ItemFetchJob *job = new ItemFetchJob(item);
-  connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFinishView(KJob*)) );
+  connect(job, &ItemFetchJob::result, this, &AttachmentHandler::slotFinishView);
   ReceivedInfo info;
   info.attachmentName = attachmentName;
   info.uid = uid;
@@ -266,7 +266,7 @@ void AttachmentHandler::saveAs( const QString &attachmentName, const QString &ui
   Item item;
   item.setGid(uid);
   ItemFetchJob *job = new ItemFetchJob(item);
-  connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFinishView(KJob*)) );
+  connect(job, &ItemFetchJob::result, this, &AttachmentHandler::slotFinishView);
 
   ReceivedInfo info;
   info.attachmentName = attachmentName;
