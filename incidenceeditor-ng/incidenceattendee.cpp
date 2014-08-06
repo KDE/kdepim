@@ -150,8 +150,7 @@ IncidenceAttendee::IncidenceAttendee( QWidget *parent, IncidenceDateTime *dateTi
   mAttendeeDelegate = new AttendeeLineEditDelegate(this);
   mAttendeeDelegate->setCompletionMode( KGlobalSettings::self()->completionMode() );
 
-  QHeaderView* headerView = mUi->mAttendeeTable->horizontalHeader();
-  headerView->setResizeMode(QHeaderView::ResizeToContents);
+
 
   mUi->mAttendeeTable->setItemDelegateForColumn(AttendeeTableModel::Role, roleDelegate());
   mUi->mAttendeeTable->setItemDelegateForColumn(AttendeeTableModel::FullName, attendeeDelegate());
@@ -709,10 +708,15 @@ AttendeeLineEditDelegate *IncidenceAttendee::attendeeDelegate()
 void IncidenceAttendee::filterLayoutChanged()
 {
 #ifndef KDEPIM_MOBILE_UI
-  mUi->mAttendeeTable->setColumnHidden(AttendeeTableModel::CuType, true);
-  mUi->mAttendeeTable->setColumnHidden(AttendeeTableModel::Name, true);
-  mUi->mAttendeeTable->setColumnHidden(AttendeeTableModel::Email, true);
-  mUi->mAttendeeTable->setColumnHidden(AttendeeTableModel::Available, true);
+    QHeaderView* headerView = mUi->mAttendeeTable->horizontalHeader();
+    headerView->setResizeMode(AttendeeTableModel::Role,  QHeaderView::ResizeToContents);
+    headerView->setResizeMode(AttendeeTableModel::FullName, QHeaderView::Stretch);
+    headerView->setResizeMode(AttendeeTableModel::Status,  QHeaderView::ResizeToContents);
+    headerView->setResizeMode(AttendeeTableModel::Response,  QHeaderView::ResizeToContents);
+    headerView->setSectionHidden(AttendeeTableModel::CuType, true);
+    headerView->setSectionHidden(AttendeeTableModel::Name, true);
+    headerView->setSectionHidden(AttendeeTableModel::Email, true);
+    headerView->setSectionHidden(AttendeeTableModel::Available, true);
 #endif
 }
 
