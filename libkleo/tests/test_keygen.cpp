@@ -38,9 +38,9 @@
 
 #include <gpgme++/keygenerationresult.h>
 
-#include <kapplication.h>
-#include <K4AboutData>
-#include <kcmdlineargs.h>
+
+#include <KAboutData>
+
 #include <kmessagebox.h>
 #include <kdebug.h>
 
@@ -49,6 +49,9 @@
 #include <QGridLayout>
 
 #include <assert.h>
+#include <QApplication>
+#include <KLocalizedString>
+#include <QCommandLineParser>
 
 static const char * const keyParams[] = {
   "Key-Type", "Key-Length",
@@ -151,12 +154,18 @@ int main( int argc, char** argv ) {
     protocol = argv[1];
     argc = 1; // hide from KDE
   }
-  K4AboutData aboutData( "test_keygen", 0, ki18n("KeyGenerationJob Test"), "0.1" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KApplication app;
+  KAboutData aboutData( QLatin1String("test_keygen"), i18n("KeyGenerationJob Test"), QLatin1String("0.1") );
+  QApplication app(argc, argv);
+  QCommandLineParser parser;
+  KAboutData::setApplicationData(aboutData);
+  parser.addVersionOption();
+  parser.addHelpOption();
+  aboutData.setupCommandLine(&parser);
+  parser.process(app);
+  aboutData.processCommandLine(&parser);
 
   KeyGenerator * keygen = new KeyGenerator( 0 );
-  keygen->setObjectName( "KeyGenerator top-level" );
+  keygen->setObjectName( QLatin1String("KeyGenerator top-level") );
   keygen->show();
 
   return app.exec();

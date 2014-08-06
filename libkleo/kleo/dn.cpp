@@ -41,7 +41,7 @@
 #include "libkleo/ui/dnattributeorderconfigwidget.h"
 
 #include <kconfig.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <QStringList>
 
@@ -53,7 +53,6 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
-#include <kglobal.h>
 #include <kconfiggroup.h>
 #include <KSharedConfig>
 

@@ -102,7 +102,7 @@ set(kleo_LIB_SRCS ${libkleo_core_SRCS} ${libkleo_ui_common_SRCS} ${libkleo_backe
 set(kleo_LIB_LIBS  ${QGPGME_LIBRARIES})
 if ( NOT KDEPIM_ONLY_KLEO )
    set( kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_backend_chiasmus_SRCS} ${libkleo_ui_SRCS})
-   set( kleo_LIB_LIBS ${kleo_LIB_LIBS}  KF5::KIOCore KF5::KDELibs4Support KF5::Gpgmepp KF5::QGpgme)
+   set( kleo_LIB_LIBS ${kleo_LIB_LIBS}  KF5::KIOCore KF5::Gpgmepp KF5::QGpgme KF5::I18n KF5::WidgetsAddons KF5::IconThemes KF5::Completion KF5::KDELibs4Support)
 endif ()
 
 add_library(kleo ${LIBRARY_TYPE} ${kleo_LIB_SRCS})

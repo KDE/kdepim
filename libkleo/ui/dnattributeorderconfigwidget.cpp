@@ -34,9 +34,8 @@
 
 #include "kleo/dn.h"
 
-#include <klocale.h>
-#include <kdebug.h>
-#include <kdialog.h>
+#include <KLocalizedString>
+#include <qdebug.h>
 #include <kiconloader.h>
 #include <kconfig.h>
 #include <QIcon>
@@ -83,7 +82,7 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMap
 
   QGridLayout * glay = new QGridLayout( this );
   glay->setMargin( 0 );
-  glay->setSpacing( KDialog::spacingHint() );
+  //PORT QT5 glay->setSpacing( KDialog::spacingHint() );
   glay->setColumnStretch( 0, 1 );
   glay->setColumnStretch( 2, 1 );
 
@@ -215,7 +214,7 @@ void Kleo::DNAttributeOrderConfigWidget::save() const {
 }
 
 void Kleo::DNAttributeOrderConfigWidget::defaults() {
-  kDebug(5150) <<"Sorry, not implemented: Kleo::DNAttributeOrderConfigWidget::defaults()";
+  qDebug() <<"Sorry, not implemented: Kleo::DNAttributeOrderConfigWidget::defaults()";
 }
 
 

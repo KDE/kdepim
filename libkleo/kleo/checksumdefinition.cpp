@@ -39,7 +39,6 @@
 #include <KLocalizedString>
 #include <KConfig>
 #include <KShell>
-#include <KStandardDirs>
 
 #include <QString>
 #include <QStringList>

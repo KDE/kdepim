@@ -34,13 +34,16 @@
 
 #include "libkleo/backends/qgpgme/gnupgprocessbase.h"
 
-#include <kapplication.h>
-#include <K4AboutData>
-#include <kcmdlineargs.h>
+
+#include <KAboutData>
+
 #include <kmessagebox.h>
 #include <kdebug.h>
 
 #include <QStringList>
+#include <QApplication>
+#include <KLocalizedString>
+#include <QCommandLineParser>
 
 GnuPGViewer::GnuPGViewer( QWidget * parent )
   : QTextEdit( parent ), mProcess( 0 )
@@ -115,9 +118,15 @@ int main( int argc, char** argv ) {
     kDebug(5150) <<"Need at least two arguments";
     return 1;
   }
-  K4AboutData aboutData( "test_gnupgprocessbase", 0, ki18n("GnuPGProcessBase Test"), "0.1" );
-  KCmdLineArgs::init( &aboutData );
-  KApplication app;
+  KAboutData aboutData( QLatin1String("test_gnupgprocessbase"), i18n("GnuPGProcessBase Test"), QLatin1String("0.1") );
+  QApplication app(argc, argv);
+  QCommandLineParser parser;
+  KAboutData::setApplicationData(aboutData);
+  parser.addVersionOption();
+  parser.addHelpOption();
+  aboutData.setupCommandLine(&parser);
+  parser.process(app);
+  aboutData.processCommandLine(&parser);
 
   Kleo::GnuPGProcessBase gpg;
   for ( int i = 1 ; i < argc ; ++i )

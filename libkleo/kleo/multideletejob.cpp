@@ -34,7 +34,7 @@
 #include "cryptobackend.h"
 #include "deletejob.h"
 
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <gpgme++/key.h>
 #include <gpgme++/context.h>

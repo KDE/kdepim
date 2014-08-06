@@ -31,8 +31,7 @@
 */
 
 #include "enum.h"
-
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <QString>
 #include <QStringList>

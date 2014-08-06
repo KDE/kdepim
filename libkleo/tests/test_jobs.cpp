@@ -40,11 +40,14 @@
 
 #include <kdebug.h>
 #include <assert.h>
-#include <K4AboutData>
-#include <kcmdlineargs.h>
-#include <kapplication.h>
+#include <KAboutData>
+
+
 
 #include <memory>
+#include <QApplication>
+#include <KLocalizedString>
+#include <QCommandLineParser>
 
 static const char * protocol = 0;
 
@@ -95,9 +98,15 @@ int main( int argc, char** argv ) {
     protocol = argv[1];
     argc = 1; // hide from KDE
   }
-  K4AboutData aboutData( "test_jobs", 0, ki18n("Signing Job Test"), "0.1" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KApplication app;
+  KAboutData aboutData( QLatin1String("test_jobs"), i18n("Signing Job Test"), QLatin1String("0.1") );
+  QApplication app(argc, argv);
+  QCommandLineParser parser;
+  KAboutData::setApplicationData(aboutData);
+  parser.addVersionOption();
+  parser.addHelpOption();
+  aboutData.setupCommandLine(&parser);
+  parser.process(app);
+  aboutData.processCommandLine(&parser);
 
   testSign();
 }

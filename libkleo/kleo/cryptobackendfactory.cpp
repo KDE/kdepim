@@ -45,8 +45,7 @@
 #endif
 
 #include <kconfig.h>
-#include <klocale.h>
-#include <kdebug.h>
+#include <KLocalizedString>
 #include <kmessagebox.h>
 #include <kconfiggroup.h>
 
