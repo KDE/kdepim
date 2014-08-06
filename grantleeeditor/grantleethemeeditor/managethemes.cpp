@@ -50,11 +50,11 @@ ManageThemes::ManageThemes(const QString &relativeThemePath, QWidget *parent)
 
     mListThemes = new QListWidget;
     mListThemes->setSelectionMode(QAbstractItemView::MultiSelection);
-    connect(mListThemes, SIGNAL(itemSelectionChanged()), this, SLOT(slotItemSelectionChanged()));
+    connect(mListThemes, &QListWidget::itemSelectionChanged, this, &ManageThemes::slotItemSelectionChanged);
     lay->addWidget(mListThemes);
 
     mDeleteTheme = new QPushButton(i18n("Delete theme"));
-    connect(mDeleteTheme, SIGNAL(clicked()), this, SLOT(slotDeleteTheme()));
+    connect(mDeleteTheme, &QPushButton::clicked, this, &ManageThemes::slotDeleteTheme);
     mDeleteTheme->setEnabled(false);
     lay->addWidget(mDeleteTheme);
 
@@ -66,8 +66,8 @@ ManageThemes::ManageThemes(const QString &relativeThemePath, QWidget *parent)
     setLayout(mainLayout);
     mainLayout->addWidget(w);
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &ManageThemes::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &ManageThemes::reject);
     mainLayout->addWidget(buttonBox);
 
     readConfig();
