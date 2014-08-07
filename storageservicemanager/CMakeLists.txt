@@ -51,4 +51,4 @@ install(FILES data/storageservicemanager.notifyrc
     DESTINATION ${KNOTIFYRC_INSTALL_DIR}
   )
 
-add_subdirectory(tests)
+add_subdirectory(autotests)

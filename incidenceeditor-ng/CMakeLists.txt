@@ -167,4 +167,4 @@ target_link_libraries(kincidenceeditor
 
 install(TARGETS kincidenceeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-add_subdirectory(tests)
+add_subdirectory(autotests)
