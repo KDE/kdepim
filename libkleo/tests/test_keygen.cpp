@@ -52,6 +52,11 @@
 #include <QApplication>
 #include <KLocalizedString>
 #include <QCommandLineParser>
+#include <QDialogButtonBox>
+#include <KConfigGroup>
+#include <QPushButton>
+#include <KGuiItem>
+#include <QVBoxLayout>
 
 static const char * const keyParams[] = {
   "Key-Type", "Key-Length",
@@ -65,21 +70,29 @@ static const int numKeyParams = sizeof keyParams / sizeof *keyParams;
 static const char * protocol = 0;
 
 KeyGenerator::KeyGenerator( QWidget * parent )
-  : KDialog( parent )
+  : QDialog( parent )
 {
   setModal( true );
-  setCaption( "KeyGenerationJob test" );
-  setButtons( Close|User1 );
-  setDefaultButton( User1 );
-  showButtonSeparator( true );
-  setButtonGuiItem( User1, KGuiItem( "Create" ) );
+  setWindowTitle( "KeyGenerationJob test" );
+  QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+  QWidget *mainWidget = new QWidget(this);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  mainLayout->addWidget(mainWidget);
+  QPushButton *user1Button = new QPushButton;
+  buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+  connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+  user1Button->setDefault(true);
+  KGuiItem::assign(user1Button, KGuiItem("Create"));
 
   QWidget * w = new QWidget( this );
-  setMainWidget( w );
+  mainLayout->addWidget(w);
+  mainLayout->addWidget(buttonBox);
 
   QGridLayout *glay = new QGridLayout( w );
-  glay->setMargin( marginHint() );
-  glay->setSpacing( spacingHint() );
+  //PORT to QT5 glay->setMargin( marginHint() );
+  //PORT to QT5 glay->setSpacing( spacingHint() );
 
   int row = -1;
 
@@ -98,7 +111,7 @@ KeyGenerator::KeyGenerator( QWidget * parent )
   glay->setRowStretch( row, 1 );
   glay->setColumnStretch( 1, 1 );
 
-  connect( this, SIGNAL(user1Clicked()), SLOT(slotStartKeyGeneration()) );
+  connect(user1Button, SIGNAL(clicked()), SLOT(slotStartKeyGeneration()) );
 }
 
 KeyGenerator::~KeyGenerator() {}

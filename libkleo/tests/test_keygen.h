@@ -32,7 +32,7 @@
 #ifndef __KLEO_TEST_KEYGEN_H__
 #define __KLEO_TEST_KEYGEN_H__
 
-#include <kdialog.h>
+#include <QDialog>
 
 #include <qbytearray.h>
 
@@ -43,7 +43,7 @@ namespace GpgME {
 
 class QLineEdit;
 
-class KeyGenerator : public KDialog {
+class KeyGenerator : public QDialog {
   Q_OBJECT
 public:
   KeyGenerator( QWidget * parent=0 );

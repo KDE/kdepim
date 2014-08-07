@@ -61,7 +61,7 @@
 // KDE
 #include <klocale.h>
 #include <kiconloader.h>
-#include <kdialog.h>
+#include <QDialog>
 #include <kdebug.h>
 #include <kmessagebox.h>
 #include <qpushbutton.h>
@@ -105,7 +105,7 @@ Kleo::KeyRequester::KeyRequester( QWidget * parent )
 void Kleo::KeyRequester::init()
 {
   QHBoxLayout * hlay = new QHBoxLayout( this );
-  hlay->setSpacing( KDialog::spacingHint() );
+//TODO PORT QT5   hlay->setSpacing( QDialog::spacingHint() );
   hlay->setMargin( 0 );
 
   // the label where the key id is to be displayed:

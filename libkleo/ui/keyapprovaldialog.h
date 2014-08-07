@@ -40,7 +40,7 @@
 #include "kleo_export.h"
 #include "kleo/enum.h"
 
-#include <kdialog.h>
+#include <QDialog>
 
 #include <gpgme++/key.h>
 
@@ -53,7 +53,7 @@ namespace GpgME {
 
 namespace Kleo {
 
-  class KLEO_EXPORT KeyApprovalDialog : public KDialog {
+  class KLEO_EXPORT KeyApprovalDialog : public QDialog {
     Q_OBJECT
   public:
     struct Item {
