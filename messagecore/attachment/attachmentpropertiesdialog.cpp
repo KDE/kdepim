@@ -120,7 +120,7 @@ void AttachmentPropertiesDialog::Private::mimeTypeChanged( const QString &type )
 {
     const KMimeType::Ptr mimeType = KMimeType::mimeType( type, KMimeType::ResolveAliases );
     QPixmap pix;
-    if ( !mimeType.isNull() ) {
+    if ( mimeType ) {
         pix = KIconLoader::global()->loadMimeTypeIcon( mimeType->iconName(), KIconLoader::Desktop );
     } else {
         pix = DesktopIcon( QLatin1String("unknown") );
