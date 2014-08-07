@@ -107,44 +107,44 @@ void KTNEFMain::setupActions()
   QAction *openAction = actionCollection()->addAction( QLatin1String("view_file") );
   openAction->setText( i18nc( "@action:inmenu", "View" ) );
   openAction->setIcon( QIcon::fromTheme( QLatin1String("document-open") ) );
-  connect( openAction, SIGNAL(triggered()), this, SLOT(viewFile()) );
+  connect(openAction, &QAction::triggered, this, &KTNEFMain::viewFile);
 
   QAction *openAsAction = actionCollection()->addAction( QLatin1String("view_file_as") );
   openAsAction->setText( i18nc( "@action:inmenu", "View With..." ) );
-  connect( openAsAction, SIGNAL(triggered()), this, SLOT(viewFileAs()) );
+  connect(openAsAction, &QAction::triggered, this, &KTNEFMain::viewFileAs);
 
   QAction *extractAction = actionCollection()->addAction( QLatin1String("extract_file") );
   extractAction->setText( i18nc( "@action:inmenu", "Extract" ) );
-  connect( extractAction, SIGNAL(triggered()), this, SLOT(extractFile()) );
+  connect(extractAction, &QAction::triggered, this, &KTNEFMain::extractFile);
 
   QAction *extractToAction = actionCollection()->addAction( QLatin1String("extract_file_to") );
   extractToAction->setText( i18nc( "@action:inmenu", "Extract To..." ) );
   extractToAction->setIcon( QIcon::fromTheme( QLatin1String("archive-extract") ) );
-  connect( extractToAction, SIGNAL(triggered()), this, SLOT(extractFileTo()) );
+  connect(extractToAction, &QAction::triggered, this, &KTNEFMain::extractFileTo);
 
   QAction *extractAllToAction = actionCollection()->addAction( QLatin1String("extract_all_files") );
   extractAllToAction->setText( i18nc( "@action:inmenu", "Extract All To..." ) );
   extractAllToAction->setIcon( QIcon::fromTheme( QLatin1String("archive-extract") ) );
-  connect( extractAllToAction, SIGNAL(triggered()), this, SLOT(extractAllFiles()) );
+  connect(extractAllToAction, &QAction::triggered, this, &KTNEFMain::extractAllFiles);
 
   QAction *filePropsAction = actionCollection()->addAction( QLatin1String("properties_file") );
   filePropsAction->setText( i18nc( "@action:inmenu", "Properties" ) );
   filePropsAction->setIcon( QIcon::fromTheme( QLatin1String("document-properties") ) );
-  connect( filePropsAction, SIGNAL(triggered()), this, SLOT(propertiesFile()));
+  connect(filePropsAction, &QAction::triggered, this, &KTNEFMain::propertiesFile);
 
   QAction *messPropsAction = actionCollection()->addAction( QLatin1String("msg_properties") );
   messPropsAction->setText( i18nc( "@action:inmenu", "Message Properties" ) );
-  connect( messPropsAction, SIGNAL(triggered()), this, SLOT(slotShowMessageProperties()) );
+  connect(messPropsAction, &QAction::triggered, this, &KTNEFMain::slotShowMessageProperties);
 
   QAction *messShowAction = actionCollection()->addAction( QLatin1String("msg_text") );
   messShowAction->setText( i18nc( "@action:inmenu", "Show Message Text" ) );
   messShowAction->setIcon( QIcon::fromTheme( QLatin1String("document-preview-archive") ) );
-  connect( messShowAction, SIGNAL(triggered()), this, SLOT(slotShowMessageText()) );
+  connect(messShowAction, &QAction::triggered, this, &KTNEFMain::slotShowMessageText);
 
   QAction *messSaveAction = actionCollection()->addAction( QLatin1String("msg_save") );
   messSaveAction->setText( i18nc( "@action:inmenu", "Save Message Text As..." ) );
   messSaveAction->setIcon( QIcon::fromTheme( QLatin1String("document-save") ) );
-  connect( messSaveAction, SIGNAL(triggered()), this, SLOT(slotSaveMessageText()) );
+  connect(messSaveAction, &QAction::triggered, this, &KTNEFMain::slotSaveMessageText);
 
   actionCollection()->action( QLatin1String("view_file") )->setEnabled( false );
   actionCollection()->action( QLatin1String("view_file_as") )->setEnabled( false );
@@ -157,7 +157,7 @@ void KTNEFMain::setupActions()
   QAction *defFolderAction = actionCollection()->addAction( QLatin1String("options_default_dir") );
   defFolderAction->setText( i18nc( "@action:inmenu", "Default Folder..." ) );
   defFolderAction->setIcon( QIcon::fromTheme( QLatin1String("folder-open") ) );
-  connect( defFolderAction, SIGNAL(triggered()), this, SLOT(optionDefaultDir()) );
+  connect(defFolderAction, &QAction::triggered, this, &KTNEFMain::optionDefaultDir);
 
 }
 
