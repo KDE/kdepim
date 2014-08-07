@@ -63,6 +63,6 @@ install(TARGETS akonadi_followupreminder_agent ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install(FILES followupreminder.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
 
-add_subdirectory(tests)
+add_subdirectory(autotests)
 
 install(FILES akonadi_followupreminder_agent.notifyrc DESTINATION ${KNOTIFYRC_INSTALL_DIR} )
