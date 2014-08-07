@@ -33,7 +33,7 @@ QTEST_MAIN( AttachmentFromUrlJobTest )
 
 void AttachmentFromUrlJobTest::testAttachments_data()
 {
-  QTest::addColumn<KUrl>( "url" );
+  QTest::addColumn<QUrl>( "url" );
   QTest::addColumn<QString>( "filename" );
   QTest::addColumn<QByteArray>( "mimetype" );
 

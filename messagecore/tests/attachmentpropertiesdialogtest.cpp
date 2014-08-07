@@ -26,7 +26,7 @@
 
 #include <QDebug>
 #include <KComboBox>
-#include <KLineEdit>
+#include <QLineEdit>
 #include <qtest.h>
 
 #include <kmime/kmime_content.h>
@@ -68,10 +68,10 @@ void AttachmentPropertiesDialogTest::testAttachmentPartReadWrite()
   // Show the dialog and verify that it is accurate.
   AttachmentPropertiesDialog *dialog = new AttachmentPropertiesDialog( part );
   dialog->show();
-  KLineEdit *nameEdit = dialog->findChild<KLineEdit*>( QLatin1String( "name" ) );
+  QLineEdit *nameEdit = dialog->findChild<QLineEdit*>( QLatin1String( "name" ) );
   Q_ASSERT( nameEdit );
   QCOMPARE( nameEdit->text(), name );
-  KLineEdit *descriptionEdit = dialog->findChild<KLineEdit*>( QLatin1String( "description" ) );
+  QLineEdit *descriptionEdit = dialog->findChild<QLineEdit*>( QLatin1String( "description" ) );
   Q_ASSERT( descriptionEdit );
   QCOMPARE( descriptionEdit->text(), description );
   KComboBox *mimeTypeCombo = dialog->findChild<KComboBox*>( QLatin1String( "mimeType" ) );
@@ -145,7 +145,7 @@ void AttachmentPropertiesDialogTest::testAttachmentPartCancel()
   // Show the (read-write) dialog and do some changes.
   AttachmentPropertiesDialog *dialog = new AttachmentPropertiesDialog( part );
   dialog->show();
-  KLineEdit *nameEdit = dialog->findChild<KLineEdit*>( QLatin1String( "name" ) );
+  QLineEdit *nameEdit = dialog->findChild<QLineEdit*>( QLatin1String( "name" ) );
   Q_ASSERT( nameEdit );
   nameEdit->setText( newName );
 
