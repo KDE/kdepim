@@ -101,8 +101,7 @@ class LIBKPGP_EXPORT Config : public QWidget
 
 // -------------------------------------------------------------------------
 #ifndef QT_NO_TREEWIDGET
-#define KeySelectionDialogSuper KDialog
-class LIBKPGP_EXPORT KeySelectionDialog: public KeySelectionDialogSuper
+class LIBKPGP_EXPORT KeySelectionDialog: public KDialog
 {
   Q_OBJECT
 
