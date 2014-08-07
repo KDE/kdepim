@@ -42,7 +42,7 @@
 #include <messagecomposer/part/textpart.h>
 
 #include <messageviewer/viewer/nodehelper.h>
-#include <messagecore/tests/util.h>
+#include <messagecore/autotests/util.h>
 
 #include <messagecore/helpers/nodehelper.h>
 

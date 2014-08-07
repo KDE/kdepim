@@ -42,7 +42,7 @@ using namespace MessageComposer;
 
 #include <messagecore/attachment/attachmentpart.h>
 #include <messagecore/helpers/nodehelper.h>
-#include <messagecore/tests/util.h>
+#include <messagecore/autotests/util.h>
 
 #include <messageviewer/viewer/objecttreeparser.h>
 

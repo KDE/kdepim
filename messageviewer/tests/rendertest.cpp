@@ -20,7 +20,7 @@
 #include "htmlwriter/filehtmlwriter.h"
 #include "viewer/objecttreeparser.h"
 #include "tests/testcsshelper.h"
-#include "messagecore/tests/util.h"
+#include "messagecore/autotests/util.h"
 
 #include <KMime/Message>
 #include <qtest.h>

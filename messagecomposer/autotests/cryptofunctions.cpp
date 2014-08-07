@@ -42,7 +42,7 @@
 
 #include <stdlib.h>
 #include <gpgme++/keylistresult.h>
-#include <messagecore/tests/util.h>
+#include <messagecore/autotests/util.h>
 
 void ComposerTestUtil::verify( bool sign, bool encrypt, KMime::Content* content, QByteArray origContent, Kleo::CryptoMessageFormat f, KMime::Headers::contentEncoding encoding ) {
   if ( sign && encrypt ) {

@@ -41,7 +41,7 @@
 #include <messageviewer/viewer/objecttreeparser.h>
 #include <messageviewer/viewer/objecttreeemptysource.h>
 #include <messageviewer/viewer/nodehelper.h>
-#include <messagecore/tests/util.h>
+#include <messagecore/autotests/util.h>
 
 #include <stdlib.h>
 #include <KCharsets>

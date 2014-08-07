@@ -16,7 +16,7 @@ add_definitions(-DKMAIL_UNITTESTS=YES)
 macro(add_messageviewer_unittest _source)
   set(_test ${_source} util.cpp)
   get_filename_component(_name ${_source} NAME_WE)
-  add_executable( ${_name} ${_test} ${CMAKE_SOURCE_DIR}/messagecore/tests/util.cpp  testcsshelper.cpp)
+  add_executable( ${_name} ${_test} ${CMAKE_SOURCE_DIR}/messagecore/autotests/util.cpp  testcsshelper.cpp)
   add_test( ${_name} ${_name} )
   ecm_mark_as_test(messageviewer-${_name})
   target_link_libraries( ${_name}

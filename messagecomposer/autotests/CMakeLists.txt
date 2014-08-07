@@ -26,7 +26,7 @@ macro( add_messagecomposer_test _source )
 endmacro()
 
 macro( add_messagecomposer_cryptotest _source )
-  set( _test cryptofunctions.cpp  ${CMAKE_SOURCE_DIR}/messagecore/tests/util.cpp ${_source} )
+  set( _test cryptofunctions.cpp  ${CMAKE_SOURCE_DIR}/messagecore/autotests/util.cpp ${_source} )
   get_filename_component( _name ${_source} NAME_WE )
   add_executable( ${_name} ${_test} )
   add_test( ${_name} ${_name} )

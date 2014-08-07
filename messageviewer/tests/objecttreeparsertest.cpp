@@ -27,7 +27,7 @@
 #include <AkonadiCore/item.h>
 
 #include "qtest.h"
-#include <messagecore/tests/util.h>
+#include <messagecore/autotests/util.h>
 
 using namespace MessageViewer;
 
