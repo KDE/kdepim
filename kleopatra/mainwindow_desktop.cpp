@@ -76,6 +76,7 @@
 #include <KGlobal>
 #include <KDebug>
 #include <KActionMenu>
+#include <KConfigGroup>
 
 #include <QAbstractItemView>
 #include <QApplication>
