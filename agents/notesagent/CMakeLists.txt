@@ -46,7 +46,8 @@ endif ()
 install(TARGETS akonadi_notes_agent ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install(FILES notesagent.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
-install(FILES akonadi_notes_agent.notifyrc DESTINATION "${DATA_INSTALL_DIR}/akonadi_notes_agent" )
+install(FILES akonadi_notes_agent.notifyrc DESTINATION ${KNOTIFYRC_INSTALL_DIR} )
+
 
 add_subdirectory(kconf_update)
 
