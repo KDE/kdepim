@@ -73,32 +73,32 @@ MainWidget::MainWidget( KXmlGuiWindow *parent )
 
   QAction *action = parent->actionCollection()->addAction( "akonadiconsole_search" );
   action->setText( "Create Search..." );
-  connect( action, SIGNAL(triggered()), this, SLOT(createSearch()) );
+  connect(action, &QAction::triggered, this, &MainWidget::createSearch);
 
   action = parent->actionCollection()->addAction( "akonadiconsole_akonadi2xml" );
   action->setText( "Dump to XML..." );
-  connect( action, SIGNAL(triggered()), mBrowser, SLOT(dumpToXml()) );
+  connect(action, &QAction::triggered, mBrowser, &BrowserWidget::dumpToXml);
 
   action = parent->actionCollection()->addAction( "akonadiconsole_clearcache" );
   action->setText( "Clear Akonadi Cache" );
-  connect( action, SIGNAL(triggered()), mBrowser, SLOT(clearCache()) );
+  connect(action, &QAction::triggered, mBrowser, &BrowserWidget::clearCache);
 
   action = parent->actionCollection()->addAction( "akonadiserver_start" );
   action->setText( "Start Server" );
-  connect( action, SIGNAL(triggered()), SLOT(startServer()) );
+  connect(action, &QAction::triggered, this, &MainWidget::startServer);
 
   action = parent->actionCollection()->addAction( "akonadiserver_stop" );
   action->setText( "Stop Server" );
-  connect( action, SIGNAL(triggered()), SLOT(stopServer()) );
+  connect(action, &QAction::triggered, this, &MainWidget::stopServer);
 
   action = parent->actionCollection()->addAction( "akonadiserver_restart" );
   action->setText( "Restart Server" );
-  connect( action, SIGNAL(triggered()), SLOT(restartServer()) );
+  connect(action, &QAction::triggered, this, &MainWidget::restartServer);
 
   action = parent->actionCollection()->addAction( "akonadiserver_configure" );
   action->setText( "Configure Server..." );
   action->setIcon( QIcon::fromTheme("configure") );
-  connect( action, SIGNAL(triggered()), SLOT(configureServer()) );
+  connect(action, &QAction::triggered, this, &MainWidget::configureServer);
 }
 
 MainWidget::~MainWidget()

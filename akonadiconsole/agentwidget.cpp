@@ -66,6 +66,7 @@ class TextDialog : public QDialog
       okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
       connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
       connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
       mainLayout->addWidget(buttonBox);
 
       mText = new KTextEdit;
@@ -102,10 +103,10 @@ AgentWidget::AgentWidget( QWidget *parent )
   currentChanged();
 
   KGuiItem::assign(ui.addButton, KStandardGuiItem::add() );
-  connect( ui.addButton, SIGNAL(clicked()), this, SLOT(addAgent()) );
+  connect(ui.addButton, &QPushButton::clicked, this, &AgentWidget::addAgent);
 
   KGuiItem::assign(ui.removeButton, KStandardGuiItem::remove() );
-  connect( ui.removeButton, SIGNAL(clicked()), this, SLOT(removeAgent()) );
+  connect(ui.removeButton, &QPushButton::clicked, this, &AgentWidget::removeAgent);
 
   mConfigMenu = new QMenu( i18n("Configure"), this );
   mConfigMenu->addAction( i18n("Configure Natively..."), this, SLOT(configureAgent()) );
@@ -113,7 +114,7 @@ AgentWidget::AgentWidget( QWidget *parent )
   mConfigMenu->setIcon( KStandardGuiItem::configure().icon() );
   KGuiItem::assign(ui.configButton, KStandardGuiItem::configure() );
   ui.configButton->setMenu( mConfigMenu );
-  connect( ui.configButton, SIGNAL(clicked()), this, SLOT(configureAgent()) );
+  connect(ui.configButton, &QPushButton::clicked, this, &AgentWidget::configureAgent);
 
   mSyncMenu = new QMenu( i18n("Synchronize"), this );
   mSyncMenu->addAction( i18n("Synchronize All"), this, SLOT(synchronizeAgent()) );
@@ -121,10 +122,10 @@ AgentWidget::AgentWidget( QWidget *parent )
   mSyncMenu->setIcon( QIcon::fromTheme("view-refresh" ) );
   ui.syncButton->setMenu( mSyncMenu );
   ui.syncButton->setIcon( QIcon::fromTheme( "view-refresh" ) );
-  connect( ui.syncButton, SIGNAL(clicked()), this, SLOT(synchronizeAgent()) );
+  connect(ui.syncButton, &QPushButton::clicked, this, &AgentWidget::synchronizeAgent);
 
   ui.abortButton->setIcon( QIcon::fromTheme("dialog-cancel") );
-  connect( ui.abortButton, SIGNAL(clicked()), this, SLOT(abortAgent()) );
+  connect(ui.abortButton, &QPushButton::clicked, this, &AgentWidget::abortAgent);
   ui.restartButton->setIcon( QIcon::fromTheme( "system-reboot" ) ); //FIXME: Is using system-reboot icon here a good idea?
   connect( ui.restartButton, SIGNAL(clicked()), SLOT(restartAgent()) );
 
