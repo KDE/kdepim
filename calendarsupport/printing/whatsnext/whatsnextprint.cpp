@@ -30,8 +30,6 @@ class WhatsNextPrintFactory : public KOrg::PrintPluginFactory
     KOrg::PrintPlugin *createPluginFactory() { return new CalPrintWhatsNext; }
 };
 
-K_EXPORT_PLUGIN( WhatsNextPrintFactory )
-
 /**************************************************************
  *           Print What's Next
  **************************************************************/

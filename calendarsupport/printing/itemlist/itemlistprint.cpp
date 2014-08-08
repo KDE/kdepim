@@ -30,7 +30,6 @@ class ItemListPrintFactory : public KOrg::PrintPluginFactory
     KOrg::PrintPlugin *createPluginFactory() { return new CalPrintItemList; }
 };
 
-K_EXPORT_PLUGIN( ItemListPrintFactory )
 
 /**************************************************************
  *           Print Item List
