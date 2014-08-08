@@ -26,7 +26,7 @@
 #include <QIcon>
 #include <KLocalizedString>
 #include <KLocale>
-#include <KMimeType>
+
 #include <QMenu>
 #include <QDateTime>
 
@@ -34,6 +34,8 @@
 #include <QHeaderView>
 #include <QTimer>
 #include <KFormat>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 using namespace PimCommon;
 
@@ -119,9 +121,10 @@ StorageServiceTreeWidgetItem *StorageServiceTreeWidget::addFile(const QString &n
     item->setData(ColumnName, Ident, ident);
     item->setData(ColumnName, ElementType, File);
     if (!mimetype.isEmpty()) {
-        KMimeType::Ptr mime = KMimeType::mimeType( mimetype, KMimeType::ResolveAliases );
-        if (mime)
-            item->setIcon(ColumnName, QIcon::fromTheme(mime->iconName()));
+        QMimeDatabase db;
+        QMimeType mime = db.mimeTypeForName( mimetype );
+        if (mime.isValid())
+            item->setIcon(ColumnName, QIcon::fromTheme(mime.iconName()));
     }
     return item;
 }

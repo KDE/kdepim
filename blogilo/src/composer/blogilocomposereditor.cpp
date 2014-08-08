@@ -24,13 +24,15 @@
 #include "global.h"
 
 #include <QDebug>
-#include <KMimeType>
+
 #include <QAction>
 #include <KLocale>
 #include <QIcon>
 
 #include <QWebElementCollection>
 #include <QWebFrame>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 
 BlogiloComposerEditor::BlogiloComposerEditor(BlogiloComposerView *view, QWidget *parent)
@@ -119,7 +121,8 @@ QList< BilboMedia* > BlogiloComposerEditor::getLocalImages()
             BilboMedia* media = new BilboMedia(this);
             KUrl mediaUrl (elm.attribute(QLatin1String("src")));
             media->setLocalUrl( mediaUrl );
-            media->setMimeType( KMimeType::findByUrl( mediaUrl, 0, true )->name() );
+            QMimeDatabase db;
+            media->setMimeType( db.mimeTypeForFile( mediaUrl.path(), QMimeDatabase::MatchExtension).name() );
             media->setName(mediaUrl.fileName());
             media->setBlogId(__currentBlogId);
             list.append(media);
