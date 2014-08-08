@@ -30,7 +30,7 @@
 #include <QDebug>
 #include <KGlobal>
 #include <KIconLoader>
-#include <KMimeType>
+
 
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_headers.h>
@@ -39,6 +39,8 @@
 #include <boost/shared_ptr.hpp>
 #include <KLocale>
 #include <KFormat>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 using namespace MessageCore;
 
@@ -118,10 +120,11 @@ void AttachmentPropertiesDialog::Private::polishUi()
 
 void AttachmentPropertiesDialog::Private::mimeTypeChanged( const QString &type )
 {
-    const KMimeType::Ptr mimeType = KMimeType::mimeType( type, KMimeType::ResolveAliases );
+    QMimeDatabase db;
+    const QMimeType mimeType = db.mimeTypeForName( type );
     QPixmap pix;
-    if ( mimeType ) {
-        pix = KIconLoader::global()->loadMimeTypeIcon( mimeType->iconName(), KIconLoader::Desktop );
+    if (mimeType.isValid()) {
+        pix = KIconLoader::global()->loadMimeTypeIcon( mimeType.iconName(), KIconLoader::Desktop );
     } else {
         pix = DesktopIcon( QLatin1String("unknown") );
     }

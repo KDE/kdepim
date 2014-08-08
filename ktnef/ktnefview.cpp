@@ -21,11 +21,13 @@
 
 #include <KApplication>
 #include <KLocalizedString>
-#include <KMimeType>
+
 #include <QIcon>
 
 #include <QPixmap>
 #include <QTimer>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 class Attachment : public QTreeWidgetItem
 {
@@ -50,14 +52,15 @@ Attachment::Attachment( QTreeWidget *parent, KTNEFAttach *attach )
     setText( 0, mAttach->fileName() );
   }
 
-  KMimeType::Ptr mimeType = KMimeType::mimeType( mAttach->mimeTag() );
-  setText( 1, mimeType->comment() );
+  QMimeDatabase db;
+  QMimeType mimeType = db.mimeTypeForName( mAttach->mimeTag() );
+  setText( 1, mimeType.comment() );
 
   QPixmap pix = AttachPropertyDialog::loadRenderingPixmap( attach, kapp->palette().color( QPalette::Background ) );
   if ( !pix.isNull() ) {
     setIcon( 0, pix );
   } else {
-    setIcon( 0, QIcon::fromTheme( mimeType->iconName() ) );
+    setIcon( 0, QIcon::fromTheme( mimeType.iconName() ) );
   }
 }
 

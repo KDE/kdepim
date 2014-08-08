@@ -27,12 +27,14 @@
 #include <KFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KMimeType>
+
 
 #include <QBuffer>
 #include <QDataStream>
 #include <QTreeWidget>
 #include <KSharedConfig>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 AttachPropertyDialog::AttachPropertyDialog( QWidget *parent )
   : KDialog( parent ),
@@ -84,14 +86,15 @@ void AttachPropertyDialog::setAttachment( KTNEFAttach *attach )
   s.setNum( attach->size() );
   s.append( i18n(" bytes") );
   mUI.mSize->setText( s );
-  KMimeType::Ptr mimetype = KMimeType::mimeType( attach->mimeTag() );
+  QMimeDatabase db;
+  QMimeType mimetype = db.mimeTypeForName( attach->mimeTag() );
   QPixmap pix = loadRenderingPixmap( attach, kapp->palette().color( QPalette::Background ) );
   if ( !pix.isNull() ) {
     mUI.mIcon->setPixmap( pix );
   } else {
-    mUI.mIcon->setPixmap( mimetype->iconName() );
+    mUI.mIcon->setPixmap( mimetype.iconName() );
   }
-  mUI.mDescription->setText( mimetype->comment() );
+  mUI.mDescription->setText( mimetype.comment() );
   s.setNum( attach->index() );
   mUI.mIndex->setText( s );
 
