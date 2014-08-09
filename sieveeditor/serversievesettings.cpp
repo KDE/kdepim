@@ -84,8 +84,8 @@ ServerSieveSettings::ServerSieveSettings(QWidget *parent) :
 {
     ui->setupUi(this);
     populateDefaultAuthenticationOptions();
-    connect(ui->serverName, SIGNAL(textChanged(QString)), this, SLOT(slotUserServerNameChanged()));
-    connect(ui->userName, SIGNAL(textChanged(QString)), this, SLOT(slotUserServerNameChanged()));
+    connect(ui->serverName, &QLineEdit::textChanged, this, &ServerSieveSettings::slotUserServerNameChanged);
+    connect(ui->userName, &QLineEdit::textChanged, this, &ServerSieveSettings::slotUserServerNameChanged);
 }
 
 ServerSieveSettings::~ServerSieveSettings()
