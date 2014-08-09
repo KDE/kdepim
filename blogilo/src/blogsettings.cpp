@@ -36,9 +36,9 @@ BlogSettings::BlogSettings( QWidget *parent )
 {
     setupUi( this );
 
-    connect( btnAdd, SIGNAL(clicked()), this, SLOT(addBlog()) );
-    connect( btnEdit, SIGNAL(clicked()), this, SLOT(editBlog()) );
-    connect( btnRemove, SIGNAL(clicked()), this, SLOT(removeBlog()) );
+    connect(btnAdd, &QPushButton::clicked, this, &BlogSettings::addBlog);
+    connect(btnEdit, &QPushButton::clicked, this, &BlogSettings::editBlog);
+    connect(btnRemove, &QPushButton::clicked, this, &BlogSettings::removeBlog);
     connect( blogsTable, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
              this, SLOT(blogsTablestateChanged()) );
     connect (blogsTable, SIGNAL(doubleClicked(QModelIndex)), SLOT(editBlog()));

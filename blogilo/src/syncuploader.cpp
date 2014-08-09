@@ -66,7 +66,7 @@ bool SyncUploader::uploadMedia( Backend *backend, BilboMedia *media )
     }
     d->loop = new QEventLoop(this);
     d->mCurrentMedia = media;
-    connect( backend, SIGNAL(sigMediaUploaded(BilboMedia*)), this, SLOT(slotMediaFileUploaded(BilboMedia*)) );
+    connect(backend, &Backend::sigMediaUploaded, this, &SyncUploader::slotMediaFileUploaded);
     connect( backend, SIGNAL(sigMediaError(QString,BilboMedia*)),
                 this, SLOT(slotMediaError(QString,BilboMedia*)) );
 
