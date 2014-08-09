@@ -23,8 +23,8 @@ SelectProgramPage::SelectProgramPage(QWidget *parent) :
     ui(new Ui::SelectProgramPage)
 {
     ui->setupUi(this);
-    connect(ui->listProgramFound,SIGNAL(itemSelectionChanged()),this,SLOT(slotItemSelectionChanged()));
-    connect( ui->listProgramFound, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(slotItemDoubleClicked(QListWidgetItem*)) );
+    connect(ui->listProgramFound, &QListWidget::itemSelectionChanged, this, &SelectProgramPage::slotItemSelectionChanged);
+    connect(ui->listProgramFound, &QListWidget::itemDoubleClicked, this, &SelectProgramPage::slotItemDoubleClicked);
 }
 
 

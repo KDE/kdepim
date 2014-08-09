@@ -88,14 +88,14 @@ void ContactEditorMainWindow::updateActions()
 void ContactEditorMainWindow::setupActions()
 {
     mRecentFileAction = new KRecentFilesAction(i18n("Load Recent Theme..."), this);
-    connect(mRecentFileAction, SIGNAL(urlSelected(QUrl)), this, SLOT(slotThemeSelected(QUrl)));
+    connect(mRecentFileAction, &KRecentFilesAction::urlSelected, this, &ContactEditorMainWindow::slotThemeSelected);
     actionCollection()->addAction( QLatin1String( "load_recent_theme" ), mRecentFileAction );
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup groupConfig = config->group( QLatin1String("ContactEditorMainWindow") );
     mRecentFileAction->loadEntries(groupConfig);
 
     mAddExtraPage = new QAction(i18n("Add Extra Page..."), this);
-    connect(mAddExtraPage, SIGNAL(triggered(bool)),SLOT(slotAddExtraPage()));
+    connect(mAddExtraPage, &QAction::triggered, this, &ContactEditorMainWindow::slotAddExtraPage);
     actionCollection()->addAction( QLatin1String( "add_extra_page" ), mAddExtraPage );
 
     mUploadTheme = KNS3::standardAction(i18n("Upload theme..."), this, SLOT(slotUploadTheme()), actionCollection(), "upload_theme");
@@ -116,19 +116,19 @@ void ContactEditorMainWindow::setupActions()
 
     mInstallTheme = new QAction(i18n("Install theme"), this);
     actionCollection()->addAction( QLatin1String( "install_theme" ), mInstallTheme );
-    connect(mInstallTheme, SIGNAL(triggered(bool)), SLOT(slotInstallTheme()));
+    connect(mInstallTheme, &QAction::triggered, this, &ContactEditorMainWindow::slotInstallTheme);
 
     mInsertFile = new QAction(i18n("Insert File..."), this);
     actionCollection()->addAction( QLatin1String( "insert_file" ), mInsertFile );
-    connect(mInsertFile, SIGNAL(triggered(bool)), SLOT(slotInsertFile()));
+    connect(mInsertFile, &QAction::triggered, this, &ContactEditorMainWindow::slotInsertFile);
 
     mManageTheme = new QAction(i18n("Manage themes..."), this);
-    connect(mManageTheme, SIGNAL(triggered(bool)),SLOT(slotManageTheme()));
+    connect(mManageTheme, &QAction::triggered, this, &ContactEditorMainWindow::slotManageTheme);
     actionCollection()->addAction( QLatin1String( "manage_themes" ), mManageTheme );
 
     mUpdateView = new QAction(i18n("Update view"), this);
     mUpdateView->setShortcut(QKeySequence( Qt::Key_F5 ));
-    connect(mUpdateView, SIGNAL(triggered(bool)),SLOT(slotUpdateView()));
+    connect(mUpdateView, &QAction::triggered, this, &ContactEditorMainWindow::slotUpdateView);
     actionCollection()->addAction( QLatin1String( "update_view" ), mUpdateView );
 }
 
@@ -211,8 +211,8 @@ bool ContactEditorMainWindow::loadTheme(const QString &directory)
         }
 
         mContactEditor = new ContactEditorPage(QString(), QString());
-        connect(mContactEditor, SIGNAL(changed(bool)), mSaveAction, SLOT(setEnabled(bool)));
-        connect(mContactEditor, SIGNAL(canInsertFile(bool)), this, SLOT(slotCanInsertFile(bool)));
+        connect(mContactEditor, &ContactEditorPage::changed, mSaveAction, &QAction::setEnabled);
+        connect(mContactEditor, &ContactEditorPage::canInsertFile, this, &ContactEditorMainWindow::slotCanInsertFile);
         mContactEditor->loadTheme(filename);
         setCentralWidget(mContactEditor);
         updateActions();
@@ -261,8 +261,8 @@ bool ContactEditorMainWindow::saveCurrentProject(ActionSaveTheme act)
         if (!projectDirectory.isEmpty()) {
             mRecentFileAction->addUrl(QUrl(projectDirectory));
             mContactEditor = new ContactEditorPage(projectDirectory, newTheme);
-            connect(mContactEditor, SIGNAL(changed(bool)), mSaveAction, SLOT(setEnabled(bool)));
-            connect(mContactEditor, SIGNAL(canInsertFile(bool)), this, SLOT(slotCanInsertFile(bool)));
+            connect(mContactEditor, &ContactEditorPage::changed, mSaveAction, &QAction::setEnabled);
+            connect(mContactEditor, &ContactEditorPage::canInsertFile, this, &ContactEditorMainWindow::slotCanInsertFile);
             setCentralWidget(mContactEditor);
         } else {
             setCentralWidget(0);

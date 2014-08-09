@@ -31,8 +31,8 @@ using namespace Akonadi;
 AbstractBase::AbstractBase()
 {
     mCreateResource = new PimCommon::CreateResource();
-    connect(mCreateResource,SIGNAL(createResourceInfo(QString)),SLOT(slotCreateResourceInfo(QString)));
-    connect(mCreateResource,SIGNAL(createResourceError(QString)),SLOT(slotCreateResourceError(QString)));
+    connect(mCreateResource, &PimCommon::CreateResource::createResourceInfo, this, &AbstractBase::slotCreateResourceInfo);
+    connect(mCreateResource, &PimCommon::CreateResource::createResourceError, this, &AbstractBase::slotCreateResourceError);
 }
 
 AbstractBase::~AbstractBase()

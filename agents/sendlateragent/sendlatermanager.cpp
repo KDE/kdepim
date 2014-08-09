@@ -40,7 +40,7 @@ SendLaterManager::SendLaterManager(QObject *parent)
 {
     mConfig = KSharedConfig::openConfig();
     mTimer = new QTimer(this);
-    connect(mTimer, SIGNAL(timeout()), this, SLOT(slotCreateJob()));
+    connect(mTimer, &QTimer::timeout, this, &SendLaterManager::slotCreateJob);
 }
 
 SendLaterManager::~SendLaterManager()

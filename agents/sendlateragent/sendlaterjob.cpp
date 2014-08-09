@@ -64,8 +64,8 @@ void SendLaterJob::start()
             mFetchScope.setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
             mFetchScope.fetchFullPayload( true );
             fetch->setFetchScope( mFetchScope );
-            connect( fetch, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(slotMessageTransfered(Akonadi::Item::List)) );
-            connect( fetch, SIGNAL(result(KJob*)), SLOT(slotJobFinished(KJob*)) );
+            connect(fetch, &Akonadi::ItemFetchJob::itemsReceived, this, &SendLaterJob::slotMessageTransfered);
+            connect(fetch, &Akonadi::ItemFetchJob::result, this, &SendLaterJob::slotJobFinished);
             fetch->start();
         }
     }
@@ -110,7 +110,7 @@ void SendLaterJob::slotJobFinished(KJob* job)
         } else {
             if (!mInfo->isRecurrence()) {
                 Akonadi::ItemDeleteJob *fetch = new Akonadi::ItemDeleteJob( mItem, this );
-                connect( fetch, SIGNAL(result(KJob*)), SLOT(slotDeleteItem(KJob*)) );
+                connect(fetch, &Akonadi::ItemDeleteJob::result, this, &SendLaterJob::slotDeleteItem);
             } else {
                 sendDone();
             }

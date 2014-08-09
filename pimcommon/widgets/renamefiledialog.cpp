@@ -143,10 +143,10 @@ RenameFileDialog::RenameFileDialog(const KUrl& url, bool multiFiles, QWidget * p
 
 
     QPushButton *overWrite = new QPushButton(i18n("&Overwrite"),this);
-    connect(overWrite,SIGNAL(clicked()),this,SLOT(slotOverwritePressed()));
+    connect(overWrite, &QPushButton::clicked, this, &RenameFileDialog::slotOverwritePressed);
 
     QPushButton *ignore = new QPushButton(i18n("&Ignore"),this);
-    connect(ignore,SIGNAL(clicked()),this,SLOT(slotIgnorePressed()));
+    connect(ignore, &QPushButton::clicked, this, &RenameFileDialog::slotIgnorePressed);
 
     d->rename = new QPushButton(i18n("&Rename"),this);
     connect(d->rename,SIGNAL(clicked()),this,SLOT(slotRenamePressed()));

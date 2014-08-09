@@ -57,19 +57,19 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &SendLaterDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &SendLaterDialog::reject);
 
     if (!info) {
         okButton->setText(i18n("SendLater"));
         mDelay = new QCheckBox(i18n("Delay"));
         mDelay->setChecked(false);
         slotDelay(false);
-        connect(mDelay, SIGNAL(clicked(bool)), this, SLOT(slotDelay(bool)));
+        connect(mDelay, &QCheckBox::clicked, this, &SendLaterDialog::slotDelay);
         lay->addWidget(mDelay);
     }
 
-    connect(okButton, SIGNAL(clicked()), this, SLOT(slotOkClicked()));
+    connect(okButton, &QPushButton::clicked, this, &SendLaterDialog::slotOkClicked);
 
     lay->addWidget(sendLaterWidget);
 
@@ -77,7 +77,7 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     t = t.addSecs(60*60);
 
     mSendLaterWidget->mDateTime->setDateTime(t);
-    connect(mSendLaterWidget->mRecurrence, SIGNAL(clicked(bool)), this, SLOT(slotRecurrenceClicked(bool)));
+    connect(mSendLaterWidget->mRecurrence, &QCheckBox::clicked, this, &SendLaterDialog::slotRecurrenceClicked);
     QStringList unitsList;
     unitsList<<i18n("Days");
     unitsList<<i18n("Weeks");

@@ -36,7 +36,7 @@ TemplateManager::TemplateManager(const QString &relativeTemplateDir, PimCommon::
     mDirWatch = new KDirWatch( this );
     initTemplatesDirectories(relativeTemplateDir);
 
-    connect( mDirWatch, SIGNAL(dirty(QString)), SLOT(slotDirectoryChanged()) );
+    connect(mDirWatch, &KDirWatch::dirty, this, &TemplateManager::slotDirectoryChanged);
     loadTemplates();
 }
 

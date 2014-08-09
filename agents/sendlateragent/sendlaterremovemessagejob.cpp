@@ -35,7 +35,7 @@ void SendLaterRemoveMessageJob::deleteItem()
 {
     if (mIndex < mListItems.count()) {
         Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob(Akonadi::Item(mListItems.at(mIndex)), this);
-        connect(job, SIGNAL(result(KJob*)), SLOT(slotItemDeleteDone(KJob*)));
+        connect(job, &Akonadi::ItemDeleteJob::result, this, &SendLaterRemoveMessageJob::slotItemDeleteDone);
     } else {
         deleteLater();
     }

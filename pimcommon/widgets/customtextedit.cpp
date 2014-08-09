@@ -45,13 +45,13 @@ public:
 CustomTextEdit::CustomTextEdit(QWidget *parent)
     : KTextEdit(parent), d(new Private(QString()))
 {
-    connect(this, SIGNAL(aboutToShowContextMenu(QMenu*)), this, SLOT(insertLanguageMenu(QMenu*)));
+    connect(this, &CustomTextEdit::aboutToShowContextMenu, this, &CustomTextEdit::insertLanguageMenu);
 }
 
 CustomTextEdit::CustomTextEdit(const QString &configName, QWidget *parent)
     : KTextEdit(parent), d(new Private(configName))
 {
-    connect(this, SIGNAL(aboutToShowContextMenu(QMenu*)), this, SLOT(insertLanguageMenu(QMenu*)));
+    connect(this, &CustomTextEdit::aboutToShowContextMenu, this, &CustomTextEdit::insertLanguageMenu);
 }
 
 CustomTextEdit::~CustomTextEdit()
@@ -115,7 +115,7 @@ void CustomTextEdit::insertLanguageMenu(QMenu* contextMenu)
                 && d->speller->defaultLanguage() == i.value()));
             languageAction->setData(i.value());
             languageAction->setActionGroup(languagesGroup);
-            connect(languageAction, SIGNAL(triggered(bool)), this, SLOT(languageSelected()));
+            connect(languageAction, &QAction::triggered, this, &CustomTextEdit::languageSelected);
         }
 
         contextMenu->insertMenu(spellCheckAction, languagesMenu);

@@ -47,12 +47,12 @@ ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &t
 {
     QHBoxLayout *lay = new QHBoxLayout;
     mTabWidget = new GrantleeThemeEditor::ThemeEditorTabWidget;
-    connect(mTabWidget, SIGNAL(currentChanged(int)), this, SLOT(slotCurrentWidgetChanged(int)));
+    connect(mTabWidget, &GrantleeThemeEditor::ThemeEditorTabWidget::currentChanged, this, &ContactEditorPage::slotCurrentWidgetChanged);
     lay->addWidget(mTabWidget);
     mEditorPage = new EditorPage(EditorPage::MainPage, projectDir);
     mEditorPage->setPageFileName(QLatin1String("contact.html"));
-    connect(mEditorPage, SIGNAL(needUpdateViewer()), this, SLOT(slotUpdateViewer()));
-    connect(mEditorPage, SIGNAL(changed()), SLOT(slotChanged()));
+    connect(mEditorPage, &EditorPage::needUpdateViewer, this, &ContactEditorPage::slotUpdateViewer);
+    connect(mEditorPage, &EditorPage::changed, this, &ContactEditorPage::slotChanged);
     mTabWidget->addTab(mEditorPage, i18n("Editor") + QLatin1String(" (contact.html)"));
 
     mEditorEmbeddedPage = createCustomPage(QLatin1String("contact_embedded.html"));
@@ -68,8 +68,8 @@ ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &t
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
 
 
-    connect(mDesktopPage, SIGNAL(changed()), SLOT(slotChanged()));
-    connect(mTabWidget, SIGNAL(tabCloseRequested(int)), SLOT(slotCloseTab(int)));
+    connect(mDesktopPage, &GrantleeThemeEditor::DesktopFilePage::changed, this, &ContactEditorPage::slotChanged);
+    connect(mTabWidget, &GrantleeThemeEditor::ThemeEditorTabWidget::tabCloseRequested, this, &ContactEditorPage::slotCloseTab);
     setLayout(lay);
 }
 
@@ -237,7 +237,7 @@ void ContactEditorPage::addExtraPage()
 EditorPage *ContactEditorPage::createCustomPage(const QString &filename)
 {
     EditorPage *customPage = new EditorPage(EditorPage::SecondPage, QString());
-    connect(customPage, SIGNAL(changed()), SLOT(slotChanged()));
+    connect(customPage, &EditorPage::changed, this, &ContactEditorPage::slotChanged);
     customPage->setPageFileName(filename);
     mTabWidget->addTab(customPage, filename);
     return customPage;
@@ -247,7 +247,7 @@ EditorPage *ContactEditorPage::createCustomPage(const QString &filename)
 EditorPage *ContactEditorPage::createExtraPage(const QString &filename)
 {
     EditorPage *extraPage = new EditorPage(EditorPage::ExtraPage, QString());
-    connect(extraPage, SIGNAL(changed()), SLOT(slotChanged()));
+    connect(extraPage, &EditorPage::changed, this, &ContactEditorPage::slotChanged);
     extraPage->setPageFileName(filename);
     mTabWidget->addTab(extraPage, filename);
     mTabWidget->setCurrentWidget(extraPage);
