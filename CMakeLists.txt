@@ -178,7 +178,7 @@ else()
   find_package(Grantlee 0.3.0 QUIET CONFIG)
   set_package_properties(Grantlee PROPERTIES DESCRIPTION "The Grantlee Template System" URL "http://www.gitorious.org/grantlee/pages/Home" TYPE REQUIRED PURPOSE "Grantlee is requires for kmail and templating, theming for KJots, KaddressBook, KNotes and MessageViewer(KMail)." )
 
-  find_package(Baloo 4.13.97 QUIET CONFIG)
+  find_package(Baloo 4.14.0 QUIET CONFIG)
   set_package_properties(Baloo PROPERTIES DESCRIPTION "The Baloo libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Baloo provides search capabilities in KMail and Akonadi")
 
   # Xsltproc
@@ -192,7 +192,7 @@ else()
   set_package_properties(Prison PROPERTIES DESCRIPTION "The Prison library" URL "http://projects.kde.org/prison" TYPE OPTIONAL PURPOSE "Needed to show mobile barcodes of your contacts")
 
   # Libkgapi2
-  find_package(LibKGAPI2 2.1.95 QUIET CONFIG)
+  find_package(LibKGAPI2 2.2.0 QUIET CONFIG)
   set_package_properties(LibKGAPI2 PROPERTIES DESCRIPTION "KDE-based library for accessing various Google services" URL "https://projects.kde.org/libkgapi" TYPE OPTIONAL PURPOSE "LibKGAPI is required to build Google Drive Storage Service")
 
   if( LibKGAPI2_FOUND )
