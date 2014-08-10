@@ -86,11 +86,6 @@ void Message::loadMessage(const QUrl &url)
 
 void Message::slotItemReceived(const Akonadi::Item::List &itemList)
 {
-    if (itemList.empty()) {
-        //TODO handle Message not found?
-        return;
-    }
-
     Akonadi::Item item = itemList.first();
 
     KMime::Message msg;
