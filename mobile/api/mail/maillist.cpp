@@ -21,9 +21,9 @@
 
 #include "maillist.h"
 
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/Collection>
+#include <AkonadiCore/ItemFetchJob>
+#include <AkonadiCore/ItemFetchScope>
+#include <AkonadiCore/Collection>
 #include <Akonadi/KMime/MessageParts>
 
 MailList::MailList( QObject *parent ) : QObject( parent ), m_model( new MailListModel )

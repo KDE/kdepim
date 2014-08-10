@@ -24,7 +24,7 @@
 
 #include "maillistmodel.h"
 
-#include <Akonadi/Item>
+#include <AkonadiCore/Item>
 
 #include <QObject>
 #include <QScopedPointer>
