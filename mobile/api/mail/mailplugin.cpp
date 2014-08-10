@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composer.h"
 #include "error.h"
 #include "receivermodel.h"
+#include "maillist.h"
 
 #include <qdeclarative.h>
 
@@ -35,6 +36,7 @@ void MailPlugin::registerTypes(const char *uri)
     qmlRegisterType<Composer>(uri, 0, 1, "Composer");
     qmlRegisterType<Error>(uri, 0, 1, "Error");
     qmlRegisterType<ReceiverModel>(uri, 0, 1, "ReceiverModel");
+    qmlRegisterType<MailList>(uri, 0, 1, "MailList");
 }
 
 //QT5 Q_EXPORT_PLUGIN2(mailplugin, MailPlugin)

@@ -322,6 +322,8 @@ void EventEditTest::shouldEnsureEndDateIsNotBeforeStartDate()
     KDateTime startDt = startDateTime->dateTime();
     QVERIFY(startDt < endDateTime->dateTime());
 
+    startDt.setTime(QTime(5, 12));
+    endDateTime->setDateTime(startDt.addSecs(3600));
     startDt = startDt.addDays(1);
     startDateTime->setDateTime(startDt);
     QCOMPARE(startDt.date(), endDateTime->date());

@@ -6,6 +6,8 @@ set(mail_SRCS
     composer.cpp
     error.cpp
     receivermodel.cpp
+    maillist.cpp
+    maillistmodel.cpp
 )
 
 INCLUDE_DIRECTORIES(
@@ -22,6 +24,7 @@ add_library(mailplugin SHARED ${mail_SRCS})
 target_link_libraries(mailplugin
     Qt5::Declarative
     KF5::AkonadiCore
+    KF5::AkonadiMime
     KF5::Mime
     messagecomposer
     kdepim
