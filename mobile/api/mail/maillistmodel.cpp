@@ -36,6 +36,7 @@ MailListModel::MailListModel( QObject *parent ) : QAbstractListModel( parent ), 
     roles[Date] = "date";
     roles[IsUnread] = "isUnread";
     roles[IsImportant] = "isImportant";
+    roles[StatusIcon] = "statusIcon";
     roles[Url] = "url";
 
     setRoleNames( roles );
@@ -81,6 +82,22 @@ QVariant MailListModel::data( const QModelIndex& index, int role ) const
             return messageStatus.isImportant();
         case IsUnread:
             return !messageStatus.isRead();
+        case StatusIcon: {
+            if ( messageStatus.isReplied() ) {
+                if ( messageStatus.isForwarded() )
+                  return QLatin1String ( "mail-forwarded-replied" );
+                else
+                  return QLatin1String ( "mail-replied" );
+            }
+
+            if ( messageStatus.isForwarded() )
+              return QLatin1String ( "mail-forwarded" );
+
+            if ( messageStatus.isRead() )
+              return QLatin1String ( "mail-read" );
+
+            return QLatin1String ( "mail-unread" );
+        }
         case Url:
             return item.url();
         }

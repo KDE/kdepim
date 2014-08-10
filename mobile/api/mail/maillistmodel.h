@@ -40,6 +40,7 @@ public:
         Date,
         IsUnread,
         IsImportant,
+        StatusIcon,
         Url
     };
 
