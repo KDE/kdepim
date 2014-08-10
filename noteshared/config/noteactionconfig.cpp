@@ -46,7 +46,7 @@ NoteActionConfig::NoteActionConfig( QWidget *parent )
     layout->addWidget( kcfg_MailAction, 0, 1 );
 
     QLabel *howItWorks = new QLabel(i18n( "<a href=\"whatsthis\">How does this work?</a>" ));
-    connect( howItWorks, SIGNAL(linkActivated(QString)),SLOT(slotHelpLinkClicked(QString)) );
+    connect(howItWorks, &QLabel::linkActivated, this, &NoteActionConfig::slotHelpLinkClicked);
     layout->addWidget( howItWorks, 1, 0 );
 
     addConfig( NoteShared::NoteSharedGlobalConfig::self(), w );

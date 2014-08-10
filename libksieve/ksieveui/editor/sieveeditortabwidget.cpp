@@ -28,7 +28,7 @@ SieveEditorTabWidget::SieveEditorTabWidget(QWidget *parent)
     : QTabWidget(parent)
 {
     setTabsClosable(true);
-    connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(slotTabCloseRequested(int)));
+    connect(this, &SieveEditorTabWidget::tabCloseRequested, this, &SieveEditorTabWidget::slotTabCloseRequested);
 }
 
 SieveEditorTabWidget::~SieveEditorTabWidget()

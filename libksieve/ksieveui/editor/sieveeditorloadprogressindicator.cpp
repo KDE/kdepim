@@ -28,7 +28,7 @@ SieveEditorLoadProgressIndicator::SieveEditorLoadProgressIndicator(QObject *pare
 {
     mProgressPix = KIconLoader::global()->loadPixmapSequence(QLatin1String("process-working"), KIconLoader::SizeSmallMedium);
     mProgressTimer = new QTimer(this);
-    connect(mProgressTimer, SIGNAL(timeout()), this, SLOT(slotTimerDone()));
+    connect(mProgressTimer, &QTimer::timeout, this, &SieveEditorLoadProgressIndicator::slotTimerDone);
 }
 
 SieveEditorLoadProgressIndicator::~SieveEditorLoadProgressIndicator()

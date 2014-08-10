@@ -38,7 +38,7 @@ SieveEditor::SieveEditor( QWidget * parent )
     mSieveEditorWidget = new SieveEditorWidget;
     connect(mSieveEditorWidget, SIGNAL(valueChanged(bool)), this, SIGNAL(valueChanged(bool)));
     setMainWidget(mSieveEditorWidget);
-    connect(mSieveEditorWidget, SIGNAL(enableButtonOk(bool)), this, SLOT(slotEnableButtonOk(bool)));
+    connect(mSieveEditorWidget, &SieveEditorWidget::enableButtonOk, this, &SieveEditor::slotEnableButtonOk);
     connect(mSieveEditorWidget, SIGNAL(checkSyntax()), this, SIGNAL(checkSyntax()));
     readConfig();
 }

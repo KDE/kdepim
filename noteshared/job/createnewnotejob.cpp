@@ -44,7 +44,7 @@ CreateNewNoteJob::CreateNewNoteJob(QObject *parent, QWidget *widget)
       mRichText(false),
       mWidget(widget)
 {
-    connect(this, SIGNAL(selectNewCollection()), this, SLOT(slotSelectNewCollection()));
+    connect(this, &CreateNewNoteJob::selectNewCollection, this, &CreateNewNoteJob::slotSelectNewCollection);
 }
 
 CreateNewNoteJob::~CreateNewNoteJob()
@@ -99,7 +99,7 @@ void CreateNewNoteJob::createFetchCollectionJob(bool useSettings)
         col = Akonadi::Collection(id);
     }
     Akonadi::CollectionFetchJob *fetchCollection = new Akonadi::CollectionFetchJob( col, Akonadi::CollectionFetchJob::Base );
-    connect(fetchCollection, SIGNAL(result(KJob*)), this, SLOT(slotFetchCollection(KJob*)));
+    connect(fetchCollection, &Akonadi::CollectionFetchJob::result, this, &CreateNewNoteJob::slotFetchCollection);
 }
 
 void CreateNewNoteJob::slotFetchCollection(KJob* job)
@@ -129,7 +129,7 @@ void CreateNewNoteJob::slotFetchCollection(KJob* job)
             if (KMessageBox::Yes == KMessageBox::warningYesNo(0, i18n("Collection is hidden. New note will stored but not displaying. Do you want to show collection?"))) {
                 col.addAttribute(new NoteShared::ShowFolderNotesAttribute());
                 Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( col );
-                connect( job, SIGNAL(result(KJob*)), SLOT(slotCollectionModifyFinished(KJob*)) );
+                connect(job, &Akonadi::CollectionModifyJob::result, this, &CreateNewNoteJob::slotCollectionModifyFinished);
             }
         }
         Akonadi::Item newItem;
@@ -169,7 +169,7 @@ void CreateNewNoteJob::slotFetchCollection(KJob* job)
         newItem.addAttribute(eda);
 
         Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, col, this );
-        connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteCreationFinished(KJob*)) );
+        connect(job, &Akonadi::ItemCreateJob::result, this, &CreateNewNoteJob::slotNoteCreationFinished);
     } else {
         deleteLater();
     }

@@ -37,21 +37,21 @@ SieveEditorParsingMissingFeatureWarning::SieveEditorParsingMissingFeatureWarning
     switch (type) {
     case TextEditor: {
         QAction *action = new QAction( i18n( "Switch in graphical mode" ), this );
-        connect( action, SIGNAL(triggered(bool)), SLOT(slotSwitchInGraphicalMode()) );
+        connect(action, &QAction::triggered, this, &SieveEditorParsingMissingFeatureWarning::slotSwitchInGraphicalMode);
         addAction( action );
 
         action = new QAction( i18n( "Keep in text mode" ), this );
-        connect( action, SIGNAL(triggered(bool)), SLOT(slotInActualMode()) );
+        connect(action, &QAction::triggered, this, &SieveEditorParsingMissingFeatureWarning::slotInActualMode);
         addAction( action );
         break;
     }
     case GraphicEditor: {
         QAction *action = new QAction( i18n( "Switch in text mode" ), this );
-        connect( action, SIGNAL(triggered(bool)), SLOT(slotSwitchInTextMode()) );
+        connect(action, &QAction::triggered, this, &SieveEditorParsingMissingFeatureWarning::slotSwitchInTextMode);
         addAction( action );
 
         action = new QAction( i18n( "Keep in Graphical mode" ), this );
-        connect( action, SIGNAL(triggered(bool)), SLOT(slotInActualMode()) );
+        connect(action, &QAction::triggered, this, &SieveEditorParsingMissingFeatureWarning::slotInActualMode);
         addAction( action );
         break;
     }
