@@ -71,10 +71,11 @@ QVariant MailListModel::data( const QModelIndex& index, int role ) const
         case SenderList: {
             QStringList l;
             foreach ( const KMime::Types::Mailbox &mbox, msg->from()->mailboxes() ) {
-              if ( mbox.hasName() )
+              if ( mbox.hasName() ) {
                 l.append( mbox.name() );
-              else
+              } else {
                 l.append( mbox.addrSpec().asPrettyString() );
+              }
             }
             return l;
         }
@@ -84,17 +85,20 @@ QVariant MailListModel::data( const QModelIndex& index, int role ) const
             return !messageStatus.isRead();
         case StatusIcon: {
             if ( messageStatus.isReplied() ) {
-                if ( messageStatus.isForwarded() )
+                if ( messageStatus.isForwarded() ) {
                   return QLatin1String ( "mail-forwarded-replied" );
-                else
+                } else {
                   return QLatin1String ( "mail-replied" );
+                }
             }
 
-            if ( messageStatus.isForwarded() )
+            if ( messageStatus.isForwarded() ) {
               return QLatin1String ( "mail-forwarded" );
+            }
 
-            if ( messageStatus.isRead() )
+            if ( messageStatus.isRead() ) {
               return QLatin1String ( "mail-read" );
+            }
 
             return QLatin1String ( "mail-unread" );
         }
