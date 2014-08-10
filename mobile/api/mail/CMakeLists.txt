@@ -8,6 +8,8 @@ set(mail_SRCS
     composer.cpp
     error.cpp
     receivermodel.cpp
+    maillist.cpp
+    maillistmodel.cpp
 )
 
 INCLUDE_DIRECTORIES(
@@ -30,6 +32,7 @@ target_link_libraries(mailplugin
     ${QT_QTDECLARATIVE_LIBRARY}
     ${KDEPIMLIBS_AKONADI_LIBS}
     ${KDEPIMLIBS_KMIME_LIBS}
+    ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
     messagecomposer
     kdepim
 )
