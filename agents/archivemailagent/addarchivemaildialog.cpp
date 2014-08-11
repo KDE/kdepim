@@ -56,7 +56,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent
     mFolderRequester = new MailCommon::FolderRequester( mainWidget );
     mFolderRequester->setMustBeReadWrite( false );
     mFolderRequester->setNotAllowToCreateNewFolder( true );
-    connect( mFolderRequester, SIGNAL(folderChanged(Akonadi::Collection)), SLOT(slotFolderChanged(Akonadi::Collection)) );
+    connect(mFolderRequester, &MailCommon::FolderRequester::folderChanged, this, &AddArchiveMailDialog::slotFolderChanged);
     if (info) //Don't autorize to modify folder when we just modify item.
         mFolderRequester->setEnabled( false );
     folderLabel->setBuddy( mFolderRequester );
@@ -86,7 +86,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent
     QLabel *pathLabel = new QLabel( i18n( "Path:" ), mainWidget );
     mainLayout->addWidget( pathLabel, row, 0 );
     mPath = new KUrlRequester(mainWidget);
-    connect(mPath, SIGNAL(textChanged(QString)), this, SLOT(slotUpdateOkButton()));
+    connect(mPath, &KUrlRequester::textChanged, this, &AddArchiveMailDialog::slotUpdateOkButton);
     mPath->setMode(KFile::Directory);
     mainLayout->addWidget(mPath);
     ++row;

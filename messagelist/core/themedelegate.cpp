@@ -53,7 +53,7 @@ ThemeDelegate::ThemeDelegate( QAbstractItemView * parent )
 {
     mItemView = parent;
     mTheme = 0;
-    connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), this,  SLOT(slotGeneralFontChanged()) );
+    connect(KGlobalSettings::self(), &KGlobalSettings::kdisplayFontChanged, this, &ThemeDelegate::slotGeneralFontChanged);
 }
 
 ThemeDelegate::~ThemeDelegate()
