@@ -1,7 +1,7 @@
 project(kgpgconf)
 
 include_directories(${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme)
-add_definitions(-D_ASSUAN_ONLY_GPG_ERRORS -DKDE_DEFAULT_DEBUG_AREA=5154)
+add_definitions(-D_ASSUAN_ONLY_GPG_ERRORS)
 
 kde_enable_exceptions()
 
