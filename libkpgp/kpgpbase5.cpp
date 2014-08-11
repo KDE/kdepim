@@ -27,7 +27,7 @@
 #include <QRegExp>
 #include <QDateTime>
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kshell.h>
 #include <qdebug.h>
 

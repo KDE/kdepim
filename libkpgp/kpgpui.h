@@ -194,6 +194,7 @@ class LIBKPGP_EXPORT KeySelectionDialog: public QDialog
     QTimer* mStartSearchTimer;
     QString mSearchText;
     QTreeWidgetItem* mCurrentContextMenuItem;
+    QPushButton *mOkButton;
 
   static const int sCheckSelectionDelay;
 };

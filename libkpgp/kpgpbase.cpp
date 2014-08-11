@@ -23,7 +23,7 @@
 #include "kpgpblock.h"
 
 #include <qdebug.h>
-#include <kdefakes.h> /* setenv, unsetenv */
+//#include <kdefakes.h> /* setenv, unsetenv */
 
 #include <QApplication>
 #include <QByteArray>

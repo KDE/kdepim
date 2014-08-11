@@ -19,9 +19,7 @@
 
 #include <KAboutData>
 
-#include <kcmdlineargs.h>
-#include <kdebug.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <libkpgp/kpgp.h>
 #include <libkpgp/kpgpui.h> 

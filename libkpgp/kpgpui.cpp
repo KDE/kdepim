@@ -53,11 +53,10 @@
 #include <kiconloader.h>
 #include <kconfigbase.h>
 #include <kconfig.h>
-#include <kprogressdialog.h>
+#include <QProgressDialog>
 #include <kwindowsystem.h>
-#include <kglobalsettings.h>
+//#include <kglobalsettings.h>
 #include <klineedit.h>
-#include <KGlobal>
 #include <QIcon>
 
 #include <assert.h>
@@ -313,9 +312,9 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   QVBoxLayout *mainLayout = new QVBoxLayout;
   setLayout(mainLayout);
   mainLayout->addWidget(mainWidget);
-  QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
-  okButton->setDefault(true);
-  okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+  mOkButton = buttonBox->button(QDialogButtonBox::Ok);
+  mOkButton->setDefault(true);
+  mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
   connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
   connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
   if ( qApp ) {
@@ -347,7 +346,7 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   QFrame *page = new QFrame( this );
   mainLayout->addWidget(page);
   QVBoxLayout *topLayout = new QVBoxLayout( page );
-  topLayout->setSpacing( spacingHint() );
+  //QT5 topLayout->setSpacing( spacingHint() );
   topLayout->setMargin( 0 );
 
   if( !text.isEmpty() ) {
@@ -426,10 +425,10 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   connect( mListView, SIGNAL(customContextMenuRequested(QPoint)),
            this,      SLOT(slotRMB(QPoint)) );
 
-  KGuiItem::assign(buttonBox->button(QDialogButtonBox::RestoreDefaults), KGuiItem(i18n("&RereadKeys"));
+  KGuiItem::assign(buttonBox->button(QDialogButtonBox::RestoreDefaults), KGuiItem(i18n("&RereadKeys")));
   connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()),
            this, SLOT(slotRereadKeys()) );
-  connect(okButton, SIGNAL(clicked()),SLOT(slotOk()));
+  connect(mOkButton, SIGNAL(clicked()),SLOT(slotOk()));
   connect(buttonBox->button(QDialogButtonBox::Cancel),SIGNAL(clicked()),SLOT(slotCancel()));
   mainLayout->addWidget(buttonBox);
 }
@@ -586,13 +585,13 @@ QString KeySelectionDialog::keyInfo( const Kpgp::Key *key ) const
   if( remark.isEmpty() ) {
     return QLatin1Char(' ') + i18nc("creation date and status of an OpenPGP key",
                       "Creation date: %1, Status: %2",
-                       KLocale::global()->formatDate( dt.date(), KLocale::ShortDate ) ,
+                       QLocale().toString(dt.date(), QLocale::ShortFormat),
                        status );
   }
   else {
     return QLatin1Char(' ') + i18nc("creation date, status and remark of an OpenPGP key",
                       "Creation date: %1, Status: %2 (%3)",
-                       KLocale::global()->formatDate( dt.date(), KLocale::ShortDate ) ,
+                       QLocale().toString(dt.date(), QLocale::ShortFormat),
                        status ,
                        remark );
   }
@@ -907,10 +906,10 @@ void KeySelectionDialog::slotCheckSelection( QTreeWidgetItem* plvi /* = 0 */ )
     KeyID keyId = getKeyId( plvi );
     if( !keyId.isEmpty() ) {
       mKeyIds.append( keyId );
-      okButton->setEnabled(1==keyAdmissibility(plvi);
+      mOkButton->setEnabled(1==keyAdmissibility(plvi));
     }
     else {
-      okButton->setEnabled(false);
+      mOkButton->setEnabled(false);
     }
   }
   else {
@@ -1015,7 +1014,7 @@ void KeySelectionDialog::slotCheckSelection( QTreeWidgetItem* plvi /* = 0 */ )
     if( !keysToBeChecked.isEmpty() ) {
       keysAllowed = keysAllowed && checkKeys( keysToBeChecked );
     }
-    okButton->setEnabled(keysAllowed);
+    mOkButton->setEnabled(keysAllowed);
 
     connect( mListView, SIGNAL(selectionChanged()),
              this,      SLOT(slotSelectionChanged()) );
@@ -1025,15 +1024,16 @@ void KeySelectionDialog::slotCheckSelection( QTreeWidgetItem* plvi /* = 0 */ )
 
 bool KeySelectionDialog::checkKeys( const QList<QTreeWidgetItem*>& keys ) const
 {
-  KProgressDialog* pProgressDlg = 0;
+  QProgressDialog* pProgressDlg = 0;
   bool keysAllowed = true;
   qCDebug(KPGP_LOG) <<"Checking keys...";
 
-  pProgressDlg = new KProgressDialog( 0, i18n("Checking Keys"),
-                                      i18n("Checking key 0xMMMMMMMM..."));
+  pProgressDlg = new QProgressDialog( 0);
+  pProgressDlg->setWindowTitle(i18n("Checking Keys"));
+  pProgressDlg->setLabelText(i18n("Checking key 0xMMMMMMMM..."));
   pProgressDlg->setModal(true );
-  pProgressDlg->setAllowCancel( false );
-  pProgressDlg->progressBar()->setMaximum( keys.count() );
+  pProgressDlg->setCancelButton(0);
+  pProgressDlg->setMaximum( keys.count() );
   pProgressDlg->setMinimumDuration( 1000 );
   pProgressDlg->show();
 
@@ -1045,7 +1045,7 @@ bool KeySelectionDialog::checkKeys( const QList<QTreeWidgetItem*>& keys ) const
                               QString::fromLatin1( getKeyId( *it ) ) ) );
     qApp->processEvents();
     keysAllowed = keysAllowed && ( -1 != keyAdmissibility( *it, AllowExpensiveTrustCheck ) );
-    pProgressDlg->progressBar()->setValue( pProgressDlg->progressBar()->value() + 1 );
+    pProgressDlg->setValue( pProgressDlg->value() + 1 );
     qApp->processEvents();
   }
 
@@ -1376,6 +1376,10 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   // if( addresses.isEmpty() || keyList.isEmpty() ||
   //     addresses.count()+1 != keyList.count() )
   //   do something;
+  QWidget *mainWidget = new QWidget(this);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  mainLayout->addWidget(mainWidget);
 
   QFrame *page = new QFrame( this );
   mainLayout->addWidget(page);
@@ -1682,12 +1686,18 @@ CipherTextDialog::CipherTextDialog( const QByteArray & text,
   connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
   connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
+  QWidget *mainWidget = new QWidget(this);
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  setLayout(mainLayout);
+  mainLayout->addWidget(mainWidget);
+
+
   // FIXME (post KDE2.2): show some more info, e.g. the output of GnuPG/PGP
   QFrame *page = new QFrame( this );
   mainLayout->addWidget(page);
   mainLayout->addWidget(buttonBox);
   QVBoxLayout *topLayout = new QVBoxLayout( page );
-  topLayout->setSpacing( spacingHint() );
+  //QT5 topLayout->setSpacing( spacingHint() );
   topLayout->setMargin( 0 );
 
   QLabel *label = new QLabel( page );

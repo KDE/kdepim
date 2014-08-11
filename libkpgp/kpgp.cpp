@@ -22,19 +22,18 @@
 #include "kpgp_debug.h"
 
 #include <qdebug.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <kmessagebox.h>
 #include <kconfigbase.h>
 #include <kconfiggroup.h>
 #include <kconfig.h>
-#include <kde_file.h>
+//#include <kde_file.h>
 
 #include <QLabel>
 #include <QCursor>
 #include <QApplication>
 #include <QByteArray>
 #include <QFileInfo>
-#include <KGlobal>
 
 #include <algorithm>
 
@@ -1392,7 +1391,7 @@ Module::checkForPGP(void)
   havePgp=false;
 
   path = QString::fromLocal8Bit( getenv("PATH") );
-  pSearchPaths = path.split( QLatin1Char(KPATH_SEPARATOR), QString::SkipEmptyParts );
+  //QT5 pSearchPaths = path.split( QLatin1Char(KPATH_SEPARATOR), QString::SkipEmptyParts );
 
   haveGpg=false;
   // lets try gpg

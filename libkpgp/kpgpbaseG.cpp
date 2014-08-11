@@ -19,8 +19,8 @@
 #include "kpgpbase.h"
 #include "kpgp.h"
 #include "kpgp_debug.h"
+#include <KLocalizedString>
 
-#include <klocale.h>
 #include <kshell.h>
 #include <qdebug.h>
 

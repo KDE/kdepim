@@ -24,7 +24,7 @@
 
 #include <QDateTime>
 
-#include <klocale.h>
+#include <KLocalizedString>
 #include <qdebug.h>
 
 #define PGP6 "pgp"

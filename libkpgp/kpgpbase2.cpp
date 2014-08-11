@@ -24,8 +24,8 @@
 #include <assert.h>
 
 #include <QDateTime>
+#include <KLocalizedString>
 
-#include <klocale.h>
 #include <kshell.h>
 #include <qdebug.h>
 
