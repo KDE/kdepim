@@ -1024,6 +1024,7 @@ static QLineEdit * adjust_row( QGridLayout * l, int row, const QString & label, 
     assert( lb );
     QLineEdit * le = qobject_cast<QLineEdit*>( l->itemAtPosition( row, 1 )->widget() );
     assert( le );
+    lb->setBuddy( le ); // For better accessibility
     QLabel * reqLB = qobject_cast<QLabel*>( l->itemAtPosition( row, 2 )->widget() );
     assert( reqLB );
 
