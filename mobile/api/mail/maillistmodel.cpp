@@ -103,9 +103,9 @@ QVariant MailListModel::data( const QModelIndex& index, int role ) const
             return QLatin1String ( "mail-unread" );
         }
         case Date:
-          return msg->date()->dateTime().dateTime();
+            return msg->date()->dateTime().dateTime();
         case Url:
-            return item.url();
+            return QVariant::fromValue<QUrl>( item.url() );
         }
     }
     return QVariant();
