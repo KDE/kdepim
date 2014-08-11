@@ -242,7 +242,8 @@ void ResourceManagement::showDetails(const KLDAP::LdapObject &obj, const KLDAP::
 
     // Fill formDetails with data
     foreach(const QString & key, obj.attributes().keys()) {
-        if (key ==  QLatin1String("objectClass")) {
+        if (key ==  QLatin1String("objectClass")
+            || key == QLatin1String("email")) {
             continue;
         } else if (key ==  QLatin1String("owner")) {
             QStringList attrs;
