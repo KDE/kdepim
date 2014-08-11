@@ -102,6 +102,7 @@ void ResultItemWidget::Private::updateShowDetailsLabel()
     const bool detailsVisible = m_detailsLabel->isVisible();
     const QString auditLogLink = m_result->auditLog().formatLink( auditlog_url_template() );
     m_showDetailsLabel->setText( QString::fromLatin1( "<a href=\"kleoresultitem://toggledetails/\">%1</a><br/>%2" ).arg( detailsVisible ? i18n( "Hide Details" ) : i18n( "Show Details" ), auditLogLink ) );
+    m_showDetailsLabel->setAccessibleDescription( detailsVisible ? i18n( "Hide Details" ) : i18n( "Show Details" ) );
 }
 
 ResultItemWidget::ResultItemWidget( const shared_ptr<const Task::Result> & result, QWidget * parent, Qt::WindowFlags flags ) : QWidget( parent, flags ), d( new Private( result, this ) )
@@ -125,6 +126,7 @@ ResultItemWidget::ResultItemWidget( const shared_ptr<const Task::Result> & resul
     overview->setWordWrap( true );
     overview->setTextFormat( Qt::RichText );
     overview->setText( d->m_result->overview() );
+    overview->setFocusPolicy ( Qt::StrongFocus );
     connect( overview, SIGNAL(linkActivated(QString)), this, SLOT(slotLinkActivated(QString)) );
 
     hlay->addWidget( overview, 1, Qt::AlignTop );
@@ -136,11 +138,15 @@ ResultItemWidget::ResultItemWidget( const shared_ptr<const Task::Result> & resul
     connect( d->m_showDetailsLabel, SIGNAL(linkActivated(QString)), this, SLOT(slotLinkActivated(QString)) );
     hlay->addWidget( d->m_showDetailsLabel );
     d->m_showDetailsLabel->setVisible( !details.isEmpty() );
+    d->m_showDetailsLabel->setFocusPolicy ( Qt::StrongFocus );
+    d->m_showDetailsLabel->setTextInteractionFlags( Qt::TextBrowserInteraction );
 
     d->m_detailsLabel = new QLabel;
     d->m_detailsLabel->setWordWrap( true );
     d->m_detailsLabel->setTextFormat( Qt::RichText );
     d->m_detailsLabel->setText( details );
+    d->m_detailsLabel->setFocusPolicy ( Qt::StrongFocus );
+    d->m_detailsLabel->setTextInteractionFlags( Qt::TextBrowserInteraction );
     connect( d->m_detailsLabel, SIGNAL(linkActivated(QString)), this, SLOT(slotLinkActivated(QString)) );
     layout->addWidget( d->m_detailsLabel );
 
