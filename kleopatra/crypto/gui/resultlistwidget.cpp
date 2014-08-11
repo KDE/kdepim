@@ -139,6 +139,7 @@ void ResultListWidget::Private::setupMulti()
         return; // already been here...
 
     m_scrollArea = new ScrollArea;
+    m_scrollArea->setFocusPolicy( Qt::NoFocus );
     assert( qobject_cast<QBoxLayout*>( m_scrollArea->widget()->layout() ) );
     static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() )->setMargin( 0 );
     static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() )->setSpacing( 2 );
