@@ -127,6 +127,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   mBrowserModel = new AkonadiBrowserModel( mBrowserMonitor, this );
   mBrowserModel->setItemPopulationStrategy( EntityTreeModel::LazyPopulation );
   mBrowserModel->setShowSystemEntities( true );
+  mBrowserModel->setListFilter( CollectionFetchScope::Display );
 
 //   new ModelTest( mBrowserModel );
 
