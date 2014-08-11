@@ -31,7 +31,7 @@
 #include <QLabel>
 
 #include <qdebug.h>       // used in inlined methods
-#include <kdialog.h>      // base class of all dialogs here
+#include <QDialog>      // base class of all dialogs here
 #include <kpassworddialog.h>
 
 class QString;
@@ -101,7 +101,7 @@ class LIBKPGP_EXPORT Config : public QWidget
 
 // -------------------------------------------------------------------------
 #ifndef QT_NO_TREEWIDGET
-class LIBKPGP_EXPORT KeySelectionDialog: public KDialog
+class LIBKPGP_EXPORT KeySelectionDialog: public QDialog
 {
   Q_OBJECT
 
@@ -292,7 +292,7 @@ protected:
 
 
 // -------------------------------------------------------------------------
-class LIBKPGP_EXPORT KeyApprovalDialog: public KDialog
+class LIBKPGP_EXPORT KeyApprovalDialog: public QDialog
 {
   Q_OBJECT
 
@@ -326,7 +326,7 @@ class LIBKPGP_EXPORT KeyApprovalDialog: public KDialog
 
 
 // -------------------------------------------------------------------------
-class LIBKPGP_EXPORT CipherTextDialog: public KDialog
+class LIBKPGP_EXPORT CipherTextDialog: public QDialog
 {
   Q_OBJECT
 
