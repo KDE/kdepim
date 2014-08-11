@@ -19,4 +19,4 @@ target_link_libraries(messagevieweraccessiblewidgetfactory
 
 install(TARGETS messagevieweraccessiblewidgetfactory DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/accessible)
 
-add_subdirectory(tests)
+add_subdirectory(autotests)
