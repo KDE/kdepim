@@ -26,7 +26,7 @@
 
 #include <QDateTime>
 #include <KLocale>
-#include <KProgressDialog>
+#include <QProgressDialog>
 #include <QUrl>
 
 #include <QBuffer>
@@ -243,13 +243,13 @@ QVariant MailListMimeData::retrieveData( const QString & mimeType,
 
         if ( mMails.isEmpty() ) {
             MailList list = MailList::fromMimeData( this );
-            KProgressDialog *dlg = new KProgressDialog( 0, QString(),
-                                                        i18n("Retrieving and storing messages...") );
+            QProgressDialog *dlg = new QProgressDialog( 0);
+            dlg->setWindowTitle(QString());
+            dlg->setLabelText(i18n("Retrieving and storing messages...") );
             dlg->setWindowModality( Qt::WindowModal );
-            dlg->setAllowCancel( true );
-            dlg->progressBar()->setMaximum( list.size() );
+            dlg->setMaximum( list.size() );
             int i = 0;
-            dlg->progressBar()->setValue( i );
+            dlg->setValue( i );
             dlg->show();
             MailList::ConstIterator end( list.constEnd() );
             for ( MailList::ConstIterator it = list.constBegin(); it != end; ++it ) {
@@ -258,10 +258,10 @@ QVariant MailListMimeData::retrieveData( const QString & mimeType,
                 // to get the actual text of the mail.
                 MailSummary mailSummary = *it;
                 mMails.append( mMailTextSource->text( mailSummary.serialNumber() ) );
-                if ( dlg->wasCancelled() ) {
+                if ( dlg->wasCanceled() ) {
                     break;
                 }
-                dlg->progressBar()->setValue(++i);
+                dlg->setValue(++i);
 #ifdef __GNUC__
 #warning Port me!
 #endif

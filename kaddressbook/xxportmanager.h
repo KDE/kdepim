@@ -28,7 +28,7 @@
 #include <QtCore/QObject>
 
 class KJob;
-class KProgressDialog;
+class QProgressDialog;
 
 class QAction;
 class QItemSelectionModel;
@@ -101,7 +101,7 @@ private:
     QSignalMapper *mImportMapper;
     QSignalMapper *mExportMapper;
     Akonadi::Collection mDefaultAddressBook;
-    KProgressDialog *mImportProgressDialog;
+    QProgressDialog *mImportProgressDialog;
 };
 
 #endif

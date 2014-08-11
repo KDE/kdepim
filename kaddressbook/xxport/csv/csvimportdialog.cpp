@@ -29,7 +29,7 @@
 #include <QLineEdit>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KProgressDialog>
+#include <QProgressDialog>
 #include <KUrlRequester>
 #include <KLineEdit>
 
@@ -222,9 +222,9 @@ KABC::AddresseeList CSVImportDialog::contacts() const
   KABC::AddresseeList contacts;
   DateParser dateParser( mDatePatternEdit->text() );
 
-  KProgressDialog progressDialog( const_cast<CSVImportDialog*>( this )->mainWidget() );
+  QProgressDialog progressDialog( const_cast<CSVImportDialog*>( this )->mainWidget() );
   progressDialog.setAutoClose( true );
-  progressDialog.progressBar()->setMaximum( mModel->rowCount() );
+  progressDialog.setMaximum( mModel->rowCount() );
   progressDialog.setLabelText( i18nc( "@label", "Importing contacts" ) );
   progressDialog.show();
 
@@ -256,11 +256,11 @@ KABC::AddresseeList CSVImportDialog::contacts() const
 
     kapp->processEvents();
 
-    if ( progressDialog.wasCancelled() ) {
+    if ( progressDialog.wasCanceled() ) {
       return KABC::AddresseeList();
     }
 
-    progressDialog.progressBar()->setValue( progressDialog.progressBar()->value() + 1 );
+    progressDialog.setValue( progressDialog.value() + 1 );
 
     if ( !emptyRow && !contact.isEmpty() ) {
       contacts.append( contact );

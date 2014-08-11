@@ -29,7 +29,7 @@
 
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KProgressDialog>
+#include <QProgressDialog>
 
 #include <QtCore/QPointer>
 #include <QtCore/QSignalMapper>
@@ -137,13 +137,14 @@ void XXPortManager::import(const KABC::Addressee::List &contacts)
     delete dlg;
 
     if ( !mImportProgressDialog ) {
-        mImportProgressDialog = new KProgressDialog( mParentWidget, i18n( "Import Contacts" ) );
+        mImportProgressDialog = new QProgressDialog( mParentWidget);
+        mImportProgressDialog->setWindowTitle(i18n( "Import Contacts" ) );
         mImportProgressDialog->setLabelText(
                     i18np( "Importing one contact to %2", "Importing %1 contacts to %2",
                            contacts.count(), collection.name() ) );
-        mImportProgressDialog->setAllowCancel( false );
+        mImportProgressDialog->setCancelButton(0);
         mImportProgressDialog->setAutoClose( true );
-        mImportProgressDialog->progressBar()->setRange( 1, contacts.count() );
+        mImportProgressDialog->setRange( 1, contacts.count() );
     }
 
     mImportProgressDialog->show();
@@ -164,12 +165,11 @@ void XXPortManager::slotImportJobDone( KJob * )
         return;
     }
 
-    QProgressBar *progressBar = mImportProgressDialog->progressBar();
 
-    progressBar->setValue( progressBar->value() + 1 );
+    mImportProgressDialog->setValue( mImportProgressDialog->value() + 1 );
 
     // cleanup on last step
-    if ( progressBar->value() == progressBar->maximum() ) {
+    if ( mImportProgressDialog->value() == mImportProgressDialog->maximum() ) {
         mImportProgressDialog->deleteLater();
         mImportProgressDialog = 0;
     }
