@@ -63,6 +63,6 @@ else()
   endif()
 endif()
 
-target_link_libraries(kleopatraclientcore KF5::KDELibs4Support)
+target_link_libraries(kleopatraclientcore Qt5::Widgets)
 
 install(TARGETS kleopatraclientcore ${INSTALL_TARGETS_DEFAULT_ARGS})
