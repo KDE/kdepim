@@ -35,7 +35,7 @@
 #include <KFileDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KMimeType>
+
 #include <KRun>
 #include <QTemporaryFile>
 #include <KToolInvocation>
@@ -46,6 +46,8 @@
 
 #include <QFile>
 #include <QPointer>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 using namespace KCalCore;
 using namespace Akonadi;
@@ -144,7 +146,8 @@ static KUrl tempFileForAttachment( const Attachment::Ptr &attachment )
 {
   KUrl url;
 
-  QStringList patterns = KMimeType::mimeType( attachment->mimeType() )->patterns();
+  QMimeDatabase db;
+  QStringList patterns = db.mimeTypeForName( attachment->mimeType() ).globPatterns();
   if ( !patterns.empty() ) {
        s_tempFile = new QTemporaryFile(QDir::tempPath() + QLatin1String("/attachementview_XXXXXX") + patterns.first().remove( QLatin1Char('*')));
   } else {

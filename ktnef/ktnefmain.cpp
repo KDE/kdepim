@@ -40,7 +40,7 @@
 #include <QTemporaryFile>
 #include <KUrl>
 #include <QIcon>
-#include <KMimeType>
+
 #include <KRecentFilesAction>
 
 #include <QContextMenuEvent>
@@ -48,6 +48,8 @@
 #include <QDrag>
 #include <QMimeData>
 #include <KSharedConfig>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 KTNEFMain::KTNEFMain( QWidget *parent )
   : KXmlGuiWindow( parent )
@@ -253,7 +255,8 @@ void KTNEFMain::viewFile()
 
     if ( mimename.isEmpty() || mimename == QLatin1String("application/octet-stream") ) {
       qDebug() << "No mime type found in attachment object, trying to guess...";
-      mimename = KMimeType::findByUrl( url, 0, true )->name();
+      QMimeDatabase db;
+      db.mimeTypeForFile( url.path(), QMimeDatabase::MatchExtension).name();
       qDebug() << "Detected mime type: " << mimename;
     } else {
       qDebug() << "Mime type from attachment object: " << mimename;

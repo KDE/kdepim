@@ -24,13 +24,15 @@
 #include <KZip>
 #include <KTar>
 #include <KUrl>
-#include <KMimeType>
+
 #include <QDebug>
 #include <QApplication>
 
 #include <QSharedPointer>
 
 #include <boost/shared_ptr.hpp>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 using namespace MailImporter;
 
@@ -205,12 +207,13 @@ void FilterKMailArchive::importMails( const QString  &archiveFile )
 {
     filterInfo()->setFrom( archiveFile );
 
-    KMimeType::Ptr mimeType = KMimeType::findByUrl( archiveFile, 0, true /* local file */ );
+    QMimeDatabase db;
+    QMimeType mimeType = db.mimeTypeForFile( archiveFile, QMimeDatabase::MatchExtension);
     typedef QSharedPointer<KArchive> KArchivePtr;
     KArchivePtr archive;
-    if ( !mimeType->patterns().filter( "tar", Qt::CaseInsensitive ).isEmpty() )
+    if ( !mimeType.globPatterns().filter( "tar", Qt::CaseInsensitive ).isEmpty() )
         archive = KArchivePtr( new KTar( archiveFile ) );
-    else if ( !mimeType->patterns().filter( "zip", Qt::CaseInsensitive ).isEmpty() )
+    else if ( !mimeType.globPatterns().filter( "zip", Qt::CaseInsensitive ).isEmpty() )
         archive = KArchivePtr( new KZip( archiveFile ) );
     else {
         filterInfo()->alert( i18n( "The file '%1' does not appear to be a valid archive.", archiveFile ) );
