@@ -84,3 +84,4 @@ Comment[zh_CN]=启动导入向导从 thunderbird/evolution 等客户端中迁移
 Comment[zh_TW]=啟動匯入精靈，將其他程式如 thunderbird 或 evolution 的資料搬過來。
 Terminal=false
 Categories=Qt;KDE;Utility;X-KDE-Utilities-PIM;
+X-DBUS-StartupType=Unique
