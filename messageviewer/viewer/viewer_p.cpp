@@ -1692,7 +1692,7 @@ void ViewerPrivate::createActions()
     mSelectAllAction  = new QAction(i18n("Select All Text"), this);
     ac->addAction(QLatin1String("mark_all_text"), mSelectAllAction );
     connect(mSelectAllAction, SIGNAL(triggered(bool)), SLOT(selectAll()));
-    mSelectAllAction->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_A ) );
+    ac->setDefaultShortcut(mSelectAllAction, QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_A ) );
 
     // copy Email address to clipboard
     mCopyURLAction = new QAction( QIcon::fromTheme( QLatin1String("edit-copy" )),
@@ -1709,7 +1709,7 @@ void ViewerPrivate::createActions()
     mToggleFixFontAction = new KToggleAction( i18n( "Use Fi&xed Font" ), this );
     ac->addAction(QLatin1String( "toggle_fixedfont"), mToggleFixFontAction );
     connect( mToggleFixFontAction, SIGNAL(triggered(bool)), SLOT(slotToggleFixedFont()) );
-    mToggleFixFontAction->setShortcut( QKeySequence( Qt::Key_X ) );
+    ac->setDefaultShortcut(mToggleFixFontAction, QKeySequence( Qt::Key_X ) );
 
 
     // Zoom actions
@@ -1719,17 +1719,17 @@ void ViewerPrivate::createActions()
     mZoomInAction = new QAction( QIcon::fromTheme(QLatin1String("zoom-in")), i18n("&Zoom In"), this);
     ac->addAction(QLatin1String("zoom_in"), mZoomInAction);
     connect(mZoomInAction, SIGNAL(triggered(bool)), SLOT(slotZoomIn()));
-    mZoomInAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Plus));
+    ac->setDefaultShortcut(mZoomInAction,QKeySequence(Qt::CTRL | Qt::Key_Plus));
 
     mZoomOutAction = new QAction( QIcon::fromTheme(QLatin1String("zoom-out")), i18n("Zoom &Out"), this);
     ac->addAction(QLatin1String("zoom_out"), mZoomOutAction);
     connect(mZoomOutAction, SIGNAL(triggered(bool)), SLOT(slotZoomOut()));
-    mZoomOutAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Minus));
+    ac->setDefaultShortcut(mZoomOutAction,QKeySequence(Qt::CTRL | Qt::Key_Minus));
 
     mZoomResetAction = new QAction( i18n("Reset"), this);
     ac->addAction(QLatin1String("zoom_reset"), mZoomResetAction);
     connect(mZoomResetAction, SIGNAL(triggered(bool)), SLOT(slotZoomReset()));
-    mZoomResetAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_0));
+    ac->setDefaultShortcut(mZoomResetAction,QKeySequence(Qt::CTRL | Qt::Key_0));
 
 
     // Show message structure viewer
@@ -1741,7 +1741,7 @@ void ViewerPrivate::createActions()
     mViewSourceAction  = new QAction(i18n("&View Source"), this);
     ac->addAction(QLatin1String("view_source"), mViewSourceAction );
     connect(mViewSourceAction, SIGNAL(triggered(bool)), SLOT(slotShowMessageSource()));
-    mViewSourceAction->setShortcut(QKeySequence(Qt::Key_V));
+    ac->setDefaultShortcut(mViewSourceAction,QKeySequence(Qt::Key_V));
 
     mSaveMessageAction = new QAction(QIcon::fromTheme(QLatin1String("document-save-as")), i18n("&Save message..."), this);
     ac->addAction(QLatin1String("save_message"), mSaveMessageAction);
@@ -1761,25 +1761,25 @@ void ViewerPrivate::createActions()
     // Scroll actions
     //
     mScrollUpAction = new QAction( i18n("Scroll Message Up"), this );
-    mScrollUpAction->setShortcut( QKeySequence( Qt::Key_Up ) );
+    ac->setDefaultShortcut(mScrollUpAction, QKeySequence( Qt::Key_Up ) );
     ac->addAction( QLatin1String("scroll_up"), mScrollUpAction );
     connect( mScrollUpAction, SIGNAL(triggered(bool)),
              q, SLOT(slotScrollUp()) );
 
     mScrollDownAction = new QAction( i18n("Scroll Message Down"), this );
-    mScrollDownAction->setShortcut( QKeySequence( Qt::Key_Down ) );
+    ac->setDefaultShortcut(mScrollDownAction, QKeySequence( Qt::Key_Down ) );
     ac->addAction( QLatin1String("scroll_down"), mScrollDownAction );
     connect( mScrollDownAction, SIGNAL(triggered(bool)),
              q, SLOT(slotScrollDown()) );
 
     mScrollUpMoreAction = new QAction( i18n("Scroll Message Up (More)"), this );
-    mScrollUpMoreAction->setShortcut( QKeySequence( Qt::Key_PageUp ) );
+    ac->setDefaultShortcut(mScrollUpMoreAction, QKeySequence( Qt::Key_PageUp ) );
     ac->addAction( QLatin1String("scroll_up_more"), mScrollUpMoreAction );
     connect( mScrollUpMoreAction, SIGNAL(triggered(bool)),
              q, SLOT(slotScrollPrior()) );
 
     mScrollDownMoreAction = new QAction( i18n("Scroll Message Down (More)"), this );
-    mScrollDownMoreAction->setShortcut( QKeySequence( Qt::Key_PageDown ) );
+    ac->setDefaultShortcut(mScrollDownMoreAction, QKeySequence( Qt::Key_PageDown ) );
     ac->addAction( QLatin1String("scroll_down_more"), mScrollDownMoreAction );
     connect( mScrollDownMoreAction, SIGNAL(triggered(bool)),
              q, SLOT(slotScrollNext()) );
@@ -1791,7 +1791,7 @@ void ViewerPrivate::createActions()
     // Toggle HTML display mode.
     mToggleDisplayModeAction = new KToggleAction( i18n( "Toggle HTML Display Mode" ), this );
     ac->addAction( QLatin1String("toggle_html_display_mode"), mToggleDisplayModeAction );
-    mToggleDisplayModeAction->setShortcut(QKeySequence(Qt::SHIFT + Qt::Key_H));
+    ac->setDefaultShortcut(mToggleDisplayModeAction,QKeySequence(Qt::SHIFT + Qt::Key_H));
     connect( mToggleDisplayModeAction, SIGNAL(triggered(bool)),
              SLOT(slotToggleHtmlMode()) );
     addHelpTextAction(mToggleDisplayModeAction, i18n( "Toggle display mode between HTML and plain text" ) );
@@ -1799,7 +1799,7 @@ void ViewerPrivate::createActions()
     // Load external reference
     QAction *loadExternalReferenceAction = new QAction( i18n( "Load external references" ), this );
     ac->addAction( QLatin1String("load_external_reference"), loadExternalReferenceAction );
-    loadExternalReferenceAction->setShortcut(QKeySequence(Qt::SHIFT + Qt::CTRL + Qt::Key_R));
+    ac->setDefaultShortcut(loadExternalReferenceAction,QKeySequence(Qt::SHIFT + Qt::CTRL + Qt::Key_R));
     connect( loadExternalReferenceAction, SIGNAL(triggered(bool)),
              SLOT(slotLoadExternalReference()) );
     addHelpTextAction(loadExternalReferenceAction, i18n( "Load external references from the Internet for this message." ) );
@@ -1819,7 +1819,7 @@ void ViewerPrivate::createActions()
              SLOT(slotCopyImageLocation()) );
 
     mTranslateAction = new QAction(i18n("Translate..."),this);
-    mTranslateAction->setShortcut(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_T));
+    ac->setDefaultShortcut(mTranslateAction,QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_T));
     mTranslateAction->setIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-locale")));
     ac->addAction(QLatin1String("translate_text"), mTranslateAction);
     connect( mTranslateAction, SIGNAL(triggered(bool)),
@@ -1828,12 +1828,12 @@ void ViewerPrivate::createActions()
     mFindInMessageAction = new QAction(QIcon::fromTheme(QLatin1String("edit-find")), i18n("&Find in Message..."), this);
     ac->addAction(QLatin1String("find_in_messages"), mFindInMessageAction );
     connect(mFindInMessageAction, SIGNAL(triggered(bool)), SLOT(slotFind()));
-    mFindInMessageAction->setShortcut(KStandardShortcut::find().first());
+    ac->setDefaultShortcut(mFindInMessageAction,KStandardShortcut::find().first());
 
 #ifndef KDEPIM_NO_WEBKIT
 #if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
     mCaretBrowsing = new KToggleAction(i18n("Toggle Caret Browsing"), this);
-    mCaretBrowsing->setShortcut(Qt::Key_F7);
+    ac->setDefaultShortcut(mCaretBrowsing,Qt::Key_F7);
     ac->addAction( QLatin1String("toggle_caret_browsing"), mCaretBrowsing );
     connect( mCaretBrowsing, SIGNAL(triggered(bool)), SLOT(slotToggleCaretBrowsing(bool)) );
     mCaretBrowsing->setChecked(false);
@@ -1859,14 +1859,14 @@ void ViewerPrivate::createActions()
     addHelpTextAction(mCreateTodoAction, i18n( "Allows you to create a calendar to-do or reminder from this message" ) );
     mCreateTodoAction->setWhatsThis( i18n( "This option starts the KOrganizer to-do editor with initial values taken from the currently selected message. Then you can edit the to-do to your liking before saving it to your calendar." ) );
     ac->addAction(QLatin1String("create_todo"), mCreateTodoAction);
-    mCreateTodoAction->setShortcut(Qt::CTRL + Qt::Key_T);
+    ac->setDefaultShortcut(mCreateTodoAction,QKeySequence(Qt::CTRL + Qt::Key_T));
     connect( mCreateTodoAction, SIGNAL(triggered(bool)), SLOT(slotShowCreateTodoWidget()) );
 
     mCreateEventAction = new QAction(QIcon::fromTheme( QLatin1String("appointment-new") ),i18n("Create Event"), this);
     mCreateEventAction->setIconText( i18n( "Create Event" ) );
     addHelpTextAction(mCreateEventAction, i18n( "Allows you to create a calendar Event" ) );
     ac->addAction(QLatin1String("create_event"), mCreateEventAction);
-    mCreateEventAction->setShortcut(Qt::CTRL + Qt::Key_E);
+    ac->setDefaultShortcut(mCreateEventAction, QKeySequence(Qt::CTRL + Qt::Key_E));
     connect( mCreateEventAction, SIGNAL(triggered(bool)), SLOT(slotShowCreateEventWidget()) );
 }
 
