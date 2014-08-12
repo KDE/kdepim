@@ -982,10 +982,6 @@ void Widget::searchTimerFired()
         d->mFilter = new Filter();
 
     const QString text = d->quickSearchLine->searchEdit()->text();
-    if (text.size() < 3) {
-       resetFilter();
-       return;
-    }
 
     if (!text.isEmpty()) {
         KCompletion *comp = d->quickSearchLine->searchEdit()->completionObject();

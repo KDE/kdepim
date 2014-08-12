@@ -216,16 +216,20 @@ void QuickSearchLine::slotMoreOptionClicked(bool b)
 
 void QuickSearchLine::slotSearchEditTextEdited(const QString &text)
 {
-    if (text.isEmpty()) {
-        mExtraOption->hide();
-    } else {
-        if (text.trimmed().isEmpty()) {
-            mExtraOption->hide();
-            return;
-        }
-        mExtraOption->show();
+    int minimumStringLength = 3;
+    if (text.startsWith(QLatin1Char('"')) && text.endsWith(QLatin1Char('"'))) {
+        minimumStringLength = 5;
     }
-    Q_EMIT searchEditTextEdited(text);
+    if (!text.trimmed().isEmpty()) {
+        if (text.length() > minimumStringLength) {
+            mExtraOption->show();
+            Q_EMIT searchEditTextEdited(text);
+        } else {
+            mExtraOption->hide();
+        }
+    } else {
+        mExtraOption->hide();
+    }
 }
 
 void QuickSearchLine::slotClearButtonClicked()

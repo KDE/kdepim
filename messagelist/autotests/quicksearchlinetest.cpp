@@ -76,11 +76,28 @@ void QuickSearchLineTest::shouldEmitTextChanged()
     QuickSearchLine searchLine;
     QSignalSpy spy(&searchLine, SIGNAL(searchEditTextEdited(QString)));
     QTest::keyClick(searchLine.searchEdit(), 'F');
-    QCOMPARE(spy.count(),1);
+    QCOMPARE(spy.count(),0);
 
+    searchLine.searchEdit()->clear();
     QSignalSpy spy2(&searchLine, SIGNAL(searchEditTextEdited(QString)));
+    QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FO"));
+    QCOMPARE(spy2.count(), 0);
+
+    searchLine.searchEdit()->clear();
+    QSignalSpy spy3(&searchLine, SIGNAL(searchEditTextEdited(QString)));
     QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FOO"));
-    QCOMPARE(spy2.count(), 3);
+    QCOMPARE(spy3.count(), 0);
+
+    searchLine.searchEdit()->clear();
+    QSignalSpy spy4(&searchLine, SIGNAL(searchEditTextEdited(QString)));
+    QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FOOO"));
+    QCOMPARE(spy4.count(), 1);
+
+    searchLine.searchEdit()->clear();
+    QSignalSpy spy5(&searchLine, SIGNAL(searchEditTextEdited(QString)));
+    QTest::keyClicks(searchLine.searchEdit(), QLatin1String("FOOO0"));
+    QCOMPARE(spy5.count(), 2);
+
 }
 
 void QuickSearchLineTest::shouldShowExtraOptionWidget()
@@ -90,7 +107,13 @@ void QuickSearchLineTest::shouldShowExtraOptionWidget()
     QTest::keyClick(searchLine.searchEdit(), 'F');
     QTest::qWaitForWindowShown(&searchLine);
     QWidget *widget = qFindChild<QWidget *>(&searchLine, QLatin1String("extraoptions"));
+    QVERIFY(!widget->isVisible());
+
+    searchLine.searchEdit()->clear();
+    QTest::keyClicks(searchLine.searchEdit(), QLatin1String("F000"));
+    QTest::qWaitForWindowShown(&searchLine);
     QVERIFY(widget->isVisible());
+
 }
 
 void QuickSearchLineTest::shouldHideExtraOptionWidgetWhenClearLineEdit()
@@ -200,9 +223,20 @@ void QuickSearchLineTest::shouldShowExtraOptionWidgetWhenTextTrimmedIsNotEmpty()
     QTest::qWaitForWindowShown(&searchLine);
     QWidget *widget = qFindChild<QWidget *>(&searchLine, QLatin1String("extraoptions"));
     QVERIFY(!widget->isVisible());
+    searchLine.searchEdit()->clear();
     QTest::keyClick(searchLine.searchEdit(), ' ');
     QVERIFY(!widget->isVisible());
+
+    searchLine.searchEdit()->clear();
     QTest::keyClick(searchLine.searchEdit(), 'F');
+    QVERIFY(!widget->isVisible());
+
+    searchLine.searchEdit()->clear();
+    QTest::keyClicks(searchLine.searchEdit(), QLatin1String(" F000 "));
+    QVERIFY(widget->isVisible());
+
+    searchLine.searchEdit()->clear();
+    QTest::keyClicks(searchLine.searchEdit(), QLatin1String(" F000 "));
     QVERIFY(widget->isVisible());
 
 }
