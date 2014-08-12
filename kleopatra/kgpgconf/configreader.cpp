@@ -37,10 +37,9 @@
 #include <gpgme++/global.h>
 #include <gpgme++/engineinfo.h>
 
-#include <KDebug>
 #include <KLocalizedString>
-#include <KStandardDirs>
 
+#include <QDebug>
 #include <QBuffer>
 #include <QByteArray>
 #include <QMap>
@@ -155,7 +154,7 @@ ConfigEntry* ConfigReader::Private::createEntryFromParsedLine( const QStringList
     }
     entry->setArgType( argType, flags & GPGCONF_FLAG_LIST ? ConfigEntry::List : ConfigEntry::NoList );
     if ( !ok )
-        kWarning() << "Unsupported datatype:" << parsedLine[4] <<" :" << *it <<" for" << parsedLine[0];
+        qWarning() << "Unsupported datatype:" << parsedLine[4] <<" :" << *it <<" for" << parsedLine[0];
     entry->unsetDirty();
     return entry.release();
 }
@@ -177,7 +176,7 @@ void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component 
             line.chop( 1 );
         if ( line.endsWith( QLatin1Char('\r') ) )
             line.chop( 1 );
-        //kDebug(5150) <<"GOT LINE:" << line;
+        //qDebug() <<"GOT LINE:" << line;
         // Format: NAME:FLAGS:LEVEL:DESCRIPTION:TYPE:ALT-TYPE:ARGNAME:DEFAULT:ARGDEF:VALUE
         const QStringList lst = line.split( QLatin1Char(':') );
         if ( lst.count() >= 10 ) {
@@ -192,7 +191,7 @@ void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component 
                     currentGroup.reset();
                 }
             //else
-            //  kDebug(5150) <<"Discarding empty group" << mCurrentGroupName;
+            //  qDebug() <<"Discarding empty group" << mCurrentGroupName;
                 currentGroup.reset( new ConfigGroup( lst[0] ) );
                 currentGroup->setDescription( lst[3] );
                 //currentGroup->setLevel( level );
@@ -207,7 +206,7 @@ void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component 
             // This happens on lines like
             // dirmngr[31465]: error opening `/home/dfaure/.gnupg/dirmngr_ldapservers.conf': No such file or directory
             // so let's not bother the user with it.
-            //kWarning() <<"Parse error on gpgconf --list-options output:" << line;
+            //qWarning() <<"Parse error on gpgconf --list-options output:" << line;
         }
     }
     if ( currentGroup.get() && !currentGroup->isEmpty() )
@@ -275,7 +274,7 @@ QMap<QString, QString> ConfigReader::Private::readComponentInfo() const
             line.chop( 1 );
         if ( line.endsWith( QLatin1Char('\r') ) )
             line.chop( 1 );
-        //kDebug(5150) <<"GOT LINE:" << line;
+        //qDebug() <<"GOT LINE:" << line;
         // Format: NAME:DESCRIPTION
         const QStringList lst = line.split( QLatin1Char(':') );
         if ( lst.count() >= 2 ) {

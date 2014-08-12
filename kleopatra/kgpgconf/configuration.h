@@ -33,7 +33,7 @@
 #ifndef KGPGCONF_CONFIGURATION_H
 #define KGPGCONF_CONFIGURATION_H
 
-#include <KUrl>
+#include <QUrl>
 
 #include <QHash>
 #include <QString>
@@ -176,11 +176,11 @@ public:
     QString stringValue() const;
     int intValue() const;
     unsigned int uintValue() const;
-    KUrl urlValue() const;
+    QUrl urlValue() const;
     QStringList stringValueList() const;
     QList<int> intValueList() const;
     QList<unsigned int> uintValueList() const;
-    KUrl::List urlValueList() const;
+    QList<QUrl> urlValueList() const;
     unsigned int numberOfTimesSet() const;
 
     QString outputString() const;
@@ -189,12 +189,12 @@ public:
     void setStringValue( const QString& );
     void setIntValue( int );
     void setUIntValue( unsigned int );
-    void setURLValue( const KUrl& );
+    void setURLValue( const QUrl& );
     void setNumberOfTimesSet( unsigned int );
     void setStringValueList( const QStringList& );
     void setIntValueList( const QList<int>& );
     void setUIntValueList( const QList<unsigned int>& );
-    void setURLValueList( const KUrl::List& );
+    void setURLValueList( const QList<QUrl>& );
 
 private:
     bool isStringType() const;

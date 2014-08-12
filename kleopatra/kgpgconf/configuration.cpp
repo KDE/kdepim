@@ -32,7 +32,7 @@
 
 #include "configuration.h"
 
-#include <KDebug>
+#include <QDebug>
 #include <KLocalizedString>
 
 #include <QStringList>
@@ -44,7 +44,7 @@ namespace {
 
 static QString gpgconf_unescape( const QString& str )
 {
-  // Looks like it's the same rules as KUrl.
+  // Looks like it's the same rules as QUrl.
   return QUrl::fromPercentEncoding( str.toUtf8() );
 }
 
@@ -62,7 +62,7 @@ static QString urlpart_encode( const QString& str )
   QString enc( str );
   enc.replace( QLatin1Char('%'), QLatin1String("%25") ); // first!
   enc.replace( QLatin1Char(':'), QLatin1String("%3a") );
-  //kDebug() <<"  urlpart_encode:" << str <<" ->" << enc;
+  //qDebug() <<"  urlpart_encode:" << str <<" ->" << enc;
   return enc;
 }
 
@@ -71,7 +71,7 @@ static QString urlpart_decode( const QString& str )
   return QUrl::fromPercentEncoding( str.toLatin1() );
 }
 
-static KUrl parseUrl( ConfigEntry::ArgType argType, const QString& str )
+static QUrl parseUrl( ConfigEntry::ArgType argType, const QString& str )
 {
     if ( argType == ConfigEntry::LdapUrl ) {
         // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
@@ -79,35 +79,35 @@ static KUrl parseUrl( ConfigEntry::ArgType argType, const QString& str )
         if ( items.count() == 5 )
         {
             QStringList::const_iterator it = items.constBegin();
-            KUrl url;
-            url.setProtocol( QLatin1String("ldap") );
+            QUrl url;
+            url.setScheme( QLatin1String("ldap") );
             url.setHost( urlpart_decode( *it++ ) );
             url.setPort( (*it++).toInt() );
-            url.setPath( QLatin1String("/") ); // workaround KUrl parsing bug
+            url.setPath( QLatin1String("/") ); // workaround QUrl parsing bug
             url.setUserName( urlpart_decode( *it++ ) );
             url.setPassword( urlpart_decode( *it++ ) );
             url.setQuery( urlpart_decode( *it ) );
             return url;
         }
         else
-            kWarning() << "parseURL: malformed LDAP server:" << str;
+            qWarning() << "parseURL: malformed LDAP server:" << str;
   }
   // other URLs : assume wellformed URL syntax.
-  return KUrl( str );
+  return QUrl( str );
 }
 
 
 // The opposite of parseURL
-static QString splitUrl( ConfigEntry::ArgType argType, const KUrl& url )
+static QString splitUrl( ConfigEntry::ArgType argType, const QUrl &url )
 {
     if ( argType == ConfigEntry::LdapUrl ) { // LDAP server
         // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
-        assert( url.protocol() == QLatin1String("ldap") );
+        assert( url.scheme() == QLatin1String("ldap") );
         return urlpart_encode( url.host() ) + QLatin1Char(':') +
             QString::number( url.port() ) + QLatin1Char(':') +
             urlpart_encode( url.userName() ) + QLatin1Char(':') +
             urlpart_encode( url.password() ) + QLatin1Char(':') +
-            // KUrl automatically encoded the query (e.g. for spaces inside it),
+            // QUrl automatically encoded the query (e.g. for spaces inside it),
             // so decode it before writing it out to gpgconf (issue119)
             urlpart_encode( QUrl::fromPercentEncoding( url.query().mid(1).toLatin1() ) );
   }
@@ -392,14 +392,14 @@ unsigned int ConfigEntry::uintValue() const
     return m_value.toUInt();
 }
 
-KUrl ConfigEntry::urlValue() const
+QUrl ConfigEntry::urlValue() const
 {
   assert( m_argType == Path || m_argType == Url || m_argType == LdapUrl );
   assert( !isList() );
   QString str = m_value.toString();
   if ( m_argType == Path )
   {
-    KUrl url;
+    QUrl url;
     url.setPath( str );
     return url;
   }
@@ -445,17 +445,17 @@ QList<unsigned int> ConfigEntry::uintValueList() const
   return ret;
 }
 
-KUrl::List ConfigEntry::urlValueList() const
+QList<QUrl> ConfigEntry::urlValueList() const
 {
   assert( m_argType == Path || m_argType == Url || m_argType == LdapUrl );
   assert( isList() );
   const QStringList lst = m_value.toStringList();
 
-  KUrl::List ret;
+  QList<QUrl> ret;
   Q_FOREACH( const QString &i, lst )
   {
     if ( m_argType == Path ) {
-      KUrl url;
+      QUrl url;
       url.setPath( i );
       ret << url;
     } else {
@@ -508,7 +508,7 @@ void ConfigEntry::setUIntValue( unsigned int i )
   m_dirty = true;
 }
 
-void ConfigEntry::setURLValue( const KUrl& url )
+void ConfigEntry::setURLValue( const QUrl &url )
 {
   QString str = splitUrl( m_argType, url );
   m_value = str;
@@ -556,10 +556,10 @@ void ConfigEntry::setUIntValueList( const QList<unsigned int>& lst )
     m_dirty = true;
 }
 
-void ConfigEntry::setURLValueList( const KUrl::List& urls )
+void ConfigEntry::setURLValueList( const QList<QUrl>& urls )
 {
     QStringList lst;
-    Q_FOREACH( const KUrl& i, urls ) {
+    Q_FOREACH( const QUrl &i, urls ) {
         lst << splitUrl( m_argType, i );
     }
     m_value = lst;
@@ -589,7 +589,7 @@ QVariant ConfigEntry::stringToValue( const QString& str, UnescapeMode mode ) con
           if( val.startsWith( QLatin1Char('"') ) )
             val = val.mid( 1 );
           else  // see README.gpgconf
-            kWarning() << "String value should start with '\"' :" << val;
+            qWarning() << "String value should start with '\"' :" << val;
         }
       }
       lst << QVariant( unescape ? gpgconf_unescape( val ) : val );
@@ -604,7 +604,7 @@ QVariant ConfigEntry::stringToValue( const QString& str, UnescapeMode mode ) con
         if( val.startsWith( QLatin1Char('"') ) )
           val = val.mid( 1 );
         else // see README.gpgconf
-          kWarning() << "String value should start with '\"' :" << val;
+          qWarning() << "String value should start with '\"' :" << val;
       }
     }
     return QVariant( unescape ? gpgconf_unescape( val ) : val );
