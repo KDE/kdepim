@@ -372,6 +372,7 @@ install(
   PROGRAMS data/kleopatra.desktop data/kleopatra_import.desktop
   DESTINATION ${XDG_APPS_INSTALL_DIR}
 )
+install(FILES data/kleopatra.appdata.xml DESTINATION ${CMAKE_INSTALL_METAINFODIR})
 install(
   FILES data/kleopatra_signencryptfiles.desktop
         data/kleopatra_signencryptfolders.desktop

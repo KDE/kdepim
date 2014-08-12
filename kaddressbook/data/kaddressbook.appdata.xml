@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<component type="desktop">
+  <id>kaddressbook.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0+</project_license>
+  <name>KAddressBook</name>
+  <description>
+    <p>KAddressBook stores all the personal details of your family, friends and other contacts.</p>
+    <p>Features:</p>
+    <ul>
+      <li>Imports and exports to nearly every address book standard</li>
+      <li>Reads .vcf format files, and can import and export vCards and csv format files</li>
+      <li>Can use multiple LDAPservers</li>
+      <li>Configurable filters and powerful search capabilities</li>
+      <li>Integrates with other Kontact components, e.g. exporting Birthday reminders to KOrganizer</li>
+      <li>Capable of groupware integration</li>
+      <li>Powered by Akonadi</li>
+    </ul>
+  </description>
+  <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=kaddressbook</url>
+  <screenshots>
+    <screenshot type="default">
+      <image>http://kde.org/images/screenshots/kaddressbook.png</image>
+    </screenshot>
+  </screenshots>
+  <project_group>KDE</project_group>
+  <provides>
+    <binary>kaddressbook</binary>
+  </provides>
+</component>
