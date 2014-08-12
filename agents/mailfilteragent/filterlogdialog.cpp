@@ -39,7 +39,7 @@
 #include <kmessagebox.h>
 #include <QVBoxLayout>
 #include <QIcon>
-#include <KUrl>
+#include <QUrl>
 
 #include <QCheckBox>
 #include <QLabel>
@@ -350,7 +350,7 @@ void FilterLogDialog::slotUser1()
 
 void FilterLogDialog::slotUser2()
 {
-    KUrl url;
+    QUrl url;
     MessageViewer::AutoQPointer<KFileDialog> fdlg( new KFileDialog( url, QString(), this) );
 
     fdlg->setMode( KFile::File );

@@ -24,7 +24,7 @@
 
 #include <KLocalizedString>
 #include <KFileDialog>
-#include <KUrl>
+#include <QUrl>
 
 #include <QHeaderView>
 #include <QCheckBox>
