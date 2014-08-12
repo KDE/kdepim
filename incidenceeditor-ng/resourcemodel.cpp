@@ -36,8 +36,8 @@ ResourceModel::ResourceModel(const QStringList &headers,
     this->headers = headers;
     rootItem = ResourceItem::Ptr(new ResourceItem(KLDAP::LdapDN(), headers, KLDAP::LdapClient(0)));
 
-    ldapSearchCollections.setFilter(QString::fromLatin1("&(objectClass=kolabGroupOfUniqueNames)(mail=*)"
-                                    "(|(cn=%1)(givenName=%1)(sn=%1))"));
+    ldapSearchCollections.setFilter(QString::fromLatin1("&(ou=Resources,*)(objectClass=kolabGroupOfUniqueNames)(objectclass=groupofurls)(!(objectclass=nstombstone))(mail=*)"
+                                    "(cn=%1)"));
     ldapSearch.setFilter(QString::fromLatin1("&(objectClass=kolabSharedFolder)(kolabFolderType=event)(mail=*)"
                          "(|(cn=%1)(givenName=%1)(sn=%1))"));
 
