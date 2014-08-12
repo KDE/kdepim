@@ -70,5 +70,6 @@ install( TARGETS blogilo ${INSTALL_TARGETS_DEFAULT_ARGS} )
 ########### install files ###############
 
 install( PROGRAMS ../blogilo.desktop  DESTINATION  ${XDG_APPS_INSTALL_DIR} )
+install( FILES ../blogilo.appdata.xml DESTINATION ${CMAKE_INSTALL_METAINFODIR})
 install( FILES blogilo.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} )
 install( FILES blogiloui.rc DESTINATION  ${KXMLGUI_INSTALL_DIR}/blogilo )

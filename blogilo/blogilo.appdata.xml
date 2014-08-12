@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<component type="desktop">
+  <id>blogilo.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0+</project_license>
+  <name>Blogilo</name>
+  <summary>A KDE Blogging Client</summary>
+  <description>
+    <p>Blogilo is a blogging client for KDE, which supports various blogging APIs.</p>
+    <p>Features:</p>
+    <ul>
+      <li>A full featured WYSIWYG editor + An HTML editor</li>
+      <li>Previewing your post with your blog style</li>
+      <li>Support for Blogger1.0, MetaWeblog, MovableType (Wordpress supports All of these!) and Google GData (used on Blogspot.com blogs) APIs</li>
+      <li>Support for Creating/Modifying/Deleting posts.</li>
+      <li>Support for creating drafts and scheduled posts</li>
+      <li>Support for uploading media files to your blog (Just on supported APIs e.g. MetaWeblog and MovableType)</li>
+      <li>Support for Fetching your recent blog entries.</li>
+      <li>Support for adding Images to post from your system. It will upload them on Submitting post to blog (Just on supported APIs e.g. MetaWeblog and MovableType)</li>
+      <li>Support for saving local entries before publishing.</li>
+      <li>Saving your writing copy to prevent data loss, at configurable intervals.</li>
+      <li>Internal auto spell checker. (KDE spell checker used so most of languages are supported)</li>
+    </ul>
+  </description>
+  <url type="homepage">http://blogilo.gnufolks.org/</url>
+  <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=blogilo</url>
+  <url type="help">http://docs.kde.org/stable/en/kdepim/blogilo/</url>
+  <screenshots>
+    <screenshot type="default">
+      <image>http://kde.org/images/screenshots/blogilo.png</image>
+    </screenshot>
+  </screenshots>
+  <project_group>KDE</project_group>
+  <provides>
+    <binary>blogilo</binary>
+  </provides>
+</component>

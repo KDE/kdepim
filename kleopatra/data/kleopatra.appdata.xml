@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<component type="desktop">
+  <id>kleopatra.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0+</project_license>
+  <name>Kleopatra</name>
+  <summary>Certificate Manager and Unified Crypto GUI</summary>
+  <description>
+    <p>
+      Kleopatra is a certificate manager and a universal crypto GUI.
+      It supports managing X.509 and OpenPGP certificates in the GpgSM keybox and retrieving certificates from LDAP servers.
+    </p>
+  </description>
+  <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=kleopatra</url>
+  <url type="help">http://docs.kde.org/stable/en/kdepim/kleopatra/index.html</url>
+  <screenshots>
+    <screenshot type="default">
+      <image>http://kde.org/images/screenshots/kleopatra.png</image>
+    </screenshot>
+  </screenshots>
+  <project_group>KDE</project_group>
+  <provides>
+    <binary>kleopatra</binary>
+  </provides>
+</component>
