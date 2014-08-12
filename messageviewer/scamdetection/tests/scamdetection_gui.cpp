@@ -23,8 +23,8 @@
 #include <KFileDialog>
 
 #include <KLocalizedString>
-#include <KUrl>
 
+#include <QUrl>
 #include <QDebug>
 #include <QPointer>
 #include <QVBoxLayout>
@@ -55,7 +55,7 @@ ScamDetectionTestWidget::ScamDetectionTestWidget(const QString &filename, QWidge
     connect(mScamWarningWidget, SIGNAL(showDetails()), mScamDetection, SLOT(showDetails()));
 
 
-    mWebView->load(QUrl(filename));
+    mWebView->load(QUrl::fromLocalFile(filename));
 
     QHBoxLayout *hbox = new QHBoxLayout;
     QPushButton *openFile = new QPushButton(i18n("Open html..."));

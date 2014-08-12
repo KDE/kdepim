@@ -22,7 +22,6 @@
 
 #include <KLocalizedString>
 #include <KFileDialog>
-#include <KUrl>
 #include <QFileDialog>
 #include <QApplication>
 #include <KAboutData>

@@ -22,7 +22,7 @@
 
 #include <KLocalizedString>
 #include <QDebug>
-#include <KUrl>
+#include <QUrl>
 
 #include <KTextEdit>
 #include <KFileDialog>
@@ -68,7 +68,7 @@ ScamDetectionDetailsDialog::~ScamDetectionDetailsDialog()
 
 void ScamDetectionDetailsDialog::slotSaveAs()
 {
-    KUrl url;
+    QUrl url;
     MessageViewer::AutoQPointer<KFileDialog> fdlg( new KFileDialog( url, QString(), this) );
 
     fdlg->setMode( KFile::File );

@@ -24,7 +24,7 @@
 #include <AkonadiCore/itemcreatejob.h>
 #include <kfiledialog.h>
 #include <QProgressDialog>
-#include <KUrl>
+#include <QUrl>
 #include <QtCore/QPointer>
 
 ImportHandlerBase::ImportHandlerBase( QObject *parent )
@@ -45,7 +45,7 @@ void ImportHandlerBase::setSelectionModel( QItemSelectionModel *model )
 
 void ImportHandlerBase::exec()
 {
-  const QStringList fileNames = KFileDialog::getOpenFileNames( KUrl(), fileDialogNameFilter(),
+  const QStringList fileNames = KFileDialog::getOpenFileNames( QUrl(), fileDialogNameFilter(),
                                                                0, fileDialogTitle() );
 
   if ( fileNames.count() == 0 ) {

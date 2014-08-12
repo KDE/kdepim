@@ -38,7 +38,7 @@
 #include <RecursiveItemFetchJob>
 #include <Session>
 #include <Job>
-#include <KUrl>
+#include <QUrl>
 #include <baloo/pim/contactcompleter.h>
 
 #include <KPIMUtils/Email>
@@ -1124,7 +1124,7 @@ void AddresseeLineEdit::insert( const QString &t )
     newText = lines.join( QLatin1String( ", " ) );
 
     if ( newText.startsWith( QLatin1String( "mailto:" ) ) ) {
-        const KUrl url( newText );
+        const QUrl url( newText );
         newText = url.path();
     } else if ( newText.indexOf( QLatin1String( " at " ) ) != -1 ) {
         // Anti-spam stuff
@@ -1203,7 +1203,7 @@ void AddresseeLineEdit::mouseReleaseEvent( QMouseEvent *event )
 void AddresseeLineEdit::dropEvent( QDropEvent *event )
 {
     if ( !isReadOnly() ) {
-        const KUrl::List uriList = KUrl::List::fromMimeData( event->mimeData() );
+        const QList<QUrl> uriList = event->mimeData()->urls();
         if ( !uriList.isEmpty() ) {
             QString contents = text();
             // remove trailing white space and comma

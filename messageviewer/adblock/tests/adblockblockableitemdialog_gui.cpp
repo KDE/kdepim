@@ -23,7 +23,7 @@
 #include <KFileDialog>
 
 #include <KLocalizedString>
-#include <KUrl>
+#include <QUrl>
 
 #include <QDebug>
 #include <QPointer>
@@ -58,7 +58,7 @@ AdBlockBlockableItemTestDialog::AdBlockBlockableItemTestDialog(const QString &fi
     setLayout(lay);
     connect(&page, SIGNAL(loadFinished(bool)), this, SLOT(slotLoadFinished()));
     mProgress->start();
-    page.mainFrame()->load(QUrl(filename));
+    page.mainFrame()->load(QUrl::fromLocalFile(filename));
 }
 
 AdBlockBlockableItemTestDialog::~AdBlockBlockableItemTestDialog()
