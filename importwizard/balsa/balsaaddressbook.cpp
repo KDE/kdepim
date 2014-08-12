@@ -24,7 +24,7 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>
-#include <KUrl>
+#include <QUrl>
 
 #include <QDebug>
 #include <QFile>
@@ -63,7 +63,7 @@ void BalsaAddressBook::readAddressBook(const KConfigGroup &grp)
         ldapStruct ldap;
         ldap.dn = grp.readEntry(QLatin1String("BaseDN"));
         ldap.useTLS = (grp.readEntry(QLatin1String("EnableTLS")) == QLatin1String("true"));
-        ldap.ldapUrl = KUrl(grp.readEntry(QLatin1String("Host")));
+        ldap.ldapUrl = QUrl(grp.readEntry(QLatin1String("Host")));
         ldap.port = ldap.ldapUrl.port();
         //TODO: verify
         const QString bookDN  = grp.readEntry(QLatin1String("BookDN")); //TODO ?

@@ -33,7 +33,7 @@
 #include <Akonadi/KMime/MessageParts>
 
 // KDE Includes
-#include <KUrl>
+#include <QUrl>
 #include <KLocalizedString>
 #include <QDebug>
 #include <KMessageBox>
@@ -340,7 +340,7 @@ bool Filter::doAddMessage( const QString &folderName,
     // Create the mail folder (if not already created).
     Akonadi::Collection mailFolder = parseFolderString(folderName );
 
-    KUrl msgUrl( msgPath );
+    QUrl msgUrl( msgPath );
     if( !msgUrl.isEmpty() &&msgUrl.isLocalFile() ) {
 
         // Read in the temporary file.

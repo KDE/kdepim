@@ -23,7 +23,7 @@
 #include <KFileDialog>
 #include <KZip>
 #include <KTar>
-#include <KUrl>
+#include <QUrl>
 
 #include <QDebug>
 #include <QApplication>
@@ -190,7 +190,7 @@ void FilterKMailArchive::import()
 {
     Q_ASSERT( filterInfo()->rootCollection().isValid() );
 
-    KFileDialog fileDialog( KUrl(), QString(), filterInfo()->parent() );
+    KFileDialog fileDialog( QUrl(), QString(), filterInfo()->parent() );
     fileDialog.setMode( KFile::File | KFile::LocalOnly );
     fileDialog.setWindowTitle( i18n( "Select KMail Archive File to Import" ) );
     fileDialog.setFilter( "*.tar.bz2 *.tar.gz *.tar *.zip|" +

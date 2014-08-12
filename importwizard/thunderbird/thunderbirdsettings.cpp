@@ -23,7 +23,7 @@
 #include <KPIMIdentities/kpimidentities/identity.h>
 #include <KPIMIdentities/kpimidentities/signature.h>
 
-#include <KUrl>
+#include <QUrl>
 #include <KABC/VCardConverter>
 #include <QTextStream>
 #include <QStringList>
@@ -297,7 +297,7 @@ void ThunderbirdSettings::readLdapSettings()
         }
         const QString ldapUri = QString::fromLatin1("%1.uri").arg(ldapAccountName);
         if (mHashConfig.contains(ldapUri)) {
-            ldap.ldapUrl = KUrl(mHashConfig.value(ldapUri).toString());
+            ldap.ldapUrl = QUrl(mHashConfig.value(ldapUri).toString());
             ldap.port = ldap.ldapUrl.port();
 
             if (ldap.ldapUrl.scheme() == QLatin1String("ldaps")) {
@@ -741,7 +741,7 @@ void ThunderbirdSettings::readTransport()
 QString convertThunderbirdPath(const QString& path)
 {
     QString newPath;
-    KUrl url(path);
+    QUrl url(path);
     newPath = url.path();
     newPath.remove(0,1);
     return MailCommon::Util::convertFolderPathToCollectionStr(newPath);
