@@ -166,8 +166,8 @@ void IncidenceDescription::setupToolBar()
 {
 #ifndef QT_NO_TOOLBAR
   KActionCollection *collection = new KActionCollection( this );
-//QT5
-  //mUi->mDescriptionEdit->createActions( collection );
+  collection->addActions(mUi->mDescriptionEdit->createActions());
+
 
   KToolBar *mEditToolBar = new KToolBar( mUi->mEditToolBarPlaceHolder );
   mEditToolBar->setToolButtonStyle( Qt::ToolButtonIconOnly );
