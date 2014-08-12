@@ -58,3 +58,4 @@ GenericName[zh_TW]=雲端儲存管理員
 Terminal=false
 Categories=Qt;KDE;Office;Network;
 InitialPreference=10
+X-DBUS-StartupType=Unique
