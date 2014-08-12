@@ -56,4 +56,4 @@ install(FILES
   sieveeditorui.rc
   DESTINATION  ${KXMLGUI_INSTALL_DIR}/sieveeditor)
 
-install(PROGRAMS sieveeditor.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(PROGRAMS org.kde.sieveeditor.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})

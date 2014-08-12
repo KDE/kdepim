@@ -72,3 +72,4 @@ GenericName[zh_TW]=過濾編輯器
 Terminal=false
 Categories=Qt;KDE;Office;Network;X-KDE-Sieve;
 InitialPreference=10
+X-DBUS-StartupType=Unique
